@@ -26,8 +26,8 @@ extern f32 lbl_803E4108;      /* render scale */
 extern s8 lbl_803DDB08;       /* deferred-message queue count */
 extern s8 lbl_803DDB09;       /* registered-target list count */
 extern int lbl_803DDB0C;      /* cached rom-curve handle */
-extern int lbl_803AC7D8[];    /* registered-target list, 8B entries */
-extern int lbl_803AC878[];    /* deferred-message queue, 12B entries */
+int lbl_803AC7D8[0x28];    /* registered-target list, 8B entries */
+int lbl_803AC878[0x22];    /* deferred-message queue, 12B entries */
 
 /* ObjMsg ids exchanged with prison members */
 enum

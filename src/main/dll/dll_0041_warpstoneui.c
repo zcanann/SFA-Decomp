@@ -48,9 +48,9 @@ typedef struct
 #define WARPSTONE_UI_ENTRY_COUNT 6
 
 extern u8 gWarpStoneUiMenuItemTemplates[];
-extern u8 gWarpStoneUiMenuItems[];
+u8 gWarpStoneUiMenuItems[0x168];
 extern WarpstoneEntry gWarpStoneUiEntryTable[];
-extern int gWarpStoneUiSelectedIndices[];
+int gWarpStoneUiSelectedIndices[0x6];
 extern int* gTitleMenuLinkInterface;
 
 #pragma scheduling off

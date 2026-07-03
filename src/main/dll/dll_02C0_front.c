@@ -116,7 +116,7 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
 };
 
 extern void* gTitleScreenMainTex;
-extern void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
+void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
 extern u8 gTitleScreenSetupDone;
 
 /* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
@@ -157,7 +157,7 @@ extern f32 gTitleScreenCursorX;
 extern int gTitleScreenCopyrightBaseY;
 extern f32 lbl_803E2318;
 extern f32 lbl_803E22F8;
-extern u8 gTitleScreenMtx[0x34];
+u8 gTitleScreenMtx[0x34];
 extern s16 gTitleScreenTextureIds[];
 extern void PSMTXIdentity(void*);
 
@@ -539,7 +539,7 @@ extern f32 lbl_803E2380;
 extern f32 lbl_803E2384;
 extern f32 lbl_803E2388;
 extern f32 lbl_803DBC0C;
-extern u8 gTitleScreenSfxFlagGrid[0x48];
+u8 gTitleScreenSfxFlagGrid[0x48];
 void fn_80134870(int obj, u8* arr);
 
 /* EN v1.0 0x80135CC8  size: 2784b  titlescreen_update: drive the title

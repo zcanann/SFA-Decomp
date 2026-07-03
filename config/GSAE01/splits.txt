@@ -643,6 +643,7 @@ main/dll/dll_bc.c:
 
 main/dll/dll_0001_camcontrol.c:
 	.text       start:0x8010224C end:0x80103524
+	.bss        start:0x803A4278 end:0x803A43C0
 
 main/dll/cutcam.c:
 	.text       start:0x80103524 end:0x801046F4
@@ -808,6 +809,7 @@ main/dll/dll_8011d918.c:
 
 main/dll/tricky.c:
 	.text       start:0x8011D9B0 end:0x80121C4C
+	.bss        start:0x803A8830 end:0x803A89B0
 
 main/dll/maybetemplate.c:
 	.text       start:0x80121C4C end:0x801242DC
@@ -848,9 +850,11 @@ main/dll/dll_0040_credits.c:
 
 main/dll/dll_0041_warpstoneui.c:
 	.text       start:0x801343CC end:0x80134870
+	.bss        start:0x803A9DD0 end:0x803A9F50
 
 main/dll/dll_02C0_front.c:
 	.text       start:0x80134870 end:0x80136A40
+	.bss        start:0x803A9F50 end:0x803AA018
 
 main/dll/dll_80136a40.c:
 	.text       start:0x80136A40 end:0x8013939C
@@ -1339,6 +1343,7 @@ main/dll/dll_0126_trigger.c:
 
 main/dll/dll_0145_cloudprisoncontrol.c:
 	.text       start:0x8019AA7C end:0x8019AE3C
+	.bss        start:0x803AC7D8 end:0x803AC900
 
 main/dll/CF/dll_0148_cfguardian.c:
 	.text       start:0x8019AE3C end:0x8019C784

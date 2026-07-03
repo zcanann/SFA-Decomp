@@ -649,7 +649,7 @@ extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 extern void GXSetVtxDesc(int a, int b);
 extern int lbl_803E1E34;
 extern int lbl_803E1E38;
-extern char lbl_803A8830[];
+char lbl_803A8830[0x120];
 
 void pauseMenuMapFn_8011de20(void *this, u8 a, s16 b, int c)
 {
@@ -1120,7 +1120,7 @@ extern void selectTexture(u8* tex, int mapId);
 extern void fn_8006C5CC(int* out);
 extern int lbl_803E1E30;
 extern int lbl_802C21AC[];
-extern f32 lbl_803A8950[];
+f32 lbl_803A8950[0x18];
 extern f32 lbl_803E1E64, lbl_803E1E6C, lbl_803E1E70;
 extern f32 lbl_803DD850;
 extern f32 lbl_80396820[];

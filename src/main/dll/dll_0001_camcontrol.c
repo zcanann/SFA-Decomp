@@ -40,7 +40,7 @@ extern int dll_19_func1B(int p); /* nonzero = obj is baddie-control managed (use
 extern f32 fn_8014C5D0(register int obj); /* target reticle distance for the enemy objType group */
  /* target reticle distance for the largecrate objType group */
 extern f32 sqrtf(f32 x);
-extern u8 gCamcontrolStateStorage[];
+u8 gCamcontrolStateStorage[0x148];
 extern CamcontrolBaddieControlInterface** gBaddieControlInterface;
 extern f32 timeDelta;
 extern f32 gCamcontrolSavedFocusWorldZ;
