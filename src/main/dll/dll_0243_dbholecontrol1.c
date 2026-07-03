@@ -72,15 +72,7 @@ STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
-extern u32 FUN_80006824();
-extern u32 FUN_80006ab8();
-extern u64 FUN_80006ac4();
 
-extern int FUN_80017a98();
-extern u64 FUN_800305f8();
-extern u32 ObjMsg_SendToObject();
-extern u32 FUN_8003b818();
-extern double FUN_80293900();
 extern u32 DAT_8032a290;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6F40;
@@ -235,7 +227,6 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int dbstealerworm_func0B(int obj, u8 msg, int* out);
 
 void DBstealerwo_setFuncPtrs_80203c78(void)
 {
