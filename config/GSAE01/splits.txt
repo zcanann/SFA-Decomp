@@ -3063,6 +3063,7 @@ main/audio/snd3d_room.c:
 	extab       start:0x80005A50 end:0x80005A68
 	extabindex  start:0x80006308 end:0x8000632C
 	.text       start:0x8027F2AC end:0x802800C0
+	.data       start:0x8032FDB8 end:0x8032FFE0
 
 main/audio/snd3d_calc.c:
 	extab       start:0x80005A68 end:0x80005A80
