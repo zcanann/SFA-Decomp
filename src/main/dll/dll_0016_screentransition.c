@@ -4,12 +4,6 @@
 #include "main/dll/dll_0016_screentransition.h"
 extern u32 DAT_803de0af;
 
-void FUN_800d7780(u8 value)
-{
-    DAT_803de0af = value;
-    return;
-}
-
 void Checkpoint_release(void);
 
 extern u8 gScreenTransitionDone;
