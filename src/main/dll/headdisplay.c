@@ -226,9 +226,9 @@ void drawFn_80125424(void)
         if (*(u8**)&gHeadDisplayModelObjs[type] != NULL)
         {
             ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[type], timeDelta, gHeadDisplayModelObjs[type], NULL);
-            if (*(u32*)(gHeadDisplayModelObjs[type] + 0x4c) > 0x90000000u)
+            if (*(u32*)&((GameObject*)gHeadDisplayModelObjs[type])->anim.placementData > 0x90000000u)
             {
-                *(u32*)(gHeadDisplayModelObjs[type] + 0x4c) = 0;
+                *(u32*)&((GameObject*)gHeadDisplayModelObjs[type])->anim.placementData = 0;
             }
             *(u8*)(gHeadDisplayModelObjs[type] + 0x37) = 0xff;
             objRender(0, 0, 0, 0, gHeadDisplayModelObjs[type], 1);
@@ -368,14 +368,14 @@ void pauseMenuCreateHeads(void)
             {
                 gHeadDisplayModelObjs[i] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]), 4, -1, -1, 0);
                 f = lbl_803E1E3C;
-                *(f32*)(gHeadDisplayModelObjs[i] + 0xc) = f;
-                *(f32*)(gHeadDisplayModelObjs[i] + 0x10) = f;
-                *(f32*)(gHeadDisplayModelObjs[i] + 0x14) = lbl_803E1E5C;
-                *(s16*)gHeadDisplayModelObjs[i] = 0x7447;
-                *(f32*)(gHeadDisplayModelObjs[i] + 8) = lbl_803E205C;
-                if (*(u32*)(gHeadDisplayModelObjs[i] + 0x4c) > 0x90000000u)
+                ((GameObject*)gHeadDisplayModelObjs[i])->anim.localPosX = f;
+                ((GameObject*)gHeadDisplayModelObjs[i])->anim.localPosY = f;
+                ((GameObject*)gHeadDisplayModelObjs[i])->anim.localPosZ = lbl_803E1E5C;
+                ((GameObject*)gHeadDisplayModelObjs[i])->anim.rotX = 0x7447;
+                ((GameObject*)gHeadDisplayModelObjs[i])->anim.rootMotionScale = lbl_803E205C;
+                if (*(u32*)&((GameObject*)gHeadDisplayModelObjs[i])->anim.placementData > 0x90000000u)
                 {
-                    *(u32*)(gHeadDisplayModelObjs[i] + 0x4c) = 0;
+                    *(u32*)&((GameObject*)gHeadDisplayModelObjs[i])->anim.placementData = 0;
                 }
                 ObjAnim_SetCurrentMove(gHeadDisplayModelObjs[i], 1, lbl_803E1E3C, 0);
             }
