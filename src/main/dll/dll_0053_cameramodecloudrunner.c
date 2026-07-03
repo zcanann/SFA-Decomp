@@ -68,14 +68,6 @@ void CameraModeForceBehind_func05_nop(void)
 {
 }
 
-void fn_80110C80(void)
-{
-}
-
-void fn_80110EC0(void)
-{
-}
-
 void CameraModeCloudRunner_copyToCurrent(void)
 {
 }
