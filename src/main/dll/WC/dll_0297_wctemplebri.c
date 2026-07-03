@@ -47,6 +47,9 @@
 #define WCTEMPLEBRI_WAVE_B_STEP_SHIFT 7
 #define WCTEMPLEBRI_WAVE_WRAP 0xffff
 
+#define WCTEMPLEBRI_OBJFLAG_HIDDEN 0x4000
+#define WCTEMPLEBRI_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct WCTempleBriSetup
 {
     ObjPlacement base;
@@ -349,6 +352,6 @@ void wctemplebri_init(int obj, int initData)
         ObjHits_DisableObject(obj);
         objAnim->alpha = 0;
     }
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (WCTEMPLEBRI_OBJFLAG_HIDDEN | WCTEMPLEBRI_OBJFLAG_HITDETECT_DISABLED);
     ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
 }
