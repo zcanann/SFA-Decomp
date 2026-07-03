@@ -168,17 +168,18 @@ void runLoadingScreens(void)
 
 #pragma opt_propagation off
 #pragma opt_common_subs off
-void initLoadingScreenTextures(void)
+#pragma inline_max_size(4000)
+static inline void initLoadingScreenTexturesBody(void)
 {
-    GXTexFmt textureFormat;
-    u16 textureHeight;
-    u16 textureWidth;
     int textureSize;
-    GXTexObj* texObj;
-    LoadingScreenTexture* textureHeader;
-    LoadingScreenTexture** textureSlot;
-    int arenaHi;
+    u16 textureHeight;
     int i;
+    int arenaHi;
+    LoadingScreenTexture** textureSlot;
+    LoadingScreenTexture* textureHeader;
+    GXTexObj* texObj;
+    u16 textureWidth;
+    GXTexFmt textureFormat;
 
     arenaHi = (int)OSGetArenaHi() - 0x40000;
     for (i = 0, textureSlot = (LoadingScreenTexture**)gTitleScreenInitLoadingTextures; i < 3; textureSlot++, i++)
@@ -205,6 +206,12 @@ void initLoadingScreenTextures(void)
     gTitleScreenInitLoadingFrameCounter = 0;
     gTitleScreenInitDvdErrorLatched = 0;
 }
+
+void initLoadingScreenTextures(void)
+{
+    initLoadingScreenTexturesBody();
+}
+#pragma inline_max_size reset
 #pragma opt_common_subs reset
 #pragma opt_propagation reset
 
