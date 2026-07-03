@@ -1330,8 +1330,8 @@ void newshadows_buildShadowDirectionTexture(void)
     return;
 }
 
-void FUN_8006dca8(u64 param_1, double param_2, u32 param_3, u32 param_4,
-                  u32 param_5, int param_6, int param_7)
+void FUN_8006dca8(u64 arg1, double fwdArg2, u32 arg3, u32 arg4,
+                  u32 fwdArg5, int fwdArg6, int fwdArg7)
 {
     int mask;
     u32 bit;
@@ -1375,7 +1375,7 @@ void FUN_8006dca8(u64 param_1, double param_2, u32 param_3, u32 param_4,
         loop = loop + -1;
     }
     while (loop != 0);
-    objAudioFn_8006ef38(f1Arg, param_2, (int)((u64)retPair >> 0x20), buf, param_5, param_6, param_7);
+    objAudioFn_8006ef38(f1Arg, fwdArg2, (int)((u64)retPair >> 0x20), buf, fwdArg5, fwdArg6, fwdArg7);
     FUN_8028688c();
     return;
 }
