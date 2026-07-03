@@ -45,7 +45,6 @@ static int FEseqobject_findControlObject(void)
     return found;
 }
 
-#pragma scheduling off
 #pragma peephole off
 void FElevControl_free(void)
 {
