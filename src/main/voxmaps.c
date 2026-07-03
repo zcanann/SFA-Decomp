@@ -4,29 +4,33 @@
 #define VOXMAPS_ROUTE_NODE_CAPACITY 200
 
 #pragma dont_inline on
-int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int d, int e, int f)
+/* Rank the occupancy bitmap: count set bits in the (ySlot) row up to the cell at
+ * (tileX, tileZ), then index nodeBase by that running count. The per-row base count
+ * is packed into the header (low/high nibble depending on which 8-tile half tileZ is
+ * in), then popcount adds every occupied cell before the target column. */
+int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ)
 {
     int count;
-    int e3 = e * 2 + e;
+    int hdrRow = ySlot * 2 + ySlot;
     u8* cur;
     u8* end;
     u8 bits;
 
-    if ((f >> 3) != 0)
+    if ((tileZ >> 3) != 0)
     {
-        count = (u32)header[e3 + 1] >> 4;
-        count |= header[e3 + 2] << 4;
-        cur = bitmap + (e * 32 | 0x10);
+        count = (u32)header[hdrRow + 1] >> 4;
+        count |= header[hdrRow + 2] << 4;
+        cur = bitmap + (ySlot * 32 | 0x10);
     }
     else
     {
-        count = header[e3];
-        count |= (header[e3 + 1] & 0xf) << 8;
-        cur = bitmap + e * 32;
+        count = header[hdrRow];
+        count |= (header[hdrRow + 1] & 0xf) << 8;
+        cur = bitmap + ySlot * 32;
     }
     {
-        int f2 = f * 2;
-        end = bitmap + (e * 32 | (f2 + (d >> 3)));
+        int tileZByte = tileZ * 2;
+        end = bitmap + (ySlot * 32 | (tileZByte + (tileX >> 3)));
     }
     while (cur < end)
     {
@@ -39,7 +43,7 @@ int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int d, int e, i
         cur++;
     }
     bits = *cur;
-    bits &= (u8)((u32)0xff >> (8 - (d & 7)));
+    bits &= (u8)((u32)0xff >> (8 - (tileX & 7)));
     while (bits != 0)
     {
         bits &= bits - 1;
@@ -283,11 +287,10 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     int found;
     int bestSlot;
     int blockId;
+    int ay;
     VoxBlock* block;
 
-
-
-    int ay = obj->z * 10 + 5 - lbl_803DCDCC;
+    ay = obj->z * 10 + 5 - lbl_803DCDCC;
 
     gridX = fastFloorf((f32)(obj->x * 10 + 5 - lbl_803DCDC8) / gVoxMapsBlockWorldSize);
     gridY = fastFloorf((f32)ay / gVoxMapsBlockWorldSize);
