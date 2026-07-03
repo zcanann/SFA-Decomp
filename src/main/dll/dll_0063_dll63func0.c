@@ -173,12 +173,12 @@ u8* getSaveFileStruct(void)
     return &gGameplayPreviewSettings;
 }
 
-void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                      u64 param_5, u64 param_6, u64 param_7,
-                      u64 param_8)
+void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+                      u64 arg5, u64 arg6, u64 arg7,
+                      u64 arg8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, DAT_803a3e26);
+    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(VtableFn**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
@@ -259,8 +259,8 @@ u8 FUN_800e8b98(void)
     return DAT_803de100;
 }
 
-void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
+void FUN_800e8f58(u64 unused1, double arg2, u64 arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8)
 {
     u32 savedX;
     u32 savedY;
@@ -362,13 +362,13 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     c = result;
     if ((c != -1) && (DAT_803dc4f0 = c, src != NULL))
     {
-        FUN_80072564(saveHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, result & 0xff,
+        FUN_80072564(saveHandle, arg2, arg3, arg4, arg5, arg6, arg7, arg8, result & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
 }
 
-void FUN_800e95e8(u32 param_1, u32 param_2, int setMode)
+void FUN_800e95e8(u32 unused1, u32 unused2, int setMode)
 {
     bool isClearMode;
     s8 slotIdx;
@@ -586,15 +586,15 @@ void FUN_800e9e9c(void)
 }
 
 u32
-FUN_800ea8c8(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8)
+FUN_800ea8c8(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+             u64 arg5, u64 arg6, u64 arg7, u64 arg8)
 {
     u32 result;
     u8* history;
 
     result = FUN_80017498();
     history = FUN_800e82d8();
-    FUN_80017488(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+    FUN_80017488(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
                  (u32)(u8)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (u32)(u8)history[5] * 2)
     ]
     )
