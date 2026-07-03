@@ -126,8 +126,6 @@ typedef struct CFEmitterFxArgs
         (args)->pos[2] += (obj)->objAnim.localPosZ;               \
     } while (0)
 
-#pragma scheduling off
-#pragma peephole off
 void areafxemit_emitEffect(AreaFxEmitObject* obj)
 {
     AreaFxEmitState* state;
