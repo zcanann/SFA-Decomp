@@ -1032,11 +1032,11 @@ extern int lbl_803DC9C8;
 
 typedef struct
 {
-    int v;
-    int f4;
-    int f8;
-    int fc;
-    int f10;
+    int opcode;
+    int arg0;
+    int arg1;
+    int arg2;
+    int arg3;
 } GameTextSlot;
 
 extern GameTextSlot lbl_8033A540[];
@@ -1079,8 +1079,8 @@ void gameTextSetCharset(int charset, int flags)
         GameTextSlot* s;
         lbl_803DC9C8 = i + 1;
         s = &lbl_8033A540[i];
-        s->v = 0xf;
-        s->f4 = charset;
+        s->opcode = 0xf;
+        s->arg0 = charset;
     }
 }
 
@@ -1108,8 +1108,8 @@ void gameTextLoadDir(int dirId)
             slotIndex = lbl_803DC9C8;
             lbl_803DC9C8 = slotIndex + 1;
             cmd = &lbl_8033A540[slotIndex];
-            cmd->v = 0xf;
-            cmd->f4 = 2;
+            cmd->opcode = 0xf;
+            cmd->arg0 = 2;
         }
     }
     else if (dirId == 0x1c)
@@ -1122,8 +1122,8 @@ void gameTextLoadDir(int dirId)
             slotIndex = lbl_803DC9C8;
             lbl_803DC9C8 = slotIndex + 1;
             cmd = &lbl_8033A540[slotIndex];
-            cmd->v = 0xf;
-            cmd->f4 = 3;
+            cmd->opcode = 0xf;
+            cmd->arg0 = 3;
         }
         gameTextLoadForCurMap(3);
     }
@@ -1136,8 +1136,8 @@ void gameTextLoadDir(int dirId)
             slotIndex = lbl_803DC9C8;
             lbl_803DC9C8 = slotIndex + 1;
             cmd = &lbl_8033A540[slotIndex];
-            cmd->v = 0xf;
-            cmd->f4 = 0;
+            cmd->opcode = 0xf;
+            cmd->arg0 = 0;
         }
         curGameTextDir = (void*)dirId;
         if ((subtitleIsActive() == 0 || gameTextFn_8001b44c(dirId) == 0) &&
@@ -1157,7 +1157,7 @@ void gameTextResetCursor(int flags)
     }
     if (flags & 2)
     {
-        int* p = &lbl_8033A540[lbl_803DC9C8++].v;
+        int* p = &lbl_8033A540[lbl_803DC9C8++].opcode;
         *p = 0xb;
     }
 }
@@ -1176,8 +1176,8 @@ void gameTextSetWindow(u8* textBox)
         lbl_803DC9C8 = i + 1;
         s = &lbl_8033A540[i];
         gCurTextBox = NULL;
-        s->v = 8;
-        s->f4 = 0xff;
+        s->opcode = 8;
+        s->arg0 = 0xff;
     }
     else
     {
@@ -1193,8 +1193,8 @@ void gameTextSetWindow(u8* textBox)
         {
             gCurTextBox = gTextBoxes + idx * 0x20;
         }
-        s->v = 8;
-        s->f4 = idx;
+        s->opcode = 8;
+        s->arg0 = idx;
     }
 }
 
@@ -1211,9 +1211,9 @@ void gameTextSetCursor(u16 x, u16 y, int flags)
         GameTextSlot* s;
         lbl_803DC9C8 = i + 1;
         s = &lbl_8033A540[i];
-        s->v = 0xa;
-        s->f4 = (u16)x;
-        s->f8 = (u16)y;
+        s->opcode = 0xa;
+        s->arg0 = (u16)x;
+        s->arg1 = (u16)y;
     }
 }
 
@@ -1325,11 +1325,11 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
         GameTextSlot* s;
         lbl_803DC9C8 = i + 1;
         s = &lbl_8033A540[i];
-        s->v = 3;
-        s->f4 = r;
-        s->f8 = g;
-        s->fc = b;
-        s->f10 = a;
+        s->opcode = 3;
+        s->arg0 = r;
+        s->arg1 = g;
+        s->arg2 = b;
+        s->arg3 = a;
     }
 }
 
@@ -1351,10 +1351,10 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
         GameTextSlot* s;
         lbl_803DC9C8 = i + 1;
         s = &lbl_8033A540[i];
-        s->v = 4;
-        s->f4 = idx;
-        s->f8 = x;
-        s->fc = y;
+        s->opcode = 4;
+        s->arg0 = idx;
+        s->arg1 = x;
+        s->arg2 = y;
     }
 }
 #pragma optimization_level reset
@@ -1808,14 +1808,14 @@ void gameTextRun(void)
     i = lbl_803DC9C8;
     while (i-- != 0)
     {
-        switch (cmd->v)
+        switch (cmd->opcode)
         {
         case 3:
             {
-                u8 c1 = cmd->f8;
-                u8 c2 = cmd->fc;
-                u8 c3 = cmd->f10;
-                lbl_803DC9A7 = cmd->f4;
+                u8 c1 = cmd->arg1;
+                u8 c2 = cmd->arg2;
+                u8 c3 = cmd->arg3;
+                lbl_803DC9A7 = cmd->arg0;
                 lbl_803DC9A6 = c1;
                 lbl_803DC9A5 = c2;
                 lbl_803DC9A4 = c3;
@@ -1823,56 +1823,56 @@ void gameTextRun(void)
             }
         case 4:
             {
-                int t1 = cmd->fc;
-                s16 t2 = cmd->f8;
-                textWindow = gTextBoxes + cmd->f4 * 0x20;
+                int t1 = cmd->arg2;
+                s16 t2 = cmd->arg1;
+                textWindow = gTextBoxes + cmd->arg0 * 0x20;
                 *(s16*)(textWindow + 0x18) = t2;
                 *(s16*)(textWindow + 0x1a) = t1;
                 break;
             }
         case 1:
-            textDisplayFn_800168dc(cmd->f4, cmd->f8);
+            textDisplayFn_800168dc(cmd->arg0, cmd->arg1);
             break;
         case 2:
-            gameTextFn_8001658c(cmd->f4, cmd->f8, cmd->fc);
+            gameTextFn_8001658c(cmd->arg0, cmd->arg1, cmd->arg2);
             break;
         case 5:
             if (gCurTextBox != NULL)
             {
-                gameTextRenderStrs(cmd->f4, ((u8*)gCurTextBox - gTextBoxes) / 0x20);
+                gameTextRenderStrs(cmd->arg0, ((u8*)gCurTextBox - gTextBoxes) / 0x20);
             }
             break;
         case 6:
-            gameTextRenderStrs(cmd->f4, cmd->f8);
+            gameTextRenderStrs(cmd->arg0, cmd->arg1);
             break;
         case 7:
             {
-                int t3 = cmd->f10;
-                int t2 = cmd->f8;
-                int t1 = cmd->f4;
+                int t3 = cmd->arg3;
+                int t2 = cmd->arg1;
+                int t1 = cmd->arg0;
                 textWindow = gTextBoxes + t2 * 0x20;
-                *(s16*)(textWindow + 0x18) = cmd->fc;
+                *(s16*)(textWindow + 0x18) = cmd->arg2;
                 *(s16*)(textWindow + 0x1a) = t3;
                 gameTextRenderStrs(t1, t2);
                 break;
             }
         case 8:
-            if (cmd->f4 == 0xff)
+            if (cmd->arg0 == 0xff)
             {
                 gCurTextBox = NULL;
             }
             else
             {
-                gCurTextBox = gTextBoxes + cmd->f4 * 0x20;
+                gCurTextBox = gTextBoxes + cmd->arg0 * 0x20;
             }
             break;
         case 9:
-            ((void (*)(void))cmd->f4)();
+            ((void (*)(void))cmd->arg0)();
             break;
         case 10:
             {
-                u16 b1 = cmd->f8;
-                lbl_803DC9AA = (u16)cmd->f4;
+                u16 b1 = cmd->arg1;
+                lbl_803DC9AA = (u16)cmd->arg0;
                 lbl_803DC9A8 = b1;
                 break;
             }
@@ -1881,28 +1881,28 @@ void gameTextRun(void)
             lbl_803DC9A8 = 0;
             break;
         case 12:
-            lbl_803DC984 = cmd->f4;
+            lbl_803DC984 = cmd->arg0;
             break;
         case 14:
             {
-                u8 e1 = cmd->f8;
-                u8 e2 = cmd->fc;
-                lbl_803DC992 = cmd->f4;
+                u8 e1 = cmd->arg1;
+                u8 e2 = cmd->arg2;
+                lbl_803DC992 = cmd->arg0;
                 lbl_803DC991 = e1;
                 lbl_803DC990 = e2;
                 break;
             }
         case 13:
             {
-                int sy = cmd->f8;
-                gGameTextShadowOffsetX = cmd->f4;
+                int sy = cmd->arg1;
+                gGameTextShadowOffsetX = cmd->arg0;
                 gGameTextShadowOffsetY = sy;
                 break;
             }
         case 15:
-            gameTextFonts = (TextFont*)(gameTextBase + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET + cmd->f4 * 0x28);
-            gameTextCharset = cmd->f4;
-            if (cmd->f4 == 2)
+            gameTextFonts = (TextFont*)(gameTextBase + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET + cmd->arg0 * 0x28);
+            gameTextCharset = cmd->arg0;
+            if (cmd->arg0 == 2)
             {
                 color = gGameTextClearColor;
                 hudDrawRect(0, 0, 0xa00, 0x780, &color);
@@ -2146,8 +2146,8 @@ typedef struct GameTextBox
     u8 style;
     s16 x;
     s16 y;
-    s16 unk18;
-    s16 unk1A;
+    s16 cursorX;
+    s16 cursorY;
     u16 flags;
     u8 alpha;
     u8 unk1F;
@@ -2190,8 +2190,8 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     int half;
     int rem;
 
-    savedX = ((GameTextBox*)box)->unk18;
-    savedY = ((GameTextBox*)box)->unk1A;
+    savedX = ((GameTextBox*)box)->cursorX;
+    savedY = ((GameTextBox*)box)->cursorY;
     f = ((GameTextBox*)box)->flags;
     if (f & 1)
     {
@@ -2315,8 +2315,8 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         boxDrawFn_8001c5ac(strPtr, boxId, box);
         break;
     }
-    ((GameTextBox*)box)->unk18 = savedX;
-    ((GameTextBox*)box)->unk1A = savedY;
+    ((GameTextBox*)box)->cursorX = savedX;
+    ((GameTextBox*)box)->cursorY = savedY;
 }
 
 extern int mmSetFreeDelay(int v);
