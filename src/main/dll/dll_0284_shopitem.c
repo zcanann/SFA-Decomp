@@ -23,6 +23,7 @@
 #include "main/sfa_shared_decls.h"
 
 #define SHOPITEM_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define SHOPITEM_OBJFLAG_UPDATE_DISABLED 0x8000
 #define PAD_BUTTON_A 0x100
 
 typedef struct ShopSparkleSpawn
@@ -292,7 +293,7 @@ void shopitem_update(int obj)
     if (b->flag_40)
     {
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SHOPITEM_OBJFLAG_UPDATE_DISABLED);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else if (b->flag_80)
@@ -318,7 +319,7 @@ void shopitem_update(int obj)
                 {
                     b->flag_40 = 1;
                     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
+                    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SHOPITEM_OBJFLAG_UPDATE_DISABLED);
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
                 ((ShopItemState*)state)->helpTextId = (s16)(
