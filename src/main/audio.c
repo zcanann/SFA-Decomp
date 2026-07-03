@@ -3248,3 +3248,6 @@ SfxTriggerCacheEntry gSfxTriggerLookupCache[16] = {
     { 0xFFFF, 0 },
     { 0xFFFF, 0 },
 };
+
+int gAudioStreamFadeTable[] = { 0, 2, 4 };
+char sDvdCancelStreamWarning[0x3C] = "WARNING:DVDCancelStreamAsync returned FALSE\012\000\000\000\000/streams/";
