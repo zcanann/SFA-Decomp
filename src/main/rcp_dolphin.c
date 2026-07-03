@@ -1318,7 +1318,6 @@ void textureFree(u8* tex)
 #pragma peephole reset
 
 #pragma scheduling on
-#pragma peephole off
 int textureCrazyPointerFollowFn_80054c30(int* p, int n)
 {
     int limit = *(u16*)((char*)p + 16);
@@ -1333,7 +1332,6 @@ int textureCrazyPointerFollowFn_80054c30(int* p, int n)
 }
 
 #pragma scheduling off
-#pragma peephole off
 void shaderInit(u8* def, void** out, u8* obj)
 {
     void** slot;
