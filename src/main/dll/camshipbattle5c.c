@@ -388,3 +388,5 @@ f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
     }
     return -t1 / (t2 - t1);
 }
+
+char sPathCamNeedTwoControlPointsError[] = "PATHCAM error: need at least two control points\n";

@@ -719,6 +719,7 @@ main/dll/dll_8010a104.c:
 
 main/dll/camshipbattle5c.c:
 	.text       start:0x8010A590 end:0x8010AEA8
+	.data       start:0x80319CB4 end:0x80319CE8
 
 main/dll/dll_0047_cameramodeteststrength.c:
 	.text       start:0x8010AEA8 end:0x8010BF08
