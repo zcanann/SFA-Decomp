@@ -424,8 +424,8 @@ int fn_80152370(int obj, int p2)
     ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
     ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-    *(u8*)(setup + 0x19) = 0;
-    *(s16*)(setup + 0x20) = 149;
+    ((Seq11EChildSetup*)setup)->unk19 = 0;
+    ((Seq11EChildSetup*)setup)->unk20 = 149;
     return (int)Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                 *(int*)&((GameObject*)obj)->anim.parent);
 }
