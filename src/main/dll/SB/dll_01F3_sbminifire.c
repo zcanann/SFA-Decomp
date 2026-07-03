@@ -63,7 +63,6 @@ extern f32 lbl_803E5934;
 extern f32 lbl_803E5938;
 extern f32 lbl_803E593C;
 
-void SB_FireBall_release(void);
 
 void SB_MiniFire_hitDetect(void)
 {
@@ -77,7 +76,6 @@ void SB_MiniFire_initialise(void)
 {
 }
 
-void ShipBattle_hitDetect(void);
 
 int SB_MiniFire_getExtraSize(void) { return 0x2; }
 int SB_MiniFire_getObjectTypeId(void) { return 0x0; }
@@ -179,7 +177,6 @@ void SB_MiniFire_update(GameObject* obj)
     }
 }
 
-void SB_SeqDoor_init(int* obj, int* def);
 
 /* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
  * and obj->_b8[3], stash v in obj->_b8[4]. */
