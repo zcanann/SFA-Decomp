@@ -8,6 +8,7 @@
 #include "main/resource.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+#define MAIN_OBJFLAG_HIDDEN 0x4000
 #define MAIN_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MAIN_OBJFLAG_RENDERED 0x800
 
@@ -269,7 +270,7 @@ void vfpflamepoint_init(int* obj, s8* def)
     d->noCheck = (u8) * (s16*)(def + 0x1c);
     d->showGameBit = *(s16*)(def + 0x1e);
     d->checkGameBit = *(s16*)(def + 0x20);
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (MAIN_OBJFLAG_HIDDEN | MAIN_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void vfpflamepoint_update(int obj)

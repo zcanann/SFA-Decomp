@@ -9,6 +9,7 @@
 #include "main/resource.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define LIGHT_OBJFLAG_HIDDEN 0x4000
 #define LIGHT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /*
@@ -324,7 +325,7 @@ void vfpblock1_init(int obj, int data)
     VfpPlatformState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
     state->gameBitId = *(s16*)(data + 0x1e);
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (LIGHT_OBJFLAG_HIDDEN | LIGHT_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void vfpplatform_init(int obj, int data)
@@ -440,7 +441,7 @@ void vfpdraghead_init(int obj, int data)
         ((GameObject*)obj)->anim.rootMotionScale =
             ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * lbl_803E6138;
     }
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (LIGHT_OBJFLAG_HIDDEN | LIGHT_OBJFLAG_HITDETECT_DISABLED);
     gVfpDragHeadResource = Resource_Acquire(0xA5, 1);
 }
 
