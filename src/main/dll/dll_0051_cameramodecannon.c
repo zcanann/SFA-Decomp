@@ -50,18 +50,6 @@ void CameraModeForceBehind_func05_nop(void)
 {
 }
 
-void fn_801101E4(void)
-{
-}
-
-void fn_80110C80(void)
-{
-}
-
-void fn_80110EC0(void)
-{
-}
-
 void CameraModeCannon_init(int* p1, int unused, int* p3)
 {
     CameraObject* camera = (CameraObject*)p1;
@@ -86,13 +74,6 @@ void CameraModeCannon_free(void)
     extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD5A0);
     lbl_803DD5A0 = NULL;
-}
-
-void fn_801101E8(void)
-{
-    extern void mm_free(u32); /* #57 */
-    mm_free((u32)lbl_803DD5B8);
-    lbl_803DD5B8 = NULL;
 }
 
 void CameraModeCannon_update(u8* obj)
