@@ -283,3 +283,11 @@ void CameraModeTitle_update(CameraObject* camera)
 
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
+
+CameraModeTitlePose gCamTitlePoseTable[5] = {
+    { -18848.0f, 29.5f, 28386.0f, 21592, 1456, 0 },
+    { -18845.0f, 21.0f, 28565.0f, 49876, 65040, 64626 },
+    { -18947.0f, 25.0f, 28509.0f, 13804, 1994, 0 },
+    { -18949.0f, 54.0f, 28324.0f, 26248, 65226, 0 },
+    { -18876.25f, 33.25548f, 28366.39f, 9419, 3496, 170 },
+};
