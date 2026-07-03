@@ -15,10 +15,6 @@
 #define NWMAMMOTH_OBJFLAG_RENDERED 0x800
 extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
-extern u32 FUN_8003a1c4();
-extern u32 fn_8003A328();
-extern u32 FUN_8003b1a4();
-extern u32 FUN_8003b280();
 extern u32 objAudioFn_8006ef38();
 extern u32 DAT_803274f4;
 extern f32 lbl_803E5EA4;
@@ -919,9 +915,7 @@ void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     ObjGroup_AddObject(obj, NW_MAMMOTH_GROUP_ID);
 }
 
-int nw_tricky_SeqFn(void);
 
-void nw_tricky_free(int obj);
 
 u8 gNwMammothPathSetupDataB[] =
 {
