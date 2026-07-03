@@ -236,7 +236,6 @@ void arwingandrossstuff_hitDetect(int obj)
     }
 }
 
-#pragma peephole off
 void arwingandrossstuff_update(int obj)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
@@ -360,7 +359,6 @@ void arwingandrossstuff_init(int obj, u8* setup)
     }
     ObjGroup_AddObject(obj, 2);
 }
-#pragma peephole reset
 
 void arwingandrossstuff_release(void)
 {
