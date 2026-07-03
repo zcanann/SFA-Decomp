@@ -596,11 +596,9 @@ void TrickyCurve_initialise(void)
 {
 }
 
-void sfxplayer_render(void);
 
 int TrickyCurve_getExtraSize(void) { return 0x14; }
 int TrickyCurve_getObjectTypeId(void) { return 0x0; }
-int sfxplayer_getExtraSize(void);
 
 void TrickyCurve_update(int* obj)
 {
