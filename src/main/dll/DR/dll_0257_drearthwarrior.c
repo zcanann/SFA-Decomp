@@ -593,7 +593,7 @@ int fn_802BC830(int obj, int p2, int p3)
     if (((GameObject*)obj)->anim.currentMoveProgress > GXInit_ClearColor &&
         ((GameObject*)obj)->anim.currentMoveProgress < GXInit_BlackColor &&
         ((BaddieState*)p3)->animSpeedC > *(f32*)((char*)((EarthWarriorSub*)p2)->configRow + 0x1c) - GXInit_WhiteColor &&
-        *(f32*)((char*)p3 + 0x298) > lbl_803E82FC &&
+        ((BaddieState*)p3)->inputMagnitude > lbl_803E82FC &&
         ((EarthWarriorSub*)p2)->frameCounter >= 0x96)
     {
         ((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b40 = 1;
