@@ -29,31 +29,10 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/modgfx.h"
 #include "main/sky_state.h"
-extern u64 FUN_80006824();
-extern u32 FUN_80017690();
-extern u32 FUN_80017698();
-extern u32 FUN_80017a88();
-extern int FUN_80017a98();
-extern u32 FUN_8002f6ac();
-extern int FUN_8002fc3c();
-extern u32 FUN_800305f8();
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void* ObjGroup_GetObjects();
-extern int ObjMsg_Pop();
-extern u32 ObjMsg_SendToObject();
 extern u32 ObjLink_DetachChild();
-extern u32 FUN_8006f7a0();
-extern int FUN_8007f924();
-extern u32 FUN_800e8630();
-extern int FUN_801149b8();
-extern int FUN_8020a468();
-extern u64 FUN_8028683c();
-extern u32 FUN_80286888();
-extern double FUN_80293900();
-extern u32 FUN_80294d40();
 extern u32 DAT_802c2a58;
 extern u32 DAT_802c2a5c;
 extern u32 DAT_802c2a60;
@@ -143,7 +122,6 @@ typedef struct BabyCloudRunnerState
 
 STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
-void cfguardian_release(void);
 
 /* Per-object extra state for the CloudRunner guardian
  * (cfguardian_getExtraSize == 0xa9c). */
@@ -216,11 +194,9 @@ void gcrobotlightbea_hitDetect(int obj)
         ((Bit80*)&sub->hitFlags)->top = 1;
     }
 }
-void cfperch_render(void);
 
 int gcrobotlightbea_getExtraSize(void) { return 0xc; }
 int gcrobotlightbea_getObjectTypeId(void) { return 0x0; }
-int cfperch_getExtraSize(void);
 
 u32 fn_801A0174(int* obj) { return (((GcRobotLightBeaState*)(int*)((GameObject*)obj)->extra)->hitFlags >> 7) & 1; }
 
@@ -268,7 +244,6 @@ void gcrobotlightbea_update(int* obj)
     }
 }
 
-void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void gcrobotlightbea_free(int* obj)
 {
@@ -283,4 +258,3 @@ void gcrobotlightbea_free(int* obj)
     }
 }
 
-void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
