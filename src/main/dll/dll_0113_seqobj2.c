@@ -78,6 +78,9 @@ STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 #define SEQOBJECT_FLAG_USE_TRIGGER_PARAM 0x10
 #define SEQOBJECT_FLAG_UNUSED_20 0x20
 
+#define SEQOBJECT_OBJFLAG_HIDDEN 0x4000
+#define SEQOBJECT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 void seqObject_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 0xf);
@@ -278,7 +281,7 @@ void seqobj2_init(int* obj, SeqObjectPlacement* def)
         }
     }
     ObjGroup_AddObject((u32)obj, 15);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SEQOBJECT_OBJFLAG_HIDDEN | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED));
 }
 
 int seqobj2_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
