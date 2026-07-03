@@ -3792,8 +3792,6 @@ void fn_8012C000(void)
 
 /* ===== EN v1.0 retargeted leaves ========================================== */
 /* EN v1.0 0x8012EBC8  size: 8b   s16 getter for cMenuSelectedItem. */
-#pragma scheduling off
-#pragma peephole off
 s16 cMenuGetSelectedItem(void)
 {
     return cMenuSelectedItem;
