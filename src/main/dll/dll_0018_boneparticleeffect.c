@@ -1497,16 +1497,16 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                 dx = dx - ((GameObject*)o)->anim.localPosX;
                 dy = dy - ((GameObject*)o)->anim.localPosY;
                 dz = dz - ((GameObject*)o)->anim.localPosZ;
-                dx = dx * 20.02f;
+                dx = dx * lbl_803DF4BC;
                 if (id == 0x1d || id == 0x1d)
                 {
-                    dy = lbl_803DF4BC * (lbl_803DF4C0 + dy);
+                    dy = *(f32*)&lbl_803DF4BC * (lbl_803DF4C0 + dy);
                 }
                 else
                 {
-                    dy = dy * 20.02f;
+                    dy = dy * lbl_803DF4BC;
                 }
-                dz = dz * 20.02f;
+                dz = dz * lbl_803DF4BC;
                 Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
                 k = 0;
                 pa = (f32*)(base + 0x90);
@@ -1515,25 +1515,26 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                 while (k < 4)
                 {
                     u8* idr;
+                    f32 sc;
                     id = *(u8*)(idp + gBoneParticleStageIndex * 5);
                     idr = base + id;
                     cls = idr[0x590];
                     if (cls == 0)
                     {
-                        s.vx = pa[0] * *(f32*)(base + id * 4 + 0x5d8);
-                        s.vy = pa[1] * *(f32*)(base + id * 4 + 0x5d8);
+                        s.vx = pa[0] * (sc = *(f32*)(base + id * 4 + 0x5d8));
+                        s.vy = pa[1] * sc;
                         s.vz = pa[2] * *(f32*)(base + id * 4 + 0x664);
                     }
                     else if (cls == 1)
                     {
-                        s.vx = pb[0] * *(f32*)(base + id * 4 + 0x5d8);
-                        s.vy = pb[1] * *(f32*)(base + id * 4 + 0x5d8);
+                        s.vx = pb[0] * (sc = *(f32*)(base + id * 4 + 0x5d8));
+                        s.vy = pb[1] * sc;
                         s.vz = pb[2] * *(f32*)(base + id * 4 + 0x664);
                     }
                     else if (cls == 2)
                     {
-                        s.vx = pc[0] * *(f32*)(base + id * 4 + 0x5d8);
-                        s.vy = pc[1] * *(f32*)(base + id * 4 + 0x5d8);
+                        s.vx = pc[0] * (sc = *(f32*)(base + id * 4 + 0x5d8));
+                        s.vy = pc[1] * sc;
                         s.vz = pc[2] * *(f32*)(base + id * 4 + 0x664);
                     }
                     Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
