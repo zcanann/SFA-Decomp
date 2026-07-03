@@ -126,18 +126,6 @@ int dbstealerworm_stateHandlerA03(int obj, int p);
 
 int dbstealerworm_stateHandlerA01(int obj, int p);
 
-/* dbstealerworm render: draw only when the visible flag is set. */
-void FUN_80204320(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0)
-    {
-        FUN_8003b818(obj);
-    }
-    return;
-}
-
-void fn_80204320(int obj);
-
 void dbholecontrol1_hitDetect(void)
 {
 }
