@@ -1428,7 +1428,6 @@ void dll_0B_initialise(void)
     }
 }
 
-#pragma peephole off
 void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
 {
     f32 fz;
@@ -1453,7 +1452,6 @@ void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
     gModgfxSpawnContext.byte5B = 0;
 }
 
-#pragma peephole reset
 
 void dll_0B_func0A(s16* p)
 {
