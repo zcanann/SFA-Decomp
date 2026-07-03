@@ -41,6 +41,20 @@
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/dll/objfsa.h"
 
+/*
+ * DusterState - file-local overlay naming the PER-FAMILY scratch that
+ * baddie_state.h leaves raw for the duster creatures. phaseTimer/decoyTimer
+ * are f32 per-frame countdown timers; turnDelta is the hooded-zyck per-frame
+ * rotY step.
+ */
+typedef struct DusterState {
+    u8 pad00[0x324];
+    f32 phaseTimer;   /* 0x324 */
+    f32 decoyTimer;   /* 0x328 */
+    u8 pad32C[0x338 - 0x32C];
+    u16 turnDelta;    /* 0x338 hooded-zyck per-frame rotY step */
+} DusterState;
+
 #pragma dont_inline on
 
 extern int getAngle(float y, float x);
@@ -386,7 +400,7 @@ void rachnopInit(u32 unused, int state)
     ((BaddieState*)state)->unk318 = lbl_803E2A04;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fb;
-    *(float*)(state + 0x324) = lbl_803E2A00;
+    ((DusterState*)state)->phaseTimer = lbl_803E2A00;
     ((BaddieState*)state)->seqEntryIndex = 0;
     ((BaddieState*)state)->inWhirlpoolGroup = 0;
     ((BaddieState*)state)->pathStep = fa;
@@ -532,7 +546,7 @@ void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int event
 
 void fn_80155F20(int obj, int state)
 {
-    *(float*)(state + 0x324) = lbl_803E2A60;
+    ((DusterState*)state)->phaseTimer = lbl_803E2A60;
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
         if (((BaddieState*)state)->seqEntryIndex == 1)
@@ -563,18 +577,18 @@ void fn_80156010(u32 obj, int state)
     u8 timerExpired;
 
     timerExpired = 0;
-    *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
-    if (*(float*)(state + 0x324) <= lbl_803E2A60)
+    ((DusterState*)state)->phaseTimer = ((DusterState*)state)->phaseTimer - timeDelta;
+    if (((DusterState*)state)->phaseTimer <= lbl_803E2A60)
     {
         timerExpired = 1;
-        *(float*)(state + 0x324) = *(f32 *)&lbl_803E2A60;
+        ((DusterState*)state)->phaseTimer = *(f32 *)&lbl_803E2A60;
     }
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
         if (((GameObject*)obj)->anim.currentMove == 4)
         {
             pollenFn_80155b10(obj, state);
-            *(float*)(state + 0x324) = lbl_803E2A80;
+            ((DusterState*)state)->phaseTimer = lbl_803E2A80;
             Baddie_SetMove(obj, state, 5, lbl_803E2A54, 0, 0);
         }
         else if ((((GameObject*)obj)->anim.currentMove == 5) && (timerExpired))
@@ -585,7 +599,7 @@ void fn_80156010(u32 obj, int state)
         else if (((GameObject*)obj)->anim.currentMove == 6)
         {
             Baddie_SetMove(obj, state, 2, lbl_803E2A54, 0, 0);
-            *(float*)(state + 0x324) = lbl_803E2A80;
+            ((DusterState*)state)->phaseTimer = lbl_803E2A80;
         }
         else if ((((GameObject*)obj)->anim.currentMove == 2) && (timerExpired) && ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
         {
@@ -616,7 +630,7 @@ void baddieInit_80156188(u32 unused, int state)
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fb;
     ((BaddieState*)state)->seqEntryIndex = 0;
-    *(float*)(state + 0x324) = lbl_803E2A60;
+    ((DusterState*)state)->phaseTimer = lbl_803E2A60;
     ((BaddieState*)state)->pathStep = fa;
     return;
 }
@@ -647,9 +661,9 @@ void fn_8015625C(u32 obj, int state)
     f32 moveSpeed;
     ObjHitsPriorityState* hitState;
 
-    if (*(float*)(state + 0x328) > lbl_803E2AA8)
+    if (((DusterState*)state)->decoyTimer > lbl_803E2AA8)
     {
-        *(float*)(state + 0x328) = lbl_803E2AAC;
+        ((DusterState*)state)->decoyTimer = lbl_803E2AAC;
     }
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
@@ -658,18 +672,18 @@ void fn_8015625C(u32 obj, int state)
     {
         Sfx_PlayFromObject(obj, SFXfox_cough4);
     }
-    *(float*)(state + 0x328) = *(float*)(state + 0x328) - timeDelta;
-    if (*(float*)(state + 0x328) <= lbl_803E2A98)
+    ((DusterState*)state)->decoyTimer = ((DusterState*)state)->decoyTimer - timeDelta;
+    if (((DusterState*)state)->decoyTimer <= lbl_803E2A98)
     {
         if ((((BaddieState*)state)->controlFlags & 0x600) != 0)
         {
             randVal = randomGetRange(0x96, 0xfa);
-            *(float*)(state + 0x328) = (float)(int)randVal;
+            ((DusterState*)state)->decoyTimer = (float)(int)randVal;
         }
         else
         {
             randVal = randomGetRange(600, 0x352);
-            *(float*)(state + 0x328) = (float)(int)randVal;
+            ((DusterState*)state)->decoyTimer = (float)(int)randVal;
         }
         Sfx_PlayFromObject(obj, SFXfoxcom_decoy);
     }
@@ -677,18 +691,18 @@ void fn_8015625C(u32 obj, int state)
     {
         ObjAnim_SetCurrentMove(obj, 3, lbl_803E2A98, *(u8*)(state + 0x323));
     }
-    if (*(float*)(state + 0x324) > lbl_803E2A98)
+    if (((DusterState*)state)->phaseTimer > lbl_803E2A98)
     {
-        *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
-        if (*(float*)(state + 0x324) <= lbl_803E2A98)
+        ((DusterState*)state)->phaseTimer = ((DusterState*)state)->phaseTimer - timeDelta;
+        if (((DusterState*)state)->phaseTimer <= lbl_803E2A98)
         {
-            *(float*)(state + 0x324) = lbl_803E2AB0;
+            ((DusterState*)state)->phaseTimer = lbl_803E2AB0;
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         }
     }
     else if ((((BaddieState*)state)->controlFlags & 0x400) != 0)
     {
-        *(float*)(state + 0x324) = lbl_803E2AB0;
+        ((DusterState*)state)->phaseTimer = lbl_803E2AB0;
     }
     if ((((BaddieState*)state)->controlFlags & 0x8000000) != 0)
     {
@@ -752,18 +766,18 @@ void fn_8015652C(u32 obj, int state)
     {
         Sfx_PlayFromObject(obj, SFXfox_cough4);
     }
-    *(float*)(state + 0x328) = *(float*)(state + 0x328) - timeDelta;
-    if (*(float*)(state + 0x328) <= lbl_803E2A98)
+    ((DusterState*)state)->decoyTimer = ((DusterState*)state)->decoyTimer - timeDelta;
+    if (((DusterState*)state)->decoyTimer <= lbl_803E2A98)
     {
         if ((((BaddieState*)state)->controlFlags & 0x600) != 0)
         {
             randVal = randomGetRange(0x96, 0xfa);
-            *(float*)(state + 0x328) = (float)(int)randVal;
+            ((DusterState*)state)->decoyTimer = (float)(int)randVal;
         }
         else
         {
             randVal = randomGetRange(600, 0x352);
-            *(float*)(state + 0x328) = (float)(int)randVal;
+            ((DusterState*)state)->decoyTimer = (float)(int)randVal;
         }
         Sfx_PlayFromObject(obj, SFXfoxcom_decoy);
     }
@@ -771,12 +785,12 @@ void fn_8015652C(u32 obj, int state)
     {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E2A98, *(u8*)(state + 0x323));
     }
-    if (*(float*)(state + 0x324) > lbl_803E2A98)
+    if (((DusterState*)state)->phaseTimer > lbl_803E2A98)
     {
-        *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
-        if (*(float*)(state + 0x324) <= lbl_803E2A98)
+        ((DusterState*)state)->phaseTimer = ((DusterState*)state)->phaseTimer - timeDelta;
+        if (((DusterState*)state)->phaseTimer <= lbl_803E2A98)
         {
-            *(float*)(state + 0x324) = lbl_803E2A98;
+            ((DusterState*)state)->phaseTimer = lbl_803E2A98;
         }
     }
     else
@@ -865,7 +879,7 @@ void wbInit(u32 unused, int state)
     ((BaddieState*)state)->unk322 = 2;
     ((BaddieState*)state)->unk31C = fa;
     ua = randomGetRange(0x78, 0x1e0);
-    *(float*)(state + 0x328) =
+    ((DusterState*)state)->decoyTimer =
         (float)(int)ua;
     return;
 }
@@ -1056,12 +1070,12 @@ void fn_80156DA0(int obj, int state)
     float sinYaw;
     float hitOut[22];
 
-    *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
-    if (*(float*)(state + 0x324) <= lbl_803E2B18)
+    ((DusterState*)state)->phaseTimer = ((DusterState*)state)->phaseTimer - timeDelta;
+    if (((DusterState*)state)->phaseTimer <= lbl_803E2B18)
     {
-        *(float*)(state + 0x324) = (float)(int)randomGetRange(0x3c, 0x78);
+        ((DusterState*)state)->phaseTimer = (float)(int)randomGetRange(0x3c, 0x78);
     }
-    if (lbl_803E2B18 != *(float*)(state + 0x328))
+    if (lbl_803E2B18 != ((DusterState*)state)->decoyTimer)
     {
         ObjHits_DisableObject(obj);
         if (((GameObject*)obj)->anim.currentMove != 5)
@@ -1071,7 +1085,7 @@ void fn_80156DA0(int obj, int state)
         else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
             ObjHits_EnableObject(obj);
-            *(float*)(state + 0x328) = lbl_803E2B18;
+            ((DusterState*)state)->decoyTimer = lbl_803E2B18;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
         resetting = true;
