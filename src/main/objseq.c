@@ -3444,8 +3444,7 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
     shortXrot = xrot;
     gObjSeqBgCmds[count * 3] = shortIndex;
     gObjSeqBgCmds[count * 3 + 2] = shortYrot;
-    gObjSeqBgCmds[count * 3 + 1] = shortXrot;
-    gObjSeqBgCmdCount++;
+    gObjSeqBgCmds[gObjSeqBgCmdCount++ * 3 + 1] = shortXrot;
 }
 
 void ObjSeq_objLoadAnimData(u8* seq, u8* obj)
