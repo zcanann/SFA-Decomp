@@ -185,10 +185,10 @@ int FUN_8007eb04(u32 slot)
 }
 
 u32
-FUN_8007f350(u64 param_1, double param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, char param_9
-             , u32 param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
+FUN_8007f350(u64 arg1, double arg2, u64 arg3, u64 arg4,
+             u64 arg5, u64 arg6, u64 arg7, u64 arg8, char arg9
+             , u32 arg10, u32 arg11, u32 arg12, u32 arg13,
+             u32 arg14, u32 arg15, u32 arg16)
 {
     return 0;
 }
