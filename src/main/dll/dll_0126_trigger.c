@@ -1011,3 +1011,20 @@ void Trigger_hitDetect(int obj)
         }
     }
 }
+
+ObjectDescriptor gTriggerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)Trigger_initialise,
+    (ObjectDescriptorCallback)Trigger_release,
+    0,
+    (ObjectDescriptorCallback)Trigger_init,
+    (ObjectDescriptorCallback)Trigger_update,
+    (ObjectDescriptorCallback)Trigger_hitDetect,
+    (ObjectDescriptorCallback)Trigger_render,
+    (ObjectDescriptorCallback)Trigger_free,
+    (ObjectDescriptorCallback)Trigger_getObjectTypeId,
+    Trigger_getExtraSize,
+};

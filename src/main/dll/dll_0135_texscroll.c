@@ -61,3 +61,20 @@ void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3F38);
 }
+
+ObjectDescriptor gTexscrollObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)texscroll_initialise,
+    (ObjectDescriptorCallback)texscroll_release,
+    0,
+    (ObjectDescriptorCallback)texscroll_init,
+    (ObjectDescriptorCallback)texscroll_update,
+    (ObjectDescriptorCallback)texscroll_hitDetect,
+    (ObjectDescriptorCallback)texscroll_render,
+    (ObjectDescriptorCallback)texscroll_free,
+    (ObjectDescriptorCallback)texscroll_getObjectTypeId,
+    texscroll_getExtraSize,
+};

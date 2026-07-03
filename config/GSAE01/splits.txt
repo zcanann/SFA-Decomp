@@ -1243,6 +1243,7 @@ main/dll/dll_0108_endobject.c:
 
 main/dll/dll_010D_portalspelldoor.c:
 	.text       start:0x80186498 end:0x80186704
+	.data       start:0x803217F8 end:0x80321830
 
 main/dll/dll_010C_lanternfirefly.c:
 	.text       start:0x80186704 end:0x801871C8
@@ -1349,6 +1350,7 @@ main/dll/dll_0134_texscroll2.c:
 
 main/dll/dll_0135_texscroll.c:
 	.text       start:0x801922E4 end:0x80192394
+	.data       start:0x80322140 end:0x80322178
 
 main/dll/dll_0136_waveanimator.c:
 	.text       start:0x80192394 end:0x80192A68
@@ -1400,6 +1402,7 @@ main/dll/mmp_gyservent.c:
 
 main/dll/dll_0126_trigger.c:
 	.text       start:0x801993B0 end:0x8019AA7C
+	.data       start:0x803224E0 end:0x80322518
 
 main/dll/dll_0145_cloudprisoncontrol.c:
 	.text       start:0x8019AA7C end:0x8019AE3C

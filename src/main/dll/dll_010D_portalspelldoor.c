@@ -3,6 +3,7 @@
  * TU = 0x80186498..0x80186704.
  */
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/dll/windlift107state_struct.h"
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
@@ -138,3 +139,20 @@ void portalspelldoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3A88);
 }
+
+ObjectDescriptor gPortalSpellDoorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)portalspelldoor_initialise,
+    (ObjectDescriptorCallback)portalspelldoor_release,
+    0,
+    (ObjectDescriptorCallback)portalspelldoor_init,
+    (ObjectDescriptorCallback)portalspelldoor_update,
+    (ObjectDescriptorCallback)portalspelldoor_hitDetect,
+    (ObjectDescriptorCallback)portalspelldoor_render,
+    (ObjectDescriptorCallback)portalspelldoor_free,
+    (ObjectDescriptorCallback)portalspelldoor_getObjectTypeId,
+    portalspelldoor_getExtraSize,
+};
