@@ -2855,13 +2855,13 @@ void dll_0B_func05(void)
             for (; emIdx < ((ModgfxEffectSlot*)eff)->emitterCount; emOff += 0x18, emIdx++)
             {
                 int flags;
-                if (((ModgfxEffectSlot*)eff)->frameIndex != *(u8*)(E9 + emOff + 0x16)) continue;
-                flags = *(int*)(E9 + emOff);
-                if ((flags & 0x1000) && *(f32*)(E9 + emOff + 0x4) > lbl_803DF430 && ((ModgfxEffectSlot*)eff)->frameIndex
+                if (((ModgfxEffectSlot*)eff)->frameIndex != ((ModgfxPendingSpawn*)(E9 + emOff))->sequenceIndex) continue;
+                flags = ((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource;
+                if ((flags & 0x1000) && ((ModgfxPendingSpawn*)(E9 + emOff))->posX > lbl_803DF430 && ((ModgfxEffectSlot*)eff)->frameIndex
                     > 0)
                 {
-                    ((ModgfxEffectSlot*)eff)->frameIndex = *(s16*)(E9 + emIdx * 0x18 + 0x14);
-                    *(f32*)(E9 + emIdx * 0x18 + 0x4) = *(f32*)(E9 + emIdx * 0x18 + 0x4) - lbl_803DF434;
+                    ((ModgfxEffectSlot*)eff)->frameIndex = ((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->param14;
+                    ((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->posX = ((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->posX - lbl_803DF434;
                     ((ModgfxEffectSlot*)eff)->frameDuration = -1;
                     break;
                 }
@@ -2870,8 +2870,8 @@ void dll_0B_func05(void)
                     if (((ModgfxEffectSlot*)eff)->unk13A != 0)
                     {
                         ((ModgfxEffectSlot*)eff)->unk13A = 0;
-                        *(int*)(E9 + emIdx * 0x18) = 0;
-                        *(int*)(E9 + emIdx * 0x18) = 0x20;
+                        ((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->modelOrResource = 0;
+                        ((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->modelOrResource = 0x20;
                         ((ModgfxEffectSlot*)eff)->frameDuration = -1;
                         reprocess = 1;
                         feFlag = 0;
@@ -2880,7 +2880,7 @@ void dll_0B_func05(void)
                     if (((ModgfxEffectSlot*)eff)->frameIndex > 0)
                     {
                         feFlag = 1;
-                        ((ModgfxEffectSlot*)eff)->frameIndex = *(s16*)(E9 + emIdx * 0x18 + 0x14);
+                        ((ModgfxEffectSlot*)eff)->frameIndex = ((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->param14;
                         ((ModgfxEffectSlot*)eff)->frameDuration = -1;
                         reprocess = 1;
                         break;
@@ -2955,41 +2955,41 @@ void dll_0B_func05(void)
                         int* list = *(int**)((char*)*(int**)&((GameObject*)o)->anim.hitReactState + 0x50);
                         if (list != NULL)
                         {
-                            if (*(s16*)((char*)list + 0x44) == (int)*(f32*)(E9 + emOff + 0x4))
+                            if (*(s16*)((char*)list + 0x44) == (int)((ModgfxPendingSpawn*)(E9 + emOff))->posX)
                             {
                                 Obj_FreeObject(o);
                                 *(int*)eff = 0;
-                                *(int*)(E9 + emIdx * 0x18) ^= 0x10000000;
-                                if (*(f32*)(E9 + emIdx * 0x18 + 0xc) >= lbl_803DF430 && *(int**)&((ModgfxEffectSlot*)
+                                ((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->modelOrResource ^= 0x10000000;
+                                if (((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->posZ >= lbl_803DF430 && *(int**)&((ModgfxEffectSlot*)
                                     eff)->sourceObj != NULL)
                                 {
                                     (*gPartfxInterface)->spawnObject(
                                         *(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
-                                        (int)*(f32*)(E9 + emIdx * 0x18 + 0xc),
+                                        (int)((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->posZ,
                                         &tmpl, 0x200001, -1, q);
                                 }
-                                ((ModgfxEffectSlot*)eff)->pendingFrameIdx = *(f32*)(E9 + emIdx * 0x18 + 0x8);
+                                ((ModgfxEffectSlot*)eff)->pendingFrameIdx = ((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->posY;
                                 break;
                             }
                         }
                     }
                 }
                 ObjList_GetObjects(&objIdx, &objCount);
-                if (*(int*)(E9 + emOff) & 0x2)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x2)
                 {
                     fn_800A0C78(eff, E9 + emOff, active, cntC);
                     cntC++;
                 }
-                if (*(int*)(E9 + emOff) & 0x4)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x4)
                 {
                     fn_800A0AB4(eff, E9 + emOff, active, cntA);
                     cntA++;
                 }
-                if (*(int*)(E9 + emOff) & 0x8)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x8)
                 {
                     ((ExpFn4)fn_800A0524)(eff, E9 + emOff, active, 0);
                 }
-                if (*(int*)(E9 + emOff) & 0x100)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x100)
                 {
                     char* em = E9 + emOff;
                     ((ModgfxEffectSlot*)eff)->rotOffsetZ += (s16)(*(f32*)(em +
@@ -2999,22 +2999,22 @@ void dll_0B_func05(void)
                     ((ModgfxEffectSlot*)eff)->rotOffsetX += (s16)(*(f32*)(em +
                         0xc) * gModgfxMotionStep);
                 }
-                if (*(int*)(E9 + emOff) & 0x80)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x80)
                 {
                     ((ExpFn4)modgfx_stepS16VectorLerp)(eff, E9 + emOff, active, 0);
                 }
-                if (*(int*)(E9 + emOff) & 0x8000000)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x8000000)
                 {
-                    *(f32*)(E9 + emOff + 0xc) = randomGetRange(0, 0xffff);
+                    ((ModgfxPendingSpawn*)(E9 + emOff))->posZ = randomGetRange(0, 0xffff);
                     ((ExpFn4)modgfx_stepS16VectorLerp)(eff, E9 + emOff, active, 0);
                 }
-                if (*(int*)(E9 + emOff) & 0x4000)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x4000)
                 {
                     ((ExpFn4)fn_800A02DC)(eff, E9 + emOff, active, 0);
                 }
-                if ((*(int*)(E9 + emOff) & 0x10000) && active != 0)
+                if ((((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x10000) && active != 0)
                 {
-                    if (*(s16*)(E9 + emOff + 0x14) == -1)
+                    if (((ModgfxPendingSpawn*)(E9 + emOff))->param14 == -1)
                     {
                         Sfx_StopObjectChannel(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj, 0x40);
                     }
@@ -3024,14 +3024,14 @@ void dll_0B_func05(void)
                                            (u16) * (s16*)(E9 + emOff + 0x14));
                     }
                 }
-                if (*(int*)(E9 + emOff) & 0x100000)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x100000)
                 {
                     if (active == 1)
                     {
                         if (((ModgfxEffectSlot*)eff)->frameDuration != 0)
                         {
                             ((ModgfxEffectSlot*)eff)->alphaDelta =
-                                (*(f32*)(E9 + emOff + 0x4) - (f32)(u32)
+                                (((ModgfxPendingSpawn*)(E9 + emOff))->posX - (f32)(u32)
                             (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha
                             )
                             /
@@ -3042,7 +3042,7 @@ void dll_0B_func05(void)
                         else
                         {
                             ((ModgfxEffectSlot*)eff)->alphaDelta =
-                                *(f32*)(E9 + emOff + 0x4) - (f32)(u32)
+                                ((ModgfxPendingSpawn*)(E9 + emOff))->posX - (f32)(u32)
                             (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha;
                             ((ModgfxEffectSlot*)eff)->alphaCurrent = lbl_803DF430;
                         }
@@ -3059,11 +3059,11 @@ void dll_0B_func05(void)
                     }
                     (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha = ((ModgfxEffectSlot*)eff)->alphaCurrent;
                 }
-                if (*(int*)(E9 + emOff) & 0x400000)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x400000)
                 {
                     ((ExpFn4)fn_800A081C)(eff, E9 + emOff, active, 0);
                 }
-                if (*(int*)(E9 + emOff) & 0x80000000)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x80000000)
                 {
                     char* em = E9 + emOff;
                     ((ModgfxEffectSlot*)eff)->motionOffsetX = *(f32*)(em + 0x4) * gModgfxMotionStep + ((ModgfxEffectSlot*)
@@ -3073,47 +3073,47 @@ void dll_0B_func05(void)
                     ((ModgfxEffectSlot*)eff)->motionOffsetZ = *(f32*)(em + 0xc) * gModgfxMotionStep + ((ModgfxEffectSlot*)
                         eff)->motionOffsetZ;
                 }
-                if (*(int*)(E9 + emOff) & 0x800000)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x800000)
                 {
-                    if ((*(int*)(E9 + emOff) & 0x1000000) && lbl_803DF430 == *(f32*)(E9 + emOff + 0x8))
+                    if ((((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x1000000) && lbl_803DF430 == ((ModgfxPendingSpawn*)(E9 + emOff))->posY)
                     {
-                        for (k = 0; k < (int)*(f32*)(E9 + emOff + 0x4); k++)
+                        for (k = 0; k < (int)((ModgfxPendingSpawn*)(E9 + emOff))->posX; k++)
                         {
-                            if (randomGetRange(0, (int)*(f32*)(E9 + emOff + 0xc)) == 0)
+                            if (randomGetRange(0, (int)((ModgfxPendingSpawn*)(E9 + emOff))->posZ) == 0)
                             {
                                 if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                                 {
                                     (*gPartfxInterface)->spawnObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
-                                                                     *(s16*)(E9 + emOff + 0x14), NULL, 0x10001, -1,
+                                                                     ((ModgfxPendingSpawn*)(E9 + emOff))->param14, NULL, 0x10001, -1,
                                                                      NULL);
                                 }
                                 else
                                 {
                                     (*gPartfxInterface)->spawnObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
-                                                                     *(s16*)(E9 + emOff + 0x14), NULL, 0x10001, -1,
+                                                                     ((ModgfxPendingSpawn*)(E9 + emOff))->param14, NULL, 0x10001, -1,
                                                                      NULL);
                                 }
                             }
                         }
                     }
-                    else if (lbl_803DF430 == *(f32*)(E9 + emOff + 0x8))
+                    else if (lbl_803DF430 == ((ModgfxPendingSpawn*)(E9 + emOff))->posY)
                     {
-                        for (k = 0; k < (int)*(f32*)(E9 + emOff + 0x4); k++)
+                        for (k = 0; k < (int)((ModgfxPendingSpawn*)(E9 + emOff))->posX; k++)
                         {
                             if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                             {
                                 (*gPartfxInterface)->spawnObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
-                                                                 *(s16*)(E9 + emOff + 0x14), eff + 3, 0x10002,
+                                                                 ((ModgfxPendingSpawn*)(E9 + emOff))->param14, eff + 3, 0x10002,
                                                                  -1, NULL);
                             }
                             else
                             {
                                 (*gPartfxInterface)->spawnObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
-                                                                 *(s16*)(E9 + emOff + 0x14), NULL, 0x10002, -1, NULL);
+                                                                 ((ModgfxPendingSpawn*)(E9 + emOff))->param14, NULL, 0x10002, -1, NULL);
                             }
                         }
                     }
-                    else if (lbl_803DF434 == *(f32*)(E9 + emOff + 0x8))
+                    else if (lbl_803DF434 == ((ModgfxPendingSpawn*)(E9 + emOff))->posY)
                     {
                         if ((((ModgfxEffectSlot*)eff)->sourceFlags & 1) == 0)
                         {
@@ -3126,7 +3126,7 @@ void dll_0B_func05(void)
                             if (*(int**)&((ModgfxEffectSlot*)eff)->sourceObj != NULL)
                             {
                                 (*gPartfxInterface)->spawnObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
-                                                                 *(s16*)(E9 + emOff + 0x14), &tmpl, 0x10001, -1, NULL);
+                                                                 ((ModgfxPendingSpawn*)(E9 + emOff))->param14, &tmpl, 0x10001, -1, NULL);
                             }
                         }
                         else
@@ -3137,15 +3137,15 @@ void dll_0B_func05(void)
                             if (*(int**)&((ModgfxEffectSlot*)eff)->sourceObj != NULL)
                             {
                                 (*gPartfxInterface)->spawnObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
-                                                                 *(s16*)(E9 + emOff + 0x14), &tmpl, 0x10001, -1, NULL);
+                                                                 ((ModgfxPendingSpawn*)(E9 + emOff))->param14, &tmpl, 0x10001, -1, NULL);
                             }
                         }
                     }
                 }
-                if (*(int*)(E9 + emOff) & 0x4000000)
+                if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x4000000)
                 {
-                    res = Resource_Acquire((u16)(*(s16*)(E9 + emOff + 0x14) + 0x58), 1);
-                    if (*(int*)(E9 + emOff) & 0x1000000)
+                    res = Resource_Acquire((u16)(((ModgfxPendingSpawn*)(E9 + emOff))->param14 + 0x58), 1);
+                    if (((ModgfxPendingSpawn*)(E9 + emOff))->modelOrResource & 0x1000000)
                     {
                         for (k = 0; k < (int)*(f32*)(E9 + (emOff + 0x4)); k++)
                         {
