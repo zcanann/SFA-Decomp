@@ -1270,8 +1270,6 @@ void boneParticleEffect_func03_nop(void)
 {
 }
 
-void partfx_onMapSetup(void);
-
 ObjectDescriptor11 projgfx_funcs = {
     0,
     0,
