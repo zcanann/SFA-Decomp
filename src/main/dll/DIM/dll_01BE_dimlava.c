@@ -170,7 +170,6 @@ int lavaball1be_getObjectTypeId(int* obj)
 
 u32 lavaball1be_func11(int* obj) { return *((u8*)(int*)((GameObject*)obj)->extra + 0x10) & LAVA1BE_FLAG_INACTIVE; }
 
-int fn_801B0784(int obj, int delta);
 
 void lavaball1be_free(int obj)
 {
