@@ -8,6 +8,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/objlib.h"
 #include "main/sky_interface.h"
+#include "main/object_descriptor.h"
 
 #define TUMBLEWEED_OBJFLAG_RENDERED 0x800
 
@@ -708,3 +709,31 @@ void tumbleweed_updateTargetedStateMachine(int obj)
         }
     }
 }
+
+u8 gTumbleweedCollisionPoint[0xc] = { 0 };
+
+ObjectDescriptor16WithPadding gTumbleweedObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_16_SLOTS,
+        0,
+        0,
+        0,
+        (ObjectDescriptorCallback)tumbleweed_init,
+        (ObjectDescriptorCallback)tumbleweed_update,
+        0,
+        (ObjectDescriptorCallback)tumbleweed_render,
+        (ObjectDescriptorCallback)tumbleweed_free,
+        0,
+        tumbleweed_getExtraSize,
+        (ObjectDescriptorCallback)tumbleweed_setScale,
+        (ObjectDescriptorCallback)tumbleweed_func0B,
+        (ObjectDescriptorCallback)tumbleweed_modelMtxFn,
+        (ObjectDescriptorCallback)tumbleweed_render2,
+        (ObjectDescriptorCallback)tumbleweed_func0E,
+        (ObjectDescriptorCallback)tumbleweed_func0F,
+    },
+    0,
+};
