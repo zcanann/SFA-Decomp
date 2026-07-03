@@ -2580,3 +2580,24 @@ int Effect2_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     return spawnResult;
 }
 #undef FILL338
+
+EmitterCfg gEffect2VelocityRangeTable =
+{
+    {
+        { 0.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f },
+        { 0.01f, 0.0f, 0.0f },
+    },
+    { 10.0f, 0.0f, 0.0f },
+    517.0f,
+    { 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0 },
+    { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 },
+    0xFF,
+    0xFF,
+    { 0x00, 0x00 },
+};
