@@ -314,7 +314,6 @@ extern int mapBlockRender_setShader(int a, int* obj, int* state);
 extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
 
 #pragma push
-#pragma scheduling off
 void renderMapBlock(int* o, u8 type)
 {
     int state[5];
