@@ -54,11 +54,9 @@ void dimwooddoor2_initialise(void)
 {
 }
 
-void dll_1CE_hitDetect(void);
 
 int dimwooddoor2_getExtraSize(void) { return 0xc; }
 int dimwooddoor2_getObjectTypeId(void) { return 0x0; }
-int dll_1CE_getExtraSize(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -68,7 +66,6 @@ void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E49D0);
 }
 
-void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dimwooddoor2_init(u8* obj, u8* params)
 {
@@ -93,7 +90,6 @@ void dimwooddoor2_init(u8* obj, u8* params)
     }
 }
 
-void dll_1CE_init(u8* obj, u8* params);
 
 void dimwooddoor2_update(int* obj)
 {
