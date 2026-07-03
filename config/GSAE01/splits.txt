@@ -2552,6 +2552,7 @@ main/dll/dll_02B2_dustmotesou.c:
 
 main/dll/dll_02B3_vortex.c:
 	.text       start:0x80237808 end:0x802383E0
+	.data       start:0x8032BE20 end:0x8032BE50
 
 main/dll/dll_02B4_cntcounter.c:
 	.text       start:0x802383E0 end:0x8023852C

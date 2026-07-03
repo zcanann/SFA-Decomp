@@ -327,3 +327,9 @@ void vortex_release(void)
 void vortex_initialise(void)
 {
 }
+
+f32 gVortexScaleParams[] = {
+    0.8f, 1.0f, 1.2f, 0.7f,
+    0.8f, 0.9f, 1.0f, 1.2f,
+    1.4f, 0.6f, 0.4f, 0.2f,
+};
