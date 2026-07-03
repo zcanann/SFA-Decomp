@@ -17145,6 +17145,8 @@ int fn_802A16CC(int obj, int state, f32 fv)
         break;
     }
     {
+        f32 w;
+        f32 py;
         f32 cx = ((GameObject*)obj)->anim.localPosX;
         f32 cy;
         f32 cz = ((GameObject*)obj)->anim.localPosZ;
@@ -17158,11 +17160,10 @@ int fn_802A16CC(int obj, int state, f32 fv)
             break;
         case 0x37:
             {
-                f32 w = ((GameObject*)obj)->anim.currentMoveProgress;
+                w = ((GameObject*)obj)->anim.currentMoveProgress;
                 cx = w * (inner->savedPosX - cx) + cx;
-                cy = (lbl_803E7EE0 - w) *
-                    (inner->moveStartPosY - ((GameObject*)obj)->anim.localPosY) +
-                    ((GameObject*)obj)->anim.localPosY;
+                py = ((GameObject*)obj)->anim.localPosY;
+                cy = (lbl_803E7EE0 - w) * (inner->moveStartPosY - py) + py;
                 czOut = w * (inner->savedPosZ - cz) + cz;
             }
             break;
