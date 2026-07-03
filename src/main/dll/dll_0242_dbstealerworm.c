@@ -1589,7 +1589,7 @@ int dbstealerworm_stateHandlerA0B(int obj, int baddie, f32 t)
     objs = ObjGroup_GetObjects(3, &cnt2);
     for (i = 0; i < cnt2; i++)
     {
-        if (*(s16*)(*objs + 0x46) == 0x539)
+        if (((GameObject*)*objs)->anim.seqId == 0x539)
         {
             if ((u32)(**(int (**)(int, int, int))(*(int*)(*(int*)(*objs + 0x68)) + 0x24))(*objs, 0x83, 0) == q)
             {
@@ -2421,7 +2421,7 @@ int dbstealerworm_stateHandlerA0C(int obj, int baddie, f32 t)
     {
         if ((u32)best != obj)
         {
-            if (*(s16*)(best + 0x46) == 0x539)
+            if (((GameObject*)best)->anim.seqId == 0x539)
             {
                 *(int*)&((BaddieState*)baddie)->targetObj = best;
                 if (randomGetRange(0, n) == 0)
