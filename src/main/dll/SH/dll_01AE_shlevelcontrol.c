@@ -24,9 +24,6 @@
 #include "main/audio/music_trigger_ids.h"
 extern void envFxActFn_800887f8(u8 value);
 extern int mapUnload(int mapId, int flags);
-extern u64 FUN_80286838();
-extern u32 FUN_80286884();
-extern u32 countLeadingZeros();
 extern char sSPShopNumBloopsFormat[];
 extern f32 lbl_803E54B0;
 extern f32 lbl_803E54B4;
