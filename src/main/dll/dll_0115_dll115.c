@@ -32,6 +32,9 @@ enum
 /* placement+0x39 flag: start parked instances at the finishing step */
 #define DLL115_PLACEMENT_FINISH_FLAG 0x10
 
+#define DLL115_OBJFLAG_HIDDEN 0x4000
+#define DLL115_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 void dll_115_hitDetect_nop(void)
 {
 }
@@ -161,7 +164,7 @@ void dll_115_init(s16* obj, int mapData)
     state = ((GameObject*)obj)->extra;
     *obj = (s16)(((Dll115Placement*)mapData)->rotByte << 8);
     ((GameObject*)obj)->animEventCallback = dll_115_seqFn;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (DLL115_OBJFLAG_HIDDEN | DLL115_OBJFLAG_HITDETECT_DISABLED);
     ObjGroup_AddObject((int)obj, 0xf);
     step = 0;
     p = (s16*)mapData;
