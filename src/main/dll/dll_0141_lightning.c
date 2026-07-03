@@ -46,12 +46,12 @@ typedef struct LightningPlacement
 void lightning_free(u8* obj, int p2)
 {
     u8* state = ((GameObject*)obj)->extra;
-    void* h;
+    void* handle;
     ObjGroup_RemoveObject(obj, MMP_LIGHTNING_OBJGROUP);
-    h = *(void**)state;
-    if (h != NULL)
+    handle = *(void**)state;
+    if (handle != NULL)
     {
-        mm_free(h);
+        mm_free(handle);
     }
 }
 
