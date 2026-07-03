@@ -1189,3 +1189,5 @@ int ObjAnim_SetCurrentMove(int objAnimHandle, int moveId, f32 moveProgress, int 
     state->framePhase = moveProgress * state->frameLength;
     return 0;
 }
+
+char gObjAnimMissingCachedMoveWarning[] = "<objanim.c -- setBlendMove> WARNING tried to load anim -1 from cache modno %d\n";
