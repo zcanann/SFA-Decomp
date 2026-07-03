@@ -2260,51 +2260,51 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     for (slot = 0; slot < PARTFX_ACTIVE_EFFECT_COUNT; slot++)
     {
         if (p[slot] == NULL) continue;
-        if (*(s16*)((char*)p[slot] + 0x10c) == -1) continue;
+        if (((PartfxEffectState*)p[slot])->sequenceId == -1) continue;
         if (a3)
         {
-            if ((*(int*)((char*)p[slot] + 0xa4) & 0x2000) == 0) continue;
+            if (((int)((PartfxEffectState*)p[slot])->flags & 0x2000) == 0) continue;
         }
         if (a3)
         {
-            if (*(void**)((char*)p[slot] + 4) != a4) continue;
+            if (((PartfxEffectState*)p[slot])->sourceObject != a4) continue;
         }
         if (!a3)
         {
-            if (*(int*)((char*)p[slot] + 0xa4) & 0x2000) continue;
+            if ((int)((PartfxEffectState*)p[slot])->flags & 0x2000) continue;
         }
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x800)
+        if ((int)((PartfxEffectState*)p[slot])->flags & 0x800)
         {
-            *(u8*)((char*)p[slot] + 0x13e) = 0;
+            ((PartfxEffectState*)p[slot])->frameUpdated = 0;
         }
         aligned = 0;
-        buf1 = *(void**)((char*)p[slot] + (int)*(u8*)((char*)p[slot] + 0x130) * 4 + 0x78);
-        buf2 = *(void**)((char*)p[slot] + (int)*(u8*)((char*)p[slot] + 0x130) * 4 + 0x84);
+        buf1 = ((PartfxEffectState*)p[slot])->vertexBuffers[((PartfxEffectState*)p[slot])->activeVertexBufferIndex];
+        buf2 = ((PartfxEffectState*)p[slot])->colorBuffers[((PartfxEffectState*)p[slot])->activeVertexBufferIndex];
         xf.pos[0] = lbl_803DF430;
         xf.pos[1] = lbl_803DF430;
         xf.pos[2] = lbl_803DF430;
         xf.scale = lbl_803DF434;
         xf.ang[2] = 0;
         xf.ang[1] = 0;
-        pos[0] = *(f32*)((char*)p[slot] + 0x60);
-        pos[1] = *(f32*)((char*)p[slot] + 0x64);
-        pos[2] = *(f32*)((char*)p[slot] + 0x68);
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x4)
+        pos[0] = ((PartfxEffectState*)p[slot])->drawPosX;
+        pos[1] = ((PartfxEffectState*)p[slot])->drawPosY;
+        pos[2] = ((PartfxEffectState*)p[slot])->drawPosZ;
+        if ((int)((PartfxEffectState*)p[slot])->flags & 0x4)
         {
             if (lbl_803DF430 == pos[2] + (pos[0] + pos[1]))
             {
                 aligned = 1;
             }
         }
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x4)
+        if ((int)((PartfxEffectState*)p[slot])->flags & 0x4)
         {
             if (!aligned)
             {
-                if (*(void**)((char*)p[slot] + 4) != NULL)
+                if (((PartfxEffectState*)p[slot])->sourceObject != NULL)
                 {
-                    xf.ang[0] = *(s16*)(*(char**)((char*)p[slot] + 4));
-                    xf.ang[1] = *(s16*)(*(char**)((char*)p[slot] + 4) + 2);
-                    xf.ang[2] = *(s16*)(*(char**)((char*)p[slot] + 4) + 4);
+                    xf.ang[0] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
+                    xf.ang[1] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
+                    xf.ang[2] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
                     vecRotateZXY(&xf.ang[0], &pos[0]);
                 }
             }
@@ -2312,20 +2312,20 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         rot[0] = lbl_803DF430;
         rot[1] = lbl_803DF430;
         rot[2] = lbl_803DF430;
-        if ((*(int*)((char*)p[slot] + 0xa4) & 1) == 0)
+        if (((int)((PartfxEffectState*)p[slot])->flags & 1) == 0)
         {
-            if (*(void**)((char*)p[slot] + 4) != NULL)
+            if (((PartfxEffectState*)p[slot])->sourceObject != NULL)
             {
-                rot[0] = *(f32*)(*(char**)((char*)p[slot] + 4) + 0x18);
-                rot[1] = *(f32*)(*(char**)((char*)p[slot] + 4) + 0x1c);
-                rot[2] = *(f32*)(*(char**)((char*)p[slot] + 4) + 0x20);
+                rot[0] = *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x18);
+                rot[1] = *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x1c);
+                rot[2] = *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x20);
             }
             else
             {
-                rot[0] = *(f32*)((char*)p[slot] + 0x18);
-                rot[1] = *(f32*)((char*)p[slot] + 0x1c);
-                rot[2] = *(f32*)((char*)p[slot] + 0x20);
-                Obj_RotateLocalOffsetByYaw((f32*)((char*)p[slot] + 0x18), &rot[0], *(s8*)((char*)p[slot] + 0x135));
+                rot[0] = ((PartfxEffectState*)p[slot])->sourcePosX;
+                rot[1] = ((PartfxEffectState*)p[slot])->sourcePosY;
+                rot[2] = ((PartfxEffectState*)p[slot])->sourcePosZ;
+                Obj_RotateLocalOffsetByYaw(&((PartfxEffectState*)p[slot])->sourcePosX, &rot[0], ((PartfxEffectState*)p[slot])->sourceYawIndex);
             }
         }
         if (rot[0] > gModgfxOffsetRangeMax || rot[0] < gModgfxOffsetRangeMin)
@@ -2343,45 +2343,45 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         xf.pos[0] = rot[0] + pos[0];
         xf.pos[1] = rot[1] + pos[1];
         xf.pos[2] = rot[2] + pos[2];
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x400000)
+        if ((int)((PartfxEffectState*)p[slot])->flags & 0x400000)
         {
-            dscale = lbl_803DF458 * *(f32*)((char*)p[slot] + 0xd4);
+            dscale = lbl_803DF458 * ((PartfxEffectState*)p[slot])->renderScale;
             xf.scale = dscale + dscale / (int)randomGetRange(1, 10);
         }
         else
         {
-            xf.scale = lbl_803DF45C * *(f32*)((char*)p[slot] + 0xd4);
+            xf.scale = lbl_803DF45C * ((PartfxEffectState*)p[slot])->renderScale;
         }
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x80000)
+        if ((int)((PartfxEffectState*)p[slot])->flags & 0x80000)
         {
-            xf.ang[2] = *(s16*)(*(char**)((char*)p[slot] + 4) + 4);
-            xf.ang[1] = *(s16*)(*(char**)((char*)p[slot] + 4) + 2);
-            xf.ang[0] = *(s16*)(*(char**)((char*)p[slot] + 4));
+            xf.ang[2] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
+            xf.ang[1] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
+            xf.ang[0] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
         }
-        else if (aligned && *(void**)((char*)p[slot] + 4) != NULL)
+        else if (aligned && ((PartfxEffectState*)p[slot])->sourceObject != NULL)
         {
-            xf.ang[2] = *(s16*)((char*)p[slot] + 0x106) + *(s16*)(*(char**)((char*)p[slot] + 4) + 4);
-            xf.ang[1] = *(s16*)((char*)p[slot] + 0x108) + *(s16*)(*(char**)((char*)p[slot] + 4) + 2);
-            xf.ang[0] = *(s16*)((char*)p[slot] + 0x10a) + *(s16*)(*(char**)((char*)p[slot] + 4));
+            xf.ang[2] = ((PartfxEffectState*)p[slot])->rotOffsetZ + *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
+            xf.ang[1] = ((PartfxEffectState*)p[slot])->rotOffsetY + *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
+            xf.ang[0] = ((PartfxEffectState*)p[slot])->rotOffsetX + *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
         }
         else if (aligned)
         {
-            xf.ang[2] = *(s16*)((char*)p[slot] + 0x106) + *(s16*)((char*)p[slot] + 0x10);
-            xf.ang[1] = *(s16*)((char*)p[slot] + 0x108) + *(s16*)((char*)p[slot] + 0xe);
-            xf.ang[0] = *(s16*)((char*)p[slot] + 0x10a) + *(s16*)((char*)p[slot] + 0xc);
+            xf.ang[2] = ((PartfxEffectState*)p[slot])->rotOffsetZ + ((PartfxEffectState*)p[slot])->sourceRotZ;
+            xf.ang[1] = ((PartfxEffectState*)p[slot])->rotOffsetY + ((PartfxEffectState*)p[slot])->sourceRotY;
+            xf.ang[0] = ((PartfxEffectState*)p[slot])->rotOffsetX + ((PartfxEffectState*)p[slot])->sourceRotX;
         }
         else
         {
-            xf.ang[2] = *(s16*)((char*)p[slot] + 0x106);
-            xf.ang[1] = *(s16*)((char*)p[slot] + 0x108);
-            xf.ang[0] = *(s16*)((char*)p[slot] + 0x10a);
+            xf.ang[2] = ((PartfxEffectState*)p[slot])->rotOffsetZ;
+            xf.ang[1] = ((PartfxEffectState*)p[slot])->rotOffsetY;
+            xf.ang[0] = ((PartfxEffectState*)p[slot])->rotOffsetX;
         }
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x1000)
+        if ((int)((PartfxEffectState*)p[slot])->flags & 0x1000)
         {
-            if (*(void**)((char*)p[slot] + 4) != NULL)
+            if (((PartfxEffectState*)p[slot])->sourceObject != NULL)
             {
-                dirX = *(f32*)((char*)view + 0x44) - *(f32*)(*(char**)((char*)p[slot] + 4) + 0x18);
-                dirZ = *(f32*)&((GameObject*)view)->anim.placementData - *(f32*)(*(char**)((char*)p[slot] + 4) + 0x20);
+                dirX = *(f32*)((char*)view + 0x44) - *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x18);
+                dirZ = *(f32*)&((GameObject*)view)->anim.placementData - *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x20);
                 dscale = sqrtf(dirX * dirX + dirZ * dirZ);
                 if (dscale != lbl_803DF430)
                 {
@@ -2398,49 +2398,49 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         mtx44Transpose(mtxB, mtxA);
         PSMTXConcat((f32*)Camera_GetViewMatrix(), mtxA, mtxA);
         GXLoadPosMtxImm(mtxA, 0);
-        tex = *(void**)((char*)p[slot] + 0x98);
+        tex = ((PartfxEffectState*)p[slot])->textureResource;
         if (tex != NULL)
         {
             texCount = (u8)(*(u16*)((char*)tex + 0x10) >> 8);
         }
-        if (tex != NULL && *(u8*)((char*)p[slot] + 0x132) != 0)
+        if (tex != NULL && ((PartfxEffectState*)p[slot])->textureFrameTimer != 0)
         {
-            *(u8*)((char*)p[slot] + 0x133) -= 1;
-            if (*(u8*)((char*)p[slot] + 0x133) == 0)
+            ((PartfxEffectState*)p[slot])->textureFrameStep -= 1;
+            if (((PartfxEffectState*)p[slot])->textureFrameStep == 0)
             {
-                *(u8*)((char*)p[slot] + 0x133) = 0x3c / *(u8*)((char*)p[slot] + 0x132);
-                *(u8*)((char*)p[slot] + 0x131) += 1;
-                if ((u8) * (u8*)((char*)p[slot] + 0x131) >= (u32)texCount)
+                ((PartfxEffectState*)p[slot])->textureFrameStep = 0x3c / ((PartfxEffectState*)p[slot])->textureFrameTimer;
+                ((PartfxEffectState*)p[slot])->textureFrame += 1;
+                if (((PartfxEffectState*)p[slot])->textureFrame >= (u32)texCount)
                 {
-                    *(u8*)((char*)p[slot] + 0x131) = 0;
+                    ((PartfxEffectState*)p[slot])->textureFrame = 0;
                 }
             }
         }
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x10000000)
+        if ((int)((PartfxEffectState*)p[slot])->flags & 0x10000000)
         {
             setTextColor(a0, ar, ag, ab, 0xff);
         }
-        else if (*(void**)((char*)p[slot] + 4) != NULL && (*(int*)((char*)p[slot] + 0xa4) & 0x4000))
+        else if (((PartfxEffectState*)p[slot])->sourceObject != NULL && ((int)((PartfxEffectState*)p[slot])->flags & 0x4000))
         {
-            setTextColor(a0, 0xff, 0xff, 0xff, *(u8*)(*(char**)((char*)p[slot] + 4) + 0x37));
+            setTextColor(a0, 0xff, 0xff, 0xff, *(u8*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x37));
         }
         else
         {
             setTextColor(a0, 0xff, 0xff, 0xff, 0xff);
         }
-        tex = *(void**)((char*)p[slot] + 0x98);
+        tex = ((PartfxEffectState*)p[slot])->textureResource;
         if (tex != NULL)
         {
-            n131 = *(u8*)((char*)p[slot] + 0x131);
+            n131 = ((PartfxEffectState*)p[slot])->textureFrame;
             n131p1 = (n131 + 1) & 0xff;
             if (n131p1 > texCount - 1)
             {
                 n131p1 = 0;
             }
         }
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x1000000)
+        if ((int)((PartfxEffectState*)p[slot])->flags & 0x1000000)
         {
-            if (*(u8*)((char*)p[slot] + 0x13e) != 0 || (*(int*)((char*)p[slot] + 0xa4) & 0x400))
+            if (((PartfxEffectState*)p[slot])->frameUpdated != 0 || ((int)((PartfxEffectState*)p[slot])->flags & 0x400))
             {
                 int j;
                 for (j = 0; j < (u8)n131p1; j++)
@@ -2448,7 +2448,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                     tex = *(void**)tex;
                 }
                 _textSetColor(a0, 0xff, 0xff, 0xff,
-                              (u8)(0xff - *(u8*)((char*)p[slot] + 0x133) * *(u8*)((char*)p[slot] + 0x134)));
+                              (u8)(0xff - ((PartfxEffectState*)p[slot])->textureFrameStep * ((PartfxEffectState*)p[slot])->textureFrameFadeStep));
                 textureSetupFn_800799c0();
                 gxTevAddTextureFrameBlendStages();
                 fn_80078DFC();
@@ -2456,25 +2456,25 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                 selectTexture(tex, 1);
             }
         }
-        else if (*(int*)((char*)p[slot] + 0xa4) & 0x2000000)
+        else if ((int)((PartfxEffectState*)p[slot])->flags & 0x2000000)
         {
             textureSetupFn_800799c0();
             fn_80078ED0();
             textRenderSetupFn_80079804();
         }
-        else if (*(int*)((char*)p[slot] + 0xa4) & 0x4000000)
+        else if ((int)((PartfxEffectState*)p[slot])->flags & 0x4000000)
         {
             textureSetupFn_800799c0();
             geomDrawFn_800796f0();
             gxTexColorFn_80079254();
             textRenderSetupFn_80079804();
         }
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x05000000)
+        if ((int)((PartfxEffectState*)p[slot])->flags & 0x05000000)
         {
-            if (*(u8*)((char*)p[slot] + 0x13e) != 0 || (*(int*)((char*)p[slot] + 0xa4) & 0x400))
+            if (((PartfxEffectState*)p[slot])->frameUpdated != 0 || ((int)((PartfxEffectState*)p[slot])->flags & 0x400))
             {
                 int j;
-                tex = *(void**)((char*)p[slot] + 0x98);
+                tex = ((PartfxEffectState*)p[slot])->textureResource;
                 for (j = 0; j < (u8)n131; j++)
                 {
                     tex = *(void**)tex;
@@ -2482,19 +2482,19 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                 selectTexture(tex, 0);
             }
         }
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x100)
+        if ((int)((PartfxEffectState*)p[slot])->flags & 0x100)
         {
             gxBlendFn_80078b4c();
         }
-        else if ((*(int*)((char*)p[slot] + 0xa4) & 0x10) && (*(int*)((char*)p[slot] + 0xa4) & 0x80))
+        else if (((int)((PartfxEffectState*)p[slot])->flags & 0x10) && ((int)((PartfxEffectState*)p[slot])->flags & 0x80))
         {
             textBlendSetupFn_80078a7c();
         }
-        else if (*(int*)((char*)p[slot] + 0xa4) & 0x80)
+        else if ((int)((PartfxEffectState*)p[slot])->flags & 0x80)
         {
             gxBlendFn_80078b4c();
         }
-        else if (*(int*)((char*)p[slot] + 0xa4) & 0x10)
+        else if ((int)((PartfxEffectState*)p[slot])->flags & 0x10)
         {
             textBlendSetupFn_80078a7c();
         }
@@ -2502,7 +2502,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         {
             gxBlendFn_80078b4c();
         }
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x40)
+        if ((int)((PartfxEffectState*)p[slot])->flags & 0x40)
         {
             GXSetCullMode(GX_CULL_FRONT);
         }
@@ -2510,27 +2510,27 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         {
             GXSetCullMode(GX_CULL_NONE);
         }
-        if (*(u8*)((char*)p[slot] + 0x13e) != 0 || (*(int*)((char*)p[slot] + 0xa4) & 0x400))
+        if (((PartfxEffectState*)p[slot])->frameUpdated != 0 || ((int)((PartfxEffectState*)p[slot])->flags & 0x400))
         {
             int di;
-            for (di = 0; di < (u8) * (u8*)((char*)p[slot] + 0x136); di++)
+            for (di = 0; di < ((PartfxEffectState*)p[slot])->drawGroupCount; di++)
             {
-                if (*(int*)((char*)p[slot] + 0xa4) & 0x8000000)
+                if ((int)((PartfxEffectState*)p[slot])->flags & 0x8000000)
                 {
-                    drawFn_8005cf8c(buf1, buf2, *(s16*)((char*)p[slot] + 0xec) / (u8) * (u8*)((char*)p[slot] + 0x136));
+                    drawFn_8005cf8c(buf1, buf2, ((PartfxEffectState*)p[slot])->colorVertexCount / ((PartfxEffectState*)p[slot])->drawGroupCount);
                 }
                 else
                 {
-                    drawFn_8005cf8c(buf1, buf2, *(s16*)((char*)p[slot] + 0xec));
+                    drawFn_8005cf8c(buf1, buf2, ((PartfxEffectState*)p[slot])->colorVertexCount);
                 }
-                buf1 = (char*)buf1 + ((u8) * (u8*)((char*)p[slot] + 0x137) << 4);
-                if (*(int*)((char*)p[slot] + 0xa4) & 0x8000000)
+                buf1 = (char*)buf1 + (((PartfxEffectState*)p[slot])->drawGroupStride << 4);
+                if ((int)((PartfxEffectState*)p[slot])->flags & 0x8000000)
                 {
-                    buf2 = (char*)buf2 + ((*(s16*)((char*)p[slot] + 0xec) / (u8) * (u8*)((char*)p[slot] + 0x136)) << 4);
+                    buf2 = (char*)buf2 + ((((PartfxEffectState*)p[slot])->colorVertexCount / ((PartfxEffectState*)p[slot])->drawGroupCount) << 4);
                 }
             }
             fn_800542F4();
-            *(u8*)((char*)p[slot] + 0x130) = 1 - *(u8*)((char*)p[slot] + 0x130);
+            ((PartfxEffectState*)p[slot])->activeVertexBufferIndex = 1 - ((PartfxEffectState*)p[slot])->activeVertexBufferIndex;
         }
     }
     return 0;
