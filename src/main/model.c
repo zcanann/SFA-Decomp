@@ -1173,7 +1173,6 @@ extern void* gModelTexAtlasList;
 extern void* allocModelStruct(int size, int align);
 extern int* lbl_803DCB5C;
 
-#pragma peephole off
 void ObjModel_InitResourceCaches(void)
 {
     void* m;
@@ -1186,7 +1185,6 @@ void ObjModel_InitResourceCaches(void)
     loadModelAndAnimTabs();
 }
 
-#pragma peephole off
 void ObjModel_Release(u8* model)
 {
     u8* header;
@@ -1257,7 +1255,6 @@ void setGQR6_2(int a, int b, int c, int d)
    Each stream record is a u16 header: low 13 bits = vertex index, top three
    bits flag which of x/y/z deltas follow (MODEL_BONEXFORM_HAS_*).
    Vertices before both streams' next index are copied through unchanged. */
-#pragma peephole on
 #pragma dont_inline on
 asm void modelBoneTransforms_next(void)
 {
