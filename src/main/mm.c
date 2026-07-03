@@ -413,7 +413,6 @@ extern int gMmRegion1Used;
 extern int gMmRegion2Used;
 extern int gMmRegion3Used;
 
-#pragma peephole off
 void mmFreeTick(int arg)
 {
     MmGlobal* g = (MmGlobal*)gMmStoreArray;
@@ -538,7 +537,6 @@ void mmFreeTick(int arg)
     }
 }
 
-#pragma peephole off
 void mmFree(void* p)
 {
     int region;
