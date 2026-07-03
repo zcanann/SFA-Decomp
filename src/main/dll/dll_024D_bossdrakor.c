@@ -407,7 +407,7 @@ void bossdrakor_updateHeadTracking(int obj, int state)
         neck[0] += (s16)step;
         PSVECSubtract(&((BossDrakorState*)state)->homePosX, &((GameObject*)obj)->anim.localPosX, prm.vec);
         prm.val = lbl_803E651C;
-        if (fn_80080150((int)((char*)state + 0x18)) != 0)
+        if (fn_80080150((int)&((BossDrakorState*)state)->unk18) != 0)
         {
             vecF = objModelGetVecFn_800395d8(obj, 0xf);
             if (vecF != NULL)
@@ -897,7 +897,8 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     int light;
     int val;
     objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E651C);
-    ObjPath_GetPointWorldPosition(p1, 0, (char*)inner + 0x1c, (char*)inner + 0x20, (char*)inner + 0x24, 0);
+    ObjPath_GetPointWorldPosition(p1, 0, &((BossDrakorState*)inner)->homePosX, &((BossDrakorState*)inner)->homePosY,
+                                  &((BossDrakorState*)inner)->homePosZ, 0);
     if (*(void* *)&((BossDrakorState*)inner)->lightObj != NULL)
     {
         ObjPath_GetPointWorldPosition(p1, 5, &pos0, &pos1, &pos2, 0);
