@@ -23,6 +23,9 @@ extern void Music_Trigger(int id, int arg);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 
+#define MMPLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
+#define MMPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 
 
 
@@ -199,7 +202,7 @@ void MMP_levelcontrol_initialise(void)
 void MMP_levelcontrol_init(int obj)
 {
 
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (MMPLEVELCONTROL_OBJFLAG_HIDDEN | MMPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
     if (getSaveGameLoadStatus() != 0)
     {
         ((GameObject*)obj)->unkF4 = 2;
