@@ -1935,9 +1935,9 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
             parentSetup = *(int*)&((GameObject*)obj)->anim.placementData;
             if ((void*)parentSetup != NULL)
             {
-                ((GameObject*)obj)->anim.worldPosX = *(f32*)(parentSetup + 8);
-                ((GameObject*)obj)->anim.worldPosY = *(f32*)(parentSetup + 0xc);
-                ((GameObject*)obj)->anim.worldPosZ = *(f32*)(parentSetup + 0x10);
+                ((GameObject*)obj)->anim.worldPosX = ((ObjPlacement*)parentSetup)->posX;
+                ((GameObject*)obj)->anim.worldPosY = ((ObjPlacement*)parentSetup)->posY;
+                ((GameObject*)obj)->anim.worldPosZ = ((ObjPlacement*)parentSetup)->posZ;
             }
             nearestDistance = lbl_803E25A8;
             gTrickyNearestObject = ObjGroup_FindNearestObject(4, obj, &nearestDistance);
@@ -1989,10 +1989,10 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
     {
         *(s16*)(setup + 0x2e) = 1;
     }
-    *(u8*)(setup + 4) = *(u8*)(parentSetup + 4);
-    *(u8*)(setup + 6) = *(u8*)(parentSetup + 6);
-    *(u8*)(setup + 5) = *(u8*)(parentSetup + 5);
-    *(u8*)(setup + 7) = *(u8*)(parentSetup + 7);
+    ((ObjPlacement*)setup)->color[0] = ((ObjPlacement*)parentSetup)->color[0];
+    ((ObjPlacement*)setup)->color[2] = ((ObjPlacement*)parentSetup)->color[2];
+    ((ObjPlacement*)setup)->color[1] = ((ObjPlacement*)parentSetup)->color[1];
+    ((ObjPlacement*)setup)->color[3] = ((ObjPlacement*)parentSetup)->color[3];
     nearest = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                    *(int*)&((GameObject*)obj)->anim.parent);
     gTrickyNearestObject = nearest;
@@ -2167,7 +2167,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
             {
                 if (hitEffects != 0)
                 {
-                    if (*(s16*)(attacker + 0x44) == 1 || *(s16*)(attacker + 0x44) == 0x2d)
+                    if (((GameObject*)attacker)->anim.classId == 1 || ((GameObject*)attacker)->anim.classId == 0x2d)
                     {
                         if ((((TrickyState*)state)->controlFlags & 0x200) != 0)
                         {
@@ -2354,7 +2354,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 objLightFn_8009a1dc((void*)obj, lbl_803E259C, &params, 4, (void*)((TrickyState*)state)->light);
             }
             proj = *(u8**)&((TrickyState*)state)->actionTargetObj;
-            if (proj != NULL && *(s16*)(proj + 0x44) == 1)
+            if (proj != NULL && ((GameObject*)proj)->anim.classId == 1)
             {
                 fn_802961FC(proj, result);
             }
@@ -2870,7 +2870,7 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     player = packed;
     hitFlag[0] = '\0';
     blocked = '\0';
-    if (*(int*)(player + 0x29c) != 0)
+    if (((TrickyState*)player)->actionTargetObj != 0)
     {
         pointX = *pointA;
         pointY = pointA[1];
@@ -2903,9 +2903,9 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
             }
         }
     }
-    if ((blocked != '\0') && ((*(u32*)(player + 0x2e4) & 8) != 0))
+    if ((blocked != '\0') && ((((TrickyState*)player)->controlFlags & 8) != 0))
     {
-        FUN_800620e8(pointA, &pointX, (float*)0x0, aiStack_74, target, (u32) * (u8*)(player + 0x261),
+        FUN_800620e8(pointA, &pointX, (float*)0x0, aiStack_74, target, (u32)((TrickyState*)player)->unk261,
                      0xffffffff, 0, 0);
     }
     FUN_80286888();
