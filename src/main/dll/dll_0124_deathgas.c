@@ -52,7 +52,6 @@ void deathgas_init(int* obj)
     state->radius = *(f32*)((char*)obj + 64);
 }
 
-int fuelcell_func0B(int* obj);
 
 void deathgas_free(int* obj)
 {
