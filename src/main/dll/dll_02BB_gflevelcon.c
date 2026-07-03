@@ -47,6 +47,17 @@
    into two casts (with differing field types at scrollA/scrollB) is
    matching-required: collapsing to one struct changes the cast keys and
    the codegen. */
+/* Spawn-setup buffer for the arwing-projectile children (defNos
+ * 0x80d/0x7e4/0x859). Reuses ObjPlacement's pos/color head and adds the
+ * class-specific launch fields at 0x18/0x19/0x1a (all u8 stores per asm). */
+typedef struct GfProjectileSetup
+{
+    ObjPlacement head; /* 0x00 */
+    u8 field18;        /* 0x18: cleared to 0 */
+    u8 pitch;          /* 0x19 */
+    u8 yawHi;          /* 0x1a */
+} GfProjectileSetup;
+
 typedef struct GfLevelconFindLinkedObjectsState
 {
     s32 light;
@@ -332,9 +343,9 @@ void fn_8023A168(int p1, int p2)
         ((ObjPlacement*)newObj)->posX = *(f32*)(p2 + 0xc0);
         ((ObjPlacement*)newObj)->posY = *(f32*)(p2 + 0xc4);
         ((ObjPlacement*)newObj)->posZ = *(f32*)(p2 + 0xc8);
-        *(u8*)(newObj + 0x1a) = (*(s16*)p1 + yawRnd) >> 8;
-        *(u8*)(newObj + 0x19) = pitchRnd;
-        *(u8*)(newObj + 0x18) = 0;
+        ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)p1 + yawRnd) >> 8;
+        ((GfProjectileSetup*)newObj)->pitch = pitchRnd;
+        ((GfProjectileSetup*)newObj)->field18 = 0;
         ((ObjPlacement*)newObj)->color[0] = 1;
         ((ObjPlacement*)newObj)->color[1] = 1;
         proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
@@ -364,9 +375,9 @@ void fn_8023A268(int p1, int p2, int p3)
         ((ObjPlacement*)newObj)->posX = *(f32*)(p2 + 0xc0);
         ((ObjPlacement*)newObj)->posY = *(f32*)(p2 + 0xc4);
         ((ObjPlacement*)newObj)->posZ = *(f32*)(p2 + 0xc8);
-        *(u8*)(newObj + 0x1a) = (*(s16*)p1 + yaw) >> 8;
-        *(u8*)(newObj + 0x19) = gGfLevelConProjectilePitch;
-        *(u8*)(newObj + 0x18) = 0;
+        ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)p1 + yaw) >> 8;
+        ((GfProjectileSetup*)newObj)->pitch = gGfLevelConProjectilePitch;
+        ((GfProjectileSetup*)newObj)->field18 = 0;
         ((ObjPlacement*)newObj)->color[0] = 1;
         ((ObjPlacement*)newObj)->color[1] = 1;
         p1 = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
@@ -398,9 +409,9 @@ void fn_80239FCC(int obj, int state)
         ((ObjPlacement*)newObj)->posX = (f32)(int)rndDur * mathSinf(ang) + *(f32*)(*(int*)state + 0xc);
         ((ObjPlacement*)newObj)->posY = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)state + 0x10);
         ((ObjPlacement*)newObj)->posZ = *(f32*)(state + 0xc8) - lbl_803E74A8;
-        *(u8*)(newObj + 0x1a) = (*(s16*)obj + yaw) >> 8;
-        *(u8*)(newObj + 0x19) = lbl_803DDDC0;
-        *(u8*)(newObj + 0x18) = 0;
+        ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)obj + yaw) >> 8;
+        ((GfProjectileSetup*)newObj)->pitch = lbl_803DDDC0;
+        ((GfProjectileSetup*)newObj)->field18 = 0;
         ((ObjPlacement*)newObj)->color[0] = 1;
         ((ObjPlacement*)newObj)->color[1] = 1;
         proj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
