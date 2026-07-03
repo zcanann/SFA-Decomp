@@ -746,7 +746,10 @@ typedef struct StaffState
     u8 pad8A[0x28];
     s16 fieldB2;
     u8 padB4[5];
-    s8 swipeTextureIndex;
+    s8 swipeTextureIndex; /* 0xB9 */
+    u8 glowEnable;        /* 0xBA */
+    u8 glowAttackType;    /* 0xBB */
+    u8 hudSuppressed;     /* 0xBC */
 } StaffState;
 
 s16 staff_getHitReactValue(int* obj) { return ((StaffState*)(int*)((GameObject*)obj)->extra)->hitReactValue; }
@@ -766,8 +769,8 @@ void playerRenderQuakeSpell(int* obj) { quakeSpellFn_8016cee8(obj, ((GameObject*
 void staffSetGlow(int* obj, u8 attackType, u8 enable)
 {
     u8* state = (u8*)(int*)((GameObject*)obj)->extra;
-    state[0xbb] = attackType;
-    state[0xba] = enable;
+    ((StaffState*)state)->glowAttackType = attackType;
+    ((StaffState*)state)->glowEnable = enable;
 }
 #pragma dont_inline reset
 
@@ -792,11 +795,11 @@ void staff_modelMtxFn(int* obj, int p4, int p5)
     staff_setupSwipe((int)obj, (u8*)inner, p5, p4);
     if (getHudHiddenFrameCount() != 0)
     {
-        *(u8*)((char*)inner + 0xbc) = 1;
+        ((StaffState*)inner)->hudSuppressed = 1;
     }
     else
     {
-        *(u8*)((char*)inner + 0xbc) = 0;
+        ((StaffState*)inner)->hudSuppressed = 0;
     }
 }
 
@@ -1284,7 +1287,7 @@ void staffDrawSwipe(int* obj, int* swipe)
     SwipeRecord* swp;
     int i;
 
-    selectTexture(gStaffSwipeTextures[*(s8*)((char*)swipe + 0xb9)], 0);
+    selectTexture(gStaffSwipeTextures[((StaffState*)swipe)->swipeTextureIndex], 0);
     textureSetupFn_800799c0();
     geomDrawFn_800796f0();
     textRenderSetupFn_80079804();
@@ -1436,7 +1439,7 @@ void staff_update(int* obj)
 
     quakeSpellFn_8016cee8(obj, ((GameObject*)obj)->ownerObj);
     objGetAnimState80A(*(int*)&((GameObject*)obj)->ownerObj);
-    state[0xb9] = 0;
+    ((StaffState*)state)->swipeTextureIndex = 0;
     {
         StaffQuakeSpellState* q = (StaffQuakeSpellState*)gStaffQuakeSpellState;
         if (q->active != 0)
@@ -1492,7 +1495,7 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
     int ang;
 
     obj = (u8*)objArg;
-    if (*(int**)(swipe + 0x48) == NULL || swipe[0xbc] != 0)
+    if (*(int**)(swipe + 0x48) == NULL || ((StaffState*)swipe)->hudSuppressed != 0)
     {
         return;
     }
@@ -1744,7 +1747,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
         return;
     }
     {
-        if (state[0xba] != 0)
+        if (((StaffState*)state)->glowEnable != 0)
         {
             f32 v;
             if (objFn_80296700(obj2) != 0)
@@ -1757,14 +1760,14 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                 power = lbl_803E328C;
                 v = lbl_803E3290;
             }
-            if (state[0xbb] == 7)
+            if (((StaffState*)state)->glowAttackType == 7)
             {
-                objfx_spawnArcedBurst(obj, lbl_803E3294, state[0xbb], state[0xba], 1, (int)(lbl_803E3298 * v),
+                objfx_spawnArcedBurst(obj, lbl_803E3294, ((StaffState*)state)->glowAttackType, ((StaffState*)state)->glowEnable, 1, (int)(lbl_803E3298 * v),
                                       lbl_803E3294, lbl_803E3294, lbl_803E329C * power, 0, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(obj, lbl_803E3288, state[0xbb], state[0xba], 1, (int)(lbl_803E3298 * v),
+                objfx_spawnArcedBurst(obj, lbl_803E3288, ((StaffState*)state)->glowAttackType, ((StaffState*)state)->glowEnable, 1, (int)(lbl_803E3298 * v),
                                       lbl_803E3288, lbl_803E3288, lbl_803E329C * power, 0, 0);
             }
         }
