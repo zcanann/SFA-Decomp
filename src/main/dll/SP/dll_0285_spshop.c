@@ -90,12 +90,6 @@ extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Music_Trigger(int id, int arg);
 
-void FUN_801e55c0(u64 unused1, double unused2, double unused3, u64 unused4,
-                  u64 unused5, u64 unused6, u64 unused7, u64 unused8,
-                  u16* unused9, int unused10)
-{
-}
-
 void SB_FireBall_release(void);
 
 void shop_hitDetect(void)
