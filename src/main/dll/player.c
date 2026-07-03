@@ -1333,10 +1333,12 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
     }
 }
 
+#pragma opt_propagation off
 int fn_8029A76C(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     int r;
+    int hi;
     f32 timer;
     struct
     {
@@ -1396,27 +1398,33 @@ int fn_8029A76C(int obj, int state, f32 fv)
         }
         ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
         pfx.scale = lbl_803E7F9C;
+        hi = 0x200000;
         pfx.mode = 0;
         (*gPartfxInterface)->spawnObject(
-            (void*)gPlayerPathObject, 0x7f5, &pfx, 0x200001, -1, NULL);
+            (void*)gPlayerPathObject, 0x7f5, &pfx, hi + 1, -1, NULL);
         pfx.mode = 1;
         (*gPartfxInterface)->spawnObject(
-            (void*)gPlayerPathObject, 0x7f5, &pfx, 0x200001, -1, NULL);
+            (void*)gPlayerPathObject, 0x7f5, &pfx, hi + 1, -1, NULL);
         if ((((PlayerState*)inner)->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
-            int z[2];
-            z[0] = 0;
-            lbl_803DE42C = z[0];
-            for (z[1] = z[0]; z[1] < 7; z[1]++)
+            int i;
+            void** p;
+            hi = 0;
+            lbl_803DE42C = hi;
+            i = hi;
+            p = gPlayerSpawnedObjects;
+            do
             {
-                if (gPlayerSpawnedObjects[z[1]] != NULL)
+                if (*p != NULL)
                 {
-                    Obj_FreeObject((int)gPlayerSpawnedObjects[z[1]]);
-                    gPlayerSpawnedObjects[z[1]] = NULL;
+                    Obj_FreeObject((int)*p);
+                    *p = (void*)hi;
                 }
-            }
+                p++;
+                i++;
+            } while (i < 7);
             if (gPlayerResource != NULL)
             {
                 Resource_Release(gPlayerResource);
@@ -1520,6 +1528,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
     }
     return 0;
 }
+#pragma opt_propagation reset
 
 extern f32 lbl_803E8064;
 extern f32 lbl_803E8074;
