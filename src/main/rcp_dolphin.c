@@ -75,39 +75,39 @@ extern u32 DAT_8030dac4;
 extern u32 DAT_8030dac8;
 extern u32 DAT_8030dacc;
 extern u32 DAT_80378600;
-extern u32 DAT_803dc070;
-extern u32 DAT_803dd9b0;
-extern u32 DAT_803dd9c8;
+extern u32 lbl_803DC070;
+extern u32 gTitleScreenCursorX;
+extern u32 gTitleScreenCursorY;
 extern u32 DAT_803dd9c9;
 extern u32 DAT_803dd9ca;
 extern u32 DAT_803dd9cb;
 extern u32 DAT_803dd9cc;
 extern u32 DAT_803dd9d0;
-extern u32 DAT_803dd9d4;
-extern u32 DAT_803dd9d8;
-extern u32 DAT_803dd9dc;
-extern u32 DAT_803dd9e0;
-extern u32 DAT_803dd9e4;
-extern u32 DAT_803dd9e8;
+extern u32 gTitleScreenMainTex;
+extern u32 gDebugScaleX;
+extern u32 gDebugScaleY;
+extern u32 gDebugScaleBiasX;
+extern u32 gDebugRecordCount;
+extern u32 gDebugGlyphVScale;
 extern u32 DAT_803dd9e9;
 extern u32 DAT_803dd9ea;
 extern u32 DAT_803dd9eb;
-extern u32 DAT_803dd9ec;
-extern u32 DAT_803dd9f0;
-extern u32 DAT_803dd9f4;
-extern u32 DAT_803dd9f8;
-extern u32 DAT_803dd9fc;
-extern u32 DAT_803dda00;
-extern u32 DAT_803dda04;
-extern u32 DAT_803dda08;
-extern u32 DAT_803dda0c;
-extern u32 DAT_803dda10;
-extern u32 DAT_803dda3c;
+extern u32 gDebugGlyphUScale;
+extern u32 gDebugTextColorA;
+extern u32 gDebugScreenHeight;
+extern u32 gDebugCurrentFontSet;
+extern u32 gDebugMarginBottom;
+extern u32 gDebugPrintOriginX;
+extern u32 gDebugMarginRight;
+extern u32 gDebugPrintOriginY;
+extern u32 gDebugDrawPass;
+extern u32 gDebugFixedWidthMode;
+extern u32 gErrContext;
 extern int* DAT_803dda44;
 extern u32 DAT_803dda74;
 extern u32 DAT_803dda75;
 extern u32 DAT_803dda7b;
-extern u32 DAT_803dda80;
+extern u32 gTumbleweedBushHitCooldownState;
 extern f32 lbl_803DDAC8;
 extern f32 lbl_803DDACC;
 extern f32 lbl_803DDAD0;
@@ -116,70 +116,70 @@ extern f32 lbl_803DF81C;
 
 void FUN_80051868(int tex, float* mtx, int blendMode)
 {
-    FUN_8025be80(DAT_803dda10);
-    FUN_8025c828(DAT_803dda10, DAT_803dda08, DAT_803dda0c, 4);
-    FUN_8025c65c(DAT_803dda10, 0, 0);
+    FUN_8025be80(gDebugFixedWidthMode);
+    FUN_8025c828(gDebugFixedWidthMode, gDebugPrintOriginY, gDebugDrawPass, 4);
+    FUN_8025c65c(gDebugFixedWidthMode, 0, 0);
     if (mtx == (float*)0x0)
     {
-        FUN_80258674(DAT_803dda08, 1, DAT_803dd9f8, 0x3c, 0, 0x7d);
+        FUN_80258674(gDebugPrintOriginY, 1, gDebugCurrentFontSet, 0x3c, 0, 0x7d);
     }
     else
     {
-        FUN_8025d8c4(mtx, DAT_803dda00, 0);
-        FUN_80258674(DAT_803dda08, 1, DAT_803dd9f8, 0x3c, 0, DAT_803dda00);
-        DAT_803dda00 = DAT_803dda00 + 3;
+        FUN_8025d8c4(mtx, gDebugPrintOriginX, 0);
+        FUN_80258674(gDebugPrintOriginY, 1, gDebugCurrentFontSet, 0x3c, 0, gDebugPrintOriginX);
+        gDebugPrintOriginX = gDebugPrintOriginX + 3;
     }
     if (blendMode == 0)
     {
-        FUN_8025c1a4(DAT_803dda10, 0xf, 8, 10, 0xf);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0xf, 8, 10, 0xf);
     }
     else if (blendMode == 8)
     {
-        FUN_8025c1a4(DAT_803dda10, 0xf, 8, 10, 6);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0xf, 8, 10, 6);
     }
     else if (blendMode == 4)
     {
-        FUN_8025c1a4(DAT_803dda10, 8, 0xf, 0xf, 0);
+        FUN_8025c1a4(gDebugFixedWidthMode, 8, 0xf, 0xf, 0);
     }
     else if (blendMode == 6)
     {
-        FUN_8025c1a4(DAT_803dda10, 0xf, 8, 0, 0xf);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0xf, 8, 0, 0xf);
     }
     else if (blendMode == 9)
     {
-        FUN_8025c1a4(DAT_803dda10, 8, 0, 1, 0xf);
+        FUN_8025c1a4(gDebugFixedWidthMode, 8, 0, 1, 0xf);
     }
     else
     {
-        FUN_8025c1a4(DAT_803dda10, 8, 0, 1, 0xf);
+        FUN_8025c1a4(gDebugFixedWidthMode, 8, 0, 1, 0xf);
     }
     if (DAT_803dd9eb == '\0')
     {
-        FUN_8025c224(DAT_803dda10, 7, 4, 5, 7);
+        FUN_8025c224(gDebugFixedWidthMode, 7, 4, 5, 7);
         DAT_803dd9eb = '\x01';
     }
     else
     {
-        FUN_8025c224(DAT_803dda10, 7, 4, 0, 7);
+        FUN_8025c224(gDebugFixedWidthMode, 7, 4, 0, 7);
     }
-    FUN_8025c2a8(DAT_803dda10, 0, 0, 0, 1, 0);
-    FUN_8025c368(DAT_803dda10, 0, 0, 0, 1, 0);
-    DAT_803dd9b0 = 1;
+    FUN_8025c2a8(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+    FUN_8025c368(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+    gTitleScreenCursorX = 1;
     if (tex != 0)
     {
         if (*(char*)(tex + 0x48) == '\0')
         {
-            FUN_8025b054((u32*)(tex + 0x20), DAT_803dda0c);
+            FUN_8025b054((u32*)(tex + 0x20), gDebugDrawPass);
         }
         else
         {
-            FUN_8025aeac((u32*)(tex + 0x20), *(u32**)(tex + 0x40), DAT_803dda0c);
+            FUN_8025aeac((u32*)(tex + 0x20), *(u32**)(tex + 0x40), gDebugDrawPass);
         }
     }
-    DAT_803dd9f8 = DAT_803dd9f8 + 1;
-    DAT_803dda08 = DAT_803dda08 + 1;
-    DAT_803dda10 = DAT_803dda10 + 1;
-    DAT_803dda0c = DAT_803dda0c + 1;
+    gDebugCurrentFontSet = gDebugCurrentFontSet + 1;
+    gDebugPrintOriginY = gDebugPrintOriginY + 1;
+    gDebugFixedWidthMode = gDebugFixedWidthMode + 1;
+    gDebugDrawPass = gDebugDrawPass + 1;
     DAT_803dd9ea = DAT_803dd9ea + '\x01';
     DAT_803dd9e9 = DAT_803dd9e9 + '\x01';
     return;
@@ -197,84 +197,84 @@ void FUN_80051fc4(u32 unused1, u32 unused2, int blendMode, char* blendSrc, u32 c
 
     mtxPair = FUN_8028683c();
     tex = (int)((u64)mtxPair >> 0x20);
-    FUN_8025be80(DAT_803dda10);
-    FUN_8025c828(DAT_803dda10, DAT_803dda08, DAT_803dda0c, 0xff);
-    FUN_8025c65c(DAT_803dda10, 0, 1);
+    FUN_8025be80(gDebugFixedWidthMode);
+    FUN_8025c828(gDebugFixedWidthMode, gDebugPrintOriginY, gDebugDrawPass, 0xff);
+    FUN_8025c65c(gDebugFixedWidthMode, 0, 1);
     colorOff = (colorIndex & 0xff) * 0xc;
     FUN_8025c6b4(1, *(u32*)(&DAT_8030dac4 + colorOff), *(int*)(&DAT_8030dac8 + colorOff),
                  *(u32*)(&DAT_8030dacc + colorOff), 3);
     if ((float*)mtxPair == (float*)0x0)
     {
-        FUN_80258674(DAT_803dda08, 1, DAT_803dd9f8, 0x3c, 0, 0x7d);
+        FUN_80258674(gDebugPrintOriginY, 1, gDebugCurrentFontSet, 0x3c, 0, 0x7d);
     }
     else
     {
-        FUN_8025d8c4((float*)mtxPair, DAT_803dda00, 0);
-        FUN_80258674(DAT_803dda08, 1, DAT_803dd9f8, 0x3c, 0, DAT_803dda00);
-        DAT_803dda00 = DAT_803dda00 + 3;
+        FUN_8025d8c4((float*)mtxPair, gDebugPrintOriginX, 0);
+        FUN_80258674(gDebugPrintOriginY, 1, gDebugCurrentFontSet, 0x3c, 0, gDebugPrintOriginX);
+        gDebugPrintOriginX = gDebugPrintOriginX + 3;
     }
     if ((customBlendFlag & 0xff) == 0)
     {
         colorWord = *(u32*)blendSrc;
-        FUN_8025c510(DAT_803dd9f4, (u8*)&colorWord);
-        GXSetBlendMode(DAT_803dda10, DAT_803dd9f0);
+        FUN_8025c510(gDebugScreenHeight, (u8*)&colorWord);
+        GXSetBlendMode(gDebugFixedWidthMode, gDebugTextColorA);
         if (((Texture*)tex)->imageOffset == 0)
         {
-            FUN_8025c5f0(DAT_803dda10, DAT_803dd9ec);
+            FUN_8025c5f0(gDebugFixedWidthMode, gDebugGlyphUScale);
         }
         else
         {
-            FUN_8025c5f0(DAT_803dda10 + 1, DAT_803dd9ec);
+            FUN_8025c5f0(gDebugFixedWidthMode + 1, gDebugGlyphUScale);
         }
-        DAT_803dd9f4 = DAT_803dd9f4 + 1;
-        DAT_803dd9f0 = DAT_803dd9f0 + 1;
-        DAT_803dd9ec = DAT_803dd9ec + 1;
+        gDebugScreenHeight = gDebugScreenHeight + 1;
+        gDebugTextColorA = gDebugTextColorA + 1;
+        gDebugGlyphUScale = gDebugGlyphUScale + 1;
     }
     else
     {
         FUN_80047d88(blendSrc, '\x01', '\x01', blendArgs, &blendModeId);
-        GXSetBlendMode(DAT_803dda10, blendArgs[0]);
+        GXSetBlendMode(gDebugFixedWidthMode, blendArgs[0]);
         if (((Texture*)tex)->imageOffset == 0)
         {
-            FUN_8025c5f0(DAT_803dda10, blendModeId);
+            FUN_8025c5f0(gDebugFixedWidthMode, blendModeId);
         }
         else
         {
-            FUN_8025c5f0(DAT_803dda10 + 1, blendModeId);
+            FUN_8025c5f0(gDebugFixedWidthMode + 1, blendModeId);
         }
     }
     if (blendMode == 0)
     {
-        FUN_8025c1a4(DAT_803dda10, 0xf, 8, 0xe, 0xf);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0xf, 8, 0xe, 0xf);
     }
     else if (blendMode == 8)
     {
-        FUN_8025c1a4(DAT_803dda10, 0xf, 8, 4, 6);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0xf, 8, 4, 6);
     }
     else
     {
-        FUN_8025c1a4(DAT_803dda10, 8, 0, 1, 0xf);
+        FUN_8025c1a4(gDebugFixedWidthMode, 8, 0, 1, 0xf);
     }
     if (DAT_803dd9eb == '\0')
     {
-        FUN_8025c224(DAT_803dda10, 7, 4, 6, 7);
+        FUN_8025c224(gDebugFixedWidthMode, 7, 4, 6, 7);
     }
     else
     {
-        FUN_8025c224(DAT_803dda10, 7, 4, 0, 7);
+        FUN_8025c224(gDebugFixedWidthMode, 7, 4, 0, 7);
     }
-    FUN_8025c2a8(DAT_803dda10, 0, 0, 0, 1, 0);
-    FUN_8025c368(DAT_803dda10, 0, 0, 0, 1, 0);
-    DAT_803dd9b0 = 1;
+    FUN_8025c2a8(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+    FUN_8025c368(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+    gTitleScreenCursorX = 1;
     if (tex != 0)
     {
         if (*(char*)&((Texture*)tex)->preloaded == '\0')
         {
-            FUN_8025b054((u32*)(tex + 0x20), DAT_803dda0c);
+            FUN_8025b054((u32*)(tex + 0x20), gDebugDrawPass);
         }
         else
         {
-            FUN_8025aeac((u32*)(tex + 0x20), *(u32**)(tex + 0x40), DAT_803dda0c);
+            FUN_8025aeac((u32*)(tex + 0x20), *(u32**)(tex + 0x40), gDebugDrawPass);
         }
         if (((Texture*)tex)->imageOffset != 0)
         {
@@ -285,21 +285,21 @@ void FUN_80051fc4(u32 unused1, u32 unused2, int blendMode, char* blendSrc, u32 c
     if (((Texture*)tex)->imageOffset != 0)
     {
         DAT_803dd9ea = DAT_803dd9ea + '\x01';
-        DAT_803dda10 = DAT_803dda10 + 1;
-        DAT_803dda0c = DAT_803dda0c + 1;
-        FUN_8025be80(DAT_803dda10);
-        FUN_8025c828(DAT_803dda10, DAT_803dda08, DAT_803dda0c, 0xff);
-        FUN_8025c65c(DAT_803dda10, 0, 0);
-        FUN_8025c1a4(DAT_803dda10, 0xf, 0xf, 0xf, 0);
-        FUN_8025c224(DAT_803dda10, 7, 4, 6, 7);
-        FUN_8025c2a8(DAT_803dda10, 0, 0, 0, 1, 0);
-        FUN_8025c368(DAT_803dda10, 0, 0, 0, 1, 0);
+        gDebugFixedWidthMode = gDebugFixedWidthMode + 1;
+        gDebugDrawPass = gDebugDrawPass + 1;
+        FUN_8025be80(gDebugFixedWidthMode);
+        FUN_8025c828(gDebugFixedWidthMode, gDebugPrintOriginY, gDebugDrawPass, 0xff);
+        FUN_8025c65c(gDebugFixedWidthMode, 0, 0);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0xf, 0xf, 0xf, 0);
+        FUN_8025c224(gDebugFixedWidthMode, 7, 4, 6, 7);
+        FUN_8025c2a8(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+        FUN_8025c368(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
     }
     DAT_803dd9eb = 1;
-    DAT_803dd9f8 = DAT_803dd9f8 + 1;
-    DAT_803dda08 = DAT_803dda08 + 1;
-    DAT_803dda10 = DAT_803dda10 + 1;
-    DAT_803dda0c = DAT_803dda0c + 1;
+    gDebugCurrentFontSet = gDebugCurrentFontSet + 1;
+    gDebugPrintOriginY = gDebugPrintOriginY + 1;
+    gDebugFixedWidthMode = gDebugFixedWidthMode + 1;
+    gDebugDrawPass = gDebugDrawPass + 1;
     DAT_803dd9ea = DAT_803dd9ea + '\x01';
     DAT_803dd9e9 = DAT_803dd9e9 + '\x01';
     FUN_80286888();
@@ -311,26 +311,26 @@ void FUN_80052778(char* blendSrc)
     int blendModeId;
     int blendArgs[4];
 
-    FUN_8025be80(DAT_803dda10);
+    FUN_8025be80(gDebugFixedWidthMode);
     FUN_80047d88(blendSrc, '\x01', '\x01', blendArgs, &blendModeId);
-    FUN_8025c5f0(DAT_803dda10, blendModeId);
-    GXSetBlendMode(DAT_803dda10, blendArgs[0]);
-    FUN_8025c828(DAT_803dda10, 0xff, 0xff, 4);
-    FUN_8025c65c(DAT_803dda10, 0, 0);
-    if ((DAT_803dd9ea == '\0') || (DAT_803dd9b0 == '\0'))
+    FUN_8025c5f0(gDebugFixedWidthMode, blendModeId);
+    GXSetBlendMode(gDebugFixedWidthMode, blendArgs[0]);
+    FUN_8025c828(gDebugFixedWidthMode, 0xff, 0xff, 4);
+    FUN_8025c65c(gDebugFixedWidthMode, 0, 0);
+    if ((DAT_803dd9ea == '\0') || (gTitleScreenCursorX == '\0'))
     {
-        FUN_8025c1a4(DAT_803dda10, 0xf, 0xf, 0xf, 0xe);
-        FUN_8025c224(DAT_803dda10, 7, 7, 7, 6);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0xf, 0xf, 0xf, 0xe);
+        FUN_8025c224(gDebugFixedWidthMode, 7, 7, 7, 6);
     }
     else
     {
-        FUN_8025c1a4(DAT_803dda10, 0xf, 0, 0xe, 0xf);
-        FUN_8025c224(DAT_803dda10, 7, 0, 6, 7);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0xf, 0, 0xe, 0xf);
+        FUN_8025c224(gDebugFixedWidthMode, 7, 0, 6, 7);
     }
-    FUN_8025c2a8(DAT_803dda10, 0, 0, 0, 1, 0);
-    FUN_8025c368(DAT_803dda10, 0, 0, 0, 1, 0);
-    DAT_803dd9b0 = 1;
-    DAT_803dda10 = DAT_803dda10 + 1;
+    FUN_8025c2a8(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+    FUN_8025c368(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+    gTitleScreenCursorX = 1;
+    gDebugFixedWidthMode = gDebugFixedWidthMode + 1;
     DAT_803dd9ea = DAT_803dd9ea + '\x01';
     return;
 }
@@ -339,38 +339,38 @@ void FUN_800528d0(void)
 {
     FUN_80258944((u32)DAT_803dd9e9);
     FUN_8025ca04((u32)DAT_803dd9ea);
-    FUN_8025be54((u32)DAT_803dd9e8);
+    FUN_8025be54((u32)gDebugGlyphVScale);
     return;
 }
 
 void FUN_80052904(void)
 {
-    DAT_803dd9d8 = 0x1e;
-    DAT_803dda04 = 0x1e;
-    DAT_803dd9d4 = 0x40;
-    DAT_803dda00 = 0x40;
-    DAT_803dd9e4 = 0;
-    DAT_803dda10 = 0;
-    DAT_803dd9dc = 0;
-    DAT_803dda08 = 0;
-    DAT_803dd9e0 = 0;
-    DAT_803dda0c = 0;
+    gDebugScaleX = 0x1e;
+    gDebugMarginRight = 0x1e;
+    gTitleScreenMainTex = 0x40;
+    gDebugPrintOriginX = 0x40;
+    gDebugRecordCount = 0;
+    gDebugFixedWidthMode = 0;
+    gDebugScaleY = 0;
+    gDebugPrintOriginY = 0;
+    gDebugScaleBiasX = 0;
+    gDebugDrawPass = 0;
     DAT_803dd9d0 = 0;
-    DAT_803dd9fc = 0;
+    gDebugMarginBottom = 0;
     DAT_803dd9cc = 4;
-    DAT_803dd9f8 = 4;
-    DAT_803dd9f4 = 0;
-    DAT_803dd9f0 = 0xc;
-    DAT_803dd9ec = 0x1c;
+    gDebugCurrentFontSet = 4;
+    gDebugScreenHeight = 0;
+    gDebugTextColorA = 0xc;
+    gDebugGlyphUScale = 0x1c;
     DAT_803dd9eb = 0;
     DAT_803dd9cb = 0;
     DAT_803dd9ea = 0;
     DAT_803dd9ca = 0;
     DAT_803dd9e9 = 0;
     DAT_803dd9c9 = 0;
-    DAT_803dd9e8 = 0;
-    DAT_803dd9c8 = 0;
-    DAT_803dd9b0 = 0;
+    gDebugGlyphVScale = 0;
+    gTitleScreenCursorY = 0;
+    gTitleScreenCursorX = 0;
     return;
 }
 
@@ -383,7 +383,7 @@ u32 FUN_80053078(u32 texId)
         return texId;
     }
     idx = texId - 1;
-    if ((-1 < idx) && (idx < DAT_803dda3c))
+    if ((-1 < idx) && (idx < gErrContext))
     {
         return *(u32*)(DAT_803dda44 + idx * 0x10 + 4);
     }
@@ -426,8 +426,8 @@ int FUN_8005337c(int key)
 
     idx = 0;
     entry = DAT_803dda44;
-    remaining = DAT_803dda3c;
-    if (0 < DAT_803dda3c)
+    remaining = gErrContext;
+    if (0 < gErrContext)
     {
         do
         {
@@ -459,7 +459,7 @@ void FUN_800533cc(int animDef, u32* flagsPtr, int* framePtr)
         {
             if (reverse == 0)
             {
-                *framePtr = *framePtr + (u32) * (u16*)(animDef + 0x14) * (u32)DAT_803dc070;
+                *framePtr = *framePtr + (u32) * (u16*)(animDef + 0x14) * (u32)lbl_803DC070;
                 while ((int)(u32) * (u16*)(animDef + 0x10) <= *framePtr)
                 {
                     *framePtr = *framePtr - (u32) * (u16*)(animDef + 0x10);
@@ -467,7 +467,7 @@ void FUN_800533cc(int animDef, u32* flagsPtr, int* framePtr)
             }
             else
             {
-                *framePtr = *framePtr - (u32) * (u16*)(animDef + 0x14) * (u32)DAT_803dc070;
+                *framePtr = *framePtr - (u32) * (u16*)(animDef + 0x14) * (u32)lbl_803DC070;
                 while (*framePtr < 0)
                 {
                     *framePtr = *framePtr + (u32) * (u16*)(animDef + 0x10);
@@ -478,11 +478,11 @@ void FUN_800533cc(int animDef, u32* flagsPtr, int* framePtr)
         {
             if (reverse == 0)
             {
-                *framePtr = *framePtr + (u32) * (u16*)(animDef + 0x14) * (u32)DAT_803dc070;
+                *framePtr = *framePtr + (u32) * (u16*)(animDef + 0x14) * (u32)lbl_803DC070;
             }
             else
             {
-                *framePtr = *framePtr - (u32) * (u16*)(animDef + 0x14) * (u32)DAT_803dc070;
+                *framePtr = *framePtr - (u32) * (u16*)(animDef + 0x14) * (u32)lbl_803DC070;
             }
             do
             {
@@ -514,7 +514,7 @@ void FUN_800533cc(int animDef, u32* flagsPtr, int* framePtr)
     }
     else if (reverse == 0)
     {
-        *framePtr = *framePtr + (u32) * (u16*)(animDef + 0x14) * (u32)DAT_803dc070;
+        *framePtr = *framePtr + (u32) * (u16*)(animDef + 0x14) * (u32)lbl_803DC070;
         if ((int)(u32) * (u16*)(animDef + 0x10) <= *framePtr)
         {
             *framePtr = ((u32) * (u16*)(animDef + 0x10) * 2 + -1) - *framePtr;
@@ -531,7 +531,7 @@ void FUN_800533cc(int animDef, u32* flagsPtr, int* framePtr)
     }
     else
     {
-        *framePtr = *framePtr - (u32) * (u16*)(animDef + 0x14) * (u32)DAT_803dc070;
+        *framePtr = *framePtr - (u32) * (u16*)(animDef + 0x14) * (u32)lbl_803DC070;
         if (*framePtr < 0)
         {
             *framePtr = 0;
@@ -696,7 +696,7 @@ void FUN_80053b3c(void)
     u32* state;
 
     state = FUN_800e87a8();
-    DAT_803dda80 = 0xffffffff;
+    gTumbleweedBushHitCooldownState = 0xffffffff;
     *(u8*)(state + 0x10) = *(u8*)(state + 0x10) & 0xdf;
     return;
 }
