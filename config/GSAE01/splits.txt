@@ -18,9 +18,11 @@ main/render.c:
 
 main/audio.c:
 	.text       start:0x80008DF4 end:0x8000DD74
+	.bss        start:0x80335940 end:0x80336D10
 
 main/camera.c:
 	.text       start:0x8000DD74 end:0x8000FE8C
+	.bss        start:0x80337090 end:0x80338790
 
 main/curves.c:
 	.text       start:0x8000FE8C end:0x80010FF4
@@ -30,9 +32,11 @@ main/voxmaps.c:
 
 main/modelEngine.c:
 	.text       start:0x800139E8 end:0x80014A28
+	.bss        start:0x80338818 end:0x803398B0
 
 main/pad.c:
 	.text       start:0x80014A28 end:0x80015624
+	.bss        start:0x803398B0 end:0x80339950
 
 main/fileio.c:
 	.text       start:0x80015624 end:0x80015BC8
@@ -45,18 +49,21 @@ dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
 
 main/textrender.c:
 	.text       start:0x80017434 end:0x8001CB3C
+	.bss        start:0x8033AF40 end:0x8033BE40
 
 main/modellight.c:
 	.text       start:0x8001CB3C end:0x8001F54C
 
 main/gameloop.c:
 	.text       start:0x8001F54C end:0x80021370
+	.bss        start:0x8033BF88 end:0x8033C7A0
 
 main/vecmath.c:
 	.text       start:0x80021370 end:0x80022948
 
 main/mm.c:
 	.text       start:0x80022948 end:0x8002430C
+	.bss        start:0x8033C7A0 end:0x80340740
 
 main/model.c:
 	.text       start:0x8002430C end:0x8002A5D4
@@ -69,45 +76,55 @@ main/objanim.c:
 
 main/objhits.c:
 	.text       start:0x80030688 end:0x800353A4
+	.bss        start:0x803408F8 end:0x803428F8
 
 main/objHitReact.c:
 	.text       start:0x800353A4 end:0x800358D4
 
 main/objlib.c:
 	.text       start:0x800358D4 end:0x80038F38
+	.bss        start:0x803428F8 end:0x80342E10
 
 main/objprint.c:
 	.text       start:0x80038F38 end:0x8003D6F8
 
 main/objprint_dolphin.c:
 	.text       start:0x8003D6F8 end:0x800443CC
+	.bss        start:0x80342E10 end:0x8035EF48
 
 main/pi_dolphin.c:
 	.text       start:0x800443CC end:0x80051868
+	.bss        start:0x8035F680 end:0x803779A0
 
 main/rcp_dolphin.c:
 	.text       start:0x80051868 end:0x80055980
+	.bss        start:0x803779C0 end:0x8037E0C0
 
 main/shader.c:
 	.text       start:0x80055980 end:0x8005AB70
+	.bss        start:0x803822C8 end:0x80386468
 
 main/lightmap.c:
 	.text       start:0x8005AB70 end:0x8005DF5C
+	.bss        start:0x803868D8 end:0x803878D8
 
 main/tex_dolphin.c:
 	.text       start:0x8005DF5C end:0x8005F920
 
 main/track_dolphin.c:
 	.text       start:0x8005F920 end:0x8006A028
+	.bss        start:0x803879B0 end:0x8038DF48
 
 main/newshadows.c:
 	.text       start:0x8006A028 end:0x8006EF38
+	.bss        start:0x8038DF48 end:0x80391DC0
 
 track/intersect.c:
 	.text       start:0x8006EF38 end:0x8007E77C
 
 main/maketex.c:
 	.text       start:0x8007E77C end:0x80080DE8
+	.bss        start:0x803994EC end:0x80399E50
 
 main/objseq.c:
 	.text       start:0x80080DE8 end:0x80088758
@@ -117,6 +134,7 @@ main/sky.c:
 
 main/newclouds.c:
 	.text       start:0x8008EE18 end:0x80094494
+	.bss        start:0x8039A818 end:0x8039AB28
 
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 	.text       start:0x80094494 end:0x800944A0
@@ -142,6 +160,7 @@ main/dll/dll_000A_expgfx.c:
 
 main/dll/dll_000B_dll0b.c:
 	.text       start:0x8009FFF0 end:0x800A3A40
+	.bss        start:0x8039BE98 end:0x8039C2C0
 
 main/dll/dll_000C_projgfx.c:
 	.text       start:0x800A3A40 end:0x800A3AF0
@@ -223,6 +242,7 @@ main/dll/dll_002D_effect20.c:
 
 main/dll/dll_0003_checkpoint.c:
 	.text       start:0x800D5530 end:0x800D7568
+	.bss        start:0x8039C458 end:0x8039CAE8
 
 main/dll/dll_0016_screentransition.c:
 	.text       start:0x800D7568 end:0x800D7F5C
@@ -241,12 +261,15 @@ main/dll/dll_0012_unk.c:
 
 main/dll/dll_0014_unk.c:
 	.text       start:0x800D9EE8 end:0x800E5434
+	.bss        start:0x8039CAE8 end:0x803A17E8
 
 main/dll/dll_0015_curves.c:
 	.text       start:0x800E5434 end:0x800E8100
+	.bss        start:0x803A2C38 end:0x803A2F80
 
 main/dll/dll_0017_savegame.c:
 	.text       start:0x800E8100 end:0x800EA174
+	.bss        start:0x803A2F80 end:0x803A31C4
 
 main/dll/dll_0011_screens.c:
 	.text       start:0x800EA174 end:0x800EA774
@@ -828,6 +851,7 @@ main/dll/dll_02C0_front.c:
 
 main/dll/dll_80136a40.c:
 	.text       start:0x80136A40 end:0x8013939C
+	.bss        start:0x803AA018 end:0x803AC428
 
 main/dll/skeetla.c:
 	.text       start:0x8013939C end:0x8013B368

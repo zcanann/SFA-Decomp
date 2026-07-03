@@ -4656,7 +4656,7 @@ extern void* externalFrameBuffer0;
 extern void* externalFrameBuffer1;
 extern u8 lbl_803DCCA7;
 extern u16 lbl_803DB5CE;
-extern char lbl_8035F730[];
+char lbl_8035F730[0x10];
 
 int GXFlush_(u8 visible, int unused)
 {
@@ -7276,7 +7276,7 @@ void fn_8004EF9C(int* param)
 }
 
 extern u8 lbl_802CC6A0[];
-extern char lbl_8035F680[];
+char lbl_8035F680[0x38];
 extern void OSStopStopwatch(void* sw);
 extern u64 OSCheckStopwatch(void* sw);
 extern void OSResetStopwatch(void* sw);
@@ -7819,7 +7819,7 @@ extern void GXEnableTexOffsets(int coord, int line_enable, int point_enable);
 extern void GXLoadPosMtxImm(void* mtx, int id);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXSetMisc(GXMiscToken token, u32 val);
-extern char lbl_8035F6B8[];
+char lbl_8035F6B8[0x78];
 extern char* lbl_803DCCE0;
 extern int lbl_803DCCB8;
 extern int lbl_803DCCF4;
@@ -7982,16 +7982,16 @@ extern InflateBaseExtra gInflateLengthCodes[29];
 extern InflateBaseExtra gInflateDistCodes[30];
 extern u8 lbl_803DCD20[];
 extern u8 lbl_803DCD18[];
-extern u8 lbl_80377880[];
-extern u16 lbl_80377894[];
-extern u16 lbl_80377954[];
-extern u16 lbl_803778B4[];
-extern u16 lbl_80377974[];
-extern u8 lbl_803778D4[];
-extern u8 lbl_8035F740[];
-extern u16 lbl_8035F860[];
-extern u8 lbl_8036F860[];
-extern u8 lbl_8036F880[];
+u8 lbl_80377880[0x14];
+u16 lbl_80377894[0x10];
+u16 lbl_80377954[0x10];
+u16 lbl_803778B4[0x10];
+u16 lbl_80377974[0x16];
+u8 lbl_803778D4[0x80];
+u8 lbl_8035F740[0x120];
+u16 lbl_8035F860[0x8000];
+u8 lbl_8036F860[0x20];
+u8 lbl_8036F880[0x8000];
 
 #define ZROT1(b) ((u32)__rlwnm((b), sh, 31, 31))
 #define ZROT8(b) ((u32)__rlwnm((b), sh, 24, 31))

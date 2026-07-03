@@ -129,8 +129,8 @@ void cloudSetOverridePosition(f32 a, f32 b, f32 c)
 
 extern void ModelLightStruct_free(void* p);
 extern void Music_Trigger(int id, int arg);
-extern void* gNewCloudLayerTextures[];
-extern void* gNewClouds[];
+void* gNewCloudLayerTextures[4];
+void* gNewClouds[8];
 extern void* lbl_803DD1C8;
 extern void* lbl_803DD1C4;
 extern void* gNewCloudModelLight;
@@ -249,7 +249,7 @@ typedef struct FogColor
 extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
 extern int snowPrintSnowCloud(int arg, int x);
 extern void drawFn_80079e64(double s1, u8 mtxIdx, void* vec, double s2, u8 a0, u8 a1, double s3);
-extern f32 lbl_8039A8F0[];
+f32 lbl_8039A8F0[4];
 extern int gNewCloudSnowFogColor;
 
 typedef struct
@@ -445,7 +445,7 @@ typedef struct WindSource
 } WindSource;
 
 #define NEWCLOUD_WIND_SOURCE_COUNT 6
-extern WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
+WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
 extern s16 renderModeSetOrGet(int mode);
 extern void normalize(f32 * x, f32 * y, f32 * z);
 
@@ -706,8 +706,8 @@ extern void GXSetPointSize(int size, int fmt);
 extern int gNewCloudStarFogColor;
 extern u8 gNewCloudStarAlphaRanges[8];
 extern u8 gNewCloudStarColorRanges[];
-extern u16 gNewCloudStarDisplayListSizes[];
-extern void* gNewCloudStarDisplayLists[];
+u16 gNewCloudStarDisplayListSizes[0x5C];
+void* gNewCloudStarDisplayLists[0x5C];
 extern char* gNewCloudStarTextureA;
 extern char* gNewCloudStarTextureB;
 extern const f32 gNewCloudStarFadeInTime;

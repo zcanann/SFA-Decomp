@@ -1,6 +1,10 @@
 #include "main/audio/sfx_ids.h"
 #include "main/engine_shared.h"
 
+void* gResourceLoadedHandles[0x2C1];
+u16 gResourceRefCounts[0x2C2];
+char gModelEngineTextBuf[0x10];
+
 #define RESOURCE_DESCRIPTOR_COUNT 0x2c1
 
 RingBufferQueue* allocModelStruct_800139e8(int capacity, int elemSize)

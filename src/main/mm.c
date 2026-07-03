@@ -198,7 +198,7 @@ typedef struct
     int f10;
 } MmRegion;
 
-extern MmRegion gMmRegionTable[];
+MmRegion gMmRegionTable[0xA0 / sizeof(MmRegion)];
 
 typedef struct
 {
@@ -283,11 +283,11 @@ typedef struct
     u8 pad[3];
 } DeferredFree;
 
-extern DeferredFree gMmDeferredFreeStack[];
+DeferredFree gMmDeferredFreeStack[0x3E80 / sizeof(DeferredFree)];
 extern char sMmShowInfoFBMemoryStoreMessageBlock[];
 extern char sMmStoreAllocationTag;
 extern int gMmNextStoreHandle;
-extern void* gMmStoreArray[];
+void* gMmStoreArray[0x20];
 
 typedef struct
 {

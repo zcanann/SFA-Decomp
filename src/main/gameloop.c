@@ -258,7 +258,7 @@ typedef struct
     int f24;
 } AssetReq;
 
-extern AssetReq gGameLoopAssetReq;
+AssetReq gGameLoopAssetReq;
 extern void* fileLoad(int id, int heap);
 extern void fileLoadToBuffer(int id, void* buf);
 extern void* textureLoad(int texId, u8 flag);
@@ -639,7 +639,7 @@ typedef struct PlayerTrailRecord
     int time;
 } PlayerTrailRecord;
 
-extern PlayerTrailRecord gGameLoopPlayerTrailBuffer[];
+PlayerTrailRecord gGameLoopPlayerTrailBuffer[0x3C0 / sizeof(PlayerTrailRecord)];
 extern int gGameLoopPlayerTrailIndex;
 extern u8 gGameLoopMusicActive;
 extern f32 lbl_803DE7B4;
@@ -709,8 +709,8 @@ extern u8 GXNtsc480IntDf[];
 extern u8 GXNtsc480Prog[];
 extern void* gRenderModeObj;
 extern u8 gGameLoopProgressiveMode;
-extern u8 lbl_8033C3B8[];
-extern u8 gGameLoopRenderModeCopy[];
+u8 lbl_8033C3B8[0x3E8];
+u8 gGameLoopRenderModeCopy[0x40];
 extern char sMainFinishedInitMessage[];
 extern void* lbl_803DCA94;
 extern void* gTitleMenuControlInterface;

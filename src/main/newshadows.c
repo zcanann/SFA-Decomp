@@ -1450,7 +1450,7 @@ void fn_8006CB24(void)
     lbl_803DCFBC = 0;
 }
 
-extern u8 lbl_8038E1E8[0x80];
+u8 lbl_8038E1E8[0x80];
 #pragma scheduling off
 #pragma peephole off
 void fn_8006C4C0(int* p1, int* p2, int* p3)
@@ -1460,7 +1460,7 @@ void fn_8006C4C0(int* p1, int* p2, int* p3)
     *p3 = 8;
 }
 
-extern int gNewShadowNoiseTexFrames[0x10];
+int gNewShadowNoiseTexFrames[0x10];
 
 void textureFn_8006c4e0(int* p1, int* p2)
 {
@@ -1533,7 +1533,7 @@ typedef struct NewShadowEntry
 /* Linear search by pointer identity through the shadow entry table.
  * Clears the active flag when the entry matches the needle. */
 #define NEW_SHADOW_ENTRY_CAPACITY 0x25
-extern NewShadowEntry gNewShadowEntries[NEW_SHADOW_ENTRY_CAPACITY];
+NewShadowEntry gNewShadowEntries[0x294 / sizeof(NewShadowEntry)];
 
 void findSomething(void* needle)
 {
@@ -1550,7 +1550,7 @@ void findSomething(void* needle)
 
 extern u8 gNewShadowFrameIndex;
 #define NEW_SHADOW_FRAME_COUNT 3
-extern u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
+u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 
 void objShadowFn_8006c5f0(int obj, u32* outTable, f32* outF, int* outX, int* outY)
 {
@@ -1703,7 +1703,7 @@ typedef struct
     u8 flags;
 } NewShadowCaster;
 
-extern NewShadowCaster gNewShadowCasterTable[];
+NewShadowCaster gNewShadowCasterTable[0x36CC / sizeof(NewShadowCaster)];
 extern f32 Ydchuff_803DED80;
 extern f32 Ydchuff_803DED90;
 extern const double TokenCB_803DED58;
@@ -1806,7 +1806,7 @@ extern const f32 __PADFixBits;
 extern const f32 Yachuff_803DEDE0;
 extern const f32 Yachuff_803DEDE4, Yachuff_803DEDE8;
 extern const f32 Vdchuff_803DEDD8, Vdchuff_803DEDDC;
-extern f32 gNewShadowPlacements[];
+f32 gNewShadowPlacements[0x112];
 extern f32 gNewShadowReflectionScrollY, gNewShadowReflectionScrollX;
 
 #pragma opt_common_subs off

@@ -1201,7 +1201,7 @@ void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32* p)
     lbl_803DCE30++;
 }
 
-extern u32 gVisibleObjectSortKeys[];
+u32 gVisibleObjectSortKeys[0x400];
 extern int gLightmapDeferredObjectCount;
 extern s16 gVisibleObjectSortKeyCount;
 extern void objRender(int a, int b, int c, int d, void* obj, int f);

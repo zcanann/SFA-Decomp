@@ -33,6 +33,8 @@
 #include "main/gamebits.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
+
+RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj,

@@ -134,7 +134,7 @@ extern f32 __AR_Callback;
 extern f32 __AR_Size;
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern void vecRotateZXY(void* xf, f32* out);
-extern f32 lbl_8038D7DC[];
+f32 lbl_8038D7DC[0x19];
 extern s16 gShadowVisibleCount;
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
@@ -145,7 +145,7 @@ extern const f32 lbl_803DEC74;
 extern void PSVECNormalize(f32 * src, f32 * dst);
 extern f32 PSVECSquareMag(f32 * v);
 extern f32 sqrtf(f32 x);
-extern f32 gPrevSunDir[];
+f32 gPrevSunDir[3];
 extern s16 gSunMagnitude;
 extern f32 gSunDotCos;
 extern int gSunDirChanged;
@@ -1200,7 +1200,7 @@ void setShadowFlag_803db658(s32 v)
 
 extern u8 gActiveTrackBlockCount;
 extern u32 gTrackTriangleBuffer;
-extern u8 gTrackGridOrigin[];
+u8 gTrackGridOrigin[0x104];
 
 typedef struct TrackBlockDescriptor
 {
@@ -1213,7 +1213,7 @@ typedef struct TrackBlockDescriptor
     void* alternateCollisionMatrix;
 } TrackBlockDescriptor;
 
-extern TrackBlockDescriptor gTrackBlockDescriptors[];
+TrackBlockDescriptor gTrackBlockDescriptors[20];
 
 /* TrackTriangle -- the 0x4c-byte collision triangle record packed into
  * gTrackTriangleBuffer.  Plane and edge-plane normals are prebaked f32;
@@ -2596,7 +2596,7 @@ extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
 
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
 
-extern u8 gShadowDrawScratch[];
+u8 gShadowDrawScratch[0x5DC0];
 extern int gShadowVolumeBuffer;
 extern int lbl_803DCEE0;
 extern int lbl_803DCEE4;
@@ -3175,7 +3175,7 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
     }
 }
 
-extern u8 gIntersectSegmentTypeTable[];
+u8 gIntersectSegmentTypeTable[0x424];
 extern int lbl_803DCF64;
 extern int lbl_803DCF68;
 extern s8 lbl_803DCF60;
@@ -4295,7 +4295,7 @@ void gxErrorFn_80060b40(void)
     }
 }
 
-extern f32 lbl_8038D77C[];
+f32 lbl_8038D77C[0x18];
 extern const f32 __AR_FreeBlocks;
 extern const f32 __AR_StackPointer;
 extern const f32 __AR_ExpansionSize;

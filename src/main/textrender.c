@@ -973,7 +973,7 @@ typedef struct
     u8 _pad2[8];
 } GameTextStateElem;
 
-extern GameTextStateElem gGameTextCharsets[];
+GameTextStateElem gGameTextCharsets[0xA0 / sizeof(GameTextStateElem)];
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -1360,7 +1360,7 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
 #pragma optimization_level reset
 
 extern void* gSubtitleBoxTextures[];
-extern void* gSubtitleLineTable[];
+void* gSubtitleLineTable[0x100];
 extern int gSubtitleBlockCount;
 
 #pragma peephole off
@@ -1465,7 +1465,7 @@ void subtitleStart(int x)
     }
 }
 
-extern u8 curGameTexts[];
+u8 curGameTexts[0x260];
 
 void dvdCancelCallback_8001b39c(int a, u8* match)
 {
@@ -2710,8 +2710,8 @@ extern int gSubtitleLineIndex;
 extern f32 gSubtitleCurTime;
 extern int gSubtitleElapsedFrames;
 extern int gSubtitleLineCount;
-extern int gSubtitleLineStrs[];
-extern f32 gSubtitleLineTimes[];
+int gSubtitleLineStrs[0x100];
+f32 gSubtitleLineTimes[0x100];
 extern f32 gSubtitleFramesPerSecond;
 
 typedef struct

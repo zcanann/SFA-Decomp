@@ -17,6 +17,12 @@ typedef struct PadStateBlock {
     PadStatusLite status[8]; // 0x40
 } PadStateBlock;
 
+u32 gPadStateBlock[4];
+u32 gPadButtonsHeld[4];
+u32 lbl_803398D0[4];
+u32 gPadButtonsJustPressed[4];
+u8 gPadStatuses[0x60];
+
 void doNothing_endOfFrame(void)
 {
 }

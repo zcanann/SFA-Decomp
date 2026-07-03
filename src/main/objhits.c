@@ -14,8 +14,9 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
 extern void debugPrintf(char* fmt, ...);
 extern f32 sqrtf(f32 v);
 extern float mathCosf(float x);
-extern ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
-extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
+ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
+ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
+f32 gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT * OBJHITS_CONTACT_SCRATCH_WORDS];
 extern u8* gObjHitsPriorityHitStates;
 extern f64 lbl_803DE928;
 extern f32 oneOverTimeDelta;

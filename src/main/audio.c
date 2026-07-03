@@ -1,6 +1,14 @@
 #include "main/engine_shared.h"
 #include "main/game_object.h"
 
+TextCallbackEntry gAudioArqRequests[0x300 / sizeof(TextCallbackEntry)];
+u8 gAudioReverbSettings[0x154];
+u8 gAudioAramBlock[0x2C];
+MusicChannel gMusicChannels[0x240 / sizeof(MusicChannel)];
+SfxObjectChannel gSfxObjectChannels[0xC40 / sizeof(SfxObjectChannel)];
+u8 gAudioStreamDvdBlockCurrent[0x30];
+u8 gAudioStreamDvdBlockPrepared[0xA0];
+
 // AISetStreamPlayState() states
 #define AI_STREAM_STOP 0
 #define AI_STREAM_START 1

@@ -23,6 +23,8 @@
  * an object onto the route and select the active checkpoint segment.
  */
 #include "main/checkpoint_route.h"
+
+CheckpointSlot gCheckpointRouteTable[0x640 / sizeof(CheckpointSlot)];
 extern int randomGetRange(int lo, int hi);
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
@@ -39,7 +41,6 @@ extern f32 lbl_803E04E4;
 #pragma dont_inline on
 CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
 {
-    extern CheckpointSlot gCheckpointRouteTable[]; /* #57 */
     extern s32 gCheckpointRouteCount; /* #57 */
     s32 high;
     s32 low;
@@ -649,7 +650,7 @@ void Checkpoint_release(void)
 
 void Checkpoint_reset(void) { extern u32 gCheckpointRouteCount; /* #57 */ gCheckpointRouteCount = 0x0; }
 
-extern u32 gCheckpointPartFxListBuffer[];
+u32 gCheckpointPartFxListBuffer[0x14];
 
 #pragma scheduling off
 void Checkpoint_initialise(void)
@@ -666,7 +667,6 @@ void Checkpoint_initialise(void)
 #pragma peephole off
 void Checkpoint_Add(CheckpointRouteEntry* entry)
 {
-    extern CheckpointSlot gCheckpointRouteTable[]; /* #57 */
     extern u32 gCheckpointRouteCount; /* #57 */
     int i = 0;
     CheckpointSlot* p = gCheckpointRouteTable;
@@ -694,7 +694,6 @@ void Checkpoint_Add(CheckpointRouteEntry* entry)
 #pragma opt_common_subs off
 void Checkpoint_remove(CheckpointRouteEntry* obj)
 {
-    extern CheckpointSlot gCheckpointRouteTable[]; /* #57 */
     extern u32 gCheckpointRouteCount; /* #57 */
     int count;
     int i = 0;
@@ -732,7 +731,6 @@ extern f32 lbl_803E0538;
 #pragma opt_propagation off
 void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
 {
-    extern CheckpointSlot gCheckpointRouteTable[]; /* #57 */
     extern u32 gCheckpointRouteCount; /* #57 */
     int stack[64];
     char visited[200];

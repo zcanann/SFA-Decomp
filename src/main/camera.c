@@ -1,6 +1,17 @@
 #include "main/engine_shared.h"
 #include "main/game_object.h"
 
+f32 gObjInverseYawTransformMatrices[0x1E][16];
+f32 gObjYawTransformMatrices[0x22][16];
+u8 lbl_80338090[0x100];
+f32 gCameraDefaultModelMatrix[16];
+CameraViewSlot gCameraShakeSlots[0x480 / sizeof(CameraViewSlot)];
+f32 gCameraViewRotationMatrix[16];
+f32 gCameraInverseViewRotationMatrix[16];
+f32 gCameraViewMatrix[16];
+f32 gCameraInverseViewMatrix[16];
+f32 gCameraProjectionMatrix[16];
+
 void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex)
 {
     s32 matrixIndex;

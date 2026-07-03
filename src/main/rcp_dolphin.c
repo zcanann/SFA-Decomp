@@ -874,7 +874,7 @@ void warpToMap(int idx, s8 transType)
     Pause_SetDisabled(1);
 }
 
-extern u8 gRcpDistortSlots[];
+u8 gRcpDistortSlots[0xA8];
 
 #pragma peephole on
 void ShaderDef_free(int* def)
@@ -2000,7 +2000,7 @@ extern void GXBegin(int prim, int vtxfmt, u16 nverts);
 extern f32 sqrtf(f32 x);
 extern u8 gRcpWarpDistortListBuilt;
 extern u32 gRcpWarpDistortListSize;
-extern u8 gRcpWarpDistortDisplayList[];
+u8 gRcpWarpDistortDisplayList[0x6640];
 extern F32Pair LastReadFinished_803DEB50;
 extern f32 lbl_803DEB54;
 extern f32 lbl_803DEB64;
@@ -2217,8 +2217,8 @@ void initFn_800534f8(void)
 
 extern void* getCurrentDataFile(int id);
 extern void loadAssetFileById(void* out, int id);
-extern int* gRcpTexBankTable[3];
-extern int gRcpTexBankCount[3];
+int* gRcpTexBankTable[3];
+int gRcpTexBankCount[3];
 extern u16* gRcpTexIdRemap;
 extern void* gRcpTexHeaderBuffer;
 void* textureLoad(int texId, u8 flag);

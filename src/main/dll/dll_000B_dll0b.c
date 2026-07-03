@@ -1308,8 +1308,8 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
     return spawnResult;
 }
 
-extern u8 gModgfxSpawnContextStorage[];
-extern ModgfxPendingSpawn gModgfxPendingSpawnQueue[];
+u8 gModgfxSpawnContextStorage[0x60];
+ModgfxPendingSpawn gModgfxPendingSpawnQueue[0x300 / sizeof(ModgfxPendingSpawn)];
 extern s16 gModgfxLastSpawnHandle;
 extern s16 gModgfxSequenceParamIndex;
 extern ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
@@ -1412,7 +1412,7 @@ void dll_0B_release(void)
 
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
-extern void*gPartfxActiveEffects[];
+void* gPartfxActiveEffects[0x32];
 extern void Obj_FreeObject(void* obj);
 #pragma peephole off
 void dll_0B_initialise(void)

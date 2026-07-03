@@ -85,8 +85,8 @@ extern f32 lbl_803E06C8;
 extern f32 lbl_803E06CC;
 extern u16 gSaveGameMapActBits[];
 extern u16 gSaveGameMapObjGroupBits[];
-extern u32 gMapObjGroupStatuses[];
-extern u8 gExtendedMapActLookup[];
+u32 gMapObjGroupStatuses[0x78];
+u8 gExtendedMapActLookup[0x28];
 extern int gSaveGameObjGroupCacheIdx;
 extern s8 gSaveGameMapActCacheIdx;
 extern u32 pRestartPoint;
@@ -212,7 +212,7 @@ typedef struct MapBitTransient
     s8 timer;
 } MapBitTransient;
 
-extern MapBitTransient gTransientMapBits[];
+MapBitTransient gTransientMapBits[0x3C / sizeof(MapBitTransient)];
 
 /* The three .bss objects gTransientMapBits (0x803A2F80), gMapObjGroupStatuses
  * (+0x3C) and gExtendedMapActLookup (+0x21C) are contiguous; the retail VtableFn

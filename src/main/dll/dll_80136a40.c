@@ -74,7 +74,7 @@ extern void* gDebugFontTex2;
 extern void* gDebugFontTex1;
 extern void* gDebugFontTex0;
 extern void* debugLogEnd;
-extern u8 debugLogBuffer[0x1100];
+u8 debugLogBuffer[0x1100];
 extern u32 getScreenResolution(void);
 extern int gDebugRecordCount;
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
@@ -89,7 +89,7 @@ extern u32 gDebugPrintOriginX;
 extern u32 gDebugPrintOriginY;
 extern u16 debugPrintXpos;
 extern u16 debugPrintYpos;
-extern u8 gErrDisplayThread[];
+u8 gErrDisplayThread[0x310];
 extern s16 gErrExceptionType;
 extern u32 gErrContext;
 extern u32 lbl_803DDA38;
@@ -107,7 +107,7 @@ extern void OSSetErrorHandler(int kind, void* handler);
 #define OS_ERROR_PROTECTION 15
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
 
-extern u8 gErrDisplayThreadStack[];
+u8 gErrDisplayThreadStack[0x1000];
 extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
 extern f32 lbl_803E23DC;

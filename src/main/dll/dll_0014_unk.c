@@ -96,9 +96,9 @@ typedef struct ObjfsaWalkGroupPatchInfo
     u16 patchGroupIds[OBJFSA_PATCHGROUP_PATCH_COUNT];
 } ObjfsaWalkGroupPatchInfo;
 
-extern ObjfsaPatch gObjfsaPatches[];
-extern ObjfsaWalkGroup gObjfsaWalkGroups[];
-extern u8 gObjfsaWalkGroupActive[];
+ObjfsaPatch gObjfsaPatches[0x3000 / sizeof(ObjfsaPatch)];
+ObjfsaWalkGroup gObjfsaWalkGroups[0x1C48 / sizeof(ObjfsaWalkGroup)];
+u8 gObjfsaWalkGroupActive[0xB8];
 
 #pragma scheduling on
 #pragma peephole on

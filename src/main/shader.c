@@ -768,7 +768,7 @@ int ViewFrustum_IsSphereVisible(float* center, float radius)
     return 1;
 }
 
-extern char lbl_803822C8[];
+char lbl_803822C8[0x41A0];
 #define ROM_LIST_PAGE_COUNT 120
 extern void* gLoadedRomListPages[];
 extern void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);

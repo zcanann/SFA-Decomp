@@ -41,8 +41,8 @@ extern int objGetAnimState80A(void* obj);
 #define OBJLIB_PRIMARY_ROM_PAGE_COUNT 0x50
 #define OBJHITREGION_ROM_ENTRY_TYPE 0x130
 
-extern u32 gObjGroupObjects[OBJGROUP_MAX_OBJECTS];
-extern u8 gObjGroupOffsets[0x58];
+u32 gObjGroupObjects[OBJGROUP_MAX_OBJECTS];
+u8 gObjGroupOffsets[0x58];
 
 typedef struct ObjContactCallbackEntry
 {
@@ -76,7 +76,7 @@ struct ObjLibRegionList
     ObjLibRegionEntry* entries;
 };
 
-extern ObjContactCallbackEntry gObjContactCallbacks[];
+ObjContactCallbackEntry gObjContactCallbacks[0xC0 / sizeof(ObjContactCallbackEntry)];
 extern void* gObjHitsWorkBuffer;
 extern u8* gObjHitsPriorityHitStates;
 extern u8 gObjGroupObjectCount;
