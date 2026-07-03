@@ -1330,11 +1330,11 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
     u16 outSfxId;
     u8 vol;
     f32 pitch;
-    f32 f7;
-    f32 f8;
-    int i9;
-    int i10;
-    int i11;
+    f32 nearDist;
+    f32 farDist;
+    int channelMask;
+    int stealExisting;
+    int globalCtrlDisabled;
     f32 delta[3];
     SfxObjectChannel* found;
     SfxObjectChannel* ch;
@@ -1346,7 +1346,7 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
         return;
     }
     if (!Sfx_ReadTriggerParams((SfxTriggerFull*)Sfx_FindTrigger(sfxId), &outSfxId,
-                               &vol, &pitch, &f7, &f8, &i9, &i10, &i11))
+                               &vol, &pitch, &nearDist, &farDist, &channelMask, &stealExisting, &globalCtrlDisabled))
     {
         return;
     }
@@ -1357,7 +1357,7 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
     }
     if (pos != NULL)
     {
-        f32 maxDist = f8;
+        f32 maxDist = farDist;
         if (!(Sfx_GetListenerRelativeDistance(pos, delta) <= maxDist))
         {
             return;
@@ -1365,21 +1365,21 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
     }
     if ((u8)channel != 0)
     {
-        i9 = (u8)channel;
+        channelMask = (u8)channel;
     }
-    if (obj != 0 && i9 != 0)
+    if (obj != 0 && channelMask != 0)
     {
-        if ((u8)i9 == 0 || obj == 0)
+        if ((u8)channelMask == 0 || obj == 0)
         {
             found = NULL;
         }
         else
         {
-            found = Sfx_FindObjectChannel(obj, (u8)i9, 0, 0);
+            found = Sfx_FindObjectChannel(obj, (u8)channelMask, 0, 0);
         }
         if (found != NULL)
         {
-            if (i10 == 0)
+            if (stealExisting == 0)
             {
                 return;
             }
@@ -1399,29 +1399,29 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
         }
         if (found != NULL)
         {
-            if (i10 != 0 || (int)gSfxObjectChannelMatchCount == 3)
+            if (stealExisting != 0 || (int)gSfxObjectChannelMatchCount == 3)
             {
                 sndFXKeyOff(found->handle);
                 found->handle = (u32) - 1;
             }
         }
     }
-    ch = Sfx_AllocObjectChannel(outSfxId, vol, pitch, 0x40, i11);
+    ch = Sfx_AllocObjectChannel(outSfxId, vol, pitch, 0x40, globalCtrlDisabled);
     if (ch == NULL)
     {
         return;
     }
     ch->sfxId = sfxId;
-    ch->channelMask = i9;
+    ch->channelMask = channelMask;
     ch->object = obj;
     if (pos != NULL)
     {
-        ch->field20 = f7;
-        ch->field24 = f8;
+        ch->field20 = nearDist;
+        ch->field24 = farDist;
         ch->hasPosition = 1;
         {
             int t = 0;
-            if (tracksObj != 0 && i9 != 0)
+            if (tracksObj != 0 && channelMask != 0)
             {
                 t = 1;
             }
