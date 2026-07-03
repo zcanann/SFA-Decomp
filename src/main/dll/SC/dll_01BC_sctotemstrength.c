@@ -63,6 +63,9 @@ extern f32 lbl_803E56A4;
 #define PLATFORM1_TRACK_EXIT_NEG (-0x46dc) /* offset below this -> EXIT_NEGATIVE */
 #define PLATFORM1_TRACK_EXIT_POS (-0xb24)  /* offset above this -> EXIT_POSITIVE */
 
+#define SC_TOTEMSTRENGTH_OBJFLAG_HIDDEN 0x4000
+#define SC_TOTEMSTRENGTH_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /* platform1_control: tug-of-war rope
  * minigame. Resolves the anchor object, applies sequence events, then per
  * frame works the rope position from A-press mashing, runs both pull anims
@@ -378,7 +381,7 @@ void sc_totemstrength_init(int* obj)
     GameObject* self = (GameObject*)obj;
     Platform1State* st = self->extra;
     self->animEventCallback = platform1_control;
-    self->objectFlags |= 0x6000;
+    self->objectFlags |= (SC_TOTEMSTRENGTH_OBJFLAG_HIDDEN | SC_TOTEMSTRENGTH_OBJFLAG_HITDETECT_DISABLED);
     self->anim.rotX = (s16) - 10496;
     st->currentTrackOffset = -10496;
     st->transitionStep = 0;
