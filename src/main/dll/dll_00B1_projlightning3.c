@@ -11,6 +11,8 @@
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
+char sProjlightning3DoNoLongerSupported[] = "<projlightning3 Do>No Longer supported \n";
+
 int projlightning3_doUnsupported(void)
 {
     OSReport(sProjlightning3DoNoLongerSupported);
