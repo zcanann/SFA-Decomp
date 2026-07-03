@@ -104,7 +104,7 @@ main/rcp_dolphin.c:
 
 main/shader.c:
 	.text       start:0x80055980 end:0x8005AB70
-	.bss        start:0x803822C8 end:0x80386468
+	.bss        start:0x8037E0C0 end:0x80386468
 
 main/lightmap.c:
 	.text       start:0x8005AB70 end:0x8005DF5C

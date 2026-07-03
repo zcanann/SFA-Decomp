@@ -3446,3 +3446,15 @@ void mapDebugRender(int* state)
     }
 }
 #pragma optimization_level reset
+
+/* .bss glue block 0x8037E0C0-0x803822C8 (defined here; other units reference) */
+char lbl_8037E0C0[0x2149];
+u8 lbl_80380209[0x1DFF];
+u8 lbl_80382008[0x30];
+u8 gGlowLightList[0x190];
+u8 distortionFilterVector[0x70];
+int gShaderMapRomBuffers[0x5];
+BlockEntry gShaderRomListSlots[8];
+u8 lbl_8038228C[0x14];
+int lbl_803822A0[5];
+int gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
