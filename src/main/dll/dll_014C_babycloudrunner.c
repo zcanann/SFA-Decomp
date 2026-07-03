@@ -250,18 +250,18 @@ STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
+void sandworm_turnTowardTargetAnim(int a, int b, BabyCloudRunnerState* c, int d)
 {
     int shifted;
-    fn_8003ADC4((int*)a, (int*)b, c + 0x3c, 0x28, 0, 3);
+    fn_8003ADC4((int*)a, (int*)b, c->lookBlock, 0x28, 0, 3);
     shifted = Obj_GetYawDeltaToObject(a, b, 0);
     *(s16*)a += (shifted >>= 3);
     if (d == 0) return;
     if ((s16)shifted > -200 && (s16)shifted < 200)
     {
-        if (((BabyCloudRunnerState*)c)->turnLatch != 0)
+        if (c->turnLatch != 0)
         {
-            ((BabyCloudRunnerState*)c)->turnLatch = 0;
+            c->turnLatch = 0;
             ObjAnim_SetCurrentMove(a, 0, lbl_803E4218, 0);
         }
         else
@@ -271,9 +271,9 @@ void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
     }
     else
     {
-        if (((BabyCloudRunnerState*)c)->turnLatch == 0)
+        if (c->turnLatch == 0)
         {
-            ((BabyCloudRunnerState*)c)->turnLatch = 1;
+            c->turnLatch = 1;
             ObjAnim_SetCurrentMove(a, 9, lbl_803E4218, 0);
         }
         else
@@ -337,7 +337,7 @@ int babycloudrunner_func0B(void* p)
         ((GameObject*)obj)->unkF4 = 0;
         return 1;
     }
-    objAudioFn_800393f8((int)obj, (char*)sub + 0x6c, 0x296, 0x1000, -1, 1);
+    objAudioFn_800393f8((int)obj, sub->audioBlock, 0x296, 0x1000, -1, 1);
     Sfx_PlayFromObject((int)obj, SFXsk_baptr9_c);
     return 0;
 }
@@ -546,7 +546,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 8:
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((int)obj, player, 0);
-        fn_8003ADC4(obj, (int*)player, (char*)sub + 0x3c, 0x28, 0, 3);
+        fn_8003ADC4(obj, (int*)player, sub->lookBlock, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         if (inRange != 0)
         {
@@ -560,7 +560,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 5:
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((int)obj, getTrickyObject(), 0);
-        fn_8003ADC4(obj, getTrickyObject(), (char*)sub + 0x3c, 0x28, 0, 3);
+        fn_8003ADC4(obj, getTrickyObject(), sub->lookBlock, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         break;
     }
@@ -638,10 +638,10 @@ void babycloudrunner_update(int* obj)
         if (sub->runnerState == 0)
         {
             mode = 0x19;
-            if ((*gRomCurveInterface)->initCurve((char*)sub + 0x124, obj, lbl_803E424C, &mode, 0) == 0)
+            if ((*gRomCurveInterface)->initCurve(sub->curveWalker, obj, lbl_803E424C, &mode, 0) == 0)
             {
                 sub->runnerState = 1;
-                storeZeroToFloatParam((char*)sub + 0x238);
+                storeZeroToFloatParam(&sub->countdownTimer);
             }
         }
         else
@@ -649,13 +649,13 @@ void babycloudrunner_update(int* obj)
             if (randFn_80080100(500) != 0)
             {
                 u16 sfxId = ((s16*)sub->mutterSfxTable)[randomGetRange(0, 3)];
-                objAudioFn_80039270((int)obj, (char*)sub + 0x6c, sfxId);
+                objAudioFn_80039270((int)obj, sub->audioBlock, sfxId);
             }
-            objAnimFn_80038f38((int)obj, (char*)sub + 0x6c);
+            objAnimFn_80038f38((int)obj, sub->audioBlock);
             if (sub->runnerState == 1 || sub->runnerState == 2)
             {
                 f32 speed = sub->curveSpeed;
-                Obj_UpdateRomCurveFollowVelocity(obj, (char*)sub + 0x124, speed, lbl_803E4238 * speed,
+                Obj_UpdateRomCurveFollowVelocity(obj, sub->curveWalker, speed, lbl_803E4238 * speed,
                                                  lbl_803E4250 * speed, 1);
                 Obj_SmoothTurnAnglesTowardVelocity(obj, (char*)((int)obj + 0x24), 0x1e, lbl_803E4238, lbl_803E4254);
                 objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY, ((GameObject*)obj)->anim.velocityZ);
@@ -666,7 +666,7 @@ void babycloudrunner_update(int* obj)
                         sub->runnerState = 2;
                         GameBit_Set(0x66, 0);
                         (*gGameUIInterface)->initAirMeter(gBabyCloudRunnerAirMeterValues[sub->runnerIndex], 0x5d1);
-                        s16toFloat((int)((char*)sub + 0x238), (s16)gBabyCloudRunnerAirMeterValues[sub->runnerIndex]);
+                        s16toFloat((int)&sub->countdownTimer, (s16)gBabyCloudRunnerAirMeterValues[sub->runnerIndex]);
                     }
                     fn_8019E3F4(obj);
                     return;
@@ -676,7 +676,7 @@ void babycloudrunner_update(int* obj)
                     near = (int*)ObjGroup_FindNearestObject(3, obj, 0);
                     if (near != NULL && Vec_distance((char*)((int)near + 0x18), (char*)sub + 0x18) < gBabyCloudRunnerTargetNearDist)
                     {
-                        sandworm_turnTowardTargetAnim((int)obj, (int)near, (u8*)sub, 0);
+                        sandworm_turnTowardTargetAnim((int)obj, (int)near, sub, 0);
                         if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) > gBabyCloudRunnerPlayerFarDist)
                         {
                             fn_8014C66C(near, obj);
@@ -706,10 +706,10 @@ void babycloudrunner_update(int* obj)
             if (sub->runnerState == 2)
             {
                 radius = (f32)def->outerRadius;
-                if (fn_80080150((char*)sub + 0x238) != 0)
+                if (fn_80080150(&sub->countdownTimer) != 0)
                 {
                     if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0 && timerCountDown(
-                        (char*)sub + 0x238) != 0)
+                        &sub->countdownTimer) != 0)
                     {
                         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
                         (*gGameUIInterface)->airMeterSetShutdown();
@@ -726,7 +726,7 @@ void babycloudrunner_update(int* obj)
                     sub->runnerState = 3;
                     (*gGameUIInterface)->airMeterSetShutdown();
                     Sfx_PlayFromObject((int)obj, SFXsp_lf_mutter4);
-                    storeZeroToFloatParam((char*)sub + 0x238);
+                    storeZeroToFloatParam(&sub->countdownTimer);
                 }
             }
             else
@@ -779,7 +779,7 @@ void babycloudrunner_update(int* obj)
                         (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                         sub->unkB0 = 1;
                     }
-                    sandworm_turnTowardTargetAnim((int)obj, (int)Obj_GetPlayerObject(), (u8*)sub, 1);
+                    sandworm_turnTowardTargetAnim((int)obj, (int)Obj_GetPlayerObject(), sub, 1);
                     if (((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(
                         (int)obj, sub->animSpeed, timeDelta, 0) != 0)
                     {
