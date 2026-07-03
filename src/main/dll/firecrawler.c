@@ -863,13 +863,13 @@ void hoodedZyck_update(s16* obj, u8* state)
     u16 mag;
     u32 grabbed;
 
-    *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
-    if (*(f32*)(state + 0x324) <= lbl_803E2B18)
+    ((FCVars*)state)->engineTimer = ((FCVars*)state)->engineTimer - timeDelta;
+    if (((FCVars*)state)->engineTimer <= lbl_803E2B18)
     {
-        *(f32*)(state + 0x324) = (f32)(int)randomGetRange(0x3c, 0x78);
+        ((FCVars*)state)->engineTimer = (f32)(int)randomGetRange(0x3c, 0x78);
     }
 
-    if (lbl_803E2B18 != *(f32*)(state + 0x328))
+    if (lbl_803E2B18 != ((FCVars*)state)->emergeTimer)
     {
         ObjHits_DisableObject((int)obj);
         if (((GameObject*)obj)->anim.currentMove != 5)
@@ -879,7 +879,7 @@ void hoodedZyck_update(s16* obj, u8* state)
         else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
             ObjHits_EnableObject((int)obj);
-            *(f32*)(state + 0x328) = lbl_803E2B18;
+            ((FCVars*)state)->emergeTimer = lbl_803E2B18;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
         moved = 1;
@@ -1023,13 +1023,13 @@ void crawler_update(int* obj, u8* state)
         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) | 0x10;
     }
 
-    if (*(f32*)(state + 0x328) != *(f32*)&lbl_803E2BA8 && *(u8*)(state + 0x33f) != 0)
+    if (((FCVars*)state)->emergeTimer != *(f32*)&lbl_803E2BA8 && *(u8*)(state + 0x33f) != 0)
     {
         cap = lbl_803E2BA8;
-        *(f32*)(state + 0x328) -= timeDelta;
-        if (*(f32*)(state + 0x328) <= cap)
+        ((FCVars*)state)->emergeTimer -= timeDelta;
+        if (((FCVars*)state)->emergeTimer <= cap)
         {
-            *(f32*)(state + 0x328) = cap;
+            ((FCVars*)state)->emergeTimer = cap;
             ((BaddieState*)state)->controlFlags |= 0x40000000LL;
             *(u8*)(state + 0x33c) = t6[*(u8*)(state + 0x33f)].flagC;
             ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
@@ -1135,7 +1135,7 @@ void hagabonMK2_update(s16* obj, u8* state)
     if (((FCVars*)state)->linkedObj != NULL && ((FCVars*)state)->linkedObj == ((BaddieState*)state)->trackedObj)
     {
         *(u32*)&((BaddieState*)state)->unk2E4 |= 0x10000LL;
-        *(f32*)(state + 0x330) = lbl_803E2C74;
+        ((FCVars*)state)->warpTimer = lbl_803E2C74;
     }
     ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x100;
     sp.x = lbl_803E2C30;
@@ -1194,35 +1194,35 @@ void hagabonMK2_update(s16* obj, u8* state)
     ((GameObject*)obj)->anim.rotY = (f32)((GameObject*)obj)->anim.rotY * pw;
     pw = powfBitEstimate(((BaddieState*)state)->unk304, timeDelta);
     ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ * pw;
-    if (*(f32*)(state + 0x324) < lbl_803E2C70)
+    if (((FCVars*)state)->engineTimer < lbl_803E2C70)
     {
-        *(f32*)(state + 0x324) = lbl_803E2C54 * timeDelta + *(f32*)(state + 0x324);
+        ((FCVars*)state)->engineTimer = lbl_803E2C54 * timeDelta + ((FCVars*)state)->engineTimer;
     }
     else
     {
-        *(f32*)(state + 0x324) = lbl_803E2C70;
+        ((FCVars*)state)->engineTimer = lbl_803E2C70;
     }
-    *(s16*)obj = *(f32*)(state + 0x324) * timeDelta + (f32)(int) * obj;
-    *(f32*)(state + 0x328) = lbl_803E2C38;
+    *(s16*)obj = ((FCVars*)state)->engineTimer * timeDelta + (f32)(int) * obj;
+    ((FCVars*)state)->emergeTimer = lbl_803E2C38;
     if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
     {
         f32* dp = d;
         dp[0] = base->posX - ((GameObject*)obj)->anim.worldPosX;
         dp[1] = base->posY - ((GameObject*)obj)->anim.worldPosY;
         dp[2] = base->posZ - ((GameObject*)obj)->anim.worldPosZ;
-        *(f32*)(state + 0x32c) = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
-        if (*(f32*)(state + 0x32c) > lbl_803E2C40)
+        ((FCVars*)state)->distToCurve = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
+        if (((FCVars*)state)->distToCurve > lbl_803E2C40)
         {
             *(u32*)&((BaddieState*)state)->unk2E4 |= 0x10000LL;
-            *(f32*)(state + 0x330) = lbl_803E2C30;
+            ((FCVars*)state)->warpTimer = lbl_803E2C30;
         }
     }
-    if (*(f32*)(state + 0x324) > lbl_803E2C30)
+    if (((FCVars*)state)->engineTimer > lbl_803E2C30)
     {
         extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfx, int vol, f32 v);
         Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_death);
         {
-            f32 t = *(f32*)(state + 0x324);
+            f32 t = ((FCVars*)state)->engineTimer;
             Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_baddie_rach_death, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
                                    t / *(f32*)&lbl_803E2C70);
         }
@@ -1268,13 +1268,13 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         scale = scale / lbl_803E2B38;
     }
 
-    *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
-    if (*(f32*)(state + 0x324) <= lbl_803E2B18)
+    ((FCVars*)state)->engineTimer = ((FCVars*)state)->engineTimer - timeDelta;
+    if (((FCVars*)state)->engineTimer <= lbl_803E2B18)
     {
-        *(f32*)(state + 0x324) = (f32)(int)randomGetRange(0x3c, 0x78);
+        ((FCVars*)state)->engineTimer = (f32)(int)randomGetRange(0x3c, 0x78);
     }
 
-    if (lbl_803E2B18 != *(f32*)(state + 0x328))
+    if (lbl_803E2B18 != ((FCVars*)state)->emergeTimer)
     {
         ObjHits_DisableObject((int)obj);
         if (((GameObject*)obj)->anim.currentMove != 5)
@@ -1284,7 +1284,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
             ObjHits_EnableObject((int)obj);
-            *(f32*)(state + 0x328) = lbl_803E2B18;
+            ((FCVars*)state)->emergeTimer = lbl_803E2B18;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
         moved = 1;
@@ -1545,7 +1545,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         v = ((BaddieState*)state)->inWhirlpoolGroup;
         if (v == 0)
         {
-            *(f32*)(state + 0x328) = lbl_803E2BB0 * (f32) * (u16*)(state + 0x2ec);
+            ((FCVars*)state)->emergeTimer = lbl_803E2BB0 * (f32) * (u16*)(state + 0x2ec);
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
             if (((GameObject*)obj)->anim.seqId == 0x6a2)
             {
@@ -1573,7 +1573,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         }
         if (v == 1)
         {
-            *(f32*)(state + 0x328) = lbl_803E2BB4 * (f32) * (u16*)(state + 0x2ec);
+            ((FCVars*)state)->emergeTimer = lbl_803E2BB4 * (f32) * (u16*)(state + 0x2ec);
             if (((GameObject*)obj)->anim.seqId == 0x6a2)
             {
                 if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
@@ -1675,12 +1675,12 @@ void crawler_updateC(s16* obj, u8* state)
         ((BaddieState*)state)->seqEntryIndex = 0;
     }
 
-    if (*(f32*)(state + 0x328) != (cap = lbl_803E2BA8) && *(u8*)(state + 0x33f) != 0)
+    if (((FCVars*)state)->emergeTimer != (cap = lbl_803E2BA8) && *(u8*)(state + 0x33f) != 0)
     {
-        *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
-        if (*(f32*)(state + 0x328) <= cap)
+        ((FCVars*)state)->emergeTimer = ((FCVars*)state)->emergeTimer - timeDelta;
+        if (((FCVars*)state)->emergeTimer <= cap)
         {
-            *(f32*)(state + 0x328) = cap;
+            ((FCVars*)state)->emergeTimer = cap;
             ((BaddieState*)state)->controlFlags |= 0x40000000LL;
             *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
             ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
@@ -1733,13 +1733,13 @@ void crawler_updateC(s16* obj, u8* state)
                 {
                     dist = lbl_803E2BA0;
                 }
-                *(f32*)(state + 0x310) = scale * (((lbl_803E2BA0 - dist) / lbl_803E2BA0) * ((BaddieState*)state)->pathStep);
-                if (*(f32*)(state + 0x310) < lbl_803E2BBC)
+                ((FCVars*)state)->pathSpeed = scale * (((lbl_803E2BA0 - dist) / lbl_803E2BA0) * ((BaddieState*)state)->pathStep);
+                if (((FCVars*)state)->pathSpeed < lbl_803E2BBC)
                 {
-                    *(f32*)(state + 0x310) = *(f32 *)&lbl_803E2BBC;
+                    ((FCVars*)state)->pathSpeed = *(f32 *)&lbl_803E2BBC;
                 }
             }
-            if ((Curve_AdvanceAlongPath(base, *(f32*)(state + 0x310)) != 0 || base->atSegmentEnd != 0)
+            if ((Curve_AdvanceAlongPath(base, ((FCVars*)state)->pathSpeed) != 0 || base->atSegmentEnd != 0)
                 && (*gRomCurveInterface)->goNextPoint(base) != 0
                 && (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2BC0,
                                                     (int*)&lbl_803DBCF0, -1) != 0)
@@ -1761,7 +1761,7 @@ void crawler_updateC(s16* obj, u8* state)
                 {
                     diff = lbl_803E2BCC + diff;
                 }
-                t = (((BaddieState*)state)->pathStep * scale - *(f32*)(state + 0x310)) / lbl_803E2B84;
+                t = (((BaddieState*)state)->pathStep * scale - ((FCVars*)state)->pathSpeed) / lbl_803E2B84;
                 a = diff >= lbl_803E2BA8 ? diff : -diff;
                 ((BaddieState*)state)->unk308 = t * (lbl_803E2BA4 - a / lbl_803E2BCC);
                 if (*(f32*)(state + 0x308) < lbl_803E2BD4)
@@ -1810,7 +1810,7 @@ void crawler_updateC(s16* obj, u8* state)
                     {
                         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) & ~0x18;
                         {
-                            f32 v = *(f32*)(state + 0x310);
+                            f32 v = ((FCVars*)state)->pathSpeed;
                             int j = ((BaddieState*)state)->inWhirlpoolGroup * 0xc;
                             if (v > *(f32*)((int)gCrawlerSpeedThresholds + j))
                             {
@@ -1832,7 +1832,7 @@ void crawler_updateC(s16* obj, u8* state)
                                 *(u8*)(state + 0x323) = 1;
                                 ((BaddieState*)state)->unk308 = lbl_803E2BDC;
                                 ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 8), lbl_803E2BA8, 0);
-                                *(f32*)(state + 0x310) = lbl_803E2BA8;
+                                ((FCVars*)state)->pathSpeed = lbl_803E2BA8;
                             }
                         }
                     }
@@ -1896,13 +1896,13 @@ void crawler_updateB(s16* obj, u8* state)
         }
     }
 
-    if (*(f32*)(state + 0x328) != *(f32*)&lbl_803E2BA8 && *(u8*)(state + 0x33f) != 0)
+    if (((FCVars*)state)->emergeTimer != *(f32*)&lbl_803E2BA8 && *(u8*)(state + 0x33f) != 0)
     {
         cap = lbl_803E2BA8;
-        *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
-        if (*(f32*)(state + 0x328) <= cap)
+        ((FCVars*)state)->emergeTimer = ((FCVars*)state)->emergeTimer - timeDelta;
+        if (((FCVars*)state)->emergeTimer <= cap)
         {
-            *(f32*)(state + 0x328) = cap;
+            ((FCVars*)state)->emergeTimer = cap;
             ((BaddieState*)state)->controlFlags |= 0x40000000LL;
             *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
             ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
@@ -2085,12 +2085,12 @@ void hagabonMK2_updateB(s16* obj, u8* state)
     f32 dv[3];
     int i;
 
-    if (*(f32*)(state + 0x330) != (cap = lbl_803E2C30))
+    if (((FCVars*)state)->warpTimer != (cap = lbl_803E2C30))
     {
-        *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
-        if (*(f32*)(state + 0x330) <= cap)
+        ((FCVars*)state)->warpTimer = ((FCVars*)state)->warpTimer - timeDelta;
+        if (((FCVars*)state)->warpTimer <= cap)
         {
-            *(f32*)(state + 0x330) = cap;
+            ((FCVars*)state)->warpTimer = cap;
         }
     }
     ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x100;
@@ -2133,7 +2133,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
     {
         CrawlerSeq12* sq = (CrawlerSeq12*)gCrawlerSeqTable;
         ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].mode;
-        *(f32*)(state + 0x328) = lbl_803E2C38;
+        ((FCVars*)state)->emergeTimer = lbl_803E2C38;
         Sfx_StopFromObject((int)obj, SFXTRIG_baddie_rach_death);
     }
 
@@ -2144,12 +2144,12 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         dp[0] = base->posX - ((GameObject*)obj)->anim.worldPosX;
         dp[1] = base->posY - ((GameObject*)obj)->anim.worldPosY;
         dp[2] = base->posZ - ((GameObject*)obj)->anim.worldPosZ;
-        *(f32*)(state + 0x32c) = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
-        if (*(f32*)(state + 0x32c) < lbl_803E2C10 && *(f32*)(state + 0x330) == lbl_803E2C30)
+        ((FCVars*)state)->distToCurve = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
+        if (((FCVars*)state)->distToCurve < lbl_803E2C10 && ((FCVars*)state)->warpTimer == lbl_803E2C30)
         {
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
         }
-        t = lbl_803E2C3C - *(f32*)(state + 0x32c) / lbl_803E2C40;
+        t = lbl_803E2C3C - ((FCVars*)state)->distToCurve / lbl_803E2C40;
         if (t < lbl_803E2C30)
         {
             t = lbl_803E2C30;
@@ -2178,16 +2178,16 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].next;
     }
 
-    if (*(f32*)(state + 0x324) > lbl_803E2C30)
+    if (((FCVars*)state)->engineTimer > lbl_803E2C30)
     {
-        *(f32*)(state + 0x324) = -(lbl_803E2C54 * timeDelta - *(f32*)(state + 0x324));
-        *(s16*)obj = *(f32*)(state + 0x324) * timeDelta + (f32)(int) * obj;
+        ((FCVars*)state)->engineTimer = -(lbl_803E2C54 * timeDelta - ((FCVars*)state)->engineTimer);
+        *(s16*)obj = ((FCVars*)state)->engineTimer * timeDelta + (f32)(int) * obj;
     }
     else
     {
         f32 ratio;
-        *(f32*)(state + 0x324) = lbl_803E2C30;
-        spd = lbl_803E2C3C - (*(f32*)(state + 0x328) - lbl_803E2C58) / lbl_803E2C5C;
+        ((FCVars*)state)->engineTimer = lbl_803E2C30;
+        spd = lbl_803E2C3C - (((FCVars*)state)->emergeTimer - lbl_803E2C58) / lbl_803E2C5C;
         if (spd < lbl_803E2C60)
         {
             spd = lbl_803E2C60;
@@ -2196,13 +2196,13 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         {
             spd = lbl_803E2C3C;
         }
-        if (*(f32*)(state + 0x328) > lbl_803E2C58)
+        if (((FCVars*)state)->emergeTimer > lbl_803E2C58)
         {
-            *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
+            ((FCVars*)state)->emergeTimer = ((FCVars*)state)->emergeTimer - timeDelta;
         }
         else
         {
-            *(f32*)(state + 0x328) = lbl_803E2C58;
+            ((FCVars*)state)->emergeTimer = lbl_803E2C58;
         }
         ratio = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX
             + ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) / lbl_803E2C48;
@@ -2216,7 +2216,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         }
         ((GameObject*)obj)->anim.rotY = (f32)(int)((GameObject*)obj)->anim.rotY - ((lbl_803E2C64 * spd) * timeDelta) *
             ratio;
-        fn_8014CD1C(obj, state, (int)*(f32*)(state + 0x328), lbl_803E2C68 * spd, lbl_803E2C30, 1);
+        fn_8014CD1C(obj, state, (int)((FCVars*)state)->emergeTimer, lbl_803E2C68 * spd, lbl_803E2C30, 1);
     }
 
     {
@@ -2231,12 +2231,12 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eba);
     }
 
-    if (*(f32*)(state + 0x324) > lbl_803E2C30)
+    if (((FCVars*)state)->engineTimer > lbl_803E2C30)
     {
         extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfx, int vol, f32 v);
         Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_death);
         {
-            f32 t = *(f32*)(state + 0x324);
+            f32 t = ((FCVars*)state)->engineTimer;
             Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_baddie_rach_death, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
                                    t / lbl_803E2C70);
         }
