@@ -3226,3 +3226,25 @@ MusicTrackSlot sMusicTrackTable[] =
     { 50, 0, 0, sMusicTrackNameWLCPuzzle, 0, 0 },
     { 51, 0, 0, sMusicTrackNameWLCChambers, 0, 0 },
 };
+
+char sMidiWadLoadedCallbackLoadError[] = "MIDIWADLoadedCallback load error\n";
+char sMidiWadPath[] = "audio/midi.wad";
+
+SfxTriggerCacheEntry gSfxTriggerLookupCache[16] = {
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+    { 0xFFFF, 0 },
+};

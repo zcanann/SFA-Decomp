@@ -18,7 +18,7 @@ main/render.c:
 
 main/audio.c:
 	.text       start:0x80008DF4 end:0x8000DD74
-	.data       start:0x802C5700 end:0x802C5D40
+	.data       start:0x802C5700 end:0x802C5DB8
 	.bss        start:0x80335940 end:0x80336D10
 
 main/camera.c:
