@@ -51,7 +51,57 @@ typedef struct MinimapMapEntry
     u8 count;
 } MinimapMapEntry;
 
-extern MinimapMapEntry gMinimapCellTable[];
+extern MinimapRow lbl_8031C328[];
+extern MinimapRow lbl_8031C33C[];
+extern MinimapRow lbl_8031C350[];
+extern MinimapRow lbl_8031C364[];
+extern MinimapRow lbl_8031C378[];
+extern MinimapRow lbl_8031C38C[];
+extern MinimapRow lbl_8031C3A0[];
+extern MinimapRow lbl_8031C3B4[];
+extern MinimapRow lbl_8031C3C8[];
+extern MinimapRow lbl_8031C3DC[];
+extern MinimapRow lbl_8031C3F0[];
+extern MinimapRow lbl_8031C404[];
+extern MinimapRow lbl_8031C418[];
+extern MinimapRow lbl_8031C440[];
+extern MinimapRow lbl_8031C454[];
+extern MinimapRow lbl_8031C468[];
+extern MinimapRow lbl_8031C47C[];
+extern MinimapRow lbl_8031C490[];
+extern MinimapRow lbl_8031C4A4[];
+extern MinimapRow lbl_8031C4B8[];
+extern MinimapRow lbl_8031C4CC[];
+extern MinimapRow lbl_8031C4E0[];
+extern MinimapRow lbl_8031C4F4[];
+
+MinimapMapEntry gMinimapCellTable[25] = {
+    { lbl_8031C328, 0x059E, 0x13, 1 },
+    { lbl_8031C33C, 0x059E, 0x1B, 1 },
+    { lbl_8031C350, 0x05A2, 0x0E, 1 },
+    { lbl_8031C364, 0x05A2, 0x47, 1 },
+    { lbl_8031C378, 0x05A3, 0x07, 1 },
+    { lbl_8031C38C, 0x05A3, 0x43, 1 },
+    { lbl_8031C3A0, 0x0835, 0x12, 1 },
+    { lbl_8031C3B4, 0x0835, 0x45, 1 },
+    { lbl_8031C3C8, 0x082E, 0x0D, 1 },
+    { lbl_8031C3DC, 0x05A1, 0x0C, 1 },
+    { lbl_8031C3DC, 0x05A1, 0x10, 1 },
+    { lbl_8031C3DC, 0x05A1, 0x0F, 1 },
+    { lbl_8031C3F0, 0x05A1, 0x2B, 1 },
+    { lbl_8031C404, 0x07E5, 0x0B, 1 },
+    { lbl_8031C418, 0x059D, 0x04, 2 },
+    { lbl_8031C440, 0x059D, 0x46, 1 },
+    { lbl_8031C454, 0x05A3, 0x08, 1 },
+    { lbl_8031C468, 0x05A0, 0x0A, 1 },
+    { lbl_8031C47C, 0x05A0, 0x38, 1 },
+    { lbl_8031C490, 0x07E9, 0x32, 1 },
+    { lbl_8031C4A4, 0x07E9, 0x15, 1 },
+    { lbl_8031C4B8, 0x07E9, 0x49, 1 },
+    { lbl_8031C4CC, 0x082F, 0x1D, 1 },
+    { lbl_8031C4E0, 0x082F, 0x48, 1 },
+    { lbl_8031C4F4, 0x07DD, 0x02, 1 },
+};
 
 void fn_80133718(void);
 void fn_8013351C(void);
