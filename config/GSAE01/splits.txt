@@ -2026,6 +2026,7 @@ main/dll/SP/dll_0288_spdrape.c:
 
 main/dll/SP/dll_0289_spitembeam.c:
 	.text       start:0x801E97DC end:0x801E991C
+	.data       start:0x803284A8 end:0x803284E0
 
 main/dll/dll_801e991c.c:
 	.text       start:0x801E991C end:0x801E9C00
