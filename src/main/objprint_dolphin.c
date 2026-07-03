@@ -254,31 +254,31 @@ extern u32 DAT_803dc0d4;
 extern u32 DAT_803dc0d8;
 extern u32 DAT_803dc0d9;
 extern u32 DAT_803dc0dc;
-extern u32 DAT_803dc0e0;
+extern u32 gDrCloudCageRouteDistGate;
 extern u32 DAT_803dc0e1;
 extern u32 DAT_803dc0e2;
-extern u32 DAT_803dc0e4;
+extern u32 sSnowBikeVelDebugFmt;
 extern u32 DAT_803dc0e8;
-extern u32 DAT_803dc210;
-extern u32 DAT_803dd8a4;
+extern u32 gWorldObjVariantAlphaTable;
+extern u32 gCMenuButtons;
 extern u32 DAT_803dd8a8;
 extern u32 DAT_803dd8a9;
 extern u32 DAT_803dd8aa;
-extern u32 DAT_803dd8ac;
-extern u32 DAT_803dd8b0;
-extern u32 DAT_803dd8b4;
-extern u32 DAT_803dd8bc;
+extern u32 gCMenuScriptedInput;
+extern u32 gCMenuItemCount;
+extern u32 gCMenuSelIndex;
+extern u32 gCMenuSelUsedBit;
 extern u8 DAT_803dd8bd;
-extern s32 DAT_803dd8c4;
+extern s32 gGameUiBlinkTexture;
 extern u32 DAT_803dd8c8;
 extern u32 DAT_803dd8cc;
 extern u32 DAT_803dd8d4;
-extern u32 DAT_803dd8d8;
+extern u32 gGameUiCurHintTextMap;
 extern u32 DAT_803dd8dc;
 extern u8 DAT_803dd8e0;
 extern int DAT_803dd8e4;
-extern u32 DAT_803dd8f8;
-extern u32 DAT_803dd900;
+extern u32 linkFlag_803dd8f8;
+extern u32 gTumbleweedBushBaseColorB;
 extern u32 DAT_803df670;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
@@ -326,7 +326,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     FUN_8025c5f0(0, 0x1c);
     GXSetBlendMode(0, 0xc);
     newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
-    FUN_8004812c(*(int*)(shadowTable + ((DAT_803dd8c4 >> 2) + DAT_803dd8bd * shadowStride) * 4), 0);
+    FUN_8004812c(*(int*)(shadowTable + ((gGameUiBlinkTexture >> 2) + DAT_803dd8bd * shadowStride) * 4), 0);
     FUN_80247a7c(mtx, lbl_803DF6B8, *(f32*)&lbl_803DF6B8, lbl_803DF69C);
     FUN_8025d8c4(mtx, 0x40, 0);
     FUN_80258674(1, 1, 4, 0x3c, 1, 0x40);
@@ -895,7 +895,7 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
                     {
                         cmd = 0;
                         gxSetZMode_(1, 3, 1);
-                        FUN_8025c754(4, DAT_803dd8bc, 0, 4, DAT_803dd8bc);
+                        FUN_8025c754(4, gCMenuSelUsedBit, 0, 4, gCMenuSelUsedBit);
                     }
                 }
                 else
@@ -974,14 +974,14 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
 
     modelData = (u16*)FUN_80286840();
     renderNode = (int*)FUN_80017a54((int)modelData);
-    if (DAT_803dd8a4 == 0)
+    if (gCMenuButtons == 0)
     {
         FUN_80017a50(modelData, localMtx, '\0');
     }
     else
     {
-        FUN_802475e4((float*)DAT_803dd8a4, localMtx);
-        DAT_803dd8a4 = 0;
+        FUN_802475e4((float*)gCMenuButtons, localMtx);
+        gCMenuButtons = 0;
     }
     mtx = (float*)FUN_80006974();
     FUN_80247618(mtx, localMtx, worldMtx);
@@ -996,7 +996,7 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
             FUN_802475e4((float*)&DAT_802cbac0, mtx);
             DAT_803dd8c8 = 3;
         }
-        else if (DAT_803dd8b0 == obj)
+        else if (gCMenuItemCount == obj)
         {
             DAT_803dd8c8 = 1;
         }
@@ -1029,9 +1029,9 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
     }
     else
     {
-        *(u8*)&color = *(u8*)&DAT_803dd8d8;
-        *(u8*)((int)&color + 1) = *(u8*)((int)&DAT_803dd8d8 + 1);
-        *(u8*)((int)&color + 2) = *(u8*)((int)&DAT_803dd8d8 + 2);
+        *(u8*)&color = *(u8*)&gGameUiCurHintTextMap;
+        *(u8*)((int)&color + 1) = *(u8*)((int)&gGameUiCurHintTextMap + 1);
+        *(u8*)((int)&color + 2) = *(u8*)((int)&gGameUiCurHintTextMap + 2);
         color = color << 8;
         DAT_803dd8a8 = '\0';
     }
@@ -1057,32 +1057,32 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
             FUN_8025a608(5, 0, 0, 0, 0, 0, 2);
             FUN_8025a5bc(0);
             DAT_803dd8aa = '\x01';
-            DAT_803dc0e4 = color;
+            sSnowBikeVelDebugFmt = color;
         }
     }
     else
     {
         texId = FUN_80053078(*(u32*)(*(int*)(obj + 0x38) + 0x24));
-        if (DAT_803dd8ac != texId)
+        if (gCMenuScriptedInput != texId)
         {
-            DAT_803dd8ac = texId;
+            gCMenuScriptedInput = texId;
             FUN_8004812c(texId, 0);
         }
-        if ((*(u8*)&DAT_803dc0e4 != *(u8*)&color) ||
-            (*(u8*)((int)&DAT_803dc0e4 + 1) != *(u8*)((int)&color + 1)) ||
-            (*(u8*)((int)&DAT_803dc0e4 + 2) != *(u8*)((int)&color + 2)) ||
-            (*(u8*)((int)&DAT_803dc0e4 + 3) != *(u8*)((int)&color + 3)))
+        if ((*(u8*)&sSnowBikeVelDebugFmt != *(u8*)&color) ||
+            (*(u8*)((int)&sSnowBikeVelDebugFmt + 1) != *(u8*)((int)&color + 1)) ||
+            (*(u8*)((int)&sSnowBikeVelDebugFmt + 2) != *(u8*)((int)&color + 2)) ||
+            (*(u8*)((int)&sSnowBikeVelDebugFmt + 3) != *(u8*)((int)&color + 3)))
         {
             colorWord = color;
             FUN_8025c510(0, (u8*)&colorWord);
-            DAT_803dc0e4 = color;
+            sSnowBikeVelDebugFmt = color;
         }
     }
-    if (DAT_803dd8b0 != obj)
+    if (gCMenuItemCount != obj)
     {
         FUN_802585d8(9, renderNode[(*(u16*)(renderNode + 6) >> 1 & 1) + 7], 6);
         FUN_802585d8(0xd, *(u32*)(obj + 0x34), 4);
-        DAT_803dd8b0 = obj;
+        gCMenuItemCount = obj;
     }
     FUN_8003f3b4((u32)(u32)modelData, (u32)obj, *(int*)(obj + 0x38));
     cmdCursor = cmdCursor + 4;
@@ -1104,17 +1104,17 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
 void FUN_8003f9f8(void)
 {
     DAT_803dd8aa = 0;
-    DAT_803dd8ac = 0;
-    DAT_803dd8b0 = 0;
-    DAT_803dd8b4 = 0;
+    gCMenuScriptedInput = 0;
+    gCMenuItemCount = 0;
+    gCMenuSelIndex = 0;
     DAT_803dc0d4 = 0xffffffff;
     DAT_803dc0d8 = 0xff;
     DAT_803dc0d9 = 0xff;
     DAT_803dc0dc = 0xffffffff;
-    DAT_803dc0e0 = 0xff;
+    gDrCloudCageRouteDistGate = 0xff;
     DAT_803dc0e1 = 0xff;
     DAT_803dc0e2 = 0xff;
-    DAT_803dc0e4 = 0;
+    sSnowBikeVelDebugFmt = 0;
 }
 
 void fn_8003FDA8(u32 objArg, u32 owner, int obj)
@@ -1149,14 +1149,14 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
     modelData = (u16*)((u64)ctx >> 0x20);
     renderNode = (int*)FUN_80017a54((int)modelData);
     viewMtx = (float*)FUN_80006974();
-    if (DAT_803dd8a4 == 0)
+    if (gCMenuButtons == 0)
     {
         FUN_80017a50(modelData, localMtx, '\0');
     }
     else
     {
-        FUN_802475e4((float*)DAT_803dd8a4, localMtx);
-        DAT_803dd8a4 = 0;
+        FUN_802475e4((float*)gCMenuButtons, localMtx);
+        gCMenuButtons = 0;
     }
     if ((*(u16*)(renderNode + 6) & 8) == 0)
     {
@@ -1497,7 +1497,7 @@ void FUN_800401a0(float* mtx, float* out, short* in, int flag, u16* obj,
 
 void FUN_8004036c(u32 mtx)
 {
-    DAT_803dd8a4 = mtx;
+    gCMenuButtons = mtx;
     return;
 }
 
@@ -1509,7 +1509,7 @@ void FUN_800406cc(int obj)
 
     if (lbl_803DF684 == ((GameObject*)obj)->anim.rootMotionScale)
     {
-        DAT_803dd8a4 = 0;
+        gCMenuButtons = 0;
     }
     else
     {
@@ -1585,7 +1585,7 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
     parent = (u16*)(u32)pairWord;
     if (lbl_803DF684 == *(float*)(child + 4))
     {
-        DAT_803dd8a4 = 0;
+        gCMenuButtons = 0;
     }
     else
     {
@@ -1661,7 +1661,7 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
         *(u8*)((int)child + 0xf1) = *(u8*)((int)parent + 0xf1);
         if ((child[3] & 0x4000) == 0)
         {
-            DAT_803dd8a4 = (u32)rot;
+            gCMenuButtons = (u32)rot;
             if ((shadowFlag & 0xff) == 0)
             {
                 child[0x58] = child[0x58] | 0x800;
@@ -1699,7 +1699,7 @@ void FUN_80040a88(int obj)
     renderNode = (int*)FUN_80017a54(obj);
     if (lbl_803DF684 == ((GameObject*)obj)->anim.rootMotionScale)
     {
-        DAT_803dd8a4 = 0;
+        gCMenuButtons = 0;
     }
     else
     {
@@ -1805,14 +1805,14 @@ void FUN_80040da0(void)
     pass = 0;
     FUN_8001782c(2);
     FUN_80243e74();
-    i = DAT_803dd900;
+    i = gTumbleweedBushBaseColorB;
     FUN_80243e9c();
     if (i == 0)
     {
-        if ((mode == 0) && (DAT_803dd8f8 == 0))
+        if ((mode == 0) && (linkFlag_803dd8f8 == 0))
         {
             FUN_800530b4();
-            DAT_803dd8f8 = 6;
+            linkFlag_803dd8f8 = 6;
         }
         else
         {
@@ -2039,9 +2039,9 @@ int FUN_80041ff8(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
 void FUN_800427c8(void)
 {
     FUN_80243e74();
-    if ((DAT_803dd900 & 0x100000) != 0)
+    if ((gTumbleweedBushBaseColorB & 0x100000) != 0)
     {
-        DAT_803dd900 = DAT_803dd900 ^ 0x100000;
+        gTumbleweedBushBaseColorB = gTumbleweedBushBaseColorB ^ 0x100000;
     }
     FUN_80243e9c();
     return;
@@ -2050,7 +2050,7 @@ void FUN_800427c8(void)
 void FUN_80042800(void)
 {
     FUN_80243e74();
-    DAT_803dd900 = DAT_803dd900 | 0x100000;
+    gTumbleweedBushBaseColorB = gTumbleweedBushBaseColorB | 0x100000;
     FUN_80243e9c();
     return;
 }
@@ -2060,7 +2060,7 @@ u32 FUN_80042838(void)
     u32 flags;
 
     FUN_80243e74();
-    flags = DAT_803dd900;
+    flags = gTumbleweedBushBaseColorB;
     FUN_80243e9c();
     return flags;
 }
@@ -2071,27 +2071,27 @@ int FUN_80042b9c(int val, int idx, int reset)
 
     if (reset == 1)
     {
-        DAT_803dc210 = 0xfffffffe;
+        gWorldObjVariantAlphaTable = 0xfffffffe;
         uRam803dc214 = 0xfffffffe;
         return -1;
     }
-    cur = (&DAT_803dc210)[idx];
+    cur = (&gWorldObjVariantAlphaTable)[idx];
     if ((val != cur) && (cur != -2))
     {
         return cur;
     }
-    (&DAT_803dc210)[idx] = 0xfffffffe;
+    (&gWorldObjVariantAlphaTable)[idx] = 0xfffffffe;
     return -1;
 }
 
 int FUN_80042bec(u32 val, int idx)
 {
-    if ((&DAT_803dc210)[idx] == -2)
+    if ((&gWorldObjVariantAlphaTable)[idx] == -2)
     {
-        (&DAT_803dc210)[idx] = val;
+        (&gWorldObjVariantAlphaTable)[idx] = val;
         return -1;
     }
-    return (&DAT_803dc210)[idx];
+    return (&gWorldObjVariantAlphaTable)[idx];
 }
 
 void FUN_80043030(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
