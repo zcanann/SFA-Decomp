@@ -421,3 +421,10 @@ void cloudaction_initialise(void)
     lbl_803DB618[1] = -1;
     gCloudOverrideObject = NULL;
 }
+
+int gCloudActionEnvTbl[] =
+{
+    0, 1575, 1577, 1886, 1525,
+    0, 1576, 1890, 2147,
+    0, 1578, 2140, 2145, 2147,
+};
