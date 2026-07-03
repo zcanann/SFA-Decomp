@@ -586,43 +586,43 @@ void fn_802BE6E8(int obj, int t, int p3)
 }
 
 #pragma dont_inline on
-int fn_802BC830(int obj, int p2, int p3)
+int fn_802BC830(int obj, int sub, int state)
 {
-    *(u32*)&((EarthWarriorSub*)p2)->unk360 |= 0x1000000LL;
-    ((BaddieState*)p3)->moveSpeed = lbl_803E82EC;
+    *(u32*)&((EarthWarriorSub*)sub)->unk360 |= 0x1000000LL;
+    ((BaddieState*)state)->moveSpeed = lbl_803E82EC;
     if (((GameObject*)obj)->anim.currentMoveProgress > GXInit_ClearColor &&
         ((GameObject*)obj)->anim.currentMoveProgress < GXInit_BlackColor &&
-        ((BaddieState*)p3)->animSpeedC > *(f32*)((char*)((EarthWarriorSub*)p2)->configRow + 0x1c) - GXInit_WhiteColor &&
-        ((BaddieState*)p3)->inputMagnitude > lbl_803E82FC &&
-        ((EarthWarriorSub*)p2)->frameCounter >= 0x96)
+        ((BaddieState*)state)->animSpeedC > *(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x1c) - GXInit_WhiteColor &&
+        ((BaddieState*)state)->inputMagnitude > lbl_803E82FC &&
+        ((EarthWarriorSub*)sub)->frameCounter >= 0x96)
     {
-        ((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b40 = 1;
-        ((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b80 = 0;
-        ((EarthWarriorSub*)p2)->unk8A6 = ((EarthWarriorSub*)p2)->unk8A7;
-        ((BaddieState*)p3)->moveSpeed = lbl_803E8300;
-        ObjAnim_SetCurrentMove(obj, *(s16*)((char*)((EarthWarriorSub*)p2)->moveTable + 0x3a), lbl_803E8304, 0);
+        ((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b40 = 1;
+        ((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b80 = 0;
+        ((EarthWarriorSub*)sub)->unk8A6 = ((EarthWarriorSub*)sub)->unk8A7;
+        ((BaddieState*)state)->moveSpeed = lbl_803E8300;
+        ObjAnim_SetCurrentMove(obj, *(s16*)((char*)((EarthWarriorSub*)sub)->moveTable + 0x3a), lbl_803E8304, 0);
         ObjAnim_SetCurrentEventStepFrames((struct ObjAnimComponent*)obj, 0x10);
-        ((EarthWarriorSub*)p2)->unk858 = ((EarthWarriorSub*)p2)->currentYaw;
-        ((EarthWarriorSub*)p2)->unk844 = (lbl_803E8308 + (*(f32*)((char*)((EarthWarriorSub*)p2)->configRow + 0x14) + ((
-            BaddieState*)p3)->animSpeedC)) / lbl_803E830C;
-        ((EarthWarriorSub*)p2)->unk478 = ((EarthWarriorSub*)p2)->currentYaw;
-        ((EarthWarriorSub*)p2)->currentYaw += 0x8000;
-        ((BaddieState*)p3)->animSpeedC = -((BaddieState*)p3)->animSpeedC;
-        ((BaddieState*)p3)->animSpeedA = -((BaddieState*)p3)->animSpeedA;
+        ((EarthWarriorSub*)sub)->unk858 = ((EarthWarriorSub*)sub)->currentYaw;
+        ((EarthWarriorSub*)sub)->unk844 = (lbl_803E8308 + (*(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x14) + ((
+            BaddieState*)state)->animSpeedC)) / lbl_803E830C;
+        ((EarthWarriorSub*)sub)->unk478 = ((EarthWarriorSub*)sub)->currentYaw;
+        ((EarthWarriorSub*)sub)->currentYaw += 0x8000;
+        ((BaddieState*)state)->animSpeedC = -((BaddieState*)state)->animSpeedC;
+        ((BaddieState*)state)->animSpeedA = -((BaddieState*)state)->animSpeedA;
     }
-    if (((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b80 != 0)
+    if (((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b80 != 0)
     {
         f32 lim;
-        if (((BaddieState*)p3)->animSpeedC <= (lim = *(f32*)((char*)((EarthWarriorSub*)p2)->configRow + 0x10)) && ((BaddieState*)p3)->animSpeedA <= lim)
+        if (((BaddieState*)state)->animSpeedC <= (lim = *(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x10)) && ((BaddieState*)state)->animSpeedA <= lim)
         {
-            ((EarthWarriorSub*)p2)->savedYaw = ((EarthWarriorSub*)p2)->currentYaw;
-            ((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b40 = 0;
-            ((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b80 = 0;
+            ((EarthWarriorSub*)sub)->savedYaw = ((EarthWarriorSub*)sub)->currentYaw;
+            ((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b40 = 0;
+            ((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b80 = 0;
             return 1;
         }
-        ((EarthWarriorSub*)p2)->unk408 = lbl_803E8304;
-        ((EarthWarriorSub*)p2)->unk438 = ((EarthWarriorSub*)p2)->unk830;
-        ((EarthWarriorSub*)p2)->flags8D8 |= 8;
+        ((EarthWarriorSub*)sub)->unk408 = lbl_803E8304;
+        ((EarthWarriorSub*)sub)->unk438 = ((EarthWarriorSub*)sub)->unk830;
+        ((EarthWarriorSub*)sub)->flags8D8 |= 8;
     }
     return 0;
 }
