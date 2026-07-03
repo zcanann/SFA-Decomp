@@ -1262,8 +1262,6 @@ void Effect4_initialise(void)
 {
 }
 
-void Effect5_func03_nop(void);
-
 ObjectDescriptor11 projgfx_funcs = {
     0,
     0,
@@ -1339,8 +1337,6 @@ void Effect4_func05(void)
     }
     gEffect4SinValueB = mathSinf(gEffect4Pi * (f32)(s16)gEffect4SinPhaseCounterB / gEffect4SinPhaseScale);
 }
-
-void Effect5_func05(void);
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
