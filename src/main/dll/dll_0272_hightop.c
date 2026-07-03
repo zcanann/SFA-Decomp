@@ -84,7 +84,7 @@ typedef struct HightopPlacement
     u8 padC1A[0xC28 - 0xC1A];
     f32 unkC28;
     u8 padC2C[0xC38 - 0xC2C];
-    f32 unkC38;
+    f32 sfxIntervalTimer;
     u8 padC3C[0xC40 - 0xC3C];
     u16 flagsC40;
     u8 padC42[0xC4B - 0xC42];
@@ -118,7 +118,7 @@ typedef struct HighTopRuntime
     u8 padC2C[4];
     f32 stateTimer; /* per-state countdown; -= framesThisStep, re-armed from random */
     u8 padC34[4];
-    f32 unkC38;
+    f32 sfxIntervalTimer;
     s32 savedControlMode;
     u16 flagsC40;
     u8 idleSeqIndex; /* index into gHighTopIdleSequenceIds/Weights */
@@ -749,10 +749,10 @@ void hightop_update(int obj)
     if (((BitFlags8*)(p + 0xc49))->b7 != 0)
     {
         (*gGameUIInterface)->runAirMeter(((HighTopRuntime*)p)->airMeterRemaining);
-        ((HighTopRuntime*)p)->unkC38 += timeDelta;
-        if (((HighTopRuntime*)p)->unkC38 > *(f32*)&gHighTopAirMeterSfxInterval)
+        ((HighTopRuntime*)p)->sfxIntervalTimer += timeDelta;
+        if (((HighTopRuntime*)p)->sfxIntervalTimer > *(f32*)&gHighTopAirMeterSfxInterval)
         {
-            ((HighTopRuntime*)p)->unkC38 -= gHighTopAirMeterSfxInterval;
+            ((HighTopRuntime*)p)->sfxIntervalTimer -= gHighTopAirMeterSfxInterval;
             Sfx_PlayFromObject((u32)obj, SFXTRIG_hightop_fstep);
         }
     }
