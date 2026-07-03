@@ -190,6 +190,47 @@ extern f32 lbl_803E2C68;
 extern char lbl_803DBCF8;
 extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
 
+/*
+ * FCVars - file-local overlay naming the crawler/HagabonMK2-family scratch
+ * region of the actor-control blob (the shared BaddieState header
+ * deliberately leaves 0x323-0x345 as per-family padding; these fields carry
+ * this TU's meaning). Cast state to (FCVars*) to read/write named fields.
+ * NOTE 0x330 is an f32 timer here, overlapping BaddieState's s16 cameraYaw -
+ * this is the documented per-family union, hence a file-local overlay rather
+ * than a shared-header field.
+ */
+typedef struct FCVars {
+    u8 pad000[0x310];
+    f32 pathSpeed;      /* 0x310: per-frame curve-advance speed */
+    u8 pad314[0x323 - 0x314];
+    u8 moveStartFlags;  /* 0x323: bit 8 = move suppresses target-facing */
+    f32 engineTimer;    /* 0x324: engine-sfx / spin-down timer (dt-decremented) */
+    f32 emergeTimer;    /* 0x328: emerge/burrow fade timer */
+    f32 distToCurve;    /* 0x32c: distance from object to its curve point */
+    f32 warpTimer;      /* 0x330: HagabonMK2 warp/teleport cooldown timer */
+    u8 pad334[0x338 - 0x334];
+    u16 turnDelta;      /* 0x338: signed turn amount / variant index (dual use) */
+    u8 pad33a[0x33c - 0x33a];
+    u8 flagsC;          /* 0x33c: bit1 hitVolumeIndex, bit4 invuln */
+    u8 flagsD;          /* 0x33d: move/link state bits (0x8/0x10/0x18/0x20/0x30/0x40) */
+    u8 moveChainIndex;  /* 0x33e: index into the chained-move table (tbl4) */
+    u8 reactStep;       /* 0x33f: reaction/hit sequence step (indexes seq/CrawlerSeq16) */
+    void *linkedObj;    /* 0x340: linked/tracked object pointer (HagabonMK2, hoodedZyck) */
+} FCVars;
+
+STATIC_ASSERT(offsetof(FCVars, pathSpeed) == 0x310);
+STATIC_ASSERT(offsetof(FCVars, moveStartFlags) == 0x323);
+STATIC_ASSERT(offsetof(FCVars, engineTimer) == 0x324);
+STATIC_ASSERT(offsetof(FCVars, emergeTimer) == 0x328);
+STATIC_ASSERT(offsetof(FCVars, distToCurve) == 0x32c);
+STATIC_ASSERT(offsetof(FCVars, warpTimer) == 0x330);
+STATIC_ASSERT(offsetof(FCVars, turnDelta) == 0x338);
+STATIC_ASSERT(offsetof(FCVars, flagsC) == 0x33c);
+STATIC_ASSERT(offsetof(FCVars, flagsD) == 0x33d);
+STATIC_ASSERT(offsetof(FCVars, moveChainIndex) == 0x33e);
+STATIC_ASSERT(offsetof(FCVars, reactStep) == 0x33f);
+STATIC_ASSERT(offsetof(FCVars, linkedObj) == 0x340);
+
 void crawler_nop(void)
 {
 }
@@ -1091,7 +1132,7 @@ void hagabonMK2_update(s16* obj, u8* state)
     int i;
     f32 pw;
 
-    if (*(void**)(state + 0x340) != NULL && *(void**)(state + 0x340) == ((BaddieState*)state)->trackedObj)
+    if (((FCVars*)state)->linkedObj != NULL && ((FCVars*)state)->linkedObj == ((BaddieState*)state)->trackedObj)
     {
         *(u32*)&((BaddieState*)state)->unk2E4 |= 0x10000LL;
         *(f32*)(state + 0x330) = lbl_803E2C74;
@@ -1190,8 +1231,9 @@ void hagabonMK2_update(s16* obj, u8* state)
     {
         Sfx_StopFromObject((int)obj, SFXTRIG_baddie_rach_death);
     }
-    if (*(void**)(state + 0x340) != NULL
-        && (*(s16*)(*(int*)(state + 0x340) + 0x46) == 0x1f || *(s16*)(*(int*)(state + 0x340) + 0x46) == 0))
+    if (((FCVars*)state)->linkedObj != NULL
+        && (((GameObject*)((FCVars*)state)->linkedObj)->anim.seqId == 0x1f
+            || ((GameObject*)((FCVars*)state)->linkedObj)->anim.seqId == 0))
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_fball2_c);
     }
@@ -2206,8 +2248,8 @@ void hagabonMK2_updateB(s16* obj, u8* state)
 
     {
         s16 t;
-        if (*(void**)(state + 0x340) != NULL
-            && ((t = *(s16*)(*(int*)(state + 0x340) + 0x46)) == 0x1f || t == 0))
+        if (((FCVars*)state)->linkedObj != NULL
+            && ((t = ((GameObject*)((FCVars*)state)->linkedObj)->anim.seqId) == 0x1f || t == 0))
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_fball2_c);
         }
