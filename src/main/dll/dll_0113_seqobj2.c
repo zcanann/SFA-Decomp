@@ -26,6 +26,7 @@
 #include "main/objlib.h"
 #include "main/objprint.h"
 #include "main/gamebits.h"
+#include "main/object_descriptor.h"
 #include "dolphin/os.h"
 
 extern u32 FUN_80017690();
@@ -373,3 +374,20 @@ void seqobj2_update(int* obj)
     }
 }
 
+
+ObjectDescriptor gSeqObj2ObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    SeqObj2_initialise,
+    SeqObj2_release,
+    0,
+    (ObjectDescriptorCallback)seqobj2_init,
+    (ObjectDescriptorCallback)seqobj2_update,
+    seqobj2_hitDetect,
+    seqobj2_render,
+    (ObjectDescriptorCallback)seqobj2_free,
+    (ObjectDescriptorCallback)seqobj2_getObjectTypeId,
+    seqobj2_getExtraSize,
+};
