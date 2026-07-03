@@ -96,8 +96,6 @@ void flammablevine_initialise(void)
 int flammablevine_getExtraSize(void) { return 0x14; }
 int flammablevine_getObjectTypeId(void) { return 0x0; }
 
-#pragma scheduling off
-#pragma peephole off
 void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
