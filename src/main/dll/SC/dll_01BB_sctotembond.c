@@ -60,6 +60,9 @@ extern void fn_8011F6D4(u32 x);
 #define SC_TOTEMBOND_EVENT_ORBS_ACTIVE 0x02
 #define SC_TOTEMBOND_EVENT_SET_MAP_MODE 0x10
 
+#define SC_TOTEMBOND_OBJFLAG_HIDDEN 0x4000
+#define SC_TOTEMBOND_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /*
  * Placement record written for each spawned villager/"orb" object
  * (Obj_AllocObjectSetup size 0x38). The ObjPlacement head carries the
@@ -355,7 +358,7 @@ void sc_totembond_init(ScTotemBondObject* obj, int params)
     state = obj->state;
     state->ringIndex = hi;
     obj->animEventCallback = sc_totempuzzle_processAnimEvents;
-    v = obj->objectFlags | 0x6000;
+    v = obj->objectFlags | (SC_TOTEMBOND_OBJFLAG_HIDDEN | SC_TOTEMBOND_OBJFLAG_HITDETECT_DISABLED);
     obj->objectFlags = v;
 }
 
