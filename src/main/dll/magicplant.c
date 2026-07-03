@@ -207,7 +207,7 @@ void fn_80153248(int obj, int state)
     int gridB[2];
     int gridA[2];
     u8 hitOut;
-    int p29c;
+    int trackedObj;
 
     curve = *(RomCurveWalker**)state;
     if (((BaddieState*)state)->inWhirlpoolGroup != 0)
@@ -234,10 +234,10 @@ void fn_80153248(int obj, int state)
         }
     }
     ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
-    p29c = *(int*)&((BaddieState*)state)->trackedObj;
-    vec[0] = ((GameObject*)p29c)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-    vec[1] = (lbl_803E28D8 + ((GameObject*)p29c)->anim.localPosY) - ((GameObject*)obj)->anim.localPosY;
-    vec[2] = ((GameObject*)p29c)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+    trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
+    vec[0] = ((GameObject*)trackedObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+    vec[1] = (lbl_803E28D8 + ((GameObject*)trackedObj)->anim.localPosY) - ((GameObject*)obj)->anim.localPosY;
+    vec[2] = ((GameObject*)trackedObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
     PSVECMag(vec);
     *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) + timeDelta;
     if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > lbl_803E28C8)
@@ -439,17 +439,17 @@ void fn_8015383C(int obj, int state)
         worldPos[2] = ((GameObject*)obj)->anim.localPosZ;
         voxmaps_worldToGrid(worldPos, gridA);
         {
-            int p29c = *(int*)&((BaddieState*)state)->trackedObj;
-            worldPos[0] = ((GameObject*)p29c)->anim.localPosX;
-            worldPos[1] = lbl_803E2908 + ((GameObject*)p29c)->anim.localPosY;
-            worldPos[2] = ((GameObject*)p29c)->anim.localPosZ;
+            int trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
+            worldPos[0] = ((GameObject*)trackedObj)->anim.localPosX;
+            worldPos[1] = lbl_803E2908 + ((GameObject*)trackedObj)->anim.localPosY;
+            worldPos[2] = ((GameObject*)trackedObj)->anim.localPosZ;
         }
         voxmaps_worldToGrid(worldPos, gridB);
         hit = voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) & 0xff;
         if (hit != 0)
         {
-            int p29c = *(int*)&((BaddieState*)state)->trackedObj;
-            fn_8014CF7C(obj, state, ((GameObject*)p29c)->anim.localPosX, ((GameObject*)p29c)->anim.localPosZ, 0x14, 0);
+            int trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
+            fn_8014CF7C(obj, state, ((GameObject*)trackedObj)->anim.localPosX, ((GameObject*)trackedObj)->anim.localPosZ, 0x14, 0);
             angle = (s16)(getAngle(vec[0], vec[2]) - (u16)((GameObject*)obj)->anim.rotX);
             if (angle > 0x8000) angle = (angle - 0x10000) + 1;
             if (angle < -0x8000) angle = (angle + 0x10000) - 1;
