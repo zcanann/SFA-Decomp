@@ -65,6 +65,22 @@ extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
 extern f32 lbl_803E2A08;
 
+/*
+ * FireflyState - file-local overlay naming the PER-FAMILY scratch that
+ * baddie_state.h leaves raw for this path-walking baddie:
+ *  - trackTimer(0x324): reset to 0 while facing the tracked player.
+ *  - breathTimer(0x328): fightbreath-SFX cooldown, counts down by timeDelta.
+ *  - anchorY(0x32C): object localPosY captured at init.
+ *  - unk330(0x330): init-seeded f32 constant.
+ */
+typedef struct FireflyState {
+    u8 pad00[0x324];
+    f32 trackTimer;   /* 0x324 */
+    f32 breathTimer;  /* 0x328 */
+    f32 anchorY;      /* 0x32C */
+    f32 unk330;       /* 0x330 */
+} FireflyState;
+
 #pragma opt_common_subs off
 void fn_80154870(int obj, int* state)
 {
@@ -94,7 +110,7 @@ void fn_80154870(int obj, int* state)
     if (((u32)state[0xd0] != 0) && ((u32)state[0xd0] == Obj_GetPlayerObject()))
     {
         *(u32*)&state[0xb9] |= 0x10000LL;
-        *(f32*)(state + 0xc9) = lbl_803E2990;
+        ((FireflyState*)state)->trackTimer = lbl_803E2990;
     }
     ((GameObject*)obj)->anim.rotY =
         -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) -
@@ -115,18 +131,18 @@ void fn_80154870(int obj, int* state)
     if (state[0xb7] & 0x40000000U)
     {
         fval = *(f32*)&lbl_803E2990;
-        if (fval == *(f32*)(state + 0xca))
+        if (fval == ((FireflyState*)state)->breathTimer)
         {
             if (flag == 0)
             {
                 if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29A4)
                 {
-                    *(f32*)(state + 0xca) = lbl_803E29E0;
+                    ((FireflyState*)state)->breathTimer = lbl_803E29E0;
                     ((BaddieState*)state)->inWhirlpoolGroup += 1;
                 }
                 else
                 {
-                    *(f32*)(state + 0xca) = lbl_803E29E4;
+                    ((FireflyState*)state)->breathTimer = lbl_803E29E4;
                 }
             }
             else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
@@ -142,10 +158,10 @@ void fn_80154870(int obj, int* state)
         }
         else
         {
-            *(f32*)(state + 0xca) = *(f32*)(state + 0xca) - timeDelta;
-            if (*(f32*)(state + 0xca) <= fval)
+            ((FireflyState*)state)->breathTimer = ((FireflyState*)state)->breathTimer - timeDelta;
+            if (((FireflyState*)state)->breathTimer <= fval)
             {
-                *(f32*)(state + 0xca) = fval;
+                ((FireflyState*)state)->breathTimer = fval;
                 if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
                 {
                     Sfx_PlayFromObject((u32)obj, SFXfox_fightbreath1);
@@ -186,13 +202,13 @@ void fn_80154C24(int obj, int state)
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fval;
     fval = lbl_803E2990;
-    *(float*)(state + 0x324) = fval;
-    *(float*)(state + 0x328) = fval;
-    *(float*)(state + 0x32c) = ((GameObject*)obj)->anim.localPosY;
+    ((FireflyState*)state)->trackTimer = fval;
+    ((FireflyState*)state)->breathTimer = fval;
+    ((FireflyState*)state)->anchorY = ((GameObject*)obj)->anim.localPosY;
     randVal = randomGetRange(0, 0xff);
     ((BaddieState*)state)->seqEntryIndex = randVal;
     ((BaddieState*)state)->inWhirlpoolGroup = 0;
-    *(float*)(state + 0x330) = lbl_803E29F4;
+    ((FireflyState*)state)->unk330 = lbl_803E29F4;
     randVal = randomGetRange(0x32, 0x4b);
     fval = (f32)(s32)randVal;
     fval = gFireflyLanternPathStepScale * fval;
