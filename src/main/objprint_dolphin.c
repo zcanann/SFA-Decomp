@@ -3134,15 +3134,16 @@ typedef struct
 } MtxBitStream;
 
 #pragma optimization_level 2
-void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
+#pragma inline_max_size(4000)
+static inline void modelLoadMtxsToGxBody(int obj, int* model, MtxBitStream* bs, f32* mtx)
 {
     char* cache = getCache();
     if (lbl_803DCC48 == 1)
     {
         char* c2 = getCache();
-        char* src;
-        char* dst;
         int i;
+        char* dst;
+        char* src;
         obj = *(u8*)(obj + 0xf3) + *(u8*)(obj + 0xf4);
         src = c2 + 0x2700;
         dst = c2;
@@ -3156,13 +3157,13 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
         lbl_803DCC48 = 2;
     }
     {
-        u8* tbl;
-        int i;
         int count;
+        int i;
+        u8* tbl;
         f32 tmp[12];
         {
-            u32 w;
             int pos = bs->pos;
+            u32 w;
             int off = pos >> 3;
             u8* p;
             w = bs->data[off];
@@ -3178,10 +3179,12 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
         {
             int idx;
             {
-                u32 w;
+                int off;
+                u8* p;
                 int pos = bs->pos;
-                int off = pos >> 3;
-                u8* p = (u8*)(off + bs->data);
+                u32 w;
+                off = pos >> 3;
+                p = (u8*)(off + bs->data);
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
@@ -3202,6 +3205,11 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
     }
 }
 
+void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
+{
+    modelLoadMtxsToGxBody(obj, model, bs, mtx);
+}
+#pragma inline_max_size reset
 #pragma optimization_level reset
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
@@ -4132,7 +4140,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
 extern void ObjModel_ToggleVertexBuffer(int* am);
 extern void PSMTXIdentity(f32 * m);
 extern void modelInitBoneMtxs2(int* am, f32* wm, f32* out);
-extern f32 gObjBoneMtxBuffer[];
+f32 gObjBoneMtxBuffer[0xC00];
 extern void ObjModel_ApplyBlendChannels(int* am);
 extern void ObjModel_BlendPrimaryVertexStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
 extern void ObjModel_BlendSecondaryVertexStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
@@ -5338,7 +5346,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
 }
 #pragma opt_propagation reset
 
-extern u8 lbl_80345E10[];
+u8 lbl_80345E10[0x160];
 extern void mm_free(void* p);
 extern s16 lbl_803DCC78;
 extern void* mmAlloc(int size, int type, int flag);
@@ -5576,7 +5584,7 @@ void* getCurrentDataFile(int id)
 extern u32 lbl_803DCC84;
 extern void* lbl_803DCC8C;
 extern u32 lbl_8035F3E8[];
-extern u32 gObjBlockStatus[];
+u32 gObjBlockStatus[0x63F6];
 extern void AtomicSList_Push(void** list, void* node);
 extern int DVDClose(void* fileInfo);
 
