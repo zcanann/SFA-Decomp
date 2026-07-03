@@ -1235,7 +1235,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
                 collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
                 collision->surfaceNormalY = collision->segmentHitPlanes[0][1];
                 collision->surfaceNormalZ = collision->segmentHitPlanes[0][2];
-                if (((collision->surfaceFlags & 1) != 0) && (collision->segmentHitTypes[0] == 0x21))
+                if ((((s8)collision->surfaceFlags & 1) != 0) && (collision->segmentHitTypes[0] == 0x21))
                 {
                     ((GameObject*)curveObj)->anim.worldPosX = collision->points[0][0];
                     ((GameObject*)curveObj)->anim.worldPosY = collision->points[0][1];
