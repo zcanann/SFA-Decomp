@@ -66,7 +66,7 @@ typedef struct EcshShrineSpawnSetup {
     s8 unk2E;          /* 0x2e */
     u8 pad2F;          /* 0x2f */
     s16 unk30;         /* 0x30 */
-    u8 unk32;          /* 0x32 */
+    u8 groupSlot;      /* 0x32 */
     u8 pad33;          /* 0x33 */
     u16 unk34;         /* 0x34 */
     u8 pad36[2];       /* 0x36 */
@@ -178,7 +178,7 @@ void ecsh_creator_update(GameObject* obj)
         p->unk2C = 0;
         p->unk34 = 0xFFFF;
         p->unk1A = 0;
-        p->unk32 = state->groupSlot;
+        p->groupSlot = state->groupSlot;
         ret = Obj_SetupObject((u8*)p, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
         if ((u32)ret != 0)
         {
