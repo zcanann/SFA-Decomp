@@ -100,7 +100,6 @@ STATIC_ASSERT(sizeof(TreeState) == 0x5c);
 
 int tree_getExtraSize(void) { return sizeof(TreeState); }
 
-#pragma scheduling off
 void tree_spawnAmbientEffect(int obj, int p2, s8 index)
 {
     TreeSetup* setup = (TreeSetup*)((GameObject*)obj)->anim.placementData;
@@ -137,7 +136,6 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
     }
 }
 
-#pragma scheduling reset
 void tree_updateAmbientEffects(int obj, int state)
 {
     int i;
