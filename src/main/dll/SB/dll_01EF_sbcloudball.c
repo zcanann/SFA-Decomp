@@ -72,7 +72,6 @@ extern f32 gSbCloudBallVelocityScale;
 extern f32 gSbCloudBallTrailVelScale;
 extern f32 gSbCloudBallTrailParticleScale;
 
-void SB_FireBall_release(void);
 
 void SB_CloudBall_release(void)
 {
@@ -82,7 +81,6 @@ void SB_CloudBall_initialise(void)
 {
 }
 
-void SB_KyteCage_render(void);
 
 int SB_CloudBall_getExtraSize(void) { return 0x24; }
 int SB_CloudBall_getObjectTypeId(void) { return 0x0; }
@@ -94,7 +92,6 @@ void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E58E8);
 }
 
-void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
  * splits at wrong addresses; these stubs ensure every asm symbol has a src
@@ -241,7 +238,6 @@ void SB_CloudBall_update(GameObject* obj)
     }
 }
 
-void SB_FireBall_init(GameObject* obj);
 
 /* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
  * call ObjLink_DetachChild(obj). */
