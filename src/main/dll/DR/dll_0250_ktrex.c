@@ -1862,6 +1862,8 @@ int ktrex_stateHandlerA01(int obj, int runtime)
     return 0;
 }
 
+f32 gKTRexLaneSpeedMin[3] = { 0.0f, 0.025f, 0.025f };
+
 f32 gKTRexLaneSpeedMax[19] = {
     1.0f, 0.975f, 0.975f, 2.8742e-40f, 2.8743e-40f, 2.87401e-40f,
     2.8741e-40f, 2.87412e-40f, 2.87422e-40f, 2.87394e-40f, 2.87402e-40f, 2.88206e-40f,
