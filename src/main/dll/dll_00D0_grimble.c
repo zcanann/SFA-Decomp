@@ -478,8 +478,6 @@ void grimble_initialiseStateHandlerTables(void);
 #pragma dont_inline reset
 void grimble_initialise(void) { grimble_initialiseStateHandlerTables(); }
 
-#pragma scheduling off
-#pragma peephole off
 void grimble_free(int obj)
 {
     int* state = ((GameObject*)obj)->extra;
