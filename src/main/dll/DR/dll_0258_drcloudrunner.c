@@ -1275,22 +1275,22 @@ int DR_CloudRunner_stateHandler04(int obj, int baddie)
     a0 -= (u16)((GameObject*)obj)->anim.rotX;
     if (a0 > 0x8000)
     {
-        a0 -= 0xffff;
+        a0 = a0 - 0xffff;
     }
     if (a0 < -0x8000)
     {
-        a0 += 0xffff;
+        a0 = a0 + 0xffff;
     }
     ((GameObject*)obj)->anim.rotX =
         (f32)(s32)((GameObject*)obj)->anim.rotX + interpolate((f32)(s32)a0, lbl_803E83FC, timeDelta);
     a1 -= (u16)((GameObject*)obj)->anim.rotY;
     if (a1 > 0x8000)
     {
-        a1 -= 0xffff;
+        a1 = a1 - 0xffff;
     }
     if (a1 < -0x8000)
     {
-        a1 += 0xffff;
+        a1 = a1 + 0xffff;
     }
     ((GameObject*)obj)->anim.rotY =
         (f32)(s32)((GameObject*)obj)->anim.rotY + interpolate((f32)(s32)a1, lbl_803E83FC, timeDelta);
