@@ -1044,7 +1044,6 @@ extern void GXSetTevColorIn(int tev, int a, int b, int c, int d);
 extern void GXSetTevAlphaIn(int tev, int a, int b, int c, int d);
 extern void GXSetTevColorOp(int tev, int op, int bias, int scale, int clamp, int outreg);
 extern void GXSetTevAlphaOp(int tev, int op, int bias, int scale, int clamp, int outreg);
-extern int lbl_803DCD90;
 
 void gxColorFn_800523d0(void)
 {
@@ -1362,7 +1361,7 @@ void shaderInit(u8* def, void** out, u8* obj)
 
 extern void selectTexture(int handle, int slot);
 
-void textureFn_800541ac(int p1, int* tex, void* forceTex, int flags, int packed)
+void textureFn_800541ac(int p1 /* unused; target never reads r3 */, int* tex, void* forceTex, int flags, int packed)
 {
     int i;
     int idx, count;
@@ -2008,20 +2007,20 @@ extern f32 lbl_803DEB64;
 
 #pragma opt_loop_invariants off
 #pragma opt_propagation off
-void lightFn_80052974(f32 a, f32 b)
+void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) */
 {
     f32 z;
-    f32 scale;
+    f32 step;
     f32 half;
-    f32 w;
+    f32 span;
     f32 x0;
     f32 y;
-    f32 yy;
+    f32 ySq;
     f32 x1;
-    f32 d;
-    f32 r;
-    f32 fa;
-    f32 fb;
+    f32 distSq;
+    f32 bulge;
+    f32 col0;
+    f32 col1;
     u32 i;
     u32 j;
 
@@ -2030,51 +2029,51 @@ void lightFn_80052974(f32 a, f32 b)
         GXSetMisc(GX_MT_XF_FLUSH, 0);
         DCInvalidateRange(gRcpWarpDistortDisplayList, 0x6640);
         GXBeginDisplayList(gRcpWarpDistortDisplayList, 0x6640);
-        w = LastReadIssued_803DEB58.lo;
+        span = LastReadIssued_803DEB58.lo;
         half = lbl_803DEB5C;
-        scale = lbl_803DEB54;
+        step = lbl_803DEB54;
         z = lbl_803DEB64;
         for (i = 0; i < 0x10; i++)
         {
             GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT4, 0x22);
-            fa = scale * (f32)i;
-            fb = scale * (f32)(i + 1);
-            x0 = fa / w - half;
-            x1 = fb / w - half;
+            col0 = step * (f32)i;
+            col1 = step * (f32)(i + 1);
+            x0 = col0 / span - half;
+            x1 = col1 / span - half;
             for (j = 0; j <= 0x10; j++)
             {
-                y = (scale * (f32)j) / w - half;
-                yy = y * y;
-                d = x0 * x0 + yy;
-                if (d < half)
+                y = (step * (f32)j) / span - half;
+                ySq = y * y;
+                distSq = x0 * x0 + ySq;
+                if (distSq < half)
                 {
-                    r = sqrtf(half - d);
+                    bulge = sqrtf(half - distSq);
                 }
                 else
                 {
-                    r = LastCommandWasRead_803DEB60;
+                    bulge = LastCommandWasRead_803DEB60;
                 }
                 *(volatile f32*)0xCC008000 = x0;
                 *(volatile f32*)0xCC008000 = y;
                 *(volatile f32*)0xCC008000 = z;
                 *(volatile f32*)0xCC008000 = x0;
                 *(volatile f32*)0xCC008000 = y;
-                *(volatile f32*)0xCC008000 = r;
-                d = x1 * x1 + yy;
-                if (d < half)
+                *(volatile f32*)0xCC008000 = bulge;
+                distSq = x1 * x1 + ySq;
+                if (distSq < half)
                 {
-                    r = sqrtf(half - d);
+                    bulge = sqrtf(half - distSq);
                 }
                 else
                 {
-                    r = LastCommandWasRead_803DEB60;
+                    bulge = LastCommandWasRead_803DEB60;
                 }
                 *(volatile f32*)0xCC008000 = x1;
                 *(volatile f32*)0xCC008000 = y;
                 *(volatile f32*)0xCC008000 = z;
                 *(volatile f32*)0xCC008000 = x1;
                 *(volatile f32*)0xCC008000 = y;
-                *(volatile f32*)0xCC008000 = r;
+                *(volatile f32*)0xCC008000 = bulge;
             }
         }
         gRcpWarpDistortListSize = GXEndDisplayList();
@@ -2810,23 +2809,23 @@ void* textureLoad(int texId, u8 flagIn)
     int id16;
     u32 size;
     u8* buf;
-    u8* first;
-    u8* prev;
+    u8* firstTex;
+    u8* prevTex;
     int slot;
     LoadedTextureEntry* entry;
     u8* walk;
-    int word;
-    int wordSaved;
-    int wordHeld;
-    int orig;
-    int packed;
-    u16 m;
-    int base19;
+    int bankWord;
+    int bankWordSaved;
+    int bankWordHeld;
+    int origTexId;
+    int mipChainWord;
+    u16 remapped;
+    int dataByteOffset;
     int mips;
-    int k;
-    int sz2;
+    int mipLevel;
+    int frameSize;
     int n;
-    int* p;
+    int* bankPtr;
     int sizeOut;
     int frameOut;
 
@@ -2865,7 +2864,7 @@ void* textureLoad(int texId, u8 flagIn)
         restore = OSDisableInterrupts();
         disabled = 1;
     }
-    orig = texId;
+    origTexId = texId;
     if (texId < 0)
     {
         texId = -texId;
@@ -2874,10 +2873,10 @@ void* textureLoad(int texId, u8 flagIn)
     {
         if (texId >= 0xbb8)
         {
-            m = gRcpTexIdRemap[texId];
-            if (m != 0)
+            remapped = gRcpTexIdRemap[texId];
+            if (remapped != 0)
             {
-                texId = m + 1;
+                texId = remapped + 1;
                 goto resolved;
             }
         }
@@ -2891,7 +2890,7 @@ resolved:
         file = 0x20;
         id16 = id16 & 0x7fff;
     }
-    else if (orig >= 0xbb8)
+    else if (origTexId >= 0xbb8)
     {
         bank = 2;
         file = 0x4f;
@@ -2906,49 +2905,49 @@ resolved:
         id16 = 0;
     }
     n = 0;
-    p = getCurrentDataFile(0x24);
-    gRcpTexBankTable[0] = p;
+    bankPtr = getCurrentDataFile(0x24);
+    gRcpTexBankTable[0] = bankPtr;
     if (gRcpTexBankTable != NULL)
         goto countBank0;
     goto doneBank0;
 countBank0:
-    while (*p != -1)
+    while (*bankPtr != -1)
     {
-        p++;
+        bankPtr++;
         n++;
     }
     gRcpTexBankCount[0] = n - 1;
 doneBank0:
     n = 0;
-    p = getCurrentDataFile(0x21);
-    gRcpTexBankTable[1] = p;
+    bankPtr = getCurrentDataFile(0x21);
+    gRcpTexBankTable[1] = bankPtr;
     if (gRcpTexBankTable != NULL)
         goto countBank1;
     goto doneBank1;
 countBank1:
-    while (*p != -1)
+    while (*bankPtr != -1)
     {
-        p++;
+        bankPtr++;
         n++;
     }
     gRcpTexBankCount[1] = n - 1;
 doneBank1:
-    word = gRcpTexBankTable[bank][id16];
-    mips = (word >> 24) & 0x3f;
-    wordSaved = word;
+    bankWord = gRcpTexBankTable[bank][id16];
+    mips = (bankWord >> 24) & 0x3f;
+    bankWordSaved = bankWord;
     if (mips == 1)
     {
         if (bank == 0)
         {
-            tex0GetFrame(word, id16, &sizeOut, &frameOut, mips, 0, 0);
+            tex0GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, 0, 0);
         }
         else if (bank == 2)
         {
-            texPreGetMipmap(word, id16, &sizeOut, &frameOut, mips, 0, 0);
+            texPreGetMipmap(bankWord, id16, &sizeOut, &frameOut, mips, 0, 0);
         }
         else
         {
-            tex1GetFrame(word, id16, &sizeOut, &frameOut, mips, 0, 0);
+            tex1GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, 0, 0);
         }
         *(int*)gRcpTexHeaderBuffer = 0;
         *((int*)gRcpTexHeaderBuffer + 1) = sizeOut;
@@ -2963,47 +2962,47 @@ doneBank1:
     }
     else if (bank == 0)
     {
-        tex0GetFrame(word, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
+        tex0GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
     }
     else if (bank == 2)
     {
-        texPreGetMipmap(word, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
+        texPreGetMipmap(bankWord, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
     }
     else
     {
-        tex1GetFrame(word, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
+        tex1GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
     }
-    first = NULL;
-    prev = NULL;
-    k = 0;
-    wordHeld = wordSaved;
-    packed = mips << 8;
-    base19 = (wordSaved & 0xffffff) << 1;
-    for (; k < mips; k++)
+    firstTex = NULL;
+    prevTex = NULL;
+    mipLevel = 0;
+    bankWordHeld = bankWordSaved;
+    mipChainWord = mips << 8;
+    dataByteOffset = (bankWordSaved & 0xffffff) << 1;
+    for (; mipLevel < mips; mipLevel++)
     {
         if (mips > 1)
         {
             if (bank == 0)
             {
-                tex0GetFrame(wordHeld, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
+                tex0GetFrame(bankWordHeld, id16, &sizeOut, &frameOut, mipLevel, gRcpTexHeaderBuffer, 1);
             }
             else if (bank == 2)
             {
-                texPreGetMipmap(wordHeld, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
+                texPreGetMipmap(bankWordHeld, id16, &sizeOut, &frameOut, mipLevel, gRcpTexHeaderBuffer, 1);
             }
             else
             {
-                tex1GetFrame(wordHeld, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
+                tex1GetFrame(bankWordHeld, id16, &sizeOut, &frameOut, mipLevel, gRcpTexHeaderBuffer, 1);
             }
         }
         size = sizeOut;
         if (frameOut == -1)
         {
-            sz2 = sizeOut;
+            frameSize = sizeOut;
         }
         else
         {
-            sz2 = frameOut;
+            frameSize = frameOut;
             texFlagFn_80023cbc(1);
             buf = (u8*)mmAlloc(size, gRcpTexAllocTag, 0);
             texFlagFn_80023cbc(0);
@@ -3030,7 +3029,7 @@ doneBank1:
         }
         if (frameOut != -1 && buf == NULL)
         {
-            if (k == 0)
+            if (mipLevel == 0)
             {
                 gRcpTexAllocFailed = 1;
                 if (getLoadedFileFlags(0) != 0)
@@ -3052,14 +3051,14 @@ doneBank1:
             }
             else
             {
-                *(u16*)(first + 0x10) = packed;
-                k = mips;
+                *(u16*)(firstTex + 0x10) = mipChainWord;
+                mipLevel = mips;
                 continue;
             }
         }
         if (frameOut == -1)
         {
-            buf = (u8*)loadAndDecompressDataFile(file, 0, base19 + ((int*)gRcpTexHeaderBuffer)[k], sz2, 0,
+            buf = (u8*)loadAndDecompressDataFile(file, 0, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel], frameSize, 0,
                                                  id16, 0);
             buf[0x49] = 1;
             if (flag != 0)
@@ -3070,7 +3069,7 @@ doneBank1:
         }
         else
         {
-            loadAndDecompressDataFile(file, (int)buf, base19 + ((int*)gRcpTexHeaderBuffer)[k], sz2, 0, id16,
+            loadAndDecompressDataFile(file, (int)buf, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel], frameSize, 0, id16,
                                       0);
         }
         if (frameOut != -1)
@@ -3078,23 +3077,23 @@ doneBank1:
             DCStoreRange(buf, size);
         }
         *(void**)buf = NULL;
-        if (prev != NULL)
+        if (prevTex != NULL)
         {
-            *(u8**)prev = buf;
+            *(u8**)prevTex = buf;
         }
-        prev = buf;
-        if (k == 0)
+        prevTex = buf;
+        if (mipLevel == 0)
         {
-            first = buf;
-            *(u16*)(buf + 0x10) = packed;
+            firstTex = buf;
+            *(u16*)(buf + 0x10) = mipChainWord;
         }
         else
         {
             *(u16*)(buf + 0x10) = 1;
         }
     }
-    walk = first;
-    *(u32*)(first + 0x4c) = size;
+    walk = firstTex;
+    *(u32*)(firstTex + 0x4c) = size;
     slot = 0;
     entry = gLoadedTextures;
     for (; slot < gLoadedTextureCount; slot++)
@@ -3108,8 +3107,8 @@ doneBank1:
     {
         gLoadedTextureCount += 1;
     }
-    gLoadedTextures[slot].key = orig;
-    gLoadedTextures[slot].texture = first;
+    gLoadedTextures[slot].key = origTexId;
+    gLoadedTextures[slot].texture = firstTex;
     gLoadedTextures[slot].flag = flag;
     gLoadedTextures[slot].size = getHeapItemSize(gLoadedTextures[slot].texture);
     if (gLoadedTextureCount > 0x2bc)
@@ -3151,6 +3150,6 @@ doneBank1:
     {
         return (void*)(slot + 1);
     }
-    return first;
+    return firstTex;
 }
 #pragma opt_propagation reset
