@@ -409,6 +409,7 @@ main/dll/dll_007A_dll7afunc0.c:
 
 main/dll/dll_007B_dll7bfunc0.c:
 	.text       start:0x800F4174 end:0x800F472C
+	.data       start:0x80314CB0 end:0x80314DE4
 
 main/dll/dll_007C_dll7cfunc0.c:
 	.text       start:0x800F472C end:0x800F4C70
