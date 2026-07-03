@@ -97,7 +97,6 @@ int dimdismountpoint_getExtraSize(void) { return 0x10; }
 
 void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, DIMDISMOUNT_GROUP); }
 
-void dimbridgecogmai_release(void);
 
 int dimdismountpoint_getObjectTypeId(void) { return 0; }
 
