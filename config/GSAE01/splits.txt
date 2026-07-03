@@ -1191,7 +1191,7 @@ main/dll/WM/dll_0116_wmcolumn.c:
 
 main/dll/dll_0117_appleontree.c:
 	.text       start:0x8017D818 end:0x8017EC10
-	.data       start:0x80321498 end:0x80321530
+	.data       start:0x80321460 end:0x80321530
 
 main/dll/dll_00FC_babycloudrunner.c:
 	.text       start:0x8017EC10 end:0x8017EF6C
