@@ -1506,6 +1506,7 @@ main/dll/CC/dll_0187_ccqueen.c:
 
 main/dll/CC/dll_0188_cclightfoot.c:
 	.text       start:0x801AA734 end:0x801AB468
+	.data       start:0x80323408 end:0x80323464
 
 main/dll/CC/dll_0189_ccsharpclawpad.c:
 	.text       start:0x801AB468 end:0x801AB6F8
