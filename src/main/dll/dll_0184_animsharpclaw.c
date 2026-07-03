@@ -136,60 +136,50 @@ void animsharpclaw_hitDetect(void)
 #pragma scheduling off
 void animsharpclaw_update(int* obj)
 {
-    int* found;
-    int* inner;
     int* placement;
     int kind;
     int kind2;
     int matchCount;
     int* objects;
+    int* inner;
+    int found;
     int i;
     int count;
 
     inner = ((GameObject*)obj)->extra;
     placement = *(int**)&((GameObject*)obj)->anim.placementData;
-    if (placement == NULL)
+    if ((placement != NULL) && (((AnimsharpclawPlacement*)placement)->unk18 != -1))
     {
-        return;
-    }
-    if (((AnimsharpclawPlacement*)placement)->unk18 == -1)
-    {
-        return;
-    }
-    i = (*gObjectTriggerInterface)->update((u8*)obj, (f32)(u32)framesThisStep);
-    fn_801A8F88((int)obj, (ObjAnimUpdateState*)inner);
-    if (i == 0)
-    {
-        return;
-    }
-    if (((GameObject*)obj)->seqIndex != -2)
-    {
-        return;
-    }
-    kind = *(s8*)&((AnimsharpclawState*)inner)->unk57;
-    kind2 = *(s8*)&((AnimsharpclawState*)inner)->unk57;
-    found = NULL;
-    objects = (int*)ObjList_GetObjects(&i, &count);
-    matchCount = 0;
-    for (i = 0; i < count; i++)
-    {
-        int* o = (int*)objects[i];
-        if (((GameObject*)o)->seqIndex == kind)
+        i = (*gObjectTriggerInterface)->update((u8*)obj, (f32)(u32)framesThisStep);
+        fn_801A8F88((int)obj, (ObjAnimUpdateState*)inner);
+        if ((i != 0) && (((GameObject*)obj)->seqIndex == -2))
         {
-            found = o;
-        }
-        if (((GameObject*)o)->seqIndex == -2 && ((GameObject*)o)->anim.classId == 0x10 &&
-            kind2 == (s8) * (u8*)((char*)*(int**)&((GameObject*)o)->extra + 0x57))
-        {
-            matchCount++;
+            kind = *(s8*)&((AnimsharpclawState*)inner)->unk57;
+            found = 0;
+            objects = (int*)ObjList_GetObjects(&i, &count);
+            matchCount = 0;
+            for (i = 0, kind2 = (int)(s8)kind; i < count; i++)
+            {
+                int o = *objects;
+                if (((GameObject*)o)->seqIndex == kind)
+                {
+                    found = o;
+                }
+                if (((GameObject*)o)->seqIndex == -2 && ((GameObject*)o)->anim.classId == 0x10 &&
+                    kind2 == *(s8*)((char*)*(int**)&((GameObject*)o)->extra + 0x57))
+                {
+                    matchCount++;
+                }
+                objects = objects + 1;
+            }
+            if (matchCount <= 1 && (u32)found != 0 && ((GameObject*)found)->seqIndex != -1)
+            {
+                ((GameObject*)found)->seqIndex = -1;
+                (*gObjectTriggerInterface)->endSequence(kind2);
+            }
+            ((GameObject*)obj)->seqIndex = -1;
         }
     }
-    if (matchCount <= 1 && found != NULL && ((GameObject*)found)->seqIndex != -1)
-    {
-        ((GameObject*)found)->seqIndex = -1;
-        (*gObjectTriggerInterface)->endSequence(kind2);
-    }
-    ((GameObject*)obj)->seqIndex = -1;
 }
 
 void animsharpclaw_init(int* obj, u8* init)
