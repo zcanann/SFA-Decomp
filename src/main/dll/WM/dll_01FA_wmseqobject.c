@@ -245,4 +245,3 @@ void WM_seqobject_initialise(void)
 {
 }
 
-int dll_1FB_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
