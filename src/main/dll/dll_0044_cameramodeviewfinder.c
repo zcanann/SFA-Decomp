@@ -388,7 +388,7 @@ void CameraModeViewfinder_update(s16* obj)
         ((GameObject*)obj)->anim.worldPosY = lbl_803DD548->posYCurve.end;
         ((GameObject*)obj)->anim.worldPosZ = lbl_803DD548->posZCurve.end;
         {
-            f32 fade = (lbl_803E17E8 - *(f32*)&((GameObject*)obj)->unkF4) - lbl_803E1824;
+            f32 fade = (lbl_803E17E8 - ((CameraObject*)obj)->blendProgress) - lbl_803E1824;
             if (fade < lbl_803E17C4)
             {
                 fade = lbl_803E17C4;
@@ -422,7 +422,7 @@ void CameraModeViewfinder_update(s16* obj)
             }
         }
         brightness = 0;
-        if (*(f32*)&((GameObject*)obj)->unkF4 <= lbl_803E17C4)
+        if (((CameraObject*)obj)->blendProgress <= lbl_803E17C4)
         {
             brightness = 1;
         }
