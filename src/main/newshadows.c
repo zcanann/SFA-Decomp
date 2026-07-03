@@ -1733,52 +1733,55 @@ extern f32 Vdchuff_803DEDD4;
 extern const f32 Uachuff_803DEE00;
 extern float __fabsf(float);
 
-void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
+/* Sample the animated noise field built from gNewShadowPlacements: sums the
+   contribution of every active placement at texel (px,pz) for animation frame
+   `frame`. out2 = sparkle intensity (0..1), out1 = accumulated shift term. */
+void fn_8006CD20(f32* placements, int count, f32* out1, f32* out2, f32 px, f32 pz, f32 frame)
 {
-    f32* p;
+    f32* place;
     int i;
     f32 acc5;
     f32 acc6;
 
     acc5 = acc6 = lbl_803DED28;
-    p = arr;
-    for (i = 0; i < n; i++, p += 5)
+    place = placements;
+    for (i = 0; i < count; i++, place += 5)
     {
         f32 over = *(f32*)&lbl_803DED28;
-        if (c < p[0])
+        if (frame < place[0])
         {
             f32 mx, mz, t, s0, tmp, p2lo, d2, sq, ratio, frac, depth;
-            t = GPFifo_803DED3C + (p[0] - c) / p[0];
+            t = GPFifo_803DED3C + (place[0] - frame) / place[0];
             if (t > lbl_803DED2C) t = lbl_803DED2C;
             s0 = sqrtf(t);
 
-            mx = __fabsf(p[1] - a);
-            tmp = __fabsf((lbl_803DED2C + p[1]) - a);
+            mx = __fabsf(place[1] - px);
+            tmp = __fabsf((lbl_803DED2C + place[1]) - px);
             if (tmp < mx) mx = tmp;
-            tmp = __fabsf((p[1] - lbl_803DED2C) - a);
+            tmp = __fabsf((place[1] - lbl_803DED2C) - px);
             if (tmp < mx) mx = tmp;
 
-            mz = __fabsf(p[2] - b);
-            if (b > p[2]) over = b - p[2];
-            tmp = __fabsf((lbl_803DED2C + p[2]) - b);
+            mz = __fabsf(place[2] - pz);
+            if (pz > place[2]) over = pz - place[2];
+            tmp = __fabsf((lbl_803DED2C + place[2]) - pz);
             if (tmp < mz)
             {
                 mz = tmp;
                 over = lbl_803DED28;
             }
-            p2lo = p[2] - lbl_803DED2C;
-            tmp = __fabsf(p2lo - b);
+            p2lo = place[2] - lbl_803DED2C;
+            tmp = __fabsf(p2lo - pz);
             if (tmp < mz)
             {
                 mz = tmp;
-                if (b > p2lo) over = b - p2lo;
+                if (pz > p2lo) over = pz - p2lo;
             }
 
             sq = sqrtf(mx * mx + mz * mz);
 
-            ratio = c / p[0];
+            ratio = frame / place[0];
             frac = sqrtf(ratio);
-            depth = p[3] - frac * (p[3] - p[4]);
+            depth = place[3] - frac * (place[3] - place[4]);
             if (sq <= depth)
             {
                 f32 sqd = sq / depth;
@@ -1786,7 +1789,7 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
                 acc5 = s0 * g + acc5;
                 over = over / depth;
                 acc6 = acc6 + over;
-                acc6 = CPUFifo_803DED38 * (lbl_803DED2C - c * Vdchuff_803DEDD0) + acc6;
+                acc6 = CPUFifo_803DED38 * (lbl_803DED2C - frame * Vdchuff_803DEDD0) + acc6;
             }
         }
     }
@@ -1807,6 +1810,9 @@ extern f32 gNewShadowPlacements[];
 extern f32 gNewShadowReflectionScrollY, gNewShadowReflectionScrollX;
 
 #pragma opt_common_subs off
+/* Builds the animated water-noise assets: scatters up to 50 non-overlapping random
+   placements ([0]=lifetime 8..16 frames, [1..2]=pos, [3]=outer size, [4]=inner size),
+   renders 16 noise animation frames through fn_8006CD20, then the caustic texture. */
 void initFn_8006d020(void)
 {
     u8 saved;
@@ -2644,9 +2650,9 @@ void renderShadows(void)
     int* slot;
     char* B = (char*)gNewShadowEntries;
     int blkArr, blkCount;
-    s8 r22;
+    s8 casterIdx;
     f32 sCamZ, dirY, dirZ, f22, f21, vAy, f23;
-    int r23, r24;
+    int texIdx, slotIdx;
 
     if (gNewShadowCasterCount == 0) return;
     Camera_DisableViewYOffset();
@@ -2668,14 +2674,14 @@ void renderShadows(void)
     v30[2] = lbl_803DED28;
     fn_80061094(v30, om100, lbl_803DED34);
     mapGetBlocks(&blkArr, &blkCount);
-    r23 = 0;
-    r24 = 0;
-    r22 = 0;
+    texIdx = 0;
+    slotIdx = 0;
+    casterIdx = 0;
     casterPtr = B + 0x360;
     mc54p = &mc54[0];
     vAp2 = &vA[2];
     vAp1 = &vA[1];
-    for (; r22 < gNewShadowCasterCount && r22 < NEW_SHADOW_MAX_CASTERS; r22++, casterPtr += 0xc)
+    for (; casterIdx < gNewShadowCasterCount && casterIdx < NEW_SHADOW_MAX_CASTERS; casterIdx++, casterPtr += 0xc)
     {
         int* obj = *(int**)casterPtr;
         int* of64 = (int*)obj[0x64 / 4];
@@ -2694,16 +2700,16 @@ void renderShadows(void)
             memcpy((char*)obj + 0xc, (char*)of64 + 0x20, 0xc);
             memcpy((char*)obj + 0x18, (char*)of64 + 0x20, 0xc);
         }
-        castSlot = B + (u8)r24 * 0x68 + 0x1170;
+        castSlot = B + (u8)slotIdx * 0x68 + 0x1170;
         *(u8*)(castSlot + 0x64) = lod;
-        if ((u8)r23 < 8 && (kind = *(u8*)(casterPtr + 8)) != 0)
+        if ((u8)texIdx < 8 && (kind = *(u8*)(casterPtr + 8)) != 0)
         {
-            if ((u8)r23 < 3)
+            if ((u8)texIdx < 3)
             {
                 w = 0x100;
                 f23 = CPUFifo_803DED38;
             }
-            else if ((u8)r23 < 5)
+            else if ((u8)texIdx < 5)
             {
                 w = 0x80;
                 f23 = GPFifo_803DED3C;
@@ -2713,7 +2719,7 @@ void renderShadows(void)
                 w = 0x40;
                 f23 = __GXCurrentThread_803DED40;
             }
-            if ((u8)r23 == 0) screenW = w << 1;
+            if ((u8)texIdx == 0) screenW = w << 1;
             else screenW = w;
             if (kind == 2)
             {
@@ -2804,9 +2810,9 @@ void renderShadows(void)
                 ((ObjModelState*)obj[0x64 / 4])->shadowCastSlot = castSlot;
                 {
                     char* texPool = B + 0x3a10;
-                    char* texSlot = texPool + (u8)r23 * 4;
+                    char* texSlot = texPool + (u8)texIdx * 4;
                     *(int*)(castSlot + 0x60) = *(int*)texSlot;
-                    *(u8*)(castSlot + 0x65) = lbl_803DB668[(u8)r23];
+                    *(u8*)(castSlot + 0x65) = lbl_803DB668[(u8)texIdx];
                     objRenderShadowIfVisible(obj, 0, 0, 0, 0, 0);
                     if (*(u8*)(casterPtr + 8) == 2)
                     {
@@ -2825,7 +2831,7 @@ void renderShadows(void)
                     }
                     else
                     {
-                        if ((u8)r23 == 0)
+                        if ((u8)texIdx == 0)
                         {
                             gxSetZMode_(1, 3, 1);
                             GXSetTexCopySrc(0, 0, screenW, screenW);
@@ -2833,7 +2839,7 @@ void renderShadows(void)
                             GXCopyTex((void*)(*(int*)texSlot + 0x60), GX_TRUE);
                             *(int*)(castSlot + 0x60) = *(int*)texSlot;
                         }
-                        r23++;
+                        texIdx++;
                     }
                 }
             }
@@ -2871,14 +2877,14 @@ void renderShadows(void)
             ((ObjModelState*)of64)->shadowOffsetZ = v30[2];
             ((ObjModelState*)of64)->shadowCastSlot = castSlot;
         }
-        r24++;
+        slotIdx++;
         if ((*(u32*)&((ObjModelState*)of64)->flags & 0x20) != 0)
         {
             memcpy((char*)obj + 0xc, mc48, 0xc);
             memcpy((char*)obj + 0x18, mc54p, 0xc);
         }
     }
-    if ((u8)r23 > 1)
+    if ((u8)texIdx > 1)
     {
         gxSetZMode_(1, 3, 1);
         GXSetCopyFilter(0, (void*)(gRenderModeObj + 0x1a), 0, (void*)(gRenderModeObj + 0x32));
