@@ -48,8 +48,6 @@ void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     dll_2E_func06(obj, state, 0);
 }
 
-#pragma scheduling off
-#pragma peephole off
 void ccqueen_init(int* obj, u8* placement)
 {
     u8* charState;
