@@ -243,7 +243,6 @@ void dim_levelcontrol_update(int obj)
     SCGameBitLatch_Update(&st->latch, 0x100, -1, -1, 0x3e2, 0x2b);
 }
 
-void dll_1CF_free(void);
 
 void dim_levelcontrol_init(int obj)
 {
@@ -282,4 +281,3 @@ void dim_levelcontrol_init(int obj)
     unlockLevel(0, 0, 1);
 }
 
-void dim_tricky_update(int* obj);
