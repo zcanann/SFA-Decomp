@@ -166,12 +166,12 @@ u8* getSaveFileStruct(void)
     return &gGameplayPreviewSettings;
 }
 
-void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                      u64 param_5, u64 param_6, u64 param_7,
-                      u64 param_8)
+void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+                      u64 arg5, u64 arg6, u64 arg7,
+                      u64 arg8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, DAT_803a3e26);
+    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(VtableFn**)(*gEnterSaveNameTotalWidth + 0x50))(DAT_803a3e27);
@@ -270,8 +270,8 @@ u8 FUN_800e8b98(void)
  * config off to FUN_80072564. taskInfo packs the current task id (low byte)
  * and its name pointer (high word) from FUN_80286840.
  */
-void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
+void FUN_800e8f58(u64 arg1, double arg2, u64 arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8)
 {
     u32 colorR;
     u32 colorG;
@@ -373,7 +373,7 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     ch = taskInfo;
     if ((ch != -1) && (DAT_803dc4f0 = ch, nameSrc != 0x0))
     {
-        FUN_80072564(cfgHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, taskInfo & 0xff,
+        FUN_80072564(cfgHandle, arg2, arg3, arg4, arg5, arg6, arg7, arg8, taskInfo & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
@@ -381,14 +381,14 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
 }
 
 /*
- * Set or clear a map-act (event) flag. param_1/param_2 identify the act; the
+ * Set or clear a map-act (event) flag. unused1/unused2 identify the act; the
  * (map,bit) pair is resolved through FUN_80286830 and the &DAT_80312460 event
  * table. setMode: 1 set, 0 clear, -1 force-set, -2 clear-without-history.
  * Setting propagates the bit into the six parallel group-status words
  * (&DAT_803a3c1c); clearing also records the (map,bit) into the recently-
  * cleared history ring at &DAT_803a3be0 unless keepTransient was requested.
  */
-void FUN_800e95e8(u32 param_1, u32 param_2, int setMode)
+void FUN_800e95e8(u32 unused1, u32 unused2, int setMode)
 {
     bool keepTransient;
     char foundIndex;
@@ -616,15 +616,15 @@ void FUN_800e9e9c(void)
 }
 
 u32
-FUN_800ea8c8(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8)
+FUN_800ea8c8(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+             u64 arg5, u64 arg6, u64 arg7, u64 arg8)
 {
     u32 result;
     u8* state;
 
     result = FUN_80017498();
     state = FUN_800e82d8();
-    FUN_80017488(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+    FUN_80017488(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
                  (u32)(u8)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (u32)(u8)state[5] * 2)
     ]
     )
