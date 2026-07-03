@@ -966,6 +966,7 @@ main/dll/seqobj11d.c:
 
 main/dll/seqobj11e.c:
 	.text       start:0x80152040 end:0x80152EC0
+	.data       start:0x8031F290 end:0x8031F2D8
 
 main/dll/magicplant.c:
 	.text       start:0x80152EC0 end:0x801540A0
