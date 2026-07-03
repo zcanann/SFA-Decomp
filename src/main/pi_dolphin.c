@@ -22,6 +22,8 @@
 #define GX_CULL_FRONT 1
 #define GX_CULL_BACK 2
 #define GX_LEQUAL 3
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
 extern u32 FUN_80003494();
 extern u32 FUN_8000697c();
 extern u32 FUN_80006988();
@@ -6983,7 +6985,7 @@ extern void loadTableFiles(void);
 void loadDataFiles(int arg)
 {
     int i;
-    if (getButtonsJustPressed(2) & 0x100)
+    if (getButtonsJustPressed(2) & PAD_BUTTON_A)
     {
         {
             int vi = 0x50;
@@ -6994,7 +6996,7 @@ void loadDataFiles(int arg)
         }
         printHeapStats(1);
     }
-    if (getButtonsJustPressed(2) & 0x200)
+    if (getButtonsJustPressed(2) & PAD_BUTTON_B)
     {
         defragMemory(0);
     }
