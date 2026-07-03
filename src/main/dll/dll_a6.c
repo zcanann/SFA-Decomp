@@ -25,9 +25,6 @@ extern void objRenderFn_8003b8f4(GameObject *reticle, u32 a, u32 b, u32 c,
 #define RETICLE_BANK_DEFAULT 1
 #define RETICLE_BANK_CONTEXT 2
 
-#pragma scheduling off
-#pragma peephole off
-
 void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int unused2,
                                     u32 arg3, u32 arg4,
                                     u32 arg5, u32 arg6)
