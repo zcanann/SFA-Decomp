@@ -14,7 +14,8 @@ typedef struct
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
-extern u64 FUN_80003494();
+extern void* memset(void* dst, int val, u32 n);
+extern void* memcpy(void* dst, const void* src, u32 n);
 extern u32 FUN_80006768();
 extern u32 FUN_8000676c();
 extern u32 FUN_80006770();
@@ -266,10 +267,10 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     savedY = DAT_802c28f4;
     savedX = DAT_802c28f0;
     name = (char*)((u64)result >> 0x20);
-    FUN_800033a8(-0x7fc5c0f8, 0, 0xf70);
+    memset((void*)-0x7fc5c0f8, 0, 0xf70);
     if ((*(u8*)(DAT_803de110 + 0x21) & 0x80) == 0)
     {
-        FUN_800033a8(DAT_803de110, 0, 0x6ec);
+        memset((void*)DAT_803de110, 0, 0x6ec);
     }
     DAT_803a3f28 = 0;
     DAT_803a3f08 = 0xc;
@@ -346,7 +347,7 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
         }
         while (ch != '\0');
     }
-    handle = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
+    handle = (u64)memcpy(DAT_803de110, (void*)0x803a3f08, 0x6ec);
     ch = result;
     if ((ch != -1) && (DAT_803dc4f0 = ch, name != 0x0))
     {
@@ -556,7 +557,7 @@ void FUN_800e9e9c(void)
     DAT_803de104 = 0xffffffff;
     FUN_80042b9c(0, 0, 1);
     size = 0x884;
-    FUN_800033a8(-0x7fc5ba0c, 0, 0x884);
+    memset((void*)-0x7fc5ba0c, 0, 0x884);
     FUN_800176cc();
     FUN_80006770(7);
     FUN_80006b8c();
