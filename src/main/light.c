@@ -114,28 +114,35 @@ void FUN_801fc978(int obj)
     return;
 }
 
+/*
+ * SeqPoint anim-event handler (twin of fn_801FC6F4). Fires the Krazoa/warp
+ * sequence when hit-volume 0xd raises anim event 0x14, then forwards the
+ * float/vararg register block (fx0..fx7 + spillArgs) on to the map-warp and
+ * sequence-run helpers. Only obj/animUpdate are used directly here; the rest
+ * are pass-through argument slots kept for ABI/register order.
+ */
 u32
-FUN_801fcccc(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int obj, u32 param_10
-             , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
-             u32 param_15, u32 param_16)
+FUN_801fcccc(u64 fx0, double fx1, double fx2, u64 fx3, u64 fx4,
+             u64 fx5, u64 fx6, u64 fx7, int obj, u32 spillArg9
+             , ObjAnimUpdateState* animUpdate, u32 spillArg11, u32 spillArg12, u32 spillArg13,
+             u32 spillArg14, u32 spillArg15)
 {
     char mapAct;
     u32 bitHandle;
     int iface2;
     int iface1;
     int eventIdx;
-    int hitVolume;
+    int hitVolumeDef;
     u64 extraout_f1;
     u64 floatArg;
     u64 extraout_f1_00;
 
-    hitVolume = *(int*)&((GameObject*)obj)->extra;
+    hitVolumeDef = *(int*)&((GameObject*)obj)->extra;
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
     for (eventIdx = 0; eventIdx < animUpdate->eventCount; eventIdx = eventIdx + 1)
     {
-        if ((*(short*)(hitVolume + 8) == 0xd) && (animUpdate->eventIds[eventIdx] == 0x14))
+        if ((*(short*)(hitVolumeDef + 8) == 0xd) && (animUpdate->eventIds[eventIdx] == 0x14))
         {
             GameBit_Set(0x500, 0);
             GameBit_Set(0xd72, 1);
@@ -153,11 +160,11 @@ FUN_801fcccc(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
                 FUN_80042bec(bitHandle, 1);
                 bitHandle = FUN_80044404(4);
                 FUN_80042bec(bitHandle, 0);
-                FUN_80041ff8(floatArg, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x46);
+                FUN_80041ff8(floatArg, fx1, fx2, fx3, fx4, fx5, fx6, fx7, 0x46);
                 iface2 = (int)*gMapEventInterface;
                 (*gMapEventInterface)->setMapAct(0x12, 2);
-                FUN_80053c98(floatArg, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7c, '\0', iface2,
-                             iface1, param_13, param_14, param_15, param_16);
+                FUN_80053c98(floatArg, fx1, fx2, fx3, fx4, fx5, fx6, fx7, 0x7c, '\0', iface2,
+                             iface1, spillArg12, spillArg13, spillArg14, spillArg15);
             }
             else
             {
@@ -170,12 +177,12 @@ FUN_801fcccc(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
                     FUN_80042bec(bitHandle, 1);
                     bitHandle = FUN_80044404(4);
                     FUN_80042bec(bitHandle, 0);
-                    FUN_80041ff8(floatArg, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x46);
+                    FUN_80041ff8(floatArg, fx1, fx2, fx3, fx4, fx5, fx6, fx7, 0x46);
                     (*gMapEventInterface)->setMapAct(0xb, 4);
                     iface2 = (int)*gMapEventInterface;
                     (*gMapEventInterface)->setMapAct(8, 6);
-                    FUN_80053c98(floatArg, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7c, '\0', iface2
-                                 , iface1, param_13, param_14, param_15, param_16);
+                    FUN_80053c98(floatArg, fx1, fx2, fx3, fx4, fx5, fx6, fx7, 0x7c, '\0', iface2
+                                 , iface1, spillArg12, spillArg13, spillArg14, spillArg15);
                 }
             }
         }
@@ -184,7 +191,7 @@ FUN_801fcccc(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     return 0;
 }
 
-void FUN_801fc374(u32 param_1)
+void FUN_801fc374(u32 arg)
 {
 }
 
@@ -1031,7 +1038,7 @@ void vfpplatform_update(int obj)
     }
 }
 
-void FUN_801fd398(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7, u64 param_8, int obj);
+void FUN_801fd398(u64 fx0, u64 fx1, u64 fx2, u64 fx3, u64 fx4, u64 fx5, u64 fx6, u64 fx7, int obj);
 
 #pragma scheduling on
 #pragma peephole on
@@ -1054,14 +1061,12 @@ void dll_224_hitDetect(void* obj)
 
 #pragma scheduling off
 #pragma peephole off
-void dll_224_update(void* objArg)
+void dll_224_update(void* obj)
 {
     extern void spellStoneUseFn_801fd270(void* obj); /* #57 */
     extern int gSpellStoneEventId; /* #57 */
-    void* obj = objArg;
     int v;
     v = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
-    v = v;
     switch (v)
     {
     case 1:
