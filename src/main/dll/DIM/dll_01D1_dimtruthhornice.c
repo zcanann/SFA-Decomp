@@ -84,8 +84,6 @@ void dll_1CF_free(void);
 int dimtruthhornice_getExtraSize(void) { return 0x8; }
 int dim2conveyor_getExtraSize(void);
 
-#pragma scheduling off
-#pragma peephole off
 int fn_801B6D40(int* obj, int v)
 {
     u8* state = ((GameObject*)obj)->extra;
