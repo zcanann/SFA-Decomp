@@ -27,3 +27,5 @@ void projlightning5_initialise(void)
 {
 }
 
+
+char sProjlightning5DoNoLongerSupported[] = "<projlightning5 Do>No Longer supported \n";
