@@ -136,7 +136,7 @@ void magicdust_update(int obj)
             (*gExpgfxInterface)->freeSource2((u32)obj);
         }
     }
-    if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
+    if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
     {
         if ((((MagicDustState*)state)->flags27A & 2) != 0)
         {
@@ -435,7 +435,7 @@ void magicdust_init(int obj, int placement)
         break;
     }
     ((MagicDustState*)state)->collectRadius = lbl_803E34F8;
-    if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
+    if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
     {
         (*gPathControlInterface)->init((void*)state, 0, 0x40007, 0);
         (*gPathControlInterface)->setup((void*)state, 1, lbl_80320CB8, (void*)(state + 0x268), pathArgs);

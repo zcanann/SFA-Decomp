@@ -1003,7 +1003,7 @@ void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
     FUN_80017a98();
     FUN_80017a90();
     callResult = ObjHits_DisableObject(obj);
-    if ((*(u16*)&((GameObject*)obj)->anim.flags & 0x2000) != 0)
+    if ((*(u16*)&((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
     {
         *(float*)(stateExtra + 8) = lbl_803E40E8;
         if (((GameObject*)obj)->anim.modelState != NULL)

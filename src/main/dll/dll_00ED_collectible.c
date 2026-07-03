@@ -599,7 +599,7 @@ void collectible_applyPickup(int* obj)
     Obj_GetPlayerObject();
     getTrickyObject();
     ObjHits_DisableObject((u32)obj);
-    if (((GameObject*)obj)->anim.flags & 0x2000)
+    if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)
     {
         ((CollectibleState*)state)->despawnTimer = gCollectibleDespawnTimerDuration;
         if (((GameObject*)obj)->anim.modelState != NULL)
@@ -960,7 +960,7 @@ void collectible_update(int obj)
         {
             ((CollectibleState*)state)->despawnTimer = zero;
             ObjHits_DisableObject((u32)obj);
-            if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
+            if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
             {
                 Obj_FreeObject(obj);
             }
@@ -988,7 +988,7 @@ void collectible_update(int obj)
         ((CollectibleState*)state)->lifetimeTimer = timer - timeDelta;
         if (((CollectibleState*)state)->lifetimeTimer <= zero)
         {
-            if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
+            if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
             {
                 ((CollectibleState*)state)->despawnTimer = gCollectibleDespawnTimerDuration;
                 if (((GameObject*)obj)->anim.modelState != NULL)

@@ -31,6 +31,9 @@ typedef s16 ObjAnimPackedEvent;
 
 #define OBJANIM_DEF_FLAG_CACHED_MOVES 0x40
 #define OBJANIM_DEF_FLAG_SKELETON_HITBOXES 0x1000
+/* Object allocated & owns its own placementData copy (must free it). Set after
+   mmAlloc+memcpy into placementData; gates the placementData mm_free in Obj_FreeObject. */
+#define OBJANIM_FLAG_OWNS_PLACEMENT_DATA 0x2000
 #define OBJANIM_FLAG_HIDDEN 0x4000
 /* Bits copied from set-move flags into ObjAnimState during move advancement. */
 #define OBJANIM_MOVE_CONTROL_HOLD_EVENT_COUNTDOWN 0x02

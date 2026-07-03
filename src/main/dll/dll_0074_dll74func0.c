@@ -206,7 +206,7 @@ void FUN_800e8630(int obj)
     int slotIdx;
     int groupsLeft;
 
-    if ((*(u16*)&((GameObject*)obj)->anim.flags & 0x2000) != 0)
+    if ((*(u16*)&((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
     {
         return;
     }

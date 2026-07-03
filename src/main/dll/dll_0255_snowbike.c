@@ -734,7 +734,7 @@ static inline void SnowBike_initBody(int obj, u8* params, int flag)
         alloc = mmAlloc(36, 5, 0);
         memcpy(alloc, params, 36);
         *(u8**)&((GameObject*)obj)->anim.placementData = alloc;
-        ((GameObject*)obj)->anim.flags |= 0x2000;
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_OWNS_PLACEMENT_DATA;
         Obj_ClearModelSlotIndex(obj);
     }
     rot = params[0x18] << 8;
