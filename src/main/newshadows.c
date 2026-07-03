@@ -1784,7 +1784,8 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
                 f32 sqd = sq / depth;
                 f32 g = sqrtf(lbl_803DED2C - sqd);
                 acc5 = s0 * g + acc5;
-                acc6 = acc6 + over / depth;
+                over = over / depth;
+                acc6 = acc6 + over;
                 acc6 = CPUFifo_803DED38 * (lbl_803DED2C - c * Vdchuff_803DEDD0) + acc6;
             }
         }
