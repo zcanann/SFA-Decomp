@@ -23,6 +23,9 @@
 
 #define PAD_BUTTON_A 0x100
 
+#define PAYMENTKIOSK_OBJFLAG_HIDDEN 0x4000
+#define PAYMENTKIOSK_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 extern int Obj_GetPlayerObject(void);
 extern int playerGetMoney(int player);
 extern void playerAddMoney(int obj, int amount);
@@ -199,7 +202,7 @@ void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
     ((GameObject*)self)->animEventCallback = PaymentKiosk_SeqFn;
     *(short*)self = (short)((int)setup->facingByte << 8);
     state->payState = PAYMENT_KIOSK_STATE_RESOLVE;
-    ((GameObject*)self)->objectFlags = (u16)(((GameObject*)self)->objectFlags | 0x6000);
+    ((GameObject*)self)->objectFlags = (u16)(((GameObject*)self)->objectFlags | (PAYMENTKIOSK_OBJFLAG_HIDDEN | PAYMENTKIOSK_OBJFLAG_HITDETECT_DISABLED));
     ((GameObject*)self)->anim.resetHitboxFlags =
         (u8)(((GameObject*)self)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
     secondaryFlag = (((GameObject*)self)->anim.seqId == PAYMENT_KIOSK_WELL_TEXT_SEQ_ID) ? 1 : 0;
