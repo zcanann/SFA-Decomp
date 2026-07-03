@@ -2560,3 +2560,12 @@ int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t)
 /* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408). */
 
 /* EN v1.0 0x80206500  size: 44b   if (b->_8 && (b->_8->_6 & 0x40)) clear. */
+
+int gDbStealerwormSfxIds[] = {
+    498, 498, 498, 149, 149, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 2, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, -1, -1, -1, -1, -1,
+    -1, -1, -65536,
+};

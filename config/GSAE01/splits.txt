@@ -2163,6 +2163,7 @@ main/dll/dll_0241_drakorenergy.c:
 
 main/dll/dll_0242_dbstealerworm.c:
 	.text       start:0x801FFE18 end:0x80203C78
+	.data       start:0x80329650 end:0x803296FC
 
 main/dll/dll_0243_dbholecontrol1.c:
 	.text       start:0x80203C78 end:0x80204098
