@@ -1819,7 +1819,6 @@ void initFn_8006d020(void)
     int attempts;
     int col;
     int row;
-    int* th;
     int j;
     f32* e;
     int placed;
@@ -1883,10 +1882,9 @@ void initFn_8006d020(void)
 
     count = placed;
     tex = 0;
-    th = gNewShadowNoiseTexFrames;
-    for (; tex < 0x10; th++, tex++)
+    for (; tex < 0x10; tex++)
     {
-        *th = (int)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
+        gNewShadowNoiseTexFrames[tex] = (int)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
         for (row = 0; row < 0x40; row++)
         {
             int rowoff, lowoff;
@@ -1897,7 +1895,7 @@ void initFn_8006d020(void)
             {
                 f32 o1, o2;
                 int hi, lo;
-                int dst = *th + lowoff;
+                int dst = gNewShadowNoiseTexFrames[tex] + lowoff;
                 dst += rowoff;
                 dst += (col & 3) * 8;
                 dst += (col >> 2) * 0x200;
@@ -1910,7 +1908,7 @@ void initFn_8006d020(void)
                 *(u16*)(dst + 0x60) = (u16)(((hi & 0xffff) << 8) | lo);
             }
         }
-        DCFlushRange((void*)(*th + 0x60), *(u32*)(*th + 0x44));
+        DCFlushRange((void*)(gNewShadowNoiseTexFrames[tex] + 0x60), *(u32*)(gNewShadowNoiseTexFrames[tex] + 0x44));
     }
 
     gNewShadowCausticTexture = (u32)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
