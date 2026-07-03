@@ -465,9 +465,9 @@ void DR_EarthWarrior_func17(int obj, int param)
     else
     {
         EarthWarriorState* inner2 = ((GameObject*)obj)->extra;
-        int p = *(int*)&((GameObject*)obj)->anim.placementData;
+        int placement = *(int*)&((GameObject*)obj)->anim.placementData;
         ((ByteFlags*)&inner2->sub.flags994)->b02 = 1;
-        (*gGameUIInterface)->initAirMeter(((DREarthWarriorPlacement*)p)->airMeterMax, 0x5cf);
+        (*gGameUIInterface)->initAirMeter(((DREarthWarriorPlacement*)placement)->airMeterMax, 0x5cf);
         (*gGameUIInterface)->runAirMeter(inner2->sub.health);
         GameBit_Set(0x7bc, 1);
         GameBit_Set(0x7d4, 0);
