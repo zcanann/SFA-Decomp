@@ -230,7 +230,7 @@ void firstPersonExit(CameraObject* camera)
     float dz;
     int targetYaw;
     float targetPos[3];
-    u8 auStack_28[4];
+    u8 unusedAngle[4];
 
     target = (GameObject*)self->anim.targetObj;
     lbl_803DD548->posXCurve.start = self->anim.worldPosX;
@@ -243,7 +243,7 @@ void firstPersonExit(CameraObject* camera)
     lbl_803DD548->posZCurve.start = self->anim.worldPosZ;
     lbl_803DD548->posZCurve.startTangent = tangent;
     lbl_803DD548->posZCurve.endTangent = tangent;
-    camcontrol_getTargetPosition(self, &target->anim, targetPos, (s16*)auStack_28);
+    camcontrol_getTargetPosition(self, &target->anim, targetPos, (s16*)unusedAngle);
     lbl_803DD548->posXCurve.end = targetPos[0];
     lbl_803DD548->posYCurve.end = targetPos[1];
     lbl_803DD548->posZCurve.end = targetPos[2];

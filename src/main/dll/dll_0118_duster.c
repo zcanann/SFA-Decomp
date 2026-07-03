@@ -31,7 +31,7 @@ extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z,
-                                void* outHits, int param_3, int param_4);
+                                void* outHits, int e, int f);
 extern int fn_8029622C(int obj);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern f32 lbl_803E38B0;
