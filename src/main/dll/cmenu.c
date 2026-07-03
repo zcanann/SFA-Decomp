@@ -391,8 +391,8 @@ int cMenuCountVisibleItems(s16* table, char mode)
 
 #pragma scheduling off
 #pragma peephole off
-void cMenuNullRenderFn(u64 param_1, f64 param_2, f64 param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
+void cMenuNullRenderFn(u64 fwdArg1, f64 fwdArg2, f64 fwdArg3, u64 fwdArg4,
+                  u64 fwdArg5, u64 fwdArg6, u64 fwdArg7, u64 fwdArg8)
 {
 }
 
@@ -467,12 +467,12 @@ int cMenuStaffModelRenderFn(int shader, int* block, int idx)
 
 #pragma scheduling off
 #pragma peephole off
-int cMenuRingModelRenderFn(int obj, int param2, int param3)
+int cMenuRingModelRenderFn(int obj, int block, int idx)
 {
     int renderOp;
     u8 cfg[4];
     *(u32*)cfg = lbl_803E1E14;
-    renderOp = ObjModel_GetRenderOp(*(int*)param2, param3);
+    renderOp = ObjModel_GetRenderOp(*(int*)block, idx);
     resetLotsOfRenderVars();
     cfg[3] = *(u8*)(obj + 0x37);
     gxFn_80051fb8(textureIdxToPtr(*(int*)(renderOp + 0x24)), 0, 0, cfg, 0, 1);
@@ -540,17 +540,17 @@ void drawTrickyHudOverlay(int obj)
 }
 
 #pragma peephole on
-int cMenuRingIconRenderFn(int obj, int param2, int param3)
+int cMenuRingIconRenderFn(int obj, int block, int idx)
 {
-    int idx;
+    int slotIdx;
     void* tex;
     u8 cfg[4];
     *(u32*)cfg = lbl_803E1E10;
-    idx = *(u8*)(ObjModel_GetRenderOp(*(int*)param2, param3) + 0x29) - 1;
+    slotIdx = *(u8*)(ObjModel_GetRenderOp(*(int*)block, idx) + 0x29) - 1;
     resetLotsOfRenderVars();
-    if (idx >= 0 && idx <= 6 && (tex = gCMenuRingIconTextures[idx]) != 0)
+    if (slotIdx >= 0 && slotIdx <= 6 && (tex = gCMenuRingIconTextures[slotIdx]) != 0)
     {
-        if (gCMenuRingIconActiveFlags[idx] != 0)
+        if (gCMenuRingIconActiveFlags[slotIdx] != 0)
         {
             cfg[3] = *(u8*)(obj + 0x37);
         }
