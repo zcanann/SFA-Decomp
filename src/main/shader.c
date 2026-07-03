@@ -1339,7 +1339,7 @@ extern int lbl_803DCE7C;
 
 int mapGetRomListAndOffsets(int p1, int flag)
 {
-    int tabOff = p1 * 7 << 2;
+    int tabOff = (p1 * 7) * 4;
     int offset0 = *(int*)(lbl_803DCE7C + tabOff);
     int tailLen = *(int*)((lbl_803DCE7C + 0x1c) + tabOff) - offset0;
     int v0, v1, v2;
