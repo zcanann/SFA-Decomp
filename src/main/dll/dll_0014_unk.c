@@ -2887,7 +2887,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
     }
 
     phase = -startPhase / (endPhase - startPhase);
-    if ((phase >= *(volatile f32 *)&gFloatZero) && (phase < gFloatOne))
+    if ((phase >= *(f32*)(int)&gFloatZero) && (phase < gFloatOne))
     {
         f32 projX;
         f32 projY;
