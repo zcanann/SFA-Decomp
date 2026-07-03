@@ -956,6 +956,7 @@ main/dll/dll_00D5_kaldachom.c:
 
 main/dll/dll_00D6_kaldachomme.c:
 	.text       start:0x80169360 end:0x801696D4
+	.data       start:0x80320458 end:0x803205E8
 
 main/dll/dll_00D7_kaldachompspit.c:
 	.text       start:0x801696D4 end:0x80169EF4
