@@ -10,6 +10,8 @@
 
 #define PROJENERGISE2_UNSUPPORTED -1
 
+char sProjenergise2DoNoLongerSupported[] = "<projenergise2 Do>No Longer supported \n";
+
 int projenergise2_doUnsupported(void)
 {
     OSReport(sProjenergise2DoNoLongerSupported);
