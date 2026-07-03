@@ -185,29 +185,34 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     int delta;
     s16 wrapDelta;
 
+    /* Fetch the barrel's secondary rotation vector (pitch channel) from the model. */
     vec = (s16*)objModelGetVecFn_800395d8((int)self, 0xb);
     if (vec == NULL)
     {
         return 0;
     }
+    /* No target: ease both yaw and pitch back toward rest by halving each frame. */
     if (target == NULL)
     {
         self->anim.rotX = (s16)(self->anim.rotX >> 1);
         *vec = (s16)(*vec >> 1);
         return 0;
     }
+    /* Vector from the cannon's eye position to the target. */
     dp = d;
     if (target != NULL) dp = d;
     dp[0] = target->anim.localPosX - eyePos[0];
     dp[1] = target->anim.localPosY - eyePos[1];
     dp[2] = target->anim.localPosZ - eyePos[2];
     horiz = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
+    /* Desired yaw from the ground-plane heading, pitch from height over horizontal range. */
     yaw = getAngle(dp[0], dp[2]);
     pitch = (s16)getAngle(dp[1], horiz);
     if (self->anim.seqId == DR_LASERCANNON_PITCH_FLIP_TYPE)
     {
         pitch = (s16) - pitch;
     }
+    /* Below the full-speed threshold, clamp the requested aim to a scaled per-frame angle. */
     if (maxRate < 0x168)
     {
         clamp = (s16)(gLaserCannonAngleRateScale * maxRate);
@@ -237,6 +242,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
         out->yaw = yaw;
         out->pitch = pitch;
     }
+    /* Shortest signed angular delta from current yaw to target, wrapped into [-0x8000, 0x8000]. */
     wrapDelta = out->yaw - (u16)self->anim.rotX;
     if (wrapDelta > 0x8000)
     {
@@ -246,10 +252,12 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     {
         wrapDelta = wrapDelta + 0xFFFF;
     }
+    /* Limit the step to the max aim rate, then interpolate current yaw toward the target. */
     wrapDelta = (wrapDelta < -gLaserCannonMaxAimStep)
                     ? -gLaserCannonMaxAimStep
                     : (s16)((wrapDelta > gLaserCannonMaxAimStep) ? gLaserCannonMaxAimStep : wrapDelta);
     self->anim.rotX = (s16)((f32)self->anim.rotX + interpolate((f32)wrapDelta, lbl_803E68E4, timeDelta));
+    /* Same wrap-and-step interpolation applied to the pitch channel. */
     if (vec != NULL)
     {
         wrapDelta = out->pitch - (u16) * vec;
@@ -266,6 +274,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
                         : (s16)((wrapDelta > gLaserCannonMaxAimStep) ? gLaserCannonMaxAimStep : wrapDelta);
         *vec = (s16)((f32) * vec + interpolate((f32)wrapDelta, lbl_803E68E4, timeDelta));
     }
+    /* Report whether yaw is still far (> 0x100) from the target, i.e. not yet on-aim. */
     delta = self->anim.rotX - out->yaw;
     if (delta < 0)
     {
