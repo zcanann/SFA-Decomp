@@ -2926,13 +2926,18 @@ void pauseMenuFn_80129ee0(void)
                 if ((s8)a1 == 0 || lbl_803DD78C == 0 ||
                     lbl_803DBA64 < menuMin || lbl_803DBA64 > menuMax)
                 {
-                    if ((s8)lbl_803DBA64 >= 1 && lbl_803DBA64 < 4)
+                    switch ((s8)lbl_803DBA64)
+                    {
+                    case 1:
+                    case 2:
+                    case 3:
                     {
                         char* anim = hud->anims[lbl_803DBA64];
                         if (*(u32*)(anim + 0x4c) > 0x90000000)
                         {
                             *(u32*)(anim + 0x4c) = 0;
                         }
+                    }
                     }
                     {
                         u8 prev = lbl_803DBA64;
@@ -2950,7 +2955,11 @@ void pauseMenuFn_80129ee0(void)
                             Sfx_PlayFromObject(0, SFXTRIG_menu_fox_select);
                         }
                     }
-                    if ((s8)lbl_803DBA64 >= 1 && lbl_803DBA64 < 4)
+                    switch ((s8)lbl_803DBA64)
+                    {
+                    case 1:
+                    case 2:
+                    case 3:
                     {
                         char* anim = hud->anims[lbl_803DBA64];
                         if (*(u32*)(anim + 0x4c) > 0x90000000)
@@ -2958,21 +2967,20 @@ void pauseMenuFn_80129ee0(void)
                             *(u32*)(anim + 0x4c) = 0;
                         }
                     }
+                    }
                 }
                 if (lbl_803DD786 < lbl_803DBAA2)
                 {
-                    s16 nv = (s16)(lbl_803DD786 + framesThisStep);
-                    lbl_803DD786 = nv;
-                    if (nv >= lbl_803DBAA2)
+                    lbl_803DD786 += framesThisStep;
+                    if (lbl_803DD786 >= lbl_803DBAA2)
                     {
                         pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
                     }
                 }
                 else
                 {
-                    int t = lbl_803DD784 + framesThisStep * 0x28;
-                    lbl_803DD784 = t;
-                    if (t > 0x400)
+                    lbl_803DD784 += framesThisStep * 0x28;
+                    if (lbl_803DD784 > 0x400)
                     {
                         lbl_803DD784 = 0x400;
                     }
