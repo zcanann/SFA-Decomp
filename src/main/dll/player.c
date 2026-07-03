@@ -4680,18 +4680,11 @@ int fn_802ABAE8(int obj, int state, int inner, f32 fv)
         d * (lbl_803E7FC4 * f2)
         )
         ;
-        if (d < -0xccc)
-        {
-            d = -0xccc;
-        }
-        else if (d > 0xccc)
-        {
-            d = 0xccc;
-        }
+        d = (d < -0xccc) ? -0xccc : ((d > 0xccc) ? 0xccc : d);
     }
     d -= (u16)((PlayerState*)inner)->headPitch;
-    if (d > 0x8000) d -= 0xffff;
-    if (d < -0x8000) d += 0xffff;
+    if (d > 0x8000) d = d - 0xffff;
+    if (d < -0x8000) d = d + 0xffff;
     ((PlayerState*)inner)->headPitch = (f32)(int)((PlayerState*)inner)->headPitch +
         interpolate((f32)(int)d, lbl_803E7EB4, timeDelta);
     near = fn_802AB1D0(obj);
