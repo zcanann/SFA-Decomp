@@ -47,8 +47,6 @@ typedef struct Dim2iciclePlacement
     s16 impactGameBit;
 } Dim2iciclePlacement;
 
-#pragma scheduling on
-#pragma peephole on
 extern f32 lbl_803E4B80;
 extern f32 lbl_803E4B6C;
 extern f32 lbl_803E4B70;
@@ -57,8 +55,6 @@ extern f32 lbl_803E4B78;
 extern f32 lbl_803E4B7C;
 extern f32 lbl_803E4B68;
 
-#pragma scheduling off
-#pragma peephole off
 void dim2icicle_free(void)
 {
 }
