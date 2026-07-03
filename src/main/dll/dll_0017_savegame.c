@@ -1028,11 +1028,8 @@ void SaveGame_gplayAddTime(int id, f32 time)
     {
         ((SaveGameData*)base)->timeEntryCount++;
     }
-    base = gSaveGameData;
-    p = base;
-    p += i * 8;
-    *(int*)(p + 0x6f0) = id;
-    *(f32*)(p + 0x6f4) = total;
+    *(int*)((int)gSaveGameData + 0x6f0 + (i << 3)) = id;
+    *(f32*)((int)gSaveGameData + 0x6f4 + (i << 3)) = total;
 }
 
 void* SaveGame_getTrickyEnergy(void) { return gSaveGameData + 0x18; }
