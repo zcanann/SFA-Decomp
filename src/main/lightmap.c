@@ -263,7 +263,7 @@ int FUN_8005b024(void)
     return cellX;
 }
 
-int FUN_8005b398(u64 param_1, double y)
+int FUN_8005b398(u64 arg1, double y)
 {
     int block;
     int* layerTable;
@@ -813,10 +813,10 @@ void fn_8005D108(int vtxTable, int indices, int triCount)
     return;
 }
 
-void FUN_8005d370(u32 param_1, u8 param_2, u8 param_3, u8 param_4,
-                  u8 param_5)
+void FUN_8005d370(u32 arg1, u8 fwdArg2, u8 fwdArg3, u8 fwdArg4,
+                  u8 fwdArg5)
 {
-    FUN_80071fb4(param_2, param_3, param_4, param_5);
+    FUN_80071fb4(fwdArg2, fwdArg3, fwdArg4, fwdArg5);
     return;
 }
 
