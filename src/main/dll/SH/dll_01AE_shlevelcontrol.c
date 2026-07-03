@@ -48,6 +48,10 @@ extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
 extern f32 lbl_803E54C0;
 
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
+#define PAD_BUTTON_MENU 0x1000
+
 int sh_levelcontrol_getExtraSize(void)
 {
     return 0x14;
@@ -596,9 +600,9 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
         {
             padClearAnalogInputX(0);
             padClearAnalogInputY(0);
-            buttonDisable(0, 0x100);
-            buttonDisable(0, 0x200);
-            buttonDisable(0, 0x1000);
+            buttonDisable(0, PAD_BUTTON_A);
+            buttonDisable(0, PAD_BUTTON_B);
+            buttonDisable(0, PAD_BUTTON_MENU);
             playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
             if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0)
             {
@@ -780,9 +784,9 @@ void sh_levelcontrol_update(int obj)
             {
                 padClearAnalogInputX(0);
                 padClearAnalogInputY(0);
-                buttonDisable(0, 0x100);
-                buttonDisable(0, 0x200);
-                buttonDisable(0, 0x1000);
+                buttonDisable(0, PAD_BUTTON_A);
+                buttonDisable(0, PAD_BUTTON_B);
+                buttonDisable(0, PAD_BUTTON_MENU);
                 val = Obj_GetPlayerObject();
                 if ((((GameObject*)val)->objectFlags & 0x1000) == 0)
                 {
@@ -852,9 +856,9 @@ void sh_levelcontrol_update(int obj)
             {
                 padClearAnalogInputX(0);
                 padClearAnalogInputY(0);
-                buttonDisable(0, 0x100);
-                buttonDisable(0, 0x200);
-                buttonDisable(0, 0x1000);
+                buttonDisable(0, PAD_BUTTON_A);
+                buttonDisable(0, PAD_BUTTON_B);
+                buttonDisable(0, PAD_BUTTON_MENU);
                 val = Obj_GetPlayerObject();
                 if ((((GameObject*)val)->objectFlags & 0x1000) == 0)
                 {
