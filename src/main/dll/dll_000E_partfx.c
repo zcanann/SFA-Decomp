@@ -2780,7 +2780,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
             cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
         }
-        if (randomGetRange(0, 0x28) == 0)
+        if ((int)randomGetRange(0, 0x28) == 0)
         {
             cfg.scale = lbl_803DF4D4;
         }
@@ -3224,7 +3224,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.velocityZ = lbl_803DF4C8 * (f32)(s32)
         randomGetRange(0xffffff9c, 100);
         cfg.behaviorFlags = 0x1081010;
-        if (randomGetRange(0, 3) == 0)
+        if ((int)randomGetRange(0, 3) == 0)
         {
             cfg.scale = lbl_803DF5BC * (f32)(s32)
             randomGetRange(0x28, 0x50);
@@ -3237,7 +3237,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.initialAlpha = 10;
             cfg.behaviorFlags = (cfg.behaviorFlags | 0x100000);
         }
-        if (randomGetRange(0, 10) == 0)
+        if ((int)randomGetRange(0, 10) == 0)
         {
             spawnFlags = spawnFlags ^ 4 | 1;
         }
@@ -4162,7 +4162,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.textureId = 0x7c;
         break;
     case 0x39:
-        if (randomGetRange(0, 1) != 0)
+        if ((int)randomGetRange(0, 1) != 0)
         {
             cfg.startPosZ = lbl_803DF55C;
         }
@@ -4179,7 +4179,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         break;
     case 0x79:
 
-        if (randomGetRange(0, 1) != 0)
+        if ((int)randomGetRange(0, 1) != 0)
         {
             (*startPos) = lbl_803DF64C;
         }
@@ -5235,7 +5235,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         randomGetRange(0xffffff9c, 100);
         cfg.velocityY = lbl_803DF608 * (f32)(s32)
         randomGetRange(8, 10);
-        if (randomGetRange(0, 0x28) != 0)
+        if ((int)randomGetRange(0, 0x28) != 0)
         {
             cfg.scale = lbl_803DF4C8 * (f32)(s32)
             randomGetRange(8, 0x14);
