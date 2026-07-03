@@ -199,13 +199,11 @@ void waveanimator_free(int* obj)
     ObjGroup_RemoveObject(obj, 27);
 }
 
-#pragma peephole off
 void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3F70);
 }
-#pragma reset
 
 void waveanimator_hitDetect(int* obj)
 {
@@ -243,7 +241,6 @@ void waveanimator_update(void)
 {
 }
 
-#pragma scheduling off
 void waveanimator_init(int* obj, int* desc)
 {
     WaveAnimatorState* state = (WaveAnimatorState*)(int*)((GameObject*)obj)->extra;
@@ -267,7 +264,6 @@ void waveanimator_init(int* obj, int* desc)
     ObjGroup_AddObject(obj, 27);
     lbl_803DDAE8++;
 }
-#pragma reset
 
 void waveanimator_release(void)
 {
