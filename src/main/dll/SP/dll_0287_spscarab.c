@@ -21,6 +21,7 @@
 #define SPSCARAB_OBJFLAG_RENDERED 0x800
 #define SPSCARAB_OBJFLAG_HIDDEN 0x4000
 #define SPSCARAB_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define SPSCARAB_OBJFLAG_UPDATE_DISABLED 0x8000
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
@@ -134,7 +135,7 @@ void spscarab_update(int obj)
     {
         Sfx_PlayFromObject(obj, (u16)((SpscarabState*)state)->sfxId);
         itemPickupDoParticleFx(obj, gSpScarabPickupParticleScale, ((SpscarabState*)state)->mode, 0x28);
-        ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x8000;
+        ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | SPSCARAB_OBJFLAG_UPDATE_DISABLED;
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
 
         {
