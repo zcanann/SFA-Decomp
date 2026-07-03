@@ -28,41 +28,41 @@ extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 
 u16*
-FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , int param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
+FUN_80017460(u64 unused1, u64 unused2, u64 unused3, u64 unused4,
+             u64 unused5, u64 unused6, u64 unused7, u64 unused8, u32 unused9
+             , int unused10, u32 unused11, u32 unused12, u32 unused13,
+             u32 unused14, u32 unused15, u32 unused16)
 {
     return 0;
 }
 
 u16*
-FUN_80017468(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , u32 param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
+FUN_80017468(u64 unused1, u64 unused2, u64 unused3, u64 unused4,
+             u64 unused5, u64 unused6, u64 unused7, u64 unused8, u32 unused9
+             , u32 unused10, u32 unused11, u32 unused12, u32 unused13,
+             u32 unused14, u32 unused15, u32 unused16)
 {
     return 0;
 }
 
 u32
-FUN_80017500(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9)
+FUN_80017500(u64 unused1, u64 unused2, u64 unused3, u64 unused4,
+             u64 unused5, u64 unused6, u64 unused7, u64 unused8, int unused9)
 {
     return 0;
 }
 
 u32
-FUN_8001786c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
-             u32 param_10, u32 param_11, u32 param_12)
+FUN_8001786c(u64 unused1, double unused2, double unused3, u64 unused4, u64 unused5,
+             u64 unused6, u64 unused7, u64 unused8, u32 unused9,
+             u32 unused10, u32 unused11, u32 unused12)
 {
     return 0;
 }
 
 u8*
-FUN_80017998(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
+FUN_80017998(u64 unused1, u64 unused2, u64 unused3, u64 unused4,
+             u64 unused5, u64 unused6, u64 unused7, u64 unused8, u32 unused9
 )
 {
     return 0;
