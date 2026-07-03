@@ -15225,8 +15225,9 @@ int fn_802A2918(int obj, int state, f32 fv)
     }
     if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x80) != 0)
     {
+        int o = obj;
         u16 sfxId = inner->characterId == 0 ? 0x398 : 0x1d;
-        Sfx_PlayFromObject(obj, sfxId);
+        Sfx_PlayFromObject(o, sfxId);
     }
     if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) != 0)
     {
