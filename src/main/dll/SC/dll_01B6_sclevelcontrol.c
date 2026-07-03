@@ -83,7 +83,7 @@ void sc_levelcontrol_initialise(void)
 int sc_levelcontrol_getExtraSize(void) { return 0x24; }
 int sc_levelcontrol_getObjectTypeId(void) { return 0x0; }
 
-u8 sc_levelcontrol_getAnimEventState(int* obj) { return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x1d); }
+u8 sc_levelcontrol_getAnimEventState(int* obj) { return ((ScLevelControlState*)((GameObject*)obj)->extra)->mode; }
 
 void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
