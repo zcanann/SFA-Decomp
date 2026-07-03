@@ -5116,6 +5116,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
     return 0;
 }
 
+#pragma opt_propagation off
 int fn_8029AF9C(int obj, int state)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
@@ -5269,20 +5270,22 @@ int fn_8029AF9C(int obj, int state)
                     *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
                     getCurSeqNo() != 0)
                 {
-                    int z[2];
+                    int i;
                     void** p;
-                    z[0] = 0;
-                    lbl_803DE42C = z[0];
-                    z[1] = z[0];
+                    hi = 0;
+                    lbl_803DE42C = hi;
+                    i = hi;
                     p = gPlayerSpawnedObjects;
-                    for (; z[1] < 7; z[1]++)
+                    do
                     {
-                        if (p[z[1]] != NULL)
+                        if (*p != NULL)
                         {
-                            Obj_FreeObject((int)p[z[1]]);
-                            p[z[1]] = NULL;
+                            Obj_FreeObject((int)*p);
+                            *p = (void*)hi;
                         }
-                    }
+                        p++;
+                        i++;
+                    } while (i < 7);
                     if (gPlayerResource != NULL)
                     {
                         Resource_Release(gPlayerResource);
@@ -5396,6 +5399,7 @@ int fn_8029AF9C(int obj, int state)
     }
     return 0;
 }
+#pragma opt_propagation reset
 
 extern f32 lbl_803E7FB8;
 
