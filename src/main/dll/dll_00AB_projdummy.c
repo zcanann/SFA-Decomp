@@ -11,6 +11,8 @@
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
+char sProjdummyDoNoLongerSupported[] = "<projdummy Do>No Longer supported \n";
+
 int projdummy_doUnsupported(void)
 {
     OSReport(sProjdummyDoNoLongerSupported);
