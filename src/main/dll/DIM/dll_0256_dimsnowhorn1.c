@@ -2,7 +2,7 @@
  * dll_0256_dimsnowhorn1 (DLL 0x256) - the rideable SnowHorn mammoth found in
  * DIM (Dinosaur InfernoMountain).  Fox can mount the mammoth and use it to
  * clear puzzle obstacles.  The object runs a 12-state BaddieState machine
- * (stateHandler00–0B); the riding sub-loop (fn_802BB4B4) handles stick/button
+ * (stateHandler00-0B); the riding sub-loop (fn_802BB4B4) handles stick/button
  * input and the air-meter while mounted, and DIMSnowHorn1_update coordinates
  * the full per-frame tick.
  */
@@ -1238,8 +1238,8 @@ void DIMSnowHorn1_update(int obj)
     s8 c = -1;
     s16 d;
     char* found;
-    int inner;
-    char* p2;
+    int statePtr;
+    char* playerObj;
     u32 flip;
     int flags;
 
@@ -1303,20 +1303,20 @@ void DIMSnowHorn1_update(int obj)
     {
     case 0:
     case 5:
-        inner = *(int*)&((GameObject*)obj)->extra;
-        p2 = (char*)Obj_GetPlayerObject();
-        if (p2 != NULL
-            && Vec_distance((void*)((int)p2 + 0x18), (void*)&((GameObject*)obj)->anim.worldPosX) < lbl_803E8240
-            && ((DIMSnowHorn1State*)inner)->mountMode == 0)
+        statePtr = *(int*)&((GameObject*)obj)->extra;
+        playerObj = (char*)Obj_GetPlayerObject();
+        if (playerObj != NULL
+            && Vec_distance((void*)((int)playerObj + 0x18), (void*)&((GameObject*)obj)->anim.worldPosX) < lbl_803E8240
+            && ((DIMSnowHorn1State*)statePtr)->mountMode == 0)
         {
-            ((DIMSnowHorn1State*)inner)->unk980 = 1;
-            ((DIMSnowHorn1State*)inner)->spawnPosX = ((GameObject*)p2)->anim.localPosX;
-            ((DIMSnowHorn1State*)inner)->spawnPosY = ((GameObject*)p2)->anim.localPosY;
-            ((DIMSnowHorn1State*)inner)->spawnPosZ = ((GameObject*)p2)->anim.localPosZ;
+            ((DIMSnowHorn1State*)statePtr)->unk980 = 1;
+            ((DIMSnowHorn1State*)statePtr)->spawnPosX = ((GameObject*)playerObj)->anim.localPosX;
+            ((DIMSnowHorn1State*)statePtr)->spawnPosY = ((GameObject*)playerObj)->anim.localPosY;
+            ((DIMSnowHorn1State*)statePtr)->spawnPosZ = ((GameObject*)playerObj)->anim.localPosZ;
         }
         else
         {
-            ((DIMSnowHorn1State*)inner)->unk980 = 0;
+            ((DIMSnowHorn1State*)statePtr)->unk980 = 0;
         }
         fn_8003B500(obj, data + 0x980, lbl_803E8234);
         break;
