@@ -2413,10 +2413,9 @@ void fn_80128470(int p1)
             ph = (s16)(ph ^ 0x3f);
         }
         alpha = (s16)(ph * (sp1 * 0xc0 / 0x100 + 0x40) / 31);
-        w16 = w;
         tex = (HudTextures*)hudTextures;
         pauseMenuDrawElement((int)tex->tex80, (f32)(s16)x1, (f32)(s16)y1,
-                             0x100, (u8)alpha, w16, 0);
+                             0x100, (u8)alpha, (w16 = w), 0);
         drawFn_8011eb3c((int)tex->tex80, x2, (f32)(s16)y1,
                         0x100, (u8)alpha, w16, 0x12, 0xa, 1);
         drawFn_8011eb3c((int)tex->tex80, (f32)(s16)x1, y2,
