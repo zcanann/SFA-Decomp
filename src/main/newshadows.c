@@ -2621,8 +2621,8 @@ void renderShadows(void)
     char* casterPtr;
     f32 *vAp1, *vAp2, *mc54p;
     f32 savedFovY, sCamX, sCamY, dirX;
-    int s170;
-    s16 s14, s19;
+    int savedRotY;
+    s16 savedRotX, savedRotZ;
     f32 om100[24];
     f32 mTrans[12], mScale[12], mOrtho[16];
     f32 mc54[3], mc48[3];
@@ -2632,7 +2632,7 @@ void renderShadows(void)
     char* B = (char*)gNewShadowEntries;
     int blkArr, blkCount;
     s8 casterIdx;
-    f32 sCamZ, dirY, dirZ, f22, f21, vAy, f23;
+    f32 sCamZ, dirY, dirZ, vAx, vAz, vAy, orthoHalf;
     int texIdx, slotIdx;
 
     if (gNewShadowCasterCount == 0) return;
@@ -2646,9 +2646,9 @@ void renderShadows(void)
     sCamX = ((GameObject*)slot)->anim.localPosX;
     sCamY = ((GameObject*)slot)->anim.localPosY;
     sCamZ = ((GameObject*)slot)->anim.localPosZ;
-    s170 = ((GameObject*)slot)->anim.rotY;
-    s14 = ((GameObject*)slot)->anim.rotX;
-    s19 = ((GameObject*)slot)->anim.rotZ;
+    savedRotY = ((GameObject*)slot)->anim.rotY;
+    savedRotX = ((GameObject*)slot)->anim.rotX;
+    savedRotZ = ((GameObject*)slot)->anim.rotZ;
     ((GameObject*)slot)->anim.rotY = 0;
     v30[0] = lbl_803DED28;
     v30[1] = lbl_803DED2C;
@@ -2688,17 +2688,17 @@ void renderShadows(void)
             if ((u8)texIdx < 3)
             {
                 w = 0x100;
-                f23 = CPUFifo_803DED38;
+                orthoHalf = CPUFifo_803DED38;
             }
             else if ((u8)texIdx < 5)
             {
                 w = 0x80;
-                f23 = GPFifo_803DED3C;
+                orthoHalf = GPFifo_803DED3C;
             }
             else
             {
                 w = 0x40;
-                f23 = __GXCurrentThread_803DED40;
+                orthoHalf = __GXCurrentThread_803DED40;
             }
             if ((u8)texIdx == 0) screenW = w << 1;
             else screenW = w;
@@ -2731,16 +2731,16 @@ void renderShadows(void)
                 vA[1] = __GXOverflowCount_803DED50;
                 PSVECNormalize(vA, vA);
             }
-            f22 = vA[0];
-            dirX = -f22;
+            vAx = vA[0];
+            dirX = -vAx;
             vAy = vA[1];
             dirY = -vAy;
-            f21 = vA[2];
-            dirZ = -f21;
-            gNewShadowLightAngleX = (u16)getAngle(dirX, f21);
+            vAz = vA[2];
+            dirZ = -vAz;
+            gNewShadowLightAngleX = (u16)getAngle(dirX, vAz);
             {
-                f32 sqA = f22 * f22;
-                f32 sqB = f21 * f21;
+                f32 sqA = vAx * vAx;
+                f32 sqB = vAz * vAz;
                 gNewShadowLightAngleY = (u16)getAngle(sqrtf(sqA + sqB), vAy) - 0x3fc8;
             }
             ((GameObject*)slot)->anim.rotY = gNewShadowLightAngleY;
@@ -2771,8 +2771,8 @@ void renderShadows(void)
                 ((GameObject*)slot)->anim.localPosX += lbl_803DCED0;
                 ((GameObject*)slot)->anim.localPosZ += lbl_803DCECC;
             }
-            f21 = *(f32*)of64;
-            f22 = -f21;
+            vAz = *(f32*)of64;
+            vAx = -vAz;
             if (*(u32*)&((GameObject*)obj)->anim.parent != 0)
             {
                 ((GameObject*)slot)->anim.localPosX += playerMapOffsetX;
@@ -2780,10 +2780,10 @@ void renderShadows(void)
             }
             GXSetScissor(2, 2, screenW - 4, screenW - 4);
             GXSetViewport(lbl_803DED28, lbl_803DED28, (f32)(u32)screenW, (f32)(u32)screenW, lbl_803DED28, lbl_803DED2C);
-            C_MTXOrtho(mOrtho, f22, f21, f22, f21, lbl_803DED2C, FinishQueue_803DED6C);
+            C_MTXOrtho(mOrtho, vAx, vAz, vAx, vAz, lbl_803DED2C, FinishQueue_803DED6C);
             GXSetProjection(mOrtho, GX_ORTHOGRAPHIC);
             Camera_UpdateViewMatrices();
-            C_MTXLightOrtho((f32*)castSlot, f21, f22, f22, f21, f23, f23, f23, f23);
+            C_MTXLightOrtho((f32*)castSlot, vAz, vAx, vAx, vAz, orthoHalf, orthoHalf, orthoHalf, orthoHalf);
             {
                 f32* vm = Camera_GetViewMatrix();
                 PSMTXCopy(vm, (f32*)(castSlot + 0x30));
@@ -2879,9 +2879,9 @@ void renderShadows(void)
     ((GameObject*)slot)->anim.localPosX = sCamX;
     ((GameObject*)slot)->anim.localPosY = sCamY;
     ((GameObject*)slot)->anim.localPosZ = sCamZ;
-    ((GameObject*)slot)->anim.rotY = s170;
-    ((GameObject*)slot)->anim.rotX = s14;
-    ((GameObject*)slot)->anim.rotZ = s19;
+    ((GameObject*)slot)->anim.rotY = savedRotY;
+    ((GameObject*)slot)->anim.rotX = savedRotX;
+    ((GameObject*)slot)->anim.rotZ = savedRotZ;
     if (getDrawDistanceFlag_8005cd48() != 0)
     {
         Camera_SetCurrentViewIndex(0);
