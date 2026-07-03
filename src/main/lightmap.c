@@ -350,6 +350,19 @@ void lightmap_sortQueuedRenderKeys(int queueBase, int keyCount)
     return;
 }
 
+/*
+ * Per-LOD-layer visibility sweep over the 16x16 map-block grid.
+ * For each of the 5 detail layers (layer 4..0) it clears a 16-row visibility
+ * mask (visGrid), stamps the four concentric camera "rings" (ring0..ring3,
+ * each an inclusive x0/x1/y0/y1 box returned by FUN_800566ec) into the mask,
+ * then walks every cell: a resident block (cellState >= 0) toggles its
+ * double-buffer parity bit and, when marked visible, streams its render; an
+ * empty cell (cellState < 0) may still be drawn via FUN_80057ce8. worldX /
+ * lbl_803DDAD4 hold the cell's world-space X/Z (u32->f64 magic-number cvt).
+ * NOTE: extraout_r4 is the decompiler's placeholder for the visGrid row base
+ * that the retail code keeps live in r4 across the fill loop; leaving it
+ * unassigned reproduces the exact register colouring.
+ */
 void FUN_8005bdbc(void)
 {
     char* extraout_r4;
@@ -663,6 +676,13 @@ void fn_8005C8CC(void)
     return;
 }
 
+/*
+ * DAT_803dda68 is the lightmap/scene render-state bitfield. The setters below
+ * decode as: 0x00020000 reflection-pass enable (FUN_8005cff0), 0x8 shadow-map
+ * enable (FUN_8005d018, also swaps the shadow bias lbl_803DC2D0/lbl_803DF89C),
+ * 0x40 lights enable (FUN_8005d0ac, mirrored into env-state bit 3), 0x50
+ * clouds+lights (FUN_8005d17c), 0x1000 pending-map-load (FUN_8005d1e8).
+ */
 void FUN_8005cff0(int enable)
 {
     if (enable == 0)
@@ -2242,13 +2262,13 @@ void getVisibleObjects(s8* opacity)
     u8* sub;
     u8* att;
     int j;
-    u8* s54;
+    u8* interactState;
     int* model;
     ObjModelInstance* modelDef;
     u32 tf;
     u32 mode;
     s16 t;
-    int t1000;
+    int sortDepth;
     int count;
     int a, b;
     f32 depth;
@@ -2326,14 +2346,14 @@ void getVisibleObjects(s8* opacity)
                         *(void**)(model + 0x16) == NULL)
                     {
                         key |= 0x80000000;
-                        t1000 = 1000 - (depthInt & 0xffff);
+                        sortDepth = 1000 - (depthInt & 0xffff);
                         if ((tf & 0x800000) != 0 && (((GameObject*)o)->colorFadeFlags & 2) == 0)
                         {
                             key |= 0x40000000LL;
                             key |= (((GameObject*)o)->anim.seqId & 0x3ff) << 20;
                         }
                         gVisibleObjectSortKeys[gVisibleObjectSortKeyCount] =
-                            (i & 0x3ff) | (((t1000 & 0x3ff) << 10) | key);
+                            (i & 0x3ff) | (((sortDepth & 0x3ff) << 10) | key);
                         gVisibleObjectSortKeyCount++;
                         if ((((ObjAnimComponent*)o)->modelInstance->renderFlags & 0x20) != 0 &&
                             (((GameObject*)o)->objectFlags & 0x400) == 0 &&
@@ -2370,10 +2390,10 @@ void getVisibleObjects(s8* opacity)
             }
             else
             {
-                s54 = (void*)((GameObject*)o)->anim.hitReactState;
-                if (s54 != NULL && (s54[0x62] & 0x30) != 0)
+                interactState = (void*)((GameObject*)o)->anim.hitReactState;
+                if (interactState != NULL && (interactState[0x62] & 0x30) != 0)
                 {
-                    s54[0xaf] = 2;
+                    interactState[0xaf] = 2;
                 }
             }
         }
