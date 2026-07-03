@@ -1261,8 +1261,6 @@ void Effect8_initialise(void)
 {
 }
 
-void Effect9_func03_nop(void);
-
 ObjectDescriptor11 projgfx_funcs = {
     0,
     0,
@@ -1341,21 +1339,6 @@ void Effect8_func05(void)
     }
     gModgfxSineWaveB = mathSinf(gModgfxPi * (f32)(s16)gModgfxSinePhaseB / lbl_803DFE24);
 }
-
-extern FxNode9 lbl_8039C398;
-
-#define FILL9() do {                            \
-    lbl_8039C398.posX = 0.0f;             \
-    lbl_8039C398.posY = 0.0f;            \
-    lbl_8039C398.posZ = 0.0f;            \
-    lbl_8039C398.scale = 1.0f;             \
-    lbl_8039C398.unk0 = 0;                         \
-    lbl_8039C398.unk2 = 0;                         \
-    lbl_8039C398.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C398;             \
-  } while (0)
-
-#undef FILL9
 
 extern FxNode9 lbl_8039C380;
 extern f32 lbl_803DB810;
