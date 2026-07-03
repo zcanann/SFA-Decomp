@@ -108,6 +108,7 @@ main/pi_dolphin.c:
 
 main/rcp_dolphin.c:
 	.text       start:0x80051868 end:0x80055980
+	.data       start:0x8030CF04 end:0x8030D024
 	.bss        start:0x803779C0 end:0x8037E0C0
 
 main/shader.c:

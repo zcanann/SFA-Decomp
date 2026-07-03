@@ -1849,7 +1849,32 @@ typedef struct TevSwapEntry
     int b;
 } TevSwapEntry;
 
-extern TevSwapEntry gRcpTevSwapTable[];
+TevSwapEntry gRcpTevSwapTable[24] = {
+    {0, 1, 2},
+    {0, 2, 1},
+    {1, 0, 2},
+    {2, 0, 1},
+    {1, 2, 0},
+    {2, 1, 0},
+    {0, 0, 2},
+    {0, 2, 0},
+    {2, 0, 0},
+    {0, 0, 1},
+    {0, 1, 0},
+    {1, 0, 0},
+    {1, 1, 2},
+    {1, 2, 1},
+    {2, 1, 1},
+    {1, 1, 0},
+    {1, 0, 1},
+    {0, 1, 1},
+    {2, 2, 0},
+    {2, 0, 2},
+    {0, 2, 2},
+    {2, 2, 1},
+    {2, 1, 2},
+    {1, 2, 2},
+};
 extern u8 lbl_803779A0[];
 void fn_80053C40(u8 * tex, u8 * obj);
 
