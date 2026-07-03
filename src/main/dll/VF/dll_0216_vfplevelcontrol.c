@@ -42,6 +42,9 @@ enum
 
 #define VFP_TIMER_INIT 0x82
 
+#define VFPLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
+#define VFPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef union VfpLevelControlLatch
 {
     u8 raw[8];
@@ -208,7 +211,7 @@ void vfplevelcontrol_init(int* obj, u8* init)
     (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     state->unk02[4] = 0;
     state->unk02[5] = 0;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (VFPLEVELCONTROL_OBJFLAG_HIDDEN | VFPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
     timeOfDayFn_80055038();
     GameBit_Set(GAMEBIT_VFP_LATCH, 1);
     unlockLevel(0, 0, 1);
