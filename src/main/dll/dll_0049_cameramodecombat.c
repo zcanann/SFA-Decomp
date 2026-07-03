@@ -539,7 +539,6 @@ void CameraModeCombat_init(CameraObject* camera, u32 arg2, GameObject** targetPt
     return;
 }
 
-void CameraModeShipBattle_update(short* cam);
 
 void CameraModeCombat_release(void)
 {
@@ -549,4 +548,3 @@ void CameraModeCombat_initialise(void)
 {
 }
 
-void CameraModeShipBattle_copyToCurrent_nop(void);
