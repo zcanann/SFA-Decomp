@@ -2632,7 +2632,7 @@ void renderShadows(void)
 {
     char* casterPtr;
     f32 *vAp1, *vAp2, *mc54p;
-    f32 savedFovY, sCamX, sCamY, sCamZ;
+    f32 savedFovY, sCamX, sCamY, dirX;
     int s170;
     s16 s14, s19;
     f32 om100[24];
@@ -2644,7 +2644,7 @@ void renderShadows(void)
     char* B = (char*)gNewShadowEntries;
     int blkArr, blkCount;
     s8 r22;
-    f32 dirX, dirY, dirZ, f22, f21, f23, vAy;
+    f32 sCamZ, dirY, dirZ, f22, f21, vAy, f23;
     int r23, r24;
 
     if (gNewShadowCasterCount == 0) return;
