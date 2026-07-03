@@ -302,7 +302,7 @@ void dimcannon_update(int* obj)
         else if (((DimCannonState*)state)->targetPlayer != 0 && !GameBit_Get(((DimcannonPlacement*)src)->holdGameBit))
         {
             f32 d = getXZDistance(&((GameObject*)obj)->anim.worldPosX,
-                                  (f32*)((char*)((DimCannonState*)state)->targetPlayer + 0x18));
+                                  &((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.worldPosX);
             int v = ((DimcannonPlacement*)src)->triggerRange * lbl_803DBF10;
             if (d < v / lbl_803E48EC)
             {
@@ -341,9 +341,9 @@ void dimcannon_update(int* obj)
                         *(f32*)&((DimCannonState*)state)->aimTargetY = ((DimCannonState*)state)->aimHistY[j];
                     }
                 }
-                ((DimCannonState*)state)->aimHistX[9] = *(f32*)((char*)((DimCannonState*)state)->targetPlayer + 0xc);
-                ((DimCannonState*)state)->aimHistY[9] = *(f32*)((char*)((DimCannonState*)state)->targetPlayer + 0x10);
-                ((DimCannonState*)state)->aimHistZ[9] = *(f32*)((char*)((DimCannonState*)state)->targetPlayer + 0x14);
+                ((DimCannonState*)state)->aimHistX[9] = ((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.localPosX;
+                ((DimCannonState*)state)->aimHistY[9] = ((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.localPosY;
+                ((DimCannonState*)state)->aimHistZ[9] = ((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.localPosZ;
                 *(f32*)&((DimCannonState*)state)->aimTargetX = ((DimCannonState*)state)->aimHistX[0];
                 ((DimCannonState*)state)->aimTargetZ = ((DimCannonState*)state)->aimHistZ[0];
             }
@@ -356,7 +356,7 @@ void dimcannon_update(int* obj)
                 ((DimCannonState*)state)->aimPitch -= framesThisStep;
             }
             ((DimCannonState*)state)->distance = getXZDistance(&((GameObject*)obj)->anim.worldPosX,
-                                                            (f32*)((char*)((DimCannonState*)state)->targetPlayer + 0x18));
+                                                            &((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.worldPosX);
             DIMwooddoor_updateShardAim(obj, *(f32*)&((DimCannonState*)state)->aimTargetX,
                                        *(f32*)&((DimCannonState*)state)->aimTargetY,
                                        ((DimCannonState*)state)->aimTargetZ, ((DimCannonState*)state)->distance);
