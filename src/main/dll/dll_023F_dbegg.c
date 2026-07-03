@@ -351,46 +351,46 @@ int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag)
 {
     f32 water;
     f32 ground;
-    f32 t;
-    f32 u;
+    f32 bestAbs;
+    f32 curAbs;
     f32 dy;
-    int n;
+    int hitCount;
     int i;
-    int** list;
-    int** cursor;
-    int* hit;
+    int** hitList;
+    int** hitCursor;
+    int* hitTri;
 
     *out = lbl_803E61C8;
-    n = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX + a, ((GameObject*)obj)->anim.localPosY,
-                             ((GameObject*)obj)->anim.localPosZ + b, obj, &list, 0, 0);
-    if (n != 0)
+    hitCount = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX + a, ((GameObject*)obj)->anim.localPosY,
+                             ((GameObject*)obj)->anim.localPosZ + b, obj, &hitList, 0, 0);
+    if (hitCount != 0)
     {
         ground = gDbEggSurfaceNotFound;
         water = ground;
-        cursor = list;
-        for (i = 0; i < n; i++)
+        hitCursor = hitList;
+        for (i = 0; i < hitCount; i++)
         {
-            hit = *cursor;
-            dy = *(f32*)hit - ((GameObject*)obj)->anim.localPosY;
-            if (*(s8*)((u8*)hit + 0x14) == 0xe)
+            hitTri = *hitCursor;
+            dy = *(f32*)hitTri - ((GameObject*)obj)->anim.localPosY;
+            if (*(s8*)((u8*)hitTri + 0x14) == 0xe)
             {
                 if (water >= lbl_803E61C8)
                 {
-                    t = water;
+                    bestAbs = water;
                 }
                 else
                 {
-                    t = -water;
+                    bestAbs = -water;
                 }
                 if (dy >= lbl_803E61C8)
                 {
-                    u = dy;
+                    curAbs = dy;
                 }
                 else
                 {
-                    u = -dy;
+                    curAbs = -dy;
                 }
-                if (u < t)
+                if (curAbs < bestAbs)
                 {
                     water = dy;
                 }
@@ -399,26 +399,26 @@ int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag)
             {
                 if (ground >= lbl_803E61C8)
                 {
-                    t = ground;
+                    bestAbs = ground;
                 }
                 else
                 {
-                    t = -ground;
+                    bestAbs = -ground;
                 }
                 if (dy >= lbl_803E61C8)
                 {
-                    u = dy;
+                    curAbs = dy;
                 }
                 else
                 {
-                    u = -dy;
+                    curAbs = -dy;
                 }
-                if (u < t)
+                if (curAbs < bestAbs)
                 {
                     ground = dy;
                 }
             }
-            cursor++;
+            hitCursor++;
         }
         if (flag == 0)
         {
@@ -440,21 +440,21 @@ int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag)
             {
                 if (ground >= lbl_803E61C8)
                 {
-                    t = ground;
+                    bestAbs = ground;
                 }
                 else
                 {
-                    t = -ground;
+                    bestAbs = -ground;
                 }
                 if (water >= lbl_803E61C8)
                 {
-                    u = water;
+                    curAbs = water;
                 }
                 else
                 {
-                    u = -water;
+                    curAbs = -water;
                 }
-                if (u <= t || water > lbl_803E61C8)
+                if (curAbs <= bestAbs || water > lbl_803E61C8)
                 {
                     *out = water;
                     return 0;
@@ -476,40 +476,40 @@ int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag)
 #pragma opt_common_subs reset
 
 #pragma peephole on
-void fn_801FE774(int cam, f32* vel)
+void fn_801FE774(int obj, f32* vel)
 {
     f32 limit;
     f32 force;
     f32 sumX;
     f32 sumZ;
     int count;
-    int* objs;
-    u8* o;
+    int* objCursor;
+    u8* sibling;
     int i;
 
-    int* t;
+    int* objList;
     sumZ = sumX = lbl_803E61C8;
-    t = (int*)ObjGroup_GetObjects(0x14, &count);
-    for (i = 0, objs = t, limit = lbl_803E61E8; i < count; i++)
+    objList = (int*)ObjGroup_GetObjects(0x14, &count);
+    for (i = 0, objCursor = objList, limit = lbl_803E61E8; i < count; i++)
     {
         f32 dy;
-        o = (u8*)*objs;
-        dy = ((GameObject*)o)->anim.localPosY - *(f32*)(cam + 0x10);
+        sibling = (u8*)*objCursor;
+        dy = ((GameObject*)sibling)->anim.localPosY - *(f32*)(obj + 0x10);
         if (dy <= limit && dy >= lbl_803E61EC)
         {
-            f32 dx = ((GameObject*)o)->anim.localPosX - *(f32*)(cam + 0xc);
-            f32 dz = ((GameObject*)o)->anim.localPosZ - *(f32*)(cam + 0x14);
+            f32 dx = ((GameObject*)sibling)->anim.localPosX - *(f32*)(obj + 0xc);
+            f32 dz = ((GameObject*)sibling)->anim.localPosZ - *(f32*)(obj + 0x14);
             f32 dist = sqrtf(dx * dx + dz * dz);
-            f32 radius = lbl_803E61F0 * (f32)(u32) * (u8*)(*(int*)(o + 0x4c) + 0x19);
+            f32 radius = lbl_803E61F0 * (f32)(u32) * (u8*)(*(int*)(sibling + 0x4c) + 0x19);
             if (dist < radius)
             {
                 force = (radius - dist) / radius;
-                force = force * (lbl_803E61F4 * *(f32*)(o + 8));
-                sumX += force * mathSinf((gDbEggPi * (f32)(int) * (s16*)o) / gDbEggAngleHalfPeriod);
-                sumZ += force * mathCosf((gDbEggPi * (f32)(int) * (s16*)o) / gDbEggAngleHalfPeriod);
+                force = force * (lbl_803E61F4 * *(f32*)(sibling + 8));
+                sumX += force * mathSinf((gDbEggPi * (f32)(int) * (s16*)sibling) / gDbEggAngleHalfPeriod);
+                sumZ += force * mathCosf((gDbEggPi * (f32)(int) * (s16*)sibling) / gDbEggAngleHalfPeriod);
             }
         }
-        objs++;
+        objCursor++;
     }
     if (count != 0)
     {
