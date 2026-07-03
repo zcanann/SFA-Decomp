@@ -2822,9 +2822,12 @@ void pauseMenuFn_80129ee0(void)
         {
         case 0:
             {
-                int camMode = (*gCameraInterface)->getMode();
-                int canOpen = 1;
-                int audioFree = 0;
+                int audioFree;
+                int camMode;
+                int canOpen;
+                camMode = (*gCameraInterface)->getMode();
+                canOpen = 1;
+                audioFree = 0;
                 if ((player == 0 || !(((GameObject*)player)->objectFlags & 0x1000)) &&
                     getCurSeqNo() == 0 && AudioStream_IsPreparing() == 0)
                 {
@@ -2904,7 +2907,7 @@ void pauseMenuFn_80129ee0(void)
                         lbl_803DD7DC = 0.0f;
                         Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
                     }
-                    lbl_803DD770 = (s16)(lbl_803DD770 + framesThisStep);
+                    lbl_803DD770 += framesThisStep;
                     if (lbl_803DD770 > 0xff)
                     {
                         lbl_803DD770 = 0;
@@ -2941,7 +2944,7 @@ void pauseMenuFn_80129ee0(void)
                     }
                     {
                         u8 prev = lbl_803DBA64;
-                        lbl_803DBA64 = prev + a1;
+                        *(u8*)&lbl_803DBA64 = prev + a1;
                         if ((s8)lbl_803DBA64 < menuMin)
                         {
                             lbl_803DBA64 = menuMax;
