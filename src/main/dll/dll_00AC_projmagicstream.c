@@ -9,6 +9,8 @@
 #include "main/dll/dll_66.h"
 #include "main/engine_shared.h"
 
+char sProjmagicstreamDoNoLongerSupported[] = "<projmagicstream Do>No Longer supported \n";
+
 int projmagicstream_doUnsupported(void)
 {
     OSReport(sProjmagicstreamDoNoLongerSupported);

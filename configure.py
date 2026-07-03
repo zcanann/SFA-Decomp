@@ -999,7 +999,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_0034_titlemenu.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/modanimeflash1.c"),
             Object(NonMatching, "main/dll/dll_00AB_projdummy.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "main/dll/dll_00AC_projmagicstream.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_00AC_projmagicstream.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00AD_projmagicemmit1.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00AE_projroombeam.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00AF_projlightning1.c", cflags=cflags_dll_noopt),
