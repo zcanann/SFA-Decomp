@@ -199,10 +199,10 @@ extern void* Obj_GetPlayerObject(void);
 typedef struct ShieldState
 {
     u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
+    f32 fadeValue; /* 0x4: current shield fade, advanced toward fadeTarget by fadeRate*dt */
+    f32 fadeTarget; /* 0x8 */
+    f32 fadeRate; /* 0xC */
+    s32 fadeMax; /* 0x10: divisor for alpha (fadeValue/fadeMax) */
     u8 pad14[0x18 - 0x14];
     u8 unk18;
     u8 pad19[0x24 - 0x19];
@@ -973,7 +973,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                     {
                         u8* r = state + k * 4;
                         ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(r + 0x24) * savedF8 *
-                            (((ShieldState*)state)->unk4 / *(f32*)&((ShieldState*)state)->unk10);
+                            (((ShieldState*)state)->fadeValue / *(f32*)&((ShieldState*)state)->fadeMax);
                         *(u8*)((char*)obj + 0x37) = *(f32*)(r + 0x14) * savedB36;
                     }
                     *(u16*)((char*)model + 0x18) &= ~0x8;
@@ -1091,10 +1091,10 @@ void staffFn_80170380(int* obj, int cmd)
         }
         {
             f32 v = lbl_803E33AC;
-            ((ShieldState*)state)->unk8 = v;
-            ((ShieldState*)state)->unkC = v;
-            *(f32*)&((ShieldState*)state)->unk10 = v;
-            ((ShieldState*)state)->unk4 = v;
+            ((ShieldState*)state)->fadeTarget = v;
+            ((ShieldState*)state)->fadeRate = v;
+            *(f32*)&((ShieldState*)state)->fadeMax = v;
+            ((ShieldState*)state)->fadeValue = v;
         }
         ((ShieldState*)state)->flags0 |= 1;
         ((ShieldState*)state)->flags1 |= 1;
@@ -1106,23 +1106,23 @@ void staffFn_80170380(int* obj, int cmd)
         {
             modelLightStruct_setEnabled(*(int*)state, 0, lbl_803E33A8);
         }
-        if (lbl_803E33AC != ((ShieldState*)state)->unk8)
+        if (lbl_803E33AC != ((ShieldState*)state)->fadeTarget)
         {
             f32 v = lbl_803E33B0;
-            *(f32*)&((ShieldState*)state)->unk10 = v;
-            ((ShieldState*)state)->unk4 = v;
+            *(f32*)&((ShieldState*)state)->fadeMax = v;
+            ((ShieldState*)state)->fadeValue = v;
             if (glow != NULL)
             {
                 staffSetGlow(glow, 7, 0);
             }
         }
-        ((ShieldState*)state)->unk8 = lbl_803E33AC;
-        ((ShieldState*)state)->unkC = lbl_803E33B4;
+        ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
+        ((ShieldState*)state)->fadeRate = lbl_803E33B4;
         Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
         Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
         break;
     case 1:
-        if (lbl_803E33AC == ((ShieldState*)state)->unk8)
+        if (lbl_803E33AC == ((ShieldState*)state)->fadeTarget)
         {
             if (glow != NULL)
             {
@@ -1148,13 +1148,13 @@ void staffFn_80170380(int* obj, int cmd)
             }
             {
                 f32 v1 = lbl_803E33AC;
-                if (v1 == ((ShieldState*)state)->unk8)
+                if (v1 == ((ShieldState*)state)->fadeTarget)
                 {
-                    *(f32*)&((ShieldState*)state)->unk10 = lbl_803E33B0;
-                    ((ShieldState*)state)->unk4 = v1;
+                    *(f32*)&((ShieldState*)state)->fadeMax = lbl_803E33B0;
+                    ((ShieldState*)state)->fadeValue = v1;
                 }
             }
-            ((ShieldState*)state)->unk8 = lbl_803E33B0;
+            ((ShieldState*)state)->fadeTarget = lbl_803E33B0;
             {
                 f32 amp = lbl_803E33C4;
                 u8* hw;
@@ -1163,7 +1163,7 @@ void staffFn_80170380(int* obj, int cmd)
                 int i;
                 f32 k;
                 /* kc inlined as lbl_803E33C8 (created after bias) */
-                ((ShieldState*)state)->unkC = amp;
+                ((ShieldState*)state)->fadeRate = amp;
                 i = 0;
                 hw = state;
                 w = state;
@@ -1196,12 +1196,12 @@ void staffFn_80170380(int* obj, int cmd)
         {
             staffSetGlow(glow, 7, 0);
         }
-        if (lbl_803E33AC != ((ShieldState*)state)->unk8)
+        if (lbl_803E33AC != ((ShieldState*)state)->fadeTarget)
         {
-            *(f32*)&((ShieldState*)state)->unk10 = lbl_803E33CC;
+            *(f32*)&((ShieldState*)state)->fadeMax = lbl_803E33CC;
         }
-        ((ShieldState*)state)->unk8 = lbl_803E33AC;
-        ((ShieldState*)state)->unkC = lbl_803E33B4;
+        ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
+        ((ShieldState*)state)->fadeRate = lbl_803E33B4;
         if (*(int**)state != NULL)
         {
             modelLightStruct_setEnabled(*(int*)state, 0, lbl_803E33A8);
@@ -1232,11 +1232,11 @@ void staffFn_80170380(int* obj, int cmd)
             modelLightStruct_startColorFade(*(int*)state, 0, 0);
             modelLightStruct_setAffectsAabbLightSelection(*(int*)state, 1);
         }
-        if (lbl_803E33AC == ((ShieldState*)state)->unk8)
+        if (lbl_803E33AC == ((ShieldState*)state)->fadeTarget)
         {
-            *(f32*)&((ShieldState*)state)->unk10 = lbl_803E33CC;
+            *(f32*)&((ShieldState*)state)->fadeMax = lbl_803E33CC;
         }
-        ((ShieldState*)state)->unk8 = lbl_803E33CC;
+        ((ShieldState*)state)->fadeTarget = lbl_803E33CC;
         {
             f32 amp = lbl_803E33C4;
             int i;
@@ -1245,7 +1245,7 @@ void staffFn_80170380(int* obj, int cmd)
             f32* t0;
             f32* t1;
             f32 k;
-            ((ShieldState*)state)->unkC = amp;
+            ((ShieldState*)state)->fadeRate = amp;
             i = 0;
             hw = state;
             w = state;
@@ -1271,9 +1271,9 @@ void staffFn_80170380(int* obj, int cmd)
         Sfx_PlayFromObject(obj, SFXTRIG_lrope_powerup);
         break;
     case 5:
-        ((ShieldState*)state)->unk8 = lbl_803E33AC;
-        ((ShieldState*)state)->unkC = lbl_803E33B4;
-        *(f32*)&((ShieldState*)state)->unk10 = lbl_803E33CC;
+        ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
+        ((ShieldState*)state)->fadeRate = lbl_803E33B4;
+        *(f32*)&((ShieldState*)state)->fadeMax = lbl_803E33CC;
         Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
         Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
         break;
@@ -1281,10 +1281,10 @@ void staffFn_80170380(int* obj, int cmd)
         {
             f32 v = lbl_803E33CC;
             f32 amp;
-            ((ShieldState*)state)->unk8 = v;
+            ((ShieldState*)state)->fadeTarget = v;
             amp = lbl_803E33C4;
-            ((ShieldState*)state)->unkC = amp;
-            *(f32*)&((ShieldState*)state)->unk10 = v;
+            ((ShieldState*)state)->fadeRate = amp;
+            *(f32*)&((ShieldState*)state)->fadeMax = v;
             {
                 int i;
                 u8* hw;
