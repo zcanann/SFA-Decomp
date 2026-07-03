@@ -2904,6 +2904,10 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         if (pi < EXPGFX_POOL_COUNT &&
             (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)
         {
+            /* Set this pool's bit in the 64-bit tracked-source-frame mask.
+             * mb selects trackedSourceFrameMasks[pi & 1] (offset 4112 = highWord,
+             * 4116 = lowWord); the bit index within the 64-bit mask is pi >> 1,
+             * with the arithmetic shift routing bits >= 32 into the high word. */
             u8* mb = (u8*)runtime + (pi & 1) * 8;
             maskHighWord = *(u32*)(mb + 4112);
             maskLowWord = *(u32*)(mb + 4116);
@@ -2915,6 +2919,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         }
         else
         {
+            /* Clear this pool's bit in the 64-bit tracked-source-frame mask. */
             u8* mb = (u8*)runtime + (pi & 1) * 8;
             maskHighWord = *(u32*)(mb + 4112);
             maskLowWord = *(u32*)(mb + 4116);
