@@ -229,8 +229,6 @@ int dll_2E_func0F_ret_0(void) { return 0x0; }
 void dll_2E_setLookAtMaxDistance(int* p, f32 v) { ((MoveLibState*)p)->lookAtMaxDistance = v; }
 void dll_2E_func04(int* p, int v) { *(int*)&((MoveLibState*)p)->lockTarget = v; }
 
-#pragma scheduling off
-#pragma peephole off
 void dll_2E_func08(int obj, int v1, int v2)
 {
     MoveLibState* s = (MoveLibState*)obj;
