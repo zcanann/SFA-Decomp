@@ -253,6 +253,8 @@ typedef struct FireballState
 #define FIREBALL_FLAG_GRAVITY 0x4     /* affected by gravity + ground snap */
 #define FIREBALL_FLAG_DISABLED 0x8    /* disabled / no-update */
 
+#define FIREBALL_OBJFLAG_FREED 0x40
+
 extern u32 ObjHits_ClearHitVolumes();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
@@ -1032,7 +1034,7 @@ void fireball_update(int* obj)
         ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
         if (other != NULL)
         {
-            if ((((GameObject*)other)->objectFlags & 0x40) != 0)
+            if ((((GameObject*)other)->objectFlags & FIREBALL_OBJFLAG_FREED) != 0)
             {
                 ((GameObject*)obj)->unkF8 = 0;
             }
