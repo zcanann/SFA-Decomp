@@ -166,5 +166,3 @@ void dll_7D_func01_nop(void)
 void dll_7D_func00_nop(void)
 {
 }
-
-void dll_7E_func01_nop(void);
