@@ -2942,7 +2942,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
             if (t2 < *(f32*)&__AR_Callback) t2 = lbl_803DECC0;
             if (t2 < t1) t1 = t2;
             t = t1;
-            if (t >= *(volatile f32*)&__AR_Callback && t <= lbl_803DECC4)
+            if (t >= *(f32*)(int)&__AR_Callback && t <= lbl_803DECC4)
             {
                 lbl_803DCF58 = t;
                 if (flag != 0)
