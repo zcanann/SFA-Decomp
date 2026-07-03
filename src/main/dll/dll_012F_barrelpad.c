@@ -47,11 +47,9 @@ void barrelpad_initialise(void)
 {
 }
 
-void cf_doorlight_free(void);
 
 int barrelpad_getExtraSize(void) { return 0x0; }
 int barrelpad_getObjectTypeId(void) { return 0x0; }
-int cf_doorlight_getExtraSize(void);
 
 void barrelpad_render(void) { objRenderFn_8003b8f4(lbl_803E3F00); }
 
