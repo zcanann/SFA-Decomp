@@ -24,8 +24,6 @@
 extern u64 ObjGroup_RemoveObject();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
-#pragma scheduling on
-#pragma peephole on
 extern void objRenderFn_8003b8f4(int* obj);
 extern f32 lbl_803E48E8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
@@ -60,8 +58,6 @@ extern f32 gDimCannonAimStickScale;
 extern f32 lbl_803DBEF8;
 extern f32 lbl_803DBEFC;
 
-#pragma scheduling off
-#pragma peephole off
 void dimcannon_hitDetect(void)
 {
 }
