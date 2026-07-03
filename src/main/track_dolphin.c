@@ -5422,7 +5422,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     int start, end;
     int vt, vp;
     u32 lineIdx;
-    s8 flag1;
+    int flag1;
     int flag2;
     int flag4;
     f32 minX, maxX, minZ, maxZ;
