@@ -3186,12 +3186,14 @@ void pauseMenuFn_80129ee0(void)
                 {
                     u8 i = 0;
                     int k = 0;
-                    while (*(int*)((u8*)&tbl->list740[0] + (u8)k * 4) > -1)
+                    u8 idx;
+                    int bit;
+                    while ((bit = *(int*)((u8*)&tbl->list740[0] + (idx = k) * 4)) > -1)
                     {
                         s16 texId = 0xbf0;
-                        if (GameBit_Get(0xbf0))
+                        if (GameBit_Get(bit))
                         {
-                            texId = tbl->alts[(u8)k].alt;
+                            texId = tbl->alts[idx].alt;
                         }
                         *(int*)((u8*)&hud->textures3A8[0] + i * 4) = (int)textureLoadAsset(texId);
                         *(s16*)((u8*)&hud->texIds358[0] + i * 2) = texId;
@@ -3202,12 +3204,14 @@ void pauseMenuFn_80129ee0(void)
                 {
                     int i = 0xa;
                     int k = 0;
-                    while (tbl->items[(u8)k].id > -1)
+                    s16* it;
+                    int id;
+                    while ((id = *(it = (s16*)((u8*)&tbl->items[0] + (u8)k * 16))) > -1)
                     {
                         s16 texId = 0xbf0;
-                        if (GameBit_Get(0xbf0))
+                        if (GameBit_Get(id))
                         {
-                            texId = tbl->items[(u8)k].alt;
+                            texId = it[3];
                         }
                         *(int*)((u8*)&hud->textures3A8[0] + (u8)i * 4) = (int)textureLoadAsset(texId);
                         *(s16*)((u8*)&hud->texIds358[0] + (u8)i * 2) = texId;
