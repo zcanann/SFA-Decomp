@@ -2532,21 +2532,22 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
 }
 #pragma optimization_level reset
 
-void renderParticles(void)
+#pragma inline_max_size(4000)
+static inline void renderParticlesBody(void)
 {
-    ExpgfxRuntimeDataLayout* runtime;
-    ExpgfxBounds* boundsTemplate;
-    ExpgfxPoolSourcePosition* sourcePosition;
-    s8* poolActiveCounts;
-    u8* poolSourceModes;
-    u8* poolBoundsTemplateIds;
-    ExpgfxBounds* poolBounds;
-    u32* poolSourceIds;
-    register s16* poolSlotTypeIds;
-    u32* slotPoolBases;
-    int poolIndex;
-    f32* currentMatrix;
     float queuePosition[3];
+    f32* currentMatrix;
+    int poolIndex;
+    u32* slotPoolBases;
+    ExpgfxRuntimeDataLayout* runtime;
+    register s16* poolSlotTypeIds;
+    u32* poolSourceIds;
+    ExpgfxBounds* poolBounds;
+    u8* poolBoundsTemplateIds;
+    u8* poolSourceModes;
+    s8* poolActiveCounts;
+    ExpgfxPoolSourcePosition* sourcePosition;
+    ExpgfxBounds* boundsTemplate;
 
     runtime = EXPGFX_RUNTIME_DATA;
     currentMatrix = Camera_GetViewMatrix();
@@ -2607,6 +2608,12 @@ void renderParticles(void)
     while (poolIndex < EXPGFX_POOL_COUNT);
     return;
 }
+
+void renderParticles(void)
+{
+    renderParticlesBody();
+}
+#pragma inline_max_size reset
 
 #pragma scheduling on
 #pragma peephole on
