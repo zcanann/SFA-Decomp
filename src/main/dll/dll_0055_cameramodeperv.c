@@ -28,8 +28,6 @@ extern f32 lbl_803E1B88;
 
 
 
-#pragma scheduling off
-#pragma peephole off
 
 void CameraModePerv_release(void)
 {
