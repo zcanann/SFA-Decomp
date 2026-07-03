@@ -614,7 +614,7 @@ void trickyUpdateCirclingTargetPosition(void* p1, void* p2)
         ((TrickyState*)p2)->substate = 1;
     }
 
-    delta = angle - (s32)(u16) * (volatile s32*)((u8*)p2 + 0x704);
+    delta = angle - (s32)(u16) * (s32*)((u8*)p2 + 0x704);
     if (delta > 0x8000) delta -= 0xFFFF;
     if (delta < -0x8000) delta += 0xFFFF;
 
@@ -629,7 +629,7 @@ void trickyUpdateCirclingTargetPosition(void* p1, void* p2)
     if (absDelta < 0x2000)
     {
         *(s32*)&((TrickyState*)p2)->unk704 =
-            *(volatile s32*)((u8*)p2 + 0x704) + (*(s32*)&((TrickyState*)p2)->unk700 << 11);
+            *(s32*)((int)p2 + 0x704) + (*(s32*)&((TrickyState*)p2)->unk700 << 11);
     }
 
     *(f32*)&((TrickyState*)p2)->unk708 =

@@ -638,7 +638,7 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
         {
             delta = delta + 0xffff;
         }
-        ((GameObject*)obj)->anim.rotX = (f32)*(volatile s16*)&((GameObject*)obj)->anim.rotX +
+        ((GameObject*)obj)->anim.rotX = (f32)*(s16*)(int)(GameObject*)obj +
             (lbl_803E1CB8 + delta) * (speed * timeDelta) / dist;
     }
     objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
