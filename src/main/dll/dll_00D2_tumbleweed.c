@@ -109,8 +109,8 @@ void tumbleweed_updateRollingMotion(int obj, int state)
     ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
-    ((s16*)obj)[2] = (s16)((f32)(int) * (s16*)(state + 0x27c) * timeDelta + (f32)(int)((s16*)obj)[2]);
-    ((s16*)obj)[1] = (s16)((f32)(int) * (s16*)(state + 0x27e) * timeDelta + (f32)(int)((s16*)obj)[1]);
+    ((s16*)obj)[2] = (s16)((f32)(int) ((BackpackState*)state)->recoilVelX * timeDelta + (f32)(int)((s16*)obj)[2]);
+    ((s16*)obj)[1] = (s16)((f32)(int) ((BackpackState*)state)->recoilVelZ * timeDelta + (f32)(int)((s16*)obj)[1]);
     *(s16*)obj = (s16)((f32)(int) * (s16*)(state + 0x280) * timeDelta + (f32)(int) * (s16*)obj);
     if (hitList[0] != 0x0)
     {
@@ -124,14 +124,14 @@ void tumbleweed_updateRollingMotion(int obj, int state)
             if (((short*)obj)[0x23] == 0x3fb)
             {
                 dy = (f32)(int)(uval = randomGetRange(0x8c, 0xb4));
-                dy = (f32) * (u16*)(state + 0x268) / dy;
+                dy = (f32) ((BackpackState*)state)->distToTarget / dy;
                 vp = lbl_803E2F84 * ((GameObject*)obj)->anim.velocityY;
                 ((GameObject*)obj)->anim.velocityY = -(vp * dy);
             }
             else
             {
                 dy = (f32)(int)(uval = randomGetRange(0x14, 0x28));
-                dy = (f32) * (u16*)(state + 0x268) / dy;
+                dy = (f32) ((BackpackState*)state)->distToTarget / dy;
                 vp = lbl_803E2F84 * ((GameObject*)obj)->anim.velocityY;
                 ((GameObject*)obj)->anim.velocityY = -(vp * dy);
             }
