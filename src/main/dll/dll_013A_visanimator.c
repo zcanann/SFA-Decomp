@@ -16,6 +16,9 @@
 #include "main/dll/visanimatorstate_struct.h"
 #include "main/dll/dll_80220608_shared.h"
 
+#define VISANIMATOR_OBJFLAG_HIDDEN 0x4000
+#define VISANIMATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 void visanimator_free(void)
@@ -49,7 +52,7 @@ void visanimator_init(int* obj, int* desc)
     u32 gate;
     u8 gateBit;
     int baseVisBit;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (VISANIMATOR_OBJFLAG_HIDDEN | VISANIMATOR_OBJFLAG_HITDETECT_DISABLED);
     vstate = (VisAnimatorState*)((GameObject*)obj)->extra;
     baseVisBit = *(s8*)((char*)desc + 0x1B);
     vstate->visBit = baseVisBit;
