@@ -15386,6 +15386,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
     char* base = (char*)lbl_80332EC0;
     PlayerState* inner = ((GameObject*)obj)->extra;
     int sub = inner->focusObject;
+    void* joint;
     f32 j0[3];
     f32 j1[3];
     f32 wpos[3];
@@ -15417,7 +15418,6 @@ int fn_8029FA24(int obj, int state, f32 fv)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         int sel;
-        int joint;
         f32 scratch[2];
 
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
@@ -15483,10 +15483,10 @@ int fn_8029FA24(int obj, int state, f32 fv)
         inner->yaw = inner->targetYaw;
         ObjAnim_SetCurrentMove(obj, ((s16*)inner->moveSequence)[sel],
                                lbl_803E7EA4, 4);
-        joint = (int)Player_GetActiveModel(obj);
-        ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale,
+        joint = Player_GetActiveModel(obj);
+        ObjModel_SampleJointTransform((int)joint, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale,
                                       j0, scratch);
-        ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, ((GameObject*)obj)->anim.rootMotionScale,
+        ObjModel_SampleJointTransform((int)joint, 0, 0, lbl_803E7EE0, ((GameObject*)obj)->anim.rootMotionScale,
                                       j1, scratch);
         (*(void (*)(int, void*, void*, void*))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x28)))(
             sub, &wpos[0], &wpos[1], &wpos[2]);
