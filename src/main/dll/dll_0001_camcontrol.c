@@ -784,3 +784,5 @@ void Camera_initialise(void)
     lbl_803DD4CB = -1;
     gCamcontrolTargetClassMask = 0xffff;
 }
+
+char sCamcontrolTriggeredCamActionLoadWarning[] = "<camcontrol.c>  failed to load triggered camaction actionno %d\n";
