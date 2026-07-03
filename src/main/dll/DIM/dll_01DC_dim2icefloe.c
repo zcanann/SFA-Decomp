@@ -20,7 +20,6 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
-static inline int* DIM2snowball_GetActiveModel(void* obj);
 
 
 extern void objRenderFn_8003b8f4(f32);
