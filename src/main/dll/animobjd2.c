@@ -648,3 +648,5 @@ void trickyUpdateCirclingTargetPosition(void* p1, void* p2)
     }
 }
 
+
+const char sTrickyShouldNeverStopCirclingError[] = "error tricky should never stop when circling\n";

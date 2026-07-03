@@ -932,6 +932,7 @@ main/dll/tumbleweedbush.c:
 
 main/dll/animobjd2.c:
 	.text       start:0x8013E0D0 end:0x8013F100
+	.data       start:0x8031D8E0 end:0x8031D90E
 
 main/dll/weapone6.c:
 	.text       start:0x8013F100 end:0x8013FFB8
