@@ -209,7 +209,7 @@ void blasted_update(int obj)
 typedef struct BlastedState
 {
     u8 pad0[0x10 - 0x0];
-    u8 unk10;
+    u8 pieceCount;
     u8 gameBitLatchState;
     u8 pad12[0x6E4 - 0x12];
     u8 unk6E4;
@@ -228,7 +228,7 @@ void blasted_init(int obj, int placement)
     objSetSlot((int*)obj, 0x51);
     targ = *(int**)&((GameObject*)obj)->anim.hitReactState;
     ((ObjHitsPriorityState*)targ)->flags = (s16)(((ObjHitsPriorityState*)targ)->flags | 1);
-    ((BlastedState*)state)->unk10 = (u8)setup->pieceCount;
+    ((BlastedState*)state)->pieceCount = (u8)setup->pieceCount;
     gbid = setup->progressGameBit;
     if (gbid != -1)
     {
