@@ -64,6 +64,16 @@ typedef struct IceBaddieControl
     u16 ambientSfxTimer;     /* 0x46: counts up to ~300 then plays an ambient grunt */
 } IceBaddieControl;
 
+/* Spawn-setup buffer for the ice-ball projectile: ObjPlacement head (pos +
+ * color) plus two class-specific s16 slots the parent seeds at +0x1e/+0x20. */
+typedef struct IceBallSetup
+{
+    ObjPlacement head; /* 0x00: pos/color/mapId */
+    u8 pad18[0x1e - 0x18];
+    s16 unk1E; /* 0x1e */
+    s16 unk20; /* 0x20 */
+} IceBallSetup;
+
 extern int randomGetRange(int lo, int hi);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
@@ -1217,15 +1227,15 @@ void iceBaddie_spawnIceBall(int* obj, int* state)
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
         alloc = Obj_AllocObjectSetup(36, 100);
-        *(f32*)((char*)alloc + 8) = ((GroundBaddieState*)state)->baddie.posX;
-        *(f32*)((char*)alloc + 12) = ((GroundBaddieState*)state)->baddie.posY;
-        *(f32*)&((ObjDef*)alloc)->jointData = ((GroundBaddieState*)state)->baddie.posZ;
-        ((ObjPlacement*)alloc)->color[0] = 1;
-        ((ObjPlacement*)alloc)->color[1] = 1;
-        ((ObjPlacement*)alloc)->color[2] = 255;
-        ((ObjPlacement*)alloc)->color[3] = 255;
-        *(s16*)((char*)alloc + 30) = -1;
-        *(s16*)((char*)alloc + 32) = -1;
+        ((IceBallSetup*)alloc)->head.posX = ((GroundBaddieState*)state)->baddie.posX;
+        ((IceBallSetup*)alloc)->head.posY = ((GroundBaddieState*)state)->baddie.posY;
+        ((IceBallSetup*)alloc)->head.posZ = ((GroundBaddieState*)state)->baddie.posZ;
+        ((IceBallSetup*)alloc)->head.color[0] = 1;
+        ((IceBallSetup*)alloc)->head.color[1] = 1;
+        ((IceBallSetup*)alloc)->head.color[2] = 255;
+        ((IceBallSetup*)alloc)->head.color[3] = 255;
+        ((IceBallSetup*)alloc)->unk1E = -1;
+        ((IceBallSetup*)alloc)->unk20 = -1;
         new_obj = Obj_SetupObject(alloc, 5, -1, -1, NULL);
         if (new_obj != NULL)
         {
