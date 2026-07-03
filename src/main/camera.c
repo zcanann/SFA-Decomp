@@ -919,13 +919,9 @@ void Camera_UpdateViewMatrices(void)
     setMatrixFromObjectPos((f32*)(base + 4096), &transform);
     mtx44Transpose((f32*)((int)base + 4096), (f32*)(base + 5760));
     PSMTXCopy((f32*)(base + 5696), (f32*)(base + 5568));
-    *(f32*)(base + 5568 + 12) = lbl_803DE60C;
-    *(f32*)(base + 5568 + 28) = lbl_803DE60C;
-    *(f32*)(base + 5568 + 44) = lbl_803DE60C;
+    *(f32*)(base + 5568 + 44) = *(f32*)(base + 5568 + 28) = *(f32*)(base + 5568 + 12) = lbl_803DE60C;
     PSMTXCopy((f32*)(base + 5760), (f32*)(base + 5632));
-    *(f32*)(base + 5632 + 12) = lbl_803DE60C;
-    *(f32*)(base + 5632 + 28) = lbl_803DE60C;
-    *(f32*)(base + 5632 + 44) = lbl_803DE60C;
+    *(f32*)(base + 5632 + 44) = *(f32*)(base + 5632 + 28) = *(f32*)(base + 5632 + 12) = lbl_803DE60C;
 }
 #pragma optimization_level reset
 
