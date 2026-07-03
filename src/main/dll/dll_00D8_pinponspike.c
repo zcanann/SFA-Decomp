@@ -27,6 +27,9 @@
 #include "main/dll/fx_800944A0_shared.h"
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
+#define PINPONSPIKE_OBJFLAG_HIDDEN 0x4000
+#define PINPONSPIKE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /* sibling kaldachompspit descriptor callbacks (code in a neighbouring DLL);
    the remaining callbacks (render/hitDetect/init/release/initialise) are in xyzanimator.h */
 
@@ -72,7 +75,7 @@ void pinponspike_init(int obj)
     ObjHits_DisableObject(obj);
     ((GameObject*)obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject(obj, SFXsc_attack02);
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (PINPONSPIKE_OBJFLAG_HIDDEN | PINPONSPIKE_OBJFLAG_HITDETECT_DISABLED);
 }
 
 int pinponspike_getExtraSize(void) { return 0x0; }
