@@ -357,11 +357,11 @@ void dfropenode_free(void* obj)
 
     node = ((GameObject*)obj)->extra;
     ObjGroup_RemoveObject((u32)obj, 0x17);
-    if (*(void**)((char*)node + 0x2c) != NULL && *(void**)((char*)node + 0x2c) != NULL)
+    if (((DFropenodeExtra*)node)->rope != NULL && ((DFropenodeExtra*)node)->rope != NULL)
     {
-        mm_free(*(void**)((char*)node + 0x2c));
+        mm_free(((DFropenodeExtra*)node)->rope);
     }
-    node = *(void**)node;
+    node = ((DFropenodeExtra*)node)->linkedObj;
     if (node != NULL)
     {
         objs = (int**)ObjGroup_GetObjects(0x17, &count);
