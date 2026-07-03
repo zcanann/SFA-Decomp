@@ -91,8 +91,6 @@ typedef struct LinkbLevState
     s16 music;
 } LinkbLevState;
 
-#pragma scheduling off
-#pragma peephole off
 void linkb_levcontrol_init(int* obj)
 {
     extern int getEnvfxAct(int a, int b, u16 idx, int d); /* #57 */
