@@ -1553,7 +1553,7 @@ extern const f32 lbl_803DF244;
 #define NC_CLOUD ((u8 *)gNewClouds[id])
 #define NC_PARTS ((SnowFlake *)*(void **)(NC_CLOUD + 4))
 
-void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
+void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
 {
     char* strs;
     int id;
@@ -1566,7 +1566,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
 
     strs = lbl_8030F500;
     ok = 1;
-    id = *(u16*)(params + 0x26);
+    id = params->cloudIndex;
     if (gNewClouds[id] != NULL)
     {
         snowFreeSnowCloud(id);
@@ -1580,50 +1580,50 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
     memset(gNewClouds[id], 0, 0x1454);
     ((NewCloud*)NC_CLOUD)->cloudId = id;
     ((NewCloud*)NC_CLOUD)->unk1453 = 0;
-    ((NewCloud*)NC_CLOUD)->cloudType = params[0x5c];
+    ((NewCloud*)NC_CLOUD)->cloudType = params->cloudType;
     *(void**)(NC_CLOUD + 0x0) = owner;
-    ((NewCloud*)NC_CLOUD)->unk144A = params[0x58];
-    ((NewCloud*)NC_CLOUD)->unk144B = params[0x59];
+    ((NewCloud*)NC_CLOUD)->unk144A = params->flags58;
+    ((NewCloud*)NC_CLOUD)->unk144B = params->flags59;
     ((NewCloud*)NC_CLOUD)->worldPosX = x;
     ((NewCloud*)NC_CLOUD)->worldPosY = y;
     ((NewCloud*)NC_CLOUD)->worldPosZ = z;
-    if (params[0x58] & 1)
+    if (params->flags58 & 1)
     {
         ((NewCloud*)NC_CLOUD)->unk1451 = 1;
     }
-    if (params[0x58] & 0x10)
+    if (params->flags58 & 0x10)
     {
         ((NewCloud*)NC_CLOUD)->unk144E = 1;
     }
     ((NewCloud*)NC_CLOUD)->unk1452 = 1;
-    ((NewCloud*)NC_CLOUD)->unk144D = params[0x5d];
+    ((NewCloud*)NC_CLOUD)->unk144D = params->unk144DInit;
     if (((NewCloud*)NC_CLOUD)->cloudType == 0)
     {
-        ((NewCloud*)NC_CLOUD)->flakeCount = *(u16*)(params + 0x28) << 3;
+        ((NewCloud*)NC_CLOUD)->flakeCount = params->flakeCount << 3;
     }
     else
     {
-        ((NewCloud*)NC_CLOUD)->flakeCount = *(u16*)(params + 0x28);
+        ((NewCloud*)NC_CLOUD)->flakeCount = params->flakeCount;
     }
-    if (*(u16*)(params + 0x2a) != 0)
+    if (params->fillDivisor != 0)
     {
         ((NewCloud*)NC_CLOUD)->flakeFillRate =
-            (f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32) * (u16*)(params + 0x2a);
+            (f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32)params->fillDivisor;
     }
     else
     {
         ((NewCloud*)NC_CLOUD)->flakeFillRate = ((NewCloud*)NC_CLOUD)->flakeCount;
     }
-    if (*(u16*)(params + 0x2c) != 0)
+    if (params->drainDivisor != 0)
     {
         ((NewCloud*)NC_CLOUD)->flakeDrainRate =
-            (f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32) * (u16*)(params + 0x2c);
+            (f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32)params->drainDivisor;
     }
     else
     {
         ((NewCloud*)NC_CLOUD)->flakeDrainRate = ((NewCloud*)NC_CLOUD)->flakeCount;
     }
-    ((NewCloud*)NC_CLOUD)->driftScale = *(f32*)(params + 8);
+    ((NewCloud*)NC_CLOUD)->driftScale = params->driftMax;
     if (((NewCloud*)NC_CLOUD)->cloudType == 0)
     {
         ((NewCloud*)NC_CLOUD)->cloudHeight = gNewCloudType0Height;
@@ -1631,18 +1631,18 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
     }
     else
     {
-        ((NewCloud*)NC_CLOUD)->cloudHeight = *(f32*)(params + 4);
-        ((NewCloud*)NC_CLOUD)->scale = gSnowFlakeSize * *(f32*)(params + 0);
+        ((NewCloud*)NC_CLOUD)->cloudHeight = params->heightBase;
+        ((NewCloud*)NC_CLOUD)->scale = gSnowFlakeSize * params->driftBase;
     }
-    if (*(f32*)(params + 8) < lbl_803DF1A4)
+    if (params->driftMax < lbl_803DF1A4)
     {
-        *(f32*)(params + 8) = lbl_803DF1A0;
+        params->driftMax = lbl_803DF1A0;
     }
-    if (lbl_803DF1A0 != *(f32*)(params + 8))
+    if (lbl_803DF1A0 != params->driftMax)
     {
         ((NewCloud*)NC_CLOUD)->driftRate = lbl_803DF23C;
         {
-            int r = randomGetRange(1, *(f32*)(params + 8));
+            int r = randomGetRange(1, params->driftMax);
             ((NewCloud*)NC_CLOUD)->driftLimit = r * lbl_803DF214;
         }
     }
@@ -1693,7 +1693,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         {
             sizeRange = (int(*)[2])(strs + 0x58);
             NC_PARTS[i].size =
-                (randomGetRange(sizeRange[params[0x5a]][0], sizeRange[params[0x5a]][1]) /
+                (randomGetRange(sizeRange[params->unk5A][0], sizeRange[params->unk5A][1]) /
                     4);
             NC_PARTS[i].fallSpeed =
                 (int)
@@ -1705,7 +1705,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         {
             sizeRange = (int(*)[2])(strs + 0x58);
             NC_PARTS[i].size =
-                (randomGetRange(sizeRange[params[0x5a]][0], sizeRange[params[0x5a]][1]) *
+                (randomGetRange(sizeRange[params->unk5A][0], sizeRange[params->unk5A][1]) *
                     2);
             NC_PARTS[i].fallSpeed = lbl_803DF1A4;
             NC_PARTS[i].unk16 = 0;
@@ -1716,8 +1716,8 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         }
         spinRange = (int(*)[2])(strs + 0x30);
         NC_PARTS[i].spin =
-            (((int(*)[2])(strs + 0x30))[params[0x5b]][1] / 2 -
-                randomGetRange(spinRange[params[0x5b]][0], spinRange[params[0x5b]][1]));
+            (((int(*)[2])(strs + 0x30))[params->unk5B][1] / 2 -
+                randomGetRange(spinRange[params->unk5B][0], spinRange[params->unk5B][1]));
     }
     if (gNewCloudWindSourcesInit != 0)
     {
@@ -1871,15 +1871,15 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
         {
             if ((fl & 2) && (fl & 0x10) && params[0x5d] != 0)
             {
-                newClouds(params, objB, posA[0], posA[1], posA[2]);
+                newClouds((CloudSpawnParams*)params, objB, posA[0], posA[1], posA[2]);
             }
             else if ((fl & 2) && (fl & 0x10))
             {
-                newClouds(params, objB, posB[0], posB[1], posB[2]);
+                newClouds((CloudSpawnParams*)params, objB, posB[0], posB[1], posB[2]);
             }
             else if (fl & 2)
             {
-                newClouds(params, objB, posA[0], posA[1], posA[2]);
+                newClouds((CloudSpawnParams*)params, objB, posA[0], posA[1], posA[2]);
             }
         }
         if (params[0x58] & 2)

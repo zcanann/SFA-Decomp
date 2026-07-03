@@ -105,4 +105,31 @@ STATIC_ASSERT(offsetof(NewCloud, unk144A) == 0x144A);
 STATIC_ASSERT(offsetof(NewCloud, unk1453) == 0x1453);
 STATIC_ASSERT(sizeof(NewCloud) == 0x1454);
 
+/*
+ * CloudSpawnParams - the spawn-config blob passed to newClouds() /
+ * newclouds_update() (the `params` argument). Only the offsets read in
+ * newclouds.c are named; the rest of the record is padded.
+ */
+typedef struct CloudSpawnParams {
+    f32 driftBase;      /* 0x00 */
+    f32 heightBase;     /* 0x04 */
+    f32 driftMax;       /* 0x08: read and written (clamped up to driftMin) */
+    u8 unk0C[0x18];
+    u16 windCount;      /* 0x24 */
+    u16 cloudIndex;     /* 0x26: index into gNewClouds[] */
+    u16 flakeCount;     /* 0x28 */
+    u16 fillDivisor;    /* 0x2A */
+    u16 drainDivisor;   /* 0x2C */
+    u8 unk2E[0x2A];
+    u8 flags58;         /* 0x58 */
+    u8 flags59;         /* 0x59 */
+    u8 unk5A;           /* 0x5A */
+    u8 unk5B;           /* 0x5B */
+    u8 cloudType;       /* 0x5C */
+    u8 unk144DInit;     /* 0x5D */
+} CloudSpawnParams;
+
+STATIC_ASSERT(offsetof(CloudSpawnParams, windCount) == 0x24);
+STATIC_ASSERT(offsetof(CloudSpawnParams, cloudType) == 0x5C);
+
 #endif
