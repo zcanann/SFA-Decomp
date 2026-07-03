@@ -48,8 +48,6 @@ typedef struct TitlescreenState
     f32 unk34;
 } TitlescreenState;
 
-extern int ObjGroup_FindNearestObject();
-extern void* Obj_GetPlayerObject(void);
 extern void* gameTextGetBox(int box);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int a);
@@ -268,8 +266,6 @@ extern f32 lbl_803E234C;
 extern f32 lbl_803E2350;
 extern f32 gTitleScreenCursorY;
 extern void PSMTXTrans(void*, f32, f32, f32);
-extern u8 gameTimerIsRunning(void);
-extern void gameTimerRun(void* obj);
 
 extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
