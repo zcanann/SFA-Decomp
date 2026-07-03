@@ -603,8 +603,6 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     return spawnResult;
 }
 
-int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
-
 void Effect13_func05_nop(void)
 {
 }
@@ -620,8 +618,6 @@ void Effect13_release(void)
 void Effect13_initialise(void)
 {
 }
-
-void Effect17_func03_nop(void);
 
 #pragma dont_inline reset
 #pragma dont_inline reset
