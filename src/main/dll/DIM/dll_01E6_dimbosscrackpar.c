@@ -35,7 +35,6 @@ void dimbosscrackpar_initialise(void)
 {
 }
 
-void magicmaker_update(int obj);
 
 int dimbosscrackpar_SeqFn(int* obj)
 {
@@ -78,8 +77,6 @@ void dimbosscrackpar_init(s16* obj, s8* def)
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[0x22] << 8);
 }
 
-void dimbossfire_hitDetect(void);
 
 int dimbosscrackpar_getExtraSize(void) { return 0x0; }
 int dimbosscrackpar_getObjectTypeId(void) { return 0x0; }
-int dimbossfire_getExtraSize(void);
