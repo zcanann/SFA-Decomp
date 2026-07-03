@@ -399,7 +399,6 @@ void dll_19B_initialise(void)
 {
 }
 
-void dll_19C_free(void);
 
 void dll_19B_init(u8* obj, u8* params)
 {
