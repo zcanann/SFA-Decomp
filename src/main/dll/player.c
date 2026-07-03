@@ -4953,9 +4953,11 @@ int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
     return 0;
 }
 
+#pragma opt_propagation off
 int fn_8029ABD8(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
+    int hi;
     f32 timer;
     struct
     {
@@ -4989,31 +4991,34 @@ int fn_8029ABD8(int obj, int state, f32 fv)
         }
         ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
         pfx.scale = lbl_803E7F9C;
+        hi = 0x200000;
         pfx.mode = 0;
         (*gPartfxInterface)->spawnObject(
-            (void*)gPlayerPathObject, 0x7f5, &pfx, 0x200000 + 1, -1, NULL);
+            (void*)gPlayerPathObject, 0x7f5, &pfx, hi + 1, -1, NULL);
         pfx.mode = 1;
         (*gPartfxInterface)->spawnObject(
-            (void*)gPlayerPathObject, 0x7f5, &pfx, 0x200000 + 1, -1, NULL);
+            (void*)gPlayerPathObject, 0x7f5, &pfx, hi + 1, -1, NULL);
         if ((inner->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
+            int i;
             void** p;
-            int z[2];
             inner->animState = -1;
-            z[0] = 0;
-            lbl_803DE42C = z[0];
-            z[1] = z[0];
+            hi = 0;
+            lbl_803DE42C = hi;
+            i = hi;
             p = gPlayerSpawnedObjects;
-            for (; z[1] < 7; z[1]++)
+            do
             {
-                if (p[z[1]] != NULL)
+                if (*p != NULL)
                 {
-                    Obj_FreeObject((int)p[z[1]]);
-                    p[z[1]] = NULL;
+                    Obj_FreeObject((int)*p);
+                    *p = (void*)hi;
                 }
-            }
+                p++;
+                i++;
+            } while (i < 7);
             if (gPlayerResource != NULL)
             {
                 Resource_Release(gPlayerResource);
@@ -5115,6 +5120,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
     inner->animState = -1;
     return 0;
 }
+#pragma opt_propagation reset
 
 #pragma opt_propagation off
 int fn_8029AF9C(int obj, int state)
