@@ -223,7 +223,6 @@ void bombplantspore_updateDrift(void* obj, void* state)
 }
 #pragma dont_inline reset
 
-void bombplant_init(void* obj, void* param, int flag);
 
 #define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES 0x66c
 #define BOMBPLANTSPORE_MSG_DETONATE 0x7000b
