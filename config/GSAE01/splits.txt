@@ -2511,6 +2511,7 @@ main/dll/dll_02B0_brokenpipe.c:
 
 main/dll/dll_02B1_cmbsrc.c:
 	.text       start:0x80236298 end:0x80237574
+	.data       start:0x8032BD10 end:0x8032BDB0
 
 main/dll/dll_02B2_dustmotesou.c:
 	.text       start:0x80237574 end:0x80237808
