@@ -611,22 +611,20 @@ void pauseMenuDrawStatus(void)
                     (PMDS_CAMERA_GET_STATE() != 0x44)) ||
                 ((i == 3) && ((lbl_803DD792 & 2) != 0)))
             {
-                op = (f32*)(base + off + 0xAC8);
-                thresh = lbl_803E1FA0 * timeDelta + *op;
-                *op = thresh;
+                thresh = lbl_803E1FA0 * timeDelta + *(f32*)(base + off + 0xAC8);
+                *(f32*)(base + off + 0xAC8) = thresh;
                 if (thresh > hudElementOpacity)
                 {
-                    *op = hudElementOpacity;
+                    *(f32*)(base + off + 0xAC8) = hudElementOpacity;
                 }
             }
             else
             {
-                op = (f32*)(base + off + 0xAC8);
-                thresh = -(lbl_803E1FA0 * timeDelta - *op);
-                *op = thresh;
+                thresh = -(lbl_803E1FA0 * timeDelta - *(f32*)(base + off + 0xAC8));
+                *(f32*)(base + off + 0xAC8) = thresh;
                 if (thresh < lbl_803E1E3C)
                 {
-                    *op = *(f32 *)&lbl_803E1E3C;
+                    *(f32*)(base + off + 0xAC8) = *(f32 *)&lbl_803E1E3C;
                 }
             }
             break;
