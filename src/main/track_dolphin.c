@@ -5908,7 +5908,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     f32 cur[3];
     f32 plane[4];
     f32 norm4[4];
-    volatile f32 svFrom[3];
+    f32 svFrom[3];
+    f32* svFromp = svFrom;
     f32 svHit[3];
     f32 svWorld[3];
     f32 dir[3];
@@ -5951,9 +5952,9 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
         cur[0] = ep1[0];
         cur[1] = ep2[1];
         cur[2] = ep2[2];
-        svFrom[0] = sp1[0];
-        svFrom[1] = sp2[1];
-        svFrom[2] = sp2[2];
+        svFromp[0] = sp1[0];
+        svFromp[1] = sp2[1];
+        svFromp[2] = sp2[2];
         radius = *(f32*)(slotp + 0x40);
         type = *((u8*)slots + i + 0x54);
         maxStep = radius + lbl_803DB660;
@@ -5972,16 +5973,16 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
             {
                 if (desc->object != NULL)
                 {
-                    Matrix_TransformPoint(desc->alternateMatrix, svFrom[0], svFrom[1], svFrom[2],
+                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2],
                                           &ws[0], &ws[1], &ws[2]);
                     Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2],
                                           &we[0], &we[1], &we[2]);
                 }
                 else
                 {
-                    ws[0] = svFrom[0] - offX;
-                    ws[1] = svFrom[1];
-                    ws[2] = svFrom[2] - offZ;
+                    ws[0] = svFromp[0] - offX;
+                    ws[1] = svFromp[1];
+                    ws[2] = svFromp[2] - offZ;
                     we[0] = cur[0] - offX;
                     we[1] = cur[1];
                     we[2] = cur[2] - offZ;
@@ -6269,9 +6270,9 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                 if (bounces > 10)
                 {
                     fn_80137948(sTrackHitOverflowError);
-                    cur[0] = svFrom[0];
-                    cur[1] = svFrom[1];
-                    cur[2] = svFrom[2];
+                    cur[0] = svFromp[0];
+                    cur[1] = svFromp[1];
+                    cur[2] = svFromp[2];
                     found = 0;
                 }
                 else
