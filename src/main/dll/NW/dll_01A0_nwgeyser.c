@@ -45,6 +45,7 @@ void fn_801CDF94(int obj, int state, int flag);
 
 #define NWGEYSER_OBJFLAG_HIDDEN 0x4000
 #define NWGEYSER_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define NWGEYSER_OBJFLAG_UPDATE_DISABLED 0x8000
 
 void nw_geyser_init(int obj)
 {
@@ -64,7 +65,7 @@ void nw_geyser_update(int obj)
     if (GameBit_Get(GAMEBIT_GEYSER_OFF) != 0)
     {
         ((GameObject*)obj)->anim.flags = OBJANIM_FLAG_HIDDEN;
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | NWGEYSER_OBJFLAG_UPDATE_DISABLED);
         Sfx_RemoveLoopedObjectSound(obj, SFX_GEYSER_LOOP_A);
         Sfx_RemoveLoopedObjectSound(obj, SFX_GEYSER_LOOP_B);
         ObjHits_DisableObject((u32)obj);
