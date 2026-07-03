@@ -184,8 +184,6 @@ void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
     return;
 }
 
-void SaveGame_func08_nop(void);
-
 void dll_62_func01_nop(void)
 {
 }
@@ -193,8 +191,6 @@ void dll_62_func01_nop(void)
 void dll_62_func00_nop(void)
 {
 }
-
-void dll_63_func01_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -400,5 +396,3 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803129C8, 0x18, &base[212], 0x5e0, 0);
 }
-
-void dll_64_func03(u8* sourceObj, int variant, u8* posSource, u32 flags);
