@@ -90,6 +90,25 @@ extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
+/* Spawn-setup buffer seeded by dll_1CE_update for its child (obj id 0x246):
+ * position/color head plus class-specific fields (see the target stb/sth). */
+typedef struct Dll1CESpawnSetup
+{
+    u8 pad0[0x4 - 0x0];
+    u8 color[4];             /* 0x04 */
+    f32 posX;                /* 0x08 */
+    f32 posY;                /* 0x0c */
+    f32 posZ;                /* 0x10 */
+    u8 pad14[0x1a - 0x14];
+    u8 field1A;              /* 0x1a */
+    u8 field1B;              /* 0x1b */
+    s16 field1C;             /* 0x1c */
+    u8 pad1E[0x24 - 0x1e];
+    s16 field24;             /* 0x24 */
+    u8 pad26[0x2c - 0x26];
+    s16 field2C;             /* 0x2c */
+} Dll1CESpawnSetup;
+
 
 
 void dll_1CE_hitDetect(void)
@@ -231,18 +250,18 @@ void dll_1CE_update(int* obj)
     if (Obj_IsLoadingLocked() == 0) return;
     {
         int* no = Obj_AllocObjectSetup(0x30, 0x246);
-        *(f32*)((char*)no + 8) = ((Dll1CEPlacement*)q)->posX;
-        *(f32*)((char*)no + 0xc) = lbl_803E49FC + ((Dll1CEPlacement*)q)->posYOffset;
-        *(f32*)&((ObjDef*)no)->jointData = ((Dll1CEPlacement*)q)->posZ;
-        *(u8*)((char*)no + 4) = ((Dll1CEPlacement*)q)->unk4;
-        *(u8*)((char*)no + 5) = ((Dll1CEPlacement*)q)->unk5;
-        *(u8*)((char*)no + 6) = ((Dll1CEPlacement*)q)->unk6;
-        *(u8*)((char*)no + 7) = ((Dll1CEPlacement*)q)->unk7;
-        *(s16*)((char*)no + 0x1c) = 0x17f;
-        *(s16*)((char*)no + 0x24) = -1;
-        *(s16*)((char*)no + 0x2c) = -1;
-        *(u8*)((char*)no + 0x1a) = 5;
-        *(u8*)((char*)no + 0x1b) = (u8)((s16)((GameObject*)obj)->anim.rotX >> 8);
+        ((Dll1CESpawnSetup*)no)->posX = ((Dll1CEPlacement*)q)->posX;
+        ((Dll1CESpawnSetup*)no)->posY = lbl_803E49FC + ((Dll1CEPlacement*)q)->posYOffset;
+        ((Dll1CESpawnSetup*)no)->posZ = ((Dll1CEPlacement*)q)->posZ;
+        ((Dll1CESpawnSetup*)no)->color[0] = ((Dll1CEPlacement*)q)->unk4;
+        ((Dll1CESpawnSetup*)no)->color[1] = ((Dll1CEPlacement*)q)->unk5;
+        ((Dll1CESpawnSetup*)no)->color[2] = ((Dll1CEPlacement*)q)->unk6;
+        ((Dll1CESpawnSetup*)no)->color[3] = ((Dll1CEPlacement*)q)->unk7;
+        ((Dll1CESpawnSetup*)no)->field1C = 0x17f;
+        ((Dll1CESpawnSetup*)no)->field24 = -1;
+        ((Dll1CESpawnSetup*)no)->field2C = -1;
+        ((Dll1CESpawnSetup*)no)->field1A = 5;
+        ((Dll1CESpawnSetup*)no)->field1B = (u8)((s16)((GameObject*)obj)->anim.rotX >> 8);
         Obj_SetupObject(no, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     }
 }
