@@ -2469,6 +2469,7 @@ main/dll/LGT/dll_02A9_lgtpointlight.c:
 
 main/dll/LGT/dll_02AA_lgtdirectionallight.c:
 	.text       start:0x8023404C end:0x80234748
+	.data       start:0x8032B9C8 end:0x8032BAE0
 
 main/dll/LGT/dll_02AB_lgtprojectedlight.c:
 	.text       start:0x80234748 end:0x80234C10

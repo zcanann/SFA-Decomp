@@ -107,7 +107,7 @@ void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 void directionallight_debugEdit(int obj, int statePtr)
 {
     DirectionalLightState* state = (DirectionalLightState*)statePtr;
-    u8* desc = gDirectionalLightObjDescriptor;
+    u8* desc = (u8*)&gDirectionalLightObjDescriptor;
     u16 buttons = getButtonsJustPressed(0);
 
     if ((buttons & PAD_TRIGGER_Z) != 0)
@@ -332,3 +332,32 @@ void directionallight_release(void)
 void directionallight_initialise(void)
 {
 }
+
+struct DirectionalLightObjDescriptorLayout {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    void (*callbacks[10])(void);
+    char debugStrings[0xE0];
+};
+
+struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor = {
+    0,
+    0,
+    0,
+    0x90000,
+    {
+        (void (*)(void))directionallight_initialise,
+        (void (*)(void))directionallight_release,
+        0,
+        (void (*)(void))directionallight_init,
+        (void (*)(void))directionallight_update,
+        (void (*)(void))directionallight_hitDetect,
+        (void (*)(void))directionallight_render,
+        (void (*)(void))directionallight_free,
+        (void (*)(void))directionallight_getObjectTypeId,
+        (void (*)(void))directionallight_getExtraSize,
+    },
+    "Mode: YAW\n\000\000Angle: %d\n\000\000Mode: PITCH\n\000\000\000\000Mode: DIFFUSE COLOUR RED\n\000\000\000Colour: %d\n\000Mode: DIFFUSE COLOUR GREEN\n\000Mode: DIFFUSE COLOUR BLUE\n\000\000Mode: SPECULAR COLOUR RED\n\000\000Mode: SPECULAR COLOUR GREEN\n\000\000\000\000Mode: SPECULAR COLOUR BLUE\n",
+};

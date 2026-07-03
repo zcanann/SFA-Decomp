@@ -512,7 +512,7 @@ extern void modelLightStruct_setSelectionPriority(ModelLight *light, u8 v);
 extern f32 lbl_802C2608[];
 extern f32 lbl_803E7250;
 extern f32 lbl_803E7254;
-extern u8 gDirectionalLightObjDescriptor[];
+extern struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor;
 extern int getButtonsJustPressed(int controller);
 extern void fn_80137948(void *fmt, ...);
 
