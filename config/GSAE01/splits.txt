@@ -765,6 +765,7 @@ main/dll/attractmovie.c:
 
 main/dll/picmenu.c:
 	.text       start:0x80119000 end:0x80119C20
+	.bss        start:0x803A5F08 end:0x803A8658
 
 main/dll/frontend_control.c:
 	.text       start:0x80119C20 end:0x80119FAC
