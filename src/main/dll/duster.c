@@ -55,6 +55,18 @@ typedef struct DusterState {
     f32 decoyTimer;   /* 0x328 */
     u8 pad32C[0x338 - 0x32C];
     u16 turnDelta;    /* 0x338 hooded-zyck per-frame rotY step */
+    /*
+     * 0x344..0x364: the wall/plane block fn_801554B4 writes from a bbox probe
+     * hit and the crawl helpers read back. planeNormal (0x344) is passed by
+     * address to the PSVEC helpers, so it stays raw; the rest are scalar-only.
+     */
+    u8 pad33A[0x350 - 0x33A];
+    f32 planeNormalW;   /* 0x350 4th probe component (hit[10]) */
+    f32 planeAxisRatio; /* 0x354 anchor->plane projection ratio */
+    f32 planeAnchorY;   /* 0x358 max(hit[3],hit[4]) */
+    f32 planeBoundMin;  /* 0x35C min(hit[15],hit[16]) */
+    f32 planeAnchorX;   /* 0x360 hit[1] */
+    f32 planeAnchorZ;   /* 0x364 hit[5] */
 } DusterState;
 
 #pragma dont_inline on
@@ -233,21 +245,21 @@ void fn_801554B4(int* obj, int state)
         *(float*)(state + 0x344) = hit[7];
         *(float*)(state + 0x348) = hit[8];
         *(float*)(state + 0x34c) = hit[9];
-        *(float*)(state + 0x350) = hit[10];
-        *(float*)(state + 0x358) = (hit[3] > hit[4]) ? hit[3] : hit[4];
-        *(float*)(state + 0x35c) = (hit[15] < hit[16]) ? hit[15] : hit[16];
+        ((DusterState*)state)->planeNormalW = hit[10];
+        ((DusterState*)state)->planeAnchorY = (hit[3] > hit[4]) ? hit[3] : hit[4];
+        ((DusterState*)state)->planeBoundMin = (hit[15] < hit[16]) ? hit[15] : hit[16];
         av[0] = lbl_803E2A00;
         av[1] = lbl_803E2A04;
         av[2] = lbl_803E2A00;
         PSVECCrossProduct(av, (float*)(state + 0x344), sideAxis0);
         PSVECNormalize(sideAxis0, sideAxis0);
-        *(float*)(state + 0x360) = hit[1];
-        *(float*)(state + 0x364) = hit[5];
+        ((DusterState*)state)->planeAnchorX = hit[1];
+        ((DusterState*)state)->planeAnchorZ = hit[5];
         cv[0] = hit[2];
         cv[2] = hit[6];
-        bv[0] = *(float*)(state + 0x360);
-        bv[1] = *(float*)(state + 0x358);
-        bv[2] = *(float*)(state + 0x364);
+        bv[0] = ((DusterState*)state)->planeAnchorX;
+        bv[1] = ((DusterState*)state)->planeAnchorY;
+        bv[2] = ((DusterState*)state)->planeAnchorZ;
         PSVECSubtract(bv, cv, toAnchor);
         dot = PSVECDotProduct(toAnchor, (float*)(state + 0x344));
         bv[0] = *(float*)(state + 0x344) * dot + cv[0];
@@ -260,11 +272,11 @@ void fn_801554B4(int* obj, int state)
         PSVECNormalize(sideAxis, sideAxis);
         if (lbl_803E2A00 != sideAxis[0])
         {
-            *(float*)(state + 0x354) = (cv[0] - *(float*)(state + 0x360)) / sideAxis[0];
+            ((DusterState*)state)->planeAxisRatio = (cv[0] - ((DusterState*)state)->planeAnchorX) / sideAxis[0];
         }
         else
         {
-            *(float*)(state + 0x354) = (cv[2] - *(float*)(state + 0x364)) / sideAxis[2];
+            ((DusterState*)state)->planeAxisRatio = (cv[2] - ((DusterState*)state)->planeAnchorZ) / sideAxis[2];
         }
         ((BaddieState*)state)->seqEntryIndex = 1;
     }
