@@ -21,6 +21,9 @@ extern f32 lbl_803E60B0;
 #define DLL_219_INERT_OBJECT_ID_LO 0x3ad
 #define DLL_219_INERT_OBJECT_ID_HI 0x3ae
 
+#define DLL_219_OBJFLAG_HIDDEN 0x4000
+#define DLL_219_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct Dll219State
 {
     s16 gameBit;
@@ -117,5 +120,5 @@ void dll_219_init(int* obj, Dll219Setup* placement)
     Dll219State* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)(placement->rotX << 8);
     state->gameBit = placement->gameBit;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (DLL_219_OBJFLAG_HIDDEN | DLL_219_OBJFLAG_HITDETECT_DISABLED);
 }
