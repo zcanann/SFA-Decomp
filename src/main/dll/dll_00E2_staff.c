@@ -1471,12 +1471,12 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
     int first;
     u8* vp;
     int idx[4];
-    f32 arrE[4];
-    f32 arrF[4];
-    f32 arrG[4];
-    f32 arrH[4];
-    f32 arrI[4];
-    f32 arrJ[4];
+    f32 ptAx[4];
+    f32 ptAy[4];
+    f32 ptAz[4];
+    f32 ptBx[4];
+    f32 ptBy[4];
+    f32 ptBz[4];
     f32 sinv, cosv, vidx, flb, tmax, step, fla, angle, frac, acc, prog, m4;
     int ang;
 
@@ -1492,8 +1492,8 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
             ang += **(s16**)&((GameObject*)obj)->anim.parent;
         }
         angle = (gStaffPi * (f32)(int) - ang) / gStaffAngleUnitScale;
-        cosv = mathSinf(angle);
-        sinv = mathCosf(angle);
+        sinv = mathSinf(angle);
+        cosv = mathCosf(angle);
         model2 = *(u8**)((char*)Obj_GetActiveModel((int)obj) + 0x2c);
         weaponDaTable = ((GameObject*)obj)->anim.weaponDaTable;
         if (weaponDaTable != NULL && weaponDaTable->byteCount > 0)
@@ -1565,7 +1565,7 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                             int n;
                             int ip;
                             int* pidx;
-                            f32 *pE, *pF, *pG, *pH, *pI, *pJ;
+                            f32 *pAx, *pAy, *pAz, *pBx, *pBy, *pBz;
                             idx[0] = ibase - 1;
                             idx[1] = ibase;
                             idx[2] = ibase + 1;
@@ -1587,44 +1587,44 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                                 idx[3] = count;
                             }
                             pidx = idx;
-                            pE = arrE;
-                            pF = arrF;
-                            pG = arrG;
-                            pH = arrH;
-                            pI = arrI;
-                            pJ = arrJ;
+                            pAx = ptAx;
+                            pAy = ptAy;
+                            pAz = ptAz;
+                            pBx = ptBx;
+                            pBy = ptBy;
+                            pBz = ptBz;
                             for (n = 4; n != 0; n--)
                             {
                                 f32 t1, t2;
                                 ip = *pidx * 12;
-                                *pE = (f32) * (s16*)((char*)tbl + ip) / lbl_803E32F4;
-                                *pF = (f32) * (s16*)((char*)tbl + ip + 2) / lbl_803E32F4;
-                                *pG = (f32) * (s16*)((char*)tbl + ip + 4) / lbl_803E32F4;
-                                *pH = (f32) * (s16*)((char*)tbl + ip + 6) / lbl_803E32F4;
-                                *pI = (f32) * (s16*)((char*)tbl + ip + 8) / lbl_803E32F4;
-                                *pJ = (f32) * (s16*)((char*)tbl + ip + 10) / lbl_803E32F4;
-                                t1 = sinv * *pE - cosv * *pG;
-                                t2 = cosv * *pE + sinv * *pG;
-                                *pG = t2;
-                                *pE = t1;
-                                t2 = cosv * *pH + sinv * *pJ;
-                                t1 = sinv * *pH - cosv * *pJ;
-                                *pH = t1;
-                                *pJ = t2;
+                                *pAx = (f32) * (s16*)((char*)tbl + ip) / lbl_803E32F4;
+                                *pAy = (f32) * (s16*)((char*)tbl + ip + 2) / lbl_803E32F4;
+                                *pAz = (f32) * (s16*)((char*)tbl + ip + 4) / lbl_803E32F4;
+                                *pBx = (f32) * (s16*)((char*)tbl + ip + 6) / lbl_803E32F4;
+                                *pBy = (f32) * (s16*)((char*)tbl + ip + 8) / lbl_803E32F4;
+                                *pBz = (f32) * (s16*)((char*)tbl + ip + 10) / lbl_803E32F4;
+                                t1 = cosv * *pAx - sinv * *pAz;
+                                t2 = sinv * *pAx + cosv * *pAz;
+                                *pAz = t2;
+                                *pAx = t1;
+                                t2 = sinv * *pBx + cosv * *pBz;
+                                t1 = cosv * *pBx - sinv * *pBz;
+                                *pBx = t1;
+                                *pBz = t2;
                                 pidx++;
-                                pE++;
-                                pF++;
-                                pG++;
-                                pH++;
-                                pI++;
-                                pJ++;
+                                pAx++;
+                                pAy++;
+                                pAz++;
+                                pBx++;
+                                pBy++;
+                                pBz++;
                             }
                             first = 0;
                         }
                         vp = *(u8**)slot + *(u16*)(slot + 0xe) * 20;
-                        *(f32*)(vp + 0) = Curve_EvalBSpline(arrH, frac, NULL);
-                        *(f32*)(vp + 4) = Curve_EvalBSpline(arrI, frac, NULL);
-                        *(f32*)(vp + 8) = Curve_EvalBSpline(arrJ, frac, NULL);
+                        *(f32*)(vp + 0) = Curve_EvalBSpline(ptBx, frac, NULL);
+                        *(f32*)(vp + 4) = Curve_EvalBSpline(ptBy, frac, NULL);
+                        *(f32*)(vp + 8) = Curve_EvalBSpline(ptBz, frac, NULL);
                         { f32 cur = *(f32*)(vp + 0); f32 bx = *(f32*)(swipe + 0x8c); *(f32*)(vp + 0) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosX - bx)); }
                         { f32 cur = *(f32*)(vp + 4); f32 bx = *(f32*)(swipe + 0x90); *(f32*)(vp + 4) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosY - bx)); }
                         { f32 cur = *(f32*)(vp + 8); f32 bx = *(f32*)(swipe + 0x94); *(f32*)(vp + 8) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosZ - bx)); }
@@ -1649,9 +1649,9 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                             }
                             *(s16*)(vp + 0x10) = k - v;
                         }
-                        *(f32*)(vp + 0x14) = Curve_EvalBSpline(arrE, frac, NULL);
-                        *(f32*)(vp + 0x18) = Curve_EvalBSpline(arrF, frac, NULL);
-                        *(f32*)(vp + 0x1c) = Curve_EvalBSpline(arrG, frac, NULL);
+                        *(f32*)(vp + 0x14) = Curve_EvalBSpline(ptAx, frac, NULL);
+                        *(f32*)(vp + 0x18) = Curve_EvalBSpline(ptAy, frac, NULL);
+                        *(f32*)(vp + 0x1c) = Curve_EvalBSpline(ptAz, frac, NULL);
                         { f32 cur = *(f32*)(vp + 0x14); f32 bx = *(f32*)(swipe + 0x8c); *(f32*)(vp + 0x14) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosX - bx)); }
                         { f32 cur = *(f32*)(vp + 0x18); f32 bx = *(f32*)(swipe + 0x90); *(f32*)(vp + 0x18) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosY - bx)); }
                         { f32 cur = *(f32*)(vp + 0x1c); f32 bx = *(f32*)(swipe + 0x94); *(f32*)(vp + 0x1c) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosZ - bx)); }
