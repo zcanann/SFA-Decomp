@@ -40,3 +40,20 @@ Validated consequences:
 => The remaining reg-perm near-misses hinge on the SPLIT-WEB numbering inside
 SpillCode.c (0x57c290 band): what vreg number a spill-split web receives, and
 therefore where it pops. Decode that and the family at 99.6-99.98 closes.
+
+## Volatile-class pop order (confirmed on objseq, GC/2.0 noopt)
+A-line streams show volatile FPR/GPR classes pop in strictly DESCENDING web
+index (LIFO of creation), taking the lowest register free of colored
+interfering neighbors. The remaining near-miss register pairs
+(RomCurveInterp f2/f3, gunpowderbarrel fsubs dest, moonrock r27/r28,
+appleontree f4/f0) all hinge on ONE neighbor's live range differing at a
+specific pop. Next tracer upgrade: print each web's def PC (walk the web
+descriptor for its first pcode ref) so indices map to instructions; then
+the differing neighbor is directly identifiable and its source construct
+can be targeted.
+
+Recovered-but-parked source structures (verified against target shape):
+- RomCurveInterp: `segmentT = segment; segmentT += (t - times[s+2]) / (...)`
+  reproduces fsubs f31 seed + fadds accumulate; adopt once f2/f3 flips.
+- inpInit zero-fill: CTR-4 loop, 2x16 stw groups with kept +64 bumps and a
+  live counter joined to the zero-constant web (class-A join).
