@@ -698,12 +698,12 @@ u8* getSaveFileStruct(void)
     return &gGameplayPreviewSettings;
 }
 
-void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                      u64 param_5, u64 param_6, u64 param_7,
-                      u64 param_8)
+void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+                      u64 arg5, u64 arg6, u64 arg7,
+                      u64 arg8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, DAT_803a3e26);
+    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(VtableFn**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
