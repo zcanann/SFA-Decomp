@@ -13,6 +13,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
+#include "main/object_descriptor.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
 extern float mathCosf(float x);
@@ -201,3 +202,20 @@ void effectbox_release(void)
 void effectbox_initialise(void)
 {
 }
+
+ObjectDescriptor gEffectBoxObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)effectbox_initialise,
+    (ObjectDescriptorCallback)effectbox_release,
+    0,
+    (ObjectDescriptorCallback)effectbox_init,
+    (ObjectDescriptorCallback)effectbox_update,
+    (ObjectDescriptorCallback)effectbox_hitDetect,
+    (ObjectDescriptorCallback)effectbox_render,
+    (ObjectDescriptorCallback)effectbox_free,
+    (ObjectDescriptorCallback)effectbox_getObjectTypeId,
+    effectbox_getExtraSize,
+};
