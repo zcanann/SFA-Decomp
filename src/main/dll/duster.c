@@ -48,7 +48,9 @@
  * rotY step.
  */
 typedef struct DusterState {
-    u8 pad00[0x324];
+    u8 pad00[0x2F8];
+    u16 moveEventFired; /* 0x2F8 nonzero = current move fired its progress event this frame */
+    u8 pad2FA[0x324 - 0x2FA];
     f32 phaseTimer;   /* 0x324 */
     f32 decoyTimer;   /* 0x328 */
     u8 pad32C[0x338 - 0x32C];
@@ -889,19 +891,19 @@ void fn_80156950(u32 obj, int state)
     switch (((GameObject*)obj)->anim.currentMove)
     {
     case 5:
-        if (*(u16*)(state + 0x2f8) != 0)
+        if (((DusterState*)state)->moveEventFired != 0)
         {
             Sfx_PlayFromObject(obj, SFXfox_fightbreath3);
         }
         break;
     case 6:
-        if (*(u16*)(state + 0x2f8) != 0)
+        if (((DusterState*)state)->moveEventFired != 0)
         {
             Sfx_PlayFromObject(obj, SFXfox_fightbreath3);
         }
         break;
     case 7:
-        if (*(u16*)(state + 0x2f8) != 0)
+        if (((DusterState*)state)->moveEventFired != 0)
         {
             if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2AF8)
             {
@@ -914,7 +916,7 @@ void fn_80156950(u32 obj, int state)
         }
         break;
     case 8:
-        if (*(u16*)(state + 0x2f8) != 0)
+        if (((DusterState*)state)->moveEventFired != 0)
         {
             if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2AFC)
             {
@@ -1097,7 +1099,7 @@ void fn_80156DA0(int obj, int state)
     if (!resetting)
     {
         ((GameObject*)obj)->anim.rotX =
-            (short)(((GameObject*)obj)->anim.rotX + *(u16*)(state + 0x338));
+            (short)(((GameObject*)obj)->anim.rotX + ((DusterState*)state)->turnDelta);
         fromPos[0] = ((GameObject*)obj)->anim.localPosX;
         fromPos[1] = ((GameObject*)obj)->anim.localPosY;
         fromPos[2] = ((GameObject*)obj)->anim.localPosZ;
@@ -1112,7 +1114,7 @@ void fn_80156DA0(int obj, int state)
         {
             if (noHit && ((GameObject*)obj)->anim.currentMove != 0)
             {
-                *(u16*)(state + 0x338) = 0;
+                ((DusterState*)state)->turnDelta = 0;
                 Baddie_SetMove(obj, state, 0, lbl_803E2B40, 0, 1);
             }
             else
@@ -1124,7 +1126,7 @@ void fn_80156DA0(int obj, int state)
                 ((GameObject*)obj)->anim.velocityY = fz;
                 ((GameObject*)obj)->anim.velocityZ = fz;
                 randBit = randomGetRange(0, 1);
-                *(u16*)(state + 0x338) = (u16)((randBit - 1) * 0x12c);
+                ((DusterState*)state)->turnDelta = (u16)((randBit - 1) * 0x12c);
             }
         }
         ((GameObject*)obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
