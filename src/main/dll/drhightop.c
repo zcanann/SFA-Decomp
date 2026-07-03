@@ -734,3 +734,8 @@ void fn_801EBD60(int obj, int stateRaw)
     st->turnVelScale += timeDelta * (k * (target540 - st->turnVelScale));
     st->turnForceGain += timeDelta * (k * (target544 - st->turnForceGain));
 }
+
+int gDrHighTopHitObjectKinds[] = {
+    0x72, 0x16D, 0x170, 0x16C, 0x16F, 0x38C,
+    0x389, 0x38A, 0x4D3, 0x38D, 0x38E, 0x4D4,
+};

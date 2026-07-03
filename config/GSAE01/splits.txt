@@ -2046,6 +2046,7 @@ main/dll/DR/drshackle.c:
 
 main/dll/drhightop.c:
 	.text       start:0x801EAE4C end:0x801EC1AC
+	.data       start:0x8032852C end:0x8032855C
 
 main/dll/drpickup.c:
 	.text       start:0x801EC1AC end:0x801EC7A0
