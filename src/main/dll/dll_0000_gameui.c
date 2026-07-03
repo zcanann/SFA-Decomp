@@ -2692,7 +2692,7 @@ void pauseMenuFn_80129ee0(void)
         btn = getButtonsJustPressed(0);
         getButtonsHeld(0);
     }
-    lbl_803DD778 = (s16)(lbl_803DD778 - framesThisStep);
+    lbl_803DD778 -= framesThisStep;
     if (lbl_803DD778 < 0)
     {
         lbl_803DD778 = 0;
@@ -2815,10 +2815,9 @@ void pauseMenuFn_80129ee0(void)
         {
         case 0:
             {
-                int camMode;
-                int audioFree = 0;
+                int camMode = (*gCameraInterface)->getMode();
                 int canOpen = 1;
-                camMode = (*gCameraInterface)->getMode();
+                int audioFree = 0;
                 if ((player == 0 || !(((GameObject*)player)->objectFlags & 0x1000)) &&
                     getCurSeqNo() == 0 && AudioStream_IsPreparing() == 0)
                 {
@@ -2873,8 +2872,9 @@ void pauseMenuFn_80129ee0(void)
                     if (tm != 0 && player != 0 && !(((GameObject*)player)->objectFlags & 0x1000) &&
                         (u8)pauseMenuIsFox() != 0)
                     {
-                        s16 nv = (s16)(lbl_803DD772 + framesThisStep);
-                        lbl_803DD772 = nv;
+                        s16 nv;
+                        lbl_803DD772 += framesThisStep;
+                        nv = lbl_803DD772;
                         if (nv >= 0x1518)
                         {
                             lbl_803DD772 = 0;
