@@ -42,7 +42,6 @@ void ecsh_cup_hitDetect(void)
 {
 }
 
-int gpsh_scene_getExtraSize(void);
 int ecsh_cup_getExtraSize(void) { return 0x30; }
 int ecsh_cup_getObjectTypeId(void) { return 0x0; }
 
@@ -57,7 +56,6 @@ void ecsh_cup_free(int* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void gpsh_scene_init(int* obj, int* def);
 
 typedef struct EcshCupState
 {
