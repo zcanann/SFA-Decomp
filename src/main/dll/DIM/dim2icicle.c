@@ -37,13 +37,14 @@ extern f32 lbl_803E4BEC;
 extern f32 lbl_803E4C44;
 extern f32 lbl_803E4C70;
 extern f32 gDim2IcicleLightDuration;
-extern u8 gDim2IcicleMeltEntries[];
 
 typedef struct IcicleEntry {
     f32 resetTime;
     u16 bit;
     u16 pad;
 } IcicleEntry;
+
+extern IcicleEntry gDim2IcicleMeltEntries[];
 
 typedef struct IcicleState {
     u8 pad[0xa0];
@@ -549,9 +550,9 @@ void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUp
     state->meltTimer = state->meltTimer - timeDelta;
   }
   if (state->meltTimer <= lbl_803E4BD8) {
-    IcicleEntry *entry = (IcicleEntry *)gDim2IcicleMeltEntries;
+    IcicleEntry *entry = gDim2IcicleMeltEntries;
     GameBit_Set(entry[state->index].bit, 1);
-    state->meltTimer = *(f32 *)(gDim2IcicleMeltEntries + state->index * 8);
+    state->meltTimer = entry[state->index].resetTime;
     state->index++;
     if (state->index > 0x17) {
       state->index = 0;
@@ -608,3 +609,30 @@ void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUp
                               gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
   *(int *)&gameObj->pendingParentObj = runtime->savedPendingParentObj;
 }
+
+IcicleEntry gDim2IcicleMeltEntries[] = {
+    { 120.0f, 2427 },
+    { 120.0f, 2428 },
+    { 240.0f, 2429 },
+    { 60.0f, 2430 },
+    { 30.0f, 2431 },
+    { 20.0f, 2432 },
+    { 220.0f, 2427 },
+    { 120.0f, 2428 },
+    { 220.0f, 2429 },
+    { 20.0f, 2430 },
+    { 20.0f, 2431 },
+    { 20.0f, 2432 },
+    { 120.0f, 2427 },
+    { 120.0f, 2428 },
+    { 120.0f, 2429 },
+    { 220.0f, 2430 },
+    { 220.0f, 2431 },
+    { 320.0f, 2432 },
+    { 220.0f, 2427 },
+    { 20.0f, 2428 },
+    { 20.0f, 2429 },
+    { 50.0f, 2430 },
+    { 150.0f, 2431 },
+    { 90.0f, 2432 },
+};
