@@ -84,7 +84,6 @@ extern f32 lbl_803E3C64;
 extern f32 lbl_803E3C68;
 
 int magiccavetop_getExtraSize(void) { return 0xc; }
-int trickyguardspot_getExtraSize(void);
 
 void magiccavetop_init(int* obj, s8* def)
 {
