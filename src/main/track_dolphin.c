@@ -17,6 +17,8 @@
 #define GX_FALSE 0
 #define GX_TG_MTX2x4 1
 #define GX_TG_TEX0 4
+#define GX_IDENTITY 0x3c
+#define GX_PTIDENTITY 0x7d
 #define GX_TEV_KASEL_K0_A 0x1c
 
 #define GX_CULL_NONE 0
@@ -3741,7 +3743,7 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
             GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
             GXSetNumTexGens(1);
-            GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
+            GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
             kColorCopy = kColor;
             GXSetTevKColor(GX_KCOLOR0, &kColorCopy);
             GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
