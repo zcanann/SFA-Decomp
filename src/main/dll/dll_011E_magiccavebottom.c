@@ -25,7 +25,6 @@ void magiccavebottom_free(int obj)
     Music_Trigger(MUSICTRIG_PU3_Adventure, 0);
 }
 
-void treasurechest_init(int* obj);
 
 void magiccavebottom_update(int* obj)
 {
