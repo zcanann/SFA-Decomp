@@ -2492,8 +2492,8 @@ void initMapBlocks(void)
     *(u32*)(mb + 0x41e0) = (u32)mmAlloc(0x3c00, 5, 0);
     *(u32*)(mb + 0x41cc) = (u32)mmAlloc(0x500, 5, 0);
 
-    *(u32*)(mb + 0x41f8) = *(volatile u32*)(mb + 0x41f4) + 0x100;
-    *(u32*)(mb + 0x41e4) = *(volatile u32*)(mb + 0x41e0) + 0xc00;
+    *(u32*)(mb + 0x41f8) = *(u32*)(mb + 0x41f4) + 0x100;
+    *(u32*)(mb + 0x41e4) = *(u32*)(mb + 0x41e0) + 0xc00;
     *(u32*)(mb + 0x41d0) = *(volatile u32*)(mb + 0x41cc) + 0x100;
     *(u32*)(mb + 0x41fc) = *(volatile u32*)(mb + 0x41f8) + 0x100;
     *(u32*)(mb + 0x41e8) = *(volatile u32*)(mb + 0x41e4) + 0xc00;

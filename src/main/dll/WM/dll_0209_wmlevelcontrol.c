@@ -139,14 +139,14 @@ void fn_801F3F18(int obj)
        then decay it toward 0. The volatile launders re-load the zero
        per use (#114; a plain extern CSEs into a reg, a literal would
        pool locally and block the unit's sdata2 claim). */
-    if (fn_8008ED88() > *(volatile f32*)&lbl_803E5E70)
+    if (fn_8008ED88() > *(f32*)&lbl_803E5E70)
     {
         gWmLevelControlBlendHold = lbl_803E5E74;
         gWmLevelControlBlendFactor = lbl_803E5E74;
     }
     decay = -(gWmLevelControlBlendDecayPerTick * timeDelta - gWmLevelControlBlendFactor);
     gWmLevelControlBlendFactor = decay;
-    if (decay < (lightX = *(volatile f32*)&lbl_803E5E70))
+    if (decay < (lightX = *(f32*)&lbl_803E5E70))
     {
         gWmLevelControlBlendFactor = lightX;
     }

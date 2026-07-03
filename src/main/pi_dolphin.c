@@ -7450,7 +7450,7 @@ int initLoadFiles(void)
     }
     if (lbl_803DCC88 == 0)
     {
-        if (((*(volatile int*)&lbl_803DCC80 & 0x100) == 0 || (*(volatile int*)&lbl_803DCC80 & 0x400) == 0) &&
+        if (((*(int*)&lbl_803DCC80 & 0x100) == 0 || (*(int*)&lbl_803DCC80 & 0x400) == 0) &&
             ((*(volatile int*)&lbl_803DCC84 & 0x100) == 0 || (*(volatile int*)&lbl_803DCC84 & 0x400) == 0))
         {
             int saved = testAndSet_onlyUseHeap3(0);

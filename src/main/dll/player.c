@@ -5200,7 +5200,7 @@ int fn_8029AF9C(int obj, int state)
                 }
             }
             a = inner->aimInputZ;
-            if (a > *(volatile f32*)&lbl_803E7EA4)
+            if (a > *(f32*)&lbl_803E7EA4)
             {
                 Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj, 0x441,
                                                     (int)(lbl_803E7FAC * a));
@@ -7738,7 +7738,7 @@ void fn_802B0EA4(int obj, int inner, int state)
                 v430 * (diff * ((frac < lbl_803E7EA4)
                                     ? lbl_803E7EA4
                                     : ((frac > lbl_803E7EE0) ? lbl_803E7EE0 : frac)) +
-                    *(volatile f32*)&lbl_803E7EE0);
+                    *(f32*)&lbl_803E7EE0);
         }
     }
     if (*(void**)((char*)inner + 0x464) != NULL)
@@ -14256,7 +14256,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                 arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
             {
-                int held = *(volatile int*)&((PlayerState*)inner)->focusObject;
+                int held = *(int*)&((PlayerState*)inner)->focusObject;
                 (*(void (*)(f32))*(int*)(*(int*)(*(int*)((char*)held + 0x68)) + 0x50))(
                     ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase);
             }
