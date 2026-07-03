@@ -49,22 +49,10 @@ typedef struct BaddieAfterUpdateBonesCbState
 } BaddieAfterUpdateBonesCbState;
 
 extern u32 ABS();
-extern double FUN_80017714();
-extern u32 FUN_80017730();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern u32 fn_80154870();
-extern u32 FUN_80247944();
-extern u32 FUN_80247cd8();
-extern u32 FUN_80247ef8();
 
-extern u32 FUN_80247f90();
-extern u32 FUN_80247fb0();
-extern u64 FUN_8028682c();
-extern u32 FUN_80286878();
-extern u32 FUN_80292754();
-extern u32 DAT_8031e840;
-extern u32 DAT_8031e860;
 extern f32 lbl_803E31FC;
 extern f32 lbl_803E3200;
 extern f32 lbl_803E3258;
@@ -166,7 +154,6 @@ extern void PSMTXRotAxisRad(void* mtx, f32* axis, f32 angle);
 extern void PSMTXMultVecSR(void* mtx, f32* src, f32* dst);
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25E8;
-extern u32 FUN_800305f8();
 extern u32 ObjGroup_ContainsObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
