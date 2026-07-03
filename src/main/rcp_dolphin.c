@@ -890,10 +890,10 @@ void ShaderDef_free(int* def)
     {
         for (i = 0; i < 6; i++)
         {
-            s = *(void**)(gRcpDistortSlots + i * 0x1C);
-            if (*(u16*)((char*)s + 0xE) != 0 && s == p1)
+            s = *(void**)(gRcpDistortSlots + i * 0x1C); /* RcpDistortSlot.texture (typedef declared later) */
+            if (((Texture*)s)->refCount != 0 && s == p1)
             {
-                (*(u16*)((char*)*(void**)(gRcpDistortSlots + i * 0x1C) + 0xE))--;
+                (((Texture*)*(void**)(gRcpDistortSlots + i * 0x1C))->refCount)--;
                 break;
             }
         }
@@ -902,10 +902,10 @@ void ShaderDef_free(int* def)
     if (p2 == NULL) return;
     for (j = 0; j < 6; j++)
     {
-        if (*(u16*)((char*)*(void**)(gRcpDistortSlots + j * 0x1C) + 0xE) != 0 &&
+        if (((Texture*)*(void**)(gRcpDistortSlots + j * 0x1C))->refCount != 0 &&
             *(void**)(gRcpDistortSlots + j * 0x1C) == p2)
         {
-            (*(u16*)((char*)*(void**)(gRcpDistortSlots + j * 0x1C) + 0xE))--;
+            (((Texture*)*(void**)(gRcpDistortSlots + j * 0x1C))->refCount)--;
             return;
         }
     }
@@ -1198,23 +1198,23 @@ extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
 extern void* memset(void*, int, u32);
 extern void textureFn_80053d58(void* obj);
 #pragma dont_inline on
-void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11)
+void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter)
 {
     u8* obj;
     u32 size = GXGetTexBufferSize(w, h, fmt, mip, maxLod) + 96;
     obj = (u8*)mmAlloc(size, 6, 0);
     if (obj == NULL) return NULL;
     memset(obj, 0, 100);
-    *(u8*)(obj + 22) = fmt;
-    *(u16*)(obj + 10) = w;
-    *(u16*)(obj + 12) = h;
-    *(u16*)(obj + 16) = 1;
-    *(u16*)(obj + 14) = 0;
-    *(u8*)(obj + 23) = b8;
-    *(u8*)(obj + 24) = b9;
-    *(u8*)(obj + 25) = b10;
-    *(u8*)(obj + 26) = b11;
-    *(int*)&((GameObject*)obj)->anim.modelInstance = 0;
+    ((Texture*)obj)->format = fmt;
+    ((Texture*)obj)->width = w;
+    ((Texture*)obj)->height = h;
+    *(u16*)(obj + 16) = 1; /* 0x10: mip-chain word (count<<8), not named in Texture */
+    ((Texture*)obj)->refCount = 0;
+    ((Texture*)obj)->wrapS = wrapS;
+    ((Texture*)obj)->wrapT = wrapT;
+    ((Texture*)obj)->minFilter = minFilter;
+    ((Texture*)obj)->magFilter = magFilter;
+    ((Texture*)obj)->imageOffset = 0;
     textureFn_80053d58(obj);
     return obj;
 }
@@ -1235,22 +1235,22 @@ void textureFn_80053d58(void* vobj)
     u8* obj = (u8*)vobj;
     u8 mipmap = 0;
     void* texObj;
-    *(int*)(obj + 64) = mipmap;
-    obj[72] = mipmap;
-    texObj = (void*)(obj + 32);
-    if ((int)obj[29] - (int)obj[28] > 0) mipmap = 1;
+    *(int*)(obj + 64) = mipmap; /* clears Texture.tmemAddr (0x40) */
+    ((Texture*)obj)->preloaded = mipmap;
+    texObj = (void*)(obj + 32); /* 0x20: embedded GXTexObj, not named in Texture */
+    if ((int)((Texture*)obj)->maxLod - (int)((Texture*)obj)->minLod > 0) mipmap = 1;
     GXInitTexObj(texObj, obj + 96,
-                 *(u16*)(obj + 10), *(u16*)(obj + 12),
-                 obj[22], obj[23], obj[24], mipmap);
+                 ((Texture*)obj)->width, ((Texture*)obj)->height,
+                 ((Texture*)obj)->format, ((Texture*)obj)->wrapS, ((Texture*)obj)->wrapT, mipmap);
     if (mipmap != 0)
     {
-        GXInitTexObjLOD(texObj, obj[25], obj[26],
-                        (f32)(u32)obj[28], (f32)(s32)obj[29],
+        GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter,
+                        (f32)(u32)obj[28], (f32)(s32)obj[29], /* minLod/maxLod: member form here ticks MWCC's @NNN counter */
                         lbl_803DEB98, 0, 0, 0);
     }
     else
     {
-        GXInitTexObjLOD(texObj, obj[25], obj[26],
+        GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter,
                         lbl_803DEB9C, lbl_803DEB9C, lbl_803DEB9C, 0, 0, 0);
     }
     GXInitTexObjUserData(texObj, obj);
@@ -1302,8 +1302,8 @@ void textureFree(u8* tex)
                     if ((u32)iter < 0x80000000 || (u32)iter >= 0xa0000000) { iter = NULL; continue; }
                     if (iter == NULL) continue;
                     next = *(u8**)iter;
-                    if (iter[72] != 0) findSomething(*(int*)(iter + 64));
-                    if (iter[73] == 0) mm_free(iter);
+                    if (((Texture*)iter)->preloaded != 0) findSomething((int)((Texture*)iter)->tmemAddr);
+                    if (((Texture*)iter)->cached == 0) mm_free(iter);
                     iter = next;
                 }
                 if (((Texture*)tex)->preloaded != 0) findSomething(*(int*)&((Texture*)tex)->tmemAddr);
@@ -1346,7 +1346,7 @@ void shaderInit(u8* def, void** out, u8* obj)
         else
             slot = (void**)(gRcpDistortSlots + 0x8C);
         s = *slot;
-        (*(u16*)((char*)s + 0xE))++;
+        (((Texture*)s)->refCount)++;
         out[0] = *slot;
     }
     if (*(void**)(def + 0x14) == NULL)
@@ -1356,7 +1356,7 @@ void shaderInit(u8* def, void** out, u8* obj)
     else
         slot = (void**)(gRcpDistortSlots + (def[0x20] >> 1) * 0x1C);
     s = *slot;
-    (*(u16*)((char*)s + 0xE))++;
+    (((Texture*)s)->refCount)++;
     out[1] = *slot;
 }
 
@@ -2138,6 +2138,26 @@ int textureFn_80052bb4(int model, f32* params)
 #pragma opt_common_subs reset
 #pragma dont_inline reset
 
+/* Declared here (not at top of file): a typedef parsed before fn_80053C40
+ * renumbers MWCC's internal @NNN constant-pool symbol for its 0.0f
+ * (strtab byte diff). ShaderDef_free/shaderInit above therefore keep raw
+ * slot arithmetic on gRcpDistortSlots. */
+typedef struct RcpDistortSlot
+{
+    u8* texture;   // 0x00
+    int model;     // 0x04
+    int unk8;      // 0x08
+    u8 colR;       // 0x0c
+    u8 unkD;       // 0x0d
+    u8 colB;       // 0x0e
+    u8 unkF;       // 0x0f
+    f32 params[2]; // 0x10
+    u8 scaleR;     // 0x18
+    u8 scaleB;     // 0x19
+    u8 group;      // 0x1a
+    u8 mode;       // 0x1b
+} RcpDistortSlot;
+
 extern f32 powfCoreHighPrecision(f32 base, f32 exp);
 extern f32 gRcpDistortScaleA;
 extern f32 gRcpDistortPowExp;
@@ -2148,46 +2168,48 @@ extern void* gRcpDistortTexture;
 void initFn_800534f8(void)
 {
     int i;
-    u8* p;
-    u8* q;
+    RcpDistortSlot* slots;
+    u8* cfg;
     int j;
-    u32 half;
-    u8* slot;
-    f32 scaleB;
-    f32 scaleA;
-    f32 v;
-    f32 inv;
+    u32 pairIdx;
+    RcpDistortSlot* slot;
+    f32 strengthScale;
+    f32 radiusScale;
+    f32 strength;
+    f32 falloff;
 
     i = 0;
-    p = gRcpDistortSlots;
+    slots = (RcpDistortSlot*)gRcpDistortSlots;
     for (; i < 6; i++)
     {
-        *(void**)(p + i * 0x1c) = textureAlloc(0x20, 0x20, 6, 0, 0, 0, 0, 1, 1);
-        p[i * 0x1c + 0x1a] = 0;
+        slots[i].texture = (u8*)textureAlloc(0x20, 0x20, 6, 0, 0, 0, 0, 1, 1);
+        slots[i].group = 0;
     }
     j = 0;
     gRcpDistortSlotIndex = j;
-    q = lbl_8030D028;
+    cfg = lbl_8030D028; /* 6 pairs of {f32 radius, f32 strength} */
     for (; j < 6; j++)
     {
-        scaleA = gRcpDistortScaleA;
-        scaleB = LastReadFinished_803DEB50.lo;
-        v = *(f32*)(q + j * 8 + 4);
-        slot = gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c;
-        slot[0xc] = 0xff;
-        slot[0xd] = 0xff;
-        slot[0xe] = 0xff;
-        inv = scaleA / powfCoreHighPrecision(*(f32*)(q + j * 8), gRcpDistortPowExp);
-        slot = gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c;
-        half = j & 1;
-        *(f32*)(slot + half * 4 + 0x10) = inv;
-        *(s8*)(slot + half + 0x18) = scaleB * v;
-        slot[0x1b] = 1;
-        if (half != 0)
+        radiusScale = gRcpDistortScaleA;
+        strengthScale = LastReadFinished_803DEB50.lo;
+        strength = *(f32*)(cfg + j * 8 + 4);
+        slot = (RcpDistortSlot*)(gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c);
+        slot->colR = 0xff;
+        slot->unkD = 0xff;
+        slot->colB = 0xff;
+        falloff = radiusScale / powfCoreHighPrecision(*(f32*)(cfg + j * 8), gRcpDistortPowExp);
+        slot = (RcpDistortSlot*)(gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c);
+        pairIdx = j & 1;
+        slot->params[pairIdx] = falloff;
+        *(s8*)(&slot->scaleR + pairIdx) = strengthScale * strength;
+        slot->mode = 1;
+        if (pairIdx != 0)
         {
             gRcpDistortSlotIndex = gRcpDistortSlotIndex + 1;
         }
     }
+    /* mode = 0 for the three remaining slots; member form (stb 0x1b(base+idx))
+     * diverges - target hoists base+0x1b and emits stbx. */
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
@@ -2508,38 +2530,22 @@ extern f32 lbl_803DEB80;
 extern f32 gRcpScreenWidth;
 extern f32 gRcpScreenHeight;
 
-typedef struct RcpDistortSlot
-{
-    u8* texture;   // 0x00
-    int model;     // 0x04
-    int unk8;      // 0x08
-    u8 colR;       // 0x0c
-    u8 unkD;       // 0x0d
-    u8 colB;       // 0x0e
-    u8 unkF;       // 0x0f
-    f32 params[2]; // 0x10
-    u8 scaleR;     // 0x18
-    u8 scaleB;     // 0x19
-    u8 group;      // 0x1a
-    u8 mode;       // 0x1b
-} RcpDistortSlot;
-
 void gxTextureFn_80052efc(void)
 {
     union { f32 m[12]; f64 a8; } mtxu;
 #define mtx mtxu.m
     int lights[8];
-    GXColor8 c2;
-    GXColor8 c;
-    u8* e;
-    u8* base;
+    GXColor8 outColor;
+    GXColor8 matColor;
+    u8* e;   /* raw u8* + per-site casts are load-bearing: typed decls swap r28/r31 */
+    u8* slots;
     int i;
-    int sel;
+    int clearSlot;
     int k;
     int n;
     int model;
     u8* tex;
-    int* lp;
+    int* lightPtr;
 
     gxFn_80052dc0();
     PSMTXScale(mtx, lbl_803DEB74, lbl_803DEB80, lbl_803DEB74);
@@ -2551,26 +2557,26 @@ void gxTextureFn_80052efc(void)
     GXSetTexCopyDst(0x20, 0x20, GX_TF_RGBA8, GX_FALSE);
     modelTextureFn_80089970(2);
     i = 0;
-    base = gRcpDistortSlots;
+    slots = gRcpDistortSlots;
     for (; i < 6; i++)
     {
-        tex = ((RcpDistortSlot*)base)[i].texture;
-        if (((Texture*)tex)->refCount != 0 && ((RcpDistortSlot*)base)[i].mode == 1 &&
-            gRcpDistortGroup == ((RcpDistortSlot*)base)[i].group)
+        tex = ((RcpDistortSlot*)slots)[i].texture;
+        if (((Texture*)tex)->refCount != 0 && ((RcpDistortSlot*)slots)[i].mode == 1 &&
+            gRcpDistortGroup == ((RcpDistortSlot*)slots)[i].group)
         {
-            c.r = (((RcpDistortSlot*)base)[i].colR * ((RcpDistortSlot*)base)[i].scaleR) >> 8;
-            c.g = 0;
-            c.b = (((RcpDistortSlot*)base)[i].colB * ((RcpDistortSlot*)base)[i].scaleB) >> 8;
-            c.a = 0xff;
-            GXSetChanMatColor(4, c);
-            GXSetChanMatColor(5, c);
-            textureFn_80052bb4(((RcpDistortSlot*)base)[i].model, ((RcpDistortSlot*)base)[i].params);
+            matColor.r = (((RcpDistortSlot*)slots)[i].colR * ((RcpDistortSlot*)slots)[i].scaleR) >> 8;
+            matColor.g = 0;
+            matColor.b = (((RcpDistortSlot*)slots)[i].colB * ((RcpDistortSlot*)slots)[i].scaleB) >> 8;
+            matColor.a = 0xff;
+            GXSetChanMatColor(4, matColor);
+            GXSetChanMatColor(5, matColor);
+            textureFn_80052bb4(((RcpDistortSlot*)slots)[i].model, ((RcpDistortSlot*)slots)[i].params);
             resetLotsOfRenderVars();
-            textureFn_8004ff20(gRcpDistortTexture, mtx, &c2, 0);
+            textureFn_8004ff20(gRcpDistortTexture, mtx, &outColor, 0);
             textureFn_800528bc();
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
-            GXCopyTex(((RcpDistortSlot*)base)[i].texture + 0x60, 0);
-            tex = ((RcpDistortSlot*)base)[i].texture;
+            GXCopyTex(((RcpDistortSlot*)slots)[i].texture + 0x60, 0);
+            tex = ((RcpDistortSlot*)slots)[i].texture;
             if (((Texture*)tex)->preloaded != 0)
             {
                 GXPreLoadEntireTexture(tex + 0x20, ((Texture*)tex)->tmemAddr);
@@ -2581,14 +2587,14 @@ void gxTextureFn_80052efc(void)
     textureFn_800524ec(&gRcpDistortMatColor);
     textureFn_800528bc();
     GXSetChanMatColor(0, *(GXColor8*)&gRcpDistortMatColor);
-    sel = 5;
+    clearSlot = 5;
     k = 5;
-    e = gRcpDistortSlots + 0x8c;
+    e = gRcpDistortSlots + 0x8c; /* &slots[5]; +0 texture, +0xe tex refCount, +0x1a group, +0x1b mode */
     for (; k >= 0; k--)
     {
         if (*(u16*)(*(u8**)e + 0xe) != 0 && e[0x1b] == 0 && gRcpDistortGroup == e[0x1a])
         {
-            sel = k;
+            clearSlot = k;
             break;
         }
         e -= 0x1c;
@@ -2596,27 +2602,27 @@ void gxTextureFn_80052efc(void)
     i = 0;
     for (; i < 6; i++)
     {
-        if (((Texture*)((RcpDistortSlot*)base)[i].texture)->refCount != 0 &&
-            ((RcpDistortSlot*)base)[i].mode == 0 && gRcpDistortGroup == ((RcpDistortSlot*)base)[i].group)
+        if (((Texture*)((RcpDistortSlot*)slots)[i].texture)->refCount != 0 &&
+            ((RcpDistortSlot*)slots)[i].mode == 0 && gRcpDistortGroup == ((RcpDistortSlot*)slots)[i].group)
         {
             int count;
-            model = ((RcpDistortSlot*)base)[i].model;
+            model = ((RcpDistortSlot*)slots)[i].model;
             modelTextureFn_80089970(2 - (i - 3));
             modelLightStruct_selectObjectLights(model, lights, 8, &count, 4);
             modelLightChannels_reset(1);
             modelLightChannel_configure(0, 0, 0);
-            lp = lights;
+            lightPtr = lights;
             for (n = 0; n < count; n++)
             {
-                modelLightStruct_loadChannelLight(0, (void*)*lp, model);
-                lp++;
+                modelLightStruct_loadChannelLight(0, (void*)*lightPtr, model);
+                lightPtr++;
             }
             modelLightChannels_applyGXControls();
-            lightGetColor(0, &c2.r, &c2.g, &c2.b);
-            GXSetChanAmbColor(GX_COLOR0, c2);
+            lightGetColor(0, &outColor.r, &outColor.g, &outColor.b);
+            GXSetChanAmbColor(GX_COLOR0, outColor);
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
-            GXCopyTex(((RcpDistortSlot*)base)[i].texture + 0x60, (i == sel) ? 1 : 0);
-            tex = ((RcpDistortSlot*)base)[i].texture;
+            GXCopyTex(((RcpDistortSlot*)slots)[i].texture + 0x60, (i == clearSlot) ? 1 : 0);
+            tex = ((RcpDistortSlot*)slots)[i].texture;
             if (((Texture*)tex)->preloaded != 0)
             {
                 GXPreLoadEntireTexture(tex + 0x20, ((Texture*)tex)->tmemAddr);
