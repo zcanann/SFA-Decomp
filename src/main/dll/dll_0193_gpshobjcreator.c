@@ -119,11 +119,9 @@ void gpsh_objcreator_update(int* obj)
     }
 }
 
-void gpsh_scene_free(void);
 
 int gpsh_objcreator_getExtraSize(void) { return 0x8; }
 int gpsh_objcreator_getObjectTypeId(void) { return 0x0; }
-int gpsh_scene_getExtraSize(void);
 
 void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -131,7 +129,6 @@ void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5048);
 }
 
-void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void gpsh_objcreator_init(int* obj, int* def)
 {
