@@ -31,6 +31,9 @@ extern u8 framesThisStep;
 #define SB_CAGEKYTE_CHIRP_MIN 400
 #define SB_CAGEKYTE_CHIRP_MAX 600
 
+#define SB_CAGEKYTE_OBJFLAG_HIDDEN 0x4000
+#define SB_CAGEKYTE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
@@ -78,7 +81,7 @@ int SB_CageKyte_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
 void SB_CageKyte_init(GameObject* p)
 {
     p->animEventCallback = SB_CageKyte_SeqFn;
-    p->objectFlags = (u16)((u32)p->objectFlags | 0x6000u);
+    p->objectFlags = (u16)((u32)p->objectFlags | (SB_CAGEKYTE_OBJFLAG_HIDDEN | SB_CAGEKYTE_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
