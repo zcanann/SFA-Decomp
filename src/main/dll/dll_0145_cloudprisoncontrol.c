@@ -40,8 +40,6 @@ enum
     CPMSG_UNREGISTER = 0xf0008  /* member -> controller: remove */
 };
 
-#pragma scheduling off
-#pragma peephole off
 void cloudprisoncontrol_free(void)
 {
 }
