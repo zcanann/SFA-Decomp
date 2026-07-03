@@ -23,6 +23,7 @@
 #include "main/camera.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_descriptor.h"
 extern int Obj_GetPlayerObject(void);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
@@ -366,3 +367,20 @@ void dll_197_release(void)
 void dll_197_initialise(void)
 {
 }
+
+ObjectDescriptor dll_197 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    dll_197_initialise,
+    dll_197_release,
+    0,
+    (ObjectDescriptorCallback)dll_197_init,
+    (ObjectDescriptorCallback)dll_197_update,
+    dll_197_hitDetect,
+    (ObjectDescriptorCallback)dll_197_render,
+    (ObjectDescriptorCallback)dll_197_free,
+    (ObjectDescriptorCallback)dll_197_getObjectTypeId,
+    dll_197_getExtraSize,
+};
