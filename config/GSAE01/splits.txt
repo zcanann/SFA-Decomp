@@ -995,6 +995,7 @@ main/dll/dll_00CA_icebaddie.c:
 
 main/dll/dll_00CE_dllce.c:
 	.text       start:0x8015DAE8 end:0x8015F5B0
+	.data       start:0x8031FEA8 end:0x8031FF80
 
 main/dll/dll_00CC_chukchuk.c:
 	.text       start:0x8015F5B0 end:0x8015FBEC

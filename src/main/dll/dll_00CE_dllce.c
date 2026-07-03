@@ -1049,3 +1049,38 @@ ObjectDescriptor gIceBallObjDescriptor = {
     (ObjectDescriptorCallback)iceball_getObjectTypeId,
     iceball_getExtraSize,
 };
+
+u8 lbl_8031FEA8[] = {
+    0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5,
+    0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5,
+    0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5,
+    0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 2, 0, 0, 0, 5,
+    0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5,
+    0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5,
+    0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5,
+    0, 0, 0, 5, 0, 0, 0, 5,
+};
+
+u8 lbl_8031FF20[] = {
+    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0,
+};
+
+ObjectDescriptor12 dll_CE = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)dll_CE_initialise,
+    (ObjectDescriptorCallback)dll_CE_release_nop,
+    0,
+    (ObjectDescriptorCallback)dll_CE_init,
+    (ObjectDescriptorCallback)dll_CE_update,
+    (ObjectDescriptorCallback)dll_CE_hitDetect_nop,
+    (ObjectDescriptorCallback)dll_CE_render,
+    (ObjectDescriptorCallback)dll_CE_free,
+    (ObjectDescriptorCallback)dll_CE_getObjectTypeId,
+    dll_CE_getExtraSize_ret_1052,
+    (ObjectDescriptorCallback)dll_CE_setScale,
+    (ObjectDescriptorCallback)dll_CE_func0B,
+};
