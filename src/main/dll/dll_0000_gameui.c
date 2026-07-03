@@ -2367,12 +2367,14 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         {
             alpha = 0xff;
         }
-        h0 = (s16)(v - 0x14);
-        if (h0 < 0)
         {
-            h0 = 0;
+            int hh = v - 0x14;
+            if (hh < 0)
+            {
+                hh = 0;
+            }
+            h0 = (s16)(hh << 4);
         }
-        h0 <<= 4;
         if (h0 > *(u16*)(gTextBoxes + 0x186))
         {
             h0 = (s16) * (u16*)(gTextBoxes + 0x186);
