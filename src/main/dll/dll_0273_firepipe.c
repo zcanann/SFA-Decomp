@@ -28,6 +28,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dll_0273_firepipe.h"
+#include "main/obj_placement.h"
 #include "string.h"
 #include "main/gamebits.h"
 #include "main/mm.h"
@@ -108,6 +109,17 @@ typedef struct
 } FirePipeBitFlags;
 
 typedef void (*FirePipeEffectInitFn)(int obj, void* spawnDef, int p3);
+
+/* Spawn-setup buffer seeded by firepipe_updateState for the emitted flame
+ * effect (defNo 0x1b5). Reuses ObjPlacement's color/pos head and adds the
+ * class-specific effectMode/scale fields; store widths per target asm. */
+typedef struct FirePipeEffectSetup
+{
+    ObjPlacement head;  /* 0x00: color at +4, pos at +8/+c/+10 */
+    u8 pad18;           /* 0x18 */
+    s8 effectMode;      /* 0x19 */
+    s16 scale;          /* 0x1a */
+} FirePipeEffectSetup;
 
 #pragma dont_inline on
 int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* spawnDef)
@@ -369,12 +381,12 @@ sound_update:
         md3 = (FirePipeMapData*)obj->objectDef;
         ex3 = obj->extra;
         spawnDef = (u8*)Obj_AllocObjectSetup(0x24, 0x1b5);
-        spawnDef[4] = 2;
-        *(s8*)(spawnDef + 0x19) = ex3->effectMode;
-        *(s16*)(spawnDef + 0x1a) = md3->scale;
-        *(f32*)(spawnDef + 8) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)(spawnDef + 0xc) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(spawnDef + 0x10) = ((GameObject*)obj)->anim.localPosZ;
+        ((FirePipeEffectSetup*)spawnDef)->head.color[0] = 2;
+        ((FirePipeEffectSetup*)spawnDef)->effectMode = ex3->effectMode;
+        ((FirePipeEffectSetup*)spawnDef)->scale = md3->scale;
+        ((FirePipeEffectSetup*)spawnDef)->head.posX = ((GameObject*)obj)->anim.localPosX;
+        ((FirePipeEffectSetup*)spawnDef)->head.posY = ((GameObject*)obj)->anim.localPosY;
+        ((FirePipeEffectSetup*)spawnDef)->head.posZ = ((GameObject*)obj)->anim.localPosZ;
         if (spawnDef == 0)
         {
             effectObj = 0;
