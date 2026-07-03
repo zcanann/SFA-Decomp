@@ -1849,15 +1849,15 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     if (objA != NULL)
     {
-        posA[0] = *(f32*)(objA + 0x18);
-        posA[1] = *(f32*)(objA + 0x1c);
-        posA[2] = *(f32*)(objA + 0x20);
+        posA[0] = ((GameObject*)objA)->anim.worldPosX;
+        posA[1] = ((GameObject*)objA)->anim.worldPosY;
+        posA[2] = ((GameObject*)objA)->anim.worldPosZ;
     }
     if (objB != NULL)
     {
-        posB[0] = *(f32*)(objB + 0x18);
-        posB[1] = *(f32*)(objB + 0x1c);
-        posB[2] = *(f32*)(objB + 0x20);
+        posB[0] = ((GameObject*)objB)->anim.worldPosX;
+        posB[1] = ((GameObject*)objB)->anim.worldPosY;
+        posB[2] = ((GameObject*)objB)->anim.worldPosZ;
     }
     if ((u32)*(u16*)(params + 0x26) > 8)
     {
@@ -1997,9 +1997,9 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
             args.fa = 0;
             args.f8 = *(s16*)objA;
             vecRotateZXY(&args.f8, vec);
-            ((NewCloud*)NC_CLOUD)->worldPosX = vec[0] + *(f32*)(objA + 0x18);
-            ((NewCloud*)NC_CLOUD)->worldPosY = vec[1] + *(f32*)(objA + 0x1c);
-            ((NewCloud*)NC_CLOUD)->worldPosZ = vec[2] + *(f32*)(objA + 0x20);
+            ((NewCloud*)NC_CLOUD)->worldPosX = vec[0] + ((GameObject*)objA)->anim.worldPosX;
+            ((NewCloud*)NC_CLOUD)->worldPosY = vec[1] + ((GameObject*)objA)->anim.worldPosY;
+            ((NewCloud*)NC_CLOUD)->worldPosZ = vec[2] + ((GameObject*)objA)->anim.worldPosZ;
             if (((NewCloud*)NC_CLOUD)->driftScale > lbl_803DF27C)
             {
                 Music_Trigger(gNewCloudMusicIdByType[((NewCloud*)NC_CLOUD)->cloudType], 0);
