@@ -1021,7 +1021,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_00BF_projcore1.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00C0_projcore2.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00C1_projcore3.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "main/dll/dll_00C2_projdfp1r.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_00C2_projdfp1r.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_8b.c"),
             Object(NonMatching, "main/dll/dll_8c.c"),
             Object(NonMatching, "main/dll/dll_8d.c"),

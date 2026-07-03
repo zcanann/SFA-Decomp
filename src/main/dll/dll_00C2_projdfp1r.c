@@ -23,3 +23,5 @@ void projdfp1r_release(void)
 void projdfp1r_initialise(void)
 {
 }
+
+char sProjdfp1rDoNoLongerSupported[] = "<projdfp1r Do>No Longer supported \n";
