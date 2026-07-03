@@ -4159,8 +4159,10 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
     f32 vec[3];
     f32 start[3];
     f32 end[3];
-    volatile f32 sc1[3];
-    volatile f32 sc0[3];
+    f32 sc1[3];
+    f32* sc1p = sc1;
+    f32 sc0[3];
+    f32* sc0p = sc0;
     s8 dirs[13] = {0xb, 4, 6, 0xa, 0xa, 3, 3, 2, 0xe, 0x10, 0x12, 0x13, 5};
     u16 dirMasks[13] = {1, 2, 4, 8, 8, 0x10, 0x10, 0x40, 0x80, 0x100, 1, 0x20, 0xffff};
     struct
@@ -4194,12 +4196,12 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
     rot[1] = lbl_803E7EA4;
     rot[2] = -mathCosf(ang);
     fn_802A81B8(obj, state, vec);
-    sc1[0] = lbl_803E808C * rot[0];
-    sc1[1] = lbl_803E808C * rot[1];
-    sc1[2] = lbl_803E808C * rot[2];
-    sc0[0] = lbl_803E808C * vec[0];
-    sc0[1] = lbl_803E808C * vec[1];
-    sc0[2] = lbl_803E808C * vec[2];
+    sc1p[0] = lbl_803E808C * rot[0];
+    sc1p[1] = lbl_803E808C * rot[1];
+    sc1p[2] = lbl_803E808C * rot[2];
+    sc0p[0] = lbl_803E808C * vec[0];
+    sc0p[1] = lbl_803E808C * vec[1];
+    sc0p[2] = lbl_803E808C * vec[2];
     *(u32*)&((PlayerState*)state)->flags360 &= ~0x100LL;
     for (i = 0; i < PLAYER_SWEEP_DIR_COUNT; i++)
     {
@@ -4314,16 +4316,16 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
         {
             if (ok == 0)
             {
-                end[0] = ((GameObject*)obj)->anim.localPosX + sc1[0];
-                end[1] = ((GameObject*)obj)->anim.localPosY + sc1[1];
-                end[2] = ((GameObject*)obj)->anim.localPosZ + sc1[2];
+                end[0] = ((GameObject*)obj)->anim.localPosX + sc1p[0];
+                end[1] = ((GameObject*)obj)->anim.localPosY + sc1p[1];
+                end[2] = ((GameObject*)obj)->anim.localPosZ + sc1p[2];
                 dir = rot;
             }
             else
             {
-                end[0] = ((GameObject*)obj)->anim.localPosX + sc0[0];
-                end[1] = ((GameObject*)obj)->anim.localPosY + sc0[1];
-                end[2] = ((GameObject*)obj)->anim.localPosZ + sc0[2];
+                end[0] = ((GameObject*)obj)->anim.localPosX + sc0p[0];
+                end[1] = ((GameObject*)obj)->anim.localPosY + sc0p[1];
+                end[2] = ((GameObject*)obj)->anim.localPosZ + sc0p[2];
                 dir = vec;
             }
             start[0] = ((GameObject*)obj)->anim.localPosX;
@@ -4334,16 +4336,16 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
         {
             if (ok == 0)
             {
-                start[0] = ((GameObject*)obj)->anim.localPosX + sc1[0];
-                start[1] = ((GameObject*)obj)->anim.localPosY + sc1[1];
-                start[2] = ((GameObject*)obj)->anim.localPosZ + sc1[2];
+                start[0] = ((GameObject*)obj)->anim.localPosX + sc1p[0];
+                start[1] = ((GameObject*)obj)->anim.localPosY + sc1p[1];
+                start[2] = ((GameObject*)obj)->anim.localPosZ + sc1p[2];
                 dir = rot;
             }
             else
             {
-                start[0] = ((GameObject*)obj)->anim.localPosX + sc0[0];
-                start[1] = ((GameObject*)obj)->anim.localPosY + sc0[1];
-                start[2] = ((GameObject*)obj)->anim.localPosZ + sc0[2];
+                start[0] = ((GameObject*)obj)->anim.localPosX + sc0p[0];
+                start[1] = ((GameObject*)obj)->anim.localPosY + sc0p[1];
+                start[2] = ((GameObject*)obj)->anim.localPosZ + sc0p[2];
                 dir = vec;
             }
             end[0] = ((GameObject*)obj)->anim.localPosX;
