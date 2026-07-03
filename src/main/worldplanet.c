@@ -602,3 +602,9 @@ void worldplanet_update(int obj)
         state->orbitSoundFrameCount += 1;
     }
 }
+
+int gWorldPlanetObjectIdTable[3][5] = {
+    { 0x00042FEA, 0x00042FE8, 0x0004300D, 0x00042FE9, 0x00042FEB },
+    { 0x00000000, 0x00004000, 0x00005FA0, 0x00008000, 0x0000C000 },
+    { 0x00043099, 0x00042FFF, 0x0004309A, 0x00043098, 0x00043097 },
+};
