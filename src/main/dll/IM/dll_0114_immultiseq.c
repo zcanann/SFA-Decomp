@@ -32,6 +32,9 @@ STATIC_ASSERT(offsetof(IMMultiSeqPlacement, polarityMask) == 0x30);
 /* state->flags: SeqFn latched a step advance for update() to consume */
 #define IMMULTISEQ_LATCH_ADVANCE_BIT 0x01
 
+#define IMMULTISEQ_OBJFLAG_HIDDEN 0x4000
+#define IMMULTISEQ_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /* immultiseq_SeqFn: end-of-sequence predicate. With a valid trigger id,
    peek at the next step's active game bit; if its polarity has flipped
    (GameBit != the polarityMask bit for that step) end the current
@@ -150,7 +153,7 @@ void immultiseq_init(int* obj, IMMultiSeqPlacement* params)
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)(params->initialYaw << 8);
     ((GameObject*)obj)->animEventCallback = immultiseq_SeqFn;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (IMMULTISEQ_OBJFLAG_HIDDEN | IMMULTISEQ_OBJFLAG_HITDETECT_DISABLED));
     objAnim->bankIndex = params->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
