@@ -968,7 +968,6 @@ int trickyFn_80142eb0(int obj, int state)
 int trickyFn_801430e0(u8* obj, u8* state)
 {
     u8* ptr;
-    int ret;
 
     if (trickyFoodFn_8014460c((int)obj, (int*)state) != 0)
     {
@@ -990,14 +989,18 @@ int trickyFn_801430e0(u8* obj, u8* state)
         }
         else
         {
-            ret = randomGetRange(0, 6);
-            if (ret < 5 && ret >= 0)
+            switch (randomGetRange(0, 6))
             {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
                 tricky_startRandomIdleMove((int)obj, (int)state);
-            }
-            else
-            {
+                break;
+            default:
                 objAnimFn_801441c0(obj, state);
+                break;
             }
         }
     }
