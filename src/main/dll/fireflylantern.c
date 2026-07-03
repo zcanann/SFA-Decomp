@@ -79,6 +79,14 @@ typedef struct FireflyState {
     f32 breathTimer;  /* 0x328 */
     f32 anchorY;      /* 0x32C */
     f32 unk330;       /* 0x330 */
+    u8 pad334[0x358 - 0x334];
+    /* 0x344..0x364 is the wall/plane block fn_801554B4 (duster.c) writes.
+     * planeNormal (0x344..0x34C) is passed by address to the PSVEC helpers,
+     * so it stays raw here; only the scalar-only anchor point is named. */
+    f32 planeAnchorY; /* 0x358 */
+    u8 pad35C[0x360 - 0x35C];
+    f32 planeAnchorX; /* 0x360 */
+    f32 planeAnchorZ; /* 0x364 */
 } FireflyState;
 
 #pragma opt_common_subs off
@@ -234,9 +242,9 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     int delta;
     u32 angle;
 
-    vecA[0] = *(f32*)(state + 0x360);
-    vecA[1] = *(f32*)(state + 0x358);
-    vecA[2] = *(f32*)(state + 0x364);
+    vecA[0] = ((FireflyState*)state)->planeAnchorX;
+    vecA[1] = ((FireflyState*)state)->planeAnchorY;
+    vecA[2] = ((FireflyState*)state)->planeAnchorZ;
     PSVECSubtract(vecA, (f32*)(obj + 0xc), tmpA);
     d = PSVECDotProduct(tmpA, (f32*)(state + 0x344));
     vecA[0] = *(f32*)(state + 0x344) * d + ((GameObject*)obj)->anim.localPosX;
@@ -249,19 +257,19 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     PSVECNormalize(crossA, crossA);
     if (lbl_803E2A00 != crossA[0])
     {
-        dxDiff = (((GameObject*)obj)->anim.localPosX - *(f32*)(state + 0x360)) / crossA[0];
+        dxDiff = (((GameObject*)obj)->anim.localPosX - ((FireflyState*)state)->planeAnchorX) / crossA[0];
     }
     else
     {
-        dxDiff = (((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x364)) / crossA[2];
+        dxDiff = (((GameObject*)obj)->anim.localPosZ - ((FireflyState*)state)->planeAnchorZ) / crossA[2];
     }
     targetObj = *(int*)&((BaddieState*)state)->trackedObj;
     targetPos[0] = ((GameObject*)targetObj)->anim.localPosX;
     targetPos[1] = lbl_803E2A08 + ((GameObject*)targetObj)->anim.localPosY;
     targetPos[2] = ((GameObject*)targetObj)->anim.localPosZ;
-    vecB[0] = *(f32*)(state + 0x360);
-    vecB[1] = *(f32*)(state + 0x358);
-    vecB[2] = *(f32*)(state + 0x364);
+    vecB[0] = ((FireflyState*)state)->planeAnchorX;
+    vecB[1] = ((FireflyState*)state)->planeAnchorY;
+    vecB[2] = ((FireflyState*)state)->planeAnchorZ;
     PSVECSubtract(vecB, targetPos, tmpB);
     d = PSVECDotProduct(tmpB, (f32*)(state + 0x344));
     vecB[0] = *(f32*)(state + 0x344) * d + targetPos[0];
@@ -274,11 +282,11 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     PSVECNormalize(crossB, crossB);
     if (lbl_803E2A00 != crossB[0])
     {
-        d = (targetPos[0] - *(f32*)(state + 0x360)) / crossB[0];
+        d = (targetPos[0] - ((FireflyState*)state)->planeAnchorX) / crossB[0];
     }
     else
     {
-        d = (targetPos[2] - *(f32*)(state + 0x364)) / crossB[2];
+        d = (targetPos[2] - ((FireflyState*)state)->planeAnchorZ) / crossB[2];
     }
     dxDiff = dxDiff - d;
     dy = objY - dy;
@@ -326,9 +334,9 @@ u32 fn_80154FB4(short* obj, int state, u32 turnTime, f32 maxDistance)
     int angleStep;
     u32 angle;
 
-    vecA[0] = *(f32*)(state + 0x360);
-    vecA[1] = *(f32*)(state + 0x358);
-    vecA[2] = *(f32*)(state + 0x364);
+    vecA[0] = ((FireflyState*)state)->planeAnchorX;
+    vecA[1] = ((FireflyState*)state)->planeAnchorY;
+    vecA[2] = ((FireflyState*)state)->planeAnchorZ;
     PSVECSubtract(vecA, (f32*)(obj + 6), tmpA);
     d = PSVECDotProduct(tmpA, (f32*)(state + 0x344));
     vecA[0] = *(f32*)(state + 0x344) * d + ((GameObject*)obj)->anim.localPosX;
@@ -341,19 +349,19 @@ u32 fn_80154FB4(short* obj, int state, u32 turnTime, f32 maxDistance)
     PSVECNormalize(crossA, crossA);
     if (lbl_803E2A00 != crossA[0])
     {
-        dxA = (((GameObject*)obj)->anim.localPosX - *(f32*)(state + 0x360)) / crossA[0];
+        dxA = (((GameObject*)obj)->anim.localPosX - ((FireflyState*)state)->planeAnchorX) / crossA[0];
     }
     else
     {
-        dxA = (((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x364)) / crossA[2];
+        dxA = (((GameObject*)obj)->anim.localPosZ - ((FireflyState*)state)->planeAnchorZ) / crossA[2];
     }
     targetObj = *(int*)&((BaddieState*)state)->trackedObj;
     targetPos[0] = ((GameObject*)targetObj)->anim.localPosX;
     targetPos[1] = lbl_803E2A08 + ((GameObject*)targetObj)->anim.localPosY;
     targetPos[2] = ((GameObject*)targetObj)->anim.localPosZ;
-    vecB[0] = *(f32*)(state + 0x360);
-    vecB[1] = *(f32*)(state + 0x358);
-    vecB[2] = *(f32*)(state + 0x364);
+    vecB[0] = ((FireflyState*)state)->planeAnchorX;
+    vecB[1] = ((FireflyState*)state)->planeAnchorY;
+    vecB[2] = ((FireflyState*)state)->planeAnchorZ;
     PSVECSubtract(vecB, targetPos, tmpB);
     d = PSVECDotProduct(tmpB, (f32*)(state + 0x344));
     vecB[0] = *(f32*)(state + 0x344) * d + targetPos[0];
@@ -366,11 +374,11 @@ u32 fn_80154FB4(short* obj, int state, u32 turnTime, f32 maxDistance)
     PSVECNormalize(crossB, crossB);
     if (lbl_803E2A00 != crossB[0])
     {
-        d = (targetPos[0] - *(f32*)(state + 0x360)) / crossB[0];
+        d = (targetPos[0] - ((FireflyState*)state)->planeAnchorX) / crossB[0];
     }
     else
     {
-        d = (targetPos[2] - *(f32*)(state + 0x364)) / crossB[2];
+        d = (targetPos[2] - ((FireflyState*)state)->planeAnchorZ) / crossB[2];
     }
     dxDiff = dxA - d;
     dy = objY - targetY;
