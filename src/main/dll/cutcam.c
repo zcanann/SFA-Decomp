@@ -47,22 +47,22 @@ extern int getAngle(float y, float x);
 extern u8 gCutCamBboxBlocked;       /* last bbox-hit result */
 extern u8 framesThisStep;
 extern f32 lbl_803DD52C;      /* yaw-offset blend gain */
-extern f32 lbl_803E1688;      /* collision probe / trace radius */
-extern f32 lbl_803E168C;
-extern f32 lbl_803E1690;
-extern f32 lbl_803E1694;
-extern f32 lbl_803E16A0;
-extern f32 lbl_803E16A4;
-extern f32 lbl_803E16A8;
-extern f32 lbl_803E16AC;
-extern f32 lbl_803E16B0;
-extern f32 lbl_803E16B4;
-extern f32 lbl_803E16B8;
-extern f32 lbl_803E16BC;
-extern f32 lbl_803E16C0;
-extern f32 lbl_803E16C4;
-extern f32 lbl_803E16C8;
-extern f32 lbl_803E16CC;
+extern f32 lbl_803E1688;      /* 4.0f  - collision probe / trace radius */
+extern f32 lbl_803E168C;      /* 3.1415927f (pi); angle-units -> radians with lbl_803E1690 */
+extern f32 lbl_803E1690;      /* 32768.0f - angle units per pi (0x8000 == 180 degrees) */
+extern f32 lbl_803E1694;      /* 5.0f   - min squared camera distance */
+extern f32 lbl_803E16A0;      /* 3.9f   - fan-probe sphere radius */
+extern f32 lbl_803E16A4;      /* 1.0f */
+extern f32 lbl_803E16A8;      /* 3.0f */
+extern f32 lbl_803E16AC;      /* 0.0f */
+extern f32 lbl_803E16B0;      /* 500.0f */
+extern f32 lbl_803E16B4;      /* 10.0f  - min yaw nudge */
+extern f32 lbl_803E16B8;      /* 100.0f - max yaw nudge */
+extern f32 lbl_803E16BC;      /* 1000.0f  - avoidance yaw-offset clamp */
+extern f32 lbl_803E16C0;      /* -1000.0f - avoidance yaw-offset clamp */
+extern f32 lbl_803E16C4;      /* 0.9f   - per-frame yaw-offset decay */
+extern f32 lbl_803E16C8;      /* 0.5f   - decay dead-zone (snap to 0 inside) */
+extern f32 lbl_803E16CC;      /* -0.5f  - decay dead-zone (snap to 0 inside) */
 
 #pragma dont_inline on
 int
@@ -462,6 +462,16 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
     return result;
 }
 
+/*
+ * Wall-avoidance update for the cut-scene camera.  Builds a 13-point fan of
+ * candidate camera positions (0x555-step yaw increments alternating left /
+ * right of the camera-to-target axis), batch-registers their swept-sphere
+ * bounds with the hit-detect system, then line-of-sight traces the current
+ * camera position.  If the view is blocked it asks cameraFn_80103b40 to pick
+ * a swing direction, and while an avoidance yaw offset is active it rotates
+ * the camera around the target and decays the offset by 0.9 per frame
+ * (snapping to zero inside +/-0.5).
+ */
 void camMoveFn_80104040(CameraObject* camera, GameObject* target)
 {
     float path[39];
@@ -476,9 +486,9 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     float* p;
     int i;
     int j;
-    f32 kB;
+    f32 angScale;   /* 32768.0f = angle units per pi */
     f32 dz;
-    f32 kA;
+    f32 pi;
     f32 dx;
     f32 rad;
     f32 sinv;
@@ -512,11 +522,11 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     i = 1;
     ang = 0xaaa;
     p = path + 3;
-    kA = lbl_803E168C;
-    kB = lbl_803E1690;
+    pi = lbl_803E168C;
+    angScale = lbl_803E1690;
     do
     {
-        rad = (kA * (f32)(s16)ang) / kB;
+        rad = (pi * (f32)(s16)ang) / angScale;
         cosv = mathSinf(rad);
         sinv = mathCosf(rad);
         t = dx * sinv - dz * cosv;
@@ -525,7 +535,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
         p[0] = t + target->anim.worldPosX;
         p[1] = camera->anim.worldPosY;
         p[2] = z;
-        rad = (kA * (f32)(s16)(-i * 0xaaa)) / kB;
+        rad = (pi * (f32)(s16)(-i * 0xaaa)) / angScale;
         cosv = mathSinf(rad);
         sinv = mathCosf(rad);
         t = dx * sinv - dz * cosv;
@@ -555,7 +565,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     {
         blocked = 1;
     }
-    trace = blocked;
+    trace = blocked; /* reused u8 temp: narrowed copy of the blocked flag */
     cameraMtxVar57->collisionBlocked = trace;
     if (trace != 0)
     {
