@@ -211,7 +211,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     }
 
     vel = gSmallBasketHitVelocity;
-    switch ((s16)mode)
+    switch (mode)
     {
     case 1:
         setup = Obj_AllocObjectSetup(0x24, 0x3d3);
