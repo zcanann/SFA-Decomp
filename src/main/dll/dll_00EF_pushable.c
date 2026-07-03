@@ -91,7 +91,7 @@ typedef struct PushablePlacement
 {
     u8 pad0[0x18 - 0x0];
     s16 gameBit;
-    s16 unk1A;
+    s16 gameBit2; /* 0x1A second gamebit id; copied to PushableState.gameBit2 */
     s8 unk1C;
     s8 unk1D;
     s8 unk1E;
@@ -105,7 +105,7 @@ typedef struct PushableObjectDef
 {
     u8 pad0[0x18 - 0x0];
     s16 gameBit;
-    s16 unk1A;
+    s16 gameBit2; /* 0x1A second gamebit id (sibling of PushablePlacement.gameBit2) */
     void* unk1C;
     u16 scaleRaw;
     u8 rotXByte;
@@ -133,7 +133,7 @@ void fn_80174A80(int obj, PushableState* ext)
     f = lbl_803E3528;
     ext->blinkPhase = f;
     ext->gameBit = ((PushablePlacement*)def)->gameBit;
-    ext->gameBit2 = ((PushablePlacement*)def)->unk1A;
+    ext->gameBit2 = ((PushablePlacement*)def)->gameBit2;
     ext->unk_F0 = f;
     ext->nearestObj = NULL;
     GameBit_Set(ext->gameBit, 0);
