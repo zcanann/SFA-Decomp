@@ -1461,6 +1461,7 @@ main/dll/CF/dll_0148_cfguardian.c:
 
 main/dll/CF/dll_0149_cfwindlift.c:
 	.text       start:0x8019C784 end:0x8019D578
+	.data       start:0x80322A48 end:0x80322A80
 	.sdata2     start:0x803E41C0 end:0x803E41C8
 
 main/dll/CF/dll_014A_cfpowerbase.c:
