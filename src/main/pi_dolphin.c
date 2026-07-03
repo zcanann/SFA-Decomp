@@ -88,10 +88,10 @@ extern u32 FUN_8028688c();
 extern double FUN_80286cd0();
 
 extern u32 DAT_800000f8;
-extern u32 DAT_802c24e8;
+extern u32 gWmSunGlareDir;
 extern u32 DAT_802c24ec;
 extern u32 DAT_802c24f0;
-extern u32 DAT_802c24f4;
+extern u32 gWmSunGlareSun;
 extern u32 DAT_802c24f8;
 extern u32 DAT_802c24fc;
 extern int DAT_802cc8a8;
@@ -103,32 +103,32 @@ extern u32 DAT_803dc071;
 extern u32 DAT_803dc22c;
 extern u32 DAT_803dc22e;
 extern u32 DAT_803dc234;
-extern u32 DAT_803dd5d0;
-extern u32* DAT_803dd71c;
+extern u32 gCamTitleStartPosePending;
+extern u32* gWeirdMenuTextureA;
 extern u32 DAT_803dd927;
 extern u32 DAT_803dd92c;
-extern u32 DAT_803dd944;
-extern u32 DAT_803dd950;
-extern u32 DAT_803dd954;
-extern u32 DAT_803dd95c;
+extern u32 gMinimapViewMode;
+extern u32 gMinimapArrowScale2;
+extern u32 gMinimapArrowScale1;
+extern u32 gMinimapAxisSwap;
 extern u32 DAT_803dd968;
 extern u32 DAT_803dd96c;
 extern u32* DAT_803dd970;
-extern u32 DAT_803dd988;
-extern u32 DAT_803dd9a8;
-extern u32 DAT_803dd9b0;
+extern u32 warpstoneUIState;
+extern u32 gTitleScreenCreditDelay;
+extern u32 gTitleScreenCursorX;
 extern u32 DAT_803dd9b1;
-extern u32 DAT_803dd9e8;
+extern u32 gDebugGlyphVScale;
 extern u32 DAT_803dd9e9;
 extern u32 DAT_803dd9ea;
-extern u32 DAT_803dd9ec;
-extern u32 DAT_803dd9f0;
-extern u32 DAT_803dd9f4;
-extern u32 DAT_803dd9fc;
-extern u32 DAT_803dda00;
-extern u32 DAT_803dda08;
-extern u32 DAT_803dda0c;
-extern u32 DAT_803dda10;
+extern u32 gDebugGlyphUScale;
+extern u32 gDebugTextColorA;
+extern u32 gDebugScreenHeight;
+extern u32 gDebugMarginBottom;
+extern u32 gDebugPrintOriginX;
+extern u32 gDebugPrintOriginY;
+extern u32 gDebugDrawPass;
+extern u32 gDebugFixedWidthMode;
 extern u32 DAT_cc008000;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
@@ -2959,10 +2959,10 @@ u32 FUN_80045c4c(char tick)
     pairWord = FUN_8025ce2c(1);
     FUN_80258a04((int)((u64)pairWord >> 0x20), pairWord, one);
     matPtr = &mat0;
-    FUN_80256b2c(DAT_803dd954, &uStack_24, matPtr);
+    FUN_80256b2c(gMinimapArrowScale1, &uStack_24, matPtr);
     local_20 = mat0;
     local_1c = 0;
-    local_18 = DAT_803dd950;
+    local_18 = gMinimapArrowScale2;
     FUN_80243e74();
     FUN_80006aa8((short*)&DAT_80360390,  & local_20);
     if (DAT_803dd927 == '\0')
@@ -2972,14 +2972,14 @@ u32 FUN_80045c4c(char tick)
     }
     FUN_80243e9c();
     FUN_80258b60((u32)DAT_803dc22e);
-    pairWord = FUN_80259a9c(DAT_803dd950, 1);
+    pairWord = FUN_80259a9c(gMinimapArrowScale2, 1);
     FUN_80258a04((int)((u64)pairWord >> 0x20), pairWord, matPtr);
     DAT_803dc22e = DAT_803dc22e + 1;
-    wasFront = DAT_803dd950 == DAT_803dd96c;
-    DAT_803dd950 = DAT_803dd96c;
+    wasFront = gMinimapArrowScale2 == DAT_803dd96c;
+    gMinimapArrowScale2 = DAT_803dd96c;
     if (wasFront)
     {
-        DAT_803dd950 = DAT_803dd968;
+        gMinimapArrowScale2 = DAT_803dd968;
     }
     if (((tick != '\0') && (DAT_803dc22c != '\0')) &&
         (DAT_803dc22c = DAT_803dc22c + -1, DAT_803dc22c == '\0'))
@@ -3032,7 +3032,7 @@ void FUN_8004600c(void)
     FUN_80246308(-0x7fc9fd20);
     FUN_80246190(-0x7fc9fd20);
     lbl_803DC074 = lbl_803DF71C * lbl_803DF720 * lbl_803DD940;
-    if (DAT_803dd5d0 != '\0')
+    if (gCamTitleStartPosePending != '\0')
     {
         lbl_803DC074 = lbl_803DF6F0;
     }
@@ -3057,8 +3057,8 @@ void FUN_8004600c(void)
         DAT_803dc070 = 1;
     }
     FUN_80243e74();
-    DAT_803dd95c = FUN_802464ec();
-    if (*(short*)(DAT_803dd95c + 0x2c8) != 2)
+    gMinimapAxisSwap = FUN_802464ec();
+    if (*(short*)(gMinimapAxisSwap + 0x2c8) != 2)
     {
         FUN_800723a0();
     }
@@ -3066,7 +3066,7 @@ void FUN_8004600c(void)
     if (1 < whole)
     {
         DAT_803dd92c = 0;
-        FUN_802471c4((int*)&DAT_803dd944);
+        FUN_802471c4((int*)&gMinimapViewMode);
     }
     FUN_80243e9c();
     FUN_80006988();
@@ -3180,26 +3180,26 @@ void fn_8004B11C(u32 ctxArg, u32 entryArg, u8 key)
     entCur = ent;
     do
     {
-        sel = DAT_803dd988;
+        sel = warpstoneUIState;
         if ((((-1 < *(int*)(entCur + 0x1c)) && ((mask & 0xff & 1 << bit) != 0)) &&
-                (found = (**(VtableFn**)(*DAT_803dd71c + 0x1c))(), sel = DAT_803dd988, found != 0)) &&
+                (found = (**(VtableFn**)(*gWeirdMenuTextureA + 0x1c))(), sel = warpstoneUIState, found != 0)) &&
             (sel = found, *(char*)(found + 0x19) == '$'))
         {
             GameBit_Get(0x4e2);
             if (((((int)*(short*)(found + 0x30) == -1) ||
-                        (uval = GameBit_Get((int)*(short*)(found + 0x30)), sel = DAT_803dd988, uval != 0))
+                        (uval = GameBit_Get((int)*(short*)(found + 0x30)), sel = warpstoneUIState, uval != 0))
                     && (((int)*(short*)(found + 0x32) == -1 ||
-                        (uval = GameBit_Get((int)*(short*)(found + 0x32)), sel = DAT_803dd988,
+                        (uval = GameBit_Get((int)*(short*)(found + 0x32)), sel = warpstoneUIState,
                             uval == 0)))) &&
                 ((*(char*)(found + 0x1a) != '\b' || (*(char*)(ent + 0x1a) != '\t'))))
             {
                 fval = FUN_80017714((float*)(ent + 8), (float*)(found + 8));
                 uval = FUN_80286718((double)(float)((double)(float)((double)(u32)ctx[2]) + fval));
                 FUN_800462f8((u32)ctxHi, (u32)(u32)ctx, key, uval, found);
-                sel = DAT_803dd988;
+                sel = warpstoneUIState;
             }
         }
-        DAT_803dd988 = sel;
+        warpstoneUIState = sel;
         entCur = entCur + 4;
         bit = bit + 1;
     }
@@ -3437,7 +3437,7 @@ void FUN_80047d88(char* color, char doRgb, char doAlpha, u32* rgbOut, u32* alpha
         }
         if (!rgbResolved)
         {
-            *rgbOut = DAT_803dd9f0;
+            *rgbOut = gDebugTextColorA;
         }
     }
     if (doAlpha == '\0')
@@ -3489,16 +3489,16 @@ void FUN_80047d88(char* color, char doRgb, char doAlpha, u32* rgbOut, u32* alpha
         }
         if (!alphaResolved)
         {
-            *alphaOut = DAT_803dd9ec;
+            *alphaOut = gDebugGlyphUScale;
         }
     }
     if ((!rgbResolved) || (!alphaResolved))
     {
         colorWord[0] = *(u32*)color;
-        FUN_8025c510(DAT_803dd9f4, (u8*)colorWord);
-        DAT_803dd9f4 = DAT_803dd9f4 + 1;
-        DAT_803dd9f0 = DAT_803dd9f0 + 1;
-        DAT_803dd9ec = DAT_803dd9ec + 1;
+        FUN_8025c510(gDebugScreenHeight, (u8*)colorWord);
+        gDebugScreenHeight = gDebugScreenHeight + 1;
+        gDebugTextColorA = gDebugTextColorA + 1;
+        gDebugGlyphUScale = gDebugGlyphUScale + 1;
     }
     return;
 }
@@ -3517,14 +3517,14 @@ void FUN_80047fdc(double value, u8 mode)
 
 void FUN_80048000(void)
 {
-    DAT_803dd9a8 = 0;
+    gTitleScreenCreditDelay = 0;
     return;
 }
 
 void FUN_8004800c(double param_1, double param_2, double param_3, double param_4, double param_5,
                   u8 param_6)
 {
-    DAT_803dd9a8 = 1;
+    gTitleScreenCreditDelay = 1;
     lbl_803DD9C4 = (float)param_1;
     lbl_803DD9C0 = (float)param_2;
     lbl_803DD9BC = (float)param_3;
@@ -3536,7 +3536,7 @@ void FUN_8004800c(double param_1, double param_2, double param_3, double param_4
 
 u8 FUN_80048094(void)
 {
-    return DAT_803dd9a8;
+    return gTitleScreenCreditDelay;
 }
 
 int FUN_800480a0(int base, int idx)
@@ -3613,10 +3613,10 @@ void FUN_80049910(u32* obj)
     float local_1c;
     float local_18;
 
-    local_ec = DAT_802c24e8;
+    local_ec = gWmSunGlareDir;
     local_e8 = DAT_802c24ec;
     local_e4 = DAT_802c24f0;
-    local_e0 = DAT_802c24f4;
+    local_e0 = gWmSunGlareSun;
     local_dc = DAT_802c24f8;
     local_d8 = DAT_802c24fc;
     viewMtx = (float*)FUN_8000697c();
@@ -3633,37 +3633,37 @@ void FUN_80049910(u32* obj)
     local_20 = lbl_803DF74C;
     local_1c = lbl_803DF74C;
     local_18 = lbl_803DF748;
-    FUN_8025d8c4(&local_44, DAT_803dda00, 0);
-    FUN_80258674(DAT_803dda08, 0, 0, 0, 0, DAT_803dda00);
+    FUN_8025d8c4(&local_44, gDebugPrintOriginX, 0);
+    FUN_80258674(gDebugPrintOriginY, 0, 0, 0, 0, gDebugPrintOriginX);
     objHeader = *obj;
-    FUN_8025c510(DAT_803dd9f4, (u8*)&objHeader);
+    FUN_8025c510(gDebugScreenHeight, (u8*)&objHeader);
     newshadows_getBlankShadowTexture(&blankShadowTex);
     if (blankShadowTex != 0)
     {
         if (*(char*)(blankShadowTex + 0x48) == '\0')
         {
-            FUN_8025b054((u32*)(blankShadowTex + 0x20), DAT_803dda0c);
+            FUN_8025b054((u32*)(blankShadowTex + 0x20), gDebugDrawPass);
         }
         else
         {
-            FUN_8025aeac((u32*)(blankShadowTex + 0x20), *(u32**)(blankShadowTex + 0x40), DAT_803dda0c);
+            FUN_8025aeac((u32*)(blankShadowTex + 0x20), *(u32**)(blankShadowTex + 0x40), gDebugDrawPass);
         }
     }
     if (DAT_803dd9b1 == '\0')
     {
-        FUN_8025c828(DAT_803dda10, DAT_803dda08, DAT_803dda0c, 0xff);
-        FUN_8025c1a4(DAT_803dda10, 0, 0xe, 9, 0xf);
-        FUN_8025c224(DAT_803dda10, 7, 7, 7, 0);
-        FUN_8025c65c(DAT_803dda10, 0, 0);
-        FUN_8025be80(DAT_803dda10);
-        FUN_8025c2a8(DAT_803dda10, 0, 0, 0, 1, 0);
-        FUN_8025c368(DAT_803dda10, 0, 0, 0, 1, 0);
-        DAT_803dd9b0 = 1;
-        GXSetBlendMode(DAT_803dda10, DAT_803dd9f0);
-        DAT_803dda08 = DAT_803dda08 + 1;
-        DAT_803dda10 = DAT_803dda10 + 1;
-        DAT_803dda0c = DAT_803dda0c + 1;
-        DAT_803dda00 = DAT_803dda00 + 3;
+        FUN_8025c828(gDebugFixedWidthMode, gDebugPrintOriginY, gDebugDrawPass, 0xff);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0, 0xe, 9, 0xf);
+        FUN_8025c224(gDebugFixedWidthMode, 7, 7, 7, 0);
+        FUN_8025c65c(gDebugFixedWidthMode, 0, 0);
+        FUN_8025be80(gDebugFixedWidthMode);
+        FUN_8025c2a8(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+        FUN_8025c368(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+        gTitleScreenCursorX = 1;
+        GXSetBlendMode(gDebugFixedWidthMode, gDebugTextColorA);
+        gDebugPrintOriginY = gDebugPrintOriginY + 1;
+        gDebugFixedWidthMode = gDebugFixedWidthMode + 1;
+        gDebugDrawPass = gDebugDrawPass + 1;
+        gDebugPrintOriginX = gDebugPrintOriginX + 3;
         DAT_803dd9ea = DAT_803dd9ea + '\x01';
         DAT_803dd9e9 = DAT_803dd9e9 + '\x01';
     }
@@ -3673,7 +3673,7 @@ void FUN_80049910(u32* obj)
         noiseScrollY = noiseScrollY * lbl_803DF760;
         noiseScrollX = noiseScrollX * lbl_803DF788;
         FUN_8025b9e8(2, &local_ec, -2);
-        FUN_8025bd1c(DAT_803dd9fc, DAT_803dda08 + 1, DAT_803dda0c + 1);
+        FUN_8025bd1c(gDebugMarginBottom, gDebugPrintOriginY + 1, gDebugDrawPass + 1);
         local_74 = lbl_803DD9B4;
         local_70 = lbl_803DF74C;
         local_6c = lbl_803DF74C;
@@ -3689,11 +3689,11 @@ void FUN_80049910(u32* obj)
         PSVECDotProduct((double)lbl_803DF7A8, afStack_d4, 0x7a);
         FUN_80247618(afStack_d4, &local_74, &local_74);
         FUN_80247618(&local_74, viewMtx, &local_74);
-        FUN_8025d8c4(&local_74, DAT_803dda00 + 3, 0);
-        FUN_80258674(DAT_803dda08 + 1, 0, 0, 0, 0, DAT_803dda00 + 3);
-        FUN_8025b94c(DAT_803dda10, DAT_803dd9fc, 0, 2, 2, 6, 6, 0, 0, 0);
-        FUN_8025bb48(DAT_803dd9fc, 0, 0);
-        FUN_8025bd1c(DAT_803dd9fc + 1, DAT_803dda08 + 2, DAT_803dda0c + 1);
+        FUN_8025d8c4(&local_74, gDebugPrintOriginX + 3, 0);
+        FUN_80258674(gDebugPrintOriginY + 1, 0, 0, 0, 0, gDebugPrintOriginX + 3);
+        FUN_8025b94c(gDebugFixedWidthMode, gDebugMarginBottom, 0, 2, 2, 6, 6, 0, 0, 0);
+        FUN_8025bb48(gDebugMarginBottom, 0, 0);
+        FUN_8025bd1c(gDebugMarginBottom + 1, gDebugPrintOriginY + 2, gDebugDrawPass + 1);
         local_a4 = lbl_803DF74C;
         local_a0 = lbl_803DF74C;
         local_9c = lbl_803DD9B4;
@@ -3709,69 +3709,69 @@ void FUN_80049910(u32* obj)
         PSVECDotProduct((double)lbl_803DF7AC, afStack_d4, 0x78);
         FUN_80247618(afStack_d4, &local_a4, &local_a4);
         FUN_80247618(&local_a4, viewMtx, &local_a4);
-        FUN_8025d8c4(&local_a4, DAT_803dda00 + 6, 0);
-        FUN_80258674(DAT_803dda08 + 2, 0, 0, 0, 0, DAT_803dda00 + 6);
-        FUN_8025b94c(DAT_803dda10 + 1, DAT_803dd9fc + 1, 0, 2, 2, 0, 0, 1, 0, 0);
-        FUN_8025bb48(DAT_803dd9fc + 1, 0, 0);
-        FUN_8025c828(DAT_803dda10, 0xff, 0xff, 0xff);
-        FUN_8025c1a4(DAT_803dda10, 0xf, 0xf, 0xf, 0);
-        FUN_8025c224(DAT_803dda10, 7, 7, 7, 0);
-        FUN_8025c65c(DAT_803dda10, 0, 0);
-        FUN_8025c2a8(DAT_803dda10, 0, 0, 0, 1, 0);
-        FUN_8025c368(DAT_803dda10, 0, 0, 0, 1, 0);
-        DAT_803dd9b0 = 1;
-        FUN_8025c828(DAT_803dda10 + 1, DAT_803dda08, DAT_803dda0c, 0xff);
-        FUN_8025c1a4(DAT_803dda10 + 1, 0, 0xe, 9, 0xf);
-        FUN_8025c224(DAT_803dda10 + 1, 7, 7, 7, 0);
-        FUN_8025c65c(DAT_803dda10 + 1, 0, 0);
-        FUN_8025c2a8(DAT_803dda10 + 1, 0, 0, 0, 1, 0);
-        FUN_8025c368(DAT_803dda10 + 1, 0, 0, 0, 1, 0);
+        FUN_8025d8c4(&local_a4, gDebugPrintOriginX + 6, 0);
+        FUN_80258674(gDebugPrintOriginY + 2, 0, 0, 0, 0, gDebugPrintOriginX + 6);
+        FUN_8025b94c(gDebugFixedWidthMode + 1, gDebugMarginBottom + 1, 0, 2, 2, 0, 0, 1, 0, 0);
+        FUN_8025bb48(gDebugMarginBottom + 1, 0, 0);
+        FUN_8025c828(gDebugFixedWidthMode, 0xff, 0xff, 0xff);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0xf, 0xf, 0xf, 0);
+        FUN_8025c224(gDebugFixedWidthMode, 7, 7, 7, 0);
+        FUN_8025c65c(gDebugFixedWidthMode, 0, 0);
+        FUN_8025c2a8(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+        FUN_8025c368(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+        gTitleScreenCursorX = 1;
+        FUN_8025c828(gDebugFixedWidthMode + 1, gDebugPrintOriginY, gDebugDrawPass, 0xff);
+        FUN_8025c1a4(gDebugFixedWidthMode + 1, 0, 0xe, 9, 0xf);
+        FUN_8025c224(gDebugFixedWidthMode + 1, 7, 7, 7, 0);
+        FUN_8025c65c(gDebugFixedWidthMode + 1, 0, 0);
+        FUN_8025c2a8(gDebugFixedWidthMode + 1, 0, 0, 0, 1, 0);
+        FUN_8025c368(gDebugFixedWidthMode + 1, 0, 0, 0, 1, 0);
         newshadows_getShadowNoiseTexture(&noiseTex);
         if (noiseTex != 0)
         {
             if (*(char*)(noiseTex + 0x48) == '\0')
             {
-                FUN_8025b054((u32*)(noiseTex + 0x20), DAT_803dda0c + 1);
+                FUN_8025b054((u32*)(noiseTex + 0x20), gDebugDrawPass + 1);
             }
             else
             {
-                FUN_8025aeac((u32*)(noiseTex + 0x20), *(u32**)(noiseTex + 0x40), DAT_803dda0c + 1);
+                FUN_8025aeac((u32*)(noiseTex + 0x20), *(u32**)(noiseTex + 0x40), gDebugDrawPass + 1);
             }
         }
-        GXSetBlendMode(DAT_803dda10 + 1, DAT_803dd9f0);
-        DAT_803dda08 = DAT_803dda08 + 3;
-        DAT_803dda10 = DAT_803dda10 + 2;
-        DAT_803dda0c = DAT_803dda0c + 2;
-        DAT_803dda00 = DAT_803dda00 + 9;
-        DAT_803dd9fc = DAT_803dd9fc + 2;
+        GXSetBlendMode(gDebugFixedWidthMode + 1, gDebugTextColorA);
+        gDebugPrintOriginY = gDebugPrintOriginY + 3;
+        gDebugFixedWidthMode = gDebugFixedWidthMode + 2;
+        gDebugDrawPass = gDebugDrawPass + 2;
+        gDebugPrintOriginX = gDebugPrintOriginX + 9;
+        gDebugMarginBottom = gDebugMarginBottom + 2;
         DAT_803dd9ea = DAT_803dd9ea + '\x02';
         DAT_803dd9e9 = DAT_803dd9e9 + '\x03';
-        DAT_803dd9e8 = DAT_803dd9e8 + '\x02';
+        gDebugGlyphVScale = gDebugGlyphVScale + '\x02';
     }
-    DAT_803dd9f4 = DAT_803dd9f4 + 1;
-    DAT_803dd9f0 = DAT_803dd9f0 + 1;
-    DAT_803dd9ec = DAT_803dd9ec + 1;
+    gDebugScreenHeight = gDebugScreenHeight + 1;
+    gDebugTextColorA = gDebugTextColorA + 1;
+    gDebugGlyphUScale = gDebugGlyphUScale + 1;
     return;
 }
 
 void FUN_8004bc68(char mode)
 {
-    FUN_8025be80(DAT_803dda10);
-    FUN_8025c828(DAT_803dda10, 0xff, 0xff, 4);
-    FUN_8025c65c(DAT_803dda10, 0, 0);
+    FUN_8025be80(gDebugFixedWidthMode);
+    FUN_8025c828(gDebugFixedWidthMode, 0xff, 0xff, 4);
+    FUN_8025c65c(gDebugFixedWidthMode, 0, 0);
     if (mode == '\0')
     {
-        FUN_8025c1a4(DAT_803dda10, 0xf, 0, 10, 6);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0xf, 0, 10, 6);
     }
     else
     {
-        FUN_8025c1a4(DAT_803dda10, 0xf, 0, 4, 6);
+        FUN_8025c1a4(gDebugFixedWidthMode, 0xf, 0, 4, 6);
     }
-    FUN_8025c224(DAT_803dda10, 7, 7, 7, 0);
-    FUN_8025c2a8(DAT_803dda10, 0, 0, 0, 1, 0);
-    FUN_8025c368(DAT_803dda10, 0, 0, 0, 1, 0);
-    DAT_803dd9b0 = 1;
-    DAT_803dda10 = DAT_803dda10 + 1;
+    FUN_8025c224(gDebugFixedWidthMode, 7, 7, 7, 0);
+    FUN_8025c2a8(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+    FUN_8025c368(gDebugFixedWidthMode, 0, 0, 0, 1, 0);
+    gTitleScreenCursorX = 1;
+    gDebugFixedWidthMode = gDebugFixedWidthMode + 1;
     DAT_803dd9ea = DAT_803dd9ea + '\x01';
     return;
 }
