@@ -22,10 +22,8 @@ void nw_ice_render(void)
 {
 }
 
-int nw_animice_SeqFn(void);
 int nw_ice_getExtraSize(void) { return 0x4; }
 
-void nw_animice_free(int x);
 void nw_ice_free(int x) { ObjGroup_RemoveObject(x, 0x3c); }
 
 void nw_ice_update(int* obj)
@@ -89,4 +87,3 @@ void nw_ice_update(int* obj)
 
 void nw_ice_init(int x) { ObjGroup_AddObject(x, 0x3c); }
 
-void nw_tricky_init(int* obj);
