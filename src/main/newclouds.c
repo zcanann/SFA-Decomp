@@ -1820,7 +1820,7 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
     }
 }
 
-extern int gNewCloudMusicIdByType[];
+int gNewCloudMusicIdByType[5] = {43, 0, 0, 0, 0};
 extern const f32 lbl_803DF27C;
 
 #undef NC_CLOUD

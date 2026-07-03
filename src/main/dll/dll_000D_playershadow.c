@@ -1326,7 +1326,7 @@ void playerShadow_renderObject(void* obj)
 }
 
 
-extern f32 gPlayerShadowCamDelta[];
+f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
 extern s16 lbl_803DD29A;
 extern s16 gPlayerShadowCamRotY;
 extern const f32 lbl_803DF468;
