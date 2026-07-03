@@ -217,66 +217,71 @@ typedef struct TexLayer
     u8 pad7;
 } TexLayer;
 
-void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bitReader, Mtx viewMtx)
+/* NOTE: this fn and mapBlockRender_setLightmapShader sit BEFORE the
+ * BitStreamReader/MapBlockData typedefs (declared further down) - a typedef
+ * declared any earlier renumbers MWCC's internal @NNN constant-pool symbol
+ * for setLightmapShader's 0.0f (a byte diff in the .o strtab). They keep the
+ * raw int* bit-cursor spelling ([0]=byte base, [4]=bit position). */
+void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* bitReader, Mtx viewMtx)
 {
-    Mtx m2;
-    float m[2][3];
-    int lb;
-    int la;
-    u8 count;
-    int ptr;
-    int bptr;
-    u32 word;
-    int pos;
+    Mtx passMtx;
+    float indMtx[2][3];
+    int texTableB;
+    int texTable;
+    u8 passCount;
+    int rec;
+    int byteBase;
+    u32 bits;
+    int bitPos;
     u32 flags;
-    u8* tbl;
+    u8* mtxSrc;
     int i;
 
-    pos = bitReader[4];
+    bitPos = bitReader[4];
     {
-        int off = pos >> 3;
-        bptr = *bitReader;
-        word = *(u8*)(bptr + off);
-        bptr += off;
-        word = word | (u32)(*(u8*)(bptr + 1) << 8);
-        word = word | (u32)(*(u8*)(bptr + 2) << 16);
+        int off = bitPos >> 3;
+        byteBase = *bitReader;
+        bits = *(u8*)(byteBase + off);
+        byteBase += off;
+        bits = bits | (u32)(*(u8*)(byteBase + 1) << 8);
+        bits = bits | (u32)(*(u8*)(byteBase + 2) << 16);
     }
-    bitReader[4] = pos + 8;
-    ptr = *(int*)(blockData + 0x68) + ((word >> (pos & 7)) & 0xff) * 0x1c;
-    flags = *(u32*)(arg2 + 0x3c);
+    bitReader[4] = bitPos + 8;
+    rec = (int)((MapBlockBoundsRec*)*(int*)(blockData + 0x68) + ((bits >> (bitPos & 7)) & 0xff));
+    flags = SHADER_FLAGS(shader);
     if ((flags & 0x4000) != 0)
     {
-        count = 4;
+        passCount = 4;
     }
     else if ((flags & 0x8000) != 0)
     {
-        count = 8;
+        passCount = 8;
     }
     else if ((flags & 0x10000) != 0)
     {
-        count = 0x10;
+        passCount = 0x10;
     }
     else
     {
         return;
     }
     i = 0;
-    for (; i < count; i = i + 1)
+    for (; i < passCount; i = i + 1)
     {
-        PSMTXTrans(m2, lbl_803DEBCC, lbl_803DEC2C * (f32)(i + 1), lbl_803DEBCC);
-        PSMTXConcat(viewMtx, m2, m2);
-        GXLoadPosMtxImm(m2, 0);
-        tbl = (u8*)gTexIndMtxTable;
-        *(IndMtxCopy*)m = *(IndMtxCopy*)tbl;
-        textureFn_8006c4e0(&la, &lb);
-        selectTexture(*(int*)(la + (u8)i * 4), 1);
+        PSMTXTrans(passMtx, lbl_803DEBCC, lbl_803DEC2C * (f32)(i + 1), lbl_803DEBCC);
+        PSMTXConcat(viewMtx, passMtx, passMtx);
+        GXLoadPosMtxImm(passMtx, 0);
+        mtxSrc = (u8*)gTexIndMtxTable;
+        *(IndMtxCopy*)indMtx = *(IndMtxCopy*)mtxSrc;
+        textureFn_8006c4e0(&texTable, &texTableB);
+        selectTexture(*(int*)(texTable + (u8)i * 4), 1);
         {
             f32 s = (f32)((i & 0xff) + 1) * gTexIndMtxScale;
-            m[0][0] = s * displayOffsetH_803DEBFC;
+            indMtx[0][0] = s * displayOffsetH_803DEBFC;
         }
-        m[1][1] = m[0][0];
-        GXSetIndTexMtx(GX_ITM_0, (const float (*)[3])m, gTexIndMtxScaleExp);
-        GXCallDisplayList(((MapBlockBoundsRec*)ptr)->dlist, (u32)((MapBlockBoundsRec*)ptr)->dlistSize);
+        indMtx[1][1] = indMtx[0][0];
+        GXSetIndTexMtx(GX_ITM_0, (const float (*)[3])indMtx, gTexIndMtxScaleExp);
+        GXCallDisplayList(((MapBlockBoundsRec*)rec)->dlist, (u32)((MapBlockBoundsRec*)rec)->dlistSize);
     }
 }
 
@@ -284,24 +289,24 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
 {
     int shader;
     u32 shaderIdx;
-    int colorWord;
-    int _base;
-    u32 _bits;
+    int fogColor;
+    int byteBase;
+    u32 bits;
     u32 bitPos;
-    u8 col[3];
+    u8 ambColor[3];
 
-    colorWord = gTexLightmapFogColor;
+    fogColor = gTexLightmapFogColor;
     bitPos = bitReader[4];
     {
-        int _off = (int)bitPos >> 3;
-        _base = *bitReader;
-        _bits = *(u8*)(_base + _off);
-        _base += _off;
-        _bits |= (u32) * (u8*)(_base + 1) << 8;
-        _bits |= (u32) * (u8*)(_base + 2) << 16;
+        int off = (int)bitPos >> 3;
+        byteBase = *bitReader;
+        bits = *(u8*)(byteBase + off);
+        byteBase += off;
+        bits |= (u32) * (u8*)(byteBase + 1) << 8;
+        bits |= (u32) * (u8*)(byteBase + 2) << 16;
         bitReader[4] = bitPos + 6;
-        shaderIdx = (_bits >> (bitPos & 7)) & 0x3f;
-        shader = *(int*)(blockData + 0x64) + shaderIdx * 0x44;
+        shaderIdx = (bits >> (bitPos & 7)) & 0x3f;
+        shader = (int)((MapShader*)*(int*)(blockData + 0x64) + shaderIdx);
     }
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
     selectTexture(*(int*)Shader_getLayer(shader, 0), 0);
@@ -310,7 +315,7 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
         _gxSetFogParams();
         goto LAB_8005E630;
     }
-    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&colorWord);
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&fogColor);
 LAB_8005E630:
     if ((SHADER_FLAGS(shader) & 1) == 0)
     {
@@ -331,12 +336,43 @@ LAB_8005E630:
     GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     goto LAB_8005E718;
 LAB_8005E6D0:
-    objGetColor(0, &col[0], &col[1], &col[2]);
+    objGetColor(0, &ambColor[0], &ambColor[1], &ambColor[2]);
     GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&col[0]);
+    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambColor[0]);
 LAB_8005E718:
     return shader;
 }
+
+/*
+ * MapBlockData - the per-map-block record handed to the mapBlockRender_*
+ * family as a raw int. Only the two array bases this file reads are named:
+ * the 0x44-stride MapShader table at 0x64 and the 0x1c-stride
+ * MapBlockBoundsRec table at 0x68. Declared HERE (not at top of file)
+ * because any typedef parsed before mapBlockRender_setLightmapShader
+ * renumbers MWCC's internal @NNN constant-pool symbol (strtab byte diff).
+ */
+typedef struct MapBlockData
+{
+    u8 pad0[0x64];
+    MapShader* shaders;        /* 0x64 */
+    MapBlockBoundsRec* bounds; /* 0x68 */
+} MapBlockData;
+
+/*
+ * BitStreamReader - the render-command bit cursor threaded through the
+ * mapBlockRender_* family as int*. data points at the packed command bytes;
+ * bitPos is the read cursor in bits. Each read grabs a 24-bit little-endian
+ * window at byte bitPos>>3 and shifts by bitPos&7. Same mid-file placement
+ * constraint as MapBlockData above.
+ */
+typedef struct BitStreamReader
+{
+    u8* data;   /* 0x00 */
+    int unk4;
+    int unk8;
+    int unkC;
+    int bitPos; /* 0x10 */
+} BitStreamReader;
 
 void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
 {
@@ -523,124 +559,123 @@ mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes,
     return 1;
 }
 
-void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, float* mtx)
+void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, int* stream, float* mtx)
 {
-    u8 dBig[16];
-    int dOut[3];
+    int lightPos[3];
     int count;
-    float x1;
-    float y1;
-    float z1;
-    float x2;
-    float y2;
-    float z2;
-    u8 c[4];
-    u8 g[4];
+    float minX;
+    float minY;
+    float minZ;
+    float maxX;
+    float maxY;
+    float maxZ;
+    u8 lightColor[4];
+    u8 chanColor[4];
     int i;
-    u32 vis;
+    u32 visible;
     u32 flags;
-    u32 word;
-    int pos;
-    int bptr;
+    u32 bits;
+    int bitPos;
+    int byteBase;
 
     {
-    u8* base;
-    int ptr;
+    u8* texGlobals;
+    int rec;
 
-    base = lbl_8037E0C0;
-    pos = stream[4];
+    texGlobals = lbl_8037E0C0;
+    bitPos = ((BitStreamReader*)stream)->bitPos;
     {
-        int off = pos >> 3;
-        bptr = *stream;
-        word = *(u8*)(bptr + off);
-        bptr += off;
-        word = word | (u32)(*(u8*)(bptr + 1) << 8);
-        word = word | (u32)(*(u8*)(bptr + 2) << 16);
+        int off = bitPos >> 3;
+        byteBase = (int)((BitStreamReader*)stream)->data;
+        bits = *(u8*)(byteBase + off);
+        byteBase += off;
+        bits = bits | (u32)(*(u8*)(byteBase + 1) << 8);
+        bits = bits | (u32)(*(u8*)(byteBase + 2) << 16);
     }
-    stream[4] = pos + 8;
-    ptr = *(int*)(block + 0x68) + ((word >> (pos & 7)) & 0xff) * 0x1c;
-    if ((obj != NULL) && ((*(u32*)(obj + 0x3c) & 2) != 0))
+    ((BitStreamReader*)stream)->bitPos = bitPos + 8;
+    rec = (int)&((MapBlockData*)block)->bounds[(bits >> (bitPos & 7)) & 0xff];
+    if ((shader != NULL) && ((SHADER_FLAGS(shader) & 2) != 0))
     {
         goto end;
     }
-    if (mapBlockBounds_ComputeAndTestPlanes(ptr, block, (FrustumPlane*)(base + 0x987c), FRUSTUM_PLANE_COUNT, &x1, &y1, &z1, &x2, &y2, &z2)
+    if (mapBlockBounds_ComputeAndTestPlanes(rec, block, (FrustumPlane*)(texGlobals + 0x987c), FRUSTUM_PLANE_COUNT, &minX, &minY, &minZ, &maxX, &maxY, &maxZ)
         == 0)
     {
         goto end;
     }
-    if ((u8)hi == 0)
+    if ((u8)passSelect == 0)
     {
-        flags = *(u32*)(obj + 0x3c);
+        flags = SHADER_FLAGS(shader);
         if ((flags & 0x80000000) != 0)
         {
-            fn_8005D3B4(ptr, block, ((MapBlockBoundsRec*)ptr)->unk18);
+            fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->unk18);
             {
                 int shadowType = 5;
-                *(int*)((u8*)&((TexShadowRow*)base)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
+                *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
             }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
         else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0))
         {
-            fn_8005D3B4(ptr, block, ((MapBlockBoundsRec*)ptr)->unk18);
+            fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->unk18);
             {
                 int shadowType = 4;
-                *(int*)((u8*)&((TexShadowRow*)base)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
+                *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
             }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
     }
     else
     {
-        if (obj != NULL)
+        if (shader != NULL)
         {
-            flags = *(u32*)(obj + 0x3c);
+            flags = SHADER_FLAGS(shader);
             if (((flags & 0x80000000) == 0) && ((flags & 0x20000) == 0))
             {
-                if ((obj != NULL) && ((flags & 0x80000) != 0))
+                if ((shader != NULL) && ((flags & 0x80000) != 0))
                 {
                     count = 0;
                 }
                 else
                 {
-                    modelLightStruct_selectBrightestAabbLights(x1 + playerMapOffsetX, y1,
-                                                               z1 + playerMapOffsetZ, x2 + playerMapOffsetX, y2,
-                                                               z2 + playerMapOffsetZ,
+                    modelLightStruct_selectBrightestAabbLights(minX + playerMapOffsetX, minY,
+                                                               minZ + playerMapOffsetZ, maxX + playerMapOffsetX, maxY,
+                                                               maxZ + playerMapOffsetZ,
                                                                (u8*)&gTexBlockLightList, 2, &count);
                 }
-                if ((obj != NULL) &&
-                    (((*(u32*)(obj + 0x3c) & 0x800) != 0 || ((*(u32*)(obj + 0x3c) & 0x1000) != 0))))
+                if ((shader != NULL) &&
+                    (((SHADER_FLAGS(shader) & 0x800) != 0 || ((SHADER_FLAGS(shader) & 0x1000) != 0))))
                 {
-                    fn_80088730(g);
-                    g[3] = 0;
-                    g[2] = 0;
-                    g[1] = 0;
-                    g[0] = 0;
+                    fn_80088730(chanColor);
+                    chanColor[3] = 0;
+                    chanColor[2] = 0;
+                    chanColor[1] = 0;
+                    chanColor[0] = 0;
                     if (count == 0)
                     {
-                        if ((obj != NULL) && ((*(u32*)(obj + 0x3c) & 0x800) != 0))
+                        if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
                         {
-                            fn_8004EF9C(g);
+                            fn_8004EF9C(chanColor);
                         }
                         else
                         {
-                            fn_8004EECC(g);
+                            fn_8004EECC(chanColor);
                         }
                     }
                     else
                     {
-                        modelLightStruct_getDiffuseColor((void*)gTexBlockLightList, &c[0], &c[1], &c[2], &c[3]);
-                        modelLightStruct_getPosition((void*)gTexBlockLightList, &dOut[0], &dOut[1], &dOut[2]);
+                        modelLightStruct_getDiffuseColor((void*)gTexBlockLightList, &lightColor[0], &lightColor[1], &lightColor[2], &lightColor[3]);
+                        modelLightStruct_getPosition((void*)gTexBlockLightList, &lightPos[0], &lightPos[1], &lightPos[2]);
                         modelLightStruct_getRadius((void*)gTexBlockLightList);
-                        fn_8004F6D8(c, &dOut[0], g);
+                        fn_8004F6D8(lightColor, &lightPos[0], chanColor);
                         for (i = 1; i < count; i = i + 1)
                         {
-                            modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &c[0], &c[1], &c[2], &c[3]);
-                            modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &dOut[0], &dOut[1], &dOut[2]);
+                            modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &lightColor[0], &lightColor[1], &lightColor[2], &lightColor[3]);
+                            modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &lightPos[0], &lightPos[1], &lightPos[2]);
                             modelLightStruct_getRadius((void*)(&gTexBlockLightList)[i]);
-                            fn_8004F380(c, &dOut[0]);
+                            fn_8004F380(lightColor, &lightPos[0]);
                         }
-                        if ((obj != NULL) && ((*(u32*)(obj + 0x3c) & 0x800) != 0))
+                        if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
                         {
                             fn_8004F2B0();
                         }
@@ -654,31 +689,31 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                 {
                     for (i = 0; i < count; i = i + 1)
                     {
-                        modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &c[0], &c[1], &c[2], &c[3]);
-                        modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &dOut[0], &dOut[1], &dOut[2]);
+                        modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &lightColor[0], &lightColor[1], &lightColor[2], &lightColor[3]);
+                        modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &lightPos[0], &lightPos[1], &lightPos[2]);
                         modelLightStruct_getRadius((void*)(&gTexBlockLightList)[i]);
-                        fn_8004FA30(c, &dOut[0]);
+                        fn_8004FA30(lightColor, &lightPos[0]);
                     }
                 }
-                if ((obj != NULL) && ((*(u32*)(obj + 0x3c) & 0x2000) != 0))
+                if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x2000) != 0))
                 {
-                    if ((obj != NULL) && ((*(u32*)(obj + 0x3c) & 0x40000000) != 0))
+                    if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x40000000) != 0))
                     {
-                        vis = lo;
+                        visible = visArg;
                     }
                     else
                     {
-                        u8 res2 = mapBlockBounds_ComputeAndTestPlanes(ptr, block, (FrustumPlane*)(base + 0x9818), FRUSTUM_PLANE_COUNT,
-                                                                      &x1, &y1, &z1, &x2, &y2, &z2);
-                        if ((res2 != 0 && (u8)lo != 0) || (res2 == 0 && (u8)lo == 0))
+                        u8 mirrorVisible = mapBlockBounds_ComputeAndTestPlanes(rec, block, (FrustumPlane*)(texGlobals + 0x9818), FRUSTUM_PLANE_COUNT,
+                                                                      &minX, &minY, &minZ, &maxX, &maxY, &maxZ);
+                        if ((mirrorVisible != 0 && (u8)visArg != 0) || (mirrorVisible == 0 && (u8)visArg == 0))
                         {
-                            vis = 1;
+                            visible = 1;
                         }
                         else
                         {
-                            vis = 0;
+                            visible = 0;
                         }
-                        if ((u8)lo != 0)
+                        if ((u8)visArg != 0)
                         {
                             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
                             gxSetZMode_(1, 3, 0);
@@ -686,7 +721,7 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                             GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                         }
                     }
-                    if ((u8)vis == 0)
+                    if ((u8)visible == 0)
                     {
                         goto end;
                     }
@@ -695,15 +730,15 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                 textureFn_800528bc();
             }
         }
-        GXCallDisplayList(((MapBlockBoundsRec*)ptr)->dlist, ((MapBlockBoundsRec*)ptr)->dlistSize);
-        flags = *(u32*)(obj + 0x3c);
+        GXCallDisplayList(((MapBlockBoundsRec*)rec)->dlist, ((MapBlockBoundsRec*)rec)->dlistSize);
+        flags = SHADER_FLAGS(shader);
         if ((((flags & 0x4000) != 0) || ((flags & 0x8000) != 0) || ((flags & 0x10000) != 0)) &&
-            (mapBlockBounds_HasCornerPastDepthThreshold(ptr, mtx) != 0))
+            (mapBlockBounds_HasCornerPastDepthThreshold(rec, mtx) != 0))
         {
-            fn_8005D3B4(ptr, block, 0x17);
+            fn_8005D3B4(rec, block, 0x17);
             {
                 int shadowType = 6;
-                *(int*)((u8*)&((TexShadowRow*)base)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
+                *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
             }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
@@ -721,35 +756,35 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     float* texMtx;
     int overrideIdx;
     int remain;
-    TexOverride* pE;
+    TexOverride* ovr;
     u8 layerByte;
-    u32 colorWord;
+    u32 kColor;
     Mtx texMatrix;
 
-    colorWord = lbl_803DEBB0;
+    kColor = lbl_803DEBB0;
     if ((((MapShader*)shader)->layerCount == 2) &&
         (texId = Shader_getLayer(shader, 1), (((TexLayer*)texId)->typeBits & 0x7f) == 9u))
     {
         layer = (int*)Shader_getLayer(shader, 0);
         if ((layerByte = ((TexLayer*)layer)->overrideByte) != '\0')
         {
-            int texVal = *layer;
+            int layerTexId = *layer;
             TexOverride* base;
             overrideIdx = 0;
             base = (TexOverride*)lbl_803DCE6C;
-            pE = base;
+            ovr = base;
             for (remain = 0x50; remain != 0; remain--)
             {
-                if (((0 < pE->count) && ((u32)pE->id == texVal)) &&
-                    ((int)layerByte == pE->layerByte))
+                if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
+                    ((int)layerByte == ovr->layerByte))
                 {
-                    texId = textureCrazyPointerFollowFn_80054c30(texVal, base[overrideIdx].ptr);
+                    texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
                     goto layer0_done;
                 }
-                pE = pE + 1;
+                ovr = ovr + 1;
                 overrideIdx = overrideIdx + 1;
             }
-            texId = texVal;
+            texId = layerTexId;
         }
         else
         {
@@ -769,7 +804,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         {
             texMtx = (float*)0x0;
         }
-        fn_80051B00(texId, texMtx, 0, &colorWord);
+        fn_80051B00(texId, texMtx, 0, &kColor);
         if ((SHADER_FLAGS(shader) & 0x100) != 0)
         {
             fn_8004D928();
@@ -777,23 +812,23 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         layer = (int*)Shader_getLayer(shader, 1);
         if ((layerByte = ((TexLayer*)layer)->overrideByte) != '\0')
         {
-            int texVal = *layer;
+            int layerTexId = *layer;
             TexOverride* base;
             overrideIdx = 0;
             base = (TexOverride*)lbl_803DCE6C;
-            pE = base;
+            ovr = base;
             for (remain = 0x50; remain != 0; remain--)
             {
-                if (((0 < pE->count) && ((u32)pE->id == texVal)) &&
-                    ((int)layerByte == pE->layerByte))
+                if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
+                    ((int)layerByte == ovr->layerByte))
                 {
-                    texId = textureCrazyPointerFollowFn_80054c30(texVal, base[overrideIdx].ptr);
+                    texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
                     goto layer1_done;
                 }
-                pE = pE + 1;
+                ovr = ovr + 1;
                 overrideIdx = overrideIdx + 1;
             }
-            texId = texVal;
+            texId = layerTexId;
         }
         else
         {
@@ -814,7 +849,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
             texMtx = (float*)0x0;
         }
         fn_80051868(texId, texMtx, 9);
-        textureFn_800524ec((char*)&colorWord);
+        textureFn_800524ec((char*)&kColor);
     }
     else
     {
@@ -823,27 +858,27 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
             layer = (int*)Shader_getLayer(shader, layerIdx);
             if (*(void**)layer != NULL)
             {
-                int texVal = *layer;
+                int layerTexId = *layer;
                 u8 ovrLayerByte;
                 if ((ovrLayerByte = ((TexLayer*)layer)->overrideByte) != '\0')
                 {
                     TexOverride* base;
                     overrideIdx = 0;
                     base = (TexOverride*)lbl_803DCE6C;
-                    pE = base;
+                    ovr = base;
                     for (remain = 0x50; remain != 0; remain--)
                     {
-                        if (((0 < pE->count) && ((u32)pE->id == texVal)) &&
-                            ((int)ovrLayerByte == pE->layerByte))
+                        if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
+                            ((int)ovrLayerByte == ovr->layerByte))
                         {
-                            texId = textureCrazyPointerFollowFn_80054c30(texVal, base[overrideIdx].ptr);
+                            texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
                             goto layerN_done;
                         }
-                        pE = pE + 1;
+                        ovr = ovr + 1;
                         overrideIdx = overrideIdx + 1;
                     }
                 }
-                texId = texVal;
+                texId = layerTexId;
             layerN_done:
                 if (((TexLayer*)layer)->mtxIndex != 0xff)
                 {
@@ -886,25 +921,25 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
 {
     u32 shader;
     u32 shaderIdx;
-    int _base;
-    int fogColorWord;
-    u8 amb[3];
+    int byteBase;
+    int fogColor;
+    u8 ambColor[3];
     u8 fogRgba[4];
-    u32 _bits;
-    u32 uPos;
+    u32 bits;
+    u32 bitPos;
 
-    fogColorWord = gTexShaderFogColor;
-    uPos = bitReader[4];
+    fogColor = gTexShaderFogColor;
+    bitPos = ((BitStreamReader*)bitReader)->bitPos;
     {
-        int _off = (int)uPos >> 3;
-        _base = *bitReader;
-        _bits = *(u8*)(_base + _off);
-        _base += _off;
-        _bits |= (u32) * (u8*)(_base + 1) << 8;
-        _bits |= (u32) * (u8*)(_base + 2) << 16;
-        bitReader[4] = uPos + 6;
-        shaderIdx = (_bits >> (uPos & 7)) & 0x3f;
-        shader = *(int*)(blockData + 0x64) + shaderIdx * 0x44;
+        int off = (int)bitPos >> 3;
+        byteBase = (int)((BitStreamReader*)bitReader)->data;
+        bits = *(u8*)(byteBase + off);
+        byteBase += off;
+        bits |= (u32) * (u8*)(byteBase + 1) << 8;
+        bits |= (u32) * (u8*)(byteBase + 2) << 16;
+        ((BitStreamReader*)bitReader)->bitPos = bitPos + 6;
+        shaderIdx = (bits >> (bitPos & 7)) & 0x3f;
+        shader = (int)&((MapBlockData*)blockData)->shaders[shaderIdx];
     }
 
     if (doSetup == 0)
@@ -917,7 +952,7 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
         _gxSetFogParams();
         goto LAB_8005F608;
     }
-    GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&fogColorWord);
+    GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&fogColor);
 LAB_8005F608:
     if ((shader != 0) && ((SHADER_FLAGS(shader) & 0x80000000) != 0))
     {
@@ -942,10 +977,10 @@ LAB_8005F608:
 LAB_8005F690:
     if ((SHADER_FLAGS(shader) & 0x20) != 0)
     {
-        int* lPtr = lbl_803DCE34;
-        if (lPtr != 0)
+        int* lightList = lbl_803DCE34;
+        if (lightList != 0)
         {
-            fn_8004FDA0(lPtr, &lbl_80382008, &lbl_803DB638);
+            fn_8004FDA0(lightList, &lbl_80382008, &lbl_803DB638);
             goto LAB_8005F6F4;
         }
     }
@@ -1003,9 +1038,9 @@ LAB_8005F7FC:
     GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     goto LAB_8005F8E4;
 LAB_8005F89C:
-    objGetColor(0, &amb[0], &amb[1], &amb[2]);
+    objGetColor(0, &ambColor[0], &ambColor[1], &ambColor[2]);
     GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&amb[0]);
+    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambColor[0]);
 LAB_8005F8E4:
     if ((SHADER_FLAGS(shader) & 0x8) != 0)
     {
