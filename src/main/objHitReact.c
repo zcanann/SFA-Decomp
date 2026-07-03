@@ -221,3 +221,6 @@ u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitS
     ObjHitReact_LoadMoveEntries(objAnim, bank, objType, hitState, 0, 1);
     return entryArena;
 }
+
+char sObjHitReactHitstateFrameString[] = "hitstate frame=%f\n";
+char sObjHitReactSphereOverflowString[] = "objHitReact.c: sphere overflow! %d\n";

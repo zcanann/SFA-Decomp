@@ -837,7 +837,7 @@ config.libs = [
             Object(NonMatching, "main/objanim.c"),
             Object(NonMatching, "main/lightmap.c"),
             Object(MatchingFor("GSAE01"), "main/textblock.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "main/objHitReact.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/objHitReact.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objhits.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/light.c"),
             Object(NonMatching, "main/main.c"),
