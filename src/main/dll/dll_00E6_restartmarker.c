@@ -588,8 +588,8 @@ void FUN_8016d994(int obj, u8 typeId, u8 flag)
     return;
 }
 
-void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+void FUN_8016e8cc(u64 arg1, u64 arg2, double arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
                   int obj)
 {
     short level;
@@ -617,23 +617,23 @@ void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
             {
                 if (emitter == extra->specialEmitter)
                 {
-                    param_3 = (double)lbl_803E3F8C;
-                    computed = (double)(float)(param_3 *
+                    arg3 = (double)lbl_803E3F8C;
+                    computed = (double)(float)(arg3 *
                         (double)((lbl_803E3FA4 * (float)extra->unk98 -
                             part->unkC) * lbl_803E3FA8));
                     clamped = (double)lbl_803E3F4C;
-                    if ((clamped <= computed) && (clamped = computed, param_3 < computed))
+                    if ((clamped <= computed) && (clamped = computed, arg3 < computed))
                     {
-                        clamped = param_3;
+                        clamped = arg3;
                     }
-                    part->levelA = (short)(int)(param_3 - clamped);
+                    part->levelA = (short)(int)(arg3 - clamped);
                     *(u16*)&part->levelB = *(u16*)&part->levelA;
                 }
                 else
                 {
-                    param_3 = (double)lbl_803E3FC4;
+                    arg3 = (double)lbl_803E3FC4;
                     part->levelA =
-                        (short)(int)-(float)(param_3 * (double)lbl_803DC074 -
+                        (short)(int)-(float)(arg3 * (double)lbl_803DC074 -
                             (double)(f32)(s32)((int)part->levelA));
                     *(u16*)&part->levelB = *(u16*)&part->levelA;
                 }
@@ -691,7 +691,7 @@ void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
         if ((double)DAT_803ad330 < (double)lbl_803E3F20)
         {
             DAT_803ad338 = '\0';
-            FUN_80017ac8((double)DAT_803ad330, clamped, param_3, param_4, param_5, param_6, param_7, param_8,
+            FUN_80017ac8((double)DAT_803ad330, clamped, arg3, arg4, arg5, arg6, arg7, arg8,
                          DAT_803ad334);
             DAT_803ad334 = 0;
         }
@@ -966,8 +966,8 @@ void FUN_80170048(void)
 
 void mikabombshadow_update(int* obj);
 
-void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+void FUN_801713ac(u64 arg1, double arg2, double arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
                   u32 obj)
 {
     extern u64 ObjHits_DisableObject(); /* #57 */
@@ -1017,7 +1017,7 @@ void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
         if (seqOrType == 0x3cd)
         {
             audioObj = FUN_80017a98();
-            FUN_80294d60(result, param_2, param_3, param_4, param_5, param_6, param_7, param_8, audioObj, 2);
+            FUN_80294d60(result, arg2, arg3, arg4, arg5, arg6, arg7, arg8, audioObj, 2);
             scratchU = FUN_80017a98();
             FUN_80006824(scratchU, SFXen_treadlpc);
             FUN_80081118((double)lbl_803E40EC, obj, 1, 0x28);
@@ -1027,7 +1027,7 @@ void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
             scratchU = FUN_80017a98();
             result = FUN_80006824(scratchU, SFXen_treadlpc);
             audioObj = FUN_80017a98();
-            FUN_80294d60(result, param_2, param_3, param_4, param_5, param_6, param_7, param_8, audioObj, 4);
+            FUN_80294d60(result, arg2, arg3, arg4, arg5, arg6, arg7, arg8, audioObj, 4);
             FUN_80081118((double)lbl_803E40EC, obj, 3, 0x28);
         }
         else

@@ -639,8 +639,8 @@ void FUN_8016d994(int obj, u8 flagBB, u8 flagBA)
     return;
 }
 
-void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+void FUN_8016e8cc(u64 arg1, u64 arg2, double arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
                   int obj)
 {
     short color;
@@ -668,23 +668,23 @@ void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
             {
                 if (group == (int*)state[0x12])
                 {
-                    param_3 = (double)lbl_803E3F8C;
-                    alphaD = (double)(float)(param_3 *
+                    arg3 = (double)lbl_803E3F8C;
+                    alphaD = (double)(float)(arg3 *
                         (double)((lbl_803E3FA4 * (float)state[0x26] -
                             *(float*)(entry + 0xc)) * lbl_803E3FA8));
                     clampD = (double)lbl_803E3F4C;
-                    if ((clampD <= alphaD) && (clampD = alphaD, param_3 < alphaD))
+                    if ((clampD <= alphaD) && (clampD = alphaD, arg3 < alphaD))
                     {
-                        clampD = param_3;
+                        clampD = arg3;
                     }
-                    *(short*)(entry + 0x10) = (short)(int)(param_3 - clampD);
+                    *(short*)(entry + 0x10) = (short)(int)(arg3 - clampD);
                     *(u16*)(entry + 0x24) = *(u16*)(entry + 0x10);
                 }
                 else
                 {
-                    param_3 = (double)lbl_803E3FC4;
+                    arg3 = (double)lbl_803E3FC4;
                     *(short*)(entry + 0x10) =
-                        (short)(int)-(float)(param_3 * (double)lbl_803DC074 -
+                        (short)(int)-(float)(arg3 * (double)lbl_803DC074 -
                             (double)(f32)(s32)((int)*(short*)(entry + 0x10)));
                     *(u16*)(entry + 0x24) = *(u16*)(entry + 0x10);
                 }
@@ -742,7 +742,7 @@ void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
         if ((double)DAT_803ad330 < (double)lbl_803E3F20)
         {
             DAT_803ad338 = '\0';
-            FUN_80017ac8((double)DAT_803ad330, clampD, param_3, param_4, param_5, param_6, param_7, param_8,
+            FUN_80017ac8((double)DAT_803ad330, clampD, arg3, arg4, arg5, arg6, arg7, arg8,
                          DAT_803ad334);
             DAT_803ad334 = 0;
         }
@@ -1017,8 +1017,8 @@ void FUN_80170048(void)
 
 void mikabombshadow_update(int* obj);
 
-void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+void FUN_801713ac(u64 arg1, double arg2, double arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
                   u32 obj)
 {
     extern u64 ObjHits_DisableObject(); /* #57 */
@@ -1068,7 +1068,7 @@ void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
         if (seqVal == 0x3cd)
         {
             iTmp = FUN_80017a98();
-            FUN_80294d60(hitState, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iTmp, 2);
+            FUN_80294d60(hitState, arg2, arg3, arg4, arg5, arg6, arg7, arg8, iTmp, 2);
             sndHandle = FUN_80017a98();
             FUN_80006824(sndHandle, SFXen_treadlpc);
             FUN_80081118((double)lbl_803E40EC, obj, 1, 0x28);
@@ -1078,7 +1078,7 @@ void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
             sndHandle = FUN_80017a98();
             hitState = FUN_80006824(sndHandle, SFXen_treadlpc);
             iTmp = FUN_80017a98();
-            FUN_80294d60(hitState, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iTmp, 4);
+            FUN_80294d60(hitState, arg2, arg3, arg4, arg5, arg6, arg7, arg8, iTmp, 4);
             FUN_80081118((double)lbl_803E40EC, obj, 3, 0x28);
         }
         else
