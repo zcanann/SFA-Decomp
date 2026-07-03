@@ -747,6 +747,7 @@ main/dll/dll_0034_titlemenu.c:
 
 main/dll/dll_3b.c:
 	.text       start:0x8011730C end:0x801175A4
+	.bss        start:0x803A4460 end:0x803A57C0
 
 main/audio_decode_thread.c:
 	.text       start:0x801175A4 end:0x80117668

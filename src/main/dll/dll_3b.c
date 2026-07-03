@@ -26,9 +26,9 @@
 extern void* PopReadedBuffer(void);
 extern void PushReadedBuffer2(void* arg);
 
-extern OSMessageQueue lbl_803A4460; /* ready-buffer queue */
-extern OSMessageQueue lbl_803A4480; /* free-buffer queue */
-extern OSThread lbl_803A54A0;       /* audio decode worker thread */
+OSMessageQueue lbl_803A4460; /* ready-buffer queue */
+OSMessageQueue lbl_803A4480; /* free-buffer queue */
+OSThread lbl_803A54A0;       /* audio decode worker thread */
 extern int gAttractMovieAudioThreadActive;
 
 void* PopDecodedAudioBuffer(int flags)
