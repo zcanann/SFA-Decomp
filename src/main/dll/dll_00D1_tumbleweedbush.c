@@ -23,6 +23,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
+#include "main/obj_placement.h"
 #include "main/sky_interface.h"
 #include "main/sfa_shared_decls.h"
 
@@ -326,16 +327,16 @@ s8 fn_801631C8(int* obj)
     if (Obj_IsLoadingLocked() == 0) return -1;
 
     newObj = Obj_AllocObjectSetup(0x20, siblingType);
-    *(f32*)((char*)newObj + 0x8) =
+    ((ObjPlacement*)newObj)->posX =
         ((GameObject*)obj)->anim.localPosX + *(f32*)(state + freeSlot * 12 + 0x1c);
-    *(f32*)((char*)newObj + 0xc) =
+    ((ObjPlacement*)newObj)->posY =
         ((GameObject*)obj)->anim.localPosY + *(f32*)(state + freeSlot * 12 + 0x20);
     *(f32*)&((ObjDef*)newObj)->jointData =
         ((GameObject*)obj)->anim.localPosZ + *(f32*)(state + freeSlot * 12 + 0x24);
-    *((u8*)newObj + 4) = p4c[4];
-    *((u8*)newObj + 5) = p4c[5];
-    *((u8*)newObj + 6) = p4c[6];
-    *((u8*)newObj + 7) = p4c[7];
+    ((ObjPlacement*)newObj)->color[0] = p4c[4];
+    ((ObjPlacement*)newObj)->color[1] = p4c[5];
+    ((ObjPlacement*)newObj)->color[2] = p4c[6];
+    ((ObjPlacement*)newObj)->color[3] = p4c[7];
     *(f32*)((char*)newObj + 0x1c) = lbl_803E2F40;
 
     if ((state[0x4c] & 1) != 0)
@@ -352,8 +353,8 @@ s8 fn_801631C8(int* obj)
                     int* child = list[idx];
                     if (((GameObject*)child)->anim.seqId == 0x27f)
                     {
-                        *(f32*)((char*)newObj + 0x8) = ((GameObject*)child)->anim.localPosX;
-                        *(f32*)((char*)newObj + 0xc) = *(f32*)((char*)list[idx] + 0x10);
+                        ((ObjPlacement*)newObj)->posX = ((GameObject*)child)->anim.localPosX;
+                        ((ObjPlacement*)newObj)->posY = *(f32*)((char*)list[idx] + 0x10);
                         *(f32*)&((ObjDef*)newObj)->jointData = *(f32*)((char*)list[idx] + 0x14);
                         idx = outCount;
                     }
