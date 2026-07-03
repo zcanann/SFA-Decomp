@@ -2183,3 +2183,7 @@ void andross_update(int obj)
 LAB_8023ef14:
     return;
 }
+
+int gAndrossSpawnObjectIds[] = {
+    0x0004AA57, 0x0004AA66, 0x0004AA96, 0x0004AA97,
+};

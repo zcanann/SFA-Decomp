@@ -73,7 +73,7 @@ extern s32* dspSurround;
 extern u8 salFrame;
 extern u16 dspMixerCycles[]; /* dspMixerCycles[32] */
 extern u16 pbOffsets[]; /* pbOffsets[9] */
-extern u16 dspSRCCycles[3][3]; /* dspSRCCycles */
+extern u16 dspSRCCycles[4][3]; /* dspSRCCycles */
 
 #define __OSBusClock (*(u32 *)0x800000F8)
 
@@ -1212,3 +1212,10 @@ void salHandleAuxProcessing(void)
         }
     }
 }
+
+u16 dspSRCCycles[4][3] = {
+    {0x0BAE, 0x0BAE, 0x045B},
+    {0x0CE4, 0x0CE4, 0x045B},
+    {0x0E74, 0x0E74, 0x045B},
+    {0x0000, 0x0000, 0x0000},
+};

@@ -885,7 +885,7 @@ main/dll/dll_003B_menu.c:
 
 main/dll/dll_003C_tumbleweedbush.c:
 	.text       start:0x80130124 end:0x80131540
-	.data       start:0x8031C1B4 end:0x8031C2A8
+	.data       start:0x8031C1A8 end:0x8031C2A8
 	.bss        start:0x803A9458 end:0x803A9DB8
 
 main/dll/dll_003D_titlemenuitem.c:
@@ -1132,6 +1132,7 @@ main/dll/dll_00ED_collectible.c:
 
 main/dll/dll_00FF_magicdust.c:
 	.text       start:0x80173224 end:0x80173F80
+	.data       start:0x80320CFC end:0x80320D10
 
 main/dll/dll_00EE_effectbox.c:
 	.text       start:0x80173F80 end:0x80174438
@@ -1553,6 +1554,7 @@ main/dll/IM/dll_0169_imicemountain.c:
 
 main/dll/dll_016A_crrockfall.c:
 	.text       start:0x801ACCFC end:0x801AD440
+	.data       start:0x803236B8 end:0x803236D0
 
 main/dll/dll_016B_magiclight.c:
 	.text       start:0x801AD440 end:0x801AD7E4
@@ -1950,6 +1952,7 @@ main/dll/SC/dll_01BA_sctotempuzzle.c:
 
 main/dll/SC/dll_01BB_sctotembond.c:
 	.text       start:0x801DDA28 end:0x801DE430
+	.data       start:0x80327A60 end:0x80327A80
 
 main/dll/SC/dll_01BC_sctotemstrength.c:
 	.text       start:0x801DE430 end:0x801DF110
@@ -2455,6 +2458,7 @@ main/dll/WC/dll_0291_wctile.c:
 
 main/dll/WC/dll_028F_wcpressures.c:
 	.text       start:0x80227BB8 end:0x802281CC
+	.data       start:0x8032B220 end:0x8032B230
 
 main/dll/WC/dll_0292_wctrexstatu.c:
 	.text       start:0x802281CC end:0x80228478
@@ -2592,6 +2596,7 @@ main/dll/dll_02BB_gflevelcon.c:
 
 main/dll/dll_02BC_andross.c:
 	.text       start:0x8023A688 end:0x8023F05C
+	.data       start:0x8032C088 end:0x8032C098
 
 main/dll/dll_02BD_androsshand.c:
 	.text       start:0x8023F05C end:0x8023FC8C
@@ -3151,6 +3156,7 @@ main/audio/hw_dspctrl.c:
 	extab       start:0x80005A30 end:0x80005A50
 	extabindex  start:0x800062D8 end:0x80006308
 	.text       start:0x8027C48C end:0x8027F2AC
+	.data       start:0x8032FDA0 end:0x8032FDB8
 
 main/audio/snd3d_room.c:
 	extab       start:0x80005A50 end:0x80005A68

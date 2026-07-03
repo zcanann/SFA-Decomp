@@ -336,3 +336,5 @@ void wcpressures_release(void)
 void wcpressures_initialise(void)
 {
 }
+
+char sWCPressuresActivateFormat[] = " Avitvate %i ";

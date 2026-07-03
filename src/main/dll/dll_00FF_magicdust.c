@@ -455,3 +455,5 @@ void magicdust_init(int obj, int placement)
     ObjMsg_AllocQueue(obj, 1);
     return;
 }
+
+char sMagicDustCollectedMessage[] = "Magic collected";
