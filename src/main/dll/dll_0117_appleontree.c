@@ -196,7 +196,7 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 
 #pragma opt_lifetimes off
-void fn_8017D854(int obj, int msg)
+void appleontree_beginFall(int obj, int msg)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     int v;
@@ -313,7 +313,7 @@ void fn_8017D854(int obj, int msg)
 #pragma opt_lifetimes reset
 
 
-int fn_8017DCD4(int p, int state, f32 y)
+int appleontree_fallStepBounce(int p, int state, f32 y)
 {
     f32 zero = lbl_803E37D4;
     f32 m = ((AppleOnTreeState*)state)->unk40;
@@ -421,7 +421,7 @@ int fn_8017DCD4(int p, int state, f32 y)
     return 1;
 }
 
-int fn_8017DF34(int p, int state, f32 y)
+int appleontree_fallStepFirstBounce(int p, int state, f32 y)
 {
     if (lbl_803E37D4 == ((AppleOnTreeState*)state)->unk3C)
     {
@@ -731,14 +731,14 @@ void appleontree_update(int objArg)
                 ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
                     (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
             {
-                fn_8017D854(obj, 1);
+                appleontree_beginFall(obj, 1);
             }
             break;
         case 3:
             ((AppleOnTreeState*)state)->elapsedTime = fb - timeDelta;
             if (frac > ((GroundBaddieState*)state)->baddie.posZ)
             {
-                fn_8017D854(obj, 0);
+                appleontree_beginFall(obj, 0);
             }
             else
             {
@@ -747,7 +747,7 @@ void appleontree_update(int objArg)
                     ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
                         (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
                 {
-                    fn_8017D854(obj, 2);
+                    appleontree_beginFall(obj, 2);
                 }
             }
             break;
@@ -769,11 +769,11 @@ void appleontree_update(int objArg)
                     fc = t * fb + (((AppleOnTreeState*)state)->bounceVel * t + ((AppleOnTreeState*)state)->posY);
                     if (((AppleOnTreeState*)state)->unk28 > fd)
                     {
-                        placement = fn_8017DF34(obj, state, fc);
+                        placement = appleontree_fallStepFirstBounce(obj, state, fc);
                     }
                     else
                     {
-                        placement = fn_8017DCD4(obj, state, fc);
+                        placement = appleontree_fallStepBounce(obj, state, fc);
                     }
                     val = val + 1;
                     if (!((val == 100) || (val != 0x66))) break;
