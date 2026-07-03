@@ -211,9 +211,12 @@ typedef struct
     int f8;
     int fc;
     int f10;
-    u8 _14[0xc];
+    int f14;
+    int f18;
+    int f1c;
     int f20;
     int f24;
+    int f28;
 } AssetReq;
 
 AssetReq gGameLoopAssetReq;
@@ -243,9 +246,9 @@ void loadAsset(void* reqVoid)
         break;
     case 4:
         *(void**)req->f8 =
-            loadCharacter(*(s16**)((u8*)req + 0x18), *(int*)((u8*)req + 0x1c),
-                          *(int*)((u8*)req + 0x24), *(int*)((u8*)req + 0x20),
-                          *(void**)((u8*)req + 0x14), *(int*)((u8*)req + 0x28));
+            loadCharacter((s16*)req->f18, req->f1c,
+                          req->f24, req->f20,
+                          (void*)req->f14, req->f28);
         break;
     case 3:
         *(void**)req->f8 = (void*)textureLoad(req->f4, 0);
@@ -258,8 +261,8 @@ void loadAsset(void* reqVoid)
         break;
     case 7:
         *(void**)req->f8 =
-            loadAnimation(*(int*)((u8*)req + 0x24), req->f4, (s16)req->fc,
-                          *(u8**)((u8*)req + 0x20));
+            loadAnimation(req->f24, req->f4, (s16)req->fc,
+                          (u8*)req->f20);
         break;
     }
 }
