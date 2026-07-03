@@ -485,7 +485,7 @@ void landed_arwing_update(int obj)
             nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
             if (((GameObject*)obj)->anim.mapEventSlot == 0xd && GameBit_Get(0xc92) != 0)
             {
-                *(f32*)(nearest + 0x10) += lbl_803E3BA0;
+                ((GameObject*)nearest)->anim.localPosY += lbl_803E3BA0;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)nearest, -1);
             }
             else
@@ -513,7 +513,7 @@ void landed_arwing_update(int obj)
             nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
             if (((GameObject*)obj)->anim.mapEventSlot == 0xd && GameBit_Get(0xc92) != 0)
             {
-                *(f32*)(nearest + 0x10) += lbl_803E3BA0;
+                ((GameObject*)nearest)->anim.localPosY += lbl_803E3BA0;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)nearest, -1);
             }
             else
