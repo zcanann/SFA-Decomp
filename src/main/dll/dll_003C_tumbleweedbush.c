@@ -942,6 +942,35 @@ void linkDrawFn_80130484(void)
 
 LinkMenuItemDB gTumbleweedBushItems[40];
 
+u8 linkTextures[0x30] =
+{
+    0x00, 0x00, 0x00, 0x00, 0x03, 0x14, 0x28, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x03, 0x15, 0x28, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x03, 0x17, 0x50, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x03, 0x19, 0x50, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x03, 0x18, 0x28, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x03, 0x1A, 0x14, 0x00,
+};
+
+struct LinkObjDescriptor
+{
+    int unk00[3];
+    int unk0C;
+    void* fns[16];
+};
+
+struct LinkObjDescriptor lbl_8031C1E4 =
+{
+    { 0, 0, 0 },
+    0x000F0000,
+    {
+        Link_initialise, Link_release, NULL,         Link_setup,
+        Link_free,       Link_update,  Link_render,  Link_getSelected,
+        Link_setSelected,Link_func09,  Link_func0A,  Link_func0B,
+        Link_func0C,     Link_copy,    Link_setOpacity, Link_func0F,
+    },
+};
+
 /* pooled PICMENU overflow debug format strings (embedded NULs), raw bytes. */
 char sTumbleweedBushSlotOverflowErr[] =
 {
