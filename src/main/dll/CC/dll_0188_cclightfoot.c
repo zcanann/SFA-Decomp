@@ -43,6 +43,7 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define CCLIGHTFOOT_OBJFLAG_UPDATE_DISABLED 0x8000
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern int ObjTrigger_IsSet();
 
@@ -566,7 +567,7 @@ void cclightfoot_update(int obj)
             state->childObj = 0;
         }
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCLIGHTFOOT_OBJFLAG_UPDATE_DISABLED);
         ObjHits_DisableObject(obj);
         return;
     }
