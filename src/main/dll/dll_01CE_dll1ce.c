@@ -64,21 +64,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern u32 FUN_800067e8();
-extern u32 FUN_80006824();
-extern u32 FUN_80017924();
-extern u32 FUN_80017944();
-extern int FUN_80017a54();
-extern u32 FUN_8002fc3c();
-extern int FUN_80039520();
-extern u32 FUN_80242114();
-extern u64 FUN_80286834();
-extern u32 FUN_8028683c();
-extern u32 FUN_80286880();
-extern u32 FUN_80286888();
-extern u32 FUN_802924b4();
-extern double FUN_80293900();
-extern u32 FUN_80293f90();
 extern u32 DAT_803dc070;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DE7EC;
@@ -105,9 +90,7 @@ extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
-void explosion_release(u32 obj);
 
-void explosion_hitDetect(void);
 
 void dll_1CE_hitDetect(void)
 {
@@ -121,7 +104,6 @@ void dll_1CE_initialise(void)
 {
 }
 
-void dimmagicbridge_free(void);
 
 int dll_1CE_getExtraSize(void) { return 0xc; }
 int dll_1CE_getObjectTypeId(void) { return 0x0; }
@@ -134,7 +116,6 @@ void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E49E8);
 }
 
-void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 #pragma peephole on
 void dll_1CE_free(void)
@@ -179,7 +160,6 @@ void dll_1CE_init(u8* obj, u8* params)
     sub->openVelocity = lbl_803E49F0;
 }
 
-void explosion_free(int obj);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
