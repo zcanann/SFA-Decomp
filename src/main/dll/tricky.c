@@ -1372,8 +1372,8 @@ void hudDrawFn_80121440(void)
     {
         hudDrawMagicBar(alpha, 0x100, 0);
     }
-    if (playerHasKrazoaSpirit(1, 0) != 0) krazoa = 1;
     magicId = 0;
+    if (playerHasKrazoaSpirit(1, 0) != 0) krazoa = 1;
     if (GameBit_Get(0x123) != 0 || GameBit_Get(0x83b) != 0) magicId = 0x63;
     else if (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x83c) != 0) magicId = 0x64;
     if ((u8)magicId != 0)
