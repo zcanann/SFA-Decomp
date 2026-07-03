@@ -58,8 +58,6 @@ typedef struct Dll1CFObjectDef
 
 /* The entry points compile with both passes OFF; the surrounding TU state is
  * the default, so no reset pair is needed. */
-#pragma scheduling off
-#pragma peephole off
 int dll_1CF_getExtraSize(void) { return 0x0; }
 int dll_1CF_getObjectTypeId(void) { return 0x0; }
 
