@@ -792,10 +792,15 @@ void pushable_init(s16* obj, char* def)
             Model_GetVertexPosition(model, i, vtx);
             if (vtx[1] == minY)
             {
-                int j = 0;
-                int found = 0;
-                f32 vx = vtx[0];
-                f32 vz = vtx[2];
+                int j;
+                int found;
+                f32 vx;
+                f32 vz;
+
+                found = 0;
+                j = 0;
+                vx = vtx[0];
+                vz = vtx[2];
 
                 for (; j < state->pointCount; j++)
                 {
