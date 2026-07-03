@@ -25,6 +25,9 @@ extern void timerSetToCountUp(void);
 extern void gameTimerInit(s8 flags, int minutes);
 extern u32 SCGameBitLatch_Update();
 
+#define NWLEVCONTROL_OBJFLAG_HIDDEN 0x4000
+#define NWLEVCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 extern void gameTextShow(int a);
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
@@ -246,7 +249,7 @@ void nw_levcontrol_init(int* obj)
     NwLevControlState* state = ((GameObject*)obj)->extra;
 
     Obj_GetPlayerObject();
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWLEVCONTROL_OBJFLAG_HIDDEN | NWLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
 
     if (GameBit_Get(0x19f) != 0)
     {
