@@ -22,6 +22,8 @@
 #include "main/sfa_shared_decls.h"
 extern int randomGetRange(int lo, int hi);
 
+#define EXPLODABLE_OBJFLAG_HIDDEN 0x4000
+
 /* object group this prop registers its fragments under */
 #define EXPLODABLE_OBJ_GROUP 0x21
 /* fragment object vtable slot returning its lifecycle status */
@@ -187,7 +189,7 @@ void explodable_init(int obj, int setup)
     e = gExplodableBreakRecipeTable;
     if ((e[((DrExplodableState*)state)->recipeIndex].flags & 1) != 0)
     {
-        ((GameObject*)obj)->objectFlags |= 0x4000;
+        ((GameObject*)obj)->objectFlags |= EXPLODABLE_OBJFLAG_HIDDEN;
     }
 }
 
