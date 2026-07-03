@@ -600,6 +600,7 @@ main/dll/dll_00AD_projmagicemmit1.c:
 
 main/dll/dll_00AE_projroombeam.c:
 	.text       start:0x801005F8 end:0x80100630
+	.data       start:0x80319480 end:0x803194A8
 
 main/dll/dll_00AF_projlightning1.c:
 	.text       start:0x80100630 end:0x80100668

@@ -24,3 +24,5 @@ void projroombeam_release(void)
 void projroombeam_initialise(void)
 {
 }
+
+char sProjroombeamDoNoLongerSupported[] = "<projroombeam Do>No Longer supported \n";
