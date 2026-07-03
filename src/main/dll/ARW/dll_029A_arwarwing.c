@@ -206,7 +206,7 @@ void arwarwing_setVelocity(int arwing, int in)
 
 void arwarwing_addVelocity(int arwing, int in)
 {
-    int v = *(int*)&((GameObject*)arwing)->extra + 0x48;
+    int v = (int)&((ArwingState*)((GameObject*)arwing)->extra)->velX;
     PSVECAdd(v, in, v);
 }
 
