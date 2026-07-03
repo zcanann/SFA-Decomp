@@ -511,10 +511,10 @@ void mmp_moonrock_update(int obj)
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void* Obj_GetPlayerObject(void);
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
-    int def = *(int*)&((GameObject*)obj)->anim.placementData;
     u8 grabbed;
     int d;
     int count;
+    int def = *(int*)&((GameObject*)obj)->anim.placementData;
     if (objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                             ((GameObject*)obj)->anim.localPosZ) == -1)
     {
@@ -598,10 +598,13 @@ void mmp_moonrock_update(int obj)
         }
         stateCopy = *(int*)&((GameObject*)obj)->extra;
         (*gCarryableInterface)->setVisible(stateCopy, 0);
-        list = (int*)ObjGroup_GetObjects(0x10, &count);
         {
-            f32 k = gMoonRockPickupRange;
-            for (i = 0; i < count; i++)
+            f32 k;
+            def = (int)ObjGroup_GetObjects(0x10, &count);
+            i = 0;
+            list = (int*)def;
+            k = gMoonRockPickupRange;
+            for (; i < count; i++)
             {
                 u32 o = (u32) * list;
                 if (o != obj && ((GameObject*)o)->anim.seqId == 0x519 &&
