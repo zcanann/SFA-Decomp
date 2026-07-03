@@ -60,7 +60,8 @@ typedef struct ModgfxEffectSlot
     u8 padA8[0xBC - 0xA8];
     f32 alphaDelta;
     f32 alphaCurrent;
-    u8 padC4[0xFC - 0xC4];
+    u8 padC4[0xEE - 0xC4];
+    s16 frameTimings[7];
     s16 frameIndex;
     s16 frameDuration;
     u8 pad100[0x106 - 0x100];
@@ -2831,8 +2832,7 @@ void dll_0B_func05(void)
                     fn_800A1040(((ModgfxEffectSlot*)eff)->animSlotId, 0);
                     goto slot_done;
                 }
-                ((ModgfxEffectSlot*)eff)->frameDuration = *(s16*)((char*)eff + ((ModgfxEffectSlot*)eff)->frameIndex * 2
-                    + 0xee);
+                ((ModgfxEffectSlot*)eff)->frameDuration = ((ModgfxEffectSlot*)eff)->frameTimings[((ModgfxEffectSlot*)eff)->frameIndex];
                 active = 1;
                 ((ExpFn2)fn_800A0478)(eff, 0);
             }
@@ -2845,8 +2845,7 @@ void dll_0B_func05(void)
                     fn_800A1040(((ModgfxEffectSlot*)eff)->animSlotId, 0);
                     goto slot_done;
                 }
-                ((ModgfxEffectSlot*)eff)->frameDuration = *(s16*)((char*)eff + ((ModgfxEffectSlot*)eff)->frameIndex * 2
-                    + 0xee);
+                ((ModgfxEffectSlot*)eff)->frameDuration = ((ModgfxEffectSlot*)eff)->frameTimings[((ModgfxEffectSlot*)eff)->frameIndex];
                 active = 1;
                 ((ExpFn2)fn_800A0478)(eff, 0);
             }
@@ -2859,7 +2858,7 @@ void dll_0B_func05(void)
             for (; emIdx < ((ModgfxEffectSlot*)eff)->emitterCount; emOff += 0x18, emIdx++)
             {
                 int flags;
-                if (*(s16*)((char*)eff + 0xfc) != *(u8*)(E9 + emOff + 0x16)) continue;
+                if (((ModgfxEffectSlot*)eff)->frameIndex != *(u8*)(E9 + emOff + 0x16)) continue;
                 flags = *(int*)(E9 + emOff);
                 if ((flags & 0x1000) && *(f32*)(E9 + emOff + 0x4) > lbl_803DF430 && ((ModgfxEffectSlot*)eff)->frameIndex
                     > 0)
@@ -2881,7 +2880,7 @@ void dll_0B_func05(void)
                         feFlag = 0;
                         break;
                     }
-                    if (*(s16*)((char*)eff + 0xfc) > 0)
+                    if (((ModgfxEffectSlot*)eff)->frameIndex > 0)
                     {
                         feFlag = 1;
                         ((ModgfxEffectSlot*)eff)->frameIndex = *(s16*)(E9 + emIdx * 0x18 + 0x14);
@@ -2901,7 +2900,7 @@ void dll_0B_func05(void)
                     q[0] = lbl_803DF434;
                     if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                     {
-                        ang[0] = *(s16*)((char*)eff + 0xc);
+                        ang[0] = ((ModgfxEffectSlot*)eff)->unkC;
                     }
                     else
                     {
