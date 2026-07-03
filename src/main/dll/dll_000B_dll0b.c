@@ -2715,11 +2715,11 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
             {
                 *(s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0) =
-                    tx * (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0);
+                    (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0) * tx;
                 *(s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2) =
-                    ty * (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2);
+                    (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2) * ty;
                 *(s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 4) =
-                    tz * (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 4);
+                    (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 4) * tz;
                 *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0) =
                     *(s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0);
                 *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2) =
