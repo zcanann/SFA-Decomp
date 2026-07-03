@@ -2687,7 +2687,7 @@ void pauseMenuFn_80129ee0(void)
     menuMin = 1;
     menuMax = 5;
     charState = (u8*)(*gMapEventInterface)->getCurCharacterState();
-    if (gameTextFn_80019c00() == lbl_803E1E3C)
+    if (lbl_803E1E3C == gameTextFn_80019c00())
     {
         btn = getButtonsJustPressed(0);
         getButtonsHeld(0);
@@ -3076,7 +3076,7 @@ void pauseMenuFn_80129ee0(void)
                     }
                     {
                         char** p;
-                        for (k = 0, p = &hud->anims[0]; k < 4; k++, p++)
+                        for (k = 0, p = &hud->anims[0]; k < 4; p++, k++)
                         {
                             if (*p != 0)
                             {
@@ -3124,7 +3124,7 @@ void pauseMenuFn_80129ee0(void)
                 {
                     hintTextFn_800ea174(hintBuf);
                     if ((u8)r != 0 ||
-                        (lbl_803DD760 == lbl_803E2160 && lbl_803DD764 > lbl_803E2160))
+                        (lbl_803E2160 == lbl_803DD760 && lbl_803DD764 > lbl_803E2160))
                     {
                         lbl_803DD7D8 = lbl_803DD8E0;
                     }
@@ -3161,15 +3161,16 @@ void pauseMenuFn_80129ee0(void)
                 else
                 {
                     u8 k;
+                    u8 gi;
                     for (k = 0; k < 0xc; k++)
                     {
-                        if (GameBit_Get(tbl->gbids[k]))
+                        if (GameBit_Get(*(s16*)((u8*)&tbl->gbids[0] + (gi = k) * 2)))
                         {
-                            lbl_803DD824[k].id = 0x26;
+                            lbl_803DD824[gi].id = 0x26;
                         }
                         else
                         {
-                            lbl_803DD824[k].id = 0x25;
+                            lbl_803DD824[gi].id = 0x25;
                         }
                     }
                 }
@@ -3211,7 +3212,7 @@ void pauseMenuFn_80129ee0(void)
                         s16 texId = 0xbf0;
                         if (GameBit_Get(bit))
                         {
-                            texId = tbl->alts[idx].alt;
+                            texId = *(s16*)((u8*)&tbl->alts[0].alt + idx * 16);
                         }
                         *(int*)((u8*)&hud->textures3A8[0] + i * 4) = (int)textureLoadAsset(texId);
                         *(s16*)((u8*)&hud->texIds358[0] + i * 2) = texId;
