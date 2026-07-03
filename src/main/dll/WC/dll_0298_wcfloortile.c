@@ -49,6 +49,16 @@ typedef struct WcFloorTileSetup
     u8 pad1C[0x24 - 0x1C];
 } WcFloorTileSetup;
 
+/* Spawn-setup buffer for an Arwing bomb: ObjPlacement head (pos/color) plus
+ * the class-specific yaw/pitch/roll bytes the parent seeds at +0x18. */
+typedef struct ArwingBombSetup
+{
+    ObjPlacement head; /* 0x00: pos/color/mapId */
+    u8 roll;           /* 0x18 */
+    u8 pitch;          /* 0x19 */
+    u8 yaw;            /* 0x1a */
+} ArwingBombSetup;
+
 STATIC_ASSERT(sizeof(WcFloorTileState) == 0x8);
 STATIC_ASSERT(offsetof(WcFloorTileState, shakeTime) == 0x00);
 STATIC_ASSERT(offsetof(WcFloorTileState, shakeMag) == 0x04);
@@ -459,14 +469,14 @@ void arwarwing_spawnBomb(int obj, int state, int side)
     else
         ObjPath_GetPointWorldPosition(obj, 6, &px, &py, &pz, 0);
     setup = Obj_AllocObjectSetup(0x20, 0x605);
-    ((ObjPlacement*)setup)->posX = px;
-    ((ObjPlacement*)setup)->posY = py;
-    ((ObjPlacement*)setup)->posZ = pz;
-    *(u8*)(setup + 0x1a) = ((GameObject*)obj)->anim.rotX >> 8;
-    *(u8*)(setup + 0x19) = ((GameObject*)obj)->anim.rotY >> 8;
-    *(u8*)(setup + 0x18) = ((GameObject*)obj)->anim.rotZ >> 8;
-    ((ObjPlacement*)setup)->color[0] = 1;
-    ((ObjPlacement*)setup)->color[1] = 1;
+    ((ArwingBombSetup*)setup)->head.posX = px;
+    ((ArwingBombSetup*)setup)->head.posY = py;
+    ((ArwingBombSetup*)setup)->head.posZ = pz;
+    ((ArwingBombSetup*)setup)->yaw = ((GameObject*)obj)->anim.rotX >> 8;
+    ((ArwingBombSetup*)setup)->pitch = ((GameObject*)obj)->anim.rotY >> 8;
+    ((ArwingBombSetup*)setup)->roll = ((GameObject*)obj)->anim.rotZ >> 8;
+    ((ArwingBombSetup*)setup)->head.color[0] = 1;
+    ((ArwingBombSetup*)setup)->head.color[1] = 1;
     arwing->activeBombObj = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
     fn_8022ED74(arwing->activeBombObj, *(u16*)&arwing->bombProjectileParam);
     fn_8022ECE0(arwing->activeBombObj, arwing->bombProjectileLifetime);
