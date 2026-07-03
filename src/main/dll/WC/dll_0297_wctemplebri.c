@@ -90,7 +90,6 @@ STATIC_ASSERT(offsetof(WCTempleBriSetup, type) == WCTEMPLEBRI_SETUP_TYPE_OFFSET)
 STATIC_ASSERT(offsetof(WCTempleBriSetup, modelIndex) == WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCTempleBriSetup, solvedBit) == WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET);
 
-#pragma peephole off
 void wctemplebri_updateModelWarp(int obj, int p2)
 {
     WCTempleBriState* state = (WCTempleBriState*)p2;
@@ -113,7 +112,6 @@ void wctemplebri_updateModelWarp(int obj, int p2)
     state->wavePhaseB = v;
 }
 
-#pragma peephole off
 int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
