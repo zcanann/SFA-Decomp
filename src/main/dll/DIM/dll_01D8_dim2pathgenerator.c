@@ -126,8 +126,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 
 void dll_1CF_free(void);
 
-#pragma scheduling off
-#pragma peephole off
 void dim2pathgenerator_free(void)
 {
 }
