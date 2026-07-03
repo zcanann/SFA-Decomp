@@ -2298,7 +2298,7 @@ void cMenuRun(void)
 }
 #pragma dont_inline reset
 
-void fn_80128A7C(u8 i, int p2, int p3);
+void fn_80128A7C(u8 i, int alpha, int flag);
 
 /* EN v1.0 0x80128470  size: 1548b  Pause-menu grid renderer: draws all cells
  * (selection last), the breathing selected cell, header/footer text, and the
@@ -3563,7 +3563,7 @@ void pauseMenuDoSave(void)
  * texture offset along the entry's trail vector, fading via the scaled
  * alpha. The selected cell on the main grid breathes (sin pulse) and slides
  * toward the panel edge while lbl_803DD75C runs. */
-void fn_80128A7C(u8 i, int p2, int p3)
+void fn_80128A7C(u8 i, int alpha, int flag)
 {
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     int div15;
@@ -3579,7 +3579,7 @@ void fn_80128A7C(u8 i, int p2, int p3)
     f64 k2108;
     f64 t;
 
-    t = (f64)(s16)p2 * (lbl_803E2080 - lbl_803DD75C);
+    t = (f64)(s16)alpha * (lbl_803E2080 - lbl_803DD75C);
     scaled = (s32)(t * lbl_803E2088);
     if (lbl_803DD824[i].id < 0)
     {
@@ -3619,7 +3619,7 @@ void fn_80128A7C(u8 i, int p2, int p3)
             f32 dx;
             f32 dy;
             f32 pr;
-            v = p2;
+            v = alpha;
             spd = (f32)(spd * (lbl_803E1F60 + lbl_803DD75C / lbl_803E2118));
             spd += lbl_803E20BC * mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) /
                     lbl_803E1E94) +
@@ -3654,7 +3654,7 @@ void fn_80128A7C(u8 i, int p2, int p3)
             {
                 continue;
             }
-            pauseMenuDrawElement(tex, x, y, ofs, (u8)v, spd, p3);
+            pauseMenuDrawElement(tex, x, y, ofs, (u8)v, spd, flag);
         }
         else
         {
@@ -3670,7 +3670,7 @@ void fn_80128A7C(u8 i, int p2, int p3)
             }
             t1c0 = (int*)((u8*)&hud->textures1C0[0] + idv * 4);
             pauseMenuDrawElement(*t1c0, x, y, ofs,
-                                 (u8)v, spd, p3);
+                                 (u8)v, spd, flag);
         }
     }
 }
