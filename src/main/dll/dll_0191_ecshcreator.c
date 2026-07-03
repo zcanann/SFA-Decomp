@@ -104,8 +104,6 @@ void ecsh_creator_initialise(void)
 int ecsh_creator_getExtraSize(void) { return 0xa; }
 int ecsh_creator_getObjectTypeId(void) { return 0x0; }
 
-#pragma scheduling off
-#pragma peephole off
 void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(f32);
@@ -188,5 +186,3 @@ void ecsh_creator_update(GameObject* obj)
         state->active = 0;
     }
 }
-#pragma reset
-#pragma reset
