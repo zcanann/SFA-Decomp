@@ -192,7 +192,7 @@ STATIC_ASSERT(offsetof(PauseMenuHud, spiritBitState) == 0xB58);
 STATIC_ASSERT(offsetof(PauseMenuHud, magicLatch) == 0xB7C);
 STATIC_ASSERT(offsetof(PauseMenuHud, maxMagicLatch) == 0xB94);
 
-void hudDrawMagicBar(int alpha, int unk2, u32 flags)
+void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
 {
     int t13;
     int total;
@@ -250,7 +250,7 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
     tex = hudTextures[0x27];
     if ((u8)flags)
     {
-        pauseMenuDrawElement(tex, lbl_803DBAD0, lbl_803DBAD4, unk2, alpha, 0x100, 0);
+        pauseMenuDrawElement(tex, lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha, 0x100, 0);
     }
     else
     {
@@ -261,7 +261,7 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
         tex = hudTextures[0x28];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x1c), lbl_803DBAD4, unk2, alpha, 0x100, seg1, 0x12,
+            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x1c), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg1, 0x12,
                             0);
         }
         else
@@ -275,7 +275,7 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
         tex = hudTextures[0x29];
         if ((u8)flags)
         {
-            drawFn_8011e8d8(tex, (f32)(seg1 + 0x1c + lbl_803DBAD0), lbl_803DBAD4, unk2, alpha, rem1, 0x12,
+            drawFn_8011e8d8(tex, (f32)(seg1 + 0x1c + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, rem1, 0x12,
                             seg1, 0);
         }
         else
@@ -289,7 +289,7 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
         tex = hudTextures[0x2A];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha, 0x100, seg2, 0x12,
+            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x24), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg2, 0x12,
                             0);
         }
         else
@@ -303,7 +303,7 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
         tex = hudTextures[0x2B];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(seg2 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, unk2, alpha, 0x100,
+            drawFn_8011eb3c(tex, (f32)(seg2 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100,
                             seg3, 0x12, 0);
         }
         else
@@ -317,7 +317,7 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
         tex = hudTextures[0x2C];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(t13 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, unk2, alpha, 0x100, seg4,
+            drawFn_8011eb3c(tex, (f32)(t13 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg4,
                             0x12, 0);
         }
         else
@@ -331,7 +331,7 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
         tex = hudTextures[0x2D];
         if ((u8)flags)
         {
-            drawFn_8011e8d8(tex, (f32)(t13 + lbl_803DBAD0 + (seg4 + 0x24)), lbl_803DBAD4, unk2, alpha, rem4,
+            drawFn_8011e8d8(tex, (f32)(t13 + lbl_803DBAD0 + (seg4 + 0x24)), lbl_803DBAD4, elemAlpha, alpha, rem4,
                             0x12, seg4, 0);
         }
         else
@@ -378,7 +378,7 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
         tex = hudTextures[0x31];
         if ((u8)flags)
         {
-            drawFn_8011e8d8(tex, (f32)(w8 + 0x1c + lbl_803DBAD0), lbl_803DBAD4, unk2, alpha, seg1, 0x12,
+            drawFn_8011e8d8(tex, (f32)(w8 + 0x1c + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, seg1, 0x12,
                             w8, 0);
         }
         else
@@ -392,7 +392,7 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
         tex = hudTextures[0x32];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(rem1 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, unk2, alpha, 0x100,
+            drawFn_8011eb3c(tex, (f32)(rem1 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100,
                             seg2, 0x12, 0);
         }
         else
@@ -406,7 +406,7 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
         tex = hudTextures[0x33];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(t13 + lbl_803DBAD0 + (current + 0x24)), lbl_803DBAD4, unk2, alpha,
+            drawFn_8011eb3c(tex, (f32)(t13 + lbl_803DBAD0 + (current + 0x24)), lbl_803DBAD4, elemAlpha, alpha,
                             0x100, seg4, 0x12, 0);
         }
         else
