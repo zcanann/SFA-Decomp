@@ -272,7 +272,6 @@ void ObjModelChain_AdvancePhase(ObjModelChain* chain)
 }
 
 
-extern void setGQR7(u32 v);
 extern int textureLoad(int id, int flag);
 
 asm
@@ -2156,7 +2155,6 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     return 0;
 }
 
-void* mmAlloc(int size, int type, int flag);
 
 #pragma opt_loop_invariants on
 int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChannels)
@@ -2452,7 +2450,6 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
     extern f32 lbl_803DE844;
     extern f32 lbl_803DE848;
     extern f32 lbl_803DE84C;
-    extern f32 lbl_803DE850;
     f32 vec[3];
     u8* hdr;
     int total;
@@ -2516,7 +2513,6 @@ typedef struct ObjHitBufs
 #pragma dont_inline off
 void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
 {
-    extern f32 lbl_803DE828;
     extern f32 lbl_803DCED0;
     extern f32 lbl_803DCECC;
     u8* mtx;
