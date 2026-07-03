@@ -441,17 +441,6 @@ extern WaterfxCfg gEffect13DefaultSplashParams;
 
 #pragma dont_inline off
 
-void fn_800D6584(void)
-{
-    extern u32 lbl_803DD418; /* #57 */
-    extern u32 lbl_803DD41C; /* #57 */
-    u32 tmp = lbl_803DD418;
-    lbl_803DD418 = lbl_803DD41C;
-    lbl_803DD41C = tmp;
-    lbl_803DD414 = lbl_803DD416;
-    lbl_803DD416 = 0;
-}
-
 /* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
  * NOTE: stuck at ~78% ? instruction scheduling differs. */
 
