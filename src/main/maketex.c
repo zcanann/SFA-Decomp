@@ -1634,3 +1634,5 @@ void endObjSequence(int seq)
     lbl_803DD07C = 0;
     gObjSeqSlotSeqIdTable[seq] = 0;
 }
+
+char sMemoryCardFileNameString[20] = "Star Fox Adventures";
