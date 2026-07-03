@@ -61,21 +61,9 @@ void CameraModeForceBehind_func05_nop(void)
 
 void CameraModeForceBehind_release(void);
 
-void fn_801101E4(void)
-{
-}
-
 void CameraModeCloudRunner_release(void);
 
-void fn_80110C80(void)
-{
-}
-
 void CameraModePerv_release(void);
-
-void fn_80110EC0(void)
-{
-}
 
 void CameraModeArwing_release(void);
 
@@ -142,13 +130,6 @@ void CameraModeTitle_moveCam(u8 newCam)
 f32 titleScreenGetCamProgress(void) { return titleScreenCamProgress; }
 
 void CameraModeWorldMap_free(void);
-
-void fn_801101E8(void)
-{
-    extern void mm_free(u32); /* #57 */
-    mm_free((u32)lbl_803DD5B8);
-    lbl_803DD5B8 = NULL;
-}
 
 void CameraModeCloudRunner_free(void);
 
