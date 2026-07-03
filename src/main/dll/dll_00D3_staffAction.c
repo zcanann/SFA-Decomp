@@ -875,7 +875,7 @@ void dll_D3_update(int* obj)
     int rc;
     int hits;
     f32 vec[4];
-    int aiStack_80[21];
+    int hitResult[21];
 #define searchRadius vec[0]
 #define dx vec[1]
 #define dy vec[2]
@@ -1016,8 +1016,8 @@ void dll_D3_update(int* obj)
             (int)((char*)obj + 0x80),
             &((GameObject*)obj)->anim.localPosX,
             lbl_803E3030, 0,
-            aiStack_80, obj, -0x7c, -1, 0xff, 0);
-        if (hitCount != 0 && *(s8*)((char*)aiStack_80 + 0x50) == 13)
+            hitResult, obj, -0x7c, -1, 0xff, 0);
+        if (hitCount != 0 && *(s8*)((char*)hitResult + 0x50) == 13)
         {
             ((StaffBits*)&extra->flags92)->b0 = 1;
             extra->scriptTimer = (u16)(randomGetRange(10, 0xf) * 0x3c);

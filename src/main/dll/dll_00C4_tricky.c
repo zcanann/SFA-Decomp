@@ -2847,7 +2847,7 @@ void FUN_80146fa0(void)
 
 void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                  u32 param_9, u32 param_10, float* pointA, float* pointB)
+                  u32 unused9, u32 unused10, float* pointA, float* pointB)
 {
     short objId;
     bool applyOffset;
@@ -2857,13 +2857,13 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     double dist;
     u64 packed;
     char hitFlag[4];
-    short asStack_9c[4];
-    short asStack_94[4];
-    float afStack_8c[3];
+    short screenA[4];
+    short screenB[4];
+    float delta[3];
     float pointX;
     float pointY;
     float pointZ;
-    int aiStack_74[29];
+    int hitScratch[29];
 
     packed = FUN_8028683c();
     target = (int*)((u64)packed >> 0x20);
@@ -2883,19 +2883,19 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
             pointY = pointY + lbl_803E3234;
             applyOffset = false;
         }
-        FUN_80006a68(&pointX, asStack_9c);
+        FUN_80006a68(&pointX, screenA);
         pointX = *pointB;
         pointY = lbl_803E3234 + pointB[1];
         pointZ = pointB[2];
-        FUN_80006a68(&pointX, asStack_94);
-        FUN_80247eb8(pointA, &pointX, afStack_8c);
-        dist = SeekTwiceBeforeRead(afStack_8c);
+        FUN_80006a68(&pointX, screenB);
+        FUN_80247eb8(pointA, &pointX, delta);
+        dist = SeekTwiceBeforeRead(delta);
         if (dist < (double)lbl_803E3244)
         {
             if (target[0xc] == 0)
             {
                 blocked = FUN_80006a64(dist, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                     asStack_94, asStack_9c, (u32*)0x0, hitFlag, 0);
+                                     screenB, screenA, (u32*)0x0, hitFlag, 0);
             }
             if ((!applyOffset) && (hitFlag[0] == '\x01'))
             {
@@ -2905,7 +2905,7 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     }
     if ((blocked != '\0') && ((((TrickyState*)player)->controlFlags & 8) != 0))
     {
-        FUN_800620e8(pointA, &pointX, (float*)0x0, aiStack_74, target, (u32)((TrickyState*)player)->unk261,
+        FUN_800620e8(pointA, &pointX, (float*)0x0, hitScratch, target, (u32)((TrickyState*)player)->unk261,
                      0xffffffff, 0, 0);
     }
     FUN_80286888();
