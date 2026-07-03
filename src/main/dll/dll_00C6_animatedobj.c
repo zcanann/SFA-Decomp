@@ -165,6 +165,8 @@ extern f32 timeDelta;
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 
+#define ANIMATEDOBJ_OBJFLAG_UPDATE_DISABLED 0x8000
+
 typedef struct AnimatedobjPlacement
 {
     u8 pad0[0x8 - 0x0];
@@ -1689,7 +1691,7 @@ void animatedobj_update(int* obj)
                 (*gObjectTriggerInterface)->endSequence(slot);
             }
             ((GameObject*)obj)->seqIndex = -1;
-            ((GameObject*)obj)->objectFlags |= 0x8000;
+            ((GameObject*)obj)->objectFlags |= ANIMATEDOBJ_OBJFLAG_UPDATE_DISABLED;
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         switch (((GameObject*)obj)->anim.seqId)
