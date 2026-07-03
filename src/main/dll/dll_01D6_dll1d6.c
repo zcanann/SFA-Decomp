@@ -130,57 +130,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_801b7314(int obj, u32 unused, float* outX, float* outZ)
-{
-    u32 bitValue;
-    int typeId;
-    float* extra;
-
-    extra = ((GameObject*)obj)->extra;
-    if (extra[4] == 0.0)
-    {
-        FUN_800067c0((int*)0xdf, 1);
-    }
-    extra[4] = 2.8026e-44;
-    typeId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
-    if (typeId == 0x49b23)
-    {
-        bitValue = GameBit_Get(0xc5c);
-        if ((bitValue != 0) && (bitValue = GameBit_Get(0xc5b), bitValue == 0))
-        {
-            *outX = *extra;
-            *outZ = extra[1];
-        }
-        bitValue = GameBit_Get(0xc5b);
-        if ((bitValue != 0) && (bitValue = GameBit_Get(0xc5c), bitValue == 0))
-        {
-            *outX = -*extra;
-            *outZ = -extra[1];
-        }
-        bitValue = GameBit_Get(0xc5b);
-        if (bitValue != 0)
-        {
-            GameBit_Set(0xc5c, 0);
-        }
-        bitValue = GameBit_Get(0xc5b);
-        if (bitValue == 0)
-        {
-            GameBit_Set(0xc5c, 1);
-        }
-    }
-    else if ((typeId < 0x49b23) && (typeId == 0x1ea9))
-    {
-        *outX = *extra;
-        *outZ = extra[1];
-    }
-    else
-    {
-        *outX = *extra;
-        *outZ = extra[1];
-    }
-    return;
-}
-
 void dll_1CF_free(void);
 
 #pragma scheduling off
