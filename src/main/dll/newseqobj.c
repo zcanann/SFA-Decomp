@@ -335,19 +335,19 @@ void fn_80150EDC(void* obj, void* state)
         else
         {
             IdleRow* idleRows = (IdleRow*)idleSrc;
-            u8 v8;
+            u8 idleAnim;
             *(u8*)((u8*)state + 0x2f2) = 0;
             *(u8*)((u8*)state + 0x2f3) = 0;
             *(u8*)((u8*)state + 0x2f4) = 0;
-            v8 = idleRows[*(u16*)((u8*)state + 0x2a0)].anim;
-            if (v8 == 0)
+            idleAnim = idleRows[*(u16*)((u8*)state + 0x2a0)].anim;
+            if (idleAnim == 0)
             {
                 *(u8*)((u8*)state + 0x323) = 3;
                 ObjAnim_SetCurrentMove((int)obj, *(u8*)((u8*)animCtrl + 0x2c), lbl_803E2740, 0);
             }
             else
             {
-                Baddie_SetMove(obj, state, v8,
+                Baddie_SetMove(obj, state, idleAnim,
                             idleRows[*(u16*)((u8*)state + 0x2a0)].speed, 0, 0xb);
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                     (ObjAnimComponent*)obj,
@@ -371,9 +371,9 @@ void fn_80150EDC(void* obj, void* state)
 
     if ((*(u8*)((u8*)state + 0x323) & 8) == 0)
     {
-        void* p_29c = ((BaddieState*)state)->trackedObj;
-        fn_8014CF7C(obj, state, ((GameObject*)p_29c)->anim.localPosX,
-                    ((GameObject*)p_29c)->anim.localPosZ, 0xf, 0);
+        void* tracked = ((BaddieState*)state)->trackedObj;
+        fn_8014CF7C(obj, state, ((GameObject*)tracked)->anim.localPosX,
+                    ((GameObject*)tracked)->anim.localPosZ, 0xf, 0);
     }
 }
 
