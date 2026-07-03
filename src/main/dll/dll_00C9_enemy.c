@@ -1624,22 +1624,22 @@ void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 fla
         if (finalScale > fa) finalScale = fa;
     }
 
-    *(f32*)((char*)obj1 + 0x24) = stk_14[0] * finalScale;
-    *(f32*)((char*)obj1 + 0x28) = stk_14[1] * finalScale;
-    *(f32*)((char*)obj1 + 0x2c) = stk_14[2] * finalScale;
+    ((GameObject*)obj1)->anim.velocityX = stk_14[0] * finalScale;
+    ((GameObject*)obj1)->anim.velocityY = stk_14[1] * finalScale;
+    ((GameObject*)obj1)->anim.velocityZ = stk_14[2] * finalScale;
 
     if (flag != 0)
     {
-        f32 y = *(f32*)((char*)obj1 + 0x28);
+        f32 y = ((GameObject*)obj1)->anim.velocityY;
         if (y < lbl_803E2574)
         {
-            f32 floor_height = *(f32*)((char*)obj1 + 0x10);
-            int* target = *(int**)((char*)obj2 + 0x29c);
-            f32 ground = lbl_803E25D0 + *(f32*)((char*)target + 0x10);
+            f32 floor_height = ((GameObject*)obj1)->anim.localPosY;
+            GameObject* target = *(GameObject**)((char*)obj2 + 0x29c);
+            f32 ground = lbl_803E25D0 + target->anim.localPosY;
             if (floor_height < ground)
             {
                 f32 t = (ground - floor_height) / lbl_803E25D0;
-                *(f32*)((char*)obj1 + 0x28) = y * (lbl_803E256C - t);
+                ((GameObject*)obj1)->anim.velocityY = y * (lbl_803E256C - t);
             }
         }
     }
@@ -1705,7 +1705,7 @@ void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledR
 void fn_8014BC98(int* node, int* sub)
 {
     extern void fn_8014BC98(int* node, int* sub);
-    int* target = *(int**)&((TrickyState*)sub)->actionTargetObj;
+    GameObject* target = *(GameObject**)&((TrickyState*)sub)->actionTargetObj;
     if (target != NULL)
     {
         volatile f32 d[3];
@@ -1716,15 +1716,15 @@ void fn_8014BC98(int* node, int* sub)
 
         if ((((TrickyState*)sub)->controlFlags & 0x8000) != 0)
         {
-            d[0] = ((GameObject*)node)->anim.worldPosX - *(f32*)((char*)target + 0x18);
+            d[0] = ((GameObject*)node)->anim.worldPosX - target->anim.worldPosX;
             d[1] = lbl_803E2574;
-            d[2] = ((GameObject*)node)->anim.worldPosZ - *(f32*)((char*)target + 0x20);
+            d[2] = ((GameObject*)node)->anim.worldPosZ - target->anim.worldPosZ;
         }
         else
         {
-            d[0] = ((GameObject*)node)->anim.worldPosX - *(f32*)((char*)target + 0x18);
-            d[1] = ((GameObject*)node)->anim.worldPosY - *(f32*)((char*)target + 0x1c);
-            d[2] = ((GameObject*)node)->anim.worldPosZ - *(f32*)((char*)target + 0x20);
+            d[0] = ((GameObject*)node)->anim.worldPosX - target->anim.worldPosX;
+            d[1] = ((GameObject*)node)->anim.worldPosY - target->anim.worldPosY;
+            d[2] = ((GameObject*)node)->anim.worldPosZ - target->anim.worldPosZ;
         }
         ua = getAngle(-d[0], -d[2]);
         if (*(int**)&((GameObject*)node)->anim.parent != NULL)
@@ -1759,9 +1759,9 @@ void fn_8014BC98(int* node, int* sub)
         dist;
 
         {
-            int* t = *(int**)&((TrickyState*)sub)->actionTargetObj;
+            GameObject* t = *(GameObject**)&((TrickyState*)sub)->actionTargetObj;
             *(s16*)&((TrickyState*)sub)->unk2A6 = (s16)(
-                *(f32*)((char*)t + 0x1c) - ((GameObject*)node)->anim.worldPosY);
+                t->anim.worldPosY - ((GameObject*)node)->anim.worldPosY);
         }
     }
 }
@@ -1772,8 +1772,8 @@ void fn_8014CF7C(int* node, int unused, u16 divisor, int angleBias, f32 fa, f32 
     s32 delta;
     f32 dt;
     s16 newVal;
-    f32 t0 = *(f32*)((char*)node + 0xc) - fa;
-    f32 t1 = *(f32*)((char*)node + 0x14) - fb;
+    f32 t0 = ((GameObject*)node)->anim.localPosX - fa;
+    f32 t1 = ((GameObject*)node)->anim.localPosZ - fb;
     delta = getAngle(t0, t1);
     delta = (s16)(delta - (u16)((GameObject*)node)->anim.rotX);
     if (delta > 0x8000) delta = (s16)(delta - 0xFFFF);
