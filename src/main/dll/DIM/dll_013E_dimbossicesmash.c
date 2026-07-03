@@ -117,7 +117,7 @@ void dimbossicesmash_update(u8* obj)
 
     if ((flags & 2) != 0)
     {
-        if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
+        if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
         {
             Obj_FreeObject(obj);
         }
