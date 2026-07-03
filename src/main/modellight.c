@@ -17,50 +17,7 @@
 #define GX_COLOR0A0 4
 #define GX_COLOR1A1 5
 #define GX_DA_MEDIUM 2
-
-u16*
-FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , int param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
-{
-    return 0;
-}
-
-u16*
-FUN_80017468(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , u32 param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
-{
-    return 0;
-}
-
 extern f32 timeDelta;
-
-u32
-FUN_80017500(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9)
-{
-    return 0;
-}
-
-u32
-FUN_8001786c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
-             u32 param_10, u32 param_11, u32 param_12)
-{
-    return 0;
-}
-
-u8*
-FUN_80017998(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-)
-{
-    return 0;
-}
-
 void objSetEventName(u8* obj, void* name)
 {
     ((GameObject*)obj)->anim.eventTable = name;
@@ -753,7 +710,6 @@ typedef struct
 } ModelLightChannelState;
 
 ModelLightChannelState gModelLightChannelStates[0x60 / sizeof(ModelLightChannelState)];
-
 
 void modelLightChannel_configure(int i, int a, int b)
 {
@@ -1583,7 +1539,6 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct* light)
     }
     light->glowAlpha = v;
 }
-
 
 extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
