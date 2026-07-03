@@ -93,11 +93,9 @@ void deathseq_initialise(void)
 {
 }
 
-void dll_127_free_nop(void);
 
 int deathseq_getExtraSize(void) { return 0x24; }
 int deathseq_getObjectTypeId(void) { return 0x0; }
-int dll_127_getExtraSize_ret_0(void);
 
 void deathseq_free(int* obj)
 {
@@ -106,7 +104,6 @@ void deathseq_free(int* obj)
     removeButtonObject(obj);
 }
 
-void deathgas_init(int* obj);
 
 void deathseq_update(int* obj)
 {
