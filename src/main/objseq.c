@@ -4334,6 +4334,7 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
 
 #pragma ppc_unroll_speculative off
 #pragma optimization_level 3
+#pragma opt_propagation off
 void objSeq_onMapSetup(void)
 {
     u8* base = lbl_80396918;
@@ -4349,6 +4350,8 @@ void objSeq_onMapSetup(void)
     u8* counts;
     int* handles;
     u8* marks;
+    int* handles2;
+    u8* marks2;
     int i = 0;
 
     flagsB = base + 0x3b9c;
@@ -4479,20 +4482,37 @@ void objSeq_onMapSetup(void)
     }
 
     {
+        flagsB = base + i;
+        modes = (s16*)(base + 0x3a98) + i;
+        frames = (f32*)((int)base + (i << 2));
+        handles2 = (int*)(frames + 3321);
+        marks2 = flagsB + 0x338c;
         for (; i < 0x55; i++)
         {
-            *(base + 0x3b9c + i) = 0;
-            *(base + 0x3b44 + i) = 0;
-            ((s16*)(base + 0x3a98))[i] = 0;
-            *(base + 0x3c4c + i) = 0;
-            *(base + 0x3bf4 + i) = 0;
-            *(base + 0x3a40 + i) = 0;
-            *(base + 0x39e8 + i) = 0;
-            ((f32*)(base + 0x3894))[i] = lbl_803DEFB0;
-            ((f32*)(base + 0x3740))[i] = lbl_803DEFF0;
-            *(base + 0x3590 + i) = 0;
-            ((int*)(base + 0x33e4))[i] = 0;
-            *(base + 0x338c + i) = 0;
+            frames = (f32*)(handles2 + 300);
+            dists = (f32*)(handles2 + 215);
+            flagsB = marks2 + 0x810;
+            flagsA = marks2 + 0x7b8;
+            actions = marks2 + 0x8c0;
+            results = marks2 + 0x868;
+            states = marks2 + 0x6b4;
+            pending = marks2 + 0x65c;
+            counts = marks2 + 0x204;
+            flagsB[0] = 0;
+            flagsA[0] = 0;
+            modes[0] = 0;
+            actions[0] = 0;
+            results[0] = 0;
+            states[0] = 0;
+            pending[0] = 0;
+            frames[0] = lbl_803DEFB0;
+            dists[0] = lbl_803DEFF0;
+            counts[0] = 0;
+            handles2[0] = 0;
+            marks2[0] = 0;
+            modes++;
+            handles2++;
+            marks2++;
         }
     }
 
@@ -4504,6 +4524,7 @@ void objSeq_onMapSetup(void)
     lbl_803DD0F8 = 0;
     gObjSeqBgCmdCount = 0;
 }
+#pragma opt_propagation reset
 #pragma optimization_level reset
 #pragma ppc_unroll_speculative on
 
