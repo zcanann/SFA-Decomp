@@ -16,3 +16,27 @@ named local's web index (first decl → highest), block decl order does not.
 The vreg-numbering rule that fixes cross-scope index gaps (e.g. def idx38 vs
 list idx35 with target wanting def < list) is still undecoded — that is the
 next unlock for the reg-perm family.
+
+## Confirmed numbering rule (probe-validated, GC/2.0 -O4,p noopt)
+
+Three controlled probes (3-4 call-crossing locals, permuted decl vs assignment
+order) pin the rule: **web index = DESCENDING in declaration order** (first
+declaration → highest index), across nested block scopes too (block decls slot
+in sequence after the enclosing decls). Assignment order does not move indices.
+Fallback (saved-reg) pop order then follows (index, park-round): r31 to the
+first-declared web of the highest park round, descending.
+
+Validated consequences:
+- crrockfall_update: exhaustive 24-permutation search over its 4 decl-inits —
+  the committed order is already optimal (9 regions); all others are worse
+  (10-33). The residual web is a SPILL-ROUND split (idx 62 vs sibling idx 33),
+  outside decl control.
+- invhit_update (idx 86), hoodedZyck_updateB (spilled turnRaw reload):
+  same spill-split class.
+- mmp_moonrock_update: cross-scope gap (fn-scope def idx 38 vs block list
+  idx 35) — fn-scope decls always outrank block decls, so unreachable by decl
+  reorder.
+
+=> The remaining reg-perm near-misses hinge on the SPLIT-WEB numbering inside
+SpillCode.c (0x57c290 band): what vreg number a spill-split web receives, and
+therefore where it pops. Decode that and the family at 99.6-99.98 closes.
