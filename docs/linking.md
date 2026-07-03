@@ -52,3 +52,46 @@ ignores. The failure modes seen so far:
 The first linking pass took 133 scanner candidates to 129 linked units; the 4
 that didn't were 2 bss-shift culprits (found by bisection) and 2 needing a
 synthetic-label rename in source.
+
+## Linking the data side (harder)
+
+Most matched-but-unlinked code is blocked by *data*, not code. `matched_code` is
+~72% but `complete_code` (linked) is ~13%: the gap is 100%-matched units whose
+built object emits `.data`/`.sdata2`/`.rodata` the retail per-unit object lacks,
+because the retail split never attributed that unit its data. To link one you
+must add the exact data range(s) to its `splits.txt` entry (see any complete DLL,
+e.g. `dll_020C_wmspiritplace.c`, for the format):
+
+```
+main/dll/foo.c:
+	.text       start:0x... end:0x...
+	.data       start:0x... end:0x...     # the unit's own data, reattributed
+```
+
+Derive the range by correlating relocations: for each symbol the *built* object
+defines in a data section, find the *retail* object's `.text` reloc at the same
+instruction offset — it names the real symbol, whose address (from `symbols.txt`)
+gives the range. `base = symaddr - built_symbol_offset`.
+
+Three walls make this a per-unit decomp task, not a bulk flip:
+
+- **Shared `.sdata2` constant pools (the big one — ~100 units, ~350k code).**
+  Float / int-magic constants live in a pool (`lbl_803Exxxx`) currently provided
+  by an auto data unit. A unit's object emits its copy as an anonymous *local*,
+  but other units reference the same constant as a *global* — attributing the
+  pool range to one unit makes those globals vanish (`undefined: lbl_...`).
+  Reproducing retail needs the constant referenced externally, which the source
+  can't express for anonymous literals. Not fixable by splits alone.
+- **Layout mismatch.** Our source's data order can differ from retail's — e.g. a
+  unit whose object has `jumptable` + `descriptor` contiguous while retail
+  interleaves a neighbour's data between them. The built section is one block, so
+  it can't map to a non-contiguous retail region.
+- **Relocated data.** A `.data` jumptable of code pointers is all-zero in the
+  object (filled at link). Even with the right range it can still miss the SHA1,
+  so the DOL check remains the only proof.
+
+Net: only a handful of units have data that is uniquely owned, contiguous, and
+unattributed — those link cleanly (this pass linked 6 via derived splits). Moving
+the linked % substantially further needs either coordinated multi-unit relinking
+of whole `.sdata2` pools (structural) or matching much more data first
+(`matched_data` is only ~3.7%).
