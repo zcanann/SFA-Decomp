@@ -24,7 +24,7 @@ typedef struct GroundanimatorPlacement
     u8 pad1C[0x20 - 0x1C];
     u8 maxSinkDepth;
     u8 sfxIndex;
-    u8 unk22;
+    u8 disableAutoLink;
     u8 pad23[0x25 - 0x23];
     u8 blockId;
     u8 pad26[0x28 - 0x26];
@@ -386,7 +386,7 @@ void groundanimator_update(int* obj)
     {
         return;
     }
-    if (((GroundanimatorPlacement*)r20)->unk22 == 0)
+    if (((GroundanimatorPlacement*)r20)->disableAutoLink == 0)
     {
         if (*(void**)&g->linkedObj == NULL)
         {
