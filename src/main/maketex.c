@@ -413,7 +413,7 @@ int ObjSeq_SetObjs(int a, int b, int c)
 }
 
 extern u8 lbl_803DD0D9;
-f32 objSeqOverridePos[0x259];
+extern f32 objSeqOverridePos[];
 
 int ObjSeq_setOverridePos(f32 x, f32 y, f32 z)
 {

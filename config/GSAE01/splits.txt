@@ -124,10 +124,10 @@ track/intersect.c:
 
 main/maketex.c:
 	.text       start:0x8007E77C end:0x80080DE8
-	.bss        start:0x803994EC end:0x80399E50
 
 main/objseq.c:
 	.text       start:0x80080DE8 end:0x80088758
+	.bss        start:0x80396918 end:0x8039A7A8
 
 main/sky.c:
 	.text       start:0x80088758 end:0x8008EE18
