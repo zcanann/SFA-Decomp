@@ -1738,6 +1738,7 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     GXColor temp;
     void (*pcb)(void*, void**, int);
     int alpha_byte;
+    GXColor fogColor;
 
     model = obj_b[0];
     renderOp = (void*)ObjModel_GetRenderOp(model, slot);
@@ -1810,7 +1811,6 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
         extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
         u8 zCompLoc = 1;
         int ref1;
-        GXColor fogColor;
         if (((u8*)obj_a)[0x37] < 0xff
             || (((ModelRenderOp *)renderOp)->flags & 0x40000000) != 0
             || ((ModelRenderOp *)renderOp)->alpha < 0xff) {
@@ -1904,15 +1904,16 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
             gGxZCompLocCached = zCompLoc;
             gGxZCompLocValid = 1;
         }
-        GXSetCullMode(0);
-        if ((((ModelFileHeader *)model)->flags & 0x100) != 0) {
-            fogColor = temp;
-            GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, fogColor);
-        } else {
-            fogColor = gFogColor;
-            GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fogColor);
-        }
-    }    return 1;
+    }
+    GXSetCullMode(0);
+    if ((((ModelFileHeader *)model)->flags & 0x100) != 0) {
+        fogColor = temp;
+        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, fogColor);
+    } else {
+        fogColor = gFogColor;
+        GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fogColor);
+    }
+    return 1;
 }
 
 /*
