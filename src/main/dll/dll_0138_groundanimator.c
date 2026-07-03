@@ -42,18 +42,9 @@ STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern int FUN_80017af0();
 extern int ObjGroup_FindNearestObject();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern int FUN_8005337c();
-extern u32 FUN_80056418();
-extern int FUN_80056448();
-extern int FUN_8005af70();
-extern int FUN_8005b398();
-extern int FUN_800600e4();
-extern u64 FUN_8028682c();
-extern u32 FUN_80286878();
 
 #pragma scheduling on
 #pragma peephole on
@@ -82,10 +73,8 @@ extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
 extern u16 lbl_803DBDF0;
 
-void waveanimator_update(void);
 
 int groundanimator_getExtraSize(void) { return 0x30; }
-int hitanimator_getExtraSize(void);
 
 u8 groundanimator_modelMtxFn(int* obj) { return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x2b); }
 
