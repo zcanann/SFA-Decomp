@@ -16,8 +16,6 @@
 
 #define DIMLAVASMASH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-#pragma scheduling on
-#pragma peephole on
 
 extern f32 lbl_803E48F8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
@@ -29,8 +27,6 @@ extern int mapBlockFn_80060678(void);
 extern int fn_8006070C(int arg1, int idx);
 extern int Shader_getLayer(int layer, int idx);
 
-#pragma scheduling off
-#pragma peephole off
 void dimlavasmash_free(void)
 {
 }
