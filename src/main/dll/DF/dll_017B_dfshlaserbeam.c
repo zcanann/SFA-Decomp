@@ -70,7 +70,6 @@ void DFSH_LaserBeam_init(int* obj)
     *(void**)state = NULL;
 }
 
-void dfsh_objcreator_init(int obj, s8* def);
 
 void DFSH_LaserBeam_render(void)
 {
