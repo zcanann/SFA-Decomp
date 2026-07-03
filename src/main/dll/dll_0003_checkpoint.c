@@ -382,9 +382,31 @@ extern f32 lbl_803E0504; /* used by Checkpoint_func08/07/06 */
 extern f32 lbl_803E0508; /* used by Checkpoint_func08 */
 extern f32 Curve_EvalHermite(f32* values, f32 t, f32* outTangent);
 
+/* Object cursor written back by Checkpoint_func08: the sampled heading/pitch
+ * angles at the front and the interpolated world position (x/y/z) mid-block. */
+typedef struct CheckpointCursor {
+    s16 headingAngle; /* 0x00 */
+    s16 pitchAngle;   /* 0x02 */
+    u8  pad04[0x08];
+    f32 posX;         /* 0x0C */
+    f32 posY;         /* 0x10 */
+    f32 posZ;         /* 0x14 */
+} CheckpointCursor;
+STATIC_ASSERT(offsetof(CheckpointCursor, posX) == 0x0C);
+STATIC_ASSERT(offsetof(CheckpointCursor, posZ) == 0x14);
+
+/* Route navigation state passed as `o`: embeds CheckpointRouteState at the
+ * front, with a route-branch flag byte further into the object. */
+typedef struct CheckpointNavState {
+    CheckpointRouteState route; /* 0x00 */
+    u8  pad24[0x0C];
+    u8  branchFlag;             /* 0x30 */
+} CheckpointNavState;
+STATIC_ASSERT(offsetof(CheckpointNavState, branchFlag) == 0x30);
+
 /* Advance along the route by arc-length `dist`, sampling the Hermite curve and
  * clamping t to [0,1]; crossing a segment end hands off to the next checkpoint. */
-s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
+s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s32 p3, u8 flag)
 {
     extern u16 getAngle(f32 a, f32 b); /* #57 */
     f32 v1[4];
@@ -416,22 +438,22 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
     kMax = lbl_803E0504;
     do
     {
-        if (((CheckpointRouteState*)o)->startCheckpointId < 0)
+        if (o->route.startCheckpointId < 0)
         {
             return 1;
         }
-        n = Checkpoint_find(((CheckpointRouteState*)o)->startCheckpointId, &local_idx);
+        n = Checkpoint_find(o->route.startCheckpointId, &local_idx);
         if (n == NULL)
         {
             return 1;
         }
         if (n->forwardLink0 < 0)
         {
-            ((CheckpointRouteState*)o)->startCheckpointId = -1;
+            o->route.startCheckpointId = -1;
             return 1;
         }
         alt = 0;
-        if (n->forwardLink1 > -1 && *(u8*)(o + 0x30) != 0)
+        if (n->forwardLink1 > -1 && o->branchFlag != 0)
         {
             alt = 1;
         }
@@ -441,7 +463,7 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
         }
         len = sqrtf((v3[0] - v3[1]) * (v3[0] - v3[1]) +
             ((v1[0] - v1[1]) * (v1[0] - v1[1]) + (v2[0] - v2[1]) * (v2[0] - v2[1])));
-        t = ((CheckpointRouteState*)o)->pathT + dist / len;
+        t = o->route.pathT + dist / len;
         clamp = 0;
         if (t < kMin)
         {
@@ -462,16 +484,16 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
             f32 xd;
             f32 zd;
             ang2 = getAngle(sqrtf(outX * outX + outZ * outZ), outY) - 0x4000;
-            xd = x - *(f32*)(out + 0xc);
-            zd = z - *(f32*)(out + 0x14);
+            xd = x - out->posX;
+            zd = z - out->posZ;
             seg = sqrtf(xd * xd + zd * zd);
         }
         else
         {
             f32 xd;
             f32 zd;
-            xd = x - *(f32*)(out + 0xc);
-            zd = z - *(f32*)(out + 0x14);
+            xd = x - out->posX;
+            zd = z - out->posZ;
             seg = sqrtf(xd * xd + zd * zd);
         }
         if (dist < kMin)
@@ -480,40 +502,40 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
         }
         if (clamp == -1 && seg < dist)
         {
-            ((CheckpointRouteState*)o)->startCheckpointId = n->backLinkIds[alt];
-            ((CheckpointRouteState*)o)->pathT = lbl_803E0508;
-            if (alt != 0 && ((CheckpointRouteState*)o)->startCheckpointId < 0)
+            o->route.startCheckpointId = n->backLinkIds[alt];
+            o->route.pathT = lbl_803E0508;
+            if (alt != 0 && o->route.startCheckpointId < 0)
             {
-                ((CheckpointRouteState*)o)->startCheckpointId = n->backLink0;
+                o->route.startCheckpointId = n->backLink0;
             }
         }
         else if (clamp == 1 && seg < dist)
         {
-            ((CheckpointRouteState*)o)->startCheckpointId = n->forwardLinkIds[alt];
-            ((CheckpointRouteState*)o)->pathT = lbl_803E04E8;
-            if (alt != 0 && ((CheckpointRouteState*)o)->startCheckpointId < 0)
+            o->route.startCheckpointId = n->forwardLinkIds[alt];
+            o->route.pathT = lbl_803E04E8;
+            if (alt != 0 && o->route.startCheckpointId < 0)
             {
-                ((CheckpointRouteState*)o)->startCheckpointId = n->forwardLink0;
+                o->route.startCheckpointId = n->forwardLink0;
             }
         }
         else
         {
-            ((CheckpointRouteState*)o)->pathT = t;
+            o->route.pathT = t;
         }
         dist -= seg;
-        *(f32*)(out + 0xc) = x;
+        out->posX = x;
         if (flag != 0)
         {
-            *(f32*)(out + 0x10) = y;
+            out->posY = y;
         }
-        *(f32*)(out + 0x14) = z;
+        out->posZ = z;
         i += 1;
     }
     while (i < 3);
-    *(s16*)(out + 0) = ang1;
+    out->headingAngle = ang1;
     if (flag != 0)
     {
-        *(s16*)(out + 2) = ang2;
+        out->pitchAngle = ang2;
     }
     return 0;
 }
