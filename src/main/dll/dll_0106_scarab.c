@@ -242,7 +242,7 @@ void scarab_update(int obj)
         }
         else if ((s8)ph == 2 && mode != 0)
         {
-            if (((ScarabState*)state)->riseAmount < (f32) * (s16*)(state + 0x1c))
+            if (((ScarabState*)state)->riseAmount < (f32)((ScarabState*)state)->riseLimit)
             {
                 f32 spd = lbl_803E3A20;
                 ((ScarabState*)state)->riseAmount = spd * timeDelta + ((ScarabState*)state)->riseAmount;
@@ -504,7 +504,7 @@ void scarab_update(int obj)
                     {
                         ObjHits_DisableObject((u32)obj);
                     }
-                    Sfx_PlayFromObject(obj, (u16) * (s16*)(state + 0x1e));
+                    Sfx_PlayFromObject(obj, (u16)((ScarabState*)state)->pickupSfx);
                     itemPickupDoParticleFx(obj, lbl_803E3A00, ((ScarabState*)state)->particleId, 0x28);
                 }
             }
@@ -739,7 +739,7 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3A00);
         if ((visible != 0) && (((GameObject*)obj)->anim.alpha != 0))
         {
-            objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, (u8) * (s16*)(state + 0x22), 1, 0x14,
+            objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, (u8)((ScarabState*)state)->unk22, 1, 0x14,
                                         lbl_803E3A04, 0, 0);
         }
     }
