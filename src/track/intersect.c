@@ -6320,3 +6320,9 @@ int saveCb_8007e748(int param_1, int param_2, void* dst)
     memcpy(dst, lbl_803DD044 + 0x1F14, 0xE4);
     return 0;
 }
+
+/* .bss block 0x80391DC0-0x803965E0 */
+f32 gWaterFxState[4];
+void* gWaterFxTextures[4];
+u8 gWaterRipples[0x1000];
+u8 gWaterSplashQuads[0x3800];

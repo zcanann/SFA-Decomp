@@ -123,6 +123,7 @@ main/newshadows.c:
 
 track/intersect.c:
 	.text       start:0x8006EF38 end:0x8007E77C
+	.bss        start:0x80391DC0 end:0x803965E0
 
 main/maketex.c:
 	.text       start:0x8007E77C end:0x80080DE8
