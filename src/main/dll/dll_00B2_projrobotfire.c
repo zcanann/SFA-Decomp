@@ -22,3 +22,5 @@ void projrobotfire_release(void)
 void projrobotfire_initialise(void)
 {
 }
+
+char sProjrobotfireDoNoLongerSupported[] = "<projrobotfire Do>No Longer supported \n";
