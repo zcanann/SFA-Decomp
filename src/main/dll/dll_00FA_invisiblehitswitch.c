@@ -38,6 +38,9 @@ ObjectDescriptor gAreaObjDescriptor = {
 #include "main/game_object.h"
 #include "main/gamebits.h"
 
+#define INVISIBLEHITSWITCH_OBJFLAG_HIDDEN 0x4000
+#define INVISIBLEHITSWITCH_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct InvisibleHitSwitchPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -165,7 +168,7 @@ void InvisibleHitSwitch_init(int obj, u8* placement)
     InvisibleHitSwitchState* info;
 
     info = (InvisibleHitSwitchState*)*(int*)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (INVISIBLEHITSWITCH_OBJFLAG_HIDDEN | INVISIBLEHITSWITCH_OBJFLAG_HITDETECT_DISABLED));
     if (placement[0x1d] == 0)
     {
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
