@@ -7,7 +7,6 @@ extern float mathCosf(float x);
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
-extern u32 FUN_80294964();
 extern u32 DAT_802c2910;
 extern u32 DAT_802c2914;
 extern u32 DAT_802c2918;
@@ -33,7 +32,6 @@ extern f32 lbl_803E1AB0;
 extern f32 lbl_803E1AB4;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
-void CameraModeNpcSpeak_release(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -49,7 +47,6 @@ void dll_4F_initialise_nop(void)
 {
 }
 
-void CameraModeCrawl_release(void);
 
 void CameraModeForceBehind_func06_nop(void)
 {
@@ -59,13 +56,9 @@ void CameraModeForceBehind_func05_nop(void)
 {
 }
 
-void CameraModeForceBehind_release(void);
 
-void CameraModeCloudRunner_release(void);
 
-void CameraModePerv_release(void);
 
-void CameraModeArwing_release(void);
 
 void dll_4F_init(void)
 {
@@ -119,7 +112,6 @@ void dll_4F_update(int* obj)
     }
 }
 
-void CameraModeCrawl_init(void);
 
 void dll_4F_func05(void)
 {
@@ -128,9 +120,7 @@ void dll_4F_func05(void)
     gCameraMode4FState = NULL;
 }
 
-void CameraModeCrawl_free(void);
 
-void CameraModeCloudRunner_free(void);
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
