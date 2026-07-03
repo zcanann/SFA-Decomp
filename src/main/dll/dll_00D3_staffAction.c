@@ -434,7 +434,7 @@ void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             if ((((u32)((LandedArwingState*)state)->flags92 >> 2) & 1) == 0)
             {
-                fn_80166E38(slideMtx, &((GameObject*)obj)->anim.velocityX, (f32*)(state + 0x7c));
+                fn_80166E38(slideMtx, &((GameObject*)obj)->anim.velocityX, &((LandedArwingState*)state)->surfaceNormalX);
             }
             scale = ((GameObject*)obj)->anim.rootMotionScale;
             initRotationMtx(mtx, scale, scale, scale);
