@@ -95,6 +95,9 @@ extern f32 PSVECDistance(void* a, void* b);
 extern void PSVECScale(void* in, void* out, f32 scale);
 extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
+/* babycloudrunner anim-event sfx dispatcher: walk the current move's event
+ * list; event 0 plays sfxIds[0], event 7 plays sfxIds[1], event 9 plays a
+ * fixed whine; if any of the "turn" events (1..4) fired, play sfxIds[2]. */
 void FUN_8019b1d8(u32 unused1, u32 unused2, u16* sfxIds)
 {
     u32 obj;
@@ -145,6 +148,11 @@ void FUN_8019b1d8(u32 unused1, u32 unused2, u16* sfxIds)
     return;
 }
 
+/* babycloudrunner fly-toward-target: aim the flier at 'target'. Computes the
+ * distance to target; if closer than a dt-scaled threshold returns 1 (arrived),
+ * else sets the velocity vector (self+0x12/0x14/0x16) toward the target, turns
+ * the heading (self+0) toward it by a dt-scaled yaw step, kicks the fly move
+ * 0x1a, and returns 0 (still travelling). */
 u32
 FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
              u32 param_6, u32 param_7, u32 param_8, u32 param_9)
@@ -155,10 +163,10 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
     double dirY;
     double dirZ;
     double dirX;
-    u64 in_f5;
-    u64 in_f6;
-    u64 in_f7;
-    u64 in_f8;
+    u64 fpSlot5;
+    u64 fpSlot6;
+    u64 fpSlot7;
+    u64 fpSlot8;
     float deltaZ;
     float deltaY;
     float deltaX[2];
@@ -214,7 +222,7 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
             FUN_80017a88((double)*(float*)(self + 0x12), dirY, dirZ, self);
             if (self[0x50] != 0x1a)
             {
-                FUN_800305f8((double)lbl_803E4DA8, dirY, dirZ, dirX, in_f5, in_f6, in_f7, in_f8, self, 0x1a, 0
+                FUN_800305f8((double)lbl_803E4DA8, dirY, dirZ, dirX, fpSlot5, fpSlot6, fpSlot7, fpSlot8, self, 0x1a, 0
                              , param_5, param_6, param_7, param_8, param_9);
             }
             FUN_8002f6ac(dt, self, param_4);
@@ -237,6 +245,9 @@ FUN_8019b650(u64 param_1, double param_2, double param_3, double param_4, u64 pa
     return 0;
 }
 
+/* babycloudrunner move dispatcher: pick the default or alt action table by the
+ * state byte at extra+0x2a0 (== 6 -> alt), run the move; on completion, if the
+ * anim raised trigger-command 2, spawn a follow-up. */
 u32
 FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
              u64 param_6, u64 param_7, u64 param_8, int obj, u32 param_10
@@ -293,6 +304,11 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     return result;
 }
 
+/* babycloudrunner message pump: drain the object's message queue and, for the
+ * 0x110001/0x110002/0x110003 relay messages, re-forward them to the message's
+ * sender when this object is in the matching state (0x54/0x55/0x56) and the
+ * anim clock (animUpdate+0x58) has passed 0xaf; then, over the anim event list,
+ * fire gamebit 0x4e0 once states 0x54/0x55/0x56 are all set. */
 u32
 FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
              u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 obj
@@ -351,6 +367,10 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     return 0;
 }
 
+/* babycloudrunner ascend/descend controller: toggles between the climb (5) and
+ * dive (0xd) moves based on vertical velocity, computes a clamped anim speed
+ * from that velocity, and plays the spit sfx once when the dive move passes its
+ * progress threshold (spitFlags bit6 latch at extra+0x244). */
 u32
 FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
              u64 param_6, u64 param_7, u64 param_8, u32 obj,
@@ -452,6 +472,11 @@ typedef struct BabyCloudRunnerState
 
 STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
+/* babycloudrunner spawn/hatch anim-event handler: sets up the model's tint
+ * params (model+0x20..0x28) from the parent's health (otherObj+0x298), submits
+ * a texture query, plays the hatch sfx, then (if the placement bit is set)
+ * snaps this object's world position onto the matched group-0x3a partner and
+ * re-runs its placement. */
 void FUN_8019f1dc(void)
 {
     u32 obj;
