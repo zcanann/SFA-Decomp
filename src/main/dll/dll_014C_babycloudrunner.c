@@ -798,3 +798,5 @@ void babycloudrunner_update(int* obj)
     }
 }
 #pragma opt_common_subs reset
+
+int gBabyCloudRunnerAirMeterValues[4] = { 0x1770, 0x2EE0, 0x2EE0, 0x3E80 };

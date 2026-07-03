@@ -469,3 +469,5 @@ void fxemit_release(void)
 void fxemit_initialise(void)
 {
 }
+
+char sCFTreasSharpyDebugFormat[12] = "%x   %f %f\n\000";

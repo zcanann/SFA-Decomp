@@ -1346,6 +1346,7 @@ main/dll/CF/dll_012A_cfcrate.c:
 
 main/dll/dll_012B_fxemit.c:
 	.text       start:0x8018E6C4 end:0x8018F148
+	.data       start:0x80321F70 end:0x80321F80
 
 main/dll/dll_0130_areafxemit.c:
 	.text       start:0x8018F148 end:0x8018FF28
@@ -1451,6 +1452,7 @@ main/dll/CF/dll_014B_cfmaincrystal.c:
 
 main/dll/dll_014C_babycloudrunner.c:
 	.text       start:0x8019E3F4 end:0x8019F540
+	.data       start:0x80322B28 end:0x80322B38
 
 main/dll/CF/dll_014E_cfprisonguard.c:
 	.text       start:0x8019F540 end:0x8019FC84
@@ -1853,7 +1855,7 @@ main/dll/NW/dll_01A0_nwgeyser.c:
 
 main/dll/NW/dll_01A1_nwmammoth.c:
 	.text       start:0x801CE078 end:0x801CF78C
-	.data       start:0x803267E8 end:0x803268B4
+	.data       start:0x803267C0 end:0x803268EC
 
 main/dll/NW/dll_01A2_nwtricky.c:
 	.text       start:0x801CF78C end:0x801CFB24
@@ -2180,6 +2182,7 @@ main/dll/WM/dll_0210_wmplanets.c:
 
 main/dll/WM/dll_0211_wmwallcrawler.c:
 	.text       start:0x801F7FF4 end:0x801F943C
+	.data       start:0x80328DD0 end:0x80328DEC
 	.sdata2     start:0x803E6020 end:0x803E6030
 
 main/dll/WM/dll_0215_wmnewcrystal.c:
@@ -2422,6 +2425,7 @@ main/dll/dll_0271_drakorhoverpad.c:
 
 main/dll/dll_0272_hightop.c:
 	.text       start:0x8021CF60 end:0x8021F34C
+	.data       start:0x8032AB30 end:0x8032ABC0
 
 main/dll/DR/dll_026F_drgenerator.c:
 	.text       start:0x8021F34C end:0x8021F8CC
