@@ -153,9 +153,9 @@ void TrickyCurve_updateBoundsTrigger(int obj)
     return;
 }
 
-void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
-                                         u64 param_4, u64 param_5, u64 param_6,
-                                         u64 param_7, u64 param_8)
+void TrickyCurve_updateEffectRingTrigger(u64 arg1, u64 arg2, u64 arg3,
+                                         u64 arg4, u64 arg5, u64 arg6,
+                                         u64 arg7, u64 arg8)
 {
     bool flag;
     u32 obj;
@@ -309,7 +309,7 @@ void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
             bitVal = FUN_80017690(0x1d9);
             if (bitVal == 0)
             {
-                ObjMsg_SendToObject(ftmp, param_2, param_3, param_4, param_5, param_6, param_7, param_8, ref,
+                ObjMsg_SendToObject(ftmp, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ref,
                                     0x60004,
                                     obj, 1, unusedArg7, unusedArg8, unusedArg9, unusedArg10);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &rotX, 2, -1, NULL);
@@ -324,7 +324,7 @@ void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
             else
             {
                 pairWord = FUN_80017698(0x468, 1);
-                ObjMsg_SendToObject(pairWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8, ref,
+                ObjMsg_SendToObject(pairWord, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ref,
                                     0x60004,
                                     obj, 0, unusedArg7, unusedArg8, unusedArg9, unusedArg10);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &rotX, 2, -1, NULL);
@@ -347,17 +347,17 @@ void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
     return;
 }
 
-void TrickyCurve_updateState(u64 param_1, u64 param_2, u64 param_3,
-                             u64 param_4, u64 param_5, u64 param_6,
-                             u64 param_7, u64 param_8, int obj)
+void TrickyCurve_updateState(u64 arg1, u64 arg2, u64 arg3,
+                             u64 arg4, u64 arg5, u64 arg6,
+                             u64 arg7, u64 arg8, int obj)
 {
     char triggerKind;
 
     triggerKind = *(char*)(*(int*)&((GameObject*)obj)->extra + 0xe);
     if (triggerKind == '\0')
     {
-        TrickyCurve_updateEffectRingTrigger(param_1, param_2, param_3, param_4, param_5, param_6, param_7,
-                                            param_8);
+        TrickyCurve_updateEffectRingTrigger(arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                                            arg8);
     }
     else if (triggerKind == '\x01')
     {
