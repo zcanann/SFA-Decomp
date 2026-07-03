@@ -79,7 +79,7 @@ extern f32 lbl_803E2C90;
 extern f32 lbl_803E2C94;
 extern u8 gCrawlerSeqTable[];
 extern u8 gCrawlerModelChainIds[];
-extern char gCrawlerDescriptorTable[];
+extern void* gCrawlerDescriptorTable[];
 extern f32 lbl_803E2CBC;
 extern u8 gCrawlerReactionTables[];
 
@@ -2281,3 +2281,35 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         }
     }
 }
+
+extern u8 lbl_8031F3A0[];
+extern u8 lbl_8031F3D0[];
+extern u8 lbl_8031F424[];
+extern u8 lbl_8031F46C[];
+extern u8 lbl_8031F4CC[];
+extern u8 lbl_8031F52C[];
+extern u8 lbl_8031F5EC[];
+extern u8 lbl_8031F65C[];
+extern u8 lbl_8031F6F8[];
+extern u8 lbl_8031F728[];
+extern u8 lbl_8031F788[];
+extern u8 lbl_8031F7AC[];
+extern u8 lbl_8031F7D0[];
+extern u8 lbl_8031F86C[];
+extern u8 lbl_8031F8BC[];
+extern u8 lbl_8031F958[];
+extern u8 lbl_8031F988[];
+extern u8 lbl_8031F9E8[];
+extern u8 lbl_8031FA18[];
+extern u8 lbl_8031FA3C[];
+extern u8 lbl_8031FA78[];
+extern u8 lbl_8031FAA8[];
+
+void* gCrawlerDescriptorTable[24] = {
+    lbl_8031F3A0, lbl_8031F46C, lbl_8031F3D0, lbl_8031F4CC,
+    lbl_8031F424, lbl_8031F5EC, lbl_8031F52C, lbl_8031F65C,
+    lbl_8031F6F8, lbl_8031F7AC, lbl_8031F788, lbl_8031F728,
+    lbl_8031F7AC, lbl_8031F86C, lbl_8031F7D0, lbl_8031F8BC,
+    lbl_8031F958, lbl_8031FA18, lbl_8031F9E8, lbl_8031F988,
+    lbl_8031FA3C, lbl_8031FAA8, lbl_8031FA78, lbl_8031F65C,
+};

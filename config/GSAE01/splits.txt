@@ -972,6 +972,7 @@ main/dll/duster.c:
 
 main/dll/firecrawler.c:
 	.text       start:0x80157004 end:0x8015AD60
+	.data       start:0x8031FAE8 end:0x8031FB48
 
 main/dll/dll_00CA_icebaddie.c:
 	.text       start:0x8015AD60 end:0x8015DAE8
