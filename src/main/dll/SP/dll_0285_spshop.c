@@ -90,9 +90,9 @@ extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Music_Trigger(int id, int arg);
 
-void FUN_801e55c0(u64 param_1, double param_2, double param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                  u16* param_9, int param_10)
+void FUN_801e55c0(u64 unused1, double unused2, double unused3, u64 unused4,
+                  u64 unused5, u64 unused6, u64 unused7, u64 unused8,
+                  u16* unused9, int unused10)
 {
 }
 
