@@ -1331,6 +1331,36 @@ extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 extern u8 framesThisStep;
 
+/*
+ * Per-object turn-to-face scratch state (carried in GameObject::extra for
+ * class-0x10 sequence objects). Only the fields touched by the turn step and
+ * the sequence teardown are named; the rest of the region stays padding.
+ * Field offsets are pinned to the original raw-buffer layout so member
+ * spelling stays byte-neutral.
+ */
+typedef struct ObjSeqTurnState {
+  u8 pad00[0x24];
+  f32 turnRate;      /* 0x24: per-frame blend increment */
+  u8 pad28[0x40 - 0x28];
+  f32 vecX;          /* 0x40 */
+  f32 vecY;          /* 0x44 */
+  f32 vecZ;          /* 0x48 */
+  f32 blend;         /* 0x4c: 0..1 progress */
+  s16 turnAmount;    /* 0x50 */
+  s16 targetPitch;   /* 0x52 */
+  s16 f54;           /* 0x54 */
+  u8 mode;           /* 0x56: 4 = start, 5 = advance */
+  u8 seqId;          /* 0x57 */
+  u8 pad58[0x6E - 0x58];
+  s16 flags;         /* 0x6e */
+  u8 pad70[0xE8 - 0x70];
+  void (*resetVecCb)(int); /* 0xe8 */
+  u8 padEC[0x110 - 0xEC];
+  int cbArg;         /* 0x110 */
+  s16 savedVecY;     /* 0x114 */
+  s16 savedVecX;     /* 0x116 */
+} ObjSeqTurnState;
+
 /* EN v1.0 0x800805A4  size: 1564b  Object-sequence turn-to-face-player step:
  * starts (mode 4) or advances (mode 5) a smooth turn of the object toward the
  * player, blending the model vector and animation as it goes. */
@@ -1351,19 +1381,19 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
     p4 = (s16)(182.04445f * p4);
     p5 = (s16)(182.04445f * p5);
     p3 = (s16)(182.04445f * p3);
-    mode = (s8) * (u8*)(state + 0x56);
+    mode = (s8)((ObjSeqTurnState*)state)->mode;
     if (mode == 4)
     {
-        *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~2;
+        ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~2;
         v = (s16*)objModelGetVecFn_800395d8(obj, 0);
         if (v != NULL)
         {
-            *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~8;
+            ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~8;
         }
-        *(void (**)(int))(state + 0xe8) = objModelResetVecFn_80080548;
-        *(f32*)(state + 0x40) = 0.0f;
-        *(f32*)(state + 0x44) = 0.0f;
-        *(f32*)(state + 0x48) = 0.0f;
+        ((ObjSeqTurnState*)state)->resetVecCb = objModelResetVecFn_80080548;
+        ((ObjSeqTurnState*)state)->vecX = 0.0f;
+        ((ObjSeqTurnState*)state)->vecY = 0.0f;
+        ((ObjSeqTurnState*)state)->vecZ = 0.0f;
         yawd = Obj_GetYawDeltaToObject((u16*)obj, player, (float*)0);
         if (((s16)yawd >= 0 ? (s16)yawd : -(s16)yawd) < p4)
         {
@@ -1373,7 +1403,7 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         {
             turn = (s16)((s16)yawd > 0 ? (s16)yawd - p4 : (s16)yawd + p4);
         }
-        *(s16*)(state + 0x50) = turn;
+        ((ObjSeqTurnState*)state)->turnAmount = turn;
         {
             f32* dp = d;
             f32* ovr = *(f32**)(obj + 0x74);
@@ -1391,30 +1421,30 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
             }
             dp[1] += 30.0f;
             dist = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
-            *(s16*)(state + 0x52) = (s16)getAngle(dp[1], dist);
+            ((ObjSeqTurnState*)state)->targetPitch = (s16)getAngle(dp[1], dist);
         }
-        *(s16*)(state + 0x54) = 0;
-        *(u8*)(state + 0x56) = 5;
-        *(f32*)(state + 0x4c) = 0.0f;
+        ((ObjSeqTurnState*)state)->f54 = 0;
+        ((ObjSeqTurnState*)state)->mode = 5;
+        ((ObjSeqTurnState*)state)->blend = 0.0f;
         if (turn != 0)
         {
             rate = (f32)p3 / (f32)turn;
-            *(f32*)(state + 0x24) = rate >= 0.0f ? rate : -rate;
+            ((ObjSeqTurnState*)state)->turnRate = rate >= 0.0f ? rate : -rate;
         }
         else
         {
-            *(f32*)(state + 0x24) = 1.0f;
+            ((ObjSeqTurnState*)state)->turnRate = 1.0f;
         }
         {
-            f32 c = *(f32*)(state + 0x24);
-            *(f32*)(state + 0x24) = c < 0.0f ? 0.0f : (c > 0.25f ? 0.25f : c);
+            f32 c = ((ObjSeqTurnState*)state)->turnRate;
+            ((ObjSeqTurnState*)state)->turnRate = c < 0.0f ? 0.0f : (c > 0.25f ? 0.25f : c);
         }
         if (p6 != -1)
         {
             if (p7 != -1)
             {
-                *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~4;
-                if (*(s16*)(state + 0x50) < 0)
+                ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~4;
+                if (((ObjSeqTurnState*)state)->turnAmount < 0)
                 {
                     if (p7 != -1)
                     {
@@ -1432,37 +1462,37 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
                 }
             }
         }
-        *(void (**)(int))(state + 0xe8) = objModelResetVecFn_80080548;
+        ((ObjSeqTurnState*)state)->resetVecCb = objModelResetVecFn_80080548;
         return 1;
     }
     else if (mode == 5)
     {
-        *(f32*)(state + 0x4c) = *(f32*)(state + 0x4c) + *(f32*)(state + 0x24);
-        if (*(f32*)(state + 0x4c) > 1.0f)
+        ((ObjSeqTurnState*)state)->blend = ((ObjSeqTurnState*)state)->blend + ((ObjSeqTurnState*)state)->turnRate;
+        if (((ObjSeqTurnState*)state)->blend > 1.0f)
         {
-            *(f32*)(state + 0x4c) = 1.0001f;
+            ((ObjSeqTurnState*)state)->blend = 1.0001f;
         }
-        ((GameObject*)obj)->anim.rotX += (s16)(*(f32*)(state + 0x24) * (f32) * (s16*)(state + 0x50));
+        ((GameObject*)obj)->anim.rotX += (s16)(((ObjSeqTurnState*)state)->turnRate * (f32)((ObjSeqTurnState*)state)->turnAmount);
         v = (s16*)objModelGetVecFn_800395d8(obj, 0);
         if (v != NULL)
         {
-            *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~8;
+            ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~8;
             yawd = Obj_GetYawDeltaToObject((u16*)obj, player, (float*)0);
             g = (f32)(s16)
             yawd;
             {
                 f32 cur = (f32)v[1];
-                g = cur * (1.0f - *(f32*)(state + 0x4c)) + g * *(f32*)(state + 0x4c);
+                g = cur * (1.0f - ((ObjSeqTurnState*)state)->blend) + g * ((ObjSeqTurnState*)state)->blend;
             }
             g = (g < (f32) - p5) ? (f32) - p5 : ((g > (f32)p5) ? (f32)p5 : g);
             v[1] = g;
-            v[0] = (f32) * (s16*)(state + 0x52) * *(f32*)(state + 0x4c);
+            v[0] = (f32)((ObjSeqTurnState*)state)->targetPitch * ((ObjSeqTurnState*)state)->blend;
         }
         if (p6 != -1)
         {
             if (p7 != -1)
             {
-                s16 t50 = *(s16*)(state + 0x50);
+                s16 t50 = ((ObjSeqTurnState*)state)->turnAmount;
                 f32 fa = (f32)(t50 >= 0 ? t50 : -t50);
                 fa = fa * 3.142f / 325767.0f;
                 ObjAnim_SampleRootCurvePhase(fa, (ObjAnimComponent*)obj, &out);
@@ -1470,24 +1500,24 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
                     (obj, out, (f32)framesThisStep, NULL);
             }
         }
-        if (*(f32*)(state + 0x4c) > 1.0f)
+        if (((ObjSeqTurnState*)state)->blend > 1.0f)
         {
-            *(u8*)(state + 0x56) = 0;
-            *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) | 8;
+            ((ObjSeqTurnState*)state)->mode = 0;
+            ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags | 8;
             v = (s16*)objModelGetVecFn_800395d8(obj, 0);
             if (v != NULL)
             {
-                *(s16*)(state + 0x114) = v[1];
-                *(s16*)(state + 0x116) = v[0];
+                ((ObjSeqTurnState*)state)->savedVecY = v[1];
+                ((ObjSeqTurnState*)state)->savedVecX = v[0];
             }
             else
             {
-                *(s16*)(state + 0x114) = 0;
-                *(s16*)(state + 0x116) = 0;
+                ((ObjSeqTurnState*)state)->savedVecY = 0;
+                ((ObjSeqTurnState*)state)->savedVecX = 0;
             }
-            if (*(f32*)(state + 0x4c) > 1.0f)
+            if (((ObjSeqTurnState*)state)->blend > 1.0f)
             {
-                *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) | 4;
+                ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags | 4;
             }
         }
         return 1;
@@ -1556,18 +1586,18 @@ void endObjSequence(int seq)
         }
         if (((GameObject*)obj)->anim.classId == 0x10)
         {
-            int st = *(int*)&((GameObject*)obj)->extra;
-            if ((s8) * (u8*)(st + 0x57) == seq)
+            ObjSeqTurnState* st = (ObjSeqTurnState*)*(int*)&((GameObject*)obj)->extra;
+            if ((s8)st->seqId == seq)
             {
                 if ((void*)obj == lbl_803DD0B8)
                 {
                     lbl_803DD0B8 = 0;
                 }
                 frees[nFree++] = obj;
-                if (*(void**)(st + 0xe8) != NULL)
+                if (st->resetVecCb != NULL)
                 {
-                    (*(void (**)(int, int, int))(st + 0xe8))(*(int*)(st + 0x110), obj, st);
-                    *(int*)(st + 0xe8) = 0;
+                    (*(void (**)(int, int, int)) & st->resetVecCb)(st->cbArg, obj, (int)st);
+                    st->resetVecCb = NULL;
                 }
                 if (nFree == 0x10)
                 {
