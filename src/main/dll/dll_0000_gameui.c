@@ -3056,19 +3056,21 @@ void pauseMenuFn_80129ee0(void)
                     {
                         AudioStream_StopCurrent();
                     }
-                    for (k = 0; k < 4; k++)
                     {
-                        char* anim = hud->anims[k];
-                        if (anim != 0)
+                        char** p;
+                        for (k = 0, p = &hud->anims[0]; k < 4; k++, p++)
                         {
-                            *(int*)(*(char**)(anim + 0x64) + 0x4) = 0;
-                            *(int*)(*(char**)(hud->anims[k] + 0x64) + 0x8) = 0;
-                            if (*(u32*)(hud->anims[k] + 0x4c) > 0x90000000)
+                            if (*p != 0)
                             {
-                                *(u32*)(hud->anims[k] + 0x4c) = 0;
+                                *(int*)(*(char**)(*p + 0x64) + 0x4) = 0;
+                                *(int*)(*(char**)(*p + 0x64) + 0x8) = 0;
+                                if (*(u32*)(*p + 0x4c) > 0x90000000)
+                                {
+                                    *(u32*)(*p + 0x4c) = 0;
+                                }
+                                Obj_FreeObject(*p);
+                                *p = 0;
                             }
-                            Obj_FreeObject(hud->anims[k]);
-                            hud->anims[k] = 0;
                         }
                     }
                     Music_Trigger(MUSICTRIG_cldrnr_tune1, 0);
