@@ -22,6 +22,8 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
 #define LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK 0x1000
+#define LINKBLEVCONTROL_OBJFLAG_HIDDEN 0x4000
+#define LINKBLEVCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern void Music_Trigger(int id, int arg);
 extern int getSaveGameLoadStatus(void);
 
@@ -96,7 +98,7 @@ void linkb_levcontrol_init(int* obj)
     extern int getEnvfxAct(int a, int b, u16 idx, int d); /* #57 */
     u8* envBase = (u8*)(int)lbl_803238D8;
     LinkbLevState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (LINKBLEVCONTROL_OBJFLAG_HIDDEN | LINKBLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
     if (GameBit_Get(0x36e) != 0)
     {
         state->flags &= 4;
