@@ -2636,3 +2636,6 @@ int snowPrintSnowCloud(int arg, int cloudId)
 #pragma opt_dead_assignments reset
 #pragma opt_common_subs reset
 #pragma opt_loop_invariants reset
+
+char sSnowFreeSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i - in snowFreeSnowCloud\n";
+char sSnowPrintSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i - in snowPrintSnowCloud\n";
