@@ -1,6 +1,80 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ansi_files.h"
 
-extern FILE __files[4];
+extern unsigned char lbl_803DADF0[];
+extern unsigned char lbl_803DACF0[];
+extern unsigned char lbl_803DABF0[];
+
+int __TRK_write_console(__file_handle file, unsigned char* buff, size_t* count, __idle_proc idle_fn);
+
+FILE __files[4] = {
+    {0,
+     {0, 1, 1, 2, 0},
+     {0, 0, 0, 0},
+     0,
+     0,
+     0,
+     {0, 0},
+     {0, 0},
+     0,
+     lbl_803DADF0,
+     256,
+     lbl_803DADF0,
+     0,
+     0,
+     0,
+     0,
+     NULL,
+     &__TRK_write_console,
+     &__write_console,
+     &__close_console,
+     0,
+     &__files[1]},
+    {1,
+     {0, 2, 1, 2, 0},
+     {0, 0, 0, 0},
+     0,
+     0,
+     0,
+     {0, 0},
+     {0, 0},
+     0,
+     lbl_803DACF0,
+     256,
+     lbl_803DACF0,
+     0,
+     0,
+     0,
+     0,
+     NULL,
+     &__TRK_write_console,
+     &__write_console,
+     &__close_console,
+     0,
+     &__files[2]},
+    {2,
+     {0, 2, 0, 2, 0},
+     {0, 0, 0, 0},
+     0,
+     0,
+     0,
+     {0, 0},
+     {0, 0},
+     0,
+     lbl_803DABF0,
+     256,
+     lbl_803DABF0,
+     0,
+     0,
+     0,
+     0,
+     NULL,
+     &__TRK_write_console,
+     &__write_console,
+     &__close_console,
+     0,
+     &__files[3]},
+};
+
 int fclose(FILE*);
 int fflush(FILE*);
 

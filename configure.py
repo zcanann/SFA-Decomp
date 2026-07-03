@@ -686,7 +686,7 @@ config.libs = [
                 cflags=cflags_msl,
                 extra_cflags=["-common", "off", "-inline", "auto,deferred"],
             ),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c", mw_version="GC/1.3"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c", mw_version="GC/1.3"),
             Object(
                 MatchingFor("GSAE01"),
                 "dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c",
