@@ -1111,3 +1111,8 @@ void SnowBike_update(int obj)
     }
 }
 #pragma opt_common_subs reset
+
+s16 gSnowBikeHitObjectIdTable[26] = {
+    0, 365, 0, 368, 0, 364, 0, 367, 0, 905, 0, 906, 0,
+    1235, 0, 909, 0, 910, 0, 1236, 1175, 1176, 1180, 930, 931, 1180,
+};

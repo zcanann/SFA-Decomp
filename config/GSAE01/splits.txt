@@ -2051,6 +2051,7 @@ main/dll/drpickup.c:
 
 main/dll/dll_0255_snowbike.c:
 	.text       start:0x801EC7A0 end:0x801EE088
+	.data       start:0x8032855C end:0x80328590
 
 main/dll/bwalphaanim.c:
 	.text       start:0x801EE088 end:0x801EE0C0
