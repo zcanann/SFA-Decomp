@@ -22,6 +22,9 @@
 #include "main/dll/player_target.h"
 #include "main/engine_shared.h"
 
+#define INVHIT_OBJFLAG_HIDDEN 0x4000
+#define INVHIT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct InvHitState
 {
     f32 anchorX;
@@ -166,7 +169,7 @@ void invhit_init(int* obj, u8* def)
         }
         break;
     }
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x6000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | (INVHIT_OBJFLAG_HIDDEN | INVHIT_OBJFLAG_HITDETECT_DISABLED);
 }
 #pragma opt_common_subs reset
 
