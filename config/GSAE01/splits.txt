@@ -99,6 +99,7 @@ main/objprint.c:
 
 main/objprint_dolphin.c:
 	.text       start:0x8003D6F8 end:0x800443CC
+	.data       start:0x802CAEE8 end:0x802CAF48
 	.bss        start:0x80342E10 end:0x8035EF48
 
 main/pi_dolphin.c:
