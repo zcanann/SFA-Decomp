@@ -672,7 +672,7 @@ void trickyFn_80142524(u8* obj, u8* state)
         }
         fn_80144B50(obj, state);
         {
-        if ((*(int (**)(u8*, u8*))(base + state[0xa] * 4 + 0x6c))(obj, state) == 0)
+        if (((int (**)(u8*, u8*))(base + 0x6c))[state[0xa]](obj, state) == 0)
         {
             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
             {
