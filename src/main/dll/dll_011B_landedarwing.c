@@ -100,8 +100,6 @@ extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void objRenderFn_8003b8f4(f32);
 extern void Obj_FreeObject(int obj);
 
-#pragma scheduling off
-#pragma peephole off
 void landed_arwing_free(int obj)
 {
     int o = obj;
