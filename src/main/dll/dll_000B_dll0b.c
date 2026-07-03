@@ -1928,10 +1928,10 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     n = st->pendingSpawnCount;
     for (i = 0; i < n; i++)
     {
-        u8* item = (u8*)st->pendingSpawns + i * 0x18;
-        if ((*(u32*)item & 0xf7fff180) == 0 && *(s16*)(item + 0x14) != 0)
+        ModgfxPendingSpawn* item = &st->pendingSpawns[i];
+        if ((item->modelOrResource & 0xf7fff180) == 0 && item->param14 != 0)
         {
-            total += *(s16*)(item + 0x14);
+            total += item->param14;
         }
     }
 
@@ -2077,26 +2077,26 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         int off;
         for (m = 0, off = 0; m < ((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCount; m++, off += 0x18)
         {
-            ((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands)[off + 0x16] = ((u8*)st->pendingSpawns)[off + 0x16];
-            *(s16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x14) = *(s16*)((u8*)st->pendingSpawns + off + 0x14);
-            *(int*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x10) = 0;
-            *(int*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off) = *(int*)((u8*)st->pendingSpawns + off);
-            if ((*(int*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off) & 0xf7fff180) == 0 &&
-                *(s16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x14) != 0)
+            ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->sequenceIndex = ((ModgfxPendingSpawn*)((u8*)st->pendingSpawns + off))->sequenceIndex;
+            ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->param14 = ((ModgfxPendingSpawn*)((u8*)st->pendingSpawns + off))->param14;
+            ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->param10 = 0;
+            ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->modelOrResource = ((ModgfxPendingSpawn*)((u8*)st->pendingSpawns + off))->modelOrResource;
+            if ((((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->modelOrResource & 0xf7fff180) == 0 &&
+                ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->param14 != 0)
             {
                 int k;
-                *(int*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x10) = 0;
-                *(u8**)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x10) = dst;
-                dst += *(s16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x14) * 2;
-                for (k = 0; k < *(s16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x14); k++)
+                ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->param10 = 0;
+                *(u8**)&((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->param10 = dst;
+                dst += ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->param14 * 2;
+                for (k = 0; k < ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->param14; k++)
                 {
-                    *(s16*)(*(u8**)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x10) + k * 2) =
-                        *(s16*)(*(u8**)((u8*)st->pendingSpawns + off + 0x10) + k * 2);
+                    *(s16*)(*(u8**)&((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->param10 + k * 2) =
+                        *(s16*)(*(u8**)&((ModgfxPendingSpawn*)((u8*)st->pendingSpawns + off))->param10 + k * 2);
                 }
             }
-            *(f32*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 4) = *(f32*)((u8*)st->pendingSpawns + off + 4);
-            *(f32*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 8) = *(f32*)((u8*)st->pendingSpawns + off + 8);
-            *(f32*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0xc) = *(f32*)((u8*)st->pendingSpawns + off + 0xc);
+            ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->posX = ((ModgfxPendingSpawn*)((u8*)st->pendingSpawns + off))->posX;
+            ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->posY = ((ModgfxPendingSpawn*)((u8*)st->pendingSpawns + off))->posY;
+            ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))->posZ = ((ModgfxPendingSpawn*)((u8*)st->pendingSpawns + off))->posZ;
         }
     }
 
