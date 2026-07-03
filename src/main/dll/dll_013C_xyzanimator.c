@@ -101,12 +101,13 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
     u16* mapBlock;
     int blockLayer;
     int edge[1];
+    int edgeIdx[1];
     VertexS16* vtx;
 
     edgeOffset[0] = 0;
     blockIndex = 0;
-    triangleOffset[0] = 0;
-    coordOffset[0] = triangleOffset[0];
+    coordOffset[0] = 0;
+    triangleOffset[0] = coordOffset[0];
     for (; blockIndex < (int)(u32)((MapBlockData*)block)->unk9A; blockIndex++)
     {
         mapBlock = mapBlockFn_800606ec((int*)block, blockIndex);
@@ -143,11 +144,11 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
             }
         }
     }
-    edgeOffset[0] = 0;
-    edge[0] = edgeOffset[0];
-    for (; edgeOffset[0] < (int)(u32)((MapBlockData*)block)->unkA1; edgeOffset[0]++)
+    edge[0] = 0;
+    edgeIdx[0] = edge[0];
+    for (; edgeIdx[0] < (int)(u32)((MapBlockData*)block)->unkA1; edgeIdx[0]++)
     {
-        blockIndex = (int)fn_800606FC((int*)block, edgeOffset[0]);
+        blockIndex = (int)fn_800606FC((int*)block, edgeIdx[0]);
         *(s16*)(state->unk28 + edge[0]) = ((EdgeVerts*)blockIndex)->a;
         *(s16*)(state->unk2C + edge[0]) = ((EdgeVerts*)blockIndex)->d;
         *(s16*)(state->unk30 + edge[0]) = ((EdgeVerts*)blockIndex)->b;
