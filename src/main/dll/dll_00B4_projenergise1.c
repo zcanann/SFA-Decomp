@@ -25,3 +25,5 @@ void projenergise1_release(void)
 void projenergise1_initialise(void)
 {
 }
+
+char sProjenergise1DoNoLongerSupported[] = "<projenergise1 Do>No Longer supported \n";
