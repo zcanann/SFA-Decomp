@@ -92,7 +92,6 @@ void dimcannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void dimlavasmash_free(void);
 
 typedef struct DimcannonPlacement
 {
