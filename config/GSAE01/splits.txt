@@ -170,6 +170,7 @@ main/dll/cloudaction.c:
 
 main/dll/dll_0013_waterfx.c:
 	.text       start:0x80094F7C end:0x80096994
+	.data       start:0x8030F86C end:0x8030F898
 
 main/dll/viewfinder.c:
 	.text       start:0x80096994 end:0x800969B0

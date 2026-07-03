@@ -828,3 +828,5 @@ void waterfx_drawFn_800953fc(void)
     gWaterfxSplashDisplayListSize = GXEndDisplayList();
     GXSetMisc(1, 8);
 }
+
+char sWaterfxDllAllocFailed[] = "Could not allocate memory for waterfx dll\n";
