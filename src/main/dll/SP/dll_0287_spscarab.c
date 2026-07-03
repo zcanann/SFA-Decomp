@@ -19,6 +19,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define SPSCARAB_OBJFLAG_RENDERED 0x800
+#define SPSCARAB_OBJFLAG_HIDDEN 0x4000
+#define SPSCARAB_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
@@ -172,7 +174,7 @@ void spscarab_init(int obj, int def)
     paletteBytes.a = gSpScarabPaletteBytesA;
     paletteBytes.b = gSpScarabPaletteByteB;
 
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x6000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | (SPSCARAB_OBJFLAG_HIDDEN | SPSCARAB_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(s8) * (u8*)(def + 0x18) << 8);
 
     ((GameObject*)obj)->anim.velocityX =
