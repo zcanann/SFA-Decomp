@@ -901,9 +901,9 @@ int pauseMenuIsFox(void)
  * trio (Music_Trigger / cutsceneFadeInOut / setTimeStop) when no slot was active
  * yet, then commits the new u8 active-id to gHighScoreActiveTableId. The third arg
  * funnels through `c == 0xa` as a branchless boolean. Always returns 1. */
-int registerNewScore(s8 a, int b, u8 c, int mode)
+int registerNewScore(s8 tableId, int score, u8 kind, int mode)
 {
-    gHighScoreHighlightRow = saveScoreFn_800e88b4(a, c == 0xa, b, getSaveFileName());
+    gHighScoreHighlightRow = saveScoreFn_800e88b4(tableId, kind == 0xa, score, getSaveFileName());
     if ((u8)mode == 2 || (u8)mode == 1)
     {
         if (gHighScoreActiveTableId == -1)
@@ -912,7 +912,7 @@ int registerNewScore(s8 a, int b, u8 c, int mode)
             cutsceneFadeInOut(1);
             setTimeStop(0xff);
         }
-        gHighScoreActiveTableId = a;
+        gHighScoreActiveTableId = tableId;
     }
     return 1;
 }
@@ -2683,8 +2683,8 @@ void pauseMenuFn_80129ee0(void)
     u8 menuMax;
     u8* charState;
     u8 hintBuf[13];
-    u8 a1;
-    u8 a2;
+    u8 analogX;
+    u8 analogY;
 
     player = Obj_GetPlayerObject();
     btn = 0;
@@ -2924,7 +2924,7 @@ void pauseMenuFn_80129ee0(void)
         case 1:
             {
                 u16 b2;
-                padGetAnalogInput(0, &a1, &a2);
+                padGetAnalogInput(0, &analogX, &analogY);
                 pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
                 if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentId() == 0 &&
                     AudioStream_IsPreparing() == 0)
@@ -2932,7 +2932,7 @@ void pauseMenuFn_80129ee0(void)
                     ObjAnim_SetCurrentMove((int)hud->anims[(s8)lbl_803DD781], 0, 0.0f, 0);
                     lbl_803DD781 = 0;
                 }
-                if ((s8)a1 == 0 || lbl_803DD78C == 0 ||
+                if ((s8)analogX == 0 || lbl_803DD78C == 0 ||
                     lbl_803DBA64 < menuMin || lbl_803DBA64 > menuMax)
                 {
                     switch ((s8)lbl_803DBA64)
@@ -2950,7 +2950,7 @@ void pauseMenuFn_80129ee0(void)
                     }
                     {
                         u8 prev = lbl_803DBA64;
-                        *(u8*)&lbl_803DBA64 = prev + a1;
+                        *(u8*)&lbl_803DBA64 = prev + analogX;
                         if ((s8)lbl_803DBA64 < menuMin)
                         {
                             lbl_803DBA64 = menuMax;
