@@ -668,6 +668,7 @@ main/dll/dll_00BE_projtesla.c:
 
 main/dll/dll_00BF_projcore1.c:
 	.text       start:0x801009B0 end:0x801009E8
+	.data       start:0x80319988 end:0x803199B0
 
 main/dll/dll_00C0_projcore2.c:
 	.text       start:0x801009E8 end:0x80100A20

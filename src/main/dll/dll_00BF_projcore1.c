@@ -21,3 +21,5 @@ void projcore1_release(void)
 void projcore1_initialise(void)
 {
 }
+
+char sProjcore1DoNoLongerSupported[] = "<projcore1 Do>No Longer supported \n";
