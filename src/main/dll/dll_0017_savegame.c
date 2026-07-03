@@ -423,8 +423,7 @@ s8 slot;
     SaveGame_gplaySetObjGroupStatus(0x13, 0x16, 1);
     GameBit_Set(0x967, 1);
 
-    *(f32*)(gSaveGameData + gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
-        SAVEGAME_CHARACTER_POSITION_OFFSET) = defaultPos.x;
+    SAVEGAME_CHARACTER_POSITION(gSaveGameData)->x = defaultPos.x;
     *(f32*)(gSaveGameData + gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
         SAVEGAME_CHARACTER_POSITION_OFFSET + 4) = defaultPos.y;
     *(f32*)(gSaveGameData + gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
