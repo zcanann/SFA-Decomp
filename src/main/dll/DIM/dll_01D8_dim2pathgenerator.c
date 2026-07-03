@@ -124,7 +124,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-void dll_1CF_free(void);
 
 void dim2pathgenerator_free(void)
 {
@@ -146,11 +145,9 @@ void dim2pathgenerator_initialise(void)
 {
 }
 
-int dll_1CF_getExtraSize(void);
 int dim2pathgenerator_getExtraSize(void) { return 0x9a8; }
 int dim2pathgenerator_getObjectTypeId(void) { return 0x0; }
 
-void dim_tricky_init(int* obj);
 
 u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4)
 {
@@ -165,7 +162,6 @@ u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** 
     return ((Dim2PathGeneratorState*)state)->curveValid;
 }
 
-void dll_1D6_free(int* obj);
 
 void dim2pathgenerator_init(int* obj, int* def)
 {
@@ -190,7 +186,6 @@ void dim2pathgenerator_init(int* obj, int* def)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIM2PATHGENERATOR_OBJFLAG_HITDETECT_DISABLED);
 }
 
-void dimtruthhornice_init(int* obj, int* def);
 
 void dim2pathgenerator_update(int* obj)
 {
