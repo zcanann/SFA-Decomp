@@ -8611,20 +8611,19 @@ void fn_802AFB0C(int obj, int inner, int state)
             }
             break;
         case 0x1e:
-            if (((ByteFlags*)((char*)inner + 0x3f3))->b08 != 0)
+            if (((ByteFlags*)((char*)inner + 0x3f3))->b08 == 0)
             {
-                return;
+                knockKind = 2;
+                if (((ByteFlags*)((char*)inner + 0x3f0))->b02 == 0)
+                {
+                    keepKnock = 0;
+                }
+                if (canCounter && ((PlayerState*)state)->baddie.targetObj == NULL)
+                {
+                    ((PlayerState*)inner)->moveVariantIndex = 5;
+                }
+                break;
             }
-            knockKind = 2;
-            if (((ByteFlags*)((char*)inner + 0x3f0))->b02 == 0)
-            {
-                keepKnock = 0;
-            }
-            if (canCounter && ((PlayerState*)state)->baddie.targetObj == NULL)
-            {
-                ((PlayerState*)inner)->moveVariantIndex = 5;
-            }
-            break;
             return;
         case 2:
         case 5:
@@ -8663,7 +8662,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             }
             if (gPlayerStepSfxTimer == 0)
             {
-                char* pt = *(char**)((char*)Player_GetActiveModel(obj) + 0x50);
+                char* pt = *(char* volatile*)((char*)Player_GetActiveModel(obj) + 0x50);
                 desc.x = playerMapOffsetX + *(f32*)(pt + surfIdx * 0x10 + 4);
                 desc.y = *(f32*)(pt + surfIdx * 0x10 + 8);
                 desc.z = playerMapOffsetZ + *(f32*)(pt + surfIdx * 0x10 + 0xc);
