@@ -20,11 +20,38 @@
 #define OBJPRINT_MODEL_COUNT(model) (((ObjDef *)(model))->modelCount)
 #define OBJPRINT_JOINT_COUNT(model) (((ObjDef *)(model))->jointCount)
 
+/*
+ * Per-joint pose scratch written by the head/eye/tail tracking helpers in
+ * this file: anim.jointPoseData is an array of these, one per jointData
+ * record, stride 0x12.  v[0]/v[1]/v[2] of each vector are the s16 angle
+ * deltas (pitch/yaw/roll) applied on top of the animated joint.
+ */
 typedef struct
 {
     s16 v[9];
 } ObjJointPose18;
 
+/*
+ * ObjDef.jointData (+0x10) is a packed joint-binding table scanned by every
+ * finder loop in this file: jointCount (+0x5A) records, each
+ * (1 + modelCount (+0x55)) bytes:
+ *   byte 0             - joint key (0 = head, 1 = jaw, ...; see the key list
+ *                        at lbl_802CAE88 used by objMathFn_8003a380)
+ *   byte 1 + bankIndex - joint index in that bank's model, 0xFF = the joint
+ *                        does not exist in that bank
+ * The record's ordinal selects the matching ObjJointPose18 in
+ * anim.jointPoseData (poseOffset advances by 0x12 per record).  The stride
+ * is runtime-variable, so the record cannot be a fixed C struct; the raw
+ * byte walk below is the original access pattern.
+ *
+ * Conversion constraint: in the standalone finder bodies FUN_8003ac24,
+ * FUN_8003ad08 and FUN_8003b444 the raw spellings *(u8*)(modelDef + 0x5a)
+ * (jointCount), *(char*)(modelDef + 0x55) (modelCount) and
+ * *(int*)(modelDef + 0x10) (jointData) are load-bearing: retyping them as
+ * ObjDef field accesses shifts the emitted object bytes.  The equivalent
+ * textureSlotDefs/textureSlotCount conversions (FUN_80039520, FUN_8003b1a4,
+ * FUN_8003b280) verified byte-identical and are applied.
+ */
 static inline s16* objFindJointVecByKey(int obj, int key)
 {
     int i;
@@ -64,7 +91,6 @@ extern u32 FUN_800400b0();
 extern u32 FUN_80040a88();
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
 extern u64 FUN_8028683c();
 extern u32 FUN_80286888();
 extern u32 FUN_80293900();
@@ -148,7 +174,7 @@ void objAnimFn_80038f38(int obj, char* state)
     }
 }
 
-void FUN_80039468(u32 param_1, u32 param_2, u16 sfxId, short pitch, u32 frame,
+void FUN_80039468(u32 unusedObj, u32 unusedState, u16 sfxId, short pitch, u32 frame,
                   u32 force)
 {
     u32 obj;
@@ -156,6 +182,7 @@ void FUN_80039468(u32 param_1, u32 param_2, u16 sfxId, short pitch, u32 frame,
     u8* state;
     u64 ctx;
 
+    /* real obj/state args are re-fetched through the profiler thunk pair */
     ctx = FUN_80286840();
     obj = (u32)((u64)ctx >> 0x20);
     state = (u8*)ctx;
@@ -179,30 +206,30 @@ u32* FUN_80039518(void)
 
 int FUN_80039520(int obj, u32 tag)
 {
-    u32 remaining;
-    int hitDef;
-    u8* entry;
-    int offset;
+    u32 slotsLeft;
+    int modelDef;
+    u8* slotDef;
+    int slotOffset;
     int found;
 
     found = 0;
-    hitDef = (int)((GameObject*)obj)->anim.modelInstance;
-    if (hitDef != 0)
+    modelDef = (int)((GameObject*)obj)->anim.modelInstance;
+    if (modelDef != 0)
     {
-        entry = *(u8**)(hitDef + 0xc);
-        if (entry == (u8*)0x0)
+        slotDef = (u8*)((ObjDef*)modelDef)->textureSlotDefs;
+        if (slotDef == (u8*)0x0)
         {
             return 0;
         }
-        offset = 0;
-        for (remaining = (u32) * (u8*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
+        slotOffset = 0;
+        for (slotsLeft = (u32)((ObjDef*)modelDef)->textureSlotCount; slotsLeft != 0; slotsLeft = slotsLeft - 1)
         {
-            if (tag == *entry)
+            if (tag == *slotDef)
             {
-                found = *(int*)&((GameObject*)obj)->anim.textureSlots + offset;
+                found = *(int*)&((GameObject*)obj)->anim.textureSlots + slotOffset;
             }
-            entry = entry + 2;
-            offset = offset + 0x10;
+            slotDef = slotDef + 2;
+            slotOffset = slotOffset + 0x10;
         }
     }
     return found;
@@ -210,27 +237,27 @@ int FUN_80039520(int obj, u32 tag)
 
 int FUN_8003964c(int obj, u32 key)
 {
-    u32 remaining;
-    int vecOffset;
-    int entryIdx;
-    int model;
+    u32 jointsLeft;
+    int poseOffset;
+    int keyOffset;
+    int modelDef;
     int found;
 
     found = 0;
-    model = (int)OBJPRINT_MODEL_INSTANCE(obj);
-    if (model != 0)
+    modelDef = (int)OBJPRINT_MODEL_INSTANCE(obj);
+    if (modelDef != 0)
     {
-        entryIdx = 0;
-        vecOffset = 0;
-        for (remaining = OBJPRINT_JOINT_COUNT(model); remaining != 0; remaining = remaining - 1)
+        keyOffset = 0;
+        poseOffset = 0;
+        for (jointsLeft = OBJPRINT_JOINT_COUNT(modelDef); jointsLeft != 0; jointsLeft = jointsLeft - 1)
         {
-            if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
-                (key == *(u8*)(*(int*)(model + 0x10) + entryIdx)))
+            if ((*(char*)(*(int*)(modelDef + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + keyOffset + 1) != -1) &&
+                (key == *(u8*)(*(int*)(modelDef + 0x10) + keyOffset)))
             {
-                found = *(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset;
+                found = *(int*)&((GameObject*)obj)->anim.jointPoseData + poseOffset;
             }
-            entryIdx = OBJPRINT_MODEL_COUNT(model) + entryIdx + 1;
-            vecOffset = vecOffset + 0x12;
+            keyOffset = OBJPRINT_MODEL_COUNT(modelDef) + keyOffset + 1;
+            poseOffset = poseOffset + 0x12;
         }
     }
     return found;
@@ -245,13 +272,13 @@ u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
     float coeff1;
     float coeff2;
     float coeff3;
-    u32 local_38;
-    u32 uStack_34;
-    u32 local_30;
-    u32 uStack_2c;
-    u64 local_28;
-    u32 local_20;
-    u32 uStack_1c;
+    u32 cvtHi0;
+    u32 cvtLo0;
+    u32 cvtHi1;
+    u32 cvtLo1;
+    u64 cvtPad;
+    u32 cvtHi2;
+    u32 cvtLo2;
 
     coeff0 = (float)a;
     coeff1 = (float)a;
@@ -263,21 +290,21 @@ u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
     }
     else
     {
-        uStack_34 = (int)*outAngle ^ 0x80000000;
-        local_38 = 0x43300000;
-        uStack_2c = (int)*(short*)(curve + 0x16) ^ 0x80000000;
-        local_30 = 0x43300000;
-        local_20 = 0x43300000;
+        cvtLo0 = (int)*outAngle ^ 0x80000000;
+        cvtHi0 = 0x43300000;
+        cvtLo1 = (int)*(short*)(curve + 0x16) ^ 0x80000000;
+        cvtHi1 = 0x43300000;
+        cvtHi2 = 0x43300000;
         ratio = (double)
         (((f32)(s32)
-        uStack_34 -
+        cvtLo0 -
             (f32)(s32)
-        uStack_2c
+        cvtLo1
         )
         /
         ((f32)(s32)((int)*(short*)(curve + 0x14)) -
             (f32)(s32)
-        uStack_2c
+        cvtLo1
         )
         )
         ;
@@ -286,7 +313,7 @@ u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
         {
             clamped = (double)lbl_803DF624;
         }
-        uStack_1c = uStack_2c;
+        cvtLo2 = cvtLo1;
         ratio = FUN_80006a30(clamped, &coeff0, (float*)0x0);
         if (*(short*)(curve + 0x14) < *(short*)(curve + 0x16))
         {
@@ -316,13 +343,13 @@ u32 FUN_80039a28(int curve, int state)
     float coeff1;
     float coeff2;
     float coeff3;
-    u32 local_38;
-    u32 uStack_34;
-    u32 local_30;
-    u32 uStack_2c;
-    u64 local_28;
-    u32 local_20;
-    u32 uStack_1c;
+    u32 cvtHi0;
+    u32 cvtLo0;
+    u32 cvtHi1;
+    u32 cvtLo1;
+    u64 cvtPad;
+    u32 cvtHi2;
+    u32 cvtLo2;
 
     coeff0 = lbl_803DF658;
     coeff1 = lbl_803DF658;
@@ -334,21 +361,21 @@ u32 FUN_80039a28(int curve, int state)
     }
     else
     {
-        uStack_34 = (int)*(short*)(state + 2) ^ 0x80000000;
-        local_38 = 0x43300000;
-        uStack_2c = (int)*(short*)(curve + 0x16) ^ 0x80000000;
-        local_30 = 0x43300000;
-        local_20 = 0x43300000;
+        cvtLo0 = (int)*(short*)(state + 2) ^ 0x80000000;
+        cvtHi0 = 0x43300000;
+        cvtLo1 = (int)*(short*)(curve + 0x16) ^ 0x80000000;
+        cvtHi1 = 0x43300000;
+        cvtHi2 = 0x43300000;
         ratio = (double)
         (((f32)(s32)
-        uStack_34 -
+        cvtLo0 -
             (f32)(s32)
-        uStack_2c
+        cvtLo1
         )
         /
         ((f32)(s32)((int)*(short*)(curve + 0x14)) -
             (f32)(s32)
-        uStack_2c
+        cvtLo1
         )
         )
         ;
@@ -357,7 +384,7 @@ u32 FUN_80039a28(int curve, int state)
         {
             clamped = (double)lbl_803DF624;
         }
-        uStack_1c = uStack_2c;
+        cvtLo2 = cvtLo1;
         ratio = FUN_80006a30(clamped, &coeff0, (float*)0x0);
         if (*(short*)(curve + 0x14) < *(short*)(curve + 0x16))
         {
@@ -522,25 +549,25 @@ void FUN_8003a1c4(int obj, int ctx)
 {
     u32 scaled;
     short* found;
-    int model;
-    int entryIdx;
-    int vecOffset;
+    int modelDef;
+    int keyOffset;
+    int poseOffset;
 
     found = 0x0;
-    model = (int)OBJPRINT_MODEL_INSTANCE(obj);
-    if (model != 0)
+    modelDef = (int)OBJPRINT_MODEL_INSTANCE(obj);
+    if (modelDef != 0)
     {
-        entryIdx = 0;
-        vecOffset = 0;
-        for (scaled = OBJPRINT_JOINT_COUNT(model); scaled != 0; scaled = scaled - 1)
+        keyOffset = 0;
+        poseOffset = 0;
+        for (scaled = OBJPRINT_JOINT_COUNT(modelDef); scaled != 0; scaled = scaled - 1)
         {
-            if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
-                (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
+            if ((*(char*)(*(int*)(modelDef + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + keyOffset + 1) != -1) &&
+                (*(char*)(*(int*)(modelDef + 0x10) + keyOffset) == '\0'))
             {
-                found = (short*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset);
+                found = (short*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + poseOffset);
             }
-            entryIdx = OBJPRINT_MODEL_COUNT(model) + entryIdx + 1;
-            vecOffset = vecOffset + 0x12;
+            keyOffset = OBJPRINT_MODEL_COUNT(modelDef) + keyOffset + 1;
+            poseOffset = poseOffset + 0x12;
         }
     }
     if (found != 0x0)
@@ -565,25 +592,25 @@ void fn_8003A328(double amount, short* obj, char* ctx)
 {
     u32 tmp;
     short* found;
-    int model;
-    int entryIdx;
-    int vecOffset;
+    int modelDef;
+    int keyOffset;
+    int poseOffset;
 
     found = 0x0;
-    model = (int)OBJPRINT_MODEL_INSTANCE(obj);
-    if (model != 0)
+    modelDef = (int)OBJPRINT_MODEL_INSTANCE(obj);
+    if (modelDef != 0)
     {
-        entryIdx = 0;
-        vecOffset = 0;
-        for (tmp = OBJPRINT_JOINT_COUNT(model); tmp != 0; tmp = tmp - 1)
+        keyOffset = 0;
+        poseOffset = 0;
+        for (tmp = OBJPRINT_JOINT_COUNT(modelDef); tmp != 0; tmp = tmp - 1)
         {
-            if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
-                (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
+            if ((*(char*)(*(int*)(modelDef + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + keyOffset + 1) != -1) &&
+                (*(char*)(*(int*)(modelDef + 0x10) + keyOffset) == '\0'))
             {
-                found = (short*)(*(int*)(obj + 0x36) + vecOffset);
+                found = (short*)(*(int*)(obj + 0x36) + poseOffset);
             }
-            entryIdx = OBJPRINT_MODEL_COUNT(model) + entryIdx + 1;
-            vecOffset = vecOffset + 0x12;
+            keyOffset = OBJPRINT_MODEL_COUNT(modelDef) + keyOffset + 1;
+            poseOffset = poseOffset + 0x12;
         }
     }
     if (found != 0x0)
@@ -611,7 +638,7 @@ void fn_8003A328(double amount, short* obj, char* ctx)
     }
 }
 
-void FUN_8003a9c8(int base, u32 count, u16 a, u16 b)
+void FUN_8003a9c8(int curves, u32 count, u16 a, u16 b)
 {
     u32 blocks;
 
@@ -624,23 +651,23 @@ void FUN_8003a9c8(int base, u32 count, u16 a, u16 b)
     {
         do
         {
-            *(u16*)(base + 0x14) = a;
-            *(u16*)(base + 0x44) = b;
-            *(u16*)(base + 0x74) = a;
-            *(u16*)(base + 0xa4) = b;
-            *(u16*)(base + 0xd4) = a;
-            *(u16*)(base + 0x104) = b;
-            *(u16*)(base + 0x134) = a;
-            *(u16*)(base + 0x164) = b;
-            *(u16*)(base + 0x194) = a;
-            *(u16*)(base + 0x1c4) = b;
-            *(u16*)(base + 500) = a;
-            *(u16*)(base + 0x224) = b;
-            *(u16*)(base + 0x254) = a;
-            *(u16*)(base + 0x284) = b;
-            *(u16*)(base + 0x2b4) = a;
-            *(u16*)(base + 0x2e4) = b;
-            base = base + 0x300;
+            *(u16*)(curves + 0x14) = a;
+            *(u16*)(curves + 0x44) = b;
+            *(u16*)(curves + 0x74) = a;
+            *(u16*)(curves + 0xa4) = b;
+            *(u16*)(curves + 0xd4) = a;
+            *(u16*)(curves + 0x104) = b;
+            *(u16*)(curves + 0x134) = a;
+            *(u16*)(curves + 0x164) = b;
+            *(u16*)(curves + 0x194) = a;
+            *(u16*)(curves + 0x1c4) = b;
+            *(u16*)(curves + 500) = a;
+            *(u16*)(curves + 0x224) = b;
+            *(u16*)(curves + 0x254) = a;
+            *(u16*)(curves + 0x284) = b;
+            *(u16*)(curves + 0x2b4) = a;
+            *(u16*)(curves + 0x2e4) = b;
+            curves = curves + 0x300;
             blocks = blocks - 1;
         }
         while (blocks != 0);
@@ -652,9 +679,9 @@ void FUN_8003a9c8(int base, u32 count, u16 a, u16 b)
     }
     do
     {
-        *(u16*)(base + 0x14) = a;
-        *(u16*)(base + 0x44) = b;
-        base = base + 0x60;
+        *(u16*)(curves + 0x14) = a;
+        *(u16*)(curves + 0x44) = b;
+        curves = curves + 0x60;
         count = count - 1;
     }
     while (count != 0);
@@ -663,30 +690,30 @@ void FUN_8003a9c8(int base, u32 count, u16 a, u16 b)
 
 void FUN_8003ac24(int obj, u32* keys, int count)
 {
-    u32 remaining;
+    u32 jointsLeft;
     int idx;
     short* found;
-    int hitDef;
-    int entryIdx;
-    int vecOffset;
+    int modelDef;
+    int keyOffset;
+    int poseOffset;
 
     for (idx = 0; idx < count; idx = idx + 1)
     {
         found = 0x0;
-        hitDef = *(int*)&((GameObject*)obj)->anim.modelInstance;
-        if (hitDef != 0)
+        modelDef = *(int*)&((GameObject*)obj)->anim.modelInstance;
+        if (modelDef != 0)
         {
-            entryIdx = 0;
-            vecOffset = 0;
-            for (remaining = (u32) * (u8*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
+            keyOffset = 0;
+            poseOffset = 0;
+            for (jointsLeft = (u32) * (u8*)(modelDef + 0x5a); jointsLeft != 0; jointsLeft = jointsLeft - 1)
             {
-                if ((*(char*)(*(int*)(hitDef + 0x10) + ((GameObject*)obj)->anim.bankIndex + entryIdx + 1) != -1) &&
-                    (*keys == (u32) * (u8*)(*(int*)(hitDef + 0x10) + entryIdx)))
+                if ((*(char*)(*(int*)(modelDef + 0x10) + ((GameObject*)obj)->anim.bankIndex + keyOffset + 1) != -1) &&
+                    (*keys == (u32) * (u8*)(*(int*)(modelDef + 0x10) + keyOffset)))
                 {
-                    found = (short*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset);
+                    found = (short*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + poseOffset);
                 }
-                entryIdx = *(char*)(hitDef + 0x55) + entryIdx + 1;
-                vecOffset = vecOffset + 0x12;
+                keyOffset = *(char*)(modelDef + 0x55) + keyOffset + 1;
+                poseOffset = poseOffset + 0x12;
             }
         }
         if (found != 0x0)
@@ -702,30 +729,30 @@ void FUN_8003ac24(int obj, u32* keys, int count)
 
 void FUN_8003ad08(int obj, u32* keys, int count, int out)
 {
-    u32 remaining;
+    u32 jointsLeft;
     u16* found;
-    int hitDef;
-    int entryIdx;
-    int vecOffset;
+    int modelDef;
+    int keyOffset;
+    int poseOffset;
     int idx;
 
     for (idx = 0; idx < count; idx = idx + 1)
     {
         found = (u16*)0x0;
-        hitDef = *(int*)&((GameObject*)obj)->anim.modelInstance;
-        if (hitDef != 0)
+        modelDef = *(int*)&((GameObject*)obj)->anim.modelInstance;
+        if (modelDef != 0)
         {
-            entryIdx = 0;
-            vecOffset = 0;
-            for (remaining = (u32) * (u8*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
+            keyOffset = 0;
+            poseOffset = 0;
+            for (jointsLeft = (u32) * (u8*)(modelDef + 0x5a); jointsLeft != 0; jointsLeft = jointsLeft - 1)
             {
-                if ((*(char*)(*(int*)(hitDef + 0x10) + ((GameObject*)obj)->anim.bankIndex + entryIdx + 1) != -1) &&
-                    (*keys == (u32) * (u8*)(*(int*)(hitDef + 0x10) + entryIdx)))
+                if ((*(char*)(*(int*)(modelDef + 0x10) + ((GameObject*)obj)->anim.bankIndex + keyOffset + 1) != -1) &&
+                    (*keys == (u32) * (u8*)(*(int*)(modelDef + 0x10) + keyOffset)))
                 {
-                    found = (u16*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset);
+                    found = (u16*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + poseOffset);
                 }
-                entryIdx = *(char*)(hitDef + 0x55) + entryIdx + 1;
-                vecOffset = vecOffset + 0x12;
+                keyOffset = *(char*)(modelDef + 0x55) + keyOffset + 1;
+                poseOffset = poseOffset + 0x12;
             }
         }
         if (found != (u16*)0x0)
@@ -739,13 +766,13 @@ void FUN_8003ad08(int obj, u32* keys, int count, int out)
     return;
 }
 
-void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 maxAngle, u32 flag,
+void FUN_8003add8(u32 unusedObj, u32 unusedTarget, int state, u32 maxAngle, u32 flag,
                   u32 minRange)
 {
     int scratch4;
     float dx;
     float deltaZ;
-    u32 count;
+    u32 jointsLeft;
     short clampHi;
     short stepVal;
     int scratch0;
@@ -769,9 +796,9 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 maxAngle, u32 flag,
     s64 local_78;
     u64 local_70;
     double local_68;
-    float local_38;
+    float cvtHi0;
     float fStack_34;
-    float local_28;
+    float cvtPad;
     float fStack_24;
     float local_18;
     float fStack_14;
@@ -782,9 +809,9 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 maxAngle, u32 flag,
     fStack_4 = (float)in_ps31_1;
     local_18 = (float)in_f30;
     fStack_14 = (float)in_ps30_1;
-    local_28 = (float)in_f29;
+    cvtPad = (float)in_f29;
     fStack_24 = (float)in_ps29_1;
-    local_38 = (float)in_f28;
+    cvtHi0 = (float)in_f28;
     fStack_34 = (float)in_ps28_1;
     packed = FUN_8028683c();
     srcPtr = (short*)((u64)packed >> 0x20);
@@ -795,7 +822,7 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 maxAngle, u32 flag,
     {
         scratch2 = 0;
         scratch3 = 0;
-        for (count = (u32) * (u8*)(scratch1 + 0x5a); count != 0; count = count - 1)
+        for (jointsLeft = (u32) * (u8*)(scratch1 + 0x5a); jointsLeft != 0; jointsLeft = jointsLeft - 1)
         {
             if ((*(char*)(*(int*)(scratch1 + 0x10) + *(char*)((int)srcPtr + 0xad) + scratch2 + 1) != -1) &&
                 (*(char*)(*(int*)(scratch1 + 0x10) + scratch2) == '\0'))
@@ -891,107 +918,107 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 maxAngle, u32 flag,
 
 void FUN_8003b1a4(int obj, int ctx)
 {
-    u32 remaining;
-    int* found5;
-    char* entry;
-    int* found4;
+    u32 slotsLeft;
+    int* foundA;
+    char* slotDef;
+    int* foundB;
     int hitDef;
-    int offset;
+    int slotOffset;
 
-    found5 = 0x0;
+    foundA = 0x0;
     hitDef = (int)((GameObject*)obj)->anim.modelInstance;
-    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
+    if ((hitDef != 0) && (slotDef = (char*)((ObjDef*)hitDef)->textureSlotDefs, slotDef != 0x0))
     {
-        offset = 0;
-        for (remaining = (u32) * (u8*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
+        slotOffset = 0;
+        for (slotsLeft = (u32)((ObjDef*)hitDef)->textureSlotCount; slotsLeft != 0; slotsLeft = slotsLeft - 1)
         {
-            if (*entry == '\x05')
+            if (*slotDef == '\x05')
             {
-                found5 = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + offset);
+                foundA = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + slotOffset);
             }
-            entry = entry + 2;
-            offset = offset + 0x10;
+            slotDef = slotDef + 2;
+            slotOffset = slotOffset + 0x10;
         }
     }
-    found4 = 0x0;
-    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
+    foundB = 0x0;
+    if ((hitDef != 0) && (slotDef = (char*)((ObjDef*)hitDef)->textureSlotDefs, slotDef != 0x0))
     {
-        offset = 0;
-        for (remaining = (u32) * (u8*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
+        slotOffset = 0;
+        for (slotsLeft = (u32)((ObjDef*)hitDef)->textureSlotCount; slotsLeft != 0; slotsLeft = slotsLeft - 1)
         {
-            if (*entry == '\x04')
+            if (*slotDef == '\x04')
             {
-                found4 = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + offset);
+                foundB = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + slotOffset);
             }
-            entry = entry + 2;
-            offset = offset + 0x10;
+            slotDef = slotDef + 2;
+            slotOffset = slotOffset + 0x10;
         }
     }
-    if (found5 == 0x0)
+    if (foundA == 0x0)
     {
         return;
     }
-    if (found4 == 0x0)
+    if (foundB == 0x0)
     {
         return;
     }
-    hitDef = *found4 + DAT_803dc070 * 0x30;
+    hitDef = *foundB + DAT_803dc070 * 0x30;
     if (0x1ff < hitDef)
     {
         hitDef = 0x200;
     }
-    *found5 = hitDef;
-    *found4 = hitDef;
+    *foundA = hitDef;
+    *foundB = hitDef;
     *(u8*)(ctx + 0x1e) = 1;
     return;
 }
 
 void FUN_8003b280(int obj, int ctx)
 {
-    int* found5;
+    int* foundA;
     u32 state;
-    char* entry;
-    int* found4;
+    char* slotDef;
+    int* foundB;
     int hitDef;
-    int offset;
+    int slotOffset;
 
-    found5 = 0x0;
+    foundA = 0x0;
     hitDef = (int)((GameObject*)obj)->anim.modelInstance;
-    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
+    if ((hitDef != 0) && (slotDef = (char*)((ObjDef*)hitDef)->textureSlotDefs, slotDef != 0x0))
     {
-        offset = 0;
-        for (state = (u32) * (u8*)(hitDef + 0x59); state != 0; state = state - 1)
+        slotOffset = 0;
+        for (state = (u32)((ObjDef*)hitDef)->textureSlotCount; state != 0; state = state - 1)
         {
-            if (*entry == '\x05')
+            if (*slotDef == '\x05')
             {
-                found5 = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + offset);
+                foundA = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + slotOffset);
             }
-            entry = entry + 2;
-            offset = offset + 0x10;
+            slotDef = slotDef + 2;
+            slotOffset = slotOffset + 0x10;
         }
     }
-    found4 = 0x0;
-    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
+    foundB = 0x0;
+    if ((hitDef != 0) && (slotDef = (char*)((ObjDef*)hitDef)->textureSlotDefs, slotDef != 0x0))
     {
-        offset = 0;
-        for (state = (u32) * (u8*)(hitDef + 0x59); state != 0; state = state - 1)
+        slotOffset = 0;
+        for (state = (u32)((ObjDef*)hitDef)->textureSlotCount; state != 0; state = state - 1)
         {
-            if (*entry == '\x04')
+            if (*slotDef == '\x04')
             {
-                found4 = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + offset);
+                foundB = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + slotOffset);
             }
-            entry = entry + 2;
-            offset = offset + 0x10;
+            slotDef = slotDef + 2;
+            slotOffset = slotOffset + 0x10;
         }
     }
-    if ((found5 != 0x0) && (found4 != 0x0))
+    if ((foundA != 0x0) && (foundB != 0x0))
     {
         state = (int)*(char*)(ctx + 0x1e) & 0xf;
         if (state == 1)
         {
             if (((int)*(char*)(ctx + 0x1e) & 0x80U) == 0)
             {
-                hitDef = *found4 + DAT_803dc070 * 0x60;
+                hitDef = *foundB + DAT_803dc070 * 0x60;
                 if (0x200 < hitDef)
                 {
                     if (hitDef + -0x200 < 0)
@@ -1009,7 +1036,7 @@ void FUN_8003b280(int obj, int ctx)
             }
             else
             {
-                hitDef = *found4 + DAT_803dc070 * -0x60;
+                hitDef = *foundB + DAT_803dc070 * -0x60;
                 if (hitDef < 0)
                 {
                     hitDef = 0;
@@ -1017,8 +1044,8 @@ void FUN_8003b280(int obj, int ctx)
                     *(u8*)(ctx + 0x1f) = 0;
                 }
             }
-            *found5 = hitDef;
-            *found4 = hitDef;
+            *foundA = hitDef;
+            *foundB = hitDef;
         }
         else if (state == 0)
         {
@@ -1045,25 +1072,25 @@ void FUN_8003b444(short* obj, char* ctx)
 {
     u32 scaled;
     short* found;
-    int model;
-    int entryIdx;
-    int vecOffset;
+    int modelDef;
+    int keyOffset;
+    int poseOffset;
 
     found = 0x0;
-    model = *(int*)(obj + 0x28);
-    if (model != 0)
+    modelDef = *(int*)(obj + 0x28);
+    if (modelDef != 0)
     {
-        entryIdx = 0;
-        vecOffset = 0;
-        for (scaled = (u32) * (u8*)(model + 0x5a); scaled != 0; scaled = scaled - 1)
+        keyOffset = 0;
+        poseOffset = 0;
+        for (scaled = (u32) * (u8*)(modelDef + 0x5a); scaled != 0; scaled = scaled - 1)
         {
-            if ((*(char*)(*(int*)(model + 0x10) + *(char*)((int)obj + 0xad) + entryIdx + 1) != -1) &&
-                (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
+            if ((*(char*)(*(int*)(modelDef + 0x10) + *(char*)((int)obj + 0xad) + keyOffset + 1) != -1) &&
+                (*(char*)(*(int*)(modelDef + 0x10) + keyOffset) == '\0'))
             {
-                found = (short*)(*(int*)(obj + 0x36) + vecOffset);
+                found = (short*)(*(int*)(obj + 0x36) + poseOffset);
             }
-            entryIdx = *(char*)(model + 0x55) + entryIdx + 1;
-            vecOffset = vecOffset + 0x12;
+            keyOffset = *(char*)(modelDef + 0x55) + keyOffset + 1;
+            poseOffset = poseOffset + 0x12;
         }
     }
     if (found != 0x0)
@@ -1114,7 +1141,7 @@ void FUN_8003b870(u32 param_1)
     return;
 }
 
-void FUN_8003b878(u32 param_1, u32 param_2, u32 param_3, u32 param_4,
+void FUN_8003b878(u32 a, u32 b, u32 c, u32 d,
                   int obj, u32 renderFlag)
 {
     short seqId;
@@ -1143,7 +1170,7 @@ void FUN_8003b878(u32 param_1, u32 param_2, u32 param_3, u32 param_4,
                 seqId = ((GameObject*)obj)->anim.seqId;
                 if ((seqId == 0x1f) || ((seqId < 0x1f && (seqId == 0))))
                 {
-                    FUN_802950c8(obj, ctxHi, ctx, param_3, param_4, flag);
+                    FUN_802950c8(obj, ctxHi, ctx, c, d, flag);
                 }
                 else if ((OBJPRINT_ACTIVE_BANK(obj) != 0) &&
                     (FUN_80040a88(obj), *(int*)&((GameObject*)obj)->anim.hitVolumeTransforms != 0))
@@ -1157,7 +1184,7 @@ void FUN_8003b878(u32 param_1, u32 param_2, u32 param_3, u32 param_4,
             vfn = *(VtableFn**)(**(int**)(obj + 0x68) + 0x10);
             if (vfn != (VtableFn*)0x0)
             {
-                (*vfn)(obj, ctxHi, ctx, param_3, param_4, renderFlag);
+                (*vfn)(obj, ctxHi, ctx, c, d, renderFlag);
             }
         }
         else if (((flag != '\0') &&
@@ -1377,7 +1404,6 @@ int fn_800399C0(s16* curve, s16* state)
 {
     extern f32 Curve_EvalHermite(int, f32, int);
     extern f32 timeDelta;
-    extern f32 lbl_803DE99C;
     extern f32 lbl_803DE9A4;
     extern f32 lbl_803DE9D8;
     extern f32 lbl_803DE9DC;
@@ -2005,9 +2031,6 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
 int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
 {
     extern f32 Curve_EvalHermite(int, f32, int);
-    extern f32 timeDelta;
-    extern f32 lbl_803DE99C;
-    extern f32 lbl_803DE9A4;
     f32 buf[4];
     f32 ratio;
     s16 lo;
@@ -2070,7 +2093,6 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
 {
 
 
-    extern f32 lbl_803DEA04;
     extern f32 gObjPrintHalfPi;
     extern f32 gObjPrintNegHalfPi;
     extern const f32 gObjPrintAngleUnitScale;
@@ -2115,7 +2137,6 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
 int fn_8003BB84(f32* m, f32* out)
 {
     extern void PSVECNormalize(f32 * src, f32 * dst);
-    extern f32 lbl_803DEA04;
     f32 v3[3];
     f32 v1[3];
     f32 v2[3];
@@ -2161,7 +2182,6 @@ int fn_8003BB84(f32* m, f32* out)
 
 void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
 {
-    extern f32 lbl_803DE9E4;
     int masked;
     int flag;
 
@@ -2259,7 +2279,6 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
 
 void fn_80039DF8(int obj, s16* curve, s16* state, f32 val)
 {
-    extern f32 lbl_803DE9E4;
     extern f32 lbl_803DE9E8;
     int masked;
     int flag;
@@ -2397,7 +2416,6 @@ void fn_80039DF8(int obj, s16* curve, s16* state, f32 val)
 void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
 {
     extern f32 sqrtf(f32);
-    extern f32 gObjPrintDegToAngle;
     s16 ang[2];
     s16* found[1];
     void* m[1];
@@ -2507,8 +2525,6 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
 #pragma opt_common_subs off
 void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, int c)
 {
-    extern f32 playerMapOffsetX;
-    extern f32 playerMapOffsetZ;
     extern f32 sqrtf(f32);
     f32 va[3];
     f32 vb[3];
@@ -2602,7 +2618,6 @@ void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, i
 
 void characterDoEyeAnims(int obj, int state)
 {
-    extern f32 lbl_803DE9A4;
     ObjTextureRuntimeSlot* a;
     ObjTextureRuntimeSlot* b;
 
@@ -2789,7 +2804,6 @@ typedef struct ObjPrintFlipFlag
 int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk6, int p7, f32 yOff)
 {
     extern f32 sqrtf(f32);
-    extern f32 gObjPrintDegToAngle;
     extern f32 lbl_803DE9D8;
     extern f32 lbl_803DE9DC;
     extern int lbl_803DB460;
