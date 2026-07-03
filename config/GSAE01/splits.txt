@@ -2175,6 +2175,7 @@ main/dll/VF/dll_021D_vfplift.c:
 
 main/light.c:
 	.text       start:0x801FB9AC end:0x801FD4A8
+	.data       start:0x80329050 end:0x80329088
 
 main/main.c:
 	.text       start:0x801FD4A8 end:0x801FE118

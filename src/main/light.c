@@ -1091,3 +1091,20 @@ void dll_224_init(void* obj, void* other)
     t = (*&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = t;
 }
+
+ObjectDescriptor gVFP_Block1ObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)vfpblock1_initialise,
+    (ObjectDescriptorCallback)vfpblock1_release,
+    0,
+    (ObjectDescriptorCallback)vfpblock1_init,
+    (ObjectDescriptorCallback)vfpblock1_update,
+    (ObjectDescriptorCallback)vfpblock1_hitDetect,
+    (ObjectDescriptorCallback)vfpblock1_render,
+    (ObjectDescriptorCallback)vfpblock1_free,
+    (ObjectDescriptorCallback)vfpblock1_getObjectTypeId,
+    vfpblock1_getExtraSize,
+};
