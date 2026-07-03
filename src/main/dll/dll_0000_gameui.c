@@ -2802,14 +2802,21 @@ void pauseMenuFn_80129ee0(void)
     }
     {
         int state = pauseMenuState;
-        if (state == 1 || state < 0 || state >= 3)
+        switch (state)
         {
-            int t = lbl_803DD78C + framesThisStep * 0x32;
-            if (t > 0x400)
+        case 0:
+        case 2:
+            break;
+        default:
             {
-                t = 0x400;
+                int t = lbl_803DD78C + framesThisStep * 0x32;
+                if (t > 0x400)
+                {
+                    t = 0x400;
+                }
+                lbl_803DD78C = t;
             }
-            lbl_803DD78C = t;
+            break;
         }
         switch (state)
         {
