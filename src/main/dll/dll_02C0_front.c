@@ -537,7 +537,6 @@ void titlescreen_update(u8* obj)
     int n;
     int s;
     u8* row;
-    int col;
     s16 t;
     u8 buf[0x1c];
 
@@ -597,7 +596,8 @@ void titlescreen_update(u8* obj)
             {
                 f = ((TrickyState*)state)->moveProgress;
             }
-            evt = ObjAnim_AdvanceCurrentMove(f, timeDelta, objHandle, (ObjAnimEventList*)buf);
+            evt = ((int (*)(f32, int, f32, ObjAnimEventList*))ObjAnim_AdvanceCurrentMove)(
+                f, objHandle, timeDelta, (ObjAnimEventList*)buf);
             if (evt != 0)
             {
                 if (((TitlescreenState*)state)->unk31 == lbl_803DD990 && ((TitlescreenState*)state)->unk30 == 1)
@@ -685,15 +685,14 @@ void titlescreen_update(u8* obj)
             {
             case 5:
                 row = gTitleScreenSfxFlagGrid + (t - 0x77d) * 0x12;
-                col = s * 3;
-                if (row[col] != 0)
+                if (row[s * 3] != 0)
                 {
-                    if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2364) row[col] = 0;
+                    if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2364) row[s * 3] = 0;
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2364)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_fened_pep_yawn);
-                    row[col] = 1;
+                    row[s * 3] = 1;
                 }
                 break;
             }
@@ -706,15 +705,14 @@ void titlescreen_update(u8* obj)
                 if (((GameObject*)obj)->anim.currentMove == 3 || ((GameObject*)obj)->anim.currentMove == 5)
                 {
                     row = gTitleScreenSfxFlagGrid + (t - 0x77d) * 0x12;
-                    col = s * 3;
-                    if (row[col] != 0)
+                    if (row[s * 3] != 0)
                     {
-                        if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2368) row[col] = 0;
+                        if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2368) row[s * 3] = 0;
                     }
                     else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2368)
                     {
                         Sfx_PlayFromObject(obj, SFXTRIG_fend_slip_fingersnap);
-                        row[col] = 1;
+                        row[s * 3] = 1;
                     }
                     p = gTitleScreenSfxFlagGrid + (((GameObject*)obj)->anim.seqId - 0x77d) * 0x12 + s * 3 + 1;
                     if (*p != 0)
@@ -735,28 +733,26 @@ void titlescreen_update(u8* obj)
             {
             case 4:
                 row = gTitleScreenSfxFlagGrid + (t - 0x77d) * 0x12;
-                col = s * 3;
-                if (row[col] != 0)
+                if (row[s * 3] != 0)
                 {
-                    if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2370) row[col] = 0;
+                    if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2370) row[s * 3] = 0;
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2370)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_fend_rob_wave);
-                    row[col] = 1;
+                    row[s * 3] = 1;
                 }
                 break;
             case 5:
                 row = gTitleScreenSfxFlagGrid + (t - 0x77d) * 0x12;
-                col = s * 3;
-                if (row[col] != 0)
+                if (row[s * 3] != 0)
                 {
-                    if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2374) row[col] = 0;
+                    if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2374) row[s * 3] = 0;
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2374)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_fend_rob_armout);
-                    row[col] = 1;
+                    row[s * 3] = 1;
                 }
                 p = gTitleScreenSfxFlagGrid + (((GameObject*)obj)->anim.seqId - 0x77d) * 0x12 + s * 3 + 1;
                 if (*p != 0)
@@ -781,15 +777,14 @@ void titlescreen_update(u8* obj)
                 break;
             case 2:
                 row = gTitleScreenSfxFlagGrid + (t - 0x77d) * 0x12;
-                col = s * 3;
-                if (row[col] != 0)
+                if (row[s * 3] != 0)
                 {
-                    if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2368) row[col] = 0;
+                    if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2368) row[s * 3] = 0;
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2368)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_fend_rob_beep);
-                    row[col] = 1;
+                    row[s * 3] = 1;
                 }
                 p = gTitleScreenSfxFlagGrid + (((GameObject*)obj)->anim.seqId - 0x77d) * 0x12 + s * 3 + 1;
                 if (*p != 0)
