@@ -271,7 +271,7 @@ void fn_80185B74(int obj)
             if ((void*)cam != (void*)obj &&
                 (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && ((GameObject*)obj)->unkF8 == 0)
             {
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 Obj_GetYawDeltaToObject(obj, player, yawBuf);
                 state->yawLow = -32768;
                 state->yawHigh = 0;
