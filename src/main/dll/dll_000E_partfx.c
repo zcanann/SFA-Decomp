@@ -1650,7 +1650,7 @@ extern f32 lbl_803DF5E0;
 extern f32 lbl_803DF5E4;
 extern f32 lbl_803DF5E8;
 extern f32 lbl_803DF5EC;
-extern f32 lbl_803DF5F0;
+extern double lbl_803DF5F0;
 extern f32 lbl_803DF5F8;
 extern f32 lbl_803DF5FC;
 extern f32 lbl_803DF600;
@@ -3628,8 +3628,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.lifetimeFrames = 0x1e;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x200;
-        cfg.textureId = randomGetRange(0, 2);
-        cfg.textureId = cfg.textureId + 0x156;
+        cfg.textureId = randomGetRange(0, 2) + 0x156;
         break;
     case 0x68:
         cfg.velocityX = lbl_803DF5EC * (f32)(s32)
@@ -3764,8 +3763,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.linkGroup = 0;
         cfg.quadVertex3Pad06 = 0x4b;
         cfg.behaviorFlags = 0x70000;
-        cfg.textureId = randomGetRange(0, 3);
-        cfg.textureId = cfg.textureId + 0xdd;
+        cfg.textureId = randomGetRange(0, 3) + 0xdd;
         cfg.sourcePosY = lbl_803DF4DC;
         cfg.sourcePosZ = lbl_803DF4FC;
         cfg.sourcePosW = lbl_803DF4DC;
@@ -3805,8 +3803,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.scale = lbl_803DF568;
         cfg.lifetimeFrames = 1;
         cfg.behaviorFlags = 0x70800;
-        cfg.textureId = randomGetRange(0, 1);
-        cfg.textureId = cfg.textureId + 0xdd;
+        cfg.textureId = randomGetRange(0, 1) + 0xdd;
         cfg.sourcePosY = lbl_803DF4DC;
         cfg.sourcePosZ = lbl_803DF4DC;
         cfg.sourcePosW = lbl_803DF4DC;
@@ -4056,8 +4053,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         randomGetRange(0x28, 0x50);
         cfg.lifetimeFrames = 0xd2;
         cfg.behaviorFlags = 0x80000201;
-        cfg.textureId = randomGetRange(0, 3);
-        cfg.textureId = cfg.textureId + 0xdd;
+        cfg.textureId = randomGetRange(0, 3) + 0xdd;
         break;
     case 0x2e:
 
