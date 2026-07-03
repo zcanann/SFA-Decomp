@@ -308,7 +308,6 @@ void arwarwing_addMaxShield(int arwing, int amount)
 }
 #pragma peephole reset
 
-#pragma scheduling off
 #pragma peephole off
 void arwarwing_addShield(int arwing, int amount)
 {
@@ -331,7 +330,6 @@ void arwarwing_addShield(int arwing, int amount)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -1373,7 +1371,6 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void arwarwing_init(int obj)
 {
@@ -1429,4 +1426,3 @@ void arwarwing_init(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
