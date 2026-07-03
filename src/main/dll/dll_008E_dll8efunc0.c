@@ -216,5 +216,3 @@ void dll_8E_func01_nop(void)
 void dll_8E_func00_nop(void)
 {
 }
-
-void dll_8F_func01_nop(void);
