@@ -2639,9 +2639,12 @@ finish:
         }
     }
     {
+        f32 w;
+        f32 py;
         f32 x = ((GameObject*)obj)->anim.localPosX;
-        f32 zz = ((GameObject*)obj)->anim.localPosZ;
         f32 y;
+        f32 zz = ((GameObject*)obj)->anim.localPosZ;
+        f32 zzOut = zz;
         switch ((s16)gPlayerCurrentMoveId)
         {
         case 0:
@@ -2657,25 +2660,25 @@ finish:
             break;
         case 10:
         case 11:
-            x = ((GameObject*)obj)->anim.currentMoveProgress * (((PlayerState*)inner)->savedPosX - x) + x;
-            y = (lbl_803E7EE0 - ((GameObject*)obj)->anim.currentMoveProgress) *
-                (((PlayerState*)inner)->climbTargetY - ((GameObject*)obj)->anim.localPosY) +
-                ((GameObject*)obj)->anim.localPosY;
-            zz = ((GameObject*)obj)->anim.currentMoveProgress * (((PlayerState*)inner)->savedPosZ - zz) + zz;
+            w = ((GameObject*)obj)->anim.currentMoveProgress;
+            x = w * (((PlayerState*)inner)->savedPosX - x) + x;
+            py = ((GameObject*)obj)->anim.localPosY;
+            y = (lbl_803E7EE0 - w) * (((PlayerState*)inner)->climbTargetY - py) + py;
+            zzOut = w * (((PlayerState*)inner)->savedPosZ - zz) + zz;
             break;
         case 6:
         case 7:
-            x = ((GameObject*)obj)->anim.currentMoveProgress * (((PlayerState*)inner)->savedPosX - x) + x;
-            y = ((GameObject*)obj)->anim.currentMoveProgress *
-                (((PlayerState*)inner)->unk4E8 - ((GameObject*)obj)->anim.localPosY) +
+            w = ((GameObject*)obj)->anim.currentMoveProgress;
+            x = w * (((PlayerState*)inner)->savedPosX - x) + x;
+            y = w * (((PlayerState*)inner)->unk4E8 - ((GameObject*)obj)->anim.localPosY) +
                 ((GameObject*)obj)->anim.localPosY;
-            zz = ((GameObject*)obj)->anim.currentMoveProgress * (((PlayerState*)inner)->savedPosZ - zz) + zz;
+            zzOut = w * (((PlayerState*)inner)->savedPosZ - zz) + zz;
             break;
         default:
             y = ((GameObject*)obj)->anim.localPosY;
             break;
         }
-        (*gCameraInterface)->overridePos(x, y, zz);
+        (*gCameraInterface)->overridePos(x, y, zzOut);
     }
     fn_802AB5A4(obj, inner, 5);
     return 0;
