@@ -888,8 +888,9 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
 void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
 {
     u32 flags;
-    int iv[3];
-    u8* worldBase;
+    u8* wb[1];
+    int iv[2];
+    int off[1];
 
     f32* localPoint;
     f32 one;
@@ -918,29 +919,26 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
         setMatrixFromObjectPos(matrix, &transform);
         iv[0] = 0;
         iv[1] = iv[0];
-        worldBase = (u8*)collision;
-        iv[2] = iv[0];
+        wb[0] = (u8*)collision;
+        off[0] = iv[0];
         while (iv[1] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
-            localPoint = (f32*)((u8*)collision->localPointPositions + iv[2]);
+            localPoint = (f32*)((u8*)collision->localPointPositions + off[0]);
             Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
-                                  (f32*)(worldBase + 228),
+                                  (f32*)(wb[0] + 228),
                                   &collision->localPointWorld[0][iv[0] + 1],
                                   &collision->localPointWorld[0][iv[0] + 2]);
-            worldBase += 0xc;
-            iv[2] += 0xc;
+            wb[0] += 0xc;
+            off[0] += 0xc;
             iv[0] += 3;
             iv[1]++;
         }
-        iv[1] = 0;
-        worldBase = (u8*)collision;
-        one = lbl_803E068C;
-        for (; iv[1] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); iv[1]++)
+        iv[0] = 0;
+        for (; iv[0] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); iv[0]++)
         {
-            *(f32*)(worldBase + 276) = *(f32*)(worldBase + 228);
-            *(f32*)(worldBase + 280) = one + *(f32*)(worldBase + 232);
-            *(f32*)(worldBase + 284) = *(f32*)(worldBase + 236);
-            worldBase += 0xc;
+            *(f32*)((u8*)collision + iv[0] * 12 + 276) = *(f32*)((u8*)collision + iv[0] * 12 + 228);
+            *(f32*)((u8*)collision + iv[0] * 12 + 280) = lbl_803E068C + *(f32*)((u8*)collision + iv[0] * 12 + 232);
+            *(f32*)((u8*)collision + iv[0] * 12 + 284) = *(f32*)((u8*)collision + iv[0] * 12 + 236);
         }
         fn_80063368((short*)obj);
     }
