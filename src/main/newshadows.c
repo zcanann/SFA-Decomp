@@ -2589,7 +2589,7 @@ extern void Camera_RebuildProjectionMatrix(void);
 extern void Camera_UpdateProjection(int a, int b);
 extern void fn_80061094(f32* v, f32* out, f32 x);
 extern void mapGetBlocks(int* a, int* b);
-extern int fn_800626C8(int* obj, int frames);
+extern u8 fn_800626C8(int* obj, int frames);
 extern void fn_8008923C(int* obj, f32* a, f32* b, f32* c);
 
 
@@ -2678,12 +2678,14 @@ void renderShadows(void)
     {
         int* obj = *(int**)casterPtr;
         int* of64 = (int*)obj[0x64 / 4];
-        int lod, screenW = 0, w = 0;
+        u8 lod;
+        u8 kind;
+        int screenW = 0, w = 0;
         char* castSlot;
         Camera_SetCurrentViewIndex(0);
         lod = fn_800626C8(obj, framesThisStep);
         Camera_SetCurrentViewIndex(1);
-        if ((u8)lod <= 4) continue;
+        if (lod <= 4) continue;
         if ((*(u32*)&((ObjModelState*)of64)->flags & 0x20) != 0)
         {
             memcpy(mc48, (char*)obj + 0xc, 0xc);
@@ -2693,7 +2695,7 @@ void renderShadows(void)
         }
         castSlot = B + (u8)r24 * 0x68 + 0x1170;
         *(u8*)(castSlot + 0x64) = lod;
-        if ((u8)r23 < 8 && *(u8*)(casterPtr + 8) != 0)
+        if ((u8)r23 < 8 && (kind = *(u8*)(casterPtr + 8)) != 0)
         {
             if ((u8)r23 < 3)
             {
@@ -2712,9 +2714,10 @@ void renderShadows(void)
             }
             if ((u8)r23 == 0) screenW = w << 1;
             else screenW = w;
-            if (*(u8*)(casterPtr + 8) == 2)
+            if (kind == 2)
             {
-                screenW = *(u16*)((char*)((int*)obj[0x64 / 4])[1] + 0xa);
+                w = *(u16*)((char*)((int*)obj[0x64 / 4])[1] + 0xa);
+                screenW = w;
             }
             fn_8008923C(obj, vA, vAp1, vAp2);
             dot24[0] = -((ObjModelState*)of64)->shadowOffsetX;
@@ -2797,7 +2800,7 @@ void renderShadows(void)
                 f32* vm = Camera_GetViewMatrix();
                 PSMTXCopy(vm, (f32*)(castSlot + 0x30));
                 PSMTXConcat((f32*)castSlot, vm, (f32*)castSlot);
-                ((ObjModelState*)of64)->shadowCastSlot = castSlot;
+                ((ObjModelState*)obj[0x64 / 4])->shadowCastSlot = castSlot;
                 {
                     char* texPool = B + 0x3a10;
                     char* texSlot = texPool + (u8)r23 * 4;
