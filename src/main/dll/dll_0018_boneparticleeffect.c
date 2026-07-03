@@ -1324,7 +1324,44 @@ void boneParticleEffect_release(void)
 }
 
 extern void Sfx_PlayFromObject(void* obj, int id);
-extern u8 gBoneParticleConfigTable[];
+f32 gBoneParticleConfigTable[108] = {
+    -1500.0f, 0.0f, -1500.0f,
+    -1500.0f, 0.0f, 1500.0f,
+    1500.0f, 0.0f, 1500.0f,
+    1500.0f, 0.0f, -1500.0f,
+    -1500.0f, 0.0f, -1500.0f,
+    -1500.0f, 0.0f, 1500.0f,
+    1500.0f, 0.0f, 1500.0f,
+    1500.0f, 0.0f, -1500.0f,
+    -1500.0f, 0.0f, -1500.0f,
+    -1500.0f, 0.0f, 1500.0f,
+    1500.0f, 0.0f, 1500.0f,
+    1500.0f, 0.0f, -1500.0f,
+    0.0f, -1500.0f, -1500.0f,
+    0.0f, -1500.0f, 1500.0f,
+    0.0f, 1500.0f, 1500.0f,
+    0.0f, 1500.0f, -1500.0f,
+    0.0f, -1500.0f, -1500.0f,
+    0.0f, -1500.0f, 1500.0f,
+    0.0f, 1500.0f, 1500.0f,
+    0.0f, 1500.0f, -1500.0f,
+    0.0f, -1500.0f, -1500.0f,
+    0.0f, -1500.0f, 1500.0f,
+    0.0f, 1500.0f, 1500.0f,
+    0.0f, 1500.0f, -1500.0f,
+    -1500.0f, -1500.0f, 0.0f,
+    1500.0f, -1500.0f, 0.0f,
+    1500.0f, 1500.0f, 0.0f,
+    -1500.0f, 1500.0f, 0.0f,
+    -1500.0f, -1500.0f, 0.0f,
+    1500.0f, -1500.0f, 0.0f,
+    1500.0f, 1500.0f, 0.0f,
+    -1500.0f, 1500.0f, 0.0f,
+    -1500.0f, -1500.0f, 0.0f,
+    1500.0f, -1500.0f, 0.0f,
+    1500.0f, 1500.0f, 0.0f,
+    -1500.0f, 1500.0f, 0.0f,
+};
 extern s16 gBoneParticleEffectTimer;
 extern s16 gBoneParticleStageIndex;
 extern s32 lbl_803DD2B0;
@@ -1408,7 +1445,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
     f32 dy;
     f32 dz;
 
-    base = gBoneParticleConfigTable;
+    base = (u8*)gBoneParticleConfigTable;
     if (GameBit_Get(0x468) != 0)
     {
         GameBit_Set(0x468, 0);
