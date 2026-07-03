@@ -127,9 +127,10 @@ extern f32 lbl_803E24AC;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E2504;
 
+#pragma opt_common_subs off
 void trickyFlame(int p1, int p2)
 {
-    register char* strBase = lbl_8031D2E8;
+    char* strBase = lbl_8031D2E8;
     void** slot;
     int i;
     void** slot2;
@@ -406,6 +407,7 @@ void trickyFlame(int p1, int p2)
         break;
     }
 }
+#pragma opt_common_subs reset
 
 #pragma scheduling on
 static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
