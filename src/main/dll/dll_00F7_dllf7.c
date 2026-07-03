@@ -196,6 +196,24 @@ typedef struct DllF7Placement
     u8 pad2E[0x30 - 0x2E];
 } DllF7Placement;
 
+/* Spawn-setup buffer seeded by dll_F7_update for the gas-cloud child (obj id
+ * 0xb): position head plus the class-specific fields (see the target stb/sth). */
+typedef struct DllF7GasSetup
+{
+    u8 pad0[0x8 - 0x0];
+    f32 posX;                /* 0x08 */
+    f32 posY;                /* 0x0c */
+    f32 posZ;                /* 0x10 */
+    u8 pad14[0x1a - 0x14];
+    u8 field1A;              /* 0x1a */
+    u8 pad1B;                /* 0x1b */
+    s16 field1C;             /* 0x1c */
+    u8 pad1E[0x24 - 0x1e];
+    s16 field24;             /* 0x24 */
+    u8 pad26[0x2c - 0x26];
+    s16 field2C;             /* 0x2c */
+} DllF7GasSetup;
+
 typedef struct DllF7Vec
 {
     u8 b[16];
@@ -869,13 +887,13 @@ void dll_F7_update(int* obj)
         if (state->byteB == 0 && (u8)Obj_IsLoadingLocked() != 0)
         {
             s16* alloc = Obj_AllocObjectSetup(0x30, 0xb);
-            alloc[0xe] = -1;
-            *(f32*)((char*)alloc + 8) = ((GameObject*)obj)->anim.localPosX;
-            *(f32*)((char*)alloc + 0xc) = lbl_803E3410 + ((GameObject*)obj)->anim.localPosY;
-            *(f32*)&((ObjDef*)alloc)->jointData = ((GameObject*)obj)->anim.localPosZ;
-            *(u8*)((char*)alloc + 0x1a) = 3;
-            alloc[0x16] = -1;
-            alloc[0x12] = -1;
+            ((DllF7GasSetup*)alloc)->field1C = -1;
+            ((DllF7GasSetup*)alloc)->posX = ((GameObject*)obj)->anim.localPosX;
+            ((DllF7GasSetup*)alloc)->posY = lbl_803E3410 + ((GameObject*)obj)->anim.localPosY;
+            ((DllF7GasSetup*)alloc)->posZ = ((GameObject*)obj)->anim.localPosZ;
+            ((DllF7GasSetup*)alloc)->field1A = 3;
+            ((DllF7GasSetup*)alloc)->field2C = -1;
+            ((DllF7GasSetup*)alloc)->field24 = -1;
             Obj_SetupObject(alloc, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
         }
         else
