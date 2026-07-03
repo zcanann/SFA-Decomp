@@ -668,8 +668,8 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     int dir;
     int next;
     int chosen;
-    int sumCur;
     int sumNext;
+    int sumCur;
     int i;
     int slot;
     int y;
@@ -725,26 +725,25 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     zlo1 = zlo + 1;
     col = (voxZ << 1) + (voxX >> 3);
 
-    p = &occ[0][0];
-    for (i = 0; i < 3; i++)
+    for (i = 0, p = &occ[0][0]; i < 3; i++)
     {
         y = i + box[1];
         y = y - 1;
         if (y < map->minY)
         {
-            slot = 0;
+            y = 0;
         }
         else if (y >= map->maxY)
         {
-            slot = (map->maxY - 1) - map->minY;
+            y = (map->maxY - 1) - map->minY;
         }
         else
         {
-            slot = y - map->minY;
+            y = y - map->minY;
         }
-        if (((map->bitmap[(slot << 5) | col] >> shift) & 1) != 0u)
+        if (((map->bitmap[(y << 5) | col] >> shift) & 1) != 0u)
         {
-            u8* node = (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, slot, voxZ);
+            u8* node = (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, y, voxZ);
             p[0] = (node[zlo] >> xbit2) & 3;
             p[1] = (node[zlo] >> xbit2p) & 3;
             p[2] = (node[zlo1] >> xbit2) & 3;
@@ -793,14 +792,18 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
         }
         if (!blocked)
         {
-            sumCur = occ[dir][0];
-            sumNext = occ[next][0];
-            sumCur += occ[dir][1];
-            sumNext += occ[next][1];
-            sumCur += occ[dir][2];
-            sumNext += occ[next][2];
-            sumCur += occ[dir][3];
-            sumNext += occ[next][3];
+            u8* rc = occ[dir];
+            sumCur = rc[0];
+            {
+            u8* rn = occ[next];
+            sumNext = rn[0];
+            sumCur += rc[1];
+            sumNext += rn[1];
+            sumCur += rc[2];
+            sumNext += rn[2];
+            sumCur += rc[3];
+            sumNext += rn[3];
+            }
             if (next == 2 && sumNext == 0)
             {
                 blocked = 1;
@@ -850,19 +853,19 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
 
     foundIdx = -1;
     {
-        int boff = 0;
-        s16 bz = box[2];
-        s16 bx = box[0];
+        s16 bx;
+        s16 bz;
+        bz = box[2];
+        bx = box[0];
         nodeCount = state->nodeCount;
         for (foundIdx = 0; foundIdx < nodeCount; foundIdx++)
         {
-            RouteNode* nn = (RouteNode*)((char*)state->nodes + boff);
+            RouteNode* nn = &state->nodes[foundIdx];
             if (nn->x == bx && nn->y == bz)
             {
                 savedFlag = nn->flag;
                 goto searched;
             }
-            boff += 14;
         }
         foundIdx = -1;
     }
