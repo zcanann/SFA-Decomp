@@ -85,7 +85,7 @@ extern s8 gObjSeqSlotResults[];
 extern ObjSeqBgCmd lbl_8039A5BC[];
 extern u8 lbl_80396918[];
 extern int lbl_8030EDA4[];
-extern u8 gObjSeqStreamTableA[];
+extern int gObjSeqStreamTableA[];
 extern u8 lbl_803DB748;
 extern int lbl_803DB720;
 extern s16 seqGlobal1;

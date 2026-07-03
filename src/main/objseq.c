@@ -44,7 +44,7 @@ extern int seqStreamFn_8008023c(int slot);
 extern int* seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 
-extern u8 gObjSeqStreamTableB[];
+extern int gObjSeqStreamTableB[];
 extern int lbl_803DB718;
 extern int lbl_803DB728;
 extern f32 gObjSeqShakeAmplitude;
@@ -5089,3 +5089,95 @@ int gObjSeqMsgIds[] = {
     0x000F000C, 0x000F000D, 0x000F000E, 0x000F000F,
     0x000F0010, 0x00130001, 0x00130002,
 };
+
+/* --- objseq .data reconstruction (absorbed range 0x8030ECA8-0x8030EF58) --- */
+extern u8 lbl_8030EC00[];
+extern u8 lbl_8030EC10[];
+extern u8 lbl_8030EC1C[];
+extern u8 lbl_8030EC28[];
+extern u8 lbl_8030EC44[];
+extern u8 lbl_8030EC54[];
+extern u8 lbl_8030EC64[];
+extern u8 lbl_8030EC70[];
+extern u8 lbl_8030EC7C[];
+extern u8 lbl_8030EC98[];
+extern void ObjSeq_preempt();
+extern void ObjSeq_yield();
+extern void ObjSeq_getGlobal3();
+extern void ObjSeq_setGlobal3();
+extern void ObjSeq_getGlobal1();
+extern void ObjSeq_setGlobal1();
+extern void ObjSeq_getGlobal2();
+extern void ObjSeq_setGlobal2();
+extern void ObjSeq_SetObjs();
+extern void ObjSeq_setOverridePos();
+extern void ObjSeq_func23();
+
+int gObjSeqStreamTableA[10] = {
+    0x35F, (int)lbl_8030EC00,
+    0x45A, (int)lbl_8030EC10,
+    0x117, (int)lbl_8030EC1C,
+    0xC3, (int)lbl_8030EC28,
+    0x122, (int)lbl_8030EC44
+};
+int gObjSeqStreamTableB[10] = {
+    0x35F, (int)lbl_8030EC54,
+    0x45A, (int)lbl_8030EC64,
+    0x117, (int)lbl_8030EC70,
+    0xC3, (int)lbl_8030EC7C,
+    0x122, (int)lbl_8030EC98
+};
+
+s16 lbl_8030ECF8[86] = { 0 };
+
+int lbl_8030EDA4[7] = { 0x100, 0x200, 0x40000, 0x80000, 0x20000, 0x10000, -1 };
+
+s8 gObjSeqMsgSendModes[24] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0 };
+
+void* lbl_8030EE34[40] = {
+    (void*)0,
+    (void*)0,
+    (void*)0,
+    (void*)0x230000,
+    (void*)ObjSeq_initialise,
+    (void*)ObjSeq_release,
+    (void*)0,
+    (void*)objSeq_onMapSetup,
+    (void*)ObjSeq_addBgCmd,
+    (void*)ObjSeq_setFlag,
+    (void*)ObjSeq_getBool,
+    (void*)ObjSeq_update,
+    (void*)ObjSeq_updateCamera,
+    (void*)ObjSeq_objLoadAnimData,
+    (void*)ObjSeq_seqState_init,
+    (void*)ObjSeq_seqState_free,
+    (void*)ObjSeq_run,
+    (void*)ObjSeq_ResolveAndAssignTargetObject,
+    (void*)fn_8008194C,
+    (void*)fn_80081964,
+    (void*)fn_8008195C,
+    (void*)fn_80081954,
+    (void*)fn_80081944,
+    (void*)fn_80081940,
+    (void*)objRunSeq,
+    (void*)endObjSequence,
+    (void*)ObjSeq_setCamVars,
+    (void*)ObjSeq_preempt,
+    (void*)ObjSeq_yield,
+    (void*)ObjSeq_getGlobal3,
+    (void*)ObjSeq_setGlobal3,
+    (void*)ObjSeq_getGlobal1,
+    (void*)ObjSeq_setGlobal1,
+    (void*)ObjSeq_getGlobal2,
+    (void*)ObjSeq_setGlobal2,
+    (void*)ObjSeq_setXrot,
+    (void*)ObjSeq_func20,
+    (void*)ObjSeq_SetObjs,
+    (void*)ObjSeq_setOverridePos,
+    (void*)ObjSeq_func23
+};
+
+char sEndObjSequenceMaxFreesError[41] = "endObjSequence: max number of obj frees\n\000";
+char sObjSequenceMissingObjectFormat[38] = " SEQUENCE: Could not Find Object %i \n\000";
+char sObjLoadAnimdataNullACRomTabWarning[45] = "<objLoadAnimdata>  Warning ACRomTab is NULL\n\000";
+
