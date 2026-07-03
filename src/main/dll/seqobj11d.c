@@ -2,7 +2,7 @@
  * seqobj11d - a family of ground/walking baddie variants sharing one
  * sequence-driven animation update. The variant is selected by anim.seqId
  * in fn_80151954 (init) into a 0..5 type index (state+0x33b) that selects
- * per-type tables (PTR_DAT_8031fd*, lbl_8031F16C entries) of movement
+ * per-type tables (lbl_8031F16C entries) of movement
  * sequence entries (SeqEntry: anim id + reaction mask + colour bytes).
  *
  * The per-frame update walks those tables to pick the next animation,
@@ -46,9 +46,6 @@ typedef struct
    player*, hud, ObjModelChain). DAT_/lbl_/PTR_ are shared .data/.sdata
    tables and FP constants. */
 
-extern u32 FUN_800305c4();
-extern int FUN_8014c78c();
-extern u32 FUN_8014d4c8();
 extern void fn_8014D08C(int obj, u8* state, int a, f32 f, int b, int c);
 extern int fn_8014C11C(int obj, f32 f, int a, int b, u8* tbl);
 extern void fn_8015039C(int obj, u8* state);
@@ -60,11 +57,6 @@ extern void hudFn_8011f38c(u8 x);
 extern float mathCosf(float x);
 extern float mathSinf(float x);
 extern f32 sqrtf(f32 x);
-extern u32 DAT_8031e980;
-extern u32 DAT_803ad088;
-extern u32 DAT_803ad08c;
-extern u32 DAT_803dc8f0;
-extern void* PTR_DAT_8031fdc8;
 extern char lbl_8031F16C[];
 extern char lbl_8031DD30[];
 extern u8 gGroundBaddieTargetSearchResult[];
@@ -74,7 +66,6 @@ extern f32 gGroundBaddieModelChainDesc;
 extern f32 lbl_803E2740;
 extern f32 lbl_803E2748;
 extern f32 lbl_803E2754;
-extern f32 lbl_803E3440;
 extern f32 lbl_803E27A4;
 extern f32 lbl_803E27A8;
 extern f32 lbl_803E27AC;
