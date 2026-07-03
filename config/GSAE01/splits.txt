@@ -83,7 +83,7 @@ main/model.c:
 
 main/object.c:
 	.text       start:0x8002A5D4 end:0x8002EB54
-	.data       start:0x802CAC54 end:0x802CACC0
+	.data       start:0x802CAC18 end:0x802CACC0
 
 main/objanim.c:
 	.text       start:0x8002EB54 end:0x80030688
