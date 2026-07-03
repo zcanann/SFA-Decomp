@@ -34,6 +34,7 @@
 #include "main/sfa_shared_decls.h"
 
 #define FIREPIPE_OBJFLAG_RENDERED 0x800
+#define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
 extern void modelLightStruct_freeSlot(int p);
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
@@ -135,7 +136,7 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
             mm_free(spawnDef);
             mmSetFreeDelay(freeDelay);
             Obj_InsertIntoUpdateList(effectObj);
-            ((GameObject*)effectObj)->objectFlags &= ~0x8000;
+            ((GameObject*)effectObj)->objectFlags &= ~FIREPIPE_OBJFLAG_UPDATE_DISABLED;
             return effectObj;
         }
     }
@@ -157,7 +158,7 @@ void firepipe_releaseEffectObject(FirePipeObject* obj)
         ObjHits_DisableObject(obj);
         ((GameObject*)obj)->objectFlags &= ~0x200;
         Obj_RemoveFromUpdateList(obj);
-        ((GameObject*)obj)->objectFlags |= 0x8000;
+        ((GameObject*)obj)->objectFlags |= FIREPIPE_OBJFLAG_UPDATE_DISABLED;
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     else
