@@ -384,5 +384,3 @@ void Effect11_release(void)
 void Effect11_initialise(void)
 {
 }
-
-void Effect12_func05_nop(void);
