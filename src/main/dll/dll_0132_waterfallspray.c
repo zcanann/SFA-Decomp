@@ -69,7 +69,6 @@ void WaterFallSpray_update(int* objParam)
     extern void Sfx_KeepAliveLoopedObjectSound(u8* obj, int sfxId); /* #57 */
     u32* state;
     WaterFallSprayPlacement* data;
-    u8* player;
     u8* obj;
     GameObject* playerObj;
     WaterFallSprayPartfxArgs partfxArgs;
@@ -83,9 +82,8 @@ void WaterFallSpray_update(int* objParam)
     obj = (u8*)objParam;
     state = ((GameObject*)obj)->extra;
     data = *(WaterFallSprayPlacement**)&((GameObject*)obj)->anim.placementData;
-    player = Obj_GetPlayerObject();
-    playerObj = (GameObject*)player;
-    if (player != NULL)
+    playerObj = (GameObject*)Obj_GetPlayerObject();
+    if (playerObj != NULL)
     {
         if (data->gameBit != -1)
         {
