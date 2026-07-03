@@ -70,7 +70,7 @@ main/vecmath.c:
 
 main/mm.c:
 	.text       start:0x80022948 end:0x8002430C
-	.data       start:0x802CA734 end:0x802CA908
+	.data       start:0x802CA5F0 end:0x802CABB8
 	.bss        start:0x8033C7A0 end:0x80340740
 
 main/model.c:
