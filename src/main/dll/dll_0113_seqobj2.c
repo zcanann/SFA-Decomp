@@ -391,3 +391,5 @@ ObjectDescriptor gSeqObj2ObjDescriptor = {
     (ObjectDescriptorCallback)seqobj2_getObjectTypeId,
     seqobj2_getExtraSize,
 };
+
+const char sSeqObjNeedBitClearDuringSequenceFormat[] = "newseqobj %d: need bit clear during sequence\n";
