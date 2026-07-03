@@ -33,15 +33,11 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-#pragma scheduling on
-#pragma peephole on
 void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* state,
                             HitAnimatorPlacement* desc);
 
 int hitanimator_getExtraSize(void) { return HITANIMATOR_EXTRA_STATE_BYTES; }
 
-#pragma scheduling off
-#pragma peephole off
 void hitanimator_update(HitAnimatorObject* obj)
 {
     HitAnimatorPlacement* desc = (HitAnimatorPlacement*)obj->objAnim.placementData;
