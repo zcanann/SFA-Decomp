@@ -2795,6 +2795,7 @@ dolphin/dvd/dvdqueue.c:
 
 dolphin/dvd/dvderror.c:
 	.text       start:0x8024BB68 end:0x8024BD00
+	.data       start:0x8032DD38 end:0x8032DD80
 
 dolphin/dvd/fstload.c:
 	.text       start:0x8024BD00 end:0x8024BF40
