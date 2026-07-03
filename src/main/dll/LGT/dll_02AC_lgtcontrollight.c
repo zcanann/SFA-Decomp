@@ -77,9 +77,11 @@ void controllight_init(int obj, int setup)
 #pragma optimization_level 1
 void controllight_update(int obj)
 {
+    u32 bit;
+    ControlLightState* state;
     GameObject* self = (GameObject*)obj;
-    ControlLightState* state = self->extra;
-    u32 bit = GameBit_Get(state->gameBit) & 0xff;
+    state = self->extra;
+    bit = GameBit_Get(state->gameBit) & 0xff;
 
     if (bit != state->lastBit)
     {
