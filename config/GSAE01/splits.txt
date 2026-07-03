@@ -100,7 +100,7 @@ main/objHitReact.c:
 
 main/objlib.c:
 	.text       start:0x800358D4 end:0x80038F38
-	.data       start:0x802CAE48 end:0x802CAE84
+	.data       start:0x802CAE20 end:0x802CAE84
 	.bss        start:0x803428F8 end:0x80342E10
 
 main/objprint.c:
@@ -2219,6 +2219,7 @@ main/main.c:
 
 main/dll/dll_023F_dbegg.c:
 	.text       start:0x801FE118 end:0x801FF884
+	.data       start:0x803292F8 end:0x80329304
 
 main/dll/dll_0240_gcrobotblast.c:
 	.text       start:0x801FF884 end:0x801FF9B0
@@ -2398,6 +2399,7 @@ main/dll/dll_0266_kytesmum.c:
 
 main/dll/DR/dll_0265_drcreator.c:
 	.text       start:0x80219A88 end:0x8021A008
+	.data       start:0x8032A8B0 end:0x8032A8C0
 
 main/dll/dll_0269_explodeplan.c:
 	.text       start:0x8021A008 end:0x8021A13C

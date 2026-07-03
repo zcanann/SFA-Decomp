@@ -2391,3 +2391,5 @@ void fn_80038F1C(int a, u8 b)
 }
 
 char sObjMsgOverflowInObjectWarning[] = "objmsg (%x): overflow in object %d defno=%d FROM: defno %d\n";
+
+char sObjAddObjectTypeReachedMaxTypes[38] = "objAddObjectType: Reached MAXTYPES!!\n\000";

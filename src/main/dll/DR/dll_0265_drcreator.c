@@ -234,3 +234,5 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* a
     }
     return 0;
 }
+
+char sDrCreatorTimeFormat[15] = " Time %i : %i \000";

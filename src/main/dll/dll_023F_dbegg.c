@@ -1020,3 +1020,5 @@ void dbegg_update(int obj)
     }
 #undef hitState
 }
+
+char sAnimGreaterMessage[11] = " GREATER \n\000";
