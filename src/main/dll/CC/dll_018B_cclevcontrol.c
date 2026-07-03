@@ -38,14 +38,10 @@ extern f32 lbl_803E46CC; /* render scale */
 extern f32 lbl_803E46D0; /* help-text hold floor */
 extern f32 lbl_803E46D4; /* help-text hold reset value */
 
-#pragma scheduling on
-#pragma peephole on
 int cclevcontrol_getExtraSize(void) { return 0x10; }
 
 void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
 
-#pragma scheduling off
-#pragma peephole off
 void cclevcontrol_free(void)
 {
     envFxActFn_800887f8(0);
