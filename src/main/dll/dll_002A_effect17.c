@@ -2,36 +2,6 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-extern u32 DAT_8039d0b8;
-extern u32 DAT_8039d0bc;
-extern u32 DAT_803de090;
-extern f32 lbl_803DC4B0;
-extern f32 lbl_803DC4B4;
-extern f32 lbl_803E0E38;
-extern f32 lbl_803E0E3C;
-extern f32 lbl_803E0E40;
-extern f32 lbl_803E0E44;
-extern f32 lbl_803E0E48;
-extern f32 lbl_803E0E4C;
-extern f32 lbl_803E0E50;
-extern f32 lbl_803E0E54;
-extern f32 lbl_803E0E58;
-extern f32 lbl_803E0E5C;
-extern f32 lbl_803E0E60;
-extern f32 lbl_803E0E64;
-extern f32 lbl_803E0E68;
-extern f32 lbl_803E0E6C;
-extern f32 lbl_803E0E70;
-extern f32 lbl_803E0E74;
-extern f32 lbl_803E0E78;
-extern f32 lbl_803E0E7C;
-extern f32 lbl_803E0E80;
-extern f32 lbl_803E0E84;
-extern f32 lbl_803E0E88;
-extern f32 lbl_803E0E8C;
-
-extern s16 lbl_803DD414;
-extern s16 lbl_803DD416;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);
