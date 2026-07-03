@@ -72,8 +72,6 @@ extern f32 lbl_803E2F60;
 extern f32 lbl_803E2F64;
 extern f32 lbl_803E2F68;
 
-#pragma scheduling off
-#pragma peephole off
 void tumbleweedbush_free(void)
 {
 }
