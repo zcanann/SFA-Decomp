@@ -163,38 +163,6 @@ extern const f32 lbl_803E5CC0;
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);
 extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 
-void FUN_801ee668(u16 *unused, int state)
-{
-    f32 target;
-    f64 negTilt;
-    f64 cosA;
-    f64 sinA;
-    f64 height;
-
-    (**(VtableFn **)(*DAT_803dd6e4 + 0x20))((int)*(s16 *)(state + 0x6a));
-    cosA = FUN_80294964();
-    sinA = FUN_80293f90();
-    target = lbl_803E6908;
-    if (((SBCloudRunnerState *)state)->targetObj != 0)
-    {
-        target = (f32)((f64)(int)((SBCloudRunnerState *)state)->rotZ) / lbl_803E6924;
-    }
-    ((SBCloudRunnerState *)state)->steerSmoothed =
-        lbl_803DC074 * (target - ((SBCloudRunnerState *)state)->steerSmoothed) * lbl_803E6928 +
-        ((SBCloudRunnerState *)state)->steerSmoothed;
-    target = lbl_803E692C;
-    height = lbl_803E692C;
-    negTilt = -(f64)((SBCloudRunnerState *)state)->steerSmoothed;
-    ((SBCloudRunnerState *)state)->steerX = ((SBCloudRunnerState *)state)->steerSmoothed;
-    ((SBCloudRunnerState *)state)->steerZ = target;
-    (**(VtableFn **)(*DAT_803dd6e4 + 0x28))
-    ((f64)(((f32)(sinA * negTilt + (f64)(f32)(height * -cosA)) * lbl_803DC074) /
-         lbl_803E6930),
-     (f64)(((f32)(cosA * negTilt + (f64)(f32)(height * sinA)) * lbl_803DC074) /
-         lbl_803E6930));
-    return;
-}
-
 #pragma scheduling off
 #pragma peephole off
 void fn_801EED7C(void)
