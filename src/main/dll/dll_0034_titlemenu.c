@@ -711,3 +711,14 @@ void TitleMenu_initialise(void)
     audioFn_8000b694(0);
     gAttractMovieIdleFrameCount = 0;
 }
+
+TitleMenuTextEntry sNAttractModeStringBlock[1] = {
+    {
+        0x036D,
+        { 0x00, 0x35, 0x01, 0x40, 0x01, 0x90, 0x00, 0x00, 0x01, 0x40, 0x01, 0x90, 0x00, 0x00 },
+        -1,
+        { 0x00, 0xC8 },
+        0x0280,
+        { 0, 0, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    },
+};

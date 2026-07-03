@@ -785,6 +785,7 @@ main/dll/dll_0033_nrareware.c:
 
 main/dll/dll_0034_titlemenu.c:
 	.text       start:0x8011611C end:0x8011730C
+	.data       start:0x8031A1D8 end:0x8031A214
 
 main/dll/dll_3b.c:
 	.text       start:0x8011730C end:0x801175A4
