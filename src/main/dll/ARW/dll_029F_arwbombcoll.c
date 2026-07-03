@@ -114,7 +114,6 @@ void arwbombcoll_updateMovingAxis(int obj, RingState* state)
     }
 }
 
-#pragma peephole off
 void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
 {
     GameObject* arwingObj = (GameObject*)arwing;
@@ -170,7 +169,6 @@ void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
     state->phase = 2;
 }
 
-#pragma peephole off
 int arwbombcoll_checkArwingCollision(int obj, RingState* state, int arwing)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
