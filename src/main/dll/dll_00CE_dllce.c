@@ -88,8 +88,6 @@ int fn_8015E3A0(int obj, int state)
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int fn_8015E210(int* obj, GroundBaddieState* state)
 {
 
@@ -153,8 +151,6 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int fn_8015DC04(int obj, GroundBaddieState* p)
 {
 
@@ -561,8 +557,6 @@ void fn_8015EA48(int obj, GroundBaddieState* state)
     }
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8015EB6C(int obj, int state, int target)
 {
     extern int* gBaddieControlInterface;
@@ -619,8 +613,6 @@ void fn_8015EB6C(int obj, int state, int target)
     }
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8015ED1C(int obj, int state, int target)
 {
     extern int* gBaddieControlInterface;
@@ -847,8 +839,6 @@ void dll_CE_update(int obj, int p2, int p3)
     }
 }
 
-#pragma scheduling on
-#pragma peephole on
 
 extern void Obj_FreeObject(int* obj);
 
@@ -899,7 +889,6 @@ void chukchuk_setScale(int obj, int v);
 
 void iceball_init(void* obj);
 
-#pragma peephole off
 int fn_8015E00C(int p1, u8* obj)
 {
     if ((s8)((GroundBaddieState*)obj)->baddie.hitPoints < 1) return 3;
@@ -911,7 +900,6 @@ extern int* gBaddieControlInterface;
 extern int* gPlayerInterface;
 extern f32 lbl_803E2DC8;
 
-#pragma scheduling off
 int fn_8015DE50(int* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
