@@ -115,8 +115,6 @@ extern void fn_801F4D54(int obj, int sub);
 extern void fn_801F4ECC(int obj, int sub);
 extern int getAngle(float y, float x);
 
-#pragma scheduling off
-#pragma peephole off
 int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
 {
     int sub = *(int*)&((GameObject*)obj)->extra;
