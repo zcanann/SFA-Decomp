@@ -285,7 +285,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
             step = 1;
         }
         fadeAlpha = maxAlpha;
-        for (hStep = 0; cur = hStep & 0xffff, (int)cur < (int)(loEdge - step); hStep += step)
+        for (hStep = 0; cur = hStep & 0xffff, (int)cur < (int)(loEdge - step);)
         {
             col.r = 0xff;
             col.g = 0xff;
@@ -293,6 +293,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
             col.a = ((int)(fadeAlpha * (halfSpan - cur)) / (int)halfSpan) & 0xff;
             hudDrawRect(vx + (hiEdge & 0xffff), vy, step + (vx + (hiEdge & 0xffff)), vb, col);
             hudDrawRect((vx + (edge & 0xffff) - step) + 1, vy, vx + (edge & 0xffff) + 1, vb, col);
+            hStep += step;
             hiEdge += step;
             edge -= step;
         }
@@ -318,7 +319,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         {
             step = 1;
         }
-        for (hStep = 0; hiEdge = hStep & 0xffff, (int)hiEdge < (int)(halfSpan - step); hStep += step)
+        for (hStep = 0; hiEdge = hStep & 0xffff, (int)hiEdge < (int)(halfSpan - step);)
         {
             col.r = 0xff;
             col.g = 0xff;
@@ -326,6 +327,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
             col.a = ((int)(fadeAlpha * (edge - hiEdge)) / (int)edge) & 0xff;
             hudDrawRect(vx, vy + (loEdge & 0xffff), vr, step + (vy + (loEdge & 0xffff)), col);
             hudDrawRect(vx, (vy + (inset & 0xffff) - step) + 1, vr, vy + (inset & 0xffff) + 1, col);
+            hStep += step;
             loEdge += step;
             inset -= step;
         }
