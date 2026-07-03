@@ -64,6 +64,9 @@
 #define WCPRESSURES_TEXTURE_PRESSED 1
 #define WCPRESSURES_TEXTURE_SHIFT 8
 
+#define WCPRESSURES_OBJFLAG_HIDDEN 0x4000
+#define WCPRESSURES_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 
 typedef struct WCPressuresSetup
 {
@@ -302,7 +305,7 @@ void wcpressures_init(u8* obj, u8* setup)
 
     objType = (s16)(setupData->objectTypeHi << 8);
     ((GameObject*)obj)->anim.rotX = objType;
-    objFlags = ((GameObject*)obj)->objectFlags | 0x6000;
+    objFlags = ((GameObject*)obj)->objectFlags | (WCPRESSURES_OBJFLAG_HIDDEN | WCPRESSURES_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->objectFlags = objFlags;
     modelIndex = setupData->modelIndex;
     objAnim->bankIndex = modelIndex;
