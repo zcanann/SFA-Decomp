@@ -52,8 +52,6 @@ extern f32 lbl_803E3028;
 extern f32 lbl_803E302C;
 extern f32 lbl_803E3030;
 
-#pragma scheduling off
-#pragma peephole off
 void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
 {
     int headingAngle;
@@ -358,8 +356,6 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
     return;
 }
 
-#pragma scheduling on
-#pragma peephole on
 void dll_D3_hitDetect_nop(void)
 {
 }
@@ -367,8 +363,6 @@ void dll_D3_hitDetect_nop(void)
 int dll_D3_getExtraSize_ret_1188(void) { return 0x4a4; }
 int dll_D3_getObjectTypeId(void) { return 0x49; }
 
-#pragma scheduling off
-#pragma peephole off
 void dll_D3_free(int obj)
 {
     int* inner = ((GameObject*)obj)->extra;
@@ -421,7 +415,6 @@ void fn_80166E38(f32* out, f32* forward, f32* up)
 }
 #pragma dont_inline reset
 
-#pragma peephole off
 void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
