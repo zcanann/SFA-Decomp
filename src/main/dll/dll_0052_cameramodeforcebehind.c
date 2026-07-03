@@ -65,13 +65,6 @@ void CameraModeForceBehind_free(void)
 {
 }
 
-void fn_801101E8(void)
-{
-    extern void mm_free(u32); /* #57: u32 form needed for codegen; mm.h declares void* */
-    mm_free((u32)lbl_803DD5B8);
-    lbl_803DD5B8 = NULL;
-}
-
 #pragma opt_propagation off
 void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
 {
