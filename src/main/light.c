@@ -1038,8 +1038,6 @@ void vfpplatform_update(int obj)
     }
 }
 
-void FUN_801fd398(u64 fx0, u64 fx1, u64 fx2, u64 fx3, u64 fx4, u64 fx5, u64 fx6, u64 fx7, int obj);
-
 #pragma scheduling on
 #pragma peephole on
 void dll_224_release_nop(void)
