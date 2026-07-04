@@ -5657,8 +5657,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                     ap = la;
                     bp = lb;
                     dp = ld;
-                    n = 2;
-                    do
+                    for (n = 0; n < 2; n++)
                     {
                         if (dp[0] + (px * bp[0] + pz * ap[0]) < __AR_Callback) *mp |= mb;
                         mb = (s16)(mb << 1);
@@ -5667,9 +5666,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                         ap += 2;
                         bp += 2;
                         dp += 2;
-                        n--;
                     }
-                    while (n != 0);
                     xp[0] = px;
                     zp[0] = pz;
                     mp++;
