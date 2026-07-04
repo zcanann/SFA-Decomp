@@ -21,6 +21,11 @@
 #define TRICKY_CONTROL_FLAG_OFFSET_FLOOR_Y 0x20000000
 #define TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK 0x28000002
 #define TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR 0x10
+/* flags2DC status bits set by the floor-response pass (Tricky_applyFloorResponse /
+ * Tricky_findNearbyFloorHeights) to record what floor correction ran this frame. */
+#define TRICKY_STATE2DC_FLAG_FLOOR_OFFSET_APPLIED 0x08000000LL /* offset-floor-Y push applied */
+#define TRICKY_STATE2DC_FLAG_FLOOR_SNAP_APPLIED 0x00100000LL   /* snap-to-floor velocity applied */
+#define TRICKY_STATE2DC_FLAG_SPECIAL_FLOOR_FOUND 0x10000000LL  /* a nearby type-0xe special floor was found */
 #define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
 #define TRICKY_HEIGHT_TRACK_GROUP 0x51
 #define TRICKY_HEIGHT_TRACK_MODEL_SLOT 3
@@ -2582,7 +2587,7 @@ void Tricky_applyFloorResponse(int obj, int state)
             {
                 f32 od = lbl_803E25C0 + dy;
                 ((GameObject*)obj)->anim.velocityY = od * oneOverTimeDelta;
-                ((TrickyState*)state)->flags2DC |= 0x08000000LL;
+                ((TrickyState*)state)->flags2DC |= TRICKY_STATE2DC_FLAG_FLOOR_OFFSET_APPLIED;
             }
         }
         else
@@ -2591,7 +2596,7 @@ void Tricky_applyFloorResponse(int obj, int state)
             if ((dy > lbl_803E25BC) && (dy < lbl_803E25A0))
             {
                 ((GameObject*)obj)->anim.velocityY = dy * oneOverTimeDelta;
-                ((TrickyState*)state)->flags2DC |= 0x00100000LL;
+                ((TrickyState*)state)->flags2DC |= TRICKY_STATE2DC_FLAG_FLOOR_SNAP_APPLIED;
             }
         }
         if ((((TrickyState*)state)->controlFlags & TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT) == 0)
@@ -2623,7 +2628,7 @@ void Tricky_applyFloorResponse(int obj, int state)
         ((*(s8*)&((TrickyState*)state)->surfaceFlags & TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR) != 0))
     {
         ((GameObject*)obj)->anim.velocityY = lbl_803E2574;
-        ((TrickyState*)state)->flags2DC |= 0x00100000LL;
+        ((TrickyState*)state)->flags2DC |= TRICKY_STATE2DC_FLAG_FLOOR_SNAP_APPLIED;
     }
     if ((((TrickyState*)state)->controlFlags & 0x00200000) != 0)
     {
@@ -2656,7 +2661,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     *nearestSpecialY = ((GameObject*)obj)->anim.localPosY;
     nearestSpecialDelta = nearestFloorDelta = lbl_803E25C8;
     i = 0;
-    ((TrickyState*)state)->flags2DC &= ~0x10000000LL;
+    ((TrickyState*)state)->flags2DC &= ~TRICKY_STATE2DC_FLAG_SPECIAL_FLOOR_FOUND;
     zero = lbl_803E2574;
     ((TrickyState*)state)->nearestSpecialDeltaY = zero;
     *(s8*)&((TrickyState*)state)->surfaceFlags &= ~TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
@@ -2680,7 +2685,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
                 *nearestSpecialY = **(f32**)(hitList[0] + ((u32)i << 2));
                 if (((TrickyState*)state)->nearestSpecialDeltaY > lbl_803E25A0)
                 {
-                    ((TrickyState*)state)->flags2DC |= 0x10100000LL;
+                    ((TrickyState*)state)->flags2DC |= (TRICKY_STATE2DC_FLAG_SPECIAL_FLOOR_FOUND | TRICKY_STATE2DC_FLAG_FLOOR_SNAP_APPLIED);
                 }
             }
         }
