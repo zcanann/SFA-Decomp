@@ -17,6 +17,11 @@
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/sfa_shared_decls.h"
 
+/* seqId of the render-only glow variant (no MagicLightState, no proximity logic) */
+#define MAGICLIGHT_SEQ_GLOW 0x172
+/* seqId of the main proximity-triggered variant (subtype-selected L-actions) */
+#define MAGICLIGHT_SEQ_PROXIMITY 0x16b
+
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
 extern u32 getLActions();
@@ -48,7 +53,7 @@ void magiclight_init(int* obj, u8* params)
     ((GameObject*)obj)->unkF4 = 0;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = magiclight_SeqFn;
-    if (((GameObject*)obj)->anim.seqId == 0x172)
+    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW)
     {
         return;
     }
@@ -56,7 +61,7 @@ void magiclight_init(int* obj, u8* params)
     state->lifetime = randomGetRange(0xc8, 0x258);
     state->subtype = (s8) * (s16*)(params + 0x1a);
     state->inRange = 0;
-    if (((GameObject*)obj)->anim.seqId == 0x16b)
+    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_PROXIMITY)
     {
         switch (state->subtype)
         {
@@ -94,7 +99,7 @@ int magiclight_getObjectTypeId(void) { return 0x0; }
 #pragma scheduling on
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x172 && visible != 0)
+    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW && visible != 0)
     {
         objRenderFn_8003b8f4(lbl_803E473C);
     }
@@ -104,7 +109,7 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 void magiclight_free(int obj)
 {
     MagicLightState* state = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.seqId != 0x172)
+    if (((GameObject*)obj)->anim.seqId != MAGICLIGHT_SEQ_GLOW)
     {
         if ((s8)state->inRange != 0)
         {
@@ -116,7 +121,7 @@ void magiclight_free(int obj)
 
 void magiclight_update(int obj)
 {
-    if (((GameObject*)obj)->anim.seqId != 0x172 && ((GameObject*)obj)->unkF4 == 0)
+    if (((GameObject*)obj)->anim.seqId != MAGICLIGHT_SEQ_GLOW && ((GameObject*)obj)->unkF4 == 0)
     {
         ((GameObject*)obj)->anim.rotX = 0;
         ((GameObject*)obj)->anim.rotY = 0;
@@ -129,7 +134,7 @@ void magiclight_update(int obj)
 #pragma scheduling on
 int magiclight_getExtraSize(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x172) return 0x0;
+    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW) return 0x0;
     return 0x14;
 }
 
@@ -140,7 +145,7 @@ int magiclight_SeqFn(int* obj)
     int* player;
     f32 dist;
 
-    if (((GameObject*)obj)->anim.seqId == 0x172) return 0;
+    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW) return 0;
 
     state = ((GameObject*)obj)->extra;
     player = (int*)Obj_GetPlayerObject();
