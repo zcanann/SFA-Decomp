@@ -27,6 +27,9 @@
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
 
+/* object group this object belongs to */
+#define GRIMBLE_OBJGROUP 3
+
 typedef struct GrimblePlacement
 {
     u8 pad0[0x14 - 0x0];
@@ -481,7 +484,7 @@ void grimble_initialise(void) { grimble_initialiseStateHandlerTables(); }
 void grimble_free(int obj)
 {
     int* state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, GRIMBLE_OBJGROUP);
     (*(void (**)(int, int*, int))(*(int*)gBaddieControlInterface + 0x40))(obj, state, 0);
 }
 
