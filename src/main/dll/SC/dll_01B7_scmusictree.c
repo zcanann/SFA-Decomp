@@ -138,6 +138,13 @@ typedef struct SCMusicTreeState
     u8 pad4D[0x50 - 0x4D];
 } SCMusicTreeState;
 
+/* music-tree flags (setup 0x23 copied to runtime 0x4C); low nibble 0xf is a
+   burst count/palette passed to the fx helpers, not individual flag bits */
+#define SCMUSICTREE_FLAG_APPROACH_BURST 0x10 /* emit a burst when player crosses hearRadius */
+#define SCMUSICTREE_FLAG_HIT_ACTIVE 0x20     /* run hit detection this frame */
+#define SCMUSICTREE_FLAG_PRIORITY_HIT 0x40   /* use priority-hit poll + color fade path */
+#define SCMUSICTREE_FLAG_SATELLITES 0x80     /* manage the 3 ambient satellite objects */
+
 void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int* def = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -147,7 +154,7 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     fn_8003B608((int)((ScMusictreePlacement*)def)->colorR, (int)((ScMusictreePlacement*)def)->colorG,
                 (int)((ScMusictreePlacement*)def)->colorB);
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E558C);
-    if ((state->flags & 0x80) != 0)
+    if ((state->flags & SCMUSICTREE_FLAG_SATELLITES) != 0)
     {
         for (i = 0; i < 3; i++)
         {
@@ -276,7 +283,7 @@ void sc_musictree_update(int obj)
     {
         ((ScMusictreeState*)inner)->moveStepScale = ((ScMusictreeState*)inner)->moveStepScale - lbl_803E5598;
     }
-    if ((((ScMusictreeState*)inner)->flags & 0x80) && ((GameObject*)obj)->unkF8 != 0)
+    if ((((ScMusictreeState*)inner)->flags & SCMUSICTREE_FLAG_SATELLITES) && ((GameObject*)obj)->unkF8 != 0)
     {
         for (i = 0, p = (int*)inner, q = (int*)inner; i < 3; i++)
         {
@@ -300,7 +307,7 @@ void sc_musictree_update(int obj)
             q = (int*)((char*)q + 0xc);
         }
     }
-    if ((((ScMusictreeState*)inner)->flags & 0x20) == 0)
+    if ((((ScMusictreeState*)inner)->flags & SCMUSICTREE_FLAG_HIT_ACTIVE) == 0)
     {
         goto end;
     }
@@ -344,7 +351,7 @@ void sc_musictree_update(int obj)
     }
     ((ScMusictreeState*)inner)->moveStepScale = lbl_803E5588;
     ((CloudRunnerState*)inner)->baddie.velZ = lbl_803E55A8;
-    if (((ScMusictreeState*)inner)->flags & 0x80)
+    if (((ScMusictreeState*)inner)->flags & SCMUSICTREE_FLAG_SATELLITES)
     {
         int* pp;
         int idx;
@@ -372,7 +379,7 @@ end:
         if (di < ((ScMusictreeState*)inner)->hearRadius
         )
         {
-            if ((((ScMusictreeState*)inner)->flags & 0x10)
+            if ((((ScMusictreeState*)inner)->flags & SCMUSICTREE_FLAG_APPROACH_BURST)
                 && ((ScMusictreeState*)inner)->previousDistance >= ((ScMusictreeState*)inner)->hearRadius && ((
                 CloudRunnerState*)inner)->baddie.velY <= lbl_803E5590
             )
@@ -427,9 +434,9 @@ void sc_musictree_init(int obj, SCMusicTreeSetup* setup)
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E558C, *(f32*)&lbl_803E558C,
                                                                 (ObjAnimEventList*)&stk);
     ObjHitbox_SetCapsuleBounds(obj, (s32)(lbl_803E55C0 * state->scale), -5, 0xff);
-    if (state->flags & 0x80)
+    if (state->flags & SCMUSICTREE_FLAG_SATELLITES)
     {
-        state->flags = state->flags | 0x20;
+        state->flags = state->flags | SCMUSICTREE_FLAG_HIT_ACTIVE;
     }
 }
 
