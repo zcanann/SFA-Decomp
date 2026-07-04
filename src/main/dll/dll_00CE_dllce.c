@@ -30,6 +30,9 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
+
+/* object group this object belongs to */
+#define DLLCE_OBJGROUP 3
 extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_SetHitVolumeSlot();
@@ -1000,7 +1003,7 @@ void dll_CE_initialise(void)
 void dll_CE_free(int* obj)
 {
     GroundBaddieState* state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, DLLCE_OBJGROUP);
     {
         int* sub = ((GameObject*)obj)->childObjs[0];
         if (sub != NULL)
