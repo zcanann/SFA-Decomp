@@ -34,7 +34,6 @@ extern u32 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern u32 ObjLink_DetachChild();
 extern void* Obj_GetPlayerObject(void);
-extern void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b);
 extern f32 lbl_803E4298;
 extern f32 lbl_803E429C;
 extern void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, int p9, int slot, f32 f, u8 arg8);
