@@ -94,7 +94,7 @@ int dll_16C_getObjectTypeId(void) { return 0x3; }
 
 void dll_16C_free(int* obj)
 {
-    int* p = (int*)obj[0xc8 / 4];
+    int* p = (int*)((GameObject*)obj)->childObjs[0];
     if (p != NULL) Obj_FreeObject(p);
 }
 
@@ -163,7 +163,6 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-#pragma peephole on
 void dll_16C_init(void* obj, void* arg2)
 {
     Dll16CState* extra;
@@ -176,13 +175,12 @@ void dll_16C_init(void* obj, void* arg2)
     }
     extra = ((GameObject*)obj)->extra;
     extra->linkedObj = NULL;
-    *(u8*)&extra->subObjIndex = *(u8*)((char*)arg2 + 0x27);
+    extra->subObjIndex = *(s8*)((char*)arg2 + 0x27);
     extra->opacity = 0xff;
 }
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
-#pragma peephole off
 int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int* p;
