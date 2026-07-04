@@ -49,7 +49,7 @@ typedef struct LoadingScreenTexture
     u8 _00[0xa];
     u16 width;
     u16 height;
-    u16 unk0e;
+    u16 refCount;
     u16 unk10;
     u8 _12[4];
     u8 format;
@@ -59,9 +59,9 @@ typedef struct LoadingScreenTexture
     u8 magFilter;
     u8 _1b[5];
     u32 texObj[8];
-    int unk40;
+    int tmemAddr;
     u32 bufferSize;
-    u8 unk48;
+    u8 preloaded;
     u8 _49[0x17];
     u8 imageData[1];
 } LoadingScreenTexture;
@@ -186,8 +186,8 @@ static inline void initLoadingScreenTexturesBody(void)
     {
         *textureSlot = (LoadingScreenTexture*)arenaHi;
         textureHeader = *textureSlot;
-        textureHeader->unk40 = 0;
-        textureHeader->unk48 = 0;
+        textureHeader->tmemAddr = 0;
+        textureHeader->preloaded = 0;
         texObj = (GXTexObj*)textureHeader->texObj;
         GXInitTexObj(texObj, textureHeader->imageData, textureHeader->width,
                      textureHeader->height, textureHeader->format,
