@@ -53,7 +53,7 @@ typedef struct DrakorenergyPlacement
     f32 posX;
     f32 posY;
     f32 posZ;
-    s32 unk14;
+    s32 mapId;
     u8 pad_18[0x19 - 0x18];
     u8 unk19;
     u8 pad_1A[0x1E - 0x1A];
