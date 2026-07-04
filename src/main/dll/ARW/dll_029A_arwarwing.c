@@ -33,6 +33,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define ARWARWING_OBJGROUP 0x26
+
 #define ARWARWING_OBJFLAG_PARENT_SLACK 0x1000
 
 /* ArwingState.flags477 bits */
@@ -111,7 +113,7 @@ void arwarwing_free(int obj)
 {
     ArwingState* state = ((GameObject*)obj)->extra;
 
-    ObjGroup_RemoveObject(obj, 0x26);
+    ObjGroup_RemoveObject(obj, ARWARWING_OBJGROUP);
     gArwing = 0;
     if (state->light != NULL)
     {
@@ -1386,7 +1388,7 @@ void arwarwing_init(int obj)
     (*gPathControlInterface)->init(pathBlock, 4, 0x1040006, 1);
     (*gPathControlInterface)->setup(pathBlock, 3, gArwingPathSetupData, sArwingPathName, &cfg);
     (*gPathControlInterface)->attachObject((void*)obj, pathBlock);
-    ObjGroup_AddObject(obj, 0x26);
+    ObjGroup_AddObject(obj, ARWARWING_OBJGROUP);
     gArwing = obj;
     ObjHits_SetTargetMask(obj, 1);
     ((ArwingState*)state)->fullLoadout = 1;
