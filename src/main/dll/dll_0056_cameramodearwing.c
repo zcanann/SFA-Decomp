@@ -50,8 +50,6 @@ typedef struct CameraArwingWork
     u8 pad5F[0x60 - 0x5F];
 } CameraArwingWork;
 
-#pragma scheduling on
-#pragma peephole on
 extern f32 gCamArwingWork[];
 extern f32 lbl_803E1BA0;
 extern f32 lbl_803E1BA4;
