@@ -2698,7 +2698,7 @@ dolphin/base/PPCArch.c:
 
 dolphin/os/OS.c:
 	.text       start:0x802403D8 end:0x80240D34
-	.data       start:0x8032C360 end:0x8032C520
+	.data       start:0x8032C360 end:0x8032C5A0
 	.bss        start:0x803AD320 end:0x803AD370
 	.sbss       start:0x803DDDD8 end:0x803DDE08
 
