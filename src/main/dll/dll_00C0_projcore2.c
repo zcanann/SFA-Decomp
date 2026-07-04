@@ -25,3 +25,13 @@ void projcore2_initialise(void)
 }
 
 char sProjcore2DoNoLongerSupported[] = "<projcore2 Do>No Longer supported \n";
+
+extern void projcore3_initialise(void);
+extern void projcore3_release(void);
+extern int projcore3_doUnsupported(void);
+
+/* projcore3 (DLL 0xC1) ResourceDescriptor, referenced by modelEngine */
+u32 lbl_803199F8[8] = {
+    0, 0, 0, 0x00030000,
+    (u32)projcore3_initialise, (u32)projcore3_release, 0, (u32)projcore3_doUnsupported,
+};
