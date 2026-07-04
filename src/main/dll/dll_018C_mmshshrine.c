@@ -408,3 +408,26 @@ void mmsh_shrine_release(void)
 void mmsh_shrine_initialise(void)
 {
 }
+
+/*__DATA_EXTERNS__*/
+extern void mmsh_waterspike_getExtraSize();
+extern void mmsh_waterspike_getObjectTypeId();
+extern void mmsh_waterspike_free();
+extern void mmsh_waterspike_render();
+extern void mmsh_waterspike_hitDetect();
+extern void mmsh_waterspike_update();
+extern void mmsh_waterspike_init();
+extern void mmsh_waterspike_release();
+extern void mmsh_waterspike_initialise();
+extern void mmsh_scales_getExtraSize();
+extern void mmsh_scales_getObjectTypeId();
+extern void mmsh_scales_free();
+extern void mmsh_scales_render();
+extern void mmsh_scales_hitDetect();
+extern void mmsh_scales_update();
+extern void mmsh_scales_init();
+extern void mmsh_scales_release();
+extern void mmsh_scales_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* gMMSH_ScalesObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, mmsh_scales_initialise, mmsh_scales_release, (void*)0x00000000, mmsh_scales_init, mmsh_scales_update, mmsh_scales_hitDetect, mmsh_scales_render, mmsh_scales_free, mmsh_scales_getObjectTypeId, mmsh_scales_getExtraSize };
+void* gMMSH_WaterSpikeObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, mmsh_waterspike_initialise, mmsh_waterspike_release, (void*)0x00000000, mmsh_waterspike_init, mmsh_waterspike_update, mmsh_waterspike_hitDetect, mmsh_waterspike_render, mmsh_waterspike_free, mmsh_waterspike_getObjectTypeId, mmsh_waterspike_getExtraSize };
