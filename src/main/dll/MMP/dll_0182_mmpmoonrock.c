@@ -343,7 +343,7 @@ void mmp_moonrock_init(int obj, int param2)
     {
         if ((u8)(kind - 3) <= 1 || kind == 6)
         {
-            state->flags = state->flags | 0x400;
+            state->flags = state->flags | MOONROCK_FLAG_PLACED;
         }
         (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 0);
     }
@@ -538,7 +538,7 @@ void mmp_moonrock_update(int obj)
     {
         return;
     }
-    if ((state->flags & 4) != 0)
+    if ((state->flags & MOONROCK_FLAG_FROZEN) != 0)
     {
         return;
     }
@@ -575,10 +575,10 @@ void mmp_moonrock_update(int obj)
         return;
     }
     grabbed = 0;
-    if ((state->flags & 8) != 0 &&
+    if ((state->flags & MOONROCK_FLAG_GRAB_FRAME) != 0 &&
         (u8)(*gMapEventInterface)->getObjGroupStatus(0x12, 6) == 0)
     {
-        state->flags |= 1;
+        state->flags |= MOONROCK_FLAG_PICKUP_PENDING;
     }
     else if ((state->flags & MOONROCK_FLAG_PLACED) == 0)
     {
@@ -639,9 +639,9 @@ void mmp_moonrock_update(int obj)
     checked:
         if (found != 0)
         {
-            state->flags |= 1;
+            state->flags |= MOONROCK_FLAG_PICKUP_PENDING;
         }
-        if ((state->flags & 2) != 0)
+        if ((state->flags & MOONROCK_FLAG_ARMED) != 0)
         {
             fn_801A7D74(obj, 0, 0);
             state->flags &= ~MOONROCK_FLAG_ARMED;
@@ -663,7 +663,7 @@ void mmp_moonrock_update(int obj)
             state->flags &= ~MOONROCK_FLAG_PICKUP_PENDING;
         }
     }
-    state->flags |= 2;
+    state->flags |= MOONROCK_FLAG_ARMED;
     if (state->kind == 0)
     {
         return;
