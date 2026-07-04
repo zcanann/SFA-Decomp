@@ -1616,8 +1616,11 @@ void drawViewFinderHud(void)
             drawViewFinderLine(_u, f15v - _cx, _d, f15v + _cx,
                                _d, f19v + _cx, _u, f19v - _cx, (u8*)&_c2);
         }
-        xc = lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
-        xc = xc;
+        {
+            f64 q = lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
+            xc = q;
+            xc = q;
+        }
         sprintf(buf, sTrickyDebugXCoordFormat, xc);
         gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);
@@ -1723,14 +1726,18 @@ void drawViewFinderHud(void)
             int r30v, r29v, r5v, r28v;
             int t;
             f32 f18, f19, num;
-            t = (int)((xc - lbl_803E1F50) * lbl_803E1F58);
+            f64 d;
+            d = xc - lbl_803E1F50;
+            t = (int)(d * lbl_803E1F58);
             r30v = (t < 0) ? 0 : ((t > 0x8c) ? 0x8c : t);
-            t = (int)((xc - lbl_803E1F60) * lbl_803E1F68);
+            d = xc - lbl_803E1F60;
+            t = (int)(d * lbl_803E1F68);
             r29v = (t < 0) ? 0 : ((t > 0xc8) ? 0xc8 : t);
             r5v = (int)((f32)gViewFinderCamAngle / gViewFinderBamToDeg);
             num = gViewFinderCamAngle - r5v * gViewFinderBamToDeg;
             f19 = xc * (gViewFinderBamToDeg / lbl_803DBAE8);
-            f18 = (f32)(lbl_803E1F78 + (num / lbl_803DBAE8) * xc);
+            num = num / lbl_803DBAE8;
+            f18 = (f32)(lbl_803E1F78 + num * xc);
             r28v = -r5v;
             while (f18 > lbl_803E1E3C)
             {
