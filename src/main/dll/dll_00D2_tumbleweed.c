@@ -13,6 +13,8 @@
 #define TUMBLEWEED_OBJFLAG_RENDERED 0x800
 #define TUMBLEWEED_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 #define TUMBLEWEED_MSG_PICKUP   0x7000b /* player collected: award and burst */
+#define TUMBLEWEED_OBJGROUP 3
+#define TUMBLEWEED_OBJGROUP_SECONDARY 0x31
 
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int pointCount,
                                 int mask);
@@ -239,8 +241,8 @@ void tumbleweed_free(int* obj)
         }
         counter = counter + 1;
     }
-    ObjGroup_RemoveObject(obj, 3);
-    ObjGroup_RemoveObject(obj, 0x31);
+    ObjGroup_RemoveObject(obj, TUMBLEWEED_OBJGROUP);
+    ObjGroup_RemoveObject(obj, TUMBLEWEED_OBJGROUP_SECONDARY);
 }
 
 void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -519,8 +521,8 @@ void tumbleweed_init(int obj, int defData)
     ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_GROWING;
     ((BackpackState*)aux)->phaseTimer = lbl_803E2FB4 + (f32)(s32)
     randomGetRange(-0x12c, 0x12c);
-    ObjGroup_AddObject(obj, 3);
-    ObjGroup_AddObject(obj, 0x31);
+    ObjGroup_AddObject(obj, TUMBLEWEED_OBJGROUP);
+    ObjGroup_AddObject(obj, TUMBLEWEED_OBJGROUP_SECONDARY);
     ObjHits_DisableObject((u32)obj);
     ObjMsg_AllocQueue((void*)obj, 1);
     if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_3)
