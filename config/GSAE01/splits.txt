@@ -3377,6 +3377,7 @@ dolphin/axfx/reverb_std_create.c:
 	extab       start:0x80005CA8 end:0x80005CB0
 	extabindex  start:0x8000668C end:0x80006698
 	.text       start:0x80284C58 end:0x8028504C
+	.data       start:0x80332220 end:0x80332230
 
 dolphin/axfx/reverb_std_callback.c:
 	extab       start:0x80005CB0 end:0x80005CB8

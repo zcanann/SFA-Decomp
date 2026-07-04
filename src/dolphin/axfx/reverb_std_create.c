@@ -2,7 +2,7 @@
 #include "string.h"
 #include "main/audio/sal_dsp.h"
 extern f32 powf(f32 x, f32 y);
-extern const s32 sReverbStdDelayLengths[4];
+s32 sReverbStdDelayLengths[4] = { 1789, 1999, 433, 149 };
 
 static void DLsetdelay(AXFX_REVSTD_DELAYLINE *dl, s32 lag)
 {
