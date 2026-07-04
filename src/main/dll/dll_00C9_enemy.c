@@ -32,6 +32,10 @@
 #define ENEMY_OBJFLAG_PARENT_SLACK 0x1000
 #define ENEMY_OBJFLAG_FREED 0x40
 
+/* object groups: the enemy's own group / secondary group left on a message */
+#define ENEMY_OBJGROUP 3
+#define ENEMY_OBJGROUP_SECONDARY 0x50
+
 typedef struct BaddieAfterUpdateBonesCbState
 {
     u8 pad0[0x2B0 - 0x0];
@@ -923,7 +927,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     n = 0;
     if ((flags & 1) != 0)
     {
-        tgt = (short*)ObjGroup_FindNearestObject(3, obj, &radius);
+        tgt = (short*)ObjGroup_FindNearestObject(ENEMY_OBJGROUP, obj, &radius);
         out->obj = tgt;
         if (tgt != 0)
         {
@@ -974,7 +978,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     else
     {
         radius = radius * radius;
-        arr = ObjGroup_GetObjects(3, &count);
+        arr = ObjGroup_GetObjects(ENEMY_OBJGROUP, &count);
         if (count != 0)
         {
             i = 0;
@@ -1639,9 +1643,9 @@ void enemy_free(int obj, int flag)
         hagabonMK2_stopLoopSfx(obj, state);
         break;
     case 0x851:
-        if ((int)ObjGroup_ContainsObject(obj, 0x50) != 0)
+        if ((int)ObjGroup_ContainsObject(obj, ENEMY_OBJGROUP_SECONDARY) != 0)
         {
-            ObjGroup_RemoveObject(obj, 0x50);
+            ObjGroup_RemoveObject(obj, ENEMY_OBJGROUP_SECONDARY);
         }
         break;
     }
@@ -1659,7 +1663,7 @@ void enemy_free(int obj, int flag)
         }
     }
     (*gExpgfxInterface)->freeSource(obj);
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, ENEMY_OBJGROUP);
 }
 
 void enemy_update(int obj)
@@ -2064,7 +2068,7 @@ void enemy_init(int obj, u8* setup, int flag)
         {
             *(int*)&((EnemyState*)state)->flags2E4 = *(int*)&((EnemyState*)state)->flags2E4 & -39;
         }
-        ObjGroup_AddObject(obj, 3);
+        ObjGroup_AddObject(obj, ENEMY_OBJGROUP);
         state[0x2f0] = 7;
         state[0x2ef] = 2;
         if (*(void**)state == NULL)
