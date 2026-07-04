@@ -38,14 +38,14 @@ typedef struct GpshObjcreatorSpawnSetup
     f32 posY;        /* 0x0c */
     f32 posZ;        /* 0x10 */
     u8 pad14[4];     /* 0x14 */
-    u8 unk18;        /* 0x18 */
+    u8 rotByte;      /* 0x18 */
     u8 pad19;        /* 0x19 */
     s16 unk1A;       /* 0x1a */
     u8 pad1C[8];     /* 0x1c */
 } GpshObjcreatorSpawnSetup;
 
 STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, posX) == 0x8);
-STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, unk18) == 0x18);
+STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, rotByte) == 0x18);
 STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, unk1A) == 0x1a);
 STATIC_ASSERT(sizeof(GpshObjcreatorSpawnSetup) == 0x24);
 
@@ -113,7 +113,7 @@ void gpsh_objcreator_update(int* obj)
         setup->posY = ((GameObject*)obj)->anim.localPosY;
         setup->posZ = ((GameObject*)obj)->anim.localPosZ;
         setup->objType = (s16)(sub[4] + 0x1f4);
-        setup->unk18 = (u8)((s32) * (s16*)obj >> 8);
+        setup->rotByte = (u8)((s32) * (s16*)obj >> 8);
         setup->unk1A = lbl_803263B8[sub[4]];
         Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject*)obj)->anim.parent);
     }

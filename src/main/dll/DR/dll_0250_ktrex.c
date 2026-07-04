@@ -75,7 +75,7 @@ typedef struct KTRexArenaState
     f32 posX;
     f32 posY;
     f32 posZ;
-    f32 unkF4;
+    f32 laneFrac;
     s16 homeYaw; /* 0xf8: spawn heading */
     u16 timerFA;
     u8 laneIndex;
@@ -87,7 +87,7 @@ typedef struct KTRexArenaState
     u8 phaseCountdown;
     u8 pathCountdown;
     u32 phaseFlags; /* 0x104: arena phase progression bits */
-    u8 unk108;
+    u8 laneAltSelect;
     u8 pad109[0x23];
     f32 unk12C;
     u8 pad130[0x14];
@@ -378,14 +378,14 @@ int ktrex_shouldAdvanceArenaPhase(void)
     {
         if (r6 != 0)
         {
-            if (((KTRexArenaState*)gKTRexState)->laneLerpT < ((KTRexArenaState*)gKTRexState)->unkF4)
+            if (((KTRexArenaState*)gKTRexState)->laneLerpT < ((KTRexArenaState*)gKTRexState)->laneFrac)
             {
                 return 1;
             }
         }
         else
         {
-            if (((KTRexArenaState*)gKTRexState)->laneLerpT > ((KTRexArenaState*)gKTRexState)->unkF4)
+            if (((KTRexArenaState*)gKTRexState)->laneLerpT > ((KTRexArenaState*)gKTRexState)->laneFrac)
             {
                 return 1;
             }
@@ -637,7 +637,7 @@ void ktrex_update(int obj)
                 dx;
         }
     }
-    ((KTRexArenaState*)gKTRexState)->unkF4 = frac;
+    ((KTRexArenaState*)gKTRexState)->laneFrac = frac;
     {
         KTRexArenaState* st = (KTRexArenaState*)gKTRexState;
         int t = st->timerFA;
@@ -836,7 +836,7 @@ int ktrex_stateHandlerB01(int obj, int runtime)
         ((KTRexRuntime*)gKTRexRuntime)->handlerState &= ~2;
         *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= mask;
     }
-    if (((KTRexArenaState*)gKTRexState)->unk108 != 0)
+    if (((KTRexArenaState*)gKTRexState)->laneAltSelect != 0)
     {
         mask = (&lbl_803DC278)[((KTRexArenaState*)gKTRexState)->laneIndex];
     }
@@ -1083,12 +1083,12 @@ void ktrex_updateAttackEffects(int obj)
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x4000) != 0)
     {
         Sfx_PlayFromObject(obj, SFXmv_dive4_c);
-        ((KTRexArenaState*)gKTRexState)->unk108 ^= 1;
+        ((KTRexArenaState*)gKTRexState)->laneAltSelect ^= 1;
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x8000) != 0)
     {
         Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
-        ((KTRexArenaState*)gKTRexState)->unk108 ^= 1;
+        ((KTRexArenaState*)gKTRexState)->laneAltSelect ^= 1;
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x3) != 0)
     {
@@ -1404,7 +1404,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
             {
                 if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)
                 {
-                    if (((KTRexArenaState*)gKTRexState)->laneLerpT - ((KTRexArenaState*)gKTRexState)->unkF4 > lbl_803E67B4)
+                    if (((KTRexArenaState*)gKTRexState)->laneLerpT - ((KTRexArenaState*)gKTRexState)->laneFrac > lbl_803E67B4)
                     {
                         result = 1;
                         goto haveResult;
@@ -1412,7 +1412,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
                 }
                 else
                 {
-                    if (((KTRexArenaState*)gKTRexState)->unkF4 - ((KTRexArenaState*)gKTRexState)->laneLerpT > lbl_803E67B4)
+                    if (((KTRexArenaState*)gKTRexState)->laneFrac - ((KTRexArenaState*)gKTRexState)->laneLerpT > lbl_803E67B4)
                     {
                         result = 1;
                         goto haveResult;
