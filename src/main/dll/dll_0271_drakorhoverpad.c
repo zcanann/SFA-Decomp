@@ -24,6 +24,8 @@
 /* placement subtype id (desc[0]) selecting the pad behaviour mode */
 #define DRAKORHOVERPAD_SUBTYPE_TRACKING 1812 /* tracks/yaws toward a nearby object */
 #define DRAKORHOVERPAD_SUBTYPE_FREE 1048     /* free curve-follow, no tracking */
+#define DRAKORHOVERPAD_OBJGROUP 0x46
+#define DRAKORHOVERPAD_OBJGROUP_SECONDARY 0xa
 
 /*
  * A ROM curve network node (the record returned by gRomCurveInterface->getById
@@ -200,8 +202,8 @@ void drakorhoverpad_initMain(int obj, void* desc)
         g->f08 = 1;
         break;
     }
-    ObjGroup_AddObject(obj, 70);
-    ObjGroup_AddObject(obj, 10);
+    ObjGroup_AddObject(obj, DRAKORHOVERPAD_OBJGROUP);
+    ObjGroup_AddObject(obj, DRAKORHOVERPAD_OBJGROUP_SECONDARY);
 }
 
 #pragma dont_inline on
@@ -961,8 +963,8 @@ f32 drakorhoverpad_func13(int obj, f32* out)
 
 void drakorhoverpad_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 0x46);
-    ObjGroup_RemoveObject(obj, 0xa);
+    ObjGroup_RemoveObject(obj, DRAKORHOVERPAD_OBJGROUP);
+    ObjGroup_RemoveObject(obj, DRAKORHOVERPAD_OBJGROUP_SECONDARY);
 }
 
 void drakorhoverpad_func17(int obj, int sel, int* out)
