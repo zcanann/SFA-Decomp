@@ -32,6 +32,10 @@
 #include "main/dll/dll_00F7_dllf7.h"
 #include "main/obj_placement.h"
 
+/* object groups: static camera prop / side-repel object */
+#define STATICCAMERA_OBJGROUP 7
+#define SIDEREPEL_OBJGROUP 0x40
+
 #define SIDEREPEL_OBJFLAG_UPDATE_DISABLED 0x8000
 #define SIDEREPEL_OBJFLAG_HIDDEN 0x4000
 #define SIDEREPEL_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -202,7 +206,7 @@ extern void shield_update(int* obj);
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, STATICCAMERA_OBJGROUP);
 }
 
 void staticCamera_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -226,14 +230,14 @@ void staticCamera_init(short* obj, int placement, int flag)
     colorState[1] = 0;
     if (flag == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, STATICCAMERA_OBJGROUP);
     }
 }
 
 void siderepel_init(int obj, int placement)
 {
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | (SIDEREPEL_OBJFLAG_UPDATE_DISABLED | SIDEREPEL_OBJFLAG_HIDDEN | SIDEREPEL_OBJFLAG_HITDETECT_DISABLED);
-    ObjGroup_AddObject(obj, 0x40);
+    ObjGroup_AddObject(obj, SIDEREPEL_OBJGROUP);
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
         ObjHitbox_SetSphereRadius(obj, (s16)(((SideRepelPlacement*)placement)->radius >> 3));
@@ -684,7 +688,7 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-void siderepel_free(int x) { ObjGroup_RemoveObject(x, 0x40); }
+void siderepel_free(int x) { ObjGroup_RemoveObject(x, SIDEREPEL_OBJGROUP); }
 
 #pragma opt_common_subs reset
 
