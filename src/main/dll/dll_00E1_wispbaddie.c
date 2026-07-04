@@ -604,7 +604,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         {
             ((BaddieState*)state)->unk308 = ((BaddieState*)state)->unk308 - lbl_803E2754;
         }
-        if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+        if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             eventTableIndex = *(u8*)(state + 0x33c);
             Baddie_SetMove(obj, state, eventRows[eventTableIndex].moveId,
@@ -621,7 +621,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
             ((BaddieState*)state)->controlFlags =
                 ((BaddieState*)state)->controlFlags & ~0x40;
             ((BaddieState*)state)->controlFlags =
-                ((BaddieState*)state)->controlFlags | 0x40000000LL;
+                ((BaddieState*)state)->controlFlags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
             *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) & ~0x80;
             *(u8*)(state + 0x33c) = 0;
             return 0;
