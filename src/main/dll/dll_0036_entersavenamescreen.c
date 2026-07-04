@@ -356,3 +356,14 @@ u32 lbl_8031AE20[56] = { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000
 u32 gHighScoreTitleIdTable[5] = { 0x0a9f046f, 0x0aa40470, 0x0aa90471, 0x0aae0472, 0x0ab30473 };
 u32 lbl_8031AF14[2] = { 0x0000022b, 0x00000050 };
 u32 lbl_8031AF1C[6] = { 0x00000219, 0x00000066, 0x00000100, (u32)lbl_8031AF14, 0x00000200, (u32)lbl_8031AF1C };
+
+/* descriptor/ptr table auto 0x803e1dd0-0x803e1df8 */
+const f32 lbl_803E1DD0 = 20.0f;
+const f32 lbl_803E1DD4 = 255.0f;
+const f32 lbl_803E1DD8 = 40.0f;
+const f32 lbl_803E1DDC = 254.0f;
+const f32 lbl_803E1DE0 = 0.0078125f;
+const f32 lbl_803E1DE4 = 120.0f;
+const f32 lbl_803E1DE8 = 176.0f;
+const f32 lbl_803E1DEC = -0.0f;
+const f32 gWeirdMenuSaveTimerLimit[2] = {120.0f, 0.0f};

@@ -873,7 +873,7 @@ main/dll/dll_0035_saveselectscreen.c:
 main/dll/dll_0036_entersavenamescreen.c:
 	.text       start:0x8011B5D4 end:0x8011BFC8
 	.data       start:0x8031A880 end:0x8031AF34
-	.sdata2     start:0x803E1DA0 end:0x803E1DD0
+	.sdata2     start:0x803E1DA0 end:0x803E1DF8
 
 main/dll/dll_4e.c:
 	.text       start:0x8011BFC8 end:0x8011C5CC
