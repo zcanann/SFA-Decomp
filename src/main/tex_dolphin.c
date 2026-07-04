@@ -83,7 +83,7 @@ typedef struct MapBlockBoundsRec
     s16 maxY;
     s16 maxZ;
     u8 pad12[0x18 - 0x12];
-    u8 unk18;
+    u8 selector;
     u8 pad19[0x1C - 0x19];
 } MapBlockBoundsRec;
 
@@ -618,7 +618,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
         flags = SHADER_FLAGS(shader);
         if ((flags & 0x80000000) != 0)
         {
-            fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->unk18);
+            fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->selector);
             {
                 int shadowType = 5;
                 *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
@@ -627,7 +627,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
         }
         else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0))
         {
-            fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->unk18);
+            fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->selector);
             {
                 int shadowType = 4;
                 *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
