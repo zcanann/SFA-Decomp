@@ -3086,7 +3086,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     fz = fz * fz;
     fz = fz * lbl_803DEA28;
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
-    GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
+    GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD2, GX_TEXMAP0, GX_COLOR_NULL);
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
@@ -3121,7 +3121,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     mtxR[0] = lbl_803DEA1C;
     mtxR[5] = lbl_803DEA1C;
     GXLoadTexMtxImm(mtxR, 0x46, 0);
-    GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x46);
+    GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP4);
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
@@ -3135,7 +3135,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     selectTexture(textureIdxToPtr(*(int*)(rop + 0x38)), 2);
-    GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
+    GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
     GXSetIndTexCoordScale(1, 0, 0);
     mtxB.m[1] = fz;
@@ -3145,7 +3145,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     selectTexture(*(void**)(texTbl + lbl_803DCC44 * 4), 3);
     PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
     GXLoadTexMtxImm(mtx4, 0x40, 0);
-    GXSetTexCoordGen2(GX_TEXCOORD4, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_TRUE, 0x40);
+    GXSetTexCoordGen2(GX_TEXCOORD4, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_TRUE, GX_PTTEXMTX0);
     GXSetTevKColorSel(GX_TEVSTAGE3, GX_TEV_KCSEL_1_2);
     GXSetTevOrder(GX_TEVSTAGE3, GX_TEXCOORD4, GX_TEXMAP3, GX_ALPHA_BUMPN);
     GXSetTevColorIn(GX_TEVSTAGE3, GX_CC_TEXC, GX_CC_KONST, GX_CC_CPREV, GX_CC_CPREV);
@@ -3184,7 +3184,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
         selectTexture(*(void**)(a174 + ((lbl_803DCC44 - 0xc) + lbl_803DCC3D * b178) * 4), 5);
         PSMTXScale(mtx5, lbl_803DEA38, *(f32*)&lbl_803DEA38, lbl_803DEA1C);
         GXLoadTexMtxImm(mtx5, 0x49, 0);
-        GXSetTexCoordGen2(GX_TEXCOORD5, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_TRUE, 0x49);
+        GXSetTexCoordGen2(GX_TEXCOORD5, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_TRUE, GX_PTTEXMTX3);
         GXSetTevDirect(GX_TEVSTAGE4);
         GXSetTevOrder(GX_TEVSTAGE4, GX_TEXCOORD5, GX_TEXMAP5, GX_COLOR0A0);
         GXSetTevColorIn(GX_TEVSTAGE4, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
@@ -3315,7 +3315,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
         fz = fz * lbl_803DEA28;
     }
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
-    GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
+    GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     if (lbl_803DCC36 == 0)
     {
         GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
@@ -3468,7 +3468,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     if (*(void**)(rop + 0x38) != NULL)
     {
         selectTexture(textureIdxToPtr(*(int*)(rop + 0x38)), 2);
-        GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
+        GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
         GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
         GXSetIndTexCoordScale(1, 0, 0);
         mtxB.m[1] = fz;
@@ -3488,7 +3488,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     selectTexture(*(void**)(texTbl + lbl_803DCC44 * 4), 3);
     PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
     GXLoadTexMtxImm(mtx4, 0x40, 0);
-    GXSetTexCoordGen2(GX_TEXCOORD4, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_TRUE, 0x40);
+    GXSetTexCoordGen2(GX_TEXCOORD4, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_TRUE, GX_PTTEXMTX0);
     GXSetTevKColorSel(stage + 1, 4);
     if (*(void**)(rop + 0x38) != NULL)
     {
