@@ -3063,6 +3063,7 @@ main/audio/synth_callback.c:
 	extab       start:0x80005620 end:0x80005630
 	extabindex  start:0x80005CC0 end:0x80005CD8
 	.text       start:0x8026BF54 end:0x8026C488
+	.bss        start:0x803AF550 end:0x803B0950
 
 main/audio/synth_queue.c:
 	extab       start:0x80005630 end:0x80005650

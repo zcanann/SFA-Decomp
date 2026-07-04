@@ -277,3 +277,5 @@ u32 synthResolveHandle(u32 handle)
 
     return SYNTH_HANDLE_INVALID;
 }
+
+u8 lbl_803AF550[0x1400];
