@@ -993,3 +993,7 @@ void sh_levelcontrol_init(int obj)
     }
     timeOfDayFn_80055000();
 }
+
+/* descriptor/ptr table auto 0x803277a8-0x80327818 */
+u32 gWarpStoneLiftObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)warpstonelift_initialise, (u32)warpstonelift_release, 0x00000000, (u32)warpstonelift_init, (u32)warpstonelift_update, (u32)warpstonelift_hitDetect, (u32)warpstonelift_render, (u32)warpstonelift_free, (u32)warpstonelift_getObjectTypeId, (u32)warpstonelift_getExtraSize };
+u32 gSH_staffObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, (u32)sh_staff_update, 0x00000000, (u32)sh_staff_render, (u32)sh_staff_free, 0x00000000, (u32)sh_staff_getExtraSize };
