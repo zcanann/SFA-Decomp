@@ -171,14 +171,6 @@ extern f32 lbl_803E31DC;
 extern f32 lbl_803E31E0;
 extern f32 lbl_803E31E4;
 extern void gcbaddieshield_update(int* obj);
-
-
-
-
-
-
-
-
 extern void shield_update(int* obj);
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern void dll_F7_update(int* obj);
@@ -720,9 +712,6 @@ void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-
-
-
 void mikabombshadow_init(int* obj)
 {
     extern u64 ObjHits_DisableObject(); /* #57 */
@@ -741,23 +730,6 @@ void mikabombshadow_init(int* obj)
     ((GameObject*)obj)->anim.modelState->shadowAlphaStep = 0;
     ((GameObject*)obj)->anim.modelState->shadowScale = lbl_803E31D8;
 }
-
-void StaticCamera_init(int* obj, int* params, int flag);
-
-
-void dll_F7_init(int* obj, int* params);
-
-
-
-void mikabomb_init(int* obj);
-
-
-
-void shield_update(int* obj);
-
-void dll_F7_update(int* obj);
-
-#pragma opt_common_subs reset
 
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 
@@ -781,5 +753,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
-
-#pragma opt_common_subs off
