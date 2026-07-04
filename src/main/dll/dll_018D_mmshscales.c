@@ -26,7 +26,7 @@ typedef struct MmshScalesState
     u8 pad10[0x14 - 0x10];
     s32 unk14;
     u8 pad18[0x24 - 0x18];
-    f32 unk24;
+    f32 dampingFactor; /* 0x24: base/(base + def[36]) smoothing coefficient */
     s32 unk28;
     u8 pad2C[0x6A - 0x2C];
     s16 unk6A;
@@ -148,7 +148,7 @@ void mmsh_scales_init(int* obj, s16* def)
     int loadedBank;
     ((MmshScalesState*)state)->unk6A = def[13];
     ((MmshScalesState*)state)->unk6E = -1;
-    ((MmshScalesState*)state)->unk24 = lbl_803E4F68 / (lbl_803E4F68 + (f32)(u32)((u8*)def)[36]);
+    ((MmshScalesState*)state)->dampingFactor = lbl_803E4F68 / (lbl_803E4F68 + (f32)(u32)((u8*)def)[36]);
     ((MmshScalesState*)state)->unk28 = -1;
     loadedBank = ((GameObject*)obj)->unkF4;
     if (loadedBank == 0 && def[12] != 1)
