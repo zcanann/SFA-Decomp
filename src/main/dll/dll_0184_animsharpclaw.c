@@ -27,7 +27,7 @@ typedef struct AnimsharpclawPlacement
 typedef struct AnimsharpclawState
 {
     u8 pad0[0x24 - 0x0];
-    f32 unk24;
+    f32 dampingFactor; /* 0x24: base/(base + placement[0x24]) smoothing coefficient */
     s32 unk28;
     u8 pad2C[0x57 - 0x2C];
     u8 kind;
@@ -192,7 +192,7 @@ void animsharpclaw_init(int* obj, u8* init)
     inner = ((GameObject*)obj)->extra;
     ((AnimsharpclawState*)inner)->unk6A = ((AnimsharpclawPlacement*)init)->unk1A;
     ((AnimsharpclawState*)inner)->unk6E = -1;
-    ((AnimsharpclawState*)inner)->unk24 = lbl_803E45C8 / (lbl_803E45C8 + (f32)(u32)init[0x24]);
+    ((AnimsharpclawState*)inner)->dampingFactor = lbl_803E45C8 / (lbl_803E45C8 + (f32)(u32)init[0x24]);
     ((AnimsharpclawState*)inner)->unk28 = -1;
     ((AnimsharpclawState*)inner)->unk98 = 0;
     ((AnimsharpclawState*)inner)->unk94 = 0;
