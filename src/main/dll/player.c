@@ -484,11 +484,11 @@ void playerLock(int obj, int lock)
     PlayerState* inner = ((GameObject*)obj)->extra;
     if (lock != 0)
     {
-        *(u32*)&((PlayerState*)inner)->flags360 |= 0x200000LL;
+        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_LOCKED;
     }
     else
     {
-        *(u32*)&((PlayerState*)inner)->flags360 &= ~0x200000LL;
+        *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_LOCKED;
     }
 }
 
@@ -1443,7 +1443,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
             f32 b;
             f32 a;
             f32 k;
-            *(u32*)&((PlayerState*)inner)->flags360 &= ~0x400LL;
+            *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_AIM_READY;
             a = inner->aimInputZ;
             b = inner->aimInputX;
             res = getScreenResolution();
@@ -1473,7 +1473,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
                 +(f32)(int)
                 half;
             }
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x400LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_AIM_READY;
             if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
             {
                 *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029A4A8;
@@ -1679,7 +1679,7 @@ int fn_802A5384(int obj, int state)
         else if ((fl >> 1 & 1) != 0)
         {
             int leave;
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_KNOCKBACK;
             {
                 f32 z = lbl_803E7EA4;
                 ((PlayerState*)state)->baddie.animSpeedC = z;
@@ -3213,7 +3213,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     if ((s8)seq->movementState != 0)
     {
         s8 c;
-        *(u32*)&((PlayerState*)inner)->flags360 &= ~0x400LL;
+        *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_AIM_READY;
         {
             f32 fz = lbl_803E7EA4;
             ((PlayerState*)inner)->knockbackTimer = fz;
@@ -3899,7 +3899,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 }
             case 0x16:
                 {
-                    *(u32*)&((PlayerState*)inner)->flags360 |= 0x20000LL;
+                    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_WATER_SPLASH_PENDING;
                     break;
                 }
             case 0x12:
@@ -5205,7 +5205,7 @@ int fn_8029AF9C(int obj, int state)
             }
             inner->bodyLeanHalf = lbl_803E7FB0 * inner->aimInputX;
             objModelGetVecFn_800395d8(obj, 9);
-            *(u32*)&((PlayerState*)inner)->flags360 &= ~0x400LL;
+            *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_AIM_READY;
             if (gPlayerSelectedItem == 0x2d)
             {
                 f32 bv;
@@ -5243,7 +5243,7 @@ int fn_8029AF9C(int obj, int state)
                     +(f32)(int)
                     half;
                 }
-                *(u32*)&((PlayerState*)inner)->flags360 |= 0x400LL;
+                *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_AIM_READY;
             }
             if (lbl_803DE42C != 0)
             {
@@ -5973,7 +5973,7 @@ int fn_8029EBCC(int obj, int state)
         (f32)inner->headYaw * powfBitEstimate(lbl_803E7F1C, timeDelta);
     inner->bodyLeanHalf = lbl_803E7FB0 * inner->aimInputX;
     inner->bodyLeanAngle = (s16)(inner->bodyLeanHalf >> 1);
-    *(u32*)&inner->flags360 &= ~0x400LL;
+    *(u32*)&inner->flags360 &= ~PLAYER_FLAG_AIM_READY;
     v7bc = inner->aimInputZ;
     v7b8 = inner->aimInputX;
     res = getScreenResolution();
@@ -5988,7 +5988,7 @@ int fn_8029EBCC(int obj, int state)
     {
         inner->aimScreenX = lbl_803E7F44 * (v7bc * (f32)halfW) + (f32)halfW;
     }
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x400LL;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_AIM_READY;
     return 0;
 }
 
@@ -8173,7 +8173,7 @@ void playerDoHitDetection(int obj)
     f32 y;
     f32 z;
 
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~0x8000000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_WORLDPOS_OVERRIDE;
     if (((ByteFlags*)((char*)inner + 0x3f2))->b20 != 0 &&
         (((GameObject*)obj)->objectFlags & 0x1000) != 0)
     {
@@ -8416,7 +8416,7 @@ void playerDoHitDetection(int obj)
                     ((GameObject*)obj)->anim.modelState->overrideWorldPosZ + *(f32*)((char*)g + 0x14);
                 ((GameObject*)obj)->anim.modelState->flags |= 0x2020;
                 ((GameObject*)obj)->anim.rotZ = *(s16*)((char*)g + 4);
-                *(u32*)&((PlayerState*)inner)->flags360 |= 0x8000000LL;
+                *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_WORLDPOS_OVERRIDE;
             }
         }
         *(u32*)&((PlayerState*)inner)->flags360 &= ~0x400000LL;
@@ -11948,7 +11948,7 @@ int fn_80298184(int obj, int state, f32 fv)
     f32 k;
     s16 hdr;
 
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x800LL;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_KNOCKBACK;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
@@ -13296,7 +13296,7 @@ void playerDie(int obj)
         Resource_Release(gPlayerResource);
         gPlayerResource = NULL;
     }
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~0x400LL;
+    *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_AIM_READY;
     AudioStream_StopCurrent();
     AudioStream_Play(0x51e0, AudioStream_StartPrepared);
 }
@@ -14356,7 +14356,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         {
             if ((((PlayerState*)inner)->pendingFxFlags & 4) != 0)
             {
-                *(u32*)&((PlayerState*)inner)->flags360 |= 0x20000LL;
+                *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_WATER_SPLASH_PENDING;
                 ((PlayerState*)inner)->pendingFxFlags = ((PlayerState*)inner)->pendingFxFlags & ~0x4;
             }
         }
@@ -15914,7 +15914,7 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
                 ((GameObject*)obj)->anim.localPosX,
                 ((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->waterDepth,
                 ((GameObject*)obj)->anim.localPosZ, 0, lbl_803E80E4, 2);
-            *(u32*)&((PlayerState*)inner)->flags360 &= ~0x20000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_WATER_SPLASH_PENDING;
         }
     }
 }

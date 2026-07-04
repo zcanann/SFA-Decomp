@@ -22,6 +22,17 @@ typedef struct PlayerStatus {
  * deref widths observed in player.c; unobserved ranges are padded.
  * 0x8E0 covers every observed access - the true allocation may be larger.
  */
+/*
+ * PlayerState.flags360 bit names. The field is a u32 but the retail source
+ * writes the OR/AND-NOT masks with an LL suffix (64-bit compute, truncated on
+ * store), so the SET/CLEAR defines carry LL to stay byte-identical.
+ */
+#define PLAYER_FLAG_AIM_READY 0x400LL         /* aim-screen coords valid: set after aim-position calc, gates the aimScreenX/Y getter */
+#define PLAYER_FLAG_KNOCKBACK 0x800LL         /* knockback latched/in-progress: clear->init knockback timers, set->suppress further knockback damage */
+#define PLAYER_FLAG_WATER_SPLASH_PENDING 0x20000LL /* queued water-entry FX: set on water-entry, gates spawnSplashBurst/spawnRipple then self-clears */
+#define PLAYER_FLAG_WORLDPOS_OVERRIDE 0x8000000LL /* anim.modelState overrideWorldPos active: gates the localPos<->overrideWorldPos swap during render */
+#define PLAYER_FLAG_LOCKED 0x200000LL         /* player controls locked (set/cleared by playerLock; gates pad-input processing) */
+
 typedef struct PlayerState {
     BaddieState baddie;
     int playerStatus; /* PlayerStatus*; kept integer while raw decomp arithmetic remains */
