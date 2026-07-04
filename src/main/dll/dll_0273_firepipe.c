@@ -34,6 +34,7 @@
 #include "main/mm.h"
 #include "main/sfa_shared_decls.h"
 
+#define FIREPIPE_OBJFLAG_ACTIVE 0x200
 #define FIREPIPE_OBJFLAG_RENDERED 0x800
 #define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
 extern void modelLightStruct_freeSlot(int p);
@@ -135,9 +136,9 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
     for (i = 0; i < extra->effectCount; i++)
     {
         effectObj = extra->effectObjs[i];
-        if ((((GameObject*)effectObj)->objectFlags & 0x200) == 0)
+        if ((((GameObject*)effectObj)->objectFlags & FIREPIPE_OBJFLAG_ACTIVE) == 0)
         {
-            ((GameObject*)effectObj)->objectFlags |= 0x200;
+            ((GameObject*)effectObj)->objectFlags |= FIREPIPE_OBJFLAG_ACTIVE;
             memcpy(((GameObject*)effectObj)->anim.placement, spawnDef, *(u8*)((int)spawnDef + 2));
             ((GameObject*)effectObj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ((GameObject*)effectObj)->anim.localPosX = *(float*)((int)spawnDef + 8);
@@ -155,7 +156,7 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
     effectObj = loadObjectAtObject(obj, spawnDef);
     if (extra->effectCount != 8)
     {
-        ((GameObject*)effectObj)->objectFlags |= 0x200;
+        ((GameObject*)effectObj)->objectFlags |= FIREPIPE_OBJFLAG_ACTIVE;
         i = extra->effectCount++;
         extra->effectObjs[i] = effectObj;
     }
@@ -165,10 +166,10 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
 
 void firepipe_releaseEffectObject(FirePipeObject* obj)
 {
-    if ((((GameObject*)obj)->objectFlags & 0x200) != 0)
+    if ((((GameObject*)obj)->objectFlags & FIREPIPE_OBJFLAG_ACTIVE) != 0)
     {
         ObjHits_DisableObject(obj);
-        ((GameObject*)obj)->objectFlags &= ~0x200;
+        ((GameObject*)obj)->objectFlags &= ~FIREPIPE_OBJFLAG_ACTIVE;
         Obj_RemoveFromUpdateList(obj);
         ((GameObject*)obj)->objectFlags |= FIREPIPE_OBJFLAG_UPDATE_DISABLED;
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
