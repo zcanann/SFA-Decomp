@@ -138,7 +138,7 @@ void fn_80152514(int* obj, u8* state)
             return;
         }
     }
-    if (((BaddieState*)state)->controlFlags & 0x2000)
+    if (((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW)
     {
         int step;
 
@@ -149,7 +149,7 @@ void fn_80152514(int* obj, u8* state)
                 if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2824,
                                                      (int*)&lbl_803DBCA8, -1) != 0)
                 {
-                    ((BaddieState*)state)->controlFlags &= ~0x2000LL;
+                    ((BaddieState*)state)->controlFlags &= ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
         }
@@ -160,7 +160,7 @@ void fn_80152514(int* obj, u8* state)
         {
             fn_8014CF7C(obj, state, path->posX, path->posZ, 0xf, 0);
         }
-        else if (((BaddieState*)state)->controlFlags & 0x2000)
+        else if (((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW)
         {
             spd = step << 8;
             if ((int)(lbl_803E2828 * path->tangentY) >= 0)
@@ -290,7 +290,7 @@ void fn_80152514(int* obj, u8* state)
             }
             newObj = (int*)fn_80152370((int)obj, 0x639);
             flag = 0;
-            if (*(s8*)((char*)def + 0x2a) != 0 && !(((BaddieState*)state)->controlFlags & 0x2000))
+            if (*(s8*)((char*)def + 0x2a) != 0 && !(((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW))
             {
                 flag = 1;
             }
@@ -543,15 +543,15 @@ void fn_80152040(int* obj, u8* state)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     }
     flags = ((BaddieState*)state)->controlFlags;
-    if (flags & 0x80000000)
+    if (flags & BADDIE_CONTROL_JUST_TRIGGERED)
     {
         if (gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].unk4 != 0)
         {
-            ((BaddieState*)state)->controlFlags = flags | 0x40000000LL;
+            ((BaddieState*)state)->controlFlags = flags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
         }
     }
     flags = ((BaddieState*)state)->controlFlags;
-    if (flags & 0x40000000)
+    if (flags & BADDIE_CONTROL_SEQUENCE_DRIVEN)
     {
         int anim;
         u8* animTbl;
