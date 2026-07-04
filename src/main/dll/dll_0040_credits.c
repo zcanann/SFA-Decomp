@@ -245,3 +245,7 @@ void Credits_initialise(void)
     lbl_803DD970 = 0;
     lbl_803DD968 = lbl_803E22A8;
 }
+
+/*__DATA_EXTERNS__*/
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_8031CC10[10] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00050000, Credits_initialise, Credits_release, (void*)0x00000000, Credits_frameStart, Credits_frameEnd, Credits_render };

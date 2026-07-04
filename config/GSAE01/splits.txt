@@ -946,7 +946,7 @@ main/dll/dll_003F_dll3f.c:
 
 main/dll/dll_0040_credits.c:
 	.text       start:0x80134098 end:0x801343CC
-	.data       start:0x8031C620 end:0x8031CC10
+	.data       start:0x8031C620 end:0x8031CC38
 
 main/dll/dll_0041_warpstoneui.c:
 	.text       start:0x801343CC end:0x80134870
