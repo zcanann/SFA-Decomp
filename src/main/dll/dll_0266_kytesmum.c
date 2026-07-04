@@ -463,3 +463,6 @@ int gKytesMumQuestIdleSfxTable[] = {
 };
 
 char sKytesMumYawDiffMessage[] = " YAW DIFF ";
+
+/* descriptor/ptr table auto 0x8032a878-0x8032a8b0 */
+u32 gDrCreatorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)drcreator_initialise, (u32)drcreator_release, 0x00000000, (u32)drcreator_init, (u32)drcreator_update, (u32)drcreator_hitDetect, (u32)drcreator_render, (u32)drcreator_free, (u32)drcreator_getObjectTypeId, (u32)drcreator_getExtraSize };
