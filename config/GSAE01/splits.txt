@@ -2325,7 +2325,7 @@ main/dll/DF/dll_0230_dfpwallbar.c:
 
 main/dll/DF/dll_022F_dfpfloorbar.c:
 	.text       start:0x80206474 end:0x80206968
-	.data       start:0x80329A20 end:0x80329A68
+	.data       start:0x80329A20 end:0x80329AD8
 
 main/dll/tesla.c:
 	.text       start:0x80206968 end:0x80206F30

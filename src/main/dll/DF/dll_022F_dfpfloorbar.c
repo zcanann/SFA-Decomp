@@ -271,3 +271,26 @@ ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor = {
     },
     0,
 };
+
+/*__DATA_EXTERNS__*/
+extern void sfxplayer_getExtraSize();
+extern void sfxplayer_getObjectTypeId();
+extern void sfxplayer_free();
+extern void sfxplayer_render();
+extern void sfxplayer_hitDetect();
+extern void sfxplayer_update();
+extern void sfxplayer_init();
+extern void sfxplayer_release();
+extern void sfxplayer_initialise();
+extern void TrickyCurve_getExtraSize();
+extern void TrickyCurve_getObjectTypeId();
+extern void TrickyCurve_free();
+extern void TrickyCurve_render();
+extern void TrickyCurve_hitDetect();
+extern void TrickyCurve_update();
+extern void TrickyCurve_init();
+extern void TrickyCurve_release();
+extern void TrickyCurve_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* gTrickyCurveObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, TrickyCurve_initialise, TrickyCurve_release, (void*)0x00000000, TrickyCurve_init, TrickyCurve_update, TrickyCurve_hitDetect, TrickyCurve_render, TrickyCurve_free, TrickyCurve_getObjectTypeId, TrickyCurve_getExtraSize };
+void* gSfxplayerObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, sfxplayer_initialise, sfxplayer_release, (void*)0x00000000, sfxplayer_init, sfxplayer_update, sfxplayer_hitDetect, sfxplayer_render, sfxplayer_free, sfxplayer_getObjectTypeId, sfxplayer_getExtraSize };
