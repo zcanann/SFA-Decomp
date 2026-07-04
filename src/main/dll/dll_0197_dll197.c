@@ -384,3 +384,16 @@ ObjectDescriptor dll_197 = {
     (ObjectDescriptorCallback)dll_197_getObjectTypeId,
     dll_197_getExtraSize,
 };
+
+/*__DATA_EXTERNS__*/
+extern void nwsh_levcon_getExtraSize();
+extern void nwsh_levcon_getObjectTypeId();
+extern void nwsh_levcon_free();
+extern void nwsh_levcon_render();
+extern void nwsh_levcon_hitDetect();
+extern void nwsh_levcon_update();
+extern void nwsh_levcon_init();
+extern void nwsh_levcon_release();
+extern void nwsh_levcon_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* gNWSH_levconObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, nwsh_levcon_initialise, nwsh_levcon_release, (void*)0x00000000, nwsh_levcon_init, nwsh_levcon_update, nwsh_levcon_hitDetect, nwsh_levcon_render, nwsh_levcon_free, nwsh_levcon_getObjectTypeId, nwsh_levcon_getExtraSize };

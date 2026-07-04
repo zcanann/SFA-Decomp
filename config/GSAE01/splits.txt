@@ -1883,7 +1883,7 @@ main/dll/dll_0196_dbshsymbol.c:
 
 main/dll/dll_0197_dll197.c:
 	.text       start:0x801C9E54 end:0x801CA718
-	.data       start:0x803264E0 end:0x80326518
+	.data       start:0x803264E0 end:0x80326550
 
 main/dll/NW/dll_0198_nwshlevcon.c:
 	.text       start:0x801CA718 end:0x801CA9C0
