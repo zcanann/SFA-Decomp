@@ -28,6 +28,9 @@
 #define PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS 1
 #define PRESSURESWITCHFB_STATE_RESET 2
 
+#define PRESSURESWITCHFB_OBJFLAG_HIDDEN 0x4000
+#define PRESSURESWITCHFB_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 #define PRESSURESWITCHFB_TRACKED_OBJECT_COUNT 10
 #define PRESSURESWITCHFB_TRACKED_OBJECT_BATCH 5
 
@@ -465,7 +468,7 @@ void pressureswitchfb_init(u8* obj, u8* params)
     sub = ((GameObject*)obj)->extra;
     flags = (PressureSwitchFbFlags*)(sub + 0x84);
     ((GameObject*)obj)->anim.rotX = (s16)(params[0x18] << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (PRESSURESWITCHFB_OBJFLAG_HIDDEN | PRESSURESWITCHFB_OBJFLAG_HITDETECT_DISABLED));
     objAnim->bankIndex = params[0x19];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
