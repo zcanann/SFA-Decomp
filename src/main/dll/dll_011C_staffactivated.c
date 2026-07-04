@@ -83,13 +83,13 @@ void staffactivated_calcInteractionTargetXZ(int obj, f32* outX, f32* outZ)
     state = ((GameObject*)obj)->extra;
     mode = ((StaffActivatedSetup*)((GameObject*)obj)->anim.placementData)->mode;
 
-    if (mode == 2) goto lbl_case2;
-    if (mode >= 2) goto lbl_gt2;
-    if (mode == 0) goto lbl_case0;
+    if (mode == STAFFACTIVATED_MODE_LIFT) goto lbl_case2;
+    if (mode >= STAFFACTIVATED_MODE_LIFT) goto lbl_gt2;
+    if (mode == STAFFACTIVATED_MODE_ACTION) goto lbl_case0;
     goto lbl_default;
 
 lbl_gt2:
-    if (mode >= 4) goto lbl_default;
+    if (mode >= STAFFACTIVATED_MODE_DAMAGE_FIRST) goto lbl_default;
     goto lbl_case3;
 
 lbl_case2:
