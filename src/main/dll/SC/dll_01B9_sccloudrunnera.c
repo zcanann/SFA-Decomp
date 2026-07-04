@@ -22,7 +22,7 @@ typedef struct ScCloudrunneraPlacement
     s16 animDataIndex; /* anim-data set selector (-1 = none); obj.unkF4 = animDataIndex+1 */
     s16 gameBit; /* GameBit id -> seq->gameBit */
     u8 pad1C[0x24 - 0x1C];
-    u8 unk24;
+    u8 posOffsetDecayFactor; /* 0x24: decay input; posOffsetDecay = base/(base + this) */
     u8 pad25[0x28 - 0x25];
 } ScCloudrunneraPlacement;
 
@@ -201,7 +201,7 @@ void sc_cloudrunnera_init(int obj, int p2)
     seq->gameBit = ((ScCloudrunneraPlacement*)p2)->gameBit;
     seq->flags = -1;
     base = lbl_803E55E0;
-    seq->posOffsetDecay = base / (base + (f32)(u32)((ScCloudrunneraPlacement*)p2)->unk24);
+    seq->posOffsetDecay = base / (base + (f32)(u32)((ScCloudrunneraPlacement*)p2)->posOffsetDecayFactor);
     seq->curveId = -1;
     ((GameObject*)obj)->unkF8 = 0;
 
