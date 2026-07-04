@@ -10,6 +10,10 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 
+#define PORTALSPELLDOOR_OBJFLAG_UPDATE_DISABLED 0x8000
+#define PORTALSPELLDOOR_OBJFLAG_HIDDEN 0x4000
+#define PORTALSPELLDOOR_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct PortalspelldoorPlacement
 {
     u8 pad0[0x1E - 0x0];
@@ -129,7 +133,7 @@ void portalspelldoor_init(u8* obj, u8* data)
     if (GameBit_Get(*(s16*)(data + 0x1e)) != 0)
     {
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0xe000);
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (PORTALSPELLDOOR_OBJFLAG_UPDATE_DISABLED | PORTALSPELLDOOR_OBJFLAG_HIDDEN | PORTALSPELLDOOR_OBJFLAG_HITDETECT_DISABLED));
     }
     sub->openTimer = -1;
 }
