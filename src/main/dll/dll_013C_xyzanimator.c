@@ -117,8 +117,8 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
         blockLayer = mapBlockFn_80060678((int*)mapBlock);
         if ((int)setup->blockLayer == blockLayer)
         {
-            *(s16*)(state->unk10 + coordOffset[0]) = ((MapBlockHdr*)mapBlock)->posA;
-            *(s16*)(state->unk14 + coordOffset[0]) = ((MapBlockHdr*)mapBlock)->posB;
+            *(s16*)(state->posABuffer + coordOffset[0]) = ((MapBlockHdr*)mapBlock)->posA;
+            *(s16*)(state->posBBuffer + coordOffset[0]) = ((MapBlockHdr*)mapBlock)->posB;
             coordOffset[0] += 2;
             blockEnd = mapBlock[10];
             triangle = *mapBlock;
@@ -152,12 +152,12 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
     for (; edgeIdx[0] < (int)(u32)((MapBlockData*)block)->unkA1; edgeIdx[0]++)
     {
         blockIndex = (int)fn_800606FC((int*)block, edgeIdx[0]);
-        *(s16*)(state->unk28 + edge[0]) = ((EdgeVerts*)blockIndex)->v0x;
-        *(s16*)(state->unk2C + edge[0]) = ((EdgeVerts*)blockIndex)->v1x;
-        *(s16*)(state->unk30 + edge[0]) = ((EdgeVerts*)blockIndex)->v0y;
-        *(s16*)(state->unk34 + edge[0]) = ((EdgeVerts*)blockIndex)->v1y;
-        *(s16*)(state->unk38 + edge[0]) = ((EdgeVerts*)blockIndex)->v0z;
-        *(s16*)(state->unk3C + edge[0]) = ((EdgeVerts*)blockIndex)->v1z;
+        *(s16*)(state->edgeV0xBuffer + edge[0]) = ((EdgeVerts*)blockIndex)->v0x;
+        *(s16*)(state->edgeV1xBuffer + edge[0]) = ((EdgeVerts*)blockIndex)->v1x;
+        *(s16*)(state->edgeV0yBuffer + edge[0]) = ((EdgeVerts*)blockIndex)->v0y;
+        *(s16*)(state->edgeV1yBuffer + edge[0]) = ((EdgeVerts*)blockIndex)->v1y;
+        *(s16*)(state->edgeV0zBuffer + edge[0]) = ((EdgeVerts*)blockIndex)->v0z;
+        *(s16*)(state->edgeV1zBuffer + edge[0]) = ((EdgeVerts*)blockIndex)->v1z;
         edge[0] += 2;
     }
 }
@@ -193,9 +193,9 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
         if ((int)def->blockLayer == blockLayer)
         {
             ((MapBlockHdr*)mapBlock)->posA = (s16)(state->offsetY +
-                (f32) * (s16*)(state->unk10 + coordOffset[0]));
+                (f32) * (s16*)(state->posABuffer + coordOffset[0]));
             ((MapBlockHdr*)mapBlock)->posB = (s16)(state->offsetY +
-                (f32) * (s16*)(state->unk14 + coordOffset[0]));
+                (f32) * (s16*)(state->posBBuffer + coordOffset[0]));
             coordOffset[0] += 2;
             blockEnd = mapBlock[10];
             triangle = *mapBlock;
@@ -234,17 +234,17 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
         {
             scale = lbl_803E4008;
             ((EdgeVerts*)vertexOffset[0])->v0x = (s16)(scale * state->offsetX +
-                (f32) * (s16*)(state->unk28 + edgeData));
+                (f32) * (s16*)(state->edgeV0xBuffer + edgeData));
             ((EdgeVerts*)vertexOffset[0])->v1x = (s16)(scale * state->offsetX +
-                (f32) * (s16*)(state->unk2C + edgeData));
+                (f32) * (s16*)(state->edgeV1xBuffer + edgeData));
             ((EdgeVerts*)vertexOffset[0])->v0y = (s16)(scale * state->offsetY +
-                (f32) * (s16*)(state->unk30 + edgeData));
+                (f32) * (s16*)(state->edgeV0yBuffer + edgeData));
             ((EdgeVerts*)vertexOffset[0])->v1y = (s16)(scale * state->offsetY +
-                (f32) * (s16*)(state->unk34 + edgeData));
+                (f32) * (s16*)(state->edgeV1yBuffer + edgeData));
             ((EdgeVerts*)vertexOffset[0])->v0z = (s16)(scale * state->offsetZ +
-                (f32) * (s16*)(state->unk38 + edgeData));
+                (f32) * (s16*)(state->edgeV0zBuffer + edgeData));
             ((EdgeVerts*)vertexOffset[0])->v1z = (s16)(scale * state->offsetZ +
-                (f32) * (s16*)(state->unk3C + edgeData));
+                (f32) * (s16*)(state->edgeV1zBuffer + edgeData));
         }
         edgeData += 2;
     }
@@ -370,26 +370,26 @@ void xyzanimator_update(int obj)
         alloc = alloc + stride;
         ((XyzAnimatorState*)state)->unk1C = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->unk10 = alloc;
+        ((XyzAnimatorState*)state)->posABuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->unk14 = alloc;
+        ((XyzAnimatorState*)state)->posBBuffer = alloc;
         alloc = alloc + stride;
         ((XyzAnimatorState*)state)->unk20 = alloc;
         alloc = alloc + stride;
         ((XyzAnimatorState*)state)->unk24 = alloc;
         alloc = alloc + stride;
         stride = ((XyzAnimatorState*)state)->unk8 * 2;
-        ((XyzAnimatorState*)state)->unk28 = alloc;
+        ((XyzAnimatorState*)state)->edgeV0xBuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->unk2C = alloc;
+        ((XyzAnimatorState*)state)->edgeV1xBuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->unk30 = alloc;
+        ((XyzAnimatorState*)state)->edgeV0yBuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->unk34 = alloc;
+        ((XyzAnimatorState*)state)->edgeV1yBuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->unk38 = alloc;
+        ((XyzAnimatorState*)state)->edgeV0zBuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->unk3C = alloc;
+        ((XyzAnimatorState*)state)->edgeV1zBuffer = alloc;
         fn_80194964(setup, state, block);
         if (((XyzAnimatorPlacement*)setup)->mode != 4)
         {

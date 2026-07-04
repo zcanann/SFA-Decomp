@@ -32,18 +32,18 @@ typedef struct XyzAnimatorState {
     int unk4;
     int unk8;
     int dataBuffer;
-    int unk10;
-    int unk14;
+    int posABuffer; /* s16 stream: per-block posA coord */
+    int posBBuffer; /* s16 stream: per-block posB coord */
     int unk18;
     int unk1C;
     int unk20;
     int unk24;
-    int unk28;
-    int unk2C;
-    int unk30;
-    int unk34;
-    int unk38;
-    int unk3C;
+    int edgeV0xBuffer; /* s16 stream: edge endpoint v0x */
+    int edgeV1xBuffer; /* s16 stream: edge endpoint v1x */
+    int edgeV0yBuffer; /* s16 stream: edge endpoint v0y */
+    int edgeV1yBuffer; /* s16 stream: edge endpoint v1y */
+    int edgeV0zBuffer; /* s16 stream: edge endpoint v0z */
+    int edgeV1zBuffer; /* s16 stream: edge endpoint v1z */
     f32 offsetX;
     f32 offsetY;
     f32 offsetZ;
