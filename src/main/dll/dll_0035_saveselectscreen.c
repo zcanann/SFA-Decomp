@@ -819,3 +819,12 @@ SaveSelectPanel gSaveSelectPanels[] = {
     { lbl_8031A5DC, 1, 0, 0x0379, 0x0367, { 2, 0 } },
     { lbl_8031A654, 6, 0, 0x0450, 0x0367, { 2, 0 } },
 };
+
+extern void fn_80007F78();
+/* .data fill (reconstructed to match dll_0035_saveselectscreen.o) */
+u8 lbl_8031A7F8[12] = { 0, 0, 5, 213, 0, 0, 5, 214, 0, 0, 5, 212 };
+void* lbl_8031A804[4] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
+u8 saveFileSelect_debugCheatSequence[12] = { 64, 0, 128, 0, 64, 0, 128, 0, 0, 4, 0, 0 };
+void* saveFileSelect_slotCheatSequence[3] = { (void*)0x04000800, (void*)((u8*)fn_80007F78 + 0x88), (void*)0x00020000 };
+void* lbl_8031A82C[10] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00050000, SaveSelectScreen_initialise, SaveSelectScreen_release, (void*)0x00000000, SaveSelectScreen_run, SaveSelectScreen_frameEnd_nop, SaveSelectScreen_render };
+u8 sFrontendTimeFormat[14] = { 37, 51, 100, 58, 37, 48, 50, 100, 58, 37, 48, 50, 100, 0 };
