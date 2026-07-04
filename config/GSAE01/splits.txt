@@ -1155,7 +1155,7 @@ main/dll/dll_00C8_depthoffieldpoint.c:
 
 main/dll/dll_00E2_staff.c:
 	.text       start:0x8016CEE8 end:0x8016F16C
-	.data       start:0x8032090C end:0x80320978
+	.data       start:0x8032090C end:0x80320984
 
 main/dll/dll_00E3_fireball.c:
 	.text       start:0x8016F16C end:0x80170004
