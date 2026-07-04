@@ -773,11 +773,11 @@ void FUN_8003ad08(int obj, u32* keys, int count, int out)
  * two angle deltas in angleDeltas[] toward the target with per-frame clamps.
  *
  * in_f28..in_ps31_1 are uninitialised incoming FP/paired-single registers the
- * caller left live; the compiler spills them to the local_8..cvtHi0 slots.
+ * caller left live; the compiler spills them to the home28..home31 slots.
  * They carry no value here - the reads/spills are a register-homing artifact
  * and are load-bearing for the byte match, so they are kept verbatim.
- * Likewise the local_XX 0x43300000/int-to-double conversion temporaries are
- * the magic-constant f64 conversion scratch and must stay as raw locals.
+ * Likewise the cvtMagic/cvtTmp 0x43300000/int-to-double conversion temporaries
+ * are the magic-constant f64 conversion scratch and must stay as raw locals.
  */
 void FUN_8003add8(u32 unusedObj, u32 unusedTarget, int state, u32 maxAngle, u32 flag,
                   u32 minRange)
@@ -804,28 +804,28 @@ void FUN_8003add8(u32 unusedObj, u32 unusedTarget, int state, u32 maxAngle, u32 
     double in_ps31_1;
     u64 packed;
     short angleDeltas[4];
-    u32 local_80;
-    u32 uStack_7c;
-    s64 local_78;
-    u64 local_70;
-    double local_68;
-    float cvtHi0;
-    float fStack_34;
-    float cvtPad;
-    float fStack_24;
-    float local_18;
-    float fStack_14;
-    float local_8;
-    float fStack_4;
+    u32 cvtMagicHi;
+    u32 cvtMagicLo;
+    s64 cvtTmp0;
+    u64 cvtTmp1;
+    double cvtTmp2;
+    float home28Lo;
+    float home28Hi;
+    float home29Lo;
+    float home29Hi;
+    float home30Lo;
+    float home30Hi;
+    float home31Lo;
+    float home31Hi;
 
-    local_8 = (float)in_f31;
-    fStack_4 = (float)in_ps31_1;
-    local_18 = (float)in_f30;
-    fStack_14 = (float)in_ps30_1;
-    cvtPad = (float)in_f29;
-    fStack_24 = (float)in_ps29_1;
-    cvtHi0 = (float)in_f28;
-    fStack_34 = (float)in_ps28_1;
+    home31Lo = (float)in_f31;
+    home31Hi = (float)in_ps31_1;
+    home30Lo = (float)in_f30;
+    home30Hi = (float)in_ps30_1;
+    home29Lo = (float)in_f29;
+    home29Hi = (float)in_ps29_1;
+    home28Lo = (float)in_f28;
+    home28Hi = (float)in_ps28_1;
     packed = FUN_8028683c();
     srcPtr = (short*)((u64)packed >> 0x20);
     scratch0 = packed;
@@ -874,16 +874,16 @@ void FUN_8003add8(u32 unusedObj, u32 unusedTarget, int state, u32 maxAngle, u32 
             }
             scratch0 = FUN_80017730();
             angleDeltas[1] = scratch0 + -0x3fff;
-            uStack_7c = maxAngle ^ 0x80000000;
-            local_80 = 0x43300000;
+            cvtMagicLo = maxAngle ^ 0x80000000;
+            cvtMagicHi = 0x43300000;
             scratch0 = (int)(lbl_803DF66C *
                 (f32)(s32)(maxAngle));
-            local_78 = (s64)scratch0;
+            cvtTmp0 = (s64)scratch0;
             clampHi = scratch0;
             srcPtr = angleDeltas;
             dx = lbl_803DF66C * (f32)(s32)(minRange);
             scratch0 = dx;
-            local_68 = (double)(s64)scratch0;
+            cvtTmp2 = (double)(s64)scratch0;
             scratch1 = -(int)(short)scratch0;
             scratch2 = -clampHi;
             scratch3 = 2;
@@ -899,10 +899,10 @@ void FUN_8003add8(u32 unusedObj, u32 unusedTarget, int state, u32 maxAngle, u32 
                 else
                 {
                     scratch4 = dx;
-                    local_68 = (double)(s64)scratch4;
+                    cvtTmp2 = (double)(s64)scratch4;
                     if ((int)(short)scratch4 < stepVal)
                     {
-                        local_70 = (double)(s64)scratch4;
+                        cvtTmp1 = (double)(s64)scratch4;
                         stepVal = scratch4;
                     }
                 }
