@@ -10,10 +10,13 @@ understood anchors.
 
 ## `0x802CC6A0`–`0x8030C6A0` — Rareware boot-logo texture / GX FIFO buffer (256 KB)
 
-- **Identity (confirmed):** the **Rareware boot logo** — a GameCube-tiled intensity texture
-  (~128 px wide), verified by de-swizzling the region as a GX I8/I4 texture (32-byte tiles),
-  which resolves into the "R" emblem + "RAREWARE" wordmark. The linear byte layout looks like
-  structured static precisely because GC textures are tile-swizzled.
+- **Identity (confirmed):** the **Rareware boot logo** — a GameCube **`RGB5A3`** texture
+  (16-bit colour + 3-bit alpha, 4×4 tile-swizzled), **128 px** wide. Verified by decoding the
+  region as RGB5A3 (renders the gold logo in colour on a transparent background; adjacent-pixel
+  coherence scores ~12 for RGB5A3 vs ~40 for any intensity format, so it is definitively colour,
+  not grayscale). The 128 px width follows from the 1024-byte tile-row stride found by
+  autocorrelation. The linear byte layout looks like structured static only because GC textures
+  are tile-swizzled.
 - **Current placeholder:** the bulk of the auto object `auto_07_802CBE94_data`
   (dtk labels `lbl_802CC6A0`, `lbl_802D808E`, `lbl_802E802E`, `lbl_802F808D`).
 - **Proposed name:** `gRareLogoTexture` (its `.data` content). Note the same address is later
@@ -29,11 +32,19 @@ write-only FIFO. `logGpuHang()` / `gpuErrorHandler()` additionally index diagnos
 strings via `base + 0x4002c` (which land just past the buffer, at `0x8030C6CC+`).
 
 ### Content (structural analysis only — no bytes reproduced)
-- `0x00000`–`~0x1F520` (~128 KB): sparse 1-bit-bitmap-style imagery — low entropy
-  (1.2–1.65 bits/byte), 50–72% `0xFF` / 20–47% `0x00` — consistent with font-glyph or
-  monochrome graphics data, including a denser ~32 KB high-entropy sub-block at
-  `0x14000`–`0x1C000`.
+Decoded as `RGB5A3` at 128 px wide, the real data (`0x0`–`~0x1F520`) contains **three
+sub-images** separated by fully-transparent (alpha 0) gaps — the frames/elements of the
+animated intro driven by DLL `0x0033` (`dll_0033_nrareware.c`, staged via
+`gNrarewareStage1/3Timer`):
+- **Block A** `0x1800`–`0x11C00` — 128×~256, bright/gold.
+- **Block B** `0x14000`–`0x1C000` — 128×128, the gold **"R RAREWARE"** logo on a dark field
+  (this block is exactly `0x8000` = one 128×128 RGB5A3 image).
+- **Block C** `0x1D400`–`0x1EC00` — 128×~24, a small strip.
 - `0x20000`–`0x40000` (~132 KB): solid `0xFF` padding out to the `0x40000` buffer size.
+
+(A straight decode from the region start shows each block vertically *rolled* — its stored
+data does not begin on the image origin — so the exact per-block row offset needs dialing in
+to centre each frame.)
 - dtk emits ~348 spurious `.4byte fn+offset` "relocations" inside the high-entropy sub-block.
   These are false positives — mid-function targets at irregular stride, i.e. the analyzer
   matching image bytes against the `0x80xxxxxx` code-address range — not a real pointer table.
