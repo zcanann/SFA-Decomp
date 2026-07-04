@@ -6,6 +6,8 @@ extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+#define FUELCELL_OBJGROUP 0x4f
 extern int randomGetRange(int lo, int hi);
 extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
@@ -123,7 +125,7 @@ void fuelcell_free(int* obj)
 
     if (((u32)state[0x5c] >> 7) & 1)
     {
-        ObjGroup_RemoveObject(obj, 0x4f);
+        ObjGroup_RemoveObject(obj, FUELCELL_OBJGROUP);
     }
 }
 
@@ -173,7 +175,7 @@ void fuelcell_update(int* obj)
                 {
                     Sfx_AddLoopedObjectSound(obj, SFXTRIG_pk_fuelcell_fizz);
                     state->lit = 1;
-                    ObjGroup_AddObject(obj, 0x4f);
+                    ObjGroup_AddObject(obj, FUELCELL_OBJGROUP);
                 }
                 else if (state->resetPos)
                 {
@@ -201,7 +203,7 @@ void fuelcell_update(int* obj)
         {
             state->lit = 0;
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_pk_fuelcell_fizz);
-            ObjGroup_RemoveObject(obj, 0x4f);
+            ObjGroup_RemoveObject(obj, FUELCELL_OBJGROUP);
         }
     }
 }
