@@ -153,7 +153,7 @@ int fn_802966B4(int obj)
 void fn_80296BBC(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~2LL;
+    *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_HITDETECT;
 }
 
 void fn_80296C6C(int obj, int flag)
@@ -344,7 +344,7 @@ void fn_802961D4(int obj, int v)
     ((GameObject*)obj)->anim.rotX = v;
     inner->targetYaw = v;
     inner->yaw = v;
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
 }
 
 void fn_80296B78(int obj, int p2)
@@ -366,7 +366,7 @@ int fn_802974A0(int obj, int state, f32 fv)
         ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
         staffFn_80170380(gPlayerStaffObject, 2);
         ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
-        *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
         ObjHits_SyncObjectPositionIfDirty(obj);
         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
         ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
@@ -425,7 +425,7 @@ int fn_802974A0(int obj, int state, f32 fv)
 void fn_8029782C(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
     ((ByteFlags*)((char*)inner + 0x3f6))->b20 = 0;
 }
 
@@ -657,7 +657,7 @@ void fn_802A4B4C(int obj)
     {
         ((GameObject*)p)->unkF8 = 1;
     }
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
 }
 
 void fn_802985AC(int obj)
@@ -724,8 +724,8 @@ int fn_802A2E8C(int obj, int targetState)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     f32 fz;
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~2LL;
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_HITDETECT;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_NO_POS_VELOCITY;
     *(int*)((char*)targetState + 4) |= 0x100000;
     fz = lbl_803E7EA4;
     ((PlayerState*)targetState)->baddie.animSpeedA = fz;
@@ -822,8 +822,8 @@ int fn_802A36EC(int obj, int state)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     f32 fz;
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~2LL;
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_HITDETECT;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_NO_POS_VELOCITY;
     *(int*)((char*)state + 4) |= 0x100000;
     fz = lbl_803E7EA4;
     ((PlayerState*)state)->baddie.animSpeedA = fz;
@@ -856,7 +856,7 @@ int fn_802A36EC(int obj, int state)
         {
             *(int*)((char*)state + 4) &= ~0x100000;
             fn_802AB5A4(obj, (int)inner, 5);
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -1574,7 +1574,7 @@ int fn_802A5384(int obj, int state)
         if ((fl >> 5 & 1) != 0)
         {
             *(u32*)state |= 0x200000;
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_NO_POS_VELOCITY;
             *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000000LL;
             *(s16*)((char*)state + 0x278) = 2;
             ((PlayerState*)inner)->stateHandler = (int)fn_802A514C;
@@ -1634,7 +1634,7 @@ int fn_802A5384(int obj, int state)
         u32 fl = *(u8*)((char*)inner + 0x3f0);
         if ((fl >> 6 & 1) != 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x1000000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_HEADING_LOCK;
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E8070;
             {
                 int cd = (int)(lbl_803E7F98 * ((GameObject*)obj)->anim.currentMoveProgress +
@@ -1733,7 +1733,7 @@ int fn_802A5384(int obj, int state)
                     }
                     staffFn_80170380(gPlayerStaffObject, 2);
                     ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
-                    *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+                    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
                     ObjHits_SyncObjectPositionIfDirty(obj);
                     leave = 1;
                 }
@@ -1811,7 +1811,7 @@ int fn_802A5384(int obj, int state)
             ((PlayerState*)inner)->pendingFxFlags |= 8;
             ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 1;
             ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->altAnimSoundId;
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x1000000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_HEADING_LOCK;
             ((PlayerState*)inner)->unk844 = ((PlayerState*)state)->baddie.animSpeedA;
             ObjAnim_SetCurrentMove(obj,
                                    *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x3c),
@@ -2369,7 +2369,7 @@ int fn_802A1CA8(int obj, int state)
             }
             ObjAnim_SetCurrentMove(obj, **(s16**)((char*)inner + 0x3f8),
                                    lbl_803E7EA4, 1);
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -2532,7 +2532,7 @@ int fn_802A1CA8(int obj, int state)
                             ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
                             staffFn_80170380(gPlayerStaffObject, 2);
                             ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
-                            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+                            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
                             ObjHits_SyncObjectPositionIfDirty(obj);
                             ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
                             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
@@ -3209,7 +3209,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         ((PlayerState*)inner)->animState = -1;
     }
     ObjHits_DisableObject(obj);
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~0x2LL;
+    *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_HITDETECT;
     if ((s8)seq->movementState != 0)
     {
         s8 c;
@@ -4105,7 +4105,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             ((GameObject*)gPlayerPathObject)->objectFlags |= 2;
         }
     }
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
     ((void (*)(int, int, int, int, int, f32, f32))objAudioFn_8006ef38)(
         obj, (int)&seq->animEvents, ((PlayerState*)inner)->animSoundId,
         (int)((char*)inner + 0x3c4), (int)((char*)inner + 4),
@@ -4202,7 +4202,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
     sc0p[0] = lbl_803E808C * vec[0];
     sc0p[1] = lbl_803E808C * vec[1];
     sc0p[2] = lbl_803E808C * vec[2];
-    *(u32*)&((PlayerState*)state)->flags360 &= ~0x100LL;
+    *(u32*)&((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_LEDGE_DETECTED;
     for (i = 0; i < PLAYER_SWEEP_DIR_COUNT; i++)
     {
         if ((mask & dirMasks[i]) == 0)
@@ -4462,7 +4462,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
                 {
                     continue;
                 }
-                *(u32*)&((PlayerState*)state)->flags360 |= 0x100LL;
+                *(u32*)&((PlayerState*)state)->flags360 |= PLAYER_FLAG_LEDGE_DETECTED;
                 if ((*(int*)&((PlayerState*)state2)->baddie.unk31C & 0x100) == 0)
                 {
                     continue;
@@ -5752,7 +5752,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             return 0x25;
         }
         ((struct { u8 hi : 1; u8 lo : 7; }*)&inner->flags3F1)->hi = 1;
-        *(u32*)&inner->flags360 |= 0x800000LL;
+        *(u32*)&inner->flags360 |= PLAYER_FLAG_TELEPORTED;
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return 2;
     }
@@ -5850,7 +5850,7 @@ int fn_8029EBCC(int obj, int state)
     f32 k;
     int res, halfW, halfH;
 
-    *(u32*)&inner->flags360 &= ~2LL;
+    *(u32*)&inner->flags360 &= ~PLAYER_FLAG_HITDETECT;
     ObjHits_EnableObject(obj);
     sub = *(void**)((char*)inner + 0x7f0);
     if (sub == NULL)
@@ -6383,7 +6383,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
     case 0x5f:
         if ((*(int*)&((PlayerState*)state)->baddie.unk318 & 0x100) == 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -6394,7 +6394,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
     case 0x65:
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -6467,7 +6467,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
         }
         else
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -6774,7 +6774,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
                 ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
                 staffFn_80170380(gPlayerStaffObject, 2);
                 ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
-                *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+                *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
                 ObjHits_SyncObjectPositionIfDirty(obj);
                 ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
                 ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
@@ -6817,7 +6817,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
         {
             *(u32*)((char*)state + 4) &= ~0x100000;
             fn_802AB5A4(obj, inner, 5);
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -8299,7 +8299,7 @@ void playerDoHitDetection(int obj)
                 objHitDetectFn_80062e84(obj, 0, 1);
             }
         }
-        *(u32*)&((PlayerState*)inner)->flags360 |= 2LL;
+        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_HITDETECT;
         if ((void*)((PlayerState*)inner)->focusObject != NULL &&
             ((((GameObject*)obj)->objectFlags & 0x1000) != 0 ||
                 arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
@@ -9385,8 +9385,8 @@ int fn_802A1114(int obj, int state)
     f32 buf1[3];
     f32 buf2[2];
     f32 pos[2];
-    *(u32*)&in0->flags360 &= ~2LL;
-    *(u32*)&in0->flags360 |= 0x2000LL;
+    *(u32*)&in0->flags360 &= ~PLAYER_FLAG_HITDETECT;
+    *(u32*)&in0->flags360 |= PLAYER_FLAG_NO_POS_VELOCITY;
     *(int*)((char*)state + 0x4) |= 0x100000;
     fz = lbl_803E7EA4;
     ((PlayerState*)state)->baddie.animSpeedA = fz;
@@ -9597,7 +9597,7 @@ int fn_8029F6E4(int obj, int state)
     (*(void (*)(int))(*(int*)((char*)*gCameraInterface + 0x68)))(2);
     ((PlayerState*)state)->baddie.physicsActive = 0;
     *(int*)((char*)state + 0x4) |= 0x100000;
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~2LL;
+    *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_HITDETECT;
     ObjHits_DisableObject(obj);
     sub = *(void**)((char*)inner + 0x7f0);
     if (sub == NULL)
@@ -9718,7 +9718,7 @@ void fn_802A93F4(int obj, int p2, int p3)
         Obj_FreeObject((int)gPlayerChildObject);
         gPlayerChildObject = NULL;
     }
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
     inner->interactObject = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b10 = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
@@ -9731,7 +9731,7 @@ void fn_802A93F4(int obj, int p2, int p3)
     ((ByteFlags*)((char*)inner + 0x3f6))->b40 = 0;
     staffFn_80170380(gPlayerStaffObject, 2);
     ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
     ObjHits_SyncObjectPositionIfDirty(obj);
     inner->waterDepth = lbl_803E7EA4;
     inner->waterSurfaceY = lbl_803E80D0;
@@ -10159,7 +10159,7 @@ void fn_8029FFD0(int obj, int p2)
                 0x42, 0, 1, 0, NULL, 0, 0xff);
             inner->curAnimId = 0x42;
         }
-        *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
         ObjHits_SyncObjectPositionIfDirty(obj);
     }
     ((GameObject*)obj)->anim.activeMove = -1;
@@ -10235,7 +10235,7 @@ int fn_802A00E0(int obj, int state)
         ObjAnim_SetCurrentMove(obj,
                                *(s16*)inner->moveAnimTable,
                                lbl_803E7EA4, 1);
-        *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return -1;
     }
@@ -10314,7 +10314,7 @@ int fn_802A03BC(int obj, int state)
         ObjAnim_SetCurrentMove(obj,
                                *(s16*)inner->moveAnimTable,
                                lbl_803E7EA4, 1);
-        *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return -1;
     }
@@ -11272,7 +11272,7 @@ void fn_8029A4A8(int obj, int p2)
     if (sel == 0x2f) return;
     if (sel == 0x2c) return;
 
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
     inner->animState = -1;
     *(u32*)&((PlayerState*)inner)->flags360 &= ~0x2000400LL;
 
@@ -11446,7 +11446,7 @@ int fn_8029BC4C(int obj, int state, f32 fv)
             return 0x25;
         }
         ((ByteFlags*)((char*)inner + 0x3f1))->b80 = 1;
-        *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return 2;
     }
@@ -11657,7 +11657,7 @@ int fn_80298CCC(int obj, int state)
         }
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -11877,7 +11877,7 @@ int fn_802A4B78(int obj, int state)
     sub = inner->heldObj;
     if ((void*)sub == NULL && *(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
     {
-        *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return 2;
     }
@@ -11934,7 +11934,7 @@ int playerSetHeldObject(int obj, int held)
             *(int*)((char*)inner->heldObj + 0xf8) = 0;
             inner->heldObj = 0;
         }
-        *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
         (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
         *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A514C;
     }
@@ -12409,7 +12409,7 @@ void fn_802B4C18(int obj, int state, f32 fv)
     *(u32*)((char*)state + 0x4) &= ~0x8100000;
     playerShadowFn_80062a30(obj);
     ((PlayerState*)state)->emissionState = 0;
-    *(u32*)&((PlayerState*)state)->flags360 &= ~0x2000LL;
+    *(u32*)&((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_NO_POS_VELOCITY;
     *(int*)state |= 0x1000000;
     fn_802B0EA4(obj, state, state);
     if (fn_802A74A4(obj, state, state, buf, fv, 0x60) == 8)
@@ -12869,7 +12869,7 @@ int fn_802AE480(int obj, int inner, int state)
     f32 h;
     f32 lim;
 
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x1000000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_HEADING_LOCK;
     ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F20;
     h = ((GameObject*)obj)->anim.currentMoveProgress;
     if (h > lbl_803E7EFC && h < lbl_803E7F44 &&
@@ -13095,8 +13095,8 @@ int fn_802A14F8(int obj, int state)
     f32 k;
     f32 pos[2];
 
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~2LL;
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_HITDETECT;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_NO_POS_VELOCITY;
     *(int*)((char*)state + 0x4) |= 0x100000;
     k = lbl_803E7EA4;
     ((PlayerState*)state)->baddie.animSpeedA = k;
@@ -13474,7 +13474,7 @@ void fn_80296D20(int obj, void* arg)
             ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
             staffFn_80170380(gPlayerStaffObject, 2);
             ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             ObjHits_SyncObjectPositionIfDirty(obj);
             ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
@@ -14559,7 +14559,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                 ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
                 staffFn_80170380(gPlayerStaffObject, 2);
                 ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
-                *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+                *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
                 ((void (*)(int))ObjHits_SyncObjectPositionIfDirty)(obj);
                 ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
                 ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
@@ -15232,8 +15232,8 @@ int fn_802A2918(int obj, int state, f32 fv)
     PlayerState* innerV = ((GameObject*)obj)->extra;
     PlayerState* inner = ((GameObject*)obj)->extra;
 
-    *(u32*)&((PlayerState*)innerV)->flags360 &= ~0x2LL;
-    *(u32*)&((PlayerState*)innerV)->flags360 |= 0x2000LL;
+    *(u32*)&((PlayerState*)innerV)->flags360 &= ~PLAYER_FLAG_HITDETECT;
+    *(u32*)&((PlayerState*)innerV)->flags360 |= PLAYER_FLAG_NO_POS_VELOCITY;
     *(int*)((char*)state + 0x4) |= 0x100000;
     {
         f32 z = lbl_803E7EA4;
@@ -16050,7 +16050,7 @@ void fn_802AED2C(int obj, int state, int p3)
     ((ByteFlags*)((char*)state + 0x3f0))->b80 = 0;
     staffFn_80170380(gPlayerStaffObject, 2);
     ((ByteFlags*)((char*)state + 0x3f0))->b02 = 0;
-    *(u32*)&((PlayerState*)state)->flags360 |= 0x800000LL;
+    *(u32*)&((PlayerState*)state)->flags360 |= PLAYER_FLAG_TELEPORTED;
     ObjHits_SyncObjectPositionIfDirty(obj);
     ((ByteFlags*)((char*)state + 0x3f0))->b08 = 0;
     ((ByteFlags*)((char*)state + 0x3f0))->b04 = 0;
@@ -16491,7 +16491,7 @@ void fn_802A514C(int obj, int state)
     {
         staffFn_80170380(gPlayerStaffObject, 2);
         ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
-        *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
         ObjHits_SyncObjectPositionIfDirty(obj);
     }
     gPlayerSubState = 1;
@@ -16537,7 +16537,7 @@ int fn_802A4D34(int obj, int state)
             {
                 inner->moveAnimTable = (int)lbl_80333110;
                 ObjAnim_SetCurrentMove(obj, *(s16*)inner->moveAnimTable, lbl_803E7EA4, 0);
-                *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+                *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
                 *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
                 return 2;
             }
@@ -16551,7 +16551,7 @@ int fn_802A4D34(int obj, int state)
                 inner->moveAnimTable = (int)lbl_80333110;
                 *(int*)((char*)inner->heldObj + 0xf8) = 1;
                 ObjAnim_SetCurrentMove(obj, *(s16*)inner->moveAnimTable, lbl_803E7EA4, 0);
-                *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+                *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
                 *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
                 return 2;
             }
@@ -16610,7 +16610,7 @@ int fn_802ADC08(int obj, int inner, int p3)
         ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
         staffFn_80170380(gPlayerStaffObject, 2);
         ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
-        *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
         ObjHits_SyncObjectPositionIfDirty(obj);
         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
         ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
@@ -17085,7 +17085,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
                         ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
                         staffFn_80170380(gPlayerStaffObject, 2);
                         ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
-                        *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+                        *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
                         ObjHits_SyncObjectPositionIfDirty(obj);
                         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
                         ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
@@ -17161,7 +17161,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
                                            *(int*)&((GameObject*)obj)->anim.parent);
             fn_802AB5A4(obj, (int)inner, 5);
             ObjAnim_SetCurrentMove(obj, *(s16*)(inner->moveAnimTable), lbl_803E7EA4, 1);
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -17260,7 +17260,7 @@ int fn_80298E54(int obj, int state, f32 fv)
     case 0xd1:
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -17355,7 +17355,7 @@ int fn_80298E54(int obj, int state, f32 fv)
     case 0xad:
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -17494,7 +17494,7 @@ int fn_802994D0(int obj, int state, f32 fv)
     case 0x44:
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             ((GameObject*)obj)->anim.velocityY = lbl_803E7EA4;
             inner->animState = -1;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -17535,7 +17535,7 @@ int fn_802994D0(int obj, int state, f32 fv)
             (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
             if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
             {
-                *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+                *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
                 ((GameObject*)obj)->anim.velocityY = lbl_803E7EA4;
                 inner->animState = -1;
                 *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -17738,7 +17738,7 @@ int fn_8029E568(int obj, int state, f32 fv)
                 (*gCameraInterface)->setMode(
                     0x42, 1, 1, 0, NULL, 0, 0xff);
             }
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -17969,7 +17969,7 @@ int fn_80298944(int obj, int state)
     case 0xe5:
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -18081,7 +18081,7 @@ int fn_802985FC(int obj, int state, f32 fv)
         }
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
@@ -18174,7 +18174,7 @@ void fn_802AE9C8(int obj, int inner, int state)
     ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
     staffFn_80170380(gPlayerStaffObject, 2);
     ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+    *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
     ObjHits_SyncObjectPositionIfDirty(obj);
     if (((ByteFlags*)((char*)inner + 0x3f0))->b40)
     {
@@ -18322,7 +18322,7 @@ int fn_8029D4C0(int obj, int state, f32 fv)
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
+            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return -1;
         }
