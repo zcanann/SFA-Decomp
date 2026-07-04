@@ -79,7 +79,7 @@ typedef struct DrakorHoverpadUpdateMainState
     f32 unkE4;
     u8 padE8[0x110 - 0xE8];
     f32 verticalVel;
-    f32 unk114;
+    f32 targetSpeed;
     u8 pad118[0x174 - 0x118];
     s16 anglePhase;
     u8 pad176[0x178 - 0x176];
@@ -94,7 +94,7 @@ typedef struct DrakorHoverpadRenderState
     f32 unkE4;
     u8 padE8[0x110 - 0xE8];
     f32 verticalVel;
-    f32 unk114;
+    f32 targetSpeed;
     u8 pad118[0x154 - 0x118];
     f32 particleEmitAX; /* 0x154: emit point A, X (jittered) */
     f32 particleEmitAY; /* 0x158 */
@@ -117,7 +117,7 @@ typedef struct DrakorHoverpadHandlePathPointEventState
     f32 unkE4;
     u8 padE8[0x110 - 0xE8];
     f32 verticalVel;
-    f32 unk114;
+    f32 targetSpeed;
     u8 pad118[0x154 - 0x118];
     f32 particleEmitAX; /* 0x154 */
     f32 particleEmitAY; /* 0x158 */
@@ -482,7 +482,7 @@ void drakorhoverpad_updateMain(int obj)
     if (f->bit20 == 0)
     {
         f->bit20 = GameBit_Get(((DrakorHoverpadUpdateMainPlacement*)q)->activateGameBit);
-        ((DrakorHoverpadUpdateMainState*)p)->unk114 = lbl_803E6A3C;
+        ((DrakorHoverpadUpdateMainState*)p)->targetSpeed = lbl_803E6A3C;
         if (f->bit20 != 0)
         {
             curveArg = 0x2a;
@@ -521,7 +521,7 @@ void drakorhoverpad_updateMain(int obj)
         {
             limit = limit + lbl_803E6A38;
         }
-        ((DrakorHoverpadUpdateMainState*)p)->verticalVel = ((DrakorHoverpadUpdateMainState*)p)->unk114 + (((
+        ((DrakorHoverpadUpdateMainState*)p)->verticalVel = ((DrakorHoverpadUpdateMainState*)p)->targetSpeed + (((
             DrakorHoverpadUpdateMainState*)p)->verticalVel + wobbleY);
         absV = ((DrakorHoverpadUpdateMainState*)p)->verticalVel;
         absH = (absV >= lbl_803E6A3C) ? absV : -absV;
@@ -550,7 +550,7 @@ void drakorhoverpad_updateMain(int obj)
     {
         (*gRomCurveInterface)->setClosed(&((DrakorHoverpadState*)p)->curve, 0);
     }
-    ((DrakorHoverpadUpdateMainState*)p)->unk114 = lbl_803E6A3C;
+    ((DrakorHoverpadUpdateMainState*)p)->targetSpeed = lbl_803E6A3C;
     if (lbl_803E6A3C != ((DrakorHoverpadUpdateMainState*)p)->verticalVel)
     {
         Curve_AdvanceAlongPath(curve, ((DrakorHoverpadUpdateMainState*)p)->verticalVel);
@@ -734,7 +734,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         }
         else
         {
-            ((DrakorHoverpadHandlePathPointEventState*)p)->unk114 +=
+            ((DrakorHoverpadHandlePathPointEventState*)p)->targetSpeed +=
                 (*(f32*)p < lbl_803E6A3C) ? lbl_803E6A74 : lbl_803E6A38;
         }
         break;
@@ -750,7 +750,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         }
         else
         {
-            ((DrakorHoverpadHandlePathPointEventState*)p)->unk114 +=
+            ((DrakorHoverpadHandlePathPointEventState*)p)->targetSpeed +=
                 (*(f32*)p < lbl_803E6A3C) ? lbl_803E6A74 : lbl_803E6A38;
         }
         break;
@@ -766,7 +766,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             break;
         }
-        ((DrakorHoverpadHandlePathPointEventState*)p)->unk114 +=
+        ((DrakorHoverpadHandlePathPointEventState*)p)->targetSpeed +=
             (*(f32*)p < lbl_803E6A3C) ? lbl_803E6A7C : lbl_803E6A80;
         break;
     case 7:
