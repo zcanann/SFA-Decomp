@@ -21,6 +21,14 @@
 
 #define SHQUEENEARTHWALKER_OBJFLAG_HIDDEN 0x4000
 
+/* QueenEarthWalkerState::flags bits (shared with dll_801d4198.c) */
+#define QEW_FLAG_STARTED 0x1    /* first update ran; per-act logic engaged */
+#define QEW_FLAG_TARGETING 0x2  /* targeting the player */
+#define QEW_FLAG_LATCHED 0x4    /* player position captured */
+#define QEW_FLAG_EYE_ANIMS 0x8  /* run characterDoEyeAnims vs the bite */
+#define QEW_FLAG_ACTIVE 0x10    /* feed sequence completed; suppress idle attacks */
+#define QEW_FLAG_INIT_DONE 0x20 /* per-frame anim-event handshake (cleared each update) */
+
 extern int ObjTrigger_IsSetById();
 
 extern f32 getXZDistance(f32* a, f32* b);
@@ -70,11 +78,11 @@ void sh_queenearthwalker_update(void* obj)
     s16 targetMove;
 
     state = ((GameObject*)obj)->extra;
-    ((QueenEarthWalkerState*)state)->flags &= ~0x20;
+    ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_INIT_DONE;
     mapSlot = ((GameObject*)obj)->anim.mapEventSlot;
     action = (*gMapEventInterface)->getMapAct(mapSlot);
 
-    if ((((QueenEarthWalkerState*)state)->flags & 0x1) != 0)
+    if ((((QueenEarthWalkerState*)state)->flags & QEW_FLAG_STARTED) != 0)
     {
         switch (action)
         {
@@ -156,7 +164,7 @@ void sh_queenearthwalker_update(void* obj)
             target = ObjGroup_FindNearestObject(0xf, obj, NULL);
             (*gObjectTriggerInterface)->preempt((int)target, 0x1324);
             (*gObjectTriggerInterface)->runSequence(1, target, 0x10);
-            ((QueenEarthWalkerState*)state)->flags |= 0xc;
+            ((QueenEarthWalkerState*)state)->flags |= (QEW_FLAG_LATCHED | QEW_FLAG_EYE_ANIMS);
             ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableAct1;
             break;
         case 2:
@@ -172,7 +180,7 @@ void sh_queenearthwalker_update(void* obj)
                 {
                     ((QueenEarthWalkerState*)state)->stateIndex = 1;
                 }
-                ((QueenEarthWalkerState*)state)->flags |= 0xc;
+                ((QueenEarthWalkerState*)state)->flags |= (QEW_FLAG_LATCHED | QEW_FLAG_EYE_ANIMS);
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableAct2;
             }
             break;
@@ -195,11 +203,11 @@ void sh_queenearthwalker_update(void* obj)
         default:
             break;
         }
-        ((QueenEarthWalkerState*)state)->flags |= 0x1;
+        ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_STARTED;
         return;
     }
 
-    if ((((QueenEarthWalkerState*)state)->flags & 0x8) != 0)
+    if ((((QueenEarthWalkerState*)state)->flags & QEW_FLAG_EYE_ANIMS) != 0)
     {
         fn_8003B228(obj, (u8*)state + 0x8);
     }
@@ -218,13 +226,13 @@ void sh_queenearthwalker_update(void* obj)
         (int)obj, gQueenEarthWalkerMoveSpeedTable[((QueenEarthWalkerState*)state)->stateIndex], timeDelta, NULL);
 
     stateFlags = ((QueenEarthWalkerState*)state)->flags;
-    if ((stateFlags & 0x10) == 0)
+    if ((stateFlags & QEW_FLAG_ACTIVE) == 0)
     {
-        ((QueenEarthWalkerState*)state)->flags &= ~0x2;
+        ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_TARGETING;
         if (ObjTrigger_IsSet(obj) != 0 && *(u8*)(*(int*)((u8*)obj + 0x78) + 0x4) != 4)
         {
             eventIndex = randomGetRange(1, *((QueenEarthWalkerState*)state)->eventTable);
-            ((QueenEarthWalkerState*)state)->flags |= 0x2;
+            ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_TARGETING;
             (*gObjectTriggerInterface)->runSequence(
                 ((u8*)((QueenEarthWalkerState*)state)->eventTable)[eventIndex], obj, -1);
         }
@@ -276,14 +284,14 @@ void queenFeedFn_801d44a4(void* obj, void* state)
         Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 4);
         if (ObjTrigger_IsSetById(obj, 0x66d) != 0)
         {
-            ((QueenEarthWalkerState*)state)->flags |= 0x10;
+            ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_ACTIVE;
             total = GameBit_Get(0x66d);
             total += GameBit_Get(0xc2);
             GameBit_Set(0x66d, 0);
             GameBit_Set(0xc2, total);
             if (total != 6)
             {
-                ((QueenEarthWalkerState*)state)->flags |= 0x2;
+                ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_TARGETING;
                 if (randomGetRange(0, 1) != 0)
                 {
                     (*gObjectTriggerInterface)->runSequence(3, obj, -1);
@@ -307,8 +315,8 @@ void queenFeedFn_801d44a4(void* obj, void* state)
         break;
     case 3:
         Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
-        ((QueenEarthWalkerState*)state)->flags &= ~0x4;
-        ((QueenEarthWalkerState*)state)->flags &= ~0x8;
+        ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_LATCHED;
+        ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_EYE_ANIMS;
         ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableFed;
         player = Obj_GetPlayerObject();
         ((u8*)state)[0x8] = 1;
