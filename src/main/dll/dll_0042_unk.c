@@ -215,15 +215,15 @@ void CameraModeNormal_func0A(float* minDistanceOut, float* maxDistanceOut,
 typedef struct CamSlideRot
 {
     s16 angles[4];
-    f32 unk08;
-    f32 unk0C;
-    f32 unk10;
-    f32 unk14;
+    f32 scale;
+    f32 transX;
+    f32 transY;
+    f32 transZ;
 } CamSlideRot;
 
 STATIC_ASSERT(offsetof(CamSlideRot, angles) == 0x00);
-STATIC_ASSERT(offsetof(CamSlideRot, unk08) == 0x08);
-STATIC_ASSERT(offsetof(CamSlideRot, unk14) == 0x14);
+STATIC_ASSERT(offsetof(CamSlideRot, scale) == 0x08);
+STATIC_ASSERT(offsetof(CamSlideRot, transZ) == 0x14);
 
 typedef struct CamSlideObjectState
 {
@@ -282,10 +282,10 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
         rot.angles[0] = (s16)(0x8000 - angle);
         rot.angles[1] = 0;
         rot.angles[2] = 0;
-        rot.unk08 = lbl_803E16A4;
-        rot.unk0C = lbl_803E16AC;
-        rot.unk10 = lbl_803E16AC;
-        rot.unk14 = lbl_803E16AC;
+        rot.scale = lbl_803E16A4;
+        rot.transX = lbl_803E16AC;
+        rot.transY = lbl_803E16AC;
+        rot.transZ = lbl_803E16AC;
         mtxRotateByVec3s(mtx, rot.angles);
         Matrix_TransformPoint(mtx, state->vectorX, state->vectorY,
                               state->vectorZ, &outX, &outY, &outZ);
