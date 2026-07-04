@@ -60,8 +60,8 @@ extern u8 gDIMbossAnimController[];
 typedef struct DIM2icicleBlueWhiteEffectPlacement {
     ObjPlacement base;
     u8 pad18[0x1E - 0x18];
-    s16 field1E;
-    s16 field20;
+    s16 gameBit;
+    s16 gameBit2;
     u8 pad22[0x24 - 0x22];
 } DIM2icicleBlueWhiteEffectPlacement;
 
@@ -155,8 +155,8 @@ void DIM2icicle_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity)
         setup->base.color[1] = 1;
         setup->base.color[2] = 255;
         setup->base.color[3] = 255;
-        setup->field1E = -1;
-        setup->field20 = -1;
+        setup->gameBit = -1;
+        setup->gameBit2 = -1;
         spawnedObj = (GameObject*)Obj_SetupObject(setup, 5, -1, -1, 0);
         if (spawnedObj != NULL)
         {
