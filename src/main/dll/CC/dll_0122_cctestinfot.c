@@ -95,3 +95,13 @@ ObjectDescriptor gCCTestInfotObjDescriptor = {
     0,
     cctestinfot_getExtraSize,
 };
+
+/* descriptor/ptr table auto 0x80321db0-0x80321f70 */
+u32 gDeathGasObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)deathgas_init, (u32)deathgas_update, 0x00000000, 0x00000000, (u32)deathgas_free, 0x00000000, (u32)deathgas_getExtraSize };
+u32 gFuelCellObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)fuelcell_init, (u32)fuelcell_update, 0x00000000, (u32)fuelcell_render, (u32)fuelcell_free, 0x00000000, (u32)fuelcell_getExtraSize };
+u32 gDeathSeqObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)deathseq_initialise, (u32)deathseq_release, 0x00000000, (u32)deathseq_init, (u32)deathseq_update, (u32)deathseq_hitDetect, (u32)deathseq_render, (u32)deathseq_free, (u32)deathseq_getObjectTypeId, (u32)deathseq_getExtraSize };
+u32 lbl_80321E58[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_127_initialise_nop, (u32)dll_127_release_nop, 0x00000000, (u32)dll_127_init, (u32)dll_127_update, (u32)dll_127_hitDetect_nop, (u32)dll_127_render, (u32)dll_127_free_nop, (u32)dll_127_getObjectTypeId, (u32)dll_127_getExtraSize_ret_0 };
+u32 gCampFireObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)campfire_init, (u32)campfire_update, 0x00000000, (u32)campfire_render, (u32)campfire_free, (u32)campfire_getObjectTypeId, (u32)campfire_getExtraSize };
+u32 gKT_TorchObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)kt_torch_initialise, (u32)kt_torch_release, 0x00000000, (u32)kt_torch_init, (u32)kt_torch_update, (u32)kt_torch_hitDetect, (u32)kt_torch_render, (u32)kt_torch_free, (u32)kt_torch_getObjectTypeId, (u32)kt_torch_getExtraSize };
+u32 gCFCrateObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cfccrate_initialise, (u32)cfccrate_release, 0x00000000, (u32)cfccrate_init, (u32)cfccrate_update, (u32)cfccrate_hitDetect, (u32)cfccrate_render, (u32)cfccrate_free, (u32)cfccrate_getObjectTypeId, (u32)cfccrate_getExtraSize };
+u32 gFXEmitObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)fxemit_initialise, (u32)fxemit_release, 0x00000000, (u32)fxemit_init, (u32)fxemit_update, (u32)fxemit_hitDetect, (u32)fxemit_render, (u32)fxemit_free, (u32)fxemit_getObjectTypeId, (u32)fxemit_getExtraSize };
