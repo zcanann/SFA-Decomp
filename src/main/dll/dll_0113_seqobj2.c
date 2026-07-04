@@ -29,6 +29,9 @@
 #include "main/object_descriptor.h"
 #include "dolphin/os.h"
 
+/* object group this object joins while active */
+#define SEQOBJ2_OBJGROUP 0xf
+
 extern u32 FUN_80017690();
 extern void FUN_80017698(u32 gameBit, u32 value);
 extern void FUN_800723a0(void);
@@ -84,7 +87,7 @@ STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 
 void seqObject_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 0xf);
+    ObjGroup_RemoveObject(obj, SEQOBJ2_OBJGROUP);
 }
 
 void seqObject_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
@@ -174,7 +177,7 @@ void seqObject_init(short* obj, int placement)
 
 void seqObj2_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 0xf);
+    ObjGroup_RemoveObject(obj, SEQOBJ2_OBJGROUP);
 }
 
 void seqObj2_update(int obj)
@@ -265,7 +268,7 @@ void SeqObj2_initialise(void)
 int seqobj2_getExtraSize(void) { return 0x1; }
 int seqobj2_getObjectTypeId(void) { return 0x0; }
 
-void seqobj2_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
+void seqobj2_free(int x) { ObjGroup_RemoveObject(x, SEQOBJ2_OBJGROUP); }
 
 void seqobj2_init(int* obj, SeqObjectPlacement* def)
 {
@@ -281,7 +284,7 @@ void seqobj2_init(int* obj, SeqObjectPlacement* def)
             state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         }
     }
-    ObjGroup_AddObject((u32)obj, 15);
+    ObjGroup_AddObject((u32)obj, SEQOBJ2_OBJGROUP);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SEQOBJECT_OBJFLAG_HIDDEN | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED));
 }
 
