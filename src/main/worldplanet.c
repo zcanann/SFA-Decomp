@@ -53,7 +53,7 @@ extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern f32 lbl_803DDD00;
 extern s16 gWorldPlanetReselectDelayTimer;
 extern int lbl_803DDD10;
-extern int gWorldPlanetObjectIdTable[3][5];
+extern int gWorldPlanetObjectIdTable[3][5]; /* [row][WorldPlanetSlot]; see definition for row meanings */
 extern u8 gWorldPlanetSelectionToIndex[8];
 extern u8 gWorldPlanetTitleStringIds[8];
 /* per-planet mission-briefing speaker model (WorldMapBriefingSpeaker), indexed by WorldPlanetSlot */
@@ -396,6 +396,12 @@ void worldplanet_update(int obj)
                 done = 1;
             }
             pauseMenuSetupTitle(WORLDPLANET_SELECT_TITLE_TEXT_ID, gWorldPlanetTitleStringIds[state->selectedPlanet], 0x19, 0);
+            /* obj->unkF4 is the GameObject's generic per-instance state word
+             * (its meaning is per-DLL); worldplanet uses it as a one-shot latch:
+             * 0 until the first selection has been set up, 1 thereafter. This
+             * block runs on a real selection change OR that first frame, but the
+             * camera swoosh (releaseAction) + select SFX below are gated on the
+             * latch so they fire only on genuine changes, not on the initial open. */
             if (prevPlanet != state->selectedPlanet || ((GameObject*)obj)->unkF4 == 0)
             {
                 if (((GameObject*)obj)->unkF4 != 0)
@@ -607,10 +613,30 @@ void worldplanet_update(int obj)
     }
 }
 
+/* Per-WorldPlanetSlot parameter table. Columns are WorldPlanetSlot 0..4
+ * (Walled City / CloudRunner / Dinosaur / Dragon Rock / DarkIce). Declared
+ * [3][5], but worldplanet_update also indexes tbl[3]: gWorldPlanetGameBitTable
+ * is laid out immediately after this in .data, so tbl[3] intentionally walks
+ * into it (the per-slot unlock gamebits - the contiguous 4th row).
+ *   row 0: the orbiting island objects. Each frame they are placed on the orbit
+ *          ring (localPos from orbit radius + the row-1 angle) and spun; they are
+ *          also the camera's focus/action target on select & confirm and carry
+ *          the binary selection highlight (WorldObjState.effectState 0/1). Slot
+ *          2's entry is WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID (special-cased in the
+ *          orbit placement).
+ *   row 1: orbit ANGLE OFFSETS, not object ids - 0/0x4000/0x5FA0/0x8000/0xC000
+ *          (0/90/~135/180/270 deg) spacing the islands evenly around the ring.
+ *   row 2: per-slot objects that rotate with the map and each hold the flight
+ *          PATH for one destination. When a planet is selected the small ferry
+ *          Arwing (the object the code calls `galleon`, WORLDPLANET_GALLEON_OBJECT_ID)
+ *          is interpolated along the selected slot's path each frame; effectState
+ *          = locked(0) / available(1) / selected(2). Verified live that all five
+ *          routes exist - the Arwing is just unlock-gated (the effectState-0 branch
+ *          hides it), so in normal play only the reachable planet's is ever seen. */
 int gWorldPlanetObjectIdTable[3][5] = {
-    { 0x00042FEA, 0x00042FE8, 0x0004300D, 0x00042FE9, 0x00042FEB },
-    { 0x00000000, 0x00004000, 0x00005FA0, 0x00008000, 0x0000C000 },
-    { 0x00043099, 0x00042FFF, 0x0004309A, 0x00043098, 0x00043097 },
+    /* row 0: orbiting island objects  */ { 0x00042FEA, 0x00042FE8, 0x0004300D, 0x00042FE9, 0x00042FEB },
+    /* row 1: orbit angle offsets      */ { 0x00000000, 0x00004000, 0x00005FA0, 0x00008000, 0x0000C000 },
+    /* row 2: galleon flight-path objs */ { 0x00043099, 0x00042FFF, 0x0004309A, 0x00043098, 0x00043097 },
 };
 
 /* descriptor/ptr table auto 0x8032a1c8-0x8032a200 */

@@ -145,7 +145,25 @@ enum GameBitId {
     GAMEBIT_WORLDMAP_UNLOCK_DARKICE_MINES = 0x3F9, /* 1017, slot 4 */
     GAMEBIT_WORLDMAP_UNLOCK_CLOUDRUNNER   = 0x3FA, /* 1018, slot 1 (CloudRunner Fortress) */
     GAMEBIT_WORLDMAP_UNLOCK_WALLED_CITY   = 0x3FB, /* 1019, slot 0 */
-    GAMEBIT_WORLDMAP_UNLOCK_DRAGON_ROCK   = 0x3FC  /* 1020, slot 3 */
+    GAMEBIT_WORLDMAP_UNLOCK_DRAGON_ROCK   = 0x3FC, /* 1020, slot 3 */
+
+    /*
+     * Arwing world-map destination NAME reveals - a SEPARATE gate from the
+     * fly-there unlocks above. worldplanet shows each slot's name via
+     * pauseMenuSetupTitle(0x2A7, gWorldPlanetTitleStringIds[slot], ...), which only
+     * prints the real name when GameBit_Get(gTaskHintTable[idx].bit_id) != 0 and
+     * otherwise falls back to text entry 5 = "?". These four ARE those
+     * gTaskHintTable[0..4].bit_id values, so they double as the pause-menu
+     * task-hint gate for each area. Live-verified: setting 0xA66 flipped Walled
+     * City's map name from "?" to its real name while it stayed unflyable (its
+     * unlock bit 0x3FB still clear). Dinosaur's name bit is 0xA63 =
+     * GAMEBIT_WORLDMAP_OPEN (always set), which is why its name always shows.
+     * Setters not yet traced.
+     */
+    GAMEBIT_WORLDMAP_NAME_DARKICE_MINES = 0xA64,
+    GAMEBIT_WORLDMAP_NAME_CLOUDRUNNER   = 0xA65,
+    GAMEBIT_WORLDMAP_NAME_WALLED_CITY   = 0xA66,
+    GAMEBIT_WORLDMAP_NAME_DRAGON_ROCK   = 0xA67
 };
 
 
