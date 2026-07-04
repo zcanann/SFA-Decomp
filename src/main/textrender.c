@@ -2844,6 +2844,10 @@ extern u16 lbl_802CA100[];
 #pragma opt_loop_invariants off
 #pragma opt_common_subs off
 #pragma peephole off
+/* the corner-texture inner loop below is a rolled 16-store group loop that the
+   retail build's unroller doubled (mtctr 2); the 128 limit is required for the
+   ~50-instr body to fit a 2x unroll (the file-wide 96 blocks it). */
+#pragma ppc_unroll_instructions_limit 128
 void gameTextInitFn_8001c794(void)
 {
     s16* p;
@@ -2878,10 +2882,9 @@ void gameTextInitFn_8001c794(void)
     src = gGameTextBoxCornerTexSrc;
     for (; i < 4; i++)
     {
-        j = 0;
         x = 0;
         x0 = 0;
-        while (j < 2)
+        for (j = 0; j < 4; j++)
         {
             x1 = (x + 1) * 2;
             x2 = (x + 2) * 2;
@@ -2910,38 +2913,9 @@ void gameTextInitFn_8001c794(void)
             dst[13] = *(u16*)(rowBase + x1);
             dst[14] = *(u16*)(rowBase + x2);
             dst[15] = *(u16*)(rowBase + x3);
+            dst += 16;
+            x += 4;
             x0 += 8;
-            x1 = (x + 5) * 2;
-            x2 = (x + 6) * 2;
-            x3 = (x + 7) * 2;
-            off = y * 32;
-            rowBase = (u8*)src + off;
-            dst[16] = *(u16*)(rowBase + x0);
-            dst[17] = *(u16*)(rowBase + x1);
-            dst[18] = *(u16*)(rowBase + x2);
-            dst[19] = *(u16*)(rowBase + x3);
-            off += 32;
-            rowBase = (u8*)src + off;
-            dst[20] = *(u16*)(rowBase + x0);
-            dst[21] = *(u16*)(rowBase + x1);
-            dst[22] = *(u16*)(rowBase + x2);
-            dst[23] = *(u16*)(rowBase + x3);
-            off += 32;
-            rowBase = (u8*)src + off;
-            dst[24] = *(u16*)(rowBase + x0);
-            dst[25] = *(u16*)(rowBase + x1);
-            dst[26] = *(u16*)(rowBase + x2);
-            dst[27] = *(u16*)(rowBase + x3);
-            off += 32;
-            rowBase = (u8*)src + off;
-            dst[28] = *(u16*)(rowBase + x0);
-            dst[29] = *(u16*)(rowBase + x1);
-            dst[30] = *(u16*)(rowBase + x2);
-            dst[31] = *(u16*)(rowBase + x3);
-            dst += 32;
-            x += 8;
-            x0 += 8;
-            j = j + 1;
         }
         y += 4;
     }
@@ -2995,6 +2969,7 @@ void gameTextInitFn_8001c794(void)
 #pragma opt_loop_invariants reset
 #pragma opt_propagation reset
 #pragma peephole reset
+#pragma ppc_unroll_instructions_limit 96
 
 extern f32 lbl_803DE730;
 extern f32 gSubtitleNoTimeSentinel;
