@@ -83,8 +83,6 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
     extern void modelLightStruct_startColorFade(int, int, int);
     extern void modelLightStruct_setAffectsAabbLightSelection(int, int);
     extern void modelLightStruct_setGlowProjectionRadius(int, f32);
-    extern f32 lbl_803E4BBC;
-    extern f32 lbl_803E4BD8;
     extern f32 lbl_803E4C28;
     extern f32 lbl_803E4C2C;
     extern f32 lbl_803E4C30;
@@ -130,7 +128,7 @@ int DIMbossAnim_hasMoveDone(int unused, int* p) { return *(s8*)&((BaddieState*)p
 #pragma peephole off
 int DIMbossHitDetect_applyForwardMove(int* obj, u8* state, f32 weight)
 {
-    if ((s8)state[634] != 0)
+    if (*(s8*)&((BaddieState*)state)->moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E4BD8, 0);
         ((BaddieState*)state)->moveDone = 0;
@@ -169,10 +167,10 @@ void DIM2icicle_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity)
 
 int DIMbossHitDetect_resetIdleMove(int* obj, u8* state)
 {
-    if ((s8)state[634] != 0)
+    if (*(s8*)&((BaddieState*)state)->moveJustStartedA != 0)
     {
         f32 fz;
-        if ((s8)state[634] != 0)
+        if (*(s8*)&((BaddieState*)state)->moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E4BD8, 0);
             ((BaddieState*)state)->moveDone = 0;
@@ -235,11 +233,6 @@ int DIMbossHitDetect_liftImpact(int obj, int p2)
 {
     f32 zeroProgress;
 
-
-
-    extern u32 gDIMbossSequenceFlags;
-    extern f32 lbl_803E4BC8;
-    extern f32 lbl_803E4BD8;
     extern f32 lbl_803E4BF0;
     extern f32 lbl_803E4BF4;
     extern f32 lbl_803E4BF8;
