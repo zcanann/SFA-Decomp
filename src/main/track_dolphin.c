@@ -5178,7 +5178,7 @@ extern u8* mapGetBlockIdx(int layer);
 extern void* mapGetBlock(int i);
 extern int getHudHiddenFrameCount(void);
 extern u8 lbl_803DCF44;
-extern int lbl_803DCF40;
+extern u32 lbl_803DCF40;
 
 void trackIntersect(void)
 {
