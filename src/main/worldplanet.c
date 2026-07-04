@@ -17,6 +17,9 @@
 extern void objRenderFn_8003b8f4(double scale);
 extern f32 lbl_803E6618;
 extern int unlockLevel(s32 val, int idx, int flag);
+/* unlock gamebit per WorldPlanetSlot: [0] Walled City, [1] CloudRunner,
+ * [2] Dinosaur Planet (== WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, always set),
+ * [3] Dragon Rock, [4] DarkIce Mines. */
 int gWorldPlanetGameBitTable[WORLDPLANET_PLANET_COUNT] = {1019, 1018, 2659, 1020, 1017};
 extern u8 gWorldPlanetHintFlagTable[8];
 extern u8 gWorldPlanetDefaultSelectOrder[8];
@@ -53,7 +56,8 @@ extern int lbl_803DDD10;
 extern int gWorldPlanetObjectIdTable[3][5];
 extern u8 gWorldPlanetSelectionToIndex[8];
 extern u8 gWorldPlanetTitleStringIds[8];
-extern u8 gWorldPlanetKrazoaControlBytes[8];
+/* per-planet mission-briefing speaker model (WorldMapBriefingSpeaker), indexed by WorldPlanetSlot */
+extern u8 gWorldPlanetBriefingSpeakerModel[8];
 extern u8 gWorldPlanetLoadMapIndices[6];
 extern u8 gWorldPlanetWarpMapIndices[6];
 extern int getAngle(float y, float x);
@@ -165,7 +169,7 @@ void worldplanet_init(int obj)
     (*gMapEventInterface)->savePoint((int)&((GameObject*)obj)->anim.localPosX, 0, 0, layer);
     (*gScreenTransitionInterface)->step(0x1e, 1);
     gWorldPlanetInputLockTimer = WORLDPLANET_COUNTDOWN_FRAMES;
-    GameBit_Set(gWorldPlanetGameBitTable[2], 1);
+    GameBit_Set(gWorldPlanetGameBitTable[WORLDPLANET_SLOT_DINOSAUR_PLANET], 1);
     state->foxSpawnTimer = WORLDPLANET_FOX_SPAWN_INITIAL_FRAMES;
     envFxActFn_800887f8(0);
 }
@@ -318,8 +322,8 @@ void worldplanet_update(int obj)
             (*gCameraInterface)->releaseAction(&objId, 2);
             state->flags |= WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED;
             {
-                int krazoa = ObjList_FindObjectById(WORLDPLANET_KRAZOA_OBJECT_ID);
-                ((WorldObjState*)((GameObject*)krazoa)->extra)->controlByte = gWorldPlanetKrazoaControlBytes[state->selectedPlanet];
+                int briefingPortrait = ObjList_FindObjectById(WORLDPLANET_BRIEFING_PORTRAIT_OBJECT_ID);
+                ((WorldObjState*)((GameObject*)briefingPortrait)->extra)->controlByte = gWorldPlanetBriefingSpeakerModel[state->selectedPlanet];
             }
             AudioStream_StopCurrent();
         }
@@ -516,8 +520,8 @@ void worldplanet_update(int obj)
                         state->selectionLocked = 1;
                         (*gCameraInterface)->releaseAction(&state->selectionLocked, 0);
                         {
-                            int krazoa = ObjList_FindObjectById(WORLDPLANET_KRAZOA_OBJECT_ID);
-                            ((WorldObjState*)((GameObject*)krazoa)->extra)->controlByte = gWorldPlanetKrazoaControlBytes[state->
+                            int briefingPortrait = ObjList_FindObjectById(WORLDPLANET_BRIEFING_PORTRAIT_OBJECT_ID);
+                            ((WorldObjState*)((GameObject*)briefingPortrait)->extra)->controlByte = gWorldPlanetBriefingSpeakerModel[state->
                                 selectedPlanet];
                         }
                         gWorldPlanetLoadedMapId = loadMapAndParent(gWorldPlanetLoadMapIndices[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);

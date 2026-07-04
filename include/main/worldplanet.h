@@ -31,7 +31,11 @@
 #define WORLDPLANET_FOX_OBJECT_ID 0x42FF5
 #define WORLDPLANET_GALLEON_OBJECT_ID 0x4300C
 #define WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID 0x4300D
-#define WORLDPLANET_KRAZOA_OBJECT_ID 0x43077
+/* The mission-briefing comms portrait (worldobj type 0x5E3): a flickering
+ * hologram head drawn in a 130x150 scissor box in the top-right corner that
+ * lip-syncs to the destination's briefing audio. WorldObjState.controlByte
+ * selects which speaker model is shown (see WorldMapBriefingSpeaker). */
+#define WORLDPLANET_BRIEFING_PORTRAIT_OBJECT_ID 0x43077
 #define WORLDPLANET_FOX_SPAWN_OBJECT_ID 0x80F
 #define WORLDPLANET_FOX_SPAWN_SETUP_SIZE 0x20
 #define WORLDPLANET_FOX_SPAWN_INITIAL_FRAMES 0x78
@@ -61,6 +65,47 @@ typedef enum WorldPlanetSelectionLock {
   WORLDPLANET_SELECTION_UNLOCKED = 0,
   WORLDPLANET_SELECTION_LOCKED = 1,
 } WorldPlanetSelectionLock;
+
+/* The five Arwing flight-select destinations, in slot order. The slot index is
+ * WorldPlanetState.selectedPlanet and the column index into the per-slot tables
+ * (gWorldPlanetGameBitTable, gWorldPlanetObjectIdTable[*], gWorldPlanetLoadMapIndices,
+ * gWorldPlanetWarpMapIndices, gWorldPlanetBriefingSpeakerModel, ...). Verified live
+ * against the in-game world map:
+ *
+ *   slot  planet                 unlock gamebit   load map  warp map
+ *   ----  ---------------------  --------------   --------  --------
+ *    0    Walled City            1019 (0x3FB)        61       118
+ *    1    CloudRunner Fortress   1018 (0x3FA)        60       110
+ *    2    Dinosaur Planet        2659 (0xA63) *      58       111
+ *    3    Dragon Rock            1020 (0x3FC)        62       117
+ *    4    DarkIce Mines          1017 (0x3F9)        59       116
+ *
+ *  * slot 2's "unlock" bit is WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN itself, which
+ *    worldplanet_init always sets - so Dinosaur Planet is always available and
+ *    is the default selection.
+ */
+typedef enum WorldPlanetSlot {
+  WORLDPLANET_SLOT_WALLED_CITY = 0,
+  WORLDPLANET_SLOT_CLOUDRUNNER = 1,
+  WORLDPLANET_SLOT_DINOSAUR_PLANET = 2,
+  WORLDPLANET_SLOT_DRAGON_ROCK = 3,
+  WORLDPLANET_SLOT_DARKICE_MINES = 4,
+} WorldPlanetSlot;
+
+/* Which Star Fox character delivers a destination's mission briefing. The value
+ * is the briefing-portrait worldobj's model index (WorldObjState.controlByte);
+ * gWorldPlanetBriefingSpeakerModel maps each WorldPlanetSlot to one of these.
+ * Verified live - only three portrait models exist (index 3 clamps to Slippy):
+ *
+ *   slot 0 Walled City -> Peppy    slot 3 Dragon Rock   -> Slippy
+ *   slot 1 CloudRunner -> Peppy    slot 4 DarkIce Mines -> Slippy
+ *   slot 2 Dinosaur    -> Pepper
+ */
+typedef enum WorldMapBriefingSpeaker {
+  WORLDMAP_BRIEFING_SPEAKER_SLIPPY = 0,
+  WORLDMAP_BRIEFING_SPEAKER_PEPPER = 1,
+  WORLDMAP_BRIEFING_SPEAKER_PEPPY = 2,
+} WorldMapBriefingSpeaker;
 
 typedef struct WorldPlanetState {
   u8 pad00[0x06];
