@@ -26,6 +26,13 @@ extern u16 lbl_8031ACB8[];     /* per-panel text-box table, 8 u16 per panel */
 extern int lbl_803A87D0[8];    /* the 8 menu-item objects of the active panel */
 /* Menu-item slots per options panel (lbl_803A87D0[8], size 0x20 / 4). */
 #define OPTIONSSCREEN_MENU_ITEM_COUNT 8
+
+/* Active panel id (lbl_803DBA28; see file header). */
+#define OPTIONSSCREEN_PANEL_NONE (-1)
+#define OPTIONSSCREEN_PANEL_TOP 0
+#define OPTIONSSCREEN_PANEL_AUDIO 1
+#define OPTIONSSCREEN_PANEL_GAMEPLAY 2
+#define OPTIONSSCREEN_PANEL_MISC 3
 extern f32 lbl_803E1DD4;
 extern f32 lbl_803E1DD8;
 extern f32 lbl_803E1DDC;
@@ -169,10 +176,10 @@ int OptionsScreen_run(void)
     {
         if ((oldFade <= 0xc || lbl_803DD704 > 0xc) && lbl_803DD704 <= 0)
         {
-            if ((s8)lbl_803DBA28 != -1)
+            if ((s8)lbl_803DBA28 != OPTIONSSCREEN_PANEL_NONE)
             {
                 (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0x8)))();
-                lbl_803DBA28 = -1;
+                lbl_803DBA28 = OPTIONSSCREEN_PANEL_NONE;
             }
             for (i = 0; i < OPTIONSSCREEN_MENU_ITEM_COUNT; i++)
             {
@@ -199,14 +206,14 @@ int OptionsScreen_run(void)
 
     switch ((s8)lbl_803DBA28)
     {
-    case 0:
+    case OPTIONSSCREEN_PANEL_TOP:
         lbl_803DD70C = item;
         if (optionsMenu_openSelectedSubmenu(selection, item) != 0)
         {
             return 0;
         }
         break;
-    case 2:
+    case OPTIONSSCREEN_PANEL_GAMEPLAY:
         optionsMenu_applyGameplaySetting(selection, item);
         if (selection == 0)
         {
@@ -218,7 +225,7 @@ int OptionsScreen_run(void)
             setRumbleEnabled(lbl_803DD708[8]);
         }
         break;
-    case 1:
+    case OPTIONSSCREEN_PANEL_AUDIO:
         optionsMenu_applyAudioSetting(selection, item);
         if (selection == 0)
         {
@@ -232,7 +239,7 @@ int OptionsScreen_run(void)
                 (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[3]);
         }
         break;
-    case 3:
+    case OPTIONSSCREEN_PANEL_MISC:
         if (selection == 0)
         {
             Sfx_PlayFromObject(0, SFXsp_snrot1_c);
@@ -260,7 +267,7 @@ int OptionsScreen_run(void)
         break;
     }
 
-    if ((s8)lbl_803DBA28 != 0)
+    if ((s8)lbl_803DBA28 != OPTIONSSCREEN_PANEL_TOP)
     {
         for (i = 0; i < OPTIONSSCREEN_MENU_ITEM_COUNT; i++)
         {
