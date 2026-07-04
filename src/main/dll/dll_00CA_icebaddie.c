@@ -70,8 +70,8 @@ typedef struct IceBallSetup
 {
     ObjPlacement head; /* 0x00: pos/color/mapId */
     u8 pad18[0x1e - 0x18];
-    s16 unk1E; /* 0x1e */
-    s16 unk20; /* 0x20 */
+    s16 gameBit;  /* 0x1e (-1 = none) */
+    s16 gameBit2; /* 0x20 (-1 = none) */
 } IceBallSetup;
 
 extern int randomGetRange(int lo, int hi);
@@ -1234,8 +1234,8 @@ void iceBaddie_spawnIceBall(int* obj, int* state)
         ((IceBallSetup*)alloc)->head.color[1] = 1;
         ((IceBallSetup*)alloc)->head.color[2] = 255;
         ((IceBallSetup*)alloc)->head.color[3] = 255;
-        ((IceBallSetup*)alloc)->unk1E = -1;
-        ((IceBallSetup*)alloc)->unk20 = -1;
+        ((IceBallSetup*)alloc)->gameBit = -1;
+        ((IceBallSetup*)alloc)->gameBit2 = -1;
         new_obj = Obj_SetupObject(alloc, 5, -1, -1, NULL);
         if (new_obj != NULL)
         {
