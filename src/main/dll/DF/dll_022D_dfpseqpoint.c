@@ -23,7 +23,7 @@ typedef struct DfpseqpointPlacement
     f32 posX; /* 0x08 */
     f32 posY; /* 0x0C */
     f32 posZ; /* 0x10 */
-    s32 unk14;
+    s32 mapId; /* 0x14 */
     u8 pad18[0x19 - 0x18];
     u8 unk19;
     u8 pad1A[0x1E - 0x1A];
@@ -119,7 +119,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
             switch (animUpdate->eventIds[i])
             {
             case 0x14:
-                if (*(u32*)&((DfpseqpointPlacement*)data)->unk14 == 0x49de8)
+                if (*(u32*)&((DfpseqpointPlacement*)data)->mapId == 0x49de8)
                 {
                     ((DfpFlags7*)&((DfpSeqPointState*)blob)->flags0F)->b80 = 1;
                 }
