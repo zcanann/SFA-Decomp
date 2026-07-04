@@ -1641,9 +1641,9 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     u8* s0;
 
     PSMTXConcat(lbl_80396850, p3, m);
-    GXLoadTexMtxImm(m, 30, 0);
+    GXLoadTexMtxImm(m, GX_TEXMTX0, GX_MTX3x4);
     PSMTXConcat(lbl_80396820, p3, m);
-    GXLoadTexMtxImm(m, 33, 0);
+    GXLoadTexMtxImm(m, GX_TEXMTX1, GX_MTX3x4);
     gxTextureSetupFn_8007cf7c();
     countShifted = (int)*(u16*)((char*)obj + 0x88) << 3;
     modelRenderInstrsState_init(state, *(void**)&((GameObject *)obj)->anim.previousLocalPosX, countShifted, countShifted);
