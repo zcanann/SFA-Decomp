@@ -1170,13 +1170,13 @@ void FUN_8003b878(u32 a, u32 b, u32 c, u32 d,
 
     ctx = FUN_8028683c();
     ctxHi = (u32)((u64)ctx >> 0x20);
-    if (((((*(u16*)(obj + 0xb0) & 0x40) == 0) && (*(int*)&((GameObject*)obj)->ownerObj == 0)) &&
+    if (((((*(u16*)(obj + 0xb0) & OBJECT_OBJFLAG_FREED) == 0) && (*(int*)&((GameObject*)obj)->ownerObj == 0)) &&
             ((*(u16*)(obj + 6) & 0x4000) == 0)) &&
         ((*(int*)&((GameObject*)obj)->anim.parent == 0 || ((*(u16*)(*(int*)&((GameObject*)obj)->anim.parent + 6) & 0x4000) == 0))
         ))
     {
         FUN_80017a04();
-        *(u16*)(obj + 0xb0) = *(u16*)(obj + 0xb0) | 0x800;
+        *(u16*)(obj + 0xb0) = *(u16*)(obj + 0xb0) | OBJECT_OBJFLAG_RENDERED;
         flag = renderFlag;
         if (*(int**)(obj + 0x68) == 0x0)
         {
@@ -1194,7 +1194,7 @@ void FUN_8003b878(u32 a, u32 b, u32 c, u32 d,
                 }
             }
         }
-        else if ((*(u16*)(obj + 0xb0) & 0x4000) == 0)
+        else if ((*(u16*)(obj + 0xb0) & OBJECT_OBJFLAG_HIDDEN) == 0)
         {
             vfn = *(VtableFn**)(**(int**)(obj + 0x68) + 0x10);
             if (vfn != (VtableFn*)0x0)
