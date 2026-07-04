@@ -27,6 +27,9 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_011B_landedarwing.h"
 
+/* object group queried to find the nearby target */
+#define LANDEDARWING_TARGET_OBJGROUP 0xf
+
 #define LANDEDARWING_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct LandedArwingPlacement
@@ -482,7 +485,7 @@ void landed_arwing_update(int obj)
             int nearest;
             int def;
             def = *(int*)&((GameObject*)obj)->anim.placementData;
-            nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
+            nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, obj, NULL);
             if (((GameObject*)obj)->anim.mapEventSlot == 0xd && GameBit_Get(0xc92) != 0)
             {
                 ((GameObject*)nearest)->anim.localPosY += lbl_803E3BA0;
@@ -510,7 +513,7 @@ void landed_arwing_update(int obj)
             int def;
             int nearest;
             def = *(int*)&((GameObject*)obj)->anim.placementData;
-            nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
+            nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, obj, NULL);
             if (((GameObject*)obj)->anim.mapEventSlot == 0xd && GameBit_Get(0xc92) != 0)
             {
                 ((GameObject*)nearest)->anim.localPosY += lbl_803E3BA0;
