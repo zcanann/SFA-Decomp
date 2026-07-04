@@ -25,6 +25,15 @@
 #define INVHIT_OBJFLAG_HIDDEN 0x4000
 #define INVHIT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+#define INVHIT_MODE_PROXIMITY_DAMAGE 0 /* scan player/Tricky, bump hit counters in range */
+#define INVHIT_MODE_ATTACH 1           /* attach to owner's hit list */
+#define INVHIT_MODE_PASSIVE_VOLUME 2   /* passive shape/radius hit volume */
+#define INVHIT_MODE_PUBLISH_POS 3      /* publish world position while player exists */
+#define INVHIT_MODE_HOMING_PROJECTILE 4 /* homing/tethered projectile toward owner target */
+#define INVHIT_MODE_LOCKON_GATE 5      /* like publish, gated on player lock-on target */
+#define INVHIT_MODE_FIXED_RADIUS 6     /* fixed primary-radius hit volume */
+#define INVHIT_MODE_SELF_FREE 7        /* self-free once owner hit list drops it */
+
 typedef struct InvHitState
 {
     f32 anchorX;
@@ -75,7 +84,7 @@ void invhit_free(int obj)
     char* inner = ((GameObject*)obj)->extra;
     switch (((InvHitState*)inner)->mode)
     {
-    case 4:
+    case INVHIT_MODE_HOMING_PROJECTILE:
         (*gExpgfxInterface)->freeSource2((u32)obj);
         break;
     }
@@ -92,10 +101,10 @@ void invhit_init(int* obj, u8* def)
     ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags & ~1;
     switch (state->mode)
     {
-    case 0:
+    case INVHIT_MODE_PROXIMITY_DAMAGE:
         ((GameObject*)obj)->unkF8 = def[0x18];
         break;
-    case 6:
+    case INVHIT_MODE_FIXED_RADIUS:
         sub[0x62] = 1;
         ((ObjHitsPriorityState*)sub)->primaryRadius = 0x23;
         ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
@@ -108,15 +117,15 @@ void invhit_init(int* obj, u8* def)
         sub[0x6a] = 0;
         sub[0x6b] = 0;
         break;
-    case 3:
+    case INVHIT_MODE_PUBLISH_POS:
         ((GameObject*)obj)->unkF8 = def[0x18];
         ((GameObject*)obj)->unkF4 = 0;
         break;
-    case 5:
+    case INVHIT_MODE_LOCKON_GATE:
         ((GameObject*)obj)->unkF8 = def[0x18];
         ((GameObject*)obj)->unkF4 = 0;
         break;
-    case 7:
+    case INVHIT_MODE_SELF_FREE:
         sub[0x62] = 1;
         ((ObjHitsPriorityState*)sub)->primaryRadius = def[0x18];
         ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
@@ -129,7 +138,7 @@ void invhit_init(int* obj, u8* def)
         sub[0x6a] = 0;
         sub[0x6b] = 0;
         break;
-    case 1:
+    case INVHIT_MODE_ATTACH:
         sub[0x62] = 1;
         ((ObjHitsPriorityState*)sub)->primaryRadius = def[0x18];
         ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
@@ -144,7 +153,7 @@ void invhit_init(int* obj, u8* def)
         sub[0x6a] = 0;
         sub[0x6b] = 0;
         break;
-    case 2:
+    case INVHIT_MODE_PASSIVE_VOLUME:
         ((ObjHitsPriorityState*)sub)->shapeFlags = def[0x19];
         ((ObjHitsPriorityState*)sub)->primaryRadius = def[0x18];
         ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 1;
@@ -153,7 +162,7 @@ void invhit_init(int* obj, u8* def)
         sub[0x6a] = 0;
         sub[0x6b] = 0;
         break;
-    case 4:
+    case INVHIT_MODE_HOMING_PROJECTILE:
         sub[0x62] = 1;
         ((ObjHitsPriorityState*)sub)->primaryRadius = 0xa;
         ((ObjHitsPriorityState*)sub)->flags = 3;
@@ -184,7 +193,7 @@ void invhit_update(int* obj)
     ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
     switch (state->mode)
     {
-    case 0:
+    case INVHIT_MODE_PROXIMITY_DAMAGE:
         {
             char* victim = Obj_GetPlayerObject();
             while (victim != NULL)
@@ -211,7 +220,7 @@ void invhit_update(int* obj)
             }
             break;
         }
-    case 3:
+    case INVHIT_MODE_PUBLISH_POS:
         if (Obj_GetPlayerObject() != NULL)
         {
             lbl_803AC780[0] = ((GameObject*)obj)->anim.worldPosX;
@@ -219,7 +228,7 @@ void invhit_update(int* obj)
             lbl_803AC780[2] = ((GameObject*)obj)->anim.worldPosZ;
         }
         break;
-    case 5:
+    case INVHIT_MODE_LOCKON_GATE:
         {
             void* pl = Obj_GetPlayerObject();
             u32 v = Player_GetTargetObject((int)pl);
@@ -231,10 +240,10 @@ void invhit_update(int* obj)
             }
             break;
         }
-    case 1:
+    case INVHIT_MODE_ATTACH:
         ObjList_ContainsObject(((GameObject*)obj)->unkF4);
         break;
-    case 7:
+    case INVHIT_MODE_SELF_FREE:
         {
             ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
             char* ownerHitSlot;
@@ -254,7 +263,7 @@ void invhit_update(int* obj)
             }
             break;
         }
-    case 4:
+    case INVHIT_MODE_HOMING_PROJECTILE:
         {
             char* hitState = *(char**)&((GameObject*)obj)->anim.hitReactState;
             f32** hits[2];
