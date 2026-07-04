@@ -25,7 +25,7 @@ typedef struct TrickyState {
     int progressPtr; /* MapEventInterface getProgressPtr() result (init) */
     int playerObj; /* owning player/sidekick object */
     u8 unk08;
-    u8 unk09;
+    u8 followPhase; /* follow-handler phase selector (discrete 0..5; gates the pathing/seed branches) */
     u8 substate; /* anim-sequence substate 0..7 */
     u8 unk0B;
     u8 unk0C;
@@ -61,7 +61,7 @@ typedef struct TrickyState {
     u16 patch[4]; /* curve-walk patch values (dll_DF trickyFn_8013b368); the
                      indexed s16 copy loop stays raw */
     u8 padA0[0xD0 - 0xA0]; /* 0xA0: f32 triples at stride 0xC (walker, raw) */
-    u16 unkD0;
+    u16 activeWalkGroup; /* current active walk-group id (getPatchGroup/walkGroupFn arg; tracked vs targetWg) */
     u16 unkD2;
     u8 padD4[0xE0 - 0xD4];
     f32 homePosX; /* home position, init from obj world pos */
@@ -164,8 +164,8 @@ typedef struct TrickyState {
     u8 unk536;
     u8 pad537[1];
     u8 voxBlocks[9][0x30]; /* trickyVoxAllocFn_8004b5d4 records, 0x538..0x6E8 */
-    void *unk6E8; /* one u32-spelled site launders */
-    int unk6EC;
+    void *cachedRouteEntry; /* cached route-entry pointer (validated via skeetla_validateRouteEntry; one u32-spelled site launders) */
+    int cachedPathId; /* pathId the cachedRouteEntry was resolved for */
     f32 *previousPathPoint;
     f32 previousPathX;
     f32 previousPathY;

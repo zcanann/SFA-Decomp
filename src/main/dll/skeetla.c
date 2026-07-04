@@ -798,18 +798,18 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
         return NULL;
     }
 
-    if ((((TrickyState*)state)->unk6EC == pathId) && (*(u32*)&((TrickyState*)state)->unk6E8 == route))
+    if ((((TrickyState*)state)->cachedPathId == pathId) && (*(u32*)&((TrickyState*)state)->cachedRouteEntry == route))
     {
-        ((TrickyState*)state)->unk6E8 = fn_8004B118(state + 0x6b8);
-        if (((TrickyState*)state)->unk6E8 == NULL)
+        ((TrickyState*)state)->cachedRouteEntry = fn_8004B118(state + 0x6b8);
+        if (((TrickyState*)state)->cachedRouteEntry == NULL)
         {
             return NULL;
         }
 
-        ((TrickyState*)state)->unk6E8 = skeetla_validateRouteEntry(((TrickyState*)state)->unk6E8);
-        if (((TrickyState*)state)->unk6E8 != NULL)
+        ((TrickyState*)state)->cachedRouteEntry = skeetla_validateRouteEntry(((TrickyState*)state)->cachedRouteEntry);
+        if (((TrickyState*)state)->cachedRouteEntry != NULL)
         {
-            return ((TrickyState*)state)->unk6E8;
+            return ((TrickyState*)state)->cachedRouteEntry;
         }
     }
 
@@ -821,9 +821,9 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
     }
 
     fn_8004B148(state + 0x6b8);
-    ((TrickyState*)state)->unk6E8 = fn_8004B118(state + 0x6b8);
-    ((TrickyState*)state)->unk6EC = pathId;
-    return ((TrickyState*)state)->unk6E8;
+    ((TrickyState*)state)->cachedRouteEntry = fn_8004B118(state + 0x6b8);
+    ((TrickyState*)state)->cachedPathId = pathId;
+    return ((TrickyState*)state)->cachedRouteEntry;
 }
 
 int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pathId)
