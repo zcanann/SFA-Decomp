@@ -37,16 +37,11 @@ extern u8 gCamTitlePrevPose;
 extern u8 gCamTitleStartPosePending;
 extern f32 lbl_803E1BE0;
 extern f32 titleScreenCamProgress;
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 lbl_803E1BE4;
 
 extern CameraModeTitlePose gCamTitleStartPose;
 extern f32 gCamTitleProgressStep;
 extern f32 lbl_803E1BEC;
-extern f32 lbl_803E1BF0;
-extern f32 lbl_803E1BF4;
-extern f32 lbl_803E1BF8;
-extern f32 lbl_803E1BFC;
 extern f32 gCamTitleAngleWrapThreshold;
 
 #pragma scheduling off
