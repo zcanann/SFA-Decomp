@@ -288,6 +288,19 @@ typedef struct {
     u8 b07 : 3;
 } WclevelcontFlags;
 
+/* WcLevelControlState.completionFlags: one-shot latches for each WC sub-puzzle.
+ * 0x1/0x2 are transient (trigger-fired / event-active); the rest mirror gamebits. */
+#define WCLEVELCTL_FLAG_TRIGGERED    0x1   /* trigger callback fired this frame */
+#define WCLEVELCTL_FLAG_EVENT_ACTIVE 0x2   /* event running; update pass skips */
+#define WCLEVELCTL_FLAG_PUZZLE_A     0x4   /* gamebit 0x7f9 solved */
+#define WCLEVELCTL_FLAG_PUZZLE_B     0x8   /* gamebit 0x7fa solved */
+#define WCLEVELCTL_FLAG_TILE_A       0x10  /* gamebit 0x812: tile-A set solved */
+#define WCLEVELCTL_FLAG_TILE_B       0x20  /* gamebit 0x813: tile-B set solved */
+#define WCLEVELCTL_FLAG_TREX         0x40  /* gamebit 0x2a5: trex timer challenge */
+#define WCLEVELCTL_FLAG_SWITCHES     0x80  /* gamebit 0x205: three-switch puzzle */
+#define WCLEVELCTL_FLAG_FINAL        0x100 /* gamebit 0xbcf: final event */
+#define WCLEVELCTL_FLAG_EXTRA        0x200 /* gamebit 0xcac */
+
 typedef struct WcLevelControlState {
     f32 eventTimer;
     f32 tileBResetTimer;
