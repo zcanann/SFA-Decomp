@@ -3,6 +3,8 @@
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DREARTHWARRIOR_OBJGROUP 0xa
+
 #define DREARTHWARRIOR_OBJFLAG_PARENT_SLACK 0x1000
 
 typedef struct DREarthWarriorPlacement
@@ -424,7 +426,7 @@ void DR_EarthWarrior_free(int obj)
     {
         ObjModelChain_Free((ObjModelChain*)inner->sub.modelChain);
     }
-    ObjGroup_RemoveObject(obj, 0xa);
+    ObjGroup_RemoveObject(obj, DREARTHWARRIOR_OBJGROUP);
     if (((ByteFlags*)&inner->sub.flags994)->b02)
     {
         (*gGameUIInterface)->airMeterSetShutdown();
@@ -1344,7 +1346,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     r1 = lbl_802C2CB4;
     ((GameObject*)obj)->anim.rotX = (s16)(((DREarthWarriorPlacement*)p2)->spawnYaw << 8);
     ((GameObject*)obj)->animEventCallback = fn_802BDBE8;
-    ObjGroup_AddObject(obj, 0xa);
+    ObjGroup_AddObject(obj, DREARTHWARRIOR_OBJGROUP);
     ((DREarthWarriorState*)inner)->unk14E8 = ((DREarthWarriorPlacement*)p2)->unk19;
     ((DREarthWarriorState*)inner)->unk14DE = 5;
     ((DREarthWarriorState*)inner)->unk14F4 = -1;
