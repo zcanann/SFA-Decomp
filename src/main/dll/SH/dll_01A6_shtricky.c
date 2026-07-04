@@ -14,6 +14,12 @@
 #define SHTRICKY_OBJFLAG_HIDDEN 0x4000
 #define SHTRICKY_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+#define SHTRICKY_STATE_WAIT_TRIGGER 0
+#define SHTRICKY_STATE_HAND_CONTROL 1
+#define SHTRICKY_STATE_POLL_TASK 2
+#define SHTRICKY_STATE_WATCH_COMPLETE 3
+#define SHTRICKY_STATE_DONE 4
+
 int sh_tricky_getExtraSize(void)
 {
     return 1;
@@ -33,26 +39,26 @@ void sh_tricky_update(int* obj)
 
     switch (state[0])
     {
-    case 0:
+    case SHTRICKY_STATE_WAIT_TRIGGER:
         if (GameBit_Get(0x94) != 0)
         {
             GameBit_Set(0x4e4, 0);
             GameBit_Set(0x4e5, 0);
             GameBit_Set(0xc11, 1);
-            state[0] = 1;
+            state[0] = SHTRICKY_STATE_HAND_CONTROL;
         }
         break;
-    case 1:
-        state[0] = 2;
+    case SHTRICKY_STATE_HAND_CONTROL:
+        state[0] = SHTRICKY_STATE_POLL_TASK;
         break;
-    case 2:
+    case SHTRICKY_STATE_POLL_TASK:
         if (((int (*)(int*, int*))(*(int*)(*(int*)(tricky[0x1a]) + 0x38)))(tricky, obj) !=
             0)
         {
-            state[0] = 3;
+            state[0] = SHTRICKY_STATE_WATCH_COMPLETE;
         }
         break;
-    case 3:
+    case SHTRICKY_STATE_WATCH_COMPLETE:
         if (GameBit_Get(0xbf) != 0)
         {
             GameBit_Set(0x4e4, 1);
@@ -60,7 +66,7 @@ void sh_tricky_update(int* obj)
             GameBit_Set(0xc11, 0);
         }
         break;
-    case 4:
+    case SHTRICKY_STATE_DONE:
         break;
     }
 }
@@ -70,11 +76,11 @@ void sh_tricky_init(int* obj)
     u8* state = ((GameObject*)obj)->extra;
     if (GameBit_Get(0xbf) != 0)
     {
-        *state = 4;
+        *state = SHTRICKY_STATE_DONE;
     }
     else
     {
-        *state = 0;
+        *state = SHTRICKY_STATE_WAIT_TRIGGER;
     }
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SHTRICKY_OBJFLAG_HIDDEN | SHTRICKY_OBJFLAG_HITDETECT_DISABLED));
 }
