@@ -25,6 +25,11 @@
 
 #define PAD_BUTTON_A 0x100
 
+/* carryState phases (state->carryState) */
+#define CARRY_STATE_RESTING 0
+#define CARRY_STATE_GRABBED 1
+#define CARRY_STATE_PUTDOWN 2
+
 typedef struct CarryableUpdateHeldState
 {
     u8 pad0[0x2 - 0x0];
@@ -64,7 +69,7 @@ void Carryable_stopCarrying(int* obj, u8* param2)
 {
     void* player = Obj_GetPlayerObject();
     int held;
-    ((CarryableUpdateHeldState*)param2)->carryState = 0;
+    ((CarryableUpdateHeldState*)param2)->carryState = CARRY_STATE_RESTING;
     Player_GetHeldObject((int)player, &held);
     if ((int*)held == obj)
     {
@@ -152,7 +157,7 @@ int Carryable_updateHeld(u8* obj)
     ((CarryableUpdateHeldState*)held)->surfaceType = 0;
     ((CarryableUpdateHeldState*)held)->flags &= ~1;
     player = Obj_GetPlayerObject();
-    if (((CarryableUpdateHeldState*)held)->carryState == 0)
+    if (((CarryableUpdateHeldState*)held)->carryState == CARRY_STATE_RESTING)
     {
         struct
         {
@@ -250,9 +255,9 @@ int Carryable_updateHeld(u8* obj)
         }
         if (((GameObject*)obj)->unkF8 == 1)
         {
-            ((CarryableUpdateHeldState*)held)->carryState = 2;
+            ((CarryableUpdateHeldState*)held)->carryState = CARRY_STATE_PUTDOWN;
         }
-        if (((CarryableUpdateHeldState*)held)->carryState == 2 && ((GameObject*)obj)->unkF8 == 0)
+        if (((CarryableUpdateHeldState*)held)->carryState == CARRY_STATE_PUTDOWN && ((GameObject*)obj)->unkF8 == 0)
         {
             u8* h2 = ((GameObject*)obj)->extra;
             *(u8*)&((CarryableUpdateHeldState*)h2)->carryState = 0;
@@ -278,7 +283,7 @@ void Carryable_init(int obj, int state)
     CarryableUpdateHeldState* s = (CarryableUpdateHeldState*)state;
     ObjGroup_AddObject(obj, 0x10);
     s->unk2 = 0;
-    s->carryState = 0;
+    s->carryState = CARRY_STATE_RESTING;
     s->pad4[0] = 0;
     s->isHeld = 0;
     ((GameObject*)obj)->unkF8 = 0;
