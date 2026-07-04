@@ -33,20 +33,20 @@ typedef struct Dll19ASpawnSetup
     u8 unk27;      /* 0x27 */
     u8 pad28;      /* 0x28 */
     u8 unk29;      /* 0x29 */
-    s8 unk2A;      /* 0x2a */
+    s8 rotByte;    /* 0x2a: object yaw byte (anim.rotX >> 8) */
     u8 unk2B;      /* 0x2b */
     u8 pad2C[2];   /* 0x2c */
     s8 unk2E;      /* 0x2e */
     u8 pad2F;      /* 0x2f */
     s16 unk30;     /* 0x30 */
-    u8 unk32;      /* 0x32 */
+    u8 linkIndex;  /* 0x32: placement gateBitIndex forwarded as child link index */
     u8 pad33[5];   /* 0x33 */
 } Dll19ASpawnSetup;
 
 STATIC_ASSERT(offsetof(Dll19ASpawnSetup, posX) == 0x8);
 STATIC_ASSERT(offsetof(Dll19ASpawnSetup, unk18) == 0x18);
-STATIC_ASSERT(offsetof(Dll19ASpawnSetup, unk2A) == 0x2a);
-STATIC_ASSERT(offsetof(Dll19ASpawnSetup, unk32) == 0x32);
+STATIC_ASSERT(offsetof(Dll19ASpawnSetup, rotByte) == 0x2a);
+STATIC_ASSERT(offsetof(Dll19ASpawnSetup, linkIndex) == 0x32);
 STATIC_ASSERT(sizeof(Dll19ASpawnSetup) == 0x38);
 
 #define GAMEBIT_DLL19A_RESET 0x5b9
@@ -105,7 +105,7 @@ void dll_19A_update(int obj)
             newObj->unk27 = 1;
             newObj->unk18 = 0x1e7;
             newObj->unk30 = 0xffff;
-            newObj->unk2A = ((GameObject*)obj)->anim.rotX >> 8;
+            newObj->rotByte = ((GameObject*)obj)->anim.rotX >> 8;
             newObj->unk2B = 2;
             if (GameBit_Get(GAMEBIT_DLL19A_GATE_BASE + 1) != 0)
             {
@@ -119,7 +119,7 @@ void dll_19A_update(int obj)
             newObj->unk2E = -1;
             {
                 int linkIdx = ((Dll19APlacement*)setup)->gateBitIndex;
-                newObj->unk32 = linkIdx;
+                newObj->linkIndex = linkIdx;
             }
             r = Obj_SetupObject((int)newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, 0xffffffff,
                                 *(int*)&((GameObject*)obj)->anim.parent);
