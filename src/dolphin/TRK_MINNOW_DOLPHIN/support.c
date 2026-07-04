@@ -184,7 +184,7 @@ DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 p1, u32 p2, int p3)
     return error;
 }
 
-DSError HandleOpenFileSupportRequest(const char* path, u8 replyError, u32* param_3,
+DSError HandleOpenFileSupportRequest(const char* path, u8 replyError, u32* fileHandle,
                                      u8* ioResult) {
     DSError error;
     int replyBufferId;
@@ -192,7 +192,7 @@ DSError HandleOpenFileSupportRequest(const char* path, u8 replyError, u32* param
     TRKBuffer* replyBuffer;
     TRKBuffer* buffer;
 
-    *param_3 = 0;
+    *fileHandle = 0;
     error = TRKGetFreeBuffer(&bufferId, &buffer);
 
     if (error == DS_NoError) {
@@ -225,7 +225,7 @@ DSError HandleOpenFileSupportRequest(const char* path, u8 replyError, u32* param
         }
 
         if (error == DS_NoError) {
-            error = TRKReadBuffer1_ui32(replyBuffer, param_3);
+            error = TRKReadBuffer1_ui32(replyBuffer, fileHandle);
         }
 
         TRKReleaseBuffer(replyBufferId);
