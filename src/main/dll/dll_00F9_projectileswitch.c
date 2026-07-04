@@ -43,7 +43,6 @@ void ProjectileSwitch_free(void)
 {
 }
 
-int levelname_getExtraSize(void);
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
 int ProjectileSwitch_getObjectTypeId(int* obj)
@@ -307,4 +306,3 @@ void ProjectileSwitch_initialise(void)
 {
 }
 
-int InvisibleHitSwitch_getExtraSize(void);
