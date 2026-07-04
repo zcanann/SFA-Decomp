@@ -12,6 +12,7 @@
 #define GAMEBIT_CC_COMPLETE 0x24
 #define CCLIGHTFOOT_TARGET_ACTOR_A 0x45d7d
 #define CCLIGHTFOOT_TARGET_ACTOR_B 0x45d7f
+#define CCLIGHTFOOT_OBJFLAG_UPDATE_DISABLED 0x8000
 
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern f32 timeDelta;
@@ -561,7 +562,7 @@ void cclightfoot_update(int obj)
             state->childObj = 0;
         }
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCLIGHTFOOT_OBJFLAG_UPDATE_DISABLED);
         ObjHits_DisableObject(obj);
         return;
     }
