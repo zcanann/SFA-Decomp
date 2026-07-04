@@ -3138,6 +3138,7 @@ main/audio/data_tables.c:
 	extab       start:0x800057F0 end:0x80005880
 	extabindex  start:0x80005F78 end:0x80006050
 	.text       start:0x80273D2C end:0x80275364
+	.bss        start:0x803BFC78 end:0x803CA278
 
 main/audio/mcmd_wait.c:
 	extab       start:0x80005880 end:0x80005888
