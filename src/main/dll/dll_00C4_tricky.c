@@ -171,7 +171,6 @@ extern f32 lbl_803E2524;
 extern f32 lbl_803E253C;
 extern f32 lbl_803E2540;
 extern u32 lbl_803E2558;
-extern u32 lbl_803E255C;
 extern u32 lbl_803E2560;
 extern u32 lbl_803E2564;
 extern u16 lbl_803E2568;
