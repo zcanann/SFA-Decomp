@@ -201,7 +201,7 @@ void andross_init(int obj, u8* setup)
     ((AndrossState*)state)->unkA8 = lbl_803E74D4;
     ((AndrossState*)state)->springStiffness = gAndrossSpringStiffness;
     ((AndrossState*)state)->springDamping = gAndrossSpringDamping;
-    ((AndrossState*)state)->unkBC = 1;
+    ((AndrossState*)state)->handsInitialized = 1;
     ObjHits_SetTargetMask(obj, 4);
     ((GameObject*)obj)->animEventCallback = andross_updateModelAlpha;
     fn_8006CB50();
@@ -416,9 +416,9 @@ void andross_update(int obj)
     case 1:
         if (stateChanged)
         {
-            if (((AndrossState*)state)->unkBC != 0)
+            if (((AndrossState*)state)->handsInitialized != 0)
             {
-                ((AndrossState*)state)->unkBC = 0;
+                ((AndrossState*)state)->handsInitialized = 0;
             }
             else
             {
@@ -499,7 +499,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->unkAF = 0xf;
             ((AndrossState*)state)->unkB0 = 0xf;
             ((AndrossState*)state)->actionState = 0;
-            ((AndrossState*)state)->unkB7 = 0;
+            ((AndrossState*)state)->attackCycleCount = 0;
         }
         if (((AndrossState*)state)->actionPending != 0)
         {
@@ -513,8 +513,8 @@ void andross_update(int obj)
                 ((AndrossState*)state)->actionState = 4;
                 break;
             case 4:
-                ((AndrossState*)state)->unkB7++;
-                if (((AndrossState*)state)->unkB7 > 3)
+                ((AndrossState*)state)->attackCycleCount++;
+                if (((AndrossState*)state)->attackCycleCount > 3)
                 {
                     ((AndrossState*)state)->fightPhase--;
                     ((AndrossState*)state)->actionState = 0x16;
@@ -1297,7 +1297,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer + (f32)(lbl_803DC464);
         }
         fn_80239EAC(obj, (int)state);
-        if (((AndrossState*)state)->unkB5 != 0)
+        if (((AndrossState*)state)->hitReactionFlag != 0)
         {
             if (((AndrossState*)state)->fightPhase == 5)
             {
@@ -1407,7 +1407,7 @@ void andross_update(int obj)
         velCalc3.x = fc * lbl_803DC468;
         fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
         velCalc3.y = fc * lbl_803DC468;
-        fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->unk14;
+        fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->spawnedObj;
         velCalc3.z = fc * lbl_803DC468;
         velArg3 = velCalc3;
         arwarwing_setVelocity(*state, (int)&velArg3);
@@ -1582,7 +1582,7 @@ void andross_update(int obj)
         }
         for (work = 0; (u8)work < 2; work = work + 1)
         {
-            if (((((void*)((AndrossState*)state)->unk14 == NULL) && (((AndrossState*)state)->actionTimer <= delayPair[(u8)work]))
+            if (((((void*)((AndrossState*)state)->spawnedObj == NULL) && (((AndrossState*)state)->actionTimer <= delayPair[(u8)work]))
                 &&
                 ((short)ref > delayPair[(u8)work])) && (Obj_IsLoadingLocked() != 0))
             {
@@ -1594,11 +1594,11 @@ void andross_update(int obj)
                 *(u8*)(found + 5) = 1;
                 ((AndrossState*)found)->unk20 = 0xffff;
                 found = ((int(*)(int,int))loadObjectAtObject)(obj, found);
-                ((AndrossState*)state)->unk14 = found;
-                if ((void*)((AndrossState*)state)->unk14 != NULL)
+                ((AndrossState*)state)->spawnedObj = found;
+                if ((void*)((AndrossState*)state)->spawnedObj != NULL)
                 {
-                    ((GameObject*)((AndrossState*)state)->unk14)->anim.alpha = 0xff;
-                    *(u8*)(((AndrossState*)state)->unk14 + 0x37) = 0xff;
+                    ((GameObject*)((AndrossState*)state)->spawnedObj)->anim.alpha = 0xff;
+                    *(u8*)(((AndrossState*)state)->spawnedObj + 0x37) = 0xff;
                     ((AndrossState*)state)->spawnedObjLifetime = lbl_803DC4EC;
                 }
             }
@@ -1820,7 +1820,7 @@ void andross_update(int obj)
             velCalc2.x = fc * lbl_803DC488;
             fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
             velCalc2.y = fc * lbl_803DC488;
-            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->unk14;
+            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->spawnedObj;
             velCalc2.z = fc * lbl_803DC488;
             velArg2 = velCalc2;
             arwarwing_setVelocity(*state, (int)&velArg2);
@@ -1939,7 +1939,7 @@ void andross_update(int obj)
             velCalc1.x = fc * lbl_803DC494;
             fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
             velCalc1.y = fc * lbl_803DC494;
-            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->unk14;
+            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->spawnedObj;
             velCalc1.z = fc * lbl_803DC494;
             velArg1 = velCalc1;
             arwarwing_setVelocity(*state, (int)&velArg1);
@@ -1979,7 +1979,7 @@ void andross_update(int obj)
             velCalc0.x = fc * lbl_803DC4A4;
             fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
             velCalc0.y = fc * lbl_803DC4A4;
-            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->unk14;
+            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->spawnedObj;
             velCalc0.z = fc * lbl_803DC4A4;
             velArg0 = velCalc0;
             arwarwing_setVelocity(*state, (int)&velArg0);
@@ -2085,16 +2085,16 @@ void andross_update(int obj)
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, ((AndrossState*)state)->animSpeed, timeDelta, 0);
     fn_8023A3E4(obj, (int)state);
     fn_8023A87C(obj, (int)state);
-    ref = ((AndrossState*)state)->unk14;
-    if (*(void**)&((AndrossState*)state)->unk14 != NULL)
+    ref = ((AndrossState*)state)->spawnedObj;
+    if (*(void**)&((AndrossState*)state)->spawnedObj != NULL)
     {
-        *(float*)&((AndrossState*)ref)->unk14 = *(float*)&((AndrossState*)ref)->unk14 - lbl_803E74D8;
+        *(float*)&((AndrossState*)ref)->spawnedObj = *(float*)&((AndrossState*)ref)->spawnedObj - lbl_803E74D8;
         ((AndrossState*)state)->spawnedObjLifetime = ((AndrossState*)state)->spawnedObjLifetime - framesThisStep;
         if (((AndrossState*)state)->spawnedObjLifetime < 0)
         {
-            Obj_FreeObject(((AndrossState*)state)->unk14);
+            Obj_FreeObject(((AndrossState*)state)->spawnedObj);
             ((AndrossState*)state)->spawnedObjLifetime = 0;
-            ((AndrossState*)state)->unk14 = 0;
+            ((AndrossState*)state)->spawnedObj = 0;
         }
     }
     if (((AndrossState*)state)->fightPhase < 6)

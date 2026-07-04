@@ -15,7 +15,7 @@ typedef struct AndrossState {
     int handObjB; /* ObjList_FindObjectById(0x47b6a); driven via androsshand_setState */
     int lightAnchorObj;
     int effectHandle;
-    int unk14;
+    int spawnedObj; /* handle of a spawned laser/projectile object (also read as its Z pos) */
     /*
      * 0x18..0x58 is genuinely a pair of per-spawn arrays on the Andross state
      * itself: four spawned-object handles followed by four position-delta
@@ -73,11 +73,11 @@ typedef struct AndrossState {
     u8 unkAF;
     u8 unkB0;
     u8 unkB1[0xB5 - 0xB1];
-    u8 unkB5;
+    u8 hitReactionFlag; /* 0xB5: set externally on damage; nonzero -> hurt/stagger action state */
     u8 unkB6;
-    u8 unkB7;
+    u8 attackCycleCount; /* 0xB7: repeat counter; phase advances after 3 attack cycles */
     int seqQueryObj; /* object handle queried via animatedObjGetSeqId */
-    u8 unkBC;
+    u8 handsInitialized; /* 0xBC: 1 at init; first phase-1 entry clears it and skips the hand reset */
     u8 unkBD[0xC0 - 0xBD];
     f32 cachedPosX;
     f32 cachedPosY;
