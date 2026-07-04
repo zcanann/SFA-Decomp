@@ -55,8 +55,6 @@ typedef struct TrickyImpressState
     u8 pad80C[0x810 - 0x80C];
 } TrickyImpressState;
 
-extern u32 ObjGroup_ContainsObject();
-extern void* ObjGroup_GetObjects();
 extern u64 ObjLink_DetachChild();
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern u32 GameBit_Get(int eventId);
@@ -477,7 +475,6 @@ void trickyImpress(u8* obj)
 /* EN v1.0 0x801375A0  size: 40b  Reset debug log/print state: rewind
  * debugLogEnd to the start of the buffer and reload the print x/y
  * coordinates from saved values. */
-#pragma scheduling off
 #pragma peephole off
 void fn_801375A0(void)
 {
@@ -607,7 +604,6 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
     return closest;
 }
 
-#pragma peephole off
 void fn_80138D7C(int obj, int p2)
 {
     u8 ratio = (u8)((s32) * (u8*)(*(int*)(p2 + 0) + 2) / 10);
@@ -980,7 +976,6 @@ int fn_80136A40(int p1, int c)
     return c;
 }
 
-#pragma peephole off
 #pragma optimization_level 3
 int fn_80136E00(int p1, u8* p)
 {
@@ -1188,7 +1183,6 @@ int fn_80136E00(int p1, u8* p)
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
  * stack trace and GPR dump via debugPrintfxy, draws the underline and
  * box pixels directly into the framebuffer, and flips buffers forever. */
-#pragma ppc_unroll_speculative on
 #pragma opt_strength_reduction off
 #pragma opt_propagation off
 void fn_80137DF8(void)
@@ -1466,9 +1460,7 @@ void fn_80137DF8(void)
         }
     }
 }
-#pragma opt_propagation off
 #pragma opt_strength_reduction on
-#pragma ppc_unroll_speculative on
 
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
