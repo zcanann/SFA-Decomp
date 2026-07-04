@@ -1116,51 +1116,67 @@ main/dll/dll_00DA_pollenfragment.c:
 
 main/dll/dll_00DB_mikabomb.c:
 	.text       start:0x8016B230 end:0x8016B710
+	.data       start:0x803205E8 end:0x80320620
 
 main/dll/dll_00DC_mikabombshadow.c:
 	.text       start:0x8016B710 end:0x8016B898
+	.data       start:0x80320620 end:0x80320658
 
 main/dll/dll_025A_staticcamera.c:
 	.text       start:0x8016B898 end:0x8016B99C
+	.data       start:0x80320658 end:0x80320690
 
 main/dll/dll_00DD_gcbaddieshield.c:
 	.text       start:0x8016B99C end:0x8016BB10
+	.data       start:0x80320690 end:0x803206C8
 
 main/dll/dll_00DE_baddieinterestp.c:
 	.text       start:0x8016BB10 end:0x8016BE70
+	.data       start:0x803206C8 end:0x80320700
 
 main/dll/dll_00C6_animatedobj.c:
 	.text       start:0x8016BE70 end:0x8016C4AC
+	.data       start:0x80320730 end:0x80320768
 
 main/dll/DIM/dll_00C7_dim2roofrub.c:
 	.text       start:0x8016C4AC end:0x8016CD48
+	.data       start:0x80320830 end:0x80320868
 
 main/dll/dll_00C8_depthoffieldpoint.c:
 	.text       start:0x8016CD48 end:0x8016CEE8
+	.data       start:0x80320868 end:0x803208A0
 
 main/dll/dll_00E2_staff.c:
 	.text       start:0x8016CEE8 end:0x8016F16C
+	.data       start:0x8032090C end:0x80320978
 
 main/dll/dll_00E3_fireball.c:
 	.text       start:0x8016F16C end:0x80170004
+	.data       start:0x80320984 end:0x803209C0
 
 main/dll/dll_00E4_flamethrowerspe.c:
 	.text       start:0x80170004 end:0x801702D4
+	.data       start:0x803209E4 end:0x80320A28
 
 main/dll/dll_00E5_shield.c:
 	.text       start:0x801702D4 end:0x80171300
+	.data       start:0x80320A68 end:0x80320AA0
 
 main/dll/dll_0125_curve.c:
 	.text       start:0x80171300 end:0x801713D8
+	.data       start:0x80320AC0 end:0x80320B00
 
 main/dll/dll_00E6_restartmarker.c:
 	.text       start:0x801713D8 end:0x801713FC
+	.data       start:0x80320B00 end:0x80320B38
 
 main/dll/dll_00F7_dllf7.c:
 	.text       start:0x801713FC end:0x801719E0
+	.data       start:0x80320B38 end:0x80320B70
 
 main/dll/dll_00E8_checkpoint4.c:
 	.text       start:0x801719E0 end:0x80171BAC
+	.data       start:0x80320B70 end:0x80320BB0
 
 main/dll/dll_00EA_sideload.c:
 	.text       start:0x80171BAC end:0x80171C78
