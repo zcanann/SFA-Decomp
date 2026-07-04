@@ -845,7 +845,7 @@ void dll_F7_update(int* obj)
             state->byte9 = 0;
             state->byte8 = 1;
             state->hitsRemaining = 2;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 1;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= OBJHITS_PRIORITY_STATE_ENABLED;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         }
         else
@@ -882,7 +882,7 @@ void dll_F7_update(int* obj)
         state->byte9 = 1;
         state->byte8 = 0;
         Sfx_PlayFromObject(obj, SFXTRIG_dsmk2_c);
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
         if ((int)((DllF7Placement*)params)->completeGameBit != -1)
         {
             GameBit_Set((int)((DllF7Placement*)params)->completeGameBit, 1);
