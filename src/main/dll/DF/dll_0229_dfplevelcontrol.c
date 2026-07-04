@@ -16,6 +16,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define DFPLEVELCONTROL_OBJGROUP 0x9
+
 #define DFPLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
 
 extern u32 ObjMsg_SendToObject();
@@ -145,7 +147,7 @@ void dfplevelcontrol_init(int obj, int param2)
 
     DfpLevelControlState* state = ((GameObject*)obj)->extra;
     int v;
-    ObjGroup_AddObject(obj, 9);
+    ObjGroup_AddObject(obj, DFPLEVELCONTROL_OBJGROUP);
     ((DfpFlags7*)&state->flags07)->b80 = GameBit_Get(0xd5d);
     ((DfpFlags7*)&state->flags07)->b40 = GameBit_Get(0xd59);
     ((DfpFlags7*)&state->flags07)->b20 = GameBit_Get(0xd5a);
