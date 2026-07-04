@@ -69,21 +69,29 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
 
 #define TRICKY_RUNTIME(st) ((TrickyRuntime *)(st))
 
+#define TRICKY_CLEAR_FLAG(st, flag) \
+    { \
+        u32 m; \
+        u32 f2 = TRICKY_RUNTIME(st)->flags; \
+        m = ~(flag); \
+        TRICKY_RUNTIME(st)->flags = f2 & m; \
+    }
+
 #define TRICKY_CLEAR_TARGET_DIRTY(st) \
-    (*(s32*)&TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
+    TRICKY_CLEAR_FLAG(st, TRICKY_STATE_TARGET_DIRTY_FLAG)
 
 #define TRICKY_MARK_HELPERS_FINISHED(st) \
     { \
-        TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_HELPERS_ACTIVE_FLAG; \
+        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_HELPERS_ACTIVE_FLAG); \
         TRICKY_RUNTIME(st)->flags |= TRICKY_STATE_HELPERS_FINISHED_FLAG; \
     }
 
 #define TRICKY_CLEAR_RESET_FLAGS(st) \
     { \
-        TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_10; \
-        TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_10000; \
-        TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_20000; \
-        TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_40000; \
+        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_10); \
+        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_10000); \
+        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_20000); \
+        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_40000); \
         TRICKY_RUNTIME(st)->unk0D = -1; \
     }
 
@@ -94,7 +102,7 @@ extern f32 getXZDistance(f32* a, f32* b);
 int trickyGuardFindBaddieTarget(TrickyRuntime * state);
 
 extern int Objfsa_FindNearestCurveType24(float* pos, int p2, int p3);
-extern int trickyUpdateApproachSpeed(int p1, int p2, f32 f, void* target, int p4);
+extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, void* target, int flag);
 extern int trickyMove(int p1, void* p2);
 extern void trickyTurnTowardYaw(int p1, s16 angle);
 extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
@@ -127,17 +135,18 @@ extern f32 lbl_803E24AC;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E2504;
 
+#pragma opt_propagation off
 #pragma opt_common_subs off
 void trickyFlame(int p1, int p2)
 {
     char* strBase = lbl_8031D2E8;
+    void* target;
+    void* state;
     void** slot;
     int i;
     void** slot2;
     int i2;
     void* setup;
-    void* state;
-    void* target;
     int dieFlag;
     int newTarget;
     f32 fz;
@@ -186,7 +195,7 @@ void trickyFlame(int p1, int p2)
     case 4:
         trickyDebugPrint(strBase + 0x720);
         target = (void*)(*(int*)&((TrickyRuntime*)p2)->guardPoint[0] + 0x8);
-        trickyUpdateApproachSpeed(p1, p2, lbl_803E2488, target, 1);
+        trickyUpdateApproachSpeed((u8*)p1, lbl_803E2488, (u8*)p2, target, 1);
         trickyMove(p1, target);
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)p1)->anim.worldPosX, 0x0) == 0)
         {
@@ -197,14 +206,15 @@ void trickyFlame(int p1, int p2)
     case 5:
         trickyDebugPrint(strBase + 0x734);
         target = (void*)(*(int*)&((TrickyRuntime*)p2)->guardPoint[0] + 0x8);
-        trickyUpdateApproachSpeed(p1, p2, lbl_803E2488, target, 1);
-        if (trickyMove(p1, target) == 0)
+        trickyUpdateApproachSpeed((u8*)p1, lbl_803E2488, (u8*)p2, target, 1);
+        if (trickyMove(p1, target) != 0)
         {
-            objAnimFn_8013a3f0(p1, 0x1a, lbl_803E23E4, 0x4000000);
-            ((TrickyRuntime*)p2)->guardState = 7;
-            (*(u8*)*(int*)p2) -= 4;
+            break;
         }
-        break;
+        objAnimFn_8013a3f0(p1, 0x1a, lbl_803E23E4, 0x4000000);
+        ((TrickyRuntime*)p2)->guardState = 7;
+        (*(u8*)*(int*)p2) -= 4;
+        /* fall through */
     case 7:
         trickyDebugPrint(strBase + 0x744);
         {
@@ -311,7 +321,7 @@ void trickyFlame(int p1, int p2)
     case 2:
         trickyDebugPrint(strBase + 0x764);
         target = (void*)((int)((TrickyRuntime*)p2)->homeObj + 0x18);
-        trickyUpdateApproachSpeed(p1, p2, lbl_803E2418, target, 1);
+        trickyUpdateApproachSpeed((u8*)p1, lbl_803E2418, (u8*)p2, target, 1);
         if (trickyMove(p1, target) == 0)
         {
             objAnimFn_8013a3f0(p1, 0x1a, lbl_803E23E4, 0x4000000);
@@ -392,7 +402,7 @@ void trickyFlame(int p1, int p2)
         if (((TrickyRuntime*)p2)->guardTimer <= lbl_803E23DC)
         {
             target = (void*)(*(int*)&((TrickyRuntime*)p2)->guardPoint[1] + 0x8);
-            trickyUpdateApproachSpeed(p1, p2, lbl_803E2488, target, 1);
+            trickyUpdateApproachSpeed((u8*)p1, lbl_803E2488, (u8*)p2, target, 1);
             trickyMove(p1, target);
             if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)p1)->anim.worldPosX, 0x0) != 0)
             {
@@ -408,6 +418,7 @@ void trickyFlame(int p1, int p2)
     }
 }
 #pragma opt_common_subs reset
+#pragma opt_propagation reset
 
 #pragma scheduling on
 static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
@@ -430,6 +441,7 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
 }
 
 #pragma scheduling off
+#pragma opt_propagation off
 #pragma opt_common_subs off
 void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
 {
@@ -690,6 +702,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
     }
 }
 #pragma opt_common_subs reset
+#pragma opt_propagation reset
 
 
 #pragma peephole on
