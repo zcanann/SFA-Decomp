@@ -898,7 +898,7 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
     entry = NULL;
 
     if ((*(u8**)&((TrickyState*)state)->unk528 == routeDef) &&
-        (((TrickyState*)state)->unk530 == ((TrickyState*)state)->unk532) &&
+        (((TrickyState*)state)->unk530 == ((TrickyState*)state)->walkGroup) &&
         (((TrickyState*)state)->unk536 == (routeFlagValue & 0xff)))
     {
         entry = skeetla_validateRouteEntry(((TrickyState*)state)->unk52C);
@@ -906,40 +906,40 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
 
     if (entry == NULL)
     {
-        entry = trickyFindNearestLinkedRouteEntry(state, routeDef, ((TrickyState*)state)->unk532,
+        entry = trickyFindNearestLinkedRouteEntry(state, routeDef, ((TrickyState*)state)->walkGroup,
                                                   routeFlagValue & 0xff);
         if (entry == NULL)
         {
-            entry = trickyFindPathRouteEntry(state, (u32)routeDef, ((TrickyState*)state)->unk532);
+            entry = trickyFindPathRouteEntry(state, (u32)routeDef, ((TrickyState*)state)->walkGroup);
         }
 
         if (entry == NULL)
         {
-            if (((TrickyState*)state)->unk534 != 0)
+            if (((TrickyState*)state)->savedWalkGroup != 0)
             {
-                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, ((TrickyState*)state)->unk534,
+                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, ((TrickyState*)state)->savedWalkGroup,
                                                           routeFlagValue & 0xff);
                 if (entry == NULL)
                 {
-                    entry = trickyFindPathRouteEntry(state, (u32)routeDef, ((TrickyState*)state)->unk534);
+                    entry = trickyFindPathRouteEntry(state, (u32)routeDef, ((TrickyState*)state)->savedWalkGroup);
                 }
                 if (entry != NULL)
                 {
-                    ((TrickyState*)state)->unk532 = ((TrickyState*)state)->unk534;
+                    ((TrickyState*)state)->walkGroup = ((TrickyState*)state)->savedWalkGroup;
                 }
             }
 
             if (entry == NULL)
             {
                 entry = trickyFindNearestLinkedRouteEntry(state, routeDef, 0, routeFlagValue & 0xff);
-                ((TrickyState*)state)->unk532 = 0;
+                ((TrickyState*)state)->walkGroup = 0;
             }
         }
     }
 
     *(u8**)&((TrickyState*)state)->unk528 = routeDef;
     ((TrickyState*)state)->unk52C = entry;
-    ((TrickyState*)state)->unk530 = ((TrickyState*)state)->unk532;
+    ((TrickyState*)state)->unk530 = ((TrickyState*)state)->walkGroup;
     ((TrickyState*)state)->unk536 = routeFlagValue;
     return entry;
 }

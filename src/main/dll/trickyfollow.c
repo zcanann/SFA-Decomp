@@ -210,12 +210,12 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             targetWg = pair[0];
         }
     }
-    if ((targetWg != 0) && (targetWg != ((TrickyState*)state)->unk532))
+    if ((targetWg != 0) && (targetWg != ((TrickyState*)state)->walkGroup))
     {
-        ((TrickyState*)state)->unk532 = targetWg;
+        ((TrickyState*)state)->walkGroup = targetWg;
     }
-    ((TrickyState*)state)->unk534 = ((TrickyState*)state)->unk532;
-    trickyDebugPrint(strs + 0x1e8, ((TrickyState*)state)->unkD0, wg, targetWg, ((TrickyState*)state)->unk532);
+    ((TrickyState*)state)->savedWalkGroup = ((TrickyState*)state)->walkGroup;
+    trickyDebugPrint(strs + 0x1e8, ((TrickyState*)state)->unkD0, wg, targetWg, ((TrickyState*)state)->walkGroup);
     if (((TrickyState*)state)->unkD0 == 0)
     {
         trickyReportError(strs + 0x214, ((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
@@ -332,11 +332,11 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                         {
                             if (tp & !(0xff - ((TrickyState*)state)->unk530))
                             {
-                                ((TrickyState*)state)->unk532 = (int)(tp & 0xff00) >> 8;
+                                ((TrickyState*)state)->walkGroup = (int)(tp & 0xff00) >> 8;
                             }
                             else
                             {
-                                ((TrickyState*)state)->unk532 = tp & 0xff;
+                                ((TrickyState*)state)->walkGroup = tp & 0xff;
                             }
                             ((TrickyState*)state)->unk09 = 5;
                         }
@@ -426,7 +426,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                         }
                         else
                         {
-                            ((TrickyState*)state)->unk532 = pid & 0xff;
+                            ((TrickyState*)state)->walkGroup = pid & 0xff;
                             ((TrickyState*)state)->unk09 = 5;
                         }
                     }
@@ -730,7 +730,7 @@ state_selected:
     case 5:
         trickyDebugPrint(strs + 0x480);
         trickyRankLinkedRouteCandidates(obj, routeFlags, wg, routePtrs);
-        i = trickyFindReachableRouteIndex(state, routePtrs, routeFlags, ((TrickyState*)state)->unk532);
+        i = trickyFindReachableRouteIndex(state, routePtrs, routeFlags, ((TrickyState*)state)->walkGroup);
         if (i == -1)
         {
             ((TrickyState*)state)->speed = velBefore;
@@ -745,7 +745,7 @@ state_selected:
         break;
     case 7:
         trickyDebugPrint(strs + 0x490);
-        if ((((TrickyState*)state)->unk534 != 0) && (wg == ((TrickyState*)state)->unk534))
+        if ((((TrickyState*)state)->savedWalkGroup != 0) && (wg == ((TrickyState*)state)->savedWalkGroup))
         {
             v = lbl_803E241C * timeDelta + velBefore;
             ((TrickyState*)state)->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;
@@ -765,7 +765,7 @@ state_selected:
             {
                 for (step = 0; step < 4; step++)
                 {
-                    if (*(u8*)(node + step + 4) == ((TrickyState*)state)->unk532)
+                    if (*(u8*)(node + step + 4) == ((TrickyState*)state)->walkGroup)
                     {
                         break;
                     }
@@ -773,9 +773,9 @@ state_selected:
                 if (step == 4)
                 {
                     fn_8004B31C(((TrickyState*)state)->voxBlocks[0], (u32)route->nodeA4, ((TrickyState*)state)->targetPosPtr,
-                                ((TrickyState*)state)->unk532, route->reverse);
+                                ((TrickyState*)state)->walkGroup, route->reverse);
                     fn_8004B31C(((TrickyState*)state)->voxBlocks[1], (u32)route->node9C, ((TrickyState*)state)->targetPosPtr,
-                                ((TrickyState*)state)->unk532, route->reverse ^ 1);
+                                ((TrickyState*)state)->walkGroup, route->reverse ^ 1);
                     found = 0;
                     for (step = 0; (step = step + 1) < 100 && (found != 1);)
                     {
@@ -854,7 +854,7 @@ state_selected:
                     fn_800D9F38(route);
                 }
             walk_nodes_common:
-                if ((((TrickyState*)state)->unk534 == 0) || (wg != ((TrickyState*)state)->unk534))
+                if ((((TrickyState*)state)->savedWalkGroup == 0) || (wg != ((TrickyState*)state)->savedWalkGroup))
                 {
                     yawA = getAngle(((TrickyState*)state)->prevLocalPosX - ((GameObject*)obj)->anim.localPosX,
                                     ((TrickyState*)state)->prevLocalPosZ - ((GameObject*)obj)->anim.localPosZ);
@@ -906,7 +906,7 @@ state_selected:
         trickyDebugPrint(strs + 0x49c);
         v = lbl_803E2420 * timeDelta + velBefore;
         ((TrickyState*)state)->speed = (v > gTrickyFollowMaxSpeed) ? gTrickyFollowMaxSpeed : v;
-        if ((((TrickyState*)state)->unk534 != 0) && (wg == ((TrickyState*)state)->unk534))
+        if ((((TrickyState*)state)->savedWalkGroup != 0) && (wg == ((TrickyState*)state)->savedWalkGroup))
         {
             v = lbl_803E241C * timeDelta + velBefore;
             ((TrickyState*)state)->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;
@@ -1125,7 +1125,7 @@ state_selected:
         trickyDebugPrint(strs + 0x4c4);
         v = lbl_803E2420 * timeDelta + velBefore;
         ((TrickyState*)state)->speed = (v > gTrickyFollowMaxSpeed) ? gTrickyFollowMaxSpeed : v;
-        if ((((TrickyState*)state)->unk534 != 0) && (wg == ((TrickyState*)state)->unk534))
+        if ((((TrickyState*)state)->savedWalkGroup != 0) && (wg == ((TrickyState*)state)->savedWalkGroup))
         {
             v = lbl_803E241C * timeDelta + velBefore;
             ((TrickyState*)state)->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;
@@ -1237,7 +1237,7 @@ state_selected:
         trickyDebugPrint(strs + 0x4e8);
         v = lbl_803E2420 * timeDelta + velBefore;
         ((TrickyState*)state)->speed = (v > gTrickyFollowMaxSpeed) ? gTrickyFollowMaxSpeed : v;
-        if ((((TrickyState*)state)->unk534 != 0) && (wg == ((TrickyState*)state)->unk534))
+        if ((((TrickyState*)state)->savedWalkGroup != 0) && (wg == ((TrickyState*)state)->savedWalkGroup))
         {
             v = lbl_803E241C * timeDelta + velBefore;
             ((TrickyState*)state)->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;

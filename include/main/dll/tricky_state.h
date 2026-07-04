@@ -159,8 +159,8 @@ typedef struct TrickyState {
     u8 pad529[3];
     void *unk52C;
     u16 unk530;
-    u16 unk532;
-    u16 unk534; /* mirrored from unk532 (dll_DF) */
+    u16 walkGroup; /* current walk-group id (route/path selection; compared to targetWg and node group bytes) */
+    u16 savedWalkGroup; /* mirrored from walkGroup (dll_DF); retained group used to gate route re-seeding */
     u8 unk536;
     u8 pad537[1];
     u8 voxBlocks[9][0x30]; /* trickyVoxAllocFn_8004b5d4 records, 0x538..0x6E8 */
