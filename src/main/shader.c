@@ -743,9 +743,6 @@ void mapBlockFn_80059c2c(u8* outFlags)
 }
 
 extern f32 lbl_803DEBCC;
-extern f32 retraceCount_803DEBE0;
-extern f32 flushFlag_803DEBE4;
-extern f32 retraceQueue_803DEBE8;
 extern f32 lbl_803DEBEC;
 extern f32 PreCB;
 extern char gViewFrustumPlanes[];
