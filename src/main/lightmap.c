@@ -2291,7 +2291,7 @@ void getVisibleObjects(s8* opacity)
             att = *(u8**)(sub + 0xc8);
             if (att != NULL)
             {
-                *(u16*)(att + 0xb0) &= ~0x800;
+                *(u16*)(att + 0xb0) &= ~OBJECT_OBJFLAG_RENDERED;
             }
             sub += 4;
         }
