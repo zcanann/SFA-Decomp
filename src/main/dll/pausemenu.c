@@ -48,7 +48,7 @@ extern void gameTextFn_8001628c(int id, int a, int b, s32* o1, s32* o2, s32* o3,
 
 extern u16 getNextTaskHintText(void);
 
-extern void fn_80128120(void* obj, int v);
+extern void fn_80128120(void* obj, u8 v);
 extern void fn_80128470(int v);
 extern f32 hudElementOpacity;
 extern f32 timeDelta;
