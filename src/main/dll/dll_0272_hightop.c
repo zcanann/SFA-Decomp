@@ -162,6 +162,8 @@ STATIC_ASSERT(offsetof(HighTopObject, x) == offsetof(ObjAnimComponent, localPosX
 STATIC_ASSERT(offsetof(HighTopObject, runtime) == 0xB8);
 
 #define HIGHTOP_OBJECT_TYPE_ID 0x43
+#define HIGHTOP_OBJGROUP 0xa
+#define ARWARWING_OBJGROUP 0x26
 
 int hightop_defaultStateHandler(void) { return 0x0; }
 
@@ -218,8 +220,8 @@ void hightop_modelMtxFn(int obj, f32* a, f32* b, f32* c)
 
 void hightop_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 0x26);
-    ObjGroup_RemoveObject(obj, 0xa);
+    ObjGroup_RemoveObject(obj, ARWARWING_OBJGROUP);
+    ObjGroup_RemoveObject(obj, HIGHTOP_OBJGROUP);
     (*gGameUIInterface)->airMeterSetShutdown();
 }
 
@@ -472,8 +474,8 @@ void hightop_init(void* obj, u8* arg)
     {
         *(int*)&((ObjModelState*)node)->flags |= 0xa10;
     }
-    ObjGroup_AddObject((int)obj, 38);
-    ObjGroup_AddObject((int)obj, 10);
+    ObjGroup_AddObject((int)obj, ARWARWING_OBJGROUP);
+    ObjGroup_AddObject((int)obj, HIGHTOP_OBJGROUP);
     (*(void (**)(void*, char*, int, int))((char*)*gPlayerInterface + 4))(obj, (char*)runtime, 11, 1);
     runtime->baddie.gravity = lbl_803E6B4C;
     pathState = (u8*)&runtime->baddie + 4;
@@ -814,7 +816,7 @@ int hightop_stateHandler07(int obj, int p)
         rt->substate = 5;
         ((BaddieState*)p)->moveSpeed = lbl_803E6AAC;
         rt->flags &= ~1;
-        ObjGroup_RemoveObject(obj, 10);
+        ObjGroup_RemoveObject(obj, HIGHTOP_OBJGROUP);
     }
     if ((s8)((BaddieState*)p)->moveDone != 0)
     {
