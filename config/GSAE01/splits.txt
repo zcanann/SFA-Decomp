@@ -1887,7 +1887,7 @@ main/dll/NW/dll_0198_nwshlevcon.c:
 
 main/dll/dll_0199_dll199.c:
 	.text       start:0x801CA9C0 end:0x801CB7A8
-	.data       start:0x80326588 end:0x803265DC
+	.data       start:0x80326550 end:0x803265DC
 
 main/dll/dll_019A_dll19a.c:
 	.text       start:0x801CB7A8 end:0x801CBA98

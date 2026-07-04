@@ -9,6 +9,7 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
+#include "main/object_descriptor.h"
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -55,6 +56,28 @@ void dll_199_free(int* obj)
     ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
     ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
 }
+
+void dll_199_initialise(void);
+void dll_199_release(void);
+void dll_199_init(int obj, int def);
+void dll_199_update(int obj);
+
+ObjectDescriptor dll_199 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_199_initialise,
+    (ObjectDescriptorCallback)dll_199_release,
+    0,
+    (ObjectDescriptorCallback)dll_199_init,
+    (ObjectDescriptorCallback)dll_199_update,
+    (ObjectDescriptorCallback)dll_199_hitDetect,
+    (ObjectDescriptorCallback)dll_199_render,
+    (ObjectDescriptorCallback)dll_199_free,
+    (ObjectDescriptorCallback)dll_199_getObjectTypeId,
+    dll_199_getExtraSize,
+};
 
 int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
