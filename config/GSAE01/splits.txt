@@ -1078,7 +1078,7 @@ main/dll/dll_00D1_tumbleweedbush.c:
 
 main/dll/dll_00D2_tumbleweed.c:
 	.text       start:0x80163BBC end:0x801650D0
-	.data       start:0x80320288 end:0x803202E8
+	.data       start:0x80320288 end:0x80320380
 
 main/dll/backpack.c:
 	.text       start:0x801650D0 end:0x8016558C
