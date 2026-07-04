@@ -30,3 +30,5 @@ void vidInit(void)
     }
     prev->next = NULL;
 }
+
+VoiceNode vidListNodes[128];

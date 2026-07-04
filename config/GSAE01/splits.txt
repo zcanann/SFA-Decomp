@@ -3168,6 +3168,7 @@ main/audio/mcmd_exec.c:
 
 main/audio/vid_init.c:
 	.text       start:0x80278F0C end:0x80279004
+	.bss        start:0x803CA2D0 end:0x803CAAD0
 
 main/audio/vid_get.c:
 	.text       start:0x80279004 end:0x80279038
