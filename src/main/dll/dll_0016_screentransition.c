@@ -2,7 +2,6 @@
 #include "main/screen_transition.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/dll/dll_0016_screentransition.h"
-extern u32 DAT_803de0af;
 
 extern u8 gScreenTransitionDone;
 u8 screenTransition_func07(void) { return gScreenTransitionDone; }
