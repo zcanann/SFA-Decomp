@@ -9,6 +9,8 @@
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/SH/shthorntail_ai.h"
 
+#define THORNTAIL_OBJGROUP 0x4d
+
 #define SHTHORNTAIL_OBJFLAG_RENDERED 0x800
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjTrigger_IsSet(int obj);
@@ -306,7 +308,7 @@ void SHthorntail_free(SHthorntailObject* obj)
     {
         gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
     }
-    ObjGroup_RemoveObject((int)obj, 0x4d);
+    ObjGroup_RemoveObject((int)obj, THORNTAIL_OBJGROUP);
 }
 
 void SHthorntail_render(SHthorntailObject* obj)
@@ -652,5 +654,5 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
     obj->animEventCallback = SHthorntail_updateLevelControlState;
     dll_2E_func05((int)obj, runtime, 0xffffdc72, 0x2aaa, 3);
     dll_2E_func08((int)runtime, 400, 0x78);
-    ObjGroup_AddObject((int)obj, 0x4d);
+    ObjGroup_AddObject((int)obj, THORNTAIL_OBJGROUP);
 }
