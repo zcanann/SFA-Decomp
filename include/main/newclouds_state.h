@@ -49,7 +49,7 @@ typedef struct NewCloud {
     u8 unk137C[0x4];
     f32 flakeMinZ;
     u8 unk1384[0x4];
-    f32 unk1388;
+    f32 flakeCenterY;
     u8 unk138C[0x4];
     f32 driftSpeed;
     u8 unk1394[0x8];

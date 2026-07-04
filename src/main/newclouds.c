@@ -1700,7 +1700,7 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
             (int)
         randomGetRange((int)((NewCloud*)NC_CLOUD)->flakeMinX,
                        ((NewCloud*)NC_CLOUD)->flakeMaxX);
-        NC_PARTS[i].y = ((NewCloud*)NC_CLOUD)->unk1388;
+        NC_PARTS[i].y = ((NewCloud*)NC_CLOUD)->flakeCenterY;
         NC_PARTS[i].z =
             (int)
         randomGetRange((int)((NewCloud*)NC_CLOUD)->flakeMinZ,
