@@ -619,27 +619,26 @@ void pauseMenuDrawStatus(void)
         case 10:
         case 11:
         case 12:
-            off = i * 4;
-            if ((*(f32*)(base + off + 0xAFC) >= lbl_803E1E3C &&
+            if ((((f32*)(base + 0xAFC))[i] >= lbl_803E1E3C &&
                     ((*(u16*)(player + 0xB0) & 0x1000) == 0) && (pauseMenuState == 0) &&
                     ((u32)airMeter == 0) && (getHudHiddenFrameCount() == 0) &&
                     (PMDS_CAMERA_GET_STATE() != 0x44)) ||
                 ((i == 3) && ((lbl_803DD792 & 2) != 0)))
             {
-                thresh = lbl_803E1FA0 * timeDelta + *(f32*)(base + off + 0xAC8);
-                *(f32*)(base + off + 0xAC8) = thresh;
+                thresh = lbl_803E1FA0 * timeDelta + ((f32*)(base + 0xAC8))[i];
+                ((f32*)(base + 0xAC8))[i] = thresh;
                 if (thresh > hudElementOpacity)
                 {
-                    *(f32*)(base + off + 0xAC8) = hudElementOpacity;
+                    ((f32*)(base + 0xAC8))[i] = hudElementOpacity;
                 }
             }
             else
             {
-                thresh = -(lbl_803E1FA0 * timeDelta - *(f32*)(base + off + 0xAC8));
-                *(f32*)(base + off + 0xAC8) = thresh;
+                thresh = -(lbl_803E1FA0 * timeDelta - ((f32*)(base + 0xAC8))[i]);
+                ((f32*)(base + 0xAC8))[i] = thresh;
                 if (thresh < lbl_803E1E3C)
                 {
-                    *(f32*)(base + off + 0xAC8) = *(f32 *)&lbl_803E1E3C;
+                    ((f32*)(base + 0xAC8))[i] = *(f32 *)&lbl_803E1E3C;
                 }
             }
             break;
@@ -722,9 +721,7 @@ void pauseMenuDrawStatus(void)
             }
             if (*(int*)((u8*)statuses + off) != 0)
             {
-                bp = base + ji;
-                bp += 0xB64;
-                if (*bp == 0)
+                if (((u8*)(base + 0xB64))[ji] == 0)
                 {
                     bit = 0;
                     switch (i)
@@ -751,7 +748,7 @@ void pauseMenuDrawStatus(void)
                     if (bit != 0)
                     {
                         GameBit_Set(bit, 1);
-                        *bp = 1;
+                        ((u8*)(base + 0xB64))[ji] = 1;
                     }
                 }
             }
