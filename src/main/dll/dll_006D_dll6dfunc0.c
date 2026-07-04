@@ -41,8 +41,6 @@ extern ModgfxInterface** gModgfxInterface;
 /* Cross-TU main-lib functions and globals this DLL references (home TUs
    un-recovered; left as Ghidra FUN_/DAT_ names). */
 
-extern void* memset(void* dst, int val, u32 n);
-extern void* memcpy(void* dst, const void* src, u32 n);
 extern u32 FUN_80006768();
 extern u32 FUN_8000676c();
 extern u32 FUN_80006c20();
