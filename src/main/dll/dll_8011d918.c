@@ -12,6 +12,8 @@
 #pragma scheduling off
 
 extern s16 gCMenuActivatedId;
+/* u16 sfxId is load-bearing: retail masks the arg (clrlwi r4,r4,16) at this
+ * call site, unlike the int-sfxId decl in sfx.h/engine_shared.h. */
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit);
 
 void cMenuPlaySelectedItemSfx(int obj)
