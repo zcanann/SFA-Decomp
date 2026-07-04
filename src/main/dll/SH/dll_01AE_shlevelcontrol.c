@@ -287,6 +287,11 @@ typedef struct ShLevelcontrolState
     u8 pad14[0x18 - 0x14];
 } ShLevelcontrolState;
 
+/* flags word bits (shared physical field with ShopkeeperLevelControlState.flags) */
+#define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2          /* re-apply map music on next tick; cleared at substate/music transitions */
+#define SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED 0x40 /* ThornTail intro event already fired */
+#define SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED 0x80 /* early cutscene sequence begun */
+
 STATIC_ASSERT(offsetof(ShLevelcontrolState, waitCounter) == 0x4);
 STATIC_ASSERT(offsetof(ShLevelcontrolState, eventState) == 0x6);
 STATIC_ASSERT(offsetof(ShLevelcontrolState, timer8) == 0x8);
@@ -415,14 +420,14 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         {
             ((ShLevelcontrolState*)state)->musicLatch = 0xf2;
             GameBit_Set(0xc0, 1);
-            ((ShLevelcontrolState*)state)->flags &= ~2;
+            ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
         }
     }
     else if (((ShLevelcontrolState*)state)->musicLatch != 0xcc)
     {
         ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
         GameBit_Set(0xc0, 1);
-        ((ShLevelcontrolState*)state)->flags &= ~2;
+        ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
     }
 
     if ((GameBit_Get(0xea8) == 0) && (GameBit_Get(0x91b) != 0))
@@ -436,9 +441,6 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
 #pragma scheduling on
 #pragma peephole on
 #define SHOPKEEPER_THORNTAIL_OBJECT_ID 0x442ff
-#define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2
-#define SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED 0x40
-#define SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED 0x80
 #define SHOPKEEPER_LOADING_FLAG 0x1000
 #define SHOPKEEPER_OBJFLAG_HIDDEN 0x4000
 
@@ -723,7 +725,7 @@ void sh_levelcontrol_update(int obj)
             {
                 ((ShLevelcontrolState*)state)->musicLatch = 0xdb;
                 GameBit_Set(0xc0, 1);
-                ((ShLevelcontrolState*)state)->flags = ((ShLevelcontrolState*)state)->flags & 0xfffffffd;
+                ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
             }
         }
         else
@@ -733,7 +735,7 @@ void sh_levelcontrol_update(int obj)
             {
                 ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
                 GameBit_Set(0xc0, 1);
-                ((ShLevelcontrolState*)state)->flags = ((ShLevelcontrolState*)state)->flags & 0xfffffffd;
+                ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
             }
         }
         val = GameBit_Get(0xc2);
@@ -752,7 +754,7 @@ void sh_levelcontrol_update(int obj)
         {
             ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
             GameBit_Set(0xc0, 1);
-            ((ShLevelcontrolState*)state)->flags = ((ShLevelcontrolState*)state)->flags & 0xfffffffd;
+            ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
         }
         if (((ShLevelcontrolState*)state)->waitCounter >= 2)
         {
@@ -794,7 +796,7 @@ void sh_levelcontrol_update(int obj)
             {
                 ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
                 GameBit_Set(0xc0, 1);
-                ((ShLevelcontrolState*)state)->flags = ((ShLevelcontrolState*)state)->flags & 0xfffffffd;
+                ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
             }
         }
         else if (((ShLevelcontrolState*)state)->musicLatch == 0xcc)
@@ -819,7 +821,7 @@ void sh_levelcontrol_update(int obj)
             {
                 ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
                 GameBit_Set(0xc0, 1);
-                ((ShLevelcontrolState*)state)->flags = ((ShLevelcontrolState*)state)->flags & 0xfffffffd;
+                ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
             }
         }
         else if (((ShLevelcontrolState*)state)->musicLatch == 0xcc)
@@ -854,7 +856,7 @@ void sh_levelcontrol_update(int obj)
         {
             ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
             GameBit_Set(0xc0, 1);
-            ((ShLevelcontrolState*)state)->flags = ((ShLevelcontrolState*)state)->flags & 0xfffffffd;
+            ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
         }
         val = GameBit_Get(0x19c);
         if ((val != 0) && (val = GameBit_Get(0xf3e), val == 0))
@@ -966,7 +968,7 @@ void sh_levelcontrol_init(int obj)
 
     if (GameBit_Get(0x611) != 0)
     {
-        *(int*)state |= 0x40;
+        ((ShLevelcontrolState*)state)->flags |= SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED;
     }
 
     ((ShLevelcontrolState*)state)->mapAct = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
