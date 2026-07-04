@@ -562,7 +562,6 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
                         {
                             goto foundBreak;
                         }
-                        if (charLen2 != 0)
                         {
                             int j = charLen2;
                             while (j-- != 0)
