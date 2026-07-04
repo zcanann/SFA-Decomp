@@ -117,7 +117,7 @@ main/pi_dolphin.c:
 	.data       start:0x802CAF48 end:0x802CBE94
 	.bss        start:0x8035EF48 end:0x803779A0
 
-main/boot_logo.s: comment:0
+main/boot_logo.c:
 	.data       start:0x802CC6A0 end:0x8030C6A0
 
 main/rcp_dolphin.c:

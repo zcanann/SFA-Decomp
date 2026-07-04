@@ -18,25 +18,29 @@ understood anchors.
   header** (`width`@0x0A, `height`@0x0C `u16`; `format`@0x16 `u8`; pixels at `+0x60`) followed by
   the tile-swizzled image; `GXInitTexObj` is called with the header's own width/height/format, so
   the dimensions are **data-driven, not hardcoded** — which is how they were recovered exactly.
-- **The three textures** (address = `0x802CC6A0` + offset; each = 0x60 header + image):
+- **The three textures** are **offsets within** the single `gLoadingScreenTextures` blob, not
+  separate symbols — the code reads them from the arena copy (below), never by per-logo symbol.
+  Each record = 0x60 header + image:
 
-  | # | logo | width×height | format | header addr | record size | proposed symbol |
-  |---|---|---|---|---|---|---|
-  | 0 | Nintendo | 376×104 | IA8 | `0x802CC6A0` | `0x131E0` | `gLoadingScreenTextures` (base) |
-  | 1 | Rareware | 128×160 | RGB5A3 | `0x802DF880` | `0xA060` | `gRarewareLogoTexture` |
-  | 2 | Dolby Pro Logic II | 180×92 | CMPR (DXT1) | `0x802E98E0` | `0x22E0` | `gDolbyProLogic2Texture` |
+  | # | logo | width×height | format | offset (addr) | record size |
+  |---|---|---|---|---|---|
+  | 0 | Nintendo | 376×104 | IA8 | `+0x0` (`0x802CC6A0`) | `0x131E0` |
+  | 1 | Rareware | 128×160 | RGB5A3 | `+0x131E0` (`0x802DF880`) | `0xA060` |
+  | 2 | Dolby Pro Logic II | 180×92 | CMPR (DXT1) | `+0x1D240` (`0x802E98E0`) | `0x22E0` |
 
   IA8/CMPR carry only intensity or a limited palette; the in-game yellow/gold is a render-time
   **TEV tint**, not stored in the texture. The three records fill `0x802CC6A0`–`0x802EBBC0`
   (`0x1F520`); everything after is `0xFF` padding.
-- **Representation:** `src/main/boot_logo.s` — a committed stub that `.incbin`s the four texture
-  ranges out of the user's own `orig/GSAE01/sys/main.dol` at build time (see *Why it isn't in
-  source*). The four symbols carry `noreloc` in `symbols.txt`, so dtk emits raw data and the object
-  byte-matches the target: the region counts as 100% matched `game` data.
-- **Proposed name:** `gLoadingScreenTextures` for the base (matching the code's own
-  `LoadingScreenTexture` type / `initLoadingScreenTextures()`), plus the per-logo symbols in the
-  table. `pi_dolphin.c:videoInit` hands this base to `GXInit` as the GPU FIFO — the region is
-  reused as the write-only FIFO once the boot logos have been displayed.
+- **Representation:** a single symbol `gLoadingScreenTextures` spanning the whole `0x40000` region.
+  `src/main/boot_logo.c` `#include`s `gLoadingScreenTextures.inc`, which dtk auto-generates from the
+  user's own disc via the `extract:` block in `config.yml` (see *Why it isn't in source*). The
+  symbol carries `noreloc` in `symbols.txt` so dtk emits raw data and the object byte-matches — the
+  region counts as 100% matched `game` data.
+- **Naming:** `gLoadingScreenTextures` is the whole `0x40000` blob, **not** just the Nintendo
+  record. `pi_dolphin.c:videoInit` memcpys all `0x40000` to arena-top and hands the same base to
+  `GXInit` as the GPU FIFO, and indexes diagnostic format strings at `base + 0x4002c`. The three
+  logos are offsets within it (table above), not separate symbols — no code references them
+  individually.
 - **Size:** `0x40000` (262,144 bytes) — three texture records (`0x1F520`) padded with `0xFF` to
   the `0x40000` GX-FIFO size.
 
@@ -50,17 +54,18 @@ strings via `base + 0x4002c`.
 ### Note on the apparent "relocations"
 dtk emits spurious `.4byte fn+offset` "relocations" inside the texture data — false positives, the
 analyzer matching tiled/compressed image bytes against the `0x80xxxxxx` code-address range, not a
-real pointer table. The four texture symbols are marked `noreloc` in `symbols.txt` so dtk emits them
-as raw data; a plain `.incbin` then byte-matches the target.
+real pointer table. `gLoadingScreenTextures` is marked `noreloc` in `symbols.txt` so dtk emits the
+whole `0x40000` region as raw data; the extracted C byte-array then matches the target.
 
 ### Why it isn't in source
-It is an embedded copyrighted asset, so its 262,144 bytes are never *committed* — not as a C array,
-not as a checked-in `.bin`. But it is still *reproduced*: `boot_logo.s` `.incbin`s the range out of
-the user's own retail DOL under `orig/` (gitignored) at build time. The repo holds only the recipe —
-four `.incbin` directives and their offsets — never the content. This is the standard decomp
-treatment for assets (cf. oot / mm / pokeemerald `.incbin "baserom/..."`).
+It is an embedded copyrighted asset, so its 262,144 bytes are never *committed*. Instead, dtk's
+`extract:` feature (config.yml) reconstructs it at build time: dtk pulls `gLoadingScreenTextures`
+straight out of the user's own retail DOL under `orig/` (gitignored) and emits a gitignored
+`build/GSAE01/include/gLoadingScreenTextures.inc` (a `unsigned char[]` byte-array); `boot_logo.c`
+only `#include`s it. The repo holds one config entry and a one-line `.c` — never the content. This
+is the standard dtk asset treatment (cf. marioparty4's `nintendoData` / `ank8x8_4b` extracts).
 
-**Status: identified, reproduced via `boot_logo.s`, 100% matched — complete.**
+**Status: identified, reproduced via `config.yml` `extract:` + `boot_logo.c`, 100% matched — complete.**
 Because it is reconstructed from the user's disc and byte-matches the target, it counts toward
 `matched_data` like any other unit. Counting it — rather than leaving it an uncounted
 `autogenerated` blob — is what lets the data metric reach 100%; excluding it caps the whole-DOL
