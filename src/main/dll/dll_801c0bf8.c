@@ -27,7 +27,7 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
     int endX;
     int endY;
     int endZ;
-    short (*vertex)[8];
+    short* vertex;
     int i;
     float angleRadians;
     f32 vertexX;
@@ -43,15 +43,15 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
 
     /* BAMS -> radians: angle * PI / 32768. */
     i = 0;
-    vertex = (short (*)[8])out;
+    vertex = out;
     angleRadians = (lbl_803E4DE4 * (float)(short)angle) / lbl_803E4DE8;
     for (; i < 6; i++)
     {
         /* Rotate each vertex about Y: x' = x*cos, z' = -x*sin. */
-        vertexX = (float)(int)(*vertex)[0];
-        (*vertex)[0] = (int)(vertexX * mathCosf(angleRadians));
-        (*vertex)[2] = (int)(-vertexX * mathSinf(angleRadians));
-        vertex++;
+        vertexX = (float)(int)vertex[0];
+        vertex[0] = (int)(vertexX * mathCosf(angleRadians));
+        vertex[2] = (int)(-vertexX * mathSinf(angleRadians));
+        vertex += 8;
     }
 
     /* Translate the near end-cap (vertices 0,1,2) onto the start node ... */
