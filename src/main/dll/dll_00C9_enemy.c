@@ -53,11 +53,6 @@ extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern u32 fn_80154870();
 
-extern f32 lbl_803E31FC;
-extern f32 lbl_803E3200;
-extern f32 lbl_803E3258;
-extern f32 lbl_803E3264;
-extern f32 lbl_803E3280;
 
 typedef struct
 {
@@ -159,14 +154,6 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 extern u64 ObjLink_DetachChild();
 extern u32 fn_80154C24();
-extern f32 lbl_803DC074;
-extern f32 lbl_803DC078;
-extern f32 lbl_803E3204;
-extern f32 lbl_803E3208;
-extern f32 lbl_803E324C;
-extern f32 lbl_803E3284;
-extern f32 lbl_803E3288;
-extern f32 lbl_803E328C;
 extern void* lbl_803DDA50;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
