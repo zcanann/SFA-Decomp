@@ -21,6 +21,10 @@
 #include "main/dll/dll_00FD.h"
 #include "main/mm.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+/* the two object groups this plant joins */
+#define MAGICPLANT_OBJGROUP_A 0x34
+#define MAGICPLANT_OBJGROUP_B 0x3e
 extern int randomGetRange(int lo, int hi);
 
 extern void* Obj_GetPlayerObject(void);
@@ -370,8 +374,8 @@ void MagicPlant_free(int obj, int freeChildren)
 
     plant = (MagicPlantObject*)obj;
     state = plant->state;
-    ObjGroup_RemoveObject(obj, 0x34);
-    ObjGroup_RemoveObject(obj, 0x3e);
+    ObjGroup_RemoveObject(obj, MAGICPLANT_OBJGROUP_A);
+    ObjGroup_RemoveObject(obj, MAGICPLANT_OBJGROUP_B);
     if (plant->childLinkActive != 0)
     {
         ObjLink_DetachChild(obj, state->childObject);
@@ -417,8 +421,8 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
     plant = (MagicPlantObject*)obj;
     objAnim = &plant->objAnim;
     state = plant->state;
-    ObjGroup_AddObject(obj, 52);
-    ObjGroup_AddObject(obj, 62);
+    ObjGroup_AddObject(obj, MAGICPLANT_OBJGROUP_A);
+    ObjGroup_AddObject(obj, MAGICPLANT_OBJGROUP_B);
     noSaveTime = (*gMapEventInterface)->shouldNotSaveTime(setup->eventId);
     if (noSaveTime == 0)
     {
