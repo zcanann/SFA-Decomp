@@ -9,10 +9,10 @@
  */
 #include "types.h"
 #include "main/engine_shared.h"
+#include "main/texture.h"
 extern u8 lbl_803DD728;
-extern u32 lbl_803DD72C;
+extern u8* lbl_803DD72C;
 
-extern void textureFree(u32 handle);
 extern void warpToMap(int idx, s8 transType);
 
 
@@ -41,7 +41,7 @@ int Dummy39_run(void)
     cur = lbl_803DD728;
     if ((s8)cur > 0)
     {
-        next = (s8)(cur - step);
+        next = cur - step;
         *(s8*)&lbl_803DD728 = next;
         if ((s8)(u8)next <= 0)
         {
