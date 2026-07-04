@@ -770,6 +770,8 @@ void loadMemCardImages(void)
     u64* q;
     u64 a[1];
     u64 chk;
+    u64 x2[1];
+    u64 a2[1];
 
     if (lbl_803DC968 != 0)
     {
@@ -843,8 +845,8 @@ void loadMemCardImages(void)
         DVDClose(&fi);
     }
     p = (u64*)gSaveCardImageBuffer;
-    x[0] = 0;
     a[0] = 1;
+    x[0] = 0;
     for (i[0] = (int)x[0]; (int)i[0] < 0x400; i[0]++)
     {
         u64 v = p[i[0]];
@@ -856,15 +858,15 @@ void loadMemCardImages(void)
     ((u32*)p)[0xa90] = (u32)(chk >> 32);
     q = (u64*)gSaveCardImageBuffer;
     p = q + 0x400;
-    x[0] = 0;
-    a[0] = 1;
-    for (i[0] = (int)x[0]; (int)i[0] < 0x3ff; i[0]++)
+    x2[0] = 0;
+    a2[0] = 1;
+    for (i[0] = (int)x2[0]; (int)i[0] < 0x3ff; i[0]++)
     {
         u64 v = p[i[0]];
-        x[0] = x[0] ^ v;
-        a[0] = a[0] + v;
+        x2[0] = x2[0] ^ v;
+        a2[0] = a2[0] + v;
     }
-    chk = x[0] ^ (a[0] + 13);
+    chk = x2[0] ^ (a2[0] + 13);
     ((u32*)q)[0xfff] = (u32)chk;
     ((u32*)q)[0xffe] = (u32)(chk >> 32);
     DCFlushRange((void*)gSaveCardImageBuffer, 0x4000);
