@@ -43,7 +43,6 @@ STATIC_ASSERT(offsetof(WaterFallSprayPlacement, count) == 0x24);
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
 
-extern f32 lbl_803E40BC;
 
 void WaterFallSpray_free(u8* obj)
 {
