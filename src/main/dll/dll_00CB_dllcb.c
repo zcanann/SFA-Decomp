@@ -35,10 +35,10 @@ typedef struct DllCBPlacement
     f32 posY;
     f32 posZ;
     u8 pad14[0x24 - 0x14];
-    s16 unk24;
+    s16 trackYieldId;
     u8 pad26[0x2C - 0x26];
     s16 gameBitId;
-    s8 unk2E;
+    s8 trackYieldEnable;
     u8 pad2F[0x30 - 0x2F];
 } DllCBPlacement;
 
@@ -143,11 +143,11 @@ void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
     {
         *(int*)&p->baddie.targetObj = ((GroundBaddieState*)sub)->savedObjC0;
         *(s8*)&p->baddie.hasTarget = 0;
-        if (((DllCBPlacement*)setup)->unk2E != -1)
+        if (((DllCBPlacement*)setup)->trackYieldEnable != -1)
         {
             if (p2 != NULL)
             {
-                (*gObjectTriggerInterface)->yield((ObjSeqState*)p2, ((DllCBPlacement*)setup)->unk24);
+                (*gObjectTriggerInterface)->yield((ObjSeqState*)p2, ((DllCBPlacement*)setup)->trackYieldId);
             }
             *(s8*)&((GroundBaddieState*)sub)->unk405 = 1;
         }
