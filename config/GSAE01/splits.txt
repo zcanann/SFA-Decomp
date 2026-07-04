@@ -672,7 +672,7 @@ main/dll/dll_00BC_projquakeshock.c:
 
 main/dll/dll_00BD_projsunshock.c:
 	.text       start:0x80100940 end:0x80100978
-	.data       start:0x803198F8 end:0x80319920
+	.data       start:0x803198F8 end:0x80319940
 
 main/dll/dll_00BE_projtesla.c:
 	.text       start:0x80100978 end:0x801009B0
