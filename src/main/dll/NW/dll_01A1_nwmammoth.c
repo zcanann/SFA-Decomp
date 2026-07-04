@@ -17,8 +17,6 @@ extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern u32 objAudioFn_8006ef38();
 extern u32 DAT_803274f4;
-extern f32 lbl_803E5EA4;
-extern f32 lbl_803E5EAC;
 
 #pragma scheduling on
 #pragma peephole on

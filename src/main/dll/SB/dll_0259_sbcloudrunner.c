@@ -118,13 +118,6 @@ extern u32 ObjGroup_AddObject();
 
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern void WCPushBlock_SpawnFromPath(s16 *path, u8 *state);
-extern u32 *DAT_803dd6e4;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6908;
-extern f32 lbl_803E6924;
-extern f32 lbl_803E6928;
-extern f32 lbl_803E692C;
-extern f32 lbl_803E6930;
 
 #pragma scheduling on
 #pragma peephole on

@@ -67,7 +67,6 @@ typedef enum Dim2lavacontrolPhase
 extern f32 lbl_803E4B90;
 extern void fn_8004C1E4(int sfxId, f32 vol);
 extern void timeOfDayFn_80055000(void);
-extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
 extern void envFxActFn_800887f8(u8 value);
 extern u8 lbl_803DBF28[8];
 extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e1, int e2);
