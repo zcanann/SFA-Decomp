@@ -48,7 +48,6 @@ typedef struct BaddieAfterUpdateBonesCbState
     s32 unk36C;
 } BaddieAfterUpdateBonesCbState;
 
-extern u32 ABS();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern u32 fn_80154870();
