@@ -267,8 +267,6 @@ extern f32 lbl_803E2350;
 extern f32 gTitleScreenCursorY;
 extern void PSMTXTrans(void*, f32, f32, f32);
 
-__declspec(section ".sdata") extern char lbl_803DBBF0[];
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void* Obj_GetActiveModel(u8* obj);
 
