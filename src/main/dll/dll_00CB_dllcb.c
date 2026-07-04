@@ -24,6 +24,9 @@
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
 
+/* object group this object belongs to */
+#define DLLCB_OBJGROUP 3
+
 typedef struct DllCBPlacement
 {
     u8 pad0[0x4 - 0x0];
@@ -594,7 +597,7 @@ int fn_80160534(int* obj)
 void dll_CB_free(int* obj)
 {
     GroundBaddieState* state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, DLLCB_OBJGROUP);
     {
         int* sub = ((GameObject*)obj)->childObjs[0];
         if (sub != NULL)
