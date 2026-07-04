@@ -294,3 +294,45 @@ u8 gDll9fEffectDataTable[520] = {
     0, 17, 0, 18, 0, 19, 0, 20, 0, 0, 0, 50, 0, 250, 0, 250,
     0, 50, 0, 0, 0, 0, 0, 0,
 };
+
+/* .sdata2 float-pool constants referenced via extern by sibling stubs */
+const f32 lbl_803E1488 = 0.0f;
+const f32 lbl_803E148C = 0.035f;
+const f32 lbl_803E1490 = -0.45f;
+const f32 lbl_803E1494 = 0.45f;
+const f32 lbl_803E1498 = 10.0f;
+const f32 lbl_803E149C = 255.0f;
+const f32 lbl_803E14A0 = -6.0f;
+const f32 lbl_803E14A4 = 1.0f;
+const f32 lbl_803E14A8 = 2.0f;
+const f32 lbl_803E14AC = 4.0f;
+const f32 lbl_803E14B0 = 6.0f;
+const f32 lbl_803E14B4 = 0.0f;
+const f32 lbl_803E14B8 = 0.0f;
+const f32 lbl_803E14BC = 0.01f;
+const f32 lbl_803E14C0 = 0.05f;
+const f32 lbl_803E14C4 = 255.0f;
+const f32 lbl_803E14C8 = 1.0f;
+const f32 lbl_803E14CC = -6.0f;
+const f32 lbl_803E14D0 = 5.0f;
+const f32 lbl_803E14D4 = 500.0f;
+const f32 lbl_803E14D8 = 3.5f;
+const f32 lbl_803E14DC = 2.0f;
+const f32 lbl_803E14E0 = 0.0f;
+const f32 lbl_803E14E4 = 0.05f;
+const f32 lbl_803E14E8 = -0.35f;
+const f32 lbl_803E14EC = 255.0f;
+const f32 lbl_803E14F0 = 4.0f;
+const f32 lbl_803E14F4 = 8.0f;
+const f32 lbl_803E14F8 = 10.0f;
+const f32 lbl_803E14FC = 1.0f;
+const f32 lbl_803E1500 = -4.0f;
+const f32 lbl_803E1504 = 0.0f;
+const f32 lbl_803E1508 = 0.0f;
+const f32 lbl_803E150C = 1.0f;
+const f32 lbl_803E1510 = 1.26f;
+const f32 lbl_803E1514 = 1.9f;
+const f32 lbl_803E1518 = 255.0f;
+const f32 lbl_803E151C = 3.0f;
+const f32 lbl_803E1520 = 2.0f;
+const f32 lbl_803E1524 = 25.0f;
