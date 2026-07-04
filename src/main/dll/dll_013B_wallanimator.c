@@ -57,7 +57,7 @@ typedef struct WallanimatorPlacement
     u8 pad0[0x18 - 0x0];
     s16 gameBit;
     u8 pad1A[0x1C - 0x1A];
-    s16 unk1C; /* 0x1C: debris spawn rotation (rot[2]) / modelMtx selector */
+    s16 spawnRotZ; /* 0x1C: debris spawn rotation (rot[2]) / modelMtx selector */
     u8 pad1E[0x24 - 0x1E];
     s16 initialRotX; /* 0x24: initial rotX seed */
     u8 pad26[0x28 - 0x26];
@@ -82,7 +82,7 @@ u8 wallanimator_func0B(int* obj)
 
 u8 wallanimator_modelMtxFn(int* obj)
 {
-    return (u8)((WallanimatorPlacement*)(((GameObject*)obj)->anim.placementData))->unk1C;
+    return (u8)((WallanimatorPlacement*)(((GameObject*)obj)->anim.placementData))->spawnRotZ;
 }
 
 f32 wallanimator_setScale(int obj, int target)
@@ -115,7 +115,7 @@ f32 wallanimator_setScale(int obj, int target)
         vecRotateZXY(spawn.rot, offset);
         offset[2] -= lbl_803E3FD8;
         vecRotateZXY((void*)obj, offset);
-        spawn.rot[2] = ((WallanimatorPlacement*)placementDesc)->unk1C;
+        spawn.rot[2] = ((WallanimatorPlacement*)placementDesc)->spawnRotZ;
         spawn.rot[0] = ((GameObject*)obj)->anim.rotX;
         spawn.pos[0] = ((GameObject*)obj)->anim.worldPosX + offset[0];
         spawn.pos[1] = lbl_803E3FDC + (((GameObject*)obj)->anim.worldPosY + offset[1]);
