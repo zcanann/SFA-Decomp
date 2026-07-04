@@ -17,12 +17,8 @@ extern f32 lbl_803E3E80;
 extern f32 lbl_803E3E84;
 extern f32 lbl_803E3E88;
 
-#pragma scheduling on
-#pragma peephole on
 extern u8 lbl_803AC7B0[];
 
-#pragma scheduling off
-#pragma peephole off
 void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
 {
     LfxEmitterState* state;
@@ -68,11 +64,11 @@ void lfxemitter_initialise(void)
     *(s16*)(lbl_803AC7B0 + 0xe) = 10000;
 }
 
+/* reports whether the emitter's config record has been loaded yet */
 int lfxemitter_func0B(LfxEmitterObject* obj)
 {
     LfxEmitterState* state = obj->state;
-    int v = (int)state->config;
-    return (u32)(-v | v) >> 31;
+    return state->config != NULL;
 }
 
 void fn_8018FF48(u16* src, u16* dst)
