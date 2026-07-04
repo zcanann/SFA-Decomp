@@ -1057,7 +1057,7 @@ main/dll/dll_00CC_chukchuk.c:
 
 main/dll/dll_00CD_iceball.c:
 	.text       start:0x8015FBEC end:0x801601C4
-	.data       start:0x8031FFD0 end:0x80320008
+	.data       start:0x8031FFD0 end:0x80320178
 
 main/dll/dll_00CB_dllcb.c:
 	.text       start:0x801601C4 end:0x80161130

@@ -280,3 +280,22 @@ ObjectDescriptor gIceBallObjDescriptor = {
     (ObjectDescriptorCallback)iceball_getObjectTypeId,
     iceball_getExtraSize,
 };
+
+/*__DATA_EXTERNS__*/
+extern void dll_CB_func0B_nop();
+extern void dll_CB_setScale();
+extern void dll_CB_getExtraSize_ret_1040();
+extern void dll_CB_getObjectTypeId();
+extern void dll_CB_free();
+extern void dll_CB_render();
+extern void dll_CB_hitDetect();
+extern void dll_CB_update();
+extern void dll_CB_init();
+extern void dll_CB_release_nop();
+extern void dll_CB_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+u8 lbl_80320008[120] = { 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2 };
+u8 lbl_80320080[32] = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0 };
+void* dll_CB[16] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x000B0000, dll_CB_initialise, dll_CB_release_nop, (void*)0x00000000, dll_CB_init, dll_CB_update, dll_CB_hitDetect, dll_CB_render, dll_CB_free, dll_CB_getObjectTypeId, dll_CB_getExtraSize_ret_1040, dll_CB_setScale, dll_CB_func0B_nop };
+u8 lbl_803200E0[120] = { 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7 };
+u8 lbl_80320158[32] = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0 };
