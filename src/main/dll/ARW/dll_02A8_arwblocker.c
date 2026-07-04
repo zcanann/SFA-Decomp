@@ -10,6 +10,10 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+/* placement sequenceMode: which object sequence the blocker fires on approach */
+#define ARWBLOCKER_SEQMODE_DEFAULT 0 /* fires sequence 0; never reports "armed" */
+#define ARWBLOCKER_SEQMODE_ARMED   1 /* fires sequence 1; reports armed until locked */
+
 typedef struct ARWBlockerSetup
 {
     ObjPlacement base;
@@ -37,13 +41,13 @@ int arwblocker_getBlockState(int obj)
     ARWBlockerState* state = ((GameObject*)obj)->extra;
     switch (state->sequenceMode)
     {
-    case 1:
+    case ARWBLOCKER_SEQMODE_ARMED:
         if (state->sequenceLocked != 0)
         {
             break;
         }
         return 1;
-    case 0:
+    case ARWBLOCKER_SEQMODE_DEFAULT:
         break;
     }
     return 0;
@@ -120,10 +124,10 @@ void arwblocker_update(int obj)
         {
             switch (state->sequenceMode)
             {
-            case 1:
+            case ARWBLOCKER_SEQMODE_ARMED:
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                 break;
-            case 0:
+            case ARWBLOCKER_SEQMODE_DEFAULT:
             default:
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 break;
