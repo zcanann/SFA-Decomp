@@ -24,6 +24,10 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 #define GX_LEQUAL 3
 #define GX_ALWAYS 7
 #define GX_AOP_AND 0
+
+#define FUELCELL_MSG_IN_RANGE 0x7000a  /* sent to player when grab is offered */
+#define FUELCELL_MSG_RELEASE 0x7000b   /* player dropped/deposited the cell */
+#define FUELCELL_GAMEBIT_CARRIED 0xe97 /* global: a fuel cell is currently held */
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void objRenderFn_8003b8f4(int* obj);
@@ -147,12 +151,12 @@ void fuelcell_update(int* obj)
     {
         while (ObjMsg_Pop(obj, &msgId, &msgParam, 0) != 0)
         {
-            if (msgId == 0x7000b)
+            if (msgId == FUELCELL_MSG_RELEASE)
             {
                 state->grabbed = 0;
                 GameBit_Set(setup->offBit, 1);
                 gameBitIncrement(0x3f5);
-                GameBit_Set(0xe97, 0);
+                GameBit_Set(FUELCELL_GAMEBIT_CARRIED, 0);
             }
         }
     }
@@ -181,14 +185,14 @@ void fuelcell_update(int* obj)
                 }
                 dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
                 if (dy > lbl_803E3D08 && dy < lbl_803E3D0C
-                    && GameBit_Get(0xe97) == 0
+                    && GameBit_Get(FUELCELL_GAMEBIT_CARRIED) == 0
                     && getXZDistance(&((GameObject*)obj)->anim.worldPosX,
                                      &((GameObject*)player)->anim.worldPosX) < lbl_803E3D10)
                 {
                     state->msg = 0xcbe;
-                    ObjMsg_SendToObject(player, 0x7000a, obj, state);
+                    ObjMsg_SendToObject(player, FUELCELL_MSG_IN_RANGE, obj, state);
                     state->grabbed = 1;
-                    GameBit_Set(0xe97, 1);
+                    GameBit_Set(FUELCELL_GAMEBIT_CARRIED, 1);
                     Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
                 }
             }
