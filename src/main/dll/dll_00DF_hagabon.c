@@ -30,6 +30,9 @@
 #include "main/mm.h"
 #include "string.h"
 
+/* object group this object belongs to */
+#define HAGABON_OBJGROUP 3
+
 typedef struct HagabonPlacement
 {
     u8 pad0[0x14 - 0x0];
@@ -289,7 +292,7 @@ void hagabon_hitDetect(int obj)
 void hagabon_free(int obj)
 {
     void** state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, HAGABON_OBJGROUP);
     Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
     if (*state != NULL)
     {
