@@ -164,7 +164,7 @@ void dbegg_processMessages(int obj)
                     ObjGroup_RemoveObject(obj, 36);
                 }
                 ObjHits_DisableObject(obj);
-                ((DbEggState*)sub)->mode = 11;
+                ((DbEggState*)sub)->mode = DBEGG_MODE_HELD;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
                 break;
@@ -188,7 +188,7 @@ void dbegg_processMessages(int obj)
             case 16:
                 ObjGroup_AddObject(obj, 36);
             case 20:
-                ((DbEggState*)sub)->mode = 5;
+                ((DbEggState*)sub)->mode = DBEGG_MODE_FALLING;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
                 ObjHits_EnableObject(obj);
