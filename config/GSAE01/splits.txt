@@ -939,7 +939,7 @@ main/dll/dll_003E_dummy3e.c:
 
 main/dll/dll_0031_minimap.c:
 	.text       start:0x80132024 end:0x80133F70
-	.data       start:0x8031C508 end:0x8031C5D0
+	.data       start:0x8031C508 end:0x8031C620
 
 main/dll/dll_003F_dll3f.c:
 	.text       start:0x80133F70 end:0x80134098

@@ -1062,3 +1062,7 @@ void fn_8013396C(void)
         }
     }
 }
+
+/* descriptor/ptr table auto 0x8031c5d0-0x8031c620 */
+u32 lbl_8031C5D0[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00040000, (u32)Minimap_initialise, (u32)Minimap_release, 0x00000000, (u32)fn_8013396C, (u32)Minimap_update, 0x00000000 };
+u32 lbl_8031C5F8[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, (u32)dll_3F_initialise, (u32)dll_3F_release, 0x00000000, (u32)dll_3F_frameStart_ret_0, (u32)dll_3F_frameEnd_nop, (u32)fn_80133F70 };
