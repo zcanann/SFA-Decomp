@@ -294,7 +294,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
 
                 if ((((KeymapEntry*)(keymap + idx))->id & 0xC000) == 0)
                 {
-                    if (inpGetMidiCtrl(0x41, midi, midiSet) > 0x1F80)
+                    if (inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 0x1F80)
                     {
                         handle = audioFn_8026f630(k & 0x7F, midi, midiSet, vidFlag, &rejected);
                         ok = !rejected;
@@ -358,7 +358,7 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
     switch (id & 0xC000)
     {
     case 0:
-        if (inpGetMidiCtrl(0x41, midi, midiSet) > 0x1F80)
+        if (inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 0x1F80)
         {
             handle = audioFn_8026f630(key & 0x7F, midi, midiSet, 1, &rejected);
             ok = !rejected;
@@ -573,7 +573,7 @@ void LowPrecisionHandler(int voice)
 
     if (sv->midi != 0xFF)
     {
-        portamento = inpGetMidiCtrl(0x41, sv->midi, sv->midiSet);
+        portamento = inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, sv->midi, sv->midiSet);
         if (portamento != sv->portLastCtrlState || (HWVOICE_FLAGS(sv) & 0x21000) == 0x20000)
         {
             if (portamento <= 0x1F80)
