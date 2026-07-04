@@ -25,6 +25,8 @@
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 extern u32 FUN_8003b818();
 
+#define STATICCAMERA_OBJGROUP 7
+
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
     0,
@@ -178,7 +180,7 @@ extern f32 lbl_803E33F0;
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, STATICCAMERA_OBJGROUP);
     return;
 }
 
@@ -204,7 +206,7 @@ void staticCamera_init(s16* obj, int placement, int p3)
     colorState[1] = 0;
     if (p3 == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, STATICCAMERA_OBJGROUP);
     }
     return;
 }
