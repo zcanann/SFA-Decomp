@@ -26,6 +26,9 @@
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+/* object group this object belongs to */
+#define BADDIEINTERESTP_OBJGROUP 7
+
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -212,7 +215,7 @@ extern f32 lbl_803E3224;
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, BADDIEINTERESTP_OBJGROUP);
     return;
 }
 
@@ -239,7 +242,7 @@ void staticCamera_init(short* obj, int params, int deferAdd)
     colorState[1] = 0;
     if (deferAdd == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, BADDIEINTERESTP_OBJGROUP);
     }
     return;
 }
