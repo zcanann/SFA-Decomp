@@ -2,6 +2,8 @@
 #include "main/game_object.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define WCLEVELCONT_OBJGROUP 0x9
+
 void wclevelcont_func16(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
@@ -169,7 +171,7 @@ void wclevelcont_free(int obj)
     WcLevelControlState* state = ((GameObject*)obj)->extra;
     u8 mode;
 
-    ObjGroup_RemoveObject(obj, 9);
+    ObjGroup_RemoveObject(obj, WCLEVELCONT_OBJGROUP);
     mode = state->mode;
     if (mode == 1)
     {
@@ -440,7 +442,7 @@ void wclevelcont_init(int obj)
     {
         state->mode = 3;
     }
-    ObjGroup_AddObject(obj, 9);
+    ObjGroup_AddObject(obj, WCLEVELCONT_OBJGROUP);
     GameBit_Set(0x226, 1);
     GameBit_Set(0x2a6, 1);
     GameBit_Set(0x206, 1);
