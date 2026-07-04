@@ -217,25 +217,15 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
                     salApplyMatrix(listener->matrix, &emitter->posX, transformed);
                     if (transformed[2] <= zero)
                     {
-                        if (-listener->rearRange < transformed[2])
-                        {
-                            frontBackSum += -transformed[2] / listener->rearRange;
-                        }
-                        else
-                        {
-                            frontBackSum += lbl_803E78A4;
-                        }
+                        frontBackSum += -listener->rearRange < transformed[2]
+                            ? -transformed[2] / listener->rearRange
+                            : lbl_803E78A4;
                     }
                     else
                     {
-                        if (listener->frontRange > transformed[2])
-                        {
-                            frontBackSum += -transformed[2] / listener->frontRange;
-                        }
-                        else
-                        {
-                            frontBackSum += lbl_803E7890;
-                        }
+                        frontBackSum += listener->frontRange > transformed[2]
+                            ? -transformed[2] / listener->frontRange
+                            : lbl_803E7890;
                     }
 
                     if (((zero != transformed[0]) ||
