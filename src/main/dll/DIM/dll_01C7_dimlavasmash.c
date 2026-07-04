@@ -186,7 +186,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 typedef struct DimlavasmashObjectDef
 {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
+    s16 rotByte; /* 0x18 rotation byte (read raw as def[0x18] into anim.rotX) */
     s16 surfaceLayerId; /* 0x1A def source for state.surfaceLayerId */
     s16 unk1C;
     s16 gameBit;
