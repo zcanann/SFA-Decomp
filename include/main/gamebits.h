@@ -124,6 +124,17 @@ enum GameBitId {
      */
     GAMEBIT_WORLDMAP_OPEN = 0xA63,
 
+    /*
+     * Arwing on-rails flight ring-gate result - the first gamebits set after the
+     * world map opens (the intro flight to Dinosaur Planet). At the end of a
+     * flight the ring-choice trigger (arwlevelcon, dll_02A1) compares collected
+     * vs required rings and sets one; the pass/fail follow-up sequence and
+     * arwarwing_update (polling GameBit_Get(0x9d8)) branch on it. Transient -
+     * both are reset to 0 at each flight start (arwlevelcon_init / seq start).
+     */
+    GAMEBIT_ARWING_FLIGHT_RINGS_PASSED = 0x9D8, /* collected >= required (success) */
+    GAMEBIT_ARWING_FLIGHT_RINGS_FAILED = 0x9D7, /* collected <  required (fail)    */
+
     /* ======================================================================
      * Unplaced - meaning verified, but the setter (the story beat that flips
      * the bit) is not yet traced, so these are not yet slotted into the
