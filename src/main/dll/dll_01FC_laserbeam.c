@@ -31,6 +31,8 @@ extern ModgfxInterface** gModgfxInterface;
 
 #define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
 
+#define LASERBEAM_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
+
 typedef struct Dll1FBSetup
 {
     ObjPlacement base;
@@ -427,7 +429,7 @@ void LaserBeam_update(int obj2)
                         }
                         else if ((u8)(c - 2) <= 1 || c == 30)
                         {
-                            ObjMsg_SendToObject(player, 0x60004, (char*)b + 0x34, 0);
+                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_BURST, (char*)b + 0x34, 0);
                         }
                         *(u8*)&b->fireCooldown = 2;
                     }
