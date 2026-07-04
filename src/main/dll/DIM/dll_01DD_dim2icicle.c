@@ -33,6 +33,12 @@ extern void objRenderFn_8003b8f4(f32);
 
 #define DIM2ICICLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* Dim2IcicleState.mode (offset 6) drop-sequence phase */
+#define DIM2ICICLE_MODE_WAIT_HIT 0 /* hanging; wait for a hit */
+#define DIM2ICICLE_MODE_DROP     1 /* falling toward the located drop-target Y */
+#define DIM2ICICLE_MODE_IMPACTED 2 /* landed; fade out then reset (also set at init if already dropped) */
+#define DIM2ICICLE_MODE_WOBBLE   3 /* post-hit sway before releasing */
+
 typedef struct Dim2iciclePlacement
 {
     u8 pad0[0x1 - 0x0];
@@ -75,12 +81,12 @@ void dim2icicle_init(int obj, s8* p)
     char* inner = ((GameObject*)obj)->extra;
     if (GameBit_Get(((Dim2iciclePlacement*)p)->impactGameBit) != 0)
     {
-        inner[6] = 2;
+        inner[6] = DIM2ICICLE_MODE_IMPACTED;
         ((GameObject*)obj)->anim.alpha = 0;
     }
     else
     {
-        inner[6] = 0;
+        inner[6] = DIM2ICICLE_MODE_WAIT_HIT;
         ((GameObject*)obj)->anim.alpha = 0xff;
     }
     ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
@@ -99,18 +105,18 @@ void dim2icicle_update(int obj)
     sub = *(int*)&((GameObject*)obj)->extra;
     switch (((Dim2IcicleState*)sub)->mode)
     {
-    case 0:
+    case DIM2ICICLE_MODE_WAIT_HIT:
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0xe)
         {
             break;
         }
         ((Dim2IcicleState*)sub)->wobbleRotY = randomGetRange(0x320, 0x4b0);
-        ((Dim2IcicleState*)sub)->mode = 3;
+        ((Dim2IcicleState*)sub)->mode = DIM2ICICLE_MODE_WOBBLE;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
         Sfx_PlayFromObject(obj, SFXmv_cflap2_c);
         break;
-    case 3:
+    case DIM2ICICLE_MODE_WOBBLE:
         ((GameObject*)obj)->anim.rotY = ((Dim2IcicleState*)sub)->wobbleRotY;
         ((Dim2IcicleState*)sub)->wobbleRotY = (f32)((Dim2IcicleState*)sub)->wobbleRotY * lbl_803E4B6C;
         if (((GameObject*)obj)->anim.rotY >= 10)
@@ -118,10 +124,10 @@ void dim2icicle_update(int obj)
             break;
         }
         ((GameObject*)obj)->anim.rotY = 0;
-        ((Dim2IcicleState*)sub)->mode = 1;
+        ((Dim2IcicleState*)sub)->mode = DIM2ICICLE_MODE_DROP;
         ((Dim2IcicleState*)sub)->timer = 0x3c;
         break;
-    case 1:
+    case DIM2ICICLE_MODE_DROP:
         if (((Dim2IcicleState*)sub)->dropTargetFound == 0)
         {
             int n;
@@ -162,7 +168,7 @@ void dim2icicle_update(int obj)
         if (((GameObject*)obj)->anim.localPosY < ((Dim2IcicleState*)sub)->dropY)
         {
             GameBit_Set(((Dim2iciclePlacement*)state)->impactGameBit, 1);
-            ((Dim2IcicleState*)sub)->mode = 2;
+            ((Dim2IcicleState*)sub)->mode = DIM2ICICLE_MODE_IMPACTED;
             (*gWaterfxInterface)->spawnSplashBurst(
                 (void*)obj, ((GameObject*)obj)->anim.localPosX,
                 ((Dim2IcicleState*)sub)->dropY, ((GameObject*)obj)->anim.localPosZ,
@@ -174,7 +180,7 @@ void dim2icicle_update(int obj)
             ((Dim2IcicleState*)sub)->timer = 0x96;
         }
         break;
-    case 2:
+    case DIM2ICICLE_MODE_IMPACTED:
     default:
         if (((Dim2IcicleState*)sub)->timer > 0)
         {
