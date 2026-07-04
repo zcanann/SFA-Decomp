@@ -104,6 +104,8 @@ typedef struct LinkbLevState
 void linkb_levcontrol_init(int* obj)
 {
     extern int getEnvfxAct(int a, int b, u16 idx, int d); /* #57 */
+    /* the (u8*)(int) launder is load-bearing: it makes the fn_80088870 arg
+     * reuse envBase's register instead of re-materializing the address */
     u8* envBase = (u8*)(int)lbl_803238D8;
     LinkbLevState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (LINKBLEVCONTROL_OBJFLAG_HIDDEN | LINKBLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
