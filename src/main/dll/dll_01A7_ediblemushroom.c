@@ -14,6 +14,13 @@
 #define EDIBLEMUSHROOM_OBJFLAG_HIDDEN 0x4000
 #define EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
 #define EDIBLEMUSHROOM_OBJFLAG_RENDERED 0x800
+
+/* EdibleMushroomState::flags bits */
+#define EDIBLEMUSHROOM_FLAG_ANIM_DONE 0x1  /* current move finished this frame */
+#define EDIBLEMUSHROOM_FLAG_ON_CURVE  0x2  /* follows a rom-curve path (type 4/5) */
+#define EDIBLEMUSHROOM_FLAG_GROUNDED  0x4  /* landed on a floor hit */
+#define EDIBLEMUSHROOM_FLAG_MOVING    0x8  /* nonzero root speed this frame */
+#define EDIBLEMUSHROOM_FLAG_STRUCK    0x10 /* hit by the player this cycle */
 #define EDIBLEMUSHROOM_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
@@ -96,7 +103,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 
     player = Obj_GetPlayerObject();
 
-    if (((EdibleMushroomState*)state)->flags & 4)
+    if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_GROUNDED)
     {
         ((EdibleMushroomState*)state)->animState = 6;
     }
@@ -108,7 +115,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
     switch (sval)
     {
     case 0:
-        if (((EdibleMushroomState*)state)->flags & 0x10)
+        if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_STRUCK)
         {
             ((EdibleMushroomState*)state)->animState = 9;
         }
@@ -116,7 +123,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         {
             if (((EdibleMushroomState*)state)->currentTargetDistance < other[0x19])
             {
-                if (((EdibleMushroomState*)state)->flags & 2)
+                if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_ON_CURVE)
                 {
                     rangeSq = ((EdibleMushroomState*)state)->lungeRange * ((EdibleMushroomState*)state)->lungeRange;
                     while (1)
@@ -171,23 +178,23 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         }
         break;
     case 1:
-        if (((EdibleMushroomState*)state)->flags & 0x10)
+        if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_STRUCK)
         {
             ((EdibleMushroomState*)state)->animState = 9;
         }
-        else if (((EdibleMushroomState*)state)->flags & 1)
+        else if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_ANIM_DONE)
         {
             ((EdibleMushroomState*)state)->animState = 0;
         }
         break;
     case 3:
     case 7:
-        if (((EdibleMushroomState*)state)->flags & 0x10)
+        if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_STRUCK)
         {
             ((EdibleMushroomState*)state)->animState = 9;
             break;
         }
-        if (((EdibleMushroomState*)state)->flags & 1)
+        if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_ANIM_DONE)
         {
             if (sval == 3u)
             {
@@ -201,7 +208,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         }
         /* fall through */
     case 4:
-        if (((EdibleMushroomState*)state)->flags & 0x10)
+        if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_STRUCK)
         {
             ((EdibleMushroomState*)state)->animState = 9;
         }
@@ -219,7 +226,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_mushrele16);
                 if (speed >= lbl_803E5298)
                 {
-                    if (((EdibleMushroomState*)state)->flags & 2)
+                    if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_ON_CURVE)
                     {
                         rangeSq = ((EdibleMushroomState*)state)->lungeRange * ((EdibleMushroomState*)state)->
                             lungeRange;
@@ -253,7 +260,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                 }
                 else
                 {
-                    if (((EdibleMushroomState*)state)->flags & 2)
+                    if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_ON_CURVE)
                     {
                         rangeSq = ((EdibleMushroomState*)state)->retreatRange * ((EdibleMushroomState*)state)->retreatRange;
                         while (1)
@@ -288,18 +295,18 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         }
         break;
     case 5:
-        if ((((EdibleMushroomState*)state)->flags & 0x11) == 0x11)
+        if ((((EdibleMushroomState*)state)->flags & (EDIBLEMUSHROOM_FLAG_STRUCK | EDIBLEMUSHROOM_FLAG_ANIM_DONE)) == (EDIBLEMUSHROOM_FLAG_STRUCK | EDIBLEMUSHROOM_FLAG_ANIM_DONE))
         {
             ((EdibleMushroomState*)state)->animState = 9;
         }
         if (((EdibleMushroomState*)state)->currentTargetDistance > lbl_803E5294 + other[0x19] && (((EdibleMushroomState
-            *)state)->flags & 1))
+            *)state)->flags & EDIBLEMUSHROOM_FLAG_ANIM_DONE))
         {
             ((EdibleMushroomState*)state)->animState = 4;
         }
         else if (speed >= lbl_803E5298)
         {
-            if (((EdibleMushroomState*)state)->flags & 2)
+            if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_ON_CURVE)
             {
                 rangeSq = ((EdibleMushroomState*)state)->lungeRange * ((EdibleMushroomState*)state)->lungeRange;
                 while (1)
@@ -347,7 +354,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
             ObjHits_SetSourceMask((int)obj, 1);
             (*gExpgfxInterface)->freeSource((int)obj);
             ((EdibleMushroomState*)state)->animState = 0;
-            ((EdibleMushroomState*)state)->flags &= ~0x10;
+            ((EdibleMushroomState*)state)->flags &= ~EDIBLEMUSHROOM_FLAG_STRUCK;
         }
         else
         {
@@ -398,7 +405,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         }
         break;
     case 6:
-        if (((EdibleMushroomState*)state)->flags & 0x10)
+        if (((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_STRUCK)
         {
             ((EdibleMushroomState*)state)->animState = 9;
         }
@@ -419,11 +426,11 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
     if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
         (int)obj, gEdibleMushroomAnimEventTable[((EdibleMushroomState*)state)->animState], timeDelta, (ObjAnimEventList*)animOut) != 0)
     {
-        ((EdibleMushroomState*)state)->flags |= 1;
+        ((EdibleMushroomState*)state)->flags |= EDIBLEMUSHROOM_FLAG_ANIM_DONE;
     }
     else
     {
-        ((EdibleMushroomState*)state)->flags &= ~1;
+        ((EdibleMushroomState*)state)->flags &= ~EDIBLEMUSHROOM_FLAG_ANIM_DONE;
     }
 
     k = ((EdibleMushroomState*)state)->animState;
@@ -442,11 +449,11 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 
     if (lbl_803E5288 != speed)
     {
-        ((EdibleMushroomState*)state)->flags |= 8;
+        ((EdibleMushroomState*)state)->flags |= EDIBLEMUSHROOM_FLAG_MOVING;
     }
     else
     {
-        ((EdibleMushroomState*)state)->flags &= ~8;
+        ((EdibleMushroomState*)state)->flags &= ~EDIBLEMUSHROOM_FLAG_MOVING;
     }
 
     ((GameObject*)obj)->anim.velocityX =
@@ -551,8 +558,8 @@ void ediblemushroom_hitDetect(u8* obj)
     mapObj = *(u8**)&((GameObject*)obj)->anim.placementData;
 
     if (((((GameObject*)obj)->objectFlags & EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK) == 0) &&
-        (((((EdibleMushroomState*)state)->flags & 8) != 0) ||
-         ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0)))
+        (((((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_MOVING) != 0) ||
+         ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & EDIBLEMUSHROOM_FLAG_MOVING) != 0)))
     {
         hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                         ((GameObject*)obj)->anim.localPosZ, &hits, 0, 0);
@@ -569,7 +576,7 @@ void ediblemushroom_hitDetect(u8* obj)
                                       -1, 0xff, 0x14);
         if ((mapObj[0x18] == 4) && (hitCount != 0) && ((s8)bboxHit[0x50] == 13))
         {
-            ((EdibleMushroomState*)state)->flags |= 4;
+            ((EdibleMushroomState*)state)->flags |= EDIBLEMUSHROOM_FLAG_GROUNDED;
         }
     }
 }
@@ -663,11 +670,11 @@ void ediblemushroom_update(u8* self)
             Obj_SetModelColorFadeRecursive(self, 0xF, 0xC8, 0, 0, 1);
             if (((GameObject*)hitObj)->anim.seqId != 0x416)
             {
-                if ((((EdibleMushroomState*)state)->flags & 0x10) == 0)
+                if ((((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_STRUCK) == 0)
                 {
                     Sfx_PlayFromObject((u32)self, SFXmv_curtainloop16);
                 }
-                ((EdibleMushroomState*)state)->flags = (u8)(((EdibleMushroomState*)state)->flags | 0x10);
+                ((EdibleMushroomState*)state)->flags = (u8)(((EdibleMushroomState*)state)->flags | EDIBLEMUSHROOM_FLAG_STRUCK);
             }
         }
     }
@@ -734,7 +741,7 @@ void ediblemushroom_init(int obj, int aux)
         {
         case 4:
         case 5:
-            ((EdibleMushroomState*)state)->flags |= 2;
+            ((EdibleMushroomState*)state)->flags |= EDIBLEMUSHROOM_FLAG_ON_CURVE;
             (*gRomCurveInterface)->initCurve((void*)state, (void*)obj, lbl_803E52EC, &curveInitParam, -1);
             ((GameObject*)obj)->anim.localPosX = ((EdibleMushroomState*)state)->curve.posX;
             ((GameObject*)obj)->anim.localPosZ = ((EdibleMushroomState*)state)->curve.posZ;
