@@ -2166,9 +2166,9 @@ extern f32 lbl_803DEB64;
 void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) */
 {
     f32 z;
+    f32 span;
     f32 step;
     f32 half;
-    f32 span;
     f32 x0;
     f32 y;
     f32 ySq;
@@ -2185,18 +2185,20 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
         GXSetMisc(GX_MT_XF_FLUSH, 0);
         DCInvalidateRange(gRcpWarpDistortDisplayList, 0x6640);
         GXBeginDisplayList(gRcpWarpDistortDisplayList, 0x6640);
+        i = 0;
         span = LastReadIssued_803DEB58.lo;
         half = lbl_803DEB5C;
         step = lbl_803DEB54;
         z = lbl_803DEB64;
-        for (i = 0; i < 0x10; i++)
+        for (; i < 0x10; i++)
         {
             GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT4, 0x22);
+            j = 0;
             col0 = step * (f32)i;
             col1 = step * (f32)(i + 1);
             x0 = col0 / span - half;
             x1 = col1 / span - half;
-            for (j = 0; j <= 0x10; j++)
+            for (; j <= 0x10; j++)
             {
                 y = (step * (f32)j) / span - half;
                 ySq = y * y;
