@@ -31,7 +31,7 @@ typedef struct DfshObjCreatorSetup
     u8 unk27;          /* 0x27 */
     u8 pad28;          /* 0x28 */
     u8 unk29;          /* 0x29 */
-    s8 unk2A;          /* 0x2A */
+    s8 rotByte;        /* 0x2A: object yaw byte (anim.rotX >> 8) */
     u8 unk2B;          /* 0x2B */
     u8 pad2C[0x2E - 0x2C];
     s8 unk2E;          /* 0x2E */
@@ -46,7 +46,7 @@ STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk18) == 0x18);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk22) == 0x22);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk27) == 0x27);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk29) == 0x29);
-STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk2A) == 0x2A);
+STATIC_ASSERT(offsetof(DfshObjCreatorSetup, rotByte) == 0x2A);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk2E) == 0x2E);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk30) == 0x30);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk34) == 0x34);
@@ -124,7 +124,7 @@ void dfsh_objcreator_update(int obj)
         ((DfshObjCreatorSetup*)spawnSetup)->unk30 = -1;
         ((DfshObjCreatorSetup*)spawnSetup)->unk1A = -1;
         ((DfshObjCreatorSetup*)spawnSetup)->unk1C = -1;
-        ((DfshObjCreatorSetup*)spawnSetup)->unk2A = (s8)(((GameObject*)obj)->anim.rotX >> 8);
+        ((DfshObjCreatorSetup*)spawnSetup)->rotByte = (s8)(((GameObject*)obj)->anim.rotX >> 8);
         ((DfshObjCreatorSetup*)spawnSetup)->unk2B = 2;
         if (GameBit_Get(0xfc) != 0)
         {
