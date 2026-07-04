@@ -32,6 +32,13 @@
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
 
+/* gSaveSelectPanelIndex: current sub-panel (index into gSaveSelectPanels; -1 = none). */
+#define SAVE_SELECT_PANEL_CHOOSE_SLOT    0 /* pick a save slot */
+#define SAVE_SELECT_PANEL_OPEN_FILE      1 /* opened file: continue / save */
+#define SAVE_SELECT_PANEL_SLOT_ACTION    2 /* copy / erase slot action */
+#define SAVE_SELECT_PANEL_CONFIRM_ERASE  3 /* confirm-erase prompt */
+#define SAVE_SELECT_PANEL_CHAPTER_SELECT 4 /* chapter (act) select */
+
 typedef struct SaveSelectPanel
 {
     TitleMenuTextEntry* entries;
@@ -219,15 +226,15 @@ void saveFileSelect_init(int sel, int slot)
                 {
                     ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
                 }
-                gSaveSelectPanelIndex = 1;
-                gSaveSelectPanels[1].entries[0].flags =
-                    (u16)(gSaveSelectPanels[1].entries[0].flags & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
-                gSaveSelectPanels[1].entries[1].pad18[2] = 0;
-                gSaveSelectPanels[1].entries[1].textId = 982;
+                gSaveSelectPanelIndex = SAVE_SELECT_PANEL_OPEN_FILE;
+                gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries[0].flags =
+                    (u16)(gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries[0].flags & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
+                gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries[1].pad18[2] = 0;
+                gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries[1].textId = 982;
                 gSaveSelectMenuItemActive = 0;
                 ((void (**)(void*, u8, int, int, int, int, int, int, int, int, int, int))
                     gTitleMenuLinkInterface->vtable)[1]
-                (gSaveSelectPanels[1].entries, gSaveSelectPanels[1].count, 0, 0, 5, 4, 20, 200,
+                (gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries, gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].count, 0, 0, 5, 4, 20, 200,
                  255, 255, 255, 255);
                 ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](0);
                 saveFileSelect_debugCheatProgress = 0;
@@ -277,8 +284,8 @@ void saveSelectGoToChapterSelect(void)
     }
     if (saveFileSelect_saveDirty != 0 || lbl_803DB424 == 0)
     {
-        gSaveSelectPanelIndex = 4;
-        panel = &gSaveSelectPanels[4];
+        gSaveSelectPanelIndex = SAVE_SELECT_PANEL_CHAPTER_SELECT;
+        panel = &gSaveSelectPanels[SAVE_SELECT_PANEL_CHAPTER_SELECT];
         for (i = 0, off = 0; i < 6; i++)
         {
             if (i > saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].cheatFlag)
@@ -368,10 +375,10 @@ void saveSelectGoToChooseSlot(int arg)
     {
         ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
     }
-    gSaveSelectPanelIndex = 0;
+    gSaveSelectPanelIndex = SAVE_SELECT_PANEL_CHOOSE_SLOT;
     saveFileSelect_currentSlotIndex = 0;
     {
-        void* tmp = &gSaveSelectPanels[0];
+        void* tmp = &gSaveSelectPanels[SAVE_SELECT_PANEL_CHOOSE_SLOT];
         p = (SaveSelectPanel*)tmp;
     }
 
@@ -486,10 +493,10 @@ void SaveSelectScreen_render(int param)
         titleScreenPositionElements(lbl_803E1D68, lbl_803E1D74);
         alpha = (u8)(((u8)v & 0x7f) << 1);
     }
-    gameTextBoxFn_80134d40(alpha, (u8)(gSaveSelectPanelIndex == 3), 0);
+    gameTextBoxFn_80134d40(alpha, (u8)(gSaveSelectPanelIndex == SAVE_SELECT_PANEL_CONFIRM_ERASE), 0);
     switch (gSaveSelectPanelIndex)
     {
-    case 1:
+    case SAVE_SELECT_PANEL_OPEN_FILE:
         ((void (*)(int, u8))saveSelect_drawText)(param, alpha);
         gameTextSetColor(0xff, 0xff, 0xff, alpha);
         n = 0;
@@ -515,11 +522,11 @@ void SaveSelectScreen_render(int param)
             ((void (**)(void*, int, u8))gTitleMenuItemInterface->vtable)[6](gSaveSelectMenuItem, 0, alpha);
         }
         break;
-    case 3:
+    case SAVE_SELECT_PANEL_CONFIRM_ERASE:
         gameTextSetColor(0xff, 0xff, 0xff, alpha);
         gameTextShow(0x324);
         break;
-    case 0:
+    case SAVE_SELECT_PANEL_CHOOSE_SLOT:
         gameTextSetColor(0xff, 0xff, 0xff, alpha);
         ((void (**)(void))gTitleMenuLinkInterface->vtable)[5]();
         if (lbl_803DB424 != 0)
@@ -646,7 +653,7 @@ int SaveSelectScreen_run(void)
         }
         return lbl_803DD6CF <= 12;
     }
-    if (gSaveSelectPanelIndex == 3)
+    if (gSaveSelectPanelIndex == SAVE_SELECT_PANEL_CONFIRM_ERASE)
     {
         btn = getButtonsJustPressed(0);
         if (btn & PAD_BUTTON_A)
@@ -673,17 +680,17 @@ int SaveSelectScreen_run(void)
         {
             ((void (**)(void*))gTitleMenuItemInterface->vtable)[5](gSaveSelectMenuItem);
         }
-        if (sel != -1 || gSaveSelectPanelIndex == 0)
+        if (sel != -1 || gSaveSelectPanelIndex == SAVE_SELECT_PANEL_CHOOSE_SLOT)
         {
             switch (gSaveSelectPanelIndex)
             {
-            case 0:
+            case SAVE_SELECT_PANEL_CHOOSE_SLOT:
                 saveFileSelect_init(sel, slot);
                 break;
-            case 1:
+            case SAVE_SELECT_PANEL_OPEN_FILE:
                 saveSelectOpenFile(sel, slot);
                 break;
-            case 2:
+            case SAVE_SELECT_PANEL_SLOT_ACTION:
                 if (sel == 0)
                 {
                     Sfx_PlayFromObject(0, SFXTRIG_menu_pause_down);
@@ -692,8 +699,8 @@ int SaveSelectScreen_run(void)
                     {
                         ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
                     }
-                    gSaveSelectPanelIndex = 1;
-                    panel = &gSaveSelectPanels[1];
+                    gSaveSelectPanelIndex = SAVE_SELECT_PANEL_OPEN_FILE;
+                    panel = &gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE];
                     panel->entries[0].flags = (u16)(panel->entries[0].flags & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
                     panel->entries[1].pad18[2] = 0;
                     panel->entries[1].textId = 0x3d6;
@@ -718,13 +725,13 @@ int SaveSelectScreen_run(void)
                     lbl_803DD6CF = 0x23;
                 }
                 break;
-            case 4:
+            case SAVE_SELECT_PANEL_CHAPTER_SELECT:
                 saveSelectSetSlot(sel, slot);
                 break;
             }
         }
     }
-    if (gSaveSelectPanelIndex == 1)
+    if (gSaveSelectPanelIndex == SAVE_SELECT_PANEL_OPEN_FILE)
     {
         saveFileSelect_checkCheatCodes();
     }
@@ -768,8 +775,8 @@ void SaveSelectScreen_initialise(void)
             ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
         }
 
-        gSaveSelectPanelIndex = 1;
-        panel = &gSaveSelectPanels[1];
+        gSaveSelectPanelIndex = SAVE_SELECT_PANEL_OPEN_FILE;
+        panel = &gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE];
         panel->entries[0].flags = (u16)(panel->entries[0].flags & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
         panel->entries[1].pad18[2] = 0;
         panel->entries[1].textId = 0x3d6;
