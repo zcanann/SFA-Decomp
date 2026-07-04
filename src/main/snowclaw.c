@@ -29,7 +29,7 @@ typedef struct SnowclawState
     s32 pendingMoveId;
     u8 pad98[0x9C - 0x98];
     s32 attackDelay;
-    u8 unkA0;
+    u8 mountAlpha; /* 0xA0: opacity byte (default 0xff) written to obj+0x37 while mounted */
     u8 hitFlag;
     u8 dropIndex;
     s8 dropIndexApplied;
@@ -404,18 +404,18 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis)
             extern s8 objUpdateOpacity(int);
             vis = objUpdateOpacity(sub);
         }
-        snowclaw_syncMountTransform(obj, sub, p2, p3, p4, p5, vis, ((SnowclawState*)inner)->unkA0, 1);
+        snowclaw_syncMountTransform(obj, sub, p2, p3, p4, p5, vis, ((SnowclawState*)inner)->mountAlpha, 1);
     }
     else
     {
         ((GameObject*)obj)->anim.flags &= ~8;
     }
-    if ((s8)vis != 0 && ((SnowclawState*)inner)->unkA0 != 0)
+    if ((s8)vis != 0 && ((SnowclawState*)inner)->mountAlpha != 0)
     {
         oldFlag = *(u8*)((char*)obj + 0x37);
         if (found != 0)
         {
-            *(u8*)((char*)obj + 0x37) = ((SnowclawState*)inner)->unkA0;
+            *(u8*)((char*)obj + 0x37) = ((SnowclawState*)inner)->mountAlpha;
         }
         if (((GameObject*)obj)->childCount == 0 && ((GameObject*)obj)->anim.seqId == 0x389 &&
             ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 != 0)
@@ -569,7 +569,7 @@ void snowclaw_update(int obj)
         ((SnowclawState*)inner)->particleAlpha = lbl_803E66F0;
     }
     ((SnowclawState*)inner)->hitFlag = 0;
-    ((SnowclawState*)inner)->unkA0 = 0xff;
+    ((SnowclawState*)inner)->mountAlpha = 0xff;
 
     healthState = *(s8*)&((SnowclawState*)inner)->health;
     if (healthState < 0)
@@ -713,7 +713,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
     }
     ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     sub = *(int**)inner;
-    ((SnowclawState*)inner)->unkA0 = 0xff;
+    ((SnowclawState*)inner)->mountAlpha = 0xff;
     if (sub != 0)
     {
         s16 v6 = ((GameObject*)sub)->anim.flags;
