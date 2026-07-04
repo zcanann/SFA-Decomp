@@ -263,3 +263,17 @@ void dll_85_func00_nop(void)
 }
 
 u8 gFoodbagEffectTemplate[88] = { 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 255, 226, 0, 0, 0, 0, 0, 15, 0, 0, 255, 226, 3, 232, 0, 0, 0, 15, 0, 15, 0, 30, 3, 232, 0, 0, 0, 0, 0, 15, 0, 0, 0, 1, 0, 2, 0, 0, 0, 2, 0, 3, 0, 0, 0, 10, 0, 15, 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 5, 39, 5, 40, 0, 223, 0, 222, 0, 223, 2, 0, 1, 251, 1, 251, 0, 223, 0, 222 };
+
+/* .sdata2 float-pool constants */
+const f32 lbl_803E0FB0 = 81.0f;
+const f32 lbl_803E0FB4 = 82.0f;
+const f32 lbl_803E0FB8 = 18.0f;
+const f32 lbl_803E0FBC = 8.0f;
+const f32 lbl_803E0FC0 = 19.0f;
+const f32 lbl_803E0FC4 = 9.0f;
+const f32 lbl_803E0FC8 = 20.0f;
+const f32 lbl_803E0FCC = 15.0f;
+const f32 lbl_803E0FD0 = 999.0f;
+const f32 lbl_803E0FD4 = 0.0f;
+const f32 lbl_803E0FD8 = 1.0f;
+const f32 lbl_803E0FDC = 0.0f;
