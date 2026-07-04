@@ -12,6 +12,8 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+
+#define GPSHSHRINE_OBJGROUP 0xb
 extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 
@@ -67,7 +69,7 @@ void gpsh_shrine_free(int* obj)
         state[0] = NULL;
     }
     gameTimerStop();
-    ObjGroup_RemoveObject(obj, 0xb);
+    ObjGroup_RemoveObject(obj, GPSHSHRINE_OBJGROUP);
     Music_Trigger(MUSICTRIG_DIM_Snow, 0);
     Music_Trigger(MUSICTRIG_CC_Visit1, 0);
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
