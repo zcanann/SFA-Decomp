@@ -14,6 +14,8 @@
 #include "main/pi_dolphin.h"
 #include "main/sfa_shared_decls.h"
 
+#define DIMBOSS_OBJGROUP 3
+
 u32 gDIMbossAnimController[0x189];
 extern void Music_Trigger(int id, int arg);
 
@@ -440,7 +442,7 @@ void DIMboss_free(DIMbossObject* obj)
     GameBit_Set(0x3e2, 0);
     obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_ACTIVE;
     Camera_DisableViewYOffset();
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, DIMBOSS_OBJGROUP);
     childObject = obj->childObject;
     if (childObject != NULL)
     {
