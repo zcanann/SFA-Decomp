@@ -2,6 +2,9 @@
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/objseq.h"
+
+/* object group this object joins */
+#define DLL19_OBJGROUP 3
 #define DLL19_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
@@ -836,7 +839,7 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
     b1 = flags & 1;
     if (b1 == 0 && (flags & 0x20) == 0)
     {
-        ObjGroup_AddObject(obj, 3);
+        ObjGroup_AddObject(obj, DLL19_OBJGROUP);
         ObjMsg_AllocQueue(obj, 4);
     }
     (*(void (**)(int, u8*, int, int))(*(int*)gPlayerInterface + 4))(obj, state, moveArg0, moveArg1);
