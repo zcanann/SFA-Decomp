@@ -1702,9 +1702,9 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
     ObjTextureRuntimeSlot* tex1;
     ObjTextureRuntimeSlot* tex2;
     ObjTextureRuntimeSlot* tex5;
+    int k;
     int* modelIds;
     int slots;
-    int k;
     int i;
     int vol;
     s16 scroll;
