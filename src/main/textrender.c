@@ -206,12 +206,10 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 int lo = str[byteOff++];
                 params[i] = (hi << 8) | lo;
             }
-            if ((u32)(ch - 0xf8f4) <= 0xb)
+            switch (ch)
             {
-                switch (ch)
-                {
-                case 0xf8f4:
-                    lbl_803DC9A0 = params[0] * lbl_803DE708;
+            case 0xf8f4:
+                lbl_803DC9A0 = params[0] * lbl_803DE708;
                     break;
                 case 0xf8f7:
                     glyphLang = params[0];
@@ -258,7 +256,6 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                     skipGlyph = 1;
                     break;
                 }
-            }
             if (skipGlyph)
             {
                 continue;
