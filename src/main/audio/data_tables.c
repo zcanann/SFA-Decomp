@@ -498,7 +498,7 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
     else
     {
         base = t->macMain[(mid >> 6) & 0x3ff].subTabIndex;
-        for (i = 0; i < num && t->macSub[base + i].id < mid; ++i)
+        for (i = 0; i < num && ((MAC_SUBTAB*)((u8*)&t->macSub[0] + (base + i) * 8))->id < mid; ++i)
         {
         }
 
