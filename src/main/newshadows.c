@@ -635,9 +635,9 @@ void newshadows_renderQueuedShadowCasters(void)
     u32 local_108;
     u32 uStack_104;
     int savedFlag;
-    float local_a8;
+    float spillF21;
     float fStack_a4;
-    float local_98;
+    float spillF22;
     float fStack_94;
     float spillF23;
     float fStack_84;
@@ -676,9 +676,9 @@ void newshadows_renderQueuedShadowCasters(void)
     fStack_74 = (float)savedPs24;
     spillF23 = (float)savedF23;
     fStack_84 = (float)savedPs23;
-    local_98 = (float)savedF22;
+    spillF22 = (float)savedF22;
     fStack_94 = (float)savedPs22;
-    local_a8 = (float)savedF21;
+    spillF21 = (float)savedF21;
     fStack_a4 = (float)savedPs21;
     FUN_8028680c();
     if (DAT_803ddbf8 != 0)
@@ -1190,10 +1190,10 @@ void newshadows_updateFrameState(void)
     float nearDepth;
     float farDepth;
     u64 local_20;
-    float local_8;
+    float spillF31;
     float fStack_4;
 
-    local_8 = (float)savedF31;
+    spillF31 = (float)savedF31;
     fStack_4 = (float)savedPs31;
     scrollDisabled = FUN_800176d0();
     if (scrollDisabled == 0)
