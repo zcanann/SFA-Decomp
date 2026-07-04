@@ -4,6 +4,17 @@
 #include "ghidra_import.h"
 #include "global.h"
 
+enum McLightningPhase {
+    MCLIGHTNING_PHASE_READ_PARAM_A = 0,
+    MCLIGHTNING_PHASE_READ_PARAM_B = 1,
+    MCLIGHTNING_PHASE_READ_PARAM_C = 2,
+    MCLIGHTNING_PHASE_READ_PARAM_D = 3,
+    MCLIGHTNING_PHASE_READ_TARGET = 4,
+    MCLIGHTNING_PHASE_ARMED = 5,
+    MCLIGHTNING_PHASE_ACTIVE = 6,
+    MCLIGHTNING_PHASE_ABORTED = 0xa
+};
+
 typedef struct McLightningFlags {
     u8 phase : 4;
     u8 spawnFlags : 4;

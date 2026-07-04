@@ -12,31 +12,31 @@ int mclightning_handleScriptEvents(int obj, int unused, ObjAnimUpdateState* anim
     {
         switch (state->flags.phase)
         {
-        case 0:
-            state->flags.phase = 1;
+        case MCLIGHTNING_PHASE_READ_PARAM_A:
+            state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_B;
             state->boltParamA = lbl_803E7440 * (f32)(u32)
             animUpdate->eventIds[i];
             break;
-        case 1:
-            state->flags.phase = 2;
+        case MCLIGHTNING_PHASE_READ_PARAM_B:
+            state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_C;
             state->boltParamB = lbl_803E7440 * (f32)(u32)
             animUpdate->eventIds[i];
             break;
-        case 2:
-            state->flags.phase = 3;
+        case MCLIGHTNING_PHASE_READ_PARAM_C:
+            state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_D;
             state->boltParamC = animUpdate->eventIds[i];
             break;
-        case 3:
-            state->flags.phase = 4;
+        case MCLIGHTNING_PHASE_READ_PARAM_D:
+            state->flags.phase = MCLIGHTNING_PHASE_READ_TARGET;
             state->boltParamD = animUpdate->eventIds[i];
             break;
-        case 4:
-            state->flags.phase = 5;
+        case MCLIGHTNING_PHASE_READ_TARGET:
+            state->flags.phase = MCLIGHTNING_PHASE_ARMED;
             state->targetLinkId = animUpdate->eventIds[i];
             ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             break;
         default:
-            state->flags.phase = 0xa;
+            state->flags.phase = MCLIGHTNING_PHASE_ABORTED;
             break;
         }
     }
@@ -65,7 +65,7 @@ void mclightning_update(int obj)
         mm_free(state->boltHandle);
         state->boltHandle = NULL;
     }
-    state->flags.phase = 0;
+    state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_A;
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
 }
 
@@ -87,7 +87,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     McLightningState* state = ((GameObject*)obj)->extra;
     u32 mode = state->flags.phase;
-    if (mode == 5)
+    if (mode == MCLIGHTNING_PHASE_ARMED)
     {
         int count;
         int* objs = ObjGroup_GetObjects(0x48, &count);
@@ -100,7 +100,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
         }
         if (i == count)
         {
-            state->flags.phase = 0xa;
+            state->flags.phase = MCLIGHTNING_PHASE_ABORTED;
         }
         else
         {
@@ -109,7 +109,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
                 lightningCreate(&((GameObject*)obj)->anim.localPosX, (f32*)(objs[i] + 0xc),
                                 state->boltParamA, state->boltParamB, state->boltParamC,
                                 state->boltParamD, 0);
-            state->flags.phase = 6;
+            state->flags.phase = MCLIGHTNING_PHASE_ACTIVE;
             state->boltFrameTimer = lbl_803E7450;
             if (state->flags.spawnFlags & 1)
             {
@@ -138,7 +138,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
             }
         }
     }
-    else if (mode == 6)
+    else if (mode == MCLIGHTNING_PHASE_ACTIVE)
     {
         if (state->boltHandle != NULL)
         {
@@ -152,7 +152,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
             {
                 mm_free(state->boltHandle);
                 state->boltHandle = NULL;
-                state->flags.phase = 0;
+                state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_A;
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
