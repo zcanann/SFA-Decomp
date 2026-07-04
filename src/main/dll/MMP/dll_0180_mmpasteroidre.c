@@ -113,7 +113,7 @@ int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 3:
             {
                 int r;
-                state->eventFlags = state->eventFlags & ~0x20;
+                state->eventFlags = state->eventFlags & ~ASTEROIDRE_FX_IMPACT;
                 state->eventFlags = state->eventFlags | 0x50;
                 r = randomGetRange(10, 60);
                 state->periodicFxTimer = r;
@@ -127,7 +127,7 @@ int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         }
     }
-    state->eventFlags |= 0x80;
+    state->eventFlags |= ASTEROIDRE_SEQ_TICK;
     mmp_asteroid_re_update(obj);
     return 0;
 }
@@ -150,7 +150,7 @@ void mmp_asteroid_re_init(int obj)
         ((GameObject*)obj)->anim.alpha = 0xFF;
         state->eventFlags = 4;
         *(u8*)&((GameObject*)obj)->anim.bankIndex = 1;
-        state->eventFlags |= 0x40;
+        state->eventFlags |= ASTEROIDRE_FX_PERIODIC;
         break;
     case 2:
         ((GameObject*)obj)->anim.alpha = 0xFF;
@@ -176,7 +176,7 @@ void mmp_asteroid_re_update(int obj)
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
-    if ((state->eventFlags & 0x80) == 0)
+    if ((state->eventFlags & ASTEROIDRE_SEQ_TICK) == 0)
     {
         if (GameBit_Get(0xD52) != 0)
         {
@@ -239,17 +239,17 @@ void mmp_asteroid_re_update(int obj)
     }
     if (state->eventFlags != 0)
     {
-        if ((state->eventFlags & 1) != 0)
+        if ((state->eventFlags & ASTEROIDRE_FX_SMOKE) != 0)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x716, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x716, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x716, NULL, 1, -1, NULL);
         }
-        if ((state->eventFlags & 8) != 0)
+        if ((state->eventFlags & ASTEROIDRE_FX_DEBRIS) != 0)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x71A, NULL, 2, -1, NULL);
         }
-        if ((state->eventFlags & 0x10) != 0)
+        if ((state->eventFlags & ASTEROIDRE_FX_EXPLODE) != 0)
         {
             int n;
             (*gPartfxInterface)->spawnObject((void*)obj, 0x71B, NULL, 1, -1, NULL);
@@ -263,14 +263,14 @@ void mmp_asteroid_re_update(int obj)
             spawnExplosion(obj, lbl_803E452C, 1, 1, 0, 1, 0, 1, 0);
             CameraShake_Start(lbl_803E4530, lbl_803E4534, lbl_803E4538);
             doRumble(lbl_803E453C);
-            state->eventFlags &= ~0x10;
+            state->eventFlags &= ~ASTEROIDRE_FX_EXPLODE;
         }
-        if ((state->eventFlags & 0x20) != 0)
+        if ((state->eventFlags & ASTEROIDRE_FX_IMPACT) != 0)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x71D, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x71D, NULL, 1, -1, NULL);
         }
-        if ((state->eventFlags & 0x40) != 0)
+        if ((state->eventFlags & ASTEROIDRE_FX_PERIODIC) != 0)
         {
             state->periodicFxTimer -= timeDelta;
             if (state->periodicFxTimer < lbl_803E4518)
@@ -293,5 +293,5 @@ void mmp_asteroid_re_update(int obj)
             }
         }
     }
-    state->eventFlags &= ~0x80;
+    state->eventFlags &= ~ASTEROIDRE_SEQ_TICK;
 }
