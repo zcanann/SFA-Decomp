@@ -8734,3 +8734,66 @@ char sResourceFileNameTexpreTab[] = "TEXPRE.tab";
 char sResourceFileNamePreanimBin[] = "PREANIM.bin";
 char sResourceFileNamePreanimTab[] = "PREANIM.tab";
 char sResourceFileNameEnvfxactBin[] = "ENVFXACT.bin";
+
+extern char sMapFileNameCrfort[];
+extern char sMapFileNameDbay[];
+extern char sMapFileNameDesert[];
+extern char sMapFileNameDfalls[];
+extern char sMapFileNameMmpass[];
+extern char sMapFileNameNwastes[];
+extern char sMapFileNameShop[];
+extern char sMapFileNameSwaphol[];
+extern char sMapFileNameVolcano[];
+
+char sMapFileNameDragrockbot[] = "dragrockbot";
+char sMapFileNameShipbattle[] = "shipbattle";
+char sMapFileNameSwapholbot[] = "swapholbot";
+char sMapFileNameLightfoot[] = "lightfoot";
+char sMapFileNameDarkicemines[] = "darkicemines";
+char sMapFileNameIcemountain[] = "icemountain";
+char sMapFileNameDarkicemines2[] = "darkicemines2";
+char sMapFileNameBossgaldon[] = "bossgaldon";
+char sMapFileNameMagiccave[] = "magiccave";
+char sMapFileNameWorldmap[] = "worldmap";
+char sMapFileNameBossdrakor[] = "bossdrakor";
+char sMapFileNameBosstrex[] = "bosstrex";
+
+char* sMapFileNameByMapIdTable[] = {
+    sMapFileNameAnimtest, sMapFileNameAnimtest, sMapFileNameAnimtest, sMapFileNameArwing,
+    sMapFileNameDragrock, sMapFileNameAnimtest, sMapFileNameDfptop, sMapFileNameVolcano,
+    sMapFileNameAnimtest, sMapFileNameMazecave, sMapFileNameDragrockbot, sMapFileNameDfalls,
+    sMapFileNameSwaphol, sMapFileNameShipbattle, sMapFileNameNwastes, sMapFileNameWarlock,
+    sMapFileNameShop, sMapFileNameAnimtest, sMapFileNameCrfort, sMapFileNameSwapholbot,
+    sMapFileNameWallcity, sMapFileNameLightfoot, sMapFileNameCloudtreasure, sMapFileNameAnimtest,
+    sMapFileNameClouddungeon, sMapFileNameMmpass, sMapFileNameDarkicemines, sMapFileNameAnimtest,
+    sMapFileNameDesert, sMapFileNameAnimtest, sMapFileNameIcemountain, sMapFileNameAnimtest,
+    sMapFileNameAnimtest, sMapFileNameAnimtest, sMapFileNameDarkicemines2, sMapFileNameBossgaldon,
+    sMapFileNameAnimtest, sMapFileNameInsidegal, sMapFileNameMagiccave, sMapFileNameDfshrine,
+    sMapFileNameMmshrine, sMapFileNameEcshrine, sMapFileNameGpshrine, sMapFileNameDbshrine,
+    sMapFileNameNwshrine, sMapFileNameWorldmap, sMapFileNameAnimtest, sMapFileNameCapeclaw,
+    sMapFileNameDbay, sMapFileNameAnimtest, sMapFileNameCloudrace, sMapFileNameBossdrakor,
+    sMapFileNameAnimtest, sMapFileNameBosstrex, sMapFileNameLinkb, sMapFileNameCloudjoin,
+    sMapFileNameArwingtoplanet, sMapFileNameArwingdarkice, sMapFileNameArwingcloud, sMapFileNameArwingcity,
+    sMapFileNameArwingdragon, sMapFileNameGamefront, sMapFileNameLinklevel, sMapFileNameGreatfox,
+    sMapFileNameLinka, sMapFileNameLinkc, sMapFileNameLinkd, sMapFileNameLinke,
+    sMapFileNameLinkf, sMapFileNameLinkg, sMapFileNameLinkh, sMapFileNameLinkj,
+    sMapFileNameLinki,
+};
+
+u32 sMapFileNameIndexRemapTable[] = {
+    13, 5, 4, 5, 7, 5, 5, 12, 19, 9, 14, 15, 18, 20, 21,
+    22, 24, 5, 25, 26, 5, 28, 5, 30, 31, 32, 5, 34, 35, 47,
+    37, 39, 40, 41, 42, 48, 5, 5, 3, 43, 44, 45, 5, 50, 51,
+    5, 5, 5, 53, 5, 6, 16, 10, 5, 38, 55, 54, 5, 56, 57,
+    58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72,
+};
+
+s16 sMapFileNameAdjacencyTable[] = {
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, -1, -1,
+    -1, 15, -1, -1, 12, -1, -1, 12, -1, -1, -1, -1,
+    18, -1, -1, -1, 6, -1, -1, -1, -1, -1, -1, 34,
+    -1, -1, -1, 25, 21, 15, 20, 14, 15, -1, -1, -1,
+    5, -1, -1, -1, -1, 20, 30, -1, -1, -1, -1, -1,
+    -1, -1, -1, 15, -1, 14, -1, 12, 7, 12, 21, 47,
+    -1, -1, -1, 0,
+};
