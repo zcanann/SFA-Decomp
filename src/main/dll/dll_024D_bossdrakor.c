@@ -24,6 +24,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define BOSSDRAKOR_OBJGROUP 0x45
+
 #define MODEL_LIGHT_KIND_POINT 2
 
 #define BOSSDRAKOR_OBJFLAG_RENDERED 0x800
@@ -606,7 +608,7 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
 void bossdrakor_free(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 0x45);
+    ObjGroup_RemoveObject(obj, BOSSDRAKOR_OBJGROUP);
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {
         ObjLink_DetachChild(obj, *(int*)&((GameObject*)obj)->childObjs[0]);
@@ -880,7 +882,7 @@ void bossdrakor_init(int obj, BossdrakorPlacement* init)
     ((BossDrakorState*)inner)->textTimer = fz;
     ((DrakorFlags*)((char*)inner + 0x198))->b10 = 1;
     storeZeroToFloatParam(&((BossDrakorState*)inner)->attackTimer);
-    ObjGroup_AddObject(obj, 0x45);
+    ObjGroup_AddObject(obj, BOSSDRAKOR_OBJGROUP);
     storeZeroToFloatParam(&((BossDrakorState*)inner)->unk18);
     ((GameObject*)obj)->animEventCallback = bossdrakor_animEventCallback;
     Music_Trigger(MUSICTRIG_LVF_Tracking, 1);
