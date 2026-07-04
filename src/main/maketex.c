@@ -1636,3 +1636,23 @@ void endObjSequence(int seq)
 }
 
 char sMemoryCardFileNameString[20] = "Star Fox Adventures";
+
+/*__DATA_EXTERNS__*/
+extern void showMemCardError();
+extern void cardGetMessage();
+extern void cardDeleteFn_8007d99c();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* jumptable_8030EACC[14] = { (void*)((u8*)cardDeleteFn_8007d99c + 0x130), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x13C), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x118), (void*)((u8*)cardDeleteFn_8007d99c + 0x10C), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x148) };
+void* jumptable_8030EB04[14] = { (void*)((u8*)cardGetMessage + 0x50), (void*)((u8*)cardGetMessage + 0x64), (void*)((u8*)cardGetMessage + 0x94), (void*)((u8*)cardGetMessage + 0xC4), (void*)((u8*)cardGetMessage + 0xF4), (void*)((u8*)cardGetMessage + 0x124), (void*)((u8*)cardGetMessage + 0x168), (void*)((u8*)cardGetMessage + 0x1AC), (void*)((u8*)cardGetMessage + 0x1DC), (void*)((u8*)cardGetMessage + 0x1E8), (void*)((u8*)cardGetMessage + 0x228), (void*)((u8*)cardGetMessage + 0x258), (void*)((u8*)cardGetMessage + 0x258), (void*)((u8*)cardGetMessage + 0x288) };
+void* jumptable_8030EB3C[7] = { (void*)((u8*)showMemCardError + 0x2C8), (void*)((u8*)showMemCardError + 0x2D4), (void*)((u8*)showMemCardError + 0x2E8), (void*)((u8*)showMemCardError + 0x2FC), (void*)((u8*)showMemCardError + 0x318), (void*)((u8*)showMemCardError + 0x33C), (void*)((u8*)showMemCardError + 0x36C) };
+u8 lbl_8030EB58[168] = { 83, 84, 65, 82, 70, 79, 88, 32, 65, 68, 86, 69, 78, 84, 85, 82, 69, 83, 0, 0, 68, 105, 110, 111, 115, 97, 117, 114, 32, 80, 108, 97, 110, 101, 116, 0, 111, 112, 101, 110, 105, 110, 103, 46, 98, 110, 114, 0, 99, 97, 114, 100, 47, 109, 101, 109, 99, 97, 114, 100, 105, 99, 111, 110, 48, 46, 105, 109, 103, 0, 0, 0, 99, 97, 114, 100, 47, 109, 101, 109, 99, 97, 114, 100, 105, 99, 111, 110, 49, 46, 105, 109, 103, 0, 0, 0, 99, 97, 114, 100, 47, 109, 101, 109, 99, 97, 114, 100, 105, 99, 111, 110, 50, 46, 105, 109, 103, 0, 0, 0, 99, 97, 114, 100, 47, 109, 101, 109, 99, 97, 114, 100, 105, 99, 111, 110, 51, 46, 105, 109, 103, 0, 0, 0, 99, 97, 114, 100, 47, 109, 101, 109, 99, 97, 114, 100, 105, 99, 111, 110, 48, 46, 112, 97, 108, 0, 0, 0 };
+u8 lbl_8030EC00[16] = { 0, 0, 40, 229, 0, 0, 40, 230, 0, 0, 40, 231, 0, 0, 40, 232 };
+u8 lbl_8030EC10[12] = { 0, 0, 80, 28, 0, 0, 80, 29, 0, 0, 80, 30 };
+u8 lbl_8030EC1C[12] = { 0, 0, 81, 161, 0, 0, 81, 162, 255, 255, 255, 255 };
+u8 lbl_8030EC28[28] = { 0, 0, 81, 164, 0, 0, 81, 165, 0, 0, 81, 167, 0, 0, 81, 168, 0, 0, 81, 169, 0, 0, 81, 170, 0, 0, 81, 171 };
+u8 lbl_8030EC44[16] = { 0, 0, 81, 172, 0, 0, 81, 173, 0, 0, 81, 174, 0, 0, 81, 175 };
+u8 lbl_8030EC54[16] = { 0, 0, 0, 42, 0, 0, 0, 37, 0, 0, 0, 33, 0, 0, 0, 43 };
+u8 lbl_8030EC64[12] = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
+u8 lbl_8030EC70[12] = { 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 5, 37 };
+u8 lbl_8030EC7C[28] = { 0, 0, 2, 229, 0, 0, 2, 230, 0, 0, 2, 232, 0, 0, 2, 234, 0, 0, 2, 234, 0, 0, 2, 232, 0, 0, 2, 233 };
+u8 lbl_8030EC98[16] = { 0, 0, 2, 237, 0, 0, 2, 238, 0, 0, 2, 239, 0, 0, 2, 240 };
