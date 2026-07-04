@@ -53,7 +53,6 @@ typedef struct CameraArwingWork
 #pragma scheduling on
 #pragma peephole on
 extern f32 gCamArwingWork[];
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 lbl_803E1BA0;
 extern f32 lbl_803E1BA4;
 extern f32 lbl_803E1BA8;
