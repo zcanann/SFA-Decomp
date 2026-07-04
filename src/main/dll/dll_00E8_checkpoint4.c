@@ -29,6 +29,9 @@
 #include "main/dll/dll_00F7_dllf7.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+/* object group this object joins while active */
+#define CHECKPOINT4_OBJGROUP 7
+
 extern f32 lbl_803E3420;
 extern f32 lbl_803E3424;
 extern f32 lbl_803E3428;
@@ -190,7 +193,7 @@ extern void shield_update(int* obj);
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, CHECKPOINT4_OBJGROUP);
 }
 
 void staticCamera_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -214,7 +217,7 @@ void staticCamera_init(short* obj, int placement, int addToGroup)
     colorState[1] = 0;
     if (addToGroup == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, CHECKPOINT4_OBJGROUP);
     }
 }
 
