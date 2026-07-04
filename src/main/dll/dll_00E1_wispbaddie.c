@@ -15,6 +15,17 @@
 #include "main/audio/sfx_trigger_ids.h"
 #define WISPBADDIE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define WISPBADDIE_OBJFLAG_PARENT_SLACK 0x1000
+
+/*
+ * WispBaddieState.flags (u8 at +0x24). Same path/chase pair as the sibling
+ * swarmbaddie: the wisp follows its ROM curve until the player comes within
+ * range, then CHASE_PLAYER steers velocity toward the player; straying too
+ * far from the path sets CHASE_LOCKOUT to block re-chase until it returns.
+ */
+#define WISPBADDIE_FLAG_PATH_NEEDS_LINK 0x01
+#define WISPBADDIE_FLAG_CHASE_PLAYER 0x02
+#define WISPBADDIE_FLAG_CHASE_LOCKOUT 0x04 /* strayed too far; block re-chase until back near path */
+#define WISPBADDIE_FLAG_CHASE_MASK 0x06
 extern int ObjHits_GetPriorityHitWithPosition();
 
 void hagabon_release(void);
@@ -158,11 +169,11 @@ void fn_8014F620(int obj, WispBaddieState* state)
         ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E26E4,
                                           &lbl_803DBC80, -1) != 0))
     {
-        state->flags = state->flags & ~1;
+        state->flags = state->flags & ~WISPBADDIE_FLAG_PATH_NEEDS_LINK;
     }
     gWispBaddieLastSegmentEnd = curve->atSegmentEnd;
 
-    if ((state->flags & 2) != 0)
+    if ((state->flags & WISPBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
         ((GameObject*)obj)->anim.velocityX =
             lbl_803E26E8 * (state->playerObj->anim.localPosX - ((GameObject*)obj)->anim.localPosX) +
@@ -290,10 +301,10 @@ void wispbaddie_update(int obj)
     {
         state->hitRadius = lbl_803E2708;
         f = state->flags;
-        if ((f & 2) != 0)
+        if ((f & WISPBADDIE_FLAG_CHASE_PLAYER) != 0)
         {
-            state->flags = (u8)(f & ~2);
-            state->flags = (u8)(state->flags | 4);
+            state->flags = (u8)(f & ~WISPBADDIE_FLAG_CHASE_PLAYER);
+            state->flags = (u8)(state->flags | WISPBADDIE_FLAG_CHASE_LOCKOUT);
         }
         Sfx_PlayAtPositionFromObject(obj, hitZ, dy, dz, SFXTRIG_robolaser16);
     }
@@ -343,12 +354,12 @@ void wispbaddie_update(int obj)
     }
 
     f = state->flags;
-    if ((f & 2) != 0)
+    if ((f & WISPBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
         if (state->curveDistance > lbl_803E2710)
         {
-            state->flags = (u8)(f & ~2);
-            state->flags = (u8)(state->flags | 4);
+            state->flags = (u8)(f & ~WISPBADDIE_FLAG_CHASE_PLAYER);
+            state->flags = (u8)(state->flags | WISPBADDIE_FLAG_CHASE_LOCKOUT);
         }
         state->cryTimer -= timeDelta;
         if (state->cryTimer < lbl_803E2714)
@@ -359,20 +370,20 @@ void wispbaddie_update(int obj)
         state->particleId = 0x338;
     }
     f = state->flags;
-    if ((f & 4) != 0)
+    if ((f & WISPBADDIE_FLAG_CHASE_LOCKOUT) != 0)
     {
         if (state->curveDistance < lbl_803E2718)
         {
-            state->flags = (u8)(f & ~4);
+            state->flags = (u8)(f & ~WISPBADDIE_FLAG_CHASE_LOCKOUT);
         }
         state->particleId = 0x337;
     }
-    if ((state->flags & 6) == 0)
+    if ((state->flags & WISPBADDIE_FLAG_CHASE_MASK) == 0)
     {
         if ((state->hitRadius >= state->maxHitRadius) && (state->playerObj != 0) &&
             (state->playerDistance < state->triggerDistance))
         {
-            state->flags = (u8)(state->flags | 2);
+            state->flags = (u8)(state->flags | WISPBADDIE_FLAG_CHASE_PLAYER);
         }
         state->particleId = 0x337;
     }
@@ -401,7 +412,7 @@ void wispbaddie_init(int obj, int setup, int initialised)
         if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->triggerDistance,
                                              &lbl_803DBC80, -1) == 0)
         {
-            state->flags = (u8)(state->flags | 1);
+            state->flags = (u8)(state->flags | WISPBADDIE_FLAG_PATH_NEEDS_LINK);
         }
         Sfx_PlayFromObject(obj, 0x23b);
     }
