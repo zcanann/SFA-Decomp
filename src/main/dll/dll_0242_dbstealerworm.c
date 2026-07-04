@@ -46,6 +46,9 @@ extern void objRenderFn_8003b8f4(int* obj);
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DBSTEALERWORM_OBJGROUP 3
+#define DBEGG_OBJGROUP 0x24
+
 /*
  * DbStealerwormControl - the per-family control record hung off
  * GroundBaddieState.control (state+0x40C) for dbstealerworm
@@ -283,7 +286,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
         bs->hasTarget = 0;
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         ObjHits_DisableObject(obj);
-        ObjGroup_RemoveObject(obj, 3);
+        ObjGroup_RemoveObject(obj, DBSTEALERWORM_OBJGROUP);
         if (*(void**)&sub_40c->linkedObj != NULL)
         {
             ObjMsg_SendToObject((void*)sub_40c->linkedObj, 17, obj, 16);
@@ -486,7 +489,7 @@ void dbstealerworm_init(int* obj, u8* def, int param3)
     }
     ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*gBaddieControlInterface)[22])(
         obj, def, sub, 0x10, 7, 0x10a, mode, lbl_803E62FC);
-    ObjGroup_AddObject(obj, 3);
+    ObjGroup_AddObject(obj, DBSTEALERWORM_OBJGROUP);
     ((GameObject*)obj)->animEventCallback = NULL;
     p40c = *(int**)&((GroundBaddieState*)sub)->control;
     memset(p40c, 0, sizeof(DbStealerwormControl));
@@ -515,7 +518,7 @@ void dbstealerworm_free(int* obj)
     extern u64 ObjGroup_RemoveObject();
     u8* sub = ((GameObject*)obj)->extra;
     int* p40c = *(int**)&((GroundBaddieState*)sub)->control;
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, DBSTEALERWORM_OBJGROUP);
     Stack_Free((int*)((DbStealerwormControl*)p40c)->msgStack);
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {
@@ -1190,11 +1193,11 @@ void fn_80203144(int obj, int p2, int p3)
         obj, p3, st->aggroRange, 0x8000);
     if (near == 0 && (st->configFlags & 0x10) != 0)
     {
-        near = ObjGroup_FindNearestObject(0x24, obj, &stk.range);
+        near = ObjGroup_FindNearestObject(DBEGG_OBJGROUP, obj, &stk.range);
     }
     if (near == 0 && (st->configFlags & 0x10) != 0 && (st->configFlags & 2) == 0 && (((DbstealerwormPlacement*)data)->configFlags & 2) != 0)
     {
-        near = ObjGroup_FindNearestObject(0x24, obj, 0);
+        near = ObjGroup_FindNearestObject(DBEGG_OBJGROUP, obj, 0);
     }
     if (near != 0 && (st->configFlags & 2) == 0)
     {
@@ -1202,7 +1205,7 @@ void fn_80203144(int obj, int p2, int p3)
             obj, p3, p2 + 0x35c, st->gameBitB, 0, 0, 0, 8, -1);
         *(int*)&((BaddieState*)p3)->targetObj = near;
         ((BaddieState*)p3)->hasTarget = 0;
-        ObjGroup_AddObject(obj, 3);
+        ObjGroup_AddObject(obj, DBSTEALERWORM_OBJGROUP);
         *(u16*)&st->targetState = 1;
     }
     else
@@ -1586,7 +1589,7 @@ int dbstealerworm_stateHandlerA0B(int obj, int baddie, f32 t)
     }
     q = *(int*)&((BaddieState*)baddie)->targetObj;
     found = 0;
-    objs = ObjGroup_GetObjects(3, &cnt2);
+    objs = ObjGroup_GetObjects(DBSTEALERWORM_OBJGROUP, &cnt2);
     for (i = 0; i < cnt2; i++)
     {
         if (((GameObject*)*objs)->anim.seqId == 0x539)
@@ -1600,7 +1603,7 @@ int dbstealerworm_stateHandlerA0B(int obj, int baddie, f32 t)
     }
     if (found == 0)
     {
-        if ((u32)obj == ObjGroup_FindNearestObject(3, *(int*)&((BaddieState*)baddie)->targetObj, 0))
+        if ((u32)obj == ObjGroup_FindNearestObject(DBSTEALERWORM_OBJGROUP, *(int*)&((BaddieState*)baddie)->targetObj, 0))
         {
             sub->unk3C = *(int*)&((BaddieState*)baddie)->targetObj;
             tmpB = sub->unk2C;
@@ -2018,7 +2021,7 @@ void dbstealerworm_update(u8* objp)
             {
                 ((void (*)(int, int, int, int, int, int, int, f32))((void**)*gBaddieControlInterface)[22])(
                     obj, data, blob, 0x10, 7, 0x10a, 0x26, lbl_803E62FC);
-                ObjGroup_AddObject(obj, 3);
+                ObjGroup_AddObject(obj, DBSTEALERWORM_OBJGROUP);
                 ((GroundBaddieState*)blob)->targetState = 0;
                 ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0x10);
                 ((GroundBaddieState*)blob)->baddie.moveDone = 0;
