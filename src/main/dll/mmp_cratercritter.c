@@ -38,16 +38,16 @@ void trickyFn_8013d8f0(u8* self, u8* state)
 
     if (trickyFoodFn_8013db3c(self, state) == 0)
     {
-        state[0x8] = 1;
-        state[0xA] = 0;
+        ((TrickyState*)state)->unk08 = 1;
+        ((TrickyState*)state)->substate = 0;
         z = lbl_803E23DC;
         ((TrickyState*)state)->unk71C = z;
         ((TrickyState*)state)->unk720 = z;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x10u;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x10000u;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x20000u;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x40000u;
-        *(s8*)&((TrickyState*)state)->unkD = -1;
+        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & (u64)~0x10u;
+        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & (u64)~0x10000u;
+        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & (u64)~0x20000u;
+        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & (u64)~0x40000u;
+        ((TrickyState*)state)->unkD = -1;
         return;
     }
 
