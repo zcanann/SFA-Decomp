@@ -61,7 +61,7 @@ extern f32 timeDelta;
 typedef struct Lavaball1bfPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s8 unk18;
+    s8 firePeriod; /* 0x18 read raw as s16 (p+0x18) into state.firePeriod */
     u8 pad19[0x1E - 0x19];
     s16 triggerGameBit;
     u8 pad20[0x24 - 0x20];
@@ -76,13 +76,13 @@ typedef struct Lavaball18dSetup
     ObjPlacement head; /* 0x00..0x17 */
     s8 unk18;          /* 0x18: copied from placement[0x1C] */
     u8 pad19;
-    s16 unk1A;         /* 0x1A: copied from placement[0x1A] */
+    s16 childRot;      /* 0x1A rotation region; copied from placement[0x1A] */
     s16 unk1C;         /* 0x1C: copied from placement[0x1B] */
     u8 pad1E[0x24 - 0x1E];
 } Lavaball18dSetup;
 
 STATIC_ASSERT(offsetof(Lavaball18dSetup, unk18) == 0x18);
-STATIC_ASSERT(offsetof(Lavaball18dSetup, unk1A) == 0x1A);
+STATIC_ASSERT(offsetof(Lavaball18dSetup, childRot) == 0x1A);
 STATIC_ASSERT(offsetof(Lavaball18dSetup, unk1C) == 0x1C);
 STATIC_ASSERT(sizeof(Lavaball18dSetup) == 0x24);
 
@@ -239,7 +239,7 @@ void lavaball1bf_update(int* obj)
         sp->head.posY = ((GameObject*)obj)->anim.localPosY;
         sp->head.posZ = ((GameObject*)obj)->anim.localPosZ;
         sp->unk18 = setup[0x1c];
-        sp->unk1A = setup[0x1a];
+        sp->childRot = setup[0x1a];
         sp->unk1C = setup[0x1b];
         sp->head.mapId = ((ObjPlacement*)setup)->mapId;
         *(int*)&state->spawnedObj = ((int (*)(int, int, int, int, int))Obj_SetupObject)(
