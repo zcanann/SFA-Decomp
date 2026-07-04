@@ -190,7 +190,7 @@ main/dll/expgfxresource.c:
 
 main/dll/dll_000A_expgfx.c:
 	.text       start:0x8009B0E0 end:0x8009FFF0
-	.data       start:0x8030F898 end:0x8030FCA8
+	.data       start:0x8030F898 end:0x8030FD20
 	.bss        start:0x8039AB58 end:0x8039BE98
 
 main/dll/dll_000B_dll0b.c:
