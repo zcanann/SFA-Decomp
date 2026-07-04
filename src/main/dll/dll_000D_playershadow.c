@@ -1210,7 +1210,29 @@ extern void hitDetect_calcSweptSphereBounds(void* out, void* top, void* bottom, 
 extern void hitDetectFn_800691c0(void* obj, void* hitData, int flags, int arg3);
 extern void fn_80069968(int* outA, int* outB);
 extern void fn_80069958(int** out);
-void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx);
+
+/* One terrain-triangle hit record produced by the hit-detect pipeline
+ * (hitDetectFn_800691c0 / fn_80069968). Stride 0x4c; the three struck-triangle
+ * corners are stored as separate s16 component arrays (tile-local coords), and
+ * the GameObject surface type lives at 0x48. */
+typedef struct PlayerShadowTriHit
+{
+    u8 pad00[0x10];
+    s16 vertX[3]; /* 0x10 */
+    s16 vertY[3]; /* 0x16 */
+    s16 vertZ[3]; /* 0x1c */
+    u8 pad22[0x48 - 0x22];
+    u8 surfaceType; /* 0x48 */
+    u8 pad49[0x4c - 0x49];
+} PlayerShadowTriHit;
+
+STATIC_ASSERT(sizeof(PlayerShadowTriHit) == 0x4c);
+STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertX) == 0x10);
+STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertY) == 0x16);
+STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertZ) == 0x1c);
+STATIC_ASSERT(offsetof(PlayerShadowTriHit, surfaceType) == 0x48);
+
+void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj);
 
 #pragma peephole off
 void playerShadow_setMode(u8 v)
@@ -1320,7 +1342,7 @@ void playerShadow_renderObject(void* obj)
     fn_80069968(&hitCount, &hitTable);
     hitTableValue = hitTable;
     fn_80069958(&tileInfo);
-    fn_800A3AF0((void*)hitTableValue, hitCount,
+    fn_800A3AF0((PlayerShadowTriHit*)hitTableValue, hitCount,
                 ((GameObject*)obj)->anim.localPosX - tileInfo[0],
                 ((GameObject*)obj)->anim.localPosZ - tileInfo[2], obj);
 }
@@ -1334,32 +1356,15 @@ extern const f32 lbl_803DF470;
 extern const f32 lbl_803DF474;
 extern const f32 lbl_803DF478;
 
-/* One terrain-triangle hit record produced by the hit-detect pipeline
- * (hitDetectFn_800691c0 / fn_80069968). Stride 0x4c; the three struck-triangle
- * corners are stored as separate s16 component arrays, and the GameObject
- * surface type lives at 0x48. */
-typedef struct PlayerShadowTriHit
-{
-    u8 pad00[0x10];
-    s16 vertX[3]; /* 0x10 */
-    s16 vertY[3]; /* 0x16 */
-    s16 vertZ[3]; /* 0x1c */
-    u8 pad22[0x48 - 0x22];
-    u8 surfaceType; /* 0x48 */
-    u8 pad49[0x4c - 0x49];
-} PlayerShadowTriHit;
-
-STATIC_ASSERT(sizeof(PlayerShadowTriHit) == 0x4c);
-STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertX) == 0x10);
-STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertY) == 0x16);
-STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertZ) == 0x1c);
-STATIC_ASSERT(offsetof(PlayerShadowTriHit, surfaceType) == 0x48);
-
-void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
+/* Walks the tri-hit table under the player and, for ground surface types
+ * 0x10-0x17, spawns footfall particle effects at a random barycentric point
+ * on each struck triangle. offsX/offsZ = obj position minus the tile origin,
+ * so (vert - offs) + objPos recovers the world-space triangle corners. */
+void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj)
 {
     extern int randomGetRange(int min, int max);
     BoneSpawnData data;
-    void* cam;
+    GameObject* cam;
     u8 found;
     u8 t;
     int i;
@@ -1387,16 +1392,16 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
     found = 0;
     cam = Camera_GetCurrentViewSlot();
     {
-        s16 camRotY = ((GameObject*)cam)->anim.rotY;
-        lbl_803DD29A = *(s16*)cam;
+        s16 camRotY = cam->anim.rotY;
+        lbl_803DD29A = cam->anim.rotX;
         gPlayerShadowCamRotY = camRotY;
     }
-    dx = ((GameObject*)cam)->anim.localPosX - ((GameObject*)ctx)->anim.localPosX;
-    dy = ((GameObject*)cam)->anim.localPosY - ((GameObject*)ctx)->anim.localPosY;
-    dz = ((GameObject*)cam)->anim.localPosZ - ((GameObject*)ctx)->anim.localPosZ;
+    dx = cam->anim.localPosX - obj->anim.localPosX;
+    dy = cam->anim.localPosY - obj->anim.localPosY;
+    dz = cam->anim.localPosZ - obj->anim.localPosZ;
     for (i = 0; i < count; i++)
     {
-        t = ((PlayerShadowTriHit*)table)[i].surfaceType;
+        t = hits[i].surfaceType;
         if ((s8)t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || (s8)t == 0x17)
         {
             gPlayerShadowCamDelta[0] = dx;
@@ -1432,20 +1437,20 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
         int j;
         for (j = 0; j < count; j++)
         {
-            PlayerShadowTriHit* e = &((PlayerShadowTriHit*)table)[j];
+            PlayerShadowTriHit* e = &hits[j];
             u8 t = e->surfaceType;
             if ((s8)t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || (s8)t == 0x17)
             {
                 int rt;
-                p0x = ((GameObject*)ctx)->anim.localPosX + ((f32)e->vertX[0] - a);
+                p0x = obj->anim.localPosX + ((f32)e->vertX[0] - offsX);
                 p0y = (f32)e->vertY[0];
-                p0z = ((GameObject*)ctx)->anim.localPosZ + ((f32)e->vertZ[0] - b);
-                p1x = ((GameObject*)ctx)->anim.localPosX + ((f32)e->vertX[1] - a);
+                p0z = obj->anim.localPosZ + ((f32)e->vertZ[0] - offsZ);
+                p1x = obj->anim.localPosX + ((f32)e->vertX[1] - offsX);
                 p1y = (f32)e->vertY[1];
-                p1z = ((GameObject*)ctx)->anim.localPosZ + ((f32)e->vertZ[1] - b);
-                p2x = ((GameObject*)ctx)->anim.localPosX + ((f32)e->vertX[2] - a);
+                p1z = obj->anim.localPosZ + ((f32)e->vertZ[1] - offsZ);
+                p2x = obj->anim.localPosX + ((f32)e->vertX[2] - offsX);
                 p2y = (f32)e->vertY[2];
-                p2z = ((GameObject*)ctx)->anim.localPosZ + ((f32)e->vertZ[2] - b);
+                p2z = obj->anim.localPosZ + ((f32)e->vertZ[2] - offsZ);
                 r1 = randomGetRange(1, 1000) / lbl_803DF474;
                 r2 = randomGetRange(1, 1000) / lbl_803DF474;
                 s = sqrtf(r2);
@@ -1464,35 +1469,35 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
                 {
                     if (randomGetRange(0, 0x1e) == 1)
                     {
-                        (*gPartfxInterface)->spawnObject(ctx, 0x72, &data, 0x200001, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(obj, 0x72, &data, 0x200001, -1, NULL);
                     }
                 }
                 else if (rt == 0x11)
                 {
                     if (randomGetRange(0, 8) == 2)
                     {
-                        (*gPartfxInterface)->spawnObject(ctx, 0x73, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(obj, 0x73, &data, 0x111, -1, NULL);
                     }
                 }
                 else if (rt == 0x14)
                 {
                     if (randomGetRange(0, 8) == 2)
                     {
-                        (*gPartfxInterface)->spawnObject(ctx, 0x73, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(obj, 0x73, &data, 0x111, -1, NULL);
                     }
                 }
                 else if (rt == 0x15)
                 {
                     if (randomGetRange(0, 8) == 2)
                     {
-                        (*gPartfxInterface)->spawnObject(ctx, 0x73, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(obj, 0x73, &data, 0x111, -1, NULL);
                     }
                 }
                 else if (rt == 0x17)
                 {
-                    (*gPartfxInterface)->spawnObject(ctx, 0x190, &data, 0x111, -1, NULL);
-                    (*gPartfxInterface)->spawnObject(ctx, 0x190, &data, 0x111, -1, NULL);
-                    (*gPartfxInterface)->spawnObject(ctx, 0x190, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, 0x190, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, 0x190, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, 0x190, &data, 0x111, -1, NULL);
                 }
             }
         }
