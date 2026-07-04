@@ -1002,6 +1002,7 @@ main/dll/dll_00C9_enemy.c:
 
 main/dll/dll_00DF_hagabon.c:
 	.text       start:0x8014E1DC end:0x8014EE8C
+	.data       start:0x8031DC88 end:0x8031DCC0
 
 main/dll/dll_00E0_swarmbaddie.c:
 	.text       start:0x8014EE8C end:0x8014F620
