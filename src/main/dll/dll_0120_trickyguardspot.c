@@ -87,4 +87,3 @@ void trickyguardspot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* 
     def->initialYaw;
 }
 
-void infotext_init(int obj, s8* def);
