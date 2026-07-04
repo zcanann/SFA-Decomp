@@ -13,6 +13,15 @@
 #include "main/dll/fx_800944A0_shared.h"
 
 #define DFPSEQPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+/* Placement trigger-mode selector (DfpSeqPointState::triggerMode). */
+#define DFPSEQPOINT_MODE_RADIUS 0            /* player within radius */
+#define DFPSEQPOINT_MODE_GATE 1              /* gate gamebit set */
+#define DFPSEQPOINT_MODE_RADIUS_AND_GATE 2   /* within radius and gate set */
+#define DFPSEQPOINT_MODE_RADIUS_AND_UNSET 3  /* within radius and gate clear, then set gate */
+#define DFPSEQPOINT_MODE_GATE_UNSET 4        /* gate clear, then set gate */
+#define DFPSEQPOINT_MODE_GATE_REPEAT 5       /* gate set, fire every frame (no latch) */
+
 extern void objRenderFn_8003b8f4(f32);
 
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
@@ -185,7 +194,7 @@ void dfpseqpoint_update(int obj)
     }
     switch (state->triggerMode)
     {
-    case 0:
+    case DFPSEQPOINT_MODE_RADIUS:
         if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius)
         {
             (*gObjectTriggerInterface)->runSequence(state->triggerId,
@@ -193,7 +202,7 @@ void dfpseqpoint_update(int obj)
             state->doneLatch = 1;
         }
         break;
-    case 1:
+    case DFPSEQPOINT_MODE_GATE:
         h = state->gameBitGate;
         if (h != -1 && GameBit_Get(h) != 0)
         {
@@ -202,7 +211,7 @@ void dfpseqpoint_update(int obj)
             state->doneLatch = 1;
         }
         break;
-    case 2:
+    case DFPSEQPOINT_MODE_RADIUS_AND_GATE:
         if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius)
         {
             h = state->gameBitGate;
@@ -214,7 +223,7 @@ void dfpseqpoint_update(int obj)
             }
         }
         break;
-    case 3:
+    case DFPSEQPOINT_MODE_RADIUS_AND_UNSET:
         if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius)
         {
             h = state->gameBitGate;
@@ -227,7 +236,7 @@ void dfpseqpoint_update(int obj)
             }
         }
         break;
-    case 4:
+    case DFPSEQPOINT_MODE_GATE_UNSET:
         h = state->gameBitGate;
         if (h != -1 && GameBit_Get(h) == 0)
         {
@@ -237,7 +246,7 @@ void dfpseqpoint_update(int obj)
             state->doneLatch = 1;
         }
         break;
-    case 5:
+    case DFPSEQPOINT_MODE_GATE_REPEAT:
         h = state->gameBitGate;
         if (h != -1 && GameBit_Get(h) != 0)
         {
