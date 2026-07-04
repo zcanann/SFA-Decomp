@@ -31,11 +31,11 @@ typedef struct CameraArwingWork
     f32 xScale;
     f32 yScale;
     f32 unk2C;
-    f32 unk30;
-    f32 unk34;
+    f32 initOffsetX;
+    f32 initOffsetY;
     f32 posZOffset;
-    f32 unk3C;
-    f32 unk40;
+    f32 zEaseDenom;
+    f32 zEaseNum;
     f32 yawScale;
     f32 pitchScale;
     f32 rollScale;
@@ -43,10 +43,10 @@ typedef struct CameraArwingWork
     s16 inputYaw;
     s16 inputPitch;
     s16 inputRoll;
-    u8 unk5A;
-    u8 unk5B;
+    u8 zScaleNear;
+    u8 zScaleFar;
     u8 pad5C[0x5E - 0x5C];
-    u8 unk5E;
+    u8 active;
     u8 pad5F[0x60 - 0x5F];
 } CameraArwingWork;
 
@@ -113,8 +113,8 @@ void CameraModeArwing_copyToCurrent(void* p1, u32 kind)
         ((CameraArwingWork*)gCamArwingWork)->posZOffset = ((f32*)p1)[0];
         return;
     }
-    ((CameraArwingWork*)gCamArwingWork)->unk3C = ((f32*)p1)[0];
-    ((CameraArwingWork*)gCamArwingWork)->unk40 = ((f32*)p1)[1];
+    ((CameraArwingWork*)gCamArwingWork)->zEaseDenom = ((f32*)p1)[0];
+    ((CameraArwingWork*)gCamArwingWork)->zEaseNum = ((f32*)p1)[1];
 }
 
 #pragma opt_common_subs off
@@ -135,7 +135,7 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
     *(f32*)(base + 52) = lbl_803E1BC0;
     *(f32*)(base + 56) = lbl_803E1BC4;
     PSVECAdd(&((GameObject*)a4)->anim.worldPosX, p, &((GameObject*)obj)->anim.worldPosX);
-    ((CameraArwingWork*)gCamArwingWork)->unk5E = 1;
+    ((CameraArwingWork*)gCamArwingWork)->active = 1;
     ((CameraArwingWork*)gCamArwingWork)->yawScale = gCamArwingYawScaleDefault;
     ((CameraArwingWork*)gCamArwingWork)->pitchScale = gCamArwingPitchScaleDefault;
     ((CameraArwingWork*)gCamArwingWork)->rollScale = gCamArwingRollScaleDefault;
@@ -144,10 +144,10 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
     fc = lbl_803E1BA4;
     ((CameraArwingWork*)gCamArwingWork)->unk2C = fc;
     fc2 = lbl_803E1BDC;
-    ((CameraArwingWork*)gCamArwingWork)->unk40 = fc2;
-    ((CameraArwingWork*)gCamArwingWork)->unk3C = fc2;
-    ((CameraArwingWork*)gCamArwingWork)->unk5B = 90;
-    ((CameraArwingWork*)gCamArwingWork)->unk5A = 100;
+    ((CameraArwingWork*)gCamArwingWork)->zEaseNum = fc2;
+    ((CameraArwingWork*)gCamArwingWork)->zEaseDenom = fc2;
+    ((CameraArwingWork*)gCamArwingWork)->zScaleFar = 90;
+    ((CameraArwingWork*)gCamArwingWork)->zScaleNear = 100;
     ((CameraArwingWork*)gCamArwingWork)->offsetZ = fc;
     ((CameraArwingWork*)gCamArwingWork)->offsetY = fc;
     ((CameraArwingWork*)gCamArwingWork)->offsetX = fc;
@@ -177,17 +177,17 @@ void CameraModeArwing_update(u8* obj)
 
     if ((s8)state[0xac] != 0x26)
     {
-        f32 t = ((CameraArwingWork*)gCamArwingWork)->unk40 / ((CameraArwingWork*)gCamArwingWork)->unk3C;
+        f32 t = ((CameraArwingWork*)gCamArwingWork)->zEaseNum / ((CameraArwingWork*)gCamArwingWork)->zEaseDenom;
         t = t - lbl_803E1BA0;
         if (t < lbl_803E1BA4)
         {
             ((GameObject*)obj)->anim.worldPosZ =
-                (f32) - (s32)((CameraArwingWork*)gCamArwingWork)->unk5A * t + ((GameObject*)obj)->anim.worldPosZ;
+                (f32) - (s32)((CameraArwingWork*)gCamArwingWork)->zScaleNear * t + ((GameObject*)obj)->anim.worldPosZ;
         }
         else
         {
             ((GameObject*)obj)->anim.worldPosZ =
-                (f32) - (s32)((CameraArwingWork*)gCamArwingWork)->unk5B * t + ((GameObject*)obj)->anim.worldPosZ;
+                (f32) - (s32)((CameraArwingWork*)gCamArwingWork)->zScaleFar * t + ((GameObject*)obj)->anim.worldPosZ;
         }
     }
 
