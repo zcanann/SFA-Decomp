@@ -874,3 +874,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
 s16 gEcShShrineCupSlotMap[] = {
     0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5,
 };
+
+/* descriptor/ptr table auto 0x80326324-0x80326398 */
+u32 gECSH_CreatorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)ecsh_creator_initialise, (u32)ecsh_creator_release, 0x00000000, (u32)ecsh_creator_init, (u32)ecsh_creator_update, (u32)ecsh_creator_hitDetect, (u32)ecsh_creator_render, (u32)ecsh_creator_free, (u32)ecsh_creator_getObjectTypeId, (u32)ecsh_creator_getExtraSize };
+u32 gGPSH_ShrineObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)gpsh_shrine_initialise, (u32)gpsh_shrine_release, 0x00000000, (u32)gpsh_shrine_init, (u32)gpsh_shrine_update, (u32)gpsh_shrine_hitDetect, (u32)gpsh_shrine_render, (u32)gpsh_shrine_free, (u32)gpsh_shrine_getObjectTypeId, (u32)gpsh_shrine_getExtraSize };

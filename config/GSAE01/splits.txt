@@ -1857,7 +1857,7 @@ main/dll/dll_018E_mmshwaterspike.c:
 
 main/dll/dll_018F_ecshshrine.c:
 	.text       start:0x801C5990 end:0x801C6E0C
-	.data       start:0x80326208 end:0x80326324
+	.data       start:0x80326208 end:0x80326398
 
 main/dll/dll_0191_ecshcreator.c:
 	.text       start:0x801C6E0C end:0x801C70F0
