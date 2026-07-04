@@ -13,6 +13,11 @@
 #define DIMBARRIER_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMBARRIER_OBJFLAG_HIDDEN 0x4000
 
+/* dimbarrier_update state machine */
+#define DIMBARRIER_STATE_ARMED 0    /* watching the trigger list, counting down */
+#define DIMBARRIER_STATE_FADING 1   /* fading alpha out before latching the gamebit */
+#define DIMBARRIER_STATE_RESOLVED 2 /* faded away, gamebit latched */
+
 typedef struct DimbarrierPlacement
 {
     u8 pad0[0x1E - 0x0];
@@ -61,7 +66,7 @@ void dimbarrier_init(int obj, s8* p)
     ((GameObject*)obj)->objectFlags |= (DIMBARRIER_OBJFLAG_HIDDEN | DIMBARRIER_OBJFLAG_HITDETECT_DISABLED);
     inner = ((GameObject*)obj)->extra;
     inner[3] = 1;
-    inner[2] = 0;
+    inner[2] = DIMBARRIER_STATE_ARMED;
     if (GameBit_Get(((DimbarrierPlacement*)p)->barrierGameBit) != 0)
     {
         ObjHitsPriorityState* hitState;
@@ -69,7 +74,7 @@ void dimbarrier_init(int obj, s8* p)
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
         ((GameObject*)obj)->anim.alpha = 0;
-        inner[2] = 2;
+        inner[2] = DIMBARRIER_STATE_RESOLVED;
     }
 }
 
@@ -80,7 +85,7 @@ void dimbarrier_update(int obj)
     DimbarrierState* extra = (DimbarrierState*)((GameObject*)obj)->extra;
     switch (extra->state)
     {
-    case 0:
+    case DIMBARRIER_STATE_ARMED:
         {
             int entry;
             int ex;
@@ -101,7 +106,7 @@ void dimbarrier_update(int obj)
             {
                 if (--extra->countdown <= 0)
                 {
-                    extra->state = 1;
+                    extra->state = DIMBARRIER_STATE_FADING;
                     extra->timer = 30;
                     Sfx_PlayFromObject(obj, SFXthorntail_chew1);
                 }
@@ -112,7 +117,7 @@ void dimbarrier_update(int obj)
             }
             break;
         }
-    case 1:
+    case DIMBARRIER_STATE_FADING:
         {
             ObjHitsPriorityState* hitState;
             int v = ((GameObject*)obj)->anim.alpha - framesThisStep * 16;
@@ -127,11 +132,11 @@ void dimbarrier_update(int obj)
             if (extra->timer <= 0)
             {
                 GameBit_Set(((DimbarrierPlacement*)def)->barrierGameBit, 1);
-                extra->state = 2;
+                extra->state = DIMBARRIER_STATE_RESOLVED;
             }
             break;
         }
-    case 2:
+    case DIMBARRIER_STATE_RESOLVED:
         break;
     }
 }
