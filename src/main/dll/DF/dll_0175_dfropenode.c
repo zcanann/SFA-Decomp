@@ -14,6 +14,9 @@
 #include "main/texture.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+#define DFROPENODE_OBJGROUP 0x17
+
 extern f32 sqrtf(f32 x);
 extern f64 gRopeNodeS32ToDoubleBias;
 extern f32 lbl_803E4DFC;
@@ -356,7 +359,7 @@ void dfropenode_free(void* obj)
     int i;
 
     node = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject((u32)obj, 0x17);
+    ObjGroup_RemoveObject((u32)obj, DFROPENODE_OBJGROUP);
     if (((DFropenodeExtra*)node)->rope != NULL && ((DFropenodeExtra*)node)->rope != NULL)
     {
         mm_free(((DFropenodeExtra*)node)->rope);
@@ -364,7 +367,7 @@ void dfropenode_free(void* obj)
     node = ((DFropenodeExtra*)node)->linkedObj;
     if (node != NULL)
     {
-        objs = (int**)ObjGroup_GetObjects(0x17, &count);
+        objs = (int**)ObjGroup_GetObjects(DFROPENODE_OBJGROUP, &count);
         for (i = 0; i < count; i++)
         {
             if ((void*)objs[i] == node)
@@ -649,7 +652,7 @@ void dfropenode_init(DFropenodeObject* obj, u8* objDef)
     {
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~0x80;
     }
-    ObjGroup_AddObject((int)obj, 0x17);
+    ObjGroup_AddObject((int)obj, DFROPENODE_OBJGROUP);
     ((GameObject*)obj)->animEventCallback = dfropenode_syncRopeToEndpoints;
     extra->rope = NULL;
     extra->linkedObj = NULL;
