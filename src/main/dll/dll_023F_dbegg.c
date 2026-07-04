@@ -46,6 +46,8 @@
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+#define DBEGG_OBJGROUP 0x24
 #define PAD_BUTTON_A 0x100
 #define DBEGG_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 extern const f32 lbl_803E61C8;
@@ -162,7 +164,7 @@ void dbegg_processMessages(int obj)
             case 18:
                 if ((((DbEggState*)sub)->flags119 & 0x20) == 0)
                 {
-                    ObjGroup_RemoveObject(obj, 36);
+                    ObjGroup_RemoveObject(obj, DBEGG_OBJGROUP);
                 }
                 ObjHits_DisableObject(obj);
                 ((DbEggState*)sub)->mode = DBEGG_MODE_HELD;
@@ -187,7 +189,7 @@ void dbegg_processMessages(int obj)
                     vecRotateZXY(buf, obj + 0x24);
                 }
             case 16:
-                ObjGroup_AddObject(obj, 36);
+                ObjGroup_AddObject(obj, DBEGG_OBJGROUP);
             case 20:
                 ((DbEggState*)sub)->mode = DBEGG_MODE_FALLING;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
@@ -202,7 +204,7 @@ void dbegg_processMessages(int obj)
                 }
                 Obj_RemoveFromUpdateList(obj);
                 ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                ObjGroup_RemoveObject(obj, 36);
+                ObjGroup_RemoveObject(obj, DBEGG_OBJGROUP);
                 break;
             }
         }
@@ -213,7 +215,7 @@ void dbegg_processMessages(int obj)
 int dbegg_getExtraSize(void) { return 0x124; }
 int dbegg_getObjectTypeId(void) { return 0x8; }
 
-void dbegg_free(int x) { ObjGroup_RemoveObject(x, 0x24); }
+void dbegg_free(int x) { ObjGroup_RemoveObject(x, DBEGG_OBJGROUP); }
 
 #pragma scheduling on
 #pragma peephole on
@@ -273,7 +275,7 @@ void dbegg_setupFromDef(int obj, u8* state)
     state[0x118] = (u8)(GameBit_Get(config->readyConditionId) != 0 ? 5 : 12);
     if (state[0x118] == 5)
     {
-        ObjGroup_AddObject(obj, 36);
+        ObjGroup_AddObject(obj, DBEGG_OBJGROUP);
     }
     {
         f32 fz = lbl_803E61C8;
@@ -811,7 +813,7 @@ void dbegg_update(int obj)
                 playerObj = Obj_GetPlayerObject();
                 b2 = *(int*)&((GameObject*)obj)->extra;
                 d2 = *(int*)&((GameObject*)obj)->anim.placementData;
-                ObjGroup_RemoveObject(obj, 0x24);
+                ObjGroup_RemoveObject(obj, DBEGG_OBJGROUP);
                 ((DbEggState*)b2)->mode = DBEGG_MODE_RELEASED;
                 GameBit_Set(0x3c4, 1);
                 GameBit_Set(0x86d, 1);
@@ -930,7 +932,7 @@ void dbegg_update(int obj)
         case DBEGG_MODE_GATED_RESPAWN:
             if (GameBit_Get(((DbeggPlacement*)data)->activateGameBit) != 0)
             {
-                ObjGroup_AddObject(obj, 0x24);
+                ObjGroup_AddObject(obj, DBEGG_OBJGROUP);
                 ((DbEggState*)eggState)->mode = DBEGG_MODE_FALLING;
             }
             break;
@@ -992,7 +994,7 @@ void dbegg_update(int obj)
                         playerObj = Obj_GetPlayerObject();
                         b2 = *(int*)&((GameObject*)obj)->extra;
                         d2 = *(int*)&((GameObject*)obj)->anim.placementData;
-                        ObjGroup_RemoveObject(obj, 0x24);
+                        ObjGroup_RemoveObject(obj, DBEGG_OBJGROUP);
                         ((DbEggState*)b2)->mode = DBEGG_MODE_RELEASED;
                         GameBit_Set(0x3c4, 1);
                         GameBit_Set(0x86d, 1);
