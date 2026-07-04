@@ -53,7 +53,7 @@
 typedef struct GfProjectileSetup
 {
     ObjPlacement head; /* 0x00 */
-    u8 field18;        /* 0x18: cleared to 0 */
+    u8 roll;        /* 0x18: cleared to 0 */
     u8 pitch;          /* 0x19 */
     u8 yawHi;          /* 0x1a */
 } GfProjectileSetup;
@@ -345,7 +345,7 @@ void fn_8023A168(int p1, int p2)
         ((ObjPlacement*)newObj)->posZ = *(f32*)(p2 + 0xc8);
         ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)p1 + yawRnd) >> 8;
         ((GfProjectileSetup*)newObj)->pitch = pitchRnd;
-        ((GfProjectileSetup*)newObj)->field18 = 0;
+        ((GfProjectileSetup*)newObj)->roll = 0;
         ((ObjPlacement*)newObj)->color[0] = 1;
         ((ObjPlacement*)newObj)->color[1] = 1;
         proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
@@ -377,7 +377,7 @@ void fn_8023A268(int p1, int p2, int p3)
         ((ObjPlacement*)newObj)->posZ = *(f32*)(p2 + 0xc8);
         ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)p1 + yaw) >> 8;
         ((GfProjectileSetup*)newObj)->pitch = gGfLevelConProjectilePitch;
-        ((GfProjectileSetup*)newObj)->field18 = 0;
+        ((GfProjectileSetup*)newObj)->roll = 0;
         ((ObjPlacement*)newObj)->color[0] = 1;
         ((ObjPlacement*)newObj)->color[1] = 1;
         p1 = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
@@ -411,7 +411,7 @@ void fn_80239FCC(int obj, int state)
         ((ObjPlacement*)newObj)->posZ = *(f32*)(state + 0xc8) - lbl_803E74A8;
         ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)obj + yaw) >> 8;
         ((GfProjectileSetup*)newObj)->pitch = lbl_803DDDC0;
-        ((GfProjectileSetup*)newObj)->field18 = 0;
+        ((GfProjectileSetup*)newObj)->roll = 0;
         ((ObjPlacement*)newObj)->color[0] = 1;
         ((ObjPlacement*)newObj)->color[1] = 1;
         proj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
