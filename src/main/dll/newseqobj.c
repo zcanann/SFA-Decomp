@@ -439,7 +439,7 @@ void fn_80150910(int* obj, u8* state)
             return;
         }
     }
-    if ((((BaddieState*)state)->controlFlags & 0x80000000) && state[0x33d] == 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) && state[0x33d] == 0)
     {
         sidekickToy_updateCurveTargetLatch(obj);
     }
