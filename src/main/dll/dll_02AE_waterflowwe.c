@@ -134,11 +134,11 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
         s16 currentAngle;
 
         other = objects[i];
-        objectStrength = (f32)(u32)((ObjectCurrentSourceSetup*)other->anim.placementData)->strengthTenths / 10.0f;
+        objectStrength = (f32)(u32)((ObjectCurrentSourceSetup*)other->anim.placementData)->strengthTenths / gWaterFlowStrengthScale;
 
         hasCurrent = 1;
         dy = other->anim.localPosY - object->anim.localPosY;
-        if ((dy <= 200.0f) && (dy >= gWaterFlowBandMin))
+        if ((dy <= gWaterFlowBandMax) && (dy >= gWaterFlowBandMin))
         {
             dx = other->anim.localPosX - object->anim.localPosX;
             dz = other->anim.localPosZ - object->anim.localPosZ;
