@@ -19,6 +19,8 @@
 #include "main/dll/dll_801b1d84.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+#define DIMCANNON_OBJGROUP 3
 #define DIMCANNON_OBJFLAG_HIDDEN 0x4000
 #define DIMCANNON_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern u64 ObjGroup_RemoveObject();
@@ -142,7 +144,7 @@ void dimcannon_free(int* obj)
         Resource_Release(lbl_803DDB50);
         lbl_803DDB50 = NULL;
     }
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, DIMCANNON_OBJGROUP);
 }
 
 #define DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED 0x13
