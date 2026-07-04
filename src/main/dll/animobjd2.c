@@ -214,9 +214,10 @@ void fn_8013E0D0(int* obj, u8* st)
                 if (getXZDistance(&gobj->anim.worldPosX,
                                   &((GameObject*)*(int*)&t->followObj)->anim.worldPosX) < lbl_803E24DC)
                 {
-                    int b = 1;
+                    int b;
                     f32 z;
                     t->substate = ANIMOBJD2_SUBSTATE_APPROACH;
+                    b = 1;
                     z = lbl_803E23DC;
                     t->unk71C = z;
                     if (z == t->waterLevel)
