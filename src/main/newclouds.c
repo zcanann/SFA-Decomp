@@ -17,6 +17,20 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+/* CloudSpawnParams.flags58 / NewCloud.flags144A — spawn command / trigger bits */
+#define NEWCLOUD_CMD_SPIN       0x1  /* enable cloud spin */
+#define NEWCLOUD_CMD_SPAWN      0x2  /* create/spawn cloud */
+#define NEWCLOUD_CMD_DESPAWN    0x4  /* despawn / finish toggle */
+#define NEWCLOUD_CMD_RELOCATE   0x8  /* reposition existing cloud */
+#define NEWCLOUD_CMD_ANCHOROBJ  0x10 /* anchor to object-B position */
+#define NEWCLOUD_CMD_KILL       0x20 /* kill snow cloud */
+#define NEWCLOUD_CMD_ROTFIXED   0x80 /* fixed flash rotation (cloudType 4) */
+
+/* CloudSpawnParams.flags59 / NewCloud.unk144B — lightning cadence bits */
+#define NEWCLOUD_LTG_SLOW       0x8  /* slow lightning cadence */
+#define NEWCLOUD_LTG_MED        0x10 /* medium lightning cadence */
+#define NEWCLOUD_LTG_FAST       0x20 /* fast lightning cadence */
+
 typedef struct LightningEffect
 {
     f32 start[3];
@@ -1506,15 +1520,15 @@ void snowReposSnowCloud(int cloudId)
             Sfx_PlayAtPositionFromObject(0, from[0], from[1], from[2], SFXTRIG_barrelgrabber_suck);
         }
         fl = ((NewCloud*)gNewClouds[cloudId])->unk144B;
-        if (fl & 8)
+        if (fl & NEWCLOUD_LTG_SLOW)
         {
             ((NewCloud*)gNewClouds[cloudId])->lightningTimer = randomGetRange(0x78, 0xf0);
         }
-        else if (fl & 0x10)
+        else if (fl & NEWCLOUD_LTG_MED)
         {
             ((NewCloud*)gNewClouds[cloudId])->lightningTimer = randomGetRange(0x78, 0xf0);
         }
-        else if (fl & 0x20)
+        else if (fl & NEWCLOUD_LTG_FAST)
         {
             ((NewCloud*)gNewClouds[cloudId])->lightningTimer = randomGetRange(0x5a, 0xb4);
         }
@@ -1591,11 +1605,11 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
     ((NewCloud*)NC_CLOUD)->worldPosX = x;
     ((NewCloud*)NC_CLOUD)->worldPosY = y;
     ((NewCloud*)NC_CLOUD)->worldPosZ = z;
-    if (params->flags58 & 1)
+    if (params->flags58 & NEWCLOUD_CMD_SPIN)
     {
         ((NewCloud*)NC_CLOUD)->spinEnabled = 1;
     }
-    if (params->flags58 & 0x10)
+    if (params->flags58 & NEWCLOUD_CMD_ANCHOROBJ)
     {
         ((NewCloud*)NC_CLOUD)->unk144E = 1;
     }
@@ -1652,15 +1666,15 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
     }
     ((NewCloud*)NC_CLOUD)->active = 1;
     fl = ((NewCloud*)NC_CLOUD)->unk144B;
-    if (fl & 8)
+    if (fl & NEWCLOUD_LTG_SLOW)
     {
         ((NewCloud*)NC_CLOUD)->lightningTimer = 0x320;
     }
-    else if (fl & 0x10)
+    else if (fl & NEWCLOUD_LTG_MED)
     {
         ((NewCloud*)NC_CLOUD)->lightningTimer = 0xc8;
     }
-    else if (fl & 0x20)
+    else if (fl & NEWCLOUD_LTG_FAST)
     {
         ((NewCloud*)NC_CLOUD)->lightningTimer = 0x64;
     }
@@ -1877,22 +1891,22 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     if (cloud == NULL)
     {
         fl = params[0x58];
-        if (!(fl & 4) && !(fl & 8) && !(fl & 0x20))
+        if (!(fl & NEWCLOUD_CMD_DESPAWN) && !(fl & NEWCLOUD_CMD_RELOCATE) && !(fl & NEWCLOUD_CMD_KILL))
         {
-            if ((fl & 2) && (fl & 0x10) && params[0x5d] != 0)
+            if ((fl & NEWCLOUD_CMD_SPAWN) && (fl & NEWCLOUD_CMD_ANCHOROBJ) && params[0x5d] != 0)
             {
                 newClouds((CloudSpawnParams*)params, objB, posA[0], posA[1], posA[2]);
             }
-            else if ((fl & 2) && (fl & 0x10))
+            else if ((fl & NEWCLOUD_CMD_SPAWN) && (fl & NEWCLOUD_CMD_ANCHOROBJ))
             {
                 newClouds((CloudSpawnParams*)params, objB, posB[0], posB[1], posB[2]);
             }
-            else if (fl & 2)
+            else if (fl & NEWCLOUD_CMD_SPAWN)
             {
                 newClouds((CloudSpawnParams*)params, objB, posA[0], posA[1], posA[2]);
             }
         }
-        if (params[0x58] & 2)
+        if (params[0x58] & NEWCLOUD_CMD_SPAWN)
         {
             if (params[0x5c] == 0 || params[0x5c] == 4)
             {
@@ -1986,11 +2000,11 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
         return;
     }
     fl = params[0x58];
-    if (fl & 2)
+    if (fl & NEWCLOUD_CMD_SPAWN)
     {
         return;
     }
-    if ((fl & 8) && cloud->unk144E != 0)
+    if ((fl & NEWCLOUD_CMD_RELOCATE) && cloud->unk144E != 0)
     {
         ((s8*)(env + 0x41))[*(u16*)(params + 0x26)] = cloud->stationary;
         ((NewCloud*)NC_CLOUD)->stationary = 1 - ((NewCloud*)NC_CLOUD)->stationary;
@@ -2032,11 +2046,11 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
             *(int*)(p1c + *(u16*)(params + 0x26) * 0xc) = posA[2];
         }
     }
-    else if (fl & 0x20)
+    else if (fl & NEWCLOUD_CMD_KILL)
     {
         newclouds_snowKillSnowCloud(*(u16*)(params + 0x26), 0);
     }
-    else if (fl & 4)
+    else if (fl & NEWCLOUD_CMD_DESPAWN)
     {
         if (cloud->finished != 0)
         {
@@ -2502,7 +2516,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
     }
     else if (ct == 4)
     {
-        if (((NewCloud*)p)->flags144A & 0x80)
+        if (((NewCloud*)p)->flags144A & NEWCLOUD_CMD_ROTFIXED)
         {
             mtxB[0] = mathCosf(lbl_803DF204);
             mtxB[1] = -mathSinf(lbl_803DF204);
