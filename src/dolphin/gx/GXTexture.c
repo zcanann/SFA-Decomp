@@ -745,3 +745,6 @@ void __GXSetTmemConfig(u32 config) {
         break;
     }
 }
+
+/* .sdata2 const referenced via extern by GXBump */
+const f32 lbl_803E76F8[2] = {1024.0f, 0.0f};
