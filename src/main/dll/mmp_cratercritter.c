@@ -11,8 +11,8 @@ extern f32 lbl_803E2440;
 extern f32 lbl_803E2444;
 extern f32 lbl_803E247C;
 extern f32 lbl_803E24C4;
-extern char sInWaterMessage[];
-extern char lbl_8031D478[];
+extern char sInWaterMessage[]; /* "in water\n" */
+extern char lbl_8031D478[]; /* "out of water\n" (head of the 0x38C Tricky debug-string blob @0x8031D478) */
 extern u8** ObjGroup_GetObjects(int kind, int* count);
 extern int trickyFn_8013b368(u8* arg1, f32 dist, u8* arg2);
 extern void objAnimFn_8013a3f0(u8* self, int a, f32 f1, int b);
@@ -29,7 +29,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     u8** objsList;
     int count;
     int i;
-    int waterFlag;
+    int inWater;
     u8* best;
 
     nearest = NULL;
@@ -86,22 +86,22 @@ void trickyFn_8013d8f0(u8* self, u8* state)
 
     if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
     {
-        waterFlag = 0;
+        inWater = 0;
     }
     else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
     {
-        waterFlag = 1;
+        inWater = 1;
     }
     else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
     {
-        waterFlag = 1;
+        inWater = 1;
     }
     else
     {
-        waterFlag = 0;
+        inWater = 0;
     }
 
-    if (waterFlag != 0)
+    if (inWater != 0)
     {
         objAnimFn_8013a3f0(self, 8, lbl_803E243C, 0);
         ((TrickyState*)state)->unk79C = lbl_803E2440;
