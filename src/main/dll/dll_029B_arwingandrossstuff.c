@@ -21,6 +21,8 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
+#define ARWINGANDROSSSTUFF_OBJGROUP 0x2
+
 #define ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK 0x1000
 
 enum ArwSeqId
@@ -151,7 +153,7 @@ void arwingandrossstuff_free(int obj)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
 
-    ObjGroup_RemoveObject(obj, 2);
+    ObjGroup_RemoveObject(obj, ARWINGANDROSSSTUFF_OBJGROUP);
     if (state->light != NULL)
     {
         ModelLightStruct_free(state->light);
@@ -357,7 +359,7 @@ void arwingandrossstuff_init(int obj, u8* setup)
     {
         hitState->trackContactMask = 1;
     }
-    ObjGroup_AddObject(obj, 2);
+    ObjGroup_AddObject(obj, ARWINGANDROSSSTUFF_OBJGROUP);
 }
 
 void arwingandrossstuff_release(void)
