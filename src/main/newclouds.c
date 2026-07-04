@@ -574,7 +574,7 @@ void lightningRender(void* state)
     selectTexture(tex, 0);
     GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, color);
     Camera_UpdateViewMatrices();
-    GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
+    GXLoadPosMtxImm(Camera_GetViewMatrix(), GX_PNMTX0);
     GXSetCurrentMtx(0);
     savedSeed = rand();
     if (p->seed == 0xffff)
@@ -779,7 +779,7 @@ void drawSkyStars(void)
     color = *(FogColor*)&gNewCloudStarFogColor;
     GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, color);
     Camera_UpdateViewMatrices();
-    GXLoadPosMtxImm(Camera_GetViewRotationMatrix(), 0);
+    GXLoadPosMtxImm(Camera_GetViewRotationMatrix(), GX_PNMTX0);
     GXSetCurrentMtx(0);
     for (i = start; i < 0x5c; i++)
     {
@@ -2525,7 +2525,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
     mtx44_mult(mtxA, mtxB, mtxOut);
     mtx44Transpose(mtxOut, mtxT);
     PSMTXConcat((void*)Camera_GetViewMatrix(), (void*)mtxT, (void*)mtxT);
-    GXLoadPosMtxImm(mtxT, 0);
+    GXLoadPosMtxImm(mtxT, GX_PNMTX0);
     texIdx = 0;
     selectTexture(((NewCloud*)p)->cloudType == 0 ? gNewCloudLayerTextures[0] : lbl_803DD1C4, 0);
     GXSetCullMode(GX_CULL_NONE);
