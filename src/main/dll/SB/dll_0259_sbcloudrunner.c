@@ -28,6 +28,8 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 
+#define SBCLOUDRUNNER_OBJGROUP 0xa
+
 typedef struct SBCloudRunnerState
 {
     u8 pad0[0x10 - 0x0];
@@ -502,7 +504,7 @@ void SB_CloudRunner_free(GameObject *obj)
     }
     Resource_Release(*(void **)&state->resource);
     state->resource = 0;
-    ObjGroup_RemoveObject(obj, 10);
+    ObjGroup_RemoveObject(obj, SBCLOUDRUNNER_OBJGROUP);
 }
 
 void SB_CloudRunner_init(GameObject *obj)
@@ -518,7 +520,7 @@ void SB_CloudRunner_init(GameObject *obj)
     state->texture1 = textureLoadAsset(3085);
     *(void **)&state->resource = Resource_Acquire(121, 1);
     ObjHits_SetTargetMask((int)obj, 1);
-    ObjGroup_AddObject(obj, 10);
+    ObjGroup_AddObject(obj, SBCLOUDRUNNER_OBJGROUP);
 }
 
 void SB_CloudRunner_update(GameObject *obj)
