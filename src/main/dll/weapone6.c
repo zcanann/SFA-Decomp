@@ -667,3 +667,15 @@ void fn_8013FEC0(int obj, int state)
         }
     }
 }
+
+/*__DATA_EXTERNS__*/
+extern void trickyDigTunnel();
+extern void trickyFlame();
+extern void trickyGuard();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+u8 sTrickyGuardDebugTextBlock[148] = { 71, 85, 65, 82, 68, 95, 73, 78, 73, 84, 10, 0, 71, 85, 65, 82, 68, 95, 70, 73, 78, 68, 73, 78, 71, 10, 0, 0, 71, 85, 65, 82, 68, 95, 84, 79, 83, 80, 79, 84, 10, 0, 0, 0, 71, 85, 65, 82, 68, 95, 84, 79, 70, 82, 79, 78, 84, 10, 0, 0, 71, 85, 65, 82, 68, 95, 84, 79, 66, 65, 68, 68, 73, 69, 10, 0, 71, 85, 65, 82, 68, 95, 70, 76, 65, 77, 69, 10, 0, 0, 0, 0, 71, 85, 65, 82, 68, 95, 68, 79, 87, 78, 84, 79, 71, 82, 79, 87, 76, 10, 0, 0, 71, 85, 65, 82, 68, 95, 71, 82, 79, 87, 76, 10, 0, 0, 0, 0, 71, 85, 65, 82, 68, 95, 85, 80, 70, 82, 79, 77, 71, 82, 79, 87, 76, 10, 0, 0 };
+void* jumptable_trickyGuard[9] = { (void*)((u8*)trickyGuard + 0x48), (void*)((u8*)trickyGuard + 0x11C), (void*)((u8*)trickyGuard + 0x15C), (void*)((u8*)trickyGuard + 0x1C4), (void*)((u8*)trickyGuard + 0x2A0), (void*)((u8*)trickyGuard + 0x41C), (void*)((u8*)trickyGuard + 0x5C4), (void*)((u8*)trickyGuard + 0x6F0), (void*)((u8*)trickyGuard + 0x854) };
+u8 sTrickyFlameDebugTextBlock[148] = { 70, 76, 65, 77, 69, 95, 78, 79, 78, 69, 10, 0, 70, 76, 65, 77, 69, 95, 70, 73, 78, 68, 73, 78, 71, 95, 79, 85, 84, 10, 0, 0, 70, 76, 65, 77, 69, 95, 71, 79, 73, 78, 71, 84, 79, 69, 68, 71, 69, 10, 0, 0, 70, 76, 65, 77, 69, 95, 84, 79, 83, 84, 65, 82, 84, 10, 0, 0, 70, 76, 65, 77, 69, 95, 79, 85, 84, 10, 0, 0, 70, 76, 65, 77, 69, 95, 70, 73, 78, 68, 73, 78, 71, 95, 73, 78, 10, 0, 0, 0, 70, 76, 65, 77, 69, 95, 84, 85, 82, 78, 73, 78, 71, 95, 73, 78, 10, 0, 0, 0, 70, 76, 65, 77, 69, 95, 73, 78, 10, 0, 0, 0, 70, 76, 65, 77, 69, 95, 84, 79, 69, 78, 68, 10, 0, 0, 0, 0 };
+void* jumptable_trickyFlame[9] = { (void*)((u8*)trickyFlame + 0x48), (void*)((u8*)trickyFlame + 0x478), (void*)((u8*)trickyFlame + 0x530), (void*)((u8*)trickyFlame + 0x11C), (void*)((u8*)trickyFlame + 0x168), (void*)((u8*)trickyFlame + 0x1CC), (void*)((u8*)trickyFlame + 0x5A0), (void*)((u8*)trickyFlame + 0x238), (void*)((u8*)trickyFlame + 0x7B8) };
+u8 sTrickyDigTunnelDebugTextBlock[124] = { 68, 73, 71, 84, 85, 78, 78, 69, 76, 95, 70, 73, 78, 68, 73, 78, 71, 10, 0, 0, 68, 73, 71, 84, 85, 78, 78, 69, 76, 95, 71, 79, 73, 78, 71, 84, 79, 83, 84, 65, 82, 84, 10, 0, 68, 73, 71, 84, 85, 78, 78, 69, 76, 95, 68, 73, 71, 71, 73, 78, 71, 10, 0, 0, 68, 73, 71, 84, 85, 78, 78, 69, 76, 95, 84, 79, 69, 78, 68, 49, 32, 37, 102, 10, 0, 0, 0, 0, 68, 73, 71, 84, 85, 78, 78, 69, 76, 95, 84, 79, 69, 78, 68, 50, 10, 0, 0, 0, 68, 73, 71, 84, 85, 78, 78, 69, 76, 95, 87, 65, 73, 84, 10, 0 };
+void* jumptable_trickyDigTunnel[8] = { (void*)((u8*)trickyDigTunnel + 0x58), (void*)((u8*)trickyDigTunnel + 0x11C), (void*)((u8*)trickyDigTunnel + 0x168), (void*)((u8*)trickyDigTunnel + 0x1E4), (void*)((u8*)trickyDigTunnel + 0x264), (void*)((u8*)trickyDigTunnel + 0x4D4), (void*)((u8*)trickyDigTunnel + 0x5A0), (void*)((u8*)trickyDigTunnel + 0x6A8) };

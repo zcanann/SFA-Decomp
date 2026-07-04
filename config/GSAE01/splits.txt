@@ -984,7 +984,7 @@ main/dll/animobjd2.c:
 
 main/dll/weapone6.c:
 	.text       start:0x8013F100 end:0x8013FFB8
-	.data       start:0x8031D910 end:0x8031D930
+	.data       start:0x8031D910 end:0x8031DB3C
 
 main/dll/tricky_flameguard.c:
 	.text       start:0x8013FFB8 end:0x80141290
