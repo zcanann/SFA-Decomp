@@ -268,11 +268,11 @@ void worldplanet_update(int obj)
     if (state->foxSpawnTimer == 1)
     {
         int def;
-        state->foxSpawnTimer = randomGetRange(0x708, 3000);
+        state->foxSpawnTimer = randomGetRange(WORLDPLANET_FOX_SPAWN_MIN_FRAMES, 3000);
         def = *(int*)&((GameObject*)obj)->anim.placementData;
         if (Obj_IsLoadingLocked() != 0)
         {
-            WorldObjSetup* setup = (WorldObjSetup*)Obj_AllocObjectSetup(0x20, 0x80f);
+            WorldObjSetup* setup = (WorldObjSetup*)Obj_AllocObjectSetup(0x20, WORLDPLANET_FOX_SPAWN_OBJECT_ID);
             *(u8*)((char*)setup + 4) = *(u8*)(def + 4);
             *(u8*)((char*)setup + 6) = *(u8*)(def + 6);
             *(u8*)((char*)setup + 5) = *(u8*)(def + 5);
@@ -318,7 +318,7 @@ void worldplanet_update(int obj)
             (*gCameraInterface)->releaseAction(&objId, 2);
             state->flags |= WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED;
             {
-                int krazoa = ObjList_FindObjectById(0x43077);
+                int krazoa = ObjList_FindObjectById(WORLDPLANET_KRAZOA_OBJECT_ID);
                 ((WorldObjState*)((GameObject*)krazoa)->extra)->controlByte = gWorldPlanetKrazoaControlBytes[state->selectedPlanet];
             }
             AudioStream_StopCurrent();
@@ -326,7 +326,7 @@ void worldplanet_update(int obj)
         if ((state->flags & WORLDPLANET_STATE_FLAG_ENVFX_STARTED) == 0)
         {
             state->flags |= WORLDPLANET_STATE_FLAG_ENVFX_STARTED;
-            getEnvfxAct(0, 0, 0x21f, 0);
+            getEnvfxAct(0, 0, WORLDPLANET_ENVFX_OPEN_ID, 0);
             setIsOvercast(0);
             setDrawLights(0);
         }
@@ -335,18 +335,18 @@ void worldplanet_update(int obj)
         pfx.offsetX = gWorldPlanetPfxOffsetX;
         pfx.offsetY = gWorldPlanetPfxOffsetY;
         pfx.offsetZ = gWorldPlanetPfxOffsetZ;
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x6f2, &pfx, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, WORLDPLANET_SELECTION_PFX_ID, &pfx, 2, -1, NULL);
         worldplanet_readMapInput(obj, (u8*)in.inX, &in.inY);
         ((GameObject*)obj)->anim.rotZ -= 10;
         ((GameObject*)obj)->anim.rotY = 0x3448;
         ((GameObject*)obj)->anim.rotX = 0x4000;
         {
-            int fox = ObjList_FindObjectById(0x42ff5);
+            int fox = ObjList_FindObjectById(WORLDPLANET_FOX_OBJECT_ID);
             ((GameObject*)fox)->anim.rotZ = ((GameObject*)obj)->anim.rotZ;
             ((GameObject*)fox)->anim.rotY = ((GameObject*)obj)->anim.rotY;
             ((GameObject*)fox)->anim.rotX = ((GameObject*)obj)->anim.rotX;
         }
-        galleon = ObjList_FindObjectById(0x4300c);
+        galleon = ObjList_FindObjectById(WORLDPLANET_GALLEON_OBJECT_ID);
         ((WorldObjState*)((GameObject*)galleon)->extra)->effectState = state->selectionLocked;
         prevPlanet = state->selectedPlanet;
         {
@@ -391,7 +391,7 @@ void worldplanet_update(int obj)
                 }
                 done = 1;
             }
-            pauseMenuSetupTitle(0x2a7, gWorldPlanetTitleStringIds[state->selectedPlanet], 0x19, 0);
+            pauseMenuSetupTitle(WORLDPLANET_SELECT_TITLE_TEXT_ID, gWorldPlanetTitleStringIds[state->selectedPlanet], 0x19, 0);
             if (prevPlanet != state->selectedPlanet || ((GameObject*)obj)->unkF4 == 0)
             {
                 if (((GameObject*)obj)->unkF4 != 0)
@@ -516,7 +516,7 @@ void worldplanet_update(int obj)
                         state->selectionLocked = 1;
                         (*gCameraInterface)->releaseAction(&state->selectionLocked, 0);
                         {
-                            int krazoa = ObjList_FindObjectById(0x43077);
+                            int krazoa = ObjList_FindObjectById(WORLDPLANET_KRAZOA_OBJECT_ID);
                             ((WorldObjState*)((GameObject*)krazoa)->extra)->controlByte = gWorldPlanetKrazoaControlBytes[state->
                                 selectedPlanet];
                         }
@@ -580,7 +580,7 @@ void worldplanet_update(int obj)
             for (b = 0, r = gWorldPlanetOrbitRadius; b < WORLDPLANET_PLANET_COUNT; b++)
             {
                 s16* p = (s16*)ObjList_FindObjectById(tbl[0][b]);
-                if (tbl[0][b] == 0x4300d)
+                if (tbl[0][b] == WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID)
                 {
                     *p = ang + tbl[1][b] + 0x4000;
                 }
