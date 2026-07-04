@@ -549,7 +549,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             for (;;)
             {
                 int k = 6;
-                while (1)
+                do
                 {
                     ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
                     if (k == charLen2)
@@ -569,18 +569,13 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
                         break;
                     }
                     k--;
-                    if (k <= 0)
-                    {
-                        break;
-                    }
-                }
+                } while (k > 0);
             }
         foundBreak:
             q[1] = q[0];
             q[0] = 0;
             dst = q + 1;
-            *(char**)((char*)buffer + ((lineIdx + 1) << 2)) = dst;
-            dst++;
+            *(char**)((char*)buffer + ((lineIdx + 1) << 2)) = dst++;
             boundary++;
             lineIdx++;
         }
