@@ -51,7 +51,7 @@
 extern void saveGame_save();
 extern u8 gPauseMenuTokenConfirmFlag;
 extern u16 lbl_803DD774;
-extern u16 lbl_803DD776;
+extern u16 gWorldMapVoiceoverTimer;
 extern u8 mapScreenVisible;
 extern s8 lbl_803DD7A8;
 extern u8 lbl_803DD840;
@@ -432,11 +432,13 @@ u8 fn_8012DDA4(void)
     return gPauseMenuTokenConfirmFlag;
 }
 
-/* EN v1.0 0x8012DDAC  size: 12b  Read the u16 cell at lbl_803DD776 narrowed
- * to its low byte. */
-u8 fn_8012DDAC(void)
+/* EN v1.0 0x8012DDAC  size: 12b  Read gWorldMapVoiceoverTimer (u16) narrowed to
+ * its low byte. Nonzero = a world-map briefing/hint voiceover is playing (the
+ * drawWorldMapHud scheduler's rate-limit timer); worldplanet/worldobj poll this
+ * to hide the Great Fox galleon and skip effect rendering while it talks. */
+u8 getWorldMapVoiceoverTimer(void)
 {
-    return lbl_803DD776;
+    return gWorldMapVoiceoverTimer;
 }
 
 /* EN v1.0 0x8012EA44  size: 12b  Signed-byte getter for lbl_803DD7A8. */
@@ -499,14 +501,14 @@ void GameUI_unselectAllItems(void)
     gCMenuCloseSfx = 0;
 }
 
-/* EN v1.0 0x8012DDB8  size: 32b  Set lbl_803DD776 to 1 if param is
+/* EN v1.0 0x8012DDB8  size: 32b  Set gWorldMapVoiceoverTimer to 1 if param is
  * nonzero else 0. */
 void fn_8012DDB8(u32 val)
 {
     if ((u8)val != 0)
-        lbl_803DD776 = 1;
+        gWorldMapVoiceoverTimer = 1;
     else
-        lbl_803DD776 = 0;
+        gWorldMapVoiceoverTimer = 0;
 }
 
 /* EN v1.0 0x8012DD7C  size: 40b  Cancel/clear helper. Stores the new u8
@@ -517,7 +519,7 @@ void setShowWorldMapHud(u8 param)
     mapScreenVisible = param;
     if (param != 0) return;
     lbl_803DD774 = 0;
-    lbl_803DD776 = 0;
+    gWorldMapVoiceoverTimer = 0;
     lbl_803DBA5C = -1;
 }
 
@@ -1027,7 +1029,7 @@ void perspectiveFn_80129db4(void)
 }
 
 /* EN v1.0 0x8012D77C  size: 496b  Title-card overlay draw routine.
- * Gated on (lbl_803DD774 != 0) && (lbl_803DD776 == 0). Saves the
+ * Gated on (lbl_803DD774 != 0) && (gWorldMapVoiceoverTimer == 0). Saves the
  * current sprite-batch state via gameTextGetCharset, sets sub-batch via
  * gameTextSetCharset(gPauseMenuTextCharset, 3), grabs a slot handle from
  * gameTextGetPhrase(lbl_803DBA60, lbl_803DBA5C), and looks up sprite 0x49.
@@ -1066,7 +1068,7 @@ void pauseMenuDrawText(void)
     s32 v[4];
 
     if (lbl_803DD774 == 0) return;
-    if (lbl_803DD776 != 0) return;
+    if (gWorldMapVoiceoverTimer != 0) return;
 
     saved = gameTextGetCharset();
     gameTextSetCharset(gPauseMenuTextCharset, 3);
@@ -1354,7 +1356,7 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
 #pragma dont_inline on
 void drawWorldMapHud(void)
 {
-    u16 raw = lbl_803DD776;
+    u16 raw = gWorldMapVoiceoverTimer;
     s16 sv = raw;
 
     if (raw == 0)
@@ -1365,7 +1367,7 @@ void drawWorldMapHud(void)
     {
         return;
     }
-    lbl_803DD776 = 0x78;
+    gWorldMapVoiceoverTimer = 0x78;
     if (sv < 0x1e)
     {
         s8 fi;
@@ -1482,9 +1484,9 @@ void drawWorldMapHud(void)
             AudioStream_Play(hint, AudioStream_StartPrepared);
         }
     }
-    if ((u16)lbl_803DD776 > 0xff)
+    if ((u16)gWorldMapVoiceoverTimer > 0xff)
     {
-        lbl_803DD776 = 0;
+        gWorldMapVoiceoverTimer = 0;
     }
 }
 #pragma dont_inline reset
@@ -2333,11 +2335,11 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     {
         return;
     }
-    if (lbl_803DD776 != 0)
+    if (gWorldMapVoiceoverTimer != 0)
     {
         extern void drawTexture(void* tex, f32 x, f32 y, u8 alpha, int u);
         extern void drawScaledTexture(void* tex, f32 x, f32 y, u8 alpha, int u, int w, int h, int q);
-        s16 v = lbl_803DD776;
+        s16 v = gWorldMapVoiceoverTimer;
         s16 alpha = (s16)(v * 0xf);
         s16 h0;
         s16 w;
@@ -3292,7 +3294,7 @@ void pauseMenuFn_80129ee0(void)
                     gameTextLoadDir(0x15);
                     mapScreenVisible = 0;
                     lbl_803DD774 = 0;
-                    lbl_803DD776 = 0;
+                    gWorldMapVoiceoverTimer = 0;
                     lbl_803DBA5C = -1;
                     pauseMenuSetupTitle(0x2b1, 1, 4, 3);
                     pauseMenuState = 2;

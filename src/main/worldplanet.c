@@ -469,7 +469,7 @@ void worldplanet_update(int obj)
                     {
                         dyaw = (s16)(dyaw + 0xffff);
                     }
-                    if (fn_8012DDAC() != 0)
+                    if (getWorldMapVoiceoverTimer() != 0)
                     {
                         ((GameObject*)galleon)->anim.flags = ((GameObject*)galleon)->anim.flags | OBJANIM_FLAG_HIDDEN;
                     }

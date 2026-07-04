@@ -164,7 +164,7 @@ int mmGetRegionForPtr(u8* ptr);
 int getHeapItemSize(void* ptr);
 void debugPrintfxy(int x, int y, char* fmt, ...);
 void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2);
-u8 fn_8012DDAC(void);
+u8 getWorldMapVoiceoverTimer(void);
 void gameTextResetCursor(int flags);
 int atan2i(int y, int x);
 
