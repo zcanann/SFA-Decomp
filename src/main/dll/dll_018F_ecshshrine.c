@@ -110,7 +110,6 @@ extern f32 lbl_803E4FEC;
 extern f32 lbl_803E4FF0;
 extern int lbl_803DDBC0;
 extern EcshIntPair lbl_803E8470;
-extern s16 gEcShShrineCupSlotMap[];
 extern void Music_Trigger(int id, int arg);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
@@ -150,6 +149,27 @@ typedef struct MmShrineAnimEvents
     u8 events[10];
     u8 eventCount;
 } MmShrineAnimEvents;
+
+typedef struct EcshRenderPair
+{
+    f32 a;
+    f32 b;
+} EcshRenderPair;
+
+/*
+ * The shell-game working set: the 6 cups' (x,z) positions (see EcshPuzzleState
+ * in ecsh_shrine_update - the slot->cup maps that follow it in memory are
+ * gEcShShrineCupSlotMap below).
+ */
+EcshRenderPair gEcShShrinePuzzleState[6] = { 0 };
+
+/* Current slot->cup index map for the 6 cups, followed by next round's map. */
+s16 gEcShShrineCupSlotMap[] = {
+    0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5,
+};
+
+/* descriptor/ptr table auto 0x80326250-0x8032629C */
+u32 gECSH_ShrineObjDescriptor[19] = { 0x00000000, 0x00000000, 0x00000000, 0x000e0000, (u32)ecsh_shrine_initialise, (u32)ecsh_shrine_release, 0x00000000, (u32)ecsh_shrine_init, (u32)ecsh_shrine_update, (u32)ecsh_shrine_hitDetect, (u32)ecsh_shrine_render, (u32)ecsh_shrine_free, (u32)ecsh_shrine_getObjectTypeId, (u32)ecsh_shrine_getExtraSize, (u32)ecsh_shrine_setScale, (u32)ecsh_shrine_getCupPos, (u32)ecsh_shrine_getPhaseAndSpiritCup, (u32)ecsh_shrine_setCupPos, (u32)ecsh_shrine_checkCupPick };
 
 void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 {
@@ -309,15 +329,8 @@ void ecsh_shrine_checkCupPick(u8 cupIndex)
     }
 }
 
-typedef struct EcshRenderPair
-{
-    f32 a;
-    f32 b;
-} EcshRenderPair;
-
 void ecsh_shrine_setCupPos(u8 cupIndex, f32 x, f32 z)
 {
-    extern EcshRenderPair gEcShShrinePuzzleState[];
     extern int gEcShShrineActiveObject;
     int slot;
     if ((int*)gEcShShrineActiveObject == NULL) return;
@@ -328,7 +341,6 @@ void ecsh_shrine_setCupPos(u8 cupIndex, f32 x, f32 z)
 
 void ecsh_shrine_getCupPos(u8 cupIndex, f32* outX, f32* outZ)
 {
-    extern u8 gEcShShrinePuzzleState[];
     extern void* gEcShShrineActiveObject;
     int slot;
     if (gEcShShrineActiveObject == NULL) return;
@@ -437,7 +449,6 @@ void ecsh_shrine_update(s16* obj)
 {
     extern void* Obj_GetPlayerObject(void);
     extern void ecsh_shrine_updateMotion(s16 * obj);
-    extern u8 gEcShShrinePuzzleState[];
     f32 t[2];
     int msgC;
     int msgA;
@@ -851,6 +862,12 @@ void ecsh_shrine_update(s16* obj)
 }
 #pragma opt_strength_reduction reset
 
+/* 4 unreferenced zero bytes sit between ecsh_shrine_update's jump tables and
+ * gECSH_CreatorObjDescriptor in retail .data (0x80326324); nothing references
+ * them. The declspec keeps this 4-byte filler out of .sdata so the section
+ * layout matches. */
+__declspec(section ".data") int gEcShShrineUnused[1] = { 0 };
+
 void ecsh_shrine_release(void)
 {
 }
@@ -898,10 +915,6 @@ void ecsh_shrine_init(s16* obj, s8* def)
     GameBit_Set(0xefa, 1);
 }
 
-s16 gEcShShrineCupSlotMap[] = {
-    0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5,
-};
-
-/* descriptor/ptr table auto 0x80326324-0x80326398 */
+/* descriptor/ptr table auto 0x80326328-0x80326398 */
 u32 gECSH_CreatorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)ecsh_creator_initialise, (u32)ecsh_creator_release, 0x00000000, (u32)ecsh_creator_init, (u32)ecsh_creator_update, (u32)ecsh_creator_hitDetect, (u32)ecsh_creator_render, (u32)ecsh_creator_free, (u32)ecsh_creator_getObjectTypeId, (u32)ecsh_creator_getExtraSize };
 u32 gGPSH_ShrineObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)gpsh_shrine_initialise, (u32)gpsh_shrine_release, 0x00000000, (u32)gpsh_shrine_init, (u32)gpsh_shrine_update, (u32)gpsh_shrine_hitDetect, (u32)gpsh_shrine_render, (u32)gpsh_shrine_free, (u32)gpsh_shrine_getObjectTypeId, (u32)gpsh_shrine_getExtraSize };
