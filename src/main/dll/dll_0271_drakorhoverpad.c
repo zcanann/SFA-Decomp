@@ -473,6 +473,8 @@ void drakorhoverpad_updateMain(int obj)
     int yawDelta;
     int c;
     int angle;
+    int clamped;
+    f32 spd;
 
     Obj_GetPlayerObject();
     if (drakorhoverpad_init(obj) != 0)
@@ -615,24 +617,20 @@ void drakorhoverpad_updateMain(int obj)
         ((GameObject*)obj)->anim.rotY = (s16)getAngle(curve->tangentY, phase);
         if (yawDelta < -0x800)
         {
-            yawDelta = -0x800;
+            clamped = -0x800;
         }
         else if (yawDelta > 0x800)
         {
-            yawDelta = 0x800;
+            clamped = 0x800;
         }
-        c = (s16)yawDelta;
+        else
+        {
+            clamped = yawDelta;
+        }
+        c = (s16)clamped;
         ((GameObject*)obj)->anim.rotZ = (s16)((((DrakorHoverpadUpdateMainState*)p)->verticalVel <
             lbl_803E6A3C) ? c : -c);
-        if (c < -0x100)
-        {
-            c = -0x100;
-        }
-        else if (c > 0x100)
-        {
-            c = 0x100;
-        }
-        ((GameObject*)obj)->anim.rotX += (s16)c;
+        ((GameObject*)obj)->anim.rotX += (s16)((c < -0x100) ? -0x100 : (c > 0x100) ? 0x100 : c);
         c = ((GameObject*)obj)->anim.rotY;
         if (c < -0x64)
         {
@@ -645,8 +643,11 @@ void drakorhoverpad_updateMain(int obj)
         ((GameObject*)obj)->anim.rotY = c;
     }
     PSVECSubtract(curvePos, &((GameObject*)obj)->anim.localPosX, diff);
-    Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, diff, lbl_803DC2F8,
-                                  lbl_803DC2F8 / lbl_803E6A98, lbl_803E6A9C);
+    /* snapshot the shared steer speed before building the call args (the
+     * through-pointer read keeps the load at this statement) */
+    spd = *(f32*)&lbl_803DC2F8;
+    Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, diff, spd,
+                                  spd / lbl_803E6A98, lbl_803E6A9C);
     PSVECAdd(&((GameObject*)obj)->anim.localPosX, &((GameObject*)obj)->anim.velocityX,
              &((GameObject*)obj)->anim.localPosX);
 }
