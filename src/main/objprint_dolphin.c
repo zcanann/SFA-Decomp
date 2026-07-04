@@ -5253,7 +5253,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     {
         u8 e5 = ((GameObject*)obj)->colorFadeFlags;
-        if ((e5 & 2) || (e5 & 0x10))
+        if ((e5 & OBJ_COLOR_FADE_FLAG_ACTIVE) || (e5 & OBJ_COLOR_FADE_FLAG_OVERRIDE))
         {
             color[0] = obj[0xec];
             color[1] = obj[0xed];

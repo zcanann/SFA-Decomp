@@ -94,6 +94,19 @@ STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
 #define OBJECT_OBJFLAG_HIDDEN              0x4000
 #define OBJECT_OBJFLAG_UPDATE_DISABLED     0x8000
 
+/*
+ * GameObject.colorFadeFlags (obj+0xE5 u8) bit names, the freeze / color-fade
+ * state machine (Obj_*ModelColorFade* family in object.c). Cross-file
+ * consensus SET+READ: object.c owns the state machine; objprint_dolphin.c
+ * and lightmap.c read ACTIVE/OVERRIDE on the render path. Field is u8, so a
+ * bare int constant folds identically for |= / & / &~.
+ */
+#define OBJ_COLOR_FADE_FLAG_FROZEN     0x1  /* freeze render attachment active (objIsFrozen) */
+#define OBJ_COLOR_FADE_FLAG_ACTIVE     0x2  /* color fade running (objGetFlagsE5_2) */
+#define OBJ_COLOR_FADE_FLAG_INCREASING 0x4  /* ping-pong direction: alpha rising */
+#define OBJ_COLOR_FADE_FLAG_INFINITE   0x8  /* no frame countdown / never auto-clears */
+#define OBJ_COLOR_FADE_FLAG_OVERRIDE   0x10 /* solid color override (not a fade) */
+
 STATIC_ASSERT(offsetof(GameObject, extra) == 0xB8);
 STATIC_ASSERT(offsetof(GameObject, hitVolumeIndex) == 0xE4);
 STATIC_ASSERT(offsetof(GameObject, colorFadeAlpha) == 0xEF);

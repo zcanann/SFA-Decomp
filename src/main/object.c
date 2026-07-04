@@ -21,13 +21,6 @@
 #include "main/track_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-/* GameObject::colorFadeFlags bits (freeze / color-fade state machine) */
-#define OBJ_COLOR_FADE_FLAG_FROZEN 0x1     /* freeze render attachment active (objIsFrozen) */
-#define OBJ_COLOR_FADE_FLAG_ACTIVE 0x2     /* color fade running (objGetFlagsE5_2) */
-#define OBJ_COLOR_FADE_FLAG_INCREASING 0x4 /* ping-pong direction: alpha rising */
-#define OBJ_COLOR_FADE_FLAG_INFINITE 0x8   /* no frame countdown / never auto-clears */
-#define OBJ_COLOR_FADE_FLAG_OVERRIDE 0x10  /* solid color override (not a fade) */
-
 /* GameObject::objectFlags lifecycle bits */
 #define OBJECT_FLAG_IN_UPDATE_LIST 0x10 /* registered in gObjList / gObjUpdateList */
 #define OBJECT_FLAG_FREED 0x40          /* Obj_FreeObject ran (double-free guard) */
