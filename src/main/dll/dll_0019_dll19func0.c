@@ -47,8 +47,6 @@ extern u32 ObjMsg_SendToObject();
 extern u32 ObjMsg_AllocQueue();
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern f32 lbl_803E2658;
-extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
@@ -56,7 +54,6 @@ extern f32 lbl_803E265C;
 extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern void voxmaps_freeRouteWork(void* p);
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern const f32 lbl_803E1C2C;
 extern void ObjHits_SetHitVolumeSlot(void* obj, int animObjId, int frame, int flags);
@@ -80,9 +77,7 @@ extern f32 lbl_803E1C44;
 extern f32 lbl_803E1C4C;
 extern f32 lbl_803E1C50;
 extern u32 lbl_803E1C18;
-extern u32 lbl_803E1C1C;
 extern u32 lbl_803E1C20;
-extern u32 lbl_803E1C24;
 extern f32 lbl_803E1C54;
 extern f32 lbl_803E1C58;
 extern const f32 lbl_803E1C5C;
