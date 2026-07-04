@@ -5431,9 +5431,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.overrideColor0 = randomGetRange(0, 0xfff) + 0xf000;
             cfg.colorWord0 = (u16)cfg.overrideColor0;
             cfg.overrideColor1 = 0xe000;
-            cfg.colorWord1 = 0xe000;
+            cfg.colorWord1 = (u16)cfg.overrideColor1;
             cfg.overrideColor2 = 0xe000;
-            cfg.colorWord2 = 0xe000;
+            cfg.colorWord2 = (u16)cfg.overrideColor2;
             cfg.textureId = 0x567;
             goto LAB_800aeb30;
         }
