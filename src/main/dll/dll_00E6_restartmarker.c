@@ -193,6 +193,9 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/engine_shared.h"
 
+/* object group this object joins while active */
+#define RESTARTMARKER_OBJGROUP 7
+
 #define RESTARTMARKER_OBJFLAG_HIDDEN 0x4000
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
@@ -211,7 +214,7 @@ extern void dll_F7_init(int* obj, int* params);
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, RESTARTMARKER_OBJGROUP);
 }
 
 void staticCamera_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -236,7 +239,7 @@ void staticCamera_init(short* obj, int placement, int flag)
     colorState[1] = 0;
     if (flag == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, RESTARTMARKER_OBJGROUP);
     }
 }
 
