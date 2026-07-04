@@ -66,12 +66,12 @@ typedef struct AndrossState {
     s16 rotXSpeed; /* smoothed delta added to anim.rotX each tick */
     s16 rotYSpeed; /* smoothed delta added to anim.rotY each tick */
     s16 timer;
-    f32 unkA8;
+    f32 camOffsetAccum; /* eased camera offset: += rate*timeDelta (clamped both ways); read as camActionParam = base + this */
     u8 actionToggle;
     u8 signalFlags; /* |= signal (the setter param name) */
-    u8 unkAE;
-    u8 unkAF;
-    u8 unkB0;
+    u8 hitsRemaining0; /* 0xAE: hits-remaining counter; set to 10/15 alongside 1,2; phase advances when (u16)(0+1+2)==0 */
+    u8 hitsRemaining1; /* 0xAF */
+    u8 hitsRemaining2; /* 0xB0 */
     u8 unkB1[0xB5 - 0xB1];
     u8 hitReactionFlag; /* 0xB5: set externally on damage; nonzero -> hurt/stagger action state */
     u8 unkB6;
