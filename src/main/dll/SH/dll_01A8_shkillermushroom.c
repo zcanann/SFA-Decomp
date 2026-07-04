@@ -17,6 +17,8 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+#define SHKILLERMUSHROOM_OBJGROUP 3
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 
 #define SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
@@ -112,7 +114,7 @@ int enemymushroom_getObjectTypeId(EnemyMushroomObject* obj)
 void enemymushroom_free(EnemyMushroomObject* obj)
 {
     (*gExpgfxInterface)->freeSource((u32)obj);
-    ObjGroup_RemoveObject((int)obj, 3);
+    ObjGroup_RemoveObject((int)obj, SHKILLERMUSHROOM_OBJGROUP);
 }
 
 void enemymushroom_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
@@ -178,7 +180,7 @@ void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int
     {
         enemymushroom_resetToSpawn(obj, state, 0);
     }
-    ObjGroup_AddObject((int*)obj, 3);
+    ObjGroup_AddObject((int*)obj, SHKILLERMUSHROOM_OBJGROUP);
 }
 
 typedef struct
