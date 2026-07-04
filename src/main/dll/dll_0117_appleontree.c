@@ -26,6 +26,9 @@
 #define APPLEONTREE_STATE_BURST 5     /* fx-burst despawn (no fade) */
 #define APPLEONTREE_STATE_FADEOUT 6   /* alpha fade-out despawn */
 
+#define APPLEONTREE_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
+#define APPLEONTREE_MSG_PICKUP   0x7000b /* player collected: restore health + burst */
+
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
 extern f32 Vec_distance(f32* a, f32* b);
@@ -158,7 +161,7 @@ void appleontree_handleCollectableHit(int obj)
         ((AppleOnTreeState*)state)->unk5C = -1;
         ((AppleOnTreeState*)state)->unk5E = 0;
         ((AppleOnTreeState*)state)->unk60 = lbl_803E37C8;
-        ObjMsg_SendToObject(player, 0x7000a, obj, (int*)(state + 0x5c));
+        ObjMsg_SendToObject(player, APPLEONTREE_MSG_IN_RANGE, obj, (int*)(state + 0x5c));
         GameBit_Set(0x90f, 1);
         ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 4);
     }
@@ -590,7 +593,7 @@ void appleontree_update(int objArg)
         {
             switch (msg)
             {
-            case 0x7000b:
+            case APPLEONTREE_MSG_PICKUP:
                 {
                     playerAddHealth(Obj_GetPlayerObject(), (int)((AppleOnTreeState*)state)->healthRestore);
                     itemPickupDoParticleFx((int)obj, lbl_803E37C8, 0xff, 0x28);
