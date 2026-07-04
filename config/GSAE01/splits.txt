@@ -3667,7 +3667,7 @@ dolphin/MSL_C/PPCEABI/bare/H/floorf.c:
 dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
 	.text       start:0x802947CC end:0x80294BB8
 	.ctors      start:0x802C1884 end:0x802C1888
-	.rodata     start:0x802C2B20 end:0x802C2B30
+	.rodata     start:0x802C2B20 end:0x802C2D4C
 	.data       start:0x80332A18 end:0x80332A28
 	.sdata2     start:0x803E7E38 end:0x803E7E50
 
