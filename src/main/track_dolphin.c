@@ -5617,7 +5617,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
             ld[0] = -(dx * ax2 + dz * az2);
             lb[1] = -dx;
             la[1] = -dz;
-            ld[1] = -(-dx * bx2 + -dz * bz2);
+            ld[1] = -(lb[1] * bx2 + la[1] * bz2);
             lb[2] = -dz;
             la[2] = dx;
             {
