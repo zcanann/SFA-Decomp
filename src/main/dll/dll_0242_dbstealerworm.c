@@ -2572,3 +2572,67 @@ int gDbStealerwormSfxIds[] = {
     5, 5, 5, -1, -1, -1, -1, -1,
     -1, -1, -65536,
 };
+
+/* auto 0x803296fc-0x80329940 */
+extern void dbholecontrol1_free(void);
+extern void dbholecontrol1_getExtraSize(void);
+extern void dbholecontrol1_getObjectTypeId(void);
+extern void dbholecontrol1_hitDetect(void);
+extern void dbholecontrol1_init(void);
+extern void dbholecontrol1_initialise(void);
+extern void dbholecontrol1_release(void);
+extern void dbholecontrol1_render(void);
+extern void dbholecontrol1_update(void);
+extern void dbstealerworm_initialise(void);
+extern void dbstealerworm_release(void);
+extern void dfplevelcontrol_free(void);
+extern void dfplevelcontrol_getExtraSize(void);
+extern void dfplevelcontrol_getObjectTypeId(void);
+extern void dfplevelcontrol_hitDetect(void);
+extern void dfplevelcontrol_init(void);
+extern void dfplevelcontrol_initialise(void);
+extern void dfplevelcontrol_release(void);
+extern void dfplevelcontrol_render(void);
+extern void dfplevelcontrol_setScale(void);
+extern void dfplevelcontrol_update(void);
+extern void dfpobjcreator_free(void);
+extern void dfpobjcreator_getExtraSize(void);
+extern void dfpobjcreator_getObjectTypeId(void);
+extern void dfpobjcreator_hitDetect(void);
+extern void dfpobjcreator_init(void);
+extern void dfpobjcreator_initialise(void);
+extern void dfpobjcreator_release(void);
+extern void dfpobjcreator_render(void);
+extern void dfpobjcreator_update(void);
+extern void dll_22C_getExtraSize_ret_16(void);
+extern void dll_22C_getObjectTypeId(void);
+extern void dll_22C_hitDetect_nop(void);
+extern void dll_22C_init(void);
+extern void dll_22C_initialise_nop(void);
+extern void dll_22C_release_nop(void);
+extern void dll_22C_render(void);
+extern void doorswitch_free(void);
+extern void doorswitch_getExtraSize(void);
+extern void doorswitch_getObjectTypeId(void);
+extern void doorswitch_hitDetect(void);
+extern void doorswitch_init(void);
+extern void doorswitch_initialise(void);
+extern void doorswitch_release(void);
+extern void doorswitch_render(void);
+extern void doorswitch_update(void);
+extern void fn_80204B6C(void);
+extern void fn_80204BF8(void);
+
+u32 lbl_803296FC[4] = { 0x00000000, 0x00000001, 0x00000003, 0x0000000a };
+u32 lbl_8032970C[4] = { 0x40000000, 0x40800000, 0x3fc00000, 0x40400000 };
+u32 lbl_8032971C[4] = { 0x00000003, 0x00000000, 0x00000001, 0x0000000a };
+u32 lbl_8032972C[4] = { 0x41000000, 0x40400000, 0x40000000, 0x40800000 };
+u32 lbl_8032973C[4] = { 0x00000003, 0x00000001, 0x00000000, 0x0000000a };
+u32 lbl_8032974C[10] = { 0x40000000, 0x3f4ccccd, 0x3ecccccd, 0x40000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
+u32 gDBstealerwormObjDescriptor[39] = { 0x00000000, 0x00000000, 0x00000000, 0x000b0000, (u32)dbstealerworm_initialise, (u32)dbstealerworm_release, 0x00000000, (u32)dbstealerworm_init, (u32)dbstealerworm_update, (u32)dbstealerworm_hitDetect, (u32)dbstealerworm_render, (u32)dbstealerworm_free, (u32)dbstealerworm_getObjectTypeId, (u32)dbstealerworm_getExtraSize, (u32)DBstealerworm_setScale, (u32)dbstealerworm_func0B, 0x20537461, 0x636b202d, 0x2d2d2d2d, 0x2d2d2d2d, 0x2d2d2d2d, 0x2d2d2d2d, 0x2d2d0a00, 0x2569203a, 0x20257320, 0x3a204f70, 0x616e6420, 0x2569200a, 0x00000000, 0x20484153, 0x2042414c, 0x4c203a20, 0x25783d20, 0x25780a00, 0x20544852, 0x4f572043, 0x48414e43, 0x45202569, 0x200a0000 };
+u32 gDBHoleControl1ObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dbholecontrol1_initialise, (u32)dbholecontrol1_release, 0x00000000, (u32)dbholecontrol1_init, (u32)dbholecontrol1_update, (u32)dbholecontrol1_hitDetect, (u32)dbholecontrol1_render, (u32)dbholecontrol1_free, (u32)dbholecontrol1_getObjectTypeId, (u32)dbholecontrol1_getExtraSize };
+u32 lbl_80329848[5] = { 0x00010002, 0x00030000, 0x00000000, 0x00000000, 0x00000000 };
+u32 gDFP_LevelControlObjDescriptor[15] = { 0x00000000, 0x00000000, 0x00000000, 0x000a0000, (u32)dfplevelcontrol_initialise, (u32)dfplevelcontrol_release, 0x00000000, (u32)dfplevelcontrol_init, (u32)dfplevelcontrol_update, (u32)dfplevelcontrol_hitDetect, (u32)dfplevelcontrol_render, (u32)dfplevelcontrol_free, (u32)dfplevelcontrol_getObjectTypeId, (u32)dfplevelcontrol_getExtraSize, (u32)dfplevelcontrol_setScale };
+u32 gDFP_ObjCreatorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dfpobjcreator_initialise, (u32)dfpobjcreator_release, 0x00000000, (u32)dfpobjcreator_init, (u32)dfpobjcreator_update, (u32)dfpobjcreator_hitDetect, (u32)dfpobjcreator_render, (u32)dfpobjcreator_free, (u32)dfpobjcreator_getObjectTypeId, (u32)dfpobjcreator_getExtraSize };
+u32 lbl_803298D0[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_22C_initialise_nop, (u32)dll_22C_release_nop, 0x00000000, (u32)dll_22C_init, (u32)fn_80204BF8, (u32)dll_22C_hitDetect_nop, (u32)dll_22C_render, (u32)fn_80204B6C, (u32)dll_22C_getObjectTypeId, (u32)dll_22C_getExtraSize_ret_16 };
+u32 gDoorswitchObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)doorswitch_initialise, (u32)doorswitch_release, 0x00000000, (u32)doorswitch_init, (u32)doorswitch_update, (u32)doorswitch_hitDetect, (u32)doorswitch_render, (u32)doorswitch_free, (u32)doorswitch_getObjectTypeId, (u32)doorswitch_getExtraSize };
