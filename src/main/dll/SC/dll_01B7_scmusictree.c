@@ -311,7 +311,7 @@ void sc_musictree_update(int obj)
     {
         goto end;
     }
-    if (((ScMusictreeState*)inner)->flags & 0xc0)
+    if (((ScMusictreeState*)inner)->flags & (SCMUSICTREE_FLAG_PRIORITY_HIT | SCMUSICTREE_FLAG_SATELLITES))
     {
         rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, (u32*)&hr3, &vec[0],
                                                     &vec[1], &vec[2]);
@@ -328,7 +328,7 @@ void sc_musictree_update(int obj)
     if (rcType == 0) goto end;
     if (rcType == 0x11) goto end;
     if (!(((CloudRunnerState*)inner)->baddie.velZ <= lbl_803E5590)) goto end;
-    if (((ScMusictreeState*)inner)->flags & 0xc0)
+    if (((ScMusictreeState*)inner)->flags & (SCMUSICTREE_FLAG_PRIORITY_HIT | SCMUSICTREE_FLAG_SATELLITES))
     {
         vec[0] = vec[0] + playerMapOffsetX;
         vec[2] = vec[2] + playerMapOffsetZ;
