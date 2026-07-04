@@ -26,7 +26,7 @@ typedef struct ExplodablePlacement
     u8 pad26[0x2C - 0x26];
     s16 launchForce;     /* 0x2C: fragment launch speed scale */
     s16 fragmentHeight;  /* 0x2E: per-fragment height override (0 = none) */
-    s16 unk30;           /* 0x30: secondary launch-spread scale */
+    s16 launchScale2;     /* 0x30: secondary fragment launch scale; /divisor -> vel2/spin2 magnitude */
     u8 pad32[0x38 - 0x32];
     u16 launchDelayBase; /* 0x38: base for the per-fragment launch-delay roll */
     u8 pad3A[0x3E - 0x3B];

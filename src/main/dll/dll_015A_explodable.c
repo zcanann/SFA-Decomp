@@ -366,7 +366,7 @@ void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def)
         randomGetRange(0, max) / lbl_803E437C;
         c->spinZ = (f32)(int)
         randomGetRange(0, max) / lbl_803E437C;
-        scale = (f32)((ExplodablePlacement*)def)->unk30 / lbl_803E4358;
+        scale = (f32)((ExplodablePlacement*)def)->launchScale2 / lbl_803E4358;
         if (((GameObject*)obj)->anim.velocityX > lbl_803E4368)
         {
             c->launchFlags |= 1;
