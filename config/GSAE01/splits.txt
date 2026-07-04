@@ -1897,7 +1897,7 @@ main/dll/dll_019A_dll19a.c:
 
 main/dll/dll_019B_dll19b.c:
 	.text       start:0x801CBA98 end:0x801CC72C
-	.data       start:0x80326680 end:0x8032668C
+	.data       start:0x80326680 end:0x803267C0
 
 main/dll/dll_019C_dll19c.c:
 	.text       start:0x801CC72C end:0x801CC998

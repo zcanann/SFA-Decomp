@@ -486,3 +486,45 @@ void dll_19C_init(int obj, u8* initData);
  * EN v1.0 Address: 0x801CCB44
  * EN v1.0 Size: 904b
  */
+
+/*__DATA_EXTERNS__*/
+extern void nw_geyser_free();
+extern void nw_geyser_update();
+extern void nw_geyser_init();
+extern void treebird_getExtraSize();
+extern void treebird_render();
+extern void treebird_update();
+extern void treebird_init();
+extern void dll_19E_getExtraSize();
+extern void dll_19E_getObjectTypeId();
+extern void dll_19E_free();
+extern void dll_19E_render();
+extern void dll_19E_hitDetect();
+extern void dll_19E_update();
+extern void dll_19E_init();
+extern void dll_19E_release();
+extern void dll_19E_initialise();
+extern void dll_19D_getExtraSize();
+extern void dll_19D_getObjectTypeId();
+extern void dll_19D_free();
+extern void dll_19D_render();
+extern void dll_19D_hitDetect();
+extern void dll_19D_update();
+extern void dll_19D_init();
+extern void dll_19D_release();
+extern void dll_19D_initialise();
+extern void dll_19C_getExtraSize();
+extern void dll_19C_getObjectTypeId();
+extern void dll_19C_free();
+extern void dll_19C_render();
+extern void dll_19C_hitDetect();
+extern void dll_19C_update();
+extern void dll_19C_release();
+extern void dll_19C_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* jumptable_8032668C[7] = { (void*)((u8*)dll_19B_update + 0x380), (void*)((u8*)dll_19B_update + 0x490), (void*)((u8*)dll_19B_update + 0x4B0), (void*)((u8*)dll_19B_update + 0x5E4), (void*)((u8*)dll_19B_update + 0x6C0), (void*)((u8*)dll_19B_update + 0x7D0), (void*)((u8*)dll_19B_update + 0x72C) };
+void* dll_19C[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, dll_19C_initialise, dll_19C_release, (void*)0x00000000, dll_19C_init, dll_19C_update, dll_19C_hitDetect, dll_19C_render, dll_19C_free, dll_19C_getObjectTypeId, dll_19C_getExtraSize };
+void* dll_19D[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, dll_19D_initialise, dll_19D_release, (void*)0x00000000, dll_19D_init, dll_19D_update, dll_19D_hitDetect, dll_19D_render, dll_19D_free, dll_19D_getObjectTypeId, dll_19D_getExtraSize };
+void* dll_19E[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, dll_19E_initialise, dll_19E_release, (void*)0x00000000, dll_19E_init, dll_19E_update, dll_19E_hitDetect, dll_19E_render, dll_19E_free, dll_19E_getObjectTypeId, dll_19E_getExtraSize };
+void* gTreeBirdObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, treebird_init, treebird_update, (void*)0x00000000, treebird_render, (void*)0x00000000, (void*)0x00000000, treebird_getExtraSize };
+void* gNW_geyserObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, nw_geyser_init, nw_geyser_update, (void*)0x00000000, (void*)0x00000000, nw_geyser_free, (void*)0x00000000, (void*)0x00000000 };
