@@ -31,6 +31,10 @@
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* object groups: static camera prop / dllf7 object */
+#define STATICCAMERA_OBJGROUP 7
+#define DLLF7_OBJGROUP 0x3e
+
 #define DLLF7_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 void mikabomb_hitDetect(void);
@@ -248,7 +252,7 @@ extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, v
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, STATICCAMERA_OBJGROUP);
     return;
 }
 
@@ -274,7 +278,7 @@ void staticCamera_init(short* obj, int placement, int addToGroup)
     colorState[1] = 0;
     if (addToGroup == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, STATICCAMERA_OBJGROUP);
     }
     return;
 }
@@ -362,7 +366,7 @@ void dll_F7_free(int obj)
     Resource_Release(gDllF7Resource5A);
     gDllF7Resource5B = NULL;
     gDllF7Resource5A = NULL;
-    ObjGroup_RemoveObject(obj, 0x3E);
+    ObjGroup_RemoveObject(obj, DLLF7_OBJGROUP);
 }
 
 void dim2roofrub_free(int* obj);
@@ -795,7 +799,7 @@ void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 void dll_F7_init(int* obj, int* params)
 {
     int* state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject((int)obj, 0x3e);
+    ObjGroup_AddObject((int)obj, DLLF7_OBJGROUP);
     *(s16*)obj = (s16)((s8) * (s8*)((char*)params + 0x18) << 8);
     ((GameObject*)obj)->objectFlags |= DLLF7_OBJFLAG_HITDETECT_DISABLED;
     gDllF7Resource5B = Resource_Acquire(0x5b, 1);
