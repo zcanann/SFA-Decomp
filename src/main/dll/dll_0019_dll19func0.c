@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/objseq.h"
+#define DLL19_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
@@ -682,7 +683,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
             }
         }
         Sfx_StopObjectChannel((int*)obj, 16);
-        ObjMsg_SendToObject(hitId, 0xe0001, obj, 0);
+        ObjMsg_SendToObject(hitId, DLL19_ADVANCE_MSG, obj, 0);
     }
     return hit;
 }
