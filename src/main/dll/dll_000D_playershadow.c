@@ -1361,6 +1361,7 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
     BoneSpawnData data;
     void* cam;
     u8 found;
+    u8 t;
     int i;
     f32 dx;
     f32 dy;
@@ -1395,7 +1396,7 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
     dz = ((GameObject*)cam)->anim.localPosZ - ((GameObject*)ctx)->anim.localPosZ;
     for (i = 0; i < count; i++)
     {
-        u8 t = ((PlayerShadowTriHit*)table)[i].surfaceType;
+        t = ((PlayerShadowTriHit*)table)[i].surfaceType;
         if ((s8)t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || (s8)t == 0x17)
         {
             gPlayerShadowCamDelta[0] = dx;
@@ -1449,7 +1450,10 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
                 r2 = randomGetRange(1, 1000) / lbl_803DF474;
                 s = sqrtf(r2);
                 w0 = lbl_803DF470 - s;
-                w1 = (lbl_803DF470 - r1) * s;
+                {
+                    f32 omr = lbl_803DF470 - r1;
+                    w1 = omr * s;
+                }
                 w2 = r1 * s;
                 data.x = w0 * p0x + w1 * p1x + w2 * p2x;
                 data.y = w0 * p0y + w1 * p1y + w2 * p2y;
