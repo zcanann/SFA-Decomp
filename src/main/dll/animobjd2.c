@@ -436,7 +436,7 @@ void fn_8013E0D0(int* obj, u8* st)
             fl = t->stateFlags;
             if (fl & TRICKY_STATE_FLAG_8000000)
             {
-                t->stateFlags = fl & ~0x800LL;
+                t->stateFlags = fl & ~(u64)TRICKY_STATE_FLAG_800;
                 t->stateFlags |= TRICKY_STATE_FLAG_1000;
                 {
                     u8* p;
