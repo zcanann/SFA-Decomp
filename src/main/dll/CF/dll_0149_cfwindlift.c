@@ -62,6 +62,15 @@ typedef struct
     int linkIndex;
 } WindLiftSlot;
 
+/* WindLiftSlot.phaseFlags bits */
+#define WLSLOT_RISING 0x1      /* rise force active this frame */
+#define WLSLOT_PENDING 0x2     /* pull direction re-evaluation requested */
+#define WLSLOT_PULLUP 0x4      /* pulling rider upward */
+#define WLSLOT_PULLDOWN 0x8    /* pulling rider downward */
+#define WLSLOT_HOLD 0x20       /* rider holding gamebit (grabbed) phase */
+#define WLSLOT_RELEASE 0x40    /* rider released phase */
+#define WLSLOT_LATCH 0x80      /* lift event latched/consumed */
+
 typedef struct
 {
     int duration;
@@ -151,39 +160,39 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         return;
     }
     flags = slot->phaseFlags;
-    if ((flags & 0x80) != 0 && gb != 0)
+    if ((flags & WLSLOT_LATCH) != 0 && gb != 0)
     {
         return;
     }
     if (dist < height)
     {
-        if ((flags & 0xe0) == 0 || (flags & 0x80) != 0)
+        if ((flags & 0xe0) == 0 || (flags & WLSLOT_LATCH) != 0)
         {
-            if (gb != 0 && (!flags & 0x80) != 0 && dy < lbl_803E4174)
+            if (gb != 0 && (!flags & WLSLOT_LATCH) != 0 && dy < lbl_803E4174)
             {
-                slot->phaseFlags |= 0x80;
+                slot->phaseFlags |= WLSLOT_LATCH;
                 return;
             }
-            if ((flags & 0x2) != 0)
+            if ((flags & WLSLOT_PENDING) != 0)
             {
                 if (dy / pull > lbl_803E4178)
                 {
-                    slot->phaseFlags |= 0x4;
-                    slot->phaseFlags &= ~0x8;
+                    slot->phaseFlags |= WLSLOT_PULLUP;
+                    slot->phaseFlags &= ~WLSLOT_PULLDOWN;
                 }
                 else
                 {
-                    slot->phaseFlags |= 0x8;
-                    slot->phaseFlags &= ~0x4;
+                    slot->phaseFlags |= WLSLOT_PULLDOWN;
+                    slot->phaseFlags &= ~WLSLOT_PULLUP;
                 }
-                slot->phaseFlags &= ~0x2;
+                slot->phaseFlags &= ~WLSLOT_PENDING;
             }
             if (gb == 0)
             {
-                slot->phaseFlags |= 0x40;
-                slot->phaseFlags &= ~0x20;
+                slot->phaseFlags |= WLSLOT_RELEASE;
+                slot->phaseFlags &= ~WLSLOT_HOLD;
                 ObjMsg_SendToObject(rider, 0xf, obj, (((slot->phaseFlags & 0xe0) >> 4) << 8) | dur);
-                slot->phaseFlags &= ~0x80;
+                slot->phaseFlags &= ~WLSLOT_LATCH;
             }
             else
             {
@@ -191,14 +200,14 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
                 {
                     ObjMsg_SendToObject(rider, 0xf, obj, (((slot->phaseFlags & 0xe0) >> 4) << 8) | dur);
                 }
-                slot->phaseFlags |= 0x20;
-                slot->phaseFlags &= ~0x40;
+                slot->phaseFlags |= WLSLOT_HOLD;
+                slot->phaseFlags &= ~WLSLOT_RELEASE;
             }
         }
         scale = lbl_803E4180;
         fl = slot->phaseFlags;
         fe = fl & 0xe;
-        if (fe != 0 && (fl & 8) != 0 && gb == 0)
+        if (fe != 0 && (fl & WLSLOT_PULLDOWN) != 0 && gb == 0)
         {
             pull = pull * lbl_803E4184;
         }
@@ -231,15 +240,15 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
                 }
             }
             factor = t;
-            slot->phaseFlags |= 1;
+            slot->phaseFlags |= WLSLOT_RISING;
             if (((slot->riseSpeed < lbl_803E4194 && slot->oscCounter % 2 != 0)
                     || (slot->riseSpeed > lbl_803E4198 && slot->oscCounter % 2 == 0))
-                && (slot->phaseFlags & 8) != 0)
+                && (slot->phaseFlags & WLSLOT_PULLDOWN) != 0)
             {
                 if (slot->oscCounter++ > 2)
                 {
-                    slot->phaseFlags &= ~0x8;
-                    slot->phaseFlags |= 0x4;
+                    slot->phaseFlags &= ~WLSLOT_PULLDOWN;
+                    slot->phaseFlags |= WLSLOT_PULLUP;
                 }
             }
         }
@@ -295,7 +304,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
             slot->riseSpeed = lbl_803E416C;
             slot->oscCounter = 0;
             ObjMsg_SendToObject(rider, 0x10, obj, gb);
-            slot->phaseFlags |= 0x80;
+            slot->phaseFlags |= WLSLOT_LATCH;
             if (pm != 0)
             {
                 ((GameObject*)player)->anim.velocityY = lbl_803E416C;
@@ -431,7 +440,7 @@ void windlift_update(int* obj)
                 b = sub->slots[0].phaseFlags;
                 if ((b & 0xe) != 0)
                 {
-                    sub->slots[0].phaseFlags = b | 2;
+                    sub->slots[0].phaseFlags = b | WLSLOT_PENDING;
                 }
                 sub->slots[0].riseSpeed = lbl_803E416C;
                 sub->slots[0].oscCounter = 0;
