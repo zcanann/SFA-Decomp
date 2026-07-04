@@ -46,7 +46,6 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-extern int randomGetRange(int lo, int hi);
 extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 extern u32 lbl_803DC0F0;
 extern u8 framesThisStep;
