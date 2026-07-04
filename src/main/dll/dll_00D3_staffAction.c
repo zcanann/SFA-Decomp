@@ -26,6 +26,9 @@
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/objhits.h"
+
+/* object group this object belongs to */
+#define STAFFACTION_OBJGROUP 3
 /* bounceFlags: per-wall bounce-allowed bits; each gates a bounce when the
  * surface crawler crosses that bounding-box face (and locks to that axis). */
 #define BOUNCE_WALL_MINX 0x01 /* boundsMinX -> surfaceMode 0 */
@@ -375,7 +378,7 @@ int dll_D3_getObjectTypeId(void) { return 0x49; }
 void dll_D3_free(int obj)
 {
     int* inner = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, STAFFACTION_OBJGROUP);
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {
         Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
