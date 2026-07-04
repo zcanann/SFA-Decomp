@@ -72,8 +72,8 @@ typedef struct BossDrakorState
     f32 shakeAmount;
     f32 shakeVel;
     f32 shakeScaleZ;
-    f32 unk184;
-    f32 unk188;
+    f32 missileBaseSpeed; /* 0x184: base missile speed (constant term of spd); also scales missile lateral vel */
+    f32 missileLeadFactor; /* 0x188: coefficient on dot(playerVel, dir) added to base speed (target-lead) */
     f32 textTimer;
     u8 repeatCount;
     u8 pad191[3];
@@ -560,15 +560,15 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
                                           vecA);
                             PSVECSubtract(target, &((BossDrakorState*)state)->homePosX, vecB);
                             PSVECNormalize(vecA, vecA);
-                            spd = ((BossDrakorState*)state)->unk188 * PSVECDotProduct(
-                                &((GameObject*)player)->anim.velocityX, vecA) + ((BossDrakorState*)state)->unk184;
+                            spd = ((BossDrakorState*)state)->missileLeadFactor * PSVECDotProduct(
+                                &((GameObject*)player)->anim.velocityX, vecA) + ((BossDrakorState*)state)->missileBaseSpeed;
                             PSVECScale(vecA, (f32*)((char*)missile + 0x24), spd);
                             mstate = *(f32**)((char*)missile + 0xb8);
                             PSVECScale(vecA, vecC, PSVECDotProduct(vecA, vecB));
                             PSVECSubtract(vecB, vecC, vecC);
                             PSVECNormalize(vecC, vecC);
                             PSVECScale(vecC, (f32*)((char*)missile + 0x24),
-                                       ((BossDrakorState*)state)->unk184 * lbl_803DC18C);
+                                       ((BossDrakorState*)state)->missileBaseSpeed * lbl_803DC18C);
                             *mstate = spd;
                             drakormissile_startActiveLaunch(missile);
                             storeZeroToFloatParam(&((BossDrakorState*)state)->jawAnimAngle);
@@ -661,24 +661,24 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         s16toFloat((void*)&((BossDrakorState*)state)->attackTimer, 0x5a);
         ((BossDrakorState*)state)->attackTimerDuration = lbl_803E6540;
         ((BossDrakorState*)state)->attackType = 1;
-        ((BossDrakorState*)state)->unk184 = *(f32*)((char*)tbl + 0x84);
-        ((BossDrakorState*)state)->unk188 = *(f32*)((char*)tbl + 0x90);
+        ((BossDrakorState*)state)->missileBaseSpeed = *(f32*)((char*)tbl + 0x84);
+        ((BossDrakorState*)state)->missileLeadFactor = *(f32*)((char*)tbl + 0x90);
         break;
     case 4:
         storeZeroToFloatParam(&((BossDrakorState*)state)->attackTimer);
         s16toFloat((void*)&((BossDrakorState*)state)->attackTimer, 0x3c);
         ((BossDrakorState*)state)->attackTimerDuration = lbl_803E6544;
         ((BossDrakorState*)state)->attackType = 1;
-        ((BossDrakorState*)state)->unk184 = *(f32*)((char*)tbl + 0x88);
-        ((BossDrakorState*)state)->unk188 = *(f32*)((char*)tbl + 0x94);
+        ((BossDrakorState*)state)->missileBaseSpeed = *(f32*)((char*)tbl + 0x88);
+        ((BossDrakorState*)state)->missileLeadFactor = *(f32*)((char*)tbl + 0x94);
         break;
     case 5:
         storeZeroToFloatParam(&((BossDrakorState*)state)->attackTimer);
         s16toFloat((void*)&((BossDrakorState*)state)->attackTimer, 0x1e);
         ((BossDrakorState*)state)->attackTimerDuration = lbl_803E6548;
         ((BossDrakorState*)state)->attackType = 1;
-        ((BossDrakorState*)state)->unk184 = *(f32*)((char*)tbl + 0x8c);
-        ((BossDrakorState*)state)->unk188 = *(f32*)((char*)tbl + 0x98);
+        ((BossDrakorState*)state)->missileBaseSpeed = *(f32*)((char*)tbl + 0x8c);
+        ((BossDrakorState*)state)->missileLeadFactor = *(f32*)((char*)tbl + 0x98);
         break;
     case 6:
         t = lbl_803E6510;
