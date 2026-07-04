@@ -26,6 +26,9 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* object group this object belongs to */
+#define KALDACHOM_OBJGROUP 3
+
 #define KALDACHOM_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 extern int randomGetRange(int lo, int hi);
@@ -353,7 +356,7 @@ void kaldachom_free(int obj)
     u32 state;
 
     state = *(u32*)&((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, KALDACHOM_OBJGROUP);
     (*(VtableFn*)(*gBaddieControlInterface + 0x40))(obj, state, 0x20);
 }
 
