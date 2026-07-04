@@ -1678,7 +1678,7 @@ void objFreeObjDef(u8* obj, int flag)
         }
         ((GameObject*)obj)->seqIndex = 0xffff;
     }
-    if ((*(s16*)&((GameObject*)obj)->anim.flags & 0x2000) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
+    if ((*(s16*)&((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
     {
         mm_free(((GameObject*)obj)->anim.placementData);
     }
