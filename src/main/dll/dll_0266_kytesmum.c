@@ -22,6 +22,8 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
+#define KYTESMUM_OBJGROUP 0x3
+
 #define KYTESMUM_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 #define PAD_BUTTON_A 0x100
@@ -208,7 +210,7 @@ void kytesmum_free(int obj)
     KytesMumSetup* setup = ((KytesMumObject*)obj)->setup;
     if (setup->mode != 0)
     {
-        ObjGroup_RemoveObject(obj, 0x3);
+        ObjGroup_RemoveObject(obj, KYTESMUM_OBJGROUP);
     }
 }
 
@@ -293,7 +295,7 @@ void kytesmum_init(int obj, KytesMumSetup* setup)
         runtime->moveSet = &moveSets[1];
         runtime->updateCallback = (KytesMumUpdateCallback)kytesmum_updateNearPlayerCallback;
         runtime->eventSfxTable = (s16*)&gKytesMumRoamEventSfxTable;
-        ObjGroup_AddObject(obj, 0x3);
+        ObjGroup_AddObject(obj, KYTESMUM_OBJGROUP);
         if (runtime->questComplete != 0)
         {
             Obj_RemoveFromUpdateList(obj);
