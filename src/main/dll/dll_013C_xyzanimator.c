@@ -82,12 +82,12 @@ typedef struct VertexS16
 typedef struct EdgeVerts
 {
     u8 pad[6];
-    s16 a;
-    s16 b;
-    s16 c;
-    s16 d;
-    s16 e;
-    s16 f;
+    s16 v0x;
+    s16 v0y;
+    s16 v0z;
+    s16 v1x;
+    s16 v1y;
+    s16 v1z;
 } EdgeVerts;
 
 #pragma opt_lifetimes off
@@ -152,12 +152,12 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
     for (; edgeIdx[0] < (int)(u32)((MapBlockData*)block)->unkA1; edgeIdx[0]++)
     {
         blockIndex = (int)fn_800606FC((int*)block, edgeIdx[0]);
-        *(s16*)(state->unk28 + edge[0]) = ((EdgeVerts*)blockIndex)->a;
-        *(s16*)(state->unk2C + edge[0]) = ((EdgeVerts*)blockIndex)->d;
-        *(s16*)(state->unk30 + edge[0]) = ((EdgeVerts*)blockIndex)->b;
-        *(s16*)(state->unk34 + edge[0]) = ((EdgeVerts*)blockIndex)->e;
-        *(s16*)(state->unk38 + edge[0]) = ((EdgeVerts*)blockIndex)->c;
-        *(s16*)(state->unk3C + edge[0]) = ((EdgeVerts*)blockIndex)->f;
+        *(s16*)(state->unk28 + edge[0]) = ((EdgeVerts*)blockIndex)->v0x;
+        *(s16*)(state->unk2C + edge[0]) = ((EdgeVerts*)blockIndex)->v1x;
+        *(s16*)(state->unk30 + edge[0]) = ((EdgeVerts*)blockIndex)->v0y;
+        *(s16*)(state->unk34 + edge[0]) = ((EdgeVerts*)blockIndex)->v1y;
+        *(s16*)(state->unk38 + edge[0]) = ((EdgeVerts*)blockIndex)->v0z;
+        *(s16*)(state->unk3C + edge[0]) = ((EdgeVerts*)blockIndex)->v1z;
         edge[0] += 2;
     }
 }
@@ -233,17 +233,17 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
         if ((int) * (u8*)((int)shader + 5) == def->blockLayer)
         {
             scale = lbl_803E4008;
-            ((EdgeVerts*)vertexOffset[0])->a = (s16)(scale * state->offsetX +
+            ((EdgeVerts*)vertexOffset[0])->v0x = (s16)(scale * state->offsetX +
                 (f32) * (s16*)(state->unk28 + edgeData));
-            ((EdgeVerts*)vertexOffset[0])->d = (s16)(scale * state->offsetX +
+            ((EdgeVerts*)vertexOffset[0])->v1x = (s16)(scale * state->offsetX +
                 (f32) * (s16*)(state->unk2C + edgeData));
-            ((EdgeVerts*)vertexOffset[0])->b = (s16)(scale * state->offsetY +
+            ((EdgeVerts*)vertexOffset[0])->v0y = (s16)(scale * state->offsetY +
                 (f32) * (s16*)(state->unk30 + edgeData));
-            ((EdgeVerts*)vertexOffset[0])->e = (s16)(scale * state->offsetY +
+            ((EdgeVerts*)vertexOffset[0])->v1y = (s16)(scale * state->offsetY +
                 (f32) * (s16*)(state->unk34 + edgeData));
-            ((EdgeVerts*)vertexOffset[0])->c = (s16)(scale * state->offsetZ +
+            ((EdgeVerts*)vertexOffset[0])->v0z = (s16)(scale * state->offsetZ +
                 (f32) * (s16*)(state->unk38 + edgeData));
-            ((EdgeVerts*)vertexOffset[0])->f = (s16)(scale * state->offsetZ +
+            ((EdgeVerts*)vertexOffset[0])->v1z = (s16)(scale * state->offsetZ +
                 (f32) * (s16*)(state->unk3C + edgeData));
         }
         edgeData += 2;
