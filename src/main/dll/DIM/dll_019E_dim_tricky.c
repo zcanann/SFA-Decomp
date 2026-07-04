@@ -50,6 +50,12 @@ typedef struct Dll19EState
     u8 sequenceIndex;
 } Dll19EState;
 
+enum DimTrickyMode
+{
+    DIM_TRICKY_MODE_SPARKLE = 0,     /* autonomous sparkle/egg effect spawner */
+    DIM_TRICKY_MODE_EGG_INTERACT = 1 /* hit-detect toggle egg-interact sequence */
+};
+
 void dll_19E_render(int obj, int p2, int p3, int p4,
                     int p5, s8 visible)
 {
@@ -199,7 +205,7 @@ void dll_19E_update(void* obj)
         state->settleTimer -= framesThisStep;
     }
 
-    if (state->mode == 1)
+    if (state->mode == DIM_TRICKY_MODE_EGG_INTERACT)
     {
         effectBuf.scale = lbl_803E51E0;
         state->previousActive = state->active;
@@ -338,7 +344,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
 
     switch (state->mode)
     {
-    case 0:
+    case DIM_TRICKY_MODE_SPARKLE:
         state->active = 1;
         resource = Resource_Acquire(TRICKY_EGG_EFFECT_RESOURCE_ID, 1);
         if (setup->sequenceIndex == 0)
@@ -347,7 +353,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
                 obj, 0, stackArg.args, 0x10004, -1, 0);
         }
         break;
-    case 1:
+    case DIM_TRICKY_MODE_EGG_INTERACT:
         state->sequenceIndex = setup->sequenceIndex;
         state->needsOpenSfx = 0;
         state->settleTimer = state->sequenceIndex * 0x28 + 0x398;
