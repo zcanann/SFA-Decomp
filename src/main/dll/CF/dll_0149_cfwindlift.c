@@ -52,14 +52,14 @@ typedef struct WindliftObjectDef
 
 typedef struct
 {
-    int i0;
+    int riderObj;
     f32 f4;
-    f32 f8;
-    f32 fc;
-    u8 b10;
-    u8 b11;
+    f32 speedDelta;
+    f32 riseSpeed;
+    u8 phaseFlags;
+    u8 oscCounter;
     u8 pad12[2];
-    int link14;
+    int linkIndex;
 } WindLiftSlot;
 
 typedef struct
@@ -122,7 +122,7 @@ extern f32 lbl_803E41BC;
  * above the lift and in range, send the lift/drop messages on state
  * edges, and integrate the rise speed with ramp-up, oscillation damping
  * and player-mode handoff. The spring model pulls a rider toward the
- * lift column and lifts it with the wind; slot->b10 carries the rider's
+ * lift column and lifts it with the wind; slot->phaseFlags carries the rider's
  * phase bits. */
 void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, u32 dur, f32 height)
 {
@@ -146,11 +146,11 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         return;
     }
     dist = Vec_xzDistance((char*)rider + 0x18, (char*)obj + 0x18);
-    if (dist > lbl_803E4170 + height && (slot->b10 & 0xe0) == 0)
+    if (dist > lbl_803E4170 + height && (slot->phaseFlags & 0xe0) == 0)
     {
         return;
     }
-    flags = slot->b10;
+    flags = slot->phaseFlags;
     if ((flags & 0x80) != 0 && gb != 0)
     {
         return;
@@ -161,42 +161,42 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         {
             if (gb != 0 && (!flags & 0x80) != 0 && dy < lbl_803E4174)
             {
-                slot->b10 |= 0x80;
+                slot->phaseFlags |= 0x80;
                 return;
             }
             if ((flags & 0x2) != 0)
             {
                 if (dy / pull > lbl_803E4178)
                 {
-                    slot->b10 |= 0x4;
-                    slot->b10 &= ~0x8;
+                    slot->phaseFlags |= 0x4;
+                    slot->phaseFlags &= ~0x8;
                 }
                 else
                 {
-                    slot->b10 |= 0x8;
-                    slot->b10 &= ~0x4;
+                    slot->phaseFlags |= 0x8;
+                    slot->phaseFlags &= ~0x4;
                 }
-                slot->b10 &= ~0x2;
+                slot->phaseFlags &= ~0x2;
             }
             if (gb == 0)
             {
-                slot->b10 |= 0x40;
-                slot->b10 &= ~0x20;
-                ObjMsg_SendToObject(rider, 0xf, obj, (((slot->b10 & 0xe0) >> 4) << 8) | dur);
-                slot->b10 &= ~0x80;
+                slot->phaseFlags |= 0x40;
+                slot->phaseFlags &= ~0x20;
+                ObjMsg_SendToObject(rider, 0xf, obj, (((slot->phaseFlags & 0xe0) >> 4) << 8) | dur);
+                slot->phaseFlags &= ~0x80;
             }
             else
             {
                 if (dy > lbl_803E417C)
                 {
-                    ObjMsg_SendToObject(rider, 0xf, obj, (((slot->b10 & 0xe0) >> 4) << 8) | dur);
+                    ObjMsg_SendToObject(rider, 0xf, obj, (((slot->phaseFlags & 0xe0) >> 4) << 8) | dur);
                 }
-                slot->b10 |= 0x20;
-                slot->b10 &= ~0x40;
+                slot->phaseFlags |= 0x20;
+                slot->phaseFlags &= ~0x40;
             }
         }
         scale = lbl_803E4180;
-        fl = slot->b10;
+        fl = slot->phaseFlags;
         fe = fl & 0xe;
         if (fe != 0 && (fl & 8) != 0 && gb == 0)
         {
@@ -213,7 +213,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         }
         if (gb == 0)
         {
-            lim = pull - (pull / lbl_803E418C) * (slot->fc * (slot->fc * slot->fc));
+            lim = pull - (pull / lbl_803E418C) * (slot->riseSpeed * (slot->riseSpeed * slot->riseSpeed));
             if (dy > lim)
             {
                 t = lbl_803E416C;
@@ -231,21 +231,21 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
                 }
             }
             factor = t;
-            slot->b10 |= 1;
-            if (((slot->fc < lbl_803E4194 && slot->b11 % 2 != 0)
-                    || (slot->fc > lbl_803E4198 && slot->b11 % 2 == 0))
-                && (slot->b10 & 8) != 0)
+            slot->phaseFlags |= 1;
+            if (((slot->riseSpeed < lbl_803E4194 && slot->oscCounter % 2 != 0)
+                    || (slot->riseSpeed > lbl_803E4198 && slot->oscCounter % 2 == 0))
+                && (slot->phaseFlags & 8) != 0)
             {
-                if (slot->b11++ > 2)
+                if (slot->oscCounter++ > 2)
                 {
-                    slot->b10 &= ~0x8;
-                    slot->b10 |= 0x4;
+                    slot->phaseFlags &= ~0x8;
+                    slot->phaseFlags |= 0x4;
                 }
             }
         }
         else
         {
-            v = slot->fc;
+            v = slot->riseSpeed;
             if (fe != 0)
             {
                 thr = lbl_803E4168;
@@ -256,12 +256,12 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
             }
             if (v > thr)
             {
-                slot->b11 = 1;
+                slot->oscCounter = 1;
             }
             scale = scale * lbl_803E41A0;
-            if (slot->b11 == 0)
+            if (slot->oscCounter == 0)
             {
-                if ((slot->b10 & 0xe) != 0)
+                if ((slot->phaseFlags & 0xe) != 0)
                 {
                     factor = lbl_803E4190 - dy / (lbl_803E41A4 * pull);
                 }
@@ -280,22 +280,22 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
                 factor = lbl_803E41AC;
             }
         }
-        slot->f8 = scale * factor - lbl_803E41B0;
-        slot->fc = slot->fc + slot->f8;
-        if (slot->fc > lbl_803E41B4)
+        slot->speedDelta = scale * factor - lbl_803E41B0;
+        slot->riseSpeed = slot->riseSpeed + slot->speedDelta;
+        if (slot->riseSpeed > lbl_803E41B4)
         {
-            slot->fc = *(f32*)&lbl_803E41B4;
+            slot->riseSpeed = *(f32*)&lbl_803E41B4;
         }
-        if (lbl_803E416C == slot->fc)
+        if (lbl_803E416C == slot->riseSpeed)
         {
-            slot->fc = lbl_803E41B8;
+            slot->riseSpeed = lbl_803E41B8;
         }
         if (dy < lbl_803E4174 && gb != 0)
         {
-            slot->fc = lbl_803E416C;
-            slot->b11 = 0;
+            slot->riseSpeed = lbl_803E416C;
+            slot->oscCounter = 0;
             ObjMsg_SendToObject(rider, 0x10, obj, gb);
-            slot->b10 |= 0x80;
+            slot->phaseFlags |= 0x80;
             if (pm != 0)
             {
                 ((GameObject*)player)->anim.velocityY = lbl_803E416C;
@@ -303,12 +303,12 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         }
         if (pm != 0)
         {
-            Player_SetLiftVelocityY((int)rider, slot->fc);
+            Player_SetLiftVelocityY((int)rider, slot->riseSpeed);
         }
         else
         {
-            ((GameObject*)rider)->anim.localPosY = slot->fc * timeDelta + ((GameObject*)rider)->anim.localPosY;
-            ((GameObject*)rider)->anim.velocityY = slot->fc * timeDelta;
+            ((GameObject*)rider)->anim.localPosY = slot->riseSpeed * timeDelta + ((GameObject*)rider)->anim.localPosY;
+            ((GameObject*)rider)->anim.velocityY = slot->riseSpeed * timeDelta;
         }
     }
     else
@@ -320,9 +320,9 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         if (pm == 0)
         {
             ObjMsg_SendToObject(rider, 0x10, obj, gb);
-            slot->b10 &= ~0xf1;
-            slot->fc = lbl_803E416C;
-            slot->b11 = 0;
+            slot->phaseFlags &= ~0xf1;
+            slot->riseSpeed = lbl_803E416C;
+            slot->oscCounter = 0;
         }
     }
 }
@@ -424,18 +424,18 @@ void windlift_update(int* obj)
                 Music_Trigger(MUSICTRIG_DIM_Cavern, 0);
                 sub->musicOn = 0;
             }
-            if ((sub->slots[0].b10 & 0xe0) != 0)
+            if ((sub->slots[0].phaseFlags & 0xe0) != 0)
             {
                 u8 b;
                 Player_SetLiftVelocityY((int)player, lbl_803E416C);
-                b = sub->slots[0].b10;
+                b = sub->slots[0].phaseFlags;
                 if ((b & 0xe) != 0)
                 {
-                    sub->slots[0].b10 = b | 2;
+                    sub->slots[0].phaseFlags = b | 2;
                 }
-                sub->slots[0].fc = lbl_803E416C;
-                sub->slots[0].b11 = 0;
-                sub->slots[0].b10 &= ~0xf1;
+                sub->slots[0].riseSpeed = lbl_803E416C;
+                sub->slots[0].oscCounter = 0;
+                sub->slots[0].phaseFlags &= ~0xf1;
             }
         }
         objs = ObjGroup_GetObjects(0x16, &count);
@@ -446,14 +446,14 @@ void windlift_update(int* obj)
         }
         for (j = 1; j < WINDLIFT_SLOTS; j++)
         {
-            sub->slots[j].link14 = -1;
+            sub->slots[j].linkIndex = -1;
         }
         for (idx = 1; idx < count; idx++)
         {
             found = -1;
             for (j = 1; j < WINDLIFT_SLOTS; j++)
             {
-                if ((u32)sub->slots[j].i0 == (u32) * objs)
+                if ((u32)sub->slots[j].riderObj == (u32) * objs)
                 {
                     found = j;
                 }
@@ -462,16 +462,16 @@ void windlift_update(int* obj)
             {
                 for (j = 1; j < WINDLIFT_SLOTS; j++)
                 {
-                    if ((u32)sub->slots[j].i0 == 0)
+                    if ((u32)sub->slots[j].riderObj == 0)
                     {
                         found = j;
-                        sub->slots[j].b10 = 0;
-                        sub->slots[j].b10 &= ~0xf1;
+                        sub->slots[j].phaseFlags = 0;
+                        sub->slots[j].phaseFlags &= ~0xf1;
                         sub->slots[j].f4 = lbl_803E4168;
-                        sub->slots[j].fc = lbl_803E416C;
-                        sub->slots[j].f8 = lbl_803E416C;
-                        sub->slots[j].i0 = 0;
-                        sub->slots[j].b11 = 0;
+                        sub->slots[j].riseSpeed = lbl_803E416C;
+                        sub->slots[j].speedDelta = lbl_803E416C;
+                        sub->slots[j].riderObj = 0;
+                        sub->slots[j].oscCounter = 0;
                         j = 2000;
                     }
                 }
@@ -479,9 +479,9 @@ void windlift_update(int* obj)
                 {
                     return;
                 }
-                sub->slots[found].i0 = (int)*objs;
+                sub->slots[found].riderObj = (int)*objs;
             }
-            sub->slots[found].link14 = found;
+            sub->slots[found].linkIndex = found;
             {
                 int* rider = *objs;
                 if ((((GameObject*)rider)->objectFlags & CFWINDLIFT_OBJFLAG_PARENT_SLACK) != 0)
@@ -496,9 +496,9 @@ void windlift_update(int* obj)
         }
         for (j = 1; j < WINDLIFT_SLOTS; j++)
         {
-            if (sub->slots[j].link14 == -1)
+            if (sub->slots[j].linkIndex == -1)
             {
-                sub->slots[j].i0 = 0;
+                sub->slots[j].riderObj = 0;
             }
         }
     }
@@ -557,13 +557,13 @@ void windlift_init(int* obj, u8* def)
         WindLiftSub* p = sub;
         for (i = 0; i < WINDLIFT_SLOTS; i++)
         {
-            p->slots[i].b10 = 0;
-            p->slots[i].b10 &= ~0xf1;
+            p->slots[i].phaseFlags = 0;
+            p->slots[i].phaseFlags &= ~0xf1;
             p->slots[i].f4 = lbl_803E4168;
-            p->slots[i].fc = lbl_803E416C;
-            p->slots[i].f8 = lbl_803E416C;
-            p->slots[i].i0 = 0;
-            p->slots[i].b11 = 0;
+            p->slots[i].riseSpeed = lbl_803E416C;
+            p->slots[i].speedDelta = lbl_803E416C;
+            p->slots[i].riderObj = 0;
+            p->slots[i].oscCounter = 0;
         }
     }
     ObjGroup_AddObject(obj, 0x49);
