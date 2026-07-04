@@ -76,7 +76,7 @@ typedef struct SfxplayerRingVisualSetup
     u8 unk1D;          /* 0x1D */
     u8 pad1E[2];       /* 0x1E..0x1F */
     f32 unk20;         /* 0x20 */
-    s16 unk24;         /* 0x24 */
+    s16 gameBit;       /* 0x24: GameBit slot (-1 = none) */
     u8 unk26;          /* 0x26 */
     u8 unk27;          /* 0x27 */
     u8 unk28;          /* 0x28 */
@@ -88,7 +88,7 @@ typedef struct SfxplayerRingVisualSetup
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk18) == 0x18);
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, ringId) == 0x1B);
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk20) == 0x20);
-STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk24) == 0x24);
+STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, gameBit) == 0x24);
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk2A) == 0x2A);
 STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 
@@ -553,7 +553,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         ((SfxplayerRingVisualSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
         ((SfxplayerRingVisualSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
         ((SfxplayerRingVisualSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
-        ((SfxplayerRingVisualSetup*)setup)->unk24 = -1;
+        ((SfxplayerRingVisualSetup*)setup)->gameBit = -1;
         ((SfxplayerRingVisualSetup*)setup)->unk1A = 0;
         ((SfxplayerRingVisualSetup*)setup)->unk18 = 0;
         ((SfxplayerRingVisualSetup*)setup)->unk19 = 0;
