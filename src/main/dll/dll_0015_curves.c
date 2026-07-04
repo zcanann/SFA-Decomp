@@ -277,7 +277,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
 
     startX = collision->points[1][0];
     startZ = collision->points[1][2];
-    if ((s32)(collision->flags & 0x100000) == 0)
+    if ((s32)(collision->flags & CURVES_COLLISION_STATE_KEEP_POSITION) == 0)
     {
         ((GameObject*)obj)->anim.worldPosX = startX;
         ((GameObject*)obj)->anim.worldPosZ = startZ;
@@ -712,7 +712,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
     }
     if (pointCount > 1)
     {
-        if ((s32)(collision->flags & 0x100000) != 0)
+        if ((s32)(collision->flags & CURVES_COLLISION_STATE_KEEP_POSITION) != 0)
         {
             goto buildTransform;
         }
@@ -730,14 +730,14 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
         ((GameObject*)obj)->anim.localPosX *= averageScale;
         ((GameObject*)obj)->anim.localPosZ *= averageScale;
     }
-    else if ((s32)(collision->flags & 0x100000) == 0)
+    else if ((s32)(collision->flags & CURVES_COLLISION_STATE_KEEP_POSITION) == 0)
     {
         ((GameObject*)obj)->anim.localPosX = collision->localPointWorld[0][0];
         ((GameObject*)obj)->anim.localPosZ = collision->localPointWorld[0][2];
     }
 buildTransform:
     transform.angles[0] = ((GameObject*)obj)->anim.rotX;
-    if ((s32)(collision->flags & 0x20) != 0)
+    if ((s32)(collision->flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
     {
         transform.angles[1] = 0;
         transform.angles[2] = 0;
@@ -817,7 +817,7 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
         if ((s32)(flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0)
         {
             transform.angles[0] = ((GameObject*)obj)->anim.rotX;
-            if ((s32)(flags & 0x20) != 0)
+            if ((s32)(flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
             {
                 transform.angles[1] = 0;
                 transform.angles[2] = 0;
@@ -905,7 +905,7 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
         ((s32)(flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0))
     {
         transform.angles[0] = ((GameObject*)obj)->anim.rotX;
-        if ((s32)(flags & 0x20) != 0)
+        if ((s32)(flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
         {
             transform.angles[1] = 0;
             transform.angles[2] = 0;
@@ -967,7 +967,7 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
         ((s32)(flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0))
     {
         transform.angles[0] = ((GameObject*)obj)->anim.rotX;
-        if ((s32)(flags & 0x20) != 0)
+        if ((s32)(flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
         {
             transform.angles[1] = 0;
             transform.angles[2] = 0;
@@ -1124,7 +1124,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             ((collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK) != 0))
         {
             s1a.angles[0] = curveObj[0];
-            if ((s32)(state->flags & 0x20) != 0)
+            if ((s32)(state->flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
             {
                 s1a.angles[1] = 0;
                 s1a.angles[2] = 0;
@@ -1185,7 +1185,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             ((collision->pointCounts & CURVES_POINT_COUNT_SEGMENT_MASK) != 0))
         {
             s1b.angles[0] = curveObj[0];
-            if ((s32)(state->flags & 0x20) != 0)
+            if ((s32)(state->flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
             {
                 s1b.angles[1] = 0;
                 s1b.angles[2] = 0;
@@ -1314,7 +1314,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             ((flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0))
         {
             s2a.angles[0] = curveObj[0];
-            if ((flags & 0x20) != 0)
+            if ((flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
             {
                 s2a.angles[1] = 0;
                 s2a.angles[2] = 0;
@@ -1356,7 +1356,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
         if ((s32)(state->flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0)
         {
             s2b.angles[0] = curveObj[0];
-            if ((s32)(state->flags & 0x20) != 0)
+            if ((s32)(state->flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
             {
                 s2b.angles[1] = 0;
                 s2b.angles[2] = 0;
@@ -1403,7 +1403,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             ((flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0))
         {
             sE.angles[0] = curveObj[0];
-            if ((flags & 0x20) != 0)
+            if ((flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
             {
                 sE.angles[1] = 0;
                 sE.angles[2] = 0;
@@ -1531,7 +1531,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
             obj->anim.worldPosZ = obj->anim.localPosZ;
         }
         s.angles[0] = obj->anim.rotX;
-        if ((s32)(state->flags & 0x20) != 0)
+        if ((s32)(state->flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
         {
             s.angles[1] = 0;
             s.angles[2] = 0;
