@@ -15,6 +15,7 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/dll/fx_800944A0_shared.h"
 
 #define GROUNDANIMATOR_OBJFLAG_FREED 0x40
+#define GROUNDANIMATOR_OBJGROUP 0x31
 
 typedef struct GroundanimatorPlacement
 {
@@ -111,7 +112,7 @@ void groundanimator_init(int* obj, int* desc)
             vstate->sinkDepth = lbl_803E3F98 * (f32) * (u8*)&((WaveanimatorObjectDef*)desc)->sinkDepthScale;
             vstate->flags |= 2;
         }
-        ObjGroup_AddObject(obj, 49);
+        ObjGroup_AddObject(obj, GROUNDANIMATOR_OBJGROUP);
         if (*(u8*)&((WaveanimatorObjectDef*)desc)->period > 1)
         {
             *(u8*)&((WaveanimatorObjectDef*)desc)->period = 0;
@@ -177,7 +178,7 @@ void groundanimator_free(int* obj, int flag)
     {
         mm_free((void*)w->falloffBuf);
     }
-    ObjGroup_RemoveObject(obj, 0x31);
+    ObjGroup_RemoveObject(obj, GROUNDANIMATOR_OBJGROUP);
 }
 
 f32 groundanimator_setScale(int* obj, int* target)
