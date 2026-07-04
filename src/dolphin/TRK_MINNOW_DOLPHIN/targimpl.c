@@ -1341,3 +1341,5 @@ void TRKTargetSetInputPendingPtr(void* ptr)
 {
 	gTRKState.inputPendingPtr = ptr;
 }
+
+ProcessorState_PPC gTRKCPUState;
