@@ -3,6 +3,12 @@
 
 #include "types.h"
 
+/* DbStealerwormControl.flags14: per-frame effect-request bits, consumed and
+ * cleared each tick by the fx dispatcher (fn_80203000). */
+#define DBWORM_FLAG14_ATTACK  0x1 /* strike the current target this frame */
+#define DBWORM_FLAG14_FX_DUST 0x2 /* emit the small dust burst (partfx 0x345) */
+#define DBWORM_FLAG14_FX_SPRAY 0x4 /* emit the large spray burst (partfx 0x343 x10) */
+
 typedef struct DbStealerwormControl
 {
     int cfg; /* entry in the lbl_80329514 table (stride 8 ints) */

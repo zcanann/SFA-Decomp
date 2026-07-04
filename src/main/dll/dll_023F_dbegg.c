@@ -546,7 +546,7 @@ FUN_80200558(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
     int control;
 
     control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    ((DbStealerwormControl*)control)->flags14 |= 2;
+    ((DbStealerwormControl*)control)->flags14 |= DBWORM_FLAG14_FX_DUST;
     ((DbStealerwormControl*)control)->flags15 |= 4;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F80;
     if (*(char*)(state + 0x27a) != '\0')
