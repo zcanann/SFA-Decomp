@@ -28,6 +28,9 @@
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/obj_placement.h"
+
+/* object group this object joins while active */
+#define MIKABOMB_OBJGROUP 7
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();
@@ -252,7 +255,7 @@ typedef struct MikabombState
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, MIKABOMB_OBJGROUP);
     return;
 }
 
@@ -279,7 +282,7 @@ void staticCamera_init(short* obj, int params, int deferAdd)
     camData[1] = 0;
     if (deferAdd == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, MIKABOMB_OBJGROUP);
     }
     return;
 }
