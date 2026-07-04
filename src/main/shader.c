@@ -260,7 +260,7 @@ void FUN_80056cfc(void)
     u32 v;
     u32* q;
     u32* tbl;
-    int in_r6;
+    int mode; /* uninitialized: Ghidra shows live-in r6; selects rebuild(0) vs notify pass */
     u32 mask;
     int pos;
     u32 count;
@@ -278,7 +278,7 @@ void FUN_80056cfc(void)
     if (count != 0)
     {
         pos = 0;
-        if (in_r6 == 0)
+        if (mode == 0)
         {
             tbl[0x21] = 0xffffffff;
             *tbl = 0xffffffff;
@@ -316,7 +316,7 @@ void FUN_80056cfc(void)
         }
         for (; pos < count; pos = pos + (u32) * stepPtr * 4)
         {
-            if (in_r6 == 0)
+            if (mode == 0)
             {
                 tag = *cur;
                 if ((tag == 0x6e) || (tag == 5))
@@ -356,7 +356,7 @@ void FUN_80056cfc(void)
             stepPtr = (u8*)(cur + 1);
             cur = cur + (u32) * stepPtr * 2;
         }
-        if (in_r6 == 0)
+        if (mode == 0)
         {
             v = tbl[0x21];
             mask = count;
