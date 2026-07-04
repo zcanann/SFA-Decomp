@@ -139,7 +139,6 @@ int wispbaddie_getObjectTypeId(void) { return 0x9; }
 void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-void fn_8014EE8C(int obj, SwarmBaddieState* state);
 
 void fn_8014F620(int obj, WispBaddieState* state)
 {
