@@ -757,6 +757,7 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     GXWGFifo.f32 = v1;
 }
 #pragma opt_propagation reset
+#pragma opt_common_subs reset
 
 void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9)
 {
@@ -932,6 +933,7 @@ void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
     ((GameObject*)objs[1])->anim.rotX = sc;
 }
 #pragma opt_propagation reset
+#pragma opt_common_subs reset
 
 extern char hudTextures[];
 extern s16 gFearTestMeterAlpha;
@@ -1535,6 +1537,7 @@ extern void gameTextSetColor(int, int, int, int);
 } while (0)
 
 #pragma opt_propagation off
+#pragma opt_common_subs off
 void drawViewFinderHud(void)
 {
     f32 fovY;
@@ -1579,7 +1582,7 @@ void drawViewFinderHud(void)
             GXColor _c2;
             GXColor _c;
             s16 _a;
-            f32 _r, _cs, _sn, _cx, _sx;
+            f32 _r, _cs, _sn, _cx, _sx, _d, _u;
             *(int*)&_c = lbl_803E1E2C;
             _c.a = hudElementOpacity * gViewFinderFadeLevel;
             _a = getAngle(lbl_803E1E3C, lbl_803E1F08 - f18v);
@@ -1589,14 +1592,16 @@ void drawViewFinderHud(void)
             _c2 = _c;
             _cx = lbl_803E1E68 * _cs;
             _sx = lbl_803E1E68 * _sn;
-            drawViewFinderLine(lbl_803E1F10 + _sx, f18v - _cx, lbl_803E1F10 - _sx, f18v + _cx,
-                               lbl_803E1F10 - _sx, lbl_803E1F08 + _cx, lbl_803E1F10 + _sx, lbl_803E1F08 - _cx, (u8*)&_c2);
+            _d = lbl_803E1F10 - _sx;
+            _u = lbl_803E1F10 + _sx;
+            drawViewFinderLine(_u, f18v - _cx, _d, f18v + _cx,
+                               _d, lbl_803E1F08 + _cx, _u, lbl_803E1F08 - _cx, (u8*)&_c2);
         }
         {
             GXColor _c2;
             GXColor _c;
             s16 _a;
-            f32 _r, _cs, _sn, _cx, _sx;
+            f32 _r, _cs, _sn, _cx, _sx, _d, _u;
             *(int*)&_c = lbl_803E1E2C;
             _c.a = hudElementOpacity * gViewFinderFadeLevel;
             _a = getAngle(lbl_803E1E3C, (f19v = lbl_803E1F14 + f15v) - f15v);
@@ -1606,8 +1611,10 @@ void drawViewFinderHud(void)
             _c2 = _c;
             _cx = lbl_803E1F18 * _cs;
             _sx = lbl_803E1F18 * _sn;
-            drawViewFinderLine(lbl_803E1F10 + _sx, f15v - _cx, lbl_803E1F10 - _sx, f15v + _cx,
-                               lbl_803E1F10 - _sx, f19v + _cx, lbl_803E1F10 + _sx, f19v - _cx, (u8*)&_c2);
+            _d = lbl_803E1F10 - _sx;
+            _u = lbl_803E1F10 + _sx;
+            drawViewFinderLine(_u, f15v - _cx, _d, f15v + _cx,
+                               _d, f19v + _cx, _u, f19v - _cx, (u8*)&_c2);
         }
         xc = lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
         xc = xc;
@@ -1837,3 +1844,4 @@ void drawViewFinderHud(void)
     }
 }
 #pragma opt_propagation reset
+#pragma opt_common_subs reset
