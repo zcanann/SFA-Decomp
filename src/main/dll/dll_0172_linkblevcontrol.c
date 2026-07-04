@@ -78,6 +78,16 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 
 int linkb_levcontrol_getExtraSize(void) { return 0x10; }
 
+enum LinkbLevStage
+{
+    LINKBLEVCONTROL_STAGE_START = 0, /* awaiting stage-1 gate bit (0x384)     */
+    LINKBLEVCONTROL_STAGE_1     = 1, /* stage 1 reached (gate 0x384)          */
+    LINKBLEVCONTROL_STAGE_2     = 2, /* stage 2 reached (gate 0x385)          */
+    LINKBLEVCONTROL_STAGE_3     = 3, /* stage 3 reached (gate 0x386)          */
+    LINKBLEVCONTROL_STAGE_4     = 4, /* stage 4 reached (gate 0x387)          */
+    LINKBLEVCONTROL_STAGE_5     = 5  /* final stage reached (gate 0x543)      */
+};
+
 typedef struct LinkbLevState
 {
     int flags;
@@ -103,23 +113,23 @@ void linkb_levcontrol_init(int* obj)
     }
     if (GameBit_Get(GAMEBIT_LINKB_STAGE_5) != 0)
     {
-        state->stage = 5;
+        state->stage = LINKBLEVCONTROL_STAGE_5;
     }
     else if (GameBit_Get(GAMEBIT_LINKB_STAGE_4) != 0)
     {
-        state->stage = 4;
+        state->stage = LINKBLEVCONTROL_STAGE_4;
     }
     else if (GameBit_Get(GAMEBIT_LINKB_STAGE_3) != 0)
     {
-        state->stage = 3;
+        state->stage = LINKBLEVCONTROL_STAGE_3;
     }
     else if (GameBit_Get(GAMEBIT_LINKB_STAGE_2) != 0)
     {
-        state->stage = 2;
+        state->stage = LINKBLEVCONTROL_STAGE_2;
     }
     else if (GameBit_Get(GAMEBIT_LINKB_STAGE_1) != 0)
     {
-        state->stage = 1;
+        state->stage = LINKBLEVCONTROL_STAGE_1;
     }
     fn_80088870(envBase + 0x38, (u8*)(int)lbl_803238D8, envBase + 0x70, envBase + 0xa8);
     if (getSaveGameLoadStatus() != 0)
@@ -198,7 +208,7 @@ void linkb_levcontrol_update(int* obj)
         fn_80138908(tricky, 0);
         switch (state->stage)
         {
-        case 0:
+        case LINKBLEVCONTROL_STAGE_START:
             if (GameBit_Get(GAMEBIT_LINKB_STAGE_1) != 0)
             {
                 fn_80138908(tricky, 1);
@@ -208,7 +218,7 @@ void linkb_levcontrol_update(int* obj)
                 return;
             }
             break;
-        case 1:
+        case LINKBLEVCONTROL_STAGE_1:
             if (GameBit_Get(0xc1) != 0)
             {
                 if (!(((GameObject*)player)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
@@ -222,7 +232,7 @@ void linkb_levcontrol_update(int* obj)
                 }
             }
             break;
-        case 2:
+        case LINKBLEVCONTROL_STAGE_2:
             if (cur[0] != 0)
             {
                 fn_80138908(tricky, 1);
@@ -236,7 +246,7 @@ void linkb_levcontrol_update(int* obj)
                 }
             }
             break;
-        case 3:
+        case LINKBLEVCONTROL_STAGE_3:
             if (GameBit_Get(0x1fd) != 0)
             {
                 GameBit_Set(GAMEBIT_LINKB_STAGE_4, 1);
@@ -258,7 +268,7 @@ void linkb_levcontrol_update(int* obj)
                 return;
             }
             break;
-        case 4:
+        case LINKBLEVCONTROL_STAGE_4:
             if (GameBit_Get(GAMEBIT_LINKB_STAGE_5) != 0)
             {
                 fn_80138908(tricky, 1);
