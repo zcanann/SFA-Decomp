@@ -23,6 +23,11 @@
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
+/* anim.seqId rock variants: BIG selects gRockfallCfgTable entry 1;
+ * QUARRY has its own scrape/impact sfx and skips the explosion. */
+#define CRROCKFALL_SEQ_BIG    0x600
+#define CRROCKFALL_SEQ_QUARRY 103
+
 /* CrRockfallState.mode */
 #define zcEn3_ROCKFALL_MODE_ARMED 0     /* count down fallDelay while player is in range */
 #define zcEn3_ROCKFALL_MODE_FALLING 1   /* gravity integrate Y until floorY+restOffsetY */
@@ -163,7 +168,7 @@ void crrockfall_init(int* obj, u8* params)
         modelState->shadowScale = modelState->shadowScale * ((GameObject*)obj)->anim.rootMotionScale;
     }
 
-    if (((GameObject*)obj)->anim.seqId == 0x600)
+    if (((GameObject*)obj)->anim.seqId == CRROCKFALL_SEQ_BIG)
     {
         state->cfg = (CrRockfallCfgEntry*)&gRockfallCfgTable[0xc];
     }
@@ -288,7 +293,7 @@ void crrockfall_update(int* obj)
                 {
                     state->fallStarted = 1;
                     ((GameObject*)obj)->anim.velocityY = lbl_803E46E8;
-                    if (((GameObject*)obj)->anim.seqId == 103)
+                    if (((GameObject*)obj)->anim.seqId == CRROCKFALL_SEQ_QUARRY)
                     {
                         Sfx_PlayFromObject(obj, SFXwp_sexpl2_c);
                     }
@@ -331,7 +336,7 @@ void crrockfall_update(int* obj)
                 ((ObjHitsPriorityState*)hitState)->flags &= ~1;
                 state->mode = zcEn3_ROCKFALL_MODE_SHATTERED;
                 Sfx_StopObjectChannel(obj, 8);
-                if (((GameObject*)obj)->anim.seqId == 103)
+                if (((GameObject*)obj)->anim.seqId == CRROCKFALL_SEQ_QUARRY)
                 {
                     Sfx_PlayFromObject(obj, SFXwp_simp1_c);
                 }
