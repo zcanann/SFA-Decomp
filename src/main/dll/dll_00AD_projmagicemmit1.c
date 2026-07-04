@@ -24,3 +24,7 @@ void projmagicemmit1_initialise(void)
 }
 
 char sProjmagicemmit1DoNoLongerSupported[] = "<projmagicemmit1 Do>No Longer supported \n";
+
+/*__DATA_EXTERNS__*/
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_80319460[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projroombeam_initialise, projroombeam_release, (void*)0x00000000, projroombeam_doUnsupported };
