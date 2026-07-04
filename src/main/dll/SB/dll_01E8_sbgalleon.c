@@ -36,6 +36,8 @@
 #include "main/texture.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 
+#define SBGALLEON_OBJGROUP 3
+
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
@@ -532,7 +534,7 @@ void SB_Galleon_init(GameObject* obj)
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     ObjHitsPriorityState* hitState;
     gSbGalleon = (u32)obj;
-    ObjGroup_AddObject((u32)obj, 3);
+    ObjGroup_AddObject((u32)obj, SBGALLEON_OBJGROUP);
     objSetSlot(obj, 0x5a);
     obj->animEventCallback = SB_Galleon_animEventCallback;
     state->posX = obj->anim.localPosX;
@@ -581,7 +583,7 @@ void SB_Galleon_free(GameObject* obj, int p2)
         textureFree((void*)gSbGalleonSkyTexB);
         gSbGalleonSkyTexB = 0;
     }
-    ObjGroup_RemoveObject((u32)obj, 3);
+    ObjGroup_RemoveObject((u32)obj, SBGALLEON_OBJGROUP);
     if (state->musicLatch != 0 && p2 == 0)
     {
         state->musicLatch = 0;
