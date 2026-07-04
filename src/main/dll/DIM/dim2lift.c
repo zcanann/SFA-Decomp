@@ -257,7 +257,7 @@ int DIMbossHitDetect_liftImpact(int obj, int p2)
         ((BaddieState*)p2)->moveDone = 0;
     }
 
-    if ((*(int*)&((BaddieState*)p2)->eventFlags & 0x1) != 0)
+    if ((*(int*)&((BaddieState*)p2)->eventFlags & BADDIE_EVENT_FOOTSTEP) != 0)
     {
         gDIMbossSequenceFlags |= 0x4004;
         Sfx_PlayFromObject(obj, SFXwmap_swoosh);
@@ -500,10 +500,10 @@ int DIMbossHitDetect_blueWhiteEventCapture(int obj, int runtime, f32 arg)
     {
         gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_0040;
     }
-    if (*(int*)&((BaddieState*)runtime)->eventFlags & 0x200)
+    if (*(int*)&((BaddieState*)runtime)->eventFlags & BADDIE_EVENT_LANDING)
     {
         gDIMbossSequenceFlags |= (u64)DIMBOSS_SEQUENCE_FLAG_CAPTURE_BLUE_WHITE_VELOCITY;
-        *(int*)&((BaddieState*)runtime)->eventFlags &= ~0x200;
+        *(int*)&((BaddieState*)runtime)->eventFlags &= ~BADDIE_EVENT_LANDING;
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, runtime, 0, 3, lbl_80325AA0);
     (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, runtime, arg, 0xf0);
@@ -541,9 +541,9 @@ int DIMbossHitDetect_randomSwipe(int obj, int runtime, f32 arg)
         }
     }
     t = *(int*)&((BaddieState*)runtime)->eventFlags;
-    if (t & 0x200)
+    if (t & BADDIE_EVENT_LANDING)
     {
-        *(int*)&((BaddieState*)runtime)->eventFlags = t & ~0x200;
+        *(int*)&((BaddieState*)runtime)->eventFlags = t & ~BADDIE_EVENT_LANDING;
         gDIMbossSequenceFlags |= (DIMBOSS_SEQUENCE_FLAG_0001 | DIMBOSS_SEQUENCE_FLAG_0004);
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(
