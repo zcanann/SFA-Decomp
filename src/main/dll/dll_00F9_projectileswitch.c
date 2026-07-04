@@ -11,6 +11,16 @@
 
 #define PROJECTILESWITCH_OBJFLAG_HIDDEN 0x4000
 
+/*
+ * Low 2 bits of ProjectileSwitchPlacement.triggerMode select switch behaviour.
+ * (Same mode field as dll_00FA invisiblehitswitch.)
+ */
+#define SWITCH_MODE_MASK 3
+#define SWITCH_MODE_LATCH 0     /* activates and stays on; cannot be toggled off */
+#define SWITCH_MODE_TOGGLE 1    /* a second hit while active turns it back off */
+#define SWITCH_MODE_MOMENTARY 2 /* activates, then auto-clears after cooldownFrames */
+#define SWITCH_MODE_DELAYED 3   /* hit arms an activation wind-up before turning on */
+
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
 
@@ -142,7 +152,7 @@ void ProjectileSwitch_hitDetect(int obj)
 
     if (((ProjectileSwitchState*)state)->isOn != 0)
     {
-        if (((((ProjectileSwitchPlacement*)state2)->triggerMode & 3)) != 1) return;
+        if (((((ProjectileSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK)) != SWITCH_MODE_TOGGLE) return;
         stateB = *(int*)&((GameObject*)obj)->extra;
         if (((GameObject*)obj)->anim.mapEventSlot == 0x2c)
         {
@@ -178,7 +188,7 @@ void ProjectileSwitch_hitDetect(int obj)
         }
         ((ProjectileSwitchState*)stateB)->isOn = 1;
         GameBit_Set((int)((ProjectileSwitchState*)state)->gameBitId, 1);
-        if ((((ProjectileSwitchPlacement*)state2)->triggerMode & 3) == 2)
+        if ((((ProjectileSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK) == SWITCH_MODE_MOMENTARY)
         {
             ((ProjectileSwitchState*)state)->cooldownTimer =
                 lbl_803E3704 * (lbl_803E3708 *
