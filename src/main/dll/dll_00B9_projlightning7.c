@@ -28,3 +28,7 @@ void projlightning7_initialise(void)
 }
 
 char sProjlightning7DoNoLongerSupported[] = "<projlightning7 Do>No Longer supported \n";
+
+/*__DATA_EXTERNS__*/
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_80319688[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projlightning6_initialise, projlightning6_release, (void*)0x00000000, projlightning6_doUnsupported };
