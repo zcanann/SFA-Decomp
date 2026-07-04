@@ -16,6 +16,8 @@ extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern int lbl_803DDB18;
 extern void objSetSlot(int* obj, int slot);
 
+#define BLASTED_GAMEBIT_DAMAGE_BASE 0x2de /* base of per-damage-step progress GameBit array */
+
 int blasted_getExtraSize(void)
 {
     return 0x14;
@@ -173,8 +175,8 @@ void blasted_update(int obj)
             if (found == 0)
             {
                 state->destroyedHitObjects[state->damageStep] = v;
-                GameBit_Set(state->damageStep + 0x2de, 0);
-                GameBit_Set(state->damageStep + 0x2df, 1);
+                GameBit_Set(state->damageStep + BLASTED_GAMEBIT_DAMAGE_BASE, 0);
+                GameBit_Set(state->damageStep + (BLASTED_GAMEBIT_DAMAGE_BASE + 1), 1);
                 if (setup->progressGameBit != -1)
                 {
                     GameBit_Set(setup->progressGameBit, state->damageStep + 1);
@@ -185,7 +187,7 @@ void blasted_update(int obj)
                     int n;
                     for (n = 0; n < total + 1; n++)
                     {
-                        GameBit_Set(n + 0x2de, 0);
+                        GameBit_Set(n + BLASTED_GAMEBIT_DAMAGE_BASE, 0);
                     }
                     GameBit_Set(setup->completedGameBit, 1);
                     fn_801A27B8(obj, setup->triggerId);
@@ -239,7 +241,7 @@ void blasted_init(int obj, int placement)
             Obj_SetActiveModelIndex(obj, (int)((BlastedState*)state)->gameBitLatchState);
         }
     }
-    GameBit_Set(0x2de, 1);
+    GameBit_Set(BLASTED_GAMEBIT_DAMAGE_BASE, 1);
     ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(placement + 0x18) << 8);
     if ((u32)GameBit_Get(setup->completedGameBit) != 0)
     {
