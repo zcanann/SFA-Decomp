@@ -22,6 +22,11 @@
 
 #define ATTRACTOR_OBJ_GROUP 0x1e
 
+/* placement mode byte (0x19) - selects what attractor_func0B reports */
+#define ATTRACTOR_MODE_NONE        0 /* report nothing */
+#define ATTRACTOR_MODE_RETURN_SELF 1 /* return the object */
+#define ATTRACTOR_MODE_FACE_PLAYER 2 /* face player, then return the object */
+
 typedef struct AttractorMapData
 {
     ObjPlacement base;
@@ -67,7 +72,7 @@ void attractor_free(int obj) { ObjGroup_RemoveObject(obj, ATTRACTOR_OBJ_GROUP); 
 int attractor_setScale(int* obj)
 {
     AttractorMapData* p = (AttractorMapData*)((int**)obj)[0x4c / 4];
-    if (p->mode != 0)
+    if (p->mode != ATTRACTOR_MODE_NONE)
     {
         return p->scale;
     }
@@ -90,12 +95,12 @@ void attractor_func0B(GameObject* obj, void** out)
     s8 mode = ((AttractorMapData*)obj->anim.placementData)->mode;
     switch (mode)
     {
-    case 0:
+    case ATTRACTOR_MODE_NONE:
         break;
-    case 1:
+    case ATTRACTOR_MODE_RETURN_SELF:
         result = obj;
         break;
-    case 2:
+    case ATTRACTOR_MODE_FACE_PLAYER:
     {
         GameObject* player = (GameObject*)Obj_GetPlayerObject();
         int angle = atan2i(
