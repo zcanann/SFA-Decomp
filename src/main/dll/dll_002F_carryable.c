@@ -25,6 +25,9 @@
 
 #define PAD_BUTTON_A 0x100
 
+/* object group this prop joins at init / leaves on free */
+#define CARRYABLE_OBJGROUP 0x10
+
 /* carryState phases (state->carryState) */
 #define CARRY_STATE_RESTING 0
 #define CARRY_STATE_GRABBED 1
@@ -121,7 +124,7 @@ s32 Carryable_getFlag01(u8* state) { return ((CarryableUpdateHeldState*)state)->
 
 s32 Carryable_isHeld(u8* state) { return ((CarryableUpdateHeldState*)state)->carryState; }
 
-void Carryable_free(int x) { ObjGroup_RemoveObject(x, 0x10); }
+void Carryable_free(int x) { ObjGroup_RemoveObject(x, CARRYABLE_OBJGROUP); }
 
 int Carryable_updateRenderState(int* obj, int flag)
 {
@@ -281,7 +284,7 @@ int Carryable_updateHeld(u8* obj)
 void Carryable_init(int obj, int state)
 {
     CarryableUpdateHeldState* s = (CarryableUpdateHeldState*)state;
-    ObjGroup_AddObject(obj, 0x10);
+    ObjGroup_AddObject(obj, CARRYABLE_OBJGROUP);
     s->unk2 = 0;
     s->carryState = CARRY_STATE_RESTING;
     s->pad4[0] = 0;
