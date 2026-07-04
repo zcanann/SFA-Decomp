@@ -204,3 +204,19 @@ void dll_A5_func01_nop(void)
 void dll_A5_func00_nop(void)
 {
 }
+
+/* .sdata2 float-pool constants referenced via extern by sibling dll_00A6 */
+const f32 lbl_803E1530 = 0.0f;
+const f32 lbl_803E1534 = 1.0f;
+const f32 lbl_803E1538 = 0.25f;
+const f32 lbl_803E153C = 0.01f;
+const f32 lbl_803E1540 = 0.4f;
+const f32 lbl_803E1544 = 145.0f;
+const f32 lbl_803E1548 = 25.0f;
+const f32 lbl_803E154C = 9.0f;
+const f32 lbl_803E1550 = 12.0f;
+const f32 lbl_803E1554 = 21.0f;
+const f32 lbl_803E1558 = 0.1f;
+const f32 lbl_803E155C = 14.0f;
+const f32 lbl_803E1560 = 0.05f;
+const f32 lbl_803E1564 = 4.0f;

@@ -578,7 +578,7 @@ main/dll/dll_00A4_dummya4.c:
 
 main/dll/dll_00A5_dlla5func0.c:
 	.text       start:0x800FEC84 end:0x800FF004
-	.sdata2     start:0x803E1528 end:0x803E1530
+	.sdata2     start:0x803E1528 end:0x803E1568
 
 main/dll/dll_00A6_dlla6func0.c:
 	.text       start:0x800FF004 end:0x800FF6A0
