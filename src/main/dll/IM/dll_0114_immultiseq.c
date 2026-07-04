@@ -17,6 +17,8 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
+
+#define IMMULTISEQ_OBJGROUP 0xf
 extern void ObjGroup_AddObject();
 extern f32 lbl_803E37A8;
 
@@ -76,7 +78,7 @@ int immultiseq_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 int immultiseq_getExtraSize(void) { return 0x2; }
 int immultiseq_getObjectTypeId(void) { return 0x0; }
 
-void immultiseq_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
+void immultiseq_free(int x) { ObjGroup_RemoveObject(x, IMMULTISEQ_OBJGROUP); }
 
 void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -159,7 +161,7 @@ void immultiseq_init(int* obj, IMMultiSeqPlacement* params)
     {
         objAnim->bankIndex = 0;
     }
-    ObjGroup_AddObject(obj, 0xf);
+    ObjGroup_AddObject(obj, IMMULTISEQ_OBJGROUP);
     i = 0;
     while (i < 4)
     {
