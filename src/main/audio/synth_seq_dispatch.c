@@ -69,7 +69,7 @@ typedef struct
 typedef struct
 {
     u32 unk0; // 0x0
-    u32 unk4; // 0x4
+    u32 entryTime; // 0x4
     u32 dataPtr; // 0x8
     u32 eventPtr; // 0xc
     u32 pitchCur; // 0x10
@@ -143,7 +143,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
 
             rec->dataPtr = (u32)(t + 0xc);
             rec->unk0 = 0;
-            rec->unk4 = d->time;
+            rec->entryTime = d->time;
             rec->eventPtr = (u32)d;
             if (*(u32*)(t + 4) != 0)
             {
