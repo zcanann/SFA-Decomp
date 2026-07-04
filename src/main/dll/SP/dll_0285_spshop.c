@@ -13,6 +13,8 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define SPSHOP_OBJGROUP 9
+
 typedef struct ShopBuyItemState
 {
     s8 unk0; /* 0x0 */
@@ -186,7 +188,7 @@ void shop_buyItem(int obj, int price)
 void shop_free(int* obj)
 {
     skyFn_80088c94(7, 0);
-    ObjGroup_RemoveObject(obj, 9);
+    ObjGroup_RemoveObject(obj, SPSHOP_OBJGROUP);
     Music_Trigger(MUSICTRIG_communicator, 0);
     GameBit_Set(3838, 0);
 }
@@ -274,7 +276,7 @@ static inline void shop_initBody(int obj, int objDef)
     int i;
 
     ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex = -1;
-    ObjGroup_AddObject(obj, 9);
+    ObjGroup_AddObject(obj, SPSHOP_OBJGROUP);
     for (i = 0, item = lbl_80327FD0; i < SHOP_ITEM_ROW_COUNT; i++)
     {
         item[5] = item[randomGetRange(0, 2) + 1];
