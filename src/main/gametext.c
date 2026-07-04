@@ -1277,6 +1277,21 @@ char sMapDirectoryNameWorldMap[] = "WorldMap";
 
 char sLanguageNameJapanese[] = "Japanese";
 
+extern char sLanguageNameEnglish[];
+extern char sLanguageNameFrench[];
+extern char sLanguageNameGerman[];
+extern char sLanguageNameItalian[];
+extern char sLanguageNameSpanish[];
+
+LanguageName sLanguageNameTable[6] = {
+    { sLanguageNameEnglish, 4, { 0, 0, 0 } },
+    { sLanguageNameFrench, 4, { 0, 0, 0 } },
+    { sLanguageNameGerman, 4, { 0, 0, 0 } },
+    { sLanguageNameItalian, 4, { 0, 0, 0 } },
+    { sLanguageNameJapanese, 0, { 0, 0, 0 } },
+    { sLanguageNameSpanish, 4, { 0, 0, 0 } },
+};
+
 u8 gTextBoxes[3144] = {
     2, 48, 2, 48, 1, 144, 1, 144, 2, 48, 1, 144, 63, 128, 0, 0,
     2, 0, 2, 5, 0, 40, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0,

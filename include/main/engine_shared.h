@@ -485,7 +485,7 @@ typedef struct {
     u8 pad1c[4];
 } TextSlot;
 typedef struct {
-    u8 pad0[4];
+    char* name;
     u8 sizeIdx;
     u8 pad5[3];
 } LanguageName;
