@@ -819,7 +819,7 @@ void linkDrawFn_801302c0(void)
     four = 4;
     gTumbleweedBushItems[linkSelected].timer = four;
     sel = &gTumbleweedBushItems[linkSelected];
-    if (((sel->flags & 4) != 0) && ((s8)sel->slots[0] != -1))
+    if (((sel->flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)sel->slots[0] != -1))
     {
         tex = *(void**)(linkTextures + sel->slots[0] * 8);
     }
@@ -849,7 +849,7 @@ void linkDrawFn_801302c0(void)
     {
         if (i != linkSelected)
         {
-            if (((gTumbleweedBushItems[i].flags & 4) != 0) && ((s8)gTumbleweedBushItems[i].slots[0] != -1))
+            if (((gTumbleweedBushItems[i].flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)gTumbleweedBushItems[i].slots[0] != -1))
             {
                 tex = *(void**)(linkTextures + gTumbleweedBushItems[i].slots[0] * 8);
             }
@@ -902,7 +902,7 @@ void linkDrawFn_80130484(void)
     for (; i < gTumbleweedBushItemCount; i++)
     {
         p = &gTumbleweedBushItems[i];
-        if (((p->flags & 4) != 0) && ((s8)p->slots[0] != -1))
+        if (((p->flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)p->slots[0] != -1))
         {
             tex = *(void**)(linkTextures + p->slots[0] * 8);
         }
