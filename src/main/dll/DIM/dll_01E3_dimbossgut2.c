@@ -12,6 +12,8 @@
 #include "main/objhits.h"
 #include "main/sfa_shared_decls.h"
 
+#define DIMBOSSGUT2_OBJGROUP 3
+
 #define MODEL_LIGHT_KIND_POINT 2
 
 typedef struct Dimbossgut2State
@@ -181,7 +183,7 @@ void dimbossgut2_free(int arg9)
     {
         ModelLightStruct_free((void*)handle);
     }
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, DIMBOSSGUT2_OBJGROUP);
     childObj = ((GameObject*)obj)->childObjs[0];
     if (childObj != 0)
     {
