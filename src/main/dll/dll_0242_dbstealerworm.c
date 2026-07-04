@@ -615,9 +615,9 @@ int dbstealerworm_stateHandlerA00(int obj, int p2)
         sub_40c->unk34 = 1;
     }
 
-    if ((*(int*)&bs->eventFlags & 0x200) != 0)
+    if ((*(int*)&bs->eventFlags & BADDIE_EVENT_LANDING) != 0)
     {
-        *(int*)&bs->eventFlags = *(int*)&bs->eventFlags & ~0x200;
+        *(int*)&bs->eventFlags = *(int*)&bs->eventFlags & ~BADDIE_EVENT_LANDING;
         sub_40c->flags14 = (u8)(sub_40c->flags14 | DBWORM_FLAG14_FX_SPRAY);
     }
 
