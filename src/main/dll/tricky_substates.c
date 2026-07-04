@@ -1619,7 +1619,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
     hi = 3;
     arr[0] = lbl_803E2524;
     found = (u8*)ObjGroup_FindNearestObject(0x4d, obj, arr);
-    if (found != NULL && (*(u16*)(found + 0xb0) & 0x800) != 0)
+    if (found != NULL && (*(u16*)(found + 0xb0) & OBJECT_OBJFLAG_RENDERED) != 0)
     {
         lo = 0;
     }
