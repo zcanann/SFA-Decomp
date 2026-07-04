@@ -552,3 +552,16 @@ ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     },
     0,
 };
+
+/*__DATA_EXTERNS__*/
+extern void cannonclaw_getExtraSize();
+extern void cannonclaw_getObjectTypeId();
+extern void cannonclaw_free();
+extern void cannonclaw_render();
+extern void cannonclaw_hitDetect();
+extern void cannonclaw_update();
+extern void cannonclaw_init();
+extern void cannonclaw_release();
+extern void cannonclaw_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* gCannonClawObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, cannonclaw_initialise, cannonclaw_release, (void*)0x00000000, cannonclaw_init, cannonclaw_update, cannonclaw_hitDetect, cannonclaw_render, cannonclaw_free, cannonclaw_getObjectTypeId, cannonclaw_getExtraSize };
