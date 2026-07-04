@@ -19,6 +19,7 @@
 /* shared item-pickup ObjMsg protocol (see dll_00ED_collectible / dll_00FF_magicdust) */
 #define SCARAB_MSG_IN_RANGE 0x7000a /* sent to player when the scarab is in grab range */
 #define SCARAB_MSG_PICKUP   0x7000b /* player collected: award money and despawn */
+#define SCARAB_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
@@ -522,7 +523,7 @@ void scarab_update(int obj)
                     {
                         if (GameBit_Get(0x1d9) == 0)
                         {
-                            ObjMsg_SendToObject(player, 0x60004, obj, 1);
+                            ObjMsg_SendToObject(player, SCARAB_MSG_PLAYER_BURST, obj, 1);
                         }
                         {
                             f32 k = lbl_803E3A40;
