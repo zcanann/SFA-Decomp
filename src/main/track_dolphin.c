@@ -2990,6 +2990,7 @@ extern f32 __PADFixBits;
 
 
 #pragma optimization_level 2
+#pragma opt_propagation off
 void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
 {
     u32 fmt;
@@ -3088,7 +3089,7 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
                     aHi = (u8)((int)(texA & 0xff00) >> 8);
                     texB = *(u16*)(bd + 0x80);
                     bHi = (u8)((int)(texB & 0xff00) >> 8);
-                    cd = dst + i9 + i12 + i4 + 0x60;
+                    cd = dst + i9; cd += i12; cd += i4; cd += 0x60;
                     *(u16*)(cd + i6) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
                     *(u16*)(cd + (int)*(u16*)(src1 + 0xa) * i5 * 2 + 0x20) =
                         ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8)
@@ -3099,6 +3100,7 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
         DCStoreRange(dst + 0x60, *(int*)(dst + 0x44));
     }
 }
+#pragma opt_propagation reset
 #pragma optimization_level reset
 
 extern void Obj_BuildTransformMatrices(void* obj);
