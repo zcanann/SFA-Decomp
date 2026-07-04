@@ -847,7 +847,7 @@ dolphin/ax/AX.c:
 
 main/dll/n_options.c:
 	.text       start:0x80117668 end:0x8011846C
-	.data       start:0x8031A3B0 end:0x8031A4B0
+	.data       start:0x8031A3B0 end:0x8031A7BC
 	.bss        start:0x803A57C0 end:0x803A5F08
 
 main/dll/dll_3e.c:
