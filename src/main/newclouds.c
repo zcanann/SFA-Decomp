@@ -2371,9 +2371,12 @@ void dll_07_func06(void)
                     -(lbl_803DF20C * (((NewCloud*)nearestCloud)->driftOffset / lbl_803DF210) +
                         lbl_803DF208)) /
                 gNewCloudFlashRotScale;
-            ((f32*)clouds)[54] = lbl_803DF1A0;
-            ((f32*)clouds)[55] = lbl_803DF244;
-            ((f32*)clouds)[56] = lbl_803DF1A0;
+            {
+                f32 zero = lbl_803DF1A0;
+                ((f32*)clouds)[54] = zero;
+                ((f32*)clouds)[55] = lbl_803DF244;
+                ((f32*)clouds)[56] = zero;
+            }
             m = Camera_GetViewRotationMatrix();
             if (((NewCloud*)nearestCloud)->cloudType == 0)
             {
