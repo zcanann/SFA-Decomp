@@ -847,7 +847,7 @@ typedef struct DllD3Placement
     f32 posY;
     f32 posZ;
     u8 pad14[0x2E - 0x14];
-    s8 unk2E;
+    s8 seqIndex;
     u8 pad2F[0x30 - 0x2F];
 } DllD3Placement;
 
@@ -916,7 +916,7 @@ void dll_D3_update(int* obj)
         ((GameObject*)obj)->anim.localPosX = ((DllD3Placement*)trans)->posX;
         ((GameObject*)obj)->anim.localPosY = ((DllD3Placement*)trans)->posY;
         ((GameObject*)obj)->anim.localPosZ = ((DllD3Placement*)trans)->posZ;
-        (*gObjectTriggerInterface)->runSequence(((DllD3Placement*)trans)->unk2E, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(((DllD3Placement*)trans)->seqIndex, obj, -1);
         ((GameObject*)obj)->unkF8 = 1;
         return;
     }
