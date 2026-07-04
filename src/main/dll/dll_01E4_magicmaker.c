@@ -12,6 +12,11 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
+#define MAGICMAKER_SPAWN_GAMEBIT 0x26b /* set-by-others trigger; cleared each spawn attempt */
+#define MAGICMAKER_CREATURE_GROUP 4    /* object group scanned for existing creatures */
+#define MAGICMAKER_CREATURE_TYPE_COUNT 6 /* number of creature type IDs in lbl_80325CE8 */
+#define MAGICMAKER_MAX_CREATURES 10    /* spawn only while fewer than this many exist */
+
 typedef struct MagicmakerPlacement
 {
     u8 pad0[0x4 - 0x0];
@@ -94,15 +99,15 @@ void magicmaker_update(int obj)
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
     if (Obj_IsLoadingLocked() != 0)
     {
-        if ((u32)GameBit_Get(0x26b) != 0u)
+        if ((u32)GameBit_Get(MAGICMAKER_SPAWN_GAMEBIT) != 0u)
         {
-            GameBit_Set(0x26b, 0);
-            objList = ObjGroup_GetObjects(4, &groupCount);
+            GameBit_Set(MAGICMAKER_SPAWN_GAMEBIT, 0);
+            objList = ObjGroup_GetObjects(MAGICMAKER_CREATURE_GROUP, &groupCount);
             matchCount = 0;
             for (i = 0; i < groupCount; i++)
             {
                 groupObj = *objList;
-                for (j = 0; j < 6; j++)
+                for (j = 0; j < MAGICMAKER_CREATURE_TYPE_COUNT; j++)
                 {
                     if (*(s16*)(groupObj + 0x46) == lbl_80325CE8[j])
                     {
@@ -111,7 +116,7 @@ void magicmaker_update(int obj)
                 }
                 objList++;
             }
-            if (matchCount < 10)
+            if (matchCount < MAGICMAKER_MAX_CREATURES)
             {
                 objSetup = Obj_AllocObjectSetup(0x30, lbl_80325CE8[randomGetRange(0, 5)]);
                 if (objSetup != NULL)
