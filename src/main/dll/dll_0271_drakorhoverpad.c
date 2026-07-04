@@ -457,7 +457,8 @@ void drakorhoverpad_updateMain(int obj)
 {
     u8* p = ((GameObject*)obj)->extra;
     RomCurveWalker* curve;
-    int q = *(int*)&((GameObject*)obj)->anim.placementData;
+    DrakorHoverpadUpdateMainPlacement* q =
+        (DrakorHoverpadUpdateMainPlacement*)((GameObject*)obj)->anim.placementData;
     HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
     Flags377* g = (Flags377*)(p + 0x179);
     int evOut;
@@ -483,7 +484,7 @@ void drakorhoverpad_updateMain(int obj)
     }
     if (f->bit20 == 0)
     {
-        f->bit20 = GameBit_Get(((DrakorHoverpadUpdateMainPlacement*)q)->activateGameBit);
+        f->bit20 = GameBit_Get(q->activateGameBit);
         ((DrakorHoverpadUpdateMainState*)p)->targetSpeed = lbl_803E6A3C;
         if (f->bit20 != 0)
         {
