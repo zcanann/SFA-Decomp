@@ -4,8 +4,6 @@
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-extern s16 lbl_803DD414;
-extern s16 lbl_803DD416;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);
