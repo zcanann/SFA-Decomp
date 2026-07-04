@@ -238,7 +238,7 @@ int iceBaddie_updateOpenHitState(int obj, int p)
 
     sub = ((GameObject*)obj)->extra;
     control = (IceBaddieControl*)sub->control;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= OBJHITS_PRIORITY_STATE_ENABLED;
     ((GroundBaddieState*)p)->baddie.physicsActive = 1;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 9;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
