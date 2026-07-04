@@ -3550,10 +3550,11 @@ RomCurveDef* RomCurve_findByIdWithIndex(u32 curveId, int* outIndex)
 static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
 {
     int bit;
+    u32* lp = curve->base.linkIds;
 
     for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
     {
-        if ((s32)curve->base.linkIds[bit] != -1 && (curve->base.blockedLinkMask & (1 << bit)) == 0)
+        if ((s32)*lp++ != -1 && (curve->base.blockedLinkMask & (1 << bit)) == 0)
         {
             return 0;
         }
@@ -3564,10 +3565,11 @@ static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
 static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
 {
     int bit;
+    u32* lp = curve->base.linkIds;
 
     for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
     {
-        if ((s32)curve->base.linkIds[bit] != -1 && (curve->base.blockedLinkMask & (1 << bit)) != 0)
+        if ((s32)*lp++ != -1 && (curve->base.blockedLinkMask & (1 << bit)) != 0)
         {
             return 0;
         }
@@ -3575,11 +3577,13 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
     return 1;
 }
 
+#pragma opt_propagation off
 int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ, s8* outTypes)
 {
     extern float mathCosf(float x); /* #57 */
     extern float mathSinf(float x); /* #57 */
     u32 mask;
+    u32* lp;
     RomCurvePlacementDef* next;
     int done;
     int n;
@@ -3602,9 +3606,10 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
         {
             count = 0;
             mask = 1;
+            lp = curve->base.linkIds;
             for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
             {
-                link = curve->base.linkIds[i];
+                link = *lp++;
                 if ((-1 < link) && ((curve->base.blockedLinkMask & mask) == 0) && (link != 0))
                 {
                     idsB[count++] = link;
@@ -3628,20 +3633,19 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
                 }
                 outX[mB] = curve->base.x;
                 outY[mB] = curve->base.y;
-                outZ[mB] = curve->base.z;
-                outX[mB + 1] = next->base.x;
-                outY[mB + 1] = next->base.y;
-                outZ[mB + 1] = next->base.z;
+                outZ[mB++] = curve->base.z;
+                outX[mB] = next->base.x;
+                outY[mB] = next->base.y;
+                outZ[mB++] = next->base.z;
                 n += 2;
-                outX[mB + 2] = lbl_803E0610 * ((f32)curve->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
-                outY[mB + 2] = lbl_803E0610 * ((f32)curve->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(curve->rotY)));
-                outZ[n] = lbl_803E0610 * ((f32)curve->rotX * mathCosf(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
-                n++;
-                outX[mB + 3] = lbl_803E0610 * ((f32)next->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
-                outY[mB + 3] = lbl_803E0610 * ((f32)next->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(next->rotY)));
-                outZ[n] = lbl_803E0610 * ((f32)next->rotX * mathCosf(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
-                n++;
-                mB += 4;
+                outX[mB] = lbl_803E0610 * ((f32)curve->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
+                outY[mB] = lbl_803E0610 * ((f32)curve->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(curve->rotY)));
+                outZ[n++] = lbl_803E0610 * ((f32)curve->rotX * mathCosf(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
+                mB++;
+                outX[mB] = lbl_803E0610 * ((f32)next->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
+                outY[mB] = lbl_803E0610 * ((f32)next->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(next->rotY)));
+                outZ[n++] = lbl_803E0610 * ((f32)next->rotX * mathCosf(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
+                mB++;
             }
             curve = next;
         }
@@ -3652,9 +3656,10 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
         {
             count = 0;
             mask = 1;
+            lp = curve->base.linkIds;
             for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
             {
-                link = curve->base.linkIds[i];
+                link = *lp++;
                 if ((-1 < link) && ((curve->base.blockedLinkMask & mask) != 0) && (link != 0))
                 {
                     idsA[count++] = link;
@@ -3678,23 +3683,19 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
                 }
                 outX[mA] = curve->base.x;
                 outY[mA] = curve->base.y;
-                outZ[mA] = curve->base.z;
-                mA++;
+                outZ[mA++] = curve->base.z;
                 outX[mA] = next->base.x;
                 outY[mA] = next->base.y;
-                outZ[mA] = next->base.z;
-                mA++;
+                outZ[mA++] = next->base.z;
                 n += 2;
                 outX[mA] = lbl_803E0610 * ((f32)curve->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
                 outY[mA] = lbl_803E0610 * ((f32)curve->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(curve->rotY)));
-                outZ[n] = lbl_803E0610 * ((f32)curve->rotX * mathCosf(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
+                outZ[n++] = lbl_803E0610 * ((f32)curve->rotX * mathCosf(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
                 mA++;
-                n++;
                 outX[mA] = lbl_803E0610 * ((f32)next->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
                 outY[mA] = lbl_803E0610 * ((f32)next->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(next->rotY)));
-                outZ[n] = lbl_803E0610 * ((f32)next->rotX * mathCosf(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
+                outZ[n++] = lbl_803E0610 * ((f32)next->rotX * mathCosf(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
                 mA++;
-                n++;
             }
             curve = next;
         }
@@ -3702,6 +3703,7 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
     return n;
 }
 
+#pragma opt_propagation reset
 int RomCurve_countRandomPoints(RomCurveDef* curve)
 {
     u32 mask;
