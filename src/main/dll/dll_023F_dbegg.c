@@ -618,7 +618,6 @@ void dbegg_update(int obj)
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[];
     extern int lbl_803E61C0;
-    extern int lbl_803E61C4;
     extern const f32 lbl_803E61C8;
     extern const f32 lbl_803E61CC;
     extern const f32 lbl_803E61E4;
