@@ -301,6 +301,15 @@ typedef struct {
 #define WCLEVELCTL_FLAG_FINAL        0x100 /* gamebit 0xbcf: final event */
 #define WCLEVELCTL_FLAG_EXTRA        0x200 /* gamebit 0xcac */
 
+/* WcLevelControlState.mode - WC level-controller event machine */
+#define WCLEVELCTL_MODE_IDLE        0 /* dispatch: watch game bits, kick off events */
+#define WCLEVELCTL_MODE_PUZZLE_A    1 /* puzzle-A event: timer running, await solve bit 0x7f9 */
+#define WCLEVELCTL_MODE_PUZZLE_B    2 /* puzzle-B event: timer running, await solve bit 0x7fa */
+#define WCLEVELCTL_MODE_SEQUENCE    3 /* post-solve sequence: await 0xcac, savePoint, then DONE */
+#define WCLEVELCTL_MODE_TREX_ACTIVE 4 /* trex challenge running: await 0x2a5 or timer expiry */
+#define WCLEVELCTL_MODE_TREX_INIT   6 /* trex challenge init: set up timer, then TREX_ACTIVE */
+#define WCLEVELCTL_MODE_DONE        7 /* terminal: sequence finished, no transitions */
+
 typedef struct WcLevelControlState {
     f32 eventTimer;
     f32 tileBResetTimer;

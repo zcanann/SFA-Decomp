@@ -641,12 +641,12 @@ void fn_802251B4(int obj, WcLevelControlState* state)
     (*gSkyInterface)->getSunPosition(&sunTime);
     switch (state->mode)
     {
-    case 6:
+    case WCLEVELCTL_MODE_TREX_INIT:
         gameTimerInit(0x1d, 0x50);
         timerSetToCountUp();
-        state->mode = 4;
+        state->mode = WCLEVELCTL_MODE_TREX_ACTIVE;
         break;
-    case 4:
+    case WCLEVELCTL_MODE_TREX_ACTIVE:
         if ((u32)GameBit_Get(0x2a5) != 0)
         {
             GameObject* player;
@@ -655,7 +655,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
             player = (GameObject*)Obj_GetPlayerObject();
             (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
             state->completionFlags |= WCLEVELCTL_FLAG_TREX;
-            state->mode = 0;
+            state->mode = WCLEVELCTL_MODE_IDLE;
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             gameTimerStop();
         }
@@ -670,7 +670,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
                 GameBit_Set(0x2a6, 1);
                 GameBit_Set(0x206, 1);
                 GameBit_Set(0x25f, 1);
-                state->mode = 0;
+                state->mode = WCLEVELCTL_MODE_IDLE;
             }
         }
         break;
@@ -686,7 +686,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
                 GameBit_Set(0x206, 0);
                 GameBit_Set(0x25f, 0);
                 GameBit_Set(0x274, 1);
-                state->mode = 6;
+                state->mode = WCLEVELCTL_MODE_TREX_INIT;
             }
         }
         break;
@@ -804,7 +804,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
     state->previousMode = state->mode;
     switch (state->mode)
     {
-    case 1:
+    case WCLEVELCTL_MODE_PUZZLE_A:
         if (state->completionFlags & WCLEVELCTL_FLAG_TRIGGERED)
         {
             gameTimerInit(0x1d, 0x3c);
@@ -825,12 +825,12 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
             if ((u32)GameBit_Get(0x7fa) != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-                state->mode = 3;
+                state->mode = WCLEVELCTL_MODE_SEQUENCE;
             }
             else
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                state->mode = 0;
+                state->mode = WCLEVELCTL_MODE_IDLE;
             }
             state->completionFlags |= WCLEVELCTL_FLAG_EVENT_ACTIVE;
         }
@@ -840,10 +840,10 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
             GameBit_Set(0x7ed, 0);
             GameBit_Set(0xba6, 0);
             GameBit_Set(0xedd, 0);
-            state->mode = 0;
+            state->mode = WCLEVELCTL_MODE_IDLE;
         }
         break;
-    case 2:
+    case WCLEVELCTL_MODE_PUZZLE_B:
         if (state->completionFlags & WCLEVELCTL_FLAG_TRIGGERED)
         {
             gameTimerInit(0x1d, 0x50);
@@ -864,12 +864,12 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
             if ((u32)GameBit_Get(0x7f9) != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-                state->mode = 3;
+                state->mode = WCLEVELCTL_MODE_SEQUENCE;
             }
             else
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                state->mode = 0;
+                state->mode = WCLEVELCTL_MODE_IDLE;
             }
             state->completionFlags |= WCLEVELCTL_FLAG_EVENT_ACTIVE;
         }
@@ -879,10 +879,10 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
             GameBit_Set(0x7ee, 0);
             GameBit_Set(0xba6, 0);
             GameBit_Set(0xedc, 0);
-            state->mode = 0;
+            state->mode = WCLEVELCTL_MODE_IDLE;
         }
         break;
-    case 3:
+    case WCLEVELCTL_MODE_SEQUENCE:
         if ((u32)GameBit_Get(0xcac) != 0)
         {
             GameObject* player;
@@ -890,17 +890,17 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
             GameBit_Set(0xc37, 1);
             player = (GameObject*)Obj_GetPlayerObject();
             (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
-            state->mode = 7;
+            state->mode = WCLEVELCTL_MODE_DONE;
         }
         break;
-    case 7:
+    case WCLEVELCTL_MODE_DONE:
         break;
     default:
         if (!(state->completionFlags & WCLEVELCTL_FLAG_PUZZLE_A) && GameBit_Get(0x7ed) != 0)
         {
             GameBit_Set(0x7ef, 1);
             state->eventTimer = lbl_803E6DB0;
-            state->mode = 1;
+            state->mode = WCLEVELCTL_MODE_PUZZLE_A;
             state->completionFlags |= WCLEVELCTL_FLAG_EVENT_ACTIVE;
             break;
         }
@@ -908,7 +908,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
         {
             GameBit_Set(0x7f0, 1);
             state->eventTimer = lbl_803E6DB0;
-            state->mode = 2;
+            state->mode = WCLEVELCTL_MODE_PUZZLE_B;
             state->completionFlags |= WCLEVELCTL_FLAG_EVENT_ACTIVE;
         }
         break;
@@ -923,7 +923,7 @@ int wcpushblock_levelControlTriggerCallback(int obj, int unused, ObjAnimUpdateSt
 
     state->completionFlags |= WCLEVELCTL_FLAG_TRIGGERED;
     state->completionFlags &= ~WCLEVELCTL_FLAG_EVENT_ACTIVE;
-    if (state->previousMode == 1)
+    if (state->previousMode == WCLEVELCTL_MODE_PUZZLE_A)
     {
         f32 t = state->eventTimer - timeDelta;
         state->eventTimer = t;
@@ -935,7 +935,7 @@ int wcpushblock_levelControlTriggerCallback(int obj, int unused, ObjAnimUpdateSt
             (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
         }
     }
-    else if (state->previousMode == 2)
+    else if (state->previousMode == WCLEVELCTL_MODE_PUZZLE_B)
     {
         f32 t = state->eventTimer - timeDelta;
         state->eventTimer = t;
@@ -952,7 +952,7 @@ int wcpushblock_levelControlTriggerCallback(int obj, int unused, ObjAnimUpdateSt
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            state->mode = 6;
+            state->mode = WCLEVELCTL_MODE_TREX_INIT;
             break;
         }
     }
