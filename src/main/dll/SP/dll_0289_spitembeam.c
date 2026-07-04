@@ -120,3 +120,13 @@ ObjectDescriptor gSPitembeamObjDescriptor = {
     (ObjectDescriptorCallback)spitembeam_getObjectTypeId,
     spitembeam_getExtraSize,
 };
+
+/* used by dll_0255 (snowbike) as a base+offset table; placed in this unit by link order */
+f32 lbl_803284E0[19] = {
+    -6.5f, 0.0f, -13.0f,
+    6.5f, 0.0f, -13.0f,
+    6.5f, 0.0f, 13.0f,
+    -6.5f, 0.0f, 13.0f,
+    1.0f, 1.0f, 1.0f, 1.0f,
+    0.0f, 0.0f, 0.0f,
+};
