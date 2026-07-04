@@ -4110,7 +4110,7 @@ void renderGlows(void)
     f32 sunMtx[12];
     f32 dir[3];
     f32 cam[3];
-    int alpha = 0xff;
+    int alpha;
     u8 sky;
     f32 sunDot;
 
@@ -4125,6 +4125,7 @@ void renderGlows(void)
     textRenderSetupFn_80079804();
     GXSetFog(GX_FOG_NONE, fogCol, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC);
     gxBlendFn_800789ac();
+    alpha = 0xff;
     gSunFlareScissorWidth = 0;
     gSunFlareScissorHeight = 0;
     sky = skyFn_8008919c(2);
