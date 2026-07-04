@@ -58,8 +58,6 @@ extern u32 gGameplayPreviewColorBlue;
 extern u32 gGameplayRegisteredDebugOptions;
 extern u32* DAT_803dd6d0;
 extern u32* DAT_803dd6e8;
-extern f32 lbl_803E1348;
-extern u32 uRam803de108;
 extern u8 lbl_80312BD8[];
 extern f32 lbl_803E08C8, lbl_803E08CC, lbl_803E08D0, lbl_803E08D4, lbl_803E08D8, lbl_803E08DC;
 extern f32 lbl_803E08E0, lbl_803E08E4, lbl_803E08E8, lbl_803E08EC, lbl_803E08F0, lbl_803E08F4;

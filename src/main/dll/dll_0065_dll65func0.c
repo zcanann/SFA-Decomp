@@ -34,8 +34,6 @@ extern u32 gGameplayPreviewColorBlue;
 extern u32 gGameplayRegisteredDebugOptions;
 extern u32* DAT_803dd6d0;
 extern u32* DAT_803dd6e8;
-extern f32 lbl_803E1348;
-extern u32 uRam803de108;
 extern u8 lbl_80312E58[];
 extern f32 lbl_803E0930;
 extern f32 lbl_803E0934;
@@ -49,7 +47,6 @@ extern f32 lbl_803E0950;
 extern f32 lbl_803E0954;
 extern f32 lbl_803E0958;
 extern f32 lbl_803E095C;
-extern f32 lbl_803E0960;
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {

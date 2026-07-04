@@ -18,24 +18,6 @@
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80316728[];
-extern f32 lbl_803E1060;
-extern f32 lbl_803E1064;
-extern f32 lbl_803E1068;
-extern f32 lbl_803E106C;
-extern f32 lbl_803E1070;
-extern f32 lbl_803E1074;
-extern f32 lbl_803E1078;
-extern f32 lbl_803E107C;
-extern f32 lbl_803E1080;
-extern f32 lbl_803E1084;
-extern f32 lbl_803E1088;
-extern f32 lbl_803E108C;
-extern f32 lbl_803E1090;
-extern f32 lbl_803E1094;
-extern f32 lbl_803E1098;
-extern f32 lbl_803E109C;
-extern f32 lbl_803E10A0;
-extern f32 lbl_803E10A4;
 
 void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5,
                    f32* arg6)
