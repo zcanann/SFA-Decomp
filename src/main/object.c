@@ -2532,7 +2532,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     {
         size = roundUpTo8(roundUpTo4(size) + 8) + 0x50;
     }
-    if (flags & 0x100)
+    if (flags & OBJLOAD_FLAG_WEAPON_DA)
     {
         size = roundUpTo8(roundUpTo4(size) + 8) + 0x800;
     }
