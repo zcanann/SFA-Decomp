@@ -277,10 +277,10 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
                     nseq->prgState[i].maxVoices = nseq->drumtab[prg * 6 + 3];
                 }
             }
-            inpSetMidiCtrl(7, i, seqId, midiSetup[5]);
-            inpSetMidiCtrl(0xA, i, seqId, midiSetup[6]);
-            inpSetMidiCtrl(0x5B, i, seqId, midiSetup[7]);
-            inpSetMidiCtrl(0x5D, i, seqId, midiSetup[8]);
+            inpSetMidiCtrl(MCMD_CTRL_VOLUME, i, seqId, midiSetup[5]);
+            inpSetMidiCtrl(MCMD_CTRL_PANNING, i, seqId, midiSetup[6]);
+            inpSetMidiCtrl(MCMD_CTRL_REVERB, i, seqId, midiSetup[7]);
+            inpSetMidiCtrl(MCMD_CTRL_POST_AUX_B, i, seqId, midiSetup[8]);
             midiSetup += 5;
         }
     }
