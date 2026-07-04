@@ -22,6 +22,8 @@
 #include "main/dll/dll_0284_shopitem.h"
 #include "main/sfa_shared_decls.h"
 
+#define SHOPITEM_OBJGROUP 0x4F
+
 #define SHOPITEM_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SHOPITEM_OBJFLAG_UPDATE_DISABLED 0x8000
 #define PAD_BUTTON_A 0x100
@@ -211,7 +213,7 @@ void shopitem_free(int obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case SHOPITEM_SEQ_SPARKLE:
-        ObjGroup_RemoveObject(obj, 0x4F);
+        ObjGroup_RemoveObject(obj, SHOPITEM_OBJGROUP);
         break;
     }
 }
@@ -257,7 +259,7 @@ void shopitem_init(int obj, int data)
         break;
     case SHOPITEM_SEQ_SPARKLE:
         ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_801E832C);
-        ObjGroup_AddObject(obj, 0x4F);
+        ObjGroup_AddObject(obj, SHOPITEM_OBJGROUP);
         break;
     }
 }
