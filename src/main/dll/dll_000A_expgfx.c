@@ -30,6 +30,14 @@
 #define GX_DIRECT 1
 #define GX_QUADS 0x80
 #define GX_VTXFMT4 4
+#define GX_PNMTX0 0
+#define GX_COLOR0 0
+#define GX_ALPHA0 2
+#define GX_FALSE 0
+#define GX_SRC_REG 0
+#define GX_SRC_VTX 1
+#define GX_DF_NONE 0
+#define GX_AF_NONE 2
 
 typedef union ExpgfxWGPipe
 {
@@ -2162,13 +2170,13 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-    GXSetCurrentMtx(0);
-    GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
-    GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+    GXSetCurrentMtx(GX_PNMTX0);
+    GXSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetNumChans(1);
     GXSetCullMode(GX_CULL_NONE);
     viewMatrix = Camera_GetViewMatrix();
-    GXLoadPosMtxImm((void*)viewMatrix, 0);
+    GXLoadPosMtxImm((void*)viewMatrix, GX_PNMTX0);
     PSMTXCopy((void*)viewMatrix, lbl_803967C0);
     fn_8007D670();
     _gxSetFogParams();
