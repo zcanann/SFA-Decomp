@@ -177,6 +177,11 @@ typedef struct GroundBaddieState {
     s16 unk3FA; /* pair passed to the interface with unk3FC */
     s16 unk3FC;
     u16 aggroRange; /* target-acquire radius passed to interface+0x48; (f32)(u32) conversions */
+/* flags400 bit: baddie is advancing along its ROM curve path. Set once the
+ * RomCurveWalker is successfully initialised (dll19func0), then each update
+ * step calls Curve_AdvanceAlongPath while it is set and clears it at the end
+ * of the path (dllcb). u16 field - no LL form needed. */
+#define BADDIE_FLAG400_PATH_ACTIVE 0x8
     u16 flags400; /* bit flags 2/8/0x100; &flags400 also passed as a buffer base */
     s16 targetState; /* 0 = no target; tryAcquireTarget vs updateTargetMotion */
     u8 configFlags; /* bits 1/2/0x10 */

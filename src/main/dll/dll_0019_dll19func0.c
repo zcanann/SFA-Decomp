@@ -947,7 +947,7 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
                                              (f32)(u32) * (u16*)(state + 1022),
                                              &curveLocal, -1) == 0)
         {
-            ((GroundBaddieState*)state)->flags400 = ((GroundBaddieState*)state)->flags400 | 8;
+            ((GroundBaddieState*)state)->flags400 = ((GroundBaddieState*)state)->flags400 | BADDIE_FLAG400_PATH_ACTIVE;
         }
     }
     else

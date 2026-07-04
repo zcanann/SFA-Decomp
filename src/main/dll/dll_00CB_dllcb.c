@@ -274,12 +274,12 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             ((ObjSeqState*)e)->flags = -1;
             ((ObjSeqState*)e)->flags &= ~0x40;
             path = (RomCurveWalker*)((GroundBaddieState*)sub)->path;
-            if ((((GroundBaddieState*)sub)->flags400 & 8) != 0)
+            if ((((GroundBaddieState*)sub)->flags400 & BADDIE_FLAG400_PATH_ACTIVE) != 0)
             {
                 if ((Curve_AdvanceAlongPath((int*)path, ((GroundBaddieState*)sub)->baddie.animSpeedA) != 0 || path->atSegmentEnd != 0) &&
                     (*gRomCurveInterface)->goNextPoint(path) != 0)
                 {
-                    ((GroundBaddieState*)sub)->flags400 &= ~8;
+                    ((GroundBaddieState*)sub)->flags400 &= ~BADDIE_FLAG400_PATH_ACTIVE;
                 }
                 ((GroundBaddieState*)sub)->baddie.animSpeedA = lbl_803E2E98;
                 ((GameObject*)obj)->anim.rotX = getAngle(path->tangentX, path->tangentZ) +
@@ -390,12 +390,12 @@ void dll_CB_update(int* obj)
     if (((int(*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, (u8*)sub, 1) == 0) return;
     fn_8016083C(obj, sub, sub);
     path = (RomCurveWalker*)sub->path;
-    if ((sub->flags400 & 8) == 0) return;
+    if ((sub->flags400 & BADDIE_FLAG400_PATH_ACTIVE) == 0) return;
     if (Curve_AdvanceAlongPath((int*)path, sub->baddie.animSpeedA) != 0 || path->atSegmentEnd != 0)
     {
         if ((*gRomCurveInterface)->goNextPoint(path) != 0)
         {
-            sub->flags400 = (u16)(sub->flags400 & ~8);
+            sub->flags400 = (u16)(sub->flags400 & ~BADDIE_FLAG400_PATH_ACTIVE);
         }
     }
     sub->baddie.animSpeedA = lbl_803E2E98;
