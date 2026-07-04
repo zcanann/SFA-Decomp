@@ -6,6 +6,7 @@
 #include "main/audio/music_trigger_ids.h"
 
 #define KTREX_LIGHTNING_COUNT 5
+#define KTREX_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 
 typedef struct KtrexMsgBlob
 {
@@ -1308,7 +1309,7 @@ void ktrex_updateContactEffects(int obj, void* runtime)
     {
         ((KTRexRuntime*)runtime)->hitCountdown = 0;
     }
-    ObjMsg_SendToObject(hitA, 0xe0001, obj, 0);
+    ObjMsg_SendToObject(hitA, KTREX_ADVANCE_MSG, obj, 0);
 }
 
 int ktrex_stateHandlerA02(int obj, int runtime)
