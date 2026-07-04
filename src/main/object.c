@@ -1974,7 +1974,7 @@ typedef struct CharSpawn
     f32 x;
     f32 y;
     f32 z;
-    int unk14;
+    int mapId;
 } CharSpawn;
 
 void mapSetupPlayer(void)
@@ -2009,7 +2009,7 @@ void mapSetupPlayer(void)
         {
             OSReport((char*)(base + 0x88), mapType, playerNo);
             memset(&spawn, 0, 0x18);
-            spawn.unk14 = -1;
+            spawn.mapId = -1;
             spawn.unk3 = 0;
             spawn.unk4 = 1;
             spawn.unk5 = 4;
