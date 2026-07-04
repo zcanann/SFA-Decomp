@@ -10,7 +10,7 @@ typedef struct AppleOnTreeState
     f32 flightTime;
     u8 unk10[0x24 - 0x10];
     f32 unk24;
-    f32 unk28;
+    f32 velY;
     f32 posY;
     f32 dropHeight;
     f32 unk34;

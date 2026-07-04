@@ -285,7 +285,7 @@ void fn_8017D854(int obj, int msg)
         }
         ((AppleOnTreeState*)state)->unk50 = r;
 
-        if (((AppleOnTreeState*)state)->unk28 < lbl_803E37D4)
+        if (((AppleOnTreeState*)state)->velY < lbl_803E37D4)
         {
             ((AppleOnTreeState*)state)->dropHeight = -(lbl_803E37D8 * ((AppleOnTreeState*)state)->unk24 - ((AppleOnTreeState
                 *)state)->dropHeight);
@@ -373,7 +373,7 @@ int fn_8017DCD4(int p, int state, f32 y)
                 ((GameObject*)p)->anim.rotX = ((AppleOnTreeState*)state)->rotX;
                 ((GameObject*)p)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
                 ((GameObject*)p)->anim.rotZ = ((AppleOnTreeState*)state)->rotZ;
-                ((AppleOnTreeState*)state)->bounceVel = -((AppleOnTreeState*)state)->unk28;
+                ((AppleOnTreeState*)state)->bounceVel = -((AppleOnTreeState*)state)->velY;
                 if ((((AppleOnTreeState*)state)->flags & 8) == 0)
                 {
                     Sfx_PlayFromObject(p, SFXTRIG_pk_fruit_lands);
@@ -485,7 +485,7 @@ int fn_8017DF34(int p, int state, f32 y)
                 f32 g2 = lbl_803E37DC * ((AppleOnTreeState*)state)->unk40;
                 ((AppleOnTreeState*)state)->bounceVel = g2 * r + ((AppleOnTreeState*)state)->bounceVel;
             }
-            ((AppleOnTreeState*)state)->unk3C = ((AppleOnTreeState*)state)->unk28;
+            ((AppleOnTreeState*)state)->unk3C = ((AppleOnTreeState*)state)->velY;
             ((WaterfxSpawnSplashBurstAtPointFn)(*gWaterfxInterface)->spawnSplashBurst)(
                 (void*)p, ((GameObject*)p)->anim.localPosX, ((AppleOnTreeState*)state)->unk34,
                 ((GameObject*)p)->anim.localPosZ);
@@ -781,7 +781,7 @@ void appleontree_update(int objArg)
                     f32 t = ((AppleOnTreeState*)state)->flightTime;
                     fb = t * (((GroundBaddieState*)state)->baddie.velZ + ((GroundBaddieState*)state)->baddie.velY);
                     fc = t * fb + (((AppleOnTreeState*)state)->bounceVel * t + ((AppleOnTreeState*)state)->posY);
-                    if (((AppleOnTreeState*)state)->unk28 > fd)
+                    if (((AppleOnTreeState*)state)->velY > fd)
                     {
                         placement = fn_8017DF34(obj, state, fc);
                     }
