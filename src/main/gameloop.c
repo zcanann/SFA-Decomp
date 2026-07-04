@@ -762,11 +762,11 @@ void init(void)
             dtv = 0;
             if (VIGetDTVStatus() != 0)
             {
-                if (OSGetResetCode() != 0 && gGameLoopProgressiveMode != 1 && (getButtonsHeld(0) & 0x200) != 0)
+                if (OSGetResetCode() != 0 && gGameLoopProgressiveMode != 1 && (getButtonsHeld(0) & PAD_BUTTON_B) != 0)
                 {
                     dtv = 1;
                 }
-                if (OSGetResetCode() == 0 && (gGameLoopProgressiveMode == 1 || (getButtonsHeld(0) & 0x200) != 0))
+                if (OSGetResetCode() == 0 && (gGameLoopProgressiveMode == 1 || (getButtonsHeld(0) & PAD_BUTTON_B) != 0))
                 {
                     dtv = 1;
                 }
@@ -1183,9 +1183,9 @@ void cardShowMessage(void)
         {
             gameTextFn_80016810(0x493, 0, 0xc8);
         }
-        if (held & 0x100)
+        if (held & PAD_BUTTON_A)
         {
-            buttonDisable(0, 0x100);
+            buttonDisable(0, PAD_BUTTON_A);
             cardSetStatusNeedInit();
             hudHiddenFrameCount = 0;
             timeStop = 0;
@@ -1197,9 +1197,9 @@ void cardShowMessage(void)
             }
             return;
         }
-        else if (ok && (held & 0x200))
+        else if (ok && (held & PAD_BUTTON_B))
         {
-            buttonDisable(0, 0x200);
+            buttonDisable(0, PAD_BUTTON_B);
             lbl_803DB424 = 0;
             hudHiddenFrameCount = 0;
             timeStop = 0;
@@ -1332,7 +1332,7 @@ void askProgressiveScanMode(void)
             sel = 0;
         }
     }
-    while ((getButtonsJustPressed(0) & 0x100) == 0 && counter < 600);
+    while ((getButtonsJustPressed(0) & PAD_BUTTON_A) == 0 && counter < 600);
     box[0x10] = savedByte;
     waitNextFrame();
     GXFlush_(0, 0);
@@ -1443,8 +1443,8 @@ void checkReset(void)
         {
             gameState = GAMELOOP_STATE_RESET_REQUESTED;
         }
-        if ((getNewInputs(0) & 0x200) != 0 && (getNewInputs(0) & 0x400) != 0 &&
-            (getNewInputs(0) & 0x1000) != 0)
+        if ((getNewInputs(0) & PAD_BUTTON_B) != 0 && (getNewInputs(0) & PAD_BUTTON_X) != 0 &&
+            (getNewInputs(0) & PAD_BUTTON_START) != 0)
         {
             pressed = 1;
         }
