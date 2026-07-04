@@ -82,7 +82,7 @@ extern s16 lbl_803DD8CA;
 extern s16 lbl_803DD8D0;
 extern s8 gHighScoreActiveTableId;
 extern u8 gHighScoreHighlightRow;
-extern int saveScoreFn_800e88b4(u8, u8, int, s32);
+extern int insertHighScore(u8, u8, int, s32);
 extern int getSaveFileName(void);
 
 
@@ -197,7 +197,7 @@ extern f32 lbl_803E20BC;
 extern f32 lbl_803E2130;
 extern f32 lbl_803E2134;
 extern f32 lbl_803E2138;
-extern char* fn_800E888C(u8 track, u8 row);
+extern char* getHighScoreEntry(u8 track, u8 row);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern struct { u16 unk0; u16 titleId; } gHighScoreTitleIdTable[];
 extern s16 gHighScorePulseAngleStep;
@@ -790,14 +790,14 @@ int pauseMenuIsFox(void)
 #pragma dont_inline reset
 
 /* EN v1.0 0x80129698  size: 196b  Pickup-pickup state hook: latches the
- * resulting object id from saveScoreFn_800e88b4 into gHighScoreHighlightRow, and on the
+ * resulting object id from insertHighScore into gHighScoreHighlightRow, and on the
  * "post-collect" mode codes (1 or 2) optionally fires off the cleanup
  * trio (Music_Trigger / cutsceneFadeInOut / setTimeStop) when no slot was active
  * yet, then commits the new u8 active-id to gHighScoreActiveTableId. The third arg
  * funnels through `c == 0xa` as a branchless boolean. Always returns 1. */
 int registerNewScore(s8 tableId, int score, u8 kind, int mode)
 {
-    gHighScoreHighlightRow = saveScoreFn_800e88b4(tableId, kind == 0xa, score, getSaveFileName());
+    gHighScoreHighlightRow = insertHighScore(tableId, kind == 0xa, score, getSaveFileName());
     if ((u8)mode == 2 || (u8)mode == 1)
     {
         if (gHighScoreActiveTableId == -1)
@@ -1604,7 +1604,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
         u8 k;
         for (k = 0; k < 5; k++)
         {
-            char* e = fn_800E888C(gHighScoreActiveTableId, k);
+            char* e = getHighScoreEntry(gHighScoreActiveTableId, k);
             char* name = e + 4;
             u32 starred = *(u8*)(e + 3) & 1;
             sprintf(buf, &sHighScoreRowFormat, *(u32*)e >> 1);

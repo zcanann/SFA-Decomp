@@ -24,7 +24,7 @@ void gplaySaveGame(int param);
 void titleDoLoadSave(void);
 void saveGame_save(void);
 int trySaveGame(int slot);
-int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8 *initials);
+int insertHighScore(u8 slot, u8 flag, u32 score, u8 *initials);
 int gplayNewGame(char *name, int slot);
 void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value);
 s8 SaveGame_findTransientMapBit(int mapId, int bit);

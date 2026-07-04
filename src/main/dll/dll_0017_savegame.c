@@ -17,7 +17,7 @@
  *     (saveGame_saveObjectPos / restore / unsave), 0x3F slots at 0x168.
  *   - per-character save/restart points (position, angle, map) and the
  *     time-attack record table at save offset 0x6EC.
- *   - the high-score files (saveData, saveScoreFn_800e88b4) and unlockable
+ *   - the high-score files (saveData, insertHighScore) and unlockable
  *     cheat/debug option bits.
  */
 #include "main/game_object.h"
@@ -315,7 +315,7 @@ int trySaveGame(int slot)
     return loaded;
 }
 
-int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
+int insertHighScore(u8 slot, u8 flag, u32 score, u8* initials)
 {
     int rank;
     SaveScoreFile* file;
@@ -1244,7 +1244,7 @@ void SaveGame_updateTransientMapBits(void)
     }
 }
 
-void* fn_800E888C(u8 fileIdx, u8 rank) { return &((SaveScoreFile*)(saveData + fileIdx * SAVE_SCORE_FILE_STRIDE))->entries[rank]; }
+void* getHighScoreEntry(u8 fileIdx, u8 rank) { return &((SaveScoreFile*)(saveData + fileIdx * SAVE_SCORE_FILE_STRIDE))->entries[rank]; }
 
 u16 gSaveGameMapActBits[120] = {
     0x0000, 0x0000, 0x076E, 0x08EC, 0x04FE, 0x00DF, 0x00E0, 0x00E1, 0x00E1, 0x00E2, 0x00E3, 0x00E4,
