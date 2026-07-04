@@ -679,7 +679,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
             for (jj = 0; (s32)(u16)jj < (*(int*)((u8*)lbl_803A9364 + 0x1c) >> 2); jj++)
             {
                 s32 v = *(int*)lbl_803A9364;
-                s32 tex;
+                u8 tex;
                 f32 fyj;
                 if ((s32)(u16)jj < (v >> 2)
                 )
