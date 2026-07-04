@@ -46,18 +46,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 extern void saveGame_save();
-extern u8 lbl_803DE3D9;
-extern u16 lbl_803DE3F4;
-extern u16 lbl_803DE3F6;
-extern u8 lbl_803DE3FE;
-extern u8 lbl_803DC070;
-extern s32 lbl_803DC6C4;
-extern s32 lbl_803DE460;
-extern f32 lbl_803DC70C;
-extern u8 lbl_803DE3FF;
-extern u8 lbl_803DE3DB;
-extern void*** lbl_803DD6D0;
-extern u8 lbl_8031BCA0[];
 extern u8 gPauseMenuTokenConfirmFlag;
 extern u16 lbl_803DD774;
 extern u16 lbl_803DD776;
