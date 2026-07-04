@@ -16,7 +16,6 @@
 #define WISPBADDIE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define WISPBADDIE_OBJFLAG_PARENT_SLACK 0x1000
 extern int ObjHits_GetPriorityHitWithPosition();
-extern f32 lbl_803DC074;
 
 void hagabon_release(void);
 
@@ -67,12 +66,6 @@ extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId
 extern void doRumble(f32 duration);
 extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
 extern void fn_801513AC(int obj, int state);
-extern f32 lbl_803E33D8;
-extern f32 lbl_803E33DC;
-extern f32 lbl_803E33E0;
-extern f32 lbl_803E33E4;
-extern f32 lbl_803E33E8;
-extern f32 lbl_803E33EC;
 extern f32 lbl_803E2708;
 extern f32 lbl_803E270C;
 extern f32 lbl_803E2710;
