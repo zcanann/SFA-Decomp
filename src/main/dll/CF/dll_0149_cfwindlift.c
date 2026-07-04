@@ -15,6 +15,8 @@
 #include "main/gamebits.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define CFWINDLIFT_OBJGROUP 0x49
+
 #define CFWINDLIFT_OBJFLAG_PARENT_SLACK 0x1000
 
 #define WINDLIFT_SLOTS 14   /* max tracked lift slots */
@@ -347,7 +349,7 @@ void windlift_free(int* obj)
     {
         Music_Trigger(MUSICTRIG_DIM_Cavern, 0);
     }
-    ObjGroup_RemoveObject(obj, 73);
+    ObjGroup_RemoveObject(obj, CFWINDLIFT_OBJGROUP);
 }
 
 void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -575,7 +577,7 @@ void windlift_init(int* obj, u8* def)
             p->slots[i].oscCounter = 0;
         }
     }
-    ObjGroup_AddObject(obj, 0x49);
+    ObjGroup_AddObject(obj, CFWINDLIFT_OBJGROUP);
 }
 
 void windlift_release(void)
