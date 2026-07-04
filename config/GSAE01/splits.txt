@@ -1770,7 +1770,7 @@ main/dll/DIM/dim2lift.c:
 
 main/dll/DIM/dim2icicle.c:
 	.text       start:0x801BB598 end:0x801BCB34
-	.data       start:0x803259E0 end:0x80325AC8
+	.data       start:0x803259E0 end:0x80325B04
 
 main/dll/DIM/dll_01E0_dimboss.c:
 	.text       start:0x801BCB34 end:0x801BDBE0

@@ -642,3 +642,7 @@ IcicleEntry gDim2IcicleMeltEntries[] = {
 int gDim2IcicleSequenceSfx[] = {
     0x17B, 0x17B, 0x17C, 0x17C,
 };
+
+/*__DATA_EXTERNS__*/
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+u8 gDim2LiftFarMoveChoices[60] = { 0, 1, 0, 1, 0, 8, 0, 4, 0, 5, 0, 5, 0, 3, 0, 4, 0, 3, 0, 5, 0, 4, 0, 5, 0, 6, 0, 0, 0, 5, 0, 4, 0, 3, 0, 5, 0, 4, 0, 5, 0, 6, 0, 0, 0, 4, 0, 5, 0, 4, 0, 5, 0, 4, 0, 5, 0, 6, 0, 0 };
