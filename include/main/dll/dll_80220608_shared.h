@@ -1443,7 +1443,7 @@ extern f32 lbl_803E6F64;
 extern f32 lbl_803E6F68;
 extern f32 lbl_803E6F38;
 extern f32 lbl_803E6EF8;
-void fn_8022F270(int obj, int p2);
+void arwarwinggu_setTextureFrame(int obj, int p2);
 
 
 
@@ -2495,7 +2495,7 @@ int drcloudper_setScale(int obj);
 int drcloudper_selectActiveCloud(int obj);
 void drcloudper_init(int obj, int setup);
 void arwarwing_updateRollAndEngine(int obj, int state);
-void fn_8022F270(int obj, int p2);
+void arwarwinggu_setTextureFrame(int obj, int p2);
 void arwarwing_clearAimSnapshot(int obj);
 void arwarwing_initAttachments(int obj, int state);
 void arwbombcoll_update(int obj);
@@ -2508,7 +2508,7 @@ void fn_80231028(int obj, int v);
 void fn_8023134C(int obj, int v);
 void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
 void fn_802317A8(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
-void fn_8022F27C(int obj);
+void arwarwinggu_applyTextureFrame(int obj);
 void fn_8022ECE0(int obj, f32 param);
 void arwarwing_spawnBomb(int obj, int state, int side);
 void fn_80239DD8(int p1, int p2);

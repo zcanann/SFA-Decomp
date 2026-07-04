@@ -179,7 +179,7 @@ void arwarwinggu_update(int obj)
 
 #pragma scheduling on
 #pragma peephole on
-void fn_8022F270(int obj, int textureFrame)
+void arwarwinggu_setTextureFrame(int obj, int textureFrame)
 {
     ArwingGuState* state = ((GameObject*)obj)->extra;
     state->texture.textureFrame = textureFrame;
@@ -187,7 +187,7 @@ void fn_8022F270(int obj, int textureFrame)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8022F27C(int obj)
+void arwarwinggu_applyTextureFrame(int obj)
 {
     int model;
     ObjTextureRuntimeSlot* texture;

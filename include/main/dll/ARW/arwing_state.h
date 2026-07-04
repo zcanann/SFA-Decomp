@@ -135,7 +135,7 @@ typedef struct ArwingState {
     f32 bombProjectileLifetime;
     u8 bombCount;        /* 0x44c */
     u8 maxBombCount;     /* 0x44d */
-    u16 enginePitch;     /* fed to fn_8022F270 */
+    u16 enginePitch;     /* fed to arwarwinggu_setTextureFrame */
     void *light;         /* 0x450 */
     int wingVec[4];      /* 0x454: objModelGetVecFn slots 0-3 */
     f32 wingFlexScale;   /* 0x464 */

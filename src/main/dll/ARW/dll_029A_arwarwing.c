@@ -729,7 +729,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
         Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
     }
 
-    fn_8022F270(((ArwingState*)state)->escortObj, ((ArwingState*)state)->enginePitch);
+    arwarwinggu_setTextureFrame(((ArwingState*)state)->escortObj, ((ArwingState*)state)->enginePitch);
 
     if (((ArwingState*)state)->rollCooldown <= lbl_803E6ECC)
     {

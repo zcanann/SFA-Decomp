@@ -87,8 +87,8 @@ extern int mapUnload(int mapId, int flags);
 extern void setLoadedFileFlags_blocks1(void);
 extern void warpToMap(int idx, s8 transType);
 extern int unlockLevel(s32 val, int idx, int flag);
-extern void fn_8022F270(int obj, int arg);
-extern void fn_8022F27C(int obj);
+extern void arwarwinggu_setTextureFrame(int obj, int arg);
+extern void arwarwinggu_applyTextureFrame(int obj);
 extern int fn_802972A8(int obj);
 
 
@@ -457,7 +457,7 @@ void landed_arwing_update(int obj)
             if ((u32)state->childObject != 0)
             {
                 ObjLink_AttachChild(obj, state->childObject, 0);
-                fn_8022F270(state->childObject, 0xaf);
+                arwarwinggu_setTextureFrame(state->childObject, 0xaf);
                 ((GameObject*)state->childObject)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
@@ -465,7 +465,7 @@ void landed_arwing_update(int obj)
 
     if ((u32)state->childObject != 0)
     {
-        fn_8022F27C(state->childObject);
+        arwarwinggu_applyTextureFrame(state->childObject);
     }
 
     if ((u32)player != 0 && (u32)fn_802972A8(player) != 0)
