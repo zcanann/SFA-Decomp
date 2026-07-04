@@ -1,5 +1,6 @@
 #include "main/engine_shared.h"
 #include "main/game_object.h"
+#include "main/audio/music_trigger_ids.h"
 
 TextCallbackEntry gAudioArqRequests[0x300 / sizeof(TextCallbackEntry)];
 u8 gAudioReverbSettings[0x154];
@@ -2120,8 +2121,8 @@ int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
         *outChannel = 0;
         break;
     case 0x420:
-        Music_Trigger(0xe7, 0);
-        Music_Trigger(0xe7, 1);
+        Music_Trigger(MUSICTRIG_TTH_Fight, 0);
+        Music_Trigger(MUSICTRIG_TTH_Fight, 1);
         return 0;
     case 0x38c:
         return !(gAudioActiveChannelMask & 4);
@@ -2166,8 +2167,8 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     }
     if (id == 1318)
     {
-        Music_Trigger(0xA8, 0);
-        Music_Trigger(0xF4, 1);
+        Music_Trigger(MUSICTRIG_drako_3, 0);
+        Music_Trigger(MUSICTRIG_TTH_Night, 1);
     }
     if ((int)audioFlagFn_8000a188(8) != 0)
     {
@@ -2796,10 +2797,10 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
 
 void Music_PlayTrackByIndex(int index)
 {
-    MusicTrigger* trigger = Music_FindTriggerById(0xec);
+    MusicTrigger* trigger = Music_FindTriggerById(MUSICTRIG_dark_ice_boss_1_ec);
     streamFn_8000a380(3, 1, 0);
     trigger->track = *(s16*)((u8*)sMusicTrackTable + (index << 4));
-    Music_Trigger(0xec, 1);
+    Music_Trigger(MUSICTRIG_dark_ice_boss_1_ec, 1);
 }
 
 void audioSetSoundMode(int mode, u8 forceFlag)
