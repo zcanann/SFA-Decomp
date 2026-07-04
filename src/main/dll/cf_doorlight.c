@@ -115,7 +115,7 @@ int kaldachom_stateHandlerA07(int obj, int p)
     KaldaChomControl* control;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    *(u8*)&((GroundBaddieState*)p)->baddie.unk34D = 3;
+    *(u8*)&((GroundBaddieState*)p)->baddie.stateTag = 3;
     ((GroundBaddieState*)p)->baddie.moveSpeed = lbl_803E3084;
     {
         f32 fz = lbl_803E3060;

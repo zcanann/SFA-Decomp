@@ -141,7 +141,7 @@ typedef struct BaddieState {
     u8 unk347[2];
     u8 hasTarget; /* cleared with death/reset */
     u8 unk34A[3];
-    u8 unk34D; /* 0/1/3 */
+    u8 stateTag; /* per-tick state/mode index (written each tick; compared ==1/==3 across the baddie cluster + player) */
     u8 unk34E[6];
     u8 hitPoints; /* decremented on hit, (s8) < 1 = dead (anim.c/kt_rex pattern) */
     u8 unk355;

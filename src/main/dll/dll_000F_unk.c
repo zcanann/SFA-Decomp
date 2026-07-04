@@ -709,7 +709,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
             *(void**)(state + 0x304) = *(void**)(state + 0x308);
             ((BaddieState*)state)->moveJustStartedA = 1;
             *(s16*)(state + 0x338) = 0;
-            ((BaddieState*)state)->unk34D = 0;
+            ((BaddieState*)state)->stateTag = 0;
             *(u8*)(state + 0x34c) = 0;
             ((BaddieState*)state)->moveEventFlags = 0;
             *(s16*)(state + 0x278) = 0;
@@ -734,7 +734,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
                 *(void**)(state + 0x304) = *(void**)(state + 0x308);
                 ((BaddieState*)state)->moveJustStartedA = 1;
                 *(s16*)(state + 0x338) = 0;
-                ((BaddieState*)state)->unk34D = 0;
+                ((BaddieState*)state)->stateTag = 0;
                 *(u8*)(state + 0x34c) = 0;
                 ((BaddieState*)state)->moveEventFlags = 0;
                 *(s16*)(state + 0x278) = 0;
@@ -876,7 +876,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     }
 
     *(u32*)state &= 0xffdfffff;
-    ((BaddieState*)state)->unk34D = 0;
+    ((BaddieState*)state)->stateTag = 0;
     gPlayerMoveVelHandled = 0;
     *(u32*)state &= 0xfff7ffff;
     *(u8*)(state + 0x34c) = 0;
@@ -1017,7 +1017,7 @@ void player_setState(void* ctx, void* p, int new_state)
 end:
     *(s16*)((char*)p + 0x338) = 0;
     ((BaddieState*)p)->moveJustStartedA = 1;
-    ((BaddieState*)p)->unk34D = 0;
+    ((BaddieState*)p)->stateTag = 0;
     *(u8*)((char*)p + 0x34c) = 0;
     ((BaddieState*)p)->moveEventFlags = 0;
     *(s16*)((char*)p + 0x278) = 0;

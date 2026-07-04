@@ -57,7 +57,7 @@ extern f32 lbl_803E3000;
 
 /* BaddieState+0x27A (moveJustStartedA): just-collided / move-just-started one-shot */
 #define LANDED_ARWING_JUST_COLLIDED 0x27A
-/* BaddieState+0x34D (unk34D): state index written each tick */
+/* BaddieState+0x34D (stateTag): state index written each tick */
 #define LANDED_ARWING_STATE_INDEX 0x34D
 /* surfaceMode value for script/free flight */
 #define LANDED_ARWING_SCRIPT_MODE 6

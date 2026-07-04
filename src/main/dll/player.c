@@ -5430,7 +5430,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         return r;
     }
     path = (int)gPlayerPathObject;
-    *(s8*)&((PlayerState*)state)->baddie.unk34D = 1;
+    *(s8*)&((PlayerState*)state)->baddie.stateTag = 1;
     gPlayerSubState = 5;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA == 0)
     {
@@ -5814,7 +5814,7 @@ int fn_802977A8(int obj, int state)
 int fn_8029D454(int obj, int state)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    ((PlayerState*)state)->baddie.unk34D = 3;
+    ((PlayerState*)state)->baddie.stateTag = 3;
     if (*(s8*)((char*)inner->playerStatus) > 0)
     {
         ObjAnim_SetCurrentMove(obj, 0xc8, lbl_803E7EA4, 0);
@@ -6152,7 +6152,7 @@ int fn_8029F108(int obj, int state)
 
 int fn_8029DA60(int obj, int state)
 {
-    ((PlayerState*)state)->baddie.unk34D = 3;
+    ((PlayerState*)state)->baddie.stateTag = 3;
     ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7FD8;
     ((PlayerState*)state)->baddie.animSpeedA = lbl_803E7EA4;
     (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, 2);
@@ -8190,7 +8190,7 @@ void playerDoHitDetection(int obj)
     {
         (*(void (*)(int, int, void*))(*(int*)(*gPlayerInterface + 0xc)))(obj, inner,
                                                                          gPlayerStateHandlers);
-        if (*(s8*)&((PlayerState*)inner)->baddie.unk34D == 1)
+        if (*(s8*)&((PlayerState*)inner)->baddie.stateTag == 1)
         {
             if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0 &&
                 (*(void**)((sub = *(int*)((char*)gPlayerPathObject + 0x54)) + 0x50) != NULL ||
@@ -8515,7 +8515,7 @@ void fn_802AFB0C(int obj, int inner, int state)
         {
             work = 0x1b;
         }
-        if (*(s8*)&((PlayerState*)state)->baddie.unk34D == 3 && *(s8*)((char*)state + 0x34f) <= work)
+        if (*(s8*)&((PlayerState*)state)->baddie.stateTag == 3 && *(s8*)((char*)state + 0x34f) <= work)
         {
             return;
         }
@@ -10465,7 +10465,7 @@ int fn_802A5048(int obj, int state, f32 fv)
 
 int fn_8029D7F0(int obj, int state, f32 fv)
 {
-    ((PlayerState*)state)->baddie.unk34D = 3;
+    ((PlayerState*)state)->baddie.stateTag = 3;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0x44c, lbl_803E7EA4, 0);
@@ -11355,7 +11355,7 @@ int fn_8029D900(int obj, int state, f32 fv)
     PlayerState* inner = ((GameObject*)obj)->extra;
     int hit;
 
-    ((PlayerState*)state)->baddie.unk34D = 3;
+    ((PlayerState*)state)->baddie.stateTag = 3;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         if (ObjHits_GetPriorityHit(obj, &hit, 0, 0))
@@ -12224,7 +12224,7 @@ int fn_8029D250(int obj, int state, f32 fv)
     u32 flags;
     int idx;
 
-    ((PlayerState*)state)->baddie.unk34D = 3;
+    ((PlayerState*)state)->baddie.stateTag = 3;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         if (((PlayerState*)state)->baddie.targetObj != NULL &&
@@ -18764,7 +18764,7 @@ int fn_80295A04(int obj, int sel)
             return 5;
         }
     case 9:
-        return *(s8*)&((PlayerState*)state)->baddie.unk34D == 3;
+        return *(s8*)&((PlayerState*)state)->baddie.stateTag == 3;
     case 10:
         return *(u32*)&((PlayerState*)state)->flags360 & 0x200;
     case 11:

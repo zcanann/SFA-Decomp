@@ -177,7 +177,7 @@ int grimble_stateHandlerA09(int obj, GroundBaddieState* p)
     f32 spd;
 
     sub = ((GameObject*)obj)->extra;
-    *(s8*)&p->baddie.unk34D = 0;
+    *(s8*)&p->baddie.stateTag = 0;
     p->baddie.moveSpeed = lbl_803E2EE0;
     spd = lbl_803E2EB8;
     p->baddie.animSpeedA = spd;

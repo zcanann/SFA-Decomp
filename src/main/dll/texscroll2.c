@@ -6,7 +6,7 @@
  * Handlers are stepped one per frame while the baddie is active. Each (a) on the
  * first frame of a move (moveJustStartedA) selects the anim move via
  * ObjAnim_SetCurrentMove and may play an attack sfx / toggle the hit volume, and
- * (b) every frame writes the per-mode movement speed and the unk34D mode tag back
+ * (b) every frame writes the per-mode movement speed and the stateTag mode tag back
  * into the GroundBaddieState. A05/A02 index the move/speed tables (lbl_803203F8
  * move ids, lbl_80320404 speeds) by the control record's climbFxIndex. A00/A01
  * raise/clear gameBitB and drive the linked-mouth mode.
@@ -37,7 +37,7 @@ int kaldachom_stateHandlerA06(int obj, int statePtr)
         Sfx_PlayFromObject(obj, SFXsc_attack01);
     }
     ((GameObject*)obj)->anim.rotX += 546;
-    ((GroundBaddieState*)statePtr)->baddie.unk34D = 1;
+    ((GroundBaddieState*)statePtr)->baddie.stateTag = 1;
     ((GroundBaddieState*)statePtr)->baddie.moveSpeed = lbl_803E3090;
     ((GroundBaddieState*)statePtr)->baddie.animSpeedA = lbl_803E3060;
     return 0;
@@ -60,7 +60,7 @@ int kaldachom_stateHandlerA05(int obj, int statePtr)
         control->climbFxIndex = 4;
     }
     ((GroundBaddieState*)statePtr)->baddie.moveSpeed = lbl_80320404[control->climbFxIndex];
-    ((GroundBaddieState*)statePtr)->baddie.unk34D = 1;
+    ((GroundBaddieState*)statePtr)->baddie.stateTag = 1;
     return 0;
 }
 
@@ -78,7 +78,7 @@ int kaldachom_stateHandlerA04(int obj, int statePtr)
         }
         Sfx_PlayFromObject(obj, SFXsc_attack01);
     }
-    ((GroundBaddieState*)statePtr)->baddie.unk34D = 3;
+    ((GroundBaddieState*)statePtr)->baddie.stateTag = 3;
     ((GroundBaddieState*)statePtr)->baddie.moveSpeed = lbl_803E3090;
     ((GroundBaddieState*)statePtr)->baddie.animSpeedA = lbl_803E3060;
     return 0;
@@ -99,7 +99,7 @@ int kaldachom_stateHandlerA03(int obj, int statePtr)
         }
     }
     ((GroundBaddieState*)statePtr)->baddie.moveSpeed = lbl_803E3094;
-    ((GroundBaddieState*)statePtr)->baddie.unk34D = 1;
+    ((GroundBaddieState*)statePtr)->baddie.stateTag = 1;
     return 0;
 }
 
@@ -121,7 +121,7 @@ int kaldachom_stateHandlerA02(int obj, int statePtr)
         control->climbFxIndex = 4;
     }
     ((GroundBaddieState*)statePtr)->baddie.moveSpeed = lbl_80320404[control->climbFxIndex];
-    ((GroundBaddieState*)statePtr)->baddie.unk34D = 1;
+    ((GroundBaddieState*)statePtr)->baddie.stateTag = 1;
     return 0;
 }
 
@@ -179,7 +179,7 @@ int kaldachom_stateHandlerA00(int obj, int statePtr)
         GameBit_Set(state->gameBitB, 1);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.alpha = 0xff;
-        ((GroundBaddieState*)statePtr)->baddie.unk34D = 1;
+        ((GroundBaddieState*)statePtr)->baddie.stateTag = 1;
         ((GroundBaddieState*)statePtr)->baddie.moveSpeed =
             lbl_803E3098 + ((f32)(u32)state->aggression / lbl_803E309C);
         ObjHits_EnableObject((u32)obj);

@@ -79,7 +79,7 @@ int fn_8015E3A0(int obj, int state)
         ObjAnim_SetCurrentMove((int)obj, 10, lbl_803E2DC8, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    ((GroundBaddieState*)state)->baddie.unk34D = 1;
+    ((GroundBaddieState*)state)->baddie.stateTag = 1;
 
     if ((((GroundBaddieState*)state)->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0U)
     {
@@ -148,7 +148,7 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
         }
         Sfx_PlayFromObject(obj, SFXfoxcom_stay);
     }
-    *(s8*)&state->baddie.unk34D = 3;
+    *(s8*)&state->baddie.stateTag = 3;
     state->baddie.moveSpeed = lbl_803E2DD4;
     state->baddie.animSpeedA = lbl_803E2DC8;
     return 0;
@@ -333,7 +333,7 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p)
                 *(s8*)&p->baddie.moveDone = 0;
             }
         }
-        *(s8*)&p->baddie.unk34D = 1;
+        *(s8*)&p->baddie.stateTag = 1;
         p->baddie.moveSpeed = lbl_803E2DDC + (f32)(u32)
         sub->aggression / lbl_803E2DE0;
     }
@@ -388,7 +388,7 @@ int fn_8015E0C8(int obj, GroundBaddieState* p)
     f32 spd;
 
     sub = ((GameObject*)obj)->extra;
-    *(s8*)&p->baddie.unk34D = 3;
+    *(s8*)&p->baddie.stateTag = 3;
     p->baddie.moveSpeed = lbl_803E2DCC;
     spd = lbl_803E2DC8;
     p->baddie.animSpeedA = spd;
@@ -488,7 +488,7 @@ int fn_8015E8BC(int obj, GroundBaddieState* p)
         GameBit_Set(sub->gameBitB, 1);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.alpha = 0xff;
-        *(s8*)&p->baddie.unk34D = 1;
+        *(s8*)&p->baddie.stateTag = 1;
         p->baddie.moveSpeed =
             lbl_803E2DE8 + (f32)(u32)
         sub->aggression / lbl_803E2DEC;
@@ -976,7 +976,7 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
         ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2DC8, 0);
         state->baddie.moveDone = 0;
     }
-    state->baddie.unk34D = 1;
+    state->baddie.stateTag = 1;
     return 0;
 }
 

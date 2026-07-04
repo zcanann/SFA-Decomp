@@ -242,7 +242,7 @@ int dbstealerworm_stateHandlerA09(int obj, int p)
         ObjMsg_SendToObject(sub_40c->linkedObj, 17, obj, 18);
         Sfx_PlayFromObject(obj, SFXfoot_ice_run_3);
     }
-    *(s8*)&bs->unk34D = 18;
+    *(s8*)&bs->stateTag = 18;
     if (*(char*)&bs->moveJustStartedA != '\0')
     {
         ObjAnim_SetCurrentMove((int)obj, 16, lbl_803E62A8, 0);
@@ -274,7 +274,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
     DbStealerwormControl* sub_40c = (DbStealerwormControl*)sub->control;
     BaddieState* bs = (BaddieState*)p2;
 
-    *(s8*)&bs->unk34D = 0x11;
+    *(s8*)&bs->stateTag = 0x11;
 
     if ((s32)(s8)bs->moveJustStartedA != 0)
     {
@@ -382,7 +382,7 @@ int dbstealerworm_stateHandlerA05(int obj, int p)
         }
         sub_40c->unk3C = 0;
     }
-    *(s8*)&bs->unk34D = 16;
+    *(s8*)&bs->stateTag = 16;
     bs->moveSpeed = lbl_803E6340;
     bs->animSpeedA = lbl_803E62A8;
     if (*(s8*)&bs->moveDone != 0)
@@ -408,7 +408,7 @@ int dbstealerworm_stateHandlerA03(int obj, int p)
         ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E62A8, 0);
         *(s8*)&((BaddieState*)p)->moveDone = 0;
     }
-    *(s8*)&((BaddieState*)p)->unk34D = 1;
+    *(s8*)&((BaddieState*)p)->stateTag = 1;
     return 0;
 }
 
@@ -598,7 +598,7 @@ int dbstealerworm_stateHandlerA00(int obj, int p2)
         bs->physicsActive = 1;
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         ((GameObject*)obj)->anim.alpha = 255;
-        bs->unk34D = 1;
+        bs->stateTag = 1;
         bs->moveSpeed = lbl_803E6350 + (f32)(u32)sub->aggression / lbl_803E6354;
         ObjHits_EnableObject(obj);
         sub_40c->linkedObj = 0;
@@ -715,7 +715,7 @@ int dbstealerworm_stateHandlerA04(int obj, int param2)
         ObjAnim_SetCurrentMove((int)obj, 0xa, lbl_803E62A8, 0);
         bs->moveDone = 0;
     }
-    bs->unk34D = 1;
+    bs->stateTag = 1;
     sub = (DbStealerwormControl*)state->control;
     sub->flags14 = sub->flags14 | DBWORM_FLAG14_FX_DUST;
     v = bs->eventFlags;
@@ -743,7 +743,7 @@ int dbstealerworm_stateHandlerA0E(int obj, int param2)
         ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
         bs->moveDone = 0;
     }
-    bs->unk34D = 0x1f;
+    bs->stateTag = 0x1f;
     if (*(s8*)&bs->moveJustStartedA != 0)
     {
         sub->linkedObj = *(int*)&bs->targetObj;
@@ -929,7 +929,7 @@ int dbstealerworm_stateHandlerA02(int obj, int p2)
                 bs->moveDone = 0;
             }
         }
-        bs->unk34D = 1;
+        bs->stateTag = 1;
         bs->moveSpeed = lbl_803E6344 + state->aggression / lbl_803E6348;
     }
     bs->animSpeedA = lbl_803E62A8;
@@ -1022,7 +1022,7 @@ int dbstealerworm_stateHandlerA0D(int obj, int p2)
         ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
         bs->moveDone = 0;
     }
-    bs->unk34D = 0x1f;
+    bs->stateTag = 0x1f;
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E62EC
         && ((GameObject*)bs->targetObj)->anim.localPosY - lbl_803E62F8 <= ((GameObject*)obj)->anim.localPosY)
     {
@@ -1506,7 +1506,7 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
             sub->unk1C = -1;
         }
         ((GameObject*)obj)->anim.rotX += Obj_GetYawDeltaToObject(obj, *(int*)&((BaddieState*)p2)->targetObj, 0);
-        ((BaddieState*)p2)->unk34D = 0x11;
+        ((BaddieState*)p2)->stateTag = 0x11;
         if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x12, lbl_803E62A8, 0);
@@ -1648,7 +1648,7 @@ int dbstealerworm_stateHandlerA0B(int obj, int baddie, f32 t)
         }
     }
     sub = (DbStealerwormControl*)blob->control;
-    ((BaddieState*)baddie)->unk34D = 0x1f;
+    ((BaddieState*)baddie)->stateTag = 0x1f;
     if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 0xf, lbl_803E62A8, 0);
@@ -1845,7 +1845,7 @@ int dbstealerworm_stateHandlerA07(int obj, int baddie, f32 t)
         ((BaddieState*)baddie)->moveSpeed = lbl_803E6300;
         frac = blob->aggression / lbl_803E6324;
     }
-    ((BaddieState*)baddie)->unk34D = 0x1f;
+    ((BaddieState*)baddie)->stateTag = 0x1f;
     if (fn_80202DA4((u8*)obj, *(u8**)&((BaddieState*)baddie)->targetObj, lbl_803E6330, frac, lbl_803E62CC, t) != 0)
     {
         sub->unk34 = 1;
@@ -2186,7 +2186,7 @@ int dbstealerworm_stateHandlerA08(int obj, int baddie, f32 t)
         ((BaddieState*)baddie)->moveSpeed = lbl_803E6300;
         frac = blob->aggression / lbl_803E6324;
     }
-    ((BaddieState*)baddie)->unk34D = 0x1f;
+    ((BaddieState*)baddie)->stateTag = 0x1f;
     if (fn_80202C78(obj, *(int*)&((BaddieState*)baddie)->targetObj, lbl_803E62B4, frac, lbl_803E62CC, t) != 0)
     {
         sub->unk34 = 1;
@@ -2499,7 +2499,7 @@ int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t)
         fn_80202A2C(obj, lbl_8032973C, lbl_8032974C, 4, frac);
     }
     d = Vec_xzDistance(obj + 0x18, (int)&((GameObject*)((BaddieState*)baddie)->targetObj)->anim.worldPosX);
-    ((BaddieState*)baddie)->unk34D = 1;
+    ((BaddieState*)baddie)->stateTag = 1;
     if (d < lbl_803E62D0)
     {
         ((BaddieState*)baddie)->animSpeedA = ((BaddieState*)baddie)->animSpeedA * (k = lbl_803E62D4);

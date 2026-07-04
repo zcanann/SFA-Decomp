@@ -557,7 +557,7 @@ FUN_80200558(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
                                arg8, obj, 0x11, 0, arg12, arg13, arg14, arg15, arg16);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
+    ((GroundBaddieState*)state)->baddie.stateTag = 0x1f;
     if (*(char*)(state + 0x27a) != '\0')
     {
         ((DbStealerwormControl*)control)->linkedObj = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
