@@ -42,14 +42,11 @@ extern f32 getXZDistance(f32* a, f32* b);
 extern int gameBitIncrement(int bit);
 extern void fn_80163990(int obj, int aux);
 extern const f32 lbl_803E2FA0;
-extern const f32 lbl_803E2FA4;
-extern const f32 lbl_803E2FA8;
 extern const f32 lbl_803E2FAC;
 extern const f32 lbl_803E2FB0;
 extern const f32 lbl_803E2FB8;
 extern const f32 lbl_803E2FBC;
 extern const f32 lbl_803E2FC0;
-extern const f32 lbl_803E2FC4;
 extern f32 sqrtf(f32 x);
 
 void tumbleweed_updateRollingMotion(int obj, int state)
