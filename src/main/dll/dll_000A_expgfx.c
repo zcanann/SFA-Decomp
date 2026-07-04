@@ -124,27 +124,6 @@ extern f32 gExpgfxYVelocitySlowStep;
 extern f32 gExpgfxYVelocityNegativeLimit;
 extern const f32 gExpgfxSlotMotionStep;
 
-ObjectDescriptor14 expgfx_funcs = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_14_SLOTS,
-    (ObjectDescriptorCallback)expgfx_initialise,
-    (ObjectDescriptorCallback)expgfx_release,
-    0,
-    (ObjectDescriptorCallback)expgfx_onMapSetup,
-    (ObjectDescriptorCallback)expgfx_addremove,
-    (ObjectDescriptorCallback)expgfx_updateFrameState,
-    (ObjectDescriptorCallback)expgfx_resetAllPools,
-    (ObjectDescriptorCallback)expgfx_free,
-    (ObjectDescriptorCallback)expgfx_free2,
-    (ObjectDescriptorCallback)expgfx_func09,
-    (ObjectDescriptorCallback)expgfx_func0A_nop,
-    (ObjectDescriptorCallback)expgfx_func0B_nop,
-    (ObjectDescriptorCallback)expgfx_ownerFree3,
-    (ObjectDescriptorCallback)expgfx_updateSourceFrameFlags,
-};
-
 extern f32 fn_80138F78(void* tricky);
 extern f32 fn_8029610C(void* player);
 extern void vecRotateZXY(void* params, void* vec);
@@ -3458,6 +3437,70 @@ u8 gExpgfxStaticPoolFrameFlags[112] = {
     64, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
+/* Crystal burst amplitude scales + spawn direction table (referenced by objfx.c). */
+typedef struct ObjFxCrystalBurstTable {
+    f32 amps[4];
+    s16 dirs[12][3];
+} ObjFxCrystalBurstTable;
+
+ObjFxCrystalBurstTable gObjFxCrystalAmpTbl = {
+    { 0.5f, 0.55f, 0.65f, 0.7f },
+    {
+        { -1000, 0, 1000 },  { 1000, 0, 1000 },   { 1000, 0, -1000 },  { -1000, 0, -1000 },
+        { -1000, -1000, 0 }, { 1000, -1000, 0 },  { 1000, 1000, 0 },   { -1000, 1000, 0 },
+        { -1000, -1000, 0 }, { 1000, -1000, 0 },  { 1000, 1000, 0 },   { -1000, 1000, 0 },
+    },
+};
+
+/* Light RGB triplets per fx type (referenced by objfx.c). */
+u8 gObjFxLightColorTbl[12][3] = {
+    { 0x00, 0x00, 0x00 }, { 0x40, 0xFF, 0xFF }, { 0xFF, 0xFF, 0x40 }, { 0xFF, 0x40, 0x7F },
+    { 0x7F, 0x7F, 0x7F }, { 0x40, 0xFF, 0x40 }, { 0xFF, 0xFF, 0x00 }, { 0xFF, 0x7F, 0x40 },
+    { 0xFF, 0xFF, 0x40 }, { 0x00, 0x7F, 0xFF }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 },
+};
+
+ObjectDescriptor14 expgfx_funcs = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_14_SLOTS,
+    (ObjectDescriptorCallback)expgfx_initialise,
+    (ObjectDescriptorCallback)expgfx_release,
+    0,
+    (ObjectDescriptorCallback)expgfx_onMapSetup,
+    (ObjectDescriptorCallback)expgfx_addremove,
+    (ObjectDescriptorCallback)expgfx_updateFrameState,
+    (ObjectDescriptorCallback)expgfx_resetAllPools,
+    (ObjectDescriptorCallback)expgfx_free,
+    (ObjectDescriptorCallback)expgfx_free2,
+    (ObjectDescriptorCallback)expgfx_func09,
+    (ObjectDescriptorCallback)expgfx_func0A_nop,
+    (ObjectDescriptorCallback)expgfx_func0B_nop,
+    (ObjectDescriptorCallback)expgfx_ownerFree3,
+    (ObjectDescriptorCallback)expgfx_updateSourceFrameFlags,
+};
+
+/* Switch jumptables for neighbouring objfx/itempickup particle fx code whose
+ * .data was emitted in this unit's address range. */
+extern void objfx_spawnDirectionalBurst();
+extern void objfx_spawnArcedBurst();
+extern void objfx_spawnBoxBurst();
+extern void fn_80098B18();
+extern void projectileParticleFxFn_80099660();
+extern void itemPickupDoParticleFx();
+extern void objParticleFn_80099d84();
+extern void objLightFn_8009a1dc();
+
+void* jumptable_8030FA9C[8] = { (void*)((u8*)objfx_spawnDirectionalBurst + 0x390), (void*)((u8*)objfx_spawnDirectionalBurst + 0x170), (void*)((u8*)objfx_spawnDirectionalBurst + 0x1D0), (void*)((u8*)objfx_spawnDirectionalBurst + 0x210), (void*)((u8*)objfx_spawnDirectionalBurst + 0x24C), (void*)((u8*)objfx_spawnDirectionalBurst + 0x288), (void*)((u8*)objfx_spawnDirectionalBurst + 0x2D8), (void*)((u8*)objfx_spawnDirectionalBurst + 0x32C) };
+void* jumptable_8030FABC[8] = { (void*)((u8*)objfx_spawnArcedBurst + 0x30C), (void*)((u8*)objfx_spawnArcedBurst + 0x1F0), (void*)((u8*)objfx_spawnArcedBurst + 0x200), (void*)((u8*)objfx_spawnArcedBurst + 0x218), (void*)((u8*)objfx_spawnArcedBurst + 0x230), (void*)((u8*)objfx_spawnArcedBurst + 0x28C), (void*)((u8*)objfx_spawnArcedBurst + 0x2E8), (void*)((u8*)objfx_spawnArcedBurst + 0x2F4) };
+void* jumptable_8030FADC[8] = { (void*)((u8*)objfx_spawnBoxBurst + 0x3A4), (void*)((u8*)objfx_spawnBoxBurst + 0x1E8), (void*)((u8*)objfx_spawnBoxBurst + 0x210), (void*)((u8*)objfx_spawnBoxBurst + 0x240), (void*)((u8*)objfx_spawnBoxBurst + 0x278), (void*)((u8*)objfx_spawnBoxBurst + 0x2E8), (void*)((u8*)objfx_spawnBoxBurst + 0x358), (void*)((u8*)objfx_spawnBoxBurst + 0x380) };
+void* jumptable_8030FAFC[15] = { (void*)((u8*)fn_80098B18 + 0xB28), (void*)((u8*)fn_80098B18 + 0x538), (void*)((u8*)fn_80098B18 + 0x588), (void*)((u8*)fn_80098B18 + 0x5D8), (void*)((u8*)fn_80098B18 + 0x628), (void*)((u8*)fn_80098B18 + 0x678), (void*)((u8*)fn_80098B18 + 0x6C8), (void*)((u8*)fn_80098B18 + 0x718), (void*)((u8*)fn_80098B18 + 0x768), (void*)((u8*)fn_80098B18 + 0x7B8), (void*)((u8*)fn_80098B18 + 0x854), (void*)((u8*)fn_80098B18 + 0x8F0), (void*)((u8*)fn_80098B18 + 0x940), (void*)((u8*)fn_80098B18 + 0x9E4), (void*)((u8*)fn_80098B18 + 0xA88) };
+void* jumptable_8030FB38[9] = { (void*)((u8*)fn_80098B18 + 0x434), (void*)((u8*)fn_80098B18 + 0x11C), (void*)((u8*)fn_80098B18 + 0x154), (void*)((u8*)fn_80098B18 + 0x18C), (void*)((u8*)fn_80098B18 + 0x1C4), (void*)((u8*)fn_80098B18 + 0x254), (void*)((u8*)fn_80098B18 + 0x2E4), (void*)((u8*)fn_80098B18 + 0x374), (void*)((u8*)fn_80098B18 + 0x3D0) };
+void* jumptable_8030FB5C[7] = { (void*)((u8*)projectileParticleFxFn_80099660 + 0x40), (void*)((u8*)projectileParticleFxFn_80099660 + 0x98), (void*)((u8*)projectileParticleFxFn_80099660 + 0x12C), (void*)((u8*)projectileParticleFxFn_80099660 + 0x1C0), (void*)((u8*)projectileParticleFxFn_80099660 + 0x218), (void*)((u8*)projectileParticleFxFn_80099660 + 0x304), (void*)((u8*)projectileParticleFxFn_80099660 + 0x2AC) };
+void* jumptable_8030FB78[11] = { (void*)((u8*)itemPickupDoParticleFx + 0x368), (void*)((u8*)itemPickupDoParticleFx + 0x48), (void*)((u8*)itemPickupDoParticleFx + 0x98), (void*)((u8*)itemPickupDoParticleFx + 0xE8), (void*)((u8*)itemPickupDoParticleFx + 0x138), (void*)((u8*)itemPickupDoParticleFx + 0x188), (void*)((u8*)itemPickupDoParticleFx + 0x1D8), (void*)((u8*)itemPickupDoParticleFx + 0x228), (void*)((u8*)itemPickupDoParticleFx + 0x278), (void*)((u8*)itemPickupDoParticleFx + 0x318), (void*)((u8*)itemPickupDoParticleFx + 0x2C8) };
+void* jumptable_8030FBA4[9] = { (void*)((u8*)objParticleFn_80099d84 + 0x368), (void*)((u8*)objParticleFn_80099d84 + 0xCC), (void*)((u8*)objParticleFn_80099d84 + 0x18C), (void*)((u8*)objParticleFn_80099d84 + 0x24C), (void*)((u8*)objParticleFn_80099d84 + 0x274), (void*)((u8*)objParticleFn_80099d84 + 0x29C), (void*)((u8*)objParticleFn_80099d84 + 0x2C8), (void*)((u8*)objParticleFn_80099d84 + 0x2F8), (void*)((u8*)objParticleFn_80099d84 + 0x334) };
+void* jumptable_8030FBC8[10] = { (void*)((u8*)objLightFn_8009a1dc + 0x5FC), (void*)((u8*)objLightFn_8009a1dc + 0x50), (void*)((u8*)objLightFn_8009a1dc + 0x118), (void*)((u8*)objLightFn_8009a1dc + 0x1E0), (void*)((u8*)objLightFn_8009a1dc + 0x2A8), (void*)((u8*)objLightFn_8009a1dc + 0x2F4), (void*)((u8*)objLightFn_8009a1dc + 0x390), (void*)((u8*)objLightFn_8009a1dc + 0x42C), (void*)((u8*)objLightFn_8009a1dc + 0x4C8), (void*)((u8*)objLightFn_8009a1dc + 0x564) };
+
 char sExpgfxMismatchInAddRemove[] = "expgfx.c: mismatch in add/remove in exptab\n";
 
 char sExpgfxNoTexture[11] = "notexture \n";
@@ -3470,5 +3513,10 @@ char sExpgfxInvalidTabIndex[] = "expgfx.c: invalid tabindex\n";
 
 char sExpgfxScaleOverflow[] = "expgfx.c: scale overflow\n";
 
-/* descriptor/ptr table auto 0x8030fca8-0x8030fd20 */
-u32 lbl_8030FCA8[30] = { 0x00000000, 0x00000000, 0x00000000, 0x00180000, (u32)dll_0B_initialise, (u32)dll_0B_release, 0x00000000, (u32)dll_0B_onMapSetup, (u32)dll_0B_func04, (u32)dll_0B_func05, (u32)dll_0B_func06, (u32)dll_0B_func07, (u32)dll_0B_func08, (u32)dll_0B_func09, (u32)dll_0B_func0A, (u32)dll_0B_func0B, (u32)dll_0B_func0C, (u32)dll_0B_func0D, (u32)dll_0B_func0E, (u32)dll_0B_func0F, (u32)dll_0B_func10, (u32)dll_0B_func11, (u32)dll_0B_func12, (u32)dll_0B_func13, (u32)dll_0B_func14, (u32)dll_0B_func15, (u32)dll_0B_func16, (u32)dll_0B_func17, (u32)dll_0B_func18, 0x00000000 };
+/* descriptor/ptr table auto 0x8030fca8-0x8030fd20 (8-byte aligned in retail) */
+typedef union Dll0BDescriptorTable {
+    u32 words[30];
+    u64 align8;
+} Dll0BDescriptorTable;
+
+Dll0BDescriptorTable lbl_8030FCA8 = { { 0x00000000, 0x00000000, 0x00000000, 0x00180000, (u32)dll_0B_initialise, (u32)dll_0B_release, 0x00000000, (u32)dll_0B_onMapSetup, (u32)dll_0B_func04, (u32)dll_0B_func05, (u32)dll_0B_func06, (u32)dll_0B_func07, (u32)dll_0B_func08, (u32)dll_0B_func09, (u32)dll_0B_func0A, (u32)dll_0B_func0B, (u32)dll_0B_func0C, (u32)dll_0B_func0D, (u32)dll_0B_func0E, (u32)dll_0B_func0F, (u32)dll_0B_func10, (u32)dll_0B_func11, (u32)dll_0B_func12, (u32)dll_0B_func13, (u32)dll_0B_func14, (u32)dll_0B_func15, (u32)dll_0B_func16, (u32)dll_0B_func17, (u32)dll_0B_func18, 0x00000000 } };
