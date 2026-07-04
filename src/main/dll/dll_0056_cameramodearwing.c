@@ -208,7 +208,7 @@ void CameraModeArwing_update(u8* obj)
         ((GameObject*)obj)->anim.rotZ = work->rollRate * timeDelta +
             (f32)((GameObject*)obj)->anim.rotZ;
         d = 0x8000 - (u16)getAngle(va, vc);
-        pitch0 = (u16)getAngle(vb, vd);
+        yaw0 = (u16)getAngle(vb, vd);
         d -= (u16)((GameObject*)obj)->anim.rotX;
         if (d > 0x8000)
         {
@@ -220,7 +220,7 @@ void CameraModeArwing_update(u8* obj)
         }
         step = (s32)((f32)d * timeDelta);
         ((GameObject*)obj)->anim.rotX = step * gCamArwingRotEaseScale + (f32) * (s16*)obj;
-        d = pitch0 - (u16)((GameObject*)obj)->anim.rotY;
+        d = yaw0 - (u16)((GameObject*)obj)->anim.rotY;
         if (d > 0x8000)
         {
             d = d - 0xffff;
@@ -265,16 +265,16 @@ void CameraModeArwing_update(u8* obj)
         }
         step = (f32)yaw0 * timeDelta;
         ((GameObject*)obj)->anim.rotX = step * gCamArwingRotEaseScale + (f32) * (s16*)obj;
-        d = pitch0 - (u16)((GameObject*)obj)->anim.rotY;
-        if (d > 0x8000)
+        pitch0 = pitch0 - (u16)((GameObject*)obj)->anim.rotY;
+        if (pitch0 > 0x8000)
         {
-            d = d - 0xffff;
+            pitch0 = pitch0 - 0xffff;
         }
-        if (d < -0x8000)
+        if (pitch0 < -0x8000)
         {
-            d = d + 0xffff;
+            pitch0 = pitch0 + 0xffff;
         }
-        step = (f32)d * timeDelta;
+        step = (f32)pitch0 * timeDelta;
         ((GameObject*)obj)->anim.rotY = step * gCamArwingRotEaseScale + (f32)((GameObject*)obj)->anim.rotY;
     }
     Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
