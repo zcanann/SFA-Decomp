@@ -29,6 +29,9 @@
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* object group this object joins while active */
+#define FIREBALL_OBJGROUP 2
+
 #define FIREBALL_OBJFLAG_FREED 0x40
 
 #define MODEL_LIGHT_KIND_POINT 2
@@ -758,7 +761,7 @@ void fireball_free(int* obj)
         ModelLightStruct_free(ptr);
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    ObjGroup_RemoveObject((int)obj, 2);
+    ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
 }
 
 void mikabombshadow_init(int* obj);
@@ -852,7 +855,7 @@ void fireball_hitDetect(int* obj)
             *(void**)state = NULL;
         }
     }
-    ObjGroup_RemoveObject((int)obj, 2);
+    ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
 }
 
 void mikabomb_init(int* obj);
@@ -916,7 +919,7 @@ void fireball_init(int* obj)
             fs = (FireballState*)((char*)fs + 2);
         }
         ((GameObject*)obj)->animEventCallback = Fireball_SeqFn;
-        ObjGroup_AddObject((int)obj, 2);
+        ObjGroup_AddObject((int)obj, FIREBALL_OBJGROUP);
         if (((GameObject*)obj)->anim.seqId != 2110 && ((FireballPlacement*)params)->unk1A != 0)
         {
             ((FireballState*)state)->startupDelay = lbl_803E3380;
@@ -1011,7 +1014,7 @@ void fireball_update(int* obj)
                 ModelLightStruct_free(*(void**)state);
                 *(int*)state = 0;
             }
-            ObjGroup_RemoveObject((int)obj, 2);
+            ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
             ObjHits_DisableObject(obj);
         }
     }
