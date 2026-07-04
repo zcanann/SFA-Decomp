@@ -339,8 +339,8 @@ int d;
     }
     ch->field08 = a;
     ch->volume = 0x64;
-    ch->field20 = lbl_803DE590;
-    ch->field24 = lbl_803DE594;
+    ch->nearDistance = lbl_803DE590;
+    ch->farDistance = lbl_803DE594;
     ch->globalCtrlDisabled = d;
 
     {
@@ -1263,8 +1263,8 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
     volf = (f32)(u32)
     objectChannel->volume;
     level = volf;
-    near = objectChannel->field20;
-    far = objectChannel->field24;
+    near = objectChannel->nearDistance;
+    far = objectChannel->farDistance;
     dist = Sfx_GetListenerRelativeDistance(&objectChannel->x, delta);
     if (dist > lbl_803DE598 * far)
     {
@@ -1433,8 +1433,8 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
     ch->object = obj;
     if (pos != NULL)
     {
-        ch->field20 = nearDist;
-        ch->field24 = farDist;
+        ch->nearDistance = nearDist;
+        ch->farDistance = farDist;
         ch->hasPosition = 1;
         {
             int t = 0;

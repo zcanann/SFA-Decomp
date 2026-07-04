@@ -107,8 +107,8 @@ typedef struct SfxObjectChannel {
     u32 object;
     u16 channelMask;
     u16 sfxId;
-    f32 field20;
-    f32 field24;
+    f32 nearDistance;
+    f32 farDistance;
     u8 globalCtrlDisabled;
     u8 pad29[0x07];
     u64 age;
