@@ -1078,7 +1078,7 @@ main/dll/dll_00D1_tumbleweedbush.c:
 
 main/dll/dll_00D2_tumbleweed.c:
 	.text       start:0x80163BBC end:0x801650D0
-	.data       start:0x80320288 end:0x80320380
+	.data       start:0x80320288 end:0x803202E8
 
 main/dll/backpack.c:
 	.text       start:0x801650D0 end:0x8016558C
@@ -2245,7 +2245,7 @@ main/dll/WM/dll_0210_wmplanets.c:
 main/dll/WM/dll_0211_wmwallcrawler.c:
 	.text       start:0x801F7FF4 end:0x801F943C
 	.data       start:0x80328DD0 end:0x80328DEC
-	.sdata2     start:0x803E6020 end:0x803E6038
+	.sdata2     start:0x803E6020 end:0x803E6030
 
 main/dll/WM/dll_0215_wmnewcrystal.c:
 	.text       start:0x801F943C end:0x801F9804
