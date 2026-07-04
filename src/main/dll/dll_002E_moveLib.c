@@ -573,8 +573,8 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
                 v = objModelGetVecFn_800395d8(obj, 0);
                 if (v != NULL)
                 {
-                    seq->unk114 = v[1];
-                    seq->unk116 = v[0];
+                    seq->baseRotY = v[1];
+                    seq->baseRotX = v[0];
                 }
                 s->phase = MOVELIB_PHASE_IDLE;
                 seq->movementState = 0;

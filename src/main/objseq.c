@@ -1490,7 +1490,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     targetFrame = ((ObjSeqState*)seq)->curFrame;
     lbl_803DD08A = targetFrame;
     ((ObjSeqState*)seq)->cmdCursor = 0;
-    ((ObjSeqState*)seq)->unk68 = -0x32;
+    ((ObjSeqState*)seq)->retriggerFrame = -0x32;
     ((ObjSeqState*)seq)->unk78 = 0;
     ((ObjSeqState*)seq)->unk7A = 0;
     ((ObjSeqState*)seq)->unk79 = 0;
@@ -1640,7 +1640,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
             {
                 if (((ObjSeqState*)seq)->curFrame >= *(s16*)(cmd + 2))
                 {
-                    ((ObjSeqState*)seq)->unk68 = *(s16*)(cmd + 2);
+                    ((ObjSeqState*)seq)->retriggerFrame = *(s16*)(cmd + 2);
                     ((ObjSeqState*)seq)->cmdCursor += 1;
                 }
                 else
@@ -1650,11 +1650,11 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
             }
             else
             {
-                if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->unk68)
+                if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->retriggerFrame)
                 {
                     if (opcode != 0xf)
                     {
-                        ((ObjSeqState*)seq)->unk68 += cmd[1];
+                        ((ObjSeqState*)seq)->retriggerFrame += cmd[1];
                     }
                     ((ObjSeqState*)seq)->cmdCursor += 1;
                     if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, flags, &out) != 0)
@@ -1983,7 +1983,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                 {
                     val = lbl_803DEFB0;
                 }
-                vec[0] = (s16)(((ObjSeqState*)seq)->unk116 + (int)(gObjSeqDegreesToAngle * val));
+                vec[0] = (s16)(((ObjSeqState*)seq)->baseRotX + (int)(gObjSeqDegreesToAngle * val));
 
                 if (((ObjSeqState*)seq)->trackRunLength[2] != 0)
                 {
@@ -2006,7 +2006,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                 {
                     val = lbl_803DEFB0;
                 }
-                vec[1] = (s16)(((ObjSeqState*)seq)->unk114 + (int)(gObjSeqDegreesToAngle * val));
+                vec[1] = (s16)(((ObjSeqState*)seq)->baseRotY + (int)(gObjSeqDegreesToAngle * val));
 
                 if (((ObjSeqState*)seq)->trackRunLength[0] != 0)
                 {
@@ -2231,10 +2231,10 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         {
             break;
         }
-        ((ObjSeqState*)seq)->unk6C = (s16)(*(s16*)(cmd + 2) & 0xfff);
-        if (((GameObject*)activeObj)->anim.classId == 1 && ((ObjSeqState*)seq)->unk6C < 4)
+        ((ObjSeqState*)seq)->moveId = (s16)(*(s16*)(cmd + 2) & 0xfff);
+        if (((GameObject*)activeObj)->anim.classId == 1 && ((ObjSeqState*)seq)->moveId < 4)
         {
-            ((ObjSeqState*)seq)->unk6C += 0x531;
+            ((ObjSeqState*)seq)->moveId += 0x531;
         }
         ((ObjSeqState*)seq)->unk8C = (*(s16*)(cmd + 2) >> 8) & 0xf0;
         if (action == NULL)
@@ -2242,7 +2242,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             break;
         }
         animState = *(u8**)(action + 0x2c);
-        if (((GameObject*)activeObj)->anim.currentMove == ((ObjSeqState*)seq)->unk6C)
+        if (((GameObject*)activeObj)->anim.currentMove == ((ObjSeqState*)seq)->moveId)
         {
             if ((s8)animState[0x60] != 0)
             {
@@ -2303,7 +2303,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             }
         }
         ((ObjSeqState*)seq)->fade = lbl_803DEFC8;
-        ObjAnim_SetCurrentMove((int)activeObj, ((ObjSeqState*)seq)->unk6C,
+        ObjAnim_SetCurrentMove((int)activeObj, ((ObjSeqState*)seq)->moveId,
                                (f32)((ObjSeqState*)seq)->unk8C * lbl_803DF02C, 0);
         break;
     case 1:
@@ -2891,7 +2891,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 {
                     if (((ObjSeqState*)seq)->curFrame >= *(s16*)(cmd + 2))
                     {
-                        ((ObjSeqState*)seq)->unk68 = *(s16*)(cmd + 2);
+                        ((ObjSeqState*)seq)->retriggerFrame = *(s16*)(cmd + 2);
                         ((ObjSeqState*)seq)->cmdCursor += 1;
                     }
                     else
@@ -2901,11 +2901,11 @@ int ObjSeq_update(u8* obj, f32 t)
                 }
                 else
                 {
-                    if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->unk68)
+                    if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->retriggerFrame)
                     {
                         if (opcode != 0xf)
                         {
-                            ((ObjSeqState*)seq)->unk68 += cmd[1];
+                            ((ObjSeqState*)seq)->retriggerFrame += cmd[1];
                         }
                         ((ObjSeqState*)seq)->cmdCursor += 1;
                         if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, 0, 0) != 0)
@@ -3002,7 +3002,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 restart = 1;
                 ((ObjSeqState*)seq)->sequenceControlFlags =
                     ((ObjSeqState*)seq)->sequenceControlFlags & ~OBJSEQ_CONTROL_RESTART_AT_SAVED_FRAME;
-                ((ObjSeqState*)seq)->curFrame = (s16)((ObjSeqState*)seq)->unk74;
+                ((ObjSeqState*)seq)->curFrame = (s16)((ObjSeqState*)seq)->savedFrame;
                 ((ObjSeqState*)seq)->prevFrame = ((ObjSeqState*)seq)->curFrame;
             }
             ((ObjSeqState*)seq)->sequenceControlFlags = 0;
@@ -3989,8 +3989,8 @@ checked:
             {
                 fn_80297254(player);
             }
-            ((ObjSeqState*)seq)->unk10C = *(int*)walk2;
-            ((ObjSeqState*)seq)->unk70 = ((ObjSeqState*)seq)->flags;
+            ((ObjSeqState*)seq)->targetObjId = *(int*)walk2;
+            ((ObjSeqState*)seq)->savedFlags = ((ObjSeqState*)seq)->flags;
             if (idx == 0)
             {
                 *(u8*)((u8*)&st->cmdFlags[0] + ((GameObject*)obj)->seqIndex) = *(u16*)(walk2 + 4);
@@ -4143,9 +4143,9 @@ int ObjSeq_ResolveAndAssignTargetObject(u8* obj)
         {
             ((ObjSeqState*)seqObj)->targetObj = Obj_GetPlayerObject();
         }
-        else if (((ObjSeqState*)seqObj)->unk10C != 0)
+        else if (((ObjSeqState*)seqObj)->targetObjId != 0)
         {
-            ((ObjSeqState*)seqObj)->targetObj = ObjList_FindObjectById(((ObjSeqState*)seqObj)->unk10C);
+            ((ObjSeqState*)seqObj)->targetObj = ObjList_FindObjectById(((ObjSeqState*)seqObj)->targetObjId);
         }
         else
         {
@@ -4275,7 +4275,7 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
         return;
     }
 
-    ((ObjSeqState*)seq)->unk68 = -1;
+    ((ObjSeqState*)seq)->retriggerFrame = -1;
     ((ObjSeqState*)seq)->cmdCursor = 0;
     ((ObjSeqState*)seq)->fade = lbl_803DEFB0;
     stop = 0;
@@ -4288,7 +4288,7 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
         {
             if (((ObjSeqState*)seq)->curFrame >= *(s16*)(command + 2))
             {
-                ((ObjSeqState*)seq)->unk68 = *(s16*)(command + 2);
+                ((ObjSeqState*)seq)->retriggerFrame = *(s16*)(command + 2);
                 ((ObjSeqState*)seq)->cmdCursor++;
             }
             else
@@ -4298,9 +4298,9 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
         }
         else if ((s8)opcode == 0xb && *(s16*)(command + 2) > 0)
         {
-            if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->unk68)
+            if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->retriggerFrame)
             {
-                ((ObjSeqState*)seq)->unk68 += command[1];
+                ((ObjSeqState*)seq)->retriggerFrame += command[1];
                 ((ObjSeqState*)seq)->cmdCursor = (s16)(((ObjSeqState*)seq)->cmdCursor + (*(s16*)(command + 2) + 1));
             }
             else
@@ -4308,11 +4308,11 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
                 stop = 1;
             }
         }
-        else if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->unk68)
+        else if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->retriggerFrame)
         {
             if ((s8)command[0] != 0xf)
             {
-                ((ObjSeqState*)seq)->unk68 += command[1];
+                ((ObjSeqState*)seq)->retriggerFrame += command[1];
             }
             ((ObjSeqState*)seq)->cmdCursor++;
         }

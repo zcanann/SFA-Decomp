@@ -120,13 +120,13 @@ struct ObjSeqState {
     s16 cmdCount;
     s16 animCount;
     s16 cmdCursor;
-    s16 unk68;
+    s16 retriggerFrame; /* curFrame threshold for a repeating command; advances by cmd stride */
     s16 gameBit;
-    s16 unk6C;
+    s16 moveId; /* masked to 0xfff; compared to anim.currentMove; passed to ObjAnim_SetCurrentMove */
     s16 flags;
-    s16 unk70;
+    s16 savedFlags; /* snapshot of flags, restored on state transitions */
     u8 unk72[2];
-    s32 unk74;
+    s32 savedFrame; /* saved frame value restored into curFrame */
     u8 unk78;
     u8 unk79;
     u8 unk7A;
@@ -151,10 +151,10 @@ struct ObjSeqState {
     ObjAnimSequenceFreeCallback freeCallback;
     ObjAnimSequenceConditionCallback conditionCallback;
     ObjAnimEventList animEvents;
-    s32 unk10C;
+    s32 targetObjId; /* object id resolved via ObjList_FindObjectById into targetObj */
     void *callbackContext;
-    s16 unk114;
-    s16 unk116;
+    s16 baseRotY; /* base rotation added to interpolated curve angle (vec[1]) */
+    s16 baseRotX; /* base rotation added to interpolated curve angle (vec[0]) */
     s16 conditionFrames[10];
     u8 conditionOpcodes[10];
     u8 flags136[2]; /* 0x136 flags byte; bit 0x04 = record a save-point on free */

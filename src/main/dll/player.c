@@ -3251,7 +3251,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         }
         if (*(s8*)(ctrl + 0x20) == 0 || (c = (s8)seq->movementState) == 3 || c == 2)
         {
-            seq->flags = seq->unk70;
+            seq->flags = seq->savedFlags;
             if ((s8)seq->movementState != 2)
             {
                 seq->posOffsetScale = lbl_803E7EE0;
@@ -3305,7 +3305,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             f32 dx;
             int d;
             seq->flags &= ~0x4c;
-            seq->unk70 &= ~0x48;
+            seq->savedFlags &= ~0x48;
             obj2 = getFocusedNpc();
             if (objModelGetVecFn_800395d8(obj2, 0) != 0)
             {
@@ -3408,7 +3408,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         else if (c == 5)
         {
             seq->flags &= ~0x4c;
-            seq->unk70 &= ~0x48;
+            seq->savedFlags &= ~0x48;
             ObjHits_EnableObject(obj);
             if (seq->posOffsetScale >= lbl_803E7EE0 &&
                 (*gCameraInterface)->isZooming() == 0)
@@ -3487,7 +3487,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         else if (c == 6)
         {
             seq->flags &= ~0x4c;
-            seq->unk70 &= ~0x48;
+            seq->savedFlags &= ~0x48;
             ObjHits_EnableObject(obj);
             if ((s8)endFlag == 0)
             {
@@ -3552,7 +3552,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 }
                 if (dd3 < 0x100 && dd3 > -0x100)
                 {
-                    seq->flags = seq->unk70;
+                    seq->flags = seq->savedFlags;
                     seq->movementState = 0;
                     seq->prevFrame = seq->curFrame - 1;
                     ((GameObject*)obj)->anim.activeMove = -1;
@@ -3613,7 +3613,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     }
     else
     {
-        seq->flags |= seq->unk70 & ~0x400;
+        seq->flags |= seq->savedFlags & ~0x400;
         *(u8*)((char*)inner + 0x34c) = 0;
         {
             f32 fz2 = lbl_803E7EA4;
@@ -3791,7 +3791,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 break;
             case 8:
                 {
-                    seq->flags = seq->unk70;
+                    seq->flags = seq->savedFlags;
                     obj2 = *(int*)&((GameObject*)obj)->extra;
                     (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, obj2, 1);
                     *(void (**)(int, int))(obj2 + 0x304) = fn_802A514C;

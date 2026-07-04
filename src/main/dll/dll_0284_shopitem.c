@@ -130,7 +130,7 @@ int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
 
     seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_801E8660;
     seq->flags &= ~4;
-    seq->unk70 &= ~4;
+    seq->savedFlags &= ~4;
 
     if ((int)objAnim->banks[objAnim->bankIndex] != 0)
     {

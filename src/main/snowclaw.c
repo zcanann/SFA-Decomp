@@ -727,7 +727,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
     {
         seq->sequenceControlFlags |= OBJSEQ_CONTROL_CLEAR_LATCH_A;
     }
-    seq->flags = seq->unk70;
+    seq->flags = seq->savedFlags;
     for (i = 0; i < seq->eventCount; i++)
     {
         switch (seq->eventIds[i])
