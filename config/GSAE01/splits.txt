@@ -1976,7 +1976,7 @@ main/dll/SH/shthorntail.c:
 
 main/dll/SH/dll_01AD_shthorntail.c:
 	.text       start:0x801D58E4 end:0x801D6914
-	.data       start:0x8032753C end:0x80327560
+	.data       start:0x8032753C end:0x80327598
 
 main/dll/scchieflightfoot.c:
 	.text       start:0x801D6914 end:0x801D6C04
