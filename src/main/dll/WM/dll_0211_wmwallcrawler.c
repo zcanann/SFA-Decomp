@@ -795,3 +795,8 @@ u16 gWallCrawlerVariantFlags[8] = { 0x0000, 0x0002, 0x0004, 0x0001, 0x000C, 0x03
 u8 gWallCrawlerPointCollision[12] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
+
+/*__DATA_EXTERNS__*/
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* gWM_WallCrawlerObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, wmwallcrawler_initialise, wmwallcrawler_release, (void*)0x00000000, wmwallcrawler_init, wmwallcrawler_update, wmwallcrawler_hitDetect, wmwallcrawler_render, wmwallcrawler_free, wmwallcrawler_getObjectTypeId, wmwallcrawler_getExtraSize, (void*)0x00000000 };
+u8 lbl_80328E28[48] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
