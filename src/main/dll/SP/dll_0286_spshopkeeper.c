@@ -36,15 +36,15 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 typedef struct ShopkeeperSpawnSetup
 {
     ObjPlacement base; /* 0x00..0x17 */
-    u8 unk18;          /* 0x18 */
-    u8 unk19;          /* 0x19 */
-    s16 unk1A;         /* 0x1A */
+    u8 rotXByte;       /* 0x18: scarab spawn rotX (1/256 turns) */
+    u8 kind;           /* 0x19: scarab variant (see SpscarabPlacement.kind) */
+    s16 groundY;       /* 0x1A: scarab ground-height delta (see SpscarabState.groundY) */
     u8 pad1C[0x24 - 0x1C];
 } ShopkeeperSpawnSetup;
 
-STATIC_ASSERT(offsetof(ShopkeeperSpawnSetup, unk18) == 0x18);
-STATIC_ASSERT(offsetof(ShopkeeperSpawnSetup, unk19) == 0x19);
-STATIC_ASSERT(offsetof(ShopkeeperSpawnSetup, unk1A) == 0x1A);
+STATIC_ASSERT(offsetof(ShopkeeperSpawnSetup, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(ShopkeeperSpawnSetup, kind) == 0x19);
+STATIC_ASSERT(offsetof(ShopkeeperSpawnSetup, groundY) == 0x1A);
 STATIC_ASSERT(sizeof(ShopkeeperSpawnSetup) == 0x24);
 
 /* object type id of the scarab coins the shopkeeper scatters (DLL 0x287) */
@@ -115,8 +115,8 @@ void fn_801E7DC8(int p1, int p2, int count)
         ((ShopkeeperSpawnSetup*)o)->base.posX = ((GameObject*)p1)->anim.localPosX;
         ((ShopkeeperSpawnSetup*)o)->base.posY = ((GameObject*)p1)->anim.localPosY;
         ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)p1)->anim.localPosZ;
-        *(s8*)&((ShopkeeperSpawnSetup*)o)->unk18 = randomGetRange(-128, 127);
-        ((ShopkeeperSpawnSetup*)o)->unk1A = ((GameObject*)p1)->anim.localPosY - *(f32*)&local;
+        *(s8*)&((ShopkeeperSpawnSetup*)o)->rotXByte = randomGetRange(-128, 127);
+        ((ShopkeeperSpawnSetup*)o)->groundY = ((GameObject*)p1)->anim.localPosY - *(f32*)&local;
         ((ShopkeeperSpawnSetup*)o)->base.color[1] = 1;
         ((ShopkeeperSpawnSetup*)o)->base.color[3] = 255;
         ((ShopkeeperSpawnSetup*)o)->base.color[0] = 16;
@@ -131,13 +131,13 @@ void fn_801E7DC8(int p1, int p2, int count)
         ((ShopkeeperSpawnSetup*)o)->base.posX = ((GameObject*)p1)->anim.localPosX;
         ((ShopkeeperSpawnSetup*)o)->base.posY = ((GameObject*)p1)->anim.localPosY;
         ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)p1)->anim.localPosZ;
-        *(s8*)&((ShopkeeperSpawnSetup*)o)->unk18 = randomGetRange(-128, 127);
-        ((ShopkeeperSpawnSetup*)o)->unk1A = ((GameObject*)p1)->anim.localPosY - *(f32*)&local;
+        *(s8*)&((ShopkeeperSpawnSetup*)o)->rotXByte = randomGetRange(-128, 127);
+        ((ShopkeeperSpawnSetup*)o)->groundY = ((GameObject*)p1)->anim.localPosY - *(f32*)&local;
         ((ShopkeeperSpawnSetup*)o)->base.color[1] = 1;
         ((ShopkeeperSpawnSetup*)o)->base.color[3] = 255;
         ((ShopkeeperSpawnSetup*)o)->base.color[0] = 16;
         ((ShopkeeperSpawnSetup*)o)->base.color[2] = 6;
-        ((ShopkeeperSpawnSetup*)o)->unk19 = 1;
+        ((ShopkeeperSpawnSetup*)o)->kind = 1;
         ((ShopkeeperSpawnSetup*)o)->base.mapId = ((ShopkeeperState*)p2)->vendorObj;
         Obj_SetupObject(o, 5, ((GameObject*)p1)->anim.mapEventSlot, -1, *(int*)&((GameObject*)p1)->anim.parent);
     }
