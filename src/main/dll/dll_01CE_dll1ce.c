@@ -240,10 +240,10 @@ void dll_1CE_update(int* obj)
         ((Dll1CESpawnSetup*)no)->posX = ((Dll1CEPlacement*)q)->posX;
         ((Dll1CESpawnSetup*)no)->posY = lbl_803E49FC + ((Dll1CEPlacement*)q)->posYOffset;
         ((Dll1CESpawnSetup*)no)->posZ = ((Dll1CEPlacement*)q)->posZ;
-        ((Dll1CESpawnSetup*)no)->color[0] = ((Dll1CEPlacement*)q)->unk4;
-        ((Dll1CESpawnSetup*)no)->color[1] = ((Dll1CEPlacement*)q)->unk5;
-        ((Dll1CESpawnSetup*)no)->color[2] = ((Dll1CEPlacement*)q)->unk6;
-        ((Dll1CESpawnSetup*)no)->color[3] = ((Dll1CEPlacement*)q)->unk7;
+        ((Dll1CESpawnSetup*)no)->color[0] = ((Dll1CEPlacement*)q)->color[0];
+        ((Dll1CESpawnSetup*)no)->color[1] = ((Dll1CEPlacement*)q)->color[1];
+        ((Dll1CESpawnSetup*)no)->color[2] = ((Dll1CEPlacement*)q)->color[2];
+        ((Dll1CESpawnSetup*)no)->color[3] = ((Dll1CEPlacement*)q)->color[3];
         ((Dll1CESpawnSetup*)no)->field1C = 0x17f;
         ((Dll1CESpawnSetup*)no)->field24 = -1;
         ((Dll1CESpawnSetup*)no)->field2C = -1;

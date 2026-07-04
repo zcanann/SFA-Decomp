@@ -6,10 +6,7 @@
 typedef struct Dll1CEPlacement
 {
     u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
+    u8 color[4]; /* 0x04: RGBA tint copied into spawn setup color[0..3] */
     f32 posX;
     f32 posYOffset;
     f32 posZ;
