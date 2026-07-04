@@ -25,7 +25,7 @@ typedef struct DIMSnowHorn1State
     u8 lookController[0x96D - 0x35C]; /* dll_2E look-controller block at 0x35C (start evidenced; true extent unknown) */
     u8 unk96D;
     u8 pad96E[0x980 - 0x96E];
-    u8 unk980;
+    u8 playerNearby; /* 0x980: 1 when player within mount range (mountMode==0); gates spawnPos capture */
     u8 pad981[3];
     f32 spawnPosX;
     f32 spawnPosY;
@@ -1309,14 +1309,14 @@ void DIMSnowHorn1_update(int obj)
             && Vec_distance((void*)((int)playerObj + 0x18), (void*)&((GameObject*)obj)->anim.worldPosX) < lbl_803E8240
             && ((DIMSnowHorn1State*)statePtr)->mountMode == 0)
         {
-            ((DIMSnowHorn1State*)statePtr)->unk980 = 1;
+            ((DIMSnowHorn1State*)statePtr)->playerNearby = 1;
             ((DIMSnowHorn1State*)statePtr)->spawnPosX = ((GameObject*)playerObj)->anim.localPosX;
             ((DIMSnowHorn1State*)statePtr)->spawnPosY = ((GameObject*)playerObj)->anim.localPosY;
             ((DIMSnowHorn1State*)statePtr)->spawnPosZ = ((GameObject*)playerObj)->anim.localPosZ;
         }
         else
         {
-            ((DIMSnowHorn1State*)statePtr)->unk980 = 0;
+            ((DIMSnowHorn1State*)statePtr)->playerNearby = 0;
         }
         fn_8003B500(obj, data + 0x980, lbl_803E8234);
         break;
