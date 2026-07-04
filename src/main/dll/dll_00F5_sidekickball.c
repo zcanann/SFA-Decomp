@@ -556,3 +556,6 @@ u8 gSidekickBallPathPointData[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 char sSidekickBallYVelDepthFormat[] = "yvel %f, depth %f\n";
 
 char sSidekickBallDotFormat[] = " dot %f ";
+
+/* .data fill (reconstructed to match dll_00F5_sidekickball.o) */
+ObjectDescriptor gSidekickBallObjDescriptor = { 0, 0, 0, 0x90000, 0, 0, 0, (ObjectDescriptorCallback)sidekickball_init, (ObjectDescriptorCallback)sidekickball_update, 0, (ObjectDescriptorCallback)sidekickball_render, (ObjectDescriptorCallback)sidekickball_free, 0, sidekickball_getExtraSize };
