@@ -35,7 +35,7 @@ typedef struct SnowBikeState {
     u8 unk05C;              /* 0x05c */
     u8 unk05D;              /* 0x05d */
     u8 pad05E[0x2];
-    char *unk060;           /* 0x060 */
+    char *gameBitPtr;       /* 0x060: base+0xa4+bikeType*6; points to a pair of s16 GameBit ids (GameBit_Get at +0/+2) */
     u8 pad064[0x1];
     s8 collisionHitType;    /* 0x065: path-collision secondaryHitType (-1 = use plain non-Ex setup) */
     u8 pad066[0x2];

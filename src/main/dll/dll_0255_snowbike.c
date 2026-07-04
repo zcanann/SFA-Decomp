@@ -862,7 +862,7 @@ static inline void SnowBike_initBody(int obj, u8* params, int flag)
     fv = ((SnowBikeState*)state)->velLimitZ;
     ((SnowBikeState*)state)->distanceScaleLimit = fv;
     ((SnowBikeState*)state)->baseVelLimitZ = fv;
-    ((SnowBikeState*)state)->unk060 = (char*)((int)base + 0xa4 + ((SnowBikeState*)state)->bikeType * 6);
+    ((SnowBikeState*)state)->gameBitPtr = (char*)((int)base + 0xa4 + ((SnowBikeState*)state)->bikeType * 6);
     if (((SnowBikeState*)state)->bikeType == 0)
     {
         if (!((SnowBikeFlags*)(state + 0x428))->b02)

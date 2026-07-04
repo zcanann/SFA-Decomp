@@ -127,7 +127,7 @@ void fn_801EAE4C(short* obj, int stateRaw)
         st->checkpointIndexC = 0xffffffff;
         st->unk044 = 0;
         lbl_803DC0BC = -1;
-        bitVal = GameBit_Get((int)*(short*)st->unk060);
+        bitVal = GameBit_Get((int)*(short*)st->gameBitPtr);
         if (bitVal != 0)
         {
             ((HightopFlags3*)&st->flags428)->active = 1;
@@ -201,7 +201,7 @@ void fn_801EAE4C(short* obj, int stateRaw)
                 *(f32*)(lbl_803AD088 + 0xc) = st->unk034;
             }
         }
-        bitVal = GameBit_Get((int)*(short*)(st->unk060 + 2));
+        bitVal = GameBit_Get((int)*(short*)(st->gameBitPtr + 2));
         if (bitVal != 0)
         {
             ((HightopFlags3*)&st->flags428)->active = 0;
