@@ -633,7 +633,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
             magicVal = 0xa;
         }
         lbl_803DD734 = magicVal;
-        *(s16*)(lbl_8031BB90 + 0x160) = magicVal != 0 ? 0x4e : 0x25;
+        *(s16*)(lbl_8031BB90 + 0x160) = magicVal != 0 ? (u8)0x4e : (u8)0x25;
         gameTextSetDrawFunc(pauseMenuTextDrawFn);
         gameTextSetColor(0xff, 0xff, 0xff, ty);
         lbl_803DBA8A = (s16)(0xff - lbl_803DD75C);
