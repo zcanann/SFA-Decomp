@@ -20,9 +20,9 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 typedef struct DfpseqpointPlacement
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX; /* 0x08 */
+    f32 posY; /* 0x0C */
+    f32 posZ; /* 0x10 */
     s32 unk14;
     u8 pad18[0x19 - 0x18];
     u8 unk19;
