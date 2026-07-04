@@ -31,17 +31,8 @@ extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int fn_80296448(int obj);
 extern u32 gCurveFishCurveQueryKey;
-extern f32 lbl_803E38EC;
 extern f32 lbl_803E38F0;
-extern f32 lbl_803E38F4;
-extern f32 lbl_803E38F8;
-extern f32 lbl_803E38FC;
 extern f32 lbl_803E3900;
-extern f32 lbl_803E3904;
-extern f32 lbl_803E3908;
-extern f32 lbl_803E390C;
-extern f32 lbl_803E3910;
-extern f32 lbl_803E3914;
 extern const f32 lbl_803E3928;
 extern f32 timeDelta;
 
