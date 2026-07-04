@@ -321,7 +321,7 @@ int warpstone_updateMenuAnimObj(int obj, u32 p2, int animObj)
         {
         case 0x17:
             ((WarpstoneUpdateMenuAnimObjState*)state)->flagsD4 = ((WarpstoneUpdateMenuAnimObjState*)state)->flagsD4 | 4;
-            Sfx_PlayFromObject(0, 0x420);
+            Sfx_PlayFromObject(0, SFXTRIG_id_420);
             break;
 
         case 3:
