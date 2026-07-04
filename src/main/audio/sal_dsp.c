@@ -1,6 +1,8 @@
 #include "main/audio/sal_dsp.h"
 #include "dolphin/dsp.h"
 
+#pragma exceptions on
+
 typedef struct {
     DSPTaskInfo task;
     u8 pad[0x10];
@@ -48,22 +50,6 @@ int salInitDsp(u32 flags)
     return 1;
 }
 
-void hwEnableIrq(void)
-{
-}
-
-void sndEnd(void)
-{
-    u16 count;
-
-    count = hwIrqLevel - 1;
-    hwIrqLevel = count;
-    if (count == 0)
-    {
-        OSRestoreInterrupts(oldState);
-    }
-}
-
 int salStartDsp(void)
 {
     DSPHalt();
@@ -107,6 +93,22 @@ void hwInitIrq(void)
 }
 
 #pragma scheduling on
+void hwEnableIrq(void)
+{
+}
+
+void sndEnd(void)
+{
+    u16 count;
+
+    count = hwIrqLevel - 1;
+    hwIrqLevel = count;
+    if (count == 0)
+    {
+        OSRestoreInterrupts(oldState);
+    }
+}
+
 void sndBegin(void)
 {
     u16 count = hwIrqLevel;
