@@ -35,7 +35,7 @@ typedef struct LightfootSub
     u8 pad8[0xC - 0x8];
     f32 animTimer;
     f32 lifeTimer; /* 0x10 counts down by timeDelta; Obj_FreeObject when it reaches the terminal value */
-    f32 unk14;
+    f32 wanderTimer;
     u8 pad18[0x24 - 0x18];
     u16 unk24;
     s16 unk26;
@@ -277,7 +277,7 @@ void lightfoot_update(int obj)
             Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_foot_metal_scuff_455);
             ((void (*)(int, f32, int, int, int, void*))fn_80098B18)(obj, lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, 3, p30, 0, snd);
         }
-        ((LightfootSub*)anim)->unk14 -= timeDelta;
+        ((LightfootSub*)anim)->wanderTimer -= timeDelta;
     }
 }
 
@@ -404,7 +404,7 @@ void lightfoot_init(int obj, int p2, int p3)
             ((GroundBaddieState*)inner)->baddie.substate = 2;
             ((LightfootSub*)sub)->unk0 = (int)(base + 0x30);
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x40);
-            ((LightfootSub*)sub)->unk14 = (f32)(s32)
+            ((LightfootSub*)sub)->wanderTimer = (f32)(s32)
             randomGetRange(0x78, 0xb4);
             ((GameObject*)obj)->anim.currentMoveProgress = (f32)(s32)
             randomGetRange(0, 0x63) / lbl_803E817C;
