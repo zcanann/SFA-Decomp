@@ -59,7 +59,7 @@ typedef struct DREarthWarriorState
     u8 pad14E0[0x14E2 - 0x14E0];
     s16 airMeterCapacity;
     u8 pad14E4[0x14E6 - 0x14E4];
-    u8 unk14E6;
+    u8 controlMode;
     u8 pad14E7[0x14E8 - 0x14E7];
     u8 unk14E8;
     u8 pad14E9[0x14ED - 0x14E9];
@@ -546,7 +546,7 @@ void fn_802BE6E8(int obj, int t, int p3)
     slot = (int)Camera_GetCurrentViewSlot();
     ((EarthWarriorState*)inner)->baddie.hitPoints = 0;
     *(int*)((char*)inner + 0) &= ~0x8000;
-    if (((DREarthWarriorState*)inner)->unk14E6 == 2)
+    if (((DREarthWarriorState*)inner)->controlMode == 2)
     {
         ((EarthWarriorState*)inner)->baddie.moveInputX = (f32)(s8)
         padGetStickX(0);
