@@ -90,6 +90,8 @@ STATIC_ASSERT(sizeof(WmwallcrawlerMapData) == 0x20);
 #define WMWALLCRAWLER_FLAG_TRICKY_FLEE 0x200   /* flee when Tricky closes in; random re-dive */
 #define WMWALLCRAWLER_FLAG_ATTACK_MOVE 0x400   /* lunge (anim move 2) when close */
 
+#define WMWALLCRAWLER_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
+
 /* state->mode */
 enum
 {
@@ -621,7 +623,7 @@ void wmwallcrawler_update(int obj)
                                     if (((GameObject*)obj)->anim.currentMove == 2 && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E6000
                                         && ((GameObject*)obj)->anim.currentMoveProgress < lbl_803E6004)
                                     {
-                                        ObjMsg_SendToObject(player, 0x60004, obj, 1);
+                                        ObjMsg_SendToObject(player, WMWALLCRAWLER_MSG_PLAYER_BURST, obj, 1);
                                         gWallCrawlerHitCount = 0;
                                     }
                                     if (GameBit_Get(0x1d9) != 0)
@@ -634,7 +636,7 @@ void wmwallcrawler_update(int obj)
                                         Sfx_PlayFromObject(obj, 0x75);
                                         if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0)
                                         {
-                                            ObjMsg_SendToObject(player, 0x60004, obj, 1);
+                                            ObjMsg_SendToObject(player, WMWALLCRAWLER_MSG_PLAYER_BURST, obj, 1);
                                         }
                                         else
                                         {
