@@ -786,3 +786,12 @@ void Camera_initialise(void)
 }
 
 char sCamcontrolTriggeredCamActionLoadWarning[] = "<camcontrol.c>  failed to load triggered camaction actionno %d\n";
+
+/* descriptor/ptr table auto 0x80319b58-0x80319cb4 */
+u32 lbl_80319B58[16] = { 0x00000000, 0x00000000, 0x00000000, 0x000b0000, (u32)camcontrol_initialiseModeSettings, (u32)camcontrol_releaseModeSettings, 0x00000000, (u32)pathcam_loadSettings, (u32)camstatic_update, (u32)CameraModeNormal_free, (u32)firstperson_loadSettings, (u32)firstperson_updatePosition, (u32)firstperson_updatePitch, (u32)camslide_update, (u32)CameraModeNormal_func0A, (u32)camcontrol_updateVerticalBounds };
+u32 lbl_80319B98[12] = { 0x00000000, 0x00000000, 0x00000000, 0x00060000, (u32)CameraModeStaffAnim_initialise, (u32)CameraModeStaffAnim_release, 0x00000000, (u32)CameraModeStaffAnim_init, (u32)camclimb_update, (u32)camcontrol_releasePathState, (u32)CameraModeStaffAnim_copyToCurrent_nop, 0x00000000 };
+u32 lbl_80319BC8[12] = { 0x00000000, 0x00000000, 0x00000000, 0x00060000, (u32)CameraModeBike_initialise, (u32)CameraModeBike_release, 0x00000000, (u32)CameraModeBike_init, (u32)CameraModeBike_update, (u32)CameraModeBike_free, (u32)CameraModeBike_copyToCurrent, 0x00000000 };
+u32 lbl_80319BF8[12] = { 0x00000000, 0x00000000, 0x00000000, 0x00060000, (u32)CameraModeViewfinder_initialise, (u32)CameraModeViewfinder_release, 0x00000000, (u32)CameraModeViewfinder_init, (u32)CameraModeViewfinder_update, (u32)CameraModeViewfinder_free, (u32)CameraModeViewfinder_copyToCurrent, 0x00000000 };
+u32 lbl_80319C28[12] = { 0x00000000, 0x00000000, 0x00000000, 0x00060000, (u32)CameraModeDebug_initialise_nop, (u32)CameraModeDebug_release_nop, 0x00000000, (u32)CameraModeDebug_init, (u32)CameraModeDebug_update, (u32)CameraModeDebug_free, (u32)CameraModeDebug_copyToCurrent_nop, 0x00000000 };
+u32 lbl_80319C58[12] = { 0x00000000, 0x00000000, 0x00000000, 0x00060000, (u32)CameraModeStatic_initialise, (u32)CameraModeStatic_release, 0x00000000, (u32)CameraModeStatic_init, (u32)CameraModeStatic_update, (u32)CameraModeStatic_free, (u32)CameraModeStatic_copyToCurrent_nop, 0x00000000 };
+u32 lbl_80319C88[11] = { 0x00000000, 0x00000000, 0x00000000, 0x00060000, (u32)CameraModeTestStrength_initialise, (u32)CameraModeTestStrength_release, 0x00000000, (u32)CameraModeTestStrength_init, (u32)CameraModeTestStrength_update, (u32)CameraModeTestStrength_free, (u32)CameraModeTestStrength_copyToCurrent_nop };
