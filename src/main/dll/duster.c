@@ -312,7 +312,7 @@ void fn_801557D4(int* obj, int state)
         {
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
         }
-        if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+        if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             Sfx_PlayFromObject((u32)obj, SFXfox_runbreath1);
             Baddie_SetMove((int)obj, state, 2, lbl_803E2A04, 0, 0);
@@ -333,7 +333,7 @@ void fn_80155884(int* obj, int state)
         (cond = fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
     {
         fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A30);
-        if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+        if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             Baddie_SetMove((int)obj, state, 0, lbl_803E2A30, 0, 0);
             Sfx_PlayFromObject((u32)obj, SFXfox_roll4);
@@ -372,7 +372,7 @@ void fn_80155948(int* obj, int state)
             fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A30);
         }
         fn_80154D0C((int)obj, state, outIds, outVec);
-        if (((((BaddieState*)state)->controlFlags & 0x40000000) != 0) ||
+        if (((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) ||
             ((outIds[0] < 0x5dc && (*(short*)(obj + 0x28) != 1))))
         {
             if (outIds[0] < 0x5dc)
@@ -561,7 +561,7 @@ void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int event
 void fn_80155F20(int obj, int state)
 {
     ((DusterState*)state)->phaseTimer = lbl_803E2A60;
-    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         if (((BaddieState*)state)->seqEntryIndex == 1)
         {
@@ -597,7 +597,7 @@ void fn_80156010(u32 obj, int state)
         timerExpired = 1;
         ((DusterState*)state)->phaseTimer = *(f32 *)&lbl_803E2A60;
     }
-    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         if (((GameObject*)obj)->anim.currentMove == 4)
         {
@@ -682,7 +682,7 @@ void fn_8015625C(u32 obj, int state)
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
-    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         Sfx_PlayFromObject(obj, SFXfox_cough4);
     }
@@ -701,7 +701,7 @@ void fn_8015625C(u32 obj, int state)
         }
         Sfx_PlayFromObject(obj, SFXfoxcom_decoy);
     }
-    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         ObjAnim_SetCurrentMove(obj, 3, lbl_803E2A98, *(u8*)(state + 0x323));
     }
@@ -776,7 +776,7 @@ void fn_8015652C(u32 obj, int state)
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
-    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         Sfx_PlayFromObject(obj, SFXfox_cough4);
     }
@@ -795,7 +795,7 @@ void fn_8015652C(u32 obj, int state)
         }
         Sfx_PlayFromObject(obj, SFXfoxcom_decoy);
     }
-    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E2A98, *(u8*)(state + 0x323));
     }
@@ -811,7 +811,7 @@ void fn_8015652C(u32 obj, int state)
     {
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
     }
-    if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
         if (((Curve_AdvanceAlongPath(route, ((BaddieState*)state)->pathStep) != 0 ||
                     route->atSegmentEnd != 0) &&
@@ -983,12 +983,12 @@ void fn_80156B0C(u32 obj, int state)
 
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
-    if (((((BaddieState*)state)->controlFlags & 0x80000000) != 0) && (((BaddieState*)state)->seqEntryIndex <= 1))
+    if (((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0) && (((BaddieState*)state)->seqEntryIndex <= 1))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
-        ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | 0x40000000LL;
+        ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
-    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         ((BaddieState*)state)->seqEntryIndex += 1;
         if (10 < ((BaddieState*)state)->seqEntryIndex)
@@ -1017,7 +1017,7 @@ void fn_80156C34(u32 obj, int state)
     int tblOff;
     u32 phase;
 
-    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         phase = ((BaddieState*)state)->seqEntryIndex;
         if (phase == 0)
@@ -1096,7 +1096,7 @@ void fn_80156DA0(int obj, int state)
         {
             Baddie_SetMove(obj, state, 5, lbl_803DBCEC, 0, 0);
         }
-        else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+        else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             ObjHits_EnableObject(obj);
             ((DusterState*)state)->decoyTimer = lbl_803E2B18;
@@ -1122,7 +1122,7 @@ void fn_80156DA0(int obj, int state)
         groundHit = objBboxFn_800640cc(fromPos, toPos, lbl_803E2B18, 3, hitOut, obj,
                                    (u32) * (u8*)(state + 0x261), 0xffffffff, 0xff, 0);
         noHit = !(groundHit & 0xff);
-        if (!noHit || ((((BaddieState*)state)->controlFlags & 0x40000000) != 0))
+        if (!noHit || ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0))
         {
             if (noHit && ((GameObject*)obj)->anim.currentMove != 0)
             {
