@@ -306,22 +306,22 @@ void fn_80174BFC(int obj, int ext)
                     delta = delta / 0xb6;
                     if (delta > -0x1e && delta < 0x1e)
                     {
-                        ((PushableState*)ext)->flags |= 0x100;
+                        ((PushableState*)ext)->flags |= PUSHABLE_FLAG_PUSH_NEG_X;
                         ((PushableState*)ext)->pushAmountX = lbl_803E3528;
                     }
                     else if (delta > 0x96 || delta < -0x96)
                     {
-                        ((PushableState*)ext)->flags |= 0x200;
+                        ((PushableState*)ext)->flags |= PUSHABLE_FLAG_PUSH_POS_X;
                         ((PushableState*)ext)->pushAmountX = lbl_803E3528;
                     }
                     else if (delta > 0x3c && delta < 0x78)
                     {
-                        ((PushableState*)ext)->flags |= 0x800;
+                        ((PushableState*)ext)->flags |= PUSHABLE_FLAG_PUSH_POS_Z;
                         ((PushableState*)ext)->pushAmountZ = lbl_803E3528;
                     }
                     else if (delta < -0x3c && delta > -0x78)
                     {
-                        ((PushableState*)ext)->flags |= 0x400;
+                        ((PushableState*)ext)->flags |= PUSHABLE_FLAG_PUSH_NEG_Z;
                         ((PushableState*)ext)->pushAmountZ = lbl_803E3528;
                     }
                     memcpy((void*)(ext + i * 12 + 0x78), &points[i * 3], 0xc);
@@ -1154,7 +1154,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         if (hit != 0)
         {
             f32 t;
-            state->flags = state->flags | 0x200;
+            state->flags = state->flags | PUSHABLE_FLAG_PUSH_POS_X;
             t = lbl_803E3528;
             state->pushAmountX = t;
             state->pushAmountZ = t;
@@ -1175,7 +1175,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         if (hit != 0)
         {
             f32 t;
-            state->flags = state->flags | 0x800;
+            state->flags = state->flags | PUSHABLE_FLAG_PUSH_POS_Z;
             t = lbl_803E3528;
             state->pushAmountX = t;
             state->pushAmountZ = t;
@@ -1196,7 +1196,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         if (hit != 0)
         {
             f32 t;
-            state->flags = state->flags | 0x400;
+            state->flags = state->flags | PUSHABLE_FLAG_PUSH_NEG_Z;
             t = lbl_803E3528;
             state->pushAmountX = t;
             state->pushAmountZ = t;
@@ -1207,19 +1207,19 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         hit = 1;
         if (dx > lbl_803E3528)
         {
-            state->flags = state->flags | 0x200;
+            state->flags = state->flags | PUSHABLE_FLAG_PUSH_POS_X;
         }
         else if (dx < lbl_803E3528)
         {
-            state->flags = state->flags | 0x100;
+            state->flags = state->flags | PUSHABLE_FLAG_PUSH_NEG_X;
         }
         else if (dz > lbl_803E3528)
         {
-            state->flags = state->flags | 0x800;
+            state->flags = state->flags | PUSHABLE_FLAG_PUSH_POS_Z;
         }
         else
         {
-            state->flags = state->flags | 0x400;
+            state->flags = state->flags | PUSHABLE_FLAG_PUSH_NEG_Z;
         }
         {
             f32 t = lbl_803E3528;
@@ -1344,19 +1344,19 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     }
     {
         u16 fl = state->flags;
-        if ((fl & 0x100) != 0)
+        if ((fl & PUSHABLE_FLAG_PUSH_NEG_X) != 0)
         {
             ret = 1;
         }
-        else if ((fl & 0x200) != 0)
+        else if ((fl & PUSHABLE_FLAG_PUSH_POS_X) != 0)
         {
             ret = 2;
         }
-        else if ((fl & 0x400) != 0)
+        else if ((fl & PUSHABLE_FLAG_PUSH_NEG_Z) != 0)
         {
             ret = 3;
         }
-        else if ((fl & 0x800) != 0)
+        else if ((fl & PUSHABLE_FLAG_PUSH_POS_Z) != 0)
         {
             ret = 4;
         }
@@ -1364,7 +1364,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         {
             ret = 5;
         }
-        state->flags = *(u16*)((u8*)state + 0x100) & ~0xf00;
+        state->flags = *(u16*)((u8*)state + 0x100) & ~PUSHABLE_FLAG_PUSH_DIR_MASK;
     }
     return ret;
 }

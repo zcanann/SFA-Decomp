@@ -73,6 +73,13 @@ typedef struct PushableState {
   u8 pad147;
 } PushableState;
 
+/* PushableState.flags push-direction bits (set from dx/dz sign, cleared via ~0xF00) */
+#define PUSHABLE_FLAG_PUSH_NEG_X 0x100
+#define PUSHABLE_FLAG_PUSH_POS_X 0x200
+#define PUSHABLE_FLAG_PUSH_NEG_Z 0x400
+#define PUSHABLE_FLAG_PUSH_POS_Z 0x800
+#define PUSHABLE_FLAG_PUSH_DIR_MASK 0xF00
+
 STATIC_ASSERT(sizeof(PushableState) == 0x148);
 STATIC_ASSERT(offsetof(PushableState, cullDistance) == 0x0C);
 STATIC_ASSERT(offsetof(PushableState, probeLocal) == 0x18);
