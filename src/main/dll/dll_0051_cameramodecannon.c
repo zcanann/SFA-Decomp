@@ -17,8 +17,6 @@
 #include "main/dll/CAM/camera_mode_cannon_state.h"
 #include "main/dll/fx_800944A0_shared.h"
 
-typedef struct CameraModeCloudRunnerState CameraModeCloudRunnerState;
-
 
 
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
