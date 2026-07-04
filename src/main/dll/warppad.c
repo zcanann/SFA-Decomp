@@ -27,7 +27,7 @@
 #include "main/gameplay_runtime.h"
 
 #define WARPPAD_OBJFLAG_PARENT_SLACK 0x1000
-extern int ObjTrigger_IsSet();
+extern int ObjTrigger_IsSet(int obj);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
@@ -61,8 +61,6 @@ extern void setAButtonIcon(int x);
 
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
 
-#pragma scheduling off
-#pragma peephole off
 void warpPadFn_8019042c(int obj)
 {
     WarpPadState* state;
@@ -106,9 +104,9 @@ void warpPadFn_8019042c(int obj)
     }
     else if ((flags & WARPPAD_FLAG_WARP_B) != 0)
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)player + 0x18)) < gWarpPadProximityBurstDistSq)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gWarpPadProximityBurstDistSq)
         {
-            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
+            if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) && (state->countdownActive == 0))
             {
                 objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100,
                                       lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
@@ -124,9 +122,9 @@ void warpPadFn_8019042c(int obj)
     }
     else if ((flags & WARPPAD_FLAG_WARP_C) != 0)
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)player + 0x18)) < gWarpPadProximityBurstDistSq)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gWarpPadProximityBurstDistSq)
         {
-            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
+            if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) && (state->countdownActive == 0))
             {
                 objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100,
                                       lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
@@ -142,9 +140,9 @@ void warpPadFn_8019042c(int obj)
     }
     else
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)player + 0x18)) < gWarpPadProximityBurstDistSq)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gWarpPadProximityBurstDistSq)
         {
-            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
+            if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) && (state->countdownActive == 0))
             {
                 objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100,
                                       lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
@@ -254,7 +252,7 @@ void warpPadPlayerStandingOn(int obj)
         if (lbl_803DCEB8 > -1)
         {
             player = Obj_GetPlayerObject();
-            if (Vec_xzDistance((f32*)(obj + 0x18), (f32*)((u8*)player + 0x18)) < gWarpPadTriggerDist)
+            if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gWarpPadTriggerDist)
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                 ((GameObject*)obj)->unkF4 = state->activateDelay;
