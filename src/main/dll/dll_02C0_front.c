@@ -42,8 +42,8 @@ typedef struct TitlescreenState
     f32 unk1C;
     f32 unk20;
     u8 pad24[0x30 - 0x24];
-    u8 unk30; /* anim state-machine phase (0-5) */
-    s8 unk31; /* per-actor pose index (seqId - 0x77d), or -2 for non-Tricky */
+    u8 animPhase; /* 0x30: anim state-machine phase (0-5); also the move index passed to ObjAnim_SetCurrentMove */
+    s8 poseIndex; /* 0x31: per-actor pose index (seqId - 0x77d), or -2 for non-Tricky */
     u8 pad32[0x34 - 0x32];
     f32 unk34;
 } TitlescreenState;
@@ -232,12 +232,12 @@ void titlescreen_init(u8* obj, u8* p)
 {
     u8* a = ((GameObject*)obj)->extra;
     s16 v;
-    ((TitlescreenState*)a)->unk30 = 0;
+    ((TitlescreenState*)a)->animPhase = 0;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)p[0x18] << 8);
     v = ((GameObject*)obj)->anim.seqId;
     if (v >= 0x77d && v < 0x781)
     {
-        ((TitlescreenState*)a)->unk31 = (s8)(v - 0x77d);
+        ((TitlescreenState*)a)->poseIndex = (s8)(v - 0x77d);
         ((TitlescreenState*)a)->unk34 = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[0];
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
     }
@@ -245,7 +245,7 @@ void titlescreen_init(u8* obj, u8* p)
     {
         f32 m = lbl_803E22F8;
         ((TitlescreenState*)a)->unk34 = m;
-        ((TitlescreenState*)a)->unk31 = -2;
+        ((TitlescreenState*)a)->poseIndex = -2;
         v = ((GameObject*)obj)->anim.seqId;
         if (v == 0x78a)
         {
@@ -535,26 +535,26 @@ void titlescreen_update(u8* obj)
 
     if (lbl_803DD9AB != 0)
     {
-        if (((TitlescreenState*)state)->unk31 != lbl_803DD990 && lbl_803DD991 == 0 &&
-            (c = ((TitlescreenState*)state)->unk30) != 0 && c != 4 && c != 3)
+        if (((TitlescreenState*)state)->poseIndex != lbl_803DD990 && lbl_803DD991 == 0 &&
+            (c = ((TitlescreenState*)state)->animPhase) != 0 && c != 4 && c != 3)
         {
             if (((GameObject*)obj)->anim.seqId == 0x77d || ((GameObject*)obj)->anim.seqId == 0x780)
             {
-                ((TitlescreenState*)state)->unk30 = 3;
+                ((TitlescreenState*)state)->animPhase = 3;
                 ObjAnim_SetCurrentMove(objHandle, 1, lbl_803E2318, 0);
                 ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[3];
             }
             else
             {
-                ((TitlescreenState*)state)->unk30 = 0;
+                ((TitlescreenState*)state)->animPhase = 0;
                 ObjAnim_SetCurrentMove(objHandle, 0, lbl_803E22F8, 0);
                 ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[0];
             }
         }
-        if (((TitlescreenState*)state)->unk31 == lbl_803DD990 && lbl_803DD991 != 0 &&
-            (c = ((TitlescreenState*)state)->unk30) != 1 && c != 2 && c != 5)
+        if (((TitlescreenState*)state)->poseIndex == lbl_803DD990 && lbl_803DD991 != 0 &&
+            (c = ((TitlescreenState*)state)->animPhase) != 1 && c != 2 && c != 5)
         {
-            ((TitlescreenState*)state)->unk30 = 1;
+            ((TitlescreenState*)state)->animPhase = 1;
             ObjAnim_SetCurrentMove(objHandle, 1, lbl_803E22F8, 0);
             ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[1];
             if (((GameObject*)obj)->anim.seqId == 0x77e)
@@ -573,7 +573,7 @@ void titlescreen_update(u8* obj)
         else if (t != 0x78a)
         {
             buf[0x1b] = 0;
-            if (t == 0x77d && ((TitlescreenState*)state)->unk30 == 2)
+            if (t == 0x77d && ((TitlescreenState*)state)->animPhase == 2)
             {
                 if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2358)
                 {
@@ -593,15 +593,15 @@ void titlescreen_update(u8* obj)
                 f, objHandle, timeDelta, (ObjAnimEventList*)buf);
             if (evt != 0)
             {
-                if (((TitlescreenState*)state)->unk31 == lbl_803DD990 && ((TitlescreenState*)state)->unk30 == 1)
+                if (((TitlescreenState*)state)->poseIndex == lbl_803DD990 && ((TitlescreenState*)state)->animPhase == 1)
                 {
-                    ((TitlescreenState*)state)->unk30 = 2;
+                    ((TitlescreenState*)state)->animPhase = 2;
                     ObjAnim_SetCurrentMove(objHandle, 2, lbl_803E22F8, 0);
                     ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[2];
                 }
-                else if (((TitlescreenState*)state)->unk30 == 3)
+                else if (((TitlescreenState*)state)->animPhase == 3)
                 {
-                    ((TitlescreenState*)state)->unk30 = 0;
+                    ((TitlescreenState*)state)->animPhase = 0;
                     ObjAnim_SetCurrentMove(objHandle, 0, lbl_803E22F8, 0);
                     ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[0];
                 }
@@ -609,9 +609,9 @@ void titlescreen_update(u8* obj)
                 {
                     if (randomGetRange(0, 4) == 0)
                     {
-                        if ((c = ((TitlescreenState*)state)->unk30) == 0 || c == 4)
+                        if ((c = ((TitlescreenState*)state)->animPhase) == 0 || c == 4)
                         {
-                            ((TitlescreenState*)state)->unk30 = 4;
+                            ((TitlescreenState*)state)->animPhase = 4;
                             ObjAnim_SetCurrentMove(objHandle, randomGetRange(3, 4), lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress =
                                 gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[1 + ((GameObject*)obj)->anim.
@@ -619,7 +619,7 @@ void titlescreen_update(u8* obj)
                         }
                         else
                         {
-                            ((TitlescreenState*)state)->unk30 = 5;
+                            ((TitlescreenState*)state)->animPhase = 5;
                             ObjAnim_SetCurrentMove(objHandle, randomGetRange(5, 6), lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress =
                                 gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[1 + ((GameObject*)obj)->anim.
@@ -628,17 +628,17 @@ void titlescreen_update(u8* obj)
                     }
                     else
                     {
-                        c = ((TitlescreenState*)state)->unk30;
+                        c = ((TitlescreenState*)state)->animPhase;
                         if (c == 4)
                         {
-                            ((TitlescreenState*)state)->unk30 = 0;
+                            ((TitlescreenState*)state)->animPhase = 0;
                             ObjAnim_SetCurrentMove(objHandle, 0, lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].
                                 moves[0];
                         }
                         else if (c == 5)
                         {
-                            ((TitlescreenState*)state)->unk30 = 2;
+                            ((TitlescreenState*)state)->animPhase = 2;
                             ObjAnim_SetCurrentMove(objHandle, 2, lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].
                                 moves[2];
@@ -649,7 +649,7 @@ void titlescreen_update(u8* obj)
             fn_80134870(obj, buf);
         }
         t = ((GameObject*)obj)->anim.seqId;
-        if (t == 0x77e && ((c = ((TitlescreenState*)state)->unk30) == 0 || c == 4))
+        if (t == 0x77e && ((c = ((TitlescreenState*)state)->animPhase) == 0 || c == 4))
         {
             fn_8003B228(obj, state);
         }
@@ -667,7 +667,7 @@ void titlescreen_update(u8* obj)
         }
         lbl_803DBC08 = -1;
         lbl_803DBC09 = -1;
-        s = ((TitlescreenState*)state)->unk30;
+        s = ((TitlescreenState*)state)->animPhase;
         t = ((GameObject*)obj)->anim.seqId;
         switch (t)
         {
