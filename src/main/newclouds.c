@@ -2684,3 +2684,6 @@ char sSnowKillSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i 
 
 /* descriptor/ptr table auto 0x8030f788-0x8030f7b0 */
 u32 lbl_8030F788[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
+
+/* fill missing .data symbols */
+u32 lbl_8030F5B4[15] = { 0x00000000, 0x00000000, 0x00000000, 0x000a0000, (u32)newclouds_initialise, (u32)newclouds_release, 0x00000000, (u32)newclouds_update, (u32)newclouds_onMapSetup, (u32)newclouds_snowKillSnowCloud, (u32)dll_07_func06, (u32)dll_07_func07, (u32)dll_07_func08, (u32)dll_07_func09, (u32)dll_07_func0A_nop };
