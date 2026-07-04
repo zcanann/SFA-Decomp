@@ -628,7 +628,7 @@ void nw_mammoth_free(void* obj)
     void* node;
 
     node = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 0x4d);
+    ObjGroup_RemoveObject(obj, NW_MAMMOTH_GROUP_ID);
     if ((((NwMammothState*)node)->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE) != 0)
     {
         (*gGameUIInterface)->airMeterShutdown();
