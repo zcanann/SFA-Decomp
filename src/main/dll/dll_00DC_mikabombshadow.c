@@ -161,6 +161,9 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/engine_shared.h"
+
+/* object group this object joins while active */
+#define MIKABOMBSHADOW_OBJGROUP 7
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern f32 lbl_803E31D8;
@@ -184,7 +187,7 @@ extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, MIKABOMBSHADOW_OBJGROUP);
     return;
 }
 
@@ -225,7 +228,7 @@ void staticCamera_init(short* obj, int paramsArg, int flag)
     dst[1] = 0;
     if (flag == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, MIKABOMBSHADOW_OBJGROUP);
     }
     return;
 }
