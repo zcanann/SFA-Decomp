@@ -19,6 +19,7 @@
  * stateIndex assignment; each state handler runs its one-time enter setup on
  * the frame the bit is seen, then clears it.
  */
+#define BOMBPLANT_FLAG_MOVE_ACTIVE 0x1
 #define BOMBPLANT_FLAG_STATE_ENTERED 0x2
 #define BOMBPLANT_GAMEBIT_INTRO_SEEN 0x189 /* one-shot: run intro sequence on first approach */
 extern u32 ObjHits_ClearHitVolumes();
@@ -494,11 +495,11 @@ void bombplant_update(void* obj)
     if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
         (int)obj, *(f32*)(entry + 0x4), timeDelta, NULL) != 0)
     {
-        ((BombPlantState*)state)->flags |= 0x1;
+        ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_MOVE_ACTIVE;
     }
     else
     {
-        ((BombPlantState*)state)->flags &= ~0x1;
+        ((BombPlantState*)state)->flags &= ~BOMBPLANT_FLAG_MOVE_ACTIVE;
     }
 
 epilogue:
