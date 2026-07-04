@@ -557,7 +557,7 @@ void collectible_func10(int* obj, f32 f1, f32 f2, f32 f3)
 void collectible_func0B(int* obj, int flag)
 {
     char* inner = (char*)((GameObject*)obj)->extra;
-    ((CollectibleState*)inner)->unkF = flag;
+    ((CollectibleState*)inner)->disabled = flag;
     if (flag != 0)
     {
         ObjHits_DisableObject((u32)obj);
@@ -1162,7 +1162,7 @@ void collectible_init(int obj, int setup)
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED;
     ((CollectibleState*)state)->unkC = ((CollectibleSetup*)setup)->unkC;
     ((CollectibleState*)state)->unkD = ((CollectibleSetup*)setup)->unkD;
-    ((CollectibleState*)state)->unkF = 0;
+    ((CollectibleState*)state)->disabled = 0;
     ((CollectibleState*)state)->hitRegionId = -2;
     ((CollectibleState*)state)->bounceTimer = 0;
     ((CollectibleState*)state)->visibilityGameBit = ((CollectibleSetup*)setup)->visibilityGameBit;

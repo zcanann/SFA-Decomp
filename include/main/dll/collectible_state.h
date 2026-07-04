@@ -25,7 +25,7 @@ typedef struct CollectibleState {
     u8 unkC;               /* 0x0C */
     u8 unkD;               /* 0x0D */
     u8 unkE[0xF - 0xE];
-    u8 unkF;               /* 0x0F nonzero suppresses the active update */
+    u8 disabled;           /* 0x0F nonzero disables hits & suppresses the active update */
     s16 hideGameBit;       /* 0x10 set on collect so the item stays gone (-1 = none) */
     u8 unk12[0x14 - 0x12];
     s16 visibilityGameBit; /* 0x14 item is active only while this bit is set (-1 = none) */
