@@ -126,7 +126,7 @@ extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern float __fabsf(float);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void selectTexture(int handle, int slot);
-extern void setupReflectionIndirectTev(u8 flag);
+extern void setupReflectionIndirectTev(u32 flag);
 extern void gxSetPeControl_ZCompLoc_(u32 zcomploc);
 extern void gxSetZMode_(u32 compEnable, int func, u32 updateEnable);
 extern void _gxSetFogParams(void);
@@ -2117,7 +2117,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
     void* dstBuf;
-    int trackedFlags;
+    u8 trackedFlags;
     int zCompLoc;
     int zMode;
     int blendMode;
@@ -2414,7 +2414,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             }
             else if ((flags & EXPGFX_RENDER_ALT_ALPHA_SETUP) != 0)
             {
-                if (!((s8)alphaMode == 4 && trackedFlags == (int)(flags & EXPGFX_RENDER_OVERRIDE_COLORS)))
+                if (!((s8)alphaMode == 4 && trackedFlags == (flags & EXPGFX_RENDER_OVERRIDE_COLORS)))
                 {
                     setupReflectionIndirectTev(flags & EXPGFX_RENDER_OVERRIDE_COLORS);
                     alphaMode = 4;
