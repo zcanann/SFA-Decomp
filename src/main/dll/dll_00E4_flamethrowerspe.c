@@ -732,15 +732,6 @@ void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3)
     ((GameObject*)obj)->anim.rotX = b;
 }
 
-void gcbaddieshield_update(int* obj);
-
-
-
-
-void mikabombshadow_init(int* obj);
-
-void StaticCamera_init(int* obj, int* params, int flag);
-
 void flamethrowerspe_init(int* obj, int* params)
 {
     extern void storeZeroToFloatParam(f32* p); /* #57 */
@@ -756,9 +747,6 @@ void flamethrowerspe_init(int* obj, int* params)
     ((FlamethrowerspeState*)state)->phase = FLAMETHROWERSPE_PHASE_LAUNCH;
     ObjHits_DisableObject(obj);
 }
-
-void dll_F7_init(int* obj, int* params);
-
 
 #pragma opt_common_subs off
 void flamethrowerspe_update(int* obj)
@@ -808,16 +796,6 @@ void flamethrowerspe_update(int* obj)
 }
 #pragma opt_common_subs reset
 
-void mikabomb_init(int* obj);
-
-
-
-void shield_update(int* obj);
-
-void dll_F7_update(int* obj);
-
-#pragma opt_common_subs reset
-
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 
 static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
@@ -840,5 +818,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
-
-#pragma opt_common_subs off
