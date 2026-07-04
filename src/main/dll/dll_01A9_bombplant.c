@@ -20,6 +20,7 @@
  * the frame the bit is seen, then clears it.
  */
 #define BOMBPLANT_FLAG_STATE_ENTERED 0x2
+#define BOMBPLANT_GAMEBIT_INTRO_SEEN 0x189 /* one-shot: run intro sequence on first approach */
 extern u32 ObjHits_ClearHitVolumes();
 extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -465,10 +466,10 @@ void bombplant_update(void* obj)
     if ((entry[8] & 0x2) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && GameBit_Get(0x189) == 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && GameBit_Get(BOMBPLANT_GAMEBIT_INTRO_SEEN) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-            GameBit_Set(0x189, 1);
+            GameBit_Set(BOMBPLANT_GAMEBIT_INTRO_SEEN, 1);
         }
     }
     else
