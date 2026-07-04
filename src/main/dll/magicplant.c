@@ -257,7 +257,10 @@ void fn_80153248(int obj, int state)
         worldPos[1] = curve->posY;
         worldPos[2] = curve->posZ;
         voxmaps_worldToGrid(worldPos, gridB);
-        if (((int)((u32)__cntlzw(((BaddieState*)state)->controlFlags) >> 5) & 0x01000000) != 0)
+        /* BUG: precedence - `!` binds before `&`, so this is (controlFlags == 0) & 0x01000000,
+         * which is always false; the line-of-sight abort below can never fire. The author
+         * almost certainly meant !(controlFlags & 0x01000000). */
+        if (!((BaddieState*)state)->controlFlags & 0x01000000)
         {
             if (voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) == 0)
             {
