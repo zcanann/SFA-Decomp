@@ -137,9 +137,7 @@ extern f32 lbl_803E201C;
 extern f32 lbl_803E20BC;
 extern f32 lbl_803E20C0;
 extern f32 lbl_803E20C4;
-extern f32 lbl_803E20C8;
 extern f32 lbl_803E20CC;
-extern f32 lbl_803E20D0;
 
 void pauseMenuDrawStatus_801274a0(int* arg1);
 void fn_80127F24(s32 alpha);
