@@ -12,6 +12,15 @@
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "sfa_light_decls.h"
+
+/* state byte (extra+0) progression */
+#define WARPSTONELIFT_STATE_IDLE     0 /* not yet swapped; character out of / entering range */
+#define WARPSTONELIFT_STATE_OFFERING 1 /* character present, WarpStone offered via Y-menu */
+#define WARPSTONELIFT_STATE_SWAPPED  2 /* WarpStone taken; locked */
+
+/* WarpStone item / game bit offered by this lift */
+#define WARPSTONELIFT_ITEM_BIT 0xC7C
+
 extern f32 lbl_803E54C8;
 extern s32 lbl_803DC058[2]; /* the two "already-swapped" progress bits */
 extern u16 getYButtonItem(s16* out);
@@ -53,11 +62,11 @@ void warpstonelift_init(int obj, s8* def)
     }
     switch (*(u8*)state)
     {
-    case 0:
-    case 2:
+    case WARPSTONELIFT_STATE_IDLE:
+    case WARPSTONELIFT_STATE_SWAPPED:
         Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
         break;
-    case 1:
+    case WARPSTONELIFT_STATE_OFFERING:
         Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
         break;
     }
@@ -93,10 +102,11 @@ void warpstonelift_update(u8* obj)
         ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         switch (*state)
         {
-        case 0:
-        case 1:
+        case WARPSTONELIFT_STATE_IDLE:
+        case WARPSTONELIFT_STATE_OFFERING:
             getYButtonItem(&item);
-            if ((GameBit_Get(0xC7C) != 0 && cMenuGetSelectedItem() != -1) || item == 0xC7C)
+            if ((GameBit_Get(WARPSTONELIFT_ITEM_BIT) != 0 && cMenuGetSelectedItem() != -1) ||
+                item == WARPSTONELIFT_ITEM_BIT)
             {
                 Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
             }
@@ -104,11 +114,11 @@ void warpstonelift_update(u8* obj)
             {
                 Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 2);
             }
-            if (ObjTrigger_IsSetById((int)obj, 0xC7C) != 0)
+            if (ObjTrigger_IsSetById((int)obj, WARPSTONELIFT_ITEM_BIT) != 0)
             {
                 GameBit_Set(0x886, 1);
                 GameBit_Set(0xC7D, 1);
-                *state = 2;
+                *state = WARPSTONELIFT_STATE_SWAPPED;
                 Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
             }
             else if (ObjTrigger_IsSet((int)obj) != 0)
@@ -116,7 +126,7 @@ void warpstonelift_update(u8* obj)
                 GameBit_Set(0xC7E, 1);
             }
             break;
-        case 2:
+        case WARPSTONELIFT_STATE_SWAPPED:
             if (ObjTrigger_IsSet((int)obj) != 0)
             {
                 GameBit_Set(0x886, 1);
