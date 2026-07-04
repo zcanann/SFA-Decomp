@@ -25,3 +25,10 @@ void projenergise2_release(void)
 void projenergise2_initialise(void)
 {
 }
+
+/*__DATA_EXTERNS__*/
+extern void projrobotfire_doUnsupported();
+extern void projrobotfire_release();
+extern void projrobotfire_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_80319768[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projrobotfire_initialise, projrobotfire_release, (void*)0x00000000, projrobotfire_doUnsupported };
