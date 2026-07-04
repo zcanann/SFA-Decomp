@@ -8,6 +8,9 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define MAGICDUST_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define MAGICDUST_MSG_IN_RANGE 0x7000a    /* sent to player when in pickup range */
+#define MAGICDUST_MSG_PICKUP 0x7000b      /* collect: award magic + burst */
+#define MAGICDUST_GAMEBIT_CLAIMED 0x90d   /* per-frame single-pickup latch */
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
@@ -95,7 +98,7 @@ void magicdust_update(int obj)
     {
         switch (msg[0])
         {
-        case 0x7000b:
+        case MAGICDUST_MSG_PICKUP:
             ref = (int)((GameObject*)obj)->anim.modelInstance->extraSetupData;
             (*gExpgfxInterface)->freeSource2((u32)obj);
             itemPickupDoParticleFx(obj, lbl_803E34B0, ((MagicDustState*)state)->mode, 0x28);
@@ -277,13 +280,13 @@ void magicdust_update(int obj)
             fval = lbl_803E34E0 + ((MagicDustState*)state)->collectRadius;
             if ((dist < fval * fval) && (fn_8029622C(player) != 0))
             {
-                val = GameBit_Get(0x90d);
+                val = GameBit_Get(MAGICDUST_GAMEBIT_CLAIMED);
                 if (val == 0)
                 {
                     *(s16*)&((MagicDustState*)state)->pickupMsgArg = 0xffff;
-                    ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x280);
+                    ObjMsg_SendToObject(player, MAGICDUST_MSG_IN_RANGE, obj, state + 0x280);
                     ObjHits_DisableObject(obj);
-                    GameBit_Set(0x90d, 1);
+                    GameBit_Set(MAGICDUST_GAMEBIT_CLAIMED, 1);
                     ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 0x20;
                 }
                 else
