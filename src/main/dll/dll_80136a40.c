@@ -990,11 +990,7 @@ int fn_80136E00(int p1, u8* p)
     int y;
     int y0;
     int y1;
-    u16 x0;
-    u32 ca;
-    u32 cb;
-    u32 cc;
-    u32 cd;
+    u32 x0;
     f32 sc;
     int rm;
     u8 c0;
@@ -1073,32 +1069,28 @@ int fn_80136E00(int p1, u8* p)
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)(u32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
-                    cb = (u32)((f32)(u32)y1 * sc);
-                    cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
-                    cd = (u32)((f32)(u32)x2 * sc);
+                    y0 = (u32)((f32)(u32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
+                    y1 = (u32)((f32)(u32)y1 * sc);
+                    x0 = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    x2 = (u32)((f32)(u32)x2 * sc);
                     colb4[0] = gDebugTextColorR;
                     colb4[1] = gDebugTextColorG;
                     colb4[2] = gDebugTextColorB;
                     colb4[3] = gDebugTextColorA;
                     colw4 = *(u32*)colb4;
-                    hudDrawRect(ca, cc, cb, cd, &colw4);
+                    hudDrawRect(y0, x0, y1, x2, &colw4);
                 }
             }
-            debugPrintYpos = p[0];
-            debugPrintYpos = (u16)debugPrintYpos | (p[1] << 8);
-            debugPrintXpos = p[2];
-            c0 = p[3];
-            p += 4;
-            debugPrintXpos |= c0 << 8;
+            debugPrintYpos = *p++;
+            debugPrintYpos = (u16)debugPrintYpos | (*p++ << 8);
+            debugPrintXpos = *p++;
+            debugPrintXpos = (u16)debugPrintXpos | (*p++ << 8);
             gDebugRectStartY = debugPrintYpos;
             gDebugRectStartX = debugPrintXpos;
             break;
         case 0x86:
-            gDebugTabWidth = p[0];
-            c0 = p[1];
-            p += 2;
-            gDebugTabWidth |= c0 << 8;
+            gDebugTabWidth = *p++;
+            gDebugTabWidth = (u16)gDebugTabWidth | (*p++ << 8);
             break;
         case 0x20:
             w = 6;
@@ -1117,16 +1109,16 @@ int fn_80136E00(int p1, u8* p)
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)(u32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
-                    cb = (u32)((f32)(u32)y1 * sc);
-                    cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
-                    cd = (u32)((f32)(u32)x2 * sc);
+                    y0 = (u32)((f32)(u32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
+                    y1 = (u32)((f32)(u32)y1 * sc);
+                    x0 = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    x2 = (u32)((f32)(u32)x2 * sc);
                     colb2[0] = gDebugTextColorR;
                     colb2[1] = gDebugTextColorG;
                     colb2[2] = gDebugTextColorB;
                     colb2[3] = gDebugTextColorA;
                     colw2 = *(u32*)colb2;
-                    hudDrawRect(ca, cc, cb, cd, &colw2);
+                    hudDrawRect(y0, x0, y1, x2, &colw2);
                 }
             }
             debugPrintYpos = gDebugPrintOriginY;
@@ -1170,16 +1162,16 @@ int fn_80136E00(int p1, u8* p)
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)(u32)y0 * sc);
-                    cb = (u32)((f32)(u32)y1 * sc);
-                    cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
-                    cd = (u32)((f32)(u32)x2 * sc);
+                    y0 = (u32)((f32)(u32)y0 * sc);
+                    y1 = (u32)((f32)(u32)y1 * sc);
+                    x0 = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    x2 = (u32)((f32)(u32)x2 * sc);
                     colb3[0] = gDebugTextColorR;
                     colb3[1] = gDebugTextColorG;
                     colb3[2] = gDebugTextColorB;
                     colb3[3] = gDebugTextColorA;
                     colw3 = *(u32*)colb3;
-                    hudDrawRect(ca, cc, cb, cd, &colw3);
+                    hudDrawRect(y0, x0, y1, x2, &colw3);
                 }
             }
             debugPrintYpos = gDebugPrintOriginY;
