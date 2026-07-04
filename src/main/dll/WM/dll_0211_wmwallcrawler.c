@@ -29,7 +29,7 @@ typedef struct WmwallcrawlerState
 {
     u8 pathState[0x268]; /* 0x000: PathControlInterface state block */
     f32 triggerRadius;   /* 0x268: aggro radius, from placement; rescaled after each dive */
-    f32 unk26C;          /* 0x26C: threshold vs lbl_803E5FD0, set once at init */
+    f32 fleeChaseThreshold; /* 0x26C: distance threshold; >thr+eps -> CHASE, <thr -> FLEE drains lifeTimer */
     f32 homeX;           /* 0x270: home position, from placement */
     f32 homeY;           /* 0x274 */
     f32 homeZ;           /* 0x278 */
@@ -396,13 +396,13 @@ void wmwallcrawler_update(int obj)
                     {
                         if (mode == WMWALLCRAWLER_MODE_FLEE)
                         {
-                            if (lbl_803E5FD0 > lbl_803E5FD4 + ((WmwallcrawlerState*)st)->unk26C)
+                            if (lbl_803E5FD0 > lbl_803E5FD4 + ((WmwallcrawlerState*)st)->fleeChaseThreshold)
                             {
                                 ((WmwallcrawlerState*)st)->mode = WMWALLCRAWLER_MODE_CHASE;
                                 ((WmwallcrawlerState*)st)->attackTimer = 0x14;
                             }
                         }
-                        else if (lbl_803E5FD0 < ((WmwallcrawlerState*)st)->unk26C)
+                        else if (lbl_803E5FD0 < ((WmwallcrawlerState*)st)->fleeChaseThreshold)
                         {
                             ((WmwallcrawlerState*)st)->lifeTimer -= framesThisStep;
                             if (randFn_80080100(0x32) != 0)
@@ -767,7 +767,7 @@ void wmwallcrawler_init(int obj, int spawn)
     state->heightOffset = mapData->heightOffset;
     ((GameObject*)obj)->anim.localPosY = mapData->base.posY + (f32)(int)state->heightOffset;
     state->lifeTimer = (s16)(randomGetRange(0, 0x50) + 0x190);
-    state->unk26C = lbl_803E6034;
+    state->fleeChaseThreshold = lbl_803E6034;
     state->counterGameBit = mapData->counterGameBit;
     if ((state->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0)
     {
