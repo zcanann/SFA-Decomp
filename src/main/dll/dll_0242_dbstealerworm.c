@@ -91,7 +91,7 @@ typedef struct DbstealerwormPlacement
     s16 cfgTableIndex;   /* 0x24: index into the per-worm config table (entry stride 8) */
     u8 pad26[0x2B - 0x26];
     u8 configFlags;      /* 0x2B: config flag bits OR'd into the state's configFlags */
-    s16 unk2C;           /* 0x2C */
+    s16 disableMapEventTime; /* 0x2C: nonzero suppresses the on-activate addTime() map-event grant */
     s8 seqId;            /* 0x2E: sequence run when activated */
     u8 pad2F[0x30 - 0x2F];
 } DbstealerwormPlacement;
@@ -310,7 +310,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
         {
             Stack_Pop(sub_40c->msgStack, &popBuf);
         }
-        if (((DbstealerwormPlacement*)data)->unk2C == 0)
+        if (((DbstealerwormPlacement*)data)->disableMapEventTime == 0)
         {
             (*gMapEventInterface)->
                 addTime(*(int*)&((DbstealerwormPlacement*)data)->eventConfigId, lbl_803E633C);
