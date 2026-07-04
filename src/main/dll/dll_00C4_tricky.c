@@ -26,6 +26,17 @@
 #define TRICKY_STATE2DC_FLAG_FLOOR_OFFSET_APPLIED 0x08000000LL /* offset-floor-Y push applied */
 #define TRICKY_STATE2DC_FLAG_FLOOR_SNAP_APPLIED 0x00100000LL   /* snap-to-floor velocity applied */
 #define TRICKY_STATE2DC_FLAG_SPECIAL_FLOOR_FOUND 0x10000000LL  /* a nearby type-0xe special floor was found */
+/* stateFlags movement-enable bits: each gates applying its matching per-frame
+ * position delta (backstepDelta / verticalDelta / sidestepDelta) or the
+ * rotate-toward-target interpolation in the per-frame update. */
+#define TRICKY_STATE_FLAG_SIDESTEP 0x20        /* apply sidestepDelta lateral offset */
+#define TRICKY_STATE_FLAG_BACKSTEP 0x40        /* apply backstepDelta offset */
+#define TRICKY_STATE_FLAG_VERTICAL_MOVE 0x80   /* apply verticalDelta to localPosY */
+#define TRICKY_STATE_FLAG_ROTATE 0x100         /* interpolate rotation toward unk5A target */
+/* stateFlags flame-particle child bookkeeping: 0x800 marks the 7 flame children
+ * as spawned; on teardown it is cleared and 0x1000 is set. */
+#define TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE 0x800   /* 7 flame child objects are spawned */
+#define TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP 0x1000 /* flame children torn down this cycle */
 #define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
 #define TRICKY_HEIGHT_TRACK_GROUP 0x51
 #define TRICKY_HEIGHT_TRACK_MODEL_SLOT 3
@@ -339,10 +350,10 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         ObjHits_DisableObject(obj);
         Sfx_StopObjectChannel(obj, 0x7f);
-        if ((((TrickyState*)state)->stateFlags & 0x800) != 0)
+        if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0)
         {
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x800;
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x1000;
+            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE;
+            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP;
             for (k = 0, slot = state; k < 7; slot = slot + 4, k = k + 1)
             {
                 objSetAnimSpeedTo1(*(int*)(slot + 0x700));
@@ -373,10 +384,10 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            if ((((TrickyState*)state)->stateFlags & 0x800) != 0)
+            if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0)
             {
-                ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x800;
-                ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x1000;
+                ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE;
+                ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP;
                 for (j = 0, slot = state; j < 7; slot = slot + 4, j = j + 1)
                 {
                     objSetAnimSpeedTo1(*(int*)(slot + 0x700));
@@ -392,7 +403,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             else if (Obj_IsLoadingLocked())
             {
-                ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x800;
+                ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE;
                 for (k = 0, p = (u8*)state; k < 7; p += 4, k = k + 1)
                 {
                     setup = Obj_AllocObjectSetup(0x24, 0x4f0);
@@ -752,10 +763,10 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[8]);
     ObjGroup_RemoveObject(obj, 1);
     (*gExpgfxInterface)->freeSource((u32)obj);
-    if ((shouldKeepFlameChildren == 0) && ((((TrickyState*)state)->stateFlags & 0x800) != 0))
+    if ((shouldKeepFlameChildren == 0) && ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0))
     {
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x800;
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x1000;
+        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE;
+        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP;
         i = 0;
         childSlot = state;
         do
@@ -1021,10 +1032,10 @@ void Tricky_update(int obj)
             ((TrickyState*)state)->speed = z;
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x80000LL;
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x2000;
-            if ((((TrickyState*)state)->stateFlags & 0x800) != 0)
+            if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0)
             {
-                ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x800;
-                ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x1000;
+                ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE;
+                ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP;
                 p = state;
                 do
                 {
@@ -1400,7 +1411,7 @@ void Tricky_update(int obj)
     {
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x8000000LL;
     }
-    if ((((TrickyState*)state)->stateFlags & 0x100) != 0)
+    if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_ROTATE) != 0)
     {
         diff = ((TrickyState*)state)->unk5A - (u16)((GameObject*)obj)->anim.rotX;
         if (diff > 0x8000)
@@ -1435,18 +1446,18 @@ void Tricky_update(int obj)
             *(s16*)obj = *(s16*)(int)(GameObject*)obj + diff;
         }
     }
-    if ((((TrickyState*)state)->stateFlags & 0x40) != 0)
+    if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_BACKSTEP) != 0)
     {
         ((GameObject*)obj)->anim.localPosX += ((TrickyState*)state)->backstepDelta * (((TrickyState*)state)->dirX * -((
             TrickyState*)state)->unk814);
         ((GameObject*)obj)->anim.localPosZ += ((TrickyState*)state)->backstepDelta * (((TrickyState*)state)->dirZ * -((
             TrickyState*)state)->unk814);
     }
-    if ((((TrickyState*)state)->stateFlags & 0x80) != 0)
+    if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_VERTICAL_MOVE) != 0)
     {
         ((GameObject*)obj)->anim.localPosY += ((TrickyState*)state)->unk810 * ((TrickyState*)state)->verticalDelta;
     }
-    if ((((TrickyState*)state)->stateFlags & 0x20) != 0)
+    if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_SIDESTEP) != 0)
     {
         ((GameObject*)obj)->anim.localPosX += ((TrickyState*)state)->sidestepDelta * (((TrickyState*)state)->dirZ * ((
             TrickyState*)state)->unk80C);
