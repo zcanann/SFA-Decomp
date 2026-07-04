@@ -2575,8 +2575,9 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
     }
 animate:
     {
+        char* kb;
         int k4 = k * 4;
-        char* kb = (char*)state + k4;
+        kb = (char*)state + k4;
         *(f32*)(kb + 0xb0) =
             *(f32*)(kb + 0xb0) +
             *(f32*)(kb + 0xac) * gModgfxMotionStep;
