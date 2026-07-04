@@ -7,6 +7,9 @@
 #include "main/obj_placement.h"
 #include "main/sfa_shared_decls.h"
 
+/* object group queried to find this object's target */
+#define SNOWCLAW_TARGET_OBJGROUP 0x1e
+
 typedef struct SnowclawState
 {
     u8 pad0[0x4 - 0x0];
@@ -417,7 +420,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis)
         if (((GameObject*)obj)->childCount == 0 && ((GameObject*)obj)->anim.seqId == 0x389 &&
             ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 != 0)
         {
-            near = ObjGroup_FindNearestObject(0x1e, obj, &dist);
+            near = ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
             if ((u32)near != 0 &&
                 (*(int (*)(int))(*(int*)(*(int*)(*(int*)&((GameObject*)near)->anim.dll) + 0x24)))(near) != 0 &&
                 (*(int (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)near)->anim.dll) + 0x20)))(near, 0) != 0)
@@ -485,7 +488,7 @@ void snowclaw_hitDetect(int obj)
                 }
                 if (((GameObject*)obj)->anim.seqId == 0x389)
                 {
-                    near = (int*)ObjGroup_FindNearestObject(0x1e, obj, &dist);
+                    near = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
                     if (near != 0)
                     {
                         ObjLink_DetachChild(obj, near);
@@ -774,7 +777,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
             break;
         case 6:
             {
-                int* found = (int*)ObjGroup_FindNearestObject(0x1e, obj, &dist);
+                int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
                 if (found != 0)
                 {
                     (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)found)->anim.dll) + 0x20)))(found, 2);
@@ -784,7 +787,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
             }
         case 7:
             {
-                int* found = (int*)ObjGroup_FindNearestObject(0x1e, obj, &dist);
+                int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
                 if (found != 0)
                 {
                     (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)found)->anim.dll) + 0x20)))(found, 0);
