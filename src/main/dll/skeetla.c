@@ -138,11 +138,11 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         {
             doHeightSnap = 0;
         }
-        else if (lbl_803E2410 == state->unk2B0)
+        else if (lbl_803E2410 == state->eventTime)
         {
             doHeightSnap = 1;
         }
-        else if (state->unk2B4 - state->unk2B0 > lbl_803E2414)
+        else if (state->currentTime - state->eventTime > lbl_803E2414)
         {
             doHeightSnap = 1;
         }
@@ -154,7 +154,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         if (doHeightSnap != 0)
         {
             ((GameObject*)obj)->anim.velocityY = *(f32*)&lbl_803E23DC;
-            ((GameObject*)obj)->anim.localPosY = state->unk2B4 - lbl_803E23EC;
+            ((GameObject*)obj)->anim.localPosY = state->currentTime - lbl_803E23EC;
         }
         else
         {
@@ -375,11 +375,11 @@ static int skeetla_isInWater(u8* state)
     {
         return 0;
     }
-    if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+    if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
     {
         return 1;
     }
-    if ((((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0) > lbl_803E2414)
+    if ((((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime) > lbl_803E2414)
     {
         return 1;
     }

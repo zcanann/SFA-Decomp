@@ -88,11 +88,11 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     {
         waterFlag = 0;
     }
-    else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+    else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
     {
         waterFlag = 1;
     }
-    else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+    else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
     {
         waterFlag = 1;
     }

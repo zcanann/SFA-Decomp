@@ -88,8 +88,8 @@ typedef struct TrickyState {
     u16 unk2A6;
     u8 pad2A8[0x2AC - 0x2A8];
     f32 waterLevel;
-    f32 unk2B0;
-    f32 unk2B4; /* collectable.c reads an s16 pair at 2B4/2B6 - launder those */
+    f32 eventTime; /* recorded event timestamp (sentinel == lbl_803E2410 means unset) */
+    f32 currentTime; /* running time reference; (currentTime - eventTime) > threshold gates the swim anim */
     f32 lookDirX; /* look/aim direction: yaw = getAngle(-X,-Z), pitch = getAngle(Y, hyp(X,Z)) */
     f32 lookDirY;
     f32 lookDirZ;

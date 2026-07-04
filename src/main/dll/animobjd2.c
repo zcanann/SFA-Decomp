@@ -223,8 +223,8 @@ void fn_8013E0D0(int* obj, u8* st)
                     {
                         b = 0;
                     }
-                    else if (lbl_803E2410 != t->unk2B0
-                             && !(t->unk2B4 - t->unk2B0 > lbl_803E2414))
+                    else if (lbl_803E2410 != t->eventTime
+                             && !(t->currentTime - t->eventTime > lbl_803E2414))
                     {
                         b = 0;
                     }
@@ -541,11 +541,11 @@ void fn_8013E0D0(int* obj, u8* st)
                     {
                         b = 0;
                     }
-                    else if (lbl_803E2410 == t->unk2B0)
+                    else if (lbl_803E2410 == t->eventTime)
                     {
                         b = 1;
                     }
-                    else if (t->unk2B4 - t->unk2B0 > lbl_803E2414)
+                    else if (t->currentTime - t->eventTime > lbl_803E2414)
                     {
                         b = 1;
                     }

@@ -120,11 +120,11 @@ void fn_8013F100(int obj, register int state)
                 {
                     useSwimAnim = 0;
                 }
-                else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+                else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
                 {
                     useSwimAnim = 1;
                 }
-                else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+                else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
                 {
                     useSwimAnim = 1;
                 }
@@ -177,11 +177,11 @@ void fn_8013F100(int obj, register int state)
                     {
                         useSwimAnim = 0;
                     }
-                    else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+                    else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
                     {
                         useSwimAnim = 1;
                     }
-                    else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+                    else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
                     {
                         useSwimAnim = 1;
                     }
@@ -208,11 +208,11 @@ void fn_8013F100(int obj, register int state)
                         {
                             useSwimAnim = 0;
                         }
-                        else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+                        else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
                         {
                             useSwimAnim = 1;
                         }
-                        else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+                        else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
                         {
                             useSwimAnim = 1;
                         }
@@ -272,11 +272,11 @@ void fn_8013F100(int obj, register int state)
                 {
                     useSwimAnim = 0;
                 }
-                else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+                else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
                 {
                     useSwimAnim = 1;
                 }
-                else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+                else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
                 {
                     useSwimAnim = 1;
                 }
@@ -353,11 +353,11 @@ void fn_8013F100(int obj, register int state)
             {
                 useSwimAnim = 0;
             }
-            else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+            else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
             {
                 useSwimAnim = 1;
             }
-            else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+            else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
             {
                 useSwimAnim = 1;
             }
@@ -413,11 +413,11 @@ void fn_8013F100(int obj, register int state)
                 {
                     useSwimAnim = 0;
                 }
-                else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+                else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
                 {
                     useSwimAnim = 1;
                 }
-                else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+                else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
                 {
                     useSwimAnim = 1;
                 }
@@ -485,11 +485,11 @@ void fn_8013F9E4(int obj, int state)
             {
                 inWater = 0;
             }
-            else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+            else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
             {
                 inWater = 1;
             }
-            else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+            else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
             {
                 inWater = 1;
             }
@@ -589,11 +589,11 @@ void fn_8013FBE4(int obj, register int state)
                 {
                     inWater = 0;
                 }
-                else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+                else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
                 {
                     inWater = 1;
                 }
-                else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+                else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
                 {
                     inWater = 1;
                 }
@@ -641,11 +641,11 @@ void fn_8013FEC0(int obj, int state)
         {
             inWater = 0;
         }
-        else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+        else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
         {
             inWater = 1;
         }
-        else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+        else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
         {
             inWater = 1;
         }
