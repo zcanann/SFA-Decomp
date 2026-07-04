@@ -676,7 +676,7 @@ main/dll/dll_00BD_projsunshock.c:
 
 main/dll/dll_00BE_projtesla.c:
 	.text       start:0x80100978 end:0x801009B0
-	.data       start:0x80319940 end:0x80319968
+	.data       start:0x80319940 end:0x80319988
 
 main/dll/dll_00BF_projcore1.c:
 	.text       start:0x801009B0 end:0x801009E8

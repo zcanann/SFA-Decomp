@@ -23,3 +23,6 @@ void projtesla_initialise(void)
 }
 
 char sProjteslaDoNoLongerSupported[] = "<projtesla Do>No Longer supported \n";
+
+/* descriptor/ptr table auto 0x80319968-0x80319988 */
+u32 lbl_80319968[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projcore1_initialise, (u32)projcore1_release, 0x00000000, (u32)projcore1_doUnsupported };
