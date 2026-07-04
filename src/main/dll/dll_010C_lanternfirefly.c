@@ -12,6 +12,9 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* object group this object joins while active */
+#define LANTERNFIREFLY_OBJGROUP 0x30
+
 #define MODEL_LIGHT_KIND_POINT 2
 
 typedef struct LanternFireFlyPlacement
@@ -156,7 +159,7 @@ void LanternFireFly_setScale(u8* obj, f32* vec)
 
 /* LanternFireFly_free: free the light struct at sub[0] if present, then
  * (when p2==0 and the freshly-cleared sub[0] is NULL and mode bits 6..7
- * aren't 1) reset lbl_803DDAD8 to 0; finally ObjGroup_RemoveObject(obj, 0x30)
+ * aren't 1) reset lbl_803DDAD8 to 0; finally ObjGroup_RemoveObject(obj, LANTERNFIREFLY_OBJGROUP)
  * and dispatch vtable[6] of *gExpgfxInterface. */
 
 void LanternFireFly_free(u8* obj, int p2)
@@ -171,7 +174,7 @@ void LanternFireFly_free(u8* obj, int p2)
     {
         lbl_803DDAD8 = 0;
     }
-    ObjGroup_RemoveObject(obj, 0x30);
+    ObjGroup_RemoveObject(obj, LANTERNFIREFLY_OBJGROUP);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
@@ -348,7 +351,7 @@ void LanternFireFly_init(int obj, int def)
 
     state = ((GameObject*)obj)->extra;
     spawnDef = (LanternFireFlySpawnDef*)def;
-    ObjGroup_AddObject(obj, 0x30);
+    ObjGroup_AddObject(obj, LANTERNFIREFLY_OBJGROUP);
 
     zero = lbl_803E3AB8;
     state->controlX[0] = zero;
