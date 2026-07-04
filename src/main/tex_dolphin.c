@@ -280,7 +280,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* b
     {
         PSMTXTrans(passMtx, lbl_803DEBCC, lbl_803DEC2C * (f32)(i + 1), lbl_803DEBCC);
         PSMTXConcat(viewMtx, passMtx, passMtx);
-        GXLoadPosMtxImm(passMtx, 0);
+        GXLoadPosMtxImm(passMtx, GX_PNMTX0);
         mtxSrc = (u8*)gTexIndMtxTable;
         *(IndMtxCopy*)indMtx = *(IndMtxCopy*)mtxSrc;
         textureFn_8006c4e0(&texTable, &texTableB);
@@ -340,14 +340,14 @@ LAB_8005E630:
     GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexLightmapAmbColor);
     if ((SHADER_FLAGS(shader) & 0x40000) != 0)
     {
-        GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+        GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         goto LAB_8005E718;
     }
-    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
     goto LAB_8005E718;
 LAB_8005E6D0:
     objGetColor(0, &ambColor[0], &ambColor[1], &ambColor[2]);
-    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
     GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambColor[0]);
 LAB_8005E718:
     return shader;
@@ -1050,14 +1050,14 @@ LAB_8005F7FC:
     GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexShaderAmbColor);
     if ((SHADER_FLAGS(shader) & 0x40000) != 0)
     {
-        GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+        GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         goto LAB_8005F8E4;
     }
-    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
     goto LAB_8005F8E4;
 LAB_8005F89C:
     objGetColor(0, &ambColor[0], &ambColor[1], &ambColor[2]);
-    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
     GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambColor[0]);
 LAB_8005F8E4:
     if ((SHADER_FLAGS(shader) & 0x8) != 0)
