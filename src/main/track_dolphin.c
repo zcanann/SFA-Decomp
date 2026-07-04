@@ -4247,7 +4247,7 @@ void renderGlows(void)
                 e->glowColor[2] * e->activeIntensity
                 )
                 ,
-                (e->glowColor[3] * e->glowAlpha) >> 8 & 0xff
+                (u8)((int)(e->glowColor[3] * e->glowAlpha) >> 8)
                 )
                 ;
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
