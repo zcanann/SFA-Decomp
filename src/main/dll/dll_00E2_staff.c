@@ -39,6 +39,10 @@
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+/* object group the staff joins while active */
+#define STAFF_OBJGROUP 7
+
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -233,7 +237,7 @@ extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, STAFF_OBJGROUP);
     return;
 }
 
@@ -259,7 +263,7 @@ void staticCamera_init(s16* obj, int params, int flag)
     state[1] = 0;
     if (flag == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, STAFF_OBJGROUP);
     }
     return;
 }
