@@ -444,7 +444,7 @@ void fn_80150910(int* obj, u8* state)
         sidekickToy_updateCurveTargetLatch(obj);
     }
     flags = ((BaddieState*)state)->controlFlags;
-    if (flags & 0x2000)
+    if (flags & BADDIE_CONTROL_PATH_FOLLOW)
     {
         f32 d;
         f32 delta;
@@ -535,7 +535,7 @@ void fn_80150910(int* obj, u8* state)
     }
     else
     {
-        if (state[0x33d] == 0 && (flags & 0x40000000))
+        if (state[0x33d] == 0 && (flags & BADDIE_CONTROL_SEQUENCE_DRIVEN))
         {
             u8 r = randomGetRange(1, tbl4[8]);
             if (*(u16*)(state + 0x338) != 0)
