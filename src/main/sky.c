@@ -1,5 +1,13 @@
 #include "main/sky_state.h"
 #include "main/sky_80080E58_shared.h"
+
+/* gSkyEnvFxFlags: per-group env-FX trigger enables + update state */
+#define SKY_ENVFX_GROUP_C 0x01   /* lbl_803DD138 group (GameBit 0x3ab) */
+#define SKY_ENVFX_GROUP_A 0x02   /* lbl_803DD130 group (GameBit 0x3ac) */
+#define SKY_ENVFX_GROUP_B 0x04   /* lbl_803DD13C group */
+#define SKY_ENVFX_GROUP_D 0x08   /* lbl_803DD134 group (weather) */
+#define SKY_ENVFX_UPDATE_PENDING 0x10 /* sun position changed; process this frame */
+#define SKY_ENVFX_IMMEDIATE 0x20 /* fire acts immediately vs deferred */
 #define SKY_CONFIG_FIELD_COUNT 0xb
 #define GX_FALSE 0
 #define GX_TEV_SWAP0 0
@@ -48,7 +56,7 @@ void envFxActFn_800887f8(u8 value)
 
     gSkyEnvFxFlags = value;
     masked = value;
-    masked &= 8;
+    masked &= SKY_ENVFX_GROUP_D;
     if (masked == 0)
     {
         player = Obj_GetPlayerObject();
@@ -88,19 +96,19 @@ void envFxFn_80088884(void)
         }
         if (gSkyEnvFxFlags != 0)
         {
-            gSkyEnvFxFlags |= 0x10;
+            gSkyEnvFxFlags |= SKY_ENVFX_UPDATE_PENDING;
         }
     }
     flags = gSkyEnvFxFlags;
-    if ((flags & 0x10) == 0)
+    if ((flags & SKY_ENVFX_UPDATE_PENDING) == 0)
     {
         return;
     }
-    flags = (u8)(flags & ~0x10);
+    flags = (u8)(flags & ~SKY_ENVFX_UPDATE_PENDING);
     gSkyEnvFxFlags = flags;
-    if ((u32)lbl_803DD130 != 0 && (flags & 0x2) != 0 && GameBit_Get(0x3ac) == 0)
+    if ((u32)lbl_803DD130 != 0 && (flags & SKY_ENVFX_GROUP_A) != 0 && GameBit_Get(0x3ac) == 0)
     {
-        if ((gSkyEnvFxFlags & 0x20) != 0)
+        if ((gSkyEnvFxFlags & SKY_ENVFX_IMMEDIATE) != 0)
         {
             getEnvfxActImmediately(0, 0, (u16)((s16*)lbl_803DD130)[b], 0);
         }
@@ -109,9 +117,9 @@ void envFxFn_80088884(void)
             getEnvfxAct(0, 0, (u16)((s16*)lbl_803DD130)[b], 0);
         }
     }
-    if ((u32)lbl_803DD13C != 0 && (gSkyEnvFxFlags & 0x4) != 0)
+    if ((u32)lbl_803DD13C != 0 && (gSkyEnvFxFlags & SKY_ENVFX_GROUP_B) != 0)
     {
-        if ((gSkyEnvFxFlags & 0x20) != 0)
+        if ((gSkyEnvFxFlags & SKY_ENVFX_IMMEDIATE) != 0)
         {
             getEnvfxActImmediately(0, 0, (u16)((s16*)lbl_803DD13C)[b], 0);
         }
@@ -120,9 +128,9 @@ void envFxFn_80088884(void)
             getEnvfxAct(0, 0, (u16)((s16*)lbl_803DD13C)[b], 0);
         }
     }
-    if ((u32)lbl_803DD138 != 0 && (gSkyEnvFxFlags & 0x1) != 0 && GameBit_Get(0x3ab) == 0)
+    if ((u32)lbl_803DD138 != 0 && (gSkyEnvFxFlags & SKY_ENVFX_GROUP_C) != 0 && GameBit_Get(0x3ab) == 0)
     {
-        if ((gSkyEnvFxFlags & 0x20) != 0)
+        if ((gSkyEnvFxFlags & SKY_ENVFX_IMMEDIATE) != 0)
         {
             getEnvfxActImmediately(0, 0, (u16)((s16*)lbl_803DD138)[b], 0);
         }
@@ -132,7 +140,7 @@ void envFxFn_80088884(void)
         }
     }
     playerEnvFxFn_80088ad4(b);
-    gSkyEnvFxFlags &= ~0x20;
+    gSkyEnvFxFlags &= ~SKY_ENVFX_IMMEDIATE;
 }
 
 void loadSunAndMoon(void)
@@ -1012,7 +1020,7 @@ void playerEnvFxFn_80088ad4(u8 idx)
     {
         return;
     }
-    if ((gSkyEnvFxFlags & 0x8) == 0)
+    if ((gSkyEnvFxFlags & SKY_ENVFX_GROUP_D) == 0)
     {
         return;
     }
@@ -1035,7 +1043,7 @@ void playerEnvFxFn_80088ad4(u8 idx)
     val = ((s16*)lbl_803DD134)[idx];
     if (val > 0)
     {
-        if (gSkyEnvFxFlags & 0x20)
+        if (gSkyEnvFxFlags & SKY_ENVFX_IMMEDIATE)
         {
             getEnvfxActImmediately(player, player, (u16)val, 0);
         }
