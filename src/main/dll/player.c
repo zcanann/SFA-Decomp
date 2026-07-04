@@ -10,6 +10,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+/* the player object's own group (joined at init, left on free) */
+#define PLAYER_OBJGROUP 0x25
+
 void fn_802960E4(void)
 {
 }
@@ -10798,7 +10801,7 @@ void fn_802B4DE0(int obj)
         off += 0xb0;
     }
     ObjGroup_RemoveObject(obj, 0);
-    ObjGroup_RemoveObject(obj, 0x25);
+    ObjGroup_RemoveObject(obj, PLAYER_OBJGROUP);
     ObjModelChain_Free((ObjModelChain*)gPlayerModelChain);
 }
 
@@ -12664,7 +12667,7 @@ void objLoadPlayerFromSave(int obj)
 
     lbl_803DE459 = 0;
     ObjGroup_AddObject(obj, 0);
-    ObjGroup_AddObject(obj, 0x25);
+    ObjGroup_AddObject(obj, PLAYER_OBJGROUP);
     objSetSlot(obj, 0x3c);
     ObjMsg_AllocQueue(obj, 0x14);
     ((GameObject*)obj)->animEventCallback = (void*)player_SeqFn;
