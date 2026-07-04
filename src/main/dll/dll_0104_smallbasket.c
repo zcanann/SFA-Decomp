@@ -1126,3 +1126,6 @@ void smallbasket_update(int obj)
         }
     }
 }
+
+/* descriptor/ptr table auto 0x803216f0-0x80321728 */
+u32 gLargeCrateObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)largecrate_initialise, (u32)largecrate_release, 0x00000000, (u32)largecrate_init, (u32)largecrate_update, (u32)largecrate_hitDetect, (u32)largecrate_render, (u32)largecrate_free, (u32)largecrate_getObjectTypeId, (u32)largecrate_getExtraSize };

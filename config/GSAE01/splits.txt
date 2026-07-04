@@ -1308,7 +1308,7 @@ main/dll/dll_801814d0.c:
 
 main/dll/dll_0104_smallbasket.c:
 	.text       start:0x801816F8 end:0x80183204
-	.data       start:0x803216B8 end:0x803216F0
+	.data       start:0x803216B8 end:0x80321728
 
 main/dll/dll_0105_largecrate.c:
 	.text       start:0x80183204 end:0x801843C0
