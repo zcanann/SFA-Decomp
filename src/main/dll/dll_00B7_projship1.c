@@ -27,3 +27,10 @@ void projship1_initialise(void)
 }
 
 char sProjship1DoNoLongerSupported[] = "<projship1 Do>No Longer supported \n";
+
+/*__DATA_EXTERNS__*/
+extern void projwallpower_doUnsupported();
+extern void projwallpower_release();
+extern void projwallpower_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_80319840[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projwallpower_initialise, projwallpower_release, (void*)0x00000000, projwallpower_doUnsupported };
