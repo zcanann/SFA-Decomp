@@ -19,6 +19,7 @@
 
 #define LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define LIGHTFOOT_OBJFLAG_RENDERED 0x800
+#define LIGHTFOOT_OBJGROUP 3
 
 typedef struct LightfootState
 {
@@ -97,7 +98,7 @@ void lightfoot_free(int obj, int p2)
     int inner = *(int*)&((GameObject*)obj)->extra;
     int count;
     int i;
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, LIGHTFOOT_OBJGROUP);
     count = ((GameObject*)obj)->childCount;
     for (i = 0; i < count; i++)
     {
