@@ -243,3 +243,15 @@ void dll_8B_func01_nop(void)
 void dll_8B_func00_nop(void)
 {
 }
+
+/* .sdata2 float-pool constants referenced via extern by sibling dll_008C */
+const f32 lbl_803E10B0 = 0.0f;
+const f32 lbl_803E10B4 = 0.01f;
+const f32 lbl_803E10B8 = 0.95f;
+const f32 lbl_803E10BC = 0.2f;
+const f32 lbl_803E10C0 = 0.3f;
+const f32 lbl_803E10C4 = 255.0f;
+const f32 lbl_803E10C8 = 10.0f;
+const f32 lbl_803E10CC = 1.0f;
+const f32 lbl_803E10D0 = 5.0f;
+const f32 lbl_803E10D4 = 2.0f;

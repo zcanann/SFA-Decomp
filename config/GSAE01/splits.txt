@@ -492,7 +492,7 @@ main/dll/dll_008A_dll8afunc0.c:
 
 main/dll/dll_008B_dll8bfunc0.c:
 	.text       start:0x800F8250 end:0x800F87E8
-	.sdata2     start:0x803E1060 end:0x803E10B0
+	.sdata2     start:0x803E1060 end:0x803E10D8
 
 main/dll/dll_008C_dll8cfunc0.c:
 	.text       start:0x800F87E8 end:0x800F8D68
