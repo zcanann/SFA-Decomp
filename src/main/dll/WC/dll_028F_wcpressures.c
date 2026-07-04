@@ -339,3 +339,10 @@ void wcpressures_initialise(void)
 }
 
 char sWCPressuresActivateFormat[] = " Avitvate %i ";
+
+/* descriptor/ptr table auto 0x8032b230-0x8032b348 */
+u32 gWCTrexStatuObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)wctrexstatu_initialise, (u32)wctrexstatu_release, 0x00000000, (u32)wctrexstatu_init, (u32)wctrexstatu_update, (u32)wctrexstatu_hitDetect, (u32)wctrexstatu_render, (u32)wctrexstatu_free, (u32)wctrexstatu_getObjectTypeId, (u32)wctrexstatu_getExtraSize };
+u32 gSunTempleObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)suntemple_initialise, (u32)suntemple_release, 0x00000000, (u32)suntemple_init, (u32)suntemple_update, (u32)suntemple_hitDetect, (u32)suntemple_render, (u32)suntemple_free, (u32)suntemple_getObjectTypeId, (u32)suntemple_getExtraSize };
+u32 gWCTempleObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)wctemple_initialise, (u32)wctemple_release, 0x00000000, (u32)wctemple_init, (u32)wctemple_update, (u32)wctemple_hitDetect, (u32)wctemple_render, (u32)wctemple_free, (u32)wctemple_getObjectTypeId, (u32)wctemple_getExtraSize };
+u32 dll_299[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_299_initialise_nop, (u32)dll_299_release_nop, 0x00000000, (u32)dll_299_init, (u32)dll_299_update, (u32)dll_299_hitDetect_nop, (u32)dll_299_render_nop, (u32)dll_299_free, (u32)dll_299_getObjectTypeId, (u32)dll_299_getExtraSize_ret_2 };
+u32 gWCApertureSObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)wcapertures_initialise, (u32)wcapertures_release, 0x00000000, (u32)wcapertures_init, (u32)wcapertures_update, (u32)wcapertures_hitDetect, (u32)wcapertures_render, (u32)wcapertures_free, (u32)wcapertures_getObjectTypeId, (u32)wcapertures_getExtraSize };

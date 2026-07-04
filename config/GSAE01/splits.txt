@@ -2542,7 +2542,7 @@ main/dll/WC/dll_0291_wctile.c:
 
 main/dll/WC/dll_028F_wcpressures.c:
 	.text       start:0x80227BB8 end:0x802281CC
-	.data       start:0x8032B220 end:0x8032B230
+	.data       start:0x8032B220 end:0x8032B348
 
 main/dll/WC/dll_0292_wctrexstatu.c:
 	.text       start:0x802281CC end:0x80228478
