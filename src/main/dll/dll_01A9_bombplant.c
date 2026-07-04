@@ -12,6 +12,14 @@
 #include "main/audio/sfx_trigger_ids.h"
 #define BOMBPLANT_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define BOMBPLANT_OBJFLAG_RENDERED 0x800
+
+/*
+ * State-machine "entered" latch on the per-object flags byte (shared by both
+ * BombPlantState and EnemyMushroomState in this DLL). Set alongside every
+ * stateIndex assignment; each state handler runs its one-time enter setup on
+ * the frame the bit is seen, then clears it.
+ */
+#define BOMBPLANT_FLAG_STATE_ENTERED 0x2
 extern u32 ObjHits_ClearHitVolumes();
 extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -84,7 +92,7 @@ void fn_801D2B70(int* obj, int unused, int* p3)
     }
     spawnExplosion((int)obj, gBombPlantExplosionScale, 0, 1, 1, 1, 0, 1, 0);
     ((BombPlantState*)p3)->stateIndex = 1;
-    ((BombPlantState*)p3)->flags = (u8)(((BombPlantState*)p3)->flags | 2);
+    ((BombPlantState*)p3)->flags = (u8)(((BombPlantState*)p3)->flags | BOMBPLANT_FLAG_STATE_ENTERED);
     gbId = p4->gameBit;
     if (gbId != -1)
     {
@@ -194,7 +202,7 @@ int bombplant_SeqFn(int* obj)
         ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->riseDuration;
         ObjHits_RefreshObjectState(obj);
         ((EnemyMushroomState*)state)->resetToSpawn = 0;
-        ((EnemyMushroomState*)state)->flags = (u8)(((EnemyMushroomState*)state)->flags | 2);
+        ((EnemyMushroomState*)state)->flags = (u8)(((EnemyMushroomState*)state)->flags | BOMBPLANT_FLAG_STATE_ENTERED);
     }
     else
     {
@@ -206,7 +214,7 @@ int bombplant_SeqFn(int* obj)
         if (flags & 0x2)
         {
             int v;
-            ((EnemyMushroomState*)state)->flags = (u8)(flags & ~0x2);
+            ((EnemyMushroomState*)state)->flags = (u8)(flags & ~BOMBPLANT_FLAG_STATE_ENTERED);
             v = ((BombplantPlacement*)base)->timerBase + randomGetRange(-0x32, 0x32);
             ((EnemyMushroomState*)state)->timer = v;
         }
@@ -308,9 +316,9 @@ void bombplant_update(void* obj)
     {
     case 1:
         param = ((GameObject*)obj)->anim.placementData;
-        if ((((BombPlantState*)state)->flags & 0x2) != 0)
+        if ((((BombPlantState*)state)->flags & BOMBPLANT_FLAG_STATE_ENTERED) != 0)
         {
-            ((BombPlantState*)state)->flags &= ~0x2;
+            ((BombPlantState*)state)->flags &= ~BOMBPLANT_FLAG_STATE_ENTERED;
             ((BombPlantState*)state)->growTimer = (f32)(int)((BombplantPlacement*)param)->growTimer;
         }
         bitId = ((BombplantPlacement*)param)->gameBit;
@@ -324,7 +332,7 @@ void bombplant_update(void* obj)
                 if (dist > gBombPlantTriggerDistSq)
                 {
                     ((BombPlantState*)state)->stateIndex = 2;
-                    ((BombPlantState*)state)->flags |= 0x2;
+                    ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
                 }
             }
         }
@@ -340,7 +348,7 @@ void bombplant_update(void* obj)
                 if (dist > gBombPlantTriggerDistSq)
                 {
                     ((BombPlantState*)state)->stateIndex = 2;
-                    ((BombPlantState*)state)->flags |= 0x2;
+                    ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
                 }
                 ((BombPlantState*)state)->growTimer = lbl_803E536C;
             }
@@ -348,10 +356,10 @@ void bombplant_update(void* obj)
         break;
 
     case 2:
-        if ((((BombPlantState*)state)->flags & 0x2) != 0)
+        if ((((BombPlantState*)state)->flags & BOMBPLANT_FLAG_STATE_ENTERED) != 0)
         {
             Sfx_PlayFromObject(obj, SFXmv_sliftloop11);
-            ((BombPlantState*)state)->flags &= ~0x2;
+            ((BombPlantState*)state)->flags &= ~BOMBPLANT_FLAG_STATE_ENTERED;
             p4c = ((GameObject*)obj)->anim.placementData;
             ((GameObject*)obj)->anim.alpha = 0xff;
             ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
@@ -382,7 +390,7 @@ void bombplant_update(void* obj)
             if (t < lbl_803E536C)
             {
                 ((BombPlantState*)state)->stateIndex = 0;
-                ((BombPlantState*)state)->flags |= 0x2;
+                ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
             }
         }
         break;
@@ -395,9 +403,9 @@ void bombplant_update(void* obj)
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_baddie_eggsnatch_sniff2);
     default:
         param = ((GameObject*)obj)->anim.placementData;
-        if ((((BombPlantState*)state)->flags & 0x2) != 0)
+        if ((((BombPlantState*)state)->flags & BOMBPLANT_FLAG_STATE_ENTERED) != 0)
         {
-            ((BombPlantState*)state)->flags &= ~0x2;
+            ((BombPlantState*)state)->flags &= ~BOMBPLANT_FLAG_STATE_ENTERED;
             ((BombPlantState*)state)->growTimer =
                 (f32)(int)(((BombplantPlacement*)param)->timerBase + randomGetRange(-0x32, 0x32));
         }
@@ -426,7 +434,7 @@ void bombplant_update(void* obj)
                 objLightFn_8009a1dc(obj, lbl_803E5380, lightVec, 1, 0);
                 Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
                 ((BombPlantState*)state)->stateIndex = 4;
-                ((BombPlantState*)state)->flags |= 0x2;
+                ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
                 p50 = ((GameObject*)obj)->anim.modelInstance;
                 ObjHitbox_SetCapsuleBounds(obj, (s16)(((ObjDef*)p50)->primaryHitboxRadius + 0x50),
                                            (s16)(((ObjDef*)p50)->primaryCapsuleOffsetA - 0x50),
