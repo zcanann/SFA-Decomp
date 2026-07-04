@@ -286,3 +286,34 @@ CameraModeTitlePose gCamTitlePoseTable[5] = {
     { -18949.0f, 54.0f, 28324.0f, 26248, 65226, 0 },
     { -18876.25f, 33.25548f, 28366.39f, 9419, 3496, 170 },
 };
+
+/* descriptor/ptr table auto 0x8031a01c-0x8031a0e0 */
+extern u8 dll_19_func03_nop[];
+extern u8 dll_19_func04_nop[];
+extern u8 dll_19_func05[];
+extern u8 dll_19_func06[];
+extern u8 dll_19_func07[];
+extern u8 dll_19_func08[];
+extern u8 dll_19_func09_ret_0[];
+extern u8 dll_19_func0A[];
+extern u8 dll_19_func0B[];
+extern u8 dll_19_func0C[];
+extern u8 dll_19_func0D[];
+extern u8 dll_19_func0E[];
+extern u8 dll_19_func0F[];
+extern u8 dll_19_func10[];
+extern u8 dll_19_func11[];
+extern u8 dll_19_func12[];
+extern u8 dll_19_func13[];
+extern u8 dll_19_func14[];
+extern u8 dll_19_func15[];
+extern u8 dll_19_func16[];
+extern u8 dll_19_func17[];
+extern u8 dll_19_func18[];
+extern u8 dll_19_func19[];
+extern u8 dll_19_func1A[];
+
+u32 lbl_8031A01C[11] = { 0x00000000, 0x00000000, 0x00000000, 0x00060000, (u32)CameraModeTitle_initialise, (u32)CameraModeTitle_release, 0x00000000, (u32)CameraModeTitle_init, (u32)CameraModeTitle_update, (u32)CameraModeTitle_loadVolumes, (u32)CameraModeTitle_moveCam };
+u32 lbl_8031A048[3] = { 0x00000000, 0x00000000, 0x00000000 };
+u32 lbl_8031A054[3] = { 0x00000000, 0x00000000, 0x00000000 };
+u32 dll_19[32] = { 0x00000000, 0x00000000, 0x00000000, 0x001a0000, (u32)dll_19_func03_nop, (u32)dll_19_func04_nop, 0x00000000, (u32)dll_19_func03_nop, (u32)dll_19_func04_nop, (u32)dll_19_func05, (u32)dll_19_func06, (u32)dll_19_func07, (u32)dll_19_func08, (u32)dll_19_func09_ret_0, (u32)dll_19_func0A, (u32)dll_19_func0B, (u32)dll_19_func0C, (u32)dll_19_func0D, (u32)dll_19_func0E, (u32)dll_19_func0F, (u32)dll_19_func10, (u32)dll_19_func11, (u32)dll_19_func12, (u32)dll_19_func13, (u32)dll_19_func14, (u32)dll_19_func15, (u32)dll_19_func16, (u32)dll_19_func17, (u32)dll_19_func18, (u32)dll_19_func19, (u32)dll_19_func1A, 0x00000000 };

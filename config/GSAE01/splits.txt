@@ -815,7 +815,7 @@ main/dll/dll_0056_cameramodearwing.c:
 
 main/dll/dll_0057_cameramodetitle.c:
 	.text       start:0x801115E4 end:0x80111D14
-	.data       start:0x80319FB8 end:0x8031A01C
+	.data       start:0x80319FB8 end:0x8031A0E0
 
 main/dll/dll_0019_dll19func0.c:
 	.text       start:0x80111D14 end:0x80113F8C
