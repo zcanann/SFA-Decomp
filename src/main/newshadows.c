@@ -599,8 +599,8 @@ void newshadows_renderQueuedShadowCasters(void)
     double savedPs29;
     double savedPs30;
     double savedPs31;
-    u32 uStack_260;
-    u32 uStack_25c;
+    u32 tmpOutB;
+    u32 tmpOutA;
     float blendX;
     float blendY;
     float blendZ;
@@ -630,56 +630,56 @@ void newshadows_renderQueuedShadowCasters(void)
     float scaleMtx11;
     float transMtx[12];
     float lightMtx[24];
-    u32 local_110;
-    u32 uStack_10c;
-    u32 local_108;
-    u32 uStack_104;
+    u32 dcvtHiA;
+    u32 dcvtLoA;
+    u32 dcvtHiB;
+    u32 dcvtLoB;
     int savedFlag;
     float spillF21;
-    float fStack_a4;
+    float psSpill21;
     float spillF22;
-    float fStack_94;
+    float psSpill22;
     float spillF23;
-    float fStack_84;
+    float psSpill23;
     float spillF24;
-    float fStack_74;
+    float psSpill24;
     float spillF25;
-    float fStack_64;
+    float psSpill25;
     float spillF26;
-    float fStack_54;
+    float psSpill26;
     float spillF27;
-    float fStack_44;
+    float psSpill27;
     float spillF28;
-    float fStack_34;
+    float psSpill28;
     float spillF29;
-    float fStack_24;
+    float psSpill29;
     float spillF30;
-    float fStack_14;
+    float psSpill30;
     float spillF31;
-    float fStack_4;
+    float psSpill31;
 
     spillF31 = (float)savedF31;
-    fStack_4 = (float)savedPs31;
+    psSpill31 = (float)savedPs31;
     spillF30 = (float)savedF30;
-    fStack_14 = (float)savedPs30;
+    psSpill30 = (float)savedPs30;
     spillF29 = (float)savedF29;
-    fStack_24 = (float)savedPs29;
+    psSpill29 = (float)savedPs29;
     spillF28 = (float)savedF28;
-    fStack_34 = (float)savedPs28;
+    psSpill28 = (float)savedPs28;
     spillF27 = (float)savedF27;
-    fStack_44 = (float)savedPs27;
+    psSpill27 = (float)savedPs27;
     spillF26 = (float)savedF26;
-    fStack_54 = (float)savedPs26;
+    psSpill26 = (float)savedPs26;
     spillF25 = (float)savedF25;
-    fStack_64 = (float)savedPs25;
+    psSpill25 = (float)savedPs25;
     spillF24 = (float)savedF24;
-    fStack_74 = (float)savedPs24;
+    psSpill24 = (float)savedPs24;
     spillF23 = (float)savedF23;
-    fStack_84 = (float)savedPs23;
+    psSpill23 = (float)savedPs23;
     spillF22 = (float)savedF22;
-    fStack_94 = (float)savedPs22;
+    psSpill22 = (float)savedPs22;
     spillF21 = (float)savedF21;
-    fStack_a4 = (float)savedPs21;
+    psSpill21 = (float)savedPs21;
     FUN_8028680c();
     if (DAT_803ddbf8 != 0)
     {
@@ -701,7 +701,7 @@ void newshadows_renderQueuedShadowCasters(void)
         defaultDirY = lbl_803DF9AC;
         defaultDirZ = lbl_803DF9A8;
         FUN_80060710((double)lbl_803DF9B4, &defaultDirX, lightMtx);
-        FUN_800606a4(&uStack_25c, &uStack_260);
+        FUN_800606a4(&tmpOutA, &tmpOutB);
         dirShadowCount = 0;
         shadowSlot = 0;
         queueEntry = &DAT_8038ef08;
@@ -825,10 +825,10 @@ void newshadows_renderQueuedShadowCasters(void)
                     }
                     FUN_8025da88(2, 2, texSize - 4, texSize - 4);
                     dVar28 = (double)lbl_803DF9A8;
-                    local_110 = 0x43300000;
-                    local_108 = 0x43300000;
-                    uStack_10c = texSize;
-                    uStack_104 = texSize;
+                    dcvtHiA = 0x43300000;
+                    dcvtHiB = 0x43300000;
+                    dcvtLoA = texSize;
+                    dcvtLoB = texSize;
                     FUN_8025da64(dVar28, dVar28,
                                  (double)(float)((double)(u32)texSize),
                                  (double)(float)((double)(u32)texSize), dVar28
@@ -1189,12 +1189,12 @@ void newshadows_updateFrameState(void)
     double savedPs31;
     float nearDepth;
     float farDepth;
-    u64 local_20;
+    u64 cvtScratch;
     float spillF31;
-    float fStack_4;
+    float psSpill31;
 
     spillF31 = (float)savedF31;
-    fStack_4 = (float)savedPs31;
+    psSpill31 = (float)savedPs31;
     scrollDisabled = FUN_800176d0();
     if (scrollDisabled == 0)
     {
@@ -1212,7 +1212,7 @@ void newshadows_updateFrameState(void)
     DAT_803ddbf8 = 0;
     DAT_803ddc68 = (int)FUN_800069a8();
     DAT_803ddc20 = DAT_803ddc20 + (u16)DAT_803dc070 * 0x28a;
-    local_20 = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(DAT_803ddc20)));
+    cvtScratch = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(DAT_803ddc20)));
     depth = (double)FUN_802947f8();
     lbl_803DDC24 = (float)((double)lbl_803DFA20 * depth);
     FUN_800606a8();
@@ -1229,7 +1229,7 @@ void newshadows_updateFrameState(void)
             if ((double)nearDepth < focusDepth)
             {
                 texSize = (u32)((lbl_803DF99C * (float)(depth - focusDepth)) / (float)(depth - (double)nearDepth));
-                local_20 = (s64)(int)
+                cvtScratch = (s64)(int)
                 texSize;
             }
             else
