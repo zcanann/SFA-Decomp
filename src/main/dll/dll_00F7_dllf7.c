@@ -288,7 +288,6 @@ extern f32 lbl_803E340C;
 extern f32 lbl_803E3410;
 extern f32 lbl_803E3414;
 extern f32 lbl_803E3418;
-extern f32 lbl_803E3420;
 extern void fn_8003B5E0(int a, int b, int c, u8 d);
 extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
