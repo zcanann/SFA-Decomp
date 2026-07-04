@@ -5,6 +5,9 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+/* object group this object joins while active */
+#define SPELLSTONE_OBJGROUP 0x1e
+
 /* GameObject anim.flags bit (== OBJANIM_FLAG_HIDDEN): stops the object being
    rendered/updated; set when the stone's map event completes. */
 #define SPELLSTONE_OBJFLAG_HIDDEN 0x4000
@@ -54,7 +57,7 @@ int spellstone_getObjectTypeId(void)
 
 void spellstone_free(SpellStoneObject* obj)
 {
-    ObjGroup_RemoveObject((u32)obj, 0x1e);
+    ObjGroup_RemoveObject((u32)obj, SPELLSTONE_OBJGROUP);
     return;
 }
 
@@ -138,7 +141,7 @@ void spellstone_init(SpellStoneObject* obj)
     SpellStoneState* state;
 
     state = obj->state;
-    ObjGroup_AddObject((u32)obj, 0x1e);
+    ObjGroup_AddObject((u32)obj, SPELLSTONE_OBJGROUP);
     state->state = SPELLSTONE_STATE_IDLE;
     obj->callback = spellstone_idleCallback;
     return;
