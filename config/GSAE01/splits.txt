@@ -2026,7 +2026,7 @@ main/dll/dll_801dd170.c:
 
 main/dll/SC/dll_01BA_sctotempuzzle.c:
 	.text       start:0x801DD1A8 end:0x801DDA28
-	.data       start:0x80327A18 end:0x80327A24
+	.data       start:0x80327A18 end:0x80327A60
 
 main/dll/SC/dll_01BB_sctotembond.c:
 	.text       start:0x801DDA28 end:0x801DE430

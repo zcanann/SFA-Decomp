@@ -409,3 +409,6 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     obj->animEventCallback = fn_801DD170;
     obj->objectFlags = (u16)(obj->objectFlags | (SC_TOTEMPUZZLE_OBJFLAG_HIDDEN | SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED));
 }
+
+/* descriptor/ptr table auto 0x80327a24-0x80327a60 */
+u32 gSC_totempuzzleObjDescriptor[15] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)sc_totempuzzle_initialise, (u32)sc_totempuzzle_release, 0x00000000, (u32)sc_totempuzzle_init, (u32)sc_totempuzzle_update, (u32)sc_totempuzzle_hitDetect, (u32)sc_totempuzzle_render, (u32)sc_totempuzzle_free, (u32)sc_totempuzzle_getObjectTypeId, (u32)sc_totempuzzle_getExtraSize, 0x00000000 };
