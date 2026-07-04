@@ -1,8 +1,6 @@
 /* DLL 0xC6 — animated object [8016984C-801713AC) */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
-extern int randomGetRange(int lo, int hi);
-extern u32 ObjHitbox_SetSphereRadius();
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -226,7 +224,6 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u64 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
-extern u32 fcos16Precise();
 extern void** gTitleMenuControlInterfaceCopy;
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
