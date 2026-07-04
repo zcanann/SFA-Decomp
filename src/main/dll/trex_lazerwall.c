@@ -73,7 +73,6 @@ extern u32* gTitleMenuControlInterfaceCopy;
 extern f32 lbl_803E59DC;
 extern const f32 lbl_803E59E0; /* curve-node Y bias */
 extern u32 lbl_803E59D0;       /* head of the rom-curve search pair (first type id) */
-extern u32 lbl_803E59D4;       /* head of the rom-curve search pair (second type id) */
 
 typedef struct RomCurveSearchPair
 {
