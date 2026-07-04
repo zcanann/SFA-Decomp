@@ -17,7 +17,7 @@ extern u32 aramChunkSize;
 extern u32 aramQueueWrite;
 extern u32 aramQueueValid;
 extern AramStreamBufferEntry* aramStreamFreeList;
-extern AramStreamBufferEntry lbl_803D4468[];
+extern u8 lbl_803D4468[];
 
 /*
  * Allocate+DMA: copies `size` bytes from `src` into the audio
@@ -114,7 +114,9 @@ u32 aramGetStreamBufferAddress(u8 idx, u32* outPos)
 {
     if (outPos != NULL)
     {
-        *outPos = lbl_803D4468[idx].position;
+        *outPos = ((AramStreamBufferEntry*)lbl_803D4468)[idx].position;
     }
-    return lbl_803D4468[idx].address;
+    return ((AramStreamBufferEntry*)lbl_803D4468)[idx].address;
 }
+
+u8 lbl_803D4468[0x418];

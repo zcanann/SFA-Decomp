@@ -560,3 +560,5 @@ void s3dStartQueuedEmitters(void)
         }
     }
 }
+
+S3DMixGroup lbl_803CC910[0xE5];

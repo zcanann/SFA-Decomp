@@ -1,6 +1,12 @@
 #include "main/audio/sal_dsp.h"
 #include "dolphin/dsp.h"
 
+typedef struct {
+    DSPTaskInfo task;
+    u8 pad[0x10];
+    u8 dram[0x2000];
+} SalDspTask;
+
 extern u16 hwIrqLevel;
 extern u32 oldState;
 extern void*(*gSalMallocHook)(u32 size);
@@ -9,7 +15,7 @@ extern u16 dspCmdFirstSize;
 extern u32 dspCmdList;
 extern u32 salDspCallbackEnabled;
 extern volatile u32 salDspInitIsDone;
-extern DSPTaskInfo lbl_803D4880;
+extern SalDspTask lbl_803D4880;
 extern u16 lbl_80330840[];
 extern u16 lbl_803DC628[4];
 extern void dspInitCallback(void* task);
@@ -17,22 +23,22 @@ extern void dspResumeCallback(void* task);
 
 int salInitDsp(u32 flags)
 {
-    lbl_803D4880.iram_mmem_addr = lbl_80330840;
-    lbl_803D4880.iram_length = lbl_803DC628[0];
-    lbl_803D4880.iram_addr = 0;
-    lbl_803D4880.dram_mmem_addr = (u16*)((u8*)&lbl_803D4880 + 0x60);
-    lbl_803D4880.dram_length = 0x2000;
-    lbl_803D4880.dram_addr = 0;
-    lbl_803D4880.dsp_init_vector = 0x10;
-    lbl_803D4880.dsp_resume_vector = 0x30;
-    lbl_803D4880.init_cb = dspInitCallback;
-    lbl_803D4880.res_cb = dspResumeCallback;
-    lbl_803D4880.done_cb = NULL;
-    lbl_803D4880.req_cb = NULL;
-    lbl_803D4880.priority = 0;
+    lbl_803D4880.task.iram_mmem_addr = lbl_80330840;
+    lbl_803D4880.task.iram_length = lbl_803DC628[0];
+    lbl_803D4880.task.iram_addr = 0;
+    lbl_803D4880.task.dram_mmem_addr = (u16*)((u8*)&lbl_803D4880 + 0x60);
+    lbl_803D4880.task.dram_length = 0x2000;
+    lbl_803D4880.task.dram_addr = 0;
+    lbl_803D4880.task.dsp_init_vector = 0x10;
+    lbl_803D4880.task.dsp_resume_vector = 0x30;
+    lbl_803D4880.task.init_cb = dspInitCallback;
+    lbl_803D4880.task.res_cb = dspResumeCallback;
+    lbl_803D4880.task.done_cb = NULL;
+    lbl_803D4880.task.req_cb = NULL;
+    lbl_803D4880.task.priority = 0;
 
     DSPInit();
-    DSPAddTask(&lbl_803D4880);
+    DSPAddTask(&lbl_803D4880.task);
     salDspInitIsDone = 0;
     sndEnd();
     while (salDspInitIsDone == 0)
@@ -125,3 +131,5 @@ void* salMalloc(u32 size)
 {
     return gSalMallocHook(size);
 }
+
+SalDspTask lbl_803D4880;

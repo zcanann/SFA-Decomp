@@ -3263,6 +3263,7 @@ main/audio/snd3d_calc.c:
 	extab       start:0x80005A68 end:0x80005A80
 	extabindex  start:0x8000632C end:0x80006350
 	.text       start:0x802800C0 end:0x80280C30
+	.bss        start:0x803CC910 end:0x803CD760
 
 main/audio/snd3d.c:
 	extab       start:0x80005A80 end:0x80005A90
@@ -3372,6 +3373,7 @@ main/audio/aram_data.c:
 	extab       start:0x80005C10 end:0x80005C18
 	extabindex  start:0x800065A8 end:0x800065B4
 	.text       start:0x80284468 end:0x80284670
+	.bss        start:0x803D4468 end:0x803D4880
 
 main/audio/sal_ai.c:
 	extab       start:0x80005C18 end:0x80005C40
@@ -3382,6 +3384,7 @@ main/audio/sal_dsp.c:
 	extab       start:0x80005C40 end:0x80005C90
 	extabindex  start:0x800065F0 end:0x80006668
 	.text       start:0x802848D8 end:0x80284B94
+	.bss        start:0x803D4880 end:0x803D68E0
 
 main/audio/snd_reverb.c:
 	extab       start:0x80005C90 end:0x80005CA8
