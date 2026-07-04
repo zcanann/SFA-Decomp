@@ -536,3 +536,11 @@ end:
 }
 
 extern int GameBit_Set(int eventId, int value);
+
+/* descriptor/ptr table auto 0x8032784c-0x803279a8 */
+u32 gSH_staffHazeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, (u32)sh_staffhaze_update, 0x00000000, (u32)sh_staffhaze_render, 0x00000000, 0x00000000, 0x00000000 };
+u32 gSH_BeaconObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)sh_beacon_init, (u32)sh_beacon_update, 0x00000000, 0x00000000, (u32)sh_beacon_free, 0x00000000, (u32)sh_beacon_getExtraSize };
+u32 gSH_EmptyTumbleWObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)sh_emptytumblew_init, (u32)sh_emptytumblew_update, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
+u32 gSC_levelcontrolObjDescriptor[16] = { 0x00000000, 0x00000000, 0x00000000, 0x000b0000, (u32)sc_levelcontrol_initialise, (u32)sc_levelcontrol_release, 0x00000000, (u32)sc_levelcontrol_init, (u32)sc_levelcontrol_update, (u32)sc_levelcontrol_hitDetect, (u32)sc_levelcontrol_render, (u32)sc_levelcontrol_free, (u32)sc_levelcontrol_getObjectTypeId, (u32)sc_levelcontrol_getExtraSize, (u32)sc_levelcontrol_applyAnimEventState, (u32)sc_levelcontrol_getAnimEventState };
+u32 gSC_MusicTreeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)sc_musictree_initialise, (u32)sc_musictree_release, 0x00000000, (u32)sc_musictree_init, (u32)sc_musictree_update, (u32)sc_musictree_hitDetect, (u32)sc_musictree_render, (u32)sc_musictree_free, (u32)sc_musictree_getObjectTypeId, (u32)sc_musictree_getExtraSize };
+u32 gSC_totempoleObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)sc_totempole_initialise, (u32)sc_totempole_release, 0x00000000, (u32)sc_totempole_init, (u32)sc_totempole_update, (u32)sc_totempole_hitDetect, (u32)sc_totempole_render, (u32)sc_totempole_free, (u32)sc_totempole_getObjectTypeId, (u32)sc_totempole_getExtraSize };

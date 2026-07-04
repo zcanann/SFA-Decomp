@@ -1997,7 +1997,7 @@ main/dll/SH/dll_01AF_shswaplift.c:
 
 main/dll/SH/dll_01B1_shstaff.c:
 	.text       start:0x801D9B1C end:0x801DA8C4
-	.data       start:0x80327818 end:0x8032784C
+	.data       start:0x80327818 end:0x803279A8
 
 main/dll/SH/dll_01B2_shstaffhaze.c:
 	.text       start:0x801DA8C4 end:0x801DA954
