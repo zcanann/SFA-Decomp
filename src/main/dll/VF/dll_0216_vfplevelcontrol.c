@@ -17,6 +17,8 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 
+#define VFPLEVELCONTROL_OBJGROUP 9
+
 /* Ordered spell-tablet sequence: the four step bits must light in this
    array order (advanced by fn_801F9804); lighting them out of order
    resets the puzzle. SEQUENCE_DONE is granted once all four are set. */
@@ -187,7 +189,7 @@ void vfplevelcontrol_initialise(void)
 void vfplevelcontrol_free(int obj)
 {
     timeOfDayFn_80055000();
-    ObjGroup_RemoveObject(obj, 9);
+    ObjGroup_RemoveObject(obj, VFPLEVELCONTROL_OBJGROUP);
     Music_Trigger(VFP_MUSIC_A, 0);
 }
 
@@ -195,7 +197,7 @@ void vfplevelcontrol_init(int* obj, u8* init)
 {
     VfpLevelControlState* state = ((GameObject*)obj)->extra;
     VfpLevelControlSetup* setup = (VfpLevelControlSetup*)init;
-    ObjGroup_AddObject(obj, 9);
+    ObjGroup_AddObject(obj, VFPLEVELCONTROL_OBJGROUP);
     state->unk02[0] = 0;
     state->unk02[1] = 0;
     state->unk02[2] = 0;
