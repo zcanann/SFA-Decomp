@@ -1,6 +1,7 @@
 #include "dolphin/os.h"
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
+#include "main/objhits.h"
 
 static inline s16* ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve* curve)
 {
@@ -1191,3 +1192,5 @@ int ObjAnim_SetCurrentMove(int objAnimHandle, int moveId, f32 moveProgress, int 
 }
 
 char gObjAnimMissingCachedMoveWarning[] = "<objanim.c -- setBlendMove> WARNING tried to load anim -1 from cache modno %d\n";
+
+int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT] = {0};
