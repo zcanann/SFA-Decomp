@@ -2294,13 +2294,14 @@ void allocLotsOfTextures(void)
     for (i = 0; i < 4; i++)
     {
         f32 x = i / 3.0f - CPUFifo_803DED38;
-        *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x60) =
+        u8* d = (u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20);
+        *(u16*)(d + 0x60) =
             (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)CPUFifo_803DED38 & 0xff));
-        *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x68) =
+        *(u16*)(d + 0x68) =
             (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)Uachuff_803DEE14 & 0xff));
-        *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x70) =
+        *(u16*)(d + 0x70) =
             (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)Uachuff_803DEE18 & 0xff));
-        *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x78) =
+        *(u16*)(d + 0x78) =
             (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)Uachuff_803DEE1C & 0xff));
     }
     DCFlushRange((void*)(lbl_803DCF94 + 0x60), *(int*)(lbl_803DCF94 + 0x44));
