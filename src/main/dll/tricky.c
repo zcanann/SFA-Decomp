@@ -1683,7 +1683,7 @@ void drawViewFinderHud(void)
                     GXColor _c;
                     s16 _a;
                     f32 _r, _cs, _sn, _cx, _sx;
-                    u8 alpha = kOpac * gViewFinderFadeLevel;
+                    u8 alpha = (f32)kOpac * gViewFinderFadeLevel;
                     f32 f15, f16;
                     _sn = lbl_803DBAE4 * mathCosf(kEC8 * (f30 * lbl_803DBAE0) / kE94);
                     f16 = gViewFinderBaseY + (kF48 + _sn);
