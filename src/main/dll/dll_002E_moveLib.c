@@ -29,6 +29,9 @@
 #include "string.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
+
+/* object group queried to find this object's target */
+#define MOVELIB_TARGET_OBJGROUP 8
 extern int ObjGroup_FindNearestObjectToPoint();
 extern int objAnimFn_80115650();
 extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
@@ -322,7 +325,7 @@ int dll_2E_func0C(int idx, char* outArg)
         out->x = p->base.x;
         out->y = p->base.y;
         out->z = p->base.z;
-        q = (char*)ObjGroup_FindNearestObjectToPoint(8, &out->x, &range);
+        q = (char*)ObjGroup_FindNearestObjectToPoint(MOVELIB_TARGET_OBJGROUP, &out->x, &range);
         if (q != NULL)
         {
             out->angle = (s16)atan2i((int)(((GameObject*)q)->anim.localPosX - out->x),
@@ -669,7 +672,7 @@ static u32 projGetLockTarget(int state, u16* obj, ProjNearSearch* sv)
 {
     u32 t = *(u32*)&((MoveLibState*)state)->lockTarget;
     if (t != 0) return t;
-    return ObjGroup_FindNearestObject(8, obj, sv);
+    return ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, obj, sv);
 }
 
 void dll_2E_func03(u16* obj, int state, int unused)
