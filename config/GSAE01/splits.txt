@@ -2165,7 +2165,7 @@ main/dll/WM/dll_01F9_wmobjcreator.c:
 
 main/dll/WM/dll_01F8_wmgalleon.c:
 	.text       start:0x801EFF7C end:0x801F06D8
-	.data       start:0x80328720 end:0x80328748
+	.data       start:0x80328720 end:0x80328898
 
 main/dll/WM/dll_01FA_wmseqobject.c:
 	.text       start:0x801F06D8 end:0x801F0900

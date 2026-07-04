@@ -381,3 +381,66 @@ void WM_Galleon_initialise(void)
 {
 }
 
+
+/* descriptor/ptr table auto 0x80328748-0x80328898 */
+extern u8 LaserBeam_free[];
+extern u8 LaserBeam_getExtraSize[];
+extern u8 LaserBeam_getObjectTypeId[];
+extern u8 LaserBeam_hitDetect[];
+extern u8 LaserBeam_init[];
+extern u8 LaserBeam_initialise[];
+extern u8 LaserBeam_release[];
+extern u8 LaserBeam_render[];
+extern u8 LaserBeam_update[];
+extern u8 WM_seqobject_free[];
+extern u8 WM_seqobject_getExtraSize[];
+extern u8 WM_seqobject_getObjectTypeId[];
+extern u8 WM_seqobject_hitDetect[];
+extern u8 WM_seqobject_init[];
+extern u8 WM_seqobject_initialise[];
+extern u8 WM_seqobject_release[];
+extern u8 WM_seqobject_render[];
+extern u8 WM_seqobject_update[];
+extern u8 dll_1FB_free_nop[];
+extern u8 dll_1FB_getExtraSize_ret_12[];
+extern u8 dll_1FB_getObjectTypeId[];
+extern u8 dll_1FB_hitDetect_nop[];
+extern u8 dll_1FB_init[];
+extern u8 dll_1FB_initialise_nop[];
+extern u8 dll_1FB_release_nop[];
+extern u8 dll_1FB_render[];
+extern u8 dll_1FB_update[];
+extern u8 dll_1FF_free_nop[];
+extern u8 dll_1FF_getExtraSize_ret_8[];
+extern u8 dll_1FF_getObjectTypeId[];
+extern u8 dll_1FF_hitDetect_nop[];
+extern u8 dll_1FF_init[];
+extern u8 dll_1FF_initialise_nop[];
+extern u8 dll_1FF_release_nop[];
+extern u8 dll_1FF_render[];
+extern u8 dll_1FF_update[];
+extern u8 pressureswitch_free[];
+extern u8 pressureswitch_getExtraSize[];
+extern u8 pressureswitch_getObjectTypeId[];
+extern u8 pressureswitch_hitDetect[];
+extern u8 pressureswitch_init[];
+extern u8 pressureswitch_initialise[];
+extern u8 pressureswitch_release[];
+extern u8 pressureswitch_render[];
+extern u8 pressureswitch_update[];
+extern u8 wmlasertarget_free[];
+extern u8 wmlasertarget_getExtraSize[];
+extern u8 wmlasertarget_getObjectTypeId[];
+extern u8 wmlasertarget_hitDetect[];
+extern u8 wmlasertarget_init[];
+extern u8 wmlasertarget_initialise[];
+extern u8 wmlasertarget_release[];
+extern u8 wmlasertarget_render[];
+extern u8 wmlasertarget_update[];
+
+u32 gWM_seqobjectObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)WM_seqobject_initialise, (u32)WM_seqobject_release, 0x00000000, (u32)WM_seqobject_init, (u32)WM_seqobject_update, (u32)WM_seqobject_hitDetect, (u32)WM_seqobject_render, (u32)WM_seqobject_free, (u32)WM_seqobject_getObjectTypeId, (u32)WM_seqobject_getExtraSize };
+u32 dll_1FB[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_1FB_initialise_nop, (u32)dll_1FB_release_nop, 0x00000000, (u32)dll_1FB_init, (u32)dll_1FB_update, (u32)dll_1FB_hitDetect_nop, (u32)dll_1FB_render, (u32)dll_1FB_free_nop, (u32)dll_1FB_getObjectTypeId, (u32)dll_1FB_getExtraSize_ret_12 };
+u32 gLaserBeamObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)LaserBeam_initialise, (u32)LaserBeam_release, 0x00000000, (u32)LaserBeam_free, (u32)LaserBeam_update, (u32)LaserBeam_hitDetect, (u32)LaserBeam_render, (u32)LaserBeam_init, (u32)LaserBeam_getObjectTypeId, (u32)LaserBeam_getExtraSize };
+u32 gPressureSwitchObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)pressureswitch_initialise, (u32)pressureswitch_release, 0x00000000, (u32)pressureswitch_init, (u32)pressureswitch_update, (u32)pressureswitch_hitDetect, (u32)pressureswitch_render, (u32)pressureswitch_free, (u32)pressureswitch_getObjectTypeId, (u32)pressureswitch_getExtraSize };
+u32 dll_1FF[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_1FF_initialise_nop, (u32)dll_1FF_release_nop, 0x00000000, (u32)dll_1FF_init, (u32)dll_1FF_update, (u32)dll_1FF_hitDetect_nop, (u32)dll_1FF_render, (u32)dll_1FF_free_nop, (u32)dll_1FF_getObjectTypeId, (u32)dll_1FF_getExtraSize_ret_8 };
+u32 gWM_LaserTargetObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)wmlasertarget_initialise, (u32)wmlasertarget_release, 0x00000000, (u32)wmlasertarget_init, (u32)wmlasertarget_update, (u32)wmlasertarget_hitDetect, (u32)wmlasertarget_render, (u32)wmlasertarget_free, (u32)wmlasertarget_getObjectTypeId, (u32)wmlasertarget_getExtraSize };
