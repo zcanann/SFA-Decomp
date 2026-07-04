@@ -47,6 +47,11 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern f32 lbl_803E4A38;
 
+#define DIMTRICKY_STATE_WAIT_TRIGGER 0
+#define DIMTRICKY_STATE_HAND_CONTROL 1
+#define DIMTRICKY_STATE_LINK_COMPANION 2
+#define DIMTRICKY_STATE_DONE 3
+
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -71,7 +76,7 @@ int dimtruthhornice_getExtraSize(void);
 
 void dim_tricky_init(int* obj)
 {
-    u8 v = 0x0;
+    u8 v = DIMTRICKY_STATE_WAIT_TRIGGER;
     *((u8*)(int*)((GameObject*)obj)->extra + 0x0) = v;
 }
 
@@ -86,22 +91,22 @@ void dim_tricky_update(int* obj)
     if (trickyObj == NULL) return;
     switch (*(u8*)state)
     {
-    case 0:
+    case DIMTRICKY_STATE_WAIT_TRIGGER:
         if (GameBit_Get(0xa1b) != 0)
         {
             GameBit_Set(0x4e4, 0);
             GameBit_Set(0x4e5, 0);
-            *(s8*)state = 1;
+            *(s8*)state = DIMTRICKY_STATE_HAND_CONTROL;
         }
         break;
-    case 1:
-        *(s8*)state = 2;
+    case DIMTRICKY_STATE_HAND_CONTROL:
+        *(s8*)state = DIMTRICKY_STATE_LINK_COMPANION;
         break;
-    case 2:
+    case DIMTRICKY_STATE_LINK_COMPANION:
         ((void(*)(int*, int*))((void**)*(*(int***)((char*)trickyObj + 104)))[14])(trickyObj, obj);
-        *(s8*)state = 3;
+        *(s8*)state = DIMTRICKY_STATE_DONE;
         break;
-    case 3:
+    case DIMTRICKY_STATE_DONE:
         break;
     }
 }
