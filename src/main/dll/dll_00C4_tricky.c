@@ -41,6 +41,7 @@
 #define TRICKY_OBJFLAG_PARENT_SLACK 0x1000
 #define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
 #define TRICKY_HEIGHT_TRACK_GROUP 0x51
+#define TRICKY_OBJGROUP 1
 #define TRICKY_HEIGHT_TRACK_MODEL_SLOT 3
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
 /* ObjPlacement offsets read by the defeat handler to fire the baddie's
@@ -763,7 +764,7 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[6]);
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[7]);
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[8]);
-    ObjGroup_RemoveObject(obj, 1);
+    ObjGroup_RemoveObject(obj, TRICKY_OBJGROUP);
     (*gExpgfxInterface)->freeSource((u32)obj);
     if ((shouldKeepFlameChildren == 0) && ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0))
     {
@@ -1678,7 +1679,7 @@ void Tricky_init(int obj)
         GameBit_Set(0x3f8, 1);
     }
     ((GameObject*)obj)->animEventCallback = tricky_SeqFn;
-    ObjGroup_AddObject(obj, 1);
+    ObjGroup_AddObject(obj, TRICKY_OBJGROUP);
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[0]);
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[1]);
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[2]);
