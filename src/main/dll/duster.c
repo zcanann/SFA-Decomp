@@ -819,7 +819,7 @@ void fn_8015652C(u32 obj, int state)
             (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2AE4,
                                              (int*)&lbl_803DBCD8, -1) != 0)
         {
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
+            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }
         if ((((BaddieState*)state)->controlFlags & 0x8000000) != 0)
         {
