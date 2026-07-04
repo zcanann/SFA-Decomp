@@ -283,7 +283,7 @@ void fn_8017D854(int obj, int msg)
             r2 = (lbl_803E37E4 + q) / t;
             r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
         }
-        ((AppleOnTreeState*)state)->unk50 = r;
+        ((AppleOnTreeState*)state)->totalFlightTime = r;
 
         if (((AppleOnTreeState*)state)->velY < lbl_803E37D4)
         {
@@ -315,7 +315,7 @@ void fn_8017D854(int obj, int msg)
         else
         {
             ((AppleOnTreeState*)state)->posY = ((GameObject*)obj)->anim.localPosY;
-            ((AppleOnTreeState*)state)->unk34 = ((GameObject*)obj)->anim.localPosY - ((AppleOnTreeState*)state)->dropHeight;
+            ((AppleOnTreeState*)state)->splashPosY = ((GameObject*)obj)->anim.localPosY - ((AppleOnTreeState*)state)->dropHeight;
             if (((GameObject*)obj)->anim.hitReactState != NULL)
             {
                 ObjHits_DisableObject(obj);
@@ -487,7 +487,7 @@ int fn_8017DF34(int p, int state, f32 y)
             }
             ((AppleOnTreeState*)state)->unk3C = ((AppleOnTreeState*)state)->velY;
             ((WaterfxSpawnSplashBurstAtPointFn)(*gWaterfxInterface)->spawnSplashBurst)(
-                (void*)p, ((GameObject*)p)->anim.localPosX, ((AppleOnTreeState*)state)->unk34,
+                (void*)p, ((GameObject*)p)->anim.localPosX, ((AppleOnTreeState*)state)->splashPosY,
                 ((GameObject*)p)->anim.localPosZ);
             return 0;
         }
@@ -794,7 +794,7 @@ void appleontree_update(int objArg)
                 }
                 if (lbl_803E37D4 != ((AppleOnTreeState*)state)->dropHeight)
                 {
-                    fb = ((AppleOnTreeState*)state)->flightTime / ((AppleOnTreeState*)state)->unk50;
+                    fb = ((AppleOnTreeState*)state)->flightTime / ((AppleOnTreeState*)state)->totalFlightTime;
                     ((u16*)obj)[0] = (f32) * (s16*)(state + 0x48) * fb;
                     ((u16*)obj)[1] = (f32) * (s16*)(state + 0x4a) * fb;
                     ((u16*)obj)[2] = (f32) * (s16*)(state + 0x4c) * fb;

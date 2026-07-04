@@ -13,7 +13,7 @@ typedef struct AppleOnTreeState
     f32 velY;
     f32 posY;
     f32 dropHeight;
-    f32 unk34;
+    f32 splashPosY;
     u16 healthRestore;
     u8 animState;
     u8 pad3B;
@@ -24,7 +24,7 @@ typedef struct AppleOnTreeState
     s16 rotY;
     s16 rotZ;
     u8 pad4E[2];
-    f32 unk50;
+    f32 totalFlightTime;
     u8 pad54[6];
     u8 flags;
     u8 pad5B;
