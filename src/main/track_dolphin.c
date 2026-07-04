@@ -5929,6 +5929,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     f32 tmp1[3];
     f32 tmp2[3];
     f32 frac;
+    f32 ndot;
     TrackBlockDescriptor* descEnd;
     f32 eps;
     f32 negStep, radius, maxStep;
@@ -6172,7 +6173,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                                     PSVECSubtract(hitpt, va, plane);
                                     PSVECNormalize(plane, plane);
                                     root = sqrtf(rr);
-                                    plane[3] = -PSVECDotProduct(hitpt, plane) + root;
+                                    ndot = -PSVECDotProduct(hitpt, plane);
+                                    plane[3] = ndot + root;
                                     frac = dotv;
                                     ok = 1;
                                 }
@@ -6224,7 +6226,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                                     PSVECSubtract(hitpt, vbp, plane);
                                     PSVECNormalize(plane, plane);
                                     root = sqrtf(rr2);
-                                    plane[3] = -PSVECDotProduct(hitpt, plane) + root;
+                                    ndot = -PSVECDotProduct(hitpt, plane);
+                                    plane[3] = ndot + root;
                                     frac = sq;
                                     ok = 1;
                                 }
