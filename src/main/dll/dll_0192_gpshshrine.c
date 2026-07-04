@@ -513,3 +513,11 @@ void gpsh_shrine_release(void)
 void gpsh_shrine_initialise(void)
 {
 }
+
+/* descriptor/ptr table auto 0x803263b8-0x803264e0 */
+u32 lbl_803263B8[3] = { 0x00280028, 0x00300030, 0x002d002d };
+u32 gGPSH_ObjCreatorObjDescriptor[15] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)gpsh_objcreator_initialise, (u32)gpsh_objcreator_release, 0x00000000, (u32)gpsh_objcreator_init, (u32)gpsh_objcreator_update, (u32)gpsh_objcreator_hitDetect, (u32)gpsh_objcreator_render, (u32)gpsh_objcreator_free, (u32)gpsh_objcreator_getObjectTypeId, (u32)gpsh_objcreator_getExtraSize, 0x00000000 };
+u32 gGPSH_SceneObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)gpsh_scene_initialise, (u32)gpsh_scene_release, 0x00000000, (u32)gpsh_scene_init, (u32)gpsh_scene_update, (u32)gpsh_scene_hitDetect, (u32)gpsh_scene_render, (u32)gpsh_scene_free, (u32)gpsh_scene_getObjectTypeId, (u32)gpsh_scene_getExtraSize };
+u32 gECSH_CupObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)ecsh_cup_initialise, (u32)ecsh_cup_release, 0x00000000, (u32)ecsh_cup_init, (u32)ecsh_cup_update, (u32)ecsh_cup_hitDetect, (u32)ecsh_cup_render, (u32)ecsh_cup_free, (u32)ecsh_cup_getObjectTypeId, (u32)ecsh_cup_getExtraSize };
+u32 gDBSH_ShrineObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dbsh_shrine_initialise, (u32)dbsh_shrine_release, 0x00000000, (u32)dbsh_shrine_init, (u32)dbsh_shrine_update, (u32)dbsh_shrine_hitDetect, (u32)dbsh_shrine_render, (u32)dbsh_shrine_free, (u32)dbsh_shrine_getObjectTypeId, (u32)dbsh_shrine_getExtraSize };
+u32 gDBSH_SymbolObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)dbsh_symbol_init, (u32)dbsh_symbol_update, 0x00000000, (u32)dbsh_symbol_render, (u32)dbsh_symbol_free, 0x00000000, (u32)dbsh_symbol_getExtraSize };

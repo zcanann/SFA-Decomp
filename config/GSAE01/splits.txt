@@ -1864,7 +1864,7 @@ main/dll/dll_0191_ecshcreator.c:
 
 main/dll/dll_0192_gpshshrine.c:
 	.text       start:0x801C70F0 end:0x801C8084
-	.data       start:0x80326398 end:0x803263B8
+	.data       start:0x80326398 end:0x803264E0
 
 main/dll/dll_0193_gpshobjcreator.c:
 	.text       start:0x801C8084 end:0x801C82C8
