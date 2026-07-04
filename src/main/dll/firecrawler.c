@@ -848,7 +848,7 @@ void snowworm_update(int* obj, u8* state)
         {
             ((BaddieState*)state)->seqEntryIndex = 7;
         }
-        ((BaddieState*)state)->controlFlags |= 0x40000000LL; /* BADDIE_CONTROL_SEQUENCE_DRIVEN (LL form preserves codegen) */
+        ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
@@ -1065,7 +1065,7 @@ void crawler_update(int* obj, u8* state)
         if (((FCVars*)state)->emergeTimer <= cap)
         {
             ((FCVars*)state)->emergeTimer = cap;
-            ((BaddieState*)state)->controlFlags |= 0x40000000LL; /* BADDIE_CONTROL_SEQUENCE_DRIVEN (LL form preserves codegen) */
+            ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
             ((FCVars*)state)->flagsC = t6[((FCVars*)state)->reactStep].flagC;
             ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
             ((FCVars*)state)->reactStep = t6[((FCVars*)state)->reactStep].nextA;
@@ -1210,7 +1210,7 @@ void hagabonMK2_update(s16* obj, u8* state)
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
     {
         ((BaddieState*)state)->seqEntryIndex = 3;
-        ((BaddieState*)state)->controlFlags |= 0x40000000LL; /* BADDIE_CONTROL_SEQUENCE_DRIVEN (LL form preserves codegen) */
+        ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
     sidekickToy_accelerateTowardTarget3D(obj, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosX,
                                          lbl_803E2C48 + ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosY,
@@ -1703,7 +1703,7 @@ void crawler_updateC(s16* obj, u8* state)
         if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2BA8,
                                              (int*)&lbl_803DBCF0, -1) != 0)
         {
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL /* BADDIE_CONTROL_PATH_FOLLOW (LL form preserves codegen) */;
+            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }
         if (((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
@@ -1719,7 +1719,7 @@ void crawler_updateC(s16* obj, u8* state)
         if (((FCVars*)state)->emergeTimer <= cap)
         {
             ((FCVars*)state)->emergeTimer = cap;
-            ((BaddieState*)state)->controlFlags |= 0x40000000LL; /* BADDIE_CONTROL_SEQUENCE_DRIVEN (LL form preserves codegen) */
+            ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
             ((FCVars*)state)->flagsC = seq[((FCVars*)state)->reactStep].flagC;
             ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
             ((FCVars*)state)->reactStep = seq[((FCVars*)state)->reactStep].nextA;
@@ -1782,7 +1782,7 @@ void crawler_updateC(s16* obj, u8* state)
                 && (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2BC0,
                                                     (int*)&lbl_803DBCF0, -1) != 0)
             {
-                ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL /* BADDIE_CONTROL_PATH_FOLLOW (LL form preserves codegen) */;
+                ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
             }
             if ((((FCVars*)state)->flagsD & 0xa) == 0)
             {
@@ -1943,7 +1943,7 @@ void crawler_updateB(s16* obj, u8* state)
         if (((FCVars*)state)->emergeTimer <= cap)
         {
             ((FCVars*)state)->emergeTimer = cap;
-            ((BaddieState*)state)->controlFlags |= 0x40000000LL; /* BADDIE_CONTROL_SEQUENCE_DRIVEN (LL form preserves codegen) */
+            ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
             ((FCVars*)state)->flagsC = seq[((FCVars*)state)->reactStep].flagC;
             ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
             ((FCVars*)state)->reactStep = seq[((FCVars*)state)->reactStep].nextA;
@@ -2204,7 +2204,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
             && (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2C44,
                                                 (int*)&lbl_803DBCF8, -1) != 0)
         {
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL /* BADDIE_CONTROL_PATH_FOLLOW (LL form preserves codegen) */;
+            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }
         sidekickToy_accelerateTowardTarget3D(obj, base->posX, base->posY,
                                              base->posZ, lbl_803E2C48, lbl_803E2C4C, lbl_803E2C50,
