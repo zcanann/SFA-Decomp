@@ -7,8 +7,6 @@ extern float mathCosf(float x);
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
-extern f32 lbl_803E2658;
-extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
@@ -26,7 +24,6 @@ extern f32 lbl_803E1AA8;
 extern f32 lbl_803E1AAC;
 extern f32 lbl_803E1AB0;
 extern f32 lbl_803E1AB4;
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
 
 #pragma scheduling off
