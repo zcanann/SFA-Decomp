@@ -37,7 +37,7 @@ void imanimspacecraft_modelMtxFn(void)
 
 /* vtable slot 0x0B: reports whether the spacecraft's bound model has its
    bit-2 flag set (read from byte +3 of the model pointer at obj+0xb8). */
-u32 imanimspacecraft_func0B(int* obj) { return ((ImAnimSpacecraftState*)((GameObject*)obj)->extra)->flags & 0x4; }
+u32 imanimspacecraft_func0B(int* obj) { return ((ImAnimSpacecraftState*)((GameObject*)obj)->extra)->flags & ANIMSPACECRAFT_FLAG_TOGGLE_4; }
 
 int imanimspacecraft_setScale(int* obj, int bitIdx)
 {
