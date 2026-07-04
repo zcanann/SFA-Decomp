@@ -79,7 +79,7 @@ typedef struct Dim2SpawnSetup
     s32 mapId;
     s8 unk18;
     u8 pad19;
-    s16 unk1A;
+    s16 childRot; /* 0x1A rotation region of spawned child placement */
     s16 unk1C;
 } Dim2SpawnSetup;
 
@@ -274,7 +274,7 @@ void dim2pathgenerator_update(int* obj)
         ((Dim2SpawnSetup*)np)->colorA = 255;
         ((Dim2SpawnSetup*)np)->unk3 = ((Dim2pathgeneratorPlacement*)def)->unk3;
         ((Dim2SpawnSetup*)np)->unk18 = (s8) * (u8*)((char*)def + 0x1c);
-        ((Dim2SpawnSetup*)np)->unk1A = *(u8*)((char*)def + 0x1a);
+        ((Dim2SpawnSetup*)np)->childRot = *(u8*)((char*)def + 0x1a);
         ((Dim2SpawnSetup*)np)->unk1C = *(u8*)((char*)def + 0x1b);
         ((Dim2SpawnSetup*)np)->mapId = ((Dim2pathgeneratorPlacement*)def)->mapId;
         Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
