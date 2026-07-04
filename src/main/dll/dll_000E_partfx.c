@@ -3990,18 +3990,21 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.lifetimeFrames = (s32)(ftmp4 * (f32)(s32)randomGetRange(1, 4));
             cfg.behaviorFlags = 0x100011;
             cfg.textureId = 0x30;
-            srcPosX = cfg.sourcePosY;
-            srcPosY = cfg.sourcePosZ;
-            srcPosZ = cfg.sourcePosW;
-            if (cfg.attachedSource != NULL)
+            if (cfg.behaviorFlags & 1)
             {
-                srcPosX = ((GameObject*)cfg.attachedSource)->anim.localPosX;
-                srcPosY = ((GameObject*)cfg.attachedSource)->anim.localPosY;
-                srcPosZ = ((GameObject*)cfg.attachedSource)->anim.localPosZ;
+                srcPosX = cfg.sourcePosY;
+                srcPosY = cfg.sourcePosZ;
+                srcPosZ = cfg.sourcePosW;
+                if (cfg.attachedSource != NULL)
+                {
+                    srcPosX = ((GameObject*)cfg.attachedSource)->anim.localPosX;
+                    srcPosY = ((GameObject*)cfg.attachedSource)->anim.localPosY;
+                    srcPosZ = ((GameObject*)cfg.attachedSource)->anim.localPosZ;
+                }
+                cfg.startPosZ = cfg.startPosZ + srcPosZ;
+                cfg.startPosY = cfg.startPosY + srcPosY;
+                (*startPos) = (*startPos) + srcPosX;
             }
-            cfg.startPosZ = cfg.startPosZ + srcPosZ;
-            cfg.startPosY = cfg.startPosY + srcPosY;
-            (*startPos) = (*startPos) + srcPosX;
             (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
         }
         break;
