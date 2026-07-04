@@ -3,6 +3,12 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 
+enum DIMwooddoorDebrisState
+{
+    DIMWOODDOOR_DEBRIS_STATE_FALLING = 0, /* fall under gravity, spin, watch for impact */
+    DIMWOODDOOR_DEBRIS_STATE_EXPLODED = 1 /* exploded + hidden, awaiting despawn timer   */
+};
+
 typedef struct DIMwooddoorUpdateFallingDebrisState
 {
     u8 pad0[0x1 - 0x0];
@@ -49,7 +55,7 @@ void DIMwooddoor_updateFallingDebris(int* obj)
     int* extra = ((GameObject*)obj)->extra;
     switch (((DIMwooddoorUpdateFallingDebrisState*)extra)->state)
     {
-    case 0:
+    case DIMWOODDOOR_DEBRIS_STATE_FALLING:
         {
             f32 oldvy = ((GameObject*)obj)->anim.velocityY;
             f32 grav = lbl_803E48A4 * -lbl_803DBEF0;
@@ -76,7 +82,7 @@ void DIMwooddoor_updateFallingDebris(int* obj)
                     ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState*)extra)->hitboxRadius);
                     spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
                     ((GameObject*)obj)->unkF4 = 1180;
-                    *(s8*)&((DIMwooddoorUpdateFallingDebrisState*)extra)->state = 1;
+                    *(s8*)&((DIMwooddoorUpdateFallingDebrisState*)extra)->state = DIMWOODDOOR_DEBRIS_STATE_EXPLODED;
                     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
             }
@@ -90,12 +96,12 @@ void DIMwooddoor_updateFallingDebris(int* obj)
                 ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState*)extra)->hitboxRadius);
                 spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
                 ((GameObject*)obj)->unkF4 = 1180;
-                *(s8*)&((DIMwooddoorUpdateFallingDebrisState*)extra)->state = 1;
+                *(s8*)&((DIMwooddoorUpdateFallingDebrisState*)extra)->state = DIMWOODDOOR_DEBRIS_STATE_EXPLODED;
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
             break;
         }
-    case 1:
+    case DIMWOODDOOR_DEBRIS_STATE_EXPLODED:
         break;
     }
     ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 + framesThisStep;
