@@ -620,7 +620,7 @@ main/dll/dll_00AF_projlightning1.c:
 
 main/dll/dll_00B0_projlightning2.c:
 	.text       start:0x80100668 end:0x801006A0
-	.data       start:0x80319518 end:0x80319548
+	.data       start:0x80319518 end:0x80319568
 
 main/dll/dll_00B1_projlightning3.c:
 	.text       start:0x801006A0 end:0x801006D8

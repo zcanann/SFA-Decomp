@@ -28,3 +28,6 @@ void projlightning2_initialise(void)
 }
 
 char sProjlightning2DoNoLongerSupported[] = "<projlightning2 Do>No Longer supported \n";
+
+/* descriptor/ptr table auto 0x80319548-0x80319568 */
+u32 lbl_80319548[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projlightning3_initialise, (u32)projlightning3_release, 0x00000000, (u32)projlightning3_doUnsupported };
