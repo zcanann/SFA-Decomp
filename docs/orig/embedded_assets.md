@@ -11,29 +11,33 @@ understood anchors.
 ## `0x802CC6A0`–`0x8030C6A0` — boot / loading-screen texture set (256 KB)
 
 - **Identity (confirmed from code):** the game's **boot logo texture set** — three GameCube
-  textures laid out back-to-back (Nintendo logo, Rareware badge, a legal/text line). Read at
-  runtime by `initLoadingScreenTextures()` in `dll_0032_titlescreeninit.c`, which walks three
-  `LoadingScreenTexture` records at `OSGetArenaHi() - 0x40000` (the arena copy of this region).
-  Each record is a **0x60-byte header** (`width`@0x0A, `height`@0x0C `u16`; `format`@0x16 `u8`;
-  pixels at `+0x60`) followed by the tile-swizzled image; `GXInitTexObj` is called with the
-  header's own width/height/format, so the dimensions are **data-driven, not hardcoded** — which
-  is how they were recovered exactly.
-- **The three textures** (offsets relative to region base `0x802CC6A0`):
+  logo textures laid out back-to-back: the **Nintendo**, **Rareware**, and **Dolby Surround
+  Pro Logic II** logos. Read at runtime by `initLoadingScreenTextures()` in
+  `dll_0032_titlescreeninit.c`, which walks three `LoadingScreenTexture` records at
+  `OSGetArenaHi() - 0x40000` (the arena copy of this region). Each record is a **0x60-byte
+  header** (`width`@0x0A, `height`@0x0C `u16`; `format`@0x16 `u8`; pixels at `+0x60`) followed by
+  the tile-swizzled image; `GXInitTexObj` is called with the header's own width/height/format, so
+  the dimensions are **data-driven, not hardcoded** — which is how they were recovered exactly.
+- **The three textures** (address = `0x802CC6A0` + offset; each = 0x60 header + image):
 
-  | # | image | width×height | format | pixels at |
-  |---|---|---|---|---|
-  | 0 | Nintendo logo | 376×104 | IA8 | region+0x60 |
-  | 1 | Rareware badge | 128×160 | RGB5A3 | region+0x13240 |
-  | 2 | legal / text line | 180×92 | CMPR (DXT1) | region+0x1D2A0 |
+  | # | logo | width×height | format | header addr | record size | proposed symbol |
+  |---|---|---|---|---|---|---|
+  | 0 | Nintendo | 376×104 | IA8 | `0x802CC6A0` | `0x131E0` | `gLoadingScreenTextures` (base) |
+  | 1 | Rareware | 128×160 | RGB5A3 | `0x802DF880` | `0xA060` | `gRarewareLogoTexture` |
+  | 2 | Dolby Pro Logic II | 180×92 | CMPR (DXT1) | `0x802E98E0` | `0x22E0` | `gDolbyProLogic2Texture` |
 
   IA8/CMPR carry only intensity or a limited palette; the in-game yellow/gold is a render-time
-  **TEV tint**, not stored in the texture. The tail past texture 2 is `0xFF` padding to `0x40000`.
-- **Current placeholder:** the bulk of the auto object `auto_07_802CBE94_data`
-  (dtk labels `lbl_802CC6A0`, `lbl_802D808E`, `lbl_802E802E`, `lbl_802F808D`).
-- **Proposed name:** `gBootLogoTextures`. The same address is later handed to `GXInit` by
-  `pi_dolphin.c:videoInit` as the GPU FIFO base — the region is reused as the write-only FIFO
-  once the boot logos have been displayed.
-- **Size:** `0x40000` (262,144 bytes) — the three textures (~`0x1D520`) padded with `0xFF`.
+  **TEV tint**, not stored in the texture. The three records fill `0x802CC6A0`–`0x802EBBC0`
+  (`0x1F520`); everything after is `0xFF` padding.
+- **Current placeholder:** the auto object `auto_07_802CBE94_data`
+  (dtk labels `lbl_802CC6A0`, `lbl_802D808E`, `lbl_802E802E`, `lbl_802F808D` — the last three are
+  mid-texture reloc-target artifacts, not real boundaries; superseded by the symbols above).
+- **Proposed name:** `gLoadingScreenTextures` for the base (matching the code's own
+  `LoadingScreenTexture` type / `initLoadingScreenTextures()`), plus the per-logo symbols in the
+  table. `pi_dolphin.c:videoInit` hands this base to `GXInit` as the GPU FIFO — the region is
+  reused as the write-only FIFO once the boot logos have been displayed.
+- **Size:** `0x40000` (262,144 bytes) — three texture records (`0x1F520`) padded with `0xFF` to
+  the `0x40000` GX-FIFO size.
 
 ### Runtime role
 `videoInit()` copies the 256 KB to arena-top, then passes the same region to
