@@ -2867,7 +2867,7 @@ void renderShadows(void)
             ((ObjModelState*)of64)->shadowOffsetX = v30[0];
             ((ObjModelState*)of64)->shadowOffsetY = v30[1];
             ((ObjModelState*)of64)->shadowOffsetZ = v30[2];
-            ((ObjModelState*)of64)->shadowCastSlot = castSlot;
+            ((ObjModelState*)obj[0x64 / 4])->shadowCastSlot = castSlot;
         }
         slotIdx++;
         if ((*(u32*)&((ObjModelState*)of64)->flags & 0x20) != 0)
