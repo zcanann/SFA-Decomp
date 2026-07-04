@@ -143,7 +143,7 @@ void ProjectileSwitch_hitDetect(int obj)
     if (((GameObject*)hitObj)->anim.seqId == 0x14b)
     {
         ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)hitObj)->anim.hitReactState;
-        if ((hitState->contactFlags & 2) != 0)
+        if ((hitState->contactFlags & OBJHITS_CONTACT_FLAG_KIND_NONZERO) != 0)
         {
             isSpecial = 1;
         }

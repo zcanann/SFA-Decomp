@@ -6,6 +6,16 @@
 
 #define OBJHITS_PRIORITY_HIT_COUNT 3
 
+/*
+ * ObjHitsPriorityState.contactFlags (state+0xAD s8) contact-kind markers.
+ * The producer objhits.c sets exactly one per contact based on the struck
+ * hit-volume's kind: kind==0 -> KIND0, kind!=0 -> KIND_NONZERO. Consumers
+ * (dll object states) read the nonzero-kind bit and the nonzero-ness of the
+ * field. Field is s8, so a bare int constant folds identically.
+ */
+#define OBJHITS_CONTACT_FLAG_KIND0        0x1 /* contact with a kind-0 hit volume */
+#define OBJHITS_CONTACT_FLAG_KIND_NONZERO 0x2 /* contact with a nonzero-kind hit volume */
+
 typedef struct ObjHitsPriorityState {
   u8 pad00[0x0C];
   f32 primaryRadiusSquared;

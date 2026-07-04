@@ -2365,11 +2365,11 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                 stateB->contactPosZ = endPoints[pointCount * 3 + 2];
                 if (hb.kinds[pointCount] != 0u)
                 {
-                    stateB->contactFlags = stateB->contactFlags | 2;
+                    stateB->contactFlags = stateB->contactFlags | OBJHITS_CONTACT_FLAG_KIND_NONZERO;
                 }
                 else
                 {
-                    stateB->contactFlags = stateB->contactFlags | 1;
+                    stateB->contactFlags = stateB->contactFlags | OBJHITS_CONTACT_FLAG_KIND0;
                 }
             }
         }

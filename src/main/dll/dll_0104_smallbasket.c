@@ -533,7 +533,7 @@ int smallbasket_resolveCollision(u8* obj)
     st = *(u8**)&((GameObject*)obj)->anim.hitReactState;
     if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3970, 1, 0, obj, 1, -1, 0xff, 0) != 0)
     {
-        ((ObjHitsPriorityState*)st)->contactFlags |= 1;
+        ((ObjHitsPriorityState*)st)->contactFlags |= OBJHITS_CONTACT_FLAG_KIND0;
         ((ObjHitsPriorityState*)st)->localPosX = ((GameObject*)obj)->anim.previousLocalPosX;
         ((ObjHitsPriorityState*)st)->localPosY = ((GameObject*)obj)->anim.previousLocalPosY;
         ((ObjHitsPriorityState*)st)->localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
@@ -592,7 +592,7 @@ int smallbasket_resolveCollision(u8* obj)
         gSmallBasketHitVelocity[3] = hitResults.hitInfo[idx][3];
         if (hitResults.solidFlags[idx] != 0)
         {
-            ((ObjHitsPriorityState*)st)->contactFlags |= 2;
+            ((ObjHitsPriorityState*)st)->contactFlags |= OBJHITS_CONTACT_FLAG_KIND_NONZERO;
             ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)st)->contactPosX;
             ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)st)->contactPosY;
             ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)st)->contactPosZ;
@@ -607,7 +607,7 @@ int smallbasket_resolveCollision(u8* obj)
         }
         else
         {
-            ((ObjHitsPriorityState*)st)->contactFlags |= 1;
+            ((ObjHitsPriorityState*)st)->contactFlags |= OBJHITS_CONTACT_FLAG_KIND0;
             ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)st)->contactPosX;
             ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)st)->contactPosY;
             ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)st)->contactPosZ;

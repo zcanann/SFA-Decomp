@@ -270,7 +270,7 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E8238;
         Sfx_PlayFromObject(obj, SFXTRIG_thorntail_chew2);
     }
-    if ((((ObjHitsPriorityState*)sub)->flags & 0x200) && (((ObjHitsPriorityState*)sub)->contactFlags & 2))
+    if ((((ObjHitsPriorityState*)sub)->flags & 0x200) && (((ObjHitsPriorityState*)sub)->contactFlags & OBJHITS_CONTACT_FLAG_KIND_NONZERO))
     {
         inner->flags |= 0x8;
     }

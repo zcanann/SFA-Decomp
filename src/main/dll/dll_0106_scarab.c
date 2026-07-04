@@ -823,7 +823,7 @@ int scarab_sweptCollide(int obj)
 
         if (results.solidFlags[idx] != 0)
         {
-            ((ObjHitsPriorityState*)state)->contactFlags = *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | 2;
+            ((ObjHitsPriorityState*)state)->contactFlags = *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND_NONZERO;
             ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
             ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
             ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
@@ -832,7 +832,7 @@ int scarab_sweptCollide(int obj)
             ((ObjHitsPriorityState*)state)->localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
             return 1;
         }
-        ((ObjHitsPriorityState*)state)->contactFlags = *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | 1;
+        ((ObjHitsPriorityState*)state)->contactFlags = *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND0;
         ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
         ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
         ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;

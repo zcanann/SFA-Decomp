@@ -168,7 +168,7 @@ check_decor_objects:
                 if (sum < radius * radius)
                 {
                     ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->lastHitObject = obj;
-                    ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->contactFlags = 1;
+                    ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->contactFlags = OBJHITS_CONTACT_FLAG_KIND0;
                 }
             }
         }
