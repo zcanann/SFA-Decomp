@@ -82,7 +82,7 @@ typedef struct HightopPlacement
     s16 unkC16;
     s16 airMeterCapacity;
     u8 padC1A[0xC28 - 0xC1A];
-    f32 unkC28;
+    f32 curveFollowSpeedScale;
     u8 padC2C[0xC38 - 0xC2C];
     f32 sfxIntervalTimer;
     u8 padC3C[0xC40 - 0xC3C];
@@ -114,7 +114,7 @@ typedef struct HighTopRuntime
     f32 lookTargetX;
     f32 lookTargetY;
     f32 lookTargetZ;
-    f32 unkC28;
+    f32 curveFollowSpeedScale;
     u8 padC2C[4];
     f32 stateTimer; /* per-state countdown; -= framesThisStep, re-armed from random */
     u8 padC34[4];
@@ -497,11 +497,11 @@ void hightop_init(void* obj, u8* arg)
     gHighTopAirMeterInitValue = *(s16*)(arg + 0x1a);
     if (*(s16*)(arg + 0x1c) == 0)
     {
-        runtime->unkC28 = lbl_803E6B50;
+        runtime->curveFollowSpeedScale = lbl_803E6B50;
     }
     else
     {
-        runtime->unkC28 = (f32) * (s16*)(arg + 0x1c) / lbl_803E6B54;
+        runtime->curveFollowSpeedScale = (f32) * (s16*)(arg + 0x1c) / lbl_803E6B54;
     }
     runtime->flagsC49.b6 = 0;
     runtime->flagsC4A.b0 = 0;
@@ -697,7 +697,7 @@ void hightop_update(int obj)
     if ((((HighTopRuntime*)p)->flagsC40 & HIGHTOP_FLAG_CURVE_FOLLOW) != 0)
     {
         int ev = Obj_UpdateRomCurveFollowVelocity(obj, (f32*)(p + 0xa10),
-                                                  lbl_803DC324 * (((HighTopRuntime*)p)->unkC28 * timeDelta),
+                                                  lbl_803DC324 * (((HighTopRuntime*)p)->curveFollowSpeedScale * timeDelta),
                                                   lbl_803E6B44, lbl_803E6ADC * timeDelta, 0);
         if (ev != 0)
         {
