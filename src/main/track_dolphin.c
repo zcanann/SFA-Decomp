@@ -4713,7 +4713,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
             nzi = xs[0] * (ys[1] - ys[2]) + (xs[1] * (ys[2] - ys[0]) + xs[2] * (ys[0] - ys[1]));
             fnz = nzi;
             len = sqrtf(fnz * fnz + (fnx * fnx + fny * fny));
-            if (len <= __AR_Callback) continue;
+            if (!(len > __AR_Callback)) continue;
             inv = lbl_803DECC4 / len;
             *(f32*)(cur + 4) = fnx * inv;
             *(f32*)(cur + 8) = fny * inv;
@@ -4753,16 +4753,16 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
                     ey = pz * (f32)(xw[0] - xs[k]) + ((f32)zw[0] * ((f32)xs[k] - px) + zs[k] * (px - xw[0]));
                     ez = px * (f32)(yw[0] - ys[k]) + ((f32)xw[0] * ((f32)ys[k] - py) + xs[k] * (py - yw[0]));
                     len = sqrtf(ez * ez + (ex * ex + ey * ey));
-                    if (len <= eps)
-                    {
-                        deg = 1;
-                    }
-                    else
+                    if (len > eps)
                     {
                         f32 inv2 = lbl_803DECC4 / len;
                         ex *= inv2;
                         ey *= inv2;
                         ez *= inv2;
+                    }
+                    else
+                    {
+                        deg = 1;
                     }
                     *(f32*)(cur + k22++ * 4 + 0x24) = ex;
                     *(f32*)(cur + k22++ * 4 + 0x24) = ey;
