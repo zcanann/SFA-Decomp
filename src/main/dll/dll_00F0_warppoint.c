@@ -32,6 +32,13 @@
 #define WARPPOINT_MAP_SAVE_A 0x4B675
 #define WARPPOINT_MAP_SAVE_B 0x46882
 
+/* def->mode behavior selector (see file header) */
+#define WARPPOINT_MODE_PROXIMITY    0 /* proximity warp / trigger-sequence near player */
+#define WARPPOINT_MODE_HINT_TIMER   1 /* trigger while hint flag set, on a timer */
+#define WARPPOINT_MODE_GATED_WARP   2 /* game-bit-gated warp, world-space distance */
+#define WARPPOINT_MODE_ONESHOT_SEQ  3 /* one-shot trigger-sequence gated on game bit */
+#define WARPPOINT_MODE_GATED_WARP2  4 /* game-bit-gated warp variant, world-space distance */
+
 /* game bit shared with mode-0 markers to coordinate a single save point */
 #define GAMEBIT_WARPPOINT_SAVED 0xD53
 
@@ -84,14 +91,14 @@ void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     WarpPointObjectDef* p = *(WarpPointObjectDef**)&((GameObject*)obj)->anim.placementData;
     if (visible == 0) return;
-    if (p->mode == 1) return;
+    if (p->mode == WARPPOINT_MODE_HINT_TIMER) return;
 }
 #pragma reset
 
 int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WarpPointObjectDef* p = *(WarpPointObjectDef**)&((GameObject*)obj)->anim.placementData;
-    if (p->mode != 2)
+    if (p->mode != WARPPOINT_MODE_GATED_WARP)
     {
         if (animUpdate->triggerCommand == 1)
         {
@@ -123,7 +130,7 @@ void WarpPoint_init(int* obj, WarpPointObjectDef* def)
     {
         ((WarpPointState*)state)->triggered = 1;
     }
-    if (def->mode == 2)
+    if (def->mode == WARPPOINT_MODE_GATED_WARP)
     {
         state[0] = 0;
     }
@@ -165,7 +172,7 @@ void WarpPoint_update(int* obj)
     }
     switch (def->mode)
     {
-    case 0:
+    case WARPPOINT_MODE_PROXIMITY:
         if (lbl_803DCEB8 > -1 || GameBit_Get(GAMEBIT_WARPPOINT_SAVED) != 0)
         {
             f32 dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
@@ -197,7 +204,7 @@ void WarpPoint_update(int* obj)
             }
         }
         break;
-    case 1:
+    case WARPPOINT_MODE_HINT_TIMER:
         {
             f32 dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
             f32 dy = ((PushableState*)player)->scale - ((GameObject*)obj)->anim.localPosY;
@@ -216,7 +223,7 @@ void WarpPoint_update(int* obj)
             }
             break;
         }
-    case 2:
+    case WARPPOINT_MODE_GATED_WARP:
         if (lbl_803E35DC != (dist = ((WarpPointState*)state)->triggerRadius))
         {
             f32 dx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
@@ -241,7 +248,7 @@ void WarpPoint_update(int* obj)
             }
         }
         break;
-    case 3:
+    case WARPPOINT_MODE_ONESHOT_SEQ:
         {
             f32 dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
             f32 dy = ((PushableState*)player)->scale - ((GameObject*)obj)->anim.localPosY;
@@ -257,7 +264,7 @@ void WarpPoint_update(int* obj)
             }
             break;
         }
-    case 4:
+    case WARPPOINT_MODE_GATED_WARP2:
         if (lbl_803E35DC != (dist = ((WarpPointState*)state)->triggerRadius))
         {
             f32 dx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
