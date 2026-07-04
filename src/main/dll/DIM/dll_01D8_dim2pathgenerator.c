@@ -46,7 +46,7 @@ FbWGPipe GXWGFifo : (0xCC008000);
 typedef struct Dim2pathgeneratorObjectDef
 {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
+    s32 mapId; /* 0x14: ObjPlacement-head map id (matches sibling Dim2pathgeneratorPlacement.mapId) */
     s16 spawnPeriod;
     s16 unk1A;
     s16 unk1C;
