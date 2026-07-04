@@ -455,7 +455,7 @@ void fn_801C4664(void* objArg)
     runtime = obj->runtime;
     playerObj = Obj_GetPlayerObject();
 
-    if ((obj->flags06 & 0x4000) != 0)
+    if ((obj->flags06 & OBJANIM_FLAG_HIDDEN) != 0)
     {
         obj->yaw = 0;
         obj->localPosY = *(f32*)((u8*)config + 0xC);
