@@ -1,0 +1,303 @@
+address,section,size_bytes,class,subtype_reason,likely_owner,owner_confidence
+0x802C18C0,.rodata,3432,const-data,small const / rodata,THPDec.c,med
+0x802C26B8,.rodata,616,const-data,small const / rodata,THPDec.c,high
+0x802C2B30,.rodata,540,const-data,small const / rodata,trigf.c,high
+0x802C2D60,.data,8616,data-table,structured .data (relocs/pointers present),audio.c,med
+0x802CA100,.data,864,data-table,structured .data (relocs/pointers present),textrender.c,high
+0x802CADA0,.data,20,data-table,opaque .data table (needs inspection),objanim.c,high
+0x802CAE84,.data,76,data-table,structured .data (relocs/pointers present),objlib.c,high
+0x802CBE94,.data,264644,asset,padding-dominated blob (texture/FIFO region),,-
+0x8030D068,.data,5192,data-table,structured .data (relocs/pointers present),rcp_dolphin.c,high
+0x8030E8B0,.data,520,data-table,structured .data (relocs/pointers present),track_dolphin.c,high
+0x8030EACC,.data,476,data-table,structured .data (relocs/pointers present),maketex.c,high
+0x8030EF58,.data,880,ptr-table,reloc-dense pointer/jump/vtable table,objseq.c,high
+0x8030F500,.data,160,data-table,opaque .data table (needs inspection),sky.c,high
+0x8030F788,.data,40,data-table,opaque .data table (needs inspection),newclouds.c,high
+0x8030F7E8,.data,132,ptr-table,reloc-dense pointer/jump/vtable table,cloudaction.c,high
+0x8030FCA8,.data,120,ptr-table,reloc-dense pointer/jump/vtable table,dll_000A_expgfx.c,high
+0x8030FDF4,.data,68,ptr-table,reloc-dense pointer/jump/vtable table,dll_000D_playershadow.c,high
+0x80310528,.data,56,ptr-table,reloc-dense pointer/jump/vtable table,dll_0018_boneparticleeffect.c,high
+0x80310670,.data,1560,ptr-table,reloc-dense pointer/jump/vtable table,dll_001B_effect2.c,high
+0x80310D1C,.data,44,data-table,structured .data (relocs/pointers present),dll_0023_effect10.c,high
+0x80310D7C,.data,44,data-table,structured .data (relocs/pointers present),dll_0024_effect11.c,high
+0x80310DE4,.data,44,data-table,structured .data (relocs/pointers present),dll_0025_effect12.c,high
+0x80310E88,.data,216,ptr-table,reloc-dense pointer/jump/vtable table,dll_0027_effect14.c,high
+0x80310FB4,.data,372,ptr-table,reloc-dense pointer/jump/vtable table,dll_0028_effect15.c,high
+0x803112E4,.data,564,ptr-table,reloc-dense pointer/jump/vtable table,dll_002D_effect20.c,high
+0x803116E0,.data,64,ptr-table,reloc-dense pointer/jump/vtable table,dll_0014_unk.c,high
+0x80311900,.data,2624,data-table,structured .data (relocs/pointers present),dll_0017_savegame.c,high
+0x8031262C,.data,5780,data-table,structured .data (relocs/pointers present),dll_005E_dll5efunc0.c,high
+0x80313E78,.data,32,data-table,structured .data (relocs/pointers present),dll_006F_dll6ffunc0.c,high
+0x8031403C,.data,2276,data-table,structured .data (relocs/pointers present),dll_0070_dll70func0.c,high
+0x80314930,.data,448,data-table,structured .data (relocs/pointers present),dll_0075_dll75func0.c,high
+0x80314BB0,.data,256,data-table,structured .data (relocs/pointers present),dll_0079_dll79func0.c,high
+0x80314DE4,.data,36,data-table,structured .data (relocs/pointers present),dll_007B_dll7bfunc0.c,high
+0x80315010,.data,2440,data-table,structured .data (relocs/pointers present),dll_007C_dll7cfunc0.c,high
+0x80315F84,.data,36,data-table,structured .data (relocs/pointers present),dll_0084_dll84func0.c,high
+0x80316000,.data,2912,data-table,structured .data (relocs/pointers present),dll_0085_dll85func0.c,high
+0x80316C20,.data,32,data-table,structured .data (relocs/pointers present),dll_008D_dll8dfunc0.c,high
+0x80316C70,.data,448,data-table,structured .data (relocs/pointers present),dll_008E_dll8efunc0.c,high
+0x80316FD4,.data,36,data-table,structured .data (relocs/pointers present),dll_0090_dll90func0.c,high
+0x8031719C,.data,4844,data-table,structured .data (relocs/pointers present),dll_0091_dll91func0.c,high
+0x80318690,.data,1920,data-table,structured .data (relocs/pointers present),dll_009F_dll9ffunc0.c,high
+0x80318E20,.data,1400,data-table,structured .data (relocs/pointers present),dll_00A6_dlla6func0.c,high
+0x803193C0,.data,32,data-table,structured .data (relocs/pointers present),dll_00AB_projdummy.c,high
+0x80319410,.data,32,data-table,structured .data (relocs/pointers present),dll_00AC_projmagicstream.c,high
+0x80319460,.data,32,data-table,structured .data (relocs/pointers present),dll_00AD_projmagicemmit1.c,high
+0x803194A8,.data,32,data-table,structured .data (relocs/pointers present),dll_00AE_projroombeam.c,high
+0x803194F8,.data,32,data-table,structured .data (relocs/pointers present),dll_00AF_projlightning1.c,high
+0x80319548,.data,32,data-table,structured .data (relocs/pointers present),dll_00B0_projlightning2.c,high
+0x80319598,.data,32,data-table,structured .data (relocs/pointers present),dll_00B1_projlightning3.c,high
+0x803195E8,.data,32,data-table,structured .data (relocs/pointers present),dll_00B3_projlightning4.c,high
+0x80319638,.data,32,data-table,structured .data (relocs/pointers present),dll_00B8_projlightning5.c,high
+0x80319688,.data,32,data-table,structured .data (relocs/pointers present),dll_00B9_projlightning7.c,high
+0x803196D8,.data,32,data-table,structured .data (relocs/pointers present),dll_00BA_projlightning6.c,high
+0x80319720,.data,32,data-table,structured .data (relocs/pointers present),dll_00B4_projenergise1.c,high
+0x80319768,.data,32,data-table,structured .data (relocs/pointers present),dll_00B5_projenergise2.c,high
+0x803197B0,.data,32,data-table,structured .data (relocs/pointers present),dll_00B2_projrobotfire.c,high
+0x803197F8,.data,32,data-table,structured .data (relocs/pointers present),dll_00B6_projsquirt1.c,high
+0x80319840,.data,32,data-table,structured .data (relocs/pointers present),dll_00B7_projship1.c,high
+0x80319888,.data,32,data-table,structured .data (relocs/pointers present),dll_00BB_projwallpower.c,high
+0x803198D8,.data,32,data-table,structured .data (relocs/pointers present),dll_00BC_projquakeshock.c,high
+0x80319920,.data,32,data-table,structured .data (relocs/pointers present),dll_00BD_projsunshock.c,high
+0x80319968,.data,32,data-table,structured .data (relocs/pointers present),dll_00BE_projtesla.c,high
+0x803199B0,.data,32,data-table,structured .data (relocs/pointers present),dll_00BF_projcore1.c,high
+0x803199F8,.data,32,data-table,structured .data (relocs/pointers present),dll_00C0_projcore2.c,high
+0x80319A40,.data,32,data-table,structured .data (relocs/pointers present),dll_00C1_projcore3.c,high
+0x80319A88,.data,140,ptr-table,reloc-dense pointer/jump/vtable table,dll_00C2_projdfp1r.c,high
+0x80319B58,.data,348,ptr-table,reloc-dense pointer/jump/vtable table,dll_0001_camcontrol.c,high
+0x80319CE8,.data,720,ptr-table,reloc-dense pointer/jump/vtable table,camshipbattle5c.c,high
+0x8031A01C,.data,196,ptr-table,reloc-dense pointer/jump/vtable table,dll_0057_cameramodetitle.c,high
+0x8031A148,.data,128,data-table,structured .data (relocs/pointers present),dll_002E_moveLib.c,high
+0x8031A214,.data,412,data-table,structured .data (relocs/pointers present),dll_0034_titlemenu.c,high
+0x8031A4B0,.data,780,data-table,opaque .data table (needs inspection),n_options.c,high
+0x8031A8D0,.data,1636,data-table,structured .data (relocs/pointers present),dll_0036_entersavenamescreen.c,high
+0x8031B050,.data,36,float-pool,numeric constant table,headdisplay.c,high
+0x8031B818,.data,2448,data-table,structured .data (relocs/pointers present),dll_003B_menu.c,high
+0x8031C2A8,.data,608,data-table,structured .data (relocs/pointers present),dll_003C_tumbleweedbush.c,high
+0x8031C5D0,.data,80,data-table,structured .data (relocs/pointers present),dll_0031_minimap.c,high
+0x8031CC10,.data,40,ptr-table,reloc-dense pointer/jump/vtable table,dll_0040_credits.c,high
+0x8031CDB8,.data,48,ptr-table,reloc-dense pointer/jump/vtable table,dll_0041_warpstoneui.c,high
+0x8031D2A4,.data,1596,data-table,structured .data (relocs/pointers present),dll_80136a40.c,high
+0x8031D930,.data,524,data-table,structured .data (relocs/pointers present),weapone6.c,high
+0x8031DBD8,.data,24,data-table,opaque .data table (needs inspection),dll_00C4_tricky.c,high
+0x8031DC30,.data,88,ptr-table,reloc-dense pointer/jump/vtable table,dll_00C9_enemy.c,high
+0x8031DD30,.data,5472,data-table,structured .data (relocs/pointers present),dll_00E1_wispbaddie.c,high
+0x8031F3A0,.data,1864,data-table,opaque .data table (needs inspection),duster.c,high
+0x8031FD58,.data,40,ptr-table,reloc-dense pointer/jump/vtable table,firecrawler.c,high
+0x80320008,.data,368,data-table,structured .data (relocs/pointers present),dll_00CD_iceball.c,high
+0x803201B0,.data,56,ptr-table,reloc-dense pointer/jump/vtable table,dll_00D0_grimble.c,high
+0x803202E8,.data,152,data-table,opaque .data table (needs inspection),dll_00D2_tumbleweed.c,high
+0x803203F8,.data,32,float-pool,numeric constant table,dll_00D4_skeetlawall.c,high
+0x80320700,.data,48,data-table,opaque .data table (needs inspection),dll_00DE_baddieinterestp.c,high
+0x80320768,.data,200,float-pool,numeric constant table,dll_00C6_animatedobj.c,high
+0x803208A0,.data,108,data-table,opaque .data table (needs inspection),dll_00C8_depthoffieldpoint.c,high
+0x80320978,.data,12,data-table,opaque .data table (needs inspection),dll_00E2_staff.c,high
+0x803209C0,.data,36,data-table,opaque .data table (needs inspection),dll_00E3_fireball.c,high
+0x80320A28,.data,64,float-pool,numeric constant table,dll_00E4_flamethrowerspe.c,high
+0x80320AA0,.data,32,ptr-table,reloc-dense pointer/jump/vtable table,dll_00E5_shield.c,high
+0x80320BB0,.data,332,data-table,structured .data (relocs/pointers present),dll_00E8_checkpoint4.c,high
+0x80320D48,.data,72,ptr-table,reloc-dense pointer/jump/vtable table,dll_00EE_effectbox.c,high
+0x80320DB8,.data,376,ptr-table,reloc-dense pointer/jump/vtable table,dll_00EF_pushable.c,high
+0x80320FD0,.data,464,data-table,structured .data (relocs/pointers present),dll_00F6_area.c,high
+0x803213F0,.data,112,ptr-table,reloc-dense pointer/jump/vtable table,dll_0113_seqobj2.c,high
+0x803216F0,.data,56,ptr-table,reloc-dense pointer/jump/vtable table,dll_0104_smallbasket.c,high
+0x80321750,.data,112,ptr-table,reloc-dense pointer/jump/vtable table,dll_0105_largecrate.c,high
+0x80321830,.data,504,ptr-table,reloc-dense pointer/jump/vtable table,dll_010D_portalspelldoor.c,high
+0x80321C24,.data,340,data-table,structured .data (relocs/pointers present),dll_011B_landedarwing.c,high
+0x80321DB0,.data,448,ptr-table,reloc-dense pointer/jump/vtable table,dll_0122_cctestinfot.c,high
+0x80321F80,.data,448,ptr-table,reloc-dense pointer/jump/vtable table,dll_012B_fxemit.c,high
+0x80322178,.data,624,ptr-table,reloc-dense pointer/jump/vtable table,dll_0135_texscroll.c,high
+0x80322400,.data,224,data-table,structured .data (relocs/pointers present),dll_013F_texframeanimator.c,high
+0x80322518,.data,820,data-table,structured .data (relocs/pointers present),dll_0126_trigger.c,high
+0x80322A80,.data,168,ptr-table,reloc-dense pointer/jump/vtable table,dll_0149_cfwindlift.c,high
+0x80322B38,.data,168,ptr-table,reloc-dense pointer/jump/vtable table,dll_014C_babycloudrunner.c,high
+0x80322C00,.data,416,ptr-table,reloc-dense pointer/jump/vtable table,dll_014E_cfprisonguard.c,high
+0x80322EA0,.data,760,data-table,structured .data (relocs/pointers present),dll_015A_explodable.c,high
+0x803231E0,.data,552,ptr-table,reloc-dense pointer/jump/vtable table,dll_0180_mmpasteroidre.c,high
+0x80323464,.data,596,data-table,structured .data (relocs/pointers present),dll_0188_cclightfoot.c,high
+0x803236D0,.data,1264,data-table,structured .data (relocs/pointers present),dll_016A_crrockfall.c,high
+0x80325360,.data,456,ptr-table,reloc-dense pointer/jump/vtable table,dll_01C1_dimsnowball.c,high
+0x80325558,.data,112,ptr-table,reloc-dense pointer/jump/vtable table,dll_01CA_dimexplosion.c,high
+0x80325600,.data,112,ptr-table,reloc-dense pointer/jump/vtable table,dll_01CE_dll1ce.c,high
+0x803256A8,.data,760,ptr-table,reloc-dense pointer/jump/vtable table,dll_01CF_dll1cf.c,high
+0x80325AC8,.data,60,data-table,opaque .data table (needs inspection),dim2icicle.c,high
+0x80325B94,.data,100,ptr-table,reloc-dense pointer/jump/vtable table,dll_01E0_dimboss.c,high
+0x80325C30,.data,856,data-table,structured .data (relocs/pointers present),dll_01E1_dimbossgut.c,high
+0x80325FEC,.data,316,ptr-table,reloc-dense pointer/jump/vtable table,dll_0178_dfshshrine.c,high
+0x80326168,.data,112,ptr-table,reloc-dense pointer/jump/vtable table,dll_018C_mmshshrine.c,high
+0x80326324,.data,116,ptr-table,reloc-dense pointer/jump/vtable table,dll_018F_ecshshrine.c,high
+0x803263B8,.data,296,ptr-table,reloc-dense pointer/jump/vtable table,dll_0192_gpshshrine.c,high
+0x80326518,.data,56,ptr-table,reloc-dense pointer/jump/vtable table,dll_0197_dll197.c,high
+0x803265DC,.data,164,ptr-table,reloc-dense pointer/jump/vtable table,dll_0199_dll199.c,high
+0x8032668C,.data,308,ptr-table,reloc-dense pointer/jump/vtable table,dll_019B_dll19b.c,high
+0x803268EC,.data,740,data-table,structured .data (relocs/pointers present),dll_01A1_nwmammoth.c,high
+0x80326CBC,.data,100,ptr-table,reloc-dense pointer/jump/vtable table,dll_01A8_shkillermushroom.c,high
+0x80326D5C,.data,188,data-table,structured .data (relocs/pointers present),dll_01A9_bombplant.c,high
+0x80326E38,.data,96,ptr-table,reloc-dense pointer/jump/vtable table,dll_01AC_shqueenearthwalker.c,high
+0x80327560,.data,56,ptr-table,reloc-dense pointer/jump/vtable table,dll_01AD_shthorntail.c,high
+0x803275C0,.data,404,data-table,structured .data (relocs/pointers present),sclantern.c,high
+0x803277A8,.data,112,data-table,structured .data (relocs/pointers present),dll_01AE_shlevelcontrol.c,high
+0x8032784C,.data,348,data-table,structured .data (relocs/pointers present),dll_01B1_shstaff.c,high
+0x803279E0,.data,56,ptr-table,reloc-dense pointer/jump/vtable table,dll_01B8_sctotempole.c,high
+0x80327A24,.data,60,ptr-table,reloc-dense pointer/jump/vtable table,dll_01BA_sctotempuzzle.c,high
+0x80327A80,.data,240,ptr-table,reloc-dense pointer/jump/vtable table,dll_01BB_sctotembond.c,high
+0x80327BA8,.data,2160,data-table,structured .data (relocs/pointers present),dll_0144_dll144.c,high
+0x80328488,.data,32,ptr-table,reloc-dense pointer/jump/vtable table,dll_0288_spdrape.c,high
+0x803285A8,.data,280,ptr-table,reloc-dense pointer/jump/vtable table,dll_0255_snowbike.c,high
+0x803286E4,.data,60,ptr-table,reloc-dense pointer/jump/vtable table,dll_01F9_wmobjcreator.c,high
+0x80328748,.data,336,ptr-table,reloc-dense pointer/jump/vtable table,dll_01F8_wmgalleon.c,high
+0x80328A30,.data,384,ptr-table,reloc-dense pointer/jump/vtable table,dll_0200_dll200.c,high
+0x80328BD0,.data,56,ptr-table,reloc-dense pointer/jump/vtable table,dll_0209_wmlevelcontrol.c,high
+0x80328C2C,.data,60,ptr-table,reloc-dense pointer/jump/vtable table,dll_020A_wmgeneralscales.c,high
+0x80328D28,.data,168,ptr-table,reloc-dense pointer/jump/vtable table,dll_020D_wmseqpoint.c,high
+0x80328DEC,.data,108,data-table,structured .data (relocs/pointers present),dll_0211_wmwallcrawler.c,high
+0x80328E90,.data,448,ptr-table,reloc-dense pointer/jump/vtable table,dll_0215_wmnewcrystal.c,high
+0x80329088,.data,624,ptr-table,reloc-dense pointer/jump/vtable table,light.c,high
+0x80329304,.data,844,data-table,structured .data (relocs/pointers present),dll_023F_dbegg.c,high
+0x803296FC,.data,580,data-table,structured .data (relocs/pointers present),dll_0242_dbstealerworm.c,high
+0x80329968,.data,112,ptr-table,reloc-dense pointer/jump/vtable table,dll_022E_dfpdoorswitch.c,high
+0x80329A68,.data,112,ptr-table,reloc-dense pointer/jump/vtable table,dll_022F_dfpfloorbar.c,high
+0x80329E40,.data,336,data-table,opaque .data table (needs inspection),dfppowersl.c,high
+0x8032A038,.data,264,ptr-table,reloc-dense pointer/jump/vtable table,dll_024D_bossdrakor.c,high
+0x8032A1C8,.data,56,ptr-table,reloc-dense pointer/jump/vtable table,worldplanet.c,high
+0x8032A2D8,.data,56,ptr-table,reloc-dense pointer/jump/vtable table,worldobj.c,high
+0x8032A370,.data,88,ptr-table,reloc-dense pointer/jump/vtable table,snowclaw.c,high
+0x8032A400,.data,40,ptr-table,reloc-dense pointer/jump/vtable table,crcloudrace.c,high
+0x8032A4A0,.data,148,data-table,structured .data (relocs/pointers present),crfueltank.c,high
+0x8032A58C,.data,564,ptr-table,reloc-dense pointer/jump/vtable table,dll_0250_ktrex.c,high
+0x8032A878,.data,56,ptr-table,reloc-dense pointer/jump/vtable table,dll_0266_kytesmum.c,high
+0x8032A8C0,.data,624,ptr-table,reloc-dense pointer/jump/vtable table,dll_0265_drcreator.c,high
+0x8032ABC0,.data,208,ptr-table,reloc-dense pointer/jump/vtable table,dll_0272_hightop.c,high
+0x8032ACC8,.data,504,ptr-table,reloc-dense pointer/jump/vtable table,dll_0273_firepipe.c,high
+0x8032AED4,.data,844,data-table,structured .data (relocs/pointers present),dll_028A_wcearthwalker.c,high
+0x8032B230,.data,280,ptr-table,reloc-dense pointer/jump/vtable table,dll_028F_wcpressures.c,high
+0x8032B360,.data,168,ptr-table,reloc-dense pointer/jump/vtable table,dll_0296_wctempledia.c,high
+0x8032B4A8,.data,1312,ptr-table,reloc-dense pointer/jump/vtable table,dll_029A_arwarwing.c,high
+0x8032BAE0,.data,256,ptr-table,reloc-dense pointer/jump/vtable table,dll_02AA_lgtdirectionallight.c,high
+0x8032BC90,.data,112,data-table,structured .data (relocs/pointers present),dll_02AF_tree.c,high
+0x8032BDB0,.data,112,ptr-table,reloc-dense pointer/jump/vtable table,dll_02B1_cmbsrc.c,high
+0x8032BE50,.data,568,data-table,structured .data (relocs/pointers present),dll_02B3_vortex.c,high
+0x8032C098,.data,472,ptr-table,reloc-dense pointer/jump/vtable table,dll_02BC_andross.c,high
+0x8032C28C,.data,212,ptr-table,reloc-dense pointer/jump/vtable table,dll_02BD_androsshand.c,high
+0x8032C520,.data,128,float-pool,numeric constant table,OS.c,high
+0x8032C7D0,.data,436,string-data,string / char table,OSCache.c,high
+0x8032ED80,.data,80,ptr-table,reloc-dense pointer/jump/vtable table,CARDMount.c,high
+0x8032FFE0,.data,72,ptr-table,reloc-dense pointer/jump/vtable table,snd3d_room.c,high
+0x80330840,.data,6624,data-table,structured .data (relocs/pointers present),inp_ctrl.c,high
+0x80332EC0,.data,48,data-table,opaque .data table (needs inspection),exponentialsf.c,high
+0x80334ABC,.data,1396,ptr-table,reloc-dense pointer/jump/vtable table,player.c,high
+0x80335128,.data,128,ptr-table,reloc-dense pointer/jump/vtable table,dll_0256_dimsnowhorn1.c,high
+0x8033566C,.data,132,ptr-table,reloc-dense pointer/jump/vtable table,dll_0257_drearthwarrior.c,high
+0x80335840,.bss,256,bss,zero-init,,-
+0x80336D10,.bss,896,bss,zero-init,,-
+0x80338790,.bss,136,bss,zero-init,,-
+0x80339950,.bss,48,bss,zero-init,,-
+0x8033BE40,.bss,32,bss,zero-init,,-
+0x803408A8,.bss,80,bss,zero-init,,-
+0x803779A0,.bss,32,bss,zero-init,,-
+0x803878D8,.bss,216,bss,zero-init,,-
+0x803965E0,.bss,824,bss,zero-init,,-
+0x8039A7A8,.bss,112,bss,zero-init,,-
+0x8039AB28,.bss,48,bss,zero-init,,-
+0x8039C2C0,.bss,408,bss,zero-init,,-
+0x803A4218,.bss,96,bss,zero-init,,-
+0x803A43C0,.bss,160,bss,zero-init,,-
+0x803A8658,.bss,472,bss,zero-init,,-
+0x803A9364,.bss,244,bss,zero-init,,-
+0x803A9DB8,.bss,24,bss,zero-init,,-
+0x803AC428,.bss,944,bss,zero-init,,-
+0x803AC900,.bss,220,bss,zero-init,,-
+0x803AD000,.bss,800,bss,zero-init,,-
+0x803AD3B4,.bss,12,bss,zero-init,,-
+0x803ADEF0,.bss,16,bss,zero-init,,-
+0x803BCC90,.bss,1748,bss,zero-init,,-
+0x803BD964,.bss,272,bss,zero-init,,-
+0x803CA278,.bss,88,bss,zero-init,,-
+0x803CAAD0,.bss,704,bss,zero-init,,-
+0x803CB190,.bss,256,bss,zero-init,,-
+0x803CC8C0,.bss,80,bss,zero-init,,-
+0x803CD760,.bss,192,bss,zero-init,,-
+0x803D3CA0,.bss,1992,bss,zero-init,,-
+0x803D68EC,.bss,52,bss,zero-init,,-
+0x803D82F8,.bss,168,bss,zero-init,,-
+0x803D87D0,.bss,168,bss,zero-init,,-
+0x803D8880,.bss,8,bss,zero-init,,-
+0x803DAAB0,.bss,8,bss,zero-init,,-
+0x803DABF0,.bss,1520,bss,zero-init,,-
+0x803DB1E0,.sdata,4944,const-data,small const / rodata,OSAlloc.c,med
+0x803DC580,.sdata,8,const-data,small const / rodata,fstload.c,high
+0x803DC600,.sdata,48,const-data,small const / rodata,GXTexture.c,high
+0x803DC648,.sdata,342,const-data,small const / rodata,printf.c,high
+0x803DC7A0,.sbss,5688,bss,zero-init,,-
+0x803DDE98,.sbss,8,bss,zero-init,,-
+0x803DDEE8,.sbss,32,bss,zero-init,,-
+0x803DE060,.sbss,8,bss,zero-init,,-
+0x803DE094,.sbss,20,bss,zero-init,,-
+0x803DE0DC,.sbss,36,bss,zero-init,,-
+0x803DE218,.sbss,432,bss,zero-init,,-
+0x803DE3E4,.sbss,12,bss,zero-init,,-
+0x803DE408,.sbss,8,bss,zero-init,,-
+0x803DE414,.sbss,208,bss,zero-init,,-
+0x803DE500,.sdata2,6904,float-pool,read-only const/float pool (.sdata2),dll_0025_effect12.c,med
+0x803E0000,.sdata2,152,float-pool,read-only const/float pool (.sdata2),dll_0025_effect12.c,high
+0x803E00A8,.sdata2,208,float-pool,read-only const/float pool (.sdata2),dll_0027_effect14.c,high
+0x803E0180,.sdata2,2056,float-pool,read-only const/float pool (.sdata2),dll_0028_effect15.c,high
+0x803E0990,.sdata2,1560,float-pool,read-only const/float pool (.sdata2),dll_00A3_dlla3func0.c,high
+0x803E0FB0,.sdata2,48,float-pool,read-only const/float pool (.sdata2),dll_0085_dll85func0.c,high
+0x803E0FE8,.sdata2,120,float-pool,read-only const/float pool (.sdata2),dll_0086_dll86func0.c,high
+0x803E10B0,.sdata2,40,float-pool,read-only const/float pool (.sdata2),dll_008B_dll8bfunc0.c,high
+0x803E10E0,.sdata2,144,float-pool,read-only const/float pool (.sdata2),dll_008C_dll8cfunc0.c,high
+0x803E1178,.sdata2,544,float-pool,read-only const/float pool (.sdata2),dll_008E_dll8efunc0.c,high
+0x803E13A0,.sdata2,80,float-pool,read-only const/float pool (.sdata2),dll_009A_dll9afunc0.c,high
+0x803E13F8,.sdata2,136,float-pool,read-only const/float pool (.sdata2),dll_009C_dll9cfunc0.c,high
+0x803E1488,.sdata2,160,float-pool,read-only const/float pool (.sdata2),dll_009F_dll9ffunc0.c,high
+0x803E1530,.sdata2,56,float-pool,read-only const/float pool (.sdata2),dll_00A5_dlla5func0.c,high
+0x803E1570,.sdata2,32,float-pool,read-only const/float pool (.sdata2),dll_00A6_dlla6func0.c,high
+0x803E1598,.sdata2,200,float-pool,read-only const/float pool (.sdata2),dll_00A7_dlla7func0.c,high
+0x803E1668,.sdata2,808,float-pool,read-only const/float pool (.sdata2),dll_b8.c,high
+0x803E19A0,.sdata2,1024,float-pool,read-only const/float pool (.sdata2),dll_004B_cameramodeclimb.c,high
+0x803E1DD0,.sdata2,40,float-pool,read-only const/float pool (.sdata2),dll_0036_entersavenamescreen.c,high
+0x803E1E00,.sdata2,4632,float-pool,read-only const/float pool (.sdata2),dll_0038_weirdunusedmenu.c,high
+0x803E3020,.sdata2,1272,float-pool,read-only const/float pool (.sdata2),landedarwing.c,high
+0x803E3528,.sdata2,2304,float-pool,read-only const/float pool (.sdata2),dll_00EE_effectbox.c,high
+0x803E3E30,.sdata2,168,float-pool,read-only const/float pool (.sdata2),dll_012A_cfcrate.c,high
+0x803E3EE0,.sdata2,24,float-pool,read-only const/float pool (.sdata2),warppad.c,high
+0x803E3F00,.sdata2,704,float-pool,read-only const/float pool (.sdata2),dll_012E_cflightwall.c,high
+0x803E41C8,.sdata2,64,float-pool,read-only const/float pool (.sdata2),dll_0149_cfwindlift.c,high
+0x803E4210,.sdata2,96,float-pool,read-only const/float pool (.sdata2),dll_014B_cfmaincrystal.c,high
+0x803E4280,.sdata2,16,float-pool,read-only const/float pool (.sdata2),dll_014E_cfprisonguard.c,high
+0x803E4298,.sdata2,248,float-pool,read-only const/float pool (.sdata2),dll_014F_cfprisonuncle.c,high
+0x803E43B8,.sdata2,40,float-pool,read-only const/float pool (.sdata2),dll_015B_cfforcefield.c,high
+0x803E43E8,.sdata2,952,float-pool,read-only const/float pool (.sdata2),dll_0162_cfmagicwall.c,high
+0x803E47A8,.sdata2,176,float-pool,read-only const/float pool (.sdata2),dll_016F_imspacethruster.c,high
+0x803E4860,.sdata2,1400,float-pool,read-only const/float pool (.sdata2),dll_01C1_dimsnowball.c,high
+0x803E4DE0,.sdata2,104,float-pool,read-only const/float pool (.sdata2),dll_0174_ccriverflow.c,high
+0x803E4E50,.sdata2,928,float-pool,read-only const/float pool (.sdata2),dll_0177_dfshdoor2speci.c,high
+0x803E51F8,.sdata2,424,float-pool,read-only const/float pool (.sdata2),dll_019E_dim_tricky.c,high
+0x803E53A8,.sdata2,2360,float-pool,read-only const/float pool (.sdata2),dll_01AA_bombplantspore.c,high
+0x803E5CE8,.sdata2,280,float-pool,read-only const/float pool (.sdata2),dll_01F9_wmobjcreator.c,high
+0x803E5E08,.sdata2,96,float-pool,read-only const/float pool (.sdata2),dll_0204_wmtorch.c,high
+0x803E5E70,.sdata2,24,float-pool,read-only const/float pool (.sdata2),dll_0207_wmworm.c,high
+0x803E5E90,.sdata2,104,float-pool,read-only const/float pool (.sdata2),dll_0209_wmlevelcontrol.c,high
+0x803E5F10,.sdata2,8,float-pool,read-only const/float pool (.sdata2),dll_020C_wmspiritplace.c,high
+0x803E5F20,.sdata2,80,float-pool,read-only const/float pool (.sdata2),dll_020D_wmseqpoint.c,high
+0x803E5F78,.sdata2,48,float-pool,read-only const/float pool (.sdata2),dll_020E_wmsun.c,high
+0x803E5FB0,.sdata2,112,float-pool,read-only const/float pool (.sdata2),dll_0210_wmplanets.c,high
+0x803E6030,.sdata2,8,float-pool,read-only const/float pool (.sdata2),dll_0211_wmwallcrawler.c,high
+0x803E6060,.sdata2,1168,float-pool,read-only const/float pool (.sdata2),dll_0215_wmnewcrystal.c,high
+0x803E64F8,.sdata2,224,float-pool,read-only const/float pool (.sdata2),dfplightni.c,high
+0x803E65E0,.sdata2,432,float-pool,read-only const/float pool (.sdata2),worldasteroids.c,high
+0x803E6798,.sdata2,1456,float-pool,read-only const/float pool (.sdata2),proximitymine_update.c,high
+0x803E6D50,.sdata2,256,float-pool,read-only const/float pool (.sdata2),dll_028C_wcbouncycra.c,high
+0x803E6E58,.sdata2,944,float-pool,read-only const/float pool (.sdata2),dll_0296_wctempledia.c,high
+0x803E7218,.sdata2,304,float-pool,read-only const/float pool (.sdata2),dll_02A7_arwproximit.c,high
+0x803E7358,.sdata2,768,float-pool,read-only const/float pool (.sdata2),dll_02B0_brokenpipe.c,high
+0x803E7678,.sdata2,8,float-pool,read-only const/float pool (.sdata2),GXInit.c,high
+0x803E76F8,.sdata2,8,float-pool,read-only const/float pool (.sdata2),GXTexture.c,high
+0x803E777C,.sdata2,20,float-pool,read-only const/float pool (.sdata2),THPDec.c,high
+0x803E7790,.sdata2,488,float-pool,read-only const/float pool (.sdata2),THPDec.c,med
+0x803E79C0,.sdata2,1136,float-pool,read-only const/float pool (.sdata2),math_float_helpers.c,high
+0x803E7E50,.sdata2,1304,float-pool,read-only const/float pool (.sdata2),trigf.c,high
+0x803E8390,.sdata2,152,float-pool,read-only const/float pool (.sdata2),synth_constants.c,high
+0x803E8440,.sbss2,56,bss,zero-init,,-
