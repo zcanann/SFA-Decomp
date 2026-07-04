@@ -7268,7 +7268,7 @@ void fn_8004EF9C(int* param)
     lbl_803DCD6A++;
 }
 
-extern u8 lbl_802CC6A0[];
+extern u8 gLoadingScreenTextures[];
 char lbl_8035F680[0x38];
 extern void OSStopStopwatch(void* sw);
 extern u64 OSCheckStopwatch(void* sw);
@@ -7635,7 +7635,7 @@ void videoFn_800499e8(void)
 #pragma peephole off
 void logGpuHang(void)
 {
-    char* strs = (char*)lbl_802CC6A0;
+    char* strs = (char*)gLoadingScreenTextures;
     int topClks, topPerf0, topClks2, topPerf1;
     int botClks, botPerf0, botClks2, botPerf1;
     u32 xfStuck;
@@ -7686,7 +7686,7 @@ extern char lbl_803DB5DC;
 
 void gpuErrorHandler(void)
 {
-    char* strs = (char*)lbl_802CC6A0;
+    char* strs = (char*)gLoadingScreenTextures;
     int tok[3];
     u32 botClks;
     int botPerf0;
@@ -7831,11 +7831,11 @@ void videoInit(void)
     u32 x;
     lo = (u32)OSGetArenaLo();
     hi = (u32)OSGetArenaHi();
-    memcpy((void*)(hi - 0x40000), lbl_802CC6A0, 0x40000);
+    memcpy((void*)(hi - 0x40000), gLoadingScreenTextures, 0x40000);
     DCStoreRange((void*)(hi - 0x40000), 0x40000);
     lbl_803DCCE4 = (void*)0x40000;
-    lbl_803DCCD8 = lbl_802CC6A0;
-    DCInvalidateRange((char*)lbl_802CC6A0, 0x40000);
+    lbl_803DCCD8 = gLoadingScreenTextures;
+    DCInvalidateRange((char*)gLoadingScreenTextures, 0x40000);
     lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
     lbl_803DCCE0 = lbl_803DCCD8;
     GXSetDispCopySrc(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
