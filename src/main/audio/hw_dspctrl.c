@@ -1,4 +1,7 @@
 #include "main/audio/hw_dspctrl.h"
+
+#pragma exceptions on
+
 extern u8 lbl_803CC1E0[];
 extern u8 salAuxFrame;
 extern u8 salMaxStudioNum;
