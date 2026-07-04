@@ -2079,7 +2079,6 @@ extern int lbl_8038228C[];
 extern s32 lbl_803DCE88;
 extern s32 lbl_803DCEC0;
 extern f32 lbl_803DCE58;
-extern double gLightmapU32ToDoubleBias;
 extern f32 lbl_803DCE54;
 
 typedef union
