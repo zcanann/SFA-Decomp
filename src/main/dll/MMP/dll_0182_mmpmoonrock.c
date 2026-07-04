@@ -171,7 +171,7 @@ void fn_801A7B10(int obj)
     else
     {
         f32 c;
-        state->flags |= 0x180;
+        state->flags |= MOONROCK_FLAG_PROBE | MOONROCK_FLAG_SUNK;
         ((GameObject*)obj)->anim.localPosY = floorYOut;
         c = lbl_803E4554;
         ((GameObject*)obj)->anim.velocityX = c;
@@ -605,13 +605,13 @@ void mmp_moonrock_update(int obj)
         if ((playerGetStateFlag310((int)Obj_GetPlayerObject()) & 0x4000) != 0)
         {
             setAButtonIcon(5);
-            state->flags |= 0x18;
+            state->flags |= MOONROCK_FLAG_GRAB_FRAME | MOONROCK_FLAG_ICON_PLACE;
             state->flags &= ~MOONROCK_FLAG_ICON_THROW;
         }
         else
         {
             setAButtonIcon(4);
-            state->flags |= 0x28;
+            state->flags |= MOONROCK_FLAG_GRAB_FRAME | MOONROCK_FLAG_ICON_THROW;
             state->flags &= ~MOONROCK_FLAG_ICON_PLACE;
         }
         stateCopy = *(int*)&((GameObject*)obj)->extra;
