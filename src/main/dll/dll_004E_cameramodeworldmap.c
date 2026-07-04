@@ -30,6 +30,10 @@ extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 
+/* CameraModeWorldMapState.mode: which world-map camera _update runs */
+#define WORLDMAP_CAMERA_FREE_OVERVIEW 0 /* C-stick orbit + focus blend */
+#define WORLDMAP_CAMERA_LOCKED_PATH   1 /* fixed-pitch path camera + map marker */
+
 #pragma scheduling on
 #pragma peephole on
 extern CameraModeWorldMapState* gCamWorldMapState;
@@ -147,7 +151,7 @@ void CameraModeWorldMap_update(u8* obj)
 
     switch (gCamWorldMapState->mode)
     {
-    case 0:
+    case WORLDMAP_CAMERA_FREE_OVERVIEW:
         if (gCamWorldMapState->previousMode != gCamWorldMapState->mode)
         {
             gCamWorldMapState->focusBlendTimer = 1;
@@ -300,7 +304,7 @@ void CameraModeWorldMap_update(u8* obj)
             }
         }
         break;
-    case 1:
+    case WORLDMAP_CAMERA_LOCKED_PATH:
         {
             GameObject* g = (GameObject*)ObjList_FindObjectById(0x43077);
             if (gCamWorldMapState->previousMode != gCamWorldMapState->mode)
