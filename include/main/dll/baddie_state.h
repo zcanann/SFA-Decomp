@@ -94,6 +94,12 @@ typedef struct BaddieState {
  * anim-chain moves, and makes the defeat handler skip the death gamebits so
  * scripted/cutscene deaths don't count). */
 #define BADDIE_CONTROL_SEQUENCE_DRIVEN 0x40000000
+/* controlFlags bit: baddie follows its ROM curve path (RomCurveWalker). Gates
+ * the path-tracking branches; cleared on hit/redirect. */
+#define BADDIE_CONTROL_PATH_FOLLOW 0x2000
+/* controlFlags bit: scripted move was just triggered this frame (the newseqobj
+ * move system latches it before it promotes to SEQUENCE_DRIVEN). */
+#define BADDIE_CONTROL_JUST_TRIGGERED 0x80000000
     u32 controlFlags; /* control flag word: 0x2000 path-follow, 0x2000_0000/0x4000_0000/0x8000_0000 move gates */
     u8 pad2E0[4];
     int unk2E4; /* whirlpool: 0x42001 flag word */
