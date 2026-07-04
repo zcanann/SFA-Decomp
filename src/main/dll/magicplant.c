@@ -113,7 +113,7 @@ void fn_80152EC0(int obj, int state)
     *(f32*)(state + 0x334) = zero;
     ((BaddieState*)state)->pathStep = lbl_803E28A8;
 
-    fn_80293018((s32)(u32) * (u16*)(state + 0x338), &a, &b);
+    fn_80293018(*(u16*)(state + 0x338), &a, &b);
     ((GameObject*)obj)->anim.localPosX = a * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x324);
     ((GameObject*)obj)->anim.localPosZ = b * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x32c);
 }
