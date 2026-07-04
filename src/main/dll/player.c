@@ -5542,7 +5542,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             inner->hitTimer = z;
             inner->hitCount = 0;
             inner->lastHitObject = 0;
-            *(u8*)&inner->activeHitWindow = 0xFF;
+            inner->activeHitWindow = -1;
             ((PlayerState*)state)->baddie.animSpeedC = z;
             ((PlayerState*)state)->baddie.animSpeedB = z;
             ((PlayerState*)state)->baddie.animSpeedA = z;
@@ -5642,7 +5642,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         }
     }
     Player_GetObjHitsState(obj)->hitVolumePriority = 0xb;
-    Player_GetObjHitsState(obj)->hitVolumeId = *(u8*)((inner->moveSlots + 0x14) + (u32)inner->moveSlotIndex * 0xb0);
+    *(u8*)&Player_GetObjHitsState(obj)->hitVolumeId = *(u8*)((inner->moveSlots + 0x14) + (u32)inner->moveSlotIndex * 0xb0);
     {
         int slot = inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0;
         f32 t = *(f32*)(slot + 0xa0);
@@ -5680,7 +5680,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             {
                 ((void (*)(int, int, int, int, int))ObjHits_RecordObjectHit)(
                     inner->lastHitObject, obj, 0xb, 1, 0);
-                *(s8*)&((PlayerState*)inner)->hitCount = *(s8*)&((PlayerState*)inner)->hitCount + 1;
+                *(u8*)&((PlayerState*)inner)->hitCount = *(u8*)&((PlayerState*)inner)->hitCount + 1;
                 inner->hitTimer = (f32)(u8)
                 inner->hitInterval;
             }
