@@ -397,7 +397,7 @@ main/dll/dll_006E_dll6efunc0.c:
 
 main/dll/dll_006F_dll6ffunc0.c:
 	.text       start:0x800F0C9C end:0x800F11E4
-	.data       start:0x80313CC0 end:0x80313E78
+	.data       start:0x80313CC0 end:0x80313E98
 
 main/dll/dll_0070_dll70func0.c:
 	.text       start:0x800F11E4 end:0x800F16E4

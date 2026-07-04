@@ -436,3 +436,7 @@ u8 gDll6FGfxCmdResourceTable[440] = {
     0, 17, 0, 21, 0, 22, 0, 23, 0, 0, 0, 24, 0, 24, 0, 24,
     0, 24, 0, 0, 0, 0, 0, 0,
 };
+
+/*__DATA_EXTERNS__*/
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_80313E78[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, dll_6F_func00_nop, dll_6F_func01_nop, (void*)0x00000000, dll_6F_func03 };
