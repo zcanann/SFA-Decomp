@@ -15,6 +15,17 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_0117_appleontree.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+/* appleontree_update animState machine: an apple's lifecycle from hanging on
+ * the tree through falling, resting, being knocked loose, and despawning. */
+#define APPLEONTREE_STATE_GROWING 0   /* unripe, hanging; scales up toward ripe */
+#define APPLEONTREE_STATE_RIPE 1      /* ripe, swaying; ready to drop */
+#define APPLEONTREE_STATE_FALLING 2   /* dropping from branch to ground */
+#define APPLEONTREE_STATE_LANDED 3    /* settled on the ground, collectable */
+#define APPLEONTREE_STATE_KNOCKED 4   /* knocked loose, bouncing/rolling physics */
+#define APPLEONTREE_STATE_BURST 5     /* fx-burst despawn (no fade) */
+#define APPLEONTREE_STATE_FADEOUT 6   /* alpha fade-out despawn */
+
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
 extern f32 Vec_distance(f32* a, f32* b);
@@ -111,15 +122,15 @@ void appleontree_func0B(int obj, float* pos)
 {
     AppleOnTreeState* state = ((GameObject*)obj)->extra;
 
-    if (state->animState == 4)
+    if (state->animState == APPLEONTREE_STATE_KNOCKED)
     {
         return;
     }
-    if (state->animState == 5)
+    if (state->animState == APPLEONTREE_STATE_BURST)
     {
         return;
     }
-    if (state->animState == 6)
+    if (state->animState == APPLEONTREE_STATE_FADEOUT)
     {
         return;
     }
@@ -217,7 +228,7 @@ void fn_8017D854(int obj, int msg)
         break;
     }
     ((AppleOnTreeState*)state)->healthRestore = v;
-    ((AppleOnTreeState*)state)->animState = 4;
+    ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_KNOCKED;
     ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
     ((AppleOnTreeState*)state)->unk0C = timeDelta;
     ((AppleOnTreeState*)state)->rotX = randomGetRange(-0x8000, 0x7fff);
@@ -632,14 +643,14 @@ void appleontree_update(int objArg)
                 }
                 ((AppleOnTreeState*)state)->flags = ((AppleOnTreeState*)state)->flags | 2;
                 ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
-                ((AppleOnTreeState*)state)->animState = 5;
+                ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_BURST;
             }
             else
             {
                 if (frac > *(float*)(state + 0x10))
                 {
                     ((GameObject*)obj)->anim.rootMotionScale = *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
-                    ((AppleOnTreeState*)state)->animState = 1;
+                    ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_RIPE;
                 }
                 else
                 {
@@ -671,7 +682,7 @@ void appleontree_update(int objArg)
                 }
                 ((AppleOnTreeState*)state)->flags = ((AppleOnTreeState*)state)->flags | 2;
                 ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
-                ((AppleOnTreeState*)state)->animState = 5;
+                ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_BURST;
             }
             else
             {
@@ -684,7 +695,7 @@ void appleontree_update(int objArg)
                         i = i + 1;
                     }
                     while (i < 8);
-                    ((AppleOnTreeState*)state)->animState = 2;
+                    ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_FALLING;
                 }
                 else
                 {
@@ -708,7 +719,7 @@ void appleontree_update(int objArg)
                 *(float*)(val + 0x24) = lbl_803E37C8;
                 ((GameObject*)obj)->anim.rootMotionScale = *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
                 Obj_SetActiveModelIndex((int)obj, 1);
-                ((AppleOnTreeState*)state)->animState = 3;
+                ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_LANDED;
             }
             else
             {
@@ -754,7 +765,7 @@ void appleontree_update(int objArg)
         case 4:
             if (frac > *(float*)(state + 0x20))
             {
-                ((AppleOnTreeState*)state)->animState = 6;
+                ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_FADEOUT;
                 ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
             }
             else
