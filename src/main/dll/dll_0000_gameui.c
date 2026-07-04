@@ -1644,18 +1644,19 @@ void pauseMenuRunSubmenu(int p1)
             buttonDisable(0, 0x300);
             lbl_803DD75E = -0x28;
         }
-        v = lbl_803DD75C + lbl_803DD75E;
-        *(s16*)&lbl_803DD75C = v;
-        if ((s16)v > 0x200)
+        lbl_803DD75C = lbl_803DD75C + lbl_803DD75E;
+        v = (s16)lbl_803DD75C;
+        if (v > 0x200)
         {
             v = 0x200;
         }
-        *(s16*)&lbl_803DD75C = v;
-        if ((s16)v < 0)
+        lbl_803DD75C = v;
+        v = (s16)lbl_803DD75C;
+        if (v < 0)
         {
             v = 0;
         }
-        *(s16*)&lbl_803DD75C = v;
+        lbl_803DD75C = v;
     }
     else
     {
