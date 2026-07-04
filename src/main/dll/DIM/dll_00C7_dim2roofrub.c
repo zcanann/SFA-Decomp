@@ -202,7 +202,7 @@ typedef struct Dim2roofrubState
     u8 padD[0x18 - 0xD];
     u8 unk18;
     u8 pad19[0x24 - 0x19];
-    f32 unk24;
+    f32 dampingFactor; /* 0x24: d/(d + placement[0x24]) smoothing coefficient */
     s32 unk28;
     f32 unk2C;
     u8 pad30[0x50 - 0x30];
@@ -742,7 +742,7 @@ void dim2roofrub_init(int* obj, int* params)
     ((Dim2roofrubState*)state)->unk6E = -1;
     {
         f32 d = lbl_803E3270;
-        ((Dim2roofrubState*)state)->unk24 = d / (d + (f32)(u32) * (u8*)((char*)params + 0x24));
+        ((Dim2roofrubState*)state)->dampingFactor = d / (d + (f32)(u32) * (u8*)((char*)params + 0x24));
     }
     ((Dim2roofrubState*)state)->unk28 = -1;
     ((Dim2roofrubState*)state)->unk98 = 0;
