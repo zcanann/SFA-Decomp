@@ -1983,7 +1983,7 @@ main/dll/scchieflightfoot.c:
 
 main/dll/sclantern.c:
 	.text       start:0x801D6C04 end:0x801D6D98
-	.data       start:0x80327598 end:0x803275C0
+	.data       start:0x80327598 end:0x80327754
 
 main/dll/SH/dll_01B0_shswapston.c:
 	.text       start:0x801D6D98 end:0x801D7BA8
