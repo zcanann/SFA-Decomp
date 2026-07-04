@@ -5501,7 +5501,7 @@ void fn_8004DA54(char* p1)
             PSMTXIdentity(mtx64);
         }
     }
-    GXLoadTexMtxImm(mtx64, 0x46, 0);
+    GXLoadTexMtxImm(mtx64, GX_PTTEXMTX2, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
     getTextureFn_8006c5e4(&tex30);
     if (tex30 != 0)
@@ -5518,7 +5518,7 @@ void fn_8004DA54(char* p1)
     }
     PSMTXScale(mtxf4, SaveEnd_803DEAD4, SaveEnd_803DEAD4, lbl_803DEAC8);
     mtxf4[1][3] = lbl_803DEB08 * ry;
-    GXLoadTexMtxImm(mtxf4, 0x40, 0);
+    GXLoadTexMtxImm(mtxf4, GX_PTTEXMTX0, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX0);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
@@ -5531,7 +5531,7 @@ void fn_8004DA54(char* p1)
     t = lbl_803DEB14 * rx;
     mtxc4[0][3] = t;
     mtxc4[1][3] = t;
-    GXLoadTexMtxImm(mtxc4, 0x43, 0);
+    GXLoadTexMtxImm(mtxc4, GX_PTTEXMTX1, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX1);
     GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD2, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE1, GX_ITS_1, GX_ITS_1);
@@ -6891,7 +6891,7 @@ void fn_8004CE0C(void* viewMtx)
     mtx40[1][1] = lbl_803DEACC;
     mtx40[1][2] = lbl_803DEAE4;
     mtx40[1][3] = lbl_803DEACC;
-    GXLoadTexMtxImm(mtx40, 0x1e, 1);
+    GXLoadTexMtxImm(mtx40, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
     getTextureFn_8006c5e4(&obj7c);
     if (obj7c != NULL)
@@ -6910,7 +6910,7 @@ void fn_8004CE0C(void* viewMtx)
     PSMTXTrans(mtx70, lbl_803DEAE0 * sx, lbl_803DEAE0 * sy, lbl_803DEACC);
     mtx70[0][0] = bootThisDol_803DEAE8;
     mtx70[1][1] = bootThisDol_803DEAE8;
-    GXLoadTexMtxImm(mtx70, 0x21, 1);
+    GXLoadTexMtxImm(mtx70, GX_TEXMTX1, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD2, GX_TEXMAP2);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
@@ -6944,7 +6944,7 @@ void fn_8004CE0C(void* viewMtx)
     mtx40[1][2] = lbl_803DEACC;
     mtx40[1][3] = lbl_803DEACC;
     PSMTXConcat(mtx40, viewMtx, mtx40);
-    GXLoadTexMtxImm(mtx40, 0x24, 1);
+    GXLoadTexMtxImm(mtx40, GX_TEXMTX2, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
     GXSetTevDirect(GX_TEVSTAGE2);
     GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD3, GX_TEXMAP3, GX_COLOR_NULL);
@@ -7944,9 +7944,9 @@ void videoInit(void)
     gxSetPeControl_ZCompLoc_(1);
     GXEnableTexOffsets(0, 1, 1);
     PSMTXIdentity(mtx);
-    GXLoadPosMtxImm(mtx, 0);
-    GXLoadTexMtxImm(mtx, 0x1e, 0);
-    GXLoadTexMtxImm(mtx, 0x21, 0);
+    GXLoadPosMtxImm(mtx, GX_PNMTX0);
+    GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX3x4);
+    GXLoadTexMtxImm(mtx, GX_TEXMTX1, GX_MTX3x4);
     GXSetCurrentMtx(0);
     C_MTXOrtho(hudMatrix, lbl_803DEA94, lbl_803DEA98, lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
     GXSetMisc(GX_MT_XF_FLUSH, 8);
