@@ -48,6 +48,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define ECSHSHRINE_OBJGROUP 0xb
+
 typedef struct EcshIntPair
 {
     int a;
@@ -367,7 +369,7 @@ void ecsh_shrine_free(int* obj)
         ModelLightStruct_free(*(void**)inner);
         *(void**)inner = NULL;
     }
-    ObjGroup_RemoveObject((int)obj, 0xb);
+    ObjGroup_RemoveObject((int)obj, ECSHSHRINE_OBJGROUP);
     GameBit_Set(0xefa, 0);
     GameBit_Set(0xcbb, 1);
     GameBit_Set(0xa7f, 1);
@@ -860,7 +862,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     gv = GameBit_Get(GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER);
     ((EcshShrineState*)sub)->introTextLatch = gv;
     gEcShShrineActiveObject = obj;
-    ObjGroup_AddObject(obj, 0xb);
+    ObjGroup_AddObject(obj, ECSHSHRINE_OBJGROUP);
     ((GameObject*)obj)->unkF4 = 1;
     if (*(void**)sub == NULL)
     {
