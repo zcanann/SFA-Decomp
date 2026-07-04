@@ -76,7 +76,7 @@ typedef struct Dll22CMapData
     s8 rotXByte;  /* 0x18: rotX in 1/256 turns */
     s8 unk19;     /* 0x19 */
     s16 raiseHeight; /* 0x1A */
-    s16 unk1C;    /* 0x1C: -> state unk0C */
+    s16 unk1C;    /* 0x1C: -> state raiseMode */
     s16 gameBit2; /* 0x1E */
     s16 gameBit;  /* 0x20 */
 } Dll22CMapData;
@@ -114,7 +114,7 @@ void dll_22C_init(int obj, char* p)
     state->gameBit = md->gameBit;
     state->gameBit2 = md->gameBit2;
     state->raiseHeight = md->raiseHeight;
-    state->unk0C = md->unk1C;
+    state->raiseMode = md->unk1C;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E63A8;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DLL22C_OBJFLAG_HITDETECT_DISABLED;
 }
@@ -172,7 +172,7 @@ void fn_80204BF8(int obj)
     switch (blob->mode)
     {
     case DLL22C_MODE_ARMED:
-        if (GameBit_Get(blob->gameBit) != 0 && blob->unk0C != 1 &&
+        if (GameBit_Get(blob->gameBit) != 0 && blob->raiseMode != 1 &&
             Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
         {
             if (object->anim.localPosY < lbl_803E63A0 + placement->posY)
@@ -191,7 +191,7 @@ void fn_80204BF8(int obj)
                 }
             }
         }
-        else if (blob->unk0C == 1)
+        else if (blob->raiseMode == 1)
         {
             if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
             {
