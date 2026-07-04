@@ -153,6 +153,17 @@ void dll_19B_free(int* obj)
     (*gModgfxInterface)->detachSource(obj);
 }
 
+enum Dll19BPhase
+{
+    DLL19B_PHASE_IDLE = 0,       /* wait for player proximity, then arm shrine */
+    DLL19B_PHASE_WAIT_EVENT = 1, /* wait for pendingEvent, then start countdown */
+    DLL19B_PHASE_COUNTDOWN = 2,  /* shrine timer ticking; success or timeout */
+    DLL19B_PHASE_RESOLVE = 3,    /* branch on unlock bit: success vs fail path */
+    DLL19B_PHASE_COMPLETE = 4,   /* set completion bits, finish */
+    DLL19B_PHASE_DONE = 5,       /* terminal, no per-tick handling */
+    DLL19B_PHASE_RESET = 6       /* tear down and return to idle */
+};
+
 typedef struct Dll19BState
 {
     s16 activationDist; /* 0x00: st[0], proximity trigger distance */
@@ -281,10 +292,10 @@ void dll_19B_update(int obj)
         }
         switch (st->phase)
         {
-        case 0:
+        case DLL19B_PHASE_IDLE:
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < st->activationDist)
             {
-                st->phase = 1;
+                st->phase = DLL19B_PHASE_WAIT_EVENT;
                 GameBit_Set(0x129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 {
@@ -301,14 +312,14 @@ void dll_19B_update(int obj)
                 (*gModgfxInterface)->releaseHandle(&st->gfxHandle);
             }
             break;
-        case 1:
+        case DLL19B_PHASE_WAIT_EVENT:
             if (st->pendingEvent == 1)
             {
-                st->phase = 2;
+                st->phase = DLL19B_PHASE_COUNTDOWN;
                 st->timer = 160;
             }
             break;
-        case 2:
+        case DLL19B_PHASE_COUNTDOWN:
             if (st->unlockCount == 0 && GameBit_Get(0x1d3) == 0)
             {
                 GameBit_Set(0x1d3, 1);
@@ -325,7 +336,7 @@ void dll_19B_update(int obj)
                 GameBit_Set(0x1d4, 1);
                 (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
                 st->timer = 10;
-                st->phase = 6;
+                st->phase = DLL19B_PHASE_RESET;
                 (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                     3, 0x35, 0x50, st->brightnessB & 0xff, 0);
                 st->brightnessBVel = 1;
@@ -333,12 +344,12 @@ void dll_19B_update(int obj)
             }
             else if (st->unlockCount == 1)
             {
-                st->phase = 3;
+                st->phase = DLL19B_PHASE_RESOLVE;
                 st->timer = 200;
                 st->brightnessBVel = -3;
             }
             break;
-        case 3:
+        case DLL19B_PHASE_RESOLVE:
             if ((u32)GameBit_Get(0x1d1) != 0)
             {
                 st->brightnessB = 1;
@@ -346,7 +357,7 @@ void dll_19B_update(int obj)
                     3, 0x2c, 0x50, st->brightnessB & 0xff, 0);
                 st->brightnessBVel = 1;
                 GameBit_Set(0x129, 1);
-                st->phase = 5;
+                st->phase = DLL19B_PHASE_DONE;
             }
             else
             {
@@ -356,22 +367,22 @@ void dll_19B_update(int obj)
                     3, 0x2a, 0x50, st->brightnessB & 0xff, 0);
                 st->brightnessBVel = 1;
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                st->phase = 4;
+                st->phase = DLL19B_PHASE_COMPLETE;
             }
             break;
-        case 4:
+        case DLL19B_PHASE_COMPLETE:
             if ((u32)GameBit_Get(0xfd) == 0)
             {
                 GameBit_Set(0xfd, 1);
             }
             GameBit_Set(0x1d2, 0);
             GameBit_Set(0x127, 0);
-            st->phase = 5;
+            st->phase = DLL19B_PHASE_DONE;
             (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                 3, 0x2c, 0x50, st->brightnessB & 0xff, 0);
             break;
-        case 6:
-            st->phase = 0;
+        case DLL19B_PHASE_RESET:
+            st->phase = DLL19B_PHASE_IDLE;
             st->pendingEvent = 0;
             st->timer = 400;
             GameBit_Set(0x129, 1);
