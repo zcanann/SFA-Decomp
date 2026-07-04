@@ -385,11 +385,3 @@ void Effect11_initialise(void)
 {
 }
 
-/*__DATA_EXTERNS__*/
-extern void Effect12_func05_nop();
-extern void Effect12_func04();
-extern void Effect12_func03_nop();
-extern void Effect12_release();
-extern void Effect12_initialise();
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* lbl_80310D80[10] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00050000, Effect12_initialise, Effect12_release, (void*)0x00000000, Effect12_func03_nop, Effect12_func04, Effect12_func05_nop };
