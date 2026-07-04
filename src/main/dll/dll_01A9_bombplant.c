@@ -517,3 +517,10 @@ u8 gBombPlantStateTable[] =
     0x00, 0x02, 0x00, 0x00, 0x3C, 0x23, 0xD7, 0x0A, 0x0B, 0x00, 0x00, 0x00,
     0x00, 0x01, 0x00, 0x00, 0x3C, 0x03, 0x12, 0x6F, 0x18, 0x00, 0x00, 0x00,
 };
+
+/*__DATA_EXTERNS__*/
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* gBombPlantObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, bombplant_init, bombplant_update, bombplant_hitDetect, bombplant_render, bombplant_free, bombplant_getObjectTypeId, bombplant_getExtraSize, (void*)0x00000000 };
+u8 lbl_80326D98[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+void* gBombPlantSporeObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, bombplantspore_init, bombplantspore_update, (void*)0x00000000, (void*)0x00000000, bombplantspore_free, (void*)0x00000000, bombplantspore_getExtraSize, (void*)0x00000000 };
+void* gBombPlantingSpotObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, bombplantingspot_init, bombplantingspot_update, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
