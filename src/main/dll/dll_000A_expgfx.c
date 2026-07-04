@@ -2934,8 +2934,8 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             maskHighWord = *(u32*)(mb + 4112);
             maskLowWord = *(u32*)(mb + 4116);
             bit = 1 << (pi >> 1);
-            maskHighWord = maskHighWord | (u32)((int)bit >> 0x1f);
-            maskLowWord = maskLowWord | bit;
+            maskHighWord = (u32)((int)bit >> 0x1f) | maskHighWord;
+            maskLowWord = bit | maskLowWord;
             *(u32*)(mb + 4116) = maskLowWord;
             *(u32*)(mb + 4112) = maskHighWord;
         }
@@ -2946,8 +2946,8 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             maskHighWord = *(u32*)(mb + 4112);
             maskLowWord = *(u32*)(mb + 4116);
             inverseBit = ~(u32)(1 << (pi >> 1));
-            maskHighWord = maskHighWord & (u32)((int)inverseBit >> 0x1f);
-            maskLowWord = maskLowWord & inverseBit;
+            maskHighWord = (u32)((int)inverseBit >> 0x1f) & maskHighWord;
+            maskLowWord = inverseBit & maskLowWord;
             *(u32*)(mb + 4116) = maskLowWord;
             *(u32*)(mb + 4112) = maskHighWord;
         }
