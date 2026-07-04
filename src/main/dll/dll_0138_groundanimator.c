@@ -146,7 +146,7 @@ void groundanimator_free(int* obj, int flag)
                                                 (double)((GameObject*)obj)->anim.localPosZ));
         if (block != NULL)
         {
-            for (blkIdx = 0, off = 0; blkIdx < ((MapBlockData*)block)->unk9A; blkIdx++)
+            for (blkIdx = 0, off = 0; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
             {
                 entry = mapBlockFn_800606ec(block, blkIdx);
                 if (((GroundanimatorPlacement*)r21)->blockId == mapBlockFn_80060678(entry))
@@ -156,7 +156,7 @@ void groundanimator_free(int* obj, int flag)
                         nv = fn_800606DC(block, mid);
                         for (inner = 0, vtx = nv, innoff = midoff; inner < 3; inner++)
                         {
-                            cell = (int*)((char*)((MapBlockData*)block)->unk58 +
+                            cell = (int*)((char*)((MapBlockData*)block)->vertices +
                                 *(u16*)vtx * 6);
                             fn_800605F0(cell, local);
                             if (*(void**)&w->heightBuf != NULL)
@@ -252,7 +252,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
                                             (double)((GameObject*)obj)->anim.localPosY,
                                             (double)((GameObject*)obj)->anim.localPosZ));
-    if (block == NULL || (((MapBlockData*)block)->unk4 & 8) == 0)
+    if (block == NULL || (((MapBlockData*)block)->flags4 & 8) == 0)
     {
         return;
     }
@@ -263,7 +263,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     off[0] = 0;
     state->entryCount = off[0];
     radsq = state->radius * state->radius;
-    for (blkIdx = 0, off[1] = off[0]; blkIdx < ((MapBlockData*)block)->unk9A; blkIdx++)
+    for (blkIdx = 0, off[1] = off[0]; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
     {
         entry = mapBlockFn_800606ec(block, blkIdx);
         if (((GroundanimatorPlacement*)placement)->blockId == mapBlockFn_80060678(entry))
@@ -279,7 +279,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
                 htInn = htMid;
                 for (inner = 0; inner < 3; inner++)
                 {
-                    void* cell = (char*)((MapBlockData*)block)->unk58 + *(u16*)vtx * 6;
+                    void* cell = (char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6;
                     f32 dx;
                     f32 dz;
                     f32 d;
@@ -415,7 +415,7 @@ void groundanimator_update(int* obj)
         }
     }
     block = mapGetBlock(bi);
-    if (block == NULL || (((MapBlockData*)block)->unk4 & 8) == 0)
+    if (block == NULL || (((MapBlockData*)block)->flags4 & 8) == 0)
     {
         return;
     }
@@ -481,7 +481,7 @@ void groundanimator_update(int* obj)
                     {
                         if (*(f32*)((char*)g->falloffBuf + foffVtx) > lbl_803E3FB0)
                         {
-                            void* cell = (char*)((MapBlockData*)block)->unk58 + *(u16*)vtx * 6;
+                            void* cell = (char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6;
                             fn_800605F0(cell, vbuf);
                             vbuf[1] = (f32) * (s16*)((char*)g->heightBuf + hoffVtx) -
                                 (g->lastDepth / lbl_803E3F98) *
@@ -498,8 +498,8 @@ void groundanimator_update(int* obj)
                     }
                 }
             }
-            DCStoreRangeNoSync((void*)((MapBlockData*)block)->unk58,
-                               ((MapBlockData*)block)->unk90 * 6);
+            DCStoreRangeNoSync((void*)((MapBlockData*)block)->vertices,
+                               ((MapBlockData*)block)->vertexCount * 6);
         }
     }
     if (((GroundanimatorPlacement*)r20)->enableGameBit == -1 ||

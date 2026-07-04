@@ -126,7 +126,7 @@ void alphaanimator_update(int* obj)
         s->doneCount = 0;
         return;
     }
-    if ((((MapBlockData*)block)->unk4 & 8) == 0)
+    if ((((MapBlockData*)block)->flags4 & 8) == 0)
     {
         return;
     }
@@ -162,8 +162,8 @@ void alphaanimator_update(int* obj)
         {
             *(int*)&s->buf = (int)mmAlloc(s->vertCount << 2, 5, 0);
         }
-        ((MapBlockData*)block)->unk4 = ((MapBlockData*)block)->unk4 ^ 1;
-        ((MapBlockData*)block)->unk4 = ((MapBlockData*)block)->unk4 ^ 1;
+        ((MapBlockData*)block)->flags4 = ((MapBlockData*)block)->flags4 ^ 1;
+        ((MapBlockData*)block)->flags4 = ((MapBlockData*)block)->flags4 ^ 1;
     }
     if ((s8)s->active == 0)
     {

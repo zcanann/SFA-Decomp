@@ -145,7 +145,7 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
 
     if ((desc->flags & HITANIMATOR_SETUP_FLAG_SKIP_POLYS) == 0)
     {
-        for (i = 0; i < ((MapBlockData*)block)->unk9A; i++)
+        for (i = 0; i < ((MapBlockData*)block)->polyGroupCount; i++)
         {
             poly = mapBlockFn_800606ec(block, i);
             if (desc->blockEffectId == mapBlockFn_80060678(poly))
@@ -171,7 +171,7 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
     }
     if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
     {
-        for (i = 0; i < ((MapBlockData*)block)->unkA2; i++)
+        for (i = 0; i < ((MapBlockData*)block)->layerCount; i++)
         {
             char* shader = fn_8006070C(block, i);
             u8* layer = Shader_getLayer(shader, 0);

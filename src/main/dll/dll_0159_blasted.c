@@ -56,14 +56,14 @@ int fn_801A27B8(int obj, int id)
 
     block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                             ((GameObject*)obj)->anim.localPosZ));
-    if (block == NULL || (block->unk4 & 0x8) == 0)
+    if (block == NULL || (block->flags4 & 0x8) == 0)
     {
         return 0;
     }
     {
         int j;
         int i;
-        for (i = 0; i < block->unk9A; i++)
+        for (i = 0; i < block->polyGroupCount; i++)
         {
             u8* e = mapBlockFn_800606ec(block, i);
             if (id == mapBlockFn_80060678(e))
@@ -71,7 +71,7 @@ int fn_801A27B8(int obj, int id)
                 *(int*)(e + 0x10) |= 3;
             }
         }
-        for (j = 0; j < block->unkA2; j++)
+        for (j = 0; j < block->layerCount; j++)
         {
             u8* g = fn_8006070C(block, j);
             u8* p;

@@ -87,7 +87,7 @@ void texframeanimator_update(int* obj)
         block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
                                                 ((GameObject*)obj)->anim.localPosY,
                                                 ((GameObject*)obj)->anim.localPosZ));
-        if (block == NULL || !(((MapBlockData*)block)->unk4 & 8))
+        if (block == NULL || !(((MapBlockData*)block)->flags4 & 8))
         {
             return;
         }
