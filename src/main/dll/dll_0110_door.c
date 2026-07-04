@@ -58,8 +58,6 @@ typedef struct DoorState
 
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 
-__declspec(section ".sdata") extern char lbl_803DBD90[];
-
 extern f32 lbl_803E3780;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 gDoorRootMotionScaleFactor;
