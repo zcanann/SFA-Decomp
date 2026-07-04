@@ -19,6 +19,9 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/map_block.h"
 #include "dolphin/os/OSCache.h"
+
+#define XYZANIMATOR_OBJGROUP 0x51
+
 extern int mmAlloc(int size, int pool, int tag);
 
 extern int return0_80060B90(void* blk);
@@ -284,7 +287,7 @@ void xyzanimator_free(int obj, int flag)
     {
         mm_free(*(void**)&state->dataBuffer);
     }
-    ObjGroup_RemoveObject(obj, 0x51);
+    ObjGroup_RemoveObject(obj, XYZANIMATOR_OBJGROUP);
 }
 
 void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -756,7 +759,7 @@ void xyzanimator_init(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
     int id;
-    ObjGroup_AddObject(obj, 0x51);
+    ObjGroup_AddObject(obj, XYZANIMATOR_OBJGROUP);
     id = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
     switch (id)
     {
