@@ -1543,7 +1543,7 @@ main/dll/dll_0159_blasted.c:
 
 main/dll/dll_015A_explodable.c:
 	.text       start:0x801A2BDC end:0x801A39B4
-	.data       start:0x80322DA0 end:0x80322EA0
+	.data       start:0x80322DA0 end:0x80323198
 
 main/dll/CF/dll_015B_cfforcefield.c:
 	.text       start:0x801A39B4 end:0x801A3E9C
