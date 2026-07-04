@@ -45,6 +45,11 @@ typedef struct MoonSeedBushPlacement
 #define MOONSEEDBUSH_SEQEV_PLANT 1
 #define MOONSEEDBUSH_SEQEV_BURST_FX 2
 
+/* seedState growth phases */
+#define MOONSEEDBUSH_SEED_UNGROWN 0 /* dormant, watching trigger bit */
+#define MOONSEEDBUSH_SEED_PLANTED 1 /* planted, growing */
+#define MOONSEEDBUSH_SEED_GROWN   2 /* fully grown / triggered */
+
 STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 
 void MoonSeedBush_free(void)
@@ -81,7 +86,7 @@ void MoonSeedBush_update(int obj)
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
     int preemptSlot;
     if ((state->flags & 1) == 0) return;
-    if (((MoonSeedBushPlacement*)def)->preemptSeq != 0 && state->seedState != 0)
+    if (((MoonSeedBushPlacement*)def)->preemptSeq != 0 && state->seedState != MOONSEEDBUSH_SEED_UNGROWN)
     {
         preemptSlot = ((MoonSeedBushPlacement*)def)->preemptSlot;
         (*gObjectTriggerInterface)->preempt(obj, ((MoonSeedBushPlacement*)def)->preemptSeq);
@@ -106,11 +111,11 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
     int i;
     int j;
-    if (state->seedState == 0)
+    if (state->seedState == MOONSEEDBUSH_SEED_UNGROWN)
     {
         if (GameBit_Get(((MoonSeedBushPlacement*)def)->triggerGameBit) != 0)
         {
-            state->seedState = 2;
+            state->seedState = MOONSEEDBUSH_SEED_GROWN;
         }
     }
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -118,7 +123,7 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch ((s32)animUpdate->eventIds[i])
         {
         case MOONSEEDBUSH_SEQEV_PLANT:
-            state->seedState = 1;
+            state->seedState = MOONSEEDBUSH_SEED_PLANTED;
             if (((MoonSeedBushPlacement*)def)->grownGameBit != -1)
             {
                 GameBit_Set(((MoonSeedBushPlacement*)def)->grownGameBit, 1);
@@ -133,7 +138,7 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         }
     }
-    return state->seedState != 2;
+    return state->seedState != MOONSEEDBUSH_SEED_GROWN;
 }
 
 void MoonSeedBush_init(int obj, int data)
@@ -157,7 +162,7 @@ void MoonSeedBush_init(int obj, int data)
     }
     else
     {
-        state->seedState = 0;
+        state->seedState = MOONSEEDBUSH_SEED_UNGROWN;
     }
 }
 #pragma reset
