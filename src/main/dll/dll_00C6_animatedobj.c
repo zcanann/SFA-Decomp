@@ -175,7 +175,7 @@ typedef struct AnimatedobjPlacement
     f32 posY;
     f32 posZ;
     s32 mapId; /* 0x14: ObjPlacement map id */
-    s16 unk18;
+    s16 loadKey;
     s16 unk1A;
     s16 unk1C;
     s16 unk1E;
@@ -765,21 +765,21 @@ void animatedobj_init(int* obj, int* params)
     ((AnimatedobjState*)state)->unk114 = 0;
     ((AnimatedobjState*)state)->unkE8 = 0;
     f4 = ((GameObject*)obj)->unkF4;
-    if (f4 == 0 && ((AnimatedobjPlacement*)params)->unk18 != 1)
+    if (f4 == 0 && ((AnimatedobjPlacement*)params)->loadKey != 1)
     {
         (*gObjectTriggerInterface)
             ->loadAnimData((u8*)state, (u8*)params);
-        ((GameObject*)obj)->unkF4 = ((AnimatedobjPlacement*)params)->unk18 + 1;
+        ((GameObject*)obj)->unkF4 = ((AnimatedobjPlacement*)params)->loadKey + 1;
     }
-    else if (f4 != 0 && ((AnimatedobjPlacement*)params)->unk18 != f4 - 1)
+    else if (f4 != 0 && ((AnimatedobjPlacement*)params)->loadKey != f4 - 1)
     {
         (*gObjectTriggerInterface)->freeState((u8*)state);
-        if (((AnimatedobjPlacement*)params)->unk18 != -1)
+        if (((AnimatedobjPlacement*)params)->loadKey != -1)
         {
             (*gObjectTriggerInterface)
                 ->loadAnimData((u8*)state, (u8*)params);
         }
-        ((GameObject*)obj)->unkF4 = ((AnimatedobjPlacement*)params)->unk18 + 1;
+        ((GameObject*)obj)->unkF4 = ((AnimatedobjPlacement*)params)->loadKey + 1;
     }
     {
         ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
@@ -802,7 +802,7 @@ void animatedobj_update(int* obj)
     ObjSeqState* seq = ((GameObject*)obj)->extra;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
-    if (params != NULL && ((AnimatedobjPlacement*)params)->unk18 != -1)
+    if (params != NULL && ((AnimatedobjPlacement*)params)->loadKey != -1)
     {
         int res;
         int count;
