@@ -18,6 +18,7 @@
 #include "main/dll/explosionpartfxsource_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -268,3 +269,20 @@ void dll_1CE_update(int* obj)
 #pragma opt_strength_reduction reset
 
 FbWGPipe GXWGFifo : (0xCC008000);
+
+ObjectDescriptor dll_1CE = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_1CE_initialise,
+    (ObjectDescriptorCallback)dll_1CE_release,
+    0,
+    (ObjectDescriptorCallback)dll_1CE_init,
+    (ObjectDescriptorCallback)dll_1CE_update,
+    (ObjectDescriptorCallback)dll_1CE_hitDetect,
+    (ObjectDescriptorCallback)dll_1CE_render,
+    (ObjectDescriptorCallback)dll_1CE_free,
+    (ObjectDescriptorCallback)dll_1CE_getObjectTypeId,
+    dll_1CE_getExtraSize,
+};
