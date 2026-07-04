@@ -312,7 +312,7 @@ main/dll/dll_0015_curves.c:
 
 main/dll/dll_0017_savegame.c:
 	.text       start:0x800E8100 end:0x800EA174
-	.data       start:0x80311720 end:0x80311900
+	.data       start:0x80311720 end:0x80312340
 	.bss        start:0x803A2F80 end:0x803A4218
 
 main/dll/dll_0011_screens.c:
