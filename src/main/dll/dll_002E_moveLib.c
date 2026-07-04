@@ -73,6 +73,21 @@ extern f32 lbl_803E1CE0;
  * region (0x1c..0x5bb) and the two packed turn/event tables (0x5bc/0x5da) are
  * handed to the seq helpers (objFn_8003acfc / fn_8003A9C0 / objMathFn_8003a380)
  * as raw blocks, so they stay byte arrays here. */
+
+/* MoveLibState.phase (state+0x600): shared scripted-move / turn-arbitration
+ * step. func03 (turn/lead-anim) walks 0/1/8; func07 (scripted move) walks the
+ * 2/3/6/7 sub-phase chain. */
+enum MoveLibPhase
+{
+    MOVELIB_PHASE_IDLE = 0,   /* not moving/turning; default and reset target */
+    MOVELIB_PHASE_TURN = 1,   /* turning/lead-anim aiming toward target */
+    MOVELIB_PHASE_RUN = 2,    /* playing the scripted move step */
+    MOVELIB_PHASE_SETUP = 3,  /* one-shot arm of the move, falls to RUN */
+    MOVELIB_PHASE_DONE = 6,   /* move finished, transition to FINISH */
+    MOVELIB_PHASE_FINISH = 7, /* final anim then reset to IDLE */
+    MOVELIB_PHASE_HELD = 8    /* paused/held by mode bit */
+};
+
 typedef struct MoveLibState
 {
     f32 animPhase; /* 0x00: phase fed to ObjAnim_AdvanceCurrentMove */
@@ -266,7 +281,7 @@ void fn_80114B1C(int* obj)
 
     (*gCameraInterface)->setTarget(0);
 
-    state->phase = 0;
+    state->phase = MOVELIB_PHASE_IDLE;
     objFn_8003acfc(obj, types, state->pointCount, (char*)state->animChannels);
     state->setupFlag = 0x50;
     fn_8003A9C0((char*)state->animChannels, state->pointCount, 0, 0);
@@ -364,7 +379,7 @@ void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
     *(int*)&s->lastTarget = 0;
     *(int*)&s->lockTarget = 0;
     s->lookAtMaxDistance = lbl_803E1C8C;
-    s->phase = 0;
+    s->phase = MOVELIB_PHASE_IDLE;
     s->needsReinit = 1;
     s->startOffsetX = z;
     s->startOffsetY = z;
@@ -516,7 +531,7 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
         s->setupFlag = 0x50;
         seq->flags = seq->flags & ~8;
         seq->flags = seq->flags & ~2;
-        s->phase = 3;
+        s->phase = MOVELIB_PHASE_SETUP;
         seq->movementState = 5;
         if ((s->modeBits & 2) == 0)
         {
@@ -527,31 +542,31 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
     }
     else if (mode == 5)
     {
-        if (s->phase >= 2 && *phasePtr <= 7)
+        if (s->phase >= MOVELIB_PHASE_RUN && *phasePtr <= MOVELIB_PHASE_FINISH)
         {
             void* types = seqFn_800394a0();
             switch (s->phase)
             {
-            case 3:
+            case MOVELIB_PHASE_SETUP:
                 objFn_8003acfc((int*)obj, types, s->pointCount, (char*)s->animChannels);
                 s->setupFlag = 0;
-                s->phase = 2;
-            case 2:
+                s->phase = MOVELIB_PHASE_RUN;
+            case MOVELIB_PHASE_RUN:
                 if (objAnimFn_80115650(obj, player, &s->turnState, st, st, pair, &s->targetX) == 0)
                 {
-                    s->phase = 6;
+                    s->phase = MOVELIB_PHASE_DONE;
                 }
                 break;
-            case 6:
-                s->phase = 7;
-            case 7:
+            case MOVELIB_PHASE_DONE:
+                s->phase = MOVELIB_PHASE_FINISH;
+            case MOVELIB_PHASE_FINISH:
                 s->animPhase = lbl_803E1CC4;
                 break;
             }
             *(int*)&s->lastTarget = player;
             ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, s->animPhase, framesThisStep,
                                                                         NULL);
-            if (s->phase == 7)
+            if (s->phase == MOVELIB_PHASE_FINISH)
             {
                 s16* v;
                 seq->flags = seq->flags | 8;
@@ -561,7 +576,7 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
                     seq->unk114 = v[1];
                     seq->unk116 = v[0];
                 }
-                s->phase = 0;
+                s->phase = MOVELIB_PHASE_IDLE;
                 seq->movementState = 0;
                 seq->flags = seq->flags | 4;
                 return 0;
@@ -707,9 +722,9 @@ void dll_2E_func03(u16* obj, int state, int unused)
     if (s->needsReinit == 0)
     {
         bit1 = s->modeBits & 1;
-        if (bit1 != 0 && s->phase != 8)
+        if (bit1 != 0 && s->phase != MOVELIB_PHASE_HELD)
         {
-            s->phase = 8;
+            s->phase = MOVELIB_PHASE_HELD;
             if ((s->modeBits & 8) == 0)
             {
                 objFn_8003acfc((int)obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
@@ -721,16 +736,16 @@ void dll_2E_func03(u16* obj, int state, int unused)
                 fn_8003AC14((int)obj, seqFn_800394a0(), (u32)s->pointCount);
             }
         }
-        else if (bit1 == 0 && s->phase == 8)
+        else if (bit1 == 0 && s->phase == MOVELIB_PHASE_HELD)
         {
-            s->phase = 0;
+            s->phase = MOVELIB_PHASE_IDLE;
             if ((s->modeBits & 8) == 0)
             {
                 objFn_8003acfc((int)obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
                 s->setupFlag = 0x50;
             }
         }
-        if (s->phase > 1)
+        if (s->phase > MOVELIB_PHASE_TURN)
         {
             if (s->setupFlag != 0 && (s->modeBits & 8) == 0)
             {
@@ -775,7 +790,7 @@ void dll_2E_func03(u16* obj, int state, int unused)
                         objFn_8003acfc((int)obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
                         s->setupFlag = 0x50;
                         fn_8003A9C0((char*)s->animChannels, (u32)s->pointCount, 0, 0);
-                        s->phase = 0;
+                        s->phase = MOVELIB_PHASE_IDLE;
                         return;
                     }
                     if (s->setupFlag != 0)
@@ -832,18 +847,18 @@ void dll_2E_func03(u16* obj, int state, int unused)
                 if (((0x5555 < ival) || (target == 0)) ||
                     (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)target)->anim.worldPosX) > s->lookAtMaxDistance))
                 {
-                    if ((s->phase != 0) ||
+                    if ((s->phase != MOVELIB_PHASE_IDLE) ||
                         ((target == 0 && (*(u32*)&s->lastTarget != 0))))
                     {
                         objFn_8003acfc((int)obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
                         s->setupFlag = 10;
                         fn_8003A9C0((char*)s->animChannels, (u32)s->pointCount, 0, 0);
-                        s->phase = 0;
+                        s->phase = MOVELIB_PHASE_IDLE;
                     }
                 }
                 else
                 {
-                    if ((target != *(u32*)&s->lastTarget) || (s->phase == 0))
+                    if ((target != *(u32*)&s->lastTarget) || (s->phase == MOVELIB_PHASE_IDLE))
                     {
                         objFn_8003acfc((int)obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
                         s->setupFlag = 1;
@@ -856,7 +871,7 @@ void dll_2E_func03(u16* obj, int state, int unused)
                                        (s->setupFlag != 0) ? (int)s->animChannels : 0,
                                        s->turnTable, targetYaw, 8,
                                        s->yawLimitA);
-                    s->phase = 1;
+                    s->phase = MOVELIB_PHASE_TURN;
                 }
                 *(u32*)&s->lastTarget = target;
                 if (s->setupFlag == 0)
