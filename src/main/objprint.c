@@ -770,7 +770,7 @@ void FUN_8003ad08(int obj, u32* keys, int count, int out)
  * Head/pitch tracking step reached through the profiler thunk pair
  * (FUN_8028683c re-fetches the real obj/target args, packed hi:obj / lo:target).
  * Walks the joint-binding table for the head joint (key 0), then drives the
- * two angle deltas in local_88[] toward the target with per-frame clamps.
+ * two angle deltas in angleDeltas[] toward the target with per-frame clamps.
  *
  * in_f28..in_ps31_1 are uninitialised incoming FP/paired-single registers the
  * caller left live; the compiler spills them to the local_8..cvtHi0 slots.
@@ -803,7 +803,7 @@ void FUN_8003add8(u32 unusedObj, u32 unusedTarget, int state, u32 maxAngle, u32 
     double in_ps30_1;
     double in_ps31_1;
     u64 packed;
-    short local_88[4];
+    short angleDeltas[4];
     u32 local_80;
     u32 uStack_7c;
     s64 local_78;
@@ -859,28 +859,28 @@ void FUN_8003add8(u32 unusedObj, u32 unusedTarget, int state, u32 maxAngle, u32 
             deltaZ = *(float*)(srcPtr + 10) - *(float*)(scratch0 + 0x14);
             FUN_80293900((double)(dx * dx + deltaZ * deltaZ));
             scratch0 = FUN_80017730();
-            local_88[0] = scratch0 - *srcPtr;
-            if (0x8000 < local_88[0])
+            angleDeltas[0] = scratch0 - *srcPtr;
+            if (0x8000 < angleDeltas[0])
             {
-                local_88[0] = local_88[0] + 1;
+                angleDeltas[0] = angleDeltas[0] + 1;
             }
-            if (local_88[0] < -0x8000)
+            if (angleDeltas[0] < -0x8000)
             {
-                local_88[0] = local_88[0] + -1;
+                angleDeltas[0] = angleDeltas[0] + -1;
             }
             if ((flag & 0xff) != 0)
             {
-                local_88[0] = local_88[0] + -0x8000;
+                angleDeltas[0] = angleDeltas[0] + -0x8000;
             }
             scratch0 = FUN_80017730();
-            local_88[1] = scratch0 + -0x3fff;
+            angleDeltas[1] = scratch0 + -0x3fff;
             uStack_7c = maxAngle ^ 0x80000000;
             local_80 = 0x43300000;
             scratch0 = (int)(lbl_803DF66C *
                 (f32)(s32)(maxAngle));
             local_78 = (s64)scratch0;
             clampHi = scratch0;
-            srcPtr = local_88;
+            srcPtr = angleDeltas;
             dx = lbl_803DF66C * (f32)(s32)(minRange);
             scratch0 = dx;
             local_68 = (double)(s64)scratch0;
