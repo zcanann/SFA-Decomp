@@ -186,3 +186,16 @@ void sc_totempole_release(void)
 void sc_totempole_initialise(void)
 {
 }
+
+/*__DATA_EXTERNS__*/
+extern void sc_cloudrunnera_getExtraSize();
+extern void sc_cloudrunnera_getObjectTypeId();
+extern void sc_cloudrunnera_free();
+extern void sc_cloudrunnera_render();
+extern void sc_cloudrunnera_hitDetect();
+extern void sc_cloudrunnera_update();
+extern void sc_cloudrunnera_init();
+extern void sc_cloudrunnera_release();
+extern void sc_cloudrunnera_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* gSC_CloudrunnerAObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, sc_cloudrunnera_initialise, sc_cloudrunnera_release, (void*)0x00000000, sc_cloudrunnera_init, sc_cloudrunnera_update, sc_cloudrunnera_hitDetect, sc_cloudrunnera_render, sc_cloudrunnera_free, sc_cloudrunnera_getObjectTypeId, sc_cloudrunnera_getExtraSize };

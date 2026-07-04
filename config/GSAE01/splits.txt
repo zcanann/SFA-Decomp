@@ -2016,7 +2016,7 @@ main/dll/SC/dll_01B7_scmusictree.c:
 
 main/dll/SC/dll_01B8_sctotempole.c:
 	.text       start:0x801DC8D4 end:0x801DCC70
-	.data       start:0x803279A8 end:0x803279E0
+	.data       start:0x803279A8 end:0x80327A18
 
 main/dll/SC/dll_01B9_sccloudrunnera.c:
 	.text       start:0x801DCC70 end:0x801DD170
