@@ -1565,8 +1565,6 @@ int Effect6_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     spawnResult = (*gExpgfxInterface)->spawnEffect(&cfg, -1, effectId, 0);
     return spawnResult;
 }
-#pragma reset
-#pragma reset
 
 void Effect6_func05(void)
 {
