@@ -16,6 +16,11 @@ extern char sObjLoadAnimdataNullACRomTabWarning[];
 extern char sSeqAAnimDataTag;
 extern char sSeqBAnimDataTag;
 
+/* GameObject::objectFlags bit: object is bound to an active sequence (set when
+   it becomes a seq callback target, cleared on release; tested elsewhere as the
+   "under sequence control / blocked from normal update" gate). */
+#define OBJECT_OBJFLAG_SEQ_ATTACHED 0x1000
+
 extern u8 lbl_80399E50[];
 extern int lbl_803DD064;
 extern int lbl_803DD084;
@@ -374,7 +379,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
         {
             result = seqObj;
             *(void**)(seqObj + 0xc0) = obj;
-            ((GameObject*)seqObj)->objectFlags |= 0x1000;
+            ((GameObject*)seqObj)->objectFlags |= OBJECT_OBJFLAG_SEQ_ATTACHED;
             ((ObjSeqState*)seq)->callbackContext = seqObj;
 
             activeObj = *(u8**)seq;
@@ -418,7 +423,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
                 *(s16*)obj += ((ObjSeqState*)seq)->heading;
             }
             ((GameObject*)obj)->pendingParentObj = NULL;
-            ((GameObject*)obj)->objectFlags &= ~0x1000;
+            ((GameObject*)obj)->objectFlags &= ~OBJECT_OBJFLAG_SEQ_ATTACHED;
             ((ObjSeqState*)seq)->targetObj = NULL;
             result = obj;
         }
@@ -2625,7 +2630,7 @@ int ObjSeq_update(u8* obj, f32 t)
         if (((ObjSeqState*)seq)->targetObj != NULL)
         {
             ((GameObject*)activeObj)->pendingParentObj = obj;
-            ((GameObject*)activeObj)->objectFlags |= 0x1000;
+            ((GameObject*)activeObj)->objectFlags |= OBJECT_OBJFLAG_SEQ_ATTACHED;
         }
         return 0;
     }
@@ -2672,7 +2677,7 @@ int ObjSeq_update(u8* obj, f32 t)
         {
             activeObj = *(u8**)seq;
             ((GameObject*)activeObj)->pendingParentObj = obj;
-            ((GameObject*)activeObj)->objectFlags |= 0x1000;
+            ((GameObject*)activeObj)->objectFlags |= OBJECT_OBJFLAG_SEQ_ATTACHED;
         }
         else if ((s8)((ObjSeqState*)seq)->unk7B == 0 && (s8)((ObjSeqState*)seq)->movementState < 4)
         {
@@ -4926,7 +4931,7 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
         if (((ObjSeqState*)seq)->targetObj != NULL)
         {
             *(void**)(seqObj + 0xc0) = NULL;
-            ((GameObject*)seqObj)->objectFlags &= ~0x1000;
+            ((GameObject*)seqObj)->objectFlags &= ~OBJECT_OBJFLAG_SEQ_ATTACHED;
             ((ObjSeqState*)seq)->targetObj = NULL;
         }
     }
