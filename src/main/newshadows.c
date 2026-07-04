@@ -2515,12 +2515,12 @@ extern const f32 Udchuff_803DEDAC, Udchuff_803DEDB0, Udchuff_803DEDB4, Udchuff_8
 #pragma opt_propagation off
 void fn_8006CB50(void)
 {
+    int yhi;
+    int ylo;
     int y, x;
     lbl_803DCFBC = (u32)textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
     for (y = 0; y < 0x100; y++)
     {
-        int yhi;
-        int ylo;
         f32 fy;
         x = 0;
         yhi = (y >> 2) * 0x20;
