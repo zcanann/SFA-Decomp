@@ -75,9 +75,9 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     if (nearest != NULL)
     {
         ((TrickyState*)state)->followObj = nearest;
-        if (((TrickyState*)state)->unk28 != nearest + 0x18)
+        if (((TrickyState*)state)->targetPosPtr != nearest + 0x18)
         {
-            ((TrickyState*)state)->unk28 = nearest + 0x18;
+            ((TrickyState*)state)->targetPosPtr = nearest + 0x18;
             *(s32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
             ((TrickyState*)state)->unkD2 = 0;
         }

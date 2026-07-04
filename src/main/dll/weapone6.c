@@ -332,9 +332,9 @@ void fn_8013F100(int obj, register int state)
             }
             ((TrickyState*)state)->substate = 7;
             targetPos = ((TrickyState*)state)->followObj + 24;
-            if (((TrickyState*)state)->unk28 != targetPos)
+            if (((TrickyState*)state)->targetPosPtr != targetPos)
             {
-                ((TrickyState*)state)->unk28 = targetPos;
+                ((TrickyState*)state)->targetPosPtr = targetPos;
                 {
                     u32 m;
                     u32 f2 = *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET);
@@ -395,9 +395,9 @@ void fn_8013F100(int obj, register int state)
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E24D0)
         {
             targetPos = *(u8**)&((TrickyState*)state)->playerObj + 24;
-            if (((TrickyState*)state)->unk28 != targetPos)
+            if (((TrickyState*)state)->targetPosPtr != targetPos)
             {
-                ((TrickyState*)state)->unk28 = targetPos;
+                ((TrickyState*)state)->targetPosPtr = targetPos;
                 {
                     u32 m;
                     u32 f2 = *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET);
@@ -560,9 +560,9 @@ void fn_8013FBE4(int obj, register int state)
         if (trackedObj != 0 && **(u8**)state != 0)
         {
             if (trackedObj != *(u8**)&((TrickyState*)state)->unk710 &&
-                ((TrickyState*)state)->unk28 != (u8*)(state + 0x704))
+                ((TrickyState*)state)->targetPosPtr != (u8*)(state + 0x704))
             {
-                ((TrickyState*)state)->unk28 = (u8*)(state + 0x704);
+                ((TrickyState*)state)->targetPosPtr = (u8*)(state + 0x704);
                 {
                     u32 m;
                     u32 f2 = *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET);

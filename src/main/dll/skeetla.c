@@ -395,8 +395,8 @@ static f32 skeetla_pathSpeedDelta(u8* obj)
     f32 previousSpeed;
     f32 currentSpeed;
 
-    currentPathPoint = (f32*)state->unk28;
-    if ((f32*)state->unk28 == state->previousPathPoint)
+    currentPathPoint = (f32*)state->targetPosPtr;
+    if ((f32*)state->targetPosPtr == state->previousPathPoint)
     {
         dx = state->previousPathX - ((GameObject*)obj)->anim.worldPosX;
         dz = state->previousPathZ - ((GameObject*)obj)->anim.worldPosZ;
@@ -813,7 +813,7 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
         }
     }
 
-    fn_8004B31C(state + 0x6b8, route, *(int*)&((TrickyState*)state)->unk28, pathId,
+    fn_8004B31C(state + 0x6b8, route, *(int*)&((TrickyState*)state)->targetPosPtr, pathId,
                 ((TrickyState*)state)->route.reverse);
     if (fn_8004B218(state + 0x6b8, 0x1f4) != 1)
     {
@@ -837,7 +837,7 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
     {
         if (routes[i] != 0)
         {
-            fn_8004B31C(state + 0x538 + i * 0x30, routes[i], *(int*)&((TrickyState*)state)->unk28, pathId, routeFlags[i]);
+            fn_8004B31C(state + 0x538 + i * 0x30, routes[i], *(int*)&((TrickyState*)state)->targetPosPtr, pathId, routeFlags[i]);
         }
     }
 
@@ -995,7 +995,7 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
         }
 
         cz = ((ObjfsaRomCurveDef*)curve)->z;
-        p = *(f32**)&((TrickyState*)state)->unk28;
+        p = *(f32**)&((TrickyState*)state)->targetPosPtr;
         {
             f32 sq0 = (p[2] - cz) * (p[2] - cz);
             f32 sq1 = (p[0] - ((ObjfsaRomCurveDef*)curve)->x) * (p[0] - ((ObjfsaRomCurveDef*)curve)->x);

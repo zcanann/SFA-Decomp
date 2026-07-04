@@ -100,7 +100,7 @@ void trickyGrowl(void* obj, void* trickyState)
         }
         else
         {
-            void* target = ((TrickyState*)((GameObject*)obj)->extra)->unk28;
+            void* target = ((TrickyState*)((GameObject*)obj)->extra)->targetPosPtr;
             trickyTurnTowardYaw(obj, getAngle(
                                     -(*(f32*)target - ((GameObject*)obj)->anim.worldPosX),
                                     -(((TrickyGrowlState*)target)->unk8 - ((GameObject*)obj)->anim.worldPosZ)));
@@ -189,7 +189,7 @@ void trickyGrowl(void* obj, void* trickyState)
         }
         else
         {
-            void* target = ((TrickyState*)((GameObject*)obj)->extra)->unk28;
+            void* target = ((TrickyState*)((GameObject*)obj)->extra)->targetPosPtr;
             trickyTurnTowardYaw(obj, getAngle(
                                     -(*(f32*)target - ((GameObject*)obj)->anim.worldPosX),
                                     -(((TrickyGrowlState*)target)->unk8 - ((GameObject*)obj)->anim.worldPosZ)));

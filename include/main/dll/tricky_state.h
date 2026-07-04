@@ -37,7 +37,7 @@ typedef struct TrickyState {
     u8 pad1C[0x20 - 0x1C];
     int moveId; /* compared to anim.currentMove, passed to ObjAnim_SetCurrentMove */
     u8 *followObj; /* the followed object (playerObj/target/found stores; dll vtable dispatched) */
-    u8 *unk28;
+    u8 *targetPosPtr; /* pointer to the current target/path position (compared to previousPathPoint; fed to fn_8004B31C as the position arg) */
     f32 dirX; /* normalized planar direction (pos delta / length) */
     f32 dirZ;
     f32 moveProgress; /* passed to ObjAnim_SetMoveProgress */

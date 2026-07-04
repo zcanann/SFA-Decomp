@@ -185,7 +185,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
         ((GameObject*)obj)->anim.worldPosZ = ((TrickyState*)state)->homePosZ;
         ObjHits_SyncObjectPosition(obj);
     }
-    target = *(u8**)&((TrickyState*)state)->unk28;
+    target = *(u8**)&((TrickyState*)state)->targetPosPtr;
     wg = Objfsa_GetWalkGroupIndexAtPoint((f32*)(obj + 0x18), 0);
     if ((wg != 0) && (((TrickyState*)state)->unkD0 != wg))
     {
@@ -753,7 +753,7 @@ state_selected:
         node = route->nodeA0;
         if ((*(s8*)((u8*)route->node9C + 0x1a) != 9) && (*(s8*)(node + 0x1a) != 9))
         {
-            f32* tpos = *(f32**)&((TrickyState*)state)->unk28;
+            f32* tpos = *(f32**)&((TrickyState*)state)->targetPosPtr;
             delta[0] = tpos[0] - ((GameObject*)obj)->anim.worldPosX;
             delta[1] = tpos[1] - ((GameObject*)obj)->anim.worldPosY;
             delta[2] = tpos[2] - ((GameObject*)obj)->anim.worldPosZ;
@@ -772,9 +772,9 @@ state_selected:
                 }
                 if (step == 4)
                 {
-                    fn_8004B31C(((TrickyState*)state)->voxBlocks[0], (u32)route->nodeA4, ((TrickyState*)state)->unk28,
+                    fn_8004B31C(((TrickyState*)state)->voxBlocks[0], (u32)route->nodeA4, ((TrickyState*)state)->targetPosPtr,
                                 ((TrickyState*)state)->unk532, route->reverse);
-                    fn_8004B31C(((TrickyState*)state)->voxBlocks[1], (u32)route->node9C, ((TrickyState*)state)->unk28,
+                    fn_8004B31C(((TrickyState*)state)->voxBlocks[1], (u32)route->node9C, ((TrickyState*)state)->targetPosPtr,
                                 ((TrickyState*)state)->unk532, route->reverse ^ 1);
                     found = 0;
                     for (step = 0; (step = step + 1) < 100 && (found != 1);)
@@ -1434,7 +1434,7 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
         f32 deltaSpeed = lbl_803E2488 + thresh;
         f32 deltaSpeedSq = deltaSpeed * deltaSpeed;
         ctx = ((GameObject*)obj)->extra;
-        otherTarget = (f32*)((TrickyState*)ctx)->unk28;
+        otherTarget = (f32*)((TrickyState*)ctx)->targetPosPtr;
         if (otherTarget == ((TrickyState*)ctx)->previousPathPoint)
         {
             dx = ((TrickyState*)ctx)->previousPathX - ((GameObject*)obj)->anim.worldPosX;
