@@ -26,6 +26,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DRCLOUDRUNNER_OBJGROUP 0xa
+#define ARWARWING_OBJGROUP 0x26
+
 #define DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
 
 STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
@@ -159,8 +162,8 @@ int DR_CloudRunner_stateHandler07(int obj)
 void DR_CloudRunner_free(int obj)
 {
     GameBit_Set(0x7aa, *(s16*)((char*)*(int*)&((GameObject*)obj)->extra + 0xbb0));
-    ObjGroup_RemoveObject(obj, 0xa);
-    ObjGroup_RemoveObject(obj, 0x26);
+    ObjGroup_RemoveObject(obj, DRCLOUDRUNNER_OBJGROUP);
+    ObjGroup_RemoveObject(obj, ARWARWING_OBJGROUP);
     (*gGameUIInterface)->airMeterSetShutdown();
 }
 
@@ -419,7 +422,7 @@ void DR_CloudRunner_init(int obj, int p2)
     int r;
     ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)p2 + 0x18) << 8);
     ((GameObject*)obj)->animEventCallback = DR_CloudRunner_SeqFn;
-    ObjGroup_AddObject(obj, 0xa);
+    ObjGroup_AddObject(obj, DRCLOUDRUNNER_OBJGROUP);
     inner = *(int*)&((GameObject*)obj)->extra;
     ((DRCloudRunnerState*)inner)->spawnVariant = *(u8*)((char*)p2 + 0x19);
     ((DRCloudRunnerState*)inner)->unkBAE = 5;
@@ -444,7 +447,7 @@ void DR_CloudRunner_init(int obj, int p2)
     fn_802BF0C8(obj, inner, ((ByteFlags*)((char*)inner + 0xbc0))->b20);
     dll_2E_func05(obj, inner + 0x4c4, -0x11c7, 0x1555, 1);
     dll_2E_func08(inner + 0x4c4, 0x12c, 0x78);
-    ObjGroup_AddObject(obj, 0x26);
+    ObjGroup_AddObject(obj, ARWARWING_OBJGROUP);
     ((ByteFlags*)((char*)inner + 0xbc0))->b01 = 0;
 }
 
