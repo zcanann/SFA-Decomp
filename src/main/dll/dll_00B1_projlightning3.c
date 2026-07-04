@@ -26,3 +26,7 @@ void projlightning3_release(void)
 void projlightning3_initialise(void)
 {
 }
+
+/*__DATA_EXTERNS__*/
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_80319598[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projlightning4_initialise, projlightning4_release, (void*)0x00000000, projlightning4_doUnsupported };
