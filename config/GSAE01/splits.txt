@@ -928,7 +928,7 @@ main/dll/dll_003B_menu.c:
 
 main/dll/dll_003C_tumbleweedbush.c:
 	.text       start:0x80130124 end:0x80131540
-	.data       start:0x8031C1A8 end:0x8031C2A8
+	.data       start:0x8031C1A8 end:0x8031C508
 	.bss        start:0x803A9458 end:0x803A9DB8
 
 main/dll/dll_003D_titlemenuitem.c:

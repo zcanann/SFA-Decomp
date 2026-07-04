@@ -989,3 +989,31 @@ char sTumbleweedBushSlotOverflowErr[] =
 char sTumbleweedBushNavLinkRangeErr[] = {
     0x00, 0x00, 0x00, 0xF9, 0x00, 0x00, 0x01, 0x03, 0x00, 0x00, 0x03, 0x71,
 };
+
+/* descriptor/ptr table auto 0x8031c2a8-0x8031c508 */
+u32 lbl_8031C2A8[3] = { 0x06160615, 0x0309030a, 0x030b030c };
+u32 lbl_8031C2B4[19] = { 0x00000000, 0x00000000, 0x00000000, 0x000e0000, (u32)TitleMenuItem_initialise, (u32)TitleMenuItem_release, 0x00000000, (u32)TitleMenuItem_createWithText, (u32)TitleMenuItem_create, (u32)TitleMenuItem_createWithWindow, (u32)TitleMenuItem_free, (u32)TitleMenuItem_update, (u32)TitleMenuItem_render, (u32)TitleMenuItem_isEnabled, (u32)TitleMenuItem_setEnabled, (u32)TitleMenuItem_getVal, (u32)TitleMenuItem_setVal, (u32)TitleMenuItem_isChanged, (u32)TitleMenuItem_setAButtonToggle };
+u32 lbl_8031C300[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, (u32)Dummy3E_initialise, (u32)Dummy3E_release, 0x00000000, (u32)Dummy3E_func03_ret_0, (u32)Dummy3E_func04_nop, (u32)Dummy3E_func05_ret_1 };
+u32 lbl_8031C328[5] = { 0xd800e700, 0x20804100, 0x80007fff, 0x00950000, 0x041a0000 };
+u32 lbl_8031C33C[5] = { 0xd300e200, 0x3c004b00, 0x80007fff, 0x00950000, 0x04420000 };
+u32 lbl_8031C350[5] = { 0xf1000280, 0xf3800000, 0x80007fff, 0x00950000, 0x04520000 };
+u32 lbl_8031C364[5] = { 0xf100f880, 0xec00f380, 0x80007fff, 0x00950000, 0x041e0000 };
+u32 lbl_8031C378[5] = { 0xe200f100, 0xf100fd80, 0x80007fff, 0x00950000, 0x04550000 };
+u32 lbl_8031C38C[5] = { 0xe480e980, 0xfd800500, 0x80007fff, 0x00950000, 0x041f0000 };
+u32 lbl_8031C3A0[5] = { 0xcb80df80, 0xec000000, 0x80007fff, 0x00950000, 0x05590000 };
+u32 lbl_8031C3B4[5] = { 0xdd00e480, 0xf8800000, 0x80007fff, 0x00950000, 0x04410000 };
+u32 lbl_8031C3C8[5] = { 0xb500cb80, 0xc180d300, 0x80007fff, 0x00950000, 0x052c0000 };
+u32 lbl_8031C3DC[5] = { 0xfb001180, 0xb500c180, 0x80007fff, 0x00950000, 0x03e00000 };
+u32 lbl_8031C3F0[5] = { 0xee800000, 0xc180d080, 0x80007fff, 0x00950000, 0x04190000 };
+u32 lbl_8031C404[5] = { 0x28003480, 0x00001900, 0x80007fff, 0x00950000, 0x04150000 };
+u32 lbl_8031C418[10] = { 0xb000c400, 0xfd800780, 0x80007fff, 0x00950000, 0x04160000, 0xbc80c400, 0xf8800780, 0x80007fff, 0x00950000, 0x04160000 };
+u32 lbl_8031C440[5] = { 0xc400cb80, 0xfd800500, 0x80007fff, 0x00950000, 0x04430000 };
+u32 lbl_8031C454[5] = { 0xe480e980, 0xf600fb00, 0x80007fff, 0x00950000, 0x04590000 };
+u32 lbl_8031C468[5] = { 0xe700fb00, 0x02801180, 0x80007fff, 0x00950000, 0x04480000 };
+u32 lbl_8031C47C[5] = { 0xfb000280, 0x07800c80, 0x80007fff, 0x00950000, 0x04180000 };
+u32 lbl_8031C490[5] = { 0x0a000f00, 0xda80e700, 0x80007fff, 0x00950000, 0x04170000 };
+u32 lbl_8031C4A4[5] = { 0x05001180, 0xd800df80, 0x80007fff, 0x00950000, 0x04440000 };
+u32 lbl_8031C4B8[5] = { 0x0c800f00, 0xe700ee80, 0x80007fff, 0x00950000, 0x04450000 };
+u32 lbl_8031C4CC[5] = { 0x05000f00, 0xec00fb00, 0x80007fff, 0x00950000, 0x04200000 };
+u32 lbl_8031C4E0[5] = { 0x02800500, 0xee80f600, 0x80007fff, 0x00950000, 0x041d0000 };
+u32 lbl_8031C4F4[5] = { 0xba00ce00, 0x20803700, 0x80007fff, 0x00950000, 0x04460000 };
