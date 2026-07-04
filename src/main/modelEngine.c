@@ -7,6 +7,12 @@ char gModelEngineTextBuf[0x10];
 
 #define RESOURCE_DESCRIPTOR_COUNT 0x2c1
 
+/* gModelEngineTimerState bits (roles from accessor fns: timerSetToCountUp,
+ * isGameTimerDisabled, gameTimerIsRunning). */
+#define MODELENGINE_TIMER_COUNTDOWN 1
+#define MODELENGINE_TIMER_DISABLED  2
+#define MODELENGINE_TIMER_RUNNING   4
+
 RingBufferQueue* allocModelStruct_800139e8(int capacity, int elemSize)
 {
     RingBufferQueue* queue = mmAlloc(elemSize * capacity + sizeof(RingBufferQueue), 0x1a, NULL);
@@ -282,7 +288,7 @@ void fn_8001404C(s32 value)
 
 u32 gameTimerIsRunning(void)
 {
-    return gModelEngineTimerState & 4;
+    return gModelEngineTimerState & MODELENGINE_TIMER_RUNNING;
 }
 
 void hudNumberFn_80014060(void)
@@ -301,13 +307,13 @@ void set_hudNumber_803db278(s32 value)
 
 u32 isGameTimerDisabled(void)
 {
-    return gModelEngineTimerState & 2;
+    return gModelEngineTimerState & MODELENGINE_TIMER_DISABLED;
 }
 
 void gameTimerStop(void)
 {
-    gModelEngineTimerState &= ~4;
-    gModelEngineTimerState |= 2;
+    gModelEngineTimerState &= ~MODELENGINE_TIMER_RUNNING;
+    gModelEngineTimerState |= MODELENGINE_TIMER_DISABLED;
 }
 
 f32 fn_8001461C(void)
@@ -326,9 +332,9 @@ f32 fn_80014668(void)
 
 void timerSetToCountUp(void)
 {
-    if ((gModelEngineTimerState & 1) != 0)
+    if ((gModelEngineTimerState & MODELENGINE_TIMER_COUNTDOWN) != 0)
     {
-        gModelEngineTimerState &= ~1;
+        gModelEngineTimerState &= ~MODELENGINE_TIMER_COUNTDOWN;
     }
 }
 
@@ -344,15 +350,15 @@ void gameTimerInit(s8 flags, int minutes)
         gModelEngineTimerValue = lbl_803DE6B8;
     }
     gModelEngineTimerDuration = minutes * 60;
-    gModelEngineTimerState |= 1;
-    gModelEngineTimerState &= ~2;
+    gModelEngineTimerState |= MODELENGINE_TIMER_COUNTDOWN;
+    gModelEngineTimerState &= ~MODELENGINE_TIMER_DISABLED;
     if ((flags & 3) != 0)
     {
-        gModelEngineTimerState |= 4;
+        gModelEngineTimerState |= MODELENGINE_TIMER_RUNNING;
     }
     else
     {
-        gModelEngineTimerState &= ~4;
+        gModelEngineTimerState &= ~MODELENGINE_TIMER_RUNNING;
     }
 }
 
@@ -505,7 +511,7 @@ void initGameTimer(void)
     gModelEnginePendingUiDll = 0;
     gModelEnginePrevUiDll = 0;
     curUiDll = 0;
-    gModelEngineTimerState = 2;
+    gModelEngineTimerState = MODELENGINE_TIMER_DISABLED;
     gModelEngineTimerFlags = 0;
     gModelEngineTimerValue = 0.0f;
     gModelEngineTimerDuration = 0.0f;
@@ -524,7 +530,7 @@ void gameTimerRun(void)
     int totalSecs;
     int mins;
 
-    if ((gModelEngineTimerState & 1) || getHudHiddenFrameCount() != 0)
+    if ((gModelEngineTimerState & MODELENGINE_TIMER_COUNTDOWN) || getHudHiddenFrameCount() != 0)
     {
         dt = lbl_803DE6B8;
     }
@@ -563,8 +569,8 @@ void gameTimerRun(void)
         {
             Sfx_PlayFromObject(0, SFXsc_clubhit02);
         }
-        gModelEngineTimerState &= ~4;
-        gModelEngineTimerState |= 2;
+        gModelEngineTimerState &= ~MODELENGINE_TIMER_RUNNING;
+        gModelEngineTimerState |= MODELENGINE_TIMER_DISABLED;
     }
 
     if ((gModelEngineTimerFlags & 4) != 0)
