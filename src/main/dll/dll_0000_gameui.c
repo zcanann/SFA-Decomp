@@ -2350,7 +2350,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         }
         {
             int hh = v - 0x14;
-            if (hh < 0)
+            if ((s16)hh < 0)
             {
                 hh = 0;
             }
