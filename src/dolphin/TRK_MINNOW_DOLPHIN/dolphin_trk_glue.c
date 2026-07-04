@@ -15,7 +15,7 @@ extern u8 lbl_803D99A4[0x110C];
 
 DBCommTable gDBCommTable = {};
 
-void TRKEXICallBack(__OSInterrupt param_0, OSContext* ctx);
+void TRKEXICallBack(__OSInterrupt interrupt, OSContext* ctx);
 
 asm void TRKLoadContext(OSContext* ctx, u32)
 {
@@ -74,7 +74,7 @@ inline UARTError TRKWriteUARTN(const void* bytes, u32 length)
     return writeErr == 0 ? 0 : -1;
 }
 
-void TRKEXICallBack(__OSInterrupt param_0, OSContext* ctx)
+void TRKEXICallBack(__OSInterrupt interrupt, OSContext* ctx)
 {
     OSEnableScheduler();
     TRKLoadContext(ctx, 0x500);
