@@ -163,6 +163,9 @@ extern f32 timeDelta;
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 
+/* object group this object joins while active */
+#define ANIMATEDOBJ_OBJGROUP 7
+
 #define ANIMATEDOBJ_OBJFLAG_UPDATE_DISABLED 0x8000
 
 typedef struct AnimatedobjPlacement
@@ -260,7 +263,7 @@ extern f32 lbl_803E3230;
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, ANIMATEDOBJ_OBJGROUP);
     return;
 }
 
@@ -287,7 +290,7 @@ void staticCamera_init(short* obj, int params, int flag)
     dest[1] = 0;
     if (flag == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, ANIMATEDOBJ_OBJGROUP);
     }
     return;
 }
