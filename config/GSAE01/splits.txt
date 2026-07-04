@@ -207,7 +207,7 @@ main/dll/dll_000D_playershadow.c:
 
 main/dll/dll_0018_boneparticleeffect.c:
 	.text       start:0x800A4338 end:0x800A4DF4
-	.data       start:0x8030FE38 end:0x80310528
+	.data       start:0x8030FE38 end:0x80310560
 
 main/dll/dll_000E_partfx.c:
 	.text       start:0x800A4DF4 end:0x800AF688
