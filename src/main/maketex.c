@@ -718,16 +718,18 @@ int saveGame_doWrite(int slot)
         result = CARDRead(lbl_80396900, (void*)lbl_803DD044, 0x2000, offset);
         if (result == 0)
         {
+            u64 x2[1];
+            u64 a2[1];
             p = (u64*)lbl_803DD044;
-            x[0] = 0;
-            a[0] = 1;
-            for (i[0] = (int)x[0]; (int)i[0] < 0x3ff; i[0]++)
+            x2[0] = 0;
+            a2[0] = 1;
+            for (i[0] = (int)x2[0]; (int)i[0] < 0x3ff; i[0]++)
             {
                 u64 v = p[i[0]];
-                x[0] = x[0] ^ v;
-                a[0] = a[0] + v;
+                x2[0] = x2[0] ^ v;
+                a2[0] = a2[0] + v;
             }
-            chk2 = x[0] ^ (a[0] + 13);
+            chk2 = x2[0] ^ (a2[0] + 13);
             if (chk != chk2)
             {
                 result = -0x55;
