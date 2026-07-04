@@ -2311,7 +2311,7 @@ main/dll/dll_022C_dll22c.c:
 
 main/dll/DF/dll_022E_dfpdoorswitch.c:
 	.text       start:0x802050C4 end:0x80205168
-	.data       start:0x80329940 end:0x80329968
+	.data       start:0x80329940 end:0x803299D8
 
 main/dll/DF/dll_022D_dfpseqpoint.c:
 	.text       start:0x80205168 end:0x802057CC
