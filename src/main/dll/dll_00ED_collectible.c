@@ -36,6 +36,7 @@
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define COLLECTIBLE_OBJGROUP 4
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
@@ -755,7 +756,7 @@ void collectible_updateLooseMotion(int* obj)
 void collectible_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    ObjGroup_RemoveObject(obj, 4);
+    ObjGroup_RemoveObject(obj, COLLECTIBLE_OBJGROUP);
     return;
 }
 
@@ -1145,7 +1146,7 @@ void collectible_init(int obj, int setup)
     state = ((GameObject*)obj)->extra;
     pathWord = lbl_803E3440;
     pathByte = lbl_803E3444;
-    ObjGroup_AddObject(obj, 4);
+    ObjGroup_AddObject(obj, COLLECTIBLE_OBJGROUP);
     ObjMsg_AllocQueue(obj, 2);
     ((GameObject*)obj)->anim.rotX = (s16)((u8)((CollectibleSetup*)setup)->rotXByte << 8);
     ((GameObject*)obj)->anim.rotY = (s16)((u8)((CollectibleSetup*)setup)->rotYByte << 8);
