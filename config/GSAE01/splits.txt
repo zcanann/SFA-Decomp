@@ -3229,6 +3229,7 @@ main/audio/vsample_events.c:
 	extab       start:0x800059C8 end:0x800059D8
 	extabindex  start:0x8000623C end:0x80006254
 	.text       start:0x8027AFC0 end:0x8027B25C
+	.bss        start:0x803CB290 end:0x803CBBE0
 
 main/audio/vsample_update.c:
 	extab       start:0x800059D8 end:0x800059E0

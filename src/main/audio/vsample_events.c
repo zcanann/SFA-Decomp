@@ -1,6 +1,6 @@
 #include "main/audio/synth_virtual_sample.h"
 
-extern u8 synthVirtualSampleState[];
+u8 synthVirtualSampleState[0x950];
 
 /*
  * Sample-completion handler: if the packed (slotIdx, sampleId)
