@@ -42,6 +42,22 @@ extern int ObjList_FindObjectById(int objectId);
 extern int ObjTrigger_IsSetById();
 extern void gameTimerStop(void);
 
+/* NwLevControlState.mode: SnowHorn Wastes progression state machine.
+ * Modes 3..7 are the intermediate table-walk steps (identical handling,
+ * driven externally by the target-object trigger sequences) so they stay
+ * numeric. */
+enum NwLevControlMode
+{
+    NWLEVCONTROL_MODE_WAIT_START = 0,   /* wait for rescue bit 0x19d, then run seq 0 */
+    NWLEVCONTROL_MODE_INIT_START = 1,   /* resumed-start: preempt+run seq, arm progression */
+    NWLEVCONTROL_MODE_WALK_TABLE = 2,   /* walk target-object table, arm challenge timer */
+    NWLEVCONTROL_MODE_WALK_FINAL = 8,   /* final table check, latch completion flag */
+    NWLEVCONTROL_MODE_WAIT_MENU_LOCK = 9, /* wait for the menu-lock flag to be set */
+    NWLEVCONTROL_MODE_TIMER_STEP = 10,  /* menu-locked: init/count-up/stop the timer */
+    NWLEVCONTROL_MODE_CLEANUP = 0xb,    /* clear game bit 0xecd */
+    NWLEVCONTROL_MODE_RESCUE_RETRIGGER = 0xc /* post-rescue re-trigger, then cleanup */
+};
+
 /* obj+0xB8 per-class state block (getExtraSize == 0x14). */
 typedef struct NwLevControlState
 {
@@ -150,22 +166,22 @@ void nw_levcontrol_update(int objArg)
     {
         switch (state->mode)
         {
-        case 0:
+        case NWLEVCONTROL_MODE_WAIT_START:
             bitVal = GameBit_Get(0x19d);
             if (bitVal != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-                state->mode = 2;
+                state->mode = NWLEVCONTROL_MODE_WALK_TABLE;
                 GameBit_Set(0xecd, 1);
             }
             break;
-        case 1:
+        case NWLEVCONTROL_MODE_INIT_START:
             (*gObjectTriggerInterface)->preempt(obj, 0x64a);
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 0x20);
-            state->mode = 2;
+            state->mode = NWLEVCONTROL_MODE_WALK_TABLE;
             GameBit_Set(0xecd, 1);
             break;
-        case 2:
+        case NWLEVCONTROL_MODE_WALK_TABLE:
             obj = fn_801CFD68((u8*)state);
             if (obj != 0)
             {
@@ -180,20 +196,20 @@ void nw_levcontrol_update(int objArg)
         case 7:
             fn_801CFD68((u8*)state);
             break;
-        case 8:
+        case NWLEVCONTROL_MODE_WALK_FINAL:
             obj = fn_801CFD68((u8*)state);
             if (obj == 1)
             {
                 state->flags = state->flags | 4;
             }
             break;
-        case 9:
+        case NWLEVCONTROL_MODE_WAIT_MENU_LOCK:
             if ((*(u16*)(player + 0x58) & 0x1000) != 0)
             {
-                state->mode = 10;
+                state->mode = NWLEVCONTROL_MODE_TIMER_STEP;
             }
             break;
-        case 10:
+        case NWLEVCONTROL_MODE_TIMER_STEP:
             if ((*(u16*)(player + 0x58) & 0x1000) == 0)
             {
                 bitVal2 = state->flags;
@@ -225,17 +241,17 @@ void nw_levcontrol_update(int objArg)
                 state->mode = state->nextMode;
             }
             break;
-        case 0xb:
+        case NWLEVCONTROL_MODE_CLEANUP:
             bitVal = GameBit_Get(0xecd);
             if (bitVal != 0)
             {
                 GameBit_Set(0xecd, 0);
             }
             break;
-        case 0xc:
+        case NWLEVCONTROL_MODE_RESCUE_RETRIGGER:
             (*gObjectTriggerInterface)->preempt(obj, 0x5a);
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, 8);
-            state->mode = 0xb;
+            state->mode = NWLEVCONTROL_MODE_CLEANUP;
         }
     }
     return;
@@ -253,15 +269,15 @@ void nw_levcontrol_init(int* obj)
 
     if (GameBit_Get(0x19f) != 0)
     {
-        state->mode = 0xc;
+        state->mode = NWLEVCONTROL_MODE_RESCUE_RETRIGGER;
     }
     else if (GameBit_Get(0x19d) != 0)
     {
-        state->mode = 1;
+        state->mode = NWLEVCONTROL_MODE_INIT_START;
     }
     else
     {
-        state->mode = 0;
+        state->mode = NWLEVCONTROL_MODE_WAIT_START;
     }
 
     state->countdown = lbl_803E5280;
@@ -299,7 +315,7 @@ int fn_801CFD68(u8* stateBytes)
     if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        state->mode = 9;
+        state->mode = NWLEVCONTROL_MODE_WAIT_MENU_LOCK;
         state->seqId = table[state->tableIndex + 7];
         state->nextMode = table[state->tableIndex + 0xe];
         state->tableIndex++;
@@ -313,7 +329,7 @@ int fn_801CFD68(u8* stateBytes)
         if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            state->mode = 9;
+            state->mode = NWLEVCONTROL_MODE_WAIT_MENU_LOCK;
             state->seqId = table[state->tableIndex + 6];
             state->timerMinutes = 0;
             return 2;
