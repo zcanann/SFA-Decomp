@@ -24,11 +24,6 @@
 #include "main/object_transform.h"
 #include "main/objlib.h"
 extern f32 sqrtf(f32 x);
-extern u32 FUN_80294964();
-extern u32 DAT_802c2910;
-extern u32 DAT_802c2914;
-extern u32 DAT_802c2918;
-extern float* DAT_803de1fc;
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;
 extern CameraMode54State* gCameraModeNpcSpeakState;
