@@ -57,6 +57,7 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 #include "main/audio/sfx.h"
 
 #define DIMSNOWBALL_OBJFLAG_PARENT_SLACK 0x1000
+#define DIMSNOWBALL_OBJFLAG_HIDDEN 0x4000
 #define DIMSNOWBALL_OBJFLAG_FREED 0x40
 
 typedef struct DimsnowballState
@@ -263,7 +264,7 @@ void dimsnowball_init(DimSnowballObject* objArg, DimSnowballDef* def)
     {
         *(u32*)(obj->handle64 + 0x30) |= 0x810;
     }
-    obj->flags = (u16)(obj->flags | 0x4000);
+    obj->flags = (u16)(obj->flags | DIMSNOWBALL_OBJFLAG_HIDDEN);
 }
 
 void dimsnowball_release(void)
