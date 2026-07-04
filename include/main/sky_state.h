@@ -20,9 +20,9 @@ typedef struct SkyLight {
     f32 directionX;
     f32 directionY;
     f32 directionZ;
-    f32 unk7C;
-    f32 unk80;
-    f32 unk84;
+    f32 moonDirectionX;
+    f32 moonDirectionY;
+    f32 moonDirectionZ;
     u8 unk88[0x14];
     f32 unk9C;
     u8 unkA0[4];
@@ -40,7 +40,7 @@ typedef struct SkyState {
     u8 *texture1;
     s32 textureId0;
     s32 textureId1;
-    f32 unk1C;
+    f32 sunYaw; /* 0x1C: yaw applied (as quaternion rz) to the sun direction each frame */
     SkyLight lights[3];
     f32 timeOfDay;
     s32 clockTime;

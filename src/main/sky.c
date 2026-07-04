@@ -494,9 +494,9 @@ void modelTextureFn_80089970(int slot)
     {
         offset = slot * 0xa4;
         sky = gSkyState + offset;
-        modelLightStruct_setDirection(gSkyMoonLight, ((SkyState*)sky)->lights[0].unk7C,
-                                      ((SkyState*)sky)->lights[0].unk80,
-                                      ((SkyState*)sky)->lights[0].unk84);
+        modelLightStruct_setDirection(gSkyMoonLight, ((SkyState*)sky)->lights[0].moonDirectionX,
+                                      ((SkyState*)sky)->lights[0].moonDirectionY,
+                                      ((SkyState*)sky)->lights[0].moonDirectionZ);
         modelLightStruct_setDiffuseColor(gSkyMoonLight, gSkyState[offset + 0x80],
                                          gSkyState[offset + 0x81],
                                          gSkyState[offset + 0x82], 0xff);
@@ -2267,7 +2267,7 @@ void fn_8008BDA8(void)
     ((SkyState*)gSkyState)->unk253 = 0;
     ((SkyState*)gSkyState)->timeOfDay = gSkyInitialTimeOfDay;
     ((SkyState*)gSkyState)->clockTime = 0xb4;
-    ((SkyState*)gSkyState)->unk1C = lbl_803DF0F8;
+    ((SkyState*)gSkyState)->sunYaw = lbl_803DF0F8;
     ((SkyState*)gSkyState)->timeOfDayRate = (f32)((SkyState*)gSkyState)->clockTime / lbl_803DF060;
     ((SkyState*)gSkyState)->skyTextureIds[0] = 0xc38;
     ((SkyState*)gSkyState)->skyTextureIds[1] = 0xc38;
@@ -2782,7 +2782,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         vec[0] = lbl_803DF0B8 * sunDir.x;
         vec[1] = lbl_803DF0B8 * sunDir.y;
         vec[2] = lbl_803DF0B8 * sunDir.z;
-        yaw = sky->unk1C;
+        yaw = sky->sunYaw;
         q1.rx =
         sunT;
         vecRotateZXY(&q1, vec);
