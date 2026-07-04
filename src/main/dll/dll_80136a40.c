@@ -1199,7 +1199,7 @@ void fn_80137DF8(void)
     u32* sp;
     int depth;
     int hold;
-    int x, col;
+    int xc[2]; /* [0]=x column counter, [1]=byte offset; paired-walker array form (matches target IV webs) */
     int row;
     u16* fbrow;
     int h, h2;
@@ -1231,32 +1231,31 @@ void fn_80137DF8(void)
         {
             if (enableDebugText != 0)
             {
-                x = 0;
-                col = x;
-                for (; x < 0x280; x++)
+                xc[0] = 0;
+                for (xc[1] = xc[0]; xc[0] < 0x280; xc[0]++)
                 {
                     row = 0;
                     for (n = 0; n < 60; n++)
                     {
                         fbrow = (u16*)((char*)debugDrawFrameBuffer + row);
-                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                         fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x500));
-                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                         fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xA00));
-                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                         fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xF00));
-                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                         fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1400));
-                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                         fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1900));
-                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                         fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00));
-                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                         fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x2300));
-                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                         row += 0x2800;
                     }
-                    col += 2;
+                    xc[1] += 2;
                 }
             }
             debugPrintfxy(0x10, 0x15, strs + 0x140, self);
@@ -1401,13 +1400,13 @@ void fn_80137DF8(void)
             debugPrintfxy(0x100, 0xf3, strs + 0x204, sp[-0x1d], sp[-0x1e]);
             debugPrintfxy(0x100, 0xff, strs + 0x204, sp[-0x1f], sp[-0x20]);
             debugPrintfxy(0x10, y, strs + 0x210);
-            for (r = 0; (r & 0xff) < 0x20; r += 8)
+            for (r = 0; (u8)r < 0x20; r += 8)
             {
                 rr = r & 0xff;
                 debugPrintfxy(0xc, y + 0xc, &lbl_803DBC34, rr, rr + 7);
                 rp = gErrContext + rr * 4;
                 debugPrintfxy(0x10, y + 0x18, strs + 0x22c,
-                              *(u32*)(gErrContext + (r & 0xff) * 4), *(u32*)(rp + 4),
+                              *(u32*)(gErrContext + (u8)r * 4), *(u32*)(rp + 4),
                               *(u32*)(rp + 8), *(u32*)(rp + 0xc));
                 y += 0x24;
                 rp = gErrContext + rr * 4;
@@ -1429,32 +1428,31 @@ void fn_80137DF8(void)
     {
         if (enableDebugText != 0)
         {
-            x = 0;
-            col = x;
-            for (; x < 0x280; x++)
+            xc[0] = 0;
+            for (xc[1] = xc[0]; xc[0] < 0x280; xc[0]++)
             {
                 row = 0;
                 for (n = 0; n < 60; n++)
                 {
                     fbrow = (u16*)((char*)debugDrawFrameBuffer + row);
-                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                     fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x500));
-                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                     fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xA00));
-                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                     fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xF00));
-                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                     fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1400));
-                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                     fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1900));
-                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                     fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00));
-                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                     fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x2300));
-                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    *(u16*)((char*)fbrow + xc[1]) = 0x1080;
                     row += 0x2800;
                 }
-                col += 2;
+                xc[1] += 2;
             }
         }
         if (enableDebugText != 0)
