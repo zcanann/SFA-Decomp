@@ -587,3 +587,55 @@ void Effect14_release(void)
 void Effect14_initialise(void)
 {
 }
+
+/* .sdata2 constant pool */
+const f32 lbl_803E00A8 = 0.001f;
+const f32 lbl_803E00AC = 0.1f;
+const f32 lbl_803E00B0 = 1.0f;
+const f32 lbl_803E00B4 = 0.0003f;
+const f32 lbl_803E00B8 = 0.3f;
+const f32 lbl_803E00BC = 0.0f;
+const f32 lbl_803E00C0 = 0.02f;
+const f32 lbl_803E00C4 = 0.00035f;
+const f32 lbl_803E00C8 = 0.035f;
+const f32 lbl_803E00CC = 0.01f;
+const f32 lbl_803E00D0 = 0.0005f;
+const f32 lbl_803E00D4 = 0.002f;
+const f32 lbl_803E00D8 = 0.05f;
+const f32 lbl_803E00DC = 0.185f;
+const f32 lbl_803E00E0 = 0.000288f;
+const f32 lbl_803E00E4 = 0.0001f;
+const f32 lbl_803E00E8 = 0.5f;
+const f32 lbl_803E00EC = 0.2f;
+const f32 lbl_803E00F0 = 5e-05f;
+const f32 lbl_803E00F4 = 2e-05f;
+const f32 lbl_803E00F8[2] = { 1e-05f, 0.0f };
+const f64 lbl_803E0100 = 4503601774854144.0;
+const f32 gEffect16Pi = 3.1415927f;
+const f32 gEffect16SinPhaseScale = 32768.0f;
+const f32 lbl_803E0110 = 0.0f;
+const f32 lbl_803E0114 = 1.5e-05f;
+const f32 lbl_803E0118 = 0.005f;
+const f32 lbl_803E011C = 1.0f;
+const f32 lbl_803E0120 = 0.05f;
+const f32 lbl_803E0124 = 5e+01f;
+const f32 lbl_803E0128 = 1e+02f;
+const f32 lbl_803E012C = 0.001f;
+const f32 lbl_803E0130 = 0.0003f;
+const f32 lbl_803E0134 = 0.01f;
+const f32 lbl_803E0138 = 0.04f;
+const f32 lbl_803E013C = 0.02f;
+const f32 lbl_803E0140 = 5e-05f;
+const f32 lbl_803E0144 = 3.0f;
+const f32 lbl_803E0148 = 1e+01f;
+const f32 lbl_803E014C = 0.0022f;
+const f32 lbl_803E0150 = 0.002f;
+const f32 lbl_803E0154 = 0.00012f;
+const f32 lbl_803E0158 = 0.0021f;
+const f32 lbl_803E015C = 0.0015f;
+const f32 lbl_803E0160 = 0.0075f;
+const f32 lbl_803E0164 = 0.03f;
+const f32 lbl_803E0168 = 2.0f;
+const f32 lbl_803E016C = 0.000945f;
+const f32 lbl_803E0170 = 0.0002f;
+const f32 lbl_803E0174 = 0.3f;

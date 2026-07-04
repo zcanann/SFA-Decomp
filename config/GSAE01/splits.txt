@@ -256,7 +256,7 @@ main/dll/dll_0025_effect12.c:
 main/dll/dll_0027_effect14.c:
 	.text       start:0x800C65B4 end:0x800C8008
 	.data       start:0x80310E10 end:0x80310E88
-	.sdata2     start:0x803E0098 end:0x803E00A8
+	.sdata2     start:0x803E0098 end:0x803E0178
 
 main/dll/dll_0029_effect16.c:
 	.text       start:0x800C8008 end:0x800C9140
