@@ -26,3 +26,6 @@ void projroombeam_initialise(void)
 }
 
 char sProjroombeamDoNoLongerSupported[] = "<projroombeam Do>No Longer supported \n";
+
+/* descriptor/ptr table auto 0x803194a8-0x803194c8 */
+u32 lbl_803194A8[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projlightning1_initialise, (u32)projlightning1_release, 0x00000000, (u32)projlightning1_doUnsupported };
