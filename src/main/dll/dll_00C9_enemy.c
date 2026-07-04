@@ -1502,7 +1502,7 @@ typedef struct EnemyPlacement
     s16 gameBit;
     s16 gameBit2;
     u8 pad1C[0x28 - 0x1C];
-    s8 unk28;
+    s8 objectFlagBits; /* 0x28: low 3 bits OR'd into GameObject.objectFlags */
     u8 aggroRangeByte; /* 0x29 */
     s8 rotXByte;
     u8 flags2B; /* 0x2B: bit 3 (0x8) reloads spawn position before the trigger sequence */
@@ -1984,7 +1984,7 @@ void enemy_init(int obj, u8* setup, int flag)
         ((EnemyState*)state)->intervalTimer = fz;
         ((EnemyState*)state)->unk2B4 = -1;
         ((EnemyState*)state)->unk2B6 = ((EnemyState*)state)->unk2B4;
-        ((GameObject*)obj)->objectFlags |= ((EnemyPlacement*)setup)->unk28 & 7;
+        ((GameObject*)obj)->objectFlags |= ((EnemyPlacement*)setup)->objectFlagBits & 7;
         ((EnemyState*)state)->unk2B0 = ((EnemyPlacement*)setup)->unk32;
         ((GameObject*)obj)->animEventCallback = enemy_animEventCallback;
         switch (((GameObject*)obj)->anim.seqId)
