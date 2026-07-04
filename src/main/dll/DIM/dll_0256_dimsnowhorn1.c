@@ -12,6 +12,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define OBJGROUP_SNOWHORN_PUZZLE   0x13  /* puzzle-target object group for nearest-object search */
+#define DIMSNOWHORN1_OBJGROUP     0xa   /* snowhorn own add/remove group */
 #define GAMEBIT_SNOWHORN_RIDING    0x3e3 /* set while Fox is mounted on the SnowHorn */
 #define GAMEBIT_SNOWHORN_AIR_DRAIN 0x3e2 /* set to drain the air meter each frame */
 #define GAMEBIT_SNOWHORN_AIR_RESET 0x3e9 /* set to reset the air meter to full */
@@ -1127,7 +1128,7 @@ int DIMSnowHorn1_getObjectTypeId(void) { return 0x43; }
 
 void DIMSnowHorn1_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 0xa);
+    ObjGroup_RemoveObject(obj, DIMSNOWHORN1_OBJGROUP);
 }
 
 void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -1501,7 +1502,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     s8 idx;
     ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)p2 + 0x18) << 8);
     ((GameObject*)obj)->animEventCallback = (void*)DIMSnowHorn1_animEventCallback;
-    ObjGroup_AddObject(obj, 0xa);
+    ObjGroup_AddObject(obj, DIMSNOWHORN1_OBJGROUP);
     inner = ((GameObject*)obj)->extra;
     inner->mode = *(u8*)((char*)p2 + 0x19);
     inner->advanceCountThreshold = 5;
