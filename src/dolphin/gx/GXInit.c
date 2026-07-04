@@ -331,3 +331,7 @@ void __GXInitGX()
     GXSetGPMetric(GX_PERF0_NONE, GX_PERF1_NONE);
     GXClearGPMetric();
 }
+
+/* .sdata2 float-pool constants referenced via extern by GX code */
+const f32 lbl_803E7678 = 256.0f;
+const f32 lbl_803E767C = 0.0f;
