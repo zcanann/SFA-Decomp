@@ -16,6 +16,10 @@
 #include "main/dll/dll_0106_scarab.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* shared item-pickup ObjMsg protocol (see dll_00ED_collectible / dll_00FF_magicdust) */
+#define SCARAB_MSG_IN_RANGE 0x7000a /* sent to player when the scarab is in grab range */
+#define SCARAB_MSG_PICKUP   0x7000b /* player collected: award money and despawn */
+
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
 STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
@@ -142,7 +146,7 @@ void scarab_update(int obj)
         {
             switch (msg)
             {
-            case 0x7000b:
+            case SCARAB_MSG_PICKUP:
                 money1 = gScarabMoneyValues;
                 playerAddMoney(player, *((u8*)&money1 + ((ScarabState*)state)->moneyKind));
                 ((ScarabState*)state)->despawnTimer = 0x50;
@@ -489,7 +493,7 @@ void scarab_update(int obj)
                         ((ScarabState*)state)->msgParamA = -1;
                         ((ScarabState*)state)->msgParamB = 0;
                         ((ScarabState*)state)->msgParamC = lbl_803E3A00;
-                        ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x2c);
+                        ObjMsg_SendToObject(player, SCARAB_MSG_IN_RANGE, obj, state + 0x2c);
                         GameBit_Set(0x910, 1);
                         ((ScarabState*)state)->flags28 |= 1;
                     }
