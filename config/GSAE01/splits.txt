@@ -1005,6 +1005,7 @@ main/dll/dll_00DF_hagabon.c:
 
 main/dll/dll_00E0_swarmbaddie.c:
 	.text       start:0x8014EE8C end:0x8014F620
+	.data       start:0x8031DCC0 end:0x8031DCF8
 
 main/dll/dll_00E1_wispbaddie.c:
 	.text       start:0x8014F620 end:0x801504F8
@@ -1052,6 +1053,7 @@ main/dll/dll_00CC_chukchuk.c:
 
 main/dll/dll_00CD_iceball.c:
 	.text       start:0x8015FBEC end:0x801601C4
+	.data       start:0x8031FFD0 end:0x80320008
 
 main/dll/dll_00CB_dllcb.c:
 	.text       start:0x801601C4 end:0x80161130
@@ -1061,6 +1063,7 @@ main/dll/dll_80161130.c:
 
 main/dll/dll_00D0_grimble.c:
 	.text       start:0x80161F0C end:0x80162FC0
+	.data       start:0x80320178 end:0x803201B0
 
 main/dll/dll_00CF_cannonclaw.c:
 	.text       start:0x80162FC0 end:0x801631C8
