@@ -15,6 +15,8 @@
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 
+#define DIMBOSSTONSIL_OBJGROUP 3
+
 #define MODEL_LIGHT_KIND_POINT 2
 
 extern void Music_Trigger(int id, int arg);
@@ -246,7 +248,7 @@ void DIMbosstonsil_free(void* obj)
     DIMbosstonsilState* state;
 
     state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, DIMBOSSTONSIL_OBJGROUP);
     (*(void (**)(void*, DIMbosstonsilState*, int))(*(int*)gBaddieControlInterface + 0x40))(obj, state, 1);
     if (gDIMbosstonsilLight != NULL)
     {
