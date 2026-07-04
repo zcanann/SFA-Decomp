@@ -201,7 +201,7 @@ void SB_ShipGun_update(int obj)
     placement = (int)((GameObject*)obj)->anim.placementData;
     if (((GameObject*)((GameObject*)obj)->anim.parent)->anim.seqId == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE)
     {
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
         ((SBShipGunState*)state)->active = 0;
     }
     else
@@ -251,11 +251,11 @@ void SB_ShipGun_update(int obj)
                     ((SBShipGunState*)state)->fireTimer = 0;
                 }
             }
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             break;
         case SB_SHIPGUN_PHASE_ACTIVE:
             {
-                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 1;
+                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= OBJHITS_PRIORITY_STATE_ENABLED;
                 placement = SB_GALLEON_VTBL(galleon)->getPhase(galleon);
                 if ((placement == 0) &&
                     (hit = ObjHits_GetPriorityHit(obj, 0, 0, 0), hit != 0))
@@ -382,7 +382,7 @@ void SB_ShipGun_update(int obj)
             }
             break;
         case SB_SHIPGUN_PHASE_DEATH_TRIGGER:
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             if (*(char*)&((SBShipGunState*)state)->health == '\0')
             {
                 spawnExplosion(obj, lbl_803E5890, 1, 1, 1, 0, 1, 1, 0);
@@ -410,7 +410,7 @@ void SB_ShipGun_update(int obj)
             }
             break;
         case SB_SHIPGUN_PHASE_SMOLDERING:
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             if (((void*)galleon != NULL) &&
                 (galleon = SB_GALLEON_VTBL(galleon)->getPhase(galleon), galleon == 0))
             {
