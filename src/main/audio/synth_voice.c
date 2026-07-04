@@ -339,6 +339,7 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
     u32 vid;
     u32 vi;
     s32 p;
+    u8 pri;
     extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
     extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
     extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol,
@@ -353,7 +354,7 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
     {
         p = 0xFF;
     }
-    prio = p;
+    pri = p;
 
     switch (id & 0xC000)
     {
@@ -376,10 +377,10 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
         {
             return handle;
         }
-        return macStart(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,
+        return macStart(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section,
                         step, trackid, 1, vGroup, studio, itd);
     case 0x4000:
-        vid = StartKeymap(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,
+        vid = StartKeymap(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section,
                           step, trackid, 1, vGroup, studio, itd);
         if (vid != 0xFFFFFFFF)
         {
@@ -392,7 +393,7 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
         }
         return vid;
     case 0x8000:
-        vid = audioLayerFn_8026f8b8(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,
+        vid = audioLayerFn_8026f8b8(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section,
                                     step, trackid, 1, vGroup, studio, itd);
         if (vid != 0xFFFFFFFF)
         {
