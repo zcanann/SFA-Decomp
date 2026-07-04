@@ -3131,7 +3131,7 @@ main/audio/snd_synth_api.c:
 
 main/audio/synth_job_init.c:
 	.text       start:0x80272EA4 end:0x80272F70
-	.bss        start:0x803BE378 end:0x803BFC78
+	.bss        start:0x803BDA74 end:0x803BFC78
 
 main/audio/synth_jobs.c:
 	extab       start:0x800057C8 end:0x800057F0
@@ -3246,6 +3246,7 @@ main/audio/sal_studio.c:
 	extab       start:0x80005A08 end:0x80005A30
 	extabindex  start:0x8000629C end:0x800062D8
 	.text       start:0x8027BA04 end:0x8027C48C
+	.bss        start:0x803CC1E0 end:0x803CC8C0
 
 main/audio/hw_dspctrl.c:
 	extab       start:0x80005A30 end:0x80005A50

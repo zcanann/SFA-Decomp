@@ -1,6 +1,8 @@
 #include "main/audio/synth_job.h"
 
 extern u8 lbl_803BD150[];
+u8 lbl_803BDA74[0x480];
+u8 lbl_803BDEF4[0x484];
 SynthJob synthJobTable[64];
 extern u8 synthJobTableCountdown;
 extern u8 synthJobTablePeriod;
