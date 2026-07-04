@@ -394,8 +394,7 @@ void fn_80152B90(int* obj, u8* state)
     *(f32*)(state + 0x334) = *(f32*)(state + 0x334) - timeDelta;
     if (*(f32*)(state + 0x334) <= lbl_803E2868)
     {
-        *(f32*)(state + 0x334) = (f32)(int)
-        randomGetRange(0x3c, 0x78);
+        *(f32*)(state + 0x334) = (f32)(int)randomGetRange(0x3c, 0x78);
         Sfx_PlayFromObject((u32)obj, 0x31);
     }
     *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
@@ -430,9 +429,8 @@ int fn_80152370(int obj, int p2)
                                 *(int*)&((GameObject*)obj)->anim.parent);
 }
 
-#pragma scheduling on
+/* scheduling stays off; only peephole flips on for the next two handlers */
 #pragma peephole on
-#pragma scheduling off
 void fn_80152A94(int obj, int p)
 {
     extern f32 lbl_803E2850;
@@ -480,7 +478,6 @@ extern f32 lbl_803E2804;
 extern f32 lbl_803E2808;
 extern f32 lbl_803E280C;
 
-#pragma scheduling off
 #pragma peephole off
 void fn_801522E0(int* obj, u8* state)
 {
@@ -500,7 +497,7 @@ void fn_801522E0(int* obj, u8* state)
     ((BaddieState*)state)->unk318 = fz;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fz;
-    if ((s8) * ((s8*)sub + 46) != -1)
+    if (*((s8*)sub + 0x2e) != -1)
     {
         *(int*)&((BaddieState*)state)->controlFlags |= 1;
     }
