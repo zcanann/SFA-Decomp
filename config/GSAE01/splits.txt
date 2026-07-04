@@ -1151,7 +1151,7 @@ main/dll/DIM/dll_00C7_dim2roofrub.c:
 
 main/dll/dll_00C8_depthoffieldpoint.c:
 	.text       start:0x8016CD48 end:0x8016CEE8
-	.data       start:0x80320868 end:0x803208A0
+	.data       start:0x80320868 end:0x8032090C
 
 main/dll/dll_00E2_staff.c:
 	.text       start:0x8016CEE8 end:0x8016F16C
