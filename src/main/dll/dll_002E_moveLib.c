@@ -1047,3 +1047,8 @@ ObjectDescriptor16WithPadding dll_2E = {
     },
     0,
 };
+
+/* descriptor/ptr table auto 0x8031a148-0x8031a1c8 */
+u32 lbl_8031A148[12] = { 0xffffffff, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
+u32 lbl_8031A178[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, (u32)TitleScreenInit_initialise, (u32)TitleScreenInit_release, 0x00000000, (u32)TitleScreenInit_frameStart, (u32)TitleScreenInit_frameEnd, (u32)TitleScreenInit_render };
+u32 lbl_8031A1A0[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, (u32)n_rareware_initialise, (u32)n_rareware_release, 0x00000000, (u32)n_rareware_frameStart, (u32)n_rareware_frameEnd, (u32)n_rareware_render };
