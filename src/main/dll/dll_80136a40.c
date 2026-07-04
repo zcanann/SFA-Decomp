@@ -56,11 +56,9 @@ typedef struct TrickyImpressState
 } TrickyImpressState;
 
 extern u32 ObjGroup_ContainsObject();
-extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern u64 ObjLink_DetachChild();
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern const f32 lbl_803E23E8;
@@ -79,8 +77,6 @@ extern u32 getScreenResolution(void);
 extern int gDebugRecordCount;
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
-extern u8 gameTimerIsRunning(void);
-extern void gameTimerRun(void* obj);
 extern int* Obj_GetActiveModel(int obj);
 extern f32 lbl_803E2408;
 extern f32 timeDelta;
