@@ -857,6 +857,7 @@ config.libs = [
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objprint_dolphin.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/pi_dolphin.c"),
+            Object(MatchingFor("GSAE01"), "main/boot_logo.s"),
             Object(NonMatching, "main/rcp_dolphin.c"),
             Object(NonMatching, "main/shader.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/tex_dolphin.c", cflags=cflags_dll_noopt),
