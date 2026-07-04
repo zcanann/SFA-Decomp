@@ -280,7 +280,7 @@ main/dll/dll_002C_effect19.c:
 
 main/dll/dll_002D_effect20.c:
 	.text       start:0x800CD430 end:0x800D5530
-	.data       start:0x80311128 end:0x803112E4
+	.data       start:0x80311128 end:0x80311518
 
 main/dll/dll_0003_checkpoint.c:
 	.text       start:0x800D5530 end:0x800D7568
