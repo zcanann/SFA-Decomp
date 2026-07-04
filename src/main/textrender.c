@@ -10,6 +10,24 @@
 #include "main/audio/sfx_trigger_ids.h"
 extern int saveFileStruct_isCheatActive(u8 idx);
 
+/*
+ * In-string formatting control codes (Unicode PUA, 0xe000..0xf8ff) and the
+ * per-window horizontal alignment they select (win[0x12]). The align codes
+ * set the mode; the realign switch reads it back to place the line.
+ */
+#define TEXT_CTRL_SCALE 0xf8f4
+#define TEXT_CTRL_LANGUAGE 0xf8f7
+#define TEXT_CTRL_ALIGN_LEFT 0xf8f8
+#define TEXT_CTRL_ALIGN_RIGHT 0xf8f9
+#define TEXT_CTRL_ALIGN_CENTER 0xf8fa
+#define TEXT_CTRL_ALIGN_JUSTIFY 0xf8fb
+#define TEXT_CTRL_COLOR 0xf8ff
+
+#define TEXT_ALIGN_LEFT 0
+#define TEXT_ALIGN_RIGHT 1
+#define TEXT_ALIGN_CENTER 2
+#define TEXT_ALIGN_JUSTIFY 3
+
 u16*
 FUN_80017460(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4,
              u64 fwdArg5, u64 fwdArg6, u64 fwdArg7, u64 fwdArg8, u32 arg9
@@ -208,29 +226,29 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             }
             switch (ch)
             {
-            case 0xf8f4:
+            case TEXT_CTRL_SCALE:
                 lbl_803DC9A0 = params[0] * lbl_803DE708;
                     break;
-                case 0xf8f7:
+                case TEXT_CTRL_LANGUAGE:
                     glyphLang = params[0];
                     break;
-                case 0xf8f8:
-                    win[0x12] = 0;
+                case TEXT_CTRL_ALIGN_LEFT:
+                    win[0x12] = TEXT_ALIGN_LEFT;
                     realign = 1;
                     break;
-                case 0xf8f9:
-                    win[0x12] = 1;
+                case TEXT_CTRL_ALIGN_RIGHT:
+                    win[0x12] = TEXT_ALIGN_RIGHT;
                     realign = 1;
                     break;
-                case 0xf8fa:
-                    win[0x12] = 2;
+                case TEXT_CTRL_ALIGN_CENTER:
+                    win[0x12] = TEXT_ALIGN_CENTER;
                     realign = 1;
                     break;
-                case 0xf8fb:
-                    win[0x12] = 3;
+                case TEXT_CTRL_ALIGN_JUSTIFY:
+                    win[0x12] = TEXT_ALIGN_JUSTIFY;
                     realign = 1;
                     break;
-                case 0xf8ff:
+                case TEXT_CTRL_COLOR:
                     if (mode == 0)
                     {
                         {
@@ -273,22 +291,22 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
         {
             switch (win[0x12])
             {
-            case 0:
+            case TEXT_ALIGN_LEFT:
                 spaceExtra = lbl_803DE704;
                 break;
-            case 1:
+            case TEXT_ALIGN_RIGHT:
                 spaceExtra = lbl_803DE704;
                 gameTextMeasureString(p, lbl_803DC9A0, &measW, NULL, 0, 0, -1);
                 x = (f32) * (s16*)(win + 0x14) +
                     ((f32)(u32) * (u16*)(win + 8) - measW);
                 break;
-            case 2:
+            case TEXT_ALIGN_CENTER:
                 spaceExtra = lbl_803DE704;
                 gameTextMeasureString(p, lbl_803DC9A0, &measW, NULL, 0, 0, -1);
                 x = ((f32)(u32) * (u16*)(win + 8) - measW) * lbl_803DE70C +
                     (f32) * (s16*)(win + 0x14);
                 break;
-            case 3:
+            case TEXT_ALIGN_JUSTIFY:
                 {
                     int acc;
                     int spaceCount;
@@ -580,10 +598,10 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
             }
             switch (ch)
             {
-            case 0xf8f4:
+            case TEXT_CTRL_SCALE:
                 scale = params[0] * lbl_803DE708;
                 break;
-            case 0xf8f7:
+            case TEXT_CTRL_LANGUAGE:
                 glyphLang = params[0];
                 tbl = &lbl_802C8680[glyphLang * 16];
                 if (glyphLang != 5)
@@ -2743,7 +2761,7 @@ void subtitleUpdateAndDraw(int a)
                 SubtitleCmd* p = &cmds[n];
                 while (p--, n-- != 0)
                 {
-                    if (p->code == 0xf8ff)
+                    if (p->code == TEXT_CTRL_COLOR)
                     {
                         SubtitleCmd* e = &cmds[n];
                         gSubtitleColorR = e->r;
