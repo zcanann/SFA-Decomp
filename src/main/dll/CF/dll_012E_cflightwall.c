@@ -9,6 +9,9 @@ extern f32 lbl_803E3EE8;
 extern f32 lbl_803E3EEC;
 extern f32 lbl_803E3EF0;
 
+#define CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED 0x8000
+#define CFLIGHTWALL_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 int cflightwall_getExtraSize(void) { return 0x0; }
 
 int cflightwall_getObjectTypeId(void) { return 0x0; }
@@ -42,7 +45,7 @@ void cflightwall_init(s16* obj, u8* def)
         ((GameObject*)obj)->anim.rootMotionScale =
             ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     }
-    ((GameObject*)obj)->objectFlags |= 0xA000;
+    ((GameObject*)obj)->objectFlags |= CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED | CFLIGHTWALL_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void cflightwall_release(void)
