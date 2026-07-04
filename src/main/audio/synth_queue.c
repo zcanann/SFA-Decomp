@@ -742,3 +742,5 @@ done:
         gSynthVoices[found & 0x7fffffffu].pendingUpdate.flags &= ~8;
     }
 }
+
+SynthVoice gSynthVoices[SYNTH_MAX_VOICES];

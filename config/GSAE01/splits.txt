@@ -3068,6 +3068,7 @@ main/audio/synth_queue.c:
 	extab       start:0x80005630 end:0x80005650
 	extabindex  start:0x80005CD8 end:0x80005D08
 	.text       start:0x8026C488 end:0x8026D630
+	.bss        start:0x803B0950 end:0x803BCC90
 
 main/audio/synth_channel.c:
 	.text       start:0x8026D630 end:0x8026D6E4
