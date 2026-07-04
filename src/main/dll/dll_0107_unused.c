@@ -16,6 +16,9 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 
+/* object group this object joins */
+#define UNUSED_OBJGROUP 0x10
+
 #define PAD_BUTTON_A 0x100
 #define UNUSED107_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
 
@@ -444,7 +447,7 @@ void fn_801862CC(int obj, int p)
     p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
     *(int*)&((ObjHitsPriorityState*)p54)->objectHitMask = 16;
     ObjHits_DisableObject(obj);
-    ObjGroup_AddObject(obj, 16);
+    ObjGroup_AddObject(obj, UNUSED_OBJGROUP);
     sub->ventState = 0;
     sub->launchPhase = 0;
     {
