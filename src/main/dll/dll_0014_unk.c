@@ -2237,8 +2237,8 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
     normalIdx = 0;                                                                     \
     for (edge = 0; edge < 4; edge++) {                                                   \
         if (OBJFSA_WG(GRP)->planeOffsets[edge] +                                   \
-                (exitFx * (f32)((s16 *)OBJFSA_WG(GRP))[normalIdx & 0xff] +                 \
-                 exitFz * (f32)((s16 *)OBJFSA_WG(GRP))[(normalIdx & 0xff) + 1]) >          \
+                (exitFx * (f32)((s16 *)OBJFSA_WG(GRP))[normalIdx] +                 \
+                 exitFz * (f32)((s16 *)OBJFSA_WG(GRP))[normalIdx + 1]) >          \
             lbl_803E05F0) {                                                     \
             break;                                                              \
         }                                                                       \
@@ -2271,7 +2271,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     u32 gi;
     u8 groupA;
     u8 edge;
-    u32 normalIdx;
+    u8 normalIdx;
     int pairId;
     int checksum;
     int searchCount;
