@@ -11,6 +11,8 @@
 #include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define SNOWBIKE_OBJGROUP 0xa
+
 typedef struct SnowBikeMountState
 {
     s16 savedRotX;
@@ -458,7 +460,7 @@ void SnowBike_free(int obj)
     int t;
 
     t = *(int*)&((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 0xa);
+    ObjGroup_RemoveObject(obj, SNOWBIKE_OBJGROUP);
     i = 0;
     p = (char*)t;
     for (; i < 9; i++)
@@ -768,7 +770,7 @@ static inline void SnowBike_initBody(int obj, u8* params, int flag)
     ((SnowBikeState*)state)->posSnapshotY = ((GameObject*)obj)->anim.localPosY;
     ((SnowBikeState*)state)->posSnapshotZ = ((GameObject*)obj)->anim.localPosZ;
     ((GameObject*)obj)->animEventCallback = SnowBike_animEventCallback;
-    ObjGroup_AddObject(obj, 10);
+    ObjGroup_AddObject(obj, SNOWBIKE_OBJGROUP);
     if (flag == 0)
     {
         i = 0;
