@@ -113,6 +113,6 @@ int fn_8027A660(int state)
 int adsrSetup(int state)
 {
     ADSR_VARS* adsr = (ADSR_VARS*)state;
-    adsr->state = 0;
+    adsr->state = ADSR_STATE_ATTACK;
     return fn_8027A660(state);
 }
