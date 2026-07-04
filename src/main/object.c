@@ -1319,7 +1319,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             }
             ObjModel_LoadRenderOpTextures(obj->models[idx], (int)obj);
             modelInitBones(obj->scale, obj->models[idx]);
-            if (((ObjModelInstance*)obj->def)->flags & 0x800)
+            if (((ObjModelInstance*)obj->def)->flags & OBJDEF_FLAG_DEFERRED_RENDER)
             {
                 ObjModel_SetRenderCallback(obj->models[idx], objCallback_80074d04);
             }
@@ -1350,7 +1350,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             }
             ObjModel_LoadRenderOpTextures(obj->models[i], (int)obj);
             modelInitBones(obj->scale, obj->models[i]);
-            if (((ObjModelInstance*)obj->def)->flags & 0x800)
+            if (((ObjModelInstance*)obj->def)->flags & OBJDEF_FLAG_DEFERRED_RENDER)
             {
                 ObjModel_SetRenderCallback(obj->models[i], objCallback_80074d04);
             }
