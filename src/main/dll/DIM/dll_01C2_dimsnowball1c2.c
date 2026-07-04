@@ -27,10 +27,10 @@ typedef struct Dimsnowball1c2Placement
     u8 colorA; /* 0x7 -> spawn setup head.unk04[3] */
     u8 pad8[0x14 - 0x8];
     s32 mapId;
-    s16 unk18; /* init: copied to extra (DimicewallState.unk2 + word 0) */
-    u8 unk1A;
-    u8 unk1B;
-    s8 unk1C;
+    s16 initialCountdown; /* init: copied to extra (DimicewallState.unk2 + word 0) */
+    u8 childRot; /* copied to spawned child placement 0x1A (rotation) */
+    u8 childZOffset; /* base for spawned child placement 0x1C (+random) */
+    s8 rotByte; /* 0x1C rotation byte; also -> child placement 0x18 */
     u8 pad1D[0x1E - 0x1D];
     s16 unk1E;
 } Dimsnowball1c2Placement;
@@ -82,8 +82,8 @@ void dimsnowball1c2_init(int obj, u8* p)
     char* inner;
     ((GameObject*)obj)->anim.rotX = (s16)((u32)p[0x1c] << 8);
     inner = ((GameObject*)obj)->extra;
-    ((DimicewallState*)inner)->unk2 = def->unk18;
-    *(s16*)inner = def->unk18;
+    ((DimicewallState*)inner)->unk2 = def->initialCountdown;
+    *(s16*)inner = def->initialCountdown;
     ((GameObject*)obj)->objectFlags |= (DIMSNOWBALL1C2_OBJFLAG_HIDDEN | DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED);
 }
 
@@ -110,12 +110,12 @@ void dimsnowball1c2_update(int* obj)
                 np->posZ = ((GameObject*)obj)->anim.localPosZ;
                 np->mapId = def->mapId;
                 {
-                    int t1c = def->unk1C;
+                    int t1c = def->rotByte;
                     *(s8*)((char*)np + 0x18) = t1c;
                 }
-                *(s16*)((char*)np + 0x1a) = def->unk1A;
+                *(s16*)((char*)np + 0x1a) = def->childRot;
                 *(s16*)((char*)np + 0x1c) =
-                    (f32)(u32)def->unk1B +
+                    (f32)(u32)def->childZOffset +
                     (f32)(int)randomGetRange(0, 100) / lbl_803E4864;
                 Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
                 *(s16*)extra = ((Dimsnowball1c2State*)extra)->spawnPeriod;
