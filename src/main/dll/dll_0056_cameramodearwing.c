@@ -157,9 +157,6 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
 }
 #pragma opt_common_subs reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
 #pragma opt_common_subs off
 #pragma opt_propagation off
 void CameraModeArwing_update(u8* obj)
