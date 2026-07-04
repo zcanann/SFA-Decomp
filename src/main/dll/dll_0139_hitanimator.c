@@ -143,7 +143,7 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
     int i;
     char* poly;
 
-    if ((desc->flags & 0x10) == 0)
+    if ((desc->flags & HITANIMATOR_SETUP_FLAG_SKIP_POLYS) == 0)
     {
         for (i = 0; i < ((MapBlockData*)block)->unk9A; i++)
         {
@@ -153,7 +153,7 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
                 if (state->activeBit != 0)
                 {
                     *(u32*)(poly + 0x10) &= ~2LL;
-                    if ((desc->flags & 0x2) != 0)
+                    if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
                     {
                         *(u32*)(poly + 0x10) &= ~1LL;
                     }
@@ -161,7 +161,7 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
                 else
                 {
                     *(int*)(poly + 0x10) |= 2;
-                    if ((desc->flags & 0x2) != 0)
+                    if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
                     {
                         *(int*)(poly + 0x10) |= 1;
                     }
@@ -169,7 +169,7 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
             }
         }
     }
-    if ((desc->flags & 0x2) != 0)
+    if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
     {
         for (i = 0; i < ((MapBlockData*)block)->unkA2; i++)
         {
