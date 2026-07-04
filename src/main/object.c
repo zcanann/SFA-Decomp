@@ -1126,6 +1126,14 @@ typedef struct LoadedObj
     int f108;
 } LoadedObj;
 
+/* loadCharacter model-load config word (flags29), passed to ObjModel_Load etc. */
+#define OBJLOAD_FLAG_HAS_SHADOW 0x0002   /* modelDef->shadowType != 0 */
+#define OBJLOAD_FLAG_ANIM_EVENTS 0x0040  /* allocate anim move-event table */
+#define OBJLOAD_FLAG_WEAPON_DA 0x0100    /* allocate weapon-DA table */
+#define OBJLOAD_FLAG_SINGLE_MODEL 0x0200 /* skip multi-model loop (modelDef->flags & 1) */
+#define OBJLOAD_FLAG_INDEXED_MODEL 0x0400 /* load one model at index (flags29>>11 & 0xf) */
+#define OBJLOAD_FLAG_SHADOW_TYPE3 0x8000  /* modelDef->shadowType == 3 */
+
 void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused)
 {
     int id;
@@ -1254,24 +1262,24 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     }
     if (modelDef->shadowType != 0)
     {
-        flags29 |= 2;
+        flags29 |= OBJLOAD_FLAG_HAS_SHADOW;
     }
     else
     {
-        flags29 &= ~2;
+        flags29 &= ~OBJLOAD_FLAG_HAS_SHADOW;
     }
     if (modelDef->shadowType == 3)
     {
-        flags29 |= 0x8000;
+        flags29 |= OBJLOAD_FLAG_SHADOW_TYPE3;
     }
     if (modelDef->flags & 1)
     {
-        flags29 |= 0x200;
+        flags29 |= OBJLOAD_FLAG_SINGLE_MODEL;
     }
     total = 0;
     i = 0;
     count = modelDef->modelCount;
-    if (flags29 & 0x400)
+    if (flags29 & OBJLOAD_FLAG_INDEXED_MODEL)
     {
         idx = (flags29 >> 0xb) & 0xf;
         if (idx < count)
@@ -1281,7 +1289,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             total += size;
         }
     }
-    else if (!(flags29 & 0x200))
+    else if (!(flags29 & OBJLOAD_FLAG_SINGLE_MODEL))
     {
         for (; i < count; i++)
         {
@@ -1298,7 +1306,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     ((ObjModelInstance*)obj->def)->flags |= 0x800000LL;
     i = 0;
     obj->f108 = 0;
-    if (flags29 & 0x400)
+    if (flags29 & OBJLOAD_FLAG_INDEXED_MODEL)
     {
         idx = (flags29 >> 0xb) & 0xf;
         if (idx < count)
@@ -1329,7 +1337,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             }
         }
     }
-    else if (!(flags29 & 0x200))
+    else if (!(flags29 & OBJLOAD_FLAG_SINGLE_MODEL))
     {
         for (; i < count; i++)
         {
@@ -1387,7 +1395,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     {
         obj->fb8 = 0;
     }
-    if ((flags29 & 0x40) || (((ObjModelInstance*)obj->def)->flags & 0x400000))
+    if ((flags29 & OBJLOAD_FLAG_ANIM_EVENTS) || (((ObjModelInstance*)obj->def)->flags & 0x400000))
     {
         seq2 = obj->seqId;
         tmp = roundUpTo4(cursor);
@@ -1397,7 +1405,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         ObjAnim_LoadMoveEvents((u8*)obj, seq2, obj->objAnimEventTable, 0, 1);
         cursor += 0x50;
     }
-    if ((flags29 & 0x100) && *(void**)obj->models != NULL)
+    if ((flags29 & OBJLOAD_FLAG_WEAPON_DA) && *(void**)obj->models != NULL)
     {
         tmp = roundUpTo4(cursor);
         obj->weaponDaTable = (ObjWeaponDaTable*)tmp;
@@ -1405,7 +1413,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         obj->weaponDaTable->entries = (s16*)cursor;
         cursor += 0x800;
     }
-    if ((flags29 & 2) && modelDef->shadowType != 0)
+    if ((flags29 & OBJLOAD_FLAG_HAS_SHADOW) && modelDef->shadowType != 0)
     {
         cursor = shadowInit(obj, cursor, 0);
     }
