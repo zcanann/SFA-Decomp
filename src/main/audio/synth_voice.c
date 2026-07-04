@@ -63,7 +63,6 @@ extern u8 synthAuxAMIDI;
 extern u8 synthAuxAIndex;
 extern u8* synthVoice;
 extern int synthRealTimeHi;
-extern int synthRealTimeLo;
 extern f32 lbl_803E77D0;
 
 typedef void (*SynthAuxCallback)(int active, u16* samples, u32 user);
