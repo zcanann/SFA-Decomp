@@ -32,6 +32,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 
+#define LARGECRATE_OBJFLAG_PARENT_SLACK 0x1000
 #define LARGECRATE_LINKED_ID_BASE 0x40000
 #define LARGECRATE_ROB_WAVE_DIRECT_ID 0x66
 #define LARGECRATE_ROB_WAVE_ID_65D0 0x65d0
@@ -159,7 +160,7 @@ void largecrate_updateConveyorSlide(int obj, int def)
 
     state31 = *(int*)&((GameObject*)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
-    if ((*(u16*)(*(int*)&((GameObject*)obj)->anim.parent + 0xb0) & 0x1000) != 0)
+    if ((*(u16*)(*(int*)&((GameObject*)obj)->anim.parent + 0xb0) & LARGECRATE_OBJFLAG_PARENT_SLACK) != 0)
     {
         ((GameObject*)obj)->anim.localPosX = ((LargeCrateState*)def)->homeX;
         ((GameObject*)obj)->anim.velocityX = 0.0f;
