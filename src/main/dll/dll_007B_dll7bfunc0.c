@@ -346,3 +346,7 @@ u8 gDll7BEffectResourceData[308] = {
     0, 11, 0, 12, 0, 0, 0, 50, 0, 200, 0, 50, 0, 0, 0, 0,
     0, 0, 0, 0,
 };
+
+/*__DATA_EXTERNS__*/
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_80314DE4[9] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, dll_7B_func00_nop, dll_7B_func01_nop, (void*)0x00000000, dll_7B_func03, (void*)0x00000000 };
