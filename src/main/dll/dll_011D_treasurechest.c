@@ -6,6 +6,12 @@
 #include "main/objhits.h"
 #include "main/resource.h"
 
+/* anim-sequence event opcodes consumed by treasurechest_SeqFn */
+#define TREASURECHEST_SEQEV_DIALOGUE     1 /* show setup dialogue */
+#define TREASURECHEST_SEQEV_STAFFBIT_SET 2 /* set StaffFlags b5 */
+#define TREASURECHEST_SEQEV_STAFFBIT_CLR 3 /* clear StaffFlags b5 */
+#define TREASURECHEST_SEQEV_OPENED       4 /* hide + disable the chest */
+
 STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
 STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
 STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
@@ -29,19 +35,19 @@ int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         eventId = animUpdate->eventIds[i];
         switch (eventId)
         {
-        case 1:
+        case TREASURECHEST_SEQEV_DIALOGUE:
             if (setup->dialogueId != 0)
             {
                 (*gGameUIInterface)->showNpcDialogue(setup->dialogueId, 0xc8, 0x8c, 0);
             }
             break;
-        case 2:
+        case TREASURECHEST_SEQEV_STAFFBIT_SET:
             ((StaffFlags*)state)->b5 = 1;
             break;
-        case 3:
+        case TREASURECHEST_SEQEV_STAFFBIT_CLR:
             ((StaffFlags*)state)->b5 = 0;
             break;
-        case 4:
+        case TREASURECHEST_SEQEV_OPENED:
             o->anim.flags = o->anim.flags | OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject((u32)o);
             break;
