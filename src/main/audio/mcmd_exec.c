@@ -177,14 +177,14 @@ void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
     case 0:
         if (state->midiSlot != 0xff)
         {
-            inpSetMidiCtrl(0x41, state->midiSlot, state->midiEvent, 0);
+            inpSetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent, 0);
         }
         MAC_CFLAGS(state) &= ~MAC_FLAG64(0, 0x400);
         return;
     case 1:
         if (state->midiSlot != 0xff)
         {
-            inpSetMidiCtrl(0x41, state->midiSlot, state->midiEvent, 0x7f);
+            inpSetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent, 0x7f);
         }
     init_port:
         if (!(MAC_CFLAGS(state) & MAC_FLAG64(0, 0x400)))
@@ -195,7 +195,7 @@ void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
         break;
     case 2:
         if (state->midiSlot != 0xff &&
-            (u16)inpGetMidiCtrl(0x41, state->midiSlot, state->midiEvent) > 0x1f80)
+            (u16)inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent) > 0x1f80)
         {
             goto init_port;
         }
@@ -486,7 +486,7 @@ void macHandleActive(McmdVoiceState* sv)
         sv->portamentoMode = 0;
         if (sv->midiSlot != 0xff)
         {
-            sv->portamentoCtrlValue = inpGetMidiCtrl(0x41, sv->midiSlot, sv->midiEvent);
+            sv->portamentoCtrlValue = inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, sv->midiSlot, sv->midiEvent);
         }
         else
         {
