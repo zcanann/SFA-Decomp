@@ -24,3 +24,6 @@ void projrobotfire_initialise(void)
 }
 
 char sProjrobotfireDoNoLongerSupported[] = "<projrobotfire Do>No Longer supported \n";
+
+/* descriptor/ptr table auto 0x803197b0-0x803197d0 */
+u32 lbl_803197B0[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projsquirt1_initialise, (u32)projsquirt1_release, 0x00000000, (u32)projsquirt1_doUnsupported };
