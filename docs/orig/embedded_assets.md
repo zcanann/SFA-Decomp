@@ -8,12 +8,18 @@ here so each reads as *identified and out-of-scope*, not as an unattributed gap 
 match. This mirrors `developer_artifacts.md`'s aim of turning anonymous blobs into named,
 understood anchors.
 
-## `0x802CC6A0`–`0x8030C6A0` — GX FIFO buffer image (256 KB)
+## `0x802CC6A0`–`0x8030C6A0` — Rareware boot-logo texture / GX FIFO buffer (256 KB)
 
+- **Identity (confirmed):** the **Rareware boot logo** — a GameCube-tiled intensity texture
+  (~128 px wide), verified by de-swizzling the region as a GX I8/I4 texture (32-byte tiles),
+  which resolves into the "R" emblem + "RAREWARE" wordmark. The linear byte layout looks like
+  structured static precisely because GC textures are tile-swizzled.
 - **Current placeholder:** the bulk of the auto object `auto_07_802CBE94_data`
   (dtk labels `lbl_802CC6A0`, `lbl_802D808E`, `lbl_802E802E`, `lbl_802F808D`).
-- **Proposed name:** `gGxFifoBuffer` — the variable `pi_dolphin.c:videoInit` hands to `GXInit`.
-- **Size:** `0x40000` (262,144 bytes).
+- **Proposed name:** `gRareLogoTexture` (its `.data` content). Note the same address is later
+  handed to `GXInit` by `pi_dolphin.c:videoInit` as the GPU FIFO base — the region is reused
+  as the FIFO once the boot logo is no longer needed.
+- **Size:** `0x40000` (262,144 bytes) — the ~128 KB texture padded to the buffer size with `0xFF`.
 
 ### Runtime role
 `videoInit()` copies the 256 KB to arena-top, then passes the same region to
