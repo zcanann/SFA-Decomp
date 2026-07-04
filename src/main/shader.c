@@ -1903,7 +1903,81 @@ int mapCoordsToId(int x, int z, int layerIdx)
 }
 #pragma dont_inline reset
 
-extern f32 sAabbCornerDirections[];
+/* .data block 0x8030E4B0-0x8030E7C4. Defined here (before
+ * frustumPlanes_updateAabbCornerIndices) so the compiler-emitted switch
+ * jumptable lands after it, matching the retail .data layout. */
+
+char sShaderDebugStrings[172] = {
+    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
+    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 52,
+    0, 0, 0, 60, 0, 0, 0, 56, 0, 0, 0, 60, 0, 0, 0, 64,
+    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
+    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
+    0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 52, 0, 0, 0, 56,
+    0, 0, 0, 68, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 56,
+    0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 60, 0, 0, 0, 52,
+    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
+    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 68, 0, 0, 0, 52,
+    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
+};
+
+s8 gShaderMapTextDirTable[120] = {
+    42, 42, 18, -1, 69, -1, -1, 44, 44, 23, 40, 71, 7, 70, 27, -1,
+    9, -1, 36, 15, -1, 17, -1, 24, 24, 24, 0, 16, 5, 8, 25, 14,
+    37, 20, 22, -1, -1, -1, 1, 12, 39, 72, -1, 10, 4, -1, -1, -1,
+    6, -1, 13, 43, 19, -1, 38, -1, 29, -1, 1, 1, 1, 1, 1, -1,
+    -1, -1, -1, 30, 31, 32, 33, 26, 34, 35, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4,
+    -1, -1, -1, -1, -1, -1, 0, 0,
+};
+
+f32 sAabbCornerDirections[24] = {
+    1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f,
+    -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
+    -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f,
+    1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
+};
+
+/* Screen-space (x,y) sample offsets used by the sun occlusion depth probe:
+ * center plus the four corners of a 30-pixel box. */
+int gSunOcclusionSampleOffsets[10] = {
+    0, 0, -15, -15, 15, -15, 15, 15, -15, 15,
+};
+
+/* Scene geometry draw-order table (referenced by lightmap.c). */
+u8 lbl_8030E65C[16] = { 7, 6, 5, 4, 3, 2, 1, 0, 8, 9, 10, 11, 12, 13, 14, 15 };
+
+/* Retail symbol lbl_8030E66C (0xD4 bytes): a second 16-entry draw-order table
+ * (referenced by lightmap.c) followed by the objShouldLoad debug strings;
+ * the splitter merged them into one object. */
+struct {
+    u8 drawOrder[16];
+    char passLevelObject[28];
+    char failManualLoad[24];
+    char failOutsideMap[40];
+    char failNoBlock[24];
+    char passBlockObject[28];
+    char passInRange[24];
+    char failOutOfRange[28];
+} lbl_8030E66C = {
+    { 0, 15, 1, 14, 2, 13, 3, 12, 4, 11, 5, 10, 6, 9, 8, 7 },
+    "LOAD PASS: Level object\n",
+    "LOAD FAIL: Manual load\n",
+    "LOAD FAIL: Outside map x=%f y=%f z=%f\n",
+    "LOAD FAIL: No block\n",
+    "LOAD PASS: Block object\n",
+    "LOAD PASS: In range %f\n",
+    "LOAD FAIL: Out of range\n",
+};
+
+char sTrackGlobalTexanimOverflowError[] = "TRACK ERROR: Global texanim overflow\n";
+
+char sTrackLoadBlockOverrunError[] = "trackLoadBlockEnd: track block overrun\n";
+
+char sTrackPiLockedFormat[] = "track piLocked %x\n";
+
+char sTrackCellCoordFormat[] = " cellx %i celly %i cellz %i ";
 
 void frustumPlanes_updateAabbCornerIndices(FrustumPlane* planes, int count)
 {
@@ -1958,6 +2032,36 @@ void frustumPlanes_updateAabbCornerIndices(FrustumPlane* planes, int count)
         planes++;
     }
 }
+
+/* Jumptables for switch statements in sceneDrawTransparentPolys (lightmap.c)
+ * and mapBlockBounds_HasCornerPastDepthThreshold (tex_dolphin.c). The original
+ * translation-unit boundary placed them in this unit's .data tail. */
+extern u8 sceneDrawTransparentPolys[];
+extern u8 mapBlockBounds_HasCornerPastDepthThreshold[];
+
+void* jumptable_8030E81C[10] = {
+    sceneDrawTransparentPolys + 0x64,
+    sceneDrawTransparentPolys + 0x88,
+    sceneDrawTransparentPolys + 0xD0,
+    sceneDrawTransparentPolys + 0xF0,
+    sceneDrawTransparentPolys + 0x110,
+    sceneDrawTransparentPolys + 0x1B4,
+    sceneDrawTransparentPolys + 0x258,
+    sceneDrawTransparentPolys + 0x2FC,
+    sceneDrawTransparentPolys + 0x30C,
+    sceneDrawTransparentPolys + 0x314,
+};
+
+void* jumptable_8030E844[8] = {
+    mapBlockBounds_HasCornerPastDepthThreshold + 0x60,
+    mapBlockBounds_HasCornerPastDepthThreshold + 0xC0,
+    mapBlockBounds_HasCornerPastDepthThreshold + 0x120,
+    mapBlockBounds_HasCornerPastDepthThreshold + 0x180,
+    mapBlockBounds_HasCornerPastDepthThreshold + 0x1E0,
+    mapBlockBounds_HasCornerPastDepthThreshold + 0x240,
+    mapBlockBounds_HasCornerPastDepthThreshold + 0x2A0,
+    mapBlockBounds_HasCornerPastDepthThreshold + 0x300,
+};
 
 int mapRectFn_8005a728(int bx, int bz, char* obj)
 {
@@ -3498,43 +3602,3 @@ int gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
 /* .bss glue 0x80386468-0x803868D8 */
 void* gLoadedRomListPages[0x78];
 u8 lbl_80386648[0x290];
-
-char sShaderDebugStrings[172] = {
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 52,
-    0, 0, 0, 60, 0, 0, 0, 56, 0, 0, 0, 60, 0, 0, 0, 64,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 52, 0, 0, 0, 56,
-    0, 0, 0, 68, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 56,
-    0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 60, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 68, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
-};
-
-s8 gShaderMapTextDirTable[120] = {
-    42, 42, 18, -1, 69, -1, -1, 44, 44, 23, 40, 71, 7, 70, 27, -1,
-    9, -1, 36, 15, -1, 17, -1, 24, 24, 24, 0, 16, 5, 8, 25, 14,
-    37, 20, 22, -1, -1, -1, 1, 12, 39, 72, -1, 10, 4, -1, -1, -1,
-    6, -1, 13, 43, 19, -1, 38, -1, 29, -1, 1, 1, 1, 1, 1, -1,
-    -1, -1, -1, 30, 31, 32, 33, 26, 34, 35, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4,
-    -1, -1, -1, -1, -1, -1, 0, 0,
-};
-
-f32 sAabbCornerDirections[24] = {
-    1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f,
-    -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
-    -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f,
-    1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
-};
-
-char sTrackGlobalTexanimOverflowError[] = "TRACK ERROR: Global texanim overflow\n";
-
-char sTrackLoadBlockOverrunError[] = "trackLoadBlockEnd: track block overrun\n";
-
-char sTrackPiLockedFormat[] = "track piLocked %x\n";
-
-char sTrackCellCoordFormat[] = " cellx %i celly %i cellz %i ";
