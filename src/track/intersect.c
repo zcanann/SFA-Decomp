@@ -1453,17 +1453,19 @@ void doColorFilter(u8* mod)
     Camera_RebuildProjectionMatrix();
 }
 
-static inline float distortSqrtf(float x) {
-    extern double lbl_803DEF10, lbl_803DEF18;
-    volatile float y;
-    double guess = __frsqrte((double)x);
-    guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * x);
-    guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * x);
-    guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * x);
-    y = (float)(x * guess);
-    return y;
+#define distortSqrtf(res, x) \
+{ \
+    extern double lbl_803DEF10, lbl_803DEF18; \
+    volatile float y; \
+    double guess = __frsqrte((double)(x)); \
+    guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * (x)); \
+    guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * (x)); \
+    guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * (x)); \
+    y = (float)((x) * guess); \
+    (res) = y; \
 }
 
+#pragma opt_common_subs off
 void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 {
     extern f32 playerMapOffsetX, playerMapOffsetZ;
@@ -1499,29 +1501,35 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXColor c1;
     GXColor c2;
     GXColor c3;
+    f32 x, z;
 
     *(u32*)&c0 = lbl_803DEEB8;
     *(u32*)&c1 = lbl_803DEEBC;
     *(u32*)&c2 = lbl_803DEEC0;
     *(u32*)&c3 = lbl_803DEEC4;
     {
+        int b0, b1, b2;
         int s0, s1, s2;
-        c0.r = (u8)(c0.r + (s0 = mod[0] >> 2));
-        c0.g = (u8)(c0.g + (s1 = mod[1] >> 2));
-        c0.b = (u8)(c0.b + (s2 = mod[2] >> 2));
+        c0.r = (u8)(c0.r + (s0 = (b0 = mod[0]) >> 2));
+        c0.g = (u8)(c0.g + (s1 = (b1 = mod[1]) >> 2));
+        c0.b = (u8)(c0.b + (s2 = (b2 = mod[2]) >> 2));
         c1.r = (u8)(c1.r + s0);
         c1.g = (u8)(c1.g + s1);
         c1.b = (u8)(c1.b + s2);
         c2.r = (u8)(c2.r + s0);
         c2.g = (u8)(c2.g + s1);
         c2.b = (u8)(c2.b + s2);
-        c3.r = (u8)(c3.r + (mod[0] >> 3));
-        c3.g = (u8)(c3.g + (mod[1] >> 3));
-        c3.b = (u8)(c3.b + (mod[2] >> 3));
+        c3.r = (u8)(c3.r + (b0 >> 3));
+        c3.g = (u8)(c3.g + (b1 >> 3));
+        c3.b = (u8)(c3.b + (b2 >> 3));
     }
 
+    x = pos[0];
+    z = pos[2];
+    x = x - playerMapOffsetX;
+    z = z - playerMapOffsetZ;
     Camera_ProjectWorldSphere(&proj5, &proj4, &proj3, &proj2, &proj1, &proj0,
-                              pos[0] - playerMapOffsetX, pos[1], pos[2] - playerMapOffsetZ, radius);
+                              x, pos[1], z, radius);
     proj3 = proj3 + lbl_803DEEE4;
     c0.a = (u8)(((u32)(lbl_803DEF08 * proj3) & 0x00FF0000) >> 16);
 
@@ -1541,7 +1549,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     PSMTXTrans(mtx_a0, gSynthDelayedActionWord0 * (-proj5) - gSynthDelayedActionWord0,
                        gSynthDelayedActionWord0 * proj4 - gSynthDelayedActionWord0,
                        lbl_803DEEDC);
-    PSMTXScale(mtx_70, lbl_803DB6C4 / proj1, lbl_803DB6C4 / proj2, lbl_803DEEDC);
+    PSMTXScale(mtx_70, lbl_803DB6C4 / proj2, lbl_803DB6C4 / proj1, lbl_803DEEDC);
     PSMTXConcat(mtx_70, mtx_a0, mtx_d0);
     PSMTXTrans(mtx_a0, gSynthDelayedActionWord0, gSynthDelayedActionWord0, lbl_803DEEDC);
     PSMTXConcat(mtx_a0, mtx_d0, mtx_d0);
@@ -1552,7 +1560,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
         f32 r2 = lbl_803DB6C8 / radius;
         f32 sr;
         if (r2 > lbl_803DEEDC) {
-            sr = distortSqrtf(r2);
+            distortSqrtf(sr, r2);
         } else {
             sr = r2;
         }
@@ -1716,6 +1724,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     Camera_RebuildProjectionMatrix();
 }
 
+#pragma opt_common_subs reset
 int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
