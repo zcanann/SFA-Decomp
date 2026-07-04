@@ -17,6 +17,7 @@
 #include "main/sfa_shared_decls.h"
 
 #define PAD_BUTTON_A 0x100
+#define UNUSED107_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
@@ -75,7 +76,7 @@ void fn_80185868(int obj, f32 arg)
     sub->spitTimer = 0;
     if (arg < sub->radius)
     {
-        ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x60004, obj, 0);
+        ObjMsg_SendToObject(Obj_GetPlayerObject(), UNUSED107_MSG_PLAYER_BURST, obj, 0);
     }
     ObjHitbox_SetCapsuleBounds(obj, sub->radius, -5, 10);
     ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
