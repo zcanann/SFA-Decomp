@@ -17,6 +17,9 @@
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+#define KALDACHOMPSPIT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 extern int randomGetRange(int lo, int hi);
 extern void queueGlowRender(void* light);
 extern int Obj_FreeObject(int obj);
@@ -261,7 +264,7 @@ void kaldachompspit_init(int obj)
     ObjHits_DisableObject((u32)obj);
     ((GameObject*)obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject(obj, SFXTRIG_whiz3_c);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= KALDACHOMPSPIT_OBJFLAG_HITDETECT_DISABLED;
     if (*(void**)extra == NULL)
     {
         *extra = (int)objCreateLight(obj, 1);
