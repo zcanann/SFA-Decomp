@@ -171,7 +171,7 @@ typedef struct AnimatedobjPlacement
     f32 posX;
     f32 posY;
     f32 posZ;
-    s32 unk14;
+    s32 mapId; /* 0x14: ObjPlacement map id */
     s16 unk18;
     s16 unk1A;
     s16 unk1C;
