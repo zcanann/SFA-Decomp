@@ -809,6 +809,8 @@ void baddieinterestp_update(int* obj)
                                 case 1:
                                     if ((*gSkyInterface)->getSunPosition(&sunTime) == 0)
                                     {
+                                        int* target;
+                                        int kind;
                                         u8 b2 = (u8)((BaddieinterestpPlacement*)params)->modeKind;
                                         kind = b2 & 0xf;
                                         target = (int*)objs[i];
@@ -832,6 +834,8 @@ void baddieinterestp_update(int* obj)
                                 case 2:
                                     if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
                                     {
+                                        int* target;
+                                        int kind;
                                         u8 b2 = (u8)((BaddieinterestpPlacement*)params)->modeKind;
                                         kind = b2 & 0xf;
                                         target = (int*)objs[i];
