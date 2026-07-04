@@ -9,6 +9,16 @@
 
 #define PAD_CHAN0_BIT 0x80000000
 
+/* Synthesized C-stick-as-direction bits OR'd into the extended button word. */
+#define PADBTN_CSTICK_UP    0x10000
+#define PADBTN_CSTICK_DOWN  0x20000
+#define PADBTN_CSTICK_LEFT  0x40000
+#define PADBTN_CSTICK_RIGHT 0x80000
+
+/* Synthesized digital-trigger bits (analog trigger past threshold). */
+#define PADTRIG_R 0x20
+#define PADTRIG_L 0x40
+
 typedef struct PadStateBlock {
     u32 held[4];        // 0x00
     u32 buttons[4];     // 0x10
@@ -470,19 +480,19 @@ void padUpdate(void)
             *curBtn = rp->buttons;
             if (rp->substickY < -40)
             {
-                *curBtn |= 0x20000LL;
+                *curBtn |= (u64)PADBTN_CSTICK_DOWN;
             }
             if (rp->substickY > 40)
             {
-                *curBtn |= 0x10000LL;
+                *curBtn |= (u64)PADBTN_CSTICK_UP;
             }
             if (rp->substickX < -40)
             {
-                *curBtn |= 0x40000LL;
+                *curBtn |= (u64)PADBTN_CSTICK_LEFT;
             }
             if (rp->substickX > 40)
             {
-                *curBtn |= 0x80000LL;
+                *curBtn |= (u64)PADBTN_CSTICK_RIGHT;
             }
             *pressed = *curBtn & (*curBtn ^ *heldRaw);
             *released = *heldRaw & (*curBtn ^ *heldRaw);
@@ -491,11 +501,11 @@ void padUpdate(void)
             *triggers = 0;
             if (rp->triggerRight > 10)
             {
-                *triggers |= 0x20;
+                *triggers |= PADTRIG_R;
             }
             if (rp->triggerLeft > 10)
             {
-                *triggers |= 0x40;
+                *triggers |= PADTRIG_L;
             }
             *triggersPressed = *triggers & (*triggers ^ *prevTriggers);
             *triggersReleased = *prevTriggers & (*triggers ^ *prevTriggers);
