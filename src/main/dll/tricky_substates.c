@@ -162,7 +162,7 @@ void trickyDigTunnel(u8* obj, u8* state)
     switch (state[0xa])
     {
     case 0:
-        pc = Objfsa_FindNearestCurveType24(((TrickyState*)state)->unk28, -1, 2);
+        pc = Objfsa_FindNearestCurveType24(((TrickyState*)state)->targetPosPtr, -1, 2);
         ((TrickyState*)state)->unk708 = (u8*)(*gRomCurveInterface)->getById(((TrickyCurveNode*)pc)->links[0]);
         ((TrickyState*)state)->unk700 = pc;
         ((TrickyState*)state)->unk704 = (u8*)(*gRomCurveInterface)->getById(((TrickyCurveNode*)pc)->links[1]);
@@ -176,9 +176,9 @@ void trickyDigTunnel(u8* obj, u8* state)
                 state)->unk708;
         }
         ptr = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk708)->x;
-        if (((TrickyState*)state)->unk28 != ptr)
+        if (((TrickyState*)state)->targetPosPtr != ptr)
         {
-            ((TrickyState*)state)->unk28 = ptr;
+            ((TrickyState*)state)->targetPosPtr = ptr;
             {
                 u32 m;
                 u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
@@ -323,11 +323,11 @@ void trickyDigTunnel(u8* obj, u8* state)
             {
                 inWater = 0;
             }
-            else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+            else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
             {
                 inWater = 1;
             }
-            else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+            else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
             {
                 inWater = 1;
             }
@@ -409,9 +409,9 @@ void trickyFn_80141fec(u8* obj, u8* state)
             {
                 state[0xa] = 2;
                 ptr = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk70C)->x;
-                if (((TrickyState*)state)->unk28 != ptr)
+                if (((TrickyState*)state)->targetPosPtr != ptr)
                 {
-                    ((TrickyState*)state)->unk28 = ptr;
+                    ((TrickyState*)state)->targetPosPtr = ptr;
                     {
                         u32 m;
                         u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
@@ -564,9 +564,9 @@ void trickyFn_80142524(u8* obj, u8* state)
                     if ((((TrickyState*)other)->stateFlags & 0x10) == 0)
                     {
                         ((TrickyState*)other)->followObj = target;
-                        if (((TrickyState*)other)->unk28 != target + 0x18)
+                        if (((TrickyState*)other)->targetPosPtr != target + 0x18)
                         {
-                            ((TrickyState*)other)->unk28 = target + 0x18;
+                            ((TrickyState*)other)->targetPosPtr = target + 0x18;
                             {
                                 u32 m;
                                 u32 f2 = *(u32*)&((TrickyState*)other)->stateFlags;
@@ -606,11 +606,11 @@ void trickyFn_80142524(u8* obj, u8* state)
                     {
                         inWater = 0;
                     }
-                    else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+                    else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
                     {
                         inWater = 1;
                     }
-                    else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+                    else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
                     {
                         inWater = 1;
                     }
@@ -704,11 +704,11 @@ void trickyFn_80142524(u8* obj, u8* state)
             {
                 inWater = 0;
             }
-            else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+            else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
             {
                 inWater = 1;
             }
-            else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+            else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
             {
                 inWater = 1;
             }
@@ -953,11 +953,11 @@ int trickyFn_80142eb0(int obj, int state)
             {
                 b = 0;
             }
-            else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+            else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
             {
                 b = 1;
             }
-            else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+            else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
             {
                 b = 1;
             }
@@ -1406,9 +1406,9 @@ int trickyFn_80143c04(int obj, int state)
 
     *(int*)&((TrickyState*)state)->followObj = ((TrickyState*)state)->playerObj;
     followBase = *(u32*)&((TrickyState*)state)->followObj + 0x18;
-    if (*(u32*)&((TrickyState*)state)->unk28 != followBase)
+    if (*(u32*)&((TrickyState*)state)->targetPosPtr != followBase)
     {
-        *(int*)&((TrickyState*)state)->unk28 = followBase;
+        *(int*)&((TrickyState*)state)->targetPosPtr = followBase;
         {
             u32 m;
             u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
@@ -1460,11 +1460,11 @@ int trickyFn_80143c04(int obj, int state)
         {
             inWater = 0;
         }
-        else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+        else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
         {
             inWater = 1;
         }
-        else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+        else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
         {
             inWater = 1;
         }
@@ -1632,9 +1632,9 @@ void objAnimFn_801441c0(u8* obj, u8* state)
     case 0:
         ((TrickyState*)state)->followObj = found;
         objPosFn_80039510((int)found, 0, (float*)(state + 0x72c));
-        if (((TrickyState*)state)->unk28 != state + 0x72c)
+        if (((TrickyState*)state)->targetPosPtr != state + 0x72c)
         {
-            ((TrickyState*)state)->unk28 = state + 0x72c;
+            ((TrickyState*)state)->targetPosPtr = state + 0x72c;
             {
                 u32 m;
                 u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
@@ -1653,9 +1653,9 @@ void objAnimFn_801441c0(u8* obj, u8* state)
         ((TrickyState*)state)->unk72C = (f32)(lbl_803E2528 * -mathSinf(ang) + ((GameObject*)obj)->anim.localPosX);
         *(f32*)&((TrickyState*)state)->unk730 = ((GameObject*)obj)->anim.localPosY;
         ((TrickyState*)state)->unk734 = (f32)(lbl_803E2484 * -mathCosf(ang) + ((GameObject*)obj)->anim.localPosZ);
-        if (((TrickyState*)state)->unk28 != state + 0x72c)
+        if (((TrickyState*)state)->targetPosPtr != state + 0x72c)
         {
-            ((TrickyState*)state)->unk28 = state + 0x72c;
+            ((TrickyState*)state)->targetPosPtr = state + 0x72c;
             {
                 u32 m;
                 u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
@@ -1777,11 +1777,11 @@ int trickyFoodFn_8014460c(int obj, int* state)
                     {
                         inWater = 0;
                     }
-                    else if (lbl_803E2410 == ((TrickyState*)b)->unk2B0)
+                    else if (lbl_803E2410 == ((TrickyState*)b)->eventTime)
                     {
                         inWater = 1;
                     }
-                    else if (((TrickyState*)b)->unk2B4 - ((TrickyState*)b)->unk2B0 > lbl_803E2414)
+                    else if (((TrickyState*)b)->currentTime - ((TrickyState*)b)->eventTime > lbl_803E2414)
                     {
                         inWater = 1;
                     }
@@ -1832,11 +1832,11 @@ int trickyFoodFn_8014460c(int obj, int* state)
                     {
                         inWater = 0;
                     }
-                    else if (lbl_803E2410 == ((TrickyState*)b)->unk2B0)
+                    else if (lbl_803E2410 == ((TrickyState*)b)->eventTime)
                     {
                         inWater = 1;
                     }
-                    else if (((TrickyState*)b)->unk2B4 - ((TrickyState*)b)->unk2B0 > lbl_803E2414)
+                    else if (((TrickyState*)b)->currentTime - ((TrickyState*)b)->eventTime > lbl_803E2414)
                     {
                         inWater = 1;
                     }
@@ -1889,11 +1889,11 @@ int trickyFoodFn_8014460c(int obj, int* state)
                 {
                     inWater = 0;
                 }
-                else if (lbl_803E2410 == ((TrickyState*)b)->unk2B0)
+                else if (lbl_803E2410 == ((TrickyState*)b)->eventTime)
                 {
                     inWater = 1;
                 }
-                else if (((TrickyState*)b)->unk2B4 - ((TrickyState*)b)->unk2B0 > lbl_803E2414)
+                else if (((TrickyState*)b)->currentTime - ((TrickyState*)b)->eventTime > lbl_803E2414)
                 {
                     inWater = 1;
                 }
@@ -1970,11 +1970,11 @@ void fn_80144B50(u8* obj, u8* state)
                             {
                                 inWater = 0;
                             }
-                            else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+                            else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
                             {
                                 inWater = 1;
                             }
-                            else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+                            else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
                             {
                                 inWater = 1;
                             }

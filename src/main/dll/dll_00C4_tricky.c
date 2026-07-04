@@ -276,11 +276,11 @@ void FUN_80144e40(int obj, int state)
                         {
                             cond = false;
                         }
-                        else if (lbl_803E30A0 == ((TrickyState*)state)->unk2B0)
+                        else if (lbl_803E30A0 == ((TrickyState*)state)->eventTime)
                         {
                             cond = true;
                         }
-                        else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 <= lbl_803E30A4)
+                        else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime <= lbl_803E30A4)
                         {
                             cond = false;
                         }
@@ -984,7 +984,7 @@ void Tricky_update(int obj)
         if ((((TrickyState*)state)->stateFlags & 0x4000) == 0)
         {
             TRICKY_RESET_COMMAND(state);
-            ((TrickyState*)state)->unk09 = 0;
+            ((TrickyState*)state)->followPhase = 0;
             ((TrickyState*)state)->prevSpeed = z;
             ((TrickyState*)state)->speed = z;
             ((TrickyState*)state)->homePosX = ((GameObject*)obj)->anim.worldPosX;
@@ -995,7 +995,7 @@ void Tricky_update(int obj)
             if (((GameObject*)obj)->anim.currentMove == 8 || ((GameObject*)obj)->anim.currentMove == 7)
             {
                 ((TrickyState*)state)->waterLevel = lbl_803E2414;
-                ((TrickyState*)state)->unk2B0 = lbl_803E2544;
+                ((TrickyState*)state)->eventTime = lbl_803E2544;
             }
             else
             {
@@ -1029,7 +1029,7 @@ void Tricky_update(int obj)
             ((GameObject*)obj)->anim.worldPosZ = ((TrickyState*)state)->homePosZ;
             ObjHits_SyncObjectPosition(obj);
             i = 0;
-            ((TrickyState*)state)->unk09 = i;
+            ((TrickyState*)state)->followPhase = i;
             z = lbl_803E23DC;
             ((TrickyState*)state)->prevSpeed = z;
             ((TrickyState*)state)->speed = z;
@@ -1300,9 +1300,9 @@ void Tricky_update(int obj)
                     *(int*)&((TrickyState*)state)->followObj = Obj_SetupObject(
                         setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
                     target = (u32)&((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
-                    if (*(u32*)&((TrickyState*)state)->unk28 != target)
+                    if (*(u32*)&((TrickyState*)state)->targetPosPtr != target)
                     {
-                        *(u32*)&((TrickyState*)state)->unk28 = target;
+                        *(u32*)&((TrickyState*)state)->targetPosPtr = target;
                         *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
                         ((TrickyState*)state)->unkD2 = 0;
                     }
@@ -1317,9 +1317,9 @@ void Tricky_update(int obj)
                     if ((void*)step != NULL)
                     {
                         *(int*)&((TrickyState*)state)->followObj = step;
-                        if (*(u32*)&((TrickyState*)state)->unk28 != (u32)(step + 0x18))
+                        if (*(u32*)&((TrickyState*)state)->targetPosPtr != (u32)(step + 0x18))
                         {
-                            *(u32*)&((TrickyState*)state)->unk28 = step + 0x18;
+                            *(u32*)&((TrickyState*)state)->targetPosPtr = step + 0x18;
                             *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
                             ((TrickyState*)state)->unkD2 = 0;
                         }
@@ -1360,9 +1360,9 @@ void Tricky_update(int obj)
             randomGetRange(0x1f4, 0x2ee);
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x40000LL;
             ((TrickyState*)state)->unkD = 3;
-            if (*(u32*)&((TrickyState*)state)->unk28 != (u32) & ((TrickyState*)state)->unk72C)
+            if (*(u32*)&((TrickyState*)state)->targetPosPtr != (u32) & ((TrickyState*)state)->unk72C)
             {
-                *(u32*)&((TrickyState*)state)->unk28 = (u32) & ((TrickyState*)state)->unk72C;
+                *(u32*)&((TrickyState*)state)->targetPosPtr = (u32) & ((TrickyState*)state)->unk72C;
                 ((TrickyState*)state)->stateFlags &= ~0x400LL;
                 ((TrickyState*)state)->unkD2 = 0;
             }
@@ -1491,7 +1491,7 @@ void Tricky_update(int obj)
     objAnimFn_80038f38(obj, state + 0x3a8);
     st = *(int*)&((GameObject*)obj)->extra;
     stState = (TrickyState*)st;
-    p = (int)stState->unk28;
+    p = (int)stState->targetPosPtr;
     stState->previousPathPoint = (f32*)p;
     if (stState->previousPathPoint != NULL)
     {
@@ -1580,11 +1580,11 @@ void Tricky_update(int obj)
     {
         talking = 0;
     }
-    else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+    else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
     {
         talking = 1;
     }
-    else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+    else if (((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime > lbl_803E2414)
     {
         talking = 1;
     }
@@ -1694,7 +1694,7 @@ void Tricky_init(int obj)
     ((TrickyState*)state)->unk08 = 0;
     ((TrickyState*)state)->unk0B = 0;
     ((TrickyState*)state)->previousPathPoint = NULL;
-    ((TrickyState*)state)->unkD0 = 0;
+    ((TrickyState*)state)->activeWalkGroup = 0;
     ((TrickyState*)state)->homePosX = ((GameObject*)obj)->anim.worldPosX;
     ((TrickyState*)state)->homePosY = ((GameObject*)obj)->anim.worldPosY;
     ((TrickyState*)state)->homePosZ = ((GameObject*)obj)->anim.worldPosZ;
@@ -2171,7 +2171,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                     (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7fc, NULL,
                                                                  0x32, NULL);
                     Obj_ResetModelColorState(obj);
-                    *(u16*)&((TrickyState*)state)->unk2B0 = 0;
+                    *(u16*)&((TrickyState*)state)->eventTime = 0;
                     ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 & ~0x20LL;
                     ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 | 0x200;
                     Sfx_PlayFromObject(obj, SFXTRIG_barrel_bounce1);
@@ -2404,7 +2404,7 @@ void baddieInstantiateWeapon(int obj, int state)
     int setup;
 
     parentSetup = *(int*)&((GameObject*)obj)->anim.placementData;
-    if ((*(s16*)&((TrickyState*)state)->unk2B4 != *(s16*)(state + 0x2b6)) &&
+    if ((*(s16*)&((TrickyState*)state)->currentTime != *(s16*)(state + 0x2b6)) &&
         (((GameObject*)obj)->anim.alpha != 0))
     {
         if (((GameObject*)obj)->childObjs[0] != NULL)
@@ -2422,12 +2422,12 @@ void baddieInstantiateWeapon(int obj, int state)
                 child = (void*)Obj_SetupObject(setup, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                                *(int*)&((GameObject*)obj)->anim.parent);
                 ObjLink_AttachChild(obj, child, 0);
-                *(s16*)&((TrickyState*)state)->unk2B4 = *(s16*)(state + 0x2b6);
+                *(s16*)&((TrickyState*)state)->currentTime = *(s16*)(state + 0x2b6);
             }
         }
         else
         {
-            *(s16*)&((TrickyState*)state)->unk2B4 = 0;
+            *(s16*)&((TrickyState*)state)->currentTime = 0;
         }
     }
 }
@@ -2964,7 +2964,7 @@ void trickyFn_801451d8(int obj, int state)
     {
         f32 resetTimer;
 
-        ((TrickyState*)state)->unk532 = pathBytes[0];
+        ((TrickyState*)state)->walkGroup = pathBytes[0];
         ((TrickyState*)state)->unk08 = 1;
         ((TrickyState*)state)->substate = 0;
         resetTimer = lbl_803E23DC;
@@ -3191,11 +3191,11 @@ void trickyFn_80144f50(int obj, int state)
             {
                 isInWater = 0;
             }
-            else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+            else if (lbl_803E2410 == ((TrickyState*)state)->eventTime)
             {
                 isInWater = 1;
             }
-            else if ((((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0) > lbl_803E2414)
+            else if ((((TrickyState*)state)->currentTime - ((TrickyState*)state)->eventTime) > lbl_803E2414)
             {
                 isInWater = 1;
             }
