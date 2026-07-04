@@ -73,25 +73,6 @@ STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
 
-extern u32 DAT_8032a290;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6F40;
-extern f32 lbl_803E6F50;
-extern f32 lbl_803E6F60;
-extern f32 lbl_803E6F80;
-extern f32 lbl_803E6F84;
-extern f32 lbl_803E6F88;
-extern f32 lbl_803E6F8C;
-extern f32 lbl_803E6F90;
-extern f32 lbl_803E6F94;
-extern f32 lbl_803E6FD8;
-extern f32 lbl_803E6FDC;
-extern f32 lbl_803E6FE0;
-extern f32 lbl_803E6FE4;
-extern f32 lbl_803E7008;
-extern f32 lbl_803E700C;
-extern f32 lbl_803E7010;
-
 int dbstealerworm_stateHandlerB04(int obj, int p);
 
 int dbstealerworm_stateHandlerB02(int obj, int p);
