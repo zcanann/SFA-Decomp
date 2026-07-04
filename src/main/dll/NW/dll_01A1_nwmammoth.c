@@ -233,7 +233,7 @@ int fn_801CE078(int* obj, u8* st)
     case 0x14:
         if (snd != 0)
         {
-            Sfx_PlayFromObject((u32)obj, 0x14b);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_id_14b);
         }
         if (state->runtimeFlags & 2)
         {
@@ -271,7 +271,7 @@ int fn_801CE078(int* obj, u8* st)
     case 0x16:
         if (snd != 0)
         {
-            Sfx_PlayFromObject((u32)obj, 0x14d);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_id_14d);
         }
         if (state->runtimeFlags & 2)
         {
@@ -554,7 +554,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             {
                 if (state->uiMessageCount % 2 == 0)
                 {
-                    Sfx_PlayFromObject((u32)obj, 0x14f);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_id_14f);
                 }
                 state->stateIndex = 0xd;
             }
