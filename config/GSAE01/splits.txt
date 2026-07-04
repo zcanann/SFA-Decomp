@@ -640,7 +640,7 @@ main/dll/dll_00B9_projlightning7.c:
 
 main/dll/dll_00BA_projlightning6.c:
 	.text       start:0x80100780 end:0x801007B8
-	.data       start:0x803196A8 end:0x803196D8
+	.data       start:0x803196A8 end:0x803196F8
 
 main/dll/dll_00B4_projenergise1.c:
 	.text       start:0x801007B8 end:0x801007F0
