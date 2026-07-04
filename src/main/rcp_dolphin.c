@@ -1556,7 +1556,6 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
     char* objStart;
     int objIndex;
     char* obj;
-    int visible;
     int v;
     int flag;
     int byteIdx;
@@ -1584,9 +1583,10 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
 
     while (obj < end)
     {
+        /* i reused below as the object-visible flag (matches retail coloring) */
         if (objIndex < 0)
         {
-            visible = 0;
+            i = 0;
         }
         else
         {
@@ -1594,19 +1594,20 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
             byteIdx = objIndex >> 3;
             if (byteIdx >= 0xc4)
             {
-                visible = 0;
+                i = 0;
             }
             else
             {
+                i = 1;
                 bit = 1 << (objIndex & 7);
                 vis = *(s8**)((char*)bm + 0x10);
                 if ((bit & vis[byteIdx]) != 0)
-                    visible = 1;
+                    i = 1;
                 else
-                    visible = 0;
+                    i = 0;
             }
         }
-        if (visible == 0)
+        if (i == 0)
         {
             v = (*gMapEventInterface)->getMapAct(mapId);
             if (v == -1)
