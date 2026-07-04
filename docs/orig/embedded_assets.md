@@ -8,46 +8,45 @@ here so each reads as *identified and out-of-scope*, not as an unattributed gap 
 match. This mirrors `developer_artifacts.md`'s aim of turning anonymous blobs into named,
 understood anchors.
 
-## `0x802CC6A0`–`0x8030C6A0` — Rareware boot-logo texture / GX FIFO buffer (256 KB)
+## `0x802CC6A0`–`0x8030C6A0` — boot / loading-screen texture set (256 KB)
 
-- **Identity (confirmed):** the **Rareware boot logo** — a GameCube **`RGB5A3`** texture
-  (16-bit colour + 3-bit alpha, 4×4 tile-swizzled), **128 px** wide. Verified by decoding the
-  region as RGB5A3 (renders the gold logo in colour on a transparent background; adjacent-pixel
-  coherence scores ~12 for RGB5A3 vs ~40 for any intensity format, so it is definitively colour,
-  not grayscale). The 128 px width follows from the 1024-byte tile-row stride found by
-  autocorrelation. The linear byte layout looks like structured static only because GC textures
-  are tile-swizzled.
+- **Identity (confirmed from code):** the game's **boot logo texture set** — three GameCube
+  textures laid out back-to-back (Nintendo logo, Rareware badge, a legal/text line). Read at
+  runtime by `initLoadingScreenTextures()` in `dll_0032_titlescreeninit.c`, which walks three
+  `LoadingScreenTexture` records at `OSGetArenaHi() - 0x40000` (the arena copy of this region).
+  Each record is a **0x60-byte header** (`width`@0x0A, `height`@0x0C `u16`; `format`@0x16 `u8`;
+  pixels at `+0x60`) followed by the tile-swizzled image; `GXInitTexObj` is called with the
+  header's own width/height/format, so the dimensions are **data-driven, not hardcoded** — which
+  is how they were recovered exactly.
+- **The three textures** (offsets relative to region base `0x802CC6A0`):
+
+  | # | image | width×height | format | pixels at |
+  |---|---|---|---|---|
+  | 0 | Nintendo logo | 376×104 | IA8 | region+0x60 |
+  | 1 | Rareware badge | 128×160 | RGB5A3 | region+0x13240 |
+  | 2 | legal / text line | 180×92 | CMPR (DXT1) | region+0x1D2A0 |
+
+  IA8/CMPR carry only intensity or a limited palette; the in-game yellow/gold is a render-time
+  **TEV tint**, not stored in the texture. The tail past texture 2 is `0xFF` padding to `0x40000`.
 - **Current placeholder:** the bulk of the auto object `auto_07_802CBE94_data`
   (dtk labels `lbl_802CC6A0`, `lbl_802D808E`, `lbl_802E802E`, `lbl_802F808D`).
-- **Proposed name:** `gRareLogoTexture` (its `.data` content). Note the same address is later
-  handed to `GXInit` by `pi_dolphin.c:videoInit` as the GPU FIFO base — the region is reused
-  as the FIFO once the boot logo is no longer needed.
-- **Size:** `0x40000` (262,144 bytes) — the ~128 KB texture padded to the buffer size with `0xFF`.
+- **Proposed name:** `gBootLogoTextures`. The same address is later handed to `GXInit` by
+  `pi_dolphin.c:videoInit` as the GPU FIFO base — the region is reused as the write-only FIFO
+  once the boot logos have been displayed.
+- **Size:** `0x40000` (262,144 bytes) — the three textures (~`0x1D520`) padded with `0xFF`.
 
 ### Runtime role
 `videoInit()` copies the 256 KB to arena-top, then passes the same region to
 `GXInit(base, 0x40000)` as the GPU command FIFO — the standard GameCube RAM-reuse pattern:
-the region's initialized `.data` is consumed at boot, and the RAM is then repurposed as the
-write-only FIFO. `logGpuHang()` / `gpuErrorHandler()` additionally index diagnostic format
-strings via `base + 0x4002c` (which land just past the buffer, at `0x8030C6CC+`).
+the initialized `.data` (the boot logos) is consumed at boot, and the RAM is then repurposed
+as the write-only FIFO. `logGpuHang()` / `gpuErrorHandler()` also index diagnostic format
+strings via `base + 0x4002c`.
 
-### Content (structural analysis only — no bytes reproduced)
-Decoded as `RGB5A3` at 128 px wide, the real data (`0x0`–`~0x1F520`) contains **three
-sub-images** separated by fully-transparent (alpha 0) gaps — the frames/elements of the
-animated intro driven by DLL `0x0033` (`dll_0033_nrareware.c`, staged via
-`gNrarewareStage1/3Timer`):
-- **Block A** `0x1800`–`0x11C00` — 128×~256, bright/gold.
-- **Block B** `0x14000`–`0x1C000` — 128×128, the gold **"R RAREWARE"** logo on a dark field
-  (this block is exactly `0x8000` = one 128×128 RGB5A3 image).
-- **Block C** `0x1D400`–`0x1EC00` — 128×~24, a small strip.
-- `0x20000`–`0x40000` (~132 KB): solid `0xFF` padding out to the `0x40000` buffer size.
-
-(A straight decode from the region start shows each block vertically *rolled* — its stored
-data does not begin on the image origin — so the exact per-block row offset needs dialing in
-to centre each frame.)
-- dtk emits ~348 spurious `.4byte fn+offset` "relocations" inside the high-entropy sub-block.
-  These are false positives — mid-function targets at irregular stride, i.e. the analyzer
-  matching image bytes against the `0x80xxxxxx` code-address range — not a real pointer table.
+### Note on the apparent "relocations"
+dtk emits ~348 spurious `.4byte fn+offset` "relocations" inside the texture data. These are
+false positives — mid-function targets at irregular stride, i.e. the analyzer matching
+tiled/compressed image bytes against the `0x80xxxxxx` code-address range — not a real pointer
+table.
 
 ### Why it isn't in source
 It is an embedded copyrighted asset. Reproducing its 262,144 bytes in any form — a C array,
