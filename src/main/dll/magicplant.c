@@ -345,34 +345,34 @@ void fn_8015355C(int obj, int state)
 #pragma dont_inline on
 void fn_80153640(int obj, int state)
 {
-    u8* fx;
+    ObjPlacement* fx;
     int newObj;
 
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
-        fx = (u8*)Obj_AllocObjectSetup(0x24, 0x51b);
-        ((GameObject*)fx)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
-        ((GameObject*)fx)->anim.localPosX = lbl_803E28F0 + ((GameObject*)obj)->anim.localPosY;
-        ((GameObject*)fx)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
-        ((ObjPlacement*)fx)->color[0] = 1;
-        ((ObjPlacement*)fx)->color[1] = 1;
-        ((ObjPlacement*)fx)->color[2] = 0xff;
-        ((ObjPlacement*)fx)->color[3] = 0xff;
+        fx = (ObjPlacement*)Obj_AllocObjectSetup(0x24, 0x51b);
+        fx->posX = ((GameObject*)obj)->anim.localPosX;
+        fx->posY = lbl_803E28F0 + ((GameObject*)obj)->anim.localPosY;
+        fx->posZ = ((GameObject*)obj)->anim.localPosZ;
+        fx->color[0] = 1;
+        fx->color[1] = 1;
+        fx->color[2] = 0xff;
+        fx->color[3] = 0xff;
         newObj = Obj_SetupObject((int)fx, 5, -1, -1, 0);
         if ((void*)newObj != NULL)
         {
             ((GameObject*)newObj)->anim.velocityX = 0.02f *
                 (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosX -
-                 ((GameObject*)fx)->anim.rootMotionScale);
+                 fx->posX);
             {
                 ((GameObject*)newObj)->anim.velocityY = 0.02f *
                     ((lbl_803E28F0 +
                       ((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosY +
                       (f32)(s32)randomGetRange(-10, 10)) -
-                     ((GameObject*)fx)->anim.localPosX);
+                     fx->posY);
                 ((GameObject*)newObj)->anim.velocityZ = 0.02f *
                     (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosZ -
-                     ((GameObject*)fx)->anim.localPosY);
+                     fx->posZ);
             }
             *(int*)&((GameObject*)newObj)->ownerObj = obj;
         }
