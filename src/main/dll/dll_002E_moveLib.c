@@ -19,6 +19,7 @@
  */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
@@ -1002,3 +1003,29 @@ void dll_2E_initialise_nop(void)
 }
 
 u8 gMoveLibDefaultMoveData[20] = { 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23 };
+
+ObjectDescriptor16WithPadding dll_2E = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_16_SLOTS,
+        (ObjectDescriptorCallback)dll_2E_initialise_nop,
+        (ObjectDescriptorCallback)dll_2E_release_nop,
+        0,
+        (ObjectDescriptorCallback)dll_2E_func03,
+        (ObjectDescriptorCallback)dll_2E_func04,
+        (ObjectDescriptorCallback)dll_2E_func05,
+        (ObjectDescriptorCallback)dll_2E_func06,
+        (ObjectDescriptorCallback)dll_2E_func07,
+        (ObjectDescriptorCallback)dll_2E_func08,
+        (ObjectDescriptorExtraSizeCallback)dll_2E_func09,
+        (ObjectDescriptorCallback)dll_2E_func0A,
+        (ObjectDescriptorCallback)dll_2E_func0B,
+        (ObjectDescriptorCallback)dll_2E_func0C,
+        (ObjectDescriptorCallback)dll_2E_func0D,
+        (ObjectDescriptorCallback)dll_2E_func0E,
+        (ObjectDescriptorCallback)dll_2E_func0F_ret_0,
+    },
+    0,
+};
