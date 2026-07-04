@@ -73,6 +73,13 @@ typedef struct PushableState {
   u8 pad147;
 } PushableState;
 
+/* PushableState.flags state bits */
+#define PUSHABLE_FLAG_RESTORED 0x01   /* restored from saved gameBit / saved-map list */
+#define PUSHABLE_FLAG_MOVING_Y 0x02   /* moving vertically this frame (velocityY != 0) */
+#define PUSHABLE_FLAG_PUSH_SFX_DUE 0x20 /* push scrape SFX timer elapsed this frame */
+#define PUSHABLE_FLAG_INITIALIZED 0x40  /* set at end of pushable_init */
+#define PUSHABLE_FLAG_PUSH_LOCKED 0x80  /* push amount frozen (no dx/dz follow) */
+
 /* PushableState.flags push-direction bits (set from dx/dz sign, cleared via ~0xF00) */
 #define PUSHABLE_FLAG_PUSH_NEG_X 0x100
 #define PUSHABLE_FLAG_PUSH_POS_X 0x200

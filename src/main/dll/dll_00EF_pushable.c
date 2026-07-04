@@ -13,6 +13,9 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* object group this object joins while active */
+#define PUSHABLE_OBJGROUP 5
+
 extern int ObjMsg_Pop(int obj, int* outMessage, int* outSender, int* outParam);
 
 extern f32 lbl_803E3528;
@@ -537,7 +540,7 @@ void pushable_free(int* obj)
         gPushableSavedMapIdCount = v + 1;
         gPushableSavedMapIds[v] = val;
     }
-    ObjGroup_RemoveObject(obj, 5);
+    ObjGroup_RemoveObject(obj, PUSHABLE_OBJGROUP);
 }
 
 int pushable_getExtraSize(void) { return 0x148; }
@@ -560,11 +563,11 @@ void pushable_update(int* obj)
 
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
-    state->flags = state->flags & ~2;
+    state->flags = state->flags & ~PUSHABLE_FLAG_MOVING_Y;
     state->moveFlags.b7 = 0;
     if (lbl_803E3528 != ((GameObject*)obj)->anim.velocityY)
     {
-        state->flags = state->flags | 2;
+        state->flags = state->flags | PUSHABLE_FLAG_MOVING_Y;
     }
     if (state->moveFlags.b6 == 0)
     {
@@ -659,7 +662,7 @@ void pushable_init(s16* obj, char* def)
     }
     *obj = ((PushableObjectDef*)def)->rotXByte << 8;
     ((GameObject*)obj)->anim.localPosY = lbl_803E358C + ((ObjPlacement*)def)->posY;
-    ObjGroup_AddObject(obj, 5);
+    ObjGroup_AddObject(obj, PUSHABLE_OBJGROUP);
     objSetSlot(obj, 0x5a);
     ((GameObject*)obj)->animEventCallback = fn_8017510C;
     state = ((GameObject*)obj)->extra;
@@ -822,7 +825,7 @@ void pushable_init(s16* obj, char* def)
     default:
         if (((PushableObjectDef*)def)->gameBit > -1 && GameBit_Get(((PushableObjectDef*)def)->gameBit) != 0)
         {
-            state->flags = state->flags | 1;
+            state->flags = state->flags | PUSHABLE_FLAG_RESTORED;
         }
         break;
     }
@@ -835,10 +838,10 @@ void pushable_init(s16* obj, char* def)
             (*(char**)&((GameObject*)obj)->anim.modelState)[0x3b] = 0x40;
         }
     }
-    state->flags = state->flags | 0x40;
+    state->flags = state->flags | PUSHABLE_FLAG_INITIALIZED;
     if (arrayIndexOf(gPushableSavedMapIds, gPushableSavedMapIdCount, ((ObjPlacement*)def)->mapId) != -1)
     {
-        state->flags = state->flags | 1;
+        state->flags = state->flags | PUSHABLE_FLAG_RESTORED;
         fn_8007FE04(gPushableSavedMapIds, &gPushableSavedMapIdCount, ((ObjPlacement*)def)->mapId);
     }
 }
@@ -930,7 +933,7 @@ void pushable_hitDetect(int obj)
             {
                 fn_80174BFC(obj, state);
             }
-            state->flags = state->flags | 2;
+            state->flags = state->flags | PUSHABLE_FLAG_MOVING_Y;
         }
     }
     state->moveFlags.b6 = 1;
@@ -966,7 +969,7 @@ void pushable_hitDetect(int obj)
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
             localPosY;
     }
-    if ((state->flags & 2) != 0 || (state->flags & 4) != 0)
+    if ((state->flags & PUSHABLE_FLAG_MOVING_Y) != 0 || (state->flags & 4) != 0)
     {
         Obj_BuildTransformMatrices((int*)obj);
         i = 0;
@@ -1229,14 +1232,14 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     }
     if (flag != 0 && (state->flags & 8) == 0)
     {
-        state->flags = state->flags | 2;
+        state->flags = state->flags | PUSHABLE_FLAG_MOVING_Y;
         state->pushSfxTimer -= 1;
         if (state->pushSfxTimer <= 0)
         {
             state->pushSfxTimer = randomGetRange(0x28, 0x3c);
-            state->flags = state->flags | 0x20;
+            state->flags = state->flags | PUSHABLE_FLAG_PUSH_SFX_DUE;
         }
-        if ((state->flags & 0x80) != 0)
+        if ((state->flags & PUSHABLE_FLAG_PUSH_LOCKED) != 0)
         {
             f32 t = lbl_803E3528;
             state->pushAmountX = t;
@@ -1320,10 +1323,10 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         {
             f32 f5 = ((GameObject*)obj)->anim.localPosX - state->posHistX[4];
             f32 f6 = ((GameObject*)obj)->anim.localPosZ - state->posHistZ[4];
-            if (f5 * f5 + f6 * f6 > lbl_803E3588 && (state->flags & 0x20) != 0)
+            if (f5 * f5 + f6 * f6 > lbl_803E3588 && (state->flags & PUSHABLE_FLAG_PUSH_SFX_DUE) != 0)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_birdymornin11);
-                state->flags = state->flags & ~0x20;
+                state->flags = state->flags & ~PUSHABLE_FLAG_PUSH_SFX_DUE;
             }
         }
     }
