@@ -574,21 +574,21 @@ void scarab_init(int* obj, u8* def)
         *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&gScarabColorVariantsA)[randomGetRange(0, 2)];
         state->pickupSfx = 0x41;
         state->particleId = 4;
-        state->unk22 = 2;
+        state->burstModel = 2;
         state->moneyKind = 0;
         break;
     case 0x3d4:
         *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&gScarabColorVariantsB)[randomGetRange(0, 1)];
         state->pickupSfx = 0x42;
         state->particleId = 1;
-        state->unk22 = 5;
+        state->burstModel = 5;
         state->moneyKind = 1;
         break;
     case 0x3d5:
         *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&gScarabColorVariantsC)[randomGetRange(0, 3)];
         state->pickupSfx = 0x43;
         state->particleId = 2;
-        state->unk22 = 4;
+        state->burstModel = 4;
         state->moneyKind = 2;
         break;
     case 0x3d6:
@@ -596,7 +596,7 @@ void scarab_init(int* obj, u8* def)
         *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = 5;
         state->pickupSfx = 0x44;
         state->particleId = 6;
-        state->unk22 = 1;
+        state->burstModel = 1;
         state->moneyKind = 3;
         break;
     }
@@ -744,7 +744,7 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3A00);
         if ((visible != 0) && (((GameObject*)obj)->anim.alpha != 0))
         {
-            objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, (u8)((ScarabState*)state)->unk22, 1, 0x14,
+            objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, (u8)((ScarabState*)state)->burstModel, 1, 0x14,
                                         lbl_803E3A04, 0, 0);
         }
     }

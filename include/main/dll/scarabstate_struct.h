@@ -18,7 +18,7 @@ typedef struct ScarabState
     s16 riseLimit; /* 0x1c */
     s16 pickupSfx; /* 0x1e */
     s16 particleId; /* 0x20 */
-    s16 unk22; /* 0x22 */
+    s16 burstModel; /* 0x22: model index for objfx_spawnDirectionalBurst */
     u8 phase; /* 0x24 */
     u8 pad25[2];
     u8 moneyKind; /* 0x27 */
