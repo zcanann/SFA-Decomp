@@ -1,5 +1,8 @@
 #include "main/audio/snd3d_room.h"
 #include "main/audio/synth_delay.h"
+
+#pragma exceptions on
+
 extern Snd3DEmitter* s3dEmitterRoot;
 extern SndSpatialListener* s3dListenerRoot;
 extern SndSpatialEntry* s3dRoomRoot;
