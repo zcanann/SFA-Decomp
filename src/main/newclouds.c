@@ -1611,7 +1611,7 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
     }
     if (params->flags58 & NEWCLOUD_CMD_ANCHOROBJ)
     {
-        ((NewCloud*)NC_CLOUD)->unk144E = 1;
+        ((NewCloud*)NC_CLOUD)->anchoredToObj = 1;
     }
     ((NewCloud*)NC_CLOUD)->followCamera = 1;
     ((NewCloud*)NC_CLOUD)->stationary = params->stationaryInit;
@@ -2004,7 +2004,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     {
         return;
     }
-    if ((fl & NEWCLOUD_CMD_RELOCATE) && cloud->unk144E != 0)
+    if ((fl & NEWCLOUD_CMD_RELOCATE) && cloud->anchoredToObj != 0)
     {
         ((s8*)(env + 0x41))[*(u16*)(params + 0x26)] = cloud->stationary;
         ((NewCloud*)NC_CLOUD)->stationary = 1 - ((NewCloud*)NC_CLOUD)->stationary;

@@ -90,7 +90,7 @@ typedef struct NewCloud {
     u8 unk144B;
     u8 unk144C;
     u8 stationary;
-    u8 unk144E;
+    u8 anchoredToObj;
     u8 finished;
     u8 unk1450;
     u8 spinEnabled;
