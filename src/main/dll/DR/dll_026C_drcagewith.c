@@ -9,6 +9,8 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
+#define DRCAGEWITH_OBJGROUP 0x18
+
 #define DRCAGEWITH_OBJFLAG_FREED 0x40
 
 typedef struct DrcagewithPlacement
@@ -205,7 +207,7 @@ void drcagewith_free(int obj, int arg)
         ((DrcagewithState*)state)->spawnedObject->unkF4 = 0;
         Obj_FreeObject((int)((DrcagewithState*)state)->spawnedObject);
     }
-    ObjGroup_RemoveObject(obj, 0x18);
+    ObjGroup_RemoveObject(obj, DRCAGEWITH_OBJGROUP);
 }
 
 int drcagewith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -286,6 +288,6 @@ void drcagewith_init(int obj, char* arg)
         ((DrcagewithState*)state)->unk18 = fz;
         ((DrcagewithState*)state)->unk1C = fz;
         ((DrcagewithState*)state)->unk20 = fz;
-        ObjGroup_AddObject(obj, 0x18);
+        ObjGroup_AddObject(obj, DRCAGEWITH_OBJGROUP);
     }
 }
