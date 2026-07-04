@@ -27,6 +27,8 @@
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/CF/dll_0148_cfguardian.h"
 
+#define CFGUARDIAN_OBJGROUP 0x16
+
 #define PAD_BUTTON_A 0x100
 
 /* steer-target header passed to cfguardianSteerToward: a yaw plus a world point */
@@ -565,7 +567,7 @@ int cfguardian_updateMain(int obj)
                         d = (d >= lbl_803E4110) ? d : -d;
                         if (d < lbl_803E413C)
                         {
-                            ObjGroup_AddObject(obj, 0x16);
+                            ObjGroup_AddObject(obj, CFGUARDIAN_OBJGROUP);
                             sub->questState = CFGUARDIAN_FLY_TO_TALK;
                             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
                         }
@@ -589,7 +591,7 @@ int cfguardian_updateMain(int obj)
                     ObjAnim_SetCurrentMove(obj, 0, lbl_803E4110, 0);
                     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
                     ((GameObject*)obj)->anim.velocityY = lbl_803E4110;
-                    ObjGroup_RemoveObject(obj, 0x16);
+                    ObjGroup_RemoveObject(obj, CFGUARDIAN_OBJGROUP);
                     {
                         f32 fz = lbl_803E4110;
                         ((GameObject*)obj)->anim.velocityX = fz;
