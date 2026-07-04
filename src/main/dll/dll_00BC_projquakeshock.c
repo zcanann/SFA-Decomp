@@ -8,6 +8,12 @@
 #include "dolphin/os.h"
 #include "main/dll/dll_77.h"
 
+extern void projsunshock_doUnsupported(void);
+
+extern void projsunshock_release(void);
+
+extern void projsunshock_initialise(void);
+
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
 int projquakeshock_doUnsupported(void)

@@ -9,6 +9,24 @@
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/SH/shthorntail_ai.h"
 
+extern void warpstone_getExtraSize(void);
+
+extern void warpstone_getObjectTypeId(void);
+
+extern void warpstone_free(void);
+
+extern void warpstone_render(void);
+
+extern void warpstone_hitDetect(void);
+
+extern void warpstone_update(void);
+
+extern void warpstone_init(void);
+
+extern void warpstone_release(void);
+
+extern void warpstone_initialise(void);
+
 #define THORNTAIL_OBJGROUP 0x4d
 
 #define SHTHORNTAIL_OBJFLAG_RENDERED 0x800

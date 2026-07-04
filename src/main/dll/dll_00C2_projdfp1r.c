@@ -8,6 +8,66 @@
 #include "dolphin/os.h"
 #include "main/dll/dll_89.h"
 
+extern void camcontrol_queueSavedAction(void);
+
+extern void Camera_func1D(void);
+
+extern void Camera_func1C(void);
+
+extern void Camera_getMinimapInfoText(void);
+
+extern void camcontrol_release(void);
+
+extern void Camera_setLetterbox(void);
+
+extern void Camera_minimapShowHelpTextForTarget(void);
+
+extern void camcontrol_updateTargetFeedback(void);
+
+extern void Camera_isZooming(void);
+
+extern void Camera_setTargetReticleOverride(void);
+
+extern void Camera_setTarget(void);
+
+extern void Camera_func13(void);
+
+extern void Camera_getTarget(void);
+
+extern void Camera_getOverrideTarget(void);
+
+extern void camcontrol_getRelativePosition(void);
+
+extern void camcontrol_initialise(void);
+
+extern void Camera_moveBy(void);
+
+extern void Camera_overridePos(void);
+
+extern void Camera_setFocus(void);
+
+extern void camcontrol_loadTriggeredCamAction(void);
+
+extern void Camera_getCamActionsBinEntry(void);
+
+extern void Camera_setMode(void);
+
+extern void Camera_getDefaultHandlerEntry(void);
+
+extern void Camera_GetFollowPos(void);
+
+extern void Camera_getMode(void);
+
+extern void Camera_get(void);
+
+extern void Camera_update(void);
+
+extern void Camera_init(void);
+
+extern void Camera_release(void);
+
+extern void Camera_initialise(void);
+
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
 int projdfp1r_doUnsupported(void)

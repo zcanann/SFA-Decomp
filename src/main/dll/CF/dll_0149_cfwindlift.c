@@ -15,6 +15,33 @@
 #include "main/gamebits.h"
 #include "main/audio/music_trigger_ids.h"
 
+extern void cfpowerbase_getExtraSize(void);
+extern void cfmaincrystal_getExtraSize(void);
+
+extern void cfpowerbase_getObjectTypeId(void);
+extern void cfmaincrystal_getObjectTypeId(void);
+
+extern void cfpowerbase_free(void);
+extern void cfmaincrystal_free(void);
+
+extern void cfpowerbase_render(void);
+extern void cfmaincrystal_render(void);
+
+extern void cfpowerbase_hitDetect(void);
+extern void cfmaincrystal_hitDetect(void);
+
+extern void cfpowerbase_update(void);
+extern void cfmaincrystal_update(void);
+
+extern void cfpowerbase_init(void);
+extern void cfmaincrystal_init(void);
+
+extern void cfpowerbase_release(void);
+extern void cfmaincrystal_release(void);
+
+extern void cfpowerbase_initialise(void);
+extern void cfmaincrystal_initialise(void);
+
 #define CFWINDLIFT_OBJGROUP 0x49
 
 #define CFWINDLIFT_OBJFLAG_PARENT_SLACK 0x1000

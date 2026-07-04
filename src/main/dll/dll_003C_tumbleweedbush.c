@@ -26,6 +26,39 @@
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
 
+extern void TitleMenuItem_setAButtonToggle(void);
+
+extern void TitleMenuItem_isChanged(void);
+
+extern void TitleMenuItem_setVal(void);
+
+extern void TitleMenuItem_getVal(void);
+
+extern void TitleMenuItem_setEnabled(void);
+
+extern void TitleMenuItem_isEnabled(void);
+
+extern void TitleMenuItem_render(void);
+
+extern void TitleMenuItem_update(void);
+
+extern void TitleMenuItem_free(void);
+
+extern void TitleMenuItem_createWithWindow(void);
+extern void Dummy3E_func05_ret_1(void);
+
+extern void TitleMenuItem_create(void);
+extern void Dummy3E_func04_nop(void);
+
+extern void TitleMenuItem_createWithText(void);
+extern void Dummy3E_func03_ret_0(void);
+
+extern void TitleMenuItem_release(void);
+extern void Dummy3E_release(void);
+
+extern void TitleMenuItem_initialise(void);
+extern void Dummy3E_initialise(void);
+
 #define LINK_ITEM_SLOTS 25          /* per-item icon-strip slot capacity */
 
 extern u8 linkFlag_803dd8f8;        /* whether navigation input is accepted */

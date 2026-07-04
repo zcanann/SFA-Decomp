@@ -10,6 +10,81 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 
+extern void LanternFireFly_modelMtxFn(void);
+
+extern void LanternFireFly_func0B(void);
+
+extern void LanternFireFly_setScale(void);
+
+extern void LanternFireFly_getExtraSize(void);
+extern void flammablevine_getExtraSize(void);
+extern void dll_109_getExtraSize_ret_16(void);
+extern void Fall_Ladders_getExtraSize(void);
+extern void infopoint_getExtraSize(void);
+
+extern void LanternFireFly_getObjectTypeId(void);
+extern void flammablevine_getObjectTypeId(void);
+extern void dll_109_getObjectTypeId(void);
+extern void Fall_Ladders_getObjectTypeId(void);
+extern void infopoint_getObjectTypeId(void);
+
+extern void LanternFireFly_free(void);
+extern void flammablevine_free(void);
+extern void dll_109_free(void);
+extern void Fall_Ladders_free(void);
+extern void infopoint_free(void);
+
+extern void LanternFireFly_render(void);
+extern void FireFlyLantern_getExtraSize(void);
+extern void flammablevine_render(void);
+extern void dll_109_render(void);
+extern void Fall_Ladders_render(void);
+extern void infopoint_render(void);
+extern void decoration11a_getExtraSize(void);
+
+extern void LanternFireFly_hitDetect(void);
+extern void FireFlyLantern_getObjectTypeId(void);
+extern void flammablevine_hitDetect(void);
+extern void dll_109_hitDetect_nop(void);
+extern void Fall_Ladders_hitDetect(void);
+extern void infopoint_hitDetect(void);
+extern void decoration11a_free(void);
+
+extern void LanternFireFly_update(void);
+extern void FireFlyLantern_free(void);
+extern void flammablevine_update(void);
+extern void carryable_break_respawn_update(void);
+extern void Fall_Ladders_update(void);
+extern void infopoint_update(void);
+extern void decoration11a_render(void);
+
+extern void LanternFireFly_init(void);
+extern void FireFlyLantern_render(void);
+extern void flammablevine_init(void);
+extern void dll_109_init(void);
+extern void Fall_Ladders_init(void);
+extern void coldwatercontrol_getExtraSize(void);
+extern void infopoint_init(void);
+extern void decoration11a_hitDetect(void);
+
+extern void LanternFireFly_release(void);
+extern void FireFlyLantern_update(void);
+extern void flammablevine_release(void);
+extern void dll_109_release_nop(void);
+extern void Fall_Ladders_release(void);
+extern void coldwatercontrol_update(void);
+extern void infopoint_release(void);
+extern void decoration11a_update(void);
+
+extern void LanternFireFly_initialise(void);
+extern void FireFlyLantern_init(void);
+extern void flammablevine_initialise(void);
+extern void dll_109_initialise_nop(void);
+extern void Fall_Ladders_initialise(void);
+extern void coldwatercontrol_init(void);
+extern void infopoint_initialise(void);
+extern void decoration11a_init(void);
+
 #define PORTALSPELLDOOR_OBJFLAG_UPDATE_DISABLED 0x8000
 #define PORTALSPELLDOOR_OBJFLAG_HIDDEN 0x4000
 #define PORTALSPELLDOOR_OBJFLAG_HITDETECT_DISABLED 0x2000

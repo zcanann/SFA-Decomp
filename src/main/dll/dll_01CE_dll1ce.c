@@ -25,6 +25,8 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 
+extern void dimmagicbridge_update(void);
+
 #define DLL1CE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /*

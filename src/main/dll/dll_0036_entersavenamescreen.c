@@ -6,6 +6,31 @@
 #include "main/dll/gameplay.h"
 #include "main/audio/sfx.h"
 #include "sfa_light_decls.h"
+
+extern void OptionsScreen_render(void);
+extern void WeirdUnusedMenu_render(void);
+extern void Dummy39_render(void);
+extern void Dummy3A_render(void);
+
+extern void OptionsScreen_frameEnd(void);
+extern void WeirdUnusedMenu_frameEnd(void);
+extern void Dummy39_frameEnd(void);
+extern void Dummy3A_frameEnd(void);
+
+extern void OptionsScreen_run(void);
+extern void WeirdUnusedMenu_run(void);
+extern void Dummy39_run(void);
+extern void Dummy3A_frameStart(void);
+
+extern void OptionsScreen_release(void);
+extern void WeirdUnusedMenu_release(void);
+extern void Dummy39_release(void);
+extern void Dummy3A_release(void);
+
+extern void OptionsScreen_initialise(void);
+extern void WeirdUnusedMenu_initialise(void);
+extern void Dummy39_initialise(void);
+extern void Dummy3A_initialise(void);
 extern f32 timeDelta;
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void fn_80135814(int p1, int p2);

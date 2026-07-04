@@ -17,6 +17,12 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 
+extern void dll_7A_func03(void);
+
+extern void dll_7A_func01_nop(void);
+
+extern void dll_7A_func00_nop(void);
+
 typedef struct
 {
     u32 mode;

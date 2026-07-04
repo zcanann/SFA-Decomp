@@ -30,6 +30,21 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 
+extern void TitleScreenInit_render(void);
+extern void n_rareware_render(void);
+
+extern void TitleScreenInit_frameEnd(void);
+extern void n_rareware_frameEnd(void);
+
+extern void TitleScreenInit_frameStart(void);
+extern void n_rareware_frameStart(void);
+
+extern void TitleScreenInit_release(void);
+extern void n_rareware_release(void);
+
+extern void TitleScreenInit_initialise(void);
+extern void n_rareware_initialise(void);
+
 /* object group queried to find this object's target */
 #define MOVELIB_TARGET_OBJGROUP 8
 extern int ObjGroup_FindNearestObjectToPoint();

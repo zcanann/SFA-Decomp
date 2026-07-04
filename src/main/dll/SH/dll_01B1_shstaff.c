@@ -46,6 +46,54 @@ void sh_staff_free(int* obj, int p2)
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+extern void sc_levelcontrol_getAnimEventState(void);
+
+extern void sc_levelcontrol_applyAnimEventState(void);
+
+extern void sc_levelcontrol_getExtraSize(void);
+extern void sc_musictree_getExtraSize(void);
+extern void sc_totempole_getExtraSize(void);
+
+extern void sc_levelcontrol_getObjectTypeId(void);
+extern void sc_musictree_getObjectTypeId(void);
+extern void sc_totempole_getObjectTypeId(void);
+
+extern void sc_levelcontrol_free(void);
+extern void sc_musictree_free(void);
+extern void sc_totempole_free(void);
+
+extern void sc_levelcontrol_render(void);
+extern void sc_musictree_render(void);
+extern void sc_totempole_render(void);
+
+extern void sc_levelcontrol_hitDetect(void);
+extern void sc_musictree_hitDetect(void);
+extern void sc_totempole_hitDetect(void);
+
+extern void sh_beacon_getExtraSize(void);
+extern void sc_levelcontrol_update(void);
+extern void sc_musictree_update(void);
+extern void sc_totempole_update(void);
+
+extern void sh_beacon_free(void);
+extern void sc_levelcontrol_init(void);
+extern void sc_musictree_init(void);
+extern void sc_totempole_init(void);
+
+extern void sh_staffhaze_render(void);
+extern void sh_beacon_update(void);
+extern void sh_emptytumblew_update(void);
+extern void sc_levelcontrol_release(void);
+extern void sc_musictree_release(void);
+extern void sc_totempole_release(void);
+
+extern void sh_staffhaze_update(void);
+extern void sh_beacon_init(void);
+extern void sh_emptytumblew_init(void);
+extern void sc_levelcontrol_initialise(void);
+extern void sc_musictree_initialise(void);
+extern void sc_totempole_initialise(void);
+
 typedef struct ShStaffPlacement
 {
     u8 pad0[0x4 - 0x0];

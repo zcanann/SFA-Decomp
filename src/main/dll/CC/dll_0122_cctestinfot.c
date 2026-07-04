@@ -9,6 +9,75 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
+
+extern void deathseq_getExtraSize(void);
+extern void dll_127_getExtraSize_ret_0(void);
+extern void kt_torch_getExtraSize(void);
+extern void cfccrate_getExtraSize(void);
+extern void fxemit_getExtraSize(void);
+
+extern void deathseq_getObjectTypeId(void);
+extern void dll_127_getObjectTypeId(void);
+extern void kt_torch_getObjectTypeId(void);
+extern void cfccrate_getObjectTypeId(void);
+extern void fxemit_getObjectTypeId(void);
+
+extern void deathseq_free(void);
+extern void dll_127_free_nop(void);
+extern void kt_torch_free(void);
+extern void cfccrate_free(void);
+extern void fxemit_free(void);
+
+extern void deathseq_render(void);
+extern void dll_127_render(void);
+extern void campfire_getExtraSize(void);
+extern void kt_torch_render(void);
+extern void cfccrate_render(void);
+extern void fxemit_render(void);
+
+extern void fuelcell_getExtraSize(void);
+extern void deathseq_hitDetect(void);
+extern void dll_127_hitDetect_nop(void);
+extern void campfire_getObjectTypeId(void);
+extern void kt_torch_hitDetect(void);
+extern void cfccrate_hitDetect(void);
+extern void fxemit_hitDetect(void);
+
+extern void deathgas_getExtraSize(void);
+extern void fuelcell_free(void);
+extern void deathseq_update(void);
+extern void dll_127_update(void);
+extern void campfire_free(void);
+extern void kt_torch_update(void);
+extern void cfccrate_update(void);
+extern void fxemit_update(void);
+
+extern void deathgas_free(void);
+extern void fuelcell_render(void);
+extern void deathseq_init(void);
+extern void dll_127_init(void);
+extern void campfire_render(void);
+extern void kt_torch_init(void);
+extern void cfccrate_init(void);
+extern void fxemit_init(void);
+
+extern void deathgas_update(void);
+extern void fuelcell_update(void);
+extern void deathseq_release(void);
+extern void dll_127_release_nop(void);
+extern void campfire_update(void);
+extern void kt_torch_release(void);
+extern void cfccrate_release(void);
+extern void fxemit_release(void);
+
+extern void deathgas_init(void);
+extern void fuelcell_init(void);
+extern void deathseq_initialise(void);
+extern void dll_127_initialise_nop(void);
+extern void campfire_init(void);
+extern void kt_torch_initialise(void);
+extern void cfccrate_initialise(void);
+extern void fxemit_initialise(void);
 extern int ObjTrigger_IsSet();
 extern int playerIsDisguised(void);
 extern void Obj_SetActiveModelIndex(int *obj, int idx);

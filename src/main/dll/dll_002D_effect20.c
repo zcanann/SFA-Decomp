@@ -19,6 +19,145 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
+
+extern void Dummy04_func26_nop(void);
+
+extern void Dummy04_func25_nop(void);
+
+extern void Dummy04_func24_ret_0(void);
+
+extern void Dummy04_func23_nop(void);
+
+extern void Dummy04_func22_ret_127(void);
+
+extern void Dummy04_func21_ret_0(void);
+
+extern void Dummy04_func20_nop(void);
+
+extern void Dummy04_func1F_nop(void);
+
+extern void Dummy04_func1E_nop(void);
+
+extern void Dummy04_func1D_ret_0(void);
+
+extern void Dummy04_func1C_nop(void);
+
+extern void Dummy04_func1B_nop(void);
+
+extern void Dummy04_func1A_nop(void);
+
+extern void Dummy04_func19_nop(void);
+extern void dll_0F_func19_nop(void);
+
+extern void Dummy04_func18_nop(void);
+extern void player_updateParticles(void);
+
+extern void Dummy04_func17_nop(void);
+extern void player_doProjGfx(void);
+
+extern void Dummy04_func16_nop(void);
+extern void player_animFn16(void);
+
+extern void Dummy04_func15_nop(void);
+extern void player_setAnimIds(void);
+
+extern void Dummy04_func14_nop(void);
+extern void player_clearXZvel(void);
+
+extern void Dummy04_func13_nop(void);
+extern void dll_0F_func13(void);
+
+extern void Dummy04_func12_nop(void);
+extern void player_updateCurve(void);
+
+extern void Checkpoint_onGameLoop(void);
+extern void Dummy04_func11_ret_0(void);
+extern void player_findCurve(void);
+
+extern void Checkpoint_func10(void);
+extern void Dummy04_func10_nop(void);
+extern void player_playSoundFn10(void);
+
+extern void Checkpoint_func0F(void);
+extern void Dummy04_func0F_ret_0(void);
+extern void player_playSoundFn0F(void);
+
+extern void Checkpoint_func0E(void);
+extern void Dummy04_func0E_nop(void);
+extern void player_rotateTowardEnemy(void);
+
+extern void Checkpoint_func0D(void);
+extern void Dummy04_func0D_ret_0(void);
+extern void player_render2(void);
+
+extern void Checkpoint_func0C(void);
+extern void Dummy04_func0C_nop(void);
+extern void player_modelMtxFn(void);
+
+extern void Checkpoint_find(void);
+extern void Dummy04_func0B_ret_0(void);
+extern void dll_0F_func0B(void);
+
+extern void Checkpoint_func0A(void);
+extern void Dummy04_func0A_ret_0(void);
+extern void player_setScale(void);
+extern void dll_12_func0A_nop(void);
+
+extern void Checkpoint_func09_ret_1(void);
+extern void Dummy04_onSelectSave(void);
+extern void player_getExtraSize(void);
+extern void dll_12_func09(void);
+
+extern void Checkpoint_func08(void);
+extern void Dummy04_func08_nop(void);
+extern void player_followCurve(void);
+extern void dll_12_func08_nop(void);
+
+extern void Checkpoint_func07(void);
+extern void Dummy04_func07_nop(void);
+extern void player_setState(void);
+extern void dll_12_func07_nop(void);
+
+extern void Checkpoint_func06(void);
+extern void screenTransition_getAlpha(void);
+extern void Dummy04_onSetupPlayer(void);
+extern void player_setOverride(void);
+extern void dll_12_func06_ret_0(void);
+
+extern void Checkpoint_remove(void);
+extern void screenTransition_func07(void);
+extern void Dummy04_func05_ret_0(void);
+extern void player_updateVel(void);
+extern void UIController_render(void);
+extern void dll_12_func05_nop(void);
+
+extern void Checkpoint_Add(void);
+extern void screenTransition_fadeFrom(void);
+extern void Dummy04_func04_nop(void);
+extern void player_update(void);
+extern void UIController_frameEnd(void);
+extern void dll_12_func04_nop(void);
+
+extern void Checkpoint_reset(void);
+extern void screenTransition_screenFade(void);
+extern void Dummy04_func03_ret_m1(void);
+extern void player_init(void);
+extern void UIController_frameStart(void);
+extern void dll_12_func03_nop(void);
+
+extern void Checkpoint_release(void);
+extern void screenTransition_Do(void);
+extern void Dummy04_release(void);
+extern void player_release(void);
+extern void UIController_release(void);
+extern void Dummy12_release(void);
+
+extern void Checkpoint_initialise(void);
+extern void screenTransition_do2(void);
+extern void Dummy04_initialise(void);
+extern void player_initialise(void);
+extern void UIController_initialise(void);
+extern void Dummy12_initialise(void);
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);

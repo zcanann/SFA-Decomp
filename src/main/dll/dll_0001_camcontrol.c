@@ -35,6 +35,64 @@
 #include "string.h"
 #include "main/dll/dll_0105_largecrate.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+extern void camcontrol_updateVerticalBounds(void);
+
+extern void CameraModeNormal_func0A(void);
+
+extern void camslide_update(void);
+
+extern void firstperson_updatePitch(void);
+
+extern void firstperson_updatePosition(void);
+
+extern void firstperson_loadSettings(void);
+extern void CameraModeStaffAnim_copyToCurrent_nop(void);
+extern void CameraModeBike_copyToCurrent(void);
+extern void CameraModeViewfinder_copyToCurrent(void);
+extern void CameraModeDebug_copyToCurrent_nop(void);
+extern void CameraModeStatic_copyToCurrent_nop(void);
+extern void CameraModeTestStrength_copyToCurrent_nop(void);
+
+extern void CameraModeNormal_free(void);
+extern void camcontrol_releasePathState(void);
+extern void CameraModeBike_free(void);
+extern void CameraModeViewfinder_free(void);
+extern void CameraModeDebug_free(void);
+extern void CameraModeStatic_free(void);
+extern void CameraModeTestStrength_free(void);
+
+extern void camstatic_update(void);
+extern void camclimb_update(void);
+extern void CameraModeBike_update(void);
+extern void CameraModeViewfinder_update(void);
+extern void CameraModeDebug_update(void);
+extern void CameraModeStatic_update(void);
+extern void CameraModeTestStrength_update(void);
+
+extern void pathcam_loadSettings(void);
+extern void CameraModeStaffAnim_init(void);
+extern void CameraModeBike_init(void);
+extern void CameraModeViewfinder_init(void);
+extern void CameraModeDebug_init(void);
+extern void CameraModeStatic_init(void);
+extern void CameraModeTestStrength_init(void);
+
+extern void camcontrol_releaseModeSettings(void);
+extern void CameraModeStaffAnim_release(void);
+extern void CameraModeBike_release(void);
+extern void CameraModeViewfinder_release(void);
+extern void CameraModeDebug_release_nop(void);
+extern void CameraModeStatic_release(void);
+extern void CameraModeTestStrength_release(void);
+
+extern void camcontrol_initialiseModeSettings(void);
+extern void CameraModeStaffAnim_initialise(void);
+extern void CameraModeBike_initialise(void);
+extern void CameraModeViewfinder_initialise(void);
+extern void CameraModeDebug_initialise_nop(void);
+extern void CameraModeStatic_initialise(void);
+extern void CameraModeTestStrength_initialise(void);
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
 extern int dll_19_func1B(int p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
 extern f32 fn_8014C5D0(register int obj); /* target reticle distance for the enemy objType group */

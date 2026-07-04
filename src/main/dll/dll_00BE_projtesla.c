@@ -8,6 +8,12 @@
 #include "main/dll/dll_7D.h"
 #include "main/engine_shared.h"
 
+extern void projcore1_doUnsupported(void);
+
+extern void projcore1_release(void);
+
+extern void projcore1_initialise(void);
+
 int projtesla_doUnsupported(void)
 {
     OSReport(sProjteslaDoNoLongerSupported);

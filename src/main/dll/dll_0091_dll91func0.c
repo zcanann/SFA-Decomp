@@ -11,6 +11,48 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/savegame.h"
 
+extern void dll_92_func03(void);
+extern void dll_93_func03(void);
+extern void dll_94_func03(void);
+extern void dll_95_func03(void);
+extern void dll_96_func03(void);
+extern void dll_97_func03(void);
+extern void dll_98_func03(void);
+extern void dll_99_func03(void);
+extern void dll_9A_func03(void);
+extern void dll_9B_func03(void);
+extern void dll_9C_func03(void);
+extern void dll_9D_func03(void);
+extern void dll_9E_func03(void);
+
+extern void dll_92_func01_nop(void);
+extern void dll_93_func01_nop(void);
+extern void dll_94_func01_nop(void);
+extern void dll_95_func01_nop(void);
+extern void dll_96_func01_nop(void);
+extern void dll_97_func01_nop(void);
+extern void dll_98_func01_nop(void);
+extern void dll_99_func01_nop(void);
+extern void dll_9A_func01_nop(void);
+extern void dll_9B_func01_nop(void);
+extern void dll_9C_func01_nop(void);
+extern void dll_9D_func01_nop(void);
+extern void dll_9E_func01_nop(void);
+
+extern void dll_92_func00_nop(void);
+extern void dll_93_func00_nop(void);
+extern void dll_94_func00_nop(void);
+extern void dll_95_func00_nop(void);
+extern void dll_96_func00_nop(void);
+extern void dll_97_func00_nop(void);
+extern void dll_98_func00_nop(void);
+extern void dll_99_func00_nop(void);
+extern void dll_9A_func00_nop(void);
+extern void dll_9B_func00_nop(void);
+extern void dll_9C_func00_nop(void);
+extern void dll_9D_func00_nop(void);
+extern void dll_9E_func00_nop(void);
+
 typedef struct
 {
     u32 mode; /* +0x00 */

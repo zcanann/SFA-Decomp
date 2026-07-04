@@ -31,6 +31,16 @@
 #include "main/lightmap.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+extern void fn_80133F70(void);
+
+extern void dll_3F_frameEnd_nop(void);
+
+extern void dll_3F_frameStart_ret_0(void);
+
+extern void dll_3F_release(void);
+
+extern void dll_3F_initialise(void);
+
 #define MINIMAP_OBJFLAG_PARENT_SLACK 0x1000
 
 /* gMinimapViewMode selector (see file header): the three HUD view modes. */

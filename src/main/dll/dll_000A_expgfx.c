@@ -13,6 +13,54 @@
 #include "dolphin/os/OSFastCast.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+extern void dll_0B_func18(void);
+
+extern void dll_0B_func17(void);
+
+extern void dll_0B_func16(void);
+
+extern void dll_0B_func15(void);
+
+extern void dll_0B_func14(void);
+
+extern void dll_0B_func13(void);
+
+extern void dll_0B_func12(void);
+
+extern void dll_0B_func11(void);
+
+extern void dll_0B_func10(void);
+
+extern void dll_0B_func0F(void);
+
+extern void dll_0B_func0E(void);
+
+extern void dll_0B_func0D(void);
+
+extern void dll_0B_func0C(void);
+
+extern void dll_0B_func0B(void);
+
+extern void dll_0B_func0A(void);
+
+extern void dll_0B_func09(void);
+
+extern void dll_0B_func08(void);
+
+extern void dll_0B_func07(void);
+
+extern void dll_0B_func06(void);
+
+extern void dll_0B_func05(void);
+
+extern void dll_0B_func04(void);
+
+extern void dll_0B_onMapSetup(void);
+
+extern void dll_0B_release(void);
+
+extern void dll_0B_initialise(void);
+
 #define GX_BM_NONE 0
 #define GX_BM_BLEND 1
 #define GX_BL_ZERO 0

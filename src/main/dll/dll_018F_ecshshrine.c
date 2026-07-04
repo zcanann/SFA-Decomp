@@ -48,6 +48,33 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+extern void ecsh_creator_getExtraSize(void);
+extern void gpsh_shrine_getExtraSize(void);
+
+extern void ecsh_creator_getObjectTypeId(void);
+extern void gpsh_shrine_getObjectTypeId(void);
+
+extern void ecsh_creator_free(void);
+extern void gpsh_shrine_free(void);
+
+extern void ecsh_creator_render(void);
+extern void gpsh_shrine_render(void);
+
+extern void ecsh_creator_hitDetect(void);
+extern void gpsh_shrine_hitDetect(void);
+
+extern void ecsh_creator_update(void);
+extern void gpsh_shrine_update(void);
+
+extern void ecsh_creator_init(void);
+extern void gpsh_shrine_init(void);
+
+extern void ecsh_creator_release(void);
+extern void gpsh_shrine_release(void);
+
+extern void ecsh_creator_initialise(void);
+extern void gpsh_shrine_initialise(void);
+
 #define ECSHSHRINE_OBJGROUP 0xb
 
 typedef struct EcshIntPair

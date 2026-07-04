@@ -8,6 +8,12 @@
 #include "dolphin/os.h"
 #include "main/dll/dll_70.h"
 
+extern void projship1_doUnsupported(void);
+
+extern void projship1_release(void);
+
+extern void projship1_initialise(void);
+
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
 char sProjsquirt1DoNoLongerSupported[] = "<projsquirt1 Do>No Longer supported \n";

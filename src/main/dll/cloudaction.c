@@ -19,6 +19,12 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "dolphin/gx/GXEnum.h"
 
+extern void __kill_critical_regions(void);
+
+extern void __begin_critical_region(void);
+
+extern void __end_critical_region(void);
+
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 extern void* Camera_GetCurrentViewSlot(void);

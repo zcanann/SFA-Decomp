@@ -17,6 +17,10 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 #include "main/gameplay_runtime.h"
+
+extern void dll_8F_func01_nop(void);
+
+extern void dll_8F_func00_nop(void);
 extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll8EEffectHwParams[];
 extern u8 gDll8EEffectVtxColorTable[];

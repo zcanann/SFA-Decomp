@@ -22,6 +22,24 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
+extern void drcreator_getExtraSize(void);
+
+extern void drcreator_getObjectTypeId(void);
+
+extern void drcreator_free(void);
+
+extern void drcreator_render(void);
+
+extern void drcreator_hitDetect(void);
+
+extern void drcreator_update(void);
+
+extern void drcreator_init(void);
+
+extern void drcreator_release(void);
+
+extern void drcreator_initialise(void);
+
 #define KYTESMUM_OBJGROUP 0x3
 
 #define KYTESMUM_OBJFLAG_HITDETECT_DISABLED 0x2000

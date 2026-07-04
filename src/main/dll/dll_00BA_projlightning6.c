@@ -9,6 +9,12 @@
 #include "main/dll/dll_66.h"
 #include "main/engine_shared.h"
 
+extern void projenergise1_doUnsupported(void);
+
+extern void projenergise1_release(void);
+
+extern void projenergise1_initialise(void);
+
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
 int projlightning6_doUnsupported(void)

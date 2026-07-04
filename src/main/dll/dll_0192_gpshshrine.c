@@ -13,6 +13,47 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+extern void gpsh_scene_getExtraSize(void);
+extern void ecsh_cup_getExtraSize(void);
+extern void dbsh_shrine_getExtraSize(void);
+
+extern void gpsh_scene_getObjectTypeId(void);
+extern void ecsh_cup_getObjectTypeId(void);
+extern void dbsh_shrine_getObjectTypeId(void);
+
+extern void gpsh_scene_free(void);
+extern void ecsh_cup_free(void);
+extern void dbsh_shrine_free(void);
+
+extern void gpsh_scene_render(void);
+extern void ecsh_cup_render(void);
+extern void dbsh_shrine_render(void);
+
+extern void gpsh_scene_hitDetect(void);
+extern void ecsh_cup_hitDetect(void);
+extern void dbsh_shrine_hitDetect(void);
+extern void dbsh_symbol_getExtraSize(void);
+
+extern void gpsh_scene_update(void);
+extern void ecsh_cup_update(void);
+extern void dbsh_shrine_update(void);
+extern void dbsh_symbol_free(void);
+
+extern void gpsh_scene_init(void);
+extern void ecsh_cup_init(void);
+extern void dbsh_shrine_init(void);
+extern void dbsh_symbol_render(void);
+
+extern void gpsh_scene_release(void);
+extern void ecsh_cup_release(void);
+extern void dbsh_shrine_release(void);
+extern void dbsh_symbol_update(void);
+
+extern void gpsh_scene_initialise(void);
+extern void ecsh_cup_initialise(void);
+extern void dbsh_shrine_initialise(void);
+extern void dbsh_symbol_init(void);
+
 #define GPSHSHRINE_OBJGROUP 0xb
 extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();

@@ -29,6 +29,24 @@
 #include "main/object_descriptor.h"
 #include "dolphin/os.h"
 
+extern void dll_115_getExtraSize_ret_2(void);
+
+extern void dll_115_getObjectTypeId(void);
+
+extern void dll_115_free(void);
+
+extern void dll_115_render(void);
+
+extern void dll_115_hitDetect_nop(void);
+
+extern void dll_115_update(void);
+
+extern void dll_115_init(void);
+
+extern void dll_115_release_nop(void);
+
+extern void dll_115_initialise_nop(void);
+
 /* object group this object joins while active */
 #define SEQOBJ2_OBJGROUP 0xf
 
@@ -401,5 +419,18 @@ const char lbl_80321208[444] = "newseqobj %d: used bit set during sequence\n\000
 const char sSeqObjNeedBitUsedBitFormat[40] = "newseqobj %d: Need Bit %d, Used Bit %d\n\000";
 
 /* descriptor/ptr table auto 0x803213f0-0x80321460 */
-u32 gIMMultiSeqObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)immultiseq_initialise, (u32)immultiseq_release, 0x00000000, (u32)immultiseq_init, (u32)immultiseq_update, (u32)immultiseq_hitDetect, (u32)immultiseq_render, (u32)immultiseq_free, (u32)immultiseq_getObjectTypeId, (u32)immultiseq_getExtraSize };
+ObjectDescriptor gIMMultiSeqObjDescriptor = {
+    0x00000000, 0x00000000, 0x00000000,
+    0x00090000,
+    (ObjectDescriptorCallback)immultiseq_initialise,
+    (ObjectDescriptorCallback)immultiseq_release,
+    0x00000000,
+    (ObjectDescriptorCallback)immultiseq_init,
+    (ObjectDescriptorCallback)immultiseq_update,
+    (ObjectDescriptorCallback)immultiseq_hitDetect,
+    (ObjectDescriptorCallback)immultiseq_render,
+    (ObjectDescriptorCallback)immultiseq_free,
+    (ObjectDescriptorCallback)immultiseq_getObjectTypeId,
+    immultiseq_getExtraSize,
+};
 u32 lbl_80321428[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_115_initialise_nop, (u32)dll_115_release_nop, 0x00000000, (u32)dll_115_init, (u32)dll_115_update, (u32)dll_115_hitDetect_nop, (u32)dll_115_render, (u32)dll_115_free, (u32)dll_115_getObjectTypeId, (u32)dll_115_getExtraSize_ret_2 };

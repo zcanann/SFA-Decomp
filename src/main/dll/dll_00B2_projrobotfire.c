@@ -7,6 +7,12 @@
 #include "dolphin/os.h"
 #include "main/dll/dll_6D.h"
 
+extern void projsquirt1_doUnsupported(void);
+
+extern void projsquirt1_release(void);
+
+extern void projsquirt1_initialise(void);
+
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
 int projrobotfire_doUnsupported(void)

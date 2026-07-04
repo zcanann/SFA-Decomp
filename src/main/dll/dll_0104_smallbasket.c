@@ -39,6 +39,24 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+extern void largecrate_getExtraSize(void);
+
+extern void largecrate_getObjectTypeId(void);
+
+extern void largecrate_free(void);
+
+extern void largecrate_render(void);
+
+extern void largecrate_hitDetect(void);
+
+extern void largecrate_update(void);
+
+extern void largecrate_init(void);
+
+extern void largecrate_release(void);
+
+extern void largecrate_initialise(void);
+
 #define SMALLBASKET_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SMALLBASKET_OBJGROUP 0x10
 #define PAD_BUTTON_A 0x100

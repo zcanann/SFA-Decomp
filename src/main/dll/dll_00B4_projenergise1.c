@@ -10,6 +10,12 @@
 #include "main/dll/modgfx67.h"
 #include "main/engine_shared.h"
 
+extern void projenergise2_doUnsupported(void);
+
+extern void projenergise2_release(void);
+
+extern void projenergise2_initialise(void);
+
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
 int projenergise1_doUnsupported(void)
