@@ -1732,7 +1732,7 @@ void crawler_updateC(s16* obj, u8* state)
 
     {
         u32 flags = ((BaddieState*)state)->controlFlags;
-        if ((flags & 0x2000) != 0)
+        if ((flags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
         {
             int count = fn_8014C11C((int)obj, lbl_803E2BB8, 1, 0x28, gCrawlerNearbyObjectBuffer);
             if (count >= 1 && (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) <= lbl_803E2BB8)
