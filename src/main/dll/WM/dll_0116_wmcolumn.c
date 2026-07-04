@@ -17,6 +17,9 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 
+/* object group this column joins */
+#define WMCOLUMN_OBJGROUP 4
+
 #define WMCOLUMN_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct WmColumnPlacement
@@ -58,7 +61,7 @@ int wm_column_getObjectTypeId(void)
 
 void wm_column_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 4);
+    ObjGroup_RemoveObject(obj, WMCOLUMN_OBJGROUP);
     (*gCarryableInterface)->free(obj);
 }
 
@@ -179,7 +182,7 @@ void wm_column_init(GameObject* obj, WmColumnPlacement* mapData)
         obj->anim.bankIndex = 0;
     }
     (*gCarryableInterface)->initAnim(obj, state, 0x32);
-    ObjGroup_AddObject((int)obj, 4);
+    ObjGroup_AddObject((int)obj, WMCOLUMN_OBJGROUP);
 }
 
 void wm_column_release(void)
