@@ -13,6 +13,9 @@
 #include "string.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+/* object group this object belongs to */
+#define WISPBADDIE_OBJGROUP 3
 #define WISPBADDIE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define WISPBADDIE_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -124,7 +127,7 @@ void swarmbaddie_free(int obj);
 void wispbaddie_free(int obj)
 {
     void** state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, WISPBADDIE_OBJGROUP);
     if (*state != NULL)
     {
         mm_free(*state);
