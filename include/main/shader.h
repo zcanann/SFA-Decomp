@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/frustum.h"
 
-int objShouldLoad(int param_1,int param_2,int param_3);
+int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup);
 void FUN_80055d0c(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8);
 void FUN_80055d10(void);

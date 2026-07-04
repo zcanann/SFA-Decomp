@@ -68,7 +68,7 @@ extern const f32 gMapBlockWorldSize;
 extern float fastFloorf(float x);
 extern void OSReport(const char* msg, ...);
 
-int objShouldLoad(int obj, int viewSlot, int mapEventGroup)
+int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)
 {
     char* strs;
     int verbose;
@@ -147,7 +147,7 @@ test:
         }
         return 0;
     }
-    if ((s8)viewSlot == 0)
+    if (viewSlot == 0)
     {
         bx = fastFloorf((((GameObject*)obj)->anim.rootMotionScale - playerMapOffsetX) / gMapBlockWorldSize);
         bz = fastFloorf((((GameObject*)obj)->anim.localPosY - playerMapOffsetZ) / gMapBlockWorldSize);
@@ -186,7 +186,7 @@ test:
         return 1;
     }
     useObj = 0;
-    if ((*(u8*)(obj + 4) & 4) && (s8)viewSlot == 0)
+    if ((*(u8*)(obj + 4) & 4) && viewSlot == 0)
     {
         player = Obj_GetPlayerObject();
         if (player != NULL)
@@ -206,8 +206,8 @@ test:
     }
     if (useObj != 0)
     {
-        off = (s8)viewSlot << 4;
-        x = ((WarpVec*)lbl_80386648)[(s8)viewSlot].x;
+        off = viewSlot << 4;
+        x = ((WarpVec*)lbl_80386648)[viewSlot].x;
         p = (f32*)(lbl_80386648 + off);
         y = p[1];
         z = p[2];
@@ -2492,11 +2492,10 @@ void mapLoadUnloadObjects(int flag)
             {
                 char* obj2 = (char*)objs2[i];
                 u32 mid2 = *(u8*)(obj2 + 0x34);
-                char** slot = &((char**)(base + 0x83A8))[mid2];
-                char* page2 = *slot;
+                char* page2 = ((char**)(base + 0x83A8))[mid2];
                 if (page2 != 0)
                 {
-                    s8 lp = *(s8*)(obj2 + 0x35) + 1;
+                    int lp = *(s8*)(obj2 + 0x35) + 1;
                     bit = 0;
                     cur = *(u32*)(page2 + 0x20);
                     end = cur + *(int*)(base + (0x4290 + mid2 * 0x8C));
@@ -2523,7 +2522,7 @@ void mapLoadUnloadObjects(int flag)
                         }
                         else
                         {
-                            char* pg2 = *slot;
+                            char* pg2 = ((char**)(base + 0x83A8))[mid2];
                             idx = bit >> 3;
                             if (idx >= 0xc4)
                             {
@@ -2532,7 +2531,7 @@ void mapLoadUnloadObjects(int flag)
                             else
                             {
                                 vis = 1;
-                                if (((1 << (bit & 7)) &
+                                if (((vis << (bit & 7)) &
                                     *(s8*)(*(int*)(pg2 + 0x10) + idx)) == 0)
                                     vis = 0;
                             }
@@ -2541,7 +2540,7 @@ void mapLoadUnloadObjects(int flag)
                         {
                             if (bit >= 0)
                             {
-                                char* pg3 = *slot;
+                                char* pg3 = ((char**)(base + 0x83A8))[mid2];
                                 int ix3 = bit >> 3;
                                 int msk3 = 1 << (bit & 7);
                                 *(s8*)(*(int*)(pg3 + 0x10) + ix3) =
