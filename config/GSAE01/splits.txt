@@ -3276,6 +3276,7 @@ main/audio/inp_midi.c:
 	extab       start:0x80005AA8 end:0x80005AB8
 	extabindex  start:0x8000638C end:0x800063A4
 	.text       start:0x80281A30 end:0x80282070
+	.bss        start:0x803CD820 end:0x803D3CA0
 
 main/audio/inp_value.c:
 	extab       start:0x80005AB8 end:0x80005AD0

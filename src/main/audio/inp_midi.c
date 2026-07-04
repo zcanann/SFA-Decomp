@@ -301,3 +301,6 @@ u8 inpGetMidiLastNote(u8 a, u8 b)
     }
     return gInpMidiLastNote[a];
 }
+
+u8 gInpMidiCtrlByKey[0x4300];
+u8 gInpMidiCtrl[0x2180];
