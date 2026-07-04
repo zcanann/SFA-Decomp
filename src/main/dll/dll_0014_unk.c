@@ -2773,52 +2773,94 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId)
 int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a,
                                           RomCurveDef* b, f32 unusedW);
 
+static inline RomCurveDef* RomCurve_FindByIdWithLimit(u32 curveId, int lim)
+{
+    RomCurveDef* curve;
+    int high;
+    int low;
+    int mid;
+
+    if ((s32)curveId < 0)
+    {
+        return NULL;
+    }
+
+    high = lim;
+    low = 0;
+    while (high >= low)
+    {
+        mid = (high + low) >> 1;
+        curve = romCurves[mid];
+        if (curveId > curve->id)
+        {
+            low = mid + 1;
+        }
+        else if (curveId < curve->id)
+        {
+            high = mid - 1;
+        }
+        else
+        {
+            return curve;
+        }
+    }
+
+    return NULL;
+}
+
+#pragma opt_propagation off
 u32
 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
                                       float* outLateralOffset, float* outVerticalOffset,
                                       float* outPhase)
 {
     RomCurveDef* curves[4];
-    f32 nextSegmentDx;
+    f32 tdx;
+    f32 tdz;
+    f32 dx;
+    f32 startPhase;
     f32 segmentDx;
-    f32 segmentDy;
-    f32 nextTangentDz;
-    f32 nextSegmentDz;
-    f32 tangentDx;
+    f32 dz;
     f32 tangentDz;
-    f32 nextTangentDx;
+    f32 tangentDx;
     f32 segmentDz;
     f32 tangentLen;
-    f32 nextTangentLen;
-    f32 startNumer;
-    f32 endNumer;
-    f32 startPhase;
+    f32 numer;
+    f32 x1;
+    f32 z1;
     f32 endPhase;
-    f32 phase;
     f32 segmentLen;
-    f32 lateralX;
-    f32 lateralZ;
+    int lim;
+    RomCurveDef** cp;
     int i;
 
-    for (i = 0; i < 4; i++)
+    i = 0;
+    cp = curves;
+    lim = nRomCurves - 1;
+    while (i < 4)
     {
-        curves[i] = RomCurve_FindByIdInline(curveIds[i]);
+        *cp = RomCurve_FindByIdWithLimit(*curveIds, lim);
+        curveIds++;
+        cp++;
+        i++;
     }
 
-    segmentDx = curves[2]->x - curves[1]->x;
-    segmentDz = curves[2]->z - curves[1]->z;
+    dx = curves[2]->x - curves[1]->x;
+    segmentDx = dx;
+    dz = curves[2]->z - curves[1]->z;
+    segmentDz = dz;
     if (curves[0] != NULL)
     {
-        tangentDx = curves[1]->x - curves[0]->x;
-        tangentDz = curves[1]->z - curves[0]->z;
+        tdx = curves[1]->x - curves[0]->x;
+        tdz = curves[1]->z - curves[0]->z;
     }
     else
     {
-        tangentDx = segmentDx;
-        tangentDz = segmentDz;
+        tdx = dx;
+        tdz = dz;
     }
-    tangentDx = gFloatHalf * (tangentDx + segmentDx);
-    tangentDz = gFloatHalf * (tangentDz + segmentDz);
+    tangentDx = gFloatHalf * (tdx + dx);
+    tangentDz = gFloatHalf * (tdz + dz);
     tangentLen = sqrtf(tangentDx * tangentDx + tangentDz * tangentDz);
     if ((*(f32*)&gFloatZero) != tangentLen)
     {
@@ -2826,74 +2868,79 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
         tangentDz = tangentDz / tangentLen;
     }
 
-    startNumer = -((tangentDx * curves[1]->x) + (tangentDz * curves[1]->z));
+    x1 = curves[1]->x;
+    z1 = curves[1]->z;
+    tangentLen = (tangentDx * x1) + (tangentDz * z1);
+    numer = -tangentLen;
     startPhase = tangentDx * segmentDx + tangentDz * segmentDz;
     if (gFloatZero != startPhase)
     {
         startPhase =
-            -(startNumer + ((tangentDx * x) + (tangentDz * z))) / startPhase;
+            -(numer + ((tangentDx * x) + (tangentDz * z))) / startPhase;
     }
 
-    nextSegmentDx = curves[2]->x - curves[1]->x;
-    nextSegmentDz = curves[2]->z - curves[1]->z;
+    dx = curves[2]->x - x1;
+    dz = curves[2]->z - z1;
     if (curves[3] != NULL)
     {
-        nextTangentDx = curves[3]->x - curves[2]->x;
-        nextTangentDz = curves[3]->z - curves[2]->z;
+        tdx = curves[3]->x - curves[2]->x;
+        tdz = curves[3]->z - curves[2]->z;
     }
     else
     {
-        nextTangentDx = nextSegmentDx;
-        nextTangentDz = nextSegmentDz;
+        tdx = dx;
+        tdz = dz;
     }
-    nextTangentDx = gFloatHalf * (nextTangentDx + nextSegmentDx);
-    nextTangentDz = gFloatHalf * (nextTangentDz + nextSegmentDz);
-    nextTangentLen = sqrtf(nextTangentDx * nextTangentDx + nextTangentDz * nextTangentDz);
-    if ((*(f32*)&gFloatZero) != nextTangentLen)
+    tangentDx = gFloatHalf * (tdx + dx);
+    tangentDz = gFloatHalf * (tdz + dz);
+    tangentLen = sqrtf(tangentDx * tangentDx + tangentDz * tangentDz);
+    if ((*(f32*)&gFloatZero) != tangentLen)
     {
-        nextTangentDx = nextTangentDx / nextTangentLen;
-        nextTangentDz = nextTangentDz / nextTangentLen;
+        tangentDx = tangentDx / tangentLen;
+        tangentDz = tangentDz / tangentLen;
     }
 
-    endNumer = -((nextTangentDx * curves[2]->x) + (nextTangentDz * curves[2]->z));
-    endPhase = nextTangentDx * nextSegmentDx + nextTangentDz * nextSegmentDz;
+    numer = -((tangentDx * curves[2]->x) + (tangentDz * curves[2]->z));
+    endPhase = tangentDx * segmentDx + tangentDz * segmentDz;
     if (gFloatZero != endPhase)
     {
         endPhase =
-            -(endNumer + ((nextTangentDx * x) + (nextTangentDz * z))) / endPhase;
+            -(numer + ((tangentDx * x) + (tangentDz * z))) / endPhase;
     }
 
-    phase = -startPhase / (endPhase - startPhase);
-    if ((phase >= *(f32*)(int)&gFloatZero) && (phase < gFloatOne))
+    /* tangentDx is reused as the projected phase from here on; tdz is reused
+     * as the segment Y delta and startPhase's old value doubles as the
+     * unnormalized lateral fallback (segmentDx/segmentDz still hold the raw
+     * segment deltas, which equal dx/dz when segmentLen is degenerate). */
+    tangentDx = -startPhase / (endPhase - startPhase);
+    if ((tangentDx >= *(f32*)(int)&gFloatZero) && (tangentDx < gFloatOne))
     {
         f32 projX;
         f32 projY;
         f32 projZ;
 
-        segmentDy = curves[2]->y - curves[1]->y;
-        segmentLen =
-            sqrtf(segmentDy * segmentDy + nextSegmentDx * nextSegmentDx +
-                  nextSegmentDz * nextSegmentDz);
-        lateralX = nextSegmentDx;
-        lateralZ = nextSegmentDz;
+        tdz = curves[2]->y - curves[1]->y;
+        segmentLen = sqrtf(dx * dx + tdz * tdz + dz * dz);
         if (segmentLen > (*(f32*)&gFloatZero))
         {
-            lateralX = -nextSegmentDx * (gFloatOne / segmentLen);
-            lateralZ = -nextSegmentDz * (gFloatOne / segmentLen);
+            segmentLen = gFloatOne / segmentLen;
+            segmentDx = -dx * segmentLen;
+            segmentDz = -dz * segmentLen;
         }
 
-        projX = nextSegmentDx * phase + curves[1]->x;
-        projY = segmentDy * phase + curves[1]->y;
-        projZ = nextSegmentDz * phase + curves[1]->z;
+        projX = dx * tangentDx + curves[1]->x;
+        projY = tdz * tangentDx + curves[1]->y;
+        projZ = dz * tangentDx + curves[1]->z;
         *outLateralOffset =
-            -((projX * lateralZ) - (projZ * lateralX)) + (x * lateralZ - z * lateralX);
+            -((projX * segmentDz) - (projZ * segmentDx)) + (x * segmentDz - z * segmentDx);
         *outVerticalOffset = y - projY;
-        *outPhase = phase;
+        *outPhase = tangentDx;
         return 1;
     }
     return 0;
 }
 
+#pragma opt_propagation reset
 int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
 {
     RomCurveDef* curve;
