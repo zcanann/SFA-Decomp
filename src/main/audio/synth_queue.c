@@ -566,7 +566,7 @@ done:
             }
             synthRecycleVoiceCallbacks(voice);
             break;
-        case 2:
+        case SYNTH_VOICE_STATE_ALLOCATED:
             if (voice->prev != 0)
             {
                 voice->prev->next = voice->next;
