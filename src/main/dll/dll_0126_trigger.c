@@ -37,6 +37,25 @@
 #include "main/shader.h"
 #include "main/sfa_shared_decls.h"
 
+/*
+ * TriggerState+0 status byte (`*state`). See objInterpretSeq / Trigger_hitDetect.
+ */
+#define TRIGGER_SFLAG_ENTERED 0x01     /* enter-direction command list has run (latch) */
+#define TRIGGER_SFLAG_EXITED 0x02      /* exit-direction command list has run (latch) */
+#define TRIGGER_SFLAG_DISABLED 0x04    /* trigger's game bit was already set at init: fire enter once */
+#define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
+
+/*
+ * Per-command-entry flags byte (entry[0] in the 4-byte command records at
+ * placementData+0x18). Gates whether the entry runs for a given activation leg.
+ */
+#define TRIGGER_CMD_ON_ENTER 0x01      /* run when activation direction is enter (legCode > 0) */
+#define TRIGGER_CMD_ON_EXIT 0x02       /* run when activation direction is exit (legCode < 0) */
+#define TRIGGER_CMD_ONCE_ENTER 0x04    /* enter leg runs only once (latched vs SFLAG_ENTERED) */
+#define TRIGGER_CMD_ONCE_EXIT 0x08     /* exit leg runs only once (latched vs SFLAG_EXITED) */
+#define TRIGGER_CMD_UNCONDITIONAL 0x10 /* ignore enter/exit gating */
+#define TRIGGER_CMD_OVERRIDE_DISABLED 0x20 /* run even when SFLAG_DISABLED is set */
+
 typedef struct TriggerPlacement
 {
     u8 pad0[0x38 - 0x0];
@@ -172,7 +191,7 @@ void Trigger_free(void* obj)
 
     while (i < 8)
     {
-        if ((entry[0] & 3) != 0 && entry[1] != 3 && entry[1] == 4)
+        if ((entry[0] & (TRIGGER_CMD_ON_ENTER | TRIGGER_CMD_ON_EXIT)) != 0 && entry[1] != 3 && entry[1] == 4)
         {
             Sfx_StopFromObject(obj, (u16)((entry[2] << 8) | entry[3]));
         }
@@ -230,9 +249,9 @@ void Trigger_init(u8* obj, u8* params)
     ((TriggerState*)sub)->gameBit = *(s16*)(params + 0x44);
     if (GameBit_Get(((TriggerState*)sub)->gameBit) == 1)
     {
-        sub[0] = (u8)(sub[0] | 0x04);
+        sub[0] = (u8)(sub[0] | TRIGGER_SFLAG_DISABLED);
     }
-    sub[0] = (u8)(sub[0] | 0x40);
+    sub[0] = (u8)(sub[0] | TRIGGER_SFLAG_SEED_TARGET);
 }
 
 int Trigger_getExtraSize(void) { return 0xac; }
@@ -262,18 +281,18 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
 
     while (i < 8)
     {
-        if (p[1] != 0 && ((sflags = *state, (sflags & 4) == 0) || (*p & 0x20) != 0))
+        if (p[1] != 0 && ((sflags = *state, (sflags & TRIGGER_SFLAG_DISABLED) == 0) || (*p & TRIGGER_CMD_OVERRIDE_DISABLED) != 0))
         {
             b = *p;
-            if ((b & 0x10) == 0)
+            if ((b & TRIGGER_CMD_UNCONDITIONAL) == 0)
             {
                 if ((s8)legCode == 1)
                 {
-                    if ((b & 1) != 0)
+                    if ((b & TRIGGER_CMD_ON_ENTER) != 0)
                     {
-                        if ((sflags & 1) != 0)
+                        if ((sflags & TRIGGER_SFLAG_ENTERED) != 0)
                         {
-                            if ((b & 4) == 0)
+                            if ((b & TRIGGER_CMD_ONCE_ENTER) == 0)
                             {
                                 goto next;
                             }
@@ -281,11 +300,11 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         goto run;
                     }
                 }
-                else if ((s8)legCode == -1 && (b & 2) != 0)
+                else if ((s8)legCode == -1 && (b & TRIGGER_CMD_ON_EXIT) != 0)
                 {
-                    if ((sflags & 2) != 0)
+                    if ((sflags & TRIGGER_SFLAG_EXITED) != 0)
                     {
-                        if ((b & 8) == 0)
+                        if ((b & TRIGGER_CMD_ONCE_EXIT) == 0)
                         {
                             goto next;
                         }
@@ -293,7 +312,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     goto run;
                 }
             }
-            else if ((b & 1) != 0)
+            else if ((b & TRIGGER_CMD_ON_ENTER) != 0)
             {
                 if ((s8)legCode < 0)
                 {
@@ -301,7 +320,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                 }
                 goto run;
             }
-            else if ((b & 2) == 0 || (s8)legCode <= 0)
+            else if ((b & TRIGGER_CMD_ON_EXIT) == 0 || (s8)legCode <= 0)
             {
             run:
                 switch (p[1])
@@ -780,12 +799,12 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
     }
     if ((s8)legCode > 0)
     {
-        *state |= 1;
+        *state |= TRIGGER_SFLAG_ENTERED;
         GameBit_Set(((TriggerState*)state)->gameBit, 1);
     }
     else if ((s8)legCode < 0)
     {
-        *state |= 2;
+        *state |= TRIGGER_SFLAG_EXITED;
     }
 }
 
@@ -824,11 +843,11 @@ void Trigger_hitDetect(int obj)
         tk = getTrickyObject();
         if ((void*)t != NULL || (void*)tk != NULL)
         {
-            if ((*state & 4) != 0)
+            if ((*state & TRIGGER_SFLAG_DISABLED) != 0)
             {
                 objInterpretSeq(obj, t, 1, 0);
-                *state &= ~4;
-                *state |= 1;
+                *state &= ~TRIGGER_SFLAG_DISABLED;
+                *state |= TRIGGER_SFLAG_ENTERED;
             }
             else
             {
@@ -867,7 +886,7 @@ void Trigger_hitDetect(int obj)
                 }
                 if (ok)
                 {
-                    if ((*state & 0x40) != 0)
+                    if ((*state & TRIGGER_SFLAG_SEED_TARGET) != 0)
                     {
                         switch (def[0x43])
                         {
@@ -888,7 +907,7 @@ void Trigger_hitDetect(int obj)
                             ((TriggerState*)state)->targetPosZ = ((GameObject*)target)->anim.previousLocalPosZ;
                             break;
                         }
-                        *state &= ~0x40;
+                        *state &= ~TRIGGER_SFLAG_SEED_TARGET;
                     }
                     else
                     {
