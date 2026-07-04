@@ -2,6 +2,8 @@
 #include "main/game_object.h"
 #include "main/dll/mclightning_state.h"
 
+#define MCLIGHTNING_OBJGROUP 0x48
+
 int mclightning_handleScriptEvents(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     McLightningState* state = ((GameObject*)obj)->extra;
@@ -47,7 +49,7 @@ void mclightning_free(int obj)
 {
     McLightningState* state = ((GameObject*)obj)->extra;
 
-    ObjGroup_RemoveObject(obj, 0x48);
+    ObjGroup_RemoveObject(obj, MCLIGHTNING_OBJGROUP);
     if (state->boltHandle != NULL)
     {
         mm_free(state->boltHandle);
@@ -74,7 +76,7 @@ void mclightning_init(int obj, u8* setup)
 
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     ((GameObject*)obj)->animEventCallback = mclightning_handleScriptEvents;
-    ObjGroup_AddObject(obj, 0x48);
+    ObjGroup_AddObject(obj, MCLIGHTNING_OBJGROUP);
     state->flags.spawnFlags = setup[0x1a];
     v = lbl_803E745C;
     state->hitEffectScale = v;
