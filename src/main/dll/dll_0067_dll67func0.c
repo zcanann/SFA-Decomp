@@ -37,8 +37,6 @@ extern ModgfxInterface** gModgfxInterface;
 /* Engine/save-system entry points and gameplay-state globals owned by the
    main executable; addresses match the retail map (FUN_/DAT_/lbl_). */
 
-extern void* memset(void* dst, int val, u32 n);
-extern void* memcpy(void* dst, const void* src, u32 n);
 extern u32 FUN_80006768();
 extern u32 FUN_8000676c();
 extern u32 FUN_80006c20();
