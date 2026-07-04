@@ -420,8 +420,6 @@ u32 FUN_800c9030(u32 key, int* outIndex)
 }
 #endif
 
-extern s16 lbl_803DD414;
-extern s16 lbl_803DD416;
 extern f32 lbl_803E0180;
 extern f32 lbl_803E0184;
 extern f32 lbl_803E0188;
