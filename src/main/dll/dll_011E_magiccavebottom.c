@@ -15,6 +15,12 @@ extern void warpToMap(int idx, s8 transType);
 #define MAGICCAVE_GAMEBIT_WARP_READY 0x91e   /* handoff to top: perform warp sequence */
 #define MAGICCAVE_GAMEBIT_WARP_DEST 0x1b8    /* warp destination map index */
 
+/* magiccavebottom_update sequence state machine (state byte at extra[0]) */
+#define MAGICCAVEBOTTOM_STATE_SETUP 0     /* latch active, seed env fx, run intro seq */
+#define MAGICCAVEBOTTOM_STATE_START_MUSIC 1 /* kick off the adventure music */
+#define MAGICCAVEBOTTOM_STATE_IDLE 2      /* show prompt, wait for the player trigger */
+#define MAGICCAVEBOTTOM_STATE_WARP 3      /* latch warp-ready and warp to the destination */
+
 int magiccavebottom_getExtraSize(void)
 {
     return 1;
@@ -40,12 +46,12 @@ void magiccavebottom_update(int* obj)
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
     switch (*sub)
     {
-    case 0:
+    case MAGICCAVEBOTTOM_STATE_SETUP:
         GameBit_Set(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 1);
         envFxActFn_800887f8(0);
         getEnvfxAct(obj, obj, 0x2c, 0);
         getEnvfxAct(obj, obj, 0x2d, 0);
-        *sub = 1;
+        *sub = MAGICCAVEBOTTOM_STATE_START_MUSIC;
         if (def[0x1b] != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
@@ -55,18 +61,18 @@ void magiccavebottom_update(int* obj)
             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
         }
         break;
-    case 1:
+    case MAGICCAVEBOTTOM_STATE_START_MUSIC:
         Music_Trigger(MUSICTRIG_PU3_Adventure, 1);
-        *sub = 2;
+        *sub = MAGICCAVEBOTTOM_STATE_IDLE;
         break;
-    case 2:
+    case MAGICCAVEBOTTOM_STATE_IDLE:
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
         {
             setAButtonIcon(0x19);
         }
         if (ObjTrigger_IsSet((int)obj) != 0)
         {
-            *sub = 3;
+            *sub = MAGICCAVEBOTTOM_STATE_WARP;
             if (def[0x1b] != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(1, obj, -1);
@@ -81,7 +87,7 @@ void magiccavebottom_update(int* obj)
             objRenderFn_80041018((int)obj);
         }
         break;
-    case 3:
+    case MAGICCAVEBOTTOM_STATE_WARP:
         GameBit_Set(MAGICCAVE_GAMEBIT_WARP_READY, 1);
         warpToMap(GameBit_Get(MAGICCAVE_GAMEBIT_WARP_DEST), 0);
         break;
