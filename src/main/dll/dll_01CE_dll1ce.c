@@ -272,3 +272,20 @@ ObjectDescriptor dll_1CE = {
     (ObjectDescriptorCallback)dll_1CE_getObjectTypeId,
     dll_1CE_getExtraSize,
 };
+
+/* descriptor/ptr table auto 0x80325600-0x80325670 */
+extern u8 dim_levelcontrol_free[];
+extern u8 dim_levelcontrol_getExtraSize[];
+extern u8 dim_levelcontrol_init[];
+extern u8 dim_levelcontrol_render[];
+extern u8 dim_levelcontrol_update[];
+extern u8 dimmagicbridge_free[];
+extern u8 dimmagicbridge_getObjectTypeId[];
+extern u8 dimmagicbridge_hitDetect[];
+extern u8 dimmagicbridge_init[];
+extern u8 dimmagicbridge_initialise[];
+extern u8 dimmagicbridge_release[];
+extern u8 dimmagicbridge_render[];
+
+u32 gDIMMagicBridgeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dimmagicbridge_initialise, (u32)dimmagicbridge_release, 0x00000000, (u32)dimmagicbridge_init, (u32)dimmagicbridge_update, (u32)dimmagicbridge_hitDetect, (u32)dimmagicbridge_render, (u32)dimmagicbridge_free, (u32)dimmagicbridge_getObjectTypeId, (u32)dimmagicbridge_getExtraSize };
+u32 gDIM_LevelControlObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)dim_levelcontrol_init, (u32)dim_levelcontrol_update, 0x00000000, (u32)dim_levelcontrol_render, (u32)dim_levelcontrol_free, 0x00000000, (u32)dim_levelcontrol_getExtraSize };

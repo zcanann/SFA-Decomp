@@ -1713,7 +1713,7 @@ main/dll/DIM/dll_01CB_dimwooddoor2.c:
 
 main/dll/dll_01CE_dll1ce.c:
 	.text       start:0x801B5A28 end:0x801B5D48
-	.data       start:0x803255C8 end:0x80325600
+	.data       start:0x803255C8 end:0x80325670
 
 main/dll/DIM/dll_01CC_dimmagicbridge.c:
 	.text       start:0x801B5D48 end:0x801B63F4
