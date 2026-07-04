@@ -1835,9 +1835,9 @@ void initFn_8006d020(void)
             randomGetRange(0, 999);
             *p2 = Vdchuff_803DEDDC * (f32)(int)
             randomGetRange(0, 999);
-            o = gNewShadowPlacements;
             collide = 0;
             j = 0;
+            o = gNewShadowPlacements;
             while (j < placed && !collide)
             {
                 f32 mx, mz, tmp, d;
