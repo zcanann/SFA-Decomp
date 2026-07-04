@@ -3158,9 +3158,9 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
         lbl_803DCC48 = 2;
     }
     {
-        int count;
-        int i;
         u8* tbl;
+        int i;
+        int count;
         f32 tmp[12];
         {
             int pos = bs->pos;
@@ -6247,7 +6247,7 @@ int mapUnload(int mapId, int flags)
                             mm_free((void*)MAPTBL32(e[0], -0x6A28));
                             mmSetFreeDelay(2);
                             MAPTBL32(e[0], -0x6A28) = 0;
-                            MAPTBL16(e[0], -0x68C8) = -1;
+                            ((s16*)(hi + -0x68C8))[e[0]] = -1;
                             MAPTBL32(e[0], -0x6D68) = 0;
                             switch (e[0])
                             {
