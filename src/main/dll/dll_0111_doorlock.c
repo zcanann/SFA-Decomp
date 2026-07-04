@@ -42,6 +42,7 @@ typedef struct DoorlockPlacement
 
 /* one-shot global "doors unlocked" game bit gating the bulk unlock sequence */
 #define GAMEBIT_DOORLOCK_UNLOCKED 0x930
+#define DOORLOCK_OBJGROUP 0xf
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
@@ -54,7 +55,7 @@ extern int ObjTrigger_IsSet(int obj);
 
 int doorlock_getExtraSize(void) { return 0x1; }
 
-void doorlock_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
+void doorlock_free(int x) { ObjGroup_RemoveObject(x, DOORLOCK_OBJGROUP); }
 
 void doorlock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -226,7 +227,7 @@ void doorlock_init(short* obj, DoorLockPlacement* config)
     }
     state = ((GameObject*)obj)->extra;
     state->unlocked = GameBit_Get(config->lockGameBit);
-    ObjGroup_AddObject((u32)obj, 0xf);
+    ObjGroup_AddObject((u32)obj, DOORLOCK_OBJGROUP);
     if ((config->flags & 1) != 0)
     {
         if (state->unlocked != 0)
