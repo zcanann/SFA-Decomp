@@ -343,3 +343,16 @@ void wmlevelcontrol_release(void)
 void wmlevelcontrol_initialise(void)
 {
 }
+
+/* descriptor/ptr table auto 0x80328bd0-0x80328c08 */
+extern u8 wmgeneralscales_free[];
+extern u8 wmgeneralscales_getExtraSize[];
+extern u8 wmgeneralscales_getObjectTypeId[];
+extern u8 wmgeneralscales_hitDetect[];
+extern u8 wmgeneralscales_init[];
+extern u8 wmgeneralscales_initialise[];
+extern u8 wmgeneralscales_release[];
+extern u8 wmgeneralscales_render[];
+extern u8 wmgeneralscales_update[];
+
+u32 gWM_GeneralScalesObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)wmgeneralscales_initialise, (u32)wmgeneralscales_release, 0x00000000, (u32)wmgeneralscales_init, (u32)wmgeneralscales_update, (u32)wmgeneralscales_hitDetect, (u32)wmgeneralscales_render, (u32)wmgeneralscales_free, (u32)wmgeneralscales_getObjectTypeId, (u32)wmgeneralscales_getExtraSize };
