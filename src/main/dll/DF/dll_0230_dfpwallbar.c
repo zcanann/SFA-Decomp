@@ -17,7 +17,7 @@ typedef struct ChukaPlacement
     f32 posX; /* 0x08 */
     f32 posY; /* 0x0C */
     f32 posZ; /* 0x10 */
-    s32 unk14;
+    s32 mapId; /* 0x14: ObjPlacement-head map id (after posX/Y/Z) */
     s8 rotXByte; /* 0x18 high byte of initial rotX (<<8) */
     u8 modeIndex; /* 0x19 mode selector; copied to ChukaState.modeIndex (indexes gChukaModeTable) */
     s16 rotZInit; /* 0x1A initial rotZ */
