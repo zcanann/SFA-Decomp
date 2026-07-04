@@ -1,5 +1,9 @@
 #include "src/main/audio/synth_internal.h"
 
+extern SynthVoiceRuntime lbl_803AF550;
+#undef SYNTH_VOICE_RUNTIME
+#define SYNTH_VOICE_RUNTIME() (&lbl_803AF550)
+
 #define SYNTH_VOICE_STUDIO_MAP_OFFSET ((u32)&(((SynthVoice*)0)->studioMap))
 
 extern void synthVolume(u32 value0, u32 value1, u8 studio, u32 mode, u32 handle);
