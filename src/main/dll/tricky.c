@@ -1465,7 +1465,7 @@ extern int Camera_GetCurrentViewSlot(void);
 extern int getAngle(float y, float x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
+extern void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, u8* color);
 extern f32 fn_8029454C(f32);
 extern const f64 lbl_803E1EA0, lbl_803E1EA8, lbl_803E1EB0, lbl_803E1EB8;
 extern const f64 lbl_803E1EF0, lbl_803E1EF8, lbl_803E1F00, lbl_803E1F20, lbl_803E1F28;
@@ -1496,7 +1496,7 @@ extern void gameTextSetColor(int, int, int, int);
     GXColor _c2; \
     GXColor _c; \
     s16 _a; \
-    f32 _r, _cs, _sn, _cx, _sx, _t; \
+    f32 _r, _cs, _sn, _cx, _sx, _u, _d, _bu, _bd; \
     *(int *)&_c = lbl_803E1E2C; \
     _c.a = hudElementOpacity * (AL); \
     _a = getAngle(gA1, gA2); \
@@ -1506,14 +1506,18 @@ extern void gameTextSetColor(int, int, int, int);
     _c2 = _c; \
     _cx = lbl_803E1E68 * _cs; \
     _sx = lbl_803E1E68 * _sn; \
-    drawViewFinderLine((u8 *)&_c2, (B) + _sx, (A) - _cx, (B) - _sx, (A) + _cx, (_t = (C)) - _sx, (A) + _cx, _t + _sx, (A) - _cx); \
+    _u = (A) + _cx; \
+    _d = (A) - _cx; \
+    _bu = (B) + _sx; \
+    _bd = (B) - _sx; \
+    drawViewFinderLine(_bu, _d, _bd, _u, (C) - _sx, _u, (C) + _sx, _d, (u8 *)&_c2); \
 } while (0)
 
 #define VBLK(gA1, gA2, A, B, C, AL) do { \
     GXColor _c2; \
     GXColor _c; \
     s16 _a; \
-    f32 _r, _cs, _sn, _cx, _sx, _t; \
+    f32 _r, _cs, _sn, _cx, _sx, _d, _u, _bd, _bu; \
     *(int *)&_c = lbl_803E1E2C; \
     _c.a = hudElementOpacity * (AL); \
     _a = getAngle(gA1, gA2); \
@@ -1523,9 +1527,14 @@ extern void gameTextSetColor(int, int, int, int);
     _c2 = _c; \
     _cx = lbl_803E1E68 * _cs; \
     _sx = lbl_803E1E68 * _sn; \
-    drawViewFinderLine((u8 *)&_c2, (A) + _sx, (_t = (B)) - _cx, (A) - _sx, _t + _cx, (A) - _sx, (_t = (C)) + _cx, (A) + _sx, _t - _cx); \
+    _d = (A) - _sx; \
+    _u = (A) + _sx; \
+    _bd = (B) - _cx; \
+    _bu = (B) + _cx; \
+    drawViewFinderLine(_u, _bd, _d, _bu, _d, (C) + _cx, _u, (C) - _cx, (u8 *)&_c2); \
 } while (0)
 
+#pragma opt_propagation off
 void drawViewFinderHud(void)
 {
     f32 fovY;
@@ -1580,8 +1589,8 @@ void drawViewFinderHud(void)
             _c2 = _c;
             _cx = lbl_803E1E68 * _cs;
             _sx = lbl_803E1E68 * _sn;
-            drawViewFinderLine((u8*)&_c2, lbl_803E1F10 + _sx, f18v - _cx, lbl_803E1F10 - _sx, f18v + _cx,
-                               lbl_803E1F10 - _sx, lbl_803E1F08 + _cx, lbl_803E1F10 + _sx, lbl_803E1F08 - _cx);
+            drawViewFinderLine(lbl_803E1F10 + _sx, f18v - _cx, lbl_803E1F10 - _sx, f18v + _cx,
+                               lbl_803E1F10 - _sx, lbl_803E1F08 + _cx, lbl_803E1F10 + _sx, lbl_803E1F08 - _cx, (u8*)&_c2);
         }
         {
             GXColor _c2;
@@ -1597,8 +1606,8 @@ void drawViewFinderHud(void)
             _c2 = _c;
             _cx = lbl_803E1F18 * _cs;
             _sx = lbl_803E1F18 * _sn;
-            drawViewFinderLine((u8*)&_c2, lbl_803E1F10 + _sx, f15v - _cx, lbl_803E1F10 - _sx, f15v + _cx,
-                               lbl_803E1F10 - _sx, f19v + _cx, lbl_803E1F10 + _sx, f19v - _cx);
+            drawViewFinderLine(lbl_803E1F10 + _sx, f15v - _cx, lbl_803E1F10 - _sx, f15v + _cx,
+                               lbl_803E1F10 - _sx, f19v + _cx, lbl_803E1F10 + _sx, f19v - _cx, (u8*)&_c2);
         }
         xc = lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
         xc = xc;
@@ -1652,8 +1661,8 @@ void drawViewFinderHud(void)
                     _c2 = _c;
                     _cx = kE68 * _cs;
                     _sx = kE68 * _sn;
-                    drawViewFinderLine((u8*)&_c2, f27 + _sx, f16 - _cx, f27 - _sx, f16 + _cx, f31 - _sx, f15 + _cx,
-                                       f31 + _sx, f15 - _cx);
+                    drawViewFinderLine(f27 + _sx, f16 - _cx, f27 - _sx, f16 + _cx, f31 - _sx, f15 + _cx,
+                                       f31 + _sx, f15 - _cx, (u8*)&_c2);
                 }
                 {
                     GXColor _c2;
@@ -1675,8 +1684,8 @@ void drawViewFinderHud(void)
                     _c2 = _c;
                     _cx = kE68 * _cs;
                     _sx = kE68 * _sn;
-                    drawViewFinderLine((u8*)&_c2, f27 + _sx, f15 - _cx, f27 - _sx, f15 + _cx, f31 - _sx, f16 + _cx,
-                                       f31 + _sx, f16 - _cx);
+                    drawViewFinderLine(f27 + _sx, f15 - _cx, f27 - _sx, f15 + _cx, f31 - _sx, f16 + _cx,
+                                       f31 + _sx, f16 - _cx, (u8*)&_c2);
                 }
                 {
                     GXColor _c2;
@@ -1698,8 +1707,8 @@ void drawViewFinderHud(void)
                     _c2 = _c;
                     _cx = kE68 * _cs;
                     _sx = kE68 * _sn;
-                    drawViewFinderLine((u8*)&_c2, f27 + _sx, f15 - _cx, f27 - _sx, f15 + _cx, f31 - _sx, f16 + _cx,
-                                       f31 + _sx, f16 - _cx);
+                    drawViewFinderLine(f27 + _sx, f15 - _cx, f27 - _sx, f15 + _cx, f31 - _sx, f16 + _cx,
+                                       f31 + _sx, f16 - _cx, (u8*)&_c2);
                 }
             }
         }
@@ -1803,8 +1812,8 @@ void drawViewFinderHud(void)
                     _c2 = _c;
                     _cx = lbl_803E1E68 * _cs;
                     _sx = lbl_803E1E68 * _sn;
-                    drawViewFinderLine((u8*)&_c2, f18 + _sx, f15 - _cx, f18 - _sx, f15 + _cx, (f32)fx - _sx, f16 + _cx,
-                                       (f32)fx + _sx, f16 - _cx);
+                    drawViewFinderLine(f18 + _sx, f15 - _cx, f18 - _sx, f15 + _cx, (f32)fx - _sx, f16 + _cx,
+                                       (f32)fx + _sx, f16 - _cx, (u8*)&_c2);
                 }
             }
         }
@@ -1827,3 +1836,4 @@ void drawViewFinderHud(void)
         }
     }
 }
+#pragma opt_propagation reset
