@@ -15,10 +15,10 @@
 typedef struct MagicmakerPlacement
 {
     u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
+    u8 colorR; /* 0x4 -> spawn head.color[0] */
+    u8 colorG; /* 0x5 -> spawn head.color[1] */
+    u8 colorB; /* 0x6 -> spawn head.color[2] */
+    u8 colorA; /* 0x7 -> spawn head.color[3] */
 } MagicmakerPlacement;
 
 /*
@@ -34,7 +34,7 @@ typedef struct MagicmakerSetup
     u8 pad1B[0x1C - 0x1B];
     s16 unk1C;
     u8 pad1E[0x24 - 0x1E];
-    s16 unk24;
+    s16 gameBit; /* 0x24: GameBit slot (-1 = none) */
     u8 pad26[0x2C - 0x26];
     s16 unk2C;
     s16 unk2E;
@@ -42,7 +42,7 @@ typedef struct MagicmakerSetup
 
 STATIC_ASSERT(offsetof(MagicmakerSetup, unk1A) == 0x1A);
 STATIC_ASSERT(offsetof(MagicmakerSetup, unk1C) == 0x1C);
-STATIC_ASSERT(offsetof(MagicmakerSetup, unk24) == 0x24);
+STATIC_ASSERT(offsetof(MagicmakerSetup, gameBit) == 0x24);
 STATIC_ASSERT(offsetof(MagicmakerSetup, unk2C) == 0x2C);
 STATIC_ASSERT(offsetof(MagicmakerSetup, unk2E) == 0x2E);
 STATIC_ASSERT(sizeof(MagicmakerSetup) == 0x30);
@@ -124,11 +124,11 @@ void magicmaker_update(int obj)
                     ((ObjPlacement*)objSetup)->posY = lbl_803E4D8C + ((GameObject*)obj)->anim.localPosY;
                     ((ObjPlacement*)objSetup)->posZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
                     randomGetRange(-0x15e, 0x15e);
-                    ((MagicmakerSetup*)objSetup)->unk24 = -1;
-                    ((ObjPlacement*)objSetup)->color[0] = ((MagicmakerPlacement*)placement)->unk4;
-                    ((ObjPlacement*)objSetup)->color[2] = ((MagicmakerPlacement*)placement)->unk6;
-                    ((ObjPlacement*)objSetup)->color[1] = ((MagicmakerPlacement*)placement)->unk5;
-                    ((ObjPlacement*)objSetup)->color[3] = ((MagicmakerPlacement*)placement)->unk7;
+                    ((MagicmakerSetup*)objSetup)->gameBit = -1;
+                    ((ObjPlacement*)objSetup)->color[0] = ((MagicmakerPlacement*)placement)->colorR;
+                    ((ObjPlacement*)objSetup)->color[2] = ((MagicmakerPlacement*)placement)->colorB;
+                    ((ObjPlacement*)objSetup)->color[1] = ((MagicmakerPlacement*)placement)->colorG;
+                    ((ObjPlacement*)objSetup)->color[3] = ((MagicmakerPlacement*)placement)->colorA;
                     ((MagicmakerSetup*)objSetup)->unk2E = 3;
                     spawnedObj = Obj_SetupObject(objSetup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                              *(int*)&((GameObject*)obj)->anim.parent);
