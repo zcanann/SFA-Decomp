@@ -32,6 +32,10 @@
 #include "main/dll/dll_00F7_dllf7.h"
 #include "main/obj_placement.h"
 
+#define SIDEREPEL_OBJFLAG_UPDATE_DISABLED 0x8000
+#define SIDEREPEL_OBJFLAG_HIDDEN 0x4000
+#define SIDEREPEL_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /*
  * SideRepel placement record: the common ObjPlacement head followed by
  * the repel-volume radius at +0x18 (sphere radius >> 3 feeds the hit
@@ -228,7 +232,7 @@ void staticCamera_init(short* obj, int placement, int flag)
 
 void siderepel_init(int obj, int placement)
 {
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0xe000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | (SIDEREPEL_OBJFLAG_UPDATE_DISABLED | SIDEREPEL_OBJFLAG_HIDDEN | SIDEREPEL_OBJFLAG_HITDETECT_DISABLED);
     ObjGroup_AddObject(obj, 0x40);
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
