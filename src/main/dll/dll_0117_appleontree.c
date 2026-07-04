@@ -233,7 +233,7 @@ void fn_8017D854(int obj, int msg)
     ((AppleOnTreeState*)state)->healthRestore = v;
     ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_KNOCKED;
     ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
-    ((AppleOnTreeState*)state)->unk0C = timeDelta;
+    ((AppleOnTreeState*)state)->flightTime = timeDelta;
     ((AppleOnTreeState*)state)->rotX = randomGetRange(-0x8000, 0x7fff);
     ((AppleOnTreeState*)state)->rotY = randomGetRange(-0x8000, 0x7fff);
     ((AppleOnTreeState*)state)->rotZ = 0x2000;
@@ -260,7 +260,7 @@ void fn_8017D854(int obj, int msg)
     {
         f32 m = ((AppleOnTreeState*)state)->unk40;
         f32 g = lbl_803E37D8 * m;
-        f32 q = sqrtf(-(g * ((AppleOnTreeState*)state)->unk30 - lbl_803E37D4));
+        f32 q = sqrtf(-(g * ((AppleOnTreeState*)state)->dropHeight - lbl_803E37D4));
         f32 t = lbl_803E37DC * m;
         f32 r;
 
@@ -287,16 +287,16 @@ void fn_8017D854(int obj, int msg)
 
         if (((AppleOnTreeState*)state)->unk28 < lbl_803E37D4)
         {
-            ((AppleOnTreeState*)state)->unk30 = -(lbl_803E37D8 * ((AppleOnTreeState*)state)->unk24 - ((AppleOnTreeState
-                *)state)->unk30);
+            ((AppleOnTreeState*)state)->dropHeight = -(lbl_803E37D8 * ((AppleOnTreeState*)state)->unk24 - ((AppleOnTreeState
+                *)state)->dropHeight);
         }
         else
         {
-            ((AppleOnTreeState*)state)->unk30 = lbl_803E37E8 * (lbl_803E37D8 * ((AppleOnTreeState*)state)->unk24) + ((
-                AppleOnTreeState*)state)->unk30;
+            ((AppleOnTreeState*)state)->dropHeight = lbl_803E37E8 * (lbl_803E37D8 * ((AppleOnTreeState*)state)->unk24) + ((
+                AppleOnTreeState*)state)->dropHeight;
         }
 
-        if (((AppleOnTreeState*)state)->unk30 <= lbl_803E37D4)
+        if (((AppleOnTreeState*)state)->dropHeight <= lbl_803E37D4)
         {
             state = *(int*)&((GameObject*)obj)->extra;
             if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
@@ -315,7 +315,7 @@ void fn_8017D854(int obj, int msg)
         else
         {
             ((AppleOnTreeState*)state)->posY = ((GameObject*)obj)->anim.localPosY;
-            ((AppleOnTreeState*)state)->unk34 = ((GameObject*)obj)->anim.localPosY - ((AppleOnTreeState*)state)->unk30;
+            ((AppleOnTreeState*)state)->unk34 = ((GameObject*)obj)->anim.localPosY - ((AppleOnTreeState*)state)->dropHeight;
             if (((GameObject*)obj)->anim.hitReactState != NULL)
             {
                 ObjHits_DisableObject(obj);
@@ -334,13 +334,13 @@ int fn_8017DCD4(int p, int state, f32 y)
 
     if (zero != m)
     {
-        if (((AppleOnTreeState*)state)->unk30 - (((AppleOnTreeState*)state)->posY - y) < zero)
+        if (((AppleOnTreeState*)state)->dropHeight - (((AppleOnTreeState*)state)->posY - y) < zero)
         {
             f32 b = ((AppleOnTreeState*)state)->bounceVel;
             if (zero == b)
             {
                 f32 g = lbl_803E37D8 * m;
-                f32 q = sqrtf(b * b - g * ((AppleOnTreeState*)state)->unk30);
+                f32 q = sqrtf(b * b - g * ((AppleOnTreeState*)state)->dropHeight);
                 f32 t = lbl_803E37DC * m;
                 f32 r;
 
@@ -365,10 +365,10 @@ int fn_8017DCD4(int p, int state, f32 y)
                     r2 = (nb + q) / t;
                     r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
                 }
-                ((AppleOnTreeState*)state)->unk0C = ((AppleOnTreeState*)state)->unk0C - r;
+                ((AppleOnTreeState*)state)->flightTime = ((AppleOnTreeState*)state)->flightTime - r;
                 ((AppleOnTreeState*)state)->posY = ((AppleOnTreeState*)state)->posY - ((AppleOnTreeState*)state)->
-                    unk30;
-                ((AppleOnTreeState*)state)->unk30 = lbl_803E37D4;
+                    dropHeight;
+                ((AppleOnTreeState*)state)->dropHeight = lbl_803E37D4;
                 ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
                 ((GameObject*)p)->anim.rotX = ((AppleOnTreeState*)state)->rotX;
                 ((GameObject*)p)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
@@ -396,7 +396,7 @@ int fn_8017DCD4(int p, int state, f32 y)
                 f32 r;
                 m = m + ((AppleOnTreeState*)state)->unk3C;
                 g = lbl_803E37D8 * m;
-                q = sqrtf(b * b - g * ((AppleOnTreeState*)state)->unk30);
+                q = sqrtf(b * b - g * ((AppleOnTreeState*)state)->dropHeight);
                 t = lbl_803E37DC * m;
 
                 if (t >= lbl_803E37D4)
@@ -420,7 +420,7 @@ int fn_8017DCD4(int p, int state, f32 y)
                     r2 = (nb + q) / t;
                     r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
                 }
-                ((AppleOnTreeState*)state)->unk0C = ((AppleOnTreeState*)state)->unk0C - r;
+                ((AppleOnTreeState*)state)->flightTime = ((AppleOnTreeState*)state)->flightTime - r;
                 ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
                 ((AppleOnTreeState*)state)->bounceVel = ((AppleOnTreeState*)state)->bounceVel * lbl_803E37F8;
                 return 0;
@@ -439,7 +439,7 @@ int fn_8017DF34(int p, int state, f32 y)
 {
     if (lbl_803E37D4 == ((AppleOnTreeState*)state)->unk3C)
     {
-        if (((AppleOnTreeState*)state)->unk30 - (((AppleOnTreeState*)state)->posY - y) <= lbl_803E37D4)
+        if (((AppleOnTreeState*)state)->dropHeight - (((AppleOnTreeState*)state)->posY - y) <= lbl_803E37D4)
         {
             f32 b;
             f32 m = ((AppleOnTreeState*)state)->unk40;
@@ -450,7 +450,7 @@ int fn_8017DF34(int p, int state, f32 y)
             f32 r;
             b = ((AppleOnTreeState*)state)->bounceVel;
             g = lbl_803E37D8 * m;
-            q = sqrtf(b * b - g * ((AppleOnTreeState*)state)->unk30);
+            q = sqrtf(b * b - g * ((AppleOnTreeState*)state)->dropHeight);
             t = lbl_803E37DC * m;
 
             if (t >= lbl_803E37D4)
@@ -474,9 +474,9 @@ int fn_8017DF34(int p, int state, f32 y)
                 r2 = (nb + q) / t;
                 r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
             }
-            ((AppleOnTreeState*)state)->unk0C = ((AppleOnTreeState*)state)->unk0C - r;
-            ((AppleOnTreeState*)state)->posY = ((AppleOnTreeState*)state)->posY - ((AppleOnTreeState*)state)->unk30;
-            ((AppleOnTreeState*)state)->unk30 = lbl_803E37D4;
+            ((AppleOnTreeState*)state)->flightTime = ((AppleOnTreeState*)state)->flightTime - r;
+            ((AppleOnTreeState*)state)->posY = ((AppleOnTreeState*)state)->posY - ((AppleOnTreeState*)state)->dropHeight;
+            ((AppleOnTreeState*)state)->dropHeight = lbl_803E37D4;
             ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
             ((GameObject*)p)->anim.rotX = ((AppleOnTreeState*)state)->rotX;
             ((GameObject*)p)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
@@ -507,7 +507,7 @@ int fn_8017DF34(int p, int state, f32 y)
         f32 r;
         b = ((AppleOnTreeState*)state)->bounceVel;
         g = lbl_803E37D8 * m;
-        q = sqrtf(b * b - g * ((AppleOnTreeState*)state)->unk30);
+        q = sqrtf(b * b - g * ((AppleOnTreeState*)state)->dropHeight);
         t = lbl_803E37DC * m;
 
         if (t >= lbl_803E37D4)
@@ -531,7 +531,7 @@ int fn_8017DF34(int p, int state, f32 y)
             r2 = (nb + q) / t;
             r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
         }
-        ((AppleOnTreeState*)state)->unk0C = ((AppleOnTreeState*)state)->unk0C - r;
+        ((AppleOnTreeState*)state)->flightTime = ((AppleOnTreeState*)state)->flightTime - r;
         ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
         ((AppleOnTreeState*)state)->unk3C = lbl_803E37FC;
         ((AppleOnTreeState*)state)->bounceVel = lbl_803E3800;
@@ -620,8 +620,8 @@ void appleontree_update(int objArg)
     if ((((AppleOnTreeState*)state)->flags & 2) == 0)
     {
         ((AppleOnTreeState*)state)->elapsedTime = ((AppleOnTreeState*)state)->elapsedTime + timeDelta;
-        fa = ((AppleOnTreeState*)state)->unk0C;
-        ((AppleOnTreeState*)state)->unk0C = fa + timeDelta;
+        fa = ((AppleOnTreeState*)state)->flightTime;
+        ((AppleOnTreeState*)state)->flightTime = fa + timeDelta;
         fb = ((AppleOnTreeState*)state)->elapsedTime;
         frac = fb / *(float*)(state + 4);
         switch (((AppleOnTreeState*)state)->animState)
@@ -778,7 +778,7 @@ void appleontree_update(int objArg)
                 fd = lbl_803E37D4;
                 while (placement == 0)
                 {
-                    f32 t = ((AppleOnTreeState*)state)->unk0C;
+                    f32 t = ((AppleOnTreeState*)state)->flightTime;
                     fb = t * (((GroundBaddieState*)state)->baddie.velZ + ((GroundBaddieState*)state)->baddie.velY);
                     fc = t * fb + (((AppleOnTreeState*)state)->bounceVel * t + ((AppleOnTreeState*)state)->posY);
                     if (((AppleOnTreeState*)state)->unk28 > fd)
@@ -792,9 +792,9 @@ void appleontree_update(int objArg)
                     val = val + 1;
                     if (!((val == 100) || (val != 0x66))) break;
                 }
-                if (lbl_803E37D4 != ((AppleOnTreeState*)state)->unk30)
+                if (lbl_803E37D4 != ((AppleOnTreeState*)state)->dropHeight)
                 {
-                    fb = ((AppleOnTreeState*)state)->unk0C / ((AppleOnTreeState*)state)->unk50;
+                    fb = ((AppleOnTreeState*)state)->flightTime / ((AppleOnTreeState*)state)->unk50;
                     ((u16*)obj)[0] = (f32) * (s16*)(state + 0x48) * fb;
                     ((u16*)obj)[1] = (f32) * (s16*)(state + 0x4a) * fb;
                     ((u16*)obj)[2] = (f32) * (s16*)(state + 0x4c) * fb;

@@ -7,12 +7,12 @@ typedef struct AppleOnTreeState
 {
     u8 unk00[8];
     f32 elapsedTime;
-    f32 unk0C;
+    f32 flightTime;
     u8 unk10[0x24 - 0x10];
     f32 unk24;
     f32 unk28;
     f32 posY;
-    f32 unk30;
+    f32 dropHeight;
     f32 unk34;
     u16 healthRestore;
     u8 animState;
