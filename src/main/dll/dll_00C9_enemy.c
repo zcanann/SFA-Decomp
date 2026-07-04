@@ -875,7 +875,7 @@ void sidekickToy_updateCurveTargetLatch(int obj)
     extern u8 lbl_803DBC58;
     u8* state = ((GameObject*)obj)->extra;
     u8* data = *(u8**)state;
-    if ((((EnemyState*)state)->controlFlags & 0x2000) != 0)
+    if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
         if ((u8)baddieTargetFn_8014a150(obj, state, &((GameObject*)obj)->anim.worldPosX, data + 0x68) != 0)
         {
@@ -885,11 +885,11 @@ void sidekickToy_updateCurveTargetLatch(int obj)
     if ((*gRomCurveInterface)->initCurve(*(u8**)state, (void*)obj, lbl_803E25DC,
                                          (int*)&lbl_803DBC58, -1) != 0)
     {
-        ((EnemyState*)state)->controlFlags &= ~0x2000LL;
+        ((EnemyState*)state)->controlFlags &= ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
     }
     else
     {
-        ((EnemyState*)state)->controlFlags = ((EnemyState*)state)->controlFlags | 0x2000;
+        ((EnemyState*)state)->controlFlags = ((EnemyState*)state)->controlFlags | BADDIE_CONTROL_PATH_FOLLOW;
     }
 }
 
@@ -1197,7 +1197,7 @@ void fn_8014B878(int* arg1, int* sub)
         if (playerIsDisguised(player) != 0)
         {
             ((TrickyState*)sub)->flags2DC |= 8LL;
-            if ((((TrickyState*)sub)->controlFlags & 0x2000) != 0)
+            if ((((TrickyState*)sub)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
             {
                 ((TrickyState*)sub)->flags2DC &= ~0x800600LL;
             }
@@ -2082,7 +2082,7 @@ void enemy_init(int obj, u8* setup, int flag)
         if ((*gRomCurveInterface)->initCurve(*(void**)state, (void*)obj, ((EnemyState*)state)->sightRange,
                                              (int*)&lbl_803DBC58, -1) == 0)
         {
-            ((EnemyState*)state)->controlFlags |= 0x2000;
+            ((EnemyState*)state)->controlFlags |= BADDIE_CONTROL_PATH_FOLLOW;
         }
         (*gPathControlInterface)->init(state + 4, 0, 422, 1);
         if ((((EnemyState*)state)->flags2E4 & 8) != 0)
