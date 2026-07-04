@@ -267,3 +267,7 @@ u8 gDll90EffectResourceBlock[420] = {
     0, 17, 0, 0, 0, 0, 0, 45, 0, 0, 0, 18, 0, 18, 0, 0,
     0, 30, 0, 0,
 };
+
+/*__DATA_EXTERNS__*/
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_80316FD4[9] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, dll_90_func00_nop, dll_90_func01_nop, (void*)0x00000000, dll_90_func03, (void*)0x00000000 };
