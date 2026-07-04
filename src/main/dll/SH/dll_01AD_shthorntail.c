@@ -34,9 +34,9 @@ extern SHthorntailDataTables gSHthorntailDataTables;
 #define SHTHORNTAIL_LEVELCONTROL_AUDIO_CHANNEL 0x7F
 #define SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG 0x40
 
-extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z, int param_6);
+extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z, int useInputPosition);
 extern void objRenderFn_8003b8f4(f32 scale);
-extern void dll_2E_func06(SHthorntailObject* obj, SHthorntailRuntime* runtime, int param_3);
+extern void dll_2E_func06(SHthorntailObject* obj, SHthorntailRuntime* runtime, int point);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern u32 Obj_GetActiveModel();
 extern u32 modelInitBones();
