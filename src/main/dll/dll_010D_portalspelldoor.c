@@ -160,3 +160,15 @@ ObjectDescriptor gPortalSpellDoorObjDescriptor = {
     (ObjectDescriptorCallback)portalspelldoor_getObjectTypeId,
     portalspelldoor_getExtraSize,
 };
+
+/* descriptor/ptr table auto 0x80321830-0x80321a28 */
+u32 gLanternFireFlyObjDescriptor[18] = { 0x00000000, 0x00000000, 0x00000000, 0x000c0000, (u32)LanternFireFly_initialise, (u32)LanternFireFly_release, 0x00000000, (u32)LanternFireFly_init, (u32)LanternFireFly_update, (u32)LanternFireFly_hitDetect, (u32)LanternFireFly_render, (u32)LanternFireFly_free, (u32)LanternFireFly_getObjectTypeId, (u32)LanternFireFly_getExtraSize, (u32)LanternFireFly_setScale, (u32)LanternFireFly_func0B, (u32)LanternFireFly_modelMtxFn, 0x00000000 };
+u32 gFireFlyLanternObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)FireFlyLantern_init, (u32)FireFlyLantern_update, 0x00000000, (u32)FireFlyLantern_render, (u32)FireFlyLantern_free, (u32)FireFlyLantern_getObjectTypeId, (u32)FireFlyLantern_getExtraSize };
+u32 gFlammableVineObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)flammablevine_initialise, (u32)flammablevine_release, 0x00000000, (u32)flammablevine_init, (u32)flammablevine_update, (u32)flammablevine_hitDetect, (u32)flammablevine_render, (u32)flammablevine_free, (u32)flammablevine_getObjectTypeId, (u32)flammablevine_getExtraSize };
+u32 lbl_803218E8[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_109_initialise_nop, (u32)dll_109_release_nop, 0x00000000, (u32)dll_109_init, (u32)carryable_break_respawn_update, (u32)dll_109_hitDetect_nop, (u32)dll_109_render, (u32)dll_109_free, (u32)dll_109_getObjectTypeId, (u32)dll_109_getExtraSize_ret_16 };
+u32 gFall_LaddersObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)Fall_Ladders_initialise, (u32)Fall_Ladders_release, 0x00000000, (u32)Fall_Ladders_init, (u32)Fall_Ladders_update, (u32)Fall_Ladders_hitDetect, (u32)Fall_Ladders_render, (u32)Fall_Ladders_free, (u32)Fall_Ladders_getObjectTypeId, (u32)Fall_Ladders_getExtraSize };
+u32 gColdWaterControlObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)coldwatercontrol_init, (u32)coldwatercontrol_update, 0x00000000, 0x00000000, 0x00000000, 0x00000000, (u32)coldwatercontrol_getExtraSize };
+u32 lbl_80321990[4] = { 0x00000050, 0x00000230, 0x0000003c, 0x00000190 };
+u32 lbl_803219A0[6] = { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
+u32 gInfoPointObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)infopoint_initialise, (u32)infopoint_release, 0x00000000, (u32)infopoint_init, (u32)infopoint_update, (u32)infopoint_hitDetect, (u32)infopoint_render, (u32)infopoint_free, (u32)infopoint_getObjectTypeId, (u32)infopoint_getExtraSize };
+u32 gDecoration11AObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)decoration11a_init, (u32)decoration11a_update, (u32)decoration11a_hitDetect, (u32)decoration11a_render, (u32)decoration11a_free, 0x00000000, (u32)decoration11a_getExtraSize };

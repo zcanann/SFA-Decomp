@@ -1326,7 +1326,7 @@ main/dll/dll_0108_endobject.c:
 
 main/dll/dll_010D_portalspelldoor.c:
 	.text       start:0x80186498 end:0x80186704
-	.data       start:0x803217F8 end:0x80321830
+	.data       start:0x803217F8 end:0x80321A28
 
 main/dll/dll_010C_lanternfirefly.c:
 	.text       start:0x80186704 end:0x801871C8
