@@ -15,6 +15,11 @@ extern void* Obj_GetPlayerObject(void);
 #define MAGICCAVE_GAMEBIT_WARP_DEST 0x1b8    /* warp destination map index */
 #define MAGICCAVETOP_GAMEBIT_SLOT_D_CLEAR 0xe05 /* cleared when arriving via map slot 0xd */
 
+#define MAGICCAVETOP_SUBSTATE_IDLE 0     /* waiting for player to approach; load map on entry */
+#define MAGICCAVETOP_SUBSTATE_LOADED 1   /* map loaded/active; unload on exit or start warp sequence */
+#define MAGICCAVETOP_SUBSTATE_WARPING 2  /* running warp sequence: set dest, lock levels, warpToMap */
+#define MAGICCAVETOP_SUBSTATE_WARP_DONE 3 /* warp handoff complete; wait for player to leave */
+
 typedef struct MagiccavetopPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -129,7 +134,7 @@ void magiccavetop_free(int* obj)
             staffSetGlow(r, 5, 0);
         }
     }
-    if (state->subState == 1)
+    if (state->subState == MAGICCAVETOP_SUBSTATE_LOADED)
     {
         if (def->noLoad == 0)
         {
@@ -172,7 +177,7 @@ void magiccavetop_update(int* obj)
             (*gMapEventInterface)->setObjGroupStatus(def->mapId, def->objGroup, 0);
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             unlockLevel(0, 0, 1);
-            sub->subState = 3;
+            sub->subState = MAGICCAVETOP_SUBSTATE_WARP_DONE;
             return;
         }
         dirIdx = mapGetDirIdx(def->mapId);
@@ -180,7 +185,7 @@ void magiccavetop_update(int* obj)
         gb = GameBit_Get(def->visibleGameBit);
         switch (sub->subState)
         {
-        case 0:
+        case MAGICCAVETOP_SUBSTATE_IDLE:
             range = def->rangeInner * 2;
             if (dist < (f32)(range * range))
             {
@@ -188,10 +193,10 @@ void magiccavetop_update(int* obj)
                 {
                     loadMapAndParent(def->mapId);
                 }
-                sub->subState = 1;
+                sub->subState = MAGICCAVETOP_SUBSTATE_LOADED;
             }
             break;
-        case 1:
+        case MAGICCAVETOP_SUBSTATE_LOADED:
             range = def->rangeOuter * 2;
             if (dist > (f32)(range * range))
             {
@@ -199,18 +204,18 @@ void magiccavetop_update(int* obj)
                 {
                     mapUnload(dirIdx, 0x20000000);
                 }
-                sub->subState = 0;
+                sub->subState = MAGICCAVETOP_SUBSTATE_IDLE;
             }
             else if (dist < lbl_803E3C30 && gb != 0)
             {
-                sub->subState = 2;
+                sub->subState = MAGICCAVETOP_SUBSTATE_WARPING;
                 (*gMapEventInterface)->setObjGroupStatus(def->mapId, def->objGroup, 1);
                 (*gMapEventInterface)->setMapAct(def->mapId, def->mapAct);
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
             }
             break;
-        case 2:
+        case MAGICCAVETOP_SUBSTATE_WARPING:
             GameBit_Set(MAGICCAVE_GAMEBIT_WARP_DEST, def->gameBitValue);
             if (def->noLoad != 0)
             {
@@ -230,10 +235,10 @@ void magiccavetop_update(int* obj)
             }
             warpToMap(def->warpMapId, 0);
             break;
-        case 3:
+        case MAGICCAVETOP_SUBSTATE_WARP_DONE:
             if (dist > lbl_803E3C30)
             {
-                sub->subState = 1;
+                sub->subState = MAGICCAVETOP_SUBSTATE_LOADED;
             }
             break;
         }
