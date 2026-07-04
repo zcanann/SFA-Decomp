@@ -2,6 +2,8 @@
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/sal_dsp.h"
 
+#pragma exceptions on
+
 typedef struct GROUP_DATA
 {
     u32 nextOff;
