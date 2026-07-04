@@ -709,3 +709,22 @@ void largecrate_release(void)
 void largecrate_initialise(void)
 {
 }
+
+/*__DATA_EXTERNS__*/
+extern void dll_107_getExtraSize_ret_44();
+extern void dll_107_getObjectTypeId();
+extern void fn_801859D4();
+extern void fn_80185A24();
+extern void dll_107_hitDetect_nop();
+extern void fn_80185B74();
+extern void fn_801862CC();
+extern void dll_107_release_nop();
+extern void dll_107_initialise_nop();
+extern void scarab_getExtraSize();
+extern void scarab_free();
+extern void scarab_render();
+extern void scarab_update();
+extern void scarab_init();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* gScarabObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, scarab_init, scarab_update, (void*)0x00000000, scarab_render, scarab_free, (void*)0x00000000, scarab_getExtraSize };
+void* lbl_80321788[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, dll_107_initialise_nop, dll_107_release_nop, (void*)0x00000000, fn_801862CC, fn_80185B74, dll_107_hitDetect_nop, fn_80185A24, fn_801859D4, dll_107_getObjectTypeId, dll_107_getExtraSize_ret_44 };

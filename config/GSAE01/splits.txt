@@ -1312,7 +1312,7 @@ main/dll/dll_0104_smallbasket.c:
 
 main/dll/dll_0105_largecrate.c:
 	.text       start:0x80183204 end:0x801843C0
-	.data       start:0x80321728 end:0x80321750
+	.data       start:0x80321728 end:0x803217C0
 
 main/dll/dll_0106_scarab.c:
 	.text       start:0x801843C0 end:0x80185868
