@@ -22,6 +22,8 @@
 #define EDIBLEMUSHROOM_FLAG_MOVING    0x8  /* nonzero root speed this frame */
 #define EDIBLEMUSHROOM_FLAG_STRUCK    0x10 /* hit by the player this cycle */
 #define EDIBLEMUSHROOM_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
+#define EDIBLEMUSHROOM_OBJGROUP 0x47
+#define EDIBLEMUSHROOM_OBJGROUP_SECONDARY 0x31
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
@@ -536,8 +538,8 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
 
 void ediblemushroom_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 0x47);
-    ObjGroup_RemoveObject(obj, 0x31);
+    ObjGroup_RemoveObject(obj, EDIBLEMUSHROOM_OBJGROUP);
+    ObjGroup_RemoveObject(obj, EDIBLEMUSHROOM_OBJGROUP_SECONDARY);
 }
 
 int ediblemushroom_getExtraSize(void)
@@ -764,8 +766,8 @@ void ediblemushroom_init(int obj, int aux)
         ((EdibleMushroomState*)state)->previousTargetDistance = z;
     }
 
-    ObjGroup_AddObject(obj, 0x31);
-    ObjGroup_AddObject(obj, 0x47);
+    ObjGroup_AddObject(obj, EDIBLEMUSHROOM_OBJGROUP_SECONDARY);
+    ObjGroup_AddObject(obj, EDIBLEMUSHROOM_OBJGROUP);
 
     if (((GameObject*)obj)->anim.seqId == 0x658)
     {
