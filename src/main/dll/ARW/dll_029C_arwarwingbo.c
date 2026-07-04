@@ -12,6 +12,8 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
+#define ARWARWINGBO_OBJGROUP 0x52
+
 #define ARWARWINGBO_OBJFLAG_PARENT_SLACK 0x1000
 #define PAD_BUTTON_B 0x200
 
@@ -49,7 +51,7 @@ int arwarwingbo_getObjectTypeId(void) { return 0; }
 void arwarwingbo_free(int obj)
 {
     (*gExpgfxInterface)->freeSource(obj);
-    ObjGroup_RemoveObject(obj, 0x52);
+    ObjGroup_RemoveObject(obj, ARWARWINGBO_OBJGROUP);
 }
 
 void arwarwingbo_hitDetect(void)
@@ -71,7 +73,7 @@ void arwarwingbo_init(int obj, int setup)
     ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotX << 8);
     ((GameObject*)obj)->anim.rotY = (s16)(mapData->rotY << 8);
     ((GameObject*)obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
-    ObjGroup_AddObject(obj, 0x52);
+    ObjGroup_AddObject(obj, ARWARWINGBO_OBJGROUP);
 }
 
 void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
