@@ -1434,8 +1434,16 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
     }
 }
 
+#define WALKANIM_COPY_SLOT(J, K)                                                          \
+    *(u16*)(stk + (J)*2 + (0x44 + (K)*2)) = *(u16*)(channel + (J)*2 + (0x44 + (K)*2));    \
+    *(u8*)(stk + (J) + 0x60 + (K)) = *(u8*)(channel + (J) + 0x60 + (K));                  \
+    *(f32*)(stk + (J)*4 + (0x14 + (K)*4)) = *(f32*)(channel + (J)*4 + (0x14 + (K)*4));    \
+    *(f32*)(stk + (J)*4 + (4 + (K)*4)) = *(f32*)(channel + (J)*4 + (4 + (K)*4));          \
+    *(u32*)(stk + (J)*4 + (0x34 + (K)*4)) = *(u32*)(channel + (J)*4 + (0x34 + (K)*4));
+
 #pragma ppc_unroll_factor_limit 8
 #pragma ppc_unroll_instructions_limit 256
+#pragma ppc_unroll_speculative off
 void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int flags)
 {
     /* channel points at an ObjAnimState. stk is an on-stack working copy of
@@ -1443,7 +1451,16 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
        sizeof(ObjAnimState) is 0x68). Some u16/s8 channel loads inside the
        unrolled i/j loops must keep the raw *(u16*)(channel + 0x58)-style
        spelling -- retyping them to ObjAnimState members changes MWCC's
-       alias/CSE class there and shifts bytes. */
+       alias/CSE class there and shifts bytes.
+
+       The bounded copy loop near the end is a MANUAL 8x unroll in the
+       original (WALKANIM_COPY_SLOT lanes + a j-indexed cleanup loop) under
+       #pragma ppc_unroll_speculative off: the compiler's own runtime
+       unroller emits the exact-div (srwi/andi.) shape for any loop whose
+       word-copy statements are affine in j, which never matches the retail
+       peel shape (n-8 guard + cleanup pointers re-derived from j via
+       slwi/add). The slotEvent = slotCount - 8 hoist and the redundant-
+       looking slotCount>0 / slotCount>8 guards are load-bearing. */
     u8 stk[0x64];
     int mtxBuf;
     int outFlags;
@@ -1506,7 +1523,7 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
         int i;
         int blendMask;
 
-        for (i = 0, blendChan = channel, animChan = channel; i < 2; i++, blendChan += 4, animChan += 2)
+        for (i = 0, blendChan = channel, animChan = channel; i < 2; blendChan += 4, animChan += 2, i++)
         {
             if (i != 0)
             {
@@ -1569,24 +1586,27 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
             *(u32*)(stk + 0x20) = *(u32*)&((ObjAnimState*)channel)->moveCache[1];
             *(u32*)(stk + 0x24) = *(u32*)&((ObjAnimState*)channel)->blendMoveCache[0];
             *(u32*)(stk + 0x28) = *(u32*)&((ObjAnimState*)channel)->blendMoveCache[1];
+            j = 0;
+            if (slotCount > 0)
             {
-                u8* srcSlots = channel;
-                u8* dstSlots = stk;
-                u8* dstTypes = stk;
-                u8* srcF = channel;
-                u8* dstF = stk;
-                for (j = 0; j < slotCount; j++)
+                slotEvent = slotCount - 8;
+                if (slotCount > 8)
                 {
-                    *(u16*)(dstSlots + 0x44) = *(u16*)(srcSlots + 0x44);
-                    *(u8*)(dstTypes + 0x60) = *(u8*)(channel + (j + 0x60));
-                    *(f32*)(dstF + 0x14) = *(f32*)(srcF + 0x14);
-                    *(f32*)(dstF + 4) = *(f32*)(srcF + 4);
-                    *(u32*)(dstF + 0x34) = *(u32*)(srcF + 0x34);
-                    srcSlots += 2;
-                    dstSlots += 2;
-                    dstTypes += 1;
-                    srcF += 4;
-                    dstF += 4;
+                    for (; j < slotEvent; j += 8)
+                    {
+                        WALKANIM_COPY_SLOT(j, 0);
+                        WALKANIM_COPY_SLOT(j, 1);
+                        WALKANIM_COPY_SLOT(j, 2);
+                        WALKANIM_COPY_SLOT(j, 3);
+                        WALKANIM_COPY_SLOT(j, 4);
+                        WALKANIM_COPY_SLOT(j, 5);
+                        WALKANIM_COPY_SLOT(j, 6);
+                        WALKANIM_COPY_SLOT(j, 7);
+                    }
+                }
+                for (; j < slotCount; j++)
+                {
+                    WALKANIM_COPY_SLOT(j, 0);
                 }
             }
             *(u16*)(stk + 0x58) = ((ObjAnimState*)channel)->eventCountdown;
@@ -1604,6 +1624,7 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
         }
     }
 }
+#pragma ppc_unroll_speculative on
 #pragma ppc_unroll_factor_limit 4
 #pragma ppc_unroll_instructions_limit 96
 
