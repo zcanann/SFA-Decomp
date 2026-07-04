@@ -810,15 +810,15 @@ void drawSkyStars(void)
         }
         if (i < 0x4c)
         {
-            GXSetPointSize((u8)randomGetRange(0xc, 0xc), 5);
+            GXSetPointSize((u8)randomGetRange(0xc, 0xc), GX_TO_ONE);
         }
         else if (i & 4)
         {
-            GXSetPointSize((u8)(randomGetRange(0x30, 0x3c) / div), 5);
+            GXSetPointSize((u8)(randomGetRange(0x30, 0x3c) / div), GX_TO_ONE);
         }
         else
         {
-            GXSetPointSize((u8)(randomGetRange(0x48, 0x60) / div), 5);
+            GXSetPointSize((u8)(randomGetRange(0x48, 0x60) / div), GX_TO_ONE);
         }
         GXCallDisplayList(gNewCloudStarDisplayLists[i], gNewCloudStarDisplayListSizes[i]);
     }
@@ -913,7 +913,7 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
         total += (i + 1);
     }
     weight = lbl_803DF1A4 / total;
-    GXSetLineWidth(width, 5);
+    GXSetLineWidth(width, GX_TO_ONE);
     GXBegin(0xb0, 2, segs + 1);
     for (i = 0; i <= segs; i++)
     {
