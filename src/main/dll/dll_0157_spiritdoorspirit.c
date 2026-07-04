@@ -12,6 +12,8 @@
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
+
+#define SPIRITDOORSPIRIT_OBJGROUP 0x4e
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
 extern f32 lbl_803E42B8;
@@ -49,7 +51,7 @@ int spiritdoorspirit_getExtraSize(void) { return 0x1; }
 int spiritdoorspirit_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling off
-void spiritdoorspirit_free(int x) { ObjGroup_RemoveObject(x, 0x4e); }
+void spiritdoorspirit_free(int x) { ObjGroup_RemoveObject(x, SPIRITDOORSPIRIT_OBJGROUP); }
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -75,7 +77,7 @@ void spiritdoorspirit_update(int* obj)
         state->active = active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
         if (active != 0)
         {
-            ObjGroup_AddObject(obj, 0x4e);
+            ObjGroup_AddObject(obj, SPIRITDOORSPIRIT_OBJGROUP);
         }
         if (((GameObject*)obj)->anim.alpha != 0)
         {
@@ -88,7 +90,7 @@ void spiritdoorspirit_update(int* obj)
         state->active = active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
         if (active == 0)
         {
-            ObjGroup_RemoveObject(obj, 0x4e);
+            ObjGroup_RemoveObject(obj, SPIRITDOORSPIRIT_OBJGROUP);
         }
         if (((GameObject*)obj)->anim.alpha < 0xff)
         {
