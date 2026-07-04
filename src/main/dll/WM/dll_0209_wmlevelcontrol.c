@@ -19,6 +19,8 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define WMLEVELCONTROL_OBJGROUP 9
+
 /* per-object extra state (getExtraSize == 0x1C) */
 typedef struct WmLevelControlState
 {
@@ -202,7 +204,7 @@ int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
 
 void wmlevelcontrol_free(int obj)
 {
-    ObjGroup_RemoveObject((u32)obj, 9);
+    ObjGroup_RemoveObject((u32)obj, WMLEVELCONTROL_OBJGROUP);
     Music_Trigger(MUSICTRIG_drako_3, 0);
     GameBit_Set(0xa7f, 0);
     GameBit_Set(0x372, 1);
@@ -267,7 +269,7 @@ void wmlevelcontrol_init(int obj)
     WmLevelControlState* state;
     u8 mode;
 
-    ObjGroup_AddObject((u32)obj, 9);
+    ObjGroup_AddObject((u32)obj, WMLEVELCONTROL_OBJGROUP);
     unlockLevel(mapGetDirIdx(0xb), 0, 0);
     state = ((GameObject*)obj)->extra;
     state->unk0B = 0;
