@@ -19,21 +19,42 @@
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
-extern void* mapGetBlock(int i);
+extern MapBlockData* mapGetBlock(int i);
 
-extern void* fn_8006070C(int* obj, int idx);
+extern void* fn_8006070C(MapBlockData* block, int idx);
 extern int fn_80065640(void);
-extern void fn_80065574(int matchVal, int obj, int flag);
-extern void* mapBlockFn_800606ec(int* obj, int idx);
+extern void fn_80065574(int matchVal, void* obj, int flag);
+extern void* mapBlockFn_800606ec(MapBlockData* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
-extern void* Shader_getLayer(char* base, int idx);
+extern void* Shader_getLayer(void* shader, int idx);
+
+/* Map-block poly-group record (blk+0x50 table, 0x14 stride, returned by
+ * mapBlockFn_800606ec) - layout matches MapTriGroup in track_dolphin.c.
+ * Only the flags word is touched here: bit 1 = poly group hidden,
+ * bit 0 = shader disabled; the top byte is the effect id matched by
+ * mapBlockFn_80060678. */
+typedef struct HitAnimatorPolyGroup
+{
+    u8 pad0[0x10 - 0x0];
+    u32 flags; /* 0x10 */
+} HitAnimatorPolyGroup;
+
+/* Map-block shader/render-op record (blk+0x64 table, 0x44 stride, returned
+ * by fn_8006070C) - layout matches ObjModelRenderOp in objprint_dolphin.c;
+ * flags @0x3C, bit 1 toggled here to hide the layer. */
+typedef struct HitAnimatorShader
+{
+    u8 pad0[0x3C - 0x0];
+    u32 flags; /* 0x3C */
+    u8 pad40[0x44 - 0x40];
+} HitAnimatorShader;
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* state,
+void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnimatorState* state,
                             HitAnimatorPlacement* desc);
 
 int hitanimator_getExtraSize(void) { return HITANIMATOR_EXTRA_STATE_BYTES; }
@@ -42,7 +63,7 @@ void hitanimator_update(HitAnimatorObject* obj)
 {
     HitAnimatorPlacement* desc = (HitAnimatorPlacement*)obj->objAnim.placementData;
     HitAnimatorState* state = obj->state;
-    void* block;
+    MapBlockData* block;
     block = mapGetBlock(objPosToMapBlockIdx(
         (double)obj->objAnim.localPosX,
         (double)obj->objAnim.localPosY,
@@ -81,7 +102,7 @@ void hitanimator_update(HitAnimatorObject* obj)
         {
             if (fn_80065640() == 0)
             {
-                fn_80065574(desc->soundId, (int)obj->objAnim.parent, state->activeBit);
+                fn_80065574(desc->soundId, obj->objAnim.parent, state->activeBit);
                 state->flags &= ~HITANIMATOR_STATE_FLAG_SOUND_PENDING;
             }
         }
@@ -102,7 +123,7 @@ void hitanimator_update(HitAnimatorObject* obj)
 void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
 {
     HitAnimatorState* state = obj->state;
-    void* block;
+    MapBlockData* block;
     u8 gameBitValue;
     s8 initialBit;
     initialBit = (s8)(desc->flags & HITANIMATOR_SETUP_FLAG_INITIAL_INVERT);
@@ -138,32 +159,32 @@ void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
     obj->objectFlags |= HITANIMATOR_OBJECT_FLAGS_ENABLED;
 }
 
-void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* state, HitAnimatorPlacement* desc)
+void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnimatorState* state, HitAnimatorPlacement* desc)
 {
     int i;
-    char* poly;
+    HitAnimatorPolyGroup* poly;
 
     if ((desc->flags & HITANIMATOR_SETUP_FLAG_SKIP_POLYS) == 0)
     {
-        for (i = 0; i < ((MapBlockData*)block)->polyGroupCount; i++)
+        for (i = 0; i < block->polyGroupCount; i++)
         {
             poly = mapBlockFn_800606ec(block, i);
             if (desc->blockEffectId == mapBlockFn_80060678(poly))
             {
                 if (state->activeBit != 0)
                 {
-                    *(u32*)(poly + 0x10) &= ~2LL;
+                    poly->flags &= ~2LL;
                     if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
                     {
-                        *(u32*)(poly + 0x10) &= ~1LL;
+                        poly->flags &= ~1LL;
                     }
                 }
                 else
                 {
-                    *(int*)(poly + 0x10) |= 2;
+                    poly->flags |= 2;
                     if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
                     {
-                        *(int*)(poly + 0x10) |= 1;
+                        poly->flags |= 1;
                     }
                 }
             }
@@ -171,19 +192,19 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
     }
     if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
     {
-        for (i = 0; i < ((MapBlockData*)block)->layerCount; i++)
+        for (i = 0; i < block->layerCount; i++)
         {
-            char* shader = fn_8006070C(block, i);
+            HitAnimatorShader* shader = fn_8006070C(block, i);
             u8* layer = Shader_getLayer(shader, 0);
             if (desc->blockEffectId == layer[5])
             {
                 if (state->activeBit != 0)
                 {
-                    *(u32*)(shader + 0x3c) &= ~2LL;
+                    shader->flags &= ~2LL;
                 }
                 else
                 {
-                    *(int*)(shader + 0x3c) |= 2;
+                    shader->flags |= 2;
                 }
             }
         }
