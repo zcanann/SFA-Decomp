@@ -13,6 +13,10 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define DFPTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+/* DfpTorchState.mode: torch behaviour selected from placement->mode */
+#define DFPTORCH_MODE_ALWAYS_LIT 0 /* permanently burning, ignited at init */
+#define DFPTORCH_MODE_LIGHTABLE 1  /* player-toggled; burn timer + gamebit latch */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 sqrtf(f32 x);
 extern int randomGetRange(int lo, int hi);
@@ -71,7 +75,7 @@ void DFP_Torch_init(int obj, int def)
     spawnArg.val = lbl_803E63E0;
     switch (state->mode)
     {
-    case 0:
+    case DFPTORCH_MODE_ALWAYS_LIT:
         state->lit = 1;
         res = Resource_Acquire(0x69, 1);
         if (place->colorIdx == 0)
@@ -205,9 +209,9 @@ void DFP_Torch_update(int obj)
     objUpdateOpacity(obj);
     switch (state->mode)
     {
-    case 0:
+    case DFPTORCH_MODE_ALWAYS_LIT:
         break;
-    case 1:
+    case DFPTORCH_MODE_LIGHTABLE:
         buf[4] = lbl_803E63E0;
         state->prevLit = state->lit;
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
