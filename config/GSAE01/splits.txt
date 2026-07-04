@@ -2995,7 +2995,7 @@ dolphin/gx/GXTextureTables.c:
 	.data       start:0x8032F218 end:0x8032F618
 
 main/audio/adsr_data.c:
-	.data       start:0x8032F618 end:0x8032F79C
+	.data       start:0x8032F618 end:0x8032FDA0
 
 dolphin/card/CARDFormat.c:
 	.text       start:0x8026253C end:0x80262D2C
