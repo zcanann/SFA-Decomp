@@ -32,7 +32,7 @@ typedef struct MmpMoonrockPlacement
     u8 pad0[0x1A - 0x0];
     s16 kindGameBit;   /* 0x1A: gamebit whose value selects the moonrock kind */
     u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
+    s16 placedGameBit; /* 0x1E: gamebit set 0 when returned home, 1 when carried away */
     s16 gateBit;       /* 0x20: gamebit gating pickup (cleared = grabbable) */
     u8 pad22[0x28 - 0x22];
 } MmpMoonrockPlacement;
@@ -384,9 +384,9 @@ void fn_801A7D74(int obj, u8 a, u8 b)
             if (a == 0)
             {
                 (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 1);
-                if (odef->unk1E != -1)
+                if (odef->placedGameBit != -1)
                 {
-                    GameBit_Set(odef->unk1E, 0);
+                    GameBit_Set(odef->placedGameBit, 0);
                 }
                 c = state->kind;
                 if (c == 3) goto dec;
@@ -419,9 +419,9 @@ void fn_801A7D74(int obj, u8 a, u8 b)
             else
             {
                 (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 0);
-                if (odef->unk1E != -1)
+                if (odef->placedGameBit != -1)
                 {
-                    GameBit_Set(odef->unk1E, 1);
+                    GameBit_Set(odef->placedGameBit, 1);
                 }
                 if (b == 0)
                 {
