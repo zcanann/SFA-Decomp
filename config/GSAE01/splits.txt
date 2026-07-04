@@ -1204,7 +1204,7 @@ main/dll/dll_00FF_magicdust.c:
 main/dll/dll_00EE_effectbox.c:
 	.text       start:0x80173F80 end:0x80174438
 	.data       start:0x80320D10 end:0x80320D48
-	.sdata2     start:0x803E3518 end:0x803E3528
+	.sdata2     start:0x803E3518 end:0x803E3E28
 
 main/dll/dll_80174438.c:
 	.text       start:0x80174438 end:0x80174A80
