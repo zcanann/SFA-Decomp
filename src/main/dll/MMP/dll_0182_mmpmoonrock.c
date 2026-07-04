@@ -23,6 +23,9 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define MMPMOONROCK_OBJGROUP 4
+#define CARRYABLE_OBJGROUP 0x10
+
 #define MMPMOONROCK_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* state->flags bits (single-bit roles; composites like 0x18/0x28/0x180 kept literal) */
@@ -231,7 +234,7 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z)
 void mmp_moonrock_free(int obj)
 {
     extern void ObjGroup_RemoveObject(u32 obj, int group);
-    ObjGroup_RemoveObject((u32)obj, 4);
+    ObjGroup_RemoveObject((u32)obj, MMPMOONROCK_OBJGROUP);
     (*gCarryableInterface)->free(obj);
 }
 
@@ -355,7 +358,7 @@ void mmp_moonrock_init(int obj, int param2)
     }
     (*gCarryableInterface)->initAnim((void*)obj, *(int*)&((GameObject*)obj)->extra, 0x32);
     (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x2c))((int)state, 1);
-    ObjGroup_AddObject(obj, 4);
+    ObjGroup_AddObject(obj, MMPMOONROCK_OBJGROUP);
     state->homeX = ((GameObject*)obj)->anim.localPosX;
     state->homeY = ((GameObject*)obj)->anim.localPosY;
     state->homeZ = ((GameObject*)obj)->anim.localPosZ;
@@ -615,7 +618,7 @@ void mmp_moonrock_update(int obj)
         (*gCarryableInterface)->setVisible(stateCopy, 0);
         {
             f32 k;
-            def = (int)ObjGroup_GetObjects(0x10, &count);
+            def = (int)ObjGroup_GetObjects(CARRYABLE_OBJGROUP, &count);
             i = 0;
             list = (int*)def;
             k = gMoonRockPickupRange;
