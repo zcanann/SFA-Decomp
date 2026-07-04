@@ -2,7 +2,6 @@
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
-extern u32 ObjHitbox_SetSphereRadius();
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -12,7 +11,6 @@ void mikabomb_free(int obj, int mode);
 int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
-extern void objRenderFn_8003b8f4(f32);
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 
@@ -165,7 +163,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/engine_shared.h"
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern u32 fcos16Precise();
 extern f32 lbl_803E31D8;
 extern f32 lbl_803E31DC;
 extern f32 lbl_803E31E0;
