@@ -46,7 +46,6 @@ STATIC_ASSERT(offsetof(SideRepelPlacement, radius) == 0x18);
 
 void mikabomb_free(int obj, int mode);
 
-extern void objRenderFn_8003b8f4(f32);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
