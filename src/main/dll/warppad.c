@@ -59,13 +59,7 @@ extern void setAButtonIcon(int x);
 /* one-shot latch: gates the first A-prompt trigger sequence for any warp pad */
 #define GAMEBIT_WARPPAD_PROMPT_SHOWN 0x912
 
-/* state->flags bits (see WarpPadState in warp_pad.h) */
-#define WARPPAD_FLAG_LATCH 0x2
-#define WARPPAD_FLAG_PULSE_FX 0x4
-#define WARPPAD_FLAG_WARP_B 0x8
-#define WARPPAD_FLAG_WARP_C 0x10
-#define WARPPAD_FLAG_WARP_A 0x40
-#define WARPPAD_FLAG_GAMEBIT_DISABLED 0x80
+/* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
 
 #pragma scheduling off
 #pragma peephole off

@@ -53,7 +53,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case 7: /* pulse fx + sfx */
-            state->flags = state->flags | 4;
+            state->flags = state->flags | WARPPAD_FLAG_PULSE_FX;
             Sfx_PlayFromObject((u32)obj, 0x420);
             break;
         case 2: /* map progress: lock/load per destination */
@@ -259,7 +259,7 @@ void transporter_hitDetect(int obj)
     {
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
             (u32) * &((GameObject*)self)->anim.resetHitboxMode & ~(INTERACT_FLAG_DISABLED | INTERACT_FLAG_PROMPT_SUPPRESSED));
-        state->flags = (u8)((u32)state->flags | 1);
+        state->flags = (u8)((u32)state->flags | WARPPAD_FLAG_INTERACTIVE);
         if (((GameObject*)self)->anim.hitVolumeTransforms != NULL)
         {
             objRenderFn_80041018(self);
@@ -268,13 +268,13 @@ void transporter_hitDetect(int obj)
     }
 
     if ((int)setup->warpId != -1
-        && (state->flags & 0x20) == 0)
+        && (state->flags & WARPPAD_FLAG_DISABLED) == 0)
     {
         if (state->triggerMode != 0 || state->countdownActive != 0)
         {
             *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
                 (u32) * &((GameObject*)self)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-            state->flags = (u8)((u32)state->flags & ~1);
+            state->flags = (u8)((u32)state->flags & ~WARPPAD_FLAG_INTERACTIVE);
         }
         else if ((int)setup->enableGameBit != -1
             && GameBit_Get((int)setup->enableGameBit) == 0)
@@ -283,13 +283,13 @@ void transporter_hitDetect(int obj)
                 (u32) * &((GameObject*)self)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
             *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
                 (u32) * &((GameObject*)self)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
-            state->flags = (u8)((u32)state->flags & ~1);
+            state->flags = (u8)((u32)state->flags & ~WARPPAD_FLAG_INTERACTIVE);
         }
         else
         {
             *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
                 (u32) * &((GameObject*)self)->anim.resetHitboxMode & ~(INTERACT_FLAG_DISABLED | INTERACT_FLAG_PROMPT_SUPPRESSED));
-            state->flags = (u8)((u32)state->flags | 1);
+            state->flags = (u8)((u32)state->flags | WARPPAD_FLAG_INTERACTIVE);
         }
         if (((GameObject*)self)->anim.hitVolumeTransforms != NULL)
         {
@@ -298,7 +298,7 @@ void transporter_hitDetect(int obj)
         return;
     }
 
-    if ((state->flags & 0x40) != 0)
+    if ((state->flags & WARPPAD_FLAG_WARP_A) != 0)
     {
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
             (u32) * &((GameObject*)self)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
@@ -310,7 +310,7 @@ void transporter_hitDetect(int obj)
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
             (u32) * &((GameObject*)self)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
-    state->flags = (u8)((u32)state->flags & ~1);
+    state->flags = (u8)((u32)state->flags & ~WARPPAD_FLAG_INTERACTIVE);
 }
 
 void transporter_render(void)
@@ -340,7 +340,7 @@ void transporter_init(int obj, u8* params)
     case 0x49267:
     case 0x4CB6A:
     case 0x4CB84:
-        state->flags = (u8)(state->flags | 0x68);
+        state->flags = (u8)(state->flags | (WARPPAD_FLAG_WARP_A | WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_WARP_B));
         break;
     case 0x48506:
     case 0x45753:
@@ -350,13 +350,13 @@ void transporter_init(int obj, u8* params)
     case 0x49C33:
     case 0x4B666:
     case 0x4B667:
-        state->flags = (u8)(state->flags | 0x08);
+        state->flags = (u8)(state->flags | WARPPAD_FLAG_WARP_B);
         break;
     case 0x4C986:
-        state->flags = (u8)(state->flags | 0x30);
+        state->flags = (u8)(state->flags | (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_WARP_C));
         break;
     case 0x47064:
-        state->flags = (u8)(state->flags | 0x10);
+        state->flags = (u8)(state->flags | WARPPAD_FLAG_WARP_C);
         break;
     case 0x43F83:
         /*
@@ -366,42 +366,42 @@ void transporter_init(int obj, u8* params)
          */
         if (GameBit_Get(GAMEBIT_K1_SPIRIT_COLLECTED) != 0 || GameBit_Get(GAMEBIT_K1_SPIRIT_DEPOSITED) != 0 || GameBit_Get(0x511) != 0)
         {
-            state->flags = (u8)(state->flags | 0x20);
+            state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x2BA7:
         if (GameBit_Get(0xBFD) != 0 || GameBit_Get(0x29A) != 0 || GameBit_Get(0x29B) != 0)
         {
-            state->flags = (u8)(state->flags | 0x20);
+            state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x46A40:
         if (GameBit_Get(0xFF) != 0 || GameBit_Get(0x8A0) != 0 || GameBit_Get(0x8A2) != 0)
         {
-            state->flags = (u8)(state->flags | 0x20);
+            state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x497F4:
         if (GameBit_Get(0xC6E) != 0 || GameBit_Get(0xC70) != 0 || GameBit_Get(0xC71) != 0)
         {
-            state->flags = (u8)(state->flags | 0x20);
+            state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x4800C:
         if (GameBit_Get(0xC85) != 0 || GameBit_Get(0xCB5) != 0 || GameBit_Get(0xCB6) != 0)
         {
-            state->flags = (u8)(state->flags | 0x20);
+            state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x4A533:
         if (GameBit_Get(0x174) != 0 || GameBit_Get(0xCB7) != 0 || GameBit_Get(0xCB8) != 0)
         {
-            state->flags = (u8)(state->flags | 0x20);
+            state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     }
 
-    if ((state->flags & 0x40) != 0)
+    if ((state->flags & WARPPAD_FLAG_WARP_A) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     }

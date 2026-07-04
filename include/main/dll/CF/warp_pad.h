@@ -33,6 +33,16 @@ typedef struct WarpPadState {
     u8 pad0F;
 } WarpPadState;
 
+/* WarpPadState.flags bits (shared by warppad.c and transporter.c) */
+#define WARPPAD_FLAG_INTERACTIVE 0x01     /* runtime interactive bit (set per-frame in hitDetect) */
+#define WARPPAD_FLAG_LATCH 0x02           /* pulse latch */
+#define WARPPAD_FLAG_PULSE_FX 0x04        /* pulse fx active */
+#define WARPPAD_FLAG_WARP_B 0x08          /* warp fx class B */
+#define WARPPAD_FLAG_WARP_C 0x10          /* warp fx class C */
+#define WARPPAD_FLAG_DISABLED 0x20        /* disabled/non-interactive (gamebit gate) */
+#define WARPPAD_FLAG_WARP_A 0x40          /* warp fx class A */
+#define WARPPAD_FLAG_GAMEBIT_DISABLED 0x80 /* burst particle variant selector (0xa0 test) */
+
 STATIC_ASSERT(sizeof(WarpPadState) == 0x10);
 STATIC_ASSERT(offsetof(WarpPadPlacement, destinationId) == 0x14);
 STATIC_ASSERT(offsetof(WarpPadPlacement, rotXHigh) == 0x18);
