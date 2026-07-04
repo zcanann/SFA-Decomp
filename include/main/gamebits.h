@@ -109,7 +109,43 @@ enum GameBitId {
      * literal by dll_012C_transporter.c - one of the three 0xBA8/0x316/0x511
      * guard bits that lock out the K1 return pad once you progress.
      */
-    GAMEBIT_K1_SPIRIT_DEPOSITED = 0x316
+    GAMEBIT_K1_SPIRIT_DEPOSITED = 0x316,
+
+    /*
+     * World map / Arwing flight-select is available. worldplanet_init force-sets
+     * this (GameBit_Set(0xA63, 1)) every time the map opens, and
+     * gWorldPlanetGameBitTable reuses it as planet slot 2's "unlock" entry - which
+     * is why Dinosaur Planet is always flyable and is the default selection. Its
+     * FIRST set is the first world-map open, right after the K1 Krazoa Spirit is
+     * deposited (when the player first gains Arwing / world-map access), hence its
+     * position here in story order. Named WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN in
+     * worldplanet.h. Live-verified: set at the post-prologue map (unlockedPlanetMask
+     * bit 2), Dinosaur Planet selectable.
+     */
+    GAMEBIT_WORLDMAP_OPEN = 0xA63,
+
+    /* ======================================================================
+     * Unplaced - meaning verified, but the setter (the story beat that flips
+     * the bit) is not yet traced, so these are not yet slotted into the
+     * chronological order above.
+     * ====================================================================== */
+
+    /*
+     * Arwing world-map (flight-select) destination unlocks. worldplanet_init
+     * marks planet slot i selectable - WorldPlanetState.unlockedPlanetMask bit i
+     * - iff GameBit_Get(gWorldPlanetGameBitTable[i]) != 0, so each of these bits
+     * ungates one floating-island Arwing destination (an extra per-slot hint gate,
+     * gWorldPlanetHintFlagTable + getNextTaskHintText, can still hold it back).
+     * Live-verified at the post-prologue map: only Dinosaur Planet's always-on bit
+     * (GAMEBIT_WORLDMAP_OPEN = 0xA63, force-set every open) was set, so
+     * the mask read 0x04 and only Dinosaur was flyable while these four read 0 and
+     * their islands showed the red cross. The id->island->slot mapping is from
+     * gWorldPlanetGameBitTable {1019,1018,2659,1020,1017}. Setters not yet traced.
+     */
+    GAMEBIT_WORLDMAP_UNLOCK_DARKICE_MINES = 0x3F9, /* 1017, slot 4 */
+    GAMEBIT_WORLDMAP_UNLOCK_CLOUDRUNNER   = 0x3FA, /* 1018, slot 1 (CloudRunner Fortress) */
+    GAMEBIT_WORLDMAP_UNLOCK_WALLED_CITY   = 0x3FB, /* 1019, slot 0 */
+    GAMEBIT_WORLDMAP_UNLOCK_DRAGON_ROCK   = 0x3FC  /* 1020, slot 3 */
 };
 
 
