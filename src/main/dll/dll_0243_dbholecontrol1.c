@@ -22,6 +22,9 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/objhits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+#define DBHOLECONTROL1_OBJGROUP 0x1e
+#define DBEGG_OBJGROUP 0x24
+
 /*
  * DbStealerwormControl - the per-family control record hung off
  * GroundBaddieState.control (state+0x40C) for dbstealerworm
@@ -131,7 +134,7 @@ void dbholecontrol1_init(int* obj, u8* params)
 {
     extern u32 ObjGroup_AddObject();
     DbHoleControl1State* sub = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, 0x1e);
+    ObjGroup_AddObject(obj, DBHOLECONTROL1_OBJGROUP);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = dbholecontrol1_SeqFn;
     sub->gameBitA = ((Dbholecontrol1Placement*)params)->gameBitA;
@@ -197,11 +200,11 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (GameBit_Get(((Dbholecontrol1Placement*)data)->hideGameBit) != 0 || lbl_803DDCE0 != 0)
     {
-        objs = ObjGroup_GetObjects(36, &count);
+        objs = ObjGroup_GetObjects(DBEGG_OBJGROUP, &count);
         ObjMsg_SendToObjects(0, 3, obj, 17, 0);
         while (count-- != 0)
         {
-            ObjGroup_RemoveObject(*objs++, 36);
+            ObjGroup_RemoveObject(*objs++, DBEGG_OBJGROUP);
         }
         return 4;
     }
