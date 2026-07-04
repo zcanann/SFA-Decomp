@@ -50,7 +50,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int kind, int id);
-extern void Music_Trigger(int id, int arg);
 extern f32 timeDelta;
 #include "main/obj_placement.h"
 #include "main/game_object.h"
