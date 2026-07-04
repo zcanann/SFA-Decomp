@@ -47,6 +47,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define PAD_BUTTON_A 0x100
+#define DBEGG_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 extern const f32 lbl_803E61C8;
 extern const f32 gDbEggSpeedByteScale;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
@@ -819,7 +820,7 @@ void dbegg_update(int obj)
                 ((DbEggState*)b2)->msg11C = -1;
                 ((DbEggState*)b2)->msg11E = 0;
                 ((DbEggState*)b2)->msg120 = lbl_803E61CC;
-                ObjMsg_SendToObject(playerObj, 0x7000a, obj, b2 + 0x11c);
+                ObjMsg_SendToObject(playerObj, DBEGG_MSG_IN_RANGE, obj, b2 + 0x11c);
                 ((GameObject*)obj)->unkF8 = 0;
             }
             else if (getButtonsJustPressed(0) & PAD_BUTTON_A)
@@ -1000,7 +1001,7 @@ void dbegg_update(int obj)
                         ((DbEggState*)b2)->msg11C = -1;
                         ((DbEggState*)b2)->msg11E = 0;
                         ((DbEggState*)b2)->msg120 = lbl_803E61CC;
-                        ObjMsg_SendToObject(playerObj, 0x7000a, obj, b2 + 0x11c);
+                        ObjMsg_SendToObject(playerObj, DBEGG_MSG_IN_RANGE, obj, b2 + 0x11c);
                     }
                     else
                     {
