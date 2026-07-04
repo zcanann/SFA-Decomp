@@ -26,3 +26,7 @@ void projdummy_release(void)
 void projdummy_initialise(void)
 {
 }
+
+/*__DATA_EXTERNS__*/
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_803193C0[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projmagicstream_initialise, projmagicstream_release, (void*)0x00000000, projmagicstream_doUnsupported };
