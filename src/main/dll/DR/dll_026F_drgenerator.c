@@ -9,6 +9,9 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
+#define DRGENERATOR_OBJGROUP 0x3
+#define TIMER_OBJGROUP 0x4c
+
 typedef struct DrgeneratorPlacement
 {
     u8 pad0[0x1E - 0x0];
@@ -51,7 +54,7 @@ void drgenerator_release(void)
 
 void drgenerator_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 0x3);
+    ObjGroup_RemoveObject(obj, DRGENERATOR_OBJGROUP);
 }
 
 void drgenerator_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
@@ -101,7 +104,7 @@ void drgenerator_init(int obj, char* arg)
         Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
     }
-    ObjGroup_AddObject(obj, 0x3);
+    ObjGroup_AddObject(obj, DRGENERATOR_OBJGROUP);
     *(int*)state = 0;
     ((BitFlags8*)(state + 0x19b))->b3 = 1;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
@@ -169,7 +172,7 @@ void drgenerator_hitDetect(int obj)
     ((BitFlags8*)(state + 0x19b))->b0 = 1;
     GameBit_Set(((DrgeneratorPlacement*)placement)->completionGameBit, 1);
     if (((GameObject*)obj)->anim.seqId == 0x716 &&
-        (found = (void*)ObjGroup_FindNearestObject(0x4c, obj, 0)) != NULL)
+        (found = (void*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, 0)) != NULL)
     {
         timer_addDuration((int)found, ((DrgeneratorState*)state)->timerDuration);
     }
