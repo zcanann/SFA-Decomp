@@ -27,6 +27,9 @@
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/dll/dll_00F7_dllf7.h"
 
+/* object group this object joins while active */
+#define SETUPPOINT_OBJGROUP 7
+
 void mikabomb_hitDetect(void);
 
 void mikabomb_free(int obj, int mode);
@@ -225,7 +228,7 @@ void StaticCamera_init(int* obj, int* params, int flag);
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, SETUPPOINT_OBJGROUP);
 }
 
 void staticCamera_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -250,7 +253,7 @@ void staticCamera_init(short* obj, int params, int flag)
     colorState[1] = 0;
     if (flag == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, SETUPPOINT_OBJGROUP);
     }
 }
 
