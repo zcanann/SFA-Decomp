@@ -114,13 +114,13 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3)
                                (s32)(lbl_803E2F54 * t));
     switch (((GameObject*)obj)->anim.seqId)
     {
-    case 0x28d:
-    case 0x4b9:
-    case 0x4be:
+    case TUMBLEWEEDBUSH_SEQ_A:
+    case TUMBLEWEEDBUSH_SEQ_C:
+    case TUMBLEWEEDBUSH_SEQ_D:
         sub[0x50] = 3;
         idx = 0;
         break;
-    case 0x3fd:
+    case TUMBLEWEEDBUSH_SEQ_B:
         sub[0x50] = 3;
         idx = 1;
         break;
@@ -167,7 +167,7 @@ void tumbleweedbush_update(int* obj)
     player = Obj_GetPlayerObject();
     if (ObjHits_PollPriorityHitWithCooldown(obj, &gTumbleweedBushHitCooldownState, &hit0, hitExtra) != 0)
     {
-        if (((GameObject*)hit0)->anim.seqId != 0x4ba)
+        if (((GameObject*)hit0)->anim.seqId != TUMBLEWEEDBUSH_SIBLING_C)
         {
             objfx_spawnHitEmitterAtPos(hitExtra, 8, 0xff, 0xff, 0x78);
             Sfx_PlayFromObject(obj, SFXsc_gethit04);
@@ -176,7 +176,7 @@ void tumbleweedbush_update(int* obj)
                 slot = (int**)&state->pieceObjects[(u8)i];
                 if (*slot != NULL)
                 {
-                    if (((GameObject*)obj)->anim.seqId == 0x28d)
+                    if (((GameObject*)obj)->anim.seqId == TUMBLEWEEDBUSH_SEQ_A)
                     {
                         if ((*gSkyInterface)->getSunPosition(&sunTime) == 0) continue;
                     }
@@ -236,7 +236,7 @@ void* tumbleweedbush_findNearestActive(f32* p_pos)
     }
     while (i < count)
     {
-        if (((GameObject*)*list)->anim.seqId == 0x3fb)
+        if (((GameObject*)*list)->anim.seqId == TUMBLEWEEDBUSH_SIBLING_B)
         {
             if (((u8*)((GameObject*)*list)->extra)[0x278] > 1)
             {
@@ -288,19 +288,19 @@ s8 fn_801631C8(int* obj)
     p4c = *(u8**)&((GameObject*)obj)->anim.placementData;
     switch (((GameObject*)obj)->anim.seqId)
     {
-    case 0x28d:
+    case TUMBLEWEEDBUSH_SEQ_A:
         if ((*gSkyInterface)->getSunPosition(&sunTime) == 0)
             return -1;
-        siblingType = 0x39d;
+        siblingType = TUMBLEWEEDBUSH_SIBLING_A;
         break;
-    case 0x3fd:
-        siblingType = 0x3fb;
+    case TUMBLEWEEDBUSH_SEQ_B:
+        siblingType = TUMBLEWEEDBUSH_SIBLING_B;
         break;
-    case 0x4b9:
-        siblingType = 0x4ba;
+    case TUMBLEWEEDBUSH_SEQ_C:
+        siblingType = TUMBLEWEEDBUSH_SIBLING_C;
         break;
-    case 0x4be:
-        siblingType = 0x4c1;
+    case TUMBLEWEEDBUSH_SEQ_D:
+        siblingType = TUMBLEWEEDBUSH_SIBLING_D;
         break;
     }
 

@@ -4,6 +4,18 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+/* Bush variant anim.seqIds and the sibling tumbleweed seqId each one spawns.
+ * The sibling ids match backpack.h's TUMBLEWEED_TYPE_1/3/4 (0x39d/0x4ba/0x4c1). */
+#define TUMBLEWEEDBUSH_SEQ_A 0x28d /* -> sibling 0x39d (sun-gated) */
+#define TUMBLEWEEDBUSH_SEQ_B 0x3fd /* -> sibling 0x3fb */
+#define TUMBLEWEEDBUSH_SEQ_C 0x4b9 /* -> sibling 0x4ba */
+#define TUMBLEWEEDBUSH_SEQ_D 0x4be /* -> sibling 0x4c1 */
+
+#define TUMBLEWEEDBUSH_SIBLING_A 0x39d
+#define TUMBLEWEEDBUSH_SIBLING_B 0x3fb
+#define TUMBLEWEEDBUSH_SIBLING_C 0x4ba
+#define TUMBLEWEEDBUSH_SIBLING_D 0x4c1
+
 void cannonclaw_update(u8* obj);
 void FUN_80163388(int param_1,u32 param_2,int param_3);
 void FUN_8016338c(void);
