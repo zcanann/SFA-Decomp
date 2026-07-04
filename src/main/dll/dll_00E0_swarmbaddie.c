@@ -28,6 +28,9 @@
 #include "main/mm.h"
 #include "string.h"
 
+/* object group this object belongs to */
+#define SWARMBADDIE_OBJGROUP 3
+
 #define SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern u32 FUN_80006b0c();
 extern u32 FUN_80006b14();
@@ -111,7 +114,7 @@ void hagabon_hitDetect(int obj);
 void swarmbaddie_free(int obj)
 {
     void** state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, SWARMBADDIE_OBJGROUP);
     if (*state != NULL)
     {
         mm_free(*state);
