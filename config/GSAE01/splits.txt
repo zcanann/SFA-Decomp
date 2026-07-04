@@ -644,7 +644,7 @@ main/dll/dll_00BA_projlightning6.c:
 
 main/dll/dll_00B4_projenergise1.c:
 	.text       start:0x801007B8 end:0x801007F0
-	.data       start:0x803196F8 end:0x80319720
+	.data       start:0x803196F8 end:0x80319740
 
 main/dll/dll_00B5_projenergise2.c:
 	.text       start:0x801007F0 end:0x80100828

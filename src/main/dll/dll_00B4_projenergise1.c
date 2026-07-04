@@ -27,3 +27,6 @@ void projenergise1_initialise(void)
 }
 
 char sProjenergise1DoNoLongerSupported[] = "<projenergise1 Do>No Longer supported \n";
+
+/* descriptor/ptr table auto 0x80319720-0x80319740 */
+u32 lbl_80319720[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projenergise2_initialise, (u32)projenergise2_release, 0x00000000, (u32)projenergise2_doUnsupported };
