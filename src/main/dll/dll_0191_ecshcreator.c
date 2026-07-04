@@ -60,7 +60,7 @@ typedef struct EcshShrineSpawnSetup {
     u8 unk27;          /* 0x27 */
     u8 unk28;          /* 0x28 */
     u8 unk29;          /* 0x29 */
-    s8 unk2A;          /* 0x2a */
+    s8 rotByte;        /* 0x2a: object yaw byte (anim.rotX >> 8) */
     u8 unk2B;          /* 0x2b */
     s16 unk2C;         /* 0x2c */
     s8 unk2E;          /* 0x2e */
@@ -75,7 +75,7 @@ typedef struct EcshShrineSpawnSetup {
 STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, posX) == 0x8);
 STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, mapId) == 0x14);
 STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, gameBit) == 0x18);
-STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, unk2A) == 0x2a);
+STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, rotByte) == 0x2a);
 STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, unk34) == 0x34);
 STATIC_ASSERT(sizeof(EcshShrineSpawnSetup) == 0x38);
 
@@ -165,7 +165,7 @@ void ecsh_creator_update(GameObject* obj)
         p->unk28 = 0;
         p->gameBit = state->gameBit + *(s8*)(def + 0x1f);
         p->unk30 = -1;
-        p->unk2A = (s8)(obj->anim.rotX >> 8);
+        p->rotByte = (s8)(obj->anim.rotX >> 8);
         p->unk2B = 2;
         p->unk20 = 0;
         p->unk1E = 0;
