@@ -179,6 +179,8 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     u8 st1;
     u8 getAuxFrame;
     u16 rampResetOffsetFlags[5];
+    DSPstudioinfo* stp;
+    DSPstudioinfo* msp;
     DSPvoice* dsp_vptr;
     DSPvoice* next_dsp_vptr;
     u32 tmp_addr;
@@ -200,8 +202,6 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     u32 needsDelta;
     u32 newVoice;
     _SPB* spb;
-    DSPstudioinfo* stp;
-    DSPstudioinfo* msp;
     u32 procVoiceFlag;
     u32 offset;
     u32 endAddr;
