@@ -1234,7 +1234,7 @@ main/dll/dll_00F5_sidekickball.c:
 
 main/dll/dll_00F6_area.c:
 	.text       start:0x8017A00C end:0x8017A048
-	.data       start:0x80320F98 end:0x80320FD0
+	.data       start:0x80320F98 end:0x803211A0
 
 main/dll/dll_00F8_levelname.c:
 	.text       start:0x8017A048 end:0x8017A350
