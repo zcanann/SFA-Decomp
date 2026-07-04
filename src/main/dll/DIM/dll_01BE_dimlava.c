@@ -51,7 +51,6 @@ int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(int* obj);
-extern void warpToMap(int idx, s8 transType);
 
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
