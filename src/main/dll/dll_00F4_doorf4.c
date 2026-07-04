@@ -403,14 +403,14 @@ int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 if (sd < lbl_803E3648 && ((GameObject*)obj)->unkF8 == 0)
                 {
-                    animUpdate->sequenceControlFlags |= 0x14;
+                    animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A | OBJSEQ_CONTROL_SET_STATE_LATCH;
                 }
             }
             else
             {
                 if (((GameObject*)obj)->unkF8 == 1)
                 {
-                    animUpdate->sequenceControlFlags |= 8;
+                    animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_CLEAR_LATCH_A;
                 }
             }
         }
@@ -452,18 +452,18 @@ int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if (active != 0)
         {
-            animUpdate->sequenceControlFlags |= 1;
+            animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_B;
         }
     }
     else if (active == 0)
     {
-        animUpdate->sequenceControlFlags |= 2;
+        animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_CLEAR_LATCH_B;
     }
     ((GameObject*)obj)->unkF8 = active;
     if ((((GameObject*)obj)->anim.seqId == 0x13e || ((GameObject*)obj)->anim.seqId == 0x151)
         && sub->triggerLatch != 0)
     {
-        animUpdate->sequenceControlFlags |= 1;
+        animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_B;
     }
     while (ObjMsg_Pop((void*)obj, &msg, 0, 0) != 0)
     {
