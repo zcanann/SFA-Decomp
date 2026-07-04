@@ -150,7 +150,7 @@ void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E6390);
 }
 
-void dbholecontrol1_free(int x) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(x, 0x1e); }
+void dbholecontrol1_free(int x) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(x, DBHOLECONTROL1_OBJGROUP); }
 
 int dbstealerworm_stateHandlerB00(int p1, int p2);
 
