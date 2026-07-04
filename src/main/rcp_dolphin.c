@@ -37,6 +37,24 @@
 #define GX_COLOR0A0 4
 #define GX_COLOR1A1 5
 #define GX_TEVREG0 1
+#define GX_TEXCOORD_NULL 0xff
+#define GX_TEXMAP_NULL 0xff
+#define GX_COLOR_NULL 0xff
+#define GX_TEV_SWAP0 0
+#define GX_TEV_ADD 0
+#define GX_TB_ZERO 0
+#define GX_CS_SCALE_1 0
+#define GX_TRUE 1
+#define GX_TEVPREV 0
+#define GX_CC_CPREV 0
+#define GX_CC_A0 3
+#define GX_CC_RASC 0xa
+#define GX_CC_KONST 0xe
+#define GX_CC_ZERO 0xf
+#define GX_CA_APREV 0
+#define GX_CA_RASA 5
+#define GX_CA_KONST 6
+#define GX_CA_ZERO 7
 extern u32 FUN_800033a8();
 extern u32 FUN_8001763c();
 extern int randomGetRange(int lo, int hi);
@@ -1056,20 +1074,20 @@ extern void GXSetTevAlphaOp(int tev, int op, int bias, int scale, int clamp, int
 void gxColorFn_800523d0(void)
 {
     GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
-    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
     if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0)
     {
-        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xa);
-        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 5);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_RASC);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_RASA);
     }
     else
     {
-        GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 0xa, 0xf);
-        GXSetTevAlphaIn(lbl_803DCD90, 7, 0, 5, 7);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_RASC, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_APREV, GX_CA_RASA, GX_CA_ZERO);
     }
-    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
@@ -1131,15 +1149,15 @@ void gxTextureFn_80052638(int* param)
     GXSetTevColor(GX_TEVREG0, &color);
     gxTextureFn_8004bf88(param, 1, 0, &sel, &v1);
     GXSetTevKColorSel(lbl_803DCD90, sel);
-    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
-    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
     if (lbl_803DCD6A != 0 && lbl_803DCD30 != 0)
     {
-        GXSetTevColorIn(lbl_803DCD90, 0, 0xe, 3, 0xf);
-        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_CPREV, GX_CC_KONST, GX_CC_A0, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
     }
-    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
@@ -1152,22 +1170,22 @@ void textureFn_800524ec(int* param)
     int sel_color;
     int sel_alpha;
     GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
-    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
     gxTextureFn_8004bf88(param, 0, 1, &sel_color, &sel_alpha);
     GXSetTevKAlphaSel(lbl_803DCD90, sel_alpha);
     if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0)
     {
-        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xa);
-        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 6);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_RASC);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_KONST);
     }
     else
     {
-        GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 0xa, 0xf);
-        GXSetTevAlphaIn(lbl_803DCD90, 7, 0, 6, 7);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_RASC, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_APREV, GX_CA_KONST, GX_CA_ZERO);
     }
-    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
@@ -1182,20 +1200,20 @@ void gxColorFn_80052764(int* param)
     gxTextureFn_8004bf88(param, 1, 1, &sel_color, &sel_alpha);
     GXSetTevKAlphaSel(lbl_803DCD90, sel_alpha);
     GXSetTevKColorSel(lbl_803DCD90, sel_color);
-    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
-    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
     if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0)
     {
-        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xe);
-        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 6);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_KONST);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_KONST);
     }
     else
     {
-        GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 0xe, 0xf);
-        GXSetTevAlphaIn(lbl_803DCD90, 7, 0, 6, 7);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_KONST, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_APREV, GX_CA_KONST, GX_CA_ZERO);
     }
-    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
