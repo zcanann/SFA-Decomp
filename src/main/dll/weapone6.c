@@ -312,7 +312,7 @@ void fn_8013F100(int obj, register int state)
         }
         break;
     case 2:
-        if ((((TrickyState*)state)->stateFlags & 0x8000000) != 0)
+        if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             *(float*)(state + 0x828) = lbl_803E2408;
             status = ((TrickyState*)state)->progressPtr;
@@ -509,7 +509,7 @@ void fn_8013F9E4(int obj, int state)
                 switch (((GameObject*)obj)->anim.currentMove)
                 {
                 case 13:
-                    if ((((TrickyState*)state)->stateFlags & 0x8000000) != 0)
+                    if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
                     {
                         objAnimFn_8013a3f0(obj, 49, lbl_803E243C, 0);
                     }

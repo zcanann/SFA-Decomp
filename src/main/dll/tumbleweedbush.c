@@ -127,7 +127,7 @@ void trickyGrowl(void* obj, void* trickyState)
         {
             if ((u8)Obj_IsLoadingLocked() != 0)
             {
-                ((TrickyState*)trickyState)->stateFlags = ((TrickyState*)trickyState)->stateFlags | 0x800;
+                ((TrickyState*)trickyState)->stateFlags = ((TrickyState*)trickyState)->stateFlags | TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 for (i = 0, slot = trickyState; i < CHILD_OBJECT_COUNT; slot++, i++)
                 {
                     setup = Obj_AllocObjectSetup(0x24, 0x4f0);
@@ -152,8 +152,8 @@ void trickyGrowl(void* obj, void* trickyState)
         trickyDebugPrint(strBase + 0x590);
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E24D0)
         {
-            ((TrickyState*)trickyState)->stateFlags &= ~0x800LL;
-            ((TrickyState*)trickyState)->stateFlags = ((TrickyState*)trickyState)->stateFlags | 0x1000;
+            ((TrickyState*)trickyState)->stateFlags &= ~(u64)TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
+            ((TrickyState*)trickyState)->stateFlags = ((TrickyState*)trickyState)->stateFlags | TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
             for (j = 0, slot2 = trickyState; j < CHILD_OBJECT_COUNT; slot2++, j++)
             {
                 objSetAnimSpeedTo1(slot2[0x700 / 4]);

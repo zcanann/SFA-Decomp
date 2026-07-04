@@ -5,6 +5,15 @@
 #include "global.h"
 #include "main/dll/curve_walker.h"
 
+/* Shared TrickyState.stateFlags bits used across the Tricky sidekick / spawned
+ * sibling handlers (tricky, tricky_substates, trickyfollow, tumbleweedbush,
+ * weaponE6). tricky.c keeps its own local names for the flame-child variant of
+ * the 0x800/0x1000 child-spawn machine; these are the generic cross-consumer
+ * names for the same bits. */
+#define TRICKY_STATE_FLAG_CHILDREN_ACTIVE 0x800    /* spawned child objects are active */
+#define TRICKY_STATE_FLAG_CHILDREN_CLEANUP 0x1000  /* child objects torn down this cycle */
+#define TRICKY_STATE_FLAG_MOVE_ADVANCING 0x8000000 /* ObjAnim_AdvanceCurrentMove reported the current move still advancing */
+
 /*
  * TrickyState - the obj+0xB8 extra record for the Tricky sidekick handlers
  * in grenade.c (trickyFn_* / trickyFoodFn_* / trickyFlameFn_* take it as

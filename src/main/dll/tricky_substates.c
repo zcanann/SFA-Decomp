@@ -630,7 +630,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                         switch (((GameObject*)obj)->anim.currentMove)
                         {
                         case 0xd:
-                            if (((TrickyState*)state)->stateFlags & 0x8000000)
+                            if (((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING)
                             {
                                 objAnimFn_8013a3f0((int)obj, 0x31, lbl_803E243C, 0);
                             }
@@ -787,12 +787,12 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
     switch (((GameObject*)obj)->anim.currentMove)
     {
     case 0x1a:
-        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E24AC && (((TrickyState*)state)->stateFlags & 0x800)
+        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E24AC && (((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE)
             == 0)
         {
             if (Obj_IsLoadingLocked() != 0)
             {
-                ((TrickyState*)state)->stateFlags |= 0x800;
+                ((TrickyState*)state)->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 for (i = 0, p = state; i < 7; p += 4, i++)
                 {
                     e = Obj_AllocObjectSetup(0x24, 0x4f0);
@@ -808,10 +808,10 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
         }
         else
         {
-            if (((TrickyState*)state)->stateFlags & 0x8000000)
+            if (((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING)
             {
-                ((TrickyState*)state)->stateFlags &= ~0x800LL;
-                ((TrickyState*)state)->stateFlags |= 0x1000;
+                ((TrickyState*)state)->stateFlags &= ~(u64)TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
+                ((TrickyState*)state)->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
                 for (j = 0, q = state; j < 7; q += 4, j++)
                 {
                     objSetAnimSpeedTo1(*(u8**)(q + 0x700));
@@ -926,14 +926,14 @@ int trickyFn_80142eb0(int obj, int state)
     {
     case 44:
     case 45:
-        if ((*(u32*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0)
+        if ((*(u32*)&((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             objAnimFn_8013a3f0(obj, 46, lbl_803E249C, 0);
         }
         break;
     case 46:
     {
-        if (((*(u32*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0) &&
+        if (((*(u32*)&((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) &&
             (((*(u32*)&((TrickyState*)state)->stateFlags & 0x10000) != 0 || randomGetRange(0, 2) == 0) ||
                 ((TrickyState*)state)->unk720 > lbl_803E23DC))
         {
@@ -947,7 +947,7 @@ int trickyFn_80142eb0(int obj, int state)
         break;
     }
     case 47:
-        if ((*(u32*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0)
+        if ((*(u32*)&((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
             {
@@ -1047,13 +1047,13 @@ u32 trickyFn_80143210(int obj, int* trickyState)
     switch (move)
     {
     case 0x23:
-        if ((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0)
+        if ((((TrickyState*)trickyState)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             objAnimFn_8013a3f0(obj, 0x24, lbl_803E2478, 0);
         }
         break;
     case 0x24:
-        if (((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0) && ((int)randomGetRange(0, 3) == 0))
+        if (((((TrickyState*)trickyState)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) && ((int)randomGetRange(0, 3) == 0))
         {
             ((TrickyState*)trickyState)->substate = 0;
         }
@@ -1076,13 +1076,13 @@ u32 trickyFn_801432cc(int obj, int* trickyState)
     switch (move)
     {
     case 0x21:
-        if ((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0)
+        if ((((TrickyState*)trickyState)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             objAnimFn_8013a3f0(obj, 0x22, lbl_803E2478, 0);
         }
         break;
     case 0x22:
-        if (((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0) && ((int)randomGetRange(0, 3) == 0))
+        if (((((TrickyState*)trickyState)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) && ((int)randomGetRange(0, 3) == 0))
         {
             ((TrickyState*)trickyState)->substate = 0;
         }
@@ -1120,7 +1120,7 @@ u32 trickyFn_80143388(int obj, int* trickyState)
     {
         return 1;
     }
-    if ((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0)
+    if ((((TrickyState*)trickyState)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
     {
         if (((TrickyState*)trickyState)->moveId == (int)((GameObject*)obj)->anim.currentMove)
         {
@@ -1153,7 +1153,7 @@ int trickyFn_801434b0(int obj, int* trickyState)
     switch (move)
     {
     case 0x29:
-        if ((((TrickyState*)trickyState)->stateFlags & 0x8000000) != 0)
+        if ((((TrickyState*)trickyState)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             objAnimFn_8013a3f0(obj, 0x2a, lbl_803E2520, 0);
         }
@@ -1193,7 +1193,7 @@ int trickyFn_801434b0(int obj, int* trickyState)
         *(float*)(trickyState + 0x1d1) = fval;
         if (fval <= lbl_803E23DC)
         {
-            if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+            if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0)
             {
                 *(f32*)&fxBuf[12] = *(f32*)(trickyState + 0x102);
                 *(f32*)&fxBuf[16] = lbl_803E23F8 + *(float*)(trickyState + 0x103);
@@ -1205,7 +1205,7 @@ int trickyFn_801434b0(int obj, int* trickyState)
         }
         break;
     case 0x2b:
-        if ((*(u32*)&trickyState[0x15] & 0x8000000) != 0)
+        if ((*(u32*)&trickyState[0x15] & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             if (lbl_803E23DC == *(float*)(trickyState + 0xab))
             {
@@ -1362,7 +1362,7 @@ u32 trickyFn_80143b04(int obj, int* trickyState)
     {
         return 1;
     }
-    if ((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0)
+    if ((((TrickyState*)trickyState)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
     {
         if (((TrickyState*)trickyState)->moveId == (int)((GameObject*)obj)->anim.currentMove)
         {

@@ -1027,7 +1027,7 @@ state_selected:
                 timeDelta * (((TrickyState*)state)->dirZ * (((TrickyState*)state)->speed * lbl_803E24AC)) +
                 ((GameObject*)obj)->anim.localPosZ;
         }
-        if ((((TrickyState*)state)->stateFlags & 0x8000000) != 0)
+        if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             f32 dx;
             f32 dz;
@@ -1226,7 +1226,7 @@ state_selected:
                 trickyTurnTowardYaw(obj, getAngle(-dx, -dz));
             }
         }
-        if ((((TrickyState*)state)->stateFlags & 0x8000000) != 0)
+        if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             ((TrickyState*)state)->speed = lbl_803E24C0;
             trickyMove(obj, &route->posX);
