@@ -41,6 +41,16 @@ ObjectDescriptor gAreaObjDescriptor = {
 #define INVISIBLEHITSWITCH_OBJFLAG_HIDDEN 0x4000
 #define INVISIBLEHITSWITCH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/*
+ * Low 2 bits of InvisibleHitSwitchPlacement.triggerMode select the switch
+ * behaviour when hit. (Same mode field as dll_00F9 projectileswitch.)
+ */
+#define SWITCH_MODE_MASK 3
+#define SWITCH_MODE_LATCH 0     /* activates and stays on; cannot be toggled off */
+#define SWITCH_MODE_TOGGLE 1    /* a second hit while active turns it back off */
+#define SWITCH_MODE_MOMENTARY 2 /* activates, then auto-clears after cooldownFrames */
+#define SWITCH_MODE_DELAYED 3   /* hit arms an activation wind-up before turning on */
+
 typedef struct InvisibleHitSwitchPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -139,20 +149,20 @@ void InvisibleHitSwitch_update(int obj)
         if ((int)((InvisibleHitSwitchState*)state)->hitId != hitId) return;
         if (((InvisibleHitSwitchState*)state)->active != 0)
         {
-            if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & 3) != 1) return;
+            if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK) != SWITCH_MODE_TOGGLE) return;
             ((InvisibleHitSwitchState*)state)->active = 0;
             GameBit_Set((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 0);
         }
         else
         {
-            if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & 3) == 3)
+            if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK) == SWITCH_MODE_DELAYED)
             {
                 ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3738;
                 return;
             }
             ((InvisibleHitSwitchState*)state)->active = 1;
             GameBit_Set((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 1);
-            if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & 3) == 2)
+            if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK) == SWITCH_MODE_MOMENTARY)
             {
                 ((InvisibleHitSwitchState*)state)->cooldownTimer =
                     lbl_803E3734 * (lbl_803E373C *
