@@ -1007,7 +1007,7 @@ void newshadows_queueShadowCaster(int object)
         if (modelDef->shadowType == 2)
         {
             (&DAT_8038ef10)[slotOff] = 1;
-            if ((modelDef->renderFlags & 4) != 0)
+            if ((modelDef->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) != 0)
             {
                 (&DAT_8038ef10)[slotOff] = 2;
                 *(float*)(&DAT_8038ef0c + slotOff) = lbl_803DFA10;
@@ -2387,7 +2387,7 @@ void shadowCreate(int* obj)
         if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 2)
         {
             gNewShadowCasterTable[gNewShadowCasterCount].flags = 1;
-            if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4)
+            if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
             {
                 gNewShadowCasterTable[gNewShadowCasterCount].flags = 2;
                 gNewShadowCasterTable[gNewShadowCasterCount].scale = Ydchuff_803DED90;

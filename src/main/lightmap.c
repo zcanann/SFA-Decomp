@@ -1240,7 +1240,7 @@ void renderObjects(s8* arg0)
         idx = keys[i] & 0x3ff;
         obj = (u8*)objects[idx];
         flags = ((GameObject*)obj)->anim.modelInstance->flags;
-        if ((flags & 0x800) != 0 || ((((GameObject*)obj)->anim.modelInstance->renderFlags & 0x10) != 0))
+        if ((flags & 0x800) != 0 || ((((GameObject*)obj)->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER) != 0))
         {
             if (arg0[idx] != 0 && gLightmapDeferredObjectCount < 0x14)
             {
@@ -2366,7 +2366,7 @@ void getVisibleObjects(s8* opacity)
                     else
                     {
                         if ((((ObjAnimComponent*)o)->modelInstance->flags & 0x800) != 0 ||
-                            (((ObjAnimComponent*)o)->modelInstance->renderFlags & 0x10) != 0)
+                            (((ObjAnimComponent*)o)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER) != 0)
                         {
                             mode = 0x1f;
                         }

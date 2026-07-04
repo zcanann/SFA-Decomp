@@ -2044,7 +2044,7 @@ int objShadowFn_80062378(void* obj, u8 param)
     void* p;
 
     p = ((GameObject*)obj)->anim.modelInstance;
-    if (((ObjDef*)p)->renderFlags & 0x4)
+    if (((ObjDef*)p)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
     {
         lo = 1000;
         hi = 2000;
@@ -2234,7 +2234,7 @@ void* shadowInit(int* obj, int size)
     {
         modelState->shadowTexture = (void*)textureLoad(-texId, 0);
     }
-    else if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 0x4)
+    else if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
     {
         modelState->shadowTexture = (void*)textureAlloc512();
     }
@@ -3932,7 +3932,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     viewMtx = Camera_GetViewMatrix();
     PSMTXConcat(viewMtx, mtx, outMtx);
     GXLoadPosMtxImm(outMtx, 0);
-    if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 0x4)
+    if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
     {
         int c = *(int*)col;
         objectShadow_setupSwappedProjectedTexture(((MapBlockData*)blockData)->unkC, &c, mtx);

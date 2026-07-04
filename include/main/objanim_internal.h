@@ -474,6 +474,25 @@ STATIC_ASSERT(offsetof(ObjDef, textureSlotCount) == 0x59);
 STATIC_ASSERT(offsetof(ObjDef, jointCount) == 0x5A);
 STATIC_ASSERT(offsetof(ObjDef, sequenceCount) == 0x5E);
 STATIC_ASSERT(offsetof(ObjDef, renderFlags) == 0x5F);
+
+/*
+ * ObjDef.renderFlags (ObjDef+0x5F, u8) bit names. These are baked into the
+ * loaded model-def data and read (never set in code) across the render/shadow
+ * paths; the roles are the cross-file consensus from how each bit gates
+ * behavior. Field is u8, so a bare int constant folds identically for & tests.
+ *  - 0x4 PROJECTED_SHADOW: the model's shadow is a dynamically rendered
+ *    projected shadow (own 512 render target, textureAlloc512 in
+ *    track_dolphin; freed via mm_free not textureFree in object.c; forces the
+ *    front-cull z-write shadow pass in objprint_dolphin; shadow-slot mode 2 in
+ *    newshadows). Consensus across object.c/newshadows.c/track_dolphin.c/
+ *    objprint_dolphin.c (5+ read sites).
+ *  - 0x10 DEFERRED_RENDER: routes the object through the deferred render queue
+ *    and the extended (0x1f) shadow render mode; also triggers the special
+ *    render setup in objprint_dolphin. Consensus across objprint_dolphin.c and
+ *    lightmap.c (paired with modelInstance->flags 0x800 to the same path).
+ */
+#define OBJDEF_RENDERFLAG_PROJECTED_SHADOW 0x4
+#define OBJDEF_RENDERFLAG_DEFERRED_RENDER  0x10
 STATIC_ASSERT(offsetof(ObjDef, hitboxStateIndex) == 0x60);
 STATIC_ASSERT(offsetof(ObjDef, primaryHitboxRadius) == 0x62);
 STATIC_ASSERT(offsetof(ObjDef, lateralResponseWeight) == 0x63);

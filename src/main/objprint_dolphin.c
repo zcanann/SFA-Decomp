@@ -769,11 +769,11 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
         if (DAT_803dd8cc == '\0')
         {
             renderFlags = OBJPRINT_MODEL_DEF(objPtr)->renderFlags;
-            if (((renderFlags & 4) == 0) || (*(float**)(*(int*)&((GameObject*)objPtr)->anim.modelState + 0xc) == (float*)0x0))
+            if (((renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) == 0) || (*(float**)(*(int*)&((GameObject*)objPtr)->anim.modelState + 0xc) == (float*)0x0))
             {
-                if ((renderFlags & 0x10) == 0)
+                if ((renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER) == 0)
                 {
-                    if ((renderFlags & 4) == 0)
+                    if ((renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) == 0)
                     {
                         lightId = &DAT_803dd8e4;
                         lightFlags = &DAT_803dd8e0;
@@ -879,7 +879,7 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
             FUN_8025d8c4(worldMtx, 0x24, 0);
             FUN_80049260();
         }
-        if ((OBJPRINT_MODEL_DEF(objPtr)->renderFlags & 0x10) != 0)
+        if ((OBJPRINT_MODEL_DEF(objPtr)->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER) != 0)
         {
             FUN_80048f00(op);
         }
@@ -1298,7 +1298,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int hdr)
     FUN_8025c754(7, 0, 0, 7, 0);
     FUN_8025a608(4, 0, 0, 0, 0, 0, 2);
     FUN_8025a5bc(1);
-    if ((OBJPRINT_MODEL_DEF(objPtr)->renderFlags & 4) == 0)
+    if ((OBJPRINT_MODEL_DEF(objPtr)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) == 0)
     {
         gxSetZMode_(0, 3, 0);
         FUN_80259288(0);
@@ -3757,7 +3757,7 @@ void objFn_8003dc50(u8* obj, u8* model)
             if (nf != 0)
             {
                 modelLightStruct_selectObjectLights(model, &lbl_803DCC64, nf, &lbl_803DCC5C, 8);
-                if ((OBJPRINT_MODEL_DEF(model)->renderFlags & 4) || gObjShadowNear)
+                if ((OBJPRINT_MODEL_DEF(model)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) || gObjShadowNear)
                 {
                     lbl_803DCC5C = 0;
                 }
@@ -4311,7 +4311,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetNumChans(1);
-    if (OBJPRINT_MODEL_DEF(obj)->renderFlags & 4)
+    if (OBJPRINT_MODEL_DEF(obj)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
     {
         gxSetZMode_(1, 3, 1);
         GXSetCullMode(GX_CULL_FRONT);
@@ -4714,7 +4714,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
         GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
         GXSetNumChans(1);
-        if (OBJPRINT_MODEL_DEF(obj)->renderFlags & 4)
+        if (OBJPRINT_MODEL_DEF(obj)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
         {
             gxSetZMode_(1, 3, 1);
             GXSetCullMode(GX_CULL_FRONT);
@@ -5247,7 +5247,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         GXLoadTexMtxImm(t2, 0x24, 0);
         fn_8004D928();
     }
-    if (OBJPRINT_MODEL_DEF(obj)->renderFlags & 0x10)
+    if (OBJPRINT_MODEL_DEF(obj)->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER)
     {
         gxTextureFn_8004d5b4(op);
     }
