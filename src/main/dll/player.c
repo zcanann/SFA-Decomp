@@ -8204,13 +8204,13 @@ void playerDoHitDetection(int obj)
                 {
                     ((PlayerState*)inner)->cutsceneTimer = lbl_803E80A8;
                 }
-                if ((((HitDesc*)((PlayerState*)inner)->moveSlots +
-                        (u32)((PlayerState*)inner)->moveSlotIndex)->flags & 2) != 0)
+                {
+                    HitDesc* hd = (HitDesc*)((PlayerState*)inner)->moveSlots +
+                        (u32)((PlayerState*)inner)->moveSlotIndex;
+                    if ((hd->flags & 2) != 0)
                     {
                         ((PlayerState*)inner)->hitInterval =
-                            ((HitDesc*)((PlayerState*)inner)->moveSlots +
-                                (u32)((PlayerState*)inner)->moveSlotIndex)->valsA[
-                                ((PlayerState*)inner)->activeHitWindow];
+                            hd->valsA[((PlayerState*)inner)->activeHitWindow];
                         ((PlayerState*)inner)->hitCountMax =
                             ((HitDesc*)((PlayerState*)inner)->moveSlots +
                                 (u32)((PlayerState*)inner)->moveSlotIndex)->valsB[
@@ -8220,6 +8220,7 @@ void playerDoHitDetection(int obj)
                         ((PlayerState*)inner)->hitCount += 1;
                         ((PlayerState*)inner)->lastHitObject = *(int*)(sub + 0x50);
                     }
+                }
                 {
                     char* h2 = *(char**)(sub + 0x50);
                     if (h2 != NULL)
@@ -8269,13 +8270,13 @@ void playerDoHitDetection(int obj)
                 {
                     ((PlayerState*)inner)->cutsceneTimer = lbl_803E80A8;
                 }
-                if ((((HitDesc*)((PlayerState*)inner)->moveSlots +
-                        (u32)((PlayerState*)inner)->moveSlotIndex)->flags & 2) != 0)
+                {
+                    HitDesc* hd = (HitDesc*)((PlayerState*)inner)->moveSlots +
+                        (u32)((PlayerState*)inner)->moveSlotIndex;
+                    if ((hd->flags & 2) != 0)
                     {
                         ((PlayerState*)inner)->hitInterval =
-                            ((HitDesc*)((PlayerState*)inner)->moveSlots +
-                                (u32)((PlayerState*)inner)->moveSlotIndex)->valsA[
-                                ((PlayerState*)inner)->activeHitWindow];
+                            hd->valsA[((PlayerState*)inner)->activeHitWindow];
                         ((PlayerState*)inner)->hitCountMax =
                             ((HitDesc*)((PlayerState*)inner)->moveSlots +
                                 (u32)((PlayerState*)inner)->moveSlotIndex)->valsB[
@@ -8286,6 +8287,7 @@ void playerDoHitDetection(int obj)
                         ((PlayerState*)inner)->lastHitObject =
                             Player_GetObjHitsState(obj)->lastHitObject;
                     }
+                }
             }
         }
         if ((*(u32*)&((PlayerState*)inner)->flags360 & 2) != 0)
