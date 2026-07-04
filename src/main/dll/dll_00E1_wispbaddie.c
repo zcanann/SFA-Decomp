@@ -81,7 +81,6 @@ extern f32 lbl_803E2750;
 extern f32 lbl_803E2754;
 extern f32 lbl_803E2760;
 extern f32 lbl_803E2764;
-extern void* PTR_DAT_8031fdc4;
 extern void fn_8014CF7C(int a, int b, f32 e, f32 f, int c, int d);
 extern f32 lbl_803E2728;
 extern f32 lbl_803E272C;
