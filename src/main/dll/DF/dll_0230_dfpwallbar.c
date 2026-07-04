@@ -14,9 +14,9 @@
 typedef struct ChukaPlacement
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX; /* 0x08 */
+    f32 posY; /* 0x0C */
+    f32 posZ; /* 0x10 */
     s32 unk14;
     s8 rotXByte; /* 0x18 high byte of initial rotX (<<8) */
     u8 modeIndex; /* 0x19 mode selector; copied to ChukaState.modeIndex (indexes gChukaModeTable) */
