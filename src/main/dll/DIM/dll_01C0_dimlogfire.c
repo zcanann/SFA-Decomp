@@ -21,6 +21,11 @@
 #define DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MODEL_LIGHT_KIND_POINT 2
 
+/* DimLogFireState.mode flame state machine */
+#define DIMLOGFIRE_MODE_LIT 1        /* burning: point light on, flicker + smoke particles */
+#define DIMLOGFIRE_MODE_UNLIT 2      /* doused: light off, waiting on the tricky/strength gate */
+#define DIMLOGFIRE_MODE_ANIM_HELD 4  /* frozen by anim event 3 (SeqFn triggerCommand) */
+
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
@@ -108,7 +113,7 @@ int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern int Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
     DimLogFireState* state = ((GameObject*)obj)->extra;
-    if (state->mode == 1)
+    if (state->mode == DIMLOGFIRE_MODE_LIT)
     {
         Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
     }
@@ -125,7 +130,7 @@ int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         GameBit_Set(46, 1);
         break;
     case 3:
-        state->mode = 4;
+        state->mode = DIMLOGFIRE_MODE_ANIM_HELD;
         break;
     }
     if (state->smokeToggle != 0)
@@ -209,7 +214,7 @@ void dimlogfire_update(int obj)
     ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     switch (state->mode)
     {
-    case 1:
+    case DIMLOGFIRE_MODE_LIT:
         if (*(int**)&state->light != NULL)
         {
             modelLightStruct_setEnabled(state->light, 1, lbl_803E4824);
@@ -241,7 +246,7 @@ void dimlogfire_update(int obj)
         fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 2, a, b, (int)&vec);
         ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
         break;
-    case 2:
+    case DIMLOGFIRE_MODE_UNLIT:
         if (*(int**)&state->light != NULL)
         {
             modelLightStruct_setEnabled(state->light, 0, lbl_803E4824);
@@ -249,7 +254,7 @@ void dimlogfire_update(int obj)
         if (state->strengthInit <= 0)
         {
             ObjHits_DisableObject(obj);
-            state->mode = 1;
+            state->mode = DIMLOGFIRE_MODE_LIT;
             state->dousedLatch = 1;
             GameBit_Set(((DimlogfirePlacement*)tricky)->douseGameBit, 1);
         }
@@ -265,17 +270,17 @@ void dimlogfire_update(int obj)
         }
         ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
         break;
-    case 4:
+    case DIMLOGFIRE_MODE_ANIM_HELD:
         break;
     default:
         if (state->initMode == 0)
         {
-            state->mode = 1;
+            state->mode = DIMLOGFIRE_MODE_LIT;
             state->dousedLatch = 1;
         }
         else
         {
-            state->mode = 2;
+            state->mode = DIMLOGFIRE_MODE_UNLIT;
         }
         break;
     }
@@ -323,7 +328,7 @@ void dimlogfire_init(int obj, int def)
     state->strength = *(u8*)&state->strengthInit;
     if (GameBit_Get(((DimlogfireObjectDef*)def)->douseGameBit) != 0)
     {
-        state->mode = 1;
+        state->mode = DIMLOGFIRE_MODE_LIT;
         state->dousedLatch = 1;
     }
     ((GameObject*)obj)->objectFlags |= DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED;
