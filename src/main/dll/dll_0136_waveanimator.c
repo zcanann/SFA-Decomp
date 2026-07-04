@@ -19,6 +19,9 @@
  * Field overlay used by waveanimator_modelMtxFn: 0x34 is WaveAnimatorState.flags,
  * 0x36-0x38 are the three dispatch args stored into pad35[1..3].
  */
+
+#define WAVEANIMATOR_OBJGROUP 27
+
 typedef struct WaveanimatorModelMtxCtx
 {
     u8 pad0[0x34 - 0x0];
@@ -196,7 +199,7 @@ void waveanimator_free(int* obj)
         if (lbl_803DDAF0 != NULL) mm_free(lbl_803DDAF0);
         if (lbl_803DDAEC != NULL) mm_free(lbl_803DDAEC);
     }
-    ObjGroup_RemoveObject(obj, 27);
+    ObjGroup_RemoveObject(obj, WAVEANIMATOR_OBJGROUP);
 }
 
 void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -261,7 +264,7 @@ void waveanimator_init(int* obj, int* desc)
     {
         fn_801923F8((int*)state);
     }
-    ObjGroup_AddObject(obj, 27);
+    ObjGroup_AddObject(obj, WAVEANIMATOR_OBJGROUP);
     lbl_803DDAE8++;
 }
 
