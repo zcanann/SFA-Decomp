@@ -2399,7 +2399,7 @@ main/worldplanet_lighting.c:
 
 main/worldplanet.c:
 	.text       start:0x8020C964 end:0x8020D9E4
-	.data       start:0x8032A178 end:0x8032A1C8
+	.data       start:0x8032A178 end:0x8032A200
 
 main/worldobj.c:
 	.text       start:0x8020D9E4 end:0x8020F214

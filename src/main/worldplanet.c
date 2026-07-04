@@ -608,3 +608,6 @@ int gWorldPlanetObjectIdTable[3][5] = {
     { 0x00000000, 0x00004000, 0x00005FA0, 0x00008000, 0x0000C000 },
     { 0x00043099, 0x00042FFF, 0x0004309A, 0x00043098, 0x00043097 },
 };
+
+/* descriptor/ptr table auto 0x8032a1c8-0x8032a200 */
+u32 gWorldPlanetObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)worldplanet_initialise, (u32)worldplanet_release, 0x00000000, (u32)worldplanet_init, (u32)worldplanet_update, (u32)worldplanet_hitDetect, (u32)worldplanet_render, (u32)worldplanet_free, (u32)worldplanet_getObjectTypeId, (u32)worldplanet_getExtraSize };
