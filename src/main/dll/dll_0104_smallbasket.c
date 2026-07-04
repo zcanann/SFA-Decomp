@@ -40,6 +40,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define SMALLBASKET_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define SMALLBASKET_OBJGROUP 0x10
 #define PAD_BUTTON_A 0x100
 
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
@@ -633,7 +634,7 @@ void smallbasket_free(int obj)
 {
     (*gModgfxInterface)->detachSource((void*)obj);
     Resource_Release(gSmallBasketResource);
-    ObjGroup_RemoveObject(obj, 0x10);
+    ObjGroup_RemoveObject(obj, SMALLBASKET_OBJGROUP);
 }
 
 void objThrowFn_80182504(int obj)
@@ -735,7 +736,7 @@ void smallbasket_init(int obj, int def)
 
     state = *(int*)&((GameObject*)obj)->extra;
     ObjHits_DisableObject(obj);
-    ObjGroup_AddObject(obj, 0x10);
+    ObjGroup_AddObject(obj, SMALLBASKET_OBJGROUP);
 
     v1c = ((SmallbasketObjectDef*)def)->respawnMinutes;
     if (v1c == 0)
