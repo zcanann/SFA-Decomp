@@ -33,6 +33,11 @@
 
 #define MINIMAP_OBJFLAG_PARENT_SLACK 0x1000
 
+/* gMinimapViewMode selector (see file header): the three HUD view modes. */
+#define MINIMAP_VIEW_MODE_MAP 0
+#define MINIMAP_VIEW_MODE_RADAR 1
+#define MINIMAP_VIEW_MODE_AREA_NAME 2
+
 typedef struct MinimapRow
 {
     s16 x0, x1, z0, z1, y0, y1;
@@ -411,7 +416,7 @@ int Minimap_update(void)
         if (gMinimapFadeAlpha != 0)
         {
             box = gameTextGetBox(0x83);
-            if (gMinimapViewMode == 2 && lbl_803DD7A2 != 0 && lbl_803DBA6E > -1)
+            if (gMinimapViewMode == MINIMAP_VIEW_MODE_AREA_NAME && lbl_803DD7A2 != 0 && lbl_803DBA6E > -1)
             {
                 w = 200;
             }
@@ -437,7 +442,7 @@ int Minimap_update(void)
             GXSetScissor(0x32, lbl_803DD938, gMinimapBoxWidth, gMinimapBoxHeight);
             switch (gMinimapViewMode)
             {
-            case 0:
+            case MINIMAP_VIEW_MODE_MAP:
                 if (minimapTexture != NULL)
                 {
                     texW = ((Texture*)minimapTexture)->width;
@@ -563,7 +568,7 @@ int Minimap_update(void)
                     gameTextResetCursor(2);
                 }
                 break;
-            case 1:
+            case MINIMAP_VIEW_MODE_RADAR:
                 fn_80133718();
                 if ((u32)lbl_803DD934 == 0)
                 {
@@ -584,7 +589,7 @@ int Minimap_update(void)
                     gameTextResetCursor(2);
                 }
                 break;
-            case 2:
+            case MINIMAP_VIEW_MODE_AREA_NAME:
                 if (lbl_803DD7A2 != 0 && lbl_803DBA6E > -1)
                 {
                     if (gMinimapAreaNameDelay == 0)
@@ -629,7 +634,7 @@ int Minimap_update(void)
                 ((u8*)&col2)[1] = 0xff;
                 ((u8*)&col2)[2] = 0;
                 xc = (s16)(lbl_803DD938 - 4);
-                if (gMinimapViewMode == 0 && minimapTexture != NULL)
+                if (gMinimapViewMode == MINIMAP_VIEW_MODE_MAP && minimapTexture != NULL)
                 {
                     if (gMinimapZoom < gMinimapMaxZoom)
                     {
@@ -798,7 +803,7 @@ void fn_80133934(void)
 u8 fn_801334E0(void)
 {
     u32 act = 0;
-    if (gMinimapViewMode == 2 && gMinimapEnabled != 0)
+    if (gMinimapViewMode == MINIMAP_VIEW_MODE_AREA_NAME && gMinimapEnabled != 0)
     {
         act = 1;
     }
@@ -920,16 +925,16 @@ void fn_8013396C(void)
                     sfx = 0x3ed;
                     if (gMinimapViewMode < 0)
                     {
-                        gMinimapViewMode = 2;
+                        gMinimapViewMode = MINIMAP_VIEW_MODE_AREA_NAME;
                     }
                 }
                 else if ((pressed & 2) != 0)
                 {
                     gMinimapViewMode += 1;
                     sfx = 0x3ed;
-                    if (gMinimapViewMode > 2)
+                    if (gMinimapViewMode > MINIMAP_VIEW_MODE_AREA_NAME)
                     {
-                        gMinimapViewMode = 0;
+                        gMinimapViewMode = MINIMAP_VIEW_MODE_MAP;
                     }
                 }
             }
@@ -939,7 +944,7 @@ void fn_8013396C(void)
                 {
                     gMinimapSavedViewMode = gMinimapViewMode;
                 }
-                gMinimapViewMode = 2;
+                gMinimapViewMode = MINIMAP_VIEW_MODE_AREA_NAME;
             }
             else
             {
@@ -951,7 +956,7 @@ void fn_8013396C(void)
             }
             switch (gMinimapViewMode)
             {
-            case 0:
+            case MINIMAP_VIEW_MODE_MAP:
                 if ((held & 4) != 0)
                 {
                     pw = powfCoreFast(gMinimapZoomInRate, timeDelta);
@@ -991,7 +996,7 @@ void fn_8013396C(void)
                     }
                 }
                 break;
-            case 1:
+            case MINIMAP_VIEW_MODE_RADAR:
                 if (gMinimapZoomSfxActive != 0)
                 {
                     Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
@@ -1028,7 +1033,7 @@ void fn_8013396C(void)
                     *(s16*)((char*)lbl_803DBBC8[1] + 4) = *(s16*)(int)((char*)lbl_803DBBC8[1] + 4) + d / 5;
                 }
                 break;
-            case 2:
+            case MINIMAP_VIEW_MODE_AREA_NAME:
                 if (gMinimapZoomSfxActive != 0)
                 {
                     Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
