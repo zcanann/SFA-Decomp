@@ -115,6 +115,13 @@ typedef struct ObjModelBlendChannel {
     u8 unk0F;
 } ObjModelBlendChannel;
 
+/* ObjModelBlendChannel.flags0E fade/state bits */
+#define BLENDCHAN_FLAG_MANUAL 0x01    /* weight is manual; skip auto-advance */
+#define BLENDCHAN_FLAG_RESET_WEIGHT 0x02 /* reset weight to base pending */
+#define BLENDCHAN_FLAG_FADING 0x04    /* fade in progress */
+#define BLENDCHAN_FLAG_FADED 0x08     /* fade processed/settled */
+#define BLENDCHAN_FLAG_CLAMP_TARGET 0x20 /* clamp low weight to targetWeight floor */
+
 STATIC_ASSERT(sizeof(ObjModelBlendChannel) == 0x10);
 
 /*

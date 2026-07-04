@@ -291,7 +291,7 @@ void ObjModel_SetBlendChannelWeight(u8* model, int channel, f32 weight)
     {
         ch->weight = weight;
     }
-    ch[0].flags0E |= 4;
+    ch[0].flags0E |= BLENDCHAN_FLAG_FADING;
 }
 
 typedef f32 Mtx[3][4];
@@ -851,7 +851,7 @@ void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 w
     }
     ch[0].targetWeight = lbl_803DE840;
     ch[0].weightRate = weight;
-    ch[0].flags0E = flags | 4;
+    ch[0].flags0E = flags | BLENDCHAN_FLAG_FADING;
 }
 
 extern f32 lbl_803DE818;
@@ -888,7 +888,7 @@ void ObjModel_ApplyBlendChannels(u8* model)
         if (ch[0].weight != ch[0].targetWeight)
         {
             ch[0].flags0E &= ~0xc;
-            ch[0].flags0E |= 4;
+            ch[0].flags0E |= BLENDCHAN_FLAG_FADING;
         }
         fadeBits = ch[0].flags0E & 0xc;
         chanFade[i] = fadeBits;
@@ -898,12 +898,12 @@ void ObjModel_ApplyBlendChannels(u8* model)
         }
         if (chanFade[i] & 4)
         {
-            ch[0].flags0E &= ~4;
-            ch[0].flags0E |= 8;
+            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADING;
+            ch[0].flags0E |= BLENDCHAN_FLAG_FADED;
         }
         else if (chanFade[i] & 8)
         {
-            ch[0].flags0E &= ~8;
+            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADED;
         }
     }
     if (chanActive[0] == 0 && chanActive[1] == 0 && chanActive[2] == 0)
@@ -933,9 +933,9 @@ void ObjModel_ApplyBlendChannels(u8* model)
             chanFade[i] = 1;
         }
         ch = ((ObjModel*)model)->blendChannels + i;
-        if (ch[0].flags0E & 2)
+        if (ch[0].flags0E & BLENDCHAN_FLAG_RESET_WEIGHT)
         {
-            ch[0].flags0E &= ~2;
+            ch[0].flags0E &= ~BLENDCHAN_FLAG_RESET_WEIGHT;
             ch[0].weight = lbl_803DE828;
         }
         if (chanActive[i] && chanFade[i])
@@ -978,7 +978,7 @@ void ObjModel_ApplyBlendChannels(u8* model)
             }
             else if (weight < lbl_803DE828)
             {
-                if (ch[0].flags0E & 0x20)
+                if (ch[0].flags0E & BLENDCHAN_FLAG_CLAMP_TARGET)
                 {
                     if (weight < lbl_803DE840)
                     {
@@ -1034,7 +1034,7 @@ void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
         {
             continue;
         }
-        if (ch[0].flags0E & 1)
+        if (ch[0].flags0E & BLENDCHAN_FLAG_MANUAL)
         {
             continue;
         }
@@ -1043,13 +1043,13 @@ void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
         {
             ch[0].weight = lbl_803DE874;
             ch[0].weightRate = lbl_803DE878;
-            ch[0].flags0E &= ~4;
+            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADING;
         }
         else if (ch[0].weight <= lbl_803DE87C)
         {
             ch[0].weight = lbl_803DE87C;
             ch[0].weightRate = lbl_803DE878;
-            ch[0].flags0E &= ~4;
+            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADING;
         }
     }
 }
