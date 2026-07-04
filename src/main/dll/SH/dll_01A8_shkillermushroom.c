@@ -69,7 +69,7 @@ void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* st
     obj->rotY = randomGetRange(-0x5dc, 0x5dc);
     obj->rotX = randomGetRange(-0x5dc, 0x5dc);
     obj->alpha = 0xff;
-    obj->flags = (s16)(obj->flags & ~0x4000);
+    obj->flags = (s16)(obj->flags & ~OBJANIM_FLAG_HIDDEN);
     obj->posX = mapData->posX;
     obj->posY = mapData->posY;
     obj->posZ = mapData->posZ;
