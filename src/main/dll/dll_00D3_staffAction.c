@@ -26,6 +26,15 @@
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/objhits.h"
+/* bounceFlags: per-wall bounce-allowed bits; each gates a bounce when the
+ * surface crawler crosses that bounding-box face (and locks to that axis). */
+#define BOUNCE_WALL_MINX 0x01 /* boundsMinX -> surfaceMode 0 */
+#define BOUNCE_WALL_MAXX 0x02 /* boundsMaxX -> surfaceMode 1 */
+#define BOUNCE_WALL_MAXZ 0x04 /* boundsMaxZ -> surfaceMode 2 */
+#define BOUNCE_WALL_MINZ 0x08 /* boundsMinZ -> surfaceMode 3 */
+#define BOUNCE_WALL_MAXY 0x10 /* boundsMaxY -> surfaceMode 4 */
+#define BOUNCE_WALL_MINY 0x20 /* boundsMinY -> surfaceMode 5 */
+
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
@@ -64,7 +73,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         if (((GameObject*)obj)->anim.localPosY < state->boundsMinY)
         {
             ((GameObject*)obj)->anim.localPosY = state->boundsMinY;
-            if ((state->bounceFlags & 0x20) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINY) != 0)
             {
                 ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityY;
                 state->surfaceMode = 5;
@@ -74,7 +83,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosY > state->boundsMaxY)
         {
             ((GameObject*)obj)->anim.localPosY = state->boundsMaxY;
-            if ((state->bounceFlags & 0x10) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXY) != 0)
             {
                 ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityY;
                 state->surfaceMode = 4;
@@ -84,7 +93,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosZ > state->boundsMaxZ)
         {
             ((GameObject*)obj)->anim.localPosZ = state->boundsMaxZ;
-            if ((state->bounceFlags & 4) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXZ) != 0)
             {
                 ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityZ;
                 state->surfaceMode = 2;
@@ -94,7 +103,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosZ < state->boundsMinZ)
         {
             ((GameObject*)obj)->anim.localPosZ = state->boundsMinZ;
-            if ((state->bounceFlags & 8) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINZ) != 0)
             {
                 ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityZ;
                 state->surfaceMode = 3;
@@ -106,7 +115,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         if (((GameObject*)obj)->anim.localPosY < state->boundsMinY)
         {
             ((GameObject*)obj)->anim.localPosY = state->boundsMinY;
-            if ((state->bounceFlags & 0x20) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINY) != 0)
             {
                 ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityY;
                 state->surfaceMode = 5;
@@ -116,7 +125,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosY > state->boundsMaxY)
         {
             ((GameObject*)obj)->anim.localPosY = state->boundsMaxY;
-            if ((state->bounceFlags & 0x10) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXY) != 0)
             {
                 ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityY;
                 state->surfaceMode = 4;
@@ -126,7 +135,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosZ > state->boundsMaxZ)
         {
             ((GameObject*)obj)->anim.localPosZ = state->boundsMaxZ;
-            if ((state->bounceFlags & 4) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXZ) != 0)
             {
                 ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityZ;
                 state->surfaceMode = 2;
@@ -136,7 +145,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosZ < state->boundsMinZ)
         {
             ((GameObject*)obj)->anim.localPosZ = state->boundsMinZ;
-            if ((state->bounceFlags & 8) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINZ) != 0)
             {
                 ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityZ;
                 state->surfaceMode = 3;
@@ -148,7 +157,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         if (((GameObject*)obj)->anim.localPosX < state->boundsMinX)
         {
             ((GameObject*)obj)->anim.localPosX = state->boundsMinX;
-            if ((state->bounceFlags & 1) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINX) != 0)
             {
                 ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityX;
                 state->surfaceMode = 0;
@@ -158,7 +167,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosX > state->boundsMaxX)
         {
             ((GameObject*)obj)->anim.localPosX = state->boundsMaxX;
-            if ((state->bounceFlags & 2) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXX) != 0)
             {
                 ((GameObject*)obj)->anim.velocityZ = -((GameObject*)obj)->anim.velocityX;
                 state->surfaceMode = 1;
@@ -168,7 +177,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosY < state->boundsMinY)
         {
             ((GameObject*)obj)->anim.localPosY = state->boundsMinY;
-            if ((state->bounceFlags & 0x20) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINY) != 0)
             {
                 ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityY;
                 state->surfaceMode = 5;
@@ -178,7 +187,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosY > state->boundsMaxY)
         {
             ((GameObject*)obj)->anim.localPosY = state->boundsMaxY;
-            if ((state->bounceFlags & 0x10) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXY) != 0)
             {
                 ((GameObject*)obj)->anim.velocityZ = -((GameObject*)obj)->anim.velocityY;
                 state->surfaceMode = 4;
@@ -190,7 +199,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         if (((GameObject*)obj)->anim.localPosX < state->boundsMinX)
         {
             ((GameObject*)obj)->anim.localPosX = state->boundsMinX;
-            if ((state->bounceFlags & 1) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINX) != 0)
             {
                 ((GameObject*)obj)->anim.velocityZ = -((GameObject*)obj)->anim.velocityX;
                 state->surfaceMode = 0;
@@ -200,7 +209,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosX > state->boundsMaxX)
         {
             ((GameObject*)obj)->anim.localPosX = state->boundsMaxX;
-            if ((state->bounceFlags & 2) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXX) != 0)
             {
                 ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityX;
                 state->surfaceMode = 1;
@@ -210,7 +219,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosY < state->boundsMinY)
         {
             ((GameObject*)obj)->anim.localPosY = state->boundsMinY;
-            if ((state->bounceFlags & 0x20) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINY) != 0)
             {
                 ((GameObject*)obj)->anim.velocityZ = -((GameObject*)obj)->anim.velocityY;
                 state->surfaceMode = 5;
@@ -220,7 +229,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosY > state->boundsMaxY)
         {
             ((GameObject*)obj)->anim.localPosY = state->boundsMaxY;
-            if ((state->bounceFlags & 0x10) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXY) != 0)
             {
                 ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityY;
                 state->surfaceMode = 4;
@@ -232,7 +241,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         if (((GameObject*)obj)->anim.localPosX < state->boundsMinX)
         {
             ((GameObject*)obj)->anim.localPosX = state->boundsMinX;
-            if ((state->bounceFlags & 1) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINX) != 0)
             {
                 ((GameObject*)obj)->anim.velocityY = -((GameObject*)obj)->anim.velocityX;
                 state->surfaceMode = 0;
@@ -242,7 +251,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosX > state->boundsMaxX)
         {
             ((GameObject*)obj)->anim.localPosX = state->boundsMaxX;
-            if ((state->bounceFlags & 2) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXX) != 0)
             {
                 ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityX;
                 state->surfaceMode = 1;
@@ -252,7 +261,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosZ > state->boundsMaxZ)
         {
             ((GameObject*)obj)->anim.localPosZ = state->boundsMaxZ;
-            if ((state->bounceFlags & 4) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXZ) != 0)
             {
                 ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityZ;
                 state->surfaceMode = 2;
@@ -262,7 +271,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosZ < state->boundsMinZ)
         {
             ((GameObject*)obj)->anim.localPosZ = state->boundsMinZ;
-            if ((state->bounceFlags & 8) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINZ) != 0)
             {
                 ((GameObject*)obj)->anim.velocityY = -((GameObject*)obj)->anim.velocityZ;
                 state->surfaceMode = 3;
@@ -274,7 +283,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         if (((GameObject*)obj)->anim.localPosX < state->boundsMinX)
         {
             ((GameObject*)obj)->anim.localPosX = state->boundsMinX;
-            if ((state->bounceFlags & 1) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINX) != 0)
             {
                 ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityX;
                 state->surfaceMode = 0;
@@ -284,7 +293,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosX > state->boundsMaxX)
         {
             ((GameObject*)obj)->anim.localPosX = state->boundsMaxX;
-            if ((state->bounceFlags & 2) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXX) != 0)
             {
                 ((GameObject*)obj)->anim.velocityY = -((GameObject*)obj)->anim.velocityX;
                 state->surfaceMode = 1;
@@ -294,7 +303,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosZ > state->boundsMaxZ)
         {
             ((GameObject*)obj)->anim.localPosZ = state->boundsMaxZ;
-            if ((state->bounceFlags & 4) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MAXZ) != 0)
             {
                 ((GameObject*)obj)->anim.velocityY = -((GameObject*)obj)->anim.velocityZ;
                 state->surfaceMode = 2;
@@ -304,7 +313,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
         else if (((GameObject*)obj)->anim.localPosZ < state->boundsMinZ)
         {
             ((GameObject*)obj)->anim.localPosZ = state->boundsMinZ;
-            if ((state->bounceFlags & 8) != 0)
+            if ((state->bounceFlags & BOUNCE_WALL_MINZ) != 0)
             {
                 ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityZ;
                 state->surfaceMode = 3;
