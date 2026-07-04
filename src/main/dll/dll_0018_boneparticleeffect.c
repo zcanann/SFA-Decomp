@@ -1385,9 +1385,9 @@ typedef u8 BoneFxJRow[16];
 
 typedef struct BoneFxVtx
 {
-    u16 unk00;
-    u16 unk02;
-    u16 unk04;
+    u16 sx;
+    u16 sy;
+    u16 sz;
     u16 pad;
     f32 w;
     f32 vx;
@@ -1398,10 +1398,10 @@ typedef struct BoneFxVtx
 /* One 0x10-byte rendered particle slot in a gBoneParticleEffectBuffers buffer. */
 typedef struct ParticleSlot
 {
-    s16 unk00, unk02, unk04;
+    s16 posX, posY, posZ;
     u16 pad;
-    s16 unk08, unk0A;
-    u8 unk0C, unk0D, unk0E, alpha;
+    s16 texU, texV;
+    u8 red, green, blue, alpha;
 } ParticleSlot;
 
 extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
@@ -1496,9 +1496,9 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                 s.vy = lbl_803DF4A8;
                 s.vz = lbl_803DF4A8;
                 s.w = lbl_803DF4B8;
-                s.unk04 = 0;
-                s.unk02 = 0;
-                s.unk00 = 0;
+                s.sz = 0;
+                s.sy = 0;
+                s.sx = 0;
                 jb = (u8*)((int*)m)[(*(u16*)((u8*)m + 0x18) & 1) + 3];
                 {
                     u8* idr2 = base + gBoneParticleStageIndex * 5;
@@ -1555,11 +1555,11 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                     Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
                     s.vx = s.vx + playerMapOffsetX;
                     s.vz = s.vz + playerMapOffsetZ;
-                    ((ParticleSlot*)*grp)[k + row].unk00 = dx + (s.vx - ((GameObject*)o)->anim.localPosX);
-                    ((ParticleSlot*)*grp)[k + row].unk02 = dy + (s.vy - ((GameObject*)o)->anim.localPosY);
-                    ((ParticleSlot*)*grp)[k + row].unk04 = dz + (s.vz - ((GameObject*)o)->anim.localPosZ);
+                    ((ParticleSlot*)*grp)[k + row].posX = dx + (s.vx - ((GameObject*)o)->anim.localPosX);
+                    ((ParticleSlot*)*grp)[k + row].posY = dy + (s.vy - ((GameObject*)o)->anim.localPosY);
+                    ((ParticleSlot*)*grp)[k + row].posZ = dz + (s.vz - ((GameObject*)o)->anim.localPosZ);
                     ((ParticleSlot*)*grp)[k + row].alpha = 0x9b;
-                    ((ParticleSlot*)*grp)[k + row].unk0A = (s16)(((ParticleSlot*)(base + 0x1b0))[k + row].unk0A - (gBoneParticleScrollOffset << 2));
+                    ((ParticleSlot*)*grp)[k + row].texV = (s16)(((ParticleSlot*)(base + 0x1b0))[k + row].texV - (gBoneParticleScrollOffset << 2));
                     pa += 3;
                     pb += 3;
                     pc += 3;
@@ -1729,14 +1729,14 @@ void boneParticleEffect_initialise(void)
     {
         for (j = 0; j < BONE_PARTICLE_EFFECT_SLOT_COUNT; j++)
         {
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk00 = gBoneParticleInitData[j].unk00;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk02 = gBoneParticleInitData[j].unk02;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk04 = gBoneParticleInitData[j].unk04;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk08 = gBoneParticleInitData[j].unk08;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk0A = gBoneParticleInitData[j].unk0A;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk0C = gBoneParticleInitData[j].unk0C;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk0D = gBoneParticleInitData[j].unk0D;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk0E = gBoneParticleInitData[j].unk0E;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].posX = gBoneParticleInitData[j].posX;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].posY = gBoneParticleInitData[j].posY;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].posZ = gBoneParticleInitData[j].posZ;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].texU = gBoneParticleInitData[j].texU;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].texV = gBoneParticleInitData[j].texV;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].red = gBoneParticleInitData[j].red;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].green = gBoneParticleInitData[j].green;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].blue = gBoneParticleInitData[j].blue;
             ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].alpha = 0xff;
         }
     }
