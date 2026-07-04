@@ -51,6 +51,13 @@ u8 GXTexImage3Ids[8] = {0x94, 0x95, 0x96, 0x97, 0xB4, 0xB5, 0xB6, 0xB7};
 u8 GXTexTlutIds[8] = {0x98, 0x99, 0x9A, 0x9B, 0xB8, 0xB9, 0xBA, 0xBB};
 u8 GX2HWFiltConv[6] = {0x00, 0x04, 0x01, 0x05, 0x02, 0x06};
 
+u32 lbl_803DC600[2] = {1, 0};
+u16 lbl_803DC608[4] = {0xFFFF, 0, 0, 0};
+u32 sndRandSeed[2] = {1, 0};
+u32 lbl_803DC618[2] = {1, 0x00020000};
+u32 lbl_803DC620[2] = {1, 0x00020000};
+u16 lbl_803DC628[4] = {0x19E0, 0, 0, 0};
+
 void __GXGetTexTileShift(GXTexFmt fmt, u32* rowTileS, u32* colTileS) {
     switch (fmt) {
     case GX_TF_I4:
