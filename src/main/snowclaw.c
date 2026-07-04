@@ -23,7 +23,7 @@ typedef struct SnowclawState
     f32 velZ;
     f32 unk30;
     u8 pad34[0x94 - 0x34];
-    s32 unk94;
+    s32 pendingMoveId;
     u8 pad98[0x9C - 0x98];
     s32 attackDelay;
     u8 unkA0;
@@ -637,7 +637,7 @@ void snowclaw_update(int obj)
         timerCountDown(inner + 0x98) != 0)
     {
         choice = randomGetRange(0, 1);
-        ((SnowclawState*)inner)->unk94 = *(u16*)&((SnowclawState*)inner)->moveIdBase + 5;
+        ((SnowclawState*)inner)->pendingMoveId = *(u16*)&((SnowclawState*)inner)->moveIdBase + 5;
         turnSign = (u32)(s16)
         Obj_GetYawDeltaToObject(obj, Obj_GetPlayerObject(), 0) >> 31;
         if (turnSign == 0 || ((GameObject*)obj)->anim.seqId == 0x389)
