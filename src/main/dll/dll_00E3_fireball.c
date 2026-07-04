@@ -199,7 +199,7 @@ typedef struct FireballPlacement
     s32 unk14;
     s16 unk18;
     s16 unk1A;
-    s16 unk1C;
+    s16 startDisabled;  /* 0x1C nonzero => fireball starts with FIREBALL_FLAG_DISABLED */
     s16 unk1E;
     s16 unk20;
     u8 pad22[0x2C - 0x22];
@@ -865,7 +865,7 @@ void fireball_init(int* obj)
     int* state = ((GameObject*)obj)->extra;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
-    if (((FireballPlacement*)params)->unk1C != 0)
+    if (((FireballPlacement*)params)->startDisabled != 0)
     {
         ((FireballState*)state)->stateFlags |= FIREBALL_FLAG_DISABLED;
     }
