@@ -118,3 +118,5 @@ void voiceSetPriority(McmdVoiceState* svoice, u8 prio)
     svoice->priorityGroup = prio;
     hwSetPriority(svoice->voiceHandle & 0xFF, ((u32)prio << 24) | (svoice->priorityValue >> 15));
 }
+
+SynthRootListNode voicePrioritySortLinks[0x100];

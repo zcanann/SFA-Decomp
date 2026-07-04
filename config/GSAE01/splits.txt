@@ -3182,6 +3182,7 @@ main/audio/voice_prio.c:
 	extab       start:0x80005960 end:0x80005968
 	extabindex  start:0x800061A0 end:0x800061AC
 	.text       start:0x802795CC end:0x8027975C
+	.bss        start:0x803CAD90 end:0x803CB190
 
 main/audio/voice_alloc.c:
 	extab       start:0x80005968 end:0x80005970
