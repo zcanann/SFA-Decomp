@@ -687,7 +687,7 @@ void babycloudrunner_update(int* obj)
                 radius = (f32)def->outerRadius;
                 if (fn_80080150(&sub->countdownTimer) != 0)
                 {
-                    if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0 && timerCountDown(
+                    if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0 && timerCountDown(
                         &sub->countdownTimer) != 0)
                     {
                         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
