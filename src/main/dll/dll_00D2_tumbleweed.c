@@ -11,6 +11,8 @@
 #include "main/object_descriptor.h"
 
 #define TUMBLEWEED_OBJFLAG_RENDERED 0x800
+#define TUMBLEWEED_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
+#define TUMBLEWEED_MSG_PICKUP   0x7000b /* player collected: award and burst */
 
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int pointCount,
                                 int mask);
@@ -395,7 +397,7 @@ void tumbleweed_updateStateMachine(int obj)
                 ((BackpackState*)aux)->unk298 = 0x195;
                 ((BackpackState*)aux)->unk29A = 0;
                 ((BackpackState*)aux)->unk29C = lbl_803E2F98;
-                ObjMsg_SendToObject(player, 0x7000a, (void*)obj, (u32)(aux + 0x298));
+                ObjMsg_SendToObject(player, TUMBLEWEED_MSG_IN_RANGE, (void*)obj, (u32)(aux + 0x298));
                 ((BackpackState*)aux)->phase = 4;
             }
             else
@@ -428,7 +430,7 @@ void tumbleweed_updateStateMachine(int obj)
 
             while (ObjMsg_Pop((void*)obj, &popMsg, 0, 0) != 0)
             {
-                if (popMsg == 0x7000b)
+                if (popMsg == TUMBLEWEED_MSG_PICKUP)
                 {
                     gameBitIncrement(0x194);
                     Sfx_PlayFromObject(obj, SFXen_treadlpc);
