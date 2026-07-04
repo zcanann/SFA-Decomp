@@ -561,15 +561,15 @@ FUN_80200558(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
     if (*(char*)(state + 0x27a) != '\0')
     {
         ((DbStealerwormControl*)control)->linkedObj = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
-        ((DbStealerwormControl*)control)->unk1C = 0x24;
-        ((DbStealerwormControl*)control)->unk2C = 0;
+        ((DbStealerwormControl*)control)->msgSlotIndex = 0x24;
+        ((DbStealerwormControl*)control)->msgMode = 0;
         ObjMsg_SendToObject(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
                             ((DbStealerwormControl*)control)->linkedObj, 0x11, obj, 0x12, arg13, arg14, arg15, arg16);
         FUN_80006824(obj, SFXfoot_ice_run_3);
     }
     if (lbl_803E6F84 < ((GameObject*)obj)->anim.currentMoveProgress)
     {
-        ((DbStealerwormControl*)control)->unk34 = 1;
+        ((DbStealerwormControl*)control)->msgAdvance = 1;
     }
     return 0;
 }
