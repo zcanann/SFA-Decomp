@@ -60,6 +60,10 @@
 #define GX_VTXFMT0 0
 #define GX_VTXFMT2 2
 #define GX_VTXFMT6 6
+#define GX_PNMTX0 0
+#define GX_PNMTX9 0x1b
+#define GX_TEXMTX2 0x24
+#define GX_MTX3x4 0
 
 typedef struct TrackP6Entry
 {
@@ -293,7 +297,7 @@ void setupToRenderMapBlock(int* block, void* posMtx)
     f32 tmp[12];
     f32 fc;
 
-    GXLoadPosMtxImm(posMtx, 0);
+    GXLoadPosMtxImm(posMtx, GX_PNMTX0);
     PSMTXCopy(posMtx, tmp);
     fc = lbl_803DEBCC;
     tmp[3] = fc;
@@ -301,7 +305,7 @@ void setupToRenderMapBlock(int* block, void* posMtx)
     tmp[11] = fc;
     GXLoadNrmMtxImm(tmp, 0);
     PSMTXConcat(lbl_803967F0, posMtx, out);
-    GXLoadTexMtxImm(out, 0x24, 0);
+    GXLoadTexMtxImm(out, GX_TEXMTX2, GX_MTX3x4);
     GXSetArray(GX_VA_POS, *(void**)((char*)block + 0x58), 6);
     GXSetArray(GX_VA_CLR0, *(void**)((char*)block + 0x5C), 2);
     GXSetArray(GX_VA_TEX0, *(void**)((char*)block + 0x60), 4);
@@ -3741,7 +3745,7 @@ void objDrawFn_80061654(int obj, int placementObj)
             mtx[9] = lbl_803DEC58;
             mtx[10] = lbl_803DEC68;
             PSMTXConcat(viewMtx, mtx, outMtx);
-            GXLoadPosMtxImm(outMtx, 0x1b);
+            GXLoadPosMtxImm(outMtx, GX_PNMTX9);
             GXClearVtxDesc();
             GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
             GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
@@ -3931,7 +3935,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     Obj_BuildWorldTransformMatrix((int)obj, mtx, 0);
     viewMtx = Camera_GetViewMatrix();
     PSMTXConcat(viewMtx, mtx, outMtx);
-    GXLoadPosMtxImm(outMtx, 0);
+    GXLoadPosMtxImm(outMtx, GX_PNMTX0);
     if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
     {
         int c = *(int*)col;
@@ -4173,7 +4177,7 @@ void renderGlows(void)
             {
                 u8 ar, ag, ab;
                 PSMTXConcat(viewMtx, sunMtx, sunMtx);
-                GXLoadPosMtxImm(sunMtx, 0);
+                GXLoadPosMtxImm(sunMtx, GX_PNMTX0);
                 GXSetCurrentMtx(0);
                 fn_8008912C();
                 selectTexture(0, 0);
