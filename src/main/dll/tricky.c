@@ -972,7 +972,7 @@ void fearTestMeterDraw(void)
         a = 0xff;
     }
     gFearTestMeterAlpha = a;
-    if (a == 0) return;
+    if (gFearTestMeterAlpha == 0) return;
     GXGetScissor(&sc0, &sc1, &sc2, &sc3);
     GXSetScissor(0, 0, 0x280, 0x1e0);
     drawScaledTexture(*(void**)(hudTextures + 0x17c),
