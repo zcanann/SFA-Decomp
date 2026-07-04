@@ -5,7 +5,7 @@
 extern void macSampleEndNotify(void);
 extern u32 hwGetVirtualSampleID(int slot);
 extern u8 lbl_803BCD90[];
-extern u8 lbl_803BD364[];
+u8 lbl_803BD364[0x600];
 extern u8 gSynthInitialized;
 extern u32 synthMasterFaderActiveFlags;
 extern u8* synthVoice;

@@ -3117,6 +3117,7 @@ main/audio/synth_volume.c:
 	extab       start:0x80005718 end:0x80005728
 	extabindex  start:0x80005E34 end:0x80005E4C
 	.text       start:0x80271B4C end:0x802720A8
+	.bss        start:0x803BD364 end:0x803BD964
 
 main/audio/synth_control.c:
 	extab       start:0x80005728 end:0x80005758
