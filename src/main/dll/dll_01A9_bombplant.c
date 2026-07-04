@@ -213,7 +213,7 @@ int bombplant_SeqFn(int* obj)
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_baddie_eggsnatch_sniff2);
         base = *(int**)&((GameObject*)obj)->anim.placementData;
         flags = ((EnemyMushroomState*)state)->flags;
-        if (flags & 0x2)
+        if (flags & BOMBPLANT_FLAG_STATE_ENTERED)
         {
             int v;
             ((EnemyMushroomState*)state)->flags = (u8)(flags & ~BOMBPLANT_FLAG_STATE_ENTERED);
