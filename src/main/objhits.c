@@ -1764,7 +1764,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
         localBz = z;
     }
     if ((animA->classId == 1) && (stateA->lateralResponseWeight != 0) &&
-        ((stateB->flags & 0x400) == 0))
+        ((stateB->flags & OBJHITS_PRIORITY_STATE_IMMOVABLE) == 0))
     {
         animA->localPosX = animA->localPosX - localAx;
         animA->localPosY = animA->localPosY - localAy;
@@ -1784,7 +1784,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
         }
     }
     else if ((animB->classId == 1) && (stateB->lateralResponseWeight != 0) &&
-        ((stateA->flags & 0x400) == 0))
+        ((stateA->flags & OBJHITS_PRIORITY_STATE_IMMOVABLE) == 0))
     {
         animB->localPosX = animB->localPosX + localBx;
         animB->localPosY = animB->localPosY + localBy;
@@ -2551,7 +2551,7 @@ void ObjHits_Update(int objectCount)
                                            : -(((GameObject*)obj)->anim.worldPosY -
                                                ((GameObject*)candObj)->anim.worldPosY);
                             if ((axisDiff < objState->secondaryRadiusY + candState->secondaryRadiusY) &&
-                                ((objState->flags & 0x100) == 0) && ((candState->flags & 0x100) == 0) &&
+                                ((objState->flags & OBJHITS_PRIORITY_STATE_HIT_EXCLUDED) == 0) && ((candState->flags & OBJHITS_PRIORITY_STATE_HIT_EXCLUDED) == 0) &&
                                 ((objState->sourceMask & candState->targetMask) != 0) &&
                                 (((candState->sourceMask & 0x80) != 0) ||
                                     ((candState->sourceMask & objState->targetMask) != 0)))

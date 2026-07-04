@@ -666,7 +666,7 @@ void dbegg_update(int obj)
                             ((GameObject*)obj)->anim.localPosZ) != -1)
     {
         dbegg_processMessages(obj);
-        hitState->flags &= ~0x400;
+        hitState->flags &= ~OBJHITS_PRIORITY_STATE_IMMOVABLE;
         switch (((DbEggState*)eggState)->mode)
         {
         case DBEGG_MODE_FALLING:
@@ -739,7 +739,7 @@ void dbegg_update(int obj)
                     ((DbEggState*)eggState)->mode = DBEGG_MODE_CURVE_INIT;
                 }
             }
-            hitState->flags |= 0x400;
+            hitState->flags |= OBJHITS_PRIORITY_STATE_IMMOVABLE;
             fz = lbl_803E61C8;
             flockVel[0] = lbl_803E61C8;
             flockVel[1] = fz;

@@ -1029,7 +1029,7 @@ void collectible_update(int obj)
         if (((GameObject*)obj)->anim.hitReactState != NULL)
         {
             hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-            hitState->flags |= 0x100;
+            hitState->flags |= OBJHITS_PRIORITY_STATE_HIT_EXCLUDED;
         }
         ObjHits_DisableObject((u32)obj);
         if (((CollectibleState*)state)->hideGameBit != -1 && GameBit_Get((s32)((CollectibleState*)state)->hideGameBit) == 0)
