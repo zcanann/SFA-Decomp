@@ -16,6 +16,8 @@
 #include "main/objlib.h"
 #include "main/dll/DB/DBstealerworm.h"
 
+#define SBSHIPHEAD_OBJGROUP 3
+
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
@@ -282,12 +284,12 @@ int SB_ShipHead_getObjectTypeId(void) { return 0x1; }
 
 u32 getSbGalleon(void);
 
-void SB_ShipHead_free(int x) { ObjGroup_RemoveObject((u32)x, 0x3); }
+void SB_ShipHead_free(int x) { ObjGroup_RemoveObject((u32)x, SBSHIPHEAD_OBJGROUP); }
 
 void SB_ShipHead_init(int obj)
 {
     SBShipHeadState* state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject((u32)obj, 3);
+    ObjGroup_AddObject((u32)obj, SBSHIPHEAD_OBJGROUP);
     ObjMsg_AllocQueue((void*)obj, 10);
     state->health = 4;
     state->swayB = state->swayB + lbl_803E5830;
