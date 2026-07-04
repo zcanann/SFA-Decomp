@@ -14,6 +14,8 @@
 
 #include "main/audio/sfx_ids.h"
 
+#define DRSHACKLE_OBJGROUP 0x37
+
 typedef struct DrshacklePlacement
 {
     u8 pad0[0xC - 0x0];
@@ -153,13 +155,13 @@ int drshackle_func0B(int obj)
 
 void drshackle_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 0x37);
+    ObjGroup_RemoveObject(obj, DRSHACKLE_OBJGROUP);
 }
 
 void drshackle_init(int obj, char* arg)
 {
     char* state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, 0x37);
+    ObjGroup_AddObject(obj, DRSHACKLE_OBJGROUP);
     ((BitFlags8*)(state + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)arg)->activeGameBit) == 0);
     ((DrshackleState*)state)->pathPointA = arg[0x18] % 2;
     ((GameObject*)obj)->animEventCallback = drshackle_toggleEventCallback;
