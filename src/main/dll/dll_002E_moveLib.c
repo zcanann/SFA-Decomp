@@ -698,13 +698,6 @@ typedef struct ProjNearSearch
     f32 dz;
 } ProjNearSearch;
 
-static u32 projGetLockTarget(int state, u16* obj, ProjNearSearch* sv)
-{
-    u32 t = *(u32*)&((MoveLibState*)state)->lockTarget;
-    if (t != 0) return t;
-    return ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, obj, sv);
-}
-
 void dll_2E_func03(u16* obj, int state, int unused)
 {
     extern int fn_8003A8B4(); /* #57 */
@@ -714,12 +707,12 @@ void dll_2E_func03(u16* obj, int state, int unused)
     extern int objFn_8003acfc(); /* #57 */
     extern int fn_8003AC14(); /* #57 */
     extern int fn_8003A9C0(); /* #57 */
-    register u32 target;
-    register int seqHandle;
     register int yawDelta;
+    register int seqHandle;
+    register u32 target;
+    void* t;
     int bit1;
     int ival;
-    u32 hitReact;
     float dist;
     float blendA;
     float blendB;
@@ -774,13 +767,15 @@ void dll_2E_func03(u16* obj, int state, int unused)
         }
         else
         {
-            if ((target = projGetLockTarget(state, obj, &sv)) != 0)
+            t = s->lockTarget;
+            target = (u32)(t != NULL ? t : (t = (void*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, obj, &sv)));
+            if (t != NULL)
             {
                 if ((s->modeBits & 0x20) != 0)
                 {
-                    sv.dx = s->targetX - ((GameObject*)target)->anim.localPosX;
-                    sv.dy = s->targetY - ((GameObject*)target)->anim.localPosY;
-                    sv.dz = s->targetZ - ((GameObject*)target)->anim.localPosZ;
+                    sv.dx = s->targetX - ((GameObject*)t)->anim.localPosX;
+                    sv.dy = s->targetY - ((GameObject*)t)->anim.localPosY;
+                    sv.dz = s->targetZ - ((GameObject*)t)->anim.localPosZ;
                     blendA = sv.dx * sv.dx;
                     blendB = sv.dz * sv.dz;
                     dist = sqrtf(blendA + blendB);
@@ -826,17 +821,15 @@ void dll_2E_func03(u16* obj, int state, int unused)
                 }
                 if ((target != *(u32*)&s->lastTarget) && (target != 0))
                 {
-                    hitReact = (u32)((GameObject*)target)->anim.hitReactState;
-                    if (hitReact != 0)
+                    if (((GameObject*)target)->anim.hitReactState != NULL)
                     {
-                        PostMotionTarget* motion = (PostMotionTarget*)hitReact;
-                        if ((motion->flags & 2) != 0)
+                        if ((((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->flags & 2) != 0)
                         {
-                            targetYaw = lbl_803E1CDC * (float)(int)motion->yawB;
+                            targetYaw = lbl_803E1CDC * (float)(int)((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->yawB;
                         }
-                        else if ((motion->flags & 1) != 0)
+                        else if ((((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->flags & 1) != 0)
                         {
-                            targetYaw = (float)(int)motion->yawA;
+                            targetYaw = (float)(int)((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->yawA;
                         }
                         else
                         {
