@@ -2,6 +2,8 @@
 #include "main/audio/inp_ctrl.h"
 #include "main/audio/voice_manage.h"
 
+#pragma exceptions on
+
 extern void macSampleEndNotify(void);
 extern u32 hwGetVirtualSampleID(int slot);
 extern u8 lbl_803BCD90[];

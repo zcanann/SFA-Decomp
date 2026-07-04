@@ -6,6 +6,8 @@
 #include "ghidra_import.h"
 #include "main/audio/sal_dsp.h"
 
+#pragma exceptions on
+
 typedef struct SAMPLE_HEADER
 {
     u32 info;

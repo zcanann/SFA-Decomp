@@ -4,6 +4,8 @@
 #include "main/audio/sal_dsp.h"
 #include "main/audio/aram.h"
 
+#pragma exceptions on
+
 /* MusyX runtime DSP control (hw_dspctrl.c, MUSY_VERSION <= 2.0.0 paths),
  * recovered against the public MusyX runtime source. */
 

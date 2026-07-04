@@ -1,5 +1,7 @@
 #include "main/audio/inp_ctrl.h"
 #include "main/audio/synth_scale.h"
+
+#pragma exceptions on
 extern u32 sndRandSeed;
 s16 sndSintab[1036] = {
     0, 6, 12, 18, 25, 31, 37, 43, 50, 56, 62, 69, 75, 81, 87, 94,

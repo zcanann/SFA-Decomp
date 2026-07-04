@@ -1,5 +1,7 @@
 #include "main/audio/snd3d_calc.h"
 
+#pragma exceptions on
+
 typedef struct S3DActiveNode
 {
     struct S3DActiveNode* next;

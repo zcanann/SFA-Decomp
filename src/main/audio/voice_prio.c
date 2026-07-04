@@ -2,6 +2,8 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
 
+#pragma exceptions on
+
 
 
 extern u8 vidListNodes[];

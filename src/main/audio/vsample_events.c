@@ -1,5 +1,7 @@
 #include "main/audio/synth_virtual_sample.h"
 
+#pragma exceptions on
+
 u8 synthVirtualSampleState[0x950];
 
 /*
