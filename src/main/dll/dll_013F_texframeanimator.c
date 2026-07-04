@@ -151,3 +151,30 @@ void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
+
+/* descriptor/ptr table auto 0x80322400-0x803224e0 */
+extern u8 WaterFallSpray_free[];
+extern u8 WaterFallSpray_getExtraSize[];
+extern u8 WaterFallSpray_init[];
+extern u8 WaterFallSpray_render[];
+extern u8 WaterFallSpray_update[];
+extern u8 fogcontrol_free[];
+extern u8 fogcontrol_getExtraSize[];
+extern u8 fogcontrol_getObjectTypeId[];
+extern u8 fogcontrol_hitDetect[];
+extern u8 fogcontrol_init[];
+extern u8 fogcontrol_update[];
+extern u8 lightning_free[];
+extern u8 lightning_getExtraSize[];
+extern u8 lightning_init[];
+extern u8 lightning_render[];
+extern u8 lightning_update[];
+extern u8 sfxplayerObj_free[];
+extern u8 sfxplayerObj_getExtraSize[];
+extern u8 sfxplayerObj_init[];
+extern u8 sfxplayerObj_update[];
+
+u32 gFogControlObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)fogcontrol_init, (u32)fogcontrol_update, (u32)fogcontrol_hitDetect, 0x00000000, (u32)fogcontrol_free, (u32)fogcontrol_getObjectTypeId, (u32)fogcontrol_getExtraSize };
+u32 gLightningObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)lightning_init, (u32)lightning_update, 0x00000000, (u32)lightning_render, (u32)lightning_free, 0x00000000, (u32)lightning_getExtraSize };
+u32 gWaterFallSprayObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)WaterFallSpray_init, (u32)WaterFallSpray_update, 0x00000000, (u32)WaterFallSpray_render, (u32)WaterFallSpray_free, 0x00000000, (u32)WaterFallSpray_getExtraSize };
+u32 gSfxPlayerObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)sfxplayerObj_init, (u32)sfxplayerObj_update, 0x00000000, 0x00000000, (u32)sfxplayerObj_free, 0x00000000, (u32)sfxplayerObj_getExtraSize };
