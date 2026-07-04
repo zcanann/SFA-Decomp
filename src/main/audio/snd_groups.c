@@ -93,7 +93,7 @@ extern void dataInsertFX(u16 gid, void* fx, u16 num);
 extern u32 seqStartPlay(void* norm, void* drum, void* midiSetup, void* arrfile, void* para, u8 studio, u16 sgid);
 extern u8 gSynthInitialized;
 extern s16 synthLoadedGroupCount;
-extern GSTACK synthLoadedGroupTable[];
+GSTACK synthLoadedGroupTable[128];
 
 static MEM_DATA* GetMacroAddr(u16 id, POOL_DATA* pool)
 {

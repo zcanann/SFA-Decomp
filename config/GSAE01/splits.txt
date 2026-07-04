@@ -3240,6 +3240,7 @@ main/audio/snd_groups.c:
 	extab       start:0x800059E0 end:0x80005A08
 	extabindex  start:0x80006260 end:0x8000629C
 	.text       start:0x8027B42C end:0x8027BA04
+	.bss        start:0x803CBBE0 end:0x803CC1E0
 
 main/audio/sal_studio.c:
 	extab       start:0x80005A08 end:0x80005A30
