@@ -2,6 +2,8 @@
 #include "main/objlib.h"
 #include "main/game_object.h"
 
+#define NWICE_OBJGROUP 0x3c
+
 typedef struct NwIcePlacement
 {
     u8 pad0[0x1B - 0x0];
@@ -24,7 +26,7 @@ void nw_ice_render(void)
 
 int nw_ice_getExtraSize(void) { return 0x4; }
 
-void nw_ice_free(int x) { ObjGroup_RemoveObject(x, 0x3c); }
+void nw_ice_free(int x) { ObjGroup_RemoveObject(x, NWICE_OBJGROUP); }
 
 void nw_ice_update(int* obj)
 {
@@ -85,5 +87,5 @@ void nw_ice_update(int* obj)
     }
 }
 
-void nw_ice_init(int x) { ObjGroup_AddObject(x, 0x3c); }
+void nw_ice_init(int x) { ObjGroup_AddObject(x, NWICE_OBJGROUP); }
 
