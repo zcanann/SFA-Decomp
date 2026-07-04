@@ -74,10 +74,10 @@ typedef struct LinkMenuItemDB
 {
     u16 textId;
     u16 itemId;
-    s16 field04;
-    s16 field06;
+    s16 rightX;
+    s16 textLeft;
     u8 pad8[4];
-    s16 field0C;
+    s16 iconLeft;
     u8 padE[2];
 
     union
@@ -86,14 +86,14 @@ typedef struct LinkMenuItemDB
         void* texture;
     };
 
-    u16 field14;
+    u16 width;
     u16 flags;
     u8 pad18[2];
-    u8 field1A;
+    u8 iconCount;
     u8 pad1B[3];
     s8 state;
     s8 slots[LINK_ITEM_SLOTS];
-    s8 field38;
+    s8 timer;
     u8 pad39[3];
 } LinkMenuItemDB;
 
@@ -127,7 +127,7 @@ void linkInitTextures(LinkMenuItemDB* item)
     int budget;
     int i;
 
-    budget = item->field14;
+    budget = item->width;
     for (i = 0; i < LINK_ITEM_SLOTS; i++)
     {
         item->slots[i] = -1;
@@ -169,7 +169,7 @@ void Link_func0F(void)
 
     for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
-        gTumbleweedBushItems[i].field38 = 4;
+        gTumbleweedBushItems[i].timer = 4;
     }
 }
 #pragma peephole reset
@@ -190,8 +190,8 @@ void Link_copy(u8* srcArg)
         dst = &gTumbleweedBushItems[i];
         src = &((LinkMenuItemDB*)srcArg)[i];
         dst->flags = src->flags;
-        dst->field1A = src->field1A;
-        dst->field04 = src->field04;
+        dst->iconCount = src->iconCount;
+        dst->rightX = src->rightX;
         if (src->textureAssetId != -1)
         {
             if (dst->texture == NULL)
@@ -224,7 +224,7 @@ void Link_func0B(u8* srcArg)
     {
         gTumbleweedBushItems[i].textId = src[i].textId;
         gTumbleweedBushItems[i].itemId = src[i].itemId;
-        gTumbleweedBushItems[i].field38 = 2;
+        gTumbleweedBushItems[i].timer = 2;
     }
 }
 #pragma peephole reset
@@ -243,17 +243,17 @@ typedef struct LinkMenuItemDA
 {
     u16 textId;
     u16 boxId;
-    s16 field04;
-    s16 field06;
+    s16 rightX;
+    s16 textLeft;
     u8 pad08[2];
     s16 x;
     s16 y;
     u8 pad0E[2];
     void* texture;
-    u16 field14;
+    u16 width;
     u16 flags;
     u8 pad18[2];
-    u8 field1A;
+    u8 iconCount;
     u8 pad1B[3];
     s8 state;
     s8 slots[LINK_ITEM_SLOTS];
@@ -433,9 +433,9 @@ typedef struct LinkMenuItem
 {
     u16 textId;
     u16 boxId;
-    s16 field04;
-    s16 field06;
-    s16 field08;
+    s16 rightX;
+    s16 textLeft;
+    s16 slotWidth;
     s16 x;
     s16 y;
     u8 pad0E[2];
@@ -446,7 +446,7 @@ typedef struct LinkMenuItem
         void* texture;
     };
 
-    u16 field14;
+    u16 width;
     u16 flags;
     u8 pad18[2];
     s8 upLink;
@@ -745,8 +745,8 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 
             if ((item->flags & LINK_FLAG_NO_SLOTS) != 0)
             {
-                item->field14 = 0;
-                item->field08 = 0;
+                item->width = 0;
+                item->slotWidth = 0;
             }
 
             if ((item->flags & LINK_FLAG_DRAW_SLOTS) != 0)
@@ -757,14 +757,14 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
             if ((item->leftLink != -1) && ((item->flags & LINK_FLAG_INHERIT_X) != 0))
             {
                 LinkMenuItem* linked = &gTumbleweedBushItems[item->leftLink];
-                item->x = linked->x + linked->field14;
-                item->field04 = linked->field04 + linked->field14;
+                item->x = linked->x + linked->width;
+                item->rightX = linked->rightX + linked->width;
             }
 
             if ((item->flags & LINK_FLAG_CENTRE) != 0)
             {
-                item->x -= item->field14 >> 1;
-                item->field04 = item->x;
+                item->x -= item->width >> 1;
+                item->rightX = item->x;
             }
 
             item->timer = 4;
@@ -817,7 +817,7 @@ void linkDrawFn_801302c0(void)
     int w;
 
     four = 4;
-    gTumbleweedBushItems[linkSelected].field38 = four;
+    gTumbleweedBushItems[linkSelected].timer = four;
     sel = &gTumbleweedBushItems[linkSelected];
     if (((sel->flags & 4) != 0) && ((s8)sel->slots[0] != -1))
     {
@@ -830,7 +830,7 @@ void linkDrawFn_801302c0(void)
     if (tex != NULL)
     {
         w = ((Texture*)tex)->height;
-        selLeft = sel->field0C;
+        selLeft = sel->iconLeft;
     }
     else
     {
@@ -842,7 +842,7 @@ void linkDrawFn_801302c0(void)
         {
             w = *(u16*)(lbl_802C8680 + 0x4a) + 2;
         }
-        selLeft = sel->field06 - 2;
+        selLeft = sel->textLeft - 2;
     }
     selRight = selLeft + w;
     for (i = 0; i < gTumbleweedBushItemCount; i++)
@@ -860,7 +860,7 @@ void linkDrawFn_801302c0(void)
             if (tex != NULL)
             {
                 w = ((Texture*)tex)->height;
-                itemLeft = gTumbleweedBushItems[i].field0C;
+                itemLeft = gTumbleweedBushItems[i].iconLeft;
             }
             else
             {
@@ -872,12 +872,12 @@ void linkDrawFn_801302c0(void)
                 {
                     w = *(u16*)(lbl_802C8680 + 0x4a) + 2;
                 }
-                itemLeft = gTumbleweedBushItems[i].field06 - 2;
+                itemLeft = gTumbleweedBushItems[i].textLeft - 2;
             }
             itemRight = itemLeft + w;
             if (itemLeft < selRight && itemRight > selLeft)
             {
-                gTumbleweedBushItems[i].field38 = four;
+                gTumbleweedBushItems[i].timer = four;
             }
         }
     }
@@ -913,7 +913,7 @@ void linkDrawFn_80130484(void)
         if (tex != NULL)
         {
             w = ((Texture*)tex)->height;
-            x = p->field0C;
+            x = p->iconLeft;
         }
         else
         {
@@ -925,7 +925,7 @@ void linkDrawFn_80130484(void)
             {
                 w = *(u16*)(lbl_802C8680 + 0x4a) + 2;
             }
-            x = p->field06 - 2;
+            x = p->textLeft - 2;
         }
         right = x + w;
         if (x < minX)
