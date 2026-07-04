@@ -85,8 +85,8 @@ typedef struct PlayerState {
     f32 velSmoothRate;       /* curve0 sample (@paramCurve0); the interpolate() rate easing smoothVelX/Z toward maxSpeed*sin/cos(heading) */
     f32 waterCurrentVelA; /* smoothed local-space water-current velocity (interpolate toward playerCalcWaterCurrent rotated by yaw); added to baddie.animSpeedA when flag 0x3f0:b20 set */
     f32 waterCurrentVelB; /* smoothed local-space water-current velocity component; added to baddie.animSpeedB when flag 0x3f0:b20 set */
-    f32 unk444;
-    f32 unk448;
+    f32 stickTargetX; /* analog-stick-driven target X; clamped to deadzone range, pairs with stickDirection */
+    f32 stickTargetY; /* analog-stick-driven target Y */
     u8 pad44C[0x450 - 0x44C];
     int paramCurve0; /* Catmull-Rom curve-data ptr (resource base+0x450); Curve_EvalCatmullRom(...) at speed u, feeds unk438 */
     int paramCurve1; /* curve-data ptr (base+0x4f4); feeds unk428 */
@@ -111,13 +111,13 @@ typedef struct PlayerState {
     int lastInputHeading;
     int bodyLeanRateSigned;
     int bodyLeanRate;
-    u16 unk4A0;
-    u16 unk4A2;
+    u16 lookAtTimer; /* countdown gating look-at-nearby; reloads random 0x78-0xf0 frames on expiry */
+    u16 lookAtRandOffset; /* companion random 0-0x28 set alongside lookAtTimer reload */
     int targetObjectBearing;    /* signed relative bearing to cameraTargetObject (targetObjectYaw - targetYaw, wrapped to +-0x8000) */
     int targetObjectBearingAbs; /* abs(targetObjectBearing); compared against 0x4000 (~90deg) to gate facing-target logic */
     int targetObjectYaw;        /* heading from player toward cameraTargetObject (getAngle(-dx,-dz)) */
     f32 targetObjectDist;       /* planar distance to cameraTargetObject (sqrt(dx^2+dz^2)) */
-    u16 unk4B4;
+    u16 targetObjModelType; /* low nibble of cameraTargetObject model flag byte; compared to classify the target */
     u8 pad4B6[0x4B8 - 0x4B6];
     void *cameraTargetObject; /* Camera_GetTarget() result; mirrored into gPlayerInteractTarget */
     u8 pad4BC[0x4C0 - 0x4BC];

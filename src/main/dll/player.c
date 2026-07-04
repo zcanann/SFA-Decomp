@@ -5566,7 +5566,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         inner->yaw = inner->targetYaw;
     }
     else if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0 && inner->cameraTargetObject != NULL &&
-        inner->unk4B4 == 1)
+        inner->targetObjModelType == 1)
     {
         if (inner->targetObjectBearingAbs < 0x4000)
         {
@@ -6367,8 +6367,8 @@ int fn_8029DB70(int obj, int state, f32 fv)
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
         {
             f32 z = lbl_803E7EA4;
-            inner->unk444 = z;
-            inner->unk448 = z;
+            inner->stickTargetX = z;
+            inner->stickTargetY = z;
         }
         ((ByteFlags*)((char*)inner + 0x3f3))->b80 = 0;
         ObjHits_MarkObjectPositionDirty(obj);
@@ -6415,33 +6415,33 @@ int fn_8029DB70(int obj, int state, f32 fv)
         if (yc > lbl_803E7F14)
         {
             xT = -(lbl_803E7F48 * yc - lbl_803E7FDC);
-            inner->unk448 = yT = lbl_803E7EA4;
+            inner->stickTargetY = yT = lbl_803E7EA4;
             *(u8*)&((PlayerState*)inner)->stickDirection = 1;
         }
         else if (yc < lbl_803E7FE0)
         {
             xT = -(lbl_803E7F48 * yc - lbl_803E7F6C);
-            inner->unk448 = yT = lbl_803E7EA4;
+            inner->stickTargetY = yT = lbl_803E7EA4;
             *(u8*)&((PlayerState*)inner)->stickDirection = 2;
         }
         else if (xc > lbl_803E7F14)
         {
-            inner->unk444 = xT = lbl_803E7EA4;
+            inner->stickTargetX = xT = lbl_803E7EA4;
             yT = lbl_803E7EAC * xc + lbl_803E7F6C;
             *(u8*)&((PlayerState*)inner)->stickDirection = 3;
         }
         else if (xc < lbl_803E7FE0)
         {
-            inner->unk444 = xT = lbl_803E7EA4;
+            inner->stickTargetX = xT = lbl_803E7EA4;
             yT = lbl_803E7EAC * xc + lbl_803E7FDC;
             *(u8*)&((PlayerState*)inner)->stickDirection = 4;
         }
         else
         {
-            if (inner->unk444 <= lbl_803E7F6C &&
-                inner->unk444 >= lbl_803E7FDC &&
-                inner->unk448 <= lbl_803E7F6C &&
-                inner->unk448 >= lbl_803E7FDC)
+            if (inner->stickTargetX <= lbl_803E7F6C &&
+                inner->stickTargetX >= lbl_803E7FDC &&
+                inner->stickTargetY <= lbl_803E7F6C &&
+                inner->stickTargetY >= lbl_803E7FDC)
             {
                 *(u8*)&((PlayerState*)inner)->stickDirection = 0;
                 nextMove = 0x5f;
@@ -6452,10 +6452,10 @@ int fn_8029DB70(int obj, int state, f32 fv)
         }
         {
             f32 k = lbl_803E7EFC;
-            inner->unk444 =
-                k * (xT - inner->unk444) + inner->unk444;
-            inner->unk448 =
-                k * (yT - inner->unk448) + inner->unk448;
+            inner->stickTargetX =
+                k * (xT - inner->stickTargetX) + inner->stickTargetX;
+            inner->stickTargetY =
+                k * (yT - inner->stickTargetY) + inner->stickTargetY;
         }
     }
     if (((ByteFlags*)((char*)inner + 0x3f3))->b80 == 0 &&
@@ -6537,8 +6537,8 @@ int fn_8029DB70(int obj, int state, f32 fv)
             }
             else
             {
-                a = inner->unk444;
-                b = inner->unk448;
+                a = inner->stickTargetX;
+                b = inner->stickTargetY;
             }
             res = (*(u8 (*)(int, int, int, f32, f32))(
                 *(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x20)))(
@@ -7647,7 +7647,7 @@ void fn_802B0EA4(int obj, int inner, int state)
         dz = ((GameObject*)cam)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
         ((PlayerState*)inner)->targetObjectYaw = getAngle(-dx, -dz) & 0xffff;
         ((PlayerState*)inner)->targetObjectDist = sqrtf(dx * dx + dz * dz);
-        ((PlayerState*)inner)->unk4B4 =
+        ((PlayerState*)inner)->targetObjModelType =
             *(u8*)(*(int*)(*(int*)&((GameObject*)cam)->anim.modelInstance + 0x40) + 0x10) & 0xf;
     }
     d = ((PlayerState*)inner)->targetObjectYaw - (u16)((PlayerState*)inner)->targetYaw;
@@ -12445,18 +12445,18 @@ void fn_802AC32C(int p1, int p2, int p3)
     if (near != NULL && ((ByteFlags*)((char*)p3 + 0x3f0))->b80 == 0 &&
         ((ByteFlags*)((char*)p3 + 0x3f0))->b40 == 0)
     {
-        s16 cd = *(s16*)&((PlayerState*)p3)->unk4A0 - 1;
+        s16 cd = *(s16*)&((PlayerState*)p3)->lookAtTimer - 1;
         f32 ratio;
         f32 clamped;
         f32 f5;
         f32 result;
         int delta;
 
-        *(s16*)&((PlayerState*)p3)->unk4A0 = cd;
+        *(s16*)&((PlayerState*)p3)->lookAtTimer = cd;
         if (cd <= 0)
         {
-            *(s16*)&((PlayerState*)p3)->unk4A0 = (s16)randomGetRange(0x78, 0xf0);
-            *(s16*)&((PlayerState*)p3)->unk4A2 = (s16)randomGetRange(0, 0x28);
+            *(s16*)&((PlayerState*)p3)->lookAtTimer = (s16)randomGetRange(0x78, 0xf0);
+            *(s16*)&((PlayerState*)p3)->lookAtRandOffset = (s16)randomGetRange(0, 0x28);
         }
         delta = getAngle(-(*(f32*)((char*)near + 0xc) - ((GameObject*)p1)->anim.localPosX),
                          -(*(f32*)((char*)near + 0x14) - ((GameObject*)p1)->anim.localPosZ)) & 0xffff;
@@ -12481,7 +12481,7 @@ void fn_802AC32C(int p1, int p2, int p3)
     else
     {
         angle1 = 0;
-        *(s16*)&((PlayerState*)p3)->unk4A0 = 0;
+        *(s16*)&((PlayerState*)p3)->lookAtTimer = 0;
     }
 
     {
@@ -14181,7 +14181,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                             (inner->cameraTargetObject != NULL &&
                                 inner->targetObjectDist < lbl_803E8054 &&
                                 inner->targetObjectBearingAbs < 0x4000 &&
-                                ((PlayerState*)inner)->unk4B4 == 1))
+                                ((PlayerState*)inner)->targetObjModelType == 1))
                         {
                             if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
                             {
