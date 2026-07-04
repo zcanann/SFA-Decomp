@@ -504,7 +504,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         }
         ObjAnim_SetCurrentMove(obj, *(s16*)(base + 0x68), lbl_803E83A4, 0);
         inner->pitchAngle = *(s16*)(base + 0x74);
-        inner->unkBBA = ((GameObject*)obj)->anim.rotX;
+        inner->headingAngle = ((GameObject*)obj)->anim.rotX;
         inner->rollAngle = ((GameObject*)obj)->anim.rotZ;
         {
             f32 fz = lbl_803E83A4;
@@ -652,7 +652,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     }
     if ((int)idx >= 4)
     {
-        inner->unkBBA = inner->unkBBA - (int)((CloudRunnerState*)baddie)->baddie.moveInputX;
+        inner->headingAngle = inner->headingAngle - (int)((CloudRunnerState*)baddie)->baddie.moveInputX;
         inner->rollAngle = inner->rollAngle - ((int)((CloudRunnerState*)baddie)->baddie.moveInputX << 3);
         ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY - (int)((CloudRunnerState*)baddie)->baddie.moveInputZ
             * 3;
@@ -660,7 +660,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     }
     else
     {
-        inner->unkBBA = inner->unkBBA - ((int)((CloudRunnerState*)baddie)->baddie.moveInputX << 3);
+        inner->headingAngle = inner->headingAngle - ((int)((CloudRunnerState*)baddie)->baddie.moveInputX << 3);
         inner->rollAngle = inner->rollAngle - (int)((CloudRunnerState*)baddie)->baddie.moveInputX;
         ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY - (int)((CloudRunnerState*)baddie)->baddie.moveInputZ
             * 6;
@@ -671,7 +671,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         s16 ang;
         s16 diff;
         ang = (s16)(getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ) + 0x8000);
-        diff = ang - (u16)inner->unkBBA;
+        diff = ang - (u16)inner->headingAngle;
         if (diff > 0x8000)
         {
             diff = diff - 0xffff;
@@ -680,7 +680,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         {
             diff = diff + 0xffff;
         }
-        inner->unkBBA += diff / 64;
+        inner->headingAngle += diff / 64;
         inner->rollAngle += diff / 128;
     }
     {
@@ -706,7 +706,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     {
         inner->pitchAngle = -0x4000;
     }
-    ((GameObject*)obj)->anim.rotX = inner->unkBBA;
+    ((GameObject*)obj)->anim.rotX = inner->headingAngle;
     ((GameObject*)obj)->anim.rotZ = inner->rollAngle;
     mag = sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
         (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
@@ -1268,9 +1268,9 @@ int DR_CloudRunner_stateHandler04(int obj, int baddie)
         ((GameObject*)obj)->anim.velocityY = fz;
         ((GameObject*)obj)->anim.velocityZ = fz;
     }
-    ((GameObject*)obj)->anim.localPosX = inner->unk3C4;
-    ((GameObject*)obj)->anim.localPosY = inner->unk3C8;
-    ((GameObject*)obj)->anim.localPosZ = inner->unk3CC;
+    ((GameObject*)obj)->anim.localPosX = inner->posX;
+    ((GameObject*)obj)->anim.localPosY = inner->posY;
+    ((GameObject*)obj)->anim.localPosZ = inner->posZ;
     {
     int a0;
     int a1;

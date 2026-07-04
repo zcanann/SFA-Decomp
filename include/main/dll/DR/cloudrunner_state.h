@@ -7,9 +7,9 @@
 typedef struct CloudRunnerState {
     BaddieState baddie;
     u8 pad35C[0x3c4 - 0x35c];
-    f32 unk3C4;
-    f32 unk3C8;
-    f32 unk3CC;
+    f32 posX; /* 0x3c4: copied into the object's anim.localPos */
+    f32 posY;
+    f32 posZ;
     f32 pathPointX;
     f32 pathPointY;
     f32 pathPointZ;
@@ -39,7 +39,7 @@ typedef struct CloudRunnerState {
     u8 unkBB7;
     u8 unkBB8;
     u8 padBB9;
-    s16 unkBBA;
+    s16 headingAngle; /* 0xbba: yaw; loaded from/stored to anim.rotX, turned toward target by moveInputX */
     s16 pitchAngle;
     s16 rollAngle;
     u8 flagsBC0; /* ByteFlags */
