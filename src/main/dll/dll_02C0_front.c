@@ -267,7 +267,6 @@ extern f32 lbl_803E2350;
 extern f32 gTitleScreenCursorY;
 extern void PSMTXTrans(void*, f32, f32, f32);
 
-extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -950,7 +949,6 @@ extern f32 lbl_803E22FC;
 extern f32 lbl_803E2300;
 extern f32 lbl_803E2304;
 extern f64 lbl_803E2308;
-extern f64 lbl_803E2310;
 extern f32 lbl_803E2328;
 extern f32 lbl_803E232C;
 extern f32 gTitleScreenPi;
