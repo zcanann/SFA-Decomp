@@ -17,6 +17,8 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DIM2ICICLE_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
+
 static inline int *DIM2Icicle_GetActiveModel(void *obj) {
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
   return (int *)objAnim->banks[objAnim->bankIndex];
@@ -520,7 +522,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
       else {
         (*gPlayerInterface)->setState((void*)obj, (void*)playerObj, 0xb);
       }
-      ObjMsg_SendToObject(hitId, 0xe0001, obj, 0);
+      ObjMsg_SendToObject(hitId, DIM2ICICLE_ADVANCE_MSG, obj, 0);
     }
   }
 }
