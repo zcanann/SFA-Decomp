@@ -161,6 +161,9 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/engine_shared.h"
 
+/* object group this object joins while active */
+#define FLAMETHROWERSPE_OBJGROUP 7
+
 typedef struct FlamethrowerspeState
 {
     u8 pad0[0x4 - 0x0];
@@ -227,7 +230,7 @@ extern int lbl_803DBD64;
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, FLAMETHROWERSPE_OBJGROUP);
     return;
 }
 
@@ -254,7 +257,7 @@ void staticCamera_init(short* obj, int params, int flag)
     dst[1] = 0;
     if (flag == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, FLAMETHROWERSPE_OBJGROUP);
     }
     return;
 }
