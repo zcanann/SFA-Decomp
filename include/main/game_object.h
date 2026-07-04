@@ -72,6 +72,28 @@ typedef struct GameObject {
 } GameObject;
 
 STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
+
+/*
+ * GameObject.objectFlags (obj+0xB0 u16) bit names. Values are the
+ * engine-wide consensus recovered from the per-class file-local
+ * *_OBJFLAG_* defines that name the identical bit across dozens of
+ * consumers (SET-condition + READ-behavior agree on the meaning):
+ *  - 0x2000 HITDETECT_DISABLED: cleared for collision; class init OR's it
+ *    in to suppress hit detection (object.c hitdetect gate, 100+ sites).
+ *  - 0x4000 HIDDEN: suppresses render; paired with HITDETECT_DISABLED on
+ *    hide (main.c/light.c/many class inits).
+ *  - 0x8000 UPDATE_DISABLED: object.c update loop skips the tick when set.
+ *  - 0x800 RENDERED: set by the render path, cleared each frame
+ *    (objprint/lightmap), queried to know an object drew this frame.
+ *  - 0x40 FREED: object freed/pending-free marker.
+ * Field is u16, so a bare int constant folds identically for |= / & / &~.
+ */
+#define OBJECT_OBJFLAG_FREED               0x40
+#define OBJECT_OBJFLAG_RENDERED            0x800
+#define OBJECT_OBJFLAG_HITDETECT_DISABLED  0x2000
+#define OBJECT_OBJFLAG_HIDDEN              0x4000
+#define OBJECT_OBJFLAG_UPDATE_DISABLED     0x8000
+
 STATIC_ASSERT(offsetof(GameObject, extra) == 0xB8);
 STATIC_ASSERT(offsetof(GameObject, hitVolumeIndex) == 0xE4);
 STATIC_ASSERT(offsetof(GameObject, colorFadeAlpha) == 0xEF);

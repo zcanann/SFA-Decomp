@@ -21,9 +21,6 @@
 #include "main/track_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#define OBJECT_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define OBJECT_OBJFLAG_UPDATE_DISABLED 0x8000
-
 /* GameObject::colorFadeFlags bits (freeze / color-fade state machine) */
 #define OBJ_COLOR_FADE_FLAG_FROZEN 0x1     /* freeze render attachment active (objIsFrozen) */
 #define OBJ_COLOR_FADE_FLAG_ACTIVE 0x2     /* color fade running (objGetFlagsE5_2) */

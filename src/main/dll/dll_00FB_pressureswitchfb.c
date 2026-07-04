@@ -403,7 +403,7 @@ void pressureswitchfb_update(int obj)
                 }
             }
         }
-        if (((((GameObject*)obj)->objectFlags & 0x800) != 0) && ((((SwitchFlags*)(state + 0x84))->latched) == 0) &&
+        if (((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) && ((((SwitchFlags*)(state + 0x84))->latched) == 0) &&
             ((((SwitchFlags*)(state + 0x84))->active) != 0))
         {
             tmp = (int)Obj_GetPlayerObject();

@@ -1833,18 +1833,18 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     int i;
     void (*vfn)(int, int, int, int, int, int);
 
-    if ((((GameObject*)obj)->objectFlags & 0x40) != 0 ||
+    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_FREED) != 0 ||
         ((GameObject*)obj)->ownerObj != NULL) return;
     if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) return;
     sub = *(void**)&((GameObject*)obj)->anim.parent;
     if (sub != NULL && (((GameObject*)sub)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) return;
 
     doNothing_beforeRenderObject(4);
-    ((GameObject*)obj)->objectFlags |= 0x800;
+    ((GameObject*)obj)->objectFlags |= OBJECT_OBJFLAG_RENDERED;
     sub = *(void**)&((GameObject*)obj)->anim.dll;
     if (sub != NULL)
     {
-        if ((((GameObject*)obj)->objectFlags & 0x4000) == 0)
+        if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_HIDDEN) == 0)
         {
             vfn = *(void(**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
             if (vfn != NULL)

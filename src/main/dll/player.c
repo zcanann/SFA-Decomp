@@ -12627,7 +12627,7 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
         if ((*(u8*)((char*)inner + 0x404) & 1) != 0 &&
-            (((GameObject*)obj)->objectFlags & 0x800) != 0)
+            (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0)
         {
             timerRec = *(int*)((char*)inner + 0x40c);
             *(f32*)((char*)timerRec + 0xc) = *(f32*)((char*)timerRec + 0xc) - timeDelta;

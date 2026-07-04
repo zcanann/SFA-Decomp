@@ -1012,7 +1012,7 @@ void Tricky_update(int obj)
         }
     }
     if (*(void**)&((TrickyState*)state)->followObj != NULL &&
-        (((GameObject*)((TrickyState*)state)->followObj)->objectFlags & 0x40) != 0)
+        (((GameObject*)((TrickyState*)state)->followObj)->objectFlags & OBJECT_OBJFLAG_FREED) != 0)
     {
         if ((((TrickyState*)state)->stateFlags & 0x10) != 0)
         {

@@ -3097,7 +3097,7 @@ void objRenderChild(int* child, int* parent, u8 p3)
         curObjMtx = (u32)m2;
         if (p3 == 0)
         {
-            ((GameObject*)child)->objectFlags |= 0x800;
+            ((GameObject*)child)->objectFlags |= OBJECT_OBJFLAG_RENDERED;
             objRenderModel(child);
         }
         else

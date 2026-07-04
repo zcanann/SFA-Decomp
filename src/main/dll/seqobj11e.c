@@ -221,7 +221,7 @@ void fn_80152514(int* obj, u8* state)
     {
         ((GameObject*)obj)->anim.velocityY += lbl_803DBCB0 * timeDelta;
     }
-    if (((GameObject*)obj)->objectFlags & 0x800)
+    if (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_RENDERED)
     {
         f32 z = lbl_803E2814;
         fx.b = z;

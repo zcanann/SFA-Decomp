@@ -2282,7 +2282,7 @@ void getVisibleObjects(s8* opacity)
     {
         o = (u8*)*p;
         
-        ((GameObject*)o)->objectFlags &= ~0x800;
+        ((GameObject*)o)->objectFlags &= ~OBJECT_OBJFLAG_RENDERED;
         j = 0;
         sub = o;
         for (; j < ((GameObject*)o)->childCount; j++)
