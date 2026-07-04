@@ -109,6 +109,7 @@ extern int Camera_GetCurrentViewSlot(void);
 extern u32 renderFlags;
 /* Global renderFlags bits (decoded by the accessor fns below: shouldDrawShadows,
  * shouldDrawClouds, getDrawDistanceFlag, isOvercast, setPendingMapLoad). */
+#define RENDERFLAG_WIDESCREEN      0x8
 #define RENDERFLAG_DRAW_CLOUDS     0x10
 #define RENDERFLAG_DRAW_SHADOWS    0x80
 #define RENDERFLAG_PENDING_MAP_LOAD 0x1000
@@ -152,7 +153,7 @@ void updateVisibleGeometry(void)
     f32 m[17];
 
     cam = (u8*)Camera_GetCurrentViewSlot();
-    if ((renderFlags & 8) != 0 || (renderFlags & RENDERFLAG_DRAW_DISTANCE) != 0)
+    if ((renderFlags & RENDERFLAG_WIDESCREEN) != 0 || (renderFlags & RENDERFLAG_DRAW_DISTANCE) != 0)
     {
         scale = Camera_GetFovY() / encoderType_803DEBF8;
     }
@@ -1318,7 +1319,7 @@ void doNothing_8005D14C(void)
 }
 
 u32 getDrawDistanceFlag_8005cd48(void) { return renderFlags & RENDERFLAG_DRAW_DISTANCE; }
-int isWidescreen(void) { return renderFlags & 0x8; }
+int isWidescreen(void) { return renderFlags & RENDERFLAG_WIDESCREEN; }
 u32 shouldDrawShadows(void) { return renderFlags & RENDERFLAG_DRAW_SHADOWS; }
 u32 shouldDrawClouds(void) { return renderFlags & RENDERFLAG_DRAW_CLOUDS; }
 
@@ -1485,12 +1486,12 @@ int setWidescreen(u8 v)
 {
     if (v != 0)
     {
-        renderFlags |= 0x8;
+        renderFlags |= RENDERFLAG_WIDESCREEN;
         Camera_SetAspectRatio(widescreenAspect_803DEC1C);
     }
     else
     {
-        renderFlags &= ~8LL;
+        renderFlags &= ~(u64)RENDERFLAG_WIDESCREEN;
         Camera_SetAspectRatio(lbl_803DB670);
     }
     return 0;
