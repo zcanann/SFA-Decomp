@@ -118,7 +118,7 @@ void fn_801540A0(int obj, int p)
         ((BaddieState*)p)->seqEntryIndex = 1;
         Baddie_SetMove(obj, p, 1, lbl_803E296C, 0, 3);
     }
-    else if ((((BaddieState*)p)->controlFlags & 0x40000000) != 0 &&
+    else if ((((BaddieState*)p)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 &&
         (Baddie_SetMove(obj, p, 3, lbl_803E2970, 0, 3), lbl_803E294C == *(f32*)(p + 0x328)))
     {
         *(f32*)(p + 0x328) = lbl_803E2974;
@@ -144,14 +144,14 @@ void fn_80154584(int obj, int p)
     ((BaddieState*)p)->inWhirlpoolGroup = 0;
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
-    if ((((BaddieState*)p)->controlFlags & 0x2000) != 0)
+    if ((((BaddieState*)p)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
         if ((Curve_AdvanceAlongPath(curve, ((BaddieState*)p)->pathStep) != 0 || curve->atSegmentEnd != 0) &&
             (*gRomCurveInterface)->goNextPoint((void*)curve) != 0 &&
             (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)p, (void*)obj, lbl_803E29B0,
                                              (int*)&lbl_803DBCD0, -1) != 0)
         {
-            ((BaddieState*)p)->controlFlags &= ~(u64)0x2000;
+            ((BaddieState*)p)->controlFlags &= ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }
         vec[0] = curve->posX - ((GameObject*)obj)->anim.localPosX;
         vec[1] = lbl_803E2990;
@@ -167,7 +167,7 @@ void fn_80154584(int obj, int p)
     ((GameObject*)obj)->anim.rotY = -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(p + 0x33a)) - (
         f32)((GameObject*)obj)->anim.rotY);
     fn_8014CD1C(obj, p, 0xf, lbl_803E29C4, lbl_803E2994, 0);
-    if ((((BaddieState*)p)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)p)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E29C8)
         {
