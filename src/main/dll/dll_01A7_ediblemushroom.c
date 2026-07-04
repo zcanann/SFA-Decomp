@@ -14,6 +14,7 @@
 #define EDIBLEMUSHROOM_OBJFLAG_HIDDEN 0x4000
 #define EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
 #define EDIBLEMUSHROOM_OBJFLAG_RENDERED 0x800
+#define EDIBLEMUSHROOM_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
@@ -383,7 +384,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                         }
                         ((EdibleMushroomState*)state)->pickupMsgValue = 0;
                         ((EdibleMushroomState*)state)->pickupMsgDelay = lbl_803E52AC;
-                        ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x13c);
+                        ObjMsg_SendToObject(player, EDIBLEMUSHROOM_MSG_IN_RANGE, obj, state + 0x13c);
                         bit = *(s16*)(other + 0x1a);
                         if (bit != -1)
                         {
