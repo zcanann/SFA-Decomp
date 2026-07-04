@@ -1779,7 +1779,7 @@ main/dll/DIM/dll_01E0_dimboss.c:
 
 main/dll/DIM/dll_01E1_dimbossgut.c:
 	.text       start:0x801BDBE0 end:0x801BDCF8
-	.data       start:0x80325BF8 end:0x80325C30
+	.data       start:0x80325BF8 end:0x80325F88
 
 main/dll/dll_223.c:
 	.text       start:0x801BDCF8 end:0x801BE19C
