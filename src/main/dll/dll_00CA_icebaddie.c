@@ -42,6 +42,10 @@
 #include "main/dll/dll_00CA_icebaddie.h"
 #include "main/sfa_shared_decls.h"
 
+/* object groups this ice baddie joins */
+#define ICEBADDIE_OBJGROUP 3
+#define ICEBADDIE_OBJGROUP_SECONDARY 80
+
 /*
  * IceBaddieControl.effectFlags (u8 at +0x44) request bits. Set by the per-move
  * state handlers, then consumed and cleared once per frame by
@@ -1175,7 +1179,7 @@ void iceBaddie_free(int obj)
     GroundBaddieState* state = ((GameObject*)obj)->extra;
 
     Camera_DisableViewYOffset();
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, ICEBADDIE_OBJGROUP);
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {
         Obj_FreeObject(*(int*)&((GameObject*)obj)->childObjs[0]);
@@ -1327,7 +1331,7 @@ void iceBaddie_leaveWhirlpoolGroup(int obj, GroundBaddieState* state)
 {
     if (state->baddie.inWhirlpoolGroup != 0)
     {
-        ObjGroup_RemoveObject(obj, 80);
+        ObjGroup_RemoveObject(obj, ICEBADDIE_OBJGROUP_SECONDARY);
         state->baddie.inWhirlpoolGroup = 0;
     }
     *(u16*)obj = (float)(int)((GameObject*)obj)->anim.rotX - lbl_803E2CD8 * timeDelta;
@@ -1339,7 +1343,7 @@ void iceBaddie_enterWhirlpoolGroup(int obj, GroundBaddieState* state)
 
     if (state->baddie.inWhirlpoolGroup == 0)
     {
-        ObjGroup_AddObject(obj, 80);
+        ObjGroup_AddObject(obj, ICEBADDIE_OBJGROUP_SECONDARY);
         state->baddie.inWhirlpoolGroup = 1;
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
