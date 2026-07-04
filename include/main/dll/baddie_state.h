@@ -193,7 +193,7 @@ typedef struct GroundBaddieState {
     u16 flags400; /* bit flags 2/8/0x100; &flags400 also passed as a buffer base */
     s16 targetState; /* 0 = no target; tryAcquireTarget vs updateTargetMotion */
     u8 configFlags; /* bits 1/2/0x10 */
-    u8 unk405; /* small mode 0..2 */
+    u8 subMode; /* sub-state-machine index 0/1/2 (switch/==-tested; &subMode handed to gBaddieControlInterface[10] as the route-phase out-param) */
     u8 aggression; /* percent-ish; randomGetRange(0, x), > 50 compares */
     u8 unk407[0x40C - 0x407];
     void *control; /* per-family control/extra record (engine-allocated; treasurechest casts its slot to LandedArwingState*) */

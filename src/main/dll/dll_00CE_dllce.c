@@ -926,7 +926,7 @@ int fn_8015DEB4(int* obj, GroundBaddieState* state)
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
         sub = ((GameObject*)obj)->extra;
-        sub->unk405 = 0;
+        sub->subMode = 0;
         if (sub->gameBitB != -1)
         {
             GameBit_Set(sub->gameBitB, 0);

@@ -316,7 +316,7 @@ int iceBaddie_stateHandlerB03(int obj, int state)
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
     {
         sub = ((GameObject*)obj)->extra;
-        sub->unk405 = 0;
+        sub->subMode = 0;
         GameBit_Set((s32)sub->gameBitB, 0);
         GameBit_Set((s32)sub->gameBitA, 1);
     }

@@ -6,7 +6,7 @@
  * sub-state's flags400 bit 8 is set, walks a ROM curve path
  * (gRomCurveInterface / Curve_AdvanceAlongPath) copying the curve's
  * position/orientation onto the object. dll_CB_seqFn drives an objseq
- * sub-state machine (unk405 0/1/2) handling player tracking, route paths
+ * sub-state machine (subMode 0/1/2) handling player tracking, route paths
  * (route35C) and game-bit gating (gameBitC / DllCBPlacement.gameBitId yield).
  * dll_CB_initialise installs the two callback tables gDllCBMoveHandlers /
  * gDllCBStateHandlers used by the player-interface update.
@@ -77,7 +77,7 @@ int fn_801601C4(int obj, GroundBaddieState* p)
         memcpy(wp, &((GameObject*)obj)->anim.localPosX, 12);
         memcpy((void*)(sub->route35C + 0xc), (void*)&((GameObject*)p->baddie.targetObj)->anim.localPosX, 12);
         voxmaps_updateRoutePath(wp, (char*)(sub->route35C + 0x28));
-        if (p->baddie.targetDistance < lbl_803E2E6C && sub->unk405 == 2)
+        if (p->baddie.targetDistance < lbl_803E2E6C && sub->subMode == 2)
         {
             return 5;
         }
@@ -152,7 +152,7 @@ void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
             {
                 (*gObjectTriggerInterface)->yield((ObjSeqState*)p2, ((DllCBPlacement*)setup)->trackYieldId);
             }
-            *(s8*)&((GroundBaddieState*)sub)->unk405 = 1;
+            *(s8*)&((GroundBaddieState*)sub)->subMode = 1;
         }
         else
         {
@@ -205,13 +205,13 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
     }
     (*(void (**)(int*, u8*, u8*, int, u8*, int, int, int))(*(int*)gBaddieControlInterface +
         0x54))(
-        obj, (u8*)p, sub->route35C, sub->gameBitB, &sub->unk405, 0, 0, 0);
+        obj, (u8*)p, sub->route35C, sub->gameBitB, &sub->subMode, 0, 0, 0);
     t = (*(int (**)(int*, u8*, u8*, int, u8*, u8*, int, int))(*(int*)gBaddieControlInterface +
         0x50))(
         obj, (u8*)p, sub->route35C, sub->gameBitB, lbl_80320008, lbl_80320080, 1, 0);
     if (t >= 4)
     {
-        *(s8*)&sub->unk405 = 2;
+        *(s8*)&sub->subMode = 2;
         *(int*)&p->baddie.targetObj = Obj_GetPlayerObject();
     }
 }
@@ -251,12 +251,12 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             (*gObjectTriggerInterface)->yield((ObjSeqState*)e, ((DllCBPlacement*)setup)->gameBitId);
             ((GroundBaddieState*)sub)->gameBitC = -1;
         }
-        switch (((GroundBaddieState*)sub)->unk405)
+        switch (((GroundBaddieState*)sub)->subMode)
         {
         case 2:
             ((ObjSeqState*)e)->flags = 0;
             fn_801606F0((int)obj, e, sub, (GroundBaddieState*)sub);
-            if (((GroundBaddieState*)sub)->unk405 == 1)
+            if (((GroundBaddieState*)sub)->subMode == 1)
             {
                 ((GroundBaddieState*)sub)->baddie.substate = 5;
                 (*gPlayerInterface)->update(obj, (void*)sub, lbl_803E2E8C, *(f32*)&lbl_803E2E8C,
@@ -303,7 +303,7 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
         ((GroundBaddieState*)sub)->flags400 |= 2;
         return 0;
     }
-    return ((GroundBaddieState*)sub)->unk405 != 0;
+    return ((GroundBaddieState*)sub)->subMode != 0;
 }
 
 #pragma scheduling on
@@ -387,7 +387,7 @@ void dll_CB_update(int* obj)
     if ((sub->flags400 & 2) != 0)
     {
         ((void(*)(int*, u8*, u8*, s16, u8*, int, int, int, int))((int**)*(int**)gBaddieControlInterface)[10])(
-            obj, (u8*)sub, sub->route35C, sub->gameBitB, &sub->unk405, 0, 0, 0, 1);
+            obj, (u8*)sub, sub->route35C, sub->gameBitB, &sub->subMode, 0, 0, 0, 1);
         sub->flags400 = (u16)(sub->flags400 & ~2);
     }
     if (((int(*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, (u8*)sub, 1) == 0) return;

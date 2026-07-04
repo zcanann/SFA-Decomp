@@ -82,7 +82,7 @@ int grimble_stateHandlerB05(int* obj, u8* obj2)
     GroundBaddieState* x = ((GameObject*)obj)->extra;
     if ((s8)obj2[0x27b] != 0)
     {
-        x->unk405 = 0;
+        x->subMode = 0;
         GameBit_Set(x->gameBitB, 0);
         GameBit_Set(x->gameBitA, 1);
     }

@@ -418,7 +418,7 @@ void grimble_update(int obj)
                 obj, state, state + 0x35c, ((GroundBaddieState*)state)->gameBitB, lbl_803200E0, lbl_80320158, 3, 0);
             if (r == 0xe)
             {
-                ((GroundBaddieState*)state)->unk405 = 2;
+                ((GroundBaddieState*)state)->subMode = 2;
                 ((GroundBaddieState*)state)->baddie.targetObj = Obj_GetPlayerObject();
             }
             if (((GroundBaddieState*)state)->baddie.targetObj != NULL || *(s8*)&((GroundBaddieState*)state)->baddie.

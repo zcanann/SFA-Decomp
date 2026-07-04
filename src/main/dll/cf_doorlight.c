@@ -102,7 +102,7 @@ int kaldachom_stateHandlerB03(int obj, GroundBaddieState* state)
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
         GroundBaddieState* extra = ((GameObject*)obj)->extra;
-        extra->unk405 = 0;
+        extra->subMode = 0;
         GameBit_Set(((CfDoorlightState*)extra)->gameBitB, 0);
         GameBit_Set(((CfDoorlightState*)extra)->gameBitA, 1);
     }

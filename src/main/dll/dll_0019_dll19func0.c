@@ -1081,7 +1081,7 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int moveArg0, int moveArg
     gDll19SeqMinDist = dist;
     if ((s8)seq->movementState == 0)
     {
-        ((GroundBaddieState*)st)->unk405 = 0;
+        ((GroundBaddieState*)st)->subMode = 0;
         ((BaddieState*)st)->controlMode = controlMode;
         *(int*)&((BaddieState*)st)->targetObj = 0;
         seq->flags = -1;
