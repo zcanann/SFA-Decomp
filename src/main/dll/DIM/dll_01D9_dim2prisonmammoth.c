@@ -17,8 +17,8 @@
 typedef struct Dim2prisonmammothPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s8 unk18; /* 0x18 packed into rotX as (s16)(unk18 << 8) at init */
-    s8 unk19; /* 0x19 spawn variant selector (stateHandler00) */
+    s8 rotByte; /* 0x18 packed into rotX as (s16)(rotByte << 8) at init */
+    s8 spawnVariant; /* 0x19 spawn variant selector (stateHandler00) */
     u8 pad1A[0x20 - 0x1A];
 } Dim2prisonmammothPlacement;
 
@@ -96,7 +96,7 @@ void dim2prisonmammoth_hitDetect(void)
 int dim2prisonmammoth_stateHandler00(int* obj)
 {
     int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
-    switch ((s8)((Dim2prisonmammothPlacement*)sub)->unk19)
+    switch ((s8)((Dim2prisonmammothPlacement*)sub)->spawnVariant)
     {
     case 0:
         if ((u32)GameBit_Get(548) != 0) return 3;
@@ -211,7 +211,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int state)
 void dim2prisonmammoth_init(int obj, int params)
 {
     int inner;
-    ((GameObject*)obj)->anim.rotX = (s16)(((Dim2prisonmammothPlacement*)params)->unk18 << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((Dim2prisonmammothPlacement*)params)->rotByte << 8);
     ((GameObject*)obj)->animEventCallback = fn_802BC3F0;
     inner = *(int*)&((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.modelState != NULL)
