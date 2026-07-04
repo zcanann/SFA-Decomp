@@ -392,7 +392,7 @@ void fn_8013E0D0(int* obj, u8* st)
             if (go != 0 && ok != 1)
             {
                 objAnimFn_8013a3f0((int*)gobj, 0x34, lbl_803E2444, 0x4000000);
-                t->stateFlags |= 0x10;
+                t->stateFlags |= TRICKY_STATE_RESET_FLAG_10;
                 t->substate = ANIMOBJD2_SUBSTATE_SPAWN;
                 *(int*)&t->unk728 = 0;
             }
@@ -450,7 +450,7 @@ void fn_8013E0D0(int* obj, u8* st)
                 }
                 Sfx_RemoveLoopedObjectSound((int*)gobj, SFXTRIG_trpopn_c);
                 TRICKY_BARK((int*)gobj, 0x29d, 0);
-                t->stateFlags &= ~0x10LL;
+                t->stateFlags &= ~TRICKY_STATE_RESET_FLAG_10;
                 t->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;
             }
             break;
