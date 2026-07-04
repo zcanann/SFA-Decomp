@@ -62,6 +62,8 @@
 #define GX_VTXFMT6 6
 #define GX_PNMTX0 0
 #define GX_PNMTX9 0x1b
+#define GX_INDEX8 2
+#define GX_INDEX16 3
 #define GX_TEXMTX2 0x24
 #define GX_MTX3x4 0
 
@@ -220,7 +222,7 @@ int* bs;
     bit = (val >> (pos & 7)) & 1;
     if (flag != 0)
     {
-        GXSetVtxDesc(GX_VA_POS, bit ? 3 : 2);
+        GXSetVtxDesc(GX_VA_POS, bit ? GX_INDEX16 : GX_INDEX8);
     }
     pos2 = bs[4];
     off2 = pos2 >> 3;
@@ -232,7 +234,7 @@ int* bs;
     bit2 = (val2 >> (pos2 & 7)) & 1;
     if (flag != 0)
     {
-        GXSetVtxDesc(GX_VA_CLR0, bit2 ? 3 : 2);
+        GXSetVtxDesc(GX_VA_CLR0, bit2 ? GX_INDEX16 : GX_INDEX8);
     }
     pos3 = bs[4];
     off3 = pos3 >> 3;
@@ -248,12 +250,12 @@ int* bs;
         {
             for (i = 0; i < *(u8*)(sh + 0x41); i++)
             {
-                GXSetVtxDesc(i + 13, bit3 ? 3 : 2);
+                GXSetVtxDesc(i + 13, bit3 ? GX_INDEX16 : GX_INDEX8);
             }
         }
         else
         {
-            GXSetVtxDesc(GX_VA_TEX0, bit3 ? 3 : 2);
+            GXSetVtxDesc(GX_VA_TEX0, bit3 ? GX_INDEX16 : GX_INDEX8);
         }
     }
 }
@@ -3767,7 +3769,7 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_ENABLE, GX_TEVPREV);
             gxSetZMode_(1, GX_LEQUAL, 0);
             GXSetCullMode(GX_CULL_NONE);
-            GXSetCurrentMtx(0x1b);
+            GXSetCurrentMtx(GX_PNMTX9);
             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
             selectTexture((int)((ObjAnimComponent*)obj)->modelState->shadowTexture, 0);
             GXBegin(GX_QUADS, GX_VTXFMT6, 4);
@@ -3779,7 +3781,7 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXTexCoord2s16(0x400, 0x400);
             GXPosition3s16(shadowVerts[9], shadowVerts[10], shadowVerts[11]);
             GXTexCoord2s16(0, 0x400);
-            GXSetCurrentMtx(0);
+            GXSetCurrentMtx(GX_PNMTX0);
         }
     }
 }
@@ -3974,7 +3976,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     afterDraw:;
     }
     GXSetCullMode(GX_CULL_FRONT);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
     ((GameObject*)obj)->anim.rootMotionScale = f31;
     ((GameObject*)obj)->anim.rotX = s31;
     ((GameObject*)obj)->anim.rotY = s29;
@@ -4178,7 +4180,7 @@ void renderGlows(void)
                 u8 ar, ag, ab;
                 PSMTXConcat(viewMtx, sunMtx, sunMtx);
                 GXLoadPosMtxImm(sunMtx, GX_PNMTX0);
-                GXSetCurrentMtx(0);
+                GXSetCurrentMtx(GX_PNMTX0);
                 fn_8008912C();
                 selectTexture(0, 0);
                 getAmbientColor(0, &ar, &ag, &ab);
@@ -4229,7 +4231,7 @@ void renderGlows(void)
             else
                 e->glowAlphaStep = -0x10;
         }
-        GXSetCurrentMtx(0x3c);
+        GXSetCurrentMtx(GX_IDENTITY);
         gxTextureFn_800794e0();
         gxBlendFn_800789ac();
         for (i = 0; i < lbl_803DCE06; i++)
@@ -4289,7 +4291,7 @@ void renderGlows(void)
                 GXWGFifo.f32 = lbl_803DEBDC;
             }
         }
-        GXSetCurrentMtx(0);
+        GXSetCurrentMtx(GX_PNMTX0);
     }
 }
 
