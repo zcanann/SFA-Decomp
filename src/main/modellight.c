@@ -1173,6 +1173,14 @@ typedef struct ModelLightCornerBlock
     f32 v[24];
 } ModelLightCornerBlock;
 
+/* per-corner outcode bits for the light-projection frustum clip test */
+#define LIGHTCLIP_LEFT 0x01   /* projected X < 0 */
+#define LIGHTCLIP_RIGHT 0x02  /* projected X > max */
+#define LIGHTCLIP_BOTTOM 0x04 /* projected Y < 0 */
+#define LIGHTCLIP_TOP 0x08    /* projected Y > max */
+#define LIGHTCLIP_NEAR 0x10   /* worldZ < nearZ */
+#define LIGHTCLIP_FAR 0x20    /* worldZ > farZ */
+
 u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
 {
     f32 localPos[3];
@@ -1234,27 +1242,27 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
         clipMask = 0;
         if (worldPos[2] < ((ModelLightStruct*)light)->projectionNearZ)
         {
-            clipMask |= 0x10;
+            clipMask |= LIGHTCLIP_NEAR;
         }
         if (worldPos[2] > ((ModelLightStruct*)light)->projectionFarZ)
         {
-            clipMask |= 0x20;
+            clipMask |= LIGHTCLIP_FAR;
         }
         if (projected[0] < zero)
         {
-            clipMask |= 1;
+            clipMask |= LIGHTCLIP_LEFT;
         }
         else if (projected[0] > lbl_803DE760)
         {
-            clipMask |= 2;
+            clipMask |= LIGHTCLIP_RIGHT;
         }
         if (projected[1] < zero)
         {
-            clipMask |= 4;
+            clipMask |= LIGHTCLIP_BOTTOM;
         }
         else if (projected[1] > lbl_803DE760)
         {
-            clipMask |= 8;
+            clipMask |= LIGHTCLIP_TOP;
         }
         if (clipMask == 0)
         {
