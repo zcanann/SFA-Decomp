@@ -102,7 +102,7 @@ int grimble_stateHandlerA08(int* obj, GroundBaddieState* state)
     {
         Sfx_PlayFromObject(obj, SFXdoor_creak);
         *(int*)&state->baddie.eventFlags &= ~0x200;
-        ((void(*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, sub->unk3F0, -1, 1);
+        ((void(*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, sub->triggerId, -1, 1);
     }
     return 0;
 }

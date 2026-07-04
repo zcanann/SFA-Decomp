@@ -177,7 +177,7 @@ typedef struct GroundBaddieState {
     u8 unk3E4[4];
     f32 glowAlpha; /* 0x3e8: alpha of the red glow tint RGBA(200,0,0,glowAlpha), passed to fn_8003B5E0 + objParticleFn alpha arg in baddie render */
     u8 unk3EC[4];
-    s16 unk3F0; /* id passed to gBaddieControlInterface[19]/+0x4C */
+    s16 triggerId; /* config-sourced id (loaded from config+0x22) handed to gBaddieControlInterface[19]/+0x4C when a move/landing event fires */
     s16 gameBitA; /* set 1 on trigger */
     s16 gameBitB; /* set 1 / cleared 0; also passed to interface[10] */
     s16 gameBitC; /* gate; checked != -1 + GameBit_Get */

@@ -878,7 +878,7 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
     }
     (*gPathControlInterface)->attachObject((void*)obj, path);
     ((GroundBaddieState*)state)->configFlags = config[43];
-    ((GroundBaddieState*)state)->unk3F0 = *(s16*)(config + 34);
+    ((GroundBaddieState*)state)->triggerId = *(s16*)(config + 34);
     ((GroundBaddieState*)state)->aggression = config[47];
     state[1031] = config[39];
     state[1032] = config[40];

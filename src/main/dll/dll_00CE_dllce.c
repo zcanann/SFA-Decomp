@@ -417,7 +417,7 @@ int fn_8015E0C8(int obj, GroundBaddieState* p)
         Sfx_PlayFromObject(obj, SFXdoor_creak);
         p->baddie.moveEventFlags |= 2;
         (*(void (**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))(
-            obj, sub->unk3F0, -1, 0);
+            obj, sub->triggerId, -1, 0);
     }
     return 0;
 }

@@ -385,7 +385,7 @@ int iceBaddie_updateLandingState(int obj, int state)
         Sfx_PlayFromObject(obj, SFXdoor_creak);
         ((GroundBaddieState*)state)->baddie.moveEventFlags |= 2;
         ((void (*)(int, int, int, int))((void**)*gBaddieControlInterface)[19])(
-            obj, sub->unk3F0, -1, 0);
+            obj, sub->triggerId, -1, 0);
     }
     return 0;
 }

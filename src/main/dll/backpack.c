@@ -21,7 +21,7 @@
 #include "main/player_control_interface.h"
 
 /* obj+0xB8 overlay used only by TriggerLaunchTarget; the named fields line
-   up with GroundBaddieState (unk3F0/gameBitA at 0x3F0/0x3F2, unk405). */
+   up with GroundBaddieState (triggerId/gameBitA at 0x3F0/0x3F2, unk405). */
 typedef struct LandedArwingTriggerLaunchTargetState
 {
     u8 pad0[0x3F0 - 0x0];
