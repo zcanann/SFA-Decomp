@@ -11,6 +11,10 @@ extern void getEnvfxAct(int* obj, int* target, int id, int p);
 
 extern void warpToMap(int idx, s8 transType);
 
+#define MAGICCAVEBOTTOM_GAMEBIT_ACTIVE 0xefb /* bottom-area loaded/active latch */
+#define MAGICCAVE_GAMEBIT_WARP_READY 0x91e   /* handoff to top: perform warp sequence */
+#define MAGICCAVE_GAMEBIT_WARP_DEST 0x1b8    /* warp destination map index */
+
 int magiccavebottom_getExtraSize(void)
 {
     return 1;
@@ -21,7 +25,7 @@ void magiccavebottom_free(int obj)
 
 
     (void)obj;
-    GameBit_Set(0xefb, 0);
+    GameBit_Set(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 0);
     Music_Trigger(MUSICTRIG_PU3_Adventure, 0);
 }
 
@@ -37,7 +41,7 @@ void magiccavebottom_update(int* obj)
     switch (*sub)
     {
     case 0:
-        GameBit_Set(0xefb, 1);
+        GameBit_Set(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 1);
         envFxActFn_800887f8(0);
         getEnvfxAct(obj, obj, 0x2c, 0);
         getEnvfxAct(obj, obj, 0x2d, 0);
@@ -78,8 +82,8 @@ void magiccavebottom_update(int* obj)
         }
         break;
     case 3:
-        GameBit_Set(0x91e, 1);
-        warpToMap(GameBit_Get(0x1b8), 0);
+        GameBit_Set(MAGICCAVE_GAMEBIT_WARP_READY, 1);
+        warpToMap(GameBit_Get(MAGICCAVE_GAMEBIT_WARP_DEST), 0);
         break;
     }
 }

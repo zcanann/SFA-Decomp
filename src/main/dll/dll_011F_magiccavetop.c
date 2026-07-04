@@ -11,6 +11,9 @@ extern void* Obj_GetPlayerObject(void);
 
 #define MAGICCAVETOP_OBJFLAG_HIDDEN 0x4000
 #define MAGICCAVETOP_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define MAGICCAVE_GAMEBIT_WARP_READY 0x91e   /* handoff from bottom: perform warp sequence */
+#define MAGICCAVE_GAMEBIT_WARP_DEST 0x1b8    /* warp destination map index */
+#define MAGICCAVETOP_GAMEBIT_SLOT_D_CLEAR 0xe05 /* cleared when arriving via map slot 0xd */
 
 typedef struct MagiccavetopPlacement
 {
@@ -163,9 +166,9 @@ void magiccavetop_update(int* obj)
     gb = 0;
     if (player != NULL)
     {
-        if (GameBit_Get(0x91e) != 0)
+        if (GameBit_Get(MAGICCAVE_GAMEBIT_WARP_READY) != 0)
         {
-            GameBit_Set(0x91e, 0);
+            GameBit_Set(MAGICCAVE_GAMEBIT_WARP_READY, 0);
             (*gMapEventInterface)->setObjGroupStatus(def->mapId, def->objGroup, 0);
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             unlockLevel(0, 0, 1);
@@ -208,7 +211,7 @@ void magiccavetop_update(int* obj)
             }
             break;
         case 2:
-            GameBit_Set(0x1b8, def->gameBitValue);
+            GameBit_Set(MAGICCAVE_GAMEBIT_WARP_DEST, def->gameBitValue);
             if (def->noLoad != 0)
             {
                 unlockLevel(0, 0, 1);
@@ -223,7 +226,7 @@ void magiccavetop_update(int* obj)
             }
             if (((GameObject*)obj)->anim.mapEventSlot == 0xd)
             {
-                GameBit_Set(0xe05, 0);
+                GameBit_Set(MAGICCAVETOP_GAMEBIT_SLOT_D_CLEAR, 0);
             }
             warpToMap(def->warpMapId, 0);
             break;
