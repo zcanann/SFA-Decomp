@@ -2380,7 +2380,7 @@ main/dfplightni.c:
 
 main/dfppowersl.c:
 	.text       start:0x80209FE0 end:0x8020A1C8
-	.data       start:0x80329E08 end:0x80329E40
+	.data       start:0x80329E08 end:0x80329F90
 
 main/dll/dll_024D_bossdrakor.c:
 	.text       start:0x8020A1C8 end:0x8020BAB4
