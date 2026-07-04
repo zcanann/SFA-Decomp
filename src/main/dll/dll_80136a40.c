@@ -182,7 +182,6 @@ extern void VIWaitForRetrace(void);
 extern u16 gDebugScreenHeight;
 extern u32 gDebugMarginRight;
 extern u32 gDebugMarginBottom;
-__declspec(section ".sdata") extern char lbl_803DBBF0[];
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
