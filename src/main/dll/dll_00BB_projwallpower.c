@@ -29,3 +29,10 @@ void projwallpower_initialise(void)
 }
 
 char sProjwallpowerDoNoLongerSupported[] = "<projwallpower Do>No Longer supported \n";
+
+/*__DATA_EXTERNS__*/
+extern void projquakeshock_doUnsupported();
+extern void projquakeshock_release();
+extern void projquakeshock_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_80319888[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projquakeshock_initialise, projquakeshock_release, (void*)0x00000000, projquakeshock_doUnsupported };
