@@ -60,6 +60,7 @@ extern f32 lbl_803E6478;
 #define SFXPLAYER_RING_HIT_OBJECT_ID 0x71C
 #define SFXPLAYER_RING_SETUP_MODE 5
 #define SFXPLAYER_EFFECT_RING_ROT_STEP 0x3FFF
+#define SFXPLAYER_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
 
 /* Obj_AllocObjectSetup(0x2C,...) ring-visual spawn buffer composed in
  * sfxplayer_ensureEffectHandlePair. Head is the common ObjPlacement
@@ -310,7 +311,7 @@ void TrickyCurve_updateEffectRingTrigger(u64 arg1, u64 arg2, u64 arg3,
             if (bitVal == 0)
             {
                 ObjMsg_SendToObject(ftmp, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ref,
-                                    0x60004,
+                                    SFXPLAYER_MSG_PLAYER_BURST,
                                     obj, 1, unusedArg7, unusedArg8, unusedArg9, unusedArg10);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &rotX, 2, -1, NULL);
                 ref = 9;
@@ -325,7 +326,7 @@ void TrickyCurve_updateEffectRingTrigger(u64 arg1, u64 arg2, u64 arg3,
             {
                 pairWord = FUN_80017698(0x468, 1);
                 ObjMsg_SendToObject(pairWord, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ref,
-                                    0x60004,
+                                    SFXPLAYER_MSG_PLAYER_BURST,
                                     obj, 0, unusedArg7, unusedArg8, unusedArg9, unusedArg10);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &rotX, 2, -1, NULL);
                 ref = 9;
