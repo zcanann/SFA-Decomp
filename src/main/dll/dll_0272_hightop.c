@@ -30,14 +30,14 @@ typedef struct HighTopDeathSpawn
 {
     ObjPlacement base; /* 0x00..0x17 */
     u8 pad18[0x1A - 0x18];
-    s16 unk1A; /* 0x1A: 0x675 */
+    s16 effectId; /* 0x1A: 0x675 */
     s16 unk1C; /* 0x1C */
-    s16 unk1E; /* 0x1E: -1 */
+    s16 gameBit; /* 0x1E: -1 */
     u8 pad20[0x2C - 0x20];
 } HighTopDeathSpawn;
 
-STATIC_ASSERT(offsetof(HighTopDeathSpawn, unk1A) == 0x1A);
-STATIC_ASSERT(offsetof(HighTopDeathSpawn, unk1E) == 0x1E);
+STATIC_ASSERT(offsetof(HighTopDeathSpawn, effectId) == 0x1A);
+STATIC_ASSERT(offsetof(HighTopDeathSpawn, gameBit) == 0x1E);
 STATIC_ASSERT(sizeof(HighTopDeathSpawn) == 0x2C);
 
 typedef struct HightopPlacement
@@ -660,9 +660,9 @@ void hightop_hitDetect(int obj)
                 spawn->base.posX = ((GameObject*)obj)->anim.localPosX;
                 spawn->base.posY = ((GameObject*)obj)->anim.localPosY;
                 spawn->base.posZ = ((GameObject*)obj)->anim.localPosZ;
-                spawn->unk1A = 0x675;
+                spawn->effectId = 0x675;
                 spawn->unk1C = 0;
-                spawn->unk1E = -1;
+                spawn->gameBit = -1;
                 Obj_SetupObject((int)spawn, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                 *(int*)&((GameObject*)obj)->anim.parent);
             }
