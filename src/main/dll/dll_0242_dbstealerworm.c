@@ -234,7 +234,7 @@ int dbstealerworm_stateHandlerA09(int obj, int p)
             sub_40c->unk1C = -1;
         }
     }
-    if ((s32)(bs->eventFlags & 0x200) != 0)
+    if ((s32)(bs->eventFlags & BADDIE_EVENT_LANDING) != 0)
     {
         sub_40c->linkedObj = *(int*)&bs->targetObj;
         sub_40c->unk1C = slotIndex;
@@ -721,7 +721,7 @@ int dbstealerworm_stateHandlerA04(int obj, int param2)
     v = bs->eventFlags;
     if (v & 1)
     {
-        bs->eventFlags = v & ~1;
+        bs->eventFlags = v & ~BADDIE_EVENT_FOOTSTEP;
         sub->flags14 = sub->flags14 | DBWORM_FLAG14_ATTACK;
     }
     if (*(s8*)&bs->moveDone != 0)
@@ -1483,7 +1483,7 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
     else
     {
         sub->flags15 |= 4;
-        if (*(void**)&sub->linkedObj != NULL && (s32)(((BaddieState*)p2)->eventFlags & 0x200) != 0)
+        if (*(void**)&sub->linkedObj != NULL && (s32)(((BaddieState*)p2)->eventFlags & BADDIE_EVENT_LANDING) != 0)
         {
             t = *(int*)&((BaddieState*)p2)->targetObj;
             stk.v[0] = ((GameObject*)t)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;

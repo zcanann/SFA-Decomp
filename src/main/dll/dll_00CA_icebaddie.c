@@ -214,7 +214,7 @@ int iceBaddie_updateOpenState(int obj, int p)
         int v = *(int*)&((GroundBaddieState*)p)->baddie.eventFlags;
         if ((v & 0x200) != 0)
         {
-            ((GroundBaddieState*)p)->baddie.eventFlags = v & ~0x200;
+            ((GroundBaddieState*)p)->baddie.eventFlags = v & ~BADDIE_EVENT_LANDING;
             control->effectFlags |= ICEBADDIE_FX_LANDING;
         }
     }
@@ -265,7 +265,7 @@ int iceBaddie_updateOpenHitState(int obj, int p)
         int v = *(int*)&((GroundBaddieState*)p)->baddie.eventFlags;
         if ((v & 0x200) != 0)
         {
-            ((GroundBaddieState*)p)->baddie.eventFlags = v & ~0x200;
+            ((GroundBaddieState*)p)->baddie.eventFlags = v & ~BADDIE_EVENT_LANDING;
             control->effectFlags |= ICEBADDIE_FX_LANDING;
         }
     }
@@ -452,9 +452,9 @@ int iceBaddie_stateHandlerA0B(int obj, int state)
     }
     control = *(int*)&sub->control;
     ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_BURST;
-    if ((s32)(((GroundBaddieState*)state)->baddie.eventFlags & 0x200) != 0)
+    if ((s32)(((GroundBaddieState*)state)->baddie.eventFlags & BADDIE_EVENT_LANDING) != 0)
     {
-        ((GroundBaddieState*)state)->baddie.eventFlags &= ~0x200;
+        ((GroundBaddieState*)state)->baddie.eventFlags &= ~BADDIE_EVENT_LANDING;
         ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_IMPACT;
     }
     ((IceBaddieControl*)control)->effectFlags |= (ICEBADDIE_FX_BURST | ICEBADDIE_FX_PUFF);
@@ -508,7 +508,7 @@ int iceBaddie_updateCommDownState(int obj, int state)
     if ((*(s32*)&((GroundBaddieState*)state)->baddie.eventFlags & 1) != 0)
     {
         control = *(int*)&sub->control;
-        ((GroundBaddieState*)state)->baddie.eventFlags &= ~1;
+        ((GroundBaddieState*)state)->baddie.eventFlags &= ~BADDIE_EVENT_FOOTSTEP;
         ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_ARM_ICEBALL;
         Sfx_PlayFromObject(obj, SFXsc_fox_commdown);
     }
@@ -711,9 +711,9 @@ int iceBaddie_updateImpactHitState(int obj, int state)
     }
     ((GroundBaddieState*)state)->baddie.unk34D = 3;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D28;
-    if ((s32)(((GroundBaddieState*)state)->baddie.eventFlags & 0x200) != 0)
+    if ((s32)(((GroundBaddieState*)state)->baddie.eventFlags & BADDIE_EVENT_LANDING) != 0)
     {
-        ((GroundBaddieState*)state)->baddie.eventFlags &= ~0x200;
+        ((GroundBaddieState*)state)->baddie.eventFlags &= ~BADDIE_EVENT_LANDING;
         ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_IMPACT;
     }
     ((IceBaddieControl*)control)->effectFlags |= (ICEBADDIE_FX_BURST | ICEBADDIE_FX_PUFF);

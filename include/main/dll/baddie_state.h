@@ -110,6 +110,14 @@ typedef struct BaddieState {
     f32 unk304;
     f32 unk308;
     u8 unk30C[8];
+/* eventFlags bit: anim-event footstep - the anim/event stream latches it, and
+ * the per-family update readers test-then-clear it to fire the footstep/climb
+ * contact SFX. */
+#define BADDIE_EVENT_FOOTSTEP 0x1
+/* eventFlags bit: anim-event landing/impact - latched on a landing anim event,
+ * test-then-cleared by the readers to fire the land sound / rumble / waterfx
+ * splash. */
+#define BADDIE_EVENT_LANDING 0x200
     u32 eventFlags; /* bits 1/0x200 observed; whirlpool states store an f32 here (union via launder) */
     f32 unk318;
     f32 unk31C;

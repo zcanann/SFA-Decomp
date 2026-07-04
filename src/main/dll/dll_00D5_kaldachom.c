@@ -172,9 +172,9 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     gKaldachomMouthSpawnScratch = lbl_803E30A0 + (f32)(s32)(s8) * (u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x28) /
         lbl_803E30A4;
 
-    if (((s32)eventState->baddie.eventFlags & 0x1) != 0)
+    if (((s32)eventState->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0)
     {
-        eventState->baddie.eventFlags &= ~0x1;
+        eventState->baddie.eventFlags &= ~BADDIE_EVENT_FOOTSTEP;
         Sfx_PlayFromObject(obj, SFXkr_climb1);
     }
     if (((s32)eventState->baddie.eventFlags & 0x80) != 0)
@@ -197,9 +197,9 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
         eventState->baddie.eventFlags &= ~0x800;
         kaldaChomFn_80168374(obj, p2, 1);
     }
-    if (((s32)eventState->baddie.eventFlags & 0x200) != 0)
+    if (((s32)eventState->baddie.eventFlags & BADDIE_EVENT_LANDING) != 0)
     {
-        eventState->baddie.eventFlags &= ~0x200;
+        eventState->baddie.eventFlags &= ~BADDIE_EVENT_LANDING;
         Sfx_PlayFromObject(obj, SFXkr_land1);
     }
     if (((s32)eventState->baddie.eventFlags & 0x400) != 0)

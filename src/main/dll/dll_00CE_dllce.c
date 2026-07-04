@@ -81,10 +81,10 @@ int fn_8015E3A0(int obj, int state)
     }
     ((GroundBaddieState*)state)->baddie.unk34D = 1;
 
-    if ((((GroundBaddieState*)state)->baddie.eventFlags & 0x1) != 0U)
+    if ((((GroundBaddieState*)state)->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0U)
     {
         int child = *(int*)&sub->control;
-        ((GroundBaddieState*)state)->baddie.eventFlags = ((GroundBaddieState*)state)->baddie.eventFlags & ~0x1;
+        ((GroundBaddieState*)state)->baddie.eventFlags = ((GroundBaddieState*)state)->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
         *(u8*)(child + 0x8) = (u8)(*(u8*)(child + 0x8) | 0x1);
         Sfx_PlayFromObject(obj, SFXfoxcom_heel);
     }
@@ -508,7 +508,7 @@ int fn_8015E8BC(int obj, GroundBaddieState* p)
     flags = p->baddie.eventFlags;
     if ((flags & 0x200) != 0)
     {
-        p->baddie.eventFlags = flags & ~0x200;
+        p->baddie.eventFlags = flags & ~BADDIE_EVENT_LANDING;
         hit[8] |= 4;
     }
     if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2DF0)
