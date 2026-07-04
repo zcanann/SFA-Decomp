@@ -7,10 +7,6 @@ extern float mathCosf(float x);
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
-extern u32 DAT_802c2910;
-extern u32 DAT_802c2914;
-extern u32 DAT_802c2918;
-extern float* DAT_803de1fc;
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;
 
