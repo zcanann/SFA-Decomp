@@ -23,6 +23,9 @@
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
+
+/* object group this object joins while active */
+#define SIDELOAD_OBJGROUP 7
 extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 extern u32 FUN_8003b818();
@@ -221,7 +224,7 @@ extern void dll_F7_init(int* obj, int* params);
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, SIDELOAD_OBJGROUP);
 }
 
 void staticCamera_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -246,7 +249,7 @@ void staticCamera_init(short* obj, int placementData, int addToGroup)
     colorState[1] = 0;
     if (addToGroup == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, SIDELOAD_OBJGROUP);
     }
 }
 
