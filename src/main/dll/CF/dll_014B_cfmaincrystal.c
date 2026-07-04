@@ -143,16 +143,16 @@ void fn_8019D9F0(int* obj)
     {
         ObjMsg_SendToObjects(0xda, 4, obj, CFMAINCRYSTAL_MSG_PYLON_3, 0);
     }
-    sub->beams[0].b1b = 0;
-    sub->beams[1].b1b = 0;
-    sub->beams[2].b1b = 0;
-    sub->beams[3].b1b = 0;
-    sub->beams[4].b1b = 0;
-    sub->beams[5].b1b = 0;
-    sub->beams[6].b1b = 0;
-    sub->beams[7].b1b = 0;
-    sub->beams[8].b1b = 0;
-    sub->beams[9].b1b = 0;
+    sub->beams[0].active = 0;
+    sub->beams[1].active = 0;
+    sub->beams[2].active = 0;
+    sub->beams[3].active = 0;
+    sub->beams[4].active = 0;
+    sub->beams[5].active = 0;
+    sub->beams[6].active = 0;
+    sub->beams[7].active = 0;
+    sub->beams[8].active = 0;
+    sub->beams[9].active = 0;
     count = 0;
     idx = 0;
     if (sub->crystalKnown != 0)
@@ -179,16 +179,16 @@ void fn_8019D9F0(int* obj)
             if (i <= 2 && sub->pylonTimer[i] != 0)
             {
                 CrystalBeam* sl = &sub->beams[idx++];
-                sl->b1b = 1;
-                sl->b18 = 0x7f;
-                sl->b19 = 0x7f;
-                sl->b1a = 0xff;
-                sl->f0 = sub->crystalX;
-                sl->f8 = lbl_803E41DC + sub->crystalY;
-                sl->f10 = sub->crystalZ;
-                dir[0] = sub->pylonX[i] - sl->f0;
-                dir[1] = (lbl_803E41E0 + sub->pylonY[i]) - sl->f8;
-                dir[2] = sub->pylonZ[i] - sl->f10;
+                sl->active = 1;
+                sl->colorR = 0x7f;
+                sl->colorG = 0x7f;
+                sl->colorB = 0xff;
+                sl->startX = sub->crystalX;
+                sl->startY = lbl_803E41DC + sub->crystalY;
+                sl->startZ = sub->crystalZ;
+                dir[0] = sub->pylonX[i] - sl->startX;
+                dir[1] = (lbl_803E41E0 + sub->pylonY[i]) - sl->startY;
+                dir[2] = sub->pylonZ[i] - sl->startZ;
                 PSVECNormalize(dir, dir);
                 pay.x = sub->pylonX[i] - sub->crystalX;
                 pay.y = (lbl_803E41E0 + sub->pylonY[i]) - sub->crystalY;
@@ -222,7 +222,7 @@ void fn_8019D9F0(int* obj)
                 pay.z = sub->pylonZ[i];
                 pay.c = i;
                 sl = &sub->beams[idx++];
-                sl->b1b = 1;
+                sl->active = 1;
                 count++;
             }
             i++;
@@ -271,16 +271,16 @@ void fn_8019D9F0(int* obj)
             CrystalBeam* sl;
             fr = fr / lbl_803E41EC;
             sl = &sub->beams[idx];
-            sl->b1b = 1;
-            sl->b18 = 0;
-            sl->b19 = 0;
-            sl->b1a = 0;
-            sl->f0 = ((GameObject*)obj)->anim.localPosX;
-            sl->f8 = lbl_803E41F0 + ((GameObject*)obj)->anim.localPosY;
-            sl->f10 = ((GameObject*)obj)->anim.localPosZ;
-            sl->f4 = sl->f0;
-            sl->fc = -(lbl_803E41F4 * fr - sl->f8);
-            sl->f14 = sl->f10;
+            sl->active = 1;
+            sl->colorR = 0;
+            sl->colorG = 0;
+            sl->colorB = 0;
+            sl->startX = ((GameObject*)obj)->anim.localPosX;
+            sl->startY = lbl_803E41F0 + ((GameObject*)obj)->anim.localPosY;
+            sl->startZ = ((GameObject*)obj)->anim.localPosZ;
+            sl->endX = sl->startX;
+            sl->endY = -(lbl_803E41F4 * fr - sl->startY);
+            sl->endZ = sl->startZ;
         }
         ((GameObject*)obj)->anim.rotX += framesThisStep * (count * 0x7e);
     }

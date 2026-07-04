@@ -5,8 +5,8 @@
 
 typedef struct
 {
-    f32 f0, f4, f8, fc, f10, f14;
-    u8 b18, b19, b1a, b1b;
+    f32 startX, endX, startY, endY, startZ, endZ;
+    u8 colorR, colorG, colorB, active;
 } CrystalBeam;
 
 typedef struct CfMainCrystalState
