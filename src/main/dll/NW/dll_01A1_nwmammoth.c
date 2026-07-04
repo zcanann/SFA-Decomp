@@ -13,6 +13,15 @@
 #include "main/audio/sfx_trigger_ids.h"
 #define NWMAMMOTH_OBJFLAG_PARENT_SLACK 0x1000
 #define NWMAMMOTH_OBJFLAG_RENDERED 0x800
+enum NwMammothRuntimeFlag
+{
+    NW_MAMMOTH_RUNTIME_PATH_CONTROL = 0x01,
+    NW_MAMMOTH_RUNTIME_ANIM_ENDED = 0x02,
+    NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH = 0x04,
+    NW_MAMMOTH_RUNTIME_MENU_LOCK = 0x10,
+    NW_MAMMOTH_RUNTIME_RESET_PATH = 0x20,
+    NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
+};
 extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern u32 objAudioFn_8006ef38();
@@ -512,10 +521,10 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                     }
                 }
             }
-            if (!(state->runtimeFlags & 0x40))
+            if (!(state->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE))
             {
                 (*gGameUIInterface)->initAirMeter(0xc8, 0x5d0);
-                state->runtimeFlags = (u8)(state->runtimeFlags | 0x40);
+                state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_UI_MESSAGE);
             }
             break;
         }
@@ -563,7 +572,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             (*gScreenTransitionInterface)->start(0x14, 1);
             state->stateIndex = 0x12;
             GameBit_Set(0xd32, 0);
-            state->runtimeFlags = (u8)(state->runtimeFlags & ~0x40);
+            state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_UI_MESSAGE);
             (*gGameUIInterface)->airMeterShutdown();
         }
         break;
@@ -596,7 +605,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         fn_801CE078(obj, st);
         break;
     }
-    if (state->runtimeFlags & 0x40)
+    if (state->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE)
     {
         if (state->airMeterValue < gNwMammothAirMeterPerSegment * state->uiMessageCount)
         {
@@ -620,7 +629,7 @@ void nw_mammoth_free(void* obj)
 
     node = ((GameObject*)obj)->extra;
     ObjGroup_RemoveObject(obj, 0x4d);
-    if ((((NwMammothState*)node)->runtimeFlags & 0x40) != 0)
+    if ((((NwMammothState*)node)->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE) != 0)
     {
         (*gGameUIInterface)->airMeterShutdown();
     }
@@ -673,16 +682,6 @@ enum NwMammothStateFlag
     NW_MAMMOTH_STATE_FLAG_SKIP_HIT_REACT = 0x08,
     NW_MAMMOTH_STATE_FLAG_MENU_ACTION = 0x10,
     NW_MAMMOTH_STATE_FLAG_SOLID = 0x20,
-};
-
-enum NwMammothRuntimeFlag
-{
-    NW_MAMMOTH_RUNTIME_PATH_CONTROL = 0x01,
-    NW_MAMMOTH_RUNTIME_ANIM_ENDED = 0x02,
-    NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH = 0x04,
-    NW_MAMMOTH_RUNTIME_MENU_LOCK = 0x10,
-    NW_MAMMOTH_RUNTIME_RESET_PATH = 0x20,
-    NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
 };
 
 #pragma inline_max_size(4000)
