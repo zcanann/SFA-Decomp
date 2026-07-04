@@ -168,7 +168,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     }
 
     lastContactObj = (void*)((GameObject*)obj)->anim.hitReactState->activeHit;
-    if ((((GameObject*)obj)->anim.hitReactState->flags & 8) == 0 ||
+    if ((((GameObject*)obj)->anim.hitReactState->flags & OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED) == 0 ||
         (((GameObject*)lastContactObj)->anim.seqId == 0x1f))
     {
         lastContactObj = NULL;
