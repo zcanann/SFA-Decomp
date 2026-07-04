@@ -2200,7 +2200,6 @@ void initFn_800534f8(void)
     int i;
     RcpDistortSlot* slots;
     u8* cfg;
-    int j;
     u32 pairIdx;
     RcpDistortSlot* slot;
     f32 strengthScale;
@@ -2215,21 +2214,20 @@ void initFn_800534f8(void)
         slots[i].texture = (u8*)textureAlloc(0x20, 0x20, 6, 0, 0, 0, 0, 1, 1);
         slots[i].group = 0;
     }
-    j = 0;
-    gRcpDistortSlotIndex = j;
+    gRcpDistortSlotIndex = i = 0;
     cfg = lbl_8030D028; /* 6 pairs of {f32 radius, f32 strength} */
-    for (; j < 6; j++)
+    for (; i < 6; i++)
     {
         radiusScale = gRcpDistortScaleA;
         strengthScale = LastReadFinished_803DEB50.lo;
-        strength = *(f32*)(cfg + j * 8 + 4);
+        strength = *(f32*)(cfg + i * 8 + 4);
         slot = (RcpDistortSlot*)(gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c);
         slot->colR = 0xff;
         slot->colG = 0xff;
         slot->colB = 0xff;
-        falloff = radiusScale / powfCoreHighPrecision(*(f32*)(cfg + j * 8), gRcpDistortPowExp);
+        falloff = radiusScale / powfCoreHighPrecision(*(f32*)(cfg + i * 8), gRcpDistortPowExp);
         slot = (RcpDistortSlot*)(gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c);
-        pairIdx = j & 1;
+        pairIdx = i & 1;
         slot->params[pairIdx] = falloff;
         *(s8*)(&slot->scaleR + pairIdx) = strengthScale * strength;
         slot->mode = 1;
