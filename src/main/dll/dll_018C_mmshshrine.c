@@ -78,6 +78,16 @@ extern f32 lbl_803E4F60;
 #define MMSH_SHRINE_GB_12D 0x12d
 #define MMSH_SHRINE_GB_F07 0xf07
 
+enum MMSHShrinePhase
+{
+    MMSH_SHRINE_PHASE_IDLE       = 0, /* idle SFX, wait for activation flag  */
+    MMSH_SHRINE_PHASE_ACTIVATING = 1, /* wait for open-ready latch, then lit */
+    MMSH_SHRINE_PHASE_LIT        = 2, /* shrine lit, await player test anim  */
+    MMSH_SHRINE_PHASE_RESULT     = 3, /* end sway seq, run result sequence   */
+    MMSH_SHRINE_PHASE_COMPLETE   = 4, /* grant completion game bit           */
+    MMSH_SHRINE_PHASE_RESET      = 5  /* clear flags, return to idle         */
+};
+
 typedef struct MMSHShrineRuntime
 {
     void* light;
@@ -192,7 +202,7 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
         fn_8011F6D4(0);
         runtime->latch.activeMask &= ~(MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE |
             MMSH_SHRINE_LATCH_FLAG_SWAY_RESET);
-        runtime->phase = 3;
+        runtime->phase = MMSH_SHRINE_PHASE_RESULT;
         GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET0, 0);
         GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET1, 0);
         GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET2, 0);
@@ -301,7 +311,7 @@ void mmsh_shrine_update(int objArg)
 
     switch (runtime->phase)
     {
-    case 0:
+    case MMSH_SHRINE_PHASE_IDLE:
         {
             f32 idleSfxTimer = runtime->idleSfxTimer - timeDelta;
             runtime->idleSfxTimer = idleSfxTimer;
@@ -316,45 +326,45 @@ void mmsh_shrine_update(int objArg)
         {
             break;
         }
-        runtime->phase = 1;
+        runtime->phase = MMSH_SHRINE_PHASE_ACTIVATING;
         (*gObjectTriggerInterface)->setCamVars(0x4c, 0, 0, 0);
         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         Music_Trigger(MMSH_SHRINE_MUSIC_RUMBLE, 1);
         break;
-    case 1:
+    case MMSH_SHRINE_PHASE_ACTIVATING:
         if ((runtime->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_OPEN_READY) == 0)
         {
             break;
         }
         obj->flags06 |= MMSH_SHRINE_FLAG_LIT;
         obj->yaw = 0;
-        runtime->phase = 2;
+        runtime->phase = MMSH_SHRINE_PHASE_LIT;
         runtime->latch.activeMask &= ~MMSH_SHRINE_LATCH_FLAG_OPEN_READY;
         GameBit_Set(MMSH_SHRINE_GB_OPEN, 1);
         (*gObjectTriggerInterface)->runSequence(2, obj, -1);
         break;
-    case 3:
+    case MMSH_SHRINE_PHASE_RESULT:
         (*gObjectTriggerInterface)->endSequence(obj->triggerHandle);
         (*gObjectTriggerInterface)->runSequence(3, obj, -1);
-        runtime->phase = 4;
+        runtime->phase = MMSH_SHRINE_PHASE_COMPLETE;
         GameBit_Set(MMSH_SHRINE_GB_OPEN, 0);
         break;
-    case 4:
-        runtime->phase = 5;
+    case MMSH_SHRINE_PHASE_COMPLETE:
+        runtime->phase = MMSH_SHRINE_PHASE_RESET;
         GameBit_Set(MMSH_SHRINE_GB_OPEN, 0);
         GameBit_Set(MMSH_SHRINE_GB_COMPLETE, 1);
         break;
-    case 2:
+    case MMSH_SHRINE_PHASE_LIT:
         if (objGetAnimStateFlags(playerObj, 4) == 0)
         {
             audioStopByMask(3);
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
         }
-        runtime->phase = 5;
+        runtime->phase = MMSH_SHRINE_PHASE_RESET;
         GameBit_Set(MMSH_SHRINE_GB_OPEN, 0);
         break;
-    case 5:
-        runtime->phase = 0;
+    case MMSH_SHRINE_PHASE_RESET:
+        runtime->phase = MMSH_SHRINE_PHASE_IDLE;
         runtime->latch.activeMask &= ~MMSH_SHRINE_LATCH_FLAG_OPEN_READY;
         obj->flags06 &= ~MMSH_SHRINE_FLAG_LIT;
         GameBit_Set(MMSH_SHRINE_GB_RESET_A, 0);
@@ -374,7 +384,7 @@ void mmsh_shrine_init(int obj, int def)
     ((MMSHShrineObject*)obj)->yaw = 0;
     ((GameObject*)obj)->animEventCallback = MMSH_Shrine_SeqFn;
     state->initCount = 10;
-    state->phase = 0;
+    state->phase = MMSH_SHRINE_PHASE_IDLE;
     if (0 < *(short*)(def + 0x1a))
     {
         state->initCount = *(short*)(def + 0x1a) >> 8;
