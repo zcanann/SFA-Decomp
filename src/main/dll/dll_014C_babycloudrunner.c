@@ -23,6 +23,8 @@
 #include "main/sfa_shared_decls.h"
 
 #define BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
+#define BABYCLOUDRUNNER_OBJGROUP 3
+#define BABYCLOUDRUNNER_OBJGROUP_SECONDARY 0x20
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
@@ -157,7 +159,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
     ObjMsg_AllocQueue(obj, 4);
     ((GameObject*)obj)->animEventCallback = babycloudrunner_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(def->initialYaw << 8);
-    ObjGroup_AddObject(obj, 3);
+    ObjGroup_AddObject(obj, BABYCLOUDRUNNER_OBJGROUP);
     sub = ((GameObject*)obj)->extra;
     sub->unkB0 = 0;
     sub->unkB4 = 0;
@@ -178,7 +180,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         sub->flags22C = (u8)(sub->flags22C & ~1);
         Obj_RemoveFromUpdateList(obj);
-        ObjGroup_RemoveObject(obj, 3);
+        ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP);
     }
     else
     {
@@ -197,7 +199,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
             }
             sub->curveSpeed = lbl_803E4258;
             sub->mutterSfxTable = &gBabyCloudRunnerMutterSfxTable;
-            ObjGroup_AddObject(obj, 0x20);
+            ObjGroup_AddObject(obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
         }
         ((BabyCloudrunnerFlags*)&sub->spitFlags)->resetLatch = 0;
     }
@@ -378,8 +380,8 @@ int babycloudrunner_setScale(int* obj)
 
 void babycloudrunner_free(int* obj)
 {
-    ObjGroup_RemoveObject(obj, 32);
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
+    ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP);
 }
 
 
@@ -491,7 +493,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     if (inRange == 0 && sub->runnerState == 2)
     {
         f32 radius = (f32)def->outerRadius;
-        if ((void*)ObjGroup_FindNearestObject(3, obj, &radius) != NULL)
+        if ((void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, obj, &radius) != NULL)
         {
             inRange = 1;
         }
@@ -580,8 +582,8 @@ void babycloudrunner_update(int* obj)
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->flags22C &= ~1;
         Obj_RemoveFromUpdateList(obj);
-        ObjGroup_RemoveObject(obj, 0x20);
-        ObjGroup_RemoveObject(obj, 3);
+        ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
+        ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP);
     }
     if (sub->runnerState == 2 && GameBit_Get(0x66) != 0)
     {
@@ -602,8 +604,8 @@ void babycloudrunner_update(int* obj)
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             sub->flags22C &= ~1;
             Obj_RemoveFromUpdateList(obj);
-            ObjGroup_RemoveObject(obj, 0x20);
-            ObjGroup_RemoveObject(obj, 3);
+            ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
+            ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         else
@@ -652,7 +654,7 @@ void babycloudrunner_update(int* obj)
                 }
                 if (sub->runnerState == 2)
                 {
-                    near = (int*)ObjGroup_FindNearestObject(3, obj, 0);
+                    near = (int*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, obj, 0);
                     if (near != NULL && Vec_distance((char*)((int)near + 0x18), (char*)sub + 0x18) < gBabyCloudRunnerTargetNearDist)
                     {
                         sandworm_turnTowardTargetAnim((int)obj, (int)near, sub, 0);
@@ -696,7 +698,7 @@ void babycloudrunner_update(int* obj)
                     }
                     (*gGameUIInterface)->runAirMeter((int)sub->countdownTimer);
                 }
-                if (inRange == 0 && (void*)ObjGroup_FindNearestObject(3, obj, &radius) != NULL)
+                if (inRange == 0 && (void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, obj, &radius) != NULL)
                 {
                     inRange = 1;
                 }
