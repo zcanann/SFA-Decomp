@@ -66,6 +66,13 @@ STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, unkC) == 0xC);
 STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, boltObj) == 0x10);
 
 
+/* KtrexfloorswitchState.flags (offset 0x10) bits */
+#define KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED 0x1 /* charge cycle maxed+reset; suppresses charging until reactivation */
+#define KTREXFLOORSWITCH_FLAG_RISING 0x2        /* plate rising back up to baseHeight */
+#define KTREXFLOORSWITCH_FLAG_SINKING 0x4       /* plate sinking down to baseHeight - sinkDepth */
+#define KTREXFLOORSWITCH_FLAG_CHARGED 0x8       /* charge level reached max (0xf) */
+#define KTREXFLOORSWITCH_FLAG_MOVING (KTREXFLOORSWITCH_FLAG_RISING | KTREXFLOORSWITCH_FLAG_SINKING) /* 0x6 */
+
 typedef struct KtrexfloorswitchState
 {
     u8 pad0[0x4 - 0x0];
@@ -74,7 +81,7 @@ typedef struct KtrexfloorswitchState
     u8 pad6[0x8 - 0x6];
     f32 chargeTimer;     /* 0x08: counts down between level increments */
     f32 scrollSpeed;     /* 0x0C: texture scroll velocity */
-    u8 flags;            /* 0x10: motion/state bits (1,2,4,8) */
+    u8 flags;            /* 0x10: motion/state bits (see KTREXFLOORSWITCH_FLAG_*) */
     u8 pad11[0x14 - 0x11];
 } KtrexfloorswitchState;
 
@@ -190,13 +197,13 @@ void ktrexfloorswitch_update(int obj)
         tex->textureId = 0;
         if (((GameObject*)obj)->unkF4 == 0 && ((GameObject*)obj)->unkF8 != 0)
         {
-            ((KtrexfloorswitchState*)state)->flags |= 0x4;
+            ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_SINKING;
         }
         if (((GameObject*)obj)->unkF4 != 0 && ((GameObject*)obj)->unkF8 == 0)
         {
             int curveId;
             int curveBits;
-            ((KtrexfloorswitchState*)state)->flags |= 0x2;
+            ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_RISING;
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
             curveBits = GameBit_Get(0x572) >> 1;
             curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
@@ -214,7 +221,7 @@ void ktrexfloorswitch_update(int obj)
                 }
             }
         }
-        if ((((KtrexfloorswitchState*)state)->flags & 0x6) == 0)
+        if ((((KtrexfloorswitchState*)state)->flags & KTREXFLOORSWITCH_FLAG_MOVING) == 0)
         {
             return;
         }
@@ -224,13 +231,13 @@ void ktrexfloorswitch_update(int obj)
         if (((GameObject*)obj)->unkF8 != 0)
         {
             tex->textureId = 0x100;
-            ((KtrexfloorswitchState*)state)->flags &= ~1;
+            ((KtrexfloorswitchState*)state)->flags &= ~KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED;
         }
         else
         {
             int curveId;
             int curveBits;
-            ((KtrexfloorswitchState*)state)->flags |= 0x2;
+            ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_RISING;
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
             curveBits = GameBit_Get(0x572) >> 1;
             curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
@@ -291,7 +298,7 @@ void ktrexfloorswitch_update(int obj)
         }
     }
     moved = 0;
-    if ((((KtrexfloorswitchState*)state)->flags & 0x4) != 0)
+    if ((((KtrexfloorswitchState*)state)->flags & KTREXFLOORSWITCH_FLAG_SINKING) != 0)
     {
         height = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
         if (((GameObject*)obj)->anim.localPosY > height)
@@ -300,7 +307,7 @@ void ktrexfloorswitch_update(int obj)
             if (((GameObject*)obj)->anim.localPosY <= height)
             {
                 ((GameObject*)obj)->anim.localPosY = height;
-                ((KtrexfloorswitchState*)state)->flags &= ~0x4;
+                ((KtrexfloorswitchState*)state)->flags &= ~KTREXFLOORSWITCH_FLAG_SINKING;
             }
             else
             {
@@ -309,7 +316,7 @@ void ktrexfloorswitch_update(int obj)
             }
         }
     }
-    else if ((((KtrexfloorswitchState*)state)->flags & 0x2) != 0)
+    else if ((((KtrexfloorswitchState*)state)->flags & KTREXFLOORSWITCH_FLAG_RISING) != 0)
     {
         if (((GameObject*)obj)->anim.localPosY < ((KtrexfloorswitchPlacement*)placement)->baseHeight)
         {
@@ -317,7 +324,7 @@ void ktrexfloorswitch_update(int obj)
             if (((GameObject*)obj)->anim.localPosY >= ((KtrexfloorswitchPlacement*)placement)->baseHeight)
             {
                 ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight;
-                ((KtrexfloorswitchState*)state)->flags &= ~0x2;
+                ((KtrexfloorswitchState*)state)->flags &= ~KTREXFLOORSWITCH_FLAG_RISING;
             }
             else
             {
@@ -326,7 +333,7 @@ void ktrexfloorswitch_update(int obj)
             }
         }
     }
-    else if ((s8)((KtrexfloorswitchState*)state)->graceTimer != 0 && (((KtrexfloorswitchState*)state)->flags & 1) == 0)
+    else if ((s8)((KtrexfloorswitchState*)state)->graceTimer != 0 && (((KtrexfloorswitchState*)state)->flags & KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED) == 0)
     {
         height = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->retractDepth;
         if (((GameObject*)obj)->anim.localPosY > height)
@@ -350,13 +357,13 @@ void ktrexfloorswitch_update(int obj)
                 GameBit_Set(((KtrexfloorswitchPlacement*)placement)->levelBit, (u8)(level += 1));
                 if ((u8)level == 0xf)
                 {
-                    ((KtrexfloorswitchState*)state)->flags |= 0x8;
+                    ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_CHARGED;
                 }
             }
             else
             {
-                ((KtrexfloorswitchState*)state)->flags &= ~0x8;
-                ((KtrexfloorswitchState*)state)->flags |= 1;
+                ((KtrexfloorswitchState*)state)->flags &= ~KTREXFLOORSWITCH_FLAG_CHARGED;
+                ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED;
                 GameBit_Set(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
                 if (GameBit_Get(0x55a) != 0)
                 {
@@ -384,12 +391,12 @@ void ktrexfloorswitch_update(int obj)
         {
             moved = 1;
         }
-        if ((((KtrexfloorswitchState*)state)->flags & 0x8) != 0)
+        if ((((KtrexfloorswitchState*)state)->flags & KTREXFLOORSWITCH_FLAG_CHARGED) != 0)
         {
             if (((KtrexfloorswitchState*)state)->chargeTimer < lbl_803E687C)
             {
-                ((KtrexfloorswitchState*)state)->flags &= ~0x8;
-                ((KtrexfloorswitchState*)state)->flags |= 1;
+                ((KtrexfloorswitchState*)state)->flags &= ~KTREXFLOORSWITCH_FLAG_CHARGED;
+                ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED;
                 GameBit_Set(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
                 if (GameBit_Get(0x55a) != 0)
                 {
@@ -406,7 +413,7 @@ void ktrexfloorswitch_update(int obj)
             ((KtrexfloorswitchState*)state)->chargeTimer -= timeDelta;
         }
     }
-    if ((((KtrexfloorswitchState*)state)->flags & 1) == 0 && (s8)((KtrexfloorswitchState*)state)->prevGraceTimer != (s8)(
+    if ((((KtrexfloorswitchState*)state)->flags & KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED) == 0 && (s8)((KtrexfloorswitchState*)state)->prevGraceTimer != (s8)(
         (KtrexfloorswitchState*)state)->graceTimer)
     {
         GameBit_Get(((KtrexfloorswitchPlacement*)placement)->levelBit);
@@ -453,7 +460,7 @@ void ktrexfloorswitch_update(int obj)
             }
             tex->textureId = scroll;
         }
-        if ((((KtrexfloorswitchState*)state)->flags & 0x6) == 0)
+        if ((((KtrexfloorswitchState*)state)->flags & KTREXFLOORSWITCH_FLAG_MOVING) == 0)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x486, NULL, 2, -1, NULL);
         }
