@@ -3,6 +3,8 @@
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DREARTHWARRIOR_OBJFLAG_PARENT_SLACK 0x1000
+
 typedef struct DREarthWarriorPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -1101,7 +1103,7 @@ void DR_EarthWarrior_hitDetect(int obj)
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     rows = gDREarthWarriorColors;
-    if (!(((GameObject*)obj)->objectFlags & 0x1000))
+    if (!(((GameObject*)obj)->objectFlags & DREARTHWARRIOR_OBJFLAG_PARENT_SLACK))
     {
         if (hitState->contactFlags != 0)
         {
