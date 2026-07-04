@@ -668,7 +668,7 @@ main/dll/dll_00BB_projwallpower.c:
 
 main/dll/dll_00BC_projquakeshock.c:
 	.text       start:0x80100908 end:0x80100940
-	.data       start:0x803198A8 end:0x803198D8
+	.data       start:0x803198A8 end:0x803198F8
 
 main/dll/dll_00BD_projsunshock.c:
 	.text       start:0x80100940 end:0x80100978

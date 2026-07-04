@@ -25,3 +25,6 @@ void projquakeshock_initialise(void)
 }
 
 char sProjquakeshockDoNoLongerSupported[] = "<projquakeshock Do>No Longer supported \n";
+
+/* descriptor/ptr table auto 0x803198d8-0x803198f8 */
+u32 lbl_803198D8[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projsunshock_initialise, (u32)projsunshock_release, 0x00000000, (u32)projsunshock_doUnsupported };
