@@ -54,6 +54,11 @@ typedef struct DIMSnowHorn1State
 STATIC_ASSERT(sizeof(DIMSnowHorn1State) == 0xD0C);
 STATIC_ASSERT(offsetof(DIMSnowHorn1State, countdownTimer) == 0xA84);
 
+/* DIMSnowHorn1State.flags bits */
+#define SNOWHORN1_FLAG_RIDING 0x2         /* GAMEBIT_SNOWHORN_RIDING active (set cross-DLL) */
+#define SNOWHORN1_FLAG_HITVOL_PRIO 0x8    /* suppress hit-volume priority this frame */
+#define SNOWHORN1_FLAG_SEQ_TRIGGERED 0x20 /* interaction sequence armed */
+
 void DIMSnowHorn1_func23(void)
 {
 }
@@ -101,7 +106,7 @@ int DIMSnowHorn1_stateHandler00(int obj)
     case 0:
         if (GameBit_Get(0xf3))
         {
-            inner->flags |= 0x20;
+            inner->flags |= SNOWHORN1_FLAG_SEQ_TRIGGERED;
         }
         return 2;
     case 5:
@@ -183,7 +188,7 @@ int DIMSnowHorn1_stateHandler03(int obj, int state)
     }
     if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
-        if (inner->flags & 0x20)
+        if (inner->flags & SNOWHORN1_FLAG_SEQ_TRIGGERED)
         {
             (*gObjectTriggerInterface)->runSequence(
                 randomGetRange(0, 2) + 6, (void*)obj, -1);
@@ -230,7 +235,7 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
     }
     if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
-        if (inner->flags & 0x20)
+        if (inner->flags & SNOWHORN1_FLAG_SEQ_TRIGGERED)
         {
             (*gObjectTriggerInterface)->runSequence(
                 randomGetRange(0, 2) + 6, (void*)obj, -1);
@@ -264,7 +269,7 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
 
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
-        inner->flags &= ~0x8;
+        inner->flags &= ~SNOWHORN1_FLAG_HITVOL_PRIO;
         ((ObjHitsPriorityState*)sub)->flags |= 0x200;
         ObjAnim_SetCurrentMove(obj, 0x204, k, 0);
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E8238;
@@ -272,9 +277,9 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
     }
     if ((((ObjHitsPriorityState*)sub)->flags & 0x200) && (((ObjHitsPriorityState*)sub)->contactFlags & OBJHITS_CONTACT_FLAG_KIND_NONZERO))
     {
-        inner->flags |= 0x8;
+        inner->flags |= SNOWHORN1_FLAG_HITVOL_PRIO;
     }
-    if (inner->flags & 0x8)
+    if (inner->flags & SNOWHORN1_FLAG_HITVOL_PRIO)
     {
         *(u8*)&((ObjHitsPriorityState*)sub)->hitVolumePriority = 0;
         *(u8*)&((ObjHitsPriorityState*)sub)->hitVolumeId = 0;
@@ -888,10 +893,10 @@ int DIMSnowHorn1_func14(int obj)
 int DIMSnowHorn1_render2(int obj)
 {
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
-    if ((state->flags & 0x2) != 0)
+    if ((state->flags & SNOWHORN1_FLAG_RIDING) != 0)
     {
         GameBit_Set(GAMEBIT_SNOWHORN_RIDING, 0);
-        state->flags = (u8)(state->flags & ~0x2);
+        state->flags = (u8)(state->flags & ~SNOWHORN1_FLAG_RIDING);
         return 1;
     }
     return 0;
@@ -934,7 +939,7 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* anim
             for (i = 0; i < (int)(u32)animUpdate->eventCount; i++)
             {
                 GameBit_Set(0x17b, 1);
-                state->flags |= 0x20;
+                state->flags |= SNOWHORN1_FLAG_SEQ_TRIGGERED;
             }
         }
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 1);
