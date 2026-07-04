@@ -242,7 +242,7 @@ main/dll/dll_0022_effect9.c:
 
 main/dll/dll_0023_effect10.c:
 	.text       start:0x800C291C end:0x800C4864
-	.data       start:0x80310C88 end:0x80310D1C
+	.data       start:0x80310C88 end:0x80310D48
 
 main/dll/dll_0024_effect11.c:
 	.text       start:0x800C4864 end:0x800C56E0

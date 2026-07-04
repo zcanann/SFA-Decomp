@@ -633,3 +633,12 @@ void Effect10_release(void)
 void Effect10_initialise(void)
 {
 }
+
+/*__DATA_EXTERNS__*/
+extern void Effect11_func05_nop();
+extern void Effect11_func04();
+extern void Effect11_func03_nop();
+extern void Effect11_release();
+extern void Effect11_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_80310D20[10] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00050000, Effect11_initialise, Effect11_release, (void*)0x00000000, Effect11_func03_nop, Effect11_func04, Effect11_func05_nop };
