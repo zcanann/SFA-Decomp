@@ -144,7 +144,7 @@ int kaldachom_stateHandlerA07(int obj, int p)
         control->soundFlags |= SOUNDFLAG_PULLUP_BURST;
         {
             char* linkedObj;
-            if (((CfDoorlightState*)state)->unk3F0 != 0)
+            if (((CfDoorlightState*)state)->spawnsLinkedObj != 0)
             {
                 linkedObj = ((char *(*)(int, int, int, int))((void**)*gBaddieControlInterface)[0x13])(obj, 6, -1, 0);
             }

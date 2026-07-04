@@ -14,7 +14,7 @@ typedef struct CfDoorlightState {
     u8 unk0[0x3E8 - 0x0];
     f32 unk3E8;
     f32 unk3EC;
-    s16 unk3F0;
+    s16 spawnsLinkedObj; /* 0x3F0: nonzero -> fetch a linked object (baddie interface[0x13], type 6) to reposition on the pull-up burst */
     s16 gameBitA;
     s16 gameBitB;
     u8 unk3F6[0x3FE - 0x3F6];
