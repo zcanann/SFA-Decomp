@@ -124,6 +124,7 @@ void lightning_update(u8* obj)
     int spawnLightning;
     int handle;
     u16 delay;
+    float* start;
 
     state = ((GameObject*)obj)->extra;
     data = *(u8**)&((GameObject*)obj)->anim.placementData;
@@ -176,8 +177,9 @@ void lightning_update(u8* obj)
             }
 
             delay = (u16)(state->delayBase + randomGetRange(-5, 5));
+            start = (float*)(obj + 0x0c);
             slot = &objects[objectIndex];
-            handle = lightningCreate((float*)(obj + 0x0c), (float*)(*slot + 0x0c),
+            handle = lightningCreate(start, (float*)(*slot + 0x0c),
                                      state->radiusX, state->radiusY,
                                      delay, state->param1D,
                                      (u8)(state->flags.style ? 1 : 0));
