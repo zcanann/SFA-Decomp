@@ -19,6 +19,9 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
+
+/* object group this object joins while active */
+#define DLL115_OBJGROUP 0xf
 extern f32 lbl_803E37B0;
 
 enum
@@ -48,7 +51,7 @@ void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E37B0);
 }
 
-void dll_115_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
+void dll_115_free(int x) { ObjGroup_RemoveObject(x, DLL115_OBJGROUP); }
 
 /* Sequence-event callback: while a trigger sequence is running on an
  * indexed step, end it once the NEXT step's gate bit (placement+0x28) has
@@ -165,7 +168,7 @@ void dll_115_init(s16* obj, int mapData)
     *obj = (s16)(((Dll115Placement*)mapData)->rotByte << 8);
     ((GameObject*)obj)->animEventCallback = dll_115_seqFn;
     ((GameObject*)obj)->objectFlags |= (DLL115_OBJFLAG_HIDDEN | DLL115_OBJFLAG_HITDETECT_DISABLED);
-    ObjGroup_AddObject((int)obj, 0xf);
+    ObjGroup_AddObject((int)obj, DLL115_OBJGROUP);
     step = 0;
     p = (s16*)mapData;
     do
