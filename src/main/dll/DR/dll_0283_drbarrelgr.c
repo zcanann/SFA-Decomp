@@ -55,6 +55,16 @@ STATIC_ASSERT(offsetof(DrbarrelgrState, startPosX) == 0x88);
 STATIC_ASSERT(offsetof(DrbarrelgrState, carrySpeed) == 0x128);
 STATIC_ASSERT(sizeof(DrbarrelgrState) == 0x12C);
 
+enum DrbarrelgrMode
+{
+    DRBARRELGR_MODE_SCAN = 0,       /* look for a grabbable barrel in range */
+    DRBARRELGR_MODE_WAIT = 1,       /* hold at curve waypoint; release if holding */
+    DRBARRELGR_MODE_RAMP_SPEED = 2, /* ramp the carry speed before moving */
+    DRBARRELGR_MODE_RELEASE = 3,    /* drop the held barrel */
+    DRBARRELGR_MODE_GRAB = 4,       /* reel the locked-on barrel toward the grab point */
+    DRBARRELGR_MODE_CARRY = 5       /* follow the rom curve carrying the barrel */
+};
+
 
 int drbarrelgr_getExtraSize(void) { return 0x12c; }
 
@@ -99,7 +109,7 @@ void drbarrelgr_init(int obj, int setup)
     {
         ((DrbarrelgrPlacement*)setup)->range = 0x64;
     }
-    ((DrbarrelgrState*)state)->mode = 5;
+    ((DrbarrelgrState*)state)->mode = DRBARRELGR_MODE_CARRY;
     ((DrbarrelgrState*)state)->heldBarrel = 0;
     ((DrBarrelGrFlags*)(state + 0x12a))->bit80 = 0;
     ((DrbarrelgrState*)state)->carrySpeed = ((DrbarrelgrPlacement*)setup)->speed;
@@ -157,7 +167,7 @@ void drbarrelgr_update(int obj)
 
     switch (((DrbarrelgrState*)state)->mode)
     {
-    case 0:
+    case DRBARRELGR_MODE_SCAN:
         if (*(void**)&((DrbarrelgrState*)state)->heldBarrel == 0)
         {
             nearest = ObjGroup_FindNearestObject(25, obj, 0);
@@ -172,7 +182,7 @@ void drbarrelgr_update(int obj)
                     gunpowderbarrel_canBeGrabbed(nearest) != 0)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_jbike_snowspray);
-                    newMode = 4;
+                    newMode = DRBARRELGR_MODE_GRAB;
                     ((DrbarrelgrState*)state)->heldBarrel = nearest;
                 }
                 break;
@@ -180,14 +190,14 @@ void drbarrelgr_update(int obj)
         }
         if (timerCountDown((void*)(state + 12)) != 0)
         {
-            newMode = 5;
+            newMode = DRBARRELGR_MODE_CARRY;
         }
         break;
-    case 4:
+    case DRBARRELGR_MODE_GRAB:
         if (*(void**)&((DrbarrelgrState*)state)->heldBarrel == 0 ||
             gunpowderbarrel_canBeGrabbed(((DrbarrelgrState*)state)->heldBarrel) == 0)
         {
-            ((DrbarrelgrState*)state)->mode = 0;
+            ((DrbarrelgrState*)state)->mode = DRBARRELGR_MODE_SCAN;
             ((DrbarrelgrState*)state)->heldBarrel = 0;
             flags->bit80 = 0;
             break;
@@ -218,7 +228,7 @@ void drbarrelgr_update(int obj)
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E6CA4, 0);
         }
         break;
-    case 5:
+    case DRBARRELGR_MODE_CARRY:
         {
             f32 spd = gDrBarrelGenCarrySpeedScale * (f32)((DrbarrelgrState*)state)->carrySpeed;
             int r = Obj_UpdateRomCurveFollowVelocity(obj, state + 0x20,
@@ -240,7 +250,7 @@ void drbarrelgr_update(int obj)
             }
             break;
         }
-    case 2:
+    case DRBARRELGR_MODE_RAMP_SPEED:
         if (((DrbarrelgrState*)state)->carrySpeed == ((DrbarrelgrPlacement*)setup)->speed)
         {
             ((DrbarrelgrState*)state)->carrySpeed =
@@ -251,19 +261,19 @@ void drbarrelgr_update(int obj)
             ((DrbarrelgrState*)state)->carrySpeed = ((DrbarrelgrPlacement*)setup)->speed;
         }
         storeZeroToFloatParam((void*)(state + 12));
-        newMode = 5;
+        newMode = DRBARRELGR_MODE_CARRY;
         break;
-    case 1:
+    case DRBARRELGR_MODE_WAIT:
         if (*(void**)&((DrbarrelgrState*)state)->heldBarrel != 0)
         {
-            newMode = 3;
+            newMode = DRBARRELGR_MODE_RELEASE;
         }
         else if (timerCountDown((void*)(state + 12)) != 0)
         {
-            newMode = 5;
+            newMode = DRBARRELGR_MODE_CARRY;
         }
         break;
-    case 3:
+    case DRBARRELGR_MODE_RELEASE:
         if (*(void**)&((DrbarrelgrState*)state)->heldBarrel != 0)
         {
             gunpowderbarrel_clearHeldState(((DrbarrelgrState*)state)->heldBarrel);
