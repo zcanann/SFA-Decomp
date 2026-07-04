@@ -74,7 +74,7 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
         {
             u32 rejected;
             u32 ok;
-            if (inpGetMidiCtrl(65, midi, midiSet) > 8064)
+            if (inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 8064)
             {
                 new_id = audioFn_8026f630(k & 0x7f, midi, midiSet, 0, &rejected);
                 ok = !rejected;
