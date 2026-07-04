@@ -23,3 +23,10 @@ void projcore1_initialise(void)
 }
 
 char sProjcore1DoNoLongerSupported[] = "<projcore1 Do>No Longer supported \n";
+
+/*__DATA_EXTERNS__*/
+extern void projcore2_doUnsupported();
+extern void projcore2_release();
+extern void projcore2_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* lbl_803199B0[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projcore2_initialise, projcore2_release, (void*)0x00000000, projcore2_doUnsupported };
