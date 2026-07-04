@@ -32,7 +32,7 @@ typedef struct DfpobjcreatorPlacement
     f32 posX;
     f32 posY;
     f32 posZ;
-    s32 unk14;
+    s32 mapId; /* 0x14: ObjPlacement-head map id (after posX/Y/Z) */
     u8 pad18[0x19 - 0x18];
     u8 unk19;
     s16 behaviorMode; /* 0x1A switch selector (case 7 spawns the periodic object) */
