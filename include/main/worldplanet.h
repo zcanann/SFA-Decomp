@@ -29,7 +29,7 @@
 #define WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED 0x08
 
 #define WORLDPLANET_FOX_OBJECT_ID 0x42FF5
-#define WORLDPLANET_GALLEON_OBJECT_ID 0x4300C
+#define WORLDPLANET_ARWING_OBJECT_ID 0x4300C /* the ferry Arwing animated along the selected destination's flight path */
 #define WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID 0x4300D
 /* The mission-briefing comms portrait (worldobj type 0x5E3): a flickering
  * hologram head drawn in a 130x150 scissor box in the top-right corner that

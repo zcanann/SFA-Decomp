@@ -250,7 +250,7 @@ void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
 void worldplanet_update(int obj)
 {
     u8 prevPlanet;
-    int galleon;
+    int arwing;
     int buttons;
     int (*tbl)[5];
     WorldPlanetState* state;
@@ -350,8 +350,8 @@ void worldplanet_update(int obj)
             ((GameObject*)fox)->anim.rotY = ((GameObject*)obj)->anim.rotY;
             ((GameObject*)fox)->anim.rotX = ((GameObject*)obj)->anim.rotX;
         }
-        galleon = ObjList_FindObjectById(WORLDPLANET_GALLEON_OBJECT_ID);
-        ((WorldObjState*)((GameObject*)galleon)->extra)->effectState = state->selectionLocked;
+        arwing = ObjList_FindObjectById(WORLDPLANET_ARWING_OBJECT_ID);
+        ((WorldObjState*)((GameObject*)arwing)->extra)->effectState = state->selectionLocked;
         prevPlanet = state->selectedPlanet;
         {
             u8 ok;
@@ -436,7 +436,7 @@ void worldplanet_update(int obj)
                 pstate->effectState = 0;
                 if ((int)i == state->selectedPlanet)
                 {
-                    ((GameObject*)galleon)->anim.flags = ((GameObject*)galleon)->anim.flags | OBJANIM_FLAG_HIDDEN;
+                    ((GameObject*)arwing)->anim.flags = ((GameObject*)arwing)->anim.flags | OBJANIM_FLAG_HIDDEN;
                 }
             }
             else
@@ -477,16 +477,16 @@ void worldplanet_update(int obj)
                     }
                     if (getWorldMapVoiceoverTimer() != 0)
                     {
-                        ((GameObject*)galleon)->anim.flags = ((GameObject*)galleon)->anim.flags | OBJANIM_FLAG_HIDDEN;
+                        ((GameObject*)arwing)->anim.flags = ((GameObject*)arwing)->anim.flags | OBJANIM_FLAG_HIDDEN;
                     }
                     else
                     {
-                        ((GameObject*)galleon)->anim.flags = ((GameObject*)galleon)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
+                        ((GameObject*)arwing)->anim.flags = ((GameObject*)arwing)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
                     }
-                    *(s16*)&((GameObject*)galleon)->anim.rotX = (frac * dyaw + yaw);
-                    ((GameObject*)galleon)->anim.localPosX = frac * (x1 - x0) + x0;
-                    ((GameObject*)galleon)->anim.localPosY = frac * (y1 - y0) + y0;
-                    ((GameObject*)galleon)->anim.localPosZ = frac * (z1 - z0) + z0;
+                    *(s16*)&((GameObject*)arwing)->anim.rotX = (frac * dyaw + yaw);
+                    ((GameObject*)arwing)->anim.localPosX = frac * (x1 - x0) + x0;
+                    ((GameObject*)arwing)->anim.localPosY = frac * (y1 - y0) + y0;
+                    ((GameObject*)arwing)->anim.localPosZ = frac * (z1 - z0) + z0;
                 }
                 else
                 {
@@ -628,15 +628,15 @@ void worldplanet_update(int obj)
  *          (0/90/~135/180/270 deg) spacing the islands evenly around the ring.
  *   row 2: per-slot objects that rotate with the map and each hold the flight
  *          PATH for one destination. When a planet is selected the small ferry
- *          Arwing (the object the code calls `galleon`, WORLDPLANET_GALLEON_OBJECT_ID)
- *          is interpolated along the selected slot's path each frame; effectState
+ *          Arwing (WORLDPLANET_ARWING_OBJECT_ID) is interpolated along the
+ *          selected slot's path each frame; effectState
  *          = locked(0) / available(1) / selected(2). Verified live that all five
  *          routes exist - the Arwing is just unlock-gated (the effectState-0 branch
  *          hides it), so in normal play only the reachable planet's is ever seen. */
 int gWorldPlanetObjectIdTable[3][5] = {
     /* row 0: orbiting island objects  */ { 0x00042FEA, 0x00042FE8, 0x0004300D, 0x00042FE9, 0x00042FEB },
     /* row 1: orbit angle offsets      */ { 0x00000000, 0x00004000, 0x00005FA0, 0x00008000, 0x0000C000 },
-    /* row 2: galleon flight-path objs */ { 0x00043099, 0x00042FFF, 0x0004309A, 0x00043098, 0x00043097 },
+    /* row 2: Arwing flight-path objs  */ { 0x00043099, 0x00042FFF, 0x0004309A, 0x00043098, 0x00043097 },
 };
 
 /* descriptor/ptr table auto 0x8032a1c8-0x8032a200 */
