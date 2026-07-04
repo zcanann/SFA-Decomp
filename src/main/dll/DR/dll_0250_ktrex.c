@@ -6,6 +6,8 @@
 #include "main/audio/music_trigger_ids.h"
 
 #define KTREX_LIGHTNING_COUNT 5
+
+#define KTREX_OBJGROUP 0x3
 #define KTREX_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 
 typedef struct KtrexMsgBlob
@@ -341,7 +343,7 @@ void ktrex_free(int obj)
 {
     int i;
     gKTRexRuntime = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 0x3);
+    ObjGroup_RemoveObject(obj, KTREX_OBJGROUP);
     (*(void (**)(int, void*, int))((char*)*gBaddieControlInterface + 0x40))(obj, gKTRexRuntime, 0);
     Stack_Free(*(void**)gKTRexState);
     if (gKTRexResource != NULL)
