@@ -384,8 +384,6 @@ void fn_80153640(int obj, int state)
 }
 #pragma dont_inline reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80153790(int obj, int state, int attacker, int msgFlag, int hitId, int damage)
 {
     if (((GameObject*)obj)->anim.currentMove == 1)
@@ -414,9 +412,6 @@ void fn_80153790(int obj, int state, int attacker, int msgFlag, int hitId, int d
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
-
 void fn_8015383C(int obj, int state)
 {
     u32 hit;
