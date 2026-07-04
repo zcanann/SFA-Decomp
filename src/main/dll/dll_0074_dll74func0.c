@@ -53,8 +53,6 @@ extern f32 lbl_803E0BD0, lbl_803E0BD4, lbl_803E0BD8, lbl_803E0BDC, lbl_803E0BE0,
 /* Cross-TU main-lib functions and globals this DLL references (home TUs
    un-recovered; left as Ghidra FUN_/DAT_ names). */
 
-extern void* memset(void* dst, int val, u32 n);
-extern void* memcpy(void* dst, const void* src, u32 n);
 extern u32 FUN_80006768();
 extern u32 FUN_8000676c();
 extern u32 FUN_80006c20();
