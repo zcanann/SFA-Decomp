@@ -85,11 +85,15 @@ STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
  *  - 0x8000 UPDATE_DISABLED: object.c update loop skips the tick when set.
  *  - 0x800 RENDERED: set by the render path, cleared each frame
  *    (objprint/lightmap), queried to know an object drew this frame.
+ *  - 0x1000 PARENT_SLACK: object attached to a parent (parent-slack); read
+ *    across a dozen classes (CF/tricky/enemy/objfx/minimap...) to gate
+ *    player/tricky behavior, cleared by player.c on detach.
  *  - 0x40 FREED: object freed/pending-free marker.
  * Field is u16, so a bare int constant folds identically for |= / & / &~.
  */
 #define OBJECT_OBJFLAG_FREED               0x40
 #define OBJECT_OBJFLAG_RENDERED            0x800
+#define OBJECT_OBJFLAG_PARENT_SLACK        0x1000
 #define OBJECT_OBJFLAG_HITDETECT_DISABLED  0x2000
 #define OBJECT_OBJFLAG_HIDDEN              0x4000
 #define OBJECT_OBJFLAG_UPDATE_DISABLED     0x8000

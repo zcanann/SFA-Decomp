@@ -559,7 +559,7 @@ void trickyFn_80142524(u8* obj, u8* state)
             {
                 target = ((TrickyState*)state)->unk7D4;
                 other = ((GameObject*)obj)->extra;
-                if ((((GameObject*)obj)->objectFlags & 0x1000) == 0)
+                if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0)
                 {
                     if ((((TrickyState*)other)->stateFlags & 0x10) == 0)
                     {

@@ -80,7 +80,7 @@ void fn_80296220(int obj, f32 v)
 
 int fn_8029622C(int obj)
 {
-    return (((GameObject*)obj)->objectFlags & 0x1000) == 0;
+    return (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0;
 }
 
 int fn_80296448(int obj)
@@ -1716,7 +1716,7 @@ int fn_802A5384(int obj, int state)
                     ((PlayerState*)inner)->baddie.targetObj == NULL &&
                     ((u32) * (u8*)((char*)inner + 0x3f6) >> 6 & 1) == 0 &&
                     ((PlayerState*)inner)->baddie.controlMode != 0x26 &&
-                    (((GameObject*)obj)->objectFlags & 0x1000) == 0 &&
+                    (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0 &&
                     ((PlayerState*)inner)->idleDelayTimer == lbl_803E7EA4)
                 {
                     stay = 1;
@@ -8178,7 +8178,7 @@ void playerDoHitDetection(int obj)
 
     *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_WORLDPOS_OVERRIDE;
     if (((ByteFlags*)((char*)inner + 0x3f2))->b20 != 0 &&
-        (((GameObject*)obj)->objectFlags & 0x1000) != 0)
+        (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0)
     {
         ((PlayerState*)inner)->baddie.physicsActive = 0;
     }
@@ -8304,7 +8304,7 @@ void playerDoHitDetection(int obj)
         }
         *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_HITDETECT;
         if ((void*)((PlayerState*)inner)->focusObject != NULL &&
-            ((((GameObject*)obj)->objectFlags & 0x1000) != 0 ||
+            ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
                 arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
             (*(void (*)(int, f32*, f32*, f32*))(
@@ -8396,7 +8396,7 @@ void playerDoHitDetection(int obj)
                 *(u32*)inner &= ~0x800000;
             }
         }
-        if ((((GameObject*)obj)->objectFlags & 0x1000) == 0)
+        if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0)
         {
             *(s16*)obj = ((PlayerState*)inner)->targetYaw;
         }
@@ -8495,7 +8495,7 @@ void fn_802AFB0C(int obj, int inner, int state)
     }
     if ((*(int (*)(int))ObjHits_IsObjectEnabled)(obj) == 0 || objGetFlagsE5_2(obj) != 0 ||
         ((ByteFlags*)((char*)inner + 0x3f3))->b20 != 0 ||
-        (((GameObject*)obj)->objectFlags & 0x1000))
+        (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK))
     {
         return;
     }
@@ -9692,7 +9692,7 @@ void fn_802A93F4(int obj, int p2, int p3)
     dist = lbl_803E80CC;
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E7EE0;
     viewFinderSetZoom(Camera_GetFovY());
-    ((GameObject*)obj)->objectFlags &= ~0x1000;
+    ((GameObject*)obj)->objectFlags &= ~OBJECT_OBJFLAG_PARENT_SLACK;
     ((GameObject*)obj)->anim.alpha = 0xff;
     ((ByteFlags*)((char*)inner + 0x3f2))->b80 = 0;
     if (((ByteFlags*)((char*)inner + 0x3f2))->b40)
@@ -9810,7 +9810,7 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
     ((GameObject*)p1)->anim.localPosY = b;
     ((GameObject*)p1)->anim.localPosZ = c;
     inner = *(int*)&((GameObject*)p1)->extra;
-    if (((PlayerState*)inner)->baddie.controlMode != 0x18 && (((GameObject*)p1)->objectFlags & 0x1000) == 0)
+    if (((PlayerState*)inner)->baddie.controlMode != 0x18 && (((GameObject*)p1)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0)
     {
         flag = 1;
         (*(void (*)(int, int, int*))(*(int*)((char*)*(int*)*(int*)((char*)p3 + 0x68) + 0x54)))(
@@ -10333,7 +10333,7 @@ int fn_802A03BC(int obj, int state)
 int objAnimFn_80296328(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    if (((((GameObject*)obj)->objectFlags & 0x1000) != 0 &&
+    if (((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 &&
         ((ByteFlags*)((char*)inner + 0x3f2))->b80 == 0) ||
         ((ByteFlags*)((char*)inner + 0x3f0))->b04 ||
         ((ByteFlags*)((char*)inner + 0x3f0))->b08 ||
@@ -12817,7 +12817,7 @@ int fn_802AB1D0(int obj)
     s16 yaw;
     void* held;
 
-    if (((GameObject*)obj)->objectFlags & 0x1000)
+    if (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK)
     {
         return 0;
     }
@@ -13644,7 +13644,7 @@ void fn_802B4ED8(int obj, int p2, int mode)
     }
     if (*(void**)((char*)inner + 0x7f0) != NULL)
     {
-        if ((((GameObject*)obj)->objectFlags & 0x1000) != 0 ||
+        if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
             arrayIndexOf(&lbl_803DC6C4, 2, inner->baddie.controlMode) != -1)
         {
             int p = inner->focusObject;
@@ -14237,7 +14237,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
     if (flag == -1 || (*(u32*)&((PlayerState*)inner)->flags360 & 0x4001) == 0)
     {
         if (*(void**)((char*)inner + 0x7f0) != NULL &&
-            ((((GameObject*)obj)->objectFlags & 0x1000) != 0 ||
+            ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
                 arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
             fn_802A9D0C(obj, inner, ((PlayerState*)inner)->focusObject, a, b, c, d, 1);
@@ -14248,7 +14248,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         }
         (*(void (*)(int))(*(int*)(*gPlayerShadowInterface + 0x8)))(obj);
         if (*(void**)((char*)inner + 0x7f0) != NULL &&
-            ((((GameObject*)obj)->objectFlags & 0x1000) != 0 ||
+            ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
                 arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
             {
@@ -14664,7 +14664,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                     ((PlayerState*)inner)->baddie.targetObj == NULL &&
                     !((ByteFlags*)((char*)inner + 0x3f6))->b40 &&
                     ((PlayerState*)inner)->baddie.controlMode != 0x26 &&
-                    (((GameObject*)obj)->objectFlags & 0x1000) == 0 &&
+                    (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0 &&
                     ((PlayerState*)inner)->idleDelayTimer == lbl_803E7EA4)
                 {
                     ok = 1;
@@ -16818,7 +16818,7 @@ void fn_802B0920(int obj, int state)
         }
         ((void (*)(int, int, u16))playerEyeAnimFn_80038988)(obj, state + 0x364, e);
     }
-    if ((((GameObject*)obj)->objectFlags & 0x1000) == 0)
+    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0)
     {
         if (((ByteFlags*)((char*)state + 0x3f1))->b20)
         {
@@ -18737,7 +18737,7 @@ int fn_80295A04(int obj, int sel)
     {
     case 1:
         if ((*(int*)((char*)state + 0x310) & 0x1000) != 0 ||
-            (((GameObject*)obj)->objectFlags & 0x1000) != 0)
+            (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0)
             return 0;
         return 1;
     case 2:

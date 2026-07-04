@@ -2486,7 +2486,7 @@ int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t)
 
     sub->flags14 |= DBWORM_FLAG14_FX_DUST;
     sub->flags15 &= ~4;
-    if (((GameObject*)((BaddieState*)baddie)->targetObj)->objectFlags & 0x1000)
+    if (((GameObject*)((BaddieState*)baddie)->targetObj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK)
     {
         ((BaddieState*)baddie)->animSpeedB = ((BaddieState*)baddie)->animSpeedA = lbl_803E62A8;
         ((BaddieState*)baddie)->moveSpeed = lbl_803E62C0;

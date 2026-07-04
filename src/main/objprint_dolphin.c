@@ -2728,7 +2728,7 @@ void objRenderFuzz(int* obj)
     u8 strong;
     f32 dx, dy, dz, dist;
     int* cam = Camera_GetCurrentViewSlot();
-    if ((((GameObject*)obj)->objectFlags & 0x1000) || ((GameObject*)obj)->anim.mapEventSlot == 0x3f
+    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) || ((GameObject*)obj)->anim.mapEventSlot == 0x3f
         || ((GameObject*)obj)->anim.seqId == 0x882 || ((GameObject*)obj)->anim.seqId == 0x887)
     {
         strong = 1;
@@ -4475,7 +4475,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     {
         int* player = Obj_GetPlayerObject();
         int* cam = (int*)(*gCameraInterface)->getCamera();
-        if (player != NULL && !(((GameObject*)player)->objectFlags & 0x1000) && *(int**)&((GameObject*)cam)->anim.
+        if (player != NULL && !(((GameObject*)player)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) && *(int**)&((GameObject*)cam)->anim.
             targetObj == player)
         {
             f32 d = lbl_803DEA38 + (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale + *(
