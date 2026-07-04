@@ -23,6 +23,9 @@
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* object group this object joins while active */
+#define FLAMMABLEVINE_OBJGROUP 0x31
+
 typedef struct FlammablevineObjectDef
 {
     u8 pad0[0x14 - 0x0];
@@ -102,7 +105,7 @@ void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3AF8);
 }
 
-void flammablevine_free(int x) { ObjGroup_RemoveObject(x, 0x31); }
+void flammablevine_free(int x) { ObjGroup_RemoveObject(x, FLAMMABLEVINE_OBJGROUP); }
 
 void flammablevine_hitDetect(int obj)
 {
@@ -133,7 +136,7 @@ void flammablevine_init(int obj, int def)
     f32 scale;
 
     state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, 0x31);
+    ObjGroup_AddObject(obj, FLAMMABLEVINE_OBJGROUP);
     ((GameObject*)obj)->anim.rotX = (s16)(((FlammablevineObjectDef*)def)->rotXByte << 8);
 
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3B20 * ((f32)((FlammablevineObjectDef*)def)->scaleParam /
