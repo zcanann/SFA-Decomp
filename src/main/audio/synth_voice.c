@@ -774,13 +774,13 @@ void ZeroOffsetHandler(int voice)
             {
                 lfoInt = 0;
             }
-            else if (pan <= 0x7F0000)
+            else if (pan > 0x7F0000)
             {
-                lfoInt = pan;
+                lfoInt = 0x7F0000;
             }
             else
             {
-                lfoInt = 0x7F0000;
+                lfoInt = pan;
             }
             sv->lastPan = lfoInt;
 
