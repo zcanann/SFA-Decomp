@@ -2168,10 +2168,12 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 }
 
 #pragma optimization_level 2
+#pragma opt_propagation off
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
     void* dstBuf;
     u8 trackedFlags;
+    u32 currentTexture;
     int zCompLoc;
     int zMode;
     int blendMode;
@@ -2183,7 +2185,6 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     ExpgfxTableEntry* tabEntry;
     ExpgfxSourceObject* sourceObject;
     u32 texture;
-    u32 currentTexture;
     int slotIndex;
     u32 behaviorFlags;
     u32 renderFlags;
@@ -2195,15 +2196,15 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     f32 scaleFactor;
     s16 angleA;
     s16 angleB;
-    f32 cosA, sinA;
-    f32 cosB, sinB;
-    f32 cosC, sinC;
+    f32 sinB, cosB;
+    f32 sinA, cosA;
+    f32 sinC, cosC;
     f32 worldX, worldY, worldZ;
     f32 aimDelta[3];
     s16* vtxStream;
     int vertexIndex;
     f32 viewProjW;
-    volatile int dummy;
+    int dummy;
     u32* activeMasks;
 
     dstBuf = getCache();
@@ -2367,8 +2368,8 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             alpha = slot->initialAlpha;
         }
 
-        angleA = 0;
         angleB = 0;
+        angleA = angleB;
         sx = slot->renderX;
         sy = slot->renderY;
         sz = slot->renderZ;
@@ -2387,49 +2388,47 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
 
         {
             u32 behavior = slot->behaviorFlags;
-            if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) != 0)
+            if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0)
             {
-                angleA = 0;
                 angleB = 0;
-            }
-            else if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_A) != 0)
-            {
-                angleA = 0;
-                angleB = 0;
-            }
-            else if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH) != 0)
-            {
-                if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_SOURCE_OBJECT) != 0 && sourceObject != NULL)
+                if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_A) != 0)
                 {
-                    aimDelta[0] = cameraSlot->x - sourceObject->worldPosX;
-                    aimDelta[1] = cameraSlot->y - sourceObject->worldPosY;
-                    aimDelta[2] = cameraSlot->z - sourceObject->worldPosZ;
-                    PSVECNormalize((Vec*)aimDelta, (Vec*)aimDelta);
+                    angleA = angleB;
+                }
+                else if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH) != 0)
+                {
+                    if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_SOURCE_OBJECT) != 0 && sourceObject != NULL)
                     {
-                        f32 absX = __fabsf(aimDelta[0]);
-                        f32 absZ = __fabsf(aimDelta[2]);
-                        if (absX > absZ)
+                        aimDelta[0] = cameraSlot->x - sourceObject->worldPosX;
+                        aimDelta[1] = cameraSlot->y - sourceObject->worldPosY;
+                        aimDelta[2] = cameraSlot->z - sourceObject->worldPosZ;
+                        PSVECNormalize((Vec*)aimDelta, (Vec*)aimDelta);
                         {
-                            getAngle(absX, aimDelta[1]);
-                            angleB = (s16)(getAngle(absX, aimDelta[1]) - 0x3800);
+                            f32 absX = __fabsf(aimDelta[0]);
+                            f32 absZ = __fabsf(aimDelta[2]);
+                            if (absX > absZ)
+                            {
+                                getAngle(absX, aimDelta[1]);
+                                angleB = (s16)(getAngle(absX, aimDelta[1]) - 0x3800);
+                            }
+                            else
+                            {
+                                getAngle(absZ, aimDelta[1]);
+                                angleB = (s16)(getAngle(absZ, aimDelta[1]) - 0x3800);
+                            }
+                            angleA = (s16)getAngle(aimDelta[0], aimDelta[2]);
                         }
-                        else
-                        {
-                            getAngle(absZ, aimDelta[1]);
-                            angleB = (s16)(getAngle(absZ, aimDelta[1]) - 0x3800);
-                        }
-                        angleA = getAngle(aimDelta[0], aimDelta[2]);
+                    }
+                    else
+                    {
+                        angleA = (s16)(0x10000 - cameraSlot->yaw);
+                        angleB = cameraSlot->pitch;
                     }
                 }
                 else
                 {
                     angleA = (s16)(0x10000 - cameraSlot->yaw);
-                    angleB = cameraSlot->pitch;
                 }
-            }
-            else
-            {
-                angleA = (s16)(0x10000 - cameraSlot->yaw);
             }
         }
 
@@ -2539,7 +2538,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         sz -= playerMapOffsetZ;
         vtxStream = (s16*)slot;
         GXBegin(GX_QUADS, GX_VTXFMT4, 4);
-        for (vertexIndex = 0; vertexIndex < 4; vertexIndex++)
+        for (vertexIndex = 4; vertexIndex != 0; vertexIndex--)
         {
             f32 px = scaleFactor * __OSs16tof32(&vtxStream[0]);
             f32 py = scaleFactor * __OSs16tof32(&vtxStream[1]);
@@ -2553,17 +2552,17 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 f32 ny = px * sinC + py * cosC;
                 ay_cosB = ny * cosB;
                 pz_sinB = pz * sinB;
-                outX = sx + (cosA * ay_cosB + nx * sinA + cosA * pz_sinB);
+                outX = sx + (nx * sinA + cosA * ay_cosB + cosA * pz_sinB);
                 outY = sy + (ny * sinB + (-pz) * cosB);
-                outZ = sz + (sinA * ay_cosB + (-nx) * cosA + sinA * pz_sinB);
+                outZ = sz + ((-nx) * cosA + sinA * ay_cosB + sinA * pz_sinB);
             }
             else
             {
                 ay_cosB = py * cosB;
                 pz_sinB = pz * sinB;
-                outX = sx + (cosA * ay_cosB + px * sinA + cosA * pz_sinB);
+                outX = sx + (px * sinA + cosA * ay_cosB + cosA * pz_sinB);
                 outY = sy + (py * sinB + (-pz) * cosB);
-                outZ = sz + (sinA * ay_cosB + (-px) * cosA + sinA * pz_sinB);
+                outZ = sz + ((-px) * cosA + sinA * ay_cosB + sinA * pz_sinB);
             }
             viewProjW = ((f32*)viewMatrix)[8] * outX
                 + ((f32*)viewMatrix)[9] * outY
@@ -2606,6 +2605,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         gExpgfxRenderResetPending = 0;
     }
 }
+#pragma opt_propagation reset
 #pragma optimization_level reset
 
 #pragma inline_max_size(4000)
