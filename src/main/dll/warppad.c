@@ -56,6 +56,9 @@ extern f32 gWarpPadPulseEndTime;
 extern f32 gWarpPadTriggerDist;
 extern void setAButtonIcon(int x);
 
+/* one-shot latch: gates the first A-prompt trigger sequence for any warp pad */
+#define GAMEBIT_WARPPAD_PROMPT_SHOWN 0x912
+
 /* state->flags bits (see WarpPadState in warp_pad.h) */
 #define WARPPAD_FLAG_LATCH 0x2
 #define WARPPAD_FLAG_PULSE_FX 0x4
@@ -237,10 +240,10 @@ void warpPadPlayerStandingOn(int obj)
     if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
     {
         setAButtonIcon(0x1b);
-        if (GameBit_Get(0x912) == 0)
+        if (GameBit_Get(GAMEBIT_WARPPAD_PROMPT_SHOWN) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-            GameBit_Set(0x912, 1);
+            GameBit_Set(GAMEBIT_WARPPAD_PROMPT_SHOWN, 1);
             return;
         }
     }
