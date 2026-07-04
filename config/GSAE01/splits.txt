@@ -1183,7 +1183,7 @@ main/dll/dll_00F7_dllf7.c:
 
 main/dll/dll_00E8_checkpoint4.c:
 	.text       start:0x801719E0 end:0x80171BAC
-	.data       start:0x80320B70 end:0x80320BB0
+	.data       start:0x80320B70 end:0x80320CFC
 
 main/dll/dll_00EA_sideload.c:
 	.text       start:0x80171BAC end:0x80171C78

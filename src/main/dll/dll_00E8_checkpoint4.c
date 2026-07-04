@@ -768,3 +768,38 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 
 #pragma opt_common_subs off
+
+/*__DATA_EXTERNS__*/
+extern void magicdust_getExtraSize();
+extern void magicdust_free();
+extern void magicdust_render();
+extern void magicdust_update();
+extern void magicdust_init();
+extern void collectible_func10();
+extern void collectible_func0F();
+extern void collectible_func0E();
+extern void collectible_render2();
+extern void collectible_modelMtxFn();
+extern void collectible_func0B();
+extern void collectible_setScale();
+extern void collectible_getExtraSize();
+extern void collectible_getObjectTypeId();
+extern void collectible_free();
+extern void collectible_render();
+extern void collectible_hitDetect();
+extern void collectible_update();
+extern void collectible_init();
+extern void collectible_release();
+extern void collectible_initialise();
+extern void setuppoint_init();
+extern void siderepel_getExtraSize();
+extern void siderepel_free();
+extern void siderepel_init();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* gSideloadObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, sideload_update, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
+void* gSiderepelObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, siderepel_init, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, siderepel_free, (void*)0x00000000, siderepel_getExtraSize };
+void* gSetuppointObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, setuppoint_init, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
+u8 lbl_80320C58[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+void* gCollectibleObjDescriptor[21] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00100000, collectible_initialise, collectible_release, (void*)0x00000000, collectible_init, collectible_update, collectible_hitDetect, collectible_render, collectible_free, collectible_getObjectTypeId, collectible_getExtraSize, collectible_setScale, collectible_func0B, collectible_modelMtxFn, collectible_render2, collectible_func0E, collectible_func0F, collectible_func10 };
+u8 lbl_80320CB8[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+void* gMagicDustObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, magicdust_init, magicdust_update, (void*)0x00000000, magicdust_render, magicdust_free, (void*)0x00000000, magicdust_getExtraSize };
