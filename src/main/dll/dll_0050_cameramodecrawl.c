@@ -27,7 +27,6 @@
 #include "main/object_transform.h"
 
 extern CameraModeCrawlState* lbl_803DD598;
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
 /* .sdata2 tuning constants (rotX scale/divisor, follow distance/height,
    turn ease, default-handler distance) */
