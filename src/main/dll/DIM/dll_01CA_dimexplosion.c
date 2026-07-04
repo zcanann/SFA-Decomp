@@ -845,3 +845,17 @@ f32 gExplosionSpreadDirs[] = {
     -1.0f, 0.0f, 0.0f,
     0.0f, -1.0f, 0.0f,
 };
+
+/*__DATA_EXTERNS__*/
+extern void dimwooddoor2_getExtraSize();
+extern void dimwooddoor2_getObjectTypeId();
+extern void dimwooddoor2_free();
+extern void dimwooddoor2_render();
+extern void dimwooddoor2_hitDetect();
+extern void dimwooddoor2_update();
+extern void dimwooddoor2_init();
+extern void dimwooddoor2_release();
+extern void dimwooddoor2_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* gExplosionObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, explosion_initialise, explosion_release, (void*)0x00000000, explosion_init, explosion_update, explosion_hitDetect, explosion_render, explosion_free, explosion_getObjectTypeId, explosion_getExtraSize };
+void* gDIMWoodDoor2ObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, dimwooddoor2_initialise, dimwooddoor2_release, (void*)0x00000000, dimwooddoor2_init, dimwooddoor2_update, dimwooddoor2_hitDetect, dimwooddoor2_render, dimwooddoor2_free, dimwooddoor2_getObjectTypeId, dimwooddoor2_getExtraSize };
