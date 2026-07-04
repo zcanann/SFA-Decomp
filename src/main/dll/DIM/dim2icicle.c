@@ -646,3 +646,6 @@ int gDim2IcicleSequenceSfx[] = {
 /*__DATA_EXTERNS__*/
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 u8 gDim2LiftFarMoveChoices[60] = { 0, 1, 0, 1, 0, 8, 0, 4, 0, 5, 0, 5, 0, 3, 0, 4, 0, 3, 0, 5, 0, 4, 0, 5, 0, 6, 0, 0, 0, 5, 0, 4, 0, 3, 0, 5, 0, 4, 0, 5, 0, 6, 0, 0, 0, 4, 0, 5, 0, 4, 0, 5, 0, 4, 0, 5, 0, 6, 0, 0 };
+
+/* fill missing .data symbols */
+u8 lbl_80325AA0[0x18] = { 0x00, 0x00, 0x01, 0x82, 0x00, 0x00, 0x01, 0x83, 0x00, 0x00, 0x01, 0x84, 0x00, 0x00, 0x01, 0x85, 0x00, 0x00, 0x01, 0x86, 0x00, 0x00, 0x01, 0x87 };
