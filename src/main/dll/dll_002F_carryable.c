@@ -178,7 +178,7 @@ int Carryable_updateHeld(u8* obj)
             v = 1;
         }
         ((CarryableUpdateHeldState*)held)->carryState = v;
-        if (((CarryableUpdateHeldState*)held)->carryState != 0)
+        if (((CarryableUpdateHeldState*)held)->carryState != CARRY_STATE_RESTING)
         {
             ((CarryableUpdateHeldState*)held)->flags |= 1;
             ((CarryableUpdateHeldState*)held)->isHeld = 1;
@@ -263,7 +263,7 @@ int Carryable_updateHeld(u8* obj)
         if (((CarryableUpdateHeldState*)held)->carryState == CARRY_STATE_PUTDOWN && ((GameObject*)obj)->unkF8 == 0)
         {
             u8* h2 = ((GameObject*)obj)->extra;
-            *(u8*)&((CarryableUpdateHeldState*)h2)->carryState = 0;
+            *(u8*)&((CarryableUpdateHeldState*)h2)->carryState = CARRY_STATE_RESTING;
             ((CarryableUpdateHeldState*)h2)->isHeld = 0;
             if ((((CarryableUpdateHeldState*)h2)->flags & 8) == 0)
             {
