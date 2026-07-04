@@ -114,7 +114,7 @@ u32 FUN_80161128(short *param_1,u32 param_2,int param_3);
 void FUN_80161130(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9);
-int grimble_stateHandlerB05(int *obj, u8 *state);
+int grimble_stateHandlerB05(int *obj, GroundBaddieState *state);
 void FUN_80161220(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80161254(int param_1);
 void FUN_80161290(short *param_1);
@@ -146,7 +146,7 @@ FUN_80161ea0(u64 param_1,double param_2,double param_3,u64 param_4,u64 param_5,
             u32 param_11,u32 param_12,u32 param_13,u32 param_14,
             u32 param_15,u32 param_16);
 int grimble_stateHandlerB04(int *obj, GroundBaddieState *state);
-int grimble_stateHandlerB03(int obj, u8 *state);
+int grimble_stateHandlerB03(int obj, GroundBaddieState *state);
 int grimble_stateHandlerB01(int *obj, GroundBaddieState *state);
 int grimble_stateHandlerB00(int obj, GroundBaddieState *state);
 int grimble_stateHandlerA09(int obj, GroundBaddieState *state);
