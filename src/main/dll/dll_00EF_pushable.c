@@ -87,7 +87,7 @@ typedef struct PushablePlacement
     s8 unk1E;
     u8 unk1F;
     u8 pad20[0x23 - 0x20];
-    s8 unk23;
+    s8 requiredHitId;   /* 0x23 hit-region id that triggers this pushable (-1 = none) */
     u8 pad24[0x28 - 0x24];
 } PushablePlacement;
 
@@ -99,7 +99,7 @@ typedef struct PushableObjectDef
     void* unk1C;
     u16 scaleRaw;
     u8 rotXByte;
-    u8 unk23;
+    u8 requiredHitId;   /* 0x23 hit-region id that triggers this pushable (-1 = none) */
     u8 pad24[0x28 - 0x24];
 } PushableObjectDef;
 
@@ -280,7 +280,7 @@ void fn_80174BFC(int obj, int ext)
                                 break;
                             default:
                                 {
-                                    s8 t = ((PushablePlacement*)def)->unk23;
+                                    s8 t = ((PushablePlacement*)def)->requiredHitId;
                                     if (t > -1 && t == hit.id)
                                     {
                                         GameBit_Set(gamebit, 1);
@@ -651,11 +651,11 @@ void pushable_init(s16* obj, char* def)
 
     if (((ObjPlacement*)def)->mapId == 0x30398)
     {
-        ((PushableObjectDef*)def)->unk23 = 1;
+        ((PushableObjectDef*)def)->requiredHitId = 1;
     }
     else
     {
-        *(s8*)&((PushableObjectDef*)def)->unk23 = -1;
+        *(s8*)&((PushableObjectDef*)def)->requiredHitId = -1;
     }
     *obj = ((PushableObjectDef*)def)->rotXByte << 8;
     ((GameObject*)obj)->anim.localPosY = lbl_803E358C + ((ObjPlacement*)def)->posY;
@@ -1308,7 +1308,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
                     case 0x7df:
                         break;
                     default:
-                        if (((PushablePlacement*)def2)->unk23 > -1)
+                        if (((PushablePlacement*)def2)->requiredHitId > -1)
                         {
                             GameBit_Set(t, 0);
                         }
