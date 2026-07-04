@@ -38,7 +38,6 @@ extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern f32 lbl_803E3420;
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
