@@ -1426,7 +1426,7 @@ void andross_update(int obj)
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x15, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[21];
-            arwarwing_addShield(*state, 0xfffffffc);
+            arwarwing_addHealth(*state, 0xfffffffc);
         }
         fval = (lbl_803E74EC > -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->camOffsetAccum)) ? lbl_803E74EC : -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->camOffsetAccum);
         ((AndrossState*)state)->camOffsetAccum = fval;

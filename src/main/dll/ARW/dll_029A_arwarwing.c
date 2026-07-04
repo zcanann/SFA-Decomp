@@ -259,9 +259,9 @@ int arwarwing_getScore(int arwing)
 
 int arwarwing_getBombCount(int arwing) { return (*(ArwingState**)&((GameObject*)arwing)->extra)->bombCount; }
 
-int arwarwing_getMaxShield(int arwing) { return *(s8*)&(*(ArwingState**)&((GameObject*)arwing)->extra)->maxShield; }
+int arwarwing_getMaxHealth(int arwing) { return *(s8*)&(*(ArwingState**)&((GameObject*)arwing)->extra)->maxHealth; }
 
-int arwarwing_getShield(int arwing) { return *(s8*)&(*(ArwingState**)&((GameObject*)arwing)->extra)->shield; }
+int arwarwing_getHealth(int arwing) { return *(s8*)&(*(ArwingState**)&((GameObject*)arwing)->extra)->health; }
 
 int arwarwing_incrementPickup6DACount(int arwing)
 {
@@ -303,30 +303,30 @@ int arwarwing_incrementCollectedRingCount(int arwing)
 #pragma peephole reset
 
 #pragma peephole off
-void arwarwing_addMaxShield(int arwing, int amount)
+void arwarwing_addMaxHealth(int arwing, int amount)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    *(s8*)&state->maxShield = state->maxShield + amount;
+    *(s8*)&state->maxHealth = state->maxHealth + amount;
 }
 #pragma peephole reset
 
 #pragma peephole off
-void arwarwing_addShield(int arwing, int amount)
+void arwarwing_addHealth(int arwing, int amount)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
     int v;
 
-    *(s8*)&state->shield = state->shield + amount;
-    if (*(s8*)&state->shield < 0)
+    *(s8*)&state->health = state->health + amount;
+    if (*(s8*)&state->health < 0)
     {
         v = 0;
     }
     else
     {
-        v = (*(s8*)&state->shield > *(s8*)&state->maxShield) ? *(s8*)&state->maxShield : *(s8*)&state->shield;
+        v = (*(s8*)&state->health > *(s8*)&state->maxHealth) ? *(s8*)&state->maxHealth : *(s8*)&state->health;
     }
-    *(s8*)&state->shield = v;
-    if (*(s8*)&state->shield > 3)
+    *(s8*)&state->health = v;
+    if (*(s8*)&state->health > 3)
     {
         Sfx_StopObjectChannel(arwing, 4);
     }
@@ -349,7 +349,7 @@ void arwarwing_emitDamageEffects(int obj, int state)
         f32 d;
     } emit;
     flag = 0;
-    if ((s8)arwing->shield <= 4)
+    if ((s8)arwing->health <= 4)
     {
         if (arwing->damageEffectCounter++ % 2 != 0)
         {
@@ -357,14 +357,14 @@ void arwarwing_emitDamageEffects(int obj, int state)
             emit.b = lbl_803E6F0C;
             emit.c = lbl_803E6F10;
             emit.d = lbl_803E6F14;
-            if ((s8)arwing->shield <= 2)
+            if ((s8)arwing->health <= 2)
                 emit.type = 0x61a8;
             else
                 emit.type = -0x63c0;
             (*gPartfxInterface)->spawnObject((void*)obj, 0x7d0, &emit.pad, 4, -1, &flag);
         }
     }
-    if ((s8)arwing->shield <= 2)
+    if ((s8)arwing->health <= 2)
     {
         emit.a = lbl_803E6F18;
         emit.type = 0xc0a;
@@ -1004,8 +1004,8 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState*)state)->wingVec[3] = objModelGetVecFn_800395d8(obj, 3);
         ((ArwingState*)state)->wingFlexScale = lbl_803E6F64;
         *(s16*)&((ArwingState*)state)->enginePitch = 0xaf;
-        ((ArwingState*)state)->maxShield = *(u8*)(mev + 0x1);
-        ((ArwingState*)state)->shield = ((ArwingState*)state)->maxShield;
+        ((ArwingState*)state)->maxHealth = *(u8*)(mev + 0x1);
+        ((ArwingState*)state)->health = ((ArwingState*)state)->maxHealth;
         ((ArwingState*)state)->bobSpeedThreshold = lbl_803E6EF8;
         ((ArwingState*)state)->bobRotZRate = (c6EF0 = lbl_803E6EF0);
         ((ArwingState*)state)->bobRotZAmp = lbl_803E6FE4;
@@ -1102,11 +1102,11 @@ void arwarwing_handlePathDamage(int obj, int state)
             return;
         }
         if ((dmg & 1) && (s8)pathBlock[0xb8] == 8)
-            ((ArwingState*)state)->shield = 0;
+            ((ArwingState*)state)->health = 0;
         else
-            ((ArwingState*)state)->shield--;
+            ((ArwingState*)state)->health--;
         doRumble(lbl_803E6F2C);
-        if ((s8)((ArwingState*)state)->shield <= 0)
+        if ((s8)((ArwingState*)state)->health <= 0)
         {
             arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
             if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
@@ -1117,7 +1117,7 @@ void arwarwing_handlePathDamage(int obj, int state)
             Sfx_PlayFromObject(obj, SFXTRIG_barrelblow11);
             Music_Trigger(MUSICTRIG_dark_ice_boss_1, 1);
         }
-        else if ((s8)((ArwingState*)((GameObject*)obj)->extra)->shield <= 3)
+        else if ((s8)((ArwingState*)((GameObject*)obj)->extra)->health <= 3)
         {
             Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_bomb_pickup);
         }
@@ -1170,7 +1170,7 @@ void arwarwing_handleObjectDamage(int obj, int state)
                 return;
             }
             doRumble(lbl_803E6F2C);
-            *(s8*)&((ArwingState*)state)->shield = *(s8*)&((ArwingState*)state)->shield - hitVol;
+            *(s8*)&((ArwingState*)state)->health = *(s8*)&((ArwingState*)state)->health - hitVol;
             Sfx_PlayFromObject(obj, SFXbaddie_vambat_death);
             ((Arw339Flags*)(state + 0x339))->scoreFlag = 1;
             Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
@@ -1188,7 +1188,7 @@ void arwarwing_handleObjectDamage(int obj, int state)
         }
     }
     if (((ArwingState*)state)->mode != ARWING_MODE_DEAD && ((ArwingState*)state)->mode != ARWING_MODE_EXPLODE &&
-        ((ArwingState*)state)->mode != ARWING_MODE_WARPOUT && (s8)((ArwingState*)state)->shield <= 0)
+        ((ArwingState*)state)->mode != ARWING_MODE_WARPOUT && (s8)((ArwingState*)state)->health <= 0)
     {
         arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
         if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
@@ -1201,7 +1201,7 @@ void arwarwing_handleObjectDamage(int obj, int state)
         loadMapAndParent(0x29);
         lockLevel(mapGetDirIdx(0x29), 0);
     }
-    else if ((s8)((ArwingState*)((GameObject*)obj)->extra)->shield <= 3)
+    else if ((s8)((ArwingState*)((GameObject*)obj)->extra)->health <= 3)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_bomb_pickup);
     }

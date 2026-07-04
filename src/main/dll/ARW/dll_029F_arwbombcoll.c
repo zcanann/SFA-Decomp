@@ -3,7 +3,7 @@
  * the Arwing in the on-rails sections. A pickup fades in once the Arwing is
  * close ahead, can oscillate along the X or Y axis (route modes 1/3 and
  * 4/5), spins, and watches for the Arwing passing through it. The reward on
- * collection depends on the object's seqId (shield, max-shield, score,
+ * collection depends on the object's seqId (health, max-health, score,
  * ring, laser upgrade, bomb, and the 0x6D8-0x6DB collectibles) and on the
  * pickup's "mode" (handled in arwbombcoll_handleArwingHit). Rings also feed
  * the ring-count gate driven by arwlevelcon. Collision is checked two ways:
@@ -124,7 +124,7 @@ void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
         if (arwingObj->anim.seqId == 0x601)
         {
-            arwarwing_addShield(arwing, 1);
+            arwarwing_addHealth(arwing, 1);
             arwarwing_addScore(arwing, 0xa);
         }
     }
@@ -133,8 +133,8 @@ void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
         if (arwingObj->anim.seqId == 0x601)
         {
-            arwarwing_addMaxShield(arwing, 1);
-            arwarwing_addShield(arwing, arwarwing_getMaxShield(arwing));
+            arwarwing_addMaxHealth(arwing, 1);
+            arwarwing_addHealth(arwing, arwarwing_getMaxHealth(arwing));
         }
     }
     else if (mode == 3 || mode == 4)
@@ -150,7 +150,7 @@ void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
             int seg;
             int collected;
             arwarwing_incrementCollectedRingCount(arwing);
-            arwarwing_addShield(arwing, 1);
+            arwarwing_addHealth(arwing, 1);
             arwarwing_addScore(arwing, 0x14);
             seg = arwarwing_getRequiredRingCount(arwing);
             collected = arwarwing_getCollectedRingCount(arwing);

@@ -139,8 +139,8 @@ typedef struct ArwingState {
     void *light;         /* 0x450 */
     int wingVec[4];      /* 0x454: objModelGetVecFn slots 0-3 */
     f32 wingFlexScale;   /* 0x464 */
-    u8 shield;           /* 0x468 */
-    u8 maxShield;        /* 0x469 */
+    u8 health;           /* 0x468 */
+    u8 maxHealth;        /* 0x469 */
     u8 pad46A[2];
     f32 modeTimer;       /* 0x46c */
     u8 collectedRings;   /* 0x470 */

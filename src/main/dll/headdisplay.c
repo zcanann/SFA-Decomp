@@ -14,7 +14,7 @@
  *    u8 npcDialogue@+7) and either an NPC dialogue bubble or a text box.
  *  - pauseMenuCreateHeads: lazily sets up the head model objects for
  *    slots 1..3 (the displayable characters); clears the rest.
- *  - drawArwingHud: draws the Arwing shield bar, bomb pips and ring
+ *  - drawArwingHud: draws the Arwing health bar, bomb pips and ring
  *    counters; fades via arwingHudAlpha tied to arwingHudVisible.
  *
  * Most state lives in cross-TU lbl_803DD/lbl_803E globals; this TU only
@@ -108,8 +108,8 @@ extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern f32 lbl_803E1E5C;
 extern f32 lbl_803E205C;
 extern int* getArwing(void);
-extern int arwarwing_getShield(int* arwing);
-extern int arwarwing_getMaxShield(int* arwing);
+extern int arwarwing_getHealth(int* arwing);
+extern int arwarwing_getMaxHealth(int* arwing);
 extern int arwarwing_getBombCount(int* arwing);
 extern int arwarwing_getCollectedRingCount(int* arwing);
 extern int arwarwing_getRequiredRingCount(int* arwing);
@@ -388,7 +388,7 @@ void drawArwingHud(void)
     u8 bombSlot;
     int* arwing;
     int fullPips;
-    int maxShield;
+    int maxHealth;
     int bombs;
     u8 buf[8];
     int req;
@@ -398,7 +398,7 @@ void drawArwingHud(void)
     u32 i;
     u32 pip;
     u8 texIdx;
-    int shield;
+    int health;
 
     arwing = getArwing();
     *(int*)buf = lbl_803E1E08;
@@ -421,8 +421,8 @@ void drawArwingHud(void)
                 arwingHudAlpha = 0;
             }
         }
-        shield = arwarwing_getShield(arwing);
-        maxShield = arwarwing_getMaxShield(arwing);
+        health = arwarwing_getHealth(arwing);
+        maxHealth = arwarwing_getMaxHealth(arwing);
         bombs = arwarwing_getBombCount(arwing);
         rings = arwarwing_getCollectedRingCount(arwing);
         req = arwarwing_getRequiredRingCount(arwing);
@@ -431,9 +431,9 @@ void drawArwingHud(void)
             rings = req;
         }
         i = 0;
-        fullPips = shield >> 2;
-        partialFrame = (shield & 3) + 0x12;
-        maxPips = maxShield >> 2;
+        fullPips = health >> 2;
+        partialFrame = (health & 3) + 0x12;
+        maxPips = maxHealth >> 2;
         for (; (int)(pip = i & 0xff) < maxPips; i++)
         {
             if ((int)pip < fullPips)
