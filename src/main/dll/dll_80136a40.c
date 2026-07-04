@@ -81,7 +81,6 @@ extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
-extern f32 lbl_803E22A0;
 extern int* Obj_GetActiveModel(int obj);
 extern f32 lbl_803E2408;
 extern f32 timeDelta;
