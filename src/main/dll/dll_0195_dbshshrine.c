@@ -14,6 +14,8 @@
 #include "main/objlib.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define DBSHSHRINE_OBJGROUP 0xb
+
 #define DBSH_SHRINE_STATE_WAITING 0
 #define DBSH_SHRINE_STATE_RISING 1
 #define DBSH_SHRINE_STATE_ACTIVE 2
@@ -140,7 +142,7 @@ void dbsh_shrine_free(int obj)
         runtime->light = NULL;
     }
     gameTimerStop();
-    ObjGroup_RemoveObject(obj, 0xb);
+    ObjGroup_RemoveObject(obj, DBSHSHRINE_OBJGROUP);
     Music_Trigger(MUSICTRIG_DIM_Snow, 0);
     Music_Trigger(MUSICTRIG_CC_Visit1, 0);
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
