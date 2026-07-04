@@ -173,7 +173,7 @@ dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 
 main/dll/cloudaction.c:
 	.text       start:0x800944A0 end:0x80094F7C
-	.data       start:0x8030F7B0 end:0x8030F7E8
+	.data       start:0x8030F7B0 end:0x8030F86C
 
 main/dll/dll_0013_waterfx.c:
 	.text       start:0x80094F7C end:0x80096994

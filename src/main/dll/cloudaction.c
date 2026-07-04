@@ -428,3 +428,7 @@ int gCloudActionEnvTbl[] =
     0, 1576, 1890, 2147,
     0, 1578, 2140, 2145, 2147,
 };
+
+/* descriptor/ptr table auto 0x8030f7e8-0x8030f86c */
+u32 lbl_8030F7E8[18] = { 0x00000000, 0x00000000, 0x00000000, 0x000c0000, (u32)cloudaction_initialise, (u32)cloudaction_release, 0x00000000, (u32)cloudaction_update, (u32)cloudaction_onMapSetup, (u32)cloudaction_func05, (u32)renderClouds, (u32)cloudaction_free, (u32)cloudaction_func08_nop, (u32)cloudaction_func09_nop, (u32)__end_critical_region, (u32)__begin_critical_region, (u32)__kill_critical_regions, 0x00000000 };
+u32 lbl_8030F830[15] = { 0x00000000, 0x00000000, 0x00000000, 0x000a0000, (u32)waterfx_initialise, (u32)waterfx_release, 0x00000000, (u32)waterfx_run, (u32)waterfx_func04, (u32)waterfx_func05, (u32)waterfx_spawnSplashBurst, (u32)waterfx_spawnRipple, (u32)waterfx_func08, (u32)waterfx_onMapSetup, (u32)waterfx_setRippleScale };
