@@ -32,6 +32,18 @@
 #include "main/obj_placement.h"
 #define ANIMOBJD2_OBJFLAG_FREED 0x40
 
+/* fn_8013E0D0 circling substate machine (TrickyState.substate; this object's
+ * own values, not a globally shared TrickyState enum). */
+enum AnimObjD2Substate
+{
+    ANIMOBJD2_SUBSTATE_ACQUIRE = 0, /* find/lock onto a target        */
+    ANIMOBJD2_SUBSTATE_APPROACH = 1, /* close on the seed heading      */
+    ANIMOBJD2_SUBSTATE_CHARGE = 2,   /* retarget + start charge anim   */
+    ANIMOBJD2_SUBSTATE_SPAWN = 3,    /* spawn the 7 drip helper objects*/
+    ANIMOBJD2_SUBSTATE_FINISH = 4,   /* speed up helpers, bark, reset  */
+    ANIMOBJD2_SUBSTATE_ORBIT = 5     /* orbit and pick the best target */
+};
+
 /* Spawn-setup buffer seeded in the substate-3 drip burst (defNo 0x4f0).
  * Reuses ObjPlacement's color head and adds the class-specific index at
  * 0x1a; store widths per target asm (stb color, sth index). */
@@ -160,7 +172,7 @@ void fn_8013E0D0(int* obj, u8* st)
 
     switch (t->substate)
     {
-    case 0:
+    case ANIMOBJD2_SUBSTATE_ACQUIRE:
         {
             u8 ok;
             int go;
@@ -189,7 +201,7 @@ void fn_8013E0D0(int* obj, u8* st)
                         {
                             *(int*)&t->followObj = *(int*)&t->unk720;
                             *(int*)&t->unk724 = 0;
-                            t->substate = 5;
+                            t->substate = ANIMOBJD2_SUBSTATE_ORBIT;
                             break;
                         }
                     }
@@ -204,7 +216,7 @@ void fn_8013E0D0(int* obj, u8* st)
                 {
                     int b = 1;
                     f32 z;
-                    t->substate = 1;
+                    t->substate = ANIMOBJD2_SUBSTATE_APPROACH;
                     z = lbl_803E23DC;
                     t->unk71C = z;
                     if (z == t->waterLevel)
@@ -232,7 +244,7 @@ void fn_8013E0D0(int* obj, u8* st)
             }
             break;
         }
-    case 1:
+    case ANIMOBJD2_SUBSTATE_APPROACH:
         {
             u8 ok;
             int go;
@@ -261,7 +273,7 @@ void fn_8013E0D0(int* obj, u8* st)
                         {
                             *(int*)&t->followObj = *(int*)&t->unk720;
                             *(int*)&t->unk724 = 0;
-                            t->substate = 5;
+                            t->substate = ANIMOBJD2_SUBSTATE_ORBIT;
                             break;
                         }
                     }
@@ -339,14 +351,14 @@ void fn_8013E0D0(int* obj, u8* st)
                     }
                     else
                     {
-                        t->substate = 2;
+                        t->substate = ANIMOBJD2_SUBSTATE_CHARGE;
                         break;
                     }
                 }
                 if (getXZDistance(&gobj->anim.worldPosX,
                                   &((GameObject*)*(int*)&t->followObj)->anim.worldPosX) > lbl_803E24E0)
                 {
-                    t->substate = 0;
+                    t->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;
                     break;
                 }
                 t->unk71C -= timeDelta;
@@ -359,7 +371,7 @@ void fn_8013E0D0(int* obj, u8* st)
             }
             break;
         }
-    case 2:
+    case ANIMOBJD2_SUBSTATE_CHARGE:
         {
             u8 ok;
             int go;
@@ -381,12 +393,12 @@ void fn_8013E0D0(int* obj, u8* st)
             {
                 objAnimFn_8013a3f0((int*)gobj, 0x34, lbl_803E2444, 0x4000000);
                 t->stateFlags |= 0x10;
-                t->substate = 3;
+                t->substate = ANIMOBJD2_SUBSTATE_SPAWN;
                 *(int*)&t->unk728 = 0;
             }
             break;
         }
-    case 3:
+    case ANIMOBJD2_SUBSTATE_SPAWN:
         if (gobj->anim.currentMove != 0x34)
         {
             break;
@@ -414,10 +426,10 @@ void fn_8013E0D0(int* obj, u8* st)
                 Sfx_AddLoopedObjectSound((int*)gobj, SFXTRIG_trpopn_c);
             }
             **(u8**)&t->progressPtr -= 2;
-            t->substate = 4;
+            t->substate = ANIMOBJD2_SUBSTATE_FINISH;
         }
         break;
-    case 4:
+    case ANIMOBJD2_SUBSTATE_FINISH:
         {
             u32 fl;
             trickyDebugPrint(str + 0x5e4);
@@ -439,11 +451,11 @@ void fn_8013E0D0(int* obj, u8* st)
                 Sfx_RemoveLoopedObjectSound((int*)gobj, SFXTRIG_trpopn_c);
                 TRICKY_BARK((int*)gobj, 0x29d, 0);
                 t->stateFlags &= ~0x10LL;
-                t->substate = 0;
+                t->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;
             }
             break;
         }
-    case 5:
+    case ANIMOBJD2_SUBSTATE_ORBIT:
         {
             void** p;
             int* tgt;
@@ -459,7 +471,7 @@ void fn_8013E0D0(int* obj, u8* st)
             if ((u32)tgt != *(u32*)&t->unk720 || *(int*)&t->unk728 != 0)
             {
                 TRICKY_RETARGET((u8*)t, *(int*)&t->followObj);
-                t->substate = 0;
+                t->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;
             }
             else
             {
@@ -615,7 +627,7 @@ void trickyUpdateCirclingTargetPosition(void* p1, void* p2)
     s32 delta;
     s32 absDelta;
 
-    if (((TrickyState*)p2)->substate == 0)
+    if (((TrickyState*)p2)->substate == ANIMOBJD2_SUBSTATE_ACQUIRE)
     {
         *(s32*)&((TrickyState*)p2)->unk700 = randomGetRange(0, 1);
         if (*(s32*)&((TrickyState*)p2)->unk700 == 0)
@@ -623,7 +635,7 @@ void trickyUpdateCirclingTargetPosition(void* p1, void* p2)
             *(s32*)&((TrickyState*)p2)->unk700 = -1;
         }
         *(s32*)&((TrickyState*)p2)->unk704 = angle;
-        ((TrickyState*)p2)->substate = 1;
+        ((TrickyState*)p2)->substate = ANIMOBJD2_SUBSTATE_APPROACH;
     }
 
     delta = angle - (s32)(u16) * (s32*)((u8*)p2 + 0x704);
