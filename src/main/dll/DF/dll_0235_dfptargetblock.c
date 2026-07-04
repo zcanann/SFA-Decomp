@@ -16,7 +16,7 @@
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
                               DfpTargetBlockObject* obj, int flags, int mask, int arg9, int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
-extern void objRenderFn_8003b8f4(int obj, float param_2);
+extern void objRenderFn_8003b8f4(int obj, float scale);
 extern const f32 lbl_803E6488;
 extern const f32 lbl_803E648C;
 extern const f32 lbl_803E6490;
