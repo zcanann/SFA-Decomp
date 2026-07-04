@@ -871,10 +871,11 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     {
         for (layerIdx = 0; layerIdx < (int)(u32)((MapShader*)shader)->layerCount; layerIdx = layerIdx + 1)
         {
+            int layerTexId;
             layer = (int*)Shader_getLayer(shader, layerIdx);
-            if (*(void**)layer != NULL)
+            layerTexId = *layer;
+            if ((u32)layerTexId != 0)
             {
-                int layerTexId = *layer;
                 u8 ovrLayerByte;
                 {
                     if ((ovrLayerByte = ((TexLayer*)layer)->overrideByte) != '\0')
@@ -894,8 +895,12 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                             ovr = ovr + 1;
                             overrideIdx = overrideIdx + 1;
                         }
+                        texId = layerTexId;
                     }
-                    texId = layerTexId;
+                    else
+                    {
+                        texId = layerTexId;
+                    }
                 layerN_done:
                     if (((TexLayer*)layer)->mtxIndex != 0xff)
                     {
