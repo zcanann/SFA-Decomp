@@ -10,6 +10,9 @@
 #include "main/object_descriptor.h"
 #include "main/game_object.h"
 
+#define AREA_OBJFLAG_UPDATE_DISABLED 0x8000
+#define AREA_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 int area_getExtraSize(void) { return 0x0; }
 int area_getObjectTypeId(void) { return 0x0; }
 
@@ -31,7 +34,7 @@ void area_update(void)
 
 void area_init(GameObject* obj)
 {
-    obj->objectFlags = (u16)(obj->objectFlags | 0xa000);
+    obj->objectFlags = (u16)(obj->objectFlags | (AREA_OBJFLAG_UPDATE_DISABLED | AREA_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void area_release(void)
