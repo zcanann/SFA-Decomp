@@ -201,7 +201,6 @@ typedef struct FlamethrowerspeState
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern u32 fcos16Precise();
 extern void gcbaddieshield_update(int* obj);
 
 
