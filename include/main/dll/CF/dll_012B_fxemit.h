@@ -136,7 +136,7 @@ typedef struct CfCcrateState {
     s16 gameBit; /* primary on/off bit */
     s16 gameBit2; /* secondary (render/SeqFn visibility) */
     s16 sfxTimer; /* frames until next ambient sfx (type 0x10D) */
-    u8 latch3E;
+    u8 gameBit2Latch; /* rising-edge latch on gameBit2 (runs sequence once) */
     u8 proximityLatch; /* type 0x125 player-distance hysteresis */
     u8 sfxCount; /* entries in sfxTable */
     u8 pad41[3];

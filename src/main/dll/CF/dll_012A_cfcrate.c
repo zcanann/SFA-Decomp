@@ -263,9 +263,9 @@ void cfccrate_update(int obj)
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         break;
     case 0x6be: /* VFP_liftgra... */
-        if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0))
+        if ((GameBit_Get(state->gameBit2) != 0) && (state->gameBit2Latch == 0))
         {
-            state->latch3E = 1;
+            state->gameBit2Latch = 1;
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         }
         break;
@@ -277,11 +277,11 @@ void cfccrate_update(int obj)
         }
         break;
     case 0x828:
-        if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0))
+        if ((GameBit_Get(state->gameBit2) != 0) && (state->gameBit2Latch == 0))
         {
             if (((GameObject*)obj)->anim.rotZ + (tmp = (s32)(lbl_803E3E00 * timeDelta)) > 0x7fff)
             {
-                state->latch3E = 1;
+                state->gameBit2Latch = 1;
                 ((GameObject*)obj)->anim.rotZ = 0x7fff;
             }
             else
@@ -387,17 +387,17 @@ void cfccrate_init(int obj, int aux)
         break;
     case 0x6be:
         ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
-        state->latch3E = 0;
+        state->gameBit2Latch = 0;
         state->gameBit2 = ((CfccratePlacement*)aux)->gameBit;
         break;
     case 0x828:
         ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
-        state->latch3E = 0;
+        state->gameBit2Latch = 0;
         state->gameBit2 = ((CfccratePlacement*)aux)->gameBit;
-        if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0))
+        if ((GameBit_Get(state->gameBit2) != 0) && (state->gameBit2Latch == 0))
         {
             ((GameObject*)obj)->anim.rotZ = 0x7fff;
-            state->latch3E = 1;
+            state->gameBit2Latch = 1;
         }
         break;
     case 0x6bf:
@@ -454,7 +454,7 @@ void cfccrate_init(int obj, int aux)
         {
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3E34;
         }
-        state->latch3E = 0;
+        state->gameBit2Latch = 0;
         state->homeX = ((CfccratePlacement*)aux)->homeX;
         state->homeY = ((CfccratePlacement*)aux)->homeY;
         state->homeZ = ((CfccratePlacement*)aux)->homeZ;
@@ -486,7 +486,7 @@ void cfccrate_init(int obj, int aux)
     case 0xd7:
         ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         ((GameObject*)obj)->anim.rootMotionScale = zeroF;
-        state->latch3E = 0;
+        state->gameBit2Latch = 0;
         state->homeX = ((CfccratePlacement*)aux)->homeX;
         state->homeY = ((CfccratePlacement*)aux)->homeY;
         state->homeZ = ((CfccratePlacement*)aux)->homeZ;
