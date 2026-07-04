@@ -15,6 +15,8 @@
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
 
+#define STATICCAMERA_OBJGROUP 7
+
 typedef struct StaticCameraState
 {
     u8 setupParam;          /* 0x00: from placement byte 0x19 */
@@ -72,7 +74,7 @@ void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void StaticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, STATICCAMERA_OBJGROUP);
 }
 
 void StaticCamera_init(GameObject* obj, StaticCameraPlacement* params, int deferAdd)
@@ -88,7 +90,7 @@ void StaticCamera_init(GameObject* obj, StaticCameraPlacement* params, int defer
     state->unk1 = 0;
     if (deferAdd == 0)
     {
-        ObjGroup_AddObject((int)obj, 7);
+        ObjGroup_AddObject((int)obj, STATICCAMERA_OBJGROUP);
     }
 }
 
