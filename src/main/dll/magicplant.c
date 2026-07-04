@@ -160,7 +160,7 @@ void fn_80153040(int obj, int state)
     {
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x80;
     }
-    if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
         if (Curve_AdvanceAlongPath(curve, ((BaddieState*)state)->pathStep) != 0 || curve->atSegmentEnd != 0)
         {
@@ -169,7 +169,7 @@ void fn_80153040(int obj, int state)
                 if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8,
                                                      &lbl_803DBCB8, -1) != 0)
                 {
-                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
+                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
         }
@@ -215,11 +215,11 @@ void fn_80153248(int obj, int state)
     {
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x80;
     }
-    if ((((BaddieState*)state)->controlFlags & 0x80000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
     {
         Sfx_PlayFromObject(obj, SFXfox_climbgrunt3);
     }
-    if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
         if (Curve_AdvanceAlongPath(curve, lbl_803E28D4 * ((BaddieState*)state)->pathStep) != 0
             || curve->atSegmentEnd != 0)
@@ -229,7 +229,7 @@ void fn_80153248(int obj, int state)
                 if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8,
                                                      &lbl_803DBCB8, -1) != 0)
                 {
-                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
+                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
         }
@@ -322,7 +322,7 @@ void fn_8015355C(int obj, int state)
         count = 1;
         break;
     case 5:
-        if ((((BaddieState*)state)->controlFlags & 0x80000000) != 0)
+        if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
         {
             count = 0xa;
         }
@@ -637,7 +637,7 @@ void fn_80153E0C(int obj, int state)
     curve = *(RomCurveWalker**)state;
     ((BaddieState*)state)->seqEntryIndex = 0;
     *(f32*)(state + 0x328) = lbl_803E294C;
-    if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
         if (Curve_AdvanceAlongPath(curve, ((BaddieState*)state)->pathStep) != 0 || curve->atSegmentEnd != 0)
         {
@@ -646,7 +646,7 @@ void fn_80153E0C(int obj, int state)
                 if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2950,
                                                      &lbl_803DBCC8, -1) != 0)
                 {
-                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
+                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
         }
