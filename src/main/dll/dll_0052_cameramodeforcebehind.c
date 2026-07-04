@@ -20,7 +20,6 @@
 
 extern void camcontrol_traceFromTarget();
 extern f32 interpolate(f32 a, f32 t, f32 exp);
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 gCamForceBehindPi; /* binary-angle -> radians scale (numerator) */
 extern f32 gCamForceBehindBamsToRadDivisor; /* binary-angle -> radians divisor (half-circle = 0x8000) */
 extern f32 gCamForceBehindHeightOffset; /* camera height offset above the target */
