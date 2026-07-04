@@ -24,6 +24,14 @@
 #define TUMBLEWEED_EFFECT_FLAG_DESPAWN 0x04
 #define TUMBLEWEED_EFFECT_FLAG_HIT_PULSE 0x10
 
+/* phase/mode state machine (BackpackState.phase == TumbleweedState.mode, off 0x278).
+ * States 3, 4 and 7 remain numeric: their meaning is not self-evident. */
+#define TUMBLEWEED_PHASE_GROWING    0 /* scale ramps up to targetScale */
+#define TUMBLEWEED_PHASE_ARMED      1 /* waiting to activate (hit / player in range) */
+#define TUMBLEWEED_PHASE_ROLLING    2 /* active rolling motion */
+#define TUMBLEWEED_PHASE_DESPAWNING 5 /* fading out and freeing */
+#define TUMBLEWEED_PHASE_HOMING     6 /* steering toward targetPos */
+
 typedef struct TumbleweedState {
     u8 pad000[0x270];
     f32 despawnTimer;

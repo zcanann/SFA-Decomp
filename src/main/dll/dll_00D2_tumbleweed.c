@@ -158,13 +158,13 @@ void tumbleweed_func0F(int obj, int value)
 
 int tumbleweed_func0E(int obj)
 {
-    return ((BackpackState*)((GameObject*)obj)->extra)->phase == 6;
+    return ((BackpackState*)((GameObject*)obj)->extra)->phase == TUMBLEWEED_PHASE_HOMING;
 }
 
 void tumbleweed_render2(int* obj, int p2)
 {
     int* state = ((GameObject*)obj)->extra;
-    ((TumbleweedState*)state)->mode = 6;
+    ((TumbleweedState*)state)->mode = TUMBLEWEED_PHASE_HOMING;
     *(int*)&((BackpackState*)state)->targetPos = p2;
     ((BackpackState*)state)->speed = timeDelta * lbl_803E2F98;
     ObjHits_DisableObject((u32)obj);
@@ -173,10 +173,10 @@ void tumbleweed_render2(int* obj, int p2)
 void tumbleweed_modelMtxFn(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    if (((TumbleweedState*)state)->mode == 1)
+    if (((TumbleweedState*)state)->mode == TUMBLEWEED_PHASE_ARMED)
     {
         ObjHits_EnableObject((u32)obj);
-        ((TumbleweedState*)state)->mode = 2;
+        ((TumbleweedState*)state)->mode = TUMBLEWEED_PHASE_ROLLING;
         ((TumbleweedState*)state)->effectFlags |= 3;
         if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_4)
         {
@@ -274,7 +274,7 @@ void tumbleweed_updateStateMachine(int obj)
     aux = *(int*)&((GameObject*)obj)->extra;
     {
         u32 state = ((BackpackState*)aux)->phase;
-        if (state == 0)
+        if (state == TUMBLEWEED_PHASE_GROWING)
         {
             if (((GameObject*)obj)->anim.rootMotionScale < ((BackpackState*)aux)->targetScale)
             {
@@ -283,15 +283,15 @@ void tumbleweed_updateStateMachine(int obj)
             }
             else
             {
-                ((BackpackState*)aux)->phase = 1;
+                ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_ARMED;
             }
         }
-        else if (state == 1)
+        else if (state == TUMBLEWEED_PHASE_ARMED)
         {
             if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0)
             {
                 ObjHits_EnableObject((u32)obj);
-                ((BackpackState*)aux)->phase = 2;
+                ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_ROLLING;
                 ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 3);
                 if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_4)
                 {
@@ -299,7 +299,7 @@ void tumbleweed_updateStateMachine(int obj)
                 }
             }
         }
-        else if (state == 2)
+        else if (state == TUMBLEWEED_PHASE_ROLLING)
         {
             f32 dx, dz, dist2;
             f32 d;
@@ -436,7 +436,7 @@ void tumbleweed_updateStateMachine(int obj)
                 }
             }
         }
-        else if (state == 6)
+        else if (state == TUMBLEWEED_PHASE_HOMING)
         {
             f32* target = ((BackpackState*)aux)->targetPos;
             f32 vx, vy, vz, d;
@@ -514,7 +514,7 @@ void tumbleweed_init(int obj, int defData)
     (*gPathControlInterface)->init((void*)aux, 0, 0x40000, 1);
     (*gPathControlInterface)->setLocalPointCollision((void*)aux, 1, gTumbleweedCollisionPoint, gTumbleweedCollisionPointData, 8);
     (*gPathControlInterface)->attachObject((void*)obj, (void*)aux);
-    ((BackpackState*)aux)->phase = 0;
+    ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_GROWING;
     ((BackpackState*)aux)->phaseTimer = lbl_803E2FB4 + (f32)(s32)
     randomGetRange(-0x12c, 0x12c);
     ObjGroup_AddObject(obj, 3);
@@ -589,7 +589,7 @@ void tumbleweed_updateEffects(int obj)
     if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_DESPAWN) != 0)
     {
         ((GameObject*)obj)->anim.alpha = 0;
-        state->mode = 5;
+        state->mode = TUMBLEWEED_PHASE_DESPAWNING;
         state->despawnTimer = lbl_803E2FC8;
         ObjHits_DisableObject((u32)obj);
         state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_DESPAWN);
@@ -624,7 +624,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
 
     aux = *(int*)&((GameObject*)obj)->extra;
     state = ((BackpackState*)aux)->phase;
-    if (state == 0)
+    if (state == TUMBLEWEED_PHASE_GROWING)
     {
         if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
@@ -635,11 +635,11 @@ void tumbleweed_updateTargetedStateMachine(int obj)
             }
             else
             {
-                ((BackpackState*)aux)->phase = 1;
+                ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_ARMED;
             }
         }
     }
-    else if (state == 1)
+    else if (state == TUMBLEWEED_PHASE_ARMED)
     {
         if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
@@ -652,14 +652,14 @@ void tumbleweed_updateTargetedStateMachine(int obj)
             *(s16*)&((BackpackState*)aux)->distToTarget = d;
             if (((BackpackState*)aux)->distToTarget < *(u16*)&((BackpackState*)aux)->triggerRange)
             {
-                ((BackpackState*)aux)->phase = 2;
+                ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_ROLLING;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
                 ObjHits_EnableObject((u32)obj);
             }
         }
     }
-    else if (state == 2)
+    else if (state == TUMBLEWEED_PHASE_ROLLING)
     {
         f32 dx, dz, d;
         u32 dist;
