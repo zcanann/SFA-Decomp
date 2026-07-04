@@ -24,3 +24,6 @@ void projmagicstream_release(void)
 void projmagicstream_initialise(void)
 {
 }
+
+/* descriptor/ptr table auto 0x80319410-0x80319430 */
+u32 lbl_80319410[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projmagicemmit1_initialise, (u32)projmagicemmit1_release, 0x00000000, (u32)projmagicemmit1_doUnsupported };

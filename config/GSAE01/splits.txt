@@ -604,7 +604,7 @@ main/dll/dll_00AB_projdummy.c:
 
 main/dll/dll_00AC_projmagicstream.c:
 	.text       start:0x80100588 end:0x801005C0
-	.data       start:0x803193E0 end:0x80319410
+	.data       start:0x803193E0 end:0x80319430
 
 main/dll/dll_00AD_projmagicemmit1.c:
 	.text       start:0x801005C0 end:0x801005F8
