@@ -14,8 +14,6 @@ typedef struct
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
-extern void* memset(void* dst, int val, u32 n);
-extern void* memcpy(void* dst, const void* src, u32 n);
 extern u32 FUN_80006768();
 extern u32 FUN_8000676c();
 extern u32 FUN_80006c20();
