@@ -11,7 +11,6 @@ extern void Obj_FreeObject(int obj);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern f32 FLOAT_803e4b00;
 extern f32 lbl_803E3E78;
 extern f32 lbl_803E3E7C;
 extern f32 lbl_803E3E80;
