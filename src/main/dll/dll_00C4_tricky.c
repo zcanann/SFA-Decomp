@@ -37,6 +37,8 @@
  * as spawned; on teardown it is cleared and 0x1000 is set. */
 #define TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE 0x800   /* 7 flame child objects are spawned */
 #define TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP 0x1000 /* flame children torn down this cycle */
+/* GameObject.objectFlags bit (distinct field from stateFlags above). */
+#define TRICKY_OBJFLAG_PARENT_SLACK 0x1000
 #define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
 #define TRICKY_HEIGHT_TRACK_GROUP 0x51
 #define TRICKY_HEIGHT_TRACK_MODEL_SLOT 3
@@ -3018,7 +3020,7 @@ int Tricky_func12(int* obj)
 int Tricky_func10(int* obj, int targetObj)
 {
     int* state = (int*)obj[0xb8 / 4];
-    s32 objBlocked = ((GameObject*)obj)->objectFlags & 0x1000;
+    s32 objBlocked = ((GameObject*)obj)->objectFlags & TRICKY_OBJFLAG_PARENT_SLACK;
 
     if (objBlocked != 0)
     {
