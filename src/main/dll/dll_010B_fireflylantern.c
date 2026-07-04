@@ -6,6 +6,9 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
+
+/* object group this object belongs to */
+#define FIREFLYLANTERN_OBJGROUP 0xf
 extern int gameBitDecrement(int bit);
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
@@ -68,7 +71,7 @@ void FireFlyLantern_free(int obj)
     {
         trickyImpress(tricky);
     }
-    ObjGroup_RemoveObject(obj, 15);
+    ObjGroup_RemoveObject(obj, FIREFLYLANTERN_OBJGROUP);
 }
 
 void FireFlyLantern_render(void) { objRenderFn_8003b8f4(lbl_803E3AF0); }
