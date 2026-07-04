@@ -15,6 +15,10 @@ extern f32 lbl_803E4614; /* distance at which the vent activates */
 #define CCGASVENT_GROUP 0x3f
 #define CCGASVENT_GAS_GAMEBIT 0x1c0
 
+/* ccgasvent_update state machine */
+#define CCGASVENT_STATE_IDLE 0     /* player near: dormant, watching distance */
+#define CCGASVENT_STATE_SPAWNING 1 /* player far enough: emitting gas each tick */
+
 int ccgasvent_getExtraSize(void) { return 0x1; }
 
 void ccgasvent_render(void)
@@ -40,16 +44,16 @@ void ccgasvent_update(int* obj)
         ObjGroup_FindNearestObject(5, (u32)obj, &dist);
         switch (state[0])
         {
-        case 0:
+        case CCGASVENT_STATE_IDLE:
             if (dist >= lbl_803E4614)
             {
-                state[0] = 1;
+                state[0] = CCGASVENT_STATE_SPAWNING;
             }
             break;
-        case 1:
+        case CCGASVENT_STATE_SPAWNING:
             if (dist < lbl_803E4614)
             {
-                state[0] = 0;
+                state[0] = CCGASVENT_STATE_IDLE;
             }
             else
             {
