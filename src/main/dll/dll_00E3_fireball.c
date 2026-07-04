@@ -201,7 +201,7 @@ typedef struct FireballPlacement
     u8 pad0[0x14 - 0x0];
     s32 unk14;
     s16 unk18;
-    s16 unk1A;
+    s16 startupDelayEnabled; /* 0x1A nonzero (and seqId != 2110) => arms FireballState.startupDelay */
     s16 startDisabled;  /* 0x1C nonzero => fireball starts with FIREBALL_FLAG_DISABLED */
     s16 unk1E;
     s16 unk20;
@@ -920,7 +920,7 @@ void fireball_init(int* obj)
         }
         ((GameObject*)obj)->animEventCallback = Fireball_SeqFn;
         ObjGroup_AddObject((int)obj, FIREBALL_OBJGROUP);
-        if (((GameObject*)obj)->anim.seqId != 2110 && ((FireballPlacement*)params)->unk1A != 0)
+        if (((GameObject*)obj)->anim.seqId != 2110 && ((FireballPlacement*)params)->startupDelayEnabled != 0)
         {
             ((FireballState*)state)->startupDelay = lbl_803E3380;
         }
