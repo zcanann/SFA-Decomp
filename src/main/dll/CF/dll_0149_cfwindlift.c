@@ -22,9 +22,9 @@
 typedef struct WindliftPlacement
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX; /* 0x08 */
+    f32 posY; /* 0x0C */
+    f32 posZ; /* 0x10 */
     u8 pad14[0x18 - 0x14];
     s16 unk18;
     s16 pullStrength; /* 0x1A: wind pull strength passed to fn_8019C784 */
@@ -36,9 +36,9 @@ typedef struct WindliftPlacement
 typedef struct WindliftObjectDef
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX; /* 0x08 */
+    f32 posY; /* 0x0C */
+    f32 posZ; /* 0x10 */
     u8 pad14[0x18 - 0x14];
     s8 unk18;
     s8 heightByte; /* 0x19: lift height in gWindLiftHeightByteScale units (0 = default) */
