@@ -31,6 +31,11 @@
 #include "main/dll/dll_0158_gunpowderbarrel.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* seqId of the indestructible cannon-range barrel variant */
+#define GUNPOWDERBARREL_SEQ_CANNONRANGE 0x754
+/* object group of the barrel generators this barrel returns home to */
+#define GUNPOWDERBARREL_OBJGROUP 0x3a
+
 /* Barrel placement data block (obj group 0x3a link id at 0x1A). init reads
  * the respawn byte (respawnByte) and the return-home word (returnHome); the descriptor
  * fns match the barrel by generatorLinkId. unk1E is the adjacent placement
@@ -229,7 +234,7 @@ void gunpowderbarrel_triggerExplosion(int* obj)
             int** p;
             if (((GunpowderbarrelPlacement*)def)->generatorLinkId != 0)
             {
-                objs = (int**)ObjGroup_GetObjects(0x3a, &count);
+                objs = (int**)ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &count);
                 for (i = 0; i < count; i++)
                 {
                     int id = barrelgener_getLinkId(objs[i]);
@@ -242,7 +247,7 @@ void gunpowderbarrel_triggerExplosion(int* obj)
             }
             else
             {
-                best = (int*)ObjGroup_FindNearestObject(0x3a, objI, 0);
+                best = (int*)ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, objI, 0);
             }
             if (best != 0)
             {
@@ -624,7 +629,7 @@ void gunpowderbarrel_init(int obj, u8* def)
     {
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 1;
     }
-    if (((GameObject*)obj)->anim.seqId == 0x754)
+    if (((GameObject*)obj)->anim.seqId == GUNPOWDERBARREL_SEQ_CANNONRANGE)
     {
         ((GpbHeldFlags*)&state->heldFlags)->cannonRangeVariant = 1;
     }
@@ -768,7 +773,7 @@ void gunpowderbarrel_update(int obj)
             if (((GunpowderbarrelPlacement*)def)->generatorLinkId != 0)
             {
                 int cnt;
-                u32* objs = ObjGroup_GetObjects(0x3a, &cnt);
+                u32* objs = ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &cnt);
                 u32* p;
                 i = 0;
                 p = objs;
@@ -784,7 +789,7 @@ void gunpowderbarrel_update(int obj)
             }
             else
             {
-                gen = ObjGroup_FindNearestObject(0x3a, obj, 0);
+                gen = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, obj, 0);
             }
             if (gen == 0)
             {
@@ -1061,7 +1066,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
         if (*(s16*)(params + 0x1a) != 0)
         {
             int count;
-            u32* barrels = ObjGroup_GetObjects(0x3a, &count);
+            u32* barrels = ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &count);
             int i;
             u32* p;
             for (i = 0, p = barrels; i < count; i++)
@@ -1076,7 +1081,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
         }
         else
         {
-            target = ObjGroup_FindNearestObject(0x3a, obj, 0);
+            target = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, obj, 0);
         }
         if ((void*)target != NULL)
         {
