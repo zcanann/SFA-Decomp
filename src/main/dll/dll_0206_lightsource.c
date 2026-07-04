@@ -60,14 +60,6 @@ extern u8 gLightSourceColorTable[];
 extern f32 lbl_803E5E0C;
 extern f32 gLightSourceFxTimerPeriod;
 extern f32 gLightSourceRangeScale;
-extern f32 lbl_803E5E24;
-extern f32 lbl_803E5E28;
-extern f32 lbl_803E5E2C;
-extern f32 lbl_803E5E30;
-extern f32 lbl_803E5E34;
-extern f32 lbl_803E5E38;
-extern f32 lbl_803E5E3C;
-extern f32 lbl_803E5E40;
 
 void lightsource_hitDetect(void)
 {
