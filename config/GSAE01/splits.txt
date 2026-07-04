@@ -656,7 +656,7 @@ main/dll/dll_00B2_projrobotfire.c:
 
 main/dll/dll_00B6_projsquirt1.c:
 	.text       start:0x80100860 end:0x80100898
-	.data       start:0x803197D0 end:0x803197F8
+	.data       start:0x803197D0 end:0x80319818
 
 main/dll/dll_00B7_projship1.c:
 	.text       start:0x80100898 end:0x801008D0

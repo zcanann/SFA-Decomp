@@ -25,3 +25,6 @@ void projsquirt1_release(void)
 void projsquirt1_initialise(void)
 {
 }
+
+/* descriptor/ptr table auto 0x803197f8-0x80319818 */
+u32 lbl_803197F8[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projship1_initialise, (u32)projship1_release, 0x00000000, (u32)projship1_doUnsupported };
