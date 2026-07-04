@@ -254,8 +254,7 @@ void MoonSeedPlantingSpot_update(int obj)
                 if (((MoonSeedPlantingSpotState*)ex)->flags & MSPLANTING_FLAG_BURST)
                 {
                     ((GameObject*)obj)->anim.localPosY =
-                        ((ObjPlacement*)setup)->posY + (f32)(int)
-                    randomGetRange(-1, 1);
+                        ((ObjPlacement*)setup)->posY + (f32)(int)randomGetRange(-1, 1);
                     (*gPartfxInterface)->spawnObject((void*)obj, 0x70f, NULL, 2, -1, NULL);
                 }
                 ((MoonSeedPlantingSpotState*)ex)->burstTimer = ((MoonSeedPlantingSpotState*)ex)->burstTimer - timeDelta;
@@ -269,8 +268,8 @@ void MoonSeedPlantingSpot_update(int obj)
                     }
                     else
                     {
-                        ((MoonSeedPlantingSpotState*)ex)->burstTimer = (f32)(int)
-                        randomGetRange(0x32, 200);
+                        ((MoonSeedPlantingSpotState*)ex)->burstTimer =
+                            (f32)(int)randomGetRange(0x32, 200);
                         ((MoonSeedPlantingSpotState*)ex)->flags &= ~MSPLANTING_FLAG_BURST;
                     }
                 }
@@ -300,7 +299,7 @@ void MoonSeedPlantingSpot_update(int obj)
             int tricky = getTrickyObject();
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
-            if (getXZDistance((f32*)(tricky + 0x18), &((GameObject*)obj)->anim.worldPosX) <= lbl_803E45FC)
+            if (getXZDistance(&((GameObject*)tricky)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <= lbl_803E45FC)
             {
                 objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 5, 1, 0x28, lbl_803E4600, 0, 0);
             }
@@ -326,6 +325,8 @@ void MoonSeedPlantingSpot_update(int obj)
             ((MoonSeedPlantingSpotState*)ex)->growthTimer = ((MoonSeedPlantingSpotState*)ex)->growthTimer - timeDelta;
             if (((MoonSeedPlantingSpotState*)ex)->growthTimer < lbl_803E45F4)
             {
+                /* the *(f32*)& launder is load-bearing: it blocks CSE with the
+                 * compare's lfs so the store reloads the constant */
                 ((MoonSeedPlantingSpotState*)ex)->growthTimer = *(f32*)&lbl_803E45F4;
             }
             break;
