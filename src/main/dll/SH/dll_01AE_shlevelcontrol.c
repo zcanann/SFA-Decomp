@@ -49,6 +49,10 @@ extern f32 lbl_803E54C0;
 #define PAD_BUTTON_B 0x200
 #define PAD_BUTTON_MENU 0x1000
 
+/* GameObject.objectFlags bit set on the player while a parent object holds it
+   ("slack"); the level-control sequences wait for it to clear before advancing. */
+#define SHLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
+
 int sh_levelcontrol_getExtraSize(void)
 {
     return 0x14;
@@ -372,7 +376,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         break;
     case 3:
         if (((*gScreenTransitionInterface)->isFinished() != 0) &&
-            ((((GameObject*)Obj_GetPlayerObject())->objectFlags & 0x1000) == 0))
+            ((((GameObject*)Obj_GetPlayerObject())->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0))
         {
             GameBit_Set(0x13f, 1);
             (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
@@ -384,7 +388,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         break;
     case 5:
         if (((*gScreenTransitionInterface)->isFinished() != 0) &&
-            ((((GameObject*)Obj_GetPlayerObject())->objectFlags & 0x1000) == 0))
+            ((((GameObject*)Obj_GetPlayerObject())->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0))
         {
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
             ((ShLevelcontrolState*)state)->eventState = 6;
@@ -761,7 +765,7 @@ void sh_levelcontrol_update(int obj)
                 buttonDisable(0, PAD_BUTTON_B);
                 buttonDisable(0, PAD_BUTTON_MENU);
                 val = Obj_GetPlayerObject();
-                if ((((GameObject*)val)->objectFlags & 0x1000) == 0)
+                if ((((GameObject*)val)->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
                 {
                     (*gObjectTriggerInterface)->runSequence(7, (void*)obj, 0xffffffff);
                     GameBit_Set(0xdff, 1);
@@ -799,7 +803,7 @@ void sh_levelcontrol_update(int obj)
         }
         val = GameBit_Get(0x90);
         if (((val != 0) && (val = GameBit_Get(0xeb3), val == 0)) &&
-            (val = Obj_GetPlayerObject(), (((GameObject*)val)->objectFlags & 0x1000) == 0))
+            (val = Obj_GetPlayerObject(), (((GameObject*)val)->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0))
         {
             GameBit_Set(0xeb3, 1);
         }
@@ -833,7 +837,7 @@ void sh_levelcontrol_update(int obj)
                 buttonDisable(0, PAD_BUTTON_B);
                 buttonDisable(0, PAD_BUTTON_MENU);
                 val = Obj_GetPlayerObject();
-                if ((((GameObject*)val)->objectFlags & 0x1000) == 0)
+                if ((((GameObject*)val)->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
                 {
                     (*gObjectTriggerInterface)->runSequence(4, (void*)obj, 0xffffffff);
                     GameBit_Set(0x177, 1);
