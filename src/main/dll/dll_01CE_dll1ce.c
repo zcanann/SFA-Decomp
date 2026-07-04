@@ -88,7 +88,7 @@ typedef struct Dll1CESpawnSetup
     f32 posZ;                /* 0x10 */
     u8 pad14[0x1a - 0x14];
     u8 field1A;              /* 0x1a */
-    u8 field1B;              /* 0x1b */
+    u8 rotByte;              /* 0x1b */
     s16 field1C;             /* 0x1c */
     u8 pad1E[0x24 - 0x1e];
     s16 field24;             /* 0x24 */
@@ -248,7 +248,7 @@ void dll_1CE_update(int* obj)
         ((Dll1CESpawnSetup*)no)->field24 = -1;
         ((Dll1CESpawnSetup*)no)->field2C = -1;
         ((Dll1CESpawnSetup*)no)->field1A = 5;
-        ((Dll1CESpawnSetup*)no)->field1B = (u8)((s16)((GameObject*)obj)->anim.rotX >> 8);
+        ((Dll1CESpawnSetup*)no)->rotByte = (u8)((s16)((GameObject*)obj)->anim.rotX >> 8);
         Obj_SetupObject(no, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     }
 }
