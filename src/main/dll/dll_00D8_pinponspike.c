@@ -293,7 +293,7 @@ void pinponspike_update(int obj)
             int i;
             ((GameObject*)obj)->anim.alpha = 0;
             ((GameObject*)obj)->unkF4 = 0x78;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             for (i = 0; i < 0x19; i++)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
@@ -305,7 +305,7 @@ void pinponspike_update(int obj)
             int i;
             ((GameObject*)obj)->anim.alpha = 0;
             ((GameObject*)obj)->unkF4 = 0x78;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             for (i = 0; i < 0x19; i++)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
