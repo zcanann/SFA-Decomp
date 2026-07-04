@@ -56,16 +56,16 @@ typedef struct DfpobjcreatorSetup
 {
     ObjPlacement base; /* 0x00..0x17 */
     u8 pad18[0x1A - 0x18];
-    s16 unk1A;         /* 0x1A */
+    s16 objDefId;      /* 0x1A: spawned object/effect def id (0xdc) */
     u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;         /* 0x1E */
-    s16 unk20;         /* 0x20 */
+    s16 gameBit;       /* 0x1E: GameBit slot (-1 = none) */
+    s16 gameBit2;      /* 0x20: GameBit slot (-1 = none) */
     u8 pad22[0x24 - 0x22];
 } DfpobjcreatorSetup;
 
-STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk1A) == 0x1A);
-STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk1E) == 0x1E);
-STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk20) == 0x20);
+STATIC_ASSERT(offsetof(DfpobjcreatorSetup, objDefId) == 0x1A);
+STATIC_ASSERT(offsetof(DfpobjcreatorSetup, gameBit) == 0x1E);
+STATIC_ASSERT(offsetof(DfpobjcreatorSetup, gameBit2) == 0x20);
 STATIC_ASSERT(sizeof(DfpobjcreatorSetup) == 0x24);
 
 extern int dbstealerworm_stateHandlerA02();
@@ -142,9 +142,9 @@ void dfpobjcreator_update(int obj)
                 ((DfpobjcreatorSetup*)setup)->base.color[1] = ((DfpobjcreatorPlacement*)data)->colorG;
                 ((DfpobjcreatorSetup*)setup)->base.color[2] = ((DfpobjcreatorPlacement*)data)->colorB;
                 ((DfpobjcreatorSetup*)setup)->base.color[3] = ((DfpobjcreatorPlacement*)data)->colorA;
-                ((DfpobjcreatorSetup*)setup)->unk1E = -1;
-                ((DfpobjcreatorSetup*)setup)->unk20 = -1;
-                ((DfpobjcreatorSetup*)setup)->unk1A = 0xdc;
+                ((DfpobjcreatorSetup*)setup)->gameBit = -1;
+                ((DfpobjcreatorSetup*)setup)->gameBit2 = -1;
+                ((DfpobjcreatorSetup*)setup)->objDefId = 0xdc;
                 newObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                          *(int*)&((GameObject*)obj)->anim.parent);
                 ((GameObject*)newObj)->unkF4 = *(s8*)(data + 0x1e);
