@@ -2,6 +2,22 @@
 #include "main/game_object.h"
 #include "main/audio/music_trigger_ids.h"
 
+/* gAudioPendingLoadFlags / gAudioCompletedLoadFlags: one bit per async
+ * resource load, set when enqueued and cleared/mirrored when the load
+ * callback fires. (Pending clears use a 64-bit mask: ~(u64)FLAG.) */
+#define AUDIO_LOAD_MUSIC_TRIGGERS 0x1   /* music trigger table */
+#define AUDIO_LOAD_SFX_TRIGGERS 0x2     /* sfx trigger table */
+#define AUDIO_LOAD_STREAMS 0x4          /* stream table */
+#define AUDIO_LOAD_M_POOL 0x8           /* music group: pool data */
+#define AUDIO_LOAD_M_PROJECT 0x10       /* music group: project data */
+#define AUDIO_LOAD_M_SAMPLE_DIR 0x20    /* music group: sample directory */
+#define AUDIO_LOAD_M_SAMPLE_BUF 0x40    /* music group: sample buffer */
+#define AUDIO_LOAD_S_POOL 0x80          /* sfx group: pool data */
+#define AUDIO_LOAD_S_PROJECT 0x100      /* sfx group: project data */
+#define AUDIO_LOAD_S_SAMPLE_DIR 0x200   /* sfx group: sample directory */
+#define AUDIO_LOAD_S_SAMPLE_BUF 0x400   /* sfx group: sample buffer */
+#define AUDIO_LOAD_MIDI_WAD 0x800       /* MIDI WAD */
+
 TextCallbackEntry gAudioArqRequests[0x300 / sizeof(TextCallbackEntry)];
 u8 gAudioReverbSettings[0x154];
 u8 gAudioAramBlock[0x2C];
@@ -1707,8 +1723,8 @@ void MIDIWADLoadedCallback(int status, void* fileInfo)
     {
         DVDClose(fileInfo);
         mm_free(fileInfo);
-        gAudioPendingLoadFlags &= ~0x800LL;
-        gAudioCompletedLoadFlags |= 0x800;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_MIDI_WAD;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_MIDI_WAD;
     }
 }
 
@@ -1741,13 +1757,13 @@ int musicInitMidiWad(void)
         }
         gMusicChannelCounterA = 1;
         gMusicChannelCounterB = 1;
-        gAudioPendingLoadFlags |= 0x800;
+        gAudioPendingLoadFlags |= AUDIO_LOAD_MIDI_WAD;
         saved = testAndSet_onlyUseHeap3(0);
         gMidiWadFileData = loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0,
                                                (void (*)(void*))MIDIWADLoadedCallback);
         testAndSet_onlyUseHeap3(saved);
     }
-    if (gAudioCompletedLoadFlags & 0x800)
+    if (gAudioCompletedLoadFlags & AUDIO_LOAD_MIDI_WAD)
     {
         size = gMidiWadLoadedSize;
         if ((int)size & 0x1f)
@@ -1811,8 +1827,8 @@ void poolDataMLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x8LL;
-        gAudioCompletedLoadFlags |= 0x8;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_POOL;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_POOL;
     }
 }
 
@@ -1833,8 +1849,8 @@ void poolDataSLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x80LL;
-        gAudioCompletedLoadFlags |= 0x80;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_POOL;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_POOL;
     }
 }
 
@@ -1855,8 +1871,8 @@ void projectDataMLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x10LL;
-        gAudioCompletedLoadFlags |= 0x10;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_PROJECT;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_PROJECT;
     }
 }
 
@@ -1877,8 +1893,8 @@ void projectDataSLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x100LL;
-        gAudioCompletedLoadFlags |= 0x100;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_PROJECT;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_PROJECT;
     }
 }
 
@@ -1899,8 +1915,8 @@ void sampleBufferMLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x40LL;
-        gAudioCompletedLoadFlags |= 0x40;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_SAMPLE_BUF;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_SAMPLE_BUF;
     }
 }
 
@@ -1921,8 +1937,8 @@ void sampleBufferSLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x400LL;
-        gAudioCompletedLoadFlags |= 0x400;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_SAMPLE_BUF;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_SAMPLE_BUF;
     }
 }
 
@@ -1943,8 +1959,8 @@ void sampleDirectoryMLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x20LL;
-        gAudioCompletedLoadFlags |= 0x20;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_SAMPLE_DIR;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_SAMPLE_DIR;
     }
 }
 
@@ -1965,8 +1981,8 @@ void sampleDirectorySLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x200LL;
-        gAudioCompletedLoadFlags |= 0x200;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_SAMPLE_DIR;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_SAMPLE_DIR;
     }
 }
 
@@ -1987,8 +2003,8 @@ void sfxTriggersLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x2LL;
-        gAudioCompletedLoadFlags |= 0x2;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_SFX_TRIGGERS;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_SFX_TRIGGERS;
     }
 }
 
@@ -2009,8 +2025,8 @@ void musicTriggersLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x1LL;
-        gAudioCompletedLoadFlags |= 0x1;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_MUSIC_TRIGGERS;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_MUSIC_TRIGGERS;
     }
 }
 
@@ -2038,10 +2054,10 @@ void streamsLoadedCallback(int status, void* fileInfo)
         {
             u32 m;
             u32 f2 = gAudioPendingLoadFlags;
-            m = ~0x4;
+            m = ~AUDIO_LOAD_STREAMS;
             gAudioPendingLoadFlags = f2 & m;
         }
-        gAudioCompletedLoadFlags |= 0x4;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_STREAMS;
         s = gStreamsData;
         count = gStreamsCount;
         for (i = count; i != 0; i--)
@@ -2858,13 +2874,13 @@ void audioLoadTriggerData(void)
         mm_free(gStreamsData);
         mmSetFreeDelay(delay);
     }
-    gAudioPendingLoadFlags |= 0x1;
+    gAudioPendingLoadFlags |= AUDIO_LOAD_MUSIC_TRIGGERS;
     gMusicTriggersData = loadFileByPathAsync(base + 0x1b4, &info, 1, (void (*)(void*))musicTriggersLoadedCallback);
     gMusicTriggersCount = (u32)info >> 4;
-    gAudioPendingLoadFlags |= 0x2;
+    gAudioPendingLoadFlags |= AUDIO_LOAD_SFX_TRIGGERS;
     gSfxTriggersData = loadFileByPathAsync(base + 0x1cc, &info, 1, (void (*)(void*))sfxTriggersLoadedCallback);
     gSfxTriggersCount = (u32)info >> 5;
-    gAudioPendingLoadFlags |= 0x4;
+    gAudioPendingLoadFlags |= AUDIO_LOAD_STREAMS;
     gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, (void (*)(void*))streamsLoadedCallback);
     gStreamsCount = info / sizeof(StreamEntry);
 }
@@ -2937,17 +2953,17 @@ int audioInit(void)
         AudioStream_Init();
         audioLoadTriggerData();
         testAndSet_onlyUseHeap3(1);
-        gAudioPendingLoadFlags |= 0x8;
+        gAudioPendingLoadFlags |= AUDIO_LOAD_M_POOL;
         gAudioStarfoxMPoolDataHandle = loadFileByPathAsync(base + 0x228, NULL, 0,
                                                            (void (*)(void*))poolDataMLoadedCallback);
-        gAudioPendingLoadFlags |= 0x10;
+        gAudioPendingLoadFlags |= AUDIO_LOAD_M_PROJECT;
         gAudioStarfoxMProjectDataHandle = loadFileByPathAsync(base + 0x23c, NULL, 0,
                                                               (void (*)(void*))projectDataMLoadedCallback);
-        gAudioPendingLoadFlags |= 0x20;
+        gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_DIR;
         gAudioStarfoxMSampleDirectoryHandle = loadFileByPathAsync(base + 0x250, NULL, 0,
                                                                   (void (*)(void*))sampleDirectoryMLoadedCallback);
         testAndSet_onlyUseHeap3(0);
-        gAudioPendingLoadFlags |= 0x40;
+        gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_BUF;
         gAudioStarfoxMSampleBufferHandle = loadFileByPathAsync(base + 0x264, NULL, 0,
                                                                (void (*)(void*))sampleBufferMLoadedCallback);
         if (gAudioStarfoxMPoolDataHandle == NULL || gAudioStarfoxMProjectDataHandle == NULL ||
@@ -2957,9 +2973,9 @@ int audioInit(void)
         }
         testAndSet_onlyUseHeap3(0);
     }
-    if (!gAudioMusicGroupReady && (gAudioCompletedLoadFlags & 0x8) && (gAudioCompletedLoadFlags & 0x10) &&
-        (gAudioCompletedLoadFlags & 0x8) && (gAudioCompletedLoadFlags & 0x20) &&
-        (gAudioCompletedLoadFlags & 0x40))
+    if (!gAudioMusicGroupReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_PROJECT) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_SAMPLE_DIR) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_M_SAMPLE_BUF))
     {
         sndPushGroup(gAudioStarfoxMProjectDataHandle, 0, gAudioStarfoxMSampleBufferHandle,
                      gAudioStarfoxMSampleDirectoryHandle, gAudioStarfoxMPoolDataHandle);
@@ -2968,17 +2984,17 @@ int audioInit(void)
         mmSetFreeDelay(delay);
         gAudioMusicGroupReady = 1;
         testAndSet_onlyUseHeap3(1);
-        gAudioPendingLoadFlags |= 0x80;
+        gAudioPendingLoadFlags |= AUDIO_LOAD_S_POOL;
         gAudioStarfoxSPoolDataHandle = loadFileByPathAsync(base + 0x278, NULL, 0,
                                                            (void (*)(void*))poolDataSLoadedCallback);
-        gAudioPendingLoadFlags |= 0x100;
+        gAudioPendingLoadFlags |= AUDIO_LOAD_S_PROJECT;
         gAudioStarfoxSProjectDataHandle = loadFileByPathAsync(base + 0x28c, NULL, 0,
                                                               (void (*)(void*))projectDataSLoadedCallback);
-        gAudioPendingLoadFlags |= 0x200;
+        gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_DIR;
         gAudioStarfoxSSampleDirectoryHandle = loadFileByPathAsync(base + 0x2a0, NULL, 0,
                                                                   (void (*)(void*))sampleDirectorySLoadedCallback);
         testAndSet_onlyUseHeap3(0);
-        gAudioPendingLoadFlags |= 0x400;
+        gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_BUF;
         gAudioStarfoxSSampleBufferHandle = loadFileByPathAsync(base + 0x2b4, NULL, 0,
                                                                (void (*)(void*))sampleBufferSLoadedCallback);
         if (gAudioStarfoxSPoolDataHandle == NULL || gAudioStarfoxSProjectDataHandle == NULL ||
@@ -2987,9 +3003,9 @@ int audioInit(void)
             return 0xff;
         }
     }
-    if (!gAudioSfxGroupsReady && (gAudioCompletedLoadFlags & 0x80) && (gAudioCompletedLoadFlags & 0x100) &&
-        (gAudioCompletedLoadFlags & 0x80) && (gAudioCompletedLoadFlags & 0x200) &&
-        (gAudioCompletedLoadFlags & 0x400))
+    if (!gAudioSfxGroupsReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_POOL) && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_PROJECT) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_S_POOL) && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_SAMPLE_DIR) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_S_SAMPLE_BUF))
     {
         for (v = 1; v <= 0x37; v++)
         {
@@ -3011,8 +3027,8 @@ int audioInit(void)
     }
     if (gAudioReady&& gAudioMusicGroupReady && gAudioSfxGroupsReady &&
 
-        (gAudioCompletedLoadFlags & 0x1) && (gAudioCompletedLoadFlags & 0x2) &&
-            (gAudioCompletedLoadFlags & 0x4)
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_MUSIC_TRIGGERS) && (gAudioCompletedLoadFlags & AUDIO_LOAD_SFX_TRIGGERS) &&
+            (gAudioCompletedLoadFlags & AUDIO_LOAD_STREAMS)
     )
     {
         gAudioResetting = 0;
