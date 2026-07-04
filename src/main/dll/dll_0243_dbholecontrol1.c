@@ -50,10 +50,10 @@ STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 typedef struct Dbholecontrol1Placement
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    s32 unk14;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    s32 mapId;
     s16 unk18;
     s16 gameBitA; /* copied into DbHoleControl1State.gameBitA */
     s16 gameBitB; /* copied into DbHoleControl1State.gameBitB */
