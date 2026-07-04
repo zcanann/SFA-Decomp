@@ -32,7 +32,7 @@ extern f32 lbl_803E4E9C;
 extern f32 lbl_803E4EB0;
 extern f32 lbl_803E4EB4;
 
-/* placements carrying this id in their unk14 are inert and never spawn */
+/* placements carrying this id in their mapId are inert and never spawn */
 #define SPIRITPRIZE_PLACEMENT_DISABLED 0x4ca62
 
 /* anim.classId of a spirit-prize object */
@@ -41,7 +41,7 @@ extern f32 lbl_803E4EB4;
 typedef struct SpiritPrizePlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
+    s32 mapId;          /* 0x14: placement map id; == DISABLED sentinel means inert */
     s16 triggerOrder;   /* 0x18: trigger sequence index; -1 = none, stored as obj->unkF4 = +1 */
     s16 mapParam1A;     /* 0x1a: copied to state->mapParam1A */
     u8 pad1C[0x24 - 0x1C];
@@ -106,7 +106,7 @@ void SpiritPrize_init(int* obj, u8* init)
 
     placement = (SpiritPrizePlacement*)init;
     state = ((GameObject*)obj)->extra;
-    if (placement->unk14 == SPIRITPRIZE_PLACEMENT_DISABLED) return;
+    if (placement->mapId == SPIRITPRIZE_PLACEMENT_DISABLED) return;
     state->mapParam1A = placement->mapParam1A;
     state->targetObjectId = -1;
     state->spawnScale = lbl_803E4E98 / (lbl_803E4E98 + (f32)(u32)placement->scaleParam);
@@ -198,7 +198,7 @@ void SpiritPrize_update(int obj)
     {
         return;
     }
-    if (((SpiritPrizePlacement*)params)->unk14 == SPIRITPRIZE_PLACEMENT_DISABLED)
+    if (((SpiritPrizePlacement*)params)->mapId == SPIRITPRIZE_PLACEMENT_DISABLED)
     {
         return;
     }
