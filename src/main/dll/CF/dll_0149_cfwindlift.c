@@ -600,3 +600,8 @@ u8 gWindLiftSeqGamebitTable[] = {
     0x00, 0x00, 0x0A, 0x98, 0x00, 0x00, 0x00, 0x95,
     0x00, 0x00, 0x0A, 0x99, 0x00, 0x00, 0x00, 0x95,
 };
+
+/* descriptor/ptr table auto 0x80322a80-0x80322b28 */
+u32 gWindLiftObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)windlift_initialise, (u32)windlift_release, 0x00000000, (u32)windlift_init, (u32)windlift_update, (u32)windlift_hitDetect, (u32)windlift_render, (u32)windlift_free, (u32)windlift_getObjectTypeId, (u32)windlift_getExtraSize };
+u32 gCFPowerBaseObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cfpowerbase_initialise, (u32)cfpowerbase_release, 0x00000000, (u32)cfpowerbase_init, (u32)cfpowerbase_update, (u32)cfpowerbase_hitDetect, (u32)cfpowerbase_render, (u32)cfpowerbase_free, (u32)cfpowerbase_getObjectTypeId, (u32)cfpowerbase_getExtraSize };
+u32 gCFMainCrystalObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cfmaincrystal_initialise, (u32)cfmaincrystal_release, 0x00000000, (u32)cfmaincrystal_init, (u32)cfmaincrystal_update, (u32)cfmaincrystal_hitDetect, (u32)cfmaincrystal_render, (u32)cfmaincrystal_free, (u32)cfmaincrystal_getObjectTypeId, (u32)cfmaincrystal_getExtraSize };
