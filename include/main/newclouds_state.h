@@ -123,8 +123,8 @@ typedef struct CloudSpawnParams {
     u8 unk2E[0x2A];
     u8 flags58;         /* 0x58 */
     u8 flags59;         /* 0x59 */
-    u8 unk5A;           /* 0x5A */
-    u8 unk5B;           /* 0x5B */
+    u8 sizeClass;           /* 0x5A */
+    u8 spinClass;           /* 0x5B */
     u8 cloudType;       /* 0x5C */
     u8 stationaryInit;     /* 0x5D */
 } CloudSpawnParams;

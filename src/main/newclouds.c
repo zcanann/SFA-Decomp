@@ -1711,7 +1711,7 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
         {
             sizeRange = (int(*)[2])(strs + 0x58);
             NC_PARTS[i].size =
-                (randomGetRange(sizeRange[params->unk5A][0], sizeRange[params->unk5A][1]) /
+                (randomGetRange(sizeRange[params->sizeClass][0], sizeRange[params->sizeClass][1]) /
                     4);
             NC_PARTS[i].fallSpeed =
                 (int)
@@ -1723,7 +1723,7 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
         {
             sizeRange = (int(*)[2])(strs + 0x58);
             NC_PARTS[i].size =
-                (randomGetRange(sizeRange[params->unk5A][0], sizeRange[params->unk5A][1]) *
+                (randomGetRange(sizeRange[params->sizeClass][0], sizeRange[params->sizeClass][1]) *
                     2);
             NC_PARTS[i].fallSpeed = lbl_803DF1A4;
             NC_PARTS[i].texLayer = 0;
@@ -1734,8 +1734,8 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
         }
         spinRange = (int(*)[2])(strs + 0x30);
         NC_PARTS[i].spin =
-            (((int(*)[2])(strs + 0x30))[params->unk5B][1] / 2 -
-                randomGetRange(spinRange[params->unk5B][0], spinRange[params->unk5B][1]));
+            (((int(*)[2])(strs + 0x30))[params->spinClass][1] / 2 -
+                randomGetRange(spinRange[params->spinClass][0], spinRange[params->spinClass][1]));
     }
     if (gNewCloudWindSourcesInit != 0)
     {
