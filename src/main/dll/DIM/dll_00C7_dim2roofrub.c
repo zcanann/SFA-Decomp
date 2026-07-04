@@ -179,7 +179,7 @@ typedef struct Dim2roofrubPlacement
     f32 posX;
     f32 posY;
     f32 posZ;
-    s32 unk14;
+    s32 mapId; /* 0x14: ObjPlacement-head map id (after posX/Y/Z) */
     s16 animDataIndex; /* 0x18 anim-data set selector (-1 = none); obj.unkF4 = animDataIndex+1 */
     s16 unk1A;
     s16 unk1C;
