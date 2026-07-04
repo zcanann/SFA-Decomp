@@ -14,6 +14,7 @@
 #include "main/audio/sfx.h"
 
 #define DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DFPFORCEAW_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
 
 typedef struct TrickyCurveObjectDef
 {
@@ -169,7 +170,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
         if (GameBit_Get(0x1d9) != 0)
         {
             GameBit_Set(0x468, 1);
-            ObjMsg_SendToObject(player, 0x60004, obj, 0);
+            ObjMsg_SendToObject(player, DFPFORCEAW_MSG_PLAYER_BURST, obj, 0);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &fxParams, 2, -1, NULL);
             burstParticles = 9;
             do
@@ -180,7 +181,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
         }
         else
         {
-            ObjMsg_SendToObject(player, 0x60004, obj, 1);
+            ObjMsg_SendToObject(player, DFPFORCEAW_MSG_PLAYER_BURST, obj, 1);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &fxParams, 2, -1, NULL);
             burstParticles = 9;
             do
@@ -411,7 +412,7 @@ void TrickyCurve_updateEffectRingTrigger(u64 arg1, u64 arg2, u64 arg3,
             if (bitVal == 0)
             {
                 ObjMsg_SendToObject(ftmp, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ref,
-                                    0x60004,
+                                    DFPFORCEAW_MSG_PLAYER_BURST,
                                     obj, 1, unusedArg7, unusedArg8, unusedArg9, unusedArg10);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &rotX, 2, -1, NULL);
                 ref = 9;
@@ -426,7 +427,7 @@ void TrickyCurve_updateEffectRingTrigger(u64 arg1, u64 arg2, u64 arg3,
             {
                 pairWord = FUN_80017698(0x468, 1);
                 ObjMsg_SendToObject(pairWord, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ref,
-                                    0x60004,
+                                    DFPFORCEAW_MSG_PLAYER_BURST,
                                     obj, 0, unusedArg7, unusedArg8, unusedArg9, unusedArg10);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &rotX, 2, -1, NULL);
                 ref = 9;
