@@ -37,6 +37,11 @@ typedef struct Dll19Placement
     u8 pad402[0x408 - 0x402];
 } Dll19Placement;
 
+/* bits in the u16 flags word at +0x400 (shared Dll19State/Dll19Placement view) */
+#define DLL19_FLAG_YAW_ALIGNED 0x10 /* yaw delta within facing cone */
+#define DLL19_FLAG_OSC_RISING 0x20  /* oscillation phase 1 (initial rise) */
+#define DLL19_FLAG_OSC_ACTIVE 0x40  /* oscillation phase 2 (active/return) */
+
 extern void ObjHits_DisableObject(u32 objPtr);
 extern void ObjHits_EnableObject(u32 objPtr);
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -576,23 +581,23 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
     if (((Dll19Placement*)state)->oscValue > lbl_803E1C2C)
     {
         ((Dll19Placement*)state)->oscValue = timeDelta * ((Dll19Placement*)state)->oscVelocity + ((Dll19Placement*)state)->oscValue;
-        if ((((Dll19Placement*)state)->flags & 0x20) != 0)
+        if ((((Dll19Placement*)state)->flags & DLL19_FLAG_OSC_RISING) != 0)
         {
-            ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~0x20;
-            ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags | 0x40;
+            ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~DLL19_FLAG_OSC_RISING;
+            ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags | DLL19_FLAG_OSC_ACTIVE;
             if (((Dll19Placement*)state)->oscValue > lbl_803E1C40)
             {
                 ((Dll19Placement*)state)->oscValue = lbl_803E1C2C;
-                ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~0x40;
+                ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~DLL19_FLAG_OSC_ACTIVE;
             }
         }
-        else if ((((Dll19Placement*)state)->flags & 0x40) != 0)
+        else if ((((Dll19Placement*)state)->flags & DLL19_FLAG_OSC_ACTIVE) != 0)
         {
             if (((Dll19Placement*)state)->oscValue > lbl_803E1C40)
             {
                 int other = *(int*)&((GameObject*)obj)->anim.placementData;
                 ((Dll19Placement*)state)->oscValue = lbl_803E1C2C;
-                ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~0x40;
+                ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~DLL19_FLAG_OSC_ACTIVE;
                 ((BaddieState*)baddieState)->hitPoints = 0;
                 obj[54] = 0;
                 ((GameObject*)obj)->unkF4 = 1;
@@ -645,7 +650,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
         *(s8*)&((BaddieState*)baddieState)->hitPoints = (s8)(((BaddieState*)baddieState)->hitPoints - v24);
         if (*(s8*)&((BaddieState*)baddieState)->hitPoints < 1)
         {
-            ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags | 0x20;
+            ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags | DLL19_FLAG_OSC_RISING;
             ((Dll19Placement*)state)->oscValue = lbl_803E1C48;
             ((Dll19Placement*)state)->oscVelocity = lbl_803E1C4C;
             ((BaddieState*)baddieState)->substate = substate;
@@ -1190,11 +1195,11 @@ void dll_19_func07(int obj, int target, int div, u16* outYaw, u16* outDelta, u16
         *outDelta = delta;
         if ((u16)delta < 0x31c4 || (u16)delta > 0xce3b)
         {
-            ((Dll19State*)st)->flags &= ~0x10;
+            ((Dll19State*)st)->flags &= ~DLL19_FLAG_YAW_ALIGNED;
         }
         else
         {
-            ((Dll19State*)st)->flags |= 0x10;
+            ((Dll19State*)st)->flags |= DLL19_FLAG_YAW_ALIGNED;
         }
         *outYaw = (u16)delta / (0x10000 / (u8)div);
         *outDist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
