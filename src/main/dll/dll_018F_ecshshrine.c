@@ -138,7 +138,7 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
     state = (MmShrineAnimState*)obj->state;
     player = Obj_GetPlayerObject();
 
-    if ((obj->flags & 0x4000) != 0)
+    if ((obj->flags & MMSHRINE_FLAG_POSE_LOCKED) != 0)
     {
         obj->yaw = 0;
         obj->posY = *(f32*)(config + 0xC);
@@ -231,14 +231,14 @@ int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
                 (*gObjectTriggerInterface)->setCamVars(0x48, 100, 0, 0x50);
                 break;
             case 14:
-                obj->flags |= 0x4000;
+                obj->flags |= MMSHRINE_FLAG_POSE_LOCKED;
                 if ((void*)state->light != NULL)
                 {
                     modelLightStruct_setEnabled(state->light, 0, lbl_803E4FC8);
                 }
                 break;
             case 15:
-                obj->flags &= ~0x4000;
+                obj->flags &= ~MMSHRINE_FLAG_POSE_LOCKED;
                 if ((void*)state->light != NULL)
                 {
                     modelLightStruct_setEnabled(state->light, 0, lbl_803E4FC8);

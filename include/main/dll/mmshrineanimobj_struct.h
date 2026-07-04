@@ -3,6 +3,9 @@
 
 #include "types.h"
 
+/* MmShrineAnimObj.flags bits */
+#define MMSHRINE_FLAG_POSE_LOCKED 0x4000 /* hold shrine in fixed pose (yaw 0, posY from config), skip normal update */
+
 typedef struct MmShrineAnimObj
 {
     s16 yaw;
