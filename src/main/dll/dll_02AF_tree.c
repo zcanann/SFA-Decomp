@@ -424,3 +424,7 @@ f32 gTreeEffectColors[] = {
     25.0f, 300.0f, 0.0f, 80.0f,
     0.0f, 50.0f, 0.0f, 50.0f,
 };
+
+/* descriptor/ptr table auto 0x8032bc90-0x8032bd00 */
+u32 gTreeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)tree_init, (u32)tree_update, 0x00000000, (u32)tree_render, 0x00000000, 0x00000000, (u32)tree_getExtraSize };
+u32 gBrokenPipeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)brokenpipe_init, (u32)brokenpipe_update, 0x00000000, 0x00000000, 0x00000000, 0x00000000, (u32)brokenpipe_getExtraSize };
