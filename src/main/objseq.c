@@ -3829,7 +3829,7 @@ checked:
             if (objId == 0x1f || objId == 0)
             {
                 u8* pp = Obj_GetPlayerObject();
-                *(u16*)(pp + 0xb0) |= 0x1000;
+                *(u16*)(pp + 0xb0) |= OBJECT_OBJFLAG_SEQ_ATTACHED;
             }
             if (objId == 0xffff)
             {
