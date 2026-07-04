@@ -237,13 +237,13 @@ void fn_8015165C(int obj, u8* state)
         if (*(f32*)(state + 0x328) <= fz)
         {
             *(f32*)(state + 0x328) = fz;
-            ((GroundBaddieState*)state)->baddie.controlFlags |= 0x40000000LL;
+            ((GroundBaddieState*)state)->baddie.controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
             *(u16*)(state + 0x338) = (p28 + *(u16*)(state + 0x338) * 16)[10];
         }
     }
     if ((u8)fn_8014FFB4(obj, state, 1) == 0)
     {
-        if ((((GroundBaddieState*)state)->baddie.controlFlags & 0x40000000) != 0)
+        if ((((GroundBaddieState*)state)->baddie.controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             player = Obj_GetPlayerObject();
             fn_8014C11C(obj, lbl_803E27AC, 3, 16, gGroundBaddieTargetSearchResult);
