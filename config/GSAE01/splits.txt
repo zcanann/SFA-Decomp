@@ -500,7 +500,7 @@ main/dll/dll_008C_dll8cfunc0.c:
 
 main/dll/dll_008D_dll8dfunc0.c:
 	.text       start:0x800F8D68 end:0x800F977C
-	.data       start:0x80316B60 end:0x80316C20
+	.data       start:0x80316B60 end:0x80316C40
 
 main/dll/dll_008E_dll8efunc0.c:
 	.text       start:0x800F977C end:0x800F9E78
