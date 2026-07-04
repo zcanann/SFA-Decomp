@@ -23,7 +23,6 @@ typedef struct CameraModeCloudRunnerState CameraModeCloudRunnerState;
 
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern CameraModeCannonState* lbl_803DD5A0;
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 lbl_803E1AE0; /* easing divisor */
 extern f32 lbl_803E1AE4; /* orbit radius */
 extern f32 lbl_803E1AE8; /* angle scale */
