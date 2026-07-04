@@ -136,6 +136,10 @@ STATIC_ASSERT(offsetof(HighTopRuntime, flags) == 0x9FD);
 STATIC_ASSERT(offsetof(HighTopRuntime, turnRateThreshold) == 0xC16);
 STATIC_ASSERT(offsetof(HighTopRuntime, substate) == 0xC4B);
 
+/* HighTopRuntime.flagsC40 bits (0x140 clear = CURVE_FOLLOW + bit 0x100 together) */
+#define HIGHTOP_FLAG_CURVE_ARMED 0x20  /* curve-follow armed (set with CURVE_FOLLOW) */
+#define HIGHTOP_FLAG_CURVE_FOLLOW 0x40 /* running Obj_UpdateRomCurveFollowVelocity */
+
 typedef struct HighTopObject
 {
     union {
@@ -688,7 +692,7 @@ void hightop_update(int obj)
     *(s8*)&((BaddieState*)p)->physicsActive = !((BitFlags8*)(p + 0xc49))->b4;
     ((BaddieState*)p)->hitPoints = 0;
     *(int*)p &= ~0x8000;
-    if ((((HighTopRuntime*)p)->flagsC40 & 0x40) != 0)
+    if ((((HighTopRuntime*)p)->flagsC40 & HIGHTOP_FLAG_CURVE_FOLLOW) != 0)
     {
         int ev = Obj_UpdateRomCurveFollowVelocity(obj, (f32*)(p + 0xa10),
                                                   lbl_803DC324 * (((HighTopRuntime*)p)->unkC28 * timeDelta),
@@ -855,8 +859,8 @@ int hightop_stateHandler04(int obj, int p)
         ObjHits_ClearSourceMask(obj, 1);
         ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask &= ~1;
         *(s8*)&state->substate = -1;
-        state->flagsC40 |= 0x40;
-        state->flagsC40 |= 0x20;
+        state->flagsC40 |= HIGHTOP_FLAG_CURVE_FOLLOW;
+        state->flagsC40 |= HIGHTOP_FLAG_CURVE_ARMED;
         state->flagsC49.b1 = 0;
         ((void (*)(void*, int, int, void*))curve->slotA8)(
             (char*)state + 0xa10, obj, 0x3463a, (curve = *gRomCurveInterface));
