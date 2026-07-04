@@ -149,3 +149,29 @@ ObjectDescriptor gCrFuelTankObjDescriptor = {
     (ObjectDescriptorCallback)crfueltank_getObjectTypeId,
     crfueltank_getExtraSize,
 };
+
+/*__DATA_EXTERNS__*/
+extern void ktrexlevel_getExtraSize();
+extern void ktrexlevel_getObjectTypeId();
+extern void ktrexlevel_free();
+extern void ktrexlevel_render();
+extern void ktrexlevel_hitDetect();
+extern void ktrexlevel_update();
+extern void ktrexlevel_init();
+extern void ktrexlevel_release();
+extern void ktrexlevel_initialise();
+extern void proximitymine_getExtraSize();
+extern void proximitymine_getObjectTypeId();
+extern void proximitymine_free();
+extern void proximitymine_render();
+extern void proximitymine_hitDetect();
+extern void proximitymine_update();
+extern void proximitymine_init();
+extern void proximitymine_release();
+extern void proximitymine_initialise();
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
+void* gProximityMineObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, proximitymine_initialise, proximitymine_release, (void*)0x00000000, proximitymine_init, proximitymine_update, proximitymine_hitDetect, proximitymine_render, proximitymine_free, proximitymine_getObjectTypeId, proximitymine_getExtraSize };
+void* gKtRexLevelObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, ktrexlevel_initialise, ktrexlevel_release, (void*)0x00000000, ktrexlevel_init, ktrexlevel_update, ktrexlevel_hitDetect, ktrexlevel_render, ktrexlevel_free, ktrexlevel_getObjectTypeId, ktrexlevel_getExtraSize };
+u8 lbl_8032A510[12] = { 0, 8, 0, 14, 0, 16, 0, 17, 0, 16, 0, 17 };
+u8 lbl_8032A51C[12] = { 59, 196, 155, 166, 59, 68, 155, 166, 59, 68, 155, 166 };
+u8 lbl_8032A528[12] = { 59, 180, 57, 88, 60, 68, 155, 166, 60, 68, 155, 166 };
