@@ -34,6 +34,8 @@
 #include "main/mm.h"
 #include "main/sfa_shared_decls.h"
 
+#define FIREPIPE_OBJGROUP 0x4a
+
 #define FIREPIPE_OBJFLAG_ACTIVE 0x200
 #define FIREPIPE_OBJFLAG_RENDERED 0x800
 #define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
@@ -448,7 +450,7 @@ void firepipe_free(FirePipeObject* obj)
     FirePipeExtra* extra;
 
     extra = obj->extra;
-    ObjGroup_RemoveObject(obj, 0x4a);
+    ObjGroup_RemoveObject(obj, FIREPIPE_OBJGROUP);
     i = 0;
     iter = (int*)extra;
     while (i < (int)(u32)extra->effectCount)
@@ -616,7 +618,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         ((FirePipeBitFlags*)&extra->flags)->glowEnabled = val;
         storeZeroToFloatParam(&extra->emitTimer);
         s16toFloat(&extra->emitTimer, 0x14);
-        ObjGroup_AddObject(obj, 0x4a);
+        ObjGroup_AddObject(obj, FIREPIPE_OBJGROUP);
         ((FirePipeBitFlags*)&extra->flags)->childEmitEnabled = 0;
         extra->glowLight = 0;
     }
