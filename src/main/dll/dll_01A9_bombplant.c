@@ -169,7 +169,7 @@ void fn_801D29E4(int* obj, int* p2)
         spore->posZ = ((GameObject*)obj)->anim.localPosZ + bd.v[2];
         spore->color[1] = 1;
         spore->color[0] = 2;
-        spore->spawnYaw = (s16)((s32)base->unk1E << 8);
+        spore->spawnYaw = (s16)((s32)base->spawnYawByte << 8);
         spore->rotXSeed = ((GameObject*)obj)->anim.rotX;
         Obj_SetupObject((int*)spore, 5, -1, -1, 0);
     }
