@@ -39,6 +39,9 @@
 #include "main/dll/dll_00E5_shield.h"
 #include "main/dll/dll_00F7_dllf7.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+/* object group this object joins while active */
+#define SHIELD_OBJGROUP 7
 extern int randomGetRange(int lo, int hi);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
@@ -292,7 +295,7 @@ extern f32 lbl_803E33CC;
 
 void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 7);
+    ObjGroup_RemoveObject(obj, SHIELD_OBJGROUP);
 }
 
 void staticCamera_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -316,7 +319,7 @@ void staticCamera_init(short* state, int placement, int addToGroup)
     dst[1] = 0;
     if (addToGroup == 0)
     {
-        ObjGroup_AddObject((int)state, 7);
+        ObjGroup_AddObject((int)state, SHIELD_OBJGROUP);
     }
 }
 
