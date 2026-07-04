@@ -16,6 +16,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define TIMER_OBJGROUP 0x4c
+
 #define TIMER_MODE_GLOBAL 1
 #define TIMER_MODE_EFFECT 2
 
@@ -66,7 +68,7 @@ int timer_getExtraSize(void) { return sizeof(TimerState); }
 void timer_free(int obj)
 {
     TimerState* state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 0x4c);
+    ObjGroup_RemoveObject(obj, TIMER_OBJGROUP);
     if (state->lightSlot != NULL)
     {
         modelLightStruct_freeSlot((int)&state->lightSlot);
@@ -139,7 +141,7 @@ void timer_init(int obj, int setup)
     state->flags.expired = 0;
     state->flags.manual = 0;
     state->lightSlot = NULL;
-    ObjGroup_AddObject(obj, 0x4c);
+    ObjGroup_AddObject(obj, TIMER_OBJGROUP);
     state->flags.flag20 = 0;
 }
 
