@@ -1,5 +1,10 @@
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
+
+/* Standard MIDI controller (CC) numbers dispatched by the sequencer. */
+#define MCMD_CTRL_MODULATION 0x01
+#define MCMD_CTRL_VOLUME 0x07
+#define MCMD_CTRL_PITCH_BEND 0x80
 extern int synthGetNextChannelEvent(u8 i);
 extern void synthInsertChannelEvent(int slot, int item);
 extern int gSynthCurrentVoice;
@@ -216,7 +221,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
             }
             if (d->velocity != 0xff)
             {
-                inpSetMidiCtrl(7, rec->chan, gSynthCurrentVoiceSlotIndex & 0xff, d->velocity);
+                inpSetMidiCtrl(MCMD_CTRL_VOLUME, rec->chan, gSynthCurrentVoiceSlotIndex & 0xff, d->velocity);
             }
             break;
         }
@@ -415,7 +420,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
             {
                 t->pitchTime = 0x7fffffff;
             }
-            inpSetMidiCtrl14(0x80, t->chan, gSynthCurrentVoiceSlotIndex & 0xff, t->pitchVal);
+            inpSetMidiCtrl14(MCMD_CTRL_PITCH_BEND, t->chan, gSynthCurrentVoiceSlotIndex & 0xff, t->pitchVal);
             break;
         }
     case 1:
@@ -439,7 +444,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
             {
                 t->modTime = 0x7fffffff;
             }
-            inpSetMidiCtrl14(1, t->chan, gSynthCurrentVoiceSlotIndex & 0xff, t->modVal);
+            inpSetMidiCtrl14(MCMD_CTRL_MODULATION, t->chan, gSynthCurrentVoiceSlotIndex & 0xff, t->modVal);
             break;
         }
     case 3:
