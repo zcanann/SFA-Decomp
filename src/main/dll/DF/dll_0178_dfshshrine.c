@@ -15,6 +15,17 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+
+/* shrine-lantern state machine (state->mode) */
+#define DFSHRINE_MODE_IDLE          0 /* orbit/chime; wait for player activation */
+#define DFSHRINE_MODE_AWAIT_OPEN    1 /* wait for the open sequence to finish */
+#define DFSHRINE_MODE_GRANT_REWARDS 2 /* timed reward-bit granting loop */
+#define DFSHRINE_MODE_POST_FINISH   3 /* run success/fail follow-up, then reset */
+#define DFSHRINE_MODE_RESET         4 /* clear latches/bits, return to idle */
+#define DFSHRINE_MODE_BEGIN_TRANS   5 /* start the intro screen transition */
+#define DFSHRINE_MODE_AFTER_FINISH  6 /* one frame after the finish transition */
+#define DFSHRINE_MODE_FINISH        7 /* start the finishing screen transition */
+
 extern void objRenderFn_8003b8f4(int* obj);
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
@@ -357,7 +368,7 @@ void dfsh_shrine_update(int objArg)
 
     switch (state->mode)
     {
-    case 0:
+    case DFSHRINE_MODE_IDLE:
         {
             f32 t = state->idleChimeTimer - timeDelta;
             state->idleChimeTimer = t;
@@ -371,28 +382,28 @@ void dfsh_shrine_update(int objArg)
         if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             GameBit_Set(0x589, 0);
-            state->mode = 5;
+            state->mode = DFSHRINE_MODE_BEGIN_TRANS;
             Music_Trigger(MUSICTRIG_DIM_Snow, 1);
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             GameBit_Set(0x129, 0);
         }
         break;
-    case 5:
+    case DFSHRINE_MODE_BEGIN_TRANS:
         state->transitionTimer = 0x1f;
         (*gScreenTransitionInterface)->step(0x1e, 1);
-        state->mode = 1;
+        state->mode = DFSHRINE_MODE_AWAIT_OPEN;
         obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
-    case 1:
+    case DFSHRINE_MODE_AWAIT_OPEN:
         if (DFSH_FLAGS(state)->openedBySequence == 1)
         {
-            state->mode = 2;
+            state->mode = DFSHRINE_MODE_GRANT_REWARDS;
             GameBit_Set(0xb76, 1);
             gameTimerInit(0x19, 0xd2);
             timerSetToCountUp();
         }
         break;
-    case 2:
+    case DFSHRINE_MODE_GRANT_REWARDS:
         if (state->rewardIndex < 10)
         {
             state->rewardTimer -= timeDelta;
@@ -414,13 +425,13 @@ void dfsh_shrine_update(int objArg)
         }
         if (anyMissing == 0)
         {
-            state->mode = 7;
+            state->mode = DFSHRINE_MODE_FINISH;
             DFSH_FLAGS(state)->success = 1;
             gameTimerStop();
         }
         else if (isGameTimerDisabled() != 0)
         {
-            state->mode = 7;
+            state->mode = DFSHRINE_MODE_FINISH;
             DFSH_FLAGS(state)->success = 0;
             state->transitionTimer = 0x78;
             for (i = 0; i < 10; i++)
@@ -440,35 +451,35 @@ void dfsh_shrine_update(int objArg)
             }
         }
         break;
-    case 7:
-        state->mode = 6;
+    case DFSHRINE_MODE_FINISH:
+        state->mode = DFSHRINE_MODE_AFTER_FINISH;
         state->transitionTimer = 0x23;
         (*gScreenTransitionInterface)->start(0x1e, 1);
         break;
-    case 6:
-        state->mode = 3;
+    case DFSHRINE_MODE_AFTER_FINISH:
+        state->mode = DFSHRINE_MODE_POST_FINISH;
         break;
-    case 3:
+    case DFSHRINE_MODE_POST_FINISH:
         if (objGetAnimStateFlags(player, 1) != 0 || GameBit_Get(0xbfd) != 0u)
         {
-            state->mode = 4;
+            state->mode = DFSHRINE_MODE_RESET;
         }
         else if (DFSH_FLAGS(state)->success == 0)
         {
-            state->mode = 4;
+            state->mode = DFSHRINE_MODE_RESET;
             GameBit_Set(0xb70, 1);
         }
         else
         {
-            state->mode = 4;
+            state->mode = DFSHRINE_MODE_RESET;
             audioStopByMask(3);
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         }
         GameBit_Set(0x129, 1);
         GameBit_Set(0xb76, 0);
         break;
-    case 4:
-        state->mode = 0;
+    case DFSHRINE_MODE_RESET:
+        state->mode = DFSHRINE_MODE_IDLE;
         DFSH_FLAGS(state)->openedBySequence = 0;
         state->rewardIndex = 0;
         state->rewardTimer = lbl_803E4E8C;
@@ -525,7 +536,7 @@ void dfsh_shrine_init(int* obj, DfshShrinePlacement* init)
     {
         state->startDelayFrames = (s16)((s32)init->startDelay >> 8);
     }
-    state->mode = 4;
+    state->mode = DFSHRINE_MODE_RESET;
     ((DfshShrineFlags*)&state->flags)->openedBySequence = 0;
     state->transitionTimer = 0;
     ((GameObject*)obj)->animEventCallback = dfsh_shrine_SeqFn;
