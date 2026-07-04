@@ -626,7 +626,7 @@ void appleontree_update(int objArg)
         frac = fb / *(float*)(state + 4);
         switch (((AppleOnTreeState*)state)->animState)
         {
-        case 0:
+        case APPLEONTREE_STATE_GROWING:
             val = ObjHits_GetPriorityHit(obj, 0x0, 0x0, 0x0);
             if ((val != 0) ||
                 ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
@@ -665,7 +665,7 @@ void appleontree_update(int objArg)
                 }
             }
             break;
-        case 1:
+        case APPLEONTREE_STATE_RIPE:
             val = ObjHits_GetPriorityHit(obj, 0x0, 0x0, 0x0);
             if ((val != 0) ||
                 ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
@@ -713,7 +713,7 @@ void appleontree_update(int objArg)
                 }
             }
             break;
-        case 2:
+        case APPLEONTREE_STATE_FALLING:
             if (frac > ((GroundBaddieState*)state)->baddie.posY)
             {
                 val = *(int*)&((GameObject*)obj)->extra;
@@ -748,7 +748,7 @@ void appleontree_update(int objArg)
                 fn_8017D854(obj, 1);
             }
             break;
-        case 3:
+        case APPLEONTREE_STATE_LANDED:
             ((AppleOnTreeState*)state)->elapsedTime = fb - timeDelta;
             if (frac > ((GroundBaddieState*)state)->baddie.posZ)
             {
@@ -765,7 +765,7 @@ void appleontree_update(int objArg)
                 }
             }
             break;
-        case 4:
+        case APPLEONTREE_STATE_KNOCKED:
             if (frac > *(float*)(state + 0x20))
             {
                 ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_FADEOUT;
@@ -804,7 +804,7 @@ void appleontree_update(int objArg)
                 appleontree_handleCollectableHit(obj);
             }
             break;
-        case 5:
+        case APPLEONTREE_STATE_BURST:
             if (fb > lbl_803E3810)
             {
                 placement = *(int*)&((GameObject*)obj)->extra;
@@ -822,7 +822,7 @@ void appleontree_update(int objArg)
                 }
             }
             break;
-        case 6:
+        case APPLEONTREE_STATE_FADEOUT:
             frac = lbl_803E3814;
             if (fb > frac)
             {
