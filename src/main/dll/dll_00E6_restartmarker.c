@@ -201,13 +201,6 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void gcbaddieshield_update(int* obj);
 
-
-
-
-
-
-
-
 extern void shield_update(int* obj);
 extern void dll_F7_update(int* obj);
 extern void dll_F7_init(int* obj, int* params);
@@ -691,24 +684,9 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-void gcbaddieshield_update(int* obj);
-
-
-
-
 void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
-
-void dll_F7_init(int* obj, int* params);
-
-
-
 void mikabomb_init(int* obj);
 
-
-
-void shield_update(int* obj);
-
-void dll_F7_update(int* obj);
