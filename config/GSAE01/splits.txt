@@ -3131,6 +3131,7 @@ main/audio/snd_synth_api.c:
 
 main/audio/synth_job_init.c:
 	.text       start:0x80272EA4 end:0x80272F70
+	.bss        start:0x803BE378 end:0x803BFC78
 
 main/audio/synth_jobs.c:
 	extab       start:0x800057C8 end:0x800057F0
