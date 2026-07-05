@@ -66,7 +66,7 @@ typedef struct WaterFallSprayPartfxArgs
 void WaterFallSpray_update(int* objParam)
 {
     extern void Sfx_KeepAliveLoopedObjectSound(u8* obj, int sfxId); /* #57 */
-    u32* state;
+    WaterFallSprayState* state;
     WaterFallSprayPlacement* data;
     u8* obj;
     GameObject* playerObj;
@@ -96,8 +96,8 @@ void WaterFallSpray_update(int* objParam)
         {
             if ((data->flags & 0x10) == 0)
             {
-                Sfx_KeepAliveLoopedObjectSound(obj, state[0] & 0xffff);
-                Sfx_KeepAliveLoopedObjectSound(obj, state[1] & 0xffff);
+                Sfx_KeepAliveLoopedObjectSound(obj, state->sfxIdA & 0xffff);
+                Sfx_KeepAliveLoopedObjectSound(obj, state->sfxIdB & 0xffff);
             }
 
             cooldown = ((GameObject*)obj)->unkF4;
