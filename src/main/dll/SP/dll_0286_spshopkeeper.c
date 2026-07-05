@@ -36,7 +36,7 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 typedef struct ShopkeeperSpawnSetup
 {
     ObjPlacement base; /* 0x00..0x17 */
-    u8 rotXByte;       /* 0x18: scarab spawn rotX (1/256 turns) */
+    s8 rotXByte;       /* 0x18: scarab spawn rotX (1/256 turns) */
     u8 kind;           /* 0x19: scarab variant (see SpscarabPlacement.kind) */
     s16 groundY;       /* 0x1A: scarab ground-height delta (see SpscarabState.groundY) */
     u8 pad1C[0x24 - 0x1C];
@@ -92,54 +92,54 @@ extern void warpToMap(int idx, s8 transType);
 extern void playerAddMoney(void* player, int amount);
 extern f32 lbl_803E5A24;
 
-void fn_801E7DC8(int p1, int p2, int count)
+void fn_801E7DC8(int obj, int state, int count)
 {
     extern u8 Obj_IsLoadingLocked(void);
     extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
     extern int Obj_AllocObjectSetup(int, int);
     extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     int i;
-    int local;
+    f32 groundHeight;
     int o;
 
     if (Obj_IsLoadingLocked() == 0) return;
 
-    (*gMapEventInterface)->setObjGroupStatus((s32)((GameObject*)p1)->anim.mapEventSlot, 6, 1);
+    (*gMapEventInterface)->setObjGroupStatus((s32)((GameObject*)obj)->anim.mapEventSlot, 6, 1);
 
-    hitDetectFn_800658a4(p1, ((GameObject*)p1)->anim.localPosX, ((GameObject*)p1)->anim.localPosY,
-                         ((GameObject*)p1)->anim.localPosZ, (f32*)&local, 0);
+    hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                         ((GameObject*)obj)->anim.localPosZ, &groundHeight, 0);
 
     for (i = 0; i < count; i++)
     {
         o = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
-        ((ShopkeeperSpawnSetup*)o)->base.posX = ((GameObject*)p1)->anim.localPosX;
-        ((ShopkeeperSpawnSetup*)o)->base.posY = ((GameObject*)p1)->anim.localPosY;
-        ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)p1)->anim.localPosZ;
-        *(s8*)&((ShopkeeperSpawnSetup*)o)->rotXByte = randomGetRange(-128, 127);
-        ((ShopkeeperSpawnSetup*)o)->groundY = ((GameObject*)p1)->anim.localPosY - *(f32*)&local;
+        ((ShopkeeperSpawnSetup*)o)->base.posX = ((GameObject*)obj)->anim.localPosX;
+        ((ShopkeeperSpawnSetup*)o)->base.posY = ((GameObject*)obj)->anim.localPosY;
+        ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ShopkeeperSpawnSetup*)o)->rotXByte = randomGetRange(-128, 127);
+        ((ShopkeeperSpawnSetup*)o)->groundY = ((GameObject*)obj)->anim.localPosY - groundHeight;
         ((ShopkeeperSpawnSetup*)o)->base.color[1] = 1;
         ((ShopkeeperSpawnSetup*)o)->base.color[3] = 255;
         ((ShopkeeperSpawnSetup*)o)->base.color[0] = 16;
         ((ShopkeeperSpawnSetup*)o)->base.color[2] = 6;
-        ((ShopkeeperSpawnSetup*)o)->base.mapId = ((ShopkeeperState*)p2)->vendorObj;
-        Obj_SetupObject(o, 5, ((GameObject*)p1)->anim.mapEventSlot, -1, *(int*)&((GameObject*)p1)->anim.parent);
+        ((ShopkeeperSpawnSetup*)o)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
+        Obj_SetupObject(o, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(int*)&((GameObject*)obj)->anim.parent);
     }
 
     for (i = 0; i < count; i++)
     {
         o = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
-        ((ShopkeeperSpawnSetup*)o)->base.posX = ((GameObject*)p1)->anim.localPosX;
-        ((ShopkeeperSpawnSetup*)o)->base.posY = ((GameObject*)p1)->anim.localPosY;
-        ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)p1)->anim.localPosZ;
-        *(s8*)&((ShopkeeperSpawnSetup*)o)->rotXByte = randomGetRange(-128, 127);
-        ((ShopkeeperSpawnSetup*)o)->groundY = ((GameObject*)p1)->anim.localPosY - *(f32*)&local;
+        ((ShopkeeperSpawnSetup*)o)->base.posX = ((GameObject*)obj)->anim.localPosX;
+        ((ShopkeeperSpawnSetup*)o)->base.posY = ((GameObject*)obj)->anim.localPosY;
+        ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ShopkeeperSpawnSetup*)o)->rotXByte = randomGetRange(-128, 127);
+        ((ShopkeeperSpawnSetup*)o)->groundY = ((GameObject*)obj)->anim.localPosY - groundHeight;
         ((ShopkeeperSpawnSetup*)o)->base.color[1] = 1;
         ((ShopkeeperSpawnSetup*)o)->base.color[3] = 255;
         ((ShopkeeperSpawnSetup*)o)->base.color[0] = 16;
         ((ShopkeeperSpawnSetup*)o)->base.color[2] = 6;
         ((ShopkeeperSpawnSetup*)o)->kind = 1;
-        ((ShopkeeperSpawnSetup*)o)->base.mapId = ((ShopkeeperState*)p2)->vendorObj;
-        Obj_SetupObject(o, 5, ((GameObject*)p1)->anim.mapEventSlot, -1, *(int*)&((GameObject*)p1)->anim.parent);
+        ((ShopkeeperSpawnSetup*)o)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
+        Obj_SetupObject(o, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(int*)&((GameObject*)obj)->anim.parent);
     }
 }
 
@@ -256,6 +256,9 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
     f32 speed;
 
     state = *(int*)&((GameObject*)obj)->extra;
+    /* second copy of the extra pointer; the (int)(long) round-trip is
+     * load-bearing - it splits the value web so state2 gets its own
+     * register home (md5-verified: removing it changes codegen) */
     state2 = (int)(long)*(int*)&((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     range = lbl_803E59D8;
@@ -286,15 +289,15 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
     {
         if ((s8)seq->movementState != 0)
         {
-            slot = (*(int (**)(int))((char*)**(int***)(((ShopkeeperState*)state)->vendorObj + 0x68) + 0x44))(
+            slot = (*(int (**)(int))((char*)*((GameObject*)((ShopkeeperState*)state)->vendorObj)->anim.dll + 0x44))(
                 ((ShopkeeperState*)state)->vendorObj);
             if (slot != -1)
             {
                 ((ShopkeeperState*)state)->price = (s16)(
-                    *(int (**)(int, int))((char*)**(int***)(((ShopkeeperState*)state)->vendorObj + 0x68) + 0x38))(
+                    *(int (**)(int, int))((char*)*((GameObject*)((ShopkeeperState*)state)->vendorObj)->anim.dll + 0x38))(
                     ((ShopkeeperState*)state)->vendorObj, slot);
                 ((ShopkeeperState*)state)->unk9CE = (s16)(
-                    *(int (**)(int, int))((char*)**(int***)(((ShopkeeperState*)state)->vendorObj + 0x68) + 0x30))(
+                    *(int (**)(int, int))((char*)*((GameObject*)((ShopkeeperState*)state)->vendorObj)->anim.dll + 0x30))(
                     ((ShopkeeperState*)state)->vendorObj, slot);
                 ((ShopkeeperState*)state)->priceShown = ((ShopkeeperState*)state)->price;
                 ((ShopkeeperState*)state)->unk9D2 = 0;
@@ -314,7 +317,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
             seq->movementState = 0;
             seq->conditionCallback = (ObjAnimSequenceConditionCallback)DRlaserturret_handlePromptChoice;
         }
-        if ((*(int (**)(int))((char*)**(int***)(((ShopkeeperState*)state)->vendorObj + 0x68) + 0x44))(
+        if ((*(int (**)(int))((char*)*((GameObject*)((ShopkeeperState*)state)->vendorObj)->anim.dll + 0x44))(
             ((ShopkeeperState*)state)->vendorObj) != -1)
         {
             setAButtonIcon(0x12);
