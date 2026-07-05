@@ -46,11 +46,8 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
-extern f32 lbl_803E5958;
 extern f32 lbl_803E595C;
-extern f32 lbl_803E5960;
-extern f32 lbl_803E5970;
-extern f32 lbl_803E5974;
+extern f32 lbl_803E5958;
 extern u8 lbl_803DB411;
 extern f32 lbl_803DDC50[2];
 extern void ModelLightStruct_free(int* p);
@@ -60,18 +57,6 @@ extern void modelLightStruct_setLightKind(int light, int v);
 extern int objCreateLight(int* obj, int mode);
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 
-
-void ShipBattle_hitDetect(void)
-{
-}
-
-void ShipBattle_release(void)
-{
-}
-
-void ShipBattle_initialise(void)
-{
-}
 
 int ShipBattle_getExtraSize(void) { return 0x140; }
 int ShipBattle_getObjectTypeId(void) { return SHIPBATTLE_OBJECT_TYPE_ID; }
@@ -89,67 +74,17 @@ void ShipBattle_free(int* obj)
     }
 }
 
-void ShipBattle_init(int obj, int def)
-{
-    ShipBattleState* state;
-    int light;
-    int chainIndex;
-
-    state = ((GameObject*)obj)->extra;
-    state->unk6A = ((ShipBattleObjectDef*)def)->unk1A;
-    state->unk6E = -1;
-    state->unk24 =
-        lbl_803E595C / (lbl_803E595C + (f32)((ShipBattleObjectDef*)def)->dampingDivisor);
-    state->unk28 = -1;
-
-    chainIndex = ((GameObject*)obj)->unkF4;
-    if (chainIndex == 0)
-    {
-        if (((ShipBattleObjectDef*)def)->segmentIndex != 1)
-        {
-            (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)def);
-            ((GameObject*)obj)->unkF4 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
-            goto light_setup;
-        }
-    }
-
-    if (chainIndex != 0)
-    {
-        if (((ShipBattleObjectDef*)def)->segmentIndex != chainIndex - 1)
-        {
-            (*gObjectTriggerInterface)->freeState((u8*)state);
-            if (((ShipBattleObjectDef*)def)->segmentIndex != -1)
-            {
-                (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)def);
-            }
-            ((GameObject*)obj)->unkF4 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
-        }
-    }
-
-light_setup:
-    if (((GameObject*)obj)->anim.seqId == SHIPBATTLE_FIRE_SEQ_ID)
-    {
-        light = objCreateLight((int*)obj, 1);
-        if ((u32)light != 0)
-        {
-            modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
-            modelLightStruct_setDiffuseColor(light, 200, 60, 0, 0);
-            modelLightStruct_setDistanceAttenuation(light, lbl_803E5970, lbl_803E5974);
-        }
-        ((GameObject*)obj)->unkF8 = light;
-    }
-
-    lbl_803DDC50[0] = lbl_803E5958;
-    *(u8*)&lbl_803DDC50[1] = 0;
-}
-
 void ShipBattle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E595C);
     if (((GameObject*)obj)->anim.seqId == SHIPBATTLE_FIRE_SEQ_ID)
     {
-        objfx_spawnFlaggedTrailBurst(obj, lbl_803E5960, 4, 389, 5, NULL);
+        objfx_spawnFlaggedTrailBurst(obj, 0.11f, 4, 389, 5, NULL);
     }
+}
+
+void ShipBattle_hitDetect(void)
+{
 }
 
 void ShipBattle_update(int obj)
@@ -211,4 +146,66 @@ void ShipBattle_update(int obj)
     }
     ((GameObject*)obj)->seqIndex = -1;
     Obj_FreeObject(obj);
+}
+
+void ShipBattle_init(int obj, int def)
+{
+    ShipBattleState* state;
+    int light;
+    int chainIndex;
+
+    state = ((GameObject*)obj)->extra;
+    state->unk6A = ((ShipBattleObjectDef*)def)->unk1A;
+    state->unk6E = -1;
+    state->unk24 =
+        lbl_803E595C / (lbl_803E595C + (f32)((ShipBattleObjectDef*)def)->dampingDivisor);
+    state->unk28 = -1;
+
+    chainIndex = ((GameObject*)obj)->unkF4;
+    if (chainIndex == 0)
+    {
+        if (((ShipBattleObjectDef*)def)->segmentIndex != 1)
+        {
+            (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)def);
+            ((GameObject*)obj)->unkF4 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
+            goto light_setup;
+        }
+    }
+
+    if (chainIndex != 0)
+    {
+        if (((ShipBattleObjectDef*)def)->segmentIndex != chainIndex - 1)
+        {
+            (*gObjectTriggerInterface)->freeState((u8*)state);
+            if (((ShipBattleObjectDef*)def)->segmentIndex != -1)
+            {
+                (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)def);
+            }
+            ((GameObject*)obj)->unkF4 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
+        }
+    }
+
+light_setup:
+    if (((GameObject*)obj)->anim.seqId == SHIPBATTLE_FIRE_SEQ_ID)
+    {
+        light = objCreateLight((int*)obj, 1);
+        if ((u32)light != 0)
+        {
+            modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
+            modelLightStruct_setDiffuseColor(light, 200, 60, 0, 0);
+            modelLightStruct_setDistanceAttenuation(light, 30.0f, 80.0f);
+        }
+        ((GameObject*)obj)->unkF8 = light;
+    }
+
+    lbl_803DDC50[0] = lbl_803E5958;
+    *(u8*)&lbl_803DDC50[1] = 0;
+}
+
+void ShipBattle_release(void)
+{
+}
+
+void ShipBattle_initialise(void)
+{
 }

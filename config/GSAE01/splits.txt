@@ -2121,6 +2121,7 @@ main/dll/SB/dll_01F3_sbminifire.c:
 
 main/dll/dll_01F5_shipbattle.c:
 	.text       start:0x801E55B8 end:0x801E59AC
+	.sdata2     start:0x803E5960 end:0x803E5978
 
 main/dll/dll_01F4_lamp.c:
 	.text       start:0x801E59AC end:0x801E5DC4
