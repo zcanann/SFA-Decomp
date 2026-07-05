@@ -1407,6 +1407,7 @@ main/dll/dll_0123_fuelcell.c:
 
 main/dll/dll_010E_deathseq.c:
 	.text       start:0x8018C7D8 end:0x8018CD64
+	.sdata2     start:0x803E3D18 end:0x803E3D5C
 
 main/dll/dll_0127_dll127.c:
 	.text       start:0x8018CD64 end:0x8018CEE4

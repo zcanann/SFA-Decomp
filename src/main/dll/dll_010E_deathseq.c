@@ -10,9 +10,6 @@ extern f32 timeDelta;
 #include "sfa_light_decls.h"
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
-extern f32 lbl_803E3D1C;
-extern f32 lbl_803E3D58;
-extern f32 lbl_803E3D2C;
 extern void setPendingMapLoad(int v);
 extern void removeButtonObject(int* obj);
 extern int fn_80296C5C(void);
@@ -28,17 +25,22 @@ extern float mathCosf(float x);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern void Camera_SetFovY(f32 fovY);
 
-extern f32 lbl_803E3D18;
-extern f32 lbl_803E3D20;
-extern f32 lbl_803E3D24;
-extern f32 lbl_803E3D28;
-extern f32 gDeathSeqCameraYawAngle;
-extern f32 gDeathSeqCameraPitchAngle;
-extern f32 lbl_803E3D38;
-extern f32 gDeathSeqPi;
-extern f32 gDeathSeqAngleHalfCircle;
-extern f32 gDeathSeqCameraFovY;
-extern f32 lbl_803E3D48;
+/* .sdata2 constant pool */
+static const f32 lbl_803E3D18 = 50.0f;
+static const f32 lbl_803E3D1C = 0.0f;
+static const f32 lbl_803E3D20 = 0.005f;
+static const f32 lbl_803E3D24 = 0.5f;
+static const f32 lbl_803E3D28 = 1.0f;
+static const f32 lbl_803E3D2C = 40.0f;
+static const f32 gDeathSeqCameraYawAngle = -0.7853982f;
+static const f32 gDeathSeqCameraPitchAngle = 0.3926991f;
+static const f32 lbl_803E3D38 = 10.0f;
+static const f32 gDeathSeqPi = 3.1415927f;
+static const f32 gDeathSeqAngleHalfCircle = 32768.0f;
+static const f32 gDeathSeqCameraFovY = 60.0f;
+static const f32 lbl_803E3D48 = 0.01f;
+static const f64 lbl_803E3D50 = 4503601774854144.0;
+static const f32 lbl_803E3D58 = 210.0f;
 
 typedef struct
 {
@@ -55,45 +57,6 @@ typedef struct
     u8 transitionStarted : 1; // bit 5
 } DeathSeqState;
 
-void deathseq_init(int* obj)
-{
-    DeathSeqState* state = ((GameObject*)obj)->extra;
-    s16* cam = Camera_GetCurrentViewSlot();
-    f32 f;
-
-    setScreenTransitionPause(1);
-    (*gScreenTransitionInterface)->start(1, 1);
-    ObjAnim_SetCurrentMove((int)obj, 0x8e, lbl_803E3D1C, 0);
-    state->timer = lbl_803E3D58;
-    state->camX = ((GameObject*)cam)->anim.localPosX;
-    state->camY = ((GameObject*)cam)->anim.localPosY;
-    state->camZ = ((GameObject*)cam)->anim.localPosZ;
-    state->camRotY = cam[0];
-    state->camRotX = cam[1];
-    f = lbl_803E3D2C;
-    state->dist = f;
-    state->distTarget = f;
-    addButtonObject(obj);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x400);
-}
-
-void deathseq_render(void)
-{
-}
-
-void deathseq_hitDetect(void)
-{
-}
-
-void deathseq_release(void)
-{
-}
-
-void deathseq_initialise(void)
-{
-}
-
-
 int deathseq_getExtraSize(void) { return 0x24; }
 int deathseq_getObjectTypeId(void) { return 0x0; }
 
@@ -104,6 +67,13 @@ void deathseq_free(int* obj)
     removeButtonObject(obj);
 }
 
+void deathseq_render(void)
+{
+}
+
+void deathseq_hitDetect(void)
+{
+}
 
 void deathseq_update(int* obj)
 {
@@ -172,7 +142,7 @@ void deathseq_update(int* obj)
             tex->textureId = 0x200;
         }
         state->timer -= timeDelta;
-        if (state->timer <= *(f32*)&lbl_803E3D1C)
+        if (state->timer <= lbl_803E3D1C)
         {
             state->timer = lbl_803E3D1C;
             if (!state->menuShown)
@@ -228,4 +198,34 @@ void deathseq_update(int* obj)
     {
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
     }
+}
+
+void deathseq_init(int* obj)
+{
+    DeathSeqState* state = ((GameObject*)obj)->extra;
+    s16* cam = Camera_GetCurrentViewSlot();
+    f32 f;
+
+    setScreenTransitionPause(1);
+    (*gScreenTransitionInterface)->start(1, 1);
+    ObjAnim_SetCurrentMove((int)obj, 0x8e, lbl_803E3D1C, 0);
+    state->timer = lbl_803E3D58;
+    state->camX = ((GameObject*)cam)->anim.localPosX;
+    state->camY = ((GameObject*)cam)->anim.localPosY;
+    state->camZ = ((GameObject*)cam)->anim.localPosZ;
+    state->camRotY = cam[0];
+    state->camRotX = cam[1];
+    f = lbl_803E3D2C;
+    state->dist = f;
+    state->distTarget = f;
+    addButtonObject(obj);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x400);
+}
+
+void deathseq_release(void)
+{
+}
+
+void deathseq_initialise(void)
+{
 }
