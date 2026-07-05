@@ -2807,7 +2807,6 @@ extern int lbl_803DCEB0;
 extern s16 lbl_803DCE70;
 extern u8 lbl_803DCDED;
 
-#pragma opt_strength_reduction off
 #pragma opt_propagation off
 #pragma ppc_unroll_factor_limit 1
 #pragma opt_dead_assignments off
@@ -2906,21 +2905,21 @@ void doPendingMapLoads(void)
                     cp2 = cBase;
                     o1 = recs;
                     recsCursor = o1;
-                    for (layer = 0; layer < 5; layer++)
+                    for (; layer < 5; layer++)
                     {
                         s16* ent = (s16*)*bp2;
-                        char* g = (char*)*ap2;
+                        g2 = (char*)*ap2;
                         lbl_803DCE88 = *cp2;
                         zb[0] = 0;
                         row = 0;
                         rowCursor = recsCursor;
-                        for (row = 0; row < 16; row++)
+                        for (; row < 16; row++)
                         {
                             zb[1] = 0;
                             cellCursor = rowCursor;
                             for (k8 = 0; k8 < 8; k8++)
                             {
-                                c = g[0];
+                                c = g2[0];
                                 if (c > -1)
                                 {
                                     cellCursor[0] = lbl_803DCDD0 + zb[1];
@@ -2932,7 +2931,7 @@ void doPendingMapLoads(void)
                                     recsCursor += 4;
                                     cnt++;
                                 }
-                                g[0] = -2;
+                                g2[0] = -2;
                                 *(s8*)(lbl_803DCE88 + zb[0]) = -1;
                                 ent[3] = -3;
                                 ent[0] = -1;
@@ -2940,7 +2939,7 @@ void doPendingMapLoads(void)
                                 ent[2] = -1;
                                 zb[0] = zb[0] + 1;
                                 zb[1] = zb[1] + 1;
-                                c = g[1];
+                                c = g2[1];
                                 if (c > -1)
                                 {
                                     cellCursor[0] = lbl_803DCDD0 + zb[1];
@@ -2952,7 +2951,7 @@ void doPendingMapLoads(void)
                                     recsCursor += 4;
                                     cnt++;
                                 }
-                                g[1] = -2;
+                                g2[1] = -2;
                                 *(s8*)(lbl_803DCE88 + zb[0]) = -1;
                                 ent[9] = -3;
                                 ent[6] = -1;
@@ -2960,7 +2959,7 @@ void doPendingMapLoads(void)
                                 ent[8] = -1;
                                 ent += 12;
                                 zb[0] = zb[0] + 1;
-                                g += 2;
+                                g2 += 2;
                                 zb[1] = zb[1] + 1;
                             }
                         }
@@ -3184,7 +3183,7 @@ void doPendingMapLoads(void)
                                     zc[0] = 0;
                                     zc[1] = zc[0];
                                     gp2 = g3;
-                                    for (; zc[1] < 16; zc[1]++)
+                                    do
                                     {
                                         for (cc = 0; cc < 16; cc++)
                                         {
@@ -3204,7 +3203,8 @@ void doPendingMapLoads(void)
                                             zc[0]++;
                                             gp2++;
                                         }
-                                    }
+                                        zc[1]++;
+                                    } while (zc[1] < 16);
                                 }
                                 ap3++;
                                 cp3++;
@@ -3303,7 +3303,6 @@ void doPendingMapLoads(void)
     }
 }
 
-#pragma opt_strength_reduction reset
 #pragma opt_propagation reset
 #pragma ppc_unroll_factor_limit 4
 #pragma opt_dead_assignments reset
