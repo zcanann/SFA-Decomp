@@ -5,7 +5,7 @@
  *   0 closed, 1 open, 2 opening, 3 closing.
  * slidingdoor_SeqFn (installed as the anim/think callback) opens the door
  * when its openGameBit (gated by gateGameBit) is set AND the player or
- * Tricky is within lbl_803E43B8 xz-distance, and closes it again when
+ * Tricky is within 130.0f xz-distance, and closes it again when
  * neither is near. The opening/closing transitions complete on the matching
  * trigger command (1=close-done, 2=open-done). SeqFn returns 1 in the steady
  * states and 0 mid-transition.
@@ -58,34 +58,7 @@ typedef struct SlidingdoorState
     u8 rest : 5;
 } SlidingdoorState;
 
-extern f32 lbl_803E43BC;
-extern f32 lbl_803E43B8;
-extern f32 lbl_803E43C0;
 extern void* getTrickyObject(void);
-
-void slidingdoor_free(void)
-{
-}
-
-void slidingdoor_hitDetect(void)
-{
-}
-
-void slidingdoor_release(void)
-{
-}
-
-void slidingdoor_initialise(void)
-{
-}
-
-int slidingdoor_getExtraSize(void) { return 0x1; }
-int slidingdoor_getObjectTypeId(void) { return 0x0; }
-
-void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E43BC);
-}
 
 int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -104,7 +77,7 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
     if (player != NULL)
     {
         playerNear = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            lbl_803E43B8;
+            130.0f;
     }
     else
     {
@@ -113,7 +86,7 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (tricky != NULL)
     {
-        trickyNear = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)tricky + 0x18)) < lbl_803E43B8;
+        trickyNear = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)tricky + 0x18)) < 130.0f;
     }
     else
     {
@@ -177,6 +150,22 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
     return result;
 }
 
+int slidingdoor_getExtraSize(void) { return 0x1; }
+int slidingdoor_getObjectTypeId(void) { return 0x0; }
+
+void slidingdoor_free(void)
+{
+}
+
+void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+}
+
+void slidingdoor_hitDetect(void)
+{
+}
+
 void slidingdoor_update(u8* obj)
 {
     u8* sub;
@@ -210,10 +199,18 @@ void slidingdoor_init(u8* obj, u8* data)
     *(u32*)&((GameObject*)obj)->unkF4 = doorState;
     ((GameObject*)obj)->anim.rotX = (s16)(data[0x1f] << 8);
     ((GameObject*)obj)->animEventCallback = slidingdoor_SeqFn;
-    v = (f32)(u32)data[0x21] * lbl_803E43C0;
+    v = (f32)(u32)data[0x21] / 64.0f;
     ((GameObject*)obj)->anim.rootMotionScale = v;
     ((GameObject*)obj)->anim.rootMotionScale =
         ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     sub = ((GameObject*)obj)->extra;
     ((SlidingdoorState*)sub)->mode = doorState;
+}
+
+void slidingdoor_release(void)
+{
+}
+
+void slidingdoor_initialise(void)
+{
 }

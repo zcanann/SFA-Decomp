@@ -1562,6 +1562,7 @@ main/dll/CF/dll_015B_cfforcefield.c:
 
 main/dll/dll_015D_slidingdoor.c:
 	.text       start:0x801A3E9C end:0x801A41D8
+	.sdata2     start:0x803E43B8 end:0x803E43D0
 
 main/dll/dll_015F_attractor.c:
 	.text       start:0x801A41D8 end:0x801A4380
