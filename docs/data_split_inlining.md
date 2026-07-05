@@ -196,6 +196,20 @@ byte-identical, and the `Matching` flip then shifts the DOL. Treat `.text` and
   prototype in the TU has that parameter typed `double`; type it `f32` and the
   literal loads as a single (`lfs`). An `extern f32` *variable* hid this (it
   loads `lfs` then promotes), so it only surfaces once you inline the literal.
+- **Two more field-first idioms** for the const-first canonicalisation when a
+  compound assignment can't reach the operand:
+  - `var / 64.0f` — MWCC strength-reduces division by a power-of-two constant to a
+    *field-first* reciprocal multiply (`var * 0.015625`). Writing the reciprocal
+    as a division reproduces retail's `fmuls fD, field, const` when the constant
+    is that reciprocal (0.015625 = 1/64, 0.5 = 1/2, …).
+  - `!x` (or `x == 0` written as `!x`) — emits the field-first zero-compare that a
+    literal `x == 0.0f` can hoist the wrong way under `scheduling off`.
+- **The DOL SHA1 is the only ground truth for the flip.** A unit can be
+  byte-identical to its retail `.o` (code+data 100%, `complete`) and *still* shift
+  the linked DOL by a few bytes — a cross-object `.sdata`/`.bss` merge that no
+  per-object check predicts. Always flip, `ninja build/GSAE01/ok`, and if it
+  fails, bisect the batch one flip at a time; a unit that shifts the DOL stays
+  `NonMatching` (range claimed is fine; the flip is not).
 
 The bounce in practice: inline everything → `diff` both sections → a `.text`
 regression on an arithmetic line means "rewrite as compound assignment"; a
