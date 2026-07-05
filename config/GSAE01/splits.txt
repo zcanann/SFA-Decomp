@@ -1411,6 +1411,7 @@ main/dll/dll_0129_campfire.c:
 
 main/dll/DR/dll_0128_kttorch.c:
 	.text       start:0x8018D4AC end:0x8018D6E8
+	.sdata2     start:0x803E3DB0 end:0x803E3DD8
 
 main/dll/CF/dll_012A_cfcrate.c:
 	.text       start:0x8018D6E8 end:0x8018E6C4
