@@ -244,15 +244,15 @@ void fn_801544E8(int obj, u8* state, int unused, int cmd)
     if (cmd == 17 || cmd == 16) return;
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29A4)
     {
-        *(int*)&((BaddieState*)state)->reactionFlags |= 8;
+        ((BaddieState*)state)->reactionFlags |= 8;
         Sfx_PlayFromObject(objCopy, SFXdoor_unlocked);
         Sfx_PlayFromObject(obj, SFXdoor_creak);
-        *(s16*)&((BaddieState*)state)->hitCounter = 0;
+        ((BaddieState*)state)->hitCounter = 0;
         ((BaddieState*)state)->unk2E4 |= 32;
     }
     else
     {
-        *(int*)&((BaddieState*)state)->reactionFlags |= 16;
+        ((BaddieState*)state)->reactionFlags |= 16;
     }
 }
 #pragma peephole reset
