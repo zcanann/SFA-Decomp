@@ -809,6 +809,7 @@ main/dll/dll_0054_dll54.c:
 
 main/dll/dll_0055_cameramodeperv.c:
 	.text       start:0x80110C80 end:0x80110E30
+	.sdata2     start:0x803E1B78 end:0x803E1B98
 
 main/dll/dll_0056_cameramodearwing.c:
 	.text       start:0x80110E30 end:0x801115E4
