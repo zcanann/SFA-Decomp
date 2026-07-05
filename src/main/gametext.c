@@ -369,7 +369,6 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     char** buffer;
     int lineIdx;
     int charLen2;
-    int total;
     u32 ch;
     int* boundary;
     int cursor = 0;
@@ -382,13 +381,14 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     penX = lbl_803DE704;
     if (gameTextCharset == 2)
     {
-        langIdx = 6;
+        i = 6;
     }
     else
     {
-        langIdx = sLanguageNameTable[curLanguage].sizeIdx;
+        i = sLanguageNameTable[curLanguage].sizeIdx;
     }
-    sizeEntry = &lbl_802C8680[langIdx];
+    langIdx = i;
+    sizeEntry = &lbl_802C8680[i];
 
     *outCount = 0;
     if (outLineH != NULL)
@@ -470,17 +470,18 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             int n = gameTextFonts->field8;
             while (n-- != 0)
             {
-                if (found->key == ch && found->lang == langIdx)
+                if (found->key != ch || found->lang != langIdx)
                 {
-                    goto gotGlyph;
+                    found++;
+                    continue;
                 }
-                found++;
+                goto gotGlyph;
             }
             found = NULL;
         gotGlyph:
             if (found != NULL)
             {
-                int advance = found->fC + (found->f9 + found->f8);
+                int advance = (found->f9 + found->f8) + found->fC;
                 penX += height * (f32)(int)
                 advance;
                 if (penX >= width)
@@ -491,8 +492,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
                     }
                     bp++;
                     lineCount++;
-                    lineOff += 4;
-                    *(int*)((char*)lineStarts + lineOff) = breakPos;
+                    *(int*)((char*)lineStarts + (lineOff += 4)) = breakPos;
                     if (lineCount > 1 && bp[0] == bp[-1])
                     {
                         return 0;
@@ -509,36 +509,35 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         }
     }
 
-    lineCount++;
-    lineOff = lineCount << 2;
+    lineOff = (lineCount = lineCount + 1) << 2;
     *(int*)((char*)lineStarts + lineOff) = cursor;
     *outCount = lineCount;
     if (cursor == 0)
     {
         return 0;
     }
-    total = cursor + (lineCount + lineOff);
+    charLen = cursor + (lineCount + lineOff);
     if (outLineH != NULL)
     {
         buffer = mmAllocateFromFBMemoryStore(lbl_803DB378);
     }
     else
     {
-        buffer = mmAlloc(total, 0, 0);
+        buffer = mmAlloc(charLen, 0, 0);
     }
     if (buffer == NULL)
     {
         return 0;
     }
     dst = (char*)buffer;
-    i = total;
+    i = charLen;
     while (i-- != 0)
     {
         *dst++ = 0;
     }
 
-    dst = (char*)buffer + lineOff;
-    buffer[0] = dst;
+    buffer[0] = (char*)buffer + lineOff;
+    dst = buffer[0];
     lineIdx = 0;
     charPos = 0;
     src = str;
