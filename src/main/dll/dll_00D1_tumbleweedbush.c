@@ -328,11 +328,11 @@ s8 fn_801631C8(int* obj)
 
     newObj = Obj_AllocObjectSetup(0x20, siblingType);
     ((ObjPlacement*)newObj)->posX =
-        ((GameObject*)obj)->anim.localPosX + *(f32*)(state + freeSlot * 12 + 0x1c);
+        ((GameObject*)obj)->anim.localPosX + ((TumbleweedBushState*)state)->pieceOffsets[freeSlot][0];
     ((ObjPlacement*)newObj)->posY =
-        ((GameObject*)obj)->anim.localPosY + *(f32*)(state + freeSlot * 12 + 0x20);
+        ((GameObject*)obj)->anim.localPosY + ((TumbleweedBushState*)state)->pieceOffsets[freeSlot][1];
     *(f32*)&((ObjDef*)newObj)->jointData =
-        ((GameObject*)obj)->anim.localPosZ + *(f32*)(state + freeSlot * 12 + 0x24);
+        ((GameObject*)obj)->anim.localPosZ + ((TumbleweedBushState*)state)->pieceOffsets[freeSlot][2];
     ((ObjPlacement*)newObj)->color[0] = p4c[4];
     ((ObjPlacement*)newObj)->color[1] = p4c[5];
     ((ObjPlacement*)newObj)->color[2] = p4c[6];
@@ -341,7 +341,7 @@ s8 fn_801631C8(int* obj)
 
     if ((state[0x4c] & 1) != 0)
     {
-        switch (*(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14))
+        switch (((ObjPlacement*)((GameObject*)obj)->anim.placementData)->mapId)
         {
         case 0x292c:
             if (*(u16*)(state + 0x4e) == 6)
