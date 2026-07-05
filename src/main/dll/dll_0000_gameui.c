@@ -1649,8 +1649,11 @@ void pauseMenuRunSubmenu(int p1)
             buttonDisable(0, 0x300);
             lbl_803DD75E = -0x28;
         }
-        lbl_803DD75C = lbl_803DD75C + lbl_803DD75E;
-        v = (s16)lbl_803DD75C;
+        {
+            int sum = lbl_803DD75C + lbl_803DD75E;
+            lbl_803DD75C = sum;
+            v = (s16)sum;
+        }
         if (v > 0x200)
         {
             v = 0x200;
