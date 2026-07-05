@@ -556,8 +556,9 @@ state_selected:
         moved = trickyMove(obj, state + 0xd4);
         break;
     case 6:
-        dist = getXZDistance((f32*)((u8*)((TrickyState*)state)->routeSeedNode + 8), (f32*)(obj + 0x18));
-        trickyDebugPrint(strs + 0x46c, 10, (int)dist);
+        trickyDebugPrint(strs + 0x46c, 10,
+                         (int)getXZDistance((f32*)((u8*)((TrickyState*)state)->routeSeedNode + 8),
+                                            (f32*)(obj + 0x18)));
         dist = getXZDistance((f32*)((u8*)((TrickyState*)state)->routeSeedNode + 8), (f32*)(obj + 0x18));
         if (lbl_803E23E0 > dist)
         {
