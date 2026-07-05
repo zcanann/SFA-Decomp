@@ -157,6 +157,11 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
     s32 val;
     s32 h;
     u8* statusTable;
+    s32 b38, b34, b30, b2c;
+    s32 sp28, sp24, sp20, sp1c;
+    char buf1[4];
+    s32 b14, b10, bc, b8;
+    char buf2[12];
 
     statusTable = lbl_8031AE20;
     player = Obj_GetPlayerObject();
@@ -292,7 +297,6 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                     idx = 4;
                     while (i < *(u16*)((u8*)lbl_803DD7A4 + 2))
                     {
-                        s32 sp28, sp24, sp20, sp1c;
                         gameTextShowStr(*(void**)((u8*)*(void**)((u8*)lbl_803DD7A4 + 8) + idx),
                                         0x79, 0xf0, acc);
                         gameTextMeasureFn_800163c4(*(void**)((u8*)*(void**)((u8*)lbl_803DD7A4 + 8) + idx),
@@ -301,7 +305,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                         sLanguageNameTable[getCurLanguage() * 8 + 4] * 16 + 0xa
                         )
                         ;
-                        val = sp20 - sp1c;
+                        val = sp1c - sp20;
                         acc += (val > h) ? val : *(u16*)(lbl_802C8680 + (u32)(u8)
                         sLanguageNameTable[getCurLanguage() * 8 + 4] * 16 + 0xa
                         );
@@ -368,7 +372,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
             lbl_803DBA8C = lbl_803E20A0;
             switch (pauseMenuState)
             {
-            default:
+            case 7:
+            case 9:
                 gameTextFn_80016810(0x3cf, 0xc8, 0x118);
                 gameTextFn_80016810(0x3e1, 0xc8, 0x96);
                 break;
@@ -380,12 +385,11 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 {
                     MapEventInterface* mapEvents = *gMapEventInterface;
                     int* info = mapEvents->getCurCharacterState();
-                    char buf[0x50];
-                    *(int*)buf = lbl_803E1E04;
+                    *(int*)buf1 = lbl_803E1E04;
                     gameTextFn_80016810(0x3e0, 0xc8, 0x118);
-                    sprintf(buf, &lbl_803DBB68, *(u8*)((u8*)info + 9));
+                    sprintf(buf1, &lbl_803DBB68, *(u8*)((u8*)info + 9));
                     lbl_803DBA8C = lbl_803E1E64;
-                    gameTextShowStr(buf, 0x93, 0x14a, 0xdc);
+                    gameTextShowStr(buf1, 0x93, 0x14a, 0xdc);
                     lbl_803DBA8C = lbl_803E20A0;
                     pauseMenuDrawElement(((HudTextures*)hudTextures)->tex134, lbl_803E1ECC, lbl_803E2018, 0x100,
                                          alpha,
@@ -394,19 +398,19 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 }
             }
             {
-                s32 b38, b34, b30, b2c;
                 int* box;
                 lbl_803DBA8C = lbl_803E1E64;
                 box = gameTextGetBox(0x7f);
                 gameTextFn_8001628c(0x3cd, 0, 0, &b38, &b34, &b30, &b2c);
-                val = b38 - b34;
+                val = b34 - b38;
                 *(u8*)((u8*)lbl_803DD824 + 8) = val;
-                x = *(s16*)((u8*)box + 0x14) + *(u16*)((u8*)box + 8) - (val >> 1) - 0x140;
-                *(s16*)((u8*)lbl_803DD824 + 2) = lbl_803DBA8C * (f32)(s32)x + lbl_803E1F34;
+                *(s16*)((u8*)lbl_803DD824 + 2) = lbl_803DBA8C
+                    * (f32)(s32)(*(s16*)((u8*)box + 0x14) + *(u16*)((u8*)box + 8) - (val >> 1) - 0x140)
+                    + lbl_803E1F34;
 
                 box = gameTextGetBox(0x80);
                 gameTextFn_8001628c(0x3cc, 0, 0, &b38, &b34, &b30, &b2c);
-                val = b38 - b34;
+                val = b34 - b38;
                 *(u8*)((u8*)lbl_803DD824 + 0x28) = val;
                 x = *(s16*)((u8*)box + 0x14) + (val >> 1) - 0x140;
                 *(s16*)((u8*)lbl_803DD824 + 0x22) = lbl_803DBA8C * (f32)(s32)x + lbl_803E1F34;
@@ -465,43 +469,42 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
             break;
         case 1:
             {
-                s32 b14, b10, bc, b8;
-                char buf[0x50];
                 u8* tbl216;
                 gameTextFn_80016810(0x440, 0, 0x78);
                 gameTextFn_8001628c(0x440, 0, 0, &b14, &b10, &bc, &b8);
-                acc = (bc - b8) + 5;
+                acc = (b8 - bc) + 5;
                 {
                     u8* p214 = statusTable + 0x214;
-                    sprintf(buf, &lbl_803DBB58, (u8) * (u8*)(p214 + lbl_803DD756 * 8));
+                    sprintf(buf2, &lbl_803DBB58, (u8) * (u8*)(p214 + lbl_803DD756 * 8));
                 }
-                gameTextShowStr(buf, 0x79, 0, acc + 0x78);
-                gameTextMeasureFn_800163c4(buf, 0x79, 0, 0, &b14, &b10, &bc, &b8);
-                acc = ((bc - b8) + acc) + 5;
+                gameTextShowStr(buf2, 0x79, 0, acc + 0x78);
+                gameTextMeasureFn_800163c4(buf2, 0x79, 0, 0, &b14, &b10, &bc, &b8);
+                acc = (b8 - bc) + acc;
+                acc += 5;
                 gameTextFn_80016810(0x441, 0, acc + 0x78);
                 gameTextFn_8001628c(0x441, 0, 0, &b14, &b10, &bc, &b8);
-                acc += bc - b8;
+                acc = (b8 - bc) + acc;
                 tbl216 = statusTable + 0x216;
                 gameTextFn_80016810(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, acc + 0x78);
                 gameTextFn_8001628c(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, 0, &b14, &b10, &bc, &b8);
-                acc = (bc - b8) + acc + 0xa;
+                acc = (b8 - bc) + acc;
+                acc += 0xa;
                 gameTextFn_80016810(0x442, 0, acc + 0x78);
                 gameTextFn_8001628c(0x442, 0, 0, &b14, &b10, &bc, &b8);
-                acc += bc - b8;
+                acc = (b8 - bc) + acc;
                 gameTextFn_80016810(0x43a, 0, acc + 0x82);
                 break;
             }
         case 2:
             {
-                s32 b14, b10, bc, b8;
                 u8* tbl216;
                 gameTextFn_80016810(0x443, 0, 0xa0);
                 gameTextFn_8001628c(0x443, 0, 0, &b14, &b10, &bc, &b8);
-                x = (bc - b8) + 5;
+                x = (b8 - bc) + 5;
                 tbl216 = statusTable + 0x216;
                 gameTextFn_80016810(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, x + 0xa0);
                 gameTextFn_8001628c(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, 0, &b14, &b10, &bc, &b8);
-                x += bc - b8;
+                x += b8 - bc;
                 gameTextFn_80016810(0x444, 0, x + 0xaa);
                 break;
             }
@@ -604,7 +607,8 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         i = GameBit_Get(0x63c);
         j = GameBit_Get(0x4e9);
         i += GameBit_Get(0x5f3);
-        gbCount = (i + GameBit_Get(0x5f4)) + j;
+        gbCount = i + GameBit_Get(0x5f4);
+        gbCount += j;
         {
             s8 k;
             u8* p;
