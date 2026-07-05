@@ -4808,6 +4808,7 @@ extern int lbl_803DCDC8;
 extern int lbl_803DCDCC;
 
 #pragma ppc_unroll_instructions_limit 56
+#pragma opt_propagation off
 int mapLoadBlocksFn_800685cc(cur, x0, y0, z0, x1, y1, z1, flags, doEdges)
 int cur;
 int x0;
@@ -4824,21 +4825,31 @@ u8 doEdges;
     f32 e2[3];
     f32 e1[3];
     f32 e0[3];
-    f32 verts[6];
+    /* verts2 sits directly above verts on the stack; the vertex loop below
+     * walks vf across both (vertex 1 -> verts, vertex 2 -> verts2). */
+    f32 verts2[3];
+    f32 verts[3];
     f32 v0[3];
     f32 en[3];
     int offA;
     int count, layer;
+    int last;
+    int* firstp;
+    int mask16;
     int f40, f80, f200, f120, f20, f8, f100, f4;
     int gx0, gz0, gx1, gz1;
     int offB;
     int *cellp, *cw;
     int *descp, *dw;
-    int* firstp;
     int offC;
+    int relx0, relz0, relx1, relz1;
+    int i;
+    int vEnd;
+    u32 triEnd;
     u8 typeb;
+    int bb;
     int dmaflip;
-    int last, i;
+    f32* vertp;
 
     x0 = x0 - lbl_803DCDC8;
     z0 = z0 - lbl_803DCDCC;
@@ -4925,17 +4936,14 @@ u8 doEdges;
     last = count - 1;
     for (; i < count; i++)
     {
-        int bb;
         int vb;
         int blk;
-        int relx0, relx1, relz0, relz1;
         int dxoff, dzoff;
-        int mask;
+        s16 mask;
         s16 bit;
-        int pos, k;
-        int mask16;
+        int pos;
         u8* tri;
-        u32 triEnd;
+        u8* tri0;
 
         bb = offA;
         vb = offB;
@@ -4974,29 +4982,26 @@ u8 doEdges;
 
         mask = 0;
         bit = 1;
-        pos = 0;
-        for (k = 8; k != 0; k--)
+        for (pos = 0; pos != 0x280; pos += 0x50)
         {
             if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
             bit = bit << 1;
-            pos += 0x50;
         }
-        pos = 0;
-        for (k = 8; k != 0; k--)
+        for (pos = 0; pos != 0x280; pos += 0x50)
         {
             if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
             bit = bit << 1;
-            pos += 0x50;
         }
-        tri = *(u8**)(blk + 0x50);
-        triEnd = (u32)tri + *(u16*)(blk + 0x9a) * 0x14;
-        mask16 = (s16)mask;
+        tri0 = *(u8**)(blk + 0x50);
+        tri = tri0;
+        triEnd = (u32)tri0 + *(u16*)(blk + 0x9a) * 0x14;
+        mask16 = mask;
         for (; (u32)tri < triEnd; tri += 0x14)
         {
             u32 tf = ((MapTriGroup*)tri)->flags;
             u8 type;
             int yoff;
-            int t0, vEnd;
+            int t0;
             u8* vq;
 
             if ((tf & 0x10) && f40) continue;
@@ -5025,6 +5030,9 @@ u8 doEdges;
             t0 = ((MapTriGroup*)tri)->firstTri;
             vq = (u8*)(bb + t0 * 8);
             vEnd = ((MapTriGroup*)tri)[1].firstTri;
+            /* int-cast keeps vertp a real variable (a bare `= verts` alias is
+             * folded away and the PSVEC calls rematerialize the address). */
+            vertp = (f32*)(u32)verts;
             for (; t0 < vEnd; t0++, vq += 8)
             {
                 s16* vp;
@@ -5094,8 +5102,8 @@ u8 doEdges;
                 if (minZ > relz1) continue;
                 if (maxZ < relz0) continue;
 
-                PSVECSubtract(v0, verts, e0);
-                PSVECSubtract(verts, verts + 3, e1);
+                PSVECSubtract(v0, vertp, e0);
+                PSVECSubtract(vertp, verts2, e1);
                 PSVECCrossProduct(e0, e1, (f32*)(cur + 4));
                 mag = PSVECMag((f32*)(cur + 4));
                 if (!(mag > __AR_Callback)) continue;
@@ -5120,13 +5128,14 @@ u8 doEdges;
                 {
                     int k22, deg, j2;
                     f32* ep;
-                    f32 one = lbl_803DECC4;
-                    f32 eps = __AR_Callback;
-                    PSVECSubtract(verts + 3, v0, e2);
+                    f32 one, eps;
+                    PSVECSubtract(verts2, v0, e2);
                     k22 = 0;
                     deg = 0;
                     j2 = 0;
                     ep = e0;
+                    eps = __AR_Callback;
+                    one = lbl_803DECC4;
                     do
                     {
                         f32 m;
@@ -5179,6 +5188,7 @@ u8 doEdges;
     }
     return cur;
 }
+#pragma opt_propagation reset
 #pragma ppc_unroll_instructions_limit 64
 
 /* trackIntersect -- rebuild the intersection line table from map blocks when
