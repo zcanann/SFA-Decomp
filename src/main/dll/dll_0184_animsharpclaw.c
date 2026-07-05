@@ -46,7 +46,6 @@ extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
-extern f32 lbl_803E45C8;
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
@@ -124,7 +123,7 @@ void animsharpclaw_free(int obj)
 void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E45C8);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
 }
 #pragma peephole on
 
@@ -192,7 +191,7 @@ void animsharpclaw_init(int* obj, u8* init)
     inner = ((GameObject*)obj)->extra;
     ((AnimsharpclawState*)inner)->unk6A = ((AnimsharpclawPlacement*)init)->unk1A;
     ((AnimsharpclawState*)inner)->unk6E = -1;
-    ((AnimsharpclawState*)inner)->dampingFactor = lbl_803E45C8 / (lbl_803E45C8 + (f32)(u32)init[0x24]);
+    ((AnimsharpclawState*)inner)->dampingFactor = 1.0f / (1.0f + (f32)(u32)init[0x24]);
     ((AnimsharpclawState*)inner)->unk28 = -1;
     ((AnimsharpclawState*)inner)->unk98 = 0;
     ((AnimsharpclawState*)inner)->unk94 = 0;

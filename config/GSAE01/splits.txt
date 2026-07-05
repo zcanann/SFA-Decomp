@@ -1599,6 +1599,7 @@ main/dll/MMP/dll_0183_mmpgyservent.c:
 
 main/dll/dll_0184_animsharpclaw.c:
 	.text       start:0x801A8F88 end:0x801A9468
+	.sdata2     start:0x803E45C8 end:0x803E45D8
 
 main/dll/dll_025B_msplantings.c:
 	.text       start:0x801A9468 end:0x801A9E74
