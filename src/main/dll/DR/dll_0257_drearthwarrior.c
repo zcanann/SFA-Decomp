@@ -405,17 +405,17 @@ void DR_EarthWarrior_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     if (vis == -1)
     {
         objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E8338);
-        ObjPath_GetPointWorldPosition(p1, 0xb, (char*)(char*)inner + 0x1438, (char*)(char*)inner + 0x143c,
-                                      (char*)(char*)inner + 0x1440, 0);
-        ObjPath_GetPointWorldPositionArray(p1, 3, 4, (char*)(char*)inner + 0xb18);
+        ObjPath_GetPointWorldPosition(p1, 0xb, (char*)inner + 0x1438, (char*)inner + 0x143c,
+                                      (char*)inner + 0x1440, 0);
+        ObjPath_GetPointWorldPositionArray(p1, 3, 4, (char*)inner + 0xb18);
     }
     else if (vis != 0)
     {
         objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E8338);
-        ObjPath_GetPointWorldPosition(p1, 0xb, (char*)(char*)inner + 0x1438, (char*)(char*)inner + 0x143c,
-                                      (char*)(char*)inner + 0x1440, 0);
-        ObjPath_GetPointWorldPositionArray(p1, 3, 4, (char*)(char*)inner + 0xb18);
-        dll_2E_func06(p1, (char*)(char*)inner + 0x3ec, 0);
+        ObjPath_GetPointWorldPosition(p1, 0xb, (char*)inner + 0x1438, (char*)inner + 0x143c,
+                                      (char*)inner + 0x1440, 0);
+        ObjPath_GetPointWorldPositionArray(p1, 3, 4, (char*)inner + 0xb18);
+        dll_2E_func06(p1, (char*)inner + 0x3ec, 0);
     }
 }
 
@@ -445,7 +445,7 @@ void DR_EarthWarrior_func23(int obj, int mode)
     {
     case 1:
         inner->sub.health += 4;
-        objAudioFn_800393f8(obj, (char*)(char*)inner + 0x3bc, 0x291, 0x1000, -1, 1);
+        objAudioFn_800393f8(obj, (char*)inner + 0x3bc, 0x291, 0x1000, -1, 1);
         inner->sub.unk8EC = lbl_803E82E8;
         *(f32*)((char*)lbl_8033527C + 0x24) = inner->sub.unk8EC;
         break;
@@ -506,7 +506,7 @@ int fn_802BDBE8(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int i;
     f32 fz;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    if (dll_2E_func07(obj, (int)(u8*)animUpdate, (void*)((int)((char*)inner + 0x3ec)), 0, 0) != 0)
+    if (dll_2E_func07(obj, (int)(u8*)animUpdate, (void*)((char*)inner + 0x3ec), 0, 0) != 0)
     {
         return 1;
     }
@@ -1144,7 +1144,7 @@ void DR_EarthWarrior_hitDetect(int obj)
                     return;
                 }
                 {
-                objAudioFn_800393f8(obj, (void*)((int)((char*)inner + 0x3bc)), 0x28e, 0x1000, -1, 1);
+                objAudioFn_800393f8(obj, (void*)((char*)inner + 0x3bc), 0x28e, 0x1000, -1, 1);
                 {
                     s16 d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)hitObj)->anim.rotX;
                     if (d > 0x8000)
@@ -1171,14 +1171,14 @@ void DR_EarthWarrior_hitDetect(int obj)
         }
         if (*(int*)inner & 0x800000)
         {
-            if ((*(u8*)((char*)(char*)inner + 0x262) != 0 || (*(s8*)((char*)(char*)inner + 0x264) & 0xf0)) &&
+            if ((*(u8*)((char*)inner + 0x262) != 0 || (*(s8*)((char*)inner + 0x264) & 0xf0)) &&
                 inner->sub.footstepCooldown <= lbl_803E8304 && inner->baddie.animSpeedA > lbl_803E836C)
             {
                 doRumble((f32)(int)randomGetRange(2, 5));
                 inner->sub.footstepCooldown = lbl_803E8370;
                 Sfx_PlayFromObject(obj, SFXTRIG_foot_run_jingle4);
             }
-            if (*(u8*)((char*)(char*)inner + 0x262) != 0 ||
+            if (*(u8*)((char*)inner + 0x262) != 0 ||
                 (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8))
             {
                 f32 spd;
@@ -1293,7 +1293,7 @@ void DR_EarthWarrior_update(int obj)
             }
         }
     }
-    *(s8*)((char*)(char*)inner + 0x264) |= 0x10;
+    *(s8*)((char*)inner + 0x264) |= 0x10;
     {
         f32 saved = ((GameObject*)obj)->anim.velocityY;
         ((GameObject*)obj)->anim.velocityY = lbl_803E8304;
