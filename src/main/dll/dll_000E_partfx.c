@@ -3135,9 +3135,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.colorWord1 = 0x7fff;
         cfg.colorWord2 = 0x7fff;
         cfg.overrideColor0 = randomGetRange(0, 10) * 0xacf;
-        cfg.renderFlags = 0x20;
         cfg.overrideColor1 = cfg.overrideColor0;
         cfg.overrideColor2 = cfg.overrideColor0;
+        cfg.renderFlags = 0x20;
         break;
     case 0x51b:
 
@@ -3147,11 +3147,12 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         randomGetRange(0xffffffce, 0x32);
         cfg.startPosY = lbl_803DF4CC * (f32)(s32)
         randomGetRange(0xffffffce, 0x32) + lbl_803DF580;
-        cfg.startPosZ = lbl_803DF4CC * (f32)(s32)
+        ftmp0 = lbl_803DF4CC * (f32)(s32)
         randomGetRange(0xffffffce, 0x32);
+        cfg.startPosZ = ftmp0;
         cfg.velocityX = (*startPos) / lbl_803DF5A4;
         cfg.velocityY = cfg.startPosY / lbl_803DF5A4;
-        cfg.velocityZ = cfg.startPosZ / lbl_803DF5A4;
+        cfg.velocityZ = ftmp0 / lbl_803DF5A4;
         cfg.lifetimeFrames = randomGetRange(0, 0x14) + 0x14;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x100110;
@@ -3293,16 +3294,12 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         break;
     case 0x1:
         cfg.startPosY = lbl_803DF5C8;
-        cfg.velocityX = lbl_803DF568 * (gPartfxFrameAnimPhase0 * (f32)(s32)
-        randomGetRange(0xfffffff1, 0xf)
-        )
-        ;
+        cfg.velocityX = lbl_803DF568 * gPartfxFrameAnimPhase0 * (f32)(s32)
+        randomGetRange(0xfffffff1, 0xf);
         cfg.velocityY = lbl_803DF5B4 * (f32)(s32)
         randomGetRange(5, 0x14);
-        cfg.velocityZ = lbl_803DF568 * (gPartfxFrameAnimPhase0 * (f32)(s32)
-        randomGetRange(0xfffffff1, 0xf)
-        )
-        ;
+        cfg.velocityZ = lbl_803DF568 * gPartfxFrameAnimPhase0 * (f32)(s32)
+        randomGetRange(0xfffffff1, 0xf);
         cfg.scale = lbl_803DF524 * (f32)(s32)
         randomGetRange(0, 10) + lbl_803DF5B4;
         cfg.initialAlpha = 0xff;
