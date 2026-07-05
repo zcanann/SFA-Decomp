@@ -6,6 +6,7 @@
 #include "main/dll/player_80295318_shared.h"
 #include "main/dll/player_state.h"
 #include "main/dll/player.h"
+#include "main/gamebits.h"
 #include "main/dll/DIM/dll_802B9780_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
@@ -5050,7 +5051,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
             b28 = 0x100;
         }
         if (inner->deferredItemCommand != -1 ||
-            (yitem == 1 && (item == 0x2d || item == 0x5ce)))
+            (yitem == 1 && (item == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || item == 0x5ce)))
         {
             buttonDisable(0, 0x900);
             ((PlayerState*)inner)->buttonsJustPressed = inner->buttonsJustPressed & ~0x900;
@@ -5209,7 +5210,7 @@ int fn_8029AF9C(int obj, int state)
             inner->bodyLeanHalf = lbl_803E7FB0 * inner->aimInputX;
             objModelGetVecFn_800395d8(obj, 9);
             *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_AIM_READY;
-            if (gPlayerSelectedItem == 0x2d)
+            if (gPlayerSelectedItem == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER)
             {
                 f32 bv;
                 f32 av;
@@ -5323,7 +5324,7 @@ int fn_8029AF9C(int obj, int state)
                     b28 = 0x100;
                 }
                 if ((inner->buttonsJustPressed & 0x100) != 0 ||
-                    (yitem == 1 && (item == 0x2d || item == 0x5ce)))
+                    (yitem == 1 && (item == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || item == 0x5ce)))
                 {
                     buttonDisable(0, 0x900);
                     inner->buttonsJustPressed = inner->buttonsJustPressed & ~0x900;
@@ -8923,7 +8924,7 @@ void fn_802B249C(int obj, int inner, int state)
         case 0x80002:
             ((PlayerState*)inner)->queuedItemCommand = (s16)param;
             if (((PlayerState*)state)->baddie.targetObj != NULL &&
-                (param == 0x2d || param == 0x5ce))
+                (param == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || param == 0x5ce))
             {
                 ((PlayerState*)inner)->deferredItemCommand = (s16)param;
                 ((PlayerState*)inner)->queuedItemCommand = -1;
