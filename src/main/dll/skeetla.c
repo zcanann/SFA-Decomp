@@ -608,13 +608,20 @@ int trickyMove(u8* obj, f32* targetPos)
                 {
                     animId = 0x27;
                 }
-                else if ((td = (td >= 0) ? td : -td) > 0x2000)
-                {
-                    animId = 0xb;
-                }
                 else
                 {
-                    animId = 9;
+                    if (td < 0)
+                    {
+                        td = -td;
+                    }
+                    if (td > 0x2000)
+                    {
+                        animId = 0xb;
+                    }
+                    else
+                    {
+                        animId = 9;
+                    }
                 }
             }
             else if ((flags & 0x800000) != 0)
@@ -623,13 +630,20 @@ int trickyMove(u8* obj, f32* targetPos)
                 {
                     animId = 0x28;
                 }
-                else if ((td = (td >= 0) ? td : -td) > 0x2000)
-                {
-                    animId = 0xc;
-                }
                 else
                 {
-                    animId = 10;
+                    if (td < 0)
+                    {
+                        td = -td;
+                    }
+                    if (td > 0x2000)
+                    {
+                        animId = 0xc;
+                    }
+                    else
+                    {
+                        animId = 10;
+                    }
                 }
             }
             ((GameObject*)obj)->anim.rotX = previousYaw;
