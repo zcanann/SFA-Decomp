@@ -122,16 +122,16 @@ extern u32 ObjPath_GetPointWorldPositionArray();
 extern u32 ObjPath_GetPointWorldPosition();
 extern u32 objAnimFn_80038f38();
 extern u64 FUN_80039468();
-extern void objAudioFn_800393f8(int param_1, void* param_2, int param_3, int param_4, int param_5,
-                                int param_6);
+extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int arg5,
+                                int arg6);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int objModelGetVecFn_800395d8(int obj, int target);
 extern void freeAndNull(void* p);
 extern void trickyVoxAllocFn_8004b5d4(void* out);
 extern int FUN_800620e8();
-extern u16 hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hits, int param_6, int param_7);
-extern void objAudioFn_8006edcc(int obj, u16 param_4, int param_5, float* points, void* aux, f32 param_1, f32 param_2);
+extern u16 hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hits, int pointCount, int arg7);
+extern void objAudioFn_8006edcc(int obj, u16 mask, int arg5, float* points, void* aux, f32 scaleX, f32 scaleY);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
 extern void doNothing_onTrickyFree(void);
@@ -155,8 +155,8 @@ extern u32 FUN_80286888();
 extern int fn_80296240(int obj);
 extern int fn_80296448(int obj);
 extern void objParticleFn_80099d84(int obj, f32 scale, int type, f32 extraScale, int light);
-extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int param_7,
-                              int param_8, int param_9, int param_10);
+extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int arg7,
+                              int arg8, int arg9, int arg10);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern u32 gTrickyVisibilityBitsInit[4];
@@ -2863,8 +2863,8 @@ void FUN_80146fa0(void)
     return;
 }
 
-void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+void FUN_80147884(u64 unused1, u64 arg2, u64 arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
                   u32 unused9, u32 unused10, float* pointA, float* pointB)
 {
     short objId;
@@ -2912,7 +2912,7 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         {
             if (target[0xc] == 0)
             {
-                blocked = FUN_80006a64(dist, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                blocked = FUN_80006a64(dist, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
                                      screenB, screenA, (u32*)0x0, hitFlag, 0);
             }
             if ((!applyOffset) && (hitFlag[0] == '\x01'))

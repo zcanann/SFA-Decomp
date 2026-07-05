@@ -15,8 +15,8 @@ extern f32 lbl_803E40A0;
 extern void lightningRender(u32 handle);
 extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int delay,
                            int colorAngle, u8 flags);
-extern void hitDetectFn_80097070(u8* obj, double radius, int param_3, int param_4, int param_5,
-                                 int param_6);
+extern void hitDetectFn_80097070(u8* obj, double radius, int arg3, int arg4, int arg5,
+                                 int arg6);
 extern void objfx_spawnDirectionalBurst(u8* obj, int idx, double radius, int kind, int mode,
                                         int chance, double scale, int origin, int flags);
 

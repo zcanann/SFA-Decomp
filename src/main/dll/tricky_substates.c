@@ -31,7 +31,7 @@ extern int ObjGroup_FindNearestObject();
 extern void ObjLink_AttachChild();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
 extern int trickyFn_8013b368();
-extern void objAnimFn_8013a3f0(int param_1, int param_2, f32 param_3, int param_4);
+extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 
 typedef struct
 {
