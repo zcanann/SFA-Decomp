@@ -1002,8 +1002,8 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int moveArg0, int moveArg
     {
         return 0;
     }
-    nx = *(f32*)(t + 0xc) - seq->posOffsetX;
-    nz = *(f32*)(t + 0x14) - seq->posOffsetZ;
+    nx = ((GameObject*)t)->anim.localPosX - seq->posOffsetX;
+    nz = ((GameObject*)t)->anim.localPosZ - seq->posOffsetZ;
     {
         f32 total = sqrtf(nx * nx + nz * nz);
         f32 step = timeDelta * (total - dist);
