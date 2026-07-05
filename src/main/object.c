@@ -2132,7 +2132,7 @@ void Obj_UpdateModelBlendStates(void)
                 m = (u8*)objAnim->banks[j];
                 if (m != 0)
                 {
-                    *(u16*)(m + 0x18) &= ~8;
+                    ((ObjModelInstanceLite*)m)->bufferFlags &= ~8;
                     if (*(u8*)(*(u8**)m + 0xf9) != 0)
                     {
                         ObjModel_AdvanceBlendChannels(m, timeDelta);
@@ -2153,7 +2153,7 @@ void Obj_UpdateModelBlendStates(void)
                         m = (u8*)childAnim->banks[k];
                         if (m != 0)
                         {
-                            *(u16*)(m + 0x18) &= ~8;
+                            ((ObjModelInstanceLite*)m)->bufferFlags &= ~8;
                             if (*(u8*)(*(u8**)m + 0xf9) != 0)
                             {
                                 c0 = ((GameObject*)child)->pendingParentObj;
