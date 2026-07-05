@@ -983,9 +983,9 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
         lbl_803E2328;
     if (gTitleScreenCursorY > lbl_803E22F8)
     {
+        f32* m2 = (f32*)gTitleScreenMtx;
         int xb;
         int yb;
-        f32* m2 = (f32*)gTitleScreenMtx;
         int w;
         xb = (int)m2[3] - 0x32;
         yb = (int)m2[7];
@@ -1001,7 +1001,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
         tex = texs2[6];
         w = tex->width;
         drawScaledTexture((char*)tex,
-                          (f32)(int)(xb + texs[4]->width + w + 0x57),
+                          (f32)(int)(xb + w + texs[4]->width + 0x57),
                           (f32)(int)(yb - 0x10), 0xff, 0x100, w,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 1);
         tex = (Texture*)gTitleScreenTextures[0];
@@ -1021,9 +1021,10 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
     {
         int xb = (int)mtx[3];
         int yb = (int)mtx[7];
-        int a = (gTitleScreenCursorY > lbl_803E22F8) ? 0xff : lbl_803DD9C0;
+        f32 cy = gTitleScreenCursorY;
+        int a = (cy > lbl_803E22F8) ? 0xff : lbl_803DD9C0;
         drawTexture(gTitleScreenTextures[2], (f32)(int)(xb - 0x18),
-                    lbl_803E22FC + (lbl_803E2300 * gTitleScreenCursorY + (f32)(int)yb), 0xff, 0xff);
+                    lbl_803E22FC + (lbl_803E2300 * cy + (f32)(int)yb), 0xff, 0xff);
         drawTexture(texs2[7], (f32)(int)(xb + 0xa1),
                     lbl_803E2304 + (lbl_803E2300 * gTitleScreenCursorY + (f32)(int)yb), a, 0xff);
     }
@@ -1073,9 +1074,9 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
                           (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
                           t->width, t->height, 1);
     }
-    idx = (int)((Texture**)gTitleScreenTextures + idx + 8);
+    texs2 = &((Texture**)(gTitleScreenTextures + 8))[idx];
     {
-        Texture* t = *(Texture**)idx;
+        Texture* t = *texs2;
         drawScaledTexture((char*)t,
                           (f32)(int)((int)(lbl_803E22F0 * gTitleScreenCursorX) +
                               texs[18]->width - 0x4a),
@@ -1091,7 +1092,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
                           t->width, t->height, 0);
     }
     {
-        Texture* t = *(Texture**)idx;
+        Texture* t = *texs2;
         drawScaledTexture((char*)t,
                           (f32)(int)(0x27a - ((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50) -
                               texs[18]->width - t->width),
