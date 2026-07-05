@@ -7,8 +7,11 @@ int vprintf(const char* format, va_list arg);
 
 OSErrorHandler __OSErrorTable[OS_ERROR_MAX];
 
-#define FPSCR_ENABLE (FPSCR_VE | FPSCR_OE | FPSCR_UE | FPSCR_ZE | FPSCR_XE)
-u32 __OSFpscrEnableBits = FPSCR_ENABLE;
+// Retail ships with all FPSCR exception enable bits cleared (the SDK default
+// would be FPSCR_VE|FPSCR_OE|FPSCR_UE|FPSCR_ZE|FPSCR_XE).
+#pragma explicit_zero_data on
+u32 __OSFpscrEnableBits = 0;
+#pragma explicit_zero_data reset
 
 void OSPanic(const char* file, int line, const char* msg, ...) {
     va_list marker;
@@ -95,3 +98,8 @@ void __OSUnhandledException(__OSException exception, OSContext* context, u32 dsi
              __OSLastInterruptSrr0, __OSLastInterruptTime);
     PPCHalt();
 }
+
+/* 6 unreferenced zero bytes trail the "\n" literal at the end of this unit's
+ * retail .sdata (0x803DC542); nothing references them. Emitted last so the
+ * section layout matches. */
+u8 gap_09_803DC542_sdata[6] = { 0 };
