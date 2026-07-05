@@ -1036,7 +1036,6 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
     u8* playerState;
     s16 stk[8];
     f32 fz;
-    int target;
     f32 sx, sy, sz;
 
     playerState = (u8*)((GameObject*)Obj_GetPlayerObject())->extra;
@@ -1065,17 +1064,20 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
     state->motionFlags = (u8)(state->motionFlags | 2);
     if (((GpbConfigFlags*)&state->configFlags)->returnHome != 0)
     {
-        u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
-        target = 0;
-        if (*(s16*)(params + 0x1a) != 0)
+        int i;
+        GunpowderbarrelPlacement* params = *(GunpowderbarrelPlacement**)&((GameObject*)obj)->anim.placementData;
+        int target = 0;
+        u32* barrels;
+        u32* p;
+        int count;
+        if (params->generatorLinkId != 0)
         {
-            int count;
-            u32* barrels = ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &count);
-            int i;
-            u32* p;
-            for (i = 0, p = barrels; i < count; i++)
+            barrels = ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &count);
+            i = 0;
+            p = barrels;
+            for (; i < count; i++)
             {
-                if (((GunpowderbarrelPlacement*)params)->generatorLinkId == barrelgener_getLinkId(*p))
+                if (params->generatorLinkId == barrelgener_getLinkId(*p))
                 {
                     target = barrels[i];
                     break;
