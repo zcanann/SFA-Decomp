@@ -168,7 +168,7 @@ void SB_ShipGun_update(int obj)
     int galleonStage;
     int hit;
     u32 randDelay;
-    u16* spawned;
+    GameObject* spawned;
     int placement;
     struct
     {
@@ -299,10 +299,7 @@ void SB_ShipGun_update(int obj)
                 ;
                 fdy = player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
                 dist = sqrtf(fdx * fdx + fdz * fdz);
-                {
-                    extern int getAngle(float y, float x);
-                    ((SBShipGunState*)state)->pitchAngle = getAngle(-fdy, dist);
-                }
+                ((SBShipGunState*)state)->pitchAngle = getAngle(-fdy, dist);
                 if (((SBShipGunState*)state)->pitchAngle > SB_SHIPGUN_MAX_PITCH)
                 {
                     ((SBShipGunState*)state)->pitchAngle = SB_SHIPGUN_MAX_PITCH;
@@ -342,16 +339,16 @@ void SB_ShipGun_update(int obj)
                     fdz = ((SBShipGunPlacement*)placement)->targetZ - ((GameObject*)obj)->anim.worldPosZ;
                     posX = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
                     posX = lbl_803E589C / posX;
-                    *(float*)(spawned + 0x12) = fdx * posX;
-                    *(float*)(spawned + 0x14) = fdy * posX;
-                    *(float*)(spawned + 0x16) = fdz * posX;
+                    spawned->anim.velocityX = fdx * posX;
+                    spawned->anim.velocityY = fdy * posX;
+                    spawned->anim.velocityZ = fdz * posX;
                     boost = gSbShipGunCannonballSpeedBoost;
-                    *(float*)(spawned + 6) = boost * *(float*)(spawned + 0x12) + *(float*)(spawned + 6);
-                    *(float*)(spawned + 8) = boost * *(float*)(spawned + 0x14) + *(float*)(spawned + 8);
-                    *(float*)(spawned + 10) = boost * *(float*)(spawned + 0x16) + *(float*)(spawned + 10);
-                    *(s16*)spawned = getAngle(*(float*)(spawned + 0x12), *(float*)(spawned + 0x16));
-                    *(u32*)(spawned + 0x7a) = SB_SHIPGUN_CANNONBALL_LIFETIME;
-                    *(int*)(spawned + 0x7c) = *state;
+                    spawned->anim.localPosX = boost * spawned->anim.velocityX + spawned->anim.localPosX;
+                    spawned->anim.localPosY = boost * spawned->anim.velocityY + spawned->anim.localPosY;
+                    spawned->anim.localPosZ = boost * spawned->anim.velocityZ + spawned->anim.localPosZ;
+                    spawned->anim.rotX = getAngle(spawned->anim.velocityX, spawned->anim.velocityZ);
+                    spawned->unkF4 = SB_SHIPGUN_CANNONBALL_LIFETIME;
+                    spawned->unkF8 = *state;
                     Camera_EnableViewYOffset();
                     CameraShake_SetAllMagnitudes(gSbShipGunFireCameraShakeMagnitude);
                     Sfx_PlayFromObject(obj, SB_SHIPGUN_FIRE_ANIM);
