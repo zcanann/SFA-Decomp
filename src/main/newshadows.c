@@ -171,6 +171,9 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
     u8 blurred[128];
     u8 row[152];
     u8* data;
+    u32 sum;
+    u32 i;
+    int k;
 
     data = texData + 0x60;
     if (window % 8 == 0)
@@ -183,10 +186,7 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
             u32* tile = (u32*)(data + ((y & 3) * 8 + (y >> 2) * 4 * size));
             u32* dst = (u32*)row;
             u32* src;
-            u32 sum;
-            u32 i;
             u32 x;
-            int k;
 
             for (i = 0; i < nfill; i++)
             {
@@ -235,10 +235,7 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                 u32* dst = (u32*)row;
                 u8* gp;
                 u8* bp;
-                u32 sum;
-                u32 i;
                 u32 yy;
-                int k;
 
                 for (i = 0; i < nfill; i++)
                 {
@@ -297,10 +294,7 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
             u16* tile = (u16*)(data + ((y & 3) * 8 + (y >> 2) * 4 * size));
             u16* dst = (u16*)row;
             u16* src;
-            u32 sum;
-            u32 i;
             u32 x;
-            int k;
 
             for (i = 0; i < nfill; i++)
             {
@@ -353,10 +347,7 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                 u16* dst = (u16*)row;
                 u8* gp;
                 u8* bp;
-                u32 sum;
-                u32 i;
                 u32 yy;
-                int k;
 
                 for (i = 0; i < nfill; i++)
                 {
