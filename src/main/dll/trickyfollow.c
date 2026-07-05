@@ -556,7 +556,7 @@ state_selected:
         break;
     case 6:
         dist = getXZDistance((f32*)((u8*)((TrickyState*)state)->routeSeedNode + 8), (f32*)(obj + 0x18));
-        trickyDebugPrint(strs + 0x46c, 10, dist);
+        trickyDebugPrint(strs + 0x46c, 10, (int)dist);
         dist = getXZDistance((f32*)((u8*)((TrickyState*)state)->routeSeedNode + 8), (f32*)(obj + 0x18));
         if (lbl_803E23E0 > dist)
         {
