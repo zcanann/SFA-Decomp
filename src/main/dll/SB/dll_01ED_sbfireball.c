@@ -12,12 +12,8 @@
 #include "main/game_object.h"
 #include "main/dll/TREX/TREX_trex.h"
 #include "main/dll/VF/vf_shared.h"
-extern f32 lbl_803E58D8; /* fireball render scale */
 
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
-
-extern f32 lbl_803E58DC; /* particle arg (particleArgs[2]) */
-extern f32 lbl_803E58E0; /* trail-burst scale */
 
 /* impact-burst particle ids spawned in SB_FireBall_hitDetect */
 enum
@@ -49,7 +45,7 @@ void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0)
     {
-        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E58D8);
+        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -70,21 +66,6 @@ void SB_FireBall_hitDetect(int* obj)
     {
         (*gPartfxInterface)->spawnObject(obj, SB_FIREBALL_HIT_PARTICLE_B, NULL, 1, -1, NULL);
     }
-}
-
-void SB_FireBall_release(void)
-{
-}
-
-void SB_FireBall_initialise(void)
-{
-}
-
-void SB_FireBall_init(GameObject* obj)
-{
-    SBFireBallState* state = obj->extra;
-    obj->unkF4 = SB_FIREBALL_LIFETIME;
-    state->launched = 0;
 }
 
 void SB_FireBall_update(GameObject* obj)
@@ -124,8 +105,8 @@ void SB_FireBall_update(GameObject* obj)
         obj->anim.localPosY += state->velY * timeDelta;
         obj->anim.localPosZ += state->velZ * timeDelta;
 
-        particleArgs[2] = lbl_803E58DC;
-        objfx_spawnFlaggedTrailBurst((int*)obj, lbl_803E58E0, SB_FIREBALL_SETUP_SIZE,
+        particleArgs[2] = 3.0f;
+        objfx_spawnFlaggedTrailBurst((int*)obj, 0.8f, SB_FIREBALL_SETUP_SIZE,
                                      SB_FIREBALL_SETUP_MODEL_ID, SB_FIREBALL_SETUP_PARAM, NULL);
         (*gPartfxInterface)->spawnObject((void*)obj, SB_FIREBALL_TRAIL_PARTICLE_ID, particleArgs, 1, -1, NULL);
 
@@ -145,4 +126,19 @@ void SB_FireBall_update(GameObject* obj)
         state->age += framesThisStep;
     }
 #undef hits
+}
+
+void SB_FireBall_init(GameObject* obj)
+{
+    SBFireBallState* state = obj->extra;
+    obj->unkF4 = SB_FIREBALL_LIFETIME;
+    state->launched = 0;
+}
+
+void SB_FireBall_release(void)
+{
+}
+
+void SB_FireBall_initialise(void)
+{
 }

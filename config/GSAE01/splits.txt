@@ -2086,6 +2086,7 @@ main/dll/SB/dll_01EE_sbcannonball.c:
 
 main/dll/SB/dll_01ED_sbfireball.c:
 	.text       start:0x801E4288 end:0x801E45AC
+	.sdata2     start:0x803E58D8 end:0x803E58E4
 
 main/dll/SB/dll_01EF_sbcloudball.c:
 	.text       start:0x801E45AC end:0x801E4AC0
