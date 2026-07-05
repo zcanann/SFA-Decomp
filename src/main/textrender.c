@@ -142,22 +142,39 @@ extern void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht);
 extern void gxSetScissorRect(int a, int b, int c, int d, int e, int f);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 
+static inline TextGlyph* findGlyph(u32 ch, int glyphLang)
+{
+    TextGlyph* g;
+    int cnt;
+
+    g = gameTextFonts->glyphs;
+    cnt = gameTextFonts->glyphCount;
+    while (cnt-- != 0)
+    {
+        if (g->key == ch && g->lang == glyphLang)
+        {
+            return g;
+        }
+        g++;
+    }
+    return NULL;
+}
+
 void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 {
     int realign;
-    void* tex;
     f32 fx0, fy0, fx1, fy1;
     int byteOff;
     f32 u0, v0;
     int charLen;
     int n2;
     int i;
-    int cnt;
     int skipGlyph;
     u8* p;
     TextGlyph* g;
     u8* winBase;
     int glyphLang;
+    void* tex;
     f32 spaceExtra;
     f32 measW;
     f32 measN;
@@ -308,8 +325,8 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 break;
             case TEXT_ALIGN_JUSTIFY:
                 {
-                    int acc;
                     int spaceCount;
+                    int acc;
                     u32 innerCh;
                     int innerLen;
                     gameTextMeasureString(p, lbl_803DC9A0, &measW, NULL, 0, 0, -1);
@@ -334,18 +351,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             realign = 0;
         }
 
-        g = gameTextFonts->glyphs;
-        cnt = gameTextFonts->glyphCount;
-        while (cnt-- != 0)
-        {
-            if (g->key == ch && g->lang == glyphLang)
-            {
-                goto matched;
-            }
-            g++;
-        }
-        g = NULL;
-    matched:
+        g = findGlyph(ch, glyphLang);
         if (g == NULL)
         {
             continue;
@@ -517,24 +523,6 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             x = lbl_803DC9A0 * (f32)(g->width + (g->advanceX + g->offsetX)) + x;
         }
     }
-}
-
-static inline TextGlyph* findGlyph(u32 ch, int glyphLang)
-{
-    TextGlyph* g;
-    int cnt;
-
-    g = gameTextFonts->glyphs;
-    cnt = gameTextFonts->glyphCount;
-    while (cnt-- != 0)
-    {
-        if (g->key == ch && g->lang == glyphLang)
-        {
-            return g;
-        }
-        g++;
-    }
-    return NULL;
 }
 
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang)
@@ -1781,8 +1769,8 @@ void gameTextRun(void)
     i = GAMETEXT_LOAD_SLOT_COUNT;
     {
         f32* timer = (f32*)(gameTextBase + 0x40);
-        u8* entry = gameTextBase + 0xa0;
         f32* alpha = (f32*)(gameTextBase + 0x20);
+        u8* entry = gameTextBase + 0xa0;
         while (timer--, alpha--, entry -= 0xc, i-- != 0)
         {
             if ((double)*timer > zero)
