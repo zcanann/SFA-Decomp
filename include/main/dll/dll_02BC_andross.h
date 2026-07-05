@@ -74,7 +74,7 @@ typedef struct AndrossState {
     u8 hitsRemaining2; /* 0xB0 */
     u8 unkB1[0xB5 - 0xB1];
     u8 hitReactionFlag; /* 0xB5: set externally on damage; nonzero -> hurt/stagger action state */
-    u8 unkB6;
+    u8 startupDelay; /* 0xB6: init to 5; update decrements and returns early until it hits 0 (spawn settle) */
     u8 attackCycleCount; /* 0xB7: repeat counter; phase advances after 3 attack cycles */
     int seqQueryObj; /* object handle queried via animatedObjGetSeqId */
     u8 handsInitialized; /* 0xBC: 1 at init; first phase-1 entry clears it and skips the hand reset */

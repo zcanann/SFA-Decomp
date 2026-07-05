@@ -192,7 +192,7 @@ void andross_init(int obj, u8* setup)
     ((AndrossState*)state)->actionState = 0;
     ((AndrossState*)state)->prevActionState = -1;
     ((AndrossState*)state)->animSpeed = gAndrossInitAnimSpeed;
-    ((AndrossState*)state)->unkB6 = 5;
+    ((AndrossState*)state)->startupDelay = 5;
     ((AndrossState*)state)->fightPhase = 1;
     ((AndrossState*)state)->prevFightPhase = -1;
     ((AndrossState*)state)->targetRotX = -0x8000;
@@ -323,9 +323,9 @@ void andross_update(int obj)
     moveChanged = 0;
     stateChanged = 0;
     pathFlag = 0;
-    if (*(u8*)((int)state + 0xb6) != 0)
+    if (((AndrossState*)state)->startupDelay != 0)
     {
-        *(u8*)((int)state + 0xb6) -= 1;
+        ((AndrossState*)state)->startupDelay -= 1;
         return;
     }
     if (*(void* *)&((AndrossState*)state)->handObjA == NULL)
