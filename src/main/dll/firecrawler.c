@@ -713,7 +713,7 @@ void crawler_initModelVariant(s16* obj, u8* state)
         *(u32*)&((BaddieState*)state)->unk2E4 |= 0xc00;
         break;
     }
-    *(f32*)(state + 0x308) = lbl_803E2BD4;
+    ((BaddieState*)state)->unk308 = lbl_803E2BD4;
     ((BaddieState*)state)->animDeltaScale = lbl_803E2BFC;
     ((BaddieState*)state)->unk304 = lbl_803E2C00;
     ((BaddieState*)state)->pathStep = ((BaddieState*)state)->pathStep * lbl_803E2C04;
