@@ -134,17 +134,14 @@ void drawFn_80125424(void)
     int i;
     u32 width;
     u32 height;
-    int xLeft;
     int type;
     int ypos;
     int alphaI;
     int alphaTmp;
     int randX;
     int randY;
-    s16 panelW;
-    s16 panelH;
-    int xRight;
     s16 alpha;
+    u32 h;
     f32 wave;
     f32 camPos;
 
@@ -187,13 +184,14 @@ void drawFn_80125424(void)
         }
         alpha = alphaI;
         gHeadDisplayFadeAlpha = alpha;
-        height = gHeadDisplayPanelHeight;
-        if (height > 0x6e)
+        h = gHeadDisplayPanelHeight;
+        if (h > 0x6e)
         {
-            height = 0x6e;
+            h = 0x6e;
         }
-        gHeadDisplayPanelHeight = height;
+        gHeadDisplayPanelHeight = h;
         width = gHeadDisplayPanelWidth;
+        height = (u16)h;
         type = gHeadDisplayEntryTable[gHeadDisplayEntryIdx * HEADREC_STRIDE + HEADREC_PANEL_TYPE];
         switch (type)
         {
@@ -265,18 +263,14 @@ void drawFn_80125424(void)
             drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2),
                                (alphaI > 0xff ? 0xff : alphaI) & 0xff, 0x100, 0x78, 2, randY, randX);
         }
-        panelW = width;
-        xLeft = panelW - 5;
-        drawTexture(hudTextures[10], lbl_803E2054, xLeft, alpha, 0x100);
-        drawScaledTexture(hudTextures[13], lbl_803E2040, xLeft, alpha, 0x100, 0x78, 5, 0);
-        panelH = height;
-        drawScaledTexture(hudTextures[11], lbl_803E2054, panelW, alpha, 0x100, 5, panelH, 0);
-        xRight = panelW + panelH;
-        drawScaledTexture(hudTextures[13], lbl_803E2040, xRight, alpha, 0x100, 0x78, 5, 2);
-        drawScaledTexture(hudTextures[11], lbl_803E2058, panelW, alpha, 0x100, 5, panelH, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, xRight, alpha, 0x100, 5, 5, 3);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, xLeft, alpha, 0x100, 5, 5, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2054, xRight, alpha, 0x100, 5, 5, 2);
+        drawTexture(hudTextures[10], lbl_803E2054, (s16)width - 5, alpha, 0x100);
+        drawScaledTexture(hudTextures[13], lbl_803E2040, (s16)width - 5, alpha, 0x100, 0x78, 5, 0);
+        drawScaledTexture(hudTextures[11], lbl_803E2054, (s16)width, alpha, 0x100, 5, (s16)height, 0);
+        drawScaledTexture(hudTextures[13], lbl_803E2040, (s16)width + (s16)height, alpha, 0x100, 0x78, 5, 2);
+        drawScaledTexture(hudTextures[11], lbl_803E2058, (s16)width, alpha, 0x100, 5, (s16)height, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, (s16)width + (s16)height, alpha, 0x100, 5, 5, 3);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, (s16)width - 5, alpha, 0x100, 5, 5, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2054, (s16)width + (s16)height, alpha, 0x100, 5, 5, 2);
     }
 }
 
