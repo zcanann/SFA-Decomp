@@ -1370,6 +1370,7 @@ main/dll/dll_011E_magiccavebottom.c:
 
 main/dll/dll_011F_magiccavetop.c:
 	.text       start:0x8018AFC8 end:0x8018B7B0
+	.sdata2     start:0x803E3C30 end:0x803E3C78
 
 main/dll/dll_0120_trickyguardspot.c:
 	.text       start:0x8018B7B0 end:0x8018B9F0
