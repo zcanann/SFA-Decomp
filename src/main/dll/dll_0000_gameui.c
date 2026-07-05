@@ -3066,10 +3066,11 @@ void pauseMenuFn_80129ee0(void)
                 else
                 {
                     u8 k;
-                    u8 gi;
+                    int gi;
                     for (k = 0; k < 0xc; k++)
                     {
-                        if (GameBit_Get(*(s16*)((u8*)&tbl->gbids[0] + (gi = k) * 2)))
+                        gi = k;
+                        if (GameBit_Get(*(s16*)((u8*)&tbl->gbids[0] + gi * 2)))
                         {
                             lbl_803DD824[gi].id = 0x26;
                         }
