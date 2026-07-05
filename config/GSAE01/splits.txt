@@ -2289,6 +2289,7 @@ main/dll/VF/dll_0217_vfpobjcreator.c:
 
 main/dll/VF/dll_0218_vfpminifire.c:
 	.text       start:0x801FA228 end:0x801FA6FC
+	.sdata2     start:0x803E6088 end:0x803E60A8
 
 main/dll/dll_0219.c:
 	.text       start:0x801FA6FC end:0x801FA870
