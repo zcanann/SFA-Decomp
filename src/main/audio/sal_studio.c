@@ -169,27 +169,29 @@ int salExitDspCtrl(void)
  */
 void salActivateStudio(u8 studio, u32 isMaster, u32 type)
 {
-    memset(dspStudio[studio].main[0], 0, 0x3c00);
-    DCFlushRangeNoSync(dspStudio[studio].main[0], 0x3c00);
-    memset(dspStudio[studio].spb, 0, sizeof(_SPB));
-    dspStudio[studio].hostDPopSum.l = dspStudio[studio].hostDPopSum.r =
-        dspStudio[studio].hostDPopSum.s = 0;
-    dspStudio[studio].hostDPopSum.lA = dspStudio[studio].hostDPopSum.rA =
-        dspStudio[studio].hostDPopSum.sA = 0;
-    dspStudio[studio].hostDPopSum.lB = dspStudio[studio].hostDPopSum.rB =
-        dspStudio[studio].hostDPopSum.sB = 0;
-    DCFlushRangeNoSync(dspStudio[studio].spb, sizeof(_SPB));
-    memset(dspStudio[studio].auxA[0], 0, 0x780);
-    DCFlushRangeNoSync(dspStudio[studio].auxA[0], 0x780);
-    memset(dspStudio[studio].auxB[0], 0, 0x780);
-    DCFlushRangeNoSync(dspStudio[studio].auxB[0], 0x780);
-    dspStudio[studio].voiceRoot = NULL;
-    dspStudio[studio].alienVoiceRoot = NULL;
-    dspStudio[studio].state = 1;
-    dspStudio[studio].isMaster = isMaster;
-    dspStudio[studio].numInputs = 0;
-    dspStudio[studio].type = type;
-    dspStudio[studio].auxAHandler = dspStudio[studio].auxBHandler = NULL;
+    DSPstudioinfo* base = dspStudio;
+
+    memset(base[studio].main[0], 0, 0x3c00);
+    DCFlushRangeNoSync(base[studio].main[0], 0x3c00);
+    memset(base[studio].spb, 0, sizeof(_SPB));
+    base[studio].hostDPopSum.l = base[studio].hostDPopSum.r =
+        base[studio].hostDPopSum.s = 0;
+    base[studio].hostDPopSum.lA = base[studio].hostDPopSum.rA =
+        base[studio].hostDPopSum.sA = 0;
+    base[studio].hostDPopSum.lB = base[studio].hostDPopSum.rB =
+        base[studio].hostDPopSum.sB = 0;
+    DCFlushRangeNoSync(base[studio].spb, sizeof(_SPB));
+    memset(base[studio].auxA[0], 0, 0x780);
+    DCFlushRangeNoSync(base[studio].auxA[0], 0x780);
+    memset(base[studio].auxB[0], 0, 0x780);
+    DCFlushRangeNoSync(base[studio].auxB[0], 0x780);
+    base[studio].voiceRoot = NULL;
+    base[studio].alienVoiceRoot = NULL;
+    base[studio].state = 1;
+    base[studio].isMaster = isMaster;
+    base[studio].numInputs = 0;
+    base[studio].type = type;
+    base[studio].auxAHandler = base[studio].auxBHandler = NULL;
 }
 
 /*
