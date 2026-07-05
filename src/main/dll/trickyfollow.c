@@ -439,9 +439,8 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                 {
                     if (wg != 0)
                     {
-                        targetWg = targetWg * wg & 0xffff;
                         if (isPointWithinPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->activeWalkGroup,
-                                                    targetWg) != 0)
+                                                    (targetWg = targetWg * wg & 0xffff)) != 0)
                         {
                             if (*(s16*)&((TrickyState*)state)->unkD2 == targetWg)
                             {
