@@ -793,8 +793,8 @@ state_selected:
                                 }
                                 else if (found < 2)
                                 {
-                                    u32 rdir = (route->reverse ^ 1) & 0xff;
-                                    if (rdir == 0)
+                                    prod = (route->reverse ^ 1) & 0xff;
+                                    if (prod == 0)
                                     {
                                         RomCurve_stepClamped(route, lbl_803E23F8);
                                     }
@@ -802,7 +802,7 @@ state_selected:
                                     {
                                         RomCurve_stepClamped(route, lbl_803E2448);
                                     }
-                                    route->reverse = rdir;
+                                    route->reverse = prod;
                                     fn_800D9EE8(route);
                                 }
                             }
