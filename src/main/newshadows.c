@@ -1710,7 +1710,7 @@ extern float __fabsf(float);
 /* Sample the animated noise field built from gNewShadowPlacements: sums the
    contribution of every active placement at texel (px,pz) for animation frame
    `frame`. out2 = sparkle intensity (0..1), out1 = accumulated shift term. */
-void fn_8006CD20(f32* placements, int count, f32* out1, f32* out2, f32 px, f32 pz, f32 frame)
+void fn_8006CD20(f32 px, f32 pz, f32 frame, f32* placements, int count, f32* out1, f32* out2)
 {
     f32* place;
     int i;
@@ -1873,10 +1873,10 @@ void initFn_8006d020(void)
                 dst += rowoff;
                 dst += (col & 3) * 8;
                 dst += (col >> 2) * 0x200;
-                fn_8006CD20(gNewShadowPlacements, count, &o1, &o2,
-                            row * Yachuff_803DEDE0,
+                fn_8006CD20(row * Yachuff_803DEDE0,
                             col * Yachuff_803DEDE0,
-                            tex);
+                            tex,
+                            gNewShadowPlacements, count, &o1, &o2);
                 hi = (int)(__PADFixBits * o2);
                 lo = (int)(__PADFixBits * o1);
                 *(u16*)(dst + 0x60) = (u16)(((hi & 0xffff) << 8) | lo);
