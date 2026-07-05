@@ -505,7 +505,9 @@ void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* y
 
 void pauseMenuDrawStatus(void)
 {
-    u8* player;
+    int off;
+    u8 i;
+    u8 j;
     u8* trickyStatus;
     u8* base;
     int delta;
@@ -513,11 +515,9 @@ void pauseMenuDrawStatus(void)
     int cur;
     f32* op;
     int* dp;
+    int player;
     int bit;
-    u8 i;
-    u8 j;
     u32 ji;
-    int off;
     u8* bp;
     int sv;
     f32 thresh;
@@ -526,17 +526,17 @@ void pauseMenuDrawStatus(void)
     int statuses[PAUSE_MENU_HUD_ITEM_COUNT];
 
     base = (u8*)lbl_803A87F0;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     getTrickyObject();
     trickyStatus = PMDS_TRICKY_ENERGY_PTR();
-    statuses[0] = Player_GetCurrentHealth((int)player);
-    statuses[7] = Player_GetMaxHealth((int)player);
+    statuses[0] = Player_GetCurrentHealth(player);
+    statuses[7] = Player_GetMaxHealth(player);
     statuses[1] = GameBit_Get(0xC1);
-    if (((PauseMenuHud*)base)->magicValue - Player_GetCurrentMagic((int)player) < 0)
+    if (((PauseMenuHud*)base)->magicValue - Player_GetCurrentMagic(player) < 0)
     {
         delta = -1;
     }
-    else if (((PauseMenuHud*)base)->magicValue - Player_GetCurrentMagic((int)player) > 0)
+    else if (((PauseMenuHud*)base)->magicValue - Player_GetCurrentMagic(player) > 0)
     {
         delta = 1;
     }
@@ -545,11 +545,11 @@ void pauseMenuDrawStatus(void)
         delta = 0;
     }
     statuses[2] = ((PauseMenuHud*)base)->magicValue - delta;
-    if (((PauseMenuHud*)base)->maxMagicValue - Player_GetMaxMagic((int)player) < 0)
+    if (((PauseMenuHud*)base)->maxMagicValue - Player_GetMaxMagic(player) < 0)
     {
         delta = -1;
     }
-    else if (((PauseMenuHud*)base)->maxMagicValue - Player_GetMaxMagic((int)player) > 0)
+    else if (((PauseMenuHud*)base)->maxMagicValue - Player_GetMaxMagic(player) > 0)
     {
         delta = 1;
     }
@@ -560,7 +560,7 @@ void pauseMenuDrawStatus(void)
     negDelta = -delta;
     statuses[8] = ((PauseMenuHud*)base)->maxMagicValue + negDelta;
     if ((negDelta != 0) && (lbl_803DD83C != lbl_803E1E3C) &&
-        (objIsCurModelNotZero(player) != 0) && (GameBit_Get(0xEB1) != 0))
+        (objIsCurModelNotZero((void*)player) != 0) && (GameBit_Get(0xEB1) != 0))
     {
         Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_pda_compassbeep_3f0);
     }
@@ -579,7 +579,7 @@ void pauseMenuDrawStatus(void)
     }
     statuses[11] = GameBit_Get(0x86A);
     statuses[12] = GameBit_Get(0x3F5);
-    statuses[3] = playerGetMoney(player);
+    statuses[3] = playerGetMoney((void*)player);
     statuses[9] = *trickyStatus;
     if ((((lbl_803DD792 & 1) != 0) ||
             ((lbl_803E1E3C == PMDS_SCREEN_GET_FADE()) && (PMDS_CAMERA_GET_STATE() != 0x44) &&
