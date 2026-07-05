@@ -52,25 +52,22 @@ STATIC_ASSERT(sizeof(GpshObjcreatorSpawnSetup) == 0x24);
 extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
 
 extern void* Obj_AllocObjectSetup(int size, int b);
-extern f32 lbl_803E504C;
-extern f32 lbl_803E5050;
-extern f32 lbl_803E5054;
 extern s16 lbl_803263B8[];
-extern f32 lbl_803E5048;
+
+int gpsh_objcreator_getExtraSize(void) { return 0x8; }
+int gpsh_objcreator_getObjectTypeId(void) { return 0x0; }
 
 void gpsh_objcreator_free(void)
 {
 }
 
+void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+}
+
 void gpsh_objcreator_hitDetect(void)
-{
-}
-
-void gpsh_objcreator_release(void)
-{
-}
-
-void gpsh_objcreator_initialise(void)
 {
 }
 
@@ -93,15 +90,15 @@ void gpsh_objcreator_update(int* obj)
     {
         if (GameBit_Get(0x148) != 0)
         {
-            *(f32*)sub = lbl_803E504C;
+            *(f32*)sub = 100.0f;
             ((GameObject*)obj)->unkF8 = 1;
         }
     }
     if ((u8)Obj_IsLoadingLocked() == 0) return;
-    if (*(f32*)sub == lbl_803E5050) return;
+    if (!*(f32*)sub) return;
     *(f32*)sub = *(f32*)sub - timeDelta;
-    hitDetectFn_80097070(obj, lbl_803E5054, 2, 1, 1, 0);
-    if (*(f32*)sub <= lbl_803E5050)
+    hitDetectFn_80097070(obj, 0.6f, 2, 1, 1, 0);
+    if (*(f32*)sub <= 0.0f)
     {
         Sfx_PlayFromObjectLimited(0, SFXwp_swtst1_c, 1);
         setup = Obj_AllocObjectSetup(0x24, sub[4] + 0x1f4);
@@ -119,17 +116,6 @@ void gpsh_objcreator_update(int* obj)
     }
 }
 
-
-int gpsh_objcreator_getExtraSize(void) { return 0x8; }
-int gpsh_objcreator_getObjectTypeId(void) { return 0x0; }
-
-void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5048);
-}
-
-
 void gpsh_objcreator_init(int* obj, int* def)
 {
     register u32 zero;
@@ -142,4 +128,12 @@ void gpsh_objcreator_init(int* obj, int* def)
     ((GpshShrineFlags*)((char*)state + 5))->b80 = 0;
     *(u8*)((char*)obj + 0x37) = 0xff;
     ((GameObject*)obj)->anim.alpha = 0xff;
+}
+
+void gpsh_objcreator_release(void)
+{
+}
+
+void gpsh_objcreator_initialise(void)
+{
 }

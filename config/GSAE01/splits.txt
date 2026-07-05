@@ -1892,6 +1892,7 @@ main/dll/dll_0192_gpshshrine.c:
 
 main/dll/dll_0193_gpshobjcreator.c:
 	.text       start:0x801C8084 end:0x801C82C8
+	.sdata2     start:0x803E5048 end:0x803E5058
 
 main/dll/dll_0194_gpshscene.c:
 	.text       start:0x801C82C8 end:0x801C835C
