@@ -33,14 +33,16 @@ extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flag
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int lbl_80323548[];
 
-extern f32 lbl_803E46C8; /* SeqFn explosion scale */
-extern f32 lbl_803E46CC; /* render scale */
-extern f32 lbl_803E46D0; /* help-text hold floor */
-extern f32 lbl_803E46D4; /* help-text hold reset value */
+int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    if (animUpdate->eventCount != 0)
+    {
+        spawnExplosion(obj, 50.0f, 1, 1, 0, 1, 1, 1, 0);
+    }
+    return 0;
+}
 
 int cclevcontrol_getExtraSize(void) { return 0x10; }
-
-void cclevcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E46CC); }
 
 void cclevcontrol_free(void)
 {
@@ -48,37 +50,7 @@ void cclevcontrol_free(void)
     Music_Trigger(MUSICTRIG_Arwing_Crash, 0);
 }
 
-int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    if (animUpdate->eventCount != 0)
-    {
-        spawnExplosion(obj, lbl_803E46C8, 1, 1, 0, 1, 1, 1, 0);
-    }
-    return 0;
-}
-
-void cclevcontrol_init(int* obj)
-{
-    void* envfxTable;
-    int* state;
-    envfxTable = lbl_80323548;
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = cclevcontrol_SeqFn;
-    fn_80088870((char*)envfxTable + 0x38, envfxTable, (char*)envfxTable + 0x70, (char*)envfxTable + 0xa8);
-    if (getSaveGameLoadStatus() != 0)
-    {
-        envFxActFn_800887f8(0x3f);
-        getEnvfxActImmediately((void*)0, 0, 0x242, 0);
-    }
-    else
-    {
-        envFxActFn_800887f8(0x1f);
-        getEnvfxAct(0, 0, 0x242, 0);
-    }
-    *(f32*)state = lbl_803E46D4;
-    state[2] = -1;
-    state[3] = (u32)(u8)(*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
-}
+void cclevcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f); }
 
 void cclevcontrol_update(int obj)
 {
@@ -88,13 +60,13 @@ void cclevcontrol_update(int obj)
     u32 collectBitA;
     u32 collectBitB;
 
-    if (*(f32*)state > lbl_803E46D0)
+    if (*(f32*)state > 0.0f)
     {
         gameTextShow(0x34c);
         *(f32*)state -= timeDelta;
-        if (*(f32*)state < lbl_803E46D0)
+        if (*(f32*)state < 0.0f)
         {
-            *(f32*)state = *(f32*)&lbl_803E46D0;
+            *(f32*)state = 0.0f;
         }
     }
     if ((*gSkyInterface)->getSunPosition(0) != 0)
@@ -170,4 +142,27 @@ void cclevcontrol_update(int obj)
         Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
         GameBit_Set(0xf26, 1);
     }
+}
+
+void cclevcontrol_init(int* obj)
+{
+    void* envfxTable;
+    int* state;
+    envfxTable = lbl_80323548;
+    state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->animEventCallback = cclevcontrol_SeqFn;
+    fn_80088870((char*)envfxTable + 0x38, envfxTable, (char*)envfxTable + 0x70, (char*)envfxTable + 0xa8);
+    if (getSaveGameLoadStatus() != 0)
+    {
+        envFxActFn_800887f8(0x3f);
+        getEnvfxActImmediately((void*)0, 0, 0x242, 0);
+    }
+    else
+    {
+        envFxActFn_800887f8(0x1f);
+        getEnvfxAct(0, 0, 0x242, 0);
+    }
+    *(f32*)state = 300.0f;
+    state[2] = -1;
+    state[3] = (u32)(u8)(*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
 }

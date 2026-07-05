@@ -1319,7 +1319,7 @@ config.libs = [
             Object(NonMatching, "main/dll/CC/dll_0188_cclightfoot.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/CC/dll_0189_ccsharpclawpad.c"),
             Object(NonMatching, "main/dll/CC/dll_018A_ccpedstal.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/CC/dll_018B_cclevcontrol.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/CC/dll_018B_cclevcontrol.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_801ac01c.c"),
             Object(NonMatching, "main/dll/IM/dll_0169_imicemountain.c"),
             Object(NonMatching, "main/dll/dll_016A_crrockfall.c"),

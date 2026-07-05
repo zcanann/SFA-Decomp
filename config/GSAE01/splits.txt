@@ -1640,6 +1640,7 @@ main/dll/CC/dll_018A_ccpedstal.c:
 
 main/dll/CC/dll_018B_cclevcontrol.c:
 	.text       start:0x801ABA84 end:0x801AC01C
+	.sdata2     start:0x803E46C8 end:0x803E46D8
 
 main/dll/dll_801ac01c.c:
 	.text       start:0x801AC01C end:0x801AC248
