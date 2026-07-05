@@ -72,8 +72,8 @@ STATIC_ASSERT(offsetof(MagicPlantObject, state) == 0xB8);
 STATIC_ASSERT(offsetof(MagicPlantObject, seqCallback) == 0xBC);
 STATIC_ASSERT(offsetof(MagicPlantObject, childLinkActive) == 0xEB);
 
-void fn_8017F4F4(int obj, MagicPlantSetup *setup, MagicPlantState *state);
-void fn_8017F7B8(int obj,int objectId);
+void MagicPlant_updateActive(int obj, MagicPlantSetup *setup, MagicPlantState *state);
+void MagicPlant_spawnChild(int obj,int objectId);
 void FUN_8017f7ec(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u32 param_9,u32 param_10,int *param_11,u32 param_12,
