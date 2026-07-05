@@ -22,15 +22,6 @@ extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particle
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
 
-extern f32 lbl_803E46A8; /* particle offset x */
-extern f32 lbl_803E46AC; /* particle offset y / alt x */
-extern f32 lbl_803E46B0; /* particle offset z / help-text hold floor */
-extern f32 lbl_803E46B4; /* burst radius */
-extern f32 lbl_803E46B8; /* burst scale */
-extern f32 lbl_803E46BC; /* burst scale z */
-extern f32 lbl_803E46C0; /* help-text hold reset value */
-extern f32 lbl_803E46C4; /* squared activation distance */
-
 typedef struct SharpClawPadParticleArgs
 {
     u8 pad00[0xc];   /* 0x00: filled in by objfx_spawnArcedBurst, not written here */
@@ -44,12 +35,6 @@ int ccsharpclawpad_getExtraSize(void) { return 0x4; }
 
 #pragma scheduling off
 #pragma peephole off
-void ccsharpclawpad_init(int* obj, int* placement)
-{
-    ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)placement + 24) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCSHARPCLAWPAD_OBJFLAG_HIDDEN);
-}
-
 void ccsharpclawpad_update(int obj)
 {
     SharpClawPadParticleArgs particleArgs;
@@ -59,14 +44,14 @@ void ccsharpclawpad_update(int obj)
     if (GameBit_Get(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a)) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        particleArgs.offset[0] = lbl_803E46A8;
-        particleArgs.offset[1] = lbl_803E46AC;
-        particleArgs.offset[2] = lbl_803E46B0;
-        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 2, 2, 0x19, lbl_803E46B8,
-                              *(f32*)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
-        particleArgs.offset[0] = lbl_803E46AC;
-        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 2, 2, 0x19, lbl_803E46B8,
-                              *(f32*)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
+        particleArgs.offset[0] = -5.0f;
+        particleArgs.offset[1] = 5.0f;
+        particleArgs.offset[2] = 0.0f;
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 2, 2, 0x19, 2.0f,
+                              2.0f, 10.0f, &particleArgs, 0);
+        particleArgs.offset[0] = 5.0f;
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 2, 2, 0x19, 2.0f,
+                              2.0f, 10.0f, &particleArgs, 0);
     }
     else
     {
@@ -82,13 +67,13 @@ void ccsharpclawpad_update(int obj)
         state = ((GameObject*)obj)->extra;
         if (ObjTrigger_IsSet(obj) != 0 && fn_801334E0() == 0)
         {
-            *state = lbl_803E46C0;
+            *state = 600.0f;
         }
-        if (*state > lbl_803E46B0)
+        if (*state > 0.0f)
         {
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
             {
-                *state = lbl_803E46B0;
+                *state = 0.0f;
             }
             else
             {
@@ -98,20 +83,26 @@ void ccsharpclawpad_update(int obj)
         }
         player = Obj_GetPlayerObject();
         if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            lbl_803E46C4
+            100.0f
             && playerIsDisguised((int)player) != 0)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_menuups16k);
             GameBit_Set(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a), 1);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
-        particleArgs.offset[0] = lbl_803E46A8;
-        particleArgs.offset[1] = lbl_803E46AC;
-        particleArgs.offset[2] = lbl_803E46B0;
-        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 5, 2, 0x19, lbl_803E46B8,
-                              *(f32*)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
-        particleArgs.offset[0] = lbl_803E46AC;
-        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 5, 2, 0x19, lbl_803E46B8,
-                              *(f32*)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
+        particleArgs.offset[0] = -5.0f;
+        particleArgs.offset[1] = 5.0f;
+        particleArgs.offset[2] = 0.0f;
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 5, 2, 0x19, 2.0f,
+                              2.0f, 10.0f, &particleArgs, 0);
+        particleArgs.offset[0] = 5.0f;
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 5, 2, 0x19, 2.0f,
+                              2.0f, 10.0f, &particleArgs, 0);
     }
+}
+
+void ccsharpclawpad_init(int* obj, int* placement)
+{
+    ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)placement + 24) << 8);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCSHARPCLAWPAD_OBJFLAG_HIDDEN);
 }

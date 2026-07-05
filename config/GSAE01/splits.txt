@@ -1650,6 +1650,7 @@ main/dll/CC/dll_0188_cclightfoot.c:
 
 main/dll/CC/dll_0189_ccsharpclawpad.c:
 	.text       start:0x801AB468 end:0x801AB6F8
+	.sdata2     start:0x803E46A8 end:0x803E46C8
 
 main/dll/CC/dll_018A_ccpedstal.c:
 	.text       start:0x801AB6F8 end:0x801ABA84
