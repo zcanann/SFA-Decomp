@@ -73,9 +73,7 @@ extern u32 FUN_8025d6ac();
 extern u32 FUN_8025da64();
 extern u32 FUN_8025da88();
 extern u32 FUN_8028680c();
-extern u64 FUN_80286840();
 extern u32 FUN_80286858();
-extern u32 FUN_8028688c();
 extern u32 FUN_802947f8();
 extern u32 SQRT();
 extern u32 DAT_8038ee3c;
@@ -1077,16 +1075,6 @@ void newshadows_getShadowNoiseTexture(int* textureOut)
     return;
 }
 
-void FUN_8006b03c(int object, u32* groupOut, u32* scaleOut, int* offsetXOut, int* offsetYOut)
-{
-    ObjModelState* modelState = ((GameObject*)object)->anim.modelState;
-    *groupOut = (&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3];
-    *scaleOut = *(u32*)&modelState->shadowScale;
-    *offsetXOut = modelState->shadowOffsetX;
-    *offsetYOut = modelState->shadowOffsetY;
-    return;
-}
-
 double newshadows_getShadowNoiseScale(void)
 {
     return (double)lbl_803DDC24;
@@ -1320,56 +1308,6 @@ void newshadows_buildShadowDirectionTexture(void)
     }
     while ((int)y < 0x100);
     FUN_802420e0(DAT_803ddc3c + 0x60, *(int*)(DAT_803ddc3c + 0x44));
-    return;
-}
-
-void FUN_8006dca8(u64 arg1, double fwdArg2, u32 arg3, u32 arg4,
-                  u32 fwdArg5, int fwdArg6, int fwdArg7)
-{
-    int mask;
-    u32 bit;
-    int loop;
-    u64 extraout_f1;
-    u64 f1Arg;
-    u64 retPair;
-    u8 buf[19];
-    u8 bitList[8];
-    char count;
-
-    retPair = FUN_80286840();
-    mask = retPair;
-    f1Arg = extraout_f1;
-    FUN_800033a8((int)buf, 0, 0x1c);
-    bit = 0;
-    loop = 8;
-    do
-    {
-        if ((mask >> (bit & 0x3f) & 1U) != 0)
-        {
-            bitList[count] = bit;
-            count = count + '\x01';
-        }
-        if ((mask >> (bit + 1 & 0x3f) & 1U) != 0)
-        {
-            bitList[count] = (char)(bit + 1);
-            count = count + '\x01';
-        }
-        if ((mask >> (bit + 2 & 0x3f) & 1U) != 0)
-        {
-            bitList[count] = (char)(bit + 2);
-            count = count + '\x01';
-        }
-        if ((mask >> (bit + 3 & 0x3f) & 1U) != 0)
-        {
-            bitList[count] = (char)(bit + 3);
-            count = count + '\x01';
-        }
-        bit = bit + 4;
-        loop = loop + -1;
-    }
-    while (loop != 0);
-    objAudioFn_8006ef38(f1Arg, fwdArg2, (int)((u64)retPair >> 0x20), buf, fwdArg5, fwdArg6, fwdArg7);
-    FUN_8028688c();
     return;
 }
 
