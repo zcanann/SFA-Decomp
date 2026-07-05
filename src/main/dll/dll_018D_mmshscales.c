@@ -111,7 +111,7 @@ void mmsh_scales_update(int objArg)
             }
             if (((siblingCount <= 1) && ((u32)match != 0)) && (*(short*)(match + 0xb4) != -1))
             {
-                *(s16*)(match + 0xb4) = -1;
+                ((GameObject*)match)->seqIndex = -1;
                 (*gObjectTriggerInterface)->endSequence(groupTag);
             }
             ((GameObject*)objArg)->seqIndex = -1;
