@@ -3250,7 +3250,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.overrideColor0 = 0x3caf;
         cfg.overrideColor1 = 0x30f7;
         cfg.overrideColor2 = 10000;
-        cfg.renderFlags = 0x100020;
+        cfg.renderFlags = 0x20;
+        cfg.renderFlags |= 0x100000LL;
         cfg.textureId = 0x60;
         break;
     case 0x3b9:
@@ -4778,7 +4779,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.colorWord1 = (u16)cfg.overrideColor1;
             cfg.overrideColor2 = (u32)((u8*)extraArgs)[2] << 8;
             cfg.colorWord2 = (u16)cfg.overrideColor2;
-            cfg.renderFlags = 0x1000020;
+            cfg.renderFlags |= 0x20;
         }
         cfg.textureId = 0x60;
         break;
@@ -4827,7 +4828,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.colorWord1 = (u16)cfg.overrideColor1;
             cfg.overrideColor2 = (u32)((u8*)extraArgs)[2] << 8;
             cfg.colorWord2 = (u16)cfg.overrideColor2;
-            cfg.renderFlags = 0x1000020;
+            cfg.renderFlags |= 0x20;
         }
         break;
     case 0x58:
@@ -4871,7 +4872,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.colorWord1 = (u16)cfg.overrideColor1;
             cfg.overrideColor2 = (u32)((u8*)extraArgs)[2] << 8;
             cfg.colorWord2 = (u16)cfg.overrideColor2;
-            cfg.renderFlags = 0x1000020;
+            cfg.renderFlags |= 0x20;
         }
         break;
     case 0x323:
