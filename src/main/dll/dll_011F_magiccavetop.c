@@ -78,7 +78,7 @@ extern void objfx_spawnArcedBurst(int* obj, int enabled, f32 radius, int particl
                                   void* args, int a);
 extern f32 gMagicCaveTopWarpDistSq;
 extern f32 gMagicCaveTopRumbleStartDistSq;
-extern f32 gMagicCaveTopZero;
+extern f32 lbl_803E3C38;
 extern f32 gMagicCaveTopRumbleStopDistSq;
 extern f32 gMagicCaveTopRumblePulseDistSq;
 extern f32 gMagicCaveTopRumbleStrength;
@@ -246,7 +246,7 @@ void magiccavetop_update(int* obj)
         {
             if (dist >= gMagicCaveTopRumbleStartDistSq)
             {
-                sub->timer = gMagicCaveTopZero;
+                sub->timer = lbl_803E3C38;
                 sub->flags &= ~2;
             }
             else if ((sub->flags & 2) == 0)
@@ -334,7 +334,7 @@ void magiccavetop_update(int* obj)
     }
     if (gb != 0)
     {
-        if (gMagicCaveTopZero == sub->fadeTimer)
+        if (lbl_803E3C38 == sub->fadeTimer)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_door_creak);
         }
@@ -356,7 +356,7 @@ void magiccavetop_update(int* obj)
     }
     if (((GameObject*)obj)->anim.alpha != 0)
     {
-        t = gMagicCaveTopZero;
+        t = lbl_803E3C38;
         fx.x = t;
         fx.y = gMagicCaveTopBurstHeight1;
         fx.z = t;

@@ -11,7 +11,9 @@
  *   - hudDrawButtons    : C-menu item ring + A/B/Y button-prompt icons.
  *   - cMenuUpdateAnims  : C-menu open/close slide and fade animation.
  *   - hudUpdateMinimapReveal: minimap reveal/fade animation.
- *   - cMenuCountAvailableEntries: counts active Tricky-HUD item entries by game bit.
+ *   - cMenuCountAvailableEntries: counts owned/available entries in a C-menu
+ *       section (owned via GameBit, not gated or superseded), or the set bits
+ *       of gTrickyHudItemMask for the Tricky-HUD variant.
  */
 #include "main/audio/sfx.h"
 #include "main/dll/maybeTemplate.h"
@@ -116,10 +118,10 @@ extern u8 gHudBButtonFlashTimer;
 extern u8 gYButtonInUse;
 extern f32 gYButtonIconAnim;
 extern f32 gHudYButtonIconScale;
-extern f32 gHudYButtonAnimTarget;
+extern f32 gHudYButtonAnimDecayBias;
 extern f32 gHudYButtonAnimXScale;
 extern f32 gHudYButtonAnimYScale;
-extern f32 gHudYButtonAnimAlphaScale;
+extern f32 gHudYButtonAnimRenderScale;
 extern f32 lbl_803DBA84;
 extern s16 gCMenuRowFadeInThreshold;
 extern s16 gCMenuRowFadeOutThreshold;
@@ -1175,7 +1177,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 gHudYButtonIconScale = dv;
             }
             gYButtonIconAnim = gYButtonIconAnim -
-                (gHudYButtonAnimTarget + (timeDelta * (gYButtonIconAnim - gHudYButtonAnimTarget)) / lbl_803DBA84);
+                (gHudYButtonAnimDecayBias + (timeDelta * (gYButtonIconAnim - gHudYButtonAnimDecayBias)) / lbl_803DBA84);
             if (gYButtonIconAnim > lbl_803E1E3C)
             {
                 gHudYButtonIconScale = lbl_803E1E68;
@@ -1186,7 +1188,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             }
             drawTexture(hudYButtonItemIconTexture, gHudYButtonAnimXScale * gYButtonIconAnim + gHudYButtonIconX,
                         gHudYButtonAnimYScale * gYButtonIconAnim + lbl_803E1F9C, (int)(gHudYButtonIconScale * lbl_803DD83C),
-                        (int)(gHudYButtonAnimAlphaScale * gYButtonIconAnim + lbl_803E2018));
+                        (int)(gHudYButtonAnimRenderScale * gYButtonIconAnim + lbl_803E2018));
         }
         else
         {
