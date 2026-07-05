@@ -2895,7 +2895,7 @@ void FUN_80147884(u64 unused1, u64 arg2, u64 arg3, u64 arg4,
         pointY = pointA[1];
         pointZ = pointA[2];
         applyOffset = true;
-        objId = *(short*)((int)target + 0x46);
+        objId = ((GameObject*)target)->anim.seqId;
         if (((((objId != 0x613) && (objId != 0x642)) && (objId != 0x3fe)) &&
             ((objId != 0x7c6 && (objId != 0x7c8)))) && ((objId != 0x251 && (objId != 0x851))))
         {
@@ -2951,7 +2951,6 @@ void trickyFn_801451d8(int obj, int state)
     u8 pathBytes[16];
     u32 pathByte = Objfsa_GetWalkGroupIndexAtPoint((void*)(obj + 0x18), 0);
 
-    pathByte = pathByte;
     pathBytes[0] = pathByte;
     if (pathByte == 0)
     {
