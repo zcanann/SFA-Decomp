@@ -1699,7 +1699,6 @@ void Tricky_init(int obj)
     ((TrickyState*)state)->homePosY = ((GameObject*)obj)->anim.worldPosY;
     ((TrickyState*)state)->homePosZ = ((GameObject*)obj)->anim.worldPosZ;
     modelVariant = *(u8*)(((TrickyState*)state)->progressPtr + 2) / 10;
-    modelVariant = modelVariant;
     ((TrickyState*)state)->modelVariant = modelVariant;
     model = Obj_GetActiveModel(obj);
     *(u8*)(*(int*)(model + 0x34) + 8) = ((TrickyState*)state)->modelVariant;
