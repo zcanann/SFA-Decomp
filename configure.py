@@ -1296,7 +1296,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_014C_babycloudrunner.c"),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_014E_cfprisonguard.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_014F_cfprisonuncle.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_0150_gcrobotlightbea.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_0150_gcrobotlightbea.c"),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_0153_cfperch.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_0154_cfprisoncage.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0157_spiritdoorspirit.c"),

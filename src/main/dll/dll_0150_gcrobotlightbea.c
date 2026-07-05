@@ -34,12 +34,8 @@ extern u32 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern u32 ObjLink_DetachChild();
 extern void* Obj_GetPlayerObject(void);
-extern f32 lbl_803E4298;
-extern f32 lbl_803E429C;
 extern void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, int p9, int slot, f32 f, u8 arg8);
 extern void modelLightStruct_freeSlot(int* p);
-extern f32 lbl_803E42A0;
-extern f32 lbl_803E42A4;
 extern f32 lbl_80322C38[];
 extern f32 lbl_803DBE58;
 extern f32 lbl_803DBE5C;
@@ -51,18 +47,6 @@ extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 fac
 extern f32 PSVECDistance(void* a, void* b);
 extern void PSVECScale(void* in, void* out, f32 scale);
 extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
-
-void babycloudrunner_init_OLD_v1_1(int obj)
-{
-    u32* state;
-
-    state = ((GameObject*)obj)->extra;
-    *state = 0;
-    state[1] = 0;
-    ObjHits_EnableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0x80;
-    return;
-}
 
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
@@ -130,23 +114,34 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
+#pragma scheduling off
+#pragma peephole off
+
+u32 fn_801A0174(int* obj) { return (((GcRobotLightBeaState*)(int*)((GameObject*)obj)->extra)->hitFlags >> 7) & 1; }
+
+int gcrobotlightbea_getExtraSize(void) { return 0xc; }
+int gcrobotlightbea_getObjectTypeId(void) { return 0x0; }
+
+void gcrobotlightbea_free(int* obj)
+{
+    GcRobotLightBeaState* state = ((GameObject*)obj)->extra;
+    if (state->light != NULL)
+    {
+        modelLightStruct_freeSlot((int*)state);
+    }
+    if (((GameObject*)obj)->ownerObj != NULL)
+    {
+        ObjLink_DetachChild(((GameObject*)obj)->ownerObj, obj);
+    }
+}
+
 void gcrobotlightbea_render(void)
-{
-}
-
-void gcrobotlightbea_release(void)
-{
-}
-
-void gcrobotlightbea_initialise(void)
 {
 }
 
 /* EN v1.0 0x801A01E8  size: 296b  gcrobotlightbea_hitDetect: clear the hit
  * flag, then re-set it only if the priority hit is the (undisguised) player
  * and lands inside the beacon's bounding box. */
-#pragma scheduling off
-#pragma peephole off
 void gcrobotlightbea_hitDetect(int obj)
 {
     float out[22];
@@ -163,28 +158,14 @@ void gcrobotlightbea_hitDetect(int obj)
     if (hit != Obj_GetPlayerObject()) return;
     if (playerIsDisguised(hit) != 0) return;
     vec[0] = ((ObjHitsPriorityState*)hit)->primaryRadiusSquared;
-    vec[1] = lbl_803E4298 + ((ObjHitsPriorityState*)hit)->localPosX;
+    vec[1] = 10.0f + ((ObjHitsPriorityState*)hit)->localPosX;
     vec[2] = ((ObjHitsPriorityState*)hit)->localPosY;
     if (voxmaps_traceWorldLine((void*)((char*)obj + 0xc), vec) == 0) return;
     if (((GameObject*)obj)->unkF4 != 0 ||
-        ((int (*)(int, f32*, f32, int, f32*, int, int, int, int, int))objBboxFn_800640cc)(obj + 0xc, vec, lbl_803E429C, 0, out, obj, 4, -1, 0, 0) == 0)
+        ((int (*)(int, f32*, f32, int, f32*, int, int, int, int, int))objBboxFn_800640cc)(obj + 0xc, vec, 1.0f, 0, out, obj, 4, -1, 0, 0) == 0)
     {
         ((Bit80*)&sub->hitFlags)->top = 1;
     }
-}
-
-int gcrobotlightbea_getExtraSize(void) { return 0xc; }
-int gcrobotlightbea_getObjectTypeId(void) { return 0x0; }
-
-u32 fn_801A0174(int* obj) { return (((GcRobotLightBeaState*)(int*)((GameObject*)obj)->extra)->hitFlags >> 7) & 1; }
-
-void gcrobotlightbea_init(int* obj)
-{
-    GcRobotLightBeaState* state = ((GameObject*)obj)->extra;
-    state->light = 0;
-    state->unk4 = 0;
-    ObjHits_EnableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0x80;
 }
 
 void gcrobotlightbea_update(int* obj)
@@ -200,7 +181,7 @@ void gcrobotlightbea_update(int* obj)
         sub->light = modelLightStruct_createPointLight((int)obj, 0xfa, 0xfa, 0xfa, 1);
         if (sub->light != NULL)
         {
-            modelLightStruct_setDistanceAttenuation(sub->light, lbl_803DBE58, lbl_803E42A0 + lbl_803DBE58);
+            modelLightStruct_setDistanceAttenuation(sub->light, lbl_803DBE58, 12.0f + lbl_803DBE58);
         }
     }
     ObjHits_SetHitVolumeSlot(obj, 0x17, 0, 0);
@@ -214,25 +195,27 @@ void gcrobotlightbea_update(int* obj)
     if (sub->light != NULL)
     {
         modelLightStruct_setDiffuseColor(sub->light,
-                                         (s32)(lbl_803E42A4 * (f32)(u32)r_byte),
-                                         (s32)(lbl_803E42A4 * (f32)(u32)g_byte),
-                                         (s32)(lbl_803E42A4 * (f32)(u32)b_byte),
+                                         (s32)(0.7f * (f32)(u32)r_byte),
+                                         (s32)(0.7f * (f32)(u32)g_byte),
+                                         (s32)(0.7f * (f32)(u32)b_byte),
                                          0xff);
         modelLightStruct_setPosition(sub->light, vec2[0], vec2[1], vec2[2]);
     }
 }
 
-
-void gcrobotlightbea_free(int* obj)
+void gcrobotlightbea_init(int* obj)
 {
     GcRobotLightBeaState* state = ((GameObject*)obj)->extra;
-    if (state->light != NULL)
-    {
-        modelLightStruct_freeSlot((int*)state);
-    }
-    if (((GameObject*)obj)->ownerObj != NULL)
-    {
-        ObjLink_DetachChild(((GameObject*)obj)->ownerObj, obj);
-    }
+    state->light = 0;
+    state->unk4 = 0;
+    ObjHits_EnableObject(obj);
+    ((GameObject*)obj)->anim.alpha = 0x80;
 }
 
+void gcrobotlightbea_release(void)
+{
+}
+
+void gcrobotlightbea_initialise(void)
+{
+}

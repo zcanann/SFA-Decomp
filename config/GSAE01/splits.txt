@@ -1549,6 +1549,7 @@ main/dll/CF/dll_014F_cfprisonuncle.c:
 
 main/dll/dll_0150_gcrobotlightbea.c:
 	.text       start:0x801A0174 end:0x801A04F4
+	.sdata2     start:0x803E4298 end:0x803E42B0
 
 main/dll/CF/dll_0153_cfperch.c:
 	.text       start:0x801A04F4 end:0x801A0614
