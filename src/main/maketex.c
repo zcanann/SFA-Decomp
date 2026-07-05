@@ -680,6 +680,7 @@ extern s32 CARDDelete(s32 chan, char* fileName);
 extern int lbl_80396900[];
 extern char* sMemoryCardFileName;
 extern u64 lbl_803DD050;
+extern u32 lbl_803DD054;
 
 /* EN v1.0 0x8007E7C0  size: 900b  Checksums the save buffer, writes it to the
  * memory card, then reads it back and verifies the checksum. */
@@ -1225,17 +1226,19 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
             }
             else
             {
-                lbl_803DD050 = chk;
+                lbl_803DD054 = (u32)chk;
+                *(u32*)&lbl_803DD050 = (u32)(chk >> 32);
             }
         }
         else
         {
-            lbl_803DD050 = chk;
+            lbl_803DD054 = (u32)chk;
+            *(u32*)&lbl_803DD050 = (u32)(chk >> 32);
         }
     }
     if (result == 0)
     {
-        gSaveCardImageBuffer = (int)(m = mmAlloc(0x4000, -1, 0));
+        m = (void*)(gSaveCardImageBuffer = (int)mmAlloc(0x4000, -1, 0));
         if (m == NULL)
         {
             if (lbl_803DD05A != 0)
