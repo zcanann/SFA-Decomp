@@ -6,6 +6,7 @@
  * empty func00/func01 entry points.
  */
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/effect_interfaces.h"
 
 typedef struct GfxCmd
@@ -132,9 +133,9 @@ void dll_77_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)ctx != 0)
         {
-            buf.pos[0] = lbl_803E0C64 + *(f32*)(ctx + 0x18);
-            buf.pos[1] = lbl_803E0C64 + *(f32*)(ctx + 0x1c);
-            buf.pos[2] = lbl_803E0C64 + *(f32*)(ctx + 0x20);
+            buf.pos[0] = lbl_803E0C64 + ((GameObject*)ctx)->anim.worldPosX;
+            buf.pos[1] = lbl_803E0C64 + ((GameObject*)ctx)->anim.worldPosY;
+            buf.pos[2] = lbl_803E0C64 + ((GameObject*)ctx)->anim.worldPosZ;
         }
         else
         {

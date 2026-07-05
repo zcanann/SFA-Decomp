@@ -12,6 +12,7 @@
  *     world position, a null one uses posSource as a position packet.
  */
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "main/dll/pickup.h"
 
 extern ModgfxInterface** gModgfxInterface;
@@ -183,9 +184,9 @@ void dll_A2_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     {
         if (sourceObj != NULL)
         {
-            buf.pos[0] = lbl_803E14E0 + *(f32*)(sourceObj + 0x18);
-            buf.pos[1] = lbl_803E14E0 + *(f32*)(sourceObj + 0x1c);
-            buf.pos[2] = lbl_803E14E0 + *(f32*)(sourceObj + 0x20);
+            buf.pos[0] = lbl_803E14E0 + ((GameObject*)sourceObj)->anim.worldPosX;
+            buf.pos[1] = lbl_803E14E0 + ((GameObject*)sourceObj)->anim.worldPosY;
+            buf.pos[2] = lbl_803E14E0 + ((GameObject*)sourceObj)->anim.worldPosZ;
         }
         else
         {

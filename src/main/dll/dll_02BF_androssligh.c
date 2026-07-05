@@ -97,9 +97,9 @@ void androssligh_update(int obj)
     }
     if (state->anchor != NULL)
     {
-        ((GameObject*)obj)->anim.localPosX = *(f32*)((int)state->anchor + 0xc);
-        ((GameObject*)obj)->anim.localPosY = *(f32*)((int)state->anchor + 0x10);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)((int)state->anchor + 0x14);
+        ((GameObject*)obj)->anim.localPosX = ((GameObject*)state->anchor)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosY = ((GameObject*)state->anchor)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)state->anchor)->anim.localPosZ;
     }
     state->prevState = state->state;
     switch (state->state)

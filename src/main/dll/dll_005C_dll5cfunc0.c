@@ -11,6 +11,7 @@
  * otherwise from the PartFxSpawnParams packet.
  */
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "main/dll/gameplay.h"
 
 typedef struct
@@ -168,9 +169,9 @@ void dll_5C_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((void*)sourceCtx != NULL)
         {
-            buf.pos[0] = lbl_803E0760 + *(f32*)(sourceCtx + 0x18);
-            buf.pos[1] = lbl_803E0788 + *(f32*)(sourceCtx + 0x1c);
-            buf.pos[2] = lbl_803E0760 + *(f32*)(sourceCtx + 0x20);
+            buf.pos[0] = lbl_803E0760 + ((GameObject*)sourceCtx)->anim.worldPosX;
+            buf.pos[1] = lbl_803E0788 + ((GameObject*)sourceCtx)->anim.worldPosY;
+            buf.pos[2] = lbl_803E0760 + ((GameObject*)sourceCtx)->anim.worldPosZ;
         }
         else
         {
