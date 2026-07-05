@@ -79,7 +79,7 @@ extern void ObjMsg_SendToNearbyObjects();
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern f32 lbl_803E3680;
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void* Obj_GetPlayerObject(void);
@@ -121,7 +121,7 @@ int doorf4_getObjectTypeId(void) { return 0x1; }
 void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E3680);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3680);
 }
 
 void doorf4_free(int obj)

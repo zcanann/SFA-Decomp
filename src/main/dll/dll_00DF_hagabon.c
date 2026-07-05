@@ -59,7 +59,7 @@ extern u32 DAT_803de6d0;   /* pressureSwitch shared resource handle */
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern f32 lbl_803DDA58;          /* last-seen curve point cache, shared with swarmbaddie */
 extern f32 lbl_803E2608;

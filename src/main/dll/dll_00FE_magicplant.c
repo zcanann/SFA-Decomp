@@ -46,7 +46,7 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int gre
 extern void Obj_ResetModelColorState(int obj);
 extern void Obj_FreeObject(int obj);
 extern int objIsFrozen(int obj);
-extern void objRenderFn_8003b8f4(int obj, float arg);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* gCameraInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -396,7 +396,7 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     state = plant->state;
     if (visible != 0)
     {
-        objRenderFn_8003b8f4(obj, lbl_803E3858);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3858);
         child = (void*)state->childObject;
         if (child != NULL)
         {

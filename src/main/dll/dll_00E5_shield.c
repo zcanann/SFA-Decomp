@@ -58,7 +58,7 @@ void mikabomb_free(int obj, int mode);
 int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,

@@ -30,7 +30,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #define SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SIDEKICKBALL_OBJFLAG_PARENT_SLACK 0x1000
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E369C;
 extern const f32 lbl_803E36A0;
 extern f32 gSidekickBallFadeDuration;
@@ -92,7 +92,7 @@ void sidekickball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (((GameObject*)obj)->unkF8 == 0 || visible == -1)
     {
-        objRenderFn_8003b8f4(lbl_803E36A0);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E36A0);
     }
 }
 

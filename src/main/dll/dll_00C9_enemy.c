@@ -160,7 +160,7 @@ extern u32 fn_80154C24();
 extern void* lbl_803DDA50;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int objCreateLight(int a, int b);
 extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int light);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);

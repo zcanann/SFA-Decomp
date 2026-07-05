@@ -420,7 +420,7 @@ int dll_CB_getObjectTypeId(void) { return 0x14b; }
 
 s16 dll_CB_setScale(int* obj) { return ((BaddieState*)((GameObject*)obj)->extra)->controlMode; }
 
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
@@ -468,7 +468,7 @@ void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->unkF4)
         {
         case 0:
-            objRenderFn_8003b8f4(lbl_803E2E8C);
+            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E2E8C);
             break;
         }
     }

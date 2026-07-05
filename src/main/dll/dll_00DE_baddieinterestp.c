@@ -38,7 +38,7 @@ void mikabomb_free(int obj, int mode);
 int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -716,7 +716,7 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
 void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E3220);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3220);
 }
 
 void gcbaddieshield_update(int* obj);
