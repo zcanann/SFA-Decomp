@@ -3282,6 +3282,9 @@ extern const f32 lbl_803DECE4;
 
 void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int allowDown)
 {
+    f32* vxp;
+    f32* vyp;
+    f32* vzp;
     TrackTriangle* tri;
     f32 ox;
     f32 planeY;
@@ -3299,8 +3302,8 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
     for (tri = triStart; (void*)tri < triEnd; tri++)
     {
         s8 fl = tri->flags;
-        int i;
         int inside;
+        int i;
 
         if (fl & 0x10)
         {
@@ -3315,34 +3318,35 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
             if (__AR_Callback == vec[1]) continue;
         }
         planeY = -(vec[0] * qx + vec[2] * qz + tri->planeD) / vec[1];
-        vxs[0] = (f32)tri->vx[0];
-        vys[0] = (f32)tri->vy[0];
-        vzs[0] = (f32)tri->vz[0];
-        vxs[1] = (f32)tri->vx[1];
-        vys[1] = (f32)tri->vy[1];
-        vzs[1] = (f32)tri->vz[1];
-        vxs[2] = (f32)tri->vx[2];
-        vys[2] = (f32)tri->vy[2];
-        vzs[2] = (f32)tri->vz[2];
+        (vxp = vxs)[0] = (f32)tri->vx[0];
+        (vyp = vys)[0] = (f32)tri->vy[0];
+        (vzp = vzs)[0] = (f32)tri->vz[0];
+        vxp[1] = (f32)tri->vx[1];
+        vyp[1] = (f32)tri->vy[1];
+        vzp[1] = (f32)tri->vz[1];
+        vxp[2] = (f32)tri->vx[2];
+        vyp[2] = (f32)tri->vy[2];
+        vzp[2] = (f32)tri->vz[2];
         inside = 1;
         {
-            f32 c31 = __AR_Callback;
-            f32 c30 = lbl_803DECC0;
-            f32 c24 = lbl_803DECE4;
             for (i = 0; i < 3; i++)
             {
                 int nxt = i + 1;
-                f32 ny, nx, nz, mag;
+                f32 c31;
+                f32 c30;
+                f32 nz, ny, nx, mag;
+                c30 = lbl_803DECC0;
+                c31 = __AR_Callback;
 
                 if (nxt > 2) nxt = 0;
-                vxs[3] = c30 * vec[0] + vxs[i];
-                vys[3] = c30 * vec[1] + vys[i];
-                vzs[3] = c30 * vec[2] + vzs[i];
-                nx = vys[3] * (vzs[i] - vzs[nxt]) + (vys[i] * (vzs[nxt] - vzs[3]) + vys[nxt] * (vzs[3] - vzs[
+                vxp[3] = c30 * vec[0] + vxp[i];
+                vyp[3] = c30 * vec[1] + vyp[i];
+                vzp[3] = c30 * vec[2] + vzp[i];
+                nx = vyp[3] * (vzp[i] - vzp[nxt]) + (vyp[i] * (vzp[nxt] - vzp[3]) + vyp[nxt] * (vzp[3] - vzp[
                     i]));
-                ny = vzs[3] * (vxs[i] - vxs[nxt]) + (vzs[i] * (vxs[nxt] - vxs[3]) + vzs[nxt] * (vxs[3] - vxs[
+                ny = vzp[3] * (vxp[i] - vxp[nxt]) + (vzp[i] * (vxp[nxt] - vxp[3]) + vzp[nxt] * (vxp[3] - vxp[
                     i]));
-                nz = vxs[3] * (vys[i] - vys[nxt]) + (vxs[i] * (vys[nxt] - vys[3]) + vxs[nxt] * (vys[3] - vys[
+                nz = vxp[3] * (vyp[i] - vyp[nxt]) + (vxp[i] * (vyp[nxt] - vyp[3]) + vxp[nxt] * (vyp[3] - vyp[
                     i]));
                 mag = sqrtf(nx * nx + ny * ny + nz * nz);
                 if (mag > c31)
@@ -3352,8 +3356,8 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
                     ny *= s;
                     nz *= s;
                 }
-                if (-(nx * vxs[i] + ny * vys[i] + nz * vzs[i]) +
-                    (nx * qx + ny * planeY + nz * qz) > c24)
+                if (-(nx * vxp[i] + ny * vyp[i] + nz * vzp[i]) +
+                    (nx * qx + ny * planeY + nz * qz) > lbl_803DECE4)
                 {
                     inside = 0;
                     break;
