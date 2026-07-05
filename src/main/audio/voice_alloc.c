@@ -72,8 +72,8 @@ typedef struct AllocVoice
  */
 u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 {
-    s32 i;
     u32 type_alloc;
+    s32 i;
     u16 p;
     s32 num;
     s32 voice;
