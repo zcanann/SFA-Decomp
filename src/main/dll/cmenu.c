@@ -243,14 +243,14 @@ int cMenuSetItems(s16* items, char useTricky)
     }
     else
     {
-        int itemMask;
-        int actionMask;
-        int yItem;
         s16* idsW;
         s16* aW;
         u8* cW;
         u8* dW;
         u8* eW;
+        int yItem;
+        int itemMask;
+        int actionMask;
 
         getTrickyObject();
         itemMask = gTrickyHudItemMask;
