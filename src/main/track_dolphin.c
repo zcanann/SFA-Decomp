@@ -5903,6 +5903,7 @@ char sTrackHitOverflowError[] = "HIT OVERFLOW\n";
 extern void fn_80137948(char* fmt, ...);
 
 #pragma opt_strength_reduction off
+#pragma opt_common_subs off
 u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots, int flagsArg)
 {
     TrackBlockDescriptor* descBase;
@@ -5911,6 +5912,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     u8* slotp;
     f32* outp;
     f32 *edge1p, *edge2p, *vbp, *evecp;
+    u8* typeSlotp;
     s16 i;
     u8 retLo;
     u8 curBit;
@@ -5956,8 +5958,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     s16 hit;
 
     descBase = gTrackBlockDescriptors;
-    descEnd = descBase + gActiveTrackBlockCount;
-    eps = __AR_Callback;
+    descEnd = &gTrackBlockDescriptors[gActiveTrackBlockCount];
     offX = (f32) * (int*)gTrackGridOrigin;
     offZ = (f32) * (int*)(gTrackGridOrigin + 8);
     i = 0;
@@ -5974,7 +5975,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     edge2p = edge2;
     vbp = vb;
     evecp = evec;
-    while (i < count)
+    eps = __AR_Callback;
+    do
     {
         cur[0] = ep1[0];
         cur[1] = ep2[1];
@@ -5983,7 +5985,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
         svFromp[1] = sp2[1];
         svFromp[2] = sp2[2];
         radius = *(f32*)(slotp + 0x40);
-        type = *((u8*)slots + i + 0x54);
+        typeSlotp = (u8*)slots + i;
+        type = typeSlotp[0x54];
         maxStep = radius + lbl_803DB660;
         rdatap[0] = radius;
         rdatap[1] = radius * radius;
@@ -6226,22 +6229,22 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                                 root = sqrtf(rr2 - disc);
                                 if (dotv > rr2)
                                 {
-                                    sq = sq - root;
+                                    tt = sq - root;
                                 }
                                 else
                                 {
-                                    sq = sq + root;
+                                    tt = sq + root;
                                 }
-                                if (sq >= (*(f32*)&__AR_Callback) && sq <= mag)
+                                if (tt >= (*(f32*)&__AR_Callback) && tt <= mag)
                                 {
-                                    PSVECScale(dir, hitpt, sq);
+                                    PSVECScale(dir, hitpt, tt);
                                     PSVECAdd(ws, hitpt, hitpt);
                                     PSVECSubtract(hitpt, vbp, plane);
                                     PSVECNormalize(plane, plane);
                                     root = sqrtf(rr2);
                                     ndot = -PSVECDotProduct(hitpt, plane);
                                     plane[3] = ndot + root;
-                                    frac = sq;
+                                    frac = tt;
                                     ok = 1;
                                 }
                                 else
@@ -6284,8 +6287,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         outp[1] = norm4[1];
                         outp[2] = norm4[2];
                         outp[3] = norm4[3];
-                        *((u8*)slots + i + 0x50) = typeb;
-                        *((u8*)slots + i + 0x58) = typeb2;
+                        typeSlotp[0x50] = typeb;
+                        typeSlotp[0x58] = typeb2;
                         *(int*)(slotp + 0x5c) = objmtx;
                         bounces++;
                         goto slot_done;
@@ -6333,8 +6336,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     outp[1] = norm4[1];
                     outp[2] = norm4[2];
                     outp[3] = norm4[3];
-                    *((u8*)slots + i + 0x50) = typeb;
-                    *((u8*)slots + i + 0x58) = typeb2;
+                    typeSlotp[0x50] = typeb;
+                    typeSlotp[0x58] = typeb2;
                     *(int*)(slotp + 0x5c) = objmtx;
                 }
             }
@@ -6362,6 +6365,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
         sp1 += 3;
         sp2 += 3;
     }
+    while (i < count);
     return (u8)(retLo | (retHi << 4));
 }
+#pragma opt_common_subs reset
 #pragma opt_strength_reduction reset
