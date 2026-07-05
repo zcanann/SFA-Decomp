@@ -2809,6 +2809,9 @@ extern u8 lbl_803DCDED;
 
 #pragma opt_strength_reduction off
 #pragma opt_propagation off
+#pragma ppc_unroll_factor_limit 1
+#pragma opt_dead_assignments off
+#pragma opt_unroll_loops off
 void doPendingMapLoads(void)
 {
     s16* cellCursor;
@@ -2818,18 +2821,21 @@ void doPendingMapLoads(void)
     int gx, gz;
     int row;
     int layer;
-    int cell;
+    int zb[2];
     int i;
     char* base;
     s16* recsCursor;
     int col;
     int doLoad;
     int cnt;
-    int* o1;
+    s16* o1;
     f32 dz;
     int* eBase;
     int* aBase;
     int* cBase;
+    char* g2;
+    int t2;
+    int k2;
     s16 recs[1200];
     int rectA[4], rectB[4], rectC[4], rectD[4];
 
@@ -2886,34 +2892,38 @@ void doPendingMapLoads(void)
                 doNothing_8001F678(1, 0);
                 cnt = 0;
                 layer = 0;
-                eBase = (int*)(base + 0x41E0);
-                aBase = (int*)(base + 0x41F4);
-                cBase = (int*)(base + 0x41CC);
                 {
-                    int* bp2 = eBase;
-                    int* ap2 = aBase;
-                    int* cp2 = cBase;
+                    int* bp2;
+                    int* ap2;
+                    int* cp2;
                     int k8;
                     s8 c;
-                    recsCursor = recs;
+                    eBase = (int*)(base + 0x41E0);
+                    bp2 = eBase;
+                    aBase = (int*)(base + 0x41F4);
+                    ap2 = aBase;
+                    cBase = (int*)(base + 0x41CC);
+                    cp2 = cBase;
+                    o1 = recs;
+                    recsCursor = o1;
                     for (layer = 0; layer < 5; layer++)
                     {
                         s16* ent = (s16*)*bp2;
                         char* g = (char*)*ap2;
                         lbl_803DCE88 = *cp2;
-                        cell = 0;
+                        zb[0] = 0;
                         row = 0;
                         rowCursor = recsCursor;
                         for (row = 0; row < 16; row++)
                         {
-                            col = 0;
+                            zb[1] = 0;
                             cellCursor = rowCursor;
                             for (k8 = 0; k8 < 8; k8++)
                             {
                                 c = g[0];
                                 if (c > -1)
                                 {
-                                    cellCursor[0] = lbl_803DCDD0 + col;
+                                    cellCursor[0] = lbl_803DCDD0 + zb[1];
                                     cellCursor[1] = lbl_803DCDD4 + row;
                                     cellCursor[3] = layer;
                                     cellCursor[2] = c;
@@ -2923,17 +2933,17 @@ void doPendingMapLoads(void)
                                     cnt++;
                                 }
                                 g[0] = -2;
-                                *(s8*)(lbl_803DCE88 + cell) = -1;
+                                *(s8*)(lbl_803DCE88 + zb[0]) = -1;
                                 ent[3] = -3;
                                 ent[0] = -1;
                                 ent[1] = -1;
                                 ent[2] = -1;
-                                cell = cell + 1;
-                                col = col + 1;
+                                zb[0] = zb[0] + 1;
+                                zb[1] = zb[1] + 1;
                                 c = g[1];
                                 if (c > -1)
                                 {
-                                    cellCursor[0] = lbl_803DCDD0 + col;
+                                    cellCursor[0] = lbl_803DCDD0 + zb[1];
                                     cellCursor[1] = lbl_803DCDD4 + row;
                                     cellCursor[3] = layer;
                                     cellCursor[2] = c;
@@ -2943,15 +2953,15 @@ void doPendingMapLoads(void)
                                     cnt++;
                                 }
                                 g[1] = -2;
-                                *(s8*)(lbl_803DCE88 + cell) = -1;
+                                *(s8*)(lbl_803DCE88 + zb[0]) = -1;
                                 ent[9] = -3;
                                 ent[6] = -1;
                                 ent[7] = -1;
                                 ent[8] = -1;
                                 ent += 12;
-                                cell = cell + 1;
+                                zb[0] = zb[0] + 1;
                                 g += 2;
-                                col = col + 1;
+                                zb[1] = zb[1] + 1;
                             }
                         }
                         bp2++;
@@ -2965,13 +2975,37 @@ void doPendingMapLoads(void)
                 playerMapOffsetZ = gMapBlockWorldSize * lbl_803DCDD4;
                 lbl_803DCDC8 = playerMapOffsetX;
                 lbl_803DCDCC = playerMapOffsetZ;
+                /* Manual 8x unroll of the rom-list slot clear (the WALKANIM_COPY_SLOT
+                   pattern from model.c): peel guards + cleanup pointer re-derived from
+                   i. The compiler's own unroller (disabled above) never emits the
+                   retail walking-pointer shape. */
+                i = 0;
+                if (gShaderRomListSlotCount > 0)
                 {
-                    s8* sp = (s8*)(base + 0x418C);
-                    int slotN = gShaderRomListSlotCount;
-                    i = 0;
-                    for (; i < slotN; i++)
+                    int rem = gShaderRomListSlotCount - 8;
+                    if (gShaderRomListSlotCount > 8)
                     {
-                        sp[i * 8 + 6] = 0;
+                        s8* p = (s8*)(base + 0x418C);
+                        for (; i < rem; i += 8)
+                        {
+                            p[6] = 0;
+                            p[14] = 0;
+                            p[22] = 0;
+                            p[30] = 0;
+                            p[38] = 0;
+                            p[46] = 0;
+                            p[54] = 0;
+                            p[62] = 0;
+                            p += 64;
+                        }
+                    }
+                    {
+                        s8* q = (s8*)(base + i * 8 + 0x418C);
+                        for (; i < gShaderRomListSlotCount; i++)
+                        {
+                            q[6] = 0;
+                            q += 8;
+                        }
                     }
                 }
                 gShaderCurMapEventId = mapCoordsToId(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, 0);
@@ -3064,20 +3098,21 @@ void doPendingMapLoads(void)
                             }
                         }
                         lbl_803DCEB0 = lbl_803DCEB0 - 1;
+                        /* Vestigial grid walk (no observable effect; present in retail).
+                           Survives DCE only because unrolling is disabled for this
+                           function (see #pragma ppc_unroll_factor_limit 1 /
+                           opt_unroll_loops off above) and the locals live at
+                           function scope. */
+                        for (i = 0; i < 5; i++)
                         {
-                            int* tp2 = eBase;
-                            for (i = 0; i < 5; i++)
+                            g2 = (char*)*eBase;
+                            t2 = 0;
+                            for (k2 = 0; k2 < 2; k2++)
                             {
-                                char* g2 = (char*)*tp2;
-                                int t2 = 0;
-                                int k2;
-                                for (k2 = 0; k2 < 2; k2++)
-                                {
-                                    g2 += 0x540;
-                                    t2 += 7;
-                                }
-                                tp2++;
+                                g2 += 0x540;
+                                t2 += 7;
                             }
+                            eBase++;
                         }
                         {
                             int d2 = mapGetDirIdx(gShaderCurMapEventId);
@@ -3143,27 +3178,30 @@ void doPendingMapLoads(void)
                                 }
                                 {
                                     s8 cn2 = 0;
-                                    int cell2 = 0;
-                                    char* gp2 = g3;
-                                    int rr, cc;
-                                    for (rr = 0; rr < 16; rr++)
+                                    int zc[2];
+                                    char* gp2;
+                                    int cc;
+                                    zc[0] = 0;
+                                    zc[1] = zc[0];
+                                    gp2 = g3;
+                                    for (; zc[1] < 16; zc[1]++)
                                     {
                                         for (cc = 0; cc < 16; cc++)
                                         {
                                             int bx = lbl_803DCDD0 + cc;
-                                            int bz = lbl_803DCDD4 + rr;
+                                            int bz = lbl_803DCDD4 + zc[1];
                                             if (*(s8*)gp2 == -3)
                                             {
-                                                if (mapLoadBlock(cc, rr, bx, bz, layer) == 0)
+                                                if (mapLoadBlock(cc, zc[1], bx, bz, layer) == 0)
                                                 {
                                                     *gp2 = -2;
                                                 }
                                                 else
                                                 {
-                                                    *(s8*)(lbl_803DCE88 + cell2) = cn2++;
+                                                    *(s8*)(lbl_803DCE88 + zc[0]) = cn2++;
                                                 }
                                             }
-                                            cell2++;
+                                            zc[0]++;
                                             gp2++;
                                         }
                                     }
@@ -3205,57 +3243,54 @@ void doPendingMapLoads(void)
                     }
                 }
                 {
-                    s16* rc = recs;
                     for (i = 0; i < cnt; i++)
                     {
-                        s16 mid = rc[2];
+                        s16 mid = o1[2];
                         if (mid >= 0)
                         {
                             *(u8*)(lbl_803DCE8C + mid) -= 1;
                             if (*(u8*)(lbl_803DCE8C + mid) == 0)
                             {
-                                char* blk = (char*)*(int*)((char*)lbl_803DCE9C + mid * 4);
-                                int off;
-                                int j, k;
+                                int blk = *(int*)((char*)lbl_803DCE9C + mid * 4);
+                                int z[2];
+                                int rb;
+                                char* p;
+                                int k;
                                 *(s16*)((char*)lbl_803DCE94 + mid * 2) = -1;
-                                *(int*)((char*)lbl_803DCE9C + mid * 4) = 0;
-                                off = 0;
-                                for (j = 0; j < *(u8*)(blk + 0xa2); j++)
+                                *(int*)((char*)lbl_803DCE9C + mid * 4) = z[0] = 0;
+                                z[1] = z[0];
+                                for (; z[0] < *(u8*)(blk + 0xa2); z[1] += 68, z[0]++)
                                 {
-                                    char* ent2 = (char*)(*(int*)(blk + 100) + off);
-                                    char* cur2 = ent2;
-                                    for (k = 0; k < *(u8*)(ent2 + 0x41); k++)
+                                    rb = *(int*)(blk + 0x64) + z[1];
+                                    k = 0;
+                                    p = (char*)rb;
+                                    for (; k < *(u8*)(rb + 0x41); k++)
                                     {
-                                        if (*(u8*)(cur2 + 0x2a) != 0xFF)
+                                        u32 cell2 = *(u8*)(p + 0x2a);
+                                        if (cell2 != 0xff)
                                         {
-                                            int ix = *(u8*)(cur2 + 0x2a) * 16 + 12;
-                                            if (*(u8*)(lbl_803DCE68 + ix) != 0)
-                                                *(u8*)(lbl_803DCE68 + ix) -= 1;
+                                            if (*(u8*)(lbl_803DCE68 + cell2 * 16 + 12) != 0)
+                                                *(u8*)(lbl_803DCE68 + cell2 * 16 + 12) -= 1;
                                         }
-                                        if (*(u8*)(cur2 + 0x29) != 0)
-                                            mapTextureOverrideRelease(*(int*)(cur2 + 0x24),
-                                                                      *(u8*)(cur2 + 0x29));
-                                        cur2 += 8;
-                                    }
-                                    off += 0x44;
-                                }
-                                {
-                                    int o2 = 0;
-                                    for (j = 0; j < *(u8*)(blk + 0xa0); j++)
-                                    {
-                                        textureFree(*(int*)(*(int*)(blk + 0x54) + o2));
-                                        o2 += 4;
+                                        if (*(u8*)(p + 0x29) != 0)
+                                            mapTextureOverrideRelease(*(int*)(p + 0x24),
+                                                                      *(u8*)(p + 0x29));
+                                        p += 8;
                                     }
                                 }
+                                z[0] = 0;
+                                z[1] = z[0];
+                                for (; z[0] < *(u8*)(blk + 0xa0); z[1] += 4, z[0]++)
+                                    textureFree(*(int*)(*(int*)(blk + 0x54) + z[1]));
                                 if (*(void**)(blk + 0x74) != NULL)
                                     mm_free(*(void**)(blk + 0x74));
                                 if (*(void**)(blk + 0x70) != NULL)
                                     mm_free(*(void**)(blk + 0x70));
                                 setMapBlockFlag();
-                                mm_free(blk);
+                                mm_free((void*)blk);
                             }
                         }
-                        rc += 4;
+                        o1 += 4;
                     }
                 }
                 lbl_803DCE70 = 0;
@@ -3267,8 +3302,12 @@ void doPendingMapLoads(void)
         }
     }
 }
-#pragma opt_propagation reset
+
 #pragma opt_strength_reduction reset
+#pragma opt_propagation reset
+#pragma ppc_unroll_factor_limit 4
+#pragma opt_dead_assignments reset
+#pragma opt_unroll_loops reset
 
 extern s16 lbl_803DCE90;
 extern int lbl_803DCE84;
