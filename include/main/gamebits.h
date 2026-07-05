@@ -135,6 +135,25 @@ enum GameBitId {
     GAMEBIT_ARWING_FLIGHT_RINGS_PASSED = 0x9D8, /* collected >= required (success) */
     GAMEBIT_ARWING_FLIGHT_RINGS_FAILED = 0x9D7, /* collected <  required (fail)    */
 
+    /*
+     * Krazoa Staff acquired - set the frame Fox picks up Krystal's staff in
+     * ThornTail Hollow (the first weapon, grabbed after landing from the intro
+     * flight). The pickup object sh_staff (dll_01B1) sets it in sh_staff_update
+     * when the pickup trigger fires (phase 1 -> 2), and checks it in phase 0 to
+     * hide the staff if it has already been taken. Live-verified with a write-
+     * watchpoint that caught GameBit_Set(0x18b, 1) at sh_staff_update+0x190
+     * during the pickup.
+     */
+    GAMEBIT_STAFF_ACQUIRED = 0x18B,
+
+    /*
+     * Set when the Krazoa Staff pickup sequence finishes and unloads the map it
+     * had streamed in (sh_staff loads a map while the player is near the staff);
+     * sh_staff_update phase-2 "done" path (dll_01B1). Traced to its setter
+     * alongside the pickup above; downstream consumer not yet confirmed.
+     */
+    GAMEBIT_STAFF_PICKUP_MAP_UNLOADED = 0x3B8,
+
     /* ======================================================================
      * Unplaced - meaning verified, but the setter (the story beat that flips
      * the bit) is not yet traced, so these are not yet slotted into the
