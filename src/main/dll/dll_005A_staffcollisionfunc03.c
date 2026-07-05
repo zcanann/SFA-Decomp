@@ -26,13 +26,29 @@ typedef struct
     u8 layer;
 } GfxCmd;
 
+typedef struct
+{
+    s16 v[5];
+} StaffFxVtx;
+
+typedef struct
+{
+    StaffFxVtx vtx0[3];
+    u8 pad1e[2];
+    StaffFxVtx vtx1[4];
+    s16 col[6];
+    s16 hw[7];
+    u8 pad62[2];
+} StaffFxDesc;
+
 extern ModgfxInterface** gModgfxInterface;
 
-extern u8 lbl_80311DA8[];
+extern StaffFxDesc lbl_80311DA8;
 extern u8 lbl_803DB898, lbl_803DB8A0, lbl_803DB8A8;
 extern const f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;
 
-void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, u32 spawnFlags, int modelId, int* colorArgs)
+void StaffCollision_func03(u8* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags, int modelId,
+                           int* colorArgs)
 {
     struct
     {
@@ -60,7 +76,7 @@ void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, u32 spaw
     GfxCmd ents[32];
     GfxCmd* e = ents;
     int cnt;
-    u8* base = lbl_80311DA8;
+    StaffFxDesc* base = &lbl_80311DA8;
     s16 r, g, b;
     int i;
     r = 0xff;
@@ -161,13 +177,13 @@ void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, u32 spaw
         buf.v5a = 0;
         buf.v5b = 0x10;
         buf.count = 4;
-        buf.hw[0] = *(s16*)&base[0x54];
-        buf.hw[1] = *(s16*)&base[0x56];
-        buf.hw[2] = *(s16*)&base[0x58];
-        buf.hw[3] = *(s16*)&base[0x5a];
-        buf.hw[4] = *(s16*)&base[0x5c];
-        buf.hw[5] = *(s16*)&base[0x5e];
-        buf.hw[6] = *(s16*)&base[0x60];
+        buf.hw[0] = base->hw[0];
+        buf.hw[1] = base->hw[1];
+        buf.hw[2] = base->hw[2];
+        buf.hw[3] = base->hw[3];
+        buf.hw[4] = base->hw[4];
+        buf.hw[5] = base->hw[5];
+        buf.hw[6] = base->hw[6];
         buf.cmds = ents;
         buf.flags = 0x2000490;
         buf.flags |= spawnFlags;
@@ -175,9 +191,9 @@ void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, u32 spaw
         {
             if (buf.ctx != 0 && spawnParams != 0)
             {
-                buf.pos[0] += ((GameObject*)buf.ctx)->anim.worldPosX + ((PartFxSpawnParams*)spawnParams)->posX;
-                buf.pos[1] += ((GameObject*)buf.ctx)->anim.worldPosY + ((PartFxSpawnParams*)spawnParams)->posY;
-                buf.pos[2] += ((GameObject*)buf.ctx)->anim.worldPosZ + ((PartFxSpawnParams*)spawnParams)->posZ;
+                buf.pos[0] += ((GameObject*)buf.ctx)->anim.worldPosX + spawnParams->posX;
+                buf.pos[1] += ((GameObject*)buf.ctx)->anim.worldPosY + spawnParams->posY;
+                buf.pos[2] += ((GameObject*)buf.ctx)->anim.worldPosZ + spawnParams->posZ;
             }
             else if (buf.ctx != 0)
             {
@@ -187,13 +203,13 @@ void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, u32 spaw
             }
             else if (spawnParams != 0)
             {
-                buf.pos[0] += ((PartFxSpawnParams*)spawnParams)->posX;
-                buf.pos[1] += ((PartFxSpawnParams*)spawnParams)->posY;
-                buf.pos[2] += ((PartFxSpawnParams*)spawnParams)->posZ;
+                buf.pos[0] += spawnParams->posX;
+                buf.pos[1] += spawnParams->posY;
+                buf.pos[2] += spawnParams->posZ;
             }
         }
-        (*gModgfxInterface)->spawnEffect(&buf, 0, variant != 0 ? 4 : 3,
-                                         variant != 0 ? &base[0x20] : base, variant != 0 ? 2 : 1,
-                                         variant != 0 ? &base[0x48] : &lbl_803DB898, 0, 0);
+        (*gModgfxInterface)
+            ->spawnEffect(&buf, 0, variant != 0 ? 4 : 3, variant != 0 ? (void*)base->vtx1 : (void*)base->vtx0,
+                          variant != 0 ? 2 : 1, variant != 0 ? (void*)base->col : (void*)&lbl_803DB898, 0, 0);
     }
 }
