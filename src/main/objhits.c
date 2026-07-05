@@ -2028,8 +2028,8 @@ void ObjHits_DetectObjectPair(int objA, int objB)
     if ((stateB->flags & OBJHITS_PRIORITY_STATE_ENABLED) != 0)
     {
         sumRadius = radiusB + radiusA;
-        sx = ((GameObject*)objA)->anim.worldPosX - stateA->worldPosX;
         sy = ((GameObject*)objA)->anim.worldPosY - stateA->worldPosY;
+        sx = ((GameObject*)objA)->anim.worldPosX - stateA->worldPosX;
         sz = ((GameObject*)objA)->anim.worldPosZ - stateA->worldPosZ;
         if (vertical != 0)
         {
@@ -2038,8 +2038,8 @@ void ObjHits_DetectObjectPair(int objA, int objB)
         segSq = sy * sy + sx * sx + sz * sz;
         if (segSq > gObjHitsScalarOne)
         {
-            cz = ((GameObject*)objB)->anim.worldPosZ - stateA->worldPosZ;
             cx = ((GameObject*)objB)->anim.worldPosX - stateA->worldPosX;
+            cz = ((GameObject*)objB)->anim.worldPosZ - stateA->worldPosZ;
             cy = ((GameObject*)objB)->anim.worldPosY - stateA->worldPosY;
             segSq = (sy * cy + sx * cx + sz * cz) / segSq;
             if ((segSq >= gObjHitsScalarZero) && (segSq <= gObjHitsScalarOne))
