@@ -2897,12 +2897,12 @@ void doPendingMapLoads(void)
                     int* cp2;
                     int k8;
                     s8 c;
-                    eBase = (int*)(base + 0x41E0);
-                    bp2 = eBase;
-                    aBase = (int*)(base + 0x41F4);
-                    ap2 = aBase;
                     cBase = (int*)(base + 0x41CC);
                     cp2 = cBase;
+                    aBase = (int*)(base + 0x41F4);
+                    ap2 = aBase;
+                    eBase = (int*)(base + 0x41E0);
+                    bp2 = eBase;
                     o1 = recs;
                     recsCursor = o1;
                     for (; layer < 5; layer++)
