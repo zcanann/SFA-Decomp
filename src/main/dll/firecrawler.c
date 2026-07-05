@@ -1902,12 +1902,12 @@ void crawler_updateC(s16* obj, u8* state)
 void crawler_updateB(s16* obj, u8* state)
 {
     CrawlerDescriptor* d = (CrawlerDescriptor*)gCrawlerDescriptorTable;
+    u8* t10 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl10;
     u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl8;
     u8* tC = d[((BaddieState*)state)->inWhirlpoolGroup].tblC;
     CrawlerSeq16* seq = d[((BaddieState*)state)->inWhirlpoolGroup].seq;
     u8* t4 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl4;
     u8* t18 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl18;
-    u8* t10 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl10;
     f32 cap;
     int count;
     int i;
@@ -1950,7 +1950,7 @@ void crawler_updateB(s16* obj, u8* state)
         }
     }
 
-    count = fn_8014C11C((int)obj, lbl_803E2BE0, 1, 0x28, gCrawlerNearbyObjectBuffer);
+    count = fn_8014C11C((u32)obj, lbl_803E2BE0, 1, 0x28, gCrawlerNearbyObjectBuffer);
     if (count >= 1)
     {
         if ((((FCVars*)state)->flagsD & 0x20) == 0 || (((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
@@ -1993,8 +1993,8 @@ void crawler_updateB(s16* obj, u8* state)
                         {
                             int i2 = ((FCVars*)state)->moveChainIndex * 0xc;
                             u8* p9 = (u8*)t4 + 9;
-                            Baddie_SetMove((int*)obj, state, *(u8*)((char*)t4 + i2 + 8), *(f32*)((int)t4 + i2), 0,
-                                        *(u8*)((char*)t4 + i2 + 0xa));
+                            Baddie_SetMove((int*)obj, state, (t4 + i2)[8], *(f32*)((int)t4 + i2), 0,
+                                        (t4 + i2)[0xa]);
                             ((FCVars*)state)->moveChainIndex = p9[((FCVars*)state)->moveChainIndex * 0xc];
                         }
                         else
@@ -2006,8 +2006,8 @@ void crawler_updateB(s16* obj, u8* state)
                     else
                     {
                         i = (randomGetRange(1, *(u8*)(t8 + 8)) & 0xff) * 0xc;
-                        Baddie_SetMove((int*)obj, state, *(u8*)((char*)t8 + i + 8), *(f32*)((int)t8 + i), 0,
-                                    *(u8*)((char*)t8 + i + 0xa));
+                        Baddie_SetMove((int*)obj, state, (t8 + i)[8], *(f32*)((int)t8 + i), 0,
+                                    (t8 + i)[0xa]);
                     }
                 }
                 else
@@ -2039,16 +2039,17 @@ void crawler_updateB(s16* obj, u8* state)
             }
             else
             {
-                int i2 = ((FCVars*)state)->moveChainIndex * 0xc;
-                if ((((BaddieState*)state)->controlFlags & *(u32*)((char*)t4 + i2 + 4)) != 0)
+                int i2;
+                u8* q;
+                if ((((BaddieState*)state)->controlFlags & *(u32*)((q = t4 + (i2 = ((FCVars*)state)->moveChainIndex * 0xc)) + 4)) != 0)
                 {
                     u8 mv;
                     i = ((FCVars*)state)->moveTableIndex * 0xc;
                     mv = *(u8*)((char*)tC + i + 8);
                     if (mv == 0)
                     {
-                        Baddie_SetMove((int*)obj, state, *(u8*)((char*)t4 + i2 + 8), *(f32*)((int)t4 + i2), 0,
-                                    *(u8*)((char*)t4 + i2 + 0xa));
+                        Baddie_SetMove((int*)obj, state, q[8], *(f32*)((int)t4 + i2), 0,
+                                    q[0xa]);
                     }
                     else
                     {
@@ -2064,8 +2065,8 @@ void crawler_updateB(s16* obj, u8* state)
                     if (mv == 0)
                     {
                         int i4 = (randomGetRange(1, *(u8*)(t8 + 8)) & 0xff) * 0xc;
-                        Baddie_SetMove((int*)obj, state, *(u8*)((char*)t8 + i4 + 8), *(f32*)((int)t8 + i4), 0,
-                                    *(u8*)((char*)t8 + i4 + 0xa));
+                        Baddie_SetMove((int*)obj, state, (t8 + i4)[8], *(f32*)((int)t8 + i4), 0,
+                                    (t8 + i4)[0xa]);
                     }
                     else
                     {
@@ -2091,8 +2092,9 @@ void crawler_updateB(s16* obj, u8* state)
         {
             if (((GameObject*)obj)->anim.currentMove == *(u8*)(p + 8))
             {
-                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)((char*)t18 + j * 0xc + 4);
-                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8) * (u8*)((char*)t18 + j * 0xc + 9);
+                p = (u8*)t18 + j * 0xc;
+                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p + 4);
+                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8) * (u8*)(p + 9);
                 if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority == 0x1f)
                 {
                     ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x40;
