@@ -2912,12 +2912,14 @@ void gameTextInitFn_8001c794(void)
     tex = textureAlloc(0x14, 0x14, 5, 0, 0, 0, 0, 1, 1);
     gGameTextBoxEdgeTexture = tex;
     dst = (u16*)((u8*)tex + 0x60);
+    i = 0;
     y = 0;
     src = lbl_802CA100;
-    for (i = 0; i < 5; i++)
+    for (; i < 5; i++)
     {
+        x = 0;
         x0 = 0;
-        for (x = 0; x < 20; x += 4)
+        for (; x < 20; x += 4)
         {
             x1 = (x + 1) * 2;
             x2 = (x + 2) * 2;
