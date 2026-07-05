@@ -3325,3 +3325,371 @@ BaddieState/ObjPlacement/GameObject-core prefixes + per-family union, and (c) in
     be836f8f... (CHANGED). params MUST stay raw u8* here (matches prior agent's note
     at newclouds.c:1843). env (saveGameGetEnvState cross-TU blob, no shared header)
     also left raw. newclouds.c now exhausted for byte-neutral respells.
+
+## struct-recovery pass 2 (expanded offset map) — seqId/seqIndex cluster
+GameObject offset map built from include/main/game_object.h + objanim_internal.h.
+Expanded beyond first-pass (rot/rootMotionScale/localPos/worldPos/velocity).
+Landed 6 byte-neutral (.o md5-identical) respells, all anim.seqId (0x46, s16) /
+GameObject.seqIndex (0xb4, s16) field reads, one commit per file:
+  - dll_0019_dll19func0 (07529757fc): *(s16*)((char*)p+0x46) -> ((GameObject*)p)->anim.seqId
+  - DIM/dll_00C7_dim2roofrub (5c9658904a): *(s16*)((char*)match+0xb4) -> ->seqIndex (r/w)
+  - dll_01AA_bombplantspore (a69587c0bf): hitObj+0x46 -> ->anim.seqId
+  - DIM/dll_01C7_dimlavasmash (03b86dfa42): hit+0x46 -> ->anim.seqId (int hit -> (GameObject*) cast neutral)
+  - dll_01CE_dll1ce (5044f6b11e): o+0x46 x2 -> ->anim.seqId
+  - dll_016C_dll16c (eeb6077fe3): objs[i]+0x46 -> ((GameObject*)objs[i])->anim.seqId
+NOTE: direct (GameObject*)intVar pointer-cast at a KNOWN-pointer value is byte-neutral;
+this is distinct from the DISQUALIFIED int-launder `int b=*(int*)&x->extra;*(T*)(b+off)`.
+EXHAUSTED in DLLs (excl skiplist): no more clean GameObject-base scalar raw derefs at
+classId(0x44)/defId(0x48)/parent(0x30)/objectFlags(0xb0)/currentMove(0xa0)/hitboxScale(0xa8)/alpha(0x36).
+Remaining 0x46/0x44/0xb0-shaped hits in model.c/object.c have NON-GameObject bases
+(ObjAnimState channel/stk, ModelFileHeader hdr, def/tmpl) = correctly disqualified.
+0x68(dll)/0x58(weaponDaTable) vtable-chain sites are ptr-chain calls, not field respells.
+
+## PROBE Jul05 — GX/SDK-struct raw-cast pool: 0-WIN WALL (pool unreachable)
+Goal: respell raw `*(T*)(base+0xNN)` → `((GXStruct*)base)->field` byte-neutrally where
+base is a DEFINED dolphin-SDK struct (GXColor/GXLightObj/GXTexObj/GXTexRegion/Mtx/Vec/S16Vec).
+VERDICT: **pool does not exist for non-foreign engine files.** No commits, no edits.
+
+Classification of the GX-heavy pool (per src/main/*.c commit-age × cast × gx density):
+- FOREIGN (Ghidra FUN_/DAT_ or *_dolphin.c SDK reimpl) → ABORT cond 1:
+  track_dolphin.c, rcp_dolphin.c, pi_dolphin.c (gx=808), tex_dolphin.c, objprint_dolphin.c,
+  and newshadows.c (190 FUN_/121 DAT_ + tuned 13h).
+- HOT / match-tuned <24h → ABORT cond 2: shader.c (8h), model.c (22h), objprint.c (0h),
+  sky.c (23h), lightmap.c (15h), light.c (10h), modellight.c (34h), maketex.c (10h, save-buf not GX).
+- ACTIVE OWNER (uncommitted-recent, sibling agent) → ABORT cond 4: newclouds.c (2min),
+  snowclaw.c (22min).
+
+DECISIVE NEGATIVE EVIDENCE (why the pool is empty even ignoring hotness):
+1. `grep -rnE '\b(GXTexObj|GXLightObj|GXColor|GXTexRegion|GXTexObjLOD)\b' src/main/*.c | grep -v dolphin`
+   = ZERO hits. Non-dolphin engine NEVER declares an SDK GX struct type. GX objects are
+   opaque: created as typed locals/globals, passed to GX fns by pointer, never reached into
+   by raw offset. There is no `*(T*)(gxTexObjBase+off)` to respell.
+2. Mtx/Vec typed locals appear ≤1×/file in engine — used opaquely, never raw-cast into.
+3. Every `*(f32*)(base+off)` / `*(u8*)(base+off)` site sampled targets a GAME-INTERNAL
+   struct (map-block descriptor obj+3/4/5, sky-state blob gSkyState+bit*0xa4+0xa8 [index-scaled,
+   disqualified], shader entry, jointMtx, blendChan, prevSphere, ObjAnimState stk) — NOT an SDK
+   struct. These bases are the OBJANIM/GameObject/shader-descriptor pools already worked
+   elsewhere, and here they sit in HOT tuned files.
+CONCLUSION: the "GX/SDK-struct" pool as framed is a null set — the SDK structs are opaque to
+the engine, and the only raw casts present are game-struct casts in hot files. NOT reachable
+for byte-neutral SDK-struct recovery. Do not re-probe under the SDK-struct framing.
+
+## Cycle Jul05 (data-split fresh-vein sweep)
+- WIN dll_013D_explodeanimator (4e53c86bb9): explodeanimator_init raw `*(s16*)((char*)def + 50)`
+  -> `((ExplodeanimatorPlacement*)def)->resultGameBit` (0x32, s16). Struct already declared in-file;
+  the update fn used typed derefs, init lagged. .o md5 IDENTICAL 0043c73d7fe15b925b0f0a21c68c413c. build EXIT=0.
+- Data-split "linked/complete" batch (81min-2h ago) checked: sbshipmast, ccqueen, cameramodeperv,
+  dll_0219, texscroll, staticcamera, vfpladders, skeetlawall, attractor, lightsource, animsharpclaw,
+  dll_0127, dimtricky = NO raw offset casts (already clean / sdata2-only splits).
+- LEFT RAW (disqualified): animsharpclaw:118 fn-ptr vtable call; animsharpclaw:168 `*(int**)&...->extra + 0x57`
+  INT-LAUNDER base. The 3-min-ago anim.seqId sweep files (dll16c, dll1ce, dimlavasmash, bombplantspore,
+  dim2roofrub, dll19func0) are actively owned by sibling struct agents (uncommitted/just-committed) — skipped per one-owner rule.
+
+## Jul05 largest-fn 90-97% O4,p deep-dive (fuzzy-structural specialist) — 0 wins, all banked caps
+Ranked default-O4,p main-lib fns 90-97% by size DESC (excluded: audio 1.2.5n noopt, *_dolphin
+Ghidra-named+sibling-hot track_dolphin[154 FUN_/DAT_,committed 04:13], player/render/shader/gametext/
+newshadows/dll_0014/animobjd2 = cflags_dll_noopt). All triaged fns are within-class coloring caps,
+NO structural seed (no missing branch / wrong struct access / misshaped loop):
+- **drawGlow** (dll_000A_expgfx, 0xba8, 95.03%): 88 reg-perm + 12 fcmpo-swap. Seed = poolIndex(r4
+  param)/counter saved-reg TRANSPOSITION at entry (r15/r22 vs r22/r15); both _savegpr same count.
+  Uniform #108 whole-web + #82 FP-perm cascade. BANK.
+- **expgfx_addremove** (0xa10, 95.84%): 57 reg-perm + 7 deref-via-copy. Target _savegpr_22 (10 saved
+  GPRs) vs current _savegpr_23 (9) — target keeps `attachedSource`(config->attachedSource, line 3026)
+  in a SAVED reg r29; current in volatile r6. attachedSource has NO call in its live range (loaded 3026,
+  last-used 3058, NULL'd 3060) so saving it is a pure allocator preference = #67d spill-vs-keep. The 7
+  deref-via-copy are all r29-vs-r6 renumber of the SAME load structure, not a real missing hoist. BANK.
+- **gameTextRun** (textrender, 0x5e0, 95.15%): 27 reg-perm + 4 ext-delete + 2 ext-insert. Both
+  _savegpr_26. Seed = `cmd`(GameTextSlot* first decl) colored r27(T) vs r29(C); the ext-delete/insert
+  are byproducts of load SCHEDULING (target batches switch-case arg loads DESCENDING off r27, current
+  ASCENDING off r29). TRIED: reorder case-3 temp decls c3/c2/c1 descending (95.154->95.133, WORSE — decl
+  order does NOT flip the batch-load order, scheduler-driven). Within-class #108. BANK.
+- **renderSceneGeometry** (lightmap, 0x4ec, 96.67%): 12 reg-perm + 6 li-const. Both _savegpr_17. Seed =
+  `p` walker r6(T)/r8(C) + `1` store-const r5(T)/r6(C) in the 4 box-fill loops (2134-2169); box[N][0]/[1]
+  load order + reg assign differs per unroll copy. gLightmapU32ToDoubleBias @132 reloc = #70 neutral.
+  Within-class coloring cascade. BANK.
+- **objFreeObjDef** (object, 0x4e4, 96.87%): 50 reg-perm — pure coloring cascade, no structural. BANK.
+- **expgfxGetSlot** (dll_000A, 0x318, 94.49%): 37 reg-perm + 1 ext-insert(inside reg-renumber block) +
+  1 sched-order. slw/and web renumber. Within-class. BANK.
+- gameTextLoadGraphicsFn(0x44c,96.66% 13rp+2mr-copy), gameTextInitFn(0x3a8,93.38%, committed 19hr) =
+  base-reg web + copy-prop renumbers, within-class. BANK.
+Tree left CLEAN (textrender case-3 experiment Edit-reverted, rebuilt, gameTextRun back to 95.154). No
+commits. All main-lib O4,p large-fn residual in this band is coloring/spill-vs-keep with no source lever.
+
+
+## SESSION Jul05 (fuzzy-scan, post-45min team commits) — 0 wins, 12 candidates triaged, all banked caps
+Method: private proto report, decoded per-fn fuzzy (float32-LE f3 under unit f2/f4). Ranked 96-99.4%
+O4,p (skipped MSL/audio/dolphin-noopt-O0; dll_noopt units ARE valid targets = O4,p + peephole/sched off).
+Scanned ALL 308 candidates for instruction-COUNT mismatches (tools/ndiff.py, note: macOS has NO `timeout`).
+109 count-mismatches found; triaged the cleanest (fewest-region) fresh ones. EVERY structural seed = banked class:
+  - dll_02BB_gflevelcon fn_8023A3E4 (99.35, T=179 C=180): the `hp[0xAE] -= 1` reloads the byte the
+    `hp[0xAE]!=0` test already loaded; target CSEs into r3 (`lbz r3;...;addi r0,r3,-1;stb`). Temp forces
+    the CSE (u32 hpHits gives cmplwi-match) BUT adds a `clrlwi` store-mask -> net 99.35->99.20 REGRESS.
+    CSE-vs-mask trade nets negative. BANK.
+  - track_dolphin hitDetectFn_800658a4 + fn_80065768 (98.31/98.61, 1-region): `if(cur>=0){}else{cur=-cur}`
+    abs-guard. Target keeps unfolded `cror;bne;b` island; mine folds to `beq`. Rewriting as ternary
+    (matches the SECOND occurrence's bne;b) REGRESSED 98.31->96.85 (ternary refolds the fneg into f2,
+    diverges more). Empty-then/else branch-island fold = BANK (same as #pollen below).
+  - dll_00D9_pollen fn_8016A660 (98.x, 1-region): `if(Obj_IsLoadingLocked()==0)return;` -> target
+    `cror;bne;b` unfolded guard, mine `beq`. Tried ==0-return, !=0-empty-then-else, goto-ok: ALL fold
+    to beq. MWCC branch-simplify collapses every spelling. BANK (empty-guard fold).
+  - dll_014C_babycloudrunner sandworm_turnTowardTargetAnim (98.86, T=101 C=102): ONE spurious `extsh r0,r0`
+    between `add` and `sth` on `*(s16*)a += (shifted>>=3)`. s16/u16/un-compound all keep a narrow (extsh
+    or clrlwi). Removing the fn's local `#pragma peephole off` DROPS the extsh but peephole-ON refolds a
+    DIFFERENT abs (`srawi;b;neg;srawi` -> 1 srawi) elsewhere: 98.86->93.52 REGRESS. Coupled peephole. BANK.
+  - dll_0017_savegame saveGame_saveObjectPos (98.62, T=95 C=96): store block `(gSaveGameData+OFFSET)[i]`
+    computes base+i*16+360 (+1 addi) vs target base+i*16 disp 360. Rewriting stores as
+    `((SaveGameImage*)gSaveGameData)->positions[i]` MATCHES count (C=95) BUT reorders slwi/reg (r5/r6) ->
+    98.62->97.61 REGRESS. count-parity != gain. BANK.
+  - shader mapGetRomListAndOffsets (99.24, T=175 C=174): `(p1*7)*4` folds to `mulli *28`; target keeps
+    `mulli r7,*7; slwi r31,r7,2` split (r7 live across a load). `(p1*7)<<2` matches count BUT lands in
+    r0 back-to-back not r7-across-load -> 99.24->98.49 REGRESS. scheduling/liveness, no lever. BANK.
+  - pi_dolphin loadDataFiles (T=107 C=105): empty `do{}while(++vi<0x57)` -> target strength-reduces to
+    `subfic 87-i; mtctr; bdnz`; mine keeps `addi;cmpwi;blt`. `for` form DELETES the loop entirely (worse).
+    do/while is closest; CTR-conversion is loop-optimizer artifact, no source lever. BANK.
+  - r0-detour named-.data-ptr (BANK-on-sight, confirmed 4x): voxmaps_resetLoadedMaps (gVoxMaps),
+    pad initControllers (gPadStateBlock), objprint renderOpMatrix (gObjGxPosMtxIdTable), seqobj11d
+    fn_8015165C (lbl_8031F16C). All `addi r0,r3,0; mr rSaved,r0` vs target `addi rSaved,r3,0`.
+  - track fn_80061DD8 (#110 shared-zero): target `li r0,0;sth r0` fresh zero vs mine reuse r4. BANK.
+  - object fn_8002B758 (T=72 C=73): ×8 unrolled shift-copy loop; my unroll ~identical, 1-instr tail
+    re-entry delta (#108/#113). mm mmAllocateFromFBMemoryStore (T=67 C=66): param-stage extra `mr r5,r4`
+    + web transpose. modellight modelLightStruct_freeSlot (97.6): pure r5/r6 counter/limit #108, decl
+    swap inert. wispbaddie fn_8014FFB4: `&~0x40` -> mine rlwinm(1) vs target li -65;and(2); literal
+    0xFFFFFFBF still folds to rlwinm; broad byte-arg web perm besides. BANK.
+Tree left CLEAN — every experiment Edit-reverted + rebuilt to baseline, no commits. NOTE: dll_00F7_dllf7.c
+and this file showed concurrent-agent edits during my session (NOT mine; left untouched). gametext.c
+(M at session start) also another owner. TOOLING: macOS `timeout` absent -> strip from scan scripts.
+
+## Struct-recovery consistency-gap sweep (Jul05)
+- WIN dll_00F7_dllf7 (commit 9d194c04a8): dll_F7_init read placement mapEventId via
+  raw `*(int*)((char*)params + 0x14)` while siblings pass `((DllF7Placement*)params)->mapEventId`
+  to the SAME shouldNotSaveTime interface call. Typed the holdout (s32 @0x14). .o md5 IDENTICAL.
+- BANKED byte-changers (reverted, md5 restored):
+  - dll_0272_hightop 0x314: eventFlags is u32 in BaddieState but raw is `*(int*)` (signed)
+    assigned to `int flags`; typed `((BaddieState*)state)->eventFlags` changes bytes (u32->int
+    conversion at the narrow site). Sign/type mismatch is load-bearing. Kept raw.
+  - dll_00C6_animatedobj 0x57: `*(s8*)((char*)seq+0x57)` = seq->slot; sibling types a DIFFERENT
+    ptr `(s8)otherSeq->slot`. Typing this holdout (s8)seq->slot changed bytes (fresh-deref
+    coloring differs). Kept raw.
+- DISQUALIFIED (no clean gap): drcloudrunner/hightop 0x334/0x338 (BaddieState per-family raw
+  scratch, header comment says keep raw); snowbike found+0x8/0xc/0x10/0x29 (void* from
+  mapRomListFindItem, no typed sibling); dim2conveyor/seqobj11e def+0x1a.. (past ObjPlacement
+  0x18 end); crrockfall params+0x1e (pad1E unnamed); visanimator desc+0x1B (high byte of
+  originY s16, not a distinct field); fireball params+0x19 (high byte of unk18 s16);
+  front box+0x16 (void* gameTextGetBox, no typed sibling); msplantings sub+0xc (placement
+  posX, but sub not typed); obj+0x37/0x34 across gpshobjcreator/dfshobjcreator/dll19a/ecshcup/
+  sbgalleon (unnamed GameObject pad past alpha@0x36); dimexplosion state+0x14 (inside flames[]
+  array); tumbleweedbush trickyState+0x728 (unnamed); dll16c SKIPPED (team-touched 11min).
+
+## STATE-descriptor (obj->extra) typed-respell sweep (2026-07-05, Opus) — 0 neutral, 2 tested+reverted
+Hunted the intra-file consistency gap where a sibling types `((FooState*)state)->field` while a
+holdout reads the same base raw. Swept every `obj->extra`-based raw cast in the repo. RESULT: 0
+byte-neutral respells found; the state partition is dominated by disqualifiers, exactly as briefed.
+TESTED + REVERTED (md5 restored, confirmed byte-changers):
+- **dll_0272_hightop.c** hightop_playMovementSfx `*(int*)((char*)state+0x314)` (2 sites) ->
+  `((BaddieState*)state)->eventFlags`. eventFlags is `u32` at 0x314; raw form reads it as signed
+  `int` (keeps `cmpwi` on the `& 0x81`/`&1`/`&0x80` mask-compares). Typed u32 flips to `cmplwi`;
+  `int flags`, `u32 flags` BOTH change md5 (d0932c9d... base). Width/sign-vs-compare hazard. REVERTED.
+- **drhightop.c** line 562 `st->yaw = *(s16*)((char*)st+0x40e) + yawDelta` -> `st->yaw = st->yaw +...`.
+  st is already `SnowBikeState*`; 0x40e IS the `yaw` field (self read+write). Arrow form re-derefs
+  differently, md5 changes (5b0f286e... base). REVERTED.
+DISQUALIFIED without building (all state descriptors, all briefed traps):
+- BaddieState UNNAMED per-family scratch region (0x278, 0x323-0x345, 0x334/0x338/0x33C/0x344/0x34C):
+  dll_000F_unk (0x2bc/0x33c/0x344/0x34c pad regions), DIM/dll_0256_dimsnowhorn1 (0x334/0x338 baddie
+  scratch), DR/dll_0257_drearthwarrior (0x278 setup-store, unnamed), dll_00C9_enemy (0x323 union),
+  newseqobj (0x328/0x32c/0x330/0x338 SeqRow16 walker scratch, code-commented file-local), dll_0272
+  p+0x334/0x338. No named field exists at these offsets — nothing to respell to.
+- INT-LAUNDER base: DIM/dll_01CA_dimexplosion (`state = *(int*)&obj->extra`; `ang[3]=*(int*)(state+0x14)`
+  bit-copy of velZ f32 into int array — the #1 false-hope trap).
+- CODE-DOCUMENTED intentional raw: drcloudcage (state+0x34/0x44 CheckpointRankItem, comment says
+  "stay raw: shifts codegen"), dll_000F eventFlags int-launder form already in-file.
+- DIFFERENT alias / not obj->extra: dll_018F_ecshshrine (raw base is `int* state`=obj->extra but
+  typed sibling uses `MmShrineAnimState* = obj->state` — different field, offset 0x20 in pad04),
+  objprint_dolphin (getCurCharPos, not a state), lightmap (pointer-walk induction), sky (SkyState
+  singleton index-scaled), mmsh_waterspike (0x40C reads a pointer, no typed sibling on `state`),
+  dll_0019 (placementData, PLACEMENT partition).
+player.c and bombplantspore SKIPPED (concurrent owners, touched <30min). No commits this cycle.
+
+## SEMANTIC-RECOVERY vein-mine pass (2026-07-05, Opus) — 0 wins, fresh team units already recovered
+Mined the 4 fresh TEAM data-split/linked-complete commits at 18:26 UTC (all others in the 90-min
+window were struct-recovery/field-naming = OURS, skipped):
+- dll_01EB_sbshipmast.c — only cast is `((GameObject*)obj->anim.parent)->anim.seqId` = named field.
+- dll_0187_ccqueen.c — all casts to named GameObject anim/objectFlags fields. Remaining raw-ish:
+  `placement[0x1a]` (bare u8* byte-INDEX, no mapped ccqueen-placement struct — index-scaled DISQ);
+  `charState + 0x624` (opaque `extra` blob size 0x654, base-pointer PASS to dll_2E_* helper, no
+  mapped state struct — not a field deref). Both correctly left raw.
+- dll_0055_cameramodeperv.c — `(GameObject*)camera->anim.targetObj` then named anim.worldPosY fields.
+- dll_0219.c — fully typed: Dll219Setup* placement / Dll219State* state, named fields throughout.
+VERDICT: all 4 fresh units already fully struct-recovered against mapped GameObject / typed
+Setup/State structs. No raw fixed-offset cast against a mapped struct exists. Legitimate 0-win pass;
+no edits, no commits, working tree unchanged (only this md appended).
+
+## FUZZY 97-99.5 band pass (Jul05, small-fn structural-seed hunt) — 0 wins, all banked caps
+Triaged ~20 -O4,p fns in 97.0-99.5% / size 0x100-0x400. Two had REAL structural seeds
+that fixed the target shape but REGRESSED net fuzzy (coupled trades — the structural fix
+triggers a bigger register/schedule cascade). Everything else = known banked classes.
+
+STRUCTURAL-SEED-BUT-COUPLED (fix worked, fuzzy dropped — reverted):
+- gameloop.c GameBit_Set 98.547: loop `end=mask+start; for(i<=end)` → target materializes
+  `end+1` once, uses for count AND guard (bge). Rewriting `end=(mask+start)+1; for(i<end)`
+  MATCHED the subf/bge/count shape (7→5 regions) BUT MWCC reassociates `+1` to `(mask+1)+start`
+  AND the flags-web r4/r5 perm costs more bytes → 98.547→97.906. `end++` split → 12 regions.
+  Coupled. Remaining baseline deficit = #108 flags-web r4↔r5 perm. BANKED.
+- dll_0017_savegame.c saveGame_saveObjectPos 98.622: store block `((SGObjPos*)(base+0x168))[i].f`
+  pushes 0x168 onto ptr (`addi r4,360; stw 0(r4)`). Respelling to `((SaveGameImage*)base)->positions[i].f`
+  FOLDED 360 into store disp (`stw r5,360(r4)`, 5→2 regions) BUT MWCC hoists `slwi i*4` early →
+  objectId load shifts r5→r6, register cascade → 98.622→97.611. Hoisting objectId into `v` first =
+  inert (copy-prop). Coupled. BANKED.
+
+BANKED-ON-SIGHT (no source lever, confirmed this pass):
+- shader.c mapGetRomListAndOffsets 99.237: `(p1*7)*4` folds to `mulli *28` (matches target r31 dest).
+  `<<2` or split-decl UNFOLDS to target's `mulli;slwi r31,r7,2` shape (instr-count matches 175) BUT
+  intermediate `p1*7` lands r0-scratch vs target r7 → cascade → 98.489. Baseline `*28` scores HIGHER.
+  r7-vs-r0 temp = pure allocator choice, no lever. BANKED.
+- model.c ObjModel_Load 99.200 + shader.c mapLoadBlock 99.153: IDENTICAL #110 copy-prop shared-zero.
+  Source `i=0; byteOff=i` → target keeps `mr byteOff,i` (copy 0), MWCC copy-props to `li byteOff,0`.
+  i provably 0 so copy always folds. No per-fn copy-prop toggle. Single-instr cap. BANKED.
+- textrender.c gameTextLoadForCurMap 98.772: 2-region pure scheduler code-motion — target computes
+  `request = base+i*40` (mulli;add) LATE (right before its store); MWCC hoists it above preceding
+  do-while. Register-neutral (205=205). Inlining the assign into the store regressed (r3/r4 perm).
+  Scheduler artifact. BANKED.
+- #108 whole-web reg-perm (no seed): object.c Obj_UpdateModelBlendStates 99.065 (walker r30↔r26 +
+  #110 mr r31,r28 vs li), worldplanet.c worldplanet_init 98.750, dll_02B5_timer timer_update 99.103,
+  dll_0158_gunpowderbarrel triggerExplosion 98.644 (def/i r26↔r29; decl-reorder inert, typed def
+  regressed 98.475), dll_0014_unk RomCurve_getAdjacentWindow/func16/getRandomLinkedOfTypes,
+  dll_02B3_vortex vortex_init, dll_00C6_animatedobj animatedobj_update, WaterFallSpray_update,
+  dll_0000_gameui ObjGroup_AddObject 99.456 (r7↔r8, already in MEMORY).
+- bias-double `@N`-vs-named sdata2 (#70 score-neutral) + FP/reg-perm: newshadows shadowCreate 98.924
+  (rsqrt refinement f2/f3/f4 #82), dll_0000_gameui boxDrawFn_8012975c, dll_0040_credits Credits_frameStart,
+  camera viewportEffectFn_8000e380, lightmap updateEnvironment, dll_0014_unk Objfsa_GetPatchGroupIdAtPoint.
+- r0-detour (#banked): pad initControllers 98.777 (`addi r0,r3,0; mr r31,r0`), shield_update.
+- pollen fn_8016A660 98.922: `if(x)goto ok;return;` — target keeps `bne ok; b epilogue` island,
+  MWCC folds to single `beq`. +1 instr. Rest = @92 bias-double (score-neutral). Peephole fold, BANKED.
+VERDICT: working tree unchanged (only this md appended + pre-existing sibling drpickup.c/track_dolphin.c).
+all_source EXIT=0, no FAILED. drpickup.c/track_dolphin.c are sibling-owned uncommitted — untouched.
+
+## Semantic-recovery (dedicated per-family state) — Jul05 session
+WIN dll_0272_drpickup (821212d762): typed 3 raw DRPickupState-base stores in
+fn_801EC1AC byte-neutral — *(s16*)(state+0x40e)->angle40E,
+*(s16*)(state+0x40c)->angle40C, *(u32*)(state+0x410)->angAccum410. The two 0x430
+liftZVel sites REVERTED (byte-changers): each coupled to an (int)state int-launder
+read on the same statement; retyping LHS store OR the read both shift bytes.
+DISQUALIFIED this session (all confirmed byte-changers or shared/narrow):
+  - firecrawler: 0x308/0x261 casts are inside BaddieState shared prefix (FireCrawlerState
+    only owns 0x368/0x36c). duster: 0x344/0x348/0x34c/0x323/0x2a0 = shared per-family scratch.
+  - tricky(sub) 0x2b6 = u16 narrow view into f32 currentTime@0x2B4 (per-unit narrow, no field).
+  - weapone6 0x828 = TrickyState pad81C region (no named field); status+0x10 is not the state base.
+  - trickyfollow 0x98/0xa0 = index-scaled patch[i]/f32-triple walker (header marks raw).
+  - drgenerator 0x19a hitsRemaining: `state[0x19a]` is SIGNED-char access; retyping to u8
+    hitsRemaining changes the `> 0` compare + arithmetic sign (byte-changer, REVERTED).
+  - dll19func0 0x20/0x8c/0x94/0x261/0x334 = BaddieState shared prefix (no dedicated struct).
+Confirms the int-launder + shared-prefix + signed-char-narrow disqualifiers dominate.
+
+## SEMANTIC-RECOVERY setup-buffer pad-split pass (2026-07-05, Opus) — 0 wins, vein confirmed mined
+Swept all 89 `Obj_AllocObjectSetup`/`Obj_SetupObject` TUs plus 183 files defining a
+`*Setup`/`*Placement`/`*Spawn` struct. Cross-referenced struct-with-pad-field headers against raw
+`*(T*)(base + 0xNN)` casts in their consumer .c. RESULT: every file that DEFINES a partial
+Setup/Placement struct has ALREADY respelled all its fixed-offset accesses through the struct — no
+raw pad-offset cast survives against a mapped struct. The remaining raw casts all fall in the
+briefed disqualifier classes:
+- **Canonical raw setup-init writes** (`*(u8*)(setup+0x4)=2; *(u8*)(setup+0x5)=1; *(s16*)(setup+0x1a)=i`):
+  tricky (dll_00C4) L412-415, tricky_flameguard L250-252/344-346/544-546, tumbleweedbush L134-136.
+  tumbleweedbush is the COMMITTED reference and it KEEPS these raw — confirmed canonical (typing shifts
+  codegen). Whole family disqualified.
+- **Bare-int `setup`/`placement` base + single class-specific offset, NO existing struct to extend**
+  (would require NEW struct + int->ptr cast that materializes a member-address temp per obj_placement.h):
+  dll_0299 L66 `*(s16*)(setup+0x1e)` (only Dll299State exists, no Dll299Setup); dll_00E5_shield
+  staticCamera_init L313-318 (`placement+0x1c/0x1e/0x20` rot shorts, +0x19/+0x1a u8);
+  dll_00D5_kaldachom L88 `*(char*)(placement+0x28)`. New-struct creation, not a pad-split; high md5 risk.
+- **GroundBaddie placement reads via `u8* setup`** (seqobj11d L337-430: 0x1c GameBit / 0x27 flag /
+  0x2e flag): no GroundBaddiePlacement struct; `setup` is u8* to placementData — retyping hits the
+  placementData deref-width hazard. Not a pad-split.
+- **DoorLock/SeqObject/IMMultiSeq placements** (alphaanim.h) are fully named; their consumers
+  (dll_0111/0112/0113/0114) use named fields only — pads genuinely unused, nothing to recover.
+- **->padNN/->unkNN direct accesses**: only dll_00F1_invhit `->unkF4` (a GameObject field, not a
+  setup buffer — out of scope).
+SKIPPED concurrent owners (uncommitted at session start / mid-session): drpickup.c, player.c,
+dll_013E_dimbossicesmash.c. NO source edits made, NO .o rebuilt, working tree clean of my changes.
+VERDICT: the object-setup pad-split vein is exhausted for this scope. Legitimate 0-win pass.
+
+## Re-check 2026-07-05 (cheap 45-min recent-commit triage)
+`git log --since='45 minutes ago'` = ~24 commits, ALL carrying the Claude Opus 4.8 trailer
+(this session's own struct-recovery/respell/field-naming work). ZERO fresh TEAM commits
+(no match / data-split / linked-complete) landed in the window. Last real team commits
+(ebfe953531 dimtricky, eede1ad83e texscroll, 14e2c60966 staticcamera, ...) are all
+pre-window and already mined by prior re-checks. No fresh team unit to inspect.
+VERDICT: legitimate 0-win pass. No files opened, no .o rebuilt, no commit.
+
+## Long-tail mop-up (catch-all raw-cast scan) — Jul05 — 0 wins (all disqualifiers)
+Scanned all 128 raw fixed-offset cast sites in src/main/*.c; excluded the 66 .c files
+already committed this cycle (struct recovery / field naming / data-split). Un-mined tail
+= 18 files. Triaged every live (non-#define, non-macro-accessor) raw cast — ALL disqualified:
+  - dfshlaserbeam:171 = vtable-through-resource call (gLaserBeamEffectResource chain).
+  - dim2icicle:478/500 = state/playerObj +0x35c/+0x3f4/+0x34f PAST mapped IcicleState end
+    (0xad) / into shared BaddieState unnamed region (shared-prefix disqualifier).
+  - dim2icicle:570/579/602 = vtable dispatch through tricky+0x68.
+  - dbprotection:804 = obj+0x34 lands in ObjAnimComponent.pad34 (UNNAMED pad; named field
+    is +0x35 yaw-idx). Not a named field at exact offset.
+  - dll_0014_unk:1153/2224 = stateBytes/BASE unmapped blob bases inside the big multi-line
+    matrix-build #define macro.
+  - dll_00C4_tricky:872 / weapone6:43 / animobjd2 = TRICKY_STATE flag/reset macros (shared
+    tricky-state blob, self read-write flag-clears, resistant #130 class).
+  - dll_0133_sfxplayer:220-264 = data+0x1a/0x22 unmapped sound-command sequence blob.
+  - dll_a6:105 = activeBank+0x18 self read-write `& ~8` on UNMAPPED ObjAnimBank blob.
+  - remaining (OBJ_*/IFACE/MLDF/DVD_/_RT) = macro-abstracted accessors, already fine.
+  - dfpforceaw/dfprotatep SFXPLAYER_UPDATE_EFFECT_HANDLE_POS macro = #define'd then #undef'd
+    immediately, dead scaffolding (never expanded), handle/obj are raw non-struct offsets.
+VERDICT: legitimate 0-win pass. No mapped-struct-base raw cast with a named field at the
+exact offset+width remains in the un-mined tail. No files edited, no .o rebuilt, no commit.
+
+## Placement/setup struct-recovery 2nd pass (Jul05, semantic-recovery)
+Scanned all custom-<Family>Placement/Setup/Spawn .c files in src/main/dll for raw
+casts on a base a same-file sibling types. Per-function same-var scan (scan3/scan4).
+COMMITTED (2 wins, .o md5-identical / byte-neutral):
+  - dll_013E_dimbossicesmash (68da73cb90): *(u8*)(params+0x3c)&2 -> ((DimbossicesmashPlacement*)params)->flags&2 (path-control flags test in _init).
+  - dll_0175_dfropenode (6909912d54): 2 sites *(u8*)(objDef+0x1b) -> ((DfropenodePlacement*)objDef)->textureIndex (rope-variant array subscripts in _update+_init).
+BYTE-CHANGERS (tested, reverted, md5 restored):
+  - dll_0265_drcreator L191: *(s16*)(placement+0x1a) -> ->behaviorMode. Vararg
+    context to fn_80137948 makes the s16 load-form load-bearing (sibling uses same
+    expr in a switch, but vararg site differs). REVERTED.
+  - dll_011B_landedarwing L260: *(int*)(def+0x14) -> ((LandedArwingPlacement*)def)->mapId.
+    Byte-changer despite identical sibling shape at L303 (case 2/0x65 vs case 3/0x64
+    colors registers differently). REVERTED.
+DISQUALIFIED (no source lever):
+  - siderepel/baddieinterestp staticCamera_init: raw params is a DIFFERENT alias
+    (static-camera placement), not the *Placement the update-fn sibling types.
+  - drgenerator arg+0x1a, dimbridgecogmai param+0x1d, pressureswitchfb params+0xc:
+    offset falls in an unnamed pad (no named field to respell to).
+  - dfpobjcreator data+0x1e (*s8 vs s16 unk1E) width mismatch; landedarwing def+0x1c
+    (*u8 vs s16 triggerGameBit) width mismatch.
+  - lightning data+0x18 -> only unk18 (generic placeholder, no recovered semantic;
+    surrounded by uniform raw byte-index reads, low value / risk).
+  - drearthwarrior p2+0x278: p2 is runtime STATE here (EarthWarriorState/BaddieState),
+    state write not placement read; different alias than the Placement sibling.
+  - objfx obj+0x1a/0x1c (ExplosionSetup): DOCUMENTED prior TEST — header note states
+    0x1a (pad, f32->s16 trunc) and 0x1c (flags word) "stay raw" (byte-changers).
+    Respected; not re-litigated.
+
+## STORE-SITE struct recovery sweep (2026-07-05, Opus) — 2 wins, GameObject-tail stores
+Store-focused raw-cast recovery pass. 2 byte-neutral wins committed:
+- **dll_018D_mmshscales** `*(s16*)(match + 0xb4) = -1` -> `((GameObject*)match)->seqIndex = -1`
+  (match is a GameObject* from *list; 0xB4 = seqIndex s16). md5 identical.
+- **dll_019D_dll19d** `*(int*)(self + 0xf4) = lifetime - frames` -> `((GameObject*)self)->unkF4 = ...`
+  (self used as GameObject* throughout; 0xF4 = unkF4 s32). md5 identical. The paired read at
+  line 225 `lifetime = *(int*)(self + 0xf4)` is a plain field load (NOT an int-launder) so no
+  coupling break; left the read raw per store-focus mandate.
+DISQUALIFIED (leave raw, confirmed this sweep):
+- **dll_0271_drakorhoverpad** `p + 0xd8/0xe0/0xe4` stores: p treated as GameObject*, offsets land
+  on childObjs[4]/unkE0-pad/hitVolumeIndex — the file's deliberate "reuse GameObject slots as f32
+  scratch via launders" idiom (surrounded by `*(f32*)&((GameObject*)p)->unkDC` etc). Canonical raw.
+- **dll_00DA_pollenfragment** `*(s8*)(config + 0x19)`: config is a raw placement blob, NO mapped
+  struct; reads use mixed char/s8 spellings; setup-store canonical.
+- **dll_0190_ecshcup** `*(u8*)(obj + 0x37)`: 0x37 is inside ObjAnimComponent pad37[] (unnamed).
+- **dll_018F_ecshshrine** `sub + 0xc/0x10/0x14`: fall inside EcshShrineState padC[] (unnamed).
+- **dll_0123_fuelcell** `op + 0x43` (render-op, no mapped struct), `slot + 0x34` (index-scaled base).
+- **dll_00FB_pressureswitchfb**: all stores index-scaled (`runtime + i*4`, `tmp + j*8`).
+- **dll_0117_appleontree** `val + 0x24`: val = `*(int*)&obj->extra` int-launder base, mixed raw offsets.
+- **dll_008D_dll8dfunc0** `base + 0xb4`: base = gDll8DEffectParamBlock (effect param block, NOT a
+  GameObject); 0xb2/0xb4 paired param-block setup writes — coincidental offset collision, NOT seqIndex.
+GENERALIZABLE: GameObject-tail stores at NAMED offsets (0xB4 seqIndex, 0xF4 unkF4) where the base var
+is used as a GameObject* are the reliable store-site win. Most other raw stores are int-launder /
+index-scaled / pad-region / non-mapped-blob = leave raw.
