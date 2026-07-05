@@ -46,21 +46,16 @@ typedef struct ExplodeanimatorPlacement
     u8 pad36[0x38 - 0x36];
 } ExplodeanimatorPlacement;
 
-extern const f32 lbl_803E4020;
+int explodeanimator_getExtraSize(void) { return 0x4; }
+int explodeanimator_getObjectTypeId(void) { return 0x0; }
+
+void explodeanimator_free(int x) { ObjGroup_RemoveObject(x, EXPLODEANIMATOR_OBJGROUP); }
 
 void explodeanimator_render(void)
 {
 }
 
 void explodeanimator_hitDetect(void)
-{
-}
-
-void explodeanimator_release(void)
-{
-}
-
-void explodeanimator_initialise(void)
 {
 }
 
@@ -81,9 +76,9 @@ void explodeanimator_update(int* obj)
     {
     for (i = 0; i < def[0x2c]; i++)
     {
-        vel[0] = lbl_803E4020 * (f32)(s32)
+        vel[0] = 0.01f * (f32)(s32)
         randomGetRange(((ExplodeanimatorPlacement*)def)->velXMin, ((ExplodeanimatorPlacement*)def)->velXMax);
-        vel[1] = lbl_803E4020 * (f32)(s32)
+        vel[1] = 0.01f * (f32)(s32)
         randomGetRange(((ExplodeanimatorPlacement*)def)->velYMin, ((ExplodeanimatorPlacement*)def)->velYMax);
         buf[3] = (f32)(s32)
         randomGetRange(((ExplodeanimatorPlacement*)def)->posXMin, ((ExplodeanimatorPlacement*)def)->posXMax);
@@ -95,11 +90,6 @@ void explodeanimator_update(int* obj)
     }
     }
 }
-
-int explodeanimator_getExtraSize(void) { return 0x4; }
-int explodeanimator_getObjectTypeId(void) { return 0x0; }
-
-void explodeanimator_free(int x) { ObjGroup_RemoveObject(x, EXPLODEANIMATOR_OBJGROUP); }
 
 void explodeanimator_init(int* obj, int* def)
 {
@@ -115,4 +105,12 @@ void explodeanimator_init(int* obj, int* def)
     }
     ((ExplodeanimatorState*)state)->flags = v;
     ObjGroup_AddObject(obj, EXPLODEANIMATOR_OBJGROUP);
+}
+
+void explodeanimator_release(void)
+{
+}
+
+void explodeanimator_initialise(void)
+{
 }

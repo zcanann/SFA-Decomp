@@ -1463,6 +1463,7 @@ main/dll/dll_013C_xyzanimator.c:
 
 main/dll/dll_013D_explodeanimator.c:
 	.text       start:0x801962C8 end:0x80196520
+	.sdata2     start:0x803E4020 end:0x803E4030
 
 main/dll/DIM/dll_013E_dimbossicesmash.c:
 	.text       start:0x80196520 end:0x8019718C
