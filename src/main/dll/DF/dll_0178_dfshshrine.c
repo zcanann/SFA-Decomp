@@ -488,8 +488,7 @@ void dfsh_shrine_update(int objArg)
         GameBit_Set(0xb71, 0);
         GameBit_Set(0xb76, 0);
         GameBit_Set(0x589, 1);
-        required = (u16*)((u8*)base + 40);
-        for (i = 0; i < 10; i++)
+        for (i = 0, required = (u16*)((u8*)base + 40); i < 10; i++)
         {
             GameBit_Set(*required, 0);
             GameBit_Set(*base, 0);
