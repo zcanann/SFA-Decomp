@@ -23,20 +23,15 @@ STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
 extern ModgfxInterface** gModgfxInterface;
 
 extern u8 lbl_80314980[];
-extern f32 lbl_803E0C58;
-extern f32 lbl_803E0C5C;
-extern f32 lbl_803E0C60;
-extern f32 lbl_803E0C64;
-extern f32 lbl_803E0C68;
-extern f32 lbl_803E0C6C;
 
-void dll_77_func01_nop(void)
-{
-}
-
-void dll_77_func00_nop(void)
-{
-}
+/* referenced via *(f32*)& so the 0.0 base keeps its additive fadds (a literal
+   0.0f + pos folds away) and the pool stays in address order */
+static const f32 gDll77Cmd0X = 999.0f;
+static const f32 gDll77Cmd0Y = 85.0f;
+static const f32 gDll77Cmd0Z = 86.0f;
+static const f32 gDll77Zero = 0.0f;
+static const f32 gDll77CmdY = 200.0f;
+static const f32 gDll77Scale = 1.0f;
 
 void dll_77_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
@@ -64,55 +59,55 @@ void dll_77_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[0].flags = 0x8c;
     e[0].tex = NULL;
     e[0].mode = 0x20000000;
-    e[0].x = lbl_803E0C58;
-    e[0].y = lbl_803E0C5C;
-    e[0].z = lbl_803E0C60;
+    e[0].x = *(f32*)&gDll77Cmd0X;
+    e[0].y = *(f32*)&gDll77Cmd0Y;
+    e[0].z = *(f32*)&gDll77Cmd0Z;
     e[1].layer = 0;
     e[1].flags = 0;
     e[1].tex = NULL;
     e[1].mode = 0x80000;
-    e[1].x = lbl_803E0C64;
-    e[1].y = lbl_803E0C68;
-    e[1].z = lbl_803E0C64;
+    e[1].x = *(f32*)&gDll77Zero;
+    e[1].y = *(f32*)&gDll77CmdY;
+    e[1].z = *(f32*)&gDll77Zero;
     e[2].layer = 1;
     e[2].flags = 0;
     e[2].tex = NULL;
     e[2].mode = 0x80000;
-    e[2].x = lbl_803E0C64;
-    e[2].y = lbl_803E0C64;
-    e[2].z = lbl_803E0C64;
+    e[2].x = *(f32*)&gDll77Zero;
+    e[2].y = *(f32*)&gDll77Zero;
+    e[2].z = *(f32*)&gDll77Zero;
     e[3].layer = 3;
     e[3].flags = 1;
     e[3].tex = NULL;
     e[3].mode = 0x2000;
-    e[3].x = lbl_803E0C64;
-    e[3].y = lbl_803E0C64;
-    e[3].z = lbl_803E0C64;
+    e[3].x = *(f32*)&gDll77Zero;
+    e[3].y = *(f32*)&gDll77Zero;
+    e[3].z = *(f32*)&gDll77Zero;
     e[4].layer = 4;
     e[4].flags = 0;
     e[4].tex = NULL;
     e[4].mode = 0x80000;
-    e[4].x = lbl_803E0C64;
-    e[4].y = lbl_803E0C68;
-    e[4].z = lbl_803E0C64;
+    e[4].x = *(f32*)&gDll77Zero;
+    e[4].y = *(f32*)&gDll77CmdY;
+    e[4].z = *(f32*)&gDll77Zero;
     e[5].layer = 5;
     e[5].flags = 0;
     e[5].tex = NULL;
     e[5].mode = 0x20000000;
-    e[5].x = lbl_803E0C58;
-    e[5].y = lbl_803E0C5C;
-    e[5].z = lbl_803E0C60;
+    e[5].x = *(f32*)&gDll77Cmd0X;
+    e[5].y = *(f32*)&gDll77Cmd0Y;
+    e[5].z = *(f32*)&gDll77Cmd0Z;
     buf.v58 = 0;
     ctx = sourceObj;
     buf.ctx = ctx;
     buf.variantId = variant;
-    buf.pos[0] = lbl_803E0C64;
-    buf.pos[1] = lbl_803E0C64;
-    buf.pos[2] = lbl_803E0C64;
-    buf.col[0] = lbl_803E0C64;
-    buf.col[1] = lbl_803E0C64;
-    buf.col[2] = lbl_803E0C64;
-    buf.scale = lbl_803E0C6C;
+    buf.pos[0] = *(f32*)&gDll77Zero;
+    buf.pos[1] = *(f32*)&gDll77Zero;
+    buf.pos[2] = *(f32*)&gDll77Zero;
+    buf.col[0] = *(f32*)&gDll77Zero;
+    buf.col[1] = *(f32*)&gDll77Zero;
+    buf.col[2] = *(f32*)&gDll77Zero;
+    buf.scale = *(f32*)&gDll77Scale;
     buf.v40 = 0;
     buf.v3c = 0;
     buf.v59 = 0;
@@ -133,16 +128,24 @@ void dll_77_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)ctx != 0)
         {
-            buf.pos[0] = lbl_803E0C64 + ((GameObject*)ctx)->anim.worldPosX;
-            buf.pos[1] = lbl_803E0C64 + ((GameObject*)ctx)->anim.worldPosY;
-            buf.pos[2] = lbl_803E0C64 + ((GameObject*)ctx)->anim.worldPosZ;
+            buf.pos[0] = *(f32*)&gDll77Zero + ((GameObject*)ctx)->anim.worldPosX;
+            buf.pos[1] = *(f32*)&gDll77Zero + ((GameObject*)ctx)->anim.worldPosY;
+            buf.pos[2] = *(f32*)&gDll77Zero + ((GameObject*)ctx)->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E0C64 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0C64 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0C64 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] = *(f32*)&gDll77Zero + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = *(f32*)&gDll77Zero + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = *(f32*)&gDll77Zero + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
+}
+
+void dll_77_func01_nop(void)
+{
+}
+
+void dll_77_func00_nop(void)
+{
 }
