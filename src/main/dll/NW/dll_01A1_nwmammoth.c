@@ -68,7 +68,7 @@ extern void fn_80163980(int o);
 extern void Obj_FreeObject(int o);
 extern f32 lbl_803E5210;
 extern u32 ObjGroup_AddObject();
-extern int ObjTrigger_IsSetById();
+extern int ObjTrigger_IsSetById(int obj, int triggerId);
 extern void fn_8003A168(int obj, void* p);
 extern void characterDoEyeAnims(int obj, void* p);
 extern int cMenuGetSelectedItem(void);
@@ -90,8 +90,7 @@ int nw_mammoth_getExtraSize(void)
 #pragma peephole off
 void fn_801CEE0C(int p1, int p2)
 {
-    extern int fn_801CE078(int);
-    extern int ObjTrigger_IsSetById(int, int);
+    extern int fn_801CE078(int, int);
     extern int gameBitDecrement(int bit);
     extern u8 lbl_803DBF70[4];
     extern u8 lbl_803DBF74[4];
@@ -99,7 +98,7 @@ void fn_801CEE0C(int p1, int p2)
     extern u8 lbl_803DBF7C[4];
     NwMammothState* state = (NwMammothState*)p2;
 
-    if (fn_801CE078(p1) != 0) return;
+    if (fn_801CE078(p1, p2) != 0) return;
 
     switch (state->stateIndex)
     {
@@ -151,7 +150,6 @@ void fn_801CEE0C(int p1, int p2)
 
 void fn_801CED2C(int p1, int p2)
 {
-    extern int ObjTrigger_IsSetById(int, int);
     extern u8 lbl_803DBFB4[4];
     extern u8 lbl_803DBFB8[4];
     extern u8 lbl_803DBFBC[4];
