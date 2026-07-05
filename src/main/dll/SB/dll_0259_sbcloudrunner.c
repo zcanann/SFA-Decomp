@@ -243,6 +243,9 @@ void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z)
  * bird's yaw/pitch/roll, clamps to the steer limits, advances the
  * flap/glide animation, and fires the forward burst on a fresh A press. */
 
+/* Overlay for the A-held bit at state+0x80. Load-bearing: accessing it
+ * through this separate typed pointer (not SBCloudRunnerState.aButtonHeld)
+ * is what reproduces the retail codegen (md5-verified). */
 typedef struct
 {
     u8 held : 1;
