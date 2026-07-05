@@ -325,7 +325,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 u8 cv;
                 Obj_BuildWorldTransformMatrix(obj, mE, 0);
                 PSMTXRotRad(
-                    m1, 0x7a, (f32)((6.2832 * (f64)(int) * &((ExplosionDebris*)p)->spinAngle) / 65536.0));
+                    m1, 0x7a, (f32)((6.2832 * (f64)(int)((ExplosionDebris*)p)->spinAngle) / 65536.0));
                 PSMTXRotRad(
                     m3, 0x78, (f32)((6.2832 * ((f64)(u32)(fn_8000FA70() & 0xffff) - 0.0)) / 65536.0));
                 PSMTXConcat(m3, m1, m3);
