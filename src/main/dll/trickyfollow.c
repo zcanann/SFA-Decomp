@@ -778,7 +778,7 @@ state_selected:
                     fn_8004B31C(((TrickyState*)state)->voxBlocks[1], (u32)route->node9C, ((TrickyState*)state)->targetPosPtr,
                                 ((TrickyState*)state)->walkGroup, route->reverse ^ 1);
                     found = 0;
-                    for (i = 0; ((i = i + 1) & 0xff) < 100 && (found != 1);)
+                    for (i = 0; (u8)(i = i + 1) < 100 && (found != 1);)
                     {
                         found = fn_8004B218(((TrickyState*)state)->voxBlocks[0], 1);
                         if (found != 1)
