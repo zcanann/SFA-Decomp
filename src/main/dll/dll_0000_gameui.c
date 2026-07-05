@@ -375,7 +375,7 @@ extern f32 lbl_803E1E70;
 
 extern int cameraGetTargetType(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern int trickyBitFn_801241cc(int bit, int x);
+extern int cMenuCountAvailableEntries(int bit, int x);
 extern int getHudHiddenFrameCount(void);
 
 
@@ -4127,15 +4127,15 @@ void GameUI_update(void)
                                 break;
                             }
                         case 0:
-                            if (trickyBitFn_801241cc(*(int*)&gCMenuSections[0], 0) != 0 ||
-                                trickyBitFn_801241cc(*(int*)&gCMenuSections[1], 0) == 0)
+                            if (cMenuCountAvailableEntries(*(int*)&gCMenuSections[0], 0) != 0 ||
+                                cMenuCountAvailableEntries(*(int*)&gCMenuSections[1], 0) == 0)
                             {
                                 gCMenuButtons |= 0x80000;
                                 break;
                             }
                         case 1:
-                            if (trickyBitFn_801241cc(*(int*)&gCMenuSections[1], 0) != 0 ||
-                                trickyBitFn_801241cc(*(int*)&gCMenuSections[0], 0) == 0)
+                            if (cMenuCountAvailableEntries(*(int*)&gCMenuSections[1], 0) != 0 ||
+                                cMenuCountAvailableEntries(*(int*)&gCMenuSections[0], 0) == 0)
                             {
                                 gCMenuButtons |= 0x40000;
                             }
@@ -4283,7 +4283,7 @@ void GameUI_update(void)
         lbl_803DD78E = cx;
         pauseMenuDrawStatus();
         if (cMenuEnabled != 0) cMenuUpdateAnims();
-        minimapFn_8012310c();
+        hudUpdateMinimapReveal();
         lbl_803DD8A8++;
         if (lbl_803DD8A8 > 2) lbl_803DD8A8 = 2;
 

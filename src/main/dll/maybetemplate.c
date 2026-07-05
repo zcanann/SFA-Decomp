@@ -10,8 +10,8 @@
  *       "got" game bits (0xB98..0xD97) and plays pickup sfx.
  *   - hudDrawButtons    : C-menu item ring + A/B/Y button-prompt icons.
  *   - cMenuUpdateAnims  : C-menu open/close slide and fade animation.
- *   - minimapFn_8012310c: minimap reveal/fade animation.
- *   - trickyBitFn_801241cc: counts active Tricky-HUD item entries by game bit.
+ *   - hudUpdateMinimapReveal: minimap reveal/fade animation.
+ *   - cMenuCountAvailableEntries: counts active Tricky-HUD item entries by game bit.
  */
 #include "main/audio/sfx.h"
 #include "main/dll/maybeTemplate.h"
@@ -780,7 +780,7 @@ void pauseMenuDrawStatus(void)
     }
 }
 
-void minimapFn_8012310c(void)
+void hudUpdateMinimapReveal(void)
 {
     if (lbl_803DD7A0 != '\0')
     {
@@ -1268,7 +1268,7 @@ void cMenuUpdateAnims(void)
     }
 }
 
-int trickyBitFn_801241cc(short* arr, s8 flag)
+int cMenuCountAvailableEntries(short* arr, s8 flag)
 {
     short* entry;
     int count;
