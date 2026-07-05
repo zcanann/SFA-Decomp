@@ -204,7 +204,7 @@ void vortex_hitDetect(void)
 
 void vortex_init(int obj, int initData)
 {
-    f32* base = gVortexScaleParams;
+    f32 (*base)[3] = (f32 (*)[3])gVortexScaleParams;
     VortexSetup* setup = (VortexSetup*)initData;
     VortexState* state = ((GameObject*)obj)->extra;
     u8 i;
@@ -236,9 +236,8 @@ void vortex_init(int obj, int initData)
     {
         for (i = 0; i < 3; i++)
         {
-            f32* p = &base[i];
-            state->radiusScale[i] = p[0];
-            state->alphaScale[i] = p[3];
+            state->radiusScale[i] = base[0][i];
+            state->alphaScale[i] = base[1][i];
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
@@ -246,9 +245,8 @@ void vortex_init(int obj, int initData)
     {
         for (i = 0; i < 3; i++)
         {
-            f32* p = &base[i];
-            state->radiusScale[i] = p[6];
-            state->alphaScale[i] = p[9];
+            state->radiusScale[i] = base[2][i];
+            state->alphaScale[i] = base[3][i];
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
         if (state->flags.active != 0)
