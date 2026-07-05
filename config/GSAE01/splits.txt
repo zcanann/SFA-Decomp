@@ -2075,6 +2075,7 @@ main/dll/SB/dll_01EA_sbshiphead.c:
 
 main/dll/SB/dll_01EB_sbshipmast.c:
 	.text       start:0x801E32BC end:0x801E341C
+	.sdata2     start:0x803E5868 end:0x803E5888
 
 main/dll/SB/dll_01EC_sbshipgun.c:
 	.text       start:0x801E341C end:0x801E3D30

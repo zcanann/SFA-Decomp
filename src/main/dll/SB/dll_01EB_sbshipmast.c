@@ -18,29 +18,25 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 /* parent galleon anim.seqId selecting the rigging-animation behavior */
 #define SB_GALLEON_SEQID 0x139
 
-extern const f32 lbl_803E586C; /* 0.0f: pins localPos to the origin */
-extern f32 lbl_803E5870;       /* fast play speed (phase >= 0xc) */
-extern f32 lbl_803E5874;       /* medium play speed (0xa <= phase < 0xc) */
-extern f32 lbl_803E5878;       /* idle play speed */
-extern f32 lbl_803E5868;
+
+int SB_ShipMast_getExtraSize(void) { return 0x0; }
+
+int SB_ShipMast_getObjectTypeId(void) { return 0x0; }
 
 void SB_ShipMast_free(void)
 {
 }
 
+void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+    {
+        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+    }
+}
+
 void SB_ShipMast_hitDetect(void)
-{
-}
-
-void SB_ShipMast_init(void)
-{
-}
-
-void SB_ShipMast_release(void)
-{
-}
-
-void SB_ShipMast_initialise(void)
 {
 }
 
@@ -53,54 +49,54 @@ void SB_ShipMast_update(GameObject* obj)
     parent = obj->anim.parent;
     if (parent == NULL) return;
     phase = parent->unkF4;
-    obj->anim.localPosX = lbl_803E586C;
-    obj->anim.localPosY = lbl_803E586C;
-    obj->anim.localPosZ = lbl_803E586C;
+    obj->anim.localPosX = 0.0f;
+    obj->anim.localPosY = 0.0f;
+    obj->anim.localPosZ = 0.0f;
     if (((GameObject*)obj->anim.parent)->anim.seqId == SB_GALLEON_SEQID)
     {
         if (phase >= 0xa && phase < 0xd)
         {
             if (obj->anim.currentMove != 0)
             {
-                ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E586C, 0);
+                ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
             }
             if (phase >= 0xc)
             {
-                speed = lbl_803E5870;
+                speed = -0.003f;
             }
             else
             {
-                speed = lbl_803E5874;
+                speed = 0.003f;
             }
         }
         else
         {
             if (obj->anim.currentMove != 1)
             {
-                ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E586C, 0);
+                ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
             }
-            speed = lbl_803E5878;
+            speed = 0.03f;
         }
     }
     else
     {
         if (obj->anim.currentMove != 1)
         {
-            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E586C, 0);
+            ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
         }
-        speed = lbl_803E5878;
+        speed = 0.03f;
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, speed, (f32)(u32)framesThisStep, NULL);
 }
 
-int SB_ShipMast_getExtraSize(void) { return 0x0; }
-int SB_ShipMast_getObjectTypeId(void) { return 0x0; }
-
-void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void SB_ShipMast_init(void)
 {
-    s32 v = visible;
-    if (v != 0)
-    {
-        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5868);
-    }
+}
+
+void SB_ShipMast_release(void)
+{
+}
+
+void SB_ShipMast_initialise(void)
+{
 }
