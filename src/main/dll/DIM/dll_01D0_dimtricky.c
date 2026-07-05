@@ -59,30 +59,22 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 }
 
 void dll_1CF_free(void);
+void dim2conveyor_hitDetect(void);
+int dimtruthhornice_getExtraSize(void);
+void dim2conveyor_free(int x);
+
+int dim_tricky_getExtraSize(void) { return 0x1; }
+int dim_tricky_getObjectTypeId(void) { return 0x0; }
 
 void dim_tricky_free(void)
 {
 }
 
+void dim_tricky_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { extern void objRenderFn_8003b8f4(int, int, int, int, int, f32); objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4A38); }
+
 void dim_tricky_hitDetect(void)
 {
 }
-
-void dim2conveyor_hitDetect(void);
-
-int dim_tricky_getExtraSize(void) { return 0x1; }
-int dim_tricky_getObjectTypeId(void) { return 0x0; }
-int dimtruthhornice_getExtraSize(void);
-
-void dim_tricky_init(int* obj)
-{
-    u8 v = DIMTRICKY_STATE_WAIT_TRIGGER;
-    *((u8*)(int*)((GameObject*)obj)->extra + 0x0) = v;
-}
-
-void dim_tricky_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { extern void objRenderFn_8003b8f4(int, int, int, int, int, f32); objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4A38); }
-
-void dim2conveyor_free(int x);
 
 void dim_tricky_update(int* obj)
 {
@@ -109,4 +101,10 @@ void dim_tricky_update(int* obj)
     case DIMTRICKY_STATE_DONE:
         break;
     }
+}
+
+void dim_tricky_init(int* obj)
+{
+    u8 v = DIMTRICKY_STATE_WAIT_TRIGGER;
+    *((u8*)(int*)((GameObject*)obj)->extra + 0x0) = v;
 }
