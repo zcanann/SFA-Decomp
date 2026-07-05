@@ -4482,15 +4482,15 @@ void objSeq_onMapSetup(void)
         {
             frames = (f32*)(handles2 + 300);
             dists = (f32*)(handles2 + 215);
-            flagsB = marks2 + 0x810;
             flagsA = marks2 + 0x7b8;
+            flagsB = marks2 + 0x810;
             actions = marks2 + 0x8c0;
             results = marks2 + 0x868;
             states = marks2 + 0x6b4;
             pending = marks2 + 0x65c;
             counts = marks2 + 0x204;
-            flagsB[0] = 0;
             flagsA[0] = 0;
+            flagsB[0] = 0;
             modes[0] = 0;
             actions[0] = 0;
             results[0] = 0;
