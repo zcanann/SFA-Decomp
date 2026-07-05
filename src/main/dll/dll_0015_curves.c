@@ -953,9 +953,10 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
     u8* worldBase;
     /* Parallel loop counters kept in one array so the codegen matches:
      * [0] = worldIdx (component index into localPointWorld, steps by 3),
-     * [1] = point loop counter (steps by 1),
-     * [2] = byteOff (offset into localPointPositions, steps by 0xc). */
-    int loopIdx[3];
+     * [1] = point loop counter (steps by 1). */
+    int loopIdx[2];
+    u8* wb[1]; /* worldBase walker (steps by 0xc) */
+    int off[1]; /* byteOff walker (steps by 0xc); element init copy keeps the retail mr */
     f32* localPoint;
     f32 one;
     CurvesTransformScratch transform;
@@ -984,17 +985,17 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
         setMatrixFromObjectPos(matrix, &transform);
         loopIdx[0] = 0;
         loopIdx[1] = loopIdx[0];
-        worldBase = (u8*)collision;
-        loopIdx[2] = loopIdx[0];
+        wb[0] = (u8*)collision;
+        off[0] = loopIdx[0];
         while (loopIdx[1] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
-            localPoint = (f32*)((u8*)collision->localPointPositions + loopIdx[2]);
+            localPoint = (f32*)((u8*)collision->localPointPositions + off[0]);
             Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
-                                  (f32*)(worldBase + 228),
+                                  (f32*)(wb[0] + 228),
                                   &collision->localPointWorld[0][loopIdx[0] + 1],
                                   &collision->localPointWorld[0][loopIdx[0] + 2]);
-            worldBase += 0xc;
-            loopIdx[2] += 0xc;
+            wb[0] += 0xc;
+            off[0] += 0xc;
             loopIdx[0] += 3;
             loopIdx[1]++;
         }
