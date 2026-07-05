@@ -1836,18 +1836,18 @@ void dll_0B_func08(void* param)
             }
             else
             {
-                arr[i]->sourcePosX = *(f32*)((char*)arr[i]->sourceObject + 0x18);
-                arr[i]->sourcePosY = *(f32*)((char*)arr[i]->sourceObject + 0x1c);
-                arr[i]->sourcePosZ = *(f32*)((char*)arr[i]->sourceObject + 0x20);
-                arr[i]->sourceScale = *(f32*)((char*)arr[i]->sourceObject + 0x8);
-                arr[i]->sourceRotZ = *(s16*)((char*)arr[i]->sourceObject + 0x4);
-                arr[i]->sourceRotY = *(s16*)((char*)arr[i]->sourceObject + 0x2);
-                arr[i]->sourceRotX = *(s16*)((char*)arr[i]->sourceObject + 0x0);
+                arr[i]->sourcePosX = ((GameObject*)arr[i]->sourceObject)->anim.worldPosX;
+                arr[i]->sourcePosY = ((GameObject*)arr[i]->sourceObject)->anim.worldPosY;
+                arr[i]->sourcePosZ = ((GameObject*)arr[i]->sourceObject)->anim.worldPosZ;
+                arr[i]->sourceScale = ((GameObject*)arr[i]->sourceObject)->anim.rootMotionScale;
+                arr[i]->sourceRotZ = ((GameObject*)arr[i]->sourceObject)->anim.rotZ;
+                arr[i]->sourceRotY = ((GameObject*)arr[i]->sourceObject)->anim.rotY;
+                arr[i]->sourceRotX = ((GameObject*)arr[i]->sourceObject)->anim.rotX;
                 if ((int)arr[i]->flags & 0x2)
                 {
-                    arr[i]->velocityX += *(f32*)((char*)arr[i]->sourceObject + 0x24);
-                    arr[i]->velocityY += *(f32*)((char*)arr[i]->sourceObject + 0x28);
-                    arr[i]->velocityZ += *(f32*)((char*)arr[i]->sourceObject + 0x2c);
+                    arr[i]->velocityX += ((GameObject*)arr[i]->sourceObject)->anim.velocityX;
+                    arr[i]->velocityY += ((GameObject*)arr[i]->sourceObject)->anim.velocityY;
+                    arr[i]->velocityZ += ((GameObject*)arr[i]->sourceObject)->anim.velocityZ;
                 }
                 if (!((int)arr[i]->flags & 0x200000))
                 {
