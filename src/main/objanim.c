@@ -28,7 +28,6 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16* axis, int sampleIndex)
 /*
  * Retail string evidence labels this source-side path as objanim.c/setBlendMove.
  */
-#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAnimState* state,
@@ -99,9 +98,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
     }
     return;
 }
-#pragma dont_inline reset
 
-#pragma peephole on
 void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, int eventState)
 {
     ObjAnimBank* bank;
@@ -319,8 +316,6 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
 #pragma opt_common_subs reset
 
 
-#pragma scheduling on
-#pragma peephole on
 int Object_ObjAnimSetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
 {
     if (moveProgress > gObjAnimSetMoveProgressMax)
@@ -425,7 +420,6 @@ Object_ObjAnimSetMove(f32 moveProgress, int objAnimHandle, int moveId, int moveC
     return 0;
 }
 
-#pragma peephole on
 u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent* objAnim)
 {
     return ObjAnim_GetCurrentState(objAnim)->eventCountdown;
@@ -1054,8 +1048,6 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     return wrapped;
 }
 
-#pragma scheduling on
-#pragma peephole on
 int ObjAnim_SetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
 {
     if (moveProgress > gObjAnimSetMoveProgressMax)
