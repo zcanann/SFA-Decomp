@@ -26,39 +26,20 @@ typedef struct IceblastPlacement
 
 extern void vecRotateZXY(void* in, void* out);
 extern f32 timeDelta;
-extern f32 lbl_803E3600;
-extern f32 lbl_803E3604;
-extern f32 lbl_803E3608;
-extern f32 lbl_803E360C;
+
+int iceblast_getExtraSize(void) { return 0x4; }
+int iceblast_getObjectTypeId(void) { return 0x0; }
 
 void iceblast_free(void)
 {
 }
 
+#pragma scheduling off
+void iceblast_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4((int)obj, a, b, c, d, 1.0f); }
+
 void iceblast_hitDetect(void)
 {
 }
-
-void iceblast_release(void)
-{
-}
-
-void iceblast_initialise(void)
-{
-}
-
-int iceblast_getExtraSize(void) { return 0x4; }
-int iceblast_getObjectTypeId(void) { return 0x0; }
-
-void iceblast_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4((int)obj, a, b, c, d, lbl_803E3600); }
-
-#pragma scheduling off
-void iceblast_init(int obj, IceblastPlacement* p)
-{
-    *(f32*)((GameObject*)obj)->extra = p->initialTimer;
-    ObjHits_SetTargetMask(obj, 1);
-}
-#pragma reset
 
 #pragma peephole off
 #pragma opt_common_subs off
@@ -95,16 +76,16 @@ void iceblast_update(int* obj)
     {
         f32 zero;
         f32 cur = state[0];
-        if (cur <= (zero = lbl_803E3604))
+        if (cur <= (zero = 0.0f))
         {
-            state[0] = cur + lbl_803E3608;
+            state[0] += 24.0f;
             ((f32*)(int)obj)[9] = zero;
             ((f32*)obj)[11] = zero;
-            ((f32*)obj)[10] = lbl_803E360C;
+            ((f32*)obj)[10] = -3.0f;
             vec.pos[1] = zero;
             vec.pos[2] = zero;
             vec.pos[3] = zero;
-            vec.pos[0] = lbl_803E3600;
+            vec.pos[0] = 1.0f;
             vec.dir[2] = ((GameObject*)path)->anim.rotZ;
             vec.dir[1] = ((GameObject*)path)->anim.rotY;
             vec.dir[0] = ((GameObject*)path)->anim.rotX;
@@ -123,3 +104,18 @@ void iceblast_update(int* obj)
 }
 #pragma opt_common_subs reset
 #pragma peephole reset
+
+void iceblast_init(int obj, IceblastPlacement* p)
+{
+    *(f32*)((GameObject*)obj)->extra = p->initialTimer;
+    ObjHits_SetTargetMask(obj, 1);
+}
+#pragma scheduling reset
+
+void iceblast_release(void)
+{
+}
+
+void iceblast_initialise(void)
+{
+}
