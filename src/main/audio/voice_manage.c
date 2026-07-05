@@ -32,9 +32,6 @@ extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
 extern u8 voiceListInsert;
 extern u8 voiceListRoot;
-extern VoiceListNode voicePriorityLinks[0x40];
-extern u8 voicePriorityGroupHeads[0x100];
-extern VoiceListNode voiceFreeListSlots[0x40];
 
 #define SYNTH_VOICE_STATE(voice) (&synthVoice[voice])
 
@@ -44,25 +41,29 @@ extern VoiceListNode voiceFreeListSlots[0x40];
 void voiceInitPriorityTables(void)
 {
     VidListBlock* vb = &vidListNodes;
+    u8* np = &lbl_803BD150[0x210];
     u32 i;
+    u32 n;
 
-    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    n = *np;
+    for (i = 0; i < n; i++)
     {
-        voiceFreeListSlots[i].prev = i - 1;
-        voiceFreeListSlots[i].next = i + 1;
-        voiceFreeListSlots[i].time = 1;
+        ((VoiceListNode*)(u32)vb->freeList)[i].prev = i - 1;
+        ((VoiceListNode*)(u32)vb->freeList)[i].next = i + 1;
+        ((VoiceListNode*)(u32)vb->freeList)[i].time = 1;
     }
     vb->freeList[0].prev = 0xff;
-    vb->freeList[lbl_803BD150[0x210] - 1].next = 0xff;
+    n = *np;
+    vb->freeList[n - 1].next = 0xff;
     voiceListRoot = 0;
-    voiceListInsert = lbl_803BD150[0x210] - 1;
-    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    voiceListInsert = n - 1;
+    for (i = 0; i < n; i++)
     {
-        voicePriorityLinks[i].time = 0;
+        ((VoiceListNode*)(u32)vb->priorityLinks)[i].time = 0;
     }
     for (i = 0; i < 0x100; i++)
     {
-        voicePriorityGroupHeads[i] = 0xff;
+        ((u8*)(u32)vb->priorityGroupHeads)[i] = 0xff;
     }
     voicePrioSortRootListRoot = 0xffff;
     voiceFxRunning = 0;
