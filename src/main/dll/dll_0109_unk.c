@@ -54,27 +54,32 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 
-extern f32 lbl_803E3B44; /* respawn timer reset value */
-extern f32 lbl_803E3B48; /* respawn timer threshold */
-extern f32 lbl_803E3B40; /* render alpha/param */
+int dll_109_getExtraSize_ret_16(void) { return 0x10; }
+int dll_109_getObjectTypeId(void) { return 0x0; }
+
+void dll_109_free(int obj)
+{
+    (*gCarryableInterface)->free(obj);
+}
+
+#pragma scheduling off
+#pragma peephole off
+void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+{
+    Dll109State* state = ((GameObject*)obj)->extra;
+    if (state->phase == DLL109_PHASE_INTACT)
+    {
+        if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
+        {
+            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, 1.0f);
+        }
+    }
+}
 
 void dll_109_hitDetect_nop(void)
 {
 }
 
-void dll_109_release_nop(void)
-{
-}
-
-void dll_109_initialise_nop(void)
-{
-}
-
-int dll_109_getExtraSize_ret_16(void) { return 0x10; }
-int dll_109_getObjectTypeId(void) { return 0x0; }
-
-#pragma scheduling off
-#pragma peephole off
 void carryable_break_respawn_update(int obj)
 {
     Dll109State* state;
@@ -113,14 +118,14 @@ void carryable_break_respawn_update(int obj)
         ObjHits_DisableObject(obj);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         state->phase = DLL109_PHASE_RESPAWNING;
-        state->timer = lbl_803E3B44;
+        state->timer = 0.0f;
         ((GameObject*)obj)->anim.localPosX = placement->posX;
         ((GameObject*)obj)->anim.localPosY = placement->posY;
         ((GameObject*)obj)->anim.localPosZ = placement->posZ;
         break;
     case DLL109_PHASE_RESPAWNING:
         state->timer += timeDelta;
-        if (state->timer > lbl_803E3B48)
+        if (state->timer > 300.0f)
         {
             if (ViewFrustum_IsSphereVisible(&((GameObject*)obj)->anim.localPosX,
                                             ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.
@@ -145,21 +150,10 @@ void dll_109_init(int obj, Dll109MapData* p)
 
 #pragma scheduling on
 #pragma peephole on
-void dll_109_free(int obj)
+void dll_109_release_nop(void)
 {
-    (*gCarryableInterface)->free(obj);
 }
 
-#pragma scheduling off
-#pragma peephole off
-void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void dll_109_initialise_nop(void)
 {
-    Dll109State* state = ((GameObject*)obj)->extra;
-    if (state->phase == DLL109_PHASE_INTACT)
-    {
-        if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
-        {
-            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E3B40);
-        }
-    }
 }

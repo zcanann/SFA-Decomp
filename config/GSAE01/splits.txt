@@ -1342,6 +1342,7 @@ main/dll/dll_00E7_flammablevine.c:
 
 main/dll/dll_0109_unk.c:
 	.text       start:0x80187BA0 end:0x80187F30
+	.sdata2     start:0x803E3B40 end:0x803E3B4C
 
 main/dll/dll_010A_fallladders.c:
 	.text       start:0x80187F30 end:0x8018824C
