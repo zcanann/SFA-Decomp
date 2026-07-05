@@ -1128,7 +1128,6 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
 
 void fn_8014B878(int* arg1, int* sub)
 {
-    extern void fn_8014B878(int* node, int* sub);
     extern void* Obj_GetPlayerObject(void);
     extern void* getTrickyObject(void);
     int* player;
@@ -1413,7 +1412,6 @@ void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledR
 #pragma fp_contract off
 void fn_8014BC98(int* node, int* sub)
 {
-    extern void fn_8014BC98(int* node, int* sub);
     GameObject* target = *(GameObject**)&((TrickyState*)sub)->actionTargetObj;
     if (target != NULL)
     {
