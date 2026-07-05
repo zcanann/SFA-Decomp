@@ -1266,7 +1266,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/warppad.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_012C_transporter.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_012E_cflightwall.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_012F_barrelpad.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_012F_barrelpad.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_0131_cfdoorlight.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/holopoint.c"),
             Object(NonMatching, "main/dll/dll_0134_texscroll2.c", cflags=cflags_dll_noopt),

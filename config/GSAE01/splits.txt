@@ -1449,6 +1449,7 @@ main/dll/CF/dll_012E_cflightwall.c:
 
 main/dll/dll_012F_barrelpad.c:
 	.text       start:0x80191B60 end:0x80191D00
+	.sdata2     start:0x803E3F00 end:0x803E3F30
 
 main/dll/CF/dll_0131_cfdoorlight.c:
 	.text       start:0x80191D00 end:0x80191F2C
