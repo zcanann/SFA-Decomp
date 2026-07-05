@@ -1,0 +1,65 @@
+# clang-format config for SFA-Decomp (C sources).
+#
+# Calibrated to the repo's existing hand style so applying it is low-churn,
+# NOT to impose a new one. Intended to be run PER FILE, on files you are
+# already touching:
+#
+#     clang-format -i src/main/dll/dll_00F2_iceblast.c
+#
+# Do NOT sweep the whole tree at once: it would produce an enormous diff and
+# risks touching SJIS-bearing string tables (edit those byte-wise, never run
+# a formatter over them). Formatting is whitespace/comments only and never
+# affects codegen or the match %, but keep diffs reviewable.
+#
+# clang-format cannot "leave #defines alone": AlignConsecutiveMacros below
+# keeps value columns aligned (matching the hand style); the alternative
+# would collapse them to a single space. To FREEZE the exact spacing of a
+# delicately hand-laid block (an aligned #define table, an offset-annotated
+# struct), wrap it in:  // clang-format off  ...  // clang-format on
+#
+# NOTE: headers were authored in a legacy 2-space / K&R-brace style, so
+# formatting one is a large, deliberate diff (it converts to 4-space Allman).
+# Review those per file; don't blanket-run over include/.
+
+Language: Cpp
+
+# --- indentation -----------------------------------------------------------
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ContinuationIndentWidth: 4
+IndentCaseLabels: false          # `case` sits at the same column as `switch`
+IndentPPDirectives: None         # `#` directives stay in column 0
+NamespaceIndentation: None
+
+# --- width -----------------------------------------------------------------
+ColumnLimit: 120                 # ~p99.5 of the codebase; keeps the long
+                                 # accessor/wrapper lines intact
+
+# --- braces: full Allman (function AND control-statement braces own a line) -
+BreakBeforeBraces: Allman
+
+# --- no one-liners ---------------------------------------------------------
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+
+# --- pointers / spacing ----------------------------------------------------
+PointerAlignment: Left           # `GameObject* obj`, not `GameObject *obj`
+DerivePointerAlignment: false
+SpaceBeforeParens: ControlStatements   # `if (` yes, `foo(` / `sizeof(` no
+
+# --- call / param packing (matches the aligned, bin-packed wrap style) ------
+BinPackArguments: true
+BinPackParameters: true
+AlignAfterOpenBracket: Align
+
+# --- preserve hand-authored intent (the things CLion trampled) -------------
+ReflowComments: false            # do not rewrap the block comments
+AlignConsecutiveMacros: true     # keep #define value columns aligned
+AlignEscapedNewlines: Right      # column-aligned backslashes in multiline macros
+SortIncludes: false              # include order is authored deliberately
+MaxEmptyLinesToKeep: 1

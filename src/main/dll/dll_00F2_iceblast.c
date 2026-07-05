@@ -27,15 +27,25 @@ typedef struct IceblastPlacement
 extern void vecRotateZXY(void* in, void* out);
 extern f32 timeDelta;
 
-int iceblast_getExtraSize(void) { return 0x4; }
-int iceblast_getObjectTypeId(void) { return 0x0; }
+int iceblast_getExtraSize(void)
+{
+    return 0x4;
+}
+
+int iceblast_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void iceblast_free(void)
 {
 }
 
 #pragma scheduling off
-void iceblast_render(int* obj, int p1, int p2, int p3, int p4) { objRenderFn_8003b8f4((int)obj, p1, p2, p3, p4, 1.0f); }
+void iceblast_render(int* obj, int p1, int p2, int p3, int p4)
+{
+    objRenderFn_8003b8f4((int)obj, p1, p2, p3, p4, 1.0f);
+}
 
 void iceblast_hitDetect(void)
 {
@@ -85,8 +95,8 @@ void iceblast_update(GameObject* obj)
         vec.dir[1] = path->anim.rotY;
         vec.dir[0] = path->anim.rotX;
         vecRotateZXY(&vec, &obj->anim.velocityX);
-        ObjPath_GetPointWorldPosition((int)path, 0, &obj->anim.localPosX, &obj->anim.localPosY,
-                                      &obj->anim.localPosZ, 0);
+        ObjPath_GetPointWorldPosition((int)path, 0, &obj->anim.localPosX, &obj->anim.localPosY, &obj->anim.localPosZ,
+                                      0);
         ObjHits_EnableObject((u32)obj);
     }
     obj->anim.previousLocalPosX = obj->anim.localPosX;
