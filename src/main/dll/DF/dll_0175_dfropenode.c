@@ -587,7 +587,7 @@ void dfropenode_update(DFropenodeObject* obj)
 
         extra->rope =
             DFRope_Create(lbl_803E4DFC, lbl_803E4DFC, lbl_803E4DFC, dx, dy, dz, length, 0x10,
-                          (&lbl_803DBF50)[*(u8*)(objDef + 0x1b)]);
+                          (&lbl_803DBF50)[((DfropenodePlacement*)objDef)->textureIndex]);
 
         extra->minX = obj->posX;
         extra->minZ = obj->posZ;
@@ -648,7 +648,7 @@ void dfropenode_init(DFropenodeObject* obj, u8* objDef)
     DFropenodeExtra* extra;
 
     extra = obj->extra;
-    if ((&gRopeNodeVariantVisibleFlags)[*(u8*)(objDef + 0x1b)] == 0)
+    if ((&gRopeNodeVariantVisibleFlags)[((DfropenodePlacement*)objDef)->textureIndex] == 0)
     {
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~0x80;
     }
