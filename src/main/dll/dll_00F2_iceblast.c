@@ -41,7 +41,6 @@ void iceblast_free(void)
 {
 }
 
-#pragma scheduling off
 void iceblast_render(int* obj, int p1, int p2, int p3, int p4)
 {
     objRenderFn_8003b8f4((int)obj, p1, p2, p3, p4, 1.0f);
@@ -51,8 +50,6 @@ void iceblast_hitDetect(void)
 {
 }
 
-#pragma peephole off
-#pragma opt_common_subs off
 void iceblast_update(GameObject* obj)
 {
     GameObject* path;
@@ -106,15 +103,12 @@ void iceblast_update(GameObject* obj)
     obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
     obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
 }
-#pragma opt_common_subs reset
-#pragma peephole reset
 
 void iceblast_init(GameObject* obj, IceblastPlacement* def)
 {
     *(f32*)obj->extra = def->initialTimer;
     ObjHits_SetTargetMask((int)obj, 1);
 }
-#pragma scheduling reset
 
 void iceblast_release(void)
 {
