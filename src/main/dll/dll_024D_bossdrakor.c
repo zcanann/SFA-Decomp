@@ -105,8 +105,8 @@ void bossdrakor_update(int obj)
     int moveId;
     s16* uvec;
     int* tbl;
-    int shakeX;
-    int shakeY;
+    s16 shakeX;
+    s16 shakeY;
     f32 shake;
     f32 shakeScaleZ;
     f32 t;
@@ -324,8 +324,8 @@ void bossdrakor_update(int obj)
         shakeScaleZ = ((BossDrakorState*)state)->shakeScaleZ;
         shake = ((BossDrakorState*)state)->shakeAmount;
         tbl = seqFn_800394a0();
-        shakeX = (int)(gBossDrakorDegToAngle * shake);
-        shakeY = (int)(gBossDrakorDegToAngle * (shake * shakeScaleZ));
+        shakeX = (s16)(gBossDrakorDegToAngle * shake);
+        shakeY = (s16)(gBossDrakorDegToAngle * (shake * shakeScaleZ));
         i = 0;
         do
         {
