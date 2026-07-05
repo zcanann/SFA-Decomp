@@ -1894,6 +1894,19 @@ void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 extern const f32 lbl_803DF460;
 extern s16 gPartfxSequenceIdCounter;
 
+static inline int modgfx_findFreeEffectSlot(void** p, int found, int i)
+{
+    for (; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; p++, i++)
+    {
+        if (*p == NULL) found = 1;
+    }
+    if (found)
+    {
+        return i - 1;
+    }
+    return -1;
+}
+
 #pragma opt_propagation off
 s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
 {
@@ -1908,23 +1921,9 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     f32 fz434;
     f32 fz430;
 
-    {
-        void** p;
-        i = 0;
-        found = 0;
-        for (p = gPartfxActiveEffects; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; p++, i++)
-        {
-            if (*p == NULL) found = 1;
-        }
-    }
-    if (found)
-    {
-        slot = i - 1;
-    }
-    else
-    {
-        slot = -1;
-    }
+    i = 0;
+    found = i;
+    slot = modgfx_findFreeEffectSlot(gPartfxActiveEffects, found, i);
     if (slot == -1)
     {
         return 0;
