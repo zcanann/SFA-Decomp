@@ -1627,7 +1627,7 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
     char* stateBytes;
     u32 currentCurve;
     int nextId;
-    int nextCurve;
+    u32 nextCurve;
     f32 t;
 
     if (state == NULL)
@@ -1706,7 +1706,7 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
     int curveId;
     u32 currentCurve;
     int nextId;
-    int nextCurve;
+    u32 nextCurve;
     int distanceCurve;
     f32 dx;
     f32 dy;
