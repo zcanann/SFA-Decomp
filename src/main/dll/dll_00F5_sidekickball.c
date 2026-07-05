@@ -26,6 +26,7 @@
 #include "main/dll/dll_00F5_sidekickball.h"
 #include "string.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SIDEKICKBALL_OBJFLAG_PARENT_SLACK 0x1000
@@ -173,7 +174,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
         }
         else
         {
-            Sfx_PlayFromObject(0, 0x10a);
+            Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
         }
     }
 
