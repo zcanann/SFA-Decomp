@@ -155,7 +155,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             hitState->flags |= 1;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)
             {
-                if (*(s16*)((char*)hit + 0x46) == DIMLAVASMASH_HIT_SEQID_CANNONBALL)
+                if (((GameObject*)hit)->anim.seqId == DIMLAVASMASH_HIT_SEQID_CANNONBALL)
                 {
                     ((DimlavasmashState*)state)->state = 2;
                     Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff1);
