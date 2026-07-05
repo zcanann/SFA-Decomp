@@ -1042,7 +1042,7 @@ state_selected:
             dx = dx * dx;
             len = sqrtf(sqx + dx);
             arc->duration = len / lbl_803E24A4;
-            arc->time = lbl_803E23DC;
+            arc->time = (v = lbl_803E23DC);
             arc->baseX = ((GameObject*)obj)->anim.worldPosX;
             arc->baseY = ((GameObject*)obj)->anim.worldPosY;
             arc->baseZ = ((GameObject*)obj)->anim.worldPosZ;
@@ -1051,7 +1051,7 @@ state_selected:
             k = arc->duration;
             arc->riseCoeff =
                 -(gTrickyFollowArcCoefficient * k * k - (((GameObject*)node)->anim.localPosX - ((GameObject*)obj)->anim.worldPosY)) / k;
-            objAnimFn_8013a3f0(obj, 0x16, lbl_803E23DC, 0x4000000);
+            objAnimFn_8013a3f0(obj, 0x16, v, 0x4000000);
             ((TrickyState*)state)->unk3C = arc->time / arc->duration;
             ((TrickyState*)state)->speed = lbl_803E24A4;
             ((TrickyState*)state)->followPhase = 10;
