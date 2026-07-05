@@ -186,6 +186,7 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
             u32* tile = (u32*)(data + ((y & 3) * 8 + (y >> 2) * 4 * size));
             u32* dst = (u32*)row;
             u32* src;
+            u32* wp;
             u32 x;
 
             for (i = 0; i < nfill; i++)
@@ -218,12 +219,13 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                 sum += (row + window)[k];
             }
             src = (u32*)blurred;
+            wp = tile;
             for (x = 0; x < size; x += 8)
             {
-                tile[0] = src[0];
-                tile[1] = src[1];
+                wp[0] = src[0];
+                wp[1] = src[1];
                 src += 2;
-                tile += 8;
+                wp += 8;
             }
         }
         {
