@@ -361,28 +361,24 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     int langIdx;
     FontSizeEntry* sizeEntry;
     f32 penX;
+    int lineCount = 0;
     int lineOff = 0;
     int charLen;
     int i;
     int* bp;
-    int lineCount = 0;
     char** buffer;
-    f32 scale;
-    f32 maxWidth;
-    int breakPos = 0;
     int lineIdx;
     int charLen2;
     int total;
     u32 ch;
     int* boundary;
     int cursor = 0;
+    int breakPos = 0;
     int haveSpace = 0;
     char* src;
     char* dst;
     int charPos;
 
-    maxWidth = width;
-    scale = height;
     penX = lbl_803DE704;
     if (gameTextCharset == 2)
     {
@@ -398,7 +394,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     if (outLineH != NULL)
     {
         *outLineH = (f32)(u32)
-        sizeEntry->lineHeight * scale;
+        sizeEntry->lineHeight * height;
     }
     if (str == NULL)
     {
@@ -406,7 +402,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     }
     if (lbl_803DC9AA != 0 || lbl_803DC9A8 != 0)
     {
-        maxWidth = (f32)(u32)
+        width = (f32)(u32)
         lbl_803DC9AA;
     }
 
@@ -424,18 +420,20 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         }
         if (ch >= 0xe000 && ch <= 0xf8ff)
         {
-            SpecialGlyph* g = lbl_802C86F0;
             int n;
             int sel;
-            for (n = 46; n != 0; n--)
+            SpecialGlyph* g = lbl_802C86F0;
+            for (n = 45; n >= 0; n--)
             {
                 if (g->key == ch)
                 {
                     n = g->val;
-                    break;
+                    goto haveCount;
                 }
                 g++;
             }
+            n = 0;
+        haveCount:
             for (i = 0; i < n; i++)
             {
                 int b0 = ((u8*)str)[cursor++];
@@ -446,7 +444,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             switch (ch)
             {
             case TEXT_CTRL_SCALE:
-                scale = (f32)(int)
+                height = (f32)(int)
                 params[0] * lbl_803DE708;
                 break;
             case TEXT_CTRL_LANGUAGE:
@@ -459,7 +457,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             if (sel != 0 && langIdx != 5)
             {
                 f32 lh = (f32)(u32)
-                sizeEntry->lineHeight * scale;
+                sizeEntry->lineHeight * height;
                 if (outLineH != NULL && lh > *outLineH)
                 {
                     *outLineH = lh;
@@ -483,9 +481,9 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             if (found != NULL)
             {
                 int advance = found->fC + (found->f9 + found->f8);
-                penX += scale * (f32)(int)
+                penX += height * (f32)(int)
                 advance;
-                if (penX >= maxWidth)
+                if (penX >= width)
                 {
                     if (haveSpace == 0)
                     {
