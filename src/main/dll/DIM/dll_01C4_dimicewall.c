@@ -37,7 +37,7 @@ int dimicewall_getExtraSize(void) { return 0x2; }
 void dimicewall_init(int obj, s8* p)
 {
     char* inner = ((GameObject*)obj)->extra;
-    *(s8*)(inner + 0) = (s8) * (s16*)(p + 0x1a);
+    ((DimicewallState*)inner)->hp = (s8) * (s16*)(p + 0x1a);
     if (((DimicewallPlacement*)p)->shatterGameBit != -1)
     {
         ((DimicewallState*)inner)->shattered = GameBit_Get(((DimicewallPlacement*)p)->shatterGameBit);
@@ -49,9 +49,9 @@ void dimicewall_init(int obj, s8* p)
 
 int fn_801B17F4(int obj, int delta)
 {
-    s8* inner = ((GameObject*)obj)->extra;
-    inner[0] = (s8)(inner[0] - delta);
-    return inner[0] <= 0;
+    DimicewallState* inner = ((GameObject*)obj)->extra;
+    inner->hp = (s8)(inner->hp - delta);
+    return inner->hp <= 0;
 }
 
 
@@ -62,7 +62,7 @@ void dimicewall_update(int* obj)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     if (((DimicewallState*)extra)->shattered == 0)
     {
-        if (*(s8*)extra <= 0)
+        if (((DimicewallState*)extra)->hp <= 0)
         {
             f32 desc[6];
             int i;
