@@ -26,9 +26,6 @@ enum
     VFPLADDERS_PHASE_SETTLED = 2
 };
 
-extern const f32 lbl_803E60D8; /* drop distance below the placed height */
-extern f32 lbl_803E60DC;       /* drop speed */
-
 typedef struct VfpLaddersState
 {
     s16 baseGameBit;    /* 0x00 */
@@ -60,6 +57,11 @@ int vfpladders_SeqFn(void) { return 0x0; }
 int vfpladders_getExtraSize(void) { return 0x8; }
 
 int vfpladders_getObjectTypeId(void) { return 0x0; }
+
+void vfpladders_free(int obj)
+{
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
 
 void vfpladders_render(void)
 {
@@ -113,26 +115,18 @@ void vfpladders_update(int obj)
                 state->delayTimer = VFPLADDERS_DROP_DELAY;
             }
             if (state->phase == VFPLADDERS_PHASE_DROPPING &&
-                ((GameObject*)obj)->anim.localPosY > setup->baseY - lbl_803E60D8)
+                ((GameObject*)obj)->anim.localPosY > setup->baseY - 150.0f)
             {
                 ((GameObject*)obj)->anim.localPosY =
-                    ((GameObject*)obj)->anim.localPosY - lbl_803E60DC * timeDelta;
-                if (((GameObject*)obj)->anim.localPosY < setup->baseY - lbl_803E60D8)
+                    ((GameObject*)obj)->anim.localPosY - 2.0f * timeDelta;
+                if (((GameObject*)obj)->anim.localPosY < setup->baseY - 150.0f)
                 {
-                    ((GameObject*)obj)->anim.localPosY = setup->baseY - lbl_803E60D8;
+                    ((GameObject*)obj)->anim.localPosY = setup->baseY - 150.0f;
                     state->phase = VFPLADDERS_PHASE_SETTLED;
                 }
             }
         }
     }
-}
-
-void vfpladders_release(void)
-{
-}
-
-void vfpladders_initialise(void)
-{
 }
 
 void vfpladders_init(int* obj, u8* init)
@@ -146,7 +140,10 @@ void vfpladders_init(int* obj, u8* init)
     ((GameObject*)obj)->animEventCallback = vfpladders_SeqFn;
 }
 
-void vfpladders_free(int obj)
+void vfpladders_release(void)
 {
-    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void vfpladders_initialise(void)
+{
 }

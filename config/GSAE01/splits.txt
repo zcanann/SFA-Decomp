@@ -2282,6 +2282,7 @@ main/dll/dll_021B.c:
 
 main/dll/VF/dll_021C_vfpladders.c:
 	.text       start:0x801FAFEC end:0x801FB220
+	.sdata2     start:0x803E60D8 end:0x803E60E0
 
 main/dll/VF/dll_021D_vfplift.c:
 	.text       start:0x801FB220 end:0x801FB9AC
