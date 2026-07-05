@@ -191,13 +191,13 @@ f32 groundanimator_setScale(int* obj, int* target)
     f32 r;
     g = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     r31 = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
-    dy = *(f32*)((char*)target + 0x10) - ((GameObject*)obj)->anim.localPosY;
+    dy = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     if (dy < lbl_803E3FA8 || dy > lbl_803E3FAC)
     {
         return lbl_803E3FB0;
     }
-    dx = *(f32*)((char*)target + 0xc) - ((GameObject*)obj)->anim.localPosX;
-    dz = *(f32*)((char*)target + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+    dx = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+    dz = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
     r = lbl_803E3FB4 + g->radius;
     r = r * r;
     if (dx * dx + dz * dz > r)
