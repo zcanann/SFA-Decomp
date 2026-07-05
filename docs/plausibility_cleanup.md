@@ -24,6 +24,40 @@ the MP4 reference decomp (`reference_projects/marioparty4`).
 
 ---
 
+## Definition of done — what "finished" means
+
+A unit is *finished* when all six hold. The catch: only some are per-file; the rest are
+**cross-cutting** (shared headers, other units, the global symbol map), and a unit can be
+"as finished as it can be on its own" while these wait on a commons change.
+
+1. **Fully linked** — `metadata.complete == true`, `MatchingFor`, data byte-matched (Phase 0
+   done). *Per-file.*
+2. **No matching hacks** — no `f32 zero` trick, no launder that exists only to bend codegen
+   (keep + comment the ones that are the faithful original). *Per-file (§1–§5).*
+3. **Data resolved** — unit-owned constants inlined; shared-pool `lbl_` *named*, not raw.
+   Inlining is per-file; **naming a shared `lbl_` is cross-cutting** (it's one symbol used by
+   many units).
+4. **A dedicated companion header** — `include/main/dll/<unit>.h` declaring the unit's structs
+   and *all* its public functions, so consumers `#include` it instead of re-declaring (and
+   the definer includes it, so decl is checked against definition). Retire duplicate decls in
+   other headers by pointing them at this one. *Per-file to create; light cross-cutting to
+   wire up existing consumers.* (Precedent: `dll_00F2_iceblast.h`.)
+5. **No consuming externs** — every called symbol comes from a real header (§10). Engine/core
+   symbols already have headers; **DLL-to-DLL helpers and shared globals are cross-cutting**
+   (promote to a shared header + fix every unit that re-declares it, reconciling signatures —
+   see §10 and the `vecRotateZXY`/`timeDelta` cases).
+6. **Nothing unnamed** — no `fn_XXXXXXXX`, `unkNNN`, `p1`, `tmp`; shared data named. Names you
+   can derive from code/cross-refs/MP4 are per-file; an opaque symbol that needs live
+   observation (Dolphin, `live_debugging_workflow.md`) or a **global rename** (e.g.
+   `objRenderFn_8003b8f4`, 327 refs → the symbol map) is cross-cutting — best-effort or defer.
+
+**Naming is the pacing item and it gates 5 and 6:** you can't properly export `fn_80138F90`
+(externed `int(void)`, really `s16(u8*)`, *called with no args*) until you know what it is.
+So "finished" is really an integrated RE pass; drive the per-file criteria to done, and
+batch the cross-cutting ones (shared-header promotions, global renames) as their own changes.
+
+---
+
 ## Prime rule: the match is truth, and you must re-prove it after every edit
 
 `report.json`'s `fuzzy_match_percent` is the only authority (per `CLAUDE.md`). Every
@@ -395,6 +429,26 @@ Worked result (iceblast / flameblast): most stragglers were "keep" (`timeDelta`,
 genuine win was `trickyGetQueuedPathParticlePos` — header-less, single-consumer, so a fresh
 `dll_80136a40.h` + `void*` reconciliation retired the extern cleanly. Don't manufacture
 churn, but do take the bounded proper-export when a header-less symbol has a real home.
+
+### 11. Publish a dedicated companion header (the unit's own API)
+
+The flip side of §10: a finished unit *exports* a header
+`include/main/dll/<unit>.h` declaring its structs and **all** its public functions, so
+other files import it rather than re-declaring. Follow the precedent
+(`dll_00F2_iceblast.h`): guard `MAIN_DLL_<NAME>_H_`, include what the declarations need
+(`main/game_object.h` for `GameObject` params), move the unit's `typedef struct`s into it,
+declare every callback. Then:
+
+- the **definer** includes its own header (so the compiler checks each declaration against
+  its definition);
+- **retire duplicate declarations elsewhere** — family/descriptor headers often re-declare
+  a class's callbacks with Ghidra-style signatures (`int a, int b, …`); replace those with
+  an `#include` of the new header and delete the dupes.
+
+All declaration-only → byte-neutral; verify the definer and every consumer still build and
+hold their match. Worked example: `iceblast` published `dll_00F2_iceblast.h` and the
+transporter-family header `dll_00EF_pushable.h` (which had re-declared 7 of its callbacks,
+missing `update`/`init`/`IceblastPlacement`) now includes it.
 
 ---
 
