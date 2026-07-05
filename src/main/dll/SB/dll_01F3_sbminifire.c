@@ -51,30 +51,8 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 extern ModgfxInterface** gModgfxInterface;
 extern int gSbMiniFireResourceVariant;
-extern f32 lbl_803E592C;
-extern const f32 lbl_803E5948;
-extern f32 lbl_803E594C;
-extern f32 lbl_803E5950;
 extern void fn_80053ED0(int);
 extern void fn_80053EBC(int);
-extern f32 lbl_803E5928;
-extern f32 lbl_803E5930;
-extern f32 lbl_803E5934;
-extern f32 lbl_803E5938;
-extern f32 lbl_803E593C;
-
-
-void SB_MiniFire_hitDetect(void)
-{
-}
-
-void SB_MiniFire_release(void)
-{
-}
-
-void SB_MiniFire_initialise(void)
-{
-}
 
 
 int SB_MiniFire_getExtraSize(void) { return 0x2; }
@@ -97,6 +75,65 @@ void SB_MiniFire_free(GameObject* obj)
     (*gModgfxInterface)->detachSource(obj);
 }
 
+void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+    {
+        fn_80053ED0(8);
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, 1.0f);
+        fn_80053EBC(8);
+    }
+}
+
+void SB_MiniFire_hitDetect(void)
+{
+}
+
+void SB_MiniFire_update(GameObject* obj)
+{
+    extern void Obj_FreeObject(int obj);
+    f32 buf[6];
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
+    obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
+    obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
+    buf[3] = 0.0f;
+    buf[4] = 0.0f;
+    buf[5] = 0.0f;
+    buf[2] = 1.0f;
+    if (obj->unkF4 <= 0x3c)
+    {
+        buf[2] = obj->unkF4 / 60.0f;
+        obj->anim.alpha =
+            (u8)(int)(255.0f * ((f32)obj->unkF4 / 60.0f));
+    }
+    *(s16*)((char*)buf + 4) = 0;
+    *(s16*)((char*)buf + 2) = 0;
+    *(s16*)((char*)buf + 0) = 0;
+    (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
+    dy = obj->anim.localPosY - obj->anim.previousLocalPosY;
+    dz = obj->anim.localPosZ - obj->anim.previousLocalPosZ;
+    dx = obj->anim.localPosX - obj->anim.previousLocalPosX;
+    buf[3] = dx / 3.0f;
+    buf[4] = dy / 3.0f;
+    buf[5] = dz / 3.0f;
+    (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
+    buf[3] *= 2.0f;
+    buf[4] *= 2.0f;
+    buf[5] *= 2.0f;
+    (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
+    obj->anim.rotX = obj->anim.rotX + framesThisStep * 0x374;
+    obj->anim.rotY = obj->anim.rotY + framesThisStep * 0x12c;
+    obj->unkF4 = obj->unkF4 - framesThisStep;
+    if (obj->unkF4 < 0)
+    {
+        Obj_FreeObject((int)obj);
+    }
+}
+
 void SB_MiniFire_init(GameObject* obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
@@ -104,10 +141,10 @@ void SB_MiniFire_init(GameObject* obj)
 
     obj->unkF4 = 180;
     obj->anim.velocityX =
-        -(lbl_803E594C * (f32)(s32)randomGetRange(20, 40) + lbl_803E5948);
-    obj->anim.velocityY = lbl_803E592C;
-    obj->anim.velocityZ = lbl_803E5950;
-    obj->anim.rootMotionScale = obj->anim.rootMotionScale * lbl_803E5948;
+        -(0.01f * (f32)(s32)randomGetRange(20, 40) + 0.8f);
+    obj->anim.velocityY = 0.0f;
+    obj->anim.velocityZ = -0.3f;
+    obj->anim.rootMotionScale *= 0.8f;
 
     resource = Resource_Acquire(117, 1);
     (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(
@@ -122,59 +159,12 @@ void SB_MiniFire_init(GameObject* obj)
     Sfx_PlayFromObject((int*)obj, SFXbaddie_crater_call);
 }
 
-void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void SB_MiniFire_release(void)
 {
-    s32 v = visible;
-    if (v != 0)
-    {
-        fn_80053ED0(8);
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5928);
-        fn_80053EBC(8);
-    }
 }
 
-void SB_MiniFire_update(GameObject* obj)
+void SB_MiniFire_initialise(void)
 {
-    extern void Obj_FreeObject(int obj);
-    f32 buf[6];
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
-    obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
-    obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
-    buf[3] = lbl_803E592C;
-    buf[4] = lbl_803E592C;
-    buf[5] = lbl_803E592C;
-    buf[2] = lbl_803E5928;
-    if (obj->unkF4 <= 0x3c)
-    {
-        buf[2] = obj->unkF4 / lbl_803E5930;
-        obj->anim.alpha =
-            (u8)(int)(lbl_803E5934 * ((f32)obj->unkF4 / *(f32*)&lbl_803E5930));
-    }
-    *(s16*)((char*)buf + 4) = 0;
-    *(s16*)((char*)buf + 2) = 0;
-    *(s16*)((char*)buf + 0) = 0;
-    (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
-    dy = obj->anim.localPosY - obj->anim.previousLocalPosY;
-    dz = obj->anim.localPosZ - obj->anim.previousLocalPosZ;
-    dx = obj->anim.localPosX - obj->anim.previousLocalPosX;
-    buf[3] = dx / lbl_803E5938;
-    buf[4] = dy / lbl_803E5938;
-    buf[5] = dz / lbl_803E5938;
-    (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
-    buf[3] = buf[3] * lbl_803E593C;
-    buf[4] = buf[4] * lbl_803E593C;
-    buf[5] = buf[5] * lbl_803E593C;
-    (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
-    obj->anim.rotX = obj->anim.rotX + framesThisStep * 0x374;
-    obj->anim.rotY = obj->anim.rotY + framesThisStep * 0x12c;
-    obj->unkF4 = obj->unkF4 - framesThisStep;
-    if (obj->unkF4 < 0)
-    {
-        Obj_FreeObject((int)obj);
-    }
 }
 
 
