@@ -82,7 +82,7 @@ extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern void voxmaps_worldToGrid(f32* pos, int* grid);
 extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
 extern f32 PSVECMag(f32 * v);
-extern int getAngle(float y, float x);
+extern s16 getAngle(float y, float x);
 
 void fn_80152EC0(int obj, int state)
 {
