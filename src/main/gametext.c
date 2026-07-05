@@ -129,9 +129,9 @@ void gameTextShowStr(char* text, int box, int arg2, int arg3)
     char* buf;
     if (gameTextDrawFunc != NULL)
     {
-        u8* slot = &gTextBoxes[box * 0x20];
-        *(s16*)(slot + 0x18) = arg2;
-        *(s16*)(slot + 0x1a) = arg3;
+        TextSlot* slot = (TextSlot*)gTextBoxes + box;
+        slot->f18 = arg2;
+        slot->f1a = arg3;
         gameTextRenderStrs(text, box);
     }
     else
@@ -171,9 +171,9 @@ void gameTextAppendStr(char* str, int arg2)
 
 void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
 {
-    u8* box = &gTextBoxes[boxIdx * 0x20];
-    s16 savedX = *(s16*)(box + 0x18);
-    s16 savedY = *(s16*)(box + 0x1a);
+    TextSlot* box = (TextSlot*)gTextBoxes + boxIdx;
+    s16 savedX = box->f18;
+    s16 savedY = box->f1a;
     lbl_803DC9BC = 1;
     lbl_803DC9B0 = 0x7FFFFFFF;
     lbl_803DC9AC = 0;
@@ -197,23 +197,23 @@ void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, i
     {
         *outMaxY = lbl_803DC9AC >> 2;
     }
-    *(s16*)(box + 0x18) = savedX;
-    *(s16*)(box + 0x1a) = savedY;
+    box->f18 = savedX;
+    box->f1a = savedY;
 }
 
 void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX,
                                 int* outMinY)
 {
-    u8* box = &gTextBoxes[boxIdx * 0x20];
-    s16 savedX = *(s16*)(box + 0x18);
-    s16 savedY = *(s16*)(box + 0x1a);
+    TextSlot* box = (TextSlot*)gTextBoxes + boxIdx;
+    s16 savedX = box->f18;
+    s16 savedY = box->f1a;
     lbl_803DC9BC = 1;
     lbl_803DC9B0 = 0x7FFFFFFF;
     lbl_803DC9AC = 0;
     lbl_803DC9B8 = 0x7FFFFFFF;
     lbl_803DC9B4 = 0;
-    *(s16*)(box + 0x18) = x;
-    *(s16*)(box + 0x1a) = y;
+    box->f18 = x;
+    box->f1a = y;
     gameTextRenderStrs(str, boxIdx);
     lbl_803DC9BC = 0;
     if (outMinX != NULL)
@@ -232,8 +232,8 @@ void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMax
     {
         *outMaxY = lbl_803DC9AC >> 2;
     }
-    *(s16*)(box + 0x18) = savedX;
-    *(s16*)(box + 0x1a) = savedY;
+    box->f18 = savedX;
+    box->f1a = savedY;
 }
 
 #pragma dont_inline on
