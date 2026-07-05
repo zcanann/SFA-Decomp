@@ -596,7 +596,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
                 ((Dll19Placement*)state)->oscValue = lbl_803E1C2C;
                 ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~DLL19_FLAG_OSC_ACTIVE;
                 ((BaddieState*)baddieState)->hitPoints = 0;
-                obj[54] = 0;
+                ((GameObject*)obj)->anim.alpha = 0;
                 ((GameObject*)obj)->unkF4 = 1;
                 ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
                 (*gMapEventInterface)->addTime(
@@ -807,10 +807,10 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
     {
         *(s16*)((u8*)setup + 46) = 1;
     }
-    *(u8*)((u8*)setup + 4) = state[4];
-    *(u8*)((u8*)setup + 6) = state[6];
-    *(u8*)((u8*)setup + 5) = state[5];
-    *(u8*)((u8*)setup + 7) = state[7];
+    setup->color[0] = state[4];
+    setup->color[2] = state[6];
+    setup->color[1] = state[5];
+    setup->color[3] = state[7];
     gDll19NearestObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(int*)&source->anim.parent);
     return (int)gDll19NearestObj;
 }
@@ -892,7 +892,7 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
     *(f32*)(state + 996) = fparam;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)config[42] << 8);
     ((GameObject*)obj)->anim.alpha = 255;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
+    ((GameObject*)obj)->anim.resetHitboxFlags = ((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
     ((GroundBaddieState*)state)->gameBitA = *(s16*)(config + 24);
     if (((GroundBaddieState*)state)->gameBitA != -1)
     {
@@ -1095,7 +1095,7 @@ void dll_19_func03_nop(void)
 
 int dll_19_func09_ret_0(void) { return 0x0; }
 
-f32 dll_19_func0B(int* obj) { return *(f32*)((char*)(int*)((GameObject*)obj)->extra + 0x3e4); }
+f32 dll_19_func0B(int* obj) { return *(f32*)((char*)((GameObject*)obj)->extra + 0x3e4); }
 
 u16 dll_19_func0A(int obj)
 {
