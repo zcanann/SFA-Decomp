@@ -5385,8 +5385,7 @@ void trackIntersect(void)
     for (i = 0, off = 0; i < gIntersectLineCount; i++, off += 0x10)
     {
         int tt = ((s8) * (u8*)(lbl_803DCF34 + off + 3) & 0x3f) + 1;
-        s16 c = counts[tt];
-        counts[tt] = c + 1;
+        s16 c = counts[tt]++;
         *(s16*)(gIntersectLineIndexTable + c * 2) = i;
     }
 
