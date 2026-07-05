@@ -15,6 +15,7 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_ids.h"
 #include "main/lightmap.h"
 #include "main/audio/music_trigger_ids.h"
 
@@ -139,7 +140,7 @@ int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdate
             }
             ((ScLevelControlState*)state)->timer10 = lbl_803E5550;
             ((ScLevelControlState*)state)->mode = 0;
-            Sfx_PlayFromObject(0, 0x10a);
+            Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
             Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
         }
     }
@@ -487,7 +488,7 @@ void sc_levelcontrol_update(int obj)
             ((ScLevelControlState*)state)->timer10 = lbl_803E5550;
             (*gScreenTransitionInterface)->start(0x73, 1);
             ((ScLevelControlState*)state)->mode = 0;
-            Sfx_PlayFromObject(0, 0x10a);
+            Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
         }
     }
     if ((u32)GameBit_Get(0x647) != 0)
@@ -522,7 +523,7 @@ void sc_levelcontrol_update(int obj)
                 }
                 ((ScLevelControlState*)state2)->timer10 = lbl_803E5550;
                 ((ScLevelControlState*)state2)->mode = 0;
-                Sfx_PlayFromObject(0, 0x10a);
+                Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
                 Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
             }
         }
