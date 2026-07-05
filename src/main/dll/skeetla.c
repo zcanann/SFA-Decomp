@@ -1210,8 +1210,10 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     if (useBlendedDistance != 0)
     {
         moveDistance = sqrtf(limitDistanceSq);
-        moveDistance =
-            moveDistance - ((moveDistance - sqrtf(centerToEnd)) * lbl_803E2480);
+        {
+            f32 blend = moveDistance - sqrtf(centerToEnd);
+            moveDistance = moveDistance - (blend * lbl_803E2480);
+        }
     }
 
     end[0] = center[0] + (dx * moveDistance);
