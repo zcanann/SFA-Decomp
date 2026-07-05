@@ -37,7 +37,8 @@ typedef struct TumbleweedBushState
     f32 pieceOffsets[3][3];
     u8 pad40[0x4c - 0x40];
     u8 variant;
-    u8 pad4D[3];
+    u8 pad4D[1];
+    u16 spawnedCount;
     u8 pieceCount;
     u8 pad51[3];
 } TumbleweedBushState;
@@ -344,7 +345,7 @@ s8 fn_801631C8(int* obj)
         switch (((ObjPlacement*)((GameObject*)obj)->anim.placementData)->mapId)
         {
         case 0x292c:
-            if (*(u16*)(state + 0x4e) == 6)
+            if (((TumbleweedBushState*)state)->spawnedCount == 6)
             {
                 *((u8*)newObj + 0x1b) = 1;
                 list = ObjList_GetObjects(&idx, &outCount);
@@ -377,7 +378,7 @@ s8 fn_801631C8(int* obj)
                 (f64)((GameObject*)obj)->anim.localPosX, (f64)((GameObject*)obj)->anim.localPosZ);
         }
     }
-    *(u16*)(state + 0x4e) += 1;
+    ((TumbleweedBushState*)state)->spawnedCount += 1;
     return freeSlot;
 }
 
