@@ -86,9 +86,9 @@ int pressureswitchfb_updateStateMode(int obj, int unused, int stateParam)
             if (handle != 0)
             {
                 *(f32*)((trackedObjectSlot = runtime + (u32)i * 8) + PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET) =
-                    *(f32*)(handle + 0xc);
+                    ((GameObject*)handle)->anim.localPosX;
                 *(f32*)(trackedObjectSlot + (PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET + 4)) =
-                    *(f32*)(*(int*)(runtime + offset) + 0x14);
+                    ((GameObject*)*(int*)(runtime + offset))->anim.localPosZ;
             }
         }
         *(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) =
@@ -402,7 +402,7 @@ void pressureswitchfb_update(int obj)
             ((((SwitchFlags*)(state + 0x84))->active) != 0))
         {
             tmp = (int)Obj_GetPlayerObject();
-            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(tmp + 0x18)) < lbl_803E375C)
+            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)tmp)->anim.worldPosX) < lbl_803E375C)
             {
                 fx.x = lbl_803E3760;
                 fx.y = lbl_803E3764;
