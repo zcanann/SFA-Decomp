@@ -57,8 +57,8 @@ extern int hudTextures[];
 extern int lbl_803A9364[];
 extern int lbl_803DBAD0;
 extern int lbl_803DBAD4;
-extern int lbl_803DBAD8;
-extern int lbl_803DBADC;
+extern int gHudMagicBarX;
+extern int gHudMagicBarY;
 extern u8 lbl_803DD7B3;
 
 extern void gameTextSetCharset(int charset, int flags);
@@ -66,11 +66,11 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 
 extern char sTemplateProgressCounterFormat[];
-extern char lbl_803DBB48;
-extern char lbl_803DBB50;
+extern char sHudCounterFmt02d;
+extern char sHudCounterFmt03d;
 extern char lbl_803DBB58;
-extern u32 lbl_803E1E1C;
-extern u32 lbl_803E1E24;
+extern u32 gHudBlankCounterTextA;
+extern u32 gHudBlankCounterTextB;
 extern f32 lbl_803E1E68;
 extern f32 lbl_803E1E70;
 extern f32 lbl_803E1F9C;
@@ -89,10 +89,10 @@ extern f32 hudElementOpacity;
 extern f32 timeDelta;
 extern f32 lbl_803E1E3C;
 extern f32 lbl_803E1FA0;
-extern f32 lbl_803E1FBC;
+extern f32 gHudElemOpacityFloor;
 extern f32 lbl_803E1FC0;
-extern f32 lbl_803E1FC4;
-extern f32 lbl_803E1FC8;
+extern f32 gHudMoneyFlashOpacity;
+extern f32 gHudCounterFlashOpacity;
 extern void hudDrawCMenu(int a, int b, int c);
 extern int gameTextGet();
 extern void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
@@ -116,37 +116,37 @@ extern u8 gHudBButtonFlashTimer;
 extern u8 gYButtonInUse;
 extern f32 gYButtonIconAnim;
 extern f32 gHudYButtonIconScale;
-extern f32 lbl_803DBA74;
-extern f32 lbl_803DBA78;
-extern f32 lbl_803DBA7C;
-extern f32 lbl_803DBA80;
+extern f32 gHudYButtonAnimTarget;
+extern f32 gHudYButtonAnimXScale;
+extern f32 gHudYButtonAnimYScale;
+extern f32 gHudYButtonAnimAlphaScale;
 extern f32 lbl_803DBA84;
 extern s16 gCMenuRowFadeInThreshold;
 extern s16 gCMenuRowFadeOutThreshold;
 extern u8 gHudButtonIcons[];
-extern char lbl_803DBB5C;
-extern u32 lbl_803E1E18;
+extern char sHudEmptyYSlotMark;
+extern u32 gHudBlankButtonLabel;
 extern f64 lbl_803E1EA8;
 extern f32 lbl_803E1FB4;
-extern f32 lbl_803E1FCC;
+extern f32 gHudRightColX;
 extern f32 lbl_803E1FD0;
-extern f32 lbl_803E1FD4;
-extern f32 lbl_803E1FD8;
-extern f32 lbl_803E1FDC;
-extern f32 lbl_803E1FE0;
-extern f32 lbl_803E1FE4;
-extern f32 lbl_803E1FE8;
-extern f32 lbl_803E1FEC;
+extern f32 gHudCMenuColX2;
+extern f32 gHudCMenuRowY2;
+extern f32 gHudSectionIconX;
+extern f32 gHudBtnPrompt0X;
+extern f32 gHudBtnPrompt1X;
+extern f32 gHudBtnPrompt1Y;
+extern f32 gHudBtnPrompt2X;
 extern f32 lbl_803E1FF0;
-extern f32 lbl_803E1FF4;
-extern f32 lbl_803E1FF8;
-extern f32 lbl_803E1FFC;
-extern f32 lbl_803E2000;
-extern f32 lbl_803E2004;
-extern f32 lbl_803E200C;
-extern f32 lbl_803E2008;
+extern f32 gHudBtnPrompt3X;
+extern f32 gHudBtnPrompt3Y;
+extern f32 gHudAButtonY;
+extern f32 gHudAButtonIconX;
+extern f32 gHudBButtonY;
+extern f32 gHudBButtonGlyphY;
+extern f32 gHudBButtonIconX;
 extern f32 lbl_803E2010;
-extern f32 lbl_803E2014;
+extern f32 gHudYButtonIconX;
 extern f32 lbl_803E2018;
 
 /* File-local overlay for the pause/status HUD block at lbl_803A87F0 (accessed
@@ -269,7 +269,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
     }
     else
     {
-        drawTexture(tex, lbl_803DBAD8, lbl_803DBADC, alpha, 0x100);
+        drawTexture(tex, gHudMagicBarX, gHudMagicBarY, alpha, 0x100);
     }
     if (seg1 != 0)
     {
@@ -281,7 +281,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
         else
         {
-            drawScaledTexture(tex, (f32)(lbl_803DBAD8 + 0x1c), lbl_803DBADC, alpha, 0x100, seg1, 0x12,
+            drawScaledTexture(tex, (f32)(gHudMagicBarX + 0x1c), gHudMagicBarY, alpha, 0x100, seg1, 0x12,
                               0);
         }
     }
@@ -295,7 +295,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
         else
         {
-            drawPartialTexture(tex, (f32)(seg1 + 0x1c + lbl_803DBAD8), lbl_803DBADC, alpha, 0x100, rem1,
+            drawPartialTexture(tex, (f32)(seg1 + 0x1c + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, rem1,
                                0x12, seg1, 0);
         }
     }
@@ -309,7 +309,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
         else
         {
-            drawScaledTexture(tex, (f32)(lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha, 0x100, seg2, 0x12,
+            drawScaledTexture(tex, (f32)(gHudMagicBarX + 0x24), gHudMagicBarY, alpha, 0x100, seg2, 0x12,
                               0);
         }
     }
@@ -323,7 +323,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
         else
         {
-            drawScaledTexture(tex, (f32)(seg2 + 0x24 + lbl_803DBAD8), lbl_803DBADC, alpha, 0x100, seg3,
+            drawScaledTexture(tex, (f32)(seg2 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg3,
                               0x12, 0);
         }
     }
@@ -337,7 +337,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
         else
         {
-            drawScaledTexture(tex, (f32)(t13 + 0x24 + lbl_803DBAD8), lbl_803DBADC, alpha, 0x100, seg4,
+            drawScaledTexture(tex, (f32)(t13 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg4,
                               0x12, 0);
         }
     }
@@ -351,7 +351,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
         else
         {
-            drawPartialTexture(tex, (f32)(t13 + lbl_803DBAD8 + (seg4 + 0x24)), lbl_803DBADC, alpha, 0x100,
+            drawPartialTexture(tex, (f32)(t13 + gHudMagicBarX + (seg4 + 0x24)), gHudMagicBarY, alpha, 0x100,
                                rem4, 0x12, seg4, 0);
         }
     }
@@ -394,7 +394,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
         else
         {
-            drawPartialTexture(tex, (f32)(w8 + 0x1c + lbl_803DBAD8), lbl_803DBADC, alpha, 0x100, seg1,
+            drawPartialTexture(tex, (f32)(w8 + 0x1c + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg1,
                                0x12, w8, 0);
         }
     }
@@ -408,7 +408,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
         else
         {
-            drawScaledTexture(tex, (f32)(rem1 + 0x24 + lbl_803DBAD8), lbl_803DBADC, alpha, 0x100, seg2,
+            drawScaledTexture(tex, (f32)(rem1 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg2,
                               0x12, 0);
         }
     }
@@ -422,7 +422,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
         else
         {
-            drawScaledTexture(tex, (f32)(t13 + lbl_803DBAD8 + (current + 0x24)), lbl_803DBADC, alpha,
+            drawScaledTexture(tex, (f32)(t13 + gHudMagicBarX + (current + 0x24)), gHudMagicBarY, alpha,
                               0x100, seg4, 0x12, 0);
         }
     }
@@ -441,8 +441,8 @@ void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* y
     CounterText buf2;
     f32 width;
 
-    buf1 = *(CounterText*)&lbl_803E1E1C;
-    buf2 = *(CounterText*)&lbl_803E1E24;
+    buf1 = *(CounterText*)&gHudBlankCounterTextA;
+    buf2 = *(CounterText*)&gHudBlankCounterTextB;
     if ((u8)alpha != 0)
     {
         if (((f32)timer < lbl_803E1F9C) || ((f32)timer > lbl_803E1FA8) || ((timer & 8) != 0) ||
@@ -455,11 +455,11 @@ void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* y
                 if (showTarget != 0)
                 {
                     sprintf((char*)&buf1, sTemplateProgressCounterFormat, value < 0 ? -value : value, target);
-                    sprintf((char*)&buf2, &lbl_803DBB48, value < 0 ? -value : value);
+                    sprintf((char*)&buf2, &sHudCounterFmt02d, value < 0 ? -value : value);
                 }
                 else
                 {
-                    sprintf((char*)&buf1, &lbl_803DBB50, value);
+                    sprintf((char*)&buf1, &sHudCounterFmt03d, value);
                 }
             }
             else
@@ -649,7 +649,7 @@ void pauseMenuDrawStatus(void)
         {
             ((int*)(base + 0xB74))[j] = statuses[j];
             ((int*)(base + 0xB30))[j] = statuses[j];
-            ((f32*)(base + 0xAFC))[j] = lbl_803E1FBC;
+            ((f32*)(base + 0xAFC))[j] = gHudElemOpacityFloor;
         }
         if ((GameBit_Get(0xB98) != 0) || (statuses[4] != 0))
         {
@@ -707,7 +707,7 @@ void pauseMenuDrawStatus(void)
                     }
                     if (*dp != sv)
                     {
-                        *op = lbl_803E1FC4;
+                        *op = gHudMoneyFlashOpacity;
                     }
                     break;
                 default:
@@ -753,7 +753,7 @@ void pauseMenuDrawStatus(void)
                 ((int*)(base + 0xB30))[ji] = *(int*)((u8*)statuses + off);
                 if (*op <= lbl_803E1FA8)
                 {
-                    *op = lbl_803E1FC8 - timeDelta;
+                    *op = gHudCounterFlashOpacity - timeDelta;
                 }
             }
             switch (i)
@@ -770,9 +770,9 @@ void pauseMenuDrawStatus(void)
                 }
                 break;
             default:
-                if (*op < lbl_803E1FBC)
+                if (*op < gHudElemOpacityFloor)
                 {
-                    *op = lbl_803E1FBC;
+                    *op = gHudElemOpacityFloor;
                 }
                 break;
             }
@@ -870,7 +870,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
 
     base = (u8*)lbl_803A87F0;
     player = Obj_GetPlayerObject();
-    label = lbl_803E1E18;
+    label = gHudBlankButtonLabel;
     icon = 0;
     if ((cMenuFadeCounter != 0) && (cMenuEnabled != 0))
     {
@@ -973,12 +973,12 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             i++;
         }
         while (i < GCMENU_ITEM_ICON_COUNT);
-        drawTexture(((PauseMenuHud*)base)->texHandle, lbl_803E1FCC, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100);
-        drawScaledTexture(((PauseMenuHud*)base)->texHandle, lbl_803E1FD4, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
+        drawTexture(((PauseMenuHud*)base)->texHandle, gHudRightColX, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100);
+        drawScaledTexture(((PauseMenuHud*)base)->texHandle, gHudCMenuColX2, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
                           0x12, 10, 1);
-        drawScaledTexture(((PauseMenuHud*)base)->texHandle, lbl_803E1FCC, lbl_803E1FD8, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
+        drawScaledTexture(((PauseMenuHud*)base)->texHandle, gHudRightColX, gHudCMenuRowY2, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
                           0x12, 10, 2);
-        drawScaledTexture(((PauseMenuHud*)base)->texHandle, lbl_803E1FD4, lbl_803E1FD8, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
+        drawScaledTexture(((PauseMenuHud*)base)->texHandle, gHudCMenuColX2, gHudCMenuRowY2, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
                           0x12, 10, 3);
         if ((player != NULL) && (objIsCurModelNotZero(player) != 0))
         {
@@ -994,7 +994,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 icon = 0x5A;
                 break;
             }
-            drawTexture(((int*)(base + 0x1C0))[icon], lbl_803E1FDC, lbl_803E1FB4, fade * lbl_803DD8D4 / 0xFF & 0xFF,
+            drawTexture(((int*)(base + 0x1C0))[icon], gHudSectionIconX, lbl_803E1FB4, fade * lbl_803DD8D4 / 0xFF & 0xFF,
                         0x100);
         }
     }
@@ -1011,12 +1011,12 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     }
     if (lbl_803DD83C != lbl_803E1E3C)
     {
-        drawTexture(((int*)(base + 0x1C0))[0], lbl_803E1FE0, lbl_803E1F9C, lbl_803DD83C, 0x100);
-        drawTexture(((int*)(base + 0x1C0))[1], lbl_803E1FE4, lbl_803E1FE8, lbl_803DD83C, 0x100);
-        drawTexture(((int*)(base + 0x1C0))[2], lbl_803E1FEC, lbl_803E1FF0, lbl_803DD83C, 0x100);
+        drawTexture(((int*)(base + 0x1C0))[0], gHudBtnPrompt0X, lbl_803E1F9C, lbl_803DD83C, 0x100);
+        drawTexture(((int*)(base + 0x1C0))[1], gHudBtnPrompt1X, gHudBtnPrompt1Y, lbl_803DD83C, 0x100);
+        drawTexture(((int*)(base + 0x1C0))[2], gHudBtnPrompt2X, lbl_803E1FF0, lbl_803DD83C, 0x100);
         if ((gHudAButtonFlashTimer & 8) == 0)
         {
-            drawTexture(((int*)(base + 0x1C0))[9], lbl_803E1FF4, lbl_803E1FF8, lbl_803DD83C, 0x100);
+            drawTexture(((int*)(base + 0x1C0))[9], gHudBtnPrompt3X, gHudBtnPrompt3Y, lbl_803DD83C, 0x100);
         }
         if ((aButtonIcon != 0) && (aButtonIcon != 0x1C))
         {
@@ -1068,21 +1068,21 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 {
                     wid = 1;
                 }
-                drawScaledTexture(((int*)(base + 0x1C0))[8], (f32)(0x219 - wid), lbl_803E1FFC, lbl_803DD83C, 0x100,
+                drawScaledTexture(((int*)(base + 0x1C0))[8], (f32)(0x219 - wid), gHudAButtonY, lbl_803DD83C, 0x100,
                                   wid, 0x16, 0);
-                drawTexture(((int*)(base + 0x1C0))[7], (f32)(0x20D - wid), lbl_803E1FFC, lbl_803DD83C, 0x100);
+                drawTexture(((int*)(base + 0x1C0))[7], (f32)(0x20D - wid), gHudAButtonY, lbl_803DD83C, 0x100);
             }
             else
             {
-                drawTexture(((int*)(base + 0x1C0))[7], lbl_803E2000, lbl_803E1FFC, lbl_803DD83C, 0x100);
+                drawTexture(((int*)(base + 0x1C0))[7], gHudAButtonIconX, gHudAButtonY, lbl_803DD83C, 0x100);
             }
             prevAButtonIcon = aButtonIcon;
-            drawTexture(((int*)(base + 0x1C0))[5], lbl_803E1FCC, lbl_803E1FFC, lbl_803DD83C, 0x100);
+            drawTexture(((int*)(base + 0x1C0))[5], gHudRightColX, gHudAButtonY, lbl_803DD83C, 0x100);
             gameTextSetCharset(prevCharset, 3);
         }
         else
         {
-            drawTexture(((int*)(base + 0x1C0))[3], lbl_803E1FCC, lbl_803E1FFC, lbl_803DD83C, 0x100);
+            drawTexture(((int*)(base + 0x1C0))[3], gHudRightColX, gHudAButtonY, lbl_803DD83C, 0x100);
             prevAButtonIcon = 0;
             gHudAButtonFlashTimer = 0;
         }
@@ -1129,21 +1129,21 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 {
                     wid = 1;
                 }
-                drawScaledTexture(((int*)(base + 0x1C0))[8], (f32)(0x219 - wid), lbl_803E2004, lbl_803DD83C, 0x100,
+                drawScaledTexture(((int*)(base + 0x1C0))[8], (f32)(0x219 - wid), gHudBButtonY, lbl_803DD83C, 0x100,
                                   wid, 0x16, 0);
-                drawTexture(((int*)(base + 0x1C0))[7], (f32)(0x20D - wid), lbl_803E2004, lbl_803DD83C, 0x100);
+                drawTexture(((int*)(base + 0x1C0))[7], (f32)(0x20D - wid), gHudBButtonY, lbl_803DD83C, 0x100);
             }
             else
             {
-                drawTexture(((int*)(base + 0x1C0))[7], lbl_803E2008, lbl_803E2004, lbl_803DD83C, 0x100);
+                drawTexture(((int*)(base + 0x1C0))[7], gHudBButtonIconX, gHudBButtonY, lbl_803DD83C, 0x100);
             }
             gHudPrevBButtonIcon = bButtonIcon;
-            drawTexture(((int*)(base + 0x1C0))[6], lbl_803E1FCC, lbl_803E200C, lbl_803DD83C, 0x100);
+            drawTexture(((int*)(base + 0x1C0))[6], gHudRightColX, gHudBButtonGlyphY, lbl_803DD83C, 0x100);
             gameTextSetCharset(prevCharset, 3);
         }
         else
         {
-            drawTexture(((int*)(base + 0x1C0))[4], lbl_803E1FCC, lbl_803E200C, lbl_803DD83C, 0x100);
+            drawTexture(((int*)(base + 0x1C0))[4], gHudRightColX, gHudBButtonGlyphY, lbl_803DD83C, 0x100);
             gHudPrevBButtonIcon = 0;
         }
         if ((u32)hudYButtonItemIconTexture != 0)
@@ -1175,7 +1175,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 gHudYButtonIconScale = dv;
             }
             gYButtonIconAnim = gYButtonIconAnim -
-                (lbl_803DBA74 + (timeDelta * (gYButtonIconAnim - lbl_803DBA74)) / lbl_803DBA84);
+                (gHudYButtonAnimTarget + (timeDelta * (gYButtonIconAnim - gHudYButtonAnimTarget)) / lbl_803DBA84);
             if (gYButtonIconAnim > lbl_803E1E3C)
             {
                 gHudYButtonIconScale = lbl_803E1E68;
@@ -1184,16 +1184,16 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             {
                 gYButtonIconAnim = lbl_803E1E3C;
             }
-            drawTexture(hudYButtonItemIconTexture, lbl_803DBA78 * gYButtonIconAnim + lbl_803E2014,
-                        lbl_803DBA7C * gYButtonIconAnim + lbl_803E1F9C, (int)(gHudYButtonIconScale * lbl_803DD83C),
-                        (int)(lbl_803DBA80 * gYButtonIconAnim + lbl_803E2018));
+            drawTexture(hudYButtonItemIconTexture, gHudYButtonAnimXScale * gYButtonIconAnim + gHudYButtonIconX,
+                        gHudYButtonAnimYScale * gYButtonIconAnim + lbl_803E1F9C, (int)(gHudYButtonIconScale * lbl_803DD83C),
+                        (int)(gHudYButtonAnimAlphaScale * gYButtonIconAnim + lbl_803E2018));
         }
         else
         {
             gameTextSetColor(0xFF, 0xFF, 0xFF, lbl_803DD83C);
             prevCharset = gameTextGetCharset();
             gameTextSetCharset(3, 3);
-            gameTextShowStr(&lbl_803DBB5C, 0x93, 0x216, 0x22);
+            gameTextShowStr(&sHudEmptyYSlotMark, 0x93, 0x216, 0x22);
             gameTextSetCharset(prevCharset, 3);
         }
     }
