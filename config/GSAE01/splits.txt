@@ -1133,6 +1133,7 @@ main/dll/dll_00DC_mikabombshadow.c:
 main/dll/dll_025A_staticcamera.c:
 	.text       start:0x8016B898 end:0x8016B99C
 	.data       start:0x80320658 end:0x80320690
+	.sdata2     start:0x803E31E8 end:0x803E31F8
 
 main/dll/dll_00DD_gcbaddieshield.c:
 	.text       start:0x8016B99C end:0x8016BB10

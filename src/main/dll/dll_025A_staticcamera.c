@@ -42,39 +42,29 @@ STATIC_ASSERT(offsetof(StaticCameraPlacement, rotX) == 0x1C);
 STATIC_ASSERT(offsetof(StaticCameraPlacement, rotY) == 0x1E);
 STATIC_ASSERT(offsetof(StaticCameraPlacement, rotZ) == 0x20);
 
+int StaticCamera_getExtraSize(void) { return sizeof(StaticCameraState); }
+int StaticCamera_getObjectTypeId(void) { return 0x0; }
+
+void StaticCamera_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, STATICCAMERA_OBJGROUP);
+}
+
+void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+    {
+        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+    }
+}
+
 void StaticCamera_hitDetect(void)
 {
 }
 
 void StaticCamera_update(void)
 {
-}
-
-void StaticCamera_release(void)
-{
-}
-
-void StaticCamera_initialise(void)
-{
-}
-
-int StaticCamera_getExtraSize(void) { return sizeof(StaticCameraState); }
-int StaticCamera_getObjectTypeId(void) { return 0x0; }
-
-void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-
-    extern f32 lbl_803E31E8;
-    s32 v = visible;
-    if (v != 0)
-    {
-        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E31E8);
-    }
-}
-
-void StaticCamera_free(int obj)
-{
-    ObjGroup_RemoveObject(obj, STATICCAMERA_OBJGROUP);
 }
 
 void StaticCamera_init(GameObject* obj, StaticCameraPlacement* params, int deferAdd)
@@ -92,6 +82,14 @@ void StaticCamera_init(GameObject* obj, StaticCameraPlacement* params, int defer
     {
         ObjGroup_AddObject((int)obj, STATICCAMERA_OBJGROUP);
     }
+}
+
+void StaticCamera_release(void)
+{
+}
+
+void StaticCamera_initialise(void)
+{
 }
 
 ObjectDescriptor gStaticCameraObjDescriptor = {
