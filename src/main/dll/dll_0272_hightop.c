@@ -923,6 +923,7 @@ int hightop_stateHandler04(int obj, int p)
         {
             goto inRange;
         }
+        dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
         if ((dy >= *(f32*)&lbl_803E6AA8 ? dy : -dy) > lbl_803E6AF0)
         {
         inRange:
