@@ -272,8 +272,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     {
         trickyDebugPrint(strs + 0x2b0);
     }
-    link = getPatchGroup((f32*)target, ((TrickyState*)state)->activeWalkGroup);
-    trickyDebugPrint(strs + 0x2e4, link);
+    trickyDebugPrint(strs + 0x2e4, getPatchGroup((f32*)target, ((TrickyState*)state)->activeWalkGroup));
     if ((((TrickyState*)state)->stateFlags & 0x400) != 0)
     {
         for (i = 0; i < 4; i++)
