@@ -2165,8 +2165,8 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         }
         else
         {
-            modelLightStruct_setPosition(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                         ((GameObject*)obj)->anim.localPosZ);
+            modelLightStruct_setPosition(((FireCrawlerState*)state)->engineLight, ((GameObject*)obj)->anim.localPosX,
+                                         ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
         }
     }
 
@@ -2237,13 +2237,13 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         {
             spd = lbl_803E2C3C;
         }
-        if (((FCVars*)state)->emergeTimer > lbl_803E2C58)
+        if (((FCVars*)state)->emergeTimer > *(f32*)&lbl_803E2C58)
         {
-            ((FCVars*)state)->emergeTimer = ((FCVars*)state)->emergeTimer - timeDelta;
+            ((FCVars*)state)->emergeTimer -= timeDelta;
         }
         else
         {
-            ((FCVars*)state)->emergeTimer = lbl_803E2C58;
+            ((FCVars*)state)->emergeTimer = *(f32*)&lbl_803E2C58;
         }
         ratio = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX
             + ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) / lbl_803E2C48;
@@ -2255,8 +2255,11 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         {
             ratio = lbl_803E2C3C;
         }
-        ((GameObject*)obj)->anim.rotY = (f32)(int)((GameObject*)obj)->anim.rotY - ((lbl_803E2C64 * spd) * timeDelta) *
-            ratio;
+        {
+            f32 t = lbl_803E2C64 * spd;
+            ratio *= t * timeDelta;
+        }
+        ((GameObject*)obj)->anim.rotY = (f32)(int)((GameObject*)obj)->anim.rotY - ratio;
         fn_8014CD1C(obj, state, (int)((FCVars*)state)->emergeTimer, lbl_803E2C68 * spd, lbl_803E2C30, 1);
     }
 
@@ -2267,7 +2270,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ * pw;
     }
 
-    if (randomGetRange(0, 0x2ee) == 0)
+    if ((int)randomGetRange(0, 0x2ee) == 0)
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eba);
     }
@@ -2279,7 +2282,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         {
             f32 t = ((FCVars*)state)->engineTimer;
             Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_baddie_rach_death, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
-                                   t / lbl_803E2C70);
+                                   t / *(f32*)&lbl_803E2C70);
         }
     }
     else
