@@ -1114,9 +1114,8 @@ state_selected:
                 }
                 else
                 {
-                    ((TrickyState*)state)->unk3C =
-                        ((k - lbl_803E24B8) / (v - lbl_803E24BC)) * lbl_803E24A8 +
-                        lbl_803E24AC;
+                    k = (k - lbl_803E24B8) / (v - lbl_803E24BC);
+                    ((TrickyState*)state)->unk3C = k * lbl_803E24A8 + lbl_803E24AC;
                 }
             }
             objHitDetectFn_80062e84(obj, 0, 0);
