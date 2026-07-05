@@ -1730,8 +1730,8 @@ extern void fn_80137948(char* fmt, ...);
 int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                        u32 modelIdArg, void* extraArgsArg)
 {
-    int modelId = modelIdArg;
     int effectId = effectIdArg;
+    int modelId = modelIdArg;
     f32* extraArgs = extraArgsArg;
     f32* startPos;
     int intVal;
@@ -2006,6 +2006,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     cfg.behaviorFlags = 0x0;
     cfg.renderFlags = 0;
     cfg.effectIdByte = effectId;
+    cfg.attachedSource = sourceObj;
     startPos = &cfg.startPosX;
     cfg.startPosX = lbl_803DF4DC;
     cfg.startPosY = lbl_803DF4DC;
@@ -2026,7 +2027,6 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     cfg.overrideColor1 = 0xffff;
     cfg.overrideColor2 = 0xffff;
     cfg.textureSetupFlags = 0;
-    cfg.attachedSource = sourceObj;
     switch (effectId)
     {
     case 0x5e:
@@ -3184,7 +3184,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80210;
         cfg.renderFlags = 0x100;
-        cfg.textureId = (s16)effectId - 0x28c;
+        cfg.textureId = (s16)(effectId - 0x28c);
         break;
     case 0x4b:
 
@@ -3827,11 +3827,12 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.textureId = 0x5c;
         break;
     case 0x41:
+        i = 0;
         ftmp4 = lbl_803DF63C;
         ftmp3 = lbl_803DF640;
         ftmp2 = lbl_803DF638;
         ftmp1 = lbl_803DF5B4;
-        for (i = 0; i < 0x1e; i = i + 1)
+        for (; i < 0x1e; i++)
         {
             cfg.startPosY = ftmp4;
             cfg.velocityX = ftmp3 * (f32)(s32)(2 - randomGetRange(0, 4));
@@ -3977,11 +3978,12 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         break;
     case 0x38:
         srand(0x4233d);
+        i = 0;
         ftmp1 = lbl_803DF644;
         ftmp2 = lbl_803DF4E8;
         ftmp3 = lbl_803DF600;
         ftmp4 = lbl_803DF660;
-        for (i = 0; i < 0x28; i = i + 1)
+        for (; i < 0x28; i++)
         {
             cfg.startPosY = ftmp1;
             cfg.velocityX = ftmp2 * (f32)(s32)(0x50 - randomGetRange(0, 0xa0));
