@@ -53,18 +53,15 @@ void iceblast_hitDetect(void)
 void iceblast_update(GameObject* obj)
 {
     GameObject* path;
-    f32* timer;
-    GameObject* player;
-    IceblastPlacement* def;
+    GameObject* player = Obj_GetPlayerObject();
+    f32* timer = obj->extra;
+    IceblastPlacement* def = (IceblastPlacement*)obj->anim.placementData;
     struct
     {
         s16 dir[3];
         s16 pad;
         f32 pos[4];
     } vec;
-    player = Obj_GetPlayerObject();
-    timer = obj->extra;
-    def = (IceblastPlacement*)obj->anim.placementData;
     if (player != NULL && (path = player->childObjs[0]) != NULL)
     {
         obj->anim.rotZ = path->anim.rotZ;
