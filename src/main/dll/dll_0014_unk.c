@@ -2261,7 +2261,6 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
               (f32)pl->normalZ * (ZA))
 
 #pragma opt_propagation off
-#pragma opt_loop_invariants off
 void walkgroupFindExitPointFn_800dc398(void)
 {
     ObjfsaPatch* patchBase = gObjfsaPatches;
@@ -2280,7 +2279,6 @@ void walkgroupFindExitPointFn_800dc398(void)
     int slot;
     int curve;
     u32 linked;
-    int myId;
     int iter;
     int pi;
     u32 gi;
@@ -2429,8 +2427,7 @@ void walkgroupFindExitPointFn_800dc398(void)
                 wg->minY = (s16) - (lbl_803E05D0 * (f32) * (s8*)(curve + 0x1a) -
                     *(f32*)(curve + 0xc));
 
-                slotPtr = (char*)curve;
-                for (slot = 0; slot < 4; slot++)
+                for (slot = 0, slotPtr = (char*)curve; slot < 4; slot++)
                 {
                     wg->patchIndices[slot] = 0;
                     if (*(s32*)(slotPtr + 0x1c) > -1 &&
@@ -2440,7 +2437,7 @@ void walkgroupFindExitPointFn_800dc398(void)
                         groupB = *(u8*)(linked + 3);
                         if (groupA < groupB)
                         {
-                            pairId = (groupB << 8) | groupA;
+                            pairId = groupA | (groupB << 8);
                         }
                         else
                         {
@@ -2463,11 +2460,10 @@ void walkgroupFindExitPointFn_800dc398(void)
                         if (wg->patchIndices[slot] == 0)
                         {
                             back = 0;
-                            myId = *(s32*)(curve + 0x14);
-                            if (*(u32*)(linked + 0x1c) != (u32)myId &&
-                                (back = 1, *(u32*)(linked + 0x20) != (u32)myId) &&
-                                (back = 2, *(u32*)(linked + 0x24) != (u32)myId) &&
-                                (back = 3, *(u32*)(linked + 0x28) != (u32)myId))
+                            if (*(u32*)(linked + 0x1c) != *(u32*)(curve + 0x14) &&
+                                (back = 1, *(u32*)(linked + 0x20) != *(u32*)(curve + 0x14)) &&
+                                (back = 2, *(u32*)(linked + 0x24) != *(u32*)(curve + 0x14)) &&
+                                (back = 3, *(u32*)(linked + 0x28) != *(u32*)(curve + 0x14)))
                             {
                                 back = 4;
                             }
@@ -2535,11 +2531,12 @@ void walkgroupFindExitPointFn_800dc398(void)
             listWalk++;
         }
 
+        pi = 1;
         pp = &pairs[2];
         zero = lbl_803E05F0;
         div = lbl_803E060C;
         p = &patchBase[1];
-        for (pi = 1; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
+        for (; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
         {
             wg = &((ObjfsaWalkGroup*)patchBase)[pp[0]];
             wg = (ObjfsaWalkGroup*)((char*)wg + 0x3000);
@@ -2592,7 +2589,6 @@ void walkgroupFindExitPointFn_800dc398(void)
     }
 }
 #pragma opt_propagation reset
-#pragma opt_loop_invariants reset
 
 int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
 {
