@@ -393,7 +393,7 @@ void dimbossicesmash_init(GameObject* obj, u8* params)
     t = (GameBit_Get(((DimbossicesmashPlacement*)params)->activateGameBit) != 0) ? 2 : 0;
     state[0x29e] = t;
     lbl_803DDB00 = 0;
-    if ((*(u8*)(params + 0x3c) & 2) != 0)
+    if ((((DimbossicesmashPlacement*)params)->flags & 2) != 0)
     {
         (*gPathControlInterface)->init(state, 0, 0x40002, 1);
         (*gPathControlInterface)->setup(state, 1, lbl_80322368, lbl_803DBDF8, buf);
