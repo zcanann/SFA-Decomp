@@ -1,13 +1,13 @@
 /*
  * In-game C-menu (radial item ring) and Tricky HUD overlay rendering.
  *
- * cMenuSetItems / cMenuCountVisibleItems walk a placement-style item table (8
+ * cMenuSetItems walks a placement-style item table (8
  * shorts per entry) gated by game bits, populating the parallel cMenu
  * arrays at lbl_803A87F0 (ids/words/state/flags/textures) and loading
  * per-item textures. The "useTricky" path filters entries through the
  * Tricky HUD item/action masks instead.
  *
- * The cMenuItemModelRenderFn / cMenuStaffModelRenderFn / cMenuRingModelRenderFn / cMenuRingIconRenderFn
+ * The cMenuRingModelRenderFn / cMenuRingIconRenderFn
  * callbacks are model render hooks that drive the GX colour/alpha
  * pipeline for menu/HUD models. drawTrickyHudOverlay draws the Tricky
  * action/item icons and the view-finder HUD. hudDrawCMenu renders the
@@ -32,23 +32,8 @@
    (ids/words/state/flags/textures); matches the s16 saved[64] snapshot. */
 #define CMENU_ITEM_SLOT_COUNT 64
 
-extern int FUN_8001792c();
-extern u32 FUN_80051fc4();
-extern u32 FUN_80052778();
-extern u32 FUN_800528d0();
-extern u32 FUN_80052904();
-extern u32 FUN_80053078();
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern u32 FUN_8025c754();
-extern u32 FUN_8025cce8();
-extern u32 DAT_8031c130;
-extern u32 DAT_803aa008;
-extern u32 DAT_803aa024;
-extern u32 DAT_803de3b8;
-extern u32 DAT_803e2a90;
-extern u32 DAT_803e2a94;
-extern f32 FLOAT_803e2c90;
 extern u8 lbl_803A87F0[];
 extern CMenuItemDef gCMenuStaffAbilities[];
 extern s16 gCMenuForcedSelIndex;
@@ -342,127 +327,6 @@ int cMenuSetItems(s16* items, char useTricky)
         while (i < CMENU_ITEM_SLOT_COUNT);
     }
     return count;
-}
-
-#pragma scheduling on
-#pragma peephole on
-int cMenuCountVisibleItems(s16* table, char mode)
-{
-    u32 bitVal;
-    int count;
-    s16* entry;
-
-    count = 0;
-    entry = table;
-    if (mode == 0)
-    {
-        for (; -1 < *entry; entry += 8)
-        {
-            bitVal = GameBit_Get((int)*entry);
-            if (bitVal != 0)
-            {
-                if (table == (short*)&DAT_8031c130)
-                {
-                    if ((entry[2] < 0) || (bitVal = GameBit_Get((int)entry[2]), bitVal == 0))
-                    {
-                        count++;
-                    }
-                }
-                else if (((entry[1] < 0) || (bitVal = GameBit_Get((int)entry[1]), bitVal == 0)) &&
-                    ((entry[2] < 0 || (bitVal = GameBit_Get((int)entry[2]), bitVal == 0))))
-                {
-                    count++;
-                }
-            }
-        }
-    }
-    else if (0 < DAT_803de3b8)
-    {
-        for (; -1 < *table; table = table + 8)
-        {
-            if ((DAT_803de3b8 != 0xffffffff) && ((DAT_803de3b8 & (int)*table) != 0))
-            {
-                count++;
-            }
-        }
-    }
-    return count;
-}
-
-#pragma scheduling off
-#pragma peephole off
-void cMenuNullRenderFn(u64 fwdArg1, f64 fwdArg2, f64 fwdArg3, u64 fwdArg4,
-                  u64 fwdArg5, u64 fwdArg6, u64 fwdArg7, u64 fwdArg8)
-{
-}
-
-#pragma scheduling on
-#pragma peephole on
-int cMenuItemModelRenderFn(int shader, int* block, int idx)
-{
-    int rec;
-    u32 texHandle;
-    u32 colorWord;
-
-    colorWord = DAT_803e2a94;
-    rec = FUN_8001792c(*block, idx);
-    FUN_80052904();
-    colorWord = ((u32)(((u32)(colorWord >> 8) << 8) | (u8)(*(u8*)(shader + 0x37))));
-    texHandle = FUN_80053078(*(u32*)(rec + 0x24));
-    FUN_80051fc4(texHandle, 0, 0, &colorWord, 0, 1);
-    FUN_800528d0();
-    FUN_8025cce8(1, 4, 5, 5);
-    gxSetZMode_(0, GX_ALWAYS, 0);
-    gxSetPeControl_ZCompLoc_(0);
-    FUN_8025c754(7, 0, 0, 7, 0);
-    return 1;
-}
-
-int cMenuStaffModelRenderFn(int shader, int* block, int idx)
-{
-    int level;
-    int rec;
-    u32 colorWord;
-    u32* tabA;
-    u32* tabB;
-
-    colorWord = DAT_803e2a90;
-    rec = FUN_8001792c(*block, idx);
-    rec = *(u8*)(rec + 0x29) - 1;
-    FUN_80052904();
-    if ((-1 < rec) && (rec < 7))
-    {
-        tabA = &DAT_803aa024;
-        tabB = &DAT_803aa008;
-        if (tabA[rec] != 0)
-        {
-            if (tabB[rec] == 0)
-            {
-                level = (int)(FLOAT_803e2c90 *
-                    (f32)((double)(u32) * (u8*)(shader + 0x37)));
-                colorWord = ((u32)(((u32)(colorWord >> 8) << 8) | (u8)(level)));
-            }
-            else
-            {
-                colorWord = ((u32)(((u32)(colorWord >> 8) << 8) | (u8)(*(u8*)(shader + 0x37))));
-            }
-            FUN_80051fc4(tabA[rec], 0, 0, &colorWord, 0, 1);
-        }
-        else
-        {
-            FUN_80052778((char*)&colorWord + 1);
-        }
-    }
-    else
-    {
-        FUN_80052778((char*)&colorWord + 1);
-    }
-    FUN_800528d0();
-    FUN_8025cce8(1, 4, 5, 5);
-    gxSetZMode_(0, GX_ALWAYS, 0);
-    gxSetPeControl_ZCompLoc_(0);
-    FUN_8025c754(7, 0, 0, 7, 0);
-    return 1;
 }
 
 #pragma scheduling off
