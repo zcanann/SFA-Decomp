@@ -270,7 +270,7 @@ void gf_levelcon_findLinkedObjects(int obj)
     }
 }
 
-void fn_80239DD8(int p1, int p2)
+void fn_80239DD8(int obj, int state)
 {
     f32 maxDist;
     char* nearObj;
@@ -279,7 +279,7 @@ void fn_80239DD8(int p1, int p2)
     maxDist = lbl_803E7490;
     if (Obj_IsLoadingLocked())
     {
-        nearObj = (char*)ObjList_FindNearestObjectByDefNo(p1, 0x7e5, &maxDist);
+        nearObj = (char*)ObjList_FindNearestObjectByDefNo(obj, 0x7e5, &maxDist);
         if (nearObj != NULL)
         {
             newObj = Obj_AllocObjectSetup(0x24, 0x608);
@@ -288,22 +288,22 @@ void fn_80239DD8(int p1, int p2)
             ((ObjPlacement*)newObj)->posZ = ((GameObject*)nearObj)->anim.localPosZ;
             ((ObjPlacement*)newObj)->color[0] = 1;
             ((ObjPlacement*)newObj)->color[1] = 1;
-            *(int*)(p2 + 0x10) = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
-            if (*(void**)(p2 + 0x10) != NULL)
+            *(int*)(state + 0x10) = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
+            if (*(void**)(state + 0x10) != NULL)
             {
-                ((GameObject*)*(int*)(p2 + 0x10))->anim.alpha = 0xff;
-                *(u8*)(*(int*)(p2 + 0x10) + 0x37) = 0xff;
-                *(int*)(p2 + 0x90) = 0x12c;
+                ((GameObject*)*(int*)(state + 0x10))->anim.alpha = 0xff;
+                *(u8*)(*(int*)(state + 0x10) + 0x37) = 0xff;
+                *(int*)(state + 0x90) = 0x12c;
             }
         }
     }
 }
 
-void fn_80239EAC(int p1, int p2)
+void fn_80239EAC(int obj, int state)
 {
     f32 dx, dy, dz;
     int* objs;
-    int obj;
+    int cur;
     int i;
     int count;
     int defNo;
@@ -312,23 +312,23 @@ void fn_80239EAC(int p1, int p2)
         int* t = ObjGroup_GetObjects(2, &count);
         for (i = 0, objs = t; i < count; i++)
         {
-            obj = *objs;
-            defNo = *(s16*)(*(int*)&((GameObject*)obj)->anim.placementData);
+            cur = *objs;
+            defNo = *(s16*)(*(int*)&((GameObject*)cur)->anim.placementData);
             if (defNo == 0x80d || defNo == 0x859)
             {
-                dy = *(f32*)(p2 + 0xc4) - ((GameObject*)obj)->anim.localPosY;
-                dz = *(f32*)(p2 + 0xc8) - ((GameObject*)obj)->anim.localPosZ;
-                dx = *(f32*)(p2 + 0xc0) - ((GameObject*)obj)->anim.localPosX;
-                ((GameObject*)obj)->anim.rotX = getAngle(dx, dz);
-                ((GameObject*)obj)->anim.rotY = -(s16)getAngle(dy, dz);
-                arwprojectile_placeForward(obj, (f32)(int)lbl_803DC4E8);
+                dy = *(f32*)(state + 0xc4) - ((GameObject*)cur)->anim.localPosY;
+                dz = *(f32*)(state + 0xc8) - ((GameObject*)cur)->anim.localPosZ;
+                dx = *(f32*)(state + 0xc0) - ((GameObject*)cur)->anim.localPosX;
+                ((GameObject*)cur)->anim.rotX = getAngle(dx, dz);
+                ((GameObject*)cur)->anim.rotY = -(s16)getAngle(dy, dz);
+                arwprojectile_placeForward(cur, (f32)(int)lbl_803DC4E8);
             }
             objs++;
         }
     }
 }
 
-void fn_8023A168(int p1, int p2)
+void fn_8023A168(int obj, int state)
 {
     int proj;
     int yawRnd;
@@ -340,15 +340,15 @@ void fn_8023A168(int p1, int p2)
         yawRnd = (s16)(randomGetRange(-0x1f40, 0x1f40) - 0x8000);
         pitchRnd = randomGetRange(-0x1f40, 0x1f40) >> 8;
         newObj = Obj_AllocObjectSetup(0x20, 0x80d);
-        ((ObjPlacement*)newObj)->posX = *(f32*)(p2 + 0xc0);
-        ((ObjPlacement*)newObj)->posY = *(f32*)(p2 + 0xc4);
-        ((ObjPlacement*)newObj)->posZ = *(f32*)(p2 + 0xc8);
-        ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)p1 + yawRnd) >> 8;
+        ((ObjPlacement*)newObj)->posX = *(f32*)(state + 0xc0);
+        ((ObjPlacement*)newObj)->posY = *(f32*)(state + 0xc4);
+        ((ObjPlacement*)newObj)->posZ = *(f32*)(state + 0xc8);
+        ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)obj + yawRnd) >> 8;
         ((GfProjectileSetup*)newObj)->pitch = pitchRnd;
         ((GfProjectileSetup*)newObj)->roll = 0;
         ((ObjPlacement*)newObj)->color[0] = 1;
         ((ObjPlacement*)newObj)->color[1] = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+        proj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
         if ((void*)proj != NULL)
         {
             ((GameObject*)proj)->anim.rootMotionScale = lbl_803E74B0;
@@ -358,7 +358,7 @@ void fn_8023A168(int p1, int p2)
     }
 }
 
-void fn_8023A268(int p1, int p2, int p3)
+void fn_8023A268(int obj, int state, int p3)
 {
     f32 dx, dz, dist;
     int yaw;
@@ -366,25 +366,25 @@ void fn_8023A268(int p1, int p2, int p3)
 
     if (Obj_IsLoadingLocked())
     {
-        dx = *(f32*)(p2 + 0xc0) - *(f32*)(*(int*)p2 + 0xc);
-        dz = *(f32*)(p2 + 0xc8) - *(f32*)(*(int*)p2 + 0x14);
+        dx = *(f32*)(state + 0xc0) - *(f32*)(*(int*)state + 0xc);
+        dz = *(f32*)(state + 0xc8) - *(f32*)(*(int*)state + 0x14);
         dist = sqrtf(dx * dx + dz * dz);
         yaw = (u16)getAngle(dx, dz);
-        gGfLevelConProjectilePitch = (u16)getAngle(*(f32*)(p2 + 0xc4) - *(f32*)(*(int*)p2 + 0x10), dist) >> 8;
+        gGfLevelConProjectilePitch = (u16)getAngle(*(f32*)(state + 0xc4) - *(f32*)(*(int*)state + 0x10), dist) >> 8;
         newObj = Obj_AllocObjectSetup(0x20, 0x7e4);
-        ((ObjPlacement*)newObj)->posX = *(f32*)(p2 + 0xc0);
-        ((ObjPlacement*)newObj)->posY = *(f32*)(p2 + 0xc4);
-        ((ObjPlacement*)newObj)->posZ = *(f32*)(p2 + 0xc8);
-        ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)p1 + yaw) >> 8;
+        ((ObjPlacement*)newObj)->posX = *(f32*)(state + 0xc0);
+        ((ObjPlacement*)newObj)->posY = *(f32*)(state + 0xc4);
+        ((ObjPlacement*)newObj)->posZ = *(f32*)(state + 0xc8);
+        ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)obj + yaw) >> 8;
         ((GfProjectileSetup*)newObj)->pitch = gGfLevelConProjectilePitch;
         ((GfProjectileSetup*)newObj)->roll = 0;
         ((ObjPlacement*)newObj)->color[0] = 1;
         ((ObjPlacement*)newObj)->color[1] = 1;
-        p1 = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
-        if ((void*)p1 != NULL)
+        obj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
+        if ((void*)obj != NULL)
         {
-            arwprojectile_setLifetime(p1, lbl_803DC4DC);
-            arwprojectile_placeForward(p1, (f32)(int)lbl_803DC4D8);
+            arwprojectile_setLifetime(obj, lbl_803DC4DC);
+            arwprojectile_placeForward(obj, (f32)(int)lbl_803DC4D8);
         }
     }
 }
