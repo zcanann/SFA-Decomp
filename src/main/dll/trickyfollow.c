@@ -230,7 +230,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x400;
         i = 0;
         mask = 1;
-        for (; i < 4; i++)
+        for (; i < 4; i++, mask = mask << 1)
         {
             if (wgi.mask & mask)
             {
@@ -239,7 +239,6 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                 *(f32*)(state + 0xa4 + i * 0xc) = ((TrickyPoint3*)target)->y;
                 *(f32*)(state + 0xa8 + i * 0xc) = ((TrickyPoint3*)target)->z;
             }
-            mask = mask << 1;
         }
     }
     if ((targetWg != 0) && (targetWg == ((TrickyState*)state)->activeWalkGroup))
