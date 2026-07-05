@@ -258,7 +258,7 @@ void fn_8017D854(int obj, int msg)
     }
     else
     {
-        f32 m = ((AppleOnTreeState*)state)->unk40;
+        f32 m = ((AppleOnTreeState*)state)->gravity;
         f32 g = lbl_803E37D8 * m;
         f32 q = sqrtf(-(g * ((AppleOnTreeState*)state)->dropHeight - lbl_803E37D4));
         f32 t = lbl_803E37DC * m;
@@ -330,7 +330,7 @@ void fn_8017D854(int obj, int msg)
 int fn_8017DCD4(int p, int state, f32 y)
 {
     f32 zero = lbl_803E37D4;
-    f32 m = ((AppleOnTreeState*)state)->unk40;
+    f32 m = ((AppleOnTreeState*)state)->gravity;
 
     if (zero != m)
     {
@@ -384,7 +384,7 @@ int fn_8017DCD4(int p, int state, f32 y)
             else if (b < lbl_803E37F4)
             {
                 ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
-                ((AppleOnTreeState*)state)->unk40 = zero;
+                ((AppleOnTreeState*)state)->gravity = zero;
                 ((AppleOnTreeState*)state)->bounceVel = zero;
                 return 1;
             }
@@ -442,7 +442,7 @@ int fn_8017DF34(int p, int state, f32 y)
         if (((AppleOnTreeState*)state)->dropHeight - (((AppleOnTreeState*)state)->posY - y) <= lbl_803E37D4)
         {
             f32 b;
-            f32 m = ((AppleOnTreeState*)state)->unk40;
+            f32 m = ((AppleOnTreeState*)state)->gravity;
             f32 g;
             f32 q;
             f32 t;
@@ -482,7 +482,7 @@ int fn_8017DF34(int p, int state, f32 y)
             ((GameObject*)p)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
             ((GameObject*)p)->anim.rotZ = ((AppleOnTreeState*)state)->rotZ;
             {
-                f32 g2 = lbl_803E37DC * ((AppleOnTreeState*)state)->unk40;
+                f32 g2 = lbl_803E37DC * ((AppleOnTreeState*)state)->gravity;
                 ((AppleOnTreeState*)state)->bounceVel = g2 * r + ((AppleOnTreeState*)state)->bounceVel;
             }
             ((AppleOnTreeState*)state)->unk3C = ((AppleOnTreeState*)state)->velY;
@@ -500,7 +500,7 @@ int fn_8017DF34(int p, int state, f32 y)
     else if (y - ((AppleOnTreeState*)state)->posY >= lbl_803E37D4)
     {
         f32 b;
-        f32 m = ((AppleOnTreeState*)state)->unk40 + ((AppleOnTreeState*)state)->unk3C;
+        f32 m = ((AppleOnTreeState*)state)->gravity + ((AppleOnTreeState*)state)->unk3C;
         f32 g;
         f32 q;
         f32 t;

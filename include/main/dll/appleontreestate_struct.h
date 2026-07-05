@@ -21,7 +21,7 @@ typedef struct AppleOnTreeState
     u8 animState;
     u8 pad3B;
     f32 unk3C;
-    f32 unk40;
+    f32 gravity;
     f32 bounceVel;
     s16 rotX;
     s16 rotY;
