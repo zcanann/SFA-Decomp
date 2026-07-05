@@ -1,5 +1,5 @@
 #include "global.h"
-#include "main/audio/inp_ctrl.h"
+#include "main/audio/mcmd.h"
 #include "main/dll/synthfade_struct.h"
 #include "util/carry.h"
 #include "main/audio/synth_channel.h"
@@ -66,6 +66,22 @@ extern int synthRealTimeHi;
 extern f32 lbl_803E77D0;
 
 typedef void (*SynthAuxCallback)(int active, u16* samples, u32 user);
+
+extern u16 inpGetVolume(McmdVoiceState* state);
+extern u16 inpGetPanning(McmdVoiceState* state);
+extern int inpGetSurPanning(McmdVoiceState* state);
+extern int inpGetPitchBend(McmdVoiceState* state);
+extern u16 inpGetDoppler(McmdVoiceState* state);
+extern u16 inpGetModulation(McmdVoiceState* state);
+extern u16 inpGetPedal(McmdVoiceState* state);
+extern u16 inpGetPreAuxA(McmdVoiceState* state);
+extern u16 inpGetReverb(McmdVoiceState* state);
+extern u16 inpGetPreAuxB(McmdVoiceState* state);
+extern u16 inpGetPostAuxB(McmdVoiceState* state);
+extern u16 inpGetTremolo(McmdVoiceState* state);
+extern u16 inpGetAuxA(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
+extern u16 inpGetAuxB(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
+extern s16 sndSin(u32 packed);
 
 extern u8* dataGetKeymap(u32 sampleId);
 extern int audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
@@ -1172,7 +1188,7 @@ void audioFn_80271498(u32 delta)
                     for (channel = 0; channel < 4; channel++)
                     {
                         auxSamplesA[channel] =
-                            inpGetAuxA(i & 0xff, channel & 0xff, *auxAIndex, *auxAMIDI);
+                            inpGetAuxA(i, channel, *auxAIndex, *auxAMIDI);
                     }
                     (*auxACallback)(1, auxSamplesA, ((u32*)(stateBase + 0xc14))[i]);
                 }
@@ -1181,7 +1197,7 @@ void audioFn_80271498(u32 delta)
                     for (channel = 0; channel < 4; channel++)
                     {
                         auxSamplesB[channel] =
-                            inpGetAuxB(i & 0xff, channel & 0xff, *auxBIndex, *auxBMIDI);
+                            inpGetAuxB(i, channel, *auxBIndex, *auxBMIDI);
                     }
                     (*auxBCallback)(1, auxSamplesB, ((u32*)(stateBase + 0xc54))[i]);
                 }
