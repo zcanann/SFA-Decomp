@@ -133,6 +133,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     u8 slot;
     u16 pp;
     int trickyPatch;
+    s16 link;
     u32 prod;
     int dir;
     int i;
@@ -140,7 +141,6 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     u8* prevNode;
     u8* patchTarget;
     int d;
-    s16 link;
     u16 ulink;
     s16 yawA;
     s16 yawB;
