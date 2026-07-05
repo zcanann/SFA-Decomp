@@ -32,7 +32,7 @@
 #include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/dfp_types.h"
 #include "main/main.h"
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"

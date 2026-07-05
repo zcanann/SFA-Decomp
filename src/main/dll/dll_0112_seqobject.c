@@ -22,7 +22,7 @@
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E37A0;
 
 STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);
@@ -95,7 +95,7 @@ int seqobject_getObjectTypeId(void) { return 0; }
 void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E37A0);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E37A0);
 }
 
 void seqobject_free(int x) { ObjGroup_RemoveObject(x, SEQOBJECT_OBJGROUP); }

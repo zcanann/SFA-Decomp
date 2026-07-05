@@ -25,7 +25,7 @@ extern void Obj_FreeObject(int obj);
 extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);
 
 
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
 extern s16 gRollingBarrelExplodingCount;
 extern int gRollingBarrelCurveInitPair;

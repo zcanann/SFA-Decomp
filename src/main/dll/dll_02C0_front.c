@@ -195,7 +195,7 @@ void titlescreen_initialise(void)
 
 extern u8 gTitleScreenCreditsStarted;
 extern int gTitleScreenCreditsEndTriggered;
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 /* EN v1.0 0x80135C2C  size: 152b  titlescreen_render: when visible and
  * ready, render via objRenderFn; once the credits flag fires, set the
@@ -205,7 +205,7 @@ void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v == 0) return;
     if (lbl_803DD9AB == 0) return;
-    objRenderFn_8003b8f4(lbl_803E2318);
+    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E2318);
     if (showCredits == 0) return;
     if (gTitleScreenCreditsStarted != 0) return;
     GameBit_Set(0xDF6, 1);

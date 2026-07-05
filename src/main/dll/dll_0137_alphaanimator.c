@@ -27,7 +27,7 @@
 #include "main/mm.h"
 #include "main/sfa_shared_decls.h"
 extern void* mapGetBlock(int i);
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Sfx_PlayFromObject(int* obj, int id);
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -101,7 +101,7 @@ void alphaanimator_init(int* obj)
 #pragma peephole off
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderFn_8003b8f4(lbl_803E3F78);
+    if (visible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3F78);
 }
 
 #pragma scheduling off

@@ -1,7 +1,7 @@
 /* DLL 0x0129 - campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
 extern int randomGetRange(int lo, int hi);
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
 #include "main/dll_000A_expgfx.h"
 #include "main/sky_interface.h"
@@ -234,7 +234,7 @@ void campfire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     isVisible = visible;
     if (isVisible != 0)
     {
-        objRenderFn_8003b8f4(lbl_803E3D78);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3D78);
         effect = state->light;
         if (((effect != 0) && (*(u8*)((int)effect + 0x2f8) != 0)) &&
             (*(u8*)((int)effect + 0x4c) != 0))

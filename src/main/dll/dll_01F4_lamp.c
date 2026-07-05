@@ -24,7 +24,7 @@ extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 extern f32 Vec_distance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5978;
 extern f32 lbl_803E597C;
 extern f32 lbl_803E5980;
@@ -48,7 +48,7 @@ int Lamp_getExtraSize(void) { return 0x1; }
 void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E5978);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5978);
 }
 
 int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)

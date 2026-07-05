@@ -63,7 +63,7 @@ extern f32 timeDelta;
 extern void ModelLightStruct_free(void* light);
 
 extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light);
 extern f32 lbl_803E5038;
 extern void fn_80296518(int* player, int a, int b);

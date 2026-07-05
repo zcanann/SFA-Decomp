@@ -47,7 +47,7 @@ extern f32 gDusterObjPickupRangeXZ;
 extern f32 gDusterObjMoveStepScale;
 extern f32 timeDelta;
 extern void vecRotateZXY(void* angles, void* outVec);
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
                               void* obj, int flags, int mask, int arg9, int arg10);
 

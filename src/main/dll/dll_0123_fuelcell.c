@@ -32,7 +32,7 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 #define FUELCELL_GAMEBIT_CARRIED 0xe97 /* global: a fuel cell is currently held */
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void ObjModel_SetPostRenderCallback(u8* model, void* callback);
 extern void mm_free_(void* ptr);
 extern f32 Vec_distance(f32* a, f32* b);

@@ -40,7 +40,7 @@ extern u32 ObjHits_DisableObject();
 extern void* Obj_GetPlayerObject(void);
 extern void* gRockfallResource;
 extern f32 lbl_803E4708;
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;

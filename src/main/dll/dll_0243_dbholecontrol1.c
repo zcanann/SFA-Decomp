@@ -10,7 +10,7 @@
 #include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/blastflags4_types.h"
 #include "main/dll/dfp_types.h"
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 
@@ -147,7 +147,7 @@ int dbholecontrol1_getObjectTypeId(void) { return 0x0; }
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E6390);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E6390);
 }
 
 void dbholecontrol1_free(int x) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(x, DBHOLECONTROL1_OBJGROUP); }
