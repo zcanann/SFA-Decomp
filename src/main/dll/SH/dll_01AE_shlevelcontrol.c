@@ -47,8 +47,8 @@ extern void sh_staff_update(void);
 extern void envFxActFn_800887f8(u8 value);
 extern int mapUnload(int mapId, int flags);
 char sSPShopNumBloopsFormat[] = "numBloops %d\n";
-extern f32 lbl_803E54B0;
-extern f32 lbl_803E54B4;
+extern f32 gShLevelControlBloopTimeLimit;
+extern f32 lbl_803E54B4; /* 0.0f floor: bloop-timer expiry, hud-text floor, sky-brightness arg */
 extern f32 timeDelta;
 extern void fn_80137948(char* fmt, ...);
 
@@ -65,7 +65,7 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
-extern f32 lbl_803E54C0;
+extern f32 gShLevelControlHudTextDuration;
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -359,7 +359,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         if (GameBit_Get(0x124) != 0)
         {
             (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
-            ((ShLevelcontrolState*)state)->timer8 = lbl_803E54B0;
+            ((ShLevelcontrolState*)state)->timer8 = gShLevelControlBloopTimeLimit;
             (*gGameUIInterface)->initAirMeter(100000, 0x5db);
             ((ShLevelcontrolState*)state)->eventState = 2;
         }
@@ -986,7 +986,7 @@ void sh_levelcontrol_init(int obj)
     }
 
     ((ShLevelcontrolState*)state)->unk10 = -1;
-    ((ShLevelcontrolState*)state)->hudTextTimer = lbl_803E54C0;
+    ((ShLevelcontrolState*)state)->hudTextTimer = gShLevelControlHudTextDuration;
 
     if (GameBit_Get(0x611) != 0)
     {
