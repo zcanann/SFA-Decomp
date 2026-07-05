@@ -205,8 +205,8 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
         else if (sourceObj != 0)
         {
             buf.pos[0] = buf.pos[0] + ((GameObject*)sourceObj)->anim.worldPosX;
-            buf.pos[1] = buf.pos[1] + *(f32*)(buf.ctx + 0x1c);
-            buf.pos[2] = buf.pos[2] + *(f32*)(buf.ctx + 0x20);
+            buf.pos[1] = buf.pos[1] + ((GameObject*)(buf.ctx))->anim.worldPosY;
+            buf.pos[2] = buf.pos[2] + ((GameObject*)(buf.ctx))->anim.worldPosZ;
         }
         else if (posSource != 0)
         {

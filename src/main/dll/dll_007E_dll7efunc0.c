@@ -9,6 +9,7 @@
  * /func01_nop are the DLL's empty init/free export slots.
  */
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
@@ -135,9 +136,9 @@ void dll_7E_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E0E04 + *(f32*)(sourceObj + 0x18);
-            buf.pos[1] = lbl_803E0E04 + *(f32*)(sourceObj + 0x1c);
-            buf.pos[2] = lbl_803E0E04 + *(f32*)(sourceObj + 0x20);
+            buf.pos[0] = lbl_803E0E04 + ((GameObject*)(sourceObj))->anim.worldPosX;
+            buf.pos[1] = lbl_803E0E04 + ((GameObject*)(sourceObj))->anim.worldPosY;
+            buf.pos[2] = lbl_803E0E04 + ((GameObject*)(sourceObj))->anim.worldPosZ;
         }
         else
         {

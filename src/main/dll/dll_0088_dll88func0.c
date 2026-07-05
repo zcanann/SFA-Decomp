@@ -9,6 +9,7 @@
  * interface's spawnEffect. func00/func01 are nops.
  */
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
@@ -120,9 +121,9 @@ void dll_88_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E1014 + *(f32*)(sourceObj + 0x18);
-            buf.pos[1] = lbl_803E1014 + *(f32*)(sourceObj + 0x1c);
-            buf.pos[2] = lbl_803E1014 + *(f32*)(sourceObj + 0x20);
+            buf.pos[0] = lbl_803E1014 + ((GameObject*)(sourceObj))->anim.worldPosX;
+            buf.pos[1] = lbl_803E1014 + ((GameObject*)(sourceObj))->anim.worldPosY;
+            buf.pos[2] = lbl_803E1014 + ((GameObject*)(sourceObj))->anim.worldPosZ;
         }
         else
         {

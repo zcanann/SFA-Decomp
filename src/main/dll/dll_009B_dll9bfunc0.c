@@ -10,6 +10,7 @@
  * the DLL's nop lifecycle slots.
  */
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 
 typedef struct GfxCmd
 {
@@ -187,9 +188,9 @@ void dll_9B_func03(int target, int variant, int parent, u32 flags)
     {
         if ((u32)target != 0)
         {
-            buf.pos[0] = lbl_803E13A0 + *(f32*)(target + 0x18);
-            buf.pos[1] = lbl_803E13A0 + *(f32*)(target + 0x1c);
-            buf.pos[2] = lbl_803E13A0 + *(f32*)(target + 0x20);
+            buf.pos[0] = lbl_803E13A0 + ((GameObject*)(target))->anim.worldPosX;
+            buf.pos[1] = lbl_803E13A0 + ((GameObject*)(target))->anim.worldPosY;
+            buf.pos[2] = lbl_803E13A0 + ((GameObject*)(target))->anim.worldPosZ;
         }
         else
         {

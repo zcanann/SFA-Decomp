@@ -257,9 +257,9 @@ void dll_68_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if (*(void**)&buf.ctx != 0)
         {
-            buf.pos[0] = lbl_803E09E0 + *(f32*)(buf.ctx + 0x18);
-            buf.pos[1] = lbl_803E09E0 + *(f32*)(buf.ctx + 0x1c);
-            buf.pos[2] = lbl_803E09E0 + *(f32*)(buf.ctx + 0x20);
+            buf.pos[0] = lbl_803E09E0 + ((GameObject*)(buf.ctx))->anim.worldPosX;
+            buf.pos[1] = lbl_803E09E0 + ((GameObject*)(buf.ctx))->anim.worldPosY;
+            buf.pos[2] = lbl_803E09E0 + ((GameObject*)(buf.ctx))->anim.worldPosZ;
         }
         else
         {

@@ -13,6 +13,7 @@
  * thunks.
  */
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "main/dll/pickup.h"
 
 /* lbl_80318038: shared texture + halfword table; lbl_803E13F8..1414:
@@ -186,9 +187,9 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     {
         if (sourceObj != NULL)
         {
-            buf.pos[0] = lbl_803E13F8 + *(f32*)(sourceObj + 0x18);
-            buf.pos[1] = lbl_803E13F8 + *(f32*)(sourceObj + 0x1c);
-            buf.pos[2] = lbl_803E13F8 + *(f32*)(sourceObj + 0x20);
+            buf.pos[0] = lbl_803E13F8 + ((GameObject*)(sourceObj))->anim.worldPosX;
+            buf.pos[1] = lbl_803E13F8 + ((GameObject*)(sourceObj))->anim.worldPosY;
+            buf.pos[2] = lbl_803E13F8 + ((GameObject*)(sourceObj))->anim.worldPosZ;
         }
         else
         {

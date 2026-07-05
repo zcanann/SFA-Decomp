@@ -11,6 +11,7 @@
  * The sibling DLL 0x98 (dll_0098_dll98func0.c) follows the same shape.
  */
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "ghidra_import.h"
 
 /* GfxCmd/GfxBuf are intentionally TU-local; the sibling DLL 0x98 keeps its own. */
@@ -182,15 +183,15 @@ static inline void dll_97_func03Body(u8* base, int sourceObj, int variant, int p
     {
         if ((u32)sourceObj != 0 && (u32)posSource != 0)
         {
-            buf.pos[0] = lbl_803E12EC + (*(f32*)(sourceObj + 0x18) + ((PartFxSpawnParams*)posSource)->posX);
-            buf.pos[1] = lbl_803E12EC + (*(f32*)(sourceObj + 0x1c) + ((PartFxSpawnParams*)posSource)->posY);
-            buf.pos[2] = lbl_803E12EC + (*(f32*)(sourceObj + 0x20) + ((PartFxSpawnParams*)posSource)->posZ);
+            buf.pos[0] = lbl_803E12EC + (((GameObject*)(sourceObj))->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX);
+            buf.pos[1] = lbl_803E12EC + (((GameObject*)(sourceObj))->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY);
+            buf.pos[2] = lbl_803E12EC + (((GameObject*)(sourceObj))->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ);
         }
         else if ((u32)sourceObj != 0)
         {
-            buf.pos[0] += *(f32*)(sourceObj + 0x18);
-            buf.pos[1] += *(f32*)(buf.ctx + 0x1c);
-            buf.pos[2] += *(f32*)(buf.ctx + 0x20);
+            buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
+            buf.pos[1] += ((GameObject*)(buf.ctx))->anim.worldPosY;
+            buf.pos[2] += ((GameObject*)(buf.ctx))->anim.worldPosZ;
         }
         else if ((u32)posSource != 0)
         {
