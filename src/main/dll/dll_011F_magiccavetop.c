@@ -76,20 +76,20 @@ extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void objfx_spawnArcedBurst(int* obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 sx, f32 sy, f32 sz,
                                   void* args, int a);
-extern f32 lbl_803E3C30;
-extern f32 lbl_803E3C34;
-extern f32 lbl_803E3C38;
-extern f32 lbl_803E3C3C;
-extern f32 lbl_803E3C40;
-extern f32 lbl_803E3C44;
-extern f32 lbl_803E3C48;
+extern f32 gMagicCaveTopWarpDistSq;
+extern f32 gMagicCaveTopRumbleStartDistSq;
+extern f32 gMagicCaveTopZero;
+extern f32 gMagicCaveTopRumbleStopDistSq;
+extern f32 gMagicCaveTopRumblePulseDistSq;
+extern f32 gMagicCaveTopRumbleStrength;
+extern f32 gMagicCaveTopRumbleDuration;
 extern f32 gMagicCaveTopAlphaMax;
-extern f32 lbl_803E3C54;
-extern f32 lbl_803E3C58;
-extern f32 lbl_803E3C5C;
-extern f32 lbl_803E3C60;
-extern f32 lbl_803E3C64;
-extern f32 lbl_803E3C68;
+extern f32 gMagicCaveTopBurstHeight1;
+extern f32 gMagicCaveTopBurstRadius;
+extern f32 gMagicCaveTopBurstSpreadX;
+extern f32 gMagicCaveTopBurstSpreadY;
+extern f32 gMagicCaveTopBurstSpreadZ;
+extern f32 gMagicCaveTopBurstHeight2;
 
 int magiccavetop_getExtraSize(void) { return 0xc; }
 
@@ -206,7 +206,7 @@ void magiccavetop_update(int* obj)
                 }
                 sub->subState = MAGICCAVETOP_SUBSTATE_IDLE;
             }
-            else if (dist < lbl_803E3C30 && gb != 0)
+            else if (dist < gMagicCaveTopWarpDistSq && gb != 0)
             {
                 sub->subState = MAGICCAVETOP_SUBSTATE_WARPING;
                 (*gMapEventInterface)->setObjGroupStatus(def->mapId, def->objGroup, 1);
@@ -236,7 +236,7 @@ void magiccavetop_update(int* obj)
             warpToMap(def->warpMapId, 0);
             break;
         case MAGICCAVETOP_SUBSTATE_WARP_DONE:
-            if (dist > lbl_803E3C30)
+            if (dist > gMagicCaveTopWarpDistSq)
             {
                 sub->subState = MAGICCAVETOP_SUBSTATE_LOADED;
             }
@@ -244,16 +244,16 @@ void magiccavetop_update(int* obj)
         }
         if ((sub->flags & 4) == 0)
         {
-            if (dist >= lbl_803E3C34)
+            if (dist >= gMagicCaveTopRumbleStartDistSq)
             {
-                sub->timer = lbl_803E3C38;
+                sub->timer = gMagicCaveTopZero;
                 sub->flags &= ~2;
             }
             else if ((sub->flags & 2) == 0)
             {
                 if ((sub->flags & 1) != 0)
                 {
-                    if (dist < lbl_803E3C3C)
+                    if (dist < gMagicCaveTopRumbleStopDistSq)
                     {
                         stopRumble();
                         if (player != NULL)
@@ -266,7 +266,7 @@ void magiccavetop_update(int* obj)
                         }
                         sub->rumbleState = 0;
                     }
-                    else if (dist < lbl_803E3C40)
+                    else if (dist < gMagicCaveTopRumblePulseDistSq)
                     {
                         if (sub->rumbleState == 1)
                         {
@@ -311,9 +311,9 @@ void magiccavetop_update(int* obj)
                     sub->flags &= ~1;
                     sub->timer += timeDelta;
                 }
-                else if (dist < lbl_803E3C34)
+                else if (dist < gMagicCaveTopRumbleStartDistSq)
                 {
-                    doRumble(lbl_803E3C44);
+                    doRumble(gMagicCaveTopRumbleStrength);
                     if (player != NULL)
                     {
                         staff = (void*)Player_GetStaffObject((int)player);
@@ -325,7 +325,7 @@ void magiccavetop_update(int* obj)
                     sub->flags |= 1;
                     sub->timer += timeDelta;
                 }
-                if (sub->timer > lbl_803E3C48)
+                if (sub->timer > gMagicCaveTopRumbleDuration)
                 {
                     sub->flags |= 2;
                 }
@@ -334,7 +334,7 @@ void magiccavetop_update(int* obj)
     }
     if (gb != 0)
     {
-        if (lbl_803E3C38 == sub->fadeTimer)
+        if (gMagicCaveTopZero == sub->fadeTimer)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_door_creak);
         }
@@ -356,23 +356,23 @@ void magiccavetop_update(int* obj)
     }
     if (((GameObject*)obj)->anim.alpha != 0)
     {
-        t = lbl_803E3C38;
+        t = gMagicCaveTopZero;
         fx.x = t;
-        fx.y = lbl_803E3C54;
+        fx.y = gMagicCaveTopBurstHeight1;
         fx.z = t;
         if ((sub->flags & 8) != 0)
         {
-            objfx_spawnArcedBurst(obj, 1, lbl_803E3C58, 5, 2, 0x32, lbl_803E3C5C, lbl_803E3C60, lbl_803E3C64, fx.pad,
+            objfx_spawnArcedBurst(obj, 1, gMagicCaveTopBurstRadius, 5, 2, 0x32, gMagicCaveTopBurstSpreadX, gMagicCaveTopBurstSpreadY, gMagicCaveTopBurstSpreadZ, fx.pad,
                                   0);
-            fx.y = lbl_803E3C68;
-            objfx_spawnArcedBurst(obj, 5, lbl_803E3C58, 5, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
+            fx.y = gMagicCaveTopBurstHeight2;
+            objfx_spawnArcedBurst(obj, 5, gMagicCaveTopBurstRadius, 5, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
         }
         else
         {
-            objfx_spawnArcedBurst(obj, 1, lbl_803E3C58, 2, 2, 0x32, lbl_803E3C5C, lbl_803E3C60, lbl_803E3C64, fx.pad,
+            objfx_spawnArcedBurst(obj, 1, gMagicCaveTopBurstRadius, 2, 2, 0x32, gMagicCaveTopBurstSpreadX, gMagicCaveTopBurstSpreadY, gMagicCaveTopBurstSpreadZ, fx.pad,
                                   0);
-            fx.y = lbl_803E3C68;
-            objfx_spawnArcedBurst(obj, 5, lbl_803E3C58, 2, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
+            fx.y = gMagicCaveTopBurstHeight2;
+            objfx_spawnArcedBurst(obj, 5, gMagicCaveTopBurstRadius, 2, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
         }
     }
 }
