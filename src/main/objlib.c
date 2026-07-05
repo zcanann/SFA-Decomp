@@ -1824,7 +1824,7 @@ u32 ObjTrigger_IsSet(int obj)
     int flagEnabled;
     int flagBlocked;
 
-    if (*(u32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x40) == 0)
+    if (((GameObject*)obj)->anim.modelInstance->hitVolumes == NULL)
     {
         return 0;
     }
