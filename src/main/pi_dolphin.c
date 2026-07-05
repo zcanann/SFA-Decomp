@@ -1622,6 +1622,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     int tmp;
     u32 decompSize;
     int entryByteOff;
+    u32 qptr;        /* MLDF_QPTR from the guard, reused for the first use of each branch */
     char buf[0x3c];  /* DVDFileInfo */
 
     switch (fileId)
@@ -2653,23 +2654,24 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         return 0;
     }
     slotPtrAddr = (fileId << 2) + ((u32)&tbl->ptrs[0] + 0x6A28);
-    if (MLDF_QPTR != 0)
+    qptr = MLDF_QPTR;
+    if (qptr != 0)
     {
     if (fileId == 0xd || fileId == 0x55)
     {
-        if (MLDF_QPTR == 0)
+        if (qptr == 0)
         {
             return 0;
         }
-        memcpy((void*)destBuf, (void*)(MLDF_QPTR + offsetFlags), length);
+        memcpy((void*)destBuf, (void*)(qptr + offsetFlags), length);
     }
     else if (fileId == 0x1b || fileId == 0x54)
     {
-        if (MLDF_QPTR == 0)
+        if (qptr == 0)
         {
             return 0;
         }
-        fileBuf = MLDF_QPTR + offsetFlags;
+        fileBuf = qptr + offsetFlags;
         if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
         {
             decompSize = ZLB_HDR(fileBuf)->decompressedSize;
@@ -2684,11 +2686,11 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     }
     else if (fileId == 0x25 || fileId == 0x47)
     {
-        if (MLDF_QPTR == 0)
+        if (qptr == 0)
         {
             return 0;
         }
-        fileBuf = MLDF_QPTR + offsetFlags;
+        fileBuf = qptr + offsetFlags;
         if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
         {
             decompSize = ZLB_HDR(fileBuf)->decompressedSize;
@@ -2703,22 +2705,22 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     }
     else if (fileId == 0x2b || fileId == 0x46)
     {
-        struct PackHeader* hdr = (struct PackHeader*)(MLDF_QPTR + offsetFlags);
+        struct PackHeader* hdr = (struct PackHeader*)(qptr + offsetFlags);
         if (hdr->magic == 0xe0e0e0e0)
         {
-            memcpy((void*)destBuf, (void*)(((int)hdr + hdr->auxSize + 0x18 - MLDF_QPTR) + MLDF_QPTR),
+            memcpy((void*)destBuf, (void*)(((int)hdr + hdr->auxSize + 0x18 - qptr) + qptr),
                    hdr->decompressedSize);
         }
         else if (hdr->magic == 0xfacefeed)
         {
-            zlbDecompress((void*)(((int)hdr + hdr->auxSize + 0x28 - MLDF_QPTR) + MLDF_QPTR),
+            zlbDecompress((void*)(((int)hdr + hdr->auxSize + 0x28 - qptr) + qptr),
                           hdr->compressedSize - 0x10, destBuf, &hdr->decompressedSize);
             DCStoreRange((void*)destBuf, hdr->decompressedSize);
         }
     }
     else if (fileId == 0x23 || fileId == 0x4d)
     {
-        fileBuf = MLDF_QPTR + (offsetFlags & 0xffffff);
+        fileBuf = qptr + (offsetFlags & 0xffffff);
         decompSize = ZLB_HDR(fileBuf)->decompressedSize;
         zlbDecompress((void*)(fileBuf + 0x10), ZLB_HDR(fileBuf)->compressedSize, destBuf, &decompSize);
         DCStoreRange((void*)destBuf, decompSize);
@@ -2726,7 +2728,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     else if (fileId == 0x20 || fileId == 0x4b)
     {
         entryIndex = offsetFlags & 0xffffff;
-        fileBuf = MLDF_QPTR + entryIndex;
+        fileBuf = qptr + entryIndex;
         if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
         {
             return MLDF_QPTR + (entryIndex + 0x20);
@@ -2742,7 +2744,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     else if (fileId == 0x4f)
     {
         entryIndex = offsetFlags & 0xffffff;
-        fileBuf = MLDF_QPTR + entryIndex;
+        fileBuf = qptr + entryIndex;
         if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
         {
             return MLDF_QPTR + (entryIndex + 0x20);
@@ -2757,7 +2759,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     }
     else if (fileId == 0x30 || fileId == 0x51 || fileId == 0x4a)
     {
-        fileBuf = MLDF_QPTR + offsetFlags;
+        fileBuf = qptr + offsetFlags;
         tmp = return0_8002A5B8(fileBuf);
         if (tmp != 0)
         {
@@ -2770,7 +2772,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     }
     else
     {
-        memcpy((void*)destBuf, (void*)(MLDF_QPTR + offsetFlags), length);
+        memcpy((void*)destBuf, (void*)(qptr + offsetFlags), length);
     }
     }
     else if (fileId == 0x20 || fileId == 0x4b)
