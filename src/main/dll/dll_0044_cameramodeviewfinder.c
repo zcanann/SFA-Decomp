@@ -101,7 +101,7 @@ void firstPersonDoControls(s16* obj)
     f32 fovTarget;
     f32 zoom2;
 
-    camObj = *(short**)(obj + 0x52);
+    camObj = (short*)((GameObject*)obj)->anim.targetObj;
     stickX = padGetStickX(0);
     stickY = padGetStickY(0);
     t = (lbl_803E17E0 - ((CameraObject*)obj)->fov) / lbl_803E17E4;
@@ -204,16 +204,16 @@ int firstPersonEnter(u8* cam, s16* p2)
     }
     if (state != NULL)
     {
-        state[54] = conv;
+        ((GameObject*)state)->anim.alpha = conv;
         if ((u8*)Obj_GetPlayerObject() == state)
         {
             Player_GetHeldObject((int)state, &other);
             if ((u32)other != 0)
             {
-                *(u8*)(other + 54) = conv;
-                if (*(u8*)(other + 54) == 1)
+                ((GameObject*)other)->anim.alpha = conv;
+                if (((GameObject*)other)->anim.alpha == 1)
                 {
-                    *(u8*)(other + 54) = 0;
+                    ((GameObject*)other)->anim.alpha = 0;
                 }
             }
         }
@@ -287,7 +287,7 @@ void CameraModeViewfinder_free(int camObj)
 
     *(s16*)(*(int*)(camObj + 0xa4) + 6) &= ~0x4000;
     Rcp_SetViewFinderHudEnabled(0);
-    viewObj = *(int*)(camObj + 0xa4);
+    viewObj = (int)((CameraObject*)camObj)->anim.targetObj;
     if ((u32)viewObj != 0)
     {
         ((GameObject*)viewObj)->anim.alpha = 0xff;
@@ -400,7 +400,7 @@ void CameraModeViewfinder_update(s16* obj)
             }
             brightness = (int)(gCamViewfinderBrightnessScale * fade);
         }
-        targetObj = *(u8**)(obj + 0x52);
+        targetObj = (u8*)((GameObject*)obj)->anim.targetObj;
         if (brightness < 1)
         {
             brightness = 1;
@@ -449,7 +449,7 @@ void CameraModeViewfinder_update(s16* obj)
         if (brightness != 0)
         {
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
-            targetObj = *(u8**)(obj + 0x52);
+            targetObj = (u8*)((GameObject*)obj)->anim.targetObj;
             if (targetObj != NULL)
             {
                 ((GameObject*)targetObj)->anim.alpha = 0xff;
@@ -501,7 +501,7 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     f32 sinv;
     f32 zero;
 
-    camObj = *(s16**)(obj + 0x52);
+    camObj = (s16*)((GameObject*)obj)->anim.targetObj;
     if (lbl_803DD548 == NULL)
     {
         lbl_803DD548 = mmAlloc(sizeof(ViewfinderState), 0xf, 0);
@@ -529,8 +529,8 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->viewCurve.dir = 0;
     lbl_803DD548->viewCurve.eval = Curve_EvalHermite;
     lbl_803DD548->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
-    dx = ((GameObject*)obj)->anim.worldPosX - *(f32*)(camObj + 0xc);
-    dz = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(camObj + 0x10);
+    dx = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)camObj)->anim.worldPosX;
+    dz = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)camObj)->anim.worldPosZ;
     dist = sqrtf(dx * dx + dz * dz);
     if (lbl_803E17C4 != dist)
     {
