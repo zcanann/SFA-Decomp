@@ -154,7 +154,7 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
     u8 cnt;
     f32 v;
     v = lbl_803E0898;
-    cnt = *(u8*)(*(int*)(sourceObj + 76) + 26);
+    cnt = *(u8*)(*(u8**)&((GameObject*)sourceObj)->anim.placementData + 0x1a);
     if (variant == 1)
     {
         *(s16*)&base[478] = 0;
