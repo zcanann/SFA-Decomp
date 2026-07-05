@@ -3,17 +3,17 @@
  * extraSize 0x10).
  *
  * init seeds the state from the placement record (rotX, two game bits,
- * raise height, an init flag) and sinks the object by lbl_803E63A8.
+ * raise height, an init flag) and sinks the object by 1228.0f.
  * The update state-machine (fn_80204BF8) drives a rise/hold/fall cycle
  * relative to the player:
  *   mode 0  armed - once gameBit is set and the player is within
- *           lbl_803E639C, rise by timeDelta to posY+lbl_803E63A0,
+ *           230.0f, rise by timeDelta to posY+60.0f,
  *           looping SFX 0x116 on object channel 8 -> mode 1.
  *   mode 1  -> mode 2 with a 100-frame hold (pauseTimer).
  *   mode 2  after the hold, pick descend (mode 3) or ascend (mode 4)
  *           by the player's Y vs placement posY (SFX 0x1cb).
- *   mode 3  fall by timeDelta to posY-lbl_803E63A8, then hold (mode 2).
- *   mode 4  rise by timeDelta to posY+lbl_803E63A0, then hold (mode 2).
+ *   mode 3  fall by timeDelta to posY-1228.0f, then hold (mode 2).
+ *   mode 4  rise by timeDelta to posY+60.0f, then hold (mode 2).
  *
  * Render (dll_22C_render) draws via objRenderFn_8003b8f4; hitDetect,
  * release, initialise and the SeqFn are stubs. fn_80204B6C frees the
@@ -89,61 +89,31 @@ STATIC_ASSERT(offsetof(Dll22CMapData, gameBit) == 0x20);
 
 extern int getLActions(int a, int b, u16 idx, int p4, int p5, int p6);
 extern f32 timeDelta;
-extern f32 lbl_803E6398; /* render scale */
-extern f32 lbl_803E639C; /* arm/trigger radius (mode 0) */
-extern f32 lbl_803E63A0; /* rise ceiling above placement posY */
-extern f32 lbl_803E63A4; /* mode 2 proximity radius */
-extern f32 lbl_803E63A8; /* sink depth at init / descend floor below posY (mode 3) */
 
 /* Dll22CState.mode rise/hold/fall cycle (see file-header comment). */
 #define DLL22C_MODE_ARMED   0 /* wait for gameBit + player proximity, then rise -> HOLD_SETUP */
 #define DLL22C_MODE_HOLD_SETUP 1 /* one-frame: arm the 100-frame pauseTimer -> HOLD */
 #define DLL22C_MODE_HOLD    2 /* hold, then pick DESCEND or ASCEND by player Y */
-#define DLL22C_MODE_DESCEND 3 /* fall to posY-lbl_803E63A8, then -> HOLD */
-#define DLL22C_MODE_ASCEND  4 /* rise to posY+lbl_803E63A0, then -> HOLD */
-
-void dll_22C_init(int obj, char* p)
-{
-    Dll22CState* state;
-    Dll22CMapData* md = (Dll22CMapData*)p;
-
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = dll_22C_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)(md->rotXByte << 8);
-    state->mode = DLL22C_MODE_ARMED;
-    state->gameBit = md->gameBit;
-    state->gameBit2 = md->gameBit2;
-    state->raiseHeight = md->raiseHeight;
-    state->raiseMode = md->unk1C;
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E63A8;
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DLL22C_OBJFLAG_HITDETECT_DISABLED;
-}
-
-void dll_22C_hitDetect_nop(void)
-{
-}
-
-void dll_22C_release_nop(void)
-{
-}
-
-void dll_22C_initialise_nop(void)
-{
-}
+#define DLL22C_MODE_DESCEND 3 /* fall to posY-1228.0f, then -> HOLD */
+#define DLL22C_MODE_ASCEND  4 /* rise to posY+60.0f, then -> HOLD */
 
 int dll_22C_SeqFn(void) { return 0x0; }
 int dll_22C_getExtraSize_ret_16(void) { return 0x10; }
 int dll_22C_getObjectTypeId(void) { return 0x0; }
 
-void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E6398);
-}
-
 void fn_80204B6C(int p1)
 {
     (*gExpgfxInterface)->freeSource2((u32)p1);
     getLActions(p1, p1, 0, 0, 0, 0);
+}
+
+void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+}
+
+void dll_22C_hitDetect_nop(void)
+{
 }
 
 void fn_80204BF8(int obj)
@@ -173,9 +143,9 @@ void fn_80204BF8(int obj)
     {
     case DLL22C_MODE_ARMED:
         if (GameBit_Get(blob->gameBit) != 0 && blob->raiseMode != 1 &&
-            Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
+            Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < 230.0f)
         {
-            if (object->anim.localPosY < lbl_803E63A0 + placement->posY)
+            if (object->anim.localPosY < 60.0f + placement->posY)
             {
                 if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                 {
@@ -183,9 +153,9 @@ void fn_80204BF8(int obj)
                     blob->sfxLatch = 1;
                 }
                 object->anim.localPosY += timeDelta;
-                if (object->anim.localPosY >= lbl_803E63A0 + placement->posY)
+                if (object->anim.localPosY >= 60.0f + placement->posY)
                 {
-                    object->anim.localPosY = lbl_803E63A0 + placement->posY;
+                    object->anim.localPosY = 60.0f + placement->posY;
                     blob->mode = DLL22C_MODE_HOLD_SETUP;
                     Sfx_StopObjectChannel(obj, 8);
                 }
@@ -193,10 +163,10 @@ void fn_80204BF8(int obj)
         }
         else if (blob->raiseMode == 1)
         {
-            if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
+            if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < 230.0f)
             {
                 y = object->anim.localPosY;
-                k = lbl_803E63A0;
+                k = 60.0f;
                 if (y < k + placement->posY)
                 {
                     object->anim.localPosY = y + timeDelta;
@@ -226,9 +196,9 @@ void fn_80204BF8(int obj)
         else
         {
             d = Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
-            if (d < lbl_803E63A4)
+            if (d < 50.0f)
             {
-                if (object->anim.localPosY == lbl_803E63A0 + placement->posY)
+                if (object->anim.localPosY == 60.0f + placement->posY)
                 {
                     blob->mode = DLL22C_MODE_DESCEND;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
@@ -237,7 +207,7 @@ void fn_80204BF8(int obj)
                         blob->sfxLatch = 1;
                     }
                 }
-                else if (object->anim.localPosY == placement->posY - lbl_803E63A8)
+                else if (object->anim.localPosY == placement->posY - 1228.0f)
                 {
                     blob->mode = DLL22C_MODE_ASCEND;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
@@ -269,7 +239,7 @@ void fn_80204BF8(int obj)
         }
         break;
     case DLL22C_MODE_DESCEND:
-        if (object->anim.localPosY > placement->posY - (k = lbl_803E63A8))
+        if (object->anim.localPosY > placement->posY - (k = 1228.0f))
         {
             object->anim.localPosY -= timeDelta;
             if (object->anim.localPosY <= placement->posY - k)
@@ -291,7 +261,7 @@ void fn_80204BF8(int obj)
         break;
     case DLL22C_MODE_ASCEND:
         y = object->anim.localPosY;
-        k = lbl_803E63A0;
+        k = 60.0f;
         if (y < k + placement->posY)
         {
             object->anim.localPosY = y + timeDelta;
@@ -313,4 +283,29 @@ void fn_80204BF8(int obj)
         }
         break;
     }
+}
+
+void dll_22C_init(int obj, char* p)
+{
+    Dll22CState* state;
+    Dll22CMapData* md = (Dll22CMapData*)p;
+
+    state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->animEventCallback = dll_22C_SeqFn;
+    ((GameObject*)obj)->anim.rotX = (s16)(md->rotXByte << 8);
+    state->mode = DLL22C_MODE_ARMED;
+    state->gameBit = md->gameBit;
+    state->gameBit2 = md->gameBit2;
+    state->raiseHeight = md->raiseHeight;
+    state->raiseMode = md->unk1C;
+    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - 1228.0f;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DLL22C_OBJFLAG_HITDETECT_DISABLED;
+}
+
+void dll_22C_release_nop(void)
+{
+}
+
+void dll_22C_initialise_nop(void)
+{
 }

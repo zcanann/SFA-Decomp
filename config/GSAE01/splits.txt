@@ -2348,6 +2348,7 @@ main/dll/DF/dll_022A_dfpobjcreator.c:
 
 main/dll/dll_022C_dll22c.c:
 	.text       start:0x80204B54 end:0x802050C4
+	.sdata2     start:0x803E6398 end:0x803E63B8
 
 main/dll/DF/dll_022E_dfpdoorswitch.c:
 	.text       start:0x802050C4 end:0x80205168
