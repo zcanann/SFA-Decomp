@@ -35,7 +35,7 @@ void iceblast_free(void)
 }
 
 #pragma scheduling off
-void iceblast_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4((int)obj, a, b, c, d, 1.0f); }
+void iceblast_render(int* obj, int p1, int p2, int p3, int p4) { objRenderFn_8003b8f4((int)obj, p1, p2, p3, p4, 1.0f); }
 
 void iceblast_hitDetect(void)
 {
@@ -99,10 +99,10 @@ void iceblast_update(GameObject* obj)
 #pragma opt_common_subs reset
 #pragma peephole reset
 
-void iceblast_init(int obj, IceblastPlacement* p)
+void iceblast_init(GameObject* obj, IceblastPlacement* def)
 {
-    *(f32*)((GameObject*)obj)->extra = p->initialTimer;
-    ObjHits_SetTargetMask(obj, 1);
+    *(f32*)obj->extra = def->initialTimer;
+    ObjHits_SetTargetMask((int)obj, 1);
 }
 #pragma scheduling reset
 
