@@ -90,7 +90,11 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
     f32 curveParam;
     f32 listenerVelocityDistance;
     f32 projectedDistance;
+    /* unusedA/unusedB are never referenced; they reserve stack to match the
+     * retail frame layout around transformed[] (frame size 0xE8). */
+    f32 unusedA[7];
     f32 transformed[3];
+    f32 unusedB[7];
     volatile f32 tmp1;
     volatile f32 tmp2;
     volatile f32 tmp3;
@@ -98,18 +102,15 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
     f64 invSqrt;
 
     listenerCount = 0;
-    zero = lbl_803E7880;
-    *distanceOut = zero;
-    frontBackSum = zero;
-    one = lbl_803E78A4;
-    *panOut = one;
-    pitchSum = frontBackSum;
-    azimuthSum = pitchSum;
+    *distanceOut = zero = lbl_803E7880;
+    *panOut = one = lbl_803E78A4;
+    azimuthSum = pitchSum = frontBackSum = zero;
+    listener = s3dListenerRoot;
     half = lbl_803E78B0;
     k3 = lbl_803E7898;
     k1 = lbl_803E78A8;
 
-    for (listener = s3dListenerRoot; listener != (SndSpatialListener*)0x0;
+    for (; listener != (SndSpatialListener*)0x0;
          listener = listener->next)
     {
         dx = emitter->posX - (listener->posX + listener->velX * listener->time);
@@ -135,18 +136,20 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
             curveParam = emitter->distanceCurve;
             if (curveParam >= zero)
             {
+                dz = one - curveParam;
                 *distanceOut += listener->volumeScale *
                 (emitter->minVolume +
                     (emitter->maxVolume - emitter->minVolume) *
-                    (one - ((one - curveParam) * ratio +
+                    (one - (dz * ratio +
                         ratio * (curveParam * ratio))));
             }
             else
             {
+                dz = one + curveParam;
                 *distanceOut += listener->volumeScale *
                 (emitter->minVolume +
                     (emitter->maxVolume - emitter->minVolume) *
-                    (one - ((one + curveParam) * ratio -
+                    (one - (dz * ratio -
                         curveParam *
                         (one - (one - ratio) * (one - ratio)))));
             }
@@ -183,7 +186,8 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
                             (listener->posY + listener->refY * half);
                         dz = (emitter->posZ + emitter->refZ * half) -
                             (listener->posZ + listener->refZ * half);
-                        projectedDistance = dx * dx + dy * dy + dz * dz;
+                        projectedDistance = dz * dz;
+                        projectedDistance += dx * dx + dy * dy;
                         if (projectedDistance > zero)
                         {
                             invSqrt = __frsqrte((f64)projectedDistance);
