@@ -3072,8 +3072,10 @@ void doPendingMapLoads(void)
                         cp2++;
                     }
                 }
-                lbl_803DCDD0 = (gx + lbl_803DCDD0) - 7;
-                lbl_803DCDD4 = (gz + lbl_803DCDD4) - 7;
+                lbl_803DCDD0 = gx + lbl_803DCDD0;
+                lbl_803DCDD0 = lbl_803DCDD0 - 7;
+                lbl_803DCDD4 = gz + lbl_803DCDD4;
+                lbl_803DCDD4 = lbl_803DCDD4 - 7;
                 playerMapOffsetX = gMapBlockWorldSize * lbl_803DCDD0;
                 playerMapOffsetZ = gMapBlockWorldSize * lbl_803DCDD4;
                 lbl_803DCDC8 = playerMapOffsetX;
