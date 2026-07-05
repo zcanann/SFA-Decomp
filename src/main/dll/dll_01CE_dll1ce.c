@@ -221,7 +221,7 @@ void dll_1CE_update(int* obj)
         for (i = 0; i < n; i++)
         {
             int* o = *(int**)((char*)list + off + 0x100);
-            if (*(s16*)((char*)o + 0x46) == 0x18f || *(s16*)((char*)o + 0x46) == 0x1d6)
+            if (((GameObject*)o)->anim.seqId == 0x18f || ((GameObject*)o)->anim.seqId == 0x1d6)
             {
                 found = 1;
                 break;
