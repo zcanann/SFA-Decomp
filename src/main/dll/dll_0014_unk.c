@@ -2231,22 +2231,22 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
 
 #define OBJFSA_WG(GRP) ((ObjfsaWalkGroup *)((char *)patchBase + (GRP) * OBJFSA_PATCHGROUP_STRIDE + 0x3000))
 
-#define OBJFSA_EXIT_INSIDE(GRP, XF, ZF)                                         \
+#define OBJFSA_EXIT_INSIDE(WGP, XF, ZF)                                         \
     exitFz = (f32)(ZF);                                                             \
     exitFx = (f32)(XF);                                                             \
-    normalIdx = 0;                                                                     \
-    for (edge = 0; edge < 4; edge++) {                                                   \
-        if (OBJFSA_WG(GRP)->planeOffsets[edge] +                                   \
-                (exitFx * (f32)((s16 *)OBJFSA_WG(GRP))[normalIdx] +                 \
-                 exitFz * (f32)((s16 *)OBJFSA_WG(GRP))[normalIdx + 1]) >          \
-            lbl_803E05F0) {                                                     \
+    for (edge = 0, normalIdx = 0; edge < 4; edge++, normalIdx += 2) {                                                   \
+        if ((WGP)->planeOffsets[edge] +                                   \
+                (exitFx * (f32)((s16 *)(WGP))[normalIdx] +                 \
+                 exitFz * (f32)((s16 *)(WGP))[normalIdx + 1]) >          \
+            zero) {                                                     \
             break;                                                              \
         }                                                                       \
-        normalIdx += 2;                                                                \
     }
 
 #define OBJFSA_NEWPATCH (patchBase[gObjfsaPatchCount])
 
+#pragma opt_propagation off
+#pragma opt_loop_invariants off
 void walkgroupFindExitPointFn_800dc398(void)
 {
     ObjfsaPatch* patchBase = gObjfsaPatches;
@@ -2276,14 +2276,15 @@ void walkgroupFindExitPointFn_800dc398(void)
     int checksum;
     int searchCount;
     ObjfsaWalkGroup* wg;
+    ObjfsaWalkGroup* wgB;
     int** curveList;
     ObjfsaPatch* sp;
     ObjfsaPatch* p;
     char* lp;
-    f32 div;
-    f32 scale;
     f32 fdx;
     f32 fdz;
+    f32 div;
+    f32 scale;
     f32 dxn;
     f32 dzn;
     f32 len;
@@ -2299,6 +2300,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     f32 z3;
     f32 fy0;
     f32 fy1;
+    f32 zero;
     mapBlockFn_80059c2c(blockFlags);
 
     checksum = 1;
@@ -2313,6 +2315,13 @@ void walkgroupFindExitPointFn_800dc398(void)
     if ((u32)checksum != gObjfsaBlockFlagsChecksum)
     {
         gObjfsaBlockFlagsChecksum = checksum;
+    }
+    else
+    {
+        return;
+    }
+
+    {
         if (blockFlags[2] != 0 || blockFlags[0x34] != 0)
         {
             scale = lbl_803E0600;
@@ -2515,47 +2524,61 @@ void walkgroupFindExitPointFn_800dc398(void)
         }
 
         pp = &pairs[2];
+        zero = lbl_803E05F0;
         div = lbl_803E060C;
         p = &patchBase[1];
         for (pi = 1; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
         {
-            groupA = pp[0];
-            groupB = pp[1];
+            wg = OBJFSA_WG(pp[0]);
+            wgB = OBJFSA_WG(pp[1]);
             fdx = (f32)(p->exit1X - p->exit0X);
             fdz = (f32)(p->exit1Z - p->exit0Z);
 
             iter = 0;
-            do
+            goto scan0;
+        update0:
+            p->exit0X = (s16)((f32)p->exit0X + fdx / div);
+            p->exit0Z = (s16)((f32)p->exit0Z + fdz / div);
+            if (iter++ == 100)
             {
-                OBJFSA_EXIT_INSIDE(groupA, p->exit0X, p->exit0Z);
-                if (edge == 4) goto exit0Done;
-                OBJFSA_EXIT_INSIDE(groupB, p->exit0X, p->exit0Z);
-                if (edge == 4) goto exit0Done;
-                p->exit0X = (s16)((f32)p->exit0X + fdx / div);
-                p->exit0Z = (s16)((f32)p->exit0Z + fdz / div);
+                OSReport(sObjfsaMissingPatchExitPoint0, p->groupId & 0xff,
+                         (int)(u32)p->groupId >> 8);
+                goto exit0Done;
             }
-            while (iter++ != 100);
-            OSReport(sObjfsaMissingPatchExitPoint0, p->groupId & 0xff,
-                     (int)(u32)p->groupId >> 8);
+        scan0:
+            OBJFSA_EXIT_INSIDE(wg, p->exit0X, p->exit0Z);
+            if (edge != 4)
+            {
+                OBJFSA_EXIT_INSIDE(wgB, p->exit0X, p->exit0Z);
+                if (edge != 4) goto update0;
+            }
+
         exit0Done:
             iter = 0;
-            do
+            goto scan1;
+        update1:
+            p->exit1X = (s16)((f32)p->exit1X - fdx / div);
+            p->exit1Z = (s16)((f32)p->exit1Z - fdz / div);
+            if (iter++ == 100)
             {
-                OBJFSA_EXIT_INSIDE(groupA, p->exit1X, p->exit1Z);
-                if (edge == 4) goto exit1Done;
-                OBJFSA_EXIT_INSIDE(groupB, p->exit1X, p->exit1Z);
-                if (edge == 4) goto exit1Done;
-                p->exit1X = (s16)((f32)p->exit1X - fdx / div);
-                p->exit1Z = (s16)((f32)p->exit1Z - fdz / div);
+                OSReport(sObjfsaMissingPatchExitPoint1, p->groupId & 0xff,
+                         (int)(u32)p->groupId >> 8);
+                goto exit1Done;
             }
-            while (iter++ != 100);
-            OSReport(sObjfsaMissingPatchExitPoint1, p->groupId & 0xff,
-                     (int)(u32)p->groupId >> 8);
+        scan1:
+            OBJFSA_EXIT_INSIDE(wg, p->exit1X, p->exit1Z);
+            if (edge != 4)
+            {
+                OBJFSA_EXIT_INSIDE(wgB, p->exit1X, p->exit1Z);
+                if (edge != 4) goto update1;
+            }
         exit1Done:
             ;
         }
     }
 }
+#pragma opt_propagation reset
+#pragma opt_loop_invariants reset
 
 int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
 {
