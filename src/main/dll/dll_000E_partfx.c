@@ -2478,7 +2478,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.behaviorFlags = 0x80480110;
         if (extraArgs != NULL)
         {
-            cfg.behaviorFlags = 0xc0480110;
+            cfg.behaviorFlags |= 0x40000000LL;
         }
         cfg.textureId = 0x85;
         break;
@@ -2496,7 +2496,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.behaviorFlags = 0x80480110;
         if (extraArgs != NULL)
         {
-            cfg.behaviorFlags = 0xc0480110;
+            cfg.behaviorFlags |= 0x40000000LL;
         }
         cfg.textureId = 0x84;
         break;
@@ -2514,7 +2514,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.behaviorFlags = 0x80480110;
         if (extraArgs != NULL)
         {
-            cfg.behaviorFlags = 0xc0480110;
+            cfg.behaviorFlags |= 0x40000000LL;
         }
         cfg.textureId = 0xc0f;
         break;
@@ -2533,7 +2533,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.behaviorFlags = 0x80480110;
         if (extraArgs != NULL)
         {
-            cfg.behaviorFlags = 0xc0480110;
+            cfg.behaviorFlags |= 0x40000000LL;
         }
         cfg.textureId = 0x157;
         break;
@@ -2736,7 +2736,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.sourcePosX = lbl_803DF4D0;
         cfg.lifetimeFrames = randomGetRange(0, 0x14) + 0x28;
         cfg.linkGroup = 0x10;
-        cfg.behaviorFlags = (cfg.behaviorFlags | 0x20000);
+        cfg.behaviorFlags |= 0x20000LL;
         break;
     case 0x548:
         if (spawnParams == NULL)
@@ -3236,7 +3236,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.scale = lbl_803DF5C0 * (f32)(s32)
             randomGetRange(0x28, 0x50);
             cfg.initialAlpha = 10;
-            cfg.behaviorFlags = (cfg.behaviorFlags | 0x100000);
+            cfg.behaviorFlags |= 0x100000LL;
         }
         if ((int)randomGetRange(0, 10) == 0)
         {
@@ -3873,7 +3873,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             randomGetRange(0, 0x14);
             cfg.scale = lbl_803DF4EC * (f32)(s32)
             randomGetRange(1, 3);
-            cfg.renderFlags = cfg.renderFlags | 0x1000000;
+            cfg.renderFlags |= 0x1000000LL;
         }
         else if (effectId == 0x3e)
         {
@@ -3884,7 +3884,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             randomGetRange(0, 0x14);
             cfg.scale = lbl_803DF624 * (f32)(s32)
             randomGetRange(1, 3);
-            cfg.renderFlags = cfg.renderFlags | 0x1000000;
+            cfg.renderFlags |= 0x1000000LL;
         }
         else if (effectId == 0x3f)
         {
@@ -3892,7 +3892,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.lifetimeFrames = 100;
             cfg.scale = lbl_803DF624 * (f32)(s32)
             randomGetRange(1, 3);
-            cfg.renderFlags = cfg.renderFlags | 0x1000000;
+            cfg.renderFlags |= 0x1000000LL;
         }
         else if (effectId == 0x43)
         {
@@ -3903,7 +3903,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.scale = lbl_803DF4E8 * (f32)(s32)
             randomGetRange(1, 8);
             cfg.behaviorFlags = (cfg.behaviorFlags | 8);
-            cfg.renderFlags = cfg.renderFlags | 0x1000000;
+            cfg.renderFlags |= 0x1000000LL;
         }
         else if (effectId == 0x44)
         {
@@ -3914,7 +3914,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.velocityY = lbl_803DF658;
             cfg.scale = lbl_803DF4E8 * (f32)(s32)
             randomGetRange(1, 8);
-            cfg.renderFlags = cfg.renderFlags | 0x1000000;
+            cfg.renderFlags |= 0x1000000LL;
         }
         cfg.linkGroup = 0x20;
         cfg.textureId = 0x5f;
@@ -3936,7 +3936,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         }
         if ((effectId == 0x3e) || (effectId == 0x3f))
         {
-            cfg.behaviorFlags = (cfg.behaviorFlags | 0x8000000);
+            cfg.behaviorFlags |= 0x8000000LL;
         }
         break;
     case 0x3d:
