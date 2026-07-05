@@ -109,13 +109,18 @@ void LaserBeam_hitDetect(void)
 
 typedef struct LaserBeamPlacement
 {
-    u8 pad0[0x1A - 0x0];
+    u8 pad0[0x18 - 0x0];
+    s8 spawnYaw; /* 0x18: seeded into the object header (obj[0] = spawnYaw << 8) */
+    u8 beamKind; /* 0x19: laser variant (2/3/30) */
     s16 beamLength; /* 0x1A: beam reach - added to beamZ for the endpoint and squared for the hit radius */
-    u8 pad1C[0x1E - 0x1C];
+    s16 firePeriod; /* 0x1C: fire cadence override (0 = randomised) */
     s16 disableGameBit;
 } LaserBeamPlacement;
 
+STATIC_ASSERT(offsetof(LaserBeamPlacement, spawnYaw) == 0x18);
+STATIC_ASSERT(offsetof(LaserBeamPlacement, beamKind) == 0x19);
 STATIC_ASSERT(offsetof(LaserBeamPlacement, beamLength) == 0x1a);
+STATIC_ASSERT(offsetof(LaserBeamPlacement, firePeriod) == 0x1c);
 STATIC_ASSERT(offsetof(LaserBeamPlacement, disableGameBit) == 0x1e);
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
@@ -490,19 +495,19 @@ void LaserBeam_free(s16* obj, char* arg)
 
     b = ((GameObject*)obj)->extra;
     ObjMsg_AllocQueue(obj, 2);
-    *obj = (s16)((s32)*(s8*)(arg + 0x18) << 8);
-    if (*(s16*)(arg + 0x1c) == 0)
+    *obj = (s16)((s32)((LaserBeamPlacement*)arg)->spawnYaw << 8);
+    if (((LaserBeamPlacement*)arg)->firePeriod == 0)
     {
         b->firePeriod = (s16)(randomGetRange(-80, 80) + 400);
     }
     else
     {
-        b->firePeriod = *(s16*)(arg + 0x1c);
+        b->firePeriod = ((LaserBeamPlacement*)arg)->firePeriod;
     }
     b->fireTimer = b->firePeriod;
     b->active = 0;
     b->sweepPhase = lbl_803E5D10;
-    b->beamKind = *(u8*)(arg + 0x19);
+    b->beamKind = ((LaserBeamPlacement*)arg)->beamKind;
     b->fireTimerLimit = 0x118;
     b->emitterSlot = -1;
     if (b->beamKind == 30)
