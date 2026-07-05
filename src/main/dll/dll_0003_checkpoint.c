@@ -219,9 +219,10 @@ typedef struct PartFxItem
     s32 priority;
 } PartFxItem;
 
+extern void* lbl_803DD418; /* #57 */
+
 s32 Checkpoint_func0F(PartFxItem* p)
 {
-    extern u32 lbl_803DD418; /* #57 */
     PartFxItem* q;
     s32 rank = 1;
     PartFxItem** arr = (PartFxItem**)lbl_803DD418;
@@ -249,41 +250,39 @@ s32 Checkpoint_func0F(PartFxItem* p)
 
 PartFxItem* Checkpoint_func10(s32 target_rank)
 {
-    extern u32 lbl_803DD418; /* #57 */
-    s32 i = 0;
-    PartFxItem** outer = (PartFxItem**)lbl_803DD418;
-    PartFxItem** base = outer;
-    s32 n = lbl_803DD414;
-    for (; i < n; i++)
+    s32 i;
+    for (i = 0; i < lbl_803DD414; i++)
     {
-        PartFxItem* cur = *outer;
-        s32 rank = 1;
-        PartFxItem** inner = base;
         s32 j;
-        for (j = 0; j < n; j++)
+        s32 rank;
+        PartFxItem* cur;
+        PartFxItem* q;
+        PartFxItem** arr;
+        cur = ((PartFxItem**)lbl_803DD418)[i];
+        rank = 1;
+        arr = (PartFxItem**)lbl_803DD418;
+        for (j = 0; j < lbl_803DD414; j++)
         {
-            PartFxItem* other = *inner;
-            if (other != cur)
+            q = arr[j];
+            if (q != cur)
             {
-                if (other->priority > cur->priority)
+                if (q->priority > cur->priority)
                 {
                     rank++;
                 }
-                else if (other->priority == cur->priority)
+                else if (q->priority == cur->priority)
                 {
-                    if (other->distSq > cur->distSq)
+                    if (q->distSq > cur->distSq)
                     {
                         rank++;
                     }
                 }
             }
-            inner++;
         }
         if (rank == target_rank)
         {
             return cur;
         }
-        outer++;
     }
     return NULL;
 }
@@ -542,9 +541,8 @@ s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s3
 
 void Checkpoint_onGameLoop(void)
 {
-    extern u32 lbl_803DD418; /* #57 */
-    extern u32 lbl_803DD41C; /* #57 */
-    u32 tmp = lbl_803DD418;
+    extern void* lbl_803DD41C; /* #57 */
+    void* tmp = lbl_803DD418;
     lbl_803DD418 = lbl_803DD41C;
     lbl_803DD41C = tmp;
     lbl_803DD414 = lbl_803DD416;
@@ -684,7 +682,6 @@ u32 gCheckpointPartFxListBuffer[0x14];
 #pragma scheduling off
 void Checkpoint_initialise(void)
 {
-    extern void* lbl_803DD418; /* #57 */
     extern void* lbl_803DD41C; /* #57 */
     extern u32 gCheckpointRouteCount; /* #57 */
     gCheckpointRouteCount = 0;
