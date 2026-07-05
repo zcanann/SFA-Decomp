@@ -2349,13 +2349,13 @@ void dll_07_func06(void)
     }
     gNewCloudScrollPhaseA += lbl_803DF254 * timeDelta;
     wrap = *(f32*)&gNewCloudScrollWrap;
-    if (gNewCloudScrollPhaseA > wrap)
+    if (wrap < gNewCloudScrollPhaseA)
     {
         gNewCloudScrollPhaseA -= wrap;
     }
     gNewCloudScrollPhaseB += lbl_803DF25C * timeDelta;
     wrap = *(f32*)&gNewCloudScrollWrap;
-    if (gNewCloudScrollPhaseB > wrap)
+    if (wrap < gNewCloudScrollPhaseB)
     {
         gNewCloudScrollPhaseB -= wrap;
     }
