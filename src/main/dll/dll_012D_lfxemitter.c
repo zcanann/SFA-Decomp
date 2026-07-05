@@ -11,58 +11,8 @@ extern void Obj_FreeObject(int obj);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern f32 lbl_803E3E78;
-extern f32 lbl_803E3E7C;
-extern f32 lbl_803E3E80;
-extern f32 lbl_803E3E84;
-extern f32 lbl_803E3E88;
 
 extern LfxEmitterConfig lbl_803AC7B0;
-
-void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
-{
-    LfxEmitterState* state;
-    int curveFlags;
-
-    state = obj->state;
-    curveFlags = 0x21;
-    obj->objAnim.rootMotionScale = lbl_803E3E80 * obj->objAnim.modelInstance->rootMotionScaleBase;
-
-    state->configIndex = setup->configIndex;
-    state->lifeTimer = setup->lifeTimer;
-    state->unk114 = -2;
-    state->enableBit = setup->enableBit;
-    state->spinRoll = setup->spinRoll;
-    state->spinPitch = setup->spinPitch;
-    state->spinYaw = setup->spinYaw;
-    obj->objAnim.localPosX = setup->initialX;
-    obj->objAnim.localPosY = setup->initialY;
-    obj->objAnim.localPosZ = setup->initialZ;
-
-    if (state->lifeTimer != 0)
-    {
-        state->hasLifeTimer = 1;
-    }
-    else
-    {
-        state->hasLifeTimer = 0;
-    }
-
-    if (setup->followCurve != 0)
-    {
-        state->flags = state->flags | LFXEMITTER_FLAG_FOLLOW_CURVE;
-        state->curveSpeed = setup->curveSpeed / lbl_803E3E84;
-        (*gRomCurveInterface)->initCurve(&state->curve, obj, lbl_803E3E88, &curveFlags, -1);
-    }
-    ObjGroup_AddObject((int)obj, LFXEMITTER_OBJ_GROUP);
-}
-
-int lfxemitter_setScale(void) { return -1; }
-
-void lfxemitter_initialise(void)
-{
-    lbl_803AC7B0.recordCount = 10000;
-}
 
 /* reports whether the emitter's config record has been loaded yet */
 int lfxemitter_func0B(LfxEmitterObject* obj)
@@ -70,6 +20,8 @@ int lfxemitter_func0B(LfxEmitterObject* obj)
     LfxEmitterState* state = obj->state;
     return state->config != NULL;
 }
+
+int lfxemitter_setScale(void) { return -1; }
 
 void fn_8018FF48(u16* src, u16* dst)
 {
@@ -105,6 +57,29 @@ void fn_8018FF48(u16* src, u16* dst)
     *(u8*)(dst + 0x14) = *(u8*)(src + 0x14);
 }
 
+int lfxemitter_getExtraSize(void) { return 0x124; }
+int lfxemitter_getObjectTypeId(void) { return 0x0; }
+
+void lfxemitter_free(LfxEmitterObject* obj)
+{
+    LfxEmitterState* state = obj->state;
+    int* ptr = state->config;
+    if (ptr != NULL)
+    {
+        mm_free(ptr);
+    }
+    ObjGroup_RemoveObject((int)obj, LFXEMITTER_OBJ_GROUP);
+}
+
+
+void lfxemitter_render(void)
+{
+}
+
+void lfxemitter_hitDetect(void)
+{
+}
+
 void lfxemitter_update(LfxEmitterObject* obj)
 {
     LfxEmitterState* state;
@@ -133,9 +108,9 @@ void lfxemitter_update(LfxEmitterObject* obj)
         obj->objAnim.localPosX = obj->objAnim.velocityX * timeDelta + obj->objAnim.localPosX;
         obj->objAnim.localPosY = obj->objAnim.velocityY * timeDelta + obj->objAnim.localPosY;
         obj->objAnim.localPosZ = obj->objAnim.velocityZ * timeDelta + obj->objAnim.localPosZ;
-        if (((state->flags & LFXEMITTER_FLAG_DAMP_Y_VELOCITY) != 0) && (obj->objAnim.velocityY > lbl_803E3E78))
+        if (((state->flags & LFXEMITTER_FLAG_DAMP_Y_VELOCITY) != 0) && (obj->objAnim.velocityY > -15.0f))
         {
-            obj->objAnim.velocityY = lbl_803E3E7C * timeDelta + obj->objAnim.velocityY;
+            obj->objAnim.velocityY = -0.01f * timeDelta + obj->objAnim.velocityY;
         }
     }
 
@@ -175,29 +150,49 @@ void lfxemitter_update(LfxEmitterObject* obj)
     }
 }
 
-void lfxemitter_free(LfxEmitterObject* obj)
+void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
 {
-    LfxEmitterState* state = obj->state;
-    int* ptr = state->config;
-    if (ptr != NULL)
+    LfxEmitterState* state;
+    int curveFlags;
+
+    state = obj->state;
+    curveFlags = 0x21;
+    obj->objAnim.rootMotionScale = 2.0f * obj->objAnim.modelInstance->rootMotionScaleBase;
+
+    state->configIndex = setup->configIndex;
+    state->lifeTimer = setup->lifeTimer;
+    state->unk114 = -2;
+    state->enableBit = setup->enableBit;
+    state->spinRoll = setup->spinRoll;
+    state->spinPitch = setup->spinPitch;
+    state->spinYaw = setup->spinYaw;
+    obj->objAnim.localPosX = setup->initialX;
+    obj->objAnim.localPosY = setup->initialY;
+    obj->objAnim.localPosZ = setup->initialZ;
+
+    if (state->lifeTimer != 0)
     {
-        mm_free(ptr);
+        state->hasLifeTimer = 1;
     }
-    ObjGroup_RemoveObject((int)obj, LFXEMITTER_OBJ_GROUP);
-}
+    else
+    {
+        state->hasLifeTimer = 0;
+    }
 
-
-void lfxemitter_render(void)
-{
-}
-
-void lfxemitter_hitDetect(void)
-{
+    if (setup->followCurve != 0)
+    {
+        state->flags = state->flags | LFXEMITTER_FLAG_FOLLOW_CURVE;
+        state->curveSpeed = setup->curveSpeed / 10.0f;
+        (*gRomCurveInterface)->initCurve(&state->curve, obj, 1000.0f, &curveFlags, -1);
+    }
+    ObjGroup_AddObject((int)obj, LFXEMITTER_OBJ_GROUP);
 }
 
 void lfxemitter_release(void)
 {
 }
 
-int lfxemitter_getExtraSize(void) { return 0x124; }
-int lfxemitter_getObjectTypeId(void) { return 0x0; }
+void lfxemitter_initialise(void)
+{
+    lbl_803AC7B0.recordCount = 10000;
+}

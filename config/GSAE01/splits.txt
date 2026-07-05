@@ -1427,6 +1427,7 @@ main/dll/dll_0130_areafxemit.c:
 
 main/dll/dll_012D_lfxemitter.c:
 	.text       start:0x8018FF28 end:0x8019042C
+	.sdata2     start:0x803E3E78 end:0x803E3E98
 
 main/dll/warppad.c:
 	.text       start:0x8019042C end:0x80190BD4
