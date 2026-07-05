@@ -712,7 +712,7 @@ void dbegg_update(int obj)
                     v = v >= lbl_803E61C8 ? v : -v;
                     if (v > lbl_803E6230)
                     {
-                        Sfx_PlayFromObject(obj, 0x2df);
+                        Sfx_PlayFromObject(obj, SFXswapstone_move_long);
                     }
                 }
                 objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
