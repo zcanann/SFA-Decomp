@@ -2513,17 +2513,15 @@ void ObjHits_Update(int objectCount)
                             {
                                 if ((candState->shapeFlags & OBJHITS_SHAPE_SKELETON) != 0)
                                 {
-                                    ((void (*)(int, int, void*, void*, void*, void*, void*, int))
-                                        ObjHits_CheckSkeletonPair)(candObj, obj, skeletonHits, skeletonScratchB,
-                                                                   skeletonScratchC, skeletonScratchD,
-                                                                   skeletonScratchE, 0);
+                                    ObjHits_CheckSkeletonPair(candObj, obj, skeletonHits, skeletonScratchB,
+                                                              skeletonScratchC, skeletonScratchD,
+                                                              skeletonScratchE, 0);
                                 }
                                 else if ((objState->shapeFlags & OBJHITS_SHAPE_SKELETON) != 0)
                                 {
-                                    ((void (*)(int, int, void*, void*, void*, void*, void*, int))
-                                        ObjHits_CheckSkeletonPair)(obj, candObj, skeletonHits, skeletonScratchB,
-                                                                   skeletonScratchC, skeletonScratchD,
-                                                                   skeletonScratchE, 0);
+                                    ObjHits_CheckSkeletonPair(obj, candObj, skeletonHits, skeletonScratchB,
+                                                              skeletonScratchC, skeletonScratchD,
+                                                              skeletonScratchE, 0);
                                 }
                                 else if ((objState->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES) ||
                                     (candState->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES))
