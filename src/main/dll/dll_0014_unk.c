@@ -2245,6 +2245,21 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
 
 #define OBJFSA_NEWPATCH (patchBase[gObjfsaPatchCount])
 
+#define OBJFSA_SET_NEWPATCH_PLANE(K, DXE, DZE, XA, ZA)                          \
+    po = &OBJFSA_NEWPATCH.planeOffsets[K];                                      \
+    pl = &OBJFSA_NEWPATCH.planes[K];                                            \
+    dxn = (DXE);                                                                \
+    dzn = (DZE);                                                                \
+    len = sqrtf(dxn * dxn + dzn * dzn);                                         \
+    if (len != lbl_803E05F0) {                                                  \
+        dxn = dxn / len;                                                        \
+        dzn = dzn / len;                                                        \
+    }                                                                           \
+    pl->normalX = (s16)(gObjfsaPlaneNormalScale * dxn);                         \
+    pl->normalZ = (s16)(gObjfsaPlaneNormalScale * dzn);                         \
+    *(po) = -((f32)pl->normalX * (XA) +                                         \
+              (f32)pl->normalZ * (ZA))
+
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 void walkgroupFindExitPointFn_800dc398(void)
@@ -2277,6 +2292,8 @@ void walkgroupFindExitPointFn_800dc398(void)
     int searchCount;
     ObjfsaWalkGroup* wg;
     ObjfsaWalkGroup* wgB;
+    ObjfsaPatchPlane* pl;
+    f32* po;
     int** curveList;
     ObjfsaPatch* sp;
     ObjfsaPatch* p;
@@ -2290,10 +2307,10 @@ void walkgroupFindExitPointFn_800dc398(void)
     f32 len;
     f32 exitFx;
     f32 exitFz;
-    f32 z1;
-    f32 x1;
     f32 x0;
     f32 z0;
+    f32 x1;
+    f32 z1;
     f32 x2;
     f32 z2;
     f32 x3;
@@ -2378,7 +2395,8 @@ void walkgroupFindExitPointFn_800dc398(void)
             if (*(s8*)(curve + 0x19) == 0x26)
             {
                 gi = *(u8*)(curve + 3);
-                wg = (ObjfsaWalkGroup*)((char*)patchBase + gi * OBJFSA_PATCHGROUP_STRIDE + 0x3000);
+                wg = &((ObjfsaWalkGroup*)patchBase)[gi];
+                wg = (ObjfsaWalkGroup*)((char*)wg + 0x3000);
                 *((u8*)patchBase + gi + OBJFSA_ACTIVE_WALKGROUPS_OFFSET) = 1;
 
                 x0 = OBJFSA_CORNER(curve, curve + 0x4, 0x8);
@@ -2466,29 +2484,23 @@ void walkgroupFindExitPointFn_800dc398(void)
                             np->exit0X = (s16)((x0 + x1) * lbl_803E0608);
                             np->exit0Z = (s16)((z0 + z1) * lbl_803E0608);
 
-                            dxn = z1 - z0;
-                            dzn = x0 - x1;
-                            OBJFSA_SET_PLANE(*np, 0, x0, z0);
+                            OBJFSA_SET_NEWPATCH_PLANE(0, z1 - z0, x0 - x1, x0, z0);
 
                             lp = (char*)(linked + back * 4);
                             x2 = OBJFSA_CORNER(linked, lp + 0x34, 0x8);
                             z2 = OBJFSA_CORNER(linked, lp + 0x35, 0x10);
-                            dxn = z2 - z1;
-                            dzn = x1 - x2;
-                            OBJFSA_SET_PLANE((*np), 1, x1, z1);
+                            OBJFSA_SET_NEWPATCH_PLANE(1, z2 - z1, x1 - x2, x1, z1);
 
                             x3 = OBJFSA_CORNER(linked, lp + 0x36, 0x8);
                             z3 = OBJFSA_CORNER(linked, lp + 0x37, 0x10);
-                            OBJFSA_NEWPATCH.exit1X = (s16)((x2 + x3) * lbl_803E0608);
-                            OBJFSA_NEWPATCH.exit1Z = (s16)((z2 + z3) * lbl_803E0608);
+                            np = &OBJFSA_NEWPATCH;
+                            np->exit1X = (s16)((x2 + x3) * lbl_803E0608);
+                            np->exit1Z = (s16)((z2 + z3) * lbl_803E0608);
 
-                            dxn = z3 - z2;
-                            dzn = x2 - x3;
-                            OBJFSA_SET_PLANE((*np), 2, x2, z2);
+                            OBJFSA_SET_NEWPATCH_PLANE(2, z3 - z2, x2 - x3, x2, z2);
 
-                            dxn = OBJFSA_CORNER(curve, slotPtr + 0x35, 0x10) - z3;
-                            dzn = x3 - OBJFSA_CORNER(curve, slotPtr + 0x34, 0x8);
-                            OBJFSA_SET_PLANE((*np), 3, x3, z3);
+                            OBJFSA_SET_NEWPATCH_PLANE(3, OBJFSA_CORNER(curve, slotPtr + 0x35, 0x10) - z3,
+                                                       x3 - OBJFSA_CORNER(curve, slotPtr + 0x34, 0x8), x3, z3);
 
                             fy0 = lbl_803E05D0 * (f32) * (s8*)(curve + 0x18) +
                                 *(f32*)(curve + 0xc);
@@ -2529,8 +2541,10 @@ void walkgroupFindExitPointFn_800dc398(void)
         p = &patchBase[1];
         for (pi = 1; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
         {
-            wg = OBJFSA_WG(pp[0]);
-            wgB = OBJFSA_WG(pp[1]);
+            wg = &((ObjfsaWalkGroup*)patchBase)[pp[0]];
+            wg = (ObjfsaWalkGroup*)((char*)wg + 0x3000);
+            wgB = &((ObjfsaWalkGroup*)patchBase)[pp[1]];
+            wgB = (ObjfsaWalkGroup*)((char*)wgB + 0x3000);
             fdx = (f32)(p->exit1X - p->exit0X);
             fdz = (f32)(p->exit1Z - p->exit0Z);
 
