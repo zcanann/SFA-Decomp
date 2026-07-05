@@ -1,14 +1,18 @@
 /*
- * shstaff (DLL 0x1B1) - the Krazoa Staff pickup object and its trailing
- * ring of light orbs.
+ * shstaff (DLL 0x1B1) - the Krazoa Staff pickup object and its ring of
+ * sh_staffhaze flames (the shimmering blue "haze" spawned as child objects,
+ * model 0x659 -> sh_staffhaze_update; live-verified in ThornTail Hollow by
+ * hiding a slot child and watching the flame vanish).
  *
  * sh_staff_render positions the staff (carried, attached to the player's
- * hand matrix in the carry phases) and animates up to ten light-orb child
- * objects spread along the staff's two path points. sh_staff_SeqFn spawns
- * the orbs on demand and consumes the carry/HUD animation events;
- * sh_staff_update runs the pickup proximity / map-load state machine
- * (phase 0 idle -> 1 carried -> 2 done). fn_801DA4A8 hides the staff and
- * releases the orbs.
+ * hand matrix in the carry phases) and animates up to ten staff-haze child
+ * flames spread along the staff's two path points; before pickup a single
+ * flame climbs the staff from base to tip on a loop (hazeClimbT) as an
+ * attract effect. sh_staff_SeqFn spawns the flames on demand and consumes
+ * the carry/HUD animation events; sh_staff_update runs the pickup proximity
+ * / map-load state machine (phase 0 idle -> 1 armed -> 2 pickup ->
+ * 3/4/5 carry -> 6 done). sh_staff_deactivate hides the staff, releases the
+ * flames, and ends the player's carry.
  */
 #include "main/game_object.h"
 #include "main/dll/player_objects.h"
@@ -42,6 +46,7 @@ void sh_staff_free(int* obj, int p2)
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/dll/DR/shstaff_state.h"
+#include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -107,7 +112,6 @@ typedef struct ShStaffPlacement
     u8 pad1A[0x20 - 0x1A];
 } ShStaffPlacement;
 
-extern u32 GameBit_Get(int eventId);
 extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern int ObjTrigger_IsSet();
@@ -124,14 +128,14 @@ extern f32 timeDelta;
 extern f32 lbl_803E54D0;
 extern f32 lbl_803E54D4;
 extern f32 lbl_803E54D8;
-extern f32 lbl_803E54DC;
-extern f32 lbl_803E54E0;
-extern f32 lbl_803E54E4;
-extern f32 lbl_803E54E8;
-extern f32 lbl_803E54EC;
-extern f32 lbl_803E54F0;
-extern f32 lbl_803E54F4;
-extern f32 lbl_803E54F8;
+extern f32 gShStaffHazeFadeOutScaleRate;
+extern f32 gShStaffFadeTimerMax;
+extern f32 gShStaffHazeScaleRampRate;
+extern f32 gShStaffConvergeLerpBase;
+extern f32 gShStaffConvergeLerpDiv;
+extern f32 gShStaffHazeSpacing;
+extern f32 gShStaffScatterJitterDiv;
+extern f32 gShStaffHazeScale;
 
 void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -244,24 +248,24 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     else
                     {
                         state->fadeTimer = state->fadeTimer - timeDelta;
-                        foldScale = lbl_803E54DC * state->fadeTimer;
+                        foldScale = gShStaffHazeFadeOutScaleRate * state->fadeTimer;
                     }
                 }
                 else
                 {
                     state->fadeTimer = state->fadeTimer + timeDelta;
-                    if (state->fadeTimer >= lbl_803E54E0)
+                    if (state->fadeTimer >= gShStaffFadeTimerMax)
                     {
-                        state->fadeTimer = *(f32*)&lbl_803E54E0;
+                        state->fadeTimer = *(f32*)&gShStaffFadeTimerMax;
                     }
-                    foldScale = lbl_803E54E4 * state->fadeTimer;
+                    foldScale = gShStaffHazeScaleRampRate * state->fadeTimer;
                 }
                 j = 0;
                 for (; j < 5; j++)
                 {
                     if (((u32)state->slots[j] != 0) && ((u32)state->slots[4] != 0))
                     {
-                        t = lbl_803E54E8 + j / lbl_803E54EC;
+                        t = gShStaffConvergeLerpBase + j / gShStaffConvergeLerpDiv;
                         bx = ((GameObject*)state->slots[4])->anim.localPosX;
                         ((GameObject*)state->slots[j])->anim.localPosX = t * (x0 - bx) + bx;
                         ((GameObject*)state->slots[j])->anim.localPosY =
@@ -276,7 +280,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     if (((u32)state->slots[j] != 0) && ((u32)state->slots[5] != 0))
                     {
-                        t = lbl_803E54E8 + (f32)(9 - j) / lbl_803E54EC;
+                        t = gShStaffConvergeLerpBase + (f32)(9 - j) / gShStaffConvergeLerpDiv;
                         bx = ((GameObject*)state->slots[5])->anim.localPosX;
                         ((GameObject*)state->slots[j])->anim.localPosX = t * (x1 - bx) + bx;
                         ((GameObject*)state->slots[j])->anim.localPosY =
@@ -299,16 +303,16 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     }
                     else
                     {
-                        scatterScale = lbl_803E54E4 * state->fadeTimer;
+                        scatterScale = gShStaffHazeScaleRampRate * state->fadeTimer;
                     }
                 }
                 for (j = 0; j < 10; j++)
                 {
                     if ((u32)state->slots[j] != 0)
                     {
-                        t = lbl_803E54F0 * j;
+                        t = gShStaffHazeSpacing * j;
                         t = t + (f32)(int)
-                        randomGetRange(-0x32, 0x32) / lbl_803E54F4;
+                        randomGetRange(-0x32, 0x32) / gShStaffScatterJitterDiv;
                         ((GameObject*)state->slots[j])->anim.localPosX = dx * t + x0;
                         ((GameObject*)state->slots[j])->anim.localPosY = dy * t + y0;
                         ((GameObject*)state->slots[j])->anim.localPosZ = dz * t + z0;
@@ -319,7 +323,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
         else
         {
-            scale = lbl_803E54F8;
+            scale = gShStaffHazeScale;
             cur2 = state->fadeTimer;
             bx = lbl_803E54D4;
             if (cur2 != bx)
@@ -337,14 +341,14 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 }
                 else
                 {
-                    scale = lbl_803E54E4 * state->fadeTimer;
+                    scale = gShStaffHazeScaleRampRate * state->fadeTimer;
                 }
             }
             if ((u32)state->slots[0] != 0)
             {
-                ((GameObject*)state->slots[0])->anim.localPosX = dx * state->pulseTimer + x0;
-                ((GameObject*)state->slots[0])->anim.localPosY = dy * state->pulseTimer + y0;
-                ((GameObject*)state->slots[0])->anim.localPosZ = dz * state->pulseTimer + z0;
+                ((GameObject*)state->slots[0])->anim.localPosX = dx * state->hazeClimbT + x0;
+                ((GameObject*)state->slots[0])->anim.localPosY = dy * state->hazeClimbT + y0;
+                ((GameObject*)state->slots[0])->anim.localPosZ = dz * state->hazeClimbT + z0;
                 ((GameObject*)state->slots[0])->anim.rootMotionScale = scale;
             }
         }
@@ -355,8 +359,8 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 
-extern void fn_801DA4A8(int obj, ShStaffState* state, int a);
-extern f32 lbl_803E5508;
+extern void sh_staff_deactivate(int obj, ShStaffState* state, int a);
+extern f32 gShStaffFadeOutTimerInit;
 
 int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -399,7 +403,7 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             state->hudFlag = 0;
             break;
         case 3:
-            fn_801DA4A8(obj, state, 1);
+            sh_staff_deactivate(obj, state, 1);
             break;
         case 4:
             state->phase = 4;
@@ -415,7 +419,7 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 8:
             state->flags = (u8)(state->flags | 0x10);
-            state->fadeTimer = lbl_803E54E0;
+            state->fadeTimer = gShStaffFadeTimerMax;
             break;
         case 9:
             state->flags = (u8)(state->flags | 0x20);
@@ -424,7 +428,7 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 0xa:
             state->flags = (u8)(state->flags | 0x10);
             state->flags = (u8)(state->flags | 0xa);
-            state->fadeTimer = lbl_803E5508;
+            state->fadeTimer = gShStaffFadeOutTimerInit;
             break;
         case 0xb:
         case 0xc:
@@ -437,10 +441,10 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         ((void (*)(s16, int, int))((int*)*gGameUIInterface)[0x34 / 4])
             (((GameObject*)obj)->anim.modelInstance->helpTextIds[1], 0xa0, 0x8c);
     }
-    state->pulseTimer = lbl_803E54D8 * timeDelta + state->pulseTimer;
-    if (state->pulseTimer > lbl_803E54D0)
+    state->hazeClimbT = lbl_803E54D8 * timeDelta + state->hazeClimbT;
+    if (state->hazeClimbT > lbl_803E54D0)
     {
-        state->pulseTimer = lbl_803E54D4;
+        state->hazeClimbT = lbl_803E54D4;
     }
     return 0;
 }
@@ -452,13 +456,13 @@ extern int ObjTrigger_IsSet(int obj);
 
 
 
-extern f32 lbl_803E550C;
+extern f32 gShStaffFizzSfxTimerInit;
 extern f32 gShStaffMapUnloadDistSq;
 extern f32 gShStaffMapLoadDistSq;
 
 #pragma dont_inline on
 #pragma opt_strength_reduction on
-void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
+void sh_staff_deactivate(int obj, ShStaffState* state, int clearChildren)
 {
     int player;
     void* child;
@@ -501,9 +505,9 @@ void sh_staff_update(int obj)
     {
         if (player == NULL) goto end;
         if ((void*)Player_GetStaffObject((int)player) == NULL) goto end;
-        if (GameBit_Get(0x18b) != 0)
+        if (GameBit_Get(GAMEBIT_STAFF_ACQUIRED) != 0)
         {
-            fn_801DA4A8(obj, ((GameObject*)obj)->extra, 0);
+            sh_staff_deactivate(obj, ((GameObject*)obj)->extra, 0);
         }
         else
         {
@@ -526,7 +530,7 @@ void sh_staff_update(int obj)
                 loadResult = loadObjectAtObject(obj, newSetup);
             }
             state->slots[0] = loadResult;
-            state->sfxTimer = lbl_803E550C;
+            state->sfxTimer = gShStaffFizzSfxTimerInit;
         }
     }
     else if (mode == 1)
@@ -536,8 +540,8 @@ void sh_staff_update(int obj)
             int target = ObjGroup_FindNearestObject(0xf, obj, 0);
             (*gObjectTriggerInterface)->runSequence(0, (void*)target, -1);
             state->phase = 2;
-            state->fadeTimer = lbl_803E54E0;
-            GameBit_Set(0x18b, 1);
+            state->fadeTimer = gShStaffFadeTimerMax;
+            GameBit_Set(GAMEBIT_STAFF_ACQUIRED, 1);
         }
         else if (dist > gShStaffMapUnloadDistSq)
         {
@@ -562,15 +566,15 @@ void sh_staff_update(int obj)
         {
             state->mapLoaded = 0;
             mapUnload(0x13, 0x20000000);
-            GameBit_Set(0x3b8, 1);
+            GameBit_Set(GAMEBIT_STAFF_PICKUP_MAP_UNLOADED, 1);
         }
     }
 end:
     hudFn_8011f38c(0);
-    state->pulseTimer = lbl_803E54D8 * timeDelta + state->pulseTimer;
-    if (state->pulseTimer > lbl_803E54D0)
+    state->hazeClimbT = lbl_803E54D8 * timeDelta + state->hazeClimbT;
+    if (state->hazeClimbT > lbl_803E54D0)
     {
-        state->pulseTimer = lbl_803E54D4;
+        state->hazeClimbT = lbl_803E54D4;
     }
     state->sfxTimer = lbl_803E54D8 * timeDelta + state->sfxTimer;
     if (state->sfxTimer > lbl_803E54D0)
@@ -582,8 +586,6 @@ end:
         }
     }
 }
-
-extern int GameBit_Set(int eventId, int value);
 
 /* descriptor/ptr table auto 0x8032784c-0x803279a8 */
 u32 gSH_staffHazeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, (u32)sh_staffhaze_update, 0x00000000, (u32)sh_staffhaze_render, 0x00000000, 0x00000000, 0x00000000 };

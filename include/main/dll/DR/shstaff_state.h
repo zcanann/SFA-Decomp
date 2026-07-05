@@ -16,11 +16,13 @@ typedef struct ShStaffState {
     u8 mapLoaded;    /* 0x03 */
     f32 fadeTimer;   /* 0x04 */
     f32 carryMtx[12];/* 0x08: player-relative carry transform */
-    int slots[10];   /* 0x38: spawned haze objects */
+    int slots[10];   /* 0x38: spawned sh_staffhaze flame child objects (the
+                        blue staff "haze"; model 0x659) */
     u8 pending[10];  /* 0x60: per-slot respawn requests */
     u8 pad6A[2];
-    f32 pulseTimer;  /* 0x6c */
-    f32 sfxTimer;    /* 0x70 */
+    f32 hazeClimbT;  /* 0x6c: idle attract flame's 0..1 climb position along
+                        the staff (base->tip), looped */
+    f32 sfxTimer;    /* 0x70: loop timer gating the periodic pk_staff_fizz sfx */
 } ShStaffState;
 STATIC_ASSERT(sizeof(ShStaffState) == 0x74);
 
