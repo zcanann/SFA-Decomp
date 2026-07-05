@@ -770,7 +770,7 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
     f32 dist1, dist2, nx, nz, outX, sum;
     f32 offs2, cos1, distB, dx, dy, len, q, t0, dz, offs1, b1, width;
     f32 px, py, pz, frac, outY;
-    f32 ddy, ddx, ddz;
+    f32 ddy;
 
     count = 0;
     for (i = 0; i < (int)gCheckpointRouteCount; i++)
@@ -789,10 +789,10 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
             e = gCheckpointRouteTable[i].entry;
             if (visited[i] == 0 && (filter == -1 || e->group == filter))
             {
-                ddx = e->posX - obj->anim.localPosX;
+                nx = e->posX - obj->anim.localPosX;
                 ddy = e->posY - obj->anim.localPosY;
-                ddz = e->posZ - obj->anim.localPosZ;
-                if (ddz * ddz + (ddx * ddx + ddy * ddy) < lbl_803E051C)
+                nz = e->posZ - obj->anim.localPosZ;
+                if (nz * nz + (nx * nx + ddy * ddy) < lbl_803E051C)
                 {
                     stack[count++] = i;
                     for (j = i; j < (int)gCheckpointRouteCount; j++)
