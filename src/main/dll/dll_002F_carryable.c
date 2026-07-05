@@ -22,6 +22,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_ids.h"
 
 #define PAD_BUTTON_A 0x100
 
@@ -248,7 +249,7 @@ int Carryable_updateHeld(u8* obj)
         {
             if ((((CarryableUpdateHeldState*)held)->flags & 4) != 0 || fn_80295BF0(player) == 0)
             {
-                Sfx_PlayFromObject(0, 0x10a);
+                Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
             }
             else
             {
