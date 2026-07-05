@@ -2,7 +2,7 @@
 #include "main/engine_shared.h"
 
 extern WorldAsteroidsObject* ObjList_FindObjectById(int objectId);
-extern void objRenderFn_8003b8f4(double scale);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 fsin16Approx(u16 angle);
 extern f32 fcos16Approx(u16 angle);
 extern f32 lbl_803E65D0;
@@ -39,7 +39,7 @@ void worldasteroids_render(u32 obj, u32 p2, u32 p3,
     s32 v = visible;
     if (v != 0)
     {
-        objRenderFn_8003b8f4(lbl_803E65D0);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E65D0);
     }
 }
 

@@ -80,7 +80,7 @@ void dim_tricky_init(int* obj)
     *((u8*)(int*)((GameObject*)obj)->extra + 0x0) = v;
 }
 
-void dim_tricky_render(void) { extern void objRenderFn_8003b8f4(f32); objRenderFn_8003b8f4(lbl_803E4A38); }
+void dim_tricky_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { extern void objRenderFn_8003b8f4(int, int, int, int, int, f32); objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4A38); }
 
 void dim2conveyor_free(int x);
 

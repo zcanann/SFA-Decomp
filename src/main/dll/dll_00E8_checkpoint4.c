@@ -40,7 +40,7 @@ extern f32 lbl_803E3430;
 
 void mikabomb_free(int obj, int mode);
 
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -221,9 +221,9 @@ void staticCamera_init(short* obj, int placement, int addToGroup)
     }
 }
 
-void checkpoint4_render(int obj)
+void checkpoint4_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderFn_8003b8f4(lbl_803E3420);
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3420);
 }
 
 void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* placement)

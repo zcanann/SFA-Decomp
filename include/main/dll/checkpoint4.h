@@ -82,7 +82,7 @@ void checkpoint4_setScale(void);
 int checkpoint4_getExtraSize(void);
 int checkpoint4_getObjectTypeId(void);
 void checkpoint4_free(void);
-void checkpoint4_render(int obj);
+void checkpoint4_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void checkpoint4_hitDetect(void);
 void checkpoint4_update(void);
 void checkpoint4_init(Checkpoint4Object *checkpoint, Checkpoint4Placement *placement);

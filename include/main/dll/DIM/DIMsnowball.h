@@ -54,7 +54,7 @@ void ccpedstal_init(int *obj, u8 *params);
 
 int cclevcontrol_getExtraSize(void);
 void cclevcontrol_free(void);
-void cclevcontrol_render(void);
+void cclevcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void cclevcontrol_update(int obj);
 void cclevcontrol_init(int *obj);
 

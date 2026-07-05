@@ -22,6 +22,6 @@ void collectible_release(void);
 void collectible_initialise(void);
 int magicdust_getExtraSize(void);
 void magicdust_free(int param_1);
-void magicdust_render(void);
+void magicdust_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 #endif /* MAIN_DLL_DLL_13F_H_ */

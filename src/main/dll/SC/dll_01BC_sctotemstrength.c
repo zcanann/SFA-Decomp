@@ -32,7 +32,7 @@ extern f32 fn_8001461C(void);
 extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(u8 x);
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int gTotemStrengthDeactivateTimer;
 extern int lbl_803DC070;
 extern const f32 lbl_803E5668;
@@ -374,7 +374,7 @@ void sc_totemstrength_initialise(void)
 int sc_totemstrength_getExtraSize(void) { return 0x34; }
 int sc_totemstrength_getObjectTypeId(void) { return 0x0; }
 
-void sc_totemstrength_render(void) { objRenderFn_8003b8f4(lbl_803E567C); }
+void sc_totemstrength_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E567C); }
 
 void sc_totemstrength_init(int* obj)
 {

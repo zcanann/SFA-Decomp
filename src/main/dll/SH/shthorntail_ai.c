@@ -209,7 +209,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
 
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config);
 void SHthorntail_update(SHthorntailObject* obj);
-void SHthorntail_render(SHthorntailObject* obj);
+void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void SHthorntail_free(SHthorntailObject* obj);
 int SHthorntail_getExtraSize(void);
 

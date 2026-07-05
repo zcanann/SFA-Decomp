@@ -53,7 +53,7 @@ extern SHthorntailDataTables gSHthorntailDataTables;
 #define SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG 0x40
 
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z, int useInputPosition);
-extern void objRenderFn_8003b8f4(f32 scale);
+extern void objRenderFn_8003b8f4(SHthorntailObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void dll_2E_func06(SHthorntailObject* obj, SHthorntailRuntime* runtime, int point);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern u32 Obj_GetActiveModel();
@@ -329,13 +329,13 @@ void SHthorntail_free(SHthorntailObject* obj)
     ObjGroup_RemoveObject((int)obj, THORNTAIL_OBJGROUP);
 }
 
-void SHthorntail_render(SHthorntailObject* obj)
+void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     SHthorntailRuntime* runtime;
     int pointIndex;
 
     runtime = obj->runtime;
-    objRenderFn_8003b8f4(lbl_803E5448);
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E5448);
     dll_2E_func06(obj, runtime, 0);
     pointIndex = 0;
     do

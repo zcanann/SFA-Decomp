@@ -35,7 +35,7 @@ void FUN_801b7fd0(u16 *param_1,int param_2);
 int dim_tricky_getExtraSize(void);
 int dim_tricky_getObjectTypeId(void);
 void dim_tricky_free(void);
-void dim_tricky_render(void);
+void dim_tricky_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dim_tricky_hitDetect(void);
 void dim_tricky_update(int* obj);
 void dim_tricky_init(int *obj);
