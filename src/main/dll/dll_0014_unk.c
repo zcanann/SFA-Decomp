@@ -527,6 +527,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
     u16 pgid;
     u8 i;
     u8 j;
+    u8 m;
     ObjfsaPatch* patch;
     ObjfsaPatch* lp;
     ObjfsaWalkGroup* wg;
@@ -582,9 +583,9 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
         }
     }
 
-    for (k = 0; k < 4; k++)
+    for (m = 0; m < 4; m++)
     {
-        pidx = wg->patchIndices[k];
+        pidx = wg->patchIndices[m];
         if (pidx == 0)
         {
             continue;
