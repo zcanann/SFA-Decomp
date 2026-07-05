@@ -815,7 +815,7 @@ void dll_F7_init(int* obj, int* params)
     *(u8*)&((DllF7State*)state)->byteB = *(u8*)((char*)params + 0x19);
     if (((DllF7State*)state)->byteB == 0)
     {
-        int r = (*gMapEventInterface)->shouldNotSaveTime(*(int*)((char*)params + 0x14));
+        int r = (*gMapEventInterface)->shouldNotSaveTime(((DllF7Placement*)params)->mapEventId);
         if (r == 0)
         {
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
