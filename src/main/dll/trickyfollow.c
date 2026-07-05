@@ -671,10 +671,11 @@ state_selected:
                         ((TrickyState*)state)->unk7A0f = lbl_803E2440;
                         break;
                     case 6:
+                        node = route->nodeA0;
                         ((TrickyState*)state)->dirX =
-                            *(f32*)((u8*)route->nodeA0 + 8) - ((GameObject*)obj)->anim.worldPosX;
+                            *(f32*)((u8*)node + 8) - ((GameObject*)obj)->anim.worldPosX;
                         ((TrickyState*)state)->dirZ =
-                            *(f32*)((u8*)route->nodeA0 + 0x10) - ((GameObject*)obj)->anim.worldPosZ;
+                            *(f32*)((u8*)node + 0x10) - ((GameObject*)obj)->anim.worldPosZ;
                         sqx = ((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX;
                         sqz = ((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ;
                         len = sqrtf(sqx + sqz);
@@ -953,10 +954,11 @@ state_selected:
             else
             {
                 curveFn_800da23c(route);
+                node = route->nodeA0;
                 ((TrickyState*)state)->dirX =
-                    *(f32*)((u8*)route->nodeA0 + 8) - ((GameObject*)obj)->anim.worldPosX;
+                    *(f32*)((u8*)node + 8) - ((GameObject*)obj)->anim.worldPosX;
                 ((TrickyState*)state)->dirZ =
-                    *(f32*)((u8*)route->nodeA0 + 0x10) - ((GameObject*)obj)->anim.worldPosZ;
+                    *(f32*)((u8*)node + 0x10) - ((GameObject*)obj)->anim.worldPosZ;
                 sqx = ((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX;
                 sqz = ((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ;
                 len = sqrtf(sqx + sqz);
@@ -1173,10 +1175,11 @@ state_selected:
             else
             {
                 curveFn_800da23c(route);
+                node = route->nodeA0;
                 ((TrickyState*)state)->dirX =
-                    *(f32*)((u8*)route->nodeA0 + 8) - ((GameObject*)obj)->anim.worldPosX;
+                    *(f32*)((u8*)node + 8) - ((GameObject*)obj)->anim.worldPosX;
                 ((TrickyState*)state)->dirZ =
-                    *(f32*)((u8*)route->nodeA0 + 0x10) - ((GameObject*)obj)->anim.worldPosZ;
+                    *(f32*)((u8*)node + 0x10) - ((GameObject*)obj)->anim.worldPosZ;
                 sqx = ((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX;
                 sqz = ((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ;
                 len = sqrtf(sqx + sqz);
@@ -1291,10 +1294,11 @@ state_selected:
             else
             {
                 curveFn_800da23c(route);
+                node = route->nodeA0;
                 ((TrickyState*)state)->dirX =
-                    *(f32*)((u8*)route->nodeA0 + 8) - ((GameObject*)obj)->anim.worldPosX;
+                    *(f32*)((u8*)node + 8) - ((GameObject*)obj)->anim.worldPosX;
                 ((TrickyState*)state)->dirZ =
-                    *(f32*)((u8*)route->nodeA0 + 0x10) - ((GameObject*)obj)->anim.worldPosZ;
+                    *(f32*)((u8*)node + 0x10) - ((GameObject*)obj)->anim.worldPosZ;
                 sqx = ((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX;
                 sqz = ((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ;
                 len = sqrtf(sqx + sqz);
