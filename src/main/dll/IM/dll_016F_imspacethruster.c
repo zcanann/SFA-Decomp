@@ -80,7 +80,7 @@ void imspacethruster_update(GameObject* obj)
     state = obj->extra;
     if (obj->anim.parent != NULL)
     {
-        mode = ((s16 (*)(int, int))((void**)*(void**)*(int*)(*(int*)&obj->anim.parent + 0x68))[8])(
+        mode = (*(s16 (**)(int, int))(*(int*)(*(int*)&((GameObject*)obj->anim.parent)->anim.dll) + 0x20))(
             *(int*)&obj->anim.parent, state->kind);
         switch (state->phase)
         {
@@ -193,9 +193,9 @@ void imspacethruster_init(GameObject* obj, u8* placement)
         u32 kind = state->kind;
         if (kind < 5)
         {
-            *(int*)&state->bufA = (int)mmAlloc(0x28, 0x12, 0);
+            state->bufA = mmAlloc(0x28, 0x12, 0);
             getTabEntry(state->bufA, 0xc, gImSpaceThrusterKeyframeIndexA[kind] * 0x28, 0x28);
-            *(int*)&state->bufB = (int)mmAlloc(0x28, 0x12, 0);
+            state->bufB = mmAlloc(0x28, 0x12, 0);
             getTabEntry(state->bufB, 0xc, gImSpaceThrusterKeyframeIndexB[kind] * 0x28, 0x28);
         }
     }
