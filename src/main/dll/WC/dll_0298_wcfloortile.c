@@ -130,8 +130,8 @@ void wcfloortile_update(int obj)
                 f32 z = 0.0f;
                 for (i = 0, off = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); off += 4, i++)
                 {
-                    int e = *(int*)(*(int*)(obj + 0x58) + off + 0x100);
-                    if (*(s16*)(e + 0x44) == 1)
+                    GameObject* e = *(GameObject**)(*(int*)(obj + 0x58) + off + 0x100);
+                    if (e->anim.classId == 1)
                     {
                         Sfx_PlayFromObject(obj, SFXsc_strafe_active);
                         state->phase = WCFLOORTILE_PHASE_FALLING;
