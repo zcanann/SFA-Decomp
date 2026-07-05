@@ -4382,10 +4382,11 @@ void initTextures(void)
 #pragma opt_common_subs reset
 
 
-extern int doLotsOfMath(void* a, void* b, int c, void* d, int* e, int g, int h, int i, int self, f32 f);
+extern int doLotsOfMath(void* a, void* b, f32 f, int c, void* d, int* e, int g, int h, int i, int self);
 char sTrackNoFreeLastLineError[] = "NO FREE LAST LINE\n";
 extern u8 lbl_803DCF4C;
 
+#pragma opt_common_subs off
 void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, int p8, int p9, int slot, u8 arg8)
 {
     f32 w0[3];
@@ -4486,7 +4487,7 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
             Obj_TransformWorldPointToLocal(w0[0], w0[1], w0[2], &t20[0], &t20[1], &t20[2], (u32)o);
         }
         Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &t14[0], &t14[1], &t14[2], (u32)o);
-        if (doLotsOfMath(t20, t14, p5, out, o, p8, p9, arg8, (int)self, f) != 0)
+        if (doLotsOfMath(t20, t14, f, p5, out, o, p8, p9, arg8, (int)self) != 0)
             Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], (u32)o);
         if ((u8)slot != 0xff)
         {
@@ -4522,7 +4523,7 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
             }
         }
     }
-    doLotsOfMath(w0, w1, p5, out, NULL, p8, p9, arg8, (int)self, f);
+    doLotsOfMath(w0, w1, f, p5, out, NULL, p8, p9, arg8, (int)self);
     if (lbl_803DCF4C != 0 && out != NULL)
     {
         f32 hx = *(f32*)((char*)out + 0x3c) - *(f32*)((char*)out + 0xc);
@@ -4579,6 +4580,7 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
             memcpy(p1, w1, 0xc);
     }
 }
+#pragma opt_common_subs reset
 
 /* fn_80067B84 -- gather model triangles overlapping a swept bbox into the
  * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
@@ -5435,8 +5437,8 @@ extern const f32 lbl_803DECD4;
 extern f32 lbl_803DB660;
 
 #pragma optimization_level 2
-int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
-                 int pmask, int seg, int ytol, int self, f32 radius)
+int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* obj,
+                 int pmask, int seg, int ytol, int self)
 {
     f32* A = ptA;
     s16 hits[6];
