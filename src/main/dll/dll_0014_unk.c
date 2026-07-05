@@ -1631,11 +1631,11 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 
     if (state == NULL)
     {
-        return 1;
+        goto fail;
     }
     if (startCurveId == -1)
     {
-        return 1;
+        goto fail;
     }
 
     stateBytes = (char*)state;
@@ -1660,11 +1660,11 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 
     if (state->reverse == 0)
     {
-        nextId = RomCurve_pickRandomControlPointId_2A(currentCurve);
+        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
     }
     else
     {
-        nextId = RomCurve_pickRandomControlPointId_2B(currentCurve);
+        nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
     }
     if (nextId == -1)
     {
@@ -1673,7 +1673,7 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 
     nextCurve = Objfsa_FindRomCurveById(nextId);
     *(s32*)&state->nodeA4 = nextCurve;
-    if (state->nodeA4 == NULL)
+    if (nextCurve == 0)
     {
         state->nodeA4 = NULL;
         return 1;
@@ -1693,6 +1693,8 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
     state->moveNetwork = 8;
     curvesMove((float*)state);
     return 0;
+fail:
+    return 1;
 }
 
 int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType, f32 maxDistance)
