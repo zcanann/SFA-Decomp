@@ -160,7 +160,7 @@ void treasurechest_update(int obj)
             nearestObject = ObjGroup_FindNearestObject(4, obj, &nearestDist);
             if (nearestObject != 0)
             {
-                (*gObjectTriggerInterface)->setObjects((int)*(short*)(nearestObject + 0x46), 0, 0);
+                (*gObjectTriggerInterface)->setObjects((int)((GameObject*)nearestObject)->anim.seqId, 0, 0);
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, 0xffffffff);
             }
             else
