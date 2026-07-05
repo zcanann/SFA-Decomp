@@ -79,9 +79,9 @@ void iceblast_update(int* obj)
     def = *(IceblastPlacement**)&((GameObject*)obj)->anim.placementData;
     if (player != NULL && (path = ((GameObject*)player)->childObjs[0]) != NULL)
     {
-        ((GameObject*)obj)->anim.rotZ = *(s16*)((char*)path + 4);
-        ((GameObject*)obj)->anim.rotY = *(s16*)((char*)path + 2);
-        ((GameObject*)obj)->anim.rotX = *(s16*)path;
+        ((GameObject*)obj)->anim.rotZ = ((GameObject*)path)->anim.rotZ;
+        ((GameObject*)obj)->anim.rotY = ((GameObject*)path)->anim.rotY;
+        ((GameObject*)obj)->anim.rotX = ((GameObject*)path)->anim.rotX;
     }
     else
     {
@@ -105,9 +105,9 @@ void iceblast_update(int* obj)
             vec.pos[2] = zero;
             vec.pos[3] = zero;
             vec.pos[0] = lbl_803E3600;
-            vec.dir[2] = *(s16*)((char*)path + 4);
-            vec.dir[1] = *(s16*)((char*)path + 2);
-            vec.dir[0] = *(s16*)path;
+            vec.dir[2] = ((GameObject*)path)->anim.rotZ;
+            vec.dir[1] = ((GameObject*)path)->anim.rotY;
+            vec.dir[0] = ((GameObject*)path)->anim.rotX;
             vecRotateZXY(&vec, (f32*)((char*)obj + 0x24));
             ObjPath_GetPointWorldPosition((int)path, 0, &((GameObject*)obj)->anim.localPosX,
                                           &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ, 0);
