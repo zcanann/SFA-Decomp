@@ -1226,12 +1226,12 @@ state_selected:
             f32 dz;
             f32 dx;
             dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
-            sqx = dx;
-            sqx = sqx * sqx;
-            dz = *(f32*)&((GameObject*)((GameObject*)obj)->extra)->anim.parent;
-            sqz = dz;
+            sqz = dx;
             sqz = sqz * sqz;
-            if (sqx + sqz > lbl_803E23EC)
+            dz = *(f32*)&((GameObject*)((GameObject*)obj)->extra)->anim.parent;
+            sqx = dz;
+            sqx = sqx * sqx;
+            if (sqz + sqx > lbl_803E23EC)
             {
                 trickyTurnTowardYaw(obj, (s16)getAngle(-dx, -dz));
             }
