@@ -1,5 +1,7 @@
 #include "src/main/audio/synth_internal.h"
 
+#pragma exceptions on
+
 /* SynthVoice.state - which intrusive list the voice sits on */
 #define SYNTH_VOICE_STATE_FREE 0      /* unallocated */
 #define SYNTH_VOICE_STATE_QUEUED 1    /* on gSynthQueuedVoices; awaiting start */
