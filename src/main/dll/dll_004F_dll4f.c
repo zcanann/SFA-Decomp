@@ -10,20 +10,8 @@ extern float mathCosf(float x);
 
 #pragma scheduling on
 #pragma peephole on
-extern f32 lbl_803E1A88;
 extern CameraMode4FState* gCameraMode4FState;
 extern f32 Curve_EvalHermite(f32* pts, f32 t, int mode);
-extern f32 lbl_803E1A8C;
-extern f32 lbl_803E1A90;
-extern f32 gCameraMode4FPi;
-extern f32 lbl_803E1A98;
-extern const f32 lbl_803E1A9C;
-extern const f32 lbl_803E1AA0;
-extern const f32 lbl_803E1AA4;
-extern f32 lbl_803E1AA8;
-extern f32 lbl_803E1AAC;
-extern f32 lbl_803E1AB0;
-extern f32 lbl_803E1AB4;
 
 
 #pragma scheduling off
@@ -32,35 +20,13 @@ void dll_4F_func06_nop(void)
 {
 }
 
-void dll_4F_release_nop(void)
+void dll_4F_func05(void)
 {
+    extern void mm_free(u32); /* #57 */
+    mm_free((u32)gCameraMode4FState);
+    gCameraMode4FState = NULL;
 }
 
-void dll_4F_initialise_nop(void)
-{
-}
-
-
-void CameraModeForceBehind_func06_nop(void)
-{
-}
-
-void CameraModeForceBehind_func05_nop(void)
-{
-}
-
-
-
-
-
-void dll_4F_init(void)
-{
-    if (gCameraMode4FState == NULL)
-    {
-        gCameraMode4FState = (CameraMode4FState*)mmAlloc(sizeof(CameraMode4FState), 15, 0);
-    }
-    gCameraMode4FState->blendProgress = lbl_803E1A88;
-}
 
 void dll_4F_update(int* obj)
 {
@@ -73,44 +39,54 @@ void dll_4F_update(int* obj)
     s16 a;
 
     camera = (CameraObject*)obj;
-    pts[0] = lbl_803E1A88;
-    pts[1] = lbl_803E1A8C;
-    pts[2] = lbl_803E1A88;
-    pts[3] = lbl_803E1A88;
+    pts[0] = 0.0f;
+    pts[1] = 1.0f;
+    pts[2] = 0.0f;
+    pts[3] = 0.0f;
     fz = Curve_EvalHermite(pts, gCameraMode4FState->blendProgress, 0);
     a = (s16)(0x8000 - ((GameObject*)camera->anim.targetObj)->anim.rotX);
-    a += (s32)(lbl_803E1A90 * fz);
+    a += (s32)(14560.0f * fz);
     target = (GameObject*)camera->anim.targetObj;
     {
-        f32 t = (gCameraMode4FPi * (f32)(s32)
+        f32 t = (3.1415927f * (f32)(s32)
         a
         )
         /
-        lbl_803E1A98;
+        32768.0f;
         sn = mathCosf(t);
         cs = mathSinf(t);
     }
-    camera->anim.localPosX = target->anim.worldPosX + (lbl_803E1A9C * sn - lbl_803E1AA0 * cs);
-    camera->anim.localPosZ = target->anim.worldPosZ + (lbl_803E1A9C * cs + lbl_803E1AA0 * sn);
-    camera->anim.localPosY = (lbl_803E1AA4 + target->anim.worldPosY) - lbl_803E1AA8 * fz;
-    camera->anim.rotY = (s16)(0x11c6 - (s32)(lbl_803E1AA4 * (lbl_803E1AAC * fz)));
+    camera->anim.localPosX = target->anim.worldPosX + (20.0f * sn - -10.0f * cs);
+    camera->anim.localPosZ = target->anim.worldPosZ + (20.0f * cs + -10.0f * sn);
+    camera->anim.localPosY = (35.0f + target->anim.worldPosY) - 15.0f * fz;
+    camera->anim.rotY = (s16)(0x11c6 - (s32)(35.0f * (182.0f * fz)));
     camera->anim.rotX = (s16)(a + 0x1ffe);
     camera->anim.rotZ = 0;
     camera->letterboxTargetOffset = 0;
-    camera->fov = lbl_803E1AB0;
-    gCameraMode4FState->blendProgress += lbl_803E1AB4 * timeDelta;
-    if (gCameraMode4FState->blendProgress > *(f32*)&lbl_803E1A8C)
+    camera->fov = 60.0f;
+    gCameraMode4FState->blendProgress += 0.005f * timeDelta;
+    if (gCameraMode4FState->blendProgress > 1.0f)
     {
-        gCameraMode4FState->blendProgress = lbl_803E1A8C;
+        gCameraMode4FState->blendProgress = 1.0f;
     }
 }
 
 
-void dll_4F_func05(void)
+void dll_4F_init(void)
 {
-    extern void mm_free(u32); /* #57 */
-    mm_free((u32)gCameraMode4FState);
-    gCameraMode4FState = NULL;
+    if (gCameraMode4FState == NULL)
+    {
+        gCameraMode4FState = (CameraMode4FState*)mmAlloc(sizeof(CameraMode4FState), 15, 0);
+    }
+    gCameraMode4FState->blendProgress = 0.0f;
+}
+
+void dll_4F_release_nop(void)
+{
+}
+
+void dll_4F_initialise_nop(void)
+{
 }
 
 

@@ -793,6 +793,7 @@ main/dll/dll_004E_cameramodeworldmap.c:
 
 main/dll/dll_004F_dll4f.c:
 	.text       start:0x8010F2F8 end:0x8010F540
+	.sdata2     start:0x803E1A88 end:0x803E1AC0
 
 main/dll/dll_0050_cameramodecrawl.c:
 	.text       start:0x8010F540 end:0x8010FA54
