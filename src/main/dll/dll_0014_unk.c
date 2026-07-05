@@ -869,21 +869,22 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
         {
             f32 x;
             f32 z;
-            u8 i;
-            u8 j;
+            u8 i[1];
+            u8 j[1];
             z = point[2];
             x = point[0];
-            j = i = 0;
-            for (; i < 4; i++, j += 2)
+            i[0] = 0;
+            j[0] = i[0];
+            for (; i[0] < 4; i[0]++, j[0] += 2)
             {
-                if (patch->planeOffsets[i] +
-                    (x * (f32)((s16*)patch)[j] + z * (f32)((s16*)patch)[j + 1]) >
+                if (patch->planeOffsets[i[0]] +
+                    (x * (f32)((s16*)patch)[j[0]] + z * (f32)((s16*)patch)[j[0] + 1]) >
                     0.0f)
                 {
                     break;
                 }
             }
-            if (i == 4)
+            if (i[0] == 4)
             {
                 return patch->groupId;
             }
@@ -899,16 +900,16 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
         if (y < g->maxY && y > g->minY) {                                \
             x = point[0];                                                          \
             z = point[2];                                                          \
-            i = 0;                                                                 \
-            j = i;                                                                 \
-            for (; i < 4; i++, j += 2) {                                           \
-                if (g->planeOffsets[i] +                                           \
-                        (x * (f32)((s16 *)g)[j] + z * (f32)((s16 *)g)[j + 1]) >    \
+            i[0] = 0;                                                              \
+            j[0] = i[0];                                                           \
+            for (; i[0] < 4; i[0]++, j[0] += 2) {                                  \
+                if (g->planeOffsets[i[0]] +                                        \
+                        (x * (f32)((s16 *)g)[j[0]] + z * (f32)((s16 *)g)[j[0] + 1]) > \
                     0.0f) {                                                        \
                     break;                                                         \
                 }                                                                  \
             }                                                                      \
-            if (i == 4) {                                                          \
+            if (i[0] == 4) {                                                       \
                 gObjfsaLastWalkGroupIndex = (idx);                                              \
                 return (idx);                                                      \
             }                                                                      \
@@ -920,8 +921,8 @@ int mathFn_800dbff0(float* point)
 {
     s16 up;
     s16 down;
-    u8 j;
-    u8 i;
+    u8 j[1];
+    u8 i[1];
     ObjfsaWalkGroup* g;
     f32 y;
     f32 x;
