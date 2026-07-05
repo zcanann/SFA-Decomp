@@ -14822,6 +14822,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         f32 thresh;
         int i;
         int j;
+        int j8;
         wallHit = 0;
         if (parent != NULL)
         {
@@ -14872,11 +14873,13 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                     j = *(s16*)(tri + 4) * 0xc;
                     x1 = *(f32*)(verts + j);
                     y1 = lbl_803E7EA4;
-                    z1 = *(f32*)(verts + (j + 8));
+                    j8 = j + 8;
+                    z1 = *(f32*)(verts + j8);
                     j = *(s16*)(tri + 6) * 0xc;
                     x2 = *(f32*)(verts + j);
                     y2 = lbl_803E7EA4;
-                    z2 = *(f32*)(verts + (j + 8));
+                    j8 = j + 8;
+                    z2 = *(f32*)(verts + j8);
                     if (parent != NULL)
                     {
                         ((void (*)(f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(
