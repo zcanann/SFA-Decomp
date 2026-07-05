@@ -13,9 +13,6 @@
 #include "main/obj_placement.h"
 #include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
-extern f32 lbl_803E3D60; /* render scale */
-extern f32 lbl_803E3D64; /* minimum sway magnitude */
-extern f32 lbl_803E3D68; /* sway -> scale multiplier */
 
 typedef struct Dll127Placement
 {
@@ -29,21 +26,21 @@ STATIC_ASSERT(offsetof(Dll127Placement, bankIndex) == 0x18);
 STATIC_ASSERT(offsetof(Dll127Placement, swayMag) == 0x19);
 STATIC_ASSERT(offsetof(Dll127Placement, yawBits) == 0x1a);
 
+int dll_127_getExtraSize_ret_0(void) { return 0x0; }
+int dll_127_getObjectTypeId(void) { return 0x13; }
+
 void dll_127_free_nop(void)
 {
 }
 
-void dll_127_hitDetect_nop(void)
-{
-}
-
-int dll_127_getExtraSize_ret_0(void) { return 0x0; }
-int dll_127_getObjectTypeId(void) { return 0x13; }
-
 void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
-    if (isVisible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3D60);
+    if (isVisible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+}
+
+void dll_127_hitDetect_nop(void)
+{
 }
 
 void dll_127_update(int obj)
@@ -85,11 +82,11 @@ void dll_127_init(short* obj, int def)
     objAnim->flags |= 2;
     swayMag = placement->swayMag;
     scale = (f32)(int)swayMag;
-    if ((f32)(int)swayMag < lbl_803E3D64)
+    if ((f32)(int)swayMag < 10.0f)
     {
-        scale = *(f32*)&lbl_803E3D64;
+        scale = 10.0f;
     }
-    scale = scale * lbl_803E3D68;
+    scale *= 0.015625f;
     objAnim->rootMotionScale = objAnim->modelInstance->rootMotionScaleBase * scale;
     if (objAnim->modelState != NULL)
     {
