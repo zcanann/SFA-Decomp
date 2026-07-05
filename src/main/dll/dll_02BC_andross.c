@@ -222,7 +222,7 @@ void fn_8023A87C(int obj, int state)
     spawned = *(void**)&((AndrossState*)state)->effectHandle;
     if (spawned != NULL)
     {
-        *(f32*)((char*)spawned + 0x14) -= lbl_803E74D8;
+        ((GameObject*)spawned)->anim.localPosZ -= lbl_803E74D8;
         ((AndrossState*)state)->effectLifetime -= framesThisStep;
         if (((AndrossState*)state)->effectLifetime < 0)
         {
