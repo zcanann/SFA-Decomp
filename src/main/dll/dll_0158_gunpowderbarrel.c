@@ -203,19 +203,18 @@ void gunpowderbarrel_render(int* obj, int p2, int p3, int p4, int p5,
 /* EN v1.0 0x801A1230  size: 708b  gunpowderbarrel_triggerExplosion: when hit
  * (or touched while resting on a damage source) blow the barrel up, optionally
  * re-saving its position at the owning generator first. */
-void gunpowderbarrel_triggerExplosion(int* obj)
+void gunpowderbarrel_triggerExplosion(int obj)
 {
     u8* sub;
     int hitObj;
     int count;
     u8* tricky;
     int* timer;
-    int objI = (int)obj;
 
     sub = ((GameObject*)obj)->extra;
     /* Arm detonation if we took a priority hit, OR we're in flight (motionFlags
      * bit 2) and made contact with a surface. Also mark the barrel sleeping. */
-    if (ObjHits_GetPriorityHit(objI, &hitObj, 0, 0) != 0 ||
+    if (ObjHits_GetPriorityHit(obj, &hitObj, 0, 0) != 0 ||
         (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0 && (((GunpowderBarrelState*)sub)->motionFlags & 2) != 0))
     {
         ((GunpowderBarrelState*)sub)->detonateTrigger += 1;
@@ -227,27 +226,29 @@ void gunpowderbarrel_triggerExplosion(int* obj)
          * to the generator's position, latch it via saveGame, then restore. */
         if (((GpbConfigFlags*)&((GunpowderBarrelState*)sub)->configFlags)->returnHome)
         {
-            int* def = *(int**)&((GameObject*)obj)->anim.placementData;
-            int* best = 0;
             int** objs;
+            int* best = 0;
             int i;
+            int* def = *(int**)&((GameObject*)obj)->anim.placementData;
             int** p;
             if (((GunpowderbarrelPlacement*)def)->generatorLinkId != 0)
             {
                 objs = (int**)ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &count);
-                for (i = 0; i < count; i++)
+                i = 0;
+                p = objs;
+                for (; i < count; i++)
                 {
-                    int id = barrelgener_getLinkId(objs[i]);
-                    if (((GunpowderbarrelPlacement*)def)->generatorLinkId == id)
+                    if (((GunpowderbarrelPlacement*)def)->generatorLinkId == barrelgener_getLinkId(*p))
                     {
                         best = objs[i];
                         break;
                     }
+                    p++;
                 }
             }
             else
             {
-                best = (int*)ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, objI, 0);
+                best = (int*)ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, obj, 0);
             }
             if (best != 0)
             {
@@ -258,7 +259,7 @@ void gunpowderbarrel_triggerExplosion(int* obj)
                 ((GameObject*)obj)->anim.localPosX = ((GameObject*)best)->anim.localPosX;
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)best)->anim.localPosY;
                 ((GameObject*)obj)->anim.localPosZ = ((GameObject*)best)->anim.localPosZ;
-                saveGame_saveObjectPos(obj);
+                saveGame_saveObjectPos((int*)obj);
                 ((GameObject*)obj)->anim.localPosX = x;
                 ((GameObject*)obj)->anim.localPosY = y;
                 ((GameObject*)obj)->anim.localPosZ = z;
@@ -266,24 +267,27 @@ void gunpowderbarrel_triggerExplosion(int* obj)
         }
         /* Reconfigure the hitbox into a blast-damage volume, play the boom SFX
          * and spawn the explosion effect at a raised Y. */
-        ObjHits_ClearFlags(objI, 0x80);
-        ObjHits_SetSourceMask(objI, 1);
-        ObjHitbox_SetCapsuleBounds(objI, 0x14, -5, 0x14);
-        ObjHits_EnableObject(objI);
-        ObjHits_SetHitVolumeSlot(objI, 5, 4, 0);
-        Sfx_PlayFromObject(objI, SFXsk_bapt11_c);
+        ObjHits_ClearFlags(obj, 0x80);
+        ObjHits_SetSourceMask(obj, 1);
+        ObjHitbox_SetCapsuleBounds(obj, 0x14, -5, 0x14);
+        ObjHits_EnableObject(obj);
+        ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
+        Sfx_PlayFromObject(obj, SFXsk_bapt11_c);
         ((GameObject*)obj)->anim.localPosY += lbl_803E4308;
-        spawnExplosion(obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
+        spawnExplosion((int*)obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
         if (((GunpowderBarrelState*)sub)->heldByCarryInterface != 0)
         {
-            (*(void (**)(int*, u8*))(*(int*)gCarryableInterface + 0x30))(obj, sub);
+            (*(void (**)(int, u8*))(*(int*)gCarryableInterface + 0x30))(obj, sub);
             ((GunpowderBarrelState*)sub)->heldByCarryInterface = 0;
         }
         /* Light the fuse: update() grows the blast radius each frame and, once
          * fuseFrames > 0x14, finishes the detonation (hide + respawn/remove). */
         ((GunpowderBarrelState*)sub)->fuseFrames = 1;
         ((GpbHeldFlags*)&((GunpowderBarrelState*)sub)->heldFlags)->held = 0;
-        ObjGroup_RemoveObject(objI, 0x19);
+        /* (void*) respelling keeps this (u32) conversion a distinct expression
+         * from the u32 call args above — matching retail, no CSE'd copy of obj
+         * survives across the calls (target passes r30 directly here). */
+        ObjGroup_RemoveObject((u32)(void*)obj, 0x19);
         if (((GameObject*)obj)->anim.parent != 0)
         {
             ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = lbl_803E42C4;
@@ -846,7 +850,7 @@ void gunpowderbarrel_update(int obj)
         (((GpbHeldFlags*)&state->heldFlags)->cannonRangeVariant != 0 && playerIsDisguised(player) == 0))
     {
         ObjHits_EnableObject(obj);
-        gunpowderbarrel_triggerExplosion((int*)obj);
+        gunpowderbarrel_triggerExplosion(obj);
         ((GameObject*)obj)->anim.alpha = 0xff;
         /* Releasing from carry: dispatch on the player's controlMode —
          * 6 = place in-place, 7 = launch at a target, no lift velocity = toss. */
@@ -903,7 +907,7 @@ void gunpowderbarrel_update(int obj)
         state->heldByCarryInterface = 1;
         ((GpbHeldFlags*)&state->heldFlags)->pendingThrowVelCapture = 1;
         state->launchYaw = ((GameObject*)player)->anim.rotX;
-        gunpowderbarrel_triggerExplosion((int*)obj);
+        gunpowderbarrel_triggerExplosion(obj);
     }
     if (((GpbHeldFlags*)&state->heldFlags)->playerHeld != 0)
     {
