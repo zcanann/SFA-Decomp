@@ -522,19 +522,19 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-u8 collectible_func0F(int* obj) { return *(u8*)((char*)((GameObject*)obj)->extra + 0x1e); }
+u8 collectible_func0F(int* obj) { return ((CollectibleState*)((GameObject*)obj)->extra)->visibilityBitClear; }
 
 int collectible_setScale(int* obj) { return ((GameObject*)obj)->unkF4; }
 
 void collectible_func0E(int* obj, u32 v)
 {
-    *(u8*)((char*)((GameObject*)obj)->extra + 0x1e) = v;
+    ((CollectibleState*)((GameObject*)obj)->extra)->visibilityBitClear = v;
 }
 
 void collectible_render2(int* obj, f32 f1, f32 f2, f32 f3)
 {
     s32 v = 0x8;
-    *(u8*)((char*)((GameObject*)obj)->extra + 0x1d) = v;
+    ((CollectibleState*)((GameObject*)obj)->extra)->bounceTimer = v;
     ((GameObject*)obj)->anim.velocityX = f1;
     ((GameObject*)obj)->anim.velocityY = f2;
     ((GameObject*)obj)->anim.velocityZ = f3;
@@ -807,11 +807,11 @@ int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             s_val = gCollectibleLaunchSpeed * mathCosf(gCollectibleLaunchAngle);
             c_val = gCollectibleLaunchSpeed * mathSinf(gCollectibleLaunchAngle);
-            *(u8*)((char*)((GameObject*)obj)->extra + 0x1d) = 8;
+            ((CollectibleState*)((GameObject*)obj)->extra)->bounceTimer = 8;
             ((GameObject*)obj)->anim.velocityX = c_val;
             ((GameObject*)obj)->anim.velocityY = (vy = lbl_803E3460);
             ((GameObject*)obj)->anim.velocityZ = s_val;
-            *(u8*)((char*)((GameObject*)obj)->extra + 0x1d) = 8;
+            ((CollectibleState*)((GameObject*)obj)->extra)->bounceTimer = 8;
             ((GameObject*)obj)->anim.velocityX = lbl_803E348C;
             ((GameObject*)obj)->anim.velocityY = vy;
             ((GameObject*)obj)->anim.velocityZ = lbl_803E345C;
