@@ -3464,6 +3464,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         case 2:
             cfg.textureId = 0xdf;
             break;
+        default:
+            cfg.textureId = 0xdf;
+            break;
         }
         cfg.sourceVecZ = 0;
         break;
@@ -3479,26 +3482,20 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         randomGetRange(0x28, 0x50);
         cfg.scale = lbl_803DF5FC * (f32)(s32)
         randomGetRange(0x28, 0x50);
-        if (cfg.sourceVecZ == 1)
+        switch (cfg.sourceVecZ)
         {
+        case 0:
+            cfg.textureId = 0xdd;
+            break;
+        case 1:
             cfg.textureId = 0x160;
-        }
-        else if (cfg.sourceVecZ < 1)
-        {
-            if (cfg.sourceVecZ < 0)
-            {
-            LAB_800a990c:
-                cfg.textureId = 0xdf;
-            }
-            else
-            {
-                cfg.textureId = 0xdd;
-            }
-        }
-        else
-        {
-            if (2 < cfg.sourceVecZ) goto LAB_800a990c;
+            break;
+        case 2:
             cfg.textureId = 0xdf;
+            break;
+        default:
+            cfg.textureId = 0xdf;
+            break;
         }
         cfg.sourceVecZ = 0;
         break;
