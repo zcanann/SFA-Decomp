@@ -2275,6 +2275,7 @@ main/dll/VF/dll_0218_vfpminifire.c:
 
 main/dll/dll_0219.c:
 	.text       start:0x801FA6FC end:0x801FA870
+	.sdata2     start:0x803E60A8 end:0x803E60B4
 
 main/dll/VF/dll_021A_vfpstatueball.c:
 	.text       start:0x801FA870 end:0x801FAC6C
