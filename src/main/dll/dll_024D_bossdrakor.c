@@ -168,41 +168,41 @@ void bossdrakor_update(int obj)
         player = (int)Obj_GetPlayerObject();
         if ((void*)player != NULL)
         {
-            d = Obj_GetYawDeltaToObject(obj, player, 0);
-            if (d < -0x200)
+            step = Obj_GetYawDeltaToObject(obj, player, 0);
+            if (step < -0x200)
             {
-                d = -0x200;
+                step = -0x200;
             }
-            else if (d > 0x200)
+            else if (step > 0x200)
             {
-                d = 0x200;
+                step = 0x200;
             }
-            ((GameObject*)obj)->anim.rotX += d;
-            d = ((GameObject*)obj)->anim.rotY;
-            if (d != 0)
+            ((GameObject*)obj)->anim.rotX += (s16)step;
+            step = ((GameObject*)obj)->anim.rotY;
+            if (step != 0)
             {
-                if (d < -0x100)
+                if (step < -0x100)
                 {
-                    d = -0x100;
+                    step = -0x100;
                 }
-                else if (d > 0x100)
+                else if (step > 0x100)
                 {
-                    d = 0x100;
+                    step = 0x100;
                 }
-                ((GameObject*)obj)->anim.rotY -= d;
+                ((GameObject*)obj)->anim.rotY -= (s16)step;
             }
-            d = ((GameObject*)obj)->anim.rotZ;
-            if (d != 0)
+            step = ((GameObject*)obj)->anim.rotZ;
+            if (step != 0)
             {
-                if (d < -0x100)
+                if (step < -0x100)
                 {
-                    d = -0x100;
+                    step = -0x100;
                 }
-                else if (d > 0x100)
+                else if (step > 0x100)
                 {
-                    d = 0x100;
+                    step = 0x100;
                 }
-                ((GameObject*)obj)->anim.rotZ -= d;
+                ((GameObject*)obj)->anim.rotZ -= (s16)step;
             }
         }
     }
