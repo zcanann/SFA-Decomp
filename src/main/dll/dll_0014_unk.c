@@ -1632,7 +1632,7 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 
     if (state == NULL)
     {
-        goto fail;
+        return 1;
     }
     if (startCurveId == -1)
     {
