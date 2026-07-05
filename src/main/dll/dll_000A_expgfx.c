@@ -1318,7 +1318,7 @@ foundFirst:
                     if ((slot->renderFlags & EXPGFX_RENDER_RANDOM_VELOCITY_BURST) != 0 && randomGetRange(0, 10) ==
                         1)
                     {
-                        if ((f32)slot->lifetimeFrame < slot->lifetimeFrameLimit)
+                        if (slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame)
                         {
                             slot->velocityX +=
                                 lbl_803DF400 * (f32)(int)
@@ -1333,7 +1333,7 @@ foundFirst:
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH) != 0)
                     {
-                        if ((f32)slot->lifetimeFrame < lbl_803DF38C * slot->lifetimeFrameLimit)
+                        if (lbl_803DF38C * slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame)
                         {
                             f32 boost = lbl_803DF404;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH | 0LL;
