@@ -1,19 +1,28 @@
 /*
- * shkillermushroom (DLL 0x1A8) - the killer mushroom enemy rooted in the
- * ground in ThornTail Hollow. It stays dormant until the player runs close,
- * then emerges and inflates a spherical damage field; striking it pops it.
+ * shkillermushroom (DLL 0x1A8) - the large red poisonous mushroom enemy
+ * rooted in the ground in ThornTail Hollow. It is always visible and never
+ * chases; when the player runs close it shakes in place and spreads a growing
+ * cloud of poison that damages anyone inside its radius. Striking it knocks it
+ * into a cartoonish side-to-side stun during which it deals no damage, then it
+ * recovers.
  *
  * EnemyMushroomState.stateId killer path (live-verified in Dolphin, watching
- * one mushroom's stateId byte through a full cycle):
- *   0  dormant - hidden/idle; wakes to 3 when the player is within detectRange
- *                AND moving fast enough (player animSpeedA, via fn_8029610C,
- *                >= gKillerMushroomTriggerAnimSpeed) - a slow walk sneaks past
- *   3  emerge  - growl (baddie_haga_talk3) + emerge anim; -> 4 when anim done
- *   4  attack  - hitRadius inflates (gKillerMushroomChaseRadiusRate, capped at
- *                gKillerMushroomMaxHitRadius) and records a contact hit on the
- *                player; -> 5 after gKillerMushroomChaseDuration frames
- *   5  deflate - cools down for the placement regrow delay; -> 0
- *   9  popped  - struck while active; spawns the burst fx then resets to 0
+ * one mushroom's stateId byte through a full cycle and cross-checking the
+ * on-screen behaviour):
+ *   0  idle    - visible but passive; wakes to 3 when the player is within
+ *                detectRange AND moving fast enough (player animSpeedA, via
+ *                fn_8029610C, >= gKillerMushroomTriggerAnimSpeed) - a slow
+ *                walk sneaks past
+ *   3  startle - starts shaking; plays the rattle sfx (baddie_haga_talk3 - a
+ *                shaker sound, not a growl) + windup anim; -> 4 when anim done
+ *   4  poison  - shakes and spreads poison: the damage radius inflates
+ *                (gKillerMushroomPoisonRadiusRate, capped at
+ *                gKillerMushroomMaxHitRadius) and records a contact hit on any
+ *                player inside it (looped rattle diallp_c); -> 5 after
+ *                gKillerMushroomPoisonDuration frames
+ *   5  settle  - stops shaking, cools down for the placement regrow delay; -> 0
+ *   9  stunned - struck while active; wobbles side to side (cartoon stun,
+ *                looped sfx cagelp_c) and deals no damage, then recovers to 0
  * States 1/2/6/0xa belong to the shared edible-mushroom grow/despawn/respawn
  * path, not the killer cycle. The per-state animation move and advance rate
  * come from the gKillerMushroomStateAnimMoves / gKillerMushroomStateAnimRates
@@ -65,15 +74,15 @@ f32 gKillerMushroomStateAnimRates[11] = {
 extern f32 gKillerMushroomHitEffectScale;
 extern f32 gKillerMushroomInflateRadiusRate;
 extern f32 gKillerMushroomMaxHitRadius;
-extern f32 gKillerMushroomChaseRadiusRate;
-extern f32 gKillerMushroomChaseDuration;
+extern f32 gKillerMushroomPoisonRadiusRate;
+extern f32 gKillerMushroomPoisonDuration;
 extern f32 gKillerMushroomRiseStepDecay;
 extern f32 lbl_803E532C;
 extern f32 lbl_803E5330;
-extern f32 gKillerMushroomPopFxInterval;
+extern f32 gKillerMushroomStunFxInterval;
 extern f32 gKillerMushroomDetectRangeScale;
 extern f32 gKillerMushroomTriggerAnimSpeed;
-extern f32 gKillerMushroomPopAnimProgressDiv;
+extern f32 gKillerMushroomStunAnimProgressDiv;
 
 void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* state, int enableTimer)
 {
@@ -309,7 +318,7 @@ void enemymushroom_update(int* obj)
         break;
     case 4:
         ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
-        ((EnemyMushroomState*)state)->hitRadius = gKillerMushroomChaseRadiusRate * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
+        ((EnemyMushroomState*)state)->hitRadius = gKillerMushroomPoisonRadiusRate * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_diallp_c);
         if (!(((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_HIT_PLAYER))
         {
@@ -327,7 +336,7 @@ void enemymushroom_update(int* obj)
             ((EnemyMushroomState*)state)->hitRadius = gKillerMushroomMaxHitRadius;
         }
         ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
-        if (((EnemyMushroomState*)state)->timer > gKillerMushroomChaseDuration)
+        if (((EnemyMushroomState*)state)->timer > gKillerMushroomPoisonDuration)
         {
             ((EnemyMushroomState*)state)->timer = lbl_803E52FC;
             ((EnemyMushroomState*)state)->stateId = 5;
@@ -407,7 +416,7 @@ void enemymushroom_update(int* obj)
                     hv.y = lbl_803E5330;
                     (*gPartfxInterface)->spawnObject(obj, 0x51d, &hv, 2, -1,
                                                      NULL);
-                    ((EnemyMushroomState*)state)->effectTimer = gKillerMushroomPopFxInterval;
+                    ((EnemyMushroomState*)state)->effectTimer = gKillerMushroomStunFxInterval;
                 }
                 ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
                     ((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
@@ -473,7 +482,7 @@ void enemymushroom_update(int* obj)
                 ((EnemyMushroomState*)state)->stateId = 9;
                 ((EnemyMushroomState*)state)->timer = lbl_803E52FC;
                 ((GameObject*)obj)->anim.currentMoveProgress = (f32)(int)
-                randomGetRange(0, 0x28) / gKillerMushroomPopAnimProgressDiv;
+                randomGetRange(0, 0x28) / gKillerMushroomStunAnimProgressDiv;
             }
             objLightFn_8009a1dc(obj, gKillerMushroomHitEffectScale, &hv, 1, 0);
         }
