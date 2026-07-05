@@ -5627,12 +5627,10 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             objSetAnimField48to0((int*)path);
             (*(void (*)(int, int))*(int*)(*(int*)(*(int*)((char*)path + 0x68)) + 0x38))(
                 path, *(u8*)((inner->moveSlots + 0x5c) + (u32)inner->moveSlotIndex * 0xb0));
-            {
-                int slot = inner->moveSlots +
-                    (u32)inner->moveSlotIndex * 0xb0;
-                (*(void (*)(int, f32, f32))*(int*)(*(int*)(*(int*)((char*)path + 0x68)) + 0x4c))(
-                    path, *(f32*)(slot + 0x48), *(f32*)(slot + 0x4c));
-            }
+            (*(void (*)(int, f32, f32))*(int*)(*(int*)(*(int*)((char*)path + 0x68)) + 0x4c))(
+                path,
+                *(f32*)((inner->moveSlots + 0x48) + (u32)inner->moveSlotIndex * 0xb0),
+                *(f32*)((inner->moveSlots + 0x4c) + (u32)inner->moveSlotIndex * 0xb0));
         }
         {
             f32 z = lbl_803E7EA4;
@@ -5698,16 +5696,15 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         Player_GetObjHitsState(obj)->objectHitMask = 0;
         for (i = 0; i != 3; i++)
         {
-            int stride = (u32)inner->moveSlotIndex * 0xb0;
-            int base = inner->moveSlots + stride;
-            int ent = base + off;
-            if (((GameObject*)obj)->anim.currentMoveProgress >= *(f32*)(ent + 0x30) &&
-                ((GameObject*)obj)->anim.currentMoveProgress <= *(f32*)(ent + 0x3c))
+            if (((GameObject*)obj)->anim.currentMoveProgress >=
+                    *(f32*)((inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0 + off) + 0x30) &&
+                ((GameObject*)obj)->anim.currentMoveProgress <=
+                    *(f32*)((inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0 + off) + 0x3c))
             {
                 if ((s8)Player_GetObjHitsState(obj)->suppressOutgoingHits == 0)
                 {
                     int bits;
-                    switch (*(s8*)((char*)(base + 0x5d) + i))
+                    switch (*(s8*)((char*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0 + 0x5d) + i))
                     {
                     case -1:
                         bits = 0;
