@@ -24,7 +24,7 @@ extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s32 x, u8 alpha, s32 m
 extern u8 hudTextures[0x198];
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern void boxDrawFn_8012975c(void* a, void* b, void* c);
-extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextLoadDir(int dirId);
 extern void gameTextFn_80016810(int a, int b, int c);
 
@@ -522,9 +522,9 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
 void pauseMenuDrawStatus_801274a0(int* arg1)
 {
     s8 i8;
+    s32 ty1;
     s32 alpha;
     s32 ty;
-    s32 ty1;
     s32 i;
     s32 j;
     ObjModel* model;
@@ -593,9 +593,9 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         f32 playRatio;
         u8 magicVal;
         info = mapEvents->getCurCharacterState();
-        hintCount = (u8)((u16)getNextTaskHintText() * 0x64 / 0xbb);
+        hintCount = ((u16)getNextTaskHintText() * 0x64 / 0xbb) & 0xff;
         playRatio = SaveGame_getPlayTime() / lbl_803E2020;
-        ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);
+        ty1 = (s32)((f32)(s16)ty1 * lbl_803DD850);
         {
             f64 tmp = (double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C);
             ty = (s32)(tmp * lbl_803E2088);
@@ -604,13 +604,13 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         i = GameBit_Get(0x63c);
         j = GameBit_Get(0x4e9);
         i += GameBit_Get(0x5f3);
-        gbCount = (u8)(j + (i + GameBit_Get(0x5f4)));
+        gbCount = (i + GameBit_Get(0x5f4)) + j;
         {
             s8 k;
-            u8* p = lbl_8031BB90;
-            for (k = 0; k < 4; k++)
+            u8* p;
+            for (k = 0, p = lbl_8031BB90; k < 4; k++)
             {
-                *(s16*)(p + 0xc0) = k < gbCount ? (u8)(0x22 + (k & 1)) : (u8)0x24;
+                *(s16*)(p + 0xc0) = k < (u8)gbCount ? (u8)(0x22 + (k & 1)) : (u8)0x24;
                 p += 0x20;
             }
         }
@@ -694,9 +694,9 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
                 {
                     tex = (v & 3) + 0x12;
                 }
-                fyj = lbl_803E1FAC * (f32)(u32)(u16)
-                jj + lbl_803E1F30;
-                for (i8 = 0x14; i8 >= 0; i8 -= 4)
+                i8 = 0x14;
+                fyj = lbl_803E1FAC * (f32)(u32)(jj & 0xffff) + lbl_803E1F30;
+                for (; i8 >= 0; i8 -= 4)
                 {
                     s16 px = (s16)((0xff - i8) - lbl_803DD75C);
                     pauseMenuDrawElement(*(int**)((u8*)hudTextures + tex * 4), fyj, lbl_803E20B4, px, ty,
