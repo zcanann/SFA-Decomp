@@ -637,7 +637,7 @@ void objSeqDoBgCmds0D(u8* seq, u8* obj, int skipSpawns)
                 resource = Resource_Acquire((u16)(cmdParam + 0xab), 1);
                 if (resource != NULL)
                 {
-                    (*(void (*)(int, int, int, int, int, int, int))(*(int*)(*(int*)resource + 0x4)))(
+                    (*(void (**)(int, int, int, int, int, int, int))((char*)*(int**)resource + 0x4))(
                         cmdObj, 0, 0, 1, -1, (u8)cmdParam, 0);
                 }
                 if (resource != NULL)
