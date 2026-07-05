@@ -5504,7 +5504,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
         vp = (int)lbl_803DCF38;
     }
 
-    flag1 = !(flags & 1);
+    flag1 = (s8)!(flags & 1);
     flag2 = (s8)(flags & 2);
     flag4 = flags & 4;
 
