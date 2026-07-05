@@ -41,7 +41,6 @@ typedef struct LightGlow
     u8 pad2FB[0x300 - 0x2FB];
 } LightGlow;
 
-extern f32 lbl_803E5E08;
 extern void queueGlowRender(void* light);
 extern void ModelLightStruct_free(void* light);
 extern void* objCreateLight(void* obj, int);
@@ -57,16 +56,19 @@ extern void lightSetField4D(void*, int);
 extern void modelLightStruct_setupGlow(void*, int, u8, u8, u8, int, f32);
 extern void modelLightStruct_setGlowProjectionRadius(void*, f32);
 extern u8 gLightSourceColorTable[];
-extern f32 lbl_803E5E0C;
-extern f32 gLightSourceFxTimerPeriod;
-extern f32 gLightSourceRangeScale;
-
-void lightsource_hitDetect(void)
-{
-}
 
 int lightsource_getExtraSize(void) { return 0x1c; }
 int lightsource_getObjectTypeId(void) { return 0x1; }
+
+void lightsource_free(int obj)
+{
+    int state = *(int*)&((GameObject*)obj)->extra;
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+    if (((LightSourceState*)state)->light != 0)
+    {
+        ModelLightStruct_free(((LightSourceState*)state)->light);
+    }
+}
 
 void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -78,18 +80,12 @@ void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible)
     }
     if (visible != 0)
     {
-        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5E08);
+        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, 1.0f);
     }
 }
 
-void lightsource_free(int obj)
+void lightsource_hitDetect(void)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-    if (((LightSourceState*)state)->light != 0)
-    {
-        ModelLightStruct_free(((LightSourceState*)state)->light);
-    }
 }
 
 #pragma opt_strength_reduction off
@@ -107,9 +103,6 @@ void lightsource_update(int obj)
 
     extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32* vec);
     extern f32 timeDelta;
-    extern f32 lbl_803E5E14;
-    extern f32 lbl_803E5E18;
-    extern f32 gLightSourceSparkTimerPeriod;
     LightSourceState* b;
     LightGlow* t;
     s16 sum;
@@ -157,10 +150,10 @@ void lightsource_update(int obj)
     if (b->lit != 0 && (((GameObject*)obj)->objectFlags & LIGHTSOURCE_OBJFLAG_RENDERED))
     {
         b->fxTimer = b->fxTimer - timeDelta;
-        if (b->fxTimer <= lbl_803E5E0C)
+        if (b->fxTimer <= 0.0f)
         {
             sfxFlag = b->fxArg;
-            b->fxTimer = b->fxTimer + gLightSourceFxTimerPeriod;
+            b->fxTimer += 15.0f;
         }
         else
         {
@@ -168,26 +161,26 @@ void lightsource_update(int obj)
         }
         if (b->fxType != 0 || b->fxArg != 0)
         {
-            vec[0] = lbl_803E5E0C;
+            vec[0] = 0.0f;
             if (((GameObject*)obj)->anim.seqId == 0x717)
             {
                 vec[1] = vec[0];
             }
             else
             {
-                vec[1] = lbl_803E5E14;
+                vec[1] = 3.5f;
             }
-            vec[2] = *(f32*)&lbl_803E5E0C;
-            fn_80098B18(obj, lbl_803E5E18 * ((GameObject*)obj)->anim.rootMotionScale, b->fxType, sfxFlag, 0, vec);
+            vec[2] = 0.0f;
+            fn_80098B18(obj, 10.0f * ((GameObject*)obj)->anim.rootMotionScale, b->fxType, sfxFlag, 0, vec);
         }
         if (b->sparks != 0)
         {
             b->sparkSpawnTimer = b->sparkSpawnTimer - timeDelta;
-            if (b->sparkSpawnTimer <= lbl_803E5E0C)
+            if (b->sparkSpawnTimer <= 0.0f)
             {
-                fx.scale = lbl_803E5E08;
+                fx.scale = 1.0f;
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x7cb, &fx, 2, -1, NULL);
-                b->sparkSpawnTimer = b->sparkSpawnTimer + gLightSourceSparkTimerPeriod;
+                b->sparkSpawnTimer += 5.0f;
             }
         }
     }
@@ -249,7 +242,7 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
     range = setup->range;
     if (range > 0)
     {
-        obj->anim.rootMotionScale = range / gLightSourceRangeScale;
+        obj->anim.rootMotionScale = range / 8192.0f;
     }
     else
     {
@@ -369,7 +362,7 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
         state->fxType = 0;
     }
     obj->objectFlags |= LIGHTSOURCE_OBJFLAG_HITDETECT_DISABLED;
-    state->fxTimer = gLightSourceFxTimerPeriod;
+    state->fxTimer = 15.0f;
     state->sparkTimer = 1.0f;
 }
 
