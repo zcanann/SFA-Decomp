@@ -3006,7 +3006,7 @@ void* textureLoad(int texId, u8 flagIn)
     }
     n = 0;
     entry = gLoadedTextures;
-    for (; n < gLoadedTextureCount; n++, entry++)
+    for (; n < gLoadedTextureCount; entry++, n++)
     {
         if (texId == entry->key)
         {
