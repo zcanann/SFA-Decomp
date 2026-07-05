@@ -13,10 +13,17 @@
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/VF/vf_shared.h"
 
-extern f32 lbl_803E3F38;
+int texscroll_getExtraSize(void) { return TEXSCROLL_EXTRA_STATE_BYTES; }
+int texscroll_getObjectTypeId(void) { return 0x0; }
 
 void texscroll_free(void)
 {
+}
+
+void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void texscroll_hitDetect(void)
@@ -26,17 +33,6 @@ void texscroll_hitDetect(void)
 void texscroll_update(void)
 {
 }
-
-void texscroll_release(void)
-{
-}
-
-void texscroll_initialise(void)
-{
-}
-
-int texscroll_getExtraSize(void) { return TEXSCROLL_EXTRA_STATE_BYTES; }
-int texscroll_getObjectTypeId(void) { return 0x0; }
 
 void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loadFlags)
 {
@@ -56,10 +52,12 @@ void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loa
     state->initLock = 0;
 }
 
-void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void texscroll_release(void)
 {
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3F38);
+}
+
+void texscroll_initialise(void)
+{
 }
 
 ObjectDescriptor gTexscrollObjDescriptor = {

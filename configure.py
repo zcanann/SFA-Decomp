@@ -1264,7 +1264,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_0131_cfdoorlight.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/holopoint.c"),
             Object(NonMatching, "main/dll/dll_0134_texscroll2.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_0135_texscroll.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_0135_texscroll.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0136_waveanimator.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0137_alphaanimator.c"),
             Object(NonMatching, "main/dll/dll_0138_groundanimator.c", cflags=cflags_dll_noopt),

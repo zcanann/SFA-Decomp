@@ -1440,6 +1440,7 @@ main/dll/dll_0134_texscroll2.c:
 main/dll/dll_0135_texscroll.c:
 	.text       start:0x801922E4 end:0x80192394
 	.data       start:0x80322140 end:0x80322178
+	.sdata2     start:0x803E3F38 end:0x803E3F3C
 
 main/dll/dll_0136_waveanimator.c:
 	.text       start:0x80192394 end:0x80192A68
