@@ -1592,6 +1592,7 @@ main/dll/dll_017D_rollingbarrel.c:
 
 main/dll/MMP/dll_017E_mmplevelcontrol.c:
 	.text       start:0x801A6638 end:0x801A6C28
+	.sdata2     start:0x803E44C0 end:0x803E44CC
 
 main/dll/dll_017F_moonseedbush.c:
 	.text       start:0x801A6C28 end:0x801A6F4C

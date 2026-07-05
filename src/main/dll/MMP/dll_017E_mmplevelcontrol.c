@@ -34,33 +34,10 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
 
 
 extern f32 timeDelta;
-extern f32 lbl_803E44C0;
-extern f32 lbl_803E44C4;
-extern f32 lbl_803E44C8;
 extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
 
 void MMP_levelcontrol_update(int obj);
-
-void MMP_levelcontrol_hitDetect(void)
-{
-}
-
-int MMP_levelcontrol_getExtraSize(void) { return 0x0; }
-int MMP_levelcontrol_getObjectTypeId(void) { return 0x0; }
-
-void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E44C4);
-}
-
-void MMP_levelcontrol_free(int obj)
-{
-    lbl_803DDB28 = lbl_803E44C0;
-    lbl_803DDB2C = 0;
-    Music_Trigger(MUSICTRIG_WLC_Puzzle, 0);
-}
 
 int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -87,6 +64,26 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
+int MMP_levelcontrol_getExtraSize(void) { return 0x0; }
+int MMP_levelcontrol_getObjectTypeId(void) { return 0x0; }
+
+void MMP_levelcontrol_free(int obj)
+{
+    lbl_803DDB28 = 0.0f;
+    lbl_803DDB2C = 0;
+    Music_Trigger(MUSICTRIG_WLC_Puzzle, 0);
+}
+
+void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+}
+
+void MMP_levelcontrol_hitDetect(void)
+{
+}
+
 #pragma peephole on
 void MMP_levelcontrol_update(int obj)
 {
@@ -97,15 +94,15 @@ void MMP_levelcontrol_update(int obj)
     playerForMap = (int)Obj_GetPlayerObject();
     playerForFx = (int)Obj_GetPlayerObject();
 
-    if (lbl_803DDB28 > lbl_803E44C0)
+    if (lbl_803DDB28 > 0.0f)
     {
         gameTextShow(0x34f);
         {
             f32 t = lbl_803DDB28 - timeDelta;
             lbl_803DDB28 = t;
-            if (t < lbl_803E44C0)
+            if (t < 0.0f)
             {
-                lbl_803DDB28 = lbl_803E44C0;
+                lbl_803DDB28 = 0.0f;
             }
         }
     }
@@ -189,14 +186,6 @@ void MMP_levelcontrol_update(int obj)
     SCGameBitLatch_Update(&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
 }
 
-void MMP_levelcontrol_release(void)
-{
-}
-
-void MMP_levelcontrol_initialise(void)
-{
-}
-
 #pragma peephole off
 void MMP_levelcontrol_init(int obj)
 {
@@ -213,7 +202,7 @@ void MMP_levelcontrol_init(int obj)
     *(u32*)&((GameObject*)obj)->unkF8 = GameBit_Get(0xF33);
     ((GameObject*)obj)->animEventCallback = MMP_LevelControl_SeqFn;
     unlockLevel(mapGetDirIdx(0x12), 0, 0);
-    lbl_803DDB28 = lbl_803E44C8;
+    lbl_803DDB28 = 300.0f;
     lbl_803DDB2C = 0;
     Music_Trigger(MUSICTRIG_wind_ambi, 0);
     Music_Trigger(MUSICTRIG_mammoth_walk_db, 0);
@@ -221,4 +210,12 @@ void MMP_levelcontrol_init(int obj)
     Music_Trigger(MUSICTRIG_CRF_Swim, 0);
     Music_Trigger(MUSICTRIG_cldrnr_walkabout, 0);
     GameBit_Set(0xDCF, 0);
+}
+
+void MMP_levelcontrol_release(void)
+{
+}
+
+void MMP_levelcontrol_initialise(void)
+{
 }

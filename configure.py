@@ -1305,7 +1305,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_0166_exploded.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0167_spiritdoorlock.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_017D_rollingbarrel.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/MMP/dll_017E_mmplevelcontrol.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/MMP/dll_017E_mmplevelcontrol.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_017F_moonseedbush.c"),
             Object(NonMatching, "main/dll/MMP/dll_0180_mmpasteroidre.c"),
             Object(NonMatching, "main/dll/MMP/dll_0182_mmpmoonrock.c", cflags=cflags_dll_noopt),
