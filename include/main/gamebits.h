@@ -154,6 +154,28 @@ enum GameBitId {
      */
     GAMEBIT_STAFF_PICKUP_MAP_UNLOADED = 0x3B8,
 
+    /*
+     * ThornTail Hollow staff-combat tutorial arena - the scripted encounter
+     * immediately after the staff pickup: an invisible trigger around the
+     * corner opens a door, four SharpClaws pour out, the door shuts, Krystal's
+     * floating head prompts "use the staff in combat", then the fight begins.
+     * It works like a life-force door (kill the whole group -> the way opens).
+     *
+     * Each SharpClaw carries one of these four death bits (per-placement
+     * deathGamebit, set by the DLL 0xC9 enemy when it dies). The area
+     * controller shlevelcontrol (dll_01AE, SH_LevelControl_doEarlyScenes,
+     * line 626) polls all four and, once all are set, sets the ARENA_CLEARED
+     * latch to open the way. Live-verified with a before/after GameBit diff
+     * across clearing the arena: exactly these five flipped 0->1 (and only
+     * these; the rest of the diff was map-streaming). The four enemy<->bit
+     * assignment is arbitrary (placement order), so 1..4 are just labels.
+     */
+    GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_1 = 0x166,
+    GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_2 = 0x167,
+    GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_3 = 0x34A,
+    GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_4 = 0x36F,
+    GAMEBIT_STAFF_TUTORIAL_ARENA_CLEARED = 0x2DA,
+
     /* ======================================================================
      * Unplaced - meaning verified, but the setter (the story beat that flips
      * the bit) is not yet traced, so these are not yet slotted into the

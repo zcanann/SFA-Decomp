@@ -623,16 +623,16 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
         state->earlySceneDelay++;
     }
 
-    if (GameBit_Get(0x2da) == 0 &&
-        GameBit_Get(0x34a) != 0 &&
-        GameBit_Get(0x36f) != 0 &&
-        GameBit_Get(0x166) != 0 &&
-        GameBit_Get(0x167) != 0)
+    if (GameBit_Get(GAMEBIT_STAFF_TUTORIAL_ARENA_CLEARED) == 0 &&
+        GameBit_Get(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_3) != 0 &&
+        GameBit_Get(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_4) != 0 &&
+        GameBit_Get(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_1) != 0 &&
+        GameBit_Get(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_2) != 0)
     {
         playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
         if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0)
         {
-            GameBit_Set(0x2da, 1);
+            GameBit_Set(GAMEBIT_STAFF_TUTORIAL_ARENA_CLEARED, 1);
         }
     }
 
