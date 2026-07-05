@@ -648,10 +648,10 @@ void gunpowderbarrel_update(int obj)
 {
     extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
     u8* player;
-    int def;
+    GunpowderbarrelPlacement* def;
     GunpowderBarrelState* state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    def = *(GunpowderbarrelPlacement**)&((GameObject*)obj)->anim.placementData;
 
     if (state->impactSoundCooldown <= lbl_803E4334)
     {
@@ -734,7 +734,7 @@ void gunpowderbarrel_update(int obj)
                 gunpowderbarrel_setPlayerHeldState((int*)obj, 0);
                 if (arg != 0)
                 {
-                    ObjGroup_AddObject(obj, 0x16);
+                    ObjGroup_AddObject((u32)(GameObject*)obj, 0x16);
                 }
                 break;
             }
@@ -774,7 +774,7 @@ void gunpowderbarrel_update(int obj)
             /* Find the owning generator: match a placement link id against the
              * group-0x3a generators, otherwise take the nearest one. */
             gen = 0;
-            if (((GunpowderbarrelPlacement*)def)->generatorLinkId != 0)
+            if (def->generatorLinkId != 0)
             {
                 int cnt;
                 u32* objs = ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &cnt);
@@ -783,7 +783,7 @@ void gunpowderbarrel_update(int obj)
                 p = objs;
                 for (; i < cnt; i++)
                 {
-                    if (((GunpowderbarrelPlacement*)def)->generatorLinkId == barrelgener_getLinkId(*p))
+                    if (def->generatorLinkId == barrelgener_getLinkId(*p))
                     {
                         gen = objs[i];
                         break;
