@@ -133,9 +133,9 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
     f32 horizDist;
     DrakorMissileState* s = ((GameObject*)obj)->extra;
 
-    dir[0] = *(f32*)((char*)target + 0xc) - *(f32*)((char*)from + 0xc);
-    dir[1] = *(f32*)((char*)target + 0x10) - *(f32*)((char*)from + 0x10);
-    dir[2] = *(f32*)((char*)target + 0x14) - *(f32*)((char*)from + 0x14);
+    dir[0] = ((GameObject*)target)->anim.localPosX - ((GameObject*)from)->anim.localPosX;
+    dir[1] = ((GameObject*)target)->anim.localPosY - ((GameObject*)from)->anim.localPosY;
+    dir[2] = ((GameObject*)target)->anim.localPosZ - ((GameObject*)from)->anim.localPosZ;
     mag = sqrtf(dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2]) / speed;
     if (mag != lbl_803E695C)
     {
@@ -143,9 +143,9 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
         *(f32*)&dir[1] = dir[1] / mag;
         *(f32*)&dir[2] = dir[2] / mag;
     }
-    ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)from + 0xc);
-    ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)from + 0x10);
-    ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)from + 0x14);
+    ((GameObject*)obj)->anim.localPosX = ((GameObject*)from)->anim.localPosX;
+    ((GameObject*)obj)->anim.localPosY = ((GameObject*)from)->anim.localPosY;
+    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)from)->anim.localPosZ;
     ((GameObject*)obj)->anim.velocityX = dir[0];
     ((GameObject*)obj)->anim.velocityY = dir[1];
     ((GameObject*)obj)->anim.velocityZ = dir[2];
