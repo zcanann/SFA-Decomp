@@ -13,6 +13,7 @@
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/vecrotatezxyarg_struct.h"
+#include "main/dll/dll_80136a40.h"
 
 #define FLAMEBLAST_OBJFLAG_RENDERED 0x800
 
@@ -42,7 +43,6 @@ extern void fn_80098B18(int obj, f32 f, int a, int b, int c, int d);
 int fn_8017805C(GameObject* obj, FlameblastState* state);
 extern void vecRotateZXY(void* in, void* out);
 extern int fn_80138F90(void);
-extern f32* trickyGetQueuedPathParticlePos(s16* tricky);
 extern f32 timeDelta;
 
 void objSetAnimSpeedTo1(GameObject* obj)

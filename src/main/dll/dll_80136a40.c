@@ -31,6 +31,7 @@
 #include "main/objseq.h"
 #include "stdarg.h"
 #include "dolphin/gx/GXCull.h"
+#include "main/dll/dll_80136a40.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/sfa_extern_decls.h"
 #include "dolphin/os/OSCache.h"
@@ -205,7 +206,7 @@ u32 fn_80138F84(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extr
 /* EN v1.0 0x80138F90  size: 12b  obj->_b8->_414 . */
 s16 fn_80138F90(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk414; }
 /* EN v1.0 0x80138F9C  size: 12b  Returns Tricky's queued path particle position. */
-void* trickyGetQueuedPathParticlePos(u8* obj) { return &((TrickyImpressState*)((GameObject*)obj)->extra)->renderPosX; }
+void* trickyGetQueuedPathParticlePos(void* obj) { return &((TrickyImpressState*)((GameObject*)obj)->extra)->renderPosX; }
 
 /* EN v1.0 0x80135BC4  size: 8b   titlescreen_getExtraSize -> 56. */
 
