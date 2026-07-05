@@ -5,10 +5,13 @@
 
 typedef struct AppleOnTreeState
 {
-    u8 unk00[8];
+    u8 unk00[4];
+    f32 phaseDuration;
     f32 elapsedTime;
     f32 flightTime;
-    u8 unk10[0x24 - 0x10];
+    f32 growThreshold;
+    u8 unk14[0x20 - 0x14];
+    f32 fadeThreshold;
     f32 unk24;
     f32 velY;
     f32 posY;

@@ -623,7 +623,7 @@ void appleontree_update(int objArg)
         fa = ((AppleOnTreeState*)state)->flightTime;
         ((AppleOnTreeState*)state)->flightTime = fa + timeDelta;
         fb = ((AppleOnTreeState*)state)->elapsedTime;
-        frac = fb / *(float*)(state + 4);
+        frac = fb / ((AppleOnTreeState*)state)->phaseDuration;
         switch (((AppleOnTreeState*)state)->animState)
         {
         case APPLEONTREE_STATE_GROWING:
@@ -650,7 +650,7 @@ void appleontree_update(int objArg)
             }
             else
             {
-                if (frac > *(float*)(state + 0x10))
+                if (frac > ((AppleOnTreeState*)state)->growThreshold)
                 {
                     ((GameObject*)obj)->anim.rootMotionScale = *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
                     ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_RIPE;
@@ -766,7 +766,7 @@ void appleontree_update(int objArg)
             }
             break;
         case APPLEONTREE_STATE_KNOCKED:
-            if (frac > *(float*)(state + 0x20))
+            if (frac > ((AppleOnTreeState*)state)->fadeThreshold)
             {
                 ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_FADEOUT;
                 ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
