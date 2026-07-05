@@ -2031,7 +2031,8 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     }
     hdrOff = 0;
     groupSlot = 1;
-    *(s16*)(hdr + (groupSlot - 1) * 2 + 0x70) = hdrOff;
+    listIdx = 0;
+    *(s16*)(hdr + listIdx * 2 + 0x70) = hdrOff;
     i = 0;
     for (; i < (int)((ModelFileHeader*)hdr)->animationCount; i++)
     {
