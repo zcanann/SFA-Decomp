@@ -43,11 +43,11 @@ void iceblast_hitDetect(void)
 
 #pragma peephole off
 #pragma opt_common_subs off
-void iceblast_update(int* obj)
+void iceblast_update(GameObject* obj)
 {
-    int* path;
-    f32* state;
-    int* player;
+    GameObject* path;
+    f32* timer;
+    GameObject* player;
     IceblastPlacement* def;
     struct
     {
@@ -56,51 +56,45 @@ void iceblast_update(int* obj)
         f32 pos[4];
     } vec;
     player = Obj_GetPlayerObject();
-    state = ((GameObject*)obj)->extra;
-    def = *(IceblastPlacement**)&((GameObject*)obj)->anim.placementData;
-    if (player != NULL && (path = ((GameObject*)player)->childObjs[0]) != NULL)
+    timer = obj->extra;
+    def = (IceblastPlacement*)obj->anim.placementData;
+    if (player != NULL && (path = player->childObjs[0]) != NULL)
     {
-        ((GameObject*)obj)->anim.rotZ = ((GameObject*)path)->anim.rotZ;
-        ((GameObject*)obj)->anim.rotY = ((GameObject*)path)->anim.rotY;
-        ((GameObject*)obj)->anim.rotX = ((GameObject*)path)->anim.rotX;
+        obj->anim.rotZ = path->anim.rotZ;
+        obj->anim.rotY = path->anim.rotY;
+        obj->anim.rotX = path->anim.rotX;
     }
     else
     {
         return;
     }
+    ObjHits_SetHitVolumeSlot((u32)obj, 0x10, def->useAltHitVolume != 0 ? 3 : 1, 0);
+
+    timer[0] -= timeDelta;
+    if (timer[0] <= 0.0f)
     {
-        int slot = def->useAltHitVolume != 0 ? 3 : 1;
-        ObjHits_SetHitVolumeSlot((u32)obj, 0x10, slot, 0);
+        timer[0] += 24.0f;
+        obj->anim.velocityX = 0.0f;
+        obj->anim.velocityZ = 0.0f;
+        obj->anim.velocityY = -3.0f;
+        vec.pos[1] = 0.0f;
+        vec.pos[2] = 0.0f;
+        vec.pos[3] = 0.0f;
+        vec.pos[0] = 1.0f;
+        vec.dir[2] = path->anim.rotZ;
+        vec.dir[1] = path->anim.rotY;
+        vec.dir[0] = path->anim.rotX;
+        vecRotateZXY(&vec, &obj->anim.velocityX);
+        ObjPath_GetPointWorldPosition((int)path, 0, &obj->anim.localPosX, &obj->anim.localPosY,
+                                      &obj->anim.localPosZ, 0);
+        ObjHits_EnableObject((u32)obj);
     }
-    state[0] = state[0] - timeDelta;
-    {
-        f32 zero;
-        f32 cur = state[0];
-        if (cur <= (zero = 0.0f))
-        {
-            state[0] += 24.0f;
-            ((f32*)(int)obj)[9] = zero;
-            ((f32*)obj)[11] = zero;
-            ((f32*)obj)[10] = -3.0f;
-            vec.pos[1] = zero;
-            vec.pos[2] = zero;
-            vec.pos[3] = zero;
-            vec.pos[0] = 1.0f;
-            vec.dir[2] = ((GameObject*)path)->anim.rotZ;
-            vec.dir[1] = ((GameObject*)path)->anim.rotY;
-            vec.dir[0] = ((GameObject*)path)->anim.rotX;
-            vecRotateZXY(&vec, (f32*)((char*)obj + 0x24));
-            ObjPath_GetPointWorldPosition((int)path, 0, &((GameObject*)obj)->anim.localPosX,
-                                          &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ, 0);
-            ObjHits_EnableObject((u32)obj);
-        }
-    }
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
+    obj->anim.previousLocalPosX = obj->anim.localPosX;
+    obj->anim.previousLocalPosY = obj->anim.localPosY;
+    obj->anim.previousLocalPosZ = obj->anim.localPosZ;
+    obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
+    obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
+    obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
 }
 #pragma opt_common_subs reset
 #pragma peephole reset
