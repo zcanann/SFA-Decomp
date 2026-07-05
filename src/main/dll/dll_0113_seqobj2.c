@@ -108,7 +108,7 @@ void seqObject_free(int obj)
     ObjGroup_RemoveObject(obj, SEQOBJ2_OBJGROUP);
 }
 
-void seqObject_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void seqObject_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
