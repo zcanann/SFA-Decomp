@@ -188,7 +188,7 @@ void lightning_update(u8* obj)
             data = *(u8**)(*slot + 0xb8);
             if ((((LightningMode*)(data + 0x24))->mode & 1) != 0)
             {
-                hitDetectFn_80097070((u8*)*slot, *(f32*)(data + 0x10), 1, 7,
+                hitDetectFn_80097070((u8*)*slot, ((LightningState*)data)->hitRadius, 1, 7,
                                      0x1e, 0);
             }
             if ((state->modeBits.mode & 2) != 0)
@@ -198,7 +198,7 @@ void lightning_update(u8* obj)
             }
             if ((((LightningMode*)(data + 0x24))->mode & 2) != 0)
             {
-                objfx_spawnDirectionalBurst((u8*)*slot, 5, *(f32*)(data + 0x14),
+                objfx_spawnDirectionalBurst((u8*)*slot, 5, ((LightningState*)data)->burstRadius,
                                             1, 1, 100, 5.0f, 0, 0);
             }
         }
