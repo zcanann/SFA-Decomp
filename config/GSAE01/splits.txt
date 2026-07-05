@@ -807,6 +807,7 @@ main/dll/dll_0052_cameramodeforcebehind.c:
 
 main/dll/dll_0053_cameramodecloudrunner.c:
 	.text       start:0x801101E4 end:0x801106B4
+	.sdata2     start:0x803E1B20 end:0x803E1B40
 
 main/dll/dll_0054_dll54.c:
 	.text       start:0x801106B4 end:0x80110C80

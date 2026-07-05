@@ -12,16 +12,6 @@
  * world position back into the target's local frame.
  *
  * Most of the mode's vtable slots are empty no-op stubs.
- *
- * WIP boundary split: fn_80110C80 / fn_80110EC0 fall outside
- * [0x801101E4-0x801106B4); they belong to neighbouring camera-mode TUs and
- * are pending relocation before the header range claim is fully accurate.
- *
- * CameraModeForceBehind_func05_nop / _func06_nop are likewise out of this
- * TU's range (no symbols.txt entry here; canonical defs live in dll_0052 /
- * dll_0051). They are intentional shared vtable no-op stubs replicated across
- * the camera-mode TUs (linker-pick-one), kept here so the mode's vtable is
- * fully populated.
  */
 #include "main/mm.h"
 #include "main/camera_object.h"
@@ -37,12 +27,6 @@ extern int getAngle(float y, float x);
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern int fn_802972A8(int obj);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern f32 lbl_803E1B20;
-extern f32 lbl_803E1B24;
-extern f32 lbl_803E1B28;
-extern f32 lbl_803E1B2C;
-extern f32 lbl_803E1B30;
-extern f32 lbl_803E1B34;
 extern f32 lbl_803DB9D0;
 extern int lbl_803DB9D4;
 
@@ -60,53 +44,8 @@ typedef struct CloudRunnerObjectPos
     f32 z;
 } CloudRunnerObjectPos;
 
-void CameraModeForceBehind_func06_nop(void)
-{
-}
-
-void CameraModeForceBehind_func05_nop(void)
-{
-}
-
 void CameraModeCloudRunner_copyToCurrent(void)
 {
-}
-
-void CameraModeCloudRunner_init(int* camera, int radius, f32* focus)
-{
-    int* targetObj = ((int**)camera)[0xA4 / 4];
-    if (lbl_803DD5B8 == NULL)
-    {
-        lbl_803DD5B8 = (CameraModeCloudRunnerState*)mmAlloc(sizeof(CameraModeCloudRunnerState), 15, 0);
-    }
-    {
-        f32 r;
-        if (focus != NULL)
-        {
-            lbl_803DD5B8->focusX = focus[0];
-            lbl_803DD5B8->focusY = focus[1];
-            lbl_803DD5B8->focusZ = focus[2];
-            r = focus[3];
-        }
-        else
-        {
-            lbl_803DD5B8->focusX = ((GameObject*)targetObj)->anim.worldPosX;
-            lbl_803DD5B8->focusY = ((GameObject*)targetObj)->anim.worldPosY;
-            lbl_803DD5B8->focusZ = ((GameObject*)targetObj)->anim.worldPosZ;
-            r = radius;
-        }
-        lbl_803DD5B8->radius = r;
-    }
-    getAngle(
-        ((GameObject*)camera)->anim.worldPosX - lbl_803DD5B8->focusX,
-        ((GameObject*)camera)->anim.worldPosZ - lbl_803DD5B8->focusZ);
-    {
-        int* target = ((int**)camera)[0xA4 / 4];
-        f32* state = (f32*)lbl_803DD5B8;
-        getAngle(
-            ((GameObject*)target)->anim.worldPosX - state[0],
-            ((GameObject*)target)->anim.worldPosZ - state[2]);
-    }
 }
 
 void CameraModeCloudRunner_free(void)
@@ -143,9 +82,9 @@ void CameraModeCloudRunner_update(u8* obj)
             mxin.angles[0] = *(s16*)(curve + 0);
             mxin.angles[1] = *(s16*)(curve + 2);
             mxin.angles[2] = *(s16*)(curve + 4);
-            mxin.scale = lbl_803E1B20;
+            mxin.scale = 1.0f;
             setMatrixFromObjectPos(matrix, &mxin);
-            Matrix_TransformPoint(matrix, lbl_803E1B24, lbl_803E1B28, lbl_803E1B2C,
+            Matrix_TransformPoint(matrix, 0.0f, 65.0f, -10.0f,
                                   &baseX, &baseY, &baseZ);
         }
         else
@@ -187,10 +126,10 @@ void CameraModeCloudRunner_update(u8* obj)
 
     camera->anim.rotZ = (s16)(target->anim.rotZ * lbl_803DB9D4);
 
-    cosYaw = mathSinf(lbl_803E1B30 * (f32)(s32)(camera->anim.rotX - 0x4000) / lbl_803E1B34);
-    sinYaw = mathCosf(lbl_803E1B30 * (f32)(s32)(camera->anim.rotX - 0x4000) / lbl_803E1B34);
-    sinPitch = mathCosf(lbl_803E1B30 * (f32)(s32)camera->anim.rotY / lbl_803E1B34);
-    cosPitch = mathSinf(lbl_803E1B30 * (f32)(s32)camera->anim.rotY / lbl_803E1B34);
+    cosYaw = mathSinf(3.1415927f * (f32)(s32)(camera->anim.rotX - 0x4000) / 32768.0f);
+    sinYaw = mathCosf(3.1415927f * (f32)(s32)(camera->anim.rotX - 0x4000) / 32768.0f);
+    sinPitch = mathCosf(3.1415927f * (f32)(s32)camera->anim.rotY / 32768.0f);
+    cosPitch = mathSinf(3.1415927f * (f32)(s32)camera->anim.rotY / 32768.0f);
     radius = lbl_803DD5B8->radius;
     ry = radius * cosPitch;
     rs = radius * sinPitch;
@@ -204,6 +143,43 @@ void CameraModeCloudRunner_update(u8* obj)
                                    *(int*)&camera->anim.parent);
 }
 #pragma opt_propagation reset
+
+void CameraModeCloudRunner_init(int* camera, int radius, f32* focus)
+{
+    int* targetObj = ((int**)camera)[0xA4 / 4];
+    if (lbl_803DD5B8 == NULL)
+    {
+        lbl_803DD5B8 = (CameraModeCloudRunnerState*)mmAlloc(sizeof(CameraModeCloudRunnerState), 15, 0);
+    }
+    {
+        f32 r;
+        if (focus != NULL)
+        {
+            lbl_803DD5B8->focusX = focus[0];
+            lbl_803DD5B8->focusY = focus[1];
+            lbl_803DD5B8->focusZ = focus[2];
+            r = focus[3];
+        }
+        else
+        {
+            lbl_803DD5B8->focusX = ((GameObject*)targetObj)->anim.worldPosX;
+            lbl_803DD5B8->focusY = ((GameObject*)targetObj)->anim.worldPosY;
+            lbl_803DD5B8->focusZ = ((GameObject*)targetObj)->anim.worldPosZ;
+            r = radius;
+        }
+        lbl_803DD5B8->radius = r;
+    }
+    getAngle(
+        ((GameObject*)camera)->anim.worldPosX - lbl_803DD5B8->focusX,
+        ((GameObject*)camera)->anim.worldPosZ - lbl_803DD5B8->focusZ);
+    {
+        int* target = ((int**)camera)[0xA4 / 4];
+        f32* state = (f32*)lbl_803DD5B8;
+        getAngle(
+            ((GameObject*)target)->anim.worldPosX - state[0],
+            ((GameObject*)target)->anim.worldPosZ - state[2]);
+    }
+}
 
 void CameraModeCloudRunner_release(void)
 {
