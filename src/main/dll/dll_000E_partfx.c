@@ -3993,18 +3993,18 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.textureId = 0x30;
             if (cfg.behaviorFlags & 1)
             {
-                srcPosX = cfg.sourcePosY;
-                srcPosY = cfg.sourcePosZ;
-                srcPosZ = cfg.sourcePosW;
                 if (cfg.attachedSource != NULL)
                 {
-                    srcPosX = ((GameObject*)cfg.attachedSource)->anim.localPosX;
-                    srcPosY = ((GameObject*)cfg.attachedSource)->anim.localPosY;
-                    srcPosZ = ((GameObject*)cfg.attachedSource)->anim.localPosZ;
+                    (*startPos) = (*startPos) + ((GameObject*)cfg.attachedSource)->anim.localPosX;
+                    cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.localPosY;
+                    cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.localPosZ;
                 }
-                cfg.startPosZ = cfg.startPosZ + srcPosZ;
-                cfg.startPosY = cfg.startPosY + srcPosY;
-                (*startPos) = (*startPos) + srcPosX;
+                else
+                {
+                    (*startPos) = (*startPos) + cfg.sourcePosY;
+                    cfg.startPosY = cfg.startPosY + cfg.sourcePosZ;
+                    cfg.startPosZ = cfg.startPosZ + cfg.sourcePosW;
+                }
             }
             (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
         }
