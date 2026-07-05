@@ -198,6 +198,22 @@ enum GameBitId {
     GAMEBIT_STAFF_TUTORIAL_ARENA_REWARD_UNLOCKED = 0x3E7,
 
     /*
+     * Fire Blaster learned - the first staff ability. Reached through the arena
+     * reward room: pry the magiccavetop "mushroom" (dll_011F) with the staff to
+     * warp into a magic cave, where the generic one-shot ability pickup
+     * mcupgrade (dll_02B7) grants it - mcupgrade_update sets the placement's
+     * collectedGameBit (0x2d here) when you interact and plays the "learned
+     * Fire Blaster" cutscene (NPC dialogue 0x468). This is the ownedGameBit for
+     * the Fire Blaster entry in the C-menu staff abilities (gCMenuStaffAbilities:
+     * text 0x3fd, icon 0xc7a; see cmenu_item_table.h). mcupgrade is generic -
+     * every magic-cave ability (Freeze Blast, etc.) is one of these with a
+     * different collectedGameBit. Live-verified with a write-watchpoint that
+     * caught GameBit_Set(0x2d, 1) in mcupgrade_update on collection. You then
+     * return and shoot the red switch (below) to open the SharpClaw/Queen door.
+     */
+    GAMEBIT_STAFF_ABILITY_FIRE_BLASTER = 0x2D,
+
+    /*
      * The red switch above the SharpClaw door (revealed when the arena clears).
      * After collecting Fire Blaster from the reward room you return and shoot
      * this switch; doing so sets BOTH of these bits together, which (consumed
