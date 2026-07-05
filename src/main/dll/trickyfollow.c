@@ -154,8 +154,8 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     f32 len;
     f32 v;
     f32 k;
-    f32 sqx;
     f32 sqz;
+    f32 sqx;
     u8 pair[2];
     u8 routeFlags[8];
     struct
@@ -1219,9 +1219,15 @@ state_selected:
         ((TrickyState*)state)->unk353 = 0;
         trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
         {
-            f32 dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
-            f32 dz = *(f32*)&((GameObject*)((GameObject*)obj)->extra)->anim.parent;
-            if (dx * dx + dz * dz > lbl_803E23EC)
+            f32 dz;
+            f32 dx;
+            dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
+            sqx = dx;
+            sqx = sqx * sqx;
+            dz = *(f32*)&((GameObject*)((GameObject*)obj)->extra)->anim.parent;
+            sqz = dz;
+            sqz = sqz * sqz;
+            if (sqx + sqz > lbl_803E23EC)
             {
                 trickyTurnTowardYaw(obj, getAngle(-dx, -dz));
             }
