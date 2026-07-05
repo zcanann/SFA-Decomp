@@ -116,7 +116,7 @@ void nw_tricky_update(int* obj)
                     ((NwTrickyState*)state)->timer = lbl_803E5260;
                 }
 
-                for (i = 0, ip = ids.ids; i < 3; ip++, i++)
+                for (i = 0, ip = ids.ids; i < 3; i++, ip++)
                 {
                     found = ObjList_FindObjectById(*ip);
                     if (found != NULL && fn_8014C5D0(found) > lbl_803E5260)
