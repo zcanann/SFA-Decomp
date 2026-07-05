@@ -3233,11 +3233,11 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
 #pragma fp_contract off
 int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* outCurveId)
 {
-    f32* distWrite;
+    u32 cur;
     f32* probe;
     f32* qscan;
     f32* distRead;
-    u32 cur;
+    f32* distWrite;
     RomCurveDef* node;
     int li;
     int found;
