@@ -233,8 +233,8 @@ void FUN_80144e40(int obj, int state)
         ((TrickyState*)state)->unk720 = lbl_803E306C;
     }
     scratch = ObjHits_GetPriorityHit(obj, hit, 0x0, 0x0);
-    if (((scratch != 0) && (*(int*)(hit[0] + 0xc4) != 0)) &&
-        (*(short*)(*(int*)(hit[0] + 0xc4) + 0x44) == 1))
+    if (((scratch != 0) && (*(int*)&((GameObject*)hit[0])->ownerObj != 0)) &&
+        (((GameObject*)*(int*)&((GameObject*)hit[0])->ownerObj)->anim.classId == 1))
     {
         waterHeight = ((TrickyState*)state)->unk720;
         if (lbl_803E306C < waterHeight)
@@ -566,7 +566,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 cmdByte = *(char*)(ref + 0x74c);
                 if (cmdByte == '\0')
                 {
-                    if (*(short*)(*(int*)(ref + 0x748) + 0x46) == 0x6a)
+                    if (((GameObject*)*(int*)(ref + 0x748))->anim.seqId == 0x6a)
                     {
                         promptB = true;
                     }
@@ -2831,10 +2831,12 @@ void Tricky_hitDetect(int obj)
                          : -(height - ((GameObject*)obj)->anim.localPosY);
                 if (dy < lbl_803E24B8)
                 {
-                    ((TrickyState*)state)->heightTrackObjId = *(u32*)(*(int*)(*objects + 0x4c) + 0x14);
+                    ((TrickyState*)state)->heightTrackObjId =
+                        ((ObjPlacement*)*(int*)&((GameObject*)*objects)->anim.placementData)->mapId;
                 }
             }
-            if (((TrickyState*)state)->heightTrackObjId == *(u32*)(*(int*)(*objects + 0x4c) + 0x14))
+            if (((TrickyState*)state)->heightTrackObjId ==
+                (u32)((ObjPlacement*)*(int*)&((GameObject*)*objects)->anim.placementData)->mapId)
             {
                 if ((((TrickyState*)state)->trackedHeight != lbl_803E23DC) &&
                     (((TrickyState*)state)->trackedHeight == height))
