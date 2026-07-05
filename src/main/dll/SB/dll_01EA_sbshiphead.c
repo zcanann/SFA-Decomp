@@ -47,19 +47,29 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int a, int b, int c, int d);
 extern u8 gSbShipHeadHasFiredFireball;
 extern int gSbShipHeadPrevGalleonPhase;
-extern f32 lbl_803E5834;
-extern f32 gSbShipHeadHissSfxDistance;
-extern f32 lbl_803E5844;
-extern f32 lbl_803E5848;
-extern f32 lbl_803E584C;
-extern f32 gSbShipHeadFireballSpeed;
-extern f32 lbl_803E5854;
-extern f32 lbl_803E5858;
-extern f32 gSbShipHeadAnimAdvanceRate;
 extern f32 sqrtf(f32);
-extern f32 lbl_803E5830;
-extern f32 lbl_803E5838;
-extern f32 lbl_803E583C;
+
+/* .sdata2 constant pool */
+static const f32 lbl_803E5830 = 1.0f;
+static const f32 lbl_803E5834 = 0.0f;
+static const f32 lbl_803E5838 = 10.0f;
+static const f32 lbl_803E583C = 3.0f;
+static const f32 gSbShipHeadHissSfxDistance = 400.0f;
+static const f32 lbl_803E5844 = 0.5f;
+static const f32 lbl_803E5848 = 50.0f;
+static const f32 lbl_803E584C = 300.0f;
+static const f32 gSbShipHeadFireballSpeed = 30.0f;
+static const f32 lbl_803E5854 = 100.0f;
+static const f32 lbl_803E5858 = 45.0f;
+static const f32 gSbShipHeadAnimAdvanceRate = 0.005f;
+static const f64 lbl_803E5860 = 4503601774854144.0;
+
+int SB_ShipHead_getExtraSize(void) { return sizeof(SBShipHeadState); }
+int SB_ShipHead_getObjectTypeId(void) { return 0x1; }
+
+u32 getSbGalleon(void);
+
+void SB_ShipHead_free(int x) { ObjGroup_RemoveObject((u32)x, SBSHIPHEAD_OBJGROUP); }
 
 void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -92,12 +102,12 @@ extern void objRenderFn_8003b8f4(GameObject* obj, int p2, int p3, int p4, int p5
             state->swayA = state->swayA - timeDelta;
             if (state->swayA <= lbl_803E5834)
             {
-                state->swayA = state->swayA + lbl_803E5838;
+                state->swayA += lbl_803E5838;
             }
             state->swayB = state->swayB - timeDelta;
             if (state->swayB <= lbl_803E5834)
             {
-                state->swayB = state->swayB + lbl_803E5830;
+                state->swayB += lbl_803E5830;
             }
             stk.a = lbl_803E583C;
             stk.mode = 0xc0a;
@@ -227,11 +237,11 @@ void SB_ShipHead_update(int obj)
             gSbShipHeadHasFiredFireball = 1;
             o->unkF4 = o->unkF4 + framesThisStep;
             Sfx_PlayFromObject(obj, SFXen_scrap1_c);
-            o->anim.localPosY = o->anim.localPosY + lbl_803E5848;
+            o->anim.localPosY += lbl_803E5848;
             o->anim.localPosZ = o->anim.localPosZ - lbl_803E584C;
             Obj_GetWorldPosition(obj, &px, &py, &pz);
             o->anim.localPosY = o->anim.localPosY - lbl_803E5848;
-            o->anim.localPosZ = o->anim.localPosZ + lbl_803E584C;
+            o->anim.localPosZ += lbl_803E584C;
             setup = Obj_AllocObjectSetup(0x18, SB_FIREBALL_OBJID);
             setup[6] = 0xff;
             setup[7] = 0xff;
@@ -279,20 +289,13 @@ void SB_ShipHead_update(int obj)
         gSbShipHeadPrevGalleonPhase = galleonPhase;
 }
 
-int SB_ShipHead_getExtraSize(void) { return sizeof(SBShipHeadState); }
-int SB_ShipHead_getObjectTypeId(void) { return 0x1; }
-
-u32 getSbGalleon(void);
-
-void SB_ShipHead_free(int x) { ObjGroup_RemoveObject((u32)x, SBSHIPHEAD_OBJGROUP); }
-
 void SB_ShipHead_init(int obj)
 {
     SBShipHeadState* state = ((GameObject*)obj)->extra;
     ObjGroup_AddObject((u32)obj, SBSHIPHEAD_OBJGROUP);
     ObjMsg_AllocQueue((void*)obj, 10);
     state->health = 4;
-    state->swayB = state->swayB + lbl_803E5830;
-    state->swayA = state->swayA + lbl_803E5838;
+    state->swayB += lbl_803E5830;
+    state->swayA += lbl_803E5838;
 }
 

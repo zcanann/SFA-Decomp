@@ -2102,6 +2102,7 @@ main/dll/SB/dll_01E9_sbpropeller.c:
 
 main/dll/SB/dll_01EA_sbshiphead.c:
 	.text       start:0x801E2B28 end:0x801E32BC
+	.sdata2     start:0x803E5830 end:0x803E5868
 
 main/dll/SB/dll_01EB_sbshipmast.c:
 	.text       start:0x801E32BC end:0x801E341C
