@@ -669,8 +669,6 @@ int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
 }
 #pragma opt_common_subs reset
 
-#pragma scheduling on
-#pragma peephole on
 void Checkpoint_release(void)
 {
 }
@@ -689,7 +687,6 @@ void Checkpoint_initialise(void)
     lbl_803DD418 = (void*)((u8*)gCheckpointPartFxListBuffer + 0x28);
 }
 
-#pragma opt_common_subs off
 #pragma peephole off
 void Checkpoint_Add(CheckpointRouteEntry* entry)
 {
