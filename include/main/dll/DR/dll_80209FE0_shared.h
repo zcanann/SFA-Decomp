@@ -139,7 +139,7 @@ extern f64 DOUBLE_803e8280;
 extern void ModelLightStruct_free(int light);
 extern void Music_Trigger(int id, int value);
 extern void Obj_UpdateLightningCluster(int obj, int p1, int n, int p2, f32 v);
-extern int objRenderFn_8003b8f4(int, int, int, int, int, f32);
+extern void objRenderFn_8003b8f4(int, int, int, int, int, f32);
 extern void storeZeroToFloatParam(f32 *p);
 extern void modelLightStruct_setPosition(int model, f32 x, f32 y, f32 z);
 extern void queueGlowRender(int model);

@@ -6252,7 +6252,7 @@ void cardShowLoadingMsg(u8 kind)
     extern f32 lbl_803DEF98;
     extern f32 lbl_803DEF9C;
 
-    extern int objRenderFn_8003b8f4(int, int, int, int, int, f32);
+    extern void objRenderFn_8003b8f4(int, int, int, int, int, f32);
     extern void curUiDllDraw(int, int, int, int);
     extern int lbl_803DB708;
     extern int getLastRenderedFrame(void);
