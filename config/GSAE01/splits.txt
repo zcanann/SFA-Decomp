@@ -1454,6 +1454,7 @@ main/dll/dll_0136_waveanimator.c:
 
 main/dll/dll_0137_alphaanimator.c:
 	.text       start:0x80192A68 end:0x80193100
+	.sdata2     start:0x803E3F78 end:0x803E3F98
 
 main/dll/dll_0138_groundanimator.c:
 	.text       start:0x80193100 end:0x80193DBC

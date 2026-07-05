@@ -31,13 +31,6 @@ extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 sc
 extern void Sfx_PlayFromObject(int* obj, int id);
 extern u8 framesThisStep;
 extern f32 timeDelta;
-/* shared .sdata2 float constants (retail links these from a common pool;
- * the retail object imports them as externs, so they must not be spelled
- * as literals here) */
-extern f32 lbl_803E3F78; /* = 1.0f */
-extern f32 lbl_803E3F7C; /* = 0.0f */
-extern f32 lbl_803E3F80; /* = 10.0f (mode-3 rate divisor) */
-extern f32 lbl_803E3F84; /* = 50.0f (fadeB trails fadeA by 50) */
 
 typedef struct AlphaanimatorPlacement
 {
@@ -69,6 +62,9 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 #define ALPHAANIM_MODE_GATED 2     /* direction follows live gate bit; sfx on gate flip */
 #define ALPHAANIM_MODE_TIMED 3     /* timeDelta float fade (fadeA/fadeMax) */
 
+int alphaanimator_getExtraSize(void) { return 0x1c; }
+int alphaanimator_getObjectTypeId(void) { return 0x0; }
+
 void alphaanimator_free(int* obj)
 {
     AlphaAnimatorState* o = (AlphaAnimatorState*)((GameObject*)obj)->extra;
@@ -76,32 +72,14 @@ void alphaanimator_free(int* obj)
     if (p != NULL) mm_free(p);
 }
 
-void alphaanimator_hitDetect(void)
-{
-}
-
-void alphaanimator_release(void)
-{
-}
-
-void alphaanimator_initialise(void)
-{
-}
-
-int alphaanimator_getExtraSize(void) { return 0x1c; }
-int alphaanimator_getObjectTypeId(void) { return 0x0; }
-
-#pragma scheduling off
-void alphaanimator_init(int* obj)
-{
-    *(s8*)&((AlphaAnimatorState*)((GameObject*)obj)->extra)->prevGate = -1;
-}
-
-#pragma scheduling on
 #pragma peephole off
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3F78);
+    if (visible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+}
+
+void alphaanimator_hitDetect(void)
+{
 }
 
 #pragma scheduling off
@@ -140,7 +118,7 @@ void alphaanimator_update(int* obj)
         {
             return;
         }
-        s->fadeB = s->fadeA = lbl_803E3F7C;
+        s->fadeB = s->fadeA = 0.0f;
         s->fadeMax = (f32)(u32)d->fadeMax;
         if (d->gateBit == -1)
         {
@@ -154,7 +132,7 @@ void alphaanimator_update(int* obj)
         if (d->completeBit != -1 && GameBit_Get(d->completeBit) != 0)
         {
             s->alphaLevel = d->targetAlpha;
-            s->fadeA = lbl_803E3F78 + s->fadeMax;
+            s->fadeA = 1.0f + s->fadeMax;
             s->gateVal = 1;
         }
         if (mode == ALPHAANIM_MODE_TIMED)
@@ -337,7 +315,7 @@ void alphaanimator_update(int* obj)
         {
             rate = -rate;
         }
-        absRate = (f32)rate / lbl_803E3F80;
+        absRate = (f32)rate / 10.0f;
         s->fadeA =
             absRate * timeDelta + s->fadeA;
         if (s->fadeA > s->fadeMax)
@@ -346,8 +324,23 @@ void alphaanimator_update(int* obj)
             GameBit_Set(d->completeBit, 1);
             s->doneCount += 1;
         }
-        s->fadeB = s->fadeA - lbl_803E3F84;
+        s->fadeB = s->fadeA - 50.0f;
         break;
     }
     }
+}
+
+#pragma peephole on
+void alphaanimator_init(int* obj)
+{
+    *(s8*)&((AlphaAnimatorState*)((GameObject*)obj)->extra)->prevGate = -1;
+}
+
+#pragma scheduling on
+void alphaanimator_release(void)
+{
+}
+
+void alphaanimator_initialise(void)
+{
 }
