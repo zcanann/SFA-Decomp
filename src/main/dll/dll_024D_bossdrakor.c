@@ -168,7 +168,7 @@ void bossdrakor_update(int obj)
         player = (int)Obj_GetPlayerObject();
         if ((void*)player != NULL)
         {
-            step = Obj_GetYawDeltaToObject(obj, player, 0);
+            step = (s16)Obj_GetYawDeltaToObject(obj, player, 0);
             if (step < -0x200)
             {
                 step = -0x200;
