@@ -1,5 +1,34 @@
 # Reconstruction Frontier State
 
+## CONTROL-FLOW STRUCTURE lever sweep (2026-07-05, Opus, CF-shape specialist) — 0 wins, family SATURATED in matchable band
+Swept guard-merge #17 / asymmetric-guard / #122 switch-pivot / #13 empty-MAX-case /
+#109 single-case-switch / branch-over-branch across the WHOLE frontier.
+METHOD: private proto report -> decoded per-fn fuzzy -> `brscan.py` (scratchpad) which
+counts branch mnemonics {b,beq,bne,blt,bge,bgt,ble,bdnz,blr} AND cmpwi/cmplwi pivot
+immediates in target-vs-current objdump, flagging any count/pivot MISMATCH.
+RESULT: **95.0-99.95 band (511 fns, minus skips): ZERO branch-count or switch-pivot
+mismatches** — every near-match already has target's exact branch/island/pivot shape;
+residuals are pure reg-perm/sched/FP (not CF-shape). No guard-island, no pivot-off-by-one,
+no jumptable-vs-tree anywhere in the matchable band.
+80-95 band: only 3 non-audio/non-dolphin hits, ALL banked as whole-fn coloring cascades
+(the `bne;b`(target 2-branch) vs `beq`(current fold) delta is a SYMPTOM of pervasive
+saved-reg renumbering, NOT an isolable guard/switch source shape):
+  - render.c fn_80007F78 94.03%: `_savegpr_15` vs `_savegpr_14` (17 vs 18 saved regs),
+    r14-r31 fully permuted; the `bne;b`->`beq` fold sits inside the 64-bit DSP decode loop.
+    #67 saved-reg-count cap, not CF.
+  - gametext.c textMeasureFn_80016c9c 94.90%: 91 regions, 68 reg-perm. Branch fold at a
+    `cmpw;bne;b` char-compare in a `cmpwi;bgt` copy loop = one symptom of whole-fn coloring.
+  - shader.c doPendingMapLoads 93.37%: 3144B, 88 reg-perm regions + loop-incr sched swaps
+    (target `cmpw;ble;addi` vs current `addi;cmpw;ble`). `bne;b`->`beq` at a `cmpw` inside a
+    `bdnz` loop = peephole branch-FOLD (brief-flagged CAP, not source-reproducible).
+LEVER LESSON: the CF-shape family (guard-merge/switch-pivot/single-case) is EXHAUSTED in
+this repo's matchable band — the historical wins (objAnimFn 81->95, dfplevelcontrol->100)
+already landed. Remaining `bne;b`-vs-`beq` deltas live ONLY in big (>1800B) low-band fns
+where they are downstream of a whole-function reg-alloc cascade; no source structural edit
+reshapes them without refolding against the dominant coloring divergence. TOOL: brscan.py
+(branch-mnem + cmp-pivot multiset diff) is the right detector for this family — it found
+the historical shape signatures would have registered, and confirms none remain.
+
 ## CInline / INLINE-TEMP MATERIALIZATION cycle (2026-07-05, Opus, novel-lever researcher #3) — mechanism fully traced; inline-copy class is SATURATED (already 100% wherever clean-C-solvable)
 STUDIED: CInline.c (InlineSizeOK @0x55c2e0 <=30-stmt/<=1024-cost gate; CanInlineCall @0x55c350),
 CodeGenNumbering.c (web-index = descending priority), IroPropagate.c (IsPropagatable @0x4709f0),
@@ -4452,3 +4481,203 @@ all coloring-entangled (would net-negative). Most `((T*)(base+CONST))->flag` sin
 accesses in the band are single-bit rlwinm ops that already fold correctly (mmFreeTick
 DeferredFree+0x78, sky gSkyState+0x209/0x255, pressureswitchfb — all 0 weld sites).
 No source lever available. Build EXIT=0, 0 FAILED, no regressions.
+
+## Team-resumption probe (2026-07-05) — team STILL IDLE, 0 wins
+Cheap ≤30k probe: newest commit WITHOUT the `Co-Authored-By: Claude Opus 4.8`
+trailer is still `d3d7a168ff` (dll_01EB sbshipmast data-split, ~3h old) — the exact
+baseline from the task brief. Every commit newer than it (91367d79ec savegame,
+d3f780a7a0/85b7651a23/5b5dcf6d76/6909912d54/68da73cb90... struct-recovery sweep,
+the sdata2 data-split runs) all carry OUR agent trailer. NO genuinely-fresh team
+.c files landed. Did NOT scan the tree (method step 2). No struct vein reopened.
+
+
+## disp-fold-UNWELD sweep #2 (2026-07-05, opus) — 0 wins, lever exhausted in scope
+Ran an AUTHORITATIVE ndiff signature scanner over the ENTIRE non-audio/non-player
+band (95-99.99 full + 88-95 full + weld-form files 88+): detect CURRENT
+`addi rX,rX,K` (K>=2 digits, self-add) immediately followed by small-disp stores on
+rX, where TARGET at the same region folds K into the store displacement instead (the
+saveGame_saveObjectPos signature, commit 91367d79ec). Scanner + scan_store.py in
+scratchpad; dfz.py decoder (f3 f32-LE is 0..100 already, NOT doubled -> no *100).
+CANDIDATES examined + verdicts (all reverted, both files pristine, git diff empty):
+  - maybetemplate.c hudDrawButtons 98.26%: the +43/+42/+50 stride at gameTextShowStr
+    y-arg is arg-expr ASSOCIATIVITY (`0x2B+yOff+scrollTimer`), not a store weld.
+    Respelling `(0x2B+scrollTimer)+yOff` changed r22 usage but was fuzzy-INERT
+    (98.2552 unchanged); dominant residual is base r31<->r29 coloring. Reverted.
+  - model.c modelLoad_calcSizes 93.53%: `total=...` size-accumulation add-chain;
+    target folds +8/+28 onto different sub-terms + hoists sizes[1]/sizes[6] loads
+    early (#66/#84 add-order + load-sched), NOT a strided store. Out of lever scope.
+  - dll_0014_unk.c walkgroupFindExitPointFn 95.38%: gObjfsaPatches+0x4C48 flag store
+    `*((u8*)patchBase+gi+OFFSET)=1`. Target `add r3,r30,r3; stb r0,19528(r3)` vs
+    current `addi r0,r4,19528; stbx r3,r31,r0`. Tried 3 respells: `(int)base+OFF+gi`
+    (REGRESSED 95.29 — hoists base+OFF into a saved reg + stbx), `(int)base+gi+OFF`
+    (INERT, refolds to stbx), `((u8*)base+gi)[OFF]` (INERT). The stbx-vs-stb+disp
+    choice is dictated by the patchBase r30-vs-r31 saved-reg COLORING cascade (pervades
+    the 1268-instr fn), not the spelling. Coloring-coupled variant per MEMORY caveat.
+  - textrender gameTextRun/loadGameTextSequence/gameTextLoadGraphics, expgfx
+    _resetAllPools, objhits CheckHitVolumes, shader doPendingMapLoads/mapProcessRomList,
+    dll_000B dll_0B_func04, gametext textMeasureFn, cmenu cMenuSetItems: scanner-flagged
+    but the `addi rX,rX,K` is a legit p++ STRIDE present on BOTH sides, OR the store is
+    inherently `stbx/stwx` (dynamic index) on both sides — pure register-numbering perms.
+    NOT disp-fold. No asymmetry.
+CONCLUSION (confirms prior sweep #1): the clean isolable disp-fold-weld is specific to
+STORE blocks where base is a freshly-loaded raw global (gSaveGameData) + plain
+`stX disp(reg)`. Where base is a live saved-reg POINTER, MWCC picks indexed-store and
+the form is coloring-locked -> no source lever. No committable win this session.
+Build all_source EXIT=0, 0 ^FAILED, no regressions. (dll_014C_babycloudrunner.c dirty
+= concurrent sibling agent, not touched by me.)
+## #112 disp-fold-UNWELD lever re-run on brief's banked targets (2026-07-05, Opus) — targets ALREADY 100%
+Dispatched to apply the newly-cracked `*(FT*)((int)base + K + idx)` addend-unweld lever
+(from saveGame_saveObjectPos 91367d79ec) to the pre-lever-banked #112 `p=base+idx;p[K]` cases.
+VERDICT: every named target is already matched; no work to do.
+- **waterfx_spawnRipple** (dll_0013_waterfx.c): the MEMORY "f10 store folds to addi r6,16;stfsx
+  vs target add;stfs 16" note is STALE (Jun18). Matched Jun30 (311040105f); now 100.000% per
+  private proto report. --diff mnemonic sequence is BYTE-IDENTICAL to target except branch-addr
+  base offsets (2-obj artifact) + one @104-vs-lbl_803DF308 named-vs-anon reloc (#70 neutral).
+  The x/y/z/w/f10 stores ALL already emit target's `add r5,r0,r6; stfs K(r5)` — no addi+stfsx
+  excess remains. waterfx_func04 also 100%. Remaining waterfx sub-100 (func05 96.9, drawFn 98.0,
+  fn_80095164 98.7) have ZERO indexed-store divergence in --diff → NOT #112, different class.
+- **saveGame_restoreObjectPosToRomList / saveObjectPos / unsaveObjectPos** (dll_0017_savegame.c):
+  ALL THREE 100.000%. The "disp-fold-works-but-slwi-hoist-regresses" restore note is resolved —
+  sibling agent's disp-fold lever (91367d79ec, committed 14:05 today) landed it. Only sub-100 fn
+  in the unit is SaveGame_gplaySetObjGroupStatus (97.56%, touched 02:45 today = TEAM-HOT); left
+  untouched per one-owner-per-.c.
+- Tree-wide: the `*(f32*)((int)base+K+idx)` spelling is already deployed at every fit (vecmath,
+  scarab, drpickup, dbegg...). Consistent with the three separate 2026-07-05 micro-store-fold
+  sweeps above ("class exhausted in owned files", 0 wins). No unowned+imperfect+#112 candidate.
+NO edits, NO commits (nothing to change). No rebuild needed (no source touched). frontier-state
+is the only file this session touches.
+
+## #53 narrowing-store sweep (Jul05)
+- WIN dll_0000 gameui pauseMenuRunSubmenu 97.88->99.23% (commit eacf48420a):
+  s16 global `lbl_803DD75C += (s8)lbl_803DD75E` then `v=(s16)lbl_803DD75C`
+  reloaded the global -> MWCC narrow-at-store (extsh before sth). Route the
+  sum through `int sum`: `sum=A+B; lbl_803DD75C=sum; v=(s16)sum;` -> sth
+  truncates raw int, extsh moves AFTER store (serves the >512/<0 clamp
+  compares), matching target. Note: reading the global for v (`v=(s16)lbl`)
+  re-adds the pre-store extsh; must CSE via the local `sum`. Costs 1 elided
+  store but net +1.35%.
+- BANK sandworm_turnTowardTargetAnim (dll_014C babycloudrunner) 98.86%:
+  `*(s16*)a += (shifted>>=3)` emits spurious extsh before sth (int RHS).
+  bombplantspore_update PROVES int-RHS s16-store extsh is legit/matched under
+  peephole-off (`*(s16*)obj += framesThisStep*0x40` -> add;extsh;sth matches).
+  Only lever that drops it is `#pragma peephole on` -> REGRESSED 98.86->93.52
+  (fuses extsh. + restructures the (s16)shifted>0?>>2:-(...)>>2 clamp, +many
+  regions). (s16)-cast on expr moves extsh before add (4 regions, worse);
+  splitting >>= breaks the srawi r4 CSE (recomputes, 111 instrs). Coupled to
+  peephole clamp = no clean source lever. Left at baseline.
+- Reverse-sig (target-has-extsh) camTalk CameraModeBike_update, headdisplay
+  drawFn_80125424 = #108 saved-reg coloring perms (r26/r29,r23/r24,r20/r21
+  swaps), extsh entangled in renumber not isolated narrowing. gameui fn_80128470
+  + curves fn_800E58FC = #84 lwz-hoist / FP-load scheduling perms. Not #53.
+
+## Jul05 isel-selection re-sweep (99%+ band, load/store-form + const-mat + CSE)
+Re-examined "1-instr-from-100" caps for source-controllable SELECTION vs coloring
+weld. Result: 0 clean wins in the 99%+ band; the residuals are dominated by
+narrow-placement trades and const-into-saved-reg CSE that all trigger coloring
+cascades. Taxonomy of what was classified + tried (all reverted to baseline):
+
+- **ObjSeq_ApplyFrameCurves (objseq.c) 99.765% BANK** — lone extsh (C=706 T=705)
+  at `tex1->offsetS = scroll` (`s16 scroll = (int)(scale*val)`). Target stores the
+  raw fctiwz int with `sth` (no narrow); `(s16)-scroll` for tex2 carries the extsh.
+  `int scroll` drops the site-1 extsh BUT adds one at the negate + r25/r26 cascade
+  (99.749). Reusing dead `int vol` = same (99.749). Compound narrow-at-store is
+  coupled to the shared scroll live-range. Same shape as banked sandworm.
+- **fn_8023A3E4 (dll_02BB gflevelcon) 99.937% BANK** — extra `lbz` reload
+  (C=180 T=179): `hp[0xAE]` loaded for the `!=0` compare then RELOADED for
+  `hp[0xAE]-=1`. Target CSEs into r3. Caching in a local DOES CSE the load but:
+  `int` local -> `cmpwi` (target `cmplwi`); `u32` local fixes the compare BUT the
+  `hpHits-1` u32->u8 store adds `clrlwi` + r3/r4 coloring swap (99.937->99.20).
+  The reload is genuinely CHEAPER than any CSE spelling here. Banked.
+- **updateVisibleGeometry (lightmap.c) 99.79% BANK** — `li r0,0;mulli r0,r0,20;
+  stfsx` (n=0 first frustum plane) vs target `stfs 0(r31)` looked like an index-fold
+  miss, but T==C==264 (the mulli is present in target too, just SCHEDULED
+  elsewhere — a `delete` region returns it). Literal `[0]` respell REMOVED the mulli
+  entirely (wrong) -> 94.82%. Equal-instr-count = placement, not selection.
+- **fn_8002B758 (object.c) 99.x% BANK** — extra dead `blr` (C=73 T=72). The
+  shift loop is MWCC Duff-unrolled (bdnz); target ALSO emits the trailing blr; the
+  +1 is an unroll-epilogue artifact. Nested-if restructure overshot (C=70, folds
+  the early-return `bne;blr` into `beqlr`). Loop-transform, not selection.
+- **smallbasket_update (dll_0104) 99.83% BANK** — `li r0,0;stb r0,54` vs target
+  `stb r28,54` (reuses r28 already holding 0 from `li r28,0`). const-0-into-saved-reg
+  CSE = allocator choice (#110 class, folds per prior `int one=1` note). No lever.
+- Effect3_func04, crrockfall, smallbasket_resolveCollision, appleontree caps all
+  confirmed pure reg-perm/#82/#70 (classifier-clean), no selection facet.
+LESSON REINFORCED: in the 99%+ band, instr-count PARITY (T==C) after a change is a
+false positive — the extsh/li moves but a coloring renumber cascades (sandworm 88%,
+lightmap 94.8%). Only pursue a change if it drops a STRICT extra AND fuzzy rises on
+two rebuilds. The saveObjectPos-style clean selection win is rare above 99%; that
+class lives lower (strided stores) and is sibling-owned.
+
+## const/base-LIVENESS sweep (Jul05) — 0 wins, 2 coupled caps
+Scanned full 90-99.9% non-owned band for the const/.data-base-liveness lever family
+(target keeps sym in saved reg, current reloads). Built HA-materialization + SDA-lfs
+reload scanners. Findings:
+- The DOMINANT band signature `RELOAD-TGT @NNN tgt=0 cur=N` (~150 fns) is the #70
+  named-vs-anonymous artifact: target uses a NAMED lbl_/SDA symbol where current emits
+  a compiler `@NNN` anon const (or the reverse). Same physical const, different name form,
+  score-NEUTRAL, NOT injectable. NOT a reload lever. Filter these out.
+- Only TWO clean `tgt=1 cur=2` HA-base-reload candidates existed, both COUPLED CAPS:
+  - **mm.c mmFreeTick 97.79%**: 2nd loop `(MmStore**)gMmStoreArray` re-materializes the
+    base (targets reuses r31 via `mr r4,r31`). Reusing `g` (the MmGlobal* already in r31)
+    DOES kill the 2nd-loop reload BUT forces an `addi r4,r3,0; mr r31,r4` SETUP detour
+    (+1 instr) — net 97.79->97.56. Count-4 loop form inert. Reverted (baseline cleaner).
+  - **lightmap.c sceneDraw 98.63%**: writes at src 1919-1928 re-reference `lbl_8037E0C0`
+    (2nd HA). Target hoists TWO sub-bases `r30=&arr[2]` `r29=&arr[3]` as SAVED regs that
+    are ALSO multiplexed with the earlier cursor loop (195c `addi r30,r31,16660`). Both
+    `((u32*)q)[...]` inline-reuse (97.89) and explicit `p2/p3=(u32*)(q+8/+12)` named
+    pointers (97.92) REGRESS: killing the reload demands fresh saved-reg homes that break
+    the function-wide r30/r29 reuse web. Reverted. Multi-reg-reuse cap, not a single hoist.
+- sky.c renderSunAndMoon `gSkyDayStartTime` vs `gSkyDayStartTime_803DF084` = pure naming
+  (same addr 803DF084, both loaded 2x), #70 neutral.
+- 90-95 non-owned band has only 8 fns, ZERO HA-reload signatures — band already tight.
+- All clean lfs-const-reload candidates (fn_802ADE80/fn_802A87CC/fn_802B1E5C) are player.c
+  (owned, skipped).
+LEVER LESSON: the base-reuse lever (#16/#71) REGRESSES when reusing the .data-base local
+introduces a setup mr-detour (mm) OR when the reload site's saved reg is part of a
+function-wide multiplexed reuse chain (lightmap). A clean win needs the reload site's
+target register to be OTHERWISE-DEAD, not a shared saved-reg home.
+
+## a66 add-order/split sweep (agent, committed 5b730929bb)
+- **WIN sky skyFn_8008a04c 99.70->99.80** (5b730929bb): #66 base-first add-order.
+  pA/pB/pC = `(f32*)&((u8*)vec)[part4+C]` gave `add rX,part4,vec` (index first);
+  target wants `add rX,vec,part4; addi C`. Rewrote as `&((f32*)((u8*)vec+C))[part]`
+  (== vec+part*4+C) -> vec leads add, C folds to store disp. Verified 2x @99.8007,
+  all_source EXIT=0, no sibling/sky regression. Residual: iofs=i=0 `mr r27,r19`
+  vs `li r27,0` (chained-init copy-prop fold; split iofs=i INERT).
+- **BANKED sky fn_80089A60 98.71** (same file, no commit): 6 f32 stores
+  `*(f32*)&gSkyState[slot*0xa4+N]` emit `add r9,part,base` (idx-first) vs target
+  `add r9,base,part`. Byte stores `arr[i]=v` already match (base-first); only the
+  `*(f32*)&arr[i]` address-of form flips it. ALL reformulations regress: pointer
+  `*(f32*)(gSkyState+..)` -> stfsx; int-cast -> stfsx; word-index
+  `((f32*)&gSkyState[slot*0xa4])[N/4]` -> stfsx; only the original `*(f32*)&arr[i]`
+  keeps clean `stfs disp(r9)` but idx-first. Coupled trade, banked.
+- **BANKED model modelLoad_calcSizes 93.53** (no commit): total add-chain. THEN &
+  ELSE branches both need target's `(sizes[1]+8)` fused as subexpr with 3 clean
+  adds; MWCC always splits `+8` off as trailing addi on the accumulator and
+  evaluates sizes[6] last. Temp `int extra=sizes[1]+8` copy-props/reorders (hoists
+  before sizes[4] store); ELSE reassoc `((sizes[6]+sizes[1])+8)+total` REGRESSED
+  93.53->92.47 (MWCC re-split sizes[6] out). Compiler-fixed constant canonicalization,
+  no source lever.
+- **BANKED model objUpdateHitSpheres 97.16 / maybetemplate hudDrawButtons 98.26**:
+  scanner flagged add-swaps but dominant residual is saved-reg coloring cascade
+  (r24/r25/r26 vs r29/r24/r25; 708-line renumber for hudDrawButtons) - #108/#126
+  domain, not add-order. Confirms prior a99d719f hudDrawButtons bank.
+- TOOLING: objdiff.json uses target_path/base_path keys (not object/name), so
+  function_objdump.py/ndiff.py resolve_unit FAILS. Use objdump directly by symbol
+  addr (see /tmp/fdiff.sh) or add-order scanner /tmp/scan_add.py (classifies diff
+  regions into addswaps/regonly/other to rank #66 candidates).
+
+## CORRECTNESS-vein session (Jul5, cmp-width bug) — 2 wins, vein otherwise exhausted
+- **dll_0014_unk RomCurve_get 98.85->98.95 + RomCurve_func2C 98.75->98.86** (commit 2ed92bbf23):
+  `int nextCurve;` -> `u32 nextCurve;` in both. nextCurve = Objfsa_FindRomCurveById
+  curve handle, sibling `currentCurve` already u32. `if(nextCurve==0)` fed a branch:
+  signed emitted `cmpwi r7,0`, target `cmplwi r7,0` (#1/#4 unsigned-compare). Type-only,
+  decl position unchanged (no reg-home shift). Two agreeing reports, full build EXIT=0,
+  zero sibling regressions.
+- SCANNED whole repo (276+ sub-99.5% non-audio/dolphin/player fns) for the classic
+  correctness veins: undefined4-on-float (ZERO — only 1 comment ref, no code),
+  FP sign errors (fnmadds/fnmsubs/fneg opcode-set MATCHES target everywhere; every
+  hit was pure f-reg permutation = #82 coloring, other agents' domain),
+  __cvt_fp2unsigned/fctiwz conversion casts (all present on BOTH sides = reg-perm only).
+  cmpwi/cmplwi width scan found ONLY the two RomCurve fns above. The correctness-import-bug
+  vein is essentially exhausted in current repo state; residuals are coloring/scheduling.
