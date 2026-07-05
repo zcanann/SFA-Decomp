@@ -90,9 +90,9 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole on
 u8 groundanimator_func0B(int* obj)
 {
-    GroundAnimatorState * state = (GroundAnimatorState*)((int**)obj)[0xB8 / 4];
+    GroundAnimatorState * state = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     f32 depth = state->sinkDepth;
-    int* placement = ((int**)obj)[0x4C / 4];
+    int* placement = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
     u8 maxDepth = ((GroundanimatorPlacement*)placement)->maxSinkDepth;
     return depth > lbl_803E3F98 * maxDepth;
 }
@@ -100,7 +100,7 @@ u8 groundanimator_func0B(int* obj)
 #pragma peephole off
 void groundanimator_init(int* obj, int* desc)
 {
-    GroundAnimatorState * vstate = (GroundAnimatorState*)((int**)obj)[0xB8 / 4];
+    GroundAnimatorState * vstate = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     vstate->modelVariant = (u8)((WaveanimatorObjectDef*)desc)->modelVariant;
     vstate->yOffset = (f32)((WaveanimatorObjectDef*)desc)->yOffset;
     vstate->lastDepth = lbl_803E3FB8;
@@ -217,7 +217,7 @@ f32 groundanimator_setScale(int* obj, int* target)
                 fn_801A80F0(e, 0);
                 break;
             default:
-                (*(VtableFn*)(*(int*)(*(int*)((char*)e + 0x68)) + 0x24))(e, 0);
+                (*(void (**)(void*, int))(*(int*)(*(int*)((char*)e + 0x68)) + 0x24))(e, 0);
                 break;
             }
         }
@@ -399,9 +399,9 @@ void groundanimator_update(int* obj)
                 default:
                     if ((g->flags & 2) == 0)
                     {
-                        (*(VtableFn*)(*(int*)(*(int*)((char*)near + 0x68)) + 0x24))(near, 1);
+                        (*(void (**)(void*, int))(*(int*)(*(int*)((char*)near + 0x68)) + 0x24))(near, 1);
                     }
-                    (*(VtableFn*)(*(int*)(*(int*)((char*)near + 0x68)) + 0x38))(
+                    (*(void (**)(void*, f32, f32, f32))(*(int*)(*(int*)((char*)near + 0x68)) + 0x38))(
                         near, ((GameObject*)obj)->anim.localPosX,
                         ((GameObject*)obj)->anim.localPosY - g->yOffset,
                         ((GameObject*)obj)->anim.localPosZ);
@@ -456,7 +456,7 @@ void groundanimator_update(int* obj)
                         fn_801A80F0((void*)g->linkedObj, 0);
                         break;
                     default:
-                        (*(VtableFn*)(*(int*)(*(int*)((char*)g->linkedObj + 0x68)) + 0x24))((void*)g->linkedObj, 0);
+                        (*(void (**)(void*, int))(*(int*)(*(int*)((char*)g->linkedObj + 0x68)) + 0x24))((void*)g->linkedObj, 0);
                         break;
                     }
                 }
@@ -525,7 +525,7 @@ void groundanimator_update(int* obj)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
         if (tricky != NULL && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
         {
-            (*(VtableFn*)(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28))(tricky, obj, 1, 1);
+            (*(void (**)(void*, int*, int, int))(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28))(tricky, obj, 1, 1);
         }
     }
     else
