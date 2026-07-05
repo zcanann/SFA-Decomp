@@ -2538,13 +2538,13 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.textureId = 0x157;
         break;
     case 0x54d:
-        if (extraArgs == NULL)
+        if (extraArgs != NULL)
         {
-            variant = '\0';
+            variant = *(u8*)extraArgs;
         }
         else
         {
-            variant = *(u8*)extraArgs;
+            variant = '\0';
         }
         if (variant == '\x01')
         {
@@ -5199,7 +5199,13 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxDefaultSpawnParams.unk6 = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams == NULL)
+        if (spawnParams != NULL)
+        {
+            (*startPos) = spawnParams->posX;
+            cfg.startPosY = spawnParams->posY;
+            cfg.startPosZ = spawnParams->posZ;
+        }
+        else
         {
             (*startPos) = lbl_803DF4CC * (f32)(s32)
             randomGetRange(0xfffffff6, 10);
@@ -5207,12 +5213,6 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             randomGetRange(0xfffffff6, 10);
             cfg.startPosZ = lbl_803DF4CC * (f32)(s32)
             randomGetRange(0xfffffff6, 10);
-        }
-        else
-        {
-            (*startPos) = spawnParams->posX;
-            cfg.startPosY = spawnParams->posY;
-            cfg.startPosZ = spawnParams->posZ;
         }
         cfg.velocityX = lbl_803DF4DC;
         cfg.velocityY = lbl_803DF508;
