@@ -789,8 +789,8 @@ void fn_80202EF0(int obj, int p2)
             dur = lbl_803E62B8 * t;
             ((GameObject*)newObj)->anim.velocityX = (((GameObject*)((BaddieState*)p2)->targetObj)->anim.localPosX - ((GameObject
                 *)obj)->anim.localPosX) / dur;
-            ((GameObject*)newObj)->anim.velocityY = ((lbl_803E6380 * t + *(f32*)(*(int*)&((BaddieState*)p2)->targetObj +
-                0x10)) - ((GameObject*)obj)->anim.localPosY) / dur;
+            ((GameObject*)newObj)->anim.velocityY = ((lbl_803E6380 * t + ((GameObject*)((BaddieState*)p2)->targetObj)->anim.localPosY)
+                - ((GameObject*)obj)->anim.localPosY) / dur;
             ((GameObject*)newObj)->anim.velocityZ = (((GameObject*)((BaddieState*)p2)->targetObj)->anim.localPosZ - ((
                 GameObject*)obj)->anim.localPosZ) / dur;
             *(int*)&((GameObject*)newObj)->ownerObj = obj;
