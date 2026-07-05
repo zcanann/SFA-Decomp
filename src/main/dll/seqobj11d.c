@@ -253,6 +253,15 @@ void fn_8015165C(int obj, u8* state)
                     u8* p28c = p28 + 12;
                     *(u8*)(state + 0x2f2) = (u8) * (u32*)(p28c + *(u16*)(state + 0x338) * 16);
                 }
+                /* NOTE(match): retail asm reads the LAST arg as (u8) of the u32
+                   mask word at +4 (lwz 4(rP); clrlwi = mask & 0xff, i.e. byte +7),
+                   while this line loads the byte at +4 (lbz) — a real semantic
+                   divergence kept only because every correct-width spelling tried
+                   so far scores lower: `(u8)((SeqEntry*)p28)[idx].mask` (with anim
+                   also via [idx] and speed via *(f32*)(p28+idx*16)) reproduces
+                   lwz+clrlwi/lfsx exactly but hoists the shared `add` above the
+                   two arg `mr`s (98.84 vs 99.05). Fix the transposition (and the
+                   prologue addi r0/mulli r3 coloring) before re-spelling this. */
                 fn_8014D08C(obj, state, (p28 + *(u16*)(state + 0x338) * 16)[8],
                             *(f32*)(p28 + *(u16*)(state + 0x338) * 16), 0,
                             (u8) * &(p28 + *(u16*)(state + 0x338) * 16)[4]);
