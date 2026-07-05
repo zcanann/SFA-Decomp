@@ -180,16 +180,15 @@ typedef struct SwitchFlags
 
 void pressureswitchfb_update(int obj)
 {
-    u32 j2;
+    u8 j2;
     int off;
     u32 other;
     int def;
     char* state;
     int i;
     int tmp;
-    u32 j;
+    u8 j;
     int isTarget;
-    u32 ju;
     int base;
     ObjTextureRuntimeSlot* tex;
     f32 cur;
@@ -197,7 +196,6 @@ void pressureswitchfb_update(int obj)
     int slots2;
     u32 nearest;
     int found;
-    u32 ju2;
     u32 o;
     int base2;
     f32 nearDist;
@@ -256,20 +254,17 @@ void pressureswitchfb_update(int obj)
                         j = 0;
                         if ((((SwitchFlags*)(tmp + 0x84))->playerOnly) != 0)
                         {
-                            if (other == (u32)Obj_GetPlayerObject())
+                            if (other != (u32)Obj_GetPlayerObject())
                             {
-                                goto do_insert;
+                                goto skip_insert;
                             }
-                            goto skip_insert;
                         }
-                    do_insert:
-                        while ((*(u32*)(tmp + (j & 0xff) * 4 + 4) != 0) && ((j & 0xff) != 9))
+                        while ((*(u32*)(tmp + j * 4 + 4) != 0) && (j != 9))
                         {
                             j++;
                         }
-                        ju = j & 0xff;
-                        *(u32*)(tmp + ju * 4 + 4) = other;
-                        *(f32*)((base = tmp + ju * 8) + 0x2c) = ((GameObject*)other)->anim.localPosX;
+                        *(u32*)(tmp + j * 4 + 4) = other;
+                        *(f32*)((base = tmp + j * 8) + 0x2c) = ((GameObject*)other)->anim.localPosX;
                         *(f32*)(base + 0x30) = ((GameObject*)other)->anim.localPosZ;
                     skip_insert: ;
                     }
@@ -279,13 +274,12 @@ void pressureswitchfb_update(int obj)
         }
         slots2 = *(volatile int*)&((GameObject*)obj)->extra;
         found = 0;
-        for (j2 = 0; (j2 & 0xff) < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; j2++)
+        for (j2 = 0; j2 < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; j2++)
         {
-            ju2 = j2 & 0xff;
-            o = *(u32*)(slots2 + ju2 * 4 + 4);
+            o = *(u32*)(slots2 + j2 * 4 + 4);
             if (o != 0)
             {
-                base2 = slots2 + ju2 * 8;
+                base2 = slots2 + j2 * 8;
                 if ((*(f32*)(base2 + 0x2c) == ((GameObject*)o)->anim.localPosX) &&
                     (*(f32*)(base2 + 0x30) == ((GameObject*)o)->anim.localPosZ))
                 {
@@ -293,7 +287,7 @@ void pressureswitchfb_update(int obj)
                 }
                 else
                 {
-                    *(int*)(slots2 + ju2 * 4 + 4) = 0;
+                    *(int*)(slots2 + j2 * 4 + 4) = 0;
                 }
             }
         }
