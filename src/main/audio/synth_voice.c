@@ -236,6 +236,8 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
     s32 idx;
     s32 p;
     s32 k;
+    s32 kk;
+    s32 pp;
     u32 handle;
     u32 ok;
     u32 rejected;
@@ -244,8 +246,8 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
 
     if ((keymap = dataGetKeymap(id)) != 0)
     {
+        idx = (key & 0x7F) * 8;
         fullKey = key & 0xFF;
-        idx = (fullKey & 0x7F) * 8;
         if (((KeymapEntry*)(keymap + idx))->id != 0xFFFF)
         {
             if ((((KeymapEntry*)(keymap + idx))->id & 0xC000) != 0x4000)
@@ -272,31 +274,37 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     pan = 0x80;
                 }
 
-                k = (fullKey & 0x7F) + ((KeymapEntry*)(keymap + idx))->transpose;
+                k = (fullKey & 0x7F) + ((s8*)((u32)keymap + idx))[2];
                 if (k > 0x7F)
                 {
-                    k = 0x7F;
+                    kk = 0x7F;
                 }
                 else if (k < 0)
                 {
-                    k = 0;
+                    kk = 0;
+                }
+                else
+                {
+                    kk = k;
                 }
 
-                prio += ((KeymapEntry*)(keymap + idx))->prioOffset;
-                if (prio > 0xFF)
+                prio += *(s16*)&keymap[idx + 4];
+                pp = prio;
+                if (pp > 0xFF)
                 {
-                    prio = 0xFF;
+                    pp = 0xFF;
                 }
                 else if (prio < 0)
                 {
-                    prio = 0;
+                    pp = 0;
                 }
+                prio = pp;
 
                 if ((((KeymapEntry*)(keymap + idx))->id & 0xC000) == 0)
                 {
                     if (inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 0x1F80)
                     {
-                        handle = audioFn_8026f630(k & 0x7F, midi, midiSet, vidFlag, &rejected);
+                        handle = audioFn_8026f630(kk & 0x7F, midi, midiSet, vidFlag, &rejected);
                         ok = !rejected;
                     }
                     else
@@ -312,11 +320,11 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     {
                         return handle;
                     }
-                    return macStart(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, k | (fullKey & 0x80), vol,
+                    return macStart(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, kk | (fullKey & 0x80), vol,
                                     pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
                                     studio, itd);
                 }
-                return audioLayerFn_8026f8b8(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, k | (fullKey & 0x80), vol,
+                return audioLayerFn_8026f8b8(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, kk | (fullKey & 0x80), vol,
                                              pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
                                              studio, itd);
             }
