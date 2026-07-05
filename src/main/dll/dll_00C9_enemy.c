@@ -1949,7 +1949,7 @@ void enemy_init(int obj, u8* setup, int flag)
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->anim.alpha = 255;
     }
-    ((EnemyState*)state)->unk2FC = ((EnemyPlacement*)setup)->healthByte / lbl_803E257C;
+    ((EnemyState*)state)->health = ((EnemyPlacement*)setup)->healthByte / lbl_803E257C;
     ((EnemyState*)state)->aggroRange = (f32)(u32)(((EnemyPlacement*)setup)->aggroRangeByte << 3);
     *(int*)&((EnemyState*)state)->controlFlags = 0;
     ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;

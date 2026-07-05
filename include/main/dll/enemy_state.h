@@ -39,7 +39,7 @@ typedef struct EnemyState {
     u8 unk2EE[0x2F8 - 0x2EE];
     s16 unk2F8;
     u8 unk2FA[0x2FC - 0x2FA];
-    f32 unk2FC;
+    f32 health; /* 0x2FC: placement.healthByte / const, the enemy's HP */
     f32 animDeltaScale;
     f32 unk304;
     f32 unk308;
