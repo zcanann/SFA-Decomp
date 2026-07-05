@@ -764,7 +764,7 @@ state_selected:
             {
                 for (step = 0; step < 4; step++)
                 {
-                    if (*(u8*)(node + step + 4) == ((TrickyState*)state)->walkGroup)
+                    if (*(s8*)(node + step + 4) == ((TrickyState*)state)->walkGroup)
                     {
                         break;
                     }
