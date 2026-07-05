@@ -67,7 +67,7 @@ typedef struct SnowClawBombSetup
 {
     ObjPlacement head; /* 0x00: pos/color/mapId */
     s8 aimYaw;         /* 0x18 */
-    s8 unk19;          /* 0x19 */
+    s8 launchMode;     /* 0x19: bomb launch/aim mode (switched on to pick launchAngle: 0=default drop, 1=aim at player) */
     s16 launchAngle;   /* 0x1a */
 } SnowClawBombSetup;
 
@@ -226,7 +226,7 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c)
         ((ObjPlacement*)obj2)->color[2] = 0xff;
         ((ObjPlacement*)obj2)->color[1] = 1;
         ((ObjPlacement*)obj2)->color[3] = 0xff;
-        ((SnowClawBombSetup*)obj2)->unk19 = b;
+        ((SnowClawBombSetup*)obj2)->launchMode = b;
         ((SnowClawBombSetup*)obj2)->head.posX = ((GameObject*)obj)->anim.localPosX;
         ((SnowClawBombSetup*)obj2)->head.posY = lbl_803E66E0 + ((GameObject*)obj)->anim.localPosY;
         ((SnowClawBombSetup*)obj2)->head.posZ = ((GameObject*)obj)->anim.localPosZ;
