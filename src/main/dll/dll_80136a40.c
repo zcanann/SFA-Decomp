@@ -37,13 +37,18 @@
 
 typedef struct TrickyImpressState
 {
-    u8 pad0[0x54 - 0x0];
+    u8 pad0[0x14 - 0x0];
+    f32 unk14;
+    u8 pad18[0x24 - 0x18];
+    u32 unk24;
+    u8 pad28[0x54 - 0x28];
     u32 flags54;
     u8 pad58[0x408 - 0x58];
     f32 renderPosX;
     f32 renderPosY;
     f32 renderPosZ;
-    u8 pad414[0x7A8 - 0x414];
+    s16 unk414;
+    u8 pad416[0x7A8 - 0x416];
     s32 childObj0; /* 0x7A8: attached child object handle (slot 0) */
     u8 pad7AC[0x7B0 - 0x7AC];
     s32 childObj1; /* 0x7B0: attached child object handle (slot 1) */
@@ -194,11 +199,11 @@ void reportAllocFail(void)
 /* EN v1.0 0x801368D4  size: 12b  Clear lbl_803DD9AB to 0. */
 
 /* EN v1.0 0x80138F78  size: 12b  obj->_b8->_14 . */
-f32 fn_80138F78(u8* obj) { return *(f32*)(*(u8**)&((GameObject*)obj)->extra + 0x14); }
+f32 fn_80138F78(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk14; }
 /* EN v1.0 0x80138F84  size: 12b  obj->_b8->_24 . */
-u32 fn_80138F84(u8* obj) { return *(u32*)(*(u8**)&((GameObject*)obj)->extra + 0x24); }
+u32 fn_80138F84(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk24; }
 /* EN v1.0 0x80138F90  size: 12b  obj->_b8->_414 . */
-s16 fn_80138F90(u8* obj) { return *(s16*)(*(u8**)&((GameObject*)obj)->extra + 0x414); }
+s16 fn_80138F90(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk414; }
 /* EN v1.0 0x80138F9C  size: 12b  Returns Tricky's queued path particle position. */
 void* trickyGetQueuedPathParticlePos(u8* obj) { return &((TrickyImpressState*)((GameObject*)obj)->extra)->renderPosX; }
 
