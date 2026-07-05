@@ -95,7 +95,7 @@ void explodeanimator_init(int* obj, int* def)
 {
     int* state = ((GameObject*)obj)->extra;
     int v;
-    if ((u32)GameBit_Get(*(s16*)((char*)def + 50)) != 0u)
+    if ((u32)GameBit_Get(((ExplodeanimatorPlacement*)def)->resultGameBit) != 0u)
     {
         v = 1;
     }
