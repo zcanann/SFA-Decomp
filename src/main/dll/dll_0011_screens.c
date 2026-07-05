@@ -126,7 +126,8 @@ void screens_initialise(void)
 
 void* saveGameGetCurHint(void)
 {
-    return gameTextGet((s32) * (u8*)((char*)getLastSavedGameTexts() + 0x5) + 0xf4);
+    u8* texts = getLastSavedGameTexts();
+    return gameTextGet((s32)texts[5] + 0xf4);
 }
 
 void loadTaskTexts(void)
@@ -161,8 +162,8 @@ void loadTaskTexts(void)
 
 u8 getCurTaskHintTextMap(void)
 {
-    return (u8)(s32)
-    lbl_803119E0[*(u8*)((char*)getLastSavedGameTexts() + 0x5)];
+    u8* texts = getLastSavedGameTexts();
+    return (u8)(s32)lbl_803119E0[texts[5]];
 }
 
 void hintTextFn_800ea174(u8* out)
