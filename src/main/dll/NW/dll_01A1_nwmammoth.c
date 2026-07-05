@@ -88,7 +88,7 @@ int nw_mammoth_getExtraSize(void)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801CEE0C(int p1, int p2)
+void fn_801CEE0C(int obj, int p2)
 {
     extern int fn_801CE078(int, int);
     extern int gameBitDecrement(int bit);
@@ -98,7 +98,7 @@ void fn_801CEE0C(int p1, int p2)
     extern u8 lbl_803DBF7C[4];
     NwMammothState* state = (NwMammothState*)p2;
 
-    if (fn_801CE078(p1, p2) != 0) return;
+    if (fn_801CE078(obj, p2) != 0) return;
 
     switch (state->stateIndex)
     {
@@ -114,11 +114,11 @@ void fn_801CEE0C(int p1, int p2)
         switch (GameBit_Get(1400))
         {
         case 0:
-            if (ObjTrigger_IsSetById(p1, 1398) != 0)
+            if (ObjTrigger_IsSetById(obj, 1398) != 0)
             {
                 GameBit_Set(1400, 1);
                 gameBitDecrement(1398);
-                (*gObjectTriggerInterface)->runSequence(2, (void*)p1, -1);
+                (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
                 state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
                 state->stateIndex = 2;
             }
@@ -133,11 +133,11 @@ void fn_801CEE0C(int p1, int p2)
         break;
     case 2:
         state->triggerList = lbl_803DBF78;
-        if (ObjTrigger_IsSetById(p1, 1398) != 0)
+        if (ObjTrigger_IsSetById(obj, 1398) != 0)
         {
             GameBit_Set(1400, 2);
             gameBitDecrement(1398);
-            (*gObjectTriggerInterface)->runSequence(4, (void*)p1, -1);
+            (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
             state->stateIndex = 3;
             state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
         }
@@ -148,7 +148,7 @@ void fn_801CEE0C(int p1, int p2)
     }
 }
 
-void fn_801CED2C(int p1, int p2)
+void fn_801CED2C(int obj, int p2)
 {
     extern u8 lbl_803DBFB4[4];
     extern u8 lbl_803DBFB8[4];
@@ -159,7 +159,7 @@ void fn_801CED2C(int p1, int p2)
     {
     case 4:
         state->triggerList = lbl_803DBFB4;
-        if (ObjTrigger_IsSetById(p1, 418) != 0)
+        if (ObjTrigger_IsSetById(obj, 418) != 0)
         {
             state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
             GameBit_Set(413, 1);
@@ -190,24 +190,24 @@ typedef struct
 
 int fn_801CE078(int* obj, u8* st)
 {
-    u8 cv;
-    int snd;
+    u8 night;
+    int animCue;
     f32 sunTime;
     WoPartfxBlock blk;
     NwMammothState* state = (NwMammothState*)st;
 
-    cv = (u8)(*gSkyInterface)->getSunPosition(&sunTime);
+    night = (u8)(*gSkyInterface)->getSunPosition(&sunTime);
     if (state->animEvents.triggerCount != 0)
     {
-        snd = state->animEvents.triggeredIds[0] == 0;
+        animCue = state->animEvents.triggeredIds[0] == 0;
     }
     else
     {
-        snd = 0;
+        animCue = 0;
     }
     if (state->stateIndex < 0x14)
     {
-        if (cv != 0)
+        if (night != 0)
         {
             if (state->pathSpeed > lbl_803E520C)
             {
@@ -224,7 +224,7 @@ int fn_801CE078(int* obj, u8* st)
     switch (state->stateIndex)
     {
     case 0x14:
-        if (snd != 0)
+        if (animCue != 0)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_id_14b);
         }
@@ -236,12 +236,12 @@ int fn_801CE078(int* obj, u8* st)
         }
         break;
     case 0x15:
-        if (snd != 0)
+        if (animCue != 0)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_sa_off);
         }
         state->stateTimer -= timeDelta;
-        if (cv == 0 && state->stateTimer <= lbl_803E520C)
+        if (night == 0 && state->stateTimer <= lbl_803E520C)
         {
             state->stateIndex = 0x16;
         }
@@ -262,7 +262,7 @@ int fn_801CE078(int* obj, u8* st)
         }
         break;
     case 0x16:
-        if (snd != 0)
+        if (animCue != 0)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_id_14d);
         }
@@ -275,7 +275,7 @@ int fn_801CE078(int* obj, u8* st)
     return 1;
 }
 
-void fn_801CEA14(short* obj, u8* st, u8* p3)
+void fn_801CEA14(short* obj, u8* st, u8* mapData)
 {
     NwMammothState* state = (NwMammothState*)st;
     switch (fn_801CE078((int*)obj, st))
@@ -339,7 +339,7 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
         }
         break;
     }
-    if (((NwMammothMapData*)p3)->behaviorMode == 1)
+    if (((NwMammothMapData*)mapData)->behaviorMode == 1)
     {
         if (GameBit_Get(0x19d) != 0)
         {
@@ -393,7 +393,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     NwMammothState* state = (NwMammothState*)st;
     int* tw2;
     int* tw;
-    int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
+    int nearestObj = ObjGroup_FindNearestObject(0xf, obj, 0);
     switch (state->stateIndex)
     {
     case 9:
@@ -423,7 +423,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         }
         if (ObjTrigger_IsSet(obj) != 0)
         {
-            (*gObjectTriggerInterface)->runSequence(3, (void*)near_, -1);
+            (*gObjectTriggerInterface)->runSequence(3, (void*)nearestObj, -1);
             state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
             state->stateIndex = 0xd;
             GameBit_Set(0xce1, 1);
@@ -431,8 +431,8 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         }
         break;
     case 0xc:
-        (*gObjectTriggerInterface)->preempt(near_, 0x5aa);
-        (*gObjectTriggerInterface)->runSequence(3, (void*)near_, 0x30);
+        (*gObjectTriggerInterface)->preempt(nearestObj, 0x5aa);
+        (*gObjectTriggerInterface)->runSequence(3, (void*)nearestObj, 0x30);
         state->stateIndex = 0xd;
         break;
     case 0xd:
@@ -556,8 +556,8 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         }
         break;
     case 0x10:
-        (*gObjectTriggerInterface)->preempt(near_, 0x157c);
-        (*gObjectTriggerInterface)->runSequence(1, (void*)near_, 2);
+        (*gObjectTriggerInterface)->preempt(nearestObj, 0x157c);
+        (*gObjectTriggerInterface)->runSequence(1, (void*)nearestObj, 2);
         state->stateIndex = 0x13;
         break;
     case 0x11:
@@ -577,7 +577,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             if ((*gScreenTransitionInterface)->isFinished() != 0)
             {
                 GameBit_Set(0x102, 1);
-                (*gObjectTriggerInterface)->runSequence(1, (void*)near_, -1);
+                (*gObjectTriggerInterface)->runSequence(1, (void*)nearestObj, -1);
                 state->stateIndex = 0x13;
             }
         }
@@ -671,7 +671,7 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
     extern void fn_801CEA14(int obj, void* state, void* objDef); /* #57 */
     extern void fn_801CED2C(int obj, void* state, void* objDef); /* #57 */
     extern void fn_801CEE0C(int obj, void* state, void* objDef); /* #57 */
-    extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2); /* #57 */
+    extern f32 vec3f_distanceSquared(f32 * obj, f32 * p2); /* #57 */
     extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry * reactionEntryTable, u32 reactionEntryCount,
                                  u32 reactionState, float* reactionStepScale);
     int triggerIndex;
