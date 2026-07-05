@@ -1617,6 +1617,7 @@ main/dll/CC/dll_0186_ccgasventcontrol.c:
 
 main/dll/CC/dll_0187_ccqueen.c:
 	.text       start:0x801AA558 end:0x801AA734
+	.sdata2     start:0x803E4650 end:0x803E466C
 
 main/dll/CC/dll_0188_cclightfoot.c:
 	.text       start:0x801AA734 end:0x801AB468
