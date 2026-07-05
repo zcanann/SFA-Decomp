@@ -64,7 +64,7 @@ extern u32 gSynthAllocatedVoices;
 extern u32 gSynthNextHandle;
 extern u32* gSynthFreeCallbacks;
 extern u8 synthIsFadeOutActive(u8 idx);
-extern u32 fn_8026E9D0(u32 ch, u32 dt);
+extern u32 fn_8026E9D0(u8 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
 extern u32 sndFXCheck(void);
 extern void synthFreeCallback(void* cb);
@@ -74,28 +74,40 @@ extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
 
 #define fabs __fabs
-void synthSetStudioChannelScale(int value, u8 bank, u32 key);
+void synthSetStudioChannelScale(int value, u8 bank, u8 key);
 
 /*
  * fn_8026EC44 - per-song pitch/mod LFO + event update pass.
  * EN v1.0 Address: 0x8026EC44, size 1736b
  */
 #pragma fp_contract off
+static inline f32 sal_fmod(f32 x, f32 y, f64 absy)
+{
+    s64 n;
+
+    if (absy > fabs(x))
+    {
+        return x;
+    }
+    n = (s64)(u64)(x / y);
+    return x - y * (f32)n;
+}
+
 void fn_8026EC44(u32 dt)
 {
     extern float floorf(float x); /* #57 */
-    SynthSong* song;
-    SynthSong* next;
     SynthSong* cs;
-    SynthStream* st;
     u32* evt;
-    u32 ret;
-    u32 cb;
     int i;
     int hasFree;
     u32 sum;
     int cnt;
+    SynthStream* st;
     u32 ch;
+    u32 ret;
+    u32 cb;
+    SynthSong* song;
+    SynthSong* next;
     f32 c0;
     f64 absRange;
     f32 range;
@@ -103,8 +115,10 @@ void fn_8026EC44(u32 dt)
     f32 val;
     f32 freq;
     u8 fade;
-    u32* node;
+    /* never referenced; reserves stack to match the retail frame (0xB0) */
+    f32 unusedA[4];
     u32* nnode;
+    u32* node;
 
     if (dt != 0)
     {
@@ -151,10 +165,7 @@ void fn_8026EC44(u32 dt)
                 freq = c0 * ((f32)st->cur * dt);
                 freq = freq * (c1 * (f32)(u32)st->vol);
                 val = range * freq;
-                if (!(absRange > fabs(val)))
-                {
-                    val = val - range * (f32)(s64)(u64)(val / range);
-                }
+                val = sal_fmod(val, range, absRange);
                 *(u32*)((u8*)st + st->idx * 8 + 0xc) = val;
                 *(int*)((u8*)st + st->idx * 8 + 0x10) = floorf(freq);
                 ret = fn_8026E9D0(0, dt);
@@ -174,12 +185,14 @@ void fn_8026EC44(u32 dt)
                 gSynthCurrentVoice->counter = cnt - (cnt / 5) * 5;
                 sum = gSynthCurrentVoice->streams[0].o[0].acc + gSynthCurrentVoice->streams[0].d[0].step;
                 gSynthCurrentVoice->streams[0].o[0].acc = sum & 0xffff;
+                sum = sum >> 16;
                 gSynthCurrentVoice->streams[0].o[0].out +=
-                    gSynthCurrentVoice->streams[0].d[0].delta + (sum >> 16);
+                    gSynthCurrentVoice->streams[0].d[0].delta + sum;
                 sum = gSynthCurrentVoice->streams[0].o[1].acc + gSynthCurrentVoice->streams[0].d[1].step;
                 gSynthCurrentVoice->streams[0].o[1].acc = sum & 0xffff;
+                sum = sum >> 16;
                 gSynthCurrentVoice->streams[0].o[1].out +=
-                    gSynthCurrentVoice->streams[0].d[1].delta + (sum >> 16);
+                    gSynthCurrentVoice->streams[0].d[1].delta + sum;
             }
             else
             {
@@ -200,12 +213,12 @@ void fn_8026EC44(u32 dt)
                                 u32* cv = (u32*)evt[1];
                                 st->cur = (u32)cv;
                                 synthSetStudioChannelScale((u32)cv >> 10,
-                                                           gSynthCurrentVoiceSlotIndex, ch & 0xff);
+                                                           gSynthCurrentVoiceSlotIndex, ch);
                             }
                             else
                             {
                                 synthSetStudioChannelScale(evt[1], gSynthCurrentVoiceSlotIndex,
-                                                           ch & 0xff);
+                                                           ch);
                                 st->cur = st->evt[1] << 10;
                             }
                             st->evt = st->evt + 2;
@@ -213,18 +226,13 @@ void fn_8026EC44(u32 dt)
                     }
                     cs = gSynthCurrentVoice;
                     st = &cs->streams[ch];
-                    freq = (c0 * ((f32)st->cur * dt)) * (c1 * (f32)(u32)
-                    st->vol
-                    )
-                    ;
+                    freq = c0 * ((f32)st->cur * dt);
+                    freq = freq * (c1 * (f32)(u32)st->vol);
                     val = range * freq;
-                    if (!(absRange > fabs(val)))
-                    {
-                        val = val - range * (f32)(s64)(u64)(val / range);
-                    }
+                val = sal_fmod(val, range, absRange);
                     *(u32*)((u8*)st + st->idx * 8 + 0xc) = val;
                     *(int*)((u8*)st + st->idx * 8 + 0x10) = floorf(freq);
-                    ret |= fn_8026E9D0(ch & 0xff, dt);
+                    ret |= fn_8026E9D0(ch, dt);
                 }
                 cb = synthUpdateCallbacks();
                 if (gSynthCurrentVoice->counter == 0)
@@ -244,12 +252,14 @@ void fn_8026EC44(u32 dt)
                 {
                     sum = gSynthCurrentVoice->streams[i].o[0].acc + gSynthCurrentVoice->streams[i].d[0].step;
                     gSynthCurrentVoice->streams[i].o[0].acc = sum & 0xffff;
+                    sum = sum >> 16;
                     gSynthCurrentVoice->streams[i].o[0].out +=
-                        gSynthCurrentVoice->streams[i].d[0].delta + (sum >> 16);
+                        gSynthCurrentVoice->streams[i].d[0].delta + sum;
                     sum = gSynthCurrentVoice->streams[i].o[1].acc + gSynthCurrentVoice->streams[i].d[1].step;
                     gSynthCurrentVoice->streams[i].o[1].acc = sum & 0xffff;
+                    sum = sum >> 16;
                     gSynthCurrentVoice->streams[i].o[1].out +=
-                        gSynthCurrentVoice->streams[i].d[1].delta + (sum >> 16);
+                        gSynthCurrentVoice->streams[i].d[1].delta + sum;
                 }
             }
             if ((ret == 0) && (cb == 0))
@@ -353,7 +363,7 @@ int fn_8026F30C(void)
 /*
  * Set one studio/channel scale entry.
  */
-void synthSetStudioChannelScale(int value, u8 bank, u32 key)
+void synthSetStudioChannelScale(int value, u8 bank, u8 key)
 {
     if (bank == 0xff)
     {
