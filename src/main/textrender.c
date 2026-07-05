@@ -494,8 +494,8 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
             if (gameTextDrawFunc != NULL)
             {
-                f32 sW = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
                 f32 sH = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xc);
+                f32 sW = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
                 ((void (*)(int, int, int, int, f32, f32, f32, f32))gameTextDrawFunc)(
                     fx0, fy0, fx1, fy1,
                     u0 / sW, v0 / sH,
@@ -504,8 +504,8 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             }
             else
             {
-                f32 sW = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
                 f32 sH = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xc);
+                f32 sW = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
                 textRenderChar((int)fx0, fy0, fx1, fy1,
                                u0 / sW, v0 / sH,
                                (u0 + (f32)(g->width << 5)) / sW,
