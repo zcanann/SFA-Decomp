@@ -180,7 +180,7 @@ typedef struct SwitchFlags
 
 void pressureswitchfb_update(int obj)
 {
-    u8 j2;
+    int found;
     int off;
     u32 other;
     int def;
@@ -193,11 +193,11 @@ void pressureswitchfb_update(int obj)
     ObjTextureRuntimeSlot* tex;
     f32 cur;
     f32 target;
-    int slots2;
+    u8 j2;
     u32 nearest;
-    int found;
-    u32 o;
+    int slots2;
     int base2;
+    u32 o;
     f32 nearDist;
     FxArgs fx;
 
