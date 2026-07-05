@@ -345,7 +345,7 @@ int hightop_interactionCallback(int obj)
 #pragma dont_inline on
 void hightop_playMovementSfx(int obj, int state2, int state)
 {
-    int flags = *(int*)((char*)state + 0x314);
+    int flags = ((BaddieState*)state)->eventFlags;
     int idx;
     if ((flags & 0x81) != 0)
     {
@@ -359,7 +359,7 @@ void hightop_playMovementSfx(int obj, int state2, int state)
         }
         Sfx_PlayFromObject((u32)obj, (u16)(&gHighTopMovementSfxIds)[idx]);
     }
-    if (*(int*)((char*)state + 0x314) & 0x100)
+    if ((s32)((BaddieState*)state)->eventFlags & 0x100)
     {
         fn_8009A8C8(obj, lbl_803E6B30);
         Sfx_PlayFromObject((u32)obj, gHighTopMovementSfxIds);
