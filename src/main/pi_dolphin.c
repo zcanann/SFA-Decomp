@@ -2200,7 +2200,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         offsetFlags = offsetFlags & 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
-            fileBuf = tbl->ptrs[fileId] + offsetFlags;
+            fileBuf = *(u32*)((fileId << 2) + (u32)&tbl->ptrs[0]) + offsetFlags;
             tmp = return0_8002A5B8(fileBuf);
             if (tmp != 0)
             {
@@ -2222,7 +2222,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         offsetFlags = offsetFlags & 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
-            fileBuf = tbl->ptrs[fileId] + offsetFlags;
+            fileBuf = *(u32*)((fileId << 2) + (u32)&tbl->ptrs[0]) + offsetFlags;
             tmp = return0_8002A5B8(fileBuf);
             if (tmp != 0)
             {
@@ -2652,7 +2652,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     {
         return 0;
     }
-    slotPtrAddr = (u32)&tbl->ptrs[fileId] + 0x6A28;
+    slotPtrAddr = (fileId << 2) + ((u32)&tbl->ptrs[0] + 0x6A28);
     if (MLDF_QPTR != 0)
     {
     if (fileId == 0xd || fileId == 0x55)
