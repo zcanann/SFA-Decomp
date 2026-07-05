@@ -162,6 +162,57 @@ unit has `matched_data == total_data` and `metadata.complete == true`.
   function-order problems the per-function code match happily hides — treat a
   mismatch there as a real signal, not noise.
 
+## The `.text` half: codegen must byte-match too (bounce it off the data)
+
+Inlining a constant is **not** data-only — it can change `.text`. The per-function
+fuzzy match normalises this away, so a unit reads 100% while its `.text` is *not*
+byte-identical, and the `Matching` flip then shifts the DOL. Treat `.text` and
+`.sdata2` as **two independent byte checks that constrain each other**: build the
+`.o` and `diff -s` *both* sections against the target `.o`. Two forces move
+`.text`:
+
+- **Function order.** The source must list functions in the retail `.fn` order
+  (see step 5). Wrong order shifts every branch offset even though each function
+  matches individually. Read the target order from the retail `.o` symbol table
+  (`objdump -t … | sort`).
+- **Commutative-op operand order.** For `field = field OP const` (add/mul), MWCC
+  canonicalises a **compile-time-known** constant to the *front*
+  (`fmuls f1,const,field`), but retail — compiled with the value unknown — is
+  *field*-first (`fmuls f2,field,const`). Inlining the literal regresses the op.
+  The fix keeps the literal inline: **write the compound assignment**
+  (`field *= 0.015625f`, `field += 15.0f`) — MWCC does *not* canonicalise the
+  compound form, so it emits field-first and matches. This is the common case.
+  - Division/subtraction aren't commutative, so a plain inline literal is fine.
+  - Last resort for a value that must be a *runtime-unknown* memory load:
+    `*(f32*)&namedconst`. It forces a load (field-first) but emits in a separate
+    declaration-order stream from the inline pool, so it fights the `.sdata2`
+    order — avoid unless a compound rewrite can't express it.
+  - Only the **`field = field OP const` accumulator** shape canonicalises. When
+    the constant is genuinely first in the expression — `0.005f * timeDelta + x`
+    (an `fmadds`), `0.13f * y`, `const + field` inside a cast — retail is *also*
+    const-first, so the plain inline literal already matches; don't "fix" it.
+- **A literal to a `double` param becomes an 8-byte `lfd` double.** If a call arg
+  inlines to a double const (`.sdata2` grows, `lfd` instead of `lfs`), the callee
+  prototype in the TU has that parameter typed `double`; type it `f32` and the
+  literal loads as a single (`lfs`). An `extern f32` *variable* hid this (it
+  loads `lfs` then promotes), so it only surfaces once you inline the literal.
+
+The bounce in practice: inline everything → `diff` both sections → a `.text`
+regression on an arithmetic line means "rewrite as compound assignment"; a
+`.sdata2` order mismatch means "fix function/first-use order." Iterate until both
+are `IDENTICAL`, *then* flip to `Matching`.
+
+## Worked examples — `dll_0127` / `lightsource` (compound-assignment fixes)
+
+`dll_0127`: 3 exclusive floats (`1.0` render arg, `10.0` compare, `0.015625`
+sway multiplier). Inlining `scale = scale * 0.015625f` regressed the `fmuls` to
+const-first; `scale *= 0.015625f` restored field-first. Reordered to retail
+function order; both sections identical → complete (24/24 data).
+
+`lightsource`: 80-byte range mixing `render`/`update`/`init` constants.
+`b->fxTimer + 15.0f` and `b->sparkSpawnTimer + 5.0f` both needed `+=`; everything
+else inlined as plain literals. Complete (80/80 data).
+
 ## Worked example — `magiccavetop` (commit `ad84d1a5`)
 
 Moved 16 `.sdata2` floats (`225 … 10.0`) + the conversion bias out of the auto
