@@ -1197,7 +1197,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_00F0_warppoint.c"),
             Object(NonMatching, "main/dll/dll_00F1_invhit.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00F2_iceblast.c"),
-            Object(NonMatching, "main/dll/dll_00F3_flameblast.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_00F3_flameblast.c"),
             Object(NonMatching, "main/dll/dll_00F4_doorf4.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00F5_sidekickball.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00F6_area.c", cflags=cflags_dll_noopt),

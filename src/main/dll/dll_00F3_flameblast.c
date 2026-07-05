@@ -37,70 +37,15 @@ extern void vecRotateZXY(void* in, void* out);
 extern int fn_80138F90(void);
 extern f32* trickyGetQueuedPathParticlePos(s16* tricky);
 extern f32 timeDelta;
-extern f32 lbl_803E3618;
-extern f32 lbl_803E361C;
-extern f32 lbl_803E3620;
-extern f32 gFlameBlastReachScale;
-extern f32 lbl_803E3628;
-extern f32 gFlameBlastRenderScaleRate;
-extern f32 gFlameBlastFireInterval;
-extern f32 gFlameBlastHitArmTime;
-extern f32 gFlameBlastInitTimerScale;
-
-int flameblast_getExtraSize(void) { return sizeof(FlameblastState); }
 
 #pragma scheduling off
-void flameblast_render(int* obj)
-{
-    f32 color[3];
-    f32 scale = gFlameBlastRenderScaleRate * ((FlameblastState*)((GameObject*)obj)->extra)->timer + lbl_803E3628;
-    color[0] = lbl_803E3618;
-    color[1] = lbl_803E3620;
-    color[2] = lbl_803E3618;
-    fn_80098B18((int)obj, scale, 2, 0, 0, (int)color);
-}
-
 void objSetAnimSpeedTo1(int* obj)
 {
     ((FlameblastState*)((GameObject*)obj)->extra)->freeRequested = 1;
 }
 
+#pragma dont_inline on
 #pragma peephole off
-void flameblast_update(int* obj)
-{
-    FlameblastState* state = ((GameObject*)obj)->extra;
-    state->timer = state->timer + timeDelta;
-    if (state->timer > gFlameBlastFireInterval)
-    {
-        state->timer = state->timer - gFlameBlastFireInterval;
-        if (fn_8017805C(obj, state) == 0)
-        {
-            return;
-        }
-    }
-    else
-    {
-        if (state->timer > gFlameBlastHitArmTime)
-        {
-            if (state->hitVolumeDelay == 0)
-            {
-                ObjHits_SetHitVolumeSlot((u32)obj, 0x1a, 1, 0);
-            }
-        }
-    }
-    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * state->timer + state->launchPosX;
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * state->timer + state->launchPosY;
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * state->timer + state->launchPosZ;
-}
-
-void flameblast_init(int* obj, u8* def)
-{
-    FlameblastState* state = ((GameObject*)obj)->extra;
-    fn_8017805C(obj, state);
-    state->timer = gFlameBlastInitTimerScale * (f32)(s32) * (s16*)(def + 0x1a);
-    state->hitVolumeDelay = 2;
-}
-
 #pragma opt_common_subs off
 int fn_8017805C(int* obj, FlameblastState* state)
 {
@@ -121,14 +66,14 @@ int fn_8017805C(int* obj, FlameblastState* state)
         return 0;
     }
     {
-        f32 zero = lbl_803E3618;
+        f32 zero = 0.0f;
         ((GameObject*)obj)->anim.velocityX = zero;
         ((GameObject*)obj)->anim.velocityY = zero;
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E361C;
+        ((GameObject*)obj)->anim.velocityZ = -1.5f;
         vec.pos[1] = zero;
         vec.pos[2] = zero;
         vec.pos[3] = zero;
-        vec.pos[0] = lbl_803E3620;
+        vec.pos[0] = 1.0f;
     }
     vec.dir[2] = tricky[2];
     vec.dir[1] = tricky[1];
@@ -142,7 +87,7 @@ int fn_8017805C(int* obj, FlameblastState* state)
     {
         origin = &((GameObject*)tricky)->anim.localPosX;
     }
-    reach = gFlameBlastReachScale;
+    reach = 0.4f;
     state->launchPosX = -(reach * ((GameObject*)obj)->anim.velocityX - origin[0]);
     state->launchPosY = -(reach * ((GameObject*)obj)->anim.velocityY - origin[1]);
     state->launchPosZ = -(reach * ((GameObject*)obj)->anim.velocityZ - origin[2]);
@@ -157,3 +102,54 @@ int fn_8017805C(int* obj, FlameblastState* state)
     return 1;
 }
 #pragma opt_common_subs reset
+#pragma peephole reset
+#pragma dont_inline reset
+
+int flameblast_getExtraSize(void) { return sizeof(FlameblastState); }
+
+void flameblast_render(int* obj)
+{
+    f32 color[3];
+    f32 scale = 0.033333335f * ((FlameblastState*)((GameObject*)obj)->extra)->timer + 0.2f;
+    color[0] = 0.0f;
+    color[1] = 1.0f;
+    color[2] = 0.0f;
+    fn_80098B18((int)obj, scale, 2, 0, 0, (int)color);
+}
+
+#pragma peephole off
+void flameblast_update(int* obj)
+{
+    FlameblastState* state = ((GameObject*)obj)->extra;
+    state->timer = state->timer + timeDelta;
+    if (state->timer > 24.0f)
+    {
+        state->timer = state->timer - 24.0f;
+        if (fn_8017805C(obj, state) == 0)
+        {
+            return;
+        }
+    }
+    else
+    {
+        if (state->timer > 6.0f)
+        {
+            if (state->hitVolumeDelay == 0)
+            {
+                ObjHits_SetHitVolumeSlot((u32)obj, 0x1a, 1, 0);
+            }
+        }
+    }
+    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * state->timer + state->launchPosX;
+    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * state->timer + state->launchPosY;
+    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * state->timer + state->launchPosZ;
+}
+
+void flameblast_init(int* obj, u8* def)
+{
+    FlameblastState* state = ((GameObject*)obj)->extra;
+    fn_8017805C(obj, state);
+    state->timer = 3.4285715f * (f32)(s32) * (s16*)(def + 0x1a);
+    state->hitVolumeDelay = 2;
+}
+#pragma scheduling reset

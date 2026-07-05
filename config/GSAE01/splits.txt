@@ -1228,6 +1228,7 @@ main/dll/dll_00F2_iceblast.c:
 
 main/dll/dll_00F3_flameblast.c:
 	.text       start:0x8017804C end:0x80178338
+	.sdata2     start:0x803E3618 end:0x803E3648
 
 main/dll/dll_00F4_doorf4.c:
 	.text       start:0x80178338 end:0x801793A4
