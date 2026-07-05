@@ -24,12 +24,13 @@ typedef struct
 extern ModgfxInterface** gModgfxInterface;
 
 extern u8 lbl_80314950[];
-extern f32 lbl_803E0C40;
-extern f32 lbl_803E0C44;
-extern f32 lbl_803E0C48;
-extern f32 lbl_803E0C4C;
-extern f32 lbl_803E0C50;
-extern f32 lbl_803E0C54;
+
+static const f32 c999 = 999.0f;
+static const f32 c83 = 83.0f;
+static const f32 c84 = 84.0f;
+static const f32 gZero = 0.0f;
+static const f32 c200 = 200.0f;
+static const f32 c1 = 1.0f;
 
 typedef struct
 {
@@ -50,14 +51,6 @@ typedef struct
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
 
-void dll_76_func01_nop(void)
-{
-}
-
-void dll_76_func00_nop(void)
-{
-}
-
 void dll_76_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     GfxBuf buf;
@@ -66,54 +59,54 @@ void dll_76_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[0].flags = 0x8c;
     e[0].tex = NULL;
     e[0].mode = 0x20000000;
-    e[0].x = lbl_803E0C40;
-    e[0].y = lbl_803E0C44;
-    e[0].z = lbl_803E0C48;
+    e[0].x = *(f32*)&c999;
+    e[0].y = *(f32*)&c83;
+    e[0].z = *(f32*)&c84;
     e[1].layer = 0;
     e[1].flags = 0;
     e[1].tex = NULL;
     e[1].mode = 0x80000;
-    e[1].x = lbl_803E0C4C;
-    e[1].y = lbl_803E0C50;
-    e[1].z = lbl_803E0C4C;
+    e[1].x = *(f32*)&gZero;
+    e[1].y = *(f32*)&c200;
+    e[1].z = *(f32*)&gZero;
     e[2].layer = 1;
     e[2].flags = 0;
     e[2].tex = NULL;
     e[2].mode = 0x80000;
-    e[2].x = lbl_803E0C4C;
-    e[2].y = lbl_803E0C4C;
-    e[2].z = lbl_803E0C4C;
+    e[2].x = *(f32*)&gZero;
+    e[2].y = *(f32*)&gZero;
+    e[2].z = *(f32*)&gZero;
     e[3].layer = 3;
     e[3].flags = 1;
     e[3].tex = NULL;
     e[3].mode = 0x2000;
-    e[3].x = lbl_803E0C4C;
-    e[3].y = lbl_803E0C4C;
-    e[3].z = lbl_803E0C4C;
+    e[3].x = *(f32*)&gZero;
+    e[3].y = *(f32*)&gZero;
+    e[3].z = *(f32*)&gZero;
     e[4].layer = 4;
     e[4].flags = 0;
     e[4].tex = NULL;
     e[4].mode = 0x80000;
-    e[4].x = lbl_803E0C4C;
-    e[4].y = lbl_803E0C50;
-    e[4].z = lbl_803E0C4C;
+    e[4].x = *(f32*)&gZero;
+    e[4].y = *(f32*)&c200;
+    e[4].z = *(f32*)&gZero;
     e[5].layer = 5;
     e[5].flags = 0;
     e[5].tex = NULL;
     e[5].mode = 0x20000000;
-    e[5].x = lbl_803E0C40;
-    e[5].y = lbl_803E0C44;
-    e[5].z = lbl_803E0C48;
+    e[5].x = *(f32*)&c999;
+    e[5].y = *(f32*)&c83;
+    e[5].z = *(f32*)&c84;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E0C4C;
-    buf.pos[1] = lbl_803E0C4C;
-    buf.pos[2] = lbl_803E0C4C;
-    buf.col[0] = lbl_803E0C4C;
-    buf.col[1] = lbl_803E0C4C;
-    buf.col[2] = lbl_803E0C4C;
-    buf.scale = lbl_803E0C54;
+    buf.pos[0] = *(f32*)&gZero;
+    buf.pos[1] = *(f32*)&gZero;
+    buf.pos[2] = *(f32*)&gZero;
+    buf.col[0] = *(f32*)&gZero;
+    buf.col[1] = *(f32*)&gZero;
+    buf.col[2] = *(f32*)&gZero;
+    buf.scale = *(f32*)&c1;
     buf.v40 = 0;
     buf.v3c = 0;
     buf.v59 = 0;
@@ -134,16 +127,24 @@ void dll_76_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)buf.ctx != 0)
         {
-            buf.pos[0] = lbl_803E0C4C + ((GameObject*)buf.ctx)->anim.worldPosX;
-            buf.pos[1] = lbl_803E0C4C + ((GameObject*)buf.ctx)->anim.worldPosY;
-            buf.pos[2] = lbl_803E0C4C + ((GameObject*)buf.ctx)->anim.worldPosZ;
+            buf.pos[0] = *(f32*)&gZero + ((GameObject*)buf.ctx)->anim.worldPosX;
+            buf.pos[1] = *(f32*)&gZero + ((GameObject*)buf.ctx)->anim.worldPosY;
+            buf.pos[2] = *(f32*)&gZero + ((GameObject*)buf.ctx)->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E0C4C + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0C4C + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0C4C + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] = *(f32*)&gZero + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = *(f32*)&gZero + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = *(f32*)&gZero + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
+}
+
+void dll_76_func01_nop(void)
+{
+}
+
+void dll_76_func00_nop(void)
+{
 }
