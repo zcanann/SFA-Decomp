@@ -848,9 +848,8 @@ void loadMemCardImages(void)
     x[0] = 0;
     for (i[0] = (int)x[0]; (int)i[0] < 0x400; i[0]++)
     {
-        u64 v = p[i[0]];
-        x[0] = x[0] ^ v;
-        a[0] = a[0] + v;
+        x[0] = x[0] ^ p[i[0]];
+        a[0] = a[0] + p[i[0]];
     }
     chk = x[0] ^ (a[0] + 13);
     ((u32*)p)[0xa91] = (u32)chk;
@@ -861,9 +860,8 @@ void loadMemCardImages(void)
     a2[0] = 1;
     for (i[0] = (int)x2[0]; (int)i[0] < 0x3ff; i[0]++)
     {
-        u64 v = p[i[0]];
-        x2[0] = x2[0] ^ v;
-        a2[0] = a2[0] + v;
+        x2[0] = x2[0] ^ p[i[0]];
+        a2[0] = a2[0] + p[i[0]];
     }
     chk = x2[0] ^ (a2[0] + 13);
     ((u32*)q)[0xfff] = (u32)chk;
