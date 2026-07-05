@@ -790,7 +790,7 @@ state_selected:
                                 {
                                     if (found >= -1)
                                     {
-                                        found = 1;
+                                        goto set_found;
                                     }
                                 }
                                 else if (found < 2)
@@ -809,6 +809,9 @@ state_selected:
                                 }
                             }
                         }
+                        continue;
+                    set_found:
+                        found = 1;
                     }
                 }
             }
