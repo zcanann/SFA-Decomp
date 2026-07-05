@@ -4415,6 +4415,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.lifetimeFrames = 0x78;
         }
         cfg.linkGroup = 0;
+        cfg.behaviorFlags = 0x80000201;
         cfg.behaviorFlags = 0x100201;
         cfg.textureId = 99;
         rot.m[1] = lbl_803DF4DC;
