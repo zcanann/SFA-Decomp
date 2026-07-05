@@ -1199,7 +1199,6 @@ void fn_80137DF8(void)
     int h, h2;
     int b;
     int n;
-    u32 cnt;
     u32* p;
     u8 lvl;
     u32 r, rr;
@@ -1350,13 +1349,11 @@ void fn_80137DF8(void)
             {
                 b = 0x12700;
                 rows = y + 0x4c;
-                if (rows > 0x3b)
+                while (rows > 0x3b)
                 {
-                    for (cnt = rows - 0x3b; cnt != 0; cnt--)
-                    {
-                        *(u16*)((char*)debugDrawFrameBuffer + b + 0x1e0) = 0xc080;
-                        b += 0x500;
-                    }
+                    *(u16*)((char*)debugDrawFrameBuffer + b + 0x1e0) = 0xc080;
+                    b += 0x500;
+                    rows--;
                 }
             }
             y += 0x51;
