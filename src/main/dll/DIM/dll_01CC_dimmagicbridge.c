@@ -9,8 +9,7 @@
  * 0x1E8; the flame sequence (dimmagicbridge_flameSeqFn) lights successive
  * segments and ramps their glow toward full.
  *
- * The per-object extra block is DimMagicBridgeState (getExtraSize == 0x68);
- * the flame-sequence fields are overlaid via DimmagicbridgeFlameSeqFnState.
+ * The per-object extra block is DimMagicBridgeState (getExtraSize == 0x68).
  */
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/dll/fbwgpipe_struct.h"
@@ -21,17 +20,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/DIM/dll_01CC_dimmagicbridge.h"
 #include "dolphin/os/OSCache.h"
-
-typedef struct DimmagicbridgeFlameSeqFnState
-{
-    u8 pad0[0x51 - 0x0];
-    u8 alpha;
-    u8 pad52[0x60 - 0x52];
-    u16 wavePhaseA;
-    u8 pad62[0x64 - 0x62];
-    s16 seqTimer;
-    u8 pad66[0x68 - 0x66];
-} DimmagicbridgeFlameSeqFnState;
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
@@ -231,23 +219,23 @@ int dimmagicbridge_flameSeqFn(int obj, int unused, ObjAnimUpdateState* animUpdat
     }
     if (state->ignited != 0)
     {
-        ((DimmagicbridgeFlameSeqFnState*)sub)->seqTimer -= framesThisStep;
-        if (((DimmagicbridgeFlameSeqFnState*)sub)->seqTimer <= 0)
+        state->igniteTimer -= framesThisStep;
+        if (state->igniteTimer <= 0)
         {
-            ((DimmagicbridgeFlameSeqFnState*)sub)->seqTimer = 0x10;
-            for (j = 1; sub[0x40 + j] != 0 && j < state->segmentCount; j++)
+            state->igniteTimer = 0x10;
+            for (j = 1; state->segmentLit[j] != 0 && j < state->segmentCount; j++)
             {
             }
-            sub[0x40 + j] = 1;
+            state->segmentLit[j] = 1;
         }
         for (i = 1; i < state->segmentCount; i++)
         {
-            if (sub[0x40 + i] != 0)
+            if (state->segmentLit[i] != 0)
             {
-                int sv = sub[0x50 + i];
+                int sv = state->segmentGlow[i];
                 int v = sv + framesThisStep;
                 if (v > 0xff) v = 0xff;
-                sub[0x50 + i] = v;
+                state->segmentGlow[i] = v;
             }
         }
     }
