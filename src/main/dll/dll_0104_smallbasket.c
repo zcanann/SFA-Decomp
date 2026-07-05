@@ -36,6 +36,7 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_ids.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -982,7 +983,7 @@ void smallbasket_update(int obj)
                     }
                     else
                     {
-                        Sfx_PlayFromObject(0, 0x10a);
+                        Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
                     }
                 }
                 if (((GameObject*)obj)->unkF8 == 1)
