@@ -2409,9 +2409,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             if ((s8) * (entry + 0x3caa) == 0xb || (s8) * (entry + 0x3caa) == 0xc)
             {
                 val = *(s16*)(cmd + 6);
-                slot = (s8)lbl_803DD113;
-                lbl_803DD113++;
-                *(s16*)(entry + 0x3ca8) = val;
+                *(s16*)(base + (s8)(lbl_803DD113++) * 8 + 0x3ca8) = val;
             }
             else
             {
