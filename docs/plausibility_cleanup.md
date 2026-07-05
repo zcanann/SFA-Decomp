@@ -5,9 +5,21 @@ C read like plausible 2002 Rare source — dropping decomp scaffolding, typing r
 pointers, extracting shared structs, and moving compiler knobs out of the file —
 **without losing a single byte of the match**.
 
-This is a *refactor* playbook, not a *matching* one. It assumes the function already
-matches; the job is to make it look like code a human wrote, and prove the `.o` never
-changed. Related: [`CLAUDE.md`](/CLAUDE.md), [data-split inlining](data_split_inlining.md),
+The full flow is **two phases**, and they belong together:
+
+- **Phase 0 — inline the unit-owned constants** (data-split). This isn't cosmetic: it's
+  what *unlocks* the cleanup. While a constant is loaded from the shared `.sdata2` pool,
+  MWCC needs the register-pinning scaffolding (the `f32 zero` trick, temp-splits) to
+  match; once the constant is a literal the unit owns, MWCC reuses loads on its own and
+  the scaffolding falls away (§4). "Now that things are inlined, it falls into place" is
+  the whole reason this playbook exists.
+- **Phase 1 — the byte-neutral cleanup** (§1–§10 below).
+
+Phase 0 is *not* byte-neutral (it changes which unit owns the data and can flip a unit to
+`complete`), so it has its own mechanics and its own success signal — see below and
+[data-split inlining](data_split_inlining.md). Do Phase 0 first, then Phase 1.
+
+Related: [`CLAUDE.md`](/CLAUDE.md), [data-split inlining](data_split_inlining.md),
 the MP4 reference decomp (`reference_projects/marioparty4`).
 
 ---
@@ -81,7 +93,42 @@ order barely mattered (99.96%) — two different findings hidden in one edit.
 
 ---
 
-## Cleanup catalog — byte-neutral transforms
+## Phase 0 — inline the unit-owned constants first (this unlocks the cleanup)
+
+A float/double literal is not a PPC immediate; MWCC materialises it in `.sdata2` and
+loads it. An un-owned constant sits in the shared auto pool and the unit references it as
+`extern f32 lbl_803EXXXX`. Turning that into an inline literal the unit *owns* is the
+"data-split" — mechanics in [data_split_inlining.md](data_split_inlining.md) (it edits
+`splits.txt`; its success signal is `matched_data` / `metadata.complete`, **not**
+`fuzzy_match_percent`, which is blind to it). Why it belongs here: the inline literal is
+what lets MWCC drop the §4 scaffolding.
+
+**The ownership gate — inline a constant only if your unit references it ALONE.** This is
+the rule that decides which `lbl_` you can retire and which must stay `extern`. A constant
+used by many units lives in the shared pool; inlining it just adds a *redundant* local
+copy while the retail object still points at the pool — no data matched, and you've made
+the unit's data *worse*. Check every candidate:
+
+```sh
+# how many units reference this constant? 1 = yours to inline; >1 = shared, keep the extern
+for lbl in $(grep -oE 'extern f32 lbl_[0-9A-Fa-f]+' src/main/dll/<unit>.c | grep -oE 'lbl_[0-9A-Fa-f]+'); do
+  echo "$(grep -rl "${lbl}@sda21" build/GSAE01/asm/ | wc -l)  $lbl"
+done
+# value of an exclusive one (to write the literal): grep -A1 '.obj lbl_XXXX,' build/GSAE01/asm/auto_*_sdata2.s
+```
+
+Worked example — `weapone6.c` has 22 `extern f32 lbl_803E2xxx`, but only **3** are
+unit-exclusive (`13.0`, `0.03`, `0.65`); the other 19 (`0.0` alone is shared by ~21 units)
+are pool constants that **stay `extern`**. So "the file is still full of `lbl_`" is the
+*correct* end state here — most of them are not yours to inline. Inline the 3, leave the
+19. Don't confuse "an extern remained" with "a step was skipped."
+
+`char lbl_XXXX[]` / non-`f32` `lbl_` are data arrays and tables with real addresses — never
+inline candidates; leave them.
+
+---
+
+## Cleanup catalog — byte-neutral transforms (Phase 1)
 
 Most of these were applied to `dll_00F2_iceblast.c` / `dll_00F3_flameblast.c` and
 verified at 100%. They are the default moves; apply the ones that fit, verify each — and
@@ -143,8 +190,9 @@ don't collapse those (`CLAUDE.md` width-discipline note). Verify.
 
 Decomp often carries crutches that pin a value in a register: a `f32 zero;` written via
 a side-effect (`if (cur <= (zero = 0.0f))`), or a `f32 tmp = state[0];` that splits a
-web. After `.sdata2` constants are inlined (see [data_split_inlining.md](data_split_inlining.md))
-MWCC frequently reuses loads on its own, so these can become plain literals:
+web. Once **Phase 0** has inlined the unit-owned constants, MWCC frequently reuses loads on
+its own, so these crutches can become plain literals (this is the payoff of doing Phase 0
+first — on a unit still loading from the pool the scaffolding often stays load-bearing):
 
 ```c
 f32 zero; f32 cur = state[0];
@@ -222,7 +270,15 @@ settings**. The build already models them as `-opt` flag lists
 | `#pragma peephole off` | `-opt nopeephole` |
 | `#pragma scheduling off` | `-opt noschedule` |
 | `#pragma opt_common_subs off` | `-opt nocse` |
+| `#pragma opt_propagation off` | `-opt nopropagation` |
+| `#pragma opt_loop_invariants off` | `-opt noloopinvariants` (alias `noloop`) |
 | `#pragma dont_inline on` | `-inline off` |
+
+(The table is not exhaustive — MWCC has more `-opt` sub-flags. If you hit an
+`opt_<name> off` pragma that isn't listed, the flag is almost always `-opt no<name>`;
+confirm it by rebuilding and diffing the object, and add it here. `opt_loop_invariants`
+is ON by default at `-O4`, so disabling it TU-wide is an unusually dangerous
+scope-widening — re-verify every function after the move.)
 
 Define (or reuse) a named list next to the others in `configure.py` and point the
 `Object` at it:
