@@ -372,7 +372,7 @@ void bombplantspore_update(void* obj)
         (*gPathControlInterface)->apply(obj, state->pathState);
         (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
         if (hitObj != NULL &&
-            (hitId = *(s16*)((u8*)hitObj + 0x46), hitId != 0x36d) &&
+            (hitId = ((GameObject*)hitObj)->anim.seqId, hitId != 0x36d) &&
             hitId != 0x198 && hitId != 0x63c)
         {
             Sfx_PlayFromObject(obj, SFXen_tiles_lightup);
