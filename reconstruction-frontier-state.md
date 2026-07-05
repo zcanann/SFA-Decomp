@@ -5752,3 +5752,165 @@ Triaged (banked, no source lever found — all coloring symptoms):
 Cluster verdict: weapon/projectile 96-99.9% residuals are near-uniformly #130 state-coloring swaps,
 #108 saved-reg renumbers, and #82 FP-transpositions — the confirmed-resistant classes. 1 genuine
 inline-assign crack landed. all_source EXIT=0, 0 FAILED.
+
+## WORLD/LEVEL cluster fresh-lever sweep (Jul05, Opus 4.8) — 0 wins, full triage
+Ranked 90-100% fns in levelcon/voxmaps/worldplanet/sky/newclouds/newshadows/worldobj.
+Every residual = #82/#108 register-permutation coloring or structural/loop reorder.
+The proven levers (disp-fold, #53 narrowing, fcmpo-value-left, type-correctness) did
+NOT apply cleanly — the fcmpo/narrowing hits were all reg-perm SYMPTOMS not real swaps.
+BANKED (tried + reverted or classified-inert):
+- **dll_02BB gflevelcon fn_8023A3E4 99.349%**: target CSEs the `hp[0xAE]` load across
+  the `!=0` test + `-=1` decrement (`lbz r3,174;...;addi r0,r3,-1`), current reloads.
+  Routing through a temp (`u8/int/u32 armor = hp[0xAE]; hp[0xAE]=armor-1`) FORCES the
+  CSE but adds a `clrlwi` mask on the u8/u32 store-back (98.6-99.2%) or flips cmplwi->cmpwi
+  (int, 98.9%). Mask-coupled cap; the reload is cheaper than any source-forced CSE. Reverted.
+- **voxmaps_resetLoadedMaps 96.92%**: target parks &gVoxMaps in saved r24 directly
+  (`addi r24,r3,0`), current adds `mr r24,r3`. `VoxMaps* mgr=&gVoxMaps;` + mgr-> everywhere
+  = INERT (r0-detour/named-base-in-saved intrinsic, MEMORY-confirmed resistant). Reverted.
+- **sky fn_80089A60 98.71%**: `stb r31,192(r3)` (c2) target has NO mask, current adds
+  `clrlwi r4,r31,24`. Sibling 0x80-0x8a stores get clrlwi in BOTH — c2's no-mask is because
+  target lands the raw param in saved r31; current colors it r4. Coloring symptom, not #53.
+- **sky fn_8008C9F4 99.38%**: `li r6,0`+`mr r0,r6` zero-CSE (folds back) + 3x `@546`-vs-
+  lbl_803DF128 = u32->double bias const (#70 named-vs-anon NEUTRAL, per-fn compiler-emitted).
+- **titleScreenDrawFn_80093db4 98.68% / CameraModeWorldMap_update 98.90% / shadowCreate 98.92%**:
+  classifier-tagged "fcmpo-swap" all VERIFIED = pure #82 FP reg-renumber (f0/f1/f2 perm,
+  operands already value-left in BOTH). No operand-order lever.
+- voxmaps_updateActiveMap 98.78%: loop-body/init structural reorder under existing
+  opt_propagation/opt_strength_reduction off pragmas — not a one-line lever, high risk.
+- worldplanet_update 97.74%: target holds objId in saved r30 across Sfx_PlayFromObject,
+  current spills (stw/lwz 12(r1)); coupled to 19 reg-perm regions. Coloring cascade.
+Cluster is coloring-saturated; no source-injectable fuzzy gains found this pass.
+
+## UI/HUD/text cluster fuzzy sweep (Jul05, Opus) — 0 wins, all coloring/canonicalized
+Triaged ~20 fns in gameui/cmenu/textrender/gametext/pausemenu/maybetemplate/minimap/
+titlemenuitem/prof (96-99.9% band). Every isolated non-coloring delta found was either
+compiler-canonicalized (inert) or coupled to a GPR/FP coloring cascade (regressed). No
+source lever landed. BANKED specifics:
+  - textrender gameTextSetWindowStrPos 96.8%: base/idx r4/r0 swap + shared-epilogue
+    `b` vs `blr` (then-block early return). `return;` + inline-box regressed 96.8->81.2
+    (coloring cascade). #108 + epilogue-merge cap.
+  - textrender gameTextRun 95.15%: case-4 s16 store (offsets 0x18/0x1a). Target hoists
+    load+extsh of t2(=arg1,s16) BEFORE the addr compute (gTextBoxes+arg0*0x20); current
+    SINKS the arg1 load to the store => extsh adjacent to sth (#53 signature). Reordering
+    decls / hoisting arg0 into a local both INERT (scheduler sinks the load regardless).
+    Scheduler-owned in this -O4,p unit. #53-lookalike but resistant.
+  - dll_0000_gameui pauseMenuFn_80129ee0 98.85% + pausemenu pauseMenuDrawStatus_801274a0:
+    `fcmpu f0,f1` vs `f1,f0` against lbl_803E1E3C(0.0) from gameTextFn_80019c00() return.
+    MWCC CANONICALIZES `x == const`/`x != const` float compares to load const-first
+    regardless of source operand order — flipping the C is INERT (semantically-equiv,
+    same asm). Not a source lever. Two sites in the same fn even get opposite orders
+    from CSE/scheduling, not source.
+  - dll_0000_gameui pauseMenuFn_8012b77c 99.84%: clamp `v=(v<lim)?lim:v` -> target
+    `ble`+result-in-f1 vs current `bge`+result-in-f0. The bge/ble is COUPLED to which
+    FP reg (f0 vs f1) holds the ternary result — one #82 coloring decision. `<=` ternary
+    got `ble` but `cror` compound; `>` ternary matched `ble` but regressed 99.84->99.09
+    (f0/f1 merge worse); `if()` stmt gave `cror`. Banked #82 FP-perm.
+  - dll_0000_gameui drawWorldMapHud 99.27%: `n+=t` -> `n=t+n` (#66 add-order) DID remove
+    the `add r29,r29,r28` miss but triggered a saved-reg renumber cascade => 99.27->98.50.
+    Coupled trade, reverted.
+  - dll_003D_titlemenuitem TitleMenuItem_update 98.31%: SOLE delta = arg-const setup
+    `li r3,0; li r4,953` (Sfx_SetObjectSfxVolume args) hoisted BEFORE the 2nd clamp phase
+    in target, sunk in current. 2-instr #84 arg-schedule; no pragmas in file, scheduling
+    territory. Left as-is (low EV, high cascade risk on 948B fn).
+  - cmenu cMenuRotateFn_80124d80 99.59%: abs-cmp `(abs(diff))<=t5` emits extra `mr r0,r3`
+    (t5 single-use, materialized into r0) + r0/r3 renumber. Operand swap `t5>=abs(diff)`
+    INERT. #108 coloring.
+  - cMenuSetItems/mapScreenDrawHud/highScoreScreenDraw/boxDrawFn/gameTextInitFn/gameTextGet/
+    pauseMenuDrawText/fn_8012C000/hudDrawCMenu/Minimap_update/hudDrawButtons/gameTextLoadForCurMap/
+    optionsMenu_openGeneralPanel/textureFreeFn: all pure GPR/FP register-numbering (#108/#82)
+    or 1-instr commutative operand-order coupled to coloring. Minimap has 2 `fmuls` #66
+    operand-order misses but buried in heavy FP-reg #82 divergence (touch = cascade).
+CONCLUSION: this cluster is saturated with within-class coloring caps. The fcmpu
+const-canonicalization finding is a reusable NEGATIVE: don't chase float `==const`/`!=const`
+operand-order in this codebase — MWCC fixes the order itself.
+
+## #53 narrowing-store sweep (tree-wide, Jul05) — VEIN EXHAUSTED, 0 wins
+Swept the pauseMenuRunSubmenu-winning signature (narrow global/field `+=` computed
+value where the store emits a REDUNDANT `clrlwi`/`extsh` the `sth`/`stb` already
+handles, fixed via `int t = A+B; narrow = t;`). Method: proto report -> all 534
+imperfect fns are in main/; 413 in safe scope (ex dolphin/audio/player/msl/dsp).
+- ndiff scan over ALL 534 <100% fns: ZERO have `extsh`/`clrlwi` appearing anywhere
+  in their diff REGIONS (matched narrow ops don't surface; the signature is gone
+  from the isolated set).
+- Per-object narrow-op count delta (objdump -drz current vs target) localized the
+  only 3 fns carrying EXTRA narrow ops, all cascade/coupled (NOT isolated):
+  * pauseMenuFn_80129ee0 (+1, 98.85%) — 3617-diff-line whole-fn coloring cascade, SKIP.
+  * cMenuCountVisibleItems (+3) — inlined-only in target (symbol not standalone), N/A.
+  * fn_80128A7C (dll_0000_gameui, +2, 99.21%) — target uses `mr r24` on `v=scaled`/
+    `v=alpha` (s16 v, no re-narrow) but `extsh r24` on the `v&0x1f;v^=0x1f;v*=div15`
+    path. TRIED `int v`: removed the 2 assignment-extsh (293->291 instr) BUT target
+    then WANTS extsh in the arithmetic path (int drops it) -> REGRESSED 99.21->98.56.
+    Coupled trade (the memory'd "extsh removal flips a costlier narrow elsewhere").
+    Reverted to `s16 v` baseline. No source lever.
+- Global tree scan (all safe fns >=98% with narrow-op delta>0): 0 flagged.
+- gameTextFadeOut (u16 lbl_803DD774 += framesThisStep), creditsStart_ (u16 DD994 +=
+  u8 DB411), cMenuRotateFn (s16 DD79C += step): all ALREADY byte-clean `add;sth` at
+  the store (target re-reads fresh with lhz/lha) — the signature never applied.
+CONCLUSION: the #53 redundant-narrow-store lever is exhausted in the isolated scope;
+remaining narrow-op residuals are cascade-buried or coupled trades.
+
+## Probe 2026-07-05: team still idle
+Jack Price-Burns newest = d3d7a168ff (dll_01EB sbshipmast), unchanged from baseline.
+All 50+ commits since are authored Zachary Canann. No fresh Jack units -> no struct-recovery
+slack reopened. Cheap 0-win stop, no tree scan.
+
+## Jul05 cutscene/seq/save cluster hunt (0 wins, coloring/SR-bound)
+Scope units (mine): cutcam, dll_0045_camTalk, dll_0003_checkpoint, dll_0017_savegame,
+dll_0035_saveselectscreen, cameramode{shipbattle,viewfinder,worldmap,arwing}, camshipbattle5c.
+Cluster is small + already 97.5-99.8%. objseq/objseq* are SIBLING (object-core) - skipped.
+TRIAGED, all coloring/SR-coupled, NO isolated source lever landed:
+- dll_0017_savegame SaveGame_gplaySetObjGroupStatus 97.56%: r0-detour on named saved-reg
+  ptr init from gTransientMapBits (.data global) + a 5x loop-UNROLL diff in the transient
+  scan loop (target `addi r4,r4,15` 5-unrolled vs current stride-3 not-unrolled) + reg-perm.
+  Disp-fold does NOT apply here (unroll, not disp). Structural+coloring, banked.
+- dll_0045_camTalk CameraModeBike_update 98.178%: 2 MISSING extsh (target keeps `extsh;sth`
+  to s16 fields rotX/rotY; current omits). Coupled to FP-reg psq-save COUNT (target saves
+  3 PS regs f29-31 frame 272, current fewer frame 240). TRIED: `(s16)` cast on `0x8000-rotX`
+  line96 (INERT), `(s16)` cast on `angleDelta>>3` line116 (added extsh but REGRESSED
+  98.178->97.807 via coloring shift). extsh here is FP-coloring-coupled, banked.
+- dll_0003_checkpoint Checkpoint_func06 98.35%: FIRST loop `for(i;i<(int)gCheckpointRouteCount)`
+  target COUNTS DOWN (`cmpwi r3,0; ble` load-once + decrement) vs current index-up
+  (`cmpw r6,r3; bge`) = SR trip-count vs index (resistant #108/SR class). Plus r4/r5,r8/r9
+  ptr-web coloring shift. mr-copy region = target CSEs `&arr[0]`=base (`mr r27,r26`) vs
+  current recompute `slwi;add`. All SR/coloring, banked.
+- dll_0044_cameramodeviewfinder CameraModeViewfinder_update 98.83%: both fcmpo sites are
+  field-LEFT already in BOTH builds; diff is pure FP-REG-NUMBER (f0vf1, f1vf2) not operand
+  order - NOT an fcmpo-swap lever. 41 reg-perm, deeply coloring-bound.
+- cutcam camMoveFn 99.08% (#82 FP-perm), saveselectscreen render 99.61% (reg-perm+li/mr
+  copy coupled), checkpoint fn_800D55BC 98.00% (reg-perm), cameramodeshipbattle 98.76%
+  (reg-perm), worldmap 98.90% (reg-perm+pool-reloc): all pure within-class, no lever.
+
+## Jul05 creature/baddie cluster hunt (1 WIN: hightop_stateHandler04 -> 100%)
+- **WIN dll_0272_hightop/hightop_stateHandler04 99.63->100%** (778504a280): the abs
+  pattern `(dy>=0?dy:-dy)` was used TWICE (lines 922 & 926) on the SAME cached `dy`
+  local. Because dy stayed live across both, MWCC preserved it via an extra `fmr f1,f2`
+  before the fneg (result lived in f1). Target negates dy IN PLACE (`fneg f2,f2`, result
+  in f2). FIX: recompute `dy` fresh for the 2nd abs (`dy = player.localPosY - obj.localPosY;`
+  again) so the 1st abs's dy dies -> in-place fneg, drops the spurious fmr. Remaining 6
+  regions all #70 pool-reloc (named-vs-anon), score-neutral. Generalizes the bossdrakor
+  inline-assign lever: when an FP value feeds two in-place clamps/abs, re-materialize it
+  so the first can consume-in-place.
+- BANKED (welded, no source lever, all triaged this session):
+  - drlasercannon_aimAtTarget 97.66%: getAngle yaw/pitch double-extsh — `s16 yaw/pitch`
+    + `(s16)` cast REGRESSED 95.87 (coloring cascade). Target's 2x-extsh is coloring, not type.
+  - sandworm_turnTowardTargetAnim (dll_014C_babycloudrunner) 98.86%: spurious `extsh`
+    before `sth` on `*(s16*)a += (shifted>>=3)`. #53. peephole-ON removes the extsh (C=100
+    vs T=101) BUT breaks the `(s16)t>>2` branch (dot-merge) -> REGRESSED 93.52. s16-shifted
+    REGRESSED (eager narrow, 7 regions). Compound-store extsh is welded here.
+  - hightop_stateHandler02 99.79%: `if(absd>threshold)`->`if(threshold<absd)` cmpw-operand
+    swap REGRESSED 99.15 (r4/r5 coloring symptom, not lever).
+  - ktrex_update 99.54%: `zc[0]=0;zm[0]=zc[0]` loop counter/accum r27/r28 swap (#108);
+    decl-reorder of zc/zm/bitA arrays INERT (allocator web-order dominates).
+  - drshackle_updateSwingBlend 98.42% (r29/r30 param #108 +1 saved reg), trickyUpdateApproachSpeed
+    98.44% (whole-fn FP-perm+fcmpo #82, 21 regions), drhightop/fn_801EAE4C 98.52%
+    (absDelta r3/r4 #108 driving srawi/and order under noschedule), dimsnowhorn1/fn_802BB4B4
+    98.94% (obj/state 184() #130), drcloudrunner/stateHandler05 99.09% (arg-eval r3/r4 seed
+    -> 32-region FP cascade), dimwooddoor_updateShardAim 99.15% (distSq f31-vs-f3 saved/vol
+    #82, ble/bge is symptom), drearthwarrior/fn_802BCA10 99.17% & stateHandler02 99.47%
+    (obj/state #130 + animSpeedC clamp vv-in-f0-vs-f1 #82), wispbaddie/fn_8014FFB4 99.20%
+    (#130), trickyFn_8013b368 99.40% (40 regions, 5x `mr r4,r3;cmplwi` value-preserve +
+    reg-perm, giant fn), drmusiccont_update 99.48% (18 reg-perm), andross_update 99.52%
+    (238 regions), bossdrakor_update 97.72% (already 3x worked; remaining `mr r0,r3;mr r4,r0`
+    param-stage welded + FP-perm), drakorhoverpad_updateMain 99.84% (r28/r30 field-cache
+    #108 + FP-perm), drcloudcage/fn_801E9C00 99.82% (ptr base+idx*16 r7/r9 #108),
+    dim2icicle 99.92% (f28/f30 #82).
