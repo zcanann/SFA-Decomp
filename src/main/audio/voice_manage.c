@@ -41,25 +41,28 @@ extern u8 voiceListRoot;
 void voiceInitPriorityTables(void)
 {
     VidListBlock* vb = &vidListNodes;
-    u8* np = &lbl_803BD150[0x210];
+    u8* base = lbl_803BD150;
+    VoiceListNode* node;
     u32 i;
     u32 n;
 
-    n = *np;
+    n = base[0x210];
+    node = vb->freeList;
     for (i = 0; i < n; i++)
     {
-        ((VoiceListNode*)(u32)vb->freeList)[i].prev = i - 1;
-        ((VoiceListNode*)(u32)vb->freeList)[i].next = i + 1;
-        ((VoiceListNode*)(u32)vb->freeList)[i].time = 1;
+        node[i].prev = i - 1;
+        node[i].next = i + 1;
+        node[i].time = 1;
     }
     vb->freeList[0].prev = 0xff;
-    n = *np;
+    n = base[0x210];
     vb->freeList[n - 1].next = 0xff;
     voiceListRoot = 0;
     voiceListInsert = n - 1;
+    node = vb->priorityLinks;
     for (i = 0; i < n; i++)
     {
-        ((VoiceListNode*)(u32)vb->priorityLinks)[i].time = 0;
+        node[i].time = 0;
     }
     for (i = 0; i < 0x100; i++)
     {
