@@ -1041,8 +1041,8 @@ foundFirst:
                         slot->lifetimeFrameLimit = randomGetRange(0, 0x28) + 0xdc;
                         slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
                         slot->renderFlags |= EXPGFX_RENDER_IMPACT_POSITION_LOCKED | 0LL;
-                        slot->velocityX = -(vecBuf[0] * attractRatio);
-                        slot->velocityZ = -(vecBuf[2] * attractRatio);
+                        slot->velocityX = -vecBuf[0] * attractRatio;
+                        slot->velocityZ = -vecBuf[2] * attractRatio;
                     }
                 }
                 else
