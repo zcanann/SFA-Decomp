@@ -1716,7 +1716,7 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
     if (state == NULL)
     {
-        goto fail;
+        return 1;
     }
 
     stateBytes = (char*)state;
