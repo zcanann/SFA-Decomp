@@ -1008,7 +1008,7 @@ state_selected:
             sqz = sqz * sqz;
             if (sqx + sqz > lbl_803E23EC)
             {
-                trickyTurnTowardYaw(obj, getAngle(-dx, -dz));
+                trickyTurnTowardYaw(obj, (s16)getAngle(-dx, -dz));
             }
         }
         if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E24A8)
@@ -1235,7 +1235,7 @@ state_selected:
             sqz = sqz * sqz;
             if (sqx + sqz > lbl_803E23EC)
             {
-                trickyTurnTowardYaw(obj, getAngle(-dx, -dz));
+                trickyTurnTowardYaw(obj, (s16)getAngle(-dx, -dz));
             }
         }
         if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
