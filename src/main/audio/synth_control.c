@@ -105,8 +105,7 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     u32* delayBucket;
 
     state = lbl_803BCD90;
-    voiceOffset = 0;
-    synthRealTimeLo = 0;
+    synthRealTimeLo = voiceOffset = 0;
     synthRealTimeHi = 0;
     ((SynthGlobalState*)state)->sampleRate = sampleRate;
     ((SynthGlobalState*)state)->dspDmaSize = 0x1800;
