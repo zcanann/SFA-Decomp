@@ -2401,9 +2401,9 @@ void skyFn_8008a04c(void)
         }
         iofs = i = 0;
         part4 = part * 4;
-        pA = (f32*)&((u8*)vec)[part4 + 0x40];
-        pB = (f32*)&((u8*)vec)[part4 + 0x18];
-        pC = (f32*)&((u8*)vec)[part4 + 0x2c];
+        pA = &((f32*)((u8*)vec + 0x40))[part];
+        pB = &((f32*)((u8*)vec + 0x18))[part];
+        pC = &((f32*)((u8*)vec + 0x2c))[part];
         idx7 = (part + 7) * 4;
         idx14 = (part + 0xe) * 4;
         color = &gSkyCurrentTextureColor;
