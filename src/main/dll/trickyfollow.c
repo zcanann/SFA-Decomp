@@ -138,6 +138,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     int i;
     u8* node;
     u8* prevNode;
+    u8* patchTarget;
     int d;
     s16 link;
     u16 ulink;
@@ -539,8 +540,8 @@ state_selected:
     case 2:
         trickyDebugPrint(strs + 0x434);
         ((TrickyState*)state)->speed = velBefore;
-        trickyUpdateApproachSpeed(obj, lbl_803E23DC, state, (f32*)(state + slot * 0xc + 0xa0), 1);
-        moved = trickyMove(obj, state + slot * 0xc + 0xa0);
+        trickyUpdateApproachSpeed(obj, lbl_803E23DC, state, (f32*)(patchTarget = state + slot * 0xc + 0xa0), 1);
+        moved = trickyMove(obj, patchTarget);
         break;
     case 4:
         trickyDebugPrint(strs + 0x448);
