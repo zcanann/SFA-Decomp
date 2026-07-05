@@ -36,22 +36,22 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern int fn_80295CE4(void);
-extern void landed_arwing_updateHitReaction(int obj, int state);
-extern void landed_arwing_updateDamageTexture(int obj, int state);
+extern void landed_arwing_updateHitReaction(GameObject* obj, void* state);
+extern void landed_arwing_updateDamageTexture(GameObject* obj, void* state);
 
 #define STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER 0x04
-#define STAFFACTIVATED_OBJ_FLAG_LOCKED 0x08
-#define STAFFACTIVATED_OBJ_FLAG_DISABLED 0x10
+#define STAFFACTIVATED_OBJ_FLAG_LOCKED      0x08
+#define STAFFACTIVATED_OBJ_FLAG_DISABLED    0x10
 
-#define STAFFACTIVATED_MODE_ACTION 0
-#define STAFFACTIVATED_MODE_LIFT 2
-#define STAFFACTIVATED_MODE_HIT_REACTION 3
-#define STAFFACTIVATED_MODE_DAMAGE_FIRST 4
+#define STAFFACTIVATED_MODE_ACTION        0
+#define STAFFACTIVATED_MODE_LIFT          2
+#define STAFFACTIVATED_MODE_HIT_REACTION  3
+#define STAFFACTIVATED_MODE_DAMAGE_FIRST  4
 #define STAFFACTIVATED_MODE_DAMAGE_SECOND 5
 
 #define STAFFACTIVATED_TRIGGER_GAMEBIT 0xd2a
-#define STAFFACTIVATED_ENABLE_GAMEBIT 0x957
-#define STAFFACTIVATED_PARTICLE_ID 0x7c3
+#define STAFFACTIVATED_ENABLE_GAMEBIT  0x957
+#define STAFFACTIVATED_PARTICLE_ID     0x7c3
 
 #define STAFFACTIVATED_OBJ_GROUP 0x41
 
@@ -78,58 +78,58 @@ STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
 void staffactivated_calcInteractionTargetXZ(int obj, f32* outX, f32* outZ)
 {
     int mode;
-    StaffActivatedState * state;
+    StaffActivatedState* state;
+    GameObject* gobj;
 
-    state = ((GameObject*)obj)->extra;
-    mode = ((StaffActivatedSetup*)((GameObject*)obj)->anim.placementData)->mode;
+    gobj = (GameObject*)obj;
+    state = gobj->extra;
+    mode = ((StaffActivatedSetup*)gobj->anim.placementData)->mode;
 
-    if (mode == STAFFACTIVATED_MODE_LIFT) goto lbl_case2;
-    if (mode >= STAFFACTIVATED_MODE_LIFT) goto lbl_gt2;
-    if (mode == STAFFACTIVATED_MODE_ACTION) goto lbl_case0;
-    goto lbl_default;
-
-lbl_gt2:
-    if (mode >= STAFFACTIVATED_MODE_DAMAGE_FIRST) goto lbl_default;
-    goto lbl_case3;
-
-lbl_case2:
-    *outX = -(lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) - state->targetX);
-    *outZ = -(lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) - state->targetZ);
-    goto lbl_done;
-
-lbl_case3:
-    *outX = lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + state->targetX;
-    *outZ = lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + state->targetZ;
-    goto lbl_done;
-
-lbl_case0:
-    *outX = lbl_803E3BFC * mathSinf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + ((GameObject*)obj)->anim.
-        localPosX;
-    *outZ = lbl_803E3BFC * mathCosf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + ((GameObject*)obj)->anim.
-        localPosZ;
-    goto lbl_done;
-
-lbl_default:
-    *outX = lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + ((GameObject*)obj)->anim.
-        localPosX;
-    *outZ = lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + ((GameObject*)obj)->anim.
-        localPosZ;
-
-lbl_done:;
+    switch (mode)
+    {
+    case STAFFACTIVATED_MODE_LIFT:
+        *outX = -(lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) -
+                  state->targetX);
+        *outZ = -(lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) -
+                  state->targetZ);
+        break;
+    case STAFFACTIVATED_MODE_HIT_REACTION:
+        *outX = lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+                state->targetX;
+        *outZ = lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+                state->targetZ;
+        break;
+    case STAFFACTIVATED_MODE_ACTION:
+        *outX = lbl_803E3BFC * mathSinf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+                gobj->anim.localPosX;
+        *outZ = lbl_803E3BFC * mathCosf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+                gobj->anim.localPosZ;
+        break;
+    default:
+        *outX = lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+                gobj->anim.localPosX;
+        *outZ = lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+                gobj->anim.localPosZ;
+        break;
+    }
 }
 
-u32 cfPrisonGuard_getLiftHeight(int* obj) { return ((StaffActivatedState*)((GameObject*)obj)->extra)->liftHeight; }
-
-void cfPrisonGuard_setLiftHeight(int* obj, int v)
+u32 cfPrisonGuard_getLiftHeight(int* obj)
 {
-    StaffActivatedState * state = ((GameObject*)obj)->extra;
-    state->liftHeight = v;
+    StaffActivatedState* state = ((GameObject*)obj)->extra;
+    return state->liftHeight;
+}
+
+void cfPrisonGuard_setLiftHeight(int* obj, int height)
+{
+    StaffActivatedState* state = ((GameObject*)obj)->extra;
+    state->liftHeight = height;
     state->liftReset = 1;
 }
 
 u8 objGetByteParam1C(int* obj)
 {
-    StaffActivatedSetup * setup = (StaffActivatedSetup*)((GameObject*)obj)->anim.placementData;
+    StaffActivatedSetup* setup = (StaffActivatedSetup*)((GameObject*)obj)->anim.placementData;
     return setup->mode;
 }
 
@@ -143,65 +143,67 @@ int staffactivated_getObjectTypeId(void)
     return 0x40;
 }
 
-void staffactivated_free(int x) { ObjGroup_RemoveObject(x, STAFFACTIVATED_OBJ_GROUP); }
+void staffactivated_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, STAFFACTIVATED_OBJ_GROUP);
+}
 
-void staffactivated_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3BBC); }
+void staffactivated_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3BBC);
+}
 
-void staffactivated_update(int obj)
+void staffactivated_update(GameObject* obj)
 {
     struct PartfxParams
     {
         int pad;
         s16 life;
         s16 extra;
-        f32 ox;
-        f32 oy;
-        f32 oz;
-        f32 ow;
+        f32 scale;
+        f32 posX;
+        f32 posY;
+        f32 posZ;
     } stk;
-    StaffActivatedSetup * param = *(StaffActivatedSetup**)&((GameObject*)obj)->anim.placementData;
-    StaffActivatedState * state = ((GameObject*)obj)->extra;
+    StaffActivatedSetup* setup = (StaffActivatedSetup*)obj->anim.placementData;
+    StaffActivatedState* state = obj->extra;
     int isSet;
-    int gb;
+    int gameBit;
 
     Obj_GetPlayerObject();
 
-    if (((state->flags >> 6) & 1) != 0u)
+    if (((StaffFlags*)&state->flags)->b6)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
-            ((GameObject*)obj)->anim.resetHitboxFlags | STAFFACTIVATED_OBJ_FLAG_LOCKED);
+        obj->anim.resetHitboxFlags |= STAFFACTIVATED_OBJ_FLAG_LOCKED;
     }
     else
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
-            ((GameObject*)obj)->anim.resetHitboxFlags & ~STAFFACTIVATED_OBJ_FLAG_LOCKED);
+        obj->anim.resetHitboxFlags &= ~STAFFACTIVATED_OBJ_FLAG_LOCKED;
     }
 
-    if (((state->flags >> 7) & 1) == 0u || fn_80295CE4() == 0)
+    if (((StaffFlags*)&state->flags)->b7 == 0 || fn_80295CE4() == 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
-            ((GameObject*)obj)->anim.resetHitboxFlags | STAFFACTIVATED_OBJ_FLAG_DISABLED);
+        obj->anim.resetHitboxFlags |= STAFFACTIVATED_OBJ_FLAG_DISABLED;
     }
     else
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
-            ((GameObject*)obj)->anim.resetHitboxFlags & ~STAFFACTIVATED_OBJ_FLAG_DISABLED);
+        obj->anim.resetHitboxFlags &= ~STAFFACTIVATED_OBJ_FLAG_DISABLED;
     }
 
-    switch (param->mode)
+    switch (setup->mode)
     {
     case STAFFACTIVATED_MODE_LIFT:
-        staffactivated_updateLiftHeight(obj, state);
+        staffactivated_updateLiftHeight((int)obj, state);
         break;
     case STAFFACTIVATED_MODE_HIT_REACTION:
-        landed_arwing_updateHitReaction(obj, (int)state);
+        landed_arwing_updateHitReaction(obj, state);
         break;
     case STAFFACTIVATED_MODE_DAMAGE_FIRST:
     case STAFFACTIVATED_MODE_DAMAGE_SECOND:
-        landed_arwing_updateDamageTexture(obj, (int)state);
+        landed_arwing_updateDamageTexture(obj, state);
         break;
     case STAFFACTIVATED_MODE_ACTION:
-        if (((GameObject*)obj)->anim.resetHitboxFlags & STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER)
+        if (obj->anim.resetHitboxFlags & STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER)
         {
             if (GameBit_Get(STAFFACTIVATED_TRIGGER_GAMEBIT) == 0)
             {
@@ -211,29 +213,28 @@ void staffactivated_update(int obj)
         }
         if (GameBit_Get(STAFFACTIVATED_ENABLE_GAMEBIT) == 0)
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
-                ((GameObject*)obj)->anim.resetHitboxFlags | STAFFACTIVATED_OBJ_FLAG_DISABLED);
+            obj->anim.resetHitboxFlags |= STAFFACTIVATED_OBJ_FLAG_DISABLED;
         }
         isSet = 0;
-        gb = param->activeGameBit;
-        if (gb == -1 || GameBit_Get(gb) != 0)
+        gameBit = setup->activeGameBit;
+        if (gameBit == -1 || GameBit_Get(gameBit) != 0)
         {
             isSet = 1;
         }
         ((StaffFlags*)&state->flags)->b7 = isSet;
-        if (((state->flags >> 7) & 1) != 0u)
+        if (((StaffFlags*)&state->flags)->b7)
         {
-            stk.oy = lbl_803E3C00;
-            stk.oz = lbl_803E3C04;
-            stk.ow = lbl_803E3BDC;
-            stk.ox = lbl_803E3BBC;
+            stk.posX = lbl_803E3C00;
+            stk.posY = lbl_803E3C04;
+            stk.posZ = lbl_803E3BDC;
+            stk.scale = lbl_803E3BBC;
             stk.extra = 0;
             stk.life = 0x64;
             (*gPartfxInterface)->spawnObject((void*)obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, NULL);
-            stk.oy = lbl_803E3C00;
-            stk.oz = lbl_803E3C04;
-            stk.ow = lbl_803E3BDC;
-            stk.ox = lbl_803E3BBC;
+            stk.posX = lbl_803E3C00;
+            stk.posY = lbl_803E3C04;
+            stk.posZ = lbl_803E3BDC;
+            stk.scale = lbl_803E3BBC;
             stk.extra = 5;
             stk.life = 0xa;
             (*gPartfxInterface)->spawnObject((void*)obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, NULL);
@@ -241,8 +242,8 @@ void staffactivated_update(int obj)
         break;
     default:
         isSet = 0;
-        gb = param->activeGameBit;
-        if (gb == -1 || GameBit_Get(gb) != 0)
+        gameBit = setup->activeGameBit;
+        if (gameBit == -1 || GameBit_Get(gameBit) != 0)
         {
             isSet = 1;
         }
@@ -251,19 +252,17 @@ void staffactivated_update(int obj)
     }
 }
 
-void staffactivated_init(int obj, int setup)
+void staffactivated_init(GameObject* obj, StaffActivatedSetup* setupData)
 {
-    StaffActivatedSetup* setupData;
     StaffActivatedState* state;
     int sizeIndex;
     int modelVariant;
     f32 scale;
     StaffFlags* flags;
 
-    setupData = (StaffActivatedSetup*)setup;
-    state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, STAFFACTIVATED_OBJ_GROUP);
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)setupData->type << 8);
+    state = obj->extra;
+    ObjGroup_AddObject((u32)obj, STAFFACTIVATED_OBJ_GROUP);
+    obj->anim.rotX = (s16)((s32)setupData->type << 8);
 
     sizeIndex = setupData->size;
     if (sizeIndex > 2)
@@ -294,50 +293,48 @@ void staffactivated_init(int obj, int setup)
         scale = lbl_803E3BBC;
     }
 
-    if (((GameObject*)obj)->anim.hitReactState != NULL)
+    if (obj->anim.hitReactState != NULL)
     {
-        ObjHitbox_SetSphereRadius(
-            obj, (int)((f32)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
-                ->primaryRadius *
-                scale));
+        ObjHitbox_SetSphereRadius((int)obj,
+                                  (int)((f32)((ObjHitsPriorityState*)obj->anim.hitReactState)->primaryRadius * scale));
     }
 
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * scale;
-    if (((GameObject*)obj)->anim.rootMotionScale < *(f32*)&gStaffActivatedMinRootMotionScale)
+    obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase * scale;
+    /* the *(f32*)& launder on the min-scale constant is load-bearing here (the
+       plain compare regresses); keep the forced load feeding the branch. */
+    if (obj->anim.rootMotionScale < *(f32*)&gStaffActivatedMinRootMotionScale)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = gStaffActivatedMinRootMotionScale;
+        obj->anim.rootMotionScale = gStaffActivatedMinRootMotionScale;
     }
 
     switch (setupData->mode)
     {
     case STAFFACTIVATED_MODE_LIFT:
-        ((GameObject*)obj)->hitVolumeIndex = modelVariant;
-        state->targetX = -(lbl_803E3C14 *
-            (((GameObject*)obj)->anim.rootMotionScale *
-                (lbl_803E3C18 *
-                    mathSinf((gStaffActivatedPi * (f32)((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale))) -
-            ((GameObject*)obj)->anim.localPosX);
-        state->targetZ = -(lbl_803E3C14 *
-            (((GameObject*)obj)->anim.rootMotionScale *
-                (lbl_803E3C18 *
-                    mathCosf((gStaffActivatedPi * (f32)((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale))) -
-            ((GameObject*)obj)->anim.localPosZ);
+        obj->hitVolumeIndex = modelVariant;
+        state->targetX = -(lbl_803E3C14 * (obj->anim.rootMotionScale *
+                                           (lbl_803E3C18 * mathSinf((gStaffActivatedPi * (f32)obj->anim.rotX) /
+                                                                    gStaffActivatedBinAngleScale))) -
+                           obj->anim.localPosX);
+        state->targetZ = -(lbl_803E3C14 * (obj->anim.rootMotionScale *
+                                           (lbl_803E3C18 * mathCosf((gStaffActivatedPi * (f32)obj->anim.rotX) /
+                                                                    gStaffActivatedBinAngleScale))) -
+                           obj->anim.localPosZ);
         break;
     case STAFFACTIVATED_MODE_HIT_REACTION:
-        state->targetX = lbl_803E3C14 *
-            (((GameObject*)obj)->anim.rootMotionScale *
-                (lbl_803E3C18 *
-                    mathSinf((gStaffActivatedPi * (f32)((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale))) +
-            ((GameObject*)obj)->anim.localPosX;
-        state->targetZ = lbl_803E3C14 *
-            (((GameObject*)obj)->anim.rootMotionScale *
-                (lbl_803E3C18 *
-                    mathCosf((gStaffActivatedPi * (f32)((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale))) +
-            ((GameObject*)obj)->anim.localPosZ;
+        state->targetX =
+            lbl_803E3C14 *
+                (obj->anim.rootMotionScale *
+                 (lbl_803E3C18 * mathSinf((gStaffActivatedPi * (f32)obj->anim.rotX) / gStaffActivatedBinAngleScale))) +
+            obj->anim.localPosX;
+        state->targetZ =
+            lbl_803E3C14 *
+                (obj->anim.rootMotionScale *
+                 (lbl_803E3C18 * mathCosf((gStaffActivatedPi * (f32)obj->anim.rotX) / gStaffActivatedBinAngleScale))) +
+            obj->anim.localPosZ;
         break;
     default:
-        state->targetX = ((GameObject*)obj)->anim.localPosX;
-        state->targetZ = ((GameObject*)obj)->anim.localPosZ;
+        state->targetX = obj->anim.localPosX;
+        state->targetZ = obj->anim.localPosZ;
         break;
     }
 
@@ -359,7 +356,7 @@ void staffactivated_init(int obj, int setup)
             switch (setupData->mode)
             {
             case STAFFACTIVATED_MODE_HIT_REACTION:
-                ((void(*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E3BBC);
+                ((void (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E3BBC);
                 break;
             case STAFFACTIVATED_MODE_DAMAGE_FIRST:
                 flags->b6 = 0;
