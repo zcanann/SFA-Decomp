@@ -688,8 +688,6 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     ObjAnimRootCurve* blendCurve;
     s16* axis;
     s16* blendAxis;
-    f32 previousProgress;
-    f32 progressDelta;
     f32 clampedStepScale;
     f32 prevFrameLength;
     f32 value;
@@ -699,8 +697,10 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     f32 currentAxisNextValue;
     f32 previousInterp;
     f32 currentInterp;
+    f32 progressDelta;
     f32 previousScaledSample;
     f32 currentScaledSample;
+    f32 previousProgress;
     f32 previousFraction;
     f32 currentFraction;
     f32 rootScale;
@@ -942,7 +942,8 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
             moveData = (ObjAnimMoveData*)bank->animDef->moveData[state->blendCacheSlot];
         }
         blendCurve = ObjAnim_GetMoveDataRootCurve(moveData);
-        blendAxis = ObjAnim_GetRootCurveAxisData(blendCurve);
+        blendAxis = (s16*)blendCurve;
+        blendAxis += 3;
     }
     else
     {
