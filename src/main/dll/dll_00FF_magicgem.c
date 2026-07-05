@@ -46,16 +46,16 @@ extern const f32 lbl_803E34FC;
 extern f32 timeDelta;
 extern const f32 lbl_803E34B4;
 extern const f32 gMagicGemActivateDistSq;
-extern const f32 lbl_803E34BC;
+extern const f32 gMagicGemVelocityDamping;
 extern const f32 gMagicGemGravity;
 extern const f32 lbl_803E34C4;
 extern const f32 lbl_803E34C8;
-extern const f32 lbl_803E34CC;
-extern const f32 lbl_803E34D0;
-extern const f32 lbl_803E34D4;
-extern const f32 lbl_803E34D8;
-extern const f32 lbl_803E34DC;
-extern const f32 lbl_803E34E0;
+extern const f32 gMagicGemBounceSfxSpeed;
+extern const f32 gMagicGemFloorNormalThreshold;
+extern const f32 gMagicGemBounceRestitutionY;
+extern const f32 gMagicGemBounceRestitutionXZ;
+extern const f32 gMagicGemPickupYRange;
+extern const f32 gMagicGemPickupRadiusBase;
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
@@ -170,8 +170,8 @@ void magicgem_update(int obj)
         *(u8*)&((MagicGemState*)state)->unk25B = 1;
         if ((((MagicGemState*)state)->flags27A & 3) == 0)
         {
-            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E34BC;
-            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * lbl_803E34BC;
+            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * gMagicGemVelocityDamping;
+            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * gMagicGemVelocityDamping;
             ((GameObject*)obj)->anim.velocityY = -(gMagicGemGravity * timeDelta - ((GameObject*)obj)->anim.velocityY);
         }
         ((MagicGemState*)state)->burstTimer = ((MagicGemState*)state)->burstTimer - timeDelta;
@@ -238,21 +238,21 @@ void magicgem_update(int obj)
                 float vy = -((GameObject*)obj)->anim.velocityY;
                 float vz = -((GameObject*)obj)->anim.velocityZ;
                 float mag = sqrtf(vx * vx + vy * vy + vz * vz);
-                if (mag > lbl_803E34CC)
+                if (mag > gMagicGemBounceSfxSpeed)
                 {
                     Sfx_PlayFromObject(obj, SFXwp_iceywindlp16);
                 }
-                if (((MagicGemState*)state)->unk6C >= lbl_803E34D0)
+                if (((MagicGemState*)state)->unk6C >= gMagicGemFloorNormalThreshold)
                 {
                     ((GameObject*)obj)->anim.velocityY = -((GameObject*)obj)->anim.velocityY;
-                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E34D4;
+                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * gMagicGemBounceRestitutionY;
                 }
                 else
                 {
                     ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityX;
                     ((GameObject*)obj)->anim.velocityZ = -((GameObject*)obj)->anim.velocityZ;
-                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E34D8;
-                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * lbl_803E34D8;
+                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * gMagicGemBounceRestitutionXZ;
+                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * gMagicGemBounceRestitutionXZ;
                 }
                 ref = ((MagicGemState*)state)->bounceCount + 1;
                 ((MagicGemState*)state)->bounceCount++;
@@ -274,10 +274,10 @@ void magicgem_update(int obj)
         {
             fval = -fval;
         }
-        if (fval < lbl_803E34DC)
+        if (fval < gMagicGemPickupYRange)
         {
             dist = getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
-            fval = lbl_803E34E0 + ((MagicGemState*)state)->collectRadius;
+            fval = gMagicGemPickupRadiusBase + ((MagicGemState*)state)->collectRadius;
             if ((dist < fval * fval) && (fn_8029622C(player) != 0))
             {
                 val = GameBit_Get(MAGICGEM_GAMEBIT_CLAIMED);
