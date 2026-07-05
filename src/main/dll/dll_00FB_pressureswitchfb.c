@@ -254,11 +254,12 @@ void pressureswitchfb_update(int obj)
                         j = 0;
                         if ((((SwitchFlags*)(tmp + 0x84))->playerOnly) != 0)
                         {
-                            if (other != (u32)Obj_GetPlayerObject())
-                            {
+                            if (other == (u32)Obj_GetPlayerObject())
+                                goto do_insert;
+                            else
                                 goto skip_insert;
-                            }
                         }
+                    do_insert:
                         while ((*(u32*)(tmp + j * 4 + 4) != 0) && (j != 9))
                         {
                             j++;
