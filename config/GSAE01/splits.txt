@@ -2038,6 +2038,7 @@ main/dll/SH/dll_01B2_shstaffhaze.c:
 
 main/dll/SH/dll_01B3_shbeacon.c:
 	.text       start:0x801DA954 end:0x801DAFA4
+	.sdata2     start:0x803E5528 end:0x803E5540
 
 main/dll/SH/dll_01B4_shemptytumblew.c:
 	.text       start:0x801DAFA4 end:0x801DB098
