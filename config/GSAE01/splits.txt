@@ -1414,6 +1414,7 @@ main/dll/dll_0127_dll127.c:
 
 main/dll/dll_0129_campfire.c:
 	.text       start:0x8018CEE4 end:0x8018D4AC
+	.sdata2     start:0x803E3D78 end:0x803E3DB0
 
 main/dll/DR/dll_0128_kttorch.c:
 	.text       start:0x8018D4AC end:0x8018D6E8
