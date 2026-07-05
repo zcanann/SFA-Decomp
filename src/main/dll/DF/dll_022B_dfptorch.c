@@ -22,23 +22,8 @@ extern f32 sqrtf(f32 x);
 extern int randomGetRange(int lo, int hi);
 extern ModgfxInterface** gModgfxInterface;
 extern f32 timeDelta;
-extern f32 gDfpTorchMotionRateScale;
-extern f32 lbl_803E63E8;
-extern f32 lbl_803E63E0;
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-
-void DFP_Torch_hitDetect(void)
-{
-}
-
-void DFP_Torch_release(void)
-{
-}
-
-void DFP_Torch_initialise(void)
-{
-}
 
 int DFP_Torch_getExtraSize(void) { return 0x10; }
 int DFP_Torch_getObjectTypeId(void) { return 0x1; }
@@ -49,45 +34,6 @@ void DFP_Torch_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void DFP_Torch_init(int obj, int def)
-{
-    DfpTorchState* state = ((GameObject*)obj)->extra;
-    DfpTorchPlacement* place = (DfpTorchPlacement*)def;
-    void* res;
-    struct
-    {
-        u8 pad[16];
-        f32 val;
-    } spawnArg;
-    int motionRate;
-    ((GameObject*)obj)->anim.rotX = (s16)((place->rotPitch & 0x3f) << 10);
-    motionRate = place->motionRate;
-    if (motionRate > 0)
-    {
-        ((GameObject*)obj)->anim.rootMotionScale = motionRate / gDfpTorchMotionRateScale;
-    }
-    else
-    {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63E8;
-    }
-    state->mode = place->mode;
-    state->gameBit = place->gameBit;
-    spawnArg.val = lbl_803E63E0;
-    switch (state->mode)
-    {
-    case DFPTORCH_MODE_ALWAYS_LIT:
-        state->lit = 1;
-        res = Resource_Acquire(0x69, 1);
-        if (place->colorIdx == 0)
-        {
-            (*(void (*)(int, int, void*, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, &spawnArg, 0x10004, -1, 0);
-        }
-        break;
-    }
-    state->colorIdx = (u8)place->colorIdx;
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DFPTORCH_OBJFLAG_HITDETECT_DISABLED;
-}
-
 #pragma opt_common_subs off
 #pragma fp_contract off
 void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -95,12 +41,6 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     extern void voxmaps_worldToGrid(f32* in, s16* out);
     extern int voxmaps_traceLine(s16*, s16*, void*, int, int);
-    extern f32 lbl_803E63C8;
-    extern f32 gDfpTorchOcclusionCheckDistMin;
-    extern f32 lbl_803E63D0;
-    extern f32 lbl_803E63D4;
-    extern f32 lbl_803E63D8;
-    extern f32 lbl_803E63DC;
     DfpTorchState* state = ((GameObject*)obj)->extra;
     char* cam;
     f32 dist;
@@ -127,7 +67,7 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     else
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E63C8);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, 1.0f);
         if (state->lit != 0)
         {
             state->visibleLatch = 1;
@@ -136,21 +76,21 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             stk2.d[1] = *(f32*)(cam + 0x10) - ((GameObject*)obj)->anim.localPosY;
             stk2.d[2] = *(f32*)(cam + 0x14) - ((GameObject*)obj)->anim.localPosZ;
             dist = sqrtf(stk2.d[2] * stk2.d[2] + (stk2.d[0] * stk2.d[0] + stk2.d[1] * stk2.d[1]));
-            if (dist > gDfpTorchOcclusionCheckDistMin)
+            if (dist > 50.0f)
             {
-                scale = lbl_803E63C8 / dist;
+                scale = 1.0f / dist;
                 stk2.d[0] *= scale;
                 stk2.d[1] *= scale;
                 stk2.d[2] *= scale;
-                stk2.a[0] = lbl_803E63D0 * stk2.d[0];
-                stk2.a[1] = lbl_803E63D0 * stk2.d[1];
-                stk2.a[2] = lbl_803E63D0 * stk2.d[2];
+                stk2.a[0] = 32.0f * stk2.d[0];
+                stk2.a[1] = 32.0f * stk2.d[1];
+                stk2.a[2] = 32.0f * stk2.d[2];
                 stk2.a[0] = stk2.a[0] + ((GameObject*)obj)->anim.localPosX;
                 stk2.a[1] = stk2.a[1] + ((GameObject*)obj)->anim.localPosY;
                 stk2.a[2] = stk2.a[2] + ((GameObject*)obj)->anim.localPosZ;
-                stk2.b[0] = lbl_803E63D4 * stk2.d[0];
-                stk2.b[1] = lbl_803E63D4 * stk2.d[1];
-                stk2.b[2] = lbl_803E63D4 * stk2.d[2];
+                stk2.b[0] = -20.0f * stk2.d[0];
+                stk2.b[1] = -20.0f * stk2.d[1];
+                stk2.b[2] = -20.0f * stk2.d[2];
                 stk2.b[0] = stk2.b[0] + *(f32*)(cam + 0xc);
                 stk2.b[1] = stk2.b[1] + *(f32*)(cam + 0x10);
                 stk2.b[2] = stk2.b[2] + *(f32*)(cam + 0x14);
@@ -170,9 +110,9 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 if (state->visibleLatch != 0)
                 {
-                    stk2.fx.col[0] = lbl_803E63D8;
-                    stk2.fx.col[1] = lbl_803E63DC;
-                    stk2.fx.col[2] = lbl_803E63D8;
+                    stk2.fx.col[0] = 0.0f;
+                    stk2.fx.col[1] = 5.0f;
+                    stk2.fx.col[2] = 0.0f;
                     (*gPartfxInterface)->spawnObject((void*)obj, 0x1f7, &stk2.fx, 0x12, -1,
                                                      NULL);
                 }
@@ -183,6 +123,10 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma fp_contract reset
 #pragma opt_common_subs reset
+
+void DFP_Torch_hitDetect(void)
+{
+}
 
 void DFP_Torch_update(int obj)
 {
@@ -212,7 +156,7 @@ void DFP_Torch_update(int obj)
     case DFPTORCH_MODE_ALWAYS_LIT:
         break;
     case DFPTORCH_MODE_LIGHTABLE:
-        buf[4] = lbl_803E63E0;
+        buf[4] = -2.0f;
         state->prevLit = state->lit;
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
         {
@@ -297,4 +241,51 @@ void DFP_Torch_update(int obj)
         }
         break;
     }
+}
+
+void DFP_Torch_init(int obj, int def)
+{
+    DfpTorchState* state = ((GameObject*)obj)->extra;
+    DfpTorchPlacement* place = (DfpTorchPlacement*)def;
+    void* res;
+    struct
+    {
+        u8 pad[16];
+        f32 val;
+    } spawnArg;
+    int motionRate;
+    ((GameObject*)obj)->anim.rotX = (s16)((place->rotPitch & 0x3f) << 10);
+    motionRate = place->motionRate;
+    if (motionRate > 0)
+    {
+        ((GameObject*)obj)->anim.rootMotionScale = motionRate / 8192.0f;
+    }
+    else
+    {
+        ((GameObject*)obj)->anim.rootMotionScale = 0.1f;
+    }
+    state->mode = place->mode;
+    state->gameBit = place->gameBit;
+    spawnArg.val = -2.0f;
+    switch (state->mode)
+    {
+    case DFPTORCH_MODE_ALWAYS_LIT:
+        state->lit = 1;
+        res = Resource_Acquire(0x69, 1);
+        if (place->colorIdx == 0)
+        {
+            (*(void (*)(int, int, void*, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, &spawnArg, 0x10004, -1, 0);
+        }
+        break;
+    }
+    state->colorIdx = (u8)place->colorIdx;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DFPTORCH_OBJFLAG_HITDETECT_DISABLED;
+}
+
+void DFP_Torch_release(void)
+{
+}
+
+void DFP_Torch_initialise(void)
+{
 }

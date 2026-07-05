@@ -857,7 +857,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_022C_dll22c.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DF/dll_022E_dfpdoorswitch.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DF/dll_022D_dfpseqpoint.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/DF/dll_022B_dfptorch.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/DF/dll_022B_dfptorch.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DF/dll_0230_dfpwallbar.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objlib.c"),
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt),

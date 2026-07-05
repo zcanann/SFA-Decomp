@@ -2365,6 +2365,7 @@ main/dll/DF/dll_022D_dfpseqpoint.c:
 
 main/dll/DF/dll_022B_dfptorch.c:
 	.text       start:0x802057CC end:0x80205F40
+	.sdata2     start:0x803E63C8 end:0x803E63F8
 
 main/dll/DF/dll_0230_dfpwallbar.c:
 	.text       start:0x80205F40 end:0x80206474
