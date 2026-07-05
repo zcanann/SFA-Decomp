@@ -26,8 +26,26 @@ extern f32 lbl_803E4108;      /* render scale */
 extern s8 lbl_803DDB08;       /* deferred-message queue count */
 extern s8 lbl_803DDB09;       /* registered-target list count */
 extern int lbl_803DDB0C;      /* cached rom-curve handle */
-int lbl_803AC7D8[0x28];    /* registered-target list, 8B entries */
-int lbl_803AC878[0x22];    /* deferred-message queue, 12B entries */
+
+/* Registered prison-member entry (list keyed by the controller's map-event slot). */
+typedef struct CPTargetEntry
+{
+    u32 obj;    /* member GameObject* (compared/stored as a word) */
+    s16 value;  /* per-member value supplied with the register message */
+    u8 flags;   /* cleared on registration */
+    u8 pad;
+} CPTargetEntry;
+
+/* Deferred message queued for another handler (12B entries). */
+typedef struct CPDeferredMsg
+{
+    int msgId;
+    u32 sender; /* sending GameObject* */
+    int data;
+} CPDeferredMsg;
+
+CPTargetEntry lbl_803AC7D8[20];  /* registered-target list */
+int lbl_803AC878[0x22];          /* deferred-message queue storage */
 
 /* ObjMsg ids exchanged with prison members */
 enum
@@ -75,7 +93,7 @@ void cloudprisoncontrol_update(int obj)
     int idx;
     int dval;
     int m;
-    int* p;
+    CPTargetEntry* p;
     int found;
 
     data = 0;
@@ -100,21 +118,21 @@ void cloudprisoncontrol_update(int obj)
                 n = lbl_803DDB09;
                 for (i = 0; i < n; i++)
                 {
-                    if (*(u32*)p == tgt)
+                    if (p->obj == tgt)
                     {
-                        *(s16*)((char*)p + 4) = dval;
+                        p->value = dval;
                         found = 1;
                     }
-                    p += 2;
+                    p++;
                 }
                 if (!found)
                 {
-                    char* e;
+                    CPTargetEntry* e;
                     i = lbl_803DDB09;
-                    e = (char*)lbl_803AC7D8 + i * 8;
-                    *(int*)e = tgt;
-                    *(u8*)(e + 6) = 0;
-                    *(s16*)(e + 4) = data;
+                    e = &lbl_803AC7D8[i];
+                    e->obj = tgt;
+                    e->flags = 0;
+                    e->value = data;
                     lbl_803DDB09++;
                 }
                 ObjMsg_SendToObject(target, CPMSG_ACK, obj, 0);
@@ -128,27 +146,27 @@ void cloudprisoncontrol_update(int obj)
             i = 0;
             p = lbl_803AC7D8;
             n = lbl_803DDB09;
-            while (i < n && *(u32*)p != target)
+            while (i < n && p->obj != (u32)target)
             {
-                p += 2;
+                p++;
                 i++;
             }
             lbl_803DDB09--;
             n = lbl_803DDB09;
-            p = lbl_803AC7D8 + n * 2;
+            p = &lbl_803AC7D8[n];
             for (; i < n; i++)
             {
-                p[-2] = p[0];
-                *(s16*)((char*)p - 4) = *(s16*)((char*)p + 4);
-                *(u8*)((char*)p - 2) = *(u8*)((char*)p + 6);
-                p -= 2;
+                p[-1].obj = p[0].obj;
+                p[-1].value = p[0].value;
+                p[-1].flags = p[0].flags;
+                p--;
             }
             break;
         default:
             idx = lbl_803DDB08 * 0xc;
-            *(int*)((char*)lbl_803AC878 + idx + 4) = target;
-            *(int*)((char*)lbl_803AC878 + idx) = m;
-            *(int*)((char*)lbl_803AC878 + idx + 8) = data;
+            ((CPDeferredMsg*)((char*)lbl_803AC878 + idx))->sender = target;
+            ((CPDeferredMsg*)((char*)lbl_803AC878 + idx))->msgId = m;
+            ((CPDeferredMsg*)((char*)lbl_803AC878 + idx))->data = data;
             lbl_803DDB08++;
             break;
         }
