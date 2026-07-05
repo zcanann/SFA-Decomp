@@ -1037,10 +1037,10 @@ state_selected:
             TrickyJumpArc* arc = (TrickyJumpArc*)(state + 0x64);
             node = route->nodeA0;
             dx = ((GameObject*)node)->anim.rootMotionScale - ((GameObject*)obj)->anim.worldPosX;
+            sqx = dx * dx;
+            dx = ((GameObject*)node)->anim.localPosY - ((GameObject*)obj)->anim.worldPosZ;
             dx = dx * dx;
-            dz = ((GameObject*)node)->anim.localPosY - ((GameObject*)obj)->anim.worldPosZ;
-            dz = dz * dz;
-            len = sqrtf(dx + dz);
+            len = sqrtf(sqx + dx);
             arc->duration = len / lbl_803E24A4;
             arc->time = lbl_803E23DC;
             arc->baseX = ((GameObject*)obj)->anim.worldPosX;
