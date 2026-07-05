@@ -1270,7 +1270,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_0138_groundanimator.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0139_hitanimator.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_013A_visanimator.c"),
-            Object(NonMatching, "main/dll/dll_013B_wallanimator.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_013B_wallanimator.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_013C_xyzanimator.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_013D_explodeanimator.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DIM/dll_013E_dimbossicesmash.c", cflags=cflags_dll_noopt),

@@ -37,17 +37,6 @@ extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 sc
 extern void objRenderFn_80041018(int obj);
 extern int getTrickyObject(void);
 
-extern const f32 gWallAnimatorNearestSearchRadius; /* nearest-object search radius seed */
-extern const f32 gWallAnimatorJitterScale; /* debris jitter-X scale */
-extern const f32 lbl_803E3FD4; /* debris base spread; also out-of-range scale fallback */
-extern const f32 lbl_803E3FD8; /* debris drop-Z offset */
-extern const f32 lbl_803E3FDC; /* debris rise-Y offset */
-extern const f32 gWallAnimatorVertRangeMin; /* deltaY lower bound */
-extern const f32 gWallAnimatorVertRangeMax; /* deltaY upper bound */
-extern const f32 gWallAnimatorRangeSqThreshold; /* max planar distance squared */
-extern const f32 gWallAnimatorTimerScaleDivisor; /* scale divisor */
-extern const f32 lbl_803E3FF8; /* render scale */
-
 #define TRICKY_IFACE_OFFSET 0x68    /* tricky object -> interface vtable pointer */
 #define TRICKY_IFACE_NOTIFY_SLOT 0x28 /* vtable slot invoked when in range */
 
@@ -74,15 +63,15 @@ typedef struct WallanimatorState
 
 STATIC_ASSERT(sizeof(WallanimatorState) == 8);
 
+u8 wallanimator_modelMtxFn(int* obj)
+{
+    return (u8)((WallanimatorPlacement*)(((GameObject*)obj)->anim.placementData))->spawnRotZ;
+}
+
 u8 wallanimator_func0B(int* obj)
 {
     WallanimatorState* state = ((GameObject*)obj)->extra;
     return state->timer >= WALLANIMATOR_DONE_TIMER;
-}
-
-u8 wallanimator_modelMtxFn(int* obj)
-{
-    return (u8)((WallanimatorPlacement*)(((GameObject*)obj)->anim.placementData))->spawnRotZ;
 }
 
 f32 wallanimator_setScale(int obj, int target)
@@ -106,19 +95,19 @@ f32 wallanimator_setScale(int obj, int target)
     count = 6;
     do
     {
-        offset[0] = gWallAnimatorJitterScale * (f32)(int)randomGetRange(-0x64, 0x64);
-        offset[1] = lbl_803E3FD4;
-        offset[2] = lbl_803E3FD4;
+        offset[0] = 0.13f * (f32)(int)randomGetRange(-0x64, 0x64);
+        offset[1] = 0.0f;
+        offset[2] = 0.0f;
         spawn.rot[2] = randomGetRange(-0x7fff, 0x8000);
         spawn.rot[1] = 0;
         spawn.rot[0] = 0;
         vecRotateZXY(spawn.rot, offset);
-        offset[2] -= lbl_803E3FD8;
+        offset[2] -= 25.0f;
         vecRotateZXY((void*)obj, offset);
         spawn.rot[2] = ((WallanimatorPlacement*)placementDesc)->spawnRotZ;
         spawn.rot[0] = ((GameObject*)obj)->anim.rotX;
         spawn.pos[0] = ((GameObject*)obj)->anim.worldPosX + offset[0];
-        spawn.pos[1] = lbl_803E3FDC + (((GameObject*)obj)->anim.worldPosY + offset[1]);
+        spawn.pos[1] = 15.0f + (((GameObject*)obj)->anim.worldPosY + offset[1]);
         spawn.pos[2] = ((GameObject*)obj)->anim.worldPosZ + offset[2];
         (*gPartfxInterface)->spawnObject((void*)obj, 0xca, spawn.rot, 0x200001, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)obj, 0xcb, spawn.rot, 0x200001, -1, NULL);
@@ -128,22 +117,22 @@ f32 wallanimator_setScale(int obj, int target)
 
     state = ((GameObject*)obj)->extra;
     deltaY = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-    if ((deltaY < gWallAnimatorVertRangeMin) || (deltaY > gWallAnimatorVertRangeMax))
+    if ((deltaY < -20.0f) || (deltaY > 20.0f))
     {
-        scale = lbl_803E3FD4;
+        scale = 0.0f;
     }
     else
     {
         deltaX = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
         deltaZ = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-        if (deltaX * deltaX + deltaZ * deltaZ > gWallAnimatorRangeSqThreshold)
+        if (deltaX * deltaX + deltaZ * deltaZ > 2500.0f)
         {
-            scale = lbl_803E3FD4;
+            scale = 0.0f;
         }
         else
         {
             state->timer += 0x3c;
-            scale = state->timer / gWallAnimatorTimerScaleDivisor;
+            scale = state->timer / 3000.0f;
         }
     }
     return scale;
@@ -154,16 +143,16 @@ int wallanimator_getExtraSize(void)
     return sizeof(WallanimatorState);
 }
 
-void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3FF8);
-}
-
 void wallanimator_free(int obj)
 {
     ObjGroup_RemoveObject(obj, WALLANIMATOR_GROUP_PRIMARY);
     ObjGroup_RemoveObject(obj, WALLANIMATOR_GROUP_SECONDARY);
+}
+
+void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void wallanimator_update(int obj)
@@ -194,7 +183,7 @@ void wallanimator_update(int obj)
     tricky = getTrickyObject();
     if ((void*)tricky != NULL)
     {
-        nearestDistance[0] = gWallAnimatorNearestSearchRadius;
+        nearestDistance[0] = 35.0f;
         nearby = ObjGroup_FindNearestObject(WALLANIMATOR_NEARBY_GROUP, obj, nearestDistance);
         if ((void*)nearby == NULL)
         {

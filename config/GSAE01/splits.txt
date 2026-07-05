@@ -1456,6 +1456,7 @@ main/dll/dll_013A_visanimator.c:
 
 main/dll/dll_013B_wallanimator.c:
 	.text       start:0x80194408 end:0x801948C0
+	.sdata2     start:0x803E3FD0 end:0x803E4000
 
 main/dll/dll_013C_xyzanimator.c:
 	.text       start:0x801948C0 end:0x801962C8
