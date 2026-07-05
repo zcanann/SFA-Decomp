@@ -2113,6 +2113,7 @@ main/dll/SB/dll_01EC_sbshipgun.c:
 
 main/dll/SB/dll_01EE_sbcannonball.c:
 	.text       start:0x801E3D30 end:0x801E4288
+	.sdata2     start:0x803E58B0 end:0x803E58D4
 
 main/dll/SB/dll_01ED_sbfireball.c:
 	.text       start:0x801E4288 end:0x801E45AC
