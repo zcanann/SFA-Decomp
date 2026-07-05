@@ -2220,7 +2220,6 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
     }
 }
 
-#pragma opt_loop_invariants off
 void ObjHits_CheckTrackContact(int objA, int objB)
 {
     u32 sphereIdx;
@@ -2375,7 +2374,6 @@ void ObjHits_CheckTrackContact(int objA, int objB)
         }
     }
 }
-#pragma opt_loop_invariants reset
 
 void ObjHits_Update(int objectCount)
 {
