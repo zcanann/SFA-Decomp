@@ -3,18 +3,20 @@
  * ObjectDescriptors for the sibling objects whose code lives in this
  * DLL (TrickyWarp, TrickyGuard, StayPoint, Duster, CurveFish).
  *
- * A magic plant holds a magicdust (dll_00FF) child - the green magic energy -
- * and runs off a map-event timer: while waiting for its event
- * (MAGICPLANT_MODE_WAIT_FOR_EVENT) it drives its open/close anim from the
- * event's remaining time, then becomes interactive (MAGICPLANT_MODE_ACTIVE,
- * MagicPlant_updateActive) where it idles, randomly retriggers its sway, plays
- * its ambient buzz loop sfx by player distance, and spawns its magicdust child
- * once loading is locked (MagicPlant_spawnChild). Shooting it pushes it into
- * MAGICPLANT_MODE_HIT_REACT (delegated to fn_8017F334 in sibling dll_00FD),
- * which releases the magicdust to the player with a particle burst and red
+ * A magic plant holds a coloured gem (spawned as a magicdust object, dll_00FF).
+ * The placement's gemColor byte picks the gem: 0 green / 1 red / 2 yellow /
+ * 3 blue (gMagicPlantGemDefIds; live-verified in Dolphin by forcing each
+ * variant and watching the regrown gem's colour). It runs off a map-event
+ * timer: while waiting for its event (MAGICPLANT_MODE_WAIT_FOR_EVENT) it drives
+ * its open/close anim from the event's remaining time, then becomes interactive
+ * (MAGICPLANT_MODE_ACTIVE, MagicPlant_updateActive) where it idles, randomly
+ * retriggers its sway, plays its ambient buzz loop sfx by player distance, and
+ * spawns its gem once loading is locked (MagicPlant_spawnChild). Shooting it
+ * pushes it into MAGICPLANT_MODE_HIT_REACT (delegated to fn_8017F334 in sibling
+ * dll_00FD), which releases the gem to the player with a particle burst and red
  * colour-fade; the fade-out/fade-in modes then ramp model alpha and it re-arms
  * for the next event. Live-verified end-to-end in Dolphin: ACTIVE -> HIT_REACT
- * clears the child pointer (dust released) -> FADE_OUT.
+ * clears the child pointer (gem released) -> FADE_OUT.
  */
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
@@ -29,6 +31,11 @@
 /* the two object groups this plant joins */
 #define MAGICPLANT_OBJGROUP_A 0x34
 #define MAGICPLANT_OBJGROUP_B 0x3e
+
+#define MAGICPLANT_HIT_BURST_FX 0x34e   /* particle effect spawned when the plant is hit */
+#define MAGICPLANT_HIT_BURST_COUNT 0x14 /* 20 hit-burst particles */
+#define MAGICPLANT_IDLE_TIMER_MIN 300   /* frames between idle-sway retriggers (lo..hi) */
+#define MAGICPLANT_IDLE_TIMER_MAX 600
 extern int randomGetRange(int lo, int hi);
 
 extern void* Obj_GetPlayerObject(void);
@@ -64,7 +71,7 @@ extern f32 gMagicPlantBuzzStartDist;
 extern f32 gMagicPlantBuzzStopDist;
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern s16 gMagicPlantDustDefIds[4];
+extern s16 gMagicPlantGemDefIds[4];
 
 typedef struct MagicPlantChildSetup
 {
@@ -134,12 +141,12 @@ void MagicPlant_updateActive(int obj, MagicPlantSetup* setupParam, MagicPlantSta
             Sfx_PlayFromObject(obj, SFXTRIG_ladderslide16);
             stateParam->mode = MAGICPLANT_MODE_HIT_REACT;
             stateParam->animStepScale = gMagicPlantHitReactAnimStep;
-            ObjAnim_SetCurrentMove(obj, 3, lbl_803E385C, 0);
+            ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_HIT, lbl_803E385C, 0);
 
-            i = 0x14;
+            i = MAGICPLANT_HIT_BURST_COUNT;
             do
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x34e, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, MAGICPLANT_HIT_BURST_FX, NULL, 2, -1, NULL);
                 i--;
             }
             while (i != 0);
@@ -147,19 +154,19 @@ void MagicPlant_updateActive(int obj, MagicPlantSetup* setupParam, MagicPlantSta
             hitPos[0] += playerMapOffsetX;
             hitPos[2] += playerMapOffsetZ;
             objLightFn_8009a1dc((void*)obj, gMagicPlantHitLightScale, lightPos, 1, 0);
-            Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
+            Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1); /* red hit-flash (200,0,0) over 15 frames */
             break;
         }
     }
 
     if (stateParam->mode == MAGICPLANT_MODE_ACTIVE)
     {
-        if (((GameObject*)obj)->anim.currentMove == 1)
+        if (((GameObject*)obj)->anim.currentMove == MAGICPLANT_MOVE_SWAY_FAST)
         {
             if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3858)
             {
                 stateParam->animStepScale = gMagicPlantIdleAnimStep;
-                ObjAnim_SetCurrentMove(obj, 4, lbl_803E385C, 0);
+                ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_IDLE, lbl_803E385C, 0);
             }
             else
             {
@@ -170,12 +177,12 @@ void MagicPlant_updateActive(int obj, MagicPlantSetup* setupParam, MagicPlantSta
         {
             if ((stateParam->idleTimer -= framesThisStep) <= 0)
             {
-                stateParam->idleTimer = randomGetRange(300, 600);
+                stateParam->idleTimer = randomGetRange(MAGICPLANT_IDLE_TIMER_MIN, MAGICPLANT_IDLE_TIMER_MAX);
             }
-            else if (((GameObject*)obj)->anim.currentMove != 4)
+            else if (((GameObject*)obj)->anim.currentMove != MAGICPLANT_MOVE_IDLE)
             {
                 stateParam->animStepScale = gMagicPlantIdleAnimStep;
-                ObjAnim_SetCurrentMove(obj, 4, lbl_803E3890 * (f32)(int)randomGetRange(0, 99), 0);
+                ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_IDLE, lbl_803E3890 * (f32)(int)randomGetRange(0, 99), 0);
             }
         }
     }
@@ -281,9 +288,9 @@ void MagicPlant_update(int obj)
     case MAGICPLANT_MODE_WAIT_FOR_EVENT:
         if ((*gMapEventInterface)->shouldNotSaveTime(setup->eventId) != 0)
         {
-            MagicPlant_spawnChild(obj, gMagicPlantDustDefIds[setup->variant & 3]);
+            MagicPlant_spawnChild(obj, gMagicPlantGemDefIds[setup->gemColor & 3]);
             state->mode = MAGICPLANT_MODE_ACTIVE;
-            state->idleTimer = randomGetRange(300, 600);
+            state->idleTimer = randomGetRange(MAGICPLANT_IDLE_TIMER_MIN, MAGICPLANT_IDLE_TIMER_MAX);
         }
         else
         {
@@ -304,9 +311,9 @@ void MagicPlant_update(int obj)
             }
             state->animProgress = 1.0f - progress;
         }
-        if (plant->objAnim.currentMove != 0)
+        if (plant->objAnim.currentMove != MAGICPLANT_MOVE_CLOSED)
         {
-            ObjAnim_SetCurrentMove(obj, 0, state->animProgress, 0);
+            ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_CLOSED, state->animProgress, 0);
         }
         ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, state->animProgress);
         break;
@@ -331,7 +338,7 @@ void MagicPlant_update(int obj)
                 resetProgress = lbl_803E385C;
                 state->animProgress = resetProgress;
                 state->animStepScale = resetProgress;
-                ObjAnim_SetCurrentMove(obj, 0, resetProgress, 0);
+                ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_CLOSED, resetProgress, 0);
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E385C);
             }
             plant->objAnim.alpha = alpha;

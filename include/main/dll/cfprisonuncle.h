@@ -21,7 +21,7 @@ typedef struct MagicPlantSetup {
   int eventId;
   u16 eventDuration;
   u8 pad1A;
-  u8 variant;
+  u8 gemColor; /* 0x1b: gem colour; indexes gMagicPlantGemDefIds (MagicPlantGemColor) */
   u8 modelIndex;
   u8 yawByte;
   u8 pad1E[MAGICPLANT_PLACEMENT_BYTES - 0x1E];
@@ -54,6 +54,25 @@ enum MagicPlantMode {
   MAGICPLANT_MODE_HIT_REACT
 };
 
+/* MagicPlantSetup.gemColor -> gMagicPlantGemDefIds[] object-def id. Live-verified
+ * in Dolphin by forcing each variant and watching the regrown gem's colour. */
+enum MagicPlantGemColor {
+  MAGICPLANT_GEM_GREEN  = 0,  /* def 0x2c4 */
+  MAGICPLANT_GEM_RED    = 1,  /* def 0x2cd */
+  MAGICPLANT_GEM_YELLOW = 2,  /* def 0x2ce */
+  MAGICPLANT_GEM_BLUE   = 3,  /* def 0x2cf */
+};
+
+/* ObjAnim_SetCurrentMove indices for the magic plant. Live-verified in Dolphin
+ * (watched currentMove through a shoot->release->reopen cycle and forced move 1). */
+enum MagicPlantMove {
+  MAGICPLANT_MOVE_CLOSED    = 0,  /* closed bud; open/close driven by the event timer */
+  MAGICPLANT_MOVE_SWAY_FAST = 1,  /* the idle sway at 2x speed; plays once, then -> IDLE */
+  MAGICPLANT_MOVE_BURST     = 2,  /* hit-react burst-open that releases the gem (set in dll_00FD) */
+  MAGICPLANT_MOVE_HIT       = 3,  /* hit recoil, set the frame it is struck */
+  MAGICPLANT_MOVE_IDLE      = 4,  /* open, idle sway */
+};
+
 STATIC_ASSERT(sizeof(MagicPlantSetup) == MAGICPLANT_PLACEMENT_BYTES);
 STATIC_ASSERT(sizeof(MagicPlantState) == MAGICPLANT_EXTRA_STATE_BYTES);
 STATIC_ASSERT(offsetof(MagicPlantState, childObject) == 0x00);
@@ -63,7 +82,7 @@ STATIC_ASSERT(offsetof(MagicPlantState, idleTimer) == 0x0c);
 STATIC_ASSERT(offsetof(MagicPlantState, mode) == 0x0f);
 STATIC_ASSERT(offsetof(MagicPlantSetup, eventId) == 0x14);
 STATIC_ASSERT(offsetof(MagicPlantSetup, eventDuration) == 0x18);
-STATIC_ASSERT(offsetof(MagicPlantSetup, variant) == 0x1b);
+STATIC_ASSERT(offsetof(MagicPlantSetup, gemColor) == 0x1b);
 STATIC_ASSERT(offsetof(MagicPlantSetup, modelIndex) == 0x1c);
 STATIC_ASSERT(offsetof(MagicPlantSetup, yawByte) == 0x1d);
 STATIC_ASSERT(offsetof(MagicPlantObject, objAnim) == 0x00);
