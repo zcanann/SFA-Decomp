@@ -18,10 +18,10 @@
  * This TU is the shared DLL bundle for objects 0x00FE..0x0103: it also
  * defines the ObjectDescriptors for magicplant, trickywarp, trickyguard,
  * staypoint, duster and curvefish, whose callbacks live in their own TUs
- * (declared in cfprisonuncle.h).
+ * (declared in dll_00FE_magicplant.h).
  */
 #include "main/game_object.h"
-#include "main/dll/cfprisonuncle.h"
+#include "main/dll/dll_00FE_magicplant.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/gameplay_runtime.h"

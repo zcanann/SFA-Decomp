@@ -20,7 +20,7 @@
  */
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
-#include "main/dll/cfprisonuncle.h"
+#include "main/dll/dll_00FE_magicplant.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"

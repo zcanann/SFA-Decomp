@@ -17,7 +17,7 @@
  */
 #include "main/frustum.h"
 #include "main/game_object.h"
-#include "main/dll/cfprisonuncle.h"
+#include "main/dll/dll_00FE_magicplant.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"

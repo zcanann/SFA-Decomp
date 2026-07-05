@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_DLL_14F_H_
-#define MAIN_DLL_DLL_14F_H_
+#ifndef MAIN_DLL_DLL_00FE_MAGICPLANT_H_
+#define MAIN_DLL_DLL_00FE_MAGICPLANT_H_
 
 #include "ghidra_import.h"
 #include "global.h"
@@ -164,4 +164,4 @@ extern ObjectDescriptor gStayPointObjDescriptor;
 extern ObjectDescriptor gDusterObjDescriptor;
 extern ObjectDescriptor gCurveFishObjDescriptor;
 
-#endif /* MAIN_DLL_DLL_14F_H_ */
+#endif /* MAIN_DLL_DLL_00FE_MAGICPLANT_H_ */
