@@ -23,6 +23,8 @@ static void DLcreate(AXFX_REVSTD_DELAYLINE *dl, s32 len)
     dl->outPoint = 0;
 }
 
+#pragma exceptions on
+
 int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32 damping, f32 predelay)
 {
     u8 i;
