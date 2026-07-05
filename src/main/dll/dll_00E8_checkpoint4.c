@@ -770,11 +770,11 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 #pragma opt_common_subs off
 
 /*__DATA_EXTERNS__*/
-extern void magicdust_getExtraSize();
-extern void magicdust_free();
-extern void magicdust_render();
-extern void magicdust_update();
-extern void magicdust_init();
+extern void magicgem_getExtraSize();
+extern void magicgem_free();
+extern void magicgem_render();
+extern void magicgem_update();
+extern void magicgem_init();
 extern void collectible_func10();
 extern void collectible_func0F();
 extern void collectible_func0E();
@@ -802,4 +802,4 @@ void* gSetuppointObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (vo
 u8 lbl_80320C58[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 void* gCollectibleObjDescriptor[21] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00100000, collectible_initialise, collectible_release, (void*)0x00000000, collectible_init, collectible_update, collectible_hitDetect, collectible_render, collectible_free, collectible_getObjectTypeId, collectible_getExtraSize, collectible_setScale, collectible_func0B, collectible_modelMtxFn, collectible_render2, collectible_func0E, collectible_func0F, collectible_func10 };
 u8 lbl_80320CB8[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-void* gMagicDustObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, magicdust_init, magicdust_update, (void*)0x00000000, magicdust_render, magicdust_free, (void*)0x00000000, magicdust_getExtraSize };
+void* gMagicGemObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, magicgem_init, magicgem_update, (void*)0x00000000, magicgem_render, magicgem_free, (void*)0x00000000, magicgem_getExtraSize };

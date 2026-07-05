@@ -3,7 +3,7 @@
  * ObjectDescriptors for the sibling objects whose code lives in this
  * DLL (TrickyWarp, TrickyGuard, StayPoint, Duster, CurveFish).
  *
- * A magic plant holds a coloured gem (spawned as a magicdust object, dll_00FF).
+ * A magic plant holds a coloured gem (spawned as a magicgem object, dll_00FF).
  * The placement's gemColor byte picks the gem: 0 green / 1 red / 2 yellow /
  * 3 blue (gMagicPlantGemDefIds; live-verified in Dolphin by forcing each
  * variant and watching the regrown gem's colour). It runs off a map-event
@@ -13,7 +13,8 @@
  * retriggers its sway, plays its ambient buzz loop sfx by player distance, and
  * spawns its gem once loading is locked (MagicPlant_spawnChild). Shooting it
  * pushes it into MAGICPLANT_MODE_HIT_REACT (delegated to fn_8017F334 in sibling
- * dll_00FD), which releases the gem to the player with a particle burst and red
+ * dll_00FD), which releases the gem (which drops to the floor, collected on touch) with a
+ * particle burst and red
  * colour-fade; the fade-out/fade-in modes then ramp model alpha and it re-arms
  * for the next event. Live-verified end-to-end in Dolphin: ACTIVE -> HIT_REACT
  * clears the child pointer (gem released) -> FADE_OUT.

@@ -68,7 +68,7 @@ STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
-/* ObjMsg ids shared with the other collectible objects (magicdust/fuelcell) */
+/* ObjMsg ids shared with the other collectible objects (magicgem/fuelcell) */
 #define DUSTER_MSG_REQUEST_PICKUP 0x7000a
 #define DUSTER_MSG_DEPOSIT 0x7000b
 

@@ -1,7 +1,7 @@
 /*
  * DLL 0x00ED — collectible / genprops object group. TU: 0x80171D14–0x801723DC.
  *
- * Hosts the pick-up "collectible" object (the magicdust/scarab family) plus
+ * Hosts the pick-up "collectible" object (the magicgem/scarab family) plus
  * the ObjectDescriptor tables for a batch of sibling genprops objects whose
  * bodies live in other TUs (mikabomb, mikabombshadow, StaticCamera,
  * gcbaddieshield, baddieinterestp, animatedobj, dim2roofrub, depthoffieldpoint,

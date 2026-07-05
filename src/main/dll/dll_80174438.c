@@ -1,7 +1,7 @@
 /* DLL — collectible objects [80173224-801732A4) */
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/magicduststate_struct.h"
-/* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
+#include "main/dll/magicgemstate_struct.h"
+/* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICGEM family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
 
@@ -23,7 +23,7 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 fn_80174BFC();
 
 
-STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
+STATIC_ASSERT(offsetof(MagicGemState, flags27A) == 0x27A);
 
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern int fn_80295A04(void* player, int p2);

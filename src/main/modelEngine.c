@@ -668,7 +668,7 @@ extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor,
 extern ResourceDescriptor gLINKLevControlObjDescriptor, gLampObjDescriptor, gLanded_ArwingObjDescriptor, gLanternFireFlyObjDescriptor, gLargeCrateObjDescriptor, gLaserBeamObjDescriptor, gLaserObjDescriptor, gLaserUnsupportedObjDescriptor;
 extern ResourceDescriptor gLavaBall1BEObjDescriptor, gLavaBall1BFObjDescriptor, gLevelNameObjDescriptor, gLightFootObjDescriptor, gLightSourceObjDescriptor, gLightningObjDescriptor, gMAGICMakerObjDescriptor, gMCLightningObjDescriptor;
 extern ResourceDescriptor gMCStaffEffeObjDescriptor, gMCUpgradeMaObjDescriptor, gMCUpgradeObjDescriptor, gMMP_BridgeObjDescriptor, gMMP_asteroid_reObjDescriptor, gMMP_gyserventObjDescriptor, gMMP_levelcontrolObjDescriptor, gMMP_moonrockObjDescriptor;
-extern ResourceDescriptor gMMP_trenchFXObjDescriptor, gMMSH_ScalesObjDescriptor, gMMSH_ShrineObjDescriptor, gMMSH_WaterSpikeObjDescriptor, gMagicCaveBottomObjDescriptor, gMagicCaveTopObjDescriptor, gMagicDustObjDescriptor, gMagicLightObjDescriptor;
+extern ResourceDescriptor gMMP_trenchFXObjDescriptor, gMMSH_ScalesObjDescriptor, gMMSH_ShrineObjDescriptor, gMMSH_WaterSpikeObjDescriptor, gMagicCaveBottomObjDescriptor, gMagicCaveTopObjDescriptor, gMagicGemObjDescriptor, gMagicLightObjDescriptor;
 extern ResourceDescriptor gMagicPlantObjDescriptor, gMikaBombObjDescriptor, gMikaBombShadowObjDescriptor, gMoonSeedBushObjDescriptor, gMoonSeedPlantingSpotObjDescriptor, gNWSH_levconObjDescriptor, gNW_animiceObjDescriptor, gNW_geyserObjDescriptor;
 extern ResourceDescriptor gNW_iceObjDescriptor, gNW_levcontrolObjDescriptor, gNW_mammothObjDescriptor, gNW_trickyObjDescriptor, gPaymentKioskObjDescriptor, gPinPonSpikeObjDescriptor, gPlatform1ObjDescriptor, gPointLightObjDescriptor;
 extern ResourceDescriptor gPollenFragmentObjDescriptor, gPollenObjDescriptor, gPortalSpellDoorObjDescriptor, gPressureSwitchFBObjDescriptor, gPressureSwitchObjDescriptor, gProjectedLightObjDescriptor, gProjectileSwitchObjDescriptor, gProximityMineObjDescriptor;
@@ -766,7 +766,7 @@ ResourceDescriptor* gResourceDescriptors[] =
     &gSideloadObjDescriptor, &gSiderepelObjDescriptor, &gInfoPointObjDescriptor, &gCollectibleObjDescriptor, &gEffectBoxObjDescriptor, &gPushableObjDescriptor,
     &gWarpPointObjDescriptor, &gInvHitObjDescriptor, &gIceblastObjDescriptor, &gFlameblastObjDescriptor, &gDoorF4ObjDescriptor, &gSidekickBallObjDescriptor,
     &gAreaObjDescriptor, &dll_F7, &gLevelNameObjDescriptor, &gProjectileSwitchObjDescriptor, &gInvisibleHitSwitchObjDescriptor, &gPressureSwitchFBObjDescriptor,
-    &gDllFCObjDescriptor, &gDll14DObjDescriptor, &gMagicPlantObjDescriptor, &gMagicDustObjDescriptor, &gTrickyWarpObjDescriptor, &gTrickyGuardObjDescriptor,
+    &gDllFCObjDescriptor, &gDll14DObjDescriptor, &gMagicPlantObjDescriptor, &gMagicGemObjDescriptor, &gTrickyWarpObjDescriptor, &gTrickyGuardObjDescriptor,
     &gStayPointObjDescriptor, &gCurveFishObjDescriptor, &gSmallBasketObjDescriptor, &gLargeCrateObjDescriptor, &gScarabObjDescriptor, &lbl_80321788,
     &gDummy108ObjDescriptor, &lbl_803218E8, &gFall_LaddersObjDescriptor, &gFireFlyLanternObjDescriptor, &gLanternFireFlyObjDescriptor, &gPortalSpellDoorObjDescriptor,
     &gDeathSeqObjDescriptor, &gMMP_BridgeObjDescriptor, &gDoorObjDescriptor, &gDoorLockObjDescriptor, &gSeqObjectObjDescriptor, &gSeqObj2ObjDescriptor,

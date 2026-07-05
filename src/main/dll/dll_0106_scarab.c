@@ -16,7 +16,7 @@
 #include "main/dll/dll_0106_scarab.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-/* shared item-pickup ObjMsg protocol (see dll_00ED_collectible / dll_00FF_magicdust) */
+/* shared item-pickup ObjMsg protocol (see dll_00ED_collectible / dll_00FF_magicgem) */
 #define SCARAB_MSG_IN_RANGE 0x7000a /* sent to player when the scarab is in grab range */
 #define SCARAB_MSG_PICKUP   0x7000b /* player collected: award money and despawn */
 #define SCARAB_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */

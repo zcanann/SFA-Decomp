@@ -1197,7 +1197,7 @@ main/dll/dll_00E9_setuppoint.c:
 main/dll/dll_00ED_collectible.c:
 	.text       start:0x80171D14 end:0x80173224
 
-main/dll/dll_00FF_magicdust.c:
+main/dll/dll_00FF_magicgem.c:
 	.text       start:0x80173224 end:0x80173F80
 	.data       start:0x80320CFC end:0x80320D10
 
