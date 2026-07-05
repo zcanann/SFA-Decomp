@@ -2405,6 +2405,7 @@ void ObjHits_Update(int objectCount)
     int currentIndex;
     f32 axisDiff;
     f32 diff;
+    int hitVolumeIndex;
 
     objectList = ObjList_GetObjects(&startIndex, &listCount);
     sweepEntries = gObjHitsSweepEntries;
@@ -2618,12 +2619,11 @@ void ObjHits_Update(int objectCount)
                 obj)->anim.previousLocalPosZ);
         }
     }
-    slotIndex = 0;
-    gObjHitsActiveHitVolumeObjects[slotIndex] = 0;
-    gObjHitsActiveHitVolumeObjects[++slotIndex] = 0;
-    gObjHitsActiveHitVolumeObjects[++slotIndex] = 0;
-    gObjHitsActiveHitVolumeObjects[++slotIndex] = 0;
-    gObjHitsActiveHitVolumeObjects[++slotIndex] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex = 0] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++hitVolumeIndex] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++hitVolumeIndex] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++hitVolumeIndex] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++hitVolumeIndex] = 0;
 }
 
 char sObjHitsTooManyHitSpheresWarning[] = "HIT VOLUMES: an object has too many hit spheres\n";
