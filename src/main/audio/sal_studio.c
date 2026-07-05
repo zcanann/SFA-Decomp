@@ -201,7 +201,9 @@ void salActivateStudio(u8 studio, u32 isMaster, u32 type)
  */
 void salDeactivateStudio(u8 studio)
 {
-    dspStudio[studio].state = 0;
+    DSPstudioinfo* base = dspStudio;
+
+    base[studio].state = 0;
 }
 
 /*
