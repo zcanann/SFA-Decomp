@@ -78,10 +78,8 @@ STATIC_ASSERT(offsetof(VfpLiftPlacement, toggleGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(VfpLiftPlacement, hitDisableGameBit) == 0x20);
 
 extern void buttonDisable(int port, u32 mask);
-extern f32 lbl_803E60E0;
-extern f32 lbl_803E60E4;
-extern f32 lbl_803E60E8;
-extern f32 lbl_803E60EC;
+
+static const f32 gVfpLift1RaisedHeight = 307.0f;
 
 static inline VfpLiftState* vfplift_getState(int obj)
 {
@@ -110,16 +108,22 @@ static inline f32 vfplift23_getRaisedOffset(int objType)
 {
     f32 offset;
 
-    offset = lbl_803E60E0;
+    offset = 0.0f;
     if (objType == VFPLIFT3_OBJTYPE)
     {
-        offset = lbl_803E60E4;
+        offset = 310.0f;
     }
     else if (objType == VFPLIFT2_OBJTYPE)
     {
-        offset = lbl_803E60E8;
+        offset = 372.5f;
     }
     return offset;
+}
+
+int vfplift_SeqFn(int obj)
+{
+    vfplift_getState(obj)->forceRaised = 1;
+    return 0;
 }
 
 void vfplift23_updateState(int obj)
@@ -130,14 +134,14 @@ void vfplift23_updateState(int obj)
 
     setup = (VfpLiftPlacement*)((GameObject*)obj)->anim.placementData;
     state = (VfpLiftState*)((GameObject*)obj)->extra;
-    raisedOffset = lbl_803E60E0;
+    raisedOffset = 0.0f;
     if (((GameObject*)obj)->anim.seqId == VFPLIFT3_OBJTYPE)
     {
-        raisedOffset = lbl_803E60E4;
+        raisedOffset = 310.0f;
     }
     else if (((GameObject*)obj)->anim.seqId == VFPLIFT2_OBJTYPE)
     {
-        raisedOffset = lbl_803E60E8;
+        raisedOffset = 372.5f;
     }
     if (state->applyHeight != 0)
     {
@@ -224,7 +228,7 @@ void vfplift1_updateState(int obj)
     if (state->applyHeight != 0 ||
         (state->forceRaised != 0 && state->mode == VFPLIFT_STATE_IDLE))
     {
-        ((GameObject*)obj)->anim.localPosY = setup->base.posY + lbl_803E60EC;
+        ((GameObject*)obj)->anim.localPosY = setup->base.posY + *(f32*)&gVfpLift1RaisedHeight;
         state->applyHeight = 0;
         state->forceRaised = 0;
         state->mode = VFPLIFT_STATE_RAISED;
@@ -271,7 +275,7 @@ void vfplift1_updateState(int obj)
             if ((u32)GameBit_Get(state->toggleGameBit) == 0)
             {
                 state->mode = VFPLIFT_STATE_RAISED;
-                ((GameObject*)obj)->anim.localPosY = setup->base.posY + lbl_803E60EC;
+                ((GameObject*)obj)->anim.localPosY = setup->base.posY + *(f32*)&gVfpLift1RaisedHeight;
             }
         }
     }
@@ -281,23 +285,28 @@ int vfplift_getExtraSize(void) { return 0x20; }
 
 int vfplift_getObjectTypeId(void) { return 0x0; }
 
-void vfplift_release(void)
+void vfplift_free(int obj)
 {
-}
-
-void vfplift_initialise(void)
-{
-}
-
-int vfplift_SeqFn(int obj)
-{
-    vfplift_getState(obj)->forceRaised = 1;
-    return 0;
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 void vfplift_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
-    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E60F0);
+    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+}
+
+void vfplift_hitDetect(int obj)
+{
+    VfpLiftState* state = vfplift_getState(obj);
+
+    if (state->hitDisableGameBit != -1 && GameBit_Get(state->hitDisableGameBit) == 0)
+    {
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+    }
+    else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0)
+    {
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= INTERACT_FLAG_DISABLED;
+    }
 }
 
 void vfplift_update(int obj)
@@ -316,20 +325,6 @@ void vfplift_update(int obj)
     else if (v == VFPLIFT3_OBJTYPE)
     {
         vfplift23_updateState(obj);
-    }
-}
-
-void vfplift_hitDetect(int obj)
-{
-    VfpLiftState* state = vfplift_getState(obj);
-
-    if (state->hitDisableGameBit != -1 && GameBit_Get(state->hitDisableGameBit) == 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    }
-    else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= INTERACT_FLAG_DISABLED;
     }
 }
 
@@ -373,7 +368,10 @@ void vfplift_init(int* obj, VfpLiftPlacement* init)
     }
 }
 
-void vfplift_free(int obj)
+void vfplift_release(void)
 {
-    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void vfplift_initialise(void)
+{
 }
