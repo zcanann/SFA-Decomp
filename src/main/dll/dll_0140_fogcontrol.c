@@ -4,10 +4,10 @@
  *
  * The fog is gated by a placement game bit (enableGameBit, -1 = always
  * on). While the gate transitions, fogcontrol_update ramps a 0..1 blend
- * value toward the gated target (ramp speeds lbl_803E4068/lbl_803E406C
- * scaled by timeDelta, selected by the FOG_FLAG_FAST_* bits) and feeds
- * the resulting fog band/density to enableHeavyFog each frame; at blend
- * <= floor (lbl_803E4070) the fog is turned off (disableHeavyFog).
+ * value toward the gated target (ramp speeds 0.005/0.02 scaled by
+ * timeDelta, selected by the FOG_FLAG_FAST_* bits) and feeds the
+ * resulting fog band/density to enableHeavyFog each frame; at blend
+ * <= floor (0.0) the fog is turned off (disableHeavyFog).
  * fogcontrol_init primes the blend from the gate state and fogcontrol_free
  * tears the fog down if it was left active.
  *
@@ -22,8 +22,8 @@
 
 /* FogcontrolPlacement::flags (low byte, offset 0x1A) */
 #define FOG_FLAG_MODE 0x01      /* enableHeavyFog mode arg */
-#define FOG_FLAG_FAST_IN 0x02   /* ramp-in uses lbl_803E4068 (else ...406C) */
-#define FOG_FLAG_FAST_OUT 0x04  /* ramp-out uses lbl_803E4068 (else ...406C) */
+#define FOG_FLAG_FAST_IN 0x02   /* ramp-in uses fast speed 0.005 (else 0.02) */
+#define FOG_FLAG_FAST_OUT 0x04  /* ramp-out uses fast speed 0.005 (else 0.02) */
 #define FOG_FLAG_ENABLE 0x08    /* fog volume is placed/active */
 
 typedef struct FogcontrolPlacement
@@ -57,13 +57,7 @@ typedef struct FogcontrolPlacement
 } FogcontrolPlacement;
 
 extern f32 timeDelta;
-extern f32 lbl_803E4070; /* blend floor (fog off at/below this) */
-extern f32 lbl_803E4074; /* blend ceiling (fully on) */
-extern f32 lbl_803E4078; /* density divisor */
-extern f32 lbl_803E407C; /* enableHeavyFog 'e' arg constant */
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
-extern f32 lbl_803E4068; /* fast ramp speed (FOG_FLAG_FAST_* set) */
-extern f32 lbl_803E406C; /* slow ramp speed (FOG_FLAG_FAST_* clear) */
 
 typedef struct FogControlState
 {
@@ -72,10 +66,6 @@ typedef struct FogControlState
     u8 full : 1;
     u8 rest : 6;
 } FogControlState;
-
-void fogcontrol_hitDetect(void)
-{
-}
 
 int fogcontrol_getExtraSize(void) { return sizeof(FogControlState); }
 int fogcontrol_getObjectTypeId(void) { return 0x0; }
@@ -89,42 +79,8 @@ void fogcontrol_free(int obj)
     }
 }
 
-void fogcontrol_init(int obj, FogcontrolPlacement* placement)
+void fogcontrol_hitDetect(void)
 {
-    FogControlState* st;
-    u8 cv;
-    f32 t;
-
-    st = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | FOGCONTROL_OBJFLAG_HIDDEN);
-    st->on = 0;
-    st->full = 0;
-    st->blend = lbl_803E4070;
-    if ((*(u8*)&placement->flags & FOG_FLAG_ENABLE) != 0)
-    {
-        if (placement->enableGameBit == -1)
-        {
-            cv = 1;
-        }
-        else
-        {
-            cv = GameBit_Get(placement->enableGameBit);
-        }
-        if (cv != 0)
-        {
-            st->full = 1;
-            st->on = 1;
-            st->blend = lbl_803E4074;
-            t = st->blend * ((f32)placement->fogTop - placement->fogBase) +
-                placement->fogBase;
-            t = ((GameObject*)obj)->anim.localPosY + t;
-            enableHeavyFog(t,
-                           ((f32)placement->fogBottom + t) - placement->fogTop,
-                           placement->fogRed,
-                           placement->fogGreen / lbl_803E4078,
-                           lbl_803E407C, *(u8*)&placement->flags & FOG_FLAG_MODE);
-        }
-    }
 }
 
 /* fogcontrol_update: ramp the fog blend toward the gamebit-selected
@@ -159,11 +115,11 @@ void fogcontrol_update(int obj)
         {
             if ((*(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_FAST_IN) != 0)
             {
-                st->blend = lbl_803E4068 * timeDelta + st->blend;
+                st->blend = 0.005f * timeDelta + st->blend;
             }
             else
             {
-                st->blend = lbl_803E406C * timeDelta + st->blend;
+                st->blend = 0.02f * timeDelta + st->blend;
             }
             st->on = 1;
         }
@@ -171,26 +127,26 @@ void fogcontrol_update(int obj)
         {
             if ((*(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_FAST_OUT) != 0)
             {
-                st->blend = -(lbl_803E4068 * timeDelta - st->blend);
+                st->blend = -(0.005f * timeDelta - st->blend);
             }
             else
             {
-                st->blend = -(lbl_803E406C * timeDelta - st->blend);
+                st->blend = -(0.02f * timeDelta - st->blend);
             }
             st->full = 0;
         }
-        if (st->blend <= lbl_803E4070)
+        if (st->blend <= 0.0f)
         {
-            st->blend = *(f32*)&lbl_803E4070;
+            st->blend = 0.0f;
             st->on = 0;
             disableHeavyFog();
         }
         else
         {
             st->on = 1;
-            if (st->blend > lbl_803E4074)
+            if (st->blend > 1.0f)
             {
-                st->blend = *(f32*)&lbl_803E4074;
+                st->blend = 1.0f;
                 st->full = 1;
             }
             t = st->blend * ((f32)((FogcontrolPlacement*)setup)->fogTop - (f32)((FogcontrolPlacement*)setup)->fogBase) +
@@ -199,9 +155,47 @@ void fogcontrol_update(int obj)
             enableHeavyFog(t,
                            ((f32)((FogcontrolPlacement*)setup)->fogBottom + t) - (f32)((FogcontrolPlacement*)setup)->fogTop,
                            (f32)((FogcontrolPlacement*)setup)->fogRed,
-                           (f32)((FogcontrolPlacement*)setup)->fogGreen / lbl_803E4078,
-                           lbl_803E407C,
+                           (f32)((FogcontrolPlacement*)setup)->fogGreen / 65535.0f,
+                           0.0001f,
                            *(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_MODE);
+        }
+    }
+}
+
+void fogcontrol_init(int obj, FogcontrolPlacement* placement)
+{
+    FogControlState* st;
+    u8 cv;
+    f32 t;
+
+    st = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | FOGCONTROL_OBJFLAG_HIDDEN);
+    st->on = 0;
+    st->full = 0;
+    st->blend = 0.0f;
+    if ((*(u8*)&placement->flags & FOG_FLAG_ENABLE) != 0)
+    {
+        if (placement->enableGameBit == -1)
+        {
+            cv = 1;
+        }
+        else
+        {
+            cv = GameBit_Get(placement->enableGameBit);
+        }
+        if (cv != 0)
+        {
+            st->full = 1;
+            st->on = 1;
+            st->blend = 1.0f;
+            t = st->blend * ((f32)placement->fogTop - placement->fogBase) +
+                placement->fogBase;
+            t = ((GameObject*)obj)->anim.localPosY + t;
+            enableHeavyFog(t,
+                           ((f32)placement->fogBottom + t) - placement->fogTop,
+                           placement->fogRed,
+                           placement->fogGreen / 65535.0f,
+                           0.0001f, *(u8*)&placement->flags & FOG_FLAG_MODE);
         }
     }
 }
