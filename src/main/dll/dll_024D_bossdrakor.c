@@ -402,8 +402,7 @@ void bossdrakor_updateHeadTracking(int obj, int state)
     neck = objModelGetVecFn_800395d8(obj, 0xe);
     if (neck != NULL)
     {
-        v = (s16)-neck[0];
-        step = (v < -(framesThisStep << 8))
+        step = ((v = (s16)-neck[0]) < -(framesThisStep << 8))
                    ? -(framesThisStep << 8)
                    : ((v > (framesThisStep << 8)) ? (framesThisStep << 8) : v);
         neck[0] += (s16)step;
