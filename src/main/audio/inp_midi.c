@@ -1,6 +1,8 @@
 #include "main/audio/inp_midi.h"
 #include "main/audio/mcmd.h"
 #include "string.h"
+
+#pragma exceptions on
 extern int inpTranslateExCtrl(int input);
 extern u8 sInpMidiCtrlFullResetPreset[];
 extern u8 sInpMidiCtrlMaskedResetPreset[];
