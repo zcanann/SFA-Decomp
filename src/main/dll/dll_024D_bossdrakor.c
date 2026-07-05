@@ -104,9 +104,9 @@ void bossdrakor_update(int obj)
     int player;
     int moveId;
     s16* uvec;
-    int* tbl;
     s16 shakeX;
     s16 shakeY;
+    int* tbl;
     f32 shake;
     f32 shakeScaleZ;
     f32 t;
