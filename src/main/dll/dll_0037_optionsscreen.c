@@ -17,10 +17,11 @@
 #include "main/screen_transition.h"
 #include "main/dll/gameplay.h"
 #include "main/dll/dll_4D.h"
+#include "main/dll/FRONT/title_menu.h"
 #include "main/engine_shared.h"
 extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
-extern int* gTitleMenuItemInterface;
-extern int* gTitleMenuLinkInterface;
+extern TitleMenuControl* gTitleMenuItemInterface;
+extern TitleMenuControl* gTitleMenuLinkInterface;
 extern s8 lbl_803DBA28;        /* active panel id (-1 = none) */
 extern u16 lbl_8031ACB8[];     /* per-panel text-box table, 8 u16 per panel */
 extern int lbl_803A87D0[8];    /* the 8 menu-item objects of the active panel */
@@ -108,11 +109,11 @@ void OptionsScreen_render(int arg)
     {
         if (*(void**)&item[i] != NULL)
         {
-            (*(void (*)(int, int, int))(*(int*)(*gTitleMenuItemInterface + 0x18)))(item[i], arg, fade);
+            ((void (**)(int, int, int))gTitleMenuItemInterface->vtable)[6](item[i], arg, fade);
         }
     }
-    (*(void (*)(int))(*(int*)(*gTitleMenuLinkInterface + 0x30)))(fade);
-    (*(void (*)(int))(*(int*)(*gTitleMenuLinkInterface + 0x10)))(arg);
+    ((void (**)(int))gTitleMenuLinkInterface->vtable)[12](fade);
+    ((void (**)(int))gTitleMenuLinkInterface->vtable)[4](arg);
     gameTextSetDrawFunc(0);
     titleScreenShowCopyright(0);
     if ((s8)--lbl_803DD706 < 0)
@@ -168,7 +169,7 @@ int OptionsScreen_run(void)
     }
     if ((*gScreenTransitionInterface)->isFinished() == 0)
     {
-        (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0x34)))();
+        ((void (**)(void))gTitleMenuLinkInterface->vtable)[13]();
         lbl_803DD706 = 2;
     }
 
@@ -178,14 +179,14 @@ int OptionsScreen_run(void)
         {
             if ((s8)lbl_803DBA28 != OPTIONSSCREEN_PANEL_NONE)
             {
-                (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0x8)))();
+                ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
                 lbl_803DBA28 = OPTIONSSCREEN_PANEL_NONE;
             }
             for (i = 0; i < OPTIONSSCREEN_MENU_ITEM_COUNT; i++)
             {
                 if ((u32)lbl_803A87D0[i] != 0)
                 {
-                    (*(void (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x10)))(lbl_803A87D0[i]);
+                    ((void (**)(int))gTitleMenuItemInterface->vtable)[4](lbl_803A87D0[i]);
                     lbl_803A87D0[i] = 0;
                 }
             }
@@ -196,8 +197,8 @@ int OptionsScreen_run(void)
         return lbl_803DD704 <= 12;
     }
 
-    selection = (*(int (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0xc)))();
-    item = (*(int (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0x14)))();
+    selection = ((int (**)(void))gTitleMenuLinkInterface->vtable)[3]();
+    item = ((int (**)(void))gTitleMenuLinkInterface->vtable)[5]();
     if (item != lbl_803DD700)
     {
         Sfx_PlayFromObject(0, SFXsp_sa_off03);
@@ -218,9 +219,9 @@ int OptionsScreen_run(void)
         if (selection == 0)
         {
             lbl_803DD708[6] =
-                (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
+                ((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[0]);
             lbl_803DD708[8] =
-                !(*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[1]);
+                !((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[1]);
             setWidescreen(lbl_803DD708[6]);
             setRumbleEnabled(lbl_803DD708[8]);
         }
@@ -230,13 +231,13 @@ int OptionsScreen_run(void)
         if (selection == 0)
         {
             lbl_803DD708[9] =
-                (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
+                ((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[0]);
             lbl_803DD708[10] =
-                (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[1]);
+                ((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[1]);
             lbl_803DD708[11] =
-                (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[2]);
+                ((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[2]);
             lbl_803DD708[12] =
-                (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[3]);
+                ((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[3]);
         }
         break;
     case OPTIONSSCREEN_PANEL_MISC:
@@ -248,18 +249,18 @@ int OptionsScreen_run(void)
             lbl_803DD705 = 1;
         }
         if ((u32)lbl_803A87D0[item] != 0 &&
-            (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x2c)))(lbl_803A87D0[item]) != 0)
+            ((int (**)(int))gTitleMenuItemInterface->vtable)[11](lbl_803A87D0[item]) != 0)
         {
             switch (item)
             {
             case 0:
                 lbl_803DD708[2] =
-                    !(*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
+                    !((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[0]);
                 setSubtitlesEnabled(lbl_803DD708[2]);
                 break;
             default:
                 saveFileStruct_setCheatActive(3,
-                                              !(*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(
+                                              !((int (**)(int))gTitleMenuItemInterface->vtable)[9](
                                                   lbl_803A87D0[item]));
                 break;
             }
@@ -275,13 +276,13 @@ int OptionsScreen_run(void)
             {
                 if (i == item)
                 {
-                    (*(void (*)(int, int))(*(int*)(*gTitleMenuItemInterface + 0x20)))(lbl_803A87D0[i], 1);
+                    ((void (**)(int, int))gTitleMenuItemInterface->vtable)[8](lbl_803A87D0[i], 1);
                 }
                 else
                 {
-                    (*(void (*)(int, int))(*(int*)(*gTitleMenuItemInterface + 0x20)))(lbl_803A87D0[i], 0);
+                    ((void (**)(int, int))gTitleMenuItemInterface->vtable)[8](lbl_803A87D0[i], 0);
                 }
-                (*(void (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x14)))(lbl_803A87D0[i]);
+                ((void (**)(int))gTitleMenuItemInterface->vtable)[5](lbl_803A87D0[i]);
             }
         }
     }
