@@ -685,8 +685,8 @@ void ktrex_update(int obj)
         ((KTRexRuntime*)runtime)->unk2C0 = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
     characterDoEyeAnims(obj, (char*)gKTRexRuntime + 0x3ac);
-    zm[0] = 0;
-    zc[0] = zm[0];
+    zc[0] = 0;
+    zm[0] = zc[0];
     bitA = lbl_803DC290;
     for (; zc[0] < 4; zc[0]++)
     {
@@ -724,8 +724,8 @@ void ktrex_update(int obj)
         st->unkFE = ((u8*)&tmp)[(t >> 1) & 3];
     }
     flags = ((KTRexArenaState*)gKTRexState)->unkFE;
-    zm[0] = 0;
-    zc[0] = zm[0];
+    zc[0] = 0;
+    zm[0] = zc[0];
     bitB = lbl_803DC298;
     for (; zc[0] < 4; zc[0]++)
     {
