@@ -9,8 +9,8 @@
  *                 gated by game bit 0x48b.
  *   fn_8013FEC0 - simple swim-or-walk move toward the follow target.
  *
- * Common to all: water is detected by comparing waterLevel / unk2B0 / unk2B4
- * to pick a swim anim vs a ground anim. fn_8013F100 and fn_8013F9E4 play a
+ * Common to all: water is detected by comparing waterLevel / eventTime /
+ * currentTime to pick a swim anim vs a ground anim. fn_8013F100 and fn_8013F9E4 play a
  * localized bark sfx unless one is already on object channel 16. Debug strings
  * are emitted via
  * trickyDebugPrint. tricky_state.h owns the TrickyState layout; the lbl_803E*
@@ -23,12 +23,11 @@
 #include "main/dll/tricky_state.h"
 #include "main/gameplay_runtime.h"
 
-#define TRICKY_STATE_FLAGS_OFFSET 0x54
 #define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
-#define TRICKY_STATE_RESET_FLAG_10 0x00000010
-#define TRICKY_STATE_RESET_FLAG_10000 0x00010000
-#define TRICKY_STATE_RESET_FLAG_20000 0x00020000
-#define TRICKY_STATE_RESET_FLAG_40000 0x00040000
+#define TRICKY_STATE_RESET_FLAG_10     0x00000010
+#define TRICKY_STATE_RESET_FLAG_10000  0x00010000
+#define TRICKY_STATE_RESET_FLAG_20000  0x00020000
+#define TRICKY_STATE_RESET_FLAG_40000  0x00040000
 
 typedef struct
 {
@@ -36,19 +35,17 @@ typedef struct
     u8 pad : 4;
 } TrickyNibblePair;
 
-#define TRICKY_CLEAR_TARGET_DIRTY(st) \
-    (*(s32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
-
-#define TRICKY_CLEAR_TARGET_DIRTY_U32(st) \
-    (*(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
-
-#define TRICKY_CLEAR_RESET_FLAGS(st) \
-    { \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_10; \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_10000; \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_20000; \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_40000; \
-        { s8 mm; mm = -1; *(s8 *)((st) + 0xd) = mm; } \
+#define TRICKY_CLEAR_RESET_FLAGS(st)                                                                                   \
+    {                                                                                                                  \
+        *(u32*)&((TrickyState*)(st))->stateFlags &= ~(u64)TRICKY_STATE_RESET_FLAG_10;                                  \
+        *(u32*)&((TrickyState*)(st))->stateFlags &= ~(u64)TRICKY_STATE_RESET_FLAG_10000;                               \
+        *(u32*)&((TrickyState*)(st))->stateFlags &= ~(u64)TRICKY_STATE_RESET_FLAG_20000;                               \
+        *(u32*)&((TrickyState*)(st))->stateFlags &= ~(u64)TRICKY_STATE_RESET_FLAG_40000;                               \
+        {                                                                                                              \
+            s8 mm;                                                                                                     \
+            mm = -1;                                                                                                   \
+            *(s8*)&((TrickyState*)(st))->unkD = mm;                                                                    \
+        }                                                                                                              \
     }
 
 extern void objAudioFn_800393f8(int obj, void* audio, int sfxId, int volume, int param5, int param6);
@@ -92,7 +89,6 @@ extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
 
-#pragma opt_propagation off
 void fn_8013F100(int obj, register int state)
 {
     int status;
@@ -100,17 +96,16 @@ void fn_8013F100(int obj, register int state)
     int useSwimAnim;
     s16 move;
     double bob;
-    f32 fz;
+    f32 resetTimer;
     u8* targetPos;
 
     switch (((TrickyState*)state)->substate)
     {
     case 0:
-        *(int*)&((TrickyState*)state)->unk700 = *(int*)&((TrickyState*)state)->followObj;
+        ((TrickyState*)state)->unk700 = ((TrickyState*)state)->followObj;
         *(float*)&((TrickyState*)state)->unk704 = lbl_803E24EC;
         ((TrickyState*)state)->substate = 1;
-        ((TrickyState*)state)->unk7A4 = (f32)(s32)
-        randomGetRange(150, 300);
+        ((TrickyState*)state)->unk7A4 = (f32)(s32)randomGetRange(150, 300);
         if (fn_80179650(*(int*)&((TrickyState*)state)->unk700) != 0)
         {
             status = trickyFn_8013b368(obj, lbl_803E24F0, state);
@@ -160,9 +155,9 @@ void fn_8013F100(int obj, register int state)
                 }
                 ((TrickyState*)state)->unk08 = 1;
                 ((TrickyState*)state)->substate = 0;
-                fz = lbl_803E23DC;
-                ((TrickyState*)state)->unk71C = fz;
-                ((TrickyState*)state)->unk720 = fz;
+                resetTimer = lbl_803E23DC;
+                ((TrickyState*)state)->unk71C = resetTimer;
+                ((TrickyState*)state)->unk720 = resetTimer;
                 TRICKY_CLEAR_RESET_FLAGS(state);
             }
         }
@@ -245,8 +240,7 @@ void fn_8013F100(int obj, register int state)
                 ((TrickyState*)state)->unk7A4 -= timeDelta;
                 if (((TrickyState*)state)->unk7A4 <= lbl_803E23DC)
                 {
-                    ((TrickyState*)state)->unk7A4 = (f32)(s32)
-                    randomGetRange(150, 300);
+                    ((TrickyState*)state)->unk7A4 = (f32)(s32)randomGetRange(150, 300);
                     extra = *(int*)&((GameObject*)obj)->extra;
                     if ((((u32) * (u8*)(extra + 0x58) >> 6) & 1) != 0)
                     {
@@ -306,8 +300,7 @@ void fn_8013F100(int obj, register int state)
             *(float*)(status + 0x10) += lbl_803E2488;
             bob = -mathCosf(lbl_803E2454 * (f32)(s32) * (short*)obj / lbl_803E2458);
             fn_801796BC(*(int*)&((TrickyState*)state)->unk700, obj,
-                        -mathSinf(lbl_803E2454 * (f32)(s32) * (short*)obj / lbl_803E2458),
-                        lbl_803E23E8, bob);
+                        -mathSinf(lbl_803E2454 * (f32)(s32) * (short*)obj / lbl_803E2458), lbl_803E23E8, bob);
             ((TrickyState*)state)->substate = 2;
         }
         break;
@@ -326,9 +319,9 @@ void fn_8013F100(int obj, register int state)
             }
             {
                 u32 m;
-                u32 f2 = *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET);
+                u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
                 m = ~TRICKY_STATE_RESET_FLAG_10;
-                *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET) = f2 & m;
+                *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
             }
             ((TrickyState*)state)->substate = 7;
             targetPos = ((TrickyState*)state)->followObj + 24;
@@ -337,9 +330,9 @@ void fn_8013F100(int obj, register int state)
                 ((TrickyState*)state)->targetPosPtr = targetPos;
                 {
                     u32 m;
-                    u32 f2 = *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET);
+                    u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
-                    *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET) = f2 & m;
+                    *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
                 }
                 *(short*)&((TrickyState*)state)->unkD2 = 0;
             }
@@ -400,9 +393,9 @@ void fn_8013F100(int obj, register int state)
                 ((TrickyState*)state)->targetPosPtr = targetPos;
                 {
                     u32 m;
-                    u32 f2 = *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET);
+                    u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
-                    *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET) = f2 & m;
+                    *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
                 }
                 *(short*)&((TrickyState*)state)->unkD2 = 0;
             }
@@ -442,7 +435,7 @@ void fn_8013F100(int obj, register int state)
         break;
     }
     if (((((TrickyState*)state)->stateFlags & TRICKY_STATE_RESET_FLAG_10000) != 0) &&
-        ViewFrustum_IsSphereVisible((float*)(obj + 0xc), lbl_803E2500) == 0)
+        ViewFrustum_IsSphereVisible(&((GameObject*)obj)->anim.localPosX, lbl_803E2500) == 0)
     {
         Obj_FreeObject(*(int*)&((TrickyState*)state)->followObj);
     }
@@ -452,7 +445,6 @@ void fn_8013F100(int obj, register int state)
     }
 }
 
-#pragma opt_propagation reset
 void fn_8013F9E4(int obj, int state)
 {
     int extra;
@@ -466,8 +458,7 @@ void fn_8013F9E4(int obj, int state)
             ((TrickyState*)state)->unk740 -= timeDelta;
             if (((TrickyState*)state)->unk740 <= lbl_803E23DC)
             {
-                ((TrickyState*)state)->unk740 = (f32)(s32)
-                randomGetRange(500, 750);
+                ((TrickyState*)state)->unk740 = (f32)(s32)randomGetRange(500, 750);
                 extra = *(int*)&((GameObject*)obj)->extra;
                 if ((((u32) * (u8*)(extra + 0x58) >> 6) & 1) == 0)
                 {
@@ -526,14 +517,13 @@ void fn_8013F9E4(int obj, int state)
     }
 }
 
-#pragma opt_propagation off
 void fn_8013FBE4(int obj, register int state)
 {
     int inWater;
     float dx;
     float dz;
     float distance;
-    f32 fz;
+    f32 resetTimer;
     float* targetPos;
     u8* trackedObj;
     u32 currentBit;
@@ -544,30 +534,32 @@ void fn_8013FBE4(int obj, register int state)
     {
     case 0:
         newBit = GameBit_Get(0x48b);
-        ((TrickyNibblePair*)(state + 0x700))->hi = newBit;
+        ((TrickyNibblePair*)&((TrickyState*)state)->unk700)->hi = newBit;
         *(int*)&((TrickyState*)state)->unk710 = 0;
         ((TrickyState*)state)->substate = 1;
     case 1:
         currentBit = GameBit_Get(0x48b);
-        bitIndex = ((TrickyNibblePair*)(state + 0x700))->hi;
+        bitIndex = ((TrickyNibblePair*)&((TrickyState*)state)->unk700)->hi;
         if (bitIndex != currentBit)
         {
-            ((TrickyNibblePair*)(state + 0x700))->hi++;
+            ((TrickyNibblePair*)&((TrickyState*)state)->unk700)->hi++;
             **(u8**)state -= 2;
         }
         targetPos = (float*)fn_801CDE70(*(int*)&((TrickyState*)state)->followObj);
         trackedObj = (u8*)tumbleweedbush_findNearestActive();
         if (trackedObj != 0 && **(u8**)state != 0)
         {
+            /* &unk704 as a raw (state + 0x704) is load-bearing here: the typed
+               field form reorders the address calc and regresses this fn. */
             if (trackedObj != *(u8**)&((TrickyState*)state)->unk710 &&
                 ((TrickyState*)state)->targetPosPtr != (u8*)(state + 0x704))
             {
                 ((TrickyState*)state)->targetPosPtr = (u8*)(state + 0x704);
                 {
                     u32 m;
-                    u32 f2 = *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET);
+                    u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
-                    *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET) = f2 & m;
+                    *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
                 }
                 *(short*)&((TrickyState*)state)->unkD2 = 0;
             }
@@ -619,16 +611,15 @@ void fn_8013FBE4(int obj, register int state)
         {
             ((TrickyState*)state)->unk08 = 1;
             ((TrickyState*)state)->substate = 0;
-            fz = lbl_803E23DC;
-            ((TrickyState*)state)->unk71C = fz;
-            ((TrickyState*)state)->unk720 = fz;
+            resetTimer = lbl_803E23DC;
+            ((TrickyState*)state)->unk71C = resetTimer;
+            ((TrickyState*)state)->unk720 = resetTimer;
             TRICKY_CLEAR_RESET_FLAGS(state);
         }
         break;
     }
 }
 
-#pragma opt_propagation reset
 void fn_8013FEC0(int obj, int state)
 {
     int inWater;

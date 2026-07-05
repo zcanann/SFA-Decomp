@@ -286,6 +286,18 @@ cflags_dll_noopt_nocse_noinline = [
     "-inline", "off",
 ]
 
+# ...plus copy/constant propagation off (opt_propagation off).
+cflags_dll_noopt_noprop = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,nopropagation",
+]
+
+# ...plus loop-invariant code motion off (opt_loop_invariants off).
+cflags_dll_noopt_noloopinv = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,noloopinvariants",
+]
+
 cflags_dll_nopeep = [
     *cflags_base,
     "-opt", "nopeephole",
@@ -1144,7 +1156,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/tumbleweedbush.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/animobjd2.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_d3.c"),
-            Object(NonMatching, "main/dll/weapone6.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/weapone6.c", cflags=cflags_dll_noopt_noprop),
             Object(NonMatching, "main/dll/tricky_flameguard.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/tricky_rollroute.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/tricky_substates.c", cflags=cflags_dll_noopt),
@@ -1203,7 +1215,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_00EB_siderepel.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00E9_setuppoint.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00ED_collectible.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_00FF_magicgem.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_00FF_magicgem.c", cflags=cflags_dll_noopt_noloopinv),
             Object(NonMatching, "main/dll/dll_00EE_effectbox.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_80174438.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00EF_pushable.c", cflags=cflags_dll_noopt),
