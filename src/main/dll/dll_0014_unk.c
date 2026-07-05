@@ -2270,7 +2270,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     u8 groupB;
     char* slotPtr;
     int flagIndex;
-    u8 found;
+    int found;
     int curveCount;
     u8* pp;
     int** listWalk;
@@ -2450,7 +2450,7 @@ void walkgroupFindExitPointFn_800dc398(void)
                         {
                             if (pairId == sp->groupId)
                             {
-                                wg->patchIndices[slot] = found;
+                                wg->patchIndices[slot] = (u8)found;
                                 break;
                             }
                             sp++;
