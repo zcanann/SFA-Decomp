@@ -353,7 +353,7 @@ int dbstealerworm_stateHandlerA05(int obj, int p)
             ObjMsg_SendToObject(sub_40c->linkedObj, 17, obj, 16);
             sub_40c->linkedObj = 0;
         }
-        player_c8 = *(int*)((char*)Obj_GetPlayerObject() + 0xc8);
+        player_c8 = *(int*)&((GameObject*)Obj_GetPlayerObject())->childObjs[0];
         r = (**(int (**)(int))(*(int*)(*(int*)(player_c8 + 0x68)) + 0x44))(player_c8);
         if (r != 0)
         {
@@ -1991,8 +1991,8 @@ void dbstealerworm_update(u8* objp)
     obj = (int)objp;
     st = (char*)(int)lbl_803AD0C0;
     tbl = (char*)lbl_803293B8;
-    blob = *(int*)(obj + 0xb8);
-    data = *(int*)(obj + 0x4c);
+    blob = *(int*)&((GameObject*)obj)->extra;
+    data = (int)((GameObject*)obj)->anim.placementData;
     sub = *(int*)&((GroundBaddieState*)blob)->control;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     if ((u32)((DbStealerwormControl*)sub)->flags44 >> 4 & 1)
@@ -2056,7 +2056,7 @@ void dbstealerworm_update(u8* objp)
                 }
                 stk.msg = 0;
                 stk.argA = 0;
-                sub2 = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
+                sub2 = *(int*)&((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
                 while (ObjMsg_Pop(obj, &stk.msg, &stk.argB, (int*)(&stk.msg + 1)) != 0)
                 {
                     if (stk.msg == 0x11 && ((DbStealerwormControl*)sub2)->msgSlotIndex != -1)
