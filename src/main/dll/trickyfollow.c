@@ -728,7 +728,7 @@ state_selected:
         break;
     case 5:
         trickyDebugPrint(strs + 0x480);
-        trickyRankLinkedRouteCandidates(obj, routeFlags, wg, routePtrs);
+        trickyRankLinkedRouteCandidates(obj, routeFlags, (s16)wg, routePtrs);
         i = trickyFindReachableRouteIndex(state, routePtrs, routeFlags, ((TrickyState*)state)->walkGroup);
         if (i == -1)
         {
