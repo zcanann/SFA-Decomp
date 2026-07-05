@@ -2727,6 +2727,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.textureId = 0xc0e;
         cfg.initialAlpha = 0xff;
         cfg.quadVertex3Pad06 = 0x548;
+        cfg.sourceVecX = 200;
         cfg.sourceVecY = 0;
         cfg.sourceVecX = 0;
         cfg.sourcePosY = lbl_803DF540;
@@ -3239,7 +3240,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         }
         if ((int)randomGetRange(0, 10) == 0)
         {
-            spawnFlags = spawnFlags ^ 4 | 1;
+            spawnFlags ^= 4;
+            spawnFlags |= 1;
         }
         cfg.lifetimeFrames = 0xdc;
         cfg.colorWord0 = 0xb1df;
