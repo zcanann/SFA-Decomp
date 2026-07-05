@@ -1786,8 +1786,8 @@ void crawler_updateC(s16* obj, u8* state)
             }
             if ((((FCVars*)state)->flagsD & 0xa) == 0)
             {
-                f32 diff;
                 f32 t;
+                f32 diff;
                 f32 a;
                 diff = (f32)(int)(((getAngle(base->tangentX, base->tangentZ) & 0xffff) + 0x8000)
                     - ((int)*(s16*)obj & 0xffffu));
@@ -1855,23 +1855,23 @@ void crawler_updateC(s16* obj, u8* state)
                             if (v > *(f32*)((int)gCrawlerSpeedThresholds + j))
                             {
                                 ((FCVars*)state)->moveStartFlags = 1;
-                                ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 0x2c), lbl_803E2BA8, 0);
+                                ObjAnim_SetCurrentMove((u32)obj, *(u8*)(t0 + 0x2c), lbl_803E2BA8, 0);
                             }
                             else if (v > *(f32*)((char*)gCrawlerSpeedThresholds + j + 4))
                             {
                                 ((FCVars*)state)->moveStartFlags = 1;
-                                ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 0x20), lbl_803E2BA8, 0);
+                                ObjAnim_SetCurrentMove((u32)obj, *(u8*)(t0 + 0x20), lbl_803E2BA8, 0);
                             }
                             else if (v > *(f32*)((char*)gCrawlerSpeedThresholds + j + 8))
                             {
                                 ((FCVars*)state)->moveStartFlags = 1;
-                                ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 0x14), lbl_803E2BA8, 0);
+                                ObjAnim_SetCurrentMove((u32)obj, *(u8*)(t0 + 0x14), lbl_803E2BA8, 0);
                             }
                             else
                             {
                                 ((FCVars*)state)->moveStartFlags = 1;
                                 *(f32*)(state + 0x308) = lbl_803E2BDC;
-                                ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 8), lbl_803E2BA8, 0);
+                                ObjAnim_SetCurrentMove((u32)obj, *(u8*)(t0 + 8), lbl_803E2BA8, 0);
                                 ((FCVars*)state)->pathSpeed = lbl_803E2BA8;
                             }
                         }
