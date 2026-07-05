@@ -9835,15 +9835,15 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
             p3, 4, &flag);
         if (flag != 0)
         {
-            ((GameObject*)p1)->anim.rotY = *(s16*)((char*)p3 + 0x2);
-            ((GameObject*)p1)->anim.rotZ = *(s16*)((char*)p3 + 0x4);
+            ((GameObject*)p1)->anim.rotY = ((GameObject*)p3)->anim.rotY;
+            ((GameObject*)p1)->anim.rotZ = ((GameObject*)p3)->anim.rotZ;
         }
     }
     else
     {
-        ((GameObject*)p1)->anim.rotY = *(s16*)((char*)p3 + 0x2);
-        ((GameObject*)p1)->anim.rotZ = *(s16*)((char*)p3 + 0x4);
-        ((PlayerState*)p2)->targetYaw = *(s16*)((char*)p3 + 0x0);
+        ((GameObject*)p1)->anim.rotY = ((GameObject*)p3)->anim.rotY;
+        ((GameObject*)p1)->anim.rotZ = ((GameObject*)p3)->anim.rotZ;
+        ((PlayerState*)p2)->targetYaw = ((GameObject*)p3)->anim.rotX;
     }
     v = ((PlayerState*)p2)->targetYaw;
     ((PlayerState*)p2)->yaw = v;
