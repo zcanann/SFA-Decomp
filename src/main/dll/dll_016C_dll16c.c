@@ -344,7 +344,7 @@ void dll_16C_update(int* obj)
         }
         for (i = 0; i < count; i++)
         {
-            if (sel == *(s16*)((char*)objs[i] + 0x46))
+            if (sel == ((GameObject*)objs[i])->anim.seqId)
             {
                 extra->linkedObj = (void*)objs[i];
                 i = count;
