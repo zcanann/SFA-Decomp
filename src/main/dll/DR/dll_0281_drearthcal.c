@@ -41,8 +41,8 @@ void drearthcal_update(int obj)
     searchDist = lbl_803E6C08;
     if (fn_802972A8() != NULL)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~(INTERACT_FLAG_PROMPT_SUPPRESSED | INTERACT_FLAG_DISABLED);
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
+        ((GameObject*)obj)->anim.resetHitboxFlags &= ~(INTERACT_FLAG_PROMPT_SUPPRESSED | INTERACT_FLAG_DISABLED);
+        if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
         {
             setAButtonIcon(0x15);
         }
@@ -53,7 +53,7 @@ void drearthcal_update(int obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         if (0 < *(s8*)(*(int*)(obj + 0x58) + 0x10f))
         for (i = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
         {
@@ -61,19 +61,19 @@ void drearthcal_update(int obj)
                 int elem = ((int*)*(int*)(obj + 0x58))[i + 0x40];
                 if ((u32)elem == player)
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+                    ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
                 }
             }
         }
         if ((u32)ObjGroup_FindNearestObject(0xa, obj, &searchDist) == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+            ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
+        if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
         {
             setAButtonIcon(0x14);
         }
