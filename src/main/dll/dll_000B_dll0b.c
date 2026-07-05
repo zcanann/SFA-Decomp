@@ -1894,22 +1894,28 @@ void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 extern const f32 lbl_803DF460;
 extern s16 gPartfxSequenceIdCounter;
 
+#pragma opt_propagation off
 s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
 {
     ModgfxSpawnContext* st = base;
+    int base0;
     int slot;
     int found;
     int i;
     int n;
     int divThresh;
-    int total;
-    int base0;
+    int total = 0;
     f32 fz434;
     f32 fz430;
 
-    for (i = 0, found = 0; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; i++)
     {
-        if (((void**)gPartfxActiveEffects)[i] == NULL) found = 1;
+        void** p;
+        i = 0;
+        found = 0;
+        for (p = gPartfxActiveEffects; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; p++, i++)
+        {
+            if (*p == NULL) found = 1;
+        }
     }
     if (found)
     {
@@ -1924,14 +1930,17 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         return 0;
     }
 
-    total = 0;
-    n = st->pendingSpawnCount;
-    for (i = 0; i < n; i++)
     {
-        ModgfxPendingSpawn* item = &st->pendingSpawns[i];
-        if ((item->modelOrResource & 0xf7fff180) == 0 && item->param14 != 0)
+        int off;
+        off = 0;
+        n = st->pendingSpawnCount;
+        for (i = 0; i < n; i++, off += 0x18)
         {
-            total += item->param14;
+            ModgfxPendingSpawn* item = (ModgfxPendingSpawn*)((u8*)st->pendingSpawns + off);
+            if ((item->modelOrResource & 0xf7fff180) == 0 && item->param14 != 0)
+            {
+                total += item->param14;
+            }
         }
     }
 
@@ -1982,9 +1991,11 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     {
         int k;
         int off;
-        for (k = 0, off = 0; k < 3; k++, off += 4)
+        for (off = k = 0; k < 3; k++, off += 4)
         {
-            u8* dstc = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorBuffers[k];
+            u8* q = (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot];
+            int idx = off + 0x84;
+            u8* dstc = *(u8**)(q + idx);
             int bias = 0;
             int j;
             s16* sd = d;
@@ -2020,9 +2031,11 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     {
         int k;
         int off;
-        for (k = 0, off = 0; k < 3; k++, off += 4)
+        for (off = k = 0; k < 3; k++, off += 4)
         {
-            u8* dstv = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexBuffers[k];
+            u8* q = (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot];
+            int idx = off + 0x78;
+            u8* dstv = *(u8**)(q + idx);
             int j;
             s16* sb = b;
             for (j = 0; j < c; j++)
@@ -2189,6 +2202,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->initialDelayFrames = st->sourceModeCopy;
     return ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sequenceId;
 }
+#pragma opt_propagation reset
 
 extern s16 renderModeSetOrGet(int mode);
 extern f32* Camera_GetViewMatrix(void);
