@@ -1183,6 +1183,40 @@ int fn_80136E00(int p1, u8* p)
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
  * stack trace and GPR dump via debugPrintfxy, draws the underline and
  * box pixels directly into the framebuffer, and flips buffers forever. */
+static inline void errDisplayFillBackdrop(int x, int xcb)
+{
+    int row;
+    int n;
+    u16* fbrow;
+
+    do
+    {
+        row = 0;
+        for (n = 0; n < 60; n++)
+        {
+            fbrow = (u16*)((char*)debugDrawFrameBuffer + row);
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
+            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x500));
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
+            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xA00));
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
+            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xF00));
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
+            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1400));
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
+            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1900));
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
+            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00));
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
+            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x2300));
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
+            row += 0x2800;
+        }
+        xcb += 2;
+        x++;
+    } while (x < 0x280);
+}
+
 #pragma opt_strength_reduction off
 #pragma opt_propagation off
 void fn_80137DF8(void)
@@ -1193,9 +1227,7 @@ void fn_80137DF8(void)
     u32* sp;
     int depth;
     int hold;
-    int xc[2]; /* [0]=x column counter, [1]=byte offset; paired-walker array form (matches target IV webs) */
-    int row;
-    u16* fbrow;
+    int x;
     int h, h2;
     int b;
     int n;
@@ -1224,32 +1256,8 @@ void fn_80137DF8(void)
         {
             if (enableDebugText != 0)
             {
-                xc[0] = 0;
-                for (xc[1] = xc[0]; xc[0] < 0x280; xc[0]++)
-                {
-                    row = 0;
-                    for (n = 0; n < 60; n++)
-                    {
-                        fbrow = (u16*)((char*)debugDrawFrameBuffer + row);
-                        *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x500));
-                        *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xA00));
-                        *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xF00));
-                        *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1400));
-                        *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1900));
-                        *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00));
-                        *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x2300));
-                        *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                        row += 0x2800;
-                    }
-                    xc[1] += 2;
-                }
+                x = 0;
+                errDisplayFillBackdrop(x, x);
             }
             debugPrintfxy(0x10, 0x15, strs + 0x140, self);
             debugPrintfxy(0x10, 0x2a, strs + 0x154);
@@ -1419,32 +1427,8 @@ void fn_80137DF8(void)
     {
         if (enableDebugText != 0)
         {
-            xc[0] = 0;
-            for (xc[1] = xc[0]; xc[0] < 0x280; xc[0]++)
-            {
-                row = 0;
-                for (n = 0; n < 60; n++)
-                {
-                    fbrow = (u16*)((char*)debugDrawFrameBuffer + row);
-                    *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x500));
-                    *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xA00));
-                    *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xF00));
-                    *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1400));
-                    *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1900));
-                    *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00));
-                    *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x2300));
-                    *(u16*)(xc[1] + (int)fbrow) = 0x1080;
-                    row += 0x2800;
-                }
-                xc[1] += 2;
-            }
+            x = 0;
+            errDisplayFillBackdrop(x, x);
         }
         if (enableDebugText != 0)
         {
