@@ -3029,7 +3029,8 @@ int ObjSeq_update(u8* obj, f32 t)
 
         for (k = 0; k < lbl_803DD0C0; k++)
         {
-            entry = base + k * 8 + 0x2b34;
+            entry = base + k * 8;
+            entry = (u8*)((int)entry + 0x2b34);
             if (seqDoSubCmd0B(obj, activeObj, seq, *(u8**)entry, *(s16*)(entry + 6),
                               *(s16*)(entry + 4), 0, 0) != 0)
             {
