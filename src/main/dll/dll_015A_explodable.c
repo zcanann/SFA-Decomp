@@ -304,10 +304,10 @@ int explodable_spawnFragmentObject(int obj, int objType, int chunkSrc, int fragm
     }
     s = (ExplodableFragmentSetup*)Obj_AllocObjectSetup(0x44, objType);
     s->seqId = objType;
-    s->unk04 = 2;
-    s->unk06 = 0xff;
-    s->unk05 = 1;
-    s->unk07 = 0xff;
+    s->colorR = 2;
+    s->colorB = 0xff;
+    s->colorG = 1;
+    s->colorA = 0xff;
     s->posX = ((GameObject*)obj)->anim.localPosX;
     s->posY = ((GameObject*)obj)->anim.localPosY;
     s->posZ = ((GameObject*)obj)->anim.localPosZ;

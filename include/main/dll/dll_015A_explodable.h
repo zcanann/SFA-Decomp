@@ -68,10 +68,10 @@ typedef struct ExplodableFragmentSetup
 {
     s16 seqId;            /* 0x00: fragment object type */
     u8 pad02[2];
-    u8 unk04;             /* 0x04: const 2 */
-    u8 unk05;             /* 0x05: const 1 */
-    u8 unk06;             /* 0x06: const 0xff */
-    u8 unk07;             /* 0x07: const 0xff */
+    u8 colorR;            /* 0x04: RGBA tint applied to the spawned fragment (= ObjPlacement.color[0]) */
+    u8 colorG;            /* 0x05: color[1] */
+    u8 colorB;            /* 0x06: color[2] */
+    u8 colorA;            /* 0x07: color[3], alpha */
     f32 posX;             /* 0x08 */
     f32 posY;             /* 0x0c */
     f32 posZ;             /* 0x10 */
