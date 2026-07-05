@@ -156,25 +156,58 @@ enum GameBitId {
 
     /*
      * ThornTail Hollow staff-combat tutorial arena - the scripted encounter
-     * immediately after the staff pickup: an invisible trigger around the
-     * corner opens a door, four SharpClaws pour out, the door shuts, Krystal's
-     * floating head prompts "use the staff in combat", then the fight begins.
-     * It works like a life-force door (kill the whole group -> the way opens).
+     * right after the staff pickup, and the gate progression it drives.
+     * Traced end to end live (watchpoints + before/after GameBit diffs).
      *
-     * Each SharpClaw carries one of these four death bits (per-placement
-     * deathGamebit, set by the DLL 0xC9 enemy when it dies). The area
-     * controller shlevelcontrol (dll_01AE, SH_LevelControl_doEarlyScenes,
-     * line 626) polls all four and, once all are set, sets the ARENA_CLEARED
-     * latch to open the way. Live-verified with a before/after GameBit diff
-     * across clearing the arena: exactly these five flipped 0->1 (and only
-     * these; the rest of the diff was map-streaming). The four enemy<->bit
-     * assignment is arbitrary (placement order), so 1..4 are just labels.
+     * Flow:
+     *   1. Crossing an invisible proximity Trigger (dll_0126, variant 0x4b, NO
+     *      gamebit gate) sets ARENA_ENTERED (0x239); its whole command list is
+     *      the single enter-command GameBit_Set(0x239,1). Staff-gating is
+     *      positional - you cannot reach this corridor before the pickup.
+     *   2. Downstream logic reacts to 0x239 (0x239 is read data-driven, not by
+     *      any .c): a door opens, four SharpClaws pour out, the door shuts,
+     *      Krystal's head prompts "use the staff in combat", the fight begins.
+     *      This sets ARENA_ACTIVE (0x11) and ARENA_ENTRY_SEQ (0x2cf).
+     *   3. Each SharpClaw sets one death bit (SHARPCLAW_DEAD_1..4) when killed
+     *      (DLL 0xC9 enemy, per-placement deathGamebit).
+     *   4. shlevelcontrol (dll_01AE, SH_LevelControl_doEarlyScenes, line 626)
+     *      polls all four; once all set it latches ARENA_CLEARED (0x2da), drops
+     *      ARENA_ACTIVE (0x11) and sets ARENA_REWARD_UNLOCKED (0x3e7).
+     *
+     * shlevelcontrol mirrors these bits onto SH map object-groups every frame
+     * (line 716+): ARENA_ACTIVE (0x11) -> object-group 0x1a (the in-fight
+     * state), ARENA_REWARD_UNLOCKED (0x3e7) -> object-group 0x1b (post-fight).
+     *
+     * IMPORTANT: clearing the arena does NOT reopen the door the SharpClaws
+     * came through. It opens a DIFFERENT door to the first staff ability, the
+     * Fire Blaster (GameBit 0x2d), and reveals a red switch above the SharpClaw
+     * door. After collecting Fire Blaster you return and shoot that switch to
+     * open the SharpClaw door, which leads to the Queen EarthWalker. The
+     * 0x11/0x3e7 <-> door/switch mapping is inferred from the group mirroring;
+     * the enter/death/clear bits themselves are watchpoint/diff-verified. The
+     * four enemy<->death-bit assignments are arbitrary placement order.
      */
+    GAMEBIT_STAFF_TUTORIAL_ARENA_ENTERED = 0x239,
+    GAMEBIT_STAFF_TUTORIAL_ARENA_ACTIVE = 0x11,
+    GAMEBIT_STAFF_TUTORIAL_ARENA_ENTRY_SEQ = 0x2CF,
     GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_1 = 0x166,
     GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_2 = 0x167,
     GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_3 = 0x34A,
     GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_4 = 0x36F,
     GAMEBIT_STAFF_TUTORIAL_ARENA_CLEARED = 0x2DA,
+    GAMEBIT_STAFF_TUTORIAL_ARENA_REWARD_UNLOCKED = 0x3E7,
+
+    /*
+     * The red switch above the SharpClaw door (revealed when the arena clears).
+     * After collecting Fire Blaster from the reward room you return and shoot
+     * this switch; doing so sets BOTH of these bits together, which (consumed
+     * data-driven - no .c reads them) opens the SharpClaw door to the Queen
+     * EarthWalker. Live-verified: gave Fire Blaster by setting its owned-bit
+     * 0x2d, shot the switch, and a before/after diff showed exactly this pair
+     * flip 0->1. Which bit is "switch hit" vs "door open" is not distinguished.
+     */
+    GAMEBIT_STAFF_TUTORIAL_QUEEN_DOOR_SWITCH_A = 0x2BB,
+    GAMEBIT_STAFF_TUTORIAL_QUEEN_DOOR_SWITCH_B = 0x3EA,
 
     /* ======================================================================
      * Unplaced - meaning verified, but the setter (the story beat that flips

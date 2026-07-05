@@ -710,14 +710,14 @@ void sh_levelcontrol_update(int obj)
             (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c, 0);
         }
     }
-    val = GameBit_Get(999);
+    val = GameBit_Get(GAMEBIT_STAFF_TUTORIAL_ARENA_REWARD_UNLOCKED);
     if ((val != 0) &&
         (animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b),
             animEvt == '\0'))
     {
         (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b, 1);
     }
-    val = GameBit_Get(0x11);
+    val = GameBit_Get(GAMEBIT_STAFF_TUTORIAL_ARENA_ACTIVE);
     if (val != 0)
     {
         animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a);
