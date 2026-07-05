@@ -19,9 +19,6 @@
 #include "main/engine_shared.h"
 extern void* ObjGroup_GetObjects();
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 lbl_803E3B78;
-extern f32 lbl_803E3B7C;
-extern f32 lbl_803E3B88;
 extern f32 Vec_distance(f32* a, f32* b);
 extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
 extern void Model_GetVertexPosition(int* model, int idx, f32* out);
@@ -34,42 +31,20 @@ enum
     DECOR11A_MODEL_C = 0x7a3
 };
 
+int decoration11a_getExtraSize(void) { return 0x1c; }
+
 void decoration11a_free(void)
 {
 }
-
-void decoration11a_update(void)
-{
-}
-
-int decoration11a_getExtraSize(void) { return 0x1c; }
 
 #pragma scheduling off /* TU-wide from here: hitDetect/init inherit this */
 #pragma peephole off
 void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3B78);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
 }
 
-#pragma dont_inline on
-#pragma peephole on
-void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
-{
-    f32 v;
-    v = vertex[0];
-    if (v > maxOut[0]) maxOut[0] = v;
-    else if (v < minOut[0]) minOut[0] = v;
-    v = vertex[1];
-    if (v > maxOut[1]) maxOut[1] = v;
-    else if (v < minOut[1]) minOut[1] = v;
-    v = vertex[2];
-    if (v > maxOut[2]) maxOut[2] = v;
-    else if (v < minOut[2]) minOut[2] = v;
-}
-#pragma dont_inline reset
-
-#pragma peephole off
 void decoration11a_hitDetect(int obj)
 {
     s16 modelId;
@@ -108,7 +83,7 @@ check_decor_objects:
                 radius = (f32)((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->primaryRadius;
                 objWorldToLocalPos(localPos, obj, (f32*)(*objects + 0xc));
 
-                sum = lbl_803E3B7C;
+                sum = 0.0f;
 
                 {
                 f32 bMax;
@@ -118,7 +93,7 @@ check_decor_objects:
                 bMax = state[0];
                 sum += ((px = localPos[0]) < bMin) ? (px - bMin) * (px - bMin)
                      : (px > bMax) ? (px - bMax) * (px - bMax)
-                     : lbl_803E3B7C;
+                     : 0.0f;
                 }
 
                 {
@@ -138,7 +113,7 @@ check_decor_objects:
                 }
                 else
                 {
-                    term = *(f32*)&lbl_803E3B7C;
+                    term = 0.0f;
                 }
                 sum += term;
                 }
@@ -160,7 +135,7 @@ check_decor_objects:
                 }
                 else
                 {
-                    term = *(f32*)&lbl_803E3B7C;
+                    term = 0.0f;
                 }
                 sum += term;
                 }
@@ -177,6 +152,28 @@ check_decor_objects:
     }
 }
 
+void decoration11a_update(void)
+{
+}
+
+#pragma dont_inline on
+#pragma peephole on
+void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
+{
+    f32 v;
+    v = vertex[0];
+    if (v > maxOut[0]) maxOut[0] = v;
+    else if (v < minOut[0]) minOut[0] = v;
+    v = vertex[1];
+    if (v > maxOut[1]) maxOut[1] = v;
+    else if (v < minOut[1]) minOut[1] = v;
+    v = vertex[2];
+    if (v > maxOut[2]) maxOut[2] = v;
+    else if (v < minOut[2]) minOut[2] = v;
+}
+#pragma dont_inline reset
+#pragma peephole off
+
 void decoration11a_init(int* obj, u8* def)
 {
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[24] << 8);
@@ -184,10 +181,10 @@ void decoration11a_init(int* obj, u8* def)
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[26] << 8);
     if (def[27] != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)def[27] / lbl_803E3B88;
-        if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E3B7C)
+        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)def[27] / 255.0f;
+        if (!((GameObject*)obj)->anim.rootMotionScale)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3B78;
+            ((GameObject*)obj)->anim.rootMotionScale = 1.0f;
         }
         ((GameObject*)obj)->anim.rootMotionScale =
             ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;

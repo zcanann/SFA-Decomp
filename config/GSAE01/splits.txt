@@ -1355,6 +1355,7 @@ main/dll/dll_00EC_infopoint.c:
 
 main/dll/dll_011A_decoration11a.c:
 	.text       start:0x80188584 end:0x801889C8
+	.sdata2     start:0x803E3B78 end:0x803E3B98
 
 main/dll/dll_011B_landedarwing.c:
 	.text       start:0x801889C8 end:0x801899B4
