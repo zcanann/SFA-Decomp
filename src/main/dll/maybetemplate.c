@@ -854,7 +854,6 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     int sel;
     int i;
     int yOff;
-    u8* iconPtr;
     s16 alpha;
     s16 rowFade;
     s16 a16;
@@ -912,11 +911,10 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             k = k - gCMenuItemCount;
         }
         fade = cMenuFadeCounter;
-        iconPtr = gCMenuItemIcons;
         for (i = 0; i < GCMENU_ITEM_ICON_COUNT; i++)
         {
             ((int*)(base + 0xBD4))[i] = 0;
-            iconPtr[i] = 0;
+            gCMenuItemIcons[i] = 0;
             ((int*)(base + 0xBB8))[i] = 0;
         }
         for (i = 0; i < slotCount; i++)
@@ -943,7 +941,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
         yOff = i;
         do
         {
-            if (*iconPtr > 1)
+            if (gCMenuItemIcons[i] > 1)
             {
                 alpha = fade;
                 rowFade = gCMenuScrollTimer + yOff;
@@ -965,13 +963,12 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 }
                 a16 = alpha * lbl_803DD8D4 / 0xFF;
                 GXSetScissor(0, 0, 0x280, 0x1E0);
-                sprintf((char*)&label, &lbl_803DBB58, *iconPtr);
+                sprintf((char*)&label, &lbl_803DBB58, gCMenuItemIcons[i]);
                 gameTextSetColor(0, 0, 0, a16 & 0xFF);
                 gameTextShowStr((char*)&label, 0x93, 0x247, 0x2B + yOff + gCMenuScrollTimer);
                 gameTextSetColor(0xFF, 0xFF, 0xFF, (u8)a16);
                 gameTextShowStr((char*)&label, 0x93, 0x246, 0x2A + yOff + gCMenuScrollTimer);
             }
-            iconPtr++;
             yOff += 0x32;
             i++;
         }
