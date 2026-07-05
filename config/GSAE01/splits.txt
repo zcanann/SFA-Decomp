@@ -1400,6 +1400,7 @@ main/dll/CC/dll_0122_cctestinfot.c:
 
 main/dll/dll_0124_deathgas.c:
 	.text       start:0x8018BC48 end:0x8018C000
+	.sdata2     start:0x803E3C90 end:0x803E3CC4
 
 main/dll/dll_0123_fuelcell.c:
 	.text       start:0x8018C000 end:0x8018C7D8

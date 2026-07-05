@@ -8,19 +8,8 @@
 extern int playerIsDisguised(void);
 extern f32 timeDelta;
 extern u32 ObjHits_RecordObjectHit();
-extern f32 gDeathGasDefaultRadius;
 extern f32 Vec_distance(void* a, void* b);
 extern void enableHeavyFog(f32 top, f32 bottom, f32 r, f32 g, f32 b, int p6);
-extern f32 lbl_803E3C90;
-extern f32 lbl_803E3C94;
-extern f32 lbl_803E3C98;
-extern f32 lbl_803E3C9C;
-extern f32 lbl_803E3CA0;
-extern f32 lbl_803E3CA4;
-extern f32 gDeathGasTimerFull;
-extern f32 lbl_803E3CAC;
-extern f32 lbl_803E3CB0;
-extern f32 lbl_803E3CB4;
 
 int deathgas_getExtraSize(void) { return 0x10; }
 
@@ -41,17 +30,6 @@ typedef struct
     u8 fillRate; // 0x19
     s16 activeBit; // 0x1a
 } DeathGasSetup;
-
-void deathgas_init(int* obj)
-{
-    register DeathGasState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DEATHGAS_OBJFLAG_HIDDEN);
-    state->radius = gDeathGasDefaultRadius;
-    if (((GameObject*)obj)->anim.seqId != 2103) return;
-    state->noFog = 1;
-    state->radius = *(f32*)((char*)obj + 64);
-}
-
 
 void deathgas_free(int* obj)
 {
@@ -111,41 +89,41 @@ void deathgas_update(int* obj)
     {
         if (!state->noFog)
         {
-            enableHeavyFog(lbl_803E3C90 + ((GameObject*)obj)->anim.worldPosY,
-                           ((GameObject*)obj)->anim.worldPosY - lbl_803E3C94,
-                           lbl_803E3C98, lbl_803E3C9C, lbl_803E3CA0, 0);
+            enableHeavyFog(35.0f + ((GameObject*)obj)->anim.worldPosY,
+                           ((GameObject*)obj)->anim.worldPosY - 5.0f,
+                           1000.0f, 0.1f, 0.0005f, 0);
         }
         state->fogOn = 1;
     }
 
     player = Obj_GetPlayerObject();
     if (!playerIsDisguised()
-        && ((GameObject*)player)->anim.worldPosY <= lbl_803E3CA4 + ((GameObject*)obj)->anim.worldPosY
+        && ((GameObject*)player)->anim.worldPosY <= 30.0f + ((GameObject*)obj)->anim.worldPosY
         && Vec_distance((char*)player + 0x18, (char*)obj + 0x18) <= state->radius)
     {
         if (!state->draining)
         {
             (*gGameUIInterface)->initAirMeter(6000, 0x603);
-            state->timer = gDeathGasTimerFull;
+            state->timer = 6000.0f;
             state->draining = 1;
         }
-        state->timer -= (timeDelta * setup->drainRate) / lbl_803E3CAC;
-        if (state->timer <= lbl_803E3CB0)
+        state->timer -= (timeDelta * setup->drainRate) / 10.0f;
+        if (state->timer <= 0.0f)
         {
-            f32 floor = lbl_803E3CB0;
-            state->timer = lbl_803E3CB0;
+            f32 floor = 0.0f;
+            state->timer = 0.0f;
             state->hitTimer -= timeDelta;
             if (state->hitTimer < floor)
             {
-                state->hitTimer += lbl_803E3CB4;
+                state->hitTimer += 120.0f;
                 ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);
             }
         }
     }
     else if (state->draining)
     {
-        state->timer += (timeDelta * setup->fillRate) / lbl_803E3CAC;
-        if (state->timer > gDeathGasTimerFull)
+        state->timer += (timeDelta * setup->fillRate) / 10.0f;
+        if (state->timer > 6000.0f)
         {
             (*gGameUIInterface)->airMeterShutdown();
             state->draining = 0;
@@ -156,4 +134,14 @@ void deathgas_update(int* obj)
     {
         (*gGameUIInterface)->runAirMeter((int)state->timer);
     }
+}
+
+void deathgas_init(int* obj)
+{
+    register DeathGasState* state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DEATHGAS_OBJFLAG_HIDDEN);
+    state->radius = 10000.0f;
+    if (((GameObject*)obj)->anim.seqId != 2103) return;
+    state->noFog = 1;
+    state->radius = *(f32*)((char*)obj + 64);
 }
