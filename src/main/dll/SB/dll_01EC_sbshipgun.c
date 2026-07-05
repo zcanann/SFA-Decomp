@@ -63,7 +63,7 @@ STATIC_ASSERT(sizeof(SBShipGunState) == 0x10);
 
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5888;
 extern int ObjList_GetObjects(int* outIndex, int* outCount);
 extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);

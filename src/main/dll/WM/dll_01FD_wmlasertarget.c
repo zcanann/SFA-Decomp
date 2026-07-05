@@ -37,7 +37,7 @@ typedef struct WmLaserTargetState
 STATIC_ASSERT(sizeof(WmLaserTargetState) == 0x4);
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5D90; /* 1.0: render scale */
 
 int wmlasertarget_getExtraSize(void) { return sizeof(WmLaserTargetState); }
@@ -50,7 +50,7 @@ void wmlasertarget_free(void)
 void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E5D90);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5D90);
 }
 
 void wmlasertarget_hitDetect(void)

@@ -89,7 +89,7 @@ extern f32 lbl_803E5724;
 extern u8 framesThisStep;
 extern u32 getSbGalleon(void);
 extern u32 gSbGalleon;
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E57FC;
 extern f32 lbl_803E5800;
 extern f32 lbl_803E5804;

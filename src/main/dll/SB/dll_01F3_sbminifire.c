@@ -12,7 +12,7 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"

@@ -50,7 +50,7 @@ extern f32 lbl_803E581C;
 extern f32 lbl_803E5820;
 extern f32 lbl_803E5824;
 extern u32 lbl_803DDC40;
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 void SB_Propeller_update(int obj)
 {
@@ -199,7 +199,7 @@ u32 fn_801E2570(void) { return lbl_803DDC40; }
 void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E5810);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5810);
 }
 
 void SB_Propeller_hitDetect(GameObject* obj)

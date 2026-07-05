@@ -4,7 +4,7 @@
 #include "main/objseq.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -62,7 +62,7 @@ void sc_cloudrunnera_free(int* obj)
 void sc_cloudrunnera_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E55E0);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E55E0);
 }
 
 void sc_cloudrunnera_hitDetect(void)

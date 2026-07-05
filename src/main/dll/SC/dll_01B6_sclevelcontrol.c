@@ -33,7 +33,7 @@ STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 #define GAMEBIT_TOTEMBOND_COMPLETE 0x2d0      /* mode 2 -> 6 */
 
 extern f32 lbl_803E5554;
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void gameTimerStop(void);
 extern void Music_Trigger(int id, int arg);
 extern void gameTimerInit(s8 flags, int minutes);
@@ -89,7 +89,7 @@ u8 sc_levelcontrol_getAnimEventState(int* obj) { return ((ScLevelControlState*)(
 void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E5554);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5554);
 }
 
 void sc_levelcontrol_free(int obj)

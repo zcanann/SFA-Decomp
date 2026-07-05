@@ -63,7 +63,7 @@ extern f32 lbl_803E583C;
 
 void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
     int phase;
     int parent;
     SBShipHeadState* state;
@@ -83,7 +83,7 @@ void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
     if (visible != 0)
     {
         state = o->extra;
-        objRenderFn_8003b8f4(lbl_803E5830);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E5830);
         parent = *(int*)&o->anim.parent;
         if ((((void*)parent != NULL && (((GameObject*)parent)->anim.seqId == SB_GALLEON_SEQID_FIRING)) &&
             (phase = SB_GALLEON_VTBL(parent)->getDamagePhase(parent),
