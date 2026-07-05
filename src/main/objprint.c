@@ -1993,9 +1993,9 @@ void fn_8003B0D0(int obj, int target, int state, int maxAngle)
     if (found != NULL)
     {
         *(s16*)((char*)state + 0x14) = (s16)((s16)getAngle(((GameObject*)obj)->anim.localPosX -
-                                                            *(f32*)((char*)target + 0xc),
+                                                            ((GameObject*)target)->anim.localPosX,
                                                         ((GameObject*)obj)->anim.localPosZ -
-                                                            *(f32*)((char*)target + 0x14)) -
+                                                            ((GameObject*)target)->anim.localPosZ) -
                                           ((GameObject*)obj)->anim.rotX);
         maxAngle = (s16)(gObjPrintDegToAngle * maxAngle);
         if (*(s16*)((char*)state + 0x14) > maxAngle)
