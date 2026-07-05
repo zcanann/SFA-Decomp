@@ -64,26 +64,6 @@ typedef struct FallLaddersState
 extern f32 timeDelta;
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern f32 lbl_803E3B50; /* gravity accel */
-extern f32 lbl_803E3B54; /* bounce damping */
-extern f32 lbl_803E3B58; /* 0: abs() pivot */
-extern f32 lbl_803E3B5C; /* settle speed threshold */
-
-void Fall_Ladders_render(void)
-{
-}
-
-void Fall_Ladders_hitDetect(void)
-{
-}
-
-void Fall_Ladders_release(void)
-{
-}
-
-void Fall_Ladders_initialise(void)
-{
-}
 
 int Fall_Ladders_SeqFn(void) { return 0x0; }
 int Fall_Ladders_getExtraSize(void) { return 0xc; }
@@ -92,6 +72,14 @@ int Fall_Ladders_getObjectTypeId(void) { return 0x0; }
 void Fall_Ladders_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void Fall_Ladders_render(void)
+{
+}
+
+void Fall_Ladders_hitDetect(void)
+{
 }
 
 #pragma scheduling off
@@ -137,16 +125,16 @@ void Fall_Ladders_update(int obj)
         }
         if ((s8)state->motionState == 1 && ((GameObject*)obj)->anim.localPosY >= ((ObjPlacement*)def)->posY)
         {
-            ((GameObject*)obj)->anim.velocityY -= lbl_803E3B50;
+            ((GameObject*)obj)->anim.velocityY -= 0.9f;
             ((GameObject*)obj)->anim.localPosY =
                 ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
             if (((GameObject*)obj)->anim.localPosY <= ((ObjPlacement*)def)->posY)
             {
                 ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
-                ((GameObject*)obj)->anim.velocityY = lbl_803E3B54 * -((GameObject*)obj)->anim.velocityY;
+                ((GameObject*)obj)->anim.velocityY = 0.3f * -((GameObject*)obj)->anim.velocityY;
                 speed = ((GameObject*)obj)->anim.velocityY;
-                speed = (speed >= lbl_803E3B58) ? speed : -speed;
-                if (speed < lbl_803E3B5C)
+                speed = (speed >= 0.0f) ? speed : -speed;
+                if (speed < 0.01f)
                 {
                     state->motionState = 2;
                 }
@@ -171,4 +159,14 @@ void Fall_Ladders_init(int* obj, FallLaddersObjectDef* def)
     {
         state->playStartSound = 1;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+void Fall_Ladders_release(void)
+{
+}
+
+void Fall_Ladders_initialise(void)
+{
 }

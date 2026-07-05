@@ -1348,6 +1348,7 @@ main/dll/dll_0109_unk.c:
 
 main/dll/dll_010A_fallladders.c:
 	.text       start:0x80187F30 end:0x8018824C
+	.sdata2     start:0x803E3B50 end:0x803E3B68
 
 main/dll/dll_0119_coldwatercontrol.c:
 	.text       start:0x8018824C end:0x80188398

@@ -1234,7 +1234,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_010B_fireflylantern.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00E7_flammablevine.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_0109_unk.c"),
-            Object(NonMatching, "main/dll/dll_010A_fallladders.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_010A_fallladders.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_0119_coldwatercontrol.c"),
             Object(NonMatching, "main/dll/dll_00EC_infopoint.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_011A_decoration11a.c"),
