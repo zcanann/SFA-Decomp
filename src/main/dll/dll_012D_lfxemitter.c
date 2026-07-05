@@ -17,7 +17,7 @@ extern f32 lbl_803E3E80;
 extern f32 lbl_803E3E84;
 extern f32 lbl_803E3E88;
 
-extern u8 lbl_803AC7B0[];
+extern LfxEmitterConfig lbl_803AC7B0;
 
 void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
 {
@@ -61,7 +61,7 @@ int lfxemitter_setScale(void) { return -1; }
 
 void lfxemitter_initialise(void)
 {
-    *(s16*)(lbl_803AC7B0 + 0xe) = 10000;
+    lbl_803AC7B0.recordCount = 10000;
 }
 
 /* reports whether the emitter's config record has been loaded yet */
@@ -153,12 +153,12 @@ void lfxemitter_update(LfxEmitterObject* obj)
         }
         if (state->configLoaded == 0)
         {
-            if ((state != NULL) && (state->configIndex == (*(u16*)(lbl_803AC7B0 + 0xe) - 1)))
+            if ((state != NULL) && (state->configIndex == (lbl_803AC7B0.recordCount - 1)))
             {
                 state->config = mmAlloc(LFXEMITTER_CONFIG_BYTES, 0x12, 0);
                 if (state->config != NULL)
                 {
-                    fn_8018FF48((u16*)lbl_803AC7B0, state->config);
+                    fn_8018FF48((u16*)&lbl_803AC7B0, state->config);
                 }
             }
             else
@@ -167,7 +167,7 @@ void lfxemitter_update(LfxEmitterObject* obj)
                 getTabEntry(state->config, 0xc, state->configIndex * LFXEMITTER_CONFIG_BYTES, LFXEMITTER_CONFIG_BYTES);
                 if (state->config != NULL)
                 {
-                    fn_8018FF48((u16*)state->config, (u16*)lbl_803AC7B0);
+                    fn_8018FF48((u16*)state->config, (u16*)&lbl_803AC7B0);
                 }
             }
             state->configLoaded = 1;

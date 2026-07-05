@@ -127,7 +127,8 @@ typedef struct LfxEmitterConfig {
     u8 pad09;
     u16 effectId;
     s16 spawnCount;
-    u8 pad0E[0x14 - 0x0E];
+    u16 recordCount; /* count of loaded config records (lfxemitter_initialise seeds 10000) */
+    u8 pad10[0x14 - 0x10];
     u16 rangeX;
     u16 rangeZ;
     u16 rangeY;
@@ -141,6 +142,7 @@ STATIC_ASSERT(sizeof(LfxEmitterConfig) == LFXEMITTER_CONFIG_BYTES);
 STATIC_ASSERT(offsetof(LfxEmitterConfig, spawnType) == 0x08);
 STATIC_ASSERT(offsetof(LfxEmitterConfig, effectId) == 0x0A);
 STATIC_ASSERT(offsetof(LfxEmitterConfig, spawnCount) == 0x0C);
+STATIC_ASSERT(offsetof(LfxEmitterConfig, recordCount) == 0x0E);
 STATIC_ASSERT(offsetof(LfxEmitterConfig, rangeX) == 0x14);
 STATIC_ASSERT(offsetof(LfxEmitterConfig, rangeZ) == 0x16);
 STATIC_ASSERT(offsetof(LfxEmitterConfig, rangeY) == 0x18);
