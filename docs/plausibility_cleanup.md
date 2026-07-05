@@ -303,9 +303,42 @@ Two traps that make this deceptive:
    and carries its own local extern with a different signature (`-maxerrors 1` aborts).
    Promoting a symbol means touching all those units — out of scope for a per-file cleanup.
 
-Worked result (iceblast / flameblast): the importable symbols were **already** imported
-via real headers; every remaining extern fell into "keep". Net change: **zero** — and
-that was the correct answer. Don't manufacture churn to shrink an extern block.
+**"Defined in a `.c`" ≠ "has an includable header."** Every one of these functions is
+defined *somewhere* — that's never the question. The question is whether the defining
+module *publishes a header* for it. Engine/core symbols do (`getTrickyObject` →
+`gameplay_runtime.h`); DLL-internal helpers usually don't — they're declared at each call
+site via a local extern, by convention. Grepping the tree for the symbol tells you which:
+if the only hits are the definition and one consumer's extern, there is no header.
+
+### The proper-export path (when you *do* want to import a header-less symbol)
+
+When a symbol is defined in a real `.c` but has no header, you can create one — this is a
+bounded, per-symbol change, distinct from trap #2 (promoting into a *shared* header that
+many units already re-declare):
+
+1. **Create a minimal companion header** for the defining module (precedent:
+   `dll_801b1d84.h`, `dll_80136a40.h`) — guard `MAIN_DLL_<NAME>_H_`, `#include "types.h"`,
+   declare just the export(s) a consumer needs.
+2. **Reconcile the signature.** Hand-recovered externs often disagree with the definition
+   (`f32*(s16*)` vs the real `void*(u8*)`). Pick the definition's truth, and prefer
+   `void*` for a generic object pointer — MWCC rejects `s16* → u8*` as a hard **error**,
+   but `anything* → void*` is legal, so `void*` lets every caller pass its own pointer type
+   with no cast. Since the definer is often `NonMatching`, aligning its param to `void*` is
+   free (the body just casts to `GameObject*` anyway).
+3. **Include the header in both** the definer (so decl is checked against definition) and
+   the consumer; drop the consumer's extern. Verify the consumer still 100% and the definer
+   still builds.
+
+Not every extern qualifies even then: `fn_80138F90` is defined `s16 fn_80138F90(u8* obj)`
+but flameblast externs it `int(void)` and *calls it with no arguments* — importing the
+real prototype is a "too few arguments" error and changes the call's codegen. That one
+**stays** a local extern.
+
+Worked result (iceblast / flameblast): most stragglers were "keep" (`timeDelta`,
+`vecRotateZXY`, `fn_*`); the already-importable symbols were already imported. The one
+genuine win was `trickyGetQueuedPathParticlePos` — header-less, single-consumer, so a fresh
+`dll_80136a40.h` + `void*` reconciliation retired the extern cleanly. Don't manufacture
+churn, but do take the bounded proper-export when a header-less symbol has a real home.
 
 ---
 
