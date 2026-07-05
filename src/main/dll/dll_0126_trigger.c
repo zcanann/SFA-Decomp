@@ -58,10 +58,13 @@
 
 typedef struct TriggerPlacement
 {
-    u8 pad0[0x38 - 0x0];
+    s16 typeId; /* 0x0: object-sequence type id dispatched by Trigger_init */
+    u8 pad2[0x38 - 0x2];
     s16 unk38;
-    u8 pad3A[0x46 - 0x3A];
+    u8 pad3A[0x44 - 0x3A];
+    s16 gameBitSrc; /* 0x44: game-bit id copied into TriggerState.gameBit */
     u16 triggerDelayFrames; /* 0x46: frames the timer must reach before firing */
+    s16 gateBitSrc[4]; /* 0x48/0x4a/0x4c/0x4e: game-bit ids copied into TriggerState.gateBits */
 } TriggerPlacement;
 
 typedef struct ObjInterpretSeqPlacement
@@ -99,8 +102,11 @@ typedef struct
     u8 lo : 7;
 } TriggerFlags8A;
 
+STATIC_ASSERT(offsetof(TriggerPlacement, typeId) == 0x0);
 STATIC_ASSERT(offsetof(TriggerPlacement, unk38) == 0x38);
+STATIC_ASSERT(offsetof(TriggerPlacement, gameBitSrc) == 0x44);
 STATIC_ASSERT(offsetof(TriggerPlacement, triggerDelayFrames) == 0x46);
+STATIC_ASSERT(offsetof(TriggerPlacement, gateBitSrc) == 0x48);
 STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, commandVariant) == 0x2);
 STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk4) == 0x4);
 STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk6) == 0x6);
@@ -207,7 +213,7 @@ void Trigger_init(u8* obj, u8* params)
 
     objSetSlot(obj, 0x28);
     sub = ((GameObject*)obj)->extra;
-    switch (*(s16*)params)
+    switch (((TriggerPlacement*)params)->typeId)
     {
     case 0x4b:
         t = (f32)(s32)(params[0x3a] * 2);
@@ -218,7 +224,7 @@ void Trigger_init(u8* obj, u8* params)
         ((GameObject*)obj)->anim.rootMotionScale = t / lbl_803E40F8;
         break;
     case 0x4c:
-        ((TriggerState*)sub)->gateBits[0] = *(s16*)(params + 0x48);
+        ((TriggerState*)sub)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
         objFn_80198fa4(obj, params);
         break;
     case 0x230:
@@ -231,10 +237,10 @@ void Trigger_init(u8* obj, u8* params)
         ((GameObject*)obj)->anim.rotZ = 0;
         break;
     case 0x54:
-        ((TriggerState*)sub)->gateBits[0] = *(s16*)(params + 0x48);
-        ((TriggerState*)sub)->gateBits[1] = *(s16*)(params + 0x4a);
-        ((TriggerState*)sub)->gateBits[2] = *(s16*)(params + 0x4c);
-        ((TriggerState*)sub)->gateBits[3] = *(s16*)(params + 0x4e);
+        ((TriggerState*)sub)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
+        ((TriggerState*)sub)->gateBits[1] = ((TriggerPlacement*)params)->gateBitSrc[1];
+        ((TriggerState*)sub)->gateBits[2] = ((TriggerPlacement*)params)->gateBitSrc[2];
+        ((TriggerState*)sub)->gateBits[3] = ((TriggerPlacement*)params)->gateBitSrc[3];
         ((TriggerFlags8A*)(sub + 0x8a))->bit7 = 0;
         break;
     case 0x4e:
@@ -246,7 +252,7 @@ void Trigger_init(u8* obj, u8* params)
     default:
         break;
     }
-    ((TriggerState*)sub)->gameBit = *(s16*)(params + 0x44);
+    ((TriggerState*)sub)->gameBit = ((TriggerPlacement*)params)->gameBitSrc;
     if (GameBit_Get(((TriggerState*)sub)->gameBit) == 1)
     {
         sub[0] = (u8)(sub[0] | TRIGGER_SFLAG_DISABLED);
@@ -825,7 +831,7 @@ void Trigger_hitDetect(int obj)
     f32 dist[1];
 
     dist[0] = lbl_803E4104;
-    if (((TriggerPlacement*)def)->unk38 <= 0 || *(s16*)def == 0xf4)
+    if (((TriggerPlacement*)def)->unk38 <= 0 || ((TriggerPlacement*)def)->typeId == 0xf4)
     {
         t = Obj_GetPlayerObject();
         if ((void*)t != NULL)
@@ -931,7 +937,7 @@ void Trigger_hitDetect(int obj)
                         break;
                     }
                 }
-                switch (*(s16*)def)
+                switch (((TriggerPlacement*)def)->typeId)
                 {
                 case 0x4b:
                     if (ok)
