@@ -1908,7 +1908,7 @@ foundFirst:
                     rotPos[0] = slot->posX.value;
                     rotPos[1] = slot->posY.value;
                     rotPos[2] = slot->posZ.value;
-                    if ((rot.angleZ | rot.angleX | rot.angleY) != 0)
+                    if ((rot.angleX | rot.angleY | rot.angleZ) != 0)
                     {
                         vecRotateZXY(&rot, rotPos);
                     }
