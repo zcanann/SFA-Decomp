@@ -893,7 +893,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         ((EarthWarriorState*)state)->baddie.animSpeedC += r;
         {
             f32 vv = ((EarthWarriorState*)state)->baddie.animSpeedC;
-            f32 lo = **(f32**)&((EarthWarriorSub*)q)->configRow;
+            f32 lo = *(f32*)((EarthWarriorSub*)q)->configRow;
             ((EarthWarriorState*)state)->baddie.animSpeedC =
                 (vv < lo) ? lo : ((vv > ((EarthWarriorSub*)q)->unk404) ? ((EarthWarriorSub*)q)->unk404 : vv);
         }
