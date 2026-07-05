@@ -1242,7 +1242,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         fnFlags = 0x1cb;
         break;
     default:
-        if (tmpl.dll != NULL && (int)(fp = (int (*)(void*))*(int*)(*(int*)tmpl.dll + 0x18)) != -1 && fp != NULL)
+        if (tmpl.dll != NULL && (int)(fp = *(int (**)(void*))((char*)*tmpl.dll + 0x18)) != -1 && fp != NULL)
         {
             fnFlags = fp(tp);
         }
@@ -1376,7 +1376,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         sz = 0x8e0;
         break;
     default:
-        if (obj->dll != NULL && (fp2 = (int (*)(void*, int))*(int*)(*(int*)obj->dll + 0x1c)) != NULL)
+        if (obj->dll != NULL && (fp2 = *(int (**)(void*, int))((char*)*obj->dll + 0x1c)) != NULL)
         {
             sz = fp2(obj, cursor);
         }
@@ -1517,7 +1517,7 @@ void objFreeObjDef(u8* obj, int flag)
     default:
         if (((GameObject*)obj)->anim.dll != NULL)
         {
-            fp = (void (*)(u8*, int))*(int*)(*(int*)((GameObject*)obj)->anim.dll + 0x14);
+            fp = *(void (**)(u8*, int))((char*)*((GameObject*)obj)->anim.dll + 0x14);
             if (fp != NULL)
             {
                 fp(obj, flag);
