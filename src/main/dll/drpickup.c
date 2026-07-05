@@ -119,7 +119,7 @@ void fn_801EC1AC(int obj, int state)
         f32 newF = (f32)(s32) * (s16*)(state + 0x40e) +
             ((DRPickupState*)state)->angVel414 * timeDelta;
         s32 delta;
-        *(s16*)(state + 0x40e) = newF;
+        ((DRPickupState*)state)->angle40E = newF;
         delta = (s32)(((DRPickupState*)state)->angVel414 * ((DRPickupState*)state)->unk550);
         delta -= (s32)(u16) * (u32*)(state + 0x410);
         if (delta > 0x8000)
@@ -130,7 +130,7 @@ void fn_801EC1AC(int obj, int state)
         {
             delta = delta + 0xFFFF;
         }
-        *(u32*)(state + 0x410) =
+        ((DRPickupState*)state)->angAccum410 =
             (u32)(s32)((f32)delta * ((DRPickupState*)state)->unk554 +
                 (f32)(s32) * (u32*)((int)state + 0x410));
     }
@@ -144,7 +144,7 @@ void fn_801EC1AC(int obj, int state)
         {
             delta = delta + 0xFFFF;
         }
-        *(s16*)(state + 0x40c) = (s16)((f32)delta * ((DRPickupState*)state)->unk558 +
+        ((DRPickupState*)state)->angle40C = (s16)((f32)delta * ((DRPickupState*)state)->unk558 +
             (f32)(s32) * (s16*)((int)state + 0x40c));
     }
 
