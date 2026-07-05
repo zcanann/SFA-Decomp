@@ -8,17 +8,13 @@
 
 
 extern u32* ObjGroup_GetObjects(int group, int* countOut);
-extern f32 lbl_803E4088;
-extern f32 lbl_803E408C;
-extern f32 lbl_803E4090;
-extern f32 lbl_803E40A0;
 extern void lightningRender(u32 handle);
 extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int delay,
                            int colorAngle, u8 flags);
 extern void hitDetectFn_80097070(u8* obj, double radius, int arg3, int arg4, int arg5,
                                  int arg6);
 extern void objfx_spawnDirectionalBurst(u8* obj, int idx, double radius, int kind, int mode,
-                                        int chance, double scale, int origin, int flags);
+                                        int chance, f32 scale, int origin, int flags);
 
 int lightning_getExtraSize(void) { return 0x28; }
 
@@ -152,7 +148,7 @@ void lightning_update(u8* obj)
     {
         spawnLightning = 0;
         state->countdown -= timeDelta;
-        if (state->countdown <= lbl_803E4088)
+        if (state->countdown <= 0.0f)
         {
             state->countdown += (f32)(s32)((u32)data[0x23] * 0x3c);
             spawnLightning = 1;
@@ -184,7 +180,7 @@ void lightning_update(u8* obj)
                                      delay, state->param1D,
                                      (u8)(state->flags.style ? 1 : 0));
             state->handle = handle;
-            state->ageTimer = lbl_803E4088;
+            state->ageTimer = 0.0f;
             if ((state->modeBits.mode & 1) != 0)
             {
                 hitDetectFn_80097070(obj, state->hitRadius, 1, 7, 0x1e, 0);
@@ -197,13 +193,13 @@ void lightning_update(u8* obj)
             }
             if ((state->modeBits.mode & 2) != 0)
             {
-                objfx_spawnDirectionalBurst(obj, 5, state->burstRadius, 1, 1, 100, lbl_803E408C,
+                objfx_spawnDirectionalBurst(obj, 5, state->burstRadius, 1, 1, 100, 5.0f,
                                             0, 0);
             }
             if ((((LightningMode*)(data + 0x24))->mode & 2) != 0)
             {
                 objfx_spawnDirectionalBurst((u8*)*slot, 5, *(f32*)(data + 0x14),
-                                            1, 1, 100, lbl_803E408C, 0, 0);
+                                            1, 1, 100, 5.0f, 0, 0);
             }
         }
     }
@@ -213,7 +209,7 @@ void lightning_update(u8* obj)
         if (state->flags.noAge == 0)
         {
             state->ageTimer += timeDelta;
-            *(u16*)(state->handle + 0x20) = (u16)(int)(lbl_803E4090 + state->ageTimer);
+            *(u16*)(state->handle + 0x20) = (u16)(int)(0.5f + state->ageTimer);
         }
         if (*(u16*)(state->handle + 0x20) >= *(u16*)(state->handle + 0x22))
         {
@@ -231,7 +227,7 @@ void lightning_init(u8* obj, u8* data)
     state = ((GameObject*)obj)->extra;
     ObjGroup_AddObject(obj, MMP_LIGHTNING_OBJGROUP);
     state->modeBits.mode = data[0x21];
-    defaultScale = lbl_803E40A0;
+    defaultScale = 1.0f;
     state->hitRadius = defaultScale;
     state->burstRadius = defaultScale;
     state->radiusX = (f32)(u32)

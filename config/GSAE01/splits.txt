@@ -1478,6 +1478,7 @@ main/dll/dll_0140_fogcontrol.c:
 
 main/dll/dll_0141_lightning.c:
 	.text       start:0x801978A0 end:0x80197DA8
+	.sdata2     start:0x803E4088 end:0x803E40B0
 
 main/dll/dll_0132_waterfallspray.c:
 	.text       start:0x80197DA8 end:0x80198194
