@@ -413,20 +413,13 @@ static f32 skeetla_pathSpeedDelta(u8* obj)
 static void skeetla_updateFacingFromMoveVector(u8* obj, s16* turnDeltaOut)
 {
     u8* state;
-    f32 dx;
-    f32 xx;
-    f32 dz;
-    f32 zz;
     int yaw;
 
     state = ((GameObject*)obj)->extra;
-    dx = ((TrickyState*)state)->dirX;
-    xx = dx * dx;
-    dz = ((TrickyState*)state)->dirZ;
-    zz = dz * dz;
-    if ((xx + zz) > lbl_803E23EC)
+    if (((((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX) +
+            (((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ)) > lbl_803E23EC)
     {
-        yaw = getAngle(-dx, -dz);
+        yaw = getAngle(-((TrickyState*)state)->dirX, -((TrickyState*)state)->dirZ);
         *turnDeltaOut = trickyTurnTowardYaw(obj, yaw);
         ((TrickyState*)state)->dirX = -mathSinf((lbl_803E2454 * (f32)(int) * (s16*)obj) / lbl_803E2458);
         ((TrickyState*)state)->dirZ = -mathCosf((lbl_803E2454 * (f32)(int) * (s16*)obj) / lbl_803E2458);
@@ -515,7 +508,7 @@ int trickyMove(u8* obj, f32* targetPos)
         }
     }
 
-    if (!(moveSpeed >= lbl_803E2420))
+    if (moveSpeed >= lbl_803E2420)
     {
         skeetla_updateFacingFromMoveVector(obj, &turnDelta);
         if (skeetla_isInWater(state) != 0)
@@ -524,7 +517,7 @@ int trickyMove(u8* obj, f32* targetPos)
             ((TrickyState*)state)->unk79C = lbl_803E2440;
             ((TrickyState*)state)->unk838 = lbl_803E23DC;
             trickyDebugPrint(debugStrings + 0x184);
-            return 1;
+            goto ret_one;
         }
 
         if (((TrickyState*)state)->unk08 == 1)
@@ -587,7 +580,7 @@ int trickyMove(u8* obj, f32* targetPos)
             objAnimFn_8013a3f0((int)obj, 1, lbl_803E2468, 0x3000000);
         }
         trickyDebugPrint(debugStrings + 0x1a0);
-        return 1;
+        goto ret_one;
     }
 
     previousYaw = ((GameObject*)obj)->anim.rotX;
@@ -615,7 +608,7 @@ int trickyMove(u8* obj, f32* targetPos)
                 {
                     animId = 0x27;
                 }
-                else if ((td >= 0 ? td : -td) > 0x2000)
+                else if ((td = (td >= 0) ? td : -td) > 0x2000)
                 {
                     animId = 0xb;
                 }
@@ -630,7 +623,7 @@ int trickyMove(u8* obj, f32* targetPos)
                 {
                     animId = 0x28;
                 }
-                else if ((td >= 0 ? td : -td) > 0x2000)
+                else if ((td = (td >= 0) ? td : -td) > 0x2000)
                 {
                     animId = 0xc;
                 }
@@ -650,6 +643,7 @@ int trickyMove(u8* obj, f32* targetPos)
     {
         return 0;
     }
+ret_one:
     return 1;
 }
 
