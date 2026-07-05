@@ -55,7 +55,7 @@ extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjMsg_Pop();
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void queueGlowRender(void* light);
 extern u32* gBaddieControlInterface;
 extern f32 lbl_803E4CF0;

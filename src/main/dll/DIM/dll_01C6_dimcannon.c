@@ -26,7 +26,7 @@
 extern u64 ObjGroup_RemoveObject();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E48E8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 extern void* lbl_803DDB50;

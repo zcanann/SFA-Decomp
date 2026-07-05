@@ -54,7 +54,7 @@ typedef struct MmpMoonrockPlacement
 } MmpMoonrockPlacement;
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
 
 #pragma scheduling on

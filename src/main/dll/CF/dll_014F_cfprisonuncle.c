@@ -20,7 +20,7 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
 extern int ObjPath_GetPointWorldPosition();
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 GameBit_Get(int eventId);
 
 extern void playerAddRemoveMagic(void* player, int n);

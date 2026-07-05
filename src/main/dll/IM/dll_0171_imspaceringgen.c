@@ -16,7 +16,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 extern int randomGetRange(int lo, int hi);
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);

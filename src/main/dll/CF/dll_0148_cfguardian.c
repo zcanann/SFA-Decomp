@@ -163,7 +163,7 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
 extern int objAnimFn_80038f38();
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int dll_2E_func03();
 extern u32 GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
@@ -961,7 +961,7 @@ void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     int* sub = ((GameObject*)obj)->extra;
     if ((s32)visible != 0)
     {
-        objRenderFn_8003b8f4(lbl_803E4130);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E4130);
         dll_2E_func06(obj, sub, 0);
     }
 }

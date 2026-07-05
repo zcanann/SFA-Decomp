@@ -28,7 +28,7 @@ STATIC_ASSERT(offsetof(CfMagicWallMapData, visibleEvent) == 0x20);
 #define CFMAGICWALL_SIDE_ANGLE 0x4000
 
 extern int Obj_GetYawDeltaToObject();
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern f32 Vec_distance(f32* a, f32* b);
 
@@ -46,7 +46,7 @@ void cfmagicwall_free(void)
 void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E43D8);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E43D8);
 }
 
 void cfmagicwall_hitDetect(void)

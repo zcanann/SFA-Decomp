@@ -26,7 +26,7 @@
 #define DFSHRINE_MODE_AFTER_FINISH  6 /* one frame after the finish transition */
 #define DFSHRINE_MODE_FINISH        7 /* start the finishing screen transition */
 
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
 extern int mapGetDirIdx(int idx);

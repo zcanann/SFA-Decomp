@@ -50,7 +50,7 @@ void imicepillar_free(void);
 int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);
 
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
