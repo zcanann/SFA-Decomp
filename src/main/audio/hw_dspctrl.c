@@ -1000,7 +1000,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                 dspCmdPtr[4] = (u32)stp->auxA[getAuxFrame];
                 dspCmdPtr += 5;
             }
-            if (stp->type == 0)
+            if (*(int*)&stp->type == 0)
             {
                 if (stp->auxBHandler)
                 {
