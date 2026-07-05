@@ -1,5 +1,59 @@
 # Reconstruction Frontier State
 
+## FUZZY-MATCH re-triage (2026-07-05, Opus, analyst) — LIVE fcmpo-operand vein RE-OPENED (12 fresh sites), disp-fold DEAD
+Re-scanned whole frontier (361 fns @ 95.0-99.9%, -O4,p, incl player.c flagged sibling-owned).
+METHOD: proto report -> decoded fuzzy (unit f4 -> ReportFunction f1/f2/f3) -> `ndiff.py --classify`
+per-fn class histogram over top-50 by size*gap, then a FULL-361 sweep (`sweep.py` scratchpad) for the
+two unambiguous correctness signatures: TRUE fcmpo operand-position swaps (same 2 fregs, reversed) and
+cmpwi<->cmplwi width mismatches (same reg+imm).
+
+**HEADLINE: the fcmpo-operand (#81) lever is NOT exhausted.** Last cycle's pass landed 1 win
+(newclouds dll_07_func06) and noted "bounds identified" — but 12 MORE genuine operand-swaps exist that
+that pass predates. Every one is the SAME shape: target loads the compared VALUE first (-> f1/f2) and the
+threshold const second (-> f0), emitting `fcmpo cr0,fVAL,fCONST`; current loads const-first -> `fcmpo
+cr0,f0,f1` (operands reversed). Fix = spell the clamp so the runtime value is the LEFT operand of the
+comparison (or reverse the relop + operands), forcing MWCC's value-first load order. Ranked by cleanliness
+(reg-perm density around the swap = lower is more isolable, better odds the swap alone moves fuzzy):
+
+LIVE fcmpo-operand targets (unit / sym / fuzzy% / reg-perm:regions / note):
+1. main/newclouds.c titleScreenDrawFn_80093db4  ~97% (rp 2:14) -- `fabs(axis) <= gNewCloudStarAxisThreshold`,
+   swap appears TWICE (two star-axis checks) -> one source edit, two sites. CLEANEST. Same unit as the
+   proven dll_07 fcmpo win (Zachary hot but same-author).
+2. main/dll/WC/dll_0298_wcfloortile.c arwarwing_updateBarrelRoll  (rp 9:13) -- `field928 <= lbl_803E6ECC`
+   isolated clamp; only minor r3/r5 reg-perm alongside.
+3. main/dll/trickyfollow.c trickyUpdateApproachSpeed  (rp 11:18).
+4. main/objseq.c ObjSeq_update  98.49% (rp 13:21) -- clamp vs `lbl_803DEFB0`; SHARED with #5.
+5. main/objseq.c ObjSeq_RebuildCurveStateToFrame  97.61% (rp 31:38) -- SAME `lbl_803DEFB0` clamp shape as #4.
+   objseq.c:338 `((ObjSeqState*)seq)->posOffsetScale <= lbl_803DEFB0` and the fade clamps at :1590/:1607 are
+   the likely source sites -- one respelling may fix BOTH objseq fns (shared inlined clamp).
+6. main/dll/DR/dll_0257_drearthwarrior.c DR_EarthWarrior_stateHandler02 (rp 17:24).
+7. main/objhits.c ObjHits_CheckSkeletonPair (rp 32:40), sky2_run (rp 20:39), pauseMenuDrawStatus (rp 20:23),
+   CameraModeViewfinder_update (rp 41:44) -- swap present but buried in heavier reg-perm; lower odds.
+   Tricky_update / andross_update / expgfx_updateActivePools have the swap but reg-perm-dominated (skip).
+SIBLING-OWNED (player.c, Jack/Zachary hot -- DO NOT edit, flag only): fn_8029C9C8, fn_802A5384, fn_802A87CC
+(2 swaps), fn_802B1E5C, player_SeqFn, playerUpdate all carry true fcmpo swaps.
+
+**cmpwi<->cmplwi width sweep: ZERO hits** across all 361 -- the RomCurve type-correctness win last cycle
+harvested the last isolated one; no signed/unsigned compare-width mismatches remain in the matchable band.
+
+**DEAD tally (dominant residual classes, no source lever):**
+- reg-perm (whole-fn saved-GPR/FP renumber cascades): the overwhelming majority. Every top-size fn
+  (allocLotsOfTextures 95.05, fn_8006A028 95.75, dll_0B_func05 98.16, scarab_update 98.90, dll_15_func08
+  97.63 [100% reg-perm], modelRenderFn_80006744 95.98 [100% reg-perm]) is a pure coloring scramble.
+- pool-reloc (#70 named-vs-anon literal-pool @NNN vs lbl_): score-neutral, ignore (andross 58, textRenderStr 26,
+  RomCurve_func20 24, gameTextBoxFn_80134d40 19).
+- disp-fold-unweld: DEAD -- zero indexed-store-vs-disp-store asymmetries found in the store-heavy set
+  (expgfx/animobjd2/scarab/dll_0b/curves/pushable/gunpowder/objhits). Confirms last cycle's "0 wins, weld
+  sites coloring-entangled" note; vein exhausted.
+- address-add-order (#66): 4 raw `add rD,A,B`vs`add rD,B,A` hits (mapLoadUnloadObjects, dll_0B_func05,
+  objRunSeq, gameTextBoxFn_80134d40) but ALL coupled to whole-fn reg-perm (the swap tracks which reg holds
+  base/index, allocator-chosen) -- NOT the clean base-first source case skyFn_8008a04c had. DEAD here.
+- frame (#67), mr-copy (copy-prop/coalescer), sched-order, deref-via-copy, ext-insert/delete (all entangled
+  with reg-perm cascades in gameTextRun/objRunSeq/expgfx_addremove -- no isolated single-store extsh) -- DEAD.
+
+AIM: crack the fcmpo-operand list top-down (#1 newclouds first = 2-for-1 & proven unit, then #4/#5 objseq
+2-for-1 via the shared lbl_803DEFB0 clamp). Everything else in the matchable band is reg-perm/pool-reloc bottomed.
+
 ## CONTROL-FLOW STRUCTURE lever sweep (2026-07-05, Opus, CF-shape specialist) — 0 wins, family SATURATED in matchable band
 Swept guard-merge #17 / asymmetric-guard / #122 switch-pivot / #13 empty-MAX-case /
 #109 single-case-switch / branch-over-branch across the WHOLE frontier.
@@ -4896,3 +4950,805 @@ TAKEAWAY: fcmpo-operand lever wins ONLY for a plain single-`if` clamp on a
 stored lvalue (newclouds shape). Ternary-max clamps and if/else-gated compares
 are coupled #82 caps where the swap regresses. Lever1 element-cmp vein is dry in
 the 97-99.99 band.
+
+## FP-EXPRESSION-FORM lever sweep (2026-07-05, Opus, FP-fusion/sign specialist) — 0 wins, band SATURATED
+Swept fmadds fusion-vs-split, fnmadds/fnmsubs/fmsubs SIGN, and reassociation-order
+across ALL 511 fns in the 95-99.95% band. Auto-scanner (ndiff per fn, FP-op-multiset
+mismatch on replace/insert/delete regions) surfaced 34 FP-op-flagged fns; a second
+tighter scanner keyed on fused-vs-(muls+addsub) count asymmetry confirmed the same set.
+EVERY flagged region was examined; NONE was an isolated source-controllable fusion/sign
+difference. Root causes (the CAVEAT in the brief, confirmed exhaustively):
+  - #82 f-register PERM: op multiset identical, only f-reg numbers differ. The scanner
+    flags these because the perm shifts identical ops across region-window boundaries.
+    (Curve_AdvanceAlongPath 99.81, mtxRotateByVec3s 98.64, trickyUpdateApproachSpeed
+    98.44, drakorhoverpad_updateMain 99.84 abs-pair, firstperson_updatePosition 99.00
+    clamp, drawGlow 95.03 matrix-xform, camshipbattle5c fn_8010AC48 99.07 component-order,
+    checkpoint fn_800D55BC 98.00 whole-fn GPR+FP renumber.)
+  - Newton-Raphson sqrt (`frsqrte`+`fnmsub`+`fmul` refinement): newshadows fn_8006CD20
+    99.56 / shadowCreate 98.92 — identical DOUBLE-prec fnmsub/fmul sign structure, only
+    f9/f10/f11 operand-reg coloring differs around the sqrt() call. NOT injectable.
+  - #67 conversion-temp / frame-offset shift desyncs the fadds/fsubs alignment:
+    Minimap_update 98.96 (redundant u32->dbl convert), ObjSeq_RebuildCurveStateToFrame
+    97.61 (+8 frame shift + r22 param-stage).
+  - #130 base-hoist / GPR coloring cascade drives the FP block downstream:
+    walkgroupFindExitPointFn_800dc398 95.38 (gObjfsaPatches base -> r30 direct vs r0/r31
+    staged), sky2_run 98.98 (loop-body-hoist realigns 10 fmadds + one commutative fmadds
+    operand-swap on the 4th term, coloring-welded).
+TRIED+REVERTED (2, both clean-reverted, tree clean):
+  - cmbsrc_updateVisuals 99.86: inlined the hoisted `fullRadius` local into the subtract
+    -> MWCC FUSED `7374*X - radiusScaled` into `fmsubs` (target keeps two `fmuls`+`fsubs`
+    SPLIT via the named local). The ORIGINAL hoisted-local form is already correct; the
+    residual is emission-ORDER of the two hoisted muls (radiusScaled before fullRadius),
+    a scheduling/coloring artifact, no source lever. Reverted.
+  - main.c fn_801FD6B4 99.36 (VFP lavapool): target `frsp f0,f1` single-rounds the
+    mathSinf return before `(6180*amp)*wave`; current uses the reg raw (no frsp). Splitting
+    `gVfpLavaPoolWaveSin = wave = mathSinf(..)` into two statements did NOT force the frsp
+    (it's a scheduler-driven double/single residue, not association-controllable). Reverted.
+SKIPPED per rules: track_dolphin (foreign), audio/synth/snd3d (noopt), player.c (owned:
+fn_802AC32C/fn_802A2EE0/fn_802B1E5C/player_SeqFn), newclouds (sibling-uncommitted at
+scan time), textrender (banked GameText; the flagged region has a genuine different
+constant lbl_803DC9A0 vs lbl_803DE710 + extra fadds accumulation = deeper missing-term,
+not FP fusion).
+TAKEAWAY: the FP fusion/sign OP-CHANGE lever is DRY in the 95-99.95% matchable band.
+Every FP-op divergence here is a symptom (perm/schedule/frame realignment shifting
+identical ops), not a cause. The one true fusion event found (cmbsrc inline) went the
+WRONG way. No isolated fmadds<->fmuls;fadds or wrong-sign store exists to fix in this band.
+
+## Jul05 — INTEGER compare-canonicalization lever sweep (0 wins, lever DRY for integers)
+Integer analog of the fcmpo-operand win (dll_07_func06). Scanned all 323 fns in
+97.0-99.99% (proto report, src/main non-audio/non-dolphin/non-player, size>=40) for a
+reversed-operand ORDERED integer compare `cmpw`/`cmplw rA,rB` (feeding blt/bge/bgt/ble)
+vs target's `cmpw rB,rA`, as isolated dominant delta. Scanner: ndiff per-fn, match
+same-register-reversed cmpw + ordered-branch-flip.
+FOUND 17 raw hits; after classification ALL fell into non-lever buckets:
+  - REGISTER-SWAP CASCADES (#108): cloudprisoncontrol_update 97.51, mmAllocFromRegion
+    98.29 (also mm.c co-owned w/ Jack), modelLightStruct_freeSlot 99.32, trickyDigTunnel
+    99.26, trickyFn_80141290 99.27, ObjGroup_AddObject 99.46, DFRope_Create 99.48,
+    bossdrakor_updateHeadTracking 98.05. The reversed cmpw is a SYMPTOM of counter/limit
+    (or two loaded values) occupying swapped saved/temp regs across the WHOLE fn; the
+    compare operand order merely reflects the coloring. NOT source-flippable.
+  - FP fcmpo (sibling-owned): modelLight_selectObjectLights 99.90, _selectBrightestAabb
+    99.79, dimwooddoor_updateShardAim 99.15, gameui pauseMenuFn_8012b77c 99.84 — all
+    `fcmpo cr0,fA,fB` + ble/bge, FP-agent territory not integer.
+  - TERNARY/if-else CLAMPS (coupled, banked): hightop_stateHandler02 99.79 (vec[1] (s16)
+    clamp `<-0x1555`/`>0x1555`, entangled r4/r5 swap + xoris sign-flip).
+EMPIRICAL TEST (the confirming datapoint): cloudprisoncontrol_update terminal
+`cmpw r5,r6/ble` (T) vs `r6,r5/bge` (C) = the `for(i=0;i<n;i++)` bottom-test. Flipped
+source `i<n`->`n>i` (semantically identical). Rebuilt+2 reports: 97.5120 -> 97.5120
+EXACTLY INERT. MWCC canonicalizes the loop bottom-test operand order from the
+induction-var/limit coloring, NOT the source relational. Reverted clean.
+TAKEAWAY: unlike fcmpo (where operand-emission-order is a genuine canonicalization choice
+the source `>`/`<` can flip), an ORDERED INTEGER `cmpw`/`cmplw rA,rB` operand order is
+driven by REGISTER ALLOCATION (which reg holds each operand), not by source relational
+direction. Flipping `a>b`->`b<a` is INERT for integers in the matchable band. The lever
+is FP-only. No integer compare-canonicalization win exists in 97-99.99%.
+
+## MID-BAND (94.0-97.5) sweep Jul05 — 0 wins, resistant-class census (agent: mid-band researcher)
+Triaged ~20 -O4,p+O2 mid-band fns (excluded objseq.c = sibling-uncommitted, player/audio/
+dolphin/foreign). DOMINANT-delta class per fn (all welded, no net-positive source lever):
+  - **r0-detour param/base staging** (`addi r0,r3,0; mr rN,r0` C vs `addi rN,r3,0` T):
+    expgfx_onMapSetup (3x detour + zero-CSE, 96.39), expgfx_initialise (1x + r6/r3 renumber,
+    95.90), voxmaps_resetLoadedMaps (1x on slotOrigin .data-sym init, 96.92),
+    mapBlockFn_80059354 (shader, 97.23). Confirmed banked-resistant: NAMED saved-reg ptr
+    init from .data sym intrinsically emits the detour; launder/peephole/opt2 all inert
+    (MEMORY player.c family). TRIED expgfx_initialise: hoist `poolIndex=0` out of loop to
+    keep 0 in saved reg like target r29 — regressed 12->13 regions, C stayed 82. Reverted.
+  - **whole-fn saved-reg renumber (#108)**: dll_0B_func04 (94.22, uniform -2 shift r21..r28
+    across 627 instrs, 137 regions, seqs byte-identical), objUpdateHitSpheres (model, 97.16,
+    param5/6/7 homed r24-26 T vs r29/r24/r25 C — cascade of 28 regions from param-home order),
+    curves_getCurves (96.96, clean 118=118 walker/count r4<->r6 VOLATILE swap in unrolled-2
+    copy loop), GameUI_release (97.24, li r30,0 vs mr r30,r27 zero-CSE + counter r25/r28),
+    mm mmAllocateFromFBMemoryStore (97.02, mr r5,r4 copy-prop + r4/r5 renumber).
+  - **FP-perm (#82) + base+off reloc (#70)**: newshadows fn_8006CB50 (94.48, entire diff =
+    f-reg numbering + `Udchuff_803DEDA0+0xN` T vs individual `Udchuff_803DEDAC` C same-addr).
+  - **O2 tail-merge**: gameTextSetWindowStrPos (textrender, 96.80, if-body ends `blr` T vs
+    `b LBL` C — O2 epilogue-share choice; TRIED if/else swap = worse 3->2reg wrong-branch,
+    TRIED inline base ptr = base lands r0 correctly but slwi reorders 3->4reg. Both reverted).
+  - **coloring mr-inserts**: render fn_80007F78 (94.03, T=589 C=581, target has 8 extra
+    scattered `mr rN,r16` saved-src copies), animobjd2 fn_8013E0D0 (180 reg), walkgroup
+    (dll_0014, 150 reg). All too large/entangled for targeted fix.
+CORRECTNESS SWEEP: grepped all mid-band .c for undefined4/2-on-float, int-cast float stores,
+ptr-as-int compares — ZERO hits. No fcmpo operand-order diffs in the FP mid-band fns checked
+(waterfx_func05, mapLoadUnloadObjects, expgfx_onMapSetup/drawGlow, skyFn_8008aee8, tricky).
+TAKEAWAY: mid-band residual is overwhelmingly the r0-detour + saved-reg-home cascade duo
+(same root as the flat-dll obj/state family). Isolated source-controllable cracks are RARE
+here as predicted; none of the near-isolated (<=3 region) fns this pass had a positive lever.
+
+## Probe 2026-07-05: team still idle
+- git log -40 = 100% Zachary Canann; zero Jack Price-Burns commits.
+- Jack HEAD d3d7a168ff (dll_01EB sbshipmast) not in recent window; no fresh Jack units to respell.
+- STOP per method (no tree scan).
+
+## NEAR-PERFECT [99.5,100.0) band triage (2026-07-05, Opus, near-perfect specialist) — 0 wins, band SATURATED
+Decoded private proto report -> 87 -O4,p fns in [99.5,100.0) (skipped audio/dolphin/player/
+team-hot). Auto-scanned every band fn's ndiff for opcode-class deltas + instr-count deltas
+(scratchpad/scan_deltas.sh). FINDING: the 99.5+ band is dominated by (a) #70 named-vs-anon
+relocs (`lbl_XXXX` vs `@NNN`, score-neutral, already effectively matched) and (b) within-class
+reg-perms (r3/r4, r26/r27, f1/f2, f24/f25). Every instr-count delta traced to a KNOWN
+resistant pattern. 5 source-controllable leads TRIED, all inert/regress:
+  - **cmbsrc_updateVisuals** (dll_02B1) 99.861: target recomputes `C74*x` inline at the
+    `fullRadius - radiusScaled` sub site; current hoists `fullRadius` local + reuses (CSE).
+    Inlining `fullRadius` into the expr REGRESSED 99.861->99.340 (broke radiusScaled
+    assign-in-subexpr scheduling). FP-reassoc coloring, banked.
+  - **hightop_stateHandler04** (dll_0272) 99.626: TWO abs `dy>=0?dy:-dy` on same `dy`
+    (lines 922/926). 1st abs both build f1 (fmr+fneg). 2nd abs: target reuses f2 IN-PLACE
+    (`b` positive / `fneg f2,f2` negative, no copy); current adds `fmr f1,f2`. Removing the
+    `*(f32*)&` launder on 926 REGRESSED 99.626->99.133; self-assign `dy=(...)` INERT. The
+    in-place-vs-copy is FP coloring, banked.
+  - **pauseMenuFn_8012b77c** (dll_0000_gameui) 99.843: max-then-min clamp (lines 1203/1205).
+    Target block1 `ble`, current `bge` (+coupled fmr f1/f0 swap block2). `<`->`<=` on 1203
+    REGRESSED 99.843->99.055. Coupled clamp-coloring, not an operator flip. Banked.
+  - **objSeq_onMapSetup** (objseq) 99.937: MAIN-loop flagsB/flagsA -> r4/r3 transposition
+    (the +2064/+1976 addi). Applying the SAME flagsA-before-flagsB decl+store swap that fixed
+    the 2ND block (commit d677a61b0e) REGRESSED main-loop 99.937->99.347 — the two blocks have
+    OPPOSITE reg preference. Coupled within-class, banked.
+  - **smallbasket_update** (dll_0104) 99.897 (1 real region): `flag=0; alpha=flag` — target
+    reuses r28(=flag=0) for `stb r28,54(obj)`; current materializes fresh `li r0,0` (T=708
+    C=709). Classic shared-zero copy-prop split (memory: folds repeatedly). Banked, no lever.
+CONFIRMED-RESISTANT r0-detour cluster (named .data-symbol / call-return parked in saved reg):
+  **fn_8007BD8C** (track/intersect) `u8* indBase=(u8*)lbl_8030EA10` -> `addi r0,r3,0; mr r31,r0`
+  (+1); **subtitleBuildLineTable** (textrender, gSubtitleLineTable); **modgfx_func03** (dll_005B).
+  All the documented player.c-cleanup r0-detour — launder/opt2/peephole inert per memory.
+NET: no source lever in the near-perfect band; residuals are compiler-internal coloring/
+scheduling/neutral-reloc. Band is at its matchable ceiling. Build EXIT=0, no regressions.
+
+## Jul05 isolated-delta deep-crack scan (0 wins, 7 candidates, all welded)
+Ranked 97-99.96% -O4,p frontier via private proto report (per-fn f3 f32-LE, unit field 4
+= ReportFunction). Mass-classified 252 fns (98.5-99.96) with ndiff.py --classify, filtered
+for NON-reg-perm/NON-reloc deltas. Attempted the 7 cleanest isolated single-instr deltas;
+EVERY one resolved to a welded compiler-internal pattern with NO source lever:
+
+- **ObjSeq_ApplyFrameCurves** (objseq) 99.766%, ext-insert T=705/C=706: extra `extsh r0,r0`
+  before `sth r0,8(r31)` (tex1->offsetS = scroll). Target stores the fctiwz->int result RAW
+  (sth truncates), narrows only in the tex2 `-scroll` path. TRIED: `int scroll`
+  (99.749, promotes to saved reg + reg churn), separate `int scrollRaw` (99.749, `extsh r0,r3`
+  move-narrow persists), direct-expr stores w/o local (98.49, double fmuls). The extsh is
+  intrinsic: value funnels through an s16-narrowed intermediary used by two s16-field stores
+  (one raw, one negated); only target's r0-scratch placement hides it. WELDED.
+- **sandworm_turnTowardTargetAnim** (dll_014C_babycloudrunner) 98.864%, ext-insert T=101/C=102:
+  extra `extsh r0,r0` before `sth r0,0(r28)` for `*(s16*)a += (shifted>>=3)`. peephole is OFF
+  for this fn (needed for the rest). peephole ON = 93.52 (wrecks dot-merges/sched). Split
+  `shifted>>=3` + plain store = 88.07 (breaks r3/r4 flow). The extsh is the s16-compound-assign
+  narrow that peephole-ON would elide but peephole-OFF keeps. WELDED to peephole-off.
+- **optionsMenu_openGeneralPanel** (prof.c) 98.913%, deref-via-copy T=209/C=210: target walks
+  `slot=&lbl_803A87D0[0]` as ONE r29 pointer (base loaded once, reused for [0]/[1]/loop);
+  current RELOADS the symbol (`lis r4;addi r4;stw r3,4(r4)`) for the slot[1] store. TRIED:
+  slot[0]-first (97.83), both-array-indexed (98.56), walker-from-[1] (broke semantics). The
+  base reuse-vs-reload for the 2nd store is a coalescer decision; every restructure regresses.
+  WELDED.
+- **mapLoadBlock** (shader.c) 99.444%, mr-copy T=C=127: `i=0; byteOff=i` -> target `li r28,0;
+  mr r27,r28`, current `li r28,0; li r27,0` (copy-prop refolds the copy to a fresh li).
+  Chained `byteOff=i=0` inert. Classic #110 shared-zero copy-survival. WELDED.
+- **smallbasket_update** (dll_0104) 99.830%, li-const: `flag=0; anim.alpha=flag` -> target
+  reuses flag's r28 for the stb; current `li r0,0` re-materializes. `(u8)flag` cast inert. #110.
+- **treasurechest_SeqFn** (dll_011D) 99.677%, mr-copy x2 T=C=66: `mr r28,r5` (param->saved)
+  placed late in current, early in target (before the two obj-derefs). `i=0` hoist = 96.45
+  (breaks li r31,0 placement). Scheduling/param-stage placement. WELDED.
+- **drawWorldMapHud** (gameui) / **loadMemCardImages** (maketex) / **mathFn_800dbff0** (dll_0014):
+  li-const deltas that are reg-perm-in-disguise (WHICH reg holds the canonical 0, or SDA-vs-
+  absolute symbol addressing #70). Not source-controllable.
+
+Two dominant near-perfect-band residuals confirmed AGAIN with no lever: (1) the extsh-before-
+s16-store (value shared by 2+ narrowing stores, or peephole-off), (2) shared-zero/copy-survival
+(li vs mr for a 0 used twice). Both are compiler-internal. Also confirmed drawFn_8006f500 /
+fn_8007BD8C (intersect) report sub-100 with ZERO visible instr/reloc diff (phantom branch-disp
+or symbol-size metric artifact) - not crackable. Band at matchable ceiling. Build EXIT=0.
+
+## STRUCT-RECOVERY deep-subdir sweep (2026-07-05, Opus, semantic-recovery specialist) — 0 wins, clusters SATURATED
+Byte-neutral raw-cast respell sweep over dll/{ARW,CF,CC,DF,DIM,SB,SH,NW,VF,SC,SP,LGT,MMP,IM,WM}.
+Surveyed ~30 representative files; ALL remaining `*(T*)(base+0xNN)` sites are disqualifiers:
+  - int-launder bases `*(int*)&x->extra + off` (dim2lift GroundBaddieState control+0xa8,
+    ccsharpclawpad/cclightfoot/cflevelcontrol placementData int-launder).
+  - camera-delta reads `*(f32*)(cam+0xc/0x10/0x14)` — `cam` is a bare runtime ptr, NO mapped
+    position struct (arwarwing, dim_tricky, dfptorch, wmsun ~20 sites). No recovery target.
+  - shared-prefix pad: DFSHLaserBeamConfig pad00[0x18] +0xC (ObjPlacement head 0x0-0x18 territory),
+    ObjAnimUpdateState pad58[0x6E-0x58] +0x58 (shared header, editing risks many DLLs).
+  - narrow-view: dfpobjcreator `*(s8*)(data+0x1e)` vs struct's `s16 unk1E` (lbz vs lha byte change).
+  - raw-int-base params with NO struct in file: sbpropeller `placement+0x1a`, dfpseqpoint
+    `init+0x1a..0x20` (placement struct exists but pad-only at those offsets, would need field adds).
+  - global raw-address bases (imanimspacecraft lbl_803AC948, mmpmoonrock gMoonRockSpawnParams) — not ptrs.
+  - macro-named byte-ptr array walk: dfptargetblock DFPTARGETBLOCK_POINT_OFFSET_* (induction stride).
+Deep subdirs already heavily processed: ~40 `struct recovery`/`field naming` commits in the
+prior 2-3 days across these exact clusters. No byte-neutral field-respell candidate remains.
+
+## LOW-BAND SWEEP Jul05 (88-94 main scope, 3 candidates, 0 wins — all coloring-welded)
+Report: only 3 non-excluded fns in [88,94) with size>=80 across all 854 main + dll units
+(project's low band is nearly exhausted). All 3 already touched by structural work in the
+prior 25h; each residual is a within-class #108 register-renumber cascade, no source lever:
+  - **modelLoad_calcSizes** (model.c) 93.53%: `total` accumulator colored r7 (current) vs
+    r6 (target); the r6/r7 split cascades through the entire size-summation tail (13 regions,
+    all pure reg-number). TRIED+REGRESSED: fold `sizes[3]+(sizes[4]+100)` then-branch
+    (93.53->91.78), rewrite else as `sizes[6]+sizes[1];+8;+(sizes[4]+100);+sizes[3]`
+    (->90.41), both together (->90.43). The unified then==else baseline expression is
+    strictly best; every attempt to match target's per-branch operand grouping flips the
+    phi-merge coloring the wrong way. BANKED baseline.
+  - **doPendingMapLoads** (shader.c) 93.37%: 3144-byte fn, pervasive whole-fn GPR renumber
+    (r28<->r29, r26<->r27, r21<->r23, r25<->r28, plus the working-copy mr chain for
+    cBase/aBase/eBase + bp2/ap2/cp2). TRIED: reorder base-ptr inits to target load order
+    eBase/aBase/cBase (93.37->93.36 flat — the mr-copy scramble is deeper than decl order).
+    BANKED.
+  - **gameTextInitFn_8001c794** (textrender.c) 93.38%: corner/edge texture unrolled j-loop.
+    Target keeps a `bdnz` ctr=2 group (2 unrolled j-bodies x2), current fully flattens.
+    Driven by `#pragma ppc_unroll_instructions_limit`. SWEPT limit 48..128: <=96 crashes to
+    74% (no unroll), 104..128 ALL give identical 93.376 (plateau — 2x-unroll shape already
+    achieved). Residual = within-body reg-number scramble (dst r12 vs r6) the limit can't
+    steer. The active 128 pragma + its explanatory comment are already correct/tuned. BANKED.
+
+## SUBDIR-DLL high-band (97-99.9%) triage (2026-07-05, Opus, fuzzy researcher) — 0 wins, band coloring-saturated
+Decoded private proto report; filtered fns 97.0-99.9% under src/main/dll/<CLUSTER>/
+(DR/DIM/SB/CC/WC/DF/IM/SH/LGT/NW/SC/ARW/...). 21 candidates. ndiff'd ALL. Result: the
+subdir high-band is dominated by whole-fn register allocation, same as the flat band.
+DOMINANT-DELTA CLASSES observed (all WELDED, no source lever):
+  - #108 GPR reg-perm cascades: dimlavasmash_setBlockSurfaceFlags (r27/r28 swap),
+    wcpressures_update (r6/r10 renumber + li-vs-mr zero-share), dfropenode_func0B (r7/r8),
+    nw_tricky_update (r27/r28 + induction-order), ktrex_update (r25-28 4-way),
+    controllight_update (r26/r28), arwbombcoll_update (r29/r31 obj/state), fn_802BB4B4.
+  - #82 FP reg-perm: dfropenode_func0E (f27/f31), DR_CloudRunner_stateHandler05 (f3/f4),
+    DIMwooddoor_updateShardAim (f31/f3 cascade -> ble/bge branch-dir follows the FP perm,
+    NOT a source-controllable fcmpo-operand swap), fn_802BCA10.
+  - saved-vs-scratch on s16 local: DIMSnowHorn1_update (angle-wrap s16 held in saved r30
+    reusing dead obj-reg vs target scratch r4) — welded #108.
+  - #110 const-share (RESISTANT): sc_totembond_update 99.79% — target `li r25,0; mr r26,r25`
+    (availableCount=orbIndex=0 CSE), current `li r25,0; li r26,0`. Source ALREADY chained
+    `availableCount = orbIndex = 0`; TRIED split `orbIndex=0; availableCount=orbIndex;` ->
+    copy-prop refolds to `li` (confirms MEMORY chained-init-folds note). +neutral @86 reloc.
+  - #70 reloc-naming (neutral) present on most: jumptable_/lbl_/gRope*Bias @NNN vs named.
+
+## CRACK ATTEMPTED (net-negative, reverted): dll_0261_drlasercannon aimAtTarget 97.66%
+Target emits DOUBLE extsh on the yaw/pitch angle locals: `yaw=getAngle()` ->
+`extsh r0,r3; extsh r28,r0`, and RE-extends before each `out->yaw`/`out->pitch` store
+(`extsh r4,r28; sth r4,20(r30)`). Current does SINGLE extsh + stores the saved reg direct
+(`sth r28,20(r30)`). Looked like an s16-retype miss but every clean-C variant REGRESSED:
+  - yaw+pitch `s16`         -> 95.87
+  - yaw `s16` only          -> 97.02
+  - `extern s16 getAngle`   -> 97.02 (mr, no cast)
+  - getAngle s16 + yaw/pitch s16 -> 95.72 (mr r28,r3, kills all extsh)
+  - `yaw=(s16)getAngle()`   -> 97.02 (single extsh, still short of the double)
+The target's double-extsh is an UN-optimizer artifact (two redundant sign-extends MWCC
+would normally fold) that clean C can't force under this unit's global pragma set; the
+re-extend-before-store means yaw/pitch live as WIDE int in the saved reg (r28) with each
+use narrowing — the exact opposite of any s16 retype. BANKED at baseline 97.66%.
+CONCLUSION: subdir high-band offers no more source-controllable cracks than the flat band;
+it is coloring-saturated. Build EXIT=0, 0 FAILED, tree clean (no C/H changes committed).
+
+## FLAT dll_80xxxxxx pool sweep (2026-07-05, Opus, flat-dll_80 97-99.5% specialist) — 0 wins, pool SATURATED
+Scope = flat address-named `dll_80xxxxxx*.c` units, high band. Private proto report ->
+decoded per-fn fuzzy (scratchpad/decode.py). The ENTIRE flat dll_80 pool has only 6
+imperfect fns (rest already 100%); all 6 in the 97.6-99.3% band, all WELDED. Triaged each
+with function_objdump + ndiff --classify + --context; no source-controllable dominant delta.
+  - **dll_80136a40/debugPrintDraw** 99.32%: 13 reg-perm regions. Target hoists
+    `debugPrintYpos`/`gDebugRectStartX` loads into saved r27/r31 (kept live across the
+    fn_80136E00 loop); current defers them. Pure #108 whole-fn coloring cascade. WELDED.
+  - **dll_80136a40/fn_80136E00** 99.10%: 55 reg-perm regions (pervasive char-register
+    r27 vs r30 base offset). The 4-byte color store block (lbz r4-r7 target vs r3-r6
+    current, gDebugTextColorR/G/B/A) is a coloring renumber, not source store-order. WELDED.
+  - **dll_80136a40/debugPrintfxy** 98.96%: the ONE mr-copy region = `ch`/`scan` both init
+    to `buf-1` (lines 880-881, spelled `(u8*)&buf[-1]` vs `(u8*)buf-1`). Target emits TWO
+    independent `addi rN,r1,115`; current coalesces (one addi + `mr`). Root = x0's saved-reg
+    home (r28 target vs r26 current). TRIED+FAILED: spell both `&buf[-1]` (STRONGER CSE ->
+    r0 + 2x mr, worse), swap init order scan-before-ch (different mr-copy, still off). Pure
+    x0-register-home #108. WELDED.
+  - **dll_801c0bf8/fn_801C0BF8** 98.63%: 3 regions, 1 real = `addi r23,r23,16` (short*
+    `vertex += 8`) placement. Target schedules it right after `sth 4(r23)` (before the i++
+    counter incr); current defers past `cmpwi r22,6`. Pure scheduler ordering of two
+    independent increments. TRIED+FAILED: `#pragma scheduling off`+reset (INERT). Other 2
+    regions = @87 pool-reloc (neutral). Scheduler WELD.
+  - **dll_80136a40/fn_80137DF8** 97.75%: 57 reg-perm regions. Pervasive whole-fn coloring. WELDED.
+  - **dll_80136a40/fn_80137A00** 97.60%: 5 regions. Target interposes `mr r26,r5` (grid
+    param save) BETWEEN `li r30,0` and the two `mulli ...,640` (row0=y*640, row1=(y+1)*640);
+    current does both multiplies first then the grid save. Cascades row0 -> r29 (current) vs
+    r27 (target). TRIED+FAILED: `#pragma scheduling off`+reset (INERT, mr not moved), swap
+    row0/row1 decl order (7 regions, worse), reorder inits row0-first (6 regions, worse).
+    Grid-save-placement #108 cascade, no source lever. WELDED.
+CONCLUSION: flat dll_80 high band is fully saturated — every residual is a within-class
+reg-perm coloring cascade or scheduler ordering artifact with no isolable source lever.
+No commits. Build clean (all edits Edit-reverted; only reconstruction-frontier-state.md modified).
+
+## Probe 2026-07-05 (semantic-recovery) — team still idle
+git log -40: ALL 40 commits authored by Zachary Canann; ZERO Jack Price-Burns.
+Jack HEAD still d3d7a168ff (sbshipmast, unchanged). No fresh struct-recovery vein.
+Cheap 0-win stop; no tree scan.
+
+## player.c fuzzy sweep (Jul05, Opus 4.8) — 0 wins, 3 tries, key CAUTION recorded
+Sole owner (last touch Zachary 3h prior). Triaged all 32 sub-100 player.c fns via
+proto report (all.py decoder = struct sub-3 float32, the RELIABLE one; the gap*sz
+`decode.py` disagrees — TRUST all.py before/after with the SAME decoder). Levers from
+this cycle applied; every candidate net-negative, all Edit-reverted, tree clean, build EXIT=0.
+
+CRITICAL FINDING — the `&= ~2LL` (long-long mask) srawi is LOAD-BEARING, do NOT remove:
+- fn_8029F108 (`*(int*)(in2+0x360) &= ~0x2LL`) and fn_8029E568 (`&= ~2LL`) both emit a
+  DEAD `srawi r0,r3,31` before `li r0,-3; and` (the 64-bit sign-extend of the loaded
+  field). The target ALSO... no — target has NO srawi. BUT changing `~2LL`->`~2`
+  removes the srawi AND triggers a saved-reg RENUMBER cascade (r3<->r4) that costs more:
+  fn_8029F108 99.7135->99.4556 REGRESS, fn_8029E568 99.6455->99.4254 REGRESS. The srawi
+  parks the loaded field in r3 so the `and` reuses it in-place matching target coloring;
+  free it and the allocator re-colors worse. Fewer ndiff instrs != higher fuzzy here.
+  KEEP the LL masks. (Same lesson: instr-count is NOT the fuzzy metric.)
+
+BANKED (no source lever, dominant residual classes):
+- playerDoHitDetection 98.19%: remaining = 4x lbzx-vs-(add;lbz 136/171) HitDesc weld
+  (target keeps base+idx*176 in saved reg + lbz@disp; ours r5+r0 lbzx) + @790/@361 bias
+  (#70). Tried hd->valsB reuse (REGRESS 98.19->97.66, target RECOMPUTES base for valsB
+  not reuse), scoped hd for flags&1 (INERT, still folds to lbzx). Coloring weld, banked.
+- fn_802ADE80 96.93%: FP f1/f2 clamp perm (#82) + @790/@361 u32->double bias (#70,
+  compiler-emitted not injectable) + f2/f3 timeDelta load-order.
+- fn_802A5384 98.51%: 57-region, @361 bias x-many (#70) + FP f0/f1 stfs perm + extsh
+  reposition COUPLED to the perm (not isolated #53).
+- fn_802A2EE0 98.78%: jumptable_80334BBC vs @3223 (#70 jumptable) + f2/f3 perm + fneg
+  reorder (all within-class).
+- fn_8029BDB4 98.19%: @790/@361x5 (#70) + FP perm + a const-sched weld (target li r0,-1
+  late for activeHitWindow=-1 store vs ours hoists li r4,-1). Tiny upside, high cascade risk.
+- fn_8029AF9C 99.64% / fn_8029A76C 99.42%: r0-detour (`li r27,0`+`addi r0,r3,0;mr r26,r0`
+  vs target `mr r27,rN`+`addi r26,r3,0`) — intrinsic named-saved-reg-ptr-from-param weld.
+- fn_802B1E5C 99.24%: jumptable_80334DA4 (#70) + f2/f3 clamp perm on a TERNARY
+  (sinkOffsetY=(r<clamp)?r:K) — prompt says ternary fcmpo-order is coupled, skip.
+- fn_802AA014 99.55%: pure r28/r29 saved-reg swap (#108).
+- fn_802A74A4 99.36%: jumptable_80334C60/94/CC0 (#70) + r26/r27 index-reg swap (#108).
+- fn_802A418C 98.75%: @6836 only (#70 pure).
+
+## FRESH-LEVER re-attack of banked caps (2026-07-05, Opus, fuzzy researcher) — 0 wins, all coloring-coupled
+Re-tested banked caps against this cycle's fresh levers (disp-fold-unweld, fcmpo-operand,
+address-add-order, #53 narrowing-store, type-correctness). Focused on the LIVE fcmpo-operand
+list (top-of-file) + the ObjSeq_ExecuteActionCommand #112 addressing cap. RESULT: every
+candidate is #82 FP-perm (whole-fn freg renumber) or #112 base-CSE-vs-rederive, NOT the
+isolated operand-swap that won dll_07_func06. All net-negative, Edit-reverted. Details:
+  - **objseq ObjSeq_ExecuteActionCommand 98.05** (#112 addressing): the census "+6 rederive"
+    is actually the TARGET re-deriving addresses the current build CSEs (base=lbl_80396918 in
+    r31, entry=base+idx*8 kept live). Fresh disp-fold-unweld / address-add-order applied to the
+    0xb/0xc branch store `*(s16*)(entry+0x3ca8)=val` -> rewrote as `base+slot*8+0x3ca8` and
+    `(base+slot*8)+0x3ca8`: BOTH regressed 98.05->97.98. MWCC emits `sthx` (indexed) not the
+    target's `add rX,base,idx; sth K(rX)` (rederive-into-GPR + const-disp) — that shape is an
+    SR/allocator artifact source can't force; typed-struct index would just re-CSE the base.
+    Confirms disp-fold-unweld only wins the INVERSE (multi-use base you want CSE'd, per SaveGame);
+    the rederive direction is welded. BANK.
+  - **objseq ObjSeq_RebuildCurveStateToFrame 97.61 + ObjSeq_update 98.49** (fcmpo #4/#5):
+    the lbl_803DEFB0 (0.0f) fade clamps at :1590/:1607/:2842/:2859 and the rate<lbl_803DEFC8
+    clamp at :1601/:2853 are the flagged swap sites. Reverse-relop `fade>0`->`0<fade` (:1590):
+    Rebuild 97.61->97.30 REGRESS. Reverse `rate<lbl_803DEFC8`->`lbl_803DEFC8>rate` (:2853):
+    Update 98.49->98.47 REGRESS. Both fns are pervasively FP+GPR-permed (r24/r25/r26/r27/r30
+    whole-fn transpose); the fcmpo text-swap is a symptom of that cascade, not isolable. BANK.
+  - **newclouds titleScreenDrawFn_80093db4 98.68** (fcmpo #1, "CLEANEST"): the two
+    `__fabs(v[i])>gNewCloudStarAxisThreshold` checks (:1300/:1325) show `fabs f2,f2;fcmpo f2,f0`
+    (T) vs `fabs f0,f1;fcmpo f0,f1` (C) — SAME comparison semantics, only the freg NUMBER differs
+    (v[0]->f2 tgt vs f1 cur), seeded by the v[0]/v[1] load-order into stack temps 8/12(r1).
+    Reverse-relop both `>`->`<`: 98.68->98.16 REGRESS (whole FP web flipped worse). Pure #82
+    FP-perm mislabeled as operand-swap by the text-pattern sweep. BANK.
+  - **trickyfollow trickyUpdateApproachSpeed 98.44** (fcmpo #3): entire fn freg-transposed
+    from line-20 const-load (f3 tgt / f2 cur) cascading through ~8 fcmpo; classic #82 coupled
+    FP-perm, no isolable swap. NOT edited (confirmed by objdump). BANK.
+LESSON: the fcmpo-operand lever wins ONLY when the swap is genuinely ISOLATED (no surrounding
+freg renumber) — a plain single-if clamp whose value/const already occupy the target's fregs and
+only the compare direction is wrong (dll_07_func06). When the whole fn's FP allocation is
+transposed (the common case), the fcmpo text-difference is a downstream symptom and reverse-relop
+cascades the web worse. The text-pattern sweep over-flags these. Build EXIT=0, 0 FAILED, tree clean.
+
+## fcmpo-operand (#81) RE-TRIAGE list AUDIT (2026-07-05, Opus, fuzzy specialist) — 0 wins, list is register-numbering (#82) NOT operand-position
+Assigned the "12 fresh fcmpo operand-swaps" from the LIVE re-triage (newclouds #1, objseq #4/#5,
+drearthwarrior/objhits/sky2/pauseMenu/viewfinder). AUDITED each by disassembling target vs current
+and counting/aligning fcmpo. FINDING: the re-triage MIS-CLASSIFIED these. In EVERY assigned target
+the fcmpo COUNT is identical target==current and the source is ALREADY value-left; the observed
+`fcmpo f0,f1` vs `fcmpo f1,f0` is FP register-RENUMBERING (f0<->f1 / f1<->f2 / f31<->f1), a downstream
+symptom of the surrounding whole-fn FP-coloring cascade — NOT the same-two-fregs operand REVERSAL that
+the #81 lever (dll_07_func06 wrap<phase) fixes.
+  - newclouds titleScreenDrawFn_80093db4 (98.68%): source ALREADY `__fabs(v[0]) > gNewCloudStarAxisThreshold`
+    (value-left). Real delta = v[0]/v[1] load-coloring (v0->f2/f1 swap) driving the fcmpo reg#, PLUS a
+    volatile-GXWGFifo store block where target hoists all 3 float->s16 fctiwz conversions BEFORE the 3
+    batched `sth` stores (current interleaves convert+store). if/else-if-gated (note says skip) + a
+    volatile-store-schedule artifact. No relop rewrite isolates it. NOT EDITED.
+  - objseq ObjSeq_update (98.49) / ObjSeq_RebuildCurveStateToFrame (97.61): source clamps ALREADY
+    value-left (`posOffsetScale<=lbl_803DEFB0`, `fade>...`, `fade<...`). fcmpo count 5==5 both fns; the
+    f0/f1 numbering differs between the two clamp sites, coupled to a pervasive stack-slot renumber
+    (24<->8, 20<->12, 12<->24) + extsb-reg webs + a getButtonsJustPressed bitfield-bool idiom diff
+    across the whole (huge) fn. Pure #82/slot cascade. NOT EDITED (also objseq is sibling-adjacent).
+  - drearthwarrior stateHandler02: clamps are ternary-max (`(ph<C)?C:(ph>D)?D:ph`) — note itself says
+    ternary regresses. value-left already. SKIP.
+  - objhits ObjHits_CheckSkeletonPair / sky2_run: fcmpo count equal; diffs are f0<->f1/f1<->f2/f31<->f1
+    renumber permutations buried in 32-44 region reg-perm. pauseMenuDrawStatus: 0 fcmpo (mis-listed).
+CONCLUSION: the #81 operand-position vein is EXHAUSTED — dll_07_func06 harvested the last genuinely
+const-left source. The re-triage text-pattern sweep flagged register-numbering `fcmpo` reversals as
+operand swaps; they are not source-drivable (source is already value-left; the reg# is allocator-chosen).
+This CONFIRMS the prior session's LESSON above. 0 source edits, 0 rebuilds, tree unchanged.
+
+## player.c fcmpo #81 re-triage sweep (Jul05, Opus) — ALL 6 MISFLAGGED, 0 wins
+Re-triage flagged fn_8029C9C8, fn_802A5384, fn_802A87CC(2), fn_802B1E5C,
+player_SeqFn, playerUpdate as carrying reversed-fcmpo (#81) swaps. VERDICT: none
+are true #81. Used `ndiff.py --fingerprint fcmpo` + `--context` to align every
+diverging fcmpo T-vs-C. In EVERY flagged compare the runtime VALUE is ALREADY the
+LEFT operand in both target AND current — the source operator order is correct.
+The residual is pure FP-register-COLORING (#82): value/const land in swapped reg
+NUMBERS (e.g. fn_802B1E5C `f3,f2`(T) vs `f2,f3`(C), player_SeqFn `f1,f0` vs `f0,f1`,
+playerUpdate `f3,f1` vs `f1,f3`), NOT a left/right operand exchange. fn_802A87CC's
+swaps cascade from a min-scan loop `fmr f4,f5;mr r0,r6`(T) vs `fmr f4,f6;mr r0,r5`(C)
+= #82+#108 renumber. EMPIRICAL PROOF: flipped fn_802B1E5C:11227
+`sinkOffsetY < lbl_803E7EA4` -> const-left `lbl_803E7EA4 > sinkOffsetY`: REGRESSED
+99.2375->98.9750 (reversed the already-correct value-left order). Reverted. The
+value-left lever WINS only where current is genuinely const-left; these were already
+value-left. No source lever. Baselines unchanged, no commit. Build all_source EXIT=0.
+Baselines: fn_8029C9C8 98.77, fn_802A5384 98.51, fn_802A87CC 97.20, fn_802B1E5C 99.24,
+player_SeqFn 99.08, playerUpdate 99.88.
+
+## Probe 2026-07-05 (semantic-recovery) — TEAM STILL IDLE
+git log -50: newest Jack Price-Burns commit = d3d7a168ff (dll_01EB sbshipmast),
+unchanged from baseline. All 48 commits newer than it authored by Zachary Canann
+(our own struct-recovery/coloring work). Zero fresh Jack .c units -> no new
+byte-neutral struct-recovery vein. Cheap 0-win STOP, no tree scan. Big-struct vein
+stays closed until Jack resumes.
+
+## STRUCT-RECOVERY re-sweep (2026-07-05, Opus) — 0 wins, un-mined DLL raw-cast candidates individually vetted
+Job (A): Jack Price-Burns newest = d3d7a168ff (dll_01EB sbshipmast) = baseline, no fresh units.
+Job (B): went past the cheap stop — ranked all un-mined src/main/dll/*.c by char* raw-cast count
+and vetted each top candidate against the GameObject/anim offset map (rot 0/2/4, localPos C/10/14,
+worldPos 18/1C/20, vel 24/28/2C, classId 44, seqId 46). EVERY remaining raw cast fell into a
+documented DISQUALIFIER bucket:
+- dll_0200_dll200 arg+0x8/0xC/0x10 = ObjPlacement shared-prefix posX/Y/Z (0x0-0x18 disqualified).
+- dll_0255_snowbike / dll_0251_ktrexfloorswitch: `found`/`curve` are void* results of
+  mapRomListFindItem/getById -> RomListItem/RomCurvePoint structs (+0x8/0x10 = curve XZ), NOT
+  GameObjects. LHS already typed (anim.localPos*); RHS correctly raw (foreign struct, void* base).
+- dll_000F_unk state/ctx/obj = BaddieState; all offsets (0x2bc,0x288,0x2b4,0x33c,0x334,0x338,0x340)
+  land in the header-documented per-family UNION / pad regions (baddie_state.h explicitly says
+  "keep RAW here"). Disqualified.
+- dll_01CA_dimexplosion state+0x14 = interior of the ExplosionState.flames[0x960] array member
+  (no named field at an array-interior offset).
+- dll_01D6_dll1d6 / dll_0200 params+0x18/0x1a/0x1c = raw spawn-extraction from an int* placement
+  arg with NO existing named Placement struct (struct-creation, not byte-neutral respell — out of
+  scope). params+0x18 -> anim.rotX = canonical spawn-rotation setup.
+- main-lib residue (shader.c lbl_803DCEA0/A8 shader-state block, track_dolphin `out` transform
+  struct +0x8..0x40, rcp_dolphin, newshadows cam+0x10, staffAction gStaffActionHitLightParams,
+  objprint_dolphin am/ModelAnim+0x18) = non-GameObject bases in bias-double/DAT_-reloc *_dolphin
+  territory, other agents' domain.
+VERDICT: the GameObject-anim / typed-Placement byte-neutral respell vein is SATURATED across the
+DLL cluster. NO commits made (quality-over-quantity; a non-neutral respell is worse than none).
+Future struct-recovery agents: do NOT re-scan un-mined dll/*.c for char* anim casts — the readable
+ones are typed; the rest are foreign-struct void*, shared-prefix, union-region, or array-interior.
+Vein reopens when Jack commits fresh units. Build untouched (no rebuilds needed, zero edits).
+
+## SEMANTIC-RECOVERY Jul05 — EnemyState.health (dll_00C9_enemy) COMMITTED f1bd4f26a0
+Renamed EnemyState.unk2FC -> health. Sole write in enemy_init (dll_00C9_enemy.c:1954):
+`state->health = placement.healthByte / lbl_803E257C` — the float HP derived from the
+per-placement health byte. Write-only in this TU (read side is via BaddieState overlay in
+a foreign unit), but source is unambiguous so name is justified, not invented. .o md5
+IDENTICAL 616559a3... (byte-neutral), all_source EXIT=0.
+LEFT OPAQUE (deliberately, per "wrong name worse than none"):
+- EnemyState unk2B0/2B2 (current/initial pair; fn_8014C5D0 returns unk2B0/unk2B2 ratio, but
+  source setup->unk32 is itself opaque so the quantity is unknown), unk2B4/2B6 (init -1 pair),
+  unk304/308/310/324/328/32C/330 (all zero-inited together at init, no read-side role in TU).
+- CrackAnimState (crackanim_state.h, dll_0117_appleontree): GENERATED overlay, init-only writes,
+  fields reused across phases via raw val+0xNN casts through a SEPARATE AppleOnTreeState overlay
+  of the same 0xB8 extra -> renaming CrackAnim fields wouldn't touch the raw accesses; murky.
+- AppleOnTreeState unk24 (dual-use: physics distance term at 290/295 AND render-scale multiplier
+  at 722/739/740 — no single role), unk40 (consistent physics coeff `m` in gravity math but
+  gravity-vs-time-vs-mass ambiguous), unk3C (gate-vs-increment muddled), unk5C/5E/60 (msg payload
+  block passed by ptr). InfopointState unk08/10/18 (all write-only in init, no read semantics).
+- crcloudrace unkF4/F8 (F8 read-only guard, F4 write-only set=1; one-time-init pattern but the
+  check-F8/set-F4 mismatch implies cross-unit coupling I don't own -> unsafe to name).
+CONFIRMED already-fully-named (no scalar unkNN work left): worldasteroids, dfplightni, crfueltank
+(byte-array pads only), windlift107state (multi-owner, skip). Zachary has done thorough naming
+passes on this cluster; residual unkNN are genuinely opaque write-only / cross-unit / GENERATED.
+
+## Semantic-recovery Jul05 — dll_0250_ktrex field naming (commit 355f999099)
+Unit-local KT Rex boss structs (KTRexRuntime / KTRexArenaState, both used only in
+DR/dll_0250_ktrex.c). Renamed usage-derived scalar unks; .o byte-identical
+(md5 ddf1c35f635d7bf7eba9206107556f48):
+  KTRexRuntime.unk2D0 -> playerObj  (= Obj_GetPlayerObject(), deref'd as player)
+  KTRexRuntime.unk2C0 -> playerDist (= sqrt of dp vector to player)
+  KTRexRuntime.unk294 -> laneSpeed  (lane traversal speed, into laneLerpT)
+  KTRexArenaState.unkFE -> currentLaneMask (rex lane, single-bit 1/2/4/8)
+  KTRexArenaState.unkFF -> activeLaneMask  (active-lane bitmask from 4 GameBits)
+LEFT OPAQUE (write-only or no derivable role): KTRexRuntime unk280/unk284 (both
+set to same z, fed to Matrix_TransformPoint; can't distinguish roles), unk3E8/unk3EC
+(oscillating effect magnitude+rate feeding fn_8003B5E0 — plausible but not certain),
+unk270/unk349/unk34C/unk34F/unk25F (opaque state bytes).
+SURVEYED + already-fully-named-or-opaque (no rename): DR/DRshackle (unk494/unk498
+write-only pair), LGT/lgtcontrollightrec (unk66/67/68/78 init-only writes),
+SH/dll_01AE_shlevelcontrol (unk10 write-only; teammate-hot recently), SH/dll_01B0
+shswapston (unk9 write-only toggle), WM/dll_0207_wmworm (unk0C write-only latch).
+Subdir cluster structs are largely through prior semantic passes; residual unks are
+overwhelmingly write-only init/latch fields with no derivable meaning.
+
+## Semantic-recovery sweep (flat-dll_80 + top-level main) — Jul05, NO-OP (0 renames)
+Swept flat `src/main/dll/dll_80*.c` (16 units) + top-level `src/main/*.c` (52 files)
+for unit-local structs with usage-derivable opaque fields. Result: no safe justifiable
+rename available.
+- Vast majority of `unkNN` refs are on SHARED `GameObject` (unkF4/unkF8/unkE9/unkEA/unkDC)
+  — multi-owner, out of scope. Same for model-domain `ModelFileHeader`/`ObjModelRenderOp`
+  (multi-owner + excluded model cluster).
+- Unit-local structs found, all no-signal:
+  - `SnowclawState.unk8`/`unk30` (snowclaw.c): write-only f32 (set to lbl_803E66xx
+    constants, NEVER read in-unit) — no consumption = no meaning.
+  - `TrickyImpressState.unk14/unk24/unk414/unk808` (dll_80136a40): only used in trivial
+    return-getters (fn_80138F78/84/90) — getter reveals nothing.
+  - `CharSpawn.unk2..unk7` (object.c): set to constants (0x18/0/1/4/0xff/0xff) then passed
+    to loadCharacter as s16* data. loadCharacter reads only bytes 5/6/7 (byte5 -> ff2 via
+    (&0x18)>>3 selector; byte6/7 -> f3c/f40 = byte<<3); bytes 2/3/4 unread there. Consumer
+    doesn't clarify source-field semantics; constants ambiguous. Left opaque.
+  - `DIMwooddoorUpdateFallingDebrisState.unk7` (dll_801b1d84): self-clearing one-shot flag
+    (`if(unk7)unk7=0`, never set nonzero in-unit). Visibly a flag but WHAT it flags is
+    unknowable from usage — wrong name worse than none, left opaque. unk1/unk2 unreferenced.
+
+## Probe 2026-07-05 — team resumption check
+Team still IDLE. `git log -50` all authored "Zachary Canann"; zero Jack Price-Burns
+commits newer than d3d7a168ff (sbshipmast not in last 50). No fresh Jack units ->
+no byte-neutral struct-recovery slack to harvest. Cheap 0-win, no tree scan. STOP.
+
+## Session 2026-07-05 (low-band 88-96 hunt, Opus 4.8) — 0 wins, 6 banked
+No source lever found in the 88-96 band this pass; all candidates are within-class
+coloring/spill/#70-reloc caps. Verified all-source build EXIT=0, zero FAILED, no
+sibling regression. All files restored to git-pristine baseline.
+- **model.c modelLoad_calcSizes 93.53%**: whole-fn accumulator-register cascade
+  (target keeps `total` in r6 throughout; current drifts r6->r7->r3). The
+  `(sizes[1]+8)+total` step: target materializes `sizes[1]+8` then adds; current
+  reassociates to `sizes[1]+total+8`. TRIED: `int hitPlusHeader=sizes[1]+8;` temp
+  -> REGRESSED 93.53->90.38 (temp forced a different coloring). Banked #108.
+- **dll_000A_expgfx expgfx_resetAllPools 95.29%**: the resource-clear loop stores 4
+  zeros. Target CSEs the loop-counter's init-zero (r27=0) via `mr r20..r25,r27`
+  (copies from one shared zero); current emits 4 separate `li r_,0`. TRIED:
+  chained-init `zeroResource=zeroId=...=0` -> over-folds to ONE reg (all `stw r23`)
+  REGRESSED 95.29->93.91. The 4-distinct-var baseline (4 regs, `li`) is structurally
+  closest; target's `mr`-from-counter-zero is a compiler CSE artifact, not injectable.
+- **dll_000A_expgfx expgfxGetSlot 94.49%**: pure temp-reg renumber (r9<->r10,
+  r11<->r12) through an unrolled 16-way scan loop. #108.
+- **newshadows.c fn_8006CB50 94.48%**: uses individual named externs
+  `Udchuff_803DEDAC/B0/B4/B8/BC` (offsets into the 8-float array symbol
+  `Udchuff_803DEDA0`, size 0x20). Target relocs as `Udchuff_803DEDA0+0xc..+0x1c`
+  (sda21 base+offset) vs current's separate `Udchuff_803DEDAC` phantom-symbol relocs
+  (SAME resolved addr, #70-neutral name diff). TRIED: `extern const f32
+  Udchuff_803DEDA0[8]` + index -> REGRESSED (broke sda21, MWCC emitted
+  `lis/addi/lfs 24(r3)` indexed loads instead of direct sda21). The `@803` anon double
+  vs `Vdchuff_803DEDC0+0x8` is the u32->double magic const (compiler-emitted, not
+  injectable). Rest is an FP-reg cascade (#82). Kept individual-symbol baseline.
+- **shader.c mapLoadUnloadObjects 95.57%**: whole-fn GPR scramble (r23<->r24,
+  r21<->r25, r22<->r26). The `base+(0x83A8+id*4)` addressing: target splits
+  0x83A8 into addis(+0x10000)+lwz-disp(-0x7C58) with BASE in the addis; current puts
+  the id*4 OFFSET in the addis. TRIED: `(base+0x83A8)+id*4` -> worse (lwzx indexed).
+  TRIED: `((void**)(base+0x83A8))[id]` array form -> fixed addis operand but shifted
+  slwi-order+add-operand coloring, net REGRESSED 95.57->94.71. #108/#66 cap.
+- **shader.c doPendingMapLoads 93.37%**: 3 base pointers (eBase 0x41E0, aBase 0x41F4,
+  cBase 0x41CC) setup. Target materializes order eBase,aBase,cBase; current (source
+  order) cBase,aBase,eBase. TRIED: reorder init to eBase,aBase,cBase -> doPendingMapLoads
+  INERT (93.37->93.36) AND regressed sibling mapLoadUnloadObjects 95.57->95.07. Reverted.
+  Whole-fn #108 scramble on a 954-instr fn.
+- **render.c fn_80007F78 94.03%**: 2212-byte dense 64-bit (long long) bit-unpack.
+  Root = target uses `_savegpr_15` (17 saved regs) vs current `_savegpr_14` (18, one
+  MORE); current keeps a 64-bit sign-hi live in a reg that target spills
+  (`srawi r0,X,31; stw r0,40(r1)`). Spill-vs-keep cascade, #67. Not triaged for a lever.
+
+## Semantic-recovery (dll_00D0-02FF, higher range) — Jul05
+- dll_0117_appleontree AppleOnTreeState.unk40 -> gravity (commit afc31fcef6).
+  It is the accel coefficient in every ballistic quadratic solve
+  (g=C*m, q=sqrt(v0^2 - g*dropHeight), roots (-v +/- q)/(C*m)) in
+  fn_8017DCD4/fn_8017DF34 + launch handler. .o md5 IDENTICAL (130c03b1...).
+- SURVEYED + LEFT OPAQUE (write-only/init-only/unused overlays, no source lever):
+  AppleOnTreeState.unk3C (added to gravity but also =velY, ambiguous),
+  unk24/unk5C/5E/60 (write-only/msg-payload); CfperchState.unk0/unk2
+  (packed (unk2<<16)|(u16)unk0 carry msg payload, axis unclear), unk1F
+  (write-only from def); FireballState.unk4/8/C (declared-unused),
+  unk40/42 (write-only random); DrakorHoverpadState.unk118/11C/120/170
+  (init-only) + parallel shadow overlays unkD8/E0/E4 (unused);
+  DbstealerwormPlacement unk4-7/1A-20 (unused placement padding);
+  SnowBikeMountState/SetTypeState unk414 (0.0-reset display ratio, no
+  accumulator in-unit) / unk3D3 (write-only latch); unk420 aliases the
+  MULTI-OWNER shared SnowBikeState (skipped per one-owner rule).
+
+## SESSION Jul05 (post-45-commit recompile) — frontier re-triage, 0 wins / 13 tries (all welded)
+Re-scanned 343 -O4,p main fns in 96-99.9% band via private proto report + custom
+normalized-diff triage (`/tmp/fdiff.py`, `/tmp/triage.py` classify REGPERM vs REAL diffs).
+Confirmed the prompt's thesis empirically: EVERY "isolated" single-instr delta at this band
+is a register-coloring / MWCC-internal-ordering symptom, not a source-controllable lever.
+NOTE: `tools/function_objdump.py` is STALE for current objdiff.json (units have
+target_path/base_path, no `object` field) — wrote `/tmp/fdiff.py` (reads target_path/base_path,
+normalizes branch-target addrs + strips reloc comments) as the working diff tool.
+
+BANKED (13, no lever — each tried + reverted, baseline confirmed):
+- dll_01BB_sctotembond/sc_totembond_update 99.79%: `li r25,0;li r26,0` vs target
+  `li;mr r26,r25` — chained-init `availableCount=orbIndex=0` copy-prop REFOLD (same
+  class as saveSelect). Swapping chain order made ordering worse. O4 refolds the mr->li.
+- dll_0000_gameui/pauseMenuFn_8012b77c 99.84%: FP clamp `(v<K)?K:v` gives `bge;fmr f0,f1`
+  (compact) vs target `ble;b;fmr f1,f0` (island). `<=` gives cror+bne (WORSE, extra instr);
+  `(v>K)?v:K` gives the ble BUT compacts fmr direction + drops the b-island -> REGRESSED
+  99.84->99.09. if-stmt form = cror again. Clamp fmr-direction welded to the b-island form.
+- modellight/modelLightStruct_selectBrightestAabbLights 99.79%: SAME clamp bge/ble+fmr
+  welded pattern as pauseMenu. Not individually retried (identical class).
+- gametext/gameTextFn_8001628c 99.59%: target reads font->entries(@4) BEFORE font->count(@12);
+  swapping the two decl/init lines DID fix load order (REGPERM after) BUT triggered r6<->r7
+  base-reg coloring to spread -> REGRESSED 99.59->99.49. Load-order welded to base coloring.
+- shader/mapGetRomListAndOffsets 99.24%: target `mulli r7,i,7; slwi r31,r7,2` (2-op *28)
+  vs mine `mulli r31,i,28` (folded). `(p1*7)<<2`, named `row` intermediate, and int-array
+  `((int*)base)[row]` ALL still fold to mulli-28 (fuzzy NEUTRAL). MWCC always folds 7*4->28.
+- tricky/fearTestMeterDraw 99.9%(REAL=2): `int half=gGlobal;` forces the u8 load BEFORE the
+  hudDrawRect arg block; target loads it late (after MarkerX+320, kept in r5, CSE'd both args).
+  noschedule unit -> decl-init forces early load. `mx` temp REGRESSED(REAL7); inline-both
+  REGRESSED(REAL4, loads twice). Welded to decl semantics.
+- dll_02BB_gflevelcon/fn_8023A3E4 99.x%: target loads hp[0xAE] ONCE (r3 reused for cmplwi
+  AND `addi r0,r3,-1` decrement); mine reloads. `u8 hpv`=+clrlwi(REGRESS); `int hpv`=cmpwi
+  not cmplwi + `add r3/r4` base-reg swap(REGRESS). CSE-local perturbs base coloring > reload cost.
+- dll_02B1_cmbsrc/cmbsrc_init 99.45%: arg0 `state->light`(lwz r3) emitted BEFORE index mulli's;
+  target emits it AFTER (last). Splitting c0/c1/c2 assigns out of the setDiffuseColor arg
+  REGRESSED(REAL15). noschedule arg-eval-order internal, not source-liftable.
+- dll_014C_babycloudrunner/sandworm_turnTowardTargetAnim 99.x%(REAL=1): spurious `extsh r0,r0`
+  before `sth` on `*(s16*)a += (shifted>>=3)`. Splitting the `>>=` from `+=` (either single
+  or double deref) REGRESSED(REAL15) — the inline compound form is what keeps `shifted`(r4)
+  live for the later `(s16)shifted` compare; the extsh is welded to that live-range.
+- dll_0013_waterfx/fn_80095164 99.x%(REAL=2): `fmuls f2,f1,f0` vs target `f2,f0,f1` on
+  `(ph+a)*h`. Source operand-swap `h*(ph+a)` INERT — MWCC canonicalizes commutative-mul
+  operands by reg-alloc, not source order (#82). +arg-eval `addi r3,r1,8` reorder also welded.
+- dll_801c0bf8/fn_801C0BF8 99.x%(REAL=2): dual-induction `i++`(r22) emitted before
+  `vertex+=8`(r23+=16); target reverses. Moving `i++` into loop body after `vertex+=8` INERT
+  — MWCC orders induction increments by its own heuristic (matches tree_updateAmbientEffects).
+- gameloop/removeButtonObject 98.09%: target `srwi r0,r3,3; cmplwi r0,0` (unfused) vs mine
+  `srwi.` (dot-merged), from an inlined array-shift copy. Fn has explicit `#pragma peephole on`
+  (line 1244); switching to `off` REGRESSED HARD (REAL22 — unfuses everything + reschedules).
+  Target is peephole-ON everywhere EXCEPT this one inline-copy DW-count spot; not liftable.
+- dll_00D9_pollen/fn_8016A660 99.77%: `beq`(fold) vs target `bne;b`(island) empty-then branch
+  polarity — the resistant #imicemountain/ObjGroup_AddObject peephole-fold class. Not retried.
+TOOLING NOTE: a linter/formatter in this env reformats .c files on edit (saw cmbsrc
+`fullRadius` inlined spontaneously). `cp`-restore can be clobbered by it; restore unintended
+linter edits with `git show HEAD:<f> > <f>` (read+write, NOT git checkout) and rebuild.
+
+## SEMANTIC-RECOVERY pad-split re-sweep (2026-07-05 16:2x, Opus) — 0 wins, vein CONFIRMED EXHAUSTED
+Independent double-pass (2 search agents + manual spot-checks) over the pad-split-to-define-a-NEW-field
+vein: (A) ranked all src/main/dll/*.c by raw offset-cast count `*(T*)(base+0xNN)`; (B) cross-referenced
+16 headers still carrying `u8 padNN[0xEND-0xSTART]`/`unkNN[]` runs (crackanim, dimicewall, pushcart97,
+mcstaffeffe, backpack, shopkeeper, cnthitobjec, sidekickball, paymentkiosk, dfptargetblock, cfperch,
+treasurechest, mmshshrine, earthwalker, dll199, cntcounter) against their .c readers.
+FINDING: EVERY remaining raw offset-cast is DISQUALIFIED. Recurring disqualifier taxonomy:
+  1. SHARED BaddieState prefix/union — the dominant baddie cluster (firecrawler FCVars, wispbaddie,
+     seqobj11d/e, newseqobj, magicplant, fall_ladders, dll_000F, icebaddie, enemy). Offsets like 0x308
+     are named `unk308` in the SHARED baddie_state.h (13+ files touch it) — respell target is
+     `((BaddieState*)state)->unk308` (cast-respell vs existing shared field = sibling's job), NOT a
+     private pad-split (would be per-unit narrow view of a shared wider field).
+  2. ALREADY-NAMED SoA/scalar — ShieldState (segScale/segAlpha/segPhase/segSeed arrays @0x14/24/34/3c),
+     CfperchState, EcshCupState, DllF7State byteB: all raw casts hit fields already recovered.
+  3. INT-LAUNDER base — `int state=*(int*)&extra; *(T*)(state+off)` (ecshcup L305, appleontree val,
+     treasurechest params, dll199 queue). `register int` bare-int bases.
+  4. SHARED placement/def/params — ObjPlacement/def (`+0x18/19/1a/1c/1e/20`) on `u8*`/bare-int bases
+     (scarab, dll_00F7, dimicewall, mmshshrine, earthwalker setup, staff staticCamera). ObjPlacement is
+     hundreds-of-files-shared; splitting its pad = high-collision hazard, not single-owner.
+  5. GameObject-core / vtable — `obj+0x37` (alpha), `+0x68` (vtable ptr), `->extra+0xNNN` opaque.
+  6. INDEX-SCALED — `state+k*4`, `base+i*stride`, `state+0x98+i*2` (shield r, trickyfollow, effect9 work0/1).
+  7. OPAQUE engine types — texscroll2 material (comment: "no struct defined"), cmenu renderOp/model/rec,
+     boneparticleeffect src[] (Jack-owned), camera view slots.
+VERDICT: pad-SPLIT-to-create-field vein is MINED OUT for the current accessible non-collision scope,
+consistent with the 2026-07-05 setup-buffer pad-split pass (line ~3749) that also closed 0-win. The
+un-named `pad`/`unk` runs that remain have NO in-source typed-pointer reader/writer landing in them —
+nothing to hang a byte-neutral name on. No file touched; no commit.
+
+## 2026-07-05 CAMERA-CLUSTER fuzzy sweep (Opus 4.8, 0 wins — all banked-class, no source lever)
+Triaged ALL 10 camera-cluster fns below 100% via private proto report (decoded fuzzy = unit
+field4 -> ReportFunction sub-3 f32-LE). Every candidate is a within-class register perm or
+frame/CSE cascade — no isolated fresh-lever (fcmpo-value-left / #53 narrow-store / type-corr /
+#81 clamp) present. NONE of the clamps are const-left in SOURCE (all already value-left or int
+short-clamps that match). No file touched, no commit. Ranked + verdicts:
+  - dll_0045_camTalk/CameraModeBike_update 98.18%: frame 272 vs 240 (#67 conversion-temp
+    slots from the many `(f32)(s32)` rotVal casts) + #84 arg-hoist at 0x10c (addi-before-lfs).
+    Both banked-resistant. Dominant delta = whole-fn stack-offset cascade from frame delta.
+  - dll_004A_cameramodeshipbattle/CameraModeShipBattle_update 98.76%: #82 FP-perm — the
+    `(f32)(s32)` u32->double conversion temp lands f3(target) vs f2(current); cascades whole
+    fn. Also one operand-eval swap (lfs const-before-deref) embedded in the cascade. opt_common_subs
+    already off. No lever.
+  - dll_0044_cameramodeviewfinder/CameraModeViewfinder_update 98.83%: pure obj/state r30<->r31
+    #130 coloring swap (obj param -> r30 target vs r31 current) cascading + tail FP f2/f3 perm.
+  - dll_004E_cameramodeworldmap/CameraModeWorldMap_update 98.90%: dominant #82 FP renumber
+    (f28<->f29, f4/f5/f6 perms). Two ISOLATED non-FP deltas: (a) `lwz r3,184(r3)` extra->deref
+    hoisted BEFORE `li r0,0` const (src line 172/325 `mk=(u8*)(*(int*)&(...)->extra+0x27d);*mk=0`)
+    — instruction-SELECTION const-hoist, NOT scheduler (fn already under `scheduling off`+
+    `opt_common_subs off`+`opt_propagation off`, hoist persists) = no source lever; (b) one extra
+    `lwz r3,0(0)` global reload (CSE miss, forced by opt_common_subs off). Both consequences of
+    the deliberate pragma tune. No lever.
+  - camshipbattle5c/fn_8010AC48 99.07%: pure #82 FP-perm (f25<->f26, f27<->f30) byte-identical seq.
+  - cutcam/camMoveFn_80104040 99.08%: pure #82 FP-perm (f26/f27/f30/f31 renumber) + FP-const
+    decl-order (lfs f31 vs lfd f26 first) that just reshuffles the same cascade.
+  - camera/Camera_UpdateProjection 98.09% (core camera.c, not dll): pure #108 GPR renumber
+    (r4<->r5) byte-identical ops.
+  - dll_0042_unk/camstatic_update 99.00%: pure #130 obj/state r30<->r31 swap (obj->r31 target
+    vs r30 current) whole-fn cascade — the confirmed-resistant flat-dll obj/state pattern.
+  - dll_0042_unk/camslide_update 99.25%: #82 FP-perm (f0/f2, f4/f5) + one `frsp;stfs` vs
+    `stfs;frsp` store/narrow reorder at +0x518 (a bl-returns-double stored to f32 local) — the
+    MEMORY-noted store/narrow-swap-is-net-wash class. No lever.
+  - dll_0056_cameramodearwing/CameraModeArwing_update 99.80%: already MEMORY-banked #82 FP-perm.
+VERDICT: camera cluster is fuzzy-saturated at the within-class register-allocation / frame-size
+floor. The FP-heavy clamps that looked like fcmpo-value-left candidates are all already value-left
+in source (target's fcmpo reversals are #82 reg-numbering, not source operand order). No commit.
+
+## Jul05 — function_objdump.py VERIFY + effect/particle fuzzy hunt (no commit)
+PART 1 — TOOL IS NOT BROKEN. `tools/function_objdump.py <unit> <symbol> [--diff]` works. Prior
+agent's "Unit not found / stale" report was a transient mis-read: the tool reads
+`build/GSAE01/config.json` (which STILL carries the `object` field per unit), NOT the root
+`objdiff.json` (which is the one that switched to target_path/base_path with no `object`). Tested
+`dll_0117_appleontree.c appleontree_init`, `dll_000A_expgfx.c expgfx_onMapSetup/updateActivePools`,
+`partfx` unit resolution — all resolve + dump target+current + produce diff. LEFT THE TOOL ALONE
+per PART-2b. (If a future config migration drops `object` from config.json, THEN port
+target_path/base_path resolution as a fallback — not needed today.)
+
+PART 2 — EFFECT/PARTICLE fuzzy hunt, cluster fully surveyed, ZERO fresh levers, NO commit.
+Candidates 96-99.9% (proto report via tools/fnfz.py): expgfx_onMapSetup 96.39, expgfx_resetAllPools
+95.29, expgfx_initialise 95.90, expgfx_updateActivePools 97.33, expgfx_updateSourceFrameFlags 98.15,
+expgfx_free 98.62, expgfxRemove 99.46, partfx_spawnObject 99.60, boneParticleEffect_update 99.26
+(Jack's file — skipped). Every one is one of TWO documented-resistant classes:
+  - **r0-detour** (named .data symbol addr -> saved reg that survives a call): target `addi r30,r3,0`
+    DIRECT vs mine `addi r0,r3,0; mr r30,r0`. expgfx_onMapSetup shows 3x (gExpgfxRuntimeData,
+    gExpgfxStaticPoolSlotTypeIds/FrameFlags) + a `mr r29,r31`-vs-`li r29,0` CSE-of-zero. MEMORY
+    already banks this as INTRINSIC (launder/peephole-off/opt2/un-name all inert/regress).
+  - **within-class GPR renumber #108**: expgfxRemove (r28<->r30), expgfx_free (6-way), 
+    updateSourceFrameFlags (62v62, r9-r12 renumber + 1 loop-incr reorder), updateActivePools
+    (2312-instr MONSTER cascade: r15<->r17, r16<->r18, r26/27/28 shuffle, whole-frame stack-offset
+    +N shift; already MEMORY-noted 9252B #67d/#108, previously improved via #74 XOR-toggle 192bed769d).
+  ONE genuine correctness signal spotted but NOT actionable: updateActivePools lines 766-767
+  `gExpgfxPhaseAngleA/B += (int)(const*timeDelta)` (u16 globals) — current emits redundant
+  `lhz; add; clrlwi r0,r0,16; sth` vs target `lhz; add; sth` (store truncates, mask is dead). Real
+  2-instr miss BUT buried in the cascade-dominated 2312-instr fn; a source rewrite risks perturbing
+  the dominant reg-allocation cascade with no reliable net gain (twice-measure discipline => hold).
+VERDICT: effect/particle cluster is fuzzy-saturated at the r0-detour + within-class-#108 floor,
+same as the camera/flat-dll clusters. No source lever, no commit. Baseline build untouched.
+(Note: pre-existing unrelated WIP in dll_0000_gameui.c drawWorldMapHud `n = t + n` was already in
+the tree at session start — NOT mine, left untouched, not my owner file.)
+
+## Numbered-dll high-band depth scan (Opus, Jul05 — 0 commits, all resistant classes)
+Focused fresh-lever hunt on top-level `src/main/dll/dll_0*.c` 97-99.9%. Triaged ~25 fns via
+`ndiff.py --classify` region tags; deep-dived 8. Every crack bottomed out in a documented
+resistant class. NO fuzzy-% gain found; tree left at baseline, all edits byte-wise reverted.
+CRACKS ATTEMPTED (before->after, all reverted):
+  - dll_02B1_cmbsrc/cmbsrc_updateVisuals 99.86%: real fmuls-association diff at
+    `fullRadius - (radiusScaled=radius*K)` (lines 283-288). Target keeps radius live in one
+    FP reg, does BOTH mults from it (radiusScaled first, fullRadius second). Splitting
+    `radiusScaled` to its own prior stmt (radiusScaled-first) FIXED the structure (9->matched
+    fmuls order) but introduced a coupled FP reg-perm (radius->f2 vs f1) -> 99.861 net WASH.
+    Inlining fullRadius instead REGRESSED (fused fmsubs/fmadds). Association-vs-coloring trade.
+  - dll_0069_dll69func0/dll_69_func03 99.31%: li-const store-order region = `buf.v3c=0; buf.v40=1`
+    (lines 181-2). Target stores offset 72(v40)=1 BEFORE 68(v3c)=0; source order is reversed.
+    Swapping the two source lines ELIMINATED the li-const region entirely, but the coupled
+    r0/r3 reg-perm cascade absorbed it -> 99.311 exact WASH. Store-order fix is real but
+    register-neutral net.
+  - dll_00E5_shield/shield_update 99.48% T=223 C=224: current has 1 EXTRA `mr r31,r0` — the
+    MEMORY r0-detour on a NAMED saved-reg pointer init (`f32* tbl=lbl_80320A28`). Target does
+    direct `addi r31,r3,0`. Decl-reorder (state-first) REGRESSED 5->28 regions. Confirmed the
+    MEMORY-noted resistant named-saved-reg-ptr-init detour.
+  - dll_0272_hightop/hightop_stateHandler04 99.63%: the abs(dy) ternary at lines 922/926 uses a
+    deliberate `*(f32*)&lbl` launder to keep the two computations DISTINCT — TARGET recomputes
+    abs (T=345), does NOT CSE. Hoisting to a shared `ady` local dropped to C=337 (removed the
+    recompute) = REGRESSED 99.79->99.626. The launder is correct; leave it.
+  - dll_00FF_magicgem/magicgem_update 99.77%: branch-over-branch `beq;b`(target) vs `bne`(current)
+    on the `flags27A & 0x40` test (line 270 `&&`). Nesting the two `&&` clauses as separate ifs
+    did NOT change the fold (peephole-resistant island). Confirmed empty-then/branch-fold cap.
+BANKED as resistant (triaged, no lever): dll_0041_warpstoneui/fn_801343CC (#108 r25/r26/r28 perm),
+dll_003D_titlemenuitem/TitleMenuItem_update (li-const arg-hoist + #70 u32->dbl bias const named-vs-anon),
+dll_0158_gunpowderbarrel/gunpowderbarrel_triggerExplosion (def-load hoist -> r26/r29 coloring cascade),
+dll_0013_waterfx/fn_80095164 (8x #70 sdata2 named-vs-anon NEUTRAL + fmuls #82),
+dll_016A_crrockfall/crrockfall_update (lfd 0x43300000 bias-double named-vs-anon NEUTRAL),
+dll_0117_appleontree/appleontree_update (loop-ctr `li r27,0` vs `mr r28,r3` copy-prop of shared 0 + reg-perm),
+dll_0045_camTalk/CameraModeBike_update (#67 frame-size + stack-local `addi r3,r1,44` delta).
+VERDICT: numbered-dll 97-99.9% band is saturated at the within-class coloring / #70-bias-const /
+#67-frame / peephole-fold floor. The genuine structural cracks (cmbsrc fmuls-order, dll_69 store-order)
+are all register-neutral net washes — the fix trades an instr-shape region for an equal-cost coloring
+region. Confirms MEMORY's flat-dll findings. No source lever landed.
+
+## 2026-07-05 probe — team idle
+Jack HEAD still d3d7a168ff (dll_01EB sbshipmast). No fresh non-Zachary commits. No scan. 0-win.
+
+## 2026-07-05 WEAPON/PROJECTILE cluster fresh-lever hunt (Opus 4.8)
+1 WIN committed:
+- **dll_024D bossdrakor_updateHeadTracking** 98.05->98.13 (c325da3395): inlined the
+  `v = (s16)-neck[0]` assignment INTO the ternary head `step = ((v = (s16)-neck[0]) < -lim)...`.
+  Killed an extra `mr r0,r4` copy in the step-clamp (region 7->6). Remaining residual = pure
+  #108 reg-perm (v in r0 vs r4, framesThisStep<<8 limit reg) + #70 named-vs-@reloc. No sibling regress.
+
+Triaged (banked, no source lever found — all coloring symptoms):
+- **dll_0261 drlasercannon_aimAtTarget** 97.66: dominated by s16-store extsh coloring cascade
+  (out->yaw/pitch @20/@68) + double-extsh at entry. `s16 pitch` REGRESSED 97.66->96.51. #108/#53-coupled.
+- **dll_024D bossdrakor_update** 97.72: state(76/184(obj))->r28/r30 swap #130 + FP-perm (t-clamp
+  fcmpo f1/f3 #82) + arg-sched (mr r3,r29;addi r4,r31,40 hoist). Big fn, state-swap dominant.
+- **dll_0158 gunpowderbarrel** triggerExplosion 98.64 (def loop-invariant r26 vs r29 #108 renumber,
+  T=C instr count), update 98.71 (uniform state r29<->r31 #130 swap), launchAtTarget 99.15 (state
+  r26/r30 swap #130). All pure renumber.
+- **dll_00D3 staffAction fn_801659B8** 98.81: obj/params r29<->r30 two-param staging swap. Reordering
+  state-init vs params-write REGRESSED 98.81->94.74. Banked param-swap.
+- **dll_00E2 staff_setupSwipe** 98.74: swipe(r4)/44(r3) r28<->r31 two-value #108 swap.
+- **dll_0178 dfsh_shrine_update** 99.32: ONLY real diff = r0-detour on obj param staging
+  (`addi r0,r3,0; mr r31,r0` vs target `addi r31,r3,0`, +1 mr); rest #70 pool-relocs. obj-decl-first
+  REGRESSED 99.32->98.20. Confirms MEMORY: r0-detour on named-saved-reg ptr init is INERT/resistant.
+- **dll_0271 drakorhoverpad_updateMain** 99.84: absH/absV two-fabs #82 FP-transposition (absH->f2/absV->f3
+  target vs f3/f2 current). decl-swap INERT (ephemeral temps), compare-reverse `lbl+absH<absV` REGRESSED
+  99.84->98.26 (value-left `absV>x` is correct). Banked #82.
+
+Cluster verdict: weapon/projectile 96-99.9% residuals are near-uniformly #130 state-coloring swaps,
+#108 saved-reg renumbers, and #82 FP-transpositions — the confirmed-resistant classes. 1 genuine
+inline-assign crack landed. all_source EXIT=0, 0 FAILED.
