@@ -4681,3 +4681,218 @@ target register to be OTHERWISE-DEAD, not a shared saved-reg home.
   __cvt_fp2unsigned/fctiwz conversion casts (all present on BOTH sides = reg-perm only).
   cmpwi/cmplwi width scan found ONLY the two RomCurve fns above. The correctness-import-bug
   vein is essentially exhausted in current repo state; residuals are coloring/scheduling.
+
+## Probe 2026-07-05 (semantic-recovery, team-resume check) — TEAM STILL IDLE
+Cheap probe, no tree scan. Newest genuine TEAM commit (Jack Price-Burns) = `d3d7a168ff`
+(sbshipmast, 3h ago) — UNCHANGED from the idle baseline. All 46 commits in
+`d3d7a168ff..HEAD` are our own "Zachary Canann"/Claude sessions (struct-recovery +
+matching wins). No fresh team .c units → no new byte-neutral struct slack. Stopped per
+method step 2. 0 wins expected/correct.
+
+## Micro-lever sweep (#31 struct-copy / #74 mask-clear / u32*-cast-srawi) — 2026-07-05 14:44
+Swept LEVER1 (struct-typedef-copy), LEVER2 (andi->rlwinm mask-clear), LEVER3
+(u32*-cast drops spurious srawi/extsw before a bitwise op) across the full 85-99%
+dll+main corpus (168 fns). Detected purely at asm level (objdump target-vs-current
+per-opcode count diffs), not by grep guesswork.
+
+LEVER1 struct-copy: EXHAUSTED. Scanned every dll+main target obj for the MWCC
+inline-block-copy signature (`stwu`/`lwzu`+`bdnz`). Only 2 target objs emit it:
+drcloudcage.o (fn_801E9C00) and modellight.o — and CURRENT builds ALREADY emit the
+identical block-copy in both (drcloudcage residual 99.815% is a downstream `sth`
+coloring r7-vs-r9, not the copy; modellight already won). ZERO un-applied targets.
+
+LEVER2 mask-clear: EXHAUSTED. NO non-100 unit has an `andi.`/`andis.` count exceeding
+its target's. Source literal-mask sites checked (dll_000F, tricky flags2DC 0xf7efffff,
+skeetla stateFlags 0xef2fffff, gameui 0xfff0fff7, shader renderFlags 0x82008,
+ktrex phaseFlags 0x1800LL) are ALL either already 100% or genuinely non-contiguous /
+keep-masks that REQUIRE the literal AND (rlwinm can't express them) — no `~KLL` lever.
+
+LEVER3 u32*-cast-srawi: 1 real hit, COUPLED-REVERT. `dll_00C4_tricky/Tricky_update`
+(99.144%, 8672B) had 2 EXTRA `srawi rN,rN,31` vs target — dead sign-words before a
+`&= ~0x400` clear at the `*(s32*)&stateFlags &= ~(u64)0x400` sites (lines 1306/1323).
+Casting to `*(u32*)&...&= ~0x400u` (or `s32*`+plain `~0x400`) DID drop both dead srawi
+(src srawi 5->3, matching target's 3; the `lwz;li -1025;and;stw` region became
+byte-perfect). BUT overall fuzzy REGRESSED 99.144->99.084 both spellings: the cast
+perturbed saved-reg coloring across the 8672B fn, net-losing >2 instrs elsewhere. The
+target has FOUR clean `lwz;li -1025;and` sites (no srawi) yet the baseline's dead-srawi
+form colors globally better. Genuine coupled trade — Edit-reverted to baseline
+(srawi restored to 5, git clean). BANKED, no source lever.
+
+Net: 0 clean wins. All three levers confirmed exhausted at asm-verification level;
+the corpus has already absorbed every straightforward instance. build EXIT=0, no
+commits, tree clean (only this log + pre-existing sky.c/memory noise untouched).
+
+## Jul05 — INTEGER-TYPE-WIDTH sweep (cmpwi<->cmplwi / lha<->lhz same-site): EXHAUSTED, 0 wins
+
+Extended the RomCurve win (dll_0014 `int nextCurve`->`u32` cmpwi->cmplwi). Built a
+same-site width-swap scanner (scratchpad scan4/scan5): objdump target vs src .o per fn,
+register-masked diff, flag ANY diff region where target/current differ ONLY in compare
+width (cmpwi/cmplwi/cmpw/cmplw) or load width (lha/lhz/lwz/lbz) with identical operands.
+
+Swept ALL 492 non-autogen fns in [96,99.99) + 40 fns in [88,96), excluding audio/
+*_dolphin/player.c. RESULT: the ONLY same-site width swap anywhere is
+`audio/hw_dspctrl.c salBuildCommandList` (6 cmpwi<->cmplwi sites) — BANNED (audio/noopt).
+ZERO winnable same-site type-width swaps outside the audio units.
+
+The multiset scan (scan2) found ~24 fns with a cmp/load COUNT delta, but every one is a
+CSE/reload or coloring-cascade artifact, NOT a mis-declared type:
+  - gameloop removeButtonObject 98.09: `srwi;cmplwi r0,0` (T) vs fused `srwi.` (C) =
+    peephole dot-merge, not a type. (#pragma domain, not integer type.)
+  - tricky hudDrawAirMeter 98.81: extra `lhz 12(r3)` in T is a re-read vs cached load
+    (CSE) tangled with r4/r6 coloring swap + @NNN relocs. Not a type.
+  - seqobj11d/model/lightmap/firecrawler/cloudprison: all lwz COUNT +1 in target =
+    reload/CSE deltas, both sides already lwz (no width change).
+Confirms MEMORY: cmp-width is coupled in nearly all fns; only isolated cases (RomCurve)
+win, and none remain in the current corpus. NO source edits, tree clean, no commits.
+
+## int->float CONVERSION-SEQUENCE class — mechanism traced, RESISTANCE PROOF (0 wins)
+GOAL: derive a source-spelling lever for the 2^52 bias-double int->float class (the
+banked "target folds bias into fsubs; current does explicit double-fsub+frsp" story).
+
+MECHANISM (controlled MWCC GC/2.0 -O4,p test /tmp/cvtest/t.c, 7 spellings, objdump):
+The scalar (f32)(intExpr) idiom is `[load]; [extend]; lfd bias; stw val; lis 0x4330;
+stw; lfd; fsubs f1,f0,f1` and ALWAYS ends in a SINGLE `fsubs` (folded, single-prec).
+MWCC NEVER emits a separate double `fsub`+`frsp` for a scalar int->float. The source
+type controls exactly THREE things:
+  - LOAD width: field type -> lhz(u16)/lha(s16)/lwz(u32/int).
+  - EXTEND op: clrlwi(u16 zero-ext) / extsh(s16 sign-ext) / none(32-bit).
+  - SIGNED-vs-UNSIGNED PATH = which magic + whether `xoris r0,rX,0x8000` appears:
+      (f32)(int)x      -> signed magic 0x4330000080000000 + xoris
+      (f32)(u32)x      -> unsigned magic 0x4330000000000000, NO xoris
+      (f32)(int)u16    -> clrlwi + SIGNED magic + xoris  (the (int) cast forces signed)
+      (f32)u16         -> clrlwi + UNSIGNED magic, no xoris (u16's own unsignedness)
+      (f32)(s16)x      -> extsh + signed magic + xoris
+      (f32)p[0] (u16*) -> lhz + unsigned magic
+So the SIGNED/UNSIGNED path IS a real source lever: an explicit `(int)`/`(u32)` cast on
+a narrow field flips the magic+xoris. (Use it if a target conv shows the OTHER path than
+current — but see below: no such divergence exists in the corpus.)
+
+CORPUS SCAN (all non-audio/dolphin/player units, target-obj vs current-src objdump):
+  - conversion-opcode (xoris/frsp/fctiwz) COUNT mismatch with aligned instr stream: 0 fns.
+  - opcode-multiset diff touching xoris/frsp/fctiwz on close-size fns: 0 fns.
+The int->float conversion sequence is ALREADY matched everywhere. The only conversion
+divergences that exist are #70 (@NNN-vs-named bias reloc, score-NEUTRAL, compiler-emitted
+per INVESTIGATION_intfloat_magic.md) and #82 (FP reg numbering) — both no-lever.
+VERIFIED on the banked tumbleweed_updateStateMachine (dll_00D2): target vs current
+conversion opcodes IDENTICAL (15 xoris/clrlwi/extsh/lhz each); the ONLY whole-fn multiset
+delta is `mr` 21-vs-22 (the state-loop obj-copy, #108). Conversion is NOT the residual.
+
+THE TWO REAL `frsp`-mismatch fns are NOT scalar-conversion cases:
+  - main/newclouds.c snowPrintSnowCloud 97.46% (T frsp=9, C frsp=0, same instr count)
+  - main/main.c fn_801FD6B4 (T frsp=1, C frsp=0)
+Both stream vertices to the volatile GX write-gather pipe (GXWGFifo @0xCC008000) via
+`volatile f32 vx[3]/vy[3]/vz[3]` temps. Target keeps the 9 fmadds results LIVE in f1-f9
+and does `frsp fN; stfs fifo` (register-reuse-narrow); current does `lfs N(r1); stfs fifo`
+(memory reload). Both are valid lowerings of a volatile-f32 store-then-read; the choice is
+a REGISTER-ALLOCATION/scheduling decision (keep 9 FP regs live vs spill+reload), NOT
+conversion typing. TRIED on snowPrintSnowCloud (rebuilt+private-report each):
+  - drop `volatile` on vx/vy/vz -> 97.46->95.30 (kills stack stores, stores reg DIRECT to
+    fifo, still no frsp -> worse).
+  - `#pragma opt_common_subs on` (fn is wrapped off) -> 97.46->94.17, frsp still 0.
+Both REVERTED (Edit-revert), file byte-identical to baseline, .o md5 restored, tree clean.
+
+VERDICT: conversion-sequence class is a RESISTANCE PROOF. The scalar idiom is
+type-controllable only in load-width/extend/signed-path, and MWCC already emits the folded
+`fsubs` everywhere in-corpus with no double-fsub+frsp scalar case remaining. The residual
+"frsp" divergences are volatile-GX-FIFO register-liveness artifacts, not conversions.
+NO source lever, NO commits, `locked_ninja.sh all_source` EXIT=0 zero FAILED.
+
+## ADDRESS-ADD-ORDER lever sweep (Jul05, Opus) — 0 wins, lever largely exhausted
+Swept the #66-address-add-order reformulation (skyFn recipe: base-leads `((f32*)((u8*)base+C))[i]`).
+Built a proto-report scanner (scan2.py) that flags true add operand transpositions (net
+target-only `add rX,A,B` vs net current-only `add rX,B,A`), run over 96-99.99% fns.
+FINDINGS (all confirmed caps, no source lever):
+  - sky.c/fn_80089A60 98.71% (6 swaps, the ONE genuine address-add case):
+    `*(f32*)&gSkyState[slot*0xa4 + C]` gives index-first `add r9,r0,r9`; target wants
+    base-first `add r9,r9,r0`. BOTH reformulations tried: `*(f32*)((gSkyState+slot*0xa4)+C)`
+    REFOLDED to `stfsx f0,r10,r9` -> 94.13% (documented stfsx caveat, runtime `slot*0xa4`
+    multiply). Constant-first `gSkyState[C + slot*0xa4]` INERT (commutative-normalized).
+    The byte stores `gSkyState[slot*0xa4+0x78]` already emit base-first; only the
+    `*(f32*)&` address-of-subscript wrapper triggers index-first, and any base-leads
+    rewrite refolds to stfsx. RESISTANT.
+  - sky.c/sky2_run 98.98% (2 swaps): `p=*pp+(off=idx*4)` -> the add order is a #108 COLORING
+    symptom (target homes base->r5/idx->r3, current base->r3/idx->r5; `add r4,rBASE,rIDX`
+    follows allocation). Source operand swap `(off=idx*4)+*pp` INERT.
+  - gameloop.c/GameBit_Set 98.55% (1): `end=(flags&mask)+start` -> `add r4,r0,r5`(tgt)
+    vs `add r4,r5,r0`(cur) commutative-normalized by reg-readiness; source swap INERT.
+    Real residual also a scheduling+extsh reuse diff, not add-order.
+  - dll_000B_dll0b.c/dll_0B_func09 99.31% (1): `xf.ang[0]+=(s16)getAngle(...)` -> `=v+ang`
+    rewrite REGRESSED 99.31->99.15 (not add-order; scalar-accum coloring).
+  - objprint.c/objMathFn_8003a380 98.87% (1): the `add r6,r7`/`r7,r6` swap is incidental;
+    real diff is an EXTRA `extsh r0,r0` (integer-type/sign-width lever domain, not add-order).
+CONCLUSION: the source-level address-add-order lever (skyFn win) needs a *non-runtime-multiply*
+additive index `base[idx+C]`; grep found ZERO such source sites outside sky's `slot*0xa4`
+(which refolds to stfsx). All remaining scanner "swaps" are coloring/scheduling/type-width
+symptoms where the add operand order is an effect, not a source-controllable cause. Lever
+exhausted in current corpus. `locked_ninja.sh all_source` EXIT=0 zero FAILED, no commits,
+all touched files reverted to baseline.
+
+## const-multiply / strength-reduction SPELLING sweep (Jul05, Opus 4.8) — 0 wins
+Swept 92-99.999% non-dolphin/track/audio/player main+dll partials for mulli/slwi/
+srwi/mulhw form/count mismatch as the dominant delta (custom seq-fingerprint over
+function_objdump T-vs-C). 10 mismatch fns found; ALL structurally coupled, none an
+isolated const-multiply respelling:
+- **shader mapGetRomListAndOffsets 99.237** (the flagged one): `int tabOff=(p1*7)*4`
+  folds to `mulli 28`; target keeps `mulli r7,r28,7; slwi r31,r7,2`. Sibling
+  mapInitSetRects uses `idx*7<<2` (shift form). TESTED respell `(p1*7)<<2`: DID force
+  the 2-instr split (T=175 C=174->C=175) BUT intermediate lands **r0** vs target **r7**
+  -> both mulli AND slwi now carry a reg mismatch, worse than the single fused mulli's
+  lone imm mismatch. Fuzzy REGRESSED 99.237->98.489. Reverted. Confirms prior memory
+  bank (coloring-coupled, r0-vs-r7, no source lever for the scratch-reg choice).
+- gameloop removeButtonObject 98.091: `srwi.` dot-merge (T=`srwi;cmplwi` C=`srwi.`).
+  Flipping `#pragma peephole on`->off unfused the dot BUT de-optimized the block-copy
+  loop (per-elem `addi r4,4` vs target 8x-unrolled `addi r4,32`), T=60 C=59->C=67.
+  Net worse. Reverted. Dot-merge coupled to loop-unroll peephole, not isolable.
+- shader initMaps 99.151 (T `mr r7,r5` C `slwi;slwi`): first `[idx<<1]` byte-offset =
+  idx<<2, target VN-folds to idx(=0) via `mr`; coupled to r26 zero-CSE. VN-of-zero, no
+  spelling lever.
+- objseq ObjSeq_update 98.488, expgfx drawGlow 95.027, objseq ObjSeq_update srwi-31:
+  boolean-from-bitfield `!!x` spelled branch(`rlwinm;cmplwi;beq;li 1`) vs bit-twiddle
+  (`neg;or;srwi 31`) — truthiness-form class, different agent. drawGlow=131-region
+  reg-perm cascade.
+- model modelLoadAnimations 98.169, objseq ObjSeq_ExecuteActionCommand 98.048,
+  checkpoint Checkpoint_func06 98.353, dll_000B dll_0B_func04 94.222, tricky
+  hudDrawAirMeter 98.810: all 11-137 region reg-perm/scheduling/address-materialization
+  cascades; the mulli/slwi delta buried, not dominant.
+CONCLUSION: this lever family is exhausted at the current frontier — the fold/split
+sites that exist are all entangled with reg-coloring of the scratch intermediate or
+with peephole/truthiness classes owned by other passes. No clean isolated fold/unfold
+site remains. Build EXIT=0, 0 FAILED, no source changes committed.
+
+## Team-resume probe (Jul05) — team STILL IDLE, 0-win cheap stop
+`git log -40` = 40/40 authored by **Zachary Canann** (us). ZERO Jack Price-Burns
+(or any non-Zachary) commit. Reference newest-Jack `d3d7a168ff` (dll_01EB sbshipmast)
+is older than the whole 40-commit window. No fresh teammate units -> no new
+byte-neutral struct-recovery slack. Per METHOD step 2: did NOT scan the tree.
+No respell, no commit.
+
+## fcmpo-operand (#81) + element-block-local (#82) micro-lever sweep (Jul05)
+Scanned 330 fns @97-99.99% via ndiff for reversed-operand cmplw (Lever1) and
+reversed-operand fcmpo (Lever2). RESULT: Lever1 element-cmp reversal = **VEIN DRY**
+(0 true reg-reg cmplw operand-swaps found across all candidates). Lever2 fcmpo =
+18 fns with a genuine `fcmpo cr0,f1,f0` vs `f0,f1` reversal.
+- **WIN dll_07 newclouds dll_07_func06 99.845->99.862** (committed 91ae772afc):
+  scroll-phase wrap clamp `if(phase>wrap)phase-=wrap;` on globals PhaseA+PhaseB.
+  Target emits `fcmpo f1(wrap),f0(phase)+bge+fsubs f0,f0,f1`. Writing the
+  semantically-identical `if(wrap<phase)` flips MWCC's operand canonicalization
+  to match. LEVER CONFIRMED: for a PLAIN clamp (simple `if`, skip-block, no else,
+  writing back to the same lvalue), `a>b`->`b<a` fixes an isolated fcmpo reversal.
+- REGRESS/REVERT (banked, lever does NOT apply):
+  - dll_0298 wcfloortile arwarwing_updateBarrelRoll 98.688: fcmpo reversal gates an
+    `if/else` (barrelRollDirection>zero). Swapping operator flipped else-block layout
+    -> 98.08 (-0.6). Reverted. Lever only for plain-if clamps, NOT if/else.
+  - trickyfollow trickyUpdateApproachSpeed 98.436: reversed fcmpo is a ternary-MAX
+    `(cand<K)?K:cand` writing ->speed. Converting to `if(x<K)x=K;` form REGRESSED
+    to 93.79 AND spawned MORE reversed fcmpo (forces a reload). Ternary was closer.
+    Coupled #82. Reverted.
+  - COUPLED (not touched, confirmed cascade): dll_0044 viewfinder
+    CameraModeViewfinder_update (fcmpo `<=`/cror coupled to base r30-vs-r31 swap);
+    newclouds titleScreenDrawFn_80093db4 (fcmpo coupled to `fabs f1,f1`vs`f0,f2`);
+    dll_0257 EarthWarrior_stateHandler02 (nested double-clamp ternary line770 =
+    the known func19 #82 FP-perm cap, coupled to lwz r3/r5/r6 GPR renumber).
+  - SKIPPED active/foreign: sky.c (touched 24min), maybetemplate (Jack owner 7h),
+    objhits/andross/objseq/Tricky (high region-count = coupled), player.c.
+TAKEAWAY: fcmpo-operand lever wins ONLY for a plain single-`if` clamp on a
+stored lvalue (newclouds shape). Ternary-max clamps and if/else-gated compares
+are coupled #82 caps where the swap regresses. Lever1 element-cmp vein is dry in
+the 97-99.99 band.
