@@ -25,12 +25,6 @@ extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 lbl_803E5978;
-extern f32 lbl_803E597C;
-extern f32 lbl_803E5980;
-extern f32 lbl_803E5984;
-extern f32 lbl_803E5988;
-extern f32 lbl_803E598C;
 
 typedef struct LampObjectDef
 {
@@ -45,10 +39,16 @@ typedef struct LampObjectDef
 
 int Lamp_getExtraSize(void) { return 0x1; }
 
+void Lamp_free(int* obj)
+{
+    Sfx_StopObjectChannel(obj, 0x40);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
 void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5978);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
 }
 
 int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -75,7 +75,7 @@ int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if ((((GameObject*)obj)->objectFlags & LAMP_OBJFLAG_RENDERED) != 0)
     {
-        fx->scale = lbl_803E597C;
+        fx->scale = 0.35f;
         fx->arg3 = 0xc0d;
         fx->posX = fx->posX - ((GameObject*)obj)->anim.worldPosX;
         fx->posY = fx->posY - ((GameObject*)obj)->anim.worldPosY;
@@ -88,30 +88,6 @@ int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void Lamp_free(int* obj)
-{
-    Sfx_StopObjectChannel(obj, 0x40);
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
-
-void Lamp_init(int* obj, int* def)
-{
-    s8* state = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.seqId == LAMP_SEQ_STATIC)
-    {
-        ((GameObject*)obj)->anim.rotX = (s16)((u32)((LampObjectDef*)def)->rotXStatic << 8);
-    }
-    else
-    {
-        ((GameObject*)obj)->anim.rotX = (s16)((s32)((LampObjectDef*)def)->rotXSwing << 8);
-    }
-    ((GameObject*)obj)->anim.rotY = 0;
-    ((GameObject*)obj)->anim.rotZ = 0;
-    ((GameObject*)obj)->unkF8 = 0;
-    *state = 1;
-    ((GameObject*)obj)->animEventCallback = Lamp_SeqFn;
-}
-
 void Lamp_update(int obj)
 {
     u8 effectArgs[0x18];
@@ -121,12 +97,12 @@ void Lamp_update(int obj)
     distance = Vec_distance((void*)((int)Obj_GetPlayerObject() + 0x18), (void*)(obj + 0x18));
     if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) == 0)
     {
-        if (distance < lbl_803E5980)
+        if (distance < 100.0f)
         {
             Sfx_PlayFromObject((int*)obj, SFXmn_eggylaugh216);
         }
     }
-    else if (distance >= lbl_803E5980)
+    else if (distance >= 100.0f)
     {
         Sfx_StopObjectChannel((int*)obj, 0x40);
     }
@@ -136,20 +112,20 @@ void Lamp_update(int obj)
         if (((GameObject*)obj)->unkF8 == 0)
         {
             ((GameObject*)obj)->unkF8 = 1;
-            ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 90) / lbl_803E5980,
+            ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 90) / 100.0f,
                                     (ObjAnimComponent*)obj);
         }
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5984,
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, 0.003f,
                                                                      timeDelta, NULL);
     }
 
     if ((((GameObject*)obj)->objectFlags & LAMP_OBJFLAG_RENDERED) != 0)
     {
-        *(f32*)(effectArgs + 8) = lbl_803E597C;
+        *(f32*)(effectArgs + 8) = 0.35f;
         *(s16*)(effectArgs + 6) = 0xc0d;
-        *(f32*)(effectArgs + 0xc) = lbl_803E5988;
-        *(f32*)(effectArgs + 0x10) = lbl_803E598C;
-        *(f32*)(effectArgs + 0x14) = lbl_803E5988;
+        *(f32*)(effectArgs + 0xc) = 0.0f;
+        *(f32*)(effectArgs + 0x10) = -12.0f;
+        *(f32*)(effectArgs + 0x14) = 0.0f;
         ObjPath_GetPointWorldPosition(obj, 0, (f32*)(effectArgs + 0xc), (f32*)(effectArgs + 0x10),
                                       (f32*)(effectArgs + 0x14), 1);
         if (((GameObject*)obj)->anim.parent != NULL)
@@ -169,4 +145,22 @@ void Lamp_update(int obj)
             (*gPartfxInterface)->spawnObject((void*)obj, 0x7c7, effectArgs, 2, -1, NULL);
         }
     }
+}
+
+void Lamp_init(int* obj, int* def)
+{
+    s8* state = ((GameObject*)obj)->extra;
+    if (((GameObject*)obj)->anim.seqId == LAMP_SEQ_STATIC)
+    {
+        ((GameObject*)obj)->anim.rotX = (s16)((u32)((LampObjectDef*)def)->rotXStatic << 8);
+    }
+    else
+    {
+        ((GameObject*)obj)->anim.rotX = (s16)((s32)((LampObjectDef*)def)->rotXSwing << 8);
+    }
+    ((GameObject*)obj)->anim.rotY = 0;
+    ((GameObject*)obj)->anim.rotZ = 0;
+    ((GameObject*)obj)->unkF8 = 0;
+    *state = 1;
+    ((GameObject*)obj)->animEventCallback = Lamp_SeqFn;
 }

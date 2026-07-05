@@ -2124,6 +2124,7 @@ main/dll/dll_01F5_shipbattle.c:
 
 main/dll/dll_01F4_lamp.c:
 	.text       start:0x801E59AC end:0x801E5DC4
+	.sdata2     start:0x803E5978 end:0x803E5998
 
 main/dll/dll_01F6_flag.c:
 	.text       start:0x801E5DC4 end:0x801E5F74
