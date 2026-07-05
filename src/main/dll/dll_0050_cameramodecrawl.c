@@ -3,9 +3,9 @@
  *
  * Owns the CameraModeCrawlState singleton (lbl_803DD598): allocates it on
  * init, frees it on shutdown, and on each update positions the camera behind
- * the target. The packed yaw is converted to radians via lbl_803E1AC0/1AC4
- * (2*pi/0x10000 numerator over 0x10000 denominator). With its own handler it
- * parks the camera at a fixed follow distance/height (lbl_803E1AD0/1AD4)
+ * the target. The packed yaw is converted to radians via 3.1415927f/32768.0f
+ * (pi numerator over 0x8000 denominator). With its own handler it
+ * parks the camera at a fixed follow distance/height (13.0f/20.0f)
  * facing the target's yaw, eases rotX toward the target heading and pins
  * rotY to 2048; with the default handler
  * active it delegates positioning to the shared camera-interface entry and
@@ -13,9 +13,8 @@
  * the live camera. The camera position is finally pushed back to local space
  * via Obj_TransformWorldPointToLocal.
  *
- * This TU is also linked alongside the sibling camera-mode DLLs, so it
- * carries their empty release/free stubs (fn_801101E4..fn_801101E8); the
- * fn_801101E8 stub frees the cloudrunner-mode state (lbl_803DD5B8).
+ * The remaining entry points (release/initialise) are empty mode-table slots
+ * shared with the sibling camera-mode DLLs.
  */
 #include "main/mm.h"
 #include "main/dll/CAM/cutCam.h"
@@ -28,52 +27,8 @@
 
 extern CameraModeCrawlState* lbl_803DD598;
 
-/* .sdata2 tuning constants (rotX scale/divisor, follow distance/height,
-   turn ease, default-handler distance) */
-extern f32 lbl_803E1AC0;
-extern f32 lbl_803E1AC4;
-extern f32 lbl_803E1AD0;
-extern f32 lbl_803E1AD4;
-extern f32 lbl_803E1AD8;
-extern f32 lbl_803E1ADC;
-
 #pragma scheduling off
 #pragma peephole off
-void CameraModeCrawl_release(void)
-{
-}
-
-void CameraModeCrawl_initialise(void)
-{
-}
-
-void CameraModeForceBehind_func06_nop(void)
-{
-}
-
-void CameraModeForceBehind_func05_nop(void)
-{
-}
-
-void CameraModeCrawl_init(void)
-{
-    if (lbl_803DD598 == NULL)
-    {
-        lbl_803DD598 = (CameraModeCrawlState*)mmAlloc(sizeof(CameraModeCrawlState), 15, 0);
-        memset(lbl_803DD598, 0, sizeof(CameraModeCrawlState));
-    }
-}
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-void CameraModeCrawl_free(void)
-{
-    extern void mm_free(u32); /* #57 */
-    mm_free((u32)lbl_803DD598);
-    lbl_803DD598 = NULL;
-}
-
 #pragma dont_inline on
 #pragma dont_inline reset
 
@@ -95,13 +50,13 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 
     if (param2 == 0)
     {
-        c = mathSinf(lbl_803E1AC0 * (f32)(s32)target->anim.rotX / lbl_803E1AC4);
-        s = mathCosf(lbl_803E1AC0 * (f32)(s32)target->anim.rotX / lbl_803E1AC4);
+        c = mathSinf(3.1415927f * (f32)(s32)target->anim.rotX / 32768.0f);
+        s = mathCosf(3.1415927f * (f32)(s32)target->anim.rotX / 32768.0f);
     }
     else
     {
-        c = -mathSinf(lbl_803E1AC0 * (f32)(s32)target->anim.rotX / lbl_803E1AC4);
-        s = -mathCosf(lbl_803E1AC0 * (f32)(s32)target->anim.rotX / lbl_803E1AC4);
+        c = -mathSinf(3.1415927f * (f32)(s32)target->anim.rotX / 32768.0f);
+        s = -mathCosf(3.1415927f * (f32)(s32)target->anim.rotX / 32768.0f);
     }
     {
         target->anim.rotX = getAngle(c, s);
@@ -128,6 +83,19 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
     lbl_803DD598->flags.useDefaultHandler = 1;
 }
 
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+
+void CameraModeCrawl_free(void)
+{
+    extern void mm_free(u32); /* #57 */
+    mm_free((u32)lbl_803DD598);
+    lbl_803DD598 = NULL;
+}
+
+#pragma dont_inline on
+#pragma dont_inline reset
+
 void CameraModeCrawl_update(u8* obj)
 {
     CameraObject* camera = (CameraObject*)obj;
@@ -143,12 +111,12 @@ void CameraModeCrawl_update(u8* obj)
     if (lbl_803DD598->flags.useDefaultHandler == 0)
     {
         camera->anim.worldPosX =
-            lbl_803E1AD0 * mathSinf(lbl_803E1AC0 * (f32)(s32)target->anim.rotX / lbl_803E1AC4) +
+            13.0f * mathSinf(3.1415927f * (f32)(s32)target->anim.rotX / 32768.0f) +
             target->anim.worldPosX;
         camera->anim.worldPosZ =
-            lbl_803E1AD0 * mathCosf(lbl_803E1AC0 * (f32)(s32)target->anim.rotX / lbl_803E1AC4) +
+            13.0f * mathCosf(3.1415927f * (f32)(s32)target->anim.rotX / 32768.0f) +
             target->anim.worldPosZ;
-        camera->anim.worldPosY = lbl_803E1AD4 + target->anim.worldPosY;
+        camera->anim.worldPosY = 20.0f + target->anim.worldPosY;
         dx = camera->anim.localPosX - target->anim.worldPosX;
         dz = camera->anim.localPosZ - target->anim.worldPosZ;
         {
@@ -164,7 +132,7 @@ void CameraModeCrawl_update(u8* obj)
             delta = delta + 0xffff;
         }
         camera->anim.rotX = (s16)((f32)(s32)camera->anim.rotX +
-                                  interpolate((f32)(s32)delta, lbl_803E1AD8, timeDelta));
+                                  interpolate((f32)(s32)delta, 0.125f, timeDelta));
         camera->anim.rotX = (s16)(0x8000 - getAngle(dx, dz));
         camera->anim.rotY = 2048;
     }
@@ -172,7 +140,7 @@ void CameraModeCrawl_update(u8* obj)
     {
         other = (int)(*gCameraInterface)->getDefaultHandlerEntry();
         (*(void (**)(u8*, f32*, f32*, f32*, f32*, f32, int))(*(int*)gCameraInterface + 56))(
-            obj, &dx, &outY, &dz, &outW, lbl_803E1ADC, 0);
+            obj, &dx, &outY, &dz, &outW, 35.0f, 0);
         {
             int t = 0x8000 - (u16)getAngle(dx, dz);
             delta = t - (u16)camera->anim.rotX;
@@ -192,6 +160,23 @@ void CameraModeCrawl_update(u8* obj)
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
+}
+
+void CameraModeCrawl_init(void)
+{
+    if (lbl_803DD598 == NULL)
+    {
+        lbl_803DD598 = (CameraModeCrawlState*)mmAlloc(sizeof(CameraModeCrawlState), 15, 0);
+        memset(lbl_803DD598, 0, sizeof(CameraModeCrawlState));
+    }
+}
+
+void CameraModeCrawl_release(void)
+{
+}
+
+void CameraModeCrawl_initialise(void)
+{
 }
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed

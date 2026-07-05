@@ -796,6 +796,7 @@ main/dll/dll_004F_dll4f.c:
 
 main/dll/dll_0050_cameramodecrawl.c:
 	.text       start:0x8010F540 end:0x8010FA54
+	.sdata2     start:0x803E1AC0 end:0x803E1AE0
 
 main/dll/dll_0051_cameramodecannon.c:
 	.text       start:0x8010FA54 end:0x8010FC74
