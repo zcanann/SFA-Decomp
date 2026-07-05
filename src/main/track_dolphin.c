@@ -4184,16 +4184,16 @@ void renderGlows(void)
             sunDot = sunDot * gSunFlareFade;
             if (sunDot > lbl_803DEBCC)
             {
-                u8 ar, ag, ab;
+                u8 amb[3];
                 PSMTXConcat(viewMtx, sunMtx, sunMtx);
                 GXLoadPosMtxImm(sunMtx, GX_PNMTX0);
                 GXSetCurrentMtx(GX_PNMTX0);
                 fn_8008912C();
                 selectTexture(0, 0);
-                getAmbientColor(0, &ar, &ag, &ab);
+                getAmbientColor(0, &amb[0], &amb[1], &amb[2]);
                 sunDot = (f32)(u32)
                 sky * sunDot;
-                _gxSetTevColor2(ar, ag, ab, (int)(displayOffsetH_803DEBFC * sunDot));
+                _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(displayOffsetH_803DEBFC * sunDot));
                 alpha = (int)(lbl_803DEBD8 - ResettingBits_803DEC38 * sunDot);
                 sunDot = RecalibrateBits_803DEC3C * sunDot * WaitingBits_803DEC40;
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
