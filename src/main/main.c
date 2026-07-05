@@ -21,7 +21,7 @@ extern void* gVfpLavaPoolEffectResource;
 extern void objRenderFn_80041018(int* obj);
 extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern f32 lbl_803E6168;
-extern void objRenderFn_8003b8f4(int* obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 gVfpLavaPoolWaveSin;
 extern f32 lbl_803E6158;
 extern f32 lbl_803E6160;
