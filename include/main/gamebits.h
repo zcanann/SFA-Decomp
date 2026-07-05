@@ -264,7 +264,22 @@ enum GameBitId {
     GAMEBIT_WORLDMAP_NAME_DARKICE_MINES = 0xA64,
     GAMEBIT_WORLDMAP_NAME_CLOUDRUNNER   = 0xA65,
     GAMEBIT_WORLDMAP_NAME_WALLED_CITY   = 0xA66,
-    GAMEBIT_WORLDMAP_NAME_DRAGON_ROCK   = 0xA67
+    GAMEBIT_WORLDMAP_NAME_DRAGON_ROCK   = 0xA67,
+
+    /*
+     * The staff abilities learned after Fire Blaster (which IS placed
+     * chronologically above, at 0x2D). Each is the ability's ownedGameBit in the
+     * C-menu staff-ability section (gCMenuStaffAbilities; see cmenu_item_table.h),
+     * granted by an mcupgrade (dll_02B7) pickup carrying that collectedGameBit.
+     * Values read straight from the gCMenuStaffAbilities data table
+     * (dll_0000_gameui.c); the cave / story beat that grants each is not yet traced.
+     */
+    GAMEBIT_STAFF_ABILITY_FREEZE_BLAST       = 0x5CE, /* freezes / puts out fires */
+    GAMEBIT_STAFF_ABILITY_SHARPCLAW_DISGUISE = 0x40,  /* enemies stop targeting you */
+    GAMEBIT_STAFF_ABILITY_GROUND_QUAKE       = 0x107, /* hidden once Super Quake is set */
+    GAMEBIT_STAFF_ABILITY_SUPER_QUAKE        = 0xC55, /* upgrade; replaces Ground Quake */
+    GAMEBIT_STAFF_ABILITY_OPEN_PORTAL        = 0x5BD, /* opens the large square doors */
+    GAMEBIT_STAFF_ABILITY_STAFF_BOOSTER      = 0x957  /* boost pads reach high ledges */
 };
 
 

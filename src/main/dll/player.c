@@ -5051,7 +5051,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
             b28 = 0x100;
         }
         if (inner->deferredItemCommand != -1 ||
-            (yitem == 1 && (item == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || item == 0x5ce)))
+            (yitem == 1 && (item == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || item == GAMEBIT_STAFF_ABILITY_FREEZE_BLAST)))
         {
             buttonDisable(0, 0x900);
             ((PlayerState*)inner)->buttonsJustPressed = inner->buttonsJustPressed & ~0x900;
@@ -5062,7 +5062,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
             }
             switch (gPlayerSelectedItem)
             {
-            case 0x2d:
+            case GAMEBIT_STAFF_ABILITY_FIRE_BLASTER:
                 {
                     int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
                     if (*(s16*)((char*)sub + 0x4) >= 2)
@@ -5096,7 +5096,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
                     }
                     break;
                 }
-            case 0x5ce:
+            case GAMEBIT_STAFF_ABILITY_FREEZE_BLAST:
                 {
                     int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
                     if (*(s16*)((char*)sub + 0x4) >= 1)
@@ -5324,7 +5324,7 @@ int fn_8029AF9C(int obj, int state)
                     b28 = 0x100;
                 }
                 if ((inner->buttonsJustPressed & 0x100) != 0 ||
-                    (yitem == 1 && (item == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || item == 0x5ce)))
+                    (yitem == 1 && (item == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || item == GAMEBIT_STAFF_ABILITY_FREEZE_BLAST)))
                 {
                     buttonDisable(0, 0x900);
                     inner->buttonsJustPressed = inner->buttonsJustPressed & ~0x900;
@@ -5335,7 +5335,7 @@ int fn_8029AF9C(int obj, int state)
                     }
                     switch (gPlayerSelectedItem)
                     {
-                    case 0x2d:
+                    case GAMEBIT_STAFF_ABILITY_FIRE_BLASTER:
                         {
                             int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
                             if (*(s16*)((char*)sub + 0x4) >= 2)
@@ -5357,7 +5357,7 @@ int fn_8029AF9C(int obj, int state)
                             Sfx_PlayFromObject(0, SFXTRIG_staff_swipes_long);
                             break;
                         }
-                    case 0x5ce:
+                    case GAMEBIT_STAFF_ABILITY_FREEZE_BLAST:
                         {
                             int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
                             if (*(s16*)((char*)sub + 0x4) >= 1)
@@ -8924,7 +8924,7 @@ void fn_802B249C(int obj, int inner, int state)
         case 0x80002:
             ((PlayerState*)inner)->queuedItemCommand = (s16)param;
             if (((PlayerState*)state)->baddie.targetObj != NULL &&
-                (param == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || param == 0x5ce))
+                (param == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || param == GAMEBIT_STAFF_ABILITY_FREEZE_BLAST))
             {
                 ((PlayerState*)inner)->deferredItemCommand = (s16)param;
                 ((PlayerState*)inner)->queuedItemCommand = -1;
@@ -10135,7 +10135,7 @@ int fn_802A9B1C(int obj, int p2, int p3)
     {
         return 0;
     }
-    if (p3 == 0x2d)
+    if (p3 == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER)
     {
         if (*(s16*)((char*)inner->playerStatus + 4) < 2) return 0;
     }
@@ -10545,7 +10545,7 @@ int fn_802A9C0C(int obj, int p2, int p3)
     {
         return 0;
     }
-    if (p3 == 0x2d)
+    if (p3 == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER)
     {
         if (*(s16*)((char*)inner->playerStatus + 4) < 2) return 0;
     }
@@ -12746,7 +12746,7 @@ void objLoadPlayerFromSave(int obj)
         off += 0xb0;
     }
     fn_802AABE4(obj);
-    gPlayerSelectedItem = 0x2d;
+    gPlayerSelectedItem = GAMEBIT_STAFF_ABILITY_FIRE_BLASTER;
     gPlayerEggObject = 0;
     base += 0x1b94;
     for (i = 0; (u32)i < 0xb; i++)
@@ -12971,7 +12971,7 @@ void fn_802AF7F8(int obj, int state)
     void** p;
     int z[2];
     int v;
-    if (fn_802A9C0C(obj, state, 0x2d) != 0)
+    if (fn_802A9C0C(obj, state, GAMEBIT_STAFF_ABILITY_FIRE_BLASTER) != 0)
     {
         GameBit_Set(0x965, 0);
         GameBit_Set(0x986, 0);
@@ -12981,7 +12981,7 @@ void fn_802AF7F8(int obj, int state)
         GameBit_Set(0x965, 1);
         GameBit_Set(0x986, 1);
     }
-    if (fn_802A9C0C(obj, state, 0x5ce) != 0)
+    if (fn_802A9C0C(obj, state, GAMEBIT_STAFF_ABILITY_FREEZE_BLAST) != 0)
     {
         GameBit_Set(0x961, 0);
     }
@@ -13038,9 +13038,9 @@ void fn_802AF7F8(int obj, int state)
     }
     switch (((PlayerState*)state)->animState)
     {
-    case 0x2d:
+    case GAMEBIT_STAFF_ABILITY_FIRE_BLASTER:
         break;
-    case 0x40:
+    case GAMEBIT_STAFF_ABILITY_SHARPCLAW_DISGUISE:
         if ((((u32 (*)(int))getButtonsJustPressed)(0) & 0x200) != 0 &&
             ((ByteFlags*)((char*)state + 0x3f3))->b08 != 0 &&
             ((PlayerState*)state)->curAnimId != 0x44)
@@ -13069,7 +13069,7 @@ void fn_802AF7F8(int obj, int state)
             ((PlayerState*)state)->stateTimer = lbl_803E7EDC;
         }
         break;
-    case 0x5ce:
+    case GAMEBIT_STAFF_ABILITY_FREEZE_BLAST:
         if (lbl_803DE42C != 0 && getCurSeqNo() != 0)
         {
             ((PlayerState*)state)->animState = -1;
@@ -16365,16 +16365,16 @@ void fn_802AB38C(int a, int b, int c)
 {
     switch (c)
     {
-    case 0x2d:
-        gPlayerSelectedItem = 0x2d;
+    case GAMEBIT_STAFF_ABILITY_FIRE_BLASTER:
+        gPlayerSelectedItem = GAMEBIT_STAFF_ABILITY_FIRE_BLASTER;
         break;
     case 0x958:
         gPlayerSelectedItem = 0x958;
         break;
-    case 0x5ce:
-        gPlayerSelectedItem = 0x5ce;
+    case GAMEBIT_STAFF_ABILITY_FREEZE_BLAST:
+        gPlayerSelectedItem = GAMEBIT_STAFF_ABILITY_FREEZE_BLAST;
         break;
-    case 0x957:
+    case GAMEBIT_STAFF_ABILITY_STAFF_BOOSTER:
         gPlayerInteractTarget = *(int*)&((PlayerState*)b)->cameraTargetObject;
         (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(a, b, 0x32);
         *(int*)&((PlayerState*)b)->baddie.unk304 = (int)fn_802994A4;
@@ -18494,9 +18494,9 @@ void playerProcessQueuedItemCommand(int obj, int state)
         noMatch = 0;
         switch (sel)
         {
-        case 0x2d:
+        case GAMEBIT_STAFF_ABILITY_FIRE_BLASTER:
         case 0x958:
-        case 0x5ce:
+        case GAMEBIT_STAFF_ABILITY_FREEZE_BLAST:
             if (fn_802A9B1C(obj, state, sel) != 0)
             {
                 ByteFlags* f1 = (ByteFlags*)((char*)state + 0x3f1);
