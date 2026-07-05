@@ -5441,13 +5441,16 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                  int pmask, int seg, int ytol, int self)
 {
     f32* A = ptA;
-    s16 hits[6];
-    f32 dists[5];
     f32 fracs[5];
+    f32 dists[5];
     f32 lb[4], la[4], ld[4];
+    s16 hits[6];
     f32 posX[2];
     f32 posZ[2];
     s16 m[2];
+    int si16;
+    int si2;
+    s16* hitp;
     int start, end;
     int vt, vp;
     u32 lineIdx;
@@ -5456,10 +5459,8 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
     int flag4;
     f32 minX, maxX, minZ, maxZ;
     int count, found;
-    s16* hitp;
     f32 *fracp, *distp;
     int mask;
-    int si2, si16;
     int i;
     f32 dist;
     s8 lineType;
@@ -5771,9 +5772,9 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                                     f32 t3 = ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]);
                                     posX[1] = -(t3 * lb[3] - posX[1]);
                                     posZ[1] = -(t3 * la[3] - posZ[1]);
+                                    j = 0;
                                     stepLb = lbl_803DB660 * lb[3];
                                     stepLa = lbl_803DB660 * la[3];
-                                    j = 0;
                                     while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
                                     {
                                         posX[1] = posX[1] + stepLb;
@@ -5792,9 +5793,9 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                                     f32 stepLb, stepLa;
                                     posX[1] = cx;
                                     posZ[1] = cz;
+                                    j = 0;
                                     stepLb = lbl_803DB660 * lb[3];
                                     stepLa = lbl_803DB660 * la[3];
-                                    j = 0;
                                     while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
                                     {
                                         posX[1] = posX[1] + stepLb;
@@ -5808,7 +5809,11 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                                         }
                                     }
                                 }
-                                dist = sqrtf((posX[1] - ax2) * (posX[1] - ax2) + (posZ[1] - az2) * (posZ[1] - az2)) / len;
+                                {
+                                    f32 ddx = posX[1] - ax2;
+                                    f32 ddz = posZ[1] - az2;
+                                    dist = sqrtf(ddx * ddx + ddz * ddz) / len;
+                                }
                             }
                         }
                     }
@@ -5845,12 +5850,14 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
         s16* rec2;
         f32 fa, fb;
         f32 *va2, *vb2;
+        f32 dx, dz;
         if (flag1 == 0)
         {
             pick = 0;
         }
-        outf[0x11] = fracs[0] * sqrtf((((f32*)ptB)[0] - posX[0]) * (((f32*)ptB)[0] - posX[0])
-            + (((f32*)ptB)[2] - posZ[0]) * (((f32*)ptB)[2] - posZ[0]));
+        dx = ((f32*)ptB)[0] - posX[0];
+        dz = ((f32*)ptB)[2] - posZ[0];
+        outf[0x11] = fracs[0] * sqrtf(dx * dx + dz * dz);
         outf[0x12] = dists[pick];
         hi = hits[pick];
         if (lineIdx != 0)
