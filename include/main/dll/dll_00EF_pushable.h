@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
+#include "main/dll/dll_00F2_iceblast.h"
 
 extern ObjectDescriptor14 gPushableObjDescriptor;
 extern ObjectDescriptor gWarpPointObjDescriptor;
@@ -59,13 +60,7 @@ void invhit_hitDetect(void);
 void invhit_release(void);
 void invhit_initialise(void);
 
-int iceblast_getExtraSize(void);
-int iceblast_getObjectTypeId(void);
-void iceblast_free(void);
-void iceblast_render(int *obj, int a, int b, int c, int d);
-void iceblast_hitDetect(void);
-void iceblast_release(void);
-void iceblast_initialise(void);
+/* iceblast_* callbacks + IceblastPlacement now come from dll_00F2_iceblast.h */
 
 int flameblast_getExtraSize(void);
 

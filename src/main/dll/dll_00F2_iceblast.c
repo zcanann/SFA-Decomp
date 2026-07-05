@@ -11,19 +11,11 @@
  * The placement's useAltHitVolume byte selects the hit-volume slot (3 when set,
  * else 1). The 4-byte extra holds only the countdown timer.
  */
-#include "main/game_object.h"
+#include "main/dll/dll_00F2_iceblast.h"
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 #include "main/dll/vecrotatezxyarg_struct.h"
-
-typedef struct IceblastPlacement
-{
-    u8 pad0[0x19 - 0x0];
-    s8 useAltHitVolume;
-    s16 initialTimer;
-    u8 pad1C[4];
-} IceblastPlacement;
 
 extern void vecRotateZXY(void* in, void* out);
 extern f32 timeDelta;
