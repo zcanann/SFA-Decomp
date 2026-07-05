@@ -436,11 +436,11 @@ void scarab_update(int obj)
                 hitDetectFn_800691c0(obj, bounds, 0, 1);
                 hits = hitDetectFn_80067958(obj, (void*)(obj + 0x80), (void*)(obj + 0xc), 1, bufs.hitBuf, 0);
                 if (flag != 0 ||
-                    Vec_distance((void*)(obj + 0x18), (void*)(*(int*)&((GameObject*)obj)->anim.placementData + 8)) >
+                    Vec_distance((void*)(obj + 0x18), &((ObjPlacement*)((GameObject*)obj)->anim.placementData)->posX) >
                     lbl_803E3A30 ||
                     ((hits & 1) != 0 && (hits & 0x10) == 0))
                 {
-                    PSVECSubtract((void*)(*(int*)&((GameObject*)obj)->anim.placementData + 8), (void*)(obj + 0xc),
+                    PSVECSubtract(&((ObjPlacement*)((GameObject*)obj)->anim.placementData)->posX, (void*)(obj + 0xc),
                                   vsub);
                     ang = (u16)getAngle(vsub[0], vsub[2]);
                     fang = ang;
