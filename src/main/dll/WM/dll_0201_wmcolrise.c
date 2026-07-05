@@ -159,8 +159,8 @@ void WM_colrise_init(s16* obj, s8* def)
 {
     WMColriseState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = WM_colrise_SeqFn;
-    obj[0] = (s16)((s32)def[0x18] << 8);
-    state->gameBit = *(s16*)(def + 0x1e);
+    obj[0] = (s16)((s32)((WMColrisePlacement*)def)->rotXByte << 8);
+    state->gameBit = ((WMColrisePlacement*)def)->gameBit;
 }
 
 void WM_colrise_release(void)
