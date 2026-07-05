@@ -812,6 +812,7 @@ main/dll/dll_0053_cameramodecloudrunner.c:
 
 main/dll/dll_0054_dll54.c:
 	.text       start:0x801106B4 end:0x80110C80
+	.sdata2     start:0x803E1B40 end:0x803E1B78
 
 main/dll/dll_0055_cameramodeperv.c:
 	.text       start:0x80110C80 end:0x80110E30

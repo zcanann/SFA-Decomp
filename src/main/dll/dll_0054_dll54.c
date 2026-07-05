@@ -25,71 +25,13 @@
 #include "main/objlib.h"
 extern f32 sqrtf(f32 x);
 extern CameraMode54State* gCameraModeNpcSpeakState;
-extern f32 lbl_803E1B5C;
-
-extern f32 lbl_803E1B40;
-extern f32 lbl_803E1B44;
-extern f32 lbl_803E1B48;
-extern f32 lbl_803E1B4C;
-extern f32 lbl_803E1B50;
-extern f32 lbl_803E1B54;
-extern f32 lbl_803E1B58;
-extern f32 lbl_803E1B60;
-extern f32 lbl_803E1B64;
-extern const f32 lbl_803E1B68;
 
 #pragma scheduling on
 #pragma peephole on
 #pragma scheduling off
 #pragma peephole off
-void CameraModeForceBehind_func06_nop(void)
-{
-}
-
-void CameraModeForceBehind_func05_nop(void)
-{
-}
-
 void dll_54_func06_nop(void)
 {
-}
-
-void dll_54_release_nop(void)
-{
-}
-
-void dll_54_initialise_nop(void)
-{
-}
-
-void dll_54_init(int* p1, int unused, int* p3)
-{
-    CameraObject* camera = (CameraObject*)p1;
-    CameraObject* source = (CameraObject*)p3;
-
-    if (gCameraModeNpcSpeakState == NULL)
-    {
-        gCameraModeNpcSpeakState = (CameraMode54State*)mmAlloc(sizeof(CameraMode54State), 15, 0);
-    }
-    memset(gCameraModeNpcSpeakState, 0, sizeof(CameraMode54State));
-    gCameraModeNpcSpeakState->transitionTimer = lbl_803E1B5C;
-    gCameraModeNpcSpeakState->transitionDone = 0;
-    if (p3 != NULL)
-    {
-        camera->anim.localPosX = source->anim.worldPosX;
-        camera->anim.localPosY = source->anim.worldPosY;
-        camera->anim.localPosZ = source->anim.worldPosZ;
-        camera->anim.rotX = source->anim.rotX;
-        camera->anim.rotY = source->anim.rotY;
-        camera->anim.rotZ = source->anim.rotZ;
-        camera->fov = source->fov;
-    }
-    gCameraModeNpcSpeakState->startX = camera->anim.worldPosX;
-    gCameraModeNpcSpeakState->startY = camera->anim.worldPosY;
-    gCameraModeNpcSpeakState->startZ = camera->anim.worldPosZ;
-    gCameraModeNpcSpeakState->startYaw = camera->anim.rotX;
-    gCameraModeNpcSpeakState->startPitch = camera->anim.rotY;
-    gCameraModeNpcSpeakState->startRoll = camera->anim.rotZ;
 }
 
 void dll_54_func05(void)
@@ -152,25 +94,25 @@ void dll_54_update(u8* obj)
         dist = sqrtf(zz + (dy * dy + xx));
         nx = dx / dist;
         nz = dz / dist;
-        fx = -(lbl_803E1B40 * nx - gCameraModeNpcSpeakState->originObj->anim.worldPosX) -
+        fx = -(140.0f * nx - gCameraModeNpcSpeakState->originObj->anim.worldPosX) -
             gCameraModeNpcSpeakState->playerObj->anim.worldPosX;
-        fz = -(lbl_803E1B40 * nz - gCameraModeNpcSpeakState->originObj->anim.worldPosZ) -
+        fz = -(140.0f * nz - gCameraModeNpcSpeakState->originObj->anim.worldPosZ) -
             gCameraModeNpcSpeakState->playerObj->anim.worldPosZ;
         d2 = sqrtf(fx * fx + fz * fz);
-        t = (lbl_803E1B44 - d2) / lbl_803E1B44;
-        camera->fov = lbl_803E1B4C * t + lbl_803E1B48;
-        h = lbl_803E1B54 * t + lbl_803E1B50;
+        t = (200.0f - d2) / 200.0f;
+        camera->fov = 45.0f + 70.0f * t;
+        h = -30.0f + 350.0f * t;
         camera->anim.worldPosX = -(nx * h - gCameraModeNpcSpeakState->originObj->anim.worldPosX);
         camera->anim.worldPosY =
-            lbl_803E1B5C * t + (lbl_803E1B58 + gCameraModeNpcSpeakState->originObj->anim.worldPosY);
+            (20.0f + gCameraModeNpcSpeakState->originObj->anim.worldPosY) + 60.0f * t;
         camera->anim.worldPosZ = -(nz * h - gCameraModeNpcSpeakState->originObj->anim.worldPosZ);
         camera->anim.rotX = -getAngle(dx, dz);
         camera->anim.rotY =
-            -getAngle(-(lbl_803E1B60 * (dist / lbl_803E1B64) - dy), sqrtf(xx + zz));
+            -getAngle(-(100.0f * (dist / 400.0f) - dy), sqrtf(xx + zz));
 
         if (gCameraModeNpcSpeakState->transitionDone == 0)
         {
-            t2 = gCameraModeNpcSpeakState->transitionTimer / lbl_803E1B5C;
+            t2 = gCameraModeNpcSpeakState->transitionTimer / 60.0f;
             camera->anim.worldPosX =
                 t2 * (gCameraModeNpcSpeakState->startX - camera->anim.worldPosX) + camera->anim.worldPosX;
             camera->anim.worldPosY =
@@ -197,14 +139,52 @@ void dll_54_update(u8* obj)
             camera->anim.rotY = d * t2 + cur;
 
             gCameraModeNpcSpeakState->transitionTimer -= timeDelta;
-            if (gCameraModeNpcSpeakState->transitionTimer < lbl_803E1B68)
+            if (gCameraModeNpcSpeakState->transitionTimer < 0.0f)
             {
                 gCameraModeNpcSpeakState->transitionDone = 1;
-                gCameraModeNpcSpeakState->transitionTimer = lbl_803E1B68;
+                gCameraModeNpcSpeakState->transitionTimer = 0.0f;
             }
         }
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                        &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                        *(int*)&camera->anim.parent);
     }
+}
+
+void dll_54_init(int* p1, int unused, int* p3)
+{
+    CameraObject* camera = (CameraObject*)p1;
+    CameraObject* source = (CameraObject*)p3;
+
+    if (gCameraModeNpcSpeakState == NULL)
+    {
+        gCameraModeNpcSpeakState = (CameraMode54State*)mmAlloc(sizeof(CameraMode54State), 15, 0);
+    }
+    memset(gCameraModeNpcSpeakState, 0, sizeof(CameraMode54State));
+    gCameraModeNpcSpeakState->transitionTimer = 60.0f;
+    gCameraModeNpcSpeakState->transitionDone = 0;
+    if (p3 != NULL)
+    {
+        camera->anim.localPosX = source->anim.worldPosX;
+        camera->anim.localPosY = source->anim.worldPosY;
+        camera->anim.localPosZ = source->anim.worldPosZ;
+        camera->anim.rotX = source->anim.rotX;
+        camera->anim.rotY = source->anim.rotY;
+        camera->anim.rotZ = source->anim.rotZ;
+        camera->fov = source->fov;
+    }
+    gCameraModeNpcSpeakState->startX = camera->anim.worldPosX;
+    gCameraModeNpcSpeakState->startY = camera->anim.worldPosY;
+    gCameraModeNpcSpeakState->startZ = camera->anim.worldPosZ;
+    gCameraModeNpcSpeakState->startYaw = camera->anim.rotX;
+    gCameraModeNpcSpeakState->startPitch = camera->anim.rotY;
+    gCameraModeNpcSpeakState->startRoll = camera->anim.rotZ;
+}
+
+void dll_54_release_nop(void)
+{
+}
+
+void dll_54_initialise_nop(void)
+{
 }
