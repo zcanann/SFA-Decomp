@@ -55,21 +55,78 @@ SalVolTab gSnd3dRoomVolTable = {
     0.0f
 };
 extern f32 voiceAdsrSustainTable[129];
-extern f32 gSnd3dRoomVolIndexScale;
-extern f32 lbl_803E785C;
-extern f32 lbl_803E7860;
-extern f32 gSnd3dRoomPanFixedToFloat;
-extern f32 lbl_803E7874;
-extern f32 lbl_803E7878;
-extern f32 lbl_803E787C;
 
 #pragma fp_contract off
-#define SAL_FMOD1(dst, x) \
-    if (__fabs(lbl_803E785C) > __fabs(x)) { \
-        dst = (x); \
-    } else { \
-        dst = (x) - lbl_803E785C * (f32)(s64)(u64)((x) / lbl_803E785C); \
+static inline f32 sal_fmod(f32 x, f32 y)
+{
+    s64 n;
+
+    if (__fabsf(y) > __fabsf(x))
+    {
+        return x;
     }
+    n = (s64)(u64)(x / y);
+    return x - y * (f32)n;
+}
+
+typedef struct SAL_PANINFO
+{
+    u32 pan_i;
+    u32 pan_im;
+    u32 span_i;
+    u32 span_im;
+    u32 rpan_i;
+    u32 rpan_im;
+    f32 pan_f;
+    f32 pan_fm;
+    f32 span_f;
+    f32 span_fm;
+    f32 rpan_f;
+    f32 rpan_fm;
+} SAL_PANINFO;
+
+static inline void CalcBus(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
+{
+    u32 i;
+    f32 f;
+    f32 v;
+
+    i = 127.0f * vol;
+    v = (127.0f * vol) - (f32)i;
+    f = (1.0f - v) * vol_tab[i] + v * vol_tab[i + 1];
+    v_out[2] = 0.7079f * (f * ((1.0f - pi->span_f) * tabs->pan[pi->span_i] +
+                               pi->span_f * tabs->pan[pi->span_i + 1]));
+    f = f * ((1.0f - pi->span_fm) * tabs->pan[pi->span_im] +
+             pi->span_fm * tabs->pan[pi->span_im + 1]);
+    v_out[1] = f * ((1.0f - pi->pan_f) * tabs->pan[pi->pan_i] +
+               pi->pan_f * tabs->pan[pi->pan_i + 1]);
+    v_out[0] = f * ((1.0f - pi->pan_fm) * tabs->pan[pi->pan_im] +
+               pi->pan_fm * tabs->pan[pi->pan_im + 1]);
+}
+
+static inline void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
+{
+    u32 i;
+    f32 f;
+    f32 v;
+    f32 vs;
+
+    i = 127.0f * vol;
+    f = (127.0f * vol) - (f32)i;
+    v = (1.0f - f) * vol_tab[i] + f * vol_tab[i + 1];
+    vs = v * ((1.0f - pi->span_f) * tabs->pan[pi->span_i] +
+              pi->span_f * tabs->pan[pi->span_i + 1]);
+    v = v * ((1.0f - pi->span_fm) * tabs->pan[pi->span_im] +
+             pi->span_fm * tabs->pan[pi->span_im + 1]);
+    v_out[1] = v * ((1.0f - pi->pan_f) * tabs->pan[pi->pan_i] +
+                pi->pan_f * tabs->pan[pi->pan_i + 1]);
+    v_out[0] = v * ((1.0f - pi->pan_fm) * tabs->pan[pi->pan_im] +
+                pi->pan_fm * tabs->pan[pi->pan_im + 1]);
+    v_out[7] = vs * ((1.0f - pi->rpan_f) * tabs->pan_dpl2[pi->rpan_i] +
+                 pi->rpan_f * tabs->pan[pi->rpan_i + 1]);
+    v_out[6] = vs * ((1.0f - pi->rpan_fm) * tabs->pan_dpl2[pi->rpan_im] +
+                 pi->rpan_fm * tabs->pan[pi->rpan_im + 1]);
+}
 
 /*
  * salCalcVolumeMatrix
@@ -82,25 +139,11 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
     SalVolTab* tabs;
     f32* vol_tab;
     f32 p, sp, t;
-    u32 pan_i, pan_im, span_i, span_im;
-    u32 rpan_i, rpan_im;
     u32 pan2, span2;
-    u32 i;
-    f32 om_span_f, om_span_fm, om_pan_f, om_pan_fm;
-    f32 rpan_fm, rpan_f;
-    f32 span_fm, pan_fm, span_f, pan_f;
-    f32 v, f, vs, ftmp, one_;
-    f32* pan1;
+    SAL_PANINFO pi;
 
     tabs = &gSnd3dRoomVolTable;
-    if (voltab_index == 0)
-    {
-        vol_tab = tabs->vol;
-    }
-    else
-    {
-        vol_tab = voiceAdsrSustainTable;
-    }
+    vol_tab = (voltab_index == 0) ? tabs->vol : voiceAdsrSustainTable;
 
     if (pan == 0x800000)
     {
@@ -125,99 +168,46 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
         span2 = span - 0x10000;
     }
 
-    p = gSnd3dRoomPanFixedToFloat * pan2;
-    sp = gSnd3dRoomPanFixedToFloat * span2;
+    p = 2.4220301e-07f * pan2;
+    sp = 2.4220301e-07f * span2;
 
     if (dpl2 != 0)
     {
-        SAL_FMOD1(rpan_f, p);
-        rpan_i = p;
-        t = lbl_803E7874 - p;
-        SAL_FMOD1(rpan_fm, t);
-        rpan_im = t;
+        pi.rpan_f = sal_fmod(p, 1.0f);
+        pi.rpan_i = p;
+        t = 2.0f - p;
+        pi.rpan_fm = sal_fmod(t, 1.0f);
+        pi.rpan_im = t;
     }
 
     if (itd != 0)
     {
-        p = lbl_803E785C + lbl_803E7878 * (p - lbl_803E785C);
+        p = 1.0f + 0.76604f * (p - 1.0f);
     }
 
-    SAL_FMOD1(pan_f, p);
-    pan_i = p;
-    SAL_FMOD1(span_f, sp);
-    span_i = sp;
-    p = lbl_803E7874 - p;
-    sp = lbl_803E7874 - sp;
-    SAL_FMOD1(pan_fm, p);
-    pan_im = p;
-    SAL_FMOD1(span_fm, sp);
-    span_im = sp;
+    pi.pan_f = sal_fmod(p, 1.0f);
+    pi.pan_i = p;
+    pi.span_f = sal_fmod(sp, 1.0f);
+    pi.span_i = sp;
+    p = 2.0f - p;
+    sp = 2.0f - sp;
+    pi.pan_fm = sal_fmod(p, 1.0f);
+    pi.pan_im = p;
+    pi.span_fm = sal_fmod(sp, 1.0f);
+    pi.span_im = sp;
 
     if (dpl2 == 0)
     {
-        ftmp = gSnd3dRoomVolIndexScale * vol;
-        i = ftmp;
-        one_ = lbl_803E785C;
-        pan1 = tabs->pan + 1;
-        om_span_f = one_ - span_f;
-        v = ftmp - i;
-        om_span_fm = one_ - span_fm;
-        f = (one_ - v) * vol_tab[i] + v * vol_tab[i + 1];
-        om_pan_f = one_ - pan_f;
-        om_pan_fm = one_ - pan_fm;
-        out[2] = lbl_803E7860 * (f * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]));
-        f = f * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
-        out[1] = f * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
-        out[0] = f * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
-
-        ftmp = gSnd3dRoomVolIndexScale * auxa;
-        i = ftmp;
-        v = ftmp - i;
-        v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
-        out[5] = lbl_803E7860 * (v * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]));
-        v = v * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
-        out[4] = v * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
-        out[3] = v * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
-
-        ftmp = gSnd3dRoomVolIndexScale * auxb;
-        i = ftmp;
-        v = ftmp - i;
-        v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
-        out[8] = lbl_803E7860 * (v * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]));
-        v = v * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
-        out[7] = v * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
-        out[6] = v * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
+        CalcBus(vol_tab, out, vol, &pi, tabs);
+        CalcBus(vol_tab, out + 3, auxa, &pi, tabs);
+        CalcBus(vol_tab, out + 6, auxb, &pi, tabs);
     }
     else
     {
-        ftmp = gSnd3dRoomVolIndexScale * vol;
-        i = ftmp;
-        one_ = lbl_803E785C;
-        pan1 = tabs->pan + 1;
-        om_span_f = one_ - span_f;
-        om_span_fm = one_ - span_fm;
-        v = ftmp - i;
-        om_pan_f = one_ - pan_f;
-        f = (one_ - v) * vol_tab[i] + v * vol_tab[i + 1];
-        om_pan_fm = one_ - pan_fm;
-        vs = f * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]);
-        f = f * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
-        out[1] = f * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
-        out[0] = f * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
-        out[7] = vs * ((one_ - rpan_f) * tabs->pan_dpl2[rpan_i] + rpan_f * pan1[rpan_i]);
-        out[6] = vs * ((one_ - rpan_fm) * tabs->pan_dpl2[rpan_im] + rpan_fm * pan1[rpan_im]);
-
-        ftmp = gSnd3dRoomVolIndexScale * auxa;
-        i = ftmp;
-        v = ftmp - i;
-        v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
-        out[5] = lbl_803E7860 * (v * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]));
-        v = v * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
-        out[4] = v * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
-        out[3] = v * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
-
-        out[2] = lbl_803E787C;
-        out[8] = lbl_803E787C;
+        CalcBusDPL2(vol_tab, out, vol, &pi, tabs);
+        CalcBus(vol_tab, out + 3, auxa, &pi, tabs);
+        out[2] = 0.0f;
+        out[8] = 0.0f;
     }
 }
 #pragma fp_contract reset
