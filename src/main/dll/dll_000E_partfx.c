@@ -4725,7 +4725,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.velocityZ = extraArgs[2];
         cfg.scale = lbl_803DF4C8;
         cfg.lifetimeFrames = 0x28;
-        cfg.initialAlpha = (u8)(int)spawnParams->scale;
+        cfg.initialAlpha = (u8)spawnParams->scale;
         cfg.linkGroup = 10;
         cfg.behaviorFlags = 0x200;
         cfg.textureId = 0xc13;
