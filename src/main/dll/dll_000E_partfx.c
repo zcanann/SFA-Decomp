@@ -4260,13 +4260,13 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.initialAlpha = 0x9b;
         cfg.linkGroup = 0xe;
         cfg.behaviorFlags = 0x100110;
-        if (extraArgs == NULL)
+        if (extraArgs != NULL)
         {
-            cfg.textureId = 0x88;
+            cfg.textureId = 0x78;
         }
         else
         {
-            cfg.textureId = 0x78;
+            cfg.textureId = 0x88;
         }
         break;
     case 0x37:
@@ -4398,13 +4398,13 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         randomGetRange(0xffffffff, 1);
         cfg.velocityY = lbl_803DF608;
         cfg.scale = lbl_803DF4E0;
-        if (extraArgs == NULL)
+        if (extraArgs != NULL)
         {
-            cfg.lifetimeFrames = 0x78;
+            cfg.lifetimeFrames = (s32) * extraArgs;
         }
         else
         {
-            cfg.lifetimeFrames = (s32) * extraArgs;
+            cfg.lifetimeFrames = 0x78;
         }
         cfg.linkGroup = 0;
         cfg.behaviorFlags = 0x100201;
@@ -4893,8 +4893,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         randomGetRange(0xffffffe9, 0x19) + cfg.startPosZ;
         cfg.scale = lbl_803DF6D8 * (f32)(s32)
         randomGetRange(1, 6);
-        intVal = randomGetRange(7, 0xf);
-        cfg.lifetimeFrames = intVal + 5;
+        intVal = randomGetRange(7, 0xf) + 5;
+        cfg.lifetimeFrames = intVal;
         cfg.textureId = 0xc9a;
         cfg.behaviorFlags = 0x100210;
         cfg.renderFlags = 0x4000800;
@@ -4921,7 +4921,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.colorWord2 = 0x2603;
                 cfg.renderFlags |= 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6DC;
-                cfg.lifetimeFrames = intVal + 0xc;
+                cfg.lifetimeFrames = intVal + 7;
             }
             else if (variantU == '\x03')
             {
@@ -4933,7 +4933,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.colorWord2 = 0x1f5;
                 cfg.renderFlags |= 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
-                cfg.lifetimeFrames = intVal + 0x19;
+                cfg.lifetimeFrames = intVal + 0x14;
             }
             else if (variantU == '\x04')
             {
