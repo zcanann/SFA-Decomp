@@ -537,10 +537,9 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 
             if (!createTransient)
             {
-                transient = s->transient;
-                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
+                for (i = 0, transient = s->transient; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; transient++, i++)
                 {
-                    if (transient[i].mapId == idx && transient[i].shift == shift)
+                    if (idx == transient->mapId && shift == transient->shift)
                     {
                         found = i;
                         goto checkedTransient;
@@ -552,10 +551,9 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
                 {
                     for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
                     {
-                        if (transient[i].mapId == -1)
+                        if (s->transient[i].mapId == -1)
                         {
-                            slot = &transient[i];
-                            slot->mapId = idx;
+                            (slot = &s->transient[i])->mapId = idx;
                             slot->shift = shift;
                             slot->timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
                             break;
