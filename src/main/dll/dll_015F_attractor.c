@@ -39,56 +39,6 @@ STATIC_ASSERT(offsetof(AttractorMapData, setupByte) == 0x18);
 STATIC_ASSERT(offsetof(AttractorMapData, mode) == 0x19);
 STATIC_ASSERT(offsetof(AttractorMapData, scale) == 0x1a);
 
-extern f32 lbl_803E43D0;
-
-void attractor_hitDetect(void)
-{
-}
-
-void attractor_update(void)
-{
-}
-
-void attractor_release(void)
-{
-}
-
-void attractor_initialise(void)
-{
-}
-
-int attractor_getExtraSize(void) { return 0x0; }
-int attractor_getObjectTypeId(void) { return 0x0; }
-
-void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0)
-        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E43D0);
-}
-
-void attractor_free(int obj) { ObjGroup_RemoveObject(obj, ATTRACTOR_OBJ_GROUP); }
-
-int attractor_setScale(int* obj)
-{
-    AttractorMapData* p = (AttractorMapData*)((int**)obj)[0x4c / 4];
-    if (p->mode != ATTRACTOR_MODE_NONE)
-    {
-        return p->scale;
-    }
-    return 0;
-}
-
-void attractor_init(GameObject* obj, AttractorMapData* data)
-{
-    ObjGroup_AddObject((u32)obj, ATTRACTOR_OBJ_GROUP);
-    {
-        s8 setup = data->setupByte;
-        s16 rotX = setup << 8;
-        obj->anim.rotX = rotX;
-    }
-}
-
 void attractor_func0B(GameObject* obj, void** out)
 {
     void* result = NULL;
@@ -112,4 +62,52 @@ void attractor_func0B(GameObject* obj, void** out)
     }
     }
     *out = result;
+}
+
+int attractor_setScale(int* obj)
+{
+    AttractorMapData* p = (AttractorMapData*)((int**)obj)[0x4c / 4];
+    if (p->mode != ATTRACTOR_MODE_NONE)
+    {
+        return p->scale;
+    }
+    return 0;
+}
+
+int attractor_getExtraSize(void) { return 0x0; }
+int attractor_getObjectTypeId(void) { return 0x0; }
+
+void attractor_free(int obj) { ObjGroup_RemoveObject(obj, ATTRACTOR_OBJ_GROUP); }
+
+void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+}
+
+void attractor_hitDetect(void)
+{
+}
+
+void attractor_update(void)
+{
+}
+
+void attractor_init(GameObject* obj, AttractorMapData* data)
+{
+    ObjGroup_AddObject((u32)obj, ATTRACTOR_OBJ_GROUP);
+    {
+        s8 setup = data->setupByte;
+        s16 rotX = setup << 8;
+        obj->anim.rotX = rotX;
+    }
+}
+
+void attractor_release(void)
+{
+}
+
+void attractor_initialise(void)
+{
 }

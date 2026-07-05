@@ -1560,6 +1560,7 @@ main/dll/dll_015D_slidingdoor.c:
 
 main/dll/dll_015F_attractor.c:
 	.text       start:0x801A41D8 end:0x801A4380
+	.sdata2     start:0x803E43D0 end:0x803E43D4
 
 main/dll/CF/dll_0162_cfmagicwall.c:
 	.text       start:0x801A4380 end:0x801A4524
