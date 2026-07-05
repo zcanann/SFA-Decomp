@@ -1848,6 +1848,7 @@ extern const f32 lbl_803DF27C;
  */
 void newclouds_update(u8* objA, u8* objB, u8* params)
 {
+    CloudSpawnParams* cfg = (CloudSpawnParams*)params;
     u8* env;
     NewCloud* cloud;
     u8 fl;
@@ -1913,7 +1914,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
                 switch (*(u16*)(params + 0x26))
                 {
                 case 0:
-                    *(s16*)(env + 0xe) = (s16) * (u16*)(params + 0x24) - 1;
+                    *(s16*)(env + 0xe) = (s16)cfg->windCount - 1;
                     *(int*)(env + 0x14) = posA[0];
                     *(int*)(env + 0x18) = posA[1];
                     *(int*)(env + 0x1c) = posA[2];
@@ -1939,7 +1940,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
                     }
                     break;
                 case 1:
-                    *(s16*)(env + 0x10) = (s16) * (u16*)(params + 0x24) - 1;
+                    *(s16*)(env + 0x10) = (s16)cfg->windCount - 1;
                     *(int*)(env + 0x20) = posA[0];
                     *(int*)(env + 0x24) = posA[1];
                     *(int*)(env + 0x28) = posA[2];
@@ -1965,7 +1966,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
                     }
                     break;
                 case 2:
-                    *(s16*)(env + 0x12) = (s16) * (u16*)(params + 0x24) - 1;
+                    *(s16*)(env + 0x12) = (s16)cfg->windCount - 1;
                     *(int*)(env + 0x2c) = posA[0];
                     *(int*)(env + 0x30) = posA[1];
                     *(int*)(env + 0x34) = posA[2];
@@ -2057,19 +2058,19 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
             cloud->finished = 0;
         }
         ((NewCloud*)NC_CLOUD)->despawning = 1 - ((NewCloud*)NC_CLOUD)->despawning;
-        if (*(u16*)(params + 0x2a) != 0)
+        if (cfg->fillDivisor != 0)
         {
             ((NewCloud*)NC_CLOUD)->flakeFillRate =
-                (f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32) * (u16*)(params + 0x2a);
+                (f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32)cfg->fillDivisor;
         }
         else
         {
             ((NewCloud*)NC_CLOUD)->flakeFillRate = (((NewCloud*)NC_CLOUD)->flakeCount - 1);
         }
-        if (*(u16*)(params + 0x2c) != 0)
+        if (cfg->drainDivisor != 0)
         {
             ((NewCloud*)NC_CLOUD)->flakeDrainRate =
-                -((f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32) * (u16*)(params + 0x2c));
+                -((f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32)cfg->drainDivisor);
         }
         else
         {
