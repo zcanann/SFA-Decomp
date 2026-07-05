@@ -1020,12 +1020,11 @@ state_selected:
         {
             ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
                 (int)obj, ((TrickyState*)state)->speed * lbl_803E24AC, &((TrickyState*)state)->moveProgress);
-            k = lbl_803E24AC;
             ((GameObject*)obj)->anim.localPosX =
-                timeDelta * (((TrickyState*)state)->dirX * (((TrickyState*)state)->speed * lbl_803E24AC)) +
+                timeDelta * (((TrickyState*)state)->dirX * (((TrickyState*)state)->speed * (k = lbl_803E24AC))) +
                 ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)obj)->anim.localPosZ =
-                timeDelta * (((TrickyState*)state)->dirZ * (((TrickyState*)state)->speed * lbl_803E24AC)) +
+                timeDelta * (((TrickyState*)state)->dirZ * (((TrickyState*)state)->speed * k)) +
                 ((GameObject*)obj)->anim.localPosZ;
         }
         if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
