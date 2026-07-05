@@ -15,6 +15,7 @@
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
+#include "main/dll/vecrotatezxyarg_struct.h"
 
 typedef struct IceblastPlacement
 {
@@ -56,12 +57,7 @@ void iceblast_update(GameObject* obj)
     GameObject* player = Obj_GetPlayerObject();
     f32* timer = obj->extra;
     IceblastPlacement* def = (IceblastPlacement*)obj->anim.placementData;
-    struct
-    {
-        s16 dir[3];
-        s16 pad;
-        f32 pos[4];
-    } vec;
+    VecRotateZXYArg vec;
     if (player != NULL && (path = player->childObjs[0]) != NULL)
     {
         obj->anim.rotZ = path->anim.rotZ;
