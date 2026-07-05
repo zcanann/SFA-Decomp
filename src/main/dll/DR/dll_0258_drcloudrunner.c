@@ -161,7 +161,8 @@ int DR_CloudRunner_stateHandler07(int obj)
 
 void DR_CloudRunner_free(int obj)
 {
-    GameBit_Set(0x7aa, *(s16*)((char*)*(int*)&((GameObject*)obj)->extra + 0xbb0));
+    DRCloudRunnerState* inner = (DRCloudRunnerState*)((GameObject*)obj)->extra;
+    GameBit_Set(0x7aa, inner->altMoveEnabled);
     ObjGroup_RemoveObject(obj, DRCLOUDRUNNER_OBJGROUP);
     ObjGroup_RemoveObject(obj, ARWARWING_OBJGROUP);
     (*gGameUIInterface)->airMeterSetShutdown();
