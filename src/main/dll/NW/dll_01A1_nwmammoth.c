@@ -38,16 +38,16 @@ extern f32 gNwMammothPlayerNearDistSq;
 extern f32 gNwMammothPathDecel;
 extern f32 gNwMammothPathSpeedMax;
 extern f32 lbl_803E5250;
-extern int lbl_803DBF80;
-extern int lbl_803DBF84;
-extern int lbl_803DBF88;
-extern int lbl_803DBF8C;
-extern int lbl_803DBF90;
-extern int lbl_803DBF94;
-extern int lbl_803DBF98;
-extern int lbl_803DBF9C;
-extern int lbl_803DBFA0;
-extern int lbl_803DBFA4;
+extern u8 lbl_803DBF80[4];
+extern u8 lbl_803DBF84[4];
+extern u8 lbl_803DBF88[4];
+extern u8 lbl_803DBF8C[4];
+extern u8 lbl_803DBF90[4];
+extern u8 lbl_803DBF94[4];
+extern u8 lbl_803DBF98[4];
+extern u8 lbl_803DBF9C[4];
+extern u8 lbl_803DBFA0[4];
+extern u8 lbl_803DBFA4[4];
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 extern f32 gNwMammothSfxInterval;
@@ -55,9 +55,9 @@ extern f32 gNwMammothTumbleweedDistSqThreshold;
 extern f32 gNwMammothCaptureDist;
 extern f32 gNwMammothAirMeterFull;
 extern f32 gNwMammothAirMeterPerSegment;
-extern int lbl_803DBFA8;
-extern int lbl_803DBFAC;
-extern int lbl_803DBFB0;
+extern u8 lbl_803DBFA8[4];
+extern u8 lbl_803DBFAC[4];
+extern u8 lbl_803DBFB0[4];
 extern int gNwMammothBushObjectIds[];
 extern int gNwMammothBushGameBits[];
 extern int* ObjList_FindObjectById(int id);
@@ -93,10 +93,10 @@ void fn_801CEE0C(int p1, int p2)
     extern int fn_801CE078(int);
     extern int ObjTrigger_IsSetById(int, int);
     extern int gameBitDecrement(int bit);
-    extern int lbl_803DBF70;
-    extern int lbl_803DBF74;
-    extern int lbl_803DBF78;
-    extern int lbl_803DBF7C;
+    extern u8 lbl_803DBF70[4];
+    extern u8 lbl_803DBF74[4];
+    extern u8 lbl_803DBF78[4];
+    extern u8 lbl_803DBF7C[4];
     NwMammothState* state = (NwMammothState*)p2;
 
     if (fn_801CE078(p1) != 0) return;
@@ -104,14 +104,14 @@ void fn_801CEE0C(int p1, int p2)
     switch (state->stateIndex)
     {
     case 0:
-        *(int*)&state->triggerList = (int)&lbl_803DBF70;
+        state->triggerList = lbl_803DBF70;
         if (GameBit_Get(211) != 0)
         {
             state->stateIndex = 1;
         }
         break;
     case 1:
-        *(int*)&state->triggerList = (int)&lbl_803DBF74;
+        state->triggerList = lbl_803DBF74;
         switch (GameBit_Get(1400))
         {
         case 0:
@@ -133,7 +133,7 @@ void fn_801CEE0C(int p1, int p2)
         }
         break;
     case 2:
-        *(int*)&state->triggerList = (int)&lbl_803DBF78;
+        state->triggerList = lbl_803DBF78;
         if (ObjTrigger_IsSetById(p1, 1398) != 0)
         {
             GameBit_Set(1400, 2);
@@ -144,7 +144,7 @@ void fn_801CEE0C(int p1, int p2)
         }
         break;
     case 3:
-        *(int*)&state->triggerList = (int)&lbl_803DBF7C;
+        state->triggerList = lbl_803DBF7C;
         break;
     }
 }
@@ -152,15 +152,15 @@ void fn_801CEE0C(int p1, int p2)
 void fn_801CED2C(int p1, int p2)
 {
     extern int ObjTrigger_IsSetById(int, int);
-    extern int lbl_803DBFB4;
-    extern int lbl_803DBFB8;
-    extern int lbl_803DBFBC;
+    extern u8 lbl_803DBFB4[4];
+    extern u8 lbl_803DBFB8[4];
+    extern u8 lbl_803DBFBC[4];
     NwMammothState* state = (NwMammothState*)p2;
 
     switch (state->stateIndex)
     {
     case 4:
-        *(int*)&state->triggerList = (int)&lbl_803DBFB4;
+        state->triggerList = lbl_803DBFB4;
         if (ObjTrigger_IsSetById(p1, 418) != 0)
         {
             state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
@@ -172,14 +172,14 @@ void fn_801CED2C(int p1, int p2)
         }
         break;
     case 5:
-        *(int*)&state->triggerList = (int)&lbl_803DBFB8;
+        state->triggerList = lbl_803DBFB8;
         if (GameBit_Get(415) != 0)
         {
             state->stateIndex = 6;
         }
         break;
     case 6:
-        *(int*)&state->triggerList = (int)&lbl_803DBFBC;
+        state->triggerList = lbl_803DBFBC;
         break;
     }
 }
@@ -345,46 +345,46 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
     {
         if (GameBit_Get(0x19d) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF90;
+            state->triggerList = lbl_803DBF90;
         }
         else if (GameBit_Get(0x1a2) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF8C;
+            state->triggerList = lbl_803DBF8C;
         }
         else if (GameBit_Get(0x102) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF88;
+            state->triggerList = lbl_803DBF88;
         }
         else if (GameBit_Get(0x9e) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF84;
+            state->triggerList = lbl_803DBF84;
         }
         else
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF80;
+            state->triggerList = lbl_803DBF80;
         }
     }
     else
     {
         if (GameBit_Get(0x19d) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBFA4;
+            state->triggerList = lbl_803DBFA4;
         }
         else if (GameBit_Get(0x1a2) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBFA0;
+            state->triggerList = lbl_803DBFA0;
         }
         else if (GameBit_Get(0x102) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF9C;
+            state->triggerList = lbl_803DBF9C;
         }
         else if (GameBit_Get(0x9e) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF98;
+            state->triggerList = lbl_803DBF98;
         }
         else
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF94;
+            state->triggerList = lbl_803DBF94;
         }
     }
 }
@@ -494,7 +494,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                     (*(void (**)(int*, int*, int, int))((char*)*((GameObject*)tk)->anim.dll + 0x28))(
                         tk, obj, 1, 1);
                 }
-                *(int*)&state->triggerList = (int)&lbl_803DBFA8;
+                state->triggerList = lbl_803DBFA8;
                 if (state->trackedObject == NULL)
                 {
                     short* cfg = ((GameObject*)obj)->anim.placementData;
@@ -588,7 +588,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     default:
         if (GameBit_Get(0x224) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBFB0;
+            state->triggerList = lbl_803DBFB0;
         }
         else
         {
@@ -597,7 +597,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                 GameBit_Set(0xea7, 1);
                 GameBit_Set(0x9d5, 1);
             }
-            *(int*)&state->triggerList = (int)&lbl_803DBFAC;
+            state->triggerList = lbl_803DBFAC;
         }
         fn_801CE078(obj, st);
         break;
