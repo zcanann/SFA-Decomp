@@ -111,7 +111,7 @@ void CameraModeForceBehind_func05_nop(void)
 
 int dll_19_func1B(int p)
 {
-    s16 v = *(s16*)((char*)p + 0x46);
+    s16 v = ((GameObject*)p)->anim.seqId;
     switch (v)
     {
     case 341:
