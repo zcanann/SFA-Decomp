@@ -1819,7 +1819,7 @@ void crawler_updateC(s16* obj, u8* state)
                 if (((FCVars*)state)->reactStep != 0)
                 {
                     i = ((FCVars*)state)->reactStep * 0x10;
-                    Baddie_SetMove((int*)obj, state, *(u8*)((char*)seq + i + 8), *(f32*)((int)seq + i), 0,
+                    Baddie_SetMove((int*)obj, state, ((u8*)seq + i)[8], *(f32*)((int)seq + i), 0,
                                 *(int*)((char*)seq + i + 4) & 0xff);
                     ((FCVars*)state)->flagsC = seq[((FCVars*)state)->reactStep].flagC;
                     ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
@@ -1892,8 +1892,8 @@ void crawler_updateC(s16* obj, u8* state)
         else if ((flags & 0xc0000000) != 0)
         {
             i = (randomGetRange(1, *(u8*)(t8 + 8)) & 0xff) * 0xc;
-            Baddie_SetMove((int*)obj, state, *(u8*)((char*)t8 + i + 8), *(f32*)((int)t8 + i), 0,
-                        *(u8*)((char*)t8 + i + 0xa));
+            Baddie_SetMove((int*)obj, state, (t8 + i)[8], *(f32*)((int)t8 + i), 0,
+                        (t8 + i)[0xa]);
         }
     }
     fn_80157CDC((int)obj, (int)state);
