@@ -17,9 +17,8 @@ extern f32 lbl_803E5520;
 
 void sh_staffhaze_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5)
 {
-    extern void objRenderFn_8003b8f4(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
     float vec[3];
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5518);
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E5518);
     vec[0] = lbl_803E551C;
     vec[1] = lbl_803E5520;
     vec[2] = lbl_803E551C;

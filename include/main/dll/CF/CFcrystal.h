@@ -70,7 +70,7 @@ void LanternFireFly_initialise(void);
 int FireFlyLantern_getExtraSize(void);
 int FireFlyLantern_getObjectTypeId(void);
 void FireFlyLantern_free(int obj);
-void FireFlyLantern_render(void);
+void FireFlyLantern_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FireFlyLantern_update(int obj);
 void FireFlyLantern_init(int param_1,int param_2);
 int FireFlyLantern_spawnFireFly(int *obj);

@@ -20,7 +20,7 @@ int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int treasurechest_getExtraSize(void);
 int treasurechest_getObjectTypeId(void);
 void treasurechest_free(void);
-void treasurechest_render(void);
+void treasurechest_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void treasurechest_hitDetect(int obj);
 
 #endif /* MAIN_DLL_CF_DLL_165_H_ */

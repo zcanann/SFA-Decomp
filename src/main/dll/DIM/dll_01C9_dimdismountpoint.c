@@ -111,7 +111,7 @@ void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible
     }
     else
     {
-        objRenderFn_8003b8f4(lbl_803E490C);
+        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E490C);
     }
 }
 

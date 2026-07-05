@@ -20,7 +20,7 @@ void cflightwall_free(void)
 {
 }
 
-void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }
+void cflightwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3EE8); }
 
 void cflightwall_hitDetect(void)
 {
