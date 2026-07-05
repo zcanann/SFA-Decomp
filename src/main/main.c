@@ -12,10 +12,7 @@
 #define MAIN_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MAIN_OBJFLAG_RENDERED 0x800
 
-extern u32 FUN_80017ac8();
 extern ModgfxInterface** gModgfxInterface;
-extern u32 DAT_803de944;
-extern u32 DAT_803de946;
 extern f32 lbl_803DC074;
 extern void* gVfpLavaPoolEffectResource;
 extern void objRenderFn_80041018(int* obj);
@@ -42,85 +39,6 @@ extern f32 lbl_803E61B0;
 extern f32 lbl_803E61B4;
 extern void* getTrickyObject(void);
 
-
-/* Per-mode gamebit/particle update handler for a lava/flame effect object.
- * `mode` (placementData[0x19]) selects behaviour; `extra` doubles as both an
- * effect-state pointer and a scratch int for the priority-hit result. */
-void FUN_801fd398(u64 fx0, u64 fx1, u64 fx2, u64 fx3,
-                  u64 fx4, u64 fx5, u64 fx6, u64 fx7,
-                  int obj)
-{
-    char mode;
-    u32 bit;
-    int extra;
-    short* extraS;
-    double dt;
-
-    mode = *(char*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x19);
-    if (mode == '\x02')
-    {
-        extra = *(int*)&((GameObject*)obj)->extra;
-        DAT_803de944 = DAT_803de944 - (short)(int)lbl_803DC074;
-        bit = GameBit_Get((int)*(short*)(extra + 2));
-        if (((bit == 0) && (DAT_803de944 < 0xc9)) &&
-            ((*(char*)(extra + 0xb) == DAT_803de946 && (bit = randomGetRange(0, 2), bit == 0))))
-        {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x391, NULL, 4, -1, NULL);
-        }
-    }
-    else if (((GameObject*)obj)->anim.seqId == 0x3c5)
-    {
-        extra = *(int*)&((GameObject*)obj)->extra;
-        *(short*)(extra + 6) = *(short*)(extra + 6) - (short)(int)lbl_803DC074;
-        ((GameObject*)obj)->anim.localPosX =
-            ((GameObject*)obj)->anim.velocityX * lbl_803DC074 + ((GameObject*)obj)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosY =
-            ((GameObject*)obj)->anim.velocityY * lbl_803DC074 + ((GameObject*)obj)->anim.localPosY;
-        dt = (double)lbl_803DC074;
-        ((GameObject*)obj)->anim.localPosZ =
-            (float)((double)((GameObject*)obj)->anim.velocityZ * dt + (double)((GameObject*)obj)->anim.
-                localPosZ);
-        if (*(short*)(extra + 6) < 1)
-        {
-            FUN_80017ac8(dt, (double)((GameObject*)obj)->anim.velocityZ, fx2, fx3, fx4, fx5,
-                         fx6,
-                         fx7, obj);
-        }
-    }
-    else if (mode == '\0')
-    {
-        extra = *(int*)&((GameObject*)obj)->extra;
-        DAT_803de944 = DAT_803de944 - (short)(int)lbl_803DC074;
-        bit = GameBit_Get(0x522);
-        if ((((bit == 0) && (DAT_803de944 < 0xc9)) && (*(char*)(extra + 0xb) == DAT_803de946)) &&
-            (bit = randomGetRange(0, 2), bit == 0))
-        {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x391, NULL, 4, -1, NULL);
-        }
-    }
-    else if (mode == '\x01')
-    {
-        extraS = ((GameObject*)obj)->extra;
-        bit = GameBit_Get((int)*extraS);
-        if (bit != 0)
-        {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x390, NULL, 4, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x390, NULL, 4, -1, NULL);
-            bit = randomGetRange(0, 1);
-            if (bit != 0)
-            {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x391, NULL, 4, -1, NULL);
-            }
-        }
-        extra = ObjHits_GetPriorityHit(obj, 0x0, 0x0, 0x0);
-        if ((short)extra != 0)
-        {
-            bit = GameBit_Get((int)*extraS);
-            GameBit_Set((int)*extraS, 1 - bit);
-        }
-    }
-    return;
-}
 
 void VFP_lavapool_free_nop(void)
 {
