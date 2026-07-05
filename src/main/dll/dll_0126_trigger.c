@@ -508,7 +508,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         {
                             continue;
                         }
-                        switch (*(s16*)tbl)
+                        switch (((TriggerPlacement*)tbl)->typeId)
                         {
                         case 0x4b:
                         case 0x4c:
@@ -518,7 +518,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         case 0x50:
                         case 0x54:
                         case 0x230:
-                            if (*(s16*)((char*)tbl + 0x38) == id)
+                            if (((TriggerPlacement*)tbl)->unk38 == id)
                             {
                                 objInterpretSeq(t2, seqArg, legCode, distSq);
                             }
