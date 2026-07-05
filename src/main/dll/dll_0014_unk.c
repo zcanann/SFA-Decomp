@@ -519,8 +519,8 @@ done_exit:
 int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGroupIndex)
 {
     u8 k;
-    u8 k2;
-    u32 pidx;
+    u8* lwg;
+    ObjfsaWalkGroup* wg;
     u32 lpidx;
     u32 clz;
     u16 lidx;
@@ -528,12 +528,11 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
     u8 i;
     u8 j;
     u8 m;
+    u32 pidx;
+    u8 k2;
     ObjfsaPatch* patch;
     ObjfsaPatch* lp;
-    ObjfsaWalkGroup* wg;
-    u8* lwg;
     f32 y;
-
     for (k = 0, wg = &gObjfsaWalkGroups[currentWalkGroupIndex]; k < 4; k++)
     {
         pidx = wg->patchIndices[k];
