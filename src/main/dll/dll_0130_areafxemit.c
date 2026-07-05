@@ -30,10 +30,6 @@ enum {
     AREAFXEMIT_SEQEV_EMIT = 1
 };
 
-extern f32 lbl_803E3E68;
-extern f32 lbl_803E3E6C;
-extern f32 lbl_803E3E70;
-
 #pragma dont_inline on
 void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
 {
@@ -136,7 +132,7 @@ void areafxemit_emitEffect(AreaFxEmitObject* obj)
     CFEmitterFxArgs args;
 
     state = obj->state;
-    args.scale = lbl_803E3E68;
+    args.scale = 1.0f;
     type = state->emitType;
 
     if (type == AREAFXEMIT_SPAWN_LOCAL_WORLD)
@@ -262,6 +258,20 @@ int areafxemit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* anim
     return 0;
 }
 
+int areafxemit_getExtraSize(void) { return sizeof(AreaFxEmitState); }
+int areafxemit_getObjectTypeId(void) { return 0x0; }
+
+void areafxemit_free(AreaFxEmitObject* obj)
+{
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+
+void areafxemit_hitDetect(void)
+{
+}
+
 void areafxemit_update(AreaFxEmitObject* obj)
 {
     AreaFxEmitState* state;
@@ -298,10 +308,10 @@ void areafxemit_update(AreaFxEmitObject* obj)
                 yy = yDelta * yDelta;
                 distance = sqrtf(yy + xDelta * xDelta + zDelta * zDelta);
                 radius = state->triggerRadius;
-                if (distance <= radius || lbl_803E3E6C == radius)
+                if (distance <= radius || 0.0f == radius)
                 {
                     if ((state->emitType >= 4) &&
-                        ((state->lastDistance > radius && (lbl_803E3E6C != radius))))
+                        ((state->lastDistance > radius && (0.0f != radius))))
                     {
                         areafxemit_emitBurst(obj, AREAFXEMIT_APPROACH_BURST_COUNT);
                     }
@@ -347,7 +357,7 @@ void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup)
     angle = (s16)(setup->initialYaw << 8);
     state->emitAngles[0] = angle;
     obj->objAnim.rotX = angle;
-    obj->objAnim.rootMotionScale = lbl_803E3E70;
+    obj->objAnim.rootMotionScale = 0.1f;
 
     if (state->emitCount < 1)
     {
@@ -364,17 +374,6 @@ void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup)
     }
 }
 
-void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-
-void areafxemit_free(AreaFxEmitObject* obj)
-{
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
-
-void areafxemit_hitDetect(void)
-{
-}
-
 void areafxemit_release(void)
 {
 }
@@ -382,6 +381,3 @@ void areafxemit_release(void)
 void areafxemit_initialise(void)
 {
 }
-
-int areafxemit_getExtraSize(void) { return sizeof(AreaFxEmitState); }
-int areafxemit_getObjectTypeId(void) { return 0x0; }

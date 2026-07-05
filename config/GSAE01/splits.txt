@@ -1419,6 +1419,7 @@ main/dll/dll_012B_fxemit.c:
 
 main/dll/dll_0130_areafxemit.c:
 	.text       start:0x8018F148 end:0x8018FF28
+	.sdata2     start:0x803E3E60 end:0x803E3E74
 
 main/dll/dll_012D_lfxemitter.c:
 	.text       start:0x8018FF28 end:0x8019042C
