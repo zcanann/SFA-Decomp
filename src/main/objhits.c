@@ -2240,7 +2240,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
     {
         u8 out[64];
         f32 radii[4];
-        u8 ids[4];
+        s8 ids[4];
         u8 sevens[4];
         u8 pad58[4];
         int kinds[5];
@@ -2273,8 +2273,6 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                     bits = hitVolume->linkedSpheres;
                     if (bits != 0)
                     {
-                        f32 offX = playerMapOffsetX;
-                        f32 offZ = playerMapOffsetZ;
                         for (; (u16)bits != 0; bits = (u16)((bits & 0xffff) << 4))
                         {
                             sphereIdx = (((u16)bits & 0xf000) >> 0xc) + i & 0xffff;
@@ -2284,15 +2282,15 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                                 int prevEntry;
                                 int sphereOff = sphereIdx * 0x10;
                                 curEntry = (float*)((u8*)curSpheres + sphereOff);
-                                endPoints[pointCount * 3] = offX + curEntry[1];
+                                endPoints[pointCount * 3] = playerMapOffsetX + curEntry[1];
                                 endPoints[pointCount * 3 + 1] = curEntry[2];
-                                endPoints[pointCount * 3 + 2] = offZ + curEntry[3];
+                                endPoints[pointCount * 3 + 2] = playerMapOffsetZ + curEntry[3];
                                 prevEntry = prevSpheres + sphereOff;
-                                startPoints[pointCount * 3] = offX + *(float*)(prevEntry + 4);
+                                startPoints[pointCount * 3] = playerMapOffsetX + *(float*)(prevEntry + 4);
                                 startPoints[pointCount * 3 + 1] = *(float*)(prevEntry + 8);
-                                startPoints[pointCount * 3 + 2] = offZ + *(float*)(prevEntry + 0xc);
+                                startPoints[pointCount * 3 + 2] = playerMapOffsetZ + *(float*)(prevEntry + 0xc);
                                 hb.radii[pointCount] = *curEntry;
-                                *(s8*)&hb.ids[pointCount] = -1;
+                                hb.ids[pointCount] = -1;
                                 hb.sevens[pointCount] = 7;
                                 pointCount = pointCount + 1;
                             }
@@ -2309,7 +2307,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                             startPoints[pointCount * 3 + 1] = *(float*)(prevSpheres + i * 0x10 + 8);
                             startPoints[pointCount * 3 + 2] = playerMapOffsetZ + *(float*)(prevSpheres + i * 0x10 + 0xc);
                             hb.radii[pointCount] = curSpheres[i * 4];
-                            *(s8*)&hb.ids[pointCount] = -1;
+                            hb.ids[pointCount] = -1;
                             hb.sevens[pointCount] = 7;
                             pointCount = pointCount + 1;
                         }
@@ -2331,7 +2329,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                 fConv = lbl_803DE91C;
             }
             hb.radii[0] = fConv;
-            *(s8*)&hb.ids[0] = -1;
+            hb.ids[0] = -1;
             hb.sevens[0] = 7;
             pointCount = 1;
         }
@@ -2358,7 +2356,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                 {
                     pointCount = 3;
                 }
-                stateB->contactHitVolume = ((s8*)hb.ids)[pointCount];
+                stateB->contactHitVolume = hb.ids[pointCount];
                 stateB->contactPosX = endPoints[pointCount * 3];
                 stateB->contactPosY = endPoints[pointCount * 3 + 1];
                 stateB->contactPosZ = endPoints[pointCount * 3 + 2];
