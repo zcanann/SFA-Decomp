@@ -3362,7 +3362,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.overrideColor0 = 500;
             cfg.overrideColor1 = 0;
             cfg.overrideColor2 = 1000;
-            cfg.renderFlags = 0x4000020;
+            cfg.renderFlags |= 0x20;
         }
         break;
     case 0x7:
@@ -4564,7 +4564,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.velocityZ = lbl_803DF4EC * (f32)(s32)(10 - randomGetRange(0, 0x14));
         cfg.scale = lbl_803DF600;
         cfg.lifetimeFrames = 0xa0;
-        cfg.behaviorFlags = 0x11000204;
+        cfg.behaviorFlags = 0x1000204;
+        cfg.behaviorFlags |= 0x10000000LL;
         cfg.textureId = 0x151;
         break;
     case 0x74:
