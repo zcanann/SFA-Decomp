@@ -17,6 +17,7 @@
  * texture each frame.
  */
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/model.h"
 #include "dolphin/gx/GXEnum.h"
 
 extern void __kill_critical_regions(void);
@@ -124,7 +125,7 @@ void renderClouds(int a, int b, int c, int d)
     f32 pos[3];
     f32 mtx[12];
     u8* view;
-    u8* model;
+    ObjModel* model;
     void* viewMtx;
     f32 cloudT;
     f32 v;
@@ -136,8 +137,8 @@ void renderClouds(int a, int b, int c, int d)
     if (gCloudOverrideObject != NULL)
     {
         fn_8008DAE8((int)gCloudOverrideObject);
-        model = Obj_GetActiveModel((int)gCloudOverrideObject);
-        *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
+        model = (ObjModel*)Obj_GetActiveModel((int)gCloudOverrideObject);
+        model->bufferFlags &= ~8;
         ((u8*)gCloudOverrideObject)[0x37] = 0xff;
         v = *(f32*)(view + 0xc);
         gCloudOverrideObject->anim.worldPosX = v;
@@ -160,8 +161,8 @@ void renderClouds(int a, int b, int c, int d)
 
     if (lbl_8039AB28.upperCloudObj != NULL)
     {
-        model = Obj_GetActiveModel((int)lbl_8039AB28.upperCloudObj);
-        *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
+        model = (ObjModel*)Obj_GetActiveModel((int)lbl_8039AB28.upperCloudObj);
+        model->bufferFlags &= ~8;
         ((u8*)lbl_8039AB28.upperCloudObj)[0x37] = 0xff;
         if ((u32)gCloudOverridePositionValid != 0)
         {
@@ -186,8 +187,8 @@ void renderClouds(int a, int b, int c, int d)
         {
             fn_8008DAE8((int)lbl_8039AB28.mainCloudObj);
         }
-        model = Obj_GetActiveModel((int)lbl_8039AB28.mainCloudObj);
-        *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
+        model = (ObjModel*)Obj_GetActiveModel((int)lbl_8039AB28.mainCloudObj);
+        model->bufferFlags &= ~8;
         ((u8*)lbl_8039AB28.mainCloudObj)[0x37] = 0xff;
         v = *(f32*)(view + 0xc);
         lbl_8039AB28.mainCloudObj->anim.worldPosX = v;
@@ -267,8 +268,8 @@ void renderClouds(int a, int b, int c, int d)
 
     if (lbl_8039AB28.lowerCloudObj != NULL)
     {
-        model = Obj_GetActiveModel((int)lbl_8039AB28.lowerCloudObj);
-        *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
+        model = (ObjModel*)Obj_GetActiveModel((int)lbl_8039AB28.lowerCloudObj);
+        model->bufferFlags &= ~8;
         ((u8*)lbl_8039AB28.lowerCloudObj)[0x37] = 0xff;
         if ((u32)gCloudOverridePositionValid != 0)
         {
