@@ -17,7 +17,7 @@ typedef struct ScLevelControlState
     f32 fog0C; /* 0x0c */
     f32 timer10; /* 0x10 */
     f32 fadeTimer; /* 0x14 */
-    u8 pad18[4];
+    u8 gameBitLatches[4]; /* 0x18: persistent latch state for the SCGameBitLatch_Update calls in update */
     u8 musicStep; /* 0x1c: index into the gScLevelControlMusicStepSequence cue table */
     u8 mode; /* 0x1d: anim-event mode latch */
     u8 areaCell; /* 0x1e: 0xff until the player enters map 0xe */
