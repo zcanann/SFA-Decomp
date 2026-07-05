@@ -2293,6 +2293,7 @@ main/dll/VF/dll_0216_vfplevelcontrol.c:
 
 main/dll/VF/dll_0217_vfpobjcreator.c:
 	.text       start:0x801F9D78 end:0x801FA228
+	.sdata2     start:0x803E6068 end:0x803E6088
 
 main/dll/VF/dll_0218_vfpminifire.c:
 	.text       start:0x801FA228 end:0x801FA6FC

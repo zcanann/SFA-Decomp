@@ -78,11 +78,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(u8* setup, int a, int b, int c, int d);
 extern void vecRotateZXY(s16 * angles, f32 * vec);
-extern f32 lbl_803E6068;
-extern f32 lbl_803E606C;
-extern f32 lbl_803E6070;
-extern f32 lbl_803E6074;
-extern f32 lbl_803E6078;
 
 int vfpobjcreator_getExtraSize(void) { return 0xa; }
 
@@ -99,27 +94,6 @@ void vfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void vfpobjcreator_hitDetect(void)
 {
-}
-
-void vfpobjcreator_release(void)
-{
-}
-
-void vfpobjcreator_initialise(void)
-{
-}
-
-void vfpobjcreator_init(int* obj, u8* init)
-{
-    VfpObjCreatorPlacement* placement = (VfpObjCreatorPlacement*)init;
-    VfpObjCreatorState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
-    state->gameBit = placement->gameBit;
-    state->spawnInterval = placement->spawnInterval;
-    state->spawnTimer = state->spawnInterval;
-    state->spawnParam = placement->spawnParam;
-    state->spawnRadius = placement->spawnRadius;
-    ((GameObject*)obj)->objectFlags |= VFPOBJCREATOR_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void vfpobjcreator_update(int* obj)
@@ -173,9 +147,9 @@ void vfpobjcreator_update(int* obj)
                 break;
             }
             ((GameObject*)spawned)->anim.velocityY =
-                lbl_803E606C * (f32)(int)randomGetRange(0, 10) + lbl_803E6068;
-            ((GameObject*)spawned)->anim.velocityX = lbl_803E6070 * (f32)(int)randomGetRange(-10, 10);
-            ((GameObject*)spawned)->anim.velocityZ = lbl_803E6070 * (f32)(int)randomGetRange(-10, 10);
+                0.01f * (f32)(int)randomGetRange(0, 10) + 0.1f;
+            ((GameObject*)spawned)->anim.velocityX = 0.2f * (f32)(int)randomGetRange(-10, 10);
+            ((GameObject*)spawned)->anim.velocityZ = 0.2f * (f32)(int)randomGetRange(-10, 10);
         }
         break;
     case VFP_OBJCREATOR_PROJECTILE_MODE:
@@ -209,10 +183,10 @@ void vfpobjcreator_update(int* obj)
             ((GameObject*)spawned)->unkF8 = 0x1f4;
             {
                 f32 vz;
-                f32 vxy = *(f32*)&lbl_803E6074;
+                f32 vxy = 0.0f;
                 ((GameObject*)spawned)->anim.velocityY = vxy;
                 ((GameObject*)spawned)->anim.velocityX = vxy;
-                vz = lbl_803E6078;
+                vz = 1.0f;
                 ((GameObject*)spawned)->anim.velocityZ = vz;
                 launch.v[1] = vxy;
                 launch.v[2] = vxy;
@@ -230,4 +204,25 @@ void vfpobjcreator_update(int* obj)
         }
         break;
     }
+}
+
+void vfpobjcreator_init(int* obj, u8* init)
+{
+    VfpObjCreatorPlacement* placement = (VfpObjCreatorPlacement*)init;
+    VfpObjCreatorState* state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
+    state->gameBit = placement->gameBit;
+    state->spawnInterval = placement->spawnInterval;
+    state->spawnTimer = state->spawnInterval;
+    state->spawnParam = placement->spawnParam;
+    state->spawnRadius = placement->spawnRadius;
+    ((GameObject*)obj)->objectFlags |= VFPOBJCREATOR_OBJFLAG_HITDETECT_DISABLED;
+}
+
+void vfpobjcreator_release(void)
+{
+}
+
+void vfpobjcreator_initialise(void)
+{
 }
