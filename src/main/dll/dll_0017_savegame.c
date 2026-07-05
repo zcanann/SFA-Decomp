@@ -918,14 +918,10 @@ void saveGame_saveObjectPos(int* obj)
         if (*(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14) == v) break;
     }
     if (i == SAVEGAME_OBJECT_POSITION_COUNT) return;
-    {
-        int objectId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
-        char* entry;
-        *(int*)((entry = (char*)gSaveGameData + i * sizeof(SaveGameObjectPosition)) + SAVEGAME_OBJECT_POSITION_OFFSET) = objectId;
-        *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 4) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 8) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 0xc) = ((GameObject*)obj)->anim.localPosZ;
-    }
+    ((SaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET))[i].objectId = *(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14);
+    ((SaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET))[i].x = ((GameObject*)obj)->anim.localPosX;
+    ((SaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET))[i].y = ((GameObject*)obj)->anim.localPosY;
+    ((SaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET))[i].z = ((GameObject*)obj)->anim.localPosZ;
     *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8) = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)((GameObject*)obj)->anim.placementData)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)((GameObject*)obj)->anim.placementData)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
