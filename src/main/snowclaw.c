@@ -347,7 +347,7 @@ void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p
     {
         u8 saved = *(u8*)(sub + 0x37);
         *(u8*)(sub + 0x37) = a8;
-        (*(void (*)(int, int, int, int, int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)sub)->anim.dll) + 0x10)))(
+        (*(void (**)(int, int, int, int, int, int))((char*)*((GameObject*)sub)->anim.dll + 0x10))(
             sub, p2, p3, p4, p5, -1);
         *(u8*)(sub + 0x37) = saved;
     }
@@ -357,7 +357,7 @@ void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-    (*(void (*)(int, f32*, f32*, f32*))(*(int*)(*(int*)(*(int*)&((GameObject*)sub)->anim.dll) + 0x28)))(sub, &va, &vb, &vc);
+    (*(void (**)(int, f32*, f32*, f32*))((char*)*((GameObject*)sub)->anim.dll + 0x28))(sub, &va, &vb, &vc);
     ((GameObject*)obj)->anim.localPosX = va;
     ((GameObject*)obj)->anim.localPosY = vb;
     ((GameObject*)obj)->anim.localPosZ = vc;
@@ -392,7 +392,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis)
     found = 0;
     if (*(s8*)&((SnowclawState*)inner)->health >= 0 && (u32)sub != 0)
     {
-        if ((*(int (*)(int))(*(int*)(*(int*)(*(int*)&((GameObject*)sub)->anim.dll) + 0x38)))(sub) == 2)
+        if ((*(int (**)(int))((char*)*((GameObject*)sub)->anim.dll + 0x38))(sub) == 2)
         {
             found = 1;
         }
@@ -422,8 +422,8 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis)
         {
             near = ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
             if ((u32)near != 0 &&
-                (*(int (*)(int))(*(int*)(*(int*)(*(int*)&((GameObject*)near)->anim.dll) + 0x24)))(near) != 0 &&
-                (*(int (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)near)->anim.dll) + 0x20)))(near, 0) != 0)
+                (*(int (**)(int))((char*)*((GameObject*)near)->anim.dll + 0x24))(near) != 0 &&
+                (*(int (**)(int, int))((char*)*((GameObject*)near)->anim.dll + 0x20))(near, 0) != 0)
             {
                 ObjLink_AttachChild(obj, near, 0);
             }
@@ -484,7 +484,7 @@ void snowclaw_hitDetect(int obj)
                 sub2 = *(int**)inner;
                 if (sub2 != 0)
                 {
-                    (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)sub2)->anim.dll) + 0x3c)))(sub2, 0);
+                    (*(void (**)(int*, int))((char*)*((GameObject*)sub2)->anim.dll + 0x3c))(sub2, 0);
                 }
                 if (((GameObject*)obj)->anim.seqId == 0x389)
                 {
@@ -492,7 +492,7 @@ void snowclaw_hitDetect(int obj)
                     if (near != 0)
                     {
                         ObjLink_DetachChild(obj, near);
-                        (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)near)->anim.dll) + 0x20)))(
+                        (*(void (**)(int*, int))((char*)*((GameObject*)near)->anim.dll + 0x20))(
                             near, 2);
                     }
                 }
@@ -531,7 +531,7 @@ void snowclaw_hitDetect(int obj)
         }
     }
     if (*(int**)inner != 0 &&
-        (*(int (*)(int*))(*(int*)(*(int*)(*(int*)&((GameObject*)*(int**)inner)->anim.dll) + 0x38)))(*(int**)inner) == 2)
+        (*(int (**)(int*))((char*)*((GameObject*)*(int**)inner)->anim.dll + 0x38))(*(int**)inner) == 2)
     {
         snowclaw_syncMountTransform(obj, (int)*(int**)inner, 0, 0, 0, 0, 0, 0, 0);
     }
@@ -720,7 +720,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
         if (v6 & OBJANIM_FLAG_HIDDEN)
         {
             ((GameObject*)sub)->anim.flags = v6 & ~OBJANIM_FLAG_HIDDEN;
-            (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)sub)->anim.dll) + 0x3c)))(sub, 2);
+            (*(void (**)(int*, int))((char*)*((GameObject*)sub)->anim.dll + 0x3c))(sub, 2);
         }
     }
     if (seq->unk7E == 2)
@@ -754,7 +754,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
                 ((SnowclawState*)inner)->prevPosX = ((SnowclawState*)inner)->posX;
                 ((SnowclawState*)inner)->prevPosY = ((SnowclawState*)inner)->posY;
                 ((SnowclawState*)inner)->prevPosZ = ((SnowclawState*)inner)->posZ;
-                (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)sub)->anim.dll) + 0x3c)))(sub, 2);
+                (*(void (**)(int*, int))((char*)*((GameObject*)sub)->anim.dll + 0x3c))(sub, 2);
                 ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                     (obj, *(u16*)&((SnowclawState*)inner)->moveIdBase, lbl_803E66F0, 1);
                 {
@@ -771,7 +771,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
             sub = *(int**)inner;
             if (sub != 0)
             {
-                (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)sub)->anim.dll) + 0x3c)))(sub, 0);
+                (*(void (**)(int*, int))((char*)*((GameObject*)sub)->anim.dll + 0x3c))(sub, 0);
                 seq->flags |= 4;
             }
             break;
@@ -780,7 +780,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
                 int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
                 if (found != 0)
                 {
-                    (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)found)->anim.dll) + 0x20)))(found, 2);
+                    (*(void (**)(int*, int))((char*)*((GameObject*)found)->anim.dll + 0x20))(found, 2);
                     ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 = 0;
                 }
                 break;
@@ -790,7 +790,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
                 int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
                 if (found != 0)
                 {
-                    (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)found)->anim.dll) + 0x20)))(found, 0);
+                    (*(void (**)(int*, int))((char*)*((GameObject*)found)->anim.dll + 0x20))(found, 0);
                     ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 = 1;
                 }
                 break;
@@ -816,7 +816,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
         }
         ((SnowclawState*)inner)->dropIndexApplied = *(s8*)&((SnowclawState*)inner)->dropIndex;
     }
-    if (sub != 0 && (*(int (*)(int*))(*(int*)(*(int*)(*(int*)&((GameObject*)sub)->anim.dll) + 0x38)))(sub) == 2)
+    if (sub != 0 && (*(int (**)(int*))((char*)*((GameObject*)sub)->anim.dll + 0x38))(sub) == 2)
     {
         seq->flags &= ~3;
     }
