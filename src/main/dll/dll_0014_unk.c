@@ -1715,14 +1715,14 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
     if (state == NULL)
     {
-        return 1;
+        goto fail;
     }
 
     stateBytes = (char*)state;
     curveId = ((int (*)(int, int*, int, int, char))curves_findNearObj)(obj, curveTypes, 1, curveType, 0xc);
     if (curveId == -1)
     {
-        return 1;
+        goto fail;
     }
 
     if (state->reverse != 0)
@@ -1759,7 +1759,7 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
     nextCurve = Objfsa_FindRomCurveById(nextId);
     *(s32*)&state->nodeA4 = nextCurve;
-    if (state->nodeA4 == NULL)
+    if (nextCurve == 0)
     {
         state->nodeA4 = NULL;
         return 1;
@@ -1802,6 +1802,8 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
     state->moveNetwork = 8;
     curvesMove((float*)state);
     return 0;
+fail:
+    return 1;
 }
 
 int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurveId)
