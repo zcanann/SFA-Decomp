@@ -1348,6 +1348,7 @@ main/dll/dll_010B_fireflylantern.c:
 
 main/dll/dll_00E7_flammablevine.c:
 	.text       start:0x80187640 end:0x80187BA0
+	.sdata2     start:0x803E3AF8 end:0x803E3B40
 
 main/dll/dll_0109_unk.c:
 	.text       start:0x80187BA0 end:0x80187F30

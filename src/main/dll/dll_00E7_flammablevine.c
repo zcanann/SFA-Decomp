@@ -71,41 +71,17 @@ extern void Obj_RemoveFromUpdateList(int obj);
 extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
 
 extern void* getTrickyObject(void);
-extern f32 lbl_803E3AF8;
-extern f32 gFlammableVineBurnDuration;
-extern f32 lbl_803E3B00;
-extern f32 lbl_803E3B04;
-extern f32 lbl_803E3B08;
-extern f32 lbl_803E3B0C;
-extern f32 lbl_803E3B10;
-extern f32 gFlammableVineMaxAlpha;
-extern f32 lbl_803E3B18;
-extern f32 lbl_803E3B1C;
-extern f32 lbl_803E3B20;
-extern f32 gFlammableVineScaleParamNormalize;
-extern f32 gFlammableVineMinScale;
-extern f32 lbl_803E3B2C;
-extern f32 lbl_803E3B30;
-extern f32 lbl_803E3B34;
-
-void flammablevine_release(void)
-{
-}
-
-void flammablevine_initialise(void)
-{
-}
 
 int flammablevine_getExtraSize(void) { return 0x14; }
 int flammablevine_getObjectTypeId(void) { return 0x0; }
 
+void flammablevine_free(int x) { ObjGroup_RemoveObject(x, FLAMMABLEVINE_OBJGROUP); }
+
 void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3AF8);
+    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
 }
-
-void flammablevine_free(int x) { ObjGroup_RemoveObject(x, FLAMMABLEVINE_OBJGROUP); }
 
 void flammablevine_hitDetect(int obj)
 {
@@ -124,49 +100,9 @@ void flammablevine_hitDetect(int obj)
                 GameBit_Set(((FlammablevineObjectDef*)def)->burnedBit, 1);
                 Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
             }
-            state->burnTimer = gFlammableVineBurnDuration;
+            state->burnTimer = 240.0f;
             state->flags = state->flags | 1;
         }
-    }
-}
-
-void flammablevine_init(int obj, int def)
-{
-    FlammablevineState* state;
-    f32 scale;
-
-    state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, FLAMMABLEVINE_OBJGROUP);
-    ((GameObject*)obj)->anim.rotX = (s16)(((FlammablevineObjectDef*)def)->rotXByte << 8);
-
-    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3B20 * ((f32)((FlammablevineObjectDef*)def)->scaleParam /
-        gFlammableVineScaleParamNormalize);
-    if (((GameObject*)obj)->anim.rootMotionScale <= *(f32*)&gFlammableVineMinScale)
-    {
-        ((GameObject*)obj)->anim.rootMotionScale = gFlammableVineMinScale;
-    }
-
-    scale = ((GameObject*)obj)->anim.rootMotionScale;
-    ObjHitbox_SetCapsuleBounds(
-        obj,
-        (s16)(lbl_803E3B2C * scale),
-        0,
-        (s16)(lbl_803E3B30 * scale));
-    state->burnIntensity = lbl_803E3B34;
-    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E3B00);
-
-    if (((FlammablevineObjectDef*)def)->burnedBit != -1 && GameBit_Get(((FlammablevineObjectDef*)def)->burnedBit) != 0)
-    {
-        Obj_RemoveFromUpdateList(obj);
-        ObjHits_DisableObject(obj);
-        ((GameObject*)obj)->anim.alpha = 0;
-        state->flags = state->flags | 2;
-    }
-
-    state->setupParam = ((FlammablevineObjectDef*)def)->setupParam;
-    if (state->setupParam == 1)
-    {
-        ObjHits_MarkObjectPositionDirty(obj);
     }
 }
 
@@ -241,7 +177,7 @@ checked_vine_use:
     }
 
     burnTimer = state->burnTimer;
-    zero = lbl_803E3B00;
+    zero = 0.0f;
     if (burnTimer > zero)
     {
         state->burnTimer = burnTimer - timeDelta;
@@ -258,47 +194,95 @@ checked_vine_use:
 
     if ((state->flags & 1) != 0)
     {
-        if (state->burnTimer < lbl_803E3B04)
+        if (state->burnTimer < 120.0f)
         {
-            state->burnIntensity = lbl_803E3AF8;
+            state->burnIntensity = 1.0f;
         }
         else
         {
-            state->burnIntensity = lbl_803E3AF8 - ((state->burnTimer - lbl_803E3B04) / lbl_803E3B04);
+            state->burnIntensity = 1.0f - ((state->burnTimer - 120.0f) / 120.0f);
         }
 
-        if (state->burnTimer < lbl_803E3B08 && state->burnTimer > lbl_803E3B04)
+        if (state->burnTimer < 180.0f && state->burnTimer > 120.0f)
         {
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                 (ObjAnimComponent*)obj,
-                lbl_803E3AF8 - ((state->burnTimer - lbl_803E3B04) / lbl_803E3B0C));
+                1.0f - ((state->burnTimer - 120.0f) / 60.0f));
         }
 
-        if (state->burnTimer < lbl_803E3B10)
+        if (state->burnTimer < 150.0f)
         {
-            if (state->burnTimer < lbl_803E3B04)
+            if (state->burnTimer < 120.0f)
             {
                 ((GameObject*)obj)->anim.alpha = 0;
             }
             else
             {
-                fadeAlpha = (u8)(gFlammableVineMaxAlpha * ((state->burnTimer - lbl_803E3B04) / lbl_803E3B18));
+                fadeAlpha = (u8)(255.0f * ((state->burnTimer - 120.0f) / 30.0f));
                 ((GameObject*)obj)->anim.alpha = fadeAlpha;
             }
         }
 
         state->pulseTimer = state->pulseTimer - timeDelta;
-        if (state->pulseTimer <= lbl_803E3B00)
+        if (state->pulseTimer <= 0.0f)
         {
             pulseStyle = 3;
-            state->pulseTimer = state->pulseTimer + lbl_803E3AF8;
+            state->pulseTimer += 1.0f;
         }
         else
         {
             pulseStyle = 0;
         }
-        fn_80098B18(obj, lbl_803E3B1C * (state->burnIntensity * ((GameObject*)obj)->anim.rootMotionScale), 3, 0,
+        fn_80098B18(obj, 0.65f * (state->burnIntensity * ((GameObject*)obj)->anim.rootMotionScale), 3, 0,
                     pulseStyle, 0);
         Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
     }
+}
+
+void flammablevine_init(int obj, int def)
+{
+    FlammablevineState* state;
+    f32 scale;
+
+    state = ((GameObject*)obj)->extra;
+    ObjGroup_AddObject(obj, FLAMMABLEVINE_OBJGROUP);
+    ((GameObject*)obj)->anim.rotX = (s16)(((FlammablevineObjectDef*)def)->rotXByte << 8);
+
+    ((GameObject*)obj)->anim.rootMotionScale = 5.0f * ((f32)((FlammablevineObjectDef*)def)->scaleParam /
+        32767.0f);
+    if (((GameObject*)obj)->anim.rootMotionScale <= 0.05f)
+    {
+        ((GameObject*)obj)->anim.rootMotionScale = 0.05f;
+    }
+
+    scale = ((GameObject*)obj)->anim.rootMotionScale;
+    ObjHitbox_SetCapsuleBounds(
+        obj,
+        (s16)(14.0f * scale),
+        0,
+        (s16)(25.0f * scale));
+    state->burnIntensity = 0.001f;
+    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, 0.0f);
+
+    if (((FlammablevineObjectDef*)def)->burnedBit != -1 && GameBit_Get(((FlammablevineObjectDef*)def)->burnedBit) != 0)
+    {
+        Obj_RemoveFromUpdateList(obj);
+        ObjHits_DisableObject(obj);
+        ((GameObject*)obj)->anim.alpha = 0;
+        state->flags = state->flags | 2;
+    }
+
+    state->setupParam = ((FlammablevineObjectDef*)def)->setupParam;
+    if (state->setupParam == 1)
+    {
+        ObjHits_MarkObjectPositionDirty(obj);
+    }
+}
+
+void flammablevine_release(void)
+{
+}
+
+void flammablevine_initialise(void)
+{
 }
