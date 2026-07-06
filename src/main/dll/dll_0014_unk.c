@@ -383,7 +383,7 @@ static inline int RomCurve_CollectUnblockedLinks(RomCurveDef* curve, int* ids)
     return count;
 }
 
-f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
+f32 curves_lengthFn24(u32 startNode, u32 endNode, f32* posA, f32* posB, f32 t1, f32 t2)
 {
     int cand1[4];
     int cand2[4];
@@ -406,7 +406,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
     f32 dz;
     f32* tmpPos;
 
-    if (a == b)
+    if (startNode == endNode)
     {
         dx = posB[0] - posA[0];
         dy = posB[1] - posA[1];
@@ -421,7 +421,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
 
     reachedForward = 0;
     done = 0;
-    found = a;
+    found = startNode;
     while (done == 0)
     {
         blocked = Objfsa_RomCurveIsBlocked(found);
@@ -442,7 +442,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
                 nextId = -1;
             }
             found = Objfsa_FindRomCurveById(nextId);
-            if (found == b)
+            if (found == endNode)
             {
                 done = 1;
                 reachedForward = 1;
@@ -452,15 +452,15 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
 
     if (reachedForward == 0)
     {
-        cur = a;
-        a = b;
-        b = cur;
+        cur = startNode;
+        startNode = endNode;
+        endNode = cur;
         tmpPos = posA;
         posA = posB;
         posB = tmpPos;
     }
 
-    count = RomCurve_CollectUnblockedLinks((RomCurveDef*)a, cand2);
+    count = RomCurve_CollectUnblockedLinks((RomCurveDef*)startNode, cand2);
     if (count != 0)
     {
         nextId = cand2[randomGetRange(0, count - 1)];
@@ -470,7 +470,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         nextId = -1;
     }
     found = Objfsa_FindRomCurveById(nextId);
-    a = found;
+    startNode = found;
     dx = ((ObjfsaRomCurveDef*)found)->x - posA[0];
     dy = ((ObjfsaRomCurveDef*)found)->y - posA[1];
     dz = ((ObjfsaRomCurveDef*)found)->z - posA[2];
@@ -479,17 +479,17 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
 
     while (done == 0)
     {
-        if (a == b)
+        if (startNode == endNode)
         {
             done = 1;
-            dx = posB[0] - ((ObjfsaRomCurveDef*)a)->x;
-            dy = posB[1] - ((ObjfsaRomCurveDef*)a)->y;
-            dz = posB[2] - ((ObjfsaRomCurveDef*)a)->z;
+            dx = posB[0] - ((ObjfsaRomCurveDef*)startNode)->x;
+            dy = posB[1] - ((ObjfsaRomCurveDef*)startNode)->y;
+            dz = posB[2] - ((ObjfsaRomCurveDef*)startNode)->z;
             total = total + sqrtf(dx * dx + dy * dy + dz * dz);
         }
         else
         {
-            count = RomCurve_CollectUnblockedLinks((RomCurveDef*)a, cand3);
+            count = RomCurve_CollectUnblockedLinks((RomCurveDef*)startNode, cand3);
             if (count != 0)
             {
                 nextId = cand3[randomGetRange(0, count - 1)];
@@ -499,11 +499,11 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
                 nextId = -1;
             }
             next = Objfsa_FindRomCurveById(nextId);
-            dx = ((ObjfsaRomCurveDef*)next)->x - ((ObjfsaRomCurveDef*)a)->x;
-            dy = ((ObjfsaRomCurveDef*)next)->y - ((ObjfsaRomCurveDef*)a)->y;
-            dz = ((ObjfsaRomCurveDef*)next)->z - ((ObjfsaRomCurveDef*)a)->z;
+            dx = ((ObjfsaRomCurveDef*)next)->x - ((ObjfsaRomCurveDef*)startNode)->x;
+            dy = ((ObjfsaRomCurveDef*)next)->y - ((ObjfsaRomCurveDef*)startNode)->y;
+            dz = ((ObjfsaRomCurveDef*)next)->z - ((ObjfsaRomCurveDef*)startNode)->z;
             total = total + sqrtf(dx * dx + dy * dy + dz * dz);
-            a = next;
+            startNode = next;
         }
     }
 
@@ -972,14 +972,14 @@ void doNothing_onTrickyInit(void)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_800D9F38(void* a, void* b)
+int fn_800D9F38(void* walker, void* curve)
 {
     extern float mathCosf(float x); /* #57 */
     extern float mathSinf(float x); /* #57 */
-    char* A = a;
-    char* B = b;
-    if (*(u32*)(A + 0xa0) == 0 || *(u32*)(A + 0xa4) == 0 || b == 0) return 1;
-    *(void**)(A + 0xa4) = b;
+    char* A = walker;
+    char* B = curve;
+    if (*(u32*)(A + 0xa0) == 0 || *(u32*)(A + 0xa4) == 0 || curve == 0) return 1;
+    *(void**)(A + 0xa4) = curve;
     if (*(int*)(A + 0x80) != 0)
     {
         f32 t;
@@ -1015,15 +1015,15 @@ int fn_800D9F38(void* a, void* b)
     return 0;
 }
 
-void RomCurve_setA4(void* a, void* b)
+void RomCurve_setA4(void* walker, void* curve)
 {
     extern float mathCosf(float x); /* #57 */
     extern float mathSinf(float x); /* #57 */
-    char* A = a;
+    char* A = walker;
     f32 t;
-    if (b != 0 && (u32)b != *(u32*)(A + 0xa4))
+    if (curve != 0 && (u32)curve != *(u32*)(A + 0xa4))
     {
-        *(void**)(A + 0xa4) = b;
+        *(void**)(A + 0xa4) = curve;
         *(f32*)(A + 0xbc) = *(f32*)((*(char**)(A + 0xa4)) + 0x8);
         t = (float)(u32) * (u8*)((*(char**)(A + 0xa4)) + 0x2e) *
             mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((*(char**)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
