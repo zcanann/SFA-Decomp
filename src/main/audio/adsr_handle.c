@@ -70,7 +70,7 @@ int adsrHandle(int state, u16* out1, u16* out2)
     int m = adsr->mode;
     int v8;
     int idx;
-    u16 o;
+    u16 outVal;
 
     switch (m)
     {
@@ -79,17 +79,17 @@ int adsrHandle(int state, u16* out1, u16* out2)
         {
             v8 = *(int*)&adsr->currentVolume;
             *(int*)&adsr->currentVolume = v8 + *(int*)&adsr->currentDelta;
-            o = v8 >> 16;
-            *out1 = o;
+            outVal = v8 >> 16;
+            *out1 = outVal;
             if (*(int*)&adsr->currentDelta >= 0)
             {
-                o = *(int*)&adsr->currentDelta >> 21;
-                *out2 = o;
+                outVal = *(int*)&adsr->currentDelta >> 21;
+                *out2 = outVal;
             }
             else
             {
-                o = -(-*(int*)&adsr->currentDelta >> 21);
-                *out2 = o;
+                outVal = -(-*(int*)&adsr->currentDelta >> 21);
+                *out2 = outVal;
             }
             if (--*(int*)&adsr->cnt == 0)
             {
@@ -98,8 +98,8 @@ int adsrHandle(int state, u16* out1, u16* out2)
         }
         else
         {
-            o = *(int*)&adsr->currentVolume >> 16;
-            *out1 = o;
+            outVal = *(int*)&adsr->currentVolume >> 16;
+            *out1 = outVal;
             *out2 = 0;
         }
         break;
@@ -123,17 +123,17 @@ int adsrHandle(int state, u16* out1, u16* out2)
                 }
                 *(int*)&adsr->currentVolume = lbl_8032F618[idx] << 16;
             }
-            o = v8 >> 16;
-            *out1 = o;
+            outVal = v8 >> 16;
+            *out1 = outVal;
             if (*(int*)&adsr->currentVolume - v8 >= 0)
             {
-                o = (*(int*)&adsr->currentVolume - v8) >> 21;
-                *out2 = o;
+                outVal = (*(int*)&adsr->currentVolume - v8) >> 21;
+                *out2 = outVal;
             }
             else
             {
-                o = -(-(*(int*)&adsr->currentVolume - v8) >> 21);
-                *out2 = o;
+                outVal = -(-(*(int*)&adsr->currentVolume - v8) >> 21);
+                *out2 = outVal;
             }
             if (--*(int*)&adsr->cnt == 0)
             {
@@ -142,8 +142,8 @@ int adsrHandle(int state, u16* out1, u16* out2)
         }
         else
         {
-            o = *(int*)&adsr->currentVolume >> 16;
-            *out1 = o;
+            outVal = *(int*)&adsr->currentVolume >> 16;
+            *out1 = outVal;
             *out2 = 0;
         }
         break;

@@ -74,7 +74,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 {
     u32 type_alloc;
     s32 i;
-    u16 p;
+    u16 prioNode;
     s32 num;
     s32 voice;
     SynthVoiceListNode* sfv;
@@ -108,10 +108,10 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             num = 0;
             voice = -1;
 
-            p = voicePrioSortRootListRoot;
-            while (p != 0xFFFF && priority >= p && voice == -1)
+            prioNode = voicePrioSortRootListRoot;
+            while (prioNode != 0xFFFF && priority >= prioNode && voice == -1)
             {
-                for (i = VB_PRIO_HEAD(vb, p); i != 0xff;
+                for (i = VB_PRIO_HEAD(vb, prioNode); i != 0xff;
                      i = VB_PRIO_LINK_NEXT(vb, i))
                 {
                     if (allocId != ALLOC_VOICE[i].allocId)
@@ -134,15 +134,15 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                     }
                 }
 
-                p = VB_PRIO_SORT_NEXT(vb, p);
+                prioNode = VB_PRIO_SORT_NEXT(vb, prioNode);
             }
         }
 
         if (num < maxVoices)
         {
-            while (p != 0xffff && num < maxVoices)
+            while (prioNode != 0xffff && num < maxVoices)
             {
-                i = VB_PRIO_HEAD(vb, p);
+                i = VB_PRIO_HEAD(vb, prioNode);
                 while (i != 0xff)
                 {
                     if (allocId == ALLOC_VOICE[i].allocId)
@@ -153,7 +153,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                     i = VB_PRIO_LINK_NEXT(vb, i);
                 }
 
-                p = VB_PRIO_SORT_NEXT(vb, p);
+                prioNode = VB_PRIO_SORT_NEXT(vb, prioNode);
             }
 
             if (num < maxVoices)
@@ -171,11 +171,11 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                     return -1;
                 }
 
-                p = voicePrioSortRootListRoot;
+                prioNode = voicePrioSortRootListRoot;
 
-                while (p != 0xFFFF && priority >= p && voice == -1)
+                while (prioNode != 0xFFFF && priority >= prioNode && voice == -1)
                 {
-                    for (i = VB_PRIO_HEAD(vb, p); i != 0xff;
+                    for (i = VB_PRIO_HEAD(vb, prioNode); i != 0xff;
                          i = VB_PRIO_LINK_NEXT(vb, i))
                     {
                         if (ALLOC_VOICE[i].block != 0)
@@ -194,7 +194,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                                 voice = i;
                         }
                     }
-                    p = VB_PRIO_SORT_NEXT(vb, p);
+                    prioNode = VB_PRIO_SORT_NEXT(vb, prioNode);
                 }
 
                 if (voice == -1)
