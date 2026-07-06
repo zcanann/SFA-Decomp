@@ -32,8 +32,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define SB_PROPELLER_SFX_DESTROYED 0x2c8
 
 extern int randomGetRange(int lo, int hi);
-extern u32 DAT_803de8c0;
-extern f32 lbl_803E64A8;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 extern f32 timeDelta;
@@ -51,6 +49,23 @@ extern f32 lbl_803E5820;
 extern f32 lbl_803E5824;
 extern u32 lbl_803DDC40;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+
+u32 fn_801E2570(void) { return lbl_803DDC40; }
+
+int SB_Propeller_getExtraSize(void) { return sizeof(SBPropellerState); }
+
+void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5810);
+}
+
+void SB_Propeller_hitDetect(GameObject* obj)
+{
+    GameObject* o = obj;
+    if (o->anim.seqId != SB_PROPELLER_SEQ_ID) return;
+    o->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
+}
 
 void SB_Propeller_update(int obj)
 {
@@ -181,31 +196,14 @@ void SB_Propeller_init(GameObject* obj, int placement)
     state = obj->extra;
     randVal = randomGetRange(0x5a, 0xf0);
     state->smokeTimer = (f32)(s32)(randVal);
-    state->spinBlend = lbl_803E64A8;
+    state->spinBlend = lbl_803E5810;
     state->spinRate = 1200;
     state->health = 4;
     objAnim->bankIndex = (char)*(s16*)(placement + 0x1a);
     if (objAnim->seqId != SB_PROPELLER_SEQ_ID)
     {
-        DAT_803de8c0 = (u32)obj;
+        lbl_803DDC40 = (u32)obj;
     }
     return;
-}
-
-int SB_Propeller_getExtraSize(void) { return sizeof(SBPropellerState); }
-
-u32 fn_801E2570(void) { return lbl_803DDC40; }
-
-void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5810);
-}
-
-void SB_Propeller_hitDetect(GameObject* obj)
-{
-    GameObject* o = obj;
-    if (o->anim.seqId != SB_PROPELLER_SEQ_ID) return;
-    o->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
 }
 
