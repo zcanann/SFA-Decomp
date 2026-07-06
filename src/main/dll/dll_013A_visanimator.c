@@ -21,6 +21,9 @@
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
+int visanimator_getExtraSize(void) { return sizeof(VisAnimatorState); }
+int visanimator_getObjectTypeId(void) { return 0x0; }
+
 void visanimator_free(void)
 {
 }
@@ -33,19 +36,35 @@ void visanimator_hitDetect(void)
 {
 }
 
-void visanimator_release(void)
-{
-}
-
-void visanimator_initialise(void)
-{
-}
-
-int visanimator_getExtraSize(void) { return sizeof(VisAnimatorState); }
-int visanimator_getObjectTypeId(void) { return 0x0; }
-
 #pragma scheduling off
 #pragma peephole off
+void visanimator_update(int* obj)
+{
+    s16* placement = ((GameObject*)obj)->anim.placementData;
+    VisAnimatorState* vstate = (VisAnimatorState*)((GameObject*)obj)->extra;
+    int idx = objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
+                                  (double)((GameObject*)obj)->anim.localPosY,
+                                  (double)((GameObject*)obj)->anim.localPosZ);
+    int gate;
+    if (mapGetBlock(idx) == NULL)
+    {
+        vstate->flags |= 1;
+        return;
+    }
+    gate = GameBit_Get(placement[0x18 / 2]);
+    vstate->gateNow = (u8)(vstate->gateMask & gate);
+    if (vstate->gatePrev != vstate->gateNow)
+    {
+        vstate->visBit = (s8)(vstate->visBit ^ 1);
+        vstate->flags |= 1;
+    }
+    vstate->gatePrev = vstate->gateNow;
+    if (vstate->flags & 1)
+    {
+        vstate->flags &= ~1;
+    }
+}
+
 void visanimator_init(int* obj, int* desc)
 {
     VisAnimatorState* vstate;
@@ -72,29 +91,10 @@ void visanimator_init(int* obj, int* desc)
     vstate->flags |= 1;
 }
 
-void visanimator_update(int* obj)
+void visanimator_release(void)
 {
-    s16* placement = ((GameObject*)obj)->anim.placementData;
-    VisAnimatorState* vstate = (VisAnimatorState*)((GameObject*)obj)->extra;
-    int idx = objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
-                                  (double)((GameObject*)obj)->anim.localPosY,
-                                  (double)((GameObject*)obj)->anim.localPosZ);
-    int gate;
-    if (mapGetBlock(idx) == NULL)
-    {
-        vstate->flags |= 1;
-        return;
-    }
-    gate = GameBit_Get(placement[0x18 / 2]);
-    vstate->gateNow = (u8)(vstate->gateMask & gate);
-    if (vstate->gatePrev != vstate->gateNow)
-    {
-        vstate->visBit = (s8)(vstate->visBit ^ 1);
-        vstate->flags |= 1;
-    }
-    vstate->gatePrev = vstate->gateNow;
-    if (vstate->flags & 1)
-    {
-        vstate->flags &= ~1;
-    }
+}
+
+void visanimator_initialise(void)
+{
 }
