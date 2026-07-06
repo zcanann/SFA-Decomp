@@ -31,7 +31,9 @@ typedef struct DIMSnowHorn1State
     f32 spawnPosX;
     f32 spawnPosY;
     f32 spawnPosZ;
-    u8 pad990[0x9E8 - 0x990];
+    u8 pad990[0x9B0 - 0x990];
+    f32 pathPointArray[12]; /* 0x9B0: ObjPath_GetPointWorldPositionArray(2,4) -> 4 XYZ points */
+    u8 pad9E0[0x9E8 - 0x9E0];
     f32 pathPosX; /* model-matrix offset vec */
     f32 pathPosY;
     f32 pathPosZ;
@@ -1140,7 +1142,7 @@ void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E8258);
         ObjPath_GetPointWorldPosition(obj, 1, &state->pathPosX, &state->pathPosY,
                                       &state->pathPosZ, 0);
-        ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32*)((char*)state + 0x9b0));
+        ObjPath_GetPointWorldPositionArray(obj, 2, 4, state->pathPointArray);
     }
 
     if ((state->mountMode != 2) && (visible != 0))
@@ -1148,7 +1150,7 @@ void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E8258);
         ObjPath_GetPointWorldPosition(obj, 1, &state->pathPosX, &state->pathPosY,
                                       &state->pathPosZ, 0);
-        ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32*)((char*)state + 0x9b0));
+        ObjPath_GetPointWorldPositionArray(obj, 2, 4, state->pathPointArray);
     }
 }
 
