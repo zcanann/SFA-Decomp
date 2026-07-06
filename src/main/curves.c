@@ -133,7 +133,7 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
     f32* lengths = &curve->totalLen;
     f32 step = dt * timeDelta;
     f32 zero;
-    f32 c;
+    f32 zeroVal;
     f32 base, frac, t;
 
     if (step > lbl_803DE658)
@@ -251,10 +251,10 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                     {
                         curve->sample[2] = ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, lbl_803DE658, &curve->tangent[2]);
                     }
-                    c = lbl_803DE658;
-                    curve->t = c;
+                    zeroVal = lbl_803DE658;
+                    curve->t = zeroVal;
                     curve->segmentDistance = -lengths[1];
-                    curve->pathDistance = c;
+                    curve->pathDistance = zeroVal;
                     curve->idx = 0;
                     return 1;
                 }
@@ -404,54 +404,54 @@ f32 Curve_EvalLinear(f32 t, f32* values)
 
 f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent)
 {
-    f32 a;
+    f32 cubic;
     f32 p0;
     f32 p1;
     f32 p2;
     f32 p3;
-    f32 n0;
-    f32 b;
-    f32 c;
-    f32 d;
+    f32 negP0;
+    f32 quadratic;
+    f32 linear;
+    f32 constant;
 
     p3 = values[3];
-    a = p3 + (-3.0f * (p2 = values[2]) + (3.0f * (p1 = values[1]) + (n0 = -(p0 = values[0]))));
-    b = (4.0f * p2 + (2.0f * p0 + -5.0f * p1)) - p3;
-    c = n0 + p2;
-    d = 2.0f * p1;
+    cubic = p3 + (-3.0f * (p2 = values[2]) + (3.0f * (p1 = values[1]) + (negP0 = -(p0 = values[0]))));
+    quadratic = (4.0f * p2 + (2.0f * p0 + -5.0f * p1)) - p3;
+    linear = negP0 + p2;
+    constant = 2.0f * p1;
 
     if (outTangent != NULL)
     {
-        f32 e = 3.0f * a;
-        *outTangent = t * (2.0f * b + e * t) + c;
+        f32 cubic3 = 3.0f * cubic;
+        *outTangent = t * (2.0f * quadratic + cubic3 * t) + linear;
     }
-    return 0.5f * (t * (t * (a * t + b) + c) + d);
+    return 0.5f * (t * (t * (cubic * t + quadratic) + linear) + constant);
 }
 
 f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent)
 {
     f32 k668;
     f32 k664;
-    f32 a;
+    f32 cubic;
     f32 p1;
     f32 p2;
     f32 p0;
     f32 m;
-    f32 b;
-    f32 c;
+    f32 quadratic;
+    f32 linear;
 
-    a = values[3];
-    a += (k668 = lbl_803DE668) * (p2 = values[2]) +
+    cubic = values[3];
+    cubic += (k668 = lbl_803DE668) * (p2 = values[2]) +
         (-(p0 = values[0]) + (m = (k664 = lbl_803DE664) * (p1 = values[1])));
-    b = k664 * p2 + (k664 * p0 + lbl_803DE66C * p1);
-    c = k668 * p0 + m;
+    quadratic = k664 * p2 + (k664 * p0 + lbl_803DE66C * p1);
+    linear = k668 * p0 + m;
 
     if (outTangent != NULL)
     {
-        f32 e = k664 * a;
-        *outTangent = t * (lbl_803DE660 * b + e * t) + c;
+        f32 cubic3 = k664 * cubic;
+        *outTangent = t * (lbl_803DE660 * quadratic + cubic3 * t) + linear;
     }
-    return t * (t * (a * t + b) + c) + p0;
+    return t * (t * (cubic * t + quadratic) + linear) + p0;
 }
 
 void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients)
@@ -464,23 +464,23 @@ void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients)
 
 f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent)
 {
-    f32 a;
+    f32 cubic;
     f32 p1;
     f32 p0;
     f32 tangent1;
     f32 p3;
-    f32 b;
+    f32 quadratic;
 
     p3 = values[3];
-    a = p3 + ((tangent1 = values[2]) + (2.0f * (p0 = values[0]) + -2.0f * (p1 = values[1])));
-    b = ((-3.0f * p0 + 3.0f * p1) + -2.0f * tangent1) - p3;
+    cubic = p3 + ((tangent1 = values[2]) + (2.0f * (p0 = values[0]) + -2.0f * (p1 = values[1])));
+    quadratic = ((-3.0f * p0 + 3.0f * p1) + -2.0f * tangent1) - p3;
 
     if (outTangent != NULL)
     {
-        f32 e = 3.0f * a;
-        *outTangent = t * (2.0f * b + e * t) + tangent1;
+        f32 cubic3 = 3.0f * cubic;
+        *outTangent = t * (2.0f * quadratic + cubic3 * t) + tangent1;
     }
-    return t * (t * (a * t + b) + tangent1) + p0;
+    return t * (t * (cubic * t + quadratic) + tangent1) + p0;
 }
 
 void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients)
@@ -498,27 +498,27 @@ void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients)
 
 f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent)
 {
-    f32 a;
-    f32 b;
-    f32 c;
+    f32 cubic;
+    f32 quadratic;
+    f32 linear;
     f32 p1;
     f32 p0;
     f32 p2;
     f32 m;
-    f32 d;
+    f32 constant;
 
-    a = values[3] + (-3.0f * (p2 = values[2]) + (-(p0 = values[0]) + 3.0f * (p1 = values[1])));
+    cubic = values[3] + (-3.0f * (p2 = values[2]) + (-(p0 = values[0]) + 3.0f * (p1 = values[1])));
     m = 3.0f * p2;
-    b = m + (3.0f * p0 + -6.0f * p1);
-    c = -3.0f * p0 + m;
-    d = p2 + (p0 + 4.0f * p1);
+    quadratic = m + (3.0f * p0 + -6.0f * p1);
+    linear = -3.0f * p0 + m;
+    constant = p2 + (p0 + 4.0f * p1);
 
     if (outTangent != NULL)
     {
-        f32 e = 3.0f * a;
-        *outTangent = 0.16666667f * (t * (2.0f * b + e * t) + c);
+        f32 cubic3 = 3.0f * cubic;
+        *outTangent = 0.16666667f * (t * (2.0f * quadratic + cubic3 * t) + linear);
     }
-    return 0.16666667f * (t * (t * (a * t + b) + c) + d);
+    return 0.16666667f * (t * (t * (cubic * t + quadratic) + linear) + constant);
 }
 
 void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index)
