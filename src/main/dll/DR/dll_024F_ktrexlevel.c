@@ -19,16 +19,15 @@ int ktrexlevel_getExtraSize(void) { return 0x4; }
 
 int ktrexlevel_getObjectTypeId(void) { return 0x0; }
 
-void ktrexlevel_hitDetect(void)
+void ktrexlevel_free(void)
 {
-}
-
-void ktrexlevel_initialise(void)
-{
-}
-
-void ktrexlevel_release(void)
-{
+    GameBit_Set(0xefd, 0);
+    GameBit_Set(0xcd1, 0);
+    GameBit_Set(0xccd, 0);
+    GameBit_Set(0xccf, 0);
+    GameBit_Set(0xcd0, 0);
+    GameBit_Set(0xedb, 0);
+    GameBit_Set(0xcbb, 0);
 }
 
 void ktrexlevel_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
@@ -39,23 +38,16 @@ void ktrexlevel_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     }
 }
 
+void ktrexlevel_hitDetect(void)
+{
+}
+
 void ktrexlevel_clearPathGameBits(void)
 {
     GameBit_Set(0x54a, 0);
     GameBit_Set(0x54e, 0);
     GameBit_Set(0x552, 0);
     GameBit_Set(0x556, 0);
-}
-
-void ktrexlevel_free(void)
-{
-    GameBit_Set(0xefd, 0);
-    GameBit_Set(0xcd1, 0);
-    GameBit_Set(0xccd, 0);
-    GameBit_Set(0xccf, 0);
-    GameBit_Set(0xcd0, 0);
-    GameBit_Set(0xedb, 0);
-    GameBit_Set(0xcbb, 0);
 }
 
 void ktrexlevel_updatePathGameBits(void)
@@ -76,6 +68,21 @@ void ktrexlevel_updatePathGameBits(void)
     }
 }
 
+void ktrexlevel_update(int obj)
+{
+    if (((GameObject*)obj)->unkF4 == 0)
+    {
+        skyFn_80088c94(7, 1);
+        getEnvfxAct(obj, obj, 0x18f, 0);
+        getEnvfxAct(obj, obj, 0x18e, 0);
+        getEnvfxAct(obj, obj, 0x190, 0);
+        skyFn_80088e54(1, lbl_803E67A4);
+        GameBit_Set(0x55e, 1);
+        ((GameObject*)obj)->unkF4 = 1;
+    }
+    lbl_803DDD40 = GameBit_Get(0x572);
+}
+
 void ktrexlevel_init(int obj)
 {
     char* extra = ((GameObject*)obj)->extra;
@@ -94,17 +101,10 @@ void ktrexlevel_init(int obj)
     GameBit_Set(0xefd, 1);
 }
 
-void ktrexlevel_update(int obj)
+void ktrexlevel_release(void)
 {
-    if (((GameObject*)obj)->unkF4 == 0)
-    {
-        skyFn_80088c94(7, 1);
-        getEnvfxAct(obj, obj, 0x18f, 0);
-        getEnvfxAct(obj, obj, 0x18e, 0);
-        getEnvfxAct(obj, obj, 0x190, 0);
-        skyFn_80088e54(1, lbl_803E67A4);
-        GameBit_Set(0x55e, 1);
-        ((GameObject*)obj)->unkF4 = 1;
-    }
-    lbl_803DDD40 = GameBit_Get(0x572);
+}
+
+void ktrexlevel_initialise(void)
+{
 }
