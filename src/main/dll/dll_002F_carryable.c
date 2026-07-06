@@ -125,7 +125,7 @@ s32 Carryable_getFlag01(u8* state) { return ((CarryableUpdateHeldState*)state)->
 
 s32 Carryable_isHeld(u8* state) { return ((CarryableUpdateHeldState*)state)->carryState; }
 
-void Carryable_free(int x) { ObjGroup_RemoveObject(x, CARRYABLE_OBJGROUP); }
+void Carryable_free(int obj) { ObjGroup_RemoveObject(obj, CARRYABLE_OBJGROUP); }
 
 int Carryable_updateRenderState(int* obj, int flag)
 {
