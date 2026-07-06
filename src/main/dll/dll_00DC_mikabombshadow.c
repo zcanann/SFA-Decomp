@@ -229,15 +229,15 @@ void mikabombshadow_update(int* obj)
 {
     int* owner;
     f32 fz = lbl_803E31D8;
-    f32 t;
-    f32 f;
+    f32 scaleFactor;
+    f32 alpha;
 
     owner = ((GameObject*)obj)->ownerObj;
-    t = fz - (((GameObject*)owner)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) / *(f32*)((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.modelState->shadowScale = lbl_803E31DC * t + fz;
-    f = t * lbl_803E31E0;
-    if (f > fz) f = fz;
-    ((GameObject*)obj)->anim.modelState->shadowAlphaStep = lbl_803E31E4 * f;
+    scaleFactor = fz - (((GameObject*)owner)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) / *(f32*)((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.modelState->shadowScale = lbl_803E31DC * scaleFactor + fz;
+    alpha = scaleFactor * lbl_803E31E0;
+    if (alpha > fz) alpha = fz;
+    ((GameObject*)obj)->anim.modelState->shadowAlphaStep = lbl_803E31E4 * alpha;
 }
 
 void mikabombshadow_free(void)
