@@ -14,15 +14,18 @@ extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int 
 extern void Obj_FreeObject(int obj);
 
 extern void vecRotateZXY(s16 * rotation, f32 * outVec);
-extern u32 lbl_803E6450;
 typedef struct RingIdPair { u32 a; u32 b; } RingIdPair;
 extern f32 timeDelta;
-extern f32 lbl_803E6458;
-extern f32 lbl_803E645C;
-extern f32 lbl_803E6460;
-extern f32 lbl_803E6464;
-extern f32 lbl_803E6468;
-extern f32 lbl_803E6478;
+
+/* .sdata2 constant pool */
+static const RingIdPair lbl_803E6450 = { 0x00040005, 0x0006000B };
+static const f32 lbl_803E6458 = 1.0f;
+static const f32 lbl_803E645C = 30.0f;
+static const f32 lbl_803E6460 = 0.0f;
+static const f32 lbl_803E6464 = 60.0f;
+static const f32 lbl_803E6468 = 93.0f;
+static const f64 lbl_803E6470 = 4503599627370496.0;
+static const f32 lbl_803E6478 = 0.5f;
 
 #define SFXPLAYER_OBJECT_FLAGS_OFFSET 0xB0
 #define SFXPLAYER_OBJECT_STATE_OFFSET 0xB8
@@ -243,6 +246,9 @@ int TrickyCurve_activateEffectHandleRing(int obj, int unused, ObjAnimUpdateState
     return 0;
 }
 
+int sfxplayer_getExtraSize(void) { return 0xa; }
+int sfxplayer_getObjectTypeId(void) { return 0x0; }
+
 void sfxplayer_free(int obj, int arg1)
 {
     u32* handles;
@@ -279,9 +285,6 @@ void sfxplayer_render(void)
 void sfxplayer_hitDetect(void)
 {
 }
-
-int sfxplayer_getExtraSize(void) { return 0xa; }
-int sfxplayer_getObjectTypeId(void) { return 0x0; }
 
 #define SFXPLAYER_OBJECT_FLAGS_OFFSET 0xB0
 #define SFXPLAYER_OBJECT_STATE_OFFSET 0xB8
