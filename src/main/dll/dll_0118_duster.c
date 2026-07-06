@@ -1,8 +1,10 @@
 /*
  * duster (DLL 0x118) - a drifting collectible "dust" object the player
- * gathers and deposits, plus the shared ObjectDescriptor table for the
- * sibling DLL objects compiled into this unit (magicplant, trickywarp,
- * trickyguard, staypoint, curvefish).
+ * gathers and deposits.
+ *
+ * The ObjectDescriptors for the 0x00FE..0x0103 bundle (including
+ * gDusterObjDescriptor) live in dll_0100_trickywarp.c, whose .data split
+ * range (0x80321568..0x803216B8) owns them in retail.
  *
  * Each duster activates from its placement game bit; once active it settles
  * to the nearest floor hit, drifts (driftDir / random heading), advances its
@@ -75,14 +77,14 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 /* game bit guarding a single carried duster at a time */
 #define GAMEBIT_DUSTER_CARRIED 0xcc0
 
-int duster_getExtraSize(void) { return 0x20; }
-
 int duster_SeqFn(u8* obj)
 {
     DusterState* state = ((GameObject*)obj)->extra;
     state->flags.floorCached = 0;
     return 0;
 }
+
+int duster_getExtraSize(void) { return 0x20; }
 
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -134,41 +136,6 @@ typedef struct DusterLaunchRotation
     f32 y;
     f32 z;
 } DusterLaunchRotation;
-
-void duster_init(int obj, u8* params)
-{
-    DusterState* state;
-    DusterSetup* setup;
-    void* hitData;
-
-    setup = (DusterSetup*)params;
-    state = ((GameObject*)obj)->extra;
-    state->settleTimer = randomGetRange(0, 0x32);
-    state->moveStepScale = gDusterObjMoveStepScale;
-    state->activeGameBit = setup->activeGameBit;
-    if (state->activeGameBit >= 0x6fe)
-    {
-        state->active = 1;
-        state->completeGameBit = state->activeGameBit;
-    }
-    else
-    {
-        state->active = GameBit_Get(state->activeGameBit);
-        state->completeGameBit = state->activeGameBit + 0x64;
-    }
-    state->complete = GameBit_Get(state->completeGameBit);
-    hitData = ((GameObject*)obj)->anim.hitReactState;
-    if (hitData != NULL && state->active == 0)
-    {
-        *(s16*)((int)hitData + 0x60) = (s16)(*(s16*)((int)hitData + 0x60) | 1);
-    }
-    if ((state->complete != 0 || state->active == 0) && ((GameObject*)obj)->anim.hitReactState != NULL)
-    {
-        ObjHits_DisableObject(obj);
-    }
-    ObjMsg_AllocQueue((void*)obj, 1);
-    ((GameObject*)obj)->animEventCallback = duster_SeqFn;
-}
 
 void duster_update(int obj)
 {
@@ -383,88 +350,37 @@ void duster_update(int obj)
     ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY;
 }
 
-void trickyguard_update(int* obj);
+void duster_init(int obj, u8* params)
+{
+    DusterState* state;
+    DusterSetup* setup;
+    void* hitData;
 
-ObjectDescriptor gMagicPlantObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_init,
-    (ObjectDescriptorCallback)MagicPlant_update,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_render,
-    (ObjectDescriptorCallback)MagicPlant_free,
-    (ObjectDescriptorCallback)MagicPlant_getObjectTypeId,
-    MagicPlant_getExtraSize,
-};
-
-ObjectDescriptor gTrickyWarpObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickywarp_init,
-    (ObjectDescriptorCallback)trickywarp_update,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickywarp_free,
-    0,
-    trickywarp_getExtraSize,
-};
-
-ObjectDescriptor gTrickyGuardObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickyguard_init,
-    (ObjectDescriptorCallback)trickyguard_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gStayPointObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)StayPoint_init,
-    (ObjectDescriptorCallback)StayPoint_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gDusterObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)duster_init,
-    (ObjectDescriptorCallback)duster_update,
-    (ObjectDescriptorCallback)duster_hitDetect,
-    (ObjectDescriptorCallback)duster_render,
-    0,
-    0,
-    duster_getExtraSize,
-};
-
-ObjectDescriptor gCurveFishObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)curvefish_init,
-    (ObjectDescriptorCallback)curvefish_update,
-    0,
-    0,
-    0,
-    0,
-    curvefish_getExtraSize,
-};
+    setup = (DusterSetup*)params;
+    state = ((GameObject*)obj)->extra;
+    state->settleTimer = randomGetRange(0, 0x32);
+    state->moveStepScale = gDusterObjMoveStepScale;
+    state->activeGameBit = setup->activeGameBit;
+    if (state->activeGameBit >= 0x6fe)
+    {
+        state->active = 1;
+        state->completeGameBit = state->activeGameBit;
+    }
+    else
+    {
+        state->active = GameBit_Get(state->activeGameBit);
+        state->completeGameBit = state->activeGameBit + 0x64;
+    }
+    state->complete = GameBit_Get(state->completeGameBit);
+    hitData = ((GameObject*)obj)->anim.hitReactState;
+    if (hitData != NULL && state->active == 0)
+    {
+        *(s16*)((int)hitData + 0x60) = (s16)(*(s16*)((int)hitData + 0x60) | 1);
+    }
+    if ((state->complete != 0 || state->active == 0) && ((GameObject*)obj)->anim.hitReactState != NULL)
+    {
+        ObjHits_DisableObject(obj);
+    }
+    ObjMsg_AllocQueue((void*)obj, 1);
+    ((GameObject*)obj)->animEventCallback = duster_SeqFn;
+}
