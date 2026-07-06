@@ -359,9 +359,9 @@ end:
         void* player = Obj_GetPlayerObject();
         f32 dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX;
         f32 dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
-        f32 d = sqrtf(dx * dx + dz * dz);
-        u16 di = d;
-        if (di < ((ScMusictreeState*)inner)->hearRadius
+        f32 dist = sqrtf(dx * dx + dz * dz);
+        u16 distU16 = dist;
+        if (distU16 < ((ScMusictreeState*)inner)->hearRadius
         )
         {
             if ((((ScMusictreeState*)inner)->flags & SCMUSICTREE_FLAG_APPROACH_BURST)
@@ -389,7 +389,7 @@ end:
                 ((ScMusictreeState*)inner)->proximityBurstTimer += 30.0f;
             }
         }
-        ((ScMusictreeState*)inner)->previousDistance = di;
+        ((ScMusictreeState*)inner)->previousDistance = distU16;
     }
 }
 
