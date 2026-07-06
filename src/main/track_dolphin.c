@@ -1398,7 +1398,7 @@ int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
 }
 
 #pragma dont_inline on
-int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e)
+int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag)
 {
     void** arr;
     int n;
@@ -1407,16 +1407,16 @@ int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e)
     f32 best;
     f32 cur;
 
-    n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
+    n = hitDetectFn_80065e50(obj, x, y, z, &arr, 0, flag);
     if (n != 0)
     {
-        cur = val - *(f32*)arr[0];
+        cur = y - *(f32*)arr[0];
         if (cur >= __AR_Callback) {} else { cur = -cur; }
         best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
         {
-            cur = val - *(f32*)arr[i];
+            cur = y - *(f32*)arr[i];
             cur = cur >= *(f32*)&__AR_Callback ? cur : -cur;
             if (cur < best)
             {
@@ -1424,16 +1424,16 @@ int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e)
                 bestIdx = i;
             }
         }
-        *out = val - *(f32*)arr[bestIdx];
+        *outGroundY = y - *(f32*)arr[bestIdx];
         return 0;
     }
-    *out = __AR_Callback;
+    *outGroundY = __AR_Callback;
     return 1;
 }
 #pragma dont_inline reset
 
 #pragma dont_inline on
-int fn_80065768(int a, f32 b, f32 val, f32 d, f32* out1, f32* out2, int f)
+int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag)
 {
     void** arr;
     int n;
@@ -1442,16 +1442,16 @@ int fn_80065768(int a, f32 b, f32 val, f32 d, f32* out1, f32* out2, int f)
     f32 best;
     f32 cur;
 
-    n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, f);
+    n = hitDetectFn_80065e50(obj, x, y, z, &arr, 0, flag);
     if (n != 0)
     {
-        cur = val - *(f32*)arr[0];
+        cur = y - *(f32*)arr[0];
         if (cur >= __AR_Callback) {} else { cur = -cur; }
         best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
         {
-            cur = val - *(f32*)arr[i];
+            cur = y - *(f32*)arr[i];
             cur = cur >= *(f32*)&__AR_Callback ? cur : -cur;
             if (cur < best)
             {
@@ -1459,18 +1459,18 @@ int fn_80065768(int a, f32 b, f32 val, f32 d, f32* out1, f32* out2, int f)
                 bestIdx = i;
             }
         }
-        *out1 = val - *(f32*)arr[bestIdx];
-        out2[0] = ((f32*)arr[bestIdx])[1];
-        out2[1] = ((f32*)arr[bestIdx])[2];
-        out2[2] = ((f32*)arr[bestIdx])[3];
+        *outGroundY = y - *(f32*)arr[bestIdx];
+        outNormal[0] = ((f32*)arr[bestIdx])[1];
+        outNormal[1] = ((f32*)arr[bestIdx])[2];
+        outNormal[2] = ((f32*)arr[bestIdx])[3];
         return 0;
     }
-    *out1 = __AR_Callback;
+    *outGroundY = __AR_Callback;
     return 1;
 }
 #pragma dont_inline reset
 
-int findSurfaceInYRange(int a, f32 b, f32 lo, f32 d, f32 hi, f32* out1, int* out2)
+int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY, int* outSurfaceId)
 {
     void** arr;
     int n;
@@ -1482,9 +1482,9 @@ int findSurfaceInYRange(int a, f32 b, f32 lo, f32 d, f32 hi, f32* out1, int* out
         hi = lo;
         lo = t;
     }
-    n = hitDetectFn_80065e50(a, b, lo, d, &arr, 0, 1);
-    *out1 = lo;
-    *out2 = 0;
+    n = hitDetectFn_80065e50(obj, x, lo, z, &arr, 0, 1);
+    *outSurfaceY = lo;
+    *outSurfaceId = 0;
     for (i = 0; i < n; i++)
     {
         void* elem = arr[i];
@@ -1494,8 +1494,8 @@ int findSurfaceInYRange(int a, f32 b, f32 lo, f32 d, f32 hi, f32* out1, int* out
         }
         if (lo < *(f32*)elem && hi > *(f32*)elem)
         {
-            *out2 = *(int*)((char*)arr[i] + 0x10);
-            *out1 = *(f32*)arr[i];
+            *outSurfaceId = *(int*)((char*)arr[i] + 0x10);
+            *outSurfaceY = *(f32*)arr[i];
             return (((f32*)arr[i])[2] < __AR_Size) + 1;
         }
     }
@@ -2473,7 +2473,7 @@ extern const f32 lbl_803DECE8;
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 
 
-int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
+int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int mode, int submode)
 {
     u8* base = gIntersectSegmentTypeTable;
     TrackBlockDescriptor* desc = (TrackBlockDescriptor*)(base + 0x424);
@@ -2484,20 +2484,20 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
     int conv[6];
     f32 tx, ty, tz;
 
-    if (e >= 0)
+    if (mode >= 0)
     {
-        conv[0] = b;
-        conv[3] = b;
-        conv[1] = (int)(c - lbl_803DECE8);
-        conv[4] = (int)(lbl_803DECE8 + c);
-        conv[2] = d;
-        conv[5] = d;
-        hitDetectFn_800691c0((int*)a, conv, f, 1);
+        conv[0] = x;
+        conv[3] = x;
+        conv[1] = (int)(y - lbl_803DECE8);
+        conv[4] = (int)(lbl_803DECE8 + y);
+        conv[2] = z;
+        conv[5] = z;
+        hitDetectFn_800691c0((int*)obj, conv, submode, 1);
     }
     else
     {
-        if (e == -1) e = 0;
-        else e = 1;
+        if (mode == -1) mode = 0;
+        else mode = 1;
     }
 
     lbl_803DCF68 = (int)(base + 0xdc);
@@ -2509,16 +2509,16 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
         if (lbl_803DCF60 >= 0x23) break;
         if (desc->object != NULL)
         {
-            Matrix_TransformPoint(desc->currentMatrix, b, __AR_Callback, d, &tx, &ty, &tz);
+            Matrix_TransformPoint(desc->currentMatrix, x, __AR_Callback, z, &tx, &ty, &tz);
             fn_800659A8((void*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
                         (void*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c),
-                        desc, tx, tz, e);
+                        desc, tx, tz, mode);
         }
         else
         {
             fn_800659A8((void*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
                         (void*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c),
-                        desc, b, d, e);
+                        desc, x, z, mode);
         }
     }
 
