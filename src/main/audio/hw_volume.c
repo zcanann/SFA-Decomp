@@ -18,7 +18,7 @@ extern f32 lbl_803E78E4;
  * EN v1.0 Address: 0x8028383C
  * EN v1.0 Size: 720b (0x2D0)
  */
-void hwSetVolume(int slot, u32 p2, f32 a, f32 b, f32 c, u32 aux, u32 p7)
+void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
 {
     DSPvoice* voice;
     DSPstudioinfo* aux_entry;
@@ -27,18 +27,18 @@ void hwSetVolume(int slot, u32 p2, f32 a, f32 b, f32 c, u32 aux, u32 p7)
 
     voice = (DSPvoice*)(dspVoice + slot * 0xf4);
 
-    if (a >= 1.0f) a = 1.0f;
-    if (b >= 1.0f) b = 1.0f;
-    if (c >= 1.0f) c = 1.0f;
+    if (vol >= 1.0f) vol = 1.0f;
+    if (auxa >= 1.0f) auxa = 1.0f;
+    if (auxb >= 1.0f) auxb = 1.0f;
 
     aux_entry = (DSPstudioinfo*)(lbl_803CC1E0 + voice->studio * 0xbc);
 
     {
-        extern void salCalcVolumeMatrix(int voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 a, f32 b,
-                                        f32 c);
+        extern void salCalcVolumeMatrix(int voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 vol,
+                                        f32 auxa, f32 auxb);
         u32 f0w = voice->flags;
         salCalcVolumeMatrix(p2, out, aux, p7, (f0w & 0x80000000u) != 0,
-                            aux_entry->type == 1, a, b, c);
+                            aux_entry->type == 1, vol, auxa, auxb);
     }
 
     v0 = (s32)(lbl_803E78E4 * out[0]);
