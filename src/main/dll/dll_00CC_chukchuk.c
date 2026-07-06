@@ -146,7 +146,7 @@ void chukchuk_update(short* obj)
     int pl;
     ObjTextureRuntimeSlot* tex;
     int ang;
-    int r;
+    int roll;
     f32 lim;
     f32 nv;
     f32 dx;
@@ -229,8 +229,8 @@ void chukchuk_update(short* obj)
                 if (((u32)ang & 0xffff) < v->arcHalfAngle ||
                     ((u32)ang & 0xffff) > ((0xffff - v->arcHalfAngle) & 0xffff))
                 {
-                    r = randomGetRange(0, 99);
-                    if (r < v->attackChance || (v->flags & CHUKCHUK_FLAG_FORCED_ATTACK) != 0)
+                    roll = randomGetRange(0, 99);
+                    if (roll < v->attackChance || (v->flags & CHUKCHUK_FLAG_FORCED_ATTACK) != 0)
                     {
                         Sfx_PlayFromObject(obj, SFXkr_impact1);
                         fn_8015F5B0(obj);
