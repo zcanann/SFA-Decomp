@@ -45,14 +45,6 @@ int dll_28B_getExtraSize(void) { return sizeof(Dll28BState); }
 
 int dll_28B_getObjectTypeId(void) { return 0x0; }
 
-void dll_28B_hitDetect_nop(void)
-{
-}
-
-void dll_28B_release_nop(void)
-{
-}
-
 void dll_28B_free(int obj) { ObjGroup_RemoveObject(obj, DLL28B_OBJ_GROUP); }
 
 void dll_28B_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -65,9 +57,16 @@ void dll_28B_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
+void dll_28B_hitDetect_nop(void)
+{
+}
+
+#pragma opt_common_subs off
+#pragma opt_propagation off
 void dll_28B_update(int obj)
 {
     f32 oz, oy, ox;
+    f32 dt;
     ObjXform xform;
     f32 mtx[16];
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -75,8 +74,9 @@ void dll_28B_update(int obj)
 
     ((Dll28BState*)state)->playerDistance = Vec_xzDistance(obj + 0x18, player + 0x18);
     ((Dll28BState*)state)->objectFlagsMirror |= OBJFLAG_BIT_2000000;
+    dt = timeDelta;
     (*(void (**)(int, int, f32, f32, void*, void*))(*gPlayerInterface + 0x8))(
-        obj, state, timeDelta, timeDelta, gDll28BStateHandlers, gDll28BSubstateHandlers);
+        obj, state, dt, dt, gDll28BStateHandlers, gDll28BSubstateHandlers);
     if ((((Dll28BState*)state)->flagsAC0 & 1) != 0)
     {
         ((Dll28BState*)state)->flags96D &= ~1;
@@ -95,9 +95,12 @@ void dll_28B_update(int obj)
     xform.rz = ((GameObject*)obj)->anim.rotZ;
     xform.scale = lbl_803E6D18;
     setMatrixFromObjectPos(mtx, &xform);
-    Matrix_TransformPoint(mtx, 0.0f, 0.0f, 0.0f, &ox, &oy, &oz);
+    Matrix_TransformPoint(mtx, gWcEarthWalkerIdleTimerThreshold, gWcEarthWalkerIdleTimerThreshold,
+                          gWcEarthWalkerIdleTimerThreshold, &ox, &oy, &oz);
     doNothing_80062A50(obj, ox, oy, oz);
 }
+#pragma opt_common_subs reset
+#pragma opt_propagation reset
 
 void dll_28B_init(int obj)
 {
@@ -115,6 +118,10 @@ void dll_28B_init(int obj)
     (*gRomCurveInterface)->initCurve((void*)(state + 0x9B0), (void*)obj, gDll28BCurveInitParam, &curveParam, -1);
     (*(void (**)(int, int, int, int))(*gPlayerInterface + 0x4))(obj, state, 4, 4);
     ObjGroup_AddObject(obj, DLL28B_OBJ_GROUP);
+}
+
+void dll_28B_release_nop(void)
+{
 }
 
 void dll_28B_initialise(void)
