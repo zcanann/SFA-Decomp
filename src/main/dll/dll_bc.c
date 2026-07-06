@@ -10,7 +10,6 @@
 #include "main/dll/dll_BC.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_80220608_shared.h"
-extern int lbl_803DD518; /* active camera action id (.sbss) */
 
 void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
 {
@@ -18,7 +17,7 @@ void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
     {
         gCamcontrolTargetHelpTextId = CAMCONTROL_HELP_TEXT_NONE;
         camcontrol_updateTargetReticle((CamcontrolTargetObject*)CAMCONTROL_CAMERA->targetReticleFocus,
-                                       lbl_803DD518 == 0x49,
+                                       gCamcontrolActiveActionId == 0x49,
                                        arg1, arg2, arg3, arg4);
         CAMCONTROL_CAMERA->targetReticleOverride = 0;
     }
