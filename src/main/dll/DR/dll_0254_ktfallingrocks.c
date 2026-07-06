@@ -29,22 +29,6 @@ int ktfallingrocks_getExtraSize(void) { return 0x0; }
 
 int ktfallingrocks_getObjectTypeId(void) { return 0x0; }
 
-void ktfallingrocks_hitDetect(void)
-{
-}
-
-void ktfallingrocks_initialise(void)
-{
-}
-
-void ktfallingrocks_release(void)
-{
-}
-
-void ktfallingrocks_init(int obj)
-{
-    ((GameObject*)obj)->animEventCallback = NULL;
-}
 
 void ktfallingrocks_free(u8* obj)
 {
@@ -57,6 +41,10 @@ void ktfallingrocks_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visib
     {
         return;
     }
+}
+
+void ktfallingrocks_hitDetect(void)
+{
 }
 
 void ktfallingrocks_update(int obj)
@@ -86,4 +74,17 @@ void ktfallingrocks_update(int obj)
     }
     Sfx_PlayFromObject(obj, SFXbaddie_haga_spin);
     GameBit_Set(((KtfallingrocksPlacement*)placement)->triggerBit, 0);
+}
+
+void ktfallingrocks_init(int obj)
+{
+    ((GameObject*)obj)->animEventCallback = NULL;
+}
+
+void ktfallingrocks_release(void)
+{
+}
+
+void ktfallingrocks_initialise(void)
+{
 }
