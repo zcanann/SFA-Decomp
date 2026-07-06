@@ -9,6 +9,7 @@
 #include "main/objseq.h"
 #include "main/vecmath.h"
 #include "main/gameplay_runtime.h"
+#include "main/object_descriptor.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -50,17 +51,12 @@ extern void fn_8003A168(int p1, int p2);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void buttonDisable(int port, u32 mask);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern f32 lbl_803E82D0;
 extern void playerTailFn_80026b3c(int* p1, int p2, int p3, void* p4);
 extern int gDim2PrisonMammothStateHandlers[];
 extern void* gDim2PrisonMammothDefaultStateHandler;
 extern int dim2prisonmammoth_stateHandler01(int obj, int p2);
 extern int dim2prisonmammoth_stateHandler02(int obj, int p2);
 extern int dim2prisonmammoth_stateHandler03(int obj, int p2);
-extern f32 lbl_803E82C0;
-extern f32 gPrisonMammothMoveSpeed;
-extern f32 lbl_803E82C8;
-extern f32 lbl_803E82CC;
 extern f32 gPrisonMammothMoveSpeedTable;
 extern s16 gPrisonMammothMoveIdTable;
 extern int *gPlayerInterface;
@@ -73,63 +69,9 @@ extern void saveGame_saveObjectPos(int obj);
 
 int dim2prisonmammoth_defaultStateHandler(void) { return 0x0; }
 
-int dim2prisonmammoth_getExtraSize(void) { return 0x604; }
-
-int dim2prisonmammoth_getObjectTypeId(void) { return 0; }
-
-void dim2prisonmammoth_free(void)
-{
-}
-
-void dim2prisonmammoth_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0)
-    {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E82D0);
-    }
-}
-
-void dim2prisonmammoth_hitDetect(void)
-{
-}
-
-int dim2prisonmammoth_stateHandler00(int* obj)
-{
-    int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
-    switch ((s8)((Dim2prisonmammothPlacement*)sub)->spawnVariant)
-    {
-    case 0:
-        if ((u32)GameBit_Get(548) != 0) return 3;
-        return 2;
-    case 1:
-        if ((u32)GameBit_Get(707) != 0) return 3;
-        return 3;
-    default:
-        return 0;
-    }
-}
-
-void dim2prisonmammoth_release(void)
-{
-}
-
-void fn_802BC788(int obj, int b)
-{
-    playerTailFn_80026b3c((int*)b, *(int*)b, *(int*)(*(int*)&((GameObject*)obj)->extra + 0x14f8), 0);
-}
-
-void dim2prisonmammoth_initialise(void)
-{
-    ((void**)gDim2PrisonMammothStateHandlers)[0] = dim2prisonmammoth_stateHandler00;
-    ((void**)gDim2PrisonMammothStateHandlers)[1] = dim2prisonmammoth_stateHandler01;
-    ((void**)gDim2PrisonMammothStateHandlers)[2] = dim2prisonmammoth_stateHandler02;
-    ((void**)gDim2PrisonMammothStateHandlers)[3] = dim2prisonmammoth_stateHandler03;
-    gDim2PrisonMammothDefaultStateHandler = dim2prisonmammoth_defaultStateHandler;
-}
-
 int dim2prisonmammoth_stateHandler03(int obj, int state)
 {
-    f32 fz = lbl_803E82C0;
+    f32 fz = 0.0f;
     ((BaddieState*)state)->animSpeedC = fz;
     ((BaddieState*)state)->animSpeedB = fz;
     ((BaddieState*)state)->animSpeedA = fz;
@@ -141,7 +83,7 @@ int dim2prisonmammoth_stateHandler03(int obj, int state)
     {
         int k = randomGetRange(0, 1);
         ((BaddieState*)state)->moveSpeed = (&gPrisonMammothMoveSpeedTable)[k];
-        ObjAnim_SetCurrentMove(obj, (&gPrisonMammothMoveIdTable)[k], lbl_803E82C0, 0);
+        ObjAnim_SetCurrentMove(obj, (&gPrisonMammothMoveIdTable)[k], 0.0f, 0);
     }
     if (*(s8*)&((BaddieState*)state)->moveDone != 0)
     {
@@ -153,7 +95,7 @@ int dim2prisonmammoth_stateHandler03(int obj, int state)
 int dim2prisonmammoth_stateHandler02(int obj, int state)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
-    f32 fz = lbl_803E82C0;
+    f32 fz = 0.0f;
     ((BaddieState*)state)->animSpeedC = fz;
     ((BaddieState*)state)->animSpeedB = fz;
     ((BaddieState*)state)->animSpeedA = fz;
@@ -161,7 +103,7 @@ int dim2prisonmammoth_stateHandler02(int obj, int state)
     ((GameObject*)obj)->anim.velocityY = fz;
     ((GameObject*)obj)->anim.velocityZ = fz;
     *(int*)((char*)state + 0) |= 0x200000;
-    ((BaddieState*)state)->moveSpeed = gPrisonMammothMoveSpeed;
+    ((BaddieState*)state)->moveSpeed = 0.005f;
     if (((GameObject*)obj)->anim.currentMove != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0, fz, 0);
@@ -179,7 +121,7 @@ int dim2prisonmammoth_stateHandler02(int obj, int state)
 int dim2prisonmammoth_stateHandler01(int obj, int state)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
-    f32 fz = lbl_803E82C0;
+    f32 fz = 0.0f;
     ((BaddieState*)state)->animSpeedC = fz;
     ((BaddieState*)state)->animSpeedB = fz;
     ((BaddieState*)state)->animSpeedA = fz;
@@ -189,7 +131,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int state)
     *(int*)((char*)state + 0) |= 0x200000;
     if (*(s8*)&((BaddieState*)state)->moveJustStartedA != 0)
     {
-        ((BaddieState*)state)->moveSpeed = gPrisonMammothMoveSpeed;
+        ((BaddieState*)state)->moveSpeed = 0.005f;
         if (((GameObject*)obj)->anim.currentMove != 5)
         {
             ObjAnim_SetCurrentMove(obj, 5, fz, 0);
@@ -201,27 +143,27 @@ int dim2prisonmammoth_stateHandler01(int obj, int state)
         GameBit_Set(0x223, 1);
         buttonDisable(0, PAD_BUTTON_A);
     }
-    if (RandomTimer_UpdateRangeTrigger((void*)(inner + 0x600), lbl_803E82C8, lbl_803E82CC))
+    if (RandomTimer_UpdateRangeTrigger((void*)(inner + 0x600), 4.0f, 8.0f))
     {
         Sfx_PlayFromObject(obj, SFXTRIG_hightop_call1);
     }
     return 0;
 }
 
-void dim2prisonmammoth_init(int obj, int params)
+int dim2prisonmammoth_stateHandler00(int* obj)
 {
-    int inner;
-    ((GameObject*)obj)->anim.rotX = (s16)(((Dim2prisonmammothPlacement*)params)->rotByte << 8);
-    ((GameObject*)obj)->animEventCallback = fn_802BC3F0;
-    inner = *(int*)&((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.modelState != NULL)
+    int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
+    switch ((s8)((Dim2prisonmammothPlacement*)sub)->spawnVariant)
     {
-        ((GameObject*)obj)->anim.modelState->flags |= 0xa10;
-        ((GameObject*)obj)->anim.modelState->flags |= 0x8020LL;
+    case 0:
+        if ((u32)GameBit_Get(548) != 0) return 3;
+        return 2;
+    case 1:
+        if ((u32)GameBit_Get(707) != 0) return 3;
+        return 3;
+    default:
+        return 0;
     }
-    (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
-    ((Dim2prisonmammothState*)inner)->unk25F = 0;
-    ((GameObject*)obj)->objectFlags |= DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED;
 }
 
 int fn_802BC3F0(int obj, int state, ObjAnimUpdateState* animUpdate)
@@ -253,6 +195,26 @@ int fn_802BC3F0(int obj, int state, ObjAnimUpdateState* animUpdate)
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
     return 0;
+}
+
+int dim2prisonmammoth_getExtraSize(void) { return 0x604; }
+
+int dim2prisonmammoth_getObjectTypeId(void) { return 0; }
+
+void dim2prisonmammoth_free(void)
+{
+}
+
+void dim2prisonmammoth_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0)
+    {
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+    }
+}
+
+void dim2prisonmammoth_hitDetect(void)
+{
 }
 
 void dim2prisonmammoth_update(int obj)
@@ -292,7 +254,7 @@ void dim2prisonmammoth_update(int obj)
     ((Dim2prisonmammothState*)inner)->unk354 = 0;
     ((Dim2prisonmammothState*)inner)->flags &= ~0x8000;
     {
-        f32 fz = lbl_803E82C0;
+        f32 fz = 0.0f;
         ((Dim2prisonmammothState*)inner)->unk290 = fz;
         ((Dim2prisonmammothState*)inner)->unk28C = fz;
     }
@@ -305,6 +267,60 @@ void dim2prisonmammoth_update(int obj)
     saveGame_saveObjectPos(obj);
 }
 
+void dim2prisonmammoth_init(int obj, int params)
+{
+    int inner;
+    ((GameObject*)obj)->anim.rotX = (s16)(((Dim2prisonmammothPlacement*)params)->rotByte << 8);
+    ((GameObject*)obj)->animEventCallback = fn_802BC3F0;
+    inner = *(int*)&((GameObject*)obj)->extra;
+    if (((GameObject*)obj)->anim.modelState != NULL)
+    {
+        ((GameObject*)obj)->anim.modelState->flags |= 0xa10;
+        ((GameObject*)obj)->anim.modelState->flags |= 0x8020LL;
+    }
+    (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
+    ((Dim2prisonmammothState*)inner)->unk25F = 0;
+    ((GameObject*)obj)->objectFlags |= DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED;
+}
+
+void dim2prisonmammoth_release(void)
+{
+}
+
+void dim2prisonmammoth_initialise(void)
+{
+    ((void**)gDim2PrisonMammothStateHandlers)[0] = dim2prisonmammoth_stateHandler00;
+    ((void**)gDim2PrisonMammothStateHandlers)[1] = dim2prisonmammoth_stateHandler01;
+    ((void**)gDim2PrisonMammothStateHandlers)[2] = dim2prisonmammoth_stateHandler02;
+    ((void**)gDim2PrisonMammothStateHandlers)[3] = dim2prisonmammoth_stateHandler03;
+    gDim2PrisonMammothDefaultStateHandler = dim2prisonmammoth_defaultStateHandler;
+}
+
+void fn_802BC788(int obj, int b)
+{
+    playerTailFn_80026b3c((int*)b, *(int*)b, *(int*)(*(int*)&((GameObject*)obj)->extra + 0x14f8), 0);
+}
+
 ObjHitReactEntry gPrisonMammothHitReactEntry[] = {
     {730, 885, 48, {0xFF, 0xFF}, 0, {0, 0, 0}, 0.012f, {0, 0, 0, 0}},
+};
+
+ObjectDescriptor10WithPadding gDIM2PrisonMammothObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        (ObjectDescriptorCallback)dim2prisonmammoth_initialise,
+        (ObjectDescriptorCallback)dim2prisonmammoth_release,
+        0,
+        (ObjectDescriptorCallback)dim2prisonmammoth_init,
+        (ObjectDescriptorCallback)dim2prisonmammoth_update,
+        (ObjectDescriptorCallback)dim2prisonmammoth_hitDetect,
+        (ObjectDescriptorCallback)dim2prisonmammoth_render,
+        (ObjectDescriptorCallback)dim2prisonmammoth_free,
+        (ObjectDescriptorCallback)dim2prisonmammoth_getObjectTypeId,
+        dim2prisonmammoth_getExtraSize,
+    },
+    0,
 };
