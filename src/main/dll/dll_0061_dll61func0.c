@@ -1,8 +1,15 @@
 /*
- * DLL 61 (dll61func0): savegame preview/debug settings plus a Modgfx effect
- * spawner. Exposes cheat-unlock and preview-volume/color accessors over the
- * gameplay save struct, applies those settings on load, and builds a GfxCmd
- * command table dispatched through gModgfxInterface->spawnEffect.
+ * DLL 61 (dll61func0) - a thin gameplay-effect DLL exporting three object
+ * hooks. func01/func00 are empty no-op slots; func03 builds a
+ * fifteen-command modgfx effect list on the stack (texture/blend modes from
+ * the lbl_803E085x/6x/7x/8x float constants and the lbl_803128E8 resource
+ * blob) and submits it through gModgfxInterface->spawnEffect.
+ *
+ * The save/cheat helpers (saveFileStruct_unlockCheat / isCheatUnlocked /
+ * saveFileStruct_resetVolumes / getSaveFileStruct / loadSaveSettings)
+ * that mainDol drift-duplicated into the dll_005E..dll_007B gameplay DLL
+ * family live in dll_0015_curves (their retail home); the retail dll_0061
+ * object carries only func03/func01/func00.
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -20,93 +27,9 @@ typedef struct
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
-extern u32 FUN_80006768();
-extern u32 FUN_8000676c();
-extern u32 FUN_80006c20();
-extern u32 FUN_80017500();
-extern u32 FUN_8005d018();
-extern u8 gGameplayPreviewSettings;
-extern u32 DAT_803a3e26;
-extern u32 DAT_803a3e27;
-extern u32 DAT_803a3e28;
-extern u32 DAT_803a3e2a;
-extern u32 DAT_803a3e2c;
-extern u32 DAT_803a3e2d;
-extern u32 gGameplayPreviewColorRed;
-extern u32 gGameplayPreviewColorGreen;
-extern u32 gGameplayPreviewColorBlue;
-extern u32 gGameplayRegisteredDebugOptions;
-extern u32* DAT_803dd6d0;
-extern u32* DAT_803dd6e8;
 extern u8 lbl_803128E8[];
 extern int lbl_803DB8C0;
 extern f32 lbl_803E0858;
-
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
-void saveFileStruct_unlockCheat(u32 cheatId)
-{
-    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
-}
-
-u32 isCheatUnlocked(u32 cheatId)
-{
-    return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
-}
-
-void saveFileStruct_resetVolumes(void)
-{
-    gGameplayPreviewColorRed = 0x7f;
-    gGameplayPreviewColorGreen = 0x7f;
-    gGameplayPreviewColorBlue = 0x7f;
-    return;
-}
-
-u8* getSaveFileStruct(void)
-{
-    return &gGameplayPreviewSettings;
-}
-
-void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
-                      u64 arg5, u64 arg6, u64 arg7,
-                      u64 arg8)
-{
-    FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, DAT_803a3e26);
-    FUN_80006c20(DAT_803a3e2c);
-    FUN_80006768(DAT_803a3e2d, '\0');
-    (**(VtableFn**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
-    (**(VtableFn**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
-}
-
-void dll_61_func01_nop(void)
-{
-}
-
-void dll_61_func00_nop(void)
-{
-}
-
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* lbl = N (byte) */
-
-/* 12b 3-insn patterns. */
-
-/* misc 8b leaves */
-
-/* if (lbl) fn(lbl); */
 
 enum
 {
@@ -178,8 +101,9 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
     entry[5].flags = 9;
     entry[5].tex = &base[0x8c];
     entry[5].mode = 2;
-    randScale = 2.6f + 0.05f * (f32)(int)
+    randScale = 0.05f * (f32)(int)
     randomGetRange(0, 0xc);
+    randScale = 2.6f + randScale;
     entry[5].x = randScale;
     entry[5].y = randScale;
     entry[5].z = randScale;
@@ -290,3 +214,11 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_803128E8, 8, &base[0x5c], 0x90, 0);
 }
 #pragma fp_contract reset
+
+void dll_61_func01_nop(void)
+{
+}
+
+void dll_61_func00_nop(void)
+{
+}
