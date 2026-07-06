@@ -1175,14 +1175,14 @@ int fn_8011E0D8(int *this, int *p2, int p3)
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
     selectTexture(tex0, 0);
     GXSetTexCoordGen2(0, 1, 1, 0x1e, 0, 0x7d);
-    GXSetTevOrder(0, 0, 0, 4);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
     GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xa);
     GXSetTevAlphaIn(0, 7, 7, 7, 5);
     GXSetTevSwapMode(0, 0, 0);
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
-    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
-    GXSetChanMatColor(4, chanCol);
+    GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanMatColor(GX_COLOR0A0, chanCol);
     GXSetIndTexOrder(1, 0, 2);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetTevIndirect(1, 1, 0, 7, 1, 0, 0, 1, 0, 0);
