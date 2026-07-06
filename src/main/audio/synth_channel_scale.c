@@ -311,7 +311,7 @@ int fn_8026F30C(void)
     SynthSong* sp;
     u32 i;
     int j;
-    int n;
+    int cbIndex;
     u32* prev;
     u32* cb;
 
@@ -345,7 +345,7 @@ int fn_8026F30C(void)
     prev = NULL;
     cb = (u32*)pool;
     gSynthFreeCallbacks = cb;
-    for (n = 0; n < 0x100; n++)
+    for (cbIndex = 0; cbIndex < 0x100; cbIndex++)
     {
         cb[1] = (u32)prev;
         if (prev != NULL)
@@ -357,7 +357,7 @@ int fn_8026F30C(void)
     }
     *prev = 0;
     gSynthNextHandle = 0;
-    return n;
+    return cbIndex;
 }
 
 /*
@@ -381,11 +381,11 @@ void synthSetStudioChannelScale(int value, u8 bank, u8 key)
 int synthGetVoiceSlotChannelScale(u8* state)
 {
     McmdVoiceState* v = (McmdVoiceState*)state;
-    u32 a;
-    int b;
-    if ((a = v->midiEvent) == 0xff) a = 8;
-    b = v->midiLayer;
-    return *(int*)(lbl_803BCD90 + a * 64 + b * 4);
+    u32 bank;
+    int key;
+    if ((bank = v->midiEvent) == 0xff) bank = 8;
+    key = v->midiLayer;
+    return *(int*)(lbl_803BCD90 + bank * 64 + key * 4);
 }
 
 /*
