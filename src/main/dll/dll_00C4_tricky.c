@@ -93,10 +93,6 @@ typedef struct TrickyStatusFlags58
     u8 bit0 : 1;
 } TrickyStatusFlags58;
 
-extern bool FUN_800067f0();
-extern char FUN_80006a64();
-extern u32 FUN_80006a68();
-extern u32 FUN_80017690();
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
@@ -121,7 +117,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern u32 ObjPath_GetPointWorldPositionArray();
 extern u32 ObjPath_GetPointWorldPosition();
 extern u32 objAnimFn_80038f38();
-extern u64 FUN_80039468();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int arg5,
                                 int arg6);
 extern f32 getXZDistance(f32* a, f32* b);
@@ -129,7 +124,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern int objModelGetVecFn_800395d8(int obj, int target);
 extern void freeAndNull(void* p);
 extern void trickyVoxAllocFn_8004b5d4(void* out);
-extern int FUN_800620e8();
 extern u16 hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hits, int pointCount, int arg7);
 extern void objAudioFn_8006edcc(int obj, u16 mask, int arg5, float* points, void* aux, f32 scaleX, f32 scaleY);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
@@ -148,10 +142,6 @@ extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
 extern void objSetAnimSpeedTo1(int obj);
 extern f32 objFn_801948c0(int obj, int coord);
-extern u32 FUN_80247eb8();
-extern double SeekTwiceBeforeRead();
-extern u64 FUN_8028683c();
-extern u32 FUN_80286888();
 extern int fn_80296240(int obj);
 extern int fn_80296448(int obj);
 extern void objParticleFn_80099d84(int obj, f32 scale, int type, f32 extraScale, int light);
