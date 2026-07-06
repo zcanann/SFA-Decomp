@@ -124,7 +124,7 @@ void magiccavetop_update(int* obj)
     int range;
     void* staff;
     f32 dist;
-    f32 t;
+    f32 originXZ;
 
     player = Obj_GetPlayerObject();
     sub = ((GameObject*)obj)->extra;
@@ -317,10 +317,10 @@ void magiccavetop_update(int* obj)
     }
     if (((GameObject*)obj)->anim.alpha != 0)
     {
-        t = 0.0f;
-        fx.x = t;
+        originXZ = 0.0f;
+        fx.x = originXZ;
         fx.y = 40.0f;
-        fx.z = t;
+        fx.z = originXZ;
         if ((sub->flags & 8) != 0)
         {
             objfx_spawnArcedBurst(obj, 1, 0.5f, 5, 2, 0x32, 18.0f, 8.0f, 80.0f, fx.pad,
