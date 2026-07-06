@@ -2,6 +2,14 @@
 
 #pragma exceptions on
 
+typedef struct SynthSeqRuntime
+{
+    u8 unk0000[0x1400];
+    SynthVoice voices[SYNTH_MAX_VOICES];
+} SynthSeqRuntime;
+
+extern SynthSeqRuntime lbl_803AF550;
+
 /* SynthVoice.state - which intrusive list the voice sits on */
 #define SYNTH_VOICE_STATE_FREE 0      /* unallocated */
 #define SYNTH_VOICE_STATE_QUEUED 1    /* on gSynthQueuedVoices; awaiting start */
@@ -391,29 +399,30 @@ void synthQueueHandle(u32 handle)
     u32 found;
     u32 i;
     SynthVoice* voice;
+    SynthVoice* sv;
 
     key = handle & 0x7fffffffu;
 
-    voice = gSynthQueuedVoices;
-    while (voice != 0)
+    sv = gSynthQueuedVoices;
+    while (sv != 0)
     {
-        if (voice->handle == key)
+        if (sv->handle == key)
         {
-            found = voice->slotIndex | (handle & 0x80000000);
+            found = sv->slotIndex | (handle & 0x80000000);
             goto done;
         }
-        voice = voice->next;
+        sv = sv->next;
     }
 
-    voice = gSynthAllocatedVoices;
-    while (voice != 0)
+    sv = gSynthAllocatedVoices;
+    while (sv != 0)
     {
-        if (voice->handle == key)
+        if (sv->handle == key)
         {
-            found = voice->slotIndex | (handle & 0x80000000);
+            found = sv->slotIndex | (handle & 0x80000000);
             goto done;
         }
-        voice = voice->next;
+        sv = sv->next;
     }
     found = 0xffffffff;
 done:
@@ -485,12 +494,12 @@ done:
 void synthFreeHandle(u32 handle)
 {
     SynthVoice* voice;
-    SynthVoiceRuntime* runtime;
+    SynthSeqRuntime* runtime;
     u32 key;
     u32 found;
     u32 i;
 
-    runtime = SYNTH_VOICE_RUNTIME();
+    runtime = &lbl_803AF550;
     key = handle & 0x7fffffffu;
 
     voice = gSynthQueuedVoices;
@@ -524,8 +533,7 @@ done:
 
     if ((found & 0x80000000) == 0)
     {
-        voice = &runtime->voices[found];
-        switch (runtime->voices[found].state)
+        switch (voice = &runtime->voices[found], runtime->voices[found].state)
         {
         case SYNTH_VOICE_STATE_QUEUED:
             if (voice->prev != 0)
@@ -589,8 +597,7 @@ done:
     }
     else
     {
-        voice = &runtime->voices[found & 0x7fffffffu];
-        if (voice->state != SYNTH_VOICE_STATE_FREE)
+        if ((voice = &runtime->voices[found & 0x7fffffffu], runtime->voices[found & 0x7fffffffu].state) != SYNTH_VOICE_STATE_FREE)
         {
             voice->pendingUpdate.output = 0;
         }
