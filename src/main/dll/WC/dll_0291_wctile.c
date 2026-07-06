@@ -107,31 +107,6 @@ void wctile_hitDetect(void)
 {
 }
 
-void wctile_init(u8* obj, u8* setupBytes)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    WCTileState* state = ((GameObject*)obj)->extra;
-    WCTileSetup* setup = (WCTileSetup*)setupBytes;
-
-    ((GameObject*)obj)->anim.localPosY = lbl_803E6DFC + setup->base.posY;
-    objAnim->bankIndex = setup->modelIndex;
-    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
-    {
-        objAnim->bankIndex = 0;
-    }
-    state->targetTile = setup->initialTile;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
-    objAnim->alpha = 0;
-}
-
-void wctile_release(void)
-{
-}
-
-void wctile_initialise(void)
-{
-}
-
 #pragma opt_common_subs off
 void wctile_update(int obj)
 {
@@ -260,3 +235,29 @@ void wctile_update(int obj)
     }
 }
 #pragma reset
+
+void wctile_init(u8* obj, u8* setupBytes)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    WCTileState* state = ((GameObject*)obj)->extra;
+    WCTileSetup* setup = (WCTileSetup*)setupBytes;
+
+    ((GameObject*)obj)->anim.localPosY = lbl_803E6DFC + setup->base.posY;
+    objAnim->bankIndex = setup->modelIndex;
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+    {
+        objAnim->bankIndex = 0;
+    }
+    state->targetTile = setup->initialTile;
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
+    objAnim->alpha = 0;
+}
+
+void wctile_release(void)
+{
+}
+
+void wctile_initialise(void)
+{
+}
+
