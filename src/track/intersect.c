@@ -4717,7 +4717,7 @@ void doHeatEffect(u8 alpha)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     GXSetProjection(hudMatrix, 1);
     GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
-    GXBegin(0x80, 0, 4);
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
     GXWGFifo.s16 = 0;
     GXWGFifo.s16 = 0;
     GXWGFifo.s16 = -8;
