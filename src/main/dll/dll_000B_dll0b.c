@@ -566,16 +566,16 @@ void fn_800A081C(int state, int cmd, int mode)
             {
                 s16 buf[12];
                 f32* fbuf = (f32*)&buf[4];
-                s16 v;
+                s16 posBase;
                 f32 fill = lbl_803DF430;
                 fbuf[1] = fill;
                 fbuf[2] = fill;
                 fbuf[3] = fill;
                 fbuf[0] = lbl_803DF434;
-                v = *((ModgfxState*)state)->unk04;
-                buf[0] = v;
-                buf[1] = v;
-                buf[2] = v;
+                posBase = *((ModgfxState*)state)->unk04;
+                buf[0] = posBase;
+                buf[1] = posBase;
+                buf[2] = posBase;
                 vecRotateZXY(buf, (f32*)(cmd + 0x4));
             }
             ((ModgfxState*)state)->posStepX = ((ModgfxVertexGroupCmd*)cmd)->valueX;
@@ -770,7 +770,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     int slot;
     int found;
     int i;
-    int n;
+    int spawnCount;
     int divThresh;
     int total = 0;
     f32 fz434;
@@ -787,8 +787,8 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     {
         int off;
         off = 0;
-        n = st->pendingSpawnCount;
-        for (i = 0; i < n; i++, off += 0x18)
+        spawnCount = st->pendingSpawnCount;
+        for (i = 0; i < spawnCount; i++, off += 0x18)
         {
             ModgfxPendingSpawn* item = (ModgfxPendingSpawn*)((u8*)st->pendingSpawns + off);
             if ((item->modelOrResource & 0xf7fff180) == 0 && item->param14 != 0)
@@ -804,7 +804,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         base0 = (int)(long)((c * 3) << 4) + ((e * 3) << 4);
     }
 
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot] = (PartfxEffectState*)mmAlloc(base0 + n * 0x18 + total * 2 + 0x240, 0x15, 0);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot] = (PartfxEffectState*)mmAlloc(base0 + spawnCount * 0x18 + total * 2 + 0x240, 0x15, 0);
     if (((PartfxEffectState**)gPartfxActiveEffects)[slot] == NULL)
     {
         fn_800A1040(0, 0);
