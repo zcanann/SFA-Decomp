@@ -278,6 +278,7 @@ main/dll/dll_002B_effect18.c:
 
 main/dll/dll_002C_effect19.c:
 	.text       start:0x800CCF5C end:0x800CD430
+	.sdata2     start:0x803E02D8 end:0x803E0310
 
 main/dll/dll_002D_effect20.c:
 	.text       start:0x800CD430 end:0x800D5530
