@@ -136,7 +136,7 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
 int MoonSeedPlantingSpot_getExtraSize(void) { return sizeof(MoonSeedPlantingSpotState); }
 int MoonSeedPlantingSpot_getObjectTypeId(void) { return 0x1; }
 
-void MoonSeedPlantingSpot_free(int x) { ObjGroup_RemoveObject(x, MSPLANTING_OBJ_GROUP); }
+void MoonSeedPlantingSpot_free(int obj) { ObjGroup_RemoveObject(obj, MSPLANTING_OBJ_GROUP); }
 
 void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
