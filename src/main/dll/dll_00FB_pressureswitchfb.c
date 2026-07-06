@@ -308,7 +308,7 @@ void pressureswitchfb_update(int obj)
             }
             if ((((SwitchFlags*)(state + 0x84))->released) == 0)
             {
-                target = ((CfGuardianState*)state)->targetPosY - (f32)(u32) * (u8*)(def + 0x1c);
+                target = ((CfGuardianState*)state)->targetPosY - (f32)(u32)((PressureswitchfbPlacement*)def)->pressDepth;
                 cur = ((GameObject*)obj)->anim.localPosY;
                 if (cur < target)
                 {
