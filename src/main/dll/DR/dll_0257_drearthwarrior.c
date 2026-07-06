@@ -90,7 +90,7 @@ typedef struct EarthWarriorSub
     u8 flags3F2;
     u8 pad3F3[5];
     int moveTable; /* config row pointer */
-    int unk3FC;
+    int prevMoveTable; /* 0x3FC: previously-selected move-table pointer; compared against moveTable to detect a move change */
     int configRow; /* config row pointer */
     f32 animSpeedMax; /* 0x404: upper clamp for BaddieState.animSpeedC (and symmetric +/-max fallback) */
     f32 targetAnimSpeed; /* 0x408: interpolate() target for BaddieState.animSpeedC, clamped to configRow[0xc] floor */
@@ -137,10 +137,10 @@ typedef struct EarthWarriorSub
     f32 animSpeedScale; /* 0x840: multiplier scaling the clamped input phase into targetAnimSpeed */
     f32 animSpeedRate; /* 0x844: per-frame anim-speed rate integrated into animSpeedC (animSpeedRate*timeDelta); captured from animSpeedA */
     u8 pad848[0x10];
-    int unk858;
+    int leapStartYaw; /* 0x858: yaw latched (from currentYaw) at leap start; re-added to move progress to build leap yaw */
     u8 pad85C[0x4a];
-    u8 unk8A6;
-    u8 unk8A7;
+    u8 soundId; /* 0x8A6: active sound-effect id passed to objAudioFn_8006edcc (8 or 0xa) */
+    u8 soundIdReload; /* 0x8A7: stored sound id copied into soundId on leap trigger */
     u8 pad8A8[8];
     u8 attackStage;
     u8 pad8B1[0x1b];
@@ -604,11 +604,11 @@ int fn_802BC830(int obj, int sub, int state)
     {
         ((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b40 = 1;
         ((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b80 = 0;
-        ((EarthWarriorSub*)sub)->unk8A6 = ((EarthWarriorSub*)sub)->unk8A7;
+        ((EarthWarriorSub*)sub)->soundId = ((EarthWarriorSub*)sub)->soundIdReload;
         ((BaddieState*)state)->moveSpeed = lbl_803E8300;
         ObjAnim_SetCurrentMove(obj, *(s16*)((char*)((EarthWarriorSub*)sub)->moveTable + 0x3a), lbl_803E8304, 0);
         ObjAnim_SetCurrentEventStepFrames((struct ObjAnimComponent*)obj, 0x10);
-        ((EarthWarriorSub*)sub)->unk858 = ((EarthWarriorSub*)sub)->currentYaw;
+        ((EarthWarriorSub*)sub)->leapStartYaw = ((EarthWarriorSub*)sub)->currentYaw;
         ((EarthWarriorSub*)sub)->animSpeedRate = (lbl_803E8308 + (*(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x14) + ((
             BaddieState*)state)->animSpeedC)) / lbl_803E830C;
         ((EarthWarriorSub*)sub)->unk478 = ((EarthWarriorSub*)sub)->currentYaw;
@@ -777,7 +777,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         *(u32*)&((EarthWarriorSub*)q)->unk360 |= 0x1000000LL;
         ((EarthWarriorState*)state)->baddie.moveSpeed = lbl_803E8300;
         {
-            s16 yaw = (lbl_803E8320 * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(s32)((EarthWarriorSub*)q)->unk858);
+            s16 yaw = (lbl_803E8320 * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(s32)((EarthWarriorSub*)q)->leapStartYaw);
             *(s16*)&((EarthWarriorSub*)q)->unk478 = yaw;
             ((EarthWarriorSub*)q)->savedYaw = yaw;
         }
@@ -931,7 +931,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         {
             ((EarthWarriorSub*)q)->attackStage = 4;
         }
-        ((EarthWarriorSub*)q)->unk8A6 = (((EarthWarriorSub*)q)->attackStage > 3) ? 0xa : 8;
+        ((EarthWarriorSub*)q)->soundId = (((EarthWarriorSub*)q)->attackStage > 3) ? 0xa : 8;
         {
             f32 v294 = ((EarthWarriorState*)state)->baddie.animSpeedC;
             int tbl = ((EarthWarriorSub*)q)->configRow;
@@ -965,7 +965,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
                 }
             }
         }
-        if ((skip != 0 || (void*)((EarthWarriorSub*)q)->unk3FC != (void*)((EarthWarriorSub*)q)->moveTable ||
+        if ((skip != 0 || (void*)((EarthWarriorSub*)q)->prevMoveTable != (void*)((EarthWarriorSub*)q)->moveTable ||
                 ((GameObject*)obj)->anim.currentMove != *(s16*)(((EarthWarriorSub*)q)->moveTable + ((EarthWarriorSub*)q)
                     ->attackPhase * 2)) &&
             (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 || ((ByteFlags*)&((EarthWarriorSub*)q)->
@@ -1048,7 +1048,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         q->yawTurnDir = 0;
         q->frameCounter = 0;
         q->turnDegrees = 0;
-        q->unk8A6 = 8;
+        q->soundId = 8;
         q->attackStage = 0;
         ((BaddieState*)p2)->velSmoothTime = lbl_803E835C;
         ((BaddieState*)p2)->moveSpeed = lbl_803E8354;
@@ -1300,9 +1300,9 @@ void DR_EarthWarrior_update(int obj)
         f32 saved = ((GameObject*)obj)->anim.velocityY;
         ((GameObject*)obj)->anim.velocityY = lbl_803E8304;
         *(int*)&inner->baddie.eventFlags &= ~7;
-        objAudioFn_8006edcc(obj, *(int*)&inner->baddie.eventFlags, inner->sub.unk8A6, (int)((char*)inner + 0xb18),
+        objAudioFn_8006edcc(obj, *(int*)&inner->baddie.eventFlags, inner->sub.soundId, (int)((char*)inner + 0xb18),
                             (int)((char*)inner + 0x4), inner->baddie.animSpeedA,
-                            (inner->sub.unk8A6 == 8) ? lbl_803E837C : lbl_803E8380);
+                            (inner->sub.soundId == 8) ? lbl_803E837C : lbl_803E8380);
         ((GameObject*)obj)->anim.velocityY = saved;
     }
     if (inner->sub.flags8D8 & 8)
