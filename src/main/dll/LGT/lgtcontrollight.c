@@ -81,15 +81,15 @@ void fn_801F4D54(int obj, u8* rec)
 {
     struct
     {
-        s16 angle;
-        s16 a;
-        s16 b;
+        s16 rotZ;
+        s16 rotX;
+        s16 rotY;
         u8 pad0e[2];
-        f32 m;
-        f32 z0;
-        f32 z1;
-        f32 z2;
-    } locals;
+        f32 scratch0;
+        f32 scratch1;
+        f32 scratch2;
+        f32 scratch3;
+    } rot;
 
     ((LgtFireFlyRec*)rec)->offX = lbl_803E5EC4;
     if (((LgtFireFlyRec*)rec)->firstFrame != 0)
@@ -115,14 +115,14 @@ void fn_801F4D54(int obj, u8* rec)
     }
     ((LgtFireFlyRec*)rec)->angle +=
         (s16)randomGetRange(FIREFLY_ANGLE_ADVANCE_MIN, FIREFLY_ANGLE_ADVANCE_MAX);
-    locals.z0 = lbl_803E5EC4;
-    locals.z1 = lbl_803E5EC4;
-    locals.z2 = lbl_803E5EC4;
-    locals.m = lbl_803E5EB4;
-    locals.b = 0;
-    locals.a = 0;
-    locals.angle = ((LgtFireFlyRec*)rec)->angle;
-    vecRotateZXY(&locals, rec + 0x34);
+    rot.scratch1 = lbl_803E5EC4;
+    rot.scratch2 = lbl_803E5EC4;
+    rot.scratch3 = lbl_803E5EC4;
+    rot.scratch0 = lbl_803E5EB4;
+    rot.rotY = 0;
+    rot.rotX = 0;
+    rot.rotZ = ((LgtFireFlyRec*)rec)->angle;
+    vecRotateZXY(&rot, rec + 0x34);
     ((LgtFireFlyRec*)rec)->offX =
         ((LgtFireFlyRec*)rec)->offX + ((LgtFireFlyRec*)rec)->posX;
     ((LgtFireFlyRec*)rec)->offY =
