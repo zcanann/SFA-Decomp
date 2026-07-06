@@ -110,48 +110,48 @@ void fn_80174A80(int obj, PushableState* ext)
 {
     int def;
     ObjTextureRuntimeSlot* tex;
-    f32 f;
-    f32 v;
+    f32 fval;
+    f32 eyePos;
     f32 lim;
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     ext->eyeOpenSpeed = lbl_803E3580;
-    f = lbl_803E3584;
-    ext->eyeDriftSpeedX = f;
-    ext->eyeDriftSpeedY = f;
+    fval = lbl_803E3584;
+    ext->eyeDriftSpeedX = fval;
+    ext->eyeDriftSpeedY = fval;
     ext->blinkInterval = lbl_803E3564 * (f32)(int)
     randomGetRange(0x19, 0x4b);
     ext->blinkStep = ext->blinkInterval / (f32)(int)
     randomGetRange(0x28, 0x46);
-    f = lbl_803E3528;
-    ext->blinkPhase = f;
+    fval = lbl_803E3528;
+    ext->blinkPhase = fval;
     ext->gameBit = ((PushablePlacement*)def)->gameBit;
     ext->gameBit2 = ((PushablePlacement*)def)->gameBit2;
-    ext->unk_F0 = f;
+    ext->unk_F0 = fval;
     ext->nearestObj = NULL;
     GameBit_Set(ext->gameBit, 0);
     tex = objFindTexture((void*)obj, 0, 0);
 
     ext->eyePosX = ext->eyePosX + ext->eyeDriftSpeedX;
-    v = ext->eyePosX;
+    eyePos = ext->eyePosX;
     lim = lbl_803E356C;
-    if (v > lim)
+    if (eyePos > lim)
     {
         ext->eyePosX = lim;
     }
-    else if (v < lbl_803E3528)
+    else if (eyePos < lbl_803E3528)
     {
         ext->eyePosX = lim;
     }
 
     ext->eyePosY = ext->eyePosY + ext->eyeDriftSpeedY;
-    v = ext->eyePosY;
+    eyePos = ext->eyePosY;
     lim = lbl_803E356C;
-    if (v > lim)
+    if (eyePos > lim)
     {
         ext->eyePosY = lim;
     }
-    else if (v < lbl_803E3528)
+    else if (eyePos < lbl_803E3528)
     {
         ext->eyePosY = lim;
     }
@@ -515,7 +515,7 @@ void pushable_free(int* obj)
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     PushableState* sub = ((GameObject*)obj)->extra;
     s16 type = ((GameObject*)obj)->anim.seqId;
-    int v;
+    int savedIdx;
 
     switch (type)
     {
@@ -536,9 +536,9 @@ void pushable_free(int* obj)
     if ((sub->flags & 1) != 0)
     {
         int val = ((ObjPlacement*)def)->mapId;
-        v = gPushableSavedMapIdCount;
-        gPushableSavedMapIdCount = v + 1;
-        gPushableSavedMapIds[v] = val;
+        savedIdx = gPushableSavedMapIdCount;
+        gPushableSavedMapIdCount = savedIdx + 1;
+        gPushableSavedMapIds[savedIdx] = val;
     }
     ObjGroup_RemoveObject(obj, PUSHABLE_OBJGROUP);
 }
@@ -737,46 +737,46 @@ void pushable_init(s16* obj, char* def)
     {
         for (i = 0; i < state->pointCount; i++)
         {
-            f32 v;
+            f32 coord;
             state->probeLocal[i].x = state->cornerLocal[i].x;
             state->probeLocal[i].y = state->cornerLocal[i].y;
             state->probeLocal[i].z = state->cornerLocal[i].z;
-            v = state->probeLocal[i].x;
-            if (v < 0.0f)
+            coord = state->probeLocal[i].x;
+            if (coord < 0.0f)
             {
-                state->probeLocal[i].x = v + lbl_803E358C;
+                state->probeLocal[i].x = coord + lbl_803E358C;
             }
             else
             {
-                state->probeLocal[i].x = v - lbl_803E358C;
+                state->probeLocal[i].x = coord - lbl_803E358C;
             }
-            v = state->probeLocal[i].z;
-            if (v < 0.0f)
+            coord = state->probeLocal[i].z;
+            if (coord < 0.0f)
             {
-                state->probeLocal[i].z = v + lbl_803E358C;
-            }
-            else
-            {
-                state->probeLocal[i].z = v - lbl_803E358C;
-            }
-            v = state->cornerLocal[i].x;
-            if (v < 0.0f)
-            {
-                state->cornerLocal[i].x = v + lbl_803E3588;
+                state->probeLocal[i].z = coord + lbl_803E358C;
             }
             else
             {
-                state->cornerLocal[i].x = v - lbl_803E3588;
+                state->probeLocal[i].z = coord - lbl_803E358C;
+            }
+            coord = state->cornerLocal[i].x;
+            if (coord < 0.0f)
+            {
+                state->cornerLocal[i].x = coord + lbl_803E3588;
+            }
+            else
+            {
+                state->cornerLocal[i].x = coord - lbl_803E3588;
                 state->cornerIdxPosX = i;
             }
-            v = state->cornerLocal[i].z;
-            if (v < 0.0f)
+            coord = state->cornerLocal[i].z;
+            if (coord < 0.0f)
             {
-                state->cornerLocal[i].z = v + lbl_803E3588;
+                state->cornerLocal[i].z = coord + lbl_803E3588;
             }
             else
             {
-                state->cornerLocal[i].z = v - lbl_803E3588;
+                state->cornerLocal[i].z = coord - lbl_803E3588;
                 state->cornerIdxPosZ = i;
             }
             Matrix_TransformPoint(mtx, state->probeLocal[i].x, state->probeLocal[i].y,
@@ -1021,16 +1021,16 @@ void pushable_hitDetect(int obj)
                     }
                     else if (found == 0)
                     {
-                        f32 v = h[0];
-                        if (v < lbl_803E3558 + wp[1] && v > wp[1] - lbl_803E35C0 && h[2] > lbl_803E35C4)
+                        f32 probeY = h[0];
+                        if (probeY < lbl_803E3558 + wp[1] && probeY > wp[1] - lbl_803E35C0 && h[2] > lbl_803E35C4)
                         {
-                            u32 o;
-                            *hp = v;
-                            tmpY = tmpY + v;
-                            o = *(u32*)(*(int*)(list + off) + 0x10);
-                            if (o != 0)
+                            u32 contactObj;
+                            *hp = probeY;
+                            tmpY = tmpY + probeY;
+                            contactObj = *(u32*)(*(int*)(list + off) + 0x10);
+                            if (contactObj != 0)
                             {
-                                ObjHits_AddContactObject(o, obj);
+                                ObjHits_AddContactObject(contactObj, obj);
                             }
                             cnt2++;
                             found = 1;
@@ -1156,11 +1156,11 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         }
         if (hit != 0)
         {
-            f32 t;
+            f32 pushAmount;
             state->flags = state->flags | PUSHABLE_FLAG_PUSH_POS_X;
-            t = lbl_803E3528;
-            state->pushAmountX = t;
-            state->pushAmountZ = t;
+            pushAmount = lbl_803E3528;
+            state->pushAmountX = pushAmount;
+            state->pushAmountZ = pushAmount;
         }
     }
     else if (dz > lbl_803E3528)
@@ -1177,11 +1177,11 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         }
         if (hit != 0)
         {
-            f32 t;
+            f32 pushAmount;
             state->flags = state->flags | PUSHABLE_FLAG_PUSH_POS_Z;
-            t = lbl_803E3528;
-            state->pushAmountX = t;
-            state->pushAmountZ = t;
+            pushAmount = lbl_803E3528;
+            state->pushAmountX = pushAmount;
+            state->pushAmountZ = pushAmount;
         }
     }
     else if (dz < lbl_803E3528)
@@ -1198,11 +1198,11 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         }
         if (hit != 0)
         {
-            f32 t;
+            f32 pushAmount;
             state->flags = state->flags | PUSHABLE_FLAG_PUSH_NEG_Z;
-            t = lbl_803E3528;
-            state->pushAmountX = t;
-            state->pushAmountZ = t;
+            pushAmount = lbl_803E3528;
+            state->pushAmountX = pushAmount;
+            state->pushAmountZ = pushAmount;
         }
     }
     if (playerIsDisguised(player) == 0 && state->moveFlags.b6 == 0)
@@ -1297,10 +1297,10 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
             fl2 = st2->flags;
             if ((fl2 & 1) != 0)
             {
-                s16 t;
+                s16 gameBit;
                 st2->flags = fl2 & ~1;
-                t = ((PushablePlacement*)def2)->gameBit;
-                if (t > -1)
+                gameBit = ((PushablePlacement*)def2)->gameBit;
+                if (gameBit > -1)
                 {
                     switch (((GameObject*)obj)->anim.seqId)
                     {
@@ -1313,7 +1313,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
                     default:
                         if (((PushablePlacement*)def2)->requiredHitId > -1)
                         {
-                            GameBit_Set(t, 0);
+                            GameBit_Set(gameBit, 0);
                         }
                         break;
                     }
