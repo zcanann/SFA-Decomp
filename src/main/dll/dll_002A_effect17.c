@@ -37,10 +37,6 @@ extern f32 lbl_803E0204;
 extern f32 lbl_803E0208;
 extern f32 lbl_803E020C;
 
-#pragma dont_inline on
-
-#pragma dont_inline off
-
 /* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
  * NOTE: stuck at ~78% ? instruction scheduling differs. */
 
