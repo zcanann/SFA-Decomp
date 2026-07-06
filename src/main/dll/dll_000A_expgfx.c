@@ -385,8 +385,6 @@ void expgfxRemoveAll(void)
 {
     expgfxRemoveAllBody();
 }
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma opt_propagation reset
 
 #pragma ppc_unroll_speculative on
