@@ -155,14 +155,14 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     kColor2 = lbl_803E1D40;
     GXSetTevKColor(2, &kColor2);
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
-    GXInitTexObj(&yTexObj, yBuf, width, height, 1, 0, 0, 0);
-    GXInitTexObjLOD(&yTexObj, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
+    GXInitTexObj(&yTexObj, yBuf, width, height, GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
+    GXInitTexObjLOD(&yTexObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
     GXLoadTexObj(&yTexObj, 0);
-    GXInitTexObj(&uTexObj, uBuf, halfWidth = (short)width >> 1, halfHeight = (short)height >> 1, 1, 0, 0, 0);
-    GXInitTexObjLOD(&uTexObj, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
+    GXInitTexObj(&uTexObj, uBuf, halfWidth = (short)width >> 1, halfHeight = (short)height >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
+    GXInitTexObjLOD(&uTexObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
     GXLoadTexObj(&uTexObj, 1);
-    GXInitTexObj(&vTexObj, vBuf, halfWidth, halfHeight, 1, 0, 0, 0);
-    GXInitTexObjLOD(&vTexObj, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
+    GXInitTexObj(&vTexObj, vBuf, halfWidth, halfHeight, GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
+    GXInitTexObjLOD(&vTexObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
     GXLoadTexObj(&vTexObj, 2);
 }
 
