@@ -6493,3 +6493,50 @@ vs ,-1 in C). ONLY 1 clean hit across all candidates:
 - The other 49 source countdown-for loops live in already-100% or <93% fns or aren't
   unrolled — none in-band matched the stride signature. render/fn_80007F78 94.0% (a
   64-bit-arith coloring cascade, not a dead-counter case) correctly excluded.
+
+## clrlwi-before-sth u16-store sweep (Jul5, 0 wins — CONCLUSIVE: never isolated)
+Focused attack on the recurring `clrlwi rX,rY,16; sth rX` u16-narrow that the TARGET omits (sth
+truncates anyway). Built a per-fn diff scanner (scratchpad scan3.py) that counts net `clrlwi,16`->
+`sth` adjacencies (current minus target) AND the total diff-line count as an isolation metric.
+Swept ALL non-foreign/non-audio/non-player fns 90.0–99.95% (378 fns). Result: exactly THREE fns
+carry a net-positive clrlwi16-before-sth delta, and ALL THREE are deep whole-function cascades —
+- expgfx_updateActivePools net=2 ndiff=3724 (the two `gExpgfxPhaseAngle{A,B} += (int)(K*dt)` at
+  L766-767: u16 global `+=` int → target `add;sth` direct, current `add;clrlwi,16;sth`. Genuinely
+  isolated at fn top BUT the fn is the flagged cascade-buried skip — dominant delta is the body
+  reorder, not this pair). PROMPT-EXCLUDED, not touched.
+- newshadows/allocLotsOfTextures net=1 ndiff=3397 (clrlwi16 present on BOTH sides; net=1 is a
+  register-rename false-positive inside a 3397-line body reorder).
+- dll_0014_unk/walkgroupFindExitPointFn_800dc398 net=1 ndiff=2535 (same: `clrlwi r3/r0,r6,16;sth`
+  present both sides, entire body relaid-out 0x2668→0x6524).
+CONCLUSION (definitive): the clrlwi-before-sth u16 miss is NOT an independent source-controllable
+delta anywhere in the current frontier. It only ever appears as a symptom coupled to a large
+coloring/layout cascade (the sth-target reg is renamed by the same cascade). No clean isolated
+candidate exists to apply the un-attempted spellings (`u16 t=(u16)expr; f=t;`, `*(u16*)&f=int`,
+end-to-end u16 typing) to. The only near-isolated instance (expgfx L766-767 u16+=int) is the
+explicitly-excluded cascade fn. Banked as a codegen-symptom class, not a lever. 0 commits.
+
+## Probe 2026-07-05 17:58
+Team still idle: newest non-Zachary commit remains d3d7a168ff (Jack, dll_01EB sbshipmast). All 60 recent commits authored by Zachary Canann. No tree scan; 0-win cheap stop.
+
+## Struct-recovery sweep 2026-07-05 (Opus, semantic-recovery) — 5 wins, freshly-named-sibling vein
+Swept freshly-field-named siblings (EnemyState/KTRex/AppleOnTree cluster) + older per-type
+State/Placement files carrying anonymous pads with raw `*(T*)(base+0xNN)` accesses. All 5
+byte-identical .o (md5 confirmed). Commits:
+- dll_00C9 enemy (af52965454): EnemyState trackedObj(u8* 0x29C) respell x2; SPLIT unk2EE pad ->
+  curveIndex/curveParamA/curveParamB (u8 0x2F2/3/4), respell fn_8014C540 reads. DISQUALIFIED:
+  state+0x2b6 (u16-narrow-into-TrickyState-currentTime-f32), state+0x323 (shared BaddieState).
+- dll_0250 ktrex (6b01d93d16): KTRexArenaState SPLIT pad109/pad130/pad148 -> pathP0/1/2/3 X/Y/Z
+  (f32, 0x118/130/148/160, stride 0x18 with unk12C/unk144 in gaps), respell 4 ObjPath calls;
+  KTRexRuntime moveJustStartedA(0x27A)+curvePhase(0x2A0) in stateHandlerB00. Left raw: gKTRexState
+  +0x17c (slot-indexed ptr array), model+0xf3 (foreign struct).
+- dll_0256 dimsnowhorn1 (dbac3a957e): SPLIT pad990 -> pathPointArray(f32[12] 0x9B0), respell
+  ObjPath_GetPointWorldPositionArray dest x2. sizeof 0xD0C STATIC_ASSERT held. Left raw: state+0x334/
+  0x338 (shared BaddieState prefix < 0x35C).
+- dll_018F ecshshrine (349f2bb7e2): respell *(s16*)(state+0x20) -> EcshShrineState.unk20 (existing
+  field, not a split).
+- dll_00FB pressureswitchfb (369bd2ea60): respell *(u8*)(def+0x1c) -> PressureswitchfbPlacement.
+  pressDepth (existing field). Left raw: base+0x30 (base=tmp+j*8 index-scaled induction).
+DISQUALIFIED whole-file: dll_000F_unk (all offsets 0x2bc/0x33c/0x344/0x34c inside shared BaddieState
+<0x35C — a sibling's field-rename job, not per-type pad-split); dll_00E6_restartmarker (placement+0x18
+= first class-specific byte but no named per-type Placement struct exists — would require creating one
+from scratch, out of pad-split scope). appleontree exhausted (only obj+0x54 GameObject-core left).
