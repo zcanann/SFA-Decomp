@@ -15,10 +15,8 @@
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
-#include "main/dll/vecrotatezxyarg_struct.h"
-
-extern void vecRotateZXY(void* in, void* out);
-extern f32 timeDelta;
+#include "main/frame_timing.h"
+#include "main/dll/vecrotatezxy.h"
 
 int iceblast_getExtraSize(void)
 {
