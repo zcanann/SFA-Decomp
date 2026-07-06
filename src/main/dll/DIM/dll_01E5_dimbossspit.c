@@ -78,7 +78,7 @@ void DIMbossspit_updateBurst(int obj)
     int state;
     s16 burstTimer;
     int iVar;
-    int n;
+    int alpha;
     int radius;
     int i;
 
@@ -124,13 +124,13 @@ void DIMbossspit_updateBurst(int obj)
     )
     )
     ;
-    n = 0xff - iVar;
+    alpha = 0xff - iVar;
     radius = 0x94 - (burstTimer >> 2);
-    if (n >= 0)
+    if (alpha >= 0)
     {
         ObjHits_SetHitVolumeSlot(obj, 5, 2, 0);
         ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
-        ((GameObject*)obj)->anim.alpha = n;
+        ((GameObject*)obj)->anim.alpha = alpha;
     }
     else
     {

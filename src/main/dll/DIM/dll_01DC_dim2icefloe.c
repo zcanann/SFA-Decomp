@@ -91,17 +91,17 @@ void dim2icefloe_update(int obj)
     }
     else
     {
-        int v;
+        int alpha;
         int reached;
         switch ((int)((Dim2IceFloeState*)sub)->paused)
         {
         case 0:
-        v = ((GameObject*)obj)->anim.alpha + framesThisStep * 4;
-        if (v > 0xff)
+        alpha = ((GameObject*)obj)->anim.alpha + framesThisStep * 4;
+        if (alpha > 0xff)
         {
-            v = 0xff;
+            alpha = 0xff;
         }
-        ((GameObject*)obj)->anim.alpha = v;
+        ((GameObject*)obj)->anim.alpha = alpha;
         if ((((Dim2IceFloeState*)sub)->flags & 1) == 0)
         {
             ((Dim2IceFloeState*)sub)->followedObj = ObjList_FindObjectById(((Dim2IceFloeState*)sub)->targetId);

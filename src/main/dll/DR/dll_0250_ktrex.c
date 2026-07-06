@@ -1585,7 +1585,7 @@ int ktrex_stateHandlerA04(int obj, int runtime)
 {
     void* p;
     int popped;
-    f32 t;
+    f32 timer;
     p = ((GameObject*)obj)->anim.placementData;
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
@@ -1595,9 +1595,9 @@ int ktrex_stateHandlerA04(int obj, int runtime)
     }
     else
     {
-        t = ((KTRexArenaState*)gKTRexState)->stateTimer - timeDelta;
-        ((KTRexArenaState*)gKTRexState)->stateTimer = t;
-        if (t < lbl_803E67B8)
+        timer = ((KTRexArenaState*)gKTRexState)->stateTimer - timeDelta;
+        ((KTRexArenaState*)gKTRexState)->stateTimer = timer;
+        if (timer < lbl_803E67B8)
         {
             ((KTRexArenaState*)gKTRexState)->stateTimer = lbl_803E67B8;
         }
@@ -1665,7 +1665,7 @@ int ktrex_stateHandlerA05(int obj, int runtime)
 int ktrex_stateHandlerA08(int obj, int runtime)
 {
     void* p;
-    f32 t;
+    f32 timer;
     p = ((GameObject*)obj)->anim.placementData;
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
@@ -1680,9 +1680,9 @@ int ktrex_stateHandlerA08(int obj, int runtime)
     }
     if ((((KTRexArenaState*)gKTRexState)->timerFA & 8) == 0)
     {
-        t = ((KTRexArenaState*)gKTRexState)->stateTimer - timeDelta;
-        ((KTRexArenaState*)gKTRexState)->stateTimer = t;
-        if (!(t <= lbl_803E67B8))
+        timer = ((KTRexArenaState*)gKTRexState)->stateTimer - timeDelta;
+        ((KTRexArenaState*)gKTRexState)->stateTimer = timer;
+        if (!(timer <= lbl_803E67B8))
         {
             goto ret0;
         }

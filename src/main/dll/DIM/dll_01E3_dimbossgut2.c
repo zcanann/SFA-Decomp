@@ -217,7 +217,7 @@ void dimbossgut2_update(int obj)
     int state;
     int tmpVar;
     u32 randomThreshold;
-    u32 n;
+    u32 brightness;
     Dimbossgut2Curve* posData;
     Dimbossgut2Curve* val;
     f32 heightDiff;
@@ -282,17 +282,17 @@ void dimbossgut2_update(int obj)
         curveLight = (u8*)val->light;
         if ((curveLight != NULL) && (curveLight[0x2f8] != 0) && (curveLight[0x4c] != 0))
         {
-            n = (curveLight[0x2f9] + *(s8*)(curveLight + 0x2fa)) & 0xffff;
-            if (0xc < n)
+            brightness = (curveLight[0x2f9] + *(s8*)(curveLight + 0x2fa)) & 0xffff;
+            if (0xc < brightness)
             {
-                n = (n + randomGetRange(-12, 12)) & 0xffff;
-                if (0xff < n)
+                brightness = (brightness + randomGetRange(-12, 12)) & 0xffff;
+                if (0xff < brightness)
                 {
-                    n = 0xff;
+                    brightness = 0xff;
                     *(u8*)(val->light + 0x2fa) = 0;
                 }
             }
-            *(u8*)(val->light + 0x2f9) = n;
+            *(u8*)(val->light + 0x2f9) = brightness;
         }
     }
     return;
