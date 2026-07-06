@@ -154,7 +154,7 @@ void WaterFallSpray_init(u8* obj, u8* dataRaw)
     WaterFallSprayPlacement* data = (WaterFallSprayPlacement*)dataRaw;
     u8* sub = ((GameObject*)obj)->extra;
     s16 a, b, c;
-    int v;
+    int mapId;
     a = (s16)((s32)data->rotZSeed << 8);
     ((GameObject*)obj)->anim.rotZ = a;
     b = (s16)((s32)data->rotYSeed << 8);
@@ -163,8 +163,8 @@ void WaterFallSpray_init(u8* obj, u8* dataRaw)
     ((GameObject*)obj)->anim.rotX = c;
     *(u32*)&((GameObject*)obj)->unkF4 = 0;
     ((GameObject*)obj)->animEventCallback = WaterFallSpray_SeqFn;
-    v = (*(WaterFallSprayPlacement**)&((GameObject*)obj)->anim.placementData)->mapId;
-    switch (v)
+    mapId = (*(WaterFallSprayPlacement**)&((GameObject*)obj)->anim.placementData)->mapId;
+    switch (mapId)
     {
     case WATERFALLSPRAY_ALT_SFX_DEF_MIN:
     case WATERFALLSPRAY_ALT_SFX_DEF_END - 1:
