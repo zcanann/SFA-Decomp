@@ -101,7 +101,7 @@ int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 1:
             state->eventFlags = 13;
-            state->phase = 1;
+            state->phase = MMP_ASTEROID_PHASE_RISING;
             GameBit_Set(0x87b, state->phase);
             ((GameObject*)obj)->anim.alpha = 0xff;
             break;
@@ -117,7 +117,7 @@ int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 state->eventFlags = state->eventFlags | 0x50;
                 r = randomGetRange(10, 60);
                 state->periodicFxTimer = r;
-                state->phase = 1;
+                state->phase = MMP_ASTEROID_PHASE_RISING;
                 GameBit_Set(0x87b, state->phase);
                 break;
             }
@@ -142,22 +142,22 @@ void mmp_asteroid_re_init(int obj)
     state->phase = GameBit_Get(0x87B);
     switch ((s32)state->phase)
     {
-    case 0:
+    case MMP_ASTEROID_PHASE_HIDDEN:
         ((GameObject*)obj)->anim.alpha = 0;
         *(u8*)&((GameObject*)obj)->anim.bankIndex = 0;
         break;
-    case 1:
+    case MMP_ASTEROID_PHASE_RISING:
         ((GameObject*)obj)->anim.alpha = 0xFF;
         state->eventFlags = 4;
         *(u8*)&((GameObject*)obj)->anim.bankIndex = 1;
         state->eventFlags |= ASTEROIDRE_FX_PERIODIC;
         break;
-    case 2:
+    case MMP_ASTEROID_PHASE_RISEN:
         ((GameObject*)obj)->anim.alpha = 0xFF;
         state->eventFlags = 4;
         *(u8*)&((GameObject*)obj)->anim.bankIndex = 1;
         break;
-    case 3:
+    case MMP_ASTEROID_PHASE_RISEN_SAVED:
         ((GameObject*)obj)->anim.alpha = 0xFF;
         state->eventFlags = 4;
         *(u8*)&((GameObject*)obj)->anim.bankIndex = 1;
@@ -186,7 +186,7 @@ void mmp_asteroid_re_update(int obj)
         {
             state->intensity = GameBit_Get(0x88C);
         }
-        state->phase = 2;
+        state->phase = MMP_ASTEROID_PHASE_RISEN;
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_lwfl1_c);
         {
             int vol = state->intensity * 0x20 + 0x20;
