@@ -113,9 +113,9 @@ void dim2prisonmammoth_release(void)
 {
 }
 
-void fn_802BC788(int a, int b)
+void fn_802BC788(int obj, int b)
 {
-    playerTailFn_80026b3c((int*)b, *(int*)b, *(int*)(*(int*)&((GameObject*)a)->extra + 0x14f8), 0);
+    playerTailFn_80026b3c((int*)b, *(int*)b, *(int*)(*(int*)&((GameObject*)obj)->extra + 0x14f8), 0);
 }
 
 void dim2prisonmammoth_initialise(void)
