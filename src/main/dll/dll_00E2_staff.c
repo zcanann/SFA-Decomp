@@ -1160,7 +1160,7 @@ void superQuakeFn_8016d9fc(f32* pos)
         }
         ObjHitbox_SetSphereRadius((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object, 1);
         ObjHits_SetHitVolumeSlot((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object, 17, 5, 0);
-        *(f32*)((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object + 8) = lbl_803E32D0;
+        ((GameObject*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->anim.rootMotionScale = lbl_803E32D0;
         ((GameObject*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->anim.alpha = 0xff;
     }
 }
@@ -1464,7 +1464,7 @@ void staff_update(int* obj)
             ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius * lbl_803E32E8;
             ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale * lbl_803E32EC;
             ((GameObject*)q->object)->anim.alpha = w;
-            *(f32*)((int)q->object + 8) += lbl_803E32F0;
+            ((GameObject*)q->object)->anim.rootMotionScale += lbl_803E32F0;
             if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade < lbl_803E3288)
             {
                 q->active = 0;
