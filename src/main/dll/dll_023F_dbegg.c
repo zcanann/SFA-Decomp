@@ -215,7 +215,7 @@ void dbegg_processMessages(int obj)
 int dbegg_getExtraSize(void) { return 0x124; }
 int dbegg_getObjectTypeId(void) { return 0x8; }
 
-void dbegg_free(int x) { ObjGroup_RemoveObject(x, DBEGG_OBJGROUP); }
+void dbegg_free(int obj) { ObjGroup_RemoveObject(obj, DBEGG_OBJGROUP); }
 
 #pragma scheduling on
 #pragma peephole on
