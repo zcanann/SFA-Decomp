@@ -174,11 +174,11 @@ void SB_ShipGun_update(int obj)
     {
         s16 rot[3];
         u16 flags;
-        f32 a;
-        f32 b;
-        f32 c;
-        f32 d;
-    } stk;
+        f32 scale;
+        f32 posX;
+        f32 posY;
+        f32 posZ;
+    } spawnArgs;
     struct
     {
         f32 x;
@@ -312,17 +312,17 @@ void SB_ShipGun_update(int obj)
                 if ((((SBShipGunState*)state)->fireTimer < 0) && (Obj_IsLoadingLocked() != 0))
                 {
                     Obj_GetWorldPosition(obj, &posX, &posY, &posZ);
-                    stk.b = lbl_803E588C;
-                    stk.c = lbl_803E588C;
-                    stk.d = lbl_803E588C;
-                    stk.a = lbl_803E5888;
-                    stk.rot[0] = ((SBShipGunState*)state)->yawAngle;
-                    stk.rot[1] = 0;
-                    stk.rot[2] = 0;
+                    spawnArgs.posX = lbl_803E588C;
+                    spawnArgs.posY = lbl_803E588C;
+                    spawnArgs.posZ = lbl_803E588C;
+                    spawnArgs.scale = lbl_803E5888;
+                    spawnArgs.rot[0] = ((SBShipGunState*)state)->yawAngle;
+                    spawnArgs.rot[1] = 0;
+                    spawnArgs.rot[2] = 0;
                     offset.x = lbl_803E5890;
                     offset.y = lbl_803E5894;
                     offset.z = lbl_803E588C;
-                    vecRotateZXY(stk.rot, &offset.x);
+                    vecRotateZXY(spawnArgs.rot, &offset.x);
                     placement = (int)Obj_AllocObjectSetup(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE,
                                                        SB_CANNONBALL_ALIAS_OBJECT_TYPE);
                     ((SBShipGunPlacement*)placement)->spawnX = posX;
@@ -392,16 +392,16 @@ void SB_ShipGun_update(int obj)
             break;
         case SB_SHIPGUN_PHASE_EXPLODED:
             {
-                stk.a = lbl_803E58A8;
-                stk.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
-                ObjPath_GetPointWorldPosition(obj, 0, &stk.b, &stk.c, &stk.d, 0);
-                stk.b = stk.b - ((GameObject*)obj)->anim.worldPosX;
-                stk.c = stk.c - ((GameObject*)obj)->anim.worldPosY;
-                stk.d = stk.d - ((GameObject*)obj)->anim.worldPosZ;
+                spawnArgs.scale = lbl_803E58A8;
+                spawnArgs.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
+                ObjPath_GetPointWorldPosition(obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
+                spawnArgs.posX = spawnArgs.posX - ((GameObject*)obj)->anim.worldPosX;
+                spawnArgs.posY = spawnArgs.posY - ((GameObject*)obj)->anim.worldPosY;
+                spawnArgs.posZ = spawnArgs.posZ - ((GameObject*)obj)->anim.worldPosZ;
                 for (placement = 0; placement < (int)(u32)framesThisStep; placement = placement + 1)
                 {
                     (*gPartfxInterface)->spawnObject(
-                        (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, stk.rot,
+                        (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, spawnArgs.rot,
                         SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
                 }
             }
@@ -425,16 +425,16 @@ void SB_ShipGun_update(int obj)
                     ((SBShipGunState*)state)->fireTimer = 0;
                 }
             }
-            stk.a = lbl_803E58A8;
-            stk.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
-            ObjPath_GetPointWorldPosition(obj, 0, &stk.b, &stk.c, &stk.d, 0);
-            stk.b = stk.b - ((GameObject*)obj)->anim.worldPosX;
-            stk.c = stk.c - ((GameObject*)obj)->anim.worldPosY;
-            stk.d = stk.d - ((GameObject*)obj)->anim.worldPosZ;
+            spawnArgs.scale = lbl_803E58A8;
+            spawnArgs.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
+            ObjPath_GetPointWorldPosition(obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
+            spawnArgs.posX = spawnArgs.posX - ((GameObject*)obj)->anim.worldPosX;
+            spawnArgs.posY = spawnArgs.posY - ((GameObject*)obj)->anim.worldPosY;
+            spawnArgs.posZ = spawnArgs.posZ - ((GameObject*)obj)->anim.worldPosZ;
             for (placement = 0; placement < (int)(u32)framesThisStep; placement = placement + 1)
             {
                 (*gPartfxInterface)->spawnObject(
-                    (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, stk.rot,
+                    (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, spawnArgs.rot,
                     SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
             }
             break;
