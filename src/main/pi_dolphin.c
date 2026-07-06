@@ -4138,7 +4138,7 @@ void fn_800510F0(void* p1, u8 flag2, u8 flag3)
         PSMTXTrans(mtxB, lbl_803DEADC, *(f32*)&lbl_803DEADC, lbl_803DEAC8);
         PSMTXConcat(mtxB, mtxA, mtxA);
         GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, lbl_803DCD80);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
         lbl_803DCD80 = lbl_803DCD80 + 3;
         lbl_803DCD88 = lbl_803DCD88 + 1;
@@ -4201,7 +4201,7 @@ void textureFn_80051348(void* p1, u8 p2)
     buf[2] = p2;
     gxTextureFn_8004bf88(buf, 1, 0, &out_c, &out_8);
     GXSetTevKColorSel(lbl_803DCD90, out_c);
-    GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
     if (lbl_803DCD68 == 0)
     {
         GXSetTevDirect(lbl_803DCD90);
@@ -4245,12 +4245,12 @@ void fn_80051528(void* p1, void* mtx)
     if (mtx != 0)
     {
         GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, 0, lbl_803DCD80);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
         lbl_803DCD80 = lbl_803DCD80 + 3;
     }
     else
     {
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, 0, 0x7d);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, 0x7d);
     }
     gxTextureFn_8004bf88(buf, 1, 0, &out_c, &out_8);
     GXSetTevKColorSel(lbl_803DCD90, out_c);
@@ -4366,12 +4366,12 @@ void textureFn_8004c330(void* p1, void* mtx)
     if (mtx != 0)
     {
         GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, 0, lbl_803DCD80);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
         lbl_803DCD80 = lbl_803DCD80 + 3;
     }
     else
     {
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, 0, 0x7d);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, 0x7d);
     }
     GXSetIndTexMtx(GX_ITM_0, m.v, (s8)lbl_803DB5F4);
     GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88, lbl_803DCD8C);
@@ -4466,8 +4466,8 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
         return;
     }
     {
-        GXSetTexCoordGen2(lbl_803DCD88, 1, 4, 0x3c, 0, 0x7d);
-        GXSetTexCoordGen2(lbl_803DCD88 + 1, 1, 4, 0x3c, 0, 0x7d);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, 0x7d);
+        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, 0x7d);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88 + 1, lbl_803DCD8C + 1, GX_COLOR_NULL);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_C0);
@@ -4806,9 +4806,9 @@ void fn_8004E0FC(void)
     m1b8[2][2] = lbl_803DEACC;
     m1b8[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(m1e8, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
     GXLoadTexMtxImm(m1b8, lbl_803DCD80 + 3, 0);
-    GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
+    GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
     fn_8006C510(&tex1c);
     {
         int id = lbl_803DCD8C;
@@ -4849,7 +4849,7 @@ void fn_8004E0FC(void)
     m188[2][2] = lbl_803DEACC;
     m188[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(m188, lbl_803DCD80 + 6, 0);
-    GXSetTexCoordGen2(lbl_803DCD88 + 2, 0, 0, 0, 0, lbl_803DCD80 + 6);
+    GXSetTexCoordGen2(lbl_803DCD88 + 2, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 6);
     GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 2, 2, 0, 0, 0, 0, 0);
     GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
     GXSetIndTexOrder(lbl_803DCD7C + 1, lbl_803DCD88 + 3, lbl_803DCD8C + 1);
@@ -4872,7 +4872,7 @@ void fn_8004E0FC(void)
     m158[2][2] = lbl_803DEACC;
     m158[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(m158, lbl_803DCD80 + 9, 0);
-    GXSetTexCoordGen2(lbl_803DCD88 + 3, 0, 0, 0, 0, lbl_803DCD80 + 9);
+    GXSetTexCoordGen2(lbl_803DCD88 + 3, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 9);
     GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C + 1, 0, 2, 2, 0, 0, 1, 0, 0);
     GXSetIndTexCoordScale(lbl_803DCD7C + 1, 0, 0);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
@@ -4949,7 +4949,7 @@ void renderHeavyFog(int* fogColorPtr)
     mcc[2][2] = lbl_803DEACC;
     mcc[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(mcc, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
     kc = *fogColorPtr;
     GXSetTevKColor(lbl_803DCD74, &kc);
     fn_8006C528(&tex20);
@@ -4991,7 +4991,7 @@ void renderHeavyFog(int* fogColorPtr)
         PSMTXConcat(mrot, m9c, m9c);
         PSMTXConcat(m9c, iv, m9c);
         GXLoadTexMtxImm(m9c, lbl_803DCD80 + 3, 0);
-        GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
+        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
         GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 2, 2, 6, 6, 0, 0, 0);
         GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
         GXSetIndTexOrder(lbl_803DCD7C + 1, lbl_803DCD88 + 2, lbl_803DCD8C + 1);
@@ -5011,7 +5011,7 @@ void renderHeavyFog(int* fogColorPtr)
         PSMTXConcat(mrot, m6c, m6c);
         PSMTXConcat(m6c, iv, m6c);
         GXLoadTexMtxImm(m6c, lbl_803DCD80 + 6, 0);
-        GXSetTexCoordGen2(lbl_803DCD88 + 2, 0, 0, 0, 0, lbl_803DCD80 + 6);
+        GXSetTexCoordGen2(lbl_803DCD88 + 2, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 6);
         GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C + 1, 0, 2, 2, 0, 0, 1, 0, 0);
         GXSetIndTexCoordScale(lbl_803DCD7C + 1, 0, 0);
         GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
@@ -5080,7 +5080,7 @@ void textureFn_8004ff20(void* p1)
 {
     if (p1 != 0)
     {
-        GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, 0x7d);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, 0x7d);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
         GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASC, GX_CC_RASA, GX_CC_TEXC);
@@ -5319,8 +5319,8 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
     PSMTXScale(mtx, v, v, lbl_803DEACC);
     mtx[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, 1, 2, 0x1e, 0, lbl_803DCD80);
-    GXSetTexCoordGen2(lbl_803DCD88 + 1, 1, 3, 0x1e, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_BINRM, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX2x4, GX_TG_TANGENT, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
     GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 5, 6, 6, 0, 0, 0);
     GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C, 0, 3, 9, 6, 6, 1, 0, 0);
     GXSetTevIndirect(lbl_803DCD90 + 2, lbl_803DCD7C, 0, 0, 0, 0, 0, 1, 0, 0);
@@ -5393,7 +5393,7 @@ void fn_8004D6D8(void)
         }
     }
     GXLoadTexMtxImm(lbl_80396820, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
     GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
     GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -5450,11 +5450,11 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
         matB[2][3] = 1.0f;
         fn_8006C540(&src);
         GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
         GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
-        GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
+        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
         color = *colorIn;
         GXSetTevKColor(lbl_803DCD74, &color);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
@@ -5532,11 +5532,11 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
         matB[2][3] = 1.0f;
         fn_8006C540(&src);
         GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
         GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
-        GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
+        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
         color = *colorIn;
         GXSetTevKColor(lbl_803DCD74, &color);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
@@ -5620,11 +5620,11 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
         matB[2][3] = 1.0f;
         fn_8006C540(&src);
         GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
         GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
-        GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
+        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
         color = *colorIn;
         GXSetTevKColor(lbl_803DCD74, &color);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
@@ -5680,10 +5680,10 @@ void fn_8005011C(int objInst)
     GXSetTevDirect(lbl_803DCD90 + 3);
     PSMTXConcat((f32 (*)[4])(objInst + 0x30), Camera_GetInverseViewMatrix(), mtx);
     GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0x3c, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
     PSMTXConcat((f32 (*)[4])objInst, Camera_GetInverseViewMatrix(), mtx);
     GXLoadTexMtxImm(mtx, lbl_803DCD80 + 3, 0);
-    GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0x3c, 0, lbl_803DCD80 + 3);
+    GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_IDENTITY, GX_FALSE, lbl_803DCD80 + 3);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
     GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C + 1, GX_COLOR_NULL);
     GXSetTevOrder(lbl_803DCD90 + 2, lbl_803DCD88 + 1, lbl_803DCD8C + 1, GX_COLOR_NULL);
@@ -5753,7 +5753,7 @@ void fn_80050558(u8* texSrc, void* texMtx, int stageMode, int compMode, int vari
     int texmap;
     GXSetTevDirect(lbl_803DCD90);
     GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
     if (variant == 0 || variant == 2)
     {
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
@@ -5907,7 +5907,7 @@ void fn_8004D230(void)
     C_MTXLightOrtho(mtx1, lbl_803DEAF4, lbl_803DEAF8, lbl_803DEAF8, lbl_803DEAF4,
                     lbl_803DEADC, lbl_803DEADC, lbl_803DEADC, lbl_803DEADC);
     GXLoadTexMtxImm(mtx1, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_GREEN);
@@ -5966,7 +5966,7 @@ void fn_8004D230(void)
     mtx2[2][2] = lbl_803DEACC;
     mtx2[2][3] = lbl_803DEACC;
     GXLoadTexMtxImm(mtx2, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
     GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP1, GX_TEV_SWAP1);
@@ -6309,7 +6309,7 @@ extern void textureFn_8006c75c(int a);
 void fn_8004D928(void)
 {
     textureFn_8006c75c(lbl_803DCD8C);
-    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0x24, 0, 0x7d);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX2, GX_FALSE, 0x7d);
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevKColorSel(lbl_803DCD90, 6);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
@@ -6331,8 +6331,8 @@ void fn_8004FDA0(u8* texSrc, void* texMtx)
 {
     GXSetTevDirect(lbl_803DCD90);
     GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
-    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
     GXSetTevKColorSel(lbl_803DCD90, 4);
     GXSetTevColorIn(lbl_803DCD90, GX_CC_KONST, GX_CC_TEXA, GX_CC_CPREV, GX_CC_CPREV);
     GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
@@ -6369,7 +6369,7 @@ void fn_80050A28(int scale)
     PSMTXScale(m, scale, scale, lbl_803DEACC);
     m[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(m, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, 1, 4, 0x3c, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
     lbl_803DCD80 += 3;
     lbl_803DCD88++;
     lbl_803DCD69++;
