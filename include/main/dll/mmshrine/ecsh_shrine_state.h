@@ -13,7 +13,7 @@ typedef struct EcshShrineState
     s16 unk1A;
     s16 unk1C;
     s16 unk1E;
-    s16 unk20;
+    s16 scale; /* 0x20: reported out via ecsh_shrine_setScale */
     s16 shuffleCount; /* 0x22: remaining shuffle iterations this round (5/7/9 for rounds 1/2/3) */
     s16 animState;
     s16 matchFlag; /* 0x26: pick result: 1 = correct cup, 0 = wrong, -1 = pending */

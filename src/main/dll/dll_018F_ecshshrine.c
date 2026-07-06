@@ -357,7 +357,7 @@ void ecsh_shrine_setScale(s16* out)
     int* state;
     if (obj == NULL) return;
     state = ((GameObject*)obj)->extra;
-    *out = ((EcshShrineState*)state)->unk20;
+    *out = ((EcshShrineState*)state)->scale;
 }
 
 int ecsh_shrine_getExtraSize(void)
@@ -841,7 +841,7 @@ void ecsh_shrine_update(s16* obj)
         case 8:
             sub[0x2f] = 0;
             ((EcshShrineState*)sub)->animTimer = zero;
-            ((EcshShrineState*)sub)->unk20 = 0;
+            ((EcshShrineState*)sub)->scale = 0;
             ((EcshShrineState*)sub)->shuffleCount = 0;
             ((EcshShrineState*)sub)->animState = 0;
             ((EcshShrineState*)sub)->matchFlag = -1;
@@ -887,7 +887,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     ((EcshShrineState*)sub)->testPhase = 0;
     ((EcshShrineState*)sub)->transitionReady = 0;
     ((EcshShrineState*)sub)->animTimer = lbl_803E4FCC;
-    ((EcshShrineState*)sub)->unk20 = 0;
+    ((EcshShrineState*)sub)->scale = 0;
     ((EcshShrineState*)sub)->shuffleCount = 0;
     ((EcshShrineState*)sub)->animState = 0;
     ((EcshShrineState*)sub)->matchFlag = -1;
