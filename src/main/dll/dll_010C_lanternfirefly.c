@@ -79,14 +79,14 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 int LanternFireFly_getExtraSize(void) { return 0x74; }
 int LanternFireFly_getObjectTypeId(void) { return 0x0; }
 
-/* LanternFireFly_modelMtxFn: receives (obj, f1, f2, f3) and stores the
- * three floats into obj->_b8 at +0x54/+0x58/+0x5c. */
-void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c)
+/* LanternFireFly_modelMtxFn: receives (obj, anchorX, anchorY, anchorZ) and
+ * stores the three floats into obj->extra at +0x54/+0x58/+0x5c. */
+void LanternFireFly_modelMtxFn(u8* obj, f32 anchorX, f32 anchorY, f32 anchorZ)
 {
-    LanternFireFlyState* sub = ((GameObject*)obj)->extra;
-    sub->anchorX = a;
-    sub->anchorY = b;
-    sub->anchorZ = c;
+    LanternFireFlyState* state = ((GameObject*)obj)->extra;
+    state->anchorX = anchorX;
+    state->anchorY = anchorY;
+    state->anchorZ = anchorZ;
 }
 
 void LanternFireFly_func0B(int obj)
