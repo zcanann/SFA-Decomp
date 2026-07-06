@@ -17,7 +17,7 @@ extern u16 dspCmdFirstSize;
 extern u32 dspCmdList;
 extern u32 salDspCallbackEnabled;
 extern volatile u32 salDspInitIsDone;
-extern SalDspTask lbl_803D4880;
+static SalDspTask lbl_803D4880;
 extern u16 lbl_80330840[];
 extern u16 lbl_803DC628[4];
 extern void dspInitCallback(void* task);
@@ -134,4 +134,3 @@ void* salMalloc(u32 size)
     return gSalMallocHook(size);
 }
 
-SalDspTask lbl_803D4880;
