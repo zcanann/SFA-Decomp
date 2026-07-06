@@ -7138,36 +7138,36 @@ extern u8 lbl_8036F880[0x8000];
 /* zlbDecompress is a foreign-compiler (GCC / SN ProDG family) object, not MWCC. */
 int zlbDecompress(void* srcv, int size, int dstv, void* outp)
 {
-    u8* src;
-    u8* dst;
     int pos;
-    int sh;
-    u8* lenBitsP;
-    u16* lenTblP;
+    int val;
+    u8* distTblP;
     int lenMax;
     u8* distBitsP;
-    u8* distTblP;
-    int distMax;
-    int hlit;
-    int hdist;
-    int hclen;
-    volatile int final;
-    int type;
-    int sym;
-    u32 code;
-    int val;
-    u8 zero;
-    u16 zeroh;
-    int i;
-    int j;
-    int k;
-    int n;
-    int bl;
-    int cnt;
-    u8* p8;
-    u16* p16;
-    u8* curLens;
     u16* curCnt;
+    u8* curLens;
+    u16* p16;
+    u8* p8;
+    int cnt;
+    int bl;
+    int n;
+    int k;
+    int j;
+    int i;
+    u16 zeroh;
+    u8 zero;
+    u32 code;
+    int sym;
+    int type;
+    int hlit;
+    volatile int final;
+    int hclen;
+    int hdist;
+    int distMax;
+    u16* lenTblP;
+    int sh;
+    u8* src;
+    u8* lenBitsP;
+    u8* dst;
     dst = (u8*)dstv - 1;
     pos = 0;
     sh = 0x20;
@@ -7304,14 +7304,11 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                     u8* cnts;
                     bl = 7;
                     cnts = lbl_803DCD20;
-                    for (;;)
+                blscan:
+                    if (cnts[bl] == 0)
                     {
-                        int cv = cnts[bl];
-                        if (cv != 0)
-                        {
-                            break;
-                        }
                         bl--;
+                        goto blscan;
                     }
                     {
                         u8* t18;
@@ -7425,15 +7422,12 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                     u16* scan;
                     lenMax = 0xf;
                     scan = (u16*)(((u8*)cnts94 + lenMax) + lenMax);
-                    for (;;)
+                lmscan:
+                    if (*scan == 0)
                     {
-                        int cv = *scan;
-                        if (cv != 0)
-                        {
-                            break;
-                        }
                         scan -= 1;
                         lenMax -= 1;
+                        goto lmscan;
                     }
                     {
                         u16* t54 = lbl_80377954;
@@ -7471,14 +7465,11 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                     distMax = 0xf;
                     cntsB4 = lbl_803778B4;
                     t74 = lbl_80377974;
-                    for (;;)
+                dmscan:
+                    if (ZW(cntsB4, distMax) == 0)
                     {
-                        int cv = ZW(cntsB4, distMax);
-                        if (cv != 0)
-                        {
-                            break;
-                        }
                         distMax -= 1;
+                        goto dmscan;
                     }
                     j = 1;
                     code = 0;
