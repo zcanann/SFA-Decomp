@@ -144,13 +144,13 @@ void blasted_update(int obj)
         for (i = 0; i < ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->priorityHitCount; i++)
         {
             int cnt;
-            u32 v;
-            int m;
+            u32 hitObject;
+            int hitType;
             int found;
-            m = *(s8*)((int)((GameObject*)obj)->anim.hitReactState + i + 117);
-            v = ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitObjects[i];
+            hitType = *(s8*)((int)((GameObject*)obj)->anim.hitReactState + i + 117);
+            hitObject = ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitObjects[i];
             found = 0;
-            if (m != 5)
+            if (hitType != 5)
             {
                 continue;
             }
@@ -159,13 +159,13 @@ void blasted_update(int obj)
                 GameBit_Set(setup->completedGameBit, 1);
                 return;
             }
-            if (m == 5)
+            if (hitType == 5)
             {
                 int k = 0;
                 cnt = state->damageStep;
                 while (k != cnt)
                 {
-                    if (v == state->destroyedHitObjects[k++])
+                    if (hitObject == state->destroyedHitObjects[k++])
                     {
                         k = cnt;
                         found = 1;
@@ -174,7 +174,7 @@ void blasted_update(int obj)
             }
             if (found == 0)
             {
-                state->destroyedHitObjects[state->damageStep] = v;
+                state->destroyedHitObjects[state->damageStep] = hitObject;
                 GameBit_Set(state->damageStep + BLASTED_GAMEBIT_DAMAGE_BASE, 0);
                 GameBit_Set(state->damageStep + (BLASTED_GAMEBIT_DAMAGE_BASE + 1), 1);
                 if (setup->progressGameBit != -1)
@@ -184,10 +184,10 @@ void blasted_update(int obj)
                 lbl_803DDB18 = 0x12c;
                 if (state->damageStep + 1 > total)
                 {
-                    int n;
-                    for (n = 0; n < total + 1; n++)
+                    int gbIndex;
+                    for (gbIndex = 0; gbIndex < total + 1; gbIndex++)
                     {
-                        GameBit_Set(n + BLASTED_GAMEBIT_DAMAGE_BASE, 0);
+                        GameBit_Set(gbIndex + BLASTED_GAMEBIT_DAMAGE_BASE, 0);
                     }
                     GameBit_Set(setup->completedGameBit, 1);
                     fn_801A27B8(obj, setup->triggerId);
@@ -224,7 +224,7 @@ void blasted_init(int obj, int placement)
     int* state = ((GameObject*)obj)->extra;
     int* targ;
     s16 gbid;
-    u8 v;
+    u8 progress;
 
     state[0xc / 4] = 0;
     objSetSlot((int*)obj, 0x51);
@@ -234,9 +234,9 @@ void blasted_init(int obj, int placement)
     gbid = setup->progressGameBit;
     if (gbid != -1)
     {
-        v = GameBit_Get(gbid);
-        ((BlastedState*)state)->gameBitLatchState = v;
-        if (v != 0)
+        progress = GameBit_Get(gbid);
+        ((BlastedState*)state)->gameBitLatchState = progress;
+        if (progress != 0)
         {
             Obj_SetActiveModelIndex(obj, (int)((BlastedState*)state)->gameBitLatchState);
         }
