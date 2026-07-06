@@ -423,7 +423,8 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             int n;
             int sel;
             SpecialGlyph* g = lbl_802C86F0;
-            for (n = 45; n >= 0; n--)
+            n = 46;
+            while (n--)
             {
                 if (g->key == ch)
                 {
