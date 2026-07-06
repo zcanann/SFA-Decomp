@@ -64,23 +64,20 @@ extern u16 lbl_80325CE8[];
 extern f32 lbl_803E4D8C;
 extern f32 lbl_803E4D88;
 
+int magicmaker_getExtraSize(void) { return 0x0; }
+int magicmaker_getObjectTypeId(void) { return 0x0; }
+
 void magicmaker_free(void)
 {
 }
 
+void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4D88);
+}
+
 void magicmaker_hitDetect(void)
-{
-}
-
-void magicmaker_init(void)
-{
-}
-
-void magicmaker_release(void)
-{
-}
-
-void magicmaker_initialise(void)
 {
 }
 
@@ -153,11 +150,14 @@ void magicmaker_update(int obj)
     }
 }
 
-int magicmaker_getExtraSize(void) { return 0x0; }
-int magicmaker_getObjectTypeId(void) { return 0x0; }
-
-void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void magicmaker_init(void)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4D88);
+}
+
+void magicmaker_release(void)
+{
+}
+
+void magicmaker_initialise(void)
+{
 }
