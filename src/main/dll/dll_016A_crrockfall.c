@@ -138,7 +138,7 @@ void crrockfall_release(void)
 void crrockfall_init(int* obj, u8* params)
 {
     CrRockfallState* state = ((GameObject*)obj)->extra;
-    int* sub;
+    int* hitState;
     ObjModelState* modelState;
 
     state->mode = zcEn3_ROCKFALL_MODE_ARMED;
@@ -147,14 +147,14 @@ void crrockfall_init(int* obj, u8* params)
     ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)
     params[0x1b] / gRockfallScaleDivisor;
 
-    sub = *(int**)&((GameObject*)obj)->anim.hitReactState;
-    if (sub != NULL)
+    hitState = *(int**)&((GameObject*)obj)->anim.hitReactState;
+    if (hitState != NULL)
     {
         f32 scale = ((GameObject*)obj)->anim.rootMotionScale;
         ObjHitbox_SetCapsuleBounds(obj,
-                                   (int)((f32)((ObjHitsPriorityState*)sub)->primaryRadius * scale),
-                                   (int)((f32)((ObjHitsPriorityState*)sub)->primaryCapsuleOffsetA * scale),
-                                   (int)((f32)((ObjHitsPriorityState*)sub)->primaryCapsuleOffsetB * scale));
+                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryRadius * scale),
+                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetA * scale),
+                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetB * scale));
         ObjHits_DisableObject(obj);
     }
 
@@ -208,7 +208,7 @@ void crrockfall_update(int* obj)
             f32 frac;
             f32 height;
             f32 dist;
-            int n;
+            int alphaScale;
             int* player;
             frac = (((GameObject*)obj)->anim.localPosY - state->floorY) /
                 (state->startY - state->floorY);
@@ -240,10 +240,10 @@ void crrockfall_update(int* obj)
             }
             dist = (dist - lbl_803E4710) / lbl_803E4714;
             dist = lbl_803E4708 - dist;
-            n = (int)(lbl_803E4718 * height) + 0x40;
+            alphaScale = (int)(lbl_803E4718 * height) + 0x40;
             modelState->shadowAlpha =
                 (int)(((f32)(u32) * (u8*)((char*)obj + 0x37) / lbl_803E471C) *
-                    ((f32)n * dist));
+                    ((f32)alphaScale * dist));
         }
 
         if (((CrrockfallPlacement*)placement)->gameBitId == -1 ||
@@ -253,15 +253,15 @@ void crrockfall_update(int* obj)
             {
             case zcEn3_ROCKFALL_MODE_ARMED:
                 {
-                    int cond;
+                    int inRange;
                     int* player = Obj_GetPlayerObject();
                     if (player == NULL)
                     {
-                        cond = 0;
+                        inRange = 0;
                     }
                     else
                     {
-                        int* def = *(int**)&((GameObject*)obj)->anim.placementData;
+                        int* desc = *(int**)&((GameObject*)obj)->anim.placementData;
                         f32 xz = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
                                                 &((GameObject*)player)->anim.worldPosX);
                         f32 dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
@@ -269,17 +269,17 @@ void crrockfall_update(int* obj)
                         {
                             dy = lbl_803E46E8;
                         }
-                        if (xz < lbl_803E46EC * (f32)(u32)((CrrockfallPlacement*)def)->triggerRange &&
+                        if (xz < lbl_803E46EC * (f32)(u32)((CrrockfallPlacement*)desc)->triggerRange &&
                             dy < lbl_803E46F0)
                         {
-                            cond = 1;
+                            inRange = 1;
                         }
                         else
                         {
-                            cond = 0;
+                            inRange = 0;
                         }
                     }
-                    if (cond != 0)
+                    if (inRange != 0)
                     {
                         if ((state->fallDelay -= framesThisStep) <= 0)
                         {
