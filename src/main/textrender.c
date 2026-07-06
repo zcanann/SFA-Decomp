@@ -3010,7 +3010,8 @@ void gameTextLoadGraphicsFn_8001a918(void)
             u32 val;
             int hi;
             u8 lo;
-            for (i = 0xfd; i >= 0; i--)
+            i = 0xfe;
+            while (i--)
             {
                 if (p[0] == c)
                 {
