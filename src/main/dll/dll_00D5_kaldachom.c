@@ -116,16 +116,16 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
     KaldaChomControl* control;
     int ref;
     u8* setup;
-    f32 r;
+    f32 yJitter;
     f32 spd;
-    f32 h;
+    f32 heightOffset;
     f32 mouthY;
 
     control = ((CampfireState*)state)->control;
     ref = *(int*)&((GameObject*)obj)->anim.placementData;
     if (Obj_IsLoadingLocked() != 0)
     {
-        h = lbl_803E30A0 + (f32)(s32) * (s8*)(ref + 0x28) / lbl_803E30A4;
+        heightOffset = lbl_803E30A0 + (f32)(s32) * (s8*)(ref + 0x28) / lbl_803E30A4;
         ref = Obj_AllocObjectSetup(0x24, 0x51b);
         if (useUpperMouthPoint != 0)
         {
@@ -151,10 +151,10 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
             ((GameObject*)setup)->anim.velocityX =
                 (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosX - ((ObjPlacement*)ref)->posX) /
                 spd;
-            r = (f32)(s32)
+            yJitter = (f32)(s32)
             randomGetRange(-0xa, 0xa);
-            mouthY = lbl_803E30A8 * h + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY;
-            ((GameObject*)setup)->anim.velocityY = (mouthY + r - ((ObjPlacement*)ref)->posY) / spd;
+            mouthY = lbl_803E30A8 * heightOffset + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY;
+            ((GameObject*)setup)->anim.velocityY = (mouthY + yJitter - ((ObjPlacement*)ref)->posY) / spd;
             ((GameObject*)setup)->anim.velocityZ =
                 (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosZ - ((ObjPlacement*)ref)->posZ) /
                 spd;
@@ -167,7 +167,7 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 {
     KaldaChomControl* control = ((CampfireState*)p2)->control;
     GroundBaddieState* eventState = (GroundBaddieState*)p3;
-    int n;
+    int spawnCount;
 
     gKaldachomMouthSpawnScratch = lbl_803E30A0 + (f32)(s32)(s8) * (u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x28) /
         lbl_803E30A4;
@@ -182,7 +182,7 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
         control->climbFxIndex = randomGetRange(0, 2);
         eventState->baddie.eventFlags &= ~0x80;
         Sfx_PlayFromObject(obj, SFXkr_climb2);
-        for (n = (2 - control->climbFxIndex) * 10; n != 0; n--)
+        for (spawnCount = (2 - control->climbFxIndex) * 10; spawnCount != 0; spawnCount--)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 1809, 0, 4, -1, &gKaldachomMouthSpawnScratch);
         }
@@ -205,13 +205,13 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     if (((s32)eventState->baddie.eventFlags & 0x400) != 0)
     {
         control->climbFxIndex = 3;
-        n = 10;
+        spawnCount = 10;
         do
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 1808, 0, 4, -1, &gKaldachomMouthSpawnScratch);
-            n--;
+            spawnCount--;
         }
-        while (n != 0);
+        while (spawnCount != 0);
         eventState->baddie.eventFlags &= ~0x400;
     }
 }
