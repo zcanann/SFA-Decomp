@@ -226,9 +226,9 @@ typedef struct DllF7Vec
 typedef struct DllF7HitBlock
 {
     DllF7Vec params;
-    s16 a;
-    s16 b;
-    s16 c;
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
     f32 scale;
     f32 x;
     f32 y;
@@ -865,9 +865,9 @@ void dll_F7_update(int* obj)
             blk.x += playerMapOffsetX;
             blk.z += playerMapOffsetZ;
             blk.scale = lbl_803E3404;
-            blk.c = 0;
-            blk.b = 0;
-            blk.a = 0;
+            blk.rotZ = 0;
+            blk.rotY = 0;
+            blk.rotX = 0;
             ((void (*)(int, int, s16*, int, int, DllF7Vec*))((int*)*(int**)gDllF7Resource5A)[
                 1])(0, 1, (s16*)((int)&blk + 16), 1025, -1, &blk.params);
         }
