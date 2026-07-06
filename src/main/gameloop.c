@@ -896,21 +896,21 @@ void gameUpdate(void)
         void* player;
         int idx;
         PlayerTrailRecord* rec;
-        int t;
+        int trailTime;
 
         updateEnvironment(0);
         (*gMapEventInterface)->updateTimes();
         player = Obj_GetPlayerObject();
         idx = gGameLoopPlayerTrailIndex;
         rec = &gGameLoopPlayerTrailBuffer[idx];
-        t = gGameLoopPlayerTrailTime + framesThisStep;
-        gGameLoopPlayerTrailTime = t;
+        trailTime = gGameLoopPlayerTrailTime + framesThisStep;
+        gGameLoopPlayerTrailTime = trailTime;
         if (player != 0)
         {
             rec->posX = ((GameObject*)player)->anim.localPosX;
             rec->posY = ((GameObject*)player)->anim.localPosY;
             rec->posZ = ((GameObject*)player)->anim.localPosZ;
-            rec->time = t;
+            rec->time = trailTime;
             gGameLoopPlayerTrailIndex = idx + 1;
             if (gGameLoopPlayerTrailIndex >= 0x3c)
             {
