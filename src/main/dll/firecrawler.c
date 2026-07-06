@@ -41,6 +41,9 @@
 #include "main/dll/firecrawler.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+/* group owned by another DLL, queried here */
+#define LANTERNFIREFLY_OBJGROUP 0x30 /* DLL 0x10C lanternfirefly */
 #define FIRECRAWLER_OBJFLAG_RENDERED 0x800
 #define FIRECRAWLER_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -1366,7 +1369,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         if (fn_80295C88(Obj_GetPlayerObject()) != 0)
         {
             range = lbl_803E2B48;
-            other = (void*)ObjGroup_FindNearestObject(0x30, obj, &range);
+            other = (void*)ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, obj, &range);
             if (other != NULL)
             {
                 s16 yaw = Obj_GetYawDeltaToObject(obj, other, &range);
