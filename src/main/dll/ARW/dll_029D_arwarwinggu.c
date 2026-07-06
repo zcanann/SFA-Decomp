@@ -39,6 +39,52 @@ enum
     ARWGU_DEF_GUN_R = 0x615
 };
 
+#pragma scheduling off
+#pragma peephole off
+void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
+{
+    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
+    ArwingGuState* state = ((GameObject*)obj)->extra;
+
+    if (active != 0)
+    {
+        Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
+        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        objAnim->alpha = 0xff;
+        state->visibleTimer = lbl_803E7058;
+    }
+    else
+    {
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        objAnim->alpha = 0;
+    }
+}
+
+#pragma scheduling on
+#pragma peephole on
+void arwarwinggu_setTextureFrame(int obj, int textureFrame)
+{
+    ArwingGuState* state = ((GameObject*)obj)->extra;
+    state->texture.textureFrame = textureFrame;
+}
+
+#pragma scheduling off
+#pragma peephole off
+void arwarwinggu_applyTextureFrame(int obj)
+{
+    int model;
+    ObjTextureRuntimeSlot* texture;
+    ArwingGuState* state = ((GameObject*)obj)->extra;
+    int anim;
+    model = Obj_GetActiveModel(obj);
+    texture = objFindTexture((void*)obj, 0, 0);
+    anim = ObjModel_GetTexture(*(int*)model, 0);
+    fn_800541A4(anim, (u16)state->texture.textureFrame);
+    textureAnimFn_80053f2c(anim, (int)state, (int)texture);
+}
+#pragma scheduling on
+#pragma peephole on
+
 int arwarwinggu_getExtraSize(int obj)
 {
     switch (((GameObject*)obj)->anim.seqId)
@@ -66,51 +112,6 @@ void arwarwinggu_render(void)
 }
 
 void arwarwinggu_hitDetect(void)
-{
-}
-
-#pragma scheduling off
-#pragma peephole off
-void arwarwinggu_init(int obj)
-{
-    if (((GameObject*)obj)->anim.seqId == ARWGU_DEF_ENGINE)
-    {
-        return;
-    }
-    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    ((GameObject*)obj)->anim.alpha = 0;
-}
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma scheduling off
-#pragma peephole off
-void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
-{
-    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
-    ArwingGuState* state = ((GameObject*)obj)->extra;
-
-    if (active != 0)
-    {
-        Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        objAnim->alpha = 0xff;
-        state->visibleTimer = lbl_803E7058;
-    }
-    else
-    {
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        objAnim->alpha = 0;
-    }
-}
-
-#pragma scheduling on
-#pragma peephole on
-void arwarwinggu_release(void)
-{
-}
-
-void arwarwinggu_initialise(void)
 {
 }
 
@@ -177,25 +178,24 @@ void arwarwinggu_update(int obj)
     }
 }
 
-#pragma scheduling on
-#pragma peephole on
-void arwarwinggu_setTextureFrame(int obj, int textureFrame)
-{
-    ArwingGuState* state = ((GameObject*)obj)->extra;
-    state->texture.textureFrame = textureFrame;
-}
-
 #pragma scheduling off
 #pragma peephole off
-void arwarwinggu_applyTextureFrame(int obj)
+void arwarwinggu_init(int obj)
 {
-    int model;
-    ObjTextureRuntimeSlot* texture;
-    ArwingGuState* state = ((GameObject*)obj)->extra;
-    int anim;
-    model = Obj_GetActiveModel(obj);
-    texture = objFindTexture((void*)obj, 0, 0);
-    anim = ObjModel_GetTexture(*(int*)model, 0);
-    fn_800541A4(anim, (u16)state->texture.textureFrame);
-    textureAnimFn_80053f2c(anim, (int)state, (int)texture);
+    if (((GameObject*)obj)->anim.seqId == ARWGU_DEF_ENGINE)
+    {
+        return;
+    }
+    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    ((GameObject*)obj)->anim.alpha = 0;
+}
+#pragma scheduling on
+#pragma peephole on
+
+void arwarwinggu_release(void)
+{
+}
+
+void arwarwinggu_initialise(void)
+{
 }
