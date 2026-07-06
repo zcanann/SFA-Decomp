@@ -97,26 +97,26 @@ extern f32 lbl_803E4D04;
 void dimbossgut2_updateTracking(int obj, int state)
 {
     int curve;
-    int r30v;
+    int pathWalker;
     s16 delta;
     s16 angle;
-    int q;
-    f32 fv;
+    int angleMag;
+    f32 angleScale;
     int player;
     int rel;
 
     curve = ((Dimbossgut2State*)state)->curveData;
-    r30v = ((Dimbossgut2State*)state)->curvePath;
+    pathWalker = ((Dimbossgut2State*)state)->curvePath;
     if ((((Dimbossgut2State*)state)->flags400 & 8) != 0)
     {
-        if ((Curve_AdvanceAlongPath(r30v, ((Dimbossgut2Curve*)curve)->f10) != 0) || (*(int*)(r30v + 0x10) != 0))
+        if ((Curve_AdvanceAlongPath(pathWalker, ((Dimbossgut2Curve*)curve)->f10) != 0) || (*(int*)(pathWalker + 0x10) != 0))
         {
-            if ((*gRomCurveInterface)->goNextPoint((void*)r30v) != 0)
+            if ((*gRomCurveInterface)->goNextPoint((void*)pathWalker) != 0)
             {
                 ((Dimbossgut2State*)state)->flags400 = ((Dimbossgut2State*)state)->flags400 & ~0x8;
             }
         }
-        angle = (s16)(getAngle(*(f32*)(r30v + 0x74), *(f32*)(r30v + 0x7c)) + 0x8000);
+        angle = (s16)(getAngle(*(f32*)(pathWalker + 0x74), *(f32*)(pathWalker + 0x7c)) + 0x8000);
         delta = (s16)(angle - (u16)((GameObject*)obj)->anim.rotX);
         if (delta > 0x8000)
         {
@@ -132,24 +132,24 @@ void dimbossgut2_updateTracking(int obj, int state)
         {
             ((Dimbossgut2Curve*)curve)->f10 = ((Dimbossgut2Curve*)curve)->f10 + lbl_803E4D18;
         }
-        q = delta / 0xb6;
-        if (q < 0)
+        angleMag = delta / 0xb6;
+        if (angleMag < 0)
         {
-            q = -q;
+            angleMag = -angleMag;
         }
-        fv = (f32)(s32)
-        q * lbl_803E4CD4;
-        if (fv > lbl_803E4CF0)
+        angleScale = (f32)(s32)
+        angleMag * lbl_803E4CD4;
+        if (angleScale > lbl_803E4CF0)
         {
-            ((Dimbossgut2Curve*)curve)->f10 = ((Dimbossgut2Curve*)curve)->f10 / fv;
+            ((Dimbossgut2Curve*)curve)->f10 = ((Dimbossgut2Curve*)curve)->f10 / angleScale;
             ((Dimbossgut2Curve*)curve)->f8 = ((Dimbossgut2Curve*)curve)->f8 + lbl_803E4D1C;
         }
         if (((Dimbossgut2Curve*)curve)->f8 > lbl_803E4CD8)
         {
             ((Dimbossgut2Curve*)curve)->f8 = ((Dimbossgut2Curve*)curve)->f8 / lbl_803E4D10;
         }
-        ((GameObject*)obj)->anim.localPosX = *(f32*)(r30v + 0x68);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)(r30v + 0x70);
+        ((GameObject*)obj)->anim.localPosX = *(f32*)(pathWalker + 0x68);
+        ((GameObject*)obj)->anim.localPosZ = *(f32*)(pathWalker + 0x70);
     }
     else
     {
@@ -301,7 +301,7 @@ void dimbossgut2_update(int obj)
 void dimbossgut2_init(int obj, int def, int p3)
 {
     int state;
-    int p;
+    int curve;
     int count;
     int i;
     int* list;
@@ -317,45 +317,45 @@ void dimbossgut2_init(int obj, int def, int p3)
     (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
         obj, def, state, 0, 0, 0x102, flags, lbl_803E4CE0);
     ((GameObject*)obj)->animEventCallback = NULL;
-    p = ((Dimbossgut2State*)state)->curveData;
+    curve = ((Dimbossgut2State*)state)->curveData;
     z = lbl_803E4CD8;
-    ((Dimbossgut2Curve*)p)->f0 = z;
-    ((Dimbossgut2Curve*)p)->f4 = z;
-    ((Dimbossgut2Curve*)p)->s14 = randomGetRange(-0x7fff, 0x7fff);
+    ((Dimbossgut2Curve*)curve)->f0 = z;
+    ((Dimbossgut2Curve*)curve)->f4 = z;
+    ((Dimbossgut2Curve*)curve)->s14 = randomGetRange(-0x7fff, 0x7fff);
     z = lbl_803E4CD8;
-    ((Dimbossgut2Curve*)p)->f8 = z;
-    ((Dimbossgut2Curve*)p)->timer16 = 0;
-    ((Dimbossgut2Curve*)p)->f10 = z;
+    ((Dimbossgut2Curve*)curve)->f8 = z;
+    ((Dimbossgut2Curve*)curve)->timer16 = 0;
+    ((Dimbossgut2Curve*)curve)->f10 = z;
     count = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                  ((GameObject*)obj)->anim.localPosZ, &list, 0, 0);
-    ((Dimbossgut2Curve*)p)->fC = lbl_803E4CD8;
+    ((Dimbossgut2Curve*)curve)->fC = lbl_803E4CD8;
     if (count != 0)
     {
-        ((Dimbossgut2Curve*)p)->fC = lbl_803E4D24;
+        ((Dimbossgut2Curve*)curve)->fC = lbl_803E4D24;
         for (i = 0; i < count; i++)
         {
             f32 d = *(f32*)list[i] - ((GameObject*)obj)->anim.localPosY;
             if (*(s8*)(list[i] + 0x14) == 0xe)
             {
-                if (d > ((Dimbossgut2Curve*)p)->fC)
+                if (d > ((Dimbossgut2Curve*)curve)->fC)
                 {
-                    ((Dimbossgut2Curve*)p)->fC = d;
+                    ((Dimbossgut2Curve*)curve)->fC = d;
                 }
             }
         }
     }
-    ((Dimbossgut2Curve*)p)->fC += ((GameObject*)obj)->anim.localPosY;
+    ((Dimbossgut2Curve*)curve)->fC += ((GameObject*)obj)->anim.localPosY;
     ObjAnim_SetCurrentMove(obj, 0, (f32)(int)randomGetRange(0, 0x63) / lbl_803E4D28, 0);
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E4D20, timeDelta, NULL);
-    ((Dimbossgut2Curve*)p)->light = (int)objCreateLight(obj, 1);
-    if ((void*)((Dimbossgut2Curve*)p)->light != NULL)
+    ((Dimbossgut2Curve*)curve)->light = (int)objCreateLight(obj, 1);
+    if ((void*)((Dimbossgut2Curve*)curve)->light != NULL)
     {
-        modelLightStruct_setLightKind(((Dimbossgut2Curve*)p)->light, MODEL_LIGHT_KIND_POINT);
-        modelLightStruct_setDiffuseColor(((Dimbossgut2Curve*)p)->light, 0, 255, 0, 0);
-        lightSetFieldBC_8001db14(((Dimbossgut2Curve*)p)->light, 1);
-        modelLightStruct_setDistanceAttenuation(((Dimbossgut2Curve*)p)->light, lbl_803E4D2C, lbl_803E4CE0);
-        modelLightStruct_setupGlow(((Dimbossgut2Curve*)p)->light, 0, 0, 255, 0, 127, lbl_803E4D30);
-        modelLightStruct_setGlowProjectionRadius(((Dimbossgut2Curve*)p)->light, lbl_803E4D04);
+        modelLightStruct_setLightKind(((Dimbossgut2Curve*)curve)->light, MODEL_LIGHT_KIND_POINT);
+        modelLightStruct_setDiffuseColor(((Dimbossgut2Curve*)curve)->light, 0, 255, 0, 0);
+        lightSetFieldBC_8001db14(((Dimbossgut2Curve*)curve)->light, 1);
+        modelLightStruct_setDistanceAttenuation(((Dimbossgut2Curve*)curve)->light, lbl_803E4D2C, lbl_803E4CE0);
+        modelLightStruct_setupGlow(((Dimbossgut2Curve*)curve)->light, 0, 0, 255, 0, 127, lbl_803E4D30);
+        modelLightStruct_setGlowProjectionRadius(((Dimbossgut2Curve*)curve)->light, lbl_803E4D04);
     }
 }
 
