@@ -150,16 +150,16 @@ void dll_19_func12(int* obj, int* state, u8 flag)
     Sfx_StopObjectChannel(obj, 127);
     if ((((GroundBaddieState*)state)->configFlags & flag) == 0)
     {
-        s16 v;
-        v = ((GroundBaddieState*)state)->unk3FC;
-        if (v != 0)
+        s16 soundId;
+        soundId = ((GroundBaddieState*)state)->unk3FC;
+        if (soundId != 0)
         {
-            (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, v, 0, 0, 0);
+            (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, soundId, 0, 0, 0);
         }
-        v = ((GroundBaddieState*)state)->unk3FA;
-        if (v != 0)
+        soundId = ((GroundBaddieState*)state)->unk3FA;
+        if (soundId != 0)
         {
-            (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, v, 0, 0, 0);
+            (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, soundId, 0, 0, 0);
         }
     }
     voxmaps_freeRouteWork((char*)state + 900);
