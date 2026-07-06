@@ -6590,3 +6590,165 @@ git log -60: all authored "Zachary Canann". No Jack Price-Burns commit newer tha
   * player.c = skip per remit.
   * modelEngine/light/objprint_dolphin char*-base casts = core-engine narrow per-unit
     / shared structs, out of flat-DLL catch-all remit.
+
+## Narrow-scalar struct-recovery sweep (Jul05 18:34 session) — 0 wins, all disqualified/byte-affecting
+Swept DLL tree for u8/s8/u16/s16 raw casts through GENUINE pointer bases into paddable local structs.
+Candidates examined + disposition:
+- **objfx.c ExplosionSetup 0x1A/0x1C** (u8* obj from Obj_AllocObjectSetup): `*(s16*)(obj+0x1a)` is a
+  clean s16 in pad1A[2]; 0x1C is the mapped `flags`. Respelling BOTH to `((ExplosionSetup*)obj)->field`
+  BUILT BYTE-DIFFERENT (.o 778ffe9f... vs baseline 3e78b62c...) — routing them through struct members
+  reorders the DLL's shared float-conversion (.sdata2) pool. Prior author already documented this in the
+  struct comment. REVERTED to raw, md5-identical confirmed. CONFIRMED-RESISTANT.
+- dll_00D1_tumbleweedbush.c 0x27c/0x27e/0x280 (u8* state): PAST struct end (TumbleweedBushState ends 0x54). raw.
+- dll_000B_dll0b.c 0x46 (u8* state): base is index-scaled global (gModgfxSpawnContextStorage + idx*2). raw.
+- dll_0191_ecshcreator.c def+0x18/0x1f/0x20 (s8* def): def = ObjPlacement (SHARED prefix + untyped param tail). raw.
+- dll_00CE_dllce.c p+0x2b, setup+0x2e (u8*): ObjPlacement param-tail (shared). raw.
+- dll_019A_dll19a.c / ecsh obj+0x37: GameObject-core (int base + adjacent to anim.alpha). raw.
+- dll_0243_dbholecontrol1.c def+0x19 (u8* def→Dbholecontrol1Placement): byte-view of the s16 unk18 field
+  (0x18-0x19), sequence-id high byte — not a paddable slot. raw.
+- dll_00C9_enemy.c state+0x323, dll_000F_unk state+0x338/34c/278, firecrawler state+0x261,
+  newseqobj state+0x338: all int-base or BaddieState shared-prefix (<0x35C). raw.
+Conclusion: the narrow-scalar-into-local-padded-struct lever is largely mined out in the DLL tree;
+genuine-pointer bases predominantly land in SHARED structs or past struct end. No commit this session.
+
+## Fifth-tier (rank ~120-205 by size*gap) fuzzy sweep (Jul05 later session) — 0 wins, all welded
+Triaged ~18 fns in the 90-99.9% band ranked 120-205. EVERY dominant delta was a
+confirmed-welded class with no source lever. Detail:
+- TitleMenuItem_update (dll_003D) 98.31%: NOOPT unit (nopeephole,noschedule). Only diff =
+  2 const args `li r3,0; li r4,953`(SFXTRIG_pda_compassbeep) emitted MID-clamp in target vs
+  AFTER-clamp in current, inside Sfx_SetObjectSfxVolume(0,953,clamp(previewVolume),f). Double-
+  ternary inline REGRESSED (breaks the two-branch r5 clamp into an r0 ternary). Arg-materialize
+  ordering quirk, no lever.
+- Camera_UpdateProjection (camera.c) 98.09%: srwi(width)/clrlwi(height) EMISSION ORDER — target
+  does width-first. Swapping the `screenWidth`/`screenHeight` decl order FIXED the ext-order
+  (ext-delete/insert dropped) BUT introduced a coupled reg-perm (srwi r5/clrlwi r6 vs target
+  r6/r4) that cost MORE: 98.087->98.060. Coupled trade, reverted.
+- voxmaps_updateRoutePath (voxmaps.c) 99.09%: T=312 C=313, extra `li r0,0`. Target reuses the
+  `state->pathCount=0` (sth r0,32) zero for the `if(pathDirect)` compare (pathDirect==0 in that
+  path). `state->pathCount=pathDirect=0` chain REGRESSED (10->12 regions). VN zero-share, welded.
+- highScoreScreenDraw (dll_0000) 98.93%: sched-order add-canonicalization #66 — `box2val+k*0x1e+0x57`
+  target groups `(box2val+k30)+87`, current `box2val+(k30+87)` because k*0x1e is CSE'd across
+  lines 1620/1627. Explicit parens INERT (MWCC reassociates regardless).
+- modelLightChannels_applyGXControls (modellight.c) 98.81%: T=191 C=193. r0-detour (.data base
+  gModelLightChannelStates into r31) + narrow-into-temp-then-copy `clrlwi r0; mr r29` vs target
+  `clrlwi r29` direct. Original `activeMask=(...|...)&0xff` = BEST (3 regions). `(u8)(...)` cast AND
+  `activeMask|=` BOTH regressed to 20 reg-perm regions. Welded.
+- fn_8014FFB4 (dll_00E1_wispbaddie) 99.20%: T=276 C=275. Target `li -65; and` for controlFlags&~0x40;
+  current emits rlwinm (single-bit clear canonical). `& 0xFFFFFFBF` folds back to rlwinm. u32 field,
+  no mask-spelling lever forces li;and. Welded.
+- optionsMenu_openGeneralPanel (prof.c) 98.91%: T=209 C=210. Named .data base lbl_803A87D0[] —
+  target keeps `slot` in r29 across [0]/[1]; current extra `mr r29,r4`. `slot=&lbl[0]; slot[0]=`
+  hoist REGRESSED (210->214). r0-detour-family, welded.
+- dll_69_func03 (dll_0069) 99.33%: struct-init store order `buf.v3c=0;buf.v40=1` — target emits
+  v40=1 BEFORE v3c=0. Swapping source lines 181/182 FIXED the li-const region BUT the downstream
+  mulhw/sth big-block r0<->r3 coloring cascade shifted worse: 99.330->99.311. Coupled, reverted.
+- BANKED equal-instr reg-perm (no lever, pure coloring): gunpowderbarrel_triggerExplosion (r26<->r29
+  counter/def + def reload; decl-reorder inert), vortex_init (33 reg-perm param shift), padUpdate
+  (mr r16 + add-operand #66), fn_80128A7C, firstperson_updatePosition (FP clamp #82 cascade),
+  bossdrakor_updateHeadTracking (clamp r0/r4 + mr-copy), fn_80025F38/fn_80026308 (model, 17 reg-perm
+  each), ObjHits_CheckSkeletonPair (fcmpo #82 + reg-perm), fn_8014C11C (enemy, 26 reg-perm),
+  modelInitBoneMtxs2, camslide/dll_15_func06 (fcmpo #82), StaffCollision_func03, snowCloudUpdateFlakes,
+  fn_801EAE4C (sched-order), objMathFn_8003a380 (ext-insert clamp coloring).
+Conclusion: this tier's residual is uniformly coloring-class (reg-perm/mr-copy/FP-perm) + noopt
+arg-order + rlwinm-canonical + add-canonicalization + VN-zero-share. The store/decl-order levers that
+touch these fns are all coloring-COUPLED (fix one region, cascade elsewhere costs more). No commit.
+
+## Tail-tier sweep Jul05 (ranks ~195-355, size*gap) — 0 wins / uniformly welded
+Triaged ~45 fns via ndiff --classify. Every T!=C candidate reduced to a coupled/welded case:
+- **shader.c mapGetRomListAndOffsets** 99.24%: target `mulli r7,r28,7; slwi r31,r7,2` (2-step
+  i*7 then <<2, intermediate in r7) vs my fused `mulli r31,r28,28`. Switching source to
+  `(p1*7)<<2` DID produce the 2-step form (T=C=175) BUT scored 98.49 (WORSE) — intermediate
+  landed in r0 not r7, perturbing downstream coloring. Named intermediate didn't move it to r7.
+  Fused baseline (1-instr-shorter) scores HIGHER. Instr-count != fuzzy. Kept fused baseline.
+- **object.c fn_8002B758** 98.46%: target ends on cold loop-body `b LBL` (no trailing blr);
+  my build appends 1 dead unreachable `blr` after it. Layout artifact of the early `return;`
+  under scheduling/peephole-off. `if(i!=count){...}` wrap REGRESSED (beqlr fold + block reorder).
+  `#pragma peephole on` REGRESSED (triggered worse loop-unroll + srwi. dot-merge). Welded.
+- **babycloudrunner sandworm_turnTowardTargetAnim** 98.86%: 1 extra `extsh` before an `sth`
+  narrowing store of `*(s16*)a += (shifted>>=3)`. Coupled: `shifted` is reused downstream as
+  `(s16)shifted`, so it must survive sign-extended. Split-shift + plain-store REGRESSED (extra
+  mr + more extsh). Coupled narrowing, welded.
+- **pollen fn_8016A660** 98.92%: target `bne body; b end` (2-instr branch island) vs my folded
+  `beq end` for the `if(IsLoadingLocked()==0) return;` guard. Positive-guard wrap `if(!=0){body}`
+  folded right back to `beq`. MWCC normalizes both to the short form. Welded. (relocs #70-neutral)
+- **wispbaddie fn_8014FFB4** 99.20%: target clears bit 0x40 via `li r0,-65; and` (2 instr, u32
+  full-mask) vs my `rlwinm r0,r0,0,26,24` (1 instr rotate-clear). `&0xFFFFFFBF` spelling folded
+  back to rlwinm — MWCC recognizes any single-bit u32 clear -> rotate. Can't force the li;and.
+  Target is 1-instr LONGER; resists. Welded.
+- **gflevelcon fn_8023A3E4** 99.35%: target CSEs `hp[0xAE]` load into r3 across the `&&`, reuses
+  for `-=1`; mine reloads (1 extra lbz). Hoist `u8 cnt=hp[0xAE]` REGRESSED (u8 local forced
+  clrlwi zero-extensions, +2 net). u8-CSE coupled, welded.
+Rest of tier (smallbasket VN-zero-share into r28, shield/kytesmum/voxmaps r0-detour+obj/state
+swap, camera add-operand+coloring, textrender return-tail-merge, mm/RomCurve*/waveanimator/
+xyzanimator/timer/credits/curves/etc): all pure reg-perm/mr-copy/#70-reloc, bank-on-sight.
+CONCLUSION: tail tier is dominated by coloring-class + canonical-idiom (rlwinm-single-bit,
+branch-fold, return-merge) + coupled-narrowing residuals with no isolated source lever.
+No commits. Tree clean, all_source EXIT=0, zero FAILED.
+
+## Jul05 — FOURTH-tier (rank ~70-120) per-fn deep sweep (Opus, 0 committed wins)
+Triaged ~25 rank-70-120 -O4,p fns by size*gap. Every crack that showed a clean
+source-controllable delta REGRESSED on measurement (coupled coloring cost > local gain):
+- **gameUiLoadResources** (dll/tricky, 96.99%): target SDA-holds `&lbl_803DD868` in r4
+  per-block (`li r4,0`+SDA21 then `stw/lwz 0(r4)`,`4(r4)`); current uses absolute
+  `lis/addi`. Declaring array `[2]` -> SDA fold but REGRESSED to 96.63 (per-access SDA
+  ref, no base-hold). `char** rings=lbl_803DD868` pointer-hold -> 96.16 (saved reg, held
+  across prior loop). The base-hold needs r4(volatile) for one block only; no source
+  spelling produces it. BANKED.
+- **updateVisibleGeometry** (lightmap, 97.60%): n=0 frustum-plane block — target has
+  normalX/Y/Z DIRECT (`stfs 0(r31)`,`0(r30=r3+8)`) but distance INDEXED (`stfsx r29,r0`
+  w/ n*20); current indexes all OR (when `n=0` folded to all-direct) drops the mulli.
+  Moving `n=0` embedded-assign to `.distance` line -> all-direct, 95.5 REGRESS (kills the
+  target's deferred `n*20`+stfsx on distance). The 3-direct-1-indexed asymmetry with a
+  live-but-folded `n` is an addressing-mode artifact; baseline `[n=0]`-on-normalY closest. BANKED.
+- **SaveGame_gplaySetObjGroupStatus** (dll_0017, 97.56%): transient-scan loop 1 uses
+  ptr-walk `transient++`; target unrolls 5-wide w/ FIXED displacements (3,4/6,7/9,10/12,13,
+  `r4+=15`). Converting to array-index `s->transient[i].mapId` REMOVED the current's spurious
+  `addi r4,r4,3` inserts BUT net REGRESSED 97.56->97.32 (reg-coloring cascade from extra
+  addressing). Coupled trade. BANKED.
+- **CameraModeViewfinder_update** (dll_0044, 98.83%): fcmpo at brightness test emitted
+  `fcmpo f0,f1`(field,const) vs target `fcmpo f1,f0; cror lt,eq`(const<=field). Rewriting
+  L425 `blendProgress<=lbl_803E17C4` -> `lbl_803E17C4 <= blendProgress` made fcmpo+cror
+  MATCH EXACTLY, but net REGRESSED 98.83->98.57 (operand swap shifted load-order + r29/r30/r31
+  perm downstream, cost > fcmpo gain). Coupled fcmpo/coloring. BANKED. (Target semantics
+  are genuinely `const<=field`, i.e. `blendProgress>=0`, not the src `<=`.)
+- BANKED on sight (dominant class, no isolated lever): mmFreeTick (dead `k+=? ->addi r3,r3,7`
+  induction in the sp[0..7] unroll, #113 but +7-vs-8 unclear), waterfx_func05 (counter
+  r25/r26 renumber + mr-vs-li zero cascade), vortex_render (u32->dbl bias `lbl_803E73F0`
+  named-vs-`@196` anon #70 + FP f30/f31 perm), TitleMenuItem_update (li r3,0/r4,953 sched
+  placement, whole-fn 0x30 offset), CameraModeBike_update (#67 frame 272-vs-240 + extsh),
+  fn_80136E00 (gDebugTextColor R/G/B/A stores r4-7 vs r3-6 #108), crawler_updateC (FP CSE
+  f3-hold-vs-reload + fcmpo coupled), staff_setupSwipe (r28/r31 25x reg-perm), fn_800119FC
+  (2-bit bit-decoder reg-perm cascade), drlasercannon_aimAtTarget (double-extsh vs extsh+mr
+  shared-extsh/coloring), trickyMove (large structural control-flow divergence + @221 anon),
+  objMathFn_8003a380 (shared-extsh+reg-perm), modelLoadAnimations/sky_fn_80089A60 (offset-shift
+  alignment noise, aligned underneath), cloudprisoncontrol/pushable/gunpowderbarrel (reg-perm).
+CONCLUSION: fourth tier same profile as tail — coloring/frame/reloc + coupled-narrowing +
+addressing-mode-fold residuals; the few clean structural leads all lose a coupled coloring
+trade. No commits. Tree clean, all_source EXIT=0, zero FAILED.
+
+## 2026-07-05 team-resume probe (cheap, no-scan)
+Jack Price-Burns newest = d3d7a168ff (dll_01EB sbshipmast). It is still the most recent
+non-"Zachary Canann" commit; 76 commits between it and HEAD, ALL authored by Zachary Canann.
+TEAM STILL IDLE. No fresh Jack .c units -> no struct-recovery respell attempted. STOP (cheap
+correct 0-win per method step 2). No commits.
+
+## 2026-07-05 byte-neutral struct-recovery re-sweep (post-quiesce, 0 wins)
+Swept the constant-offset pointer-base raw-cast vein across src/main/dll. Nearly every
+remaining candidate is a documented disqualifier:
+- **pushable_func0B `state->flags = *(u16*)((u8*)state+0x100) & ~MASK`** (dll_00EF, line 1370):
+  0x100 IS `PushableState.flags` (STATIC_ASSERT confirms). TESTED the respell
+  `state->flags = state->flags & ~MASK` -> .o md5 CHANGED (24f94a2c -> f81585d8), REVERTED,
+  restored to 24f94a2c. The raw `*(u16*)` self-read is a canonical raw form the target needs
+  (field-access reorders the AND opcode). Leave raw.
+- tumbleweedbush fn_80163990 `*(s16*)(state+0x27c/0x27e/0x280)`: base is u8* but offsets are
+  PAST TumbleweedBushState end (struct maps only to 0x54); external-only callee, ambiguous
+  wider struct -> past-struct-end disqualifier.
+- mmsh_waterspike `*(int*)(state+0x40C)`: lone opaque access, no mapped state struct to split.
+- hightop_playMovementSfx `*(int*)((char*)state+0x314)`: `state` is `int` param -> int-base.
+- effect1-9 / partfx / dll0b / playershadow / wmsun `state+ch*2+0xNN` / `+j+0xNN`: index-scaled.
+- dll_000F_unk `((BaddieState*)state)+0x2bc/0x33c`, dll_000B `state+0xb0`: BaddieState shared-prefix (<0x35C).
+- texscroll2 layer/material/tex casts: documented opaque (no struct), leave raw.
+- imspaceringgen `state->ringB+0x68`: vtable dispatch, not a data field.
+CONCLUSION: constant-offset clean vein exhausted; the one true field-match (pushable.flags)
+is a confirmed non-neutral canonical-raw self-read. No commits. Tree clean (only this MD +
+untracked memory/tools). all_source untouched.
