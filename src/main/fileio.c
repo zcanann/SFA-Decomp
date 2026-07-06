@@ -104,56 +104,7 @@ void dvdCheckError(void)
     }
 }
 
-void fileReadCb_80015954(void* result)
-{
-    gDvdReadCallbackResult = (int)result;
-}
-
-void setFileInfo(void* fileInfo)
-{
-    gFileInfo = fileInfo;
-}
-
-void* loadFileByPath(char* path, int* outSize)
-{
-    u8 fileInfo[0x3c];
-    int size;
-    u32 alignedSize;
-    void* buf;
-    if (outSize != NULL)
-    {
-        *outSize = 0;
-    }
-    DVDSetAutoInvalidation(1);
-    if (DVDOpen(path, fileInfo) == 0)
-    {
-        return NULL;
-    }
-    size = *(u32*)(fileInfo + 0x34);
-    alignedSize = (size + 0x1f) & ~0x1f;
-    buf = mmAlloc(alignedSize, 0x7d7d7d7d, NULL);
-    if (buf == NULL)
-    {
-        return NULL;
-    }
-    if (DVDRead(fileInfo, buf, alignedSize, 0) == -1)
-    {
-        mm_free(buf);
-        return NULL;
-    }
-    if (DVDClose(fileInfo) == 0)
-    {
-        mm_free(buf);
-        return NULL;
-    }
-    DCStoreRange(buf, size);
-    if (outSize != NULL)
-    {
-        *outSize = size;
-    }
-    return buf;
-}
-
+#pragma dont_inline on
 int DVDRead(void* fileInfo, void* buf, int size, int offset)
 {
     u8 resetSeen = 0;
@@ -184,6 +135,17 @@ int DVDRead(void* fileInfo, void* buf, int size, int offset)
         }
     }
     return gDvdReadCallbackResult;
+}
+#pragma dont_inline reset
+
+void fileReadCb_80015954(void* result)
+{
+    gDvdReadCallbackResult = (int)result;
+}
+
+void setFileInfo(void* fileInfo)
+{
+    gFileInfo = fileInfo;
 }
 
 void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*))
@@ -234,4 +196,44 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*
     mm_free(buf);
     mm_free(fileInfo);
     return NULL;
+}
+
+void* loadFileByPath(char* path, int* outSize)
+{
+    u8 fileInfo[0x3c];
+    int size;
+    u32 alignedSize;
+    void* buf;
+    if (outSize != NULL)
+    {
+        *outSize = 0;
+    }
+    DVDSetAutoInvalidation(1);
+    if (DVDOpen(path, fileInfo) == 0)
+    {
+        return NULL;
+    }
+    size = *(u32*)(fileInfo + 0x34);
+    alignedSize = (size + 0x1f) & ~0x1f;
+    buf = mmAlloc(alignedSize, 0x7d7d7d7d, NULL);
+    if (buf == NULL)
+    {
+        return NULL;
+    }
+    if (DVDRead(fileInfo, buf, alignedSize, 0) == -1)
+    {
+        mm_free(buf);
+        return NULL;
+    }
+    if (DVDClose(fileInfo) == 0)
+    {
+        mm_free(buf);
+        return NULL;
+    }
+    DCStoreRange(buf, size);
+    if (outSize != NULL)
+    {
+        *outSize = size;
+    }
+    return buf;
 }
