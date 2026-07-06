@@ -76,14 +76,14 @@ typedef struct Dll22CMapData
     s8 rotXByte;  /* 0x18: rotX in 1/256 turns */
     s8 unk19;     /* 0x19 */
     s16 raiseHeight; /* 0x1A */
-    s16 unk1C;    /* 0x1C: -> state raiseMode */
+    s16 raiseMode; /* 0x1C: -> state raiseMode */
     s16 gameBit2; /* 0x1E */
     s16 gameBit;  /* 0x20 */
 } Dll22CMapData;
 
 STATIC_ASSERT(offsetof(Dll22CMapData, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(Dll22CMapData, raiseHeight) == 0x1A);
-STATIC_ASSERT(offsetof(Dll22CMapData, unk1C) == 0x1C);
+STATIC_ASSERT(offsetof(Dll22CMapData, raiseMode) == 0x1C);
 STATIC_ASSERT(offsetof(Dll22CMapData, gameBit2) == 0x1E);
 STATIC_ASSERT(offsetof(Dll22CMapData, gameBit) == 0x20);
 
@@ -297,7 +297,7 @@ void dll_22C_init(int obj, char* p)
     state->gameBit = md->gameBit;
     state->gameBit2 = md->gameBit2;
     state->raiseHeight = md->raiseHeight;
-    state->raiseMode = md->unk1C;
+    state->raiseMode = md->raiseMode;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - 1228.0f;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DLL22C_OBJFLAG_HITDETECT_DISABLED;
 }
