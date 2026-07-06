@@ -688,7 +688,7 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-void siderepel_free(int x) { ObjGroup_RemoveObject(x, SIDEREPEL_OBJGROUP); }
+void siderepel_free(int obj) { ObjGroup_RemoveObject(obj, SIDEREPEL_OBJGROUP); }
 
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 
