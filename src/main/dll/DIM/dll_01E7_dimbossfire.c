@@ -76,9 +76,8 @@ STATIC_ASSERT(offsetof(DimbossfireState, light) == 0x10);
 STATIC_ASSERT(offsetof(DimbossfirePlacement, flameColor) == 0x1A);
 STATIC_ASSERT(offsetof(DimbossfirePlacement, triggerGameBit) == 0x20);
 
-void dimbossfire_hitDetect(void)
-{
-}
+int dimbossfire_getExtraSize(void) { return 0x14; }
+int dimbossfire_getObjectTypeId(void) { return 0x0; }
 
 void dimbossfire_free(int obj)
 {
@@ -98,9 +97,9 @@ void dimbossfire_free(int obj)
 
 void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-int dimbossfire_getExtraSize(void) { return 0x14; }
-int dimbossfire_getObjectTypeId(void) { return 0x0; }
-
+void dimbossfire_hitDetect(void)
+{
+}
 
 void dimbossfire_update(int obj)
 {
