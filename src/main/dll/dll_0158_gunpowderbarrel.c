@@ -1117,8 +1117,8 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     f32 scale;
     f32 rate;
     f32 dy;
-    int v;
-    int w;
+    int rotYMode;
+    int rotZMode;
     char* player;
     char* near;
     f32 radius = lbl_803E42E0;
@@ -1169,33 +1169,33 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     }
     ((GameObject*)obj)->anim.velocityX = dx * rate;
     ((GameObject*)obj)->anim.velocityZ = dz * rate;
-    v = a;
-    if (v != 0)
+    rotYMode = a;
+    if (rotYMode != 0)
     {
         f32 t;
-        if (v == 1)
+        if (rotYMode == 1)
         {
             t = gGunpowderBarrelAngleUnit - (f32)(u16)((GameObject*)obj)->anim.rotY;
             t = t * rate;
         }
         else
         {
-            t = (f32)(u16)((GameObject*)obj)->anim.rotY * (rate * v);
+            t = (f32)(u16)((GameObject*)obj)->anim.rotY * (rate * rotYMode);
         }
         ((GameObject*)obj)->anim.rotY = (f32)((GameObject*)obj)->anim.rotY + t;
     }
-    w = b;
-    if (w != 0)
+    rotZMode = b;
+    if (rotZMode != 0)
     {
         f32 t;
-        if (w == 1)
+        if (rotZMode == 1)
         {
             t = 0.0f;
         }
         else
         {
             t = (f32)(u16)((GameObject*)obj)->anim.rotZ;
-            t = t * (rate * w);
+            t = t * (rate * rotZMode);
         }
         ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ + t;
     }
