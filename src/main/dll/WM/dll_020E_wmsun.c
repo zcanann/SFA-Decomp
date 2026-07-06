@@ -334,9 +334,9 @@ void wmsun_update(int obj)
     s16 mult;
     f32 spd;
     ObjTextureRuntimeSlot* t;
-    s8 c;
-    u8 b;
-    s16 v;
+    s8 bank;
+    u8 curAlpha;
+    s16 newAlpha;
 
     objAnim = (ObjAnimComponent*)obj;
     thresh = 0;
@@ -419,16 +419,16 @@ void wmsun_update(int obj)
             /* v is only set when b < 0xfa - retail-faithful shape (at
                b >= 0xfa the clamp-and-store is effectively a no-op);
                same pattern in the fades below. Do not "fix". */
-            b = objAnim->alpha;
-            if (b < 0xfa)
+            curAlpha = objAnim->alpha;
+            if (curAlpha < 0xfa)
             {
-                v = b + framesThisStep;
+                newAlpha = curAlpha + framesThisStep;
             }
-            if (v > 0xfa)
+            if (newAlpha > 0xfa)
             {
-                v = 0xfa;
+                newAlpha = 0xfa;
             }
-            objAnim->alpha = v;
+            objAnim->alpha = newAlpha;
             t = objFindTexture((void*)obj, 0, 0);
             if (t != NULL)
             {
@@ -443,42 +443,42 @@ void wmsun_update(int obj)
     }
     if (GameBit_Get(0x38f) != 0)
     {
-        c = objAnim->bankIndex;
-        if (c == 0 && (b = objAnim->alpha) != 0xff)
+        bank = objAnim->bankIndex;
+        if (bank == 0 && (curAlpha = objAnim->alpha) != 0xff)
         {
-            if (b < 0xff)
+            if (curAlpha < 0xff)
             {
-                v = b + framesThisStep;
+                newAlpha = curAlpha + framesThisStep;
             }
-            if (v > 0xff)
+            if (newAlpha > 0xff)
             {
-                v = 0xff;
+                newAlpha = 0xff;
             }
-            objAnim->alpha = v;
+            objAnim->alpha = newAlpha;
         }
-        else if (c == 1 && (b = objAnim->alpha) != 0x55)
+        else if (bank == 1 && (curAlpha = objAnim->alpha) != 0x55)
         {
-            if (b < 0x55)
+            if (curAlpha < 0x55)
             {
-                v = b + framesThisStep;
+                newAlpha = curAlpha + framesThisStep;
             }
-            if (v > 0x55)
+            if (newAlpha > 0x55)
             {
-                v = 0x55;
+                newAlpha = 0x55;
             }
-            objAnim->alpha = v;
+            objAnim->alpha = newAlpha;
         }
-        else if (c == 2 && (b = objAnim->alpha) != 0x19)
+        else if (bank == 2 && (curAlpha = objAnim->alpha) != 0x19)
         {
-            if (b < 0x19)
+            if (curAlpha < 0x19)
             {
-                v = b + framesThisStep;
+                newAlpha = curAlpha + framesThisStep;
             }
-            if (v > 0x19)
+            if (newAlpha > 0x19)
             {
-                v = 0x19;
+                newAlpha = 0x19;
             }
-            objAnim->alpha = v;
+            objAnim->alpha = newAlpha;
         }
         if (objAnim->bankIndex == 0)
         {
@@ -552,8 +552,8 @@ void wmsun_init(int obj, int params)
     ObjAnimComponent* objAnim;
     WmSunState* state = ((GameObject*)obj)->extra;
     WmSunMapData* mapData;
-    u8 c;
-    int c2;
+    u8 mapAct;
+    int bank;
     int j;
     s16 i;
     s16 mode;
@@ -561,8 +561,8 @@ void wmsun_init(int obj, int params)
     objAnim = (ObjAnimComponent*)obj;
     mapData = (WmSunMapData*)params;
     ((GameObject*)obj)->animEventCallback = wmsun_SeqFn;
-    c = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
-    if (c == 3 && GameBit_Get(0x21b) == 0)
+    mapAct = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
+    if (mapAct == 3 && GameBit_Get(0x21b) == 0)
     {
         GameBit_Set(0x21b, 1);
     }
@@ -599,18 +599,18 @@ void wmsun_init(int obj, int params)
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24;
         }
         *(u8*)&objAnim->bankIndex = mapData->bankIndex;
-        c2 = objAnim->bankIndex;
-        if (c2 == 0)
+        bank = objAnim->bankIndex;
+        if (bank == 0)
         {
             state->riseStep = randomGetRange(300, 600);
             state->spinStep = randomGetRange(300, 600);
         }
-        else if (c2 == 1)
+        else if (bank == 1)
         {
             state->riseStep = randomGetRange(500, 800);
             state->spinStep = randomGetRange(500, 800);
         }
-        else if (c2 == 2)
+        else if (bank == 2)
         {
             state->riseStep = randomGetRange(700, 1000);
             state->spinStep = randomGetRange(700, 1000);
