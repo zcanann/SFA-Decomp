@@ -3,8 +3,8 @@
  * statue. While its loop game bit and 0xedf are set it runs trigger
  * sequence 0 and keeps a looped object sound alive; once stateFlags is
  * raised it runs sequence 1 and stops. A stop timer clears one of a set
- * of related game bits per loopSfxId. The DLL also exports the perchwitch
- * stub descriptor as a sibling object.
+ * of related game bits per loopSfxId. The DLL's descriptors (and the
+ * perchwitch stub sibling) live in dll_0234_dfpperchsw.
  */
 #include "main/dll/crate2.h"
 #include "main/gamebits.h"
@@ -108,32 +108,7 @@ void dfpstatue1_initialise(void)
 {
 }
 
-ObjectDescriptor gDfpstatue1ObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)dfpstatue1_initialise,
-    (ObjectDescriptorCallback)dfpstatue1_release,
-    0,
-    (ObjectDescriptorCallback)dfpstatue1_init,
-    (ObjectDescriptorCallback)dfpstatue1_update,
-    (ObjectDescriptorCallback)dfpstatue1_hitDetect,
-    (ObjectDescriptorCallback)dfpstatue1_render,
-    (ObjectDescriptorCallback)dfpstatue1_free,
-    (ObjectDescriptorCallback)dfpstatue1_getObjectTypeId,
-    dfpstatue1_getExtraSize,
-};
-
-ObjectDescriptor gDfperchwitchObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)dfperchwitch_initialise,
-    (ObjectDescriptorCallback)dfperchwitch_release,
-    0,
-    (ObjectDescriptorCallback)dfperchwitch_init,
-    (ObjectDescriptorCallback)dfperchwitch_update,
-    (ObjectDescriptorCallback)dfperchwitch_hitDetect,
-    (ObjectDescriptorCallback)dfperchwitch_render,
-    (ObjectDescriptorCallback)dfperchwitch_free,
-    (ObjectDescriptorCallback)dfperchwitch_getObjectTypeId,
-    dfperchwitch_getExtraSize,
-};
-
-char sDfperchwitchInitNoLongerSupported[] = "<dfperchwitch Init>No Longer supported \n";
+/* gDfpstatue1ObjDescriptor / gDfperchwitchObjDescriptor /
+ * sDfperchwitchInitNoLongerSupported live in the sibling unit
+ * dll_0234_dfpperchsw in retail (its target obj defines all three at
+ * identical offsets 0x00/0x38/0x70); this unit has no .data section. */
