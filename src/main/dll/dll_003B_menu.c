@@ -20,7 +20,10 @@
 #include "main/pad.h"
 #include "main/sfa_shared_decls.h"
 
+#define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
+#define PAD_BUTTON_START 0x1000
+#define PAD_ACCEPT_MASK (PAD_BUTTON_A | PAD_BUTTON_START)
 
 extern s8 lbl_803DD8F0;   /* item count */
 extern s16 lbl_803DD8F2;  /* accumulated item width */
@@ -80,7 +83,7 @@ int Menu_func08(int* sel)
     if (lbl_803DD8E8 != 0)
     {
         input = getButtonsJustPressed(0);
-        if (((input & 0x1100) != 0) && (mainGetBit(0x44F) == 0))
+        if (((input & PAD_ACCEPT_MASK) != 0) && (mainGetBit(0x44F) == 0))
         {
             return lbl_803DD8F5;
         }
