@@ -1808,8 +1808,7 @@ void initFn_8006d020(void)
             {
                 f32 o1, o2;
                 int hi, lo;
-                int dst = gNewShadowNoiseTexFrames[tex] + lowoff;
-                dst += rowoff;
+                int dst = gNewShadowNoiseTexFrames[tex] + lowoff + rowoff;
                 dst += (col & 3) * 8;
                 dst += (col >> 2) * 0x200;
                 fn_8006CD20(row * Yachuff_803DEDE0,
