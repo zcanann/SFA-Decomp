@@ -868,20 +868,20 @@ extern u8 framesThisStep;
 void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
 {
     u32 a, b, c;
-    u32 v;
-    int r;
+    u32 flags;
+    int roll;
     int flag2;
 
-    v = node[0];
-    a = v & 0x80000;
-    b = v & 0x40000;
-    c = v & 0x20000;
+    flags = node[0];
+    a = flags & 0x80000;
+    b = flags & 0x40000;
+    c = flags & 0x20000;
     if (c != 0)
     {
         if (b == 0)
         {
-            r = randomGetRange(0, 0x3e8);
-            if (r > 0x3d9)
+            roll = randomGetRange(0, 0x3e8);
+            if (roll > 0x3d9)
             {
                 node[0] &= ~0x80000LL;
                 node[0] |= 0x40000LL;
