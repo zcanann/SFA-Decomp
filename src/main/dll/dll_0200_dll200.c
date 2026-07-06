@@ -48,12 +48,12 @@ void fn_801F20D4(int obj)
     extern f32 lbl_803E5D9C;
     extern f32 gArwingAttachmentU32ToDoubleBias;
 
-    int sub;
-    IntVec3 stk;
+    int state;
+    IntVec3 itemSet;
 
-    sub = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
-    stk = *(IntVec3*)gArwingAttachmentItemSetIdle;
+    itemSet = *(IntVec3*)gArwingAttachmentItemSetIdle;
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= INTERACT_FLAG_DISABLED;
@@ -79,15 +79,15 @@ void fn_801F20D4(int obj)
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && GameBit_Get(763) == 0)
     {
         GameBit_Set(763, 1);
-        *(u8*)&((Dll200State*)sub)->counter27 = 0;
+        *(u8*)&((Dll200State*)state)->counter27 = 0;
         buttonDisable(0, PAD_BUTTON_A);
     }
     else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
     {
-        if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&stk, 3) > -1)
+        if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&itemSet, 3) > -1)
         {
             GameBit_Set(784, 1);
-            *(u8*)&((Dll200State*)sub)->counter27 += 1;
+            *(u8*)&((Dll200State*)state)->counter27 += 1;
             buttonDisable(0, PAD_BUTTON_A);
         }
     }
@@ -102,22 +102,22 @@ void fn_801F27E4(int obj)
     extern f32 lbl_803E5D9C;
     extern f32 gArwingAttachmentU32ToDoubleBias;
 
-    int sub;
+    int state;
 
-    sub = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.currentMove != 2)
     {
         ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
         (obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
-    ((Dll200State*)sub)->latch24 = 1;
-    if (((Dll200State*)sub)->latch24 == 0)
+    ((Dll200State*)state)->latch24 = 1;
+    if (((Dll200State*)state)->latch24 == 0)
     {
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             GameBit_Set(208, 1);
-            ((Dll200State*)sub)->latch24 = 1;
+            ((Dll200State*)state)->latch24 = 1;
             buttonDisable(0, PAD_BUTTON_A);
         }
     }
@@ -129,7 +129,7 @@ void fn_801F27E4(int obj)
             Obj_GetPlayerObject();
             if (fn_80296A14() > 0)
             {
-                ((Dll200State*)sub)->mode25 = 2;
+                ((Dll200State*)state)->mode25 = 2;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
                 buttonDisable(0, PAD_BUTTON_A);
             }
@@ -137,7 +137,7 @@ void fn_801F27E4(int obj)
             {
                 if (GameBit_Get(177) == 0 || GameBit_Get(178) == 0 || GameBit_Get(179) == 0)
                 {
-                    ((Dll200State*)sub)->mode25 = 1;
+                    ((Dll200State*)state)->mode25 = 1;
                     (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                     buttonDisable(0, PAD_BUTTON_A);
                 }
@@ -188,24 +188,24 @@ int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
 
 void dll_200_init(int* obj, int* arg)
 {
-    Dll200State* b;
+    Dll200State* state;
     ((GameObject*)obj)->unkF4 = 0;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)*(s8*)((char*)arg + 0x18) << 8);
     ((GameObject*)obj)->animEventCallback = dll_200_SeqFn;
-    b = ((GameObject*)obj)->extra;
-    b->defNoLow = (u8)*(s16*)arg;
-    b->unk1C = 0;
-    b->unk18 = 0;
-    b->homeX = *(f32*)((char*)arg + 0x8);
-    b->homeY = *(f32*)((char*)arg + 0xc);
-    b->homeZ = *(f32*)((char*)arg + 0x10);
-    b->latch24 = GameBit_Get(0xd0);
-    b->counter27 = 0;
-    b->mode = 1;
-    b->prevMode = 0xc;
-    b->modeTimer = 0x12c;
-    b->animSpeed = lbl_803E5D98;
-    b->unk14 = lbl_803E5DC0;
+    state = ((GameObject*)obj)->extra;
+    state->defNoLow = (u8)*(s16*)arg;
+    state->unk1C = 0;
+    state->unk18 = 0;
+    state->homeX = *(f32*)((char*)arg + 0x8);
+    state->homeY = *(f32*)((char*)arg + 0xc);
+    state->homeZ = *(f32*)((char*)arg + 0x10);
+    state->latch24 = GameBit_Get(0xd0);
+    state->counter27 = 0;
+    state->mode = 1;
+    state->prevMode = 0xc;
+    state->modeTimer = 0x12c;
+    state->animSpeed = lbl_803E5D98;
+    state->unk14 = lbl_803E5DC0;
 }
 
 int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
@@ -301,19 +301,19 @@ void dll_200_update(int obj)
     extern f32 lbl_803E5D9C;
     u8 ev;
     u8 ret;
-    Dll200State* b;
+    Dll200State* state;
 
-    b = ((GameObject*)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     ret = ObjHitReact_Update(obj, gArwingAttachmentHitReactTable, 11,
-                             (u8)((b->mode & DLL200_MODE_HITREACTING) ? 1 : 0),
-                             &b->hitReactVec);
+                             (u8)((state->mode & DLL200_MODE_HITREACTING) ? 1 : 0),
+                             &state->hitReactVec);
     if (ret != 0)
     {
-        b->mode = (u8)(b->mode | DLL200_MODE_HITREACTING);
+        state->mode = (u8)(state->mode | DLL200_MODE_HITREACTING);
     }
     else
     {
-        b->mode = (u8)(b->mode & ~DLL200_MODE_HITREACTING);
+        state->mode = (u8)(state->mode & ~DLL200_MODE_HITREACTING);
         ev = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
         switch (ev)
         {
@@ -362,29 +362,29 @@ void fn_801F2290(int obj)
     extern f32 lbl_803E5DAC;
     extern f32 lbl_803E5DB0;
     extern f32 lbl_803E5DB4;
-    Dll200State* b;
-    u8 m;
+    Dll200State* state;
+    u8 mode;
     s16 ang;
     s16 diff;
     f32 dx;
     f32 dy;
     f32 dist;
     f32 spd;
-    IntVec3 stk;
+    IntVec3 itemSet;
     ObjAnimEventList animEvents;
 
-    b = ((GameObject*)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
-    stk = *(IntVec3*)gArwingAttachmentItemSetWander;
-    ((GameObject*)obj)->anim.localPosY = b->homeY;
+    itemSet = *(IntVec3*)gArwingAttachmentItemSetWander;
+    ((GameObject*)obj)->anim.localPosY = state->homeY;
     if (GameBit_Get(0x1fc) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
-            (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&stk, 3) > -1)
+            (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&itemSet, 3) > -1)
         {
             GameBit_Set(0x4d1, 1);
-            b->counter27 += 1;
+            state->counter27 += 1;
             GameBit_Set(0x310, 1);
             buttonDisable(0, PAD_BUTTON_A);
         }
@@ -392,44 +392,44 @@ void fn_801F2290(int obj)
     else
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-        if (b->modeTimer <= 0)
+        if (state->modeTimer <= 0)
         {
             switch (randomGetRange(1, 4))
             {
             case 1:
-                b->prevMode = b->mode;
-                b->mode = 1;
-                b->modeTimer = 400;
+                state->prevMode = state->mode;
+                state->mode = 1;
+                state->modeTimer = 400;
                 break;
             case 2:
-                b->prevMode = b->mode;
-                b->mode = 2;
-                b->modeTimer = 400;
+                state->prevMode = state->mode;
+                state->mode = 2;
+                state->modeTimer = 400;
                 break;
             case 3:
-                b->prevMode = b->mode;
-                b->mode = 3;
-                b->modeTimer = 400;
+                state->prevMode = state->mode;
+                state->mode = 3;
+                state->modeTimer = 400;
                 break;
             case 4:
-                b->prevMode = b->mode;
-                b->mode = 4;
-                b->modeTimer = 400;
+                state->prevMode = state->mode;
+                state->mode = 4;
+                state->modeTimer = 400;
                 break;
             case 5:
-                b->prevMode = b->mode;
-                b->mode = 5;
-                b->modeTimer = 400;
+                state->prevMode = state->mode;
+                state->mode = 5;
+                state->modeTimer = 400;
                 break;
             }
         }
         else
         {
-            m = b->mode;
-            if (m == 12)
+            mode = state->mode;
+            if (mode == 12)
             {
-                ang = getAngle(gArwingAttachmentTargets[b->prevMode].x,
-                               gArwingAttachmentTargets[b->prevMode].y);
+                ang = getAngle(gArwingAttachmentTargets[state->prevMode].x,
+                               gArwingAttachmentTargets[state->prevMode].y);
                 diff = (s16)(ang - ((GameObject*)obj)->anim.rotX);
                 fn_80137948(sArwingAttachmentDiffFormat, diff);
                 if (diff < -1000 || diff > 1000)
@@ -445,36 +445,36 @@ void fn_801F2290(int obj)
                 }
                 else
                 {
-                    ObjAnim_SetCurrentMove(obj, gArwingAttachmentTargets[b->prevMode].moveId,
+                    ObjAnim_SetCurrentMove(obj, gArwingAttachmentTargets[state->prevMode].moveId,
                                            lbl_803E5D98, 0);
-                    b->animSpeed = gArwingAttachmentTargets[b->prevMode].speed;
-                    b->mode = 13;
+                    state->animSpeed = gArwingAttachmentTargets[state->prevMode].speed;
+                    state->mode = 13;
                 }
             }
-            else if (m == 13)
+            else if (mode == 13)
             {
                 if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-                    (obj, b->animSpeed, timeDelta, &animEvents) != 0)
+                    (obj, state->animSpeed, timeDelta, &animEvents) != 0)
                 {
                     if ((f32)(int)((GameObject*)obj)->anim.currentMove ==
-                        gArwingAttachmentTargets[b->prevMode].moveId)
+                        gArwingAttachmentTargets[state->prevMode].moveId)
                     {
                         ObjAnim_SetCurrentMove(obj,
-                                               gArwingAttachmentTargets[b->prevMode].altMoveId,
+                                               gArwingAttachmentTargets[state->prevMode].altMoveId,
                                                lbl_803E5D98, 0);
-                        b->animSpeed = gArwingAttachmentTargets[b->prevMode].speed;
+                        state->animSpeed = gArwingAttachmentTargets[state->prevMode].speed;
                     }
                 }
-                b->modeTimer -= framesThisStep;
-                if (b->modeTimer <= 0)
+                state->modeTimer -= framesThisStep;
+                if (state->modeTimer <= 0)
                 {
-                    b->modeTimer = 0;
+                    state->modeTimer = 0;
                 }
             }
             else
             {
-                dx = gArwingAttachmentTargets[m].x - (((GameObject*)obj)->anim.localPosX - b->homeX);
-                dy = gArwingAttachmentTargets[m].y - (((GameObject*)obj)->anim.localPosZ - b->homeZ);
+                dx = gArwingAttachmentTargets[mode].x - (((GameObject*)obj)->anim.localPosX - state->homeX);
+                dy = gArwingAttachmentTargets[mode].y - (((GameObject*)obj)->anim.localPosZ - state->homeZ);
                 dist = sqrtf(dx * dx + dy * dy);
                 ang = getAngle(dx, dy);
                 diff = (s16)(ang - ((GameObject*)obj)->anim.rotX);
@@ -483,20 +483,20 @@ void fn_801F2290(int obj)
                     if (((GameObject*)obj)->anim.currentMove != 59)
                     {
                         ObjAnim_SetCurrentMove(obj, 59, lbl_803E5D98, 0);
-                        b->animSpeed = lbl_803E5DA8;
+                        state->animSpeed = lbl_803E5DA8;
                     }
                     spd = lbl_803E5DAC;
                     ((GameObject*)obj)->anim.velocityX = spd * (dx / dist);
                     ((GameObject*)obj)->anim.velocityZ = spd * (dy / dist);
                     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)
-                        (obj, spd, &b->animSpeed);
+                        (obj, spd, &state->animSpeed);
                 }
                 else
                 {
                     if (((GameObject*)obj)->anim.currentMove != 12)
                     {
                         ObjAnim_SetCurrentMove(obj, 12, lbl_803E5D98, 0);
-                        b->animSpeed = lbl_803E5DB0;
+                        state->animSpeed = lbl_803E5DB0;
                     }
                     if (diff > 0)
                     {
@@ -509,8 +509,8 @@ void fn_801F2290(int obj)
                 }
                 if (dist < lbl_803E5DB4)
                 {
-                    b->prevMode = b->mode;
-                    b->mode = 12;
+                    state->prevMode = state->mode;
+                    state->mode = 12;
                     spd = lbl_803E5D98;
                     ((GameObject*)obj)->anim.velocityX = spd;
                     ((GameObject*)obj)->anim.velocityZ = spd;
@@ -520,7 +520,7 @@ void fn_801F2290(int obj)
                 ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)
                     ->anim.localPosZ;
                 ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-                    (obj, b->animSpeed, timeDelta, &animEvents);
+                    (obj, state->animSpeed, timeDelta, &animEvents);
             }
         }
     }
