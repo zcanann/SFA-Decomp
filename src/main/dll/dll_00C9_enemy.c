@@ -49,7 +49,7 @@ typedef struct BaddieAfterUpdateBonesCbState
     u8 unk2F3;
     u8 unk2F4;
     u8 pad2F5[0x36C - 0x2F5];
-    s32 unk36C;
+    s32 tailBoneChain; /* 0x36C: bone chain passed to playerTailFn_80026b3c for tail sim */
 } BaddieAfterUpdateBonesCbState;
 
 extern int ObjGroup_FindNearestObject();
@@ -705,10 +705,10 @@ void baddieAfterUpdateBonesCb(int obj, int* bones)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x7C8:
-        playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->unk36C, fn_8015983C);
+        playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain, fn_8015983C);
         break;
     default:
-        playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->unk36C, NULL);
+        playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain, NULL);
         break;
     }
 }
