@@ -5325,9 +5325,9 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
     GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C, 0, 3, 9, 6, 6, 1, 0, 0);
     GXSetTevIndirect(lbl_803DCD90 + 2, lbl_803DCD7C, 0, 0, 0, 0, 0, 1, 0, 0);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, (lbl_803DCD8C + 1) | 0x100, GX_COLOR_NULL);
-    GXSetTevOp(lbl_803DCD90, 4);
+    GXSetTevOp(lbl_803DCD90, GX_PASSCLR);
     GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, (lbl_803DCD8C + 1) | 0x100, GX_COLOR_NULL);
-    GXSetTevOp(lbl_803DCD90 + 1, 4);
+    GXSetTevOp(lbl_803DCD90 + 1, GX_PASSCLR);
     texmap = lbl_803DCD8C;
     if (p1 != 0)
     {
