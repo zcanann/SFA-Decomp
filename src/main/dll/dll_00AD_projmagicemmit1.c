@@ -26,5 +26,12 @@ void projmagicemmit1_initialise(void)
 char sProjmagicemmit1DoNoLongerSupported[] = "<projmagicemmit1 Do>No Longer supported \n";
 
 /*__DATA_EXTERNS__*/
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* lbl_80319460[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projroombeam_initialise, projroombeam_release, (void*)0x00000000, projroombeam_doUnsupported };
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs).
+ * Union u64 member forces the retail 8-byte alignment (table follows an odd-length
+ * string; retail pads to an 8-aligned table start). Same idiom as dll_000A_expgfx. */
+typedef union DllDescriptorTable {
+    void* ptrs[8];
+    u64 align8;
+} DllDescriptorTable;
+
+DllDescriptorTable lbl_80319460 = { { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projroombeam_initialise, projroombeam_release, (void*)0x00000000, projroombeam_doUnsupported } };
