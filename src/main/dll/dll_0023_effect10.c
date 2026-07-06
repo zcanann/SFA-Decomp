@@ -196,7 +196,7 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         break;
     case 0x32e:
         {
-            u16 c;
+            u16 color;
 
             p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
             p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(0xa, 0x50);
@@ -211,9 +211,9 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
             p.srcZ = (f32)(int)randomGetRange(0xe6, 0x320);
             p.flagsB = 0x1000020;
             p.flagsA = 0x86000008;
-            c = randomGetRange(0x8000, 0xffff);
-            p.colD = c;
-            p.colA = c;
+            color = randomGetRange(0x8000, 0xffff);
+            p.colD = color;
+            p.colA = color;
             p.colB = p.colE = 0xffff;
             p.colC = p.colF = 0xffff;
             p.kind = 0x3a3;
@@ -258,22 +258,22 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         break;
     case 0x336:
         {
-            f32 w;
+            f32 scale;
 
             if (p6 != NULL)
             {
-                w = *p6;
+                scale = *p6;
             }
             else
             {
-                w = 1.0f;
+                scale = 1.0f;
             }
-            p.posX = w * (f32)(int)randomGetRange(-10, 10);
-            p.posY = w * (f32)(int)randomGetRange(-10, 10);
-            p.posZ = w * (f32)(int)randomGetRange(-10, 10);
-            p.velX = w * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
-            p.velY = w * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
-            p.velZ = w * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
+            p.posX = scale * (f32)(int)randomGetRange(-10, 10);
+            p.posY = scale * (f32)(int)randomGetRange(-10, 10);
+            p.posZ = scale * (f32)(int)randomGetRange(-10, 10);
+            p.velX = scale * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
+            p.velY = scale * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
+            p.velZ = scale * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
             p.scale = lbl_803DFF08 * (f32)(int)randomGetRange(8, 10);
             p.count = 0x50;
             p.flagsA = 0x80480404;
@@ -504,7 +504,7 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         break;
     case 0x34d:
         {
-            u16 c;
+            u16 color;
 
             p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
             p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(10, 0x50);
@@ -519,21 +519,21 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
             p.srcZ = (f32)(int)randomGetRange(0xe6, 0x320);
             p.flagsB = 0x1000020;
             p.flagsA = 0x86000008;
-            c = randomGetRange(0, 0x2ee0) + 0x3caf;
-            p.colD = c;
-            p.colA = c;
-            c = p.colA - randomGetRange(0, 0x2710);
-            p.colE = c;
-            p.colB = c;
-            c = p.colA - randomGetRange(0x2710, 0x3caf);
-            p.colF = c;
-            p.colC = c;
+            color = randomGetRange(0, 0x2ee0) + 0x3caf;
+            p.colD = color;
+            p.colA = color;
+            color = p.colA - randomGetRange(0, 0x2710);
+            p.colE = color;
+            p.colB = color;
+            color = p.colA - randomGetRange(0x2710, 0x3caf);
+            p.colF = color;
+            p.colC = color;
             p.kind = 0x3a3;
             break;
         }
     case 0x34e:
         {
-            u16 c;
+            u16 color;
 
             p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
             p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(10, 0x50);
@@ -549,14 +549,14 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
             p.srcZ = (f32)(int)randomGetRange(0xe6, 0x320);
             p.flagsB = 0x1000020;
             p.flagsA = 0x86000008;
-            c = randomGetRange(0, 0x2ee0) + 0x3caf;
-            p.colD = c;
-            p.colA = c;
+            color = randomGetRange(0, 0x2ee0) + 0x3caf;
+            p.colD = color;
+            p.colA = color;
             p.colE = 0x7530;
             p.colB = 0x7530;
-            c = p.colA - randomGetRange(0x2710, 0x3caf);
-            p.colF = c;
-            p.colC = c;
+            color = p.colA - randomGetRange(0x2710, 0x3caf);
+            p.colF = color;
+            p.colC = color;
             p.kind = 0x3a3;
             break;
         }
