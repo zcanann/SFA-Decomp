@@ -53,23 +53,6 @@ STATIC_ASSERT(offsetof(AndrossBrainState, health) == 0x1E);
 STATIC_ASSERT(offsetof(AndrossBrainState, flashTimer) == 0x1F);
 
 
-int androssbrain_getExtraSize(void) { return 0x28; }
-
-int androssbrain_getObjectTypeId(void) { return 0; }
-
-void androssbrain_free(void)
-{
-}
-
-void androssbrain_render(int obj, int p2, int p3, int p4, int p5)
-{
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7600);
-}
-
-void androssbrain_hitDetect(void)
-{
-}
-
 void androssbrain_setState(int obj, int newState, u8 force)
 {
     AndrossBrainState* state;
@@ -93,12 +76,21 @@ void androssbrain_setState(int obj, int newState, u8 force)
     }
 }
 
-void androssbrain_init(int obj)
-{
-    AndrossBrainState* state = ((GameObject*)obj)->extra;
+int androssbrain_getExtraSize(void) { return 0x28; }
 
-    state->health = BRAIN_MAX_HEALTH;
-    ObjHits_SetTargetMask(obj, 4);
+int androssbrain_getObjectTypeId(void) { return 0; }
+
+void androssbrain_free(void)
+{
+}
+
+void androssbrain_render(int obj, int p2, int p3, int p4, int p5)
+{
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7600);
+}
+
+void androssbrain_hitDetect(void)
+{
 }
 
 #pragma opt_common_subs off
@@ -192,4 +184,13 @@ void androssbrain_update(int obj)
     }
 }
 #pragma opt_common_subs reset
+
+void androssbrain_init(int obj)
+{
+    AndrossBrainState* state = ((GameObject*)obj)->extra;
+
+    state->health = BRAIN_MAX_HEALTH;
+    ObjHits_SetTargetMask(obj, 4);
+}
+
 
