@@ -284,27 +284,27 @@ void invhit_update(int* obj)
             {
                 f32 dx;
                 f32 dz;
-                f32 k;
+                f32 smoothTime;
                 f32 qt;
-                f32 d;
+                f32 dist;
 
                 if (ObjList_ContainsObject((int)targetObj) == 0) break;
                 dx = ((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
                 dz = ((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-                k = lbl_803E35EC;
-                qt = dx / k;
+                smoothTime = lbl_803E35EC;
+                qt = dx / smoothTime;
                 ((GameObject*)obj)->anim.localPosX = qt * timeDelta + ((GameObject*)obj)->anim.localPosX;
-                qt = dz / k;
+                qt = dz / smoothTime;
                 ((GameObject*)obj)->anim.localPosZ = qt * timeDelta + ((GameObject*)obj)->anim.localPosZ;
                 dx = ((GameObject*)targetObj)->anim.localPosX - state->anchorX;
                 dz = ((GameObject*)targetObj)->anim.localPosZ - state->anchorZ;
                 reach = lbl_803E35F0 + sqrtf(dx * dx + dz * dz);
                 dx2 = ((GameObject*)obj)->anim.localPosX - state->anchorX;
                 dz2 = ((GameObject*)obj)->anim.localPosZ - state->anchorZ;
-                d = sqrtf(dx2 * dx2 + dz2 * dz2);
-                if (d > reach)
+                dist = sqrtf(dx2 * dx2 + dz2 * dz2);
+                if (dist > reach)
                 {
-                    f32 r = reach / d;
+                    f32 r = reach / dist;
                     dx2 = dx2 * r;
                     dz2 = dz2 * r;
                     ((GameObject*)obj)->anim.localPosX = state->anchorX + dx2;
