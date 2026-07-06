@@ -91,9 +91,63 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 
 void fn_801F9804(int obj);
 
+/* Advance the ordered spell-tablet puzzle. The four step bits must be
+   set in array order; the next-expected bit advances the step, any
+   later bit lighting early resets the whole puzzle. */
+#pragma dont_inline on
+void fn_801F9804(int obj)
+{
+    s16* p;
+    VfpLevelControlState* state = ((GameObject*)obj)->extra;
+    s16 bits[4];
+    s16 i;
+
+    if (state->latch.fields.sequenceStep < 4)
+    {
+        bits[0] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_0);
+        bits[1] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_1);
+        bits[2] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_2);
+        bits[3] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_3);
+        i = state->latch.fields.sequenceStep;
+        p = &bits[i];
+        for (; i < 4; i++)
+        {
+            if (i == state->latch.fields.sequenceStep)
+            {
+                if (*p != 0)
+                {
+                    state->latch.fields.sequenceStep++;
+                    if (state->latch.fields.sequenceStep == 4)
+                    {
+                        GameBit_Set(GAMEBIT_VFP_SEQ_DONE, 1);
+                    }
+                }
+            }
+            else if (*p != 0)
+            {
+                state->latch.fields.sequenceStep = 0;
+                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_0, 0);
+                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_1, 0);
+                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_2, 0);
+                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_3, 0);
+                break;
+            }
+            p++;
+        }
+    }
+}
+#pragma dont_inline reset
+
 int vfplevelcontrol_getExtraSize(void) { return 0x1c; }
 
 int vfplevelcontrol_getObjectTypeId(void) { return 0x0; }
+
+void vfplevelcontrol_free(int obj)
+{
+    timeOfDayFn_80055000();
+    ObjGroup_RemoveObject(obj, VFPLEVELCONTROL_OBJGROUP);
+    Music_Trigger(VFP_MUSIC_A, 0);
+}
 
 void vfplevelcontrol_render(void)
 {
@@ -177,22 +231,6 @@ void vfplevelcontrol_update(int obj)
     SCGameBitLatch_Update(state->latch.raw, 2, -1, -1, GAMEBIT_VFP_LATCH, VFP_MUSIC_B);
 }
 
-void vfplevelcontrol_release(void)
-{
-}
-
-void vfplevelcontrol_initialise(void)
-{
-    lbl_803DC148 = VFP_TIMER_INIT;
-}
-
-void vfplevelcontrol_free(int obj)
-{
-    timeOfDayFn_80055000();
-    ObjGroup_RemoveObject(obj, VFPLEVELCONTROL_OBJGROUP);
-    Music_Trigger(VFP_MUSIC_A, 0);
-}
-
 void vfplevelcontrol_init(int* obj, u8* init)
 {
     VfpLevelControlState* state = ((GameObject*)obj)->extra;
@@ -230,47 +268,11 @@ void vfplevelcontrol_init(int* obj, u8* init)
     }
 }
 
-/* Advance the ordered spell-tablet puzzle. The four step bits must be
-   set in array order; the next-expected bit advances the step, any
-   later bit lighting early resets the whole puzzle. */
-void fn_801F9804(int obj)
+void vfplevelcontrol_release(void)
 {
-    s16* p;
-    VfpLevelControlState* state = ((GameObject*)obj)->extra;
-    s16 bits[4];
-    s16 i;
+}
 
-    if (state->latch.fields.sequenceStep < 4)
-    {
-        bits[0] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_0);
-        bits[1] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_1);
-        bits[2] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_2);
-        bits[3] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_3);
-        i = state->latch.fields.sequenceStep;
-        p = &bits[i];
-        for (; i < 4; i++)
-        {
-            if (i == state->latch.fields.sequenceStep)
-            {
-                if (*p != 0)
-                {
-                    state->latch.fields.sequenceStep++;
-                    if (state->latch.fields.sequenceStep == 4)
-                    {
-                        GameBit_Set(GAMEBIT_VFP_SEQ_DONE, 1);
-                    }
-                }
-            }
-            else if (*p != 0)
-            {
-                state->latch.fields.sequenceStep = 0;
-                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_0, 0);
-                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_1, 0);
-                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_2, 0);
-                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_3, 0);
-                break;
-            }
-            p++;
-        }
-    }
+void vfplevelcontrol_initialise(void)
+{
+    lbl_803DC148 = VFP_TIMER_INIT;
 }
