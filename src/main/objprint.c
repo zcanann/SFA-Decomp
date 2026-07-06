@@ -2349,11 +2349,11 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     GXSetIndTexMtx(GX_ITM_0, &mtxA, (s8)lbl_803DB48C);
     GXSetTevIndirect(stage, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(stage, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-    GXSetTevSwapMode(stage, 0, 0);
-    GXSetTevColorIn(stage, 0xf, 0, 4, 0xf);
-    GXSetTevAlphaIn(stage, 7, 7, 7, 0);
-    GXSetTevColorOp(stage, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(stage, 0, 0, 0, 0, 0);
+    GXSetTevSwapMode(stage, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorIn(stage, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_ZERO);
+    GXSetTevAlphaIn(stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevColorOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
     if (*(void**)(rop + 0x38) != NULL)
     {
         selectTexture(textureIdxToPtr(*(int*)(rop + 0x38)), 2);
@@ -2378,21 +2378,21 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
     GXLoadTexMtxImm(mtx4, GX_PTTEXMTX0, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD4, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_TRUE, GX_PTTEXMTX0);
-    GXSetTevKColorSel(stage + 1, 4);
+    GXSetTevKColorSel(stage + 1, GX_TEV_KCSEL_1_2);
     if (*(void**)(rop + 0x38) != NULL)
     {
         GXSetTevOrder(stage + 1, GX_TEXCOORD4, GX_TEXMAP3, GX_ALPHA_BUMPN);
-        GXSetTevAlphaIn(stage + 1, 7, 4, 5, 0);
+        GXSetTevAlphaIn(stage + 1, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_APREV);
     }
     else
     {
         GXSetTevOrder(stage + 1, GX_TEXCOORD4, GX_TEXMAP3, GX_COLOR_NULL);
-        GXSetTevAlphaIn(stage + 1, 4, 7, 7, 0);
+        GXSetTevAlphaIn(stage + 1, GX_CA_TEXA, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
     }
-    GXSetTevColorIn(stage + 1, 8, 0xe, 0, 0);
-    GXSetTevSwapMode(stage + 1, 0, 0);
-    GXSetTevColorOp(stage + 1, 1, 1, 0, 1, 0);
-    GXSetTevAlphaOp(stage + 1, 0, 0, 0, 1, 0);
+    GXSetTevColorIn(stage + 1, GX_CC_TEXC, GX_CC_KONST, GX_CC_CPREV, GX_CC_CPREV);
+    GXSetTevSwapMode(stage + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(stage + 1, GX_TEV_SUB, GX_TB_ADDHALF, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(stage + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     if (fancy)
     {
         GXSetNumTevStages(5);
