@@ -24,10 +24,10 @@
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
+void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
-extern void fn_800D915C(int pos, int* obj, f32 fval, void* fnTable);
+void fn_800D915C(int pos, int* obj, f32 fval, void* fnTable);
 
 extern u32 gPlayerMoveSlowMoveId;
 extern u32 gPlayerMoveFastMoveId;
