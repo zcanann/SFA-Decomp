@@ -46,22 +46,6 @@ typedef struct Dll1FFSlots
 extern void ObjMsg_SendToObject(void* to, int msg, int obj, int param);
 extern const f32 lbl_803E5D80;
 
-void dll_1FF_free_nop(void)
-{
-}
-
-void dll_1FF_hitDetect_nop(void)
-{
-}
-
-void dll_1FF_release_nop(void)
-{
-}
-
-void dll_1FF_initialise_nop(void)
-{
-}
-
 int dll_1FF_getExtraSize_ret_8(void) { return 0x8; }
 
 int dll_1FF_getObjectTypeId(int* obj)
@@ -70,10 +54,8 @@ int dll_1FF_getObjectTypeId(int* obj)
     return 0x0;
 }
 
-void dll_1FF_init(s16* a, s8* b)
+void dll_1FF_free_nop(void)
 {
-    a[0] = (s16)((s32)b[0x18] << 8);
-    a[1] = -0x8000;
 }
 
 /* visible is -1 while held (unkF8 set), otherwise a 0/non-0 flag; gate
@@ -104,6 +86,10 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
         }
     }
     objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E5D80);
+}
+
+void dll_1FF_hitDetect_nop(void)
+{
 }
 
 void dll_1FF_update(int obj)
@@ -202,4 +188,18 @@ void dll_1FF_update(int obj)
                                 ((int)state->msgHi << 16) | ((int)state->msgLo & 0xffff));
         }
     }
+}
+
+void dll_1FF_init(s16* a, s8* b)
+{
+    a[0] = (s16)((s32)b[0x18] << 8);
+    a[1] = -0x8000;
+}
+
+void dll_1FF_release_nop(void)
+{
+}
+
+void dll_1FF_initialise_nop(void)
+{
 }
