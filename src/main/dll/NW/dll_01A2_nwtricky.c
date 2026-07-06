@@ -77,7 +77,7 @@ void nw_tricky_update(int* obj)
     int* ip;
     int* found;
     f32 dPlayer;
-    f32 t;
+    f32 timer;
     int i;
 
     state = ((GameObject*)obj)->extra;
@@ -128,10 +128,10 @@ void nw_tricky_update(int* obj)
                 }
 
                 ((NwTrickyState*)state)->timer += timeDelta;
-                t = ((NwTrickyState*)state)->timer;
-                if (t >= lbl_803E5264)
+                timer = ((NwTrickyState*)state)->timer;
+                if (timer >= lbl_803E5264)
                 {
-                    ((NwTrickyState*)state)->timer = t - lbl_803E5264;
+                    ((NwTrickyState*)state)->timer = timer - lbl_803E5264;
                     fn_80138920(tricky, 0x152, 0x1000);
                 }
             }
@@ -166,10 +166,10 @@ void nw_tricky_update(int* obj)
                 GameBit_Set(0x4e3, 0xff);
             }
         }
-        t = ((NwTrickyState*)state)->timer;
-        if (t >= lbl_803E5268)
+        timer = ((NwTrickyState*)state)->timer;
+        if (timer >= lbl_803E5268)
         {
-            ((NwTrickyState*)state)->timer = t - lbl_803E5268;
+            ((NwTrickyState*)state)->timer = timer - lbl_803E5268;
             if (GameBit_Get(0x4e3) == 0xff)
             {
                 if ((*gMapEventInterface)->getTrickyEnergy()[0] < 4)
