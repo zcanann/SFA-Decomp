@@ -159,9 +159,9 @@ extern void drawFn_8005cf8c(void* a, void* b, int count);
 
 /* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
 #pragma opt_propagation off
-void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
+void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
 {
-    BoneFxVtx s;
+    BoneFxVtx vtx;
     void** grp;
     s16 j;
     s16 k;
@@ -171,10 +171,10 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
     u8* mtx;
     u8* idp;
     u8* base;
-    f32* pa;
-    f32* pb;
-    f32* pc;
-    int* m;
+    f32* scaleA;
+    f32* scaleB;
+    f32* scaleC;
+    int* model;
     void** grp2;
     int slot;
     u8* jb;
@@ -188,14 +188,14 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
     {
         GameBit_Set(0x468, 0);
         gBoneParticleEffectTimer = 0xf;
-        Sfx_PlayFromObject(o, SFXsc_mumble01);
+        Sfx_PlayFromObject(obj, SFXsc_mumble01);
     }
-    m = Modgfx_GetActiveModel((void*)o);
+    model = Modgfx_GetActiveModel((void*)obj);
     if (gBoneParticleStageIndex > 6)
     {
         gBoneParticleStageIndex = 0;
     }
-    if (lbl_803DD2B0 > *(u8*)(*m + 0xf3) - 1)
+    if (lbl_803DD2B0 > *(u8*)(*model + 0xf3) - 1)
     {
         lbl_803DD2B0 = 0;
     }
@@ -209,13 +209,13 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
         gBoneParticleDrift = gBoneParticleDriftMax;
-        Sfx_PlayFromObject(o, SFXsc_mumble02);
+        Sfx_PlayFromObject(obj, SFXsc_mumble02);
     }
     else if (gBoneParticleDrift < gBoneParticleDriftMin)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
         gBoneParticleDrift = gBoneParticleDriftMin;
-        Sfx_PlayFromObject(o, SFXsc_mumble02);
+        Sfx_PlayFromObject(obj, SFXsc_mumble02);
     }
     slot = 0;
     grp2 = gBoneParticleEffectBuffers;
@@ -230,14 +230,14 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
             idp = base + 0x5b4;
             while (j < 5)
             {
-                s.vx = lbl_803DF4A8;
-                s.vy = lbl_803DF4A8;
-                s.vz = lbl_803DF4A8;
-                s.w = lbl_803DF4B8;
-                s.sz = 0;
-                s.sy = 0;
-                s.sx = 0;
-                jb = (u8*)m[(*(u16*)((u8*)m + 0x18) & 1) + 3];
+                vtx.vx = lbl_803DF4A8;
+                vtx.vy = lbl_803DF4A8;
+                vtx.vz = lbl_803DF4A8;
+                vtx.w = lbl_803DF4B8;
+                vtx.sz = 0;
+                vtx.sy = 0;
+                vtx.sx = 0;
+                jb = (u8*)model[(*(u16*)((u8*)model + 0x18) & 1) + 3];
                 {
                     u8* idr2 = base + gBoneParticleStageIndex * 5;
                     idr2 = idr2 + j;
@@ -247,9 +247,9 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                 dx = *(f32*)(mtx + 0x30) + playerMapOffsetX;
                 dy = *(f32*)(mtx + 0x34);
                 dz = *(f32*)(mtx + 0x38) + playerMapOffsetZ;
-                dx = dx - ((GameObject*)o)->anim.localPosX;
-                dy = dy - ((GameObject*)o)->anim.localPosY;
-                dz = dz - ((GameObject*)o)->anim.localPosZ;
+                dx = dx - ((GameObject*)obj)->anim.localPosX;
+                dy = dy - ((GameObject*)obj)->anim.localPosY;
+                dz = dz - ((GameObject*)obj)->anim.localPosZ;
                 dx = dx * lbl_803DF4BC;
                 if (id == 0x1d || id == 0x1d)
                 {
@@ -260,11 +260,11 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                     dy = dy * lbl_803DF4BC;
                 }
                 dz = dz * lbl_803DF4BC;
-                Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
+                Matrix_TransformPoint(mtx, vtx.vx, vtx.vy, vtx.vz, &vtx.vx, &vtx.vy, &vtx.vz);
                 k = 0;
-                pa = (f32*)(base + 0x90);
-                pb = (f32*)base;
-                pc = (f32*)(base + 0x120);
+                scaleA = (f32*)(base + 0x90);
+                scaleB = (f32*)base;
+                scaleC = (f32*)(base + 0x120);
                 while (k < 4)
                 {
                     u8* idr;
@@ -274,33 +274,33 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                     cls = idr[0x590];
                     if (cls == 0)
                     {
-                        s.vx = pa[0] * (sc = *(f32*)(base + id * 4 + 0x5d8));
-                        s.vy = pa[1] * sc;
-                        s.vz = pa[2] * *(f32*)(base + id * 4 + 0x664);
+                        vtx.vx = scaleA[0] * (sc = *(f32*)(base + id * 4 + 0x5d8));
+                        vtx.vy = scaleA[1] * sc;
+                        vtx.vz = scaleA[2] * *(f32*)(base + id * 4 + 0x664);
                     }
                     else if (cls == 1)
                     {
-                        s.vx = pb[0] * (sc = *(f32*)(base + id * 4 + 0x5d8));
-                        s.vy = pb[1] * sc;
-                        s.vz = pb[2] * *(f32*)(base + id * 4 + 0x664);
+                        vtx.vx = scaleB[0] * (sc = *(f32*)(base + id * 4 + 0x5d8));
+                        vtx.vy = scaleB[1] * sc;
+                        vtx.vz = scaleB[2] * *(f32*)(base + id * 4 + 0x664);
                     }
                     else if (cls == 2)
                     {
-                        s.vx = pc[0] * (sc = *(f32*)(base + id * 4 + 0x5d8));
-                        s.vy = pc[1] * sc;
-                        s.vz = pc[2] * *(f32*)(base + id * 4 + 0x664);
+                        vtx.vx = scaleC[0] * (sc = *(f32*)(base + id * 4 + 0x5d8));
+                        vtx.vy = scaleC[1] * sc;
+                        vtx.vz = scaleC[2] * *(f32*)(base + id * 4 + 0x664);
                     }
-                    Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
-                    s.vx = s.vx + playerMapOffsetX;
-                    s.vz = s.vz + playerMapOffsetZ;
-                    ((ParticleSlot*)*grp)[k + row].posX = dx + (s.vx - ((GameObject*)o)->anim.localPosX);
-                    ((ParticleSlot*)*grp)[k + row].posY = dy + (s.vy - ((GameObject*)o)->anim.localPosY);
-                    ((ParticleSlot*)*grp)[k + row].posZ = dz + (s.vz - ((GameObject*)o)->anim.localPosZ);
+                    Matrix_TransformPoint(mtx, vtx.vx, vtx.vy, vtx.vz, &vtx.vx, &vtx.vy, &vtx.vz);
+                    vtx.vx = vtx.vx + playerMapOffsetX;
+                    vtx.vz = vtx.vz + playerMapOffsetZ;
+                    ((ParticleSlot*)*grp)[k + row].posX = dx + (vtx.vx - ((GameObject*)obj)->anim.localPosX);
+                    ((ParticleSlot*)*grp)[k + row].posY = dy + (vtx.vy - ((GameObject*)obj)->anim.localPosY);
+                    ((ParticleSlot*)*grp)[k + row].posZ = dz + (vtx.vz - ((GameObject*)obj)->anim.localPosZ);
                     ((ParticleSlot*)*grp)[k + row].alpha = 0x9b;
                     ((ParticleSlot*)*grp)[k + row].texV = (s16)(((ParticleSlot*)(base + 0x1b0))[k + row].texV - (gBoneParticleScrollOffset << 2));
-                    pa += 3;
-                    pb += 3;
-                    pc += 3;
+                    scaleA += 3;
+                    scaleB += 3;
+                    scaleC += 3;
                     k += 1;
                 }
                 row += 4;
@@ -310,16 +310,16 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
         }
         grp += 1;
     }
-    s.vx = ((GameObject*)o)->anim.localPosX;
-    s.vy = ((GameObject*)o)->anim.localPosY;
-    s.vz = ((GameObject*)o)->anim.localPosZ;
-    s.w = lbl_803DF4C4;
+    vtx.vx = ((GameObject*)obj)->anim.localPosX;
+    vtx.vy = ((GameObject*)obj)->anim.localPosY;
+    vtx.vz = ((GameObject*)obj)->anim.localPosZ;
+    vtx.w = lbl_803DF4C4;
     setTextColor(ctx, 0xff, 0xff, 0xff, 0xff);
     if (gBoneParticleEffectTimer != 0)
     {
-        (*gPartfxInterface)->spawnObject(o, 0x28c, NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(o, 0x28c, NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(o, 0x28c, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x28c, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x28c, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x28c, NULL, 1, -1, NULL);
         if ((int)randomGetRange(0, 1) != 0)
         {
             textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
@@ -338,7 +338,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
     {
         textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
     }
-    Camera_LoadModelViewMatrix(ctx, renderParam, &s, lbl_803DF4B8, lbl_803DF4A8, 0);
+    Camera_LoadModelViewMatrix(ctx, renderParam, &vtx, lbl_803DF4B8, lbl_803DF4A8, 0);
     GXSetCullMode(GX_CULL_NONE);
     _textSetColor(ctx, 0xff, 0xff, 0xff, 0xff);
     textureSetupFn_800799c0();
