@@ -22,32 +22,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-int cnthitobjec_getExtraSize(void) { return sizeof(CntHitObjectState); }
-
-int cnthitobjec_getObjectTypeId(void) { return 0; }
-
-void cnthitobjec_free(void)
-{
-}
-
-void cnthitobjec_release(void)
-{
-}
-
-void cnthitobjec_initialise(void)
-{
-}
-
-void cnthitobjec_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
-{
-    CntHitObjectState* state = ((GameObject*)obj)->extra;
-    CntHitObjectSetup* setup = (CntHitObjectSetup*)((GameObject*)obj)->anim.placementData;
-    if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT && state->flags.disabled == 0)
-    {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7430);
-    }
-}
-
 int cnthitobjec_emitHitEvents(int obj, int p2, int p3)
 {
     int i;
@@ -57,6 +31,24 @@ int cnthitobjec_emitHitEvents(int obj, int p2, int p3)
         spawnExplosion(obj, (f32)(u32)event->explosionIds[i], 1, 1, 1, 1, 0, 1, 0);
     }
     return 0;
+}
+
+int cnthitobjec_getExtraSize(void) { return sizeof(CntHitObjectState); }
+
+int cnthitobjec_getObjectTypeId(void) { return 0; }
+
+void cnthitobjec_free(void)
+{
+}
+
+void cnthitobjec_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    CntHitObjectState* state = ((GameObject*)obj)->extra;
+    CntHitObjectSetup* setup = (CntHitObjectSetup*)((GameObject*)obj)->anim.placementData;
+    if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT && state->flags.disabled == 0)
+    {
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+    }
 }
 
 void cnthitobjec_hitDetect(int obj)
@@ -126,6 +118,33 @@ void cnthitobjec_hitDetect(int obj)
     }
 }
 
+void cnthitobjec_update(int obj)
+{
+    CntHitObjectSetup* setup;
+    CntHitObjectState* state = ((GameObject*)obj)->extra;
+    setup = (CntHitObjectSetup*)((GameObject*)obj)->anim.placementData;
+
+    if (state->flags.disabled == 0)
+    {
+        if ((u32)GameBit_Get(setup->doneGameBit) != 0)
+        {
+            state->flags.disabled = 1;
+            ObjHits_DisableObject(obj);
+        }
+    }
+
+    if (state->flags.disabled == 0 && state->remainingHealth == 0 &&
+        GameBit_Get(setup->startGameBit) != 0)
+    {
+        ObjHits_EnableObject(obj);
+        state->remainingHealth = setup->startHealth;
+        if (setup->mode != CNTHIT_MODE_VISIBLE_OBJECT)
+        {
+            ObjHitbox_SetSphereRadius(obj, setup->explosionSize);
+        }
+    }
+}
+
 void cnthitobjec_init(int obj, int setup)
 {
     CntHitObjectState* state = ((GameObject*)obj)->extra;
@@ -155,31 +174,12 @@ void cnthitobjec_init(int obj, int setup)
     ((GameObject*)obj)->animEventCallback = cnthitobjec_emitHitEvents;
 }
 
-void cnthitobjec_update(int obj)
+void cnthitobjec_release(void)
 {
-    CntHitObjectSetup* setup;
-    CntHitObjectState* state = ((GameObject*)obj)->extra;
-    setup = (CntHitObjectSetup*)((GameObject*)obj)->anim.placementData;
+}
 
-    if (state->flags.disabled == 0)
-    {
-        if ((u32)GameBit_Get(setup->doneGameBit) != 0)
-        {
-            state->flags.disabled = 1;
-            ObjHits_DisableObject(obj);
-        }
-    }
-
-    if (state->flags.disabled == 0 && state->remainingHealth == 0 &&
-        GameBit_Get(setup->startGameBit) != 0)
-    {
-        ObjHits_EnableObject(obj);
-        state->remainingHealth = setup->startHealth;
-        if (setup->mode != CNTHIT_MODE_VISIBLE_OBJECT)
-        {
-            ObjHitbox_SetSphereRadius(obj, setup->explosionSize);
-        }
-    }
+void cnthitobjec_initialise(void)
+{
 }
 
 int mcupgrade_SeqFn(int obj, int unused, CntHitObjectAnimEvent* event)
