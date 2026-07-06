@@ -44,8 +44,8 @@ typedef struct ArwingState {
     f32 accelZNeutral;
     f32 rollEnergy;      /* 0x09c */
     f32 rollEnergyMax;   /* 0x0a0 */
-    f32 unkA4;
-    f32 unkA8;
+    f32 altRollEnergy;    /* 0x0a4 current, reset to altRollEnergyMax in lockstep with rollEnergy */
+    f32 altRollEnergyMax; /* 0x0a8 init/max value (set to a constant on spawn) */
     f32 wingFlexCur;     /* 0x0ac */
     f32 wingFlexTarget;  /* 0x0b0 */
     f32 rollCooldown;    /* 0x0b4 */

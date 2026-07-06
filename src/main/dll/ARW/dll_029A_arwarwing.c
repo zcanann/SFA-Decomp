@@ -978,9 +978,9 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState*)state)->accelZNeutral = lbl_803E6FD8;
         ((ArwingState*)state)->rollCooldownInit = lbl_803E6FDC;
         ((ArwingState*)state)->rollEnergyMax = lbl_803E6FE0;
-        ((ArwingState*)state)->unkA8 = lbl_803E6F2C;
+        ((ArwingState*)state)->altRollEnergyMax = lbl_803E6F2C;
         ((ArwingState*)state)->rollEnergy = ((ArwingState*)state)->rollEnergyMax;
-        ((ArwingState*)state)->unkA4 = ((ArwingState*)state)->unkA8;
+        ((ArwingState*)state)->altRollEnergy = ((ArwingState*)state)->altRollEnergyMax;
         ((ArwingState*)state)->wingFlexCur = (c6F5C = lbl_803E6F5C);
         ((ArwingState*)state)->wingFlexTarget = c6F5C;
         if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
@@ -1061,7 +1061,7 @@ void arwarwing_resetFlightState(int obj)
     state->speedScaleRollL = lbl_803E6FBC;
     state->speedScaleRollR = lbl_803E6F64;
     state->rollEnergy = state->rollEnergyMax;
-    state->unkA4 = state->unkA8;
+    state->altRollEnergy = state->altRollEnergyMax;
     state->wingFlexTarget = state->wingFlexCur = lbl_803E6F5C;
     state->velZ = state->velY = state->velX = lbl_803E6ECC;
     state->laserLevel = 0;
