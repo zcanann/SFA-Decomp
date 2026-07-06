@@ -46,14 +46,6 @@ extern f32 lbl_803E12B0;
 extern f32 lbl_803E12B4;
 extern f32 lbl_803E12B8;
 
-void dll_95_func01_nop(void)
-{
-}
-
-void dll_95_func00_nop(void)
-{
-}
-
 /* effect header passed to spawnEffect (matches ScreenFxHdr); the part
    command array is inline here rather than a separate buffer */
 typedef struct GfxBuf
@@ -188,4 +180,12 @@ void dll_95_func03(int sourceObj, int variant, int posSource)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 8, base, 8, base + 0x50, 0x46, 0);
+}
+
+void dll_95_func01_nop(void)
+{
+}
+
+void dll_95_func00_nop(void)
+{
 }
