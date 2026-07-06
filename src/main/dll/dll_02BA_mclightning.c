@@ -72,15 +72,15 @@ void mclightning_update(int obj)
 void mclightning_init(int obj, u8* setup)
 {
     McLightningState* state = ((GameObject*)obj)->extra;
-    f32 v;
+    f32 effectScale;
 
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     ((GameObject*)obj)->animEventCallback = mclightning_handleScriptEvents;
     ObjGroup_AddObject(obj, MCLIGHTNING_OBJGROUP);
     state->flags.spawnFlags = setup[0x1a];
-    v = lbl_803E745C;
-    state->hitEffectScale = v;
-    state->burstEffectChance = v;
+    effectScale = lbl_803E745C;
+    state->hitEffectScale = effectScale;
+    state->burstEffectChance = effectScale;
 }
 
 void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
@@ -94,8 +94,8 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
         int i;
         for (i = 0; i < count; i++)
         {
-            int* o = (int*)objs[i];
-            if (*(u8*)(*(int*)((int)o + 0x4c) + 0x1b) == state->targetLinkId)
+            int* candidate = (int*)objs[i];
+            if (*(u8*)(*(int*)((int)candidate + 0x4c) + 0x1b) == state->targetLinkId)
                 break;
         }
         if (i == count)
