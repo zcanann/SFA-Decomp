@@ -94,7 +94,7 @@ void sh_beacon_update(int obj)
 {
     u8* state;
     int def;
-    int tmp;
+    int tricky;
     int* setup;
     int mode;
     int state2;
@@ -177,10 +177,10 @@ void sh_beacon_update(int obj)
         {
             ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
-        tmp = (int)getTrickyObject();
-        if (((void*)tmp != NULL) && ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))
+        tricky = (int)getTrickyObject();
+        if (((void*)tricky != NULL) && ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))
         {
-            (*(VtableFn*)(*(int*)(*(int*)(tmp + 0x68)) + 0x28))(tmp, obj, 1, 4);
+            (*(VtableFn*)(*(int*)(*(int*)(tricky + 0x68)) + 0x28))(tricky, obj, 1, 4);
         }
     }
     else
