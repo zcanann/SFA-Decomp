@@ -9,20 +9,20 @@
  */
 #include "main/game_ui_interface.h"
 
-extern u8 gameTimerIsRunning(void* p, int a, int b);
+extern u8 gameTimerIsRunning(void* context, int arg1, int arg2);
 extern void hudNumberFn_80014060(void* p);
 extern void gameTimerRun(void* p);
 
 #pragma scheduling off
 #pragma peephole off
-void UIController_render(void* p, int a, int b)
+void UIController_render(void* context, int arg1, int arg2)
 {
-    if (gameTimerIsRunning(p, a, b) != 0)
+    if (gameTimerIsRunning(context, arg1, arg2) != 0)
     {
-        gameTimerRun(p);
+        gameTimerRun(context);
     }
-    hudNumberFn_80014060(p);
-    (*gGameUIInterface)->render(p, a, b);
+    hudNumberFn_80014060(context);
+    (*gGameUIInterface)->render(context, arg1, arg2);
 }
 
 void UIController_frameEnd(void)
