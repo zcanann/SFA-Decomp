@@ -3,6 +3,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 
+void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state);
 void crcloudrace_updateRaceState(int obj);
 
 extern f32 lbl_803E6748;
@@ -11,87 +12,6 @@ extern f32 lbl_803E6740;
 extern f32 lbl_803E6744;
 
 typedef void (*CrCloudRaceRenderScaleFn)(double scale);
-
-int crcloudrace_getExtraSize(void)
-{
-  return sizeof(CrCloudRaceState);
-}
-
-int crcloudrace_getObjectTypeId(void)
-{
-  return 0;
-}
-
-void crcloudrace_free(void)
-{
-  return;
-}
-
-void crcloudrace_render(u32 obj,u32 p2,u32 p3,
-                        u32 p4,u32 p5,char visible)
-{
-  int draw;
-
-  draw = visible;
-  if (draw != 0) {
-    ((CrCloudRaceRenderScaleFn)objRenderModelAndHitVolumes)((double)lbl_803E6748);
-  }
-  return;
-}
-
-void crcloudrace_hitDetect(void)
-{
-  return;
-}
-
-void crcloudrace_update(CrCloudRaceObject *obj)
-{
-  u32 eventActive;
-  CrCloudRaceState *state;
-
-  state = obj->state;
-  if (obj->unkF8 == 0) {
-    eventActive = GameBit_Get(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR);
-    if (eventActive != 0) {
-      getEnvfxActImmediately(obj,obj,CRCLOUDRACE_ENVFX_CLEAR_A,0);
-      getEnvfxActImmediately(obj,obj,CRCLOUDRACE_ENVFX_CLEAR_B,0);
-      GameBit_Set(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR,0);
-      unlockLevel(0,0,1);
-    }
-    obj->unkF4 = 1;
-  }
-  crcloudrace_updateRaceState((int)obj);
-  state->flags &= ~1;
-  SCGameBitLatch_Update((SCGameBitLatchState *)state->effect,1,-1,-1,
-                        CRCLOUDRACE_GAMEBIT_START_LATCH_A,CRCLOUDRACE_GAMEBIT_START_LATCH_B);
-  SCGameBitLatch_Update((SCGameBitLatchState *)state->effect,2,-1,-1,
-                        CRCLOUDRACE_GAMEBIT_START_LATCH_A,CRCLOUDRACE_GAMEBIT_START_LATCH_C);
-  return;
-}
-
-void crcloudrace_init(CrCloudRaceObject *obj)
-{
-  CrCloudRaceState *state;
-
-  state = obj->state;
-  obj->animEventCallback = crcloudrace_completionCallback;
-  state->phase = CRCLOUDRACE_PHASE_START;
-  storeZeroToFloatParam(state->timer);
-  GameBit_Set(CRCLOUDRACE_GAMEBIT_START_LATCH_A,1);
-  streamFn_8000a380(3,2,1000);
-  return;
-}
-
-
-void crcloudrace_release(void)
-{
-  return;
-}
-
-void crcloudrace_initialise(void)
-{
-  return;
-}
 
 ObjectDescriptor gCrCloudRaceObjDescriptor = {
     0,
@@ -109,26 +29,6 @@ ObjectDescriptor gCrCloudRaceObjDescriptor = {
     (ObjectDescriptorCallback)crcloudrace_getObjectTypeId,
     crcloudrace_getExtraSize,
 };
-
-int crcloudrace_completionCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
-    CrCloudRaceState *state = ((CrCloudRaceObject *)obj)->state;
-    int i;
-
-    state->flags |= CRCLOUDRACE_STATE_FLAG_COMPLETION_CALLBACK;
-    for (i = 0; i < animUpdate->eventCount; i++) {
-        switch (animUpdate->eventIds[i]) {
-        case CRCLOUDRACE_COMPLETION_ANIM_EVENT:
-            GameBit_Set(CRCLOUDRACE_GAMEBIT_COMPLETION_EVENT, 1);
-            GameBit_Set(CRCLOUDRACE_GAMEBIT_DRAG_ROCK_CLEARED, 0);
-            loadMapAndParent(CRCLOUDRACE_DRAG_ROCK_MAP_ID);
-            unlockLevel(0, 0, 1);
-            lockLevel(mapGetDirIdx(CRCLOUDRACE_DRAG_ROCK_MAP_ID), 0);
-            (*gMapEventInterface)->setObjGroupStatus(CRCLOUDRACE_DRAG_ROCK_MAP_ID, 1, 1);
-            break;
-        }
-    }
-    return 0;
-}
 
 #pragma dont_inline on
 void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state) {
@@ -216,4 +116,105 @@ void crcloudrace_updateRaceState(int obj) {
     case CRCLOUDRACE_PHASE_IDLE:
         break;
     }
+}
+
+int crcloudrace_completionCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
+    CrCloudRaceState *state = ((CrCloudRaceObject *)obj)->state;
+    int i;
+
+    state->flags |= CRCLOUDRACE_STATE_FLAG_COMPLETION_CALLBACK;
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
+        case CRCLOUDRACE_COMPLETION_ANIM_EVENT:
+            GameBit_Set(CRCLOUDRACE_GAMEBIT_COMPLETION_EVENT, 1);
+            GameBit_Set(CRCLOUDRACE_GAMEBIT_DRAG_ROCK_CLEARED, 0);
+            loadMapAndParent(CRCLOUDRACE_DRAG_ROCK_MAP_ID);
+            unlockLevel(0, 0, 1);
+            lockLevel(mapGetDirIdx(CRCLOUDRACE_DRAG_ROCK_MAP_ID), 0);
+            (*gMapEventInterface)->setObjGroupStatus(CRCLOUDRACE_DRAG_ROCK_MAP_ID, 1, 1);
+            break;
+        }
+    }
+    return 0;
+}
+
+int crcloudrace_getExtraSize(void)
+{
+  return sizeof(CrCloudRaceState);
+}
+
+int crcloudrace_getObjectTypeId(void)
+{
+  return 0;
+}
+
+void crcloudrace_free(void)
+{
+  return;
+}
+
+void crcloudrace_render(u32 obj,u32 p2,u32 p3,
+                        u32 p4,u32 p5,char visible)
+{
+  int draw;
+
+  draw = visible;
+  if (draw != 0) {
+    ((CrCloudRaceRenderScaleFn)objRenderModelAndHitVolumes)((double)lbl_803E6748);
+  }
+  return;
+}
+
+void crcloudrace_hitDetect(void)
+{
+  return;
+}
+
+void crcloudrace_update(CrCloudRaceObject *obj)
+{
+  u32 eventActive;
+  CrCloudRaceState *state;
+
+  state = obj->state;
+  if (obj->unkF8 == 0) {
+    eventActive = GameBit_Get(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR);
+    if (eventActive != 0) {
+      getEnvfxActImmediately(obj,obj,CRCLOUDRACE_ENVFX_CLEAR_A,0);
+      getEnvfxActImmediately(obj,obj,CRCLOUDRACE_ENVFX_CLEAR_B,0);
+      GameBit_Set(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR,0);
+      unlockLevel(0,0,1);
+    }
+    obj->unkF4 = 1;
+  }
+  crcloudrace_updateRaceState((int)obj);
+  state->flags &= ~1;
+  SCGameBitLatch_Update((SCGameBitLatchState *)state->effect,1,-1,-1,
+                        CRCLOUDRACE_GAMEBIT_START_LATCH_A,CRCLOUDRACE_GAMEBIT_START_LATCH_B);
+  SCGameBitLatch_Update((SCGameBitLatchState *)state->effect,2,-1,-1,
+                        CRCLOUDRACE_GAMEBIT_START_LATCH_A,CRCLOUDRACE_GAMEBIT_START_LATCH_C);
+  return;
+}
+
+void crcloudrace_init(CrCloudRaceObject *obj)
+{
+  CrCloudRaceState *state;
+
+  state = obj->state;
+  obj->animEventCallback = crcloudrace_completionCallback;
+  state->phase = CRCLOUDRACE_PHASE_START;
+  storeZeroToFloatParam(state->timer);
+  GameBit_Set(CRCLOUDRACE_GAMEBIT_START_LATCH_A,1);
+  streamFn_8000a380(3,2,1000);
+  return;
+}
+
+
+void crcloudrace_release(void)
+{
+  return;
+}
+
+void crcloudrace_initialise(void)
+{
+  return;
 }
