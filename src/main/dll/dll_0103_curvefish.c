@@ -15,10 +15,9 @@
  *      is stepped along the path with yaw turning capped at 0x180/frame.
  *      Reaching the route end (curveFn_800da23c) resets to stage 0.
  *
- * This TU is the shared DLL bundle for objects 0x00FE..0x0103: it also
- * defines the ObjectDescriptors for magicplant, trickywarp, trickyguard,
- * staypoint, duster and curvefish, whose callbacks live in their own TUs
- * (declared in dll_00FE_magicplant.h).
+ * The ObjectDescriptors for the 0x00FE..0x0103 bundle (including
+ * gCurveFishObjDescriptor) live in dll_0100_trickywarp.c, whose .data split
+ * range (0x80321568..0x803216B8) owns them in retail.
  */
 #include "main/game_object.h"
 #include "main/dll/dll_00FE_magicplant.h"
@@ -30,11 +29,13 @@ extern f32 getXZDistance(f32* a, f32* b);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int fn_80296448(int obj);
-extern u32 gCurveFishCurveQueryKey;
-extern f32 lbl_803E38F0;
-extern f32 lbl_803E3900;
-extern const f32 lbl_803E3928;
 extern f32 timeDelta;
+
+/* ROM curve query key for the fish path curves; first entry of this TU's
+ * .sdata2 (retail 0x803E38E8), followed by the compiler float pool. Read
+ * through a volatile view in curvefish_update so the value is not constant
+ * folded away. */
+const u32 gCurveFishCurveQueryKey = 0x23;
 
 /* per-frame cap on the body's yaw turn toward the next path node */
 #define CURVEFISH_MAX_YAW_TURN 0x180
@@ -112,7 +113,7 @@ void curvefish_update(int obj)
     setup = *(CurveFishSetup**)&((GameObject*)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
     setup2 = *(CurveFishSetup**)&((GameObject*)obj)->anim.placementData;
-    curveQuery = gCurveFishCurveQueryKey;
+    curveQuery = *(volatile u32*)&gCurveFishCurveQueryKey;
 
     state->phaseTimer += timeDelta;
 
@@ -147,7 +148,7 @@ void curvefish_update(int obj)
             return;
         }
         state->mode = CURVEFISH_MODE_FADE_IN;
-        state->speed = lbl_803E38F0;
+        state->speed = 0.0f;
     case CURVEFISH_MODE_FADE_IN:
         if (state->phaseTimer <= 60.0f)
         {
@@ -178,9 +179,9 @@ void curvefish_update(int obj)
             speedDelta = (f32)(int)randomGetRange(-setup2->speedChange,
                                                   setup2->speedChange << 1);
             state->speed += (speedDelta * timeDelta) / 1000.0f;
-            if (state->speed < lbl_803E38F0)
+            if (state->speed < 0.0f)
             {
-                state->speed = lbl_803E38F0;
+                state->speed = 0.0f;
             }
             else if (state->speed > state->maxSpeed)
             {
@@ -188,24 +189,24 @@ void curvefish_update(int obj)
             }
         }
 
-        speedThreshold = state->maxSpeed * lbl_803E3900;
+        speedThreshold = state->maxSpeed / 4.0f;
         if (state->speed < speedThreshold)
         {
             if (((GameObject*)obj)->anim.currentMove == 0 && state->animTimer > 120.0f)
             {
-                ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
+                ObjAnim_SetCurrentMove(obj, 1, 0.0f, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
-                state->animTimer = lbl_803E38F0;
+                state->animTimer = 0.0f;
             }
             state->moveStepScale = 0.0075f;
         }
-        else if (state->speed > 3.0f * state->maxSpeed * lbl_803E3900)
+        else if (state->speed > 3.0f * state->maxSpeed / 4.0f)
         {
             if (((GameObject*)obj)->anim.currentMove == 0 && state->animTimer > 240.0f)
             {
-                ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
+                ObjAnim_SetCurrentMove(obj, 1, 0.0f, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
-                state->animTimer = lbl_803E38F0;
+                state->animTimer = 0.0f;
             }
             state->moveStepScale = 0.015f;
         }
@@ -213,14 +214,14 @@ void curvefish_update(int obj)
         {
             if (((GameObject*)obj)->anim.currentMove == 1 && state->animTimer > 240.0f)
             {
-                ObjAnim_SetCurrentMove(obj, 0, lbl_803E38F0, 0);
+                ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
-                state->animTimer = lbl_803E38F0;
+                state->animTimer = 0.0f;
             }
             state->moveStepScale = (0.015f * state->speed) / state->maxSpeed;
         }
 
-        if (lbl_803E38F0 != state->speed)
+        if (0.0f != state->speed)
         {
             distLimit = state->speed * timeDelta;
             distLimit *= distLimit;
@@ -239,7 +240,7 @@ void curvefish_update(int obj)
                 if (curveFn_800da23c((RomCurveWalker*)state, (*gRomCurveInterface)->getById(nextNode)) != 0)
                 {
                     state->mode = CURVEFISH_MODE_WAIT;
-                    state->phaseTimer = lbl_803E38F0;
+                    state->phaseTimer = 0.0f;
                     ((GameObject*)obj)->anim.alpha = 0;
                     return;
                 }
@@ -297,91 +298,8 @@ void curvefish_init(int obj, u8* setup)
     flags |= 0x6000;
     ((GameObject*)obj)->objectFlags = flags;
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
-        ((f32)(u32)((CurveFishSetup*)setup)->rootMotionScaleParam / lbl_803E3928);
+        ((f32)(u32)((CurveFishSetup*)setup)->rootMotionScaleParam / 100.0f);
     ((CurveFishState*)state)->mode = CURVEFISH_MODE_SPAWN;
-    ((CurveFishState*)state)->maxSpeed = (f32)(u32)setup[0x19] / lbl_803E3928;
+    ((CurveFishState*)state)->maxSpeed = (f32)(u32)setup[0x19] / 100.0f;
 }
 
-ObjectDescriptor gMagicPlantObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_init,
-    (ObjectDescriptorCallback)MagicPlant_update,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_render,
-    (ObjectDescriptorCallback)MagicPlant_free,
-    (ObjectDescriptorCallback)MagicPlant_getObjectTypeId,
-    MagicPlant_getExtraSize,
-};
-
-ObjectDescriptor gTrickyWarpObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickywarp_init,
-    (ObjectDescriptorCallback)trickywarp_update,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickywarp_free,
-    0,
-    trickywarp_getExtraSize,
-};
-
-ObjectDescriptor gTrickyGuardObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickyguard_init,
-    (ObjectDescriptorCallback)trickyguard_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gStayPointObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)StayPoint_init,
-    (ObjectDescriptorCallback)StayPoint_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gDusterObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)duster_init,
-    (ObjectDescriptorCallback)duster_update,
-    (ObjectDescriptorCallback)duster_hitDetect,
-    (ObjectDescriptorCallback)duster_render,
-    0,
-    0,
-    duster_getExtraSize,
-};
-
-ObjectDescriptor gCurveFishObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)curvefish_init,
-    (ObjectDescriptorCallback)curvefish_update,
-    0,
-    0,
-    0,
-    0,
-    curvefish_getExtraSize,
-};
