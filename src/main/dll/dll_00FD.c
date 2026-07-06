@@ -30,29 +30,6 @@ extern f32 lbl_803E3880;
 extern void dll_14D_update();
 extern void dll_14D_free_nop();
 
-void dll_14D_hitDetect(int obj)
-{
-    if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
-        (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
-    {
-        objRenderFn_80041018();
-    }
-    return;
-}
-
-void dll_14D_free_nop(void)
-{
-}
-
-int dll_14D_getExtraSize_ret_8(void) { return 0x8; }
-int dll_14D_getObjectTypeId(void) { return 0x0; }
-
-void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3850);
-}
-
 typedef struct Dll14DState
 {
     u8 mode;       /* 0x00: state-machine mode (0/1/2/3/4) */
@@ -92,6 +69,30 @@ typedef struct MagicPlantBridgeState
     u8 pad0E;
     s8 mode;
 } MagicPlantBridgeState;
+
+int dll_14D_getExtraSize_ret_8(void) { return 0x8; }
+
+int dll_14D_getObjectTypeId(void) { return 0x0; }
+
+void dll_14D_free_nop(void)
+{
+}
+
+void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3850);
+}
+
+void dll_14D_hitDetect(int obj)
+{
+    if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
+        (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
+    {
+        objRenderFn_80041018();
+    }
+    return;
+}
 
 void dll_14D_update(u16* obj)
 {
@@ -208,6 +209,14 @@ void dll_14D_init(int* obj)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DLL00FD_OBJFLAG_HIDDEN);
 }
 
+void dll_14D_release_nop(void)
+{
+}
+
+void dll_14D_initialise_nop(void)
+{
+}
+
 void fn_8017F334(int obj, void* setup, void* stateArg)
 {
     MagicPlantBridgeState* state;
@@ -246,14 +255,6 @@ void fn_8017F334(int obj, void* setup, void* stateArg)
         state->moveStepScale = lbl_803E3880;
         ObjAnim_SetCurrentMove(obj, 2, lbl_803E385C, 0);
     }
-}
-
-void dll_14D_release_nop(void)
-{
-}
-
-void dll_14D_initialise_nop(void)
-{
 }
 
 ObjectDescriptor gDll14DObjDescriptor = {
