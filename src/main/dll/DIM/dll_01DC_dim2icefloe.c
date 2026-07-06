@@ -57,19 +57,20 @@ extern f32 lbl_803E4B54;
 extern f32 lbl_803E4B58;
 extern f32 lbl_803E4B30;
 
+int dim2icefloe_getExtraSize(void) { return 0xbc; }
+int dim2icefloe_getObjectTypeId(void) { return 0x0; }
+
 void dim2icefloe_free(void)
 {
 }
 
+void dim2icefloe_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B30);
+}
+
 void dim2icefloe_hitDetect(void)
-{
-}
-
-void dim2icefloe_release(void)
-{
-}
-
-void dim2icefloe_initialise(void)
 {
 }
 
@@ -184,11 +185,10 @@ void dim2icefloe_init(int obj, int p)
     ((GameObject*)obj)->objectFlags |= DIM2ICEFLOE_OBJFLAG_HITDETECT_DISABLED;
 }
 
-int dim2icefloe_getExtraSize(void) { return 0xbc; }
-int dim2icefloe_getObjectTypeId(void) { return 0x0; }
-
-void dim2icefloe_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dim2icefloe_release(void)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B30);
+}
+
+void dim2icefloe_initialise(void)
+{
 }
