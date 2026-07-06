@@ -91,7 +91,7 @@ void gmmazewell_update(unsigned int obj)
     GmmazewellState* state = ((GameObject*)obj)->extra;
     u8* player;
     int matchedBit;
-    s16* p;
+    s16* questBitPtr;
     int i;
 
     if (state->savepointSet == 0)
@@ -107,14 +107,14 @@ void gmmazewell_update(unsigned int obj)
 
     ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
 
-    for (i = 0, p = questBits; (u32)i < QUEST_BIT_COUNT; i++)
+    for (i = 0, questBitPtr = questBits; (u32)i < QUEST_BIT_COUNT; i++)
     {
-        if (GameBit_Get(*p) != 0)
+        if (GameBit_Get(*questBitPtr) != 0)
         {
             matchedBit = questBits[i];
             goto checkValue;
         }
-        p++;
+        questBitPtr++;
     }
     matchedBit = 0;
 checkValue:
@@ -131,9 +131,9 @@ checkValue:
     if ((((GameObject*)objId)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
         int found;
-        for (i = 0, p = questBits; (u32)i < QUEST_BIT_COUNT; i++)
+        for (i = 0, questBitPtr = questBits; (u32)i < QUEST_BIT_COUNT; i++)
         {
-            if ((*gGameUIInterface)->isEventReady(*p) != 0)
+            if ((*gGameUIInterface)->isEventReady(*questBitPtr) != 0)
             {
                 if (lbl_803DC968 != 0)
                 {
@@ -170,7 +170,7 @@ checkValue:
                 found = 1;
                 goto checkFound;
             }
-            p++;
+            questBitPtr++;
         }
         found = 0;
     checkFound:
