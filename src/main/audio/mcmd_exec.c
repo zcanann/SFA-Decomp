@@ -21,7 +21,7 @@ extern void synthQueueVoicePrimaryUpdates(void* state);
 extern void voiceKill(u32 voice);
 extern u32 lbl_803BDA34[];
 extern u32 voiceIsRegistered(int state);
-extern void (*synthMessageCallback)(u32 id);
+extern void (*synthMessageCallback)(u32 id, u32 message);
 
 #define SYNTH_VOICE_STRIDE 0x404
 #define SYNTH_GLOBAL_REG(index) (lbl_803BDA34[(index) - 0x10])
@@ -318,8 +318,8 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
 {
     u32 index;
     u32 value;
-    u32 targetInstrument;
     int offset;
+    u32 targetInstrument;
     int voice;
     McmdVoiceState* voiceState;
     u8 i;
@@ -342,8 +342,8 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
                     targetVoice = vidGetInternalId(voiceState->vidListNode->id);
                     if (targetVoice != 0xffffffff)
                     {
-                        voice = (int)(synthVoice + (targetVoice & 0xff) * SYNTH_VOICE_STRIDE);
-                        voiceState = (McmdVoiceState*)voice;
+                        voiceState =
+                            (McmdVoiceState*)(synthVoice + (targetVoice & 0xff) * SYNTH_VOICE_STRIDE);
                         if (voiceState->queuedMessageCount < 4)
                         {
                             voiceState->queuedMessageCount = voiceState->queuedMessageCount + 1;
@@ -356,6 +356,7 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
                                 voiceState->macroCursor = voiceState->messageMacroCursor;
                                 voiceState->macroBase = voiceState->messageMacroBase;
                                 voiceState->messageMacroBase = 0;
+                                voice = (int)voiceState;
                                 macMakeActive((McmdVoiceState*)voice);
                             }
                         }
@@ -368,7 +369,7 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
         {
             if (synthMessageCallback != 0)
             {
-                synthMessageCallback(state->vidListNode->id);
+                synthMessageCallback(state->vidListNode->id, value);
             }
         }
     }
@@ -377,8 +378,7 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
         targetVoice = vidGetInternalId(varGet32(state, 0, args->value));
         if (targetVoice != 0xffffffff)
         {
-            voice = (int)(synthVoice + (targetVoice & 0xff) * SYNTH_VOICE_STRIDE);
-            voiceState = (McmdVoiceState*)voice;
+            voiceState = (McmdVoiceState*)(synthVoice + (targetVoice & 0xff) * SYNTH_VOICE_STRIDE);
             if (voiceState->queuedMessageCount < 4)
             {
                 voiceState->queuedMessageCount = voiceState->queuedMessageCount + 1;
@@ -390,6 +390,7 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
                     voiceState->macroCursor = voiceState->messageMacroCursor;
                     voiceState->macroBase = voiceState->messageMacroBase;
                     voiceState->messageMacroBase = 0;
+                    voice = (int)voiceState;
                     macMakeActive((McmdVoiceState*)voice);
                 }
             }
