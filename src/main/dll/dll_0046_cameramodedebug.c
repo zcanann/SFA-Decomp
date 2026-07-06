@@ -24,6 +24,7 @@ extern u8 padGetCY(int port);
 /* camera mode id to restore on B-press exit */
 #define CAMCONTROL_ACTION_DEFAULT 0x42
 
+#define PAD_BUTTON_RIGHT 0x002
 #define PAD_BUTTON_DOWN 0x004
 #define PAD_BUTTON_UP   0x008
 
@@ -65,7 +66,7 @@ void CameraModeDebug_update(CameraObject* cam)
     move = lbl_803E1840;
     state = (GameObject*)cam->anim.targetObj;
     held = getButtonsHeld(0);
-    if ((getButtonsJustPressed(0) & 2) != 0)
+    if ((getButtonsJustPressed(0) & PAD_BUTTON_RIGHT) != 0)
     {
         (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
         return;
