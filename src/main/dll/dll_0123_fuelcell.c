@@ -137,7 +137,7 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
     f32 scale;
     int* candidates[9];
     f32 pos[3];
-    f32 t;
+    f32 dist;
     int objCount;
 
     state = ((GameObject*)obj)->extra;
@@ -213,9 +213,9 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
                 {
                     pickCount--;
                     pickCount = randomGetRange(0, pickCount);
-                    t = Vec_distance(((GameObjPos*)candidates[pickCount])->pos2,
+                    dist = Vec_distance(((GameObjPos*)candidates[pickCount])->pos2,
                                      ((GameObjPos*)obj)->pos2) / 100.0f;
-                    angle = 0.1f - 0.07f * t;
+                    angle = 0.1f - 0.07f * dist;
                     mode = 0xff;
                 }
                 else
