@@ -28,48 +28,21 @@ extern u16 getYButtonItem(s16* out);
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
 
+int warpstonelift_getExtraSize(void) { return 0x1; }
+int warpstonelift_getObjectTypeId(void) { return 0x0; }
+
 void warpstonelift_free(void)
 {
 }
 
+void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E54C8);
+}
+
 void warpstonelift_hitDetect(void)
 {
-}
-
-void warpstonelift_release(void)
-{
-}
-
-void warpstonelift_initialise(void)
-{
-}
-
-int warpstonelift_getExtraSize(void) { return 0x1; }
-int warpstonelift_getObjectTypeId(void) { return 0x0; }
-
-void warpstonelift_init(int obj, s8* def)
-{
-    int* state = ((GameObject*)obj)->extra;
-    int i;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
-    ((GameObject*)obj)->unkF4 = 0;
-    for (i = 0; i < 2; i++)
-    {
-        if (GameBit_Get(lbl_803DC058[i]) != 0)
-        {
-            *(u8*)state = (u8)(i + 1);
-        }
-    }
-    switch (*(u8*)state)
-    {
-    case WARPSTONELIFT_STATE_IDLE:
-    case WARPSTONELIFT_STATE_SWAPPED:
-        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
-        break;
-    case WARPSTONELIFT_STATE_OFFERING:
-        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
-        break;
-    }
 }
 
 void warpstonelift_update(u8* obj)
@@ -140,8 +113,35 @@ void warpstonelift_update(u8* obj)
     }
 }
 
-void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void warpstonelift_init(int obj, s8* def)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E54C8);
+    int* state = ((GameObject*)obj)->extra;
+    int i;
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
+    ((GameObject*)obj)->unkF4 = 0;
+    for (i = 0; i < 2; i++)
+    {
+        if (GameBit_Get(lbl_803DC058[i]) != 0)
+        {
+            *(u8*)state = (u8)(i + 1);
+        }
+    }
+    switch (*(u8*)state)
+    {
+    case WARPSTONELIFT_STATE_IDLE:
+    case WARPSTONELIFT_STATE_SWAPPED:
+        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
+        break;
+    case WARPSTONELIFT_STATE_OFFERING:
+        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
+        break;
+    }
+}
+
+void warpstonelift_release(void)
+{
+}
+
+void warpstonelift_initialise(void)
+{
 }
