@@ -2212,6 +2212,7 @@ main/dll/SB/dll_01F7_sbshipgunbroke.c:
 
 main/dll/SP/dll_0285_spshop.c:
 	.text       start:0x801E6050 end:0x801E66DC
+	.data       start:0x80328310 end:0x80328370
 
 main/dll/dll_801e66dc.c:
 	.text       start:0x801E66DC end:0x801E67BC
