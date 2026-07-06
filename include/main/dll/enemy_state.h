@@ -36,7 +36,11 @@ typedef struct EnemyState {
     u32 flags2E4;
     int flags2E8;
     s16 unk2EC;
-    u8 unk2EE[0x2F8 - 0x2EE];
+    u8 unk2EE[0x2F2 - 0x2EE];
+    u8 curveIndex; /* 0x2F2: selector index -> *outIdx */
+    u8 curveParamA; /* 0x2F3: byte scaled by 1/lbl_803E257C -> *outA */
+    u8 curveParamB; /* 0x2F4: byte -> *outB */
+    u8 unk2F5[0x2F8 - 0x2F5];
     s16 unk2F8;
     u8 unk2FA[0x2FC - 0x2FA];
     f32 health; /* 0x2FC: placement.healthByte / const, the enemy's HP */

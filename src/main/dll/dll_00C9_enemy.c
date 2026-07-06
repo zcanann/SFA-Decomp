@@ -643,7 +643,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
 int Baddie_EnemygetExtraSize(void) { return 0x370; }
 int enemy_getObjectTypeId(void) { return 0x14b; }
 
-void fn_8014C66C(int* obj, int x) { *(int*)((char*)(int*)((GameObject*)obj)->extra + 0x29c) = x; }
+void fn_8014C66C(int* obj, int x) { ((EnemyState*)((GameObject*)obj)->extra)->trackedObj = (u8*)x; }
 
 #pragma scheduling off
 #pragma peephole off
@@ -657,7 +657,7 @@ void fn_8014C63C(int* obj)
 {
     extern void* Obj_GetPlayerObject(void);
     int* state = ((GameObject*)obj)->extra;
-    *(void**)((char*)state + 668) = Obj_GetPlayerObject();
+    ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
 }
 
 u8 fn_8014C4D8(int* obj)
@@ -722,9 +722,9 @@ void fn_8014C540(int* obj, int* outIdx, f32* outA, f32* outB)
         state = ((GameObject*)obj)->extra;
         if (state != NULL)
         {
-            *outA = (f32)(u32) * (u8*)((char*)state + 755) / lbl_803E257C;
-            *outB = (f32)(u32) * (u8*)((char*)state + 756);
-            *outIdx = *(u8*)((char*)state + 754);
+            *outA = (f32)(u32)((EnemyState*)state)->curveParamA / lbl_803E257C;
+            *outB = (f32)(u32)((EnemyState*)state)->curveParamB;
+            *outIdx = ((EnemyState*)state)->curveIndex;
             return;
         }
     }
