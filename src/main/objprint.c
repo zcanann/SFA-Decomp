@@ -69,24 +69,9 @@ static inline s16* objFindJointVecByKey(int obj, int key)
     return found;
 }
 
-extern bool FUN_800067f0();
-extern u32 FUN_8000681c();
-extern double FUN_80006a30();
-extern int FUN_80017730();
-extern u32 FUN_80017798();
-extern int FUN_8001779c();
-extern int FUN_80017970();
-extern u32 FUN_80017a00();
-extern u32 FUN_80017a04();
 extern u32 objRenderFuzzFn_8003d6f8();
-extern u32 FUN_800400b0();
-extern u32 FUN_80040a88();
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern u64 FUN_8028683c();
-extern u32 FUN_80286888();
-extern u32 FUN_80293900();
-extern u32 FUN_802950c8();
 extern u32 DAT_802cba60;
 extern u32 DAT_803dc070;
 extern u32 DAT_803dd888;
