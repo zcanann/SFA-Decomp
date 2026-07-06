@@ -466,10 +466,10 @@ void saveSelectScreenFree(int runExitCallback)
 void SaveSelectScreen_render(int param)
 {
     SaveSelectPanel* panel;
-    int v;
+    int progress;
     u8 alpha;
     int i;
-    int n;
+    int slotCount;
     int off;
     char* p;
     u8* strs;
@@ -478,18 +478,18 @@ void SaveSelectScreen_render(int param)
 
     panel = &gSaveSelectPanels[gSaveSelectPanelIndex];
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
-    v = (int)(lbl_803E1D64 -
+    progress = (int)(lbl_803E1D64 -
         (*gScreenTransitionInterface)->getProgress());
-    if ((u8)v < 0x80)
+    if ((u8)progress < 0x80)
     {
-        f32 conv = (f32)(int)((u8)v * 0x86);
+        f32 conv = (f32)(int)((u8)progress * 0x86);
         titleScreenPositionElements(lbl_803E1D68, lbl_803E1D6C - conv * gSaveSelectPositionScale);
         alpha = 0;
     }
     else
     {
         titleScreenPositionElements(lbl_803E1D68, lbl_803E1D74);
-        alpha = (u8)(((u8)v & 0x7f) << 1);
+        alpha = (u8)(((u8)progress & 0x7f) << 1);
     }
     gameTextBoxFn_80134d40(alpha, (u8)(gSaveSelectPanelIndex == SAVE_SELECT_PANEL_CONFIRM_ERASE), 0);
     switch (gSaveSelectPanelIndex)
@@ -497,17 +497,17 @@ void SaveSelectScreen_render(int param)
     case SAVE_SELECT_PANEL_OPEN_FILE:
         ((void (*)(int, u8))saveSelect_drawText)(param, alpha);
         gameTextSetColor(0xff, 0xff, 0xff, alpha);
-        n = 0;
+        slotCount = 0;
         p = (char*)saveFileSelect_saveSlots + saveFileSelect_currentSlotIndex * 0x24;
-        while (n < 3 && *(void**)(p + 0xc) != NULL)
+        while (slotCount < 3 && *(void**)(p + 0xc) != NULL)
         {
             p += 4;
-            n++;
+            slotCount++;
         }
         i = 0;
-        strs = &gSaveSelectInfoTextIds + (u8)(3 - n);
+        strs = &gSaveSelectInfoTextIds + (u8)(3 - slotCount);
         off = 0;
-        while (i < n)
+        while (i < slotCount)
         {
             gameTextAppendStr(
                 *(char**)((char*)saveFileSelect_saveSlots + saveFileSelect_currentSlotIndex * 0x24 + off + 0xc), *strs);
@@ -560,7 +560,7 @@ void SaveSelectScreen_render(int param)
         gameTextSetColor(0xff, 0xff, 0xff, alpha);
         gameTextShow(panel->textIdB);
     }
-    ((void (**)(int))gTitleMenuLinkInterface->vtable)[12](v);
+    ((void (**)(int))gTitleMenuLinkInterface->vtable)[12](progress);
     ((void (**)(int))gTitleMenuLinkInterface->vtable)[4](param);
     gameTextSetDrawFunc(0);
     titleScreenShowCopyright(0);
@@ -574,7 +574,7 @@ int SaveSelectScreen_run(void)
 {
     char buf[32];
     s8 timer;
-    int n;
+    int frames;
     int sel;
     int slot;
     int prev;
@@ -584,14 +584,14 @@ int SaveSelectScreen_run(void)
     s8* flagPtr;
 
     timer = lbl_803DD6CF;
-    n = framesThisStep;
-    if (n > 3)
+    frames = framesThisStep;
+    if (frames > 3)
     {
-        n = 3;
+        frames = 3;
     }
     if (timer > 0)
     {
-        lbl_803DD6CF -= n;
+        lbl_803DD6CF -= frames;
     }
     if ((*gScreenTransitionInterface)->isFinished() == 0)
     {
