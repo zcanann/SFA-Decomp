@@ -6426,3 +6426,70 @@ Structs inspected + verdict (all left as-is, no commits):
   3 files). SKIP.
 - TrickyState / BaddieState / ObjSeqState / EnemyState (read-nameable timer/flag hits from
   ++/--/compare grep): all MULTI-OWNER shared structs. SKIP.
+
+## Probe 2026-07-05 (semantic-recovery): team still idle
+Newest non-Zachary commit remains Jack's d3d7a168ff (dll_01EB sbshipmast). git log -60
+shows all commits above it authored "Zachary Canann". No fresh Jack .c files. Cheap 0-win
+STOP, no tree scan.
+
+## Fuzzy deep-sweep 2026-07-05 (top point-value uncracked -O4,p fns, size×gap ranked)
+Triaged top ~15 by size×gap (90-99.9%, excl audio/dolphin/player/team-hot). Frontier is
+mature: EVERY top target's residual is a previously-swept coloring/frame/FP-perm cap. 0 wins.
+Two source experiments attempted, both reverted (neutral or regress). Build EXIT=0, all_source clean.
+NOTE: textrender.c has SIBLING uncommitted edit (gameTextLoadGraphicsFn for->while(i--)) — skipped
+gameTextRun/textRenderStr/gameTextInitFn as sibling-owned.
+
+TRIAGED (dominant-delta class → why banked):
+- newshadows/allocLotsOfTextures 95.05% sz5948: whole-fn FP-perm cascade rooted at disk-texture
+  const-load ordering (target `lfd f5` double-load Vdchuff+0x8 shifts f2-f6 + GPR r4-r8 renumber).
+  #82+#108 coupled. Worked 24h ago. No lever.
+- shader/doPendingMapLoads 93.37% sz3144: base-ptr r28(tgt)/r29(cur) whole-fn saved-reg renumber
+  (#108). TRIED: reorder eBase/aBase/cBase assign to loop-use order (eBase,aBase,cBase) — fixed the
+  `addi 0x41E0/41F4/41CC` EMIT ORDER (structural match!) but fuzzy FLAT 93.37 (the r28/r29 base-home
+  is the root, addi-order rides it). Reverted (register-neutral).
+- dll_0014/walkgroupFindExitPointFn_800dc398 ~95%: r0-detour (`addi r0,r3,0;mr r31,r0` vs tgt
+  `addi r30,r3,0`) on patchBase=gObjfsaPatches global-init to NAMED saved reg. Known INTRINSIC
+  resistant r0-detour + r30/r31 home. No lever.
+- newclouds/snowPrintSnowCloud 97.464% sz2456: REAL structural lever found but REGRESSED. Target
+  computes 9 vertex fmadds into f9..f1 (all live), stfs to volatile vx/vy/vz[3] stack, THEN
+  `frsp f0,fN; stfs f0,FIFO` — reuses the LIVE double reg for GXWGFifo.f32, NO reload. Current
+  reloads via `lfs` (volatile read forces it). TRIED: 9 `f64 tN` temps `vx[i]=tN=...; FIFO=tN;` —
+  got the register-REUSE (stfs fN,FIFO direct, no reload!) BUT (a) NO frsp emitted (MWCC tracks fN
+  as single, frsp elided) and (b) f64 decls added FP pressure → allocator used f10 + wrapped f2/f3/f0
+  (only 8 distinct vs tgt's 9), net 97.464→96.806. Reverted. BANKED: the frsp-from-live-double-reg
+  pattern needs the value to stay genuinely double to FIFO; f64-temp route doesn't reproduce it and
+  costs FP regs. Volatile-array is load-bearing (target keeps the stfs stores).
+- expgfx_addremove 95.84% sz2576: config-param r22(tgt)/r23(cur) whole-fn renumber (#108) + buried
+  or/and operand-order (#66, `or r4,r6,r4` tgt vs `or r3,r3,r5` cur) coupled to it. No isolated lever.
+- objanim/ObjAnim_AdvanceCurrentMove 97.32% sz2236: `move`=obj->anim.currentMove(44) homes r8(tgt)/
+  r7(cur) single-reg swap throughout + #67 conversion-temp frame-slot delta (32-52 vs 16-28 for the
+  int↔double bias temps) + #82 f2/f3/f4 perm. Pure coloring/frame.
+- voxmapsFn_80010ff4 97.38% sz2296: base-ptr r5(tgt)/r3(cur) pure #108 rotation, identical seqs.
+- worldplanet_update 97.74% sz3136: register-PRESSURE cascade (current SPILLS `stw/lwz 12(r1)` where
+  tgt keeps `mr r30,r3`) + lwzx-vs-disp on obj[i].rotZ(40) + FP fmadds perm. Pressure-driven.
+- objseq/ObjSeq_update 98.49% sz3912: #67 frame-slot delta (24/20(r1) tgt vs 8/12 cur) + extsb-in-place
+  (`extsb r4,r4` tgt vs `extsb r4,r0` cur). Worked 17h ago. Layout cap.
+- render/fn_80007F78, dll_0B_func04/05, gametext/textMeasure, shader/mapLoadUnloadObjects,
+  animobjd2/fn_8013E0D0: all whole-fn saved-reg renumber (#108), skimmed.
+
+## Jul05 — #113 unrolled-dead-counter `while(n--)` sweep (1 win, textrender)
+Swept all 397 non-audio/dolphin/player fns in 93-99.9% for the signature "unrolled
+`bdnz` loop where target has `addi rN,rN,-2/-4` (per-copy decrements folded) while
+current has `-1`". Automated ndiff-fingerprint scan (aggregate count of ,-2/,-4 in T
+vs ,-1 in C). ONLY 1 clean hit across all candidates:
+- **WIN gameTextLoadGraphicsFn_8001a918** (textrender.c) 96.662→96.665 [commit 5695506957]:
+  SJIS glyph-search `for(i=0xfd;i>=0;i--){if(p[0]==c)...;p++}` — dead counter i (ptr p
+  walks, i never read/indexed). MWCC 2x-unrolls; bounded-for emits per-copy `addi -1`,
+  target folds both to `addi rN,rN,-2`. Rewrote `i=0xfe; while(i--)` → matching -2 stride
+  (254 iters both ways). Confirmed twice-rebuilt, no sibling regression, all_source EXIT=0.
+  Gain is small (residual = downstream r4/r5 coloring on the folded loop) but real (stride
+  match, instr-level). This is the SAME idiom as the prior textMeasureFn win.
+- BANKED same fn, 2nd loop (buffer-clear `int j=0x47; while(j>0){9 stores; q+=9; j-=9}`):
+  target KEEPS the dead j (`li r4,71; addi r4,r4,-9` under mtctr 8) but current ELIMINATES
+  it entirely (DCE — pure CTR loop, no addi). This is a keep-vs-eliminate DCE difference,
+  NOT the per-copy `-1`→`-K` stride case, so `while(n--)` doesn't apply. TRIED `for(j=0x47;
+  j>0;j-=9)` — INERT (compiler still proves j dead + eliminates; same 96.665). No source
+  lever to force MWCC to retain a genuinely-dead loop-carried counter it chose to DCE.
+- The other 49 source countdown-for loops live in already-100% or <93% fns or aren't
+  unrolled — none in-band matched the stride signature. render/fn_80007F78 94.0% (a
+  64-bit-arith coloring cascade, not a dead-counter case) correctly excluded.
