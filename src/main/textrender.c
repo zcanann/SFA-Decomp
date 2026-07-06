@@ -2597,7 +2597,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     int c3x1;
     s16 savedY;
     s16 savedX;
-    u16 f;
+    u16 boxFlags;
     u8* cur;
     int cy;
     int cx;
@@ -2617,12 +2617,12 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
 
     savedX = ((GameTextBox*)box)->cursorX;
     savedY = ((GameTextBox*)box)->cursorY;
-    f = ((GameTextBox*)box)->flags;
-    if (f & 1)
+    boxFlags = ((GameTextBox*)box)->flags;
+    if (boxFlags & 1)
     {
         return;
     }
-    ((GameTextBox*)box)->flags = f | 1;
+    ((GameTextBox*)box)->flags = boxFlags | 1;
     switch (((GameTextBox*)box)->style)
     {
     case 5:
