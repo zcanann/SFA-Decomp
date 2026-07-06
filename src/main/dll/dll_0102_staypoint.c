@@ -14,10 +14,9 @@
  * if the player is within range - issues the stay command to Tricky
  * through Tricky's vtable (slot at (tricky + 0x68) -> [0] -> 0x28).
  *
- * This TU is the shared DLL bundle for objects 0x00FE..0x0103: it also
- * defines the ObjectDescriptors for magicplant, trickywarp, trickyguard,
- * duster and curvefish, whose callbacks live in their own TUs (declared in
- * dll_00FE_magicplant.h).
+ * The ObjectDescriptors for the 0x00FE..0x0103 bundle (including
+ * gStayPointObjDescriptor) live in dll_0100_trickywarp.c, whose .data split
+ * range (0x80321568..0x803216B8) owns them in retail.
  */
 #include "main/game_object.h"
 #include "main/dll/dll_00FE_magicplant.h"
@@ -44,14 +43,6 @@ typedef struct StayPointSetup
     s16 activeGameBit;   /* 0x1E: set while Tricky is staying here; -1 = none */
     s16 requiredGameBit; /* 0x20: gate; -1 = always active */
 } StayPointSetup;
-
-void StayPoint_init(u16* obj)
-{
-    u32 flags;
-    flags = ((GameObject*)obj)->objectFlags;
-    flags |= STAYPOINT_OBJECT_FLAG;
-    ((GameObject*)obj)->objectFlags = flags;
-}
 
 void StayPoint_update(int obj)
 {
@@ -105,86 +96,10 @@ void StayPoint_update(int obj)
     }
 }
 
-ObjectDescriptor gMagicPlantObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_init,
-    (ObjectDescriptorCallback)MagicPlant_update,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_render,
-    (ObjectDescriptorCallback)MagicPlant_free,
-    (ObjectDescriptorCallback)MagicPlant_getObjectTypeId,
-    MagicPlant_getExtraSize,
-};
-
-ObjectDescriptor gTrickyWarpObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickywarp_init,
-    (ObjectDescriptorCallback)trickywarp_update,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickywarp_free,
-    0,
-    trickywarp_getExtraSize,
-};
-
-ObjectDescriptor gTrickyGuardObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickyguard_init,
-    (ObjectDescriptorCallback)trickyguard_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gStayPointObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)StayPoint_init,
-    (ObjectDescriptorCallback)StayPoint_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gDusterObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)duster_init,
-    (ObjectDescriptorCallback)duster_update,
-    (ObjectDescriptorCallback)duster_hitDetect,
-    (ObjectDescriptorCallback)duster_render,
-    0,
-    0,
-    duster_getExtraSize,
-};
-
-ObjectDescriptor gCurveFishObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)curvefish_init,
-    (ObjectDescriptorCallback)curvefish_update,
-    0,
-    0,
-    0,
-    0,
-    curvefish_getExtraSize,
-};
+void StayPoint_init(u16* obj)
+{
+    u32 flags;
+    flags = ((GameObject*)obj)->objectFlags;
+    flags |= STAYPOINT_OBJECT_FLAG;
+    ((GameObject*)obj)->objectFlags = flags;
+}
