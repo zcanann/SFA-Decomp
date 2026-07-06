@@ -640,12 +640,12 @@ void arwsquadron_update(int obj)
     if (state->dialogueVariant == 1)
     {
         int aim = getArwing();
-        f32 d;
+        f32 deltaZ;
         int inRange;
         if ((u32)aim == 0)
             aim = Obj_GetPlayerObject();
-        d = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)aim)->anim.localPosZ;
-        inRange = (d < lbl_803E71B8 && d > lbl_803E7164);
+        deltaZ = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)aim)->anim.localPosZ;
+        inRange = (deltaZ < lbl_803E71B8 && deltaZ > lbl_803E7164);
         if (inRange)
         {
             if (randomGetRange(0, 1) != 0)
@@ -676,12 +676,12 @@ void arwsquadron_update(int obj)
             {
                 f32 thr = state->activationDistance;
                 int aim = getArwing();
-                f32 d;
+                f32 deltaZ;
                 int inRange;
                 if ((u32)aim == 0)
                     aim = Obj_GetPlayerObject();
-                d = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim)->anim.localPosZ;
-                inRange = (d < thr && d > lbl_803E7164);
+                deltaZ = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim)->anim.localPosZ;
+                inRange = (deltaZ < thr && deltaZ > lbl_803E7164);
                 if (!inRange)
                     goto enable0;
                 if (setupL->gameBit > 0)
@@ -741,12 +741,12 @@ void arwsquadron_update(int obj)
             {
                 f32 thr = state->activationDistance;
                 int aim = getArwing();
-                f32 d;
+                f32 deltaZ;
                 int inRange;
                 if ((u32)aim == 0)
                     aim = Obj_GetPlayerObject();
-                d = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim)->anim.localPosZ;
-                inRange = (d < thr && d > lbl_803E7164);
+                deltaZ = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim)->anim.localPosZ;
+                inRange = (deltaZ < thr && deltaZ > lbl_803E7164);
                 if (inRange)
                     goto disable0;
                 if (setupL->gameBit > 0)
