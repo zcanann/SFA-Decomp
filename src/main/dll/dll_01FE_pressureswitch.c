@@ -103,8 +103,8 @@ void pressureswitch_free(void)
 
 void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    s32 isVisible = visible;
+    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void pressureswitch_hitDetect(void)
@@ -116,85 +116,85 @@ void pressureswitch_hitDetect(void)
 #pragma opt_common_subs off
 void pressureswitch_update(int obj)
 {
-    int off[1];
-    PressureswitchPlacement* t;
+    int byteOff[1];
+    PressureswitchPlacement* placement;
     GameObject* self;
-    PressureSwitchState* sub;
-    PswContactList* list;
-    s8 far;
+    PressureSwitchState* state;
+    PswContactList* contacts;
+    s8 playerFar;
     int i;
     GameObject* player;
     GameObject* tricky;
-    s8 ac;
-    int v;
-    s8 played;
-    f32 cur;
-    f32 lim;
-    f32 thr;
-    f32 f;
+    s8 mapSlot;
+    int bit;
+    s8 moving;
+    f32 curY;
+    f32 pressedY;
+    f32 heightThreshold;
+    f32 posY;
 
     self = (GameObject*)obj;
     player = (GameObject*)Obj_GetPlayerObject();
-    t = (PressureswitchPlacement*)self->anim.placementData;
-    sub = self->extra;
-    far = 0;
+    placement = (PressureswitchPlacement*)self->anim.placementData;
+    state = self->extra;
+    playerFar = 0;
     if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) > 100.0f)
     {
-        far = 1;
+        playerFar = 1;
     }
-    sub->holdTimer -= 1;
-    if (sub->holdTimer < 0)
+    state->holdTimer -= 1;
+    if (state->holdTimer < 0)
     {
-        sub->holdTimer = 0;
-        sub->chimeLatch = 0;
+        state->holdTimer = 0;
+        state->chimeLatch = 0;
     }
-    off[0] = 0;
-    ((PressureSwitchFlags*)&sub->flags)->active = off[0];
+    byteOff[0] = 0;
+    ((PressureSwitchFlags*)&state->flags)->active = byteOff[0];
     if (PSW_CONTACT_LIST(obj) != NULL &&
         PSW_CONTACT_LIST(obj)->count > 0)
     {
-        sub->retriggerTimer = (s16)(t->retriggerDelay * 60);
+        state->retriggerTimer = (s16)(placement->retriggerDelay * 60);
         i = 0;
-        thr = 7.0f;
-        for (; i < (list = PSW_CONTACT_LIST(obj))->count; i++)
+        heightThreshold = 7.0f;
+        for (; i < (contacts = PSW_CONTACT_LIST(obj))->count; i++)
         {
-            GameObject* ent = *(GameObject**)((char*)list + off[0] + 256);
+            GameObject* ent = *(GameObject**)((char*)contacts + byteOff[0] + 256);
             if (ent->anim.seqId == PSWITCH_TRIGGER_SEQ_ID)
             {
-                ((PressureSwitchFlags*)&sub->flags)->active = 1;
+                ((PressureSwitchFlags*)&state->flags)->active = 1;
             }
-            if (ent->anim.localPosY - self->anim.localPosY > thr)
+            if (ent->anim.localPosY - self->anim.localPosY > heightThreshold)
             {
-                sub->holdTimer = 5;
+                state->holdTimer = 5;
             }
-            if (sub->chimeLatch == 0 && ent != NULL && ent->anim.seqId == PSWITCH_CHIME_SEQ_ID)
+            if (state->chimeLatch == 0 && ent != NULL && ent->anim.seqId == PSWITCH_CHIME_SEQ_ID)
             {
-                if (far == 0)
+                if (playerFar == 0)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
                 }
-                sub->chimeLatch = 1;
+                state->chimeLatch = 1;
             }
-            off[0] += 4;
+            byteOff[0] += 4;
         }
     }
     else
     {
-        ac = self->anim.mapEventSlot;
-        if (ac == 11 && (*gMapEventInterface)->getMapAct(ac) == 3 &&
+        mapSlot = self->anim.mapEventSlot;
+        if (mapSlot == 11 && (*gMapEventInterface)->getMapAct(mapSlot) == 3 &&
             (tricky = (GameObject*)getTrickyObject()) != NULL &&
             Vec_distance(&self->anim.worldPosX, &tricky->anim.worldPosX) < 50.0f)
         {
-            sub->holdTimer = 5;
+            state->holdTimer = 5;
         }
     }
-    ac = self->anim.mapEventSlot;
-    if (ac == 11 && (*gMapEventInterface)->getMapAct(ac) == 1 && far == 0)
+    mapSlot = self->anim.mapEventSlot;
+    if (mapSlot == 11 && (*gMapEventInterface)->getMapAct(mapSlot) == 1 && playerFar == 0)
     {
-        if (sub->holdTimer != 0)
+        if (state->holdTimer != 0)
         {
-            f = t->restPosY - self->anim.localPosY;
-            if (f > 2.5f && f < 5.0f && GameBit_Get(sub->mapGameBit) == 0)
+            posY = placement->restPosY - self->anim.localPosY;
+            if (posY > 2.5f && posY < 5.0f && GameBit_Get(state->mapGameBit) == 0)
             {
                 GameBit_Set(0x905, 1);
             }
@@ -208,72 +208,72 @@ void pressureswitch_update(int obj)
             GameBit_Set(0x905, 0);
         }
     }
-    played = 0;
-    if (sub->holdTimer != 0)
+    moving = 0;
+    if (state->holdTimer != 0)
     {
-        lim = t->restPosY - 5.0f;
-        cur = self->anim.localPosY;
-        if (cur < lim)
+        pressedY = placement->restPosY - 5.0f;
+        curY = self->anim.localPosY;
+        if (curY < pressedY)
         {
-            self->anim.localPosY = 0.25f * timeDelta + cur;
-            if (self->anim.localPosY > lim)
+            self->anim.localPosY = 0.25f * timeDelta + curY;
+            if (self->anim.localPosY > pressedY)
             {
-                self->anim.localPosY = lim;
+                self->anim.localPosY = pressedY;
             }
-            GameBit_Set(t->triggerGameBit, 1);
-            if (((PressureSwitchFlags*)&sub->flags)->active)
+            GameBit_Set(placement->triggerGameBit, 1);
+            if (((PressureSwitchFlags*)&state->flags)->active)
             {
-                GameBit_Set(sub->mapGameBit, 1);
+                GameBit_Set(state->mapGameBit, 1);
             }
         }
         else
         {
-            self->anim.localPosY = -(0.125f * timeDelta - cur);
-            if (self->anim.localPosY < lim)
+            self->anim.localPosY = -(0.125f * timeDelta - curY);
+            if (self->anim.localPosY < pressedY)
             {
-                self->anim.localPosY = lim;
-                GameBit_Set(t->triggerGameBit, 1);
-                v = sub->mapGameBit;
-                if (v != -1)
+                self->anim.localPosY = pressedY;
+                GameBit_Set(placement->triggerGameBit, 1);
+                bit = state->mapGameBit;
+                if (bit != -1)
                 {
-                    GameBit_Set(v, 1);
-                    if (((PressureSwitchFlags*)&sub->flags)->active)
+                    GameBit_Set(bit, 1);
+                    if (((PressureSwitchFlags*)&state->flags)->active)
                     {
-                        ((PressureSwitchFlags*)&sub->flags)->mapBitLatched = 1;
+                        ((PressureSwitchFlags*)&state->flags)->mapBitLatched = 1;
                     }
                 }
             }
             else
             {
-                played = 1;
+                moving = 1;
             }
         }
     }
     else
     {
-        if (sub->retriggerTimer == 0)
+        if (state->retriggerTimer == 0)
         {
             self->anim.localPosY = 0.125f * timeDelta + self->anim.localPosY;
-            if (self->anim.localPosY > (f = t->restPosY))
+            if (self->anim.localPosY > (posY = placement->restPosY))
             {
-                self->anim.localPosY = f;
+                self->anim.localPosY = posY;
             }
             else
             {
-                played = 1;
+                moving = 1;
             }
-            GameBit_Set(t->triggerGameBit, 0);
-            v = sub->mapGameBit;
-            if (v != -1)
+            GameBit_Set(placement->triggerGameBit, 0);
+            bit = state->mapGameBit;
+            if (bit != -1)
             {
-                if (!((PressureSwitchFlags*)&sub->flags)->mapBitLatched)
+                if (!((PressureSwitchFlags*)&state->flags)->mapBitLatched)
                 {
-                    GameBit_Set(v, 0);
+                    GameBit_Set(bit, 0);
                 }
             }
         }
     }
-    if (played != 0)
+    if (moving != 0)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_en_treedrum16);
     }
@@ -281,12 +281,12 @@ void pressureswitch_update(int obj)
     {
         Sfx_StopObjectChannel(obj, 8);
     }
-    if (sub->retriggerTimer != 0)
+    if (state->retriggerTimer != 0)
     {
-        sub->retriggerTimer -= framesThisStep;
-        if (sub->retriggerTimer < 0)
+        state->retriggerTimer -= framesThisStep;
+        if (state->retriggerTimer < 0)
         {
-            sub->retriggerTimer = 0;
+            state->retriggerTimer = 0;
         }
     }
 }
@@ -294,38 +294,38 @@ void pressureswitch_update(int obj)
 
 void pressureswitch_init(int* obj, u8* init)
 {
-    PressureSwitchState* sub;
+    PressureSwitchState* state;
     u32 mapId;
 
-    sub = ((GameObject*)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = PressureSwitch_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
-    sub->retriggerTimer = (s16)(((PressureswitchPlacement*)init)->retriggerDelay * 0x3c);
-    sub->chimeLatch = 0;
+    state->retriggerTimer = (s16)(((PressureswitchPlacement*)init)->retriggerDelay * 0x3c);
+    state->chimeLatch = 0;
     mapId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
     if (mapId == 0x1f1a)
     {
-        sub->mapGameBit = 0xf45;
+        state->mapGameBit = 0xf45;
     }
     else if (mapId == 0x47293)
     {
-        sub->mapGameBit = 0xf46;
+        state->mapGameBit = 0xf46;
     }
     else
     {
-        sub->mapGameBit = -1;
+        state->mapGameBit = -1;
     }
-    if (sub->mapGameBit != -1)
+    if (state->mapGameBit != -1)
     {
-        if (GameBit_Get(sub->mapGameBit) != 0)
+        if (GameBit_Get(state->mapGameBit) != 0)
         {
-            ((PressureSwitchFlags*)&sub->flags)->mapBitLatched = 1;
+            ((PressureSwitchFlags*)&state->flags)->mapBitLatched = 1;
         }
     }
     if (GameBit_Get(((PressureswitchPlacement*)init)->triggerGameBit) != 0)
     {
         ((GameObject*)obj)->anim.localPosY = ((PressureswitchPlacement*)init)->restPosY - 25.0f;
-        sub->holdTimer = 0x1e;
+        state->holdTimer = 0x1e;
     }
 }
 
