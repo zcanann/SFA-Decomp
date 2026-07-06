@@ -705,30 +705,30 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
 #pragma dont_inline on
 void fn_80133818(void)
 {
-    f32 e;
-    f32 d;
-    f32 c;
-    f32 b;
-    f32 a;
+    f32 scale;
+    f32 posZ;
+    f32 center;
+    f32 posY;
+    f32 posX;
     u8 i;
 
     i = 0;
-    a = gMinimapFNeg15;
-    b = gMinimapFNeg9_8;
-    c = gMinimapZero;
-    d = gMinimapFNeg40;
-    e = gMinimapF0_05;
+    posX = gMinimapFNeg15;
+    posY = gMinimapFNeg9_8;
+    center = gMinimapZero;
+    posZ = gMinimapFNeg40;
+    scale = gMinimapF0_05;
     for (; i < 2; i++)
     {
         lbl_803DBBC8[i] = (void*)Obj_SetupObject(Obj_AllocObjectSetup(32, 2010 + i), 4, -1, -1, 0);
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = a;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = b;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = c;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = c;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosZ = d;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = posX;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = posY;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = center;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = center;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosZ = posZ;
         ((GameObject*)lbl_803DBBC8[i])->anim.rotX = 2000;
         ((GameObject*)lbl_803DBBC8[i])->anim.rotY = 0;
-        ((GameObject*)lbl_803DBBC8[i])->anim.rootMotionScale = e;
+        ((GameObject*)lbl_803DBBC8[i])->anim.rootMotionScale = scale;
     }
 }
 #pragma dont_inline reset
@@ -737,20 +737,20 @@ void fn_80133718(void)
 {
     u8 count;
     u8 i;
-    int b;
+    int pulseOn;
     int* model;
 
     count = 2;
     viewFn_80129cbc(gMinimapF43, gMinimapF110, gMinimapF390);
-    b = (gMinimapBlipPulse >> 3) & 1;
-    if (b != 0)
+    pulseOn = (gMinimapBlipPulse >> 3) & 1;
+    if (pulseOn != 0)
     {
         if ((s8) * (u8*)((char*)lbl_803DBBC8[1] + 173) == 0)
         {
             Sfx_PlayFromObject(0, SFXTRIG_and_suck_lp);
         }
     }
-    *(s8*)((char*)lbl_803DBBC8[1] + 173) = b;
+    *(s8*)((char*)lbl_803DBBC8[1] + 173) = pulseOn;
     if ((u32)lbl_803DD934 == 0)
     {
         count = 1;
@@ -866,9 +866,9 @@ void fn_8013396C(void)
     int held;
     int pressed;
     s16* slot;
-    int a;
-    s16 d;
-    s16 v2;
+    int targetAngle;
+    s16 angleDelta;
+    s16 areaNameId;
     f32 t;
     f32 old;
     f32 pw;
@@ -1028,19 +1028,19 @@ void fn_8013396C(void)
                         gMinimapBlipPulse = 0;
                     }
                     slot = Camera_GetCurrentViewSlot();
-                    a = getAngle(((GameObject*)lbl_803DD934)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
+                    targetAngle = getAngle(((GameObject*)lbl_803DD934)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
                                  ((GameObject*)lbl_803DD934)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
-                    a = *slot + a;
-                    d = a - (u16)((GameObject*)lbl_803DBBC8[1])->anim.rotZ;
-                    if (d > 0x8000)
+                    targetAngle = *slot + targetAngle;
+                    angleDelta = targetAngle - (u16)((GameObject*)lbl_803DBBC8[1])->anim.rotZ;
+                    if (angleDelta > 0x8000)
                     {
-                        d = (d - 0x10000) + 1;
+                        angleDelta = (angleDelta - 0x10000) + 1;
                     }
-                    if (d < -0x8000)
+                    if (angleDelta < -0x8000)
                     {
-                        d += 0xffff;
+                        angleDelta += 0xffff;
                     }
-                    *(s16*)((char*)lbl_803DBBC8[1] + 4) = *(s16*)(int)((char*)lbl_803DBBC8[1] + 4) + d / 5;
+                    *(s16*)((char*)lbl_803DBBC8[1] + 4) = *(s16*)(int)((char*)lbl_803DBBC8[1] + 4) + angleDelta / 5;
                 }
                 break;
             case MINIMAP_VIEW_MODE_AREA_NAME:
@@ -1049,10 +1049,10 @@ void fn_8013396C(void)
                     Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
                     gMinimapZoomSfxActive = 0;
                 }
-                v2 = lbl_803DBA6E;
-                if (v2 != gMinimapPrevAreaNameId)
+                areaNameId = lbl_803DBA6E;
+                if (areaNameId != gMinimapPrevAreaNameId)
                 {
-                    switch (v2)
+                    switch (areaNameId)
                     {
                     case -1:
                         sfx = 0x3ef;
@@ -1062,7 +1062,7 @@ void fn_8013396C(void)
                         break;
                     }
                 }
-                gMinimapPrevAreaNameId = v2;
+                gMinimapPrevAreaNameId = areaNameId;
                 break;
             }
             if ((u16)sfx != 0)
