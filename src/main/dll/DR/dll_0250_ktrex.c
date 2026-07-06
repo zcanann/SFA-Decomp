@@ -191,7 +191,7 @@ typedef struct KTRexRuntime
     s16 unk270;
     u8 pad272[8];
     u8 moveJustStartedA; /* 0x27A: baddie one-shot, gates per-state move setup (BaddieState.moveJustStartedA) */
-    u8 unk27B; /* player-control handoff latch (BaddieState.moveJustStartedB @ 0x27B) */
+    u8 moveJustStartedB; /* 0x27B: baddie one-shot, player-control handoff latch (BaddieState.moveJustStartedB); gates state handlers to defer to gPlayerInterface */
     u8 pad27C[4];
     f32 localOffsetZ; /* 0x280: local-space Z offset fed (negated) as Z arg to Matrix_TransformPoint -> anim.velocityZ */
     f32 localOffsetX; /* 0x284: local-space X offset fed as X arg to Matrix_TransformPoint -> anim.velocityX */
@@ -328,7 +328,7 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
 int ktrex_stateHandlerA06(int obj, int runtime)
 {
     int slot;
-    if (*(s8*)&((KTRexRuntime*)runtime)->unk27B != 0)
+    if (*(s8*)&((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 5);
     }
@@ -671,7 +671,7 @@ void ktrex_update(int obj)
         Music_Trigger(MUSICTRIG_mammoth_walk, 1);
         ((GameObject*)obj)->unkF8 = 2;
         ((KTRexRuntime*)runtime)->unk270 = 11;
-        ((KTRexRuntime*)runtime)->unk27B = 1;
+        ((KTRexRuntime*)runtime)->moveJustStartedB = 1;
     }
     ObjHits_RegisterActiveHitVolumeObject(obj);
     ((KTRexRuntime*)runtime)->playerObj = Obj_GetPlayerObject();
@@ -1399,7 +1399,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
     int flag1;
     u8* pb;
     p = ((GameObject*)obj)->anim.placementData;
-    if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
+    if ((s8)((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 1);
         ((KTRexArenaState*)gKTRexState)->laneIndex = 0;
@@ -1523,7 +1523,7 @@ int ktrex_stateHandlerA03(int obj, int runtime)
     f32 f4;
     f32 f5;
     int popped;
-    if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
+    if ((s8)((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 2);
         goto ret0;
@@ -1561,7 +1561,7 @@ ret0:
 
 int ktrex_stateHandlerA07(int obj, int runtime)
 {
-    if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
+    if ((s8)((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 6);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
@@ -1587,7 +1587,7 @@ int ktrex_stateHandlerA04(int obj, int runtime)
     int popped;
     f32 timer;
     p = ((GameObject*)obj)->anim.placementData;
-    if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
+    if ((s8)((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 4);
         ((KTRexArenaState*)gKTRexState)->stateTimer =
@@ -1623,7 +1623,7 @@ int ktrex_stateHandlerA05(int obj, int runtime)
     int pushLo;
     int pushHi;
     p = ((GameObject*)obj)->anim.placementData;
-    if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
+    if ((s8)((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 1);
         ((KTRexArenaState*)gKTRexState)->laneIndex = 1;
@@ -1667,7 +1667,7 @@ int ktrex_stateHandlerA08(int obj, int runtime)
     void* p;
     f32 timer;
     p = ((GameObject*)obj)->anim.placementData;
-    if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
+    if ((s8)((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 7);
         {
@@ -1755,7 +1755,7 @@ int ktrex_stateHandlerA11(int obj, int runtime)
 
 int ktrex_stateHandlerA09(int obj, int runtime)
 {
-    if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
+    if ((s8)((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 8);
         if ((*gCameraInterface)->getMode() == 66)
@@ -1784,7 +1784,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     flags = ((KTRexArenaState*)gKTRexState)->timerFA;
     phase = (flags >> 1) & 3;
     laneBit = flags & 1;
-    if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
+    if ((s8)((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 1);
         ((KTRexArenaState*)gKTRexState)->laneIndex = 2;
@@ -1900,7 +1900,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
 
 int ktrex_stateHandlerA01(int obj, int runtime)
 {
-    if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
+    if ((s8)((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         ((KTRexRuntime*)runtime)->unk349 = 0;
