@@ -154,18 +154,18 @@ int Credits_frameStart(void)
     u8 idx;
     int i;
     f32 cur;
-    f32 t;
+    f32 elapsed;
     f32 frac;
     CreditsLine* line;
-    u8 a;
+    u8 alpha;
     int off;
 
     idx = lbl_803DD970;
     if (idx < 10)
     {
-        t = lbl_803DD968 + timeDelta;
-        lbl_803DD968 = t;
-        if (t >= gCreditsPages[idx].endTime)
+        elapsed = lbl_803DD968 + timeDelta;
+        lbl_803DD968 = elapsed;
+        if (elapsed >= gCreditsPages[idx].endTime)
         {
             lbl_803DD970 = idx + 1;
         }
@@ -179,7 +179,7 @@ int Credits_frameStart(void)
                 line = (CreditsLine*)((char*)gCreditsPages[lbl_803DD970].lines + off);
                 if (cur < line->t0)
                 {
-                    a = 0;
+                    alpha = 0;
                 }
                 else if (cur < line->t1)
                 {
@@ -193,11 +193,11 @@ int Credits_frameStart(void)
                     {
                         frac = lbl_803E22AC;
                     }
-                    a = lbl_803E22B0 * frac;
+                    alpha = lbl_803E22B0 * frac;
                 }
                 else if (cur < line->t2)
                 {
-                    a = 0xff;
+                    alpha = 0xff;
                 }
                 else if (cur < line->t3)
                 {
@@ -211,13 +211,13 @@ int Credits_frameStart(void)
                     {
                         frac = lbl_803E22AC;
                     }
-                    a = 0xff - (int)(lbl_803E22B0 * frac);
+                    alpha = 0xff - (int)(lbl_803E22B0 * frac);
                 }
                 else
                 {
-                    a = 0;
+                    alpha = 0;
                 }
-                line->alpha = a;
+                line->alpha = alpha;
                 if (cur >= line->t0 && cur <= line->t3 &&
                     cur >= gCreditsPages[lbl_803DD970].scrollStartTime)
                 {
