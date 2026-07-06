@@ -135,7 +135,7 @@ void CameraModeWorldMap_update(u8* obj)
     u16 buttons;
     f32 spd = lbl_803E1A28;
     f32 mdx, mdz;
-    s16 e;
+    s16 pitchDelta;
 
     focus = (GameObject*)camera->anim.targetObj;
     objA = (GameObject*)ObjList_FindObjectById(0x42fff);
@@ -228,32 +228,32 @@ void CameraModeWorldMap_update(u8* obj)
                     f32 dx = f->anim.worldPosX - objA->anim.worldPosX;
                     f32 dz = f->anim.worldPosZ - objA->anim.worldPosZ;
                     CameraModeWorldMapState* st;
-                    s16 d;
+                    s16 angleDelta;
                     f32 cur;
                     gCamWorldMapState->targetAngle = (s16)(0x8000 - getAngle(dx, dz));
-                    d = (s16)((st = gCamWorldMapState)->targetAngle - (u16)camera->anim.rotX);
-                    if (d > 0x8000)
+                    angleDelta = (s16)((st = gCamWorldMapState)->targetAngle - (u16)camera->anim.rotX);
+                    if (angleDelta > 0x8000)
                     {
-                        d = (s16)(d - 0xffff);
+                        angleDelta = (s16)(angleDelta - 0xffff);
                     }
-                    if (d < -0x8000)
+                    if (angleDelta < -0x8000)
                     {
-                        d += 0xffff;
+                        angleDelta += 0xffff;
                     }
-                    camera->anim.rotX = camera->anim.rotX + d / st->focusBlendTimer;
+                    camera->anim.rotX = camera->anim.rotX + angleDelta / st->focusBlendTimer;
                     gCamWorldMapState->targetAngle =
                         (s16)(0x47d0 - getAngle(sqrtf(dx * dx + dz * dz),
                                                 f->anim.worldPosY - objA->anim.worldPosY));
-                    d = (s16)((st = gCamWorldMapState)->targetAngle - (u16)camera->anim.rotY);
-                    if (d > 0x8000)
+                    angleDelta = (s16)((st = gCamWorldMapState)->targetAngle - (u16)camera->anim.rotY);
+                    if (angleDelta > 0x8000)
                     {
-                        d = (s16)(d - 0xffff);
+                        angleDelta = (s16)(angleDelta - 0xffff);
                     }
-                    if (d < -0x8000)
+                    if (angleDelta < -0x8000)
                     {
-                        d += 0xffff;
+                        angleDelta += 0xffff;
                     }
-                    camera->anim.rotY = camera->anim.rotY + d / st->focusBlendTimer;
+                    camera->anim.rotY = camera->anim.rotY + angleDelta / st->focusBlendTimer;
                     st = gCamWorldMapState;
                     cur = st->distance;
                     st->distance =
@@ -322,7 +322,7 @@ void CameraModeWorldMap_update(u8* obj)
                 if (gCamWorldMapState->flags.transitionActive == 0)
                 {
                     int ang;
-                    s16 d;
+                    s16 angleDelta;
                     u16 my;
                     gCamWorldMapState->settleFrames -= 1;
                     if (gCamWorldMapState->settleFrames < 1)
@@ -331,26 +331,26 @@ void CameraModeWorldMap_update(u8* obj)
                     }
                     ang = (u16) - getAngle(objA->anim.worldPosX - focus->anim.worldPosX,
                                            objA->anim.worldPosZ - focus->anim.worldPosZ);
-                    d = (s16)((ang - 0x308f) - (u16)camera->anim.rotX);
-                    if (d > 0x8000)
+                    angleDelta = (s16)((ang - 0x308f) - (u16)camera->anim.rotX);
+                    if (angleDelta > 0x8000)
                     {
-                        d = (s16)(d - 0xffff);
+                        angleDelta = (s16)(angleDelta - 0xffff);
                     }
-                    if (d < -0x8000)
+                    if (angleDelta < -0x8000)
                     {
-                        d += 0xffff;
+                        angleDelta += 0xffff;
                     }
-                    camera->anim.rotX = camera->anim.rotX + d / gCamWorldMapState->settleFrames;
-                    d = (s16)(0x7d0 - (u16)camera->anim.rotY);
-                    if (d > 0x8000)
+                    camera->anim.rotX = camera->anim.rotX + angleDelta / gCamWorldMapState->settleFrames;
+                    angleDelta = (s16)(0x7d0 - (u16)camera->anim.rotY);
+                    if (angleDelta > 0x8000)
                     {
-                        d = (s16)(d - 0xffff);
+                        angleDelta = (s16)(angleDelta - 0xffff);
                     }
-                    if (d < -0x8000)
+                    if (angleDelta < -0x8000)
                     {
-                        d += 0xffff;
+                        angleDelta += 0xffff;
                     }
-                    camera->anim.rotY = camera->anim.rotY + d / gCamWorldMapState->settleFrames;
+                    camera->anim.rotY = camera->anim.rotY + angleDelta / gCamWorldMapState->settleFrames;
                     {
                         f32 a, sn, cs, sn54, cs54;
                         f32 t6, t5, px, pz;
@@ -411,8 +411,8 @@ void CameraModeWorldMap_update(u8* obj)
         objB->anim.rootMotionScale = marker->anim.rootMotionScale;
     }
 
-    e = (s16)(objB->anim.rotX - 0x2198);
-    if (e > -0x2000 && e < 0x2000)
+    pitchDelta = (s16)(objB->anim.rotX - 0x2198);
+    if (pitchDelta > -0x2000 && pitchDelta < 0x2000)
     {
         f32 lim;
         lim = (lbl_803E1A28 >
