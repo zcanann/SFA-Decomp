@@ -252,7 +252,7 @@ void renderClouds(int a, int b, int c, int d)
         {
             *(f32*)&gCloudActionGlareQuadSize = randomGetRange(0x1f40, 0x2ee0);
         }
-        GXBegin(0x80, 2, 4);
+        GXBegin(GX_QUADS, GX_VTXFMT2, 4);
         v = -gCloudActionGlareQuadSize;
         GXPos3f32(v, v, lbl_803DF2B4);
         GXTex2f32(lbl_803DF2B4, lbl_803DF2B4);
