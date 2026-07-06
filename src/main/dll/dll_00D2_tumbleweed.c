@@ -306,7 +306,7 @@ void tumbleweed_updateStateMachine(int obj)
         else if (state == TUMBLEWEED_PHASE_ROLLING)
         {
             f32 dx, dz, dist2;
-            f32 d;
+            f32 dist;
             player = (GameObject*)Obj_GetPlayerObject();
             dx = ((GameObject*)obj)->anim.localPosX - player->anim.localPosX;
             dz = ((GameObject*)obj)->anim.localPosZ - player->anim.localPosZ;
@@ -329,8 +329,8 @@ void tumbleweed_updateStateMachine(int obj)
                     dist2 = ndist2;
                 }
             }
-            d = sqrtf(dist2);
-            *(s16*)&((BackpackState*)aux)->distToTarget = d;
+            dist = sqrtf(dist2);
+            *(s16*)&((BackpackState*)aux)->distToTarget = dist;
             {
                 f32 dpx = ((GameObject*)obj)->anim.localPosX - ((BackpackState*)aux)->anchorPosX;
                 f32 dpz = ((GameObject*)obj)->anim.localPosZ - ((BackpackState*)aux)->anchorPosZ;
@@ -391,10 +391,10 @@ void tumbleweed_updateStateMachine(int obj)
         }
         else if (state == 3)
         {
-            f32 d;
+            f32 dist;
             player = (GameObject*)Obj_GetPlayerObject();
-            d = getXZDistance(&player->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
-            if (d < lbl_803E2FB8)
+            dist = getXZDistance(&player->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
+            if (dist < lbl_803E2FB8)
             {
                 ((BackpackState*)aux)->unk298 = 0x195;
                 ((BackpackState*)aux)->unk29A = 0;
