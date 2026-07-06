@@ -6142,9 +6142,6 @@ void loadDataFiles(int arg)
         }
         lbl_803DCC78--;
     }
-    /* banked 2-instr residual: retail strength-reduces this scan to a counted
-       mtctr/bdnz loop (subfic 87-i trip); MWCC won't emit the counted form for
-       this body (indexed loads + calls), so ours keeps the cmpwi 87/ble tail */
     for (i = 0; i <= 0x57; i++)
     {
         if (lbl_8035EF48[i] != -1)
@@ -6495,10 +6492,6 @@ int initLoadFiles(void)
             rom++;
         }
         lbl_803DCC98 = 0;
-        /* the walkers must derive from the shared end-of-table base (himem) --
-           re-spelling them as tbl->field changes the address web. Banked residual:
-           some walker bases materialize via an r0 addi+mr detour where retail
-           addi's straight into the saved reg, plus a saved-reg permutation. */
         himem = (u8*)tbl + 0x20000;
         ptrs = (u32*)(himem - 27176);  /* tbl->ptrs */
         owners = (s16*)(himem - 26824); /* tbl->owners */
@@ -7135,7 +7128,6 @@ extern u8 lbl_8036F880[0x8000];
 #define ZADV(n) (pos += (n), src += pos >> 3, pos &= 7, sh = 0x20 - pos)
 #define ZW(tbl, i) (*(u16*)(((u8*)(tbl) + (i)) + (i)))
 
-/* zlbDecompress is a foreign-compiler (GCC / SN ProDG family) object, not MWCC. */
 int zlbDecompress(void* srcv, int size, int dstv, void* outp)
 {
     int pos;
