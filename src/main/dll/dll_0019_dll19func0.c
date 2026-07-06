@@ -109,9 +109,9 @@ void CameraModeForceBehind_func05_nop(void)
 {
 }
 
-int dll_19_func1B(int p)
+int dll_19_func1B(int obj)
 {
-    s16 v = ((GameObject*)p)->anim.seqId;
+    s16 v = ((GameObject*)obj)->anim.seqId;
     switch (v)
     {
     case 341:
@@ -1099,8 +1099,8 @@ f32 dll_19_func0B(int* obj) { return *(f32*)((char*)((GameObject*)obj)->extra + 
 
 u16 dll_19_func0A(int obj)
 {
-    void* p = ((GameObject*)obj)->anim.placementData;
-    if (p != NULL) return *(u16*)((char*)p + 0x34);
+    void* placement = ((GameObject*)obj)->anim.placementData;
+    if (placement != NULL) return *(u16*)((char*)placement + 0x34);
     return 0xd2;
 }
 
