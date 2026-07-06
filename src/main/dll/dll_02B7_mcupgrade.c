@@ -16,6 +16,28 @@
 #include "main/dll/mcupgrade_state.h"
 #include "main/game_object.h"
 
+void mcupgrade_update(int obj)
+{
+    GameObject* gameObj = (GameObject*)obj;
+    McUpgradeSetup* setup = (McUpgradeSetup*)gameObj->anim.placementData;
+
+    if (GameBit_Get(setup->collectedGameBit) != 0)
+    {
+        gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+    }
+    else if (ObjTrigger_IsSet(obj) != 0)
+    {
+        GameBit_Set(setup->collectedGameBit, 1);
+        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+    }
+    else
+    {
+        objRenderFn_80041018(obj);
+    }
+}
+
+void mcupgrade_init(int obj) { ((GameObject*)obj)->animEventCallback = mcupgrade_SeqFn; }
+
 int mcupgradema_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -38,25 +60,3 @@ int mcupgradema_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-void mcupgrade_update(int obj)
-{
-    GameObject* gameObj = (GameObject*)obj;
-    McUpgradeSetup* setup = (McUpgradeSetup*)gameObj->anim.placementData;
-
-    if (GameBit_Get(setup->collectedGameBit) != 0)
-    {
-        gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-    }
-    else if (ObjTrigger_IsSet(obj) != 0)
-    {
-        GameBit_Set(setup->collectedGameBit, 1);
-        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-    }
-    else
-    {
-        objRenderFn_80041018(obj);
-    }
-}
-
-void mcupgrade_init(int obj) { ((GameObject*)obj)->animEventCallback = mcupgrade_SeqFn; }
