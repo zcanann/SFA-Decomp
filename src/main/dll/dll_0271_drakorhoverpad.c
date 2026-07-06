@@ -177,17 +177,17 @@ void drakorhoverpad_initMain(int obj, void* desc)
     u8* p = ((GameObject*)obj)->extra;
     HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
     Flags377* g = (Flags377*)(p + 0x179);
-    f32 v;
+    f32 initialSpeed;
 
     ((GameObject*)obj)->anim.rotX = (s16)(*(s8*)((char*)desc + 0x18) << 8);
     ((DrakorHoverpadState*)p)->unk118 = (f32) * (s16*)((char*)desc + 0x1a);
-    v = lbl_803E6A3C;
-    ((DrakorHoverpadState*)p)->speed = v;
+    initialSpeed = lbl_803E6A3C;
+    ((DrakorHoverpadState*)p)->speed = initialSpeed;
     f->bit20 = 0;
     f->b40 = 1;
     ((DrakorHoverpadState*)p)->unk170 = 0;
-    ((DrakorHoverpadState*)p)->unk11C = v;
-    ((DrakorHoverpadState*)p)->unk120 = v;
+    ((DrakorHoverpadState*)p)->unk11C = initialSpeed;
+    ((DrakorHoverpadState*)p)->unk120 = initialSpeed;
     ((DrakorHoverpadState*)p)->frameCounter = 0;
     switch (*(s16*)desc)
     {
