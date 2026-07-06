@@ -98,7 +98,7 @@ void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37A0);
 }
 
-void seqobject_free(int x) { ObjGroup_RemoveObject(x, SEQOBJECT_OBJGROUP); }
+void seqobject_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJECT_OBJGROUP); }
 
 void fn_8017C294(int* obj)
 {
