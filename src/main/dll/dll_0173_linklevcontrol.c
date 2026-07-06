@@ -11,8 +11,10 @@
  * position and a couple of story game bits, edge-latched through the
  * object's musicTrack field and a SCGameBitLatch record.
  *
- * The object descriptor exported here is gIMIcePillarObjDescriptor; its
- * callbacks (imicepillar_*) live in sibling TUs.
+ * The unit's own object descriptor (gLINKLevControlObjDescriptor,
+ * .data:0x80323AD0) and its area-effect table (lbl_803239F0) live in the
+ * unowned .data gap (auto_07_803236D0); this TU carries no data sections,
+ * matching the retail object.
  */
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/game_object.h"
@@ -52,76 +54,10 @@ extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern u8 lbl_803239F0[];
 
-void imicepillar_render(void);
-void imicepillar_hitDetect(void);
-void imicepillar_update(void);
-void imicepillar_init(void);
-void imicepillar_release(void);
-void imicepillar_initialise(void);
-void imicepillar_free(void);
-int imicepillar_getExtraSize(void);
-int imicepillar_getObjectTypeId(void);
-
 void link_levcontrol_updateAreaMusic(int* obj);
 void link_levcontrol_applyEnterAreaEffects(int* obj);
 
-ObjectDescriptor gIMIcePillarObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)imicepillar_initialise,
-    (ObjectDescriptorCallback)imicepillar_release,
-    0,
-    (ObjectDescriptorCallback)imicepillar_init,
-    (ObjectDescriptorCallback)imicepillar_update,
-    (ObjectDescriptorCallback)imicepillar_hitDetect,
-    (ObjectDescriptorCallback)imicepillar_render,
-    (ObjectDescriptorCallback)imicepillar_free,
-    (ObjectDescriptorCallback)imicepillar_getObjectTypeId,
-    imicepillar_getExtraSize,
-};
-
-int link_levcontrol_getExtraSize(void) { return sizeof(LinkLevControlState); }
-
-void link_levcontrol_free(int obj)
-{
-    switch ((s32)((GameObject*)obj)->anim.mapEventSlot)
-    {
-    case AREA_CELL_45:
-        Music_Trigger(MUSICTRIG_underwater, 0);
-        break;
-    case AREA_CELL_48:
-    case AREA_CELL_49:
-        Music_Trigger(MUSICTRIG_Teleport, 0);
-        break;
-    }
-}
-
-void link_levcontrol_update(int* obj)
-{
-    LinkLevControlState* state = ((GameObject*)obj)->extra;
-    f32* player = Obj_GetPlayerObject();
-    if (player == NULL) return;
-
-    if ((s32)state->areaCell != (s32)((GameObject*)obj)->anim.mapEventSlot)
-    {
-        if ((s32)((GameObject*)obj)->anim.mapEventSlot == coordsToMapCell(player[3], player[5]))
-        {
-            link_levcontrol_applyEnterAreaEffects(obj);
-        }
-        else
-        {
-            return;
-        }
-    }
-    if ((s32)((GameObject*)obj)->anim.mapEventSlot == coordsToMapCell(player[3], player[5]))
-    {
-        link_levcontrol_updateAreaMusic(obj);
-    }
-    state->areaCell = coordsToMapCell(player[3], player[5]);
-}
-
+#pragma dont_inline on
 void link_levcontrol_updateAreaMusic(int* obj)
 {
     LinkLevControlState* state = ((GameObject*)obj)->extra;
@@ -218,6 +154,47 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
         Music_Trigger(MUSICTRIG_citytombs, 1);
         break;
     }
+}
+#pragma dont_inline reset
+
+int link_levcontrol_getExtraSize(void) { return sizeof(LinkLevControlState); }
+
+void link_levcontrol_free(int obj)
+{
+    switch ((s32)((GameObject*)obj)->anim.mapEventSlot)
+    {
+    case AREA_CELL_45:
+        Music_Trigger(MUSICTRIG_underwater, 0);
+        break;
+    case AREA_CELL_48:
+    case AREA_CELL_49:
+        Music_Trigger(MUSICTRIG_Teleport, 0);
+        break;
+    }
+}
+
+void link_levcontrol_update(int* obj)
+{
+    LinkLevControlState* state = ((GameObject*)obj)->extra;
+    f32* player = Obj_GetPlayerObject();
+    if (player == NULL) return;
+
+    if ((s32)state->areaCell != (s32)((GameObject*)obj)->anim.mapEventSlot)
+    {
+        if ((s32)((GameObject*)obj)->anim.mapEventSlot == coordsToMapCell(player[3], player[5]))
+        {
+            link_levcontrol_applyEnterAreaEffects(obj);
+        }
+        else
+        {
+            return;
+        }
+    }
+    if ((s32)((GameObject*)obj)->anim.mapEventSlot == coordsToMapCell(player[3], player[5]))
+    {
+        link_levcontrol_updateAreaMusic(obj);
+    }
+    state->areaCell = coordsToMapCell(player[3], player[5]);
 }
 
 void link_levcontrol_init(int* obj)
