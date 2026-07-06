@@ -1,4 +1,4 @@
-/* DLL 0x019D — dll19d / torch1CD group. TU: 0x801CBA98–0x801CBD88. */
+/* DLL 0x019D — dll19d / torch1CD group. TU: 0x801CC998–0x801CCFA4. */
 #include "main/dll/torch1CD.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -34,26 +34,8 @@ extern u32 getLActions();
 
 extern f32 lbl_803E51B8;
 
-void dll_19D_render(void)
-{
-}
-
-void dll_19D_release(void)
-{
-}
-
-void dll_19D_initialise(void)
-{
-}
-
 int dll_19D_getExtraSize(void) { return 0x38; }
 int dll_19D_getObjectTypeId(void) { return 0x0; }
-
-/*
- * Function: dll_19C_init
- * EN v1.0 Address: 0x801CC950
- * EN v1.0 Size: 64b
- */
 
 /*
  * Function: dll_19D_free
@@ -72,39 +54,8 @@ void dll_19D_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)self);
 }
 
-/*
- * Function: dll_19D_init
- * EN v1.0 Address: 0x801CCECC
- * EN v1.0 Size: 208b
- */
-void dll_19D_init(int obj)
+void dll_19D_render(void)
 {
-    register int self = obj;
-    register int state2 = *(int*)&((GameObject*)self)->anim.placementData;
-    int slot;
-
-    if ((int)(signed char)*(u8*)(state2 + 0x19) != 0)
-    {
-        slot = 3;
-    }
-    else
-    {
-        slot = 1;
-    }
-    ObjHits_SetHitVolumeSlot(self, 0xe, slot, 0);
-
-    if ((int)(signed char)((Dll19DPlacement*)state2)->variant == 1)
-    {
-        getLActions(self, self, 0x203, 0, 0, 0);
-    }
-    else if ((int)(signed char)((Dll19DPlacement*)state2)->variant == 2)
-    {
-        getLActions(self, self, 0x204, 0, 0, 0);
-    }
-    else
-    {
-        getLActions(self, self, 0x201, 0, 0, 0);
-    }
 }
 
 /*
@@ -229,4 +180,47 @@ void dll_19D_update(int obj)
             Obj_FreeObject(self);
         }
     }
+}
+
+/*
+ * Function: dll_19D_init
+ * EN v1.0 Address: 0x801CCECC
+ * EN v1.0 Size: 208b
+ */
+void dll_19D_init(int obj)
+{
+    register int self = obj;
+    register int state2 = *(int*)&((GameObject*)self)->anim.placementData;
+    int slot;
+
+    if ((int)(signed char)*(u8*)(state2 + 0x19) != 0)
+    {
+        slot = 3;
+    }
+    else
+    {
+        slot = 1;
+    }
+    ObjHits_SetHitVolumeSlot(self, 0xe, slot, 0);
+
+    if ((int)(signed char)((Dll19DPlacement*)state2)->variant == 1)
+    {
+        getLActions(self, self, 0x203, 0, 0, 0);
+    }
+    else if ((int)(signed char)((Dll19DPlacement*)state2)->variant == 2)
+    {
+        getLActions(self, self, 0x204, 0, 0, 0);
+    }
+    else
+    {
+        getLActions(self, self, 0x201, 0, 0, 0);
+    }
+}
+
+void dll_19D_release(void)
+{
+}
+
+void dll_19D_initialise(void)
+{
 }
