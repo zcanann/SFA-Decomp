@@ -204,19 +204,19 @@ extern u8 gGameLoopReloadRequested;
 
 typedef struct
 {
-    u8 f0;
-    u8 f1;
+    u8 pending;
+    u8 type;
     u8 _2[2];
-    int f4;
-    int f8;
-    int fc;
-    int f10;
-    int f14;
-    int f18;
-    int f1c;
-    int f20;
-    int f24;
-    int f28;
+    int resourceId;
+    int dest;
+    int argC;
+    int offset;
+    int arg14;
+    int arg18;
+    int arg1c;
+    int arg20;
+    int arg24;
+    int arg28;
 } AssetReq;
 
 AssetReq gGameLoopAssetReq;
@@ -233,36 +233,36 @@ void loadAsset(void* reqVoid)
     AssetReq* req;
 
     req = reqVoid;
-    switch (req->f1)
+    switch (req->type)
     {
     case 0:
-        *(void**)req->f8 = fileLoad(req->f4, 0);
+        *(void**)req->dest = fileLoad(req->resourceId, 0);
         break;
     case 1:
-        fileLoadToBuffer(req->f4, (void*)req->f8);
+        fileLoadToBuffer(req->resourceId, (void*)req->dest);
         break;
     case 2:
-        fileLoadToBufferOffset(req->f4, (void*)req->f8, req->f10, req->fc);
+        fileLoadToBufferOffset(req->resourceId, (void*)req->dest, req->offset, req->argC);
         break;
     case 4:
-        *(void**)req->f8 =
-            loadCharacter((s16*)req->f18, req->f1c,
-                          req->f24, req->f20,
-                          (void*)req->f14, req->f28);
+        *(void**)req->dest =
+            loadCharacter((s16*)req->arg18, req->arg1c,
+                          req->arg24, req->arg20,
+                          (void*)req->arg14, req->arg28);
         break;
     case 3:
-        *(void**)req->f8 = (void*)textureLoad(req->f4, 0);
+        *(void**)req->dest = (void*)textureLoad(req->resourceId, 0);
         break;
     case 5:
-        *(void**)req->f8 = Resource_Acquire(req->f4 & 0xffff, req->fc & 0xffff);
+        *(void**)req->dest = Resource_Acquire(req->resourceId & 0xffff, req->argC & 0xffff);
         break;
     case 6:
-        *(void**)req->f8 = (void*)((int (*)(int, int, void*))return0_8002969C)(req->f4, req->fc, tmp);
+        *(void**)req->dest = (void*)((int (*)(int, int, void*))return0_8002969C)(req->resourceId, req->argC, tmp);
         break;
     case 7:
-        *(void**)req->f8 =
-            loadAnimation(req->f24, req->f4, (s16)req->fc,
-                          (u8*)req->f20);
+        *(void**)req->dest =
+            loadAnimation(req->arg24, req->resourceId, (s16)req->argC,
+                          (u8*)req->arg20);
         break;
     }
 }
@@ -280,19 +280,19 @@ void mapReload(void)
 #pragma dont_inline on
 void* loadAssetFileById(int id, int arg)
 {
-    gGameLoopAssetReq.f0 = 1;
-    gGameLoopAssetReq.f1 = 0;
-    gGameLoopAssetReq.f4 = arg;
-    gGameLoopAssetReq.f8 = id;
+    gGameLoopAssetReq.pending = 1;
+    gGameLoopAssetReq.type = 0;
+    gGameLoopAssetReq.resourceId = arg;
+    gGameLoopAssetReq.dest = id;
     loadAsset(&gGameLoopAssetReq);
 }
 
 void* loadTextureFile(int id, int arg)
 {
-    gGameLoopAssetReq.f0 = 1;
-    gGameLoopAssetReq.f1 = 3;
-    gGameLoopAssetReq.f4 = arg;
-    gGameLoopAssetReq.f8 = id;
+    gGameLoopAssetReq.pending = 1;
+    gGameLoopAssetReq.type = 3;
+    gGameLoopAssetReq.resourceId = arg;
+    gGameLoopAssetReq.dest = id;
     loadAsset(&gGameLoopAssetReq);
 }
 
@@ -300,12 +300,12 @@ void gameTextLoadDir(int dirId);
 
 void* getTabEntry(void* dst, int fileId, int offset, int size)
 {
-    gGameLoopAssetReq.f0 = 1;
-    gGameLoopAssetReq.f1 = 2;
-    gGameLoopAssetReq.f4 = fileId;
-    gGameLoopAssetReq.f8 = (int)dst;
-    gGameLoopAssetReq.f10 = offset;
-    gGameLoopAssetReq.fc = size;
+    gGameLoopAssetReq.pending = 1;
+    gGameLoopAssetReq.type = 2;
+    gGameLoopAssetReq.resourceId = fileId;
+    gGameLoopAssetReq.dest = (int)dst;
+    gGameLoopAssetReq.offset = offset;
+    gGameLoopAssetReq.argC = size;
     loadAsset(&gGameLoopAssetReq);
 }
 
@@ -381,13 +381,13 @@ int cacheAllocAndCopy(u32 srcAddr, u32 size, u32* cacheCursor, u32* outEnd, u32 
 #pragma dont_inline on
 void* animationLoad(int id, s16 animId, s16 moveIndex, int cache, int animDef)
 {
-    gGameLoopAssetReq.f0 = 1;
-    gGameLoopAssetReq.f1 = 7;
-    gGameLoopAssetReq.f4 = animId;
-    gGameLoopAssetReq.f8 = id;
-    gGameLoopAssetReq.fc = moveIndex;
-    gGameLoopAssetReq.f20 = cache;
-    gGameLoopAssetReq.f24 = animDef;
+    gGameLoopAssetReq.pending = 1;
+    gGameLoopAssetReq.type = 7;
+    gGameLoopAssetReq.resourceId = animId;
+    gGameLoopAssetReq.dest = id;
+    gGameLoopAssetReq.argC = moveIndex;
+    gGameLoopAssetReq.arg20 = cache;
+    gGameLoopAssetReq.arg24 = animDef;
     loadAsset(&gGameLoopAssetReq);
 }
 
