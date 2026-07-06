@@ -61,45 +61,6 @@ enum
     SEQOBJECT_OBJGROUP = 0xf
 };
 
-void seqobject_init(int* obj, SeqObjectPlacement* params)
-{
-    ObjAnimComponent* objAnim;
-    SeqObjectState* state;
-
-    objAnim = (ObjAnimComponent*)obj;
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)(params->initialYaw << 8);
-    ((GameObject*)obj)->animEventCallback = seqobject_SeqFn;
-    *(u8*)&objAnim->bankIndex = params->modelBankIndex;
-    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
-    {
-        objAnim->bankIndex = 0;
-    }
-    ObjGroup_AddObject(obj, SEQOBJECT_OBJGROUP);
-    state->flags = 0;
-    if (params->openGameBit != -1 && GameBit_Get(params->openGameBit) != 0)
-    {
-        state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
-        if (params->preemptSequenceId != 0)
-        {
-            state->flags = (u8)(state->flags | SEQOBJECT_STATE_TRIGGER_SEQUENCE);
-        }
-    }
-    state->triggerBitState = 0;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED);
-}
-
-int seqobject_getExtraSize(void) { return sizeof(SeqObjectState); }
-int seqobject_getObjectTypeId(void) { return 0; }
-
-void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37A0);
-}
-
-void seqobject_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJECT_OBJGROUP); }
-
 void fn_8017C294(int* obj)
 {
     if (obj != NULL)
@@ -152,6 +113,17 @@ int seqobject_SeqFn(int* obj, int* unused, ObjAnimUpdateState* animUpdate)
     }
     state->flags = (u8)(state->flags | SEQOBJECT_STATE_SEQUENCE_DONE);
     return 0;
+}
+
+int seqobject_getExtraSize(void) { return sizeof(SeqObjectState); }
+int seqobject_getObjectTypeId(void) { return 0; }
+
+void seqobject_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJECT_OBJGROUP); }
+
+void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37A0);
 }
 
 void seqobject_update(int* obj)
@@ -232,4 +204,32 @@ void seqobject_update(int* obj)
     {
         state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_OPEN);
     }
+}
+
+void seqobject_init(int* obj, SeqObjectPlacement* params)
+{
+    ObjAnimComponent* objAnim;
+    SeqObjectState* state;
+
+    objAnim = (ObjAnimComponent*)obj;
+    state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.rotX = (s16)(params->initialYaw << 8);
+    ((GameObject*)obj)->animEventCallback = seqobject_SeqFn;
+    *(u8*)&objAnim->bankIndex = params->modelBankIndex;
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+    {
+        objAnim->bankIndex = 0;
+    }
+    ObjGroup_AddObject(obj, SEQOBJECT_OBJGROUP);
+    state->flags = 0;
+    if (params->openGameBit != -1 && GameBit_Get(params->openGameBit) != 0)
+    {
+        state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
+        if (params->preemptSequenceId != 0)
+        {
+            state->flags = (u8)(state->flags | SEQOBJECT_STATE_TRIGGER_SEQUENCE);
+        }
+    }
+    state->triggerBitState = 0;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED);
 }
