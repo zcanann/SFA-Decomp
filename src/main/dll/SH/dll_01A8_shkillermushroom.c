@@ -294,12 +294,12 @@ void enemymushroom_update(int* obj)
         ((EnemyMushroomState*)state)->stateFlags = (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_ACTIVE);
         if (((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
         {
-            int t = ((GameObject*)obj)->anim.alpha - framesThisStep * 4;
-            if (t < 0)
+            int newAlpha = ((GameObject*)obj)->anim.alpha - framesThisStep * 4;
+            if (newAlpha < 0)
             {
-                t = 0;
+                newAlpha = 0;
             }
-            ((GameObject*)obj)->anim.alpha = t;
+            ((GameObject*)obj)->anim.alpha = newAlpha;
             ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
             if (((EnemyMushroomState*)state)->timer > (f32)((EnemyMushroomState*)state)->respawnFrameLimit)
             {
