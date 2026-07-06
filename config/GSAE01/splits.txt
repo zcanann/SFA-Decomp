@@ -279,6 +279,8 @@ main/dll/dll_002A_effect17.c:
 
 main/dll/dll_002B_effect18.c:
 	.text       start:0x800CB690 end:0x800CCF5C
+	.data       start:0x80311060 end:0x803110D4
+	.sdata2     start:0x803E0220 end:0x803E02D8
 
 main/dll/dll_002C_effect19.c:
 	.text       start:0x800CCF5C end:0x800CD430
@@ -300,6 +302,7 @@ main/dll/dll_0004_dummy04.c:
 
 main/dll/dll_000F_unk.c:
 	.text       start:0x800D8020 end:0x800D9DCC
+	.sdata2     start:0x803E0598 end:0x803E05A0
 
 main/dll/dll_0010_uicontroller.c:
 	.text       start:0x800D9DCC end:0x800D9EB4
