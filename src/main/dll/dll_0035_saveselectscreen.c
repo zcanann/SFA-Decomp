@@ -364,8 +364,6 @@ void saveSelectFn_8011a70c(void)
     }
 }
 #pragma opt_dead_assignments reset
-#pragma dont_inline reset
-#pragma dont_inline on
 void saveSelectGoToChooseSlot(int arg)
 {
     SaveSelectPanel* p;
