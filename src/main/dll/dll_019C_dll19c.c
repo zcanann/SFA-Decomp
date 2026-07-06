@@ -19,37 +19,25 @@ typedef struct Dll19CPlacement
     u8 pad1A[0x20 - 0x1A];
 } Dll19CPlacement;
 
-extern f32 lbl_803E51B0;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 
-extern f32 lbl_803E51B4;
+int dll_19C_getExtraSize(void) { return 0x8; }
+int dll_19C_getObjectTypeId(void) { return 0x0; }
 
 void dll_19C_free(void)
 {
 }
 
-void dll_19C_hitDetect(void)
-{
-}
-
-void dll_19C_release(void)
-{
-}
-
-void dll_19C_initialise(void)
-{
-}
-
-
-int dll_19C_getExtraSize(void) { return 0x8; }
-int dll_19C_getObjectTypeId(void) { return 0x0; }
-
 void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E51B0);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+}
+
+void dll_19C_hitDetect(void)
+{
 }
 
 void dll_19C_update(int* obj)
@@ -90,7 +78,7 @@ void dll_19C_update(int* obj)
     {
         setup = Obj_AllocObjectSetup(0x18, 0x248);
         ((ObjPlacement*)setup)->posX = ((Dll19CPlacement*)def)->posX;
-        ((ObjPlacement*)setup)->posY = lbl_803E51B4 + ((Dll19CPlacement*)def)->posY;
+        ((ObjPlacement*)setup)->posY = 50.0f + ((Dll19CPlacement*)def)->posY;
         ((ObjPlacement*)setup)->posZ = ((Dll19CPlacement*)def)->posZ;
         *(s16*)setup = 0x248;
         ((ObjPlacement*)setup)->mapId = -1;
@@ -122,6 +110,15 @@ void dll_19C_init(int obj, u8* initData)
     *(u8*)(self + 0x37) = 0xff;
     ((GameObject*)self)->anim.alpha = 0xff;
 }
+
+void dll_19C_release(void)
+{
+}
+
+void dll_19C_initialise(void)
+{
+}
+
 
 /*
  * Function: dll_19D_free
