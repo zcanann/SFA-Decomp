@@ -90,45 +90,14 @@ void DrakorEnergy_func0B_nop(void)
 {
 }
 
-void drakorenergy_free(void)
-{
-}
-
-void drakorenergy_hitDetect(void)
-{
-}
-
-void drakorenergy_release(void)
-{
-}
-
-void drakorenergy_initialise(void)
-{
-}
-
-void drakorenergy_init(int* obj, u8* init)
-{
-    DrakorEnergyState* sub;
-    DrakorenergyPlacement* placement = (DrakorenergyPlacement*)init;
-    f32 fz;
-    sub = ((GameObject*)obj)->extra;
-    sub->mode = DRAKORENERGY_MODE_RESET;
-    ((GameObject*)obj)->anim.localPosX = placement->posX;
-    ((GameObject*)obj)->anim.localPosY = placement->posY;
-    ((GameObject*)obj)->anim.localPosZ = placement->posZ;
-    fz = lbl_803E627C;
-    ((GameObject*)obj)->anim.velocityZ = fz;
-    ((GameObject*)obj)->anim.velocityX = fz;
-    ((GameObject*)obj)->anim.velocityY = lbl_803E62A0;
-    sub->phase = randomGetRange(0, 0xffff);
-    if (GameBit_Get(placement->gameBitId) != 0)
-    {
-        sub->mode = DRAKORENERGY_MODE_COLLECTED;
-    }
-}
+int DrakorEnergy_setScale(int* obj) { return ((DrakorEnergyState*)(int*)((GameObject*)obj)->extra)->mode == DRAKORENERGY_MODE_IDLE; }
 
 int drakorenergy_getExtraSize(void) { return sizeof(DrakorEnergyState); }
 int drakorenergy_getObjectTypeId(void) { return 0x0; }
+
+void drakorenergy_free(void)
+{
+}
 
 void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -140,7 +109,9 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-int DrakorEnergy_setScale(int* obj) { return ((DrakorEnergyState*)(int*)((GameObject*)obj)->extra)->mode == DRAKORENERGY_MODE_IDLE; }
+void drakorenergy_hitDetect(void)
+{
+}
 
 void drakorenergy_update(int obj)
 {
@@ -230,4 +201,33 @@ void drakorenergy_update(int obj)
     }
     *(s16*)obj += lbl_803DC178;
     ((DrakorEnergyState*)blob)->phase += framesThisStep * 0x500;
+}
+
+void drakorenergy_init(int* obj, u8* init)
+{
+    DrakorEnergyState* sub;
+    DrakorenergyPlacement* placement = (DrakorenergyPlacement*)init;
+    f32 fz;
+    sub = ((GameObject*)obj)->extra;
+    sub->mode = DRAKORENERGY_MODE_RESET;
+    ((GameObject*)obj)->anim.localPosX = placement->posX;
+    ((GameObject*)obj)->anim.localPosY = placement->posY;
+    ((GameObject*)obj)->anim.localPosZ = placement->posZ;
+    fz = lbl_803E627C;
+    ((GameObject*)obj)->anim.velocityZ = fz;
+    ((GameObject*)obj)->anim.velocityX = fz;
+    ((GameObject*)obj)->anim.velocityY = lbl_803E62A0;
+    sub->phase = randomGetRange(0, 0xffff);
+    if (GameBit_Get(placement->gameBitId) != 0)
+    {
+        sub->mode = DRAKORENERGY_MODE_COLLECTED;
+    }
+}
+
+void drakorenergy_release(void)
+{
+}
+
+void drakorenergy_initialise(void)
+{
 }
