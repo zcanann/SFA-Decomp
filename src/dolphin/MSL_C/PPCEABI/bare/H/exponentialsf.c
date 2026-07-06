@@ -2,14 +2,14 @@
 
 extern const float __one_over_F[];
 
+extern const float lbl_803E7E50;
+extern const float lbl_803E7E54;
+extern const float lbl_803E7E58;
 extern float lbl_803DC648;
 extern float lbl_803DC64C;
 __declspec(section ".sdata") extern float lbl_803DC650[];
 __declspec(section ".sdata") extern u32 lbl_803DC658;
 __declspec(section ".sdata") extern u32 lbl_803DC65C;
-extern const float lbl_803E7E50;
-extern const float lbl_803E7E54;
-extern const float lbl_803E7E58;
 
 u32 lbl_80332C78[] = {
     0xBEC00000, 0xBEBA406C, 0xBEB48C35, 0xBEAEE32E, 0xBEA9452D, 0xBEA3B205, 0xBE9E298F, 0xBE98ABA0,
@@ -41,32 +41,26 @@ static inline u32 float_bits(float value)
 static inline int classify_float(float value)
 {
     u32 bits;
-    s32 exponent;
     s32 fraction;
 
     bits = float_bits(value);
-    exponent = bits & 0x7F800000;
 
-    if (exponent >= 0x7F800000) {
-        if (exponent == 0x7F800000) {
-            fraction = bits & 0x007FFFFF;
-            if (fraction != 0) {
-                return 1;
-            }
-            return 2;
+    switch ((s32)(bits & 0x7F800000)) {
+    case 0x7F800000:
+        fraction = bits & 0x007FFFFF;
+        if (fraction != 0) {
+            return 1;
         }
-        return 4;
-    }
-
-    if (exponent == 0) {
+        return 2;
+    case 0:
         fraction = bits & 0x007FFFFF;
         if (fraction != 0) {
             return 5;
         }
         return 3;
+    default:
+        return 4;
     }
-
-    return 4;
 }
 
 typedef union {
@@ -76,20 +70,18 @@ typedef union {
 
 static inline float log2_kernel(float x, float* table)
 {
-    float_word value;
     u32 bits;
-    u32 fraction;
-    u32 index;
     int exponent;
-    float result;
+    u32 index;
+    u32 fraction;
     float_word high;
     float_word coef0;
     float_word coef1;
+    float_word pad; /* write-only; kept for retail stack layout */
     float_word full;
 
-    value.f = x;
+    bits = *(u32*)&x;
     coef0.i = lbl_803DC658;
-    bits = value.i;
     coef1.i = lbl_803DC65C;
     exponent = (bits >> 23) - 0x80;
     fraction = bits;
@@ -98,8 +90,8 @@ static inline float log2_kernel(float x, float* table)
 
     if ((bits & 0xFFFF) != 0) {
         float delta;
-        float delta2;
 
+        pad.i = bits;
         high.i = (bits & 0x007F0000) | 0x3F800000;
         full.i = fraction | 0x3F800000;
 
@@ -110,15 +102,11 @@ static inline float log2_kernel(float x, float* table)
 
         delta = full.f - high.f;
         delta *= __one_over_F[index];
-        delta2 = delta * delta;
-        result = delta * coef1.f + coef0.f;
-        result = delta2 * result;
-        result = lbl_803DC650[1] * delta + result;
-        result = lbl_803DC650[0] * delta + result;
-        result = delta + result;
-        result = table[index] + result;
-        result = ((float)exponent + lbl_803E7E54) + result;
-        return result;
+        return ((float)exponent + lbl_803E7E54)
+             + (table[index]
+                + (delta
+                   + (lbl_803DC650[0] * delta
+                      + (lbl_803DC650[1] * delta + (delta * delta) * (delta * coef1.f + coef0.f)))));
     }
 
     return ((float)exponent + lbl_803E7E54) + table[index];
@@ -127,10 +115,13 @@ static inline float log2_kernel(float x, float* table)
 static inline float exp2_kernel(float x, float* table)
 {
     float_word scale;
+    float_word pad; /* write-only; kept for retail stack layout */
     float fraction;
+    float z;
     float poly;
 
     scale.i = x;
+    pad.i = scale.i;
     fraction = x - (float)scale.i;
 
     if (scale.i > 128) {
@@ -138,11 +129,12 @@ static inline float exp2_kernel(float x, float* table)
     }
 
     if (scale.i < -127) {
-        return lbl_803E7E50;
+        return 0.0f;
     }
 
     scale.i += 127;
     scale.i <<= 23;
+    z = scale.f;
 
     poly = fraction
          * (fraction
@@ -158,7 +150,7 @@ static inline float exp2_kernel(float x, float* table)
          + table[129];
     poly = fraction * poly;
 
-    return scale.f * (poly + lbl_803E7E58);
+    return z * (poly + lbl_803E7E58);
 }
 
 #define float_bits(value) (*(u32*)&(value))
@@ -166,50 +158,52 @@ static inline float exp2_kernel(float x, float* table)
 #pragma optimization_level 2
 float powf(float x, float y)
 {
-    float xx;
     float* table;
     int int_y;
+    float d;
 
-    xx = x;
     table = (float*)lbl_80332C78;
 
-    if (xx > lbl_803E7E50) {
-        y *= log2_kernel(xx, table);
+    if (x > lbl_803E7E50) {
+        y *= log2_kernel(x, table);
         return exp2_kernel(y, table);
     }
 
-    if (xx < lbl_803E7E50) {
+    if (x < lbl_803E7E50) {
         int_y = y;
-        if (y - (float)int_y != lbl_803E7E50) {
+        d = y - (float)int_y;
+        if (d != lbl_803E7E50) {
             return lbl_803DC648;
         }
 
         if (int_y % 2 != 0) {
-            y *= log2_kernel(-xx, table);
+            y *= log2_kernel(-x, table);
             return -exp2_kernel(y, table);
         }
 
-        y *= log2_kernel(-xx, table);
+        y *= log2_kernel(-x, table);
         return exp2_kernel(y, table);
     }
 
-    if (classify_float(x) != 1) {
-        switch (classify_float(y)) {
-        case 3:
-            return lbl_803E7E58;
-        case 1:
-        case 2:
-            return lbl_803DC648;
-        case 4:
-        case 5:
-            if ((float_bits(x) & 0x80000000) != 0) {
-                return lbl_803DC64C;
-            }
-            return lbl_803E7E50;
-        }
+    if (classify_float(x) == 1) {
+        return x;
     }
 
-    return x;
+    switch (classify_float(y)) {
+    case 3:
+        return 1.0f;
+    case 1:
+    case 2:
+        return lbl_803DC648;
+    case 4:
+    case 5:
+        if ((float_bits(x) & 0x80000000) != 0) {
+            return lbl_803DC64C;
+        }
+        return x;
+    }
+
+    return 0.0f;
 }
 
 /* player head-move table + spawned-object list; owned here by link order */
