@@ -2229,6 +2229,7 @@ main/dll/dll_01FB_dll1fb.c:
 
 main/dll/dll_01FC_laserbeam.c:
 	.text       start:0x801F0AE4 end:0x801F160C
+	.sdata2     start:0x803E5D10 end:0x803E5D58
 
 main/dll/dll_01FE_pressureswitch.c:
 	.text       start:0x801F160C end:0x801F1BC8

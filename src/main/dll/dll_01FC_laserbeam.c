@@ -147,6 +147,23 @@ STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
+/* .sdata2 constant pool */
+static const f32 lbl_803E5D10 = 0.0f;
+static const f32 lbl_803E5D14 = 0.0026f;
+static const f32 lbl_803E5D18 = 1.0f;
+static const f32 lbl_803E5D1C = 0.052f;
+static const f32 gLaserBeamObjPi = 3.1415927f;
+static const f32 gLaserBeamObjAngleToRadScale = 32768.0f;
+static const f32 lbl_803E5D28 = 5.0f;
+static const f32 lbl_803E5D2C = 25.0f;
+static const f32 lbl_803E5D30 = 63.0f;
+static const f32 lbl_803E5D34 = 2.0f;
+static const f32 lbl_803E5D38 = 70.0f;
+static const f32 lbl_803E5D3C = -70.0f;
+static const f32 lbl_803E5D40 = -20.0f;
+static const f32 lbl_803E5D44 = 20.0f;
+static const f32 lbl_803E5D48 = 0.04f;
+
 void LaserBeam_update(int obj2)
 {
 
@@ -158,21 +175,6 @@ void LaserBeam_update(int obj2)
     extern int* gLaserBeamObjModgfxResource;
     extern u8 framesThisStep;
     extern f32 timeDelta;
-    extern f32 lbl_803E5D10;
-    extern f32 lbl_803E5D14;
-    extern f32 lbl_803E5D18;
-    extern f32 lbl_803E5D1C;
-    extern f32 gLaserBeamObjPi;
-    extern f32 gLaserBeamObjAngleToRadScale;
-    extern f32 lbl_803E5D28;
-    extern f32 lbl_803E5D2C;
-    extern f32 lbl_803E5D30;
-    extern f32 lbl_803E5D34;
-    extern f32 lbl_803E5D38;
-    extern f32 lbl_803E5D3C;
-    extern f32 lbl_803E5D40;
-    extern f32 lbl_803E5D44;
-    extern f32 lbl_803E5D48;
     char* t;
     LaserBeamState* b;
     char* player;
@@ -383,7 +385,7 @@ void LaserBeam_update(int obj2)
                 {
                     a = lbl_803E5D30;
                 }
-                tt = *(f32*)&lbl_803E5D30 - a;
+                tt = lbl_803E5D30 - a;
                 tt = lbl_803E5D34 * tt;
                 b->unk28 = (s16)(int)tt;
                 if (!(lat < lbl_803E5D38 && lat > lbl_803E5D3C) && b->sourceAttached == 1)
@@ -471,26 +473,12 @@ void LaserBeam_update(int obj2)
     }
 }
 
-extern void* gLaserBeamObjModgfxResource;
-
-void LaserBeam_initialise(void)
-{
-    gLaserBeamObjModgfxResource = Resource_Acquire(0x81, 1);
-}
-
-void LaserBeam_release(void)
-{
-    Resource_Release(gLaserBeamObjModgfxResource);
-    gLaserBeamObjModgfxResource = NULL;
-}
-
 #pragma opt_strength_reduction off
 
 extern int textureLoadAsset(int id);
 
 void LaserBeam_free(s16* obj, char* arg)
 {
-    extern f32 lbl_803E5D10;
     LaserBeamState* b;
 
     b = ((GameObject*)obj)->extra;
@@ -530,3 +518,16 @@ void LaserBeam_free(s16* obj, char* arg)
     }
 }
 #pragma opt_strength_reduction reset
+
+extern void* gLaserBeamObjModgfxResource;
+
+void LaserBeam_release(void)
+{
+    Resource_Release(gLaserBeamObjModgfxResource);
+    gLaserBeamObjModgfxResource = NULL;
+}
+
+void LaserBeam_initialise(void)
+{
+    gLaserBeamObjModgfxResource = Resource_Acquire(0x81, 1);
+}
