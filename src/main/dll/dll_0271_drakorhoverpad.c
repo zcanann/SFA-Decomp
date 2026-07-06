@@ -661,7 +661,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
     HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
     Flags377* g = (Flags377*)(p + 0x179);
     int player;
-    f32 m;
+    f32 shakeMag;
     f32 absP;
     f32 cur;
 
@@ -679,13 +679,13 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
             Camera_EnableViewYOffset();
             if (((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel >= lbl_803E6A3C)
             {
-                m = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
+                shakeMag = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
             }
             else
             {
-                m = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
+                shakeMag = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
             }
-            CameraShake_SetAllMagnitudes(m);
+            CameraShake_SetAllMagnitudes(shakeMag);
         }
         break;
     case 3:
@@ -710,13 +710,13 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
             Camera_EnableViewYOffset();
             if (((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel >= lbl_803E6A3C)
             {
-                m = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
+                shakeMag = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
             }
             else
             {
-                m = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
+                shakeMag = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
             }
-            CameraShake_SetAllMagnitudes(m);
+            CameraShake_SetAllMagnitudes(shakeMag);
         }
         return 1;
     case 4:
@@ -836,13 +836,13 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
                 Camera_EnableViewYOffset();
                 if (((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel >= lbl_803E6A3C)
                 {
-                    m = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
+                    shakeMag = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
                 }
                 else
                 {
-                    m = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
+                    shakeMag = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
                 }
-                CameraShake_SetAllMagnitudes(m);
+                CameraShake_SetAllMagnitudes(shakeMag);
             }
         }
         break;
@@ -862,13 +862,13 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
                 Camera_EnableViewYOffset();
                 if (((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel >= lbl_803E6A3C)
                 {
-                    m = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
+                    shakeMag = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
                 }
                 else
                 {
-                    m = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
+                    shakeMag = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
                 }
-                CameraShake_SetAllMagnitudes(m);
+                CameraShake_SetAllMagnitudes(shakeMag);
             }
         }
         break;
