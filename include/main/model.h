@@ -28,7 +28,7 @@ typedef struct ModelFileHeader {
     u8 *texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
     u8 *renderOps; /* 0x44 each, renderOpCount */
     u8 *jointData;
-    u8 *unk40;
+    u8 *jointBlendData; /* 0x40: per-joint blend/pivot table (stride joff); [+0..8]=pivot XYZ (PSMTXTrans to/from origin for scale-fuzz), [+0xc]=scale divisor; passed to ObjModel_BlendVertexStream; offset->ptr relocated on load */
     u8 unk44[0x10];
     u8 *unk54;
     u8 *unk58;

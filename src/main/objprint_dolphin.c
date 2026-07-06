@@ -1977,7 +1977,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             {
                 vtx = *(int*)&((ModelFileHeader*)m)->vertices;
             }
-            ObjModel_BlendVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->unk40,
+            ObjModel_BlendVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->jointBlendData,
                                               ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
             ObjModel_BlendNormalStream(gObjBoneMtxBuffer, m + 0xac, *(int*)&((ModelFileHeader*)m)->normals,
                                                 *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
@@ -2313,7 +2313,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 {
                     vtx = *(int*)&((ModelFileHeader*)m)->vertices;
                 }
-                ObjModel_BlendVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->unk40,
+                ObjModel_BlendVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->jointBlendData,
                                                   ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
                 ObjModel_BlendNormalStream(gObjBoneMtxBuffer, m + 0xac, *(int*)&((ModelFileHeader*)m)->normals,
                                                     *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
@@ -2346,18 +2346,18 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         joff = 0;
         for (; j < ((ModelFileHeader*)m)->jointCount; j++)
         {
-            f32 sc = (f32)gObjFuzzStep * (fade / *(f32*)(((ModelFileHeader*)m)->unk40 + joff + 0xc)) + lbl_803DEA1C;
+            f32 sc = (f32)gObjFuzzStep * (fade / *(f32*)(((ModelFileHeader*)m)->jointBlendData + joff + 0xc)) + lbl_803DEA1C;
             f32* jm = (f32*)ObjModel_GetJointMatrix((u8*)am, j);
             PSMTXScale(sm, sc, sc, sc);
             if (lbl_803DCC35 == 0)
             {
                 {
-                    char* jp = (char*)((ModelFileHeader*)m)->unk40 + joff;
+                    char* jp = (char*)((ModelFileHeader*)m)->jointBlendData + joff;
                     PSMTXTrans(tm, -*(f32*)jp, -*(f32*)(jp + 4), -*(f32*)(jp + 8));
                 }
                 PSMTXConcat(sm, tm, sm);
                 {
-                    char* jp = (char*)((ModelFileHeader*)m)->unk40 + joff;
+                    char* jp = (char*)((ModelFileHeader*)m)->jointBlendData + joff;
                     PSMTXTrans(tm, *(f32*)jp, *(f32*)(jp + 4), *(f32*)(jp + 8));
                 }
                 PSMTXConcat(tm, sm, sm);

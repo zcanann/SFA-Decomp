@@ -354,9 +354,9 @@ void ObjModel_RelocateModelData(u8* m)
         {
             ((ModelFileHeader*)m)->unk1C = m + *(u32*)&((ModelFileHeader*)m)->unk1C;
         }
-        if (*(u32*)&((ModelFileHeader*)m)->unk40)
+        if (*(u32*)&((ModelFileHeader*)m)->jointBlendData)
         {
-            ((ModelFileHeader*)m)->unk40 = m + *(u32*)&((ModelFileHeader*)m)->unk40;
+            ((ModelFileHeader*)m)->jointBlendData = m + *(u32*)&((ModelFileHeader*)m)->jointBlendData;
         }
     }
     if (*(u32*)&((ModelFileHeader*)m)->unk54)
