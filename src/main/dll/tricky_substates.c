@@ -36,6 +36,8 @@ extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 /* GameCube controller button mask */
 #define PAD_BUTTON_A 0x100
 
+#define THORNTAIL_OBJGROUP 0x4d /* DLL 0x1AD shthorntail */
+
 typedef struct
 {
     u8 bit7 : 1;
@@ -1619,7 +1621,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
     lo = 1;
     hi = 3;
     arr[0] = lbl_803E2524;
-    found = (u8*)ObjGroup_FindNearestObject(0x4d, obj, arr);
+    found = (u8*)ObjGroup_FindNearestObject(THORNTAIL_OBJGROUP, obj, arr);
     if (found != NULL && (*(u16*)(found + 0xb0) & OBJECT_OBJFLAG_RENDERED) != 0)
     {
         lo = 0;
