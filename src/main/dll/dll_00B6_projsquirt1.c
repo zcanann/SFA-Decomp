@@ -32,5 +32,13 @@ void projsquirt1_initialise(void)
 {
 }
 
-/* descriptor/ptr table auto 0x803197f8-0x80319818 */
-u32 lbl_803197F8[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projship1_initialise, (u32)projship1_release, 0x00000000, (u32)projship1_doUnsupported };
+/* descriptor/ptr table auto 0x803197f8-0x80319818 (8-byte aligned in retail;
+ * pointer tables regenerate ADDR32 relocs). Union u64 member forces the
+ * retail 8-byte alignment after the 0x26-byte string (retail pad
+ * gap_07_803197F6_data). Same idiom as dll_00B1_projlightning3. */
+typedef union DllDescriptorTable {
+    void* ptrs[8];
+    u64 align8;
+} DllDescriptorTable;
+
+DllDescriptorTable lbl_803197F8 = { { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projship1_initialise, projship1_release, (void*)0x00000000, projship1_doUnsupported } };
