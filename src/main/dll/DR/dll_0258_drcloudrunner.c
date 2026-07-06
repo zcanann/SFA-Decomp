@@ -420,7 +420,7 @@ void DR_CloudRunner_init(int obj, int p2)
         f32 mat[4];
     } stk;
     int inner;
-    int r;
+    int savedSlot;
     ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)p2 + 0x18) << 8);
     ((GameObject*)obj)->animEventCallback = DR_CloudRunner_SeqFn;
     ObjGroup_AddObject(obj, DRCLOUDRUNNER_OBJGROUP);
@@ -434,10 +434,10 @@ void DR_CloudRunner_init(int obj, int p2)
     {
         ((GameObject*)obj)->anim.modelState->flags |= 0xa10;
     }
-    r = GameBit_Get(0x7a9);
-    if (r != 0)
+    savedSlot = GameBit_Get(0x7a9);
+    if (savedSlot != 0)
     {
-        dll_2E_func0A(r + 0x13, &stk);
+        dll_2E_func0A(savedSlot + 0x13, &stk);
         ((GameObject*)obj)->anim.localPosX = stk.mat[1];
         ((GameObject*)obj)->anim.localPosY = stk.mat[2];
         ((GameObject*)obj)->anim.localPosZ = stk.mat[3];
