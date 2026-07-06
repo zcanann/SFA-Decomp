@@ -62,51 +62,51 @@ void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 
 void mmsh_waterspike_update(int obj)
 {
-    void* o;
-    int* p;
-    int obj2;
-    int n;
+    void* animObj;
+    int* hitPtr;
+    int hitObj;
+    int hitCount;
     int i;
-    f32 d;
+    f32 delta;
     f32 newY;
     f32 maxY;
-    f32 dist;
-    int* list;
+    f32 riseDelta;
+    int* hitList;
     int placement;
 
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
     ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
-    o = ObjList_FindObjectById(((GameObject*)obj)->unkF8);
-    if (o != NULL)
+    animObj = ObjList_FindObjectById(((GameObject*)obj)->unkF8);
+    if (animObj != NULL)
     {
-        dist = objFn_801948c0(o, 3) - ((GameObject*)obj)->anim.localPosY;
+        riseDelta = objFn_801948c0(animObj, 3) - ((GameObject*)obj)->anim.localPosY;
     }
     else
     {
         fn_80137948(sWaterSpikeInvalidXyzAnimIdWarning, ((MmshWaterspikePlacement*)placement)->xyzAnimId);
-        n = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
+        hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
                                  ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, &list, 0, 0);
-        if (n != 0)
+                                 ((GameObject*)obj)->anim.localPosZ, &hitList, 0, 0);
+        if (hitCount != 0)
         {
-            dist = lbl_803E4F80;
-            p = list;
-            for (i = 0; i < n; i++)
+            riseDelta = lbl_803E4F80;
+            hitPtr = hitList;
+            for (i = 0; i < hitCount; i++)
             {
-                obj2 = *p;
-                if (*(char*)(obj2 + 0x14) == 0xe)
+                hitObj = *hitPtr;
+                if (*(char*)(hitObj + 0x14) == 0xe)
                 {
-                    d = *(f32*)obj2 - ((GameObject*)obj)->anim.localPosY;
-                    if (d > dist)
+                    delta = *(f32*)hitObj - ((GameObject*)obj)->anim.localPosY;
+                    if (delta > riseDelta)
                     {
-                        dist = d;
+                        riseDelta = delta;
                     }
                 }
-                p = p + 1;
+                hitPtr = hitPtr + 1;
             }
         }
     }
-    newY = ((GameObject*)obj)->anim.localPosY + dist;
+    newY = ((GameObject*)obj)->anim.localPosY + riseDelta;
     maxY = ((MmshWaterspikePlacement*)placement)->maxHeight;
     if (newY > maxY)
     {
@@ -119,7 +119,7 @@ void mmsh_waterspike_update(int obj)
         if (((GameObject*)obj)->unkF4 <= 0)
         {
             ((GameObject*)obj)->unkF4 = randomGetRange(0x3c, 0xf0);
-            if (lbl_803E4F84 == dist)
+            if (lbl_803E4F84 == riseDelta)
             {
                 ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
                     ((GameObject*)obj)->anim.localPosX,
