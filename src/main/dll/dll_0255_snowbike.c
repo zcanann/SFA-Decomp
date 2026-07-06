@@ -407,17 +407,17 @@ void SnowBike_func12(int obj, f32* outFloat, s32* outBool)
 f32 SnowBike_func13(int obj, f32* out)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    f32 r;
+    f32 speed;
     *out = lbl_803E5BB8;
-    r = sqrtf(((SnowBikeMountState*)state)->velocityZ * ((SnowBikeMountState*)state)->velocityZ
+    speed = sqrtf(((SnowBikeMountState*)state)->velocityZ * ((SnowBikeMountState*)state)->velocityZ
         + (((SnowBikeMountState*)state)->velocityX * ((SnowBikeMountState*)state)->velocityX
             + ((SnowBikeMountState*)state)->velocityY * ((SnowBikeMountState*)state)->velocityY));
-    r = r * lbl_803E5BA8;
-    if (r > lbl_803E5AEC)
+    speed = speed * lbl_803E5BA8;
+    if (speed > lbl_803E5AEC)
     {
-        r = lbl_803E5AEC;
+        speed = lbl_803E5AEC;
     }
-    return r;
+    return speed;
 }
 
 u32 SnowBike_setScale(int obj)
