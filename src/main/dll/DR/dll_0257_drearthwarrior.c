@@ -3,6 +3,8 @@
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define PAD_BUTTON_A 0x100
+
 #define DREARTHWARRIOR_OBJGROUP 0xa
 
 #define DREARTHWARRIOR_OBJFLAG_PARENT_SLACK 0x1000
@@ -746,7 +748,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     if (!((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 &&
         !((ByteFlags*)((char*)inner + 0x14ec))->b01 && (*(int*)&((EarthWarriorState*)state)->baddie.unk31C & 0x100))
     {
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         ((ByteFlags*)((char*)inner + 0x14ec))->b01 = 1;
         hitState->suppressOutgoingHits = 0;
         ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E8304, 0);
@@ -1015,7 +1017,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     if (!((ByteFlags*)&q->flags3F0)->b80 && !((ByteFlags*)&q->flags3F0)->b40 &&
         !((ByteFlags*)&inner->sub.flags994)->b01 && (*(int*)&((BaddieState*)p2)->unk31C & 0x100))
     {
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         ((ByteFlags*)&inner->sub.flags994)->b01 = 1;
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
         ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E8304, 0);
@@ -1272,7 +1274,7 @@ void DR_EarthWarrior_update(int obj)
         if ((*gGameUIInterface)->isEventReady(0xc1) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-            buttonDisable(0, 0x100);
+            buttonDisable(0, PAD_BUTTON_A);
             inner->sub.health += 4;
             GameBit_Set(0xc1, GameBit_Get(0xc1) - 1);
         }
@@ -1284,7 +1286,7 @@ void DR_EarthWarrior_update(int obj)
                 {
                     (*gObjectTriggerInterface)->runSequence(
                         inner->sub.unk99C, (void*)obj, -1);
-                    buttonDisable(0, 0x100);
+                    buttonDisable(0, PAD_BUTTON_A);
                 }
                 else
                 {
