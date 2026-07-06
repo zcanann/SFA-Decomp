@@ -4,7 +4,7 @@
  * dll_9E_func03 builds a fixed list of 14 modgfx draw commands (GfxCmd
  * entries[], one mode/blend + xyz per command, texture sub-tables taken
  * from the lbl_80318260 data blob) plus the surrounding spawn header
- * (colour, position, scale, the seven s16 params at tab+0x1f8..+0x204),
+ * (colour, position, scale, the seven s16 params at base+0x1f8..+0x204),
  * then hands the whole packet to (*gModgfxInterface)->spawnEffect.
  *
  * The spawn flag word starts at 0xC0100C0 and ORs in the caller's flags;
@@ -48,35 +48,35 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     struct
     {
         GfxCmd* cmds; /* +0x00 */
-        int ctx; /* +0x04 */
+        int sourceObj; /* +0x04 */
         u8 pad0[0x18]; /* +0x08 */
         f32 col[3]; /* +0x20 */
         f32 pos[3]; /* +0x2c */
         f32 scale; /* +0x38 */
-        u32 v3c; /* +0x3c */
-        u32 v40; /* +0x40 */
-        s16 v44; /* +0x44 */
-        s16 hw[7]; /* +0x46 */
-        u32 flags; /* +0x54 */
-        u8 v58, v59, v5a, v5b, v5c; /* +0x58..+0x5c */
+        u32 unk_3c; /* +0x3c */
+        u32 unk_40; /* +0x40 */
+        s16 variant; /* +0x44 */
+        s16 unk_46[7]; /* +0x46 */
+        u32 spawnFlags; /* +0x54 */
+        u8 unk_58, unk_59, unk_5a, unk_5b, unk_5c; /* +0x58..+0x5c */
         s8 count; /* +0x5d */
         u8 pad1[2]; /* +0x5e */
         GfxCmd entries[32]; /* +0x60 */
     } buf;
-    u8* tab = (u8*)(int)lbl_80318260;
+    u8* base = (u8*)(int)lbl_80318260;
     GfxCmd* e = buf.entries;
-    u32 fl;
+    u32 spawnFlags;
 
     e[0].layer = 0;
     e[0].flags = 0x15;
-    e[0].tex = &tab[0x1b0];
+    e[0].tex = &base[0x1b0];
     e[0].mode = 4;
     e[0].x = lbl_803E1418;
     e[0].y = lbl_803E1418;
     e[0].z = lbl_803E1418;
     e[1].layer = 0;
     e[1].flags = 0x15;
-    e[1].tex = &tab[0x1b0];
+    e[1].tex = &base[0x1b0];
     e[1].mode = 2;
     e[1].x = lbl_803E141C;
     e[1].y = lbl_803E1420;
@@ -90,21 +90,21 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[2].z = lbl_803E1418;
     e[3].layer = 1;
     e[3].flags = 0x15;
-    e[3].tex = &tab[0x1b0];
+    e[3].tex = &base[0x1b0];
     e[3].mode = 2;
     e[3].x = lbl_803E1428;
     e[3].y = lbl_803E1428;
     e[3].z = lbl_803E1428;
     e[4].layer = 1;
     e[4].flags = 7;
-    e[4].tex = &tab[0x174];
+    e[4].tex = &base[0x174];
     e[4].mode = 4;
     e[4].x = lbl_803E142C;
     e[4].y = lbl_803E1418;
     e[4].z = lbl_803E1418;
     e[5].layer = 1;
     e[5].flags = 0x15;
-    e[5].tex = &tab[0x1b0];
+    e[5].tex = &base[0x1b0];
     e[5].mode = 0x4000;
     e[5].x = lbl_803E1430;
     e[5].y = lbl_803E1418;
@@ -125,14 +125,14 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[7].z = lbl_803E1418;
     e[8].layer = 2;
     e[8].flags = 0x15;
-    e[8].tex = &tab[0x1b0];
+    e[8].tex = &base[0x1b0];
     e[8].mode = 8;
     e[8].x = lbl_803E1434;
     e[8].y = lbl_803E1438;
     e[8].z = lbl_803E1418;
     e[9].layer = 2;
     e[9].flags = 0x15;
-    e[9].tex = &tab[0x1b0];
+    e[9].tex = &base[0x1b0];
     e[9].mode = 0x4000;
     e[9].x = lbl_803E1430;
     e[9].y = lbl_803E1418;
@@ -146,7 +146,7 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[10].z = lbl_803E1418;
     e[11].layer = 3;
     e[11].flags = 0x15;
-    e[11].tex = &tab[0x1b0];
+    e[11].tex = &base[0x1b0];
     e[11].mode = 0x4000;
     e[11].x = lbl_803E1430;
     e[11].y = lbl_803E1418;
@@ -160,15 +160,15 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[12].z = lbl_803E1418;
     e[13].layer = 3;
     e[13].flags = 7;
-    e[13].tex = &tab[0x174];
+    e[13].tex = &base[0x174];
     e[13].mode = 4;
     e[13].x = lbl_803E1418;
     e[13].y = lbl_803E1418;
     e[13].z = lbl_803E1418;
 
-    buf.v58 = 0;
-    buf.ctx = (int)sourceObj;
-    buf.v44 = variant;
+    buf.unk_58 = 0;
+    buf.sourceObj = (int)sourceObj;
+    buf.variant = variant;
     buf.pos[0] = lbl_803E1418;
     buf.pos[1] = lbl_803E1418;
     buf.pos[2] = lbl_803E1418;
@@ -176,25 +176,25 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.col[1] = lbl_803E1418;
     buf.col[2] = lbl_803E1418;
     buf.scale = lbl_803E1440;
-    buf.v40 = 2;
-    buf.v3c = 7;
-    buf.v59 = 0xe;
-    buf.v5a = 0;
-    buf.v5b = 0x1e;
+    buf.unk_40 = 2;
+    buf.unk_3c = 7;
+    buf.unk_59 = 0xe;
+    buf.unk_5a = 0;
+    buf.unk_5b = 0x1e;
     buf.count = (GfxCmd*)((u8*)e + 336) - e;
-    buf.hw[0] = *(s16*)&tab[0x1f8];
-    buf.hw[1] = *(s16*)&tab[0x1fa];
-    buf.hw[2] = *(s16*)&tab[0x1fc];
-    buf.hw[3] = *(s16*)&tab[0x1fe];
-    buf.hw[4] = *(s16*)&tab[0x200];
-    buf.hw[5] = *(s16*)&tab[0x202];
-    buf.hw[6] = *(s16*)&tab[0x204];
+    buf.unk_46[0] = *(s16*)&base[0x1f8];
+    buf.unk_46[1] = *(s16*)&base[0x1fa];
+    buf.unk_46[2] = *(s16*)&base[0x1fc];
+    buf.unk_46[3] = *(s16*)&base[0x1fe];
+    buf.unk_46[4] = *(s16*)&base[0x200];
+    buf.unk_46[5] = *(s16*)&base[0x202];
+    buf.unk_46[6] = *(s16*)&base[0x204];
     buf.cmds = e;
-    fl = 0xc0100c0;
-    buf.flags = fl;
-    fl |= flags;
-    buf.flags = fl;
-    if (fl & 1)
+    spawnFlags = 0xc0100c0;
+    buf.spawnFlags = spawnFlags;
+    spawnFlags |= flags;
+    buf.spawnFlags = spawnFlags;
+    if (spawnFlags & 1)
     {
         if (sourceObj != NULL)
         {
@@ -209,7 +209,7 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
             buf.pos[2] = lbl_803E1418 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80318260, 0x18, &tab[0xd4], 0x46c, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80318260, 0x18, &base[0xd4], 0x46c, 0);
 }
 
 
