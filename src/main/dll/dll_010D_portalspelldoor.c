@@ -108,6 +108,23 @@ extern f32 lbl_803E3A90;
 extern f32 lbl_803E3A88;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
+int portalspelldoor_getExtraSize(void) { return 0x10; }
+int portalspelldoor_getObjectTypeId(void) { return 0x0; }
+
+void portalspelldoor_free(void)
+{
+}
+
+void portalspelldoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3A88);
+}
+
+void portalspelldoor_hitDetect(void)
+{
+}
+
 void portalspelldoor_update(int obj)
 {
     extern int playerHasSpell(int obj, int spell);
@@ -171,25 +188,6 @@ void portalspelldoor_update(int obj)
     }
 }
 
-void portalspelldoor_free(void)
-{
-}
-
-void portalspelldoor_hitDetect(void)
-{
-}
-
-void portalspelldoor_release(void)
-{
-}
-
-void portalspelldoor_initialise(void)
-{
-}
-
-int portalspelldoor_getExtraSize(void) { return 0x10; }
-int portalspelldoor_getObjectTypeId(void) { return 0x0; }
-
 /* portalspelldoor_init: byte<<8 / halfword<<8 stash at obj+0..+2, prime
  * obj+8 with lbl_803E3A8C, derive sub+4 = obj->_a8 * obj+8 * lbl_803E3A90,
  * GameBit-gated bit-set on obj+6 (0x4000) and obj+b0 (0xe000), then
@@ -213,10 +211,12 @@ void portalspelldoor_init(u8* obj, u8* data)
     sub->openTimer = -1;
 }
 
-void portalspelldoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void portalspelldoor_release(void)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3A88);
+}
+
+void portalspelldoor_initialise(void)
+{
 }
 
 ObjectDescriptor gPortalSpellDoorObjDescriptor = {
