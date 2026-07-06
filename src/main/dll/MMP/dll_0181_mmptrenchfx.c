@@ -26,18 +26,6 @@ extern f32 lbl_803E45C0;
 extern f32 lbl_803E45B0;
 extern f32 lbl_803E45B4;
 
-void mmp_trenchfx_hitDetect(void)
-{
-}
-
-void mmp_trenchfx_release(void)
-{
-}
-
-void mmp_trenchfx_initialise(void)
-{
-}
-
 int mmp_trenchfx_getExtraSize(void) { return 0x30; }
 int mmp_trenchfx_getObjectTypeId(void) { return 0x0; }
 
@@ -47,28 +35,11 @@ void mmp_trenchfx_free(int obj)
 }
 
 #pragma peephole off
-void mmp_trenchfx_init(int obj, int data)
-{
-    MmpTrenchfxState* state = ((GameObject*)obj)->extra;
-    MmpTrenchfxPlacement* place = (MmpTrenchfxPlacement*)data;
-    s16 angle;
-    state->enableBit = place->enableBit;
-    state->extentX = (u16)(place->extentX << 2);
-    state->extentZ = (u16)(place->extentZ << 2);
-    state->extentY = (u16)(place->extentY << 2);
-    angle = (s16)(((s32)place->emitAngleZ) << 8);
-    state->emitAngles[2] = angle;
-    ((GameObject*)obj)->anim.rotZ = angle;
-    angle = (s16)(((s32)place->emitAngleY) << 8);
-    state->emitAngles[1] = angle;
-    ((GameObject*)obj)->anim.rotY = angle;
-    angle = (s16)(((s32)place->emitAngleX) << 8);
-    state->emitAngles[0] = angle;
-    ((GameObject*)obj)->anim.rotX = angle;
-    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E45C0;
-}
-
 void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+
+void mmp_trenchfx_hitDetect(void)
+{
+}
 
 #pragma scheduling off
 void mmp_trenchfx_update(int obj)
@@ -115,4 +86,35 @@ void mmp_trenchfx_update(int obj)
         (*gPartfxInterface)->spawnObject((void*)obj, 0x720, lbl_803AC930, 0x200001, -1,
                                          NULL);
     }
+}
+#pragma scheduling reset
+
+void mmp_trenchfx_init(int obj, int data)
+{
+    MmpTrenchfxState* state = ((GameObject*)obj)->extra;
+    MmpTrenchfxPlacement* place = (MmpTrenchfxPlacement*)data;
+    s16 angle;
+    state->enableBit = place->enableBit;
+    state->extentX = (u16)(place->extentX << 2);
+    state->extentZ = (u16)(place->extentZ << 2);
+    state->extentY = (u16)(place->extentY << 2);
+    angle = (s16)(((s32)place->emitAngleZ) << 8);
+    state->emitAngles[2] = angle;
+    ((GameObject*)obj)->anim.rotZ = angle;
+    angle = (s16)(((s32)place->emitAngleY) << 8);
+    state->emitAngles[1] = angle;
+    ((GameObject*)obj)->anim.rotY = angle;
+    angle = (s16)(((s32)place->emitAngleX) << 8);
+    state->emitAngles[0] = angle;
+    ((GameObject*)obj)->anim.rotX = angle;
+    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E45C0;
+}
+#pragma peephole reset
+
+void mmp_trenchfx_release(void)
+{
+}
+
+void mmp_trenchfx_initialise(void)
+{
 }
