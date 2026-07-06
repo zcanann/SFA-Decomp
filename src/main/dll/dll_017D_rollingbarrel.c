@@ -78,11 +78,11 @@ void RollingBarrel_free(int obj)
     int count;
     int* arr = ObjGroup_GetObjects(ROLLINGBARREL_GROUP_ID, &count);
     int i;
-    u32 a;
+    u32 groupObj;
     for (i = 0; i < count; i++)
     {
-        a = arr[i];
-        if (a == obj)
+        groupObj = arr[i];
+        if (groupObj == obj)
         {
             ObjGroup_RemoveObject(obj, ROLLINGBARREL_GROUP_ID);
             break;
@@ -127,15 +127,15 @@ void RollingBarrel_update(int obj)
     f32 floor_y;
     f32 dist_sq;
     int blocked;
-    int hitInfo;
-    int hitB;
-    u32 hitC;
-    int hitResult;
-    u32 r;
+    int hitObject;
+    int hitSphereIndex;
+    u32 hitVolume;
+    int hitPriority;
+    u32 explosionVariant;
     u8 stateId;
 
     state = ((GameObject*)obj)->extra;
-    hitInfo = 0;
+    hitObject = 0;
     descriptor = *(RollingBarrelMapData**)&((GameObject*)obj)->anim.placementData;
     blocked = 0;
     dist_sq = lbl_803E4468;
@@ -231,10 +231,10 @@ void RollingBarrel_update(int obj)
                     (s16)(rotYStep * state->curveSpeed +
                         (f32)(int)((GameObject*)obj)->anim.rotY);
             }
-            hitResult = ObjHits_GetPriorityHit(obj, &hitInfo, &hitB, &hitC);
+            hitPriority = ObjHits_GetPriorityHit(obj, &hitObject, &hitSphereIndex, &hitVolume);
 
-            if (blocked != 0 || (void*)hitInfo == (void*)Obj_GetPlayerObject() || (u32)(hitResult - 0xe) <= 1u ||
-                hitResult == 0x13)
+            if (blocked != 0 || (void*)hitObject == (void*)Obj_GetPlayerObject() || (u32)(hitPriority - 0xe) <= 1u ||
+                hitPriority == 0x13)
             {
                 if (blocked == 0)
                 {
@@ -244,8 +244,8 @@ void RollingBarrel_update(int obj)
                 {
                     state->hitVolumeSlot = 5;
                 }
-                r = randomGetRange(0, 2);
-                fn_801A5D88(obj, r);
+                explosionVariant = randomGetRange(0, 2);
+                fn_801A5D88(obj, explosionVariant);
             }
         }
         break;
@@ -293,7 +293,7 @@ void RollingBarrel_update(int obj)
 void fn_801A5D88(int obj, int explosionVariant)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;
-    u32 r;
+    u32 debrisType;
     u32 r2;
     int player;
     f32 dist;
@@ -302,13 +302,13 @@ void fn_801A5D88(int obj, int explosionVariant)
     Sfx_PlayFromObject(obj, SFXsp_lf_mutter1);
     if (gRollingBarrelExplodingCount > 1)
     {
-        r = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, r, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        debrisType = randomGetRange(0, 1) & 0xff;
+        spawnExplosion(obj, 1, 1, 0, debrisType, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     else
     {
-        r = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, r, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        debrisType = randomGetRange(0, 1) & 0xff;
+        spawnExplosion(obj, 1, 1, 0, debrisType, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     state->timer = lbl_803E4468;
