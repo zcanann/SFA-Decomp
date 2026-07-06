@@ -100,7 +100,7 @@ void fn_801E7DC8(int obj, int state, int count)
     extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     int i;
     f32 groundHeight;
-    int o;
+    int setup;
 
     if (Obj_IsLoadingLocked() == 0) return;
 
@@ -111,35 +111,35 @@ void fn_801E7DC8(int obj, int state, int count)
 
     for (i = 0; i < count; i++)
     {
-        o = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
-        ((ShopkeeperSpawnSetup*)o)->base.posX = ((GameObject*)obj)->anim.localPosX;
-        ((ShopkeeperSpawnSetup*)o)->base.posY = ((GameObject*)obj)->anim.localPosY;
-        ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
-        ((ShopkeeperSpawnSetup*)o)->rotXByte = randomGetRange(-128, 127);
-        ((ShopkeeperSpawnSetup*)o)->groundY = ((GameObject*)obj)->anim.localPosY - groundHeight;
-        ((ShopkeeperSpawnSetup*)o)->base.color[1] = 1;
-        ((ShopkeeperSpawnSetup*)o)->base.color[3] = 255;
-        ((ShopkeeperSpawnSetup*)o)->base.color[0] = 16;
-        ((ShopkeeperSpawnSetup*)o)->base.color[2] = 6;
-        ((ShopkeeperSpawnSetup*)o)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
-        Obj_SetupObject(o, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(int*)&((GameObject*)obj)->anim.parent);
+        setup = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
+        ((ShopkeeperSpawnSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
+        ((ShopkeeperSpawnSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
+        ((ShopkeeperSpawnSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ShopkeeperSpawnSetup*)setup)->rotXByte = randomGetRange(-128, 127);
+        ((ShopkeeperSpawnSetup*)setup)->groundY = ((GameObject*)obj)->anim.localPosY - groundHeight;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[1] = 1;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[3] = 255;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[0] = 16;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[2] = 6;
+        ((ShopkeeperSpawnSetup*)setup)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
+        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(int*)&((GameObject*)obj)->anim.parent);
     }
 
     for (i = 0; i < count; i++)
     {
-        o = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
-        ((ShopkeeperSpawnSetup*)o)->base.posX = ((GameObject*)obj)->anim.localPosX;
-        ((ShopkeeperSpawnSetup*)o)->base.posY = ((GameObject*)obj)->anim.localPosY;
-        ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
-        ((ShopkeeperSpawnSetup*)o)->rotXByte = randomGetRange(-128, 127);
-        ((ShopkeeperSpawnSetup*)o)->groundY = ((GameObject*)obj)->anim.localPosY - groundHeight;
-        ((ShopkeeperSpawnSetup*)o)->base.color[1] = 1;
-        ((ShopkeeperSpawnSetup*)o)->base.color[3] = 255;
-        ((ShopkeeperSpawnSetup*)o)->base.color[0] = 16;
-        ((ShopkeeperSpawnSetup*)o)->base.color[2] = 6;
-        ((ShopkeeperSpawnSetup*)o)->kind = 1;
-        ((ShopkeeperSpawnSetup*)o)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
-        Obj_SetupObject(o, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(int*)&((GameObject*)obj)->anim.parent);
+        setup = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
+        ((ShopkeeperSpawnSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
+        ((ShopkeeperSpawnSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
+        ((ShopkeeperSpawnSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ShopkeeperSpawnSetup*)setup)->rotXByte = randomGetRange(-128, 127);
+        ((ShopkeeperSpawnSetup*)setup)->groundY = ((GameObject*)obj)->anim.localPosY - groundHeight;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[1] = 1;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[3] = 255;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[0] = 16;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[2] = 6;
+        ((ShopkeeperSpawnSetup*)setup)->kind = 1;
+        ((ShopkeeperSpawnSetup*)setup)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
+        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(int*)&((GameObject*)obj)->anim.parent);
     }
 }
 
