@@ -6,26 +6,9 @@
 #include "main/sfa_extern_decls.h"
 
 
-extern void spscarab_free(int x);
-
-
-
-ObjectDescriptor gSPScarabObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)spscarab_initialise,
-    (ObjectDescriptorCallback)spscarab_release,
-    0,
-    (ObjectDescriptorCallback)spscarab_init,
-    (ObjectDescriptorCallback)spscarab_update,
-    (ObjectDescriptorCallback)spscarab_hitDetect,
-    (ObjectDescriptorCallback)spscarab_render,
-    (ObjectDescriptorCallback)spscarab_free,
-    (ObjectDescriptorCallback)spscarab_getObjectTypeId,
-    spscarab_getExtraSize,
-};
+/* gSPScarabObjDescriptor drift copy removed: retail home is the
+ * dll_0287_spscarab target obj (defines it at .data+0, byte-equal; src twin
+ * already matches). Retail dll_801e991c obj carries no .data. */
 
 volatile ShWGPipe GXWGFifo : (0xCC008000);
 
