@@ -131,10 +131,10 @@ typedef struct EarthWarriorSub
     f32 unk7E0;
     u8 pad7E4[0x48];
     f32 animSpeedASmoothing; /* 0x82C: interpolate() rate closing BaddieState.animSpeedA toward animSpeedC */
-    f32 unk830;
+    f32 animSpeedSmoothingReload; /* 0x830: preset smoothing rate copied into animSpeedSmoothing on state entry */
     f32 unk834;
     u8 pad838[8];
-    f32 unk840;
+    f32 animSpeedScale; /* 0x840: multiplier scaling the clamped input phase into targetAnimSpeed */
     f32 animSpeedRate; /* 0x844: per-frame anim-speed rate integrated into animSpeedC (animSpeedRate*timeDelta); captured from animSpeedA */
     u8 pad848[0x10];
     int unk858;
@@ -627,7 +627,7 @@ int fn_802BC830(int obj, int sub, int state)
             return 1;
         }
         ((EarthWarriorSub*)sub)->targetAnimSpeed = lbl_803E8304;
-        ((EarthWarriorSub*)sub)->animSpeedSmoothing = ((EarthWarriorSub*)sub)->unk830;
+        ((EarthWarriorSub*)sub)->animSpeedSmoothing = ((EarthWarriorSub*)sub)->animSpeedSmoothingReload;
         ((EarthWarriorSub*)sub)->flags8D8 |= 8;
     }
     return 0;
@@ -770,7 +770,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         f32 t;
         a = ((EarthWarriorSub*)q)->animSpeedMax - lbl_803E833C;
         t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
-        ((EarthWarriorSub*)q)->targetAnimSpeed = a * (t * ((EarthWarriorSub*)q)->unk840);
+        ((EarthWarriorSub*)q)->targetAnimSpeed = a * (t * ((EarthWarriorSub*)q)->animSpeedScale);
     }
     if (((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40)
     {
@@ -1039,7 +1039,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         f32 t;
         a = q->animSpeedMax - lbl_803E833C;
         t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
-        q->targetAnimSpeed = a * (t * q->unk840);
+        q->targetAnimSpeed = a * (t * q->animSpeedScale);
     }
     ((BaddieState*)p2)->animSpeedC += interpolate(q->targetAnimSpeed - ((BaddieState*)p2)->animSpeedC, q->animSpeedSmoothing, timeDelta);
     if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
