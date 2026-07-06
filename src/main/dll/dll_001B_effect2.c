@@ -118,13 +118,13 @@ void Effect2_func05(void)
 typedef struct EmitterCfg
 {
     f32 vel[7][3];
-    f32 g08[3];
-    f32 f60;
+    f32 lifetimeRange[3];
+    f32 textureId;
     int emit[EFFECT2_VELOCITY_RANGE_COUNT];
     int sub[EFFECT2_VELOCITY_RANGE_COUNT];
     u16 col[EFFECT2_VELOCITY_RANGE_COUNT];
-    u8 b_a0;
-    u8 b_a1;
+    u8 alphaMin;
+    u8 alphaMax;
     u8 pad[2];
 } EmitterCfg;
 
@@ -310,7 +310,7 @@ int Effect2_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         randomGetRange((s32)gEffect2VelocityRangeTable.vel[5][1], gEffect2VelocityRangeTable.vel[5][2]);
         cfg.scale = gEffect2VelocityRangeTable.vel[6][0] * (f32)(s32)
         randomGetRange((s32)gEffect2VelocityRangeTable.vel[6][1], gEffect2VelocityRangeTable.vel[6][2]);
-        cfg.lifetimeFrames = randomGetRange((s32)gEffect2VelocityRangeTable.g08[1], gEffect2VelocityRangeTable.g08[2]) + (s32)gEffect2VelocityRangeTable.g08[
+        cfg.lifetimeFrames = randomGetRange((s32)gEffect2VelocityRangeTable.lifetimeRange[1], gEffect2VelocityRangeTable.lifetimeRange[2]) + (s32)gEffect2VelocityRangeTable.lifetimeRange[
             0];
         cfg.colorWord0 = gEffect2VelocityRangeTable.col[0];
         cfg.colorWord1 = gEffect2VelocityRangeTable.col[1];
@@ -321,8 +321,8 @@ int Effect2_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         for (i = 0; i < EFFECT2_VELOCITY_RANGE_COUNT; i++) if (gEffect2VelocityRangeTable.emit[i] != 0) cfg.behaviorFlags |= 1 << (gEffect2VelocityRangeTable.emit[i] - 1);
         cfg.renderFlags = 0x2000000;
         for (i = 0; i < EFFECT2_VELOCITY_RANGE_COUNT; i++) if (gEffect2VelocityRangeTable.sub[i] != 0) cfg.renderFlags |= 1 << (gEffect2VelocityRangeTable.sub[i] - 1);
-        cfg.textureId = (s32)gEffect2VelocityRangeTable.f60;
-        cfg.initialAlpha = randomGetRange(gEffect2VelocityRangeTable.b_a0, gEffect2VelocityRangeTable.b_a1);
+        cfg.textureId = (s32)gEffect2VelocityRangeTable.textureId;
+        cfg.initialAlpha = randomGetRange(gEffect2VelocityRangeTable.alphaMin, gEffect2VelocityRangeTable.alphaMax);
         break;
     case 0x2b2:
         cfg.velocityX = lbl_803DF8A0 * (f32)(s32)
