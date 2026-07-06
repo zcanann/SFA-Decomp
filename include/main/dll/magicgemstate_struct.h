@@ -16,11 +16,11 @@
 typedef struct MagicGemState
 {
     u8 unk00[0x6C];
-    f32 unk6C;
+    f32 contactNormalY; /* 0x6C: surface-normal Y from path-control apply; >= threshold => floor (Y bounce) else wall (XZ bounce) */
     u8 unk70[0x25B - 0x70];
     u8 unk25B;
     u8 unk25C[5];
-    s8 unk261;
+    s8 contacted; /* 0x261: nonzero after path-control apply reports a collision this tick */
     u8 unk262[6];
     f32 collectRadius; /* added to base radius; squared for the XZ pickup test */
     f32 burstTimer; /* counts down to the next 30-particle burst */

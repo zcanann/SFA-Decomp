@@ -226,7 +226,7 @@ void magicgem_update(GameObject* obj)
             (*gPathControlInterface)->update((void*)obj, (void*)state, timeDelta);
             (*gPathControlInterface)->apply((void*)obj, (void*)state);
             (*gPathControlInterface)->advance((void*)obj, (void*)state, timeDelta);
-            if (state->unk261 != '\0')
+            if (state->contacted != '\0')
             {
                 float vx = -obj->anim.velocityX;
                 float vy = -obj->anim.velocityY;
@@ -236,7 +236,7 @@ void magicgem_update(GameObject* obj)
                 {
                     Sfx_PlayFromObject((int)obj, SFXwp_iceywindlp16);
                 }
-                if (state->unk6C >= gMagicGemFloorNormalThreshold)
+                if (state->contactNormalY >= gMagicGemFloorNormalThreshold)
                 {
                     obj->anim.velocityY = -obj->anim.velocityY;
                     obj->anim.velocityY = obj->anim.velocityY * gMagicGemBounceRestitutionY;
