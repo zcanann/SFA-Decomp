@@ -366,6 +366,7 @@ main/dll/dll_0062_dll62func0.c:
 
 main/dll/dll_0063_dll63func0.c:
 	.text       start:0x800EE25C end:0x800EE8FC
+	.sdata2     start:0x803E0900 end:0x803E0908
 
 main/dll/dll_0064_dll64func0.c:
 	.text       start:0x800EE8FC end:0x800EEC34
@@ -2614,6 +2615,7 @@ main/dll/DR/dll_026B_drchimmey.c:
 
 main/dll/DR/dll_026C_drcagewith.c:
 	.text       start:0x8021A62C end:0x8021ACE8
+	.sdata2     start:0x803E6A20 end:0x803E6A28
 
 main/dll/DR/dll_026E_drshackle.c:
 	.text       start:0x8021ACE8 end:0x8021B358
