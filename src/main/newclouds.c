@@ -925,7 +925,7 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
     }
     weight = lbl_803DF1A4 / total;
     GXSetLineWidth(width, GX_TO_ONE);
-    GXBegin(0xb0, 2, segs + 1);
+    GXBegin(GX_LINESTRIP, GX_VTXFMT2, segs + 1);
     for (i = 0; i <= segs; i++)
     {
         if (i == 0)
@@ -1270,7 +1270,7 @@ void titleScreenDrawFn_80093db4(void)
         DCInvalidateRange(gNewCloudStarDisplayLists[k], 0x220);
         GXBeginDisplayList(gNewCloudStarDisplayLists[k], 0x220);
         GXResetWriteGatherPipe();
-        GXBegin(0xb8, 0, 0x32);
+        GXBegin(GX_POINTS, GX_VTXFMT0, 0x32);
         for (j = 0; j < 0x32; j++)
         {
             if (randomGetRange(0, 9) < 5)
@@ -2578,11 +2578,11 @@ int snowPrintSnowCloud(int arg, int cloudId)
                        : driftZ);
     if (((NewCloud*)p)->cloudType == 4)
     {
-        GXBegin(0x90, 4, (((NewCloud*)p)->flakeCount * 3));
+        GXBegin(GX_TRIANGLES, GX_VTXFMT4, (((NewCloud*)p)->flakeCount * 3));
     }
     else
     {
-        GXBegin(0x90, 4, (((NewCloud*)p)->flakeCount * 3 / 4));
+        GXBegin(GX_TRIANGLES, GX_VTXFMT4, (((NewCloud*)p)->flakeCount * 3 / 4));
     }
     for (j = 0, part = *(SnowFlake**)(p + 4); j < ((NewCloud*)p)->flakeCount; j++)
     {
@@ -2590,7 +2590,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
         {
             texIdx = part->texLayer;
             selectTexture(gNewCloudLayerTextures[texIdx], 0);
-            GXBegin(0x90, 4, (((NewCloud*)p)->flakeCount * 3 / 4));
+            GXBegin(GX_TRIANGLES, GX_VTXFMT4, (((NewCloud*)p)->flakeCount * 3 / 4));
         }
         if (hudHidden == 0)
         {
