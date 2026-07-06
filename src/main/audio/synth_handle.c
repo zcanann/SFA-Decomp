@@ -124,7 +124,6 @@ resolved:
     }
 }
 
-/* TU-local twin of synthResolveHandle; MWCC auto-inlines it at both call sites. */
 static u32 resolveHandle(u32 handle)
 {
     SynthVoice* voice;
@@ -157,7 +156,6 @@ void synthStartHandleFromRequest(SynthStartRequest* request, u32* outHandle, u8 
 {
     SynthVoiceRuntime* runtime;
     SynthStartParams params;
-    /* Fully DCE'd, but their slots shape the retail frame (cf. MusyX seqCrossFade temporaries). */
     u32 deadSlot0;
     u32 deadSlot1;
     u32 deadSlot2;

@@ -443,7 +443,7 @@ void s3dUpdateDoorStudioInputs(void)
                 if (link->target->assignedVoice != 0xff)
                 {
                     v = link->inputScale;
-                    f = (1.0f - v) * v; /* dead (fully DCE'd) but its stack slot shapes the frame; cf. MusyX CalcDoorParameters */
+                    f = (1.0f - v) * v;
                     link->studioInput[1] = (s32)((f32)link->sendLevel * v);
                     link->studioInput[2] = 0;
                     link->studioInput[0] = (s32)(127.0f * v);

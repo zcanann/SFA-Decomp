@@ -10,7 +10,6 @@ typedef struct VoiceListNode
     u16 time;
 } VoiceListNode;
 
-/* TU-local statics: declaration order fixes the retail .bss offsets off vidListNodes. */
 static u8 vidListNodes[0x800];
 static u8 midiKeySlots[0x80];
 static u8 directSlots[0x40];

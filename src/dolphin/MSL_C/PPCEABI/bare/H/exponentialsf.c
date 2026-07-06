@@ -77,7 +77,7 @@ static inline float log2_kernel(float x, float* table)
     float_word high;
     float_word coef0;
     float_word coef1;
-    float_word pad; /* write-only; kept for retail stack layout */
+    float_word pad;
     float_word full;
 
     bits = *(u32*)&x;
@@ -115,7 +115,7 @@ static inline float log2_kernel(float x, float* table)
 static inline float exp2_kernel(float x, float* table)
 {
     float_word scale;
-    float_word pad; /* write-only; kept for retail stack layout */
+    float_word pad;
     float fraction;
     float z;
     float poly;

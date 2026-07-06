@@ -50,9 +50,6 @@ typedef struct SalStudio
     u8 padAC[0x10];
 } SalStudio;
 
-/* ================= MusyX hardware DSP control (hw_dspctrl.c) =================
- * Recovered against the public MusyX runtime source (hw_dspctrl.c,
- * MUSY_VERSION <= 2.0.0 paths), adapted to SFA's symbol set. */
 
 #include "main/unknown/autos/musyx_dsp.h"
 #include "dolphin/os/OSCache.h"
