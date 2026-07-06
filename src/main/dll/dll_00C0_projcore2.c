@@ -30,8 +30,13 @@ extern void projcore3_initialise(void);
 extern void projcore3_release(void);
 extern int projcore3_doUnsupported(void);
 
-/* projcore3 (DLL 0xC1) ResourceDescriptor, referenced by modelEngine */
-u32 lbl_803199F8[8] = {
-    0, 0, 0, 0x00030000,
-    (u32)projcore3_initialise, (u32)projcore3_release, 0, (u32)projcore3_doUnsupported,
-};
+/* projcore3 (DLL 0xC1) ResourceDescriptor, referenced by modelEngine.
+ * Union u64 member forces the retail 8-byte alignment (table follows the
+ * string, which ends 4-aligned; retail pads to an 8-aligned table start).
+ * Same idiom as dll_00AD_projmagicemmit1 / dll_000A_expgfx. */
+typedef union DllDescriptorTable {
+    void* ptrs[8];
+    u64 align8;
+} DllDescriptorTable;
+
+DllDescriptorTable lbl_803199F8 = { { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projcore3_initialise, projcore3_release, (void*)0x00000000, projcore3_doUnsupported } };
