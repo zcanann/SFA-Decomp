@@ -354,6 +354,7 @@ main/dll/dll_005F_dll5ffunc0.c:
 
 main/dll/dll_0060_dll60func0.c:
 	.text       start:0x800ED5E4 end:0x800EDA28
+	.sdata2     start:0x803E0850 end:0x803E0858
 
 main/dll/dll_0061_dll61func0.c:
 	.text       start:0x800EDA28 end:0x800EDE74
