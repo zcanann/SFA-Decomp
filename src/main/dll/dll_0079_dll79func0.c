@@ -96,7 +96,7 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     }
     else if (variant == 1)
     {
-        f32 t;
+        f32 jitter;
         *(s16*)&base[0xb2] = 0x50;
         *(s16*)&base[0xb4] = 0x118;
         e[0].layer = 0;
@@ -110,10 +110,10 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[1].flags = 8;
         e[1].tex = &base[0x8c];
         e[1].mode = 2;
-        t = lbl_803E0CC4 * (f32)(int)randomGetRange(0, 0xc);
-        e[1].x = lbl_803E0CC8 + t;
-        e[1].y = lbl_803E0CC8 + t;
-        e[1].z = lbl_803E0CCC + t;
+        jitter = lbl_803E0CC4 * (f32)(int)randomGetRange(0, 0xc);
+        e[1].x = lbl_803E0CC8 + jitter;
+        e[1].y = lbl_803E0CC8 + jitter;
+        e[1].z = lbl_803E0CCC + jitter;
         e[2].layer = 0;
         e[2].flags = 9;
         e[2].tex = &base[0x8c];
@@ -132,7 +132,7 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     }
     else if (variant == 2)
     {
-        f32 t;
+        f32 jitter;
         *(s16*)&base[0xb2] = 0x50;
         *(s16*)&base[0xb4] = 0x50;
         e[0].layer = 0;
@@ -146,10 +146,10 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[1].flags = 8;
         e[1].tex = &base[0x8c];
         e[1].mode = 2;
-        t = lbl_803E0CC4 * (f32)(int)randomGetRange(0, 0xc);
-        e[1].x = lbl_803E0CD8 + t;
-        e[1].y = lbl_803E0CD8 + t;
-        e[1].z = lbl_803E0CDC + t;
+        jitter = lbl_803E0CC4 * (f32)(int)randomGetRange(0, 0xc);
+        e[1].x = lbl_803E0CD8 + jitter;
+        e[1].y = lbl_803E0CD8 + jitter;
+        e[1].z = lbl_803E0CDC + jitter;
         e[2].layer = 0;
         e[2].flags = 0x8c;
         e[2].tex = NULL;
