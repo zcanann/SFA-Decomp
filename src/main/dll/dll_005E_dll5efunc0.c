@@ -1,16 +1,10 @@
 /*
- * dll5efunc0 (DLL 0x5E) - save-file / gameplay-state services.
+ * dll5efunc0 (DLL 0x5E) - a modgfx particle-sequence spawn stub DLL.
  *
- * Home TU for a block of save and map-event helpers that live in the
- * 0x800e8xxx-0x800eaxxx text range and are called from many object DLLs
- * (the FUN_800exxxx symbols are mirrored as drift duplicates in sibling
- * dll_00xx files; this file holds the canonical bodies the linker resolves).
- *
- * Named entry points cover the gameplay preview/cheat settings struct
- * (cheat-unlock bitset in gGameplayRegisteredDebugOptions, preview RGB
- * volumes, getSaveFileStruct), save load/commit, the map-act flag history
- * tables, and a modgfx particle-sequence spawn (dll_5E_func03). Several
- * tiny dll_5E/5F entry stubs are no-ops.
+ * dll_5E_func03 spawns a modgfx particle sequence from the embedded
+ * gDll5EFunc03SequenceData block; the two tiny dll_5E entry stubs are
+ * no-ops. The trailing tables chain the sibling dll_5F..dll_6E stub
+ * entry points.
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -18,76 +12,11 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
 extern ModgfxInterface** gModgfxInterface;
-extern u32 FUN_80006768();
-extern u32 FUN_8000676c();
-extern u32 FUN_80006c20();
-extern u32 FUN_80017500();
-extern u32 FUN_8005d018();
-extern u8 gGameplayPreviewSettings;
-extern u32 DAT_803a3e26;
-extern u32 DAT_803a3e27;
-extern u32 DAT_803a3e28;
-extern u32 DAT_803a3e2a;
-extern u32 DAT_803a3e2c;
-extern u32 DAT_803a3e2d;
-extern u32 gGameplayPreviewColorRed;
-extern u32 gGameplayPreviewColorGreen;
-extern u32 gGameplayPreviewColorBlue;
-extern u32 gGameplayRegisteredDebugOptions;
-extern u32* DAT_803dd6d0;
-extern u32* DAT_803dd6e8;
 extern u8 gDll5EFunc03SequenceData[];
-extern f32 lbl_803E07C0, lbl_803E07C4, lbl_803E07C8, lbl_803E07CC, lbl_803E07D0, lbl_803E07D4;
-extern f32 lbl_803E07D8, lbl_803E07DC, lbl_803E07E0, lbl_803E07E4, lbl_803E07E8, lbl_803E07EC;
-extern f32 lbl_803E07F0, lbl_803E07F4, lbl_803E07F8;
 
-void saveFileStruct_unlockCheat(u32 cheatId)
-{
-    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
-    return;
-}
-
-u32 isCheatUnlocked(u32 cheatId)
-{
-    return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
-}
-
-void saveFileStruct_resetVolumes(void)
-{
-    gGameplayPreviewColorRed = 0x7f;
-    gGameplayPreviewColorGreen = 0x7f;
-    gGameplayPreviewColorBlue = 0x7f;
-    return;
-}
-
-u8* getSaveFileStruct(void)
-{
-    return &gGameplayPreviewSettings;
-}
-
-void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
-                      u64 arg5, u64 arg6, u64 arg7,
-                      u64 arg8)
-{
-    FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, DAT_803a3e26);
-    FUN_80006c20(DAT_803a3e2c);
-    FUN_80006768(DAT_803a3e2d, '\0');
-    (**(VtableFn**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
-    (**(VtableFn**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
-    return;
-}
-
-void dll_5E_func01_nop(void)
-{
-}
-
-void dll_5E_func00_nop(void)
-{
-}
+void dll_5E_func03(int sourceObj, int variant, u8* posSource, u32 flags);
+void dll_5E_func01_nop(void);
+void dll_5E_func00_nop(void);
 
 void dll_5E_func03(int sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -96,31 +25,39 @@ void dll_5E_func03(int sourceObj, int variant, u8* posSource, u32 flags)
     (*gModgfxInterface)->setSequenceParams(&base[0x2cc]);
     (*gModgfxInterface)->addSequenceFlags(flags | 0x4004484);
     (*gModgfxInterface)->resetSequenceSpawns();
-    (*gModgfxInterface)->addSequenceSpawn(2, lbl_803E07C0, lbl_803E07C4, *(f32*)&lbl_803E07C0, 9, &base[0x1c8]);
-    (*gModgfxInterface)->addSequenceSpawn(2, lbl_803E07C8, lbl_803E07C4, lbl_803E07CC, 9, &base[0x1dc]);
-    (*gModgfxInterface)->addSequenceSpawn(2, lbl_803E07C8, lbl_803E07C4, *(f32*)&lbl_803E07C8, 9, &base[0x1f0]);
-    (*gModgfxInterface)->addSequenceSpawn(2, lbl_803E07C8, lbl_803E07C4, *(f32*)&lbl_803E07C8, 9, &base[0x204]);
+    (*gModgfxInterface)->addSequenceSpawn(2, 0.01f, 0.02f, 0.01f, 9, &base[0x1c8]);
+    (*gModgfxInterface)->addSequenceSpawn(2, 0.015f, 0.02f, 0.014f, 9, &base[0x1dc]);
+    (*gModgfxInterface)->addSequenceSpawn(2, 0.015f, 0.02f, 0.015f, 9, &base[0x1f0]);
+    (*gModgfxInterface)->addSequenceSpawn(2, 0.015f, 0.02f, 0.015f, 9, &base[0x204]);
     (*gModgfxInterface)->addSequenceSpawn(4, 0.0f, 0.0f, 0.0f, 0x24, &base[0x260]);
-    (*gModgfxInterface)->addSequenceSpawn(8, lbl_803E07D4, lbl_803E07D8, lbl_803E07DC, 0x24, &base[0x260]);
+    (*gModgfxInterface)->addSequenceSpawn(8, 175.0f, 165.0f, 40.0f, 0x24, &base[0x260]);
     (*gModgfxInterface)->nextSequenceParam();
-    (*gModgfxInterface)->addSequenceSpawn(2, lbl_803E07E0, lbl_803E07E4, *(f32*)&lbl_803E07E0, 0, NULL);
-    (*gModgfxInterface)->addSequenceSpawn(0x4000, lbl_803E07D0, lbl_803E07E8, *(f32*)&lbl_803E07D0, 0, NULL);
-    (*gModgfxInterface)->addSequenceSpawn(0x1800000, lbl_803E07EC, *(f32*)&lbl_803E07EC, lbl_803E07F0, 0x5e0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(2, 37.0f, 11.0f, 37.0f, 0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(0x4000, 0.0f, -4.0f, 0.0f, 0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(0x1800000, 1.0f, 1.0f, 3.0f, 0x5e0, NULL);
     (*gModgfxInterface)->nextSequenceParam();
-    (*gModgfxInterface)->addSequenceSpawn(4, lbl_803E07F4, lbl_803E07D0, *(f32*)&lbl_803E07D0, 0x12, &base[0x2a8]);
-    (*gModgfxInterface)->addSequenceSpawn(0x4000, lbl_803E07D0, lbl_803E07E8, *(f32*)&lbl_803E07D0, 0x24, &base[0x260]);
-    (*gModgfxInterface)->addSequenceSpawn(0x100, lbl_803E07D0, *(f32*)&lbl_803E07D0, lbl_803E07F8, 0, NULL);
-    (*gModgfxInterface)->addSequenceSpawn(0x1800000, lbl_803E07EC, *(f32*)&lbl_803E07EC, lbl_803E07F0, 0x5e0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(4, 254.0f, 0.0f, 0.0f, 0x12, &base[0x2a8]);
+    (*gModgfxInterface)->addSequenceSpawn(0x4000, 0.0f, -4.0f, 0.0f, 0x24, &base[0x260]);
+    (*gModgfxInterface)->addSequenceSpawn(0x100, 0.0f, 0.0f, 1800.0f, 0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(0x1800000, 1.0f, 1.0f, 3.0f, 0x5e0, NULL);
     (*gModgfxInterface)->nextSequenceParam();
-    (*gModgfxInterface)->addSequenceSpawn(0x4000, lbl_803E07D0, lbl_803E07E8, *(f32*)&lbl_803E07D0, 0x24, &base[0x260]);
-    (*gModgfxInterface)->addSequenceSpawn(0x100, lbl_803E07D0, *(f32*)&lbl_803E07D0, lbl_803E07F8, 0, NULL);
-    (*gModgfxInterface)->addSequenceSpawn(0x1800000, lbl_803E07EC, *(f32*)&lbl_803E07EC, lbl_803E07F0, 0x5e0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(0x4000, 0.0f, -4.0f, 0.0f, 0x24, &base[0x260]);
+    (*gModgfxInterface)->addSequenceSpawn(0x100, 0.0f, 0.0f, 1800.0f, 0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(0x1800000, 1.0f, 1.0f, 3.0f, 0x5e0, NULL);
     (*gModgfxInterface)->nextSequenceParam();
-    (*gModgfxInterface)->addSequenceSpawn(0x4000, lbl_803E07D0, lbl_803E07E8, *(f32*)&lbl_803E07D0, 0x24, &base[0x260]);
-    (*gModgfxInterface)->addSequenceSpawn(0x100, lbl_803E07D0, *(f32*)&lbl_803E07D0, lbl_803E07F8, 0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(0x4000, 0.0f, -4.0f, 0.0f, 0x24, &base[0x260]);
+    (*gModgfxInterface)->addSequenceSpawn(0x100, 0.0f, 0.0f, 1800.0f, 0, NULL);
     (*gModgfxInterface)->addSequenceSpawn(4, 0.0f, 0.0f, 0.0f, 0x24, &base[0x260]);
     (*gModgfxInterface)->spawnSequence(posSource, (u8*)(int)gDll5EFunc03SequenceData, 0x24, &base[0x168], 0x10, 0x120, 0);
     (*gModgfxInterface)->getLastSpawnHandle();
+}
+
+void dll_5E_func01_nop(void)
+{
+}
+
+void dll_5E_func00_nop(void)
+{
 }
 
 u8 gDll5EFunc03SequenceData[748] = {
