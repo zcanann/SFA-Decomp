@@ -34,6 +34,9 @@ extern float mathCosf(float x);
 #define WORLDMAP_CAMERA_FREE_OVERVIEW 0 /* C-stick orbit + focus blend */
 #define WORLDMAP_CAMERA_LOCKED_PATH   1 /* fixed-pitch path camera + map marker */
 
+#define PAD_BUTTON_DOWN 0x004
+#define PAD_BUTTON_UP   0x008
+
 #pragma scheduling on
 #pragma peephole on
 extern CameraModeWorldMapState* gCamWorldMapState;
@@ -173,11 +176,11 @@ void CameraModeWorldMap_update(u8* obj)
                 {
                     gCamWorldMapState->settleFrames = 1;
                 }
-                if (buttons & 8)
+                if (buttons & PAD_BUTTON_UP)
                 {
                     spd = lbl_803E1A2C * gCamWorldMapState->distance;
                 }
-                if (buttons & 4)
+                if (buttons & PAD_BUTTON_DOWN)
                 {
                     spd = lbl_803E1A30 * gCamWorldMapState->distance;
                 }
