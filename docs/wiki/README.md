@@ -13,6 +13,7 @@ The GameBits table from this wiki has already been imported as code: 687 named b
 | [AudioStreams](AudioStreams.md) | Documents the /streams/*.adp cutscene-dialogue directory listing and cross-references it to our fully-recovered playback path (StreamEntry in include/main/engine_shared.h, AudioStr... |
 | [BaddieLootDrops](BaddieLootDrops.md) | Wiki's 6-tier/50%-chance baddie loot system maps concretely to two matched pickup DLLs (0x00FF MagicDust dust, 0x00ED collectible Apple/EnergyEgg health) plus a magicplant 'move ex... |
 | [ChapBits](ChapBits.md) | CHAPBITS.bin (disc-root, 0x14000 bytes, mostly zero) is verified byte-for-byte and fully zero-mapped against this repo's own retail ISO, but is not referenced anywhere in our decom... |
+| [CheatTokens](CheatTokens.md) | Documents the 8 Cheat Tokens / Well mechanic and cross-references it to a fully-decompiled implementation: GM_MazeWell (DLL 0x263, src/main/dll/dll_0263_gmmazewell.c) driving lbl_8... |
 | [Curves](Curves.md) | Documents the RomCurve object network (DLL 0x125 point object, DLL 0x14 navigation/interpolation) and its known Type-field values, cross-referenced against dll_0125_curve.c, dll_00... |
 | [DLLs](DLLs.md) | Full 469-entry DLL ID table preserved verbatim, cross-referenced against gResourceDescriptors[]/Resource_Acquire/Release in src/main/modelEngine.c (confirms the wiki's refcount-onl... |
 | [Files](Files.md) | Wiki's disc file catalogue maps almost entirely onto src/main/pi_dolphin.c's sResourceFileNameTable[90]/mapLoadDataFile dual-slot streaming system, with concrete fileIds and confir... |
@@ -56,6 +57,11 @@ Concrete, high-confidence naming/enum/struct opportunities the agents surfaced w
 - LARGECRATE_DROP_* enum for LargeCrateState.dropType's switch values (1/2/3/5/6/7/8/9) in dll_0105_largecrate.c, replacing bare case labels
 - Resolve the 6-byte size mismatch between this codebase's SnowClawAnimTbl ({ s16 v[5] }, 10 bytes) and symbols.txt's recorded 0x10-byte size for gSnowClawDropObjectTable before trusting the table's element count
 - If/when the generic baddie loot-drop logic is decompiled out of baddieControl.h's FUN_8010xxxx range, name it against BaddieState/GroundBaddieState (baddie_state.h) using this wiki page's tier1/3/6 + 50%-chance framing
+
+### CheatTokens
+- enum CheatId { CHEAT_SHOW_CREDITS=0, CHEAT_SEPIA_MODE=1, CHEAT_MUSIC_TEST=2, CHEAT_DINO_LANGUAGE=3 } to replace the raw cheatId ints scattered across src/main/dll/prof.c, src/main/dll/dll_4d.c (LANGUAGE_MENU_CHEAT_ID), src/main/textrender.c, and src/main/dll/dll_0037_optionsscreen.c
+- enum QuestWellRow (0=Credits/ThornTail .. 8=unused/Nowhere) to name the loop index i in GM_MazeWell_update (src/main/dll/dll_0263_gmmazewell.c) instead of the bare int
+- Add GAMEBIT_MAZEWELL_ACTIVE = 0xEFC to include/main/gamebits.h's enum GameBitId (currently only a private #define in dll_0263_gmmazewell.c) between the existing 0xEFB and 0xEFE entries
 
 ### Curves
 - ObjfsaRomCurveDef (include/main/dll/objfsa_romcurve.h) tail 's8 angle; u8 pad2D[3];' at 0x2C-0x2F should be split into 'rotZ/rotY/rotX/pad2F' (s8/s8/u8/u8) to match the sibling RomCurvePlacementDef (dll_0015_curves.h) and DrakorCurveNode (dll_0271_drakorhoverpad.c) overlays of the exact same offsets, which already use three named one-byte fields instead of one byte + padding.
@@ -168,4 +174,13 @@ Concrete, high-confidence naming/enum/struct opportunities the agents surfaced w
 - Add a project-wide WarpTabId enum (only for the ~20 ids this repo's code already names/switches on: 0x00,0x02,0x0F,0x12,0x1A,0x20,0x22,0x32,0x33,0x4E,0x50,0x60,0x63,0x6C,0x73,0x77,0x78,0x79,0x7C,0x7E,0x7F) to replace scattered raw hex literals and per-file #defines like LINKA_LEVCONTROL_WARP_ID_* and DUMMY39_WARP_MAP
 - Fix the misleading 'two orientation s16s' doc comment above WarpDestination in rcp_dolphin.c now that angle0 is confirmed to be the map layer, not an orientation
 
-*Total: 91 proposed incorporations across 21 pages.*
+*Total: 94 proposed incorporations across 22 pages.*
+
+## Not imported
+
+These wiki pages were intentionally left out - they are not source-relevant to the decomp:
+
+- **GeckoCodes10 / GeckoCodesK / ARcodes10 / ARcodes11** - runtime cheat codes (Gecko / Action Replay), injected into the running game; not part of the game's source.
+- **Versions** - ISO barcodes and MD5 hashes; the build already pins these via `config/*/build.sha1`.
+- **MapLoading** - marked obsolete on the wiki, redirects to [Maps](Maps.md).
+- **Home** - the wiki's index page; superseded by this file.
