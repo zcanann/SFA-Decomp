@@ -2284,7 +2284,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     {
         GXSetTevDirect(GX_TEVSTAGE2);
         GXLoadTexMtxImm(modelLightStruct_getProjectionTexMtx(lbl_803DCC64), GX_PTTEXMTX3, GX_MTX3x4);
-        GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_POS, 0, GX_FALSE, 0x49);
+        GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, GX_PTTEXMTX3);
         if (lbl_803DCC60 == 0 || lbl_803DCC60 == 2)
         {
             GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD1, GX_TEXMAP5, GX_COLOR0A0);
@@ -2341,7 +2341,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     mtxR[0] = lbl_803DEA1C;
     mtxR[5] = lbl_803DEA1C;
     GXLoadTexMtxImm(mtxR, GX_PTTEXMTX2, GX_MTX3x4);
-    GXSetTexCoordGen2(coord, 1, 4, GX_IDENTITY, 0, GX_PTTEXMTX2);
+    GXSetTexCoordGen2(coord, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, coord, GX_TEXMAP4);
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
