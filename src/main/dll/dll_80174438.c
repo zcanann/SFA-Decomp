@@ -46,37 +46,6 @@ extern f32 lbl_803E356C;
 extern f32 lbl_803E3570;
 extern f32 lbl_803E3528;
 
-void fn_80174588(int obj, PushableState* p2)
-{
-    int data = *(int*)&((GameObject*)obj)->anim.placementData;
-
-    switch (*(int*)(data + 0x14))
-    {
-    case 0x49B2C:
-        p2->requiredHitId = 10;
-        break;
-    case 0x49B5D:
-        p2->requiredHitId = 11;
-        ((ObjAnimComponent*)obj)->bankIndex = 1;
-        break;
-    case 0x49B5E:
-        p2->requiredHitId = 12;
-        ((ObjAnimComponent*)obj)->bankIndex = 1;
-        break;
-    }
-
-    if (GameBit_Get(*(s16*)(data + 0x18)) != 0)
-    {
-        ObjTextureRuntimeSlot* tex;
-        p2->flags = (u16)(p2->flags | 0x80);
-        tex = objFindTexture((void*)obj, 0, 0);
-        if (tex != NULL)
-        {
-            tex->textureId = 256;
-        }
-    }
-}
-
 int fn_80174438(int obj, PushableState* state)
 {
     int def;
@@ -111,6 +80,37 @@ int fn_80174438(int obj, PushableState* state)
         ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)def)->posZ;
     }
     return 0;
+}
+
+void fn_80174588(int obj, PushableState* p2)
+{
+    int data = *(int*)&((GameObject*)obj)->anim.placementData;
+
+    switch (*(int*)(data + 0x14))
+    {
+    case 0x49B2C:
+        p2->requiredHitId = 10;
+        break;
+    case 0x49B5D:
+        p2->requiredHitId = 11;
+        ((ObjAnimComponent*)obj)->bankIndex = 1;
+        break;
+    case 0x49B5E:
+        p2->requiredHitId = 12;
+        ((ObjAnimComponent*)obj)->bankIndex = 1;
+        break;
+    }
+
+    if (GameBit_Get(*(s16*)(data + 0x18)) != 0)
+    {
+        ObjTextureRuntimeSlot* tex;
+        p2->flags = (u16)(p2->flags | 0x80);
+        tex = objFindTexture((void*)obj, 0, 0);
+        if (tex != NULL)
+        {
+            tex->textureId = 256;
+        }
+    }
 }
 
 int fn_80174668(int obj, PushableState* state)
