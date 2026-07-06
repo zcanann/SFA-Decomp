@@ -62,16 +62,16 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
     camcontrol_getTargetPosition((CameraObject*)obj, &target->anim, pos, NULL);
     target->anim.rotX = yaw;
     {
-        f32 p;
-        p = pos[0];
-        ((CameraObject*)obj)->anim.worldPosX = p;
-        ((CameraObject*)obj)->probePosX = p;
-        p = pos[1];
-        ((CameraObject*)obj)->anim.worldPosY = p;
-        ((CameraObject*)obj)->probePosY = p;
-        p = pos[2];
-        ((CameraObject*)obj)->anim.worldPosZ = p;
-        ((CameraObject*)obj)->probePosZ = p;
+        f32 coord;
+        coord = pos[0];
+        ((CameraObject*)obj)->anim.worldPosX = coord;
+        ((CameraObject*)obj)->probePosX = coord;
+        coord = pos[1];
+        ((CameraObject*)obj)->anim.worldPosY = coord;
+        ((CameraObject*)obj)->probePosY = coord;
+        coord = pos[2];
+        ((CameraObject*)obj)->anim.worldPosZ = coord;
+        ((CameraObject*)obj)->probePosZ = coord;
     }
     Obj_TransformWorldPointToLocal(((CameraObject*)obj)->anim.worldPosX, ((CameraObject*)obj)->anim.worldPosY,
                                    ((CameraObject*)obj)->anim.worldPosZ,
