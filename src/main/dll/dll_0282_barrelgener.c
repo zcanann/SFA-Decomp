@@ -31,6 +31,8 @@ typedef struct ObjUpdateRomCurveFollowVelocityState
 
 #define BARRELGENER_OBJGROUP 0x3a
 #define GAMEBIT_BARRELGENER_TRIGGERED 0xadb
+/* update group a dispensed barrel is added to (GunpowderBarrel DLL 0x158) */
+#define BARREL_UPDATE_OBJGROUP 25
 
 int barrelgener_getLinkId(int obj)
 {
@@ -125,7 +127,7 @@ void barrelgener_update(int obj)
                 releasedBarrel->anim.velocityZ = releaseVelocity;
                 releasedBarrel->anim.velocityY = releaseVelocity;
                 releasedBarrel->anim.velocityX = releaseVelocity;
-                ObjGroup_AddObject((int)state->queuedObject, 25);
+                ObjGroup_AddObject((int)state->queuedObject, BARREL_UPDATE_OBJGROUP);
                 state->queuedObject = NULL;
             }
         }
