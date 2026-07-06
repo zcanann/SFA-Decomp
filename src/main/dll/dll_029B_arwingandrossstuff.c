@@ -200,9 +200,9 @@ void arwingandrossstuff_hitDetect(int obj)
         }
         if (objAnim->seqId == ARW_SEQID_CHARGE)
         {
-            s16 a = (s16) - getAngle(objAnim->localPosX - arwingAnim->localPosX,
-                                     objAnim->localPosY - arwingAnim->localPosY);
-            f32 ang = gArwingAndrossPi * a / gArwingAndrossBinAngScale;
+            s16 angle = (s16) - getAngle(objAnim->localPosX - arwingAnim->localPosX,
+                                         objAnim->localPosY - arwingAnim->localPosY);
+            f32 ang = gArwingAndrossPi * angle / gArwingAndrossBinAngScale;
 
             v.x = lbl_803E702C * mathSinf(ang);
             v.y = lbl_803E7038 * mathCosf(ang);
