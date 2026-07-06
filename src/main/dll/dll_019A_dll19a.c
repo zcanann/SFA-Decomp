@@ -58,6 +58,23 @@ extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 
 extern f32 lbl_803E5180;
 
+int dll_19A_getExtraSize(void) { return 0x4; }
+int dll_19A_getObjectTypeId(void) { return 0x0; }
+
+void dll_19A_free(void)
+{
+}
+
+void dll_19A_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5180);
+}
+
+void dll_19A_hitDetect(void)
+{
+}
+
 void dll_19A_update(int obj)
 {
     int setup;
@@ -133,25 +150,6 @@ void dll_19A_update(int obj)
     }
 }
 
-void dll_19A_free(void)
-{
-}
-
-void dll_19A_hitDetect(void)
-{
-}
-
-void dll_19A_release(void)
-{
-}
-
-void dll_19A_initialise(void)
-{
-}
-
-int dll_19A_getExtraSize(void) { return 0x4; }
-int dll_19A_getObjectTypeId(void) { return 0x0; }
-
 void dll_19A_init(int obj, s8* def)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -163,8 +161,10 @@ void dll_19A_init(int obj, s8* def)
     ((GameObject*)obj)->anim.alpha = 0xFF;
 }
 
-void dll_19A_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_19A_release(void)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5180);
+}
+
+void dll_19A_initialise(void)
+{
 }
