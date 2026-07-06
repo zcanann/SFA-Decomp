@@ -375,15 +375,15 @@ void seqpoint_init(int obj, int data)
 
 void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6128);
+    s32 isVisible = visible;
+    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6128);
 }
 
 void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     VfpPlatformState* state = ((GameObject*)obj)->extra;
-    s32 v = visible;
-    if (v != 0 && state->axisMode != 0x63)
+    s32 isVisible = visible;
+    if (isVisible != 0 && state->axisMode != 0x63)
     {
         ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E610C);
     }
@@ -971,9 +971,9 @@ void dll_224_update(void* obj)
 {
     extern void spellStoneUseFn_801fd270(void* obj); /* #57 */
     extern int gSpellStoneEventId; /* #57 */
-    int v;
-    v = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
-    switch (v)
+    int mapAct;
+    mapAct = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
+    switch (mapAct)
     {
     case 1:
         gSpellStoneEventId = 0x123;
@@ -994,13 +994,13 @@ void dll_224_update(void* obj)
 void dll_224_init(void* obj, void* other)
 {
     SpellStoneUseState* extra = ((GameObject*)obj)->extra;
-    s16 v = ((s8) * ((s8*)other + 0x18) << 8);
-    u8 t;
-    ((GameObject*)obj)->anim.rotX = v;
+    s16 rotX = ((s8) * ((s8*)other + 0x18) << 8);
+    u8 hitboxFlags;
+    ((GameObject*)obj)->anim.rotX = rotX;
     extra->completeGameBit = *(s16*)((char*)other + 0x1e);
     extra->requiredGameBit = *(s16*)((char*)other + 0x20);
-    t = (*&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = t;
+    hitboxFlags = (*&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = hitboxFlags;
 }
 
 ObjectDescriptor gVFP_Block1ObjDescriptor = {
