@@ -55,7 +55,7 @@ void dll_54_update(u8* obj)
     f32 t2;
     f32 lim;
     s16 cur;
-    s16 d;
+    s16 angleDelta;
 
     if (gCameraModeNpcSpeakState->exitRequested != 0)
     {
@@ -121,22 +121,22 @@ void dll_54_update(u8* obj)
                 t2 * (gCameraModeNpcSpeakState->startZ - camera->anim.worldPosZ) + camera->anim.worldPosZ;
 
             cur = camera->anim.rotX;
-            d = (s16)(gCameraModeNpcSpeakState->startYaw - (u16)cur);
-            if (d > 0x8000)
+            angleDelta = (s16)(gCameraModeNpcSpeakState->startYaw - (u16)cur);
+            if (angleDelta > 0x8000)
             {
-                d = (s16)(d - 0xffff);
+                angleDelta = (s16)(angleDelta - 0xffff);
             }
-            if (d < -0x8000)
+            if (angleDelta < -0x8000)
             {
-                d += 0xffff;
+                angleDelta += 0xffff;
             }
-            camera->anim.rotX = d * t2 + cur;
+            camera->anim.rotX = angleDelta * t2 + cur;
 
             cur = camera->anim.rotY;
-            d = (s16)(gCameraModeNpcSpeakState->startPitch - (u16)cur);
-            d = (d > 0x8000) ? (s16)(d - 0xffff) : d;
-            d = (d < -0x8000) ? (s16)(d + 0xffff) : d;
-            camera->anim.rotY = d * t2 + cur;
+            angleDelta = (s16)(gCameraModeNpcSpeakState->startPitch - (u16)cur);
+            angleDelta = (angleDelta > 0x8000) ? (s16)(angleDelta - 0xffff) : angleDelta;
+            angleDelta = (angleDelta < -0x8000) ? (s16)(angleDelta + 0xffff) : angleDelta;
+            camera->anim.rotY = angleDelta * t2 + cur;
 
             gCameraModeNpcSpeakState->transitionTimer -= timeDelta;
             if (gCameraModeNpcSpeakState->transitionTimer < 0.0f)
