@@ -938,8 +938,8 @@ typedef struct ShieldFxVec
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8* state = ((GameObject*)obj)->extra;
-    s32 v = visible;
-    if (v != 0)
+    s32 isVisible = visible;
+    if (isVisible != 0)
     {
         u8 i;
         u8 j;
@@ -1101,11 +1101,11 @@ void staffFn_80170380(int* obj, int cmd)
             modelLightStruct_setEnabled(*(int*)state, 0, lbl_803E33A8);
         }
         {
-            f32 v = lbl_803E33AC;
-            ((ShieldState*)state)->fadeTarget = v;
-            ((ShieldState*)state)->fadeRate = v;
-            *(f32*)&((ShieldState*)state)->fadeMax = v;
-            ((ShieldState*)state)->fadeValue = v;
+            f32 fade = lbl_803E33AC;
+            ((ShieldState*)state)->fadeTarget = fade;
+            ((ShieldState*)state)->fadeRate = fade;
+            *(f32*)&((ShieldState*)state)->fadeMax = fade;
+            ((ShieldState*)state)->fadeValue = fade;
         }
         ((ShieldState*)state)->flags0 |= 1;
         ((ShieldState*)state)->flags1 |= 1;
@@ -1119,9 +1119,9 @@ void staffFn_80170380(int* obj, int cmd)
         }
         if (lbl_803E33AC != ((ShieldState*)state)->fadeTarget)
         {
-            f32 v = lbl_803E33B0;
-            *(f32*)&((ShieldState*)state)->fadeMax = v;
-            ((ShieldState*)state)->fadeValue = v;
+            f32 fade = lbl_803E33B0;
+            *(f32*)&((ShieldState*)state)->fadeMax = fade;
+            ((ShieldState*)state)->fadeValue = fade;
             if (glow != NULL)
             {
                 staffSetGlow(glow, 7, 0);
@@ -1158,11 +1158,11 @@ void staffFn_80170380(int* obj, int cmd)
                 modelLightStruct_setAffectsAabbLightSelection(*(int*)state, 1);
             }
             {
-                f32 v1 = lbl_803E33AC;
-                if (v1 == ((ShieldState*)state)->fadeTarget)
+                f32 fade = lbl_803E33AC;
+                if (fade == ((ShieldState*)state)->fadeTarget)
                 {
                     *(f32*)&((ShieldState*)state)->fadeMax = lbl_803E33B0;
-                    ((ShieldState*)state)->fadeValue = v1;
+                    ((ShieldState*)state)->fadeValue = fade;
                 }
             }
             ((ShieldState*)state)->fadeTarget = lbl_803E33B0;
@@ -1183,13 +1183,13 @@ void staffFn_80170380(int* obj, int cmd)
                 /* kc inlined below */
                 for (; i < 4; i++)
                 {
-                    f32 c;
+                    f32 wave;
                     f32 sum;
                     *(s16*)(hw + 0x34) = -0x4000;
-                    c = fcos16((u16) * (s16*)(hw + 0x34));
-                    sum = amp + c;
-                    c = sum * k;
-                    *(f32*)(w + 0x24) = *tbl * c;
+                    wave = fcos16((u16) * (s16*)(hw + 0x34));
+                    sum = amp + wave;
+                    wave = sum * k;
+                    *(f32*)(w + 0x24) = *tbl * wave;
                     *(f32*)(w + 0x14) = *t1;
                     *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + lbl_803E33C8;
                     hw += 2;
@@ -1264,13 +1264,13 @@ void staffFn_80170380(int* obj, int cmd)
             k = lbl_803E33A8;
             for (; i < 4; i++)
             {
-                f32 c;
+                f32 wave;
                 f32 sum;
                 *(s16*)(hw + 0x34) = 0;
-                c = fcos16((u16) * (s16*)(hw + 0x34));
-                sum = amp + c;
-                c = sum * k;
-                *(f32*)(w + 0x24) = *tbl * c;
+                wave = fcos16((u16) * (s16*)(hw + 0x34));
+                sum = amp + wave;
+                wave = sum * k;
+                *(f32*)(w + 0x24) = *tbl * wave;
                 *(f32*)(w + 0x14) = *t1;
                 hw += 2;
                 tbl += 1;
@@ -1290,12 +1290,12 @@ void staffFn_80170380(int* obj, int cmd)
         break;
     case 4:
         {
-            f32 v = lbl_803E33CC;
+            f32 fade = lbl_803E33CC;
             f32 amp;
-            ((ShieldState*)state)->fadeTarget = v;
+            ((ShieldState*)state)->fadeTarget = fade;
             amp = lbl_803E33C4;
             ((ShieldState*)state)->fadeRate = amp;
-            *(f32*)&((ShieldState*)state)->fadeMax = v;
+            *(f32*)&((ShieldState*)state)->fadeMax = fade;
             {
                 int i;
                 u8* hw;
@@ -1313,13 +1313,13 @@ void staffFn_80170380(int* obj, int cmd)
                 /* kc inlined below */
                 for (; i < 4; i++)
                 {
-                    f32 c;
+                    f32 wave;
                     f32 sum;
                     *(s16*)(hw + 0x34) = -0x4000;
-                    c = fcos16((u16) * (s16*)(hw + 0x34));
-                    sum = amp + c;
-                    c = sum * k;
-                    *(f32*)(w + 0x24) = *t0 * c;
+                    wave = fcos16((u16) * (s16*)(hw + 0x34));
+                    sum = amp + wave;
+                    wave = sum * k;
+                    *(f32*)(w + 0x24) = *t0 * wave;
                     *(f32*)(w + 0x14) = *t1;
                     *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + lbl_803E33C8;
                     hw += 2;
@@ -1350,13 +1350,13 @@ void staffFn_80170380(int* obj, int cmd)
             k = lbl_803E33A8;
             for (; i < 4; i++)
             {
-                f32 c;
+                f32 wave;
                 f32 sum;
                 *(s16*)(hw + 0x34) = 0x4000;
-                c = fcos16((u16) * (s16*)(hw + 0x34));
-                sum = amp + c;
-                c = sum * k;
-                *(f32*)(w + 0x24) = *t0 * c;
+                wave = fcos16((u16) * (s16*)(hw + 0x34));
+                sum = amp + wave;
+                wave = sum * k;
+                *(f32*)(w + 0x24) = *t0 * wave;
                 *(f32*)(w + 0x14) = *t1;
                 hw += 2;
                 t0 += 1;
