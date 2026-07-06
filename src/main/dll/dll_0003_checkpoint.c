@@ -712,7 +712,6 @@ void Checkpoint_Add(CheckpointRouteEntry* entry)
     gCheckpointRouteTable[i].entry = entry;
     gCheckpointRouteTable[i].key = entry->sortKey;
 }
-#pragma opt_common_subs reset
 
 #pragma opt_common_subs off
 void Checkpoint_remove(CheckpointRouteEntry* obj)
