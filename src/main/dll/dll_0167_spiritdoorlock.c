@@ -66,26 +66,8 @@ extern const f32 gSpiritDoorLockOrbitMaxDist;
 
 typedef struct { int a, b, c; } Vec3i;
 
-void SpiritDoorLock_hitDetect(void)
-{
-}
-
-void SpiritDoorLock_release(void)
-{
-}
-
-void SpiritDoorLock_initialise(void)
-{
-}
-
 int SpiritDoorLock_getExtraSize(void) { return SPIRITDOORLOCK_EXTRA_SIZE; }
 int SpiritDoorLock_getObjectTypeId(void) { return 0x0; }
-
-void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, gSpiritDoorLockDefaultScale);
-}
 
 void SpiritDoorLock_free(int obj)
 {
@@ -96,34 +78,14 @@ void SpiritDoorLock_free(int obj)
     }
 }
 
-void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
+void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    SpiritDoorLockState* state = ((GameObject*)obj)->extra;
-    f32 scale;
-    int atDefault;
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, gSpiritDoorLockDefaultScale);
+}
 
-    *(s16*)obj = (s16)(params->yaw << 8);
-    state->orbitCount = params->orbitCount;
-    state->active = 0;
-
-    scale = params->scale * gSpiritDoorLockScaleFactor;
-    atDefault = (scale != lbl_803E4430);
-    atDefault = !atDefault;
-    if (atDefault)
-    {
-        scale = gSpiritDoorLockDefaultScale;
-    }
-    ((GameObject*)obj)->anim.rootMotionScale = (*(f32**)&((GameObject*)obj)->anim.modelInstance)[1] * scale;
-    state->spinAngle = 0;
-
-    ObjHits_DisableObject(obj);
-    ((struct { u8 bit80:1; } *)&state->flags)->bit80 = 0;
-
-    if (mode == 0)
-    {
-        ((GameObject*)obj)->anim.alpha = 0;
-        state->light = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
-    }
+void SpiritDoorLock_hitDetect(void)
+{
 }
 
 #pragma opt_loop_invariants off
@@ -261,3 +223,41 @@ void SpiritDoorLock_update(int obj)
     }
 }
 #pragma opt_loop_invariants reset
+
+void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
+{
+    SpiritDoorLockState* state = ((GameObject*)obj)->extra;
+    f32 scale;
+    int atDefault;
+
+    *(s16*)obj = (s16)(params->yaw << 8);
+    state->orbitCount = params->orbitCount;
+    state->active = 0;
+
+    scale = params->scale * gSpiritDoorLockScaleFactor;
+    atDefault = (scale != lbl_803E4430);
+    atDefault = !atDefault;
+    if (atDefault)
+    {
+        scale = gSpiritDoorLockDefaultScale;
+    }
+    ((GameObject*)obj)->anim.rootMotionScale = (*(f32**)&((GameObject*)obj)->anim.modelInstance)[1] * scale;
+    state->spinAngle = 0;
+
+    ObjHits_DisableObject(obj);
+    ((struct { u8 bit80:1; } *)&state->flags)->bit80 = 0;
+
+    if (mode == 0)
+    {
+        ((GameObject*)obj)->anim.alpha = 0;
+        state->light = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
+    }
+}
+
+void SpiritDoorLock_release(void)
+{
+}
+
+void SpiritDoorLock_initialise(void)
+{
+}
