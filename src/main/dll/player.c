@@ -18,6 +18,7 @@
 #define BABYCLOUDRUNNER_OBJGROUP 0x20 /* DLL 0x14C babycloudrunner (secondary) */
 #define LANTERNFIREFLY_OBJGROUP 0x30  /* DLL 0x10C lanternfirefly */
 #define STAFFACTIVATED_OBJ_GROUP 0x41 /* DLL 0x11C staffactivated */
+#define MAGICPLANT_OBJGROUP_B 0x3e    /* DLL 0xFE magicplant (group B) */
 
 /* GameCube controller button masks (tested against PlayerState.buttons* fields) */
 #define PAD_BUTTON_A 0x100
@@ -10064,7 +10065,7 @@ int fn_80299BB0(int obj, int p2)
     f32 sinv;
     f32 fz;
     dist = lbl_803E7F5C;
-    near = (void*)ObjGroup_FindNearestObject(0x3e, obj, &dist);
+    near = (void*)ObjGroup_FindNearestObject(MAGICPLANT_OBJGROUP_B, obj, &dist);
     ((ByteFlags*)((char*)inner + 0x3f4))->b20 = 1;
     fz = lbl_803E7EA4;
     inner->buttonHoldTimer = fz;
