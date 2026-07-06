@@ -43,21 +43,21 @@ void voiceInitPriorityTables(void)
     VidListBlock* vb = &vidListNodes;
     u8* np = &lbl_803BD150[0x210];
     u32 i;
-    u32 n;
+    u32 count;
 
-    n = *np;
-    for (i = 0; i < n; i++)
+    count = *np;
+    for (i = 0; i < count; i++)
     {
         ((VoiceListNode*)(u32)vb->freeList)[i].prev = i - 1;
         ((VoiceListNode*)(u32)vb->freeList)[i].next = i + 1;
         ((VoiceListNode*)(u32)vb->freeList)[i].time = 1;
     }
     vb->freeList[0].prev = 0xff;
-    n = *np;
-    vb->freeList[n - 1].next = 0xff;
+    count = *np;
+    vb->freeList[count - 1].next = 0xff;
     voiceListRoot = 0;
-    voiceListInsert = n - 1;
-    for (i = 0; i < n; i++)
+    voiceListInsert = count - 1;
+    for (i = 0; i < count; i++)
     {
         ((VoiceListNode*)(u32)vb->priorityLinks)[i].time = 0;
     }
@@ -125,10 +125,10 @@ int voiceKillById(u32 id)
 
     if (gSynthInitialized != 0)
     {
-        u32 s;
-        if ((id != SYNTH_INVALID_VOICE) && ((s = get_vidlist(id)) != 0))
+        u32 listEntry;
+        if ((id != SYNTH_INVALID_VOICE) && ((listEntry = get_vidlist(id)) != 0))
         {
-            id = *(u32*)(s + 0xc);
+            id = *(u32*)(listEntry + 0xc);
         }
         else
         {
@@ -160,20 +160,20 @@ int voiceIsRegistered(int state)
 {
     SynthVoiceState* voiceState = (SynthVoiceState*)state;
     u32 voice = voiceState->handle;
-    u8 a;
-    u8 b;
-    u8 v;
+    u8 slot;
+    u8 channel;
+    u8 voiceIdx;
     if (voice == SYNTH_INVALID_VOICE) goto fail;
-    a = voiceState->midiSlot;
-    if (a == SYNTH_INVALID_VOICE_U8) goto fail;
-    b = voiceState->midiChannel;
-    v = voice;
-    if (b == SYNTH_INVALID_VOICE_U8)
+    slot = voiceState->midiSlot;
+    if (slot == SYNTH_INVALID_VOICE_U8) goto fail;
+    channel = voiceState->midiChannel;
+    voiceIdx = voice;
+    if (channel == SYNTH_INVALID_VOICE_U8)
     {
-        if (voiceDirectSlots[v] == v) return 1;
+        if (voiceDirectSlots[voiceIdx] == voiceIdx) return 1;
         goto fail;
     }
-    if (v == voiceMidiKeySlots[b][a]) return 1;
+    if (voiceIdx == voiceMidiKeySlots[channel][slot]) return 1;
 fail:
     return 0;
 }
@@ -187,20 +187,20 @@ void voiceRegister(int state)
 {
     SynthVoiceState* voiceState = (SynthVoiceState*)state;
     u32 voice = voiceState->handle;
-    u8 a;
-    u8 b;
-    u8 v;
+    u8 slot;
+    u8 channel;
+    u8 voiceIdx;
     if (voice == SYNTH_INVALID_VOICE) return;
-    a = voiceState->midiSlot;
-    if (a == SYNTH_INVALID_VOICE_U8) return;
-    b = voiceState->midiChannel;
-    v = voice;
-    if (b == SYNTH_INVALID_VOICE_U8)
+    slot = voiceState->midiSlot;
+    if (slot == SYNTH_INVALID_VOICE_U8) return;
+    channel = voiceState->midiChannel;
+    voiceIdx = voice;
+    if (channel == SYNTH_INVALID_VOICE_U8)
     {
-        voiceDirectSlots[v] = v;
+        voiceDirectSlots[voiceIdx] = voiceIdx;
     }
     else
     {
-        voiceMidiKeySlots[b][a] = v;
+        voiceMidiKeySlots[channel][slot] = voiceIdx;
     }
 }
