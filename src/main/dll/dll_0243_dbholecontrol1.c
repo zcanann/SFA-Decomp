@@ -133,12 +133,12 @@ void dbholecontrol1_update(int* obj)
 void dbholecontrol1_init(int* obj, u8* params)
 {
     extern u32 ObjGroup_AddObject();
-    DbHoleControl1State* sub = ((GameObject*)obj)->extra;
+    DbHoleControl1State* state = ((GameObject*)obj)->extra;
     ObjGroup_AddObject(obj, DBHOLECONTROL1_OBJGROUP);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = dbholecontrol1_SeqFn;
-    sub->gameBitA = ((Dbholecontrol1Placement*)params)->gameBitA;
-    sub->gameBitB = ((Dbholecontrol1Placement*)params)->gameBitB;
+    state->gameBitA = ((Dbholecontrol1Placement*)params)->gameBitA;
+    state->gameBitB = ((Dbholecontrol1Placement*)params)->gameBitB;
 }
 
 int dbholecontrol1_getExtraSize(void) { return 0xc; }
@@ -146,11 +146,11 @@ int dbholecontrol1_getObjectTypeId(void) { return 0x0; }
 
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6390);
+    s32 enabled = visible;
+    if (enabled != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6390);
 }
 
-void dbholecontrol1_free(int x) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(x, DBHOLECONTROL1_OBJGROUP); }
+void dbholecontrol1_free(int obj) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(obj, DBHOLECONTROL1_OBJGROUP); }
 
 int dbstealerworm_stateHandlerB00(int p1, int p2);
 
