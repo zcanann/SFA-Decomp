@@ -91,7 +91,7 @@ void ecsh_cup_update(short* obj)
     CupVec3 v;
     GameObject* player = Obj_GetPlayerObject();
     EcshCupState* state = ((GameObject*)obj)->extra;
-    f32 a;
+    f32 fade;
 
     v = *(CupVec3*)lbl_802C23B8;
     dist = lbl_803E5064;
@@ -150,13 +150,13 @@ void ecsh_cup_update(short* obj)
             }
             if (*(u8*)((char*)obj + 0x37) != 0xff)
             {
-                a = (f32)(u32) * (u8*)((char*)obj + 0x37);
-                a = lbl_803E507C * timeDelta + a;
-                if (a >= lbl_803E5080)
+                fade = (f32)(u32) * (u8*)((char*)obj + 0x37);
+                fade = lbl_803E507C * timeDelta + fade;
+                if (fade >= lbl_803E5080)
                 {
-                    a = lbl_803E5080;
+                    fade = lbl_803E5080;
                 }
-                *(u8*)((char*)obj + 0x37) = (u8)a;
+                *(u8*)((char*)obj + 0x37) = (u8)fade;
             }
             state->spawnTimer -= timeDelta;
             if (state->spawnTimer <= lbl_803E5068)
@@ -182,13 +182,13 @@ void ecsh_cup_update(short* obj)
             }
             if (*(u8*)((char*)obj + 0x37) != 0)
             {
-                a = (f32)(u32) * (u8*)((char*)obj + 0x37);
-                a = a - lbl_803E507C * timeDelta;
-                if (a <= lbl_803E5068)
+                fade = (f32)(u32) * (u8*)((char*)obj + 0x37);
+                fade = fade - lbl_803E507C * timeDelta;
+                if (fade <= lbl_803E5068)
                 {
-                    a = lbl_803E5068;
+                    fade = lbl_803E5068;
                 }
-                *(u8*)((char*)obj + 0x37) = (u8)a;
+                *(u8*)((char*)obj + 0x37) = (u8)fade;
             }
         }
         else if (m == 8 && m != state->currentMode)
