@@ -136,9 +136,9 @@ void snowclaw_release(void);
 void snowclaw_initialise(void);
 void snowclaw_free(int obj);
 void snowclaw_init(int* obj, u8* init);
-void snowclaw_spawnDropBomb(int obj, int a, int b, int c);
+void snowclaw_spawnDropBomb(int obj, int owner, int launchMode, int unkF4Value);
 void snowclaw_updateMountAttack(int obj, int mount);
-void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9);
+void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int mountAlpha, int enabled);
 void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis);
 void snowclaw_hitDetect(int obj);
 void snowclaw_update(int obj);
@@ -211,7 +211,7 @@ void snowclaw_init(int* obj, u8* init)
 }
 
 #pragma dont_inline on
-void snowclaw_spawnDropBomb(int obj, int a, int b, int c)
+void snowclaw_spawnDropBomb(int obj, int owner, int launchMode, int unkF4Value)
 {
     int player;
     int obj2;
@@ -226,7 +226,7 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c)
         ((ObjPlacement*)obj2)->color[2] = 0xff;
         ((ObjPlacement*)obj2)->color[1] = 1;
         ((ObjPlacement*)obj2)->color[3] = 0xff;
-        ((SnowClawBombSetup*)obj2)->launchMode = b;
+        ((SnowClawBombSetup*)obj2)->launchMode = launchMode;
         ((SnowClawBombSetup*)obj2)->head.posX = ((GameObject*)obj)->anim.localPosX;
         ((SnowClawBombSetup*)obj2)->head.posY = lbl_803E66E0 + ((GameObject*)obj)->anim.localPosY;
         ((SnowClawBombSetup*)obj2)->head.posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -234,7 +234,7 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c)
             ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX,
             ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) & 0xffff) >> 8) + 0x8000) >> 8);
         Sfx_PlayFromObject(obj, SFXswapstone_mumble);
-        switch ((u8)b)
+        switch ((u8)launchMode)
         {
         case 0:
             ((SnowClawBombSetup*)obj2)->launchAngle = gSnowClawDropBombAngle;
@@ -248,8 +248,8 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c)
         spawned = loadObjectAtObject(obj, obj2);
         if (spawned != NULL)
         {
-            ((GameObject*)spawned)->unkF4 = (u8)c;
-            ((GameObject*)spawned)->ownerObj = (void*)a;
+            ((GameObject*)spawned)->unkF4 = (u8)unkF4Value;
+            ((GameObject*)spawned)->ownerObj = (void*)owner;
         }
     }
 }
@@ -339,14 +339,14 @@ void snowclaw_updateMountAttack(int obj, int mount)
 }
 
 #pragma dont_inline on
-void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9)
+void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int mountAlpha, int enabled)
 {
-    f32 va, vb, vc;
+    f32 newPosX, newPosY, newPosZ;
 
-    if (a9 != 0 && (s8)opacity != 0 && a8 > 0)
+    if (enabled != 0 && (s8)opacity != 0 && mountAlpha > 0)
     {
         u8 saved = *(u8*)(sub + 0x37);
-        *(u8*)(sub + 0x37) = a8;
+        *(u8*)(sub + 0x37) = mountAlpha;
         (*(void (**)(int, int, int, int, int, int))((char*)*((GameObject*)sub)->anim.dll + 0x10))(
             sub, p2, p3, p4, p5, -1);
         *(u8*)(sub + 0x37) = saved;
@@ -357,10 +357,10 @@ void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-    (*(void (**)(int, f32*, f32*, f32*))((char*)*((GameObject*)sub)->anim.dll + 0x28))(sub, &va, &vb, &vc);
-    ((GameObject*)obj)->anim.localPosX = va;
-    ((GameObject*)obj)->anim.localPosY = vb;
-    ((GameObject*)obj)->anim.localPosZ = vc;
+    (*(void (**)(int, f32*, f32*, f32*))((char*)*((GameObject*)sub)->anim.dll + 0x28))(sub, &newPosX, &newPosY, &newPosZ);
+    ((GameObject*)obj)->anim.localPosX = newPosX;
+    ((GameObject*)obj)->anim.localPosY = newPosY;
+    ((GameObject*)obj)->anim.localPosZ = newPosZ;
     ((GameObject*)obj)->anim.rotX = ((GameObject*)sub)->anim.rotX;
     ((GameObject*)obj)->anim.rotY = ((GameObject*)sub)->anim.rotY;
     ((GameObject*)obj)->anim.rotZ = ((GameObject*)sub)->anim.rotZ;
