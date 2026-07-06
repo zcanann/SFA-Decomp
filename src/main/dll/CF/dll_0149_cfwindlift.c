@@ -43,6 +43,7 @@ extern void cfpowerbase_initialise(void);
 extern void cfmaincrystal_initialise(void);
 
 #define CFWINDLIFT_OBJGROUP 0x49
+#define CFGUARDIAN_OBJGROUP 0x16 /* DLL 0x148 cfguardian */
 
 #define CFWINDLIFT_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -476,7 +477,7 @@ void windlift_update(int* obj)
                 sub->slots[0].phaseFlags &= ~0xf1;
             }
         }
-        objs = ObjGroup_GetObjects(0x16, &count);
+        objs = ObjGroup_GetObjects(CFGUARDIAN_OBJGROUP, &count);
         count = count + 1;
         if (count > 0xe)
         {
