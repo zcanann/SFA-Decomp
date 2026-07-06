@@ -93,7 +93,7 @@ typedef struct DimlavasmashState
 #pragma opt_propagation off
 void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
 {
-    int m;
+    int clearMask;
     int i;
     int j;
     int* block;
@@ -116,14 +116,14 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
             }
         }
     }
-    for (i = 0, m = ~2; i < (int)*(u8*)((char*)arg1 + 0xa2); i++)
+    for (i = 0, clearMask = ~2; i < (int)*(u8*)((char*)arg1 + 0xa2); i++)
     {
         block = (int*)fn_8006070C(arg1, i);
         if (arg3 == (int)*(u8*)((char*)Shader_getLayer((int)block, 0) + 5))
         {
             if (arg2 != 0)
             {
-                *(u32*)(block + 0x3c / 4) &= m;
+                *(u32*)(block + 0x3c / 4) &= clearMask;
             }
             else
             {
