@@ -28,5 +28,12 @@ void projdummy_initialise(void)
 }
 
 /*__DATA_EXTERNS__*/
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* lbl_803193C0[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projmagicstream_initialise, projmagicstream_release, (void*)0x00000000, projmagicstream_doUnsupported };
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs).
+ * Union u64 member forces the retail 8-byte alignment (table follows an odd-length
+ * string; retail pads to an 8-aligned table start). Same idiom as dll_000A_expgfx. */
+typedef union DllDescriptorTable {
+    void* ptrs[8];
+    u64 align8;
+} DllDescriptorTable;
+
+DllDescriptorTable lbl_803193C0 = { { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projmagicstream_initialise, projmagicstream_release, (void*)0x00000000, projmagicstream_doUnsupported } };
