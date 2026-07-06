@@ -84,7 +84,13 @@ void projdfp1r_initialise(void)
 {
 }
 
-char sProjdfp1rDoNoLongerSupported[] = "<projdfp1r Do>No Longer supported \n";
+/* Explicit length 40 (string data is 36 bytes; NUL-fill supplies the 4-byte
+ * retail pad gap_07_80319A84_data) so the 35-word descriptor table below
+ * starts 8-aligned at +0x28 as in retail. The u64-union idiom used by the
+ * 8-word tables (dll_00AD/dll_000A) can't be used here: MWCC rounds the
+ * union's size up to 0x90, adding 4 trailing bytes retail doesn't have. */
+char sProjdfp1rDoNoLongerSupported[40] = "<projdfp1r Do>No Longer supported \n";
 
-/* descriptor/ptr table auto 0x80319a88-0x80319b14 */
-u32 lbl_80319A88[35] = { 0x00000000, 0x00000000, 0x00000000, 0x001d0000, (u32)Camera_initialise, (u32)Camera_release, 0x00000000, (u32)Camera_init, (u32)Camera_update, (u32)Camera_get, (u32)Camera_getMode, (u32)Camera_GetFollowPos, (u32)Camera_getDefaultHandlerEntry, (u32)Camera_setMode, (u32)Camera_getCamActionsBinEntry, (u32)camcontrol_loadTriggeredCamAction, (u32)Camera_setFocus, (u32)Camera_overridePos, (u32)Camera_moveBy, (u32)camcontrol_initialise, (u32)camcontrol_getRelativePosition, (u32)Camera_getOverrideTarget, (u32)Camera_getTarget, (u32)Camera_func13, (u32)Camera_setTarget, (u32)Camera_setTargetReticleOverride, (u32)Camera_isZooming, (u32)camcontrol_updateTargetFeedback, (u32)Camera_minimapShowHelpTextForTarget, (u32)Camera_setLetterbox, (u32)camcontrol_release, (u32)Camera_getMinimapInfoText, (u32)Camera_func1C, (u32)Camera_func1D, (u32)camcontrol_queueSavedAction };
+/* descriptor/ptr table auto 0x80319a88-0x80319b14 (8-byte aligned in retail;
+ * pointer tables regenerate ADDR32 relocs) */
+void* lbl_80319A88[35] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x001d0000, Camera_initialise, Camera_release, (void*)0x00000000, Camera_init, Camera_update, Camera_get, Camera_getMode, Camera_GetFollowPos, Camera_getDefaultHandlerEntry, Camera_setMode, Camera_getCamActionsBinEntry, camcontrol_loadTriggeredCamAction, Camera_setFocus, Camera_overridePos, Camera_moveBy, camcontrol_initialise, camcontrol_getRelativePosition, Camera_getOverrideTarget, Camera_getTarget, Camera_func13, Camera_setTarget, Camera_setTargetReticleOverride, Camera_isZooming, camcontrol_updateTargetFeedback, Camera_minimapShowHelpTextForTarget, Camera_setLetterbox, camcontrol_release, Camera_getMinimapInfoText, Camera_func1C, Camera_func1D, camcontrol_queueSavedAction };
