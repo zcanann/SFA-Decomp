@@ -9,8 +9,6 @@
  * Entering or leaving pose 4 cross-fades the title music tracks and the movie
  * volume against the saved-file music-volume byte (save[10]).
  *
- * Also hosts the shared no-op release/free/copy callbacks the sibling
- * camera-mode DLLs reference.
  */
 #include "main/dll/cameramodetitlepose_struct.h"
 #include "main/camera_object.h"
@@ -34,65 +32,13 @@ extern CameraModeTitlePose gCamTitlePoseTable[];
 extern u8 gCamTitleCurPose;
 extern u8 gCamTitlePrevPose;
 extern u8 gCamTitleStartPosePending;
-extern f32 lbl_803E1BE0;
 extern f32 titleScreenCamProgress;
-extern f32 lbl_803E1BE4;
 
 extern CameraModeTitlePose gCamTitleStartPose;
-extern f32 gCamTitleProgressStep;
-extern f32 lbl_803E1BEC;
-extern f32 gCamTitleAngleWrapThreshold;
 
 #pragma scheduling off
 #pragma peephole off
-void CameraModeForceBehind_func06_nop(void)
-{
-}
-
-void CameraModeForceBehind_func05_nop(void)
-{
-}
-
-void CameraModeForceBehind_release(void);
-
-void CameraModeCloudRunner_release(void);
-
-void CameraModePerv_release(void);
-
-void CameraModeArwing_release(void);
-
-void CameraModeTitle_release(void)
-{
-}
-
-void CameraModeTitle_initialise(void)
-{
-}
-
-void CameraModeForceBehind_copyToCurrent(void);
-
-void CameraModeTitle_loadVolumes(void)
-{
-    u8* save = getSaveFileStruct();
-    audioSetVolumes(save[10], 1000, 1, 0, 0);
-}
-
-void dll_4F_init(void);
-
-void CameraModeTitle_init(CameraObject* camera)
-{
-    gCamTitleCurPose = TITLE_CAM_REST_POSE;
-    gCamTitlePrevPose = TITLE_CAM_REST_POSE;
-    titleScreenCamProgress = lbl_803E1BE0;
-    gCamTitleStartPosePending = 0;
-
-    camera->anim.localPosX = gCamTitlePoseTable[TITLE_CAM_REST_POSE].x;
-    camera->anim.localPosY = gCamTitlePoseTable[gCamTitleCurPose].y;
-    camera->anim.localPosZ = gCamTitlePoseTable[gCamTitleCurPose].z;
-    camera->anim.rotX = gCamTitlePoseTable[gCamTitleCurPose].yaw;
-    camera->anim.rotY = gCamTitlePoseTable[gCamTitleCurPose].pitch;
-    camera->anim.rotZ = gCamTitlePoseTable[gCamTitleCurPose].roll;
-}
+f32 titleScreenGetCamProgress(void) { return titleScreenCamProgress; }
 
 void CameraModeTitle_moveCam(u8 newCam)
 {
@@ -100,7 +46,7 @@ void CameraModeTitle_moveCam(u8 newCam)
     if (cam == gCamTitleCurPose) return;
     if (gCamTitlePrevPose == TITLE_CAM_REST_POSE)
     {
-        if (lbl_803E1BE0 != titleScreenCamProgress)
+        if (1.0f != titleScreenCamProgress)
         {
             u8* save = getSaveFileStruct();
             Movie_SetVolumeFade(0, 1000);
@@ -114,15 +60,15 @@ void CameraModeTitle_moveCam(u8 newCam)
     }
     gCamTitlePrevPose = gCamTitleCurPose;
     gCamTitleCurPose = cam;
-    titleScreenCamProgress = lbl_803E1BE4;
+    titleScreenCamProgress = 0.0f;
     gCamTitleStartPosePending = 1;
 }
 
-f32 titleScreenGetCamProgress(void) { return titleScreenCamProgress; }
-
-void CameraModeWorldMap_free(void);
-
-void CameraModeCloudRunner_free(void);
+void CameraModeTitle_loadVolumes(void)
+{
+    u8* save = getSaveFileStruct();
+    audioSetVolumes(save[10], 1000, 1, 0, 0);
+}
 
 void CameraModeTitle_update(CameraObject* camera)
 {
@@ -140,10 +86,9 @@ void CameraModeTitle_update(CameraObject* camera)
     {
         u8* save = getSaveFileStruct();
         f32 ease;
-        f32 bf0;
 
-        titleScreenCamProgress = titleScreenCamProgress + gCamTitleProgressStep;
-        if (titleScreenCamProgress >= lbl_803E1BE0)
+        titleScreenCamProgress += 0.01f;
+        if (titleScreenCamProgress >= 1.0f)
         {
             if (gCamTitleCurPose == TITLE_CAM_REST_POSE)
             {
@@ -157,21 +102,21 @@ void CameraModeTitle_update(CameraObject* camera)
                 Movie_SetVolumeFade(0, 1);
                 audioSetVolumes(save[10], 10, 1, 0, 0);
             }
-            titleScreenCamProgress = lbl_803E1BE0;
+            titleScreenCamProgress = 1.0f;
             gCamTitlePrevPose = gCamTitleCurPose;
         }
         else
         {
             if (gCamTitleCurPose == TITLE_CAM_REST_POSE)
             {
-                Movie_SetVolumeFade((s32)(lbl_803E1BEC * titleScreenCamProgress), 1);
+                Movie_SetVolumeFade((s32)(100.0f * titleScreenCamProgress), 1);
                 audioSetVolumes(
-                    (s32)((f32)(u32)save[10] * (lbl_803E1BE0 - titleScreenCamProgress)), 10, 1, 0,
+                    (s32)((f32)(u32)save[10] * (1.0f - titleScreenCamProgress)), 10, 1, 0,
                     0);
             }
             else if (gCamTitlePrevPose == TITLE_CAM_REST_POSE)
             {
-                Movie_SetVolumeFade((s32)(lbl_803E1BEC * (lbl_803E1BE0 - titleScreenCamProgress)), 1);
+                Movie_SetVolumeFade((s32)(100.0f * (1.0f - titleScreenCamProgress)), 1);
                 audioSetVolumes((s32)((f32)(u32)save[10] * titleScreenCamProgress), 10, 1, 0, 0);
             }
         }
@@ -187,7 +132,7 @@ void CameraModeTitle_update(CameraObject* camera)
             w = w * w;
             ease = (1.0f - w) * 0.5f + 0.5f;
         }
-        ease = ease * ((-1.0f * ease) * ease) + (0.5f * ease + (1.5f * ease) * ease);
+        ease = (0.5f * ease + (1.5f * ease) * ease) + ease * ((-1.0f * ease) * ease);
 
         camera->anim.localPosX =
             ease * (gCamTitlePoseTable[gCamTitleCurPose].x - gCamTitleStartPose.x) + gCamTitleStartPose.x;
@@ -199,7 +144,7 @@ void CameraModeTitle_update(CameraObject* camera)
         {
             u16 sy = gCamTitleStartPose.yaw;
             int d = gCamTitlePoseTable[gCamTitleCurPose].yaw - sy;
-            if (__fabs((f32)d) > gCamTitleAngleWrapThreshold)
+            if (__fabsf((f32)d) > 32767.0f)
             {
                 int d2 = (s16)gCamTitlePoseTable[gCamTitleCurPose].yaw - (s16)sy;
                 camera->anim.rotX = (s16)(s32)(ease * d2 + (f32)(s16)sy);
@@ -212,7 +157,7 @@ void CameraModeTitle_update(CameraObject* camera)
         {
             u16 sy = gCamTitleStartPose.pitch;
             int d = gCamTitlePoseTable[gCamTitleCurPose].pitch - sy;
-            if (__fabs((f32)d) > gCamTitleAngleWrapThreshold)
+            if (__fabsf((f32)d) > 32767.0f)
             {
                 int d2 = (s16)gCamTitlePoseTable[gCamTitleCurPose].pitch - (s16)sy;
                 camera->anim.rotY = (s16)(s32)(ease * d2 + (f32)(s16)sy);
@@ -225,7 +170,7 @@ void CameraModeTitle_update(CameraObject* camera)
         {
             u16 sy = gCamTitleStartPose.roll;
             int d = gCamTitlePoseTable[gCamTitleCurPose].roll - sy;
-            if (__fabs((f32)d) > gCamTitleAngleWrapThreshold)
+            if (__fabsf((f32)d) > 32767.0f)
             {
                 int d2 = (s16)gCamTitlePoseTable[gCamTitleCurPose].roll - (s16)sy;
                 camera->anim.rotZ = (s16)(s32)(ease * d2 + (f32)(s16)sy);
@@ -236,6 +181,29 @@ void CameraModeTitle_update(CameraObject* camera)
             }
         }
     }
+}
+
+void CameraModeTitle_init(CameraObject* camera)
+{
+    gCamTitleCurPose = TITLE_CAM_REST_POSE;
+    gCamTitlePrevPose = TITLE_CAM_REST_POSE;
+    titleScreenCamProgress = 1.0f;
+    gCamTitleStartPosePending = 0;
+
+    camera->anim.localPosX = gCamTitlePoseTable[TITLE_CAM_REST_POSE].x;
+    camera->anim.localPosY = gCamTitlePoseTable[gCamTitleCurPose].y;
+    camera->anim.localPosZ = gCamTitlePoseTable[gCamTitleCurPose].z;
+    camera->anim.rotX = gCamTitlePoseTable[gCamTitleCurPose].yaw;
+    camera->anim.rotY = gCamTitlePoseTable[gCamTitleCurPose].pitch;
+    camera->anim.rotZ = gCamTitlePoseTable[gCamTitleCurPose].roll;
+}
+
+void CameraModeTitle_release(void)
+{
+}
+
+void CameraModeTitle_initialise(void)
+{
 }
 
 CameraModeTitlePose gCamTitlePoseTable[5] = {
