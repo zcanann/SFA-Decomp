@@ -19,6 +19,34 @@
 #include "main/game_object.h"
 #include "main/dll/mcstaffeffe_state.h"
 
+/* obj is a word, not a pointer: the shared-header prototype fixes the
+   original signature as int, and the integral param pools low in the saved
+   regs to match retail coloring (CLAUDE.md recipe #126). */
+void mcupgradema_update(int obj)
+{
+    GameObject* gameObj = (GameObject*)obj;
+    McUpgradeMaSetup* setup = (McUpgradeMaSetup*)gameObj->anim.placementData;
+
+    if ((u32)GameBit_Get(setup->collectedGameBit) != 0)
+    {
+        *(u8*)&gameObj->anim.resetHitboxMode |= MCUPGRADE_OBJ_FLAG_COLLECTED;
+    }
+    else if (ObjTrigger_IsSet(obj) != 0)
+    {
+        GameBit_Set(setup->collectedGameBit, 1);
+        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+    }
+    else
+    {
+        objRenderFn_80041018(obj);
+    }
+}
+
+void mcupgradema_init(int obj)
+{
+    ((GameObject*)obj)->animEventCallback = mcupgradema_SeqFn;
+}
+
 int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     McStaffEffectObject* staffEffect = (McStaffEffectObject*)obj;
@@ -50,32 +78,4 @@ int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
     }
     return 0;
-}
-
-/* obj is a word, not a pointer: the shared-header prototype fixes the
-   original signature as int, and the integral param pools low in the saved
-   regs to match retail coloring (CLAUDE.md recipe #126). */
-void mcupgradema_update(int obj)
-{
-    GameObject* gameObj = (GameObject*)obj;
-    McUpgradeMaSetup* setup = (McUpgradeMaSetup*)gameObj->anim.placementData;
-
-    if ((u32)GameBit_Get(setup->collectedGameBit) != 0)
-    {
-        *(u8*)&gameObj->anim.resetHitboxMode |= MCUPGRADE_OBJ_FLAG_COLLECTED;
-    }
-    else if (ObjTrigger_IsSet(obj) != 0)
-    {
-        GameBit_Set(setup->collectedGameBit, 1);
-        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-    }
-    else
-    {
-        objRenderFn_80041018(obj);
-    }
-}
-
-void mcupgradema_init(int obj)
-{
-    ((GameObject*)obj)->animEventCallback = mcupgradema_SeqFn;
 }
