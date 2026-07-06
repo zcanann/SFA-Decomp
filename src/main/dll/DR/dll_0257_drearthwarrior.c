@@ -543,10 +543,10 @@ int fn_802BDBE8(int obj, int unused, ObjAnimUpdateState* animUpdate)
 void fn_802BE6E8(int obj, int t, int p3)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
-    int q;
+    int sub;
     int slot;
     Obj_GetPlayerObject();
-    q = inner + 0xb58;
+    sub = inner + 0xb58;
     slot = (int)Camera_GetCurrentViewSlot();
     ((EarthWarriorState*)inner)->baddie.hitPoints = 0;
     *(int*)((char*)inner + 0) &= ~0x8000;
@@ -570,7 +570,7 @@ void fn_802BE6E8(int obj, int t, int p3)
         ((EarthWarriorState*)inner)->baddie.cameraYaw = 0;
     }
     *(int*)((char*)inner + 0) |= 0x1000000;
-    fn_802B0EA4(obj, q, inner);
+    fn_802B0EA4(obj, sub, inner);
     (*(void (*)(int, int, f32, f32, int, void*))(*(int*)(*gPlayerInterface + 0x8)))(
         obj, inner, timeDelta, timeDelta, (int)gDREarthWarriorStateHandlers, &gDREarthWarriorDefaultStateHandler);
     ((GameObject*)obj)->anim.rotY = (s16)(
@@ -581,12 +581,12 @@ void fn_802BE6E8(int obj, int t, int p3)
     {
         (*gGameUIInterface)->runAirMeter(((DREarthWarriorState*)inner)->airMeterCapacity);
     }
-    fn_802B1BF8(obj, q, inner, timeDelta);
+    fn_802B1BF8(obj, sub, inner, timeDelta);
     fn_802B1B28(obj, timeDelta);
     (*gPathControlInterface)->update((void*)obj, (void*)(inner + 4), timeDelta);
     (*gPathControlInterface)->apply((void*)obj, (void*)(inner + 4));
     (*gPathControlInterface)->advance((void*)obj, (void*)(inner + 4), timeDelta);
-    ((GameObject*)obj)->anim.rotX = ((EarthWarriorSub*)q)->unk478;
+    ((GameObject*)obj)->anim.rotX = ((EarthWarriorSub*)sub)->unk478;
 }
 
 #pragma dont_inline on
@@ -635,52 +635,52 @@ int fn_802BC830(int obj, int sub, int state)
 #pragma opt_common_subs off
 void fn_802BCA10(int obj, int sub, int state)
 {
-    int v;
-    int d;
+    int angle;
+    int delta;
     s16* vec0;
     s16* vec9;
-    v = ((EarthWarriorSub*)sub)->unk480 << 1;
-    if (v < -0x41)
+    angle = ((EarthWarriorSub*)sub)->unk480 << 1;
+    if (angle < -0x41)
     {
-        d = -0x41;
+        delta = -0x41;
     }
-    else if (v > 0x41)
+    else if (angle > 0x41)
     {
-        d = 0x41;
+        delta = 0x41;
     }
     else
     {
-        d = v;
+        delta = angle;
     }
-    d = d * 0xb6;
-    d -= (u16)((EarthWarriorSub*)sub)->unk4D4;
-    if (d > 0x8000)
+    delta = delta * 0xb6;
+    delta -= (u16)((EarthWarriorSub*)sub)->unk4D4;
+    if (delta > 0x8000)
     {
-        d = d - 0xffff;
+        delta = delta - 0xffff;
     }
-    if (d < -0x8000)
+    if (delta < -0x8000)
     {
-        d = d + 0xffff;
+        delta = delta + 0xffff;
     }
-    d = (int)((f32)d * lbl_803E8324);
-    d = (d < -0x16c) ? -0x16c : ((d > 0x16c) ? 0x16c : d);
-    ((EarthWarriorSub*)sub)->unk4D4 = d * timeDelta + (f32)(s32)((EarthWarriorSub*)sub)->unk4D4;
+    delta = (int)((f32)delta * lbl_803E8324);
+    delta = (delta < -0x16c) ? -0x16c : ((delta > 0x16c) ? 0x16c : delta);
+    ((EarthWarriorSub*)sub)->unk4D4 = delta * timeDelta + (f32)(s32)((EarthWarriorSub*)sub)->unk4D4;
     ((EarthWarriorSub*)sub)->unk4D2 = ((EarthWarriorSub*)sub)->unk4D4 / 2;
     {
         f32 ph = (f32)(s32)((BaddieState*)state)->spawnRotY / lbl_803E8328;
         f32 t = (ph < lbl_803E8334) ? lbl_803E8334 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
-        d = (int)(lbl_803E832C * (lbl_803E8330 * -t));
-        d -= (u16)((EarthWarriorSub*)sub)->unk4D6;
+        delta = (int)(lbl_803E832C * (lbl_803E8330 * -t));
+        delta -= (u16)((EarthWarriorSub*)sub)->unk4D6;
     }
-    if (d > 0x8000)
+    if (delta > 0x8000)
     {
-        d = d - 0xffff;
+        delta = delta - 0xffff;
     }
-    if (d < -0x8000)
+    if (delta < -0x8000)
     {
-        d = d + 0xffff;
+        delta = delta + 0xffff;
     }
-    ((EarthWarriorSub*)sub)->unk4D6 += d;
+    ((EarthWarriorSub*)sub)->unk4D6 += delta;
     vec0 = objModelGetVecFn_800395d8(obj, 0);
     vec9 = objModelGetVecFn_800395d8(obj, 9);
     objModelGetVecFn_800395d8(obj, 4);
