@@ -474,8 +474,8 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
     s16 angleMinus;
     int i;
     f32 rad;
-    f32 c;
-    f32 s;
+    f32 cos0;
+    f32 sin0;
     f32 cosM;
     f32 cosP;
     f32 sinM;
@@ -489,21 +489,21 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
     angle = getAngle(-(((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX),
                      -(((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ));
     rad = (gEdibleMushroomPi * angle) / gEdibleMushroomAngleToRadDivisor;
-    c = mathSinf(rad);
-    s = mathCosf(rad);
-    vec[0] = ((GameObject*)obj)->anim.localPosX - dist * c;
+    cos0 = mathSinf(rad);
+    sin0 = mathCosf(rad);
+    vec[0] = ((GameObject*)obj)->anim.localPosX - dist * cos0;
     vec[1] = ((GameObject*)obj)->anim.localPosY;
-    vec[2] = ((GameObject*)obj)->anim.localPosZ - dist * s;
+    vec[2] = ((GameObject*)obj)->anim.localPosZ - dist * sin0;
     if (objBboxFn_800640cc(obj + 0xc, vec, lbl_803E52D0, 3, 0, obj, 8, -1, 0xff, 0) != 0)
     {
         anglePlus = angle;
         angleMinus = angle;
-        cosM = c;
-        cosP = c;
+        cosM = cos0;
+        cosP = cos0;
         cosStepP = mathSinf(lbl_803E52D4);
         cosStepM = mathSinf(lbl_803E52D8);
-        sinP = s;
-        sinM = s;
+        sinP = sin0;
+        sinM = sin0;
         sinStepP = mathCosf(lbl_803E52D4);
         sinStepM = mathCosf(lbl_803E52D8);
         for (i = 0; i < 8; i++)
