@@ -70,6 +70,11 @@ typedef struct SpscarabState
 
 STATIC_ASSERT(sizeof(SpscarabState) == 0x14);
 
+int spscarab_getExtraSize(void) { return 0x14; }
+int spscarab_getObjectTypeId(void) { return 0x0; }
+
+void spscarab_free(int obj) { Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_scarab_runloop); }
+
 void spscarab_render(void)
 {
 }
@@ -77,11 +82,6 @@ void spscarab_render(void)
 void spscarab_hitDetect(void)
 {
 }
-
-int spscarab_getExtraSize(void) { return 0x14; }
-int spscarab_getObjectTypeId(void) { return 0x0; }
-
-void spscarab_free(int obj) { Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_scarab_runloop); }
 
 void spscarab_update(int obj)
 {
