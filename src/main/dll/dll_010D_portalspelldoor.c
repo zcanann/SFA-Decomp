@@ -122,7 +122,7 @@ void portalspelldoor_update(int obj)
     PortalSpellDoorState* state;
     int player;
     int p4c;
-    int t;
+    int timer;
 
     player = Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
@@ -153,9 +153,9 @@ void portalspelldoor_update(int obj)
     }
     if (state->openTimer != -1)
     {
-        t = state->openTimer - framesThisStep;
-        state->openTimer = t;
-        if (t < 0)
+        timer = state->openTimer - framesThisStep;
+        state->openTimer = timer;
+        if (timer < 0)
         {
             int tricky;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
