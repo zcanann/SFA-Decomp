@@ -119,9 +119,9 @@ void objAnimFn_80038f38(int obj, char* state)
     extern f32 lbl_803DB464;
     extern u8 framesThisStep;
     s16* found;
-    int t;
+    int timer;
 
-    t = (s32) * (f32*)(state + 0xc);
+    timer = (s32) * (f32*)(state + 0xc);
     found = objFindJointVecByKey(obj, 1);
 
     if (*(s8*)state != 0)
@@ -130,16 +130,16 @@ void objAnimFn_80038f38(int obj, char* state)
     }
     else if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) != 0)
     {
-        if (t != -1)
+        if (timer != -1)
         {
-            t -= framesThisStep;
-            if (t < 0)
+            timer -= framesThisStep;
+            if (timer < 0)
             {
                 Sfx_StopObjectChannel((u32)obj, 0x10);
                 *(f32*)(state + 4) = lbl_803DE9A4;
                 *(s16*)(state + 0x14) = 0;
             }
-            *(f32*)(state + 0xc) = t;
+            *(f32*)(state + 0xc) = timer;
         }
     }
     else
