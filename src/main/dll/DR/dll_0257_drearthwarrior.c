@@ -393,9 +393,9 @@ void DR_EarthWarrior_initialise(void)
 f32 DR_EarthWarrior_func19(int obj, f32* out)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
-    f32 v;
-    v = 0.001f * inner->baddie.animSpeedC + 0.005f;
-    *out = -((v < 0.005f) ? 0.005f : ((v > 0.01f) ? 0.01f : v));
+    f32 animSpeed;
+    animSpeed = 0.001f * inner->baddie.animSpeedC + 0.005f;
+    *out = -((animSpeed < 0.005f) ? 0.005f : ((animSpeed > 0.01f) ? 0.01f : animSpeed));
     return 0.0f;
 }
 
@@ -996,7 +996,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     extern int ObjAnim_GetCurrentEventCountdown();
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     EarthWarriorSub* q = &inner->sub;
-    int s;
+    int moveId;
     if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
     {
         ((BaddieState*)p2)->animSpeedC = lbl_803E8304;
@@ -1028,7 +1028,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     {
         return 3;
     }
-    s = *(s16*)q->moveTable;
+    moveId = *(s16*)q->moveTable;
     *(s16*)((char*)p2 + 0x278) = 0;
     q->unk404 = lbl_803E82E8;
     {
@@ -1057,13 +1057,13 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         if (*(s8*)&((BaddieState*)p2)->moveDone != 0 && ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 &&
             !((ByteFlags*)&inner->sub.flags994)->b01)
         {
-            ObjAnim_SetCurrentMove(obj, s, lbl_803E8304, 0);
+            ObjAnim_SetCurrentMove(obj, moveId, lbl_803E8304, 0);
             ((BaddieState*)p2)->moveSpeed = lbl_803E8354;
         }
     }
     else if (!((ByteFlags*)&inner->sub.flags994)->b01)
     {
-        ObjAnim_SetCurrentMove(obj, s, lbl_803E8304, 0);
+        ObjAnim_SetCurrentMove(obj, moveId, lbl_803E8304, 0);
         ((BaddieState*)p2)->moveSpeed = lbl_803E8354;
     }
     {
