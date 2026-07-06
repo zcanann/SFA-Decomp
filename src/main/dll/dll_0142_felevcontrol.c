@@ -74,7 +74,7 @@ void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E56B8);
 }
 
-void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
+void FElevControl_init(int obj) { ObjMsg_AllocQueue(obj, 0x2); }
 
 ObjectDescriptor gFElevControlObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
