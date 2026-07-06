@@ -95,7 +95,10 @@ extern void padGetAnalogInput(int pad, s8* x, s8* y);
 extern void padClearAnalogInputY(int port);
 extern void padClearAnalogInputX(int port);
 extern void buttonDisable(int port, u32 mask);
+#define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
+#define PAD_BUTTON_START 0x1000
+#define PAD_ACCEPT_MASK (PAD_BUTTON_A | PAD_BUTTON_START)
 
 
 extern void fn_8001BDD4(int mode); /* mode 3: free the three subtitle textures */
@@ -601,7 +604,7 @@ u32 Link_update(void)
     {
         buttons = getButtonsJustPressed(0);
         acceptPressed = 0;
-        if ((int)(buttons & 0x1100) != 0)
+        if ((int)(buttons & PAD_ACCEPT_MASK) != 0)
         {
             acceptPressed = 1;
         }
@@ -610,7 +613,7 @@ u32 Link_update(void)
             if (((gTumbleweedBushItems[linkSelected].flags & LINK_FLAG_NO_ACCEPT) == 0) &&
                 (mainGetBit(0x44f) == 0))
             {
-                buttonDisable(0, 0x1100);
+                buttonDisable(0, PAD_ACCEPT_MASK);
                 result = 1;
             }
         }
