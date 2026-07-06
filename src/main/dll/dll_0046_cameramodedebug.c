@@ -24,6 +24,9 @@ extern u8 padGetCY(int port);
 /* camera mode id to restore on B-press exit */
 #define CAMCONTROL_ACTION_DEFAULT 0x42
 
+#define PAD_BUTTON_DOWN 0x004
+#define PAD_BUTTON_UP   0x008
+
 extern CameraModeDebugState* gCamDebugState;
 extern f32 lbl_803E1840;
 extern f32 gCamDebugZoomInRate;
@@ -67,11 +70,11 @@ void CameraModeDebug_update(CameraObject* cam)
         (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
         return;
     }
-    if ((held & 8) != 0)
+    if ((held & PAD_BUTTON_UP) != 0)
     {
         move = gCamDebugZoomInRate * gCamDebugState->orbitRadius;
     }
-    if ((held & 4) != 0)
+    if ((held & PAD_BUTTON_DOWN) != 0)
     {
         move = gCamDebugZoomOutRate * gCamDebugState->orbitRadius;
     }
