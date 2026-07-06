@@ -156,21 +156,21 @@ void campfire_update(int obj)
         {
             int rnd;
             u8* l2;
-            s16 v;
+            s16 brightness;
             rnd = randomGetRange(-0x19, 0x19);
             l2 = state->light;
-            v = l2[0x2f9] + *(s8*)(l2 + 0x2fa) + rnd;
-            if (v < 0)
+            brightness = l2[0x2f9] + *(s8*)(l2 + 0x2fa) + rnd;
+            if (brightness < 0)
             {
-                v = 0;
+                brightness = 0;
                 l2[0x2fa] = 0;
             }
-            else if (v > 0xff)
+            else if (brightness > 0xff)
             {
-                v = 0xff;
+                brightness = 0xff;
                 l2[0x2fa] = 0;
             }
-            *(u8*)((int)state->light + 0x2f9) = v;
+            *(u8*)((int)state->light + 0x2f9) = brightness;
         }
     }
 }
@@ -201,11 +201,11 @@ void campfire_init(int obj, int p2)
     state->unk10 = *(u8*)(p2 + 0x1b);
     {
         f32 scale = ((GameObject*)obj)->anim.rootMotionScale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-        int m = *(int*)&((GameObject*)obj)->anim.hitReactState;
+        int hitState = *(int*)&((GameObject*)obj)->anim.hitReactState;
         ObjHitbox_SetCapsuleBounds(obj,
-                                   (int)((f32)((ObjHitsPriorityState*)m)->primaryRadius * scale),
-                                   (int)((f32)((ObjHitsPriorityState*)m)->primaryCapsuleOffsetA * scale),
-                                   (int)((f32)((ObjHitsPriorityState*)m)->primaryCapsuleOffsetB * scale));
+                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryRadius * scale),
+                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetA * scale),
+                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetB * scale));
     }
     state->dayTimer = 10.0f;
     state->nightTimer = 1.0f;
