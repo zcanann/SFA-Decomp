@@ -2108,6 +2108,7 @@ main/dll/SC/dll_01B8_sctotempole.c:
 
 main/dll/SC/dll_01B9_sccloudrunnera.c:
 	.text       start:0x801DCC70 end:0x801DD170
+	.sdata2     start:0x803E55E8 end:0x803E55F0
 
 main/dll/dll_801dd170.c:
 	.text       start:0x801DD170 end:0x801DD1A8
