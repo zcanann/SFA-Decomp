@@ -35,9 +35,9 @@ void infotext_update(int obj)
 
 void infotext_init(int obj, s8* def)
 {
-    u32 v;
-    v = (u32)((GameObject*)obj)->objectFlags | (INFOTEXT_OBJFLAG_HIDDEN | INFOTEXT_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->objectFlags = v;
+    u32 flags;
+    flags = (u32)((GameObject*)obj)->objectFlags | (INFOTEXT_OBJFLAG_HIDDEN | INFOTEXT_OBJFLAG_HITDETECT_DISABLED);
+    ((GameObject*)obj)->objectFlags = flags;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x18] << 8);
     objSetHintTextIdx(obj, (u8)def[0x19]);
 }

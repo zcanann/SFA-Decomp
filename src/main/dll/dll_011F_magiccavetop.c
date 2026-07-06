@@ -83,16 +83,16 @@ void magiccavetop_free(int* obj)
 {
     MagiccavetopState* state = ((GameObject*)obj)->extra;
     MagiccavetopPlacement* def = *(MagiccavetopPlacement**)&((GameObject*)obj)->anim.placementData;
-    void* p;
-    void* r;
+    void* player;
+    void* staff;
     stopRumble2();
-    p = Obj_GetPlayerObject();
-    if (p != NULL)
+    player = Obj_GetPlayerObject();
+    if (player != NULL)
     {
-        r = (void*)Player_GetStaffObject((int)p);
-        if (r != NULL)
+        staff = (void*)Player_GetStaffObject((int)player);
+        if (staff != NULL)
         {
-            staffSetGlow(r, 5, 0);
+            staffSetGlow(staff, 5, 0);
         }
     }
     if (state->subState == MAGICCAVETOP_SUBSTATE_LOADED)
