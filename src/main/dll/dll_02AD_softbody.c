@@ -111,22 +111,22 @@ void softbody_update(int obj)
 
     if ((void*)obj == lbl_803DDD98)
     {
-        f32 a;
+        f32 phase;
 
-        a = lbl_803E728C * timeDelta + lbl_803DDDA0;
-        lbl_803DDDA0 = a;
-        while (a > *(f32*)&lbl_803E7288)
+        phase = lbl_803E728C * timeDelta + lbl_803DDDA0;
+        lbl_803DDDA0 = phase;
+        while (phase > *(f32*)&lbl_803E7288)
         {
-            a -= *(f32*)&lbl_803E7288;
+            phase -= *(f32*)&lbl_803E7288;
         }
-        lbl_803DDDA0 = a;
-        a = lbl_803E7290 * timeDelta + lbl_803DDD9C;
-        lbl_803DDD9C = a;
-        while (a > *(f32*)&lbl_803E7288)
+        lbl_803DDDA0 = phase;
+        phase = lbl_803E7290 * timeDelta + lbl_803DDD9C;
+        lbl_803DDD9C = phase;
+        while (phase > *(f32*)&lbl_803E7288)
         {
-            a -= *(f32*)&lbl_803E7288;
+            phase -= *(f32*)&lbl_803E7288;
         }
-        lbl_803DDD9C = a;
+        lbl_803DDD9C = phase;
     }
 
     switch (object->anim.seqId)
