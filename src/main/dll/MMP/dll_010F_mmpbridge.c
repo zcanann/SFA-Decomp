@@ -28,6 +28,9 @@ typedef struct MmpBridgePlacement
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 
+int mmp_bridge_getExtraSize(void) { return 0x0; }
+int mmp_bridge_getObjectTypeId(void) { return 0x0; }
+
 void mmp_bridge_free(void)
 {
 }
@@ -38,34 +41,6 @@ void mmp_bridge_render(void)
 
 void mmp_bridge_hitDetect(void)
 {
-}
-
-void mmp_bridge_release(void)
-{
-}
-
-void mmp_bridge_initialise(void)
-{
-}
-
-int mmp_bridge_getExtraSize(void) { return 0x0; }
-int mmp_bridge_getObjectTypeId(void) { return 0x0; }
-
-void mmp_bridge_init(int* obj)
-{
-    MmpBridgePlacement* placement = (MmpBridgePlacement*)*(int**)&((GameObject*)obj)->anim.placementData;
-    ObjTextureRuntimeSlot* tex = objFindTexture(obj, 0, 0);
-    if (tex != NULL)
-    {
-        tex->offsetS = BRIDGE_TEX_OFFSET_START;
-    }
-    ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
-    ((GameObject*)obj)->objectFlags |= (MMPBRIDGE_OBJFLAG_HIDDEN | MMPBRIDGE_OBJFLAG_HITDETECT_DISABLED);
-    ObjHits_DisableObject((int)obj);
-    if (GameBit_Get(placement->enableBit) != 0)
-    {
-        ObjHits_EnableObject((int)obj);
-    }
 }
 
 void mmp_bridge_update(int* obj)
@@ -90,4 +65,29 @@ void mmp_bridge_update(int* obj)
         }
         ObjHits_EnableObject((int)obj);
     }
+}
+
+void mmp_bridge_init(int* obj)
+{
+    MmpBridgePlacement* placement = (MmpBridgePlacement*)*(int**)&((GameObject*)obj)->anim.placementData;
+    ObjTextureRuntimeSlot* tex = objFindTexture(obj, 0, 0);
+    if (tex != NULL)
+    {
+        tex->offsetS = BRIDGE_TEX_OFFSET_START;
+    }
+    ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
+    ((GameObject*)obj)->objectFlags |= (MMPBRIDGE_OBJFLAG_HIDDEN | MMPBRIDGE_OBJFLAG_HITDETECT_DISABLED);
+    ObjHits_DisableObject((int)obj);
+    if (GameBit_Get(placement->enableBit) != 0)
+    {
+        ObjHits_EnableObject((int)obj);
+    }
+}
+
+void mmp_bridge_release(void)
+{
+}
+
+void mmp_bridge_initialise(void)
+{
 }
