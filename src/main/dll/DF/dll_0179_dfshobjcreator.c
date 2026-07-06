@@ -52,21 +52,21 @@ STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk30) == 0x30);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk34) == 0x34);
 STATIC_ASSERT(sizeof(DfshObjCreatorSetup) == 0x38);
 
+int dfsh_objcreator_getExtraSize(void) { return 0x4; }
+int dfsh_objcreator_getObjectTypeId(void) { return 0x0; }
+
 void dfsh_objcreator_free(void)
 {
 }
-
-void dfsh_objcreator_hitDetect(void)
-{
-}
-
-int dfsh_objcreator_getExtraSize(void) { return 0x4; }
-int dfsh_objcreator_getObjectTypeId(void) { return 0x0; }
 
 void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4EB8);
+}
+
+void dfsh_objcreator_hitDetect(void)
+{
 }
 
 typedef struct DfshObjCreatorState
@@ -144,14 +144,6 @@ void dfsh_objcreator_update(int obj)
     }
 }
 
-void dfsh_objcreator_release(void)
-{
-}
-
-void dfsh_objcreator_initialise(void)
-{
-}
-
 void dfsh_objcreator_init(int obj, s8* def)
 {
     DfshObjCreatorState* state = ((GameObject*)obj)->extra;
@@ -161,4 +153,12 @@ void dfsh_objcreator_init(int obj, s8* def)
     state->spawnTimerStep = 0;
     *(u8*)((char*)obj + 0x37) = 0xFF;
     ((GameObject*)obj)->anim.alpha = 0xFF;
+}
+
+void dfsh_objcreator_release(void)
+{
+}
+
+void dfsh_objcreator_initialise(void)
+{
 }
