@@ -39,42 +39,8 @@ extern void* gameTextGet(int textId);
 extern int lbl_803219A0[];
 extern int lbl_80321990[];
 
-void infopoint_hitDetect(void)
-{
-}
-
-void infopoint_free(void)
-{
-}
-
-void infopoint_release(void)
-{
-}
-
-void infopoint_initialise(void)
-{
-}
-
-int infopoint_getExtraSize(void) { return 0x20; }
-int infopoint_getObjectTypeId(void) { return 0x0; }
-
 #pragma scheduling off
 #pragma peephole off
-void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3B70);
-}
-
-void infopoint_update(GameObject* obj)
-{
-    if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
-    {
-        buttonDisable(0, PAD_BUTTON_A);
-        (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-    }
-}
-
 int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     InfopointState* state = ((GameObject*)obj)->extra;
@@ -92,6 +58,40 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
     }
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+int infopoint_getExtraSize(void) { return 0x20; }
+int infopoint_getObjectTypeId(void) { return 0x0; }
+
+void infopoint_free(void)
+{
+}
+
+#pragma scheduling off
+#pragma peephole off
+void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3B70);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+void infopoint_hitDetect(void)
+{
+}
+
+#pragma scheduling off
+#pragma peephole off
+void infopoint_update(GameObject* obj)
+{
+    if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
+    {
+        buttonDisable(0, PAD_BUTTON_A);
+        (*gObjectTriggerInterface)->runSequence(0, obj, -1);
+    }
 }
 
 void infopoint_init(int* obj, u8* def)
@@ -113,4 +113,14 @@ void infopoint_init(int* obj, u8* def)
     state->unk10 = ((InfopointObjectDef*)def)->unk1B;
     state->flag = 0;
     ((GameObject*)obj)->objectFlags |= INFOPOINT_OBJFLAG_HITDETECT_DISABLED;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+void infopoint_release(void)
+{
+}
+
+void infopoint_initialise(void)
+{
 }
