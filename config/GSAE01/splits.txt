@@ -366,6 +366,7 @@ main/dll/dll_0063_dll63func0.c:
 
 main/dll/dll_0064_dll64func0.c:
 	.text       start:0x800EE8FC end:0x800EEC34
+	.sdata2     start:0x803E0928 end:0x803E0930
 
 main/dll/dll_0065_dll65func0.c:
 	.text       start:0x800EEC34 end:0x800EEFEC
@@ -1271,6 +1272,7 @@ main/dll/dll_00F9_projectileswitch.c:
 
 main/dll/dll_00FA_invisiblehitswitch.c:
 	.text       start:0x8017A8EC end:0x8017AC2C
+	.sdata2     start:0x803E3740 end:0x803E3750
 
 main/dll/dll_00FB_pressureswitchfb.c:
 	.text       start:0x8017AC2C end:0x8017B5C8
