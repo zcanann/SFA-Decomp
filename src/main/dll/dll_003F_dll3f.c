@@ -1,8 +1,7 @@
 /*
  * dll3f (DLL 0x3F) - title-screen DLL boilerplate.
  *
- * Owns gTitleScreenObjDescriptor, a 10-slot ObjectDescriptor wiring the
- * titlescreen_* object callbacks (init/update/hitDetect/render/free/...).
+ * (gTitleScreenObjDescriptor lives in dll_02C0_front.c, not here.)
  * dll_3F_initialise loads texture asset 0x47A into lbl_803DD960 and
  * dll_3F_release frees it. dll_3F_frameStart_ret_0 / dll_3F_frameEnd_nop
  * are the per-frame hook leaves.
@@ -32,32 +31,6 @@ __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
 
 
-
-void dll_3F_frameEnd_nop(void)
-{
-}
-
-int dll_3F_frameStart_ret_0(void) { return 0; }
-
-ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)titlescreen_initialise,
-        (ObjectDescriptorCallback)titlescreen_release,
-        0,
-        (ObjectDescriptorCallback)titlescreen_init,
-        (ObjectDescriptorCallback)titlescreen_update,
-        (ObjectDescriptorCallback)titlescreen_hitDetect,
-        (ObjectDescriptorCallback)titlescreen_render,
-        (ObjectDescriptorCallback)titlescreen_free,
-        (ObjectDescriptorCallback)titlescreen_getObjectTypeId,
-        titlescreen_getExtraSize,
-    },
-    0,
-};
 
 #pragma scheduling off
 #pragma peephole off
@@ -95,6 +68,12 @@ void fn_80133F70(void* obj)
 
 #pragma scheduling on
 #pragma peephole on
+void dll_3F_frameEnd_nop(void)
+{
+}
+
+int dll_3F_frameStart_ret_0(void) { return 0; }
+
 void dll_3F_release(void)
 {
     textureFree(lbl_803DD960);
