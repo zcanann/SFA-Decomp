@@ -29,8 +29,6 @@ extern CameraModeCrawlState* lbl_803DD598;
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 {
@@ -83,18 +81,12 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
     lbl_803DD598->flags.useDefaultHandler = 1;
 }
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
 void CameraModeCrawl_free(void)
 {
     extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD598);
     lbl_803DD598 = NULL;
 }
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void CameraModeCrawl_update(u8* obj)
 {
