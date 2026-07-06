@@ -94,10 +94,10 @@ void fn_801923F8(int* cfgArg)
     int y;
     int phaseIdx;
     int stepY;
-    f32 a;
+    f32 waveY;
     f32 waveDivisor;
     f32 waveScale;
-    f32 z;
+    f32 initHeight;
     WaveAnimatorState* cfg = (WaveAnimatorState*)cfgArg;
 
     lbl_803DDAF4 = mmAlloc(4 * cfg->period * cfg->period, 0xFFFFFF, 0);
@@ -108,9 +108,9 @@ void fn_801923F8(int* cfgArg)
     y = cfg->originY;
     stepY = (s32)((lbl_803E3F40 * cfg->spanY) / cfg->period);
 
-    z = lbl_803E3F44;
-    cfg->maxHeight = z;
-    cfg->minHeight = z;
+    initHeight = lbl_803E3F44;
+    cfg->maxHeight = initHeight;
+    cfg->minHeight = initHeight;
 
     i = 0;
     heightIdx = 0;
@@ -126,9 +126,9 @@ void fn_801923F8(int* cfgArg)
         {
             f32 s1 = mathSinf((waveScale * y) / waveDivisor);
             f32 s2;
-            a = cfg->ampY * s1;
+            waveY = cfg->ampY * s1;
             s2 = mathSinf(xv / waveDivisor);
-            *(f32*)((u8*)lbl_803DDAF4 + row) = cfg->ampX * s2 + a;
+            *(f32*)((u8*)lbl_803DDAF4 + row) = cfg->ampX * s2 + waveY;
             if (*(f32*)((u8*)lbl_803DDAF4 + row) < cfg->minHeight)
             {
                 cfg->minHeight = *(f32*)((u8*)lbl_803DDAF4 + row);
