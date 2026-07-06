@@ -1,17 +1,11 @@
 /*
- * dll_00CF cannonclaw - combined object DLL holding three independent
- * object descriptors:
+ * dll_00CF cannonclaw - a trigger-once cannon-arm awakener: plays move 0x208
+ * until the Tricky object's gate game bit fires, then disables its own hits
+ * and stops animating (unkF4 latch).
  *
- *   gGrimbleObjDescriptor       - the Grimble enemy (logic in dll_00D0).
- *   gTumbleWeedBushObjDescriptor - the tumbleweed bush (logic elsewhere).
- *   cannonclaw                  - a trigger-once cannon-arm awakener: plays
- *                                 move 0x208 until the Tricky object's gate
- *                                 game bit fires, then disables its own
- *                                 hits and stops animating (unkF4 latch).
- *
- * This TU owns grimble_initialiseStateHandlerTables (builds Grimble's two
- * state-handler dispatch tables in .bss) and the small cannonclaw_* object
- * callbacks. The Grimble/TumbleWeedBush bodies live in their own TUs.
+ * This TU also owns grimble_initialiseStateHandlerTables (builds Grimble's
+ * two state-handler dispatch tables in .bss). The Grimble/TumbleWeedBush
+ * bodies and object descriptors live in their own TUs (dll_00D0/dll_00D1).
  */
 #include "main/game_object.h"
 #include "main/dll/barrel.h"
@@ -27,17 +21,6 @@ extern f32 timeDelta;
 extern f32 lbl_803E2F30;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
-
-void cannonclaw_free(void)
-{
-}
-
-void cannonclaw_hitDetect(void)
-{
-}
-
-int cannonclaw_getExtraSize(void) { return 0x0; }
-int cannonclaw_getObjectTypeId(void) { return 0x0; }
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -61,7 +44,16 @@ void grimble_initialiseStateHandlerTables(void)
     gGrimbleStateHandlersB[5] = grimble_stateHandlerB05;
 }
 #pragma dont_inline reset
+#pragma scheduling reset
 
+int cannonclaw_getExtraSize(void) { return 0x0; }
+int cannonclaw_getObjectTypeId(void) { return 0x0; }
+
+void cannonclaw_free(void)
+{
+}
+
+#pragma scheduling off
 #pragma peephole off
 void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -78,22 +70,9 @@ void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-ObjectDescriptor gGrimbleObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)grimble_initialise,
-    (ObjectDescriptorCallback)grimble_release,
-    0,
-    (ObjectDescriptorCallback)grimble_init,
-    (ObjectDescriptorCallback)grimble_update,
-    (ObjectDescriptorCallback)grimble_hitDetect,
-    (ObjectDescriptorCallback)grimble_render,
-    (ObjectDescriptorCallback)grimble_free,
-    (ObjectDescriptorCallback)grimble_getObjectTypeId,
-    grimble_getExtraSize,
-};
+void cannonclaw_hitDetect(void)
+{
+}
 
 #define CANNONCLAW_OBJID_TRICKY 0x1723
 #define CANNONCLAW_MOVE_ARM 0x208
@@ -116,25 +95,6 @@ void cannonclaw_update(u8* obj)
     ObjHits_DisableObject((u32)obj);
 }
 
-void cannonclaw_release(void)
-{
-}
-
-void cannonclaw_initialise(void)
-{
-}
-
-void tumbleweedbush_free(void);
-void tumbleweedbush_hitDetect(void);
-void tumbleweedbush_release(void);
-void tumbleweedbush_initialise(void);
-void tumbleweedbush_init(u8* obj, u8* params, int param3);
-int tumbleweedbush_getExtraSize(void);
-int tumbleweedbush_getObjectTypeId(void);
-void tumbleweedbush_update(int* obj);
-void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void tumbleweedbush_setScale(u8* obj, void* match);
-
 void cannonclaw_init(s16* dst, void* src)
 {
     s8 v = *((s8*)src + 0x28);
@@ -142,23 +102,10 @@ void cannonclaw_init(s16* dst, void* src)
     *dst = t;
 }
 
-ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)tumbleweedbush_initialise,
-        (ObjectDescriptorCallback)tumbleweedbush_release,
-        0,
-        (ObjectDescriptorCallback)tumbleweedbush_init,
-        (ObjectDescriptorCallback)tumbleweedbush_update,
-        (ObjectDescriptorCallback)tumbleweedbush_hitDetect,
-        (ObjectDescriptorCallback)tumbleweedbush_render,
-        (ObjectDescriptorCallback)tumbleweedbush_free,
-        (ObjectDescriptorCallback)tumbleweedbush_getObjectTypeId,
-        tumbleweedbush_getExtraSize,
-        (ObjectDescriptorCallback)tumbleweedbush_setScale,
-    },
-    0,
-};
+void cannonclaw_release(void)
+{
+}
+
+void cannonclaw_initialise(void)
+{
+}
