@@ -734,7 +734,6 @@ extern const f32 gNewCloudStarFadeOutTime;
 extern const f32 lbl_803DF28C;
 
 #pragma opt_common_subs off
-#pragma opt_common_subs off
 void drawSkyStars(void)
 {
     int timeOk;
@@ -837,8 +836,6 @@ void drawSkyStars(void)
         GXCallDisplayList(gNewCloudStarDisplayLists[i], gNewCloudStarDisplayListSizes[i]);
     }
 }
-#pragma opt_common_subs reset
-
 #pragma opt_common_subs reset
 
 
