@@ -166,9 +166,9 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
 {
     char* player;
     f32 lim;
-    f32 t;
-    f32 d;
-    f32 v;
+    f32 rise;
+    f32 over;
+    f32 speed;
     f32 thr;
     f32 dy;
     f32 dist;
@@ -254,21 +254,21 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
             lim = pull - (pull / lbl_803E418C) * (slot->riseSpeed * (slot->riseSpeed * slot->riseSpeed));
             if (dy > lim)
             {
-                t = lbl_803E416C;
+                rise = lbl_803E416C;
             }
             else
             {
-                d = lim - dy;
-                if (d > lbl_803E4174)
+                over = lim - dy;
+                if (over > lbl_803E4174)
                 {
-                    t = lbl_803E4190;
+                    rise = lbl_803E4190;
                 }
                 else
                 {
-                    t = d / lbl_803E4174;
+                    rise = over / lbl_803E4174;
                 }
             }
-            factor = t;
+            factor = rise;
             slot->phaseFlags |= WLSLOT_RISING;
             if (((slot->riseSpeed < lbl_803E4194 && slot->oscCounter % 2 != 0)
                     || (slot->riseSpeed > lbl_803E4198 && slot->oscCounter % 2 == 0))
@@ -283,7 +283,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         }
         else
         {
-            v = slot->riseSpeed;
+            speed = slot->riseSpeed;
             if (fe != 0)
             {
                 thr = lbl_803E4168;
@@ -292,7 +292,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
             {
                 thr = lbl_803E419C;
             }
-            if (v > thr)
+            if (speed > thr)
             {
                 slot->oscCounter = 1;
             }
@@ -381,8 +381,8 @@ void windlift_free(int* obj)
 
 void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4190);
+    s32 vis = visible;
+    if (vis != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4190);
 }
 
 void windlift_hitDetect(void)
@@ -427,9 +427,9 @@ void windlift_update(int* obj)
        city's power is restored (0x57, the crystal convergence) */
     if ((GameBit_Get(0x57) != 0 || sub->duration > 0xa) && sub->active)
     {
-        int t = sub->timer;
-        sub->timer = t + 1;
-        if (t < 0x3c && GameBit_Get(sub->seqId) == 0)
+        int ticks = sub->timer;
+        sub->timer = ticks + 1;
+        if (ticks < 0x3c && GameBit_Get(sub->seqId) == 0)
         {
             ((GameObject*)obj)->anim.rotX -= ((framesThisStep * 100) * (sub->timer * sub->timer)) / 0x3c;
             Obj_SetActiveModelIndex(obj, 0);
@@ -438,8 +438,8 @@ void windlift_update(int* obj)
         Obj_SetActiveModelIndex(obj, 1);
         gb2 = GameBit_Get(sub->delay);
         {
-            int m = framesThisStep * 0xb6;
-            ((GameObject*)obj)->anim.rotX -= m * ((gb2 << 2) + 0xe);
+            int rotStep = framesThisStep * 0xb6;
+            ((GameObject*)obj)->anim.rotX -= rotStep * ((gb2 << 2) + 0xe);
         }
         pull = (f32)((WindliftPlacement*)def)->pullStrength;
         player = Obj_GetPlayerObject();
@@ -464,12 +464,12 @@ void windlift_update(int* obj)
             }
             if ((sub->slots[0].phaseFlags & 0xe0) != 0)
             {
-                u8 b;
+                u8 flags;
                 Player_SetLiftVelocityY((int)player, lbl_803E416C);
-                b = sub->slots[0].phaseFlags;
-                if ((b & 0xe) != 0)
+                flags = sub->slots[0].phaseFlags;
+                if ((flags & 0xe) != 0)
                 {
-                    sub->slots[0].phaseFlags = b | WLSLOT_PENDING;
+                    sub->slots[0].phaseFlags = flags | WLSLOT_PENDING;
                 }
                 sub->slots[0].riseSpeed = lbl_803E416C;
                 sub->slots[0].oscCounter = 0;
