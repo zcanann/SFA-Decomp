@@ -46,22 +46,27 @@ extern void gameTimerStop(void);
 extern int isGameTimerDisabled(void);
 extern int getButtonsJustPressedIfNotBusy(int p);
 extern f32 timeDelta;
-extern f32 lbl_803E50E0;
-extern f32 lbl_803E50E4;
-extern f32 lbl_803E50EC;
-extern f32 lbl_803E50F0;
-extern f32 lbl_803E50F4;
-extern f32 lbl_803E50FC;
-extern f32 lbl_803E5100;
-extern f32 lbl_803E5104;
-extern f32 lbl_803E5108;
 
 STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
 STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 lbl_803E5118;
+
+/* .sdata2 constant pool */
+static const f32 lbl_803E50E0 = 127.0f;
+static const f32 lbl_803E50E4 = 14.8f;
+static const f32 lbl_803E50E8 = 80.0f;
+static const f32 lbl_803E50EC = 0.0f;
+static const f32 lbl_803E50F0 = -300.0f;
+static const f32 lbl_803E50F4 = 10.1f;
+static const f32 lbl_803E50F8 = -80.0f;
+static const f32 lbl_803E50FC = 1.6f;
+static const f32 lbl_803E5100 = 7500.0f;
+static const f32 lbl_803E5104 = 1.0f;
+static const f32 lbl_803E5108 = 4.0f;
+static const f64 lbl_803E5110 = 4503601774854144.0;
+static const f32 lbl_803E5118 = 50.0f;
 
 int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
 {
@@ -120,11 +125,11 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
         }
         if ((getButtonsJustPressedIfNotBusy(0) & PAD_BUTTON_A) != 0)
         {
-            state->spinSpeed = state->spinSpeed + lbl_803E50E4;
+            state->spinSpeed += lbl_803E50E4;
         }
-        if (state->spinSpeed > 80.0f)
+        if (state->spinSpeed > lbl_803E50E8)
         {
-            state->spinSpeed = 80.0f;
+            state->spinSpeed = lbl_803E50E8;
         }
         state->spinProgress = (int)((f32)state->spinProgress + state->spinSpeed);
         if (state->spinProgress >= DBSH_SPIN_DONE)
@@ -144,7 +149,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
             state->spinProgress = 0;
             if (state->spinSpeed < lbl_803E50EC)
             {
-                state->spinSpeed = *(f32*)&lbl_803E50EC;
+                state->spinSpeed = lbl_803E50EC;
             }
             state->prevSpinProgress = state->spinProgress;
             if (state->spinSpeed > lbl_803E50F0)
@@ -153,12 +158,12 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
             }
             return 0;
         }
-        if (state->spinSpeed > -80.0f)
+        if (state->spinSpeed > lbl_803E50F8)
         {
             state->spinSpeed = state->spinSpeed - lbl_803E50FC;
         }
         if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-            player, ((f32)state->spinProgress - state->prevSpinProgress) / 7500.0f,
+            player, ((f32)state->spinProgress - state->prevSpinProgress) / lbl_803E5100,
             timeDelta, NULL) != 0)
         {
             if (((GameObject*)player)->anim.currentMoveProgress < lbl_803E50EC)
@@ -227,6 +232,21 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
+int dbsh_symbol_getExtraSize(void)
+{
+    return 0x24;
+}
+
+void dbsh_symbol_free(void)
+{
+    gameTimerStop();
+}
+
+void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5104);
+}
+
 void dbsh_symbol_update(int obj)
 {
     s16 phase;
@@ -280,21 +300,6 @@ void dbsh_symbol_update(int obj)
             state->flags.active = 1;
         }
     }
-}
-
-int dbsh_symbol_getExtraSize(void)
-{
-    return 0x24;
-}
-
-void dbsh_symbol_free(void)
-{
-    gameTimerStop();
-}
-
-void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5104);
 }
 
 void dbsh_symbol_init(int* obj)

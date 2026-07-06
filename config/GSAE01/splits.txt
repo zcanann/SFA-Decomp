@@ -1925,6 +1925,7 @@ main/dll/dll_0195_dbshshrine.c:
 
 main/dll/dll_0196_dbshsymbol.c:
 	.text       start:0x801C9660 end:0x801C9E54
+	.sdata2     start:0x803E50E0 end:0x803E511C
 
 main/dll/dll_0197_dll197.c:
 	.text       start:0x801C9E54 end:0x801CA718
