@@ -723,25 +723,25 @@ void fn_80095164(WaterParticle* s)
     colorOut = (u8*)s;
     for (; i < 8; i++)
     {
-        f32 h = s->f10;
+        f32 life = s->f10;
         f32 ph = lbl_803DF2E0;
-        f32 a = 0.9f * ((f32)i / 7.0f);
+        f32 bandOfs = 0.9f * ((f32)i / 7.0f);
         f32 dd;
         f32 lim;
         f32 sc;
         f32 fade;
-        f32 t;
-        ph = (ph + a) * h;
+        f32 alpha;
+        ph = (ph + bandOfs) * life;
         dd = ph - 0.5f;
         fade = -(4.0f * (dd * dd) - 1.0f);
-        lim = 0.05f + a;
-        if (h < lim)
+        lim = 0.05f + bandOfs;
+        if (life < lim)
         {
-            t = 1.0f;
+            alpha = 1.0f;
         }
         else
         {
-            t = (1.0f - h) / (1.0f - lim);
+            alpha = (1.0f - life) / (1.0f - lim);
         }
         sc = 2.0f * ph + 1.0f;
         PSMTXScale(mtxB, sc, 1.0f, sc);
@@ -752,7 +752,7 @@ void fn_80095164(WaterParticle* s)
         PSMTXConcat(mtxC, mtxD, mtxD);
         PSMTXConcat(Camera_GetViewMatrix(), mtxD, mtxD);
         GXLoadPosMtxImm(mtxD, mtxIdx);
-        *(u32*)(colorOut + 0x18) = (u8)(int)(lbl_803DF304 * t);
+        *(u32*)(colorOut + 0x18) = (u8)(int)(lbl_803DF304 * alpha);
         mtxIdx += 3;
         colorOut += 4;
     }
