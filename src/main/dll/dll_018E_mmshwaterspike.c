@@ -40,25 +40,18 @@ extern f32 lbl_803E4F80;
 extern f32 lbl_803E4F84;
 extern f32 lbl_803E4F88;
 
+int mmsh_waterspike_getExtraSize(void) { return 0x0; }
+int mmsh_waterspike_getObjectTypeId(void) { return 0x0; }
+
 void mmsh_waterspike_free(void)
 {
 }
 
+void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+
 void mmsh_waterspike_hitDetect(void)
 {
 }
-
-void mmsh_waterspike_release(void)
-{
-}
-
-void mmsh_waterspike_initialise(void)
-{
-}
-
-int mmsh_waterspike_getExtraSize(void) { return 0x0; }
-int mmsh_waterspike_getObjectTypeId(void) { return 0x0; }
-void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 void mmsh_waterspike_update(int obj)
 {
@@ -141,6 +134,14 @@ void mmsh_waterspike_init(int obj, s16* def)
     lowEventId = (u32)(u16)((MmshWaterspikeObjectDef*)def)->xyzAnimIdLow;
     packedEventIds |= lowEventId;
     *(u32*)&((GameObject*)obj)->unkF8 = packedEventIds;
+}
+
+void mmsh_waterspike_release(void)
+{
+}
+
+void mmsh_waterspike_initialise(void)
+{
 }
 
 char sWaterSpikeInvalidXyzAnimIdWarning[] = "WARNING Water Spike [%d] as invalid xyzAnim ID\n";
