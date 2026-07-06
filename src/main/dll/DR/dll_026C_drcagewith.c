@@ -52,20 +52,73 @@ STATIC_ASSERT(offsetof(DrcagewithState, angularVel) == 0x24);
 STATIC_ASSERT(sizeof(DrcagewithState) == 0x34);
 
 
+int drcagewith_setScale(int obj)
+{
+    u8* state = ((GameObject*)obj)->extra;
+    return state[0x30];
+}
+
+int drcagewith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    char* state = ((GameObject*)obj)->extra;
+    int i;
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        if (animUpdate->eventIds[i] == 1)
+        {
+            ((BitFlags8*)(state + 0x31))->b1 ^= 1;
+        }
+    }
+    return 0;
+}
+
 int drcagewith_getExtraSize(void) { return 0x34; }
 
 int drcagewith_getObjectTypeId(void) { return 0x0; }
 
-void drcagewith_initialise(void)
+void drcagewith_free(int obj, int arg)
 {
+    char* state = ((GameObject*)obj)->extra;
+    GameObject* linked = ((DrcagewithState*)state)->spawnedObject;
+    if (linked != 0 && arg == 0 && linked->anim.modelInstance != 0)
+    {
+        char* child = *(char**)&((DrcagewithState*)state)->linkedObject;
+        if (child != 0)
+        {
+            ((GameObject*)child)->unkF4 = 0;
+        }
+        ((DrcagewithState*)state)->spawnedObject->unkF4 = 0;
+        Obj_FreeObject((int)((DrcagewithState*)state)->spawnedObject);
+    }
+    ObjGroup_RemoveObject(obj, DRCAGEWITH_OBJGROUP);
 }
 
-void drcagewith_release(void)
+void drcagewith_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
-}
-
-void drcagewith_update(void)
-{
+    char* state = ((GameObject*)obj)->extra;
+    int* linkedObj;
+    if (visible != 0)
+    {
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69F0);
+        if (((DrcagewithState*)state)->spawnedObject != 0)
+        {
+            ObjPath_GetPointWorldPosition((int)obj, 0, &((DrcagewithState*)state)->spawnedObject->anim.localPosX,
+                                          &((DrcagewithState*)state)->spawnedObject->anim.localPosY,
+                                          &((DrcagewithState*)state)->spawnedObject->anim.localPosZ, 0);
+            objRenderModelAndHitVolumes(((DrcagewithState*)state)->spawnedObject, p2, p3, p4, p5, (double)lbl_803E69F0);
+            linkedObj = *(int**)&((DrcagewithState*)state)->linkedObject;
+            if (linkedObj != 0)
+            {
+                ((GameObject*)linkedObj)->anim.rotY = ((DrcagewithState*)state)->spawnedObject->anim.rotY;
+                ((GameObject*)linkedObj)->anim.rotZ = ((DrcagewithState*)state)->spawnedObject->anim.rotZ;
+                ObjPath_GetPointWorldPosition((int)((DrcagewithState*)state)->spawnedObject, 0,
+                                              &((GameObject*)linkedObj)->anim.localPosX,
+                                              &((GameObject*)linkedObj)->anim.localPosY,
+                                              &((GameObject*)linkedObj)->anim.localPosZ, 0);
+                objRenderModelAndHitVolumes(linkedObj, p2, p3, p4, p5, (double)lbl_803E69F0);
+            }
+        }
+    }
 }
 
 void drcagewith_hitDetect(int obj)
@@ -187,69 +240,8 @@ void drcagewith_hitDetect(int obj)
     }
 }
 
-int drcagewith_setScale(int obj)
+void drcagewith_update(void)
 {
-    u8* state = ((GameObject*)obj)->extra;
-    return state[0x30];
-}
-
-void drcagewith_free(int obj, int arg)
-{
-    char* state = ((GameObject*)obj)->extra;
-    GameObject* linked = ((DrcagewithState*)state)->spawnedObject;
-    if (linked != 0 && arg == 0 && linked->anim.modelInstance != 0)
-    {
-        char* child = *(char**)&((DrcagewithState*)state)->linkedObject;
-        if (child != 0)
-        {
-            ((GameObject*)child)->unkF4 = 0;
-        }
-        ((DrcagewithState*)state)->spawnedObject->unkF4 = 0;
-        Obj_FreeObject((int)((DrcagewithState*)state)->spawnedObject);
-    }
-    ObjGroup_RemoveObject(obj, DRCAGEWITH_OBJGROUP);
-}
-
-int drcagewith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    char* state = ((GameObject*)obj)->extra;
-    int i;
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        if (animUpdate->eventIds[i] == 1)
-        {
-            ((BitFlags8*)(state + 0x31))->b1 ^= 1;
-        }
-    }
-    return 0;
-}
-
-void drcagewith_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
-{
-    char* state = ((GameObject*)obj)->extra;
-    int* linkedObj;
-    if (visible != 0)
-    {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69F0);
-        if (((DrcagewithState*)state)->spawnedObject != 0)
-        {
-            ObjPath_GetPointWorldPosition((int)obj, 0, &((DrcagewithState*)state)->spawnedObject->anim.localPosX,
-                                          &((DrcagewithState*)state)->spawnedObject->anim.localPosY,
-                                          &((DrcagewithState*)state)->spawnedObject->anim.localPosZ, 0);
-            objRenderModelAndHitVolumes(((DrcagewithState*)state)->spawnedObject, p2, p3, p4, p5, (double)lbl_803E69F0);
-            linkedObj = *(int**)&((DrcagewithState*)state)->linkedObject;
-            if (linkedObj != 0)
-            {
-                ((GameObject*)linkedObj)->anim.rotY = ((DrcagewithState*)state)->spawnedObject->anim.rotY;
-                ((GameObject*)linkedObj)->anim.rotZ = ((DrcagewithState*)state)->spawnedObject->anim.rotZ;
-                ObjPath_GetPointWorldPosition((int)((DrcagewithState*)state)->spawnedObject, 0,
-                                              &((GameObject*)linkedObj)->anim.localPosX,
-                                              &((GameObject*)linkedObj)->anim.localPosY,
-                                              &((GameObject*)linkedObj)->anim.localPosZ, 0);
-                objRenderModelAndHitVolumes(linkedObj, p2, p3, p4, p5, (double)lbl_803E69F0);
-            }
-        }
-    }
 }
 
 void drcagewith_init(int obj, char* arg)
@@ -290,4 +282,12 @@ void drcagewith_init(int obj, char* arg)
         ((DrcagewithState*)state)->unk20 = fz;
         ObjGroup_AddObject(obj, DRCAGEWITH_OBJGROUP);
     }
+}
+
+void drcagewith_release(void)
+{
+}
+
+void drcagewith_initialise(void)
+{
 }
