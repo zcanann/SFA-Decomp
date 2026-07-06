@@ -34,7 +34,7 @@ typedef struct DRPickupState {
     f32 liftZVel; /* eased vertical-offset velocity; lerps toward liftZVelTarget when flags.b6, drives localOffsetZ */
     u8 unk434[0x458 - 0x434];
     u32 flags458; /* bit 0x100 -> b6, 0x200 -> b4 */
-    f32 unk45C;
+    f32 angAccelGain; /* 0x45C factor in the angVel414 += (-angAccelGain*angAccelScale)*dt increment */
     u8 unk460[0x47C - 0x460];
     f32 clampLimitX; /* 0x47C clamp limit for accumX */
     f32 clampLimitY; /* 0x480 clamp limit for accumY */
@@ -47,15 +47,15 @@ typedef struct DRPickupState {
     f32 localOffsetY; /* 0x4A4 */
     f32 localOffsetZ; /* 0x4A8 */
     u8 unk4AC[0x52C - 0x4AC];
-    f32 unk52C;
+    f32 angAccelScale; /* 0x52C factor in the angVel414 += (-angAccelGain*angAccelScale)*dt increment */
     f32 angVelDamping; /* 0x530 per-frame powf damping base for angVel414 */
     f32 angVelLimit; /* 0x534 clamp limit for angVel414 */
     f32 liftZVelTarget; /* target for liftZVel */
     f32 settleVelMax;   /* 0x53c: max settle velocity magnitude clamping the Z offset against accumZ */
     u8 unk540[0x550 - 0x540];
-    f32 unk550;
-    f32 unk554;
-    f32 unk558;
+    f32 angleScale;   /* 0x550 angVel414*angleScale -> integer angle delta */
+    f32 angAccumGain; /* 0x554 gain k in angAccum410 = delta*k + angAccum410 */
+    f32 angleGain;    /* 0x558 gain k in angle40C = delta*k + angle40C */
     u8 unk55C[0x570 - 0x55C];
     f32 spinDecel; /* 0x570: angular deceleration rate, spinVel += -spinDecel*timeDelta */
     u8 unk574[0x584 - 0x574];

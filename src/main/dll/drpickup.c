@@ -101,7 +101,7 @@ void fn_801EC1AC(int obj, int state)
     PSVECAdd(out, (void*)(state + 0x494), (void*)(state + 0x494));
 
     ((DRPickupState*)state)->angVel414 =
-        (-((DRPickupState*)state)->unk45C * ((DRPickupState*)state)->unk52C) * timeDelta +
+        (-((DRPickupState*)state)->angAccelGain * ((DRPickupState*)state)->angAccelScale) * timeDelta +
         ((DRPickupState*)state)->angVel414;
     ((DRPickupState*)state)->angVel414 =
         powfBitEstimate(((DRPickupState*)state)->angVelDamping, timeDelta) *
@@ -120,7 +120,7 @@ void fn_801EC1AC(int obj, int state)
             ((DRPickupState*)state)->angVel414 * timeDelta;
         s32 delta;
         ((DRPickupState*)state)->angle40E = newF;
-        delta = (s32)(((DRPickupState*)state)->angVel414 * ((DRPickupState*)state)->unk550);
+        delta = (s32)(((DRPickupState*)state)->angVel414 * ((DRPickupState*)state)->angleScale);
         delta -= (s32)(u16) * (u32*)(state + 0x410);
         if (delta > 0x8000)
         {
@@ -131,7 +131,7 @@ void fn_801EC1AC(int obj, int state)
             delta = delta + 0xFFFF;
         }
         ((DRPickupState*)state)->angAccum410 =
-            (u32)(s32)((f32)delta * ((DRPickupState*)state)->unk554 +
+            (u32)(s32)((f32)delta * ((DRPickupState*)state)->angAccumGain +
                 (f32)(s32) * (u32*)((int)state + 0x410));
     }
     {
@@ -144,7 +144,7 @@ void fn_801EC1AC(int obj, int state)
         {
             delta = delta + 0xFFFF;
         }
-        ((DRPickupState*)state)->angle40C = (s16)((f32)delta * ((DRPickupState*)state)->unk558 +
+        ((DRPickupState*)state)->angle40C = (s16)((f32)delta * ((DRPickupState*)state)->angleGain +
             (f32)(s32) * (s16*)((int)state + 0x40c));
     }
 
