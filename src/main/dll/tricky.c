@@ -47,11 +47,11 @@ typedef struct GameUIWork10
 typedef struct TrickyAirMeter
 {
     u8 pad0[0x18 - 0x0];
-    u8 unk18;
+    u8 alpha;              /* 0x18 HUD fade alpha: ramps 0..0xFF, passed to drawTexture calls */
     u8 pad19[0x24 - 0x19];
     f32 unk24;
     u8 pad28[0x2C - 0x28];
-    u16 unk2C;
+    u16 bgTextureId;       /* 0x2C background texture asset id (textureLoadAsset arg); selects meter variant */
     u8 pad2E[0x48 - 0x2E];
 } TrickyAirMeter;
 
@@ -343,7 +343,7 @@ void GameUI_airMeterShutdown(void)
 {
     int* m = airMeter;
     if (m == NULL) return;
-    ((TrickyAirMeter*)m)->unk18 = 0;
+    ((TrickyAirMeter*)m)->alpha = 0;
     switch (m[0x10])
     {
     case 0:
@@ -385,12 +385,12 @@ void GameUI_initAirMeter(int a, int b)
     m[1] = a;
     m[2] = 0;
     m[0xc] = (int)textureLoadAsset(b);
-    ((TrickyAirMeter*)m)->unk2C = b;
+    ((TrickyAirMeter*)m)->bgTextureId = b;
     m[0xd] = (int)textureLoadAsset(0x5d4);
     m[0xe] = (int)textureLoadAsset(0x5d3);
     m[0xf] = (int)textureLoadAsset(0x5d2);
     airMeter = m;
-    ((TrickyAirMeter*)m)->unk18 = 0;
+    ((TrickyAirMeter*)m)->alpha = 0;
     ((TrickyAirMeter*)m)->unk24 = lbl_803E1E68;
     m[0x10] = 1;
 }
@@ -506,7 +506,7 @@ void GameUI_airMeterInitType0(int a, int b, int c)
     m[4] = *(u16*)((char*)m[0xb] + 0xa);
     m[5] = *(u16*)((char*)m[0xb] + 0xc);
     airMeter = m;
-    ((TrickyAirMeter*)m)->unk18 = 0;
+    ((TrickyAirMeter*)m)->alpha = 0;
     ((TrickyAirMeter*)m)->unk24 = lbl_803E1E68;
     m[0x10] = 0;
 }
@@ -1022,16 +1022,16 @@ void hudDrawAirMeter(void)
     AirMeterFlags* p = (AirMeterFlags*)airMeter;
     s16 alpha;
     if (m == NULL) return;
-    alpha = ((TrickyAirMeter*)m)->unk18;
+    alpha = ((TrickyAirMeter*)m)->alpha;
     if (p->bit7 || pauseMenuState != 0 || getHudHiddenFrameCount() != 0 ||
         (player != NULL && (((GameObject*)player)->objectFlags & TRICKY_OBJFLAG_PARENT_SLACK) != 0 &&
-            ((TrickyAirMeter*)m)->unk2C != 0x5d5))
+            ((TrickyAirMeter*)m)->bgTextureId != 0x5d5))
     {
         s16 clamped;
         alpha -= framesThisStep << 2;
         clamped = (alpha < 0) ? 0 : alpha;
-        ((TrickyAirMeter*)m)->unk18 = clamped;
-        if (((TrickyAirMeter*)m)->unk18 == 0 && p->bit7)
+        ((TrickyAirMeter*)m)->alpha = clamped;
+        if (((TrickyAirMeter*)m)->alpha == 0 && p->bit7)
         {
             p->bit7 = 0;
             GameUI_airMeterShutdown();
@@ -1043,7 +1043,7 @@ void hudDrawAirMeter(void)
         s16 clamped;
         alpha += framesThisStep << 2;
         clamped = (alpha > 0xff) ? 0xff : alpha;
-        ((TrickyAirMeter*)m)->unk18 = clamped;
+        ((TrickyAirMeter*)m)->alpha = clamped;
     }
     GXGetScissor(&sc0, &sc1, &sc2, &sc3);
     GXSetScissor(0, 0, 0x280, 0x1e0);
@@ -1057,7 +1057,7 @@ void hudDrawAirMeter(void)
             {
                 void* tex = (i < m[3]) ? m[0xb] : (void*)m[0xc];
                 drawTexture(tex, (f32)(int)x, (f32)(u32)(0x1a4 - m[5]),
-                            ((TrickyAirMeter*)m)->unk18, 0x100);
+                            ((TrickyAirMeter*)m)->alpha, 0x100);
                 x += m[4];
             }
             break;
@@ -1070,7 +1070,7 @@ void hudDrawAirMeter(void)
             int cy;
             int clampVal;
             s16 clampedC;
-            switch (((TrickyAirMeter*)m)->unk2C)
+            switch (((TrickyAirMeter*)m)->bgTextureId)
             {
             case 0x63e:
                 off = -0xa;
@@ -1087,7 +1087,7 @@ void hudDrawAirMeter(void)
                 base += lbl_803DBAEC;
                 drawTexture((void*)m[0xc], (f32)(int)(lbl_803DD7F9 + 0xb5),
                             (f32)(int)(base + (lbl_803DD7F8 + (s8)off)),
-                            ((TrickyAirMeter*)m)->unk18, 0x100);
+                            ((TrickyAirMeter*)m)->alpha, 0x100);
             }
             by = *(u16*)((char*)m[0xc] + 0xa) + 0xb4;
             cy = 0x1a4 - ((u32)*(u16*)((char*)m[0xd] + 0xc) >> 1);
@@ -1099,12 +1099,12 @@ void hudDrawAirMeter(void)
             m[3] = clampVal;
             clampedC = clampVal;
             drawScaledTexture((void*)m[0xf], (f32)(int)(by + clampedC), (f32)(int)cy,
-                              ((TrickyAirMeter*)m)->unk18, 0x100, m[2] - clampedC, 0x1a, 0);
+                              ((TrickyAirMeter*)m)->alpha, 0x100, m[2] - clampedC, 0x1a, 0);
             drawScaledTexture((void*)m[0xe], (f32)(int)by, (f32)(int)cy,
-                              ((TrickyAirMeter*)m)->unk18, 0x100, clampedC, 0x1a, 0);
+                              ((TrickyAirMeter*)m)->alpha, 0x100, clampedC, 0x1a, 0);
             drawTexture((void*)m[0xd], (f32)(int)(by + m[2]),
                         (f32)(int)cy,
-                        ((TrickyAirMeter*)m)->unk18, 0x100);
+                        ((TrickyAirMeter*)m)->alpha, 0x100);
             break;
         }
     }
