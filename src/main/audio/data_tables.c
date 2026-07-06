@@ -332,7 +332,7 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
     s32 i;
     SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
     SDIR_DATA* s;
-    u16 n;
+    u16 count;
     u16 j;
     u16 k;
 
@@ -342,14 +342,14 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
     {
         if (dataSmpSDirNum < 128)
         {
-            n = 0;
+            count = 0;
             for (s = sdir; s->id != 0xFFFF; ++s)
             {
-                ++n;
+                ++count;
             }
 
             sndBegin();
-            for (j = 0; j < n; ++j)
+            for (j = 0; j < count; ++j)
             {
                 for (i = 0; i < dataSmpSDirNum; ++i)
                 {
@@ -373,7 +373,7 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
 
             i = dataSmpSDirNum;
             t->sdir[i].data = sdir;
-            t->sdir[i].numSmp = n;
+            t->sdir[i].numSmp = count;
             t->sdir[i].base = smp_data;
             ++dataSmpSDirNum;
             sndEnd();
@@ -701,13 +701,13 @@ s32 layercmp(void* p1, void* p2)
     return ((LAYER_TAB*)p1)->id - ((LAYER_TAB*)p2)->id;
 }
 
-void* dataGetLayer(u16 cid, u16* n)
+void* dataGetLayer(u16 cid, u16* count)
 {
     dataGetLayerSearchKey.id = cid;
     if ((dataGetLayer_result = (LAYER_TAB*)sndBSearch(&dataGetLayerSearchKey, dataLayerTab,
                                                       dataLayerNum, sizeof(LAYER_TAB), layercmp)))
     {
-        *n = dataGetLayer_result->num;
+        *count = dataGetLayer_result->num;
         return dataGetLayer_result->data;
     }
     return NULL;

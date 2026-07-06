@@ -67,27 +67,27 @@ void inpResetMidiCtrl(u8 a, u8 b, u32 mode)
  */
 u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
 {
-    u32 s;
-    u32 k;
+    u32 slotIdx;
+    u32 keyIdx;
     u32 ctrl;
     InpMidiState* st;
 
     st = (InpMidiState*)lbl_803CD760;
-    s = slot & 0xff;
-    if (s != INP_INVALID_SLOT)
+    slotIdx = slot & 0xff;
+    if (slotIdx != INP_INVALID_SLOT)
     {
-        k = key & 0xff;
-        if (k != INP_INVALID_SLOT)
+        keyIdx = key & 0xff;
+        if (keyIdx != INP_INVALID_SLOT)
         {
             ctrl = controller & 0xff;
             if (ctrl < 0x40)
             {
-                return (u16)(((u32)st->midiCtrl[k][s][ctrl & 0x1f] << 7) |
-                    st->midiCtrl[k][s][(ctrl & 0x1f) + 0x20]);
+                return (u16)(((u32)st->midiCtrl[keyIdx][slotIdx][ctrl & 0x1f] << 7) |
+                    st->midiCtrl[keyIdx][slotIdx][(ctrl & 0x1f) + 0x20]);
             }
             if (ctrl < 0x46)
             {
-                return (u16)((st->midiCtrl[k][s][ctrl] < 0x40) ? 0 : 0x3fff);
+                return (u16)((st->midiCtrl[keyIdx][slotIdx][ctrl] < 0x40) ? 0 : 0x3fff);
             }
             if (ctrl >= 0x60 && ctrl < 0x66)
             {
@@ -109,12 +109,12 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
         ctrl = controller & 0xff;
         if (ctrl < 0x40)
         {
-            return (u16)(((u32)st->fxCtrl[s][ctrl & 0x1f] << 7) |
-                st->fxCtrl[s][(ctrl & 0x1f) + 0x20]);
+            return (u16)(((u32)st->fxCtrl[slotIdx][ctrl & 0x1f] << 7) |
+                st->fxCtrl[slotIdx][(ctrl & 0x1f) + 0x20]);
         }
         if (ctrl < 0x46)
         {
-            return (u16)((st->fxCtrl[s][ctrl] < 0x40) ? 0 : 0x3fff);
+            return (u16)((st->fxCtrl[slotIdx][ctrl] < 0x40) ? 0 : 0x3fff);
         }
         if (ctrl >= 0x60 && ctrl < 0x66)
         {
