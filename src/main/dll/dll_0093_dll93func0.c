@@ -22,14 +22,6 @@ extern f32 lbl_803E1250;
 extern f32 lbl_803E1254;
 extern f32 lbl_803E1258;
 
-void dll_93_func01_nop(void)
-{
-}
-
-void dll_93_func00_nop(void)
-{
-}
-
 typedef struct GfxCmd
 {
     u32 mode; /* +0x00 */
@@ -154,4 +146,12 @@ void dll_93_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80317260, 0x18, base + 0xd4, 0x89, 0);
+}
+
+void dll_93_func01_nop(void)
+{
+}
+
+void dll_93_func00_nop(void)
+{
 }
