@@ -108,8 +108,8 @@ int dfplevelcontrol_SeqFn(int p1)
 
     DfpLevelControlState* p_b8 = ((GameObject*)p1)->extra;
     void* player = Obj_GetPlayerObject();
-    s16 v = p_b8->timer;
-    if (v > 0)
+    s16 timer = p_b8->timer;
+    if (timer > 0)
     {
         p_b8->timer -= (s16)timeDelta;
         fn_802960E8(player, 0x51e);
@@ -146,17 +146,17 @@ void dfplevelcontrol_init(int obj, int param2)
 {
 
     DfpLevelControlState* state = ((GameObject*)obj)->extra;
-    int v;
+    int mode;
     ObjGroup_AddObject(obj, DFPLEVELCONTROL_OBJGROUP);
     ((DfpFlags7*)&state->flags07)->b80 = GameBit_Get(0xd5d);
     ((DfpFlags7*)&state->flags07)->b40 = GameBit_Get(0xd59);
     ((DfpFlags7*)&state->flags07)->b20 = GameBit_Get(0xd5a);
     ((GameObject*)obj)->animEventCallback = (void*)dfplevelcontrol_SeqFn;
     state->mode = 1;
-    v = *(s16*)(param2 + 0x1a);
-    if (v != 0 && v <= 2)
+    mode = *(s16*)(param2 + 0x1a);
+    if (mode != 0 && mode <= 2)
     {
-        state->mode = v;
+        state->mode = mode;
     }
     (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     unlockLevel(0, 0, 1);
