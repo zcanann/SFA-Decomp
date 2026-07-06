@@ -41,11 +41,6 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern int randomGetRange(int lo, int hi);
 
-void imicepillar_free(void);
-
-int imicepillar_getExtraSize(void);
-int imicepillar_getObjectTypeId(void);
-
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern u8 Obj_IsLoadingLocked(void);
@@ -105,48 +100,6 @@ static inline int* DIMcannon_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-void imicepillar_hitDetect(void);
-
-void imicepillar_update(void);
-
-void imicepillar_init(void);
-
-void imicepillar_release(void);
-
-void imicepillar_initialise(void);
-
-ObjectDescriptor gIMIcePillarObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)imicepillar_initialise,
-    (ObjectDescriptorCallback)imicepillar_release,
-    0,
-    (ObjectDescriptorCallback)imicepillar_init,
-    (ObjectDescriptorCallback)imicepillar_update,
-    (ObjectDescriptorCallback)imicepillar_hitDetect,
-    (ObjectDescriptorCallback)imicepillar_render,
-    (ObjectDescriptorCallback)imicepillar_free,
-    (ObjectDescriptorCallback)imicepillar_getObjectTypeId,
-    imicepillar_getExtraSize,
-};
-
-void lavaball1bf_hitDetect(void)
-{
-}
-
-void lavaball1bf_release(void)
-{
-}
-
-void lavaball1bf_initialise(void)
-{
-}
-
-int lavaball1bf_getExtraSize(void) { return 0x1c; }
-int lavaball1bf_getObjectTypeId(void) { return 0x0; }
-
 void lavaball1bf_func11(int* obj)
 {
     Lavaball1bfState* p = (Lavaball1bfState*)(int*)((GameObject*)obj)->extra;
@@ -169,27 +122,8 @@ int lavaball1bf_setScale(int* obj)
     return 0;
 }
 
-void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4810);
-}
-
-void lavaball1bf_init(s16* obj, u8* p)
-{
-    Lavaball1bfState* inner;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x1c] << 8);
-    inner = ((GameObject*)obj)->extra;
-    inner->firePeriod = (f32) * (s16*)(p + 0x18);
-    inner->fireTimer = lbl_803E4814;
-    inner->gateA = p[0x1d];
-    inner->gateB = GameBit_Get((int)*(s16*)(p + 0x22));
-    if (*(s16*)(p + 0x24) == -1 && inner->gateB == 0)
-    {
-        inner->soloLatch = 1;
-    }
-    ((GameObject*)obj)->objectFlags |= (DIMLAVABALL_OBJFLAG_HIDDEN | DIMLAVABALL_OBJFLAG_HITDETECT_DISABLED);
-}
+int lavaball1bf_getExtraSize(void) { return 0x1c; }
+int lavaball1bf_getObjectTypeId(void) { return 0x0; }
 
 void lavaball1bf_free(int obj, int mode)
 {
@@ -199,6 +133,16 @@ void lavaball1bf_free(int obj, int mode)
     {
         Obj_FreeObject(inner->spawnedObj);
     }
+}
+
+void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4810);
+}
+
+void lavaball1bf_hitDetect(void)
+{
 }
 
 void lavaball1bf_update(int* obj)
@@ -266,4 +210,28 @@ void lavaball1bf_update(int* obj)
         state->fireTimer = state->firePeriod + (f32)(int)
         randomGetRange(0, 0x3c);
     }
+}
+
+void lavaball1bf_init(s16* obj, u8* p)
+{
+    Lavaball1bfState* inner;
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x1c] << 8);
+    inner = ((GameObject*)obj)->extra;
+    inner->firePeriod = (f32) * (s16*)(p + 0x18);
+    inner->fireTimer = lbl_803E4814;
+    inner->gateA = p[0x1d];
+    inner->gateB = GameBit_Get((int)*(s16*)(p + 0x22));
+    if (*(s16*)(p + 0x24) == -1 && inner->gateB == 0)
+    {
+        inner->soloLatch = 1;
+    }
+    ((GameObject*)obj)->objectFlags |= (DIMLAVABALL_OBJFLAG_HIDDEN | DIMLAVABALL_OBJFLAG_HITDETECT_DISABLED);
+}
+
+void lavaball1bf_release(void)
+{
+}
+
+void lavaball1bf_initialise(void)
+{
 }
