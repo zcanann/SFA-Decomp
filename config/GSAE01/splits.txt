@@ -1226,6 +1226,7 @@ main/dll/dll_00EF_pushable.c:
 
 main/dll/dll_00F0_warppoint.c:
 	.text       start:0x80176FC4 end:0x8017779C
+	.sdata2     start:0x803E35D8 end:0x803E35E8
 
 main/dll/dll_00F1_invhit.c:
 	.text       start:0x8017779C end:0x80177E28

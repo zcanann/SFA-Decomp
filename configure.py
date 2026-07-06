@@ -1219,7 +1219,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_00EE_effectbox.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_80174438.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00EF_pushable.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_00F0_warppoint.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_00F0_warppoint.c"),
             Object(NonMatching, "main/dll/dll_00F1_invhit.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00F2_iceblast.c", cflags=cflags_dll_noopt_nocse),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00F3_flameblast.c", cflags=cflags_dll_noopt_nocse_noinline),
