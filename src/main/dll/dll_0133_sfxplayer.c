@@ -64,35 +64,7 @@ extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8* obj, u16 sfx);
 extern f32 lbl_803E40B8;
 extern f32 lbl_803E40BC;
 
-void sfxplayerObj_init(u8* obj, u8* data)
-{
-    SfxplayerObjState* state = ((GameObject*)obj)->extra;
-    int mode;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SFXPLAYER_OBJECT_FLAGS);
-    mode = data[0x1d];
-    switch (mode)
-    {
-    case SFXPLAYER_MODE_GAMEBIT:
-        {
-            s16 bit = *(s16*)(data + 0x18);
-            if (bit > 0)
-            {
-                state->gameBitState = GameBit_Get(bit);
-            }
-            break;
-        }
-    case SFXPLAYER_MODE_LOOPED:
-        break;
-    case SFXPLAYER_MODE_RANDOM_DELAY:
-        {
-            int delay = randomGetRange(data[0x1e], data[0x1f]);
-            f32 delayF = delay;
-            delayF = lbl_803E40BC * delayF;
-            state->delayTimer = delayF;
-            break;
-        }
-    }
-}
+int sfxplayerObj_getExtraSize(void) { return 0x8; }
 
 void sfxplayerObj_free(u8* obj)
 {
@@ -273,4 +245,33 @@ void sfxplayerObj_update(u8* obj)
     }
 }
 
-int sfxplayerObj_getExtraSize(void) { return 0x8; }
+
+void sfxplayerObj_init(u8* obj, u8* data)
+{
+    SfxplayerObjState* state = ((GameObject*)obj)->extra;
+    int mode;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SFXPLAYER_OBJECT_FLAGS);
+    mode = data[0x1d];
+    switch (mode)
+    {
+    case SFXPLAYER_MODE_GAMEBIT:
+        {
+            s16 bit = *(s16*)(data + 0x18);
+            if (bit > 0)
+            {
+                state->gameBitState = GameBit_Get(bit);
+            }
+            break;
+        }
+    case SFXPLAYER_MODE_LOOPED:
+        break;
+    case SFXPLAYER_MODE_RANDOM_DELAY:
+        {
+            int delay = randomGetRange(data[0x1e], data[0x1f]);
+            f32 delayF = delay;
+            delayF = lbl_803E40BC * delayF;
+            state->delayTimer = delayF;
+            break;
+        }
+    }
+}
