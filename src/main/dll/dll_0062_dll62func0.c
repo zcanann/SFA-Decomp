@@ -26,24 +26,6 @@ typedef struct
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
-extern u32 FUN_80006768();
-extern u32 FUN_8000676c();
-extern u32 FUN_80006c20();
-extern u32 FUN_80017500();
-extern u32 FUN_8005d018();
-extern u8 gGameplayPreviewSettings;
-extern u32 DAT_803a3e26;
-extern u32 DAT_803a3e27;
-extern u32 DAT_803a3e28;
-extern u32 DAT_803a3e2a;
-extern u32 DAT_803a3e2c;
-extern u32 DAT_803a3e2d;
-extern u32 gGameplayPreviewColorRed;
-extern u32 gGameplayPreviewColorGreen;
-extern u32 gGameplayPreviewColorBlue;
-extern u32 gGameplayRegisteredDebugOptions;
-extern u32* DAT_803dd6d0;
-extern u32* DAT_803dd6e8;
 extern u8 lbl_803129C8[];
 extern f32 lbl_803E0898;
 extern f32 lbl_803E089C;
@@ -54,60 +36,6 @@ extern f32 lbl_803E08A8;
 extern f32 lbl_803E08AC;
 extern f32 lbl_803E08B0;
 extern f32 lbl_803E08B4;
-
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
-void saveFileStruct_unlockCheat(u32 cheatId)
-{
-    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
-    return;
-}
-
-u32 isCheatUnlocked(u32 cheatId)
-{
-    return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
-}
-
-void saveFileStruct_resetVolumes(void)
-{
-    gGameplayPreviewColorRed = 0x7f;
-    gGameplayPreviewColorGreen = 0x7f;
-    gGameplayPreviewColorBlue = 0x7f;
-    return;
-}
-
-u8* getSaveFileStruct(void)
-{
-    return &gGameplayPreviewSettings;
-}
-
-void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
-                      u64 arg5, u64 arg6, u64 arg7,
-                      u64 arg8)
-{
-    FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, DAT_803a3e26);
-    FUN_80006c20(DAT_803a3e2c);
-    FUN_80006768(DAT_803a3e2d, '\0');
-    (**(VtableFn**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
-    (**(VtableFn**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
-    return;
-}
-
-void dll_62_func01_nop(void)
-{
-}
-
-void dll_62_func00_nop(void)
-{
-}
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -312,4 +240,12 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803129C8, 0x18, &base[212], 0x5e0, 0);
+}
+
+void dll_62_func01_nop(void)
+{
+}
+
+void dll_62_func00_nop(void)
+{
 }
