@@ -35,8 +35,8 @@ extern f32 lbl_803E18BC;
 u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
 {
     u8 flags;
+    f32 speed;
     f32 t;
-    f32 q;
 
     lbl_803DD560->posXEnd = camera->anim.localPosX;
     lbl_803DD560->posYEnd = camera->anim.localPosY;
@@ -48,36 +48,36 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
 
     if (lbl_803E1888 != lbl_803DD560->duration)
     {
-        t = lbl_803DD560->elapsed / lbl_803DD560->duration;
+        speed = lbl_803DD560->elapsed / lbl_803DD560->duration;
     }
     else
     {
-        t = lbl_803E1888;
+        speed = lbl_803E1888;
+    }
+    if (speed > lbl_803E188C)
+    {
+        speed = lbl_803E188C;
+    }
+    speed = Curve_EvalHermite(speed, lbl_803DD560->speedCurve, 0x0);
+    if (speed < lbl_803E18AC)
+    {
+        speed = lbl_803E18AC;
+    }
+    lbl_803DD560->elapsed += speed * timeDelta;
+
+    t = *(f32*)&lbl_803E1888;
+    if (t != lbl_803DD560->duration)
+    {
+        t = lbl_803DD560->elapsed / lbl_803DD560->duration;
     }
     if (t > lbl_803E188C)
     {
         t = lbl_803E188C;
     }
-    t = Curve_EvalHermite(t, lbl_803DD560->speedCurve, 0x0);
-    if (t < lbl_803E18AC)
-    {
-        t = lbl_803E18AC;
-    }
-    lbl_803DD560->elapsed += t * timeDelta;
-
-    q = *(f32*)&lbl_803E1888;
-    if (q != lbl_803DD560->duration)
-    {
-        q = lbl_803DD560->elapsed / lbl_803DD560->duration;
-    }
-    if (q > lbl_803E188C)
-    {
-        q = lbl_803E188C;
-    }
-    camera->anim.localPosX = Curve_EvalLinear(&lbl_803DD560->posXStart, q, 0x0);
-    camera->anim.localPosY = Curve_EvalLinear(&lbl_803DD560->posYStart, q, 0x0);
-    camera->anim.localPosZ = Curve_EvalLinear(&lbl_803DD560->posZStart, q, 0x0);
-    camera->fov = Curve_EvalLinear(&lbl_803DD560->fovStart, q, 0x0);
+    camera->anim.localPosX = Curve_EvalLinear(&lbl_803DD560->posXStart, t, 0x0);
+    camera->anim.localPosY = Curve_EvalLinear(&lbl_803DD560->posYStart, t, 0x0);
+    camera->anim.localPosZ = Curve_EvalLinear(&lbl_803DD560->posZStart, t, 0x0);
+    camera->fov = Curve_EvalLinear(&lbl_803DD560->fovStart, t, 0x0);
 
     if (((lbl_803DD560->rotXStart - lbl_803DD560->rotXEnd) > lbl_803E1890) || ((lbl_803DD560->rotXStart - lbl_803DD560->rotXEnd) < lbl_803E1894))
     {
@@ -117,19 +117,19 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     if ((flags & 1) == 0)
     {
         *(s16*)&camera->anim.rotX =
-        Curve_EvalLinear(&lbl_803DD560->rotXStart, q, 0x0);
+        Curve_EvalLinear(&lbl_803DD560->rotXStart, t, 0x0);
     }
     if ((flags & 2) == 0)
     {
         *(s16*)&camera->anim.rotY =
-        Curve_EvalLinear(&lbl_803DD560->rotYStart, q, 0x0);
+        Curve_EvalLinear(&lbl_803DD560->rotYStart, t, 0x0);
     }
     if ((flags & 4) == 0)
     {
         *(s16*)&camera->anim.rotZ =
-        Curve_EvalLinear(&lbl_803DD560->rotZStart, q, 0x0);
+        Curve_EvalLinear(&lbl_803DD560->rotZStart, t, 0x0);
     }
-    return q >= lbl_803E188C;
+    return t >= lbl_803E188C;
 }
 
 void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* posEnd,
@@ -181,21 +181,21 @@ void CameraModeTestStrength_free(void)
 void CameraModeTestStrength_update(short* cam)
 {
     extern int fn_8010AEA8(short* cam, int flags); /* #57 */
-    int m4;
+    int lockRoll;
     int obj;
-    int m1;
-    int m2;
+    int lockPitch;
+    int lockYaw;
     int node;
     int flags;
     f32 t;
     f32 dx;
     f32 dy;
     f32 dz;
-    f32 t2;
+    f32 param;
     int yaw;
     int node2;
-    int w2[4];
-    int w1[4];
+    int nextWindow[4];
+    int prevWindow[4];
     f32 x[4];
     f32 y[4];
     f32 z[4];
@@ -214,66 +214,66 @@ void CameraModeTestStrength_update(short* cam)
         getButtonsJustPressed(0);
         node = (int)(*gRomCurveInterface)->getById(lbl_803DD560->nextNodeId);
         node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->prevNodeId);
-        pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560->pathTag);
-        pathcam_findTaggedNodeWindow(node, w2, lbl_803DD560->pathTag);
-        pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
-        t2 = fn_8010AC48(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
-                         ((GameObject*)obj)->anim.worldPosZ, w2);
-        if (t2 < lbl_803E1888)
+        pathcam_findTaggedNodeWindow(node2, prevWindow, lbl_803DD560->pathTag);
+        pathcam_findTaggedNodeWindow(node, nextWindow, lbl_803DD560->pathTag);
+        pathcam_buildWindowSamples(prevWindow, x, y, z, pitchS, yawS, rollS, fov);
+        param = fn_8010AC48(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
+                         ((GameObject*)obj)->anim.worldPosZ, nextWindow);
+        if (param < lbl_803E1888)
         {
-            if (w2[0] > -1)
+            if (nextWindow[0] > -1)
             {
-                lbl_803DD560->nextNodeId = w2[0];
+                lbl_803DD560->nextNodeId = nextWindow[0];
                 node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->nextNodeId);
-                pathcam_findTaggedNodeWindow(node2, w2, lbl_803DD560->pathTag);
-                if (w1[0] > -1)
+                pathcam_findTaggedNodeWindow(node2, nextWindow, lbl_803DD560->pathTag);
+                if (prevWindow[0] > -1)
                 {
-                    lbl_803DD560->prevNodeId = w1[0];
+                    lbl_803DD560->prevNodeId = prevWindow[0];
                     node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->prevNodeId);
-                    pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560->pathTag);
-                    pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
-                    t2 = fn_8010AC48(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
-                                     ((GameObject*)obj)->anim.worldPosZ, w2);
+                    pathcam_findTaggedNodeWindow(node2, prevWindow, lbl_803DD560->pathTag);
+                    pathcam_buildWindowSamples(prevWindow, x, y, z, pitchS, yawS, rollS, fov);
+                    param = fn_8010AC48(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
+                                     ((GameObject*)obj)->anim.worldPosZ, nextWindow);
                     lbl_803DD560->pathProgress += lbl_803E188C;
                 }
                 else
                 {
-                    t2 = lbl_803E1888;
+                    param = lbl_803E1888;
                 }
             }
             else
             {
-                t2 = lbl_803E1888;
+                param = lbl_803E1888;
             }
         }
-        else if (t2 > *(f32*)&lbl_803E188C)
+        else if (param > *(f32*)&lbl_803E188C)
         {
-            if (w2[2] > -1 && w2[3] > -1)
+            if (nextWindow[2] > -1 && nextWindow[3] > -1)
             {
-                lbl_803DD560->nextNodeId = w2[2];
+                lbl_803DD560->nextNodeId = nextWindow[2];
                 node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->nextNodeId);
-                pathcam_findTaggedNodeWindow(node2, w2, lbl_803DD560->pathTag);
-                if (w1[2] > -1 && w1[3] > -1)
+                pathcam_findTaggedNodeWindow(node2, nextWindow, lbl_803DD560->pathTag);
+                if (prevWindow[2] > -1 && prevWindow[3] > -1)
                 {
-                    lbl_803DD560->prevNodeId = w1[2];
+                    lbl_803DD560->prevNodeId = prevWindow[2];
                     node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->prevNodeId);
-                    pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560->pathTag);
-                    pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
-                    t2 = fn_8010AC48(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
-                                     ((GameObject*)obj)->anim.worldPosZ, w2);
+                    pathcam_findTaggedNodeWindow(node2, prevWindow, lbl_803DD560->pathTag);
+                    pathcam_buildWindowSamples(prevWindow, x, y, z, pitchS, yawS, rollS, fov);
+                    param = fn_8010AC48(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
+                                     ((GameObject*)obj)->anim.worldPosZ, nextWindow);
                     lbl_803DD560->pathProgress -= lbl_803E188C;
                 }
                 else
                 {
-                    t2 = lbl_803E188C;
+                    param = lbl_803E188C;
                 }
             }
             else
             {
-                t2 = lbl_803E188C;
+                param = lbl_803E188C;
             }
         }
-        t = lbl_803E18BC * (t2 - lbl_803DD560->pathProgress) +
+        t = lbl_803E18BC * (param - lbl_803DD560->pathProgress) +
             lbl_803DD560->pathProgress;
         lbl_803DD560->pathProgress = t;
         ((CameraObject*)cam)->anim.worldPosX = Curve_EvalBSpline(x, t, 0);
@@ -281,18 +281,18 @@ void CameraModeTestStrength_update(short* cam)
         ((CameraObject*)cam)->anim.worldPosZ = Curve_EvalBSpline(z, t, 0);
         node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->prevNodeId);
         flags = *(u8*)(node2 + 0x3b);
-        m1 = flags & 1;
-        if (m1 == 0)
+        lockPitch = flags & 1;
+        if (lockPitch == 0)
         {
             *cam = (int)Curve_EvalCatmullRom(pitchS, t, 0) + 0x8000;
         }
-        m2 = flags & 2;
-        if (m2 == 0)
+        lockYaw = flags & 2;
+        if (lockYaw == 0)
         {
             cam[1] = Curve_EvalCatmullRom(yawS, t, 0);
         }
-        m4 = flags & 4;
-        if (m4 == 0)
+        lockRoll = flags & 4;
+        if (lockRoll == 0)
         {
             cam[2] = Curve_EvalCatmullRom(rollS, t, 0);
         }
@@ -304,38 +304,38 @@ void CameraModeTestStrength_update(short* cam)
         dx = ((CameraObject*)cam)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
         dy = ((CameraObject*)cam)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
         dz = ((CameraObject*)cam)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        if (m1 != 0)
+        if (lockPitch != 0)
         {
             *cam = 0x8000 - getAngle(dx, dz);
         }
-        if (m2 != 0)
+        if (lockYaw != 0)
         {
-            int d;
+            int delta;
             yaw = getAngle(dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
-            d = (int)(((f32)yaw - Curve_EvalCatmullRom(yawS, t, 0)) -
+            delta = (int)(((f32)yaw - Curve_EvalCatmullRom(yawS, t, 0)) -
                 (f32)(cam[1] & 0xffff));
-            if (d > 0x8000)
+            if (delta > 0x8000)
             {
-                d -= 0xffff;
+                delta -= 0xffff;
             }
-            if (d < -0x8000)
+            if (delta < -0x8000)
             {
-                d += 0xffff;
+                delta += 0xffff;
             }
-            cam[1] += ((int)(d * framesThisStep) >> 3);
+            cam[1] += ((int)(delta * framesThisStep) >> 3);
         }
-        if (m4 != 0)
+        if (lockRoll != 0)
         {
-            int d = cam[2] - (((GameObject*)obj)->anim.rotZ & 0xffff);
-            if (d > 0x8000)
+            int delta = cam[2] - (((GameObject*)obj)->anim.rotZ & 0xffff);
+            if (delta > 0x8000)
             {
-                d -= 0xffff;
+                delta -= 0xffff;
             }
-            if (d < -0x8000)
+            if (delta < -0x8000)
             {
-                d += 0xffff;
+                delta += 0xffff;
             }
-            cam[2] += ((int)(d * framesThisStep) >> 3);
+            cam[2] += ((int)(delta * framesThisStep) >> 3);
         }
         if (lbl_803DD560->linkedObject != NULL)
         {
