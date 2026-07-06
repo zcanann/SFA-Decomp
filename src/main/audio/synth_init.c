@@ -43,32 +43,32 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
                           u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                           u32 vidFlag, u8 vGroup, u8 studio, u32 itd)
 {
-    u16 n;
+    u16 count;
     u32 vid;
     u32 new_id;
     u32 id;
     LAYER* l;
-    s32 p;
-    s32 k;
-    u8 v;
+    s32 pan;
+    s32 note;
+    u8 scaledVol;
     u8 mKey;
 
     vid = 0xFFFFFFFF;
-    if ((l = dataGetLayer(layerID, &n)) == NULL)
+    if ((l = dataGetLayer(layerID, &count)) == NULL)
     {
         goto end;
     }
 
     mKey = key & 0x7f;
-    for (; n != 0; --n, l++)
+    for (; count != 0; --count, l++)
     {
         if (l->id == 0xffff || l->keyLow > mKey || l->keyHigh < mKey)
         {
             continue;
         }
 
-        k = mKey + l->transpose;
-        k = k > 127 ? 127 : k < 0 ? 0 : k;
+        note = mKey + l->transpose;
+        note = note > 127 ? 127 : note < 0 ? 0 : note;
 
         if ((l->id & 0xC000) == 0)
         {
@@ -76,7 +76,7 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
             u32 ok;
             if (inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 8064)
             {
-                new_id = audioFn_8026f630(k & 0x7f, midi, midiSet, 0, &rejected);
+                new_id = audioFn_8026f630(note & 0x7f, midi, midiSet, 0, &rejected);
                 ok = !rejected;
             }
             else
@@ -96,32 +96,32 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
 
         if ((l->panning & 0x80) == 0)
         {
-            p = l->panning - 0x40;
-            p += panning;
-            p = p < 0 ? 0 : p > 0x7f ? 0x7f : p;
+            pan = l->panning - 0x40;
+            pan += panning;
+            pan = pan < 0 ? 0 : pan > 0x7f ? 0x7f : pan;
         }
         else
         {
-            p = 0x80;
+            pan = 0x80;
         }
 
-        v = (vol * l->volume) / 0x7f;
+        scaledVol = (vol * l->volume) / 0x7f;
         prio += l->prioOffset;
         prio = prio > 0xff ? 0xff : prio < 0 ? 0 : prio;
 
         switch (l->id & 0xC000)
         {
         case 0:
-            new_id = macStart(l->id, prio, maxVoices, allocId, k | (key & 0x80), v, p, midi,
+            new_id = macStart(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi,
                               midiSet, section, step, trackid, 0, vGroup, studio, itd);
             break;
         case 0x4000:
-            new_id = StartKeymap(l->id, prio, maxVoices, allocId, k | (key & 0x80), v, p,
+            new_id = StartKeymap(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan,
                                  midi, midiSet, section, step, trackid, 0, vGroup, studio,
                                  itd);
             break;
         case 0x8000:
-            new_id = audioLayerFn_8026f8b8(l->id, prio, maxVoices, allocId, k | (key & 0x80), v, p,
+            new_id = audioLayerFn_8026f8b8(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan,
                                            midi, midiSet, section, step, trackid, 0, vGroup, studio,
                                            itd);
             break;
