@@ -54,10 +54,6 @@ void arwarwingbo_free(int obj)
     ObjGroup_RemoveObject(obj, ARWARWINGBO_OBJGROUP);
 }
 
-void arwarwingbo_hitDetect(void)
-{
-}
-
 void arwarwingbo_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
@@ -66,37 +62,7 @@ void arwarwingbo_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void arwarwingbo_init(int obj, int setup)
-{
-    ArwingBombSetup* mapData = (ArwingBombSetup*)setup;
-
-    ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotX << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)(mapData->rotY << 8);
-    ((GameObject*)obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
-    ObjGroup_AddObject(obj, ARWARWINGBO_OBJGROUP);
-}
-
-void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
-{
-    ArwingBombState* state = ((GameObject*)obj)->extra;
-    if (active != 0)
-    {
-        Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
-        state->control.active = 1;
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-    }
-    else
-    {
-        state->control.active = 0;
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    }
-}
-
-void arwarwingbo_release(void)
-{
-}
-
-void arwarwingbo_initialise(void)
+void arwarwingbo_hitDetect(void)
 {
 }
 
@@ -166,4 +132,38 @@ void arwarwingbo_update(int obj)
     }
     objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta,
             objAnim->velocityZ * timeDelta);
+}
+
+void arwarwingbo_init(int obj, int setup)
+{
+    ArwingBombSetup* mapData = (ArwingBombSetup*)setup;
+
+    ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotX << 8);
+    ((GameObject*)obj)->anim.rotY = (s16)(mapData->rotY << 8);
+    ((GameObject*)obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
+    ObjGroup_AddObject(obj, ARWARWINGBO_OBJGROUP);
+}
+
+void arwarwingbo_release(void)
+{
+}
+
+void arwarwingbo_initialise(void)
+{
+}
+
+void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
+{
+    ArwingBombState* state = ((GameObject*)obj)->extra;
+    if (active != 0)
+    {
+        Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
+        state->control.active = 1;
+        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+    }
+    else
+    {
+        state->control.active = 0;
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    }
 }
