@@ -86,7 +86,7 @@ typedef struct CameraModeNpcSpeakInitParams
     u8 mode;
 } CameraModeNpcSpeakInitParams;
 
-void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
+void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData)
 {
     CameraObject* camera = (CameraObject*)obj;
 #define target ((GameObject*)camera->anim.targetObj)
@@ -103,9 +103,9 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
         gCamNpcSpeakState = (CameraModeNpcSpeakState*)mmAlloc(sizeof(CameraModeNpcSpeakState), 15, 0);
     }
 
-    if (p3 != NULL)
+    if (initData != NULL)
     {
-        CameraModeNpcSpeakInitParams* params = (CameraModeNpcSpeakInitParams*)p3;
+        CameraModeNpcSpeakInitParams* params = (CameraModeNpcSpeakInitParams*)initData;
         gCamNpcSpeakState->anchorX = params->anchorX;
         gCamNpcSpeakState->anchorY = params->anchorY;
         gCamNpcSpeakState->anchorZ = params->anchorZ;
