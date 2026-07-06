@@ -450,6 +450,27 @@ hold their match. Worked example: `iceblast` published `dll_00F2_iceblast.h` and
 transporter-family header `dll_00EF_pushable.h` (which had re-declared 7 of its callbacks,
 missing `update`/`init`/`IceblastPlacement`) now includes it.
 
+### 12. Comments — current, and useful only
+
+Comments are byte-neutral, so they're free to fix and easy to leave wrong. Two rules:
+
+- **Every comment must describe the CURRENT code.** After a rename/retype/extract, fix the
+  comments that referenced the old spelling — a comment naming a variable, field, file, or
+  struct that no longer exists (or a "was X, now Y" migration note) is *worse* than no
+  comment. After any rename, grep the file for the old name and update the comments too, not
+  just the code. Never leave a comment that only makes sense against a previous version.
+- **Delete useless / hanging comments.** Decomp scaffolding leaves a lot of them: orphaned
+  Ghidra markers (`/* WARNING: ... */`, `// 0x8003b8f4`), dangling address/offset fragments
+  with no referent, commented-out dead code, decompiler provenance stubs (`/* EN v1.0
+  0x... size: ... */`), and half-sentences stranded by an earlier edit. Cut them.
+
+Keep the comments that earn their place: the class/file overview, struct field offsets, an
+explanation of a **load-bearing quirk** (why a launder / store order / `int` type is
+required — so the next reader doesn't "fix" it), and genuinely non-obvious intent. The
+test: a good comment tells a future reader something the code *can't*, about the code *as it
+is now*. If it restates the code, names something that's gone, or is a decompiler artifact,
+delete it.
+
 ---
 
 ## Load-bearing: measure before you "tidy" these
