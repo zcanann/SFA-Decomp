@@ -94,16 +94,16 @@ void explodeanimator_update(int* obj)
 void explodeanimator_init(int* obj, int* def)
 {
     int* state = ((GameObject*)obj)->extra;
-    int v;
+    int flag;
     if ((u32)GameBit_Get(((ExplodeanimatorPlacement*)def)->resultGameBit) != 0u)
     {
-        v = 1;
+        flag = 1;
     }
     else
     {
-        v = 0;
+        flag = 0;
     }
-    ((ExplodeanimatorState*)state)->flags = v;
+    ((ExplodeanimatorState*)state)->flags = flag;
     ObjGroup_AddObject(obj, EXPLODEANIMATOR_OBJGROUP);
 }
 
