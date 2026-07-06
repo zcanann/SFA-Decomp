@@ -10,19 +10,16 @@ typedef struct VoiceListNode
     u16 time;
 } VoiceListNode;
 
-typedef struct VidListBlock
-{
-    u8 vidLists[0x800];
-    u8 midiKeySlots[0x80];
-    u8 directSlots[0x40];
-    VoiceListNode priorityLinks[0x40];
-    u8 priorityGroupHeads[0x100];
-    u16 prioritySortLinks[0x200];
-    VoiceListNode freeList[0x40];
-} VidListBlock;
+/* TU-local statics: declaration order fixes the retail .bss offsets off vidListNodes. */
+static u8 vidListNodes[0x800];
+static u8 midiKeySlots[0x80];
+static u8 directSlots[0x40];
+static VoiceListNode priorityLinks[0x40];
+static u8 priorityGroupHeads[0x100];
+static u16 prioritySortLinks[0x200];
+static VoiceListNode freeList[0x40];
 
 extern SynthVoiceState* synthVoice;
-extern VidListBlock vidListNodes;
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
 extern u8 voiceDirectSlots[];
@@ -35,37 +32,44 @@ extern u8 voiceListRoot;
 
 #define SYNTH_VOICE_STATE(voice) (&synthVoice[voice])
 
+static void voiceInitFreeList(void)
+{
+    u32 i;
+
+    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    {
+        freeList[i].prev = i - 1;
+        freeList[i].next = i + 1;
+        freeList[i].time = 1;
+    }
+    freeList[0].prev = 0xff;
+    freeList[lbl_803BD150[0x210] - 1].next = 0xff;
+    voiceListRoot = 0;
+    voiceListInsert = lbl_803BD150[0x210] - 1;
+}
+
+static void voiceInitPrioSort(void)
+{
+    u32 i;
+
+    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    {
+        priorityLinks[i].time = 0;
+    }
+    for (i = 0; i < 0x100; i++)
+    {
+        priorityGroupHeads[i] = 0xff;
+    }
+    voicePrioSortRootListRoot = 0xffff;
+}
+
 /*
  * Initialize the voice priority and group linked-list tables.
  */
 void voiceInitPriorityTables(void)
 {
-    VidListBlock* vb = &vidListNodes;
-    u8* np = &lbl_803BD150[0x210];
-    u32 i;
-    u32 count;
-
-    count = *np;
-    for (i = 0; i < count; i++)
-    {
-        ((VoiceListNode*)(u32)vb->freeList)[i].prev = i - 1;
-        ((VoiceListNode*)(u32)vb->freeList)[i].next = i + 1;
-        ((VoiceListNode*)(u32)vb->freeList)[i].time = 1;
-    }
-    vb->freeList[0].prev = 0xff;
-    count = *np;
-    vb->freeList[count - 1].next = 0xff;
-    voiceListRoot = 0;
-    voiceListInsert = count - 1;
-    for (i = 0; i < count; i++)
-    {
-        ((VoiceListNode*)(u32)vb->priorityLinks)[i].time = 0;
-    }
-    for (i = 0; i < 0x100; i++)
-    {
-        ((u8*)(u32)vb->priorityGroupHeads)[i] = 0xff;
-    }
-    voicePrioSortRootListRoot = 0xffff;
+    voiceInitFreeList();
+    voiceInitPrioSort();
     voiceFxRunning = 0;
     voiceMusicRunning = 0;
 }
