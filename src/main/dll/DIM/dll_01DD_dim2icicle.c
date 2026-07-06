@@ -130,19 +130,19 @@ void dim2icicle_update(int obj)
     case DIM2ICICLE_MODE_DROP:
         if (((Dim2IcicleState*)sub)->dropTargetFound == 0)
         {
-            int n;
+            int hitCount;
             int i;
             int list;
-            n = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+            hitCount = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                      ((GameObject*)obj)->anim.localPosZ, obj, &list, 0, 0);
             ((Dim2IcicleState*)sub)->dropY = lbl_803E4B70;
-            for (i = 0; i < n; i++)
+            for (i = 0; i < hitCount; i++)
             {
                 int p = *(int*)(list + i * 4);
                 if (*(s8*)(p + 0x14) == 0xe)
                 {
                     ((Dim2IcicleState*)sub)->dropY = *(f32*)p;
-                    i = n;
+                    i = hitCount;
                 }
             }
             if (lbl_803E4B70 != ((Dim2IcicleState*)sub)->dropY)

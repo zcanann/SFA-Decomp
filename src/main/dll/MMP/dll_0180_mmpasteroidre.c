@@ -251,15 +251,15 @@ void mmp_asteroid_re_update(int obj)
         }
         if ((state->eventFlags & ASTEROIDRE_FX_EXPLODE) != 0)
         {
-            int n;
+            int count;
             (*gPartfxInterface)->spawnObject((void*)obj, 0x71B, NULL, 1, -1, NULL);
-            n = 0x28;
+            count = 0x28;
             do
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x71C, NULL, 1, -1, NULL);
-                n--;
+                count--;
             }
-            while (n != 0);
+            while (count != 0);
             spawnExplosion(obj, lbl_803E452C, 1, 1, 0, 1, 0, 1, 0);
             CameraShake_Start(lbl_803E4530, lbl_803E4534, lbl_803E4538);
             doRumble(lbl_803E453C);

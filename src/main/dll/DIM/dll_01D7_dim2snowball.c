@@ -280,24 +280,24 @@ void dim2snowball_update(int* obj)
         {
             if (GameBit_Get(GAMEBIT_SNOWBALL_LAUNCH) != 0)
             {
-                int n;
+                int hitCount;
                 ((Dim2SnowballState*)extra)->flagsAC |= 2;
-                n = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
+                hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
                                          ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
                                          &results, 0, 0);
                 ((Dim2SnowballState*)extra)->floorY = ((GameObject*)obj)->anim.localPosY;
-                while (n > 0)
+                while (hitCount > 0)
                 {
                     int* r;
-                    n--;
-                    r = results[n];
+                    hitCount--;
+                    r = results[hitCount];
                     if (*(f32*)r < ((GameObject*)obj)->anim.localPosY)
                     {
                         s8 t = *(s8*)((char*)r + 0x14);
                         if (t == 26 || t == 8)
                         {
                             ((Dim2SnowballState*)extra)->floorY = *(f32*)r;
-                            n = 0;
+                            hitCount = 0;
                         }
                     }
                 }
