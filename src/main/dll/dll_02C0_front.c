@@ -230,28 +230,28 @@ extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 rend
  * callback. */
 void titlescreen_init(u8* obj, u8* p)
 {
-    u8* a = ((GameObject*)obj)->extra;
-    s16 v;
-    ((TitlescreenState*)a)->animPhase = 0;
+    u8* state = ((GameObject*)obj)->extra;
+    s16 seqId;
+    ((TitlescreenState*)state)->animPhase = 0;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)p[0x18] << 8);
-    v = ((GameObject*)obj)->anim.seqId;
-    if (v >= 0x77d && v < 0x781)
+    seqId = ((GameObject*)obj)->anim.seqId;
+    if (seqId >= 0x77d && seqId < 0x781)
     {
-        ((TitlescreenState*)a)->poseIndex = (s8)(v - 0x77d);
-        ((TitlescreenState*)a)->unk34 = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[0];
+        ((TitlescreenState*)state)->poseIndex = (s8)(seqId - 0x77d);
+        ((TitlescreenState*)state)->unk34 = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[0];
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
     }
     else
     {
-        f32 m = lbl_803E22F8;
-        ((TitlescreenState*)a)->unk34 = m;
-        ((TitlescreenState*)a)->poseIndex = -2;
-        v = ((GameObject*)obj)->anim.seqId;
-        if (v == 0x78a)
+        f32 blendFloat = lbl_803E22F8;
+        ((TitlescreenState*)state)->unk34 = blendFloat;
+        ((TitlescreenState*)state)->poseIndex = -2;
+        seqId = ((GameObject*)obj)->anim.seqId;
+        if (seqId == 0x78a)
         {
-            ObjAnim_SetCurrentMove((int)obj, 1, m, 0);
+            ObjAnim_SetCurrentMove((int)obj, 1, blendFloat, 0);
         }
-        else if (v == 0x781)
+        else if (seqId == 0x781)
         {
             ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2318, 0);
             ObjModel_SetRenderCallback((int*)((GameObject*)obj)->anim.banks[0],
@@ -877,8 +877,8 @@ extern void gameTextFn_80016810(int a, int b, int c);
 
 typedef struct
 {
-    u16 a;
-    u16 b;
+    u16 textId;
+    u16 duration;
 } CreditEntry;
 
 extern CreditEntry gCreditEntries[];
@@ -909,24 +909,24 @@ void creditsStart_(void)
     {
         alpha = gTitleScreenCreditTimer * 0xff / 0x14 & 0xff;
     }
-    else if (gTitleScreenCreditTimer >= gCreditEntries[gTitleScreenCreditIndex].b - 0x14)
+    else if (gTitleScreenCreditTimer >= gCreditEntries[gTitleScreenCreditIndex].duration - 0x14)
     {
         if (gTitleScreenCreditIndex == lbl_803DBC0A - 1 && gTitleScreenCreditsEndTriggered == 0)
         {
             streamFn_8000a380(3, 2, 0xfa0);
             gTitleScreenCreditsEndTriggered = 1;
         }
-        alpha = 0xff - (gTitleScreenCreditTimer - gCreditEntries[gTitleScreenCreditIndex].b) * 0xff / 0x14 & 0xff;
+        alpha = 0xff - (gTitleScreenCreditTimer - gCreditEntries[gTitleScreenCreditIndex].duration) * 0xff / 0x14 & 0xff;
     }
     else
     {
         alpha = 0xff;
     }
     gameTextSetColor(0xff, 0xff, 0xff, alpha);
-    gameTextFn_80016810(gCreditEntries[gTitleScreenCreditIndex].a, 0, 0);
+    gameTextFn_80016810(gCreditEntries[gTitleScreenCreditIndex].textId, 0, 0);
     lbl_803DD994 += lbl_803DB411;
     gTitleScreenCreditTimer += lbl_803DB411;
-    if (gTitleScreenCreditTimer < gCreditEntries[gTitleScreenCreditIndex].b)
+    if (gTitleScreenCreditTimer < gCreditEntries[gTitleScreenCreditIndex].duration)
     {
         return;
     }
@@ -968,7 +968,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
     f32 m;
     f32 sc3;
     int a;
-    u16 v;
+    u16 boxIndex;
     int idx;
     int i;
     int r;
@@ -1054,9 +1054,9 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
         }
         while (i < 4);
     }
-    if (gTitleScreenCursorY > lbl_803E22F8 && (v = fn_80130124()) != 0xFFFF)
+    if (gTitleScreenCursorY > lbl_803E22F8 && (boxIndex = fn_80130124()) != 0xFFFF)
     {
-        yb = *(s16*)((int)gameTextGetBox(v) + 0x16);
+        yb = *(s16*)((int)gameTextGetBox(boxIndex) + 0x16);
         xb = (int)mtx[3];
         yb += (int)mtx[7];
         if ((hideHighlight & 0xff) == 0u)
