@@ -33,6 +33,9 @@ extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, i
 extern int trickyFn_8013b368();
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 
+/* GameCube controller button mask */
+#define PAD_BUTTON_A 0x100
+
 typedef struct
 {
     u8 bit7 : 1;
@@ -1858,7 +1861,7 @@ int trickyFoodFn_8014460c(int obj, int* state)
                     ((TrickyByteFlags*)&((TrickyState*)b)->unk82E)->bit5 = 1;
                     ((TrickyState*)state)->stateFlags |= 0x40000000LL;
                 }
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 return 1;
             }
         }
@@ -1913,7 +1916,7 @@ int trickyFoodFn_8014460c(int obj, int* state)
                 }
                 (*gObjectTriggerInterface)->runSequence(g, (void*)obj, -1);
                 ((TrickyByteFlags*)&((TrickyState*)b)->unk82E)->bit5 = 1;
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 return 1;
             }
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
