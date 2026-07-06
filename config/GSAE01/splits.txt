@@ -227,6 +227,8 @@ main/dll/dll_001D_effect4.c:
 
 main/dll/dll_001E_effect5.c:
 	.text       start:0x800BC244 end:0x800BD43C
+	.data       start:0x803109B8 end:0x80310A20
+	.sdata2     start:0x803DFBE0 end:0x803DFC78
 
 main/dll/dll_001F_effect6.c:
 	.text       start:0x800BD43C end:0x800BE034

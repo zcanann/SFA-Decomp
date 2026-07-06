@@ -900,7 +900,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_001B_effect2.c"),
             Object(NonMatching, "main/dll/dll_001C_effect3.c"),
             Object(NonMatching, "main/dll/dll_001D_effect4.c"),
-            Object(NonMatching, "main/dll/dll_001E_effect5.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_001E_effect5.c"),
             Object(NonMatching, "main/dll/dll_001F_effect6.c"),
             Object(NonMatching, "main/dll/dll_0020_effect7.c"),
             Object(NonMatching, "main/dll/dll_0021_effect8.c"),
