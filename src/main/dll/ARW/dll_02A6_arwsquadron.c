@@ -391,10 +391,10 @@ void arwsquadron_followPath(int objArg, int stateArg)
     ObjAnimComponent* objAnim = &obj->anim;
     ArwSquadronState* state = (ArwSquadronState*)stateArg;
     ArwSquadronSetup* setup = (ArwSquadronSetup*)objAnim->placementData;
-    int r;
+    int pathResult;
 
-    r = Obj_UpdateRomCurveFollowVelocity(objArg, stateArg, state->pathSpeed, lbl_803E719C, state->pathSpeed, 1);
-    if (r == -1)
+    pathResult = Obj_UpdateRomCurveFollowVelocity(objArg, stateArg, state->pathSpeed, lbl_803E719C, state->pathSpeed, 1);
+    if (pathResult == -1)
     {
         objAnim->flags |= OBJANIM_FLAG_HIDDEN;
         ObjHits_DisableObject(objArg);
@@ -402,7 +402,7 @@ void arwsquadron_followPath(int objArg, int stateArg)
     }
     else
     {
-        if (r != 0)
+        if (pathResult != 0)
             arwsquadron_applyCommandParams(objArg, stateArg);
         if (setup->pathMode == 2)
         {
