@@ -95,7 +95,7 @@ void dimdismountpoint_init(u8* obj, u8* params)
 
 int dimdismountpoint_getExtraSize(void) { return 0x10; }
 
-void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, DIMDISMOUNT_GROUP); }
+void dimdismountpoint_free(int obj) { ObjGroup_RemoveObject(obj, DIMDISMOUNT_GROUP); }
 
 
 int dimdismountpoint_getObjectTypeId(void) { return 0; }
