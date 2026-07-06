@@ -866,6 +866,8 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
     u16 i[1];
     u64* p;
     u64 acc[1];
+    u64 x2[1];
+    u64 acc2[1];
     u64 chk;
     u64 chk2;
     u64 c;
@@ -908,15 +910,15 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
             if (result == 0)
             {
                 p = (u64*)lbl_803DD044;
-                x[0] = 0;
-                acc[0] = 1;
-                for (i[0] = (int)x[0]; (int)i[0] < 0x3ff; i[0]++)
+                x2[0] = 0;
+                acc2[0] = 1;
+                for (i[0] = (int)x2[0]; (int)i[0] < 0x3ff; i[0]++)
                 {
                     u64 v = p[i[0]];
-                    x[0] = x[0] ^ v;
-                    acc[0] = acc[0] + v;
+                    x2[0] = x2[0] ^ v;
+                    acc2[0] = acc2[0] + v;
                 }
-                c = x[0] ^ (acc[0] + 13);
+                c = x2[0] ^ (acc2[0] + 13);
                 chk = c;
                 if (c == *(u64*)(lbl_803DD044 + 0x1ff8))
                 {
