@@ -68,10 +68,10 @@ void SB_Propeller_update(int obj)
     {
         u8 pad[6];
         u16 mode;
-        f32 a;
-        f32 b;
-        f32 c;
-        f32 d;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
     } stk;
 
     objAnim = (ObjAnimComponent*)obj;
@@ -92,22 +92,22 @@ void SB_Propeller_update(int obj)
             f32 spd;
             for (i = randomGetRange(10, 0x19), spd = lbl_803E5810; i != 0; i--)
             {
-                stk.b = objAnim->worldPosX;
-                stk.c = objAnim->worldPosY;
-                stk.d = objAnim->worldPosZ;
-                stk.a = spd;
+                stk.x = objAnim->worldPosX;
+                stk.y = objAnim->worldPosY;
+                stk.z = objAnim->worldPosZ;
+                stk.scale = spd;
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x9f, stk.pad, 0x200001, -1, NULL);
             }
             state->smokeTimer = (f32)(int)randomGetRange(0x5a, 0xf0);
         }
         if ((2 < camA) && (objAnim->bankIndex == 1))
         {
-            stk.a = lbl_803E5818;
+            stk.scale = lbl_803E5818;
             stk.mode = 0xc0a;
-            ObjPath_GetPointWorldPosition(obj, 0, &stk.b, &stk.c, &stk.d, 0);
-            stk.b = stk.b - objAnim->worldPosX;
-            stk.c = stk.c - objAnim->worldPosY;
-            stk.d = stk.d - objAnim->worldPosZ;
+            ObjPath_GetPointWorldPosition(obj, 0, &stk.x, &stk.y, &stk.z, 0);
+            stk.x = stk.x - objAnim->worldPosX;
+            stk.y = stk.y - objAnim->worldPosY;
+            stk.z = stk.z - objAnim->worldPosZ;
             for (j = 0; j < framesThisStep; j++)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x7aa, stk.pad, 2, -1, NULL);
