@@ -82,27 +82,34 @@ STATIC_ASSERT(offsetof(DirectionalLightSetup, rotXSpeed) == 0x32);
 STATIC_ASSERT(offsetof(DirectionalLightSetup, rotYSpeed) == 0x34);
 STATIC_ASSERT(sizeof(DirectionalLightSetup) == 0x38);
 
-int directionallight_getExtraSize(void) { return sizeof(DirectionalLightState); }
+struct DirectionalLightObjDescriptorLayout {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    void (*callbacks[10])(void);
+    char debugStrings[0xE0];
+};
 
-int directionallight_getObjectTypeId(void) { return 0; }
-
-void directionallight_free(int obj)
-{
-    DirectionalLightState* state = ((GameObject*)obj)->extra;
-    if (state->light != NULL)
+struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor = {
+    0,
+    0,
+    0,
+    0x90000,
     {
-        ModelLightStruct_free(state->light);
-    }
-}
-
-void directionallight_hitDetect(void)
-{
-}
-
-void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
-{
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7254);
-}
+        (void (*)(void))directionallight_initialise,
+        (void (*)(void))directionallight_release,
+        0,
+        (void (*)(void))directionallight_init,
+        (void (*)(void))directionallight_update,
+        (void (*)(void))directionallight_hitDetect,
+        (void (*)(void))directionallight_render,
+        (void (*)(void))directionallight_free,
+        (void (*)(void))directionallight_getObjectTypeId,
+        (void (*)(void))directionallight_getExtraSize,
+    },
+    "Mode: YAW\n\000\000Angle: %d\n\000\000Mode: PITCH\n\000\000\000\000Mode: DIFFUSE COLOUR RED\n\000\000\000Colour: %d\n\000Mode: DIFFUSE COLOUR GREEN\n\000Mode: DIFFUSE COLOUR BLUE\n\000\000Mode: SPECULAR COLOUR RED\n\000\000Mode: SPECULAR COLOUR GREEN\n\000\000\000\000Mode: SPECULAR COLOUR BLUE\n",
+};
 
 void directionallight_debugEdit(int obj, int statePtr)
 {
@@ -236,6 +243,69 @@ void directionallight_debugEdit(int obj, int statePtr)
     }
 }
 
+int directionallight_getExtraSize(void) { return sizeof(DirectionalLightState); }
+
+int directionallight_getObjectTypeId(void) { return 0; }
+
+void directionallight_free(int obj)
+{
+    DirectionalLightState* state = ((GameObject*)obj)->extra;
+    if (state->light != NULL)
+    {
+        ModelLightStruct_free(state->light);
+    }
+}
+
+void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7254);
+}
+
+void directionallight_hitDetect(void)
+{
+}
+
+void directionallight_update(int obj)
+{
+    u8 colorR, colorG, colorB;
+    DirectionalLightState* state = ((GameObject*)obj)->extra;
+    DirectionalLightSetup* setup = (DirectionalLightSetup*)((GameObject*)obj)->anim.placementData;
+
+    if (state->light == NULL)
+    {
+        return;
+    }
+
+    ((GameObject*)obj)->anim.rotX =
+        (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX);
+    ((GameObject*)obj)->anim.rotY =
+        (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY);
+
+    if (state->enabled != 0)
+    {
+        if ((u32)GameBit_Get(setup->enableBit) == 0)
+        {
+            state->enabled = 0;
+            modelLightStruct_setEnabled(state->light, 0, lbl_803E7254);
+        }
+        if ((setup->flags & DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR) != 0)
+        {
+            getAmbientColor(0, &colorR, &colorG, &colorB);
+            modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
+        }
+    }
+    else
+    {
+        if ((u32)GameBit_Get(setup->enableBit) != 0)
+        {
+            state->enabled = 1;
+            modelLightStruct_setEnabled(state->light, 1, lbl_803E7254);
+        }
+    }
+
+    directionallight_debugEdit(obj, (int)state);
+}
+
 void directionallight_init(int obj, int setup)
 {
     u8 colorR, colorG, colorB;
@@ -284,47 +354,6 @@ void directionallight_init(int obj, int setup)
     }
 }
 
-void directionallight_update(int obj)
-{
-    u8 colorR, colorG, colorB;
-    DirectionalLightState* state = ((GameObject*)obj)->extra;
-    DirectionalLightSetup* setup = (DirectionalLightSetup*)((GameObject*)obj)->anim.placementData;
-
-    if (state->light == NULL)
-    {
-        return;
-    }
-
-    ((GameObject*)obj)->anim.rotX =
-        (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX);
-    ((GameObject*)obj)->anim.rotY =
-        (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY);
-
-    if (state->enabled != 0)
-    {
-        if ((u32)GameBit_Get(setup->enableBit) == 0)
-        {
-            state->enabled = 0;
-            modelLightStruct_setEnabled(state->light, 0, lbl_803E7254);
-        }
-        if ((setup->flags & DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR) != 0)
-        {
-            getAmbientColor(0, &colorR, &colorG, &colorB);
-            modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
-        }
-    }
-    else
-    {
-        if ((u32)GameBit_Get(setup->enableBit) != 0)
-        {
-            state->enabled = 1;
-            modelLightStruct_setEnabled(state->light, 1, lbl_803E7254);
-        }
-    }
-
-    directionallight_debugEdit(obj, (int)state);
-}
-
 void directionallight_release(void)
 {
 }
@@ -332,32 +361,3 @@ void directionallight_release(void)
 void directionallight_initialise(void)
 {
 }
-
-struct DirectionalLightObjDescriptorLayout {
-    u32 reserved0;
-    u32 reserved1;
-    u32 reserved2;
-    u32 slotCountAndFlags;
-    void (*callbacks[10])(void);
-    char debugStrings[0xE0];
-};
-
-struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor = {
-    0,
-    0,
-    0,
-    0x90000,
-    {
-        (void (*)(void))directionallight_initialise,
-        (void (*)(void))directionallight_release,
-        0,
-        (void (*)(void))directionallight_init,
-        (void (*)(void))directionallight_update,
-        (void (*)(void))directionallight_hitDetect,
-        (void (*)(void))directionallight_render,
-        (void (*)(void))directionallight_free,
-        (void (*)(void))directionallight_getObjectTypeId,
-        (void (*)(void))directionallight_getExtraSize,
-    },
-    "Mode: YAW\n\000\000Angle: %d\n\000\000Mode: PITCH\n\000\000\000\000Mode: DIFFUSE COLOUR RED\n\000\000\000Colour: %d\n\000Mode: DIFFUSE COLOUR GREEN\n\000Mode: DIFFUSE COLOUR BLUE\n\000\000Mode: SPECULAR COLOUR RED\n\000\000Mode: SPECULAR COLOUR GREEN\n\000\000\000\000Mode: SPECULAR COLOUR BLUE\n",
-};
