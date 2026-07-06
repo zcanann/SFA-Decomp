@@ -363,8 +363,8 @@ void waterfx_func05(int obj, int renderParam)
         if ((int)gWaterfxSplashCount != 0)
         {
             fn_8007BD8C((int)gWaterfxSplashTexture0, (int)gWaterfxSplashTexture1);
-            GXSetArray(9, gWaterfxSplashPosArray, 0xc);
-            GXSetArray(0xd, gWaterfxSplashTexCoordArray, 8);
+            GXSetArray(GX_VA_POS, gWaterfxSplashPosArray, 0xc);
+            GXSetArray(GX_VA_TEX0, gWaterfxSplashTexCoordArray, 8);
             GXClearVtxDesc();
             GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
             GXSetVtxDesc(GX_VA_TEX0MTXIDX, GX_DIRECT);
@@ -757,7 +757,7 @@ void fn_80095164(WaterParticle* s)
         colorOut += 4;
     }
     DCStoreRange(s->pad18, 32);
-    GXSetArray(11, s->pad18, 4);
+    GXSetArray(GX_VA_CLR0, s->pad18, 4);
     GXSetCullMode(GX_CULL_FRONT);
     GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
     GXSetCullMode(GX_CULL_BACK);
