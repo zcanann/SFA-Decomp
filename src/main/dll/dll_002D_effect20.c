@@ -3161,4 +3161,3 @@ void Effect20_initialise(void)
 }
 
 #pragma dont_inline reset
-#pragma dont_inline reset
