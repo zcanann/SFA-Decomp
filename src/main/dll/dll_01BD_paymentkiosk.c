@@ -10,9 +10,6 @@
  * (promptState 1) or "cannot afford" (promptState 2) text from
  * lbl_80327AF0, indexed by textVariant (set to 1 for the "well" text
  * sequence, seq id 0x476).
- *
- * The TU also defines gFElevControlObjDescriptor for the FElevControl
- * (front-end elevator control) object, whose callbacks live in DBrockfall.
  */
 #include "main/dll/DB/DBrockfall.h"
 #include "main/game_object.h"
@@ -54,25 +51,6 @@ enum
     PAYMENT_KIOSK_SEQEV_SHOW_PROMPT = 1,
     PAYMENT_KIOSK_SEQEV_PAY = 2
 };
-
-void paymentkiosk_free(void)
-{
-}
-
-void paymentkiosk_hitDetect(void)
-{
-}
-
-int paymentkiosk_getExtraSize(void) { return sizeof(PaymentKioskState); }
-int paymentkiosk_getObjectTypeId(void) { return 0x1; }
-
-void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible == 0)
-    {
-        return;
-    }
-}
 
 /* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
 u32 PaymentKiosk_testEvent(int obj, int unused, int ev)
@@ -154,6 +132,25 @@ int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
+int paymentkiosk_getExtraSize(void) { return sizeof(PaymentKioskState); }
+int paymentkiosk_getObjectTypeId(void) { return 0x1; }
+
+void paymentkiosk_free(void)
+{
+}
+
+void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible == 0)
+    {
+        return;
+    }
+}
+
+void paymentkiosk_hitDetect(void)
+{
+}
+
 /* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
 void paymentkiosk_update(int obj)
 {
@@ -216,17 +213,3 @@ void paymentkiosk_release(void)
 void paymentkiosk_initialise(void)
 {
 }
-
-ObjectDescriptor gFElevControlObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)FElevControl_initialise,
-    (ObjectDescriptorCallback)FElevControl_release,
-    0,
-    (ObjectDescriptorCallback)FElevControl_init,
-    (ObjectDescriptorCallback)FElevControl_update,
-    (ObjectDescriptorCallback)FElevControl_hitDetect,
-    (ObjectDescriptorCallback)FElevControl_render,
-    (ObjectDescriptorCallback)FElevControl_free,
-    (ObjectDescriptorCallback)FElevControl_getObjectTypeId,
-    FElevControl_getExtraSize,
-};
