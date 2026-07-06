@@ -195,9 +195,9 @@ void fn_8011F6D4(u32 x)
 extern s16 aButtonIcon;
 #pragma scheduling reset
 #pragma peephole reset
-void forceAButtonIcon(int x)
+void forceAButtonIcon(int icon)
 {
-    aButtonIcon = x;
+    aButtonIcon = icon;
 }
 
 extern s16 yButtonItemTextureId;
@@ -211,19 +211,19 @@ void resetYbutton(void)
 
 extern u8 bButtonIcon;
 
-void setBButtonIcon(int x)
+void setBButtonIcon(int icon)
 {
     if (bButtonIcon == 0)
     {
-        bButtonIcon = x;
+        bButtonIcon = icon;
     }
 }
 
-void setAButtonIcon(int x)
+void setAButtonIcon(int icon)
 {
     if (aButtonIcon == 0)
     {
-        aButtonIcon = x;
+        aButtonIcon = icon;
     }
 }
 
