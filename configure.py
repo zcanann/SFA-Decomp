@@ -1680,7 +1680,7 @@ config.libs = [
             Object(NonMatching, "main/audio/sal_ai.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/sal_dsp.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/snd_reverb.c", mw_version="GC/1.2.5n"),
-            Object(NonMatching, "dolphin/axfx/reverb_std_create.c", mw_version="GC/1.2.5n"),
+            Object(MatchingFor("GSAE01"), "dolphin/axfx/reverb_std_create.c", mw_version="GC/1.2.5n"),
             Object(
                 NonMatching,
                 "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c",
