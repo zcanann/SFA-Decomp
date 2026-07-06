@@ -271,7 +271,7 @@ void wmwallcrawler_update(int obj)
     u32 player;
     f32 speed;
     int k;
-    int n;
+    int hitCount;
     int idx;
     u32 tricky;
     u8 sum;
@@ -468,10 +468,10 @@ void wmwallcrawler_update(int obj)
                         if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_FLOOR_SNAP) != 0)
                         {
                             best = lbl_803E5FBC;
-                            n = hitDetectFn_80065e50(ob, ((GameObject*)ob)->anim.localPosX, ((GameObject*)ob)->anim.localPosY, ((GameObject*)ob)->anim.localPosZ,
+                            hitCount = hitDetectFn_80065e50(ob, ((GameObject*)ob)->anim.localPosX, ((GameObject*)ob)->anim.localPosY, ((GameObject*)ob)->anim.localPosZ,
                                                      &list, 0, 0);
                             idx = 0;
-                            for (k = 0; k < n; k++)
+                            for (k = 0; k < hitCount; k++)
                             {
                                 d = *list[idx] - ((GameObject*)ob)->anim.localPosY;
                                 if (d < *(f32*)&lbl_803E5FB0)
@@ -560,10 +560,10 @@ void wmwallcrawler_update(int obj)
                                 if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_FLOOR_SNAP) != 0)
                                 {
                                     best = lbl_803E5FBC;
-                                    n = hitDetectFn_80065e50(ob, ((GameObject*)ob)->anim.localPosX, ((GameObject*)ob)->anim.localPosY,
+                                    hitCount = hitDetectFn_80065e50(ob, ((GameObject*)ob)->anim.localPosX, ((GameObject*)ob)->anim.localPosY,
                                                              ((GameObject*)ob)->anim.localPosZ, &list, 0, 0);
                                     idx = 0;
-                                    for (k = 0; k < n; k++)
+                                    for (k = 0; k < hitCount; k++)
                                     {
                                         d = *list[idx] - ((GameObject*)ob)->anim.localPosY;
                                         if (d < *(f32*)&lbl_803E5FB0)

@@ -311,18 +311,18 @@ void vfplift_hitDetect(int obj)
 
 void vfplift_update(int obj)
 {
-    int v;
+    int seqId;
     Obj_GetPlayerObject();
-    v = ((GameObject*)obj)->anim.seqId;
-    if (v == VFPLIFT1_OBJTYPE)
+    seqId = ((GameObject*)obj)->anim.seqId;
+    if (seqId == VFPLIFT1_OBJTYPE)
     {
         vfplift1_updateState(obj);
     }
-    else if (v == VFPLIFT2_OBJTYPE)
+    else if (seqId == VFPLIFT2_OBJTYPE)
     {
         vfplift23_updateState(obj);
     }
-    else if (v == VFPLIFT3_OBJTYPE)
+    else if (seqId == VFPLIFT3_OBJTYPE)
     {
         vfplift23_updateState(obj);
     }
