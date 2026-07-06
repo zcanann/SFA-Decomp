@@ -167,7 +167,7 @@ int Carryable_updateHeld(u8* obj)
         {
             u8 a, b, c, d, e;
         } * t;
-        int v = 0;
+        int newCarryState = 0;
         t = (void*)*(u8**)(obj + 0x78);
         if ((t[((GameObject*)obj)->hitVolumeIndex].e & 0xf) == 6
             && (buttonGetDisabled(0) & PAD_BUTTON_A) == 0
@@ -176,9 +176,9 @@ int Carryable_updateHeld(u8* obj)
         {
             *(s16*)held = 0;
             buttonDisable(0, PAD_BUTTON_A);
-            v = 1;
+            newCarryState = 1;
         }
-        ((CarryableUpdateHeldState*)held)->carryState = v;
+        ((CarryableUpdateHeldState*)held)->carryState = newCarryState;
         if (((CarryableUpdateHeldState*)held)->carryState != CARRY_STATE_RESTING)
         {
             ((CarryableUpdateHeldState*)held)->flags |= 1;
@@ -235,9 +235,9 @@ int Carryable_updateHeld(u8* obj)
             }
             if (hit != 0)
             {
-                u8* q = *(u8**)(hit + 0x58);
-                u8 c = (*(u8*)(q + 0x10f))++;
-                ((void**)(q + 0x100))[(s8)c] = obj;
+                u8* owner = *(u8**)(hit + 0x58);
+                u8 slot = (*(u8*)(owner + 0x10f))++;
+                ((void**)(owner + 0x100))[(s8)slot] = obj;
             }
         }
     }
