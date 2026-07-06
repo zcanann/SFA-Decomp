@@ -145,7 +145,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     int i;
     int j;
     int* slotPtr;
-    int o;
+    int slotObj;
     f32 dx;
     f32 dy;
     f32 dz;
@@ -331,10 +331,10 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 state->fadeTimer = cur2 - timeDelta;
                 if (state->fadeTimer <= bx)
                 {
-                    o = state->slots[0];
-                    if ((u32)o != 0)
+                    slotObj = state->slots[0];
+                    if ((u32)slotObj != 0)
                     {
-                        ((GameObject*)o)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                        ((GameObject*)slotObj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                         state->slots[0] = 0;
                         state->fadeTimer = bx;
                     }
