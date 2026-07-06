@@ -691,7 +691,7 @@ void ZeroOffsetHandler(int voice)
     f32 vol;
     f32 auxa;
     f32 auxb;
-    f32 f;
+    f32 faderVol;
     f32 voiceVol;
     u32 volUpdate;
     f32 lfo;
@@ -736,17 +736,17 @@ void ZeroOffsetHandler(int voice)
 
     HWVOICE_FLAGS(sv) &= ~0x100000000000ULL;
 
-    f = ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->vGroup].pauseVol *
+    faderVol = ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->vGroup].pauseVol *
             ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->vGroup].volume *
         ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->fxFlag ? 22 : 21].volume;
 
     if (sv->track != 0xFF)
     {
-        vol = lbl_803E7798 * (f * (f32)(base + 0xBD4)[sv->track]);
+        vol = lbl_803E7798 * (faderVol * (f32)(base + 0xBD4)[sv->track]);
     }
     else
     {
-        vol = f;
+        vol = faderVol;
     }
 
     if (vol != sv->lastVolFaderScale)
