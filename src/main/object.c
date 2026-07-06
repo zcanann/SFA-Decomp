@@ -633,7 +633,7 @@ void objWorldToLocalPos(f32* out, u8* transform, f32* in)
 #undef rotMtx
 }
 
-void* Obj_AllocObjectSetup(int size, int b)
+void* Obj_AllocObjectSetup(int size, int type)
 {
     u8* p = mmAlloc(size, 0xe, 0);
     memset(p, 0, size);
@@ -642,7 +642,7 @@ void* Obj_AllocObjectSetup(int size, int b)
     p[7] = 0x96;
     p[4] = 8;
     p[5] = 4;
-    *(s16*)p = b;
+    *(s16*)p = type;
     p[2] = size;
     return p;
 }
@@ -790,18 +790,18 @@ void* ObjModel_LoadAnimData(u8* p, int b, int c);
 
 void* ObjModel_Load(int id, int arg2, int* outSize);
 
-void* Obj_SetupObject(int a, int b, int c, int d, int e)
+void* Obj_SetupObject(int data, int flags, int arg2, int arg3, int parent)
 {
     void* obj;
     if (getLoadedFileFlags(0) & 0x100000)
     {
-        OSReport(sObjSetupObjectLoadingLockedWarning, d);
+        OSReport(sObjSetupObjectLoadingLockedWarning, arg3);
         return NULL;
     }
-    obj = loadCharacter((s16*)a, b, c, d, (void*)e, 0);
+    obj = loadCharacter((s16*)data, flags, arg2, arg3, (void*)parent, 0);
     if (obj != NULL)
     {
-        Obj_RegisterObject(obj, b);
+        Obj_RegisterObject(obj, flags);
         OSReport(sObjDebugStrings, *(int*)&((GameObject*)obj)->anim.modelInstance + 0x91);
     }
     return obj;
@@ -1142,7 +1142,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     LoadedObj tmpl;
     LoadedObj* tp;
     s16 seq;
-    int m;
+    int modelPtr;
     u8* def;
     int fnFlags;
     int (*fp)(void*);
@@ -1157,13 +1157,13 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     int base;
     int cursor;
     u8 n;
-    u16 h;
-    u8 cb;
+    u16 modelFlags;
+    u8 renderFlags;
     f32 max;
     s16 seq2;
-    u32 v;
+    u32 cullScale;
     int size;
-    int sz;
+    int dllStateSize;
     int tmp;
 
     seq = *data;
@@ -1325,12 +1325,12 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             }
             else
             {
-                cb = ((ObjModelInstance*)obj->def)->renderFlags;
-                if (cb & 1)
+                renderFlags = ((ObjModelInstance*)obj->def)->renderFlags;
+                if (renderFlags & 1)
                 {
                     ObjModel_SetRenderCallback(obj->models[idx], modelCb_80073d04);
                 }
-                else if (cb & 0x80)
+                else if (renderFlags & 0x80)
                 {
                     ObjModel_SetRenderCallback(obj->models[idx], modelCb_80074518);
                 }
@@ -1343,8 +1343,8 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         {
             obj->models[i] = (u8*)obj + base + offsets[i];
             ObjModel_LoadAnimData(models[i], flags29, (int)obj->models[i]);
-            h = *(u16*)(*(u8**)obj->models[i] + 2);
-            if (!(h & 0x8000) && !(h & 0x4000))
+            modelFlags = *(u16*)(*(u8**)obj->models[i] + 2);
+            if (!(modelFlags & 0x8000) && !(modelFlags & 0x4000))
             {
                 ((ObjModelInstance*)obj->def)->flags &= ~0x800000LL;
             }
@@ -1356,12 +1356,12 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             }
             else
             {
-                cb = ((ObjModelInstance*)obj->def)->renderFlags;
-                if (cb & 1)
+                renderFlags = ((ObjModelInstance*)obj->def)->renderFlags;
+                if (renderFlags & 1)
                 {
                     ObjModel_SetRenderCallback(obj->models[i], modelCb_80073d04);
                 }
-                else if (cb & 0x80)
+                else if (renderFlags & 0x80)
                 {
                     ObjModel_SetRenderCallback(obj->models[i], modelCb_80074518);
                 }
@@ -1373,23 +1373,23 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     {
     case 0:
     case 0x1f:
-        sz = 0x8e0;
+        dllStateSize = 0x8e0;
         break;
     default:
         if (obj->dll != NULL && (fp2 = *(int (**)(void*, int))((char*)*obj->dll + 0x1c)) != NULL)
         {
-            sz = fp2(obj, cursor);
+            dllStateSize = fp2(obj, cursor);
         }
         else
         {
-            sz = 0;
+            dllStateSize = 0;
         }
         break;
     }
-    if (sz != 0)
+    if (dllStateSize != 0)
     {
         obj->fb8 = cursor;
-        cursor += sz;
+        cursor += dllStateSize;
     }
     else
     {
@@ -1421,19 +1421,19 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     i = 0;
     for (; i < *(s8*)((u8*)obj->def + 0x55); i++)
     {
-        m = *(int*)((u8*)obj->models + i * 4);
-        if (m != 0)
+        modelPtr = *(int*)((u8*)obj->models + i * 4);
+        if (modelPtr != 0)
         {
-            if ((f32)modelFileHeaderGetCullDistance(*(u8**)m) > max)
+            if ((f32)modelFileHeaderGetCullDistance(*(u8**)modelPtr) > max)
             {
-                max = modelFileHeaderGetCullDistance(*(u8**)m);
+                max = modelFileHeaderGetCullDistance(*(u8**)modelPtr);
             }
         }
     }
-    v = *(u8*)(obj->def + 0x73);
-    if (v != 0)
+    cullScale = *(u8*)(obj->def + 0x73);
+    if (cullScale != 0)
     {
-        max = max * ((lbl_803DE8CC * v) / lbl_803DE8D0);
+        max = max * ((lbl_803DE8CC * cullScale) / lbl_803DE8D0);
     }
     obj->cullDist = max;
     if (*(u8*)(def + 0x61) != 0)
@@ -1495,7 +1495,7 @@ void objFreeObjDef(u8* obj, int flag)
     int i;
     int count;
     int n;
-    u8* o;
+    u8* otherObj;
     int* bp;
     void* curTex;
     void* tex;
@@ -1537,13 +1537,13 @@ void objFreeObjDef(u8* obj, int flag)
             count = 0;
             for (i = 0; i < gObjCount; i++)
             {
-                o = ((u8**)gObjList)[i];
-                if (*(int*)&((GameObject*)o)->anim.parent == (int)obj)
+                otherObj = ((u8**)gObjList)[i];
+                if (*(int*)&((GameObject*)otherObj)->anim.parent == (int)obj)
                 {
-                    *(int*)&((GameObject*)o)->anim.parent = 0;
-                    if (*(void**)&((GameObject*)o)->anim.placementData != NULL)
+                    *(int*)&((GameObject*)otherObj)->anim.parent = 0;
+                    if (*(void**)&((GameObject*)otherObj)->anim.placementData != NULL)
                     {
-                        defs[count++] = (int)o;
+                        defs[count++] = (int)otherObj;
                     }
                 }
             }
@@ -1558,10 +1558,10 @@ void objFreeObjDef(u8* obj, int flag)
     {
         for (i = 0; i < gObjCount; i++)
         {
-            o = ((u8**)gObjList)[i];
-            if (*(int*)(o + 0xc0) == (int)obj)
+            otherObj = ((u8**)gObjList)[i];
+            if (*(int*)(otherObj + 0xc0) == (int)obj)
             {
-                *(int*)(o + 0xc0) = 0;
+                *(int*)(otherObj + 0xc0) = 0;
             }
         }
     }
@@ -1656,16 +1656,16 @@ void objFreeObjDef(u8* obj, int flag)
         *(u8*)(gObjFileRefCount + type) -= 1;
         if (*(u8*)(gObjFileRefCount + type) == 0)
         {
-            o = ((u8**)gObjFileBufferTable)[type];
-            if (*(void**)&((GameObject*)o)->anim.parent != NULL)
+            otherObj = ((u8**)gObjFileBufferTable)[type];
+            if (*(void**)&((GameObject*)otherObj)->anim.parent != NULL)
             {
-                mm_free(((GameObject*)o)->anim.parent);
+                mm_free(((GameObject*)otherObj)->anim.parent);
             }
-            if (*(void**)(o + 0x34) != NULL)
+            if (*(void**)(otherObj + 0x34) != NULL)
             {
-                mm_free(*(void**)(o + 0x34));
+                mm_free(*(void**)(otherObj + 0x34));
             }
-            mm_free(o);
+            mm_free(otherObj);
         }
     }
     if (((GameObject*)obj)->seqIndex > -1)
