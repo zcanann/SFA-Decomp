@@ -1658,24 +1658,24 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj, u32 hitFxMode, u32 colorR
 
 void ObjLink_DetachChild(int obj, int child)
 {
-    int q;
-    int p;
+    int dst;
+    int slot;
     int i;
 
     i = 0;
-    for (p = obj; i < (int)((GameObject*)obj)->childCount; i++)
+    for (slot = obj; i < (int)((GameObject*)obj)->childCount; i++)
     {
-        if ((u32) * (int*)(p + OBJLINK_CHILD_LIST_OFFSET) == child)
+        if ((u32) * (int*)(slot + OBJLINK_CHILD_LIST_OFFSET) == child)
         {
             break;
         }
-        p += 4;
+        slot += 4;
     }
-    q = obj + i * 4;
+    dst = obj + i * 4;
     while (i < (int)((GameObject*)obj)->childCount - 1)
     {
-        *(int*)(q + OBJLINK_CHILD_LIST_OFFSET) = *(int*)(q + OBJLINK_CHILD_LIST_OFFSET + sizeof(int));
-        q += 4;
+        *(int*)(dst + OBJLINK_CHILD_LIST_OFFSET) = *(int*)(dst + OBJLINK_CHILD_LIST_OFFSET + sizeof(int));
+        dst += 4;
         i++;
     }
     ((GameObject*)obj)->childCount--;
