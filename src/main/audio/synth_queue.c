@@ -397,9 +397,12 @@ void synthQueueHandle(u32 handle)
 {
     u32 key;
     u32 found;
-    u32 i;
-    SynthVoice* voice;
     SynthVoice* sv;
+    u32 i;
+    SynthCallbackLink* cb;
+    SynthVoice* base;
+    SynthCallbackLink* cb2;
+    SynthVoice* voice;
 
     key = handle & 0x7fffffffu;
 
@@ -456,10 +459,10 @@ done:
         voice->state = SYNTH_VOICE_STATE_ALLOCATED;
 
         {
-            SynthVoice* base = voice;
+            base = voice;
             for (i = 0; i < 2; i++)
             {
-                SynthCallbackLink* cb = base->callbackLists[0];
+                cb = base->callbackLists[0];
                 while (cb != 0)
                 {
                     voiceKillById(cb->callbackId);
@@ -469,7 +472,7 @@ done:
             }
         }
         {
-            SynthCallbackLink* cb2 = voice->callbackLists[2];
+            cb2 = voice->callbackLists[2];
             while (cb2 != 0)
             {
                 voiceKillById(cb2->callbackId);
