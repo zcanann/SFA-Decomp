@@ -259,9 +259,9 @@ void fn_801FD6B4(int obj)
     VfpLavaPoolState* state;
     int def;
     f32 speed;
-    f32 c;
+    f32 phase;
     ObjTextureRuntimeSlot* tex;
-    f32 v;
+    f32 scrollT;
     f32 wave;
     struct
     {
@@ -289,8 +289,8 @@ void fn_801FD6B4(int obj)
     gVfpLavaPoolWaveSin = wave = mathSinf((gVfpLavaPoolPi * (f32)(s16)(int)state->phase) / lbl_803E6178);
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E617C * state->amplitude + lbl_803E6180 * state->amplitude *
         wave;
-    c = state->phase;
-    if (c > lbl_803E6184 && c < lbl_803E6188)
+    phase = state->phase;
+    if (phase > lbl_803E6184 && phase < lbl_803E6188)
     {
         parm.value = state->amplitude;
         if (((GameObject*)obj)->objectFlags & MAIN_OBJFLAG_RENDERED)
@@ -298,14 +298,14 @@ void fn_801FD6B4(int obj)
             (*gPartfxInterface)->spawnObject((void*)obj, 0x3a2, &parm, 2, -1, NULL);
         }
     }
-    c = state->phase;
-    if (c > lbl_803E618C)
+    phase = state->phase;
+    if (phase > lbl_803E618C)
     {
         speed = (f32)(s16)(int)(lbl_803E6170 * gVfpLavaPoolWaveSin);
     }
-    if (c < lbl_803E6190)
+    if (phase < lbl_803E6190)
     {
-        speed = lbl_803E6170 * (c / lbl_803E6190);
+        speed = lbl_803E6170 * (phase / lbl_803E6190);
     }
     ((GameObject*)obj)->anim.alpha = ((speed < lbl_803E616C)
                                           ? lbl_803E616C
@@ -313,22 +313,22 @@ void fn_801FD6B4(int obj)
     tex = objFindTexture((void*)obj, 0, 0);
     if (tex != NULL)
     {
-        v = (f32)(int)tex->offsetT + lbl_803E6160;
-        if (v >= lbl_803E6194)
+        scrollT = (f32)(int)tex->offsetT + lbl_803E6160;
+        if (scrollT >= lbl_803E6194)
         {
-            v -= lbl_803E6194;
+            scrollT -= lbl_803E6194;
         }
-        tex->offsetT = (s16)v;
+        tex->offsetT = (s16)scrollT;
     }
     tex = objFindTexture((void*)obj, 1, 0);
     if (tex != NULL)
     {
-        v = (f32)(int)tex->offsetT + lbl_803E6198;
-        if (v >= lbl_803E6194)
+        scrollT = (f32)(int)tex->offsetT + lbl_803E6198;
+        if (scrollT >= lbl_803E6194)
         {
-            v -= lbl_803E6194;
+            scrollT -= lbl_803E6194;
         }
-        tex->offsetT = (s16)v;
+        tex->offsetT = (s16)scrollT;
     }
 }
 
