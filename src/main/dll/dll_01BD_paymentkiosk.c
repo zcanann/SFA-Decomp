@@ -75,7 +75,7 @@ void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 /* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
-u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
+u32 PaymentKiosk_testEvent(int obj, int unused, int ev)
 {
     PaymentKioskMapData* setup = (PaymentKioskMapData*)((GameObject*)obj)->anim.placementData;
     PaymentKioskState* st = ((GameObject*)obj)->extra;
