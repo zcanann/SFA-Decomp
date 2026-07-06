@@ -102,9 +102,9 @@ int cctestinfot_getExtraSize(void) { return sizeof(CctestinfotState); }
 
 void cctestinfot_init(int obj, s8 *def)
 {
-    u32 v;
-    v = (u32)((GameObject*)obj)->objectFlags | (CCTESTINFOT_OBJFLAG_HIDDEN | CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->objectFlags = v;
+    u32 flags;
+    flags = (u32)((GameObject*)obj)->objectFlags | (CCTESTINFOT_OBJFLAG_HIDDEN | CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED);
+    ((GameObject*)obj)->objectFlags = flags;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x1A] << 8);
     ((GameObject*)obj)->anim.rotY = (s16)((s32)(u8)def[0x19] << 8);
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)(u8)def[0x18] << 8);
