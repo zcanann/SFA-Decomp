@@ -864,17 +864,17 @@ void Obj_RunInitCallback(u8* obj, int cb, int unused)
         }
     }
     {
-        f32 v;
+        f32 zero;
         ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
         ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
         ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
         ((GameObject*)obj)->anim.previousWorldPosX = ((GameObject*)obj)->anim.localPosX;
         ((GameObject*)obj)->anim.previousWorldPosY = ((GameObject*)obj)->anim.localPosY;
         ((GameObject*)obj)->anim.previousWorldPosZ = ((GameObject*)obj)->anim.localPosZ;
-        v = lbl_803DE88C;
-        ((GameObject*)obj)->externalVelX = v;
-        ((GameObject*)obj)->externalVelY = v;
-        ((GameObject*)obj)->externalVelZ = v;
+        zero = lbl_803DE88C;
+        ((GameObject*)obj)->externalVelX = zero;
+        ((GameObject*)obj)->externalVelY = zero;
+        ((GameObject*)obj)->externalVelZ = zero;
     }
 }
 
