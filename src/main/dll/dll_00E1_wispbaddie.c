@@ -294,7 +294,7 @@ void wispbaddie_update(int obj)
     f32 hitY;
     f32 d[3];
     int particleParam;
-    u8 f;
+    u8 flags;
     void* dAlias = (void*)d;
 
     state = ((GameObject*)obj)->extra;
@@ -303,10 +303,10 @@ void wispbaddie_update(int obj)
     if (hit != 0)
     {
         state->hitRadius = lbl_803E2708;
-        f = state->flags;
-        if ((f & WISPBADDIE_FLAG_CHASE_PLAYER) != 0)
+        flags = state->flags;
+        if ((flags & WISPBADDIE_FLAG_CHASE_PLAYER) != 0)
         {
-            state->flags = (u8)(f & ~WISPBADDIE_FLAG_CHASE_PLAYER);
+            state->flags = (u8)(flags & ~WISPBADDIE_FLAG_CHASE_PLAYER);
             state->flags = (u8)(state->flags | WISPBADDIE_FLAG_CHASE_LOCKOUT);
         }
         Sfx_PlayAtPositionFromObject(obj, hitZ, dy, dz, SFXTRIG_robolaser16);
@@ -356,12 +356,12 @@ void wispbaddie_update(int obj)
         state->curveDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
 
-    f = state->flags;
-    if ((f & WISPBADDIE_FLAG_CHASE_PLAYER) != 0)
+    flags = state->flags;
+    if ((flags & WISPBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
         if (state->curveDistance > lbl_803E2710)
         {
-            state->flags = (u8)(f & ~WISPBADDIE_FLAG_CHASE_PLAYER);
+            state->flags = (u8)(flags & ~WISPBADDIE_FLAG_CHASE_PLAYER);
             state->flags = (u8)(state->flags | WISPBADDIE_FLAG_CHASE_LOCKOUT);
         }
         state->cryTimer -= timeDelta;
@@ -372,12 +372,12 @@ void wispbaddie_update(int obj)
         }
         state->particleId = 0x338;
     }
-    f = state->flags;
-    if ((f & WISPBADDIE_FLAG_CHASE_LOCKOUT) != 0)
+    flags = state->flags;
+    if ((flags & WISPBADDIE_FLAG_CHASE_LOCKOUT) != 0)
     {
         if (state->curveDistance < lbl_803E2718)
         {
-            state->flags = (u8)(f & ~WISPBADDIE_FLAG_CHASE_LOCKOUT);
+            state->flags = (u8)(flags & ~WISPBADDIE_FLAG_CHASE_LOCKOUT);
         }
         state->particleId = 0x337;
     }
