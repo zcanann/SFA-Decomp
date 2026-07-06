@@ -369,7 +369,7 @@ void drawFn_8006f500(void)
             PSMTXTrans(trans, __THPHuffmanBits_803DEE24, *(f32 *)&__THPHuffmanBits_803DEE24, Vachuff_803DEE20);
             PSMTXConcat(trans, rot, rot);
             GXLoadTexMtxImm(rot, 0x1e, 1);
-            GXBegin(0x80, 2, 4);
+            GXBegin(GX_QUADS, GX_VTXFMT2, 4);
             GXPosition3f32(*(f32 *)(quad + 0x0), *(f32 *)(quad + 0x4), *(f32 *)(quad + 0x8));
             GXTexCoord2f32(Vachuff_803DEE20, tTop);
             GXPosition3f32(*(f32 *)(quad + 0xc), *(f32 *)(quad + 0x10), *(f32 *)(quad + 0x14));
