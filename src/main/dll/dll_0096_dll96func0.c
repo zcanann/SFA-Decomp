@@ -34,14 +34,6 @@ extern f32 lbl_803E12D4;
 extern f32 lbl_803E12D8;
 extern u8 lbl_803175E8[];
 
-void dll_96_func01_nop(void)
-{
-}
-
-void dll_96_func00_nop(void)
-{
-}
-
 typedef struct GfxBuf
 {
     GfxCmd* cmds;       /* 0x00: points at entries[] */
@@ -185,4 +177,12 @@ int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
     }
     return (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803175E8, 0x18, base + 0xd4, 0x89, 0);
+}
+
+void dll_96_func01_nop(void)
+{
+}
+
+void dll_96_func00_nop(void)
+{
 }
