@@ -2348,7 +2348,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     mtxA.m[4] = fz;
     GXSetIndTexMtx(GX_ITM_0, &mtxA, (s8)lbl_803DB48C);
     GXSetTevIndirect(stage, 0, 0, 7, 1, 6, 6, 0, 0, 0);
-    GXSetTevOrder(stage, 0xff, 0xff, 0xff);
+    GXSetTevOrder(stage, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
     GXSetTevSwapMode(stage, 0, 0);
     GXSetTevColorIn(stage, 0xf, 0, 4, 0xf);
     GXSetTevAlphaIn(stage, 7, 7, 7, 0);
@@ -2381,12 +2381,12 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     GXSetTevKColorSel(stage + 1, 4);
     if (*(void**)(rop + 0x38) != NULL)
     {
-        GXSetTevOrder(stage + 1, 4, 3, 8);
+        GXSetTevOrder(stage + 1, GX_TEXCOORD4, GX_TEXMAP3, GX_ALPHA_BUMPN);
         GXSetTevAlphaIn(stage + 1, 7, 4, 5, 0);
     }
     else
     {
-        GXSetTevOrder(stage + 1, 4, 3, 0xff);
+        GXSetTevOrder(stage + 1, GX_TEXCOORD4, GX_TEXMAP3, GX_COLOR_NULL);
         GXSetTevAlphaIn(stage + 1, 4, 7, 7, 0);
     }
     GXSetTevColorIn(stage + 1, 8, 0xe, 0, 0);
