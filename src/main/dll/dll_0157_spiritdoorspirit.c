@@ -38,7 +38,7 @@ int spiritdoorspirit_getExtraSize(void) { return 0x1; }
 int spiritdoorspirit_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling off
-void spiritdoorspirit_free(int x) { ObjGroup_RemoveObject(x, SPIRITDOORSPIRIT_OBJGROUP); }
+void spiritdoorspirit_free(int obj) { ObjGroup_RemoveObject(obj, SPIRITDOORSPIRIT_OBJGROUP); }
 #pragma scheduling reset
 
 #pragma scheduling off
