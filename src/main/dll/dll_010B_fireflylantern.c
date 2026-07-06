@@ -18,6 +18,29 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int* obj, void* setup);
 extern f32 lbl_803E3AE8;
 
+#pragma dont_inline on
+int FireFlyLantern_spawnFireFly(int* obj)
+{
+    FireFlyLanternSpawnSetup* setup;
+    if (Obj_IsLoadingLocked() == 0) return 0;
+    setup = (FireFlyLanternSpawnSetup*)Obj_AllocObjectSetup(sizeof(FireFlyLanternSpawnSetup), 1084);
+    setup->objectType = 1084;
+    setup->setupType = 9;
+    setup->field04 = 2;
+    setup->field06 = 0xff;
+    setup->field05 = 4;
+    setup->field07 = 8;
+    setup->x = ((GameObject*)obj)->anim.localPosX;
+    setup->y = lbl_803E3AE8 + ((GameObject*)obj)->anim.localPosY;
+    setup->z = ((GameObject*)obj)->anim.localPosZ;
+    setup->field19 = 4;
+    setup->field1A = 0x514;
+    setup->field1C = 40;
+    setup->field18 = 30;
+    return loadObjectAtObject(obj, setup);
+}
+#pragma dont_inline reset
+
 int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     FireFlyLanternState* state;
@@ -166,25 +189,4 @@ void FireFlyLantern_init(int obj, int def)
             i++;
         }
     }
-}
-
-int FireFlyLantern_spawnFireFly(int* obj)
-{
-    FireFlyLanternSpawnSetup* setup;
-    if (Obj_IsLoadingLocked() == 0) return 0;
-    setup = (FireFlyLanternSpawnSetup*)Obj_AllocObjectSetup(sizeof(FireFlyLanternSpawnSetup), 1084);
-    setup->objectType = 1084;
-    setup->setupType = 9;
-    setup->field04 = 2;
-    setup->field06 = 0xff;
-    setup->field05 = 4;
-    setup->field07 = 8;
-    setup->x = ((GameObject*)obj)->anim.localPosX;
-    setup->y = lbl_803E3AE8 + ((GameObject*)obj)->anim.localPosY;
-    setup->z = ((GameObject*)obj)->anim.localPosZ;
-    setup->field19 = 4;
-    setup->field1A = 0x514;
-    setup->field1C = 40;
-    setup->field18 = 30;
-    return loadObjectAtObject(obj, setup);
 }
