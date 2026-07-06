@@ -29,6 +29,7 @@
 
 /* object group this object belongs to */
 #define GRIMBLE_OBJGROUP 3
+#define DFROPENODE_OBJGROUP 0x17 /* DLL 0x175 dfropenode (path nodes) */
 
 typedef struct GrimblePlacement
 {
@@ -281,7 +282,7 @@ void fn_801627F4(int obj)
     char* sub;
 
     state = ((GameObject*)obj)->extra;
-    ptr = ObjGroup_GetObjects(0x17, &count);
+    ptr = ObjGroup_GetObjects(DFROPENODE_OBJGROUP, &count);
     if (count != 0)
     {
         sub = (char*)((GroundBaddieState*)state)->control;
