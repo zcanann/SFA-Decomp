@@ -85,3 +85,7 @@ Download the latest release from [encounter/objdiff](https://github.com/encounte
 Select an object from the left sidebar to begin diffing. Changes to the project will rebuild automatically: changes to source files, headers, `configure.py`, `splits.txt` or `symbols.txt`.
 
 ![](assets/objdiff.png)
+
+# Acknowledgements
+
+Much of the function and symbol naming in this project draws on [Rena Kunisaki](https://github.com/RenaKunisaki)'s extensive Star Fox Adventures reverse-engineering work — in particular the symbol map from the [StarFoxAdventures](https://github.com/RenaKunisaki/StarFoxAdventures) research repo. Thank you to Rena for making that work available.
