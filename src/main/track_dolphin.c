@@ -82,28 +82,10 @@ typedef struct TrackP6Entry
 
 #pragma peephole off
 #pragma scheduling off
-extern u32 FUN_800068ec();
-extern u32 FUN_800068f0();
-extern u32 FUN_800068f4();
-extern u64 FUN_800068f8();
-extern u32 FUN_80006904();
-extern u32 FUN_80017784();
 extern u32 FUN_80017790();
 extern u32 FUN_8001779c();
-extern int FUN_80017830();
 extern void* ObjGroup_GetObjects();
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern u32 FUN_802475e4();
-extern u32 FUN_80247618();
-extern u32 FUN_802585d8();
-extern u32 FUN_8025d80c();
-extern u32 FUN_8025d848();
-extern u32 FUN_8025d8c4();
-extern u32 FUN_80292b48();
-extern double FUN_80293900();
-extern u32 FUN_802947f8();
-extern u32 FUN_802949e8();
-extern u32 FUN_80294da4();
 extern int DAT_80382c98;
 extern u32 DAT_8038859c;
 extern u32 DAT_803885a0;
