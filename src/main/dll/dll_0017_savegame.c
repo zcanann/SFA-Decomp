@@ -421,7 +421,7 @@ s8 slot;
     SaveGame_gplaySetObjGroupStatus(0x1d, 0x1f, 1);
     SaveGame_gplaySetObjGroupStatus(0x13, 0, 1);
     SaveGame_gplaySetObjGroupStatus(0x13, 0x16, 1);
-    GameBit_Set(0x967, 1);
+    mainSetBits(0x967, 1);
 
     SAVEGAME_CHARACTER_POSITION(gSaveGameData)->x = defaultPos.x;
     *(f32*)(gSaveGameData + gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
@@ -492,7 +492,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             createTransient = 1;
         }
 
-        newStatus = GameBit_Get(gSaveGameMapObjGroupBits[idx]);
+        newStatus = mainGetBit(gSaveGameMapObjGroupBits[idx]);
         oldStatus = newStatus;
         if (value != 0)
         {
@@ -506,7 +506,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             newStatus = newStatus & bit;
         }
 
-        GameBit_Set(gSaveGameMapObjGroupBits[idx], newStatus);
+        mainSetBits(gSaveGameMapObjGroupBits[idx], newStatus);
         gSaveGameObjGroupCacheIdx = idx;
         (&gSaveGameObjGroupCacheIdx)[1] = newStatus;
 
@@ -1084,7 +1084,7 @@ void SaveGame_mapUpdateObjGroups(int idx)
     bit = gSaveGameMapObjGroupBits[idx];
     if (bit != 0)
     {
-        gMapObjGroupStatuses[idx] = GameBit_Get(bit);
+        gMapObjGroupStatuses[idx] = mainGetBit(bit);
     }
 }
 
@@ -1101,7 +1101,7 @@ u8 SaveGame_getMapAct(int idx)
         }
         else
         {
-            *((s8*)&gSaveGameMapActCacheIdx + 1) = GameBit_Get(gSaveGameMapActBits[idx]);
+            *((s8*)&gSaveGameMapActCacheIdx + 1) = mainGetBit(gSaveGameMapActBits[idx]);
         }
     }
     return *((u8*)&gSaveGameMapActCacheIdx + 1);
@@ -1114,7 +1114,7 @@ int SaveGame_gplayGetObjGroupStatus(int idx, int shift)
     if (idx != gSaveGameObjGroupCacheIdx)
     {
         gSaveGameObjGroupCacheIdx = idx;
-        (&gSaveGameObjGroupCacheIdx)[1] = GameBit_Get(gSaveGameMapObjGroupBits[idx]);
+        (&gSaveGameObjGroupCacheIdx)[1] = mainGetBit(gSaveGameMapObjGroupBits[idx]);
     }
     return ((&gSaveGameObjGroupCacheIdx)[1] >> shift) & 1;
 }
@@ -1125,7 +1125,7 @@ void SaveGame_gplaySetAct(int idx, int act)
     u16 bit;
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) idx = *(u8*)((char*)gExtendedMapActLookup + idx -
         SAVEGAME_EXTENDED_MAP_THRESHOLD);
-    GameBit_Set(gSaveGameMapActBits[idx], act);
+    mainSetBits(gSaveGameMapActBits[idx], act);
     gSaveGameMapActCacheIdx = idx;
     *((s8*)&gSaveGameMapActCacheIdx + 1) = act;
     j = idx;
@@ -1134,7 +1134,7 @@ void SaveGame_gplaySetAct(int idx, int act)
     bit = gSaveGameMapObjGroupBits[j];
     if (bit != 0)
     {
-        gMapObjGroupStatuses[j] = GameBit_Get(bit);
+        gMapObjGroupStatuses[j] = mainGetBit(bit);
     }
 }
 
@@ -1200,7 +1200,7 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
     }
     if (flag != 0)
     {
-        GameBit_Set(0x970, 1);
+        mainSetBits(0x970, 1);
         if (Player_GetCurrentHealth((int)Obj_GetPlayerObject()) > 1)
         {
             playerAddHealth((u8*)Obj_GetPlayerObject(), -1);
@@ -1215,7 +1215,7 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
     ((SaveGameCharacterPosition *)((u8 *)pRestartPoint + SAVEGAME_CHARACTER_POSITION_OFFSET))
         [gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET]]
             .map = b691;
-    GameBit_Set(0x970, 0);
+    mainSetBits(0x970, 0);
     if (flag != 0 && healed != 0)
     {
         playerAddHealth((u8*)Obj_GetPlayerObject(), 1);
@@ -1269,16 +1269,16 @@ u16 gSaveGameMapObjGroupBits[120] = {
 /*__DATA_EXTERNS__*/
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 extern void Carryable_free();
-extern void Carryable_getFlag01();
-extern void Carryable_getFlag04();
+extern void Carryable_wasJustGrabbed();
+extern void Carryable_getDropDisabled();
 extern void Carryable_getSurfaceType();
 extern void Carryable_init();
 extern void Carryable_initialise();
-extern void Carryable_isHeld();
+extern void Carryable_getCarryState();
 extern void Carryable_release();
-extern void Carryable_setFlag02Inverted();
-extern void Carryable_setFlag04();
-extern void Carryable_setFlag08();
+extern void Carryable_setGravityEnabled();
+extern void Carryable_setDropDisabled();
+extern void Carryable_setSuppressPositionSave();
 extern void Carryable_stopCarrying();
 extern void Carryable_updateHeld();
 extern void Carryable_updateRenderState();
@@ -1296,12 +1296,12 @@ extern void modgfx_func03();
 extern void screens_initialise();
 extern void screens_release();
 extern void screens_remove();
-extern void screens_remove2();
+extern void screens_run();
 extern void screens_show();
 void* lbl_80311900[56] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00330000, SaveGame_initialise, SaveGame_release, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, SaveGame_func08_nop, SaveGame_gplaySavePoint, SaveGame_gplayGotoSavegame, SaveGame_gplayRestartPoint, SaveGame_gplayGotoRestartPoint, SaveGame_gplayClearRestartPoint, SaveGame_gplayGetRestartGameNotCleared, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, SaveGame_getMapAct, SaveGame_gplaySetAct, SaveGame_setMapActLut, SaveGame_gplayGetObjGroupStatus, SaveGame_gplaySetObjGroupStatus, SaveGame_getMapObjGroupBit, SaveGame_mapUpdateObjGroups, SaveGame_mapGetObjGroups, SaveGame_resetObjGroups, SaveGame_gplayAddTime, SaveGame_gplayShouldNotSaveTime, SaveGame_gplayGetTime, SaveGame_updateTimes, SaveGame_getCurChar, SaveGame_setCharacter, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, SaveGame_getLast, SaveGame_getCurCharacterState, SaveGame_getCurCharPos, SaveGame_getTrickyEnergy, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, SaveGame_getPlayTime, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
 u8 lbl_803119E0[512] = { 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 255, 255, 255, 255, 0, 2, 0, 2, 0, 5, 0, 5, 0, 5, 0, 5, 0, 6, 255, 255, 255, 255, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 255, 255, 0, 5, 255, 255, 0, 5, 0, 6, 0, 7, 255, 255, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 255, 255, 255, 255, 255, 255, 255, 255, 0, 7, 0, 6, 0, 9, 0, 9, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 255, 255, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 6, 255, 255, 0, 0, 0, 0, 0, 12, 255, 255, 0, 12, 255, 255, 255, 255, 0, 12, 0, 6, 0, 11, 255, 255, 0, 11, 0, 11, 0, 11, 0, 11, 0, 11, 0, 11, 255, 255, 255, 255, 255, 255, 255, 255, 0, 11, 255, 255, 0, 12, 0, 8, 0, 8, 0, 8, 0, 8, 255, 255, 255, 255, 255, 255, 0, 6, 0, 4, 0, 4, 0, 4, 255, 255, 0, 4, 255, 255, 255, 255, 255, 255, 0, 4, 255, 255, 0, 0, 0, 6, 0, 6, 0, 3, 255, 255, 0, 3, 0, 3, 0, 3, 0, 3, 255, 255, 255, 255, 255, 255, 0, 3, 0, 10, 0, 10, 0, 10, 0, 10, 255, 255, 0, 6, 255, 255, 0, 6, 0, 5, 0, 5, 0, 5, 255, 255, 0, 0, 255, 255, 0, 6, 0, 1, 255, 255, 255, 255, 0, 1, 0, 1, 0, 1, 0, 1, 255, 255, 0, 1, 0, 1, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 1, 0, 12, 0, 8, 255, 255, 0, 8, 255, 255, 255, 255, 0, 6, 0, 6, 0, 3, 0, 3, 255, 255, 0, 3, 255, 255, 255, 255, 255, 255, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0 };
-void* lbl_80311BE0[10] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00050000, screens_initialise, screens_release, (void*)0x00000000, screens_show, screens_remove, screens_remove2 };
-void* Carryable_funcs[20] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x000E0000, Carryable_initialise, Carryable_release, (void*)0x00000000, Carryable_init, Carryable_updateHeld, Carryable_updateRenderState, Carryable_free, Carryable_isHeld, Carryable_getFlag01, Carryable_getSurfaceType, Carryable_setFlag02Inverted, Carryable_setFlag04, Carryable_getFlag04, Carryable_setFlag08, Carryable_stopCarrying, (void*)0x00000000 };
+void* lbl_80311BE0[10] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00050000, screens_initialise, screens_release, (void*)0x00000000, screens_show, screens_remove, screens_run };
+void* Carryable_funcs[20] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x000E0000, Carryable_initialise, Carryable_release, (void*)0x00000000, Carryable_init, Carryable_updateHeld, Carryable_updateRenderState, Carryable_free, Carryable_getCarryState, Carryable_wasJustGrabbed, Carryable_getSurfaceType, Carryable_setGravityEnabled, Carryable_setDropDisabled, Carryable_getDropDisabled, Carryable_setSuppressPositionSave, Carryable_stopCarrying, (void*)0x00000000 };
 u8 lbl_80311C58[304] = { 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 150, 1, 144, 3, 132, 0, 0, 0, 127, 255, 206, 1, 144, 3, 232, 0, 31, 0, 127, 0, 50, 2, 18, 252, 24, 0, 0, 0, 127, 255, 106, 2, 18, 252, 174, 0, 31, 0, 127, 3, 232, 0, 100, 0, 150, 0, 0, 0, 127, 4, 176, 0, 100, 255, 206, 0, 31, 0, 127, 252, 24, 1, 14, 0, 50, 0, 0, 0, 127, 252, 24, 1, 14, 255, 206, 0, 31, 0, 127, 2, 108, 2, 38, 3, 12, 0, 0, 0, 127, 3, 12, 2, 38, 3, 152, 0, 31, 0, 127, 252, 204, 0, 210, 3, 12, 0, 0, 0, 127, 253, 188, 0, 210, 3, 52, 0, 31, 0, 127, 3, 52, 0, 100, 252, 244, 0, 0, 0, 127, 3, 12, 0, 100, 253, 148, 0, 31, 0, 127, 252, 104, 1, 214, 252, 244, 0, 0, 0, 127, 252, 244, 1, 214, 252, 204, 0, 31, 0, 127, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 3, 0, 4, 0, 0, 0, 5, 0, 6, 0, 0, 0, 7, 0, 8, 0, 0, 0, 9, 0, 10, 0, 0, 0, 11, 0, 12, 0, 0, 0, 13, 0, 14, 0, 0, 0, 15, 0, 16, 0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15, 0, 16, 0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15, 0, 16, 0, 0, 0, 90, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 void* lbl_80311D88[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, dll_59_func00_nop, dll_59_func01_nop, (void*)0x00000000, dll_59_func03 };
 u8 lbl_80311DA8[100] = { 0, 30, 0, 0, 0, 0, 0, 0, 0, 31, 255, 226, 0, 0, 0, 0, 0, 15, 0, 31, 0, 0, 0, 0, 3, 232, 0, 8, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 31, 255, 241, 0, 0, 0, 0, 0, 15, 0, 31, 0, 15, 0, 0, 7, 208, 0, 8, 0, 0, 255, 241, 0, 0, 7, 208, 0, 8, 0, 0, 0, 0, 0, 1, 0, 2, 0, 1, 0, 3, 0, 2, 0, 0, 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };

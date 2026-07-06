@@ -55,7 +55,7 @@ STATIC_ASSERT(sizeof(MagicmakerSetup) == 0x30);
 extern int randomGetRange(int lo, int hi);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u8 Obj_IsLoadingLocked(void);
-extern void GameBit_Set(int eventId, int value);
+extern void mainSetBits(int eventId, int value);
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
@@ -96,9 +96,9 @@ void magicmaker_update(int obj)
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
     if (Obj_IsLoadingLocked() != 0)
     {
-        if ((u32)GameBit_Get(MAGICMAKER_SPAWN_GAMEBIT) != 0u)
+        if ((u32)mainGetBit(MAGICMAKER_SPAWN_GAMEBIT) != 0u)
         {
-            GameBit_Set(MAGICMAKER_SPAWN_GAMEBIT, 0);
+            mainSetBits(MAGICMAKER_SPAWN_GAMEBIT, 0);
             objList = ObjGroup_GetObjects(MAGICMAKER_CREATURE_GROUP, &groupCount);
             matchCount = 0;
             for (i = 0; i < groupCount; i++)

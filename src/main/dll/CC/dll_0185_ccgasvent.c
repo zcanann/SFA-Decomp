@@ -33,7 +33,7 @@ void ccgasvent_update(int* obj)
 {
     f32 dist = 3.4028235e38f;
     u8* state = ((GameObject*)obj)->extra;
-    if (GameBit_Get(CCGASVENT_GAS_GAMEBIT) != 0)
+    if (mainGetBit(CCGASVENT_GAS_GAMEBIT) != 0)
     {
         ObjGroup_FindNearestObject(5, (u32)obj, &dist);
         switch (state[0])

@@ -370,7 +370,7 @@ extern void *gDIMSnowHorn1Texture;
 
 extern f32 lbl_803E8410;
 
-int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
+int dim2prisonmammoth_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate);
 
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
@@ -412,7 +412,7 @@ extern int gDRCloudRunnerAirMeterBaseline;
 extern f32 lbl_803E83B4;
 void fn_802BF4D8(int obj);
 
-extern void fn_80137948(const char *fmt, ...);
+extern void logPrintf(const char *fmt, ...);
 extern char sOnCloudFormat[];
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;

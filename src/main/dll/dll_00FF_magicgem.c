@@ -24,7 +24,7 @@ extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void playerAddRemoveMagic(int obj, int amount);
 
 extern f32 getXZDistance(f32* a, f32* b);
-extern int fn_8029622C(int obj);
+extern int Obj_IsParentSlackClear(int obj);
 extern u8 framesThisStep;
 extern char sMagicGemCollectedMessage[];
 
@@ -59,7 +59,7 @@ extern f32 sqrtf(f32 x);
 extern void objMove(int obj, f32 a, f32 b, f32 c);
 STATIC_ASSERT(offsetof(MagicGemState, flags27A) == 0x27A);
 
-void magicgem_free(GameObject* obj)
+void MagicDust_free(GameObject* obj)
 {
     if (*(u32*)&obj->ownerObj != 0)
     {
@@ -69,17 +69,17 @@ void magicgem_free(GameObject* obj)
     return;
 }
 
-int magicgem_getExtraSize(void)
+int MagicDust_getExtraSize(void)
 {
     return 0x288;
 }
 
-void magicgem_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void MagicDust_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E34B0);
 }
 
-void magicgem_update(GameObject* obj)
+void MagicDust_update(GameObject* obj)
 {
     extern u32 ObjHits_DisableObject(); /* #57 */
     float fval;
@@ -272,15 +272,15 @@ void magicgem_update(GameObject* obj)
         {
             dist = getXZDistance(&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
             fval = gMagicGemPickupRadiusBase + state->collectRadius;
-            if ((dist < fval * fval) && (fn_8029622C(player) != 0))
+            if ((dist < fval * fval) && (Obj_IsParentSlackClear(player) != 0))
             {
-                val = GameBit_Get(MAGICGEM_GAMEBIT_CLAIMED);
+                val = mainGetBit(MAGICGEM_GAMEBIT_CLAIMED);
                 if (val == 0)
                 {
                     *(s16*)&state->pickupMsgArg = 0xffff;
                     ObjMsg_SendToObject(player, MAGICGEM_MSG_IN_RANGE, obj, (int)state + 0x280);
                     ObjHits_DisableObject(obj);
-                    GameBit_Set(MAGICGEM_GAMEBIT_CLAIMED, 1);
+                    mainSetBits(MAGICGEM_GAMEBIT_CLAIMED, 1);
                     state->flags27A = state->flags27A | MAGICGEM_FLAG_CLAIMED;
                 }
                 else
@@ -314,7 +314,7 @@ typedef struct MagicgemObjectDef
     s16 spawnMode;
 } MagicgemObjectDef;
 
-void magicgem_init(GameObject* obj, MagicgemObjectDef* placement)
+void MagicDust_init(GameObject* obj, MagicgemObjectDef* placement)
 {
     extern u32 ObjHits_DisableObject(); /* #57 */
     short mode;

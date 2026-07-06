@@ -55,25 +55,25 @@ STATIC_ASSERT(offsetof(CfDoorLightMapData, resetFrame) == 0x18);
 STATIC_ASSERT(offsetof(CfDoorLightMapData, doneEvent) == 0x1E);
 STATIC_ASSERT(offsetof(CfDoorLightMapData, triggerEvent) == 0x20);
 
-int cf_doorlight_getExtraSize(void) { return sizeof(CfDoorLightState); }
+int CF_DoorLight_getExtraSize(void) { return sizeof(CfDoorLightState); }
 
-int cf_doorlight_getObjectTypeId(void) { return 0x0; }
+int CF_DoorLight_getObjectTypeId(void) { return 0x0; }
 
-void cf_doorlight_free(void)
+void CF_DoorLight_free(void)
 {
 }
 
-void cf_doorlight_render(void)
+void CF_DoorLight_render(void)
 {
 }
 
-void cf_doorlight_hitDetect(void)
+void CF_DoorLight_hitDetect(void)
 {
 }
 
 /* obj is a word here, not a pointer: target colors it r30 UNDER the state
    copy (r31) = the integral-param pool. */
-void cf_doorlight_update(int obj)
+void CF_DoorLight_update(int obj)
 {
     CfDoorLightState* state;
     CfDoorLightMapData* def;
@@ -81,7 +81,7 @@ void cf_doorlight_update(int obj)
 
     state = ((GameObject*)obj)->extra;
     def = (CfDoorLightMapData*)((GameObject*)obj)->anim.placement;
-    if (state->flags.active == 0 && GameBit_Get(def->triggerEvent) != 0 && state->flags.done == 0)
+    if (state->flags.active == 0 && mainGetBit(def->triggerEvent) != 0 && state->flags.done == 0)
     {
         state->flags.active = 1;
         state->currentFrame = 0;
@@ -100,7 +100,7 @@ void cf_doorlight_update(int obj)
             {
                 if (def->doneEvent != -1)
                 {
-                    GameBit_Set(def->doneEvent, 1);
+                    mainSetBits(def->doneEvent, 1);
                     state->flags.active = 0;
                     state->flags.done = 1;
                     state->currentFrame = state->maxFrame;
@@ -115,7 +115,7 @@ void cf_doorlight_update(int obj)
     }
 }
 
-void cf_doorlight_init(GameObject* obj, CfDoorLightMapData* mapData)
+void CF_DoorLight_init(GameObject* obj, CfDoorLightMapData* mapData)
 {
     register CfDoorLightState* state = obj->extra;
     state->textureId = 0;
@@ -123,7 +123,7 @@ void cf_doorlight_init(GameObject* obj, CfDoorLightMapData* mapData)
     state->maxFrame = mapData->maxFrame << 8;
     state->frameStep = mapData->frameStep;
     state->resetFrame = mapData->resetFrame << 8;
-    if (state->flags.done = GameBit_Get(mapData->doneEvent))
+    if (state->flags.done = mainGetBit(mapData->doneEvent))
     {
         state->currentFrame = state->maxFrame;
         state->flags.active = 1;
@@ -132,10 +132,10 @@ void cf_doorlight_init(GameObject* obj, CfDoorLightMapData* mapData)
     obj->objectFlags |= CFDOORLIGHT_OBJFLAG_HIDDEN;
 }
 
-void cf_doorlight_release(void)
+void CF_DoorLight_release(void)
 {
 }
 
-void cf_doorlight_initialise(void)
+void CF_DoorLight_initialise(void)
 {
 }

@@ -14,7 +14,7 @@ typedef struct CfPrisonUncleState
     s16 unk70;
     u8 pad72;
     s8 released; /* GameBit 0x4D latch: his cage has been opened */
-    s8 magicGranted; /* one-shot thank-you magic in fn_8019FC84 */
+    s8 magicGranted; /* one-shot thank-you magic in CFPrisonUncle_SeqFn */
     u8 pad75[0x33];
 } CfPrisonUncleState;
 

@@ -23,14 +23,14 @@ extern f32 lbl_803E3208;
 extern f32 lbl_803E320C;
 extern f32 lbl_803E3210;
 
-int gcbaddieshield_getExtraSize(void) { return 0x8; }
-int gcbaddieshield_getObjectTypeId(void) { return 0x0; }
+int GCbaddieShield_getExtraSize(void) { return 0x8; }
+int GCbaddieShield_getObjectTypeId(void) { return 0x0; }
 
-void gcbaddieshield_free(void)
+void GCbaddieShield_free(void)
 {
 }
 
-void gcbaddieshield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void GCbaddieShield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
@@ -46,11 +46,11 @@ void gcbaddieshield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void gcbaddieshield_hitDetect(void)
+void GCbaddieShield_hitDetect(void)
 {
 }
 
-void gcbaddieshield_update(int* obj)
+void GCbaddieShield_update(int* obj)
 {
     extern void Obj_FreeObject(int* obj); /* #57 */
     f32* state = ((GameObject*)obj)->extra;
@@ -72,31 +72,31 @@ void gcbaddieshield_update(int* obj)
     }
 }
 
-void gcbaddieshield_init(int* obj, void* initData)
+void GCbaddieShield_init(int* obj, void* initData)
 {
     int lifetime = *(s16*)((char*)initData + 0x1a);
     f32* state = ((GameObject*)obj)->extra;
     state[0] = lifetime;
 }
 
-void gcbaddieshield_release(void)
+void GCbaddieShield_release(void)
 {
 }
 
-void gcbaddieshield_initialise(void)
+void GCbaddieShield_initialise(void)
 {
 }
 
 ObjectDescriptor gGCbaddieShieldObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)gcbaddieshield_initialise,
-    (ObjectDescriptorCallback)gcbaddieshield_release,
+    (ObjectDescriptorCallback)GCbaddieShield_initialise,
+    (ObjectDescriptorCallback)GCbaddieShield_release,
     0,
-    (ObjectDescriptorCallback)gcbaddieshield_init,
-    (ObjectDescriptorCallback)gcbaddieshield_update,
-    (ObjectDescriptorCallback)gcbaddieshield_hitDetect,
-    (ObjectDescriptorCallback)gcbaddieshield_render,
-    (ObjectDescriptorCallback)gcbaddieshield_free,
-    (ObjectDescriptorCallback)gcbaddieshield_getObjectTypeId,
-    gcbaddieshield_getExtraSize,
+    (ObjectDescriptorCallback)GCbaddieShield_init,
+    (ObjectDescriptorCallback)GCbaddieShield_update,
+    (ObjectDescriptorCallback)GCbaddieShield_hitDetect,
+    (ObjectDescriptorCallback)GCbaddieShield_render,
+    (ObjectDescriptorCallback)GCbaddieShield_free,
+    (ObjectDescriptorCallback)GCbaddieShield_getObjectTypeId,
+    GCbaddieShield_getExtraSize,
 };

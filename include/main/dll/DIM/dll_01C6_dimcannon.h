@@ -13,6 +13,6 @@
 #include "main/resource.h"
 #include "main/pad.h"
 
-int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate);
+int DIMCannon_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate);
 
 #endif

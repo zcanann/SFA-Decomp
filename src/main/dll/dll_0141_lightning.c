@@ -115,7 +115,7 @@ void lightning_update(u8* obj)
     {
         if (state->flags.enabled)
         {
-            if (GameBit_Get(((LightningPlacement*)data)->enableGameBit) == 0)
+            if (mainGetBit(((LightningPlacement*)data)->enableGameBit) == 0)
             {
                 state->flags.enabled = 0;
                 if (state->handle != 0)
@@ -125,7 +125,7 @@ void lightning_update(u8* obj)
                 }
             }
         }
-        else if (GameBit_Get(((LightningPlacement*)data)->enableGameBit) != 0)
+        else if (mainGetBit(((LightningPlacement*)data)->enableGameBit) != 0)
         {
             state->flags.enabled = 1;
         }

@@ -49,7 +49,7 @@ void mmp_bridge_update(int* obj)
     ObjTextureRuntimeSlot* tex;
     int frame;
 
-    if (GameBit_Get(placement->enableBit) != 0)
+    if (mainGetBit(placement->enableBit) != 0)
     {
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
@@ -61,7 +61,7 @@ void mmp_bridge_update(int* obj)
             {
                 tex->offsetS = BRIDGE_TEX_OFFSET_MAX;
             }
-            fn_80137948(lbl_803DBD90, tex->offsetS);
+            logPrintf(lbl_803DBD90, tex->offsetS);
         }
         ObjHits_EnableObject((int)obj);
     }
@@ -78,7 +78,7 @@ void mmp_bridge_init(int* obj)
     ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
     ((GameObject*)obj)->objectFlags |= (MMPBRIDGE_OBJFLAG_HIDDEN | MMPBRIDGE_OBJFLAG_HITDETECT_DISABLED);
     ObjHits_DisableObject((int)obj);
-    if (GameBit_Get(placement->enableBit) != 0)
+    if (mainGetBit(placement->enableBit) != 0)
     {
         ObjHits_EnableObject((int)obj);
     }

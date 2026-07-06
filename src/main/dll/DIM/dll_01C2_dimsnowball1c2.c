@@ -40,7 +40,7 @@ extern f32 lbl_803E4860;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
-extern u32 fn_802972A8(int player);
+extern u32 playerGetFocusObject(int player);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern f32 lbl_803E4864;
@@ -73,7 +73,7 @@ void dimsnowball1c2_update(int* obj)
         int* extra = ((GameObject*)obj)->extra;
         if ((*(s16*)extra -= framesThisStep) <= 0)
         {
-            if (fn_802972A8(Obj_GetPlayerObject()) == 0)
+            if (playerGetFocusObject(Obj_GetPlayerObject()) == 0)
             {
                 ObjPlacement* np;
                 Dimsnowball1c2Placement* def;

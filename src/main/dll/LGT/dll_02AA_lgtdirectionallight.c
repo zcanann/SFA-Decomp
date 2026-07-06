@@ -12,7 +12,7 @@
  * Z toggles edit mode, Up/Down cycle through DIRECTIONALLIGHT_DEBUG_FIELD_COUNT
  * editable fields (rotX, rotY, then the diffuse and target RGB channels) and
  * Left/Right nudge the selected field, echoing the value through the debug
- * text helper fn_80137948.
+ * text helper logPrintf.
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
@@ -153,8 +153,8 @@ void directionallight_debugEdit(int obj, int statePtr)
         {
             ((GameObject*)obj)->anim.rotX += 0x3e8;
         }
-        fn_80137948(desc + 0x38);
-        fn_80137948(desc + 0x44, ((GameObject*)obj)->anim.rotX);
+        logPrintf(desc + 0x38);
+        logPrintf(desc + 0x44, ((GameObject*)obj)->anim.rotX);
         break;
     case 1:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -165,8 +165,8 @@ void directionallight_debugEdit(int obj, int statePtr)
         {
             ((GameObject*)obj)->anim.rotY += 0x3e8;
         }
-        fn_80137948(desc + 0x50);
-        fn_80137948(desc + 0x44, ((GameObject*)obj)->anim.rotY);
+        logPrintf(desc + 0x50);
+        logPrintf(desc + 0x44, ((GameObject*)obj)->anim.rotY);
         break;
     case 2:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -177,8 +177,8 @@ void directionallight_debugEdit(int obj, int statePtr)
         {
             state->diffuseR += 5;
         }
-        fn_80137948(desc + 0x60);
-        fn_80137948(desc + 0x7c, state->diffuseR);
+        logPrintf(desc + 0x60);
+        logPrintf(desc + 0x7c, state->diffuseR);
         break;
     case 3:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -189,8 +189,8 @@ void directionallight_debugEdit(int obj, int statePtr)
         {
             state->diffuseG += 5;
         }
-        fn_80137948(desc + 0x88);
-        fn_80137948(desc + 0x7c, state->diffuseG);
+        logPrintf(desc + 0x88);
+        logPrintf(desc + 0x7c, state->diffuseG);
         break;
     case 4:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -201,8 +201,8 @@ void directionallight_debugEdit(int obj, int statePtr)
         {
             state->diffuseB += 5;
         }
-        fn_80137948(desc + 0xa4);
-        fn_80137948(desc + 0x7c, state->diffuseB);
+        logPrintf(desc + 0xa4);
+        logPrintf(desc + 0x7c, state->diffuseB);
         break;
     case 5:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -213,8 +213,8 @@ void directionallight_debugEdit(int obj, int statePtr)
         {
             state->targetR += 5;
         }
-        fn_80137948(desc + 0xc0);
-        fn_80137948(desc + 0x7c, state->targetR);
+        logPrintf(desc + 0xc0);
+        logPrintf(desc + 0x7c, state->targetR);
         break;
     case 6:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -225,8 +225,8 @@ void directionallight_debugEdit(int obj, int statePtr)
         {
             state->targetG += 5;
         }
-        fn_80137948(desc + 0xdc);
-        fn_80137948(desc + 0x7c, state->targetG);
+        logPrintf(desc + 0xdc);
+        logPrintf(desc + 0x7c, state->targetG);
         break;
     case 7:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -237,8 +237,8 @@ void directionallight_debugEdit(int obj, int statePtr)
         {
             state->targetB += 5;
         }
-        fn_80137948(desc + 0xfc);
-        fn_80137948(desc + 0x7c, state->targetB);
+        logPrintf(desc + 0xfc);
+        logPrintf(desc + 0x7c, state->targetB);
         break;
     }
 }
@@ -283,7 +283,7 @@ void directionallight_update(int obj)
 
     if (state->enabled != 0)
     {
-        if ((u32)GameBit_Get(setup->enableBit) == 0)
+        if ((u32)mainGetBit(setup->enableBit) == 0)
         {
             state->enabled = 0;
             modelLightStruct_setEnabled(state->light, 0, lbl_803E7254);
@@ -296,7 +296,7 @@ void directionallight_update(int obj)
     }
     else
     {
-        if ((u32)GameBit_Get(setup->enableBit) != 0)
+        if ((u32)mainGetBit(setup->enableBit) != 0)
         {
             state->enabled = 1;
             modelLightStruct_setEnabled(state->light, 1, lbl_803E7254);

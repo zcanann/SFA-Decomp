@@ -168,14 +168,14 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
         runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion1ImpactSfxTable;
         break;
     case SHTHORNTAIL_LOCOMOTION_2:
-        gameBitValue = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION2_GAMEBIT);
+        gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION2_GAMEBIT);
         if (gameBitValue != 6)
         {
             runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion2ImpactSfxTable;
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_3:
-        gameBitValue = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION3_GAMEBIT);
+        gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION3_GAMEBIT);
         if (gameBitValue == 0)
         {
             runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion3ImpactSfxTable;
@@ -185,10 +185,10 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
         runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion4ImpactSfxTable;
         break;
     case SHTHORNTAIL_LOCOMOTION_5:
-        gameBitValue = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_GATE_GAMEBIT);
+        gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_GATE_GAMEBIT);
         if (gameBitValue == 0)
         {
-            gameBitValue = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_EVENT_GAMEBIT);
+            gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_EVENT_GAMEBIT);
             if (gameBitValue != 0)
             {
                 (*gMapEventInterface)->triggerEvent(SHTHORNTAIL_ROOT_MODE3_TRIGGER_EVENT,
@@ -197,7 +197,7 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
             }
             else
             {
-                gameBitValue = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_PLAYER_GAMEBIT);
+                gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_PLAYER_GAMEBIT);
                 if (gameBitValue != 0)
                 {
                     if (runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE3_WAIT)
@@ -218,14 +218,14 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_6:
-        gameBitValue = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION6_GAMEBIT);
+        gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION6_GAMEBIT);
         if (gameBitValue == 0)
         {
             runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion6ImpactSfxTable;
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_7:
-        gameBitValue = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION7_GAMEBIT);
+        gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION7_GAMEBIT);
         if (gameBitValue == 0)
         {
             runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion7ImpactSfxTable;
@@ -282,8 +282,8 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
     case SHTHORNTAIL_LOCOMOTION_7:
         if (runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE2_EVENT)
         {
-            triggerEventId = GameBit_Get(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);
-            triggerIsSet = GameBit_Get(triggerEventId);
+            triggerEventId = mainGetBit(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);
+            triggerIsSet = mainGetBit(triggerEventId);
             if (triggerIsSet != 0)
             {
                 (*gMapEventInterface)->setAnimEvent((int)obj->animObjId, SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT, 0);
@@ -298,14 +298,14 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
         }
         else
         {
-            triggerIsSet = GameBit_Get(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);
+            triggerIsSet = mainGetBit(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);
             if ((triggerIsSet == 0) &&
                 (objectTriggerIsSet = ObjTrigger_IsSet((int)obj), objectTriggerIsSet != 0))
             {
                 runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
                 runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;
                 (*gMapEventInterface)->setAnimEvent((int)obj->animObjId, SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT, 1);
-                GameBit_Set(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION7_GAMEBIT, 1);
+                mainSetBits(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION7_GAMEBIT, 1);
                 return;
             }
         }

@@ -6,7 +6,7 @@
  * dll_3F_release frees it. dll_3F_frameStart_ret_0 / dll_3F_frameEnd_nop
  * are the per-frame hook leaves.
  *
- * fn_80133F70 formats a countdown into a stack buffer: it runs the game
+ * dll_3F_updateTimerReadout formats a countdown into a stack buffer: it runs the game
  * timer (if active), finds the nearest object of group 9 within
  * lbl_803E22A0, queries it through vtable slot 21 for three counters,
  * derives a clamped remaining value, and sprintf's it via the
@@ -34,7 +34,7 @@ __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80133F70(void* obj)
+void dll_3F_updateTimerReadout(void* obj)
 {
     char buf[12];
     f32 maxDist;

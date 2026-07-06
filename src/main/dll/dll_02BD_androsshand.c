@@ -39,7 +39,7 @@ enum AndrossHandStateId
 
 /*
  * Per-object extra state for an Andross hand
- * (androsshand_getExtraSize == 0x2C).
+ * (AndrossHand_getExtraSize == 0x2C).
  */
 typedef struct AndrossHandState
 {
@@ -77,21 +77,21 @@ STATIC_ASSERT(offsetof(AndrossHandState, handState) == 0x23);
 STATIC_ASSERT(offsetof(AndrossHandState, soundGate) == 0x29);
 STATIC_ASSERT(sizeof(AndrossHandState) == 0x2C);
 
-int androsshand_getExtraSize(void) { return sizeof(AndrossHandState); }
+int AndrossHand_getExtraSize(void) { return sizeof(AndrossHandState); }
 
-int androsshand_getObjectTypeId(void) { return 0; }
+int AndrossHand_getObjectTypeId(void) { return 0; }
 
-void androsshand_free(void)
+void AndrossHand_free(void)
 {
 }
 
-void androsshand_render(int obj, int p2, int p3, int p4, int p5)
+void AndrossHand_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E75B0);
 }
 
 #pragma opt_common_subs off
-void androsshand_update(int obj)
+void AndrossHand_update(int obj)
 {
     f32 fScale = lbl_803DC4F8;
     AndrossHandState* state = ((GameObject*)obj)->extra;
@@ -345,7 +345,7 @@ void androsshand_update(int obj)
 #pragma opt_common_subs reset
 
 
-void androsshand_hitDetect(void)
+void AndrossHand_hitDetect(void)
 {
 }
 
@@ -441,7 +441,7 @@ void androsshand_handleDamage(int obj, int hand)
     }
 }
 
-void androsshand_init(int obj, u8* setup)
+void AndrossHand_init(int obj, u8* setup)
 {
     GameObject* gobj = (GameObject*)obj;
     AndrossHandState* state = gobj->extra;

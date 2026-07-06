@@ -107,7 +107,7 @@ STATIC_ASSERT(sizeof(NewCloud) == 0x1454);
 
 /*
  * CloudSpawnParams - the spawn-config blob passed to newClouds() /
- * newclouds_update() (the `params` argument). Only the offsets read in
+ * newclouds_updateEnvfxAct() (the `params` argument). Only the offsets read in
  * newclouds.c are named; the rest of the record is padded.
  */
 typedef struct CloudSpawnParams {

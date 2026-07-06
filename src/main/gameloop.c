@@ -28,7 +28,7 @@
 #include "main/rcp_dolphin.h"
 #include "main/lightmap.h"
 #include "main/audio/music_trigger_ids.h"
-extern u64 camcontrol_playTargetTypeSfx();
+extern u64 camcontrol_setAButtonIconForTarget();
 extern u64 runLoadingScreens();
 
 extern f32 timeDelta;
@@ -320,10 +320,10 @@ void cutsceneFadeInOut(int enter)
 
 int gameBitDecrement(int bit)
 {
-    int val = GameBit_Get(bit);
+    int val = mainGetBit(bit);
     if (val != 0)
     {
-        GameBit_Set(bit, val = val - 1);
+        mainSetBits(bit, val = val - 1);
         return val;
     }
     return 0;
@@ -406,7 +406,7 @@ extern u8* gGameBitSaveData;
 #define GAMEBIT_FLAG_BANK_SHIFT 6    /* top bits select one of four save-data banks */
 
 #pragma dont_inline off
-u32 GameBit_Get(int eventId)
+u32 mainGetBit(int eventId)
 {
     s16 id = (s16)eventId & 0xfff;
     u8 flags;
@@ -476,7 +476,7 @@ extern void gameBitFn_800ea2e0(u8 id);
 char sGameBitSetDuringSaveLoadWarning[204] = "WARNING in mainSetBits: Bit %d can't be set to %d while a savegame is loading\n\000\000GAME_STATE_RESETPRESSED\n\000\000\000\000GAME_STATE_RESETNOW\n\000\000\000\000audioQuit passed\n\000\000\000GX flush passed\n\000\000\000\000VIFlush passed\n\000reset default\n\000\000";
 #define GameBit_RequestSync gameBitFn_800ea2e0
 #pragma optimization_level 3
-void GameBit_Set(int eventId, int value)
+void mainSetBits(int eventId, int value)
 {
     s16 id;
     u8 flags;
@@ -566,11 +566,11 @@ void GameBit_Set(int eventId, int value)
 
 int gameBitIncrement(int bit)
 {
-    int val = GameBit_Get(bit) + 1;
+    int val = mainGetBit(bit) + 1;
     int max = 1 << ((gGameBitTable[bit * 4 + 2] & GAMEBIT_FLAG_WIDTH_MASK) + 1);
     if (val < max)
     {
-        GameBit_Set(bit, val);
+        mainSetBits(bit, val);
     }
     else
     {
@@ -651,7 +651,7 @@ extern void mapInitFn_8006fccc(void);
 extern void initGameTimer(void);
 
 extern void _initCardAndDsp(void);
-extern void fn_802B6F48(void);
+extern void playerInitFuncPtrsEntry(void);
 extern void loadTaskTexts(void);
 
 
@@ -787,7 +787,7 @@ void init(void)
     mmSetFreeDelay(delay);
     testAndSet_onlyUseHeap3(1);
     viFn_8004a56c(5);
-    fn_80137D28();
+    errDisplayInstallHandlers();
     loadTextureFiles();
     initMapBlocks();
     ObjModel_InitResourceCaches();
@@ -795,14 +795,14 @@ void init(void)
     gameTextInit();
     gameTextLoadDir(0x15);
     Obj_InitObjectSystem();
-    fn_80137998();
+    debugPrintInit();
     mapInitFn_80069990();
     initTextures();
     mapInitFn_8006fccc();
     initGameTimer();
     ObjModel_InitRenderBuffers();
     _initCardAndDsp();
-    fn_802B6F48();
+    playerInitFuncPtrsEntry();
     loadTaskTexts();
     gameTextInitFn_8001bd14();
     initMaps();
@@ -888,7 +888,7 @@ void gameUpdate(void)
         (*gCameraInterface)->updateTargetFeedback();
     }
     uiDll_runFrameStartAndLoadNext();
-    camcontrol_playTargetTypeSfx();
+    camcontrol_setAButtonIconForTarget();
     getButtonsJustPressed(0);
     Obj_UpdateAllObjects(timeStop);
     if (hudHiddenFrameCount == 0)
@@ -1089,7 +1089,7 @@ void doQueuedLoads(void)
         old = mmSetFreeDelay(0);
         gGameLoopReloadRequested = 0;
         Camera_InitState();
-        fn_801375A0();
+        debugPrintReset();
         if (gGameLoopPendingUiDllId > -1)
         {
             loadUiDll(gGameLoopPendingUiDllId);

@@ -16,7 +16,7 @@ extern f32 lbl_803E33F0;
 extern f32 lbl_803E33F4;
 extern f32 lbl_803E33F8;
 
-int curve_func11(void) { return 0x0; }
+int curve_func0B(void) { return 0x0; }
 
 void curve_setScale(void)
 {
@@ -71,5 +71,5 @@ ObjectDescriptor12 gCurveObjDescriptor = {
     (ObjectDescriptorCallback)curve_getObjectTypeId,
     curve_getExtraSize,
     (ObjectDescriptorCallback)curve_setScale,
-    (ObjectDescriptorCallback)curve_func11,
+    (ObjectDescriptorCallback)curve_func0B,
 };

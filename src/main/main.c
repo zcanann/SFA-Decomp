@@ -56,31 +56,31 @@ void VFP_lavapool_initialise_nop(void)
 {
 }
 
-void vfplavastar_render(void)
+void VFP_lavastar_render(void)
 {
 }
 
-void vfplavastar_hitDetect(void)
+void VFP_lavastar_hitDetect(void)
 {
 }
 
-void vfpspellplace_free(void)
+void VFP_SpellPlace_free(void)
 {
 }
 
-void vfpspellplace_render(void)
+void VFP_SpellPlace_render(void)
 {
 }
 
-void vfpspellplace_hitDetect(void)
+void VFP_SpellPlace_hitDetect(void)
 {
 }
 
-void vfpspellplace_release(void)
+void VFP_SpellPlace_release(void)
 {
 }
 
-void vfpspellplace_initialise(void)
+void VFP_SpellPlace_initialise(void)
 {
 }
 
@@ -145,19 +145,19 @@ STATIC_ASSERT(offsetof(VfpLavaPoolState, amplitude) == 0x08);
 STATIC_ASSERT(offsetof(VfpLavaPoolState, phase) == 0x0C);
 STATIC_ASSERT(offsetof(VfpLavaPoolState, speedFactor) == 0x10);
 
-int vfpflamepoint_getExtraSize(void) { return sizeof(VfpFlamePointData); }
+int VFP_flamepoint_getExtraSize(void) { return sizeof(VfpFlamePointData); }
 int return1_801FDA08(void) { return 0x1; }
 int VFP_lavapool_getExtraSize_ret_24(void) { return 0x18; }
 int VFP_lavapool_getObjectTypeId(void) { return 0x0; }
-int vfplavastar_getExtraSize(void) { return sizeof(VfpLavaStarState); }
-int vfplavastar_getObjectTypeId(void) { return 0x0; }
-int vfpspellplace_getExtraSize(void) { return sizeof(LaserState); }
-int vfpspellplace_getObjectTypeId(void) { return 0x0; }
+int VFP_lavastar_getExtraSize(void) { return sizeof(VfpLavaStarState); }
+int VFP_lavastar_getObjectTypeId(void) { return 0x0; }
+int VFP_SpellPlace_getExtraSize(void) { return sizeof(LaserState); }
+int VFP_SpellPlace_getObjectTypeId(void) { return 0x0; }
 
 void VFP_lavapool_update(int obj) { fn_801FD6B4(obj); }
 
 #pragma scheduling off
-void vfplavastar_release(void)
+void VFP_lavastar_release(void)
 {
     Resource_Release(gVfpLavaPoolEffectResource);
     gVfpLavaPoolEffectResource = NULL;
@@ -176,13 +176,13 @@ int fn_801FD4A8(void* obj, int x)
 }
 #pragma peephole on
 
-void vfplavastar_initialise(void)
+void VFP_lavastar_initialise(void)
 {
     gVfpLavaPoolEffectResource = NULL;
     gVfpLavaPoolEffectResource = Resource_Acquire(0xa6, 1);
 }
 
-void vfplavastar_free(int obj)
+void VFP_lavastar_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects((void*)obj);
@@ -198,7 +198,7 @@ void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-void vfpflamepoint_init(int* obj, s8* def)
+void VFP_flamepoint_init(int* obj, s8* def)
 {
     VfpFlamePointData* d = (VfpFlamePointData*)((GameObject*)obj)->extra;
     d->counter = (s8) * (s16*)(def + 0x1a);
@@ -208,20 +208,20 @@ void vfpflamepoint_init(int* obj, s8* def)
     ((GameObject*)obj)->objectFlags |= (MAIN_OBJFLAG_HIDDEN | MAIN_OBJFLAG_HITDETECT_DISABLED);
 }
 
-void vfpflamepoint_update(int obj)
+void VFP_flamepoint_update(int obj)
 {
     VfpFlamePointData* d;
     void* tricky;
 
     d = ((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    if (!d->done && (d->checkGameBit == -1 || GameBit_Get(d->checkGameBit) != 0))
+    if (!d->done && (d->checkGameBit == -1 || mainGetBit(d->checkGameBit) != 0))
     {
         if (d->counter <= 0 && !d->done)
         {
             if (d->showGameBit != -1)
             {
-                GameBit_Set(d->showGameBit, 1);
+                mainSetBits(d->showGameBit, 1);
                 d->done = 1;
             }
         }
@@ -246,7 +246,7 @@ void vfpflamepoint_update(int obj)
     }
     else
     {
-        u8 v = GameBit_Get(d->showGameBit);
+        u8 v = mainGetBit(d->showGameBit);
         if (!(d->done = v))
         {
             d->counter = (s8) * (s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a);
@@ -353,7 +353,7 @@ void VFP_lavapool_init(int obj, int def)
     randomGetRange(0x32, 100);
 }
 
-void vfplavastar_update(int obj)
+void VFP_lavastar_update(int obj)
 {
     VfpLavaStarMapData* mapData;
     VfpLavaStarState* state;
@@ -380,7 +380,7 @@ void vfplavastar_update(int obj)
     state->particleToggle ^= 1;
 }
 
-void vfplavastar_init(int obj, int def)
+void VFP_lavastar_init(int obj, int def)
 {
     VfpLavaStarState* state;
     VfpLavaStarMapData* mapData;
@@ -399,14 +399,14 @@ void vfplavastar_init(int obj, int def)
     randomGetRange(100, 200);
 }
 
-void vfpspellplace_update(int obj)
+void VFP_SpellPlace_update(int obj)
 {
     LaserObject* spellPlace;
     LaserState* state;
     u8 mode;
 
     spellPlace = (LaserObject*)obj;
-    if (spellPlace->state->completionLatched == 0 && GameBit_Get((int)spellPlace->state->activationGameBit) != 0)
+    if (spellPlace->state->completionLatched == 0 && mainGetBit((int)spellPlace->state->activationGameBit) != 0)
     {
         spellPlace->statusFlags &= ~LASER_OBJECT_STATUS_DISABLED;
     }
@@ -424,8 +424,8 @@ void vfpspellplace_update(int obj)
             state = spellPlace->state;
             if ((*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_A_EVENT) != 0)
             {
-                GameBit_Set(state->completionGameBit, 1);
-                GameBit_Set(state->activationGameBit, 0);
+                mainSetBits(state->completionGameBit, 1);
+                mainSetBits(state->activationGameBit, 0);
                 state->completionLatched = 1;
                 spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;
             }
@@ -434,8 +434,8 @@ void vfpspellplace_update(int obj)
             state = spellPlace->state;
             if ((*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_B_EVENT) != 0)
             {
-                GameBit_Set(state->completionGameBit, 1);
-                GameBit_Set(state->activationGameBit, 0);
+                mainSetBits(state->completionGameBit, 1);
+                mainSetBits(state->activationGameBit, 0);
                 state->completionLatched = 1;
                 spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;
             }
@@ -444,7 +444,7 @@ void vfpspellplace_update(int obj)
     }
 }
 
-void vfpspellplace_init(int obj, s8* def)
+void VFP_SpellPlace_init(int obj, s8* def)
 {
     LaserObject* spellPlace;
     LaserObjectMapData* mapData;
@@ -457,7 +457,7 @@ void vfpspellplace_init(int obj, s8* def)
     state->activationGameBit = mapData->activationGameBit;
     state->completionLatched = 0;
     spellPlace->modeWord = (s16)(mapData->mapEventSlot << LASEROBJ_MODE_WORD_SHIFT);
-    if (GameBit_Get(state->completionGameBit) != 0)
+    if (mainGetBit(state->completionGameBit) != 0)
     {
         state->completionLatched = 1;
         spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;

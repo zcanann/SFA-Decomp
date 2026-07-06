@@ -3,7 +3,7 @@
  * object. It loads a body of game text (gameTextGet) plus a shared font/
  * texture asset (asset 616) at init, parks the text + a scroll/fade timer
  * in its extra-state block, and renders the prompt billboard each frame
- * (infopoint_render). When the player triggers it (resetHitboxMode bit 0)
+ * (InfoPoint_render). When the player triggers it (resetHitboxMode bit 0)
  * it disables the A-button and runs trigger sequence 0.
  *
  * InfoPoint_SeqFn handles the trigger sequence: events 1/2 toggle a s16
@@ -62,16 +62,16 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #pragma peephole reset
 #pragma scheduling reset
 
-int infopoint_getExtraSize(void) { return 0x20; }
-int infopoint_getObjectTypeId(void) { return 0x0; }
+int InfoPoint_getExtraSize(void) { return 0x20; }
+int InfoPoint_getObjectTypeId(void) { return 0x0; }
 
-void infopoint_free(void)
+void InfoPoint_free(void)
 {
 }
 
 #pragma scheduling off
 #pragma peephole off
-void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void InfoPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3B70);
@@ -79,13 +79,13 @@ void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole reset
 #pragma scheduling reset
 
-void infopoint_hitDetect(void)
+void InfoPoint_hitDetect(void)
 {
 }
 
 #pragma scheduling off
 #pragma peephole off
-void infopoint_update(GameObject* obj)
+void InfoPoint_update(GameObject* obj)
 {
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
@@ -94,7 +94,7 @@ void infopoint_update(GameObject* obj)
     }
 }
 
-void infopoint_init(int* obj, u8* def)
+void InfoPoint_init(int* obj, u8* def)
 {
     InfopointState* state = ((GameObject*)obj)->extra;
     int* txt;
@@ -117,10 +117,10 @@ void infopoint_init(int* obj, u8* def)
 #pragma peephole reset
 #pragma scheduling reset
 
-void infopoint_release(void)
+void InfoPoint_release(void)
 {
 }
 
-void infopoint_initialise(void)
+void InfoPoint_initialise(void)
 {
 }

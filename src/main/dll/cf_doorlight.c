@@ -103,8 +103,8 @@ int kaldachom_stateHandlerB03(int obj, GroundBaddieState* state)
     {
         GroundBaddieState* extra = ((GameObject*)obj)->extra;
         extra->subMode = 0;
-        GameBit_Set(((CfDoorlightState*)extra)->gameBitB, 0);
-        GameBit_Set(((CfDoorlightState*)extra)->gameBitA, 1);
+        mainSetBits(((CfDoorlightState*)extra)->gameBitB, 0);
+        mainSetBits(((CfDoorlightState*)extra)->gameBitA, 1);
     }
     return 0;
 }

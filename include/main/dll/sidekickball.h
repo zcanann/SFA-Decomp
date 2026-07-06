@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void sidekickball_update(u8 *self);
+void SidekickBall_update(u8 *self);
 
 #endif /* MAIN_DLL_SIDEKICKBALL_H_ */

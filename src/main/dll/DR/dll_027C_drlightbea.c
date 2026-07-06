@@ -38,7 +38,7 @@ typedef struct LightningEffect
     u8 flags;      /* 0x27 */
 } LightningEffect;
 
-/* Per-object extra state block (drlightbea_getExtraSize == 0xc): holds the
+/* Per-object extra state block (DR_LightBea_getExtraSize == 0xc): holds the
  * lightningCreate buffer handle at 0 and the active/free bit flags at 4. */
 typedef struct DrLightBeaState
 {
@@ -46,11 +46,11 @@ typedef struct DrLightBeaState
     DrLightBeaFlags flags;   /* 0x04 */
 } DrLightBeaState;
 
-int drlightbea_getExtraSize(void) { return 0xc; }
+int DR_LightBea_getExtraSize(void) { return 0xc; }
 
-int drlightbea_getObjectTypeId(void) { return 0; }
+int DR_LightBea_getObjectTypeId(void) { return 0; }
 
-void drlightbea_free(int obj)
+void DR_LightBea_free(int obj)
 {
     DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
     LightningEffect* buffer = state->handle;
@@ -62,7 +62,7 @@ void drlightbea_free(int obj)
     }
 }
 
-void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
+void DR_LightBea_render(int obj, int p2, int p3, int p4, int p5)
 {
     DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
     int setup = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -103,7 +103,7 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
             mm_free(state->handle);
             state->handle = NULL;
         }
-        state->flags.bit80 = GameBit_Get(((DrlightbeaPlacement*)setup)->gameBit);
+        state->flags.bit80 = mainGetBit(((DrlightbeaPlacement*)setup)->gameBit);
         if (state->flags.bit80)
         {
             Sfx_PlayFromObject(obj, SFXfend_pep_snoreout);
@@ -130,11 +130,11 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
     }
 }
 
-void drlightbea_hitDetect(void)
+void DR_LightBea_hitDetect(void)
 {
 }
 
-void drlightbea_update(int obj)
+void DR_LightBea_update(int obj)
 {
     DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
     if (state->flags.bit40)
@@ -143,7 +143,7 @@ void drlightbea_update(int obj)
     }
 }
 
-void drlightbea_init(int obj)
+void DR_LightBea_init(int obj)
 {
     DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
     state->flags.bit80 = 0;
@@ -151,10 +151,10 @@ void drlightbea_init(int obj)
     state->flags.bit40 = 0;
 }
 
-void drlightbea_release(void)
+void DR_LightBea_release(void)
 {
 }
 
-void drlightbea_initialise(void)
+void DR_LightBea_initialise(void)
 {
 }

@@ -50,7 +50,7 @@ int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     animUpdate->sequenceEventActive = 0;
     if ((*(u8*)(param + 0x1d) & 0x2) != 0 && animUpdate->triggerCommand == 1)
     {
-        GameBit_Set(((DimbridgecogmaiPlacement*)param)->doneGameBit, 1);
+        mainSetBits(((DimbridgecogmaiPlacement*)param)->doneGameBit, 1);
         animUpdate->triggerCommand = 0;
     }
     return 0;
@@ -79,14 +79,14 @@ void dimbridgecogmai_update(int* obj)
     int callArg;
 
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((DimbridgecogmaiPlacement*)def)->watchGameBit) != 0)
+    if (mainGetBit(((DimbridgecogmaiPlacement*)def)->watchGameBit) != 0)
     {
         if ((s8)def[0x1e] != -1)
         {
             switch (((DimbridgecogmaiPlacement*)def)->watchGameBit)
             {
             case COGBIT_PANEL_A:
-                if (GameBit_Get(COGBIT_PANEL_B) != 0)
+                if (mainGetBit(COGBIT_PANEL_B) != 0)
                 {
                     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMBRIDGECOGMAI_OBJFLAG_UPDATE_DISABLED);
                     code = -1;
@@ -94,15 +94,15 @@ void dimbridgecogmai_update(int* obj)
                 }
                 else
                 {
-                    GameBit_Set(((DimbridgecogmaiPlacement*)def)->watchGameBit, 0);
+                    mainSetBits(((DimbridgecogmaiPlacement*)def)->watchGameBit, 0);
                     code = 0x1f;
                     callArg = 1;
                 }
                 break;
             case COGBIT_BRIDGE:
-                bits = GameBit_Get(COGBIT_SLOT_0);
-                bits |= GameBit_Get(COGBIT_SLOT_1) << 1;
-                bits |= GameBit_Get(COGBIT_SLOT_2) << 2;
+                bits = mainGetBit(COGBIT_SLOT_0);
+                bits |= mainGetBit(COGBIT_SLOT_1) << 1;
+                bits |= mainGetBit(COGBIT_SLOT_2) << 2;
                 if (bits == 7)
                 {
                     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMBRIDGECOGMAI_OBJFLAG_UPDATE_DISABLED);
@@ -111,7 +111,7 @@ void dimbridgecogmai_update(int* obj)
                 }
                 else
                 {
-                    GameBit_Set(((DimbridgecogmaiPlacement*)def)->watchGameBit, 0);
+                    mainSetBits(((DimbridgecogmaiPlacement*)def)->watchGameBit, 0);
                     code = 0x1d;
                     if ((bits & 4) != 0)
                     {
@@ -132,7 +132,7 @@ void dimbridgecogmai_update(int* obj)
         }
         if ((def[0x1d] & 2) == 0)
         {
-            GameBit_Set(((DimbridgecogmaiPlacement*)def)->doneGameBit, 1);
+            mainSetBits(((DimbridgecogmaiPlacement*)def)->doneGameBit, 1);
         }
     }
 }
@@ -143,7 +143,7 @@ void dimbridgecogmai_init(int* obj, int* def)
     ((GameObject*)obj)->anim.rotX = (s16)((u32)((DimbridgecogmaiObjectDef*)def)->rotationAngle << 8);
     ((GameObject*)obj)->animEventCallback = dimbridgecogmai_SeqFn;
     ObjGroup_AddObject((u32)obj, DIMBRIDGECOG_GROUP);
-    if ((u8)GameBit_Get(((DimbridgecogmaiObjectDef*)def)->watchGameBit) != 0)
+    if ((u8)mainGetBit(((DimbridgecogmaiObjectDef*)def)->watchGameBit) != 0)
     {
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMBRIDGECOGMAI_OBJFLAG_UPDATE_DISABLED);
     }

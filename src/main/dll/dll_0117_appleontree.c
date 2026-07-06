@@ -16,7 +16,7 @@
 #include "main/dll/dll_0117_appleontree.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-/* appleontree_update animState machine: an apple's lifecycle from hanging on
+/* AppleOnTree_update animState machine: an apple's lifecycle from hanging on
  * the tree through falling, resting, being knocked loose, and despawning. */
 #define APPLEONTREE_STATE_GROWING 0   /* unripe, hanging; scales up toward ripe */
 #define APPLEONTREE_STATE_RIPE 1      /* ripe, swaying; ready to drop */
@@ -35,20 +35,20 @@ extern f32 Vec_distance(f32* a, f32* b);
 
 ObjectDescriptor gWM_ColumnObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)wm_column_initialise,
-    (ObjectDescriptorCallback)wm_column_release,
+    (ObjectDescriptorCallback)WM_Column_initialise,
+    (ObjectDescriptorCallback)WM_Column_release,
     0,
-    (ObjectDescriptorCallback)wm_column_init,
-    (ObjectDescriptorCallback)wm_column_update,
-    (ObjectDescriptorCallback)wm_column_hitDetect,
-    (ObjectDescriptorCallback)wm_column_render,
-    (ObjectDescriptorCallback)wm_column_free,
-    (ObjectDescriptorCallback)wm_column_getObjectTypeId,
-    wm_column_getExtraSize,
+    (ObjectDescriptorCallback)WM_Column_init,
+    (ObjectDescriptorCallback)WM_Column_update,
+    (ObjectDescriptorCallback)WM_Column_hitDetect,
+    (ObjectDescriptorCallback)WM_Column_render,
+    (ObjectDescriptorCallback)WM_Column_free,
+    (ObjectDescriptorCallback)WM_Column_getObjectTypeId,
+    WM_Column_getExtraSize,
 };
 
-extern void appleontree_init();
-extern void appleontree_update();
+extern void AppleOnTree_init();
+extern void AppleOnTree_update();
 
 
 
@@ -60,26 +60,26 @@ ObjectDescriptor13 gAppleOnTreeObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)appleontree_init,
-    (ObjectDescriptorCallback)appleontree_update,
+    (ObjectDescriptorCallback)AppleOnTree_init,
+    (ObjectDescriptorCallback)AppleOnTree_update,
     0,
-    (ObjectDescriptorCallback)appleontree_render,
-    (ObjectDescriptorCallback)appleontree_free,
+    (ObjectDescriptorCallback)AppleOnTree_render,
+    (ObjectDescriptorCallback)AppleOnTree_free,
     0,
-    appleontree_getExtraSize,
-    (ObjectDescriptorCallback)appleontree_setScale,
-    (ObjectDescriptorCallback)appleontree_func0B,
-    (ObjectDescriptorCallback)appleontree_modelMtxFn,
+    AppleOnTree_getExtraSize,
+    (ObjectDescriptorCallback)AppleOnTree_setScale,
+    (ObjectDescriptorCallback)AppleOnTree_setPosition,
+    (ObjectDescriptorCallback)AppleOnTree_modelMtxFn,
 };
 
 u32 jumptable_803214DC[] = {
-    (u32)((u8*)appleontree_update + 0x170),
-    (u32)((u8*)appleontree_update + 0x274),
-    (u32)((u8*)appleontree_update + 0x3C4),
-    (u32)((u8*)appleontree_update + 0x4E8),
-    (u32)((u8*)appleontree_update + 0x554),
-    (u32)((u8*)appleontree_update + 0x6C8),
-    (u32)((u8*)appleontree_update + 0x71C),
+    (u32)((u8*)AppleOnTree_update + 0x170),
+    (u32)((u8*)AppleOnTree_update + 0x274),
+    (u32)((u8*)AppleOnTree_update + 0x3C4),
+    (u32)((u8*)AppleOnTree_update + 0x4E8),
+    (u32)((u8*)AppleOnTree_update + 0x554),
+    (u32)((u8*)AppleOnTree_update + 0x6C8),
+    (u32)((u8*)AppleOnTree_update + 0x71C),
 };
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
@@ -121,7 +121,7 @@ extern f32 lbl_803E3814;
 extern f32 lbl_803E3818;
 
 
-void appleontree_func0B(int obj, float* pos)
+void AppleOnTree_setPosition(int obj, float* pos)
 {
     AppleOnTreeState* state = ((GameObject*)obj)->extra;
 
@@ -155,14 +155,14 @@ void appleontree_handleCollectableHit(int obj)
     if (!(Vec_xzDistance((float*)(player + 0x18), (float*)(obj + 0x18)) < gAppleOnTreePickupXZRange)) return;
     if (!(Vec_distance((float*)(player + 0x18), (float*)(obj + 0x18)) < gAppleOnTreePickupRange)) return;
 
-    if (GameBit_Get(0x90f) == 0)
+    if (mainGetBit(0x90f) == 0)
     {
         (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
         ((AppleOnTreeState*)state)->unk5C = -1;
         ((AppleOnTreeState*)state)->unk5E = 0;
         ((AppleOnTreeState*)state)->unk60 = lbl_803E37C8;
         ObjMsg_SendToObject(player, APPLEONTREE_MSG_IN_RANGE, obj, (int*)(state + 0x5c));
-        GameBit_Set(0x90f, 1);
+        mainSetBits(0x90f, 1);
         ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 4);
     }
     else
@@ -186,20 +186,20 @@ void appleontree_handleCollectableHit(int obj)
     }
 }
 
-void appleontree_setScale(void)
+void AppleOnTree_setScale(void)
 {
 }
 
-int appleontree_getExtraSize(void) { return 0x64; }
+int AppleOnTree_getExtraSize(void) { return 0x64; }
 
-u8 appleontree_modelMtxFn(int* obj) { return ((AppleOnTreeState*)(int*)((GameObject*)obj)->extra)->animState; }
+u8 AppleOnTree_modelMtxFn(int* obj) { return ((AppleOnTreeState*)(int*)((GameObject*)obj)->extra)->animState; }
 
-void appleontree_free(int* obj)
+void AppleOnTree_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
-void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void AppleOnTree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4, f32 scale);
     AppleOnTreeState* inner = ((GameObject*)obj)->extra;
@@ -560,7 +560,7 @@ typedef struct AppleontreeObjectDef
 } AppleontreeObjectDef;
 
 #pragma inline_max_size(1)
-void appleontree_update(int objArg)
+void AppleOnTree_update(int objArg)
 {
     extern void playerAddHealth(u8* player, int v);
     extern u8* Obj_GetPlayerObject(void);
@@ -628,7 +628,7 @@ void appleontree_update(int objArg)
             val = ObjHits_GetPriorityHit(obj, 0x0, 0x0, 0x0);
             if ((val != 0) ||
                 ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
-                    (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
+                    (bitVal = mainGetBit((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
             {
                 state = *(int*)&((GameObject*)obj)->extra;
                 i = 0;
@@ -667,7 +667,7 @@ void appleontree_update(int objArg)
             val = ObjHits_GetPriorityHit(obj, 0x0, 0x0, 0x0);
             if ((val != 0) ||
                 ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
-                    (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
+                    (bitVal = mainGetBit((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
             {
                 state = *(int*)&((GameObject*)obj)->extra;
                 i = 0;
@@ -741,7 +741,7 @@ void appleontree_update(int objArg)
             state = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
             if ((state != 0) ||
                 ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
-                    (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
+                    (bitVal = mainGetBit((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
             {
                 fn_8017D854(obj, 1);
             }
@@ -757,7 +757,7 @@ void appleontree_update(int objArg)
                 state = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
                 if ((state != 0) ||
                     ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
-                        (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
+                        (bitVal = mainGetBit((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
                 {
                     fn_8017D854(obj, 2);
                 }
@@ -851,7 +851,7 @@ switchD_8017e864_caseD_7:
 }
 #pragma inline_max_size reset
 
-void appleontree_init(int obj, int def)
+void AppleOnTree_init(int obj, int def)
 {
     int state;
     f32 zeroScale;
@@ -894,7 +894,7 @@ void appleontree_init(int obj, int def)
         Obj_SetActiveModelIndex(obj, 0);
 
         eventBit = ((AppleontreeObjectDef*)def)->gameBit;
-        if ((eventBit != -1) && (GameBit_Get(eventBit) != 0))
+        if ((eventBit != -1) && (mainGetBit(eventBit) != 0))
         {
             ((CrackAnimState*)state)->elapsed = lbl_803E3838;
             ((CrackAnimState*)state)->stage = 6;

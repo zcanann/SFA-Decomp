@@ -25,7 +25,7 @@ extern int objCreateLight(int arg, int addToList);
 extern int Obj_GetPlayerObject(void);
 extern void fn_8011F6D4(u32 x);
 extern int fn_801C49B8(int obj);
-extern void fn_80296518(int obj, int flag, int set);
+extern void objSetAnimStateFlags(int obj, int flag, int set);
 extern void Music_Trigger(int id, int arg);
 extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
 
@@ -145,9 +145,9 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
             switch (command)
             {
             case 7:
-                fn_80296518(playerObj, 4, 1);
-                GameBit_Set(MMSH_SHRINE_SEQ_GB_KRYSTAL, 1);
-                GameBit_Set(MMSH_SHRINE_SEQ_GB_UNKNOWN_FF, 1);
+                objSetAnimStateFlags(playerObj, 4, 1);
+                mainSetBits(MMSH_SHRINE_SEQ_GB_KRYSTAL, 1);
+                mainSetBits(MMSH_SHRINE_SEQ_GB_UNKNOWN_FF, 1);
                 (*gMapEventInterface)->setMapAct(MMSH_SHRINE_SEQ_MAP_DIR,MMSH_SHRINE_SEQ_MAP_EVENT);
                 break;
             case 0xe:
@@ -203,31 +203,31 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
         runtime->latch.activeMask &= ~(MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE |
             MMSH_SHRINE_LATCH_FLAG_SWAY_RESET);
         runtime->phase = MMSH_SHRINE_PHASE_RESULT;
-        GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET0, 0);
-        GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET1, 0);
-        GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET2, 0);
-        GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET3, 0);
+        mainSetBits(MMSH_SHRINE_SEQ_GB_RESET0, 0);
+        mainSetBits(MMSH_SHRINE_SEQ_GB_RESET1, 0);
+        mainSetBits(MMSH_SHRINE_SEQ_GB_RESET2, 0);
+        mainSetBits(MMSH_SHRINE_SEQ_GB_RESET3, 0);
         return MMSH_SHRINE_SEQ_RESULT_COMPLETE;
     }
     runtime->latch.activeMask |= MMSH_SHRINE_LATCH_FLAG_OPEN_READY;
     return 0;
 }
 
-int mmsh_shrine_getExtraSize(void)
+int MMSH_Shrine_getExtraSize(void)
 {
     return 0x28;
 }
 
-int mmsh_shrine_getObjectTypeId(void)
+int MMSH_Shrine_getObjectTypeId(void)
 {
     return 0;
 }
 
-void mmsh_shrine_hitDetect(void)
+void MMSH_Shrine_hitDetect(void)
 {
 }
 
-void mmsh_shrine_free(int obj)
+void MMSH_Shrine_free(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     if ((((MMSHShrineRuntime*)state)->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_RESET) != 0)
@@ -244,15 +244,15 @@ void mmsh_shrine_free(int obj)
     Music_Trigger(MMSH_SHRINE_MUSIC_RUMBLE_STOP, 0);
     Music_Trigger(MMSH_SHRINE_MUSIC_STOP_8, 0);
     Music_Trigger(MMSH_SHRINE_MUSIC_STOP_A, 0);
-    GameBit_Set(MMSH_SHRINE_GB_EFA, 0);
-    GameBit_Set(MMSH_SHRINE_GB_MUSIC_LOCK, 1);
-    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET0, 0);
-    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET1, 0);
-    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET2, 0);
-    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET3, 0);
+    mainSetBits(MMSH_SHRINE_GB_EFA, 0);
+    mainSetBits(MMSH_SHRINE_GB_MUSIC_LOCK, 1);
+    mainSetBits(MMSH_SHRINE_SEQ_GB_RESET0, 0);
+    mainSetBits(MMSH_SHRINE_SEQ_GB_RESET1, 0);
+    mainSetBits(MMSH_SHRINE_SEQ_GB_RESET2, 0);
+    mainSetBits(MMSH_SHRINE_SEQ_GB_RESET3, 0);
 }
 
-void mmsh_shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5,
+void MMSH_Shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5,
                         char visible)
 {
     MMSHShrineObject* shrine = (MMSHShrineObject*)obj;
@@ -276,7 +276,7 @@ void mmsh_shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5,
     }
 }
 
-void mmsh_shrine_update(int objArg)
+void MMSH_Shrine_update(int objArg)
 {
     MMSHShrineRuntime* runtime;
     MMSHShrineObject* obj;
@@ -340,19 +340,19 @@ void mmsh_shrine_update(int objArg)
         obj->yaw = 0;
         runtime->phase = MMSH_SHRINE_PHASE_LIT;
         runtime->latch.activeMask &= ~MMSH_SHRINE_LATCH_FLAG_OPEN_READY;
-        GameBit_Set(MMSH_SHRINE_GB_OPEN, 1);
+        mainSetBits(MMSH_SHRINE_GB_OPEN, 1);
         (*gObjectTriggerInterface)->runSequence(2, obj, -1);
         break;
     case MMSH_SHRINE_PHASE_RESULT:
         (*gObjectTriggerInterface)->endSequence(obj->triggerHandle);
         (*gObjectTriggerInterface)->runSequence(3, obj, -1);
         runtime->phase = MMSH_SHRINE_PHASE_COMPLETE;
-        GameBit_Set(MMSH_SHRINE_GB_OPEN, 0);
+        mainSetBits(MMSH_SHRINE_GB_OPEN, 0);
         break;
     case MMSH_SHRINE_PHASE_COMPLETE:
         runtime->phase = MMSH_SHRINE_PHASE_RESET;
-        GameBit_Set(MMSH_SHRINE_GB_OPEN, 0);
-        GameBit_Set(MMSH_SHRINE_GB_COMPLETE, 1);
+        mainSetBits(MMSH_SHRINE_GB_OPEN, 0);
+        mainSetBits(MMSH_SHRINE_GB_COMPLETE, 1);
         break;
     case MMSH_SHRINE_PHASE_LIT:
         if (objGetAnimStateFlags(playerObj, 4) == 0)
@@ -361,21 +361,21 @@ void mmsh_shrine_update(int objArg)
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
         }
         runtime->phase = MMSH_SHRINE_PHASE_RESET;
-        GameBit_Set(MMSH_SHRINE_GB_OPEN, 0);
+        mainSetBits(MMSH_SHRINE_GB_OPEN, 0);
         break;
     case MMSH_SHRINE_PHASE_RESET:
         runtime->phase = MMSH_SHRINE_PHASE_IDLE;
         runtime->latch.activeMask &= ~MMSH_SHRINE_LATCH_FLAG_OPEN_READY;
         obj->flags06 &= ~MMSH_SHRINE_FLAG_LIT;
-        GameBit_Set(MMSH_SHRINE_GB_RESET_A, 0);
-        GameBit_Set(MMSH_SHRINE_GB_COMPLETE, 0);
-        GameBit_Set(MMSH_SHRINE_GB_RESET_B, 0);
-        GameBit_Set(MMSH_SHRINE_GB_OPEN, 0);
+        mainSetBits(MMSH_SHRINE_GB_RESET_A, 0);
+        mainSetBits(MMSH_SHRINE_GB_COMPLETE, 0);
+        mainSetBits(MMSH_SHRINE_GB_RESET_B, 0);
+        mainSetBits(MMSH_SHRINE_GB_OPEN, 0);
         break;
     }
 }
 
-void mmsh_shrine_init(int obj, int def)
+void MMSH_Shrine_init(int obj, int def)
 {
     int light;
     MMSHShrineRuntime* state;
@@ -389,23 +389,23 @@ void mmsh_shrine_init(int obj, int def)
     {
         state->initCount = *(short*)(def + 0x1a) >> 8;
     }
-    GameBit_Set(MMSH_SHRINE_GB_RESET_A, 0);
-    GameBit_Set(MMSH_SHRINE_GB_12D, 0);
+    mainSetBits(MMSH_SHRINE_GB_RESET_A, 0);
+    mainSetBits(MMSH_SHRINE_GB_12D, 0);
     ((MMSHShrineObject*)obj)->loadTriggerTimer = 1;
     if (state->light == NULL)
     {
         light = objCreateLight(0, 1);
         state->light = (void*)light;
     }
-    GameBit_Set(MMSH_SHRINE_GB_F07, 1);
-    GameBit_Set(MMSH_SHRINE_GB_EFA, 1);
+    mainSetBits(MMSH_SHRINE_GB_F07, 1);
+    mainSetBits(MMSH_SHRINE_GB_EFA, 1);
 }
 
-void mmsh_shrine_release(void)
+void MMSH_Shrine_release(void)
 {
 }
 
-void mmsh_shrine_initialise(void)
+void MMSH_Shrine_initialise(void)
 {
 }
 
@@ -419,15 +419,15 @@ extern void mmsh_waterspike_update();
 extern void mmsh_waterspike_init();
 extern void mmsh_waterspike_release();
 extern void mmsh_waterspike_initialise();
-extern void mmsh_scales_getExtraSize();
-extern void mmsh_scales_getObjectTypeId();
-extern void mmsh_scales_free();
-extern void mmsh_scales_render();
-extern void mmsh_scales_hitDetect();
-extern void mmsh_scales_update();
-extern void mmsh_scales_init();
-extern void mmsh_scales_release();
-extern void mmsh_scales_initialise();
+extern void MMSH_Scales_getExtraSize();
+extern void MMSH_Scales_getObjectTypeId();
+extern void MMSH_Scales_free();
+extern void MMSH_Scales_render();
+extern void MMSH_Scales_hitDetect();
+extern void MMSH_Scales_update();
+extern void MMSH_Scales_init();
+extern void MMSH_Scales_release();
+extern void MMSH_Scales_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gMMSH_ScalesObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, mmsh_scales_initialise, mmsh_scales_release, (void*)0x00000000, mmsh_scales_init, mmsh_scales_update, mmsh_scales_hitDetect, mmsh_scales_render, mmsh_scales_free, mmsh_scales_getObjectTypeId, mmsh_scales_getExtraSize };
+void* gMMSH_ScalesObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, MMSH_Scales_initialise, MMSH_Scales_release, (void*)0x00000000, MMSH_Scales_init, MMSH_Scales_update, MMSH_Scales_hitDetect, MMSH_Scales_render, MMSH_Scales_free, MMSH_Scales_getObjectTypeId, MMSH_Scales_getExtraSize };
 void* gMMSH_WaterSpikeObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, mmsh_waterspike_initialise, mmsh_waterspike_release, (void*)0x00000000, mmsh_waterspike_init, mmsh_waterspike_update, mmsh_waterspike_hitDetect, mmsh_waterspike_render, mmsh_waterspike_free, mmsh_waterspike_getObjectTypeId, mmsh_waterspike_getExtraSize };

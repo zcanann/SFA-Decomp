@@ -32,27 +32,27 @@ extern void dbsh_shrine_render(void);
 extern void gpsh_scene_hitDetect(void);
 extern void ecsh_cup_hitDetect(void);
 extern void dbsh_shrine_hitDetect(void);
-extern void dbsh_symbol_getExtraSize(void);
+extern void DBSH_Symbol_getExtraSize(void);
 
 extern void gpsh_scene_update(void);
 extern void ecsh_cup_update(void);
 extern void dbsh_shrine_update(void);
-extern void dbsh_symbol_free(void);
+extern void DBSH_Symbol_free(void);
 
 extern void gpsh_scene_init(void);
 extern void ecsh_cup_init(void);
 extern void dbsh_shrine_init(void);
-extern void dbsh_symbol_render(void);
+extern void DBSH_Symbol_render(void);
 
 extern void gpsh_scene_release(void);
 extern void ecsh_cup_release(void);
 extern void dbsh_shrine_release(void);
-extern void dbsh_symbol_update(void);
+extern void DBSH_Symbol_update(void);
 
 extern void gpsh_scene_initialise(void);
 extern void ecsh_cup_initialise(void);
 extern void dbsh_shrine_initialise(void);
-extern void dbsh_symbol_init(void);
+extern void DBSH_Symbol_init(void);
 
 #define GPSHSHRINE_OBJGROUP 0xb
 extern int randomGetRange(int lo, int hi);
@@ -66,7 +66,7 @@ extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light);
 extern f32 lbl_803E5038;
-extern void fn_80296518(int* player, int a, int b);
+extern void objSetAnimStateFlags(int* player, int a, int b);
 extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 lbl_803E5000;
@@ -115,8 +115,8 @@ void gpsh_shrine_free(int* obj)
     Music_Trigger(MUSICTRIG_CC_Visit1, 0);
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
     Music_Trigger(MUSICTRIG_krazoa_tunnel_2, 0);
-    GameBit_Set(0xefa, 0);
-    GameBit_Set(0xcbb, GameBit_Get(0xc91) == 0);
+    mainSetBits(0xefa, 0);
+    mainSetBits(0xcbb, mainGetBit(0xc91) == 0);
 }
 
 void gpsh_shrine_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -164,7 +164,7 @@ STATIC_ASSERT(offsetof(GpshShrineState, anglePhase) == 0x0C);
 STATIC_ASSERT(offsetof(GpshShrineState, solvedCount) == 0x12);
 STATIC_ASSERT(offsetof(GpshShrineState, puzzleState) == 0x14);
 
-int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void* Obj_GetPlayerObject(void); /* #57 */
     GpshShrineState* sub;
@@ -188,9 +188,9 @@ int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 sub->activatedFlag = 1;
                 break;
             case 7:
-                fn_80296518(player, 0x80, 1);
-                GameBit_Set(0x12b, 1);
-                GameBit_Set(0xc85, 1);
+                objSetAnimStateFlags(player, 0x80, 1);
+                mainSetBits(0x12b, 1);
+                mainSetBits(0xc85, 1);
                 (*gMapEventInterface)->setMapAct(0xb, 5);
                 break;
             case 14:
@@ -306,12 +306,12 @@ void gpsh_shrine_update(int obj)
     count = 0;
     if (player != NULL)
     {
-        b149 = GameBit_Get(0x149);
-        b14c = GameBit_Get(0x14c);
-        b14d = GameBit_Get(0x14d);
-        b14e = GameBit_Get(0x14e);
-        b14a = GameBit_Get(0x14a);
-        b14b = GameBit_Get(0x14b);
+        b149 = mainGetBit(0x149);
+        b14c = mainGetBit(0x14c);
+        b14d = mainGetBit(0x14d);
+        b14e = mainGetBit(0x14e);
+        b14a = mainGetBit(0x14a);
+        b14b = mainGetBit(0x14b);
         if (b149 == 0 || b14c == 0 || b14d == 0 || b14e == 0 || b14a == 0 || b14b == 0)
         {
             if (!((GpshShrineFlags*)((char*)data + 0x15))->b40 && b149 != 0)
@@ -386,9 +386,9 @@ void gpsh_shrine_update(int obj)
                 if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
                 {
                     ((GpshShrineState*)data)->puzzleState = 5;
-                    GameBit_Set(0x129, 0);
-                    GameBit_Set(0x5af, 0);
-                    GameBit_Set(0xdd2, 1);
+                    mainSetBits(0x129, 0);
+                    mainSetBits(0x5af, 0);
+                    mainSetBits(0xdd2, 1);
                     (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                     Music_Trigger(MUSICTRIG_DIM_Snow, 1);
                 }
@@ -402,7 +402,7 @@ void gpsh_shrine_update(int obj)
             case 1:
                 if (((GpshShrineFlags*)((char*)data + 0x15))->b80 == 1)
                 {
-                    GameBit_Set(0x148, 1);
+                    mainSetBits(0x148, 1);
                     ((GpshShrineState*)data)->puzzleState = 2;
                     gameTimerInit(0x1d, 0x4e);
                     timerSetToCountUp();
@@ -410,27 +410,27 @@ void gpsh_shrine_update(int obj)
                 break;
             case 2:
                 ((GpshShrineState*)data)->solvedCount = 0;
-                if (GameBit_Get(0x149))
+                if (mainGetBit(0x149))
                 {
                     ((GpshShrineState*)data)->solvedCount += 1;
                 }
-                if (GameBit_Get(0x14b))
+                if (mainGetBit(0x14b))
                 {
                     ((GpshShrineState*)data)->solvedCount += 1;
                 }
-                if (GameBit_Get(0x14e))
+                if (mainGetBit(0x14e))
                 {
                     ((GpshShrineState*)data)->solvedCount += 1;
                 }
-                if (GameBit_Get(0x14d))
+                if (mainGetBit(0x14d))
                 {
                     ((GpshShrineState*)data)->solvedCount += 1;
                 }
-                if (GameBit_Get(0x14c))
+                if (mainGetBit(0x14c))
                 {
                     ((GpshShrineState*)data)->solvedCount += 1;
                 }
-                if (GameBit_Get(0x14a))
+                if (mainGetBit(0x14a))
                 {
                     ((GpshShrineState*)data)->solvedCount += 1;
                 }
@@ -438,7 +438,7 @@ void gpsh_shrine_update(int obj)
                 {
                     ((GpshShrineState*)data)->puzzleState = 6;
                     gameTimerStop();
-                    GameBit_Set(0xdd2, 0);
+                    mainSetBits(0xdd2, 0);
                     ((GpshShrineState*)data)->timer = lbl_803E5040;
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                     Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
@@ -461,8 +461,8 @@ void gpsh_shrine_update(int obj)
                 break;
             case 7:
                 ((GpshShrineState*)data)->puzzleState = 4;
-                GameBit_Set(0xdd2, 0);
-                GameBit_Set(0xe37, 1);
+                mainSetBits(0xdd2, 0);
+                mainSetBits(0xe37, 1);
                 break;
             case 6:
                 ((GpshShrineState*)data)->puzzleState = 3;
@@ -470,7 +470,7 @@ void gpsh_shrine_update(int obj)
             case 3:
                 if (objGetAnimStateFlags((int)player, 0x80))
                 {
-                    GameBit_Set(0x129, 1);
+                    mainSetBits(0x129, 1);
                     ((GpshShrineState*)data)->puzzleState = 4;
                 }
                 else
@@ -478,32 +478,32 @@ void gpsh_shrine_update(int obj)
                     audioStopByMask(3);
                     (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                     ((GpshShrineState*)data)->puzzleState = 4;
-                    GameBit_Set(0x36a, 0);
+                    mainSetBits(0x36a, 0);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 0, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 1, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 5, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 10, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 1);
-                    GameBit_Set(0xc91, 1);
-                    GameBit_Set(0xe05, 0);
+                    mainSetBits(0xc91, 1);
+                    mainSetBits(0xe05, 0);
                 }
                 break;
             case 4:
                 ((GpshShrineState*)data)->puzzleState = 0;
                 ((GpshShrineFlags*)((char*)data + 0x15))->b80 = 0;
-                GameBit_Set(0xdd2, 0);
-                GameBit_Set(0x129, 1);
-                GameBit_Set(0x149, 0);
-                GameBit_Set(0x14c, 0);
-                GameBit_Set(0x14d, 0);
-                GameBit_Set(0x14e, 0);
-                GameBit_Set(0x14a, 0);
-                GameBit_Set(0x14b, 0);
-                GameBit_Set(0x14b, 0);
-                GameBit_Set(0x5af, 1);
-                GameBit_Set(0x148, 0);
-                GameBit_Set(0xe37, 0);
-                GameBit_Set(0xe3a, 0);
+                mainSetBits(0xdd2, 0);
+                mainSetBits(0x129, 1);
+                mainSetBits(0x149, 0);
+                mainSetBits(0x14c, 0);
+                mainSetBits(0x14d, 0);
+                mainSetBits(0x14e, 0);
+                mainSetBits(0x14a, 0);
+                mainSetBits(0x14b, 0);
+                mainSetBits(0x14b, 0);
+                mainSetBits(0x5af, 1);
+                mainSetBits(0x148, 0);
+                mainSetBits(0xe37, 0);
+                mainSetBits(0xe3a, 0);
                 ((GpshShrineFlags*)((char*)data + 0x15))->b40 = 0;
                 ((GpshShrineFlags*)((char*)data + 0x15))->b20 = 0;
                 ((GpshShrineFlags*)((char*)data + 0x15))->b10 = 0;
@@ -523,27 +523,27 @@ void gpsh_shrine_init(int* obj, int* def)
 
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = 0;
-    ((GameObject*)obj)->animEventCallback = gpsh_shrine_SeqFn;
+    ((GameObject*)obj)->animEventCallback = GPSH_Shrine_SeqFn;
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
     state[0x14] = 0;
     ((GpshShrineFlags*)(state + 0x15))->b80 = 0;
-    GameBit_Set(0x129, 1);
-    GameBit_Set(0x12b, 0);
-    GameBit_Set(0x149, 0);
-    GameBit_Set(0x14c, 0);
-    GameBit_Set(0x14d, 0);
-    GameBit_Set(0x14e, 0);
-    GameBit_Set(0x14a, 0);
-    GameBit_Set(0x14b, 0);
+    mainSetBits(0x129, 1);
+    mainSetBits(0x12b, 0);
+    mainSetBits(0x149, 0);
+    mainSetBits(0x14c, 0);
+    mainSetBits(0x14d, 0);
+    mainSetBits(0x14e, 0);
+    mainSetBits(0x14a, 0);
+    mainSetBits(0x14b, 0);
     ((GameObject*)obj)->unkF4 = 1;
     if (*(void**)state == NULL)
     {
         *(void**)state = objCreateLight(0, 1);
     }
-    GameBit_Set(0xea1, 1);
-    GameBit_Set(0xefa, 1);
+    mainSetBits(0xea1, 1);
+    mainSetBits(0xefa, 1);
 }
 
 void gpsh_shrine_release(void)
@@ -560,4 +560,4 @@ u32 gGPSH_ObjCreatorObjDescriptor[15] = { 0x00000000, 0x00000000, 0x00000000, 0x
 u32 gGPSH_SceneObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)gpsh_scene_initialise, (u32)gpsh_scene_release, 0x00000000, (u32)gpsh_scene_init, (u32)gpsh_scene_update, (u32)gpsh_scene_hitDetect, (u32)gpsh_scene_render, (u32)gpsh_scene_free, (u32)gpsh_scene_getObjectTypeId, (u32)gpsh_scene_getExtraSize };
 u32 gECSH_CupObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)ecsh_cup_initialise, (u32)ecsh_cup_release, 0x00000000, (u32)ecsh_cup_init, (u32)ecsh_cup_update, (u32)ecsh_cup_hitDetect, (u32)ecsh_cup_render, (u32)ecsh_cup_free, (u32)ecsh_cup_getObjectTypeId, (u32)ecsh_cup_getExtraSize };
 u32 gDBSH_ShrineObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dbsh_shrine_initialise, (u32)dbsh_shrine_release, 0x00000000, (u32)dbsh_shrine_init, (u32)dbsh_shrine_update, (u32)dbsh_shrine_hitDetect, (u32)dbsh_shrine_render, (u32)dbsh_shrine_free, (u32)dbsh_shrine_getObjectTypeId, (u32)dbsh_shrine_getExtraSize };
-u32 gDBSH_SymbolObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)dbsh_symbol_init, (u32)dbsh_symbol_update, 0x00000000, (u32)dbsh_symbol_render, (u32)dbsh_symbol_free, 0x00000000, (u32)dbsh_symbol_getExtraSize };
+u32 gDBSH_SymbolObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)DBSH_Symbol_init, (u32)DBSH_Symbol_update, 0x00000000, (u32)DBSH_Symbol_render, (u32)DBSH_Symbol_free, 0x00000000, (u32)DBSH_Symbol_getExtraSize };

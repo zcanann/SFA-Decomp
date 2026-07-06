@@ -86,7 +86,7 @@ STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 int LaserBeam_getExtraSize(void) { return 0x50; }
 int LaserBeam_getObjectTypeId(void) { return 0; }
 
-void LaserBeam_init(int* obj)
+void LaserBeam_free(int* obj)
 {
     void** state;
 
@@ -199,7 +199,7 @@ void LaserBeam_update(int obj2)
     t = *(char**)&((GameObject*)obj2)->anim.placementData;
     b = ((GameObject*)obj2)->extra;
     b->fireTimer -= framesThisStep;
-    if (GameBit_Get(((LaserBeamPlacement*)t)->disableGameBit) == 0)
+    if (mainGetBit(((LaserBeamPlacement*)t)->disableGameBit) == 0)
     {
         if (b->fireTimer < 0)
         {
@@ -356,7 +356,7 @@ void LaserBeam_update(int obj2)
     {
         b->beamState = 2;
     }
-    if (GameBit_Get(((LaserBeamPlacement*)t)->disableGameBit) != 0)
+    if (mainGetBit(((LaserBeamPlacement*)t)->disableGameBit) != 0)
     {
         b->beamState = 0;
     }
@@ -397,7 +397,7 @@ void LaserBeam_update(int obj2)
                 {
                     if (objGetAnimState80A(player) == 0x1d7 && b->beamKind != 1)
                     {
-                        GameBit_Set(0x468, 1);
+                        mainSetBits(0x468, 1);
                     }
                     else
                     {
@@ -477,7 +477,7 @@ void LaserBeam_update(int obj2)
 
 extern int textureLoadAsset(int id);
 
-void LaserBeam_free(s16* obj, char* arg)
+void LaserBeam_init(s16* obj, char* arg)
 {
     LaserBeamState* b;
 

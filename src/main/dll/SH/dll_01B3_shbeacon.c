@@ -108,7 +108,7 @@ void sh_beacon_update(int obj)
             ((*gGameUIInterface)->isEventReady(0x194) != 0))
         {
             gameBitDecrement(0x194);
-            GameBit_Set(((ShBeaconPlacement*)def)->igniteGameBit, 1);
+            mainSetBits(((ShBeaconPlacement*)def)->igniteGameBit, 1);
             if (Obj_IsLoadingLocked() != 0)
             {
                 setup = Obj_AllocObjectSetup(0x20, 0x55);
@@ -169,7 +169,7 @@ void sh_beacon_update(int obj)
         {
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 8);
         }
-        else if ((((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT) && (GameBit_Get(0x194) == 0))
+        else if ((((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT) && (mainGetBit(0x194) == 0))
         {
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
@@ -185,7 +185,7 @@ void sh_beacon_update(int obj)
     }
     else
     {
-        if ((GameBit_Get(0x193) != 0) || (((ShBeaconPlacement*)def)->litGameBit != 0x95))
+        if ((mainGetBit(0x193) != 0) || (((ShBeaconPlacement*)def)->litGameBit != 0x95))
         {
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         }
@@ -204,8 +204,8 @@ void sh_beacon_update(int obj)
         if ((((ShBeaconState*)state)->fadeTimer <= 0.0f) && (((ShBeaconState*)state)->mode == SH_BEACON_MODE_IGNITING))
         {
             ((ShBeaconState*)state)->mode = SH_BEACON_MODE_LIT;
-            GameBit_Set(((ShBeaconPlacement*)def)->litGameBit, 1);
-            if ((GameBit_Get(0x190) != 0) && (GameBit_Get(0x191) != 0) && (GameBit_Get(0x192) != 0))
+            mainSetBits(((ShBeaconPlacement*)def)->litGameBit, 1);
+            if ((mainGetBit(0x190) != 0) && (mainGetBit(0x191) != 0) && (mainGetBit(0x192) != 0))
             {
                 Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             }
@@ -227,10 +227,10 @@ void sh_beacon_init(int obj, int defData)
     ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(defData + 0x18) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SHBEACON_OBJFLAG_HIDDEN);
 
-    ((ShBeaconState*)state)->mode = GameBit_Get(((ShBeaconPlacement*)defData)->litGameBit);
+    ((ShBeaconState*)state)->mode = mainGetBit(((ShBeaconPlacement*)defData)->litGameBit);
     if (((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT)
     {
-        if (GameBit_Get(((ShBeaconPlacement*)defData)->igniteGameBit) != 0)
+        if (mainGetBit(((ShBeaconPlacement*)defData)->igniteGameBit) != 0)
         {
             ((ShBeaconState*)state)->mode = SH_BEACON_MODE_IGNITING;
         }

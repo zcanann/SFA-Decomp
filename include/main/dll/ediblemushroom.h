@@ -76,7 +76,7 @@ typedef struct EnemyMushroomObject {
   EnemyMushroomState *state;
 } EnemyMushroomObject;
 
-/* ediblemushroom extra block (size 0x144 = ediblemushroom_getExtraSize). */
+/* ediblemushroom extra block (size 0x144 = EdibleMushroom_getExtraSize). */
 typedef struct EdibleMushroomState {
   RomCurveWalker curve;
   f32 currentTargetDistance;
@@ -149,7 +149,7 @@ STATIC_ASSERT(offsetof(EdibleMushroomState, pickupMsgValue) == 0x13E);
 STATIC_ASSERT(offsetof(EdibleMushroomState, pickupMsgDelay) == 0x140);
 STATIC_ASSERT(sizeof(EdibleMushroomState) == 0x144);
 
-void ediblemushroom_init(int obj, int aux);
+void EdibleMushroom_init(int obj, int aux);
 int EdibleMushroom_SeqFn(int *obj);
 void enemymushroom_resetToSpawn(EnemyMushroomObject *obj,EnemyMushroomState *state,
                                 int enableTimer);

@@ -130,18 +130,18 @@ void lightsource_update(int obj)
         {
             if (b->lit != 0)
             {
-                if (b->gameBit != -1 && GameBit_Get(b->gameBit) == 0)
+                if (b->gameBit != -1 && mainGetBit(b->gameBit) == 0)
                 {
-                    GameBit_Set(b->gameBit, 1);
+                    mainSetBits(b->gameBit, 1);
                 }
                 Sfx_PlayFromObject(obj, SFXTRIG_cvdrip1c);
             }
             else
             {
                 (*gExpgfxInterface)->freeSource(obj);
-                if (b->gameBit != -1 && GameBit_Get(b->gameBit) != 0)
+                if (b->gameBit != -1 && mainGetBit(b->gameBit) != 0)
                 {
-                    GameBit_Set(b->gameBit, 0);
+                    mainSetBits(b->gameBit, 0);
                 }
             }
         }

@@ -73,7 +73,7 @@ typedef struct SnowClawBombSetup
 
 extern void Obj_FreeObject(int obj);
 extern int Obj_GetPlayerObject(void);
-extern int fn_802972A8(int obj);
+extern int playerGetFocusObject(int obj);
 extern int ObjGroup_FindNearestObject(int kind, int obj, f32* maxDistance);
 extern void s16toFloat(void* p, int duration);
 extern u8 gSnowClawMoveTable[];
@@ -512,7 +512,7 @@ void snowclaw_hitDetect(int obj)
                 randomGetRange(0x28, 0x64);
                 ((SnowclawState*)inner)->velZ = lbl_803E6728 * mathCosf(
                     gSnowClawPi * (f32)((GameObject*)obj)->anim.rotX / lbl_803E6730);
-                player = (int*)fn_802972A8(Obj_GetPlayerObject());
+                player = (int*)playerGetFocusObject(Obj_GetPlayerObject());
                 if (player != 0)
                 {
                     int* sub3 = ((GameObject*)player)->extra;
@@ -628,7 +628,7 @@ void snowclaw_update(int obj)
         }
     }
 
-    if (GameBit_Get(*(s16*)(((SnowclawState*)inner)->moveTablePtr)) == 0)
+    if (mainGetBit(*(s16*)(((SnowclawState*)inner)->moveTablePtr)) == 0)
     {
         return;
     }
@@ -705,7 +705,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
     }
     if (((GameObject*)obj)->seqIndex != -1 &&
         (((GameObject*)obj)->anim.seqId == 0x16d || ((GameObject*)obj)->anim.seqId == 0x170) &&
-        GameBit_Get(0x3a3) != 0)
+        mainGetBit(0x3a3) != 0)
     {
         (*gObjectTriggerInterface)->endSequence(((GameObject*)obj)->seqIndex);
         ((SnowclawState*)inner)->particleAlpha = lbl_803E66F0;
@@ -736,13 +736,13 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
             *(s8*)&((SnowclawState*)inner)->dropIndex = -1;
             break;
         case 4:
-            if (GameBit_Get(0xb7d) != 0)
+            if (mainGetBit(0xb7d) != 0)
             {
                 seq->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
             }
             break;
         case 5:
-            if (GameBit_Get(*(s16*)(((SnowclawState*)inner)->moveTablePtr)) != 0)
+            if (mainGetBit(*(s16*)(((SnowclawState*)inner)->moveTablePtr)) != 0)
             {
                 seq->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
             }

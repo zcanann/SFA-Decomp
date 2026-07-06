@@ -158,7 +158,7 @@ void wctempledia_update(int obj)
     for (i = 0; i < WCTEMPLE_DIA_STAGE_COUNT; i++)
     {
         if ((state->stageMask & (1 << i)) == 0 &&
-            GameBit_Get(state->gamebits[i]) != 0)
+            mainGetBit(state->gamebits[i]) != 0)
         {
             int found = 0;
             for (j = 0; j < i; j++)
@@ -173,7 +173,7 @@ void wctempledia_update(int obj)
             {
                 for (k = 0; k < WCTEMPLE_DIA_STAGE_COUNT; k++)
                 {
-                    GameBit_Set(state->gamebits[k], 0);
+                    mainSetBits(state->gamebits[k], 0);
                 }
                 Sfx_PlayFromObject(0, WCTEMPLE_DIA_RESET_SFX);
                 state->stageMask = 0;
@@ -196,7 +196,7 @@ void wctempledia_update(int obj)
     wctempledia_syncPartVisibility((int)go, state->stageMask);
     if (state->stageMask == WCTEMPLE_DIA_ALL_STAGES_MASK)
     {
-        GameBit_Set(setup->solvedBit, 1);
+        mainSetBits(setup->solvedBit, 1);
         Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
         state->flags |= WCTEMPLE_DIA_FLAG_SOLVED;
     }
@@ -227,12 +227,12 @@ void wctempledia_init(int obj, int setup)
     }
     for (i = 0; i < WCTEMPLE_DIA_STAGE_COUNT; i++)
     {
-        if ((u32)GameBit_Get(state->gamebits[i]) != 0)
+        if ((u32)mainGetBit(state->gamebits[i]) != 0)
         {
             state->stageMask |= (1 << i);
         }
     }
-    if ((u32)GameBit_Get(setupData->solvedBit) != 0)
+    if ((u32)mainGetBit(setupData->solvedBit) != 0)
     {
         state->stageMask = WCTEMPLE_DIA_ALL_STAGES_MASK;
         state->flags |= WCTEMPLE_DIA_FLAG_SOLVED;

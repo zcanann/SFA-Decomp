@@ -31,15 +31,15 @@
 #define WISPBADDIE_FLAG_CHASE_MASK 0x06
 extern int ObjHits_GetPriorityHitWithPosition();
 
-void hagabon_release(void);
+void Hagabon_release(void);
 
-void hagabon_initialise(void);
+void Hagabon_initialise(void);
 
-void swarmbaddie_hitDetect(void);
+void SwarmBaddie_hitDetect(void);
 
-void swarmbaddie_release(void);
+void SwarmBaddie_release(void);
 
-void swarmbaddie_initialise(void);
+void SwarmBaddie_initialise(void);
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E26D0;
@@ -120,9 +120,9 @@ void wispbaddie_hitDetect(void)
 {
 }
 
-void hagabon_hitDetect(int obj);
+void Hagabon_hitDetect(int obj);
 
-void swarmbaddie_free(int obj);
+void SwarmBaddie_free(int obj);
 
 void wispbaddie_free(int obj)
 {
@@ -135,22 +135,22 @@ void wispbaddie_free(int obj)
     }
 }
 
-void hagabon_free(int obj);
+void Hagabon_free(int obj);
 
-void swarmbaddie_init(int obj, int data, int skip_alloc);
+void SwarmBaddie_init(int obj, int data, int skip_alloc);
 
-void hagabon_init(int obj, int data, int skip_alloc);
+void Hagabon_init(int obj, int data, int skip_alloc);
 
-void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void Hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-int hagabon_getExtraSize(void);
-int hagabon_getObjectTypeId(void);
-int swarmbaddie_getExtraSize(void);
-int swarmbaddie_getObjectTypeId(void);
+int Hagabon_getExtraSize(void);
+int Hagabon_getObjectTypeId(void);
+int SwarmBaddie_getExtraSize(void);
+int SwarmBaddie_getObjectTypeId(void);
 int wispbaddie_getExtraSize(void) { return 0x2c; }
 int wispbaddie_getObjectTypeId(void) { return 0x9; }
 
-void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void SwarmBaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 
@@ -241,25 +241,25 @@ void fn_8014F620(int obj, WispBaddieState* state)
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
 }
 
-void swarmbaddie_update(int obj);
+void SwarmBaddie_update(int obj);
 
-void hagabon_update(int obj);
+void Hagabon_update(int obj);
 
 ObjectDescriptor gHagabonObjDescriptor = {
     0,
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)hagabon_initialise,
-    (ObjectDescriptorCallback)hagabon_release,
+    (ObjectDescriptorCallback)Hagabon_initialise,
+    (ObjectDescriptorCallback)Hagabon_release,
     0,
-    (ObjectDescriptorCallback)hagabon_init,
-    (ObjectDescriptorCallback)hagabon_update,
-    (ObjectDescriptorCallback)hagabon_hitDetect,
-    (ObjectDescriptorCallback)hagabon_render,
-    (ObjectDescriptorCallback)hagabon_free,
-    (ObjectDescriptorCallback)hagabon_getObjectTypeId,
-    hagabon_getExtraSize,
+    (ObjectDescriptorCallback)Hagabon_init,
+    (ObjectDescriptorCallback)Hagabon_update,
+    (ObjectDescriptorCallback)Hagabon_hitDetect,
+    (ObjectDescriptorCallback)Hagabon_render,
+    (ObjectDescriptorCallback)Hagabon_free,
+    (ObjectDescriptorCallback)Hagabon_getObjectTypeId,
+    Hagabon_getExtraSize,
 };
 
 ObjectDescriptor gSwarmBaddieObjDescriptor = {
@@ -267,16 +267,16 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)swarmbaddie_initialise,
-    (ObjectDescriptorCallback)swarmbaddie_release,
+    (ObjectDescriptorCallback)SwarmBaddie_initialise,
+    (ObjectDescriptorCallback)SwarmBaddie_release,
     0,
-    (ObjectDescriptorCallback)swarmbaddie_init,
-    (ObjectDescriptorCallback)swarmbaddie_update,
-    (ObjectDescriptorCallback)swarmbaddie_hitDetect,
-    (ObjectDescriptorCallback)swarmbaddie_render,
-    (ObjectDescriptorCallback)swarmbaddie_free,
-    (ObjectDescriptorCallback)swarmbaddie_getObjectTypeId,
-    swarmbaddie_getExtraSize,
+    (ObjectDescriptorCallback)SwarmBaddie_init,
+    (ObjectDescriptorCallback)SwarmBaddie_update,
+    (ObjectDescriptorCallback)SwarmBaddie_hitDetect,
+    (ObjectDescriptorCallback)SwarmBaddie_render,
+    (ObjectDescriptorCallback)SwarmBaddie_free,
+    (ObjectDescriptorCallback)SwarmBaddie_getObjectTypeId,
+    SwarmBaddie_getExtraSize,
 };
 
 void wispbaddie_update(int obj)
@@ -453,7 +453,7 @@ void fn_8014FF20(void)
 {
 }
 
-void fn_8014FEF8(int obj, int* state, int arg, int code)
+void battleDroidUpdateWhileFrozen(int obj, int* state, int arg, int code)
 {
     if (code == 0x10)
     {
@@ -471,7 +471,7 @@ void fn_8014FF24(int obj, int state)
     fn_8014CF7C(obj, state, pos[3], pos[5], 0xf, 0);
 }
 
-void fn_8014FF58(int unused, char* p)
+void battleDroidInit(int unused, char* p)
 {
     f32 v1c;
     ((BaddieState*)p)->speedScale = lbl_803E2728;

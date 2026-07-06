@@ -65,7 +65,7 @@ void fxemit_emitEffect(FxEmitObject* obj)
     spawnFlags = 0;
     if (state->effectId == 0x11)
     {
-        fn_80137948(sCFTreasSharpyDebugFormat, obj, obj->objAnim.localPosX, obj->objAnim.localPosZ);
+        logPrintf(sCFTreasSharpyDebugFormat, obj, obj->objAnim.localPosX, obj->objAnim.localPosZ);
     }
 
     switch (def->spawnMode)
@@ -212,7 +212,7 @@ void fxemit_emitEffect(FxEmitObject* obj)
 
 #undef CFTREAS_PARTFX_SPAWN
 
-int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int FxEmit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     FxEmitState* state;
     FxEmitPlacement* def;
@@ -273,29 +273,29 @@ int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int fxemit_getExtraSize(void)
+int FxEmit_getExtraSize(void)
 {
     return sizeof(FxEmitState);
 }
 
-int fxemit_getObjectTypeId(void)
+int FxEmit_getObjectTypeId(void)
 {
     return 0;
 }
 
-void fxemit_free(FxEmitObject* obj)
+void FxEmit_free(FxEmitObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects(obj);
 }
 
-void fxemit_hitDetect(void)
+void FxEmit_hitDetect(void)
 {
 }
 
-void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void FxEmit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-void fxemit_update(FxEmitObject* obj)
+void FxEmit_update(FxEmitObject* obj)
 {
     FxEmitState* state;
     FxEmitPlacement* def;
@@ -380,13 +380,13 @@ void fxemit_update(FxEmitObject* obj)
             obj->objAnim.rotZ = obj->objAnim.rotZ + rotStep * framesThisStep * 100;
         }
 
-        if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0)
+        if (state->enableBit == -1 || mainGetBit(state->enableBit) != 0)
         {
             switch (state->suppressed)
             {
             case 0:
                 {
-                    if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0)
+                    if (state->stopBit != -1 && mainGetBit(state->stopBit) != 0)
                     {
                         state->suppressed = 1;
                     }
@@ -422,12 +422,12 @@ void fxemit_update(FxEmitObject* obj)
     }
 }
 
-void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
+void FxEmit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 {
     FxEmitState* state;
 
     obj->objAnim.rotX = 0;
-    obj->seqCallback = fxemit_SeqFn;
+    obj->seqCallback = FxEmit_SeqFn;
     state = obj->state;
 
     state->triggerRadius = (f32)((s32)setup->triggerRadius << 2);
@@ -448,7 +448,7 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
         obj->emitCooldown = 0;
     }
 
-    if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0)
+    if (state->stopBit != -1 && mainGetBit(state->stopBit) != 0)
     {
         state->suppressed = 1;
     }
@@ -462,11 +462,11 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
     state->altEffectId = 0;
 }
 
-void fxemit_release(void)
+void FxEmit_release(void)
 {
 }
 
-void fxemit_initialise(void)
+void FxEmit_initialise(void)
 {
 }
 

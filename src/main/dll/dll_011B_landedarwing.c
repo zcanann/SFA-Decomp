@@ -92,7 +92,7 @@ extern void warpToMap(int idx, s8 transType);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void arwarwinggu_setTextureFrame(int obj, int arg);
 extern void arwarwinggu_applyTextureFrame(int obj);
-extern int fn_802972A8(int obj);
+extern int playerGetFocusObject(int obj);
 
 
 
@@ -471,7 +471,7 @@ void landed_arwing_update(int obj)
         arwarwinggu_applyTextureFrame(state->childObject);
     }
 
-    if ((u32)player != 0 && (u32)fn_802972A8(player) != 0)
+    if ((u32)player != 0 && (u32)playerGetFocusObject(player) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
@@ -489,7 +489,7 @@ void landed_arwing_update(int obj)
             int def;
             def = *(int*)&((GameObject*)obj)->anim.placementData;
             nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, obj, NULL);
-            if (((GameObject*)obj)->anim.mapEventSlot == 0xd && GameBit_Get(0xc92) != 0)
+            if (((GameObject*)obj)->anim.mapEventSlot == 0xd && mainGetBit(0xc92) != 0)
             {
                 ((GameObject*)nearest)->anim.localPosY += lbl_803E3BA0;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)nearest, -1);
@@ -498,7 +498,7 @@ void landed_arwing_update(int obj)
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)nearest, -1);
             }
-            GameBit_Set(((LandedArwingUpdateDamageTexturePlacement*)def)->triggerGameBit, 0);
+            mainSetBits(((LandedArwingUpdateDamageTexturePlacement*)def)->triggerGameBit, 0);
         }
         break;
     case 1:
@@ -517,7 +517,7 @@ void landed_arwing_update(int obj)
             int nearest;
             def = *(int*)&((GameObject*)obj)->anim.placementData;
             nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, obj, NULL);
-            if (((GameObject*)obj)->anim.mapEventSlot == 0xd && GameBit_Get(0xc92) != 0)
+            if (((GameObject*)obj)->anim.mapEventSlot == 0xd && mainGetBit(0xc92) != 0)
             {
                 ((GameObject*)nearest)->anim.localPosY += lbl_803E3BA0;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)nearest, -1);
@@ -526,7 +526,7 @@ void landed_arwing_update(int obj)
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)nearest, -1);
             }
-            GameBit_Set(((LandedArwingUpdateDamageTexturePlacement*)def)->triggerGameBit, 0);
+            mainSetBits(((LandedArwingUpdateDamageTexturePlacement*)def)->triggerGameBit, 0);
         }
         else
         {
@@ -541,7 +541,7 @@ void landed_arwing_init(int obj, int param)
     LandedArwingState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | LANDEDARWING_OBJFLAG_HITDETECT_DISABLED;
     state->sequenceState = 1;
-    if (GameBit_Get(((LandedArwingPlacement*)param)->triggerGameBit) == 0)
+    if (mainGetBit(((LandedArwingPlacement*)param)->triggerGameBit) == 0)
     {
         unlockLevel(0, 0, 1);
     }
@@ -573,7 +573,7 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
         {
             if (((LandedArwingUpdateHitReactionPlacement*)def)->reactionGameBit > 0)
             {
-                GameBit_Set(((LandedArwingUpdateHitReactionPlacement*)def)->reactionGameBit, 1);
+                mainSetBits(((LandedArwingUpdateHitReactionPlacement*)def)->reactionGameBit, 1);
             }
 
             switch (((LandedArwingUpdateHitReactionPlacement*)def)->reactionType)
@@ -604,7 +604,7 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
                     otherState = ((GameObject*)other)->extra;
                     if (((LandedArwingUpdateHitReactionPlacement*)*(int*)&((GameObject*)other)->anim.placementData)->siblingGameBit > 0)
                     {
-                        GameBit_Set(((LandedArwingUpdateHitReactionPlacement*)*(int*)&((GameObject*)other)->anim.placementData)->siblingGameBit, 1);
+                        mainSetBits(((LandedArwingUpdateHitReactionPlacement*)*(int*)&((GameObject*)other)->anim.placementData)->siblingGameBit, 1);
                     }
                     ((LandedArwingHitFlagBits*)&otherState->hitFlags)->damaged = 1;
                 }
@@ -643,7 +643,7 @@ void landed_arwing_updateDamageTexture(int obj, LandedArwingState* state)
     flags = (LandedArwingHitFlagBits*)&state->hitFlags;
     if (((LandedArwingUpdateDamageTexturePlacement*)def)->damageStateGameBit != -1)
     {
-        bit = GameBit_Get(((LandedArwingUpdateDamageTexturePlacement*)def)->damageStateGameBit);
+        bit = mainGetBit(((LandedArwingUpdateDamageTexturePlacement*)def)->damageStateGameBit);
         flags->gameBit24Set = bit;
         bit = flags->gameBit24Set;
         if (bit != 0 && *(u8*)(def + 0x1c) == 5)
@@ -658,7 +658,7 @@ void landed_arwing_updateDamageTexture(int obj, LandedArwingState* state)
 
     if (flags->damaged == 0)
     {
-        if (((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit != -1 && GameBit_Get(
+        if (((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit != -1 && mainGetBit(
             ((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit) != 0)
         {
             flags->damaged = 1;
@@ -666,7 +666,7 @@ void landed_arwing_updateDamageTexture(int obj, LandedArwingState* state)
     }
     else
     {
-        if (((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit != -1 && GameBit_Get(
+        if (((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit != -1 && mainGetBit(
             ((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit) == 0)
         {
             flags->damaged = 0;

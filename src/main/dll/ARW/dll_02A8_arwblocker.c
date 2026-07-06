@@ -4,7 +4,7 @@
  * once the Arwing (or, as a fallback, the player object) closes to within
  * a fixed distance it fades in, enables its hitbox and fires one of two
  * object sequences (selected by the placement's sequenceMode). The
- * animEventCallback (arwblocker_getBlockState) reports whether the blocker
+ * animEventCallback (ARWBlocker_SeqFn) reports whether the blocker
  * is currently "armed" (mode 1 and not yet locked) to the sequence system.
  */
 #include "main/dll/dll_80220608_shared.h"
@@ -36,7 +36,7 @@ STATIC_ASSERT(offsetof(ARWBlockerSetup, rotZ) == 0x18);
 STATIC_ASSERT(offsetof(ARWBlockerSetup, sequenceMode) == 0x19);
 
 #pragma peephole off
-int arwblocker_getBlockState(int obj)
+int ARWBlocker_SeqFn(int obj)
 {
     ARWBlockerState* state = ((GameObject*)obj)->extra;
     switch (state->sequenceMode)
@@ -53,27 +53,27 @@ int arwblocker_getBlockState(int obj)
     return 0;
 }
 
-int arwblocker_getExtraSize(void) { return 2; }
+int ARWBlocker_getExtraSize(void) { return 2; }
 
-int arwblocker_getObjectTypeId(void) { return 0; }
+int ARWBlocker_getObjectTypeId(void) { return 0; }
 
 #pragma peephole on
-void arwblocker_free(void)
+void ARWBlocker_free(void)
 {
 }
 
-void arwblocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+void ARWBlocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7218);
 }
 
-void arwblocker_hitDetect(void)
+void ARWBlocker_hitDetect(void)
 {
 }
 
 #pragma scheduling off
 #pragma peephole off
-void arwblocker_update(int obj)
+void ARWBlocker_update(int obj)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     ARWBlockerState* state = ((GameObject*)obj)->extra;
@@ -110,7 +110,7 @@ void arwblocker_update(int obj)
     }
 }
 
-void arwblocker_init(int obj, int setup)
+void ARWBlocker_init(int obj, int setup)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     ARWBlockerState* state = ((GameObject*)obj)->extra;
@@ -118,7 +118,7 @@ void arwblocker_init(int obj, int setup)
 
     ((GameObject*)obj)->anim.rotX = -0x8000;
     ((GameObject*)obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
-    ((GameObject*)obj)->animEventCallback = arwblocker_getBlockState;
+    ((GameObject*)obj)->animEventCallback = ARWBlocker_SeqFn;
     state->sequenceMode = mapData->sequenceMode;
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;
@@ -127,10 +127,10 @@ void arwblocker_init(int obj, int setup)
 
 #pragma scheduling on
 #pragma peephole on
-void arwblocker_release(void)
+void ARWBlocker_release(void)
 {
 }
 
-void arwblocker_initialise(void)
+void ARWBlocker_initialise(void)
 {
 }

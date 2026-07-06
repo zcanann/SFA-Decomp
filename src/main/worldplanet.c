@@ -128,10 +128,10 @@ void worldplanet_init(int obj)
 
     state = ((GameObject*)obj)->extra;
     gWorldPlanetSelectConfirmTimer = 0;
-    GameBit_Set(WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, 1);
+    mainSetBits(WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, 1);
     mask = 0;
     for (i = 0; i < WORLDPLANET_PLANET_COUNT; i++) {
-        if (GameBit_Get(gWorldPlanetGameBitTable[i]) != 0) {
+        if (mainGetBit(gWorldPlanetGameBitTable[i]) != 0) {
             flag = 1;
             if (gWorldPlanetHintFlagTable[i] != 0) {
                 if ((s32)getNextTaskHintText() > WORLDPLANET_HINT_UNLOCK_THRESHOLD) {
@@ -150,7 +150,7 @@ void worldplanet_init(int obj)
         state->selectedPlanet = gWorldPlanetSavedSelection;
     } else {
         for (j = 0; j < WORLDPLANET_PLANET_COUNT; j++) {
-            if (GameBit_Get(gWorldPlanetGameBitTable[gWorldPlanetDefaultSelectOrder[j]]) != 0) {
+            if (mainGetBit(gWorldPlanetGameBitTable[gWorldPlanetDefaultSelectOrder[j]]) != 0) {
                 state->selectedPlanet = gWorldPlanetDefaultSelectOrder[j];
                 break;
             }
@@ -169,7 +169,7 @@ void worldplanet_init(int obj)
     (*gMapEventInterface)->savePoint((int)&((GameObject*)obj)->anim.localPosX, 0, 0, layer);
     (*gScreenTransitionInterface)->step(0x1e, 1);
     gWorldPlanetInputLockTimer = WORLDPLANET_COUNTDOWN_FRAMES;
-    GameBit_Set(gWorldPlanetGameBitTable[WORLDPLANET_SLOT_DINOSAUR_PLANET], 1);
+    mainSetBits(gWorldPlanetGameBitTable[WORLDPLANET_SLOT_DINOSAUR_PLANET], 1);
     state->foxSpawnTimer = WORLDPLANET_FOX_SPAWN_INITIAL_FRAMES;
     envFxActFn_800887f8(0);
 }
@@ -361,7 +361,7 @@ void worldplanet_update(int obj)
             u8* hints = gWorldPlanetHintFlagTable;
             do
             {
-                if (GameBit_Get(*ids) != 0)
+                if (mainGetBit(*ids) != 0)
                 {
                     ok = 1;
                     if (*hints != 0 && (s32)getNextTaskHintText() > 0xad)

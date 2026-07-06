@@ -370,10 +370,10 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRunt
     CameraShake_SetAllMagnitudes(lbl_803E4BD8);
   }
   if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_0004) {
-    GameBit_Set(GAMEBIT_DIM2_ICICLE_ACTIVE, 1);
+    mainSetBits(GAMEBIT_DIM2_ICICLE_ACTIVE, 1);
   }
   else {
-    GameBit_Set(GAMEBIT_DIM2_ICICLE_ACTIVE, 0);
+    mainSetBits(GAMEBIT_DIM2_ICICLE_ACTIVE, 0);
   }
   gDIMbossSequenceFlags &= DIMBOSS_SEQUENCE_FLAGS_PERSIST_AFTER_EFFECT_UPDATE;
 }
@@ -508,12 +508,12 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
         hitState->flags &= ~1;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x80;
-        GameBit_Set(GAMEBIT_DIM2_ICICLE_DEFEATED, 1);
+        mainSetBits(GAMEBIT_DIM2_ICICLE_DEFEATED, 1);
         if (((GroundBaddieState *)state)->targetState == 1) {
-          GameBit_Set(GAMEBIT_DIM2_ICICLE_PHASE1_WIN, 1);
+          mainSetBits(GAMEBIT_DIM2_ICICLE_PHASE1_WIN, 1);
         }
         else if (((GroundBaddieState *)state)->targetState == 2) {
-          GameBit_Set(GAMEBIT_DIM2_ICICLE_PHASE2_WIN, 1);
+          mainSetBits(GAMEBIT_DIM2_ICICLE_PHASE2_WIN, 1);
         }
       }
       else if (((GroundBaddieState *)state)->targetState == 1) {
@@ -553,7 +553,7 @@ void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUp
   }
   if (state->meltTimer <= lbl_803E4BD8) {
     IcicleEntry *entry = gDim2IcicleMeltEntries;
-    GameBit_Set(entry[state->index].bit, 1);
+    mainSetBits(entry[state->index].bit, 1);
     state->meltTimer = entry[state->index].resetTime;
     state->index++;
     if (state->index > 0x17) {

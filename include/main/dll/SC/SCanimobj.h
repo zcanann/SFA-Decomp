@@ -7,6 +7,6 @@ void warpstone_update(int obj);
 void warpstone_release(void);
 void warpstone_initialise(void);
 void warpstone_init(int obj, u8 *setup);
-int sh_levelcontrol_getExtraSize(void);
+int SH_LevelControl_getExtraSize(void);
 
 #endif /* MAIN_DLL_SC_SCANIMOBJ_H_ */

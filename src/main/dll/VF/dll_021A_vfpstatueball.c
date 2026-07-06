@@ -51,24 +51,24 @@ extern void objfx_spawnDirectionalBurst(int* obj, u8 idx, f32 scale, int model, 
 extern u8 fn_8016F16C(int* obj);
 extern f32 lbl_803E60B8;
 
-int vfpstatueball_getExtraSize(void) { return 0xc; }
+int VFP_statueball_getExtraSize(void) { return 0xc; }
 
-int vfpstatueball_getObjectTypeId(void) { return 0x0; }
+int VFP_statueball_getObjectTypeId(void) { return 0x0; }
 
-void vfpstatueball_free(int obj)
+void VFP_statueball_free(int obj)
 {
     (*gExpgfxInterface)->freeSource(obj);
 }
 
-void vfpstatueball_render(void)
+void VFP_statueball_render(void)
 {
 }
 
-void vfpstatueball_hitDetect(void)
+void VFP_statueball_hitDetect(void)
 {
 }
 
-void vfpstatueball_update(int* obj)
+void VFP_statueball_update(int* obj)
 {
     int* setup;
     VfpStatueBallState* state;
@@ -115,7 +115,7 @@ void vfpstatueball_update(int* obj)
     Vec_distance((void*)((char*)Obj_GetPlayerObject() + 0x18), &((GameObject*)obj)->anim.worldPosX);
     state->prevActive = state->active;
 
-    if ((u32)GameBit_Get(state->gameBit) == 0)
+    if ((u32)mainGetBit(state->gameBit) == 0)
     {
         hitType = ObjHits_GetPriorityHit((int)obj, &hitObj, 0, 0);
         if ((hitObj != NULL) && (hitType != 0) && (hitObj != NULL) &&
@@ -147,9 +147,9 @@ void vfpstatueball_update(int* obj)
         {
             if (state->gameBit != -1)
             {
-                if ((u32)GameBit_Get(state->gameBit) == 0)
+                if ((u32)mainGetBit(state->gameBit) == 0)
                 {
-                    GameBit_Set(state->gameBit, 1);
+                    mainSetBits(state->gameBit, 1);
                 }
             }
             state->playActivateSfx = 1;
@@ -160,16 +160,16 @@ void vfpstatueball_update(int* obj)
             (*gExpgfxInterface)->freeSource((u32)obj);
             if (state->gameBit != -1)
             {
-                if ((u32)GameBit_Get(state->gameBit) != 0)
+                if ((u32)mainGetBit(state->gameBit) != 0)
                 {
-                    GameBit_Set(state->gameBit, 0);
+                    mainSetBits(state->gameBit, 0);
                 }
             }
         }
     }
 }
 
-void vfpstatueball_init(int* obj, u8* init)
+void VFP_statueball_init(int* obj, u8* init)
 {
     VfpStatueBallPlacement* setup = (VfpStatueBallPlacement*)init;
     VfpStatueBallState* state = ((GameObject*)obj)->extra;
@@ -186,13 +186,13 @@ void vfpstatueball_init(int* obj, u8* init)
             ((GameObject*)obj)->anim.rootMotionScale * (f32)(s32)setup->modelScale;
     }
     Obj_SetActiveModelIndex((int)obj, setup->variant);
-    state->active = GameBit_Get(state->gameBit);
+    state->active = mainGetBit(state->gameBit);
 }
 
-void vfpstatueball_release(void)
+void VFP_statueball_release(void)
 {
 }
 
-void vfpstatueball_initialise(void)
+void VFP_statueball_initialise(void)
 {
 }

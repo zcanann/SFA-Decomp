@@ -15,7 +15,7 @@ STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
-/* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
+/* DIM2PathGenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
@@ -153,7 +153,7 @@ void dim2icicle_update(int obj)
             localPosY;
         if (((GameObject*)obj)->anim.localPosY < ((Dim2IcicleState*)sub)->dropY)
         {
-            GameBit_Set(((Dim2iciclePlacement*)state)->impactGameBit, 1);
+            mainSetBits(((Dim2iciclePlacement*)state)->impactGameBit, 1);
             ((Dim2IcicleState*)sub)->mode = DIM2ICICLE_MODE_IMPACTED;
             (*gWaterfxInterface)->spawnSplashBurst(
                 (void*)obj, ((GameObject*)obj)->anim.localPosX,
@@ -195,7 +195,7 @@ void dim2icicle_update(int obj)
 void dim2icicle_init(int obj, s8* p)
 {
     char* inner = ((GameObject*)obj)->extra;
-    if (GameBit_Get(((Dim2iciclePlacement*)p)->impactGameBit) != 0)
+    if (mainGetBit(((Dim2iciclePlacement*)p)->impactGameBit) != 0)
     {
         inner[6] = DIM2ICICLE_MODE_IMPACTED;
         ((GameObject*)obj)->anim.alpha = 0;

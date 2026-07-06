@@ -202,7 +202,7 @@ void dll_F7_update(int* obj)
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
         if ((int)((DllF7Placement*)params)->completeGameBit != -1)
         {
-            GameBit_Set((int)((DllF7Placement*)params)->completeGameBit, 1);
+            mainSetBits((int)((DllF7Placement*)params)->completeGameBit, 1);
         }
         if (state->byteB == 0 && (u8)Obj_IsLoadingLocked() != 0)
         {

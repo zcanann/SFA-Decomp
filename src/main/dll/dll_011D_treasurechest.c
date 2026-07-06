@@ -6,7 +6,7 @@
 #include "main/objhits.h"
 #include "main/resource.h"
 
-/* anim-sequence event opcodes consumed by treasurechest_SeqFn */
+/* anim-sequence event opcodes consumed by TreasureChest_SeqFn */
 #define TREASURECHEST_SEQEV_DIALOGUE     1 /* show setup dialogue */
 #define TREASURECHEST_SEQEV_STAFFBIT_SET 2 /* set StaffFlags b5 */
 #define TREASURECHEST_SEQEV_STAFFBIT_CLR 3 /* clear StaffFlags b5 */
@@ -19,7 +19,7 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
 STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
 STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
-int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int TreasureChest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GameObject* o = (GameObject*)obj;
     int i;
@@ -57,27 +57,27 @@ int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int treasurechest_getExtraSize(void)
+int TreasureChest_getExtraSize(void)
 {
     return 1;
 }
 
-int treasurechest_getObjectTypeId(void)
+int TreasureChest_getObjectTypeId(void)
 {
     return 0;
 }
 
 extern f32 lbl_803E3C20;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-void treasurechest_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3C20); }
+void TreasureChest_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3C20); }
 
 extern void* lbl_803DDAE0;
-void treasurechest_free(void) { Resource_Release(lbl_803DDAE0); }
+void TreasureChest_free(void) { Resource_Release(lbl_803DDAE0); }
 
 extern f32 lbl_803E3C24;
 extern void hitDetectFn_80097070(f32 radius, int obj, int a, int b, int c, int d);
 
-void treasurechest_hitDetect(int obj)
+void TreasureChest_hitDetect(int obj)
 {
     u8* state;
     TreasureChestSetup * setup;
@@ -95,7 +95,7 @@ void treasurechest_hitDetect(int obj)
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
 
-extern void fn_802967E0(void* obj, int enabled);
+extern void playerPullOutStaff(void* obj, int enabled);
 
 typedef struct ChestHitParams
 {
@@ -130,7 +130,7 @@ extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3C28;
 extern f32 lbl_803E3C2C;
 
-void treasurechest_update(int obj)
+void TreasureChest_update(int obj)
 {
 
     ChestFlags* flags;
@@ -156,7 +156,7 @@ void treasurechest_update(int obj)
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-            fn_802967E0(Obj_GetPlayerObject(), 1);
+            playerPullOutStaff(Obj_GetPlayerObject(), 1);
             nearestObject = ObjGroup_FindNearestObject(4, obj, &nearestDist);
             if (nearestObject != 0)
             {
@@ -168,7 +168,7 @@ void treasurechest_update(int obj)
                 (*gObjectTriggerInterface)->setObjects(setup->triggerObjectId, 0, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 0xffffffff);
             }
-            GameBit_Set(setup->openGameBit, 1);
+            mainSetBits(setup->openGameBit, 1);
             flags->open = 1;
             ObjHits_DisableObject((u32)obj);
         }
@@ -201,26 +201,26 @@ void treasurechest_update(int obj)
     return;
 }
 
-void treasurechest_release(void)
+void TreasureChest_release(void)
 {
 }
 
-void treasurechest_initialise(void)
+void TreasureChest_initialise(void)
 {
 }
 
 
-void treasurechest_init(int* obj)
+void TreasureChest_init(int* obj)
 {
     register ChestFlags* state = ((GameObject*)obj)->extra;
     register TreasureChestSetup* cfg = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
 
-    ((GameObject*)obj)->animEventCallback = treasurechest_SeqFn;
+    ((GameObject*)obj)->animEventCallback = TreasureChest_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)cfg->type << 8);
 
     if (cfg->openGameBit != -1)
     {
-        state->open = GameBit_Get(cfg->openGameBit);
+        state->open = mainGetBit(cfg->openGameBit);
     }
     else
     {

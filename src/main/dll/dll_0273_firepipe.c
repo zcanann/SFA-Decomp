@@ -244,7 +244,7 @@ void firepipe_updateState(FirePipeObject* obj)
             {
                 FirePipeMapData* md0 = (FirePipeMapData*)obj->objectDef;
                 Obj_StartModelFadeIn(obj, 0x12c);
-                GameBit_Set(md0->gameBit, 1);
+                mainSetBits(md0->gameBit, 1);
                 flags->restartPending = 1;
             }
             break;
@@ -253,9 +253,9 @@ void firepipe_updateState(FirePipeObject* obj)
 
     if ((flags->restartPending == 0) && (mapData->gameBit != -1))
     {
-        if (flags->lastGameBitState != GameBit_Get(mapData->gameBit))
+        if (flags->lastGameBitState != mainGetBit(mapData->gameBit))
         {
-            if ((flags->emitting = !GameBit_Get(mapData->gameBit)) != 0)
+            if ((flags->emitting = !mainGetBit(mapData->gameBit)) != 0)
             {
                 FirePipeExtra* ex2;
                 FirePipeMapData* md2;
@@ -293,7 +293,7 @@ void firepipe_updateState(FirePipeObject* obj)
                 storeZeroToFloatParam(&extra->cycleTimer);
             }
         }
-        flags->lastGameBitState = GameBit_Get(mapData->gameBit);
+        flags->lastGameBitState = mainGetBit(mapData->gameBit);
     }
 
     if (flags->emitting != 0)
@@ -315,7 +315,7 @@ void firepipe_updateState(FirePipeObject* obj)
     {
         flags->emitting = 1;
         flags->restartPending = 0;
-        GameBit_Set(mapData->gameBit, flags->lastGameBitState);
+        mainSetBits(mapData->gameBit, flags->lastGameBitState);
     }
 
     if ((fn_80080150((int)&extra->cycleTimer) != 0) && (flags->emitting == 0))
@@ -507,7 +507,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
     }
     if (mapData->gameBit != -1)
     {
-        bitVal = GameBit_Get((int)mapData->gameBit);
+        bitVal = mainGetBit((int)mapData->gameBit);
         ((FirePipeBitFlags*)&extra->flags)->emitting = bitVal;
     }
     else
@@ -593,7 +593,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         ObjHits_EnableObject(obj);
         ((FirePipeBitFlags*)&extra->flags)->restartPending = 0;
         extra->activeSpawn = 0;
-        bitVal = GameBit_Get((int)mapData->gameBit);
+        bitVal = mainGetBit((int)mapData->gameBit);
         {
             u32 clz = __cntlzw(bitVal);
             ((FirePipeBitFlags*)&extra->flags)->lastGameBitState = (u8)(clz >> 5);

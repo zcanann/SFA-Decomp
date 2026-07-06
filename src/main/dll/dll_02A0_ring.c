@@ -184,7 +184,7 @@ void ring_update(int obj)
         bit = setup->activateBit;
         if (bit > -1)
         {
-            if (GameBit_Get(bit) != 0u)
+            if (mainGetBit(bit) != 0u)
             {
                 ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~RING_OBJFLAG_HIDDEN);
                 state->phase = RING_PHASE_ACTIVE;
@@ -206,7 +206,7 @@ void ring_update(int obj)
         bit = setup->activateBit;
         if (bit > -1)
         {
-            if (GameBit_Get(bit) == 0u)
+            if (mainGetBit(bit) == 0u)
                 state->phase = RING_PHASE_ACTIVE; /* original re-stores ACTIVE here (no-op write is intentional) */
         }
         switch (state->route)
@@ -255,7 +255,7 @@ void ring_update(int obj)
             if (arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0 &&
                 arwbombcoll_checkArwingCollision(obj, state, arwing) != 0)
             {
-                arwbombcoll_handleArwingHit(obj, state, arwing);
+                Ring_onCollect(obj, state, arwing);
             }
         }
         ((GameObject*)obj)->anim.rotX =

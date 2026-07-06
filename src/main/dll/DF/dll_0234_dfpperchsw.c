@@ -7,58 +7,58 @@
 #include "main/dll/crate2.h"
 #include "main/engine_shared.h"
 
-int dfperchwitch_getExtraSize(void) { return 0x0; }
-int dfperchwitch_getObjectTypeId(void) { return 0x0; }
+int DFP_PerchWitch_getExtraSize(void) { return 0x0; }
+int DFP_PerchWitch_getObjectTypeId(void) { return 0x0; }
 
-void dfperchwitch_free(void)
+void DFP_PerchWitch_free(void)
 {
 }
 
-void dfperchwitch_render(void)
+void DFP_PerchWitch_render(void)
 {
 }
 
-void dfperchwitch_hitDetect(void)
+void DFP_PerchWitch_hitDetect(void)
 {
 }
 
-void dfperchwitch_update(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
-void dfperchwitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
+void DFP_PerchWitch_update(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
+void DFP_PerchWitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 
-void dfperchwitch_release(void)
+void DFP_PerchWitch_release(void)
 {
 }
 
-void dfperchwitch_initialise(void)
+void DFP_PerchWitch_initialise(void)
 {
 }
 
 ObjectDescriptor gDfpstatue1ObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)dfpstatue1_initialise,
-    (ObjectDescriptorCallback)dfpstatue1_release,
+    (ObjectDescriptorCallback)DFP_Statue1_initialise,
+    (ObjectDescriptorCallback)DFP_Statue1_release,
     0,
-    (ObjectDescriptorCallback)dfpstatue1_init,
-    (ObjectDescriptorCallback)dfpstatue1_update,
-    (ObjectDescriptorCallback)dfpstatue1_hitDetect,
-    (ObjectDescriptorCallback)dfpstatue1_render,
-    (ObjectDescriptorCallback)dfpstatue1_free,
-    (ObjectDescriptorCallback)dfpstatue1_getObjectTypeId,
-    dfpstatue1_getExtraSize,
+    (ObjectDescriptorCallback)DFP_Statue1_init,
+    (ObjectDescriptorCallback)DFP_Statue1_update,
+    (ObjectDescriptorCallback)DFP_Statue1_hitDetect,
+    (ObjectDescriptorCallback)DFP_Statue1_render,
+    (ObjectDescriptorCallback)DFP_Statue1_free,
+    (ObjectDescriptorCallback)DFP_Statue1_getObjectTypeId,
+    DFP_Statue1_getExtraSize,
 };
 
 ObjectDescriptor gDfperchwitchObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)dfperchwitch_initialise,
-    (ObjectDescriptorCallback)dfperchwitch_release,
+    (ObjectDescriptorCallback)DFP_PerchWitch_initialise,
+    (ObjectDescriptorCallback)DFP_PerchWitch_release,
     0,
-    (ObjectDescriptorCallback)dfperchwitch_init,
-    (ObjectDescriptorCallback)dfperchwitch_update,
-    (ObjectDescriptorCallback)dfperchwitch_hitDetect,
-    (ObjectDescriptorCallback)dfperchwitch_render,
-    (ObjectDescriptorCallback)dfperchwitch_free,
-    (ObjectDescriptorCallback)dfperchwitch_getObjectTypeId,
-    dfperchwitch_getExtraSize,
+    (ObjectDescriptorCallback)DFP_PerchWitch_init,
+    (ObjectDescriptorCallback)DFP_PerchWitch_update,
+    (ObjectDescriptorCallback)DFP_PerchWitch_hitDetect,
+    (ObjectDescriptorCallback)DFP_PerchWitch_render,
+    (ObjectDescriptorCallback)DFP_PerchWitch_free,
+    (ObjectDescriptorCallback)DFP_PerchWitch_getObjectTypeId,
+    DFP_PerchWitch_getExtraSize,
 };
 
 char sDfperchwitchInitNoLongerSupported[] = "<dfperchwitch Init>No Longer supported \n";

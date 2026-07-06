@@ -102,7 +102,7 @@ void dimbarrier_update(int obj)
             extra->timer -= framesThisStep;
             if (extra->timer <= 0)
             {
-                GameBit_Set(((DimbarrierPlacement*)def)->barrierGameBit, 1);
+                mainSetBits(((DimbarrierPlacement*)def)->barrierGameBit, 1);
                 extra->state = DIMBARRIER_STATE_RESOLVED;
             }
             break;
@@ -120,7 +120,7 @@ void dimbarrier_init(int obj, s8* p)
     inner = ((GameObject*)obj)->extra;
     inner[3] = 1;
     inner[2] = DIMBARRIER_STATE_ARMED;
-    if (GameBit_Get(((DimbarrierPlacement*)p)->barrierGameBit) != 0)
+    if (mainGetBit(((DimbarrierPlacement*)p)->barrierGameBit) != 0)
     {
         ObjHitsPriorityState* hitState;
         inner[3] = 0;

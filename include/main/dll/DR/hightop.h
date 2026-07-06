@@ -32,15 +32,15 @@ void Trigger_initialise(void);
 
 extern ObjectDescriptor gTriggerObjDescriptor;
 
-int cloudprisoncontrol_getExtraSize(void);
-int cloudprisoncontrol_getObjectTypeId(void);
-void cloudprisoncontrol_free(void);
-void cloudprisoncontrol_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void cloudprisoncontrol_hitDetect(void);
-void cloudprisoncontrol_update(int obj);
-void cloudprisoncontrol_init(int obj);
-void cloudprisoncontrol_release(void);
-void cloudprisoncontrol_initialise(void);
+int CloudPrisonControl_getExtraSize(void);
+int CloudPrisonControl_getObjectTypeId(void);
+void CloudPrisonControl_free(void);
+void CloudPrisonControl_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void CloudPrisonControl_hitDetect(void);
+void CloudPrisonControl_update(int obj);
+void CloudPrisonControl_init(int obj);
+void CloudPrisonControl_release(void);
+void CloudPrisonControl_initialise(void);
 
 extern ObjectDescriptor gCloudPrisonControlObjDescriptor;
 

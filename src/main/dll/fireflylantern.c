@@ -27,7 +27,7 @@
 
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
-extern int fn_80296448(int obj);
+extern int playerGetFlags3F0Bit5(int obj);
 extern void fn_8014C678(int obj, int* state, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int* state, int a, f32 x, f32 y, int b);
 extern void fn_8014CF7C(int obj, int* state, f32 x, f32 z, int a, int b);
@@ -111,7 +111,7 @@ void fn_80154870(int obj, int* state)
         *(u32*)&state[0xb7] &= ~0x2000LL;
     }
     ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
-    flag = fn_80296448(Obj_GetPlayerObject());
+    flag = playerGetFlags3F0Bit5(Obj_GetPlayerObject());
     dvec[0] = *(f32*)(state[0xa7] + 0xc) - ((GameObject*)obj)->anim.localPosX;
     dvec[1] = lbl_803E2990;
     dvec[2] = *(f32*)(state[0xa7] + 0x14) - ((GameObject*)obj)->anim.localPosZ;

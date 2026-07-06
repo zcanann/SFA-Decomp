@@ -267,7 +267,7 @@ STATIC_ASSERT(offsetof(FCVars, moveChainIndex) == 0x33e);
 STATIC_ASSERT(offsetof(FCVars, reactStep) == 0x33f);
 STATIC_ASSERT(offsetof(FCVars, linkedObj) == 0x340);
 
-void crawler_nop(void)
+void whirlpool_updateWhileFrozen(void)
 {
 }
 
@@ -302,7 +302,7 @@ void firecrawler_spawnFirepipe(int* obj)
     }
 }
 
-void crawler_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, int sub)
+void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int sub)
 {
     u8* base;
     u32 r;
@@ -484,7 +484,7 @@ void crawler_initTailModel(int* obj, int* st)
 #pragma opt_common_subs reset
 
 
-void crawler_initScaledVariant(int* obj, int* st)
+void hoodedZyck_init(int* obj, int* st)
 {
     f32 ratio;
     f32 base_v;
@@ -534,7 +534,7 @@ void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5,
     PSMTXMultVecSR(mtx, vec, vec);
 }
 
-void crawler_handleHitStateEvent(int obj, int* st, int unused, int cmd)
+void hagabonMK2_updateWhileFrozen(int obj, int* st, int unused, int cmd)
 {
     int objI = (int)obj;
     if (cmd == 0x11)
@@ -1574,7 +1574,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         return;
     }
 
-    if ((((BaddieState*)state)->inWhirlpoolGroup == 0 && cmd == 0x11 && GameBit_Get(0xc55) != 0)
+    if ((((BaddieState*)state)->inWhirlpoolGroup == 0 && cmd == 0x11 && mainGetBit(0xc55) != 0)
         || ((BaddieState*)state)->inWhirlpoolGroup == 1)
     {
         u8 v;

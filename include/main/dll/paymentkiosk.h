@@ -6,8 +6,8 @@
 
 /*
  * Per-object extra state for the PaymentKiosk family
- * (paymentkiosk_getExtraSize == 3). Shared by VF/platform1.c and
- * DB/DBrockfall.c (paymentkiosk_init).
+ * (PaymentKiosk_getExtraSize == 3). Shared by VF/platform1.c and
+ * DB/DBrockfall.c (PaymentKiosk_init).
  */
 typedef struct PaymentKioskState {
   u8 payState;    /* 0 = resolve from gamebit, 1 = trigger disabled, 2 = paid */

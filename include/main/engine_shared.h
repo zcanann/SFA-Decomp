@@ -585,7 +585,7 @@ extern void AISetStreamVolRight(u8 volume);
 extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
 extern void OSReport(char *message, ...);
 extern s32 getGameState(void);
-extern u32 GameBit_Get(u32 bit);
+extern u32 mainGetBit(u32 bit);
 extern void AudioStream_CancelCallback(s32 result);
 extern void fn_8000D0B4(void);
 extern void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);

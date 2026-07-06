@@ -120,29 +120,29 @@ void fn_80196520(u8* obj, u8* state, u8* setup)
     ((DimBossIceSmashState*)state)->timer = 0;
 }
 
-int dimbossicesmash_getExtraSize(void) { return 0x2a0; }
+int DIMBossIceSmash_getExtraSize(void) { return 0x2a0; }
 
-u32 dimbossicesmash_getObjectTypeId(int* obj) { return (*((u8*)((GameObject*)obj)->anim.placementData + 0x18) << 11) | 0x400; }
+u32 DIMBossIceSmash_getObjectTypeId(int* obj) { return (*((u8*)((GameObject*)obj)->anim.placementData + 0x18) << 11) | 0x400; }
 
-void dimbossicesmash_free(int* obj)
+void DIMBossIceSmash_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
-void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void DIMBossIceSmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
-void dimbossicesmash_hitDetect(void)
+void DIMBossIceSmash_hitDetect(void)
 {
 }
 
 /* gate on the trigger gamebit, integrate velocity/rotation with per-axis gravity
  * clamps, run the path-control hooks with surface bounce, fade alpha over
  * the lifetime window, and emit the two trail particles. */
-void dimbossicesmash_update(u8* obj)
+void DIMBossIceSmash_update(u8* obj)
 {
     u8* state = ((GameObject*)obj)->extra;
     u8 flags = state[0x29e];
@@ -179,11 +179,11 @@ void dimbossicesmash_update(u8* obj)
         {
             if (((ObjAnimComponent*)obj)->bankIndex == 0)
             {
-                triggerBit = GameBit_Get(((DimbossicesmashPlacement*)setup)->triggerGameBit);
+                triggerBit = mainGetBit(((DimbossicesmashPlacement*)setup)->triggerGameBit);
                 if (triggerBit != 0 || ((DimbossicesmashPlacement*)setup)->triggerGameBit == -1)
                 {
                     state[0x29e] = state[0x29e] | 1;
-                    GameBit_Set(((DimbossicesmashPlacement*)setup)->activateGameBit, 1);
+                    mainSetBits(((DimbossicesmashPlacement*)setup)->activateGameBit, 1);
                     lbl_803DDB00 = 1;
                 }
             }
@@ -356,7 +356,7 @@ void dimbossicesmash_update(u8* obj)
     }
 }
 
-void dimbossicesmash_init(GameObject* obj, u8* params)
+void DIMBossIceSmash_init(GameObject* obj, u8* params)
 {
     u8* state;
     f32 fz;
@@ -371,7 +371,7 @@ void dimbossicesmash_init(GameObject* obj, u8* params)
     ((DimBossIceSmashState*)state)->spawnScaleY = fz;
     ((DimBossIceSmashState*)state)->spawnScaleZ = fz;
     fn_80196520((u8*)obj, state, params);
-    initState = (GameBit_Get(((DimbossicesmashPlacement*)params)->activateGameBit) != 0) ? 2 : 0;
+    initState = (mainGetBit(((DimbossicesmashPlacement*)params)->activateGameBit) != 0) ? 2 : 0;
     state[0x29e] = initState;
     lbl_803DDB00 = 0;
     if ((((DimbossicesmashPlacement*)params)->flags & 2) != 0)
@@ -382,10 +382,10 @@ void dimbossicesmash_init(GameObject* obj, u8* params)
     }
 }
 
-void dimbossicesmash_release(void)
+void DIMBossIceSmash_release(void)
 {
 }
 
-void dimbossicesmash_initialise(void)
+void DIMBossIceSmash_initialise(void)
 {
 }

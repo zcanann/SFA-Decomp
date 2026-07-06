@@ -71,7 +71,7 @@ void cclightfoot_init(int* obj, int* def)
 {
     ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)def + 26) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCLIGHTFOOT_OBJFLAG_HIDDEN);
-    ((GameObject*)obj)->animEventCallback = ccqueen_SeqFn;
+    ((GameObject*)obj)->animEventCallback = CClightfoot_SeqFn;
 }
 
 void cclightfoot_free(int* obj, int p2)
@@ -132,7 +132,7 @@ void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
 
 extern f32 lbl_803E4670;
 
-int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int CClightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern u32 ObjLink_DetachChild();
     CcLightfootState* state = ((GameObject*)obj)->extra;
@@ -173,7 +173,7 @@ extern f32 lbl_803E4698;
 extern u8 gCcLightfootAnimTable[];
 extern u8 gCcLightfootHitCooldown[8];
 extern int getAngle(float y, float x);
-extern f32 fn_8014C5D0(register int obj);
+extern f32 enemy_getHealthFraction(register int obj);
 extern void fn_8014C66C(int obj, int target);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_FreeObject(int o);
@@ -227,26 +227,26 @@ void cclightfoot_update(int obj)
     o1 = state->targetA;
     if (o1 != 0)
     {
-        if (!(fn_8014C5D0(o1) > lbl_803E4680))
+        if (!(enemy_getHealthFraction(o1) > lbl_803E4680))
         {
             valid = 0;
         }
         else
         {
-            valid = GameBit_Get(*(s16*)(*(int*)&((GameObject*)o1)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+            valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o1)->anim.placementData + 0x18)) != 0 ? 0 : 1;
         }
         if (valid == 0)
         {
             goto cc_else;
         }
         o2 = state->targetB;
-        if (!(fn_8014C5D0(o2) > lbl_803E4680))
+        if (!(enemy_getHealthFraction(o2) > lbl_803E4680))
         {
             valid = 0;
         }
         else
         {
-            valid = GameBit_Get(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+            valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
         }
         if (valid == 0)
         {
@@ -305,26 +305,26 @@ void cclightfoot_update(int obj)
     cc_else:
         {
             o2 = state->targetA;
-            if (!(fn_8014C5D0(o2) > lbl_803E4680))
+            if (!(enemy_getHealthFraction(o2) > lbl_803E4680))
             {
                 valid = 0;
             }
             else
             {
-                valid = GameBit_Get(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+                valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
             }
             if (valid != 0)
             {
                 fallback = state->targetA;
             }
             o2 = state->targetB;
-            if (!(fn_8014C5D0(o2) > lbl_803E4680))
+            if (!(enemy_getHealthFraction(o2) > lbl_803E4680))
             {
                 valid = 0;
             }
             else
             {
-                valid = GameBit_Get(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+                valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
             }
             if (valid != 0)
             {
@@ -390,7 +390,7 @@ void cclightfoot_update(int obj)
     switch (state->state)
     {
     case CCLIGHTFOOT_STATE_INIT:
-        if (GameBit_Get(GAMEBIT_LIGHTFOOT_TRIGGERED) != 0)
+        if (mainGetBit(GAMEBIT_LIGHTFOOT_TRIGGERED) != 0)
         {
             state->state = CCLIGHTFOOT_STATE_DESPAWN;
         }
@@ -527,9 +527,9 @@ void cclightfoot_update(int obj)
         fn_801AA878(state, (int*)targetObj, dist);
         break;
     case CCLIGHTFOOT_STATE_DORMANT:
-        if (GameBit_Get(GAMEBIT_LIGHTFOOT_TRIGGERED) != 0)
+        if (mainGetBit(GAMEBIT_LIGHTFOOT_TRIGGERED) != 0)
         {
-            if (GameBit_Get(GAMEBIT_CC_COMPLETE) != 0)
+            if (mainGetBit(GAMEBIT_CC_COMPLETE) != 0)
             {
                 state->state = CCLIGHTFOOT_STATE_DESPAWN;
             }
@@ -538,7 +538,7 @@ void cclightfoot_update(int obj)
         {
             if (ObjTrigger_IsSet(obj) != 0)
             {
-                GameBit_Set(GAMEBIT_LIGHTFOOT_TRIGGERED, 1);
+                mainSetBits(GAMEBIT_LIGHTFOOT_TRIGGERED, 1);
             }
             else if (state->flags & 2)
             {

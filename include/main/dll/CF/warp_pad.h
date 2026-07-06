@@ -15,7 +15,7 @@ typedef struct WarpPadPlacement {
 
 /*
  * Per-object extra state for the warp-pad transporter
- * (transporter_getExtraSize == 0x10; helpers shared by the
+ * (Transporter_getExtraSize == 0x10; helpers shared by the
  * CFwalltorch/mmp_asteroid transporter updates).
  */
 typedef struct WarpPadState {

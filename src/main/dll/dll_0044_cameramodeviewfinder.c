@@ -56,7 +56,7 @@ extern void viewFinderSetZoom(f32 fov);
 
 extern void buttonDisable(int port, u32 mask);
 extern void firstPersonZoomOutOnExit(int a, int b);
-extern void fn_80137948(char* fmt, ...);
+extern void logPrintf(char* fmt, ...);
 extern char sCam5BYDebugFormat;
 extern void* memset(void* dst, int v, int n);
 extern ViewfinderState* lbl_803DD548;
@@ -481,7 +481,7 @@ void CameraModeViewfinder_update(s16* obj)
         ((GameObject*)obj)->anim.worldPosZ = lbl_803DD548->posZCurve.end;
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0);
     }
-    fn_80137948(&sCam5BYDebugFormat, ((GameObject*)obj)->anim.worldPosY);
+    logPrintf(&sCam5BYDebugFormat, ((GameObject*)obj)->anim.worldPosY);
     Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
                                    (f32*)(obj + 6), (f32*)(obj + 8), (f32*)(obj + 10),
                                    *(int*)&((GameObject*)obj)->anim.parent);
@@ -594,7 +594,7 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->pitchCurve.startTangent = zero;
     lbl_803DD548->pitchCurve.endTangent = zero;
     ((CameraObject*)obj)->unk13E = 1;
-    if (GameBit_Get(0xc64) != 0)
+    if (mainGetBit(0xc64) != 0)
     {
         lbl_803DD548->flags.zoomHudEnabled = 1;
     }

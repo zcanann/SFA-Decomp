@@ -59,27 +59,27 @@ void FUN_801f2ac8(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  int param_9,int param_10);
 void FUN_801f2b94(short *param_1);
 
-int pressureswitch_getExtraSize(void);
-int pressureswitch_getObjectTypeId(void);
+int PressureSwitch_getExtraSize(void);
+int PressureSwitch_getObjectTypeId(void);
 int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
-void pressureswitch_free(void);
-void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void pressureswitch_hitDetect(void);
-void pressureswitch_update(int obj);
-void pressureswitch_init(int *obj, u8 *init);
-void pressureswitch_release(void);
-void pressureswitch_initialise(void);
+void PressureSwitch_free(void);
+void PressureSwitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void PressureSwitch_hitDetect(void);
+void PressureSwitch_update(int obj);
+void PressureSwitch_init(int *obj, u8 *init);
+void PressureSwitch_release(void);
+void PressureSwitch_initialise(void);
 
-int wmlasertarget_getExtraSize(void);
-int wmlasertarget_getObjectTypeId(void);
+int WM_LaserTarget_getExtraSize(void);
+int WM_LaserTarget_getObjectTypeId(void);
 int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate, int arg3);
-void wmlasertarget_free(void);
-void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void wmlasertarget_hitDetect(void);
-void wmlasertarget_update(int *obj);
-void wmlasertarget_init(char *obj, s8 *p);
-void wmlasertarget_release(void);
-void wmlasertarget_initialise(void);
+void WM_LaserTarget_free(void);
+void WM_LaserTarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void WM_LaserTarget_hitDetect(void);
+void WM_LaserTarget_update(int *obj);
+void WM_LaserTarget_init(char *obj, s8 *p);
+void WM_LaserTarget_release(void);
+void WM_LaserTarget_initialise(void);
 int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void lightsource_render(void *obj, int p1, int p2, int p3, int p4, s8 visible);
 

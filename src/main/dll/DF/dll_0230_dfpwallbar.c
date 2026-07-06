@@ -99,7 +99,7 @@ void chuka_update(int obj)
     }
     linkedObj = ((ChukaState*)state)->linkedObject;
     (*(void (**)(int, u8*))(*((GameObject*)linkedObj)->anim.dll + 8))(linkedObj, gChukaModeTable);
-    if (GameBit_Get(0x5e4) == 0)
+    if (mainGetBit(0x5e4) == 0)
     {
         ((ChukaState*)state)->mode = 0;
     }

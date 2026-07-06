@@ -75,7 +75,7 @@ typedef struct ArwSquadronPathCommand
     u8 secondaryValue;
 } ArwSquadronPathCommand;
 
-/* arwsquadron_getExtraSize == 0x164 (ARWSquadron object family). */
+/* ARWSquadron_getExtraSize == 0x164 (ARWSquadron object family). */
 typedef struct ArwSquadronState
 {
     u8 pad000[0x68];
@@ -137,20 +137,20 @@ STATIC_ASSERT(offsetof(ArwSquadronState, volleyCooldownTimer) == 0x124);
 STATIC_ASSERT(offsetof(ArwSquadronState, leaderObj) == 0x13c);
 STATIC_ASSERT(offsetof(ArwSquadronState, flags) == 0x160);
 
-int arwsquadron_getExtraSize(void) { return 0x164; }
+int ARWSquadron_getExtraSize(void) { return 0x164; }
 
-int arwsquadron_getObjectTypeId(void) { return 0; }
+int ARWSquadron_getObjectTypeId(void) { return 0; }
 
-void arwsquadron_free(void)
+void ARWSquadron_free(void)
 {
 }
 
-void arwsquadron_render(int obj, int p2, int p3, int p4, int p5)
+void ARWSquadron_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7188);
 }
 
-void arwsquadron_hitDetect(void)
+void ARWSquadron_hitDetect(void)
 {
 }
 
@@ -184,7 +184,7 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag)
 }
 #pragma optimization_level reset
 
-void arwsquadron_init(int obj, int setup)
+void ARWSquadron_init(int obj, int setup)
 {
     SquadFlags* flags;
     ArwSquadronState* state;
@@ -627,7 +627,7 @@ void arwsquadron_followLeader(int objArg, int stateArg)
     }
 }
 
-void arwsquadron_update(int obj)
+void ARWSquadron_update(int obj)
 {
     ArwSquadronState* state = *(ArwSquadronState**)&((GameObject*)obj)->extra;
     ArwSquadronSetup* setup = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
@@ -699,7 +699,7 @@ void arwsquadron_update(int obj)
                         goto enable1;
                 }
             enableCheckBit:
-                if (GameBit_Get(setupL->gameBit) == 0)
+                if (mainGetBit(setupL->gameBit) == 0)
                     goto enable0;
             }
         enable1:
@@ -764,7 +764,7 @@ void arwsquadron_update(int obj)
                         goto disable1;
                 }
             disableCheckBit:
-                if (GameBit_Get(setupL->gameBit) != 0)
+                if (mainGetBit(setupL->gameBit) != 0)
                     goto disable0;
             }
         disable1:

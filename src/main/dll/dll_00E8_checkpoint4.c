@@ -106,18 +106,18 @@ void checkpoint4_initialise(void)
 {
 }
 
-extern void magicgem_getExtraSize();
-extern void magicgem_free();
-extern void magicgem_render();
-extern void magicgem_update();
-extern void magicgem_init();
-extern void collectible_func10();
-extern void collectible_func0F();
-extern void collectible_func0E();
-extern void collectible_render2();
-extern void collectible_modelMtxFn();
-extern void collectible_func0B();
-extern void collectible_setScale();
+extern void MagicDust_getExtraSize();
+extern void MagicDust_free();
+extern void MagicDust_render();
+extern void MagicDust_update();
+extern void MagicDust_init();
+extern void collectible_setPosition();
+extern void collectible_getVisibilityBitClear();
+extern void collectible_setVisibilityBitClear();
+extern void collectible_startBounceMotion();
+extern void collectible_getHitRegionId();
+extern void collectible_setDisabled();
+extern void collectible_getIsHidden();
 extern void collectible_getExtraSize();
 extern void collectible_getObjectTypeId();
 extern void collectible_free();
@@ -155,6 +155,6 @@ void* gSideloadObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void
 void* gSiderepelObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, siderepel_init, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, siderepel_free, (void*)0x00000000, siderepel_getExtraSize };
 void* gSetuppointObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, setuppoint_init, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
 u8 lbl_80320C58[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-void* gCollectibleObjDescriptor[21] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00100000, collectible_initialise, collectible_release, (void*)0x00000000, collectible_init, collectible_update, collectible_hitDetect, collectible_render, collectible_free, collectible_getObjectTypeId, collectible_getExtraSize, collectible_setScale, collectible_func0B, collectible_modelMtxFn, collectible_render2, collectible_func0E, collectible_func0F, collectible_func10 };
+void* gCollectibleObjDescriptor[21] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00100000, collectible_initialise, collectible_release, (void*)0x00000000, collectible_init, collectible_update, collectible_hitDetect, collectible_render, collectible_free, collectible_getObjectTypeId, collectible_getExtraSize, collectible_getIsHidden, collectible_setDisabled, collectible_getHitRegionId, collectible_startBounceMotion, collectible_setVisibilityBitClear, collectible_getVisibilityBitClear, collectible_setPosition };
 u8 lbl_80320CB8[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-void* gMagicGemObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, magicgem_init, magicgem_update, (void*)0x00000000, magicgem_render, magicgem_free, (void*)0x00000000, magicgem_getExtraSize };
+void* gMagicGemObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, MagicDust_init, MagicDust_update, (void*)0x00000000, MagicDust_render, MagicDust_free, (void*)0x00000000, MagicDust_getExtraSize };

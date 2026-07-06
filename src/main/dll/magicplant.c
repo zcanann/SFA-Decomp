@@ -84,7 +84,7 @@ extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
 extern f32 PSVECMag(f32 * v);
 extern s16 getAngle(float y, float x);
 
-void fn_80152EC0(int obj, int state)
+void mikaladon_init(int obj, int state)
 {
     f32 zero;
     f32 lblA;
@@ -118,7 +118,7 @@ void fn_80152EC0(int obj, int state)
     ((GameObject*)obj)->anim.localPosZ = b * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x32c);
 }
 
-void fn_80152FA8(int obj, int state, int unused, int msgFlag)
+void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag)
 {
     if (((BaddieState*)state)->inWhirlpoolGroup != 0)
     {
@@ -274,7 +274,7 @@ void fn_80153248(int obj, int state)
     fn_8014CD1C(obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
 }
 
-void fn_801534D8(int obj, int state)
+void vambat_init(int obj, int state)
 {
     f32 initSpeed;
     f32 zero;
@@ -384,7 +384,7 @@ void fn_80153640(int obj, int state)
 }
 #pragma dont_inline reset
 
-void fn_80153790(int obj, int state, int attacker, int msgFlag, int hitId, int damage)
+void kooshy_updateWhileFrozen(int obj, int state, int attacker, int msgFlag, int hitId, int damage)
 {
     if (((GameObject*)obj)->anim.currentMove == 1)
     {
@@ -539,7 +539,7 @@ void fn_80153BFC(int obj, int state)
     fn_8015355C(obj, state);
 }
 
-void fn_80153C90(int unused, int state)
+void kooshy_init(int unused, int state)
 {
     f32 eventFlagsVal;
     f32 pathStepInit;
@@ -562,7 +562,7 @@ void fn_80153C90(int unused, int state)
     ((BaddieState*)state)->pathStep = pathStepInit;
 }
 
-void fn_80153CF8(int obj, int state, int attacker, int msgFlag)
+void weevil_updateWhileFrozen(int obj, int state, int attacker, int msgFlag)
 {
     u8 cond = 0;
     int kind = ((GameObject*)obj)->anim.currentMove;

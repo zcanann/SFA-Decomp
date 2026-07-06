@@ -108,9 +108,9 @@ void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnim
 }
 #pragma dont_inline reset
 
-int hitanimator_getExtraSize(void) { return HITANIMATOR_EXTRA_STATE_BYTES; }
+int HitAnimator_getExtraSize(void) { return HITANIMATOR_EXTRA_STATE_BYTES; }
 
-void hitanimator_update(HitAnimatorObject* obj)
+void HitAnimator_update(HitAnimatorObject* obj)
 {
     HitAnimatorPlacement* desc = (HitAnimatorPlacement*)obj->objAnim.placementData;
     HitAnimatorState* state = obj->state;
@@ -125,7 +125,7 @@ void hitanimator_update(HitAnimatorObject* obj)
         state->flags |= HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
         return;
     }
-    state->gameBitValue = GameBit_Get(desc->gameBit);
+    state->gameBitValue = mainGetBit(desc->gameBit);
     if (state->previousGameBitValue != state->gameBitValue)
     {
         state->activeBit = state->activeBit ^ 1;
@@ -171,7 +171,7 @@ void hitanimator_update(HitAnimatorObject* obj)
     }
 }
 
-void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
+void HitAnimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
 {
     HitAnimatorState* state = obj->state;
     MapBlockData* block;
@@ -180,7 +180,7 @@ void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
     initialBit = (s8)(desc->flags & HITANIMATOR_SETUP_FLAG_INITIAL_INVERT);
     state->activeBit = initialBit;
     state->flags = 0;
-    if (GameBit_Get(desc->gameBit) != 0)
+    if (mainGetBit(desc->gameBit) != 0)
     {
         state->activeBit = state->activeBit ^ 1;
         if (desc->toggleMode == 1)
@@ -204,7 +204,7 @@ void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
     {
         state->flags |= HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
     }
-    gameBitValue = GameBit_Get(desc->gameBit);
+    gameBitValue = mainGetBit(desc->gameBit);
     state->gameBitValue = gameBitValue;
     state->previousGameBitValue = gameBitValue;
     obj->objectFlags |= HITANIMATOR_OBJECT_FLAGS_ENABLED;

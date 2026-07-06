@@ -167,12 +167,12 @@ int cMenuSetItems(s16* items, char useTricky)
         gCMenuForcedSelIndex = -1;
         for (src = items; *src > -1; src += 8)
         {
-            active = GameBit_Get(*src);
+            active = mainGetBit(*src);
             if (active != 0)
             {
                 if (items == (s16*)gCMenuStaffAbilities)
                 {
-                    if (src[1] < 0 || GameBit_Get(src[1]) == 0)
+                    if (src[1] < 0 || mainGetBit(src[1]) == 0)
                     {
                         *(s16*)(base + halfOff + 0x948) = src[3];
                         *(int*)(base + wordOff + 0x848) = src[0];
@@ -183,7 +183,7 @@ int cMenuSetItems(s16* items, char useTricky)
                         *(s16*)(base + halfOff + 0x5c8) = src[5];
                         *(u8*)(base + count + 0x508) = *(u8*)(src + 7);
                         *(u8*)(base + count + 0x4c8) = ((u8*)src)[0xf];
-                        if (src[2] < 0 || GameBit_Get(src[2]) == 0)
+                        if (src[2] < 0 || mainGetBit(src[2]) == 0)
                         {
                             *(u8*)(count + 0x488 + base) = 1;
                         }
@@ -196,7 +196,7 @@ int cMenuSetItems(s16* items, char useTricky)
                         halfOff += 2;
                     }
                 }
-                else if (src[1] < 0 || GameBit_Get(src[1]) == 0)
+                else if (src[1] < 0 || mainGetBit(src[1]) == 0)
                 {
                     if (gCMenuPreselectOwnedBit != 0 && gCMenuPreselectOwnedBit == *src)
                     {
@@ -211,7 +211,7 @@ int cMenuSetItems(s16* items, char useTricky)
                     *(s16*)(base + halfOff + 0x5c8) = src[5];
                     *(u8*)(base + count + 0x508) = *(u8*)(src + 7);
                     *(u8*)(base + count + 0x4c8) = ((u8*)src)[0xf];
-                    if (src[2] < 0 || GameBit_Get(src[2]) == 0)
+                    if (src[2] < 0 || mainGetBit(src[2]) == 0)
                     {
                         *(u8*)(count + 0x488 + base) = 1;
                     }

@@ -3096,7 +3096,7 @@ extern int gMapBlockLayerTables[];
 extern void* lbl_803DCEA8;
 extern int lbl_803DCE74;
 extern char sTrackCellCoordFormat[];
-extern void fn_80137948(char* fmt, ...);
+extern void logPrintf(char* fmt, ...);
 extern void modelRenderInstrsState_init(int* state, int buf, int s1, int s2);
 
 #pragma optimization_level 2
@@ -3178,7 +3178,7 @@ void mapDebugRender(int* state)
             cell = row * 0x40;
             cell += cz * 8;
             cell += cx;
-            fn_80137948(sTrackCellCoordFormat);
+            logPrintf(sTrackCellCoordFormat);
             v = lbl_803DCE70;
             n = v >> 3;
             if (v & 7)

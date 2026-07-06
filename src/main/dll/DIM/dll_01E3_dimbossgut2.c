@@ -170,7 +170,7 @@ void dimbossgut2_updateTracking(int obj, int state)
     return;
 }
 
-void dimbossgut2_free(int arg9)
+void DIM_BossGut2_free(int arg9)
 {
     int obj = arg9;
     u32 handle;
@@ -194,7 +194,7 @@ void dimbossgut2_free(int arg9)
     return;
 }
 
-void dimbossgut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void DIM_BossGut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8* light;
 
@@ -212,7 +212,7 @@ void dimbossgut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     return;
 }
 
-void dimbossgut2_update(int obj)
+void DIM_BossGut2_update(int obj)
 {
     int state;
     int tmpVar;
@@ -298,7 +298,7 @@ void dimbossgut2_update(int obj)
     return;
 }
 
-void dimbossgut2_init(int obj, int def, int p3)
+void DIM_BossGut2_init(int obj, int def, int p3)
 {
     int state;
     int curve;
@@ -359,23 +359,23 @@ void dimbossgut2_init(int obj, int def, int p3)
     }
 }
 
-void dimbossgut2_func11(void)
+void DIM_BossGut2_func0B(void)
 {
 }
 
-void dimbossgut2_hitDetect(void)
+void DIM_BossGut2_hitDetect(void)
 {
 }
 
-void dimbossgut2_release(void)
+void DIM_BossGut2_release(void)
 {
 }
 
-void dimbossgut2_initialise(void)
+void DIM_BossGut2_initialise(void)
 {
 }
 
 
-int dimbossgut2_setScale(void) { return 0x0; }
-int dimbossgut2_getExtraSize(void) { return 0x42c; }
-int dimbossgut2_getObjectTypeId(void) { return 0x49; }
+int DIM_BossGut2_setScale(void) { return 0x0; }
+int DIM_BossGut2_getExtraSize(void) { return 0x42c; }
+int DIM_BossGut2_getObjectTypeId(void) { return 0x49; }

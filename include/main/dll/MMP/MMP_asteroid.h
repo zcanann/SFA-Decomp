@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "global.h"
 
-void xyzanimator_update(int obj);
+void XyzAnimator_update(int obj);
 void FUN_801950ac(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801950d4(u32 param_1,u32 param_2,u32 *param_3);
 void FUN_801954f0(void);
@@ -21,11 +21,11 @@ void FUN_80195b9c(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
 void FUN_80196244(u16 *param_1,int param_2);
 void FUN_8019635c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80196384(int param_1);
-void texframeanimator_update(int *obj);
-void texframeanimator_init(int *obj, u8 *params);
+void TexFrameAnimator_update(int *obj);
+void TexFrameAnimator_init(int *obj, u8 *params);
 
 
-/* xyzanimator per-object extra state (xyzanimator_getExtraSize == 0x50):
+/* xyzanimator per-object extra state (XyzAnimator_getExtraSize == 0x50):
  * 16 int slots, current-offset vec at 0x40, mode/active bytes, looped SFX id. */
 typedef struct XyzAnimatorState {
     int rowCount;
@@ -75,7 +75,7 @@ typedef struct XyzAnimatorPlacement {
 } XyzAnimatorPlacement;
 
 
-/* dimbossicesmash per-object extra state (dimbossicesmash_getExtraSize
+/* dimbossicesmash per-object extra state (DIMBossIceSmash_getExtraSize
  * == 0x2A0): smash vectors at 0x26C.., home/target vec 0x278, s16 timer
  * at 0x29C. 0x0-0x68 region untyped (only float trio observed). */
 typedef struct DimBossIceSmashState {

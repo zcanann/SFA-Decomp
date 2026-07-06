@@ -4,7 +4,7 @@
  * fires, it raises the spirit-vision sky and env fx, plays an idle sfx on
  * a randomised timer, then steps a small state machine
  * (WAITING -> RISING -> ACTIVE -> CLOSING -> RESET) gated by the
- * DBSH_SHRINE_GB_* game bits. The sequence callback fn_801C8EBC drives
+ * DBSH_SHRINE_GB_* game bits. The sequence callback DBSH_Shrine_SeqFn drives
  * level/map unlocks and toggles the attached point light.
  */
 #include "main/dll/dll_0195_dbshshrine.h"
@@ -56,7 +56,7 @@ extern int lockLevel(s32 val, int idx);
 extern void modelLightStruct_setEnabled(int light, int enabled, double scale);
 extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
-extern void fn_80296518(int obj, int flag, int set);
+extern void objSetAnimStateFlags(int obj, int flag, int set);
 extern void* objCreateLight(int arg, u8 addToList);
 extern f32 timeDelta;
 extern f32 lbl_803E50DC;
@@ -69,7 +69,7 @@ extern f32 lbl_803E50D8;
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
     (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
-int fn_801C8EBC(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
+int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
     DbshShrineRuntime* runtime;
     int player;
@@ -92,9 +92,9 @@ int fn_801C8EBC(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
                 runtime->flags.latchStarted = 1;
                 break;
             case 7:
-                fn_80296518(player, 2, 1);
-                GameBit_Set(DBSH_SHRINE_GB_FIRST_RISE, 1);
-                GameBit_Set(0xc6e, 1);
+                objSetAnimStateFlags(player, 2, 1);
+                mainSetBits(DBSH_SHRINE_GB_FIRST_RISE, 1);
+                mainSetBits(0xc6e, 1);
                 (*gMapEventInterface)->setMapAct(0xb, 3);
                 unlockLevel(0, 0, 1);
                 lockLevel(mapGetDirIdx(10), 0);
@@ -147,8 +147,8 @@ void dbsh_shrine_free(int obj)
     Music_Trigger(MUSICTRIG_CC_Visit1, 0);
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
     Music_Trigger(MUSICTRIG_test_of_fear, 0);
-    GameBit_Set(DBSH_SHRINE_GB_ACTIVE, 0);
-    GameBit_Set(DBSH_SHRINE_GB_SCENE_BLOCK, 1);
+    mainSetBits(DBSH_SHRINE_GB_ACTIVE, 0);
+    mainSetBits(DBSH_SHRINE_GB_SCENE_BLOCK, 1);
 }
 
 void dbsh_shrine_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
@@ -230,7 +230,7 @@ void dbsh_shrine_update(DbshShrineObject* obj)
                 MAP_EVENT_SET_ANIM(obj->mapId, 1, 0);
             }
             runtime->state = DBSH_SHRINE_STATE_RISING;
-            GameBit_Set(DBSH_SHRINE_GB_APPROACH, 1);
+            mainSetBits(DBSH_SHRINE_GB_APPROACH, 1);
             obj->triggerRadius = 0x7fff;
             OBJECT_TRIGGER_REFRESH(0, obj, -1);
             Music_Trigger(MUSICTRIG_DIM_Snow, 1);
@@ -241,19 +241,19 @@ void dbsh_shrine_update(DbshShrineObject* obj)
         if (runtime->flags.latchStarted != 0)
         {
             runtime->state = DBSH_SHRINE_STATE_ACTIVE;
-            GameBit_Set(DBSH_SHRINE_GB_RISE_DONE, 1);
+            mainSetBits(DBSH_SHRINE_GB_RISE_DONE, 1);
         }
         break;
     case DBSH_SHRINE_STATE_ACTIVE:
-        if (GameBit_Get(DBSH_SHRINE_GB_CLOSE_A) != 0)
+        if (mainGetBit(DBSH_SHRINE_GB_CLOSE_A) != 0)
         {
             runtime->state = DBSH_SHRINE_STATE_CLOSING;
             runtime->resetTimer = 0;
         }
-        else if (GameBit_Get(DBSH_SHRINE_GB_CLOSE_B) != 0)
+        else if (mainGetBit(DBSH_SHRINE_GB_CLOSE_B) != 0)
         {
             runtime->state = DBSH_SHRINE_STATE_RESET;
-            GameBit_Set(DBSH_SHRINE_GB_RESET_A, 1);
+            mainSetBits(DBSH_SHRINE_GB_RESET_A, 1);
             runtime->resetTimer = 10;
         }
         break;
@@ -261,19 +261,19 @@ void dbsh_shrine_update(DbshShrineObject* obj)
         runtime->state = DBSH_SHRINE_STATE_RESET;
         audioStopByMask(3);
         OBJECT_TRIGGER_REFRESH(1, obj, -1);
-        GameBit_Set(DBSH_SHRINE_GB_APPROACH, 0);
+        mainSetBits(DBSH_SHRINE_GB_APPROACH, 0);
         break;
     case DBSH_SHRINE_STATE_RESET:
         runtime->state = DBSH_SHRINE_STATE_WAITING;
         runtime->flags.latchStarted = 0;
         runtime->resetTimer = 0;
-        GameBit_Set(DBSH_SHRINE_GB_APPROACH, 0);
-        GameBit_Set(DBSH_SHRINE_GB_FIRST_RISE, 0);
-        GameBit_Set(DBSH_SHRINE_GB_RISE_DONE, 0);
-        GameBit_Set(DBSH_SHRINE_GB_CLOSE_A, 0);
-        GameBit_Set(DBSH_SHRINE_GB_CLOSE_B, 0);
-        GameBit_Set(DBSH_SHRINE_GB_RESET_A, 0);
-        GameBit_Set(DBSH_SHRINE_GB_RESET_B, 0);
+        mainSetBits(DBSH_SHRINE_GB_APPROACH, 0);
+        mainSetBits(DBSH_SHRINE_GB_FIRST_RISE, 0);
+        mainSetBits(DBSH_SHRINE_GB_RISE_DONE, 0);
+        mainSetBits(DBSH_SHRINE_GB_CLOSE_A, 0);
+        mainSetBits(DBSH_SHRINE_GB_CLOSE_B, 0);
+        mainSetBits(DBSH_SHRINE_GB_RESET_A, 0);
+        mainSetBits(DBSH_SHRINE_GB_RESET_B, 0);
         break;
     }
 }
@@ -283,14 +283,14 @@ void dbsh_shrine_init(DbshShrineObject* obj)
     DbshShrineRuntime* runtime;
 
     runtime = obj->runtime;
-    obj->messageFn = fn_801C8EBC;
+    obj->messageFn = DBSH_Shrine_SeqFn;
     obj->triggerRadius = 0;
     runtime->state = DBSH_SHRINE_STATE_WAITING;
     runtime->flags.latchStarted = 0;
     runtime->resetTimer = 0;
 
     ObjMsg_AllocQueue(obj, 4);
-    GameBit_Set(DBSH_SHRINE_GB_FIRST_RISE, 0);
+    mainSetBits(DBSH_SHRINE_GB_FIRST_RISE, 0);
 
     if ((u8)MAP_EVENT_GET_ANIM(obj->mapId, 1) == 0)
     {
@@ -307,8 +307,8 @@ void dbsh_shrine_init(DbshShrineObject* obj)
         runtime->light = objCreateLight(0, 1);
     }
 
-    GameBit_Set(DBSH_SHRINE_GB_ACTIVE, 1);
-    GameBit_Set(DBSH_SHRINE_GB_INITIALIZED, 1);
+    mainSetBits(DBSH_SHRINE_GB_ACTIVE, 1);
+    mainSetBits(DBSH_SHRINE_GB_INITIALIZED, 1);
 }
 
 void dbsh_shrine_release(void)

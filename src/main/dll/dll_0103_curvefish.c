@@ -3,7 +3,7 @@
  * curve path (Curve_AdvanceAlongPath), fading in on spawn and steering its
  * yaw toward the next path node each frame.
  *
- * curvefish_update is a four-stage state machine (CurveFishState.mode):
+ * CurveFish_update is a four-stage state machine (CurveFishState.mode):
  *   0  wait setup->waitFrames game-frames, then advance;
  *   1  teleport to setup->spawn{X,Y,Z}, bind the walker to the three curve
  *      nodes nearest that point, seed speed; bail back to wait if the curve
@@ -28,19 +28,19 @@
 extern f32 getXZDistance(f32* a, f32* b);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
-extern int fn_80296448(int obj);
+extern int playerGetFlags3F0Bit5(int obj);
 extern f32 timeDelta;
 
 /* ROM curve query key for the fish path curves; first entry of this TU's
  * .sdata2 (retail 0x803E38E8), followed by the compiler float pool. Read
- * through a volatile view in curvefish_update so the value is not constant
+ * through a volatile view in CurveFish_update so the value is not constant
  * folded away. */
 const u32 gCurveFishCurveQueryKey = 0x23;
 
 /* per-frame cap on the body's yaw turn toward the next path node */
 #define CURVEFISH_MAX_YAW_TURN 0x180
 
-int curvefish_getExtraSize(void) { return 0x120; }
+int CurveFish_getExtraSize(void) { return 0x120; }
 
 typedef struct CurveFishSetup
 {
@@ -85,7 +85,7 @@ typedef enum CurveFishMode
     CURVEFISH_MODE_CRUISE = 3,  /* cruise along the path; reaching the end resets to wait */
 } CurveFishMode;
 
-void curvefish_update(int obj)
+void CurveFish_update(int obj)
 {
     CurveFishState* state;
     CurveFishSetup* setup;
@@ -163,7 +163,7 @@ void curvefish_update(int obj)
         {
             state->speed = 2.0f * state->maxSpeed;
         }
-        else if (fn_80296448((int)player) != 0 &&
+        else if (playerGetFlags3F0Bit5((int)player) != 0 &&
             getXZDistance(&((GameObject*)player)->anim.localPosX, (f32*)(obj + 0xc)) <
             (f32)(u32)setup->playerRadius * (f32)(u32)setup->playerRadius)
         {
@@ -289,7 +289,7 @@ void curvefish_update(int obj)
     }
 }
 
-void curvefish_init(int obj, u8* setup)
+void CurveFish_init(int obj, u8* setup)
 {
     int state;
     u32 flags;

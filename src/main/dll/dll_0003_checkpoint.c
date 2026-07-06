@@ -14,7 +14,7 @@
  * double-buffered particle-ranking list (lbl_803DD418/lbl_803DD41C, swapped
  * each game loop) holding up to 10 entries (lbl_803DD414/lbl_803DD416).
  *
- * Checkpoint_Add / Checkpoint_remove keep the table key-sorted;
+ * Checkpoint_Add / Checkpoint_Remove keep the table key-sorted;
  * Checkpoint_find does a binary search by key. fn_800D55BC builds the per-
  * segment Hermite control points (curve mode 0 = endpoints, 1 = full 4-point
  * spline sampled along the heading-rotated cross section, >=2 = single point);
@@ -714,7 +714,7 @@ void Checkpoint_Add(CheckpointRouteEntry* entry)
 }
 
 #pragma opt_common_subs off
-void Checkpoint_remove(CheckpointRouteEntry* obj)
+void Checkpoint_Remove(CheckpointRouteEntry* obj)
 {
     extern u32 gCheckpointRouteCount;
     int count;

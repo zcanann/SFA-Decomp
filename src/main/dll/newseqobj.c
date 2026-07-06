@@ -2,7 +2,7 @@
  * sidekick-toy baddie reaction + update handlers. The object is a
  * curve-following toy/pet baddie driven by per-family anim tables keyed off
  * BaddieState.inWhirlpoolGroup (state[0x33b]):
- *   - fn_801504F8: hit/message reaction handler. Maps incoming message ids
+ *   - sidekickToy_handleHitMessage: hit/message reaction handler. Maps incoming message ids
  *     (0xe..0x1f) onto reaction flags (BaddieState.reactionFlags 8/0x10/0x28),
  *     starts a new anim move from the per-family row tables, decrements the
  *     hit counter and plays the impact sfx (0x13/0x14/0x22).
@@ -89,7 +89,7 @@ typedef struct
     u16 padA;  /* 0xa */
 } IdleRow;
 
-int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int damage)
+int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int damage)
 {
     u8* animRows;
     u8* rowsC;
@@ -272,7 +272,7 @@ void fn_80150EDC(void* obj, void* state)
 
     if (idx == 5 && (((BaddieState*)state)->controlFlags & 0x800000) != 0)
     {
-        GameBit_Set(0x1c8, 1);
+        mainSetBits(0x1c8, 1);
     }
 
     if (((BaddieState*)state)->trackedObj != NULL &&
@@ -392,7 +392,7 @@ void fn_80150910(int* obj, u8* state)
 
     if (state[0x33b] == 5 && (((BaddieState*)state)->controlFlags & 0x800000))
     {
-        GameBit_Set(0x1c8, 1);
+        mainSetBits(0x1c8, 1);
     }
     fn_8015039C(obj, state);
     {

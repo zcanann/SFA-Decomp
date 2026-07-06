@@ -124,7 +124,7 @@ STATIC_ASSERT(offsetof(DIMbosstonsilState, hitReactMode) == DIMBOSSTONSIL_HIT_RE
 extern DIMbosstonsilLight *gDIMbosstonsilLight;
 extern s8 gDIMbosstonsilRoutePhase;
 
-int dll_DIM_BossGutSpik_update(void *obj,u32 param_2,ObjAnimUpdateState *animUpdate);
+int DIMbosstonsil_SeqFn(void *obj,u32 param_2,ObjAnimUpdateState *animUpdate);
 void DIMbosstonsil_func0B(void);
 int DIMbosstonsil_setScale(int obj);
 int DIMbosstonsil_getExtraSize(void);

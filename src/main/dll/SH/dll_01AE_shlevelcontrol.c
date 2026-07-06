@@ -2,7 +2,7 @@
  * shlevelcontrol (DLL 0x1AE) - the SnowHorn / ThornTail Hollow area level
  * controller object.
  *
- * sh_levelcontrol_update is the area's per-frame script driver: it keeps
+ * SH_LevelControl_update is the area's per-frame script driver: it keeps
  * the day/night music in sync (SH_LevelControl_setMusic + the
  * SCGameBitLatch helpers), mirrors a set of game bits onto map-event
  * object-group statuses, and dispatches the active sub-event by the
@@ -50,7 +50,7 @@ char sSPShopNumBloopsFormat[] = "numBloops %d\n";
 extern f32 gShLevelControlBloopTimeLimit;
 extern f32 lbl_803E54B4; /* 0.0f floor: bloop-timer expiry, hud-text floor, sky-brightness arg */
 extern f32 timeDelta;
-extern void fn_80137948(char* fmt, ...);
+extern void logPrintf(char* fmt, ...);
 
 extern int ObjList_FindObjectById(int objectId);
 extern int isScreenTransitionActive(void);
@@ -75,22 +75,22 @@ extern f32 gShLevelControlHudTextDuration;
    ("slack"); the level-control sequences wait for it to clear before advancing. */
 #define SHLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 
-int sh_levelcontrol_getExtraSize(void)
+int SH_LevelControl_getExtraSize(void)
 {
     return 0x14;
 }
 
-void sh_levelcontrol_free(void)
+void SH_LevelControl_free(void)
 {
 
     envFxActFn_800887f8(0);
-    if (GameBit_Get(0x13F) == 0)
+    if (mainGetBit(0x13F) == 0)
     {
         (*gGameUIInterface)->airMeterShutdown();
     }
-    if (GameBit_Get(0x193) != 0)
+    if (mainGetBit(0x193) != 0)
     {
-        GameBit_Set(0x194, 0);
+        mainSetBits(0x194, 0);
     }
 }
 
@@ -129,10 +129,10 @@ void mapUnloadFn_801d7c94(void* obj, void* p2)
     puzzleObj = (SCTotemLogPuzzleObject*)obj;
     runtime = (SCTotemLogPuzzleRuntime*)p2;
 
-    if ((u32)GameBit_Get(SCTOTEMLOGPUZ_RESET_GAMEBIT) != 0)
+    if ((u32)mainGetBit(SCTOTEMLOGPUZ_RESET_GAMEBIT) != 0)
     {
         runtime->eventCountdown = SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET;
-        GameBit_Set(SCTOTEMLOGPUZ_RESET_GAMEBIT, 0);
+        mainSetBits(SCTOTEMLOGPUZ_RESET_GAMEBIT, 0);
     }
     if (runtime->eventCountdown == 0) return;
 
@@ -177,19 +177,19 @@ void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetB
 
     if ((state->activeMask & mask) != 0)
     {
-        if (clearIfSetBitValid == 0 || GameBit_Get(clearIfSetBit) == 0)
+        if (clearIfSetBitValid == 0 || mainGetBit(clearIfSetBit) == 0)
         {
-            if (GameBit_Get(latchBit) != 0) goto end;
+            if (mainGetBit(latchBit) != 0) goto end;
         }
         if (clearIfSetBitValid != 0)
         {
-            GameBit_Set(clearIfSetBit, 0);
+            mainSetBits(clearIfSetBit, 0);
         }
         if (clearIfClearBitValid != 0)
         {
-            GameBit_Set(clearIfClearBit, 0);
+            mainSetBits(clearIfClearBit, 0);
         }
-        GameBit_Set(latchBit, 0);
+        mainSetBits(latchBit, 0);
         if (musicId != -1)
         {
             Music_Trigger(musicId, 0);
@@ -198,19 +198,19 @@ void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetB
     }
     else
     {
-        if (clearIfClearBitValid == 0 || GameBit_Get(clearIfClearBit) == 0)
+        if (clearIfClearBitValid == 0 || mainGetBit(clearIfClearBit) == 0)
         {
-            if (GameBit_Get(latchBit) == 0) goto end;
+            if (mainGetBit(latchBit) == 0) goto end;
         }
         if (clearIfSetBitValid != 0)
         {
-            GameBit_Set(clearIfSetBit, 0);
+            mainSetBits(clearIfSetBit, 0);
         }
         if (clearIfClearBitValid != 0)
         {
-            GameBit_Set(clearIfClearBit, 0);
+            mainSetBits(clearIfClearBit, 0);
         }
-        GameBit_Set(latchBit, 1);
+        mainSetBits(latchBit, 1);
         if (musicId != -1)
         {
             Music_Trigger(musicId, 1);
@@ -226,9 +226,9 @@ void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 cle
                                    s16 clearIfClearBit, s16 latchBit, int musicId)
 {
 
-    GameBit_Set(latchBit, !GameBit_Get(latchBit));
+    mainSetBits(latchBit, !mainGetBit(latchBit));
     SCGameBitLatch_Update(state, mask, clearIfSetBit, clearIfClearBit, latchBit, musicId);
-    GameBit_Set(latchBit, !GameBit_Get(latchBit));
+    mainSetBits(latchBit, !mainGetBit(latchBit));
 }
 
 #pragma dont_inline on
@@ -279,11 +279,11 @@ void SH_LevelControl_setMusic(short* obj)
             }
         }
     }
-    if (GameBit_Get(0xb) != 0)
+    if (mainGetBit(0xb) != 0)
     {
-        if (GameBit_Get(0x64b) != 0)
+        if (mainGetBit(0x64b) != 0)
         {
-            GameBit_Set(0x390, 1);
+            mainSetBits(0x390, 1);
         }
         SCGameBitLatch_Update((SCGameBitLatchState*)obj, 1, 0x1a7, 0x64b, 0x372, obj[8]);
         SCGameBitLatch_Update((SCGameBitLatchState*)obj, 2, 0x1a8, 0xc0, 0x390, obj[9]);
@@ -331,13 +331,13 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     u8 j;
 
     if (((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0) &&
-        (GameBit_Get(0x13f) == 0))
+        (mainGetBit(0x13f) == 0))
     {
         ((ShLevelcontrolState*)state)->eventState = 0;
         (*gGameUIInterface)->airMeterShutdown();
         for (j = 0; j < 0x12; j++)
         {
-            GameBit_Set(lbl_80327618[j], 0);
+            mainSetBits(lbl_80327618[j], 0);
         }
     }
 
@@ -345,7 +345,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     switch (((ShLevelcontrolState*)state)->eventState)
     {
     case 0:
-        if (GameBit_Get(0x13f) != 0)
+        if (mainGetBit(0x13f) != 0)
         {
             ((ShLevelcontrolState*)state)->eventState = 7;
         }
@@ -355,7 +355,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         }
         break;
     case 1:
-        if (GameBit_Get(0x124) != 0)
+        if (mainGetBit(0x124) != 0)
         {
             (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
             ((ShLevelcontrolState*)state)->timer8 = gShLevelControlBloopTimeLimit;
@@ -367,12 +367,12 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         bloopsRemaining = 0x12;
         for (i = 0; i < 0x12; i++)
         {
-            if (GameBit_Get(lbl_80327618[i]) != 0)
+            if (mainGetBit(lbl_80327618[i]) != 0)
             {
                 bloopsRemaining--;
             }
         }
-        fn_80137948(sSPShopNumBloopsFormat, bloopsRemaining);
+        logPrintf(sSPShopNumBloopsFormat, bloopsRemaining);
         if (bloopsRemaining == 0)
         {
             (*gGameUIInterface)->airMeterShutdown();
@@ -404,7 +404,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         if (((*gScreenTransitionInterface)->isFinished() != 0) &&
             ((((GameObject*)Obj_GetPlayerObject())->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0))
         {
-            GameBit_Set(0x13f, 1);
+            mainSetBits(0x13f, 1);
             (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
             ((ShLevelcontrolState*)state)->eventState = 4;
         }
@@ -424,12 +424,12 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         (*gMapEventInterface)->gotoRestartPoint();
         break;
     case 7:
-        if (GameBit_Get(0xea6) == 0)
+        if (mainGetBit(0xea6) == 0)
         {
-            GameBit_Set(0xea6, 1);
-            if (GameBit_Get(0x1a2) == 0)
+            mainSetBits(0xea6, 1);
+            if (mainGetBit(0x1a2) == 0)
             {
-                GameBit_Set(0x9d5, 1);
+                mainSetBits(0x9d5, 1);
             }
         }
         break;
@@ -440,20 +440,20 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         if (((ShLevelcontrolState*)state)->musicLatch != 0xf2)
         {
             ((ShLevelcontrolState*)state)->musicLatch = 0xf2;
-            GameBit_Set(0xc0, 1);
+            mainSetBits(0xc0, 1);
             ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
         }
     }
     else if (((ShLevelcontrolState*)state)->musicLatch != 0xcc)
     {
         ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
-        GameBit_Set(0xc0, 1);
+        mainSetBits(0xc0, 1);
         ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
     }
 
-    if ((GameBit_Get(0xea8) == 0) && (GameBit_Get(0x91b) != 0))
+    if ((mainGetBit(0xea8) == 0) && (mainGetBit(0x91b) != 0))
     {
-        GameBit_Set(0xea8, 1);
+        mainSetBits(0xea8, 1);
         (*gMapEventInterface)->savePoint(0, 0, 1, 0);
     }
 }
@@ -486,10 +486,10 @@ typedef struct ShopkeeperObject
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
     (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 #define SHOPKEEPER_APPLY_MAP_OVERRIDE(state, enabledBit)      \
-    if (GameBit_Get((enabledBit)) != 0) {                     \
+    if (mainGetBit((enabledBit)) != 0) {                     \
         if ((state)->mapOverride != 0xcc) {                   \
             (state)->mapOverride = 0xcc;                      \
-            GameBit_Set(0xc0, 1);                             \
+            mainSetBits(0xc0, 1);                             \
             (state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;\
         }                                                     \
     } else if ((state)->mapOverride == 0xcc) {                \
@@ -510,7 +510,7 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* sta
     switch (state->thornTailState)
     {
     case 0:
-        if (GameBit_Get(0xd39) != 0)
+        if (mainGetBit(0xd39) != 0)
         {
             state->thornTailState = 7;
         }
@@ -529,7 +529,7 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* sta
             {
                 OBJECT_TRIGGER_REFRESH(6, obj, -1);
                 state->thornTailState = 7;
-                GameBit_Set(0xd39, 1);
+                mainSetBits(0xd39, 1);
             }
         }
         break;
@@ -538,11 +538,11 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* sta
     }
 
     if ((state->flags & SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED) == 0 &&
-        GameBit_Get(0x190) != 0 &&
-        GameBit_Get(0x191) != 0 &&
-        GameBit_Get(0x192) != 0)
+        mainGetBit(0x190) != 0 &&
+        mainGetBit(0x191) != 0 &&
+        mainGetBit(0x192) != 0)
     {
-        if (GameBit_Get(0x193) == 0)
+        if (mainGetBit(0x193) == 0)
         {
             thornTailObj = (ShopkeeperObject*)ObjList_FindObjectById(SHOPKEEPER_THORNTAIL_OBJECT_ID);
             if (thornTailObj != 0)
@@ -552,13 +552,13 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* sta
                 {
                     if (isScreenTransitionActive() != 0)
                     {
-                        GameBit_Set(0x193, 1);
+                        mainSetBits(0x193, 1);
                         OBJECT_TRIGGER_REFRESH(1, obj, -1);
                         state->flags |= SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED;
                     }
                     else
                     {
-                        GameBit_Set(0x193, 1);
+                        mainSetBits(0x193, 1);
                         SCREEN_TRANSITION_START(0x14, 1);
                     }
                 }
@@ -579,9 +579,9 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* sta
         }
     }
 
-    if (GameBit_Get(0xea9) == 0 && GameBit_Get(0x611) != 0)
+    if (mainGetBit(0xea9) == 0 && mainGetBit(0x611) != 0)
     {
-        GameBit_Set(0xea9, 1);
+        mainSetBits(0xea9, 1);
         MAP_EVENT_TRIGGER(0, 0, 1, 0);
     }
 }
@@ -596,7 +596,7 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
 
     if (state->earlySceneDelay >= 2)
     {
-        if (GameBit_Get(0xb) == 0)
+        if (mainGetBit(0xb) == 0)
         {
             padClearAnalogInputX(0);
             padClearAnalogInputY(0);
@@ -607,13 +607,13 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
             if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0)
             {
                 OBJECT_TRIGGER_REFRESH(0, obj, -1);
-                GameBit_Set(0xb, 1);
+                mainSetBits(0xb, 1);
             }
         }
 
         if ((state->flags & SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED) == 0)
         {
-            GameBit_Set(0x2ba, 0);
+            mainSetBits(0x2ba, 0);
             state->flags |= SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED;
         }
     }
@@ -622,16 +622,16 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
         state->earlySceneDelay++;
     }
 
-    if (GameBit_Get(GAMEBIT_STAFF_TUTORIAL_ARENA_CLEARED) == 0 &&
-        GameBit_Get(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_3) != 0 &&
-        GameBit_Get(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_4) != 0 &&
-        GameBit_Get(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_1) != 0 &&
-        GameBit_Get(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_2) != 0)
+    if (mainGetBit(GAMEBIT_STAFF_TUTORIAL_ARENA_CLEARED) == 0 &&
+        mainGetBit(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_3) != 0 &&
+        mainGetBit(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_4) != 0 &&
+        mainGetBit(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_1) != 0 &&
+        mainGetBit(GAMEBIT_STAFF_TUTORIAL_SHARPCLAW_DEAD_2) != 0)
     {
         playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
         if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0)
         {
-            GameBit_Set(GAMEBIT_STAFF_TUTORIAL_ARENA_CLEARED, 1);
+            mainSetBits(GAMEBIT_STAFF_TUTORIAL_ARENA_CLEARED, 1);
         }
     }
 
@@ -645,7 +645,7 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
     }
 }
 
-void sh_levelcontrol_update(int obj)
+void SH_LevelControl_update(int obj)
 {
     extern u8 lbl_80327618[0x104];
     extern void SH_LevelControl_doEarlyScenes(int obj, u32* state);
@@ -672,7 +672,7 @@ void sh_levelcontrol_update(int obj)
         }
     }
     SH_LevelControl_setMusic(state);
-    val = GameBit_Get(0x3aa);
+    val = mainGetBit(0x3aa);
     if (val != 0)
     {
         if (((GameObject*)obj)->anim.mapEventSlot == 8)
@@ -692,7 +692,7 @@ void sh_levelcontrol_update(int obj)
             }
         }
     }
-    val = GameBit_Get(0x3b8);
+    val = mainGetBit(0x3b8);
     if (val != 0)
     {
         animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c);
@@ -709,14 +709,14 @@ void sh_levelcontrol_update(int obj)
             (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c, 0);
         }
     }
-    val = GameBit_Get(GAMEBIT_STAFF_TUTORIAL_ARENA_REWARD_UNLOCKED);
+    val = mainGetBit(GAMEBIT_STAFF_TUTORIAL_ARENA_REWARD_UNLOCKED);
     if ((val != 0) &&
         (animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b),
             animEvt == '\0'))
     {
         (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b, 1);
     }
-    val = GameBit_Get(GAMEBIT_STAFF_TUTORIAL_ARENA_ACTIVE);
+    val = mainGetBit(GAMEBIT_STAFF_TUTORIAL_ARENA_ACTIVE);
     if (val != 0)
     {
         animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a);
@@ -739,32 +739,32 @@ void sh_levelcontrol_update(int obj)
         SH_LevelControl_doEarlyScenes(obj, state);
         break;
     case 2:
-        val = GameBit_Get(0xbf);
-        if ((val != 0) && (val3 = GameBit_Get(0xc2), val3 < 6))
+        val = mainGetBit(0xbf);
+        if ((val != 0) && (val3 = mainGetBit(0xc2), val3 < 6))
         {
             if (((ShLevelcontrolState*)state)->musicLatch != 0xdb)
             {
                 ((ShLevelcontrolState*)state)->musicLatch = 0xdb;
-                GameBit_Set(0xc0, 1);
+                mainSetBits(0xc0, 1);
                 ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
             }
         }
         else
         {
-            val = GameBit_Get(0xc2);
+            val = mainGetBit(0xc2);
             if ((val == 6) && (((ShLevelcontrolState*)state)->musicLatch != 0xcc))
             {
                 ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
-                GameBit_Set(0xc0, 1);
+                mainSetBits(0xc0, 1);
                 ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
             }
         }
-        val = GameBit_Get(0xc2);
-        val2 = GameBit_Get(0x66d);
-        if ((val2 + val == 6) && (val = GameBit_Get(0xe5b), val == 0))
+        val = mainGetBit(0xc2);
+        val2 = mainGetBit(0x66d);
+        if ((val2 + val == 6) && (val = mainGetBit(0xe5b), val == 0))
         {
             Sfx_PlayFromObject(obj, SFXmn_sml_trex_fstep);
-            GameBit_Set(0xe5b, 1);
+            mainSetBits(0xe5b, 1);
         }
         break;
     case 3:
@@ -774,12 +774,12 @@ void sh_levelcontrol_update(int obj)
         if (((ShLevelcontrolState*)state)->musicLatch != 0xcc)
         {
             ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
-            GameBit_Set(0xc0, 1);
+            mainSetBits(0xc0, 1);
             ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
         }
         if (((ShLevelcontrolState*)state)->waitCounter >= 2)
         {
-            val = GameBit_Get(0xdff);
+            val = mainGetBit(0xdff);
             if (val == 0)
             {
                 padClearAnalogInputX(0);
@@ -791,16 +791,16 @@ void sh_levelcontrol_update(int obj)
                 if ((((GameObject*)val)->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
                 {
                     (*gObjectTriggerInterface)->runSequence(7, (void*)obj, 0xffffffff);
-                    GameBit_Set(0xdff, 1);
+                    mainSetBits(0xdff, 1);
                 }
             }
             else
             {
-                val = GameBit_Get(0xede);
+                val = mainGetBit(0xede);
                 if (val == 0)
                 {
-                    GameBit_Set(0xede, 1);
-                    GameBit_Set(0x9d5, 1);
+                    mainSetBits(0xede, 1);
+                    mainSetBits(0x9d5, 1);
                 }
             }
         }
@@ -810,13 +810,13 @@ void sh_levelcontrol_update(int obj)
         }
         break;
     case 5:
-        val = GameBit_Get(0x23c);
+        val = mainGetBit(0x23c);
         if (val != 0)
         {
             if (((ShLevelcontrolState*)state)->musicLatch != 0xcc)
             {
                 ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
-                GameBit_Set(0xc0, 1);
+                mainSetBits(0xc0, 1);
                 ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
             }
         }
@@ -824,24 +824,24 @@ void sh_levelcontrol_update(int obj)
         {
             ((ShLevelcontrolState*)state)->musicLatch = -1;
         }
-        val = GameBit_Get(0x90);
-        if (((val != 0) && (val = GameBit_Get(0xeb3), val == 0)) &&
+        val = mainGetBit(0x90);
+        if (((val != 0) && (val = mainGetBit(0xeb3), val == 0)) &&
             (val = Obj_GetPlayerObject(), (((GameObject*)val)->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0))
         {
-            GameBit_Set(0xeb3, 1);
+            mainSetBits(0xeb3, 1);
         }
         break;
     case 6:
         SH_LevelControl_runBloopEvent(obj, state);
         break;
     case 7:
-        val = GameBit_Get(0x1a0);
+        val = mainGetBit(0x1a0);
         if (val != 0)
         {
             if (((ShLevelcontrolState*)state)->musicLatch != 0xcc)
             {
                 ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
-                GameBit_Set(0xc0, 1);
+                mainSetBits(0xc0, 1);
                 ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
             }
         }
@@ -851,7 +851,7 @@ void sh_levelcontrol_update(int obj)
         }
         if (((ShLevelcontrolState*)state)->waitCounter >= 2)
         {
-            val = GameBit_Get(0x177);
+            val = mainGetBit(0x177);
             if (val == 0)
             {
                 padClearAnalogInputX(0);
@@ -863,7 +863,7 @@ void sh_levelcontrol_update(int obj)
                 if ((((GameObject*)val)->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
                 {
                     (*gObjectTriggerInterface)->runSequence(4, (void*)obj, 0xffffffff);
-                    GameBit_Set(0x177, 1);
+                    mainSetBits(0x177, 1);
                 }
             }
         }
@@ -876,21 +876,21 @@ void sh_levelcontrol_update(int obj)
         if (((ShLevelcontrolState*)state)->musicLatch != 0xcc)
         {
             ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
-            GameBit_Set(0xc0, 1);
+            mainSetBits(0xc0, 1);
             ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
         }
-        val = GameBit_Get(0x19c);
-        if ((val != 0) && (val = GameBit_Get(0xf3e), val == 0))
+        val = mainGetBit(0x19c);
+        if ((val != 0) && (val = mainGetBit(0xf3e), val == 0))
         {
-            GameBit_Set(0xf3e, 1);
-            val = GameBit_Get(0xc64);
+            mainSetBits(0xf3e, 1);
+            val = mainGetBit(0xc64);
             if (val == 0)
             {
-                GameBit_Set(0x9d5, 1);
+                mainSetBits(0x9d5, 1);
             }
         }
     }
-    val = GameBit_Get(0xd36);
+    val = mainGetBit(0xd36);
     if (val != 0)
     {
         if (((GameObject*)obj)->unkF8 != 2)
@@ -915,7 +915,7 @@ void sh_levelcontrol_update(int obj)
     }
     else
     {
-        val = GameBit_Get(0xd35);
+        val = mainGetBit(0xd35);
         if (val != 0)
         {
             if (((GameObject*)obj)->unkF8 != 1)
@@ -961,7 +961,7 @@ void sh_levelcontrol_update(int obj)
     return;
 }
 
-void sh_levelcontrol_init(int obj)
+void SH_LevelControl_init(int obj)
 {
 
     extern void Music_Trigger(int id, int arg);
@@ -987,7 +987,7 @@ void sh_levelcontrol_init(int obj)
     ((ShLevelcontrolState*)state)->unk10 = -1;
     ((ShLevelcontrolState*)state)->hudTextTimer = gShLevelControlHudTextDuration;
 
-    if (GameBit_Get(0x611) != 0)
+    if (mainGetBit(0x611) != 0)
     {
         ((ShLevelcontrolState*)state)->flags |= SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED;
     }
@@ -1002,14 +1002,14 @@ void sh_levelcontrol_init(int obj)
     Music_Trigger(MUSICTRIG_wcity_day, 0);
     Music_Trigger(MUSICTRIG_trex_boss_1, 0);
     Music_Trigger(MUSICTRIG_drako_3, 0);
-    GameBit_Set(3213, 1);
+    mainSetBits(3213, 1);
 
-    if (GameBit_Get(319) == 0)
+    if (mainGetBit(319) == 0)
     {
         extern s16 lbl_80327618[];
         for (i = 0; i < 18; i++)
         {
-            GameBit_Set(lbl_80327618[i], 0);
+            mainSetBits(lbl_80327618[i], 0);
         }
     }
     timeOfDayFn_80055000();

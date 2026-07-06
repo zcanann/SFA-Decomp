@@ -145,7 +145,7 @@ void drakord_thornbush_update(int obj)
         switch (((GameObject*)obj)->anim.seqId)
         {
         case THORNBUSH_SEQ_THORN:
-            if (fn_802972A8((int)Obj_GetPlayerObject()) != NULL)
+            if (playerGetFocusObject((int)Obj_GetPlayerObject()) != NULL)
             {
                 ObjHits_ClearHitVolumes(obj);
                 ObjHits_EnableObject(obj);

@@ -149,7 +149,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     def = *(int**)&((GameObject*)obj)->anim.placementData;
     if (((DimlavasmashState*)state)->state == 0)
     {
-        if (GameBit_Get(((DimlavasmashPlacement*)def)->gateGameBit) != 0)
+        if (mainGetBit(((DimlavasmashPlacement*)def)->gateGameBit) != 0)
         {
             hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             hitState->flags |= 1;
@@ -176,7 +176,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if (animUpdate->triggerCommand == 1)
         {
-            GameBit_Set(((DimlavasmashPlacement*)def)->triggerGameBit, 1);
+            mainSetBits(((DimlavasmashPlacement*)def)->triggerGameBit, 1);
             ((DimlavasmashState*)state)->state = 1;
         }
     }
@@ -207,7 +207,7 @@ void dimlavasmash_init(s16* obj, s8* def)
     inner = ((GameObject*)obj)->extra;
     inner->surfaceLayerId = (u8)((DimlavasmashObjectDef*)def)->surfaceLayerId;
     inner->unk0 = (s8)((DimlavasmashObjectDef*)def)->unk1C;
-    inner->state = GameBit_Get(((DimlavasmashObjectDef*)def)->gameBit);
+    inner->state = mainGetBit(((DimlavasmashObjectDef*)def)->gameBit);
     if (inner->state == 1)
     {
         block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,

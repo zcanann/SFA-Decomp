@@ -56,7 +56,7 @@ typedef struct AreaFxEmitPlacement {
 
 /*
  * Per-object extra state for the areafxemit volume particle emitter
- * (areafxemit_getExtraSize == 0x20).
+ * (AreaFxEmit_getExtraSize == 0x20).
  */
 typedef struct AreaFxEmitState {
     f32 triggerRadius; /* (s8)setup[0x18] << 2; sentinel value = always emit */
@@ -216,7 +216,7 @@ STATIC_ASSERT(offsetof(LfxEmitterState, flags) == 0x120);
 STATIC_ASSERT(offsetof(LfxEmitterObject, objAnim) == 0x00);
 STATIC_ASSERT(offsetof(LfxEmitterObject, state) == 0xB8);
 
-void fxemit_init(FxEmitObject *obj, FxEmitPlacement *setup);
+void FxEmit_init(FxEmitObject *obj, FxEmitPlacement *setup);
 void FUN_8018f158(u32 param_1);
 void FUN_8018f1b4(short *param_1);
 void FUN_8018f4fc(u16 *param_1,int param_2);
@@ -236,15 +236,15 @@ void FUN_80190004(u64 param_1,double param_2,double param_3,u64 param_4,
                  short *param_9);
 void FUN_80190008(int param_1,int param_2);
 
-int areafxemit_getExtraSize(void);
-int areafxemit_getObjectTypeId(void);
-void areafxemit_free(AreaFxEmitObject *obj);
-void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void areafxemit_hitDetect(void);
-void areafxemit_update(AreaFxEmitObject *obj);
-void areafxemit_init(AreaFxEmitObject *obj, AreaFxEmitPlacement *setup);
-void areafxemit_release(void);
-void areafxemit_initialise(void);
+int AreaFxEmit_getExtraSize(void);
+int AreaFxEmit_getObjectTypeId(void);
+void AreaFxEmit_free(AreaFxEmitObject *obj);
+void AreaFxEmit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void AreaFxEmit_hitDetect(void);
+void AreaFxEmit_update(AreaFxEmitObject *obj);
+void AreaFxEmit_init(AreaFxEmitObject *obj, AreaFxEmitPlacement *setup);
+void AreaFxEmit_release(void);
+void AreaFxEmit_initialise(void);
 
 int lfxemitter_func0B(LfxEmitterObject *obj);
 int lfxemitter_setScale(void);

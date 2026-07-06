@@ -115,10 +115,10 @@ void dimbossfire_update(int obj)
     placement = *(DimbossfirePlacement**)&((GameObject*)obj)->anim.placementData;
     if ((int)placement->triggerGameBit != -1)
     {
-        bitVal = GameBit_Get((int)placement->triggerGameBit);
+        bitVal = mainGetBit((int)placement->triggerGameBit);
         if (bitVal != 0)
         {
-            GameBit_Set((int)placement->triggerGameBit, 0);
+            mainSetBits((int)placement->triggerGameBit, 0);
             state->flags = state->flags | DIMBOSSFIRE_FLAG_START_BURST;
             state->activeTimer = lbl_80325D68[state->flameIndex];
             state->initialActiveTimer = state->activeTimer;

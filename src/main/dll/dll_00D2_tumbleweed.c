@@ -694,7 +694,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
         (*gPathControlInterface)->advance((void*)obj, (void*)aux, timeDelta);
         if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0)
         {
-            GameBit_Set(0x642, 1);
+            mainSetBits(0x642, 1);
             ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
         }
     }

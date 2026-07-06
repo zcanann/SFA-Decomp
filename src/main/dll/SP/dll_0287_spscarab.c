@@ -70,20 +70,20 @@ typedef struct SpscarabState
 
 STATIC_ASSERT(sizeof(SpscarabState) == 0x14);
 
-int spscarab_getExtraSize(void) { return 0x14; }
-int spscarab_getObjectTypeId(void) { return 0x0; }
+int SPScarab_getExtraSize(void) { return 0x14; }
+int SPScarab_getObjectTypeId(void) { return 0x0; }
 
-void spscarab_free(int obj) { Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_scarab_runloop); }
+void SPScarab_free(int obj) { Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_scarab_runloop); }
 
-void spscarab_render(void)
+void SPScarab_render(void)
 {
 }
 
-void spscarab_hitDetect(void)
+void SPScarab_hitDetect(void)
 {
 }
 
-void spscarab_update(int obj)
+void SPScarab_update(int obj)
 {
     extern int Obj_GetPlayerObject(void);
     int state;
@@ -157,7 +157,7 @@ void spscarab_update(int obj)
     }
 }
 
-void spscarab_init(int obj, int def)
+void SPScarab_init(int obj, int def)
 {
     extern int Obj_GetActiveModel(int obj);
 
@@ -211,11 +211,11 @@ void spscarab_init(int obj, int def)
     }
 }
 
-void spscarab_release(void)
+void SPScarab_release(void)
 {
 }
 
-void spscarab_initialise(void)
+void SPScarab_initialise(void)
 {
 }
 
@@ -224,14 +224,14 @@ ObjectDescriptor gSPScarabObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)spscarab_initialise,
-    (ObjectDescriptorCallback)spscarab_release,
+    (ObjectDescriptorCallback)SPScarab_initialise,
+    (ObjectDescriptorCallback)SPScarab_release,
     0,
-    (ObjectDescriptorCallback)spscarab_init,
-    (ObjectDescriptorCallback)spscarab_update,
-    (ObjectDescriptorCallback)spscarab_hitDetect,
-    (ObjectDescriptorCallback)spscarab_render,
-    (ObjectDescriptorCallback)spscarab_free,
-    (ObjectDescriptorCallback)spscarab_getObjectTypeId,
-    spscarab_getExtraSize,
+    (ObjectDescriptorCallback)SPScarab_init,
+    (ObjectDescriptorCallback)SPScarab_update,
+    (ObjectDescriptorCallback)SPScarab_hitDetect,
+    (ObjectDescriptorCallback)SPScarab_render,
+    (ObjectDescriptorCallback)SPScarab_free,
+    (ObjectDescriptorCallback)SPScarab_getObjectTypeId,
+    SPScarab_getExtraSize,
 };

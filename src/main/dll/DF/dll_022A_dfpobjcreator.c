@@ -70,10 +70,10 @@ STATIC_ASSERT(sizeof(DfpobjcreatorSetup) == 0x24);
 
 extern int dbstealerworm_stateHandlerA02();
 
-int dfpobjcreator_getExtraSize(void) { return 0x1c; }
-int dfpobjcreator_getObjectTypeId(void) { return 0x0; }
+int DFP_ObjCreator_getExtraSize(void) { return 0x1c; }
+int DFP_ObjCreator_getObjectTypeId(void) { return 0x0; }
 
-void dfpobjcreator_free(int obj, int flag)
+void DFP_ObjCreator_free(int obj, int flag)
 {
     DfpObjCreatorState* state = ((GameObject*)obj)->extra;
     if (flag == 0)
@@ -86,15 +86,15 @@ void dfpobjcreator_free(int obj, int flag)
     }
 }
 
-void dfpobjcreator_render(int obj, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void DFP_ObjCreator_render(int obj, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-void dfpobjcreator_hitDetect(void)
+void DFP_ObjCreator_hitDetect(void)
 {
 }
 
 #pragma dont_inline on
 
-void dfpobjcreator_update(int obj)
+void DFP_ObjCreator_update(int obj)
 {
 
     extern void* Obj_AllocObjectSetup(int size, int id);
@@ -110,7 +110,7 @@ void dfpobjcreator_update(int obj)
         {
         case 7:
             state->spawnTimer -= (s16)timeDelta;
-            if (state->spawnTimer <= 0 && GameBit_Get(state->gameBit) != 0)
+            if (state->spawnTimer <= 0 && mainGetBit(state->gameBit) != 0)
             {
                 state->spawnTimer = state->spawnPeriod;
                 setup = Obj_AllocObjectSetup(0x24, 0x71b);
@@ -134,7 +134,7 @@ void dfpobjcreator_update(int obj)
 }
 #pragma dont_inline reset
 
-void dfpobjcreator_init(int obj, s8* def)
+void DFP_ObjCreator_init(int obj, s8* def)
 {
     DfpObjCreatorState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
@@ -147,11 +147,11 @@ void dfpobjcreator_init(int obj, s8* def)
     state->unk16 = 100;
 }
 
-void dfpobjcreator_release(void)
+void DFP_ObjCreator_release(void)
 {
 }
 
-void dfpobjcreator_initialise(void)
+void DFP_ObjCreator_initialise(void)
 {
 }
 

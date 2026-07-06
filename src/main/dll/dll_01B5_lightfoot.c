@@ -141,9 +141,9 @@ void lightfoot_update(int obj)
         case 0x4993F:
         case 0x49940:
         case 0x49941:
-            if (GameBit_Get(0xc44))
+            if (mainGetBit(0xc44))
             {
-                ((GameObject*)obj)->unkF4 = GameBit_Get(((GroundBaddieState*)inner)->gameBitA);
+                ((GameObject*)obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
             }
             else
             {
@@ -153,13 +153,13 @@ void lightfoot_update(int obj)
         case 0x499AC:
         case 0x499AE:
         case 0x499AF:
-            if (GameBit_Get(0xc42) && GameBit_Get(((GroundBaddieState*)inner)->gameBitA) == 0)
+            if (mainGetBit(0xc42) && mainGetBit(((GroundBaddieState*)inner)->gameBitA) == 0)
             {
                 void* other = ObjList_FindObjectById(0x499B5);
                 if (other != NULL &&
                     Vec_distance((char*)obj + 0x18, (char*)other + 0x18) < lbl_803E8214)
                 {
-                    GameBit_Set(((GroundBaddieState*)inner)->gameBitA, 1);
+                    mainSetBits(((GroundBaddieState*)inner)->gameBitA, 1);
                     buf[3] = lbl_803E8180;
                     buf[4] = lbl_803E8218;
                     buf[5] = lbl_803E8180;
@@ -167,7 +167,7 @@ void lightfoot_update(int obj)
                     {
                         objfx_spawnDirectionalBurst(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
                     }
-                    if (GameBit_Get(0xc3b) && GameBit_Get(0xc3c) && GameBit_Get(0xc3d))
+                    if (mainGetBit(0xc3b) && mainGetBit(0xc3c) && mainGetBit(0xc3d))
                     {
                         Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
                     }
@@ -176,7 +176,7 @@ void lightfoot_update(int obj)
                         Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
                     }
                 }
-                ((GameObject*)obj)->unkF4 = GameBit_Get(((GroundBaddieState*)inner)->gameBitA);
+                ((GameObject*)obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
             }
             else
             {
@@ -186,13 +186,13 @@ void lightfoot_update(int obj)
         case 0x499B0:
         case 0x499B1:
         case 0x499B2:
-            if (GameBit_Get(0xc46) && GameBit_Get(((GroundBaddieState*)inner)->gameBitA) == 0)
+            if (mainGetBit(0xc46) && mainGetBit(((GroundBaddieState*)inner)->gameBitA) == 0)
             {
                 void* other = ObjList_FindObjectById(0x499B6);
                 if (other != NULL &&
                     Vec_distance((char*)obj + 0x18, (char*)other + 0x18) < lbl_803E8214)
                 {
-                    GameBit_Set(((GroundBaddieState*)inner)->gameBitA, 1);
+                    mainSetBits(((GroundBaddieState*)inner)->gameBitA, 1);
                     buf[3] = lbl_803E8180;
                     buf[4] = lbl_803E8218;
                     buf[5] = lbl_803E8180;
@@ -200,7 +200,7 @@ void lightfoot_update(int obj)
                     {
                         objfx_spawnDirectionalBurst(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
                     }
-                    if (GameBit_Get(0xc3e) && GameBit_Get(0xc3f) && GameBit_Get(0xc40))
+                    if (mainGetBit(0xc3e) && mainGetBit(0xc3f) && mainGetBit(0xc40))
                     {
                         Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
                     }
@@ -209,7 +209,7 @@ void lightfoot_update(int obj)
                         Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
                     }
                 }
-                ((GameObject*)obj)->unkF4 = GameBit_Get(((GroundBaddieState*)inner)->gameBitA);
+                ((GameObject*)obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
             }
             else
             {
@@ -217,7 +217,7 @@ void lightfoot_update(int obj)
             }
             break;
         default:
-            ((GameObject*)obj)->unkF4 = GameBit_Get(((GroundBaddieState*)inner)->gameBitA) == 0;
+            ((GameObject*)obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA) == 0;
             break;
         }
 
@@ -235,10 +235,10 @@ void lightfoot_update(int obj)
 
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if ((((ObjPlacement*)p30)->mapId == 0x499B5 && GameBit_Get(0xc42) &&
-                (GameBit_Get(0xc3b) == 0 || GameBit_Get(0xc3c) == 0 || GameBit_Get(0xc3d) == 0)) ||
-            (((ObjPlacement*)p30)->mapId == 0x499B6 && GameBit_Get(0xc46) &&
-                (GameBit_Get(0xc3e) == 0 || GameBit_Get(0xc3f) == 0 || GameBit_Get(0xc40) == 0)))
+        if ((((ObjPlacement*)p30)->mapId == 0x499B5 && mainGetBit(0xc42) &&
+                (mainGetBit(0xc3b) == 0 || mainGetBit(0xc3c) == 0 || mainGetBit(0xc3d) == 0)) ||
+            (((ObjPlacement*)p30)->mapId == 0x499B6 && mainGetBit(0xc46) &&
+                (mainGetBit(0xc3e) == 0 || mainGetBit(0xc3f) == 0 || mainGetBit(0xc40) == 0)))
         {
             buf[3] = lbl_803E8180;
             buf[4] = lbl_803E821C;
@@ -369,7 +369,7 @@ void lightfoot_init(int obj, int p2, int p3)
             randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x46a51:
-            if (GameBit_Get(0xc52))
+            if (mainGetBit(0xc52))
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
@@ -378,7 +378,7 @@ void lightfoot_init(int obj, int p2, int p3)
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x10);
             break;
         case 0x46a55:
-            if (GameBit_Get(0xc53))
+            if (mainGetBit(0xc53))
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
@@ -387,7 +387,7 @@ void lightfoot_init(int obj, int p2, int p3)
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x10);
             break;
         case 0x49928:
-            if (GameBit_Get(0xc54))
+            if (mainGetBit(0xc54))
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);

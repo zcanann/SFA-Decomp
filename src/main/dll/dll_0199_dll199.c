@@ -132,32 +132,32 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
         case 4:
             ((Dll197State*)st)->menuState = 4;
             ((Dll197State*)st)->unk10 = 2;
-            GameBit_Set(0x129, 1);
-            GameBit_Set(0x1cf, 0);
-            GameBit_Set(0x126, 1);
+            mainSetBits(0x129, 1);
+            mainSetBits(0x1cf, 0);
+            mainSetBits(0x126, 1);
             ((Dll197State*)st)->scrollVel = -3;
             break;
         case 5:
             ((Dll197State*)st)->unk10 = 3;
             ((Dll197State*)st)->scrollVel = -3;
-            GameBit_Set(0x129, 1);
+            mainSetBits(0x129, 1);
             break;
         case 6:
-            GameBit_Set(0x1cf, 1);
+            mainSetBits(0x1cf, 1);
             break;
         case 7:
-            GameBit_Set(0x1cf, 0);
+            mainSetBits(0x1cf, 0);
             ((Dll197State*)st)->scrollVel = -3;
             break;
         case 9:
-            GameBit_Set(0x128, 1);
+            mainSetBits(0x128, 1);
             if (lbl_803DDBD8 == 0)
             {
                 lbl_803DDBD8 = return0_8005669C(1);
             }
             break;
         case 8:
-            GameBit_Set(0x127, 1);
+            mainSetBits(0x127, 1);
             break;
         case 10:
             ((Dll197State*)st)->scrollPos = 100;
@@ -230,7 +230,7 @@ void dll_199_update(int obj)
             break;
         }
     }
-    GameBit_Set(0x127, 1);
+    mainSetBits(0x127, 1);
     delta = state[3];
     if (delta != 0)
     {
@@ -310,15 +310,15 @@ void dll_199_update(int obj)
         switch (((Dll199State*)state)->phase)
         {
         case 0:
-            if ((GameBit_Get(0x5b5) == 0) && (GameBit_Get(0x594) != 0))
+            if ((mainGetBit(0x5b5) == 0) && (mainGetBit(0x594) != 0))
             {
-                GameBit_Set(0x5b5, 1);
+                mainSetBits(0x5b5, 1);
             }
-            GameBit_Set(0x5b9, 0);
+            mainSetBits(0x5b9, 0);
             if (Vec_distance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < state[0])
             {
                 ((Dll199State*)state)->phase = 1;
-                GameBit_Set(0x129, 0);
+                mainSetBits(0x129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 0xffffffff);
                 {
                     int* res = Resource_Acquire(0x83, 1);
@@ -330,7 +330,7 @@ void dll_199_update(int obj)
                     (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
                     Resource_Release(res);
                 }
-                GameBit_Set(0x126, 0);
+                mainSetBits(0x126, 0);
                 (*gModgfxInterface)->releaseHandle(state + 6);
             }
             break;
@@ -342,11 +342,11 @@ void dll_199_update(int obj)
             }
             break;
         case 2:
-            if ((((Dll199State*)state)->unlockCount == 0) && (GameBit_Get(0x1cd) == 0))
+            if ((((Dll199State*)state)->unlockCount == 0) && (mainGetBit(0x1cd) == 0))
             {
-                GameBit_Set(0x1cd, 1);
+                mainSetBits(0x1cd, 1);
             }
-            if (GameBit_Get(0x5b2) != 0)
+            if (mainGetBit(0x5b2) != 0)
             {
                 ((Dll199State*)state)->unlockCount += 1;
                 state[1] = 100;
@@ -381,17 +381,17 @@ void dll_199_update(int obj)
             }
             ((Dll199State*)state)->phase = 0;
             state[1] = 400;
-            GameBit_Set(0x129, 1);
-            GameBit_Set(0x126, 1);
-            GameBit_Set(0x127, 1);
-            GameBit_Set(0x5b2, 0);
-            GameBit_Set(0x5b9, 1);
+            mainSetBits(0x129, 1);
+            mainSetBits(0x126, 1);
+            mainSetBits(0x127, 1);
+            mainSetBits(0x5b2, 0);
+            mainSetBits(0x5b9, 1);
             {
                 int* res = Resource_Acquire(0x6a, 1);
                 state[6] = (**(short (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 0x402, 0xffffffff, 0);
                 Resource_Release(res);
             }
-            GameBit_Set(0x1cd, 0);
+            mainSetBits(0x1cd, 0);
             ((Dll199State*)state)->unlockCount = 0;
             ((Dll199State*)state)->unk10 = 0;
             break;
@@ -402,18 +402,18 @@ void dll_199_update(int obj)
             {
                 Obj_FreeObject(found);
             }
-            if (GameBit_Get(0x1ce) != 0)
+            if (mainGetBit(0x1ce) != 0)
             {
                 state[4] = 1;
                 (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(
                     3, 0x2c, 0x50, state[4] & 0xff, 0);
                 state[5] = 1;
-                GameBit_Set(0x129, 1);
+                mainSetBits(0x129, 1);
                 ((Dll199State*)state)->phase = 5;
             }
             else
             {
-                GameBit_Set(0x126, 0);
+                mainSetBits(0x126, 0);
                 (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(
                     3, 0x2a, 0x50, state[4] & 0xff, 0);
                 state[5] = 1;
@@ -421,16 +421,16 @@ void dll_199_update(int obj)
             }
             break;
         case 4:
-            if (GameBit_Get(0xfd) == 0)
+            if (mainGetBit(0xfd) == 0)
             {
-                GameBit_Set(0xfd, 1);
+                mainSetBits(0xfd, 1);
             }
-            GameBit_Set(0x1cf, 0);
-            GameBit_Set(0x127, 0);
+            mainSetBits(0x1cf, 0);
+            mainSetBits(0x127, 0);
             ((Dll199State*)state)->phase = 5;
             (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(
                 3, 0x2c, 0x50, state[4] & 0xff, 0);
-            GameBit_Set(0x1ce, 1);
+            mainSetBits(0x1ce, 1);
             (*gMapEventInterface)->setMapAct(0xb, 6);
             break;
         }
@@ -457,12 +457,12 @@ void dll_199_init(int obj, int def)
     ((Dll199State*)state)->unlockCount = 0;
     ((GameObject*)obj)->animEventCallback = dll_199_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
-    GameBit_Set(0x129, 1);
-    GameBit_Set(0x1cf, 0);
-    GameBit_Set(0x126, 1);
-    GameBit_Set(0x127, 1);
-    GameBit_Set(0x1cd, 0);
-    GameBit_Set(0x1e7, 0);
+    mainSetBits(0x129, 1);
+    mainSetBits(0x1cf, 0);
+    mainSetBits(0x126, 1);
+    mainSetBits(0x127, 1);
+    mainSetBits(0x1cd, 0);
+    mainSetBits(0x1e7, 0);
     state[2] = 0xc;
     state[4] = 0x1e;
     state[1] = 200;

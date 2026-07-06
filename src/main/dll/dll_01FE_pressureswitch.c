@@ -62,7 +62,7 @@ typedef struct PswContactList
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
-/* pressureswitch_getExtraSize == 0x8. */
+/* PressureSwitch_getExtraSize == 0x8. */
 typedef struct PressureSwitchState
 {
     s8 holdTimer; /* frames the switch stays pressed */
@@ -94,27 +94,27 @@ int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int pressureswitch_getExtraSize(void) { return 0x8; }
-int pressureswitch_getObjectTypeId(void) { return 0x0; }
+int PressureSwitch_getExtraSize(void) { return 0x8; }
+int PressureSwitch_getObjectTypeId(void) { return 0x0; }
 
-void pressureswitch_free(void)
+void PressureSwitch_free(void)
 {
 }
 
-void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void PressureSwitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
     if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
-void pressureswitch_hitDetect(void)
+void PressureSwitch_hitDetect(void)
 {
 }
 
 #pragma opt_strength_reduction off
 
 #pragma opt_common_subs off
-void pressureswitch_update(int obj)
+void PressureSwitch_update(int obj)
 {
     int byteOff[1];
     PressureswitchPlacement* placement;
@@ -194,18 +194,18 @@ void pressureswitch_update(int obj)
         if (state->holdTimer != 0)
         {
             posY = placement->restPosY - self->anim.localPosY;
-            if (posY > 2.5f && posY < 5.0f && GameBit_Get(state->mapGameBit) == 0)
+            if (posY > 2.5f && posY < 5.0f && mainGetBit(state->mapGameBit) == 0)
             {
-                GameBit_Set(0x905, 1);
+                mainSetBits(0x905, 1);
             }
-            else if (GameBit_Get(0x905) != 0)
+            else if (mainGetBit(0x905) != 0)
             {
-                GameBit_Set(0x905, 0);
+                mainSetBits(0x905, 0);
             }
         }
-        else if (GameBit_Get(0x905) != 0)
+        else if (mainGetBit(0x905) != 0)
         {
-            GameBit_Set(0x905, 0);
+            mainSetBits(0x905, 0);
         }
     }
     moving = 0;
@@ -220,10 +220,10 @@ void pressureswitch_update(int obj)
             {
                 self->anim.localPosY = pressedY;
             }
-            GameBit_Set(placement->triggerGameBit, 1);
+            mainSetBits(placement->triggerGameBit, 1);
             if (((PressureSwitchFlags*)&state->flags)->active)
             {
-                GameBit_Set(state->mapGameBit, 1);
+                mainSetBits(state->mapGameBit, 1);
             }
         }
         else
@@ -232,11 +232,11 @@ void pressureswitch_update(int obj)
             if (self->anim.localPosY < pressedY)
             {
                 self->anim.localPosY = pressedY;
-                GameBit_Set(placement->triggerGameBit, 1);
+                mainSetBits(placement->triggerGameBit, 1);
                 bit = state->mapGameBit;
                 if (bit != -1)
                 {
-                    GameBit_Set(bit, 1);
+                    mainSetBits(bit, 1);
                     if (((PressureSwitchFlags*)&state->flags)->active)
                     {
                         ((PressureSwitchFlags*)&state->flags)->mapBitLatched = 1;
@@ -262,13 +262,13 @@ void pressureswitch_update(int obj)
             {
                 moving = 1;
             }
-            GameBit_Set(placement->triggerGameBit, 0);
+            mainSetBits(placement->triggerGameBit, 0);
             bit = state->mapGameBit;
             if (bit != -1)
             {
                 if (!((PressureSwitchFlags*)&state->flags)->mapBitLatched)
                 {
-                    GameBit_Set(bit, 0);
+                    mainSetBits(bit, 0);
                 }
             }
         }
@@ -292,7 +292,7 @@ void pressureswitch_update(int obj)
 }
 #pragma opt_common_subs reset
 
-void pressureswitch_init(int* obj, u8* init)
+void PressureSwitch_init(int* obj, u8* init)
 {
     PressureSwitchState* state;
     u32 mapId;
@@ -317,22 +317,22 @@ void pressureswitch_init(int* obj, u8* init)
     }
     if (state->mapGameBit != -1)
     {
-        if (GameBit_Get(state->mapGameBit) != 0)
+        if (mainGetBit(state->mapGameBit) != 0)
         {
             ((PressureSwitchFlags*)&state->flags)->mapBitLatched = 1;
         }
     }
-    if (GameBit_Get(((PressureswitchPlacement*)init)->triggerGameBit) != 0)
+    if (mainGetBit(((PressureswitchPlacement*)init)->triggerGameBit) != 0)
     {
         ((GameObject*)obj)->anim.localPosY = ((PressureswitchPlacement*)init)->restPosY - 25.0f;
         state->holdTimer = 0x1e;
     }
 }
 
-void pressureswitch_release(void)
+void PressureSwitch_release(void)
 {
 }
 
-void pressureswitch_initialise(void)
+void PressureSwitch_initialise(void)
 {
 }

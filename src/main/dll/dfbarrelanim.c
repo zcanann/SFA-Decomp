@@ -9,7 +9,7 @@
  * The lbl_803E4DF8..803E4E18 constants tune the simulation (rest step,
  * damping, slack, link stiffness/max-length scale).
  *
- * The dfropenode_func0F..func13 accessors read/write the DFropenodeExtra
+ * The dfropenode_getAngle..func13 accessors read/write the DFropenodeExtra
  * state (angle, hidden flag with its linked-object mirror, ground minY,
  * linked object). fn_801C1698 projects a point onto the start->end segment
  * (clamped to the endpoints) and returns the projection parameter t.
@@ -139,19 +139,19 @@ DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f3
     return rope;
 }
 
-void dfropenode_func12(int obj, float value)
+void dfropenode_setMinY(int obj, float value)
 {
     ((DFropenodeObject*)obj)->extra->minY = value;
 }
 
-int dfropenode_func11(int obj)
+int dfropenode_isVisible(int obj)
 {
     DFropenodeExtra* extra = ((DFropenodeObject*)obj)->extra;
 
     return (s16)(extra->hidden == 0);
 }
 
-void dfropenode_func10(int obj, int value)
+void dfropenode_setVisible(int obj, int value)
 {
     u32 bit;
     u8 bitByte;
@@ -170,12 +170,12 @@ void dfropenode_func10(int obj, int value)
     }
 }
 
-void dfropenode_func13(int obj)
+void dfropenode_clearLinkedObj(int obj)
 {
     ((DFropenodeObject*)obj)->extra->linkedObj = 0;
 }
 
-int dfropenode_func0F(int obj)
+int dfropenode_getAngle(int obj)
 {
     return ((DFropenodeObject*)obj)->extra->angle;
 }

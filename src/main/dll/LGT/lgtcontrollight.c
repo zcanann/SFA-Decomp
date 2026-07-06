@@ -7,7 +7,7 @@
  * per-frame angular step plus the orbit radius bounds. fn_801F4D54 advances the
  * record one frame: it re-rolls the vertical bob (offY) and outward radius
  * (offZ), spins the orbit angle and rotates a unit offset by it through
- * vecRotateZXY, then re-bases the resulting offset onto pos. fn_801F4C04 is the
+ * vecRotateZXY, then re-bases the resulting offset onto pos. firefly_animEventCallback is the
  * object think callback, forwarding to the firefly update in dll_020B_firefly.
  */
 #include "main/dll/LGT/lgtcontrollightrec_struct.h"
@@ -38,7 +38,7 @@ extern void FireFlyFn_801f4f88(int* obj);
 /* minimum inward margin when re-rolling the orbit radius */
 #define FIREFLY_RADIUS_MARGIN 0x14
 
-int fn_801F4C04(int* obj)
+int firefly_animEventCallback(int* obj)
 {
     FireFlyFn_801f4f88(obj);
     return 0;

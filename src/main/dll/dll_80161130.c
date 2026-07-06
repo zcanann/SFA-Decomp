@@ -34,40 +34,40 @@ extern f32 lbl_803E2EC4;
 extern f32 lbl_803E2EC8;
 extern f32 lbl_803E2ECC;
 
-void chukchuk_free(void);
+void ChukChuk_free(void);
 
-void chukchuk_hitDetect(void);
+void ChukChuk_hitDetect(void);
 
-void chukchuk_release(void);
+void ChukChuk_release(void);
 
-void chukchuk_initialise(void);
+void ChukChuk_initialise(void);
 
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
-void chukchuk_init(u8* obj, u8* params);
-void iceball_hitDetect(void);
+void ChukChuk_init(u8* obj, u8* params);
+void IceBall_hitDetect(void);
 
-void iceball_release(void);
+void IceBall_release(void);
 
-void iceball_initialise(void);
+void IceBall_initialise(void);
 
-int chukchuk_getExtraSize(void);
-int chukchuk_getObjectTypeId(void);
-int iceball_getExtraSize(void);
-int iceball_getObjectTypeId(void);
+int ChukChuk_getExtraSize(void);
+int ChukChuk_getObjectTypeId(void);
+int IceBall_getExtraSize(void);
+int IceBall_getObjectTypeId(void);
 
-void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void iceball_free(void);
+void IceBall_free(void);
 
-void chukchuk_update(short* obj);
+void ChukChuk_update(short* obj);
 
-void chukchuk_setScale(int obj, int v);
+void ChukChuk_setScale(int obj, int v);
 
-void iceball_init(void* obj);
+void IceBall_init(void* obj);
 
 #pragma peephole off
 int grimble_stateHandlerB03(int p1, GroundBaddieState* state)
@@ -83,8 +83,8 @@ int grimble_stateHandlerB05(int* obj, GroundBaddieState* state)
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
         sub->subMode = 0;
-        GameBit_Set(sub->gameBitB, 0);
-        GameBit_Set(sub->gameBitA, 1);
+        mainSetBits(sub->gameBitB, 0);
+        mainSetBits(sub->gameBitA, 1);
     }
     return 0;
 }
@@ -465,17 +465,17 @@ ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)chukchuk_initialise,
-        (ObjectDescriptorCallback)chukchuk_release,
+        (ObjectDescriptorCallback)ChukChuk_initialise,
+        (ObjectDescriptorCallback)ChukChuk_release,
         0,
-        (ObjectDescriptorCallback)chukchuk_init,
-        (ObjectDescriptorCallback)chukchuk_update,
-        (ObjectDescriptorCallback)chukchuk_hitDetect,
-        (ObjectDescriptorCallback)chukchuk_render,
-        (ObjectDescriptorCallback)chukchuk_free,
-        (ObjectDescriptorCallback)chukchuk_getObjectTypeId,
-        chukchuk_getExtraSize,
-        (ObjectDescriptorCallback)chukchuk_setScale,
+        (ObjectDescriptorCallback)ChukChuk_init,
+        (ObjectDescriptorCallback)ChukChuk_update,
+        (ObjectDescriptorCallback)ChukChuk_hitDetect,
+        (ObjectDescriptorCallback)ChukChuk_render,
+        (ObjectDescriptorCallback)ChukChuk_free,
+        (ObjectDescriptorCallback)ChukChuk_getObjectTypeId,
+        ChukChuk_getExtraSize,
+        (ObjectDescriptorCallback)ChukChuk_setScale,
     },
     0,
 };
@@ -485,16 +485,16 @@ ObjectDescriptor gIceBallObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)iceball_initialise,
-    (ObjectDescriptorCallback)iceball_release,
+    (ObjectDescriptorCallback)IceBall_initialise,
+    (ObjectDescriptorCallback)IceBall_release,
     0,
-    (ObjectDescriptorCallback)iceball_init,
-    (ObjectDescriptorCallback)iceball_update,
-    (ObjectDescriptorCallback)iceball_hitDetect,
-    (ObjectDescriptorCallback)iceball_render,
-    (ObjectDescriptorCallback)iceball_free,
-    (ObjectDescriptorCallback)iceball_getObjectTypeId,
-    iceball_getExtraSize,
+    (ObjectDescriptorCallback)IceBall_init,
+    (ObjectDescriptorCallback)IceBall_update,
+    (ObjectDescriptorCallback)IceBall_hitDetect,
+    (ObjectDescriptorCallback)IceBall_render,
+    (ObjectDescriptorCallback)IceBall_free,
+    (ObjectDescriptorCallback)IceBall_getObjectTypeId,
+    IceBall_getExtraSize,
 };
 
 int scarab_updateProximityGate(int* obj, GroundBaddieState* state)

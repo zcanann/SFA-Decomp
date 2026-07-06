@@ -18,14 +18,14 @@ extern f32 Vec_xzDistance(f32* a, f32* b);
 extern u8 framesThisStep;
 extern void ObjGroup_AddObject(u32 obj, int group);
 
-void trickyguardspot_render(void)
+void TrickyGuardSpot_render(void)
 {
 }
 
 #define TRICKY_GUARD_SPOT_VTABLE(tricky) \
     (*(TrickyGuardSpotInterfaceVTable **)((tricky)->dll))
 
-void trickyguardspot_update(TrickyGuardSpotObject* obj)
+void TrickyGuardSpot_update(TrickyGuardSpotObject* obj)
 {
 
     u8* state;
@@ -71,14 +71,14 @@ void trickyguardspot_update(TrickyGuardSpotObject* obj)
         TRICKY_GUARD_SPOT_VTABLE(tricky)->resetGuardSpotAction(tricky);
         *(int*)state = placement[0x19] * 0x3c;
     }
-    GameBit_Set(((TrickyguardspotPlacement*)placement)->trickyInRangeGameBit, flags->trickyInRange);
+    mainSetBits(((TrickyguardspotPlacement*)placement)->trickyInRangeGameBit, flags->trickyInRange);
 }
 
-int trickyguardspot_getExtraSize(void) { return 0x8; }
+int TrickyGuardSpot_getExtraSize(void) { return 0x8; }
 
-void trickyguardspot_free(TrickyGuardSpotObject* obj) { ObjGroup_RemoveObject(obj, TRICKY_GUARD_SPOT_GROUP); }
+void TrickyGuardSpot_free(TrickyGuardSpotObject* obj) { ObjGroup_RemoveObject(obj, TRICKY_GUARD_SPOT_GROUP); }
 
-void trickyguardspot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* def)
+void TrickyGuardSpot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* def)
 {
     TrickyGuardSpotState* state = obj->state;
     ObjGroup_AddObject((int)obj, TRICKY_GUARD_SPOT_GROUP);

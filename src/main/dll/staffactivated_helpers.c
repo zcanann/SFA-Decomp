@@ -116,12 +116,12 @@ void cfPrisonGuard_setGameBitMirror(int obj, u8 flag)
     StaffActivatedState* state = ((GameObject*)obj)->extra;
     if (flag != 0)
     {
-        GameBit_Set(setup->lockGameBit, 1);
+        mainSetBits(setup->lockGameBit, 1);
         ((PrisonGuardStateFlags*)state)->mirror = 1;
     }
     else
     {
-        GameBit_Set(setup->lockGameBit, 0);
+        mainSetBits(setup->lockGameBit, 0);
         ((PrisonGuardStateFlags*)state)->mirror = 0;
     }
 }

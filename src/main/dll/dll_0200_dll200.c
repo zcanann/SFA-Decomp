@@ -3,7 +3,7 @@
  * is selected by the current map-event mode for its placement slot
  * (gMapEventInterface->getMapAct). Per mode it plays idle/move anims,
  * lets the player interact (A-button) to spend magic and grant game
- * bits, runs trigger sequences (dll_200_SeqFn / fn_801F2974), and in
+ * bits, runs trigger sequences (dll_200_SeqFn / dll_200_unlockFireBlasterSpell), and in
  * mode 2 (fn_801F2290) steers a wandering attachment toward scripted
  * targets (gArwingAttachmentTargets) via getAngle/sqrtf. Object body is Dll200State
  * (0x28); render scales through objRenderModelAndHitVolumes and gates on
@@ -37,7 +37,7 @@ STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 #define DLL200_MODE_HITREACTING 0x80
 
 extern void playerAddRemoveMagic(int obj, int amount);
-extern void fn_80296474(int player, int a, int b);
+extern void playerSetHaveSpell(int player, int a, int b);
 extern ObjHitReactEntry gArwingAttachmentHitReactTable[];
 extern f32 lbl_803E5DC0;
 extern f32 lbl_803E5D98;
@@ -60,7 +60,7 @@ void fn_801F20D4(int obj)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= INTERACT_FLAG_DISABLED;
     }
-    if (GameBit_Get(763) == 0)
+    if (mainGetBit(763) == 0)
     {
         if (((GameObject*)obj)->anim.currentMove != 7)
         {
@@ -78,9 +78,9 @@ void fn_801F20D4(int obj)
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
             (obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
     }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && GameBit_Get(763) == 0)
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && mainGetBit(763) == 0)
     {
-        GameBit_Set(763, 1);
+        mainSetBits(763, 1);
         *(u8*)&((Dll200State*)state)->counter27 = 0;
         buttonDisable(0, PAD_BUTTON_A);
     }
@@ -88,7 +88,7 @@ void fn_801F20D4(int obj)
     {
         if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&itemSet, 3) > -1)
         {
-            GameBit_Set(784, 1);
+            mainSetBits(784, 1);
             *(u8*)&((Dll200State*)state)->counter27 += 1;
             buttonDisable(0, PAD_BUTTON_A);
         }
@@ -99,7 +99,7 @@ void fn_801F20D4(int obj)
 #pragma dont_inline on
 void fn_801F27E4(int obj)
 {
-    extern int fn_80296A14(void);
+    extern int playerGetCurMagic(void);
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
     extern f32 gArwingAttachmentU32ToDoubleBias;
@@ -118,7 +118,7 @@ void fn_801F27E4(int obj)
     {
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
-            GameBit_Set(208, 1);
+            mainSetBits(208, 1);
             ((Dll200State*)state)->latch24 = 1;
             buttonDisable(0, PAD_BUTTON_A);
         }
@@ -129,7 +129,7 @@ void fn_801F27E4(int obj)
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             Obj_GetPlayerObject();
-            if (fn_80296A14() > 0)
+            if (playerGetCurMagic() > 0)
             {
                 ((Dll200State*)state)->mode25 = 2;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
@@ -137,7 +137,7 @@ void fn_801F27E4(int obj)
             }
             else
             {
-                if (GameBit_Get(177) == 0 || GameBit_Get(178) == 0 || GameBit_Get(179) == 0)
+                if (mainGetBit(177) == 0 || mainGetBit(178) == 0 || mainGetBit(179) == 0)
                 {
                     ((Dll200State*)state)->mode25 = 1;
                     (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
@@ -179,7 +179,7 @@ void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     areaId = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
     if ((u8)areaId == 4)
     {
-        if ((u32)GameBit_Get(0x2bd) == 0u) return;
+        if ((u32)mainGetBit(0x2bd) == 0u) return;
         objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E5DC0);
         return;
     }
@@ -201,7 +201,7 @@ void dll_200_init(int* obj, int* arg)
     state->homeX = *(f32*)((char*)arg + 0x8);
     state->homeY = *(f32*)((char*)arg + 0xc);
     state->homeZ = *(f32*)((char*)arg + 0x10);
-    state->latch24 = GameBit_Get(0xd0);
+    state->latch24 = mainGetBit(0xd0);
     state->counter27 = 0;
     state->mode = 1;
     state->prevMode = 0xc;
@@ -210,7 +210,7 @@ void dll_200_init(int* obj, int* arg)
     state->unk14 = lbl_803E5DC0;
 }
 
-int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
+int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 
 #pragma opt_strength_reduction off
 int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
@@ -225,7 +225,7 @@ int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
     case 0:
         break;
     case 1:
-        fn_801F2974((int*)obj, unused, animUpdate, arg3);
+        dll_200_unlockFireBlasterSpell((int*)obj, unused, animUpdate, arg3);
         break;
     case 2:
         break;
@@ -244,7 +244,7 @@ int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
             case 1:
                 if (*(u8*)&((Dll200State*)state)->counter27 >= 2)
                 {
-                    GameBit_Set(0x314, 1);
+                    mainSetBits(0x314, 1);
                 }
                 break;
             }
@@ -256,7 +256,7 @@ int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
 #pragma opt_strength_reduction reset
 
 #pragma opt_strength_reduction off
-int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
+int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
 {
     int state;
     int player;
@@ -281,12 +281,12 @@ int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
             u8 eventId = animUpdate->eventIds[i];
             if (eventId == 1)
             {
-                GameBit_Set(208, 1);
+                mainSetBits(208, 1);
                 ((Dll200State*)state)->latch24 = 1;
             }
             else if (eventId == 2)
             {
-                fn_80296474(player, 0, 1);
+                playerSetHaveSpell(player, 0, 1);
                 playerAddRemoveMagic(player, 5);
             }
         }
@@ -379,15 +379,15 @@ void fn_801F2290(int obj)
     Obj_GetPlayerObject();
     itemSet = *(ItemIdSet3*)gArwingAttachmentItemSetWander;
     ((GameObject*)obj)->anim.localPosY = state->homeY;
-    if (GameBit_Get(0x1fc) != 0)
+    if (mainGetBit(0x1fc) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
             (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&itemSet, 3) > -1)
         {
-            GameBit_Set(0x4d1, 1);
+            mainSetBits(0x4d1, 1);
             state->counter27 += 1;
-            GameBit_Set(0x310, 1);
+            mainSetBits(0x310, 1);
             buttonDisable(0, PAD_BUTTON_A);
         }
     }
@@ -433,7 +433,7 @@ void fn_801F2290(int obj)
                 ang = getAngle(gArwingAttachmentTargets[state->prevMode].x,
                                gArwingAttachmentTargets[state->prevMode].y);
                 diff = (s16)(ang - ((GameObject*)obj)->anim.rotX);
-                fn_80137948(sArwingAttachmentDiffFormat, diff);
+                logPrintf(sArwingAttachmentDiffFormat, diff);
                 if (diff < -1000 || diff > 1000)
                 {
                     if (diff > 0)

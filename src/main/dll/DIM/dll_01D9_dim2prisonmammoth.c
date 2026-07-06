@@ -60,7 +60,7 @@ extern int dim2prisonmammoth_stateHandler03(int obj, int p2);
 extern f32 gPrisonMammothMoveSpeedTable;
 extern s16 gPrisonMammothMoveIdTable;
 extern int *gPlayerInterface;
-int fn_802BC3F0(int obj, int state, ObjAnimUpdateState *animUpdate);
+int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState *animUpdate);
 
 extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
@@ -140,7 +140,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int state)
     }
     if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
-        GameBit_Set(0x223, 1);
+        mainSetBits(0x223, 1);
         buttonDisable(0, PAD_BUTTON_A);
     }
     if (RandomTimer_UpdateRangeTrigger((void*)(inner + 0x600), 4.0f, 8.0f))
@@ -156,17 +156,17 @@ int dim2prisonmammoth_stateHandler00(int* obj)
     switch ((s8)((Dim2prisonmammothPlacement*)sub)->spawnVariant)
     {
     case 0:
-        if ((u32)GameBit_Get(548) != 0) return 3;
+        if ((u32)mainGetBit(548) != 0) return 3;
         return 2;
     case 1:
-        if ((u32)GameBit_Get(707) != 0) return 3;
+        if ((u32)mainGetBit(707) != 0) return 3;
         return 3;
     default:
         return 0;
     }
 }
 
-int fn_802BC3F0(int obj, int state, ObjAnimUpdateState* animUpdate)
+int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState* animUpdate)
 {
     struct
     {
@@ -271,7 +271,7 @@ void dim2prisonmammoth_init(int obj, int params)
 {
     int inner;
     ((GameObject*)obj)->anim.rotX = (s16)(((Dim2prisonmammothPlacement*)params)->rotByte << 8);
-    ((GameObject*)obj)->animEventCallback = fn_802BC3F0;
+    ((GameObject*)obj)->animEventCallback = dim2prisonmammoth_SeqFn;
     inner = *(int*)&((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.modelState != NULL)
     {

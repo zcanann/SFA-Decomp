@@ -40,7 +40,7 @@ void dim_tricky_hitDetect(void);
 void dim_tricky_update(int* obj);
 void dim_tricky_init(int *obj);
 
-void dim2conveyor_setScale(int *obj, int unused, f32 *outX, f32 *outY);
+void dim2conveyor_getScrollVector(int *obj, int unused, f32 *outX, f32 *outY);
 int dim2conveyor_getExtraSize(void);
 int dim2conveyor_getObjectTypeId(void);
 void dim2conveyor_free(int obj);

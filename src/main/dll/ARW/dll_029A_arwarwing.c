@@ -383,9 +383,9 @@ void arwarwing_warpByCourse(int obj)
     switch (((GameObject*)obj)->anim.mapEventSlot)
     {
     case 0x3a:
-        if ((u32)GameBit_Get(0xc85) != 0)
+        if ((u32)mainGetBit(0xc85) != 0)
         {
-            GameBit_Set(0x405, 0);
+            mainSetBits(0x405, 0);
             (*gMapEventInterface)->setMapAct(0xb, 5);
             (*gMapEventInterface)->setObjGroupStatus(0xb, 0xa, 1);
             (*gMapEventInterface)->setObjGroupStatus(0xb, 0xb, 1);
@@ -721,7 +721,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 
     vec = objModelGetVecFn_800395d8(((ArwingState*)state)->escortObj, 0x14);
 
-    if (((ArwingState*)state)->mode < ARWING_MODE_DEAD && GameBit_Get(0x9d6) == 0 && GameBit_Get(0x9d8) == 0)
+    if (((ArwingState*)state)->mode < ARWING_MODE_DEAD && mainGetBit(0x9d6) == 0 && mainGetBit(0x9d8) == 0)
     {
         sum = lbl_803E6F48 + fn_802945E0(((ArwingState*)state)->velZ / ((ArwingState*)state)->maxSpeedZ);
         vol = (f32)(sum * lbl_803E6F50);
@@ -1110,7 +1110,7 @@ void arwarwing_handlePathDamage(int obj, int state)
         {
             arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
             if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
-                GameBit_Set(0xe74, 1);
+                mainSetBits(0xe74, 1);
             else
                 ((ArwingState*)state)->mode = ARWING_MODE_DEAD;
             ((ArwingState*)state)->modeTimer = lbl_803E6F30;
@@ -1192,7 +1192,7 @@ void arwarwing_handleObjectDamage(int obj, int state)
     {
         arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
         if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
-            GameBit_Set(0xe74, 1);
+            mainSetBits(0xe74, 1);
         ((ArwingState*)state)->mode = ARWING_MODE_DEAD;
         ((ArwingState*)state)->modeTimer = lbl_803E6F30;
         Sfx_PlayFromObject(obj, SFXTRIG_barrelblow11);
@@ -1280,7 +1280,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((ArwArwingProjectileSetup*)setup)->field05 = 1;
                 loaded = ((int(*)(int,int))loadObjectAtObject)(obj, setup);
                 if ((void*)loaded != 0)
-                    fn_8022F558(loaded, 0x12c);
+                    arwbombcoll_setLifetime(loaded, 0x12c);
             }
             break;
         case 0xb:
@@ -1298,7 +1298,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             setLoadedFileFlags_blocks1();
             break;
         case 5:
-            if (((ArwingState*)state)->levelIndex == 0 && GameBit_Get(0xc85))
+            if (((ArwingState*)state)->levelIndex == 0 && mainGetBit(0xc85))
             {
                 loadMapAndParent(0xb);
                 lockLevel(mapGetDirIdx(0xb), 0);
@@ -1317,27 +1317,27 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 (*gMapEventInterface)->setObjGroupStatus(0x13, 0x16, 1);
                 break;
             case 0x3d:
-                GameBit_Set(0x36a, 0);
+                mainSetBits(0x36a, 0);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 0, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 1, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 5, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 0xa, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 1);
-                GameBit_Set(0xe05, 0);
+                mainSetBits(0xe05, 0);
                 break;
             case 0x3c:
-                GameBit_Set(0x458, 0);
-                GameBit_Set(0x47c, 0);
-                GameBit_Set(0x4a3, 0);
+                mainSetBits(0x458, 0);
+                mainSetBits(0x47c, 0);
+                mainSetBits(0x4a3, 0);
                 (*gMapEventInterface)->setObjGroupStatus(0xc, 0, 1);
-                GameBit_Set(0xd73, 0);
+                mainSetBits(0xd73, 0);
                 break;
             case 0x3e:
-                GameBit_Set(0x5db, 0);
+                mainSetBits(0x5db, 0);
                 (*gMapEventInterface)->setObjGroupStatus(2, 0xf, 1);
                 (*gMapEventInterface)->setObjGroupStatus(2, 0x10, 1);
-                GameBit_Set(0xe7b, 0);
-                GameBit_Set(0x9e9, 0);
+                mainSetBits(0xe7b, 0);
+                mainSetBits(0x9e9, 0);
                 break;
             }
             break;

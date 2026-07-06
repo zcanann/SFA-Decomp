@@ -27,8 +27,8 @@ extern f32 lbl_803E3874;
 extern f32 lbl_803E3878;
 extern f32 lbl_803E387C;
 extern f32 lbl_803E3880;
-extern void dll_14D_update();
-extern void dll_14D_free_nop();
+extern void dll_FD_update();
+extern void dll_FD_free();
 
 typedef struct Dll14DState
 {
@@ -70,21 +70,21 @@ typedef struct MagicPlantBridgeState
     s8 mode;
 } MagicPlantBridgeState;
 
-int dll_14D_getExtraSize_ret_8(void) { return 0x8; }
+int dll_FD_getExtraSize(void) { return 0x8; }
 
-int dll_14D_getObjectTypeId(void) { return 0x0; }
+int dll_FD_getObjectTypeId(void) { return 0x0; }
 
-void dll_14D_free_nop(void)
+void dll_FD_free(void)
 {
 }
 
-void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_FD_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3850);
 }
 
-void dll_14D_hitDetect(int obj)
+void dll_FD_hitDetect(int obj)
 {
     if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
         (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
@@ -94,7 +94,7 @@ void dll_14D_hitDetect(int obj)
     return;
 }
 
-void dll_14D_update(u16* obj)
+void dll_FD_update(u16* obj)
 {
     extern u32 ObjGroup_FindNearestObject(); /* #57 */
     u8 mode;
@@ -122,7 +122,7 @@ void dll_14D_update(u16* obj)
         }
         else
         {
-            bitVal = GameBit_Get(placement->stateBit);
+            bitVal = mainGetBit(placement->stateBit);
             state->gateOpen = bitVal;
         }
         if ((state->gateOpen != 0) && (placement->preemptSeq != -1))
@@ -159,7 +159,7 @@ void dll_14D_update(u16* obj)
             state->mode = 4;
         }
         else if ((placement->enableBit != -1) &&
-            (bitVal = GameBit_Get(placement->enableBit), bitVal == 0))
+            (bitVal = mainGetBit(placement->enableBit), bitVal == 0))
         {
             *(u8*)(state->anchorObj + 0xaf) &= ~0x20;
             *(u8*)((int)obj + 0xaf) |= 8;
@@ -172,11 +172,11 @@ void dll_14D_update(u16* obj)
         {
             if ((placement->flags & 2) != 0)
             {
-                GameBit_Set(placement->enableBit, 0);
+                mainSetBits(placement->enableBit, 0);
             }
             if (placement->stateBit != -1)
             {
-                GameBit_Set(placement->stateBit, 1);
+                mainSetBits(placement->stateBit, 1);
             }
             *(u8*)((int)obj + 0xaf) |= 8;
             state->gateOpen = 1;
@@ -190,7 +190,7 @@ void dll_14D_update(u16* obj)
         }
         break;
     case 3:
-        bitVal = GameBit_Get(placement->enableBit);
+        bitVal = mainGetBit(placement->enableBit);
         if (bitVal != 0)
         {
             state->mode = 2;
@@ -201,7 +201,7 @@ void dll_14D_update(u16* obj)
     }
 }
 
-void dll_14D_init(int* obj)
+void dll_FD_init(int* obj)
 {
     Dll14DState* p = ((GameObject*)obj)->extra;
     p->mode = 0;
@@ -209,15 +209,15 @@ void dll_14D_init(int* obj)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DLL00FD_OBJFLAG_HIDDEN);
 }
 
-void dll_14D_release_nop(void)
+void dll_FD_release(void)
 {
 }
 
-void dll_14D_initialise_nop(void)
+void dll_FD_initialise(void)
 {
 }
 
-void fn_8017F334(int obj, void* setup, void* stateArg)
+void magicPlantDropGem(int obj, void* setup, void* stateArg)
 {
     MagicPlantBridgeState* state;
     int player;
@@ -259,14 +259,14 @@ void fn_8017F334(int obj, void* setup, void* stateArg)
 
 ObjectDescriptor gDll14DObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)dll_14D_initialise_nop,
-    (ObjectDescriptorCallback)dll_14D_release_nop,
+    (ObjectDescriptorCallback)dll_FD_initialise,
+    (ObjectDescriptorCallback)dll_FD_release,
     0,
-    (ObjectDescriptorCallback)dll_14D_init,
-    (ObjectDescriptorCallback)dll_14D_update,
-    (ObjectDescriptorCallback)dll_14D_hitDetect,
-    (ObjectDescriptorCallback)dll_14D_render,
-    (ObjectDescriptorCallback)dll_14D_free_nop,
-    (ObjectDescriptorCallback)dll_14D_getObjectTypeId,
-    dll_14D_getExtraSize_ret_8,
+    (ObjectDescriptorCallback)dll_FD_init,
+    (ObjectDescriptorCallback)dll_FD_update,
+    (ObjectDescriptorCallback)dll_FD_hitDetect,
+    (ObjectDescriptorCallback)dll_FD_render,
+    (ObjectDescriptorCallback)dll_FD_free,
+    (ObjectDescriptorCallback)dll_FD_getObjectTypeId,
+    dll_FD_getExtraSize,
 };

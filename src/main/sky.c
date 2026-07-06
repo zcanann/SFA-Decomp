@@ -32,7 +32,7 @@
 
 int getEnvFxBit2BA(void)
 {
-    return (u8)GameBit_Get(0x2ba);
+    return (u8)mainGetBit(0x2ba);
 }
 
 void setGameBit2BA(int value)
@@ -41,12 +41,12 @@ void setGameBit2BA(int value)
     {
         value = 0;
     }
-    GameBit_Set(0x2ba, (u8)value);
+    mainSetBits(0x2ba, (u8)value);
 }
 
 void envFxFn_800887cc(void)
 {
-    playerEnvFxFn_80088ad4((u8)GameBit_Get(0x2ba));
+    playerEnvFxFn_80088ad4((u8)mainGetBit(0x2ba));
 }
 
 void envFxActFn_800887f8(u8 value)
@@ -81,7 +81,7 @@ void envFxFn_80088884(void)
     u8 flags;
 
     a = (u8)(*gSkyInterface)->getSunPosition(0);
-    b = GameBit_Get(0x2ba);
+    b = mainGetBit(0x2ba);
     if (a != gSkySunPositionPrev)
     {
         gSkySunPositionPrev = a;
@@ -92,7 +92,7 @@ void envFxFn_80088884(void)
             {
                 b = 0;
             }
-            GameBit_Set(0x2ba, b);
+            mainSetBits(0x2ba, b);
         }
         if (gSkyEnvFxFlags != 0)
         {
@@ -106,7 +106,7 @@ void envFxFn_80088884(void)
     }
     flags = (u8)(flags & ~SKY_ENVFX_UPDATE_PENDING);
     gSkyEnvFxFlags = flags;
-    if ((u32)lbl_803DD130 != 0 && (flags & SKY_ENVFX_GROUP_A) != 0 && GameBit_Get(0x3ac) == 0)
+    if ((u32)lbl_803DD130 != 0 && (flags & SKY_ENVFX_GROUP_A) != 0 && mainGetBit(0x3ac) == 0)
     {
         if ((gSkyEnvFxFlags & SKY_ENVFX_IMMEDIATE) != 0)
         {
@@ -128,7 +128,7 @@ void envFxFn_80088884(void)
             getEnvfxAct(0, 0, (u16)((s16*)lbl_803DD13C)[b], 0);
         }
     }
-    if ((u32)lbl_803DD138 != 0 && (gSkyEnvFxFlags & SKY_ENVFX_GROUP_C) != 0 && GameBit_Get(0x3ab) == 0)
+    if ((u32)lbl_803DD138 != 0 && (gSkyEnvFxFlags & SKY_ENVFX_GROUP_C) != 0 && mainGetBit(0x3ab) == 0)
     {
         if ((gSkyEnvFxFlags & SKY_ENVFX_IMMEDIATE) != 0)
         {
@@ -1024,7 +1024,7 @@ void playerEnvFxFn_80088ad4(u8 idx)
     {
         return;
     }
-    if (GameBit_Get(944) != 0)
+    if (mainGetBit(944) != 0)
     {
         return;
     }

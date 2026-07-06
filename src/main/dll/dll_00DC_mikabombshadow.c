@@ -20,14 +20,14 @@ extern f32 lbl_803E31E4;
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
-int mikabombshadow_getExtraSize(void) { return 0x4; }
-int mikabombshadow_getObjectTypeId(void) { return 0x0; }
+int MikaBombShadow_getExtraSize(void) { return 0x4; }
+int MikaBombShadow_getObjectTypeId(void) { return 0x0; }
 
-void mikabombshadow_free(void)
+void MikaBombShadow_free(void)
 {
 }
 
-void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void MikaBombShadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
@@ -39,11 +39,11 @@ void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void mikabombshadow_hitDetect(void)
+void MikaBombShadow_hitDetect(void)
 {
 }
 
-void mikabombshadow_update(int* obj)
+void MikaBombShadow_update(int* obj)
 {
     int* owner;
     f32 fz = lbl_803E31D8;
@@ -58,7 +58,7 @@ void mikabombshadow_update(int* obj)
     ((GameObject*)obj)->anim.modelState->shadowAlphaStep = lbl_803E31E4 * alpha;
 }
 
-void mikabombshadow_init(int* obj)
+void MikaBombShadow_init(int* obj)
 {
     extern u64 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
@@ -77,24 +77,24 @@ void mikabombshadow_init(int* obj)
     ((GameObject*)obj)->anim.modelState->shadowScale = lbl_803E31D8;
 }
 
-void mikabombshadow_release(void)
+void MikaBombShadow_release(void)
 {
 }
 
-void mikabombshadow_initialise(void)
+void MikaBombShadow_initialise(void)
 {
 }
 
 ObjectDescriptor gMikaBombShadowObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)mikabombshadow_initialise,
-    (ObjectDescriptorCallback)mikabombshadow_release,
+    (ObjectDescriptorCallback)MikaBombShadow_initialise,
+    (ObjectDescriptorCallback)MikaBombShadow_release,
     0,
-    (ObjectDescriptorCallback)mikabombshadow_init,
-    (ObjectDescriptorCallback)mikabombshadow_update,
-    (ObjectDescriptorCallback)mikabombshadow_hitDetect,
-    (ObjectDescriptorCallback)mikabombshadow_render,
-    (ObjectDescriptorCallback)mikabombshadow_free,
-    (ObjectDescriptorCallback)mikabombshadow_getObjectTypeId,
-    mikabombshadow_getExtraSize,
+    (ObjectDescriptorCallback)MikaBombShadow_init,
+    (ObjectDescriptorCallback)MikaBombShadow_update,
+    (ObjectDescriptorCallback)MikaBombShadow_hitDetect,
+    (ObjectDescriptorCallback)MikaBombShadow_render,
+    (ObjectDescriptorCallback)MikaBombShadow_free,
+    (ObjectDescriptorCallback)MikaBombShadow_getObjectTypeId,
+    MikaBombShadow_getExtraSize,
 };

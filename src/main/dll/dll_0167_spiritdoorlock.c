@@ -105,7 +105,7 @@ void SpiritDoorLock_update(int obj)
 
     player = Obj_GetPlayerObject();
 
-    if (GameBit_Get(GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED) == 0)
+    if (mainGetBit(GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED) == 0)
     {
         if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gSpiritDoorLockApproachRange)
         {
@@ -113,15 +113,15 @@ void SpiritDoorLock_update(int obj)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             }
-            GameBit_Set(GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED, 1);
+            mainSetBits(GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED, 1);
         }
     }
 
     if (state->active == 0)
     {
-        if (GameBit_Get(placement->doneGameBit) == 0)
+        if (mainGetBit(placement->doneGameBit) == 0)
         {
-            state->active = GameBit_Get(placement->activeGameBit);
+            state->active = mainGetBit(placement->activeGameBit);
             if (state->active != 0)
             {
                 f32 modelScale = (*(f32**)&((GameObject*)obj)->anim.modelInstance)[1] *
@@ -199,7 +199,7 @@ void SpiritDoorLock_update(int obj)
         if (orbitCount == 0)
         {
             state->active = 0;
-            GameBit_Set(placement->doneGameBit, 1);
+            mainSetBits(placement->doneGameBit, 1);
             ObjHits_DisableObject(obj);
         }
         tex = objFindTexture((void*)obj, 0, 0);

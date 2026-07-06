@@ -220,7 +220,7 @@ extern int lbl_803DD8E0;
 s16 lbl_803A8B48[0x98];
 extern GridEntry lbl_8031BD90[];
 extern void cMenuRotateFn_80124d80(void);
-extern void cMenuPlaySelectedItemSfx(u8 * player);
+extern void cMenuPlayTrickyCommandSfx(u8 * player);
 extern s8 padGetCY(int chan);
 extern u8 lbl_803A87F0[];
 extern u8 cMenuEnabled;
@@ -307,7 +307,7 @@ extern u8 getCurTaskHintTextMap(void);
 extern void hintTextFn_800ea174(u8 * buf);
 extern void Obj_FreeObject(char* obj);
 extern int fn_80296C4C(u8 * player);
-extern void fn_80296C84(u8 * player);
+extern void playerHeal(u8 * player);
 extern void AudioStream_StopCurrent(void);
 extern void updateSavedHealth(void);
 extern u16* saveGameGetCurHint(void);
@@ -428,7 +428,7 @@ extern s8 gCMenuCloseSfx;
 extern void* gameTextGetBox(int box);
 extern void gameTextAppendStr(char* str, int arg2);
 extern int cMenuSetItems(int handle, int flag);
-extern void* fn_802972A8(void* player);
+extern void* playerGetFocusObject(void* player);
 
 /* ===== EN v1.0 retargeted leaves ========================================== */
 /* Getter for the u8 at gPauseMenuTokenConfirmFlag. */
@@ -640,7 +640,7 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
     if (flags & PAUSEMENU_TITLE_FLAG_SET_HINT)
     {
         gPauseMenuHintIndex = idx;
-        if (GameBit_Get(gTaskHintTable[idx].bit_id) == 0)
+        if (mainGetBit(gTaskHintTable[idx].bit_id) == 0)
         {
             idx = 5;
         }
@@ -733,11 +733,11 @@ void timeListFn_8012be84(void)
         buttonDisable(0, PAD_BUTTON_A);
         if (lbl_803DD75B == 1)
         {
-            GameBit_Set(0x2b3, 1);
+            mainSetBits(0x2b3, 1);
         }
         else
         {
-            GameBit_Set(0x781, 1);
+            mainSetBits(0x781, 1);
         }
         lbl_803DD75B = 0;
         cutsceneFadeInOut(0);
@@ -1244,7 +1244,7 @@ void pauseMenuFn_8012b77c(void)
 
     lbl_803DD784 -= framesThisStep * 0x50;
     if (lbl_803DD784 < 0) lbl_803DD784 = 0;
-    fn_8012C000();
+    pauseMenuAnimateCarousel();
 }
 
 /* Draws the help-text frame: a base panel
@@ -1390,7 +1390,7 @@ void drawWorldMapHud(void)
             p = base;
             for (; i < GAMEUI_TASK_HINT_COUNT; i++)
             {
-                if (GameBit_Get(gTaskHintTable[*p].bit_id))
+                if (mainGetBit(gTaskHintTable[*p].bit_id))
                 {
                     fi = gGameUiTaskHintCandidates[i];
                     goto haveIdx;
@@ -1399,24 +1399,24 @@ void drawWorldMapHud(void)
             }
             fi = -1;
         haveIdx:
-            n = GameBit_Get(0x63c);
-            t = GameBit_Get(0x4e9);
-            n += GameBit_Get(0x5f3);
-            n += GameBit_Get(0x5f4);
+            n = mainGetBit(0x63c);
+            t = mainGetBit(0x4e9);
+            n += mainGetBit(0x5f3);
+            n += mainGetBit(0x5f4);
             n += t;
-            if (GameBit_Get(0x123))
+            if (mainGetBit(0x123))
             {
                 n++;
             }
-            if (GameBit_Get(0x2e8))
+            if (mainGetBit(0x2e8))
             {
                 n++;
             }
-            if (GameBit_Get(0x83b))
+            if (mainGetBit(0x83b))
             {
                 n++;
             }
-            if (GameBit_Get(0x83c))
+            if (mainGetBit(0x83c))
             {
                 n++;
             }
@@ -1456,7 +1456,7 @@ void drawWorldMapHud(void)
                 }
                 else if (fi == li_)
                 {
-                    if (GameBit_Get(gTaskHintTable[li_].bit1a))
+                    if (mainGetBit(gTaskHintTable[li_].bit1a))
                     {
                         hint = 0x51e6;
                     }
@@ -1548,7 +1548,7 @@ void timeListDraw(void)
         p = bits;
         for (; k < GAMEUI_TIME_LIST_COUNT; k++)
         {
-            int v = GameBit_Get(*p);
+            int v = mainGetBit(*p);
             int mins;
             if (k == 0)
             {
@@ -1895,7 +1895,7 @@ void cMenuRun(void)
     switch (yButtonState)
     {
     case 2:
-        if (!GameBit_Get(0x4e4))
+        if (!mainGetBit(0x4e4))
         {
             yButtonState = 0;
             yButtonItemTextureId = -1;
@@ -1911,13 +1911,13 @@ void cMenuRun(void)
         break;
     case 1:
     case 3:
-        if (GameBit_Get(yButtonItem) == 0 ||
-            (gYButtonUsedBit > -1 && GameBit_Get(gYButtonUsedBit) != 0))
+        if (mainGetBit(yButtonItem) == 0 ||
+            (gYButtonUsedBit > -1 && mainGetBit(gYButtonUsedBit) != 0))
         {
             yButtonState = 0;
             yButtonItemTextureId = -1;
         }
-        else if (gYButtonActiveBit > -1 && GameBit_Get(gYButtonActiveBit) != 0)
+        else if (gYButtonActiveBit > -1 && mainGetBit(gYButtonActiveBit) != 0)
         {
             gYButtonInUse = 1;
         }
@@ -2134,7 +2134,7 @@ void cMenuRun(void)
                                     {
                                         cMenuOpen = 0;
                                         gCMenuActivatedId = cMenuSelectedItem;
-                                        cMenuPlaySelectedItemSfx(player);
+                                        cMenuPlayTrickyCommandSfx(player);
                                         gCMenuCloseSfx = 0;
                                     }
                                 }
@@ -2166,7 +2166,7 @@ void cMenuRun(void)
                     if (gTrickyHudItemMask & (1 << yButtonItem))
                     {
                         gCMenuActivatedId = yButtonItem;
-                        cMenuPlaySelectedItemSfx(player);
+                        cMenuPlayTrickyCommandSfx(player);
                         buttonDisable(0, 0x900);
                     }
                 }
@@ -2398,7 +2398,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 p = base;
                 for (; i < GAMEUI_TASK_HINT_COUNT; i++)
                 {
-                    if (GameBit_Get(gTaskHintTable[*p].bit_id))
+                    if (mainGetBit(gTaskHintTable[*p].bit_id))
                     {
                         tmp = (s8)gGameUiTaskHintCandidates[i];
                         goto haveIdx2;
@@ -2408,24 +2408,24 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 tmp = -1;
             haveIdx2:
                 fi = (s8)tmp;
-                taskCount = GameBit_Get(0x63c);
-                taskPartial = GameBit_Get(0x4e9);
-                taskCount += GameBit_Get(0x5f3);
-                taskCount += GameBit_Get(0x5f4);
+                taskCount = mainGetBit(0x63c);
+                taskPartial = mainGetBit(0x4e9);
+                taskCount += mainGetBit(0x5f3);
+                taskCount += mainGetBit(0x5f4);
                 taskCount = taskPartial + taskCount;
-                if (GameBit_Get(0x123))
+                if (mainGetBit(0x123))
                 {
                     taskCount++;
                 }
-                if (GameBit_Get(0x2e8))
+                if (mainGetBit(0x2e8))
                 {
                     taskCount++;
                 }
-                if (GameBit_Get(0x83b))
+                if (mainGetBit(0x83b))
                 {
                     taskCount++;
                 }
-                if (GameBit_Get(0x83c))
+                if (mainGetBit(0x83c))
                 {
                     taskCount++;
                 }
@@ -2462,7 +2462,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                     }
                     else if (fi == li_)
                     {
-                        if (GameBit_Get(gTaskHintTable[li_].bit1a))
+                        if (mainGetBit(gTaskHintTable[li_].bit1a))
                         {
                             hint = 0x578;
                         }
@@ -2620,7 +2620,7 @@ void pauseMenuFn_80129ee0(void)
     }
     if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 ||
         (player != 0 && coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0 &&
-            fn_802972A8(player) != 0))
+            playerGetFocusObject(player) != 0))
     {
         menuMax = 4;
     }
@@ -2696,7 +2696,7 @@ void pauseMenuFn_80129ee0(void)
             {
                 int code = *(u16*)((u8*)&tbl->cellMap[0].code + i * 4);
                 lbl_803DD8E0 = code;
-                GameBit_Set(code + 0xf10, 1);
+                mainSetBits(code + 0xf10, 1);
             }
         }
     }
@@ -2954,7 +2954,7 @@ void pauseMenuFn_80129ee0(void)
                         lbl_803DD81C = 1;
                     }
                 }
-                fn_8012C000();
+                pauseMenuAnimateCarousel();
                 if ((b2 & 0x1200) && (s8)pauseMenuFrameCounter == 0)
                 {
                     Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
@@ -3007,7 +3007,7 @@ void pauseMenuFn_80129ee0(void)
                 }
                 else
                 {
-                    fn_8012C000();
+                    pauseMenuAnimateCarousel();
                 }
                 {
                     s16 v = (s16)(lbl_803DD784 - framesThisStep * 0x50);
@@ -3076,7 +3076,7 @@ void pauseMenuFn_80129ee0(void)
                     for (k = 0; k < 0xc; k++)
                     {
                         gi = k;
-                        if (GameBit_Get(*(s16*)((u8*)&tbl->gbids[0] + gi * 2)))
+                        if (mainGetBit(*(s16*)((u8*)&tbl->gbids[0] + gi * 2)))
                         {
                             lbl_803DD824[gi].id = 0x26;
                         }
@@ -3122,7 +3122,7 @@ void pauseMenuFn_80129ee0(void)
                     while ((bit = *(int*)((u8*)&tbl->list740[0] + (idx = k) * 4)) > -1)
                     {
                         s16 texId = 0xbf0;
-                        if (GameBit_Get(bit))
+                        if (mainGetBit(bit))
                         {
                             texId = *(s16*)((u8*)&tbl->alts[0].alt + idx * 16);
                         }
@@ -3140,7 +3140,7 @@ void pauseMenuFn_80129ee0(void)
                     while ((id = *(it = (s16*)((u8*)&tbl->items[0] + (u8)k * 16))) > -1)
                     {
                         s16 texId = 0xbf0;
-                        if (GameBit_Get(id))
+                        if (mainGetBit(id))
                         {
                             texId = it[3];
                         }
@@ -3152,21 +3152,21 @@ void pauseMenuFn_80129ee0(void)
                 }
                 {
                     s16 texId = 0xbf0;
-                    if (GameBit_Get(0x1ee))
+                    if (mainGetBit(0x1ee))
                     {
                         texId = 0xc8a;
                     }
                     hud->textures3A8[0x14] = (int)textureLoadAsset(texId);
                     hud->texIds358[0x14] = texId;
                     texId = 0xbf0;
-                    if (GameBit_Get(0x13e))
+                    if (mainGetBit(0x13e))
                     {
                         texId = 0xc06;
                     }
                     hud->textures3A8[0x15] = (int)textureLoadAsset(texId);
                     hud->texIds358[0x15] = texId;
                     texId = 0xbf0;
-                    if (GameBit_Get(0xc64))
+                    if (mainGetBit(0xc64))
                     {
                         texId = 0xc05;
                     }
@@ -3280,7 +3280,7 @@ void pauseMenuFn_80129ee0(void)
                     break;
                 case 8:
                     charState[9] -= 1;
-                    fn_80296C84(player);
+                    playerHeal(player);
                     gameTextLoadDir(lbl_803DD8DC);
                     pauseMenuState = 2;
                     pauseMenuFrameCounter = 0x3c;
@@ -3315,7 +3315,7 @@ void pauseMenuFn_80129ee0(void)
         case 0xb:
             if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160)
             {
-                int have = GameBit_Get(0x3f5);
+                int have = mainGetBit(0x3f5);
                 lbl_803DD758 = 0;
                 if (player != 0)
                 {
@@ -3324,11 +3324,11 @@ void pauseMenuFn_80129ee0(void)
                     {
                         for (lbl_803DD756 = 0; lbl_803DD756 < 4;)
                         {
-                            if (!GameBit_Get(*(s16*)((u8*)&tbl->tokens[0].bitA + lbl_803DD756 * 8)))
+                            if (!mainGetBit(*(s16*)((u8*)&tbl->tokens[0].bitA + lbl_803DD756 * 8)))
                             {
                                 break;
                             }
-                            if (GameBit_Get(*(s16*)((u8*)&tbl->tokens[0].bitB + lbl_803DD756 * 8)) == 0)
+                            if (mainGetBit(*(s16*)((u8*)&tbl->tokens[0].bitB + lbl_803DD756 * 8)) == 0)
                             {
                                 if (have >= tbl->tokens[lbl_803DD756].thresh)
                                 {
@@ -3349,8 +3349,8 @@ void pauseMenuFn_80129ee0(void)
                     if (lbl_803DD758 == 2)
                     {
                         int rem = have - tbl->tokens[lbl_803DD756].thresh;
-                        GameBit_Set(0x3f5, rem);
-                        GameBit_Set(tbl->tokens[lbl_803DD756].bitB, 1);
+                        mainSetBits(0x3f5, rem);
+                        mainSetBits(tbl->tokens[lbl_803DD756].bitB, 1);
                     }
                     gPauseMenuTokenConfirmFlag = 1;
                     buttonDisable(0, PAD_BUTTON_A);
@@ -3583,7 +3583,7 @@ void fn_80128A7C(u8 i, int alpha, int flag)
  * eases the swivel angle gPauseMenuSwivelAngle toward the selected slot, spins the
  * podium objects (lbl_803DD868), then bobs/sways each character model in
  * lbl_803A9410 with phase-shifted sine waves around the podium centre. */
-void fn_8012C000(void)
+void pauseMenuAnimateCarousel(void)
 {
     u8 flag;
     u8 k;
@@ -3609,7 +3609,7 @@ void fn_8012C000(void)
     if (player != NULL)
     {
         flag = (coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) != 0 ||
-            fn_802972A8(player) == 0);
+            playerGetFocusObject(player) == 0);
     }
     else
     {
@@ -3774,7 +3774,7 @@ int GameUI_run(void)
 }
 
 #pragma dont_inline on
-void fn_8012F9B4(int idx, s16 target, s8 flag)
+void cMenuSelectItemByTarget(int idx, s16 target, s8 flag)
 {
     void* entry = (u8*)gCMenuSections + idx * 16;
     int count = cMenuSetItems(*(int*)entry, flag);
@@ -3797,7 +3797,7 @@ void fn_8012F9B4(int idx, s16 target, s8 flag)
     }
 }
 
-void fn_8012FA70(int idx, s8 flag)
+void cMenuSelectFirstEnabledItem(int idx, s8 flag)
 {
     void* entry;
     s16* posPtr;
@@ -4034,7 +4034,7 @@ void GameUI_update(void)
     {
         if (lbl_803DD75B != 0) timeListFn_8012be84();
 
-        if (fn_802972A8(player) != 0 || (*gCameraInterface)->getMode() == 0x44 ||
+        if (playerGetFocusObject(player) != 0 || (*gCameraInterface)->getMode() == 0x44 ||
             (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || pauseMenuState != 0)
         {
             buttonDisable(0, 0xf0000);
@@ -4051,7 +4051,7 @@ void GameUI_update(void)
             }
         }
 
-        if (fn_802972A8(player) != 0 || (*gCameraInterface)->getMode() == 0x44 ||
+        if (playerGetFocusObject(player) != 0 || (*gCameraInterface)->getMode() == 0x44 ||
             (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || shouldCloseCMenu != 0 ||
             pauseMenuState != 0 || getHudHiddenFrameCount() != 0 || lbl_803DD75B != 0)
         {
@@ -4072,7 +4072,7 @@ void GameUI_update(void)
         if (angDelta > 0x8000) angDelta = (s16)(angDelta - 0xffff);
         if (angDelta < -0x8000) angDelta = (s16)(angDelta + 0xffff);
 
-        if (GameBit_Get(0x9d5))
+        if (mainGetBit(0x9d5))
         {
             int hint = (u16)getNextTaskHintText();
             if (hint > lbl_803DD730)
@@ -4081,7 +4081,7 @@ void GameUI_update(void)
                 lbl_803DBA64 = 3;
                 lbl_803DD730 = hint;
             }
-            GameBit_Set(0x9d5, 0);
+            mainSetBits(0x9d5, 0);
         }
 
         if (allowCStickTarget != 0)
@@ -4119,7 +4119,7 @@ void GameUI_update(void)
                         gCMenuButtons |= 0x80000;
                         trickyProximity = 1;
                     }
-                    else if (tricky != 0 && GameBit_Get(0x4e4) && cameraGetTargetType() == 8)
+                    else if (tricky != 0 && mainGetBit(0x4e4) && cameraGetTargetType() == 8)
                     {
                         gCMenuButtons |= 0x20000;
                     }
@@ -4174,7 +4174,7 @@ void GameUI_update(void)
                     shouldOpenCMenu = 2;
                     lbl_803DD8B7 = 2;
                     gCMenuCurSection = 2;
-                    fn_8012FA70(2, 1);
+                    cMenuSelectFirstEnabledItem(2, 1);
                     goto afterDispatch;
                 }
             }
@@ -4191,8 +4191,8 @@ void GameUI_update(void)
                     shouldOpenCMenu = 3;
                     lbl_803DD8B7 = 0;
                     gCMenuCurSection = 0;
-                    fn_8012FA70(0, 0);
-                    if (trickyProximity != 0) fn_8012F9B4(0, 0xc1, 0);
+                    cMenuSelectFirstEnabledItem(0, 0);
+                    if (trickyProximity != 0) cMenuSelectItemByTarget(0, 0xc1, 0);
                     goto afterDispatch;
                 }
             }
@@ -4209,7 +4209,7 @@ void GameUI_update(void)
                     shouldOpenCMenu = 4;
                     lbl_803DD8B7 = 1;
                     gCMenuCurSection = 1;
-                    fn_8012FA70(1, 0);
+                    cMenuSelectFirstEnabledItem(1, 0);
                     goto afterDispatch;
                 }
             }

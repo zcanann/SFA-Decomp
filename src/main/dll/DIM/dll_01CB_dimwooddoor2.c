@@ -101,7 +101,7 @@ void dimwooddoor2_update(int* obj)
             sub->animSpeed = lbl_803E49E0;
             sub->riseSpeed = lbl_803E49E4;
             sub->burnState = 0;
-            GameBit_Set(((Dimwooddoor2Placement*)placement)->openedGameBit, 1);
+            mainSetBits(((Dimwooddoor2Placement*)placement)->openedGameBit, 1);
             Sfx_PlayFromObject((int)obj, SFXTRIG_wp_dsmk2_c);
         }
     }
@@ -121,7 +121,7 @@ void dimwooddoor2_init(u8* obj, u8* params)
     fz = lbl_803E49D4;
     sub->animSpeed = fz;
     sub->riseSpeed = fz;
-    if (GameBit_Get(((Dimwooddoor2Placement*)params)->openedGameBit) != 0)
+    if (mainGetBit(((Dimwooddoor2Placement*)params)->openedGameBit) != 0)
     {
         sub->burnState = 0;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;

@@ -4,7 +4,7 @@
 
 #define MCLIGHTNING_OBJGROUP 0x48
 
-int mclightning_handleScriptEvents(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int mclightning_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     McLightningState* state = ((GameObject*)obj)->extra;
     int i;
@@ -151,7 +151,7 @@ void mclightning_init(int obj, u8* setup)
     f32 effectScale;
 
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    ((GameObject*)obj)->animEventCallback = mclightning_handleScriptEvents;
+    ((GameObject*)obj)->animEventCallback = mclightning_SeqFn;
     ObjGroup_AddObject(obj, MCLIGHTNING_OBJGROUP);
     state->flags.spawnFlags = setup[0x1a];
     effectScale = lbl_803E745C;

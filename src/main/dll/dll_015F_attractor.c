@@ -5,7 +5,7 @@
  * <<8 into anim.rotX at init), a mode byte (0x19) and a scale halfword
  * (0x1a).
  *
- * attractor_func0B is the queried accessor: mode 1 returns the object;
+ * attractor_getTarget is the queried accessor: mode 1 returns the object;
  * mode 2 additionally faces the object at the player (atan2 of the
  * player-relative xz delta, biased by 0x8000) before returning it;
  * other modes report nothing.
@@ -22,7 +22,7 @@
 
 #define ATTRACTOR_OBJ_GROUP 0x1e
 
-/* placement mode byte (0x19) - selects what attractor_func0B reports */
+/* placement mode byte (0x19) - selects what attractor_getTarget reports */
 #define ATTRACTOR_MODE_NONE        0 /* report nothing */
 #define ATTRACTOR_MODE_RETURN_SELF 1 /* return the object */
 #define ATTRACTOR_MODE_FACE_PLAYER 2 /* face player, then return the object */
@@ -39,7 +39,7 @@ STATIC_ASSERT(offsetof(AttractorMapData, setupByte) == 0x18);
 STATIC_ASSERT(offsetof(AttractorMapData, mode) == 0x19);
 STATIC_ASSERT(offsetof(AttractorMapData, scale) == 0x1a);
 
-void attractor_func0B(GameObject* obj, void** out)
+void attractor_getTarget(GameObject* obj, void** out)
 {
     void* result = NULL;
     s8 mode = ((AttractorMapData*)obj->anim.placementData)->mode;

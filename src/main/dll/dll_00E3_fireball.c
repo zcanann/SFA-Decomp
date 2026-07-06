@@ -268,10 +268,10 @@ void fn_8016F260(int* obj, int* state, int* other)
     }
 }
 
-int fireball_getExtraSize(void) { return 0x74; }
-int fireball_getObjectTypeId(void) { return 0x0; }
+int Fireball_getExtraSize(void) { return 0x74; }
+int Fireball_getObjectTypeId(void) { return 0x0; }
 
-void fireball_free(int* obj)
+void Fireball_free(int* obj)
 {
     int* inner = (int*)((GameObject*)obj)->extra;
     void* ptr = *(void**)inner;
@@ -283,7 +283,7 @@ void fireball_free(int* obj)
     ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
 }
 
-void fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void Fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int* model;
     u8* state = ((GameObject*)obj)->extra;
@@ -344,7 +344,7 @@ void fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void fireball_hitDetect(int* obj)
+void Fireball_hitDetect(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
     int* target;
@@ -400,9 +400,9 @@ void fireball_hitDetect(int* obj)
     ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
 }
 
-void mikabomb_init(int* obj);
+void MikaBomb_init(int* obj);
 
-void fireball_update(int* obj)
+void Fireball_update(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
 #define hitState ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
@@ -553,7 +553,7 @@ void fireball_update(int* obj)
 }
 
 #pragma opt_common_subs off
-void fireball_init(int* obj)
+void Fireball_init(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -618,27 +618,27 @@ void fireball_init(int* obj)
 }
 #pragma opt_common_subs reset
 
-void fireball_release(void)
+void Fireball_release(void)
 {
 }
 
-void fireball_initialise(void)
+void Fireball_initialise(void)
 {
 }
 
 ObjectDescriptor10WithPadding gFireballObjDescriptor = {
     {
         0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)fireball_initialise,
-        (ObjectDescriptorCallback)fireball_release,
+        (ObjectDescriptorCallback)Fireball_initialise,
+        (ObjectDescriptorCallback)Fireball_release,
         0,
-        (ObjectDescriptorCallback)fireball_init,
-        (ObjectDescriptorCallback)fireball_update,
-        (ObjectDescriptorCallback)fireball_hitDetect,
-        (ObjectDescriptorCallback)fireball_render,
-        (ObjectDescriptorCallback)fireball_free,
-        (ObjectDescriptorCallback)fireball_getObjectTypeId,
-        fireball_getExtraSize,
+        (ObjectDescriptorCallback)Fireball_init,
+        (ObjectDescriptorCallback)Fireball_update,
+        (ObjectDescriptorCallback)Fireball_hitDetect,
+        (ObjectDescriptorCallback)Fireball_render,
+        (ObjectDescriptorCallback)Fireball_free,
+        (ObjectDescriptorCallback)Fireball_getObjectTypeId,
+        Fireball_getExtraSize,
     },
     0,
 };

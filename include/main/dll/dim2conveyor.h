@@ -214,14 +214,14 @@ STATIC_ASSERT(offsetof(NwMammothPathControlInterface, apply) == 0x14);
 STATIC_ASSERT(offsetof(NwMammothPathControlInterface, advance) == 0x18);
 STATIC_ASSERT(offsetof(NwMammothPathControlInterface, attachObject) == 0x20);
 STATIC_ASSERT(offsetof(NwMammothGameUiInterface, showMessage) == 0x58);
-void nw_mammoth_update(NwMammothObject *obj,int param_2);
-void nw_mammoth_init(NwMammothObject *obj,NwMammothMapData *mapData,int isReload);
+void NW_mammoth_update(NwMammothObject *obj,int param_2);
+void NW_mammoth_init(NwMammothObject *obj,NwMammothMapData *mapData,int isReload);
 void FUN_801cf0b0(u32 param_1,int param_2);
 void FUN_801cf0b4(int param_1);
 void FUN_801cf108(int param_1);
 void FUN_801cf1a0(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  short *param_9);
-int nw_tricky_getExtraSize(void);
+int NW_tricky_getExtraSize(void);
 
 #endif /* MAIN_DLL_DIM2CONVEYOR_H_ */

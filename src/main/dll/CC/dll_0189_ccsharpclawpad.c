@@ -31,17 +31,17 @@ typedef struct SharpClawPadParticleArgs
 STATIC_ASSERT(offsetof(SharpClawPadParticleArgs, offset) == 0xC);
 STATIC_ASSERT(sizeof(SharpClawPadParticleArgs) == 0x18);
 
-int ccsharpclawpad_getExtraSize(void) { return 0x4; }
+int CCSharpclawPad_getExtraSize(void) { return 0x4; }
 
 #pragma scheduling off
 #pragma peephole off
-void ccsharpclawpad_update(int obj)
+void CCSharpclawPad_update(int obj)
 {
     SharpClawPadParticleArgs particleArgs;
     f32* state;
     int* player;
 
-    if (GameBit_Get(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a)) != 0)
+    if (mainGetBit(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a)) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         particleArgs.offset[0] = -5.0f;
@@ -56,7 +56,7 @@ void ccsharpclawpad_update(int obj)
     else
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-        if (GameBit_Get(0x40) == 0)
+        if (mainGetBit(0x40) == 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
@@ -65,7 +65,7 @@ void ccsharpclawpad_update(int obj)
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         state = ((GameObject*)obj)->extra;
-        if (ObjTrigger_IsSet(obj) != 0 && fn_801334E0() == 0)
+        if (ObjTrigger_IsSet(obj) != 0 && isAreaNameTextActive() == 0)
         {
             *state = 600.0f;
         }
@@ -87,7 +87,7 @@ void ccsharpclawpad_update(int obj)
             && playerIsDisguised((int)player) != 0)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_menuups16k);
-            GameBit_Set(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a), 1);
+            mainSetBits(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a), 1);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
         particleArgs.offset[0] = -5.0f;
@@ -101,7 +101,7 @@ void ccsharpclawpad_update(int obj)
     }
 }
 
-void ccsharpclawpad_init(int* obj, int* placement)
+void CCSharpclawPad_init(int* obj, int* placement)
 {
     ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)placement + 24) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCSHARPCLAWPAD_OBJFLAG_HIDDEN);

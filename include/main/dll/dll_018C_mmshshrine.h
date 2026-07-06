@@ -14,12 +14,12 @@ typedef struct MMSHShrineSequenceState {
 } MMSHShrineSequenceState;
 
 int MMSH_Shrine_SeqFn(int obj, u32 unused, MMSHShrineSequenceState *seq);
-int mmsh_shrine_getExtraSize(void);
-int mmsh_shrine_getObjectTypeId(void);
-void mmsh_shrine_free(int param_1);
-void mmsh_shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5,
+int MMSH_Shrine_getExtraSize(void);
+int MMSH_Shrine_getObjectTypeId(void);
+void MMSH_Shrine_free(int param_1);
+void MMSH_Shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5,
                         char flag);
-void mmsh_shrine_hitDetect(void);
-void mmsh_shrine_update(int param_1);
+void MMSH_Shrine_hitDetect(void);
+void MMSH_Shrine_update(int param_1);
 
 #endif /* MAIN_DLL_LASER19F_H_ */

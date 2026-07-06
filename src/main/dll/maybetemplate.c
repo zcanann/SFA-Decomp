@@ -533,7 +533,7 @@ void pauseMenuDrawStatus(void)
     trickyStatus = PMDS_TRICKY_ENERGY_PTR();
     statuses[0] = Player_GetCurrentHealth(player);
     statuses[7] = Player_GetMaxHealth(player);
-    statuses[1] = GameBit_Get(0xC1);
+    statuses[1] = mainGetBit(0xC1);
     if (((PauseMenuHud*)base)->magicValue - Player_GetCurrentMagic(player) < 0)
     {
         delta = -1;
@@ -562,14 +562,14 @@ void pauseMenuDrawStatus(void)
     negDelta = -delta;
     statuses[8] = ((PauseMenuHud*)base)->maxMagicValue + negDelta;
     if ((negDelta != 0) && (lbl_803DD83C != lbl_803E1E3C) &&
-        (objIsCurModelNotZero((void*)player) != 0) && (GameBit_Get(0xEB1) != 0))
+        (objIsCurModelNotZero((void*)player) != 0) && (mainGetBit(0xEB1) != 0))
     {
         Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_pda_compassbeep_3f0);
     }
     ((PauseMenuHud*)base)->magicLatch = statuses[2];
     ((PauseMenuHud*)base)->maxMagicLatch = statuses[8];
-    statuses[4] = GameBit_Get(0x66C);
-    statuses[10] = GameBit_Get(0x13D);
+    statuses[4] = mainGetBit(0x66C);
+    statuses[10] = mainGetBit(0x13D);
     if (statuses[10] != ((PauseMenuHud*)base)->spiritBitState)
     {
         u8 flag = 0;
@@ -577,10 +577,10 @@ void pauseMenuDrawStatus(void)
         {
             flag = 1;
         }
-        GameBit_Set(0x967, flag);
+        mainSetBits(0x967, flag);
     }
-    statuses[11] = GameBit_Get(0x86A);
-    statuses[12] = GameBit_Get(0x3F5);
+    statuses[11] = mainGetBit(0x86A);
+    statuses[12] = mainGetBit(0x3F5);
     statuses[3] = playerGetMoney((void*)player);
     statuses[9] = *trickyStatus;
     if ((((lbl_803DD792 & 1) != 0) ||
@@ -603,7 +603,7 @@ void pauseMenuDrawStatus(void)
             lbl_803DD83C = *(f32 *)&lbl_803E1E3C;
         }
     }
-    if ((cMenuEnabled == 0) && (GameBit_Get(0xA7B) != 0))
+    if ((cMenuEnabled == 0) && (mainGetBit(0xA7B) != 0))
     {
         cMenuEnabled = 1;
     }
@@ -653,27 +653,27 @@ void pauseMenuDrawStatus(void)
             ((int*)(base + 0xB30))[j] = statuses[j];
             ((f32*)(base + 0xAFC))[j] = gHudElemOpacityFloor;
         }
-        if ((GameBit_Get(0xB98) != 0) || (statuses[4] != 0))
+        if ((mainGetBit(0xB98) != 0) || (statuses[4] != 0))
         {
             ((PauseMenuHud*)base)->healthAnim = lbl_803E1FC0;
         }
-        if ((GameBit_Get(0xB99) != 0) || (statuses[1] != 0))
+        if ((mainGetBit(0xB99) != 0) || (statuses[1] != 0))
         {
             ((PauseMenuHud*)base)->magicCur = lbl_803E1FC0;
         }
-        if ((GameBit_Get(0xB9A) != 0) || (statuses[10] != 0))
+        if ((mainGetBit(0xB9A) != 0) || (statuses[10] != 0))
         {
             ((PauseMenuHud*)base)->keyAnim = lbl_803E1FC0;
         }
-        if ((GameBit_Get(0xB9B) != 0) || (statuses[11] != 0))
+        if ((mainGetBit(0xB9B) != 0) || (statuses[11] != 0))
         {
             ((PauseMenuHud*)base)->scarabAnim = lbl_803E1FC0;
         }
-        if ((GameBit_Get(0xB9C) != 0) || (statuses[3] != 0))
+        if ((mainGetBit(0xB9C) != 0) || (statuses[3] != 0))
         {
             ((PauseMenuHud*)base)->moneyAnim = lbl_803E1FC0;
         }
-        if ((GameBit_Get(0xD97) != 0) || (statuses[12] != 0))
+        if ((mainGetBit(0xD97) != 0) || (statuses[12] != 0))
         {
             ((PauseMenuHud*)base)->spiritAnim = lbl_803E1FC0;
         }
@@ -745,7 +745,7 @@ void pauseMenuDrawStatus(void)
                     }
                     if (bit != 0)
                     {
-                        GameBit_Set(bit, 1);
+                        mainSetBits(bit, 1);
                         ((u8*)(base + 0xB64))[ji] = 1;
                     }
                 }
@@ -1282,20 +1282,20 @@ int cMenuCountAvailableEntries(short* arr, s8 flag)
         entry = arr;
         while (entry[0] > -1)
         {
-            if (GameBit_Get((int)entry[0]) != 0)
+            if (mainGetBit((int)entry[0]) != 0)
             {
                 if (arr == gCMenuStaffAbilities)
                 {
-                    if (entry[2] < 0 || GameBit_Get((int)entry[2]) == 0)
+                    if (entry[2] < 0 || mainGetBit((int)entry[2]) == 0)
                     {
                         count++;
                     }
                 }
                 else
                 {
-                    if (!(entry[1] >= 0 && GameBit_Get((int)entry[1]) != 0))
+                    if (!(entry[1] >= 0 && mainGetBit((int)entry[1]) != 0))
                     {
-                        if (entry[2] < 0 || GameBit_Get((int)entry[2]) == 0)
+                        if (entry[2] < 0 || mainGetBit((int)entry[2]) == 0)
                         {
                             count++;
                         }

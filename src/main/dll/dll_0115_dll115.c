@@ -62,7 +62,7 @@ int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             s16 nextGate = (gateBits + next)[0x14];
             if (nextGate != -1 && nextGate != (gateBits + step)[0x14])
             {
-                if (GameBit_Get(nextGate) != 0)
+                if (mainGetBit(nextGate) != 0)
                 {
                     (*gObjectTriggerInterface)->endSequence(((GameObject*)obj)->seqIndex);
                 }
@@ -114,7 +114,7 @@ void dll_115_update(int obj)
         eventId = ((s16*)(mapData + 0x18))[state[0]];
         if (eventId != -1)
         {
-            GameBit_Set(eventId, 1);
+            mainSetBits(eventId, 1);
         }
         state[1] = (u8)(state[1] & ~1);
         state[0]++;
@@ -135,7 +135,7 @@ void dll_115_update(int obj)
         {
             state[0] = DLL115_STEP_IDLE;
         }
-        else if ((u32)GameBit_Get(eventId) != 0)
+        else if ((u32)mainGetBit(eventId) != 0)
         {
             s8 id = (s8)((u8*)(mapData + 0x40))[state[0]];
             if (id != -1)
@@ -151,7 +151,7 @@ void dll_115_update(int obj)
     {
         eventId = p[12];
         if (eventId == -1) break;
-        if ((u32)GameBit_Get(eventId) != 0) break;
+        if ((u32)mainGetBit(eventId) != 0) break;
         state[0]--;
         p--;
         step--;
@@ -174,7 +174,7 @@ void dll_115_init(s16* obj, int mapData)
     do
     {
         if (p[12] == -1) break;
-        if ((u32)GameBit_Get(p[12]) == 0) break;
+        if ((u32)mainGetBit(p[12]) == 0) break;
         p++;
         step++;
     }

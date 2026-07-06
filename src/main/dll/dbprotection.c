@@ -15,7 +15,7 @@
  * DBprotection_updateEnvfxGameBits toggles the A/B envfx cycle game bits
  * (0xa3c-0xa3f), swapping envfxIndex and replaying actions from the
  * SBGalleonState envfx table. DBprotection_getCameraState exposes the
- * boss's cameraState byte to other DLLs; DBprotection_storeHomePosition
+ * boss's cameraState byte to other DLLs; SB_Galleon_onSeqFree
  * latches the object's local position as the home position.
  */
 #include "main/audio/sfx_ids.h"
@@ -61,7 +61,7 @@ extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
-extern u32 fn_801E2570(void);
+extern u32 sbGetPropeller(void);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern s8 lbl_803DDC2C;
@@ -384,7 +384,7 @@ void fn_801DFA28(u8* obj)
                 ((SBGalleonState*)state)->phaseCounter = 0;
                 *(s8*)&((SBGalleonState*)state)->flightPattern = 0;
                 ((SBGalleonState*)state)->headingLatch = 200;
-                GameBit_Set(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 1);
+                mainSetBits(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 1);
                 break;
             }
         }
@@ -581,10 +581,10 @@ void fn_801DFA28(u8* obj)
             ((SBGalleonState*)state)->stage = 3;
             ((SBGalleonState*)state)->phaseCounter = 5;
             ((SBGalleonState*)state)->headingLatch = 200;
-            sfxObj = fn_801E2570();
+            sfxObj = sbGetPropeller();
             Sfx_StopFromObject(sfxObj, SFXTRIG_swtst1_c);
             Sfx_PlayFromObject(sfxObj, SFXwp_dsmk2_c);
-            GameBit_Set(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 0);
+            mainSetBits(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 0);
         }
         else if (((SBGalleonState*)state)->phaseCounter >= 4)
         {
@@ -878,29 +878,29 @@ void DBprotection_updateEnvfxGameBits(u8* state)
     int effectObj;
 
     player = Obj_GetPlayerObject();
-    if (GameBit_Get(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING) != 0)
+    if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING) != 0)
     {
         effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_B);
         getEnvfxAct(effectObj, player, state[state[0xa4] + 0xa9], 0);
         effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_A);
         getEnvfxAct(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
         getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
-        GameBit_Set(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING, 0);
+        mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING, 0);
         ((SBGalleonState*)state)->envfxCycle = DBPROTECTION_GAMEBIT_CYCLE_A_DONE;
     }
 
-    if (GameBit_Get(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING) != 0)
+    if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING) != 0)
     {
         effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_A);
         getEnvfxAct(effectObj, player, state[state[0xa4] + 0xa9], 0);
         effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_B);
         getEnvfxAct(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
         getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
-        GameBit_Set(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING, 0);
+        mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING, 0);
         ((SBGalleonState*)state)->envfxCycle = DBPROTECTION_GAMEBIT_CYCLE_B_DONE;
     }
 
-    if (GameBit_Get(DBPROTECTION_GAMEBIT_CYCLE_A_DONE) != 0)
+    if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_A_DONE) != 0)
     {
         if (((SBGalleonState*)state)->envfxCycle != DBPROTECTION_GAMEBIT_CYCLE_A_DONE)
         {
@@ -909,10 +909,10 @@ void DBprotection_updateEnvfxGameBits(u8* state)
         getEnvfxAct(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
         getEnvfxAct(player, player, state[state[0xa4] + 0xa9], 0);
         getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_SWAP, 0);
-        GameBit_Set(DBPROTECTION_GAMEBIT_CYCLE_A_DONE, 0);
+        mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_A_DONE, 0);
     }
 
-    if (GameBit_Get(DBPROTECTION_GAMEBIT_CYCLE_B_DONE) != 0)
+    if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_B_DONE) != 0)
     {
         if (((SBGalleonState*)state)->envfxCycle != DBPROTECTION_GAMEBIT_CYCLE_B_DONE)
         {
@@ -921,7 +921,7 @@ void DBprotection_updateEnvfxGameBits(u8* state)
         getEnvfxAct(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
         getEnvfxAct(player, player, state[state[0xa4] + 0xa9], 0);
         getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_SWAP, 0);
-        GameBit_Set(DBPROTECTION_GAMEBIT_CYCLE_B_DONE, 0);
+        mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_B_DONE, 0);
     }
 }
 
@@ -935,12 +935,12 @@ void DBprotection_updateShield(int* obj)
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->unkF4 = 7;
 
-    if (GameBit_Get(DBPROTECTION_GAMEBIT_TRANSITION_ARMED) != 0 &&
-        GameBit_Get(DBPROTECTION_GAMEBIT_TRANSITION_USED) == 0 &&
-        GameBit_Get(DBPROTECTION_GAMEBIT_TRANSITION_READY) != 0)
+    if (mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_ARMED) != 0 &&
+        mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_USED) == 0 &&
+        mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_READY) != 0)
     {
         lbl_803DDC2C = 1;
-        GameBit_Set(DBPROTECTION_GAMEBIT_TRANSITION_USED, 1);
+        mainSetBits(DBPROTECTION_GAMEBIT_TRANSITION_USED, 1);
         SCREEN_TRANSITION_FADE(0xa, 1);
     }
 
@@ -962,7 +962,7 @@ void DBprotection_updateShield(int* obj)
     {
         if (angleCos < lbl_803E57CC)
         {
-            if (GameBit_Get(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0)
+            if (mainGetBit(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0)
             {
                 Sfx_PlayFromObject((int)obj, SFXwp_crthit6);
             }
@@ -970,7 +970,7 @@ void DBprotection_updateShield(int* obj)
         }
         else if (angleCos > lbl_803E57D0)
         {
-            if (GameBit_Get(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0)
+            if (mainGetBit(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0)
             {
                 Sfx_PlayFromObject((int)obj, SFXwp_crtsmsh6);
             }
@@ -986,7 +986,7 @@ void DBprotection_updateShield(int* obj)
     state->shieldAngle = (u16)(s32)(lbl_803E57E0 * timeDelta + state->shieldAngle);
 }
 
-void DBprotection_storeHomePosition(int* obj)
+void SB_Galleon_onSeqFree(int* obj)
 {
     SBGalleonState* state = ((GameObject*)obj)->extra;
     state->posX = ((GameObject*)obj)->anim.localPosX;

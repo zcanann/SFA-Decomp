@@ -172,7 +172,7 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void fn_802B0EA4(int obj, int q, int inner);
 extern void fn_802B1BF8(int obj, int q, int inner, f32 t);
 extern void fn_802B1B28(int obj, f32 t);
-extern void fn_80137948(const char *fmt, ...);
+extern void logPrintf(const char *fmt, ...);
 extern char sOnCloudFormat[];
 extern void buttonDisable(int a, int b);
 extern void fn_8003B500(int obj, int q, f32 f);
@@ -200,7 +200,7 @@ extern f32 lbl_803E830C;
 extern int getAngle(f32 deltaX, f32 deltaZ);
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern f32 lbl_803E83FC;
-int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
+int dim2prisonmammoth_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate);
 void fn_802BF0C8(int obj, int inner, int bit);
 void fn_802BF4D8(int obj);
 

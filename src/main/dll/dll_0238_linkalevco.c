@@ -3,7 +3,7 @@
  *
  * A scripted level-progression controller placed in the LinkA map. It runs
  * trigger sequence 0 every update and reacts to that sequence's anim events
- * (fire_updateState), branching on the current map-event mode (getMapAct of
+ * (LinkALevControl_seqFn), branching on the current map-event mode (getMapAct of
  * its mapEventMapId):
  *   - OPEN_PATH:  defrag memory, enable object groups, unlock Lightfoot and
  *                 load/lock the destination map for the active mode.
@@ -51,7 +51,7 @@ extern f32 lbl_803E64D8;
 /* per-instance extra block reserved by the object system; unused by this TU */
 #define LINKA_LEVCONTROL_EXTRA_SIZE 4
 
-int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int LinkALevControl_seqFn(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int stateIndex;
     u8 mode;
@@ -76,7 +76,7 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
                 (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 7, 0);
                 (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 10, 0);
                 (*gMapEventInterface)->setObjGroupStatus(10, 7, 0);
-                GameBit_Set(LINKA_LEVCONTROL_LIGHTFOOT_UNLOCK_GAMEBIT, 1);
+                mainSetBits(LINKA_LEVCONTROL_LIGHTFOOT_UNLOCK_GAMEBIT, 1);
                 loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_17);
                 mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_17);
                 lockLevel(mapDir, 0);
@@ -102,22 +102,22 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
                 warpToMap(LINKA_LEVCONTROL_WARP_ID_SHRINE, 0);
                 break;
             case 2:
-                GameBit_Set(LINKA_LEVCONTROL_MODE2_RESET_GAMEBIT, 0);
-                if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_B_GAMEBIT) != 0)
+                mainSetBits(LINKA_LEVCONTROL_MODE2_RESET_GAMEBIT, 0);
+                if (mainGetBit(LINKA_LEVCONTROL_MODE2_ROUTE_B_GAMEBIT) != 0)
                 {
                     (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_ID_0B, 3);
                     (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 8, 1);
                     (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 9, 1);
                     warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B, 0);
                 }
-                else if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_A_GAMEBIT) != 0)
+                else if (mainGetBit(LINKA_LEVCONTROL_MODE2_ROUTE_A_GAMEBIT) != 0)
                 {
                     (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_ID_0B, 2);
                     (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 5, 1);
                     (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 6, 1);
                     warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_A, 0);
                 }
-                else if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_C_GAMEBIT) != 0)
+                else if (mainGetBit(LINKA_LEVCONTROL_MODE2_ROUTE_C_GAMEBIT) != 0)
                 {
                     (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_ID_0B, 4);
                     (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 8, 1);
@@ -151,54 +151,54 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
     return 0;
 }
 
-int fireObj_getExtraSize(void)
+int LinkALevControl_getExtraSize(void)
 {
     return LINKA_LEVCONTROL_EXTRA_SIZE;
 }
 
-int fireObj_getObjectTypeId(void)
+int LinkALevControl_getObjectTypeId(void)
 {
     return 0;
 }
 
-void fireObj_free(void)
+void LinkALevControl_free(void)
 {
 }
 
-void fireObj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void LinkALevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E64D8);
 }
 
-void fireObj_hitDetect(void)
+void LinkALevControl_hitDetect(void)
 {
 }
 
-void fireObj_update(FireObject* obj)
+void LinkALevControl_update(FireObject* obj)
 {
     (*gObjectTriggerInterface)->runSequence(0, obj, 0xffffffff);
 }
 
-void fireObj_init(FireObject* obj)
+void LinkALevControl_init(FireObject* obj)
 {
     u32 flags;
-    obj->animEventCallback = fire_updateState;
+    obj->animEventCallback = LinkALevControl_seqFn;
     unlockLevel(0, 0, 1);
     flags = obj->flags | LINKA_LEVCONTROL_SEQUENCE_OBJECT_FLAGS;
     obj->flags = flags;
     envFxActFn_800887f8(0);
-    GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_0, 1);
-    GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_1, 1);
-    GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_2, 1);
+    mainSetBits(LINKA_LEVCONTROL_INIT_GAMEBIT_0, 1);
+    mainSetBits(LINKA_LEVCONTROL_INIT_GAMEBIT_1, 1);
+    mainSetBits(LINKA_LEVCONTROL_INIT_GAMEBIT_2, 1);
     streamFn_8000a380(3, 2, LINKA_LEVCONTROL_INIT_COLLECTABLE_ID);
 }
 
-void fireObj_release(void)
+void LinkALevControl_release(void)
 {
 }
 
-void fireObj_initialise(void)
+void LinkALevControl_initialise(void)
 {
 }
 
@@ -207,14 +207,14 @@ ObjectDescriptor gFireObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    fireObj_initialise,
-    fireObj_release,
+    LinkALevControl_initialise,
+    LinkALevControl_release,
     0,
-    (ObjectDescriptorCallback)fireObj_init,
-    (ObjectDescriptorCallback)fireObj_update,
-    fireObj_hitDetect,
-    (ObjectDescriptorCallback)fireObj_render,
-    fireObj_free,
-    (ObjectDescriptorCallback)fireObj_getObjectTypeId,
-    fireObj_getExtraSize,
+    (ObjectDescriptorCallback)LinkALevControl_init,
+    (ObjectDescriptorCallback)LinkALevControl_update,
+    LinkALevControl_hitDetect,
+    (ObjectDescriptorCallback)LinkALevControl_render,
+    LinkALevControl_free,
+    (ObjectDescriptorCallback)LinkALevControl_getObjectTypeId,
+    LinkALevControl_getExtraSize,
 };

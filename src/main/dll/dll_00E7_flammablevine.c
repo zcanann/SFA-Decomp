@@ -72,18 +72,18 @@ extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
 
 extern void* getTrickyObject(void);
 
-int flammablevine_getExtraSize(void) { return 0x14; }
-int flammablevine_getObjectTypeId(void) { return 0x0; }
+int FlammableVine_getExtraSize(void) { return 0x14; }
+int FlammableVine_getObjectTypeId(void) { return 0x0; }
 
-void flammablevine_free(int obj) { ObjGroup_RemoveObject(obj, FLAMMABLEVINE_OBJGROUP); }
+void FlammableVine_free(int obj) { ObjGroup_RemoveObject(obj, FLAMMABLEVINE_OBJGROUP); }
 
-void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void FlammableVine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
-void flammablevine_hitDetect(int obj)
+void FlammableVine_hitDetect(int obj)
 {
     FlammablevineState* state;
     u8* def;
@@ -97,7 +97,7 @@ void flammablevine_hitDetect(int obj)
         {
             if (((FlammablevineObjectDef*)def)->burnedBit != -1)
             {
-                GameBit_Set(((FlammablevineObjectDef*)def)->burnedBit, 1);
+                mainSetBits(((FlammablevineObjectDef*)def)->burnedBit, 1);
                 Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
             }
             state->burnTimer = 240.0f;
@@ -106,7 +106,7 @@ void flammablevine_hitDetect(int obj)
     }
 }
 
-void flammablevine_update(int obj)
+void FlammableVine_update(int obj)
 {
     FlammablevineState* state;
     u8* def;
@@ -126,7 +126,7 @@ void flammablevine_update(int obj)
     {
         goto can_use_vine;
     }
-    if (GameBit_Get(((FlammablevineObjectDef*)def)->gateBit) == 0)
+    if (mainGetBit(((FlammablevineObjectDef*)def)->gateBit) == 0)
     {
         goto cant_use_vine;
     }
@@ -134,7 +134,7 @@ void flammablevine_update(int obj)
     {
         goto cant_use_vine;
     }
-    if (GameBit_Get(0x245) == 0)
+    if (mainGetBit(0x245) == 0)
     {
         goto cant_use_vine;
     }
@@ -239,7 +239,7 @@ checked_vine_use:
     }
 }
 
-void flammablevine_init(int obj, int def)
+void FlammableVine_init(int obj, int def)
 {
     FlammablevineState* state;
     f32 scale;
@@ -264,7 +264,7 @@ void flammablevine_init(int obj, int def)
     state->burnIntensity = 0.001f;
     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, 0.0f);
 
-    if (((FlammablevineObjectDef*)def)->burnedBit != -1 && GameBit_Get(((FlammablevineObjectDef*)def)->burnedBit) != 0)
+    if (((FlammablevineObjectDef*)def)->burnedBit != -1 && mainGetBit(((FlammablevineObjectDef*)def)->burnedBit) != 0)
     {
         Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
@@ -279,10 +279,10 @@ void flammablevine_init(int obj, int def)
     }
 }
 
-void flammablevine_release(void)
+void FlammableVine_release(void)
 {
 }
 
-void flammablevine_initialise(void)
+void FlammableVine_initialise(void)
 {
 }

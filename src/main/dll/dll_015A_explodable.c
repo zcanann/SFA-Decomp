@@ -21,13 +21,13 @@
 #include "main/game_object.h"
 #include "main/sfa_shared_decls.h"
 
-extern void attractor_func0B(void);
+extern void attractor_getTarget(void);
 
 extern void attractor_setScale(void);
 extern void exploded_setScale(void);
 
 extern void cfforcefield_getExtraSize(void);
-extern void slidingdoor_getExtraSize(void);
+extern void SlidingDoor_getExtraSize(void);
 extern void attractor_getExtraSize(void);
 extern void cfmagicwall_getExtraSize(void);
 extern void cflevelcontrol_getExtraSize(void);
@@ -37,7 +37,7 @@ extern void RollingBarrel_getExtraSize(void);
 extern void MMP_levelcontrol_getExtraSize(void);
 
 extern void cfforcefield_getObjectTypeId(void);
-extern void slidingdoor_getObjectTypeId(void);
+extern void SlidingDoor_getObjectTypeId(void);
 extern void attractor_getObjectTypeId(void);
 extern void cfmagicwall_getObjectTypeId(void);
 extern void cflevelcontrol_getObjectTypeId(void);
@@ -47,7 +47,7 @@ extern void RollingBarrel_getObjectTypeId(void);
 extern void MMP_levelcontrol_getObjectTypeId(void);
 
 extern void cfforcefield_free(void);
-extern void slidingdoor_free(void);
+extern void SlidingDoor_free(void);
 extern void attractor_free(void);
 extern void cfmagicwall_free(void);
 extern void cflevelcontrol_free(void);
@@ -57,7 +57,7 @@ extern void RollingBarrel_free(void);
 extern void MMP_levelcontrol_free(void);
 
 extern void cfforcefield_render(void);
-extern void slidingdoor_render(void);
+extern void SlidingDoor_render(void);
 extern void attractor_render(void);
 extern void cfmagicwall_render(void);
 extern void cflevelcontrol_render(void);
@@ -67,7 +67,7 @@ extern void RollingBarrel_render(void);
 extern void MMP_levelcontrol_render(void);
 
 extern void cfforcefield_hitDetect(void);
-extern void slidingdoor_hitDetect(void);
+extern void SlidingDoor_hitDetect(void);
 extern void attractor_hitDetect(void);
 extern void cfmagicwall_hitDetect(void);
 extern void cflevelcontrol_hitDetect(void);
@@ -77,7 +77,7 @@ extern void RollingBarrel_hitDetect(void);
 extern void MMP_levelcontrol_hitDetect(void);
 
 extern void cfforcefield_update(void);
-extern void slidingdoor_update(void);
+extern void SlidingDoor_update(void);
 extern void attractor_update(void);
 extern void cfmagicwall_update(void);
 extern void cflevelcontrol_update(void);
@@ -87,7 +87,7 @@ extern void RollingBarrel_update(void);
 extern void MMP_levelcontrol_update(void);
 
 extern void cfforcefield_init(void);
-extern void slidingdoor_init(void);
+extern void SlidingDoor_init(void);
 extern void attractor_init(void);
 extern void cfmagicwall_init(void);
 extern void cflevelcontrol_init(void);
@@ -97,7 +97,7 @@ extern void RollingBarrel_init(void);
 extern void MMP_levelcontrol_init(void);
 
 extern void cfforcefield_release(void);
-extern void slidingdoor_release(void);
+extern void SlidingDoor_release(void);
 extern void attractor_release(void);
 extern void cfmagicwall_release(void);
 extern void cflevelcontrol_release(void);
@@ -107,7 +107,7 @@ extern void RollingBarrel_release(void);
 extern void MMP_levelcontrol_release(void);
 
 extern void cfforcefield_initialise(void);
-extern void slidingdoor_initialise(void);
+extern void SlidingDoor_initialise(void);
 extern void attractor_initialise(void);
 extern void cfmagicwall_initialise(void);
 extern void cflevelcontrol_initialise(void);
@@ -174,7 +174,7 @@ void explodable_update(int obj)
     {
         if (((DrExplodableState*)state)->phase6E4 == 0)
         {
-            if ((u32)GameBit_Get(((ExplodablePlacement*)def)->activateGameBit) != 0)
+            if ((u32)mainGetBit(((ExplodablePlacement*)def)->activateGameBit) != 0)
             {
                 explodable_buildFragments(obj, def, 0, state);
                 if (((DrExplodableState*)state)->breakSfx != 0)
@@ -202,12 +202,12 @@ void explodable_update(int obj)
                     switch (status)
                     {
                     case 2:
-                        GameBit_Set(((ExplodablePlacement*)def)->doneGameBit, 1);
+                        mainSetBits(((ExplodablePlacement*)def)->doneGameBit, 1);
                         Obj_FreeObject(*(int*)(slotPtr + 0x690));
                         *(int*)(slotPtr + 0x690) = 0;
                         break;
                     case 0:
-                        GameBit_Set(((ExplodablePlacement*)def)->doneGameBit, 1);
+                        mainSetBits(((ExplodablePlacement*)def)->doneGameBit, 1);
                         if ((((DrExplodableState*)state)->flags6CC & (1 << i)) == 0)
                         {
                             ((DrExplodableState*)state)->flags6CC |= 1 << i;
@@ -260,7 +260,7 @@ void explodable_init(int obj, int setup)
     ((GameObject*)obj)->anim.rotX = ((ExplodablePlacement*)setup)->rotX;
     ((GameObject*)obj)->anim.rotY = ((ExplodablePlacement*)setup)->rotY;
     ((GameObject*)obj)->anim.rotZ = ((ExplodablePlacement*)setup)->rotZ;
-    if ((u32)GameBit_Get(((ExplodablePlacement*)setup)->doneGameBit) != 0)
+    if ((u32)mainGetBit(((ExplodablePlacement*)setup)->doneGameBit) != 0)
     {
         ((DrExplodableState*)state)->phase6E4 = 2;
     }
@@ -403,13 +403,13 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
             c->offZ = c->centroidZ;
             explodable_computeFragmentLaunch(obj, (int)c, def);
             c->unk6B = 0xff;
-            c->gameBitMode = (u32)GameBit_Get(((ExplodablePlacement*)def)->doneGameBit) != 0 ? 2 : 0;
+            c->gameBitMode = (u32)mainGetBit(((ExplodablePlacement*)def)->doneGameBit) != 0 ? 2 : 0;
             *(int*)(i8 + 0x690) = explodable_spawnFragmentObject(obj, objType, (int)c, i13);
             c++;
             i14 += 4;
             i8 += 4;
         }
-        ((DrExplodableState*)state)->phase6E4 = ((u32)GameBit_Get(((ExplodablePlacement*)def)->doneGameBit) != 0) ? 1 : 0;
+        ((DrExplodableState*)state)->phase6E4 = ((u32)mainGetBit(((ExplodablePlacement*)def)->doneGameBit) != 0) ? 1 : 0;
     }
 }
 
@@ -534,8 +534,8 @@ GasVentTableEntry gExplodableBreakRecipeTable[16] = {
 u32 gExplodableObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)explodable_init, (u32)explodable_update, 0x00000000, (u32)explodable_render, (u32)explodable_free, 0x00000000, (u32)explodable_getExtraSize };
 u32 lbl_80322ED8[18] = { 0x000007a4, 0x000007a5, 0x00004000, 0x00000064, 0xfffff000, 0x44e74000, 0x000007a2, 0x000007a3, 0x00004000, 0x00000032, 0x00001000, 0x44370000, 0x000007a2, 0x000007a3, 0x00004000, 0x00000032, 0x00001000, 0x44370000 };
 u32 gCFForceFieldObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cfforcefield_initialise, (u32)cfforcefield_release, 0x00000000, (u32)cfforcefield_init, (u32)cfforcefield_update, (u32)cfforcefield_hitDetect, (u32)cfforcefield_render, (u32)cfforcefield_free, (u32)cfforcefield_getObjectTypeId, (u32)cfforcefield_getExtraSize };
-u32 gSlidingDoorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)slidingdoor_initialise, (u32)slidingdoor_release, 0x00000000, (u32)slidingdoor_init, (u32)slidingdoor_update, (u32)slidingdoor_hitDetect, (u32)slidingdoor_render, (u32)slidingdoor_free, (u32)slidingdoor_getObjectTypeId, (u32)slidingdoor_getExtraSize };
-u32 gAttractorObjDescriptor[16] = { 0x00000000, 0x00000000, 0x00000000, 0x000b0000, (u32)attractor_initialise, (u32)attractor_release, 0x00000000, (u32)attractor_init, (u32)attractor_update, (u32)attractor_hitDetect, (u32)attractor_render, (u32)attractor_free, (u32)attractor_getObjectTypeId, (u32)attractor_getExtraSize, (u32)attractor_setScale, (u32)attractor_func0B };
+u32 gSlidingDoorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)SlidingDoor_initialise, (u32)SlidingDoor_release, 0x00000000, (u32)SlidingDoor_init, (u32)SlidingDoor_update, (u32)SlidingDoor_hitDetect, (u32)SlidingDoor_render, (u32)SlidingDoor_free, (u32)SlidingDoor_getObjectTypeId, (u32)SlidingDoor_getExtraSize };
+u32 gAttractorObjDescriptor[16] = { 0x00000000, 0x00000000, 0x00000000, 0x000b0000, (u32)attractor_initialise, (u32)attractor_release, 0x00000000, (u32)attractor_init, (u32)attractor_update, (u32)attractor_hitDetect, (u32)attractor_render, (u32)attractor_free, (u32)attractor_getObjectTypeId, (u32)attractor_getExtraSize, (u32)attractor_setScale, (u32)attractor_getTarget };
 u32 gCFMagicWallObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cfmagicwall_initialise, (u32)cfmagicwall_release, 0x00000000, (u32)cfmagicwall_init, (u32)cfmagicwall_update, (u32)cfmagicwall_hitDetect, (u32)cfmagicwall_render, (u32)cfmagicwall_free, (u32)cfmagicwall_getObjectTypeId, (u32)cfmagicwall_getExtraSize };
 u32 lbl_80323008[12] = { 0x02fc02fd, 0x02fe02ff, 0x0b2a0b2b, 0x0b2c0b2d, 0x0b2e0b2f, 0x0b300b31, 0x0b6c0b32, 0x0b370b38, 0x0b390b3a, 0x0b3b0b3c, 0x0b3d0b3e, 0x0b3f0000 };
 u32 gCFLevelControlObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cflevelcontrol_initialise, (u32)cflevelcontrol_release, 0x00000000, (u32)cflevelcontrol_init, (u32)cflevelcontrol_update, (u32)cflevelcontrol_hitDetect, (u32)cflevelcontrol_render, (u32)cflevelcontrol_free, (u32)cflevelcontrol_getObjectTypeId, (u32)cflevelcontrol_getExtraSize };

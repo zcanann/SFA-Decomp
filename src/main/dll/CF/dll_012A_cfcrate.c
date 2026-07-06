@@ -77,15 +77,15 @@ extern f32 sqrtf(f32);
 #define PARTFX_SPAWN(obj, fxId, a, b, c, d) \
   (*gPartfxInterface)->spawnObject((void *)(obj), (fxId), (void *)(a), (b), (c), (void *)(d))
 
-int cfccrate_getExtraSize(void) { return 0x4c; }
-int cfccrate_getObjectTypeId(void) { return 0x1; }
+int CFCrate_getExtraSize(void) { return 0x4c; }
+int CFCrate_getObjectTypeId(void) { return 0x1; }
 
-void cfccrate_free(int obj)
+void CFCrate_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void CFCrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
 
     int objectType;
@@ -98,7 +98,7 @@ void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     if (visible == 0 || objectType == 0x6bf)
     {
-        if (GameBit_Get(state->gameBit2) == 0)
+        if (mainGetBit(state->gameBit2) == 0)
         {
             return;
         }
@@ -128,7 +128,7 @@ int CFCrate_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     case 0x409:
         break;
     case 0x2B7: /* WM_largerock */
-        if (GameBit_Get(state->gameBit2) != 0)
+        if (mainGetBit(state->gameBit2) != 0)
         {
             ((u8*)animUpdate)[0x90] = (u8)(((u8*)animUpdate)[0x90] | 4);
         }
@@ -145,11 +145,11 @@ int CFCrate_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void cfccrate_hitDetect(void)
+void CFCrate_hitDetect(void)
 {
 }
 
-void cfccrate_update(int obj)
+void CFCrate_update(int obj)
 {
 
 
@@ -168,7 +168,7 @@ void cfccrate_update(int obj)
     switch (id)
     {
     case 0x7de: /* LinkF_cog */
-        if (GameBit_Get(state->gameBit) != 0)
+        if (mainGetBit(state->gameBit) != 0)
         {
             ((GameObject*)obj)->anim.rotZ = (short)-(timeDelta * state->oscVelB - (f32)((GameObject*)obj)->anim.rotZ);
         }
@@ -178,7 +178,7 @@ void cfccrate_update(int obj)
         }
         break;
     case 0x729: /* VFP_Warding... */
-        if (GameBit_Get(state->gameBit) == 0)
+        if (mainGetBit(state->gameBit) == 0)
         {
             ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 100;
         }
@@ -196,18 +196,18 @@ void cfccrate_update(int obj)
         }
         break;
     case 0x6fc: /* DFP_Water */
-        if ((GameBit_Get(state->gameBit) != 0) &&
+        if ((mainGetBit(state->gameBit) != 0) &&
             (((GameObject*)obj)->anim.localPosY <= lbl_803E3DE8 + ((CfccratePlacement*)viewslot)->homeY))
         {
             ((GameObject*)obj)->anim.localPosY = lbl_803E3DEC * timeDelta + ((GameObject*)obj)->anim.localPosY;
             if (((GameObject*)obj)->anim.localPosY >= lbl_803E3DE8 + ((CfccratePlacement*)viewslot)->homeY)
             {
-                GameBit_Set(state->gameBit, 0);
+                mainSetBits(state->gameBit, 0);
             }
         }
         break;
     case 0x6fd: /* DFP_InnerRing */
-        if (GameBit_Get(state->gameBit) != 0)
+        if (mainGetBit(state->gameBit) != 0)
         {
             ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + (s32)(lbl_803E3DF0 * timeDelta);
             ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + (s32)(lbl_803E3DF4 * timeDelta);
@@ -219,7 +219,7 @@ void cfccrate_update(int obj)
         }
         break;
     case 0x6fe: /* DFP_OuterRing */
-        if (GameBit_Get(state->gameBit) != 0)
+        if (mainGetBit(state->gameBit) != 0)
         {
             ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + (s32)(lbl_803E3DF0 * timeDelta);
             ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + (s32)(lbl_803E3DF4 * timeDelta);
@@ -233,7 +233,7 @@ void cfccrate_update(int obj)
     case 0x622: /* VFP_locksym */
         {
             ObjTextureRuntimeSlot* p = objFindTexture((void*)obj, 0, 0);
-            if ((p != NULL) && (GameBit_Get(state->gameBit) != 0) && (p->textureId == 0))
+            if ((p != NULL) && (mainGetBit(state->gameBit) != 0) && (p->textureId == 0))
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_en_littletink22_3c4);
                 p->textureId = 0x100;
@@ -251,9 +251,9 @@ void cfccrate_update(int obj)
     case 0x708: /* VFP_newball... */
         if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) != 0)
         {
-            GameBit_Set(state->gameBit, 1);
+            mainSetBits(state->gameBit, 1);
         }
-        if (GameBit_Get(state->gameBit) == 0)
+        if (mainGetBit(state->gameBit) == 0)
         {
             ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX +
                 ((s8*)viewslot)[0x18] * framesThisStep;
@@ -263,7 +263,7 @@ void cfccrate_update(int obj)
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         break;
     case 0x6be: /* VFP_liftgra... */
-        if ((GameBit_Get(state->gameBit2) != 0) && (state->gameBit2Latch == 0))
+        if ((mainGetBit(state->gameBit2) != 0) && (state->gameBit2Latch == 0))
         {
             state->gameBit2Latch = 1;
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
@@ -271,13 +271,13 @@ void cfccrate_update(int obj)
         break;
     case 0x4bf:
         if ((((GameObject*)obj)->anim.localPosY < lbl_803E3DFC + ((CfccratePlacement*)viewslot)->homeY) &&
-            (GameBit_Get(state->gameBit) != 0))
+            (mainGetBit(state->gameBit) != 0))
         {
             ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + timeDelta;
         }
         break;
     case 0x828:
-        if ((GameBit_Get(state->gameBit2) != 0) && (state->gameBit2Latch == 0))
+        if ((mainGetBit(state->gameBit2) != 0) && (state->gameBit2Latch == 0))
         {
             if (((GameObject*)obj)->anim.rotZ + (tmp = (s32)(lbl_803E3E00 * timeDelta)) > 0x7fff)
             {
@@ -345,7 +345,7 @@ void cfccrate_update(int obj)
     }
 }
 
-void cfccrate_init(int obj, int aux)
+void CFCrate_init(int obj, int aux)
 {
 
     ObjAnimComponent* objAnim;
@@ -394,7 +394,7 @@ void cfccrate_init(int obj, int aux)
         ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         state->gameBit2Latch = 0;
         state->gameBit2 = ((CfccratePlacement*)aux)->gameBit;
-        if ((GameBit_Get(state->gameBit2) != 0) && (state->gameBit2Latch == 0))
+        if ((mainGetBit(state->gameBit2) != 0) && (state->gameBit2Latch == 0))
         {
             ((GameObject*)obj)->anim.rotZ = 0x7fff;
             state->gameBit2Latch = 1;
@@ -438,7 +438,7 @@ void cfccrate_init(int obj, int aux)
         ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         *(u8*)&objAnim->bankIndex = ((CfccratePlacement*)aux)->bankIndex;
         state->gameBit = ((CfccratePlacement*)aux)->gameBit;
-        if (GameBit_Get(state->gameBit) != 0)
+        if (mainGetBit(state->gameBit) != 0)
         {
             ((GameObject*)obj)->anim.localPosY = lbl_803E3DFC + ((CfccratePlacement*)aux)->homeY;
         }
@@ -478,7 +478,7 @@ void cfccrate_init(int obj, int aux)
         }
         state->oscVelB = (f32)(s32)((CfccratePlacement*)aux)->param1A;
         state->gameBit = ((CfccratePlacement*)aux)->gameBit;
-        if (GameBit_Get(state->gameBit) != 0)
+        if (mainGetBit(state->gameBit) != 0)
         {
             state->oscVelB = state->oscVelB * lbl_803E3E3C;
         }
@@ -520,10 +520,10 @@ void cfccrate_init(int obj, int aux)
     }
 }
 
-void cfccrate_release(void)
+void CFCrate_release(void)
 {
 }
 
-void cfccrate_initialise(void)
+void CFCrate_initialise(void)
 {
 }

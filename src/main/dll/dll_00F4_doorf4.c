@@ -5,7 +5,7 @@
  * init caches the spawn yaw as a plane normal (cosYaw,sinYaw,planeD), an
  * open-range threshold and the two game bits read from the placement
  * (gameBitA = open latch at params+0x1E, plus a per-type secondary gate
- * gameBitB). The animation SeqFn (doorf4_SeqFn) is the brain: it measures
+ * gameBitB). The animation SeqFn (DoorF4_SeqFn) is the brain: it measures
  * the player's signed distance through the door plane, folds in inbox
  * messages (open 0x30002 / close 0x30003) and the gameBits, and drives the
  * anim "active/open" bit per a switch on the placement's gate-mode byte
@@ -23,7 +23,7 @@
 #include "main/camera.h"
 #include "main/sfa_shared_decls.h"
 
-/* Per-object extra state for the doorf4 door (doorf4_getExtraSize == 0x24). */
+/* Per-object extra state for the doorf4 door (DoorF4_getExtraSize == 0x24). */
 typedef struct DoorF4State
 {
     f32 cosYaw; /* cos/sin of spawn yaw; door plane normal */
@@ -103,28 +103,28 @@ extern f32 lbl_803E366C;
 extern f32 lbl_803E3670;
 extern f32 lbl_803E3674;
 
-void doorf4_hitDetect(void)
+void DoorF4_hitDetect(void)
 {
 }
 
-void doorf4_release(void)
+void DoorF4_release(void)
 {
 }
 
-void doorf4_initialise(void)
+void DoorF4_initialise(void)
 {
 }
 
-int doorf4_getExtraSize(void) { return 0x24; }
-int doorf4_getObjectTypeId(void) { return 0x1; }
+int DoorF4_getExtraSize(void) { return 0x24; }
+int DoorF4_getObjectTypeId(void) { return 0x1; }
 
-void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void DoorF4_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3680);
 }
 
-void doorf4_free(int obj)
+void DoorF4_free(int obj)
 {
     DoorF4State* state = ((GameObject*)obj)->extra;
     if (state->sfxOpen != 0)
@@ -137,7 +137,7 @@ void doorf4_free(int obj)
     ObjGroup_RemoveObject(obj, DOORF4_OBJ_GROUP);
 }
 
-void doorf4_update(int* obj)
+void DoorF4_update(int* obj)
 {
     DoorF4State* state = ((GameObject*)obj)->extra;
     state->triggerLatch = 0;
@@ -152,7 +152,7 @@ void doorf4_update(int* obj)
         type = ((GameObject*)obj)->anim.seqId;
         if (type == 0x151)
         {
-            if (GameBit_Get(state->gameBitA) != 0)
+            if (mainGetBit(state->gameBitA) != 0)
             {
                 (*gObjectTriggerInterface)->preempt((int)obj, 0x75);
                 state->triggerLatch = 1;
@@ -161,7 +161,7 @@ void doorf4_update(int* obj)
         }
         else if (type == 0x37a)
         {
-            if (GameBit_Get(state->gameBitA) != 0)
+            if (mainGetBit(state->gameBitA) != 0)
             {
                 (*gObjectTriggerInterface)->preempt((int)obj, 0x8a);
                 state->triggerLatch = 1;
@@ -176,7 +176,7 @@ void doorf4_update(int* obj)
     }
 }
 
-void doorf4_init(int* obj, int* params)
+void DoorF4_init(int* obj, int* params)
 {
     DoorF4State* state = ((GameObject*)obj)->extra;
     s16 type;
@@ -185,7 +185,7 @@ void doorf4_init(int* obj, int* params)
 
     ObjMsg_AllocQueue(obj, 4);
     ((GameObject*)obj)->anim.rotX = (s16)((s8)def->yawByte << 8);
-    ((GameObject*)obj)->animEventCallback = doorf4_SeqFn;
+    ((GameObject*)obj)->animEventCallback = DoorF4_SeqFn;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     ((GameObject*)obj)->objectFlags |= (DOORF4_OBJFLAG_HIDDEN | DOORF4_OBJFLAG_HITDETECT_DISABLED);
     state->gameBitA = def->gameBitA;
@@ -223,7 +223,7 @@ void doorf4_init(int* obj, int* params)
         state->sinYaw * ((GameObject*)obj)->anim.localPosZ);
 }
 
-int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int msg;
     int objCount;
@@ -263,7 +263,7 @@ int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     else
     {
-        gb = GameBit_Get(sub->gameBitA);
+        gb = mainGetBit(sub->gameBitA);
     }
     if (ObjMsg_Peek(obj, &msg, 0, 0) != 0)
     {
@@ -301,7 +301,7 @@ int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (((GameObject*)obj)->anim.seqId == 200)
             {
-                if (GameBit_Get(0x57) != 0)
+                if (mainGetBit(0x57) != 0)
                 {
                     getEnvfxAct(0, 0, 0x7f, 0);
                 }
@@ -348,14 +348,14 @@ int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     case 2:
         if (gb == 0)
         {
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0 && GameBit_Get(0x2c) != 0)
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0 && mainGetBit(0x2c) != 0)
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             }
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                GameBit_Set(sub->gameBitA, 1);
+                mainSetBits(sub->gameBitA, 1);
             }
         }
         else if (gb != 0)
@@ -430,13 +430,13 @@ int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         break;
     case 5:
-        if (GameBit_Get(sub->gameBitB) != 0 && gb == 0)
+        if (mainGetBit(sub->gameBitB) != 0 && gb == 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                GameBit_Set(sub->gameBitA, 1);
+                mainSetBits(sub->gameBitA, 1);
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                 gb = 1;
             }
@@ -481,16 +481,16 @@ int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     if (def->gameBitC != -1)
                     {
-                        gbToggle = (u8)GameBit_Get(def->gameBitC);
+                        gbToggle = (u8)mainGetBit(def->gameBitC);
                         gbToggle ^= (u8)def->toggleMask;
-                        GameBit_Set(def->gameBitC, gbToggle);
+                        mainSetBits(def->gameBitC, gbToggle);
                     }
                 }
                 else if (def->gameBitB != -1)
                 {
-                    gbToggle = (u8)GameBit_Get(def->gameBitB);
+                    gbToggle = (u8)mainGetBit(def->gameBitB);
                     gbToggle ^= (u8)(def->toggleMask >> 8);
-                    GameBit_Set(def->gameBitB, gbToggle);
+                    mainSetBits(def->gameBitB, gbToggle);
                 }
                 if (sd <= lbl_803E3648)
                 {
@@ -536,7 +536,7 @@ int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 break;
             case 5:
-                if (sub->sfxClose != 0 && GameBit_Get(0xcbb) == 0)
+                if (sub->sfxClose != 0 && mainGetBit(0xcbb) == 0)
                 {
                     Sfx_PlayFromObject(obj, sub->sfxClose);
                 }
@@ -547,16 +547,16 @@ int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     if (def->gameBitC != -1)
                     {
-                        gbToggle = (u8)GameBit_Get(def->gameBitC);
+                        gbToggle = (u8)mainGetBit(def->gameBitC);
                         gbToggle ^= (u8)def->toggleMask;
-                        GameBit_Set(def->gameBitC, gbToggle);
+                        mainSetBits(def->gameBitC, gbToggle);
                     }
                 }
                 else if (def->gameBitB != -1)
                 {
-                    gbToggle = (u8)GameBit_Get(def->gameBitB);
+                    gbToggle = (u8)mainGetBit(def->gameBitB);
                     gbToggle ^= (u8)(def->toggleMask >> 8);
-                    GameBit_Set(def->gameBitB, gbToggle);
+                    mainSetBits(def->gameBitB, gbToggle);
                 }
                 switch (((GameObject*)obj)->anim.seqId)
                 {

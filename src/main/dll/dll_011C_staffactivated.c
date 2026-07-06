@@ -35,7 +35,7 @@ extern float mathCosf(float x);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
-extern int fn_80295CE4(void);
+extern int playerIsPathFollowing(void);
 extern void landed_arwing_updateHitReaction(GameObject* obj, void* state);
 extern void landed_arwing_updateDamageTexture(GameObject* obj, void* state);
 
@@ -181,7 +181,7 @@ void staffactivated_update(GameObject* obj)
         obj->anim.resetHitboxFlags &= ~STAFFACTIVATED_OBJ_FLAG_LOCKED;
     }
 
-    if (((StaffFlags*)&state->flags)->b7 == 0 || fn_80295CE4() == 0)
+    if (((StaffFlags*)&state->flags)->b7 == 0 || playerIsPathFollowing() == 0)
     {
         obj->anim.resetHitboxFlags |= STAFFACTIVATED_OBJ_FLAG_DISABLED;
     }
@@ -205,19 +205,19 @@ void staffactivated_update(GameObject* obj)
     case STAFFACTIVATED_MODE_ACTION:
         if (obj->anim.resetHitboxFlags & STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER)
         {
-            if (GameBit_Get(STAFFACTIVATED_TRIGGER_GAMEBIT) == 0)
+            if (mainGetBit(STAFFACTIVATED_TRIGGER_GAMEBIT) == 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-                GameBit_Set(STAFFACTIVATED_TRIGGER_GAMEBIT, 1);
+                mainSetBits(STAFFACTIVATED_TRIGGER_GAMEBIT, 1);
             }
         }
-        if (GameBit_Get(STAFFACTIVATED_ENABLE_GAMEBIT) == 0)
+        if (mainGetBit(STAFFACTIVATED_ENABLE_GAMEBIT) == 0)
         {
             obj->anim.resetHitboxFlags |= STAFFACTIVATED_OBJ_FLAG_DISABLED;
         }
         isSet = 0;
         gameBit = setup->activeGameBit;
-        if (gameBit == -1 || GameBit_Get(gameBit) != 0)
+        if (gameBit == -1 || mainGetBit(gameBit) != 0)
         {
             isSet = 1;
         }
@@ -243,7 +243,7 @@ void staffactivated_update(GameObject* obj)
     default:
         isSet = 0;
         gameBit = setup->activeGameBit;
-        if (gameBit == -1 || GameBit_Get(gameBit) != 0)
+        if (gameBit == -1 || mainGetBit(gameBit) != 0)
         {
             isSet = 1;
         }
@@ -339,7 +339,7 @@ void staffactivated_init(GameObject* obj, StaffActivatedSetup* setupData)
     flags = (StaffFlags*)&state->flags;
     if (setupData->activeGameBit > 0)
     {
-        flags->b7 = GameBit_Get(setupData->activeGameBit);
+        flags->b7 = mainGetBit(setupData->activeGameBit);
     }
     else
     {
@@ -349,7 +349,7 @@ void staffactivated_init(GameObject* obj, StaffActivatedSetup* setupData)
 
     if (setupData->lockGameBit > 0)
     {
-        if ((flags->b6 = GameBit_Get(setupData->lockGameBit)) != 0)
+        if ((flags->b6 = mainGetBit(setupData->lockGameBit)) != 0)
         {
             switch (setupData->mode)
             {

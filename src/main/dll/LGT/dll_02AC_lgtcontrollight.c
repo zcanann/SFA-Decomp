@@ -46,23 +46,23 @@ STATIC_ASSERT(offsetof(ControlLightSetup, radius) == 0x1A);
 STATIC_ASSERT(offsetof(ControlLightSetup, gameBit) == 0x1E);
 STATIC_ASSERT(sizeof(ControlLightSetup) == 0x20);
 
-int controllight_getExtraSize(void) { return sizeof(ControlLightState); }
+int ControlLight_getExtraSize(void) { return sizeof(ControlLightState); }
 
-int controllight_getObjectTypeId(void) { return 0; }
+int ControlLight_getObjectTypeId(void) { return 0; }
 
-void controllight_free(void)
+void ControlLight_free(void)
 {
 }
 
-void controllight_hitDetect(void)
+void ControlLight_hitDetect(void)
 {
 }
 
-void controllight_render(void)
+void ControlLight_render(void)
 {
 }
 
-void controllight_init(int obj, int setup)
+void ControlLight_init(int obj, int setup)
 {
     ControlLightSetup* setupData = (ControlLightSetup*)setup;
     ControlLightState* state = ((GameObject*)obj)->extra;
@@ -75,14 +75,14 @@ void controllight_init(int obj, int setup)
 
 #pragma opt_loop_invariants off
 #pragma optimization_level 1
-void controllight_update(int obj)
+void ControlLight_update(int obj)
 {
     u8 newBit;
     u32 bit;
     ControlLightState* state;
     GameObject* self = (GameObject*)obj;
     state = self->extra;
-    newBit = GameBit_Get(state->gameBit);
+    newBit = mainGetBit(state->gameBit);
     bit = newBit;
 
     if (bit != state->lastBit)
@@ -140,10 +140,10 @@ void controllight_update(int obj)
 #pragma optimization_level reset
 #pragma opt_loop_invariants reset
 
-void controllight_release(void)
+void ControlLight_release(void)
 {
 }
 
-void controllight_initialise(void)
+void ControlLight_initialise(void)
 {
 }

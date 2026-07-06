@@ -3104,7 +3104,7 @@ lbl_TVWT_loop:
     blr
 }
 
-void ObjModel_BlendPrimaryVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u8* out)
+void ObjModel_BlendVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u8* out)
 {
     u16 sizes[2];
 
@@ -3436,7 +3436,7 @@ lbl_TQVL_loop:
     blr
 }
 
-void ObjModel_BlendSecondaryVertexStream(u8* mtxs, u8* hdr, u8* data, u8** outs, int quad)
+void ObjModel_BlendNormalStream(u8* mtxs, u8* hdr, u8* data, u8** outs, int quad)
 {
     u16 sizes[2];
 

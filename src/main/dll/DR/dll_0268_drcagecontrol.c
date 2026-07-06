@@ -24,23 +24,23 @@ STATIC_ASSERT(offsetof(CageControlPlacement, armGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(CageControlPlacement, watchGameBit) == 0x20);
 STATIC_ASSERT(sizeof(CageControlPlacement) == 0x28);
 
-int cagecontrol_updateTriggerCallback(int obj)
+int DR_CageControl_SeqFn(int obj)
 {
     int ret;
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
     char* state = ((GameObject*)obj)->extra;
     if (*(int*)state == 0)
     {
-        if (GameBit_Get(((CageControlPlacement*)placement)->armGameBit) != 0)
+        if (mainGetBit(((CageControlPlacement*)placement)->armGameBit) != 0)
         {
             Sfx_StopObjectChannel(obj, 8);
             return 4;
         }
-        if (((BitFlags8*)(state + 4))->b0 != GameBit_Get(((CageControlPlacement*)placement)->watchGameBit))
+        if (((BitFlags8*)(state + 4))->b0 != mainGetBit(((CageControlPlacement*)placement)->watchGameBit))
         {
             Sfx_PlayFromObject(obj, SFXar_ring_pickup);
             Sfx_PlayFromObject(obj, SFXar_generic_pickup);
-            if (GameBit_Get(((CageControlPlacement*)placement)->watchGameBit) != 0)
+            if (mainGetBit(((CageControlPlacement*)placement)->watchGameBit) != 0)
             {
                 Sfx_PlayFromObject(obj, SFXar_bomb_pickup);
             }
@@ -49,12 +49,12 @@ int cagecontrol_updateTriggerCallback(int obj)
                 Sfx_StopObjectChannel(obj, 8);
             }
         }
-        ((BitFlags8*)(state + 4))->b0 = GameBit_Get(((CageControlPlacement*)placement)->watchGameBit);
+        ((BitFlags8*)(state + 4))->b0 = mainGetBit(((CageControlPlacement*)placement)->watchGameBit);
     }
     ret = 0;
     if (*(int*)state == 0)
     {
-        if (GameBit_Get(((CageControlPlacement*)placement)->watchGameBit) == 0)
+        if (mainGetBit(((CageControlPlacement*)placement)->watchGameBit) == 0)
         {
             ret = 1;
         }
@@ -62,15 +62,15 @@ int cagecontrol_updateTriggerCallback(int obj)
     return ret;
 }
 
-int cagecontrol_getExtraSize(void) { return 0x4; }
+int DR_CageControl_getExtraSize(void) { return 0x4; }
 
-int cagecontrol_getObjectTypeId(void) { return 0x0; }
+int DR_CageControl_getObjectTypeId(void) { return 0x0; }
 
-void cagecontrol_free(void)
+void DR_CageControl_free(void)
 {
 }
 
-void cagecontrol_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void DR_CageControl_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     if (visible != 0)
     {
@@ -78,11 +78,11 @@ void cagecontrol_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     }
 }
 
-void cagecontrol_hitDetect(void)
+void DR_CageControl_hitDetect(void)
 {
 }
 
-void cagecontrol_update(int obj)
+void DR_CageControl_update(int obj)
 {
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
     char* state = ((GameObject*)obj)->extra;
@@ -90,7 +90,7 @@ void cagecontrol_update(int obj)
     {
         return;
     }
-    if (*(int*)state == 0 && GameBit_Get(((CageControlPlacement*)placement)->armGameBit) != 0)
+    if (*(int*)state == 0 && mainGetBit(((CageControlPlacement*)placement)->armGameBit) != 0)
     {
         ((BitFlags8*)(state + 0x4))->b1 = 1;
         *(int*)state = 2;
@@ -99,7 +99,7 @@ void cagecontrol_update(int obj)
     {
         ((BitFlags8*)(state + 0x4))->b1 = 1;
         (*gObjectTriggerInterface)->preempt(obj, 0x76c);
-        if (GameBit_Get(0x9f3) != 0)
+        if (mainGetBit(0x9f3) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(*(int*)state, (void*)obj, 0x60);
         }
@@ -114,11 +114,11 @@ void cagecontrol_update(int obj)
     }
 }
 
-void cagecontrol_init(int obj, char* arg)
+void DR_CageControl_init(int obj, char* arg)
 {
     char* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = cagecontrol_updateTriggerCallback;
-    if (GameBit_Get(((CageControlPlacement*)arg)->armGameBit) != 0)
+    ((GameObject*)obj)->animEventCallback = DR_CageControl_SeqFn;
+    if (mainGetBit(((CageControlPlacement*)arg)->armGameBit) != 0)
     {
         ((BitFlags8*)(state + 0x4))->b2 = 1;
         *(int*)state = 2;
@@ -129,10 +129,10 @@ void cagecontrol_init(int obj, char* arg)
     }
 }
 
-void cagecontrol_release(void)
+void DR_CageControl_release(void)
 {
 }
 
-void cagecontrol_initialise(void)
+void DR_CageControl_initialise(void)
 {
 }

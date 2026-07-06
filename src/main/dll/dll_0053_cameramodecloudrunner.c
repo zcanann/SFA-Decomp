@@ -25,7 +25,7 @@
 
 extern int getAngle(float y, float x);
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
-extern int fn_802972A8(int obj);
+extern int playerGetFocusObject(int obj);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 lbl_803DB9D0;
 extern int lbl_803DB9D4;
@@ -71,7 +71,7 @@ void CameraModeCloudRunner_update(u8* obj)
     f32 matrix[16];
 
     Player_GetAimAngles((int)target, &tgtYaw, &tgtPitch);
-    curve = (u8*)fn_802972A8((int)target);
+    curve = (u8*)playerGetFocusObject((int)target);
     if (curve != NULL)
     {
         if (*(s16*)(curve + 70) == CLOUDRUNNER_CURVE_TAG)

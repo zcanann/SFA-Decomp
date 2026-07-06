@@ -13,7 +13,7 @@
  * her on to Krazoa Palace, where the key actually fits a door.
  *
  * This object is both the galleon and the driver of that closing cutscene's
- * camera/encounter state machine: SB_Galleon_animEventCallback consumes the
+ * camera/encounter state machine: SB_Galleon_SeqFn consumes the
  * sequence events (damage-phase toggle, water spray, sky lighting, the
  * on-screen gameText subtitle) while SB_Galleon_update steps the camera
  * state and hands per-phase work to the DBprotection.c handlers
@@ -43,7 +43,7 @@ STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern u32 getLActions();
-extern void DBprotection_storeHomePosition(int obj);
+extern void SB_Galleon_onSeqFree(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Music_Trigger(int id, int arg);
 extern const f32 lbl_803E56CC;
@@ -106,7 +106,7 @@ extern int gSbGalleonSkyTexA;
 extern int gSbGalleonSkyTexB;
 extern f32 lbl_803E580C;
 
-/* Sequence-event opcodes consumed by SB_Galleon_animEventCallback. */
+/* Sequence-event opcodes consumed by SB_Galleon_SeqFn. */
 enum SbGalleonSeqEvent
 {
     SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_1 = 2,  /* toggle damagePhase to 1 */
@@ -146,7 +146,7 @@ enum SbGalleonCameraState
 #define SBGALLEON_MAP_PALACE 0xb         /* map-event/dir id this boss locks */
 #define SBGALLEON_SKY_LIGHT_SLOT 7       /* sky override light slot fn_801E1588 drives */
 
-int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
     int i;
@@ -159,7 +159,7 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
         state->swayY = z;
         state->swayZ = z;
     }
-    animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)DBprotection_storeHomePosition;
+    animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)SB_Galleon_onSeqFree;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch (animUpdate->eventIds[i])
@@ -226,7 +226,7 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
             state->skyFlag = 0;
             break;
         case SBGALLEON_SEQEV_SPLASH_SFX:
-            Sfx_PlayFromObject(fn_801E2570(), SBGALLEON_SFX_SPRAY);
+            Sfx_PlayFromObject(sbGetPropeller(), SBGALLEON_SFX_SPRAY);
             break;
         case SBGALLEON_SEQEV_MUSIC:
             state->musicIdB = SBGALLEON_MUSIC_INTRO;
@@ -485,7 +485,7 @@ void SB_Galleon_update(GameObject* obj)
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     obj->anim.mapEventSlot = state->mapLayer;
     fn_801E1588((int)obj, (int)state);
-    if (GameBit_Get(SBGALLEON_GAMEBIT_INTRO) == 0)
+    if (mainGetBit(SBGALLEON_GAMEBIT_INTRO) == 0)
     {
         (*gMapEventInterface)->setMapAct(SBGALLEON_MAP_PALACE, 1);
         (*gMapEventInterface)->setObjGroupStatus(SBGALLEON_MAP_PALACE, 0, 1);
@@ -534,7 +534,7 @@ void SB_Galleon_init(GameObject* obj)
     gSbGalleon = (u32)obj;
     ObjGroup_AddObject((u32)obj, SBGALLEON_OBJGROUP);
     objSetSlot(obj, 0x5a);
-    obj->animEventCallback = SB_Galleon_animEventCallback;
+    obj->animEventCallback = SB_Galleon_SeqFn;
     state->posX = obj->anim.localPosX;
     state->posY = obj->anim.localPosY;
     state->posZ = obj->anim.localPosZ;
@@ -589,7 +589,7 @@ void SB_Galleon_free(GameObject* obj, int leavingMap)
     gSbGalleon = 0;
     Music_Trigger(state->musicIdB, 0);
     Music_Trigger(state->musicIdA, 0);
-    GameBit_Set(SBGALLEON_GAMEBIT_DEFEATED, 1);
+    mainSetBits(SBGALLEON_GAMEBIT_DEFEATED, 1);
 }
 
 int SB_Galleon_getPhase(int* obj)

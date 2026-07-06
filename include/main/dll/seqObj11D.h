@@ -14,6 +14,6 @@
 #include "main/dll/player_target.h"
 #include "main/dll/VF/vf_shared.h"
 
-void fn_80151954(int obj, u8* state);
+void sharpClawInit(int obj, u8* state);
 
 #endif

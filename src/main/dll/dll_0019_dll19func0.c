@@ -305,7 +305,7 @@ void dll_19_func0C(int obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16
     }
     if (gameBit != -1)
     {
-        GameBit_Set(gameBit, 1);
+        mainSetBits(gameBit, 1);
     }
 }
 #pragma dont_inline reset
@@ -393,7 +393,7 @@ int dll_19_func10(int obj, u8* state, int moveArg0, int moveArg1, s16 controlMod
             ((BaddieState*)state)->controlMode = controlMode;
             ((BaddieState*)state)->targetObj = 0;
             ((BaddieState*)state)->physicsActive = 0;
-            GameBit_Set(((GroundBaddieState*)state)->gameBitB, 0);
+            mainSetBits(((GroundBaddieState*)state)->gameBitB, 0);
         }
         return 1;
     }
@@ -851,7 +851,7 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
     *(s16*)(state + 1016) = *(s16*)(config + 28);
     if (((GroundBaddieState*)state)->gameBitB != -1)
     {
-        GameBit_Set(((GroundBaddieState*)state)->gameBitB, 0);
+        mainSetBits(((GroundBaddieState*)state)->gameBitB, 0);
     }
     path = state + 4;
     if ((flags & 2) != 0)
@@ -896,11 +896,11 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
     {
         if (((GameObject*)obj)->anim.seqId == 636)
         {
-            ((GameObject*)obj)->unkF4 = (GameBit_Get(((GroundBaddieState*)state)->gameBitA) == 0);
+            ((GameObject*)obj)->unkF4 = (mainGetBit(((GroundBaddieState*)state)->gameBitA) == 0);
         }
         else
         {
-            ((GameObject*)obj)->unkF4 = GameBit_Get(((GroundBaddieState*)state)->gameBitA);
+            ((GameObject*)obj)->unkF4 = mainGetBit(((GroundBaddieState*)state)->gameBitA);
         }
     }
     else
@@ -1078,7 +1078,7 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int moveArg0, int moveArg
         seq->flags = -1;
         seq->flags = seq->flags & ~0x40;
         ((BaddieState*)st)->physicsActive = 0;
-        GameBit_Set(((GroundBaddieState*)st)->gameBitB, 0);
+        mainSetBits(((GroundBaddieState*)st)->gameBitB, 0);
     }
     return 1;
 }

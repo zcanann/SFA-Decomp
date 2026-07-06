@@ -30,12 +30,12 @@ extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 extern u32 FUN_8003b818();
 
-void mikabomb_hitDetect(void);
+void MikaBomb_hitDetect(void);
 
-void mikabomb_free(int obj, int mode);
+void MikaBomb_free(int obj, int mode);
 
-int mikabomb_getExtraSize(void);
-int mikabomb_getObjectTypeId(void);
+int MikaBomb_getExtraSize(void);
+int MikaBomb_getObjectTypeId(void);
 
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
@@ -43,16 +43,16 @@ ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)kaldachompspit_initialise,
-    (ObjectDescriptorCallback)kaldachompspit_release,
+    (ObjectDescriptorCallback)KaldaChompSpit_initialise,
+    (ObjectDescriptorCallback)KaldaChompSpit_release,
     0,
-    (ObjectDescriptorCallback)kaldachompspit_init,
-    (ObjectDescriptorCallback)kaldachompspit_update,
-    (ObjectDescriptorCallback)kaldachompspit_hitDetect,
-    (ObjectDescriptorCallback)kaldachompspit_render,
-    (ObjectDescriptorCallback)kaldachompspit_free,
-    (ObjectDescriptorCallback)kaldachompspit_getObjectTypeId,
-    kaldachompspit_getExtraSize,
+    (ObjectDescriptorCallback)KaldaChompSpit_init,
+    (ObjectDescriptorCallback)KaldaChompSpit_update,
+    (ObjectDescriptorCallback)KaldaChompSpit_hitDetect,
+    (ObjectDescriptorCallback)KaldaChompSpit_render,
+    (ObjectDescriptorCallback)KaldaChompSpit_free,
+    (ObjectDescriptorCallback)KaldaChompSpit_getObjectTypeId,
+    KaldaChompSpit_getExtraSize,
 };
 
 ObjectDescriptor gPinPonSpikeObjDescriptor = {
@@ -77,16 +77,16 @@ ObjectDescriptor gPollenObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pollen_initialise,
-    (ObjectDescriptorCallback)pollen_release,
+    (ObjectDescriptorCallback)Pollen_initialise,
+    (ObjectDescriptorCallback)Pollen_release,
     0,
-    (ObjectDescriptorCallback)pollen_init,
-    (ObjectDescriptorCallback)pollen_update,
-    (ObjectDescriptorCallback)pollen_hitDetect,
-    (ObjectDescriptorCallback)pollen_render,
-    (ObjectDescriptorCallback)pollen_free,
-    (ObjectDescriptorCallback)pollen_getObjectTypeId,
-    pollen_getExtraSize,
+    (ObjectDescriptorCallback)Pollen_init,
+    (ObjectDescriptorCallback)Pollen_update,
+    (ObjectDescriptorCallback)Pollen_hitDetect,
+    (ObjectDescriptorCallback)Pollen_render,
+    (ObjectDescriptorCallback)Pollen_free,
+    (ObjectDescriptorCallback)Pollen_getObjectTypeId,
+    Pollen_getExtraSize,
 };
 
 PollenFragmentConfig lbl_80320538 = {
@@ -218,7 +218,7 @@ extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 
 
 
-extern void shield_update(int* obj);
+extern void Shield_update(int* obj);
 extern void dll_F7_update(int* obj);
 extern void dll_F7_init(int* obj, int* params);
 
@@ -261,7 +261,7 @@ void sideload_update(int self)
 
     state = *(int*)&((GameObject*)self)->anim.placementData;
     if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) &&
-        (getTrickyObject() == 0) && (GameBit_Get((int)((SideloadPlacement*)state)->armGameBit) != 0))
+        (getTrickyObject() == 0) && (mainGetBit((int)((SideloadPlacement*)state)->armGameBit) != 0))
     {
         obj = Obj_AllocObjectSetup(0x18, 0x24);
         *(u8*)((char*)obj + 4) = 2;
@@ -275,7 +275,7 @@ void sideload_update(int self)
     }
 }
 
-void mikabombshadow_update(int* obj);
+void MikaBombShadow_update(int* obj);
 
 void staff_func0F(void);
 
@@ -287,9 +287,9 @@ void staff_render(void);
 
 void staff_hitDetect(void);
 
-void fireball_release(void);
+void Fireball_release(void);
 
-void fireball_initialise(void);
+void Fireball_initialise(void);
 
 void flamethrowerspe_modelMtxFn(void);
 
@@ -301,23 +301,23 @@ void flamethrowerspe_release(void);
 
 void flamethrowerspe_initialise(void);
 
-void shield_hitDetect(void);
+void Shield_hitDetect(void);
 
-void shield_release(void);
+void Shield_release(void);
 
-void shield_initialise(void);
+void Shield_initialise(void);
 
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
 int staff_getExtraSize(void);
 int staff_getObjectTypeId(void);
-int fireball_getExtraSize(void);
-int fireball_getObjectTypeId(void);
+int Fireball_getExtraSize(void);
+int Fireball_getObjectTypeId(void);
 int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
-int shield_getExtraSize(void);
-int shield_getObjectTypeId(void);
+int Shield_getExtraSize(void);
+int Shield_getObjectTypeId(void);
 
 void dim2roofrub_free(int* obj);
 
@@ -325,40 +325,40 @@ void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
-void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
+void staff_startSwipe(int* obj, s16 idx, f32 f1, f32 f2);
 
 void restartmarker_init(int* obj, int* state);
 
 void staffFn_80170380(int* obj, int cmd);
 
-void shield_init(int* obj, void* initData);
+void Shield_init(int* obj, void* initData);
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)mikabomb_initialise,
-    (ObjectDescriptorCallback)mikabomb_release,
+    (ObjectDescriptorCallback)MikaBomb_initialise,
+    (ObjectDescriptorCallback)MikaBomb_release,
     0,
-    (ObjectDescriptorCallback)mikabomb_init,
-    (ObjectDescriptorCallback)mikabomb_update,
-    (ObjectDescriptorCallback)mikabomb_hitDetect,
-    (ObjectDescriptorCallback)mikabomb_render,
-    (ObjectDescriptorCallback)mikabomb_free,
-    (ObjectDescriptorCallback)mikabomb_getObjectTypeId,
-    mikabomb_getExtraSize,
+    (ObjectDescriptorCallback)MikaBomb_init,
+    (ObjectDescriptorCallback)MikaBomb_update,
+    (ObjectDescriptorCallback)MikaBomb_hitDetect,
+    (ObjectDescriptorCallback)MikaBomb_render,
+    (ObjectDescriptorCallback)MikaBomb_free,
+    (ObjectDescriptorCallback)MikaBomb_getObjectTypeId,
+    MikaBomb_getExtraSize,
 };
 
 ObjectDescriptor gMikaBombShadowObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)mikabombshadow_initialise,
-    (ObjectDescriptorCallback)mikabombshadow_release,
+    (ObjectDescriptorCallback)MikaBombShadow_initialise,
+    (ObjectDescriptorCallback)MikaBombShadow_release,
     0,
-    (ObjectDescriptorCallback)mikabombshadow_init,
-    (ObjectDescriptorCallback)mikabombshadow_update,
-    (ObjectDescriptorCallback)mikabombshadow_hitDetect,
-    (ObjectDescriptorCallback)mikabombshadow_render,
-    (ObjectDescriptorCallback)mikabombshadow_free,
-    (ObjectDescriptorCallback)mikabombshadow_getObjectTypeId,
-    mikabombshadow_getExtraSize,
+    (ObjectDescriptorCallback)MikaBombShadow_init,
+    (ObjectDescriptorCallback)MikaBombShadow_update,
+    (ObjectDescriptorCallback)MikaBombShadow_hitDetect,
+    (ObjectDescriptorCallback)MikaBombShadow_render,
+    (ObjectDescriptorCallback)MikaBombShadow_free,
+    (ObjectDescriptorCallback)MikaBombShadow_getObjectTypeId,
+    MikaBombShadow_getExtraSize,
 };
 
 ObjectDescriptor gStaticCameraObjDescriptor = {
@@ -377,30 +377,30 @@ ObjectDescriptor gStaticCameraObjDescriptor = {
 
 ObjectDescriptor gGCbaddieShieldObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)gcbaddieshield_initialise,
-    (ObjectDescriptorCallback)gcbaddieshield_release,
+    (ObjectDescriptorCallback)GCbaddieShield_initialise,
+    (ObjectDescriptorCallback)GCbaddieShield_release,
     0,
-    (ObjectDescriptorCallback)gcbaddieshield_init,
-    (ObjectDescriptorCallback)gcbaddieshield_update,
-    (ObjectDescriptorCallback)gcbaddieshield_hitDetect,
-    (ObjectDescriptorCallback)gcbaddieshield_render,
-    (ObjectDescriptorCallback)gcbaddieshield_free,
-    (ObjectDescriptorCallback)gcbaddieshield_getObjectTypeId,
-    gcbaddieshield_getExtraSize,
+    (ObjectDescriptorCallback)GCbaddieShield_init,
+    (ObjectDescriptorCallback)GCbaddieShield_update,
+    (ObjectDescriptorCallback)GCbaddieShield_hitDetect,
+    (ObjectDescriptorCallback)GCbaddieShield_render,
+    (ObjectDescriptorCallback)GCbaddieShield_free,
+    (ObjectDescriptorCallback)GCbaddieShield_getObjectTypeId,
+    GCbaddieShield_getExtraSize,
 };
 
 ObjectDescriptor gBaddieInterestPObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)baddieinterestp_initialise,
-    (ObjectDescriptorCallback)baddieinterestp_release,
+    (ObjectDescriptorCallback)BaddieInterestP_initialise,
+    (ObjectDescriptorCallback)BaddieInterestP_release,
     0,
-    (ObjectDescriptorCallback)baddieinterestp_init,
-    (ObjectDescriptorCallback)baddieinterestp_update,
-    (ObjectDescriptorCallback)baddieinterestp_hitDetect,
-    (ObjectDescriptorCallback)baddieinterestp_render,
-    (ObjectDescriptorCallback)baddieinterestp_free,
-    (ObjectDescriptorCallback)baddieinterestp_getObjectTypeId,
-    baddieinterestp_getExtraSize,
+    (ObjectDescriptorCallback)BaddieInterestP_init,
+    (ObjectDescriptorCallback)BaddieInterestP_update,
+    (ObjectDescriptorCallback)BaddieInterestP_hitDetect,
+    (ObjectDescriptorCallback)BaddieInterestP_render,
+    (ObjectDescriptorCallback)BaddieInterestP_free,
+    (ObjectDescriptorCallback)BaddieInterestP_getObjectTypeId,
+    BaddieInterestP_getExtraSize,
 };
 
 u32 lbl_80320700[] = {
@@ -557,8 +557,8 @@ ObjectDescriptor23 gStaffObjDescriptor = {
     (ObjectDescriptorCallback)staff_addHitReactValue,
     (ObjectDescriptorCallback)staff_getHitReactValue,
     (ObjectDescriptorCallback)staff_getHitGeometryPoints,
-    (ObjectDescriptorCallback)staff_func15,
-    (ObjectDescriptorCallback)staff_func16,
+    (ObjectDescriptorCallback)staff_startSwipe,
+    (ObjectDescriptorCallback)staff_getSwipeTextureIndex,
 };
 
 u32 lbl_80320978[] = {
@@ -570,16 +570,16 @@ u32 lbl_80320978[] = {
 ObjectDescriptor10WithPadding gFireballObjDescriptor = {
     {
         0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)fireball_initialise,
-        (ObjectDescriptorCallback)fireball_release,
+        (ObjectDescriptorCallback)Fireball_initialise,
+        (ObjectDescriptorCallback)Fireball_release,
         0,
-        (ObjectDescriptorCallback)fireball_init,
-        (ObjectDescriptorCallback)fireball_update,
-        (ObjectDescriptorCallback)fireball_hitDetect,
-        (ObjectDescriptorCallback)fireball_render,
-        (ObjectDescriptorCallback)fireball_free,
-        (ObjectDescriptorCallback)fireball_getObjectTypeId,
-        fireball_getExtraSize,
+        (ObjectDescriptorCallback)Fireball_init,
+        (ObjectDescriptorCallback)Fireball_update,
+        (ObjectDescriptorCallback)Fireball_hitDetect,
+        (ObjectDescriptorCallback)Fireball_render,
+        (ObjectDescriptorCallback)Fireball_free,
+        (ObjectDescriptorCallback)Fireball_getObjectTypeId,
+        Fireball_getExtraSize,
     },
     0,
 };
@@ -634,16 +634,16 @@ f32 lbl_80320A28[] = {
 
 ObjectDescriptor gShieldObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)shield_initialise,
-    (ObjectDescriptorCallback)shield_release,
+    (ObjectDescriptorCallback)Shield_initialise,
+    (ObjectDescriptorCallback)Shield_release,
     0,
-    (ObjectDescriptorCallback)shield_init,
-    (ObjectDescriptorCallback)shield_update,
-    (ObjectDescriptorCallback)shield_hitDetect,
-    (ObjectDescriptorCallback)shield_render,
-    (ObjectDescriptorCallback)shield_free,
-    (ObjectDescriptorCallback)shield_getObjectTypeId,
-    shield_getExtraSize,
+    (ObjectDescriptorCallback)Shield_init,
+    (ObjectDescriptorCallback)Shield_update,
+    (ObjectDescriptorCallback)Shield_hitDetect,
+    (ObjectDescriptorCallback)Shield_render,
+    (ObjectDescriptorCallback)Shield_free,
+    (ObjectDescriptorCallback)Shield_getObjectTypeId,
+    Shield_getExtraSize,
 };
 
 u32 jumptable_80320AA0[] = {
@@ -670,7 +670,7 @@ ObjectDescriptor12 gCurveObjDescriptor = {
     (ObjectDescriptorCallback)curve_getObjectTypeId,
     curve_getExtraSize,
     (ObjectDescriptorCallback)curve_setScale,
-    (ObjectDescriptorCallback)curve_func11,
+    (ObjectDescriptorCallback)curve_func0B,
 };
 
 ObjectDescriptor gReStartMarkerObjDescriptor = {

@@ -64,7 +64,7 @@ static inline int* DrShackle_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-int drshackle_toggleEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int drshackle_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     char* state = ((GameObject*)obj)->extra;
     void* placement = *(void**)state;
@@ -241,7 +241,7 @@ void drshackle_update(int obj)
     }
     if (((BitFlags8*)(state + 0x1a))->b0 != 0)
     {
-        ((BitFlags8*)(state + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)placement)->activeGameBit) == 0);
+        ((BitFlags8*)(state + 0x1a))->b0 = (mainGetBit(((DrshacklePlacement*)placement)->activeGameBit) == 0);
     }
 }
 
@@ -249,9 +249,9 @@ void drshackle_init(int obj, char* arg)
 {
     char* state = ((GameObject*)obj)->extra;
     ObjGroup_AddObject(obj, DRSHACKLE_OBJGROUP);
-    ((BitFlags8*)(state + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)arg)->activeGameBit) == 0);
+    ((BitFlags8*)(state + 0x1a))->b0 = (mainGetBit(((DrshacklePlacement*)arg)->activeGameBit) == 0);
     ((DrshackleState*)state)->pathPointA = arg[0x18] % 2;
-    ((GameObject*)obj)->animEventCallback = drshackle_toggleEventCallback;
+    ((GameObject*)obj)->animEventCallback = drshackle_SeqFn;
     if (((DrshacklePlacement*)arg)->quarterTurns == 1)
     {
         ((DrshackleState*)state)->slotCount = 2;

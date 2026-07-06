@@ -69,7 +69,7 @@ STATIC_ASSERT(offsetof(TrickyGuardSpotObject, objAnim) == 0x00);
 STATIC_ASSERT(offsetof(TrickyGuardSpotObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(TrickyGuardSpotObject, state) == 0xB8);
 
-void magiccavebottom_update(int *obj);
+void MagicCaveBottom_update(int *obj);
 void FUN_8018aee4(void);
 void FUN_8018af08(int param_1);
 void FUN_8018af28(int param_1);
@@ -88,14 +88,14 @@ void FUN_8018b5a0(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  int param_9);
 void FUN_8018b6ac(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8);
-int magiccavetop_getExtraSize(void);
-int trickyguardspot_getExtraSize(void);
+int MagicCaveTop_getExtraSize(void);
+int TrickyGuardSpot_getExtraSize(void);
 int infotext_getExtraSize(void);
-int cctestinfot_getExtraSize(void);
-int deathgas_getExtraSize(void);
-void trickyguardspot_free(TrickyGuardSpotObject *obj);
-void trickyguardspot_render(void);
-void trickyguardspot_update(TrickyGuardSpotObject *obj);
-void trickyguardspot_init(TrickyGuardSpotObject *obj, TrickyGuardSpotPlacement *def);
+int CCTestInfot_getExtraSize(void);
+int DeathGas_getExtraSize(void);
+void TrickyGuardSpot_free(TrickyGuardSpotObject *obj);
+void TrickyGuardSpot_render(void);
+void TrickyGuardSpot_update(TrickyGuardSpotObject *obj);
+void TrickyGuardSpot_init(TrickyGuardSpotObject *obj, TrickyGuardSpotPlacement *def);
 
 #endif /* MAIN_DLL_CF_CFTOGGLESWITCH_H_ */

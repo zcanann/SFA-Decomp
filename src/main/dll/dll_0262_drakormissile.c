@@ -120,7 +120,7 @@ void drakormissile_startActiveLaunch(int obj)
 
 #pragma fp_contract off
 #pragma opt_common_subs off
-void drakormissile_func0B(int obj, int from, int target, f32 speed)
+void drakormissile_startStraightLaunch(int obj, int from, int target, f32 speed)
 {
     void* light;
     f32 dir[3];
@@ -353,7 +353,7 @@ int drakormissile_setScale(int obj)
     return s->state == DRAKORMISSILE_STATE_FADEOUT;
 }
 
-void drakormissile_render2(int obj)
+void drakormissile_abortStraightFlight(int obj)
 {
     DrakorMissileState* s = ((GameObject*)obj)->extra;
     if (s->state == DRAKORMISSILE_STATE_STRAIGHT)

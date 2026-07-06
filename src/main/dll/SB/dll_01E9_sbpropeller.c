@@ -50,7 +50,7 @@ extern f32 lbl_803E5824;
 extern u32 lbl_803DDC40;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-u32 fn_801E2570(void) { return lbl_803DDC40; }
+u32 sbGetPropeller(void) { return lbl_803DDC40; }
 
 int SB_Propeller_getExtraSize(void) { return sizeof(SBPropellerState); }
 

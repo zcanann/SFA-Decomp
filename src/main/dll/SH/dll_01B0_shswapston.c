@@ -3,8 +3,8 @@
  *
  * It runs the WarpStone's idle/look-at-target animation behaviour
  * (warpstone_update), drives the warp menu sequence object that lets the
- * player pick a destination (warpstone_updateMenuAnimObj +
- * warpstone_handleMenuOptionInput, keyed off analog stick / button input
+ * player pick a destination (warpstone_SeqFn +
+ * warpstone_testEvent, keyed off analog stick / button input
  * and the player's Krazoa-spirit count), and renders the player model
  * standing on the stone during the menu. Map loads/locks and warps are
  * issued through the map-event interface.
@@ -31,8 +31,8 @@ typedef struct WarpstoneUpdateMenuAnimObjState
     u8 flagsD4;     /* 0xd4: bit2 set on event 0x17 */
 } WarpstoneUpdateMenuAnimObjState;
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+extern u32 mainGetBit(int eventId);
+extern void mainSetBits(int eventId, int value);
 extern u32 getButtonsJustPressed(int port);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern int playerHasKrazoaSpirit();
@@ -100,7 +100,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern int Obj_GetPlayerObject(void);
 extern int fn_80296464(void);
 extern int* Obj_GetActiveModel(int player);
-extern void fn_80295B2C(int player, f32 x, f32 y, f32 z);
+extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 extern f32 lbl_803E549C;
 
@@ -122,7 +122,7 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             model = Obj_GetActiveModel((int)player);
             *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
             ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex, &x, &y, &z, 0);
-            fn_80295B2C((int)player, x, y, z);
+            objSetPos((int)player, x, y, z);
             playerRender((int)player, p2, p3, p4, p5, -1);
         }
     }
@@ -139,7 +139,7 @@ extern int mapUnload(int mapId, int flags);
 #define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value) \
     (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
-int warpstone_handleMenuOptionInput(u32 p1, u32 p2, int option)
+int warpstone_testEvent(u32 p1, u32 p2, int option)
 {
     s8 horizontal;
     s8 vertical;
@@ -176,19 +176,19 @@ int warpstone_handleMenuOptionInput(u32 p1, u32 p2, int option)
             loadMapAndParent(0x42);
             lockLevel(mapGetDirIdx(0x42), 0);
             lockLevel(mapGetDirIdx(7), 1);
-            if (GameBit_Get(0xbfd) != 0)
+            if (mainGetBit(0xbfd) != 0)
             {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
             }
-            else if (GameBit_Get(0xff) != 0)
+            else if (mainGetBit(0xff) != 0)
             {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
             }
-            else if (GameBit_Get(0xc6e) != 0)
+            else if (mainGetBit(0xc6e) != 0)
             {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
             }
-            else if (GameBit_Get(0xc85) != 0)
+            else if (mainGetBit(0xc85) != 0)
             {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
             }
@@ -247,7 +247,7 @@ extern int getDLL16(void);
 extern void SHthorntail_updateDustEffects(int obj);
 extern f32 timeDelta;
 
-int warpstone_updateMenuAnimObj(int obj, u32 p2, int animObj)
+int warpstone_SeqFn(int obj, u32 p2, int animObj)
 {
     extern int playerFn_801d6d58(void);
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -274,7 +274,7 @@ int warpstone_updateMenuAnimObj(int obj, u32 p2, int animObj)
          timeDelta, NULL);
     }
 
-    animUpdate->conditionCallback = (ObjAnimSequenceConditionCallback)warpstone_handleMenuOptionInput;
+    animUpdate->conditionCallback = (ObjAnimSequenceConditionCallback)warpstone_testEvent;
     animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)warpstone_loadBaseUi;
 
     if ((s8)animUpdate->sequenceEventActive != 0)
@@ -286,11 +286,11 @@ int warpstone_updateMenuAnimObj(int obj, u32 p2, int animObj)
         }
         {
             int hit;
-            if (GameBit_Get(0x2e8) != 0)
+            if (mainGetBit(0x2e8) != 0)
             {
                 hit = 1;
             }
-            else if (GameBit_Get(0x123) != 0)
+            else if (mainGetBit(0x123) != 0)
             {
                 hit = 1;
             }
@@ -305,7 +305,7 @@ int warpstone_updateMenuAnimObj(int obj, u32 p2, int animObj)
         }
         animUpdate->sequenceEventActive = 0;
 
-        if (GameBit_Get(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE) != 0 && animatedObjGetSeqId(animObj) == 0x35f)
+        if (mainGetBit(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE) != 0 && animatedObjGetSeqId(animObj) == 0x35f)
         {
             AudioStream_CancelPrepared();
             seqClearTaskTexts();
@@ -341,7 +341,7 @@ int warpstone_updateMenuAnimObj(int obj, u32 p2, int animObj)
         case 7:
             CMenu_SetFadeCounter(0);
             loadUiDll(1);
-            GameBit_Set(0x884, 1);
+            mainSetBits(0x884, 1);
             warpToMap(0x7e, 1);
             break;
 
@@ -372,8 +372,8 @@ int warpstone_updateMenuAnimObj(int obj, u32 p2, int animObj)
                 int dll16 = getDLL16();
                 (*(void (**)(int))(*(int*)dll16 + 0x10))(animUpdate->eventIds[i] - 0xd);
             }
-            GameBit_Set(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE, 1);
-            GameBit_Set(0x887, 1);
+            mainSetBits(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE, 1);
+            mainSetBits(0x887, 1);
             break;
 
         case 0x12:
@@ -479,7 +479,7 @@ void warpstone_update(int obj)
         }
     }
 
-    if (GameBit_Get(0xc7d) != 0)
+    if (mainGetBit(0xc7d) != 0)
     {
         if (randFn_80080100(lbl_803DC038) != 0)
         {
@@ -487,7 +487,7 @@ void warpstone_update(int obj)
         }
         if (((WarpstoneFlags*)(state + 0xd5))->lookAtPlayer == 0)
         {
-            ((WarpstoneFlags*)(state + 0xd5))->lookAtPlayer = GameBit_Get(0xa45);
+            ((WarpstoneFlags*)(state + 0xd5))->lookAtPlayer = mainGetBit(0xa45);
         }
     }
 
@@ -570,7 +570,7 @@ void warpstone_update(int obj)
 
     objAnimFn_80038f38(obj, (int*)(state + 0x14));
     characterDoEyeAnims(obj, (void*)(state + 0x44));
-    if (GameBit_Get(0x887) == 0)
+    if (mainGetBit(0x887) == 0)
     {
         ((WarpstoneState*)state)->activated = 0;
     }
@@ -630,11 +630,11 @@ void warpstone_init(int obj, u8* setup)
     state = *(int*)&((GameObject*)obj)->extra;
     setupYaw = (s16)(setup[0x1a] << 8);
     ((GameObject*)obj)->anim.rotX = setupYaw;
-    ((GameObject*)obj)->animEventCallback = warpstone_updateMenuAnimObj;
+    ((GameObject*)obj)->animEventCallback = warpstone_SeqFn;
     ((WarpstoneState*)state)->gameBitE = 0x15a;
     ((WarpstoneState*)state)->gameBit10 = 0x886;
     ObjHits_EnableObject((u32)obj);
-    if (GameBit_Get(0x887) != 0 && GameBit_Get(0x15a) != 0)
+    if (mainGetBit(0x887) != 0 && mainGetBit(0x15a) != 0)
     {
         ((WarpstoneState*)state)->activated = 1;
     }
@@ -642,6 +642,6 @@ void warpstone_init(int obj, u8* setup)
     {
         ((WarpstoneState*)state)->activated = 0;
     }
-    GameBit_Set(((WarpstoneState*)state)->gameBit10, 0);
+    mainSetBits(((WarpstoneState*)state)->gameBit10, 0);
     *(int*)state = 0;
 }

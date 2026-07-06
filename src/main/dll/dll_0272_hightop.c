@@ -3,7 +3,7 @@
  * (object type 0x43).
  *
  * Runs as a BaddieState-driven object with an 11-entry state-handler
- * table (gHighTopStateHandlers, installed in hightop_initialise) plus a
+ * table (gHighTopStateHandlers, installed in HighTop_initialise) plus a
  * default handler. States cover idle/wander (04), locomotion (02),
  * follow/turn (01), the air-meter ride sequence (07/08), reset/death (09),
  * and a scripted progress state (10). It owns a path-control walker
@@ -25,7 +25,7 @@
 #define PAD_BUTTON_A 0x100
 
 /* 0x2C-byte Obj_AllocObjectSetup(0x2C, 0xD4) buffer composed in
- * hightop_hitDetect when the air meter empties (death follow-up spawn). */
+ * HighTop_hitDetect when the air meter empties (death follow-up spawn). */
 typedef struct HighTopDeathSpawn
 {
     ObjPlacement base; /* 0x00..0x17 */
@@ -179,17 +179,17 @@ int hightop_func0E(void) { return 0x1; }
 
 int hightop_func0B(void) { return 0x1; }
 
-int hightop_getExtraSize(void) { return sizeof(HighTopRuntime); }
+int HighTop_getExtraSize(void) { return sizeof(HighTopRuntime); }
 
-int hightop_getObjectTypeId(void) { return HIGHTOP_OBJECT_TYPE_ID; }
+int HighTop_getObjectTypeId(void) { return HIGHTOP_OBJECT_TYPE_ID; }
 
-void hightop_release(void)
+void HighTop_release(void)
 {
 }
 
-int hightop_render2(void) { return 0x0; }
+int HighTop_render2(void) { return 0x0; }
 
-int hightop_setScale(void) { return 0x0; }
+int HighTop_setScale(void) { return 0x0; }
 
 void hightop_func11(int obj, int val)
 {
@@ -210,7 +210,7 @@ void hightop_func12(int obj, f32* a, int* b)
     *b = 0;
 }
 
-void hightop_modelMtxFn(int obj, f32* a, f32* b, f32* c)
+void HighTop_modelMtxFn(int obj, f32* a, f32* b, f32* c)
 {
     HighTopRuntime* runtime = ((HighTopObject*)obj)->runtime;
     *a = runtime->pathPoint2X;
@@ -218,7 +218,7 @@ void hightop_modelMtxFn(int obj, f32* a, f32* b, f32* c)
     *c = runtime->pathPoint2Z;
 }
 
-void hightop_free(int obj)
+void HighTop_free(int obj)
 {
     ObjGroup_RemoveObject(obj, ARWARWING_OBJGROUP);
     ObjGroup_RemoveObject(obj, HIGHTOP_OBJGROUP);
@@ -232,7 +232,7 @@ int hightop_stateHandler00(int obj)
     {
         return 0xa;
     }
-    if (GameBit_Get(0x631) != 0)
+    if (mainGetBit(0x631) != 0)
     {
         return 8;
     }
@@ -246,14 +246,14 @@ int hightop_stateHandler06(int obj, u8* state)
     {
         runtime->flags |= 1;
     }
-    if (GameBit_Get(0x632) != 0)
+    if (mainGetBit(0x632) != 0)
     {
         return 8;
     }
     return 2;
 }
 
-void hightop_func0F(int obj, f32* ox, f32* oy, f32* oz)
+void HighTop_func0F(int obj, f32* ox, f32* oy, f32* oz)
 {
     int* player;
     ObjPosParams pos;
@@ -312,13 +312,13 @@ int hightop_stateHandler05(int obj, u8* state)
     switch ((s8)runtime->substate)
     {
     case 1:
-        if (GameBit_Get(0x62c) != 0)
+        if (mainGetBit(0x62c) != 0)
         {
             runtime->substate = 2;
         }
         break;
     case 0xa:
-        if (GameBit_Get(0x630) != 0)
+        if (mainGetBit(0x630) != 0)
         {
             return 7;
         }
@@ -327,7 +327,7 @@ int hightop_stateHandler05(int obj, u8* state)
     return 0;
 }
 
-int hightop_interactionCallback(int obj)
+int HighTop_seqFn(int obj)
 {
     HighTopRuntime* runtime;
     seqFn_800394a0(obj);
@@ -367,7 +367,7 @@ void hightop_playMovementSfx(int obj, int state2, int state)
 }
 #pragma dont_inline reset
 
-void hightop_getLookTargetYaw(int obj, int mode, int* out)
+void HighTop_getLookTargetYaw(int obj, int mode, int* out)
 {
     f32 buf[6];
     HighTopRuntime* runtime;
@@ -398,7 +398,7 @@ void hightop_getLookTargetYaw(int obj, int mode, int* out)
     }
 }
 
-void hightop_renderGroundMarker(int obj, f32 scale)
+void HighTop_renderGroundMarker(int obj, f32 scale)
 {
     f32* mtx;
     f32 lx, ly, lz;
@@ -417,7 +417,7 @@ void hightop_renderGroundMarker(int obj, f32 scale)
     fn_8003B950(gHighTopGroundMarkerMtx);
 }
 
-void hightop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
+void HighTop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
 {
     HighTopRuntime* runtime = ((HighTopObject*)obj)->runtime;
     if (visible != 0)
@@ -452,7 +452,7 @@ void hightop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
     }
 }
 
-void hightop_init(void* obj, u8* arg)
+void HighTop_init(void* obj, u8* arg)
 {
     u8* base = lbl_8032AAB0;
     HighTopRuntime* runtime = ((GameObject*)obj)->extra;
@@ -465,7 +465,7 @@ void hightop_init(void* obj, u8* arg)
     local1 = gHighTopLookInitData1;
     local2 = gHighTopLookInitData2;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = hightop_interactionCallback;
+    ((GameObject*)obj)->animEventCallback = HighTop_seqFn;
     runtime->unkC45 = arg[0x19];
     runtime->turnRateThreshold = 5;
     *(s8*)&runtime->substate = -1;
@@ -566,7 +566,7 @@ int hightop_stateHandler08(int obj, u8* stateArg)
     return 0;
 }
 
-void hightop_initialise(void)
+void HighTop_initialise(void)
 {
     void** t = gHighTopStateHandlers;
     t[0] = hightop_stateHandler00;
@@ -595,12 +595,12 @@ int hightop_handleMotionEvent(int obj, u8 event)
         (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 8);
         break;
     case 6:
-        GameBit_Set(0x634, 1);
+        mainSetBits(0x634, 1);
         (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
         break;
     case 7:
-        GameBit_Set(0x634, 0);
-        GameBit_Set(0x631, 1);
+        mainSetBits(0x634, 0);
+        mainSetBits(0x631, 1);
         ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask |= 1;
         runtime->flagsC40 &= ~0x140;
         runtime->flags &= ~2;
@@ -617,7 +617,7 @@ int hightop_handleMotionEvent(int obj, u8 event)
 }
 #pragma dont_inline reset
 
-void hightop_hitDetect(int obj)
+void HighTop_hitDetect(int obj)
 {
     HighTopRuntime* runtime = ((GameObject*)obj)->extra;
     f32 l10;
@@ -658,7 +658,7 @@ void hightop_hitDetect(int obj)
         {
             (*gGameUIInterface)->airMeterSetShutdown();
             runtime->flagsC49.b7 = 0;
-            GameBit_Set(0x634, 0);
+            mainSetBits(0x634, 0);
             if (Obj_IsLoadingLocked() != 0)
             {
                 HighTopDeathSpawn* spawn = (HighTopDeathSpawn*)Obj_AllocObjectSetup(0x2c, 0xd4);
@@ -676,7 +676,7 @@ void hightop_hitDetect(int obj)
             ((GameObject*)obj)->anim.rotZ = 0;
             runtime->baddie.physicsActive = 0;
             *(int*)runtime |= 0x1000000;
-            GameBit_Set(0xb48, 1);
+            mainSetBits(0xb48, 1);
             (*gGameUIInterface)->airMeterSetShutdown();
         }
     }
@@ -686,7 +686,7 @@ void hightop_hitDetect(int obj)
     }
 }
 
-void hightop_update(int obj)
+void HighTop_update(int obj)
 {
     char* state = ((GameObject*)obj)->extra;
     ((HighTopRuntime*)state)->turnRateThreshold = 5;
@@ -742,7 +742,7 @@ void hightop_update(int obj)
             }
             else
             {
-                GameBit_Set(((s16*)((char*)&lbl_803DC314 - 0x14))[substate], 1);
+                mainSetBits(((s16*)((char*)&lbl_803DC314 - 0x14))[substate], 1);
             }
         }
     }
@@ -851,12 +851,12 @@ int hightop_stateHandler04(int obj, int stateArg)
         }
         fn_80039264((char*)state + 0xb48);
     }
-    count = GameBit_Get(0x9c7) + GameBit_Get(0x9c9) + GameBit_Get(0x9cb) + GameBit_Get(0x9cd);
-    if (GameBit_Get(0x62b) != 0)
+    count = mainGetBit(0x9c7) + mainGetBit(0x9c9) + mainGetBit(0x9cb) + mainGetBit(0x9cd);
+    if (mainGetBit(0x62b) != 0)
     {
         HighTopRuntime* state2;
         RomCurveInterface* curve;
-        GameBit_Set(0x62f, 1);
+        mainSetBits(0x62f, 1);
         ObjHits_MarkObjectPositionDirty(obj);
         ObjHits_ClearSourceMask(obj, 1);
         ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask &= ~1;
@@ -875,7 +875,7 @@ int hightop_stateHandler04(int obj, int stateArg)
     }
     if (count == 4)
     {
-        GameBit_Set(0x62a, 1);
+        mainSetBits(0x62a, 1);
         return 0;
     }
     objModelAndSoundFn_80039118(obj, (char*)state + 0xb48);
@@ -1104,19 +1104,19 @@ int hightop_stateHandler09(int obj, int stateArg)
             ((HightopPlacement*)stateArg)->unk2A0 = lbl_803E6AAC;
         }
         ((HightopPlacement*)stateArg)->unk2A0 = lbl_803E6AAC;
-        prevCount = GameBit_Get(0x3f0) - 1;
+        prevCount = mainGetBit(0x3f0) - 1;
         state->savedControlMode = 9;
         for (i = 0; i < 4; i++)
         {
-            GameBit_Set((&gHighTopProgressGameBitIds)[i], i > prevCount);
+            mainSetBits((&gHighTopProgressGameBitIds)[i], i > prevCount);
         }
         if (prevCount == 3)
         {
-            GameBit_Set(0x3f4, 1);
+            mainSetBits(0x3f4, 1);
             return 0xb;
         }
     }
-    if (GameBit_Get(((HightopPlacement*)placement)->gameBitId) == 0)
+    if (mainGetBit(((HightopPlacement*)placement)->gameBitId) == 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (randFn_80080100(0x64) != 0)
@@ -1143,7 +1143,7 @@ int hightop_stateHandler09(int obj, int stateArg)
     {
         s16 yItem;
         getYButtonItem(&yItem);
-        if ((GameBit_Get(0xaf7) != 0 && cMenuGetSelectedItem() != -1) || yItem == 0xaf7)
+        if ((mainGetBit(0xaf7) != 0 && cMenuGetSelectedItem() != -1) || yItem == 0xaf7)
         {
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
         }
@@ -1154,10 +1154,10 @@ int hightop_stateHandler09(int obj, int stateArg)
     }
     if (ObjTrigger_IsSetById(obj, 0xaf7) != 0)
     {
-        int total = GameBit_Get(0x3f0);
-        total = total + GameBit_Get(0xaf7);
-        GameBit_Set(0x3f0, total);
-        GameBit_Set(0xaf7, 0);
+        int total = mainGetBit(0x3f0);
+        total = total + mainGetBit(0xaf7);
+        mainSetBits(0x3f0, total);
+        mainSetBits(0xaf7, 0);
         if (randFn_80080100(5 - total) != 0)
         {
             state->substate = 2;
@@ -1228,9 +1228,9 @@ int hightop_stateHandler10(int obj, int stateArg)
         rt->substate = 3;
         *(int*)((char*)stateArg + 0) |= 0x1000000;
     }
-    if (GameBit_Get(0x1c3) != 0)
+    if (mainGetBit(0x1c3) != 0)
     {
-        if ((int)GameBit_Get(0xee) == 2)
+        if ((int)mainGetBit(0xee) == 2)
         {
             rt->substate = 7;
         }

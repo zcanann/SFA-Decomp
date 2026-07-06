@@ -19,11 +19,11 @@ void playerShadow_func03_nop(void)
 {
 }
 
-void playerShadow_release_nop(void)
+void playerShadow_release(void)
 {
 }
 
-void playerShadow_initialise_nop(void)
+void playerShadow_initialise(void)
 {
 }
 

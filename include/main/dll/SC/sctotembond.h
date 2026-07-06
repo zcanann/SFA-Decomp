@@ -100,7 +100,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject *obj,ScTotemPuzzleMapData *params);
 void sc_totempuzzle_release(void);
 void sc_totempuzzle_initialise(void);
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *state,f32 radius);
-u32 sc_totempuzzle_processAnimEvents(ScTotemBondObject *obj,u32 param_2,ObjAnimUpdateState *animUpdate);
+u32 sc_totembond_SeqFn(ScTotemBondObject *obj,u32 param_2,ObjAnimUpdateState *animUpdate);
 void sc_totembond_update(ScTotemBondObject *obj);
 void sc_totembond_init(ScTotemBondObject *obj,int params);
 int fn_801DE320(u16 *gameBitIds,u16 newValue);

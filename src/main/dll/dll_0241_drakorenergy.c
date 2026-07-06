@@ -90,7 +90,7 @@ void DrakorEnergy_func0B_nop(void)
 {
 }
 
-int DrakorEnergy_setScale(int* obj) { return ((DrakorEnergyState*)(int*)((GameObject*)obj)->extra)->mode == DRAKORENERGY_MODE_IDLE; }
+int drakorenergy_setScale(int* obj) { return ((DrakorEnergyState*)(int*)((GameObject*)obj)->extra)->mode == DRAKORENERGY_MODE_IDLE; }
 
 int drakorenergy_getExtraSize(void) { return sizeof(DrakorEnergyState); }
 int drakorenergy_getObjectTypeId(void) { return 0x0; }
@@ -130,7 +130,7 @@ void drakorenergy_update(int obj)
     switch (((DrakorEnergyState*)blob)->mode)
     {
     case DRAKORENERGY_MODE_IDLE:
-        if (GameBit_Get(((DrakorenergyPlacement*)data)->gameBitId) == 1)
+        if (mainGetBit(((DrakorenergyPlacement*)data)->gameBitId) == 1)
         {
             ((DrakorEnergyState*)blob)->mode = DRAKORENERGY_MODE_BOBBING;
         }
@@ -218,7 +218,7 @@ void drakorenergy_init(int* obj, u8* init)
     ((GameObject*)obj)->anim.velocityX = fz;
     ((GameObject*)obj)->anim.velocityY = lbl_803E62A0;
     sub->phase = randomGetRange(0, 0xffff);
-    if (GameBit_Get(placement->gameBitId) != 0)
+    if (mainGetBit(placement->gameBitId) != 0)
     {
         sub->mode = DRAKORENERGY_MODE_COLLECTED;
     }

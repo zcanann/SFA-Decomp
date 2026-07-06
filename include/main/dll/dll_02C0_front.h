@@ -13,6 +13,6 @@
 
 void titleScreenPositionElements(f32 a, f32 b);
 void titleScreenShowCopyright(u8 arg);
-int titlescreen_getObjectTypeId(u8* obj);
+int TitleScreen_getObjectTypeId(u8* obj);
 
 #endif

@@ -78,7 +78,7 @@ void dll_219_update(Dll219Object* obj)
         return;
     }
 
-    if (GameBit_Get(state->gameBit) != 0)
+    if (mainGetBit(state->gameBit) != 0)
     {
         if (obj->x > setup->posX - 30.0f)
         {
@@ -90,7 +90,7 @@ void dll_219_update(Dll219Object* obj)
             return;
         }
     }
-    if (GameBit_Get(state->gameBit) == 0)
+    if (mainGetBit(state->gameBit) == 0)
     {
         if (obj->x < setup->posX)
         {

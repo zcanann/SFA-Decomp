@@ -117,7 +117,7 @@ STATIC_ASSERT(offsetof(WCPressuresSetup, activateBit) == WCPRESSURES_SETUP_ACTIV
 
 int wcpressures_getExtraSize(void) { return WCPRESSURES_EXTRA_SIZE; }
 
-int wcpressures_tileStateCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int wcpressures_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WCPressuresState* state = *(WCPressuresState**)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
     WCPressuresSetup* setup = *(WCPressuresSetup**)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
@@ -146,7 +146,7 @@ int wcpressures_tileStateCallback(int obj, int unused, ObjAnimUpdateState* animU
         ((GameObject*)obj)->anim.localPosZ = setup->x;
         ((GameObject*)obj)->anim.localPosY = setup->y;
         ((GameObject*)obj)->anim.localPosZ = setup->z;
-        GameBit_Set(setup->solvedBit, 0);
+        mainSetBits(setup->solvedBit, 0);
         animUpdate->triggerCommand = WCPRESSURES_CALLBACK_NONE;
     }
 
@@ -191,9 +191,9 @@ void wcpressures_update(int obj)
     f32 thr;
 
     if (setup->activateBit > 0 &&
-        GameBit_Get(setup->activateBit) == 0)
+        mainGetBit(setup->activateBit) == 0)
     {
-        fn_80137948(sWCPressuresActivateFormat, setup->activateBit);
+        logPrintf(sWCPressuresActivateFormat, setup->activateBit);
         return;
     }
     if ((state->pressTimer -= 1) < 0)
@@ -263,13 +263,13 @@ void wcpressures_update(int obj)
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E6E04 * timeDelta;
         if (((GameObject*)obj)->anim.localPosY < thr)
         {
-            GameBit_Set(setup->solvedBit, 1);
+            mainSetBits(setup->solvedBit, 1);
             state->mode = WCPRESSURES_MODE_PRESSED;
             ((GameObject*)obj)->anim.localPosY = thr;
         }
         break;
     case WCPRESSURES_MODE_PRESSED:
-        if ((u32)GameBit_Get(setup->solvedBit) == 0)
+        if ((u32)mainGetBit(setup->solvedBit) == 0)
         {
             Sfx_PlayFromObject(obj, SFXsc_lockon2_on);
             state->mode = WCPRESSURES_MODE_RISING;
@@ -315,7 +315,7 @@ void wcpressures_init(u8* obj, u8* setup)
         objAnim->bankIndex = 0;
     }
 
-    if ((u32)GameBit_Get(setupData->solvedBit) != 0)
+    if ((u32)mainGetBit(setupData->solvedBit) != 0)
     {
         ((GameObject*)obj)->anim.localPosY = setupData->y - setupData->pressDepth;
         state->pressTimer = WCPRESSURES_SOLVED_TIMER;
@@ -327,7 +327,7 @@ void wcpressures_init(u8* obj, u8* setup)
     {
         state->objects[i] = 0;
     }
-    ((GameObject*)obj)->animEventCallback = wcpressures_tileStateCallback;
+    ((GameObject*)obj)->animEventCallback = wcpressures_SeqFn;
 }
 
 void wcpressures_release(void)

@@ -57,53 +57,53 @@ STATIC_ASSERT(offsetof(DrCloudPerObject, state) == 0xb8);
 #define DRCLOUDPER_MAP_ANIM_EVENT 0x0c
 #define DRCLOUDPER_OBJECT_FLAGS 0xe000
 
-int drcloudper_setScale(int obj)
+int DR_CloudPer_setScale(int obj)
 {
     DrCloudPerObject* cloud = (DrCloudPerObject*)obj;
     DrCloudPerSetup* setup = (DrCloudPerSetup*)cloud->setup;
-    if ((u32)GameBit_Get(setup->gameBit) == 0)
+    if ((u32)mainGetBit(setup->gameBit) == 0)
     {
         return 0;
     }
-    GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
+    mainSetBits(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
     (*gMapEventInterface)->setObjGroupStatus(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
     return 1;
 }
 
-int drcloudper_selectActiveCloud(int obj)
+int DR_CloudPer_selectActiveCloud(int obj)
 {
     DrCloudPerObject* cloud = (DrCloudPerObject*)obj;
     DrCloudPerSetup* setup = (DrCloudPerSetup*)cloud->setup;
 
-    GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
+    mainSetBits(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
     (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
     return 0;
 }
 
-int drcloudper_getExtraSize(void) { return 0x10; }
+int DR_CloudPer_getExtraSize(void) { return 0x10; }
 
-int drcloudper_getObjectTypeId(void) { return 0; }
+int DR_CloudPer_getObjectTypeId(void) { return 0; }
 
-void drcloudper_free(int obj)
+void DR_CloudPer_free(int obj)
 {
     ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_TRIGGER);
     ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_SURFACE);
 }
 
-void drcloudper_render(void)
+void DR_CloudPer_render(void)
 {
 }
 
-void drcloudper_hitDetect(void)
+void DR_CloudPer_hitDetect(void)
 {
 }
 
-void drcloudper_update(void)
+void DR_CloudPer_update(void)
 {
 }
 
-void drcloudper_init(int obj, int setup)
+void DR_CloudPer_init(int obj, int setup)
 {
     DrCloudPerObject* cloud;
     DrCloudPerSetup* setupData;
@@ -125,17 +125,17 @@ void drcloudper_init(int obj, int setup)
         -(state->normalZ * cloud->posZ +
           (state->normalX * cloud->posX + state->normalY * cloud->posY));
     cloud->flagsB0 |= DRCLOUDPER_OBJECT_FLAGS;
-    if (setupData->cloudIndex == GameBit_Get(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT))
+    if (setupData->cloudIndex == mainGetBit(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT))
     {
         (*gMapEventInterface)->setObjGroupStatus(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     }
 }
 
-void drcloudper_release(void)
+void DR_CloudPer_release(void)
 {
 }
 
-void drcloudper_initialise(void)
+void DR_CloudPer_initialise(void)
 {
 }
 

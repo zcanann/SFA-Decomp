@@ -47,7 +47,7 @@ void screenTransition_fadeFrom(int duration, int type, f32 from)
 }
 
 #pragma opt_common_subs off
-void screenTransition_screenFade(int duration, int type)
+void screenTransition_fadeIn(int duration, int type)
 {
     if (gScreenTransitionAlphaStep >= lbl_803E0560 || lbl_803E0560 == screenTransitionAlpha)
     {
@@ -61,7 +61,7 @@ void screenTransition_screenFade(int duration, int type)
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off
-void screenTransition_Do(int duration, int type)
+void screenTransition_fadeOut(int duration, int type)
 {
     if (gScreenTransitionAlphaStep <= lbl_803E0560 || gScreenTransitionAlphaMax == screenTransitionAlpha)
     {
@@ -131,7 +131,7 @@ static inline void screenTransitionFadeColor(u8 r, u8 g, u8 b)
 }
 
 #pragma opt_common_subs off
-void screenTransition_do2(int p1, int p2, int p3)
+void screenTransition_update(int p1, int p2, int p3)
 {
     if (gScreenTransitionDelay != 0)
     {

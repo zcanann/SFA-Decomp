@@ -46,20 +46,20 @@ typedef struct ExplodeanimatorPlacement
     u8 pad36[0x38 - 0x36];
 } ExplodeanimatorPlacement;
 
-int explodeanimator_getExtraSize(void) { return 0x4; }
-int explodeanimator_getObjectTypeId(void) { return 0x0; }
+int ExplodeAnimator_getExtraSize(void) { return 0x4; }
+int ExplodeAnimator_getObjectTypeId(void) { return 0x0; }
 
-void explodeanimator_free(int obj) { ObjGroup_RemoveObject(obj, EXPLODEANIMATOR_OBJGROUP); }
+void ExplodeAnimator_free(int obj) { ObjGroup_RemoveObject(obj, EXPLODEANIMATOR_OBJGROUP); }
 
-void explodeanimator_render(void)
+void ExplodeAnimator_render(void)
 {
 }
 
-void explodeanimator_hitDetect(void)
+void ExplodeAnimator_hitDetect(void)
 {
 }
 
-void explodeanimator_update(int* obj)
+void ExplodeAnimator_update(int* obj)
 {
     int i;
     u8* sub;
@@ -70,8 +70,8 @@ void explodeanimator_update(int* obj)
     sub = ((GameObject*)obj)->extra;
     if ((sub[2] & 1) != 0) return;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((ExplodeanimatorPlacement*)def)->triggerGameBit) == 0) return;
-    GameBit_Set(((ExplodeanimatorPlacement*)def)->resultGameBit, 1);
+    if (mainGetBit(((ExplodeanimatorPlacement*)def)->triggerGameBit) == 0) return;
+    mainSetBits(((ExplodeanimatorPlacement*)def)->resultGameBit, 1);
     sub[2] = (u8)(sub[2] | 1);
     {
     for (i = 0; i < def[0x2c]; i++)
@@ -91,11 +91,11 @@ void explodeanimator_update(int* obj)
     }
 }
 
-void explodeanimator_init(int* obj, int* def)
+void ExplodeAnimator_init(int* obj, int* def)
 {
     int* state = ((GameObject*)obj)->extra;
     int flag;
-    if ((u32)GameBit_Get(((ExplodeanimatorPlacement*)def)->resultGameBit) != 0u)
+    if ((u32)mainGetBit(((ExplodeanimatorPlacement*)def)->resultGameBit) != 0u)
     {
         flag = 1;
     }
@@ -107,10 +107,10 @@ void explodeanimator_init(int* obj, int* def)
     ObjGroup_AddObject(obj, EXPLODEANIMATOR_OBJGROUP);
 }
 
-void explodeanimator_release(void)
+void ExplodeAnimator_release(void)
 {
 }
 
-void explodeanimator_initialise(void)
+void ExplodeAnimator_initialise(void)
 {
 }

@@ -132,7 +132,7 @@ void ProjectileSwitch_hitDetect(int obj)
             tex->textureId = 0;
         }
         ((ProjectileSwitchState*)stateB)->isOn = 0;
-        GameBit_Set((int)((ProjectileSwitchState*)state)->gameBitId, 0);
+        mainSetBits((int)((ProjectileSwitchState*)state)->gameBitId, 0);
     }
     else
     {
@@ -151,7 +151,7 @@ void ProjectileSwitch_hitDetect(int obj)
             tex->textureId = 0x100;
         }
         ((ProjectileSwitchState*)stateB)->isOn = 1;
-        GameBit_Set((int)((ProjectileSwitchState*)state)->gameBitId, 1);
+        mainSetBits((int)((ProjectileSwitchState*)state)->gameBitId, 1);
         if ((((ProjectileSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK) == SWITCH_MODE_MOMENTARY)
         {
             ((ProjectileSwitchState*)state)->cooldownTimer =
@@ -171,7 +171,7 @@ void ProjectileSwitch_update(int obj)
     state = *(int*)&((GameObject*)obj)->extra;
     if (((ProjectileSwitchState*)state)->isOn != 0)
     {
-        if (GameBit_Get((int)((ProjectileSwitchState*)state)->gameBitId) == 0)
+        if (mainGetBit((int)((ProjectileSwitchState*)state)->gameBitId) == 0)
         {
             state2 = *(int*)&((GameObject*)obj)->extra;
             tex = objFindTexture((void*)obj, 0, 0);
@@ -181,7 +181,7 @@ void ProjectileSwitch_update(int obj)
     }
     else
     {
-        if (GameBit_Get((int)((ProjectileSwitchState*)state)->gameBitId) != 0)
+        if (mainGetBit((int)((ProjectileSwitchState*)state)->gameBitId) != 0)
         {
             state2 = *(int*)&((GameObject*)obj)->extra;
             tex = objFindTexture((void*)obj, 0, 0);
@@ -197,7 +197,7 @@ void ProjectileSwitch_update(int obj)
         if (((ProjectileSwitchState*)state)->cooldownTimer <= 0.0f)
         {
             ((ProjectileSwitchState*)state)->cooldownTimer = 0.0f;
-            GameBit_Set((int)((ProjectileSwitchState*)state)->gameBitId, 0);
+            mainSetBits((int)((ProjectileSwitchState*)state)->gameBitId, 0);
         }
     }
 }
@@ -251,7 +251,7 @@ void ProjectileSwitch_init(int obj, u8* initData)
     {
         ((ProjectileSwitchState*)state)->gameBitId = *(short*)(initData + 0x18);
     }
-    ((ProjectileSwitchState*)state)->isOn = GameBit_Get((int)((ProjectileSwitchState*)state)->gameBitId);
+    ((ProjectileSwitchState*)state)->isOn = mainGetBit((int)((ProjectileSwitchState*)state)->gameBitId);
     if (((ProjectileSwitchState*)state)->isOn != 0)
     {
         state = *(int*)&((GameObject*)obj)->extra;

@@ -219,7 +219,7 @@ void warpPadPlayerStandingOn(int obj)
     gameBit = placement->enableGameBit;
     if (gameBit != -1)
     {
-        if (GameBit_Get(gameBit) != 0)
+        if (mainGetBit(gameBit) != 0)
         {
             state->flags = state->flags & ~WARPPAD_FLAG_GAMEBIT_DISABLED;
         }
@@ -232,10 +232,10 @@ void warpPadPlayerStandingOn(int obj)
     if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
     {
         setAButtonIcon(0x1b);
-        if (GameBit_Get(GAMEBIT_WARPPAD_PROMPT_SHOWN) == 0)
+        if (mainGetBit(GAMEBIT_WARPPAD_PROMPT_SHOWN) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-            GameBit_Set(GAMEBIT_WARPPAD_PROMPT_SHOWN, 1);
+            mainSetBits(GAMEBIT_WARPPAD_PROMPT_SHOWN, 1);
             return;
         }
     }
@@ -264,7 +264,7 @@ void warpPadPlayerStandingOn(int obj)
         }
         gameBit = placement->enableGameBit;
         if (((gameBit == -1) ||
-                ((GameBit_Get(gameBit) != 0) && ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))) &&
+                ((mainGetBit(gameBit) != 0) && ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))) &&
             (ObjTrigger_IsSet(obj) != 0))
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);

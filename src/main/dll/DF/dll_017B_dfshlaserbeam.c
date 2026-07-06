@@ -57,7 +57,7 @@ extern const f32 lbl_803E4F44;
 extern const f32 lbl_803E4F48;
 extern const f32 lbl_803E4F4C;
 
-void DFSH_LaserBeam_init(int* obj)
+void DFSH_LaserBeam_free(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
     (*gModgfxInterface)->detachSource(obj);
@@ -195,7 +195,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
     runtime = obj->runtime;
 
     DFSH_LASER_CYCLE_TIMER(runtime) -= framesThisStep;
-    if (GameBit_Get(config->disableGameBit) == 0)
+    if (mainGetBit(config->disableGameBit) == 0)
     {
         if (DFSH_LASER_CYCLE_TIMER(runtime) < 0)
         {
@@ -304,7 +304,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
     {
         DFSH_LASER_ACTIVE(runtime) = 1;
     }
-    if (GameBit_Get(config->disableGameBit) != 0)
+    if (mainGetBit(config->disableGameBit) != 0)
     {
         DFSH_LASER_ACTIVE(runtime) = 0;
     }
@@ -372,7 +372,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                     }
                     else
                     {
-                        GameBit_Set(0x468, 1);
+                        mainSetBits(0x468, 1);
                     }
                 }
             }
@@ -401,7 +401,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
 /*
  * Object setup: initializes the rotating DragonRock Shrine laser beam state.
  */
-void DFSH_LaserBeam_free(void* objArg, void* configArg)
+void DFSH_LaserBeam_init(void* objArg, void* configArg)
 {
     DFSHLaserBeamObject* obj;
     DFSHLaserBeamConfig* config;

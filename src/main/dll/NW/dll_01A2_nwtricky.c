@@ -20,7 +20,7 @@
 extern f32 timeDelta;
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(int* obj, int* target);
-extern f32 fn_8014C5D0(int* obj);
+extern f32 enemy_getHealthFraction(int* obj);
 extern int* ObjList_FindObjectById(int objId);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void fn_80138920(int* obj, int a, int b);
@@ -29,21 +29,21 @@ extern f32 lbl_803E5264;
 extern f32 lbl_803E5268;
 extern int lbl_802C23E8[];
 
-int nw_tricky_getExtraSize(void)
+int NW_tricky_getExtraSize(void)
 {
     return 8;
 }
 
-int nw_tricky_SeqFn(void)
+int NW_tricky_SeqFn(void)
 {
     Sfx_StopObjectChannel((u32)getTrickyObject(), 16);
     return 0;
 }
 
-void nw_tricky_free(int obj)
+void NW_tricky_free(int obj)
 {
     (void)obj;
-    GameBit_Set(0x4e4, 1);
+    mainSetBits(0x4e4, 1);
 }
 
 typedef struct NwTrickyState
@@ -64,7 +64,7 @@ typedef struct NwObjPos
 } NwObjPos;
 
 #pragma opt_loop_invariants off
-void nw_tricky_update(int* obj)
+void NW_tricky_update(int* obj)
 {
 
     int count;
@@ -93,7 +93,7 @@ void nw_tricky_update(int* obj)
     switch (*(u8*)state)
     {
     case 0:
-        if (GameBit_Get(0xd11))
+        if (mainGetBit(0xd11))
         {
             objects = ObjGroup_GetObjects(3, &count);
             for (i = 0, scan = objects; i < count; scan++, i++)
@@ -103,23 +103,23 @@ void nw_tricky_update(int* obj)
                     fn_8014C66C(*scan, player);
                 }
             }
-            GameBit_Set(0x4e4, 1);
+            mainSetBits(0x4e4, 1);
             *(u8*)state = 1;
         }
         else
         {
-            if (GameBit_Get(0x544))
+            if (mainGetBit(0x544))
             {
                 if (!(*(u8 (**)(int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x40))(tricky))
                 {
-                    GameBit_Set(0x4e4, 0);
+                    mainSetBits(0x4e4, 0);
                     ((NwTrickyState*)state)->timer = lbl_803E5260;
                 }
 
                 for (i = 0, ip = ids.ids; i < 3; i++, ip++)
                 {
                     found = ObjList_FindObjectById(*ip);
-                    if (found != NULL && fn_8014C5D0(found) > lbl_803E5260)
+                    if (found != NULL && enemy_getHealthFraction(found) > lbl_803E5260)
                     {
                         (*(void (**)(int*, int, int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x34))(
                             tricky, 1, found);
@@ -159,22 +159,22 @@ void nw_tricky_update(int* obj)
         {
             ((NwTrickyState*)state)->timer += timeDelta;
         }
-        if (GameBit_Get(0x4e3) == 1)
+        if (mainGetBit(0x4e3) == 1)
         {
             if ((*gMapEventInterface)->getTrickyEnergy()[0] >= 4)
             {
-                GameBit_Set(0x4e3, 0xff);
+                mainSetBits(0x4e3, 0xff);
             }
         }
         timer = ((NwTrickyState*)state)->timer;
         if (timer >= lbl_803E5268)
         {
             ((NwTrickyState*)state)->timer = timer - lbl_803E5268;
-            if (GameBit_Get(0x4e3) == 0xff)
+            if (mainGetBit(0x4e3) == 0xff)
             {
                 if ((*gMapEventInterface)->getTrickyEnergy()[0] < 4)
                 {
-                    GameBit_Set(0x4e3, 1);
+                    mainSetBits(0x4e3, 1);
                 }
             }
         }
@@ -183,8 +183,8 @@ void nw_tricky_update(int* obj)
 }
 #pragma opt_loop_invariants reset
 
-void nw_tricky_init(int* obj)
+void NW_tricky_init(int* obj)
 {
-    ((GameObject*)obj)->animEventCallback = nw_tricky_SeqFn;
+    ((GameObject*)obj)->animEventCallback = NW_tricky_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWTRICKY_OBJFLAG_HIDDEN | NWTRICKY_OBJFLAG_HITDETECT_DISABLED));
 }

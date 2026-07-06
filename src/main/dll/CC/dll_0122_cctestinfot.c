@@ -10,74 +10,74 @@
 #include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
 
-extern void deathseq_getExtraSize(void);
+extern void DeathSeq_getExtraSize(void);
 extern void dll_127_getExtraSize_ret_0(void);
-extern void kt_torch_getExtraSize(void);
-extern void cfccrate_getExtraSize(void);
-extern void fxemit_getExtraSize(void);
+extern void KT_Torch_getExtraSize(void);
+extern void CFCrate_getExtraSize(void);
+extern void FxEmit_getExtraSize(void);
 
-extern void deathseq_getObjectTypeId(void);
+extern void DeathSeq_getObjectTypeId(void);
 extern void dll_127_getObjectTypeId(void);
-extern void kt_torch_getObjectTypeId(void);
-extern void cfccrate_getObjectTypeId(void);
-extern void fxemit_getObjectTypeId(void);
+extern void KT_Torch_getObjectTypeId(void);
+extern void CFCrate_getObjectTypeId(void);
+extern void FxEmit_getObjectTypeId(void);
 
-extern void deathseq_free(void);
+extern void DeathSeq_free(void);
 extern void dll_127_free_nop(void);
-extern void kt_torch_free(void);
-extern void cfccrate_free(void);
-extern void fxemit_free(void);
+extern void KT_Torch_free(void);
+extern void CFCrate_free(void);
+extern void FxEmit_free(void);
 
-extern void deathseq_render(void);
+extern void DeathSeq_render(void);
 extern void dll_127_render(void);
-extern void campfire_getExtraSize(void);
-extern void kt_torch_render(void);
-extern void cfccrate_render(void);
-extern void fxemit_render(void);
+extern void CampFire_getExtraSize(void);
+extern void KT_Torch_render(void);
+extern void CFCrate_render(void);
+extern void FxEmit_render(void);
 
-extern void fuelcell_getExtraSize(void);
-extern void deathseq_hitDetect(void);
+extern void FuelCell_getExtraSize(void);
+extern void DeathSeq_hitDetect(void);
 extern void dll_127_hitDetect_nop(void);
-extern void campfire_getObjectTypeId(void);
-extern void kt_torch_hitDetect(void);
-extern void cfccrate_hitDetect(void);
-extern void fxemit_hitDetect(void);
+extern void CampFire_getObjectTypeId(void);
+extern void KT_Torch_hitDetect(void);
+extern void CFCrate_hitDetect(void);
+extern void FxEmit_hitDetect(void);
 
-extern void deathgas_getExtraSize(void);
-extern void fuelcell_free(void);
-extern void deathseq_update(void);
+extern void DeathGas_getExtraSize(void);
+extern void FuelCell_free(void);
+extern void DeathSeq_update(void);
 extern void dll_127_update(void);
-extern void campfire_free(void);
-extern void kt_torch_update(void);
-extern void cfccrate_update(void);
-extern void fxemit_update(void);
+extern void CampFire_free(void);
+extern void KT_Torch_update(void);
+extern void CFCrate_update(void);
+extern void FxEmit_update(void);
 
-extern void deathgas_free(void);
-extern void fuelcell_render(void);
-extern void deathseq_init(void);
+extern void DeathGas_free(void);
+extern void FuelCell_render(void);
+extern void DeathSeq_init(void);
 extern void dll_127_init(void);
-extern void campfire_render(void);
-extern void kt_torch_init(void);
-extern void cfccrate_init(void);
-extern void fxemit_init(void);
+extern void CampFire_render(void);
+extern void KT_Torch_init(void);
+extern void CFCrate_init(void);
+extern void FxEmit_init(void);
 
-extern void deathgas_update(void);
-extern void fuelcell_update(void);
-extern void deathseq_release(void);
+extern void DeathGas_update(void);
+extern void FuelCell_update(void);
+extern void DeathSeq_release(void);
 extern void dll_127_release_nop(void);
-extern void campfire_update(void);
-extern void kt_torch_release(void);
-extern void cfccrate_release(void);
-extern void fxemit_release(void);
+extern void CampFire_update(void);
+extern void KT_Torch_release(void);
+extern void CFCrate_release(void);
+extern void FxEmit_release(void);
 
-extern void deathgas_init(void);
-extern void fuelcell_init(void);
-extern void deathseq_initialise(void);
+extern void DeathGas_init(void);
+extern void FuelCell_init(void);
+extern void DeathSeq_initialise(void);
 extern void dll_127_initialise_nop(void);
-extern void campfire_init(void);
-extern void kt_torch_initialise(void);
-extern void cfccrate_initialise(void);
-extern void fxemit_initialise(void);
+extern void CampFire_init(void);
+extern void KT_Torch_initialise(void);
+extern void CFCrate_initialise(void);
+extern void FxEmit_initialise(void);
 extern int ObjTrigger_IsSet();
 extern int playerIsDisguised(void);
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
@@ -98,9 +98,9 @@ typedef struct CctestinfotState
 STATIC_ASSERT(offsetof(CctestinfotState, disguised) == 0x4);
 STATIC_ASSERT(sizeof(CctestinfotState) == 0x8);
 
-int cctestinfot_getExtraSize(void) { return sizeof(CctestinfotState); }
+int CCTestInfot_getExtraSize(void) { return sizeof(CctestinfotState); }
 
-void cctestinfot_update(int *obj)
+void CCTestInfot_update(int *obj)
 {
     CctestinfotState *state = ((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
@@ -120,7 +120,7 @@ void cctestinfot_update(int *obj)
     }
     objSetHintTextIdx((int)obj, state->disguised);
     Obj_SetActiveModelIndex(obj, state->disguised);
-    if (ObjTrigger_IsSet((int)obj) != 0 && fn_801334E0() == 0)
+    if (ObjTrigger_IsSet((int)obj) != 0 && isAreaNameTextActive() == 0)
     {
         state->holdTimer = lbl_803E3C88;
     }
@@ -138,7 +138,7 @@ void cctestinfot_update(int *obj)
     }
 }
 
-void cctestinfot_init(int obj, s8 *def)
+void CCTestInfot_init(int obj, s8 *def)
 {
     u32 flags;
     flags = (u32)((GameObject*)obj)->objectFlags | (CCTESTINFOT_OBJFLAG_HIDDEN | CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED);
@@ -156,21 +156,21 @@ ObjectDescriptor gCCTestInfotObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)cctestinfot_init,
-    (ObjectDescriptorCallback)cctestinfot_update,
+    (ObjectDescriptorCallback)CCTestInfot_init,
+    (ObjectDescriptorCallback)CCTestInfot_update,
     0,
     0,
     0,
     0,
-    cctestinfot_getExtraSize,
+    CCTestInfot_getExtraSize,
 };
 
 /* descriptor/ptr table auto 0x80321db0-0x80321f70 */
-u32 gDeathGasObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)deathgas_init, (u32)deathgas_update, 0x00000000, 0x00000000, (u32)deathgas_free, 0x00000000, (u32)deathgas_getExtraSize };
-u32 gFuelCellObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)fuelcell_init, (u32)fuelcell_update, 0x00000000, (u32)fuelcell_render, (u32)fuelcell_free, 0x00000000, (u32)fuelcell_getExtraSize };
-u32 gDeathSeqObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)deathseq_initialise, (u32)deathseq_release, 0x00000000, (u32)deathseq_init, (u32)deathseq_update, (u32)deathseq_hitDetect, (u32)deathseq_render, (u32)deathseq_free, (u32)deathseq_getObjectTypeId, (u32)deathseq_getExtraSize };
+u32 gDeathGasObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)DeathGas_init, (u32)DeathGas_update, 0x00000000, 0x00000000, (u32)DeathGas_free, 0x00000000, (u32)DeathGas_getExtraSize };
+u32 gFuelCellObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)FuelCell_init, (u32)FuelCell_update, 0x00000000, (u32)FuelCell_render, (u32)FuelCell_free, 0x00000000, (u32)FuelCell_getExtraSize };
+u32 gDeathSeqObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)DeathSeq_initialise, (u32)DeathSeq_release, 0x00000000, (u32)DeathSeq_init, (u32)DeathSeq_update, (u32)DeathSeq_hitDetect, (u32)DeathSeq_render, (u32)DeathSeq_free, (u32)DeathSeq_getObjectTypeId, (u32)DeathSeq_getExtraSize };
 u32 lbl_80321E58[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_127_initialise_nop, (u32)dll_127_release_nop, 0x00000000, (u32)dll_127_init, (u32)dll_127_update, (u32)dll_127_hitDetect_nop, (u32)dll_127_render, (u32)dll_127_free_nop, (u32)dll_127_getObjectTypeId, (u32)dll_127_getExtraSize_ret_0 };
-u32 gCampFireObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)campfire_init, (u32)campfire_update, 0x00000000, (u32)campfire_render, (u32)campfire_free, (u32)campfire_getObjectTypeId, (u32)campfire_getExtraSize };
-u32 gKT_TorchObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)kt_torch_initialise, (u32)kt_torch_release, 0x00000000, (u32)kt_torch_init, (u32)kt_torch_update, (u32)kt_torch_hitDetect, (u32)kt_torch_render, (u32)kt_torch_free, (u32)kt_torch_getObjectTypeId, (u32)kt_torch_getExtraSize };
-u32 gCFCrateObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cfccrate_initialise, (u32)cfccrate_release, 0x00000000, (u32)cfccrate_init, (u32)cfccrate_update, (u32)cfccrate_hitDetect, (u32)cfccrate_render, (u32)cfccrate_free, (u32)cfccrate_getObjectTypeId, (u32)cfccrate_getExtraSize };
-u32 gFXEmitObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)fxemit_initialise, (u32)fxemit_release, 0x00000000, (u32)fxemit_init, (u32)fxemit_update, (u32)fxemit_hitDetect, (u32)fxemit_render, (u32)fxemit_free, (u32)fxemit_getObjectTypeId, (u32)fxemit_getExtraSize };
+u32 gCampFireObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)CampFire_init, (u32)CampFire_update, 0x00000000, (u32)CampFire_render, (u32)CampFire_free, (u32)CampFire_getObjectTypeId, (u32)CampFire_getExtraSize };
+u32 gKT_TorchObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)KT_Torch_initialise, (u32)KT_Torch_release, 0x00000000, (u32)KT_Torch_init, (u32)KT_Torch_update, (u32)KT_Torch_hitDetect, (u32)KT_Torch_render, (u32)KT_Torch_free, (u32)KT_Torch_getObjectTypeId, (u32)KT_Torch_getExtraSize };
+u32 gCFCrateObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)CFCrate_initialise, (u32)CFCrate_release, 0x00000000, (u32)CFCrate_init, (u32)CFCrate_update, (u32)CFCrate_hitDetect, (u32)CFCrate_render, (u32)CFCrate_free, (u32)CFCrate_getObjectTypeId, (u32)CFCrate_getExtraSize };
+u32 gFXEmitObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)FxEmit_initialise, (u32)FxEmit_release, 0x00000000, (u32)FxEmit_init, (u32)FxEmit_update, (u32)FxEmit_hitDetect, (u32)FxEmit_render, (u32)FxEmit_free, (u32)FxEmit_getObjectTypeId, (u32)FxEmit_getExtraSize };

@@ -14,10 +14,10 @@ STATIC_ASSERT(offsetof(SCMusicTreeSetup, hearRadiusHalf) == 0x1B);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, scale) == 0x1C);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 
-int fn_801DD170(void)
+int sc_totempuzzle_animEventCallback(void)
 {
     int r;
-    if (GameBit_Get(0x639) != 0) { r = 0; }
+    if (mainGetBit(0x639) != 0) { r = 0; }
     else { r = 1; }
     return r;
 }

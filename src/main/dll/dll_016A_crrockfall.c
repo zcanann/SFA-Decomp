@@ -247,7 +247,7 @@ void crrockfall_update(int* obj)
         }
 
         if (((CrrockfallPlacement*)placement)->gameBitId == -1 ||
-            GameBit_Get(((CrrockfallPlacement*)placement)->gameBitId) != 0)
+            mainGetBit(((CrrockfallPlacement*)placement)->gameBitId) != 0)
         {
             switch (state->mode)
             {

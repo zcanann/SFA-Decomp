@@ -109,7 +109,7 @@ void WM_colrise_update(int* obj)
         }
     }
     reached = 0;
-    if ((sub->gameBit == -1 || (u32)GameBit_Get(sub->gameBit) != 0) && (s8)sub->raiseTimer != 0)
+    if ((sub->gameBit == -1 || (u32)mainGetBit(sub->gameBit) != 0) && (s8)sub->raiseTimer != 0)
     {
         target = lbl_803E5DD0 + (lbl_803E5DD4 + ((WMColrisePlacement*)def)->base.posY);
         if (((GameObject*)obj)->anim.localPosY > target)

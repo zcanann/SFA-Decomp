@@ -10,11 +10,11 @@
 #include "main/camera_object.h"
 #include "main/object_transform.h"
 
-void CameraModeFixed_copyToCurrent_nop(void)
+void CameraModeFixed_copyToCurrent(void)
 {
 }
 
-void CameraModeFixed_free_nop(void)
+void CameraModeFixed_free(void)
 {
 }
 

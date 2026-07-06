@@ -69,7 +69,7 @@ void spiritdoorspirit_update(int* obj)
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (state->active == 0)
     {
-        state->active = active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
+        state->active = active = (u8)(mainGetBit(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
         if (active != 0)
         {
             ObjGroup_AddObject(obj, SPIRITDOORSPIRIT_OBJGROUP);
@@ -82,7 +82,7 @@ void spiritdoorspirit_update(int* obj)
     else
     {
         fn_80098B18((int)obj, lbl_803DBE78, 5, 0, 0, 0);
-        state->active = active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
+        state->active = active = (u8)(mainGetBit(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
         if (active == 0)
         {
             ObjGroup_RemoveObject(obj, SPIRITDOORSPIRIT_OBJGROUP);

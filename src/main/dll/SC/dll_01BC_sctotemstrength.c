@@ -402,7 +402,7 @@ void sc_totemstrength_update(u8* obj)
     f32 zero;
 
     Obj_GetPlayerObject();
-    GameBit_Set(0xf1d, 0);
+    mainSetBits(0xf1d, 0);
     mapMode = (*gMapEventInterface)->getMapAct(0xe);
     if (mapMode == 6)
     {
@@ -425,7 +425,7 @@ void sc_totemstrength_update(u8* obj)
                 flags = st->flags;
                 if ((flags & PLATFORM1_FLAG_EXIT_NEGATIVE) != 0)
                 {
-                    GameBit_Set(0x784, 1);
+                    mainSetBits(0x784, 1);
                     st->loopSfxHandle = -1;
                     st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
                     st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_EXIT_NEGATIVE);
@@ -434,7 +434,7 @@ void sc_totemstrength_update(u8* obj)
                 {
                     st->flags = (u8)(flags & ~PLATFORM1_FLAG_EXIT_POSITIVE);
                     st->loopSfxHandle = -1;
-                    GameBit_Set(0x786, 1);
+                    mainSetBits(0x786, 1);
                 }
             }
         }
@@ -454,7 +454,7 @@ void sc_totemstrength_update(u8* obj)
             }
             else if (step == 1)
             {
-                GameBit_Set(0xf1d, 1);
+                mainSetBits(0xf1d, 1);
                 hudFn_8011f38c(1);
                 st->loopSfxHandle =
                     (*gObjectTriggerInterface)->runSequence(0, obj, -1);

@@ -37,7 +37,7 @@ extern f32 lbl_803E19C4;
 extern f32 gCamClimbDefaultHeightAdjustRate;
 extern CameraModeClimbState* gCamClimbState;
 
-void CameraModeClimb_copyToCurrent_nop(void)
+void CameraModeClimb_copyToCurrent(void)
 {
 }
 

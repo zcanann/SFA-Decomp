@@ -109,7 +109,7 @@ int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (ev)
         {
         case PAYMENT_KIOSK_SEQEV_PAY:
-            GameBit_Set(setup->gameBit, 1);
+            mainSetBits(setup->gameBit, 1);
             playerAddMoney(player, -setup->price);
             st->payState = PAYMENT_KIOSK_STATE_PAID;
             break;
@@ -130,14 +130,14 @@ int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int paymentkiosk_getExtraSize(void) { return sizeof(PaymentKioskState); }
-int paymentkiosk_getObjectTypeId(void) { return 0x1; }
+int PaymentKiosk_getExtraSize(void) { return sizeof(PaymentKioskState); }
+int PaymentKiosk_getObjectTypeId(void) { return 0x1; }
 
-void paymentkiosk_free(void)
+void PaymentKiosk_free(void)
 {
 }
 
-void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void PaymentKiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible == 0)
     {
@@ -145,11 +145,11 @@ void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void paymentkiosk_hitDetect(void)
+void PaymentKiosk_hitDetect(void)
 {
 }
 
-void paymentkiosk_update(int obj)
+void PaymentKiosk_update(int obj)
 {
     PaymentKioskState* st = ((GameObject*)obj)->extra;
     PaymentKioskMapData* setup = (PaymentKioskMapData*)((GameObject*)obj)->anim.placementData;
@@ -158,7 +158,7 @@ void paymentkiosk_update(int obj)
     switch (payState)
     {
     case PAYMENT_KIOSK_STATE_RESOLVE:
-        if (setup->gameBit != -1 && GameBit_Get(setup->gameBit) != 0)
+        if (setup->gameBit != -1 && mainGetBit(setup->gameBit) != 0)
         {
             st->payState = PAYMENT_KIOSK_STATE_PAID;
         }
@@ -186,7 +186,7 @@ void paymentkiosk_update(int obj)
     }
 }
 
-void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
+void PaymentKiosk_init(int obj, PaymentKioskMapData* initData)
 {
     int self = obj;
     PaymentKioskMapData* setup = initData;
@@ -203,10 +203,10 @@ void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
     state->textVariant = secondaryFlag;
 }
 
-void paymentkiosk_release(void)
+void PaymentKiosk_release(void)
 {
 }
 
-void paymentkiosk_initialise(void)
+void PaymentKiosk_initialise(void)
 {
 }

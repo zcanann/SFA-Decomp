@@ -3,7 +3,7 @@
 
 #include "global.h"
 
-/* sidekickball extra block (size 0x2CC = sidekickball_getExtraSize).
+/* sidekickball extra block (size 0x2CC = SidekickBall_getExtraSize).
  * Converged from the two src-side censuses (sidekickball.c update/hit
  * handlers + autoTransporter.c's fn_80179xxx ball helpers - same family,
  * adjacent v1.0 address range, zero width conflicts; the shared fields

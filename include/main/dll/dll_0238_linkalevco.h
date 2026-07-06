@@ -35,15 +35,15 @@ STATIC_ASSERT(offsetof(LinkALevelControlObject, animEventCallback) == 0xBC);
 
 extern ObjectDescriptor gFireObjDescriptor;
 
-int fire_updateState(FireObject *obj,int unused,ObjAnimUpdateState *animUpdate);
-int fireObj_getExtraSize(void);
-int fireObj_getObjectTypeId(void);
-void fireObj_free(void);
-void fireObj_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void fireObj_hitDetect(void);
-void fireObj_update(FireObject *obj);
-void fireObj_init(FireObject *obj);
-void fireObj_release(void);
-void fireObj_initialise(void);
+int LinkALevControl_seqFn(FireObject *obj,int unused,ObjAnimUpdateState *animUpdate);
+int LinkALevControl_getExtraSize(void);
+int LinkALevControl_getObjectTypeId(void);
+void LinkALevControl_free(void);
+void LinkALevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void LinkALevControl_hitDetect(void);
+void LinkALevControl_update(FireObject *obj);
+void LinkALevControl_init(FireObject *obj);
+void LinkALevControl_release(void);
+void LinkALevControl_initialise(void);
 
 #endif /* MAIN_DLL_FIRE_H_ */

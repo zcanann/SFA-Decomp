@@ -12,7 +12,7 @@
  * A-button, sets game bit 0x7fb and, from interactionState 2, selects a
  * trigger-sequence number from a large encounterType-by-game-bit table
  * (gMapEventInterface map-act 2 plus quest bits 0xc90/0xc36/0xc55/0x7fc/
- * 0x235/0x9ad/0xc92) and runs it via gObjectTriggerInterface (objRunSeq),
+ * 0x235/0x9ad/0xc92) and runs it via gObjectTriggerInterface (ObjSeq_start),
  * remembering it in lastTriggeredState. Confirmed live (Dolphin): contact
  * on an encounterType-6 instance sets game bit 0x7fb and runs sequence 2;
  * the encounterType-8 instance (the Krazoa Shrine door dino) runs sequence 4,
@@ -81,7 +81,7 @@ void earthwalker_initialise(void)
 
 void earthwalker_update(int obj)
 {
-    extern int GameBit_Get(int eventId);
+    extern int mainGetBit(int eventId);
     extern u8 ObjHitReact_Update();
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
     int state = (int)ewObj->state;
@@ -129,7 +129,7 @@ void earthwalker_update(int obj)
         if (ewObj->statusFlags & 1)
         {
             buttonDisable(0, PAD_BUTTON_A);
-            GameBit_Set(0x7fb, 1);
+            mainSetBits(0x7fb, 1);
             ewState->interactionState = 2;
             ewState->flags |= 1;
         }
@@ -154,19 +154,19 @@ void earthwalker_update(int obj)
                         newState = 0x14;
                     }
                 }
-                else if (GameBit_Get(0xc90) != 0)
+                else if (mainGetBit(0xc90) != 0)
                 {
                     newState = 5;
                 }
-                else if (GameBit_Get(0xc36) != 0)
+                else if (mainGetBit(0xc36) != 0)
                 {
                     newState = 4;
                 }
-                else if (GameBit_Get(0xc55) != 0)
+                else if (mainGetBit(0xc55) != 0)
                 {
                     newState = 3;
                 }
-                else if (GameBit_Get(0x7fc) != 0)
+                else if (mainGetBit(0x7fc) != 0)
                 {
                     newState = 3;
                 }
@@ -195,19 +195,19 @@ void earthwalker_update(int obj)
                         newState = 0x16;
                     }
                 }
-                else if (GameBit_Get(0xc90) != 0)
+                else if (mainGetBit(0xc90) != 0)
                 {
                     newState = 0xa;
                 }
-                else if (GameBit_Get(0xc36) != 0)
+                else if (mainGetBit(0xc36) != 0)
                 {
                     newState = 9;
                 }
-                else if (GameBit_Get(0xc55) != 0)
+                else if (mainGetBit(0xc55) != 0)
                 {
                     newState = 8;
                 }
-                else if (GameBit_Get(0x7fc) != 0)
+                else if (mainGetBit(0x7fc) != 0)
                 {
                     newState = 8;
                 }
@@ -240,19 +240,19 @@ void earthwalker_update(int obj)
                         newState = 0x18;
                     }
                 }
-                else if (GameBit_Get(0xc90) != 0)
+                else if (mainGetBit(0xc90) != 0)
                 {
                     newState = 0xf;
                 }
-                else if (GameBit_Get(0xc36) != 0)
+                else if (mainGetBit(0xc36) != 0)
                 {
                     newState = 0xe;
                 }
-                else if (GameBit_Get(0xc55) != 0)
+                else if (mainGetBit(0xc55) != 0)
                 {
                     newState = 0xd;
                 }
-                else if (GameBit_Get(0x7fc) != 0)
+                else if (mainGetBit(0x7fc) != 0)
                 {
                     if (ewState->lastTriggeredState == 0xb)
                     {
@@ -284,11 +284,11 @@ void earthwalker_update(int obj)
                         newState = 0x1c;
                     }
                 }
-                else if (GameBit_Get(0xc90) != 0)
+                else if (mainGetBit(0xc90) != 0)
                 {
                     newState = 0x13;
                 }
-                else if (GameBit_Get(0xc36) != 0)
+                else if (mainGetBit(0xc36) != 0)
                 {
                     if (ewState->lastTriggeredState == 0x11)
                     {
@@ -299,11 +299,11 @@ void earthwalker_update(int obj)
                         newState = 0x11;
                     }
                 }
-                else if (GameBit_Get(0xc55) != 0)
+                else if (mainGetBit(0xc55) != 0)
                 {
                     newState = 0x10;
                 }
-                else if (GameBit_Get(0x7fc) != 0)
+                else if (mainGetBit(0x7fc) != 0)
                 {
                     newState = 0x10;
                 }
@@ -311,12 +311,12 @@ void earthwalker_update(int obj)
             case 1:
                 if ((*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
                 {
-                    if (GameBit_Get(0xc92) != 0)
+                    if (mainGetBit(0xc92) != 0)
                     {
                         ewObj->statusFlags |= 8;
                         newState = -1;
                     }
-                    else if (GameBit_Get(0x235) != 0)
+                    else if (mainGetBit(0x235) != 0)
                     {
                         newState = 9;
                     }
@@ -325,15 +325,15 @@ void earthwalker_update(int obj)
                         newState = 8;
                     }
                 }
-                else if (GameBit_Get(0xc90) != 0)
+                else if (mainGetBit(0xc90) != 0)
                 {
                     newState = 7;
                 }
-                else if (GameBit_Get(0xc36) != 0)
+                else if (mainGetBit(0xc36) != 0)
                 {
                     newState = 6;
                 }
-                else if (GameBit_Get(0xc55) != 0)
+                else if (mainGetBit(0xc55) != 0)
                 {
                     newState = 5;
                 }
@@ -361,11 +361,11 @@ void earthwalker_update(int obj)
                 newState = 3;
                 break;
             case 8:
-                if ((u32)GameBit_Get(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0)
+                if ((u32)mainGetBit(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0)
                 {
                     newState = 4;
                     buttonDisable(0, PAD_BUTTON_A);
-                    GameBit_Set(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
+                    mainSetBits(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
                 }
                 else
                 {
@@ -510,7 +510,7 @@ int dll_28B_stateHandler1(int obj, int ai)
     return 0;
 }
 
-int earthwalker_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate, int shouldAdvanceMove)
+int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int shouldAdvanceMove)
 {
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
     int state = (int)ewObj->state;
@@ -550,7 +550,7 @@ void earthwalker_init(int obj, int setup)
     int local;
 
     local = gEarthWalkerMoveBlendData;
-    ewObj->animEventCallback = earthwalker_animEventCallback;
+    ewObj->animEventCallback = earthwalker_SeqFn;
     dll_2E_func05(obj, state, -8192, 12743, 2);
     dll_2E_func09(state, 0, &local, 2);
     /* moveLib state+0x614: head look-at only engages while the target is
@@ -562,7 +562,7 @@ void earthwalker_init(int obj, int setup)
     ewState->encounterType = *(u8*)(setup + 0x19);
     if (ewState->encounterType == 1)
     {
-        if ((int)GameBit_Get(0x7fc) != 0 ||
+        if ((int)mainGetBit(0x7fc) != 0 ||
             (*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
         {
             ewState->interactionState = 2;

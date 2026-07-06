@@ -78,7 +78,7 @@ void gpsh_objcreator_update(int* obj)
     GpshObjcreatorSpawnSetup* setup;
 
     sub = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0x5af) != 0)
+    if (mainGetBit(0x5af) != 0)
     {
         ((GameObject*)obj)->unkF8 = 0;
         ((GpshShrineFlags*)(sub + 5))->b80 = 0;
@@ -88,7 +88,7 @@ void gpsh_objcreator_update(int* obj)
     if (((GpshShrineFlags*)(sub + 5))->b80) return;
     if (((GameObject*)obj)->unkF8 == 0)
     {
-        if (GameBit_Get(0x148) != 0)
+        if (mainGetBit(0x148) != 0)
         {
             *(f32*)sub = 100.0f;
             ((GameObject*)obj)->unkF8 = 1;

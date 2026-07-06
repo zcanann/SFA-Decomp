@@ -56,7 +56,7 @@ extern void PSVECScale(f32* v, f32* out, f32 s);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 
-void CameraModeCombat_copyToCurrent_nop(void)
+void CameraModeCombat_copyToCurrent(void)
 {
 }
 

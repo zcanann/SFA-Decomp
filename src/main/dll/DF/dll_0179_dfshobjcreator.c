@@ -17,7 +17,7 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
 
-/* Obj_AllocObjectSetup(0x38,...) buffer composed in dfsh_objcreator_update.
+/* Obj_AllocObjectSetup(0x38,...) buffer composed in DFSH_ObjCreator_update.
  * Head is the common ObjPlacement; tail (0x18..0x37) is file-local. */
 typedef struct DfshObjCreatorSetup
 {
@@ -52,20 +52,20 @@ STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk30) == 0x30);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk34) == 0x34);
 STATIC_ASSERT(sizeof(DfshObjCreatorSetup) == 0x38);
 
-int dfsh_objcreator_getExtraSize(void) { return 0x4; }
-int dfsh_objcreator_getObjectTypeId(void) { return 0x0; }
+int DFSH_ObjCreator_getExtraSize(void) { return 0x4; }
+int DFSH_ObjCreator_getObjectTypeId(void) { return 0x0; }
 
-void dfsh_objcreator_free(void)
+void DFSH_ObjCreator_free(void)
 {
 }
 
-void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void DFSH_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4EB8);
 }
 
-void dfsh_objcreator_hitDetect(void)
+void DFSH_ObjCreator_hitDetect(void)
 {
 }
 
@@ -75,7 +75,7 @@ typedef struct DfshObjCreatorState
     s16 spawnTimerStep;
 } DfshObjCreatorState;
 
-void dfsh_objcreator_update(int obj)
+void DFSH_ObjCreator_update(int obj)
 {
 
     u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
@@ -83,13 +83,13 @@ void dfsh_objcreator_update(int obj)
     void* resource;
     u8* spawnSetup;
 
-    if (GameBit_Get(0x589) != 0)
+    if (mainGetBit(0x589) != 0)
     {
         ((GameObject*)obj)->unkF8 = 0;
         return;
     }
 
-    if (((GameObject*)obj)->unkF8 == 0 && GameBit_Get((s8)setup[0x1f] + 0xf6) != 0)
+    if (((GameObject*)obj)->unkF8 == 0 && mainGetBit((s8)setup[0x1f] + 0xf6) != 0)
     {
         resource = Resource_Acquire(0x82, 1);
         (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(
@@ -126,7 +126,7 @@ void dfsh_objcreator_update(int obj)
         ((DfshObjCreatorSetup*)spawnSetup)->unk1C = -1;
         ((DfshObjCreatorSetup*)spawnSetup)->rotByte = (s8)(((GameObject*)obj)->anim.rotX >> 8);
         ((DfshObjCreatorSetup*)spawnSetup)->unk2B = 2;
-        if (GameBit_Get(0xfc) != 0)
+        if (mainGetBit(0xfc) != 0)
         {
             ((DfshObjCreatorSetup*)spawnSetup)->unk22 = 0x49;
         }
@@ -144,7 +144,7 @@ void dfsh_objcreator_update(int obj)
     }
 }
 
-void dfsh_objcreator_init(int obj, s8* def)
+void DFSH_ObjCreator_init(int obj, s8* def)
 {
     DfshObjCreatorState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
@@ -155,10 +155,10 @@ void dfsh_objcreator_init(int obj, s8* def)
     ((GameObject*)obj)->anim.alpha = 0xFF;
 }
 
-void dfsh_objcreator_release(void)
+void DFSH_ObjCreator_release(void)
 {
 }
 
-void dfsh_objcreator_initialise(void)
+void DFSH_ObjCreator_initialise(void)
 {
 }

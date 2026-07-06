@@ -3,11 +3,11 @@
  *
  * A drifting pollen mote. It falls under gravity (anim.velocityY ramped by
  * lbl_803E3140 * timeDelta each frame); when its descent passes through zero
- * (prev velocityY >= 0 and the new one <= 0) it bursts: fn_8016A660 spawns a
+ * (prev velocityY >= 0 and the new one <= 0) it bursts: Pollen_burst spawns a
  * fixed batch of pollen-fragment objects (POLLEN_FRAGMENT_OBJECT_ID), plays
  * sfx 0xb7 and hides the mote. The mote also collides: a hit against the
  * player or Tricky triggers a small camera offset + shake (sfx 0xb6) and
- * arms a 60-frame despawn timer; pollen_hitDetect snaps the mote to the
+ * arms a 60-frame despawn timer; Pollen_hitDetect snaps the mote to the
  * contact point and freezes it. Visible motes emit a particle (fx 0x4ba)
  * each frame. The object frees itself once hidden and idle.
  *
@@ -33,7 +33,7 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* getTrickyObject(void);
 
 #pragma dont_inline on
-void fn_8016A660(int obj)
+void Pollen_burst(int obj)
 {
     extern u8 Obj_IsLoadingLocked(void);
     extern void* Obj_AllocObjectSetup(int size, int b);
@@ -90,20 +90,20 @@ void fn_8016A660(int obj)
 }
 #pragma dont_inline reset
 
-void pollen_release(void)
+void Pollen_release(void)
 {
 }
 
-void pollen_initialise(void)
+void Pollen_initialise(void)
 {
 }
 
-void pollen_free(int obj)
+void Pollen_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void pollen_hitDetect(int obj)
+void Pollen_hitDetect(int obj)
 {
     if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
     {
@@ -120,10 +120,10 @@ void pollen_hitDetect(int obj)
     }
 }
 
-int pollen_getExtraSize(void) { return sizeof(PollenExtra); }
-int pollen_getObjectTypeId(void) { return 0x0; }
+int Pollen_getExtraSize(void) { return sizeof(PollenExtra); }
+int Pollen_getObjectTypeId(void) { return 0x0; }
 
-void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void Pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3138);
@@ -134,16 +134,16 @@ ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)kaldachompspit_initialise,
-    (ObjectDescriptorCallback)kaldachompspit_release,
+    (ObjectDescriptorCallback)KaldaChompSpit_initialise,
+    (ObjectDescriptorCallback)KaldaChompSpit_release,
     0,
-    (ObjectDescriptorCallback)kaldachompspit_init,
-    (ObjectDescriptorCallback)kaldachompspit_update,
-    (ObjectDescriptorCallback)kaldachompspit_hitDetect,
-    (ObjectDescriptorCallback)kaldachompspit_render,
-    (ObjectDescriptorCallback)kaldachompspit_free,
-    (ObjectDescriptorCallback)kaldachompspit_getObjectTypeId,
-    kaldachompspit_getExtraSize,
+    (ObjectDescriptorCallback)KaldaChompSpit_init,
+    (ObjectDescriptorCallback)KaldaChompSpit_update,
+    (ObjectDescriptorCallback)KaldaChompSpit_hitDetect,
+    (ObjectDescriptorCallback)KaldaChompSpit_render,
+    (ObjectDescriptorCallback)KaldaChompSpit_free,
+    (ObjectDescriptorCallback)KaldaChompSpit_getObjectTypeId,
+    KaldaChompSpit_getExtraSize,
 };
 
 ObjectDescriptor gPinPonSpikeObjDescriptor = {
@@ -168,16 +168,16 @@ ObjectDescriptor gPollenObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pollen_initialise,
-    (ObjectDescriptorCallback)pollen_release,
+    (ObjectDescriptorCallback)Pollen_initialise,
+    (ObjectDescriptorCallback)Pollen_release,
     0,
-    (ObjectDescriptorCallback)pollen_init,
-    (ObjectDescriptorCallback)pollen_update,
-    (ObjectDescriptorCallback)pollen_hitDetect,
-    (ObjectDescriptorCallback)pollen_render,
-    (ObjectDescriptorCallback)pollen_free,
-    (ObjectDescriptorCallback)pollen_getObjectTypeId,
-    pollen_getExtraSize,
+    (ObjectDescriptorCallback)Pollen_init,
+    (ObjectDescriptorCallback)Pollen_update,
+    (ObjectDescriptorCallback)Pollen_hitDetect,
+    (ObjectDescriptorCallback)Pollen_render,
+    (ObjectDescriptorCallback)Pollen_free,
+    (ObjectDescriptorCallback)Pollen_getObjectTypeId,
+    Pollen_getExtraSize,
 };
 
 PollenFragmentConfig lbl_80320538 = {
@@ -265,7 +265,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-void pollen_init(int obj)
+void Pollen_init(int obj)
 {
     PollenExtra* extra = *(PollenExtra**)&((GameObject*)obj)->extra;
     extra->phaseX = randomGetRange(-0x8000, 0x7fff);
@@ -287,7 +287,7 @@ void pollen_init(int obj)
     }
 }
 
-void pollen_update(int obj)
+void Pollen_update(int obj)
 {
     PollenExtra* extra;
     int i;
@@ -303,7 +303,7 @@ void pollen_update(int obj)
         ((GameObject*)obj)->anim.velocityY = -(lbl_803E3140 * timeDelta - prev);
         if (prev >= lbl_803E313C && ((GameObject*)obj)->anim.velocityY <= lbl_803E313C)
         {
-            fn_8016A660(obj);
+            Pollen_burst(obj);
             Sfx_PlayFromObject(obj, SFXTRIG_majring2);
             ((GameObject*)obj)->anim.alpha = 0;
         }

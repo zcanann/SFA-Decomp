@@ -94,17 +94,17 @@ int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdate
         }
     }
     ((ScLevelControlState*)state)->flags1F |= 1;
-    GameBit_Set(0x60f, 0);
+    mainSetBits(0x60f, 0);
     state = *(int*)&((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
     if (((ScLevelControlState*)state)->mode == 5)
     {
-        GameBit_Set(0x60f, 1);
+        mainSetBits(0x60f, 1);
         if (isGameTimerDisabled())
         {
-            if ((u32)GameBit_Get(0x7a) != 0)
+            if ((u32)mainGetBit(0x7a) != 0)
             {
-                GameBit_Set(0x85, 1);
+                mainSetBits(0x85, 1);
             }
             ((ScLevelControlState*)state)->timer10 = lbl_803E5550;
             ((ScLevelControlState*)state)->mode = 0;
@@ -130,9 +130,9 @@ void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
     }
     else if (mode == 5)
     {
-        GameBit_Set(0x2b8, 1);
-        GameBit_Set(0x4bd, 0);
-        GameBit_Set(0x85, 0);
+        mainSetBits(0x2b8, 1);
+        mainSetBits(0x4bd, 0);
+        mainSetBits(0x85, 0);
         gameTimerInit(0x1d, 0x96);
         Music_Trigger(MUSICTRIG_CRF_Suspense, 1);
         timerSetToCountUp();
@@ -226,7 +226,7 @@ void sc_levelcontrol_update(int obj)
         }
         ((GameObject*)obj)->unkF4 = 0;
     }
-    if (((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 == 0 && (u32)GameBit_Get(0xc53) != 0)
+    if (((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 == 0 && (u32)mainGetBit(0xc53) != 0)
     {
         (*gMapEventInterface)->setObjGroupStatus(0xe, 0xa, 1);
         ((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 = 1;
@@ -240,7 +240,7 @@ void sc_levelcontrol_update(int obj)
             switch (c)
             {
             case 1:
-                if ((u32)GameBit_Get(GAMEBIT_WATER_SPELLSTONE_PLACED) != 0)
+                if ((u32)mainGetBit(GAMEBIT_WATER_SPELLSTONE_PLACED) != 0)
                 {
                     (*gMapEventInterface)->setMapAct(0xe, 2);
                 }
@@ -249,7 +249,7 @@ void sc_levelcontrol_update(int obj)
             case 3:
             case 4:
             case 5:
-                if ((u32)GameBit_Get(GAMEBIT_TOTEMBOND_COMPLETE) != 0)
+                if ((u32)mainGetBit(GAMEBIT_TOTEMBOND_COMPLETE) != 0)
                 {
                     (*gMapEventInterface)->setMapAct(0xe, 6);
                 }
@@ -273,14 +273,14 @@ void sc_levelcontrol_update(int obj)
         {
             ((ScLevelControlState*)state)->fadeTimer = lbl_803E5558;
             ((ScLevelControlState*)state)->timer10 = lbl_803E5558;
-            GameBit_Set(0x2b8, 0);
-            GameBit_Set(0x4bd, 1);
-            GameBit_Set(GAMEBIT_TOTEMPOLE_FRONT, 0);
-            GameBit_Set(GAMEBIT_TOTEMPOLE_LEFT, 0);
-            GameBit_Set(GAMEBIT_TOTEMPOLE_RIGHT, 0);
-            GameBit_Set(GAMEBIT_TOTEMPOLE_REAR, 0);
-            GameBit_Set(0x63e, 1);
-            GameBit_Set(0x7cf, 1);
+            mainSetBits(0x2b8, 0);
+            mainSetBits(0x4bd, 1);
+            mainSetBits(GAMEBIT_TOTEMPOLE_FRONT, 0);
+            mainSetBits(GAMEBIT_TOTEMPOLE_LEFT, 0);
+            mainSetBits(GAMEBIT_TOTEMPOLE_RIGHT, 0);
+            mainSetBits(GAMEBIT_TOTEMPOLE_REAR, 0);
+            mainSetBits(0x63e, 1);
+            mainSetBits(0x7cf, 1);
         }
     }
     else if (((ScLevelControlState*)state)->timer10 &&
@@ -293,19 +293,19 @@ void sc_levelcontrol_update(int obj)
         ((ScLevelControlState*)state)->timer10 -= timeDelta;
         if (((ScLevelControlState*)state)->timer10 <= lbl_803E5558)
         {
-            GameBit_Set(0x640, 1);
+            mainSetBits(0x640, 1);
             ((ScLevelControlState*)state)->timer10 = lbl_803E5558;
-            GameBit_Set(0x2b8, 0);
-            GameBit_Set(0x4bd, 1);
-            GameBit_Set(GAMEBIT_TOTEMPOLE_FRONT, 0);
-            GameBit_Set(GAMEBIT_TOTEMPOLE_LEFT, 0);
-            GameBit_Set(GAMEBIT_TOTEMPOLE_RIGHT, 0);
-            GameBit_Set(GAMEBIT_TOTEMPOLE_REAR, 0);
+            mainSetBits(0x2b8, 0);
+            mainSetBits(0x4bd, 1);
+            mainSetBits(GAMEBIT_TOTEMPOLE_FRONT, 0);
+            mainSetBits(GAMEBIT_TOTEMPOLE_LEFT, 0);
+            mainSetBits(GAMEBIT_TOTEMPOLE_RIGHT, 0);
+            mainSetBits(GAMEBIT_TOTEMPOLE_REAR, 0);
         }
     }
     ((ScLevelControlState*)state)->areaCell = coordsToMapCell(((GameObject*)player)->anim.localPosX,
                                                               ((GameObject*)player)->anim.localPosZ);
-    if ((u32)GameBit_Get(0xcdc) != 0)
+    if ((u32)mainGetBit(0xcdc) != 0)
     {
         if (((ScLevelControlState*)state)->fog0C > lbl_803E5558)
         {
@@ -362,9 +362,9 @@ void sc_levelcontrol_update(int obj)
         enableHeavyFog(lbl_803E5570 + *(f32*)state, *(f32*)state, lbl_803E5574, lbl_803E5578,
                        lbl_803E557C, 0);
     }
-    if ((u32)GameBit_Get(0x7d) != 0)
+    if ((u32)mainGetBit(0x7d) != 0)
     {
-        GameBit_Set(0x7d, 0);
+        mainSetBits(0x7d, 0);
         if (gScLevelControlMusicStepSequence[((ScLevelControlState*)state)->musicStep] == 0x7d)
         {
             ((ScLevelControlState*)state)->musicStep += 1;
@@ -374,9 +374,9 @@ void sc_levelcontrol_update(int obj)
             ((ScLevelControlState*)state)->musicStep = 0;
         }
     }
-    else if ((u32)GameBit_Get(0x7e) != 0)
+    else if ((u32)mainGetBit(0x7e) != 0)
     {
-        GameBit_Set(0x7e, 0);
+        mainSetBits(0x7e, 0);
         if (gScLevelControlMusicStepSequence[((ScLevelControlState*)state)->musicStep] == 0x7e)
         {
             ((ScLevelControlState*)state)->musicStep += 1;
@@ -386,9 +386,9 @@ void sc_levelcontrol_update(int obj)
             ((ScLevelControlState*)state)->musicStep = 0;
         }
     }
-    else if ((u32)GameBit_Get(0x7f) != 0)
+    else if ((u32)mainGetBit(0x7f) != 0)
     {
-        GameBit_Set(0x7f, 0);
+        mainSetBits(0x7f, 0);
         if (gScLevelControlMusicStepSequence[((ScLevelControlState*)state)->musicStep] == 0x7f)
         {
             ((ScLevelControlState*)state)->musicStep += 1;
@@ -400,45 +400,45 @@ void sc_levelcontrol_update(int obj)
     }
     if (((ScLevelControlState*)state)->musicStep >= 3)
     {
-        GameBit_Set(0x80, 1);
+        mainSetBits(0x80, 1);
         ((ScLevelControlState*)state)->musicStep = 0;
     }
     if ((((ScLevelControlState*)state)->flags1F & 1) != 0)
     {
         ((ScLevelControlState*)state)->flags1F &= ~1;
-        GameBit_Set(0x60f, 1);
-        if ((u32)GameBit_Get(0x7a) == 0)
+        mainSetBits(0x60f, 1);
+        if ((u32)mainGetBit(0x7a) == 0)
         {
-            if ((u32)GameBit_Get(0x627) != 0 && (u32)GameBit_Get(0x63e) != 0)
+            if ((u32)mainGetBit(0x627) != 0 && (u32)mainGetBit(0x63e) != 0)
             {
-                GameBit_Set(0x61c, 1);
+                mainSetBits(0x61c, 1);
             }
         }
         else
         {
-            if ((u32)GameBit_Get(0x61c) != 0)
+            if ((u32)mainGetBit(0x61c) != 0)
             {
-                GameBit_Set(0x85, 1);
+                mainSetBits(0x85, 1);
             }
         }
     }
     if (((ScLevelControlState*)state)->mode == 0)
     {
-        if ((u32)GameBit_Get(0x60e) != 0)
+        if ((u32)mainGetBit(0x60e) != 0)
         {
-            GameBit_Set(0x60e, 0);
+            mainSetBits(0x60e, 0);
             timeListFn_8012df14();
         }
     }
     else if (((ScLevelControlState*)state)->mode == 5)
     {
-        if ((u32)GameBit_Get(0x60e) != 0)
+        if ((u32)mainGetBit(0x60e) != 0)
         {
-            GameBit_Set(0x60e, 0);
+            mainSetBits(0x60e, 0);
             gameTimerStop();
-            if ((u32)GameBit_Get(0x7a) != 0)
+            if ((u32)mainGetBit(0x7a) != 0)
             {
-                GameBit_Set(0x85, 1);
+                mainSetBits(0x85, 1);
             }
             ((ScLevelControlState*)state)->timer10 = lbl_803E5550;
             (*gScreenTransitionInterface)->start(0x73, 1);
@@ -446,35 +446,35 @@ void sc_levelcontrol_update(int obj)
             Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
         }
     }
-    if ((u32)GameBit_Get(0x647) != 0)
+    if ((u32)mainGetBit(0x647) != 0)
     {
-        GameBit_Set(0x612, 1);
-        GameBit_Set(0x90b, 1);
-        GameBit_Set(0x87, 1);
+        mainSetBits(0x612, 1);
+        mainSetBits(0x90b, 1);
+        mainSetBits(0x87, 1);
     }
-    if ((u32)GameBit_Get(0xbde) != 0)
+    if ((u32)mainGetBit(0xbde) != 0)
     {
-        GameBit_Set(0x2c6, 1);
-        GameBit_Set(0x2ce, 1);
-        GameBit_Set(0xbdc, 1);
+        mainSetBits(0x2c6, 1);
+        mainSetBits(0x2ce, 1);
+        mainSetBits(0xbdc, 1);
     }
-    if ((u32)GameBit_Get(0xbe5) != 0)
+    if ((u32)mainGetBit(0xbe5) != 0)
     {
-        GameBit_Set(0xbdf, 1);
-        GameBit_Set(0xbe1, 1);
-        GameBit_Set(0xbe3, 1);
+        mainSetBits(0xbdf, 1);
+        mainSetBits(0xbe1, 1);
+        mainSetBits(0xbe3, 1);
     }
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
         Obj_GetPlayerObject();
         if (((ScLevelControlState*)state2)->mode == 5)
         {
-            GameBit_Set(0x60f, 1);
+            mainSetBits(0x60f, 1);
             if (isGameTimerDisabled())
             {
-                if ((u32)GameBit_Get(0x7a) != 0)
+                if ((u32)mainGetBit(0x7a) != 0)
                 {
-                    GameBit_Set(0x85, 1);
+                    mainSetBits(0x85, 1);
                 }
                 ((ScLevelControlState*)state2)->timer10 = lbl_803E5550;
                 ((ScLevelControlState*)state2)->mode = 0;
@@ -483,11 +483,11 @@ void sc_levelcontrol_update(int obj)
             }
         }
     }
-    if ((u32)GameBit_Get(0x4d0) == 0)
+    if ((u32)mainGetBit(0x4d0) == 0)
     {
-        if ((u32)GameBit_Get(0x2b5) != 0)
+        if ((u32)mainGetBit(0x2b5) != 0)
         {
-            GameBit_Set(0x4d0, 1);
+            mainSetBits(0x4d0, 1);
             (*gMapEventInterface)->setObjGroupStatus(0xe, 2, 1);
             warpToMap(0x50, 0);
             (*gMapEventInterface)->setObjGroupStatus(0xe, 1, 0);
@@ -523,7 +523,7 @@ void sc_levelcontrol_update(int obj)
     SCGameBitLatch_Update(state + 0x18, 2, -1, -1, 0xcbb, 0xc4);
     if ((((ScLevelControlState*)state)->flags1F & 2) != 0)
     {
-        GameBit_Set(0x60e, 1);
+        mainSetBits(0x60e, 1);
         ((ScLevelControlState*)state)->flags1F &= ~2;
     }
 }
@@ -538,22 +538,22 @@ void sc_levelcontrol_init(int obj)
     ((ScLevelControlState*)state)->areaCell = 0xff;
     ((ScLevelControlState*)state)->mode = 0;
     ((GameObject*)obj)->animEventCallback = sc_levelcontrol_processAnimEventsCallback;
-    GameBit_Set(0x60f, 1);
-    GameBit_Set(0x2b8, 0);
-    GameBit_Set(0x4bd, 1);
-    GameBit_Set(GAMEBIT_TOTEMPOLE_FRONT, 0);
-    GameBit_Set(GAMEBIT_TOTEMPOLE_LEFT, 0);
-    GameBit_Set(GAMEBIT_TOTEMPOLE_RIGHT, 0);
-    GameBit_Set(GAMEBIT_TOTEMPOLE_REAR, 0);
+    mainSetBits(0x60f, 1);
+    mainSetBits(0x2b8, 0);
+    mainSetBits(0x4bd, 1);
+    mainSetBits(GAMEBIT_TOTEMPOLE_FRONT, 0);
+    mainSetBits(GAMEBIT_TOTEMPOLE_LEFT, 0);
+    mainSetBits(GAMEBIT_TOTEMPOLE_RIGHT, 0);
+    mainSetBits(GAMEBIT_TOTEMPOLE_REAR, 0);
     st->fog0C = lbl_803E5580;
     fogNear = lbl_803E5564;
     st->fogNear = lbl_803E5564;
     st->fog04 = fogNear;
     st->fog08 = lbl_803E5568;
     enableHeavyFog(lbl_803E5570 + st->fogNear, st->fogNear, lbl_803E5574, lbl_803E5578, lbl_803E557C, 0);
-    if ((u32)GameBit_Get(0x7a) != 0)
+    if ((u32)mainGetBit(0x7a) != 0)
     {
-        GameBit_Set(0x85, 1);
+        mainSetBits(0x85, 1);
     }
     unlockLevel(mapGetDirIdx(0xe), 0, 0);
     if (getSaveGameLoadStatus() != 0)

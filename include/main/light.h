@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
-void vfpblock1_update(int obj);
+void VFP_Block1_update(int obj);
 void FUN_801fbcd0(int obj);
 void FUN_801fbd04(int param_1);
 void FUN_801fbd24(int param_1);
@@ -20,7 +20,7 @@ void FUN_801fc75c(u64 param_1,u64 param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u32 param_9);
 void FUN_801fc944(int obj);
-void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void SeqPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FUN_801fc998(u64 param_1,u64 param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u32 param_9);

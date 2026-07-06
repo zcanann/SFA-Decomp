@@ -54,24 +54,24 @@ STATIC_ASSERT(offsetof(VfpLaddersSetup, triggerGameBit) == 0x20);
 
 int vfpladders_SeqFn(void) { return 0x0; }
 
-int vfpladders_getExtraSize(void) { return 0x8; }
+int VFP_Ladders_getExtraSize(void) { return 0x8; }
 
-int vfpladders_getObjectTypeId(void) { return 0x0; }
+int VFP_Ladders_getObjectTypeId(void) { return 0x0; }
 
-void vfpladders_free(int obj)
+void VFP_Ladders_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void vfpladders_render(void)
+void VFP_Ladders_render(void)
 {
 }
 
-void vfpladders_hitDetect(void)
+void VFP_Ladders_hitDetect(void)
 {
 }
 
-void vfpladders_update(int obj)
+void VFP_Ladders_update(int obj)
 {
     VfpLaddersState* state;
     VfpLaddersSetup* setup;
@@ -81,16 +81,16 @@ void vfpladders_update(int obj)
 
     if (((GameObject*)obj)->anim.seqId == VFPLADDERS_TRIGGER_SEQID)
     {
-        if ((u32)GameBit_Get(state->triggerGameBit) != 0)
+        if ((u32)mainGetBit(state->triggerGameBit) != 0)
         {
-            if ((u32)GameBit_Get(state->baseGameBit) == 0)
+            if ((u32)mainGetBit(state->baseGameBit) == 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             }
         }
-        if ((u32)GameBit_Get(state->triggerGameBit) == 0)
+        if ((u32)mainGetBit(state->triggerGameBit) == 0)
         {
-            if ((u32)GameBit_Get(state->baseGameBit) != 0)
+            if ((u32)mainGetBit(state->baseGameBit) != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
             }
@@ -110,7 +110,7 @@ void vfpladders_update(int obj)
         }
         else
         {
-            if (state->phase == VFPLADDERS_PHASE_WAIT && GameBit_Get(state->triggerGameBit) != 0)
+            if (state->phase == VFPLADDERS_PHASE_WAIT && mainGetBit(state->triggerGameBit) != 0)
             {
                 state->delayTimer = VFPLADDERS_DROP_DELAY;
             }
@@ -129,7 +129,7 @@ void vfpladders_update(int obj)
     }
 }
 
-void vfpladders_init(int* obj, u8* init)
+void VFP_Ladders_init(int* obj, u8* init)
 {
     VfpLaddersState* state = ((GameObject*)obj)->extra;
     VfpLaddersSetup* setup = (VfpLaddersSetup*)init;
@@ -140,10 +140,10 @@ void vfpladders_init(int* obj, u8* init)
     ((GameObject*)obj)->animEventCallback = vfpladders_SeqFn;
 }
 
-void vfpladders_release(void)
+void VFP_Ladders_release(void)
 {
 }
 
-void vfpladders_initialise(void)
+void VFP_Ladders_initialise(void)
 {
 }

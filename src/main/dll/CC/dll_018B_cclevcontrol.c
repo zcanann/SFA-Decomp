@@ -101,17 +101,17 @@ void cclevcontrol_update(int obj)
     {
         SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(state + 1), 0x80, -1, -1, 0x24, 0xea);
     }
-    if (GameBit_Get(0x3d6) != 0
+    if (mainGetBit(0x3d6) != 0
         && (u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1f) != 0)
     {
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1f, 0);
     }
-    if (GameBit_Get(0x161) != 0
+    if (mainGetBit(0x161) != 0
         && (u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1e) == 0)
     {
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1e, 1);
     }
-    if (GameBit_Get(0x3d7) != 0
+    if (mainGetBit(0x3d7) != 0
         && (u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1d) == 0)
     {
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1d, 1);
@@ -119,7 +119,7 @@ void cclevcontrol_update(int obj)
     tricky = getTrickyObject();
     if (state[1] & 1)
     {
-        if (GameBit_Get(0x22d) != 0 || GameBit_Get(0x22e) == 0
+        if (mainGetBit(0x22d) != 0 || mainGetBit(0x22e) == 0
             || (((GameObject*)tricky)->objectFlags & CCLEVCONTROL_OBJFLAG_PARENT_SLACK) != 0)
         {
             state[1] &= ~1;
@@ -128,19 +128,19 @@ void cclevcontrol_update(int obj)
     }
     else
     {
-        if (GameBit_Get(0x22d) == 0 && GameBit_Get(0x22a) != 0 && GameBit_Get(0x22e) != 0
-            && GameBit_Get(0x160) == 0)
+        if (mainGetBit(0x22d) == 0 && mainGetBit(0x22a) != 0 && mainGetBit(0x22e) != 0
+            && mainGetBit(0x160) == 0)
         {
             state[1] |= 1;
             (*gCameraInterface)->loadTriggeredCamAction(1, 1, 0);
         }
     }
-    collectBitA = GameBit_Get(0x3f0);
-    collectBitB = GameBit_Get(0xaf7);
-    if (collectBitB + collectBitA == 4 && GameBit_Get(0xf26) == 0)
+    collectBitA = mainGetBit(0x3f0);
+    collectBitB = mainGetBit(0xaf7);
+    if (collectBitB + collectBitA == 4 && mainGetBit(0xf26) == 0)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
-        GameBit_Set(0xf26, 1);
+        mainSetBits(0xf26, 1);
     }
 }
 

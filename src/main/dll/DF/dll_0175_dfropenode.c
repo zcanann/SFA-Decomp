@@ -69,7 +69,7 @@ static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value)
     return (f32) * (f64*)&bits - (f32)gRopeNodeS32ToDoubleBias;
 }
 
-int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut,
+int dfropenode_findNearestRopePoint(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut,
                       float* phaseOut, u8* sideOut)
 {
     int offset;
@@ -152,7 +152,7 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distan
     return result;
 }
 
-void dfropenode_render2(f32 phase, f32 force, int obj)
+void dfropenode_applyForceAtPhase(f32 phase, f32 force, int obj)
 {
     DFropenodeExtra* extra;
     s8 idx;
@@ -171,7 +171,7 @@ void dfropenode_render2(f32 phase, f32 force, int obj)
     node->force[1] = force * fraction + node->force[1];
 }
 
-void dfropenode_modelMtxFn(int obj, float* phase, f32 distance)
+void dfropenode_advancePhaseByDistance(int obj, float* phase, f32 distance)
 {
     DFropenodeExtra* extra;
     s32 raw;
@@ -200,7 +200,7 @@ void dfropenode_modelMtxFn(int obj, float* phase, f32 distance)
     raw;
 }
 
-void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut)
+void dfropenode_getWorldPosAtPhase(f32 phase, int obj, float* xOut, float* yOut, float* zOut)
 {
     DFropenodeExtra* extra;
     s8 idx;
@@ -226,7 +226,7 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
     *zOut = dz * fraction + (((GameObject*)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
 }
 
-void dfropenode_setScale(int* obj, f32* out)
+void dfropenode_getPlaneEquation(int* obj, f32* out)
 {
     DFropenodeExtra* p = ((GameObject*)obj)->extra;
     out[0] = p->planeNormalX;
@@ -403,7 +403,7 @@ void dfropenode_render(int obj, int p2, int p3)
     extra = ((GameObject*)obj)->extra;
     objDef = (int)objAnim->placementData;
     eventId = ((DfropenodePlacement*)objDef)->fadeGameBit;
-    if ((eventId != 0) && (GameBit_Get(eventId) != 0))
+    if ((eventId != 0) && (mainGetBit(eventId) != 0))
     {
         oldAlpha = objAnim->alpha;
         if (oldAlpha == 0x46)

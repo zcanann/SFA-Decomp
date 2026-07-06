@@ -23,20 +23,20 @@ typedef struct BarrelPadParticleArgs
     f32 offset[3];
 } BarrelPadParticleArgs;
 
-int barrelpad_getExtraSize(void) { return 0x0; }
-int barrelpad_getObjectTypeId(void) { return 0x0; }
+int BarrelPad_getExtraSize(void) { return 0x0; }
+int BarrelPad_getObjectTypeId(void) { return 0x0; }
 
-void barrelpad_free(void)
+void BarrelPad_free(void)
 {
 }
 
-void barrelpad_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f); }
+void BarrelPad_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f); }
 
-void barrelpad_hitDetect(void)
+void BarrelPad_hitDetect(void)
 {
 }
 
-void barrelpad_update(s16* obj)
+void BarrelPad_update(s16* obj)
 {
     BarrelPadParticleArgs particleArgs;
 
@@ -58,7 +58,7 @@ void barrelpad_update(s16* obj)
     }
 }
 
-void barrelpad_init(s16* obj, u8* def)
+void BarrelPad_init(s16* obj, u8* def)
 {
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[0x18] << 8);
     ((GameObject*)obj)->anim.rotY = (s16)((s32)def[0x19] << 8);
@@ -77,10 +77,10 @@ void barrelpad_init(s16* obj, u8* def)
     ((GameObject*)obj)->objectFlags |= BARRELPAD_OBJFLAG_HITDETECT_DISABLED;
 }
 
-void barrelpad_release(void)
+void BarrelPad_release(void)
 {
 }
 
-void barrelpad_initialise(void)
+void BarrelPad_initialise(void)
 {
 }

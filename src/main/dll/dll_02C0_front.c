@@ -71,14 +71,14 @@ void fn_80135814(u32 a, u32 b)
 
 void titleScreenFn_801368d4(void) { lbl_803DD9AB = 0; }
 
-int titlescreen_getExtraSize(void) { return 56; }
+int TitleScreen_getExtraSize(void) { return 56; }
 
-void titlescreen_hitDetect(void)
+void TitleScreen_hitDetect(void)
 {
 }
 
 /* Returns 74 if seqId is in [1917, 1920], else returns 0. */
-int titlescreen_getObjectTypeId(u8* obj)
+int TitleScreen_getObjectTypeId(u8* obj)
 {
     s16 v = ((GameObject*)obj)->anim.seqId;
     if (v >= 1917 && v < 1921) return 74;
@@ -91,16 +91,16 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)titlescreen_initialise,
-        (ObjectDescriptorCallback)titlescreen_release,
+        (ObjectDescriptorCallback)TitleScreen_initialise,
+        (ObjectDescriptorCallback)TitleScreen_release,
         0,
-        (ObjectDescriptorCallback)titlescreen_init,
-        (ObjectDescriptorCallback)titlescreen_update,
-        (ObjectDescriptorCallback)titlescreen_hitDetect,
-        (ObjectDescriptorCallback)titlescreen_render,
-        (ObjectDescriptorCallback)titlescreen_free,
-        (ObjectDescriptorCallback)titlescreen_getObjectTypeId,
-        titlescreen_getExtraSize,
+        (ObjectDescriptorCallback)TitleScreen_init,
+        (ObjectDescriptorCallback)TitleScreen_update,
+        (ObjectDescriptorCallback)TitleScreen_hitDetect,
+        (ObjectDescriptorCallback)TitleScreen_render,
+        (ObjectDescriptorCallback)TitleScreen_free,
+        (ObjectDescriptorCallback)TitleScreen_getObjectTypeId,
+        TitleScreen_getExtraSize,
     },
     0,
 };
@@ -114,7 +114,7 @@ extern u8 gTitleScreenSetupDone;
  * byte at gTitleScreenSetupDone. */
 #pragma scheduling off
 #pragma peephole off
-void titlescreen_release(void)
+void TitleScreen_release(void)
 {
     int i;
     textureFree(gTitleScreenMainTex);
@@ -153,7 +153,7 @@ extern void PSMTXIdentity(void*);
 /* Reset state bytes, load the main texture (asset 0x647 or 0xC5 depending on
  * lbl_803DC968), identity the matrix, then load the 19-entry texture table
  * from the id list at gTitleScreenTextureIds into gTitleScreenTextures. */
-void titlescreen_initialise(void)
+void TitleScreen_initialise(void)
 {
     int i;
     lbl_803DBC08 = -1;
@@ -190,7 +190,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 /* When visible and ready, render via objRenderFn; once the credits flag
  * fires, set the one-shot trigger 0x57 and release the attract-mode movie
  * buffers. */
-void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void TitleScreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v == 0) return;
@@ -198,7 +198,7 @@ void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2318);
     if (showCredits == 0) return;
     if (gTitleScreenCreditsStarted != 0) return;
-    GameBit_Set(0xDF6, 1);
+    mainSetBits(0xDF6, 1);
     gTitleScreenCreditsStarted = 1;
     (*gObjectTriggerInterface)->setCamVars(0x57, 0, 0, 0);
     n_attractmode_releaseMovieBuffers();
@@ -217,7 +217,7 @@ extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 rend
 /* Seed the object's state from its seqId, pick the anim move and blend
  * float per id range, and for the attract id install the movie draw
  * callback. */
-void titlescreen_init(u8* obj, u8* p)
+void TitleScreen_init(u8* obj, u8* p)
 {
     u8* state = ((GameObject*)obj)->extra;
     s16 seqId;
@@ -323,7 +323,7 @@ int gameTextFn_80134be8(void)
  * and clear showCredits. */
 extern void Music_Trigger(int id, int arg);
 
-void titlescreen_free(u8* obj)
+void TitleScreen_free(u8* obj)
 {
     if (((GameObject*)obj)->anim.seqId == 0x77d)
     {
@@ -489,7 +489,7 @@ void fn_80134870(int obj, u8* arr);
 /* Drive the title screen actor anim state machine, the per-actor
  * footstep/voice sfx flag grid at gTitleScreenSfxFlagGrid, the random blink
  * blend, and the one-shot envfx/sky setup. */
-void titlescreen_update(u8* obj)
+void TitleScreen_update(u8* obj)
 {
     extern int randomGetRange(int lo, int hi);
     extern void characterDoEyeAnims(u8* obj, void* state);

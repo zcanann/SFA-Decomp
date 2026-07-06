@@ -143,13 +143,13 @@ void fn_801E7DC8(int obj, int state, int count)
     }
 }
 
-void shopkeeper_free(int obj)
+void ShopKeeper_free(int obj)
 {
     Stack_Free(((ShopkeeperState*)((GameObject*)obj)->extra)->msgStack);
     return;
 }
 
-void shopkeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void ShopKeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     f32 fxParams[4];
@@ -167,19 +167,19 @@ void shopkeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 
-void shopkeeper_hitDetect(void)
+void ShopKeeper_hitDetect(void)
 {
 }
 
-void shopkeeper_release(void)
+void ShopKeeper_release(void)
 {
 }
 
 
-int shopkeeper_getExtraSize(void) { return 0x9d8; }
-int shopkeeper_getObjectTypeId(void) { return 0x0; }
+int ShopKeeper_getExtraSize(void) { return 0x9d8; }
+int ShopKeeper_getObjectTypeId(void) { return 0x0; }
 
-void shopkeeper_initialise(void)
+void ShopKeeper_initialise(void)
 {
     lbl_803AD068[0] = DRlaserturret_startLinkedTarget;
     lbl_803AD068[1] = DRlaserturret_updateTracking;
@@ -192,7 +192,7 @@ void shopkeeper_initialise(void)
     lbl_803DDC58 = fn_801E66DC;
 }
 
-void shopkeeper_update(int obj)
+void ShopKeeper_update(int obj)
 {
     void* player;
     int state;
@@ -227,7 +227,7 @@ void shopkeeper_update(int obj)
     ((GameObject*)obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
 }
 
-void shopkeeper_init(int obj)
+void ShopKeeper_init(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags |= SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED;

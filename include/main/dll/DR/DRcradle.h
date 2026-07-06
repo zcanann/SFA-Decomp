@@ -14,6 +14,6 @@ int SnowBike_getExtraSize(void);
 int SnowBike_getObjectTypeId(void);
 u8 SnowBike_func0B(int *obj);
 s32 SnowBike_func14(int *obj);
-s32 SnowBike_getType(int *obj);
+s32 SnowBike_getRiderMode(int *obj);
 
 #endif /* MAIN_DLL_DR_DRCRADLE_H_ */

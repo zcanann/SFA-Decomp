@@ -36,7 +36,7 @@ void dll_1FB_initialise_nop(void);
 
 int LaserBeam_getExtraSize(void);
 int LaserBeam_getObjectTypeId(void);
-void LaserBeam_init(int *obj);
+void LaserBeam_free(int *obj);
 void LaserBeam_render(void);
 void LaserBeam_hitDetect(void);
 

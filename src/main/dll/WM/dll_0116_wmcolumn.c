@@ -49,23 +49,23 @@ extern f32 lbl_803E37BC; /* 10000.0: nearest-object sentinel */
 extern f32 lbl_803E37C0; /* 35.0: scene-spot snap radius */
 extern f32 lbl_803E37C4; /* 60.0: pickup prompt distance */
 
-int wm_column_getExtraSize(void)
+int WM_Column_getExtraSize(void)
 {
     return 0xa;
 }
 
-int wm_column_getObjectTypeId(void)
+int WM_Column_getObjectTypeId(void)
 {
     return 0;
 }
 
-void wm_column_free(int obj)
+void WM_Column_free(int obj)
 {
     ObjGroup_RemoveObject(obj, WMCOLUMN_OBJGROUP);
     (*gCarryableInterface)->free(obj);
 }
 
-void wm_column_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void WM_Column_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
     if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
@@ -74,11 +74,11 @@ void wm_column_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void wm_column_hitDetect(void)
+void WM_Column_hitDetect(void)
 {
 }
 
-void wm_column_update(int obj)
+void WM_Column_update(int obj)
 {
     int* objects;
     u32 playerFlags;
@@ -104,7 +104,7 @@ void wm_column_update(int obj)
                     other = ((WmColumnPlacement*)((GameObject*)objects[i])->anim.placement)->gameBit;
                     if (other != -1)
                     {
-                        GameBit_Set(other, 0);
+                        mainSetBits(other, 0);
                     }
                 }
             }
@@ -142,12 +142,12 @@ void wm_column_update(int obj)
                     {
                         if (((WmColumnPlacement*)mapData)->gameBit != -1)
                         {
-                            GameBit_Set(((WmColumnPlacement*)mapData)->gameBit, 1);
+                            mainSetBits(((WmColumnPlacement*)mapData)->gameBit, 1);
                         }
                     }
                     else if (((WmColumnPlacement*)mapData)->gameBit != -1)
                     {
-                        GameBit_Set(((WmColumnPlacement*)mapData)->gameBit, 0);
+                        mainSetBits(((WmColumnPlacement*)mapData)->gameBit, 0);
                     }
                     ((GameObject*)obj)->anim.localPosX = ((GameObject*)objects[i])->anim.localPosX;
                     ((GameObject*)obj)->anim.localPosY = ((GameObject*)objects[i])->anim.localPosY;
@@ -170,7 +170,7 @@ void wm_column_update(int obj)
     }
 }
 
-void wm_column_init(GameObject* obj, WmColumnPlacement* mapData)
+void WM_Column_init(GameObject* obj, WmColumnPlacement* mapData)
 {
     int state = *(int*)&obj->extra;
     obj->anim.rotX = (s16)(mapData->rotXByte << 8);
@@ -185,10 +185,10 @@ void wm_column_init(GameObject* obj, WmColumnPlacement* mapData)
     ObjGroup_AddObject((int)obj, WMCOLUMN_OBJGROUP);
 }
 
-void wm_column_release(void)
+void WM_Column_release(void)
 {
 }
 
-void wm_column_initialise(void)
+void WM_Column_initialise(void)
 {
 }

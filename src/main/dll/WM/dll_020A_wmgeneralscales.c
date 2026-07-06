@@ -2,7 +2,7 @@
  * WM_GeneralScales (DLL 0x20A) - General Scales at Krazoa Palace, the
  * cutscene actor driven entirely by sequence events (his appearance in
  * the final spirit ceremony). TU = 0x801F48C0..0x801F4C04
- * (wmgeneralscales_SeqFn + wmgeneralscales_*).
+ * (WM_GeneralScales_SeqFn + wmgeneralscales_*).
  *
  * The SeqFn fades the model in/out through state->fadeAlpha, spawns
  * impact particles + sfx on the slam events, and attaches/detaches his
@@ -51,7 +51,7 @@ extern void ObjLink_DetachChild(int* parent, int* child);
 extern f32 lbl_803E5EA4; /* 1.0: render scale */
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WmGeneralScalesState* state;
     int i;
@@ -144,16 +144,16 @@ int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int wmgeneralscales_getExtraSize(void) { return sizeof(WmGeneralScalesState); }
-int wmgeneralscales_getObjectTypeId(void) { return 0x9; }
+int WM_GeneralScales_getExtraSize(void) { return sizeof(WmGeneralScalesState); }
+int WM_GeneralScales_getObjectTypeId(void) { return 0x9; }
 
-void wmgeneralscales_free(int* obj)
+void WM_GeneralScales_free(int* obj)
 {
     int* p = (int*)obj[0xc8 / 4]; /* childObjs[0] */
     if (p != NULL) ObjLink_DetachChild(obj, p);
 }
 
-void wmgeneralscales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void WM_GeneralScales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     WmGeneralScalesState* state = ((GameObject*)obj)->extra;
     if (state->phase == WMGENERALSCALES_PHASE_HIDDEN) return;
@@ -161,27 +161,27 @@ void wmgeneralscales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible
     ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5EA4);
 }
 
-void wmgeneralscales_hitDetect(void)
+void WM_GeneralScales_hitDetect(void)
 {
 }
 
-void wmgeneralscales_update(void)
+void WM_GeneralScales_update(void)
 {
 }
 
-void wmgeneralscales_init(int* obj)
+void WM_GeneralScales_init(int* obj)
 {
     WmGeneralScalesState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = wmgeneralscales_SeqFn;
+    ((GameObject*)obj)->animEventCallback = WM_GeneralScales_SeqFn;
     state->unk00 = lbl_803E5E98;
     state->phase = WMGENERALSCALES_PHASE_HIDDEN;
     *(int*)&((GameObject*)obj)->childObjs[0] = 0;
 }
 
-void wmgeneralscales_release(void)
+void WM_GeneralScales_release(void)
 {
 }
 
-void wmgeneralscales_initialise(void)
+void WM_GeneralScales_initialise(void)
 {
 }

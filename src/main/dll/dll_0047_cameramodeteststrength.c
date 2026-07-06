@@ -167,7 +167,7 @@ void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* po
                                     (f64)*(f32*)&lbl_803E18B4, lbl_803E18B8);
 }
 
-void CameraModeTestStrength_copyToCurrent_nop(void)
+void CameraModeTestStrength_copyToCurrent(void)
 {
 }
 

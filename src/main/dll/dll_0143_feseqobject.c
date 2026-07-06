@@ -89,7 +89,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case FESEQOBJECT_EVENT_SET_BIT:
-            GameBit_Set(FESEQOBJECT_SEQUENCE_BIT, 1);
+            mainSetBits(FESEQOBJECT_SEQUENCE_BIT, 1);
             break;
         case FESEQOBJECT_EVENT_FX_0:
             effect.variant = 0;
@@ -193,7 +193,7 @@ void FEseqobject_update(int obj)
 {
     register int self = obj;
     *(short*)self = 0x2000;
-    if (GameBit_Get(FESEQOBJECT_SEQUENCE_BIT) == 0)
+    if (mainGetBit(FESEQOBJECT_SEQUENCE_BIT) == 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, (void*)self, -1);
     }

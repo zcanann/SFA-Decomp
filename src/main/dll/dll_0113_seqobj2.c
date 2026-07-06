@@ -10,7 +10,7 @@
  *   - seqObj2_*    : the SeqObj2 variant (single-byte SeqObj2State), gated on
  *     trigger/open game bits with the same SEQOBJECT_FLAG_* placement flags.
  *   - seqobj2_*    : the SeqObj2 object exported via gSeqObj2ObjDescriptor;
- *     seqobj2_SeqFn handles in-sequence events (op 0 clears the trigger bit,
+ *     SeqObj2_seqFn handles in-sequence events (op 0 clears the trigger bit,
  *     op 1 sets the open bit) and OSReports the bit usage for debugging.
  *
  * Game bits used here are per-placement (openGameBit/triggerGameBit), not
@@ -100,7 +100,7 @@ STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 #define SEQOBJECT_OBJFLAG_HIDDEN 0x4000
 #define SEQOBJECT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-int seqobj2_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
+int SeqObj2_seqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {
     SeqObjectPlacement * def = (SeqObjectPlacement*)((GameObject*)obj)->anim.placementData;
     SeqObj2State* state = ((GameObject*)obj)->extra;
@@ -112,11 +112,11 @@ int seqobj2_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
         switch (op)
         {
         case SEQOBJ2_SEQEV_CLEAR_TRIGGER:
-            GameBit_Set(def->triggerGameBit, 0);
+            mainSetBits(def->triggerGameBit, 0);
             OSReport(sSeqObjNeedBitClearDuringSequenceFormat, def->base.mapId);
             break;
         case SEQOBJ2_SEQEV_SET_OPEN:
-            GameBit_Set(def->openGameBit, 1);
+            mainSetBits(def->openGameBit, 1);
             OSReport(lbl_80321208, def->base.mapId);
             break;
         }
@@ -125,20 +125,20 @@ int seqobj2_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int seqobj2_getExtraSize(void) { return 0x1; }
-int seqobj2_getObjectTypeId(void) { return 0x0; }
+int SeqObj2_getExtraSize(void) { return 0x1; }
+int SeqObj2_getObjectTypeId(void) { return 0x0; }
 
-void seqobj2_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJ2_OBJGROUP); }
+void SeqObj2_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJ2_OBJGROUP); }
 
-void seqobj2_render(void)
+void SeqObj2_render(void)
 {
 }
 
-void seqobj2_hitDetect(void)
+void SeqObj2_hitDetect(void)
 {
 }
 
-void seqobj2_update(int* obj)
+void SeqObj2_update(int* obj)
 {
     SeqObj2State* state;
     SeqObjectPlacement * def;
@@ -153,12 +153,12 @@ void seqobj2_update(int* obj)
     {
         if ((def->flags & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) != 0)
         {
-            GameBit_Set(def->triggerGameBit, 0);
+            mainSetBits(def->triggerGameBit, 0);
             OSReport(strBase + 0x94, def->base.mapId);
         }
         if ((def->flags & SEQOBJECT_FLAG_SET_SOURCE_ON_DONE) != 0)
         {
-            GameBit_Set(def->openGameBit, 1);
+            mainSetBits(def->openGameBit, 1);
             OSReport(strBase + 0xd0, def->base.mapId);
         }
         OSReport(strBase + 0x108, def->base.mapId, def->sequenceParam);
@@ -171,29 +171,29 @@ void seqobj2_update(int* obj)
     {
         if ((def->flags & SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE) != 0)
         {
-            GameBit_Set(def->triggerGameBit, 0);
+            mainSetBits(def->triggerGameBit, 0);
             OSReport(strBase + 0x140, def->base.mapId);
         }
         if ((def->flags & SEQOBJECT_FLAG_USE_TRIGGER_PARAM) != 0)
         {
-            GameBit_Set(def->openGameBit, 1);
+            mainSetBits(def->openGameBit, 1);
             OSReport(strBase + 0x170, def->base.mapId);
         }
         state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_TRIGGER_SEQUENCE);
     }
     else
     {
-        if ((def->triggerGameBit == -1 || GameBit_Get(def->triggerGameBit) != 0) &&
-            (def->openGameBit == -1 || GameBit_Get(def->openGameBit) == 0))
+        if ((def->triggerGameBit == -1 || mainGetBit(def->triggerGameBit) != 0) &&
+            (def->openGameBit == -1 || mainGetBit(def->openGameBit) == 0))
         {
             if ((def->flags & SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE) != 0)
             {
-                GameBit_Set(def->triggerGameBit, 0);
+                mainSetBits(def->triggerGameBit, 0);
                 OSReport(strBase + 0x19c, def->base.mapId);
             }
             if ((def->flags & SEQOBJECT_FLAG_UNUSED_20) != 0)
             {
-                GameBit_Set(def->openGameBit, 1);
+                mainSetBits(def->openGameBit, 1);
                 OSReport(strBase + 0x1cc, def->base.mapId);
             }
             OSReport(strBase + 0x1f8, def->base.mapId);
@@ -202,16 +202,16 @@ void seqobj2_update(int* obj)
     }
 }
 
-void seqobj2_init(int* obj, SeqObjectPlacement* def)
+void SeqObj2_init(int* obj, SeqObjectPlacement* def)
 {
     SeqObj2State* state = ((GameObject*)obj)->extra;
     OSReport(sSeqObjNeedBitUsedBitFormat, def->base.mapId, def->triggerGameBit, def->openGameBit);
     ((GameObject*)obj)->anim.rotX = (s16)((u32)def->initialYaw << 8);
-    ((GameObject*)obj)->animEventCallback = seqobj2_SeqFn;
+    ((GameObject*)obj)->animEventCallback = SeqObj2_seqFn;
     if (def->preemptSequenceId > -1)
     {
         s16 slot = def->openGameBit;
-        if (slot != -1 && GameBit_Get(slot) != 0u)
+        if (slot != -1 && mainGetBit(slot) != 0u)
         {
             state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         }
@@ -237,13 +237,13 @@ ObjectDescriptor gSeqObj2ObjDescriptor = {
     SeqObj2_initialise,
     SeqObj2_release,
     0,
-    (ObjectDescriptorCallback)seqobj2_init,
-    (ObjectDescriptorCallback)seqobj2_update,
-    seqobj2_hitDetect,
-    seqobj2_render,
-    (ObjectDescriptorCallback)seqobj2_free,
-    (ObjectDescriptorCallback)seqobj2_getObjectTypeId,
-    seqobj2_getExtraSize,
+    (ObjectDescriptorCallback)SeqObj2_init,
+    (ObjectDescriptorCallback)SeqObj2_update,
+    SeqObj2_hitDetect,
+    SeqObj2_render,
+    (ObjectDescriptorCallback)SeqObj2_free,
+    (ObjectDescriptorCallback)SeqObj2_getObjectTypeId,
+    SeqObj2_getExtraSize,
 };
 
 const char sSeqObjNeedBitClearDuringSequenceFormat[] = "newseqobj %d: need bit clear during sequence\n";
@@ -256,15 +256,15 @@ const char sSeqObjNeedBitUsedBitFormat[40] = "newseqobj %d: Need Bit %d, Used Bi
 ObjDescriptorAlign8 gIMMultiSeqObjDescriptor = { {
     0x00000000, 0x00000000, 0x00000000,
     0x00090000,
-    (ObjectDescriptorCallback)immultiseq_initialise,
-    (ObjectDescriptorCallback)immultiseq_release,
+    (ObjectDescriptorCallback)IMMultiSeq_initialise,
+    (ObjectDescriptorCallback)IMMultiSeq_release,
     0x00000000,
-    (ObjectDescriptorCallback)immultiseq_init,
-    (ObjectDescriptorCallback)immultiseq_update,
-    (ObjectDescriptorCallback)immultiseq_hitDetect,
-    (ObjectDescriptorCallback)immultiseq_render,
-    (ObjectDescriptorCallback)immultiseq_free,
-    (ObjectDescriptorCallback)immultiseq_getObjectTypeId,
-    immultiseq_getExtraSize,
+    (ObjectDescriptorCallback)IMMultiSeq_init,
+    (ObjectDescriptorCallback)IMMultiSeq_update,
+    (ObjectDescriptorCallback)IMMultiSeq_hitDetect,
+    (ObjectDescriptorCallback)IMMultiSeq_render,
+    (ObjectDescriptorCallback)IMMultiSeq_free,
+    (ObjectDescriptorCallback)IMMultiSeq_getObjectTypeId,
+    IMMultiSeq_getExtraSize,
 } };
 u32 lbl_80321428[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_115_initialise_nop, (u32)dll_115_release_nop, 0x00000000, (u32)dll_115_init, (u32)dll_115_update, (u32)dll_115_hitDetect_nop, (u32)dll_115_render, (u32)dll_115_free, (u32)dll_115_getObjectTypeId, (u32)dll_115_getExtraSize_ret_2 };

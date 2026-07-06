@@ -75,7 +75,7 @@ void fn_8015F5B0(short* obj)
 
 #pragma scheduling on
 #pragma peephole on
-void chukchuk_setScale(int obj, int message)
+void ChukChuk_setScale(int obj, int message)
 {
     switch ((u8)message)
     {
@@ -87,18 +87,18 @@ void chukchuk_setScale(int obj, int message)
 
 #pragma scheduling off
 #pragma peephole off
-int chukchuk_getExtraSize(void) { return sizeof(ChukChukState); }
-int chukchuk_getObjectTypeId(void) { return 0x0; }
+int ChukChuk_getExtraSize(void) { return sizeof(ChukChukState); }
+int ChukChuk_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling on
 #pragma peephole on
-void chukchuk_free(void)
+void ChukChuk_free(void)
 {
 }
 
 #pragma scheduling off
 #pragma peephole off
-void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
@@ -106,14 +106,14 @@ void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 #pragma scheduling on
 #pragma peephole on
-void chukchuk_hitDetect(void)
+void ChukChuk_hitDetect(void)
 {
 }
 
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_propagation off
-void chukchuk_update(short* obj)
+void ChukChuk_update(short* obj)
 {
     extern void objParticleFn_80099d84(f32, short*, int, f32, int);
     extern int Obj_GetPlayerObject(void);
@@ -236,7 +236,7 @@ void chukchuk_update(short* obj)
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 v->flags |= CHUKCHUK_FLAG_DEAD;
                 Sfx_PlayFromObject(obj, SFXkr_impact3);
-                GameBit_Set(v->gameBit, 1);
+                mainSetBits(v->gameBit, 1);
                 v->steamTimer = 60.0f;
                 Sfx_PlayFromObject(obj, SFXfoot_ice_run_4);
             }
@@ -245,12 +245,12 @@ void chukchuk_update(short* obj)
     }
 }
 
-void chukchuk_init(u8* obj, u8* params)
+void ChukChuk_init(u8* obj, u8* params)
 {
     ChukChukState* sub = ((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     sub->gameBit = *(s16*)(params + 0x18);
-    if (sub->gameBit != -1 && GameBit_Get(sub->gameBit) != 0)
+    if (sub->gameBit != -1 && mainGetBit(sub->gameBit) != 0)
     {
         ObjHits_DisableObject(obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
@@ -271,11 +271,11 @@ void chukchuk_init(u8* obj, u8* params)
 #pragma opt_propagation reset
 #pragma scheduling on
 #pragma peephole on
-void chukchuk_release(void)
+void ChukChuk_release(void)
 {
 }
 
-void chukchuk_initialise(void)
+void ChukChuk_initialise(void)
 {
 }
 
@@ -285,17 +285,17 @@ ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)chukchuk_initialise,
-        (ObjectDescriptorCallback)chukchuk_release,
+        (ObjectDescriptorCallback)ChukChuk_initialise,
+        (ObjectDescriptorCallback)ChukChuk_release,
         0,
-        (ObjectDescriptorCallback)chukchuk_init,
-        (ObjectDescriptorCallback)chukchuk_update,
-        (ObjectDescriptorCallback)chukchuk_hitDetect,
-        (ObjectDescriptorCallback)chukchuk_render,
-        (ObjectDescriptorCallback)chukchuk_free,
-        (ObjectDescriptorCallback)chukchuk_getObjectTypeId,
-        chukchuk_getExtraSize,
-        (ObjectDescriptorCallback)chukchuk_setScale,
+        (ObjectDescriptorCallback)ChukChuk_init,
+        (ObjectDescriptorCallback)ChukChuk_update,
+        (ObjectDescriptorCallback)ChukChuk_hitDetect,
+        (ObjectDescriptorCallback)ChukChuk_render,
+        (ObjectDescriptorCallback)ChukChuk_free,
+        (ObjectDescriptorCallback)ChukChuk_getObjectTypeId,
+        ChukChuk_getExtraSize,
+        (ObjectDescriptorCallback)ChukChuk_setScale,
     },
     0,
 };

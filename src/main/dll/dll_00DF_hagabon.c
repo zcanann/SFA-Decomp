@@ -12,7 +12,7 @@
  * target, clamps + damps the velocity, moves the object, and turns it to face
  * the player.
  *
- * hagabon_update handles the dormant-until-armed state (unkF4): while waiting it
+ * Hagabon_update handles the dormant-until-armed state (unkF4): while waiting it
  * polls its placement game bit / the map-event save-time gate, then fades in.
  * Once active it fades out on a priority hit, plays the swipe/lock/creak sfx,
  * adds map time and sets the placement game bit, and re-evaluates chase state.
@@ -101,15 +101,15 @@ STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 
-void swarmbaddie_hitDetect(void);
-void swarmbaddie_release(void);
-void swarmbaddie_initialise(void);
-void swarmbaddie_free(int obj);
-void swarmbaddie_init(int obj, int data, int skip_alloc);
-int swarmbaddie_getExtraSize(void);
-int swarmbaddie_getObjectTypeId(void);
-void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void swarmbaddie_update(int obj);
+void SwarmBaddie_hitDetect(void);
+void SwarmBaddie_release(void);
+void SwarmBaddie_initialise(void);
+void SwarmBaddie_free(int obj);
+void SwarmBaddie_init(int obj, int data, int skip_alloc);
+int SwarmBaddie_getExtraSize(void);
+int SwarmBaddie_getObjectTypeId(void);
+void SwarmBaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void SwarmBaddie_update(int obj);
 
 void pressureSwitch_freeSharedResource(void)
 {
@@ -128,11 +128,11 @@ void pressureSwitch_ensureSharedResource(void)
     }
 }
 
-void hagabon_release(void)
+void Hagabon_release(void)
 {
 }
 
-void hagabon_initialise(void)
+void Hagabon_initialise(void)
 {
 }
 
@@ -278,7 +278,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
     ((GameObject*)obj)->anim.rotX += (s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
 }
 
-void hagabon_hitDetect(int obj)
+void Hagabon_hitDetect(int obj)
 {
     ObjHitsPriorityState* hitState;
 
@@ -289,7 +289,7 @@ void hagabon_hitDetect(int obj)
     }
 }
 
-void hagabon_free(int obj)
+void Hagabon_free(int obj)
 {
     void** state = ((GameObject*)obj)->extra;
     ObjGroup_RemoveObject(obj, HAGABON_OBJGROUP);
@@ -301,7 +301,7 @@ void hagabon_free(int obj)
     }
 }
 
-void hagabon_init(int obj, int data, int skip_alloc)
+void Hagabon_init(int obj, int data, int skip_alloc)
 {
     HagabonState* state = ((GameObject*)obj)->extra;
     HagabonPlacement* placement = (HagabonPlacement*)data;
@@ -323,14 +323,14 @@ void hagabon_init(int obj, int data, int skip_alloc)
     }
     if (placement->armGameBit != -1)
     {
-        if (GameBit_Get(placement->armGameBit) != 0)
+        if (mainGetBit(placement->armGameBit) != 0)
         {
             ((GameObject*)obj)->unkF4 = 1;
         }
     }
 }
 
-void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void Hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     HagabonState* state = *(HagabonState**)&((GameObject*)obj)->extra;
     s32 v = visible;
@@ -356,11 +356,11 @@ void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-int hagabon_getExtraSize(void) { return 0x28; }
-int hagabon_getObjectTypeId(void) { return 0xb; }
+int Hagabon_getExtraSize(void) { return 0x28; }
+int Hagabon_getObjectTypeId(void) { return 0xb; }
 
 #pragma fp_contract off
-void hagabon_update(int obj)
+void Hagabon_update(int obj)
 {
     GameObject* player;
     HagabonState* state;
@@ -381,7 +381,7 @@ void hagabon_update(int obj)
 
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if ((((HagabonPlacement*)data)->armGameBit != -1) && (GameBit_Get(((HagabonPlacement*)data)->armGameBit) != 0))
+        if ((((HagabonPlacement*)data)->armGameBit != -1) && (mainGetBit(((HagabonPlacement*)data)->armGameBit) != 0))
         {
             return;
         }
@@ -450,7 +450,7 @@ void hagabon_update(int obj)
                                                    (f32)(s32)(((HagabonPlacement*)data)->timeReward * 0x3c));
             if (((HagabonPlacement*)data)->armGameBit != -1)
             {
-                GameBit_Set(((HagabonPlacement*)data)->armGameBit, 1);
+                mainSetBits(((HagabonPlacement*)data)->armGameBit, 1);
             }
         }
         ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
@@ -499,16 +499,16 @@ ObjectDescriptor gHagabonObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)hagabon_initialise,
-    (ObjectDescriptorCallback)hagabon_release,
+    (ObjectDescriptorCallback)Hagabon_initialise,
+    (ObjectDescriptorCallback)Hagabon_release,
     0,
-    (ObjectDescriptorCallback)hagabon_init,
-    (ObjectDescriptorCallback)hagabon_update,
-    (ObjectDescriptorCallback)hagabon_hitDetect,
-    (ObjectDescriptorCallback)hagabon_render,
-    (ObjectDescriptorCallback)hagabon_free,
-    (ObjectDescriptorCallback)hagabon_getObjectTypeId,
-    hagabon_getExtraSize,
+    (ObjectDescriptorCallback)Hagabon_init,
+    (ObjectDescriptorCallback)Hagabon_update,
+    (ObjectDescriptorCallback)Hagabon_hitDetect,
+    (ObjectDescriptorCallback)Hagabon_render,
+    (ObjectDescriptorCallback)Hagabon_free,
+    (ObjectDescriptorCallback)Hagabon_getObjectTypeId,
+    Hagabon_getExtraSize,
 };
 
 ObjectDescriptor gSwarmBaddieObjDescriptor = {
@@ -516,14 +516,14 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)swarmbaddie_initialise,
-    (ObjectDescriptorCallback)swarmbaddie_release,
+    (ObjectDescriptorCallback)SwarmBaddie_initialise,
+    (ObjectDescriptorCallback)SwarmBaddie_release,
     0,
-    (ObjectDescriptorCallback)swarmbaddie_init,
-    (ObjectDescriptorCallback)swarmbaddie_update,
-    (ObjectDescriptorCallback)swarmbaddie_hitDetect,
-    (ObjectDescriptorCallback)swarmbaddie_render,
-    (ObjectDescriptorCallback)swarmbaddie_free,
-    (ObjectDescriptorCallback)swarmbaddie_getObjectTypeId,
-    swarmbaddie_getExtraSize,
+    (ObjectDescriptorCallback)SwarmBaddie_init,
+    (ObjectDescriptorCallback)SwarmBaddie_update,
+    (ObjectDescriptorCallback)SwarmBaddie_hitDetect,
+    (ObjectDescriptorCallback)SwarmBaddie_render,
+    (ObjectDescriptorCallback)SwarmBaddie_free,
+    (ObjectDescriptorCallback)SwarmBaddie_getObjectTypeId,
+    SwarmBaddie_getExtraSize,
 };

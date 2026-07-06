@@ -3,9 +3,9 @@
 
 #include "ghidra_import.h"
 
-void treasurechest_update(int obj);
-void treasurechest_release(void);
-void treasurechest_initialise(void);
-int magiccavebottom_getExtraSize(void);
+void TreasureChest_update(int obj);
+void TreasureChest_release(void);
+void TreasureChest_initialise(void);
+int MagicCaveBottom_getExtraSize(void);
 
 #endif /* MAIN_DLL_CF_DLL_166_H_ */

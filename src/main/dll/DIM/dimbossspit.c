@@ -76,14 +76,14 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
             (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
-            GameBit_Set(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
+            mainSetBits(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
             if (gDIMbosstonsilRoutePhase >= DIMBOSSSPIT_ROUTE_HIGH_THRESHOLD)
             {
-                GameBit_Set(DIMBOSSSPIT_GAMEBIT_ROUTE_HIGH, 1);
+                mainSetBits(DIMBOSSSPIT_GAMEBIT_ROUTE_HIGH, 1);
             }
             else
             {
-                GameBit_Set(DIMBOSSSPIT_GAMEBIT_ROUTE_LOW, 1);
+                mainSetBits(DIMBOSSSPIT_GAMEBIT_ROUTE_LOW, 1);
             }
         }
     }
@@ -114,14 +114,14 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
             (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
-            GameBit_Set(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
+            mainSetBits(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
             if (gDIMbosstonsilRoutePhase == DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD)
             {
-                GameBit_Set(DIMBOSSSPIT_GAMEBIT_ROUTE_LOW, 1);
+                mainSetBits(DIMBOSSSPIT_GAMEBIT_ROUTE_LOW, 1);
             }
             else
             {
-                GameBit_Set(DIMBOSSSPIT_GAMEBIT_ROUTE_HIGH, 1);
+                mainSetBits(DIMBOSSSPIT_GAMEBIT_ROUTE_HIGH, 1);
             }
         }
     }

@@ -98,11 +98,11 @@ void pointlight_setEffectState(int obj, int enabled)
     }
 }
 
-int pointlight_getExtraSize(void) { return sizeof(PointLightState); }
+int PointLight_getExtraSize(void) { return sizeof(PointLightState); }
 
-int pointlight_getObjectTypeId(void) { return 0; }
+int PointLight_getObjectTypeId(void) { return 0; }
 
-void pointlight_free(int obj)
+void PointLight_free(int obj)
 {
     PointLightState* state = ((GameObject*)obj)->extra;
     if (state->light != NULL)
@@ -112,7 +112,7 @@ void pointlight_free(int obj)
     ObjGroup_RemoveObject(obj, LGT_POINTLIGHT_GROUP);
 }
 
-void pointlight_render(int obj)
+void PointLight_render(int obj)
 {
     PointLightState* state = ((GameObject*)obj)->extra;
     ModelLight* light = state->light;
@@ -123,11 +123,11 @@ void pointlight_render(int obj)
     }
 }
 
-void pointlight_hitDetect(void)
+void PointLight_hitDetect(void)
 {
 }
 
-void pointlight_update(int obj)
+void PointLight_update(int obj)
 {
     u8 colorR, colorG, colorB;
     PointLightSetup* setup = (PointLightSetup*)((GameObject*)obj)->anim.placementData;
@@ -146,7 +146,7 @@ void pointlight_update(int obj)
     if (state->enabled != 0)
     {
         s16 bit = setup->enableBit;
-        if (bit > 0 && GameBit_Get(bit) == 0)
+        if (bit > 0 && mainGetBit(bit) == 0)
         {
             state->enabled = 0;
             modelLightStruct_setEnabled(state->light, 0, 1.0f);
@@ -161,7 +161,7 @@ void pointlight_update(int obj)
     else
     {
         s16 bit = setup->enableBit;
-        if (bit > 0 && GameBit_Get(bit) != 0)
+        if (bit > 0 && mainGetBit(bit) != 0)
         {
             state->enabled = 1;
             modelLightStruct_setEnabled(state->light, 1, 1.0f);
@@ -174,7 +174,7 @@ void pointlight_update(int obj)
     }
 }
 
-void pointlight_init(int obj, int setup)
+void PointLight_init(int obj, int setup)
 {
     u8 colorR, colorG, colorB;
     PointLightVec vec;
@@ -257,10 +257,10 @@ void pointlight_init(int obj, int setup)
     ObjGroup_AddObject(obj, LGT_POINTLIGHT_GROUP);
 }
 
-void pointlight_release(void)
+void PointLight_release(void)
 {
 }
 
-void pointlight_initialise(void)
+void PointLight_initialise(void)
 {
 }

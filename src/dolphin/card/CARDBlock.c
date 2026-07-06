@@ -2,15 +2,15 @@
 #include "dolphin/card/__card.h"
 
 // prototypes
-static void WriteCallback(s32 chan, s32 result);
-static void EraseCallback(s32 chan, s32 result);
+static void WriteCallback3(s32 chan, s32 result);
+static void EraseCallback3(s32 chan, s32 result);
 
 void* __CARDGetFatBlock(CARDControl* card) {
     ASSERTLINE(57, card->currentFat);
     return card->currentFat;
 }
 
-static void WriteCallback(s32 chan, s32 result) {
+static void WriteCallback3(s32 chan, s32 result) {
     CARDControl* card;
     CARDCallback callback;
     u16* fat0;
@@ -43,7 +43,7 @@ static void WriteCallback(s32 chan, s32 result) {
     }
 }
 
-static void EraseCallback(s32 chan, s32 result) {
+static void EraseCallback3(s32 chan, s32 result) {
     CARDControl* card = &__CARDBlock[chan];
     CARDCallback callback;
     u16* fat;
@@ -54,7 +54,7 @@ static void EraseCallback(s32 chan, s32 result) {
 
     fat = __CARDGetFatBlock(card);
     addr = ((u32)fat - (u32)card->workArea) / CARD_SYSTEM_BLOCK_SIZE * card->sectorSize;
-    result = __CARDWrite(chan, addr, CARD_SYSTEM_BLOCK_SIZE, fat, WriteCallback);
+    result = __CARDWrite(chan, addr, CARD_SYSTEM_BLOCK_SIZE, fat, WriteCallback3);
     if (result < 0)
         goto error;
 
@@ -155,5 +155,5 @@ s32 __CARDUpdateFatBlock(s32 chan, u16* fat, CARDCallback callback) {
     DCStoreRange(fat, 0x2000);
     card->eraseCallback = callback;
     addr = (((char*)fat - card->workArea) / 8192u) * card->sectorSize;
-    return __CARDEraseSector(chan, addr, EraseCallback);
+    return __CARDEraseSector(chan, addr, EraseCallback3);
 }

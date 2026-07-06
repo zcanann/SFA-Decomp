@@ -1,7 +1,7 @@
 /*
  * DLL 0xDE - baddieinterestp: an invisible "baddie interest point" trigger
- * object. Most callbacks are empty stubs; baddieinterestp_render draws the
- * model when visible, and baddieinterestp_update does the real work: when
+ * object. Most callbacks are empty stubs; BaddieInterestP_render draws the
+ * model when visible, and BaddieInterestP_update does the real work: when
  * its placement's gate bits permit (enableGameBit set, doneGameBit clear),
  * it scans ObjGroup 3 for a nearby object matching the placement id
  * (targetIdLo/targetIdHi), then by sun-position mode (modeKind bits 4-5)
@@ -39,33 +39,33 @@ extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void fn_801504BC(int* obj, int kind);
 extern f32 lbl_803E3224;
 
-int baddieinterestp_getExtraSize(void) { return 0x0; }
+int BaddieInterestP_getExtraSize(void) { return 0x0; }
 
-int baddieinterestp_getObjectTypeId(void) { return 0x0; }
+int BaddieInterestP_getObjectTypeId(void) { return 0x0; }
 
-void baddieinterestp_free(void)
+void BaddieInterestP_free(void)
 {
 }
 
-void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void BaddieInterestP_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3220);
 }
 
-void baddieinterestp_hitDetect(void)
+void BaddieInterestP_hitDetect(void)
 {
 }
 
 #pragma opt_loop_invariants off
-void baddieinterestp_update(int* obj)
+void BaddieInterestP_update(int* obj)
 {
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
     if (((int)((BaddieinterestpPlacement*)params)->enableGameBit == -1 ||
-            GameBit_Get((int)((BaddieinterestpPlacement*)params)->enableGameBit) != 0) &&
+            mainGetBit((int)((BaddieinterestpPlacement*)params)->enableGameBit) != 0) &&
         ((int)((BaddieinterestpPlacement*)params)->doneGameBit == -1 ||
-            GameBit_Get((int)((BaddieinterestpPlacement*)params)->doneGameBit) == 0))
+            mainGetBit((int)((BaddieinterestpPlacement*)params)->doneGameBit) == 0))
     {
         int count;
         int* objs = ObjGroup_GetObjects(3, &count);
@@ -115,7 +115,7 @@ void baddieinterestp_update(int* obj)
                                         target = (int*)objs[i];
                                         if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
                                         {
-                                            GameBit_Set((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
+                                            mainSetBits((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
                                         }
                                         switch (((GameObject*)target)->anim.seqId)
                                         {
@@ -140,7 +140,7 @@ void baddieinterestp_update(int* obj)
                                         target = (int*)objs[i];
                                         if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
                                         {
-                                            GameBit_Set((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
+                                            mainSetBits((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
                                         }
                                         switch (((GameObject*)target)->anim.seqId)
                                         {
@@ -165,7 +165,7 @@ void baddieinterestp_update(int* obj)
                                         target = (int*)objs[i];
                                         if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
                                         {
-                                            GameBit_Set((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
+                                            mainSetBits((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
                                         }
                                         switch (((GameObject*)target)->anim.seqId)
                                         {
@@ -198,28 +198,28 @@ void baddieinterestp_update(int* obj)
 }
 #pragma opt_loop_invariants reset
 
-void baddieinterestp_init(void)
+void BaddieInterestP_init(void)
 {
 }
 
-void baddieinterestp_release(void)
+void BaddieInterestP_release(void)
 {
 }
 
-void baddieinterestp_initialise(void)
+void BaddieInterestP_initialise(void)
 {
 }
 
 ObjectDescriptor gBaddieInterestPObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)baddieinterestp_initialise,
-    (ObjectDescriptorCallback)baddieinterestp_release,
+    (ObjectDescriptorCallback)BaddieInterestP_initialise,
+    (ObjectDescriptorCallback)BaddieInterestP_release,
     0,
-    (ObjectDescriptorCallback)baddieinterestp_init,
-    (ObjectDescriptorCallback)baddieinterestp_update,
-    (ObjectDescriptorCallback)baddieinterestp_hitDetect,
-    (ObjectDescriptorCallback)baddieinterestp_render,
-    (ObjectDescriptorCallback)baddieinterestp_free,
-    (ObjectDescriptorCallback)baddieinterestp_getObjectTypeId,
-    baddieinterestp_getExtraSize,
+    (ObjectDescriptorCallback)BaddieInterestP_init,
+    (ObjectDescriptorCallback)BaddieInterestP_update,
+    (ObjectDescriptorCallback)BaddieInterestP_hitDetect,
+    (ObjectDescriptorCallback)BaddieInterestP_render,
+    (ObjectDescriptorCallback)BaddieInterestP_free,
+    (ObjectDescriptorCallback)BaddieInterestP_getObjectTypeId,
+    BaddieInterestP_getExtraSize,
 };

@@ -58,32 +58,32 @@ enum
     CPMSG_UNREGISTER = 0xf0008  /* member -> controller: remove */
 };
 
-void cloudprisoncontrol_free(void)
+void CloudPrisonControl_free(void)
 {
 }
 
-void cloudprisoncontrol_hitDetect(void)
+void CloudPrisonControl_hitDetect(void)
 {
 }
 
-void cloudprisoncontrol_release(void)
+void CloudPrisonControl_release(void)
 {
 }
 
-int cloudprisoncontrol_getExtraSize(void) { return 0x0; }
-int cloudprisoncontrol_getObjectTypeId(void) { return 0x0; }
+int CloudPrisonControl_getExtraSize(void) { return 0x0; }
+int CloudPrisonControl_getObjectTypeId(void) { return 0x0; }
 
-void cloudprisoncontrol_initialise(void) { lbl_803DBE08 = 1; }
+void CloudPrisonControl_initialise(void) { lbl_803DBE08 = 1; }
 
-void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void CloudPrisonControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4108);
 }
 
-void cloudprisoncontrol_init(int obj) { ObjMsg_AllocQueue(obj, 0xa); }
+void CloudPrisonControl_init(int obj) { ObjMsg_AllocQueue(obj, 0xa); }
 
-void cloudprisoncontrol_update(int obj)
+void CloudPrisonControl_update(int obj)
 {
     int target;
     int data;

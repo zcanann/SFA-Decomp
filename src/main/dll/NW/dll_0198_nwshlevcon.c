@@ -23,7 +23,7 @@ extern int unlockLevel(s32 val, int idx, int flag);
 extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
-extern void fn_80296518(void* player, int a, int b);
+extern void objSetAnimStateFlags(void* player, int a, int b);
 
 int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -38,8 +38,8 @@ int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             switch (animUpdate->eventIds[i])
             {
             case 1:
-                fn_80296518(player, 0x10, 1);
-                GameBit_Set(0x174, 1);
+                objSetAnimStateFlags(player, 0x10, 1);
+                mainSetBits(0x174, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xb, 4, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1d, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1e, 1);
@@ -60,7 +60,7 @@ int nwsh_levcon_getObjectTypeId(void) { return 0x0; }
 void nwsh_levcon_free(int obj)
 {
     Music_Trigger(MUSICTRIG_ewt_chase, 0);
-    GameBit_Set(0xefd, 0);
+    mainSetBits(0xefd, 0);
 }
 
 void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -94,8 +94,8 @@ void nwsh_levcon_init(int* obj)
     unlockLevel(mapGetDirIdx(0x28), 1, 0);
     Music_Trigger(MUSICTRIG_ewt_chase, 1);
     ((GameObject*)obj)->unkF4 = 1;
-    GameBit_Set(0xea2, 1);
-    GameBit_Set(0xefd, 1);
+    mainSetBits(0xea2, 1);
+    mainSetBits(0xefd, 1);
 }
 
 void nwsh_levcon_release(void)

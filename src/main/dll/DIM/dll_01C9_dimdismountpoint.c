@@ -30,12 +30,12 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 lbl_803E490C;
 
-void dimdismountpoint_func11(int obj, int flag)
+void DIMDismountPoint_func0B(int obj, int flag)
 {
     (*gObjectTriggerInterface)->runSequence((flag ^ 1) + 2, (void*)obj, -1);
 }
 
-int dimdismountpoint_setScale(int obj)
+int DIMDismountPoint_setScale(int obj)
 {
     int* player = (int*)Obj_GetPlayerObject();
     int* state = ((GameObject*)obj)->extra;
@@ -59,13 +59,13 @@ int dimdismountpoint_setScale(int obj)
     return side;
 }
 
-int dimdismountpoint_getExtraSize(void) { return 0x10; }
+int DIMDismountPoint_getExtraSize(void) { return 0x10; }
 
-int dimdismountpoint_getObjectTypeId(void) { return 0; }
+int DIMDismountPoint_getObjectTypeId(void) { return 0; }
 
-void dimdismountpoint_free(int obj) { ObjGroup_RemoveObject(obj, DIMDISMOUNT_GROUP); }
+void DIMDismountPoint_free(int obj) { ObjGroup_RemoveObject(obj, DIMDISMOUNT_GROUP); }
 
-void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void DIMDismountPoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     if (visible == 0 || ((GameObject*)obj)->unkF8 != 0)
     {
@@ -80,11 +80,11 @@ void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible
     }
 }
 
-void dimdismountpoint_hitDetect(void)
+void DIMDismountPoint_hitDetect(void)
 {
 }
 
-void dimdismountpoint_update(int* obj)
+void DIMDismountPoint_update(int* obj)
 {
     int* nearest;
     f32 dist;
@@ -92,7 +92,7 @@ void dimdismountpoint_update(int* obj)
     dist = lbl_803E4910;
     nearest = (int*)ObjGroup_FindNearestObject(DIMCONVEYOR_GROUP, (u32)obj, &dist);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
-    if (GameBit_Get(DIMDISMOUNT_GAMEBIT_DONE) != 0)
+    if (mainGetBit(DIMDISMOUNT_GAMEBIT_DONE) != 0)
     {
         ((GameObject*)obj)->hitVolumeIndex = 1;
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
@@ -120,7 +120,7 @@ void dimdismountpoint_update(int* obj)
     }
 }
 
-void dimdismountpoint_init(u8* obj, u8* params)
+void DIMDismountPoint_init(u8* obj, u8* params)
 {
     f32* sub;
 
@@ -135,10 +135,10 @@ void dimdismountpoint_init(u8* obj, u8* params)
     ((GameObject*)obj)->unkF8 = 1;
 }
 
-void dimdismountpoint_release(void)
+void DIMDismountPoint_release(void)
 {
 }
 
-void dimdismountpoint_initialise(void)
+void DIMDismountPoint_initialise(void)
 {
 }

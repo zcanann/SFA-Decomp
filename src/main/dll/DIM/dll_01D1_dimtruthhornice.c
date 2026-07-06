@@ -106,7 +106,7 @@ void dimtruthhornice_update(int* obj)
         {
             if (extra->gameBit != -1)
             {
-                GameBit_Set(extra->gameBit, 1);
+                mainSetBits(extra->gameBit, 1);
                 ObjHits_DisableObject(obj);
                 extra->phase = TRUTHHORNICE_PHASE_SHATTERING;
                 extra->timer = lbl_803E4A40;
@@ -173,7 +173,7 @@ void dimtruthhornice_init(int* obj, int* def)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMTRUTHHORNICE_OBJFLAG_HIDDEN);
     {
         s16 slot = state->gameBit;
-        if (slot != -1 && GameBit_Get(slot) != 0u)
+        if (slot != -1 && mainGetBit(slot) != 0u)
         {
             ObjHits_DisableObject(obj);
             state->phase = TRUTHHORNICE_PHASE_SHATTERED;

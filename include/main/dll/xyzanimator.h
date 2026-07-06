@@ -37,11 +37,11 @@ typedef struct PollenExtra {
 #define POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES 60
 #define POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET 0xc4
 
-void kaldachompspit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible);
-void kaldachompspit_hitDetect(void);
-void kaldachompspit_init(int obj);
-void kaldachompspit_release(void);
-void kaldachompspit_initialise(void);
+void KaldaChompSpit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible);
+void KaldaChompSpit_hitDetect(void);
+void KaldaChompSpit_init(int obj);
+void KaldaChompSpit_release(void);
+void KaldaChompSpit_initialise(void);
 void FUN_80169d38(u64 param_1,u64 param_2,u64 param_3,double param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  short *param_9);
@@ -68,15 +68,15 @@ void FUN_8016aba8(u64 param_1,double param_2,double param_3,u64 param_4,
                  u32 param_9);
 void FUN_8016ae64(double param_1,double param_2,double param_3,u64 param_4,u64 param_5
                  ,u64 param_6,u64 param_7,u64 param_8,int param_9);
-int pollen_getExtraSize(void);
-int pollen_getObjectTypeId(void);
-void pollen_free(int obj);
-void pollen_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
-void pollen_hitDetect(int obj);
-void pollen_update(int obj);
-void pollen_init(int obj);
-void pollen_release(void);
-void pollen_initialise(void);
+int Pollen_getExtraSize(void);
+int Pollen_getObjectTypeId(void);
+void Pollen_free(int obj);
+void Pollen_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
+void Pollen_hitDetect(int obj);
+void Pollen_update(int obj);
+void Pollen_init(int obj);
+void Pollen_release(void);
+void Pollen_initialise(void);
 int pollenfragment_getExtraSize(void);
 int pollenfragment_getObjectTypeId(void);
 void pollenfragment_free(int obj);
@@ -112,7 +112,7 @@ void quakeSpellFn_8016cee8(int* obj, int* x);
 
 
 /* extern-cleanup: consolidated prototypes (true-def sigs) */
-void kaldachompspit_free(int* obj);
-void kaldachompspit_update(int obj);
+void KaldaChompSpit_free(int* obj);
+void KaldaChompSpit_update(int obj);
 
 #endif /* MAIN_DLL_DLL_13C_H_ */

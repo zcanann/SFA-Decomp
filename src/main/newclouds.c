@@ -302,7 +302,7 @@ extern char sSnowKillSnowCloudInvalidCloudId[];
 extern void debugPrintf(char* fmt, ...);
 
 #pragma dont_inline on
-void newclouds_snowKillSnowCloud(int cloudId, int flag)
+void newclouds_killSnowCloud(int cloudId, int flag)
 {
     void* p;
     int i;
@@ -1843,7 +1843,7 @@ extern const f32 lbl_803DF27C;
  * byte arithmetic; retyping shifts the index/CSE codegen. `env` is the
  * cross-TU saveGameGetEnvState() blob (would need a shared header).
  */
-void newclouds_update(u8* objA, u8* objB, u8* params)
+void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
 {
     CloudSpawnParams* cfg = (CloudSpawnParams*)params;
     u8* env;
@@ -2046,7 +2046,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     else if (fl & NEWCLOUD_CMD_KILL)
     {
-        newclouds_snowKillSnowCloud(*(u16*)(params + 0x26), 0);
+        newclouds_killSnowCloud(*(u16*)(params + 0x26), 0);
     }
     else if (fl & NEWCLOUD_CMD_DESPAWN)
     {
@@ -2684,4 +2684,4 @@ char sSnowKillSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i 
 u32 lbl_8030F788[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
 
 /* fill missing .data symbols */
-u32 lbl_8030F5B4[15] = { 0x00000000, 0x00000000, 0x00000000, 0x000a0000, (u32)newclouds_initialise, (u32)newclouds_release, 0x00000000, (u32)newclouds_update, (u32)newclouds_onMapSetup, (u32)newclouds_snowKillSnowCloud, (u32)dll_07_func06, (u32)dll_07_func07, (u32)dll_07_func08, (u32)dll_07_func09, (u32)dll_07_func0A_nop };
+u32 lbl_8030F5B4[15] = { 0x00000000, 0x00000000, 0x00000000, 0x000a0000, (u32)newclouds_initialise, (u32)newclouds_release, 0x00000000, (u32)newclouds_updateEnvfxAct, (u32)newclouds_onMapSetup, (u32)newclouds_killSnowCloud, (u32)dll_07_func06, (u32)dll_07_func07, (u32)dll_07_func08, (u32)dll_07_func09, (u32)dll_07_func0A_nop };

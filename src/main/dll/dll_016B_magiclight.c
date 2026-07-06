@@ -5,9 +5,9 @@
  * visible frame). The other variants carry a MagicLightState: at init a
  * random lifetime is rolled and, for seqId 0x16B, the placement subtype
  * picks an enter/leave L-action pair and a trigger radius preset. Each
- * tick (magiclight_SeqFn) the distance to the player is measured: crossing
+ * tick (MagicLight_SeqFn) the distance to the player is measured: crossing
  * inside triggerRadius fires the enter action, crossing back outside the
- * radius plus hysteresis fires the leave action. magiclight_update kicks
+ * radius plus hysteresis fires the leave action. MagicLight_update kicks
  * off trigger sequence 0 once, on the first update.
  */
 #include "main/dll/magiclightstate_struct.h"
@@ -31,7 +31,7 @@ extern f32 Vec_distance(f32* a, f32* b);
 
 #pragma scheduling off
 #pragma peephole off
-int magiclight_SeqFn(int* obj)
+int MagicLight_SeqFn(int* obj)
 {
     MagicLightState* state;
     int* player;
@@ -57,16 +57,16 @@ int magiclight_SeqFn(int* obj)
 }
 
 #pragma scheduling on
-int magiclight_getExtraSize(int* obj)
+int MagicLight_getExtraSize(int* obj)
 {
     if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW) return 0x0;
     return 0x14;
 }
 
 #pragma scheduling off
-int magiclight_getObjectTypeId(void) { return 0x0; }
+int MagicLight_getObjectTypeId(void) { return 0x0; }
 
-void magiclight_free(int obj)
+void MagicLight_free(int obj)
 {
     MagicLightState* state = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.seqId != MAGICLIGHT_SEQ_GLOW)
@@ -80,7 +80,7 @@ void magiclight_free(int obj)
 }
 
 #pragma scheduling on
-void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void MagicLight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW && visible != 0)
     {
@@ -89,13 +89,13 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 
 #pragma peephole on
-void magiclight_hitDetect(void)
+void MagicLight_hitDetect(void)
 {
 }
 
 #pragma scheduling off
 #pragma peephole off
-void magiclight_update(int obj)
+void MagicLight_update(int obj)
 {
     if (((GameObject*)obj)->anim.seqId != MAGICLIGHT_SEQ_GLOW && ((GameObject*)obj)->unkF4 == 0)
     {
@@ -107,12 +107,12 @@ void magiclight_update(int obj)
     }
 }
 
-void magiclight_init(int* obj, u8* params)
+void MagicLight_init(int* obj, u8* params)
 {
     MagicLightState* state;
     ((GameObject*)obj)->unkF4 = 0;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = magiclight_SeqFn;
+    ((GameObject*)obj)->animEventCallback = MagicLight_SeqFn;
     if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW)
     {
         return;
@@ -156,10 +156,10 @@ void magiclight_init(int* obj, u8* params)
 
 #pragma scheduling on
 #pragma peephole on
-void magiclight_release(void)
+void MagicLight_release(void)
 {
 }
 
-void magiclight_initialise(void)
+void MagicLight_initialise(void)
 {
 }

@@ -82,9 +82,9 @@ void link_levcontrol_updateAreaMusic(int* obj)
         }
         break;
     case AREA_CELL_48:
-        if (GameBit_Get(0xe1e) == 0)
+        if (mainGetBit(0xe1e) == 0)
         {
-            if (GameBit_Get(0xb72) != 0)
+            if (mainGetBit(0xb72) != 0)
             {
                 if (state->musicTrack != 0x95)
                 {

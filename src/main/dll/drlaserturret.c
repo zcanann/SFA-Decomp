@@ -77,7 +77,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     }
     ObjHits_EnableObject((u32)obj);
     obj->hitFlags &= ~DR_LASERTURRET_HITFLAG_CLEAR_PROMPT;
-    if (GameBit_Get(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0)
+    if (mainGetBit(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0)
     {
         pushState = DR_LASERTURRET_STATE_PUSH_IDLE;
         stack = state->stateStack;
@@ -109,7 +109,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     {
         if (playerGetMoney(playerObj) >= 1)
         {
-            GameBit_Set(DR_LASERTURRET_GAMEBIT_HAS_MONEY, 1);
+            mainSetBits(DR_LASERTURRET_GAMEBIT_HAS_MONEY, 1);
             buttonDisable(0, DR_LASERTURRET_BUTTON_ACCEPT);
         }
         else
@@ -197,7 +197,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         }
         state->flags = state->flags | DR_LASERTURRET_FLAG_ACTION_ACTIVE;
     }
-    if (GameBit_Get(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0)
+    if (mainGetBit(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0)
     {
         pushState = DR_LASERTURRET_STATE_PUSH_TRACKING;
         stack = state->stateStack;
@@ -269,14 +269,14 @@ int DRlaserturret_startLinkedTarget(DRLaserTurretObject* obj)
     DRLaserTurretState* state;
 
     state = obj->state;
-    if (GameBit_Get(DR_LASERTURRET_GAMEBIT_LINK_READY) == 0)
+    if (mainGetBit(DR_LASERTURRET_GAMEBIT_LINK_READY) == 0)
     {
         return 0;
     }
-    if ((int)GameBit_Get(DR_LASERTURRET_GAMEBIT_LINK_STARTED) == 0)
+    if ((int)mainGetBit(DR_LASERTURRET_GAMEBIT_LINK_STARTED) == 0)
     {
         int* target;
-        GameBit_Set(DR_LASERTURRET_GAMEBIT_LINK_STARTED, 1);
+        mainSetBits(DR_LASERTURRET_GAMEBIT_LINK_STARTED, 1);
         target = state->linkedTarget;
         (**(VtableFn***)((char*)target + 0x68))[0x24 / 4](target, 1, 2);
     }
@@ -418,7 +418,7 @@ void DRlaserturret_startTimedChallenge(DRLaserTurretObject* obj)
         gameTimerInit(0x11, 0x1e);
         timerSetToCountUp();
         hudFn_8011f6f0(1);
-        GameBit_Set(DR_LASERTURRET_GAMEBIT_TIMER_STARTED, 1);
+        mainSetBits(DR_LASERTURRET_GAMEBIT_TIMER_STARTED, 1);
         target = state->linkedTarget;
         (**(VtableFn***)((char*)target + 0x68))[0x4c / 4](target, state->digitCount);
         (*(VtableFn**)gTitleMenuControlInterface)[0x4 / 4](0, 0xf5, 0, 0, 0);

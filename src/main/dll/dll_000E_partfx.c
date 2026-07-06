@@ -451,7 +451,7 @@ extern PartFxSpawnParams gPartfxDefaultSpawnParams;
 
 extern void vecRotateZXY(void* obj, f32* vec);
 extern char sModgfxAlphaDebugFormat[];
-extern void fn_80137948(char* fmt, ...);
+extern void logPrintf(char* fmt, ...);
 
 int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                        u32 modelIdArg, void* extraArgsArg)
@@ -1554,7 +1554,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         {
             intVal = (int)(gPartfxAlphaByteScale * (lbl_803DF4D0 - *extraArgs));
             cfg.initialAlpha = intVal;
-            fn_80137948(sModgfxAlphaDebugFormat, intVal);
+            logPrintf(sModgfxAlphaDebugFormat, intVal);
         }
         cfg.scale = lbl_803DF54C;
         cfg.behaviorFlags = 0x80000;

@@ -164,7 +164,7 @@ void fn_80206968(TrickyCurveObject* obj)
     {
         if (objGetAnimState80A((int)player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
         {
-            GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
+            mainSetBits(TRICKY_CURVE_GAMEBIT_HIT, 1);
             PARTFX_SPAWN(player, TRICKY_CURVE_PARTFX_COOLDOWN, 0, 2, -1, 0);
         }
         else
@@ -273,14 +273,14 @@ void fn_80206C18(TrickyCurveObject* obj)
             if (gTrickyCurveBurstCounter > TRICKY_CURVE_BURST_LIMIT)
             {
                 gTrickyCurveBurstCounter = 0;
-                GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
+                mainSetBits(TRICKY_CURVE_GAMEBIT_HIT, 1);
                 Sfx_PlayFromObject((u32)obj, TRICKY_CURVE_SFX_BURST);
             }
             PARTFX_SPAWN(player, TRICKY_CURVE_PARTFX_COOLDOWN, 0, 2, -1, 0);
         }
         else
         {
-            GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
+            mainSetBits(TRICKY_CURVE_GAMEBIT_HIT, 1);
             ObjMsg_SendToObject(player, TRICKY_CURVE_MESSAGE_BURST, obj, 2);
             PARTFX_SPAWN((int)obj, TRICKY_CURVE_PARTFX_BURST, &partfxArgs, 2, -1, 0);
             Sfx_PlayFromObject((u32)obj, TRICKY_CURVE_SFX_BURST);

@@ -5,7 +5,7 @@
  * behaviour runs. The DLL exists only to fill the 0x29E id in the object
  * table.
  *
- * fn_8022F558 is the odd one out: it is the ARWBombColl lifetime setter,
+ * arwbombcoll_setLifetime is the odd one out: it is the ARWBombColl lifetime setter,
  * called from arwarwing (DLL 0x29A) and andross (DLL 0x2BC), and lives
  * here purely because of where it landed in the link order.
  */
@@ -44,7 +44,7 @@ void Dummy29E_initialise(void)
 {
 }
 
-void fn_8022F558(int obj, int lifetime)
+void arwbombcoll_setLifetime(int obj, int lifetime)
 {
     ARWBombCollState* state = ((GameObject*)obj)->extra;
     state->lifetime = lifetime;

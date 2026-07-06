@@ -7,7 +7,7 @@ void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state);
 void crcloudrace_updateRaceState(int obj);
 
 extern f32 lbl_803E6748;
-extern u32 fn_802972A8(int obj);
+extern u32 playerGetFocusObject(int obj);
 extern f32 lbl_803E6740;
 extern f32 lbl_803E6744;
 
@@ -38,17 +38,17 @@ void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state) {
 
     dist = lbl_803E6740;
     player = (int)Obj_GetPlayerObject();
-    if (GameBit_Get(CRCLOUDRACE_GAMEBIT_IN_FINISH_VOLUME) == 0) {
-        if (GameBit_Get(CRCLOUDRACE_GAMEBIT_ABORT_TRIGGER) != 0) {
+    if (mainGetBit(CRCLOUDRACE_GAMEBIT_IN_FINISH_VOLUME) == 0) {
+        if (mainGetBit(CRCLOUDRACE_GAMEBIT_ABORT_TRIGGER) != 0) {
             state->phase = CRCLOUDRACE_PHASE_ABORT;
             setMotionBlur(0, lbl_803E6744);
-            GameBit_Set(CRCLOUDRACE_GAMEBIT_RACE_ACTIVE, 0);
-            GameBit_Set(CRCLOUDRACE_GAMEBIT_RACE_STARTED, 0);
+            mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_ACTIVE, 0);
+            mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_STARTED, 0);
         }
     } else {
-        GameBit_Set(CRCLOUDRACE_GAMEBIT_IN_FINISH_VOLUME, 1);
+        mainSetBits(CRCLOUDRACE_GAMEBIT_IN_FINISH_VOLUME, 1);
         setMotionBlur(0, lbl_803E6744);
-        if (GameBit_Get(CRCLOUDRACE_GAMEBIT_RACE_CAN_FINISH) != 0 && fn_802972A8(player) == 0) {
+        if (mainGetBit(CRCLOUDRACE_GAMEBIT_RACE_CAN_FINISH) != 0 && playerGetFocusObject(player) == 0) {
             near = ObjGroup_FindNearestObject(CRCLOUDRACE_NEARBY_TOTEM_GROUP, obj, &dist);
             if (near != 0) {
                 (*(void (**)(int, int))((char *)*((GameObject *)near)->anim.dll + 0x20))(near, 1);
@@ -69,12 +69,12 @@ void crcloudrace_updateRaceState(int obj) {
     player = (int)Obj_GetPlayerObject();
     switch (inner->phase) {
     case CRCLOUDRACE_PHASE_START:
-        if (GameBit_Get(CRCLOUDRACE_GAMEBIT_TOTEM_GATE) != 0) {
-            GameBit_Set(CRCLOUDRACE_GAMEBIT_TOTEM_LATCH, 1);
+        if (mainGetBit(CRCLOUDRACE_GAMEBIT_TOTEM_GATE) != 0) {
+            mainSetBits(CRCLOUDRACE_GAMEBIT_TOTEM_LATCH, 1);
         }
-        if (fn_802972A8(player) != 0) {
-            GameBit_Set(CRCLOUDRACE_GAMEBIT_RACE_STARTED, 1);
-            GameBit_Set(CRCLOUDRACE_GAMEBIT_RACE_ACTIVE, 1);
+        if (playerGetFocusObject(player) != 0) {
+            mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_STARTED, 1);
+            mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_ACTIVE, 1);
             inner->phase = CRCLOUDRACE_PHASE_RACING;
             unlockLevel(0, 0, 1);
         }
@@ -83,7 +83,7 @@ void crcloudrace_updateRaceState(int obj) {
         crcloudrace_updateCompletionState(obj, inner);
         break;
     case CRCLOUDRACE_PHASE_ABORT:
-        GameBit_Set(CRCLOUDRACE_GAMEBIT_TOTEM_LATCH, 0);
+        mainSetBits(CRCLOUDRACE_GAMEBIT_TOTEM_LATCH, 0);
         inner->phase = CRCLOUDRACE_PHASE_COUNTDOWN;
         s16toFloat((char *)inner->timer, CRCLOUDRACE_COUNTDOWN_FRAMES);
         break;
@@ -96,13 +96,13 @@ void crcloudrace_updateRaceState(int obj) {
         unlockLevel(0, 0, 1);
         loadMapAndParent(CRCLOUDRACE_DRAG_ROCK_MAP_ID);
         lockLevel(mapGetDirIdx(CRCLOUDRACE_DRAG_ROCK_MAP_ID), 0);
-        GameBit_Set(CRCLOUDRACE_RESET_BIT_D73, 0);
-        GameBit_Set(CRCLOUDRACE_RESET_BIT_983, 0);
-        GameBit_Set(CRCLOUDRACE_RESET_BIT_E23, 0);
-        GameBit_Set(CRCLOUDRACE_RESET_BIT_E1D, 0);
-        GameBit_Set(CRCLOUDRACE_RESET_BIT_DB8, 0);
-        GameBit_Set(CRCLOUDRACE_RESET_BIT_984, 0);
-        GameBit_Set(CRCLOUDRACE_GAMEBIT_DRAG_ROCK_CLEARED, 0);
+        mainSetBits(CRCLOUDRACE_RESET_BIT_D73, 0);
+        mainSetBits(CRCLOUDRACE_RESET_BIT_983, 0);
+        mainSetBits(CRCLOUDRACE_RESET_BIT_E23, 0);
+        mainSetBits(CRCLOUDRACE_RESET_BIT_E1D, 0);
+        mainSetBits(CRCLOUDRACE_RESET_BIT_DB8, 0);
+        mainSetBits(CRCLOUDRACE_RESET_BIT_984, 0);
+        mainSetBits(CRCLOUDRACE_GAMEBIT_DRAG_ROCK_CLEARED, 0);
         inner->phase = CRCLOUDRACE_PHASE_IDLE;
         break;
     case CRCLOUDRACE_PHASE_RESET_TO_START:
@@ -126,8 +126,8 @@ int crcloudrace_completionCallback(int obj, int unused, ObjAnimUpdateState *anim
     for (i = 0; i < animUpdate->eventCount; i++) {
         switch (animUpdate->eventIds[i]) {
         case CRCLOUDRACE_COMPLETION_ANIM_EVENT:
-            GameBit_Set(CRCLOUDRACE_GAMEBIT_COMPLETION_EVENT, 1);
-            GameBit_Set(CRCLOUDRACE_GAMEBIT_DRAG_ROCK_CLEARED, 0);
+            mainSetBits(CRCLOUDRACE_GAMEBIT_COMPLETION_EVENT, 1);
+            mainSetBits(CRCLOUDRACE_GAMEBIT_DRAG_ROCK_CLEARED, 0);
             loadMapAndParent(CRCLOUDRACE_DRAG_ROCK_MAP_ID);
             unlockLevel(0, 0, 1);
             lockLevel(mapGetDirIdx(CRCLOUDRACE_DRAG_ROCK_MAP_ID), 0);
@@ -177,11 +177,11 @@ void crcloudrace_update(CrCloudRaceObject *obj)
 
   state = obj->state;
   if (obj->unkF8 == 0) {
-    eventActive = GameBit_Get(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR);
+    eventActive = mainGetBit(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR);
     if (eventActive != 0) {
       getEnvfxActImmediately(obj,obj,CRCLOUDRACE_ENVFX_CLEAR_A,0);
       getEnvfxActImmediately(obj,obj,CRCLOUDRACE_ENVFX_CLEAR_B,0);
-      GameBit_Set(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR,0);
+      mainSetBits(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR,0);
       unlockLevel(0,0,1);
     }
     obj->unkF4 = 1;
@@ -203,7 +203,7 @@ void crcloudrace_init(CrCloudRaceObject *obj)
   obj->animEventCallback = crcloudrace_completionCallback;
   state->phase = CRCLOUDRACE_PHASE_START;
   storeZeroToFloatParam(state->timer);
-  GameBit_Set(CRCLOUDRACE_GAMEBIT_START_LATCH_A,1);
+  mainSetBits(CRCLOUDRACE_GAMEBIT_START_LATCH_A,1);
   streamFn_8000a380(3,2,1000);
   return;
 }

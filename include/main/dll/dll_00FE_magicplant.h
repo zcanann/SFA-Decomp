@@ -122,17 +122,17 @@ typedef struct TrickyWarpState {
   int curveNodeIds[0x18];
 } TrickyWarpState;
 
-int trickywarp_getExtraSize(void);
-void trickywarp_free(int obj);
-void trickywarp_update(int obj);
+int TrickyWarp_getExtraSize(void);
+void TrickyWarp_free(int obj);
+void TrickyWarp_update(int obj);
 int fn_8017FFD0(int obj, TrickyWarpState *state);
-void trickywarp_init(s16 *obj, u8 *param_2);
+void TrickyWarp_init(s16 *obj, u8 *param_2);
 void FUN_801804a0(short *param_1,int param_2);
 void FUN_801804a4(int param_1);
 void FUN_801804d8(int param_1,u32 param_2,u8 *param_3,int param_4,int param_5);
 void FUN_801804dc(u32 param_1,u32 param_2,u8 *param_3,int param_4,int param_5);
-void trickyguard_update();
-void trickyguard_init(s16 *obj, u8 *param_2);
+void TrickyGuard_update();
+void TrickyGuard_init(s16 *obj, u8 *param_2);
 void StayPoint_update(int obj);
 void StayPoint_init(u16 *obj);
 int duster_getExtraSize(void);
@@ -152,9 +152,9 @@ void FUN_80181a90(int param_1,int param_2);
 void FUN_80181b50(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u32 param_9,u32 param_10,int param_11);
-int curvefish_getExtraSize(void);
-void curvefish_update(int obj);
-void curvefish_init(int obj, u8 *param_2);
+int CurveFish_getExtraSize(void);
+void CurveFish_update(int obj);
+void CurveFish_init(int obj, u8 *param_2);
 void fn_801814D0(int obj, int param_2, u8 *state);
 
 extern ObjectDescriptor gMagicPlantObjDescriptor;

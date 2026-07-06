@@ -125,7 +125,7 @@ extern int objFn_80198fa4();
 extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
 extern void Sfx_StopFromObject(void* obj, int sfxId);
 extern void objSetSlot(u8* obj, s8 slot);
-extern int GameBit_Get(int eventId);
+extern int mainGetBit(int eventId);
 extern f32 lbl_803E40F8; /* unnamed f32 constant from the shared .sdata2 pool (range divisor) */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* gPlayerShadowInterface;
@@ -148,7 +148,7 @@ extern int ObjList_GetObjects(int* first, int* count);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void textureFree(int tex);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void GameBit_Set(int eventId, int value);
+extern void mainSetBits(int eventId, int value);
 
 extern int getTrickyObject(void);
 
@@ -165,7 +165,7 @@ extern void envFxFn_800887cc(void);
 extern f32 lbl_803E40D8;
 extern f32 lbl_803E40FC;
 extern f32 lbl_803E4100;
-extern int fn_802972A8(void);
+extern int playerGetFocusObject(void);
 extern int return1_800202BC(void);
 extern int fn_80198B68(int obj, int p2);
 extern void objSeqFn_801992ec(int obj, int target);
@@ -256,7 +256,7 @@ void Trigger_init(u8* obj, u8* params)
         break;
     }
     ((TriggerState*)state)->gameBit = ((TriggerPlacement*)params)->gameBitSrc;
-    if (GameBit_Get(((TriggerState*)state)->gameBit) == 1)
+    if (mainGetBit(((TriggerState*)state)->gameBit) == 1)
     {
         state[0] = (u8)(state[0] | TRIGGER_SFLAG_DISABLED);
     }
@@ -535,7 +535,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                 case 0x12:
                     op = (u16)((p[2] << 8) | p[3]);
                     bit = op & 0x3fff;
-                    v = GameBit_Get(bit);
+                    v = mainGetBit(bit);
                     sel = op >> 14 & 3;
                     if (sel == 0)
                     {
@@ -549,12 +549,12 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     {
                         v = ~v;
                     }
-                    GameBit_Set(bit, v);
+                    mainSetBits(bit, v);
                     break;
                 case 0x21:
                     op = (u16)((p[2] << 8) | p[3]);
                     bit = op & 0x1fff;
-                    GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (op >> 13 & 7)));
+                    mainSetBits(bit, mainGetBit(bit) ^ (1 << (op >> 13 & 7)));
                     break;
                 case 0x13:
                     (*gMapEventInterface)->setObjGroupStatus(
@@ -639,7 +639,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     (*gMapEventInterface)->setMapAct(p[3], p[2]);
                     break;
                 case 0x11:
-                    GameBit_Set(0x4e3, (p[2] << 8) | p[3]);
+                    mainSetBits(0x4e3, (p[2] << 8) | p[3]);
                     break;
                 case 0x1f:
                     t = Obj_GetPlayerObject();
@@ -725,10 +725,10 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                             }
                             break;
                         case 3:
-                            GameBit_Set(0xd00, 0);
+                            mainSetBits(0xd00, 0);
                             break;
                         case 4:
-                            GameBit_Set(0xd00, 1);
+                            mainSetBits(0xd00, 1);
                             break;
                         }
                     }
@@ -737,32 +737,32 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     switch (p[2])
                     {
                     case 0:
-                        GameBit_Set(0x3ab, p[3] == 0);
+                        mainSetBits(0x3ab, p[3] == 0);
                         break;
                     case 1:
-                        GameBit_Set(0x3ac, p[3] == 0);
+                        mainSetBits(0x3ac, p[3] == 0);
                         break;
                     case 2:
-                        GameBit_Set(0x3af, p[3] == 0);
+                        mainSetBits(0x3af, p[3] == 0);
                         break;
                     case 3:
                         switch (p[3])
                         {
                         case 0:
-                            GameBit_Set(0x3b0, 1);
+                            mainSetBits(0x3b0, 1);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
                             break;
                         case 1:
-                            GameBit_Set(0x3b0, 0);
+                            mainSetBits(0x3b0, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
                             envFxFn_800887cc();
                             break;
                         case 2:
-                            GameBit_Set(0x3b0, 1);
+                            mainSetBits(0x3b0, 1);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x136, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x137, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x143, 0);
@@ -774,15 +774,15 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                 case 0x1d:
                     if (p[2] != 0)
                     {
-                        GameBit_Set(0x966, 0);
-                        GameBit_Set(0x967, 0);
-                        GameBit_Set(0x968, 0);
+                        mainSetBits(0x966, 0);
+                        mainSetBits(0x967, 0);
+                        mainSetBits(0x968, 0);
                     }
                     else
                     {
-                        GameBit_Set(0x966, 1);
-                        GameBit_Set(0x967, 1);
-                        GameBit_Set(0x968, 1);
+                        mainSetBits(0x966, 1);
+                        mainSetBits(0x967, 1);
+                        mainSetBits(0x968, 1);
                     }
                     break;
                 case 0x2c:
@@ -809,7 +809,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
     if ((s8)legCode > 0)
     {
         *state |= TRIGGER_SFLAG_ENTERED;
-        GameBit_Set(((TriggerState*)state)->gameBit, 1);
+        mainSetBits(((TriggerState*)state)->gameBit, 1);
     }
     else if ((s8)legCode < 0)
     {
@@ -839,7 +839,7 @@ void Trigger_hitDetect(int obj)
         triggerObj = Obj_GetPlayerObject();
         if ((void*)triggerObj != NULL)
         {
-            inside = fn_802972A8();
+            inside = playerGetFocusObject();
             if ((void*)inside != NULL)
             {
                 triggerObj = inside;
@@ -956,7 +956,7 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4c:
                     ok2 = 1;
-                    if (((TriggerState*)state)->gateBits[0] != -1 && GameBit_Get(((TriggerState*)state)->gateBits[0]) == 0u)
+                    if (((TriggerState*)state)->gateBits[0] != -1 && mainGetBit(((TriggerState*)state)->gateBits[0]) == 0u)
                     {
                         ok2 = 0;
                     }
@@ -1012,7 +1012,7 @@ void Trigger_hitDetect(int obj)
                     while (i < 4 && ok)
                     {
                         s16 gate = ((TriggerState*)state)->gateBits[i];
-                        if (gate != -1 && GameBit_Get(gate) == 0u)
+                        if (gate != -1 && mainGetBit(gate) == 0u)
                         {
                             ok = 0;
                         }

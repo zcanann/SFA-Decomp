@@ -22,7 +22,7 @@
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern CameraModeCannonState* lbl_803DD5A0;
 
-void CameraModeCannon_copyToCurrent_nop(void)
+void CameraModeCannon_copyToCurrent(void)
 {
 }
 

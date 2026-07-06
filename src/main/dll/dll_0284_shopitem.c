@@ -210,7 +210,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
     }
 }
 
-void fn_801E8660(int obj)
+void shopitem_onSeqFree(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -232,12 +232,12 @@ void fn_801E8660(int obj)
     }
 }
 
-int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
+int shopitem_SeqFn(int obj, int p2, ObjSeqState* seq)
 {
     int sub = *(int*)&((GameObject*)obj)->extra;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
 
-    seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_801E8660;
+    seq->freeCallback = (ObjAnimSequenceFreeCallback)shopitem_onSeqFree;
     seq->flags &= ~4;
     seq->savedFlags &= ~4;
 
@@ -455,7 +455,7 @@ void shopitem_init(int obj, int data)
 
     objAnim = (ObjAnimComponent*)obj;
     ((GameObject*)obj)->objectFlags |= SHOPITEM_OBJFLAG_HITDETECT_DISABLED;
-    ((GameObject*)obj)->animEventCallback = fn_801E86F4;
+    ((GameObject*)obj)->animEventCallback = shopitem_SeqFn;
     objAnim->bankIndex = (s8)((ShopItemDef*)data)->bankIndex;
     ((GameObject*)obj)->anim.rotX = (s16)(((ShopItemDef*)data)->rotXByte << 8);
     ((GameObject*)obj)->anim.rotY = (s16)(((ShopItemDef*)data)->rotYByte << 8);

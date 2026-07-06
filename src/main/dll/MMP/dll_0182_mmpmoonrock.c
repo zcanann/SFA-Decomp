@@ -337,7 +337,7 @@ void mmp_moonrock_init(int obj, int param2)
     u8 kind;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | MMPMOONROCK_OBJFLAG_HITDETECT_DISABLED;
     *(s16*)&state->flags = 0;
-    state->kind = GameBit_Get(((MmpMoonrockPlacement*)param2)->kindGameBit);
+    state->kind = mainGetBit(((MmpMoonrockPlacement*)param2)->kindGameBit);
     kind = state->kind;
     if (kind != 0)
     {
@@ -395,14 +395,14 @@ void fn_801A7D74(int obj, u8 place, u8 mode)
             u32 kind;
             odef = (MmpMoonrockPlacement*)((GameObject*)list[i])->anim.placementData;
             mydef = (MmpMoonrockPlacement*)((GameObject*)obj)->anim.placementData;
-            pedestalCount = GameBit_Get(0x88C);
-            inventoryCount = GameBit_Get(0x894);
+            pedestalCount = mainGetBit(0x88C);
+            inventoryCount = mainGetBit(0x894);
             if (place == 0)
             {
                 (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 1);
                 if (odef->placedGameBit != -1)
                 {
-                    GameBit_Set(odef->placedGameBit, 0);
+                    mainSetBits(odef->placedGameBit, 0);
                 }
                 kind = state->kind;
                 if (kind == 3) goto dec;
@@ -418,7 +418,7 @@ void fn_801A7D74(int obj, u8 place, u8 mode)
                 }
                 if (mydef->kindGameBit != -1)
                 {
-                    GameBit_Set(mydef->kindGameBit, 0);
+                    mainSetBits(mydef->kindGameBit, 0);
                     state->kind = 0;
                 }
                 {
@@ -437,7 +437,7 @@ void fn_801A7D74(int obj, u8 place, u8 mode)
                 (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 0);
                 if (odef->placedGameBit != -1)
                 {
-                    GameBit_Set(odef->placedGameBit, 1);
+                    mainSetBits(odef->placedGameBit, 1);
                 }
                 if (mode == 0)
                 {
@@ -453,7 +453,7 @@ void fn_801A7D74(int obj, u8 place, u8 mode)
                 }
                 if (mydef->kindGameBit != -1)
                 {
-                    GameBit_Set(mydef->kindGameBit, odef->kindGameBit);
+                    mainSetBits(mydef->kindGameBit, odef->kindGameBit);
                     state->kind = odef->kindGameBit;
                 }
                 kind = state->kind;
@@ -469,7 +469,7 @@ void fn_801A7D74(int obj, u8 place, u8 mode)
                     if (mode == 0)
                     {
                         Sfx_PlayFromObject(0, pedestalCount < 3 ? SFXTRIG_menuups16k : SFXTRIG_mpick1_b);
-                        GameBit_Set(0x9AE, 1);
+                        mainSetBits(0x9AE, 1);
                     }
                     state->flags |= MOONROCK_FLAG_PLACED;
                     setAButtonIcon(0);
@@ -481,11 +481,11 @@ void fn_801A7D74(int obj, u8 place, u8 mode)
             }
             if (pedestalCount >= 3)
             {
-                GameBit_Set(0x89B, 1);
+                mainSetBits(0x89B, 1);
             }
             else
             {
-                GameBit_Set(0x89B, 0);
+                mainSetBits(0x89B, 0);
             }
             if (pedestalCount > 3)
             {
@@ -503,8 +503,8 @@ void fn_801A7D74(int obj, u8 place, u8 mode)
             {
                 inventoryCount = 0;
             }
-            GameBit_Set(0x88C, pedestalCount);
-            GameBit_Set(0x894, inventoryCount);
+            mainSetBits(0x88C, pedestalCount);
+            mainSetBits(0x894, inventoryCount);
         }
     }
 }
@@ -582,7 +582,7 @@ void mmp_moonrock_update(int obj)
     }
     else if ((state->flags & MOONROCK_FLAG_PLACED) == 0)
     {
-        if (((MmpMoonrockPlacement*)def)->gateBit != -1 && GameBit_Get(((MmpMoonrockPlacement*)def)->gateBit) == 0)
+        if (((MmpMoonrockPlacement*)def)->gateBit != -1 && mainGetBit(((MmpMoonrockPlacement*)def)->gateBit) == 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
@@ -670,7 +670,7 @@ void mmp_moonrock_update(int obj)
     }
     if ((state->flags & MOONROCK_FLAG_PLACED) != 0)
     {
-        state->raised = GameBit_Get(0x894);
+        state->raised = mainGetBit(0x894);
     }
     else
     {

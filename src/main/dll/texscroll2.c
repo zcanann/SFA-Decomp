@@ -144,7 +144,7 @@ int kaldachom_stateHandlerA01(int obj, int statePtr)
     }
     else if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveDone != 0)
     {
-        GameBit_Set(state->gameBitB, 0);
+        mainSetBits(state->gameBitB, 0);
         if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0);
@@ -176,7 +176,7 @@ int kaldachom_stateHandlerA00(int obj, int statePtr)
         }
         kaldachompme_setLinkedMouthMode((u8*)obj, 1);
         ((GroundBaddieState*)statePtr)->baddie.physicsActive = 1;
-        GameBit_Set(state->gameBitB, 1);
+        mainSetBits(state->gameBitB, 1);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.alpha = 0xff;
         ((GroundBaddieState*)statePtr)->baddie.stateTag = 1;

@@ -118,7 +118,7 @@ void dll_FC_update(int obj)
         }
         else
         {
-            gameBitValue = GameBit_Get((int)placement->rememberedGameBit);
+            gameBitValue = mainGetBit((int)placement->rememberedGameBit);
             state->rememberedGameBitValue = gameBitValue;
         }
         state->mode = BABYCLOUDRUNNER_MODE_LATCHED;
@@ -143,7 +143,7 @@ void dll_FC_update(int obj)
             state->mode = BABYCLOUDRUNNER_MODE_FINISHED;
         }
         else if (((int)placement->gateGameBit != -1) &&
-            (GameBit_Get((int)placement->gateGameBit) == 0))
+            (mainGetBit((int)placement->gateGameBit) == 0))
         {
             state->target->anim.resetHitboxFlags &= ~0x20;
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
@@ -153,11 +153,11 @@ void dll_FC_update(int obj)
         {
             if ((placement->flags & BABYCLOUDRUNNER_FLAG_CLEAR_GATE_BIT) != 0)
             {
-                GameBit_Set((int)placement->gateGameBit, 0);
+                mainSetBits((int)placement->gateGameBit, 0);
             }
             if ((int)placement->rememberedGameBit != -1)
             {
-                GameBit_Set((int)placement->rememberedGameBit, 1);
+                mainSetBits((int)placement->rememberedGameBit, 1);
             }
             if ((placement->flags & BABYCLOUDRUNNER_FLAG_RANDOM_TRIGGER) != 0)
             {
@@ -183,7 +183,7 @@ void dll_FC_update(int obj)
         }
         break;
     case BABYCLOUDRUNNER_MODE_WAIT_GATE:
-        if (GameBit_Get((int)placement->gateGameBit) != 0)
+        if (mainGetBit((int)placement->gateGameBit) != 0)
         {
             state->mode = BABYCLOUDRUNNER_MODE_LATCHED;
         }

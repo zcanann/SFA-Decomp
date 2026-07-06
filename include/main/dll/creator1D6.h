@@ -3,8 +3,8 @@
 
 #include "ghidra_import.h"
 
-void nw_tricky_update(int *obj);
-int nw_tricky_SeqFn(void);
-void nw_ice_update(int *obj);
+void NW_tricky_update(int *obj);
+int NW_tricky_SeqFn(void);
+void NW_ice_update(int *obj);
 
 #endif /* MAIN_DLL_CREATOR1D6_H_ */

@@ -130,7 +130,7 @@ void wmseqpoint_onSeqFree(int obj)
     state = ((GameObject*)obj)->extra;
     if (state->sequenceId == WMSEQPOINT_SEQ_SPIRIT_1)
     {
-        GameBit_Set(WMSEQPOINT_SPIRIT_1_GAMEBIT, 1);
+        mainSetBits(WMSEQPOINT_SPIRIT_1_GAMEBIT, 1);
     }
     else if (state->sequenceId == WMSEQPOINT_SEQ_SKY_TOGGLE)
     {
@@ -180,18 +180,18 @@ int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
                 switch (actor->eventIds[i])
                 {
                 case 1:
-                    GameBit_Set(0x143, 1);
+                    mainSetBits(0x143, 1);
                     break;
                 case 2:
-                    GameBit_Set(0x143, 0);
+                    mainSetBits(0x143, 0);
                     break;
                 case 5:
-                    GameBit_Set(0x21d, 1);
+                    mainSetBits(0x21d, 1);
                     break;
                 case 4:
-                    GameBit_Set(0x21d, 1);
-                    fn_80296518(player, 8, 0);
-                    GameBit_Set(0x277, 1);
+                    mainSetBits(0x21d, 1);
+                    objSetAnimStateFlags(player, 8, 0);
+                    mainSetBits(0x277, 1);
                     break;
                 default:
                     break;
@@ -274,15 +274,15 @@ void wmseqpoint_update(int obj)
     {
         if (state->doneLatch != 0)
         {
-            if (GameBit_Get(state->disableGameBit) != 0)
+            if (mainGetBit(state->disableGameBit) != 0)
             {
                 return;
             }
-            GameBit_Set(state->disableGameBit, 1);
+            mainSetBits(state->disableGameBit, 1);
             state->doneLatch = 1;
             return;
         }
-        if (GameBit_Get(state->disableGameBit) != 0)
+        if (mainGetBit(state->disableGameBit) != 0)
         {
             state->doneLatch = 1;
             return;
@@ -304,13 +304,13 @@ void wmseqpoint_update(int obj)
         }
         break;
     case WMSEQPOINT_TRIGGER_BIT_SET:
-        if (state->conditionGameBit != -1 && GameBit_Get(state->conditionGameBit) != 0)
+        if (state->conditionGameBit != -1 && mainGetBit(state->conditionGameBit) != 0)
         {
             if (state->sequenceId == WMSEQPOINT_SEQ_SPIRIT_RESET)
             {
                 for (i = 0; i < WMSEQPOINT_SPIRIT_COUNT; i++)
                 {
-                    GameBit_Set(gWM_seqpointSpiritTargets[i * 2], 0);
+                    mainSetBits(gWM_seqpointSpiritTargets[i * 2], 0);
                     target = ObjList_FindObjectById(gWM_seqpointSpiritTargets[i * 2 + 1]);
                     ((WmSeqPointState*)((GameObject*)target)->extra)->doneLatch = 0;
                     if (((GameObject*)target)->seqIndex != -1)
@@ -329,11 +329,11 @@ void wmseqpoint_update(int obj)
         break;
     case WMSEQPOINT_TRIGGER_PROXIMITY_BIT_SET:
         if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius &&
-            state->conditionGameBit != -1 && GameBit_Get(state->conditionGameBit) != 0)
+            state->conditionGameBit != -1 && mainGetBit(state->conditionGameBit) != 0)
         {
             if (state->sequenceId == WMSEQPOINT_SEQ_SPIRIT_1)
             {
-                GameBit_Set(WMSEQPOINT_SPIRIT_1_GAMEBIT, 0);
+                mainSetBits(WMSEQPOINT_SPIRIT_1_GAMEBIT, 0);
                 target = ObjList_FindObjectById(WMSEQPOINT_SPIRIT_1_OBJID);
                 ((WmSeqPointState*)((GameObject*)target)->extra)->doneLatch = 0;
                 if (((GameObject*)target)->seqIndex != -1)
@@ -347,23 +347,23 @@ void wmseqpoint_update(int obj)
         break;
     case WMSEQPOINT_TRIGGER_PROXIMITY_BIT_CLEAR:
         if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius &&
-            state->conditionGameBit != -1 && GameBit_Get(state->conditionGameBit) == 0)
+            state->conditionGameBit != -1 && mainGetBit(state->conditionGameBit) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
-            GameBit_Set(state->conditionGameBit, 1);
+            mainSetBits(state->conditionGameBit, 1);
             state->doneLatch = 1;
         }
         break;
     case WMSEQPOINT_TRIGGER_BIT_CLEAR:
-        if (state->conditionGameBit != -1 && GameBit_Get(state->conditionGameBit) == 0)
+        if (state->conditionGameBit != -1 && mainGetBit(state->conditionGameBit) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
-            GameBit_Set(state->conditionGameBit, 1);
+            mainSetBits(state->conditionGameBit, 1);
             state->doneLatch = 1;
         }
         break;
     case WMSEQPOINT_TRIGGER_BIT_SET_REPEAT:
-        if (state->conditionGameBit != -1 && GameBit_Get(state->conditionGameBit) != 0)
+        if (state->conditionGameBit != -1 && mainGetBit(state->conditionGameBit) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
         }

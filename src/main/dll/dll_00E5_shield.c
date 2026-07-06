@@ -5,9 +5,9 @@
  * a four-segment ring driven by staffFn_80170380: each mode sets the
  * per-segment fade/scale targets in ShieldState, drives a point light
  * (modelLightStruct_*) and the 0x42C/0x42D loop sfx, and seeds the
- * fcos16 wobble for the four segments. shield_update advances the fade
+ * fcos16 wobble for the four segments. Shield_update advances the fade
  * toward its target, modulates alpha from a random flicker, and updates
- * the segment cosine; shield_render re-renders the four segments with
+ * the segment cosine; Shield_render re-renders the four segments with
  * per-segment rotation and (off-HUD) spawns particle fx 2028 at the
  * staff tips.
  *
@@ -131,15 +131,15 @@ extern f32 lbl_80320A28[];
 
 void staffSetGlow(int* obj, u8 a, u8 b);
 
-void shield_hitDetect(void);
-void shield_release(void);
-void shield_initialise(void);
-void shield_init(int* obj, void* initData);
-void shield_update(int* obj);
-void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-void shield_free(int obj);
-int shield_getExtraSize(void);
-int shield_getObjectTypeId(void);
+void Shield_hitDetect(void);
+void Shield_release(void);
+void Shield_initialise(void);
+void Shield_init(int* obj, void* initData);
+void Shield_update(int* obj);
+void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void Shield_free(int obj);
+int Shield_getExtraSize(void);
+int Shield_getObjectTypeId(void);
 void staffFn_80170380(int* obj, int cmd);
 
 int* fn_801702D4(int* obj, f32 fv)
@@ -164,16 +164,16 @@ int* fn_801702D4(int* obj, f32 fv)
 
 ObjectDescriptor gShieldObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)shield_initialise,
-    (ObjectDescriptorCallback)shield_release,
+    (ObjectDescriptorCallback)Shield_initialise,
+    (ObjectDescriptorCallback)Shield_release,
     0,
-    (ObjectDescriptorCallback)shield_init,
-    (ObjectDescriptorCallback)shield_update,
-    (ObjectDescriptorCallback)shield_hitDetect,
-    (ObjectDescriptorCallback)shield_render,
-    (ObjectDescriptorCallback)shield_free,
-    (ObjectDescriptorCallback)shield_getObjectTypeId,
-    shield_getExtraSize,
+    (ObjectDescriptorCallback)Shield_init,
+    (ObjectDescriptorCallback)Shield_update,
+    (ObjectDescriptorCallback)Shield_hitDetect,
+    (ObjectDescriptorCallback)Shield_render,
+    (ObjectDescriptorCallback)Shield_free,
+    (ObjectDescriptorCallback)Shield_getObjectTypeId,
+    Shield_getExtraSize,
 };
 
 
@@ -468,10 +468,10 @@ void staffFn_80170380(int* obj, int cmd)
 }
 #pragma opt_common_subs reset
 
-int shield_getExtraSize(void) { return 0x60; }
-int shield_getObjectTypeId(void) { return 0x0; }
+int Shield_getExtraSize(void) { return 0x60; }
+int Shield_getObjectTypeId(void) { return 0x0; }
 
-void shield_free(int obj)
+void Shield_free(int obj)
 {
     void** state = ((GameObject*)obj)->extra;
     if (state[0] != NULL)
@@ -492,7 +492,7 @@ typedef struct ShieldFxVec
     f32 pos[3];
 } ShieldFxVec;
 
-void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8* state = ((GameObject*)obj)->extra;
     s32 isVisible = visible;
@@ -605,11 +605,11 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void shield_hitDetect(void)
+void Shield_hitDetect(void)
 {
 }
 
-void shield_update(int* obj)
+void Shield_update(int* obj)
 {
     f32* tbl = lbl_80320A28;
     f32* state = ((GameObject*)obj)->extra;
@@ -698,7 +698,7 @@ void shield_update(int* obj)
     }
 }
 
-void shield_init(int* obj, void* initData)
+void Shield_init(int* obj, void* initData)
 {
     int* model = Obj_GetActiveModel((int)obj);
     ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
@@ -712,10 +712,10 @@ void shield_init(int* obj, void* initData)
     }
 }
 
-void shield_release(void)
+void Shield_release(void)
 {
 }
 
-void shield_initialise(void)
+void Shield_initialise(void)
 {
 }

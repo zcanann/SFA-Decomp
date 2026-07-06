@@ -5,7 +5,7 @@
 #include "main/dll/dll_0195_dbshshrine.h"
 #include "main/objanim_update.h"
 
-int fn_801C8EBC(int obj, u32 unused, ObjAnimUpdateState *animUpdate);
+int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState *animUpdate);
 void FUN_801c9018(u16 *param_1);
 int dbsh_shrine_getExtraSize(void);
 int dbsh_shrine_getObjectTypeId(void);

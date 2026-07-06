@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/dll/curve_walker.h"
 
-void player_setScale(short *moveState, u32 *obj, f32 dt, int flags);
+void player_advanceMove(short *moveState, u32 *obj, f32 dt, int flags);
 void FUN_800d9090(double param_1,double param_2,short *param_3,int param_4);
 void FUN_800d90f8(double param_1,double param_2,double param_3,short *param_4,int param_5);
 void FUN_800d91b0(double param_1,short *param_2,u32 *param_3,u32 param_4);
@@ -83,7 +83,7 @@ int curves_findNearObj(int obj,int *curveTypes,int typeCount,int action,char bbo
 void FUN_800dece0(void);
 int FUN_800df2a4(double param_1,double param_2,double param_3,int param_4,int param_5);
 u32 FUN_800df46c(u64 param_1,double param_2,double param_3);
-f32 curves_lengthFn24(u32 a, u32 b, f32 *posA, f32 *posB, f32 t1, f32 t2);
+f32 curves_getPathLength(u32 a, u32 b, f32 *posA, f32 *posB, f32 t1, f32 t2);
 void curves_getPos(int curve,float *outX,float *outY,float *outZ,f32 phase);
 int RomCurve_findProjectedCurveFromStart(int curve,f32 x,f32 y,f32 z,float *outPhase);
 

@@ -47,7 +47,7 @@ typedef struct FxEmitPlacement {
 
 /*
  * Per-object extra state for the fxemit particle emitter
- * (fxemit_getExtraSize == 0x20). init lives in CFchuckobj.c,
+ * (FxEmit_getExtraSize == 0x20). init lives in CFchuckobj.c,
  * the rest of the family in CFTreasSharpy.c.
  */
 typedef struct FxEmitState {
@@ -112,7 +112,7 @@ STATIC_ASSERT(offsetof(FxEmitObject, emitCooldown) == 0xF4);
 
 /*
  * Per-object extra state for the cfccrate multi-prop handler
- * (cfccrate_getExtraSize == 0x4C). Fields are per-objType scratch:
+ * (CFCrate_getExtraSize == 0x4C). Fields are per-objType scratch:
  * init in CFTreasSharpy.c, update in CFlevelControl.c, SeqFn/render
  * in dll_179.c.
  */
@@ -148,16 +148,16 @@ typedef struct CfCcrateState {
 STATIC_ASSERT(sizeof(CfCcrateState) == 0x4C);
 STATIC_ASSERT(offsetof(CfCcrateState, sfxTable) == 0x44);
 
-void cfccrate_init(int obj, int aux);
+void CFCrate_init(int obj, int aux);
 void fxemit_emitEffect(FxEmitObject *obj);
-int fxemit_SeqFn(FxEmitObject *obj, int unused, ObjAnimUpdateState *animUpdate);
-void cfccrate_release(void);
-void cfccrate_initialise(void);
-int fxemit_getExtraSize(void);
-int fxemit_getObjectTypeId(void);
-void fxemit_free(FxEmitObject *obj);
-void fxemit_hitDetect(void);
-void fxemit_update(FxEmitObject *obj);
-void fxemit_init(FxEmitObject *obj, FxEmitPlacement *setup);
+int FxEmit_SeqFn(FxEmitObject *obj, int unused, ObjAnimUpdateState *animUpdate);
+void CFCrate_release(void);
+void CFCrate_initialise(void);
+int FxEmit_getExtraSize(void);
+int FxEmit_getObjectTypeId(void);
+void FxEmit_free(FxEmitObject *obj);
+void FxEmit_hitDetect(void);
+void FxEmit_update(FxEmitObject *obj);
+void FxEmit_init(FxEmitObject *obj, FxEmitPlacement *setup);
 
 #endif /* MAIN_DLL_CF_CFTREASSHARPY_H_ */

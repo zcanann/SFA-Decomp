@@ -1,7 +1,7 @@
 /*
  * shstaff (DLL 0x1B1) - the Krazoa Staff pickup object and its ring of
  * sh_staffhaze flames (the shimmering blue "haze" spawned as child objects,
- * model 0x659 -> sh_staffhaze_update; live-verified in ThornTail Hollow by
+ * model 0x659 -> SH_StaffHaze_update; live-verified in ThornTail Hollow by
  * hiding a slot child and watching the flame vanish).
  *
  * sh_staff_render positions the staff (carried, attached to the player's
@@ -85,16 +85,16 @@ extern void sc_levelcontrol_init(void);
 extern void sc_musictree_init(void);
 extern void sc_totempole_init(void);
 
-extern void sh_staffhaze_render(void);
+extern void SH_StaffHaze_render(void);
 extern void sh_beacon_update(void);
-extern void sh_emptytumblew_update(void);
+extern void SH_EmptyTumbleW_update(void);
 extern void sc_levelcontrol_release(void);
 extern void sc_musictree_release(void);
 extern void sc_totempole_release(void);
 
-extern void sh_staffhaze_update(void);
+extern void SH_StaffHaze_update(void);
 extern void sh_beacon_init(void);
-extern void sh_emptytumblew_init(void);
+extern void SH_EmptyTumbleW_init(void);
 extern void sc_levelcontrol_initialise(void);
 extern void sc_musictree_initialise(void);
 extern void sc_totempole_initialise(void);
@@ -450,8 +450,8 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 }
 
 extern f32 getXZDistance(f32* a, f32* b);
-extern void fn_80295CF4(int obj, int a);
-extern void fn_8029672C(int obj, int mode);
+extern void staffToggle(int obj, int a);
+extern void playerPutAwayStaff(int obj, int mode);
 extern int ObjTrigger_IsSet(int obj);
 
 
@@ -475,8 +475,8 @@ void sh_staff_deactivate(int obj, ShStaffState* state, int clearChildren)
 
     if (clearChildren != 0)
     {
-        fn_80295CF4(player, 1);
-        fn_8029672C(player, 1);
+        staffToggle(player, 1);
+        playerPutAwayStaff(player, 1);
         for (i = 0; i < 10; i++)
         {
             child = *(void**)((char*)state + i * 4 + 56);
@@ -505,14 +505,14 @@ void sh_staff_update(int obj)
     {
         if (player == NULL) goto end;
         if ((void*)Player_GetStaffObject((int)player) == NULL) goto end;
-        if (GameBit_Get(GAMEBIT_STAFF_ACQUIRED) != 0)
+        if (mainGetBit(GAMEBIT_STAFF_ACQUIRED) != 0)
         {
             sh_staff_deactivate(obj, ((GameObject*)obj)->extra, 0);
         }
         else
         {
             int loadResult;
-            fn_80295CF4((int)player, 0);
+            staffToggle((int)player, 0);
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E54D0);
             ((GameObject*)obj)->anim.rotY = (s16)(((ShStaffPlacement*)setup)->rotYByte << 8);
             ((GameObject*)obj)->anim.rotZ = (s16)(((ShStaffPlacement*)setup)->rotZByte << 8);
@@ -541,7 +541,7 @@ void sh_staff_update(int obj)
             (*gObjectTriggerInterface)->runSequence(0, (void*)target, -1);
             state->phase = 2;
             state->fadeTimer = gShStaffFadeTimerMax;
-            GameBit_Set(GAMEBIT_STAFF_ACQUIRED, 1);
+            mainSetBits(GAMEBIT_STAFF_ACQUIRED, 1);
         }
         else if (dist > gShStaffMapUnloadDistSq)
         {
@@ -566,7 +566,7 @@ void sh_staff_update(int obj)
         {
             state->mapLoaded = 0;
             mapUnload(0x13, 0x20000000);
-            GameBit_Set(GAMEBIT_STAFF_PICKUP_MAP_UNLOADED, 1);
+            mainSetBits(GAMEBIT_STAFF_PICKUP_MAP_UNLOADED, 1);
         }
     }
 end:
@@ -588,9 +588,9 @@ end:
 }
 
 /* descriptor/ptr table auto 0x8032784c-0x803279a8 */
-u32 gSH_staffHazeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, (u32)sh_staffhaze_update, 0x00000000, (u32)sh_staffhaze_render, 0x00000000, 0x00000000, 0x00000000 };
+u32 gSH_staffHazeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, (u32)SH_StaffHaze_update, 0x00000000, (u32)SH_StaffHaze_render, 0x00000000, 0x00000000, 0x00000000 };
 u32 gSH_BeaconObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)sh_beacon_init, (u32)sh_beacon_update, 0x00000000, 0x00000000, (u32)sh_beacon_free, 0x00000000, (u32)sh_beacon_getExtraSize };
-u32 gSH_EmptyTumbleWObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)sh_emptytumblew_init, (u32)sh_emptytumblew_update, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
+u32 gSH_EmptyTumbleWObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)SH_EmptyTumbleW_init, (u32)SH_EmptyTumbleW_update, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
 u32 gSC_levelcontrolObjDescriptor[16] = { 0x00000000, 0x00000000, 0x00000000, 0x000b0000, (u32)sc_levelcontrol_initialise, (u32)sc_levelcontrol_release, 0x00000000, (u32)sc_levelcontrol_init, (u32)sc_levelcontrol_update, (u32)sc_levelcontrol_hitDetect, (u32)sc_levelcontrol_render, (u32)sc_levelcontrol_free, (u32)sc_levelcontrol_getObjectTypeId, (u32)sc_levelcontrol_getExtraSize, (u32)sc_levelcontrol_applyAnimEventState, (u32)sc_levelcontrol_getAnimEventState };
 u32 gSC_MusicTreeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)sc_musictree_initialise, (u32)sc_musictree_release, 0x00000000, (u32)sc_musictree_init, (u32)sc_musictree_update, (u32)sc_musictree_hitDetect, (u32)sc_musictree_render, (u32)sc_musictree_free, (u32)sc_musictree_getObjectTypeId, (u32)sc_musictree_getExtraSize };
 u32 gSC_totempoleObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)sc_totempole_initialise, (u32)sc_totempole_release, 0x00000000, (u32)sc_totempole_init, (u32)sc_totempole_update, (u32)sc_totempole_hitDetect, (u32)sc_totempole_render, (u32)sc_totempole_free, (u32)sc_totempole_getObjectTypeId, (u32)sc_totempole_getExtraSize };

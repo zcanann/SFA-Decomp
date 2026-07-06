@@ -86,7 +86,7 @@ int wcbeacon_aButtonCallback(int obj)
     if (isGameTimerDisabled() == 0)
     {
         state->acceptedInteraction = 1;
-        GameBit_Set(setup->solvedBit, 1);
+        mainSetBits(setup->solvedBit, 1);
     }
     return 1;
 }
@@ -125,7 +125,7 @@ void wcbeacon_update(int obj)
     if (phase == WCBEACON_PHASE_WAITING_FOR_TRICKY)
     {
         int tricky = getTrickyObject();
-        if ((u32)GameBit_Get(setup->armBit) == 0)
+        if ((u32)mainGetBit(setup->armBit) == 0)
         {
             u32 owner = fn_80138F84(tricky);
             if (owner != obj || trickyFn_80138f14(tricky) != 0)
@@ -156,7 +156,7 @@ void wcbeacon_update(int obj)
     }
     else if (phase == WCBEACON_PHASE_IDLE)
     {
-        if ((u32)GameBit_Get(setup->armBit) != 0)
+        if ((u32)mainGetBit(setup->armBit) != 0)
         {
             (*gObjectTriggerInterface)
                 ->runSequence(WCBEACON_TRIGGER_ARM_SLOT, (void*)obj, WCBEACON_TRIGGER_NO_ARG);
@@ -204,9 +204,9 @@ void wcbeacon_init(u8* obj, u8* setup)
     {
         objAnim->bankIndex = 0;
     }
-    if ((u32)GameBit_Get(setupData->armBit) != 0)
+    if ((u32)mainGetBit(setupData->armBit) != 0)
     {
-        if ((u32)GameBit_Get(setupData->solvedBit) != 0)
+        if ((u32)mainGetBit(setupData->solvedBit) != 0)
         {
             state->phase = WCBEACON_PHASE_ACTIVE;
         }

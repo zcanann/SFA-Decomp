@@ -1729,11 +1729,11 @@ u32 playerHasKrazoaSpirit(u8 checkStoryBits, u32 bit)
 {
     if (checkStoryBits == 0)
     {
-        return GameBit_Get(bit);
+        return mainGetBit(bit);
     }
-    if ((GameBit_Get(0xbfd) != 0) || (GameBit_Get(0xff) != 0) ||
-        (GameBit_Get(GAMEBIT_K1_SPIRIT_COLLECTED) != 0) || (GameBit_Get(0xc85) != 0) ||
-        (GameBit_Get(0xc6e) != 0) || (GameBit_Get(0x174) != 0))
+    if ((mainGetBit(0xbfd) != 0) || (mainGetBit(0xff) != 0) ||
+        (mainGetBit(GAMEBIT_K1_SPIRIT_COLLECTED) != 0) || (mainGetBit(0xc85) != 0) ||
+        (mainGetBit(0xc6e) != 0) || (mainGetBit(0x174) != 0))
     {
         return 1;
     }

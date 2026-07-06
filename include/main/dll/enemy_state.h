@@ -25,7 +25,7 @@ typedef struct EnemyState {
     f32 sightRange; /* 0x2AC patrol/detection range, clamped to enemySightRange
                        (the global sight extent) just like aggroRange; passed to
                        RomCurve initCurve as the wander-curve radius. */
-    s16 current; /* 0x2B0 numerator of the current/max ratio computed in fn_8014C5D0 */
+    s16 current; /* 0x2B0 numerator of the current/max ratio computed in enemy_getHealthFraction */
     u16 max;     /* 0x2B2 denominator (snapshot of `current` at spawn) */
     s16 unk2B4;
     s16 unk2B6;

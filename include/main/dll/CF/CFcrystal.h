@@ -76,14 +76,14 @@ void FireFlyLantern_init(int param_1,int param_2);
 int FireFlyLantern_spawnFireFly(int *obj);
 int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 
-int flammablevine_getExtraSize(void);
-int flammablevine_getObjectTypeId(void);
-void flammablevine_free(int obj);
-void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void flammablevine_hitDetect(void);
-void flammablevine_update(void);
-void flammablevine_init(void);
-void flammablevine_release(void);
-void flammablevine_initialise(void);
+int FlammableVine_getExtraSize(void);
+int FlammableVine_getObjectTypeId(void);
+void FlammableVine_free(int obj);
+void FlammableVine_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void FlammableVine_hitDetect(void);
+void FlammableVine_update(void);
+void FlammableVine_init(void);
+void FlammableVine_release(void);
+void FlammableVine_initialise(void);
 
 #endif /* MAIN_DLL_CF_CFCRYSTAL_H_ */

@@ -131,15 +131,15 @@ void fn_8019D9F0(int* obj)
     {
         ObjMsg_SendToObjects(0xdc, 5, obj, CFMAINCRYSTAL_MSG_CRYSTAL, 0);
     }
-    if (GameBit_Get(GAMEBIT_CFBASE_1) != 0 && sub->pylonTimer[0] == 0)
+    if (mainGetBit(GAMEBIT_CFBASE_1) != 0 && sub->pylonTimer[0] == 0)
     {
         ObjMsg_SendToObjects(0xda, 4, obj, CFMAINCRYSTAL_MSG_PYLON_1, 0);
     }
-    if (GameBit_Get(GAMEBIT_CFBASE_2) != 0 && sub->pylonTimer[1] == 0)
+    if (mainGetBit(GAMEBIT_CFBASE_2) != 0 && sub->pylonTimer[1] == 0)
     {
         ObjMsg_SendToObjects(0xda, 4, obj, CFMAINCRYSTAL_MSG_PYLON_2, 0);
     }
-    if (GameBit_Get(GAMEBIT_CFBASE_3) != 0 && sub->pylonTimer[2] == 0)
+    if (mainGetBit(GAMEBIT_CFBASE_3) != 0 && sub->pylonTimer[2] == 0)
     {
         ObjMsg_SendToObjects(0xda, 4, obj, CFMAINCRYSTAL_MSG_PYLON_3, 0);
     }
@@ -157,7 +157,7 @@ void fn_8019D9F0(int* obj)
     idx = 0;
     if (sub->crystalKnown != 0)
     {
-        if (GameBit_Get(GAMEBIT_CF_CONVERGENCE) != 0)
+        if (mainGetBit(GAMEBIT_CF_CONVERGENCE) != 0)
         {
             if (sub->pylonTimer[0] != 0)
             {
@@ -327,26 +327,26 @@ void fn_8019D9F0(int* obj)
     ((GameObject*)obj)->anim.rotX += framesThisStep * 0x2a;
 }
 
-int cfmaincrystal_getExtraSize(void) { return 0x160; }
+int CFMainCrystal_getExtraSize(void) { return 0x160; }
 
-int cfmaincrystal_getObjectTypeId(void) { return 0x1; }
+int CFMainCrystal_getObjectTypeId(void) { return 0x1; }
 
-void cfmaincrystal_free(int* obj)
+void CFMainCrystal_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
-void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void CFMainCrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4210);
 }
 
-void cfmaincrystal_hitDetect(void)
+void CFMainCrystal_hitDetect(void)
 {
 }
 
-void cfmaincrystal_update(int* obj)
+void CFMainCrystal_update(int* obj)
 {
     u32 payload;
     u32 msgType;
@@ -375,7 +375,7 @@ void cfmaincrystal_update(int* obj)
     }
 }
 
-void cfmaincrystal_init(int* obj, u8* def)
+void CFMainCrystal_init(int* obj, u8* def)
 {
     CfMainCrystalState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)*(s8*)((char*)def + 0x18) << 8);
@@ -391,10 +391,10 @@ void cfmaincrystal_init(int* obj, u8* def)
     ObjMsg_AllocQueue(obj, 2);
 }
 
-void cfmaincrystal_release(void)
+void CFMainCrystal_release(void)
 {
 }
 
-void cfmaincrystal_initialise(void)
+void CFMainCrystal_initialise(void)
 {
 }

@@ -14,7 +14,7 @@
  *       transition (when modeFlags>>2 set) and sets/clears the completion bit
  *   3 - timeDelta-based float fade (fadeA/fadeB), sets completion bit at fadeMax
  * doneCount counts finished ramps and freezes the object once it exceeds 2.
- * alphaanimator_render draws via objRenderModelAndHitVolumes; alphaanimator_free
+ * AlphaAnimator_render draws via objRenderModelAndHitVolumes; AlphaAnimator_free
  * releases the mode-3 buffer.
  */
 #include "main/game_object.h"
@@ -62,10 +62,10 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 #define ALPHAANIM_MODE_GATED 2     /* direction follows live gate bit; sfx on gate flip */
 #define ALPHAANIM_MODE_TIMED 3     /* timeDelta float fade (fadeA/fadeMax) */
 
-int alphaanimator_getExtraSize(void) { return 0x1c; }
-int alphaanimator_getObjectTypeId(void) { return 0x0; }
+int AlphaAnimator_getExtraSize(void) { return 0x1c; }
+int AlphaAnimator_getObjectTypeId(void) { return 0x0; }
 
-void alphaanimator_free(int* obj)
+void AlphaAnimator_free(int* obj)
 {
     AlphaAnimatorState* o = (AlphaAnimatorState*)((GameObject*)obj)->extra;
     void* p = o->buf;
@@ -73,17 +73,17 @@ void alphaanimator_free(int* obj)
 }
 
 #pragma peephole off
-void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void AlphaAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
-void alphaanimator_hitDetect(void)
+void AlphaAnimator_hitDetect(void)
 {
 }
 
 #pragma scheduling off
-void alphaanimator_update(int* obj)
+void AlphaAnimator_update(int* obj)
 {
     AlphaanimatorPlacement* d;
     AlphaAnimatorState* s;
@@ -125,10 +125,10 @@ void alphaanimator_update(int* obj)
         }
         else
         {
-            s->gateVal = GameBit_Get(d->gateBit);
+            s->gateVal = mainGetBit(d->gateBit);
         }
         s->alphaLevel = d->startAlpha;
-        if (d->completeBit != -1 && GameBit_Get(d->completeBit) != 0)
+        if (d->completeBit != -1 && mainGetBit(d->completeBit) != 0)
         {
             s->alphaLevel = d->targetAlpha;
             s->fadeA = 1.0f + s->fadeMax;
@@ -148,7 +148,7 @@ void alphaanimator_update(int* obj)
     }
     if (mode == ALPHAANIM_MODE_GATED)
     {
-        s->gateVal = GameBit_Get(d->gateBit);
+        s->gateVal = mainGetBit(d->gateBit);
         if ((s8)s->doneCount > 2 &&
             (s8)s->gateVal != (s8)s->prevGate)
         {
@@ -172,7 +172,7 @@ void alphaanimator_update(int* obj)
         }
         if ((s8)s->gateVal == 0)
         {
-            s->gateVal = GameBit_Get(d->gateBit);
+            s->gateVal = mainGetBit(d->gateBit);
             if ((s8)s->gateVal == 0)
             {
                 return;
@@ -195,7 +195,7 @@ void alphaanimator_update(int* obj)
                 s->alphaLevel = d->targetAlpha;
                 if (d->completeBit != -1)
                 {
-                    GameBit_Set(d->completeBit, 1);
+                    mainSetBits(d->completeBit, 1);
                 }
                 s->doneCount += 1;
             }
@@ -209,7 +209,7 @@ void alphaanimator_update(int* obj)
                 s->alphaLevel = d->targetAlpha;
                 if (d->completeBit != -1)
                 {
-                    GameBit_Set(d->completeBit, 1);
+                    mainSetBits(d->completeBit, 1);
                 }
                 s->doneCount += 1;
             }
@@ -253,7 +253,7 @@ void alphaanimator_update(int* obj)
                 s->alphaLevel = d->targetAlpha;
                 if (d->completeBit != -1)
                 {
-                    GameBit_Set(d->completeBit, 1);
+                    mainSetBits(d->completeBit, 1);
                 }
                 s->doneCount += 1;
             }
@@ -268,7 +268,7 @@ void alphaanimator_update(int* obj)
                 s->alphaLevel = d->targetAlpha;
                 if (d->completeBit != -1)
                 {
-                    GameBit_Set(d->completeBit, 1);
+                    mainSetBits(d->completeBit, 1);
                 }
                 s->doneCount += 1;
             }
@@ -286,7 +286,7 @@ void alphaanimator_update(int* obj)
                 s->alphaLevel = d->startAlpha;
                 if (d->completeBit != -1)
                 {
-                    GameBit_Set(d->completeBit, 0);
+                    mainSetBits(d->completeBit, 0);
                 }
                 s->doneCount += 1;
             }
@@ -301,7 +301,7 @@ void alphaanimator_update(int* obj)
                 s->alphaLevel = d->startAlpha;
                 if (d->completeBit != -1)
                 {
-                    GameBit_Set(d->completeBit, 0);
+                    mainSetBits(d->completeBit, 0);
                 }
                 s->doneCount += 1;
             }
@@ -320,7 +320,7 @@ void alphaanimator_update(int* obj)
         if (s->fadeA > s->fadeMax)
         {
             s->fadeA = s->fadeMax;
-            GameBit_Set(d->completeBit, 1);
+            mainSetBits(d->completeBit, 1);
             s->doneCount += 1;
         }
         s->fadeB = s->fadeA - 50.0f;
@@ -330,16 +330,16 @@ void alphaanimator_update(int* obj)
 }
 
 #pragma peephole on
-void alphaanimator_init(int* obj)
+void AlphaAnimator_init(int* obj)
 {
     *(s8*)&((AlphaAnimatorState*)((GameObject*)obj)->extra)->prevGate = -1;
 }
 
 #pragma scheduling on
-void alphaanimator_release(void)
+void AlphaAnimator_release(void)
 {
 }
 
-void alphaanimator_initialise(void)
+void AlphaAnimator_initialise(void)
 {
 }

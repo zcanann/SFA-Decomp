@@ -59,7 +59,7 @@ extern int lbl_803DB9BC;
 extern f32 lbl_803DD580;
 extern f32 lbl_803DB9C4;
 
-void CameraModeNpcSpeak_copyToCurrent_nop(void)
+void CameraModeNpcSpeak_copyToCurrent(void)
 {
 }
 

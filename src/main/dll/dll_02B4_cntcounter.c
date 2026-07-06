@@ -26,11 +26,11 @@ STATIC_ASSERT(offsetof(CntCounterSetup, doneGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(CntCounterSetup, decrementGameBit) == 0x20);
 STATIC_ASSERT(sizeof(CntCounterSetup) == 0x24);
 
-int cntcounter_getExtraSize(void) { return 8; }
+int CntCounter_getExtraSize(void) { return 8; }
 
-int cntcounter_getObjectTypeId(void) { return 0; }
+int CntCounter_getObjectTypeId(void) { return 0; }
 
-void cntcounter_free(int obj)
+void CntCounter_free(int obj)
 {
     CntCounterState* state = ((GameObject*)obj)->extra;
     if (state->displayHud != 0)
@@ -39,15 +39,15 @@ void cntcounter_free(int obj)
     }
 }
 
-void cntcounter_render(void)
+void CntCounter_render(void)
 {
 }
 
-void cntcounter_hitDetect(void)
+void CntCounter_hitDetect(void)
 {
 }
 
-void cntcounter_update(int obj)
+void CntCounter_update(int obj)
 {
     CntCounterState* state = ((GameObject*)obj)->extra;
     CntCounterSetup* setup = (CntCounterSetup*)((GameObject*)obj)->anim.placementData;
@@ -59,15 +59,15 @@ void cntcounter_update(int obj)
         {
             set_hudNumber_803db278(state->remainingCount);
         }
-        bit = GameBit_Get(setup->decrementGameBit);
+        bit = mainGetBit(setup->decrementGameBit);
         if (bit != 0)
         {
-            GameBit_Set(setup->decrementGameBit, 0);
+            mainSetBits(setup->decrementGameBit, 0);
             state->remainingCount -= bit;
             if (state->remainingCount <= 0)
             {
                 state->remainingCount = 0;
-                GameBit_Set(setup->doneGameBit, 1);
+                mainSetBits(setup->doneGameBit, 1);
                 if (state->displayHud != 0)
                 {
                     set_hudNumber_803db278(-1);
@@ -78,7 +78,7 @@ void cntcounter_update(int obj)
     }
     else
     {
-        if ((u32)GameBit_Get(setup->decrementGameBit) != 0)
+        if ((u32)mainGetBit(setup->decrementGameBit) != 0)
         {
             state->displayHud = setup->displayHud;
             state->remainingCount = setup->initialCount;
@@ -86,17 +86,17 @@ void cntcounter_update(int obj)
     }
 }
 
-void cntcounter_init(int obj)
+void CntCounter_init(int obj)
 {
     CntCounterState* state = ((GameObject*)obj)->extra;
     state->displayHud = 0;
     state->remainingCount = 0;
 }
 
-void cntcounter_release(void)
+void CntCounter_release(void)
 {
 }
 
-void cntcounter_initialise(void)
+void CntCounter_initialise(void)
 {
 }

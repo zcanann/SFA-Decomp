@@ -92,19 +92,19 @@ _MATH_INLINE float cosf(float x)
 {
     return (float)cos((double)x);
 }
-_MATH_INLINE float atan2f(float y, float x)
+_MATH_INLINE float fn_802924B4(float y, float x)
 {
     return (float)atan2((double)y, (double)x);
 }
-_MATH_INLINE float atanf(float x)
+_MATH_INLINE float fn_80292248(float x)
 {
     return (float)atan((double)x);
 }
-_MATH_INLINE float asinf(float x)
+_MATH_INLINE float __kernel_sin(float x)
 {
     return (float)asin((double)x);
 }
-_MATH_INLINE float acosf(float x)
+_MATH_INLINE float fn_802920A4(float x)
 {
     return (float)acos((double)x);
 }

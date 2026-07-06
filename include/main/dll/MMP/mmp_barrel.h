@@ -106,18 +106,18 @@ void waveanimator_init(int *obj, int *desc);
 void waveanimator_release(void);
 void waveanimator_initialise(void);
 
-int alphaanimator_getExtraSize(void);
-int alphaanimator_getObjectTypeId(void);
-void alphaanimator_free(int *obj);
-void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void alphaanimator_hitDetect(void);
-void alphaanimator_update(int *obj);
-void alphaanimator_init(int *obj);
-void alphaanimator_release(void);
-void alphaanimator_initialise(void);
+int AlphaAnimator_getExtraSize(void);
+int AlphaAnimator_getObjectTypeId(void);
+void AlphaAnimator_free(int *obj);
+void AlphaAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void AlphaAnimator_hitDetect(void);
+void AlphaAnimator_update(int *obj);
+void AlphaAnimator_init(int *obj);
+void AlphaAnimator_release(void);
+void AlphaAnimator_initialise(void);
 
 u8 groundanimator_modelMtxFn(int *obj);
-u8 groundanimator_func0B(int *obj);
+u8 groundanimator_isFullySunk(int *obj);
 f32 groundanimator_setScale(int *obj, int *target);
 int groundanimator_getExtraSize(void);
 void groundanimator_free(int *obj, int flag);
@@ -125,8 +125,8 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void groundanimator_update(int *obj);
 void groundanimator_init(int *obj, int *desc);
 
-int hitanimator_getExtraSize(void);
-void hitanimator_update(HitAnimatorObject *obj);
-void hitanimator_init(HitAnimatorObject *obj, HitAnimatorPlacement *desc);
+int HitAnimator_getExtraSize(void);
+void HitAnimator_update(HitAnimatorObject *obj);
+void HitAnimator_init(HitAnimatorObject *obj, HitAnimatorPlacement *desc);
 
 #endif /* MAIN_DLL_MMP_MMP_BARREL_H_ */

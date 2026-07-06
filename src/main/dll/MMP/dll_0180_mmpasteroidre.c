@@ -1,7 +1,7 @@
 /*
  * mmpasteroidre (DLL 0x180) - Moon Mountain Pass asteroid re-entry object.
  *
- * A scripted falling asteroid. The sequence callback (fn_801A6F4C)
+ * A scripted falling asteroid. The sequence callback (mmp_asteroid_re_SeqFn)
  * consumes anim events to toggle lighting and drive phase transitions
  * (eventFlags / gamebit 0x87B). init seeds intensity (gamebit 0x88C) and
  * phase, restoring the right visual state on load. update integrates the
@@ -85,7 +85,7 @@ void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 #pragma scheduling off
-int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
 
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
@@ -102,7 +102,7 @@ int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 1:
             state->eventFlags = 13;
             state->phase = MMP_ASTEROID_PHASE_RISING;
-            GameBit_Set(0x87b, state->phase);
+            mainSetBits(0x87b, state->phase);
             ((GameObject*)obj)->anim.alpha = 0xff;
             break;
         case 2:
@@ -118,7 +118,7 @@ int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 r = randomGetRange(10, 60);
                 state->periodicFxTimer = r;
                 state->phase = MMP_ASTEROID_PHASE_RISING;
-                GameBit_Set(0x87b, state->phase);
+                mainSetBits(0x87b, state->phase);
                 break;
             }
         case 4:
@@ -136,10 +136,10 @@ void mmp_asteroid_re_init(int obj)
 {
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags |= (MMPASTEROIDRE_OBJFLAG_HIDDEN | MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->animEventCallback = fn_801A6F4C;
+    ((GameObject*)obj)->animEventCallback = mmp_asteroid_re_SeqFn;
     state->eventFlags = 0;
-    state->intensity = GameBit_Get(0x88C);
-    state->phase = GameBit_Get(0x87B);
+    state->intensity = mainGetBit(0x88C);
+    state->phase = mainGetBit(0x87B);
     switch ((s32)state->phase)
     {
     case MMP_ASTEROID_PHASE_HIDDEN:
@@ -178,13 +178,13 @@ void mmp_asteroid_re_update(int obj)
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
     if ((state->eventFlags & ASTEROIDRE_SEQ_TICK) == 0)
     {
-        if (GameBit_Get(0xD52) != 0)
+        if (mainGetBit(0xD52) != 0)
         {
             state->intensity = 1;
         }
         else
         {
-            state->intensity = GameBit_Get(0x88C);
+            state->intensity = mainGetBit(0x88C);
         }
         state->phase = MMP_ASTEROID_PHASE_RISEN;
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_lwfl1_c);
@@ -289,7 +289,7 @@ void mmp_asteroid_re_update(int obj)
             state->stateTimer = v - timeDelta;
             if (state->stateTimer <= k)
             {
-                GameBit_Set(0x88B, 0);
+                mainSetBits(0x88B, 0);
             }
         }
     }

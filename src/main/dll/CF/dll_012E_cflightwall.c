@@ -12,25 +12,25 @@ extern f32 lbl_803E3EF0;
 #define CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED 0x8000
 #define CFLIGHTWALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-int cflightwall_getExtraSize(void) { return 0x0; }
+int CFLightWall_getExtraSize(void) { return 0x0; }
 
-int cflightwall_getObjectTypeId(void) { return 0x0; }
+int CFLightWall_getObjectTypeId(void) { return 0x0; }
 
-void cflightwall_free(void)
+void CFLightWall_free(void)
 {
 }
 
-void cflightwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3EE8); }
+void CFLightWall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3EE8); }
 
-void cflightwall_hitDetect(void)
+void CFLightWall_hitDetect(void)
 {
 }
 
-void cflightwall_update(void)
+void CFLightWall_update(void)
 {
 }
 
-void cflightwall_init(s16* obj, u8* def)
+void CFLightWall_init(s16* obj, u8* def)
 {
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[0x18] << 8);
     ((GameObject*)obj)->anim.rotY = (s16)((s32)def[0x19] << 8);
@@ -48,10 +48,10 @@ void cflightwall_init(s16* obj, u8* def)
     ((GameObject*)obj)->objectFlags |= CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED | CFLIGHTWALL_OBJFLAG_HITDETECT_DISABLED;
 }
 
-void cflightwall_release(void)
+void CFLightWall_release(void)
 {
 }
 
-void cflightwall_initialise(void)
+void CFLightWall_initialise(void)
 {
 }

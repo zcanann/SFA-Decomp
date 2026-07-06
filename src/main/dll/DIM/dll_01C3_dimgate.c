@@ -71,7 +71,7 @@ void dimgate_update(int obj)
             }
             if (found)
             {
-                GameBit_Set(((DimgatePlacement*)def)->gateGameBit, 1);
+                mainSetBits(((DimgatePlacement*)def)->gateGameBit, 1);
                 if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != DIMGATE_STATE_OPEN)
                 {
                     ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, DIMGATE_STATE_OPEN);
@@ -99,7 +99,7 @@ void dimgate_init(int obj, s8* p_unused_passthrough)
     char* param;
     param = *(char**)&((GameObject*)obj)->anim.placementData;
     inner = ((GameObject*)obj)->extra;
-    if (GameBit_Get(((DimgatePlacement*)param)->gateGameBit) != 0)
+    if (mainGetBit(((DimgatePlacement*)param)->gateGameBit) != 0)
     {
         inner[0] = DIMGATE_STATE_OPEN;
         ((GameObject*)obj)->anim.currentMoveProgress = lbl_803E4878;

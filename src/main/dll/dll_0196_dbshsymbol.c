@@ -3,7 +3,7 @@
  * DarkIce Mines SnowHorn shrine (shares the shrine's RISE_DONE/CLOSE
  * game bits with dbshshrine, DLL 0x195).
  *
- * dbsh_symbol_update walks a small state machine on phase: hide the
+ * DBSH_Symbol_update walks a small state machine on phase: hide the
  * model, play a stone-scuff cue, arm trigger sequence 0, then resolve -
  * granting CLOSE_A when the spin finished or CLOSE_B otherwise. While
  * the trigger sequence runs, DBSH_Symbol_SeqFn accumulates spin from the
@@ -232,34 +232,34 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int dbsh_symbol_getExtraSize(void)
+int DBSH_Symbol_getExtraSize(void)
 {
     return 0x24;
 }
 
-void dbsh_symbol_free(void)
+void DBSH_Symbol_free(void)
 {
     gameTimerStop();
 }
 
-void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void DBSH_Symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5104);
 }
 
-void dbsh_symbol_update(int obj)
+void DBSH_Symbol_update(int obj)
 {
     s16 phase;
     u32 puzzleStarted;
     DbshSymbolState* state;
 
     state = ((GameObject*)obj)->extra;
-    puzzleStarted = GameBit_Get(DBSH_GB_RISE_DONE);
+    puzzleStarted = mainGetBit(DBSH_GB_RISE_DONE);
     if (puzzleStarted == 0)
     {
         state->phase = 0;
         state->partnerObj = NULL;
-        GameBit_Set(DBSH_GB_CLOSE_B, 0);
+        mainSetBits(DBSH_GB_CLOSE_B, 0);
     }
     else
     {
@@ -290,11 +290,11 @@ void dbsh_symbol_update(int obj)
             ((GameObject*)obj)->anim.modelState->flags &= ~(u64)DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
             if (state->flags.finished != 0)
             {
-                GameBit_Set(DBSH_GB_CLOSE_A, 1);
+                mainSetBits(DBSH_GB_CLOSE_A, 1);
             }
             else
             {
-                GameBit_Set(DBSH_GB_CLOSE_B, 1);
+                mainSetBits(DBSH_GB_CLOSE_B, 1);
             }
             Sfx_StopObjectChannel(obj, 0x7f);
             state->flags.active = 1;
@@ -302,7 +302,7 @@ void dbsh_symbol_update(int obj)
     }
 }
 
-void dbsh_symbol_init(int* obj)
+void DBSH_Symbol_init(int* obj)
 {
     DbshSymbolState* state = ((GameObject*)obj)->extra;
 

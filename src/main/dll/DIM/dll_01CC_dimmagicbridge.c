@@ -6,7 +6,7 @@
  * channels scroll (dimmagicbridge_scrollTextureChannels). When ignited
  * (gamebit 0x1E9, or once the player's emission controller lingers over
  * gamebit 0x1EF) it fires the death VFX (fn_80065574) and latches gamebit
- * 0x1E8; the flame sequence (dimmagicbridge_flameSeqFn) lights successive
+ * 0x1E8; the flame sequence (dimmagicbridge_SeqFn) lights successive
  * segments and ramps their glow toward full.
  *
  * The per-object extra block is DimMagicBridgeState (getExtraSize == 0x68).
@@ -111,7 +111,7 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 }
 #pragma dont_inline reset
 
-int dimmagicbridge_flameSeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int dimmagicbridge_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int j;
     int i;
@@ -181,11 +181,11 @@ void dimmagicbridge_update(int obj)
     dimmagicbridge_updateVertexWave(obj, (u8*)sub);
     if (sub->ignited == 0)
     {
-        if (GameBit_Get(DIMMAGICBRIDGE_GAMEBIT_TRIGGER) != 0)
+        if (mainGetBit(DIMMAGICBRIDGE_GAMEBIT_TRIGGER) != 0)
         {
             if (EmissionController_IsLingering(player) != 0)
             {
-                GameBit_Set(DIMMAGICBRIDGE_GAMEBIT_LATCH, 1);
+                mainSetBits(DIMMAGICBRIDGE_GAMEBIT_LATCH, 1);
             }
         }
     }
@@ -213,7 +213,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
     ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8
     )
     ;
-    ((GameObject*)obj)->animEventCallback = dimmagicbridge_flameSeqFn;
+    ((GameObject*)obj)->animEventCallback = dimmagicbridge_SeqFn;
     state = ((GameObject*)obj)->extra;
     minY = 0;
     model = Obj_GetActiveModel((int)obj);
@@ -256,7 +256,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
     state->segmentCount = 0xa;
     state->minVertexY = minY;
 
-    if (GameBit_Get(DIMMAGICBRIDGE_GAMEBIT_IGNITED) != 0)
+    if (mainGetBit(DIMMAGICBRIDGE_GAMEBIT_IGNITED) != 0)
     {
         state->ignited = 1;
     }

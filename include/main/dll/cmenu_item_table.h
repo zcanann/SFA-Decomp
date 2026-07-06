@@ -13,7 +13,7 @@
  * gCMenuSections[mi] points at the section's CMenuItemDef[] (see CMenuSection).
  *
  * cMenuSetItems() rebuilds the visible list every frame: for each entry whose
- * ownedGameBit is currently set (GameBit_Get != 0) and whose usedGameBit is
+ * ownedGameBit is currently set (mainGetBit != 0) and whose usedGameBit is
  * clear, it appends the entry to the CMenuHud arrays and loads iconTextureId.
  * The on-screen item set therefore mirrors live save state - picking an item
  * up sets its ownedGameBit; using/consuming it sets usedGameBit.
@@ -24,7 +24,7 @@
  */
 typedef struct CMenuItemDef
 {
-    s16 ownedGameBit;  /* +0x0  owned/visible while GameBit_Get(this) != 0 */
+    s16 ownedGameBit;  /* +0x0  owned/visible while mainGetBit(this) != 0 */
     s16 usedGameBit;   /* +0x2  consumed/used gate; entry hidden while set (-1 = none) */
     s16 activeGameBit; /* +0x4  "currently in use" gate (-1 = none) */
     s16 iconTextureId; /* +0x6  HUD icon texture id (drives the on-screen art) */

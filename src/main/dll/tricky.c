@@ -1245,7 +1245,7 @@ int fn_8011E0D8(int *this, int *p2, int p3)
 
 extern int objIsCurModelNotZero(void* obj);
 
-extern int fn_802972A8(int* player);
+extern int playerGetFocusObject(int* player);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
 extern void hudDrawCounter(int id, int a, int b, int c, int d, int* e, int f);
 extern s16 cMenuFadeCounter;
@@ -1360,7 +1360,7 @@ void hudDrawFn_80121440(void)
                 ((int)base->magicCur & 8)) &&
             !(base->scarabCur > *(f32*)&lbl_803E1F9C && base->scarabCur < lbl_803E1FA8 &&
                 ((int)base->scarabCur & 8)) &&
-            !(cell == 0 && (void*)fn_802972A8(player) != NULL))
+            !(cell == 0 && (void*)playerGetFocusObject(player) != NULL))
         {
             for (i = 0; (int)(u8)i < (base->magicCount >> 2); i++)
             {
@@ -1374,14 +1374,14 @@ void hudDrawFn_80121440(void)
             }
         }
     }
-    if ((u8)alpha != 0 && objIsCurModelNotZero(player) != 0 && GameBit_Get(0xeb1) != 0)
+    if ((u8)alpha != 0 && objIsCurModelNotZero(player) != 0 && mainGetBit(0xeb1) != 0)
     {
         hudDrawMagicBar(alpha, 0x100, 0);
     }
     magicId = 0;
     if (playerHasKrazoaSpirit(1, 0) != 0) krazoa = 1;
-    if (GameBit_Get(0x123) != 0 || GameBit_Get(0x83b) != 0) magicId = 0x63;
-    else if (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x83c) != 0) magicId = 0x64;
+    if (mainGetBit(0x123) != 0 || mainGetBit(0x83b) != 0) magicId = 0x63;
+    else if (mainGetBit(0x2e8) != 0 || mainGetBit(0x83c) != 0) magicId = 0x64;
     if ((u8)magicId != 0)
     {
         drawTexture(base->icons[(u8)magicId],
@@ -1444,9 +1444,9 @@ void hudDrawFn_80121440(void)
     else
     {
         int style;
-        if (GameBit_Get(0x91b) != 0) style = 0xc8;
-        else if (GameBit_Get(0x91a) != 0) style = 0x64;
-        else if (GameBit_Get(0x919) != 0) style = 0x32;
+        if (mainGetBit(0x91b) != 0) style = 0xc8;
+        else if (mainGetBit(0x91a) != 0) style = 0x64;
+        else if (mainGetBit(0x919) != 0) style = 0x32;
         else style = 0xa;
         hudDrawCounter(0x1e, (s16) base->moneyValue, (s16)style, (int)base->spiritAnim,
                        (int)base->spiritCur, &hcArg, 0);

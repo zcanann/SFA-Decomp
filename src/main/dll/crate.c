@@ -44,29 +44,29 @@ u32 sfxplayer_updateState(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
         switch (event)
         {
         case SFXPLAYER_EVENT_ACTIVATE:
-            GameBit_Set(state->effectSfxBaseId + 5, 1);
+            mainSetBits(state->effectSfxBaseId + 5, 1);
             break;
         case SFXPLAYER_EVENT_DEACTIVATE:
-            GameBit_Set(state->effectSfxBaseId + 5, 0);
+            mainSetBits(state->effectSfxBaseId + 5, 0);
             state->effectFlags = 1;
             break;
         case SFXPLAYER_EVENT_VARIANT:
             switch (state->effectSfxBaseId)
             {
             case SFXPLAYER_BASE_VARIANT_A:
-                GameBit_Set(GAMEBIT_SFXPLAYER_VARIANT_A, 1);
+                mainSetBits(GAMEBIT_SFXPLAYER_VARIANT_A, 1);
                 state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
                 break;
             case SFXPLAYER_BASE_VARIANT_B:
-                GameBit_Set(GAMEBIT_SFXPLAYER_VARIANT_B, 1);
+                mainSetBits(GAMEBIT_SFXPLAYER_VARIANT_B, 1);
                 state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
                 break;
             case SFXPLAYER_BASE_VARIANT_C:
-                GameBit_Set(GAMEBIT_SFXPLAYER_VARIANT_C, 1);
+                mainSetBits(GAMEBIT_SFXPLAYER_VARIANT_C, 1);
                 state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
                 break;
             case SFXPLAYER_BASE_VARIANT_D:
-                GameBit_Set(GAMEBIT_SFXPLAYER_VARIANT_D, 1);
+                mainSetBits(GAMEBIT_SFXPLAYER_VARIANT_D, 1);
                 state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
                 break;
             }

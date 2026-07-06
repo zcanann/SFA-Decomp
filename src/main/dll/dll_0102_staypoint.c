@@ -59,16 +59,16 @@ void StayPoint_update(int obj)
         isCurrentStayPoint = (obj - fn_80138F84((int)tricky) == 0);
         if (isCurrentStayPoint == 0 && setup->activeGameBit != -1)
         {
-            GameBit_Set(setup->activeGameBit, 0);
+            mainSetBits(setup->activeGameBit, 0);
         }
-        if (setup->requiredGameBit == -1 || GameBit_Get(setup->requiredGameBit) != 0)
+        if (setup->requiredGameBit == -1 || mainGetBit(setup->requiredGameBit) != 0)
         {
             if (isCurrentStayPoint != 0 &&
                 vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((int)tricky + 0x18)) < lbl_803E38A8)
             {
                 if (setup->activeGameBit != -1)
                 {
-                    GameBit_Set(setup->activeGameBit, 1);
+                    mainSetBits(setup->activeGameBit, 1);
                 }
                 return;
             }

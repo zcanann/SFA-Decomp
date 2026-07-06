@@ -10,7 +10,7 @@
 #include "main/dll/player_state.h"
 
 int fn_802AD2F4(int obj, int inner, int state);
-void fn_802B249C(int obj, int inner, int state);
+void playerItemGetAnimFn(int obj, int inner, int state);
 void fn_802AFB0C(int obj, int inner, int state);
 void playerDoHitDetection(int obj);
 

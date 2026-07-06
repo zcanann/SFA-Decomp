@@ -5,7 +5,7 @@
  *
  *  - RomCurve_ / curves_ : the curve network. romCurves[] holds the loaded
  *    curve defs (nRomCurves entries); curves register/unregister through
- *    curves_addCurveDef/curves_remove and are looked up by id, type, action
+ *    RomCurve_add/RomCurve_remove and are looked up by id, type, action
  *    or proximity. Walkers (RomCurveWalker) step along a curve, pick the next
  *    control point/linked curve (RomCurve_goNextPoint, RomCurve_func29, the
  *    getControlPointId_2A/2B link choosers) and clamp progress. Curve type
@@ -380,7 +380,7 @@ static inline int RomCurve_CollectUnblockedLinks(RomCurveDef* curve, int* ids)
     return count;
 }
 
-f32 curves_lengthFn24(u32 startNode, u32 endNode, f32* posA, f32* posB, f32 t1, f32 t2)
+f32 curves_getPathLength(u32 startNode, u32 endNode, f32* posA, f32* posB, f32 t1, f32 t2)
 {
     int cand1[4];
     int cand2[4];
@@ -1012,7 +1012,7 @@ int fn_800D9F38(void* walker, void* curve)
     return 0;
 }
 
-void RomCurve_setA4(void* walker, void* curve)
+void RomCurve_setNextNode(void* walker, void* curve)
 {
     extern float mathCosf(float x);
     extern float mathSinf(float x);
@@ -1307,8 +1307,8 @@ static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset
     return lbl_803E05D0 * trig;
 }
 
-int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
-int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx);
+int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx);
+int RomCurve_getControlPointId(int curve, int exclude, int pickIdx);
 
 static inline int RomCurve_pickRandomControlPointId_2A(int curve)
 {
@@ -1402,11 +1402,11 @@ int RomCurve_func29(RomCurveWalker* state, int pickIdx)
 
     if (state->reverse != 0)
     {
-        nextId = RomCurve_getControlPointId_2B(*(s32*)&state->nodeA0, -1, pickIdx);
+        nextId = RomCurve_getControlPointId(*(s32*)&state->nodeA0, -1, pickIdx);
     }
     else
     {
-        nextId = RomCurve_getControlPointId_2A(*(s32*)&state->nodeA0, -1, pickIdx);
+        nextId = RomCurve_getUnblockedControlPointId(*(s32*)&state->nodeA0, -1, pickIdx);
     }
 
     if (nextId == -1)
@@ -1452,7 +1452,7 @@ fail:
     return 1;
 }
 
-int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx)
+int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx)
 {
     int candidates[4];
     int neighbor;
@@ -1480,7 +1480,7 @@ int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx)
     return -1;
 }
 
-int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx)
+int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
 {
     int candidates[4];
     int neighbor;
@@ -1695,7 +1695,7 @@ fail:
     return 1;
 }
 
-int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType, f32 maxDistance)
+int RomCurve_initCurve(RomCurveWalker* state, int obj, int* curveTypes, int curveType, f32 maxDistance)
 {
     extern float mathCosf(float x);
     extern float mathSinf(float x);
@@ -2192,10 +2192,10 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
             && (p5_filter == -1 || (s8) * ((u8*)hit + 0x1A) == p5_filter))
         {
             gbId = *(s16*)((char*)hit + 0x30);
-            if (gbId == -1 || GameBit_Get(gbId) != 0)
+            if (gbId == -1 || mainGetBit(gbId) != 0)
             {
                 gbId = *(s16*)((char*)hit + 0x32);
-                if (gbId == -1 || GameBit_Get(gbId) == 0)
+                if (gbId == -1 || mainGetBit(gbId) == 0)
                 {
                     f32 dx = *(f32*)pos - *(f32*)((char*)hit + 8);
                     f32 dy = *(f32*)(pos + 4) - *(f32*)((char*)hit + 0xC);
@@ -2657,7 +2657,7 @@ int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
 
 int RomCurve_func16(double x, double y, double z)
 {
-    extern int curves_distFn15();
+    extern int curves_isPointInsideLoop();
     u32 candidateIds[20];
     u32* top;
     int candidateCount;
@@ -2683,7 +2683,7 @@ int RomCurve_func16(double x, double y, double z)
     top = &candidateIds[candidateCount];
     while (candidateCount != 0)
     {
-        if (curves_distFn15(candidateIds[0], x, y, z, &out) != 0)
+        if (curves_isPointInsideLoop(candidateIds[0], x, y, z, &out) != 0)
         {
             return candidateIds[0];
         }
@@ -2976,7 +2976,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
 }
 
 #pragma opt_propagation reset
-int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
+int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
 {
     RomCurveDef* curve;
     RomCurveDef* nextCurve;
@@ -3034,7 +3034,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
     return hitCount & 1;
 }
 
-int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
+int curves_findNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
 {
     float dx;
     float dy;
@@ -3478,7 +3478,7 @@ f32 curves_distXZ(f32 x, f32 z, u32 curveId)
     return gFloatNegOne;
 }
 
-f32 curves_distFn0B(int obj, u32 curveId)
+f32 curves_distToObj(int obj, u32 curveId)
 {
     RomCurveDef* curve;
     f32 dx;
@@ -4255,7 +4255,7 @@ int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action)
     return -1;
 }
 
-void curves_remove(RomCurveDef* curve)
+void RomCurve_remove(RomCurveDef* curve)
 {
     RomCurveDef** tableSlot;
     int sortedCurveCount;
@@ -4284,7 +4284,7 @@ void curves_remove(RomCurveDef* curve)
     }
 }
 
-void curves_addCurveDef(RomCurveDef* curve)
+void RomCurve_add(RomCurveDef* curve)
 {
     int sortedCurveCount;
     RomCurveDef** tailSlot;
@@ -4317,7 +4317,7 @@ void curves_addCurveDef(RomCurveDef* curve)
 #pragma dont_inline on
 #pragma dont_inline reset
 
-void curves_release(void)
+void RomCurve_release(void)
 {
 }
 
@@ -4403,17 +4403,17 @@ void* lbl_803115F8[49] = {
     (void*)0,
     (void*)0x2C0000,
     (void*)RomCurve_initialise,
-    (void*)curves_release,
+    (void*)RomCurve_release,
     (void*)0,
     (void*)curves_initialise,
-    (void*)curves_addCurveDef,
-    (void*)curves_remove,
+    (void*)RomCurve_add,
+    (void*)RomCurve_remove,
     (void*)RomCurve_getCurves,
     (void*)RomCurve_find,
     (void*)curves_findNearObj,
     (void*)RomCurve_getById,
     (void*)curves_find,
-    (void*)curves_distFn0B,
+    (void*)curves_distToObj,
     (void*)curves_distXZ,
     (void*)RomCurve_func0D,
     (void*)curves_isPoint,
@@ -4422,8 +4422,8 @@ void* lbl_803115F8[49] = {
     (void*)RomCurve_func11,
     (void*)curves_findByAction,
     (void*)RomCurve_func13,
-    (void*)curves_distanceToNearestOfType16,
-    (void*)curves_distFn15,
+    (void*)curves_findNearestOfType16,
+    (void*)curves_isPointInsideLoop,
     (void*)RomCurve_func16,
     (void*)RomCurve_getRandomUnblockedLink,
     (void*)RomCurve_getLinkIds,
@@ -4438,14 +4438,14 @@ void* lbl_803115F8[49] = {
     (void*)RomCurve_projectPointToAdjacentWindow,
     (void*)RomCurve_findProjectedCurveFromStart,
     (void*)curves_getPos,
-    (void*)curves_lengthFn24,
-    (void*)RomCurve_get,
+    (void*)curves_getPathLength,
+    (void*)RomCurve_initCurve,
     (void*)RomCurve_goNextPoint,
     (void*)RomCurve_setClosed,
-    (void*)RomCurve_setA4,
+    (void*)RomCurve_setNextNode,
     (void*)RomCurve_func29,
-    (void*)RomCurve_getControlPointId_2A,
-    (void*)RomCurve_getControlPointId_2B,
+    (void*)RomCurve_getUnblockedControlPointId,
+    (void*)RomCurve_getControlPointId,
     (void*)RomCurve_func2C
 };
 char sCurvesMaxRomCurvesExceeded[36] = "curves.c: MAX_ROMCURVES exceeded!!\n\000";

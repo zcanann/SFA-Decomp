@@ -94,15 +94,15 @@ typedef struct ProximityMineDef {
 extern ObjectDescriptor gProximityMineObjDescriptor;
 
 void proximitymine_resetToIdle(ProximityMineObject *obj);
-int proximitymine_getExtraSize(void);
-int proximitymine_getObjectTypeId(void);
-void proximitymine_free(ProximityMineObject *obj);
-void proximitymine_render(ProximityMineObject *obj,u32 param_2,u32 param_3,
+int ProximityMine_getExtraSize(void);
+int ProximityMine_getObjectTypeId(void);
+void ProximityMine_free(ProximityMineObject *obj);
+void ProximityMine_render(ProximityMineObject *obj,u32 param_2,u32 param_3,
                           u32 param_4,u32 param_5);
-void proximitymine_hitDetect(ProximityMineObject *obj);
-void proximitymine_update(ProximityMineObject *obj);
-void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def);
-void proximitymine_release(void);
-void proximitymine_initialise(void);
+void ProximityMine_hitDetect(ProximityMineObject *obj);
+void ProximityMine_update(ProximityMineObject *obj);
+void ProximityMine_init(ProximityMineObject *obj,ProximityMineDef *def);
+void ProximityMine_release(void);
+void ProximityMine_initialise(void);
 
 #endif /* MAIN_PROXIMITYMINE_H_ */

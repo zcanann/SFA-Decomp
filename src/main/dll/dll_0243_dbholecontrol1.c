@@ -156,7 +156,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            if (GameBit_Get((s32)(s8) * (u8*)(data + 0x19) + 2601) != 0) continue;
+            if (mainGetBit((s32)(s8) * (u8*)(data + 0x19) + 2601) != 0) continue;
             if (Obj_IsLoadingLocked() == 0) continue;
             res = mapRomListFindItem(0x4658A, 0, 0, 0, 0);
             if (res == NULL) continue;
@@ -172,7 +172,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
     }
 
-    if (GameBit_Get(((Dbholecontrol1Placement*)data)->hideGameBit) != 0 || lbl_803DDCE0 != 0)
+    if (mainGetBit(((Dbholecontrol1Placement*)data)->hideGameBit) != 0 || lbl_803DDCE0 != 0)
     {
         objs = ObjGroup_GetObjects(DBEGG_OBJGROUP, &count);
         ObjMsg_SendToObjects(0, 3, obj, 17, 0);
@@ -205,12 +205,12 @@ void dbholecontrol1_update(int* obj)
 
     u8* def;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((Dbholecontrol1Placement*)def)->hideGameBit) != 0)
+    if (mainGetBit(((Dbholecontrol1Placement*)def)->hideGameBit) != 0)
     {
         Obj_RemoveFromUpdateList(obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     }
-    else if (GameBit_Get(((Dbholecontrol1Placement*)def)->triggerGameBit) != 0)
+    else if (mainGetBit(((Dbholecontrol1Placement*)def)->triggerGameBit) != 0)
     {
         (*gObjectTriggerInterface)->runSequence(*(s8*)(def + 0x19), obj, -1);
     }

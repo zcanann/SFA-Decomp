@@ -1,7 +1,7 @@
 /*
  * gflevelcon (DLL 0x2BB) - "GalleonForce" level controller object.
  *
- * Its anim-event callback (gf_levelcon_handleScriptEvents) reacts to
+ * Its anim-event callback (gf_levelcon_SeqFn) reacts to
  * sequence event opcodes that drive the sky/weather presets (skyFn_*
  * + getEnvfxAct), warp/credits flow at the end of the level, and a
  * countdown-driven on-screen text prompt (gameTextShow 0x476). It also
@@ -19,7 +19,7 @@
 #include "main/obj_placement.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-/* sequence event opcodes consumed by gf_levelcon_handleScriptEvents */
+/* sequence event opcodes consumed by gf_levelcon_SeqFn */
 #define GFLEVELCON_SEQEV_NONE 0
 #define GFLEVELCON_SEQEV_SKY_PRESET_A 1
 #define GFLEVELCON_SEQEV_SKY_PRESET_B 2
@@ -94,7 +94,7 @@ STATIC_ASSERT(offsetof(GfHitState, hits[0]) == 0xAE);
 STATIC_ASSERT(offsetof(GfHitState, timer[0]) == 0xB2);
 STATIC_ASSERT(offsetof(GfHitState, texState[0]) == 0xB9);
 
-int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* animUpdate)
+int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     int i;
@@ -220,7 +220,7 @@ void gf_levelcon_free(void)
 
 void gf_levelcon_update(int obj)
 {
-    ((GameObject*)obj)->animEventCallback = gf_levelcon_handleScriptEvents;
+    ((GameObject*)obj)->animEventCallback = gf_levelcon_SeqFn;
 }
 
 void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)

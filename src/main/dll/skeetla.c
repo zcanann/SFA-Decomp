@@ -545,7 +545,7 @@ int trickyMove(u8* obj, f32* targetPos)
                         {
                             *(u32*)sfxIds = gSkeetlaFootstepSfxIds01;
                             sfxIds[2] = gSkeetlaFootstepSfxId2;
-                            if (GameBit_Get(0x25) != 0)
+                            if (mainGetBit(0x25) != 0)
                             {
                                 randomGetRange(0, 2);
                             }
@@ -720,8 +720,8 @@ static void* skeetla_validateRouteEntry(void* entry)
     {
         return NULL;
     }
-    if (((((ObjfsaRomCurveDef*)entry)->requiredBit != -1) && (GameBit_Get(((ObjfsaRomCurveDef*)entry)->requiredBit) == 0)) ||
-        ((((ObjfsaRomCurveDef*)entry)->forbiddenBit != -1) && (GameBit_Get(((ObjfsaRomCurveDef*)entry)->forbiddenBit) != 0)))
+    if (((((ObjfsaRomCurveDef*)entry)->requiredBit != -1) && (mainGetBit(((ObjfsaRomCurveDef*)entry)->requiredBit) == 0)) ||
+        ((((ObjfsaRomCurveDef*)entry)->forbiddenBit != -1) && (mainGetBit(((ObjfsaRomCurveDef*)entry)->forbiddenBit) != 0)))
     {
         entry = NULL;
     }
@@ -764,10 +764,10 @@ void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelec
                 if ((linkSelector == 0) || (*(u8*)((u8*)routeDef + 4 + count) == linkSelector))
                 {
                     requiredBit = ((ObjfsaRomCurveDef*)entry)->requiredBit;
-                    if ((requiredBit == -1) || (GameBit_Get(requiredBit) != 0))
+                    if ((requiredBit == -1) || (mainGetBit(requiredBit) != 0))
                     {
                         forbiddenBit = ((ObjfsaRomCurveDef*)entry)->forbiddenBit;
-                        if ((forbiddenBit == -1) || (GameBit_Get(forbiddenBit) == 0))
+                        if ((forbiddenBit == -1) || (mainGetBit(forbiddenBit) == 0))
                         {
                             if (((s8)routeDef[0x1a] != 9) || (*(s8*)((u8*)entry + 0x1a) != 8))
                             {
@@ -1000,9 +1000,9 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
             continue;
         }
         if (((((ObjfsaRomCurveDef*)curve)->requiredBit != -1) &&
-                (GameBit_Get(((ObjfsaRomCurveDef*)curve)->requiredBit) == 0)) ||
+                (mainGetBit(((ObjfsaRomCurveDef*)curve)->requiredBit) == 0)) ||
             ((((ObjfsaRomCurveDef*)curve)->forbiddenBit != -1) &&
-                (GameBit_Get(((ObjfsaRomCurveDef*)curve)->forbiddenBit) != 0)))
+                (mainGetBit(((ObjfsaRomCurveDef*)curve)->forbiddenBit) != 0)))
         {
             continue;
         }

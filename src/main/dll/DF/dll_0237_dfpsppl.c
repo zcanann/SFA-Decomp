@@ -7,29 +7,29 @@
 #include "main/dll/CF/laser.h"
 #include "main/gameplay_runtime.h"
 
-int laserObj_getExtraSize(void)
+int DFPSpPl_getExtraSize(void)
 {
     return sizeof(LaserState);
 }
 
-int laserObj_getObjectTypeId(void)
+int DFPSpPl_getObjectTypeId(void)
 {
     return 0;
 }
 
-void laserObj_free(void)
+void DFPSpPl_free(void)
 {
 }
 
-void laserObj_render(void)
+void DFPSpPl_render(void)
 {
 }
 
-void laserObj_hitDetect(void)
+void DFPSpPl_hitDetect(void)
 {
 }
 
-void laserObj_update(LaserObject* obj)
+void DFPSpPl_update(LaserObject* obj)
 {
     LaserState* state;
     u32 activationGameBitSet;
@@ -37,7 +37,7 @@ void laserObj_update(LaserObject* obj)
     int mode;
 
     if ((obj->state->completionLatched == '\0') &&
-        (activationGameBitSet = GameBit_Get((int)obj->state->activationGameBit),
+        (activationGameBitSet = mainGetBit((int)obj->state->activationGameBit),
             activationGameBitSet != 0))
     {
         obj->statusFlags = (u8)(obj->statusFlags & ~LASER_OBJECT_STATUS_DISABLED);
@@ -57,8 +57,8 @@ void laserObj_update(LaserObject* obj)
             eventReady = (*gGameUIInterface)->isEventReady(LASEROBJ_SEQUENCE_A_EVENT);
             if (eventReady != 0)
             {
-                GameBit_Set((int)state->completionGameBit, 1);
-                GameBit_Set((int)state->activationGameBit, 0);
+                mainSetBits((int)state->completionGameBit, 1);
+                mainSetBits((int)state->activationGameBit, 0);
                 state->completionLatched = 1;
                 obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
             }
@@ -68,8 +68,8 @@ void laserObj_update(LaserObject* obj)
             eventReady = (*gGameUIInterface)->isEventReady(LASEROBJ_SEQUENCE_B_EVENT);
             if (eventReady != 0)
             {
-                GameBit_Set((int)state->completionGameBit, 1);
-                GameBit_Set((int)state->activationGameBit, 0);
+                mainSetBits((int)state->completionGameBit, 1);
+                mainSetBits((int)state->activationGameBit, 0);
                 state->completionLatched = 1;
                 obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
                 (*gMapEventInterface)->setMapAct(LASEROBJ_SEQUENCE_B_MODE_MAP_A,
@@ -84,7 +84,7 @@ void laserObj_update(LaserObject* obj)
 }
 
 
-void laserObj_init(LaserObject* obj, LaserObjectMapData* mapData)
+void DFPSpPl_init(LaserObject* obj, LaserObjectMapData* mapData)
 {
     LaserState* state;
     u32 completionGameBitSet;
@@ -94,7 +94,7 @@ void laserObj_init(LaserObject* obj, LaserObjectMapData* mapData)
     state->activationGameBit = mapData->activationGameBit;
     state->completionLatched = 0;
     obj->modeWord = (s16)(mapData->mapEventSlot << LASEROBJ_MODE_WORD_SHIFT);
-    completionGameBitSet = GameBit_Get((int)state->completionGameBit);
+    completionGameBitSet = mainGetBit((int)state->completionGameBit);
     if (completionGameBitSet != 0)
     {
         state->completionLatched = 1;
@@ -104,11 +104,11 @@ void laserObj_init(LaserObject* obj, LaserObjectMapData* mapData)
     return;
 }
 
-void laserObj_release(void)
+void DFPSpPl_release(void)
 {
 }
 
-void laserObj_initialise(void)
+void DFPSpPl_initialise(void)
 {
 }
 
@@ -117,14 +117,14 @@ ObjectDescriptor gLaserObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    laserObj_initialise,
-    laserObj_release,
+    DFPSpPl_initialise,
+    DFPSpPl_release,
     0,
-    (ObjectDescriptorCallback)laserObj_init,
-    (ObjectDescriptorCallback)laserObj_update,
-    laserObj_hitDetect,
-    laserObj_render,
-    laserObj_free,
-    (ObjectDescriptorCallback)laserObj_getObjectTypeId,
-    laserObj_getExtraSize,
+    (ObjectDescriptorCallback)DFPSpPl_init,
+    (ObjectDescriptorCallback)DFPSpPl_update,
+    DFPSpPl_hitDetect,
+    DFPSpPl_render,
+    DFPSpPl_free,
+    (ObjectDescriptorCallback)DFPSpPl_getObjectTypeId,
+    DFPSpPl_getExtraSize,
 };

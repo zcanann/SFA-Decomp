@@ -14,7 +14,7 @@
 #include "main/gameplay_runtime.h"
 
 /*
- * Setup buffer fn_80152370 fills for a spawned child object (0x24 bytes from
+ * Setup buffer gcRobotLight_init fills for a spawned child object (0x24 bytes from
  * Obj_AllocObjectSetup). Embeds the common ObjPlacement head; the class byte at
  * 0x18 is left unwritten and 0x19 / 0x20 carry class-specific slots this handler
  * seeds. Names beyond the head are generic (provenance is the raw store offsets).
@@ -32,6 +32,6 @@ STATIC_ASSERT(offsetof(Seq11EChildSetup, unk19) == 0x19);
 STATIC_ASSERT(offsetof(Seq11EChildSetup, unk20) == 0x20);
 STATIC_ASSERT(sizeof(Seq11EChildSetup) == 0x24);
 
-int fn_80152370(int obj, int p2);
+int gcRobotLight_init(int obj, int p2);
 
 #endif

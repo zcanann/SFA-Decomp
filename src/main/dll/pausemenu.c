@@ -134,7 +134,7 @@ extern f32 lbl_803E20C0;
 extern f32 lbl_803E20C4;
 extern f32 lbl_803E20CC;
 
-void pauseMenuDrawStatus_801274a0(int* arg1);
+void pauseMenuDrawStatus_801274A0(int* arg1);
 void fn_80127F24(s32 alpha);
 
 void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
@@ -242,7 +242,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         }
         break;
     case 5:
-        pauseMenuDrawStatus_801274a0(player);
+        pauseMenuDrawStatus_801274A0(player);
         break;
     case 4:
         pauseMenuDoSave();
@@ -517,7 +517,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
     }
 }
 
-void pauseMenuDrawStatus_801274a0(int* arg1)
+void pauseMenuDrawStatus_801274A0(int* arg1)
 {
     s8 i8;
     s32 ty1;
@@ -599,10 +599,10 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
             ty = (s32)(tmp * lbl_803E2088);
         }
         fn_80128120(arg1, ty);
-        i = GameBit_Get(0x63c);
-        j = GameBit_Get(0x4e9);
-        i += GameBit_Get(0x5f3);
-        gbCount = i + GameBit_Get(0x5f4);
+        i = mainGetBit(0x63c);
+        j = mainGetBit(0x4e9);
+        i += mainGetBit(0x5f3);
+        gbCount = i + mainGetBit(0x5f4);
         gbCount += j;
         {
             s8 k;
@@ -613,15 +613,15 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
                 p += 0x20;
             }
         }
-        if (GameBit_Get(0x91b) != 0)
+        if (mainGetBit(0x91b) != 0)
         {
             magicVal = 0xc8;
         }
-        else if (GameBit_Get(0x91a) != 0)
+        else if (mainGetBit(0x91a) != 0)
         {
             magicVal = 0x64;
         }
-        else if (GameBit_Get(0x919) != 0)
+        else if (mainGetBit(0x919) != 0)
         {
             magicVal = 0x32;
         }

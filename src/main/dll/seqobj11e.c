@@ -4,19 +4,19 @@
  * a GameObject plus its BaddieState scratch block; the pairs below are
  * (init, update) sets plus hit/reaction callbacks selected per type:
  *
- *   fn_801522E0 / fn_80152514: a child-zapping curve-follower. Init seeds
+ *   guardClaw_init / fn_80152514: a child-zapping curve-follower. Init seeds
  *     speed/scale/state flags from the placement row; update runs a child-
  *     zap timer, advances along a rom curve, steps heading from the curve
  *     tangent, plays landing/laser sfx, emits light-pulse + masked-hit fx
  *     while the active flag (objectFlags 0x800) is set, clamps vertical
  *     velocity, and spawns/parents a spark child object.
- *   fn_80152A94 / fn_80152B90: a firefly hover. Init seeds state; update
+ *   gcRobotPatrol_init / fn_80152B90: a firefly hover. Init seeds state; update
  *     drives a circular drift, bobs between two heights, periodically
  *     spawns a dropped object, and runs ambient sfx timers.
  *   fn_80152040: a 12-byte-row state-table driver (gSeq11EStateTable) that
  *     advances on GameBit + sequence flags and kicks the matching anim.
- *   fn_80152370: spawns and sets up a child object at the parent's pos.
- *   fn_80152440 / fn_80152B2C: hit/reaction message callbacks.
+ *   gcRobotLight_init: spawns and sets up a child object at the parent's pos.
+ *   gcRobotPatrol_updateWhileFrozen / mikaladon_updateWhileFrozen: hit/reaction message callbacks.
  *
  * Object type ids handled (from the enemy dispatch table): 0xd8/0x281
  * (state-table), 0x613 (curve-follower update), 0x642 (firefly).
@@ -41,7 +41,7 @@ extern u32 ObjLink_AttachChild();
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void fn_80152440(GameObject* obj, int p, int p3, int msg)
+void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int p, int p3, int msg)
 {
     extern void fn_8014D08C(GameObject* obj, int p, int type, f32 t, int a, int b);
     extern f32 lbl_803E2810;
@@ -252,7 +252,7 @@ void fn_80152514(int* obj, u8* state)
             (child2 = ((GameObject*)obj)->childObjs[0]) != 0 && fn_801A0174(child2) != 0)
         {
             ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), (int)obj, 0x16, 2, 0);
-            fn_80152370((int)obj, 0x3b2);
+            gcRobotLight_init((int)obj, 0x3b2);
             Sfx_PlayFromObject((u32)obj, SFXsp_literun116);
             *(f32*)(state + 0x32c) = lbl_803DBCB4;
         }
@@ -288,7 +288,7 @@ void fn_80152514(int* obj, u8* state)
             {
                 attached = 0;
             }
-            newObj = (int*)fn_80152370((int)obj, 0x639);
+            newObj = (int*)gcRobotLight_init((int)obj, 0x639);
             flag = 0;
             if (*(s8*)((char*)def + 0x2a) != 0 && !(((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW))
             {
@@ -405,7 +405,7 @@ void fn_80152B90(int* obj, u8* state)
     }
 }
 
-int fn_80152370(int obj, int p2)
+int gcRobotLight_init(int obj, int p2)
 {
     extern u8*Obj_SetupObject(u8* obj, int a, int b, int c, int d);
     int sub;
@@ -431,7 +431,7 @@ int fn_80152370(int obj, int p2)
 
 /* scheduling stays off; only peephole flips on for the next two handlers */
 #pragma peephole on
-void fn_80152A94(int obj, int p)
+void gcRobotPatrol_init(int obj, int p)
 {
     extern f32 lbl_803E2850;
     extern f32 lbl_803E2854;
@@ -459,7 +459,7 @@ void fn_80152A94(int obj, int p)
     Sfx_AddLoopedObjectSound((u32)obj, SFXsp_literun115);
 }
 
-void fn_80152B2C(int obj, int p, int param3, int msg)
+void mikaladon_updateWhileFrozen(int obj, int p, int param3, int msg)
 {
     if (msg == 16 || msg == 17)
     {
@@ -479,7 +479,7 @@ extern f32 lbl_803E2808;
 extern f32 lbl_803E280C;
 
 #pragma peephole off
-void fn_801522E0(int* obj, u8* state)
+void guardClaw_init(int* obj, u8* state)
 {
     int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
     f32 fz;
@@ -526,7 +526,7 @@ void fn_80152040(int* obj, u8* state)
     int* def = *(int**)&((GameObject*)obj)->anim.placementData;
     u32 flags;
 
-    if (((BaddieState*)state)->seqEntryIndex == 2 && GameBit_Get(*(s16*)((char*)def + 0x1c)) == 0)
+    if (((BaddieState*)state)->seqEntryIndex == 2 && mainGetBit(*(s16*)((char*)def + 0x1c)) == 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
@@ -556,7 +556,7 @@ void fn_80152040(int* obj, u8* state)
         {
             if (flags & 0x20000000)
             {
-                if (GameBit_Get(*(s16*)((char*)def + 0x1c)) != 0)
+                if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0)
                 {
                     ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].alt;
                 }
@@ -568,7 +568,7 @@ void fn_80152040(int* obj, u8* state)
         }
         else if (((BaddieState*)state)->seqEntryIndex == 2)
         {
-            if (GameBit_Get(*(s16*)((char*)def + 0x1c)) != 0 ||
+            if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0 ||
                 !(((BaddieState*)state)->controlFlags & 0x20000000))
             {
                 ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
@@ -576,7 +576,7 @@ void fn_80152040(int* obj, u8* state)
         }
         else if (((BaddieState*)state)->seqEntryIndex == 3)
         {
-            if (GameBit_Get(*(s16*)((char*)def + 0x1c)) != 0)
+            if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0)
             {
                 ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].alt;
             }

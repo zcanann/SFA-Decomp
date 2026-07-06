@@ -90,7 +90,7 @@ void sh_queenearthwalker_update(void* obj)
             queenFeedFn_801d44a4(obj, state);
             break;
         case 1:
-            if (GameBit_Get(0x193) != 0)
+            if (mainGetBit(0x193) != 0)
             {
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
             }
@@ -109,7 +109,7 @@ void sh_queenearthwalker_update(void* obj)
             openPortalFn_801d4364(obj, state);
             break;
         case 3:
-            if (GameBit_Get(0x13f) != 0)
+            if (mainGetBit(0x13f) != 0)
             {
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
             }
@@ -125,7 +125,7 @@ void sh_queenearthwalker_update(void* obj)
             fn_8003B500(obj, (u8*)state + 0x8, lbl_803E53F8);
             break;
         case 4:
-            if (GameBit_Get(0x199) != 0)
+            if (mainGetBit(0x199) != 0)
             {
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
             }
@@ -168,7 +168,7 @@ void sh_queenearthwalker_update(void* obj)
             ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableAct1;
             break;
         case 2:
-            if (GameBit_Get(0xc2) == 6)
+            if (mainGetBit(0xc2) == 6)
             {
                 (*gObjectTriggerInterface)->preempt((int)obj, 0x18f6);
                 (*gObjectTriggerInterface)->runSequence(6, obj, 1);
@@ -176,7 +176,7 @@ void sh_queenearthwalker_update(void* obj)
             }
             else
             {
-                if (GameBit_Get(0xbf) != 0)
+                if (mainGetBit(0xbf) != 0)
                 {
                     ((QueenEarthWalkerState*)state)->stateIndex = 1;
                 }
@@ -255,7 +255,7 @@ void queenFeedFn_801d44a4(void* obj, void* state)
     switch (((QueenEarthWalkerState*)state)->stateIndex)
     {
     case 0:
-        if (GameBit_Get(0xbf) != 0)
+        if (mainGetBit(0xbf) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             ((QueenEarthWalkerState*)state)->stateIndex = 1;
@@ -285,10 +285,10 @@ void queenFeedFn_801d44a4(void* obj, void* state)
         if (ObjTrigger_IsSetById(obj, 0x66d) != 0)
         {
             ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_ACTIVE;
-            total = GameBit_Get(0x66d);
-            total += GameBit_Get(0xc2);
-            GameBit_Set(0x66d, 0);
-            GameBit_Set(0xc2, total);
+            total = mainGetBit(0x66d);
+            total += mainGetBit(0xc2);
+            mainSetBits(0x66d, 0);
+            mainSetBits(0xc2, total);
             if (total != 6)
             {
                 ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_TARGETING;
@@ -310,7 +310,7 @@ void queenFeedFn_801d44a4(void* obj, void* state)
         break;
     case 2:
         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
-        GameBit_Set(0x9e, 1);
+        mainSetBits(0x9e, 1);
         ((QueenEarthWalkerState*)state)->stateIndex = 3;
         break;
     case 3:
@@ -336,24 +336,24 @@ void openPortalFn_801d4364(void* obj, void* state)
 
     player = Obj_GetPlayerObject();
     ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
-    if (GameBit_Get(0xc48) != 0)
+    if (mainGetBit(0xc48) != 0)
     {
         ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
     }
-    else if (GameBit_Get(0x23c) != 0)
+    else if (mainGetBit(0x23c) != 0)
     {
         ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTablePortalReady;
     }
-    else if (GameBit_Get(0x5bd) != 0)
+    else if (mainGetBit(0x5bd) != 0)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         if (playerHasSpell(player, 3) != 0 &&
             getXZDistance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) < gQueenEarthWalkerPortalSpellDistance)
         {
-            GameBit_Set(0x23b, 1);
+            mainSetBits(0x23b, 1);
         }
     }
-    else if (GameBit_Get(0xa31) != 0)
+    else if (mainGetBit(0xa31) != 0)
     {
         ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
     }

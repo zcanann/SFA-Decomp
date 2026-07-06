@@ -30,7 +30,7 @@ void Tricky_func0F(int *obj,int commandEnabled,int targetObj);
 void sideCommandEnable(int obj,int targetObj,int commandKind,int commandType);
 int Tricky_updateSideCommandPrompts(int obj);
 u32 FUN_80146874(void);
-void Tricky_destroy(int obj,int shouldKeepFlameChildren);
+void Tricky_free(int obj,int shouldKeepFlameChildren);
 void Tricky_init(int obj);
 int tricky_SeqFn(int obj,int unused,ObjAnimUpdateState *animUpdate);
 void Tricky_update(int obj);

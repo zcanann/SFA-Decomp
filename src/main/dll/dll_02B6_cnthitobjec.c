@@ -22,7 +22,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-int cnthitobjec_emitHitEvents(int obj, int p2, int p3)
+int cnthitobjec_SeqFn(int obj, int p2, int p3)
 {
     int i;
     CntHitObjectAnimEvent* event = (CntHitObjectAnimEvent*)p3;
@@ -88,7 +88,7 @@ void cnthitobjec_hitDetect(int obj)
     {
         CntHitObjectSetup* s = (CntHitObjectSetup*)((GameObject*)obj)->anim.placementData;
         state->remainingHealth = 0;
-        GameBit_Set(s->doneGameBit, 1);
+        mainSetBits(s->doneGameBit, 1);
         if (s->mode != 0)
         {
             if (s->mode == CNTHIT_MODE_VISIBLE_OBJECT)
@@ -126,7 +126,7 @@ void cnthitobjec_update(int obj)
 
     if (state->flags.disabled == 0)
     {
-        if ((u32)GameBit_Get(setup->doneGameBit) != 0)
+        if ((u32)mainGetBit(setup->doneGameBit) != 0)
         {
             state->flags.disabled = 1;
             ObjHits_DisableObject(obj);
@@ -134,7 +134,7 @@ void cnthitobjec_update(int obj)
     }
 
     if (state->flags.disabled == 0 && state->remainingHealth == 0 &&
-        GameBit_Get(setup->startGameBit) != 0)
+        mainGetBit(setup->startGameBit) != 0)
     {
         ObjHits_EnableObject(obj);
         state->remainingHealth = setup->startHealth;
@@ -166,12 +166,12 @@ void cnthitobjec_init(int obj, int setup)
     {
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
-    if ((u32)GameBit_Get(setupData->doneGameBit) != 0)
+    if ((u32)mainGetBit(setupData->doneGameBit) != 0)
     {
         state->flags.disabled = 1;
         ObjHits_DisableObject(obj);
     }
-    ((GameObject*)obj)->animEventCallback = cnthitobjec_emitHitEvents;
+    ((GameObject*)obj)->animEventCallback = cnthitobjec_SeqFn;
 }
 
 void cnthitobjec_release(void)

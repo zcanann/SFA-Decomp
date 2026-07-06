@@ -2,8 +2,8 @@
  * dll_80136a40 - EN v1.0 retargeted system/debug leaves.
  *
  * A grab-bag of low-level support code linked into this DLL:
- *   - The fatal-error display thread (fn_80137DF8) plus its installer
- *     (fn_80137D28 / fn_801388D0): OSSetErrorHandler hooks dump the
+ *   - The fatal-error display thread (errDisplayThreadMain) plus its installer
+ *     (errDisplayInstallHandlers / errDisplayHandler): OSSetErrorHandler hooks dump the
  *     exception type, DSISR/SRR0, the stack trace and a full GPR/SPR
  *     register window straight into the external framebuffers, flipping
  *     them forever in a hang loop.
@@ -12,14 +12,14 @@
  *     debugLogBuffer) replayed by debugPrintDraw, which lays the log out
  *     twice (measure then draw) and rasterizes glyphs through
  *     fn_80136A40 (per-glyph texture select + textRenderChar) and
- *     fn_80136E00 (record interpreter: color/tab/newline/position tags).
+ *     debugPrintDrawRecord (record interpreter: color/tab/newline/position tags).
  *   - The title-screen ObjectDescriptor (gTitleScreenObjDescriptor) and
  *     its forwarded callbacks.
  *   - Tricky companion helpers: queued-path particle emission
  *     (Tricky_emitQueuedPathParticles), command-target selection,
  *     blend-channel weight animation and impress/GameBit state pokes.
  *   - Misc object teardown (objAnimFreeChildren) and a minimap timer
- *     readout (fn_80133F70).
+ *     readout (dll_3F_updateTimerReadout).
  */
 #include "main/texture.h"
 #include "main/dll/ppcwgpipe_struct.h"
@@ -63,7 +63,7 @@ typedef struct TrickyImpressState
 
 extern u64 ObjLink_DetachChild();
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern u32 GameBit_Get(int eventId);
+extern u32 mainGetBit(int eventId);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern const f32 lbl_803E23E8;
 extern void Obj_FreeObject(u8* obj);
@@ -122,7 +122,7 @@ extern f32 getXZDistance(f32* a, f32* b);
 extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
 extern int dll_19_func1B(int p);
 extern int* gBaddieControlInterface;
-extern f32 fn_8014C5D0(register int obj);
+extern f32 enemy_getHealthFraction(register int obj);
 extern f32 vec3f_distanceSquared(int, int);
 extern u8 enableDebugText;
 extern u16* debugDrawFrameBuffer;
@@ -196,7 +196,7 @@ u32 fn_80138F84(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extr
 s16 fn_80138F90(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk414; }
 void* trickyGetQueuedPathParticlePos(void* obj) { return &((TrickyImpressState*)((GameObject*)obj)->extra)->renderPosX; }
 
-int titlescreen_getObjectTypeId(u8* obj);
+int TitleScreen_getObjectTypeId(u8* obj);
 
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     {
@@ -204,16 +204,16 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)titlescreen_initialise,
-        (ObjectDescriptorCallback)titlescreen_release,
+        (ObjectDescriptorCallback)TitleScreen_initialise,
+        (ObjectDescriptorCallback)TitleScreen_release,
         0,
-        (ObjectDescriptorCallback)titlescreen_init,
-        (ObjectDescriptorCallback)titlescreen_update,
-        (ObjectDescriptorCallback)titlescreen_hitDetect,
-        (ObjectDescriptorCallback)titlescreen_render,
-        (ObjectDescriptorCallback)titlescreen_free,
-        (ObjectDescriptorCallback)titlescreen_getObjectTypeId,
-        titlescreen_getExtraSize,
+        (ObjectDescriptorCallback)TitleScreen_init,
+        (ObjectDescriptorCallback)TitleScreen_update,
+        (ObjectDescriptorCallback)TitleScreen_hitDetect,
+        (ObjectDescriptorCallback)TitleScreen_render,
+        (ObjectDescriptorCallback)TitleScreen_free,
+        (ObjectDescriptorCallback)TitleScreen_getObjectTypeId,
+        TitleScreen_getExtraSize,
     },
     0,
 };
@@ -317,12 +317,12 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
 }
 
 #pragma optimization_level reset
-/* GameBit-gated bit toggle on obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
+/* GameBit-gated bit toggle on obj->_b8->_54: requires mainGetBit(0x4E4); sets bit 0x10000 then
  * checks bit 0x10. Returns 1 only when the post-OR check passes. */
 int trickyFn_80138f14(u8* obj)
 {
     u8* b = ((GameObject*)obj)->extra;
-    if ((u32)GameBit_Get(0x4E4) != 0u)
+    if ((u32)mainGetBit(0x4E4) != 0u)
     {
         ((TrickyImpressState*)b)->flags54 |= 0x10000LL;
         if ((((TrickyImpressState*)b)->flags54 & 0x10) != 0u)
@@ -337,7 +337,7 @@ int trickyFn_80138f14(u8* obj)
  * two state bytes, acquires three sized buffers (605/1/2 bytes) and primes the
  * debugLogEnd cursor to the start of the 0x1100-byte arena. */
 #pragma peephole on
-void fn_80137998(void)
+void debugPrintInit(void)
 {
     getScreenResolution();
     gDebugScaleX = gDebugInitialScale;
@@ -414,7 +414,7 @@ void debugPrintf(char* fmt, ...)
     }
 }
 
-void fn_80137948(char* fmt, ...)
+void logPrintf(char* fmt, ...)
 {
 }
 
@@ -431,7 +431,7 @@ void trickyImpress(u8* obj)
  * debugLogEnd to the start of the buffer and reload the print x/y
  * coordinates from saved values. */
 #pragma peephole off
-void fn_801375A0(void)
+void debugPrintReset(void)
 {
     u32 yp;
     u32 xp;
@@ -451,7 +451,7 @@ void fn_80138908(u8* obj, int v)
 
 /* Stash 4 args to four globals and resume
  * the thread at &gErrDisplayThread. */
-void fn_801388D0(s16 a, u32 b, u32 c, u32 d)
+void errDisplayHandler(s16 a, u32 b, u32 c, u32 d)
 {
     gErrExceptionType = a;
     gErrContext = b;
@@ -460,17 +460,17 @@ void fn_801388D0(s16 a, u32 b, u32 c, u32 d)
     OSResumeThread(gErrDisplayThread);
 }
 
-void fn_80137D28(void)
+void errDisplayInstallHandlers(void)
 {
-    OSSetErrorHandler(OS_ERROR_SYSTEM_RESET, fn_801388D0);
-    OSSetErrorHandler(OS_ERROR_MACHINE_CHECK, fn_801388D0);
-    OSSetErrorHandler(OS_ERROR_DSI, fn_801388D0);
-    OSSetErrorHandler(OS_ERROR_PERFORMACE_MONITOR, fn_801388D0);
-    OSSetErrorHandler(OS_ERROR_SYSTEM_INTERRUPT, fn_801388D0);
-    OSSetErrorHandler(OS_ERROR_PROTECTION, fn_801388D0);
-    OSSetErrorHandler(OS_ERROR_ISI, fn_801388D0);
-    OSSetErrorHandler(OS_ERROR_ALIGNMENT, fn_801388D0);
-    OSCreateThread(gErrDisplayThread, fn_80137DF8, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
+    OSSetErrorHandler(OS_ERROR_SYSTEM_RESET, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_MACHINE_CHECK, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_DSI, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_PERFORMACE_MONITOR, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_SYSTEM_INTERRUPT, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_PROTECTION, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_ISI, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_ALIGNMENT, errDisplayHandler);
+    OSCreateThread(gErrDisplayThread, errDisplayThreadMain, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
 }
 
 int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
@@ -504,7 +504,7 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
         }
         else
         {
-            obj_extra = fn_8014C5D0(*objs);
+            obj_extra = enemy_getHealthFraction(*objs);
         }
 
         data = (int*)*(int*)(*objs + 0x4c);
@@ -515,7 +515,7 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
         }
         else
         {
-            v1 = GameBit_Get(g1);
+            v1 = mainGetBit(g1);
         }
         g2 = *(s16*)((char*)data + 0x1a);
         if (g2 == -1)
@@ -524,7 +524,7 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
         }
         else
         {
-            v2 = GameBit_Get(g2);
+            v2 = mainGetBit(g2);
         }
 
         if (ObjGroup_ContainsObject(*objs, 49) == 0 &&
@@ -566,9 +566,9 @@ void fn_80138D7C(int obj, int p2)
     if (*(u8*)(p2 + 0x82c) != ratio)
     {
         f32 t;
-        if (GameBit_Get(1005) == 0)
+        if (mainGetBit(1005) == 0)
         {
-            GameBit_Set(1005, 1);
+            mainSetBits(1005, 1);
             (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
             ((TrickyImpressState*)p2)->flags54 |= 0x4000;
             *(f32*)(p2 + 0x828) = *(f32*)(p2 + 0x828) + lbl_803E2408;
@@ -758,7 +758,7 @@ void objAnimFreeChildren(int a, int b, void** c)
 }
 
 #pragma opt_strength_reduction off
-void fn_80137A00(int x, int y, u8* grid, int unused)
+void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused)
 {
     int c1;
     int i;
@@ -851,9 +851,9 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
                 if (*ch >= 0x21 && *ch <= 0x5a)
                 {
                     debugDrawFrameBuffer = externalFrameBuffer0;
-                    fn_80137A00(xx, yy, glyph = gDebugFontGlyphs + (*ch - 0x21) * 5, -1);
+                    debugTextDrawToFrameBuffer(xx, yy, glyph = gDebugFontGlyphs + (*ch - 0x21) * 5, -1);
                     debugDrawFrameBuffer = externalFrameBuffer1;
-                    fn_80137A00(xx, yy, glyph, -1);
+                    debugTextDrawToFrameBuffer(xx, yy, glyph, -1);
                     xx += 0xf;
                 }
                 break;
@@ -932,7 +932,7 @@ int fn_80136A40(int p1, int c)
 }
 
 #pragma optimization_level 3
-int fn_80136E00(int p1, u8* p)
+int debugPrintDrawRecord(int p1, u8* p)
 {
     u8 c;
     int w;
@@ -1170,7 +1170,7 @@ static inline void errDisplayFillBackdrop(int x, int xcb)
 
 #pragma opt_strength_reduction off
 #pragma opt_propagation off
-void fn_80137DF8(void)
+void errDisplayThreadMain(void)
 {
     char* strs = (char*)gDebugFontGlyphs;
     void (*self)(void);
@@ -1202,7 +1202,7 @@ void fn_80137DF8(void)
         GXSetBreakPtCallback(NULL);
         __GXAbortWaitPECopyDone();
         OSRestoreInterrupts(lvl);
-        self = fn_80137DF8;
+        self = errDisplayThreadMain;
         while (1)
         {
             if (enableDebugText != 0)
@@ -1453,7 +1453,7 @@ void debugPrintDraw(int ctx)
     for (; p != debugLogEnd;)
     {
         gDebugDrawPass = pass;
-        p += fn_80136E00(ctx, p);
+        p += debugPrintDrawRecord(ctx, p);
     }
     x1 = debugPrintXpos + 0xa;
     yv = debugPrintYpos;
@@ -1486,7 +1486,7 @@ void debugPrintDraw(int ctx)
     for (; p != debugLogEnd;)
     {
         gDebugDrawPass = pass;
-        p += fn_80136E00(ctx, p);
+        p += debugPrintDrawRecord(ctx, p);
     }
     debugLogEnd = debugLogBuffer;
     gDebugRecordCount = 0;

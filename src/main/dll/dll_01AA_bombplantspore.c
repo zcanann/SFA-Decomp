@@ -72,12 +72,12 @@ extern const f32 lbl_803E53EC;
 extern f32 lbl_803E53F0;
 extern const f32 lbl_803E53F4;
 
-int bombplantspore_getExtraSize(void)
+int BombPlantSpore_getExtraSize(void)
 {
     return 0x2b4;
 }
 
-void bombplantspore_free(void* obj)
+void BombPlantSpore_free(void* obj)
 {
     void* state;
     void* light;
@@ -92,7 +92,7 @@ void bombplantspore_free(void* obj)
     }
 }
 
-/* These two drift helpers' only callers (bombplantspore_update/init) live
+/* These two drift helpers' only callers (BombPlantSpore_update/init) live
  * in the BombPlantSpore TU (SHrocketmushroom.c). */
 #pragma dont_inline on
 void bombplantspore_startDriftBurst(void* obj, void* state)
@@ -240,7 +240,7 @@ typedef struct BombPlantSporeStateFlags {
 
 #define BOMBPLANTSPORE_FLAGS(state) ((BombPlantSporeStateFlags*)&(state)->stateFlags)
 
-void bombplantspore_update(void* obj)
+void BombPlantSpore_update(void* obj)
 {
     BombPlantSporeState* state;
     s32 particleAlpha;
@@ -418,7 +418,7 @@ void bombplantspore_update(void* obj)
     }
 }
 
-void bombplantspore_init(void* obj, void* param2)
+void BombPlantSpore_init(void* obj, void* param2)
 {
     BombPlantSporeState* state;
     void* light;

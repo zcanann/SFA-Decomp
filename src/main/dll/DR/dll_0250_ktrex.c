@@ -5,81 +5,81 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
-extern void drakormissile_render2(void);
+extern void drakormissile_abortStraightFlight(void);
 
 extern void drakormissile_modelMtxFn(void);
 
-extern void drakormissile_func0B(void);
+extern void drakormissile_startStraightLaunch(void);
 
 extern void drakormissile_setScale(void);
 
-extern void ktrexfloorswitch_getExtraSize(void);
-extern void ktlazerwall_getExtraSize(void);
+extern void KT_RexFloorSwitch_getExtraSize(void);
+extern void KT_Lazerwall_getExtraSize(void);
 extern void ktlazerlight_getExtraSize(void);
 extern void ktfallingrocks_getExtraSize(void);
-extern void drlasercannon_getExtraSize(void);
+extern void DR_LaserCannon_getExtraSize(void);
 extern void drakormissile_getExtraSize(void);
 
-extern void ktrexfloorswitch_getObjectTypeId(void);
-extern void ktlazerwall_getObjectTypeId(void);
+extern void KT_RexFloorSwitch_getObjectTypeId(void);
+extern void KT_Lazerwall_getObjectTypeId(void);
 extern void ktlazerlight_getObjectTypeId(void);
 extern void ktfallingrocks_getObjectTypeId(void);
-extern void drlasercannon_getObjectTypeId(void);
+extern void DR_LaserCannon_getObjectTypeId(void);
 extern void drakormissile_getObjectTypeId(void);
 
-extern void ktrexfloorswitch_free(void);
-extern void ktlazerwall_free(void);
+extern void KT_RexFloorSwitch_free(void);
+extern void KT_Lazerwall_free(void);
 extern void ktlazerlight_free(void);
 extern void ktfallingrocks_free(void);
-extern void drlasercannon_free(void);
+extern void DR_LaserCannon_free(void);
 extern void drakormissile_free(void);
 
-extern void ktrexfloorswitch_render(void);
-extern void ktlazerwall_render(void);
+extern void KT_RexFloorSwitch_render(void);
+extern void KT_Lazerwall_render(void);
 extern void ktlazerlight_render(void);
 extern void ktfallingrocks_render(void);
-extern void drlasercannon_render(void);
+extern void DR_LaserCannon_render(void);
 extern void drakormissile_render(void);
 
-extern void ktrexfloorswitch_hitDetect(void);
-extern void ktlazerwall_hitDetect(void);
+extern void KT_RexFloorSwitch_hitDetect(void);
+extern void KT_Lazerwall_hitDetect(void);
 extern void ktlazerlight_hitDetect(void);
 extern void ktfallingrocks_hitDetect(void);
-extern void drlasercannon_hitDetect(void);
+extern void DR_LaserCannon_hitDetect(void);
 extern void drakormissile_hitDetect(void);
-extern void gmmazewell_getExtraSize(void);
+extern void GM_MazeWell_getExtraSize(void);
 
-extern void ktrexfloorswitch_update(void);
-extern void ktlazerwall_update(void);
+extern void KT_RexFloorSwitch_update(void);
+extern void KT_Lazerwall_update(void);
 extern void ktlazerlight_update(void);
 extern void ktfallingrocks_update(void);
-extern void drlasercannon_update(void);
+extern void DR_LaserCannon_update(void);
 extern void drakormissile_update(void);
-extern void gmmazewell_free(void);
+extern void GM_MazeWell_free(void);
 
-extern void ktrexfloorswitch_init(void);
-extern void ktlazerwall_init(void);
+extern void KT_RexFloorSwitch_init(void);
+extern void KT_Lazerwall_init(void);
 extern void ktlazerlight_init(void);
 extern void ktfallingrocks_init(void);
-extern void drlasercannon_init(void);
+extern void DR_LaserCannon_init(void);
 extern void drakormissile_init(void);
-extern void gmmazewell_render(void);
+extern void GM_MazeWell_render(void);
 
-extern void ktrexfloorswitch_release(void);
-extern void ktlazerwall_release(void);
+extern void KT_RexFloorSwitch_release(void);
+extern void KT_Lazerwall_release(void);
 extern void ktlazerlight_release(void);
 extern void ktfallingrocks_release(void);
-extern void drlasercannon_release(void);
+extern void DR_LaserCannon_release(void);
 extern void drakormissile_release(void);
-extern void gmmazewell_update(void);
+extern void GM_MazeWell_update(void);
 
-extern void ktrexfloorswitch_initialise(void);
-extern void ktlazerwall_initialise(void);
+extern void KT_RexFloorSwitch_initialise(void);
+extern void KT_Lazerwall_initialise(void);
 extern void ktlazerlight_initialise(void);
 extern void ktfallingrocks_initialise(void);
-extern void drlasercannon_initialise(void);
+extern void DR_LaserCannon_initialise(void);
 extern void drakormissile_initialise(void);
-extern void gmmazewell_init(void);
+extern void GM_MazeWell_init(void);
 
 #define KTREX_LIGHTNING_COUNT 5
 
@@ -690,7 +690,7 @@ void ktrex_update(int obj)
     bitA = lbl_803DC290;
     for (; zc[0] < 4; zc[0]++)
     {
-        if (GameBit_Get(*bitA) != 0)
+        if (mainGetBit(*bitA) != 0)
         {
             zm[0] |= 1 << zc[0];
         }
@@ -730,7 +730,7 @@ void ktrex_update(int obj)
     for (; zc[0] < 4; zc[0]++)
     {
         mm = 1 << zc[0];
-        if ((flags & mm) != 0 && GameBit_Get(*bitB) != 0)
+        if ((flags & mm) != 0 && mainGetBit(*bitB) != 0)
         {
             zm[0] |= mm;
         }
@@ -1177,7 +1177,7 @@ void ktrex_updateAttackEffects(int obj)
         {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(mag);
-            GameBit_Set(0x554, 1);
+            mainSetBits(0x554, 1);
         }
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0xc) != 0)
@@ -1188,7 +1188,7 @@ void ktrex_updateAttackEffects(int obj)
         {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E67C8 * mag);
-            GameBit_Set(0x554, 1);
+            mainSetBits(0x554, 1);
         }
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x30) != 0)
@@ -1199,7 +1199,7 @@ void ktrex_updateAttackEffects(int obj)
         {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E6834 * mag);
-            GameBit_Set(0x554, 1);
+            mainSetBits(0x554, 1);
         }
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x100000) == 0)
@@ -1567,7 +1567,7 @@ int ktrex_stateHandlerA07(int obj, int runtime)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((KTRexArenaState*)gKTRexState)->phaseCounter += 1;
         ktrexlevel_clearPathGameBits();
-        GameBit_Set(1394, ((KTRexArenaState*)gKTRexState)->phaseCounter);
+        mainSetBits(1394, ((KTRexArenaState*)gKTRexState)->phaseCounter);
         ((KTRexArenaState*)gKTRexState)->timerFA |= 0x10;
         ((KTRexArenaState*)gKTRexState)->timerFA &= ~8;
         Music_Trigger(MUSICTRIG_guard_theme, 0);
@@ -1829,7 +1829,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
             u8 cond;
             u8 fe;
             ((KTRexArenaState*)gKTRexState)->phaseCounter += 1;
-            GameBit_Set(0x572, ((KTRexArenaState*)gKTRexState)->phaseCounter);
+            mainSetBits(0x572, ((KTRexArenaState*)gKTRexState)->phaseCounter);
             ((KTRexArenaState*)gKTRexState)->moveVariant = 0;
             ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x8;
             fe = ((KTRexArenaState*)gKTRexState)->currentLaneMask;
@@ -1885,7 +1885,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
         }
         ktrexlevel_updatePathGameBits();
         (*gCameraInterface)->loadTriggeredCamAction(3, 0, 0);
-        GameBit_Set(0x572, ((KTRexArenaState*)gKTRexState)->phaseCounter);
+        mainSetBits(0x572, ((KTRexArenaState*)gKTRexState)->phaseCounter);
         {
             int popped = 0;
             if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
@@ -1925,16 +1925,16 @@ int ktrex_stateHandlerA01(int obj, int runtime)
             Music_Trigger(MUSICTRIG_menu_page, 0);
             Music_Trigger(MUSICTRIG_guard_theme, 0);
             ((ObjAnimComponent*)obj)->bankIndex = 1;
-            GameBit_Set(1380, 1);
-            GameBit_Set(874, 0);
+            mainSetBits(1380, 1);
+            mainSetBits(874, 0);
             (*gMapEventInterface)->setObjGroupStatus(13, 0, 1);
             (*gMapEventInterface)->setObjGroupStatus(13, 1, 1);
             (*gMapEventInterface)->setObjGroupStatus(13, 5, 1);
             (*gMapEventInterface)->setObjGroupStatus(13, 10, 1);
             (*gMapEventInterface)->setObjGroupStatus(13, 11, 1);
-            GameBit_Set(3589, 0);
+            mainSetBits(3589, 0);
             unlockLevel(53, 1, 0);
-            GameBit_Set(2107, 1);
+            mainSetBits(2107, 1);
             (*gMapEventInterface)->setMapAct(4, 2);
         }
     }
@@ -1952,11 +1952,11 @@ f32 gKTRexLaneSpeedMax[19] = {
 
 /* descriptor/ptr table auto 0x8032a58c-0x8032a7c0 */
 u32 gKtRexObjDescriptor[17] = { 0x00000000, 0x00000000, 0x00000000, 0x000b0000, (u32)ktrex_initialise, (u32)ktrex_release, 0x00000000, (u32)ktrex_init, (u32)ktrex_update, (u32)ktrex_hitDetect, (u32)ktrex_render, (u32)ktrex_free, (u32)ktrex_getObjectTypeId, (u32)ktrex_getExtraSize, (u32)ktrex_setScale, (u32)ktrex_func0B, 0x00000000 };
-u32 gKtRexFloorSwitchObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)ktrexfloorswitch_initialise, (u32)ktrexfloorswitch_release, 0x00000000, (u32)ktrexfloorswitch_init, (u32)ktrexfloorswitch_update, (u32)ktrexfloorswitch_hitDetect, (u32)ktrexfloorswitch_render, (u32)ktrexfloorswitch_free, (u32)ktrexfloorswitch_getObjectTypeId, (u32)ktrexfloorswitch_getExtraSize };
-u32 gKtLazerwallObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)ktlazerwall_initialise, (u32)ktlazerwall_release, 0x00000000, (u32)ktlazerwall_init, (u32)ktlazerwall_update, (u32)ktlazerwall_hitDetect, (u32)ktlazerwall_render, (u32)ktlazerwall_free, (u32)ktlazerwall_getObjectTypeId, (u32)ktlazerwall_getExtraSize };
+u32 gKtRexFloorSwitchObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)KT_RexFloorSwitch_initialise, (u32)KT_RexFloorSwitch_release, 0x00000000, (u32)KT_RexFloorSwitch_init, (u32)KT_RexFloorSwitch_update, (u32)KT_RexFloorSwitch_hitDetect, (u32)KT_RexFloorSwitch_render, (u32)KT_RexFloorSwitch_free, (u32)KT_RexFloorSwitch_getObjectTypeId, (u32)KT_RexFloorSwitch_getExtraSize };
+u32 gKtLazerwallObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)KT_Lazerwall_initialise, (u32)KT_Lazerwall_release, 0x00000000, (u32)KT_Lazerwall_init, (u32)KT_Lazerwall_update, (u32)KT_Lazerwall_hitDetect, (u32)KT_Lazerwall_render, (u32)KT_Lazerwall_free, (u32)KT_Lazerwall_getObjectTypeId, (u32)KT_Lazerwall_getExtraSize };
 u32 gKtLazerlightObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)ktlazerlight_initialise, (u32)ktlazerlight_release, 0x00000000, (u32)ktlazerlight_init, (u32)ktlazerlight_update, (u32)ktlazerlight_hitDetect, (u32)ktlazerlight_render, (u32)ktlazerlight_free, (u32)ktlazerlight_getObjectTypeId, (u32)ktlazerlight_getExtraSize };
 u32 gKtFallingrocksObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)ktfallingrocks_initialise, (u32)ktfallingrocks_release, 0x00000000, (u32)ktfallingrocks_init, (u32)ktfallingrocks_update, (u32)ktfallingrocks_hitDetect, (u32)ktfallingrocks_render, (u32)ktfallingrocks_free, (u32)ktfallingrocks_getObjectTypeId, (u32)ktfallingrocks_getExtraSize };
-u32 gDrLaserCannonObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)drlasercannon_initialise, (u32)drlasercannon_release, 0x00000000, (u32)drlasercannon_init, (u32)drlasercannon_update, (u32)drlasercannon_hitDetect, (u32)drlasercannon_render, (u32)drlasercannon_free, (u32)drlasercannon_getObjectTypeId, (u32)drlasercannon_getExtraSize };
-u32 gDrakorMissileObjDescriptor[18] = { 0x00000000, 0x00000000, 0x00000000, 0x000d0000, (u32)drakormissile_initialise, (u32)drakormissile_release, 0x00000000, (u32)drakormissile_init, (u32)drakormissile_update, (u32)drakormissile_hitDetect, (u32)drakormissile_render, (u32)drakormissile_free, (u32)drakormissile_getObjectTypeId, (u32)drakormissile_getExtraSize, (u32)drakormissile_setScale, (u32)drakormissile_func0B, (u32)drakormissile_modelMtxFn, (u32)drakormissile_render2 };
+u32 gDrLaserCannonObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)DR_LaserCannon_initialise, (u32)DR_LaserCannon_release, 0x00000000, (u32)DR_LaserCannon_init, (u32)DR_LaserCannon_update, (u32)DR_LaserCannon_hitDetect, (u32)DR_LaserCannon_render, (u32)DR_LaserCannon_free, (u32)DR_LaserCannon_getObjectTypeId, (u32)DR_LaserCannon_getExtraSize };
+u32 gDrakorMissileObjDescriptor[18] = { 0x00000000, 0x00000000, 0x00000000, 0x000d0000, (u32)drakormissile_initialise, (u32)drakormissile_release, 0x00000000, (u32)drakormissile_init, (u32)drakormissile_update, (u32)drakormissile_hitDetect, (u32)drakormissile_render, (u32)drakormissile_free, (u32)drakormissile_getObjectTypeId, (u32)drakormissile_getExtraSize, (u32)drakormissile_setScale, (u32)drakormissile_startStraightLaunch, (u32)drakormissile_modelMtxFn, (u32)drakormissile_abortStraightFlight };
 s16 lbl_8032A730[44] = { 0x0ddc, 0x0de2, 0x0dde, 0x0ddd, 0x0de0, 0x0de3, 0x0ddf, 0x0de1, 0x0de4, 0x0000, 0x0de5, 0x0deb, 0x0de7, 0x0de6, 0x0de9, 0x0dec, 0x0de8, 0x0dea, 0x0ded, 0x0000, 0x0f34, 0x0f3a, 0x0f36, 0x0f35, 0x0f38, 0x0f3b, 0x0f37, 0x0f39, 0x0000, 0x0524, 0x0000, 0x0524, 0x0000, 0x0524, 0x0000, 0x0571, 0x0000, 0x056e, 0x0000, 0x056f, 0x0000, 0x0570, 0x0000, 0x0572 };
-u32 gGmMazeWellObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)gmmazewell_init, (u32)gmmazewell_update, 0x00000000, (u32)gmmazewell_render, (u32)gmmazewell_free, 0x00000000, (u32)gmmazewell_getExtraSize };
+u32 gGmMazeWellObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)GM_MazeWell_init, (u32)GM_MazeWell_update, 0x00000000, (u32)GM_MazeWell_render, (u32)GM_MazeWell_free, 0x00000000, (u32)GM_MazeWell_getExtraSize };

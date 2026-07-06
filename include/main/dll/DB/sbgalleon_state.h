@@ -7,7 +7,7 @@
 /* Per-object extra state for the SB_Galleon boss (SB_Galleon_getExtraSize ==
  * 0xB4). Shared by the SB_Galleon handlers in DBstealerworm.c and the
  * protection-spirit phase handlers in DBprotection.c (fn_801DFA28,
- * DBprotection_updateShield, DBprotection_storeHomePosition), which run on
+ * DBprotection_updateShield, SB_Galleon_onSeqFree), which run on
  * the same object. Offsets re-derived independently from both TUs' deref
  * censuses (task #4 redo). */
 typedef struct SBGalleonState {

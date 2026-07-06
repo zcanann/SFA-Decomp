@@ -7,7 +7,7 @@
 
 /*
  * Per-object extra state for the dimlogfire burning log
- * (dimlogfire_getExtraSize == 0x24). init/update in DIMlavasmash.c,
+ * (DIMLogFire_getExtraSize == 0x24). init/update in DIMlavasmash.c,
  * free/SeqFn/render in DIMcannon.c.
  */
 typedef struct DimLogFireState {
@@ -32,6 +32,6 @@ STATIC_ASSERT(sizeof(DimLogFireState) == 0x24);
 
 int MoonSeedPlantingSpot_SeqFn(int obj);
 int CCGasVentControl_SeqFn(int obj);
-int dimlogfire_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
+int DIMLogFire_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 
 #endif /* MAIN_DLL_DIM_DIMLOGFIRE_H_ */

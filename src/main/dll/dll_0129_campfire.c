@@ -28,7 +28,7 @@ extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, in
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
 
 /* CampfireExtra - the per-class extra state block (GameObject.extra) for the
- * campfire object class; campfire_getExtraSize() returns 0x14. Single-owner;
+ * campfire object class; CampFire_getExtraSize() returns 0x14. Single-owner;
  * offsets mirror the observed deref widths in this unit. */
 typedef struct CampfireExtra {
     void *light;     /* 0x00 ModelLightStruct handle (objCreateLight result) */
@@ -45,10 +45,10 @@ typedef struct CampfireExtra {
 STATIC_ASSERT(offsetof(CampfireExtra, gameBit) == 0xC);
 STATIC_ASSERT(sizeof(CampfireExtra) == 0x14);
 
-int campfire_getExtraSize(void) { return 0x14; }
-int campfire_getObjectTypeId(void) { return 0x1; }
+int CampFire_getExtraSize(void) { return 0x14; }
+int CampFire_getObjectTypeId(void) { return 0x1; }
 
-void campfire_free(int obj)
+void CampFire_free(int obj)
 {
     CampfireExtra* state;
     void* effect;
@@ -62,7 +62,7 @@ void campfire_free(int obj)
     }
 }
 
-void campfire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void CampFire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     CampfireExtra* state;
     void* effect;
@@ -82,7 +82,7 @@ void campfire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void campfire_update(int obj)
+void CampFire_update(int obj)
 {
 
     extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
@@ -175,7 +175,7 @@ void campfire_update(int obj)
     }
 }
 
-void campfire_init(int obj, int p2)
+void CampFire_init(int obj, int p2)
 {
     CampfireExtra* state;
     f32 sunTime;
@@ -188,13 +188,13 @@ void campfire_init(int obj, int p2)
     {
         ((GameObject*)obj)->anim.rootMotionScale = 0.01f * size;
     }
-    if (GameBit_Get(0x8c) != 0)
+    if (mainGetBit(0x8c) != 0)
     {
         state->flags |= 1;
     }
     state->gameBit = *(s16*)(p2 + 0x18);
     bit = state->gameBit;
-    if (bit != -1 && GameBit_Get(bit) != 0)
+    if (bit != -1 && mainGetBit(bit) != 0)
     {
         state->flags |= 4;
     }

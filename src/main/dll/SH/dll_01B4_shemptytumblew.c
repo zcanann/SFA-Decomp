@@ -30,13 +30,13 @@ typedef struct ShEmptyTumblewPlacement
 STATIC_ASSERT(offsetof(ShEmptyTumblewPlacement, rotZByte) == 0x18);
 STATIC_ASSERT(offsetof(ShEmptyTumblewPlacement, scale) == 0x1c);
 
-void sh_emptytumblew_update(int obj)
+void SH_EmptyTumbleW_update(int obj)
 {
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280,
                                               &lbl_803DDC00);
 }
 
-void sh_emptytumblew_init(s16* obj, ShEmptyTumblewPlacement* def)
+void SH_EmptyTumbleW_init(s16* obj, ShEmptyTumblewPlacement* def)
 {
     f32 scale;
 

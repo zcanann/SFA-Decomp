@@ -4,8 +4,8 @@
  * Implements the per-frame logic of the snowbike vehicle: route following
  * along a checkpoint path (fn_801EAE4C / gCheckpointInterface), the air /
  * fuel meter and its UI + shutdown sequence (fn_801EB0D4), spawn / reset
- * latching (fn_801EB334), the animation-event/sequence callback that seeds
- * the launch impulse from per-step velocity (SnowBike_animEventCallback),
+ * latching (SnowBike_onSeqFree), the animation-event/sequence callback that seeds
+ * the launch impulse from per-step velocity (SnowBike_SeqFn),
  * collision response and impact particle bursts (fn_801EB634), steering /
  * pitch-roll integration with rumble + camera shake (fn_801EB940), and the
  * exhaust/contrail particle drivers blended toward per-state targets
@@ -43,7 +43,7 @@ extern void setMotionBlur(u8 enabled, f32 amount);
 extern f32 sqrtf(f32);
 extern void fn_8009A8C8();
 extern int arrayIndexOf(int* arr, int count, int target);
-extern void SnowBike_func15();
+extern void SnowBike_resetToRomListPosition();
 extern u8 framesThisStep;
 extern f32 oneOverTimeDelta;
 extern f32 timeDelta;
@@ -127,7 +127,7 @@ void fn_801EAE4C(short* obj, int stateRaw)
         st->checkpointIndexC = 0xffffffff;
         st->unk044 = 0;
         lbl_803DC0BC = -1;
-        bitVal = GameBit_Get((int)*(short*)st->gameBitPtr);
+        bitVal = mainGetBit((int)*(short*)st->gameBitPtr);
         if (bitVal != 0)
         {
             ((HightopFlags3*)&st->flags428)->active = 1;
@@ -136,7 +136,7 @@ void fn_801EAE4C(short* obj, int stateRaw)
         {
             if ((u32)(st->flags428 >> 1 & 1) != 0)
             {
-                SnowBike_func15(obj);
+                SnowBike_resetToRomListPosition(obj);
             }
             else
             {
@@ -201,7 +201,7 @@ void fn_801EAE4C(short* obj, int stateRaw)
                 *(f32*)(lbl_803AD088 + 0xc) = st->unk034;
             }
         }
-        bitVal = GameBit_Get((int)*(short*)(st->gameBitPtr + 2));
+        bitVal = mainGetBit((int)*(short*)(st->gameBitPtr + 2));
         if (bitVal != 0)
         {
             ((HightopFlags3*)&st->flags428)->active = 0;
@@ -286,7 +286,7 @@ typedef struct HightopFlags
     u8 flags : 7;
 } HightopFlags;
 
-void fn_801EB334(int* obj)
+void SnowBike_onSeqFree(int* obj)
 {
     SnowBikeState* state = ((GameObject*)obj)->extra;
     if ((u32)((state->flags428 >> 1) & 1) == 0)
@@ -313,7 +313,7 @@ void fn_801EB334(int* obj)
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
 }
 
-int SnowBike_animEventCallback(short* obj, int arg2, ObjSeqState* seq)
+int SnowBike_SeqFn(short* obj, int arg2, ObjSeqState* seq)
 {
     typedef struct HightopMatrixSeed
     {
@@ -337,7 +337,7 @@ int SnowBike_animEventCallback(short* obj, int arg2, ObjSeqState* seq)
     f64 zSpeed;
 
     state = *(int*)(obj + 0x5c);
-    seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_801EB334;
+    seq->freeCallback = (ObjAnimSequenceFreeCallback)SnowBike_onSeqFree;
     ObjHits_DisableObject((u32)obj);
 
     for (i = 0; i < (int)(u32)seq->eventCount; i++)
@@ -348,7 +348,7 @@ int SnowBike_animEventCallback(short* obj, int arg2, ObjSeqState* seq)
         case 2:
             if (obj[0x23] != 0x16c && obj[0x23] != 0x16f)
             {
-                GameBit_Set(0x499, 1);
+                mainSetBits(0x499, 1);
             }
             break;
         case 3:
@@ -383,7 +383,7 @@ int SnowBike_animEventCallback(short* obj, int arg2, ObjSeqState* seq)
             ((SnowBikeState*)state)->stickY = 0x46;
         }
 
-        ((void (*)(int, int, f32, int, int, u8))fn_801EA240)(
+        ((void (*)(int, int, f32, int, int, u8))drcloudcage_updateEngineFx)(
             (int)obj, state, ((SnowBikeState*)state)->distanceScale,
             (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->unk430),
             state + 0x461, 4);

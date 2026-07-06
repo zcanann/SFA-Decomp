@@ -129,7 +129,7 @@ int DR_CloudRunner_func11(int obj)
     return 2;
 }
 
-void DR_CloudRunner_func22(int obj)
+void DR_CloudRunner_setGroundMarkerMatrix(int obj)
 {
     fn_8003B950(ObjPath_GetPointModelMtx(obj, 2));
 }
@@ -164,7 +164,7 @@ int DR_CloudRunner_stateHandler07(int obj)
 void DR_CloudRunner_free(int obj)
 {
     DRCloudRunnerState* inner = (DRCloudRunnerState*)((GameObject*)obj)->extra;
-    GameBit_Set(0x7aa, inner->altMoveEnabled);
+    mainSetBits(0x7aa, inner->altMoveEnabled);
     ObjGroup_RemoveObject(obj, DRCLOUDRUNNER_OBJGROUP);
     ObjGroup_RemoveObject(obj, ARWARWING_OBJGROUP);
     (*gGameUIInterface)->airMeterSetShutdown();
@@ -244,7 +244,7 @@ int DR_CloudRunner_stateHandler01(int obj, int p2)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_lfoot_taunt);
     }
-    if ((u32)GameBit_Get(((DRCloudRunnerPlacement*)placement)->enableGameBit) != 0)
+    if ((u32)mainGetBit(((DRCloudRunnerPlacement*)placement)->enableGameBit) != 0)
     {
         ((GameObject*)obj)->unkF4 = 0;
         ObjHits_EnableObject(obj);
@@ -339,7 +339,7 @@ int DR_CloudRunner_stateHandler00(int obj)
     return 3;
 }
 
-void DR_CloudRunner_func17(int obj, int param)
+void DR_CloudRunner_setFlightState(int obj, int param)
 {
     CloudRunnerState * inner = ((GameObject*)obj)->extra;
     inner->flightState = param;
@@ -359,11 +359,11 @@ void DR_CloudRunner_func17(int obj, int param)
     }
     if (param == CLOUDRUNNER_FLIGHT_MOUNTED)
     {
-        GameBit_Set(CLOUDRUNNER_ONCLOUD_GAMEBIT, 1);
+        mainSetBits(CLOUDRUNNER_ONCLOUD_GAMEBIT, 1);
     }
     else
     {
-        GameBit_Set(CLOUDRUNNER_ONCLOUD_GAMEBIT, 0);
+        mainSetBits(CLOUDRUNNER_ONCLOUD_GAMEBIT, 0);
     }
 }
 
@@ -436,7 +436,7 @@ void DR_CloudRunner_init(int obj, int p2)
     {
         ((GameObject*)obj)->anim.modelState->flags |= 0xa10;
     }
-    savedSlot = GameBit_Get(0x7a9);
+    savedSlot = mainGetBit(0x7a9);
     if (savedSlot != 0)
     {
         dll_2E_func0A(savedSlot + 0x13, &stk);
@@ -869,7 +869,7 @@ void DR_CloudRunner_func23(int obj, int mode, int* out)
             p = bits.a;
             do
             {
-                if ((u32)GameBit_Get(*p) != 0)
+                if ((u32)mainGetBit(*p) != 0)
                 {
                     break;
                 }
@@ -1085,7 +1085,7 @@ void DR_CloudRunner_update(int obj)
     Obj_GetPlayerObject();
     inner = ((GameObject*)obj)->extra;
     inner->unkBAE = 5;
-    fn_80137948(sOnCloudFormat, GameBit_Get(CLOUDRUNNER_ONCLOUD_GAMEBIT));
+    logPrintf(sOnCloudFormat, mainGetBit(CLOUDRUNNER_ONCLOUD_GAMEBIT));
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if (inner->flightState == CLOUDRUNNER_FLIGHT_MOUNTED)
     {
@@ -1364,12 +1364,12 @@ ObjectDescriptor24 gDR_CloudRunnerObjDescriptor = {
     (ObjectDescriptorCallback)DR_CloudRunner_func14,
     (ObjectDescriptorCallback)DR_CloudRunner_func15,
     (ObjectDescriptorCallback)DR_CloudRunner_func16,
-    (ObjectDescriptorCallback)DR_CloudRunner_func17,
+    (ObjectDescriptorCallback)DR_CloudRunner_setFlightState,
     (ObjectDescriptorCallback)DR_CloudRunner_func18,
     (ObjectDescriptorCallback)DR_CloudRunner_func19,
     (ObjectDescriptorCallback)DR_CloudRunner_func20,
     (ObjectDescriptorCallback)DR_CloudRunner_func21,
-    (ObjectDescriptorCallback)DR_CloudRunner_func22,
+    (ObjectDescriptorCallback)DR_CloudRunner_setGroundMarkerMatrix,
     (ObjectDescriptorCallback)DR_CloudRunner_func23,
 };
 

@@ -99,14 +99,14 @@ void laser_updateUnsupported(void);
 void laser_init(void);
 void laser_releaseUnsupported(void);
 void laser_initialiseUnsupported(void);
-int laserObj_getExtraSize(void);
-int laserObj_getObjectTypeId(void);
-void laserObj_free(void);
-void laserObj_render(void);
-void laserObj_hitDetect(void);
-void laserObj_update(LaserObject *obj);
-void laserObj_init(LaserObject *obj,LaserObjectMapData *mapData);
-void laserObj_release(void);
-void laserObj_initialise(void);
+int DFPSpPl_getExtraSize(void);
+int DFPSpPl_getObjectTypeId(void);
+void DFPSpPl_free(void);
+void DFPSpPl_render(void);
+void DFPSpPl_hitDetect(void);
+void DFPSpPl_update(LaserObject *obj);
+void DFPSpPl_init(LaserObject *obj,LaserObjectMapData *mapData);
+void DFPSpPl_release(void);
+void DFPSpPl_initialise(void);
 
 #endif /* MAIN_DLL_CF_LASER_H_ */

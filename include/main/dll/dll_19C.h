@@ -4,8 +4,8 @@
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
-void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void dfsh_shrine_update(int obj);
+void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void DFSH_Shrine_update(int obj);
 void FUN_801c3134(u32 param_1,u32 param_2,ObjAnimUpdateState *animUpdate);
 void FUN_801c3288(int param_1);
 void FUN_801c331c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);

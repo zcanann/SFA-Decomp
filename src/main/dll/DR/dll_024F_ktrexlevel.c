@@ -15,22 +15,22 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
-int ktrexlevel_getExtraSize(void) { return 0x4; }
+int KT_RexLevel_getExtraSize(void) { return 0x4; }
 
-int ktrexlevel_getObjectTypeId(void) { return 0x0; }
+int KT_RexLevel_getObjectTypeId(void) { return 0x0; }
 
-void ktrexlevel_free(void)
+void KT_RexLevel_free(void)
 {
-    GameBit_Set(0xefd, 0);
-    GameBit_Set(0xcd1, 0);
-    GameBit_Set(0xccd, 0);
-    GameBit_Set(0xccf, 0);
-    GameBit_Set(0xcd0, 0);
-    GameBit_Set(0xedb, 0);
-    GameBit_Set(0xcbb, 0);
+    mainSetBits(0xefd, 0);
+    mainSetBits(0xcd1, 0);
+    mainSetBits(0xccd, 0);
+    mainSetBits(0xccf, 0);
+    mainSetBits(0xcd0, 0);
+    mainSetBits(0xedb, 0);
+    mainSetBits(0xcbb, 0);
 }
 
-void ktrexlevel_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void KT_RexLevel_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     if (visible != 0)
     {
@@ -38,37 +38,37 @@ void ktrexlevel_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     }
 }
 
-void ktrexlevel_hitDetect(void)
+void KT_RexLevel_hitDetect(void)
 {
 }
 
 void ktrexlevel_clearPathGameBits(void)
 {
-    GameBit_Set(0x54a, 0);
-    GameBit_Set(0x54e, 0);
-    GameBit_Set(0x552, 0);
-    GameBit_Set(0x556, 0);
+    mainSetBits(0x54a, 0);
+    mainSetBits(0x54e, 0);
+    mainSetBits(0x552, 0);
+    mainSetBits(0x556, 0);
 }
 
 void ktrexlevel_updatePathGameBits(void)
 {
-    if (GameBit_Get(0x55a) != 0)
+    if (mainGetBit(0x55a) != 0)
     {
-        GameBit_Set(0x54a, 2);
-        GameBit_Set(0x54e, 2);
-        GameBit_Set(0x552, 1);
-        GameBit_Set(0x556, 1);
+        mainSetBits(0x54a, 2);
+        mainSetBits(0x54e, 2);
+        mainSetBits(0x552, 1);
+        mainSetBits(0x556, 1);
     }
-    else if (GameBit_Get(0x55b) != 0)
+    else if (mainGetBit(0x55b) != 0)
     {
-        GameBit_Set(0x54a, 1);
-        GameBit_Set(0x54e, 1);
-        GameBit_Set(0x552, 2);
-        GameBit_Set(0x556, 2);
+        mainSetBits(0x54a, 1);
+        mainSetBits(0x54e, 1);
+        mainSetBits(0x552, 2);
+        mainSetBits(0x556, 2);
     }
 }
 
-void ktrexlevel_update(int obj)
+void KT_RexLevel_update(int obj)
 {
     if (((GameObject*)obj)->unkF4 == 0)
     {
@@ -77,34 +77,34 @@ void ktrexlevel_update(int obj)
         getEnvfxAct(obj, obj, 0x18e, 0);
         getEnvfxAct(obj, obj, 0x190, 0);
         skyFn_80088e54(1, lbl_803E67A4);
-        GameBit_Set(0x55e, 1);
+        mainSetBits(0x55e, 1);
         ((GameObject*)obj)->unkF4 = 1;
     }
-    lbl_803DDD40 = GameBit_Get(0x572);
+    lbl_803DDD40 = mainGetBit(0x572);
 }
 
-void ktrexlevel_init(int obj)
+void KT_RexLevel_init(int obj)
 {
     char* extra = ((GameObject*)obj)->extra;
     setDrawCloudsAndLights(0);
-    GameBit_Set(0x572, 0);
-    GameBit_Set(0x56e, 1);
-    GameBit_Set(0x566, 1);
-    GameBit_Set(0x569, 1);
+    mainSetBits(0x572, 0);
+    mainSetBits(0x56e, 1);
+    mainSetBits(0x566, 1);
+    mainSetBits(0x569, 1);
     *(f32*)extra = lbl_803E67A8;
-    GameBit_Set(0x55a, 1);
-    GameBit_Set(0x54a, 2);
-    GameBit_Set(0x54e, 2);
-    GameBit_Set(0x552, 1);
-    GameBit_Set(0x556, 1);
+    mainSetBits(0x55a, 1);
+    mainSetBits(0x54a, 2);
+    mainSetBits(0x54e, 2);
+    mainSetBits(0x552, 1);
+    mainSetBits(0x556, 1);
     ((GameObject*)obj)->unkF4 = 0;
-    GameBit_Set(0xefd, 1);
+    mainSetBits(0xefd, 1);
 }
 
-void ktrexlevel_release(void)
+void KT_RexLevel_release(void)
 {
 }
 
-void ktrexlevel_initialise(void)
+void KT_RexLevel_initialise(void)
 {
 }

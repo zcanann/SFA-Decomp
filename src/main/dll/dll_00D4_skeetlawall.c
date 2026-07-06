@@ -2,7 +2,7 @@
  * skeetlawall (DLL 0x00D4) - an axis-aligned bounding-box wall/trigger
  * object used in the Skeetla arena level.  Each instance stores six
  * per-axis extents (in unsigned world units) and an optional shape flag;
- * skeetlawall_setScale unpacks these into a float[6] min/max array for
+ * SkeetlaWall_setScale unpacks these into a float[6] min/max array for
  * the engine's collision layer.  The render function delegates to
  * objRenderModelAndHitVolumes only when unkF4 == 0 (default/inactive shape).
  */
@@ -21,7 +21,7 @@ typedef struct SkeetlaWallState
     u8 shapeFlag;
 } SkeetlaWallState;
 
-void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte)
+void SkeetlaWall_setScale(int* obj, f32* outVec, u8* outByte)
 {
     SkeetlaWallState* state = ((GameObject*)obj)->extra;
     outVec[0] = ((GameObject*)obj)->anim.worldPosX - (f32)(u32)
@@ -39,14 +39,14 @@ void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte)
     outByte[0] = state->shapeFlag;
 }
 
-int skeetlawall_getExtraSize(void) { return 0x7; }
-int skeetlawall_getObjectTypeId(void) { return 0x0; }
+int SkeetlaWall_getExtraSize(void) { return 0x7; }
+int SkeetlaWall_getObjectTypeId(void) { return 0x0; }
 
-void skeetlawall_free(void)
+void SkeetlaWall_free(void)
 {
 }
 
-void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void SkeetlaWall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
@@ -59,15 +59,15 @@ void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void skeetlawall_hitDetect(void)
+void SkeetlaWall_hitDetect(void)
 {
 }
 
-void skeetlawall_update(void)
+void SkeetlaWall_update(void)
 {
 }
 
-void skeetlawall_init(int obj, u8* def)
+void SkeetlaWall_init(int obj, u8* def)
 {
     SkeetlaWallState* state = ((GameObject*)obj)->extra;
     state->negXExtent = def[0x18];
@@ -79,11 +79,11 @@ void skeetlawall_init(int obj, u8* def)
     state->shapeFlag = def[0x1E];
 }
 
-void skeetlawall_release(void)
+void SkeetlaWall_release(void)
 {
 }
 
-void skeetlawall_initialise(void)
+void SkeetlaWall_initialise(void)
 {
 }
 
@@ -93,17 +93,17 @@ ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)skeetlawall_initialise,
-        (ObjectDescriptorCallback)skeetlawall_release,
+        (ObjectDescriptorCallback)SkeetlaWall_initialise,
+        (ObjectDescriptorCallback)SkeetlaWall_release,
         0,
-        (ObjectDescriptorCallback)skeetlawall_init,
-        (ObjectDescriptorCallback)skeetlawall_update,
-        (ObjectDescriptorCallback)skeetlawall_hitDetect,
-        (ObjectDescriptorCallback)skeetlawall_render,
-        (ObjectDescriptorCallback)skeetlawall_free,
-        (ObjectDescriptorCallback)skeetlawall_getObjectTypeId,
-        skeetlawall_getExtraSize,
-        (ObjectDescriptorCallback)skeetlawall_setScale,
+        (ObjectDescriptorCallback)SkeetlaWall_init,
+        (ObjectDescriptorCallback)SkeetlaWall_update,
+        (ObjectDescriptorCallback)SkeetlaWall_hitDetect,
+        (ObjectDescriptorCallback)SkeetlaWall_render,
+        (ObjectDescriptorCallback)SkeetlaWall_free,
+        (ObjectDescriptorCallback)SkeetlaWall_getObjectTypeId,
+        SkeetlaWall_getExtraSize,
+        (ObjectDescriptorCallback)SkeetlaWall_setScale,
     },
     0,
 };

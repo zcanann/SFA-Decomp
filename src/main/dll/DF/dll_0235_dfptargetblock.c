@@ -298,12 +298,12 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
     {
         if (state->completionSfxReady == '\0')
         {
-            bitVal = GameBit_Get((int)state->completionSfxId);
+            bitVal = mainGetBit((int)state->completionSfxId);
             state->completionSfxReady = bitVal;
         }
         if (state->stateSfxReady == '\0')
         {
-            bitVal = GameBit_Get((int)state->stateSfxId);
+            bitVal = mainGetBit((int)state->stateSfxId);
             state->stateSfxReady = bitVal;
         }
         if ((state->completionSfxReady != '\0') || (state->stateSfxReady == '\0') ||
@@ -332,7 +332,7 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
                 {
                     obj->y = home->y - lbl_803E64AC;
                     state->mode = DFPTARGETBLOCK_MODE_SETTLED;
-                    GameBit_Set((int)state->completionSfxId, 1);
+                    mainSetBits((int)state->completionSfxId, 1);
                 }
             }
         }
@@ -404,9 +404,9 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
         obj->y = obj->y - lbl_803E64AC;
         state->completionSfxId = ((DfpTargetBlockPlacement*)placementData)->completionSfxId;
         state->stateSfxId = ((DfpTargetBlockPlacement*)placementData)->stateSfxId;
-        bitVal = GameBit_Get((int)state->completionSfxId);
+        bitVal = mainGetBit((int)state->completionSfxId);
         state->completionSfxReady = bitVal;
-        bitVal = GameBit_Get((int)state->stateSfxId);
+        bitVal = mainGetBit((int)state->stateSfxId);
         state->stateSfxReady = bitVal;
         if (state->completionSfxReady != '\0')
         {

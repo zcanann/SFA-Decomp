@@ -90,7 +90,7 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
 {
     u8 i;
     u8 count = 0;
-    if (GameBit_Get(GAMEBIT_GAS_ACTIVE) != 0)
+    if (mainGetBit(GAMEBIT_GAS_ACTIVE) != 0)
     {
         int cnt;
         int* list = ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
@@ -163,7 +163,7 @@ void ccgasventcontrol_update(int obj)
             break;
         }
     case CCGASVENT_STATE_WAIT_INTRO:
-        if (GameBit_Get(GAMEBIT_GAS_INTRO_TRIGGER) != 0)
+        if (mainGetBit(GAMEBIT_GAS_INTRO_TRIGGER) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_INIT_METER;
@@ -224,8 +224,8 @@ void ccgasventcontrol_update(int obj)
         {
             Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             (*gGameUIInterface)->airMeterSetShutdown();
-            GameBit_Set(GAMEBIT_GAS_PUZZLE_DONE, 1);
-            GameBit_Set(0x620, 0);
+            mainSetBits(GAMEBIT_GAS_PUZZLE_DONE, 1);
+            mainSetBits(0x620, 0);
             ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_SAVE_POINT;
         }
         break;
@@ -240,7 +240,7 @@ void ccgasventcontrol_update(int obj)
             break;
         }
     case CCGASVENT_STATE_WAIT_CLEAR:
-        if (GameBit_Get(GAMEBIT_GAS_ACTIVE) == 0)
+        if (mainGetBit(GAMEBIT_GAS_ACTIVE) == 0)
         {
             disableHeavyFog();
             ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_DONE;
@@ -254,7 +254,7 @@ void ccgasventcontrol_init(int obj, u8* p)
     char* inner = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = CCGasVentControl_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((u32)p[0x1a] << 8);
-    if (GameBit_Get(GAMEBIT_GAS_PUZZLE_DONE) != 0)
+    if (mainGetBit(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
         ((CcgasventcontrolState*)inner)->state = CCGASVENT_STATE_DONE;
     }

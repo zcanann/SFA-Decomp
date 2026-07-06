@@ -11,7 +11,7 @@ extern u32 ObjHits_RecordObjectHit();
 extern f32 Vec_distance(void* a, void* b);
 extern void enableHeavyFog(f32 top, f32 bottom, f32 r, f32 g, f32 b, int p6);
 
-int deathgas_getExtraSize(void) { return 0x10; }
+int DeathGas_getExtraSize(void) { return 0x10; }
 
 typedef struct
 {
@@ -31,7 +31,7 @@ typedef struct
     s16 activeBit; // 0x1a
 } DeathGasSetup;
 
-void deathgas_free(int* obj)
+void DeathGas_free(int* obj)
 {
     u8* state = ((GameObject*)obj)->extra;
     u8 flags = state[12];
@@ -48,7 +48,7 @@ void deathgas_free(int* obj)
     }
 }
 
-void deathgas_update(int* obj)
+void DeathGas_update(int* obj)
 {
 
     DeathGasSetup* setup = *(DeathGasSetup**)&((GameObject*)obj)->anim.placementData;
@@ -64,7 +64,7 @@ void deathgas_update(int* obj)
     }
     else
     {
-        active = GameBit_Get(bit);
+        active = mainGetBit(bit);
     }
 
     if (active == 0)
@@ -136,7 +136,7 @@ void deathgas_update(int* obj)
     }
 }
 
-void deathgas_init(int* obj)
+void DeathGas_init(int* obj)
 {
     register DeathGasState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DEATHGAS_OBJFLAG_HIDDEN);

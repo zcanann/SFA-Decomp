@@ -25,12 +25,12 @@ static inline f64 dfplightni_u32AsDouble(u32 value)
     return *(f64*)&bits;
 }
 
-int dfplightni_getExtraSize(void)
+int DFP_Lightni_getExtraSize(void)
 {
     return sizeof(DfpLightniState);
 }
 
-void dfplightni_free(DfpLightniObject* obj)
+void DFP_Lightni_free(DfpLightniObject* obj)
 {
     DfpLightniState* state;
 
@@ -46,7 +46,7 @@ void dfplightni_free(DfpLightniObject* obj)
     return;
 }
 
-void dfplightni_render(DfpLightniObject* obj)
+void DFP_Lightni_render(DfpLightniObject* obj)
 {
     DfpLightniState* state;
     int eventActive;
@@ -56,7 +56,7 @@ void dfplightni_render(DfpLightniObject* obj)
         state = dfplightni_getState(obj);
         if (state->timer >= gDfpLightningTimerMax)
         {
-            eventActive = GameBit_Get(DFPLIGHTNI_EVENT_TIMER_GAMEBIT);
+            eventActive = mainGetBit(DFPLIGHTNI_EVENT_TIMER_GAMEBIT);
             if (state->effectHandle != 0)
             {
                 lightningRender(state->effectHandle);
@@ -78,7 +78,7 @@ void dfplightni_render(DfpLightniObject* obj)
     return;
 }
 
-void dfplightni_update(DfpLightniObject* obj)
+void DFP_Lightni_update(DfpLightniObject* obj)
 {
     DfpLightniObject* playerObj;
     int eventActive;
@@ -98,7 +98,7 @@ void dfplightni_update(DfpLightniObject* obj)
         if (playerObj != 0)
         {
             state->timer += timeDelta;
-            eventActive = GameBit_Get(state->eventId);
+            eventActive = mainGetBit(state->eventId);
             if ((eventActive != 0) && (state->timer < gDfpLightningTimerMax))
             {
                 state->timer = gDfpLightningTimerActiveReset;
@@ -127,7 +127,7 @@ void dfplightni_update(DfpLightniObject* obj)
                 }
                 radiusX = state->radiusX;
                 radiusY = state->radiusY;
-                eventBlocked = GameBit_Get(DFPLIGHTNI_BLOCKED_GAMEBIT);
+                eventBlocked = mainGetBit(DFPLIGHTNI_BLOCKED_GAMEBIT);
                 if (eventBlocked == 0)
                 {
                     f32 clampX;
@@ -180,7 +180,7 @@ void dfplightni_update(DfpLightniObject* obj)
     return;
 }
 
-void dfplightni_init(DfpLightniObject* obj, DfpLightniMapData* mapData)
+void DFP_Lightni_init(DfpLightniObject* obj, DfpLightniMapData* mapData)
 {
     DfpLightniState* state;
     int randomValue;
@@ -246,11 +246,11 @@ ObjectDescriptor gDfplightniObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)dfplightni_init,
-    (ObjectDescriptorCallback)dfplightni_update,
+    (ObjectDescriptorCallback)DFP_Lightni_init,
+    (ObjectDescriptorCallback)DFP_Lightni_update,
     0,
-    (ObjectDescriptorCallback)dfplightni_render,
-    (ObjectDescriptorCallback)dfplightni_free,
+    (ObjectDescriptorCallback)DFP_Lightni_render,
+    (ObjectDescriptorCallback)DFP_Lightni_free,
     0,
-    dfplightni_getExtraSize,
+    DFP_Lightni_getExtraSize,
 };

@@ -199,29 +199,29 @@ void fn_801F3F18(int obj)
     skyFn_800894a8(1, L.fog.x, L.fog.y, L.fog.z);
 }
 
-int wmlevelcontrol_getExtraSize(void) { return sizeof(WmLevelControlState); }
-int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
+int WM_LevelControl_getExtraSize(void) { return sizeof(WmLevelControlState); }
+int WM_LevelControl_getObjectTypeId(void) { return 0x0; }
 
-void wmlevelcontrol_free(int obj)
+void WM_LevelControl_free(int obj)
 {
     ObjGroup_RemoveObject((u32)obj, WMLEVELCONTROL_OBJGROUP);
     Music_Trigger(MUSICTRIG_drako_3, 0);
-    GameBit_Set(0xa7f, 0);
-    GameBit_Set(0x372, 1);
-    GameBit_Set(0x390, 1);
+    mainSetBits(0xa7f, 0);
+    mainSetBits(0x372, 1);
+    mainSetBits(0x390, 1);
 }
 
-void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void WM_LevelControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5E74);
 }
 
-void wmlevelcontrol_hitDetect(void)
+void WM_LevelControl_hitDetect(void)
 {
 }
 
-void wmlevelcontrol_update(int obj)
+void WM_LevelControl_update(int obj)
 {
     u32 mode6;
     int loadingDone;
@@ -248,7 +248,7 @@ void wmlevelcontrol_update(int obj)
         mode6 = __cntlzw(6 - (mode6 & 0xff));
         mode6 = mode6 >> 5;
         if ((((int)mode6 == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
-            (mode6 = GameBit_Get(0xa7f), mode6 == 0))
+            (mode6 = mainGetBit(0xa7f), mode6 == 0))
         {
             SCGameBitLatch_UpdateInverted(&state->latch, 0x10, -1, -1, 0xa7f, 0xa6);
             SCGameBitLatch_Update(&state->latch, 2, -1, -1, 0xa7f, 0xa8);
@@ -264,7 +264,7 @@ void wmlevelcontrol_update(int obj)
     return;
 }
 
-void wmlevelcontrol_init(int obj)
+void WM_LevelControl_init(int obj)
 {
     WmLevelControlState* state;
     u8 mode;
@@ -288,44 +288,44 @@ void wmlevelcontrol_init(int obj)
         (*gMapEventInterface)->setObjGroupStatus(0xe, 0, 1);
         break;
     case 2:
-        GameBit_Set(0xd1b, 1);
-        GameBit_Set(0xe6f, 1);
-        GameBit_Set(0xf43, 1);
-        GameBit_Set(0xf44, 0);
+        mainSetBits(0xd1b, 1);
+        mainSetBits(0xe6f, 1);
+        mainSetBits(0xf43, 1);
+        mainSetBits(0xf44, 0);
         break;
     case 3:
-        GameBit_Set(0xd1b, 1);
-        GameBit_Set(0xd1c, 1);
-        GameBit_Set(0xa7f, 1);
-        GameBit_Set(0xf43, 0);
-        GameBit_Set(0xf44, 1);
+        mainSetBits(0xd1b, 1);
+        mainSetBits(0xd1c, 1);
+        mainSetBits(0xa7f, 1);
+        mainSetBits(0xf43, 0);
+        mainSetBits(0xf44, 1);
         break;
     case 4:
-        GameBit_Set(0xd1b, 1);
-        GameBit_Set(0xd1c, 1);
-        GameBit_Set(0xd1d, 1);
-        GameBit_Set(0xa7f, 1);
-        GameBit_Set(0xf43, 0);
-        GameBit_Set(0xf44, 1);
+        mainSetBits(0xd1b, 1);
+        mainSetBits(0xd1c, 1);
+        mainSetBits(0xd1d, 1);
+        mainSetBits(0xa7f, 1);
+        mainSetBits(0xf43, 0);
+        mainSetBits(0xf44, 1);
         state->unk04 = -1;
         break;
     case 5:
-        GameBit_Set(0xd1b, 1);
-        GameBit_Set(0xd1c, 1);
-        GameBit_Set(0xd1d, 1);
-        GameBit_Set(0xd1e, 1);
-        GameBit_Set(0xf43, 0);
-        GameBit_Set(0xf44, 1);
+        mainSetBits(0xd1b, 1);
+        mainSetBits(0xd1c, 1);
+        mainSetBits(0xd1d, 1);
+        mainSetBits(0xd1e, 1);
+        mainSetBits(0xf43, 0);
+        mainSetBits(0xf44, 1);
         break;
     case 6:
-        GameBit_Set(0xd1b, 1);
-        GameBit_Set(0xd1c, 1);
-        GameBit_Set(0xd1d, 1);
-        GameBit_Set(0xd1e, 1);
-        GameBit_Set(0xd1f, 1);
-        GameBit_Set(0x164, 1);
-        GameBit_Set(0xf43, 0);
-        GameBit_Set(0xf44, 0);
+        mainSetBits(0xd1b, 1);
+        mainSetBits(0xd1c, 1);
+        mainSetBits(0xd1d, 1);
+        mainSetBits(0xd1e, 1);
+        mainSetBits(0xd1f, 1);
+        mainSetBits(0x164, 1);
+        mainSetBits(0xf43, 0);
+        mainSetBits(0xf44, 0);
         break;
     case 7:
         state->unk08 = 700;
@@ -336,23 +336,23 @@ void wmlevelcontrol_init(int obj)
     }
 }
 
-void wmlevelcontrol_release(void)
+void WM_LevelControl_release(void)
 {
 }
 
-void wmlevelcontrol_initialise(void)
+void WM_LevelControl_initialise(void)
 {
 }
 
 /* descriptor/ptr table auto 0x80328bd0-0x80328c08 */
-extern u8 wmgeneralscales_free[];
-extern u8 wmgeneralscales_getExtraSize[];
-extern u8 wmgeneralscales_getObjectTypeId[];
-extern u8 wmgeneralscales_hitDetect[];
-extern u8 wmgeneralscales_init[];
-extern u8 wmgeneralscales_initialise[];
-extern u8 wmgeneralscales_release[];
-extern u8 wmgeneralscales_render[];
-extern u8 wmgeneralscales_update[];
+extern u8 WM_GeneralScales_free[];
+extern u8 WM_GeneralScales_getExtraSize[];
+extern u8 WM_GeneralScales_getObjectTypeId[];
+extern u8 WM_GeneralScales_hitDetect[];
+extern u8 WM_GeneralScales_init[];
+extern u8 WM_GeneralScales_initialise[];
+extern u8 WM_GeneralScales_release[];
+extern u8 WM_GeneralScales_render[];
+extern u8 WM_GeneralScales_update[];
 
-u32 gWM_GeneralScalesObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)wmgeneralscales_initialise, (u32)wmgeneralscales_release, 0x00000000, (u32)wmgeneralscales_init, (u32)wmgeneralscales_update, (u32)wmgeneralscales_hitDetect, (u32)wmgeneralscales_render, (u32)wmgeneralscales_free, (u32)wmgeneralscales_getObjectTypeId, (u32)wmgeneralscales_getExtraSize };
+u32 gWM_GeneralScalesObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)WM_GeneralScales_initialise, (u32)WM_GeneralScales_release, 0x00000000, (u32)WM_GeneralScales_init, (u32)WM_GeneralScales_update, (u32)WM_GeneralScales_hitDetect, (u32)WM_GeneralScales_render, (u32)WM_GeneralScales_free, (u32)WM_GeneralScales_getObjectTypeId, (u32)WM_GeneralScales_getExtraSize };

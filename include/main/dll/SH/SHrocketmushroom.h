@@ -52,10 +52,10 @@ STATIC_ASSERT(offsetof(BombPlantingSpotMapData, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(BombPlantingSpotMapData, plantedGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(BombPlantingSpotMapData, requiredGameBit) == 0x20);
 
-void bombplantingspot_init(void *obj, BombPlantingSpotMapData *mapData);
-void bombplantingspot_update(void *obj);
-void bombplantspore_update(void *obj);
-void bombplantspore_init(void *obj, void *param2);
+void BombPlantingSpot_init(void *obj, BombPlantingSpotMapData *mapData);
+void BombPlantingSpot_update(void *obj);
+void BombPlantSpore_update(void *obj);
+void BombPlantSpore_init(void *obj, void *param2);
 int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, ObjAnimUpdateState *animUpdate);
 
 #endif /* MAIN_DLL_SH_SHROCKETMUSHROOM_H_ */

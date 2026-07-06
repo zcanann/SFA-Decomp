@@ -1884,8 +1884,8 @@ extern void PSMTXIdentity(f32 * m);
 extern void modelInitBoneMtxs2(int* am, f32* wm, f32* out);
 f32 gObjBoneMtxBuffer[0xC00];
 extern void ObjModel_ApplyBlendChannels(int* am);
-extern void ObjModel_BlendPrimaryVertexStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
-extern void ObjModel_BlendSecondaryVertexStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
+extern void ObjModel_BlendVertexStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
+extern void ObjModel_BlendNormalStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
 extern void objUpdateHitSpheres(int* am, u8* m, int* obj, int p4, int* p5);
 extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetNumTevStages(u8 nStages);
@@ -1976,9 +1976,9 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             {
                 vtx = *(int*)&((ModelFileHeader*)m)->vertices;
             }
-            ObjModel_BlendPrimaryVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->unk40,
+            ObjModel_BlendVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->unk40,
                                               ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
-            ObjModel_BlendSecondaryVertexStream(gObjBoneMtxBuffer, m + 0xac, *(int*)&((ModelFileHeader*)m)->normals,
+            ObjModel_BlendNormalStream(gObjBoneMtxBuffer, m + 0xac, *(int*)&((ModelFileHeader*)m)->normals,
                                                 *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
         }
         if (((ModelFileHeader*)m)->unkF7 != 0)
@@ -2312,9 +2312,9 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 {
                     vtx = *(int*)&((ModelFileHeader*)m)->vertices;
                 }
-                ObjModel_BlendPrimaryVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->unk40,
+                ObjModel_BlendVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->unk40,
                                                   ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
-                ObjModel_BlendSecondaryVertexStream(gObjBoneMtxBuffer, m + 0xac, *(int*)&((ModelFileHeader*)m)->normals,
+                ObjModel_BlendNormalStream(gObjBoneMtxBuffer, m + 0xac, *(int*)&((ModelFileHeader*)m)->normals,
                                                     *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
             }
         }

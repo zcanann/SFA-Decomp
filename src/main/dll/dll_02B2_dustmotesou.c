@@ -48,7 +48,7 @@ void dustmotesou_update(int obj)
     DustMoteSouObject* source = (DustMoteSouObject*)obj;
     DustMoteSouMapData* mapData = (DustMoteSouMapData*)source->objAnim.placementData;
 
-    if (mapData->gameBit != -1 && GameBit_Get(mapData->gameBit) == 0)
+    if (mapData->gameBit != -1 && mainGetBit(mapData->gameBit) == 0)
     {
         return;
     }

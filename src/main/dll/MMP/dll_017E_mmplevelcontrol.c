@@ -110,7 +110,7 @@ void MMP_levelcontrol_update(int obj)
     if (((GameObject*)obj)->unkF4 != 0)
     {
         envFxActFn_800887f8(0);
-        if (GameBit_Get(0xd47) != 0)
+        if (mainGetBit(0xd47) != 0)
         {
             skyFn_80088c94(7, 1);
             if (((GameObject*)obj)->unkF4 == 2)
@@ -127,7 +127,7 @@ void MMP_levelcontrol_update(int obj)
             }
             ((GameObject*)obj)->unkF8 = 0;
         }
-        else if (GameBit_Get(0xf33) != 0)
+        else if (mainGetBit(0xf33) != 0)
         {
             skyFn_80088c94(7, 1);
             if (((GameObject*)obj)->unkF4 == 2)
@@ -165,7 +165,7 @@ void MMP_levelcontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 0;
     }
 
-    if (((GameObject*)obj)->unkF8 != 0 && GameBit_Get(0xf33) == 0)
+    if (((GameObject*)obj)->unkF8 != 0 && mainGetBit(0xf33) == 0)
     {
         skyFn_80088c94(7, 0);
         getEnvfxAct(obj, playerForFx, 0x13a, 0);
@@ -173,7 +173,7 @@ void MMP_levelcontrol_update(int obj)
         getEnvfxAct(obj, playerForFx, 0x139, 0);
         ((GameObject*)obj)->unkF8 = 0;
     }
-    else if (((GameObject*)obj)->unkF8 == 0 && GameBit_Get(0xf33) != 0)
+    else if (((GameObject*)obj)->unkF8 == 0 && mainGetBit(0xf33) != 0)
     {
         skyFn_80088c94(7, 1);
         getEnvfxAct(obj, playerForFx, 0x13a, 0);
@@ -199,7 +199,7 @@ void MMP_levelcontrol_init(int obj)
     {
         ((GameObject*)obj)->unkF4 = 1;
     }
-    *(u32*)&((GameObject*)obj)->unkF8 = GameBit_Get(0xF33);
+    *(u32*)&((GameObject*)obj)->unkF8 = mainGetBit(0xF33);
     ((GameObject*)obj)->animEventCallback = MMP_LevelControl_SeqFn;
     unlockLevel(mapGetDirIdx(0x12), 0, 0);
     lbl_803DDB28 = 300.0f;
@@ -209,7 +209,7 @@ void MMP_levelcontrol_init(int obj)
     Music_Trigger(MUSICTRIG_LVF_Tracking_f2, 0);
     Music_Trigger(MUSICTRIG_CRF_Swim, 0);
     Music_Trigger(MUSICTRIG_cldrnr_walkabout, 0);
-    GameBit_Set(0xDCF, 0);
+    mainSetBits(0xDCF, 0);
 }
 
 void MMP_levelcontrol_release(void)

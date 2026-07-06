@@ -18,7 +18,7 @@
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
- * (imicemountain_getExtraSize == 0x14).
+ * (IMIceMountain_getExtraSize == 0x14).
  */
 typedef struct IMIceMountainState
 {
@@ -100,7 +100,7 @@ static inline int* DIMcannon_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-void lavaball1bf_func11(int* obj)
+void lavaball1bf_clearPending(int* obj)
 {
     Lavaball1bfState* p = (Lavaball1bfState*)(int*)((GameObject*)obj)->extra;
     if (p->gateA == 0) return;
@@ -108,7 +108,7 @@ void lavaball1bf_func11(int* obj)
     p->pending = 0;
 }
 
-int lavaball1bf_setScale(int* obj)
+int lavaball1bf_trySetPending(int* obj)
 {
     Lavaball1bfState* p;
     obj = (int*)(int*)((GameObject*)obj)->extra;
@@ -155,10 +155,10 @@ void lavaball1bf_update(int* obj)
 
     state = ((GameObject*)obj)->extra;
     setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-    state->gbState = GameBit_Get(((Lavaball1bfPlacement*)setup)->stateGameBit);
+    state->gbState = mainGetBit(((Lavaball1bfPlacement*)setup)->stateGameBit);
     if (state->soloLatch != 0)
     {
-        if (GameBit_Get(((Lavaball1bfPlacement*)setup)->triggerGameBit) != 0)
+        if (mainGetBit(((Lavaball1bfPlacement*)setup)->triggerGameBit) != 0)
         {
             state->gbState = 1;
             state->soloLatch = 0;
@@ -196,7 +196,7 @@ void lavaball1bf_update(int* obj)
         if (state->gbState != 0)
         {
             int rot;
-            if (GameBit_Get(((Lavaball1bfPlacement*)setup)->triggerGameBit) != 0 && state->gateB == 0)
+            if (mainGetBit(((Lavaball1bfPlacement*)setup)->triggerGameBit) != 0 && state->gateB == 0)
             {
                 rot = setup[0x20];
                 state->gateB = 1;
@@ -220,7 +220,7 @@ void lavaball1bf_init(s16* obj, u8* p)
     inner->firePeriod = (f32) * (s16*)(p + 0x18);
     inner->fireTimer = lbl_803E4814;
     inner->gateA = p[0x1d];
-    inner->gateB = GameBit_Get((int)*(s16*)(p + 0x22));
+    inner->gateB = mainGetBit((int)*(s16*)(p + 0x22));
     if (*(s16*)(p + 0x24) == -1 && inner->gateB == 0)
     {
         inner->soloLatch = 1;

@@ -112,7 +112,7 @@ void wctemplebri_updateModelWarp(int obj, int p2)
     state->wavePhaseB = phase;
 }
 
-int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
+int wctemplebri_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     WCTempleBriSetup* setup = (WCTempleBriSetup*)((GameObject*)obj)->anim.placementData;
@@ -135,7 +135,7 @@ int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
         if ((state->flags & WCTEMPLEBRI_FLAG_SOLVED) == 0)
         {
             state->flags |= WCTEMPLEBRI_FLAG_SOLVED;
-            GameBit_Set(setup->solvedBit, 1);
+            mainSetBits(setup->solvedBit, 1);
         }
         {
             int a = (int)
@@ -251,9 +251,9 @@ void wctemplebri_update(int obj)
     {
         if ((state->flags & WCTEMPLEBRI_FLAG_SOLVED) == 0)
         {
-            GameBit_Set(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 1);
+            mainSetBits(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 1);
             state->flags |= WCTEMPLEBRI_FLAG_SOLVED;
-            GameBit_Set(setup->solvedBit, 1);
+            mainSetBits(setup->solvedBit, 1);
         }
         {
             int a = (int)
@@ -271,7 +271,7 @@ void wctemplebri_update(int obj)
     }
     else
     {
-        GameBit_Set(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 0);
+        mainSetBits(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 0);
         ObjHits_DisableObject(obj);
     }
     if ((void*)Obj_GetPlayerObject() != NULL)
@@ -280,7 +280,7 @@ void wctemplebri_update(int obj)
             &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) >
             lbl_803E6E94)
         {
-            GameBit_Set(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 0);
+            mainSetBits(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 0);
         }
     }
 }
@@ -301,7 +301,7 @@ void wctemplebri_init(int obj, int initData)
     *(u8*)&objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;
-    ((GameObject*)obj)->animEventCallback = wctemplebri_interactCallback;
+    ((GameObject*)obj)->animEventCallback = wctemplebri_SeqFn;
     state = ((GameObject*)obj)->extra;
     maxY = 0;
     model = Obj_GetActiveModel(obj);
@@ -331,7 +331,7 @@ void wctemplebri_init(int obj, int initData)
     }
     state->partCount = 0xa;
     state->maxY = maxY;
-    if ((u32)GameBit_Get(setup->solvedBit) != 0)
+    if ((u32)mainGetBit(setup->solvedBit) != 0)
     {
         state->active = 1;
         state->flags |= WCTEMPLEBRI_FLAG_SOLVED;

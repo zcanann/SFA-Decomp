@@ -82,11 +82,11 @@ STATIC_ASSERT(offsetof(DfpLightniObject, state) == 0xB8);
 
 extern ObjectDescriptor gDfplightniObjDescriptor;
 
-int dfplightni_getExtraSize(void);
-void dfplightni_free(DfpLightniObject *obj);
-void dfplightni_render(DfpLightniObject *obj);
-void dfplightni_update(DfpLightniObject *obj);
-void dfplightni_init(DfpLightniObject *obj,DfpLightniMapData *mapData);
+int DFP_Lightni_getExtraSize(void);
+void DFP_Lightni_free(DfpLightniObject *obj);
+void DFP_Lightni_render(DfpLightniObject *obj);
+void DFP_Lightni_update(DfpLightniObject *obj);
+void DFP_Lightni_init(DfpLightniObject *obj,DfpLightniMapData *mapData);
 int dfppowersl_spawnSeqObjectsOnHit(DfpPowerSlObject *obj);
 
 #endif /* MAIN_DFPLIGHTNI_H_ */

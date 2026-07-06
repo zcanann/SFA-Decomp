@@ -129,7 +129,7 @@ void fn_80174A80(int obj, PushableState* ext)
     ext->gameBit2 = ((PushablePlacement*)def)->gameBit2;
     ext->unk_F0 = fval;
     ext->nearestObj = NULL;
-    GameBit_Set(ext->gameBit, 0);
+    mainSetBits(ext->gameBit, 0);
     tex = objFindTexture((void*)obj, 0, 0);
 
     ext->eyePosX = ext->eyePosX + ext->eyeDriftSpeedX;
@@ -265,7 +265,7 @@ void fn_80174BFC(int obj, int ext)
                                     {
                                         tex->textureId = 0x100;
                                     }
-                                    GameBit_Set(((PushablePlacement*)def)->gameBit, 1);
+                                    mainSetBits(((PushablePlacement*)def)->gameBit, 1);
                                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                                     ((PushableState*)ext)->flags |= 0x80;
                                 }
@@ -273,7 +273,7 @@ void fn_80174BFC(int obj, int ext)
                             case 0x1cb:
                                 if (hit.id == 1)
                                 {
-                                    GameBit_Set(gamebit, 1);
+                                    mainSetBits(gamebit, 1);
                                     Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
                                     ((PushableState*)ext)->flags |= 0x80;
                                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
@@ -285,7 +285,7 @@ void fn_80174BFC(int obj, int ext)
                                     s8 t = ((PushablePlacement*)def)->requiredHitId;
                                     if (t > -1 && t == hit.id)
                                     {
-                                        GameBit_Set(gamebit, 1);
+                                        mainSetBits(gamebit, 1);
                                         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
                                     }
                                     break;
@@ -340,7 +340,7 @@ void fn_80174BFC(int obj, int ext)
     memcpy(((PushableState*)ext)->cornerWorld, points, ((PushableState*)ext)->pointCount * 0xc);
 }
 
-u32 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
+u32 pushable_SeqFn(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
 {
     extern int Obj_GetPlayerObject(); /* #57 */
     u32 bitVal;
@@ -410,9 +410,9 @@ u32 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
         *(u8*)((int)obj + 0xaf) = *(u8*)((int)obj + 0xaf) | 8;
         if (('\0' < *(char*)(*(int*)(obj + 0x2c) + 0x10f)) &&
             ((*(short*)(*(int*)(*(int*)(obj + 0x2c) + 0x100) + 0x44) == 0x24 &&
-                (bitVal = GameBit_Get(0x103), bitVal == 0))))
+                (bitVal = mainGetBit(0x103), bitVal == 0))))
         {
-            GameBit_Set(0x103, 1);
+            mainSetBits(0x103, 1);
             *(u8*)((int)obj + 0xaf) = *(u8*)((int)obj + 0xaf) & ~8;
             player = Obj_GetPlayerObject();
             dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX;
@@ -433,7 +433,7 @@ u32 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void fn_80175428(int obj)
+void pushable_handleMsgs(int obj)
 {
     PushableState* state;
     int msgSender;
@@ -518,10 +518,10 @@ void pushable_free(int* obj)
     switch (type)
     {
     case 0x21e:
-        GameBit_Set(sub->gameBit, 0);
+        mainSetBits(sub->gameBit, 0);
         break;
     case 0x411:
-        GameBit_Set(sub->gameBit, 0);
+        mainSetBits(sub->gameBit, 0);
         break;
     default:
         if (((PushablePlacement*)def)->gameBit > -1 && type != 0x54a && type != 0x5ae && type != 0x108 && sub->
@@ -577,10 +577,10 @@ void pushable_update(int* obj)
     LAB_clear:
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && GameBit_Get(0x913) == 0)
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && mainGetBit(0x913) == 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-        GameBit_Set(0x913, 1);
+        mainSetBits(0x913, 1);
         return;
     }
     player = Obj_GetPlayerObject();
@@ -608,7 +608,7 @@ void pushable_update(int* obj)
         if (fn_80174668(obj, state) == 0) break;
         return;
     case 0x54a:
-        if (GameBit_Get(state->gameBit) != 0)
+        if (mainGetBit(state->gameBit) != 0)
         {
             ((GameObject*)obj)->anim.localPosX = (f32)((f64)((ObjPlacement*)def)->posX - lbl_803E3530);
             ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
@@ -620,9 +620,9 @@ void pushable_update(int* obj)
         if (lbl_803E3528 == state->prevWaterDepth && state->waterDepth > lbl_803E3528)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_curtainopen16);
-            GameBit_Set(0x272, 1);
+            mainSetBits(0x272, 1);
         }
-        if (GameBit_Get(0x272) != 0)
+        if (mainGetBit(0x272) != 0)
         {
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject((u32)obj);
@@ -662,7 +662,7 @@ void pushable_init(s16* obj, char* def)
     ((GameObject*)obj)->anim.localPosY = lbl_803E358C + ((ObjPlacement*)def)->posY;
     ObjGroup_AddObject(obj, PUSHABLE_OBJGROUP);
     objSetSlot(obj, 0x5a);
-    ((GameObject*)obj)->animEventCallback = fn_8017510C;
+    ((GameObject*)obj)->animEventCallback = pushable_SeqFn;
     state = ((GameObject*)obj)->extra;
     state->pointCount = 0;
     entry = Transporter_GetActiveModel(obj);
@@ -812,7 +812,7 @@ void pushable_init(s16* obj, char* def)
         fn_80174588(obj, state);
         break;
     case 0x1cb:
-        if (((PushableObjectDef*)def)->gameBit > -1 && GameBit_Get(((PushableObjectDef*)def)->gameBit) != 0)
+        if (((PushableObjectDef*)def)->gameBit > -1 && mainGetBit(((PushableObjectDef*)def)->gameBit) != 0)
         {
             state->flags = state->flags | 0x81;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
@@ -821,7 +821,7 @@ void pushable_init(s16* obj, char* def)
         state->savePosEnabled = 0;
         break;
     default:
-        if (((PushableObjectDef*)def)->gameBit > -1 && GameBit_Get(((PushableObjectDef*)def)->gameBit) != 0)
+        if (((PushableObjectDef*)def)->gameBit > -1 && mainGetBit(((PushableObjectDef*)def)->gameBit) != 0)
         {
             state->flags = state->flags | PUSHABLE_FLAG_RESTORED;
         }
@@ -938,19 +938,19 @@ void pushable_hitDetect(int obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x108:
-        if (GameBit_Get(0x272) != 0)
+        if (mainGetBit(0x272) != 0)
         {
             return;
         }
         break;
     case 0x21e:
-        if (GameBit_Get(state->gameBit) != 0)
+        if (mainGetBit(state->gameBit) != 0)
         {
             return;
         }
         break;
     case 0x411:
-        if (GameBit_Get(state->gameBit) != 0)
+        if (mainGetBit(state->gameBit) != 0)
         {
             return;
         }
@@ -1311,7 +1311,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
                     default:
                         if (((PushablePlacement*)def2)->requiredHitId > -1)
                         {
-                            GameBit_Set(gameBit, 0);
+                            mainSetBits(gameBit, 0);
                         }
                         break;
                     }
@@ -1378,13 +1378,13 @@ void pushable_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
         switch (((GameObject*)obj)->anim.seqId)
         {
         case 0x21e:
-            if (GameBit_Get(state->gameBit) == 0)
+            if (mainGetBit(state->gameBit) == 0)
             {
                 break;
             }
             return;
         case 0x411:
-            if (GameBit_Get(state->gameBit) == 0)
+            if (mainGetBit(state->gameBit) == 0)
             {
                 break;
             }

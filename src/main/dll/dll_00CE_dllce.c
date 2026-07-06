@@ -450,7 +450,7 @@ int fn_8015E798(int obj, GroundBaddieState* p)
     }
     if (*(char*)&p->baddie.moveDone != '\0')
     {
-        GameBit_Set(sub->gameBitB, 0);
+        mainSetBits(sub->gameBitB, 0);
         ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
         *(int*)&p->baddie.targetObj = 0;
         *(s8*)&p->baddie.physicsActive = 0;
@@ -485,7 +485,7 @@ int fn_8015E8BC(int obj, GroundBaddieState* p)
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
     {
         *(s8*)&p->baddie.physicsActive = 1;
-        GameBit_Set(sub->gameBitB, 1);
+        mainSetBits(sub->gameBitB, 1);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.alpha = 0xff;
         *(s8*)&p->baddie.stateTag = 1;
@@ -853,44 +853,44 @@ void dll_CE_release_nop(void)
 {
 }
 
-void chukchuk_free(void);
+void ChukChuk_free(void);
 
-void chukchuk_hitDetect(void);
+void ChukChuk_hitDetect(void);
 
-void chukchuk_release(void);
+void ChukChuk_release(void);
 
-void chukchuk_initialise(void);
+void ChukChuk_initialise(void);
 
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
-void chukchuk_init(u8* obj, u8* params);
-void iceball_hitDetect(void);
+void ChukChuk_init(u8* obj, u8* params);
+void IceBall_hitDetect(void);
 
-void iceball_release(void);
+void IceBall_release(void);
 
-void iceball_initialise(void);
+void IceBall_initialise(void);
 
 int dll_CE_getExtraSize_ret_1052(void) { return 0x41c; }
 int dll_CE_getObjectTypeId(void) { return 0x49; }
-int chukchuk_getExtraSize(void);
-int chukchuk_getObjectTypeId(void);
-int iceball_getExtraSize(void);
-int iceball_getObjectTypeId(void);
+int ChukChuk_getExtraSize(void);
+int ChukChuk_getObjectTypeId(void);
+int IceBall_getExtraSize(void);
+int IceBall_getObjectTypeId(void);
 
 s16 dll_CE_setScale(int* obj) { return ((BaddieState*)((GameObject*)obj)->extra)->controlMode; }
 
-void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void iceball_free(void);
+void IceBall_free(void);
 
-void chukchuk_update(short* obj);
+void ChukChuk_update(short* obj);
 
-void chukchuk_setScale(int obj, int v);
+void ChukChuk_setScale(int obj, int v);
 
-void iceball_init(void* obj);
+void IceBall_init(void* obj);
 
 int fn_8015E00C(int p1, u8* obj)
 {
@@ -929,11 +929,11 @@ int fn_8015DEB4(int* obj, GroundBaddieState* state)
         sub->subMode = 0;
         if (sub->gameBitB != -1)
         {
-            GameBit_Set(sub->gameBitB, 0);
+            mainSetBits(sub->gameBitB, 0);
         }
         if (sub->gameBitA != -1)
         {
-            GameBit_Set(sub->gameBitA, 1);
+            mainSetBits(sub->gameBitA, 1);
         }
     }
     return 0;
@@ -1021,17 +1021,17 @@ ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)chukchuk_initialise,
-        (ObjectDescriptorCallback)chukchuk_release,
+        (ObjectDescriptorCallback)ChukChuk_initialise,
+        (ObjectDescriptorCallback)ChukChuk_release,
         0,
-        (ObjectDescriptorCallback)chukchuk_init,
-        (ObjectDescriptorCallback)chukchuk_update,
-        (ObjectDescriptorCallback)chukchuk_hitDetect,
-        (ObjectDescriptorCallback)chukchuk_render,
-        (ObjectDescriptorCallback)chukchuk_free,
-        (ObjectDescriptorCallback)chukchuk_getObjectTypeId,
-        chukchuk_getExtraSize,
-        (ObjectDescriptorCallback)chukchuk_setScale,
+        (ObjectDescriptorCallback)ChukChuk_init,
+        (ObjectDescriptorCallback)ChukChuk_update,
+        (ObjectDescriptorCallback)ChukChuk_hitDetect,
+        (ObjectDescriptorCallback)ChukChuk_render,
+        (ObjectDescriptorCallback)ChukChuk_free,
+        (ObjectDescriptorCallback)ChukChuk_getObjectTypeId,
+        ChukChuk_getExtraSize,
+        (ObjectDescriptorCallback)ChukChuk_setScale,
     },
     0,
 };
@@ -1041,16 +1041,16 @@ ObjectDescriptor gIceBallObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)iceball_initialise,
-    (ObjectDescriptorCallback)iceball_release,
+    (ObjectDescriptorCallback)IceBall_initialise,
+    (ObjectDescriptorCallback)IceBall_release,
     0,
-    (ObjectDescriptorCallback)iceball_init,
-    (ObjectDescriptorCallback)iceball_update,
-    (ObjectDescriptorCallback)iceball_hitDetect,
-    (ObjectDescriptorCallback)iceball_render,
-    (ObjectDescriptorCallback)iceball_free,
-    (ObjectDescriptorCallback)iceball_getObjectTypeId,
-    iceball_getExtraSize,
+    (ObjectDescriptorCallback)IceBall_init,
+    (ObjectDescriptorCallback)IceBall_update,
+    (ObjectDescriptorCallback)IceBall_hitDetect,
+    (ObjectDescriptorCallback)IceBall_render,
+    (ObjectDescriptorCallback)IceBall_free,
+    (ObjectDescriptorCallback)IceBall_getObjectTypeId,
+    IceBall_getExtraSize,
 };
 
 u8 lbl_8031FEA8[] = {

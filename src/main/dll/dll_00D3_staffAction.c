@@ -1104,22 +1104,22 @@ void dll_D3_release_nop(void)
 {
 }
 
-void skeetlawall_free(void);
+void SkeetlaWall_free(void);
 
-void skeetlawall_hitDetect(void);
+void SkeetlaWall_hitDetect(void);
 
-void skeetlawall_update(void);
+void SkeetlaWall_update(void);
 
-void skeetlawall_release(void);
+void SkeetlaWall_release(void);
 
-void skeetlawall_initialise(void);
+void SkeetlaWall_initialise(void);
 
-int skeetlawall_getExtraSize(void);
-int skeetlawall_getObjectTypeId(void);
+int SkeetlaWall_getExtraSize(void);
+int SkeetlaWall_getObjectTypeId(void);
 
-void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void SkeetlaWall_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void skeetlawall_init(int obj, u8* def);
+void SkeetlaWall_init(int obj, u8* def);
 
 ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
     {
@@ -1127,17 +1127,17 @@ ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)skeetlawall_initialise,
-        (ObjectDescriptorCallback)skeetlawall_release,
+        (ObjectDescriptorCallback)SkeetlaWall_initialise,
+        (ObjectDescriptorCallback)SkeetlaWall_release,
         0,
-        (ObjectDescriptorCallback)skeetlawall_init,
-        (ObjectDescriptorCallback)skeetlawall_update,
-        (ObjectDescriptorCallback)skeetlawall_hitDetect,
-        (ObjectDescriptorCallback)skeetlawall_render,
-        (ObjectDescriptorCallback)skeetlawall_free,
-        (ObjectDescriptorCallback)skeetlawall_getObjectTypeId,
-        skeetlawall_getExtraSize,
-        (ObjectDescriptorCallback)skeetlawall_setScale,
+        (ObjectDescriptorCallback)SkeetlaWall_init,
+        (ObjectDescriptorCallback)SkeetlaWall_update,
+        (ObjectDescriptorCallback)SkeetlaWall_hitDetect,
+        (ObjectDescriptorCallback)SkeetlaWall_render,
+        (ObjectDescriptorCallback)SkeetlaWall_free,
+        (ObjectDescriptorCallback)SkeetlaWall_getObjectTypeId,
+        SkeetlaWall_getExtraSize,
+        (ObjectDescriptorCallback)SkeetlaWall_setScale,
     },
     0,
 };

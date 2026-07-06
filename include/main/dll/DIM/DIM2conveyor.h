@@ -20,15 +20,15 @@ void dimbridgecogmai_init(int *obj, int *def);
 int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void dimbridgecogmai_initialise(void);
 
-void dimdismountpoint_func11(int obj, int flag);
-int dimdismountpoint_setScale(int obj);
-int dimdismountpoint_getExtraSize(void);
-void dimdismountpoint_free(int obj);
-void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
-void dimdismountpoint_hitDetect(void);
-void dimdismountpoint_update(int *obj);
-void dimdismountpoint_init(u8* obj, u8* params);
-void dimdismountpoint_release(void);
-void dimdismountpoint_initialise(void);
+void DIMDismountPoint_func0B(int obj, int flag);
+int DIMDismountPoint_setScale(int obj);
+int DIMDismountPoint_getExtraSize(void);
+void DIMDismountPoint_free(int obj);
+void DIMDismountPoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+void DIMDismountPoint_hitDetect(void);
+void DIMDismountPoint_update(int *obj);
+void DIMDismountPoint_init(u8* obj, u8* params);
+void DIMDismountPoint_release(void);
+void DIMDismountPoint_initialise(void);
 
 #endif /* MAIN_DLL_DIM_DIM2CONVEYOR_H_ */

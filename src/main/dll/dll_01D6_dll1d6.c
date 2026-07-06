@@ -84,7 +84,7 @@ STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
-/* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
+/* DIM2PathGenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
@@ -178,7 +178,7 @@ void dll_1D6_init(int* obj, u8* params)
         extra->hitRangeSqB = k * ((GameObject*)obj)->anim.rootMotionScale;
         extra->hitRangeSqB = extra->hitRangeSqB * extra->hitRangeSqB;
     }
-    extra->flags1D = GameBit_Get(496) ? 2 : 0;
+    extra->flags1D = mainGetBit(496) ? 2 : 0;
     for (i = 0; i < 4; i++)
     {
         if ((&gDll1D6SlotInUse)[i] == 0)
@@ -341,7 +341,7 @@ void dll_1D6_update(int* obj)
             extra->bobPhase = lbl_803E4A7C;
         }
     }
-    if (GameBit_Get(496) != 0)
+    if (mainGetBit(496) != 0)
     {
         extra->flags1D |= 2;
     }

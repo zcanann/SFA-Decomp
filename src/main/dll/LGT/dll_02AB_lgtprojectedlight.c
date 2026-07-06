@@ -81,11 +81,11 @@ STATIC_ASSERT(offsetof(ProjectedLightSetup, tevModeB) == 0x3E);
 STATIC_ASSERT(offsetof(ProjectedLightSetup, orthoDepthNibbles) == 0x3F);
 STATIC_ASSERT(sizeof(ProjectedLightSetup) == 0x40);
 
-int projectedlight_getExtraSize(void) { return sizeof(ProjectedLightState); }
+int ProjectedLight_getExtraSize(void) { return sizeof(ProjectedLightState); }
 
-int projectedlight_getObjectTypeId(void) { return 0; }
+int ProjectedLight_getObjectTypeId(void) { return 0; }
 
-void projectedlight_free(int obj)
+void ProjectedLight_free(int obj)
 {
     ProjectedLightState* state = ((GameObject*)obj)->extra;
     if (state->light != NULL)
@@ -98,15 +98,15 @@ void projectedlight_free(int obj)
     }
 }
 
-void projectedlight_render(void)
+void ProjectedLight_render(void)
 {
 }
 
-void projectedlight_hitDetect(void)
+void ProjectedLight_hitDetect(void)
 {
 }
 
-void projectedlight_update(int obj)
+void ProjectedLight_update(int obj)
 {
     ProjectedLightSetup* setup = (ProjectedLightSetup*)((GameObject*)obj)->anim.placementData;
 
@@ -119,7 +119,7 @@ void projectedlight_update(int obj)
 }
 
 #pragma opt_common_subs off
-void projectedlight_init(int obj, int setup)
+void ProjectedLight_init(int obj, int setup)
 {
     PointLightVec vec;
     ProjectedLightSetup* setupData = (ProjectedLightSetup*)setup;
@@ -215,10 +215,10 @@ void projectedlight_init(int obj, int setup)
 }
 #pragma opt_common_subs reset
 
-void projectedlight_release(void)
+void ProjectedLight_release(void)
 {
 }
 
-void projectedlight_initialise(void)
+void ProjectedLight_initialise(void)
 {
 }

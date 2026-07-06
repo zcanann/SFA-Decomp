@@ -21,7 +21,7 @@ extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
 extern int ObjPath_GetPointWorldPosition();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern u32 GameBit_Get(int eventId);
+extern u32 mainGetBit(int eventId);
 
 extern void playerAddRemoveMagic(void* player, int n);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
@@ -36,7 +36,7 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 /* release-sequence callback: on the cued trigger, thank Fox with a
  * one-shot +2 magic (the Power Room key comes from the script) */
-int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int CFPrisonUncle_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     CfPrisonUncleState* p = ((GameObject*)obj)->extra;
     if (p->magicGranted != 0) return 0;
@@ -62,14 +62,14 @@ void cfprisonuncle_free(void)
 void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0x50) != 0)
+    if (mainGetBit(0x50) != 0)
     {
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
             ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5, lbl_803E4288);
         }
     }
-    else if (GameBit_Get(0x4d) != 0 && visible != 0)
+    else if (mainGetBit(0x4d) != 0 && visible != 0)
     {
         ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4288);
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
@@ -125,7 +125,7 @@ void cfprisonuncle_update(int* obj)
     int* objects;
     int i;
     if (sub == NULL) return;
-    if (GameBit_Get(0x50) != 0) return;
+    if (mainGetBit(0x50) != 0) return;
     if (ObjMsg_Pop(obj, &m1, &m2, &m3) != 0)
     {
         *(void**)&sub->target = NULL;
@@ -143,7 +143,7 @@ void cfprisonuncle_update(int* obj)
         }
     }
     ObjTrigger_UpdateIdBlockFlag((int)obj);
-    sub->released = GameBit_Get(0x4d);
+    sub->released = mainGetBit(0x4d);
     if (sub->released == 0)
     {
         player = Obj_GetPlayerObject();
@@ -181,15 +181,15 @@ void cfprisonuncle_init(int* obj)
 {
     CfPrisonUncleState* state;
     ObjMsg_AllocQueue(obj, 1);
-    ((GameObject*)obj)->animEventCallback = fn_8019FC84;
+    ((GameObject*)obj)->animEventCallback = CFPrisonUncle_SeqFn;
     state = ((GameObject*)obj)->extra;
     state->unk64 = 464;
     state->unk68 = 465;
     state->unk70 = 0;
     state->magicGranted = 0;
-    if ((u32)GameBit_Get(0x4d) != 0u)
+    if ((u32)mainGetBit(0x4d) != 0u)
     {
-        GameBit_Set(0x50, 1);
+        mainSetBits(0x50, 1);
     }
 }
 

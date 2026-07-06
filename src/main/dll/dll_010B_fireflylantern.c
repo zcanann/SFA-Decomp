@@ -63,7 +63,7 @@ int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 --state->fireflyCount;
                 --state->remainingCount;
-                GameBit_Set(state->gameBit, state->remainingCount);
+                mainSetBits(state->gameBit, state->remainingCount);
             }
             break;
         }
@@ -165,7 +165,7 @@ void FireFlyLantern_init(int obj, int def)
     }
 
     state->fireflyCount = 0;
-    state->remainingCount = GameBit_Get(state->gameBit);
+    state->remainingCount = mainGetBit(state->gameBit);
 
     if ((s8)((FireFlyLanternSpawnSetup*)def)->spawnMode == 1)
     {

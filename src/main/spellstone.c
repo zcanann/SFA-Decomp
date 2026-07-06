@@ -94,17 +94,17 @@ void spellstone_update(SpellStoneObject* obj)
         obj->rotX += 0x100;
         obj->rotZ = 0;
     }
-    eventActive = GameBit_Get(def->completeEvent);
+    eventActive = mainGetBit(def->completeEvent);
     if (eventActive != 0)
     {
-        GameBit_Set(*(&lbl_803DC228 + def->eventIndex), 1);
+        mainSetBits(*(&lbl_803DC228 + def->eventIndex), 1);
         obj->flags = (s16)(obj->flags | SPELLSTONE_OBJFLAG_HIDDEN);
         Obj_RemoveFromUpdateList(obj);
         (*gMapEventInterface)->setMapAct(0x1d, 2);
     }
     else
     {
-        eventActive = GameBit_Get(def->activeEvent);
+        eventActive = mainGetBit(def->activeEvent);
         if (eventActive != 0)
         {
             obj->flags = (s16)(obj->flags | SPELLSTONE_OBJFLAG_HIDDEN);
@@ -115,7 +115,7 @@ void spellstone_update(SpellStoneObject* obj)
             playerObj = Obj_GetPlayerObject();
             if (Vec_distance(&obj->worldPosX, (u8*)playerObj + 0x18) < lbl_803E6758)
             {
-                GameBit_Set(def->completeEvent, 1);
+                mainSetBits(def->completeEvent, 1);
             }
         }
         if (state->state == SPELLSTONE_STATE_HIDDEN)

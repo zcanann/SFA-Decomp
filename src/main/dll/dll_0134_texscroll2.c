@@ -85,7 +85,7 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
                     int mapId = ((TexScrollPlacement*)obj->objAnim.placementData)->mapId;
                     if (mapId == TEXSCROLL_GAMEBIT_GATED_MAP_A || mapId == TEXSCROLL_GAMEBIT_GATED_MAP_B)
                     {
-                        if (GameBit_Get(state->gameBit) != 0)
+                        if (mainGetBit(state->gameBit) != 0)
                         {
                             mapTextureScrollSetStep(
                                 (s32) * (u8*)((char*)material + 0x2a),
@@ -157,14 +157,14 @@ void texscroll2_update(TexScroll2Object* obj)
     {
         if (block != NULL)
         {
-            if (GameBit_Get(state->gameBit) != *(u32*)&state->previousGameBitValue && state->needsApply == 0)
+            if (mainGetBit(state->gameBit) != *(u32*)&state->previousGameBitValue && state->needsApply == 0)
             {
                 texscroll2_applyMapTextureScroll(obj, state);
                 state->needsApply = 0;
             }
         }
     }
-    state->previousGameBitValue = GameBit_Get(state->gameBit);
+    state->previousGameBitValue = mainGetBit(state->gameBit);
     if (block == NULL)
     {
         state->needsApply = 1;

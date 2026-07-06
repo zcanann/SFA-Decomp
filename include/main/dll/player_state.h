@@ -72,7 +72,7 @@ typedef struct PlayerState {
     u8 staffHoldFrames; /* frames the staff-hold/grab condition has persisted; ++ while held, reset to 0 on state changes, clamped to 10; >2 forces drop of carried object + staff action */
     u8 pad40E[0x410 - 0x40E];
     f32 rumbleCooldown; /* f32 countdown decremented by frame-time each tick, floored to 0; when expired (<=0) and moving fast (animSpeedA > thresh) fires doRumble + sfx 0x404 and resets to the cooldown interval */
-    f32 buttonHoldTimer; /* accumulates frame-time while button 0x100 is held (and fn_802A9A0C true), clamped to a max; reset to 0 when released; paired with the 0x3f4:b20 "accumulating" flag */
+    f32 buttonHoldTimer; /* accumulates frame-time while button 0x100 is held (and playerCanCastQuakeSpell true), clamped to a max; reset to 0 when released; paired with the 0x3f4:b20 "accumulating" flag */
     f32 actionCooldown; /* f32 input-cooldown countdown decremented by timeDelta each tick, floored to 0; gates button 0x100: when pressed and the timer has expired (<=0) performs the staff/aim action (fn_802AA014) and resets to the cooldown interval */
     u8 chargeCapacity; /* 0x41c: full-charge level for the breath attack (0x14 for move 0xc55, else 0xa); chargeLevel must reach this to fire, and -chargeCapacity is the damage applied to the target */
     u8 pad41D[0x420 - 0x41D];
@@ -301,7 +301,7 @@ typedef struct PlayerState {
     f32 unk7FC;
     u8 isHoldingObject; /* 1 while carrying a held object (set with heldObj on pickup msgs 0x100008/0x100010); cleared to 0 on release/state resets */
     u8 pad801[0x806 - 0x801];
-    u16 staffAnimState; /* staff grow/shrink anim state machine (fn_802AEF34): 0/1=shrink,2=grow,3=settle,0xf=variant */
+    u16 staffAnimState; /* staff grow/shrink anim state machine (staffAnimate): 0/1=shrink,2=grow,3=settle,0xf=variant */
     u16 hitIntervalTimer; /* countdown (-= dt) reset to 0x3c on expiry, firing a periodic ObjHits record */
     s16 animState;
     s16 queuedItemCommand; /* primary queued item/use command id from ObjMsg 0x80002; -1 = none; processed by playerProcessQueuedItemCommand */

@@ -47,14 +47,14 @@ FUN_801addec(u64 param_1,double param_2,double param_3,u64 param_4,u64 param_5,
             ObjAnimUpdateState *animUpdate,u32 param_12,u32 *param_13,u32 param_14,
             u32 param_15,u32 param_16);
 
-int imicemountain_getExtraSize(void);
-int imicemountain_getObjectTypeId(void);
-void imicemountain_free(void);
+int IMIceMountain_getExtraSize(void);
+int IMIceMountain_getObjectTypeId(void);
+void IMIceMountain_free(void);
 int IMIceMountain_SeqFn(void *obj, int unused, ObjAnimUpdateState *animUpdate);
-void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void imicemountain_hitDetect(void);
-void imicemountain_update(int* obj);
-void imicemountain_init(int* obj);
+void IMIceMountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void IMIceMountain_hitDetect(void);
+void IMIceMountain_update(int* obj);
+void IMIceMountain_init(int* obj);
 
 int crrockfall_getExtraSize(void);
 int crrockfall_getObjectTypeId(void);
@@ -66,16 +66,16 @@ void crrockfall_init(int* obj, u8* params);
 void crrockfall_release(void);
 void crrockfall_initialise(void);
 
-int magiclight_getExtraSize(int *obj);
-int magiclight_getObjectTypeId(void);
-void magiclight_free(int obj);
-void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
-void magiclight_hitDetect(void);
-void magiclight_update(int obj);
-void magiclight_init(int* obj, u8* params);
-int magiclight_SeqFn(int *obj);
-void magiclight_release(void);
-void magiclight_initialise(void);
+int MagicLight_getExtraSize(int *obj);
+int MagicLight_getObjectTypeId(void);
+void MagicLight_free(int obj);
+void MagicLight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+void MagicLight_hitDetect(void);
+void MagicLight_update(int obj);
+void MagicLight_init(int* obj, u8* params);
+int MagicLight_SeqFn(int *obj);
+void MagicLight_release(void);
+void MagicLight_initialise(void);
 
 int dll_16C_getExtraSize(void);
 int dll_16C_getObjectTypeId(void);

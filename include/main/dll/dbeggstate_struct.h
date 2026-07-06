@@ -8,7 +8,7 @@ typedef struct DbEggState
 {
     f32 waterOffset; /* float-height offset above water */
     RomCurveWalker curve; /* 0x004: rom-curve walker record (state+4 to gRomCurveInterface) */
-    f32 launchVelX; /* 0x10C: launch velocity vec3, set by dbegg_func0B, applied
+    f32 launchVelX; /* 0x10C: launch velocity vec3, set by dbegg_setLaunchVelocity, applied
         to anim.velocity when the egg is thrown */
     f32 launchVelY; /* 0x110 */
     f32 launchVelZ; /* 0x114 */

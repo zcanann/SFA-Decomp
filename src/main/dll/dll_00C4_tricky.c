@@ -68,7 +68,7 @@ typedef struct BaddieInstantiateWeaponPlacement
 typedef struct TrickyDestroyState
 {
     u8 pad0[0x700 - 0x0];
-    s32 childObj; /* 0x700: child flame object handle (per-slot, walked by Tricky_destroy) */
+    s32 childObj; /* 0x700: child flame object handle (per-slot, walked by Tricky_free) */
     u8 pad704[0x708 - 0x704];
 } TrickyDestroyState;
 
@@ -146,7 +146,7 @@ extern int trickyFn_8013b368();
 extern void objSetAnimSpeedTo1(int obj);
 extern f32 objFn_801948c0(int obj, int coord);
 extern int fn_80296240(int obj);
-extern int fn_80296448(int obj);
+extern int playerGetFlags3F0Bit5(int obj);
 extern void objParticleFn_80099d84(int obj, f32 scale, int type, f32 extraScale, int light);
 extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int arg7,
                               int arg8, int arg9, int arg10);
@@ -312,8 +312,8 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case 2:
-            GameBit_Set(0x186, 1);
-            if ((GameBit_Get(0x186) != 0 && *(void**)&((TrickyState*)state)->unk7CC == NULL) && Obj_IsLoadingLocked())
+            mainSetBits(0x186, 1);
+            if ((mainGetBit(0x186) != 0 && *(void**)&((TrickyState*)state)->unk7CC == NULL) && Obj_IsLoadingLocked())
             {
                 mapBlockFn_80059c2c(blockFlags);
                 if (blockFlags[0xd] != 0)
@@ -426,7 +426,7 @@ int Tricky_updateSideCommandPrompts(int obj)
     promptB = false;
     promptC = false;
     promptTable[0] = lbl_803E23C8;
-    bitVal = GameBit_Get(0x4e4);
+    bitVal = mainGetBit(0x4e4);
     if (bitVal != 0)
     {
         if ((((TrickyState*)state)->stateFlags & 0x10) != 0)
@@ -469,27 +469,27 @@ int Tricky_updateSideCommandPrompts(int obj)
                 }
             }
         }
-        if (((((TrickyState*)state)->stateFlags & 0x10) == 0) && (bitVal = GameBit_Get(0x3f8), bitVal != 0))
+        if (((((TrickyState*)state)->stateFlags & 0x10) == 0) && (bitVal = mainGetBit(0x3f8), bitVal != 0))
         {
             ref = Obj_GetPlayerObject();
             ref = fn_80296240(ref);
-            if ((ref != 0) && (bitVal = GameBit_Get(0xd00), bitVal == 0))
+            if ((ref != 0) && (bitVal = mainGetBit(0xd00), bitVal == 0))
             {
-                if (fn_80296448(((TrickyState*)state)->playerObj) == 0)
+                if (playerGetFlags3F0Bit5(((TrickyState*)state)->playerObj) == 0)
                 {
                     commandMask |= 0x20;
                 }
             }
         }
-        if (GameBit_Get(0xdd) == 0)
+        if (mainGetBit(0xdd) == 0)
         {
             commandMask &= ~1;
         }
-        if (GameBit_Get(0x9e) == 0)
+        if (mainGetBit(0x9e) == 0)
         {
             commandMask &= ~4;
         }
-        if (GameBit_Get(0x245) == 0)
+        if (mainGetBit(0x245) == 0)
         {
             commandMask &= ~0x10;
         }
@@ -638,7 +638,7 @@ int Tricky_updateSideCommandPrompts(int obj)
     return -1;
 }
 
-void Tricky_destroy(int obj, int shouldKeepFlameChildren)
+void Tricky_free(int obj, int shouldKeepFlameChildren)
 {
     int i;
     int childSlot;
@@ -836,7 +836,7 @@ void Tricky_update(int obj)
     cmdQuery = *(TrickyCmdQuery*)gTrickyCmdQueryInit;
     pair = lbl_803E23C4;
     walkgroupFindExitPointFn_800dc398();
-    if (GameBit_Get(0x186) != 0 && *(void**)&((TrickyState*)state)->unk7CC == NULL && Obj_IsLoadingLocked())
+    if (mainGetBit(0x186) != 0 && *(void**)&((TrickyState*)state)->unk7CC == NULL && Obj_IsLoadingLocked())
     {
         mapBlockFn_80059c2c(blockFlags);
         if (blockFlags[0xd] != 0)
@@ -1406,7 +1406,7 @@ void Tricky_update(int obj)
     }
     if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX) >=
         lbl_803E2538 &&
-        GameBit_Get(0x4e4) != 0)
+        mainGetBit(0x4e4) != 0)
     {
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x10000LL;
     }
@@ -1532,7 +1532,7 @@ void Tricky_update(int obj)
         }
         if (((TrickyState*)state)->unk7C0 > lbl_803E2550)
         {
-            if (GameBit_Get(0xc1) != 0)
+            if (mainGetBit(0xc1) != 0)
             {
                 TRICKY_VOICE(obj, st, 0x392, 0x500);
             }
@@ -1564,10 +1564,10 @@ void Tricky_init(int obj)
 
     state = *(int*)&((GameObject*)obj)->extra;
     startPath[0] = lbl_803E23C0;
-    GameBit_Set(0x4e3, 0xff);
-    if (GameBit_Get(0x25) != 0)
+    mainSetBits(0x4e3, 0xff);
+    if (mainGetBit(0x25) != 0)
     {
-        GameBit_Set(0x3f8, 1);
+        mainSetBits(0x3f8, 1);
     }
     ((GameObject*)obj)->animEventCallback = tricky_SeqFn;
     ObjGroup_AddObject(obj, TRICKY_OBJGROUP);
@@ -1680,7 +1680,7 @@ void tricky_handleDefeat(int obj, int state)
             }
             if (*(s16*)(setup + BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT) != -1)
             {
-                GameBit_Set(*(s16*)(setup + BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT), 0);
+                mainSetBits(*(s16*)(setup + BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT), 0);
             }
         }
         ((TrickyState*)state)->actionTargetObj = 0;
@@ -1740,7 +1740,7 @@ void tricky_handleDefeat(int obj, int state)
             }
             if (*(s16*)(setup + BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT) != -1)
             {
-                GameBit_Set(*(s16*)(setup + BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT), 0);
+                mainSetBits(*(s16*)(setup + BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT), 0);
             }
         }
         ((TrickyState*)state)->currentMoveProgress = lbl_803E2574;
@@ -1959,18 +1959,18 @@ extern void fn_802972B4(int player, u32* outEffects, f32* outA, f32* outB, f32* 
 extern void vecRotateZXY(int obj, void* vel);
 extern int objCreateLight(int a, int b);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
-extern void Obj_ResetModelColorState(int obj);
+extern void Obj_Shatter(int obj);
 extern void Obj_StartModelFadeIn(int obj, int duration);
 extern void fn_802961FC(u8* proj, int result);
-extern int fn_801504F8(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector, f32 hDist,
+extern int sidekickToy_handleHitMessage(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector, f32 hDist,
                        f32 vDist);
-extern void fn_80152004(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void fn_80152440(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void fn_80152B2C(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void fn_80152FA8(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void fn_80153790(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void fn_80153CF8(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void fn_801544E8(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void guardClawUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void gcRobotPatrol_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void mikaladon_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void vambat_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void kooshy_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void weevil_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void Baddie_HandleHitReaction(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
 extern void rachnopUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                      int sector);
 extern void wbUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
@@ -1978,14 +1978,14 @@ extern void baddieUpdateWhileFrozen_80155e10(int obj, u8* state, int attacker, i
                                              int sector);
 extern void mutatedEbaUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                         int sector);
-extern void crawler_nop(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void crawler_handleReactionEvent(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+extern void whirlpool_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void snowworm_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                             int sector);
 extern void hoodedZyckUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                         int sector);
-extern void fn_8014FEF8(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void battleDroidUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
 extern void crawler_onHit(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void crawler_handleHitStateEvent(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+extern void hagabonMK2_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                             int sector);
 
 void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
@@ -2060,7 +2060,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                                                                  0x64, &params);
                     (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7fc, NULL,
                                                                  0x32, NULL);
-                    Obj_ResetModelColorState(obj);
+                    Obj_Shatter(obj);
                     *(u16*)&((TrickyState*)state)->eventTime = 0;
                     ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 & ~0x20LL;
                     ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 | 0x200;
@@ -2134,30 +2134,30 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 case 0x5b9:
                 case 0x5e1:
                 case 0x7a6:
-                    result = fn_801504F8(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector, hDist, vDist);
+                    result = sidekickToy_handleHitMessage(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector, hDist, vDist);
                     break;
                 case 0xd8:
                 case 0x281:
-                    fn_80152004(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    guardClawUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x613:
-                    fn_80152440(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    gcRobotPatrol_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x642:
-                    fn_80152B2C(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    mikaladon_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x3fe:
                 case 0x7c6:
-                    fn_80152FA8(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    vambat_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x58b:
-                    fn_80153790(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    kooshy_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x369:
-                    fn_80153CF8(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    weevil_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x251:
-                    fn_801544E8(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    Baddie_HandleHitReaction(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x25d:
                     rachnopUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
@@ -2172,17 +2172,17 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                     mutatedEbaUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x851:
-                    crawler_nop(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    whirlpool_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x842:
                 case 0x84b:
-                    crawler_handleReactionEvent(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    snowworm_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x4ac:
                     hoodedZyckUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x427:
-                    fn_8014FEF8(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    battleDroidUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x6a2:
                 case 0x6a3:
@@ -2191,10 +2191,10 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                     crawler_onHit(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x7c8:
-                    crawler_handleHitStateEvent(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    hagabonMK2_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 default:
-                    fn_8014FEF8(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    battleDroidUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 }
             }
@@ -2806,7 +2806,7 @@ void trickyFn_801451d8(int obj, int state)
 void Tricky_func11(int* obj)
 {
     register u32* p = (u32*)obj[0xb8 / 4];
-    if (GameBit_Get(0x4e4))
+    if (mainGetBit(0x4e4))
     {
         p[0x54 / 4] |= 0x10000LL;
     }
@@ -2920,12 +2920,12 @@ void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
 int Tricky_getAvailableCommands(void)
 {
     int r = 0;
-    if (GameBit_Get(0x4e4) != 0)
+    if (mainGetBit(0x4e4) != 0)
     {
         r = 0xa;
-        if (GameBit_Get(0xdd) != 0) r |= 0x1;
-        if (GameBit_Get(0x25) != 0) r |= 0x20;
-        if (GameBit_Get(0x245) != 0) r |= 0x10;
+        if (mainGetBit(0xdd) != 0) r |= 0x1;
+        if (mainGetBit(0x25) != 0) r |= 0x20;
+        if (mainGetBit(0x245) != 0) r |= 0x10;
     }
     return r;
 }

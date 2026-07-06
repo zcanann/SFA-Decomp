@@ -3,8 +3,8 @@
  * Each instance is placed at a crack site in the DIM gut wall.  While the
  * associated game bit is set it spawns two particle effects per frame
  * (one indexed by placement particleIndex, plus a fixed glow burst).
- * The animEventCallback (dimbosscrackpar_SeqFn) does the same on sequence ticks.
- * NOTE: GameBit_Get is used implicitly (no include); adding gamebits.h changes
+ * The animEventCallback (DIMbosscrackpar_SeqFn) does the same on sequence ticks.
+ * NOTE: mainGetBit is used implicitly (no include); adding gamebits.h changes
  * codegen at the  cast call sites — leave it implicit.
  */
 #include "main/dll_000A_expgfx.h"
@@ -23,10 +23,10 @@ typedef struct DimbosscrackparPlacement
 
 extern f32 lbl_803E4D98;
 
-int dimbosscrackpar_SeqFn(int* obj)
+int DIMbosscrackpar_SeqFn(int* obj)
 {
     int* side = *(int**)&((GameObject*)obj)->anim.placementData;
-    if ((u32)GameBit_Get(((DimbosscrackparPlacement*)side)->triggerGameBit) == 0u)
+    if ((u32)mainGetBit(((DimbosscrackparPlacement*)side)->triggerGameBit) == 0u)
     {
         return 0;
     }
@@ -36,24 +36,24 @@ int dimbosscrackpar_SeqFn(int* obj)
     return 0;
 }
 
-int dimbosscrackpar_getExtraSize(void) { return 0x0; }
-int dimbosscrackpar_getObjectTypeId(void) { return 0x0; }
+int DIMbosscrackpar_getExtraSize(void) { return 0x0; }
+int DIMbosscrackpar_getObjectTypeId(void) { return 0x0; }
 
-void dimbosscrackpar_free(int* obj)
+void DIMbosscrackpar_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void DIMbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-void dimbosscrackpar_hitDetect(void)
+void DIMbosscrackpar_hitDetect(void)
 {
 }
 
-void dimbosscrackpar_update(int* obj)
+void DIMbosscrackpar_update(int* obj)
 {
     int* side = *(int**)&((GameObject*)obj)->anim.placementData;
-    if ((u32)GameBit_Get(((DimbosscrackparPlacement*)side)->triggerGameBit) != 0u)
+    if ((u32)mainGetBit(((DimbosscrackparPlacement*)side)->triggerGameBit) != 0u)
     {
         (*gPartfxInterface)->spawnObject(
             obj, ((DimbosscrackparPlacement*)side)->particleIndex + DIMBOSSCRACKPAR_BASE_PARTICLE_ID, NULL, 2, -1, NULL);
@@ -61,20 +61,20 @@ void dimbosscrackpar_update(int* obj)
     }
 }
 
-void dimbosscrackpar_init(s16* obj, s8* def)
+void DIMbosscrackpar_init(s16* obj, s8* def)
 {
     ((GameObject*)obj)->anim.rotX = 0;
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E4D98;
-    ((GameObject*)obj)->animEventCallback = dimbosscrackpar_SeqFn;
+    ((GameObject*)obj)->animEventCallback = DIMbosscrackpar_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x24] << 8);
     ((GameObject*)obj)->anim.rotY = (s16)((s32)def[0x23] << 8);
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[0x22] << 8);
 }
 
-void dimbosscrackpar_release(void)
+void DIMbosscrackpar_release(void)
 {
 }
 
-void dimbosscrackpar_initialise(void)
+void DIMbosscrackpar_initialise(void)
 {
 }

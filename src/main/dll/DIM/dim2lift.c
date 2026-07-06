@@ -218,8 +218,8 @@ int DIMbossAnim_finishDefeat(int obj, int p2)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x80);
         ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xE0000, obj, 0);
-        GameBit_Set(((GroundBaddieState*)state)->gameBitB, 0);
-        GameBit_Set(((GroundBaddieState*)state)->gameBitA, 1);
+        mainSetBits(((GroundBaddieState*)state)->gameBitB, 0);
+        mainSetBits(((GroundBaddieState*)state)->gameBitA, 1);
         if (((GameObject*)obj)->anim.placementData == NULL)
         {
             Obj_FreeObject(obj);
@@ -257,7 +257,7 @@ int DIMbossHitDetect_liftImpact(int obj, int p2)
         Camera_EnableViewYOffset();
         CameraShake_Start(lbl_803E4BC8, lbl_803E4BF4, lbl_803E4BF8);
         doRumble(lbl_803E4BFC);
-        GameBit_Set(619, 1);
+        mainSetBits(619, 1);
     }
     return 0;
 }

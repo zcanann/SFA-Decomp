@@ -297,7 +297,7 @@ void wmwallcrawler_update(int obj)
         : ObjGroup_FindNearestObject(10, ob, &best);
     if (player != 0)
     {
-        sq = GameBit_Get(0x789);
+        sq = mainGetBit(0x789);
         gWallCrawlerSpeedCap = lbl_803E5FC0 * sq + lbl_803E5FC0;
         if (((WmwallcrawlerState*)st)->mode == WMWALLCRAWLER_MODE_DIE)
         {
@@ -316,7 +316,7 @@ void wmwallcrawler_update(int obj)
             {
                 if (((WmwallcrawlerState*)st)->counterGameBit != 0 && ((WmwallcrawlerState*)st)->counterGameBit != -1)
                 {
-                    GameBit_Set(((WmwallcrawlerState*)st)->counterGameBit, GameBit_Get(((WmwallcrawlerState*)st)->counterGameBit) + 1);
+                    mainSetBits(((WmwallcrawlerState*)st)->counterGameBit, mainGetBit(((WmwallcrawlerState*)st)->counterGameBit) + 1);
                 }
                 if (*(void**)(*(int*)&((GameObject*)ob)->anim.placementData + 0x14) == 0)
                 {
@@ -365,7 +365,7 @@ void wmwallcrawler_update(int obj)
             }
             for (k = 0; k < 6; k++)
             {
-                sum += GameBit_Get(k + 0x2aa);
+                sum += mainGetBit(k + 0x2aa);
             }
             if (sum >= 6)
             {
@@ -523,7 +523,7 @@ void wmwallcrawler_update(int obj)
                     else
                     {
                         dist = Vec_xzDistance((f32*)(player + 0x18), (f32*)(ob + 0x18));
-                        if (dist < ((WmwallcrawlerState*)st)->triggerRadius || GameBit_Get(0x1d9) != 0)
+                        if (dist < ((WmwallcrawlerState*)st)->triggerRadius || mainGetBit(0x1d9) != 0)
                         {
                             mode = ((WmwallcrawlerState*)st)->mode;
                             if (mode == WMWALLCRAWLER_MODE_IDLE)
@@ -626,7 +626,7 @@ void wmwallcrawler_update(int obj)
                                         ObjMsg_SendToObject(player, WMWALLCRAWLER_MSG_PLAYER_BURST, ob, 1);
                                         gWallCrawlerHitCount = 0;
                                     }
-                                    if (GameBit_Get(0x1d9) != 0)
+                                    if (mainGetBit(0x1d9) != 0)
                                     {
                                         gWallCrawlerHitCount = 0;
                                     }

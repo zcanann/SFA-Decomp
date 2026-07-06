@@ -8,7 +8,7 @@
  * openGameBit. The flag bits gate which gamebits are set/cleared as the object
  * opens and completes; used to chain world progression.
  *
- * fn_8017C294 is a small helper exported for other DLLs (cflevelcontrol)
+ * objCallOnloadCallback is a small helper exported for other DLLs (cflevelcontrol)
  * to invoke an object's vtable slot 1 on its placement data.
  */
 #include "main/dll/alphaanim.h"
@@ -48,7 +48,7 @@ STATIC_ASSERT(offsetof(SeqObjectState, triggerBitState) == 0x1);
 #define SEQOBJECT_FLAG_SET_SOURCE_ON_DONE 0x08
 #define SEQOBJECT_FLAG_USE_TRIGGER_PARAM 0x10
 
-/* sequence-event opcodes consumed by seqobject_SeqFn */
+/* sequence-event opcodes consumed by SeqObject_SeqFn */
 enum
 {
     SEQOBJECT_SEQEV_SET_OPEN_BIT = 1,
@@ -61,7 +61,7 @@ enum
     SEQOBJECT_OBJGROUP = 0xf
 };
 
-void fn_8017C294(int* obj)
+void objCallOnloadCallback(int* obj)
 {
     if (obj != NULL)
     {
@@ -70,7 +70,7 @@ void fn_8017C294(int* obj)
     }
 }
 
-int seqobject_SeqFn(int* obj, int* unused, ObjAnimUpdateState* animUpdate)
+int SeqObject_SeqFn(int* obj, int* unused, ObjAnimUpdateState* animUpdate)
 {
     SeqObjectPlacement* def;
     SeqObjectState* state;
@@ -93,7 +93,7 @@ int seqobject_SeqFn(int* obj, int* unused, ObjAnimUpdateState* animUpdate)
                 if ((flags & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) == 0 &&
                     (flags & SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE) != 0)
                 {
-                    GameBit_Set(def->openGameBit, 1);
+                    mainSetBits(def->openGameBit, 1);
                 }
                 break;
             }
@@ -115,18 +115,18 @@ int seqobject_SeqFn(int* obj, int* unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int seqobject_getExtraSize(void) { return sizeof(SeqObjectState); }
-int seqobject_getObjectTypeId(void) { return 0; }
+int SeqObject_getExtraSize(void) { return sizeof(SeqObjectState); }
+int SeqObject_getObjectTypeId(void) { return 0; }
 
-void seqobject_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJECT_OBJGROUP); }
+void SeqObject_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJECT_OBJGROUP); }
 
-void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void SeqObject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37A0);
 }
 
-void seqobject_update(int* obj)
+void SeqObject_update(int* obj)
 {
     SeqObjectState* state;
     SeqObjectPlacement* def;
@@ -143,14 +143,14 @@ void seqobject_update(int* obj)
         {
             if ((flags & SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE) == 0)
             {
-                GameBit_Set(def->triggerGameBit, 0);
+                mainSetBits(def->triggerGameBit, 0);
             }
         }
         else
         {
             if ((flags & SEQOBJECT_FLAG_SET_SOURCE_ON_DONE) != 0)
             {
-                GameBit_Set(def->openGameBit, 1);
+                mainSetBits(def->openGameBit, 1);
             }
             state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         }
@@ -159,12 +159,12 @@ void seqobject_update(int* obj)
 
     if ((state->flags & SEQOBJECT_STATE_OPEN) == 0)
     {
-        if (GameBit_Get(def->openGameBit) != 0)
+        if (mainGetBit(def->openGameBit) != 0)
         {
             state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         }
 
-        bitValue = GameBit_Get(def->triggerGameBit);
+        bitValue = mainGetBit(def->triggerGameBit);
         bitValue = (s8)bitValue;
         if (bitValue != state->triggerBitState)
         {
@@ -180,7 +180,7 @@ void seqobject_update(int* obj)
                     (def->flags & (SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE |
                         SEQOBJECT_FLAG_SET_SOURCE_ON_DONE)) == 0)
                 {
-                    GameBit_Set(def->openGameBit, 1);
+                    mainSetBits(def->openGameBit, 1);
                 }
             }
         }
@@ -200,13 +200,13 @@ void seqobject_update(int* obj)
         state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_TRIGGER_SEQUENCE);
     }
     else if ((def->flags & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) != 0 &&
-        GameBit_Get(def->openGameBit) == 0)
+        mainGetBit(def->openGameBit) == 0)
     {
         state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_OPEN);
     }
 }
 
-void seqobject_init(int* obj, SeqObjectPlacement* params)
+void SeqObject_init(int* obj, SeqObjectPlacement* params)
 {
     ObjAnimComponent* objAnim;
     SeqObjectState* state;
@@ -214,7 +214,7 @@ void seqobject_init(int* obj, SeqObjectPlacement* params)
     objAnim = (ObjAnimComponent*)obj;
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)(params->initialYaw << 8);
-    ((GameObject*)obj)->animEventCallback = seqobject_SeqFn;
+    ((GameObject*)obj)->animEventCallback = SeqObject_SeqFn;
     *(u8*)&objAnim->bankIndex = params->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
@@ -222,7 +222,7 @@ void seqobject_init(int* obj, SeqObjectPlacement* params)
     }
     ObjGroup_AddObject(obj, SEQOBJECT_OBJGROUP);
     state->flags = 0;
-    if (params->openGameBit != -1 && GameBit_Get(params->openGameBit) != 0)
+    if (params->openGameBit != -1 && mainGetBit(params->openGameBit) != 0)
     {
         state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         if (params->preemptSequenceId != 0)

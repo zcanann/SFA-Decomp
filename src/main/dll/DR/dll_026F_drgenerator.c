@@ -40,7 +40,7 @@ STATIC_ASSERT(offsetof(DrgeneratorState, hitsRemaining) == 0x19A);
 STATIC_ASSERT(sizeof(DrgeneratorState) == 0x19C);
 
 
-int drgenerator_eventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int drgenerator_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -109,7 +109,7 @@ void drgenerator_hitDetect(int obj)
         }
     }
     ((BitFlags8*)(state + 0x19b))->b0 = 1;
-    GameBit_Set(((DrgeneratorPlacement*)placement)->completionGameBit, 1);
+    mainSetBits(((DrgeneratorPlacement*)placement)->completionGameBit, 1);
     if (((GameObject*)obj)->anim.seqId == 0x716 &&
         (found = (void*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, 0)) != NULL)
     {
@@ -126,7 +126,7 @@ void drgenerator_update(int obj)
     char* state = ((GameObject*)obj)->extra;
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
     int n;
-    if (((BitFlags8*)(state + 0x19b))->b4 == 0 && GameBit_Get(0x9b9) != 0)
+    if (((BitFlags8*)(state + 0x19b))->b4 == 0 && mainGetBit(0x9b9) != 0)
     {
         ((BitFlags8*)(state + 0x19b))->b4 = 1;
     }
@@ -138,7 +138,7 @@ void drgenerator_update(int obj)
     {
         goto enable;
     }
-    if (GameBit_Get(((DrgeneratorPlacement*)placement)->watchGameBit) != 0)
+    if (mainGetBit(((DrgeneratorPlacement*)placement)->watchGameBit) != 0)
     {
         goto enable;
     }
@@ -155,7 +155,7 @@ enable:
     {
         goto loop;
     }
-    if (GameBit_Get(((DrgeneratorPlacement*)placement)->watchGameBit) == 0)
+    if (mainGetBit(((DrgeneratorPlacement*)placement)->watchGameBit) == 0)
     {
         goto loop;
     }
@@ -186,7 +186,7 @@ void drgenerator_init(int obj, char* arg)
     if (((GameObject*)obj)->anim.seqId == 0x72e)
     {
         ObjTextureRuntimeSlot* t;
-        ((GameObject*)obj)->animEventCallback = drgenerator_eventCallback;
+        ((GameObject*)obj)->animEventCallback = drgenerator_SeqFn;
         t = objFindTexture((void*)obj, 0, 0);
         if (t != 0)
         {
@@ -195,7 +195,7 @@ void drgenerator_init(int obj, char* arg)
     }
     ((DrgeneratorState*)state)->hitsRemaining = 2;
     ObjHits_EnableObject(obj);
-    if (GameBit_Get(((DrgeneratorPlacement*)arg)->completionGameBit) != 0)
+    if (mainGetBit(((DrgeneratorPlacement*)arg)->completionGameBit) != 0)
     {
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         Obj_RemoveFromUpdateList(obj);
@@ -217,7 +217,7 @@ void drgenerator_init(int obj, char* arg)
     }
     ((DrgeneratorState*)state)->timerDuration = ((DrgeneratorState*)state)->timerDuration * 0x3c;
     ((DrgeneratorState*)state)->unk124 = lbl_803E6B68;
-    if (GameBit_Get(0x9b9) != 0)
+    if (mainGetBit(0x9b9) != 0)
     {
         ((BitFlags8*)(state + 0x19b))->b0 = 1;
         ((BitFlags8*)(state + 0x19b))->b4 = 1;

@@ -397,7 +397,7 @@ void SB_CloudRunner_HandlePriorityHit(int obj, u8 *state)
                 Obj_SetModelColorFadeRecursive(obj, 175, 200, 0, 0, 1);
                 doRumble(lbl_803E5CB8);
                 Sfx_PlayFromObject(0, SFXtr_bcrek2_c);
-                if (GameBit_Get(GAMEBIT_CLOUDRUNNER_HIT_SFX) != 0)
+                if (mainGetBit(GAMEBIT_CLOUDRUNNER_HIT_SFX) != 0)
                 {
                     Sfx_PlayFromObject(obj, SFX_CLOUDRUNNER_HIT);
                 }

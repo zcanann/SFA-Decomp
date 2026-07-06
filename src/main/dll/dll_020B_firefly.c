@@ -108,7 +108,7 @@ STATIC_ASSERT(offsetof(FireFlyMapData, requiredGameBit) == 0x20);
 /* The active-flight tick: fade in, advance the B-spline (shifting in a
    new segment and re-targeting while pathAge < 4), spawn the trail fx,
    ease the proximity glow, and detect the player touch. Runs as the
-   anim-event callback via the sibling TU's fn_801F4C04 wrapper. */
+   anim-event callback via the sibling TU's firefly_animEventCallback wrapper. */
 void FireFlyFn_801f4f88(int obj)
 {
     FireFlyState* state = ((GameObject*)obj)->extra;
@@ -218,11 +218,11 @@ void FireFlyFn_801f4f88(int obj)
                 if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E5EF0) /* 225.0f */
                 {
                     state->flags = (u8)(state->flags | FIREFLY_FLAG_PLAYER_TOUCHED);
-                    if (GameBit_Get(FIREFLY_FIRST_TOUCH_BIT) == 0)
+                    if (mainGetBit(FIREFLY_FIRST_TOUCH_BIT) == 0)
                     {
                         state->messageParam = -1;
                         ObjMsg_SendToObject(player, FIREFLY_MESSAGE_TALK, obj, &state->messageParam);
-                        GameBit_Set(FIREFLY_FIRST_TOUCH_BIT, 1);
+                        mainSetBits(FIREFLY_FIRST_TOUCH_BIT, 1);
                     }
                     else
                     {
@@ -276,7 +276,7 @@ void firefly_update(int obj)
     if (((FireFlyActiveBits*)&state->activeFlags)->active == 0)
     {
         isActive = 0;
-        if ((def->requiredGameBit == -1) || ((u32)GameBit_Get(def->requiredGameBit) != 0))
+        if ((def->requiredGameBit == -1) || ((u32)mainGetBit(def->requiredGameBit) != 0))
         {
             isActive = 1;
         }
@@ -320,7 +320,7 @@ void firefly_init(int obj, int def)
     mapData = (FireFlyMapData*)def;
     fn_801F4C28(obj, state);
     ((GameObject*)obj)->anim.alpha = 0;
-    ((GameObject*)obj)->animEventCallback = fn_801F4C04;
+    ((GameObject*)obj)->animEventCallback = firefly_animEventCallback;
     ObjMsg_AllocQueue(obj, 1);
     storeZeroToFloatParam(state->lifeTimer);
     if (mapData->variantParam == 0x7f)

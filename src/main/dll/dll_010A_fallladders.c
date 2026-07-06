@@ -94,11 +94,11 @@ void Fall_Ladders_update(int obj)
     state = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.seqId == FALLLADDERS_SEQ_ID)
     {
-        if (GameBit_Get(state->upperGameBit) != 0 && GameBit_Get(state->lowerGameBit) == 0)
+        if (mainGetBit(state->upperGameBit) != 0 && mainGetBit(state->lowerGameBit) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         }
-        if (GameBit_Get(state->upperGameBit) == 0 && GameBit_Get(state->lowerGameBit) != 0)
+        if (mainGetBit(state->upperGameBit) == 0 && mainGetBit(state->lowerGameBit) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         }
@@ -119,7 +119,7 @@ void Fall_Ladders_update(int obj)
     }
     else
     {
-        if ((s8)state->motionState == 0 && GameBit_Get(state->upperGameBit) != 0)
+        if ((s8)state->motionState == 0 && mainGetBit(state->upperGameBit) != 0)
         {
             state->delay = 10;
         }
@@ -155,7 +155,7 @@ void Fall_Ladders_init(int* obj, FallLaddersObjectDef* def)
     ((GameObject*)obj)->anim.localPosY = def->base.posY + state->restYOffset;
     Obj_SetActiveModelIndex(obj, def->modelIndex);
     state->motionState = 0;
-    if (GameBit_Get(state->upperGameBit) == 0)
+    if (mainGetBit(state->upperGameBit) == 0)
     {
         state->playStartSound = 1;
     }

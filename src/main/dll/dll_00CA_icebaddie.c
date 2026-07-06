@@ -199,7 +199,7 @@ int iceBaddie_updateOpenState(int obj, int state)
     }
     if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
-        GameBit_Set(sub->gameBitB, 1);
+        mainSetBits(sub->gameBitB, 1);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.alpha = 0xff;
         *(s8*)&((GroundBaddieState*)state)->baddie.stateTag = 1;
@@ -250,7 +250,7 @@ int iceBaddie_updateOpenHitState(int obj, int state)
     }
     if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
-        GameBit_Set(sub->gameBitB, 1);
+        mainSetBits(sub->gameBitB, 1);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.alpha = 0xff;
         *(s8*)&((GroundBaddieState*)state)->baddie.stateTag = 1;
@@ -317,8 +317,8 @@ int iceBaddie_stateHandlerB03(int obj, int state)
     {
         sub = ((GameObject*)obj)->extra;
         sub->subMode = 0;
-        GameBit_Set((s32)sub->gameBitB, 0);
-        GameBit_Set((s32)sub->gameBitA, 1);
+        mainSetBits((s32)sub->gameBitB, 0);
+        mainSetBits((s32)sub->gameBitA, 1);
     }
     return 0;
 }
@@ -741,7 +741,7 @@ int iceBaddie_updateHideResetState(int obj, int state)
     }
     if ((s8)((GroundBaddieState*)state)->baddie.moveDone != 0)
     {
-        GameBit_Set((s32)sub->gameBitB, 0);
+        mainSetBits((s32)sub->gameBitB, 0);
         ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0);
         *(int*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
         ((GroundBaddieState*)state)->baddie.physicsActive = 0;
@@ -1169,7 +1169,7 @@ void iceBaddie_updateTargetCollision(int obj, int sub, int state)
 
 s16 iceBaddie_setScale(int* obj) { return ((GroundBaddieState*)((GameObject*)obj)->extra)->baddie.controlMode; }
 
-int iceBaddie_getExtraSize_ret_1112(void) { return 0x458; }
+int iceBaddie_getExtraSize(void) { return 0x458; }
 int iceBaddie_getObjectTypeId(void) { return 0x49; }
 
 void iceBaddie_free(int obj)
@@ -1214,7 +1214,7 @@ void iceBaddie_hitDetect(int obj)
                                                               gIceBaddieStateHandlersA);
 }
 
-void iceBaddie_initWhirlpoolState(int* obj, GroundBaddieState* state)
+void baddie_initWhirlpoolState(int* obj, GroundBaddieState* state)
 {
     f32 fz;
     state->baddie.speedScale = lbl_803E2CE8;
@@ -1560,25 +1560,25 @@ void iceBaddie_release_nop(void)
 {
 }
 
-void chukchuk_free(void);
-void chukchuk_hitDetect(void);
-void chukchuk_release(void);
-void chukchuk_initialise(void);
-void chukchuk_init(u8* obj, u8* params);
-int chukchuk_getExtraSize(void);
-int chukchuk_getObjectTypeId(void);
-void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void chukchuk_update(short* obj);
-void chukchuk_setScale(int obj, int v);
+void ChukChuk_free(void);
+void ChukChuk_hitDetect(void);
+void ChukChuk_release(void);
+void ChukChuk_initialise(void);
+void ChukChuk_init(u8* obj, u8* params);
+int ChukChuk_getExtraSize(void);
+int ChukChuk_getObjectTypeId(void);
+void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void ChukChuk_update(short* obj);
+void ChukChuk_setScale(int obj, int v);
 
-void iceball_hitDetect(void);
-void iceball_release(void);
-void iceball_initialise(void);
-int iceball_getExtraSize(void);
-int iceball_getObjectTypeId(void);
-void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void iceball_free(void);
-void iceball_init(void* obj);
+void IceBall_hitDetect(void);
+void IceBall_release(void);
+void IceBall_initialise(void);
+int IceBall_getExtraSize(void);
+int IceBall_getObjectTypeId(void);
+void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void IceBall_free(void);
+void IceBall_init(void* obj);
 
 void iceBaddie_initialise(void) { fn_8015DAE8(); }
 
@@ -1588,17 +1588,17 @@ ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)chukchuk_initialise,
-        (ObjectDescriptorCallback)chukchuk_release,
+        (ObjectDescriptorCallback)ChukChuk_initialise,
+        (ObjectDescriptorCallback)ChukChuk_release,
         0,
-        (ObjectDescriptorCallback)chukchuk_init,
-        (ObjectDescriptorCallback)chukchuk_update,
-        (ObjectDescriptorCallback)chukchuk_hitDetect,
-        (ObjectDescriptorCallback)chukchuk_render,
-        (ObjectDescriptorCallback)chukchuk_free,
-        (ObjectDescriptorCallback)chukchuk_getObjectTypeId,
-        chukchuk_getExtraSize,
-        (ObjectDescriptorCallback)chukchuk_setScale,
+        (ObjectDescriptorCallback)ChukChuk_init,
+        (ObjectDescriptorCallback)ChukChuk_update,
+        (ObjectDescriptorCallback)ChukChuk_hitDetect,
+        (ObjectDescriptorCallback)ChukChuk_render,
+        (ObjectDescriptorCallback)ChukChuk_free,
+        (ObjectDescriptorCallback)ChukChuk_getObjectTypeId,
+        ChukChuk_getExtraSize,
+        (ObjectDescriptorCallback)ChukChuk_setScale,
     },
     0,
 };
@@ -1608,16 +1608,16 @@ ObjectDescriptor gIceBallObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)iceball_initialise,
-    (ObjectDescriptorCallback)iceball_release,
+    (ObjectDescriptorCallback)IceBall_initialise,
+    (ObjectDescriptorCallback)IceBall_release,
     0,
-    (ObjectDescriptorCallback)iceball_init,
-    (ObjectDescriptorCallback)iceball_update,
-    (ObjectDescriptorCallback)iceball_hitDetect,
-    (ObjectDescriptorCallback)iceball_render,
-    (ObjectDescriptorCallback)iceball_free,
-    (ObjectDescriptorCallback)iceball_getObjectTypeId,
-    iceball_getExtraSize,
+    (ObjectDescriptorCallback)IceBall_init,
+    (ObjectDescriptorCallback)IceBall_update,
+    (ObjectDescriptorCallback)IceBall_hitDetect,
+    (ObjectDescriptorCallback)IceBall_render,
+    (ObjectDescriptorCallback)IceBall_free,
+    (ObjectDescriptorCallback)IceBall_getObjectTypeId,
+    IceBall_getExtraSize,
 };
 
 /* --- icebaddie .data reconstruction (0x8031FD80-0x8031FEA8) --- */
@@ -1662,7 +1662,7 @@ ObjectDescriptor12 gIceBaddieObjDescriptor = {
     (ObjectDescriptorCallback)iceBaddie_render,
     (ObjectDescriptorCallback)iceBaddie_free,
     (ObjectDescriptorCallback)iceBaddie_getObjectTypeId,
-    iceBaddie_getExtraSize_ret_1112,
+    iceBaddie_getExtraSize,
     (ObjectDescriptorCallback)iceBaddie_setScale,
     (ObjectDescriptorCallback)iceBaddie_func0B,
 };

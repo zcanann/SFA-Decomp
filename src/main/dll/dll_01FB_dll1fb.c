@@ -160,11 +160,11 @@ void dll_1FB_update(int* obj)
     Dll1FBState* state = (Dll1FBState*)((GameObject*)obj)->extra;
 
     if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0) && (state->triggerMode == 2) &&
-        (GameBit_Get(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0))
+        (mainGetBit(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0))
     {
         OBJECT_TRIGGER_REFRESH(4, obj, -1);
         buttonDisable(0, PAD_BUTTON_A);
-        GameBit_Set(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
+        mainSetBits(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
         ((int)obj, lbl_803E5D04, timeDelta, NULL);

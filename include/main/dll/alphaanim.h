@@ -58,7 +58,7 @@ typedef struct IMMultiSeqPlacement {
 } IMMultiSeqPlacement;
 
 int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
-void doorlock_init(short *obj, DoorLockPlacement *config);
+void Lock_DoorLock_init(short *obj, DoorLockPlacement *config);
 void FUN_8017c230(int param_1);
 void FUN_8017c254(int param_1,int p1,int p2,int p3,int p4,s8 visible);
 void FUN_8017c29c(int param_1);
@@ -73,44 +73,44 @@ void seqObject_render(int param_1,int p1,int p2,int p3,int p4,s8 visible);
 void seqObject_update(int param_1);
 void seqObject_init(short *param_1,int param_2);
 u32 FUN_8017ca44(int obj, u32 unused, ObjAnimUpdateState *animUpdate);
-int seqobject_SeqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate);
+int SeqObject_SeqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate);
 void seqObj2_free(int param_1);
 void seqObj2_update(int param_1);
 void seqObj2_init(short *param_1,int param_2);
-int seqobj2_SeqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate);
+int SeqObj2_seqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate);
 
-int doorlock_getExtraSize(void);
-void doorlock_free(int x);
-void doorlock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-void doorlock_update(int obj);
+int Lock_DoorLock_getExtraSize(void);
+void Lock_DoorLock_free(int x);
+void Lock_DoorLock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void Lock_DoorLock_update(int obj);
 
-int seqobject_getExtraSize(void);
-int seqobject_getObjectTypeId(void);
-void fn_8017C294(int *obj);
-void seqobject_free(int x);
-void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void seqobject_update(int *obj);
-void seqobject_init(int *obj, SeqObjectPlacement *params);
+int SeqObject_getExtraSize(void);
+int SeqObject_getObjectTypeId(void);
+void objCallOnloadCallback(int *obj);
+void SeqObject_free(int x);
+void SeqObject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void SeqObject_update(int *obj);
+void SeqObject_init(int *obj, SeqObjectPlacement *params);
 
-int seqobj2_getExtraSize(void);
-int seqobj2_getObjectTypeId(void);
-void seqobj2_free(int x);
-void seqobj2_render(void);
-void seqobj2_hitDetect(void);
-void seqobj2_update(int *obj);
-void seqobj2_init(int *obj, SeqObjectPlacement *def);
+int SeqObj2_getExtraSize(void);
+int SeqObj2_getObjectTypeId(void);
+void SeqObj2_free(int x);
+void SeqObj2_render(void);
+void SeqObj2_hitDetect(void);
+void SeqObj2_update(int *obj);
+void SeqObj2_init(int *obj, SeqObjectPlacement *def);
 void SeqObj2_release(void);
 void SeqObj2_initialise(void);
 
-int immultiseq_getExtraSize(void);
-int immultiseq_getObjectTypeId(void);
-void immultiseq_free(int x);
-void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void immultiseq_hitDetect(void);
-void immultiseq_update(int *obj);
-void immultiseq_init(int *obj, IMMultiSeqPlacement *params);
-void immultiseq_release(void);
-void immultiseq_initialise(void);
-int immultiseq_SeqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate);
+int IMMultiSeq_getExtraSize(void);
+int IMMultiSeq_getObjectTypeId(void);
+void IMMultiSeq_free(int x);
+void IMMultiSeq_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void IMMultiSeq_hitDetect(void);
+void IMMultiSeq_update(int *obj);
+void IMMultiSeq_init(int *obj, IMMultiSeqPlacement *params);
+void IMMultiSeq_release(void);
+void IMMultiSeq_initialise(void);
+int IMMultiSeq_SeqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate);
 
 #endif /* MAIN_DLL_ALPHAANIM_H_ */

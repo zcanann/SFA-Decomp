@@ -3,15 +3,15 @@
  * objects while the level is loaded and its arming game bit is set.
  * Spawn cadence is driven by spawnTimer/spawnInterval/timerVariance; each
  * projectile is launched with a velocity derived from the creator's
- * facing (drcreator_update) or a randomised spread
- * (drcreator_spawnProjectileCallback).
+ * facing (DR_Creator_update) or a randomised spread
+ * (DR_Creator_SeqFn).
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
-/* Obj_AllocObjectSetup(36,...) buffer composed in drcreator_update and
- * drcreator_spawnProjectileCallback. Head is the common ObjPlacement;
+/* Obj_AllocObjectSetup(36,...) buffer composed in DR_Creator_update and
+ * DR_Creator_SeqFn. Head is the common ObjPlacement;
  * tail (0x18..0x23) is file-local. */
 typedef struct DrcreatorSetup
 {
@@ -74,14 +74,14 @@ STATIC_ASSERT(offsetof(DrcreatorState, velocityZ) == 0x2C);
 STATIC_ASSERT(offsetof(DrcreatorState, creatorObj) == 0xC4);
 
 
-int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int DR_Creator_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
     char* runtime;
     int setup;
     int projectile;
-    fn_80137948(sDrCreatorTimeFormat, *(s16*)(placement + 0x1a), *(s16*)((u8*)animUpdate + 0x58));
+    logPrintf(sDrCreatorTimeFormat, *(s16*)(placement + 0x1a), *(s16*)((u8*)animUpdate + 0x58));
     if (Obj_IsLoadingLocked() == 0)
     {
         return 0;
@@ -94,7 +94,7 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* a
         case 4:
         case 9:
             runtime = ((GameObject*)obj)->extra;
-            if (GameBit_Get(((DrcreatorSpawnProjectileCallbackState*)runtime)->spawnGameBit) != 0)
+            if (mainGetBit(((DrcreatorSpawnProjectileCallbackState*)runtime)->spawnGameBit) != 0)
             {
                 setup = Obj_AllocObjectSetup(36, 1725);
                 ((DrcreatorSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
@@ -128,23 +128,23 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* a
     return 0;
 }
 
-int drcreator_getExtraSize(void) { return 0x1c; }
+int DR_Creator_getExtraSize(void) { return 0x1c; }
 
-int drcreator_getObjectTypeId(void) { return 0x0; }
+int DR_Creator_getObjectTypeId(void) { return 0x0; }
 
-void drcreator_free(void)
+void DR_Creator_free(void)
 {
 }
 
-void drcreator_render(void)
+void DR_Creator_render(void)
 {
 }
 
-void drcreator_hitDetect(void)
+void DR_Creator_hitDetect(void)
 {
 }
 
-void drcreator_update(int obj)
+void DR_Creator_update(int obj)
 {
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
     char* runtime = ((GameObject*)obj)->extra;
@@ -156,14 +156,14 @@ void drcreator_update(int obj)
         {
         case 3:
         case 9:
-            if (GameBit_Get(((DrcreatorState*)runtime)->gameBitId) != 0)
+            if (mainGetBit(((DrcreatorState*)runtime)->gameBitId) != 0)
             {
                 (*gObjectTriggerInterface)
                     ->runSequence((((DrcreatorPlacement*)placement)->behaviorMode == 3) ? 0 : 4, (void*)obj, -1);
             }
             break;
         case 4:
-            if (GameBit_Get(((DrcreatorState*)runtime)->gameBitId) != 0)
+            if (mainGetBit(((DrcreatorState*)runtime)->gameBitId) != 0)
             {
                 ((DrcreatorState*)runtime)->spawnTimer -= framesThisStep;
                 if (((DrcreatorState*)runtime)->spawnTimer <= 0)
@@ -213,7 +213,7 @@ void drcreator_update(int obj)
     }
 }
 
-void drcreator_init(int obj, char* arg)
+void DR_Creator_init(int obj, char* arg)
 {
     char* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)(((DrcreatorPlacement*)arg)->rotXByte << 8);
@@ -223,15 +223,15 @@ void drcreator_init(int obj, char* arg)
     ((DrcreatorState*)state)->timerVariance = ((DrcreatorPlacement*)arg)->timerVariance;
     *(int*)state = ((DrcreatorPlacement*)arg)->speedScale;
     ((BitFlags8*)(state + 0x18))->b0 = 1;
-    GameBit_Set(0x5dd, 0);
-    ((GameObject*)obj)->animEventCallback = drcreator_spawnProjectileCallback;
+    mainSetBits(0x5dd, 0);
+    ((GameObject*)obj)->animEventCallback = DR_Creator_SeqFn;
 }
 
-void drcreator_release(void)
+void DR_Creator_release(void)
 {
 }
 
-void drcreator_initialise(void)
+void DR_Creator_initialise(void)
 {
 }
 

@@ -98,7 +98,7 @@ int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
             if (cfg->flags & SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT)
             {
                 ObjTextureRuntimeSlot* tex;
-                GameBit_Set(cfg->activationGameBit, 1);
+                mainSetBits(cfg->activationGameBit, 1);
                 tex = objFindTexture((void*)obj, 0, 0);
                 if (tex != NULL)
                     tex->textureId = SUNTEMPLE_TEXTURE_LATCHED;
@@ -152,7 +152,7 @@ void suntemple_update(int obj)
 
     state = gameObj->extra;
     cfg = (SunTempleSetup*)gameObj->anim.placementData;
-    state->activationLatched = GameBit_Get(cfg->activationGameBit);
+    state->activationLatched = mainGetBit(cfg->activationGameBit);
     if (state->activationLatched == 0)
     {
         texture = objFindTexture((void*)obj, 0, 0);
@@ -167,7 +167,7 @@ void suntemple_update(int obj)
 
         if (cfg->gateGameBit != -1)
         {
-            if ((u32)GameBit_Get(cfg->gateGameBit) != 0)
+            if ((u32)mainGetBit(cfg->gateGameBit) != 0)
             {
                 gameObj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
             }
@@ -200,14 +200,14 @@ void suntemple_update(int obj)
                     if (gameObj->anim.seqId == SUNTEMPLE_SEQ_WC_INV_USE)
                     {
                         if (state->mapEventMode == 1 &&
-                            ((u32)GameBit_Get(SUNTEMPLE_GAMEBIT_WC_INV_A) != 0 || GameBit_Get(
+                            ((u32)mainGetBit(SUNTEMPLE_GAMEBIT_WC_INV_A) != 0 || mainGetBit(
                                 SUNTEMPLE_GAMEBIT_WC_INV_B) != 0))
                         {
                             (*gObjectTriggerInterface)->runSequence(cfg->triggerSlot + 2, (void*)obj,
                                                                     SUNTEMPLE_SEQUENCE_INVALID);
                         }
                         else if (state->mapEventMode == 2 &&
-                            ((u32)GameBit_Get(SUNTEMPLE_GAMEBIT_WC_INV_C) != 0 || GameBit_Get(
+                            ((u32)mainGetBit(SUNTEMPLE_GAMEBIT_WC_INV_C) != 0 || mainGetBit(
                                 SUNTEMPLE_GAMEBIT_WC_INV_D) != 0))
                         {
                             (*gObjectTriggerInterface)->runSequence(cfg->triggerSlot + 2, (void*)obj,
@@ -227,7 +227,7 @@ void suntemple_update(int obj)
                 }
                 if ((cfg->flags & SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT) == 0)
                 {
-                    GameBit_Set(cfg->activationGameBit, 1);
+                    mainSetBits(cfg->activationGameBit, 1);
                     texture = objFindTexture((void*)obj, 0, 0);
                     if (texture != NULL)
                     {
@@ -236,7 +236,7 @@ void suntemple_update(int obj)
                 }
                 if ((cfg->flags & SUNTEMPLE_FLAG_CLEAR_GATE_BIT) != 0)
                 {
-                    GameBit_Set(cfg->gateGameBit, 0);
+                    mainSetBits(cfg->gateGameBit, 0);
                 }
                 else
                 {
@@ -289,7 +289,7 @@ void suntemple_init(u8* obj, u8* setup)
         gameObj->anim.bankIndex = 0;
     }
     state = gameObj->extra;
-    state->activationLatched = GameBit_Get(cfg->activationGameBit);
+    state->activationLatched = mainGetBit(cfg->activationGameBit);
     state->mapEventMode = (*gMapEventInterface)->getMapAct(gameObj->anim.mapEventSlot);
     if ((cfg->flags & SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE) != 0 && state->activationLatched != 0)
     {

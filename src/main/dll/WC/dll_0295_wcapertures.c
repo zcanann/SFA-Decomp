@@ -186,7 +186,7 @@ void wcapertures_update(int obj)
         state->targetAlpha = 0;
         break;
     case WCAPERTURES_MODE_CLOSED:
-        if ((u32)GameBit_Get(setup->armBit) != 0)
+        if ((u32)mainGetBit(setup->armBit) != 0)
         {
             state->mode = WCAPERTURES_MODE_ARMED;
         }
@@ -198,7 +198,7 @@ void wcapertures_update(int obj)
             state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
             if (Camera_GetFovY() <= lbl_803E6E38 && (((GameObject*)obj)->objectFlags & WCAPERTURES_ACCEPT_OBJECT_FLAG))
             {
-                GameBit_Set(setup->openBit, 1);
+                mainSetBits(setup->openBit, 1);
                 state->mode = WCAPERTURES_MODE_OPEN;
             }
         }
@@ -249,9 +249,9 @@ void wcapertures_init(int obj, int initData)
     *(u8*)&objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;
-    if ((u32)GameBit_Get(setup->armBit) != 0)
+    if ((u32)mainGetBit(setup->armBit) != 0)
     {
-        if ((u32)GameBit_Get(setup->openBit) != 0)
+        if ((u32)mainGetBit(setup->openBit) != 0)
             state->mode = WCAPERTURES_MODE_OPEN;
         else
             state->mode = WCAPERTURES_MODE_ARMED;

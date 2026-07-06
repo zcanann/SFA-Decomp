@@ -135,7 +135,7 @@ u32 LandedArwing_UpdateFlightChase(int obj, int state)
         targetY = ((GameObject*)playerObj)->anim.localPosY - lbl_803E2FD8;
         targetZ = ((GameObject*)playerObj)->anim.localPosZ;
         chaseScale = lbl_803E300C;
-        if (GameBit_Get(LANDED_ARWING_REVERSE_CHASE_GAMEBIT) != 0)
+        if (mainGetBit(LANDED_ARWING_REVERSE_CHASE_GAMEBIT) != 0)
         {
             chaseScale = -lbl_803E300C;
         }

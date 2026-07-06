@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
-void pressureswitchfb_update(int obj);
+void PressureSwitchFB_update(int obj);
 void FUN_8017b3b8(short *param_1,int param_2);
 void FUN_8017b3bc(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void FUN_8017b6bc(int param_1);

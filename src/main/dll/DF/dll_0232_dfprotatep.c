@@ -231,8 +231,8 @@ int TrickyCurve_activateEffectHandleRing(int obj, int unused, ObjAnimUpdateState
         case 1:
             state->flags.bit10 = 1;
             state->ringCount = 0;
-            GameBit_Set(state->activationEventId, 0);
-            GameBit_Set(SFXPLAYER_GAMEBIT_RING_ACTIVE, 1);
+            mainSetBits(state->activationEventId, 0);
+            mainSetBits(SFXPLAYER_GAMEBIT_RING_ACTIVE, 1);
             for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
             {
                 sfxplayer_ensureEffectHandlePair(obj, i);
@@ -320,7 +320,7 @@ void sfxplayer_update(int obj)
 
     state = *(SfxplayerState**)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
     flags = &state->flags;
-    if ((flags->bit20 == 0) && (GameBit_Get(state->eventId) == 0))
+    if ((flags->bit20 == 0) && (mainGetBit(state->eventId) == 0))
     {
         if (state->ringCount == SFXPLAYER_COMPLETE_RING_COUNT)
         {
@@ -328,12 +328,12 @@ void sfxplayer_update(int obj)
             flags->bit20 = 1;
             flags->bit10 = 0;
             flags->bit40 = 0;
-            GameBit_Set(state->eventId, 1);
-            GameBit_Set(SFXPLAYER_GAMEBIT_RING_ACTIVE, 0);
+            mainSetBits(state->eventId, 1);
+            mainSetBits(SFXPLAYER_GAMEBIT_RING_ACTIVE, 0);
             mode = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
             if (mode == SFXPLAYER_MODE_SINGLE)
             {
-                GameBit_Set(SFXPLAYER_GAMEBIT_SINGLE_COMPLETE, 1);
+                mainSetBits(SFXPLAYER_GAMEBIT_SINGLE_COMPLETE, 1);
             }
             gameTimerStop();
         }
@@ -376,7 +376,7 @@ void sfxplayer_update(int obj)
                 state->ringCount = 0;
                 flags->bit40 = 0;
                 flags->bit10 = 0;
-                GameBit_Set(SFXPLAYER_GAMEBIT_RING_ACTIVE, 0);
+                mainSetBits(SFXPLAYER_GAMEBIT_RING_ACTIVE, 0);
             }
             TrickyCurve_updateEffectHandleRing(obj);
             handles = (u32*)gSfxplayerEffectHandles;
@@ -433,7 +433,7 @@ void sfxplayer_init(int obj, int config)
     gSfxplayerEffectHandles[6] = 0;
     gSfxplayerEffectHandles[7] = 0;
     gameTimerStop();
-    if (GameBit_Get(state->eventId) != 0)
+    if (mainGetBit(state->eventId) != 0)
     {
         state->flags.bit20 = 1;
     }

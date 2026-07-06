@@ -30,7 +30,7 @@ void wallanimator_free(int obj);
 void wallanimator_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
 void wallanimator_update(int obj);
 void wallanimator_init(s16 *obj,s16 *desc);
-int xyzanimator_getExtraSize(void);
-void xyzanimator_free(int obj,int param_2);
+int XyzAnimator_getExtraSize(void);
+void XyzAnimator_free(int obj,int param_2);
 
 #endif /* MAIN_DLL_MMP_MMP_LEVELCONTROL_H_ */

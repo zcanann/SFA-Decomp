@@ -38,11 +38,11 @@ STATIC_ASSERT(offsetof(SoftBodySetup, scale) == 0x1b);
 STATIC_ASSERT(offsetof(SoftBodySetup, phaseDriverDisabled) == 0x1f);
 STATIC_ASSERT(sizeof(SoftBodySetup) == 0x20);
 
-int softbody_getExtraSize(void) { return 0; }
+int SoftBody_getExtraSize(void) { return 0; }
 
-int softbody_getObjectTypeId(void) { return 0; }
+int SoftBody_getObjectTypeId(void) { return 0; }
 
-void softbody_free(int obj)
+void SoftBody_free(int obj)
 {
     if ((void*)obj == lbl_803DDD98)
     {
@@ -50,7 +50,7 @@ void softbody_free(int obj)
     }
 }
 
-void softbody_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void SoftBody_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
@@ -58,11 +58,11 @@ void softbody_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void softbody_hitDetect(void)
+void SoftBody_hitDetect(void)
 {
 }
 
-void softbody_update(int obj)
+void SoftBody_update(int obj)
 {
     GameObject* object = (GameObject*)obj;
     SoftBodySetup* setup = (SoftBodySetup*)object->anim.placementData;
@@ -105,7 +105,7 @@ void softbody_update(int obj)
     }
 }
 
-void softbody_init(int obj, int setup)
+void SoftBody_init(int obj, int setup)
 {
     GameObject* object = (GameObject*)obj;
     SoftBodySetup* setupData = (SoftBodySetup*)setup;
@@ -131,11 +131,11 @@ void softbody_init(int obj, int setup)
     }
 }
 
-void softbody_release(void)
+void SoftBody_release(void)
 {
 }
 
-void softbody_initialise(void)
+void SoftBody_initialise(void)
 {
     lbl_803DDD98 = NULL;
     lbl_803DDDA0 = lbl_803E7298;

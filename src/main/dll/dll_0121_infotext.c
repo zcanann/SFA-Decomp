@@ -11,7 +11,7 @@ int infotext_getExtraSize(void) { return 0x4; }
 void infotext_update(int obj)
 {
     f32* sub = ((GameObject*)obj)->extra;
-    if (ObjTrigger_IsSet(obj) != 0 && fn_801334E0() == 0)
+    if (ObjTrigger_IsSet(obj) != 0 && isAreaNameTextActive() == 0)
     {
         *sub = 600.0f;
     }

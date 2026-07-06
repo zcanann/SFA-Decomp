@@ -39,7 +39,7 @@ void ccriverflow_update(CCriverflowObject* obj)
     if (mapData->gameBit != -1)
     {
         state = obj->state;
-        isGameBitSet = GameBit_Get((int)mapData->gameBit);
+        isGameBitSet = mainGetBit((int)mapData->gameBit);
         if (isGameBitSet != 0)
         {
             if (state->active != 0)

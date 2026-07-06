@@ -1,4 +1,4 @@
-/* proximitymine_update - ProximityMine object update/render handlers [8021122C-802113F8) */
+/* ProximityMine_update - ProximityMine object update/render handlers [8021122C-802113F8) */
 #include "main/proximitymine.h"
 #include "main/audio/sfx.h"
 #include "main/objlib.h"
@@ -45,17 +45,17 @@ extern f32 lbl_803E6774;
 extern f32 gProximityMineHeightScale;
 extern f32 lbl_803E679C;
 
-int proximitymine_getExtraSize(void)
+int ProximityMine_getExtraSize(void)
 {
     return sizeof(ProximityMineState);
 }
 
-int proximitymine_getObjectTypeId(void)
+int ProximityMine_getObjectTypeId(void)
 {
     return 0;
 }
 
-void proximitymine_free(ProximityMineObject* obj)
+void ProximityMine_free(ProximityMineObject* obj)
 {
     ProximityMineState* state;
 
@@ -67,7 +67,7 @@ void proximitymine_free(ProximityMineObject* obj)
     return;
 }
 
-void proximitymine_render(ProximityMineObject* obj, u32 p2, u32 p3,
+void ProximityMine_render(ProximityMineObject* obj, u32 p2, u32 p3,
                           u32 p4, u32 p5)
 {
     int mapBlock;
@@ -95,7 +95,7 @@ void proximitymine_render(ProximityMineObject* obj, u32 p2, u32 p3,
     return;
 }
 
-void proximitymine_hitDetect(ProximityMineObject* obj)
+void ProximityMine_hitDetect(ProximityMineObject* obj)
 {
     f32 zeroVelocity;
     int hit;
@@ -135,7 +135,7 @@ typedef struct MineLaunchParams
     f32 z;
 } MineLaunchParams;
 
-void proximitymine_update(ProximityMineObject* obj)
+void ProximityMine_update(ProximityMineObject* obj)
 {
     f32 groundY;
     MineLaunchParams params;
@@ -349,7 +349,7 @@ void proximitymine_update(ProximityMineObject* obj)
     }
 }
 
-void proximitymine_init(ProximityMineObject* obj, ProximityMineDef* def)
+void ProximityMine_init(ProximityMineObject* obj, ProximityMineDef* def)
 {
     s8 mode;
     ProximityMineState* state;
@@ -407,12 +407,12 @@ void proximitymine_init(ProximityMineObject* obj, ProximityMineDef* def)
     return;
 }
 
-void proximitymine_release(void)
+void ProximityMine_release(void)
 {
     return;
 }
 
-void proximitymine_initialise(void)
+void ProximityMine_initialise(void)
 {
     return;
 }

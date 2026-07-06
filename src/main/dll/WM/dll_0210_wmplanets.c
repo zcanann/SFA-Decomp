@@ -68,15 +68,15 @@ STATIC_ASSERT(sizeof(WmPlanetsMapData) == 0x1C);
 extern void vecRotateZXY(void* angles, void* outVec);
 extern u32 lbl_802C2500[3]; /* (0.0f, 0.0f, 0.0f) */
 
-int wmplanets_getExtraSize(void) { return sizeof(WmPlanetsState); }
+int WM_Planets_getExtraSize(void) { return sizeof(WmPlanetsState); }
 
-int wmplanets_getObjectTypeId(void) { return 0x0; }
+int WM_Planets_getObjectTypeId(void) { return 0x0; }
 
-void wmplanets_free(void)
+void WM_Planets_free(void)
 {
 }
 
-void wmplanets_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+void WM_Planets_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
     if (vis != 0)
     {
@@ -84,11 +84,11 @@ void wmplanets_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     }
 }
 
-void wmplanets_hitDetect(void)
+void WM_Planets_hitDetect(void)
 {
 }
 
-void wmplanets_update(int* obj)
+void WM_Planets_update(int* obj)
 {
     WmPlanetsState* state;
     WmPlanetsVector vec;
@@ -132,7 +132,7 @@ void wmplanets_update(int* obj)
     ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + state->yawStep * (s32)timeDelta);
 }
 
-void wmplanets_init(int* obj, u8* init)
+void WM_Planets_init(int* obj, u8* init)
 {
     WmPlanetsState* inner = ((GameObject*)obj)->extra;
     f32 a = lbl_803E5FA0 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase; /* 0.1f * */
@@ -156,10 +156,10 @@ void wmplanets_init(int* obj, u8* init)
     ((GameObject*)obj)->anim.localPosZ = ((WmPlanetsMapData*)init)->base.posZ + inner->orbitRadius;
 }
 
-void wmplanets_release(void)
+void WM_Planets_release(void)
 {
 }
 
-void wmplanets_initialise(void)
+void WM_Planets_initialise(void)
 {
 }

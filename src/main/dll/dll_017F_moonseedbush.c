@@ -62,7 +62,7 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int j;
     if (state->seedState == MOONSEEDBUSH_SEED_UNGROWN)
     {
-        if (GameBit_Get(((MoonSeedBushPlacement*)def)->triggerGameBit) != 0)
+        if (mainGetBit(((MoonSeedBushPlacement*)def)->triggerGameBit) != 0)
         {
             state->seedState = MOONSEEDBUSH_SEED_GROWN;
         }
@@ -75,7 +75,7 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             state->seedState = MOONSEEDBUSH_SEED_PLANTED;
             if (((MoonSeedBushPlacement*)def)->grownGameBit != -1)
             {
-                GameBit_Set(((MoonSeedBushPlacement*)def)->grownGameBit, 1);
+                mainSetBits(((MoonSeedBushPlacement*)def)->grownGameBit, 1);
             }
             break;
         case MOONSEEDBUSH_SEQEV_BURST_FX:
@@ -155,7 +155,7 @@ void MoonSeedBush_init(int obj, int data)
         ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     if (placement->grownGameBit != -1)
     {
-        state->seedState = GameBit_Get(placement->grownGameBit);
+        state->seedState = mainGetBit(placement->grownGameBit);
     }
     else
     {

@@ -88,7 +88,7 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 #pragma scheduling off
 #pragma peephole on
-u8 groundanimator_func0B(int* obj)
+u8 groundanimator_isFullySunk(int* obj)
 {
     GroundAnimatorState * state = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     f32 depth = state->sinkDepth;
@@ -107,7 +107,7 @@ void groundanimator_init(int* obj, int* desc)
     vstate->radius = (f32)((WaveanimatorObjectDef*)desc)->radius;
     if (((WaveanimatorObjectDef*)desc)->sinkEnable != 0)
     {
-        if (GameBit_Get(((WaveanimatorObjectDef*)desc)->originX) != 0)
+        if (mainGetBit(((WaveanimatorObjectDef*)desc)->originX) != 0)
         {
             vstate->sinkDepth = lbl_803E3F98 * (f32) * (u8*)&((WaveanimatorObjectDef*)desc)->sinkDepthScale;
             vstate->flags |= 2;
@@ -460,7 +460,7 @@ void groundanimator_update(int* obj)
                         break;
                     }
                 }
-                GameBit_Set(((GroundanimatorPlacement*)r20)->sunkGameBit, 1);
+                mainSetBits(((GroundanimatorPlacement*)r20)->sunkGameBit, 1);
                 g->flags = g->flags | 2;
                 Sfx_PlayFromObject(obj, (&lbl_803DBDF0)[((GroundanimatorPlacement*)r20)->sfxIndex]);
             }
@@ -503,7 +503,7 @@ void groundanimator_update(int* obj)
         }
     }
     if (((GroundanimatorPlacement*)r20)->enableGameBit == -1 ||
-        GameBit_Get(((GroundanimatorPlacement*)r20)->enableGameBit) != 0)
+        mainGetBit(((GroundanimatorPlacement*)r20)->enableGameBit) != 0)
     {
         allow = 1;
     }
@@ -514,7 +514,7 @@ void groundanimator_update(int* obj)
     if ((g->flags & 2) == 0 && allow != 0)
     {
         tricky = getTrickyObject();
-        if (tricky != NULL && GameBit_Get(0x4e4) != 0)
+        if (tricky != NULL && mainGetBit(0x4e4) != 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }

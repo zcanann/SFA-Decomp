@@ -8,7 +8,7 @@
 extern ObjectDescriptor gDoorF4ObjDescriptor;
 extern ObjectDescriptor gSidekickBallObjDescriptor;
 
-int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void FUN_80178370(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9);
@@ -26,18 +26,18 @@ void FUN_80179848(u16 *param_1);
 void FUN_801799bc(u16 *param_1,int param_2);
 u32 FUN_801799c0(int param_1);
 
-int doorf4_getExtraSize(void);
-int doorf4_getObjectTypeId(void);
-void doorf4_free(int obj);
-void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void doorf4_hitDetect(void);
-void doorf4_update(int *obj);
-void doorf4_init(int *obj, int *params);
-void doorf4_release(void);
-void doorf4_initialise(void);
+int DoorF4_getExtraSize(void);
+int DoorF4_getObjectTypeId(void);
+void DoorF4_free(int obj);
+void DoorF4_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void DoorF4_hitDetect(void);
+void DoorF4_update(int *obj);
+void DoorF4_init(int *obj, int *params);
+void DoorF4_release(void);
+void DoorF4_initialise(void);
 
-int sidekickball_getExtraSize(void);
-void sidekickball_free(int obj);
-void sidekickball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+int SidekickBall_getExtraSize(void);
+void SidekickBall_free(int obj);
+void SidekickBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 #endif /* MAIN_DLL_AUTOTRANSPORTER_H_ */

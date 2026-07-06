@@ -175,7 +175,7 @@ void wallanimator_update(int obj)
     if (state->timer >= WALLANIMATOR_DONE_TIMER)
     {
         state->activeFlag = 1;
-        GameBit_Set((int)((WallanimatorPlacement*)desc)->gameBit, 1);
+        mainSetBits((int)((WallanimatorPlacement*)desc)->gameBit, 1);
         Sfx_PlayFromObject(obj, WALLANIMATOR_COMPLETE_SFX);
         return;
     }
@@ -218,7 +218,7 @@ void wallanimator_init(s16* obj, s16* placement)
     *obj = ((WallanimatorPlacement*)placement)->initialRotX;
     ObjGroup_AddObject(oi, WALLANIMATOR_GROUP_PRIMARY);
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_SECONDARY);
-    if (GameBit_Get((int)((WallanimatorPlacement*)placement)->gameBit) != 0)
+    if (mainGetBit((int)((WallanimatorPlacement*)placement)->gameBit) != 0)
     {
         state->activeFlag = 1;
         state->timer = WALLANIMATOR_DONE_TIMER;

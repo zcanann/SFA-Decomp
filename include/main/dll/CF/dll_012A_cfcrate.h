@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void cfccrate_update(int obj);
+void CFCrate_update(int obj);
 
 #endif /* MAIN_DLL_CF_CFLEVELCONTROL_H_ */

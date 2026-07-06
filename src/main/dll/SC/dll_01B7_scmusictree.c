@@ -178,29 +178,29 @@ void sc_musictree_handleHitObject(int p1, int p2, int effectType)
     case SC_MUSICTREE_MAP_TOTEM_1:
         Sfx_PlayFromObject(p1, SFXTRIG_sdrstp_c);
         Sfx_PlayFromObject(p1, SFXTRIG_gland2_c);
-        GameBit_Set(GAMEBIT_TOTEM_COMBO_1, 1);
+        mainSetBits(GAMEBIT_TOTEM_COMBO_1, 1);
         break;
     case SC_MUSICTREE_MAP_TOTEM_2:
         Sfx_PlayFromObject(p1, SFXTRIG_en_sdrstp_c);
         Sfx_PlayFromObject(p1, SFXTRIG_gland2_c);
-        GameBit_Set(GAMEBIT_TOTEM_COMBO_2, 1);
+        mainSetBits(GAMEBIT_TOTEM_COMBO_2, 1);
         break;
     case SC_MUSICTREE_MAP_TOTEM_3:
         Sfx_PlayFromObject(p1, SFXTRIG_en_sdrstp_c_12d);
         Sfx_PlayFromObject(p1, SFXTRIG_gland2_c);
-        GameBit_Set(GAMEBIT_TOTEM_COMBO_3, 1);
+        mainSetBits(GAMEBIT_TOTEM_COMBO_3, 1);
         break;
     case SC_MUSICTREE_MAP_GATE_1:
-        if ((u32)GameBit_Get(GAMEBIT_MUSICTREE_GATE) != 0)
-            GameBit_Set(0xc41, 1);
+        if ((u32)mainGetBit(GAMEBIT_MUSICTREE_GATE) != 0)
+            mainSetBits(0xc41, 1);
         break;
     case SC_MUSICTREE_MAP_GATE_2:
-        if ((u32)GameBit_Get(GAMEBIT_MUSICTREE_GATE) != 0)
-            GameBit_Set(0xc43, 1);
+        if ((u32)mainGetBit(GAMEBIT_MUSICTREE_GATE) != 0)
+            mainSetBits(0xc43, 1);
         break;
     case SC_MUSICTREE_MAP_GATE_3:
-        if ((u32)GameBit_Get(GAMEBIT_MUSICTREE_GATE) != 0)
-            GameBit_Set(0xc45, 1);
+        if ((u32)mainGetBit(GAMEBIT_MUSICTREE_GATE) != 0)
+            mainSetBits(0xc45, 1);
         break;
     }
     state->animSpeed = 0.0225f;

@@ -131,7 +131,7 @@ void dll_197_update(int obj)
             state->activeTimer = 300;
             if (state->stage == 2)
             {
-                GameBit_Set(CUP_STAGE_COMPLETE_BIT, 1);
+                mainSetBits(CUP_STAGE_COMPLETE_BIT, 1);
             }
         }
     }
@@ -173,21 +173,21 @@ void dll_197_update(int obj)
                                              -1, NULL);
         }
 
-        if (state->gameBit != -1 && GameBit_Get(state->gameBit) == 0)
+        if (state->gameBit != -1 && mainGetBit(state->gameBit) == 0)
         {
-            GameBit_Set(state->gameBit, 1);
+            mainSetBits(state->gameBit, 1);
         }
-        if (lbl_803DDBD0 == 0 && state->stage == 0 && GameBit_Get(state->gameBit) != 0)
+        if (lbl_803DDBD0 == 0 && state->stage == 0 && mainGetBit(state->gameBit) != 0)
         {
             lbl_803DDBD0 = 1;
         }
-        if (lbl_803DDBD0 == 1 && state->stage == 1 && GameBit_Get(state->gameBit) != 0)
+        if (lbl_803DDBD0 == 1 && state->stage == 1 && mainGetBit(state->gameBit) != 0)
         {
             lbl_803DDBD0 = 2;
         }
-        if (lbl_803DDBD0 == 2 && state->stage == 2 && GameBit_Get(state->gameBit) != 0)
+        if (lbl_803DDBD0 == 2 && state->stage == 2 && mainGetBit(state->gameBit) != 0)
         {
-            GameBit_Set(CUP_STAGE_COMPLETE_BIT, 1);
+            mainSetBits(CUP_STAGE_COMPLETE_BIT, 1);
             lbl_803DDBD0 = 3;
         }
         state->sparkArmed = 1;
@@ -198,9 +198,9 @@ void dll_197_update(int obj)
         Sfx_StopObjectChannel(obj, 0x7f);
         (*gModgfxInterface)->detachSource((void*)obj);
         (*gExpgfxInterface)->freeSource(obj);
-        if (state->gameBit != -1 && GameBit_Get(state->gameBit) != 0)
+        if (state->gameBit != -1 && mainGetBit(state->gameBit) != 0)
         {
-            GameBit_Set(state->gameBit, 0);
+            mainSetBits(state->gameBit, 0);
         }
         if (lbl_803DDBD0 == 1 && state->stage == 0)
         {
@@ -210,9 +210,9 @@ void dll_197_update(int obj)
         {
             lbl_803DDBD0 = 0;
         }
-        if (lbl_803DDBD0 == 3 && state->stage == 2 && GameBit_Get(0x474) == 0)
+        if (lbl_803DDBD0 == 3 && state->stage == 2 && mainGetBit(0x474) == 0)
         {
-            GameBit_Set(CUP_STAGE_COMPLETE_BIT, 0);
+            mainSetBits(CUP_STAGE_COMPLETE_BIT, 0);
             lbl_803DDBD0 = 0;
         }
     }

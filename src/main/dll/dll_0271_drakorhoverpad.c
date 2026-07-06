@@ -224,7 +224,7 @@ int drakorhoverpad_init(int obj)
             }
         }
     }
-    if (f->b01 != GameBit_Get(1654))
+    if (f->b01 != mainGetBit(1654))
     {
         f->b01 ^= 1;
         *(f32*)p = -*(f32*)p;
@@ -486,7 +486,7 @@ void drakorhoverpad_updateMain(int obj)
     }
     if (f->bit20 == 0)
     {
-        f->bit20 = GameBit_Get(q->activateGameBit);
+        f->bit20 = mainGetBit(q->activateGameBit);
         ((DrakorHoverpadUpdateMainState*)p)->targetSpeed = lbl_803E6A3C;
         if (f->bit20 != 0)
         {
@@ -728,11 +728,11 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         }
         if (f->b40 != 0)
         {
-            GameBit_Set(0x660, 1);
+            mainSetBits(0x660, 1);
         }
-        else if (GameBit_Get(0x661) == 0)
+        else if (mainGetBit(0x661) == 0)
         {
-            GameBit_Set(0x788, 1);
+            mainSetBits(0x788, 1);
             f->state = 1;
             *(f32*)p = lbl_803E6A3C;
         }
@@ -747,7 +747,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             break;
         }
-        if (GameBit_Get(0x661) == 0)
+        if (mainGetBit(0x661) == 0)
         {
             f->state = 1;
             *(f32*)p = lbl_803E6A3C;
@@ -794,11 +794,11 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             break;
         }
-        if (GameBit_Get(0x689) != 0)
+        if (mainGetBit(0x689) != 0)
         {
             break;
         }
-        GameBit_Set(0x689, 1);
+        mainSetBits(0x689, 1);
         break;
     case 11:
         if (g->p1 == 0)
@@ -809,7 +809,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             break;
         }
-        GameBit_Set(0x68a, 1);
+        mainSetBits(0x68a, 1);
         break;
     case 12:
         if (g->p1 == 0)
@@ -820,10 +820,10 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             break;
         }
-        GameBit_Set(0x68b, 1);
+        mainSetBits(0x68b, 1);
         break;
     case 13:
-        if (GameBit_Get(0x68a) == 0)
+        if (mainGetBit(0x68a) == 0)
         {
             break;
         }
@@ -879,7 +879,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             break;
         }
-        GameBit_Set(0x788, 1);
+        mainSetBits(0x788, 1);
         break;
     case 16:
         cur = *(f32*)p;
@@ -912,7 +912,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
     switch (b)
     {
     case 8:
-        if (GameBit_Get(0x67f) != 0)
+        if (mainGetBit(0x67f) != 0)
         {
             *(int*)out = 1;
         }
@@ -922,7 +922,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         }
         break;
     case 2:
-        GameBit_Set(0x7ba, 1);
+        mainSetBits(0x7ba, 1);
         break;
     case 18:
         *(int*)out = 0;
@@ -1018,7 +1018,7 @@ void drakorhoverpad_resetPendingMotion(int obj)
     }
 }
 
-void drakorhoverpad_func16(int obj, f32 scale)
+void drakorhoverpad_renderGroundMarker(int obj, f32 scale)
 {
     f32* mtx;
     ObjPosParams pos;

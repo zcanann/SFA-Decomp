@@ -15,7 +15,7 @@ STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
-/* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
+/* DIM2PathGenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);

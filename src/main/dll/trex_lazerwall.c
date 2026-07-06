@@ -182,7 +182,7 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
 
 int TREX_Lazerwall_waitForStartBit(void)
 {
-    if (GameBit_Get(GAMEBIT_LAZERWALL_START) != 0)
+    if (mainGetBit(GAMEBIT_LAZERWALL_START) != 0)
     {
         return WAITFORSTART_RESULT;
     }
@@ -211,15 +211,15 @@ int TREX_Lazerwall_updateTimedChallenge(int arg1)
     {
         gameTimerStop();
         hudFn_8011f6f0(0);
-        GameBit_Set(GAMEBIT_LAZERWALL_RUNNING, 0);
+        mainSetBits(GAMEBIT_LAZERWALL_RUNNING, 0);
 
         if (now >= limit)
         {
-            GameBit_Set(GAMEBIT_LAZERWALL_WIN, 1);
+            mainSetBits(GAMEBIT_LAZERWALL_WIN, 1);
         }
         else
         {
-            GameBit_Set(GAMEBIT_LAZERWALL_LOSE, 1);
+            mainSetBits(GAMEBIT_LAZERWALL_LOSE, 1);
         }
 
         hudFn_8011f38c(2);

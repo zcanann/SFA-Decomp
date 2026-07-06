@@ -4,7 +4,7 @@
 
 #define WCLEVELCONT_OBJGROUP 0x9
 
-void wclevelcont_func16(s16 value, s16* outRow, s16* outCol)
+void wclevelcont_getSolvedTileXYB(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
 
@@ -22,7 +22,7 @@ void wclevelcont_func16(s16 value, s16* outRow, s16* outCol)
     }
 }
 
-void wclevelcont_func15(s16 value, s16* outRow, s16* outCol)
+void wclevelcont_getInitialTileXYB(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
 
@@ -40,7 +40,7 @@ void wclevelcont_func15(s16 value, s16* outRow, s16* outCol)
     }
 }
 
-int wclevelcont_func14(s16 i, s16 j)
+int wclevelcont_getTileB(s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
     {
@@ -49,7 +49,7 @@ int wclevelcont_func14(s16 i, s16 j)
     return lbl_803AD298[i][j];
 }
 
-void wclevelcont_func13(int value, s16 i, s16 j)
+void wclevelcont_setTileB(int value, s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
     {
@@ -58,7 +58,7 @@ void wclevelcont_func13(int value, s16 i, s16 j)
     lbl_803AD298[i][j] = value;
 }
 
-void wclevelcont_func12(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
+void wclevelcont_worldPosToTileB(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     f32 outX, outZ;
 
@@ -69,7 +69,7 @@ void wclevelcont_func12(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DC0) / 48);
 }
 
-void wclevelcont_func11(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
+void wclevelcont_tileBToWorldPos(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;
 
@@ -83,7 +83,7 @@ void wclevelcont_func11(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
     }
 }
 
-void wclevelcont_func0F(s16 value, s16* outRow, s16* outCol)
+void wclevelcont_getSolvedTileXYA(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
 
@@ -101,7 +101,7 @@ void wclevelcont_func0F(s16 value, s16* outRow, s16* outCol)
     }
 }
 
-void wclevelcont_func0E(s16 value, s16* outRow, s16* outCol)
+void wclevelcont_getInitialTileXYA(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
 
@@ -119,7 +119,7 @@ void wclevelcont_func0E(s16 value, s16* outRow, s16* outCol)
     }
 }
 
-int wclevelcont_render2(s16 i, s16 j)
+int wclevelcont_getTileA(s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
     {
@@ -128,7 +128,7 @@ int wclevelcont_render2(s16 i, s16 j)
     return lbl_803AD2D8[i][j];
 }
 
-void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
+void wclevelcont_setTileA(int value, s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
     {
@@ -137,7 +137,7 @@ void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
     lbl_803AD2D8[i][j] = value;
 }
 
-void wclevelcont_func0B(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
+void wclevelcont_worldPosToTileA(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     f32 outX, outZ;
 
@@ -148,7 +148,7 @@ void wclevelcont_func0B(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DD4) / 48);
 }
 
-void wclevelcont_setScale(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
+void wclevelcont_tileAToWorldPos(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;
 
@@ -175,17 +175,17 @@ void wclevelcont_free(int obj)
     mode = state->mode;
     if (mode == 1)
     {
-        GameBit_Set(0x7ef, 0);
-        GameBit_Set(0x7ed, 0);
-        GameBit_Set(0xba6, 0);
-        GameBit_Set(0xedd, 0);
+        mainSetBits(0x7ef, 0);
+        mainSetBits(0x7ed, 0);
+        mainSetBits(0xba6, 0);
+        mainSetBits(0xedd, 0);
     }
     else if (mode == 2)
     {
-        GameBit_Set(0x7f0, 0);
-        GameBit_Set(0x7ee, 0);
-        GameBit_Set(0xba6, 0);
-        GameBit_Set(0xedc, 0);
+        mainSetBits(0x7f0, 0);
+        mainSetBits(0x7ee, 0);
+        mainSetBits(0xba6, 0);
+        mainSetBits(0xedc, 0);
     }
     gameTimerStop();
 }
@@ -239,11 +239,11 @@ void wclevelcont_syncProgressBits(int stateArg)
     SCGameBitLatch_Update((int)&state->gameBitLatch, 0x10, -1, -1, 0xcd0, 0xd4);
     SCGameBitLatch_Update((int)&state->gameBitLatch, 0x40, -1, -1, 0xcbb, 0xc4);
     flag = 0;
-    if ((u32)GameBit_Get(0xba6) == 0 && ((u32)GameBit_Get(0xda9) != 0 || gameTimerIsRunning() != 0))
+    if ((u32)mainGetBit(0xba6) == 0 && ((u32)mainGetBit(0xda9) != 0 || gameTimerIsRunning() != 0))
     {
         flag = 1;
     }
-    GameBit_Set(0xf31, flag);
+    mainSetBits(0xf31, flag);
     SCGameBitLatch_Update((int)&state->gameBitLatch, 0x80, -1, -1, 0xf31, 0xaf);
 }
 #pragma opt_common_subs reset
@@ -255,14 +255,14 @@ void wclevelcont_update(int obj)
 
     if (((GameObject*)obj)->unkF4 == 0)
     {
-        if ((u32)GameBit_Get(0xe05) == 0)
+        if ((u32)mainGetBit(0xe05) == 0)
         {
             getEnvfxActImmediately(obj, obj, 0x1fb, 0);
             getEnvfxActImmediately(obj, obj, 0x1ff, 0);
             getEnvfxActImmediately(obj, obj, 0x1fc, 0);
             getEnvfxActImmediately(obj, obj, 0x1fd, 0);
             skyFn_80088e54(0, lbl_803E6DA8);
-            GameBit_Set(0xe05, 1);
+            mainSetBits(0xe05, 1);
         }
         ((GameObject*)obj)->unkF4 = 1;
     }
@@ -279,17 +279,17 @@ void wclevelcont_update(int obj)
     wclevelcont_syncProgressBits((int)state);
     if ((*gSkyInterface)->getSunPosition(&sunTime))
     {
-        GameBit_Set(0x7f3, 1);
-        GameBit_Set(0x7f1, 0);
+        mainSetBits(0x7f3, 1);
+        mainSetBits(0x7f1, 0);
     }
     else
     {
-        GameBit_Set(0x7f3, 0);
-        GameBit_Set(0x7f1, 1);
+        mainSetBits(0x7f3, 0);
+        mainSetBits(0x7f1, 1);
     }
 }
 
-int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
+int wclevelcont_traceMoveA(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
 {
     int i;
     int limit;
@@ -420,19 +420,19 @@ void wclevelcont_init(int obj)
     WcLevelControlState* state = ((GameObject*)obj)->extra;
     u16 flags;
 
-    ((GameObject*)obj)->animEventCallback = wcpushblock_levelControlTriggerCallback;
-    GameBit_Set(0x810, 0);
+    ((GameObject*)obj)->animEventCallback = wclevelcont_seqFn;
+    mainSetBits(0x810, 0);
     memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
-    GameBit_Set(0x811, 0);
+    mainSetBits(0x811, 0);
     memcpy(lbl_803AD298, lbl_8032B088, 0x40);
-    if ((u32)GameBit_Get(0x7fa) != 0) state->completionFlags |= 0x8;
-    if ((u32)GameBit_Get(0x7f9) != 0) state->completionFlags |= 0x4;
-    if ((u32)GameBit_Get(0x813) != 0) state->completionFlags |= 0x20;
-    if ((u32)GameBit_Get(0x812) != 0) state->completionFlags |= 0x10;
-    if ((u32)GameBit_Get(0x2a5) != 0) state->completionFlags |= 0x40;
-    if ((u32)GameBit_Get(0x205) != 0) state->completionFlags |= 0x80;
-    if ((u32)GameBit_Get(0xbcf) != 0) state->completionFlags |= 0x100;
-    if ((u32)GameBit_Get(0xcac) != 0) state->completionFlags |= 0x200;
+    if ((u32)mainGetBit(0x7fa) != 0) state->completionFlags |= 0x8;
+    if ((u32)mainGetBit(0x7f9) != 0) state->completionFlags |= 0x4;
+    if ((u32)mainGetBit(0x813) != 0) state->completionFlags |= 0x20;
+    if ((u32)mainGetBit(0x812) != 0) state->completionFlags |= 0x10;
+    if ((u32)mainGetBit(0x2a5) != 0) state->completionFlags |= 0x40;
+    if ((u32)mainGetBit(0x205) != 0) state->completionFlags |= 0x80;
+    if ((u32)mainGetBit(0xbcf) != 0) state->completionFlags |= 0x100;
+    if ((u32)mainGetBit(0xcac) != 0) state->completionFlags |= 0x200;
     flags = state->completionFlags;
     if (flags & 0x200)
     {
@@ -443,14 +443,14 @@ void wclevelcont_init(int obj)
         state->mode = 3;
     }
     ObjGroup_AddObject(obj, WCLEVELCONT_OBJGROUP);
-    GameBit_Set(0x226, 1);
-    GameBit_Set(0x2a6, 1);
-    GameBit_Set(0x206, 1);
-    GameBit_Set(0x25f, 1);
+    mainSetBits(0x226, 1);
+    mainSetBits(0x2a6, 1);
+    mainSetBits(0x206, 1);
+    mainSetBits(0x25f, 1);
     (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
-    state->dialogueFlags.b40 = GameBit_Get(0xc58);
-    state->dialogueFlags.b20 = GameBit_Get(0xc59);
-    state->dialogueFlags.b18 = GameBit_Get(0xc5a);
+    state->dialogueFlags.b40 = mainGetBit(0xc58);
+    state->dialogueFlags.b20 = mainGetBit(0xc59);
+    state->dialogueFlags.b18 = mainGetBit(0xc5a);
 }
 
 void wclevelcont_release(void)

@@ -92,27 +92,27 @@ STATIC_ASSERT(offsetof(KtrexfloorswitchState, scrollSpeed) == 0x0C);
 STATIC_ASSERT(offsetof(KtrexfloorswitchState, flags) == 0x10);
 STATIC_ASSERT(sizeof(KtrexfloorswitchState) == 0x14);
 
-void ktrexfloorswitch_free(void)
+void KT_RexFloorSwitch_free(void)
 {
 }
 
-int ktrexfloorswitch_getExtraSize(void) { return 0x14; }
+int KT_RexFloorSwitch_getExtraSize(void) { return 0x14; }
 
-int ktrexfloorswitch_getObjectTypeId(void) { return 0x0; }
+int KT_RexFloorSwitch_getObjectTypeId(void) { return 0x0; }
 
-void ktrexfloorswitch_hitDetect(void)
+void KT_RexFloorSwitch_hitDetect(void)
 {
 }
 
-void ktrexfloorswitch_initialise(void)
+void KT_RexFloorSwitch_initialise(void)
 {
 }
 
-void ktrexfloorswitch_release(void)
+void KT_RexFloorSwitch_release(void)
 {
 }
 
-void ktrexfloorswitch_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void KT_RexFloorSwitch_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     if (visible != 0)
     {
@@ -120,7 +120,7 @@ void ktrexfloorswitch_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vis
     }
 }
 
-void ktrexfloorswitch_init(int obj, char* placement)
+void KT_RexFloorSwitch_init(int obj, char* placement)
 {
     char* extra = ((GameObject*)obj)->extra;
     int curve;
@@ -173,7 +173,7 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle)
     runtime->boltObj = lightningCreate(pos, dir, lbl_803E68A0, lbl_803E68A4, angle, 96, 0);
 }
 
-void ktrexfloorswitch_update(int obj)
+void KT_RexFloorSwitch_update(int obj)
 {
     int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
     int* state = ((GameObject*)obj)->extra;
@@ -190,7 +190,7 @@ void ktrexfloorswitch_update(int obj)
     *(Vec3Blob*)vecA = *(Vec3Blob*)lbl_802C2560;
     *(Vec3Blob*)vecB = *(Vec3Blob*)lbl_802C256C;
     ((GameObject*)obj)->unkF8 = ((GameObject*)obj)->unkF4;
-    ((GameObject*)obj)->unkF4 = GameBit_Get(((KtrexfloorswitchPlacement*)placement)->activeBit);
+    ((GameObject*)obj)->unkF4 = mainGetBit(((KtrexfloorswitchPlacement*)placement)->activeBit);
     tex = objFindTexture((void*)obj, 0, 0);
     if (((GameObject*)obj)->unkF4 <= 1)
     {
@@ -205,7 +205,7 @@ void ktrexfloorswitch_update(int obj)
             int curveBits;
             ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_RISING;
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
-            curveBits = GameBit_Get(0x572) >> 1;
+            curveBits = mainGetBit(0x572) >> 1;
             curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
                 ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->curveX,
                 ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->baseHeight,
@@ -239,7 +239,7 @@ void ktrexfloorswitch_update(int obj)
             int curveBits;
             ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_RISING;
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
-            curveBits = GameBit_Get(0x572) >> 1;
+            curveBits = mainGetBit(0x572) >> 1;
             curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
                 ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->curveX,
                 ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->baseHeight,
@@ -351,10 +351,10 @@ void ktrexfloorswitch_update(int obj)
         if (((KtrexfloorswitchState*)state)->chargeTimer < lbl_803E687C)
         {
             ((KtrexfloorswitchState*)state)->chargeTimer = (f32)(u32)((KtrexfloorswitchPlacement*)placement)->chargeReload;
-            level = GameBit_Get(((KtrexfloorswitchPlacement*)placement)->levelBit) & 0xff;
+            level = mainGetBit(((KtrexfloorswitchPlacement*)placement)->levelBit) & 0xff;
             if (level < 0xf)
             {
-                GameBit_Set(((KtrexfloorswitchPlacement*)placement)->levelBit, (u8)(level += 1));
+                mainSetBits(((KtrexfloorswitchPlacement*)placement)->levelBit, (u8)(level += 1));
                 if ((u8)level == 0xf)
                 {
                     ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_CHARGED;
@@ -364,16 +364,16 @@ void ktrexfloorswitch_update(int obj)
             {
                 ((KtrexfloorswitchState*)state)->flags &= ~KTREXFLOORSWITCH_FLAG_CHARGED;
                 ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED;
-                GameBit_Set(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
-                if (GameBit_Get(0x55a) != 0)
+                mainSetBits(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
+                if (mainGetBit(0x55a) != 0)
                 {
-                    GameBit_Set(0x55a, 0);
-                    GameBit_Set(0x55b, 1);
+                    mainSetBits(0x55a, 0);
+                    mainSetBits(0x55b, 1);
                 }
                 else
                 {
-                    GameBit_Set(0x55a, 1);
-                    GameBit_Set(0x55b, 0);
+                    mainSetBits(0x55a, 1);
+                    mainSetBits(0x55b, 0);
                 }
                 ktrexlevel_updatePathGameBits();
             }
@@ -397,16 +397,16 @@ void ktrexfloorswitch_update(int obj)
             {
                 ((KtrexfloorswitchState*)state)->flags &= ~KTREXFLOORSWITCH_FLAG_CHARGED;
                 ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED;
-                GameBit_Set(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
-                if (GameBit_Get(0x55a) != 0)
+                mainSetBits(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
+                if (mainGetBit(0x55a) != 0)
                 {
-                    GameBit_Set(0x55a, 0);
-                    GameBit_Set(0x55b, 1);
+                    mainSetBits(0x55a, 0);
+                    mainSetBits(0x55b, 1);
                 }
                 else
                 {
-                    GameBit_Set(0x55a, 1);
-                    GameBit_Set(0x55b, 0);
+                    mainSetBits(0x55a, 1);
+                    mainSetBits(0x55b, 0);
                 }
                 ktrexlevel_updatePathGameBits();
             }
@@ -416,8 +416,8 @@ void ktrexfloorswitch_update(int obj)
     if ((((KtrexfloorswitchState*)state)->flags & KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED) == 0 && (s8)((KtrexfloorswitchState*)state)->prevGraceTimer != (s8)(
         (KtrexfloorswitchState*)state)->graceTimer)
     {
-        GameBit_Get(((KtrexfloorswitchPlacement*)placement)->levelBit);
-        GameBit_Set(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
+        mainGetBit(((KtrexfloorswitchPlacement*)placement)->levelBit);
+        mainSetBits(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
     }
     if ((s8)moved != 0 && gKTrexFloorSwitchPrevMoved == 0)
     {

@@ -20,7 +20,7 @@ STATIC_ASSERT(offsetof(MagicGemState, flags27A) == 0x27A);
 
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern int fn_80295A04(void* player, int p2);
-extern void fn_80175428(int obj, int p2);
+extern void pushable_handleMsgs(int obj, int p2);
 extern f32 lbl_803E352C;
 extern f64 lbl_803E3530;
 extern f64 lbl_803E3538;
@@ -59,14 +59,14 @@ int fn_80174438(int obj, PushableState* state)
     }
     if (((GameObject*)obj)->anim.localPosX <= lbl_803E352C + ((ObjPlacement*)def)->posX)
     {
-        GameBit_Set(state->gameBit, 1);
+        mainSetBits(state->gameBit, 1);
         state->flags |= 0x80;
         ((GameObject*)obj)->anim.localPosX = (f32)(((ObjPlacement*)def)->posX - lbl_803E3530);
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
         ((GameObject*)obj)->anim.localPosZ = (f32)(lbl_803E3538 + ((ObjPlacement*)def)->posZ);
         Sfx_PlayFromObject(obj, SFXTRIG_curtainopen16);
     }
-    if (GameBit_Get(0xa1a) != 0)
+    if (mainGetBit(0xa1a) != 0)
     {
         ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
@@ -94,7 +94,7 @@ void fn_80174588(int obj, PushableState* p2)
         break;
     }
 
-    if (GameBit_Get(*(s16*)(data + 0x18)) != 0)
+    if (mainGetBit(*(s16*)(data + 0x18)) != 0)
     {
         ObjTextureRuntimeSlot* tex;
         p2->flags = (u16)(p2->flags | 0x80);
@@ -120,8 +120,8 @@ int fn_80174668(int obj, PushableState* state)
 
     flag = 0;
     dist[0] = lbl_803E3540;
-    fn_80175428(obj, 0);
-    if (GameBit_Get(state->gameBit) != 0)
+    pushable_handleMsgs(obj, 0);
+    if (mainGetBit(state->gameBit) != 0)
     {
         cur = ((GameObject*)obj)->anim.rootMotionScale;
         bound = lbl_803E3544;
@@ -172,7 +172,7 @@ int fn_80174668(int obj, PushableState* state)
     if ((cur >= lbl_803E3558 + dy) && (cur <= lbl_803E3560 + dy))
     {
         flag = 1;
-        GameBit_Set(0x1c9, 1);
+        mainSetBits(0x1c9, 1);
     }
     tex = objFindTexture((void*)obj, 0, 0);
     state->blinkPhase = state->blinkStep * timeDelta + state->blinkPhase;
@@ -193,10 +193,10 @@ int fn_80174668(int obj, PushableState* state)
         state->eyeOpenAmount = state->eyeOpenAmount + state->eyeOpenSpeed;
         if (state->eyeOpenAmount >= lbl_803E3568)
         {
-            GameBit_Set(state->gameBit, 1);
+            mainSetBits(state->gameBit, 1);
             if (flag)
             {
-                GameBit_Set(0x1c9, 0);
+                mainSetBits(0x1c9, 0);
             }
             tex = (ObjTextureRuntimeSlot*)Resource_Acquire(0x5b, 1);
             ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);

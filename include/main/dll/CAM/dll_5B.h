@@ -22,7 +22,7 @@ void *fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2);
 void FUN_80108e7c(void);
 void CameraModeStatic_update(short *param_1);
 void CameraModeStatic_init(u8 *cam, int p2, int *p3);
-void CameraModeStatic_copyToCurrent_nop(void);
+void CameraModeStatic_copyToCurrent(void);
 void CameraModeStatic_free(void);
 void CameraModeStatic_release(void);
 void CameraModeStatic_initialise(void);

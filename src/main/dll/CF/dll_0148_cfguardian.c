@@ -166,7 +166,7 @@ extern int ObjTrigger_IsSet();
 extern int objAnimFn_80038f38();
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int dll_2E_func03();
-extern u32 GameBit_Get(int eventId);
+extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern GuardianVec gCfGuardianHitboxTemplateA; /* hitbox template copied at init */
 extern GuardianVec gCfGuardianHitboxTemplateB; /* hitbox template copied at init */
@@ -462,7 +462,7 @@ int cfguardian_updateMain(int obj)
     sub->moveSpeed = lbl_803E4134;
     player = Obj_GetPlayerObject();
     ObjTrigger_UpdateIdBlockFlag(obj);
-    if (def->variant == 1 && GameBit_Get(GAMEBIT_GUARDIAN_CONVERGENCE) == 0)
+    if (def->variant == 1 && mainGetBit(GAMEBIT_GUARDIAN_CONVERGENCE) == 0)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         return 0;
@@ -477,7 +477,7 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = GUARDIAN_CHATTER_READY;
         }
-        if (GameBit_Get(GAMEBIT_GUARDIAN_QUEST_START) != 0)
+        if (mainGetBit(GAMEBIT_GUARDIAN_QUEST_START) != 0)
         {
             sub->questState = CFGUARDIAN_CAGED;
         }
@@ -488,12 +488,12 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = GUARDIAN_CHATTER_READY;
         }
-        if (GameBit_Get(GAMEBIT_GUARDIAN_CAGE_OPEN) != 0)
+        if (mainGetBit(GAMEBIT_GUARDIAN_CAGE_OPEN) != 0)
         {
             sub->questState = CFGUARDIAN_RELEASE_SEQ;
             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
             ((GameObject*)obj)->unkF4 = 0;
-            GameBit_Set(GAMEBIT_GUARDIAN_PRISONGUARD_STAND_DOWN, 1);
+            mainSetBits(GAMEBIT_GUARDIAN_PRISONGUARD_STAND_DOWN, 1);
             sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED;
         }
         break;
@@ -511,11 +511,11 @@ int cfguardian_updateMain(int obj)
         break;
     case CFGUARDIAN_RELEASE_SEQ: /* play the release sequence once */
         (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-        GameBit_Set(GAMEBIT_GUARDIAN_RELEASED, 1);
+        mainSetBits(GAMEBIT_GUARDIAN_RELEASED, 1);
         sub->questState = CFGUARDIAN_FLY_ESCAPE;
         break;
     case CFGUARDIAN_ROOST: /* roost until the convergence cutscene parks her */
-        if (GameBit_Get(GAMEBIT_GUARDIAN_CONVERGENCE) != 0)
+        if (mainGetBit(GAMEBIT_GUARDIAN_CONVERGENCE) != 0)
         {
             if (def->variant != 1)
             {
@@ -587,7 +587,7 @@ int cfguardian_updateMain(int obj)
                 r = r + w;
                 ((GameObject*)obj)->anim.rotX = r;
                 sub->moveSpeed = lbl_803E4148;
-                if (GameBit_Get(GAMEBIT_GUARDIAN_LANDED) != 0)
+                if (mainGetBit(GAMEBIT_GUARDIAN_LANDED) != 0)
                 {
                     ObjAnim_SetCurrentMove(obj, 0, lbl_803E4110, 0);
                     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
@@ -707,7 +707,7 @@ int cfguardian_updateMain(int obj)
             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
             sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
         }
-        if (GameBit_Get(0x43) != 0)
+        if (mainGetBit(0x43) != 0)
         {
             sub->questState = CFGUARDIAN_TALK_2;
             sub->chatterAlt = 0;
@@ -751,7 +751,7 @@ int cfguardian_updateMain(int obj)
             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
             sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
         }
-        if (GameBit_Get(0x4be) != 0)
+        if (mainGetBit(0x4be) != 0)
         {
             sub->questState = CFGUARDIAN_FLY_OUT;
             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
@@ -785,13 +785,13 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = GUARDIAN_CHATTER_READY;
         }
-        if (GameBit_Get(0x4b7) != 0)
+        if (mainGetBit(0x4b7) != 0)
         {
             (*gCameraInterface)->setTarget(obj);
             (*gObjectTriggerInterface)->runSequence(0xb, (void*)obj, -1);
-            GameBit_Set(0x4b7, 0);
+            mainSetBits(0x4b7, 0);
         }
-        if (GameBit_Get(0x49a) != 0)
+        if (mainGetBit(0x49a) != 0)
         {
             sub->questState = CFGUARDIAN_CUTSCENE_PERCH_B;
         }
@@ -801,13 +801,13 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = GUARDIAN_CHATTER_READY;
         }
-        if (GameBit_Get(0x4b7) != 0)
+        if (mainGetBit(0x4b7) != 0)
         {
             (*gCameraInterface)->setTarget(obj);
             (*gObjectTriggerInterface)->runSequence(0xa, (void*)obj, -1);
-            GameBit_Set(0x4b7, 0);
+            mainSetBits(0x4b7, 0);
         }
-        if (GameBit_Get(0x4aa) != 0)
+        if (mainGetBit(0x4aa) != 0)
         {
             sub->questState = CFGUARDIAN_PARKED;
         }
@@ -830,7 +830,7 @@ int cfguardian_updateMain(int obj)
         buttonDisable(0, PAD_BUTTON_A);
         if ((*gGameUIInterface)->isEventReady(0x2e8) != 0)
         {
-            GameBit_Set(0x4ab, 1);
+            mainSetBits(0x4ab, 1);
         }
         else if (sub->chatterState == GUARDIAN_CHATTER_READY)
         {
@@ -856,14 +856,14 @@ int cfguardian_updateMain(int obj)
             }
         }
     }
-    if (GameBit_Get(0x902) != 0)
+    if (mainGetBit(0x902) != 0)
     {
         int* tbl2 = (int*)seqStreamLookupFn_8007fff8(gCfGuardianSeqStreamTable, 0xf, sub->questState);
         if (tbl2[0] != -1)
         {
             sub->chatterState = GUARDIAN_CHATTER_PLAYING;
             (*gObjectTriggerInterface)->runSequence(tbl2[0], (void*)obj, -1);
-            GameBit_Set(0x902, 0);
+            mainSetBits(0x902, 0);
         }
     }
     {
@@ -889,9 +889,9 @@ int cfguardian_updateMain(int obj)
     }
     objAnimFn_80038f38(obj, sub->audioBlock);
     characterDoEyeAnims((int*)obj, sub->eyeBlock);
-    if (sub->questState != GameBit_Get(GAMEBIT_GUARDIAN_QUEST_STATE))
+    if (sub->questState != mainGetBit(GAMEBIT_GUARDIAN_QUEST_STATE))
     {
-        GameBit_Set(GAMEBIT_GUARDIAN_QUEST_STATE, sub->questState);
+        mainSetBits(GAMEBIT_GUARDIAN_QUEST_STATE, sub->questState);
     }
     return 0;
 }
@@ -987,7 +987,7 @@ void cfguardian_init(int* obj, u8* params)
     stk2 = gCfGuardianHitboxTemplateB;
     if (sub == NULL) return;
     ObjMsg_AllocQueue(obj, 4);
-    sub->questState = GameBit_Get(GAMEBIT_GUARDIAN_QUEST_STATE);
+    sub->questState = mainGetBit(GAMEBIT_GUARDIAN_QUEST_STATE);
     ((GameObject*)obj)->unkF4 = 1;
     ((GameObject*)obj)->animEventCallback = cfguardian_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(((CfGuardianMapData*)params)->rotXByte << 8);
@@ -999,7 +999,7 @@ void cfguardian_init(int* obj, u8* params)
     sub->chatterState = GUARDIAN_CHATTER_READY;
     sub->chatterAlt = 0;
     sub->chatterPick = 0;
-    if (GameBit_Get(GAMEBIT_GUARDIAN_CONVERGENCE) != 0)
+    if (mainGetBit(GAMEBIT_GUARDIAN_CONVERGENCE) != 0)
     {
         sub->questState = CFGUARDIAN_ROOST;
         if (((CfGuardianMapData*)params)->variant == 0)
@@ -1008,7 +1008,7 @@ void cfguardian_init(int* obj, u8* params)
             Obj_RemoveFromUpdateList(obj);
         }
     }
-    else if (GameBit_Get(GAMEBIT_GUARDIAN_RELEASED) != 0 && ((CfGuardianMapData*)params)->variant == 0)
+    else if (mainGetBit(GAMEBIT_GUARDIAN_RELEASED) != 0 && ((CfGuardianMapData*)params)->variant == 0)
     {
         sub->questState = CFGUARDIAN_ROOST;
         dll_2E_func0A(8, obj);

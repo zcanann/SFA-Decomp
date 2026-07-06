@@ -1,7 +1,7 @@
 /*
  * iceball (DLL 0x00CD) - the ChukChuk ice-spitter's projectile.
  *
- * iceball_update integrates the iceball each frame: an unkF4 lifetime timer,
+ * IceBall_update integrates the iceball each frame: an unkF4 lifetime timer,
  * primed to 0xb4 (180 frames), counts down by timeDelta (freeing the object at
  * <0), gravity (lbl_803E2E54) and drag (lbl_803E2E58) are applied to the Y
  * velocity, the model is spun (rotX/rotY/rotZ += 910), and it is moved + given
@@ -13,7 +13,7 @@
  *     keyed by the obj's seqId (0x2cb / 100 / 0x30a).
  *   - fn_8015FBEC runs for any other contact: a Krazoa-impact burst keyed by
  *     seqId (0x2cb / 100 / 0x30a).
- * iceball_init primes the lifetime (0xb4) and full alpha; render/free toggle
+ * IceBall_init primes the lifetime (0xb4) and full alpha; render/free toggle
  * the camera view-Y offset for the impact shake.
  */
 #include "main/game_object.h"
@@ -144,14 +144,14 @@ void fn_8015FCCC(int obj)
 #pragma scheduling on
 #pragma peephole on
 
-int iceball_getExtraSize(void) { return 0x2; }
-int iceball_getObjectTypeId(void) { return 0x0; }
+int IceBall_getExtraSize(void) { return 0x2; }
+int IceBall_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling off
 #pragma peephole off
-void iceball_free(void) { Camera_DisableViewYOffset(); }
+void IceBall_free(void) { Camera_DisableViewYOffset(); }
 
-void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 visible32 = visible;
     if (visible32 != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2E50);
@@ -159,13 +159,13 @@ void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling on
 #pragma peephole on
 
-void iceball_hitDetect(void)
+void IceBall_hitDetect(void)
 {
 }
 
 #pragma scheduling off
 #pragma peephole off
-void iceball_update(u16* obj, int unused)
+void IceBall_update(u16* obj, int unused)
 {
     int objInt;
 
@@ -208,7 +208,7 @@ void iceball_update(u16* obj, int unused)
     }
 }
 
-void iceball_init(GameObject* obj)
+void IceBall_init(GameObject* obj)
 {
     obj->unkF4 = 0xb4;
     ObjHits_DisableObject((int)obj);
@@ -217,11 +217,11 @@ void iceball_init(GameObject* obj)
 #pragma scheduling on
 #pragma peephole on
 
-void iceball_release(void)
+void IceBall_release(void)
 {
 }
 
-void iceball_initialise(void)
+void IceBall_initialise(void)
 {
 }
 
@@ -230,16 +230,16 @@ ObjectDescriptor gIceBallObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)iceball_initialise,
-    (ObjectDescriptorCallback)iceball_release,
+    (ObjectDescriptorCallback)IceBall_initialise,
+    (ObjectDescriptorCallback)IceBall_release,
     0,
-    (ObjectDescriptorCallback)iceball_init,
-    (ObjectDescriptorCallback)iceball_update,
-    (ObjectDescriptorCallback)iceball_hitDetect,
-    (ObjectDescriptorCallback)iceball_render,
-    (ObjectDescriptorCallback)iceball_free,
-    (ObjectDescriptorCallback)iceball_getObjectTypeId,
-    iceball_getExtraSize,
+    (ObjectDescriptorCallback)IceBall_init,
+    (ObjectDescriptorCallback)IceBall_update,
+    (ObjectDescriptorCallback)IceBall_hitDetect,
+    (ObjectDescriptorCallback)IceBall_render,
+    (ObjectDescriptorCallback)IceBall_free,
+    (ObjectDescriptorCallback)IceBall_getObjectTypeId,
+    IceBall_getExtraSize,
 };
 
 /*__DATA_EXTERNS__*/

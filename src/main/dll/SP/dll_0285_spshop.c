@@ -83,7 +83,7 @@ typedef struct ShopItemRow
 /* number of ShopItemRow entries in lbl_80327FD0
    (data symbol size 0x2D0 / sizeof(ShopItemRow)(0xc) == 0x3c). */
 #define SHOP_ITEM_ROW_COUNT 0x3c
-extern void fn_80295CF4(int obj, int a);
+extern void staffToggle(int obj, int a);
 extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
@@ -177,13 +177,13 @@ void shop_buyItem(int obj, int price)
     boughtBit = *(s16*)(items + ((ShopBuyItemState*)state)->itemIndex * 0xc);
     if (boughtBit != -1)
     {
-        GameBit_Set(boughtBit, 1);
+        mainSetBits(boughtBit, 1);
     }
 }
 
-s32 shop_getStateField1(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex; }
+s32 shop_getItemIndex(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex; }
 
-void shop_setStateField1(int* obj, int v)
+void shop_setItemIndex(int* obj, int v)
 {
     s8* state = ((GameObject*)obj)->extra;
     state[1] = v;
@@ -236,7 +236,7 @@ int shop_isItemBought(int obj, int idx)
     Obj_GetPlayerObject();
     result = 0;
     slot = ((ShopItemRow*)lbl_80327FD0)[idx].boughtBit;
-    if (slot != -1 && GameBit_Get(slot) != 0u)
+    if (slot != -1 && mainGetBit(slot) != 0u)
     {
         result = 1;
     }
@@ -254,7 +254,7 @@ int shop_isItemAvailable(int obj, int idx)
     Obj_GetPlayerObject();
     result = 0;
     slot = ((ShopItemRow*)lbl_80327FD0)[idx].availBit;
-    if (slot == -1 || GameBit_Get(slot) != 0u)
+    if (slot == -1 || mainGetBit(slot) != 0u)
     {
         result = 1;
     }
@@ -271,7 +271,7 @@ void shop_func0B(int* obj, int v, int p3)
     }
 }
 
-s32 shop_setScale(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->unk0; }
+s32 shop_getStateField0(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->unk0; }
 
 int shop_getExtraSize(void) { return 0x5; }
 
@@ -282,7 +282,7 @@ void shop_free(int* obj)
     skyFn_80088c94(7, 0);
     ObjGroup_RemoveObject(obj, SPSHOP_OBJGROUP);
     Music_Trigger(MUSICTRIG_communicator, 0);
-    GameBit_Set(3838, 0);
+    mainSetBits(3838, 0);
 }
 
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -301,9 +301,9 @@ void shop_update(int obj)
     int player;
 
     player = (int)Obj_GetPlayerObject();
-    if ((void*)Player_GetStaffObject(player) != NULL && GameBit_Get(0x18b) == 0u)
+    if ((void*)Player_GetStaffObject(player) != NULL && mainGetBit(0x18b) == 0u)
     {
-        fn_80295CF4(player, 0);
+        staffToggle(player, 0);
     }
 
     if (((GameObject*)obj)->unkF4 == 0)
@@ -311,12 +311,12 @@ void shop_update(int obj)
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0, 1);
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 5, 1);
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6, 1);
-        GameBit_Set(0x617, 1);
+        mainSetBits(0x617, 1);
         skyFn_80088c94(7, 1);
         ((GameObject*)obj)->unkF4 = 1;
     }
 
-    if ((u32)GameBit_Get(0xd21) != 0u && ((GameObject*)obj)->unkF8 == 0)
+    if ((u32)mainGetBit(0xd21) != 0u && ((GameObject*)obj)->unkF8 == 0)
     {
         envFxActFn_800887f8(0);
         getEnvfxAct(obj, obj, 0x1c8, 0);
@@ -325,7 +325,7 @@ void shop_update(int obj)
         return;
     }
 
-    if ((u32)GameBit_Get(0xd21) == 0u && ((GameObject*)obj)->unkF8 != 0)
+    if ((u32)mainGetBit(0xd21) == 0u && ((GameObject*)obj)->unkF8 != 0)
     {
         ((GameObject*)obj)->unkF8 = 0;
     }
@@ -346,7 +346,7 @@ static inline void shop_initBody(int obj, int objDef)
     }
     Music_Trigger(MUSICTRIG_communicator, 1);
     ((GameObject*)obj)->unkF8 = 0;
-    GameBit_Set(0xefe, 1);
+    mainSetBits(0xefe, 1);
 }
 #pragma inline_max_size reset
 

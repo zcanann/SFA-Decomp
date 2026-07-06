@@ -42,7 +42,7 @@ void hintTextFn_800ea174(u8* out)
     s16 i;
     for (i = 0; i < 0xd; i++)
     {
-        out[i] = GameBit_Get(i + 0xf10);
+        out[i] = mainGetBit(i + 0xf10);
     }
     out[lbl_803119E0[texts[5]]] = 1;
 }
@@ -81,11 +81,11 @@ static inline void markTaskBit(u8 id)
 
     mask = 1 << (id % 32);
     bank = (s16)(((u32)id >> 5) + 0x12f);
-    bits = GameBit_Get(bank);
+    bits = mainGetBit(bank);
     if ((bits & mask) == 0)
     {
         bits |= mask;
-        GameBit_Set(bank, bits);
+        mainSetBits(bank, bits);
     }
 }
 
@@ -97,13 +97,13 @@ static inline int setTaskBit(u8 id)
 
     mask = 1 << (id % 32);
     bank = (s16)(((u32)id >> 5) + 0x12f);
-    bits = GameBit_Get(bank);
+    bits = mainGetBit(bank);
     if ((bits & mask) != 0)
     {
         return 0;
     }
     bits |= mask;
-    GameBit_Set(bank, bits);
+    mainSetBits(bank, bits);
     return 1;
 }
 
@@ -156,7 +156,7 @@ void gameBitFn_800ea2e0(u8 id)
                 if (dwBank != cachedBank)
                 {
                     cachedBank = dwBank;
-                    cachedBits = GameBit_Get(dwBank);
+                    cachedBits = mainGetBit(dwBank);
                 }
                 dwMask = 1 << (texts[5] % 32);
             }
@@ -195,7 +195,7 @@ void loadTaskTexts(void)
     }
 }
 
-void screens_remove2(void)
+void screens_run(void)
 {
     if (lbl_803DD4A0 != 0)
     {

@@ -106,8 +106,8 @@ static u8* trickyfollow_validateRouteNode(u8* node)
     {
         return NULL;
     }
-    if (((*(s16*)(node + 0x30) != -1) && (GameBit_Get(*(s16*)(node + 0x30)) == 0)) ||
-        ((*(s16*)(node + 0x32) != -1) && (GameBit_Get(*(s16*)(node + 0x32)) != 0)))
+    if (((*(s16*)(node + 0x30) != -1) && (mainGetBit(*(s16*)(node + 0x30)) == 0)) ||
+        ((*(s16*)(node + 0x32) != -1) && (mainGetBit(*(s16*)(node + 0x32)) != 0)))
     {
         node = NULL;
     }

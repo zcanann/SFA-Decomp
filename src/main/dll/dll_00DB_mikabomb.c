@@ -65,10 +65,10 @@ typedef struct MikabombState
     u8 padB2[0xB8 - 0xB2];
 } MikabombState;
 
-int mikabomb_getExtraSize(void) { return 0x10; }
-int mikabomb_getObjectTypeId(void) { return 0x0; }
+int MikaBomb_getExtraSize(void) { return 0x10; }
+int MikaBomb_getObjectTypeId(void) { return 0x0; }
 
-void mikabomb_free(int obj, int mode)
+void MikaBomb_free(int obj, int mode)
 {
     void** inner = ((GameObject*)obj)->extra;
     if (inner[0] != NULL && mode == 0)
@@ -79,17 +79,17 @@ void mikabomb_free(int obj, int mode)
     (*gModgfxInterface)->detachSource((void*)obj);
 }
 
-void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void MikaBomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E31C0);
 }
 
-void mikabomb_hitDetect(void)
+void MikaBomb_hitDetect(void)
 {
 }
 
-void mikabomb_update(int* obj)
+void MikaBomb_update(int* obj)
 {
     extern void objMove(int* obj, f32 x, f32 y, f32 z); /* #57 */
     extern void Sfx_PlayFromObject(int* obj, int sfx); /* #57 */
@@ -176,7 +176,7 @@ void mikabomb_update(int* obj)
     }
 }
 
-void mikabomb_init(int* obj)
+void MikaBomb_init(int* obj)
 {
     extern u64 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
@@ -217,24 +217,24 @@ void mikabomb_init(int* obj)
     ((MikabombState*)state)->exploded = 0;
 }
 
-void mikabomb_release(void)
+void MikaBomb_release(void)
 {
 }
 
-void mikabomb_initialise(void)
+void MikaBomb_initialise(void)
 {
 }
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)mikabomb_initialise,
-    (ObjectDescriptorCallback)mikabomb_release,
+    (ObjectDescriptorCallback)MikaBomb_initialise,
+    (ObjectDescriptorCallback)MikaBomb_release,
     0,
-    (ObjectDescriptorCallback)mikabomb_init,
-    (ObjectDescriptorCallback)mikabomb_update,
-    (ObjectDescriptorCallback)mikabomb_hitDetect,
-    (ObjectDescriptorCallback)mikabomb_render,
-    (ObjectDescriptorCallback)mikabomb_free,
-    (ObjectDescriptorCallback)mikabomb_getObjectTypeId,
-    mikabomb_getExtraSize,
+    (ObjectDescriptorCallback)MikaBomb_init,
+    (ObjectDescriptorCallback)MikaBomb_update,
+    (ObjectDescriptorCallback)MikaBomb_hitDetect,
+    (ObjectDescriptorCallback)MikaBomb_render,
+    (ObjectDescriptorCallback)MikaBomb_free,
+    (ObjectDescriptorCallback)MikaBomb_getObjectTypeId,
+    MikaBomb_getExtraSize,
 };

@@ -9,12 +9,12 @@
  *     and derives upper/lower world-Y bounds from the hit results.
  *   - camslide_update: lateral slide + height tracking that follows the
  *     target (classId 1 = the player).
- *   - firstperson_updatePitch / firstperson_updatePosition: aim and
+ *   - firstperson_updatePitch / CameraModeNormal_follow: aim and
  *     distance handling for the first-person view.
- *   - firstperson_loadSettings / pathcam_loadSettings: load a settings
+ *   - CameraModeNormal_copyToCurrent / CameraModeNormal_init: load a settings
  *     blob into the mode-settings block (pathcam dispatches on a mode id
  *     0..4) and snapshot/restore the saved camera state.
- *   - camstatic_update: the main per-frame driver tying the above together
+ *   - CameraModeNormal_update: the main per-frame driver tying the above together
  *     plus wall-avoidance and collision-probe timers.
  *   - CameraModeNormal_func0A / _free and the mode-settings alloc/free.
  *
@@ -42,7 +42,7 @@ extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy,
 extern float mathSinf(float x);
 
 extern f32 fn_802966F4(GameObject* obj); /* returns a target proximity/distance scalar */
-extern void fn_8029656C(int obj, float* out); /* fills out[] with a target motion scalar */
+extern void playerGetTimeScale(int obj, float* out); /* fills out[] with a target motion scalar */
 extern int EmissionController_IsLingering(int obj);
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 
@@ -488,7 +488,7 @@ void firstperson_updatePitch(f32 targetY, f32 dist, CameraObject* camera)
                          timeDelta));
 }
 
-void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
+void CameraModeNormal_follow(CameraObject* camera, ObjAnimComponent* target)
 {
     extern f32 interpolate(f32 a, f32 t, f32 exp);
 
@@ -609,7 +609,7 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
     }
 }
 
-void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
+void CameraModeNormal_copyToCurrent(CamcontrolFirstPersonActionSettings* settings)
 {
     float fval;
     CameraObject* camera;
@@ -686,7 +686,7 @@ void CameraModeNormal_free(CameraObject* camera)
     gCamcontrolModeSettings->wallAvoidanceFlags.b6 = 0;
 }
 
-void camstatic_update(u8* obj)
+void CameraModeNormal_update(u8* obj)
 {
     extern f32 interpolate(f32 a, f32 t, f32 exp);
     CameraObject* camera = (CameraObject*)obj;
@@ -715,7 +715,7 @@ void camstatic_update(u8* obj)
     }
     if (target->anim.classId == 1)
     {
-        fn_8029656C((int)target, &dx);
+        playerGetTimeScale((int)target, &dx);
         lbl_803DD52C = timeDelta * dx;
         val = EmissionController_IsLingering((int)target);
         switch (val)
@@ -750,7 +750,7 @@ void camstatic_update(u8* obj)
     camera->unk13E = 0;
     camcontrol_updateModeSettings((int)camera);
     camMoveFn_80104040(camera, target);
-    firstperson_updatePosition(camera, &target->anim);
+    CameraModeNormal_follow(camera, &target->anim);
     Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY,
                                    camera->anim.localPosZ, &camera->anim.worldPosX,
                                    &camera->anim.worldPosY, &camera->anim.worldPosZ,
@@ -887,7 +887,7 @@ void camstatic_update(u8* obj)
                                    (u32)camera->anim.parent);
 }
 
-void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
+void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
 {
     GameObject* target;
     f32 vOutA;
@@ -1093,13 +1093,13 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
     cam->unk13E = 1;
 }
 
-void camcontrol_releaseModeSettings(void)
+void CameraModeNormal_release(void)
 {
     mm_free(gCamcontrolModeSettings);
     gCamcontrolModeSettings = 0;
 }
 
-void camcontrol_initialiseModeSettings(void)
+void CameraModeNormal_initialise(void)
 {
     gCamcontrolModeSettings = (CamcontrolModeSettings*)mmAlloc(sizeof(CamcontrolModeSettings), 0xf, 0);
     memset(gCamcontrolModeSettings, 0, sizeof(CamcontrolModeSettings));

@@ -83,8 +83,8 @@ extern f32 lbl_803E483C;
 
 #define DIMLOGFIRE_GROUP 0x31
 
-int dimlogfire_getExtraSize(void) { return 0x24; }
-int dimlogfire_getObjectTypeId(void) { return 0x1; }
+int DIMLogFire_getExtraSize(void) { return 0x24; }
+int DIMLogFire_getObjectTypeId(void) { return 0x1; }
 
 int fn_801B0784(int obj, int delta)
 {
@@ -93,7 +93,7 @@ int fn_801B0784(int obj, int delta)
     return inner->strengthInit <= 0;
 }
 
-void dimlogfire_free(int* obj, int mode)
+void DIMLogFire_free(int* obj, int mode)
 {
     extern void Obj_FreeObject(void* o); /* #57 */
     DimLogFireState* inner = ((GameObject*)obj)->extra;
@@ -109,7 +109,7 @@ void dimlogfire_free(int* obj, int mode)
     }
 }
 
-int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int DIMLogFire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern int Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
     DimLogFireState* state = ((GameObject*)obj)->extra;
@@ -127,7 +127,7 @@ int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         state->smokeToggle = (u8)(state->smokeToggle ^ 1);
         break;
     case 2:
-        GameBit_Set(46, 1);
+        mainSetBits(46, 1);
         break;
     case 3:
         state->mode = DIMLOGFIRE_MODE_ANIM_HELD;
@@ -146,7 +146,7 @@ int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void DIMLogFire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DimLogFireState* state;
     int* subobj;
@@ -193,7 +193,7 @@ typedef struct DimlogfireObjectDef
     s16 douseGameBit;
 } DimlogfireObjectDef;
 
-void dimlogfire_update(int obj)
+void DIMLogFire_update(int obj)
 {
     extern int getTrickyObject(void); /* #57 */
     extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */
@@ -256,7 +256,7 @@ void dimlogfire_update(int obj)
             ObjHits_DisableObject(obj);
             state->mode = DIMLOGFIRE_MODE_LIT;
             state->dousedLatch = 1;
-            GameBit_Set(((DimlogfirePlacement*)tricky)->douseGameBit, 1);
+            mainSetBits(((DimlogfirePlacement*)tricky)->douseGameBit, 1);
         }
         tricky = getTrickyObject();
         if ((u32)tricky != 0)
@@ -308,7 +308,7 @@ void dimlogfire_update(int obj)
     }
 }
 
-void dimlogfire_init(int obj, int def)
+void DIMLogFire_init(int obj, int def)
 {
     extern void modelLightStruct_setGlowProjectionRadius(int light, f32 radius); /* #57 */
     extern void modelLightStruct_setupGlow(int light, int mode, int r, int g, int b, int a, f32 radius); /* #57 */
@@ -319,14 +319,14 @@ void dimlogfire_init(int obj, int def)
     int radius;
     DimLogFireState* state;
 
-    ((GameObject*)obj)->animEventCallback = dimlogfire_SeqFn;
+    ((GameObject*)obj)->animEventCallback = DIMLogFire_SeqFn;
     ObjGroup_AddObject(obj, DIMLOGFIRE_GROUP);
     state = ((GameObject*)obj)->extra;
     state->unk20 = 0;
     state->initMode = ((DimlogfireObjectDef*)def)->initMode;
     state->strengthInit = (s8)((DimlogfireObjectDef*)def)->strengthInit;
     state->strength = *(u8*)&state->strengthInit;
-    if (GameBit_Get(((DimlogfireObjectDef*)def)->douseGameBit) != 0)
+    if (mainGetBit(((DimlogfireObjectDef*)def)->douseGameBit) != 0)
     {
         state->mode = DIMLOGFIRE_MODE_LIT;
         state->dousedLatch = 1;

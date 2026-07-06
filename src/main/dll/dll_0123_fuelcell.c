@@ -68,7 +68,7 @@ typedef struct
     s16 onBit; // 0x20
 } FuelcellSetup;
 
-int fuelcell_func0B(int* obj)
+int FuelCell_SeqFn(int* obj)
 {
     FuelcellState* state = ((GameObject*)obj)->extra;
     state->unkBit5 = 1;
@@ -91,9 +91,9 @@ void fuelcell_modelMtxFn(u8* model)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-int fuelcell_getExtraSize(void) { return 0x60; }
+int FuelCell_getExtraSize(void) { return 0x60; }
 
-void fuelcell_free(int* obj)
+void FuelCell_free(int* obj)
 {
     u8* state = ((GameObject*)obj)->extra;
     u8 i;
@@ -121,7 +121,7 @@ typedef struct
 } GameObjPos;
 
 #pragma opt_loop_invariants off
-void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
+void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
 {
     extern f32 vec3f_distanceSquared(f32* a, f32* b);
     extern void* Obj_GetActiveModel(int* obj);
@@ -249,7 +249,7 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
 }
 #pragma opt_loop_invariants reset
 
-void fuelcell_update(int* obj)
+void FuelCell_update(int* obj)
 {
     extern void* Obj_GetPlayerObject(void);
     extern u32 ObjGroup_AddObject();
@@ -268,19 +268,19 @@ void fuelcell_update(int* obj)
             if (msgId == FUELCELL_MSG_RELEASE)
             {
                 state->grabbed = 0;
-                GameBit_Set(setup->offBit, 1);
+                mainSetBits(setup->offBit, 1);
                 gameBitIncrement(0x3f5);
-                GameBit_Set(FUELCELL_GAMEBIT_CARRIED, 0);
+                mainSetBits(FUELCELL_GAMEBIT_CARRIED, 0);
             }
         }
     }
     else
     {
         int bit = setup->offBit;
-        if (bit != -1 && GameBit_Get(bit) == 0)
+        if (bit != -1 && mainGetBit(bit) == 0)
         {
             bit = setup->onBit;
-            if (bit == -1 || GameBit_Get(bit) != 0)
+            if (bit == -1 || mainGetBit(bit) != 0)
             {
                 f32 dy;
                 if (!state->lit)
@@ -299,14 +299,14 @@ void fuelcell_update(int* obj)
                 }
                 dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
                 if (dy > -5.0f && dy < 40.0f
-                    && GameBit_Get(FUELCELL_GAMEBIT_CARRIED) == 0
+                    && mainGetBit(FUELCELL_GAMEBIT_CARRIED) == 0
                     && getXZDistance(&((GameObject*)obj)->anim.worldPosX,
                                      &((GameObject*)player)->anim.worldPosX) < 81.0f)
                 {
                     state->msg = 0xcbe;
                     ObjMsg_SendToObject(player, FUELCELL_MSG_IN_RANGE, obj, state);
                     state->grabbed = 1;
-                    GameBit_Set(FUELCELL_GAMEBIT_CARRIED, 1);
+                    mainSetBits(FUELCELL_GAMEBIT_CARRIED, 1);
                     Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
                 }
             }
@@ -320,10 +320,10 @@ void fuelcell_update(int* obj)
     }
 }
 
-void fuelcell_init(int* obj)
+void FuelCell_init(int* obj)
 {
     extern void* Obj_GetActiveModel(int* obj);
-    ((GameObject*)obj)->animEventCallback = fuelcell_func0B;
+    ((GameObject*)obj)->animEventCallback = FuelCell_SeqFn;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fuelcell_modelMtxFn);
     ObjMsg_AllocQueue(obj, 2);
 }

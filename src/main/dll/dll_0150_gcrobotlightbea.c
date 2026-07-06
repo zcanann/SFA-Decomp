@@ -90,17 +90,17 @@ STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
 /* Per-object extra state for the CloudRunner main crystal
- * (cfmaincrystal_getExtraSize == 0x160). */
+ * (CFMainCrystal_getExtraSize == 0x160). */
 
 STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
 /* Per-object extra state for the CloudRunner power base
- * (cfpowerbase_getExtraSize == 0x6). */
+ * (CFPowerBase_getExtraSize == 0x6). */
 
 STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
 
 /* Per-object extra state for the CloudRunner prison guard
- * (cfprisonguard_getExtraSize == 0x3c). */
+ * (CFPrisonGuard_getExtraSize == 0x3c). */
 
 STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 

@@ -115,7 +115,7 @@ void lfxemitter_update(LfxEmitterObject* obj)
     }
 
     if ((player != NULL) &&
-        ((state->enableBit == -1) || (GameBit_Get(state->enableBit) != 0)))
+        ((state->enableBit == -1) || (mainGetBit(state->enableBit) != 0)))
     {
         if (state->hasLifeTimer != 0)
         {

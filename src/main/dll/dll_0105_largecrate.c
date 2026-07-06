@@ -184,7 +184,7 @@ void largecrate_updateConveyorSlide(int obj, int def)
                 if (Vec_distance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
                     lbl_803E39BC)
                 {
-                    if ((u32)GameBit_Get(GAMEBIT_SFX_MUTE) == 0)
+                    if ((u32)mainGetBit(GAMEBIT_SFX_MUTE) == 0)
                     {
                         Sfx_PlayFromObject(obj, SFXfend_rob_wave);
                     }
@@ -221,7 +221,7 @@ int largecrate_spawnDropContents(int obj, int player, int state)
     {
         return 0;
     }
-    GameBit_Set(((LargeCrateState*)state)->brokenGameBit, 1);
+    mainSetBits(((LargeCrateState*)state)->brokenGameBit, 1);
     switch (((LargeCrateState*)state)->dropType)
     {
     case 1:
@@ -391,7 +391,7 @@ int largecrate_spawnDropContents(int obj, int player, int state)
         break;
     case 7:
     case 8:
-        GameBit_Set(((LargeCrateState*)state)->brokenGameBit, 1);
+        mainSetBits(((LargeCrateState*)state)->brokenGameBit, 1);
         break;
     case 9:
         if (Obj_IsLoadingLocked() != 0)
@@ -656,7 +656,7 @@ void largecrate_init(int obj, u8* initData)
         ((LargeCrateState*)state)->breakTimeBonus = id * LARGECRATE_TIMER_SCALE_FRAMES;
     }
 
-    if (GameBit_Get((int)((LargeCrateState*)state)->brokenGameBit) != 0)
+    if (mainGetBit((int)((LargeCrateState*)state)->brokenGameBit) != 0)
     {
         ((LargeCrateState*)state)->animTimer = lbl_803E39AC;
         ObjHits_DisableObject((u32)obj);
@@ -713,18 +713,18 @@ void largecrate_initialise(void)
 /*__DATA_EXTERNS__*/
 extern void dll_107_getExtraSize_ret_44();
 extern void dll_107_getObjectTypeId();
-extern void fn_801859D4();
-extern void fn_80185A24();
+extern void dll_107_free();
+extern void dll_107_render();
 extern void dll_107_hitDetect_nop();
-extern void fn_80185B74();
-extern void fn_801862CC();
+extern void dll_107_update();
+extern void dll_107_init();
 extern void dll_107_release_nop();
 extern void dll_107_initialise_nop();
-extern void scarab_getExtraSize();
-extern void scarab_free();
-extern void scarab_render();
-extern void scarab_update();
-extern void scarab_init();
+extern void Scarab_getExtraSize();
+extern void Scarab_free();
+extern void Scarab_render();
+extern void Scarab_update();
+extern void Scarab_init();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gScarabObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, scarab_init, scarab_update, (void*)0x00000000, scarab_render, scarab_free, (void*)0x00000000, scarab_getExtraSize };
-void* lbl_80321788[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, dll_107_initialise_nop, dll_107_release_nop, (void*)0x00000000, fn_801862CC, fn_80185B74, dll_107_hitDetect_nop, fn_80185A24, fn_801859D4, dll_107_getObjectTypeId, dll_107_getExtraSize_ret_44 };
+void* gScarabObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, Scarab_init, Scarab_update, (void*)0x00000000, Scarab_render, Scarab_free, (void*)0x00000000, Scarab_getExtraSize };
+void* lbl_80321788[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, dll_107_initialise_nop, dll_107_release_nop, (void*)0x00000000, dll_107_init, dll_107_update, dll_107_hitDetect_nop, dll_107_render, dll_107_free, dll_107_getObjectTypeId, dll_107_getExtraSize_ret_44 };

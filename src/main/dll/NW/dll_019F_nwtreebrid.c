@@ -182,7 +182,7 @@ void treebird_update(int obj)
             (*gObjectTriggerInterface)->runSequence((int)state->triggerId, (void*)obj, 1);
             state->triggerLatched = 1;
         }
-        else if (GameBit_Get((int)state->gameBit) != 0)
+        else if (mainGetBit((int)state->gameBit) != 0)
         {
             (*gObjectTriggerInterface)->runSequence((int)state->triggerId, (void*)obj, -1);
             state->triggerLatched = 1;
@@ -201,7 +201,7 @@ void treebird_init(int obj, int setup)
     ((GameObject*)obj)->anim.rotZ = ((NwTreeBirdMapData*)setup)->rotZ;
     state->triggerId = ((NwTreeBirdMapData*)setup)->triggerVariant;
     state->gameBit = ((NwTreeBirdMapData*)setup)->gameBit;
-    if (GameBit_Get((int)state->gameBit) != 0)
+    if (mainGetBit((int)state->gameBit) != 0)
     {
         state->immediateTrigger = 0x154;
     }

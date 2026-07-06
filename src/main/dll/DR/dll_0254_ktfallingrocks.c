@@ -53,7 +53,7 @@ void ktfallingrocks_update(int obj)
     ObjPosParams params;
     char* player;
     int i;
-    if (GameBit_Get(((KtfallingrocksPlacement*)placement)->triggerBit) == 0)
+    if (mainGetBit(((KtfallingrocksPlacement*)placement)->triggerBit) == 0)
     {
         return;
     }
@@ -73,7 +73,7 @@ void ktfallingrocks_update(int obj)
             (void*)obj, ((KtfallingrocksPlacement*)placement)->effectId, &params, 0x200001, -1, NULL);
     }
     Sfx_PlayFromObject(obj, SFXbaddie_haga_spin);
-    GameBit_Set(((KtfallingrocksPlacement*)placement)->triggerBit, 0);
+    mainSetBits(((KtfallingrocksPlacement*)placement)->triggerBit, 0);
 }
 
 void ktfallingrocks_init(int obj)

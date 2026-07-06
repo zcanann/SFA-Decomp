@@ -21,24 +21,24 @@
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-int visanimator_getExtraSize(void) { return sizeof(VisAnimatorState); }
-int visanimator_getObjectTypeId(void) { return 0x0; }
+int VisAnimator_getExtraSize(void) { return sizeof(VisAnimatorState); }
+int VisAnimator_getObjectTypeId(void) { return 0x0; }
 
-void visanimator_free(void)
+void VisAnimator_free(void)
 {
 }
 
-void visanimator_render(void)
+void VisAnimator_render(void)
 {
 }
 
-void visanimator_hitDetect(void)
+void VisAnimator_hitDetect(void)
 {
 }
 
 #pragma scheduling off
 #pragma peephole off
-void visanimator_update(int* obj)
+void VisAnimator_update(int* obj)
 {
     s16* placement = ((GameObject*)obj)->anim.placementData;
     VisAnimatorState* vstate = (VisAnimatorState*)((GameObject*)obj)->extra;
@@ -51,7 +51,7 @@ void visanimator_update(int* obj)
         vstate->flags |= 1;
         return;
     }
-    gate = GameBit_Get(placement[0x18 / 2]);
+    gate = mainGetBit(placement[0x18 / 2]);
     vstate->gateNow = (u8)(vstate->gateMask & gate);
     if (vstate->gatePrev != vstate->gateNow)
     {
@@ -65,7 +65,7 @@ void visanimator_update(int* obj)
     }
 }
 
-void visanimator_init(int* obj, int* desc)
+void VisAnimator_init(int* obj, int* desc)
 {
     VisAnimatorState* vstate;
     u32 gate;
@@ -76,7 +76,7 @@ void visanimator_init(int* obj, int* desc)
     baseVisBit = *(s8*)((char*)desc + 0x1B);
     vstate->visBit = baseVisBit;
     vstate->gateMask = (u8)(1 << *(u8*)&((WaveanimatorObjectDef*)desc)->spanX);
-    gate = GameBit_Get(((WaveanimatorObjectDef*)desc)->originX);
+    gate = mainGetBit(((WaveanimatorObjectDef*)desc)->originX);
     if ((vstate->gateMask & gate) != 0)
     {
         vstate->visBit = vstate->visBit ^ 1;
@@ -84,17 +84,17 @@ void visanimator_init(int* obj, int* desc)
     mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
                                     (double)((GameObject*)obj)->anim.localPosY,
                                     (double)((GameObject*)obj)->anim.localPosZ));
-    gate = GameBit_Get(((WaveanimatorObjectDef*)desc)->originX);
+    gate = mainGetBit(((WaveanimatorObjectDef*)desc)->originX);
     gateBit = (u8)(vstate->gateMask & gate);
     vstate->gateNow = gateBit;
     vstate->gatePrev = gateBit;
     vstate->flags |= 1;
 }
 
-void visanimator_release(void)
+void VisAnimator_release(void)
 {
 }
 
-void visanimator_initialise(void)
+void VisAnimator_initialise(void)
 {
 }

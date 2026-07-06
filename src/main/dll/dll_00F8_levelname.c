@@ -12,7 +12,7 @@
  *            frames against the duration cap, then advance.
  *   phase 3  slide the banner out - lower the Y offset to 0, then settle.
  *   phase 4  idle.
- * The sequence callback (levelname_SeqFn) reacts to anim event id 1 by
+ * The sequence callback (LevelName_SeqFn) reacts to anim event id 1 by
  * setting the enable game bit and jumping straight to phase 1.
  *
  * Render/hitDetect/free/release/initialise are empty; behaviour is driven
@@ -26,7 +26,7 @@
 #include "main/engine_shared.h"
 
 #define LEVELNAME_OBJFLAG_HITDETECT_DISABLED 0x2000
-extern void GameBit_Set(int eventId, int value);
+extern void mainSetBits(int eventId, int value);
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E36E0;
 extern f32 lbl_803E36E4;
@@ -43,9 +43,9 @@ extern f32 lbl_803E36E8;
 #define LEVELNAME_BANNER_Y_MAX 0xdc
 #define LEVELNAME_BANNER_Y_STEP 4
 #define LEVELNAME_SEQEV_SHOW 1     /* anim event id that triggers the banner */
-#define LEVELNAME_SEQFN_HANDLED 4  /* levelname_SeqFn return when the show event fired */
+#define LEVELNAME_SEQFN_HANDLED 4  /* LevelName_SeqFn return when the show event fired */
 
-int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int LevelName_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int* state = ((GameObject*)obj)->extra;
     int i;
@@ -55,7 +55,7 @@ int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (((TFrameAnimatorState*)state)->enableGameBit != -1)
             {
-                GameBit_Set(((TFrameAnimatorState*)state)->enableGameBit, 1);
+                mainSetBits(((TFrameAnimatorState*)state)->enableGameBit, 1);
             }
             ((TFrameAnimatorState*)state)->phase = LEVELNAME_PHASE_SLIDE_IN;
             return LEVELNAME_SEQFN_HANDLED;
@@ -64,22 +64,22 @@ int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int levelname_getExtraSize(void) { return 0x18; }
-int levelname_getObjectTypeId(void) { return 0x0; }
+int LevelName_getExtraSize(void) { return 0x18; }
+int LevelName_getObjectTypeId(void) { return 0x0; }
 
-void levelname_free(void)
+void LevelName_free(void)
 {
 }
 
-void levelname_render(void)
+void LevelName_render(void)
 {
 }
 
-void levelname_hitDetect(void)
+void LevelName_hitDetect(void)
 {
 }
 
-void levelname_update(int* obj)
+void LevelName_update(int* obj)
 {
     u8* state;
     int* player;
@@ -94,7 +94,7 @@ void levelname_update(int* obj)
         {
             if (((LevelnameState*)state)->gameBit != -1)
             {
-                GameBit_Set(((LevelnameState*)state)->gameBit, 1);
+                mainSetBits(((LevelnameState*)state)->gameBit, 1);
             }
             state[LEVELNAME_PHASE] = LEVELNAME_PHASE_SLIDE_IN;
         }
@@ -132,13 +132,13 @@ void levelname_update(int* obj)
     }
 }
 
-void levelname_init(int obj, int objDef)
+void LevelName_init(int obj, int objDef)
 {
     int* state;
     int* text;
 
     state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = levelname_SeqFn;
+    ((GameObject*)obj)->animEventCallback = LevelName_SeqFn;
     text = (int*)gameTextGet(*(int*)(objDef + 0x1c));
     ((TFrameAnimatorState*)state)->unk4 = **(int**)(text + 2);
     ((TFrameAnimatorState*)state)->duration = 0x64;
@@ -150,7 +150,7 @@ void levelname_init(int obj, int objDef)
     ((TFrameAnimatorState*)state)->elapsedFrames = 0;
     if (((TFrameAnimatorState*)state)->enableGameBit != -1)
     {
-        if (GameBit_Get(((TFrameAnimatorState*)state)->enableGameBit) != 0)
+        if (mainGetBit(((TFrameAnimatorState*)state)->enableGameBit) != 0)
         {
             ((TFrameAnimatorState*)state)->phase = LEVELNAME_PHASE_IDLE;
         }
@@ -158,10 +158,10 @@ void levelname_init(int obj, int objDef)
     ((GameObject*)obj)->objectFlags |= LEVELNAME_OBJFLAG_HITDETECT_DISABLED;
 }
 
-void levelname_release(void)
+void LevelName_release(void)
 {
 }
 
-void levelname_initialise(void)
+void LevelName_initialise(void)
 {
 }

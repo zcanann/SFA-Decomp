@@ -77,7 +77,7 @@ void bombplant_hitDetect(void)
 
 void bombplant_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5370); }
 
-void fn_801D2B70(int* obj, int unused, int* p3)
+void bombplant_explode(int* obj, int unused, int* p3)
 {
     BombplantPlacement* p4 = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
     void* trickyObj = getTrickyObject();
@@ -98,13 +98,13 @@ void fn_801D2B70(int* obj, int unused, int* p3)
     gbId = p4->gameBit;
     if (gbId != -1)
     {
-        GameBit_Set(gbId, 0);
+        mainSetBits(gbId, 0);
     }
     else
     {
         for (i = 0; i < 3; i++)
         {
-            fn_801D29E4(obj, p3);
+            bombplant_throwSpore(obj, p3);
         }
     }
 }
@@ -136,7 +136,7 @@ typedef struct
 /* Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
 #pragma opt_common_subs off
-void fn_801D29E4(int* obj, int* p2)
+void bombplant_throwSpore(int* obj, int* p2)
 {
     BombplantSporeSpawn* spore;
     BombplantPlacement* base = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
@@ -243,7 +243,7 @@ void bombplant_init(void* obj, void* param, int flag)
     }
 
     bitId = ((BombplantPlacement*)param)->gameBit;
-    if (bitId != -1 && GameBit_Get(bitId) == 0)
+    if (bitId != -1 && mainGetBit(bitId) == 0)
     {
         p4c = ((GameObject*)obj)->anim.placementData;
         ((GameObject*)obj)->anim.alpha = 0xff;
@@ -277,7 +277,7 @@ void bombplant_update(void* obj)
     extern void Obj_StartModelFadeIn(u8* obj, int frames); /* #57 */
     extern void Sfx_KeepAliveLoopedObjectSound(void* obj, int sndId); /* #57 */
     extern void Sfx_PlayFromObject(void* obj, int sndId); /* #57 */
-    extern void fn_801D2B70(void* obj, void* stateEntry, void* state); /* #57 */
+    extern void bombplant_explode(void* obj, void* stateEntry, void* state); /* #57 */
     extern u32 ObjHits_RefreshObjectState(); /* #57 */
     extern int randomGetRange(int lo, int hi); /* #57 */
     void* state;
@@ -319,7 +319,7 @@ void bombplant_update(void* obj)
         bitId = ((BombplantPlacement*)param)->gameBit;
         if (bitId != -1)
         {
-            if (GameBit_Get(bitId) != 0)
+            if (mainGetBit(bitId) != 0)
             {
                 plr = Obj_GetPlayerObject();
                 dist =
@@ -391,7 +391,7 @@ void bombplant_update(void* obj)
         break;
 
     case 4:
-        fn_801D2B70(obj, entry, state);
+        bombplant_explode(obj, entry, state);
         break;
 
     case 0:
@@ -460,10 +460,10 @@ void bombplant_update(void* obj)
     if ((entry[8] & 0x2) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && GameBit_Get(BOMBPLANT_GAMEBIT_INTRO_SEEN) == 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && mainGetBit(BOMBPLANT_GAMEBIT_INTRO_SEEN) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-            GameBit_Set(BOMBPLANT_GAMEBIT_INTRO_SEEN, 1);
+            mainSetBits(BOMBPLANT_GAMEBIT_INTRO_SEEN, 1);
         }
     }
     else
@@ -515,5 +515,5 @@ u8 gBombPlantStateTable[] =
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* gBombPlantObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, bombplant_init, bombplant_update, bombplant_hitDetect, bombplant_render, bombplant_free, bombplant_getObjectTypeId, bombplant_getExtraSize, (void*)0x00000000 };
 u8 lbl_80326D98[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-void* gBombPlantSporeObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, bombplantspore_init, bombplantspore_update, (void*)0x00000000, (void*)0x00000000, bombplantspore_free, (void*)0x00000000, bombplantspore_getExtraSize, (void*)0x00000000 };
-void* gBombPlantingSpotObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, bombplantingspot_init, bombplantingspot_update, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
+void* gBombPlantSporeObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_init, BombPlantSpore_update, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_free, (void*)0x00000000, BombPlantSpore_getExtraSize, (void*)0x00000000 };
+void* gBombPlantingSpotObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, BombPlantingSpot_init, BombPlantingSpot_update, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };

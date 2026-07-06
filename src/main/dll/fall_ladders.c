@@ -12,7 +12,7 @@
  *                scratch floats at 0x300..0x33c.
  *   fn_80154328  spawns a water ripple under the object and a splash sfx when
  *                it is moving fast enough; gated by a randomised cooldown.
- *   fn_801544E8  hit-reaction handler: sets reaction flags + door sfx above a
+ *   Baddie_HandleHitReaction  hit-reaction handler: sets reaction flags + door sfx above a
  *                progress threshold.
  *   fn_80154584  curve-path follow update: advances the RomCurveWalker, steers
  *                toward the next point, bobs rotY via a sine table, then calls
@@ -238,7 +238,7 @@ void fn_80154328(int obj, int p)
 
 #pragma optimization_level 1
 #pragma peephole on
-void fn_801544E8(int obj, u8* state, int unused, int cmd)
+void Baddie_HandleHitReaction(int obj, u8* state, int unused, int cmd)
 {
     int objCopy = obj;
     if (cmd == 17 || cmd == 16) return;

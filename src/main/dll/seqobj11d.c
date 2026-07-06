@@ -1,7 +1,7 @@
 /*
  * seqobj11d - a family of ground/walking baddie variants sharing one
  * sequence-driven animation update. The variant is selected by anim.seqId
- * in fn_80151954 (init) into a 0..5 type index (state+0x33b) that selects
+ * in sharpClawInit (init) into a 0..5 type index (state+0x33b) that selects
  * per-type tables (lbl_8031F16C entries) of movement
  * sequence entries (SeqEntry: anim id + reaction mask + colour bytes).
  *
@@ -13,7 +13,7 @@
  * target; fn_801513AC steers toward a tracked object using getAngle.
  * fn_80151C68 is a pay-to-trigger interaction (spends 25 money, sets a
  * placement game bit, runs object trigger sequences). fn_80151DB8 pushes
- * the player out of a cylinder around the object. fn_80152004 plays a dirt
+ * the player out of a cylinder around the object. guardClawUpdateWhileFrozen plays a dirt
  * step sfx and sets a reaction flag. fn_801513AC is also referenced
  * directly by the wisp baddie DLL.
  */
@@ -221,7 +221,7 @@ void fn_8015165C(int obj, u8* state)
     p28 = *(u8**)(base + 28);
     if (t == 5 && (((GroundBaddieState*)state)->baddie.controlFlags & 0x800000) != 0)
     {
-        GameBit_Set(456, 1);
+        mainSetBits(456, 1);
     }
     if (((GroundBaddieState*)state)->baddie.trackedObj != NULL && ((GameObject*)*(int*)&((GroundBaddieState*)state)->baddie.
         trackedObj)->anim.classId == 1)
@@ -308,7 +308,7 @@ void fn_8015165C(int obj, u8* state)
     }
 }
 
-void fn_80151954(int obj, u8* state)
+void sharpClawInit(int obj, u8* state)
 {
     u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
     f32 fz;
@@ -427,7 +427,7 @@ void fn_80151C68(int obj, u8* state)
         if (player != NULL && playerGetMoney(player) >= 25)
         {
             playerAddMoney(player, -25);
-            GameBit_Set(*(s16*)(setup + 0x1c), 1);
+            mainSetBits(*(s16*)(setup + 0x1c), 1);
             *(u16*)(state + 0x338) = gGroundBaddieTriggerResponseSeq[2];
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             hudFn_8011f38c(2);
@@ -497,7 +497,7 @@ void fn_80151DB8(int obj, u8* state)
     }
 }
 
-void fn_80152004(int obj, int* state)
+void guardClawUpdateWhileFrozen(int obj, int* state)
 {
     Sfx_PlayFromObject((u32)obj, SFXen_cavedirt22);
     ((GroundBaddieState*)state)->baddie.reactionFlags |= 0x10;

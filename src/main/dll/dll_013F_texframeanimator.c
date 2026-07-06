@@ -27,7 +27,7 @@ typedef struct TexframeanimatorPlacement
 char sTexFrameAnimDebugFormat[] = " TEXFRAMEANIM %i ";
 extern int* return0_80056694(int* block, int textureSlot);
 extern int* mapTextureOverrideGetEntry(int idx);
-extern void fn_80137948(char* fmt, ...);
+extern void logPrintf(char* fmt, ...);
 extern f32 lbl_803E4060;
 
 typedef struct TexFrameAnimatorState
@@ -44,24 +44,24 @@ typedef struct TexFrameAnimatorState
     u8 flagLow : 5;
 } TexFrameAnimatorState;
 
-int texframeanimator_getExtraSize(void) { return 0x18; }
-int texframeanimator_getObjectTypeId(void) { return 0x0; }
+int TexFrameAnimator_getExtraSize(void) { return 0x18; }
+int TexFrameAnimator_getObjectTypeId(void) { return 0x0; }
 
-void texframeanimator_free(void)
+void TexFrameAnimator_free(void)
 {
 }
 
-void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void TexFrameAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4060);
 }
 
-void texframeanimator_hitDetect(void)
+void TexFrameAnimator_hitDetect(void)
 {
 }
 
-void texframeanimator_update(int* obj)
+void TexFrameAnimator_update(int* obj)
 {
     extern void* mapGetBlock(int i);
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
@@ -75,7 +75,7 @@ void texframeanimator_update(int* obj)
     params = *(u8**)&((GameObject*)obj)->anim.placementData;
 
     if ((state->active == 0) &&
-        ((u32)GameBit_Get(((TexframeanimatorPlacement*)params)->triggerGameBit) != 0) &&
+        ((u32)mainGetBit(((TexframeanimatorPlacement*)params)->triggerGameBit) != 0) &&
         (state->done == 0))
     {
         state->active = 1;
@@ -96,7 +96,7 @@ void texframeanimator_update(int* obj)
         {
             textureEntry = mapTextureOverrideGetEntry(*(s16*)textureHit);
             state->frame += state->speed * framesThisStep;
-            fn_80137948(sTexFrameAnimDebugFormat, state->frame);
+            logPrintf(sTexFrameAnimDebugFormat, state->frame);
             if (state->frame < 0)
             {
                 state->frame = 0;
@@ -105,7 +105,7 @@ void texframeanimator_update(int* obj)
             {
                 if (((TexframeanimatorPlacement*)params)->completedGameBit != -1)
                 {
-                    GameBit_Set(((TexframeanimatorPlacement*)params)->completedGameBit, 1);
+                    mainSetBits(((TexframeanimatorPlacement*)params)->completedGameBit, 1);
                     state->active = 0;
                     state->done = 1;
                     state->frame = state->endFrame;
@@ -120,7 +120,7 @@ void texframeanimator_update(int* obj)
     }
 }
 
-void texframeanimator_init(int* obj, u8* params)
+void TexFrameAnimator_init(int* obj, u8* params)
 {
     TexFrameAnimatorState* state;
     u8 done;
@@ -130,7 +130,7 @@ void texframeanimator_init(int* obj, u8* params)
     state->endFrame = ((TexframeanimatorPlacement*)params)->endFrame << 8;
     state->speed = (u8)((TexframeanimatorPlacement*)params)->speed;
     state->wrapFrame = ((TexframeanimatorPlacement*)params)->wrapFrame << 8;
-    done = GameBit_Get(((TexframeanimatorPlacement*)params)->completedGameBit);
+    done = mainGetBit(((TexframeanimatorPlacement*)params)->completedGameBit);
     if ((state->done = done) != 0)
     {
         state->frame = state->endFrame;
@@ -140,11 +140,11 @@ void texframeanimator_init(int* obj, u8* params)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | TEXFRAMEANIMATOR_OBJFLAG_HIDDEN);
 }
 
-void texframeanimator_release(void)
+void TexFrameAnimator_release(void)
 {
 }
 
-void texframeanimator_initialise(void)
+void TexFrameAnimator_initialise(void)
 {
 }
 
@@ -154,12 +154,12 @@ extern u8 WaterFallSpray_getExtraSize[];
 extern u8 WaterFallSpray_init[];
 extern u8 WaterFallSpray_render[];
 extern u8 WaterFallSpray_update[];
-extern u8 fogcontrol_free[];
-extern u8 fogcontrol_getExtraSize[];
-extern u8 fogcontrol_getObjectTypeId[];
-extern u8 fogcontrol_hitDetect[];
-extern u8 fogcontrol_init[];
-extern u8 fogcontrol_update[];
+extern u8 FogControl_free[];
+extern u8 FogControl_getExtraSize[];
+extern u8 FogControl_getObjectTypeId[];
+extern u8 FogControl_hitDetect[];
+extern u8 FogControl_init[];
+extern u8 FogControl_update[];
 extern u8 lightning_free[];
 extern u8 lightning_getExtraSize[];
 extern u8 lightning_init[];
@@ -179,7 +179,7 @@ typedef union ObjDescriptorTable {
     u64 align8;
 } ObjDescriptorTable;
 
-ObjDescriptorTable gFogControlObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)fogcontrol_init, (u32)fogcontrol_update, (u32)fogcontrol_hitDetect, 0x00000000, (u32)fogcontrol_free, (u32)fogcontrol_getObjectTypeId, (u32)fogcontrol_getExtraSize } };
+ObjDescriptorTable gFogControlObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)FogControl_init, (u32)FogControl_update, (u32)FogControl_hitDetect, 0x00000000, (u32)FogControl_free, (u32)FogControl_getObjectTypeId, (u32)FogControl_getExtraSize } };
 ObjDescriptorTable gLightningObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)lightning_init, (u32)lightning_update, 0x00000000, (u32)lightning_render, (u32)lightning_free, 0x00000000, (u32)lightning_getExtraSize } };
 ObjDescriptorTable gWaterFallSprayObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)WaterFallSpray_init, (u32)WaterFallSpray_update, 0x00000000, (u32)WaterFallSpray_render, (u32)WaterFallSpray_free, 0x00000000, (u32)WaterFallSpray_getExtraSize } };
 ObjDescriptorTable gSfxPlayerObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)sfxplayerObj_init, (u32)sfxplayerObj_update, 0x00000000, 0x00000000, (u32)sfxplayerObj_free, 0x00000000, (u32)sfxplayerObj_getExtraSize } };

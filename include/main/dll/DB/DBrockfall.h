@@ -12,14 +12,14 @@ typedef struct FEseqobjectState {
   u8 promptState;
 } FEseqobjectState;
 
-void paymentkiosk_init(int obj, PaymentKioskMapData *initData);
+void PaymentKiosk_init(int obj, PaymentKioskMapData *initData);
 int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void FEseqobject_init(int obj);
 void FEseqobject_update(int obj);
 int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void dll_144_init(int obj);
-void paymentkiosk_release(void);
-void paymentkiosk_initialise(void);
+void PaymentKiosk_release(void);
+void PaymentKiosk_initialise(void);
 void FUN_801df45c(u16 *param_1);
 u32 FUN_801df69c(int param_1,u32 param_2,int param_3);
 void FUN_801df784(u64 param_1,u64 param_2,u64 param_3,u64 param_4,

@@ -178,11 +178,11 @@ void WM_seqobject_update(int* obj)
         {
             return;
         }
-        if (GameBit_Get(0xa4) != 0)
+        if (mainGetBit(0xa4) != 0)
         {
             return;
         }
-        if (GameBit_Get(0x78) != 0)
+        if (mainGetBit(0x78) != 0)
         {
             return;
         }
@@ -203,7 +203,7 @@ void WM_seqobject_update(int* obj)
             {
                 OBJECT_TRIGGER_REFRESH(0, obj, -1);
                 OBJ_S32(obj, 0xf4) = 1;
-                GameBit_Set(0xa4, 1);
+                mainSetBits(0xa4, 1);
             }
             else
             {

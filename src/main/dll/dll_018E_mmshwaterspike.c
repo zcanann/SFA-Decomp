@@ -32,7 +32,7 @@ typedef struct MmshWaterspikeObjectDef
 } MmshWaterspikeObjectDef;
 
 extern void* ObjList_FindObjectById(int id);
-extern void fn_80137948(char* fmt, ...);
+extern void logPrintf(char* fmt, ...);
 extern char sWaterSpikeInvalidXyzAnimIdWarning[];
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern u8 framesThisStep;
@@ -76,7 +76,7 @@ void mmsh_waterspike_update(int obj)
     }
     else
     {
-        fn_80137948(sWaterSpikeInvalidXyzAnimIdWarning, ((MmshWaterspikePlacement*)placement)->xyzAnimId);
+        logPrintf(sWaterSpikeInvalidXyzAnimIdWarning, ((MmshWaterspikePlacement*)placement)->xyzAnimId);
         hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
                                  ((GameObject*)obj)->anim.localPosY,
                                  ((GameObject*)obj)->anim.localPosZ, &hitList, 0, 0);

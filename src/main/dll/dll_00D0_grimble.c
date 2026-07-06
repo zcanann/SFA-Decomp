@@ -510,26 +510,26 @@ ObjectDescriptor gGrimbleObjDescriptor = {
     grimble_getExtraSize,
 };
 
-void tumbleweedbush_free(void);
+void TumbleWeedBush_free(void);
 
-void tumbleweedbush_hitDetect(void);
+void TumbleWeedBush_hitDetect(void);
 
-void tumbleweedbush_release(void);
+void TumbleWeedBush_release(void);
 
-void tumbleweedbush_initialise(void);
+void TumbleWeedBush_initialise(void);
 
-void tumbleweedbush_init(u8* obj, u8* params, int param3);
+void TumbleWeedBush_init(u8* obj, u8* params, int param3);
 
-int tumbleweedbush_getExtraSize(void);
-int tumbleweedbush_getObjectTypeId(void);
+int TumbleWeedBush_getExtraSize(void);
+int TumbleWeedBush_getObjectTypeId(void);
 
-void tumbleweedbush_update(int* obj);
+void TumbleWeedBush_update(int* obj);
 
-void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void TumbleWeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* tumbleweedbush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
+/* TumbleWeedBush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
  * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
-void tumbleweedbush_setScale(u8* obj, void* match);
+void TumbleWeedBush_setScale(u8* obj, void* match);
 
 ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     {
@@ -537,17 +537,17 @@ ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)tumbleweedbush_initialise,
-        (ObjectDescriptorCallback)tumbleweedbush_release,
+        (ObjectDescriptorCallback)TumbleWeedBush_initialise,
+        (ObjectDescriptorCallback)TumbleWeedBush_release,
         0,
-        (ObjectDescriptorCallback)tumbleweedbush_init,
-        (ObjectDescriptorCallback)tumbleweedbush_update,
-        (ObjectDescriptorCallback)tumbleweedbush_hitDetect,
-        (ObjectDescriptorCallback)tumbleweedbush_render,
-        (ObjectDescriptorCallback)tumbleweedbush_free,
-        (ObjectDescriptorCallback)tumbleweedbush_getObjectTypeId,
-        tumbleweedbush_getExtraSize,
-        (ObjectDescriptorCallback)tumbleweedbush_setScale,
+        (ObjectDescriptorCallback)TumbleWeedBush_init,
+        (ObjectDescriptorCallback)TumbleWeedBush_update,
+        (ObjectDescriptorCallback)TumbleWeedBush_hitDetect,
+        (ObjectDescriptorCallback)TumbleWeedBush_render,
+        (ObjectDescriptorCallback)TumbleWeedBush_free,
+        (ObjectDescriptorCallback)TumbleWeedBush_getObjectTypeId,
+        TumbleWeedBush_getExtraSize,
+        (ObjectDescriptorCallback)TumbleWeedBush_setScale,
     },
     0,
 };

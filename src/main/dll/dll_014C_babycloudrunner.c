@@ -42,7 +42,7 @@ extern f32 lbl_803E4258;
 extern u8 gBabyCloudRunnerMutterSfxTable;
 extern u8 gBabyCloudRunnerMutterSfxTableSpecial;
 extern void storeZeroToFloatParam(void* p);
-extern u32 GameBit_Get(int eventId);
+extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void* Obj_GetPlayerObject(void);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
@@ -174,7 +174,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
     sub->flags22C = 0;
     sub->animSpeed = lbl_803E422C;
     sub->runnerState = 0;
-    if (GameBit_Get(def->runnerGameBit) != 0)
+    if (mainGetBit(def->runnerGameBit) != 0)
     {
         ObjHits_DisableObject(obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
@@ -280,7 +280,7 @@ void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* su
  * fire its burst (notify, bump the counter, set the gamebit); otherwise just
  * play the idle audio cue. */
 #pragma peephole off
-int babycloudrunner_func0B(void* p)
+int babycloudrunner_tryCapture(void* p)
 {
     int* obj;
     int flag;
@@ -313,7 +313,7 @@ int babycloudrunner_func0B(void* p)
         sub->unk00 = lbl_803E4244;
         gameBitIncrement(0x901);
         sub->behaviourState = 0xc;
-        GameBit_Set(q->enableBit, 1);
+        mainSetBits(q->enableBit, 1);
         ((GameObject*)obj)->unkF4 = 0;
         return 1;
     }
@@ -324,17 +324,17 @@ int babycloudrunner_func0B(void* p)
 #pragma peephole reset
 
 /* Per-object extra state for the CloudRunner main crystal
- * (cfmaincrystal_getExtraSize == 0x160). */
+ * (CFMainCrystal_getExtraSize == 0x160). */
 
 STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
 /* Per-object extra state for the CloudRunner power base
- * (cfpowerbase_getExtraSize == 0x6). */
+ * (CFPowerBase_getExtraSize == 0x6). */
 
 STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
 
 /* Per-object extra state for the CloudRunner prison guard
- * (cfprisonguard_getExtraSize == 0x3c). */
+ * (CFPrisonGuard_getExtraSize == 0x3c). */
 
 STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 
@@ -363,7 +363,7 @@ void babycloudrunner_initialise(void)
 
 
 int babycloudrunner_getExtraSize(void) { return 0x248; }
-int cfprisonguard_getExtraSize(void);
+int CFPrisonGuard_getExtraSize(void);
 
 int babycloudrunner_getObjectTypeId(void) { return 0; }
 
@@ -575,7 +575,7 @@ void babycloudrunner_update(int* obj)
     sub = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     getTrickyObject();
-    if (GameBit_Get(def->runnerGameBit) != 0)
+    if (mainGetBit(def->runnerGameBit) != 0)
     {
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->flags22C &= ~1;
@@ -583,7 +583,7 @@ void babycloudrunner_update(int* obj)
         ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
         ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP);
     }
-    if (sub->runnerState == 2 && GameBit_Get(0x66) != 0)
+    if (sub->runnerState == 2 && mainGetBit(0x66) != 0)
     {
         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
         (*gGameUIInterface)->airMeterSetShutdown();
@@ -596,7 +596,7 @@ void babycloudrunner_update(int* obj)
         {
             if (def->runnerGameBit != -1)
             {
-                GameBit_Set(def->runnerGameBit, 1);
+                mainSetBits(def->runnerGameBit, 1);
             }
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -640,10 +640,10 @@ void babycloudrunner_update(int* obj)
                 objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY, ((GameObject*)obj)->anim.velocityZ);
                 if (sub->runnerState == 1)
                 {
-                    if (sub->runnerIndex != -1 && GameBit_Get(sub->runnerIndex + 0xb2a) != 0)
+                    if (sub->runnerIndex != -1 && mainGetBit(sub->runnerIndex + 0xb2a) != 0)
                     {
                         sub->runnerState = 2;
-                        GameBit_Set(0x66, 0);
+                        mainSetBits(0x66, 0);
                         (*gGameUIInterface)->initAirMeter(gBabyCloudRunnerAirMeterValues[sub->runnerIndex], 0x5d1);
                         s16toFloat((int)&sub->countdownTimer, (s16)gBabyCloudRunnerAirMeterValues[sub->runnerIndex]);
                     }
@@ -700,7 +700,7 @@ void babycloudrunner_update(int* obj)
                 {
                     inRange = 1;
                 }
-                if (GameBit_Get(sub->runnerIndex + 0xb2e) != 0)
+                if (mainGetBit(sub->runnerIndex + 0xb2e) != 0)
                 {
                     sub->runnerState = 3;
                     (*gGameUIInterface)->airMeterSetShutdown();
@@ -747,7 +747,7 @@ void babycloudrunner_update(int* obj)
                     if (dll_2E_func0D(obj, &tgt, lbl_803DBE40, -1, &lbl_803DBE44, &lbl_803DBE48) != 0)
                     {
                         ((WormSpitByte*)&sub->spitFlags)->_p0 = 1;
-                        GameBit_Set(0x66, 0);
+                        mainSetBits(0x66, 0);
                     }
                     ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803DBE44, timeDelta, 0);
                 }

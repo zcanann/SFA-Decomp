@@ -125,7 +125,7 @@ void Obj_SetActiveHitVolumeBounds(GameObject *obj, int xBound, int zBound, int y
 void disableHeavyFog(void);
 void subtitleFn_8001b700(void);
 void trickyReportError(const char* fmt, ...);
-u8 fn_801334E0(void);
+u8 isAreaNameTextActive(void);
 int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 void renderResetFn_8003fc60(void);
 void modelLightChannels_applyGXControls(void);
@@ -135,7 +135,7 @@ int atan2_8002178c(f32 dx, f32 dz);
 void mapBlockFn_80059c2c(u8 * outFlags);
 void fn_8003A230(int obj, void* p, f32 f);
 int isInBounds(f32 x, f32 z);
-void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
+void SkeetlaWall_setScale(int* obj, f32* outVec, u8* outByte);
 void objSetHintTextIdx(int obj, u16 idx);
 void DBstealerwo_setFuncPtrs_80203c78(void);
 int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);

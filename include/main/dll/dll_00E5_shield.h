@@ -10,10 +10,10 @@
 #include "main/objprint.h"
 #include "main/objlib.h"
 
-void shield_init(int* obj, void* initData);
+void Shield_init(int* obj, void* initData);
 
 
 /* extern-cleanup: defining-file public prototypes */
-void shield_update(int* obj);
+void Shield_update(int* obj);
 
 #endif

@@ -538,12 +538,12 @@ void fn_8013FBE4(int obj, register int state)
     switch (((TrickyState*)state)->substate)
     {
     case 0:
-        newBit = GameBit_Get(0x48b);
+        newBit = mainGetBit(0x48b);
         ((TrickyNibblePair*)&((TrickyState*)state)->unk700)->hi = newBit;
         *(int*)&((TrickyState*)state)->unk710 = 0;
         ((TrickyState*)state)->substate = 1;
     case 1:
-        currentBit = GameBit_Get(0x48b);
+        currentBit = mainGetBit(0x48b);
         bitIndex = ((TrickyNibblePair*)&((TrickyState*)state)->unk700)->hi;
         if (bitIndex != currentBit)
         {

@@ -121,7 +121,7 @@ void cfforcefield_update(u8* obj)
     ((GameObject*)obj)->anim.velocityY = zero;
     ((GameObject*)obj)->anim.velocityX = zero;
 
-    if (GameBit_Get(data->activeEvent) != 0)
+    if (mainGetBit(data->activeEvent) != 0)
     {
         if (!state->flags.disabled)
         {
@@ -178,7 +178,7 @@ void cfforcefield_update(u8* obj)
                     ((GameObject*)obj)->anim.rotY = 0;
                 }
             }
-            else if (GameBit_Get(data->collapseEvent) != 0)
+            else if (mainGetBit(data->collapseEvent) != 0)
             {
                 s16toFloat(&state->timer, CFFORCEFIELD_COLLAPSE_FRAMES);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_en_littletink22); /* field power-down */
@@ -190,7 +190,7 @@ void cfforcefield_update(u8* obj)
         }
         else
         {
-            state->flags.disabled = GameBit_Get(data->collapseEvent);
+            state->flags.disabled = mainGetBit(data->collapseEvent);
         }
     }
 }
@@ -203,7 +203,7 @@ void cfforcefield_init(GameObject* obj, CfForceFieldMapData* data)
         s16 rotX = rotByte << 8;
         obj->anim.rotX = rotX;
     }
-    state->flags.disabled = GameBit_Get(data->collapseEvent);
+    state->flags.disabled = mainGetBit(data->collapseEvent);
     storeZeroToFloatParam(&state->timer);
 }
 

@@ -2,15 +2,15 @@
  * smallbasket (DLL 0x104) - a pick-up-and-throw basket/pot object whose
  * extra record is the shared CfperchState (obj+0xB8).
  *
- * smallbasket_init acquires resource 0x5b, joins object group 0x10, seeds a
+ * SmallBasket_init acquires resource 0x5b, joins object group 0x10, seeds a
  * random idle timer, and picks the impact sfx from the spawn seqId
  * (0x3cf -> 0x60, 0x662 -> 0x37d, otherwise 0x4a).
  *
- * smallbasket_update drives the lifecycle: a respawn countdown
+ * SmallBasket_update drives the lifecycle: a respawn countdown
  * (CfperchState.respawnTimer) that scatters basket contents and warps the object
  * back to its placement, fade-in via anim.alpha, the carry/throw state
  * machine on carryState/throwState (A-button grab, charged vs. normal throw via the
- * player query helpers fn_80295BF0/fn_8029669C/fn_802966B4), in-flight
+ * player query helpers isTrickyNear/fn_8029669C/fn_802966B4), in-flight
  * physics integration calling smallbasket_resolveCollision each step for swept-sphere
  * ground/wall collision, leash to the placement origin (leashRange), and
  * the periodic ambient sfx (0x6c/0x6d) keyed on the object subtype.
@@ -81,7 +81,7 @@ typedef struct SmallBasketThrowSetup
 } SmallBasketThrowSetup;
 
 /* CfperchState's carryAttached/throwState fields are u8 in the header, but the
-   sign-checked reads in smallbasket_update treat them as signed (s8). */
+   sign-checked reads in SmallBasket_update treat them as signed (s8). */
 /* engine/runtime symbols (game bits, object spawn/group, hit-detect, sky,
    player query) and this object's tuning floats (lbl_803Exxxx) - no home
    header in the import skeleton; declared locally. */
@@ -115,9 +115,9 @@ extern void hitDetectFn_800691c0(u8* obj, void* bounds, u32 mask, int flags);
 extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount,
                                void* outHits, int flags);
 extern const f32 lbl_803E3970;
-void smallbasket_init(int obj, int def);
-void smallbasket_update(int obj);
-void smallbasket_render(int obj, int p2, int p3, int p4,
+void SmallBasket_init(int obj, int def);
+void SmallBasket_update(int obj);
+void SmallBasket_render(int obj, int p2, int p3, int p4,
                         int p5, char visible);
 extern ModgfxInterface** gModgfxInterface;
 extern void* gSmallBasketResource;
@@ -140,7 +140,7 @@ extern int ObjTrigger_IsSet(int obj);
 extern int playerIsDisguised(int obj);
 extern u32 playerGetStateFlag310(int obj);
 
-extern int fn_80295BF0(int obj);
+extern int isTrickyNear(int obj);
 extern int fn_8029669C(int obj);
 extern int fn_802966B4(int obj);
 extern void ObjMsg_SendToObject(int target, int msg, int obj, u32 value);
@@ -195,7 +195,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     bit = *(s16*)(data + 0x1c);
     if (bit != -1)
     {
-        GameBit_Set(bit, 1);
+        mainSetBits(bit, 1);
     }
     if (Obj_IsLoadingLocked() == 0)
     {
@@ -644,12 +644,12 @@ int smallbasket_resolveCollision(u8* obj)
     return 0;
 }
 
-int smallbasket_getExtraSize(void)
+int SmallBasket_getExtraSize(void)
 {
     return 0x24;
 }
 
-void smallbasket_free(int obj)
+void SmallBasket_free(int obj)
 {
     (*gModgfxInterface)->detachSource((void*)obj);
     Resource_Release(gSmallBasketResource);
@@ -688,7 +688,7 @@ void objThrowFn_80182504(int obj)
     vecRotateZXY(&local.f8, &((GameObject*)obj)->anim.velocityX);
 }
 
-void smallbasket_render(int obj, int p2, int p3, int p4,
+void SmallBasket_render(int obj, int p2, int p3, int p4,
                         int p5, char visible)
 {
     int extra;
@@ -725,13 +725,13 @@ ObjectDescriptor gSmallBasketObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)smallbasket_init,
-    (ObjectDescriptorCallback)smallbasket_update,
+    (ObjectDescriptorCallback)SmallBasket_init,
+    (ObjectDescriptorCallback)SmallBasket_update,
     0,
-    (ObjectDescriptorCallback)smallbasket_render,
-    (ObjectDescriptorCallback)smallbasket_free,
+    (ObjectDescriptorCallback)SmallBasket_render,
+    (ObjectDescriptorCallback)SmallBasket_free,
     0,
-    smallbasket_getExtraSize,
+    SmallBasket_getExtraSize,
 };
 
 typedef struct SmallbasketObjectDef
@@ -747,7 +747,7 @@ typedef struct SmallbasketObjectDef
     f32 unk24;
 } SmallbasketObjectDef;
 
-void smallbasket_init(int obj, int def)
+void SmallBasket_init(int obj, int def)
 {
     int state;
     s16 v1c;
@@ -784,7 +784,7 @@ void smallbasket_init(int obj, int def)
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosZ;
 
-    if ((u32)GameBit_Get(((CfperchState*)state)->enableGameBit) != 0)
+    if ((u32)mainGetBit(((CfperchState*)state)->enableGameBit) != 0)
     {
         ((CfperchState*)state)->hiddenTimer = 1;
         ObjHits_DisableObject(obj);
@@ -817,7 +817,7 @@ typedef struct
     f32 fw;
 } BasketMathArgs;
 
-void smallbasket_update(int obj)
+void SmallBasket_update(int obj)
 {
     /* int-param redecls override the u8* definitions for these call sites only
        (caller passes int locals); can't live at file scope - conflicts with the
@@ -976,7 +976,7 @@ void smallbasket_update(int obj)
                 }
                 if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
                 {
-                    if (fn_80295BF0(player) != 0)
+                    if (isTrickyNear(player) != 0)
                     {
                         ((CfperchState*)state)->carryAttached = 0;
                         buttonDisable(0, PAD_BUTTON_A);

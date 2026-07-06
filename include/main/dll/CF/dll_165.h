@@ -16,11 +16,11 @@ typedef struct TreasureChestSetup {
 } TreasureChestSetup;
 
 void staffactivated_init(int obj, int setup);
-int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
-int treasurechest_getExtraSize(void);
-int treasurechest_getObjectTypeId(void);
-void treasurechest_free(void);
-void treasurechest_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void treasurechest_hitDetect(int obj);
+int TreasureChest_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int TreasureChest_getExtraSize(void);
+int TreasureChest_getObjectTypeId(void);
+void TreasureChest_free(void);
+void TreasureChest_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void TreasureChest_hitDetect(int obj);
 
 #endif /* MAIN_DLL_CF_DLL_165_H_ */

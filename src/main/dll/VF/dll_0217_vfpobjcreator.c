@@ -79,24 +79,24 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(u8* setup, int a, int b, int c, int d);
 extern void vecRotateZXY(s16 * angles, f32 * vec);
 
-int vfpobjcreator_getExtraSize(void) { return 0xa; }
+int VFP_ObjCreator_getExtraSize(void) { return 0xa; }
 
-int vfpobjcreator_getObjectTypeId(void) { return 0x0; }
+int VFP_ObjCreator_getObjectTypeId(void) { return 0x0; }
 
-void vfpobjcreator_free(void)
+void VFP_ObjCreator_free(void)
 {
 }
 
-void vfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void VFP_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible == 0) return;
 }
 
-void vfpobjcreator_hitDetect(void)
+void VFP_ObjCreator_hitDetect(void)
 {
 }
 
-void vfpobjcreator_update(int* obj)
+void VFP_ObjCreator_update(int* obj)
 {
     VfpObjCreatorPlacement* placement =
         (VfpObjCreatorPlacement*)((GameObject*)obj)->anim.placementData;
@@ -111,7 +111,7 @@ void vfpobjcreator_update(int* obj)
     case 0:
         break;
     case VFP_OBJCREATOR_FALLING_MODE:
-        if ((u32)GameBit_Get(state->gameBit) == 0 && state->gameBit != -1)
+        if ((u32)mainGetBit(state->gameBit) == 0 && state->gameBit != -1)
         {
             break;
         }
@@ -206,7 +206,7 @@ void vfpobjcreator_update(int* obj)
     }
 }
 
-void vfpobjcreator_init(int* obj, u8* init)
+void VFP_ObjCreator_init(int* obj, u8* init)
 {
     VfpObjCreatorPlacement* placement = (VfpObjCreatorPlacement*)init;
     VfpObjCreatorState* state = ((GameObject*)obj)->extra;
@@ -219,10 +219,10 @@ void vfpobjcreator_init(int* obj, u8* init)
     ((GameObject*)obj)->objectFlags |= VFPOBJCREATOR_OBJFLAG_HITDETECT_DISABLED;
 }
 
-void vfpobjcreator_release(void)
+void VFP_ObjCreator_release(void)
 {
 }
 
-void vfpobjcreator_initialise(void)
+void VFP_ObjCreator_initialise(void)
 {
 }

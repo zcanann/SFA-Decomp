@@ -166,7 +166,7 @@ void CameraModeShipBattle_init(void)
 }
 
 
-void CameraModeShipBattle_copyToCurrent_nop(void)
+void CameraModeShipBattle_copyToCurrent(void)
 {
 }
 

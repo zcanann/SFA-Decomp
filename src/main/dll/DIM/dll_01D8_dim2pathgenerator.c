@@ -125,7 +125,7 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 }
 
 
-u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4)
+u8 DIM2PathGenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4)
 {
     int* state = ((GameObject*)obj)->extra;
     *p1 = (int*)((char*)state + 12);
@@ -138,23 +138,23 @@ u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** 
     return ((Dim2PathGeneratorState*)state)->curveValid;
 }
 
-int dim2pathgenerator_getExtraSize(void) { return 0x9a8; }
-int dim2pathgenerator_getObjectTypeId(void) { return 0x0; }
+int DIM2PathGenerator_getExtraSize(void) { return 0x9a8; }
+int DIM2PathGenerator_getObjectTypeId(void) { return 0x0; }
 
-void dim2pathgenerator_free(void)
+void DIM2PathGenerator_free(void)
 {
 }
 
-void dim2pathgenerator_render(void)
+void DIM2PathGenerator_render(void)
 {
 }
 
-void dim2pathgenerator_hitDetect(void)
+void DIM2PathGenerator_hitDetect(void)
 {
 }
 
 
-void dim2pathgenerator_update(int* obj)
+void DIM2PathGenerator_update(int* obj)
 {
     int* def;
     int* extra = ((GameObject*)obj)->extra;
@@ -165,7 +165,7 @@ void dim2pathgenerator_update(int* obj)
     int count;
 
     def = *(int**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((Dim2pathgeneratorPlacement*)def)->activeGameBit) == 0)
+    if (mainGetBit(((Dim2pathgeneratorPlacement*)def)->activeGameBit) == 0)
     {
         return;
     }
@@ -250,7 +250,7 @@ void dim2pathgenerator_update(int* obj)
 }
 
 
-void dim2pathgenerator_init(int* obj, int* def)
+void DIM2PathGenerator_init(int* obj, int* def)
 {
     Dim2PathGeneratorState* state;
     *(s16*)obj = (s16)((u32) * (u8*)((char*)def + 28) << 8);
@@ -273,10 +273,10 @@ void dim2pathgenerator_init(int* obj, int* def)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIM2PATHGENERATOR_OBJFLAG_HITDETECT_DISABLED);
 }
 
-void dim2pathgenerator_release(void)
+void DIM2PathGenerator_release(void)
 {
 }
 
-void dim2pathgenerator_initialise(void)
+void DIM2PathGenerator_initialise(void)
 {
 }

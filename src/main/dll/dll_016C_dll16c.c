@@ -24,7 +24,7 @@
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
- * (imicemountain_getExtraSize == 0x14).
+ * (IMIceMountain_getExtraSize == 0x14).
  */
 typedef struct IMIceMountainState
 {
@@ -43,7 +43,7 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
 /*
  * Per-object extra state for the magiclight proximity light
- * (magiclight_getExtraSize == 0x14 for non-0x172 types).
+ * (MagicLight_getExtraSize == 0x14 for non-0x172 types).
  */
 
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
@@ -122,9 +122,9 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 
     if (((GameObject*)obj)->anim.seqId != 883)
     {
-        if (GameBit_Get(110) != 0)
+        if (mainGetBit(110) != 0)
         {
-            if (GameBit_Get(898) == 0) return;
+            if (mainGetBit(898) == 0) return;
         }
         extra = ((GameObject*)obj)->extra;
         p = extra->linkedObj;
@@ -354,7 +354,7 @@ void dll_16C_update(int* obj)
         }
     }
 
-    if (((GameObject*)obj)->anim.seqId == 883 || GameBit_Get(0x3a2) != 0)
+    if (((GameObject*)obj)->anim.seqId == 883 || mainGetBit(0x3a2) != 0)
     {
         int* sub = extra->linkedObj;
         f32 b;

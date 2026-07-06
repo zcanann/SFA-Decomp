@@ -118,7 +118,7 @@ extern void trySaveGame(int slot);
 extern int gplayNewGame(char* name, int slot);
 extern char* loadFileByPath(char* path, int a, int b);
 extern void* memcpy(void* dst, void* src, int n);
-extern void fn_80296B70(int arg);
+extern void saveSetOverrideHealth(int arg);
 extern TitleMenuControl* gMapEventInterface;
 extern void* lbl_803DD498;
 extern char sFrontendFoxName;
@@ -638,7 +638,7 @@ int SaveSelectScreen_run(void)
                 }
                 else
                 {
-                    fn_80296B70(0);
+                    saveSetOverrideHealth(0);
                 }
                 ((void (**)(void))gMapEventInterface->vtable)[8]();
             }

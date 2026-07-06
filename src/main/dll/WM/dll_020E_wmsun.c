@@ -142,7 +142,7 @@ extern float mathSinf(float x);
 extern int Camera_GetCurrentViewSlot(void);
 extern void vecRotateZXY(s16 * ang, WmSunVec3 * vec);
 
-int wmsun_SeqFn(int p1, int p2, ObjAnimUpdateState* actor)
+int wmsun_animEventCallback(int p1, int p2, ObjAnimUpdateState* actor)
 {
     actor->hitVolumePair = -1;
     actor->sequenceEventActive = 0;
@@ -344,7 +344,7 @@ void wmsun_update(int obj)
     spd = lbl_803E5F20;
     if (((GameObject*)obj)->anim.seqId == 0x262) /* WM_Crystal */
     {
-        if (GameBit_Get(0x38f) != 0)
+        if (mainGetBit(0x38f) != 0)
         {
             Obj_FreeObject(obj);
         }
@@ -359,27 +359,27 @@ void wmsun_update(int obj)
                     t->offsetT = 0;
                 }
             }
-            if (GameBit_Get(0x21b) != 0)
+            if (mainGetBit(0x21b) != 0)
             {
                 thresh = 100;
             }
-            if (GameBit_Get(0x21c) != 0)
+            if (mainGetBit(0x21c) != 0)
             {
                 thresh = 200;
             }
-            if (GameBit_Get(0x21d) != 0)
+            if (mainGetBit(0x21d) != 0)
             {
                 thresh = 400;
             }
-            if (GameBit_Get(0x21f) != 0)
+            if (mainGetBit(0x21f) != 0)
             {
                 thresh = 800;
             }
-            if (GameBit_Get(0x221) != 0)
+            if (mainGetBit(0x221) != 0)
             {
                 thresh = 0x640;
             }
-            if (GameBit_Get(0x222) != 0)
+            if (mainGetBit(0x222) != 0)
             {
                 thresh = 0x1900;
                 mult = 3;
@@ -393,16 +393,16 @@ void wmsun_update(int obj)
                 ((GameObject*)obj)->anim.localPosY = lbl_803E5F7C * (spd * timeDelta) + ((GameObject*)obj)->anim.
                     localPosY;
             }
-            else if (GameBit_Get(0x222) != 0 && GameBit_Get(0x38d) == 0)
+            else if (mainGetBit(0x222) != 0 && mainGetBit(0x38d) == 0)
             {
-                GameBit_Set(0x38d, 1);
-                GameBit_Set(0x370, 0);
+                mainSetBits(0x38d, 1);
+                mainSetBits(0x370, 0);
                 state->renderEnabled = 0;
             }
-            if (GameBit_Get(0x38d) == 0 && state->riseStep > 0x960 && (int)randomGetRange(0, 100) == 0)
+            if (mainGetBit(0x38d) == 0 && state->riseStep > 0x960 && (int)randomGetRange(0, 100) == 0)
             {
                 CameraShake_SetAllMagnitudes(lbl_803E5F80 * ((f32)(state->riseStep - 0x960) / lbl_803E5F84));
-                GameBit_Set(0x370, 1);
+                mainSetBits(0x370, 1);
             }
             ((GameObject*)obj)->anim.rotX += state->riseStep;
             if (state->renderEnabled == 0)
@@ -414,7 +414,7 @@ void wmsun_update(int obj)
     }
     if (((GameObject*)obj)->anim.seqId == 0x2c2) /* unreachable in retail */
     {
-        if (GameBit_Get(0x38f) != 0)
+        if (mainGetBit(0x38f) != 0)
         {
             /* v is only set when b < 0xfa - retail-faithful shape (at
                b >= 0xfa the clamp-and-store is effectively a no-op);
@@ -441,7 +441,7 @@ void wmsun_update(int obj)
         }
         return;
     }
-    if (GameBit_Get(0x38f) != 0)
+    if (mainGetBit(0x38f) != 0)
     {
         bank = objAnim->bankIndex;
         if (bank == 0 && (curAlpha = objAnim->alpha) != 0xff)
@@ -496,7 +496,7 @@ void wmsun_update(int obj)
     {
         ((GameObject*)obj)->anim.rotZ += state->spinStep;
         ((GameObject*)obj)->anim.rotX += state->riseStep;
-        if (GameBit_Get(0x38d) != 0 && objAnim->bankIndex == 0)
+        if (mainGetBit(0x38d) != 0 && objAnim->bankIndex == 0)
         {
             if (lbl_803DDCAA == 0)
             {
@@ -510,8 +510,8 @@ void wmsun_update(int obj)
                     if (gWmSunQuakeTimer <= 0)
                     {
                         gWmSunQuakeTimer = 0;
-                        GameBit_Set(0x38d, 0);
-                        GameBit_Set(0x38f, 1);
+                        mainSetBits(0x38d, 0);
+                        mainSetBits(0x38f, 1);
                     }
                 }
             }
@@ -560,11 +560,11 @@ void wmsun_init(int obj, int params)
 
     objAnim = (ObjAnimComponent*)obj;
     mapData = (WmSunMapData*)params;
-    ((GameObject*)obj)->animEventCallback = wmsun_SeqFn;
+    ((GameObject*)obj)->animEventCallback = wmsun_animEventCallback;
     mapAct = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
-    if (mapAct == 3 && GameBit_Get(0x21b) == 0)
+    if (mapAct == 3 && mainGetBit(0x21b) == 0)
     {
-        GameBit_Set(0x21b, 1);
+        mainSetBits(0x21b, 1);
     }
     state->glareParams = NULL;
     state->renderEnabled = 1;

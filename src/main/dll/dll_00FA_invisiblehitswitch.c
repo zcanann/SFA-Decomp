@@ -65,14 +65,14 @@ void InvisibleHitSwitch_update(int obj)
     state = *(int*)&((GameObject*)obj)->extra;
     if (((InvisibleHitSwitchState*)state)->active != 0)
     {
-        if (GameBit_Get((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId) == 0)
+        if (mainGetBit((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId) == 0)
         {
             ((InvisibleHitSwitchState*)state)->active = 0;
         }
     }
     else
     {
-        if (GameBit_Get((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId) != 0)
+        if (mainGetBit((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId) != 0)
         {
             ((InvisibleHitSwitchState*)state)->active = 1;
         }
@@ -86,7 +86,7 @@ void InvisibleHitSwitch_update(int obj)
         if (((InvisibleHitSwitchState*)state)->cooldownTimer <= lbl_803E3730)
         {
             ((InvisibleHitSwitchState*)state)->cooldownTimer = lbl_803E3730;
-            GameBit_Set((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 0);
+            mainSetBits((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 0);
         }
         else
         {
@@ -104,7 +104,7 @@ void InvisibleHitSwitch_update(int obj)
             {
                 ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3730;
                 ((InvisibleHitSwitchState*)state)->active = 1;
-                GameBit_Set((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 1);
+                mainSetBits((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 1);
             }
             else if (((InvisibleHitSwitchState*)state)->activationTimer <= *(f32*)&lbl_803E3730)
             {
@@ -120,7 +120,7 @@ void InvisibleHitSwitch_update(int obj)
         {
             if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK) != SWITCH_MODE_TOGGLE) return;
             ((InvisibleHitSwitchState*)state)->active = 0;
-            GameBit_Set((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 0);
+            mainSetBits((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 0);
         }
         else
         {
@@ -130,7 +130,7 @@ void InvisibleHitSwitch_update(int obj)
                 return;
             }
             ((InvisibleHitSwitchState*)state)->active = 1;
-            GameBit_Set((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 1);
+            mainSetBits((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 1);
             if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK) == SWITCH_MODE_MOMENTARY)
             {
                 ((InvisibleHitSwitchState*)state)->cooldownTimer =
@@ -162,7 +162,7 @@ void InvisibleHitSwitch_init(int obj, u8* placement)
     ObjHitbox_SetSphereRadius(
         obj,
         (s16)((placement[0x1d] * (int)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius) / 64));
-    info->active = GameBit_Get(((InvisibleHitSwitchPlacement*)placement)->gameBitId);
+    info->active = mainGetBit(((InvisibleHitSwitchPlacement*)placement)->gameBitId);
     switch ((placement[0x23] & 0xe) >> 1)
     {
     case 0:

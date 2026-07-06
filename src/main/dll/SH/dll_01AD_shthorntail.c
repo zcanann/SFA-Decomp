@@ -96,10 +96,10 @@ void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runti
     }
     if (config->impactSfxVariant == 0)
     {
-        gameBit = GameBit_Get(SHTHORNTAIL_LEVEL_MODE1_GATE_OPEN_GAMEBIT);
+        gameBit = mainGetBit(SHTHORNTAIL_LEVEL_MODE1_GATE_OPEN_GAMEBIT);
         if (gameBit != 0)
         {
-            gameBit = GameBit_Get(SHTHORNTAIL_LEVEL_MODE1_FREEZE_GAMEBIT);
+            gameBit = mainGetBit(SHTHORNTAIL_LEVEL_MODE1_FREEZE_GAMEBIT);
             if (gameBit != 0)
             {
                 runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_FREEZE_MOTION;
@@ -112,7 +112,7 @@ void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runti
                 if (triggerIsSet != 0)
                 {
                     runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
-                    GameBit_Set(SHTHORNTAIL_LEVEL_MODE1_SECONDARY_TRIGGER_GAMEBIT, 1);
+                    mainSetBits(SHTHORNTAIL_LEVEL_MODE1_SECONDARY_TRIGGER_GAMEBIT, 1);
                 }
             }
         }
@@ -122,13 +122,13 @@ void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runti
             if (triggerIsSet != 0)
             {
                 runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
-                GameBit_Set(SHTHORNTAIL_LEVEL_MODE1_PRIMARY_TRIGGER_GAMEBIT, 1);
+                mainSetBits(SHTHORNTAIL_LEVEL_MODE1_PRIMARY_TRIGGER_GAMEBIT, 1);
             }
         }
     }
     else
     {
-        gameBit = GameBit_Get(SHTHORNTAIL_LEVEL_MODE1_CLOSE_ATTACK_DISABLE_GAMEBIT);
+        gameBit = mainGetBit(SHTHORNTAIL_LEVEL_MODE1_CLOSE_ATTACK_DISABLE_GAMEBIT);
         if (gameBit != 0)
         {
             closeToPlayer = FALSE;
@@ -210,7 +210,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
             (u8*)dataTables->levelMode0Locomotion1ImpactSfxVariants + config->impactSfxVariant * 2;
         break;
     case SHTHORNTAIL_LOCOMOTION_2:
-        gameBit = GameBit_Get(SHTHORNTAIL_LEVEL_MODE0_LOCOMOTION2_GAMEBIT);
+        gameBit = mainGetBit(SHTHORNTAIL_LEVEL_MODE0_LOCOMOTION2_GAMEBIT);
         if (gameBit != 0)
         {
             runtime->impactSfxTable =
@@ -223,7 +223,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_3:
-        gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION3_GAMEBIT);
+        gameBit = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION3_GAMEBIT);
         if (gameBit != 0)
         {
             runtime->impactSfxTable =
@@ -236,7 +236,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_5:
-        gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_PLAYER_GAMEBIT);
+        gameBit = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_PLAYER_GAMEBIT);
         if (gameBit == 0)
         {
             runtime->impactSfxTable =
@@ -257,7 +257,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
             randomIdleWait = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN, SHTHORNTAIL_IDLE_WAIT_MAX);
             runtime->idleTimer = (float)randomIdleWait;
         }
-        gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION6_GAMEBIT);
+        gameBit = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION6_GAMEBIT);
         if (gameBit == 0)
         {
             runtime->impactSfxTable = &gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable;

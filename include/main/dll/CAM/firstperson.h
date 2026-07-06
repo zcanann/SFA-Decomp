@@ -7,8 +7,8 @@
 #include "main/objanim_internal.h"
 
 void firstperson_updatePitch(f32 targetY, CameraObject *camera);
-void firstperson_updatePosition(CameraObject *camera,ObjAnimComponent *target);
-void firstperson_loadSettings(CamcontrolFirstPersonActionSettings *settings);
+void CameraModeNormal_follow(CameraObject *camera,ObjAnimComponent *target);
+void CameraModeNormal_copyToCurrent(CamcontrolFirstPersonActionSettings *settings);
 void CameraModeNormal_free(CameraObject *camera);
 
 #endif /* MAIN_DLL_CAM_FIRSTPERSON_H_ */

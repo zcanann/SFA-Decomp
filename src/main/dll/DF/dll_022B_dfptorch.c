@@ -199,18 +199,18 @@ void DFP_Torch_update(int obj)
                 }
                 if (state->gameBit != -1)
                 {
-                    if (GameBit_Get(state->gameBit) == 0)
+                    if (mainGetBit(state->gameBit) == 0)
                     {
-                        GameBit_Set(state->gameBit, 1);
+                        mainSetBits(state->gameBit, 1);
                     }
                 }
-                if ((s8)gDfpTorchSequenceState == 0 && state->colorIdx == 0 && GameBit_Get(state->gameBit) != 0)
+                if ((s8)gDfpTorchSequenceState == 0 && state->colorIdx == 0 && mainGetBit(state->gameBit) != 0)
                 {
                     gDfpTorchSequenceState = 1;
                 }
-                if ((s8)gDfpTorchSequenceState == 1 && state->colorIdx == 1 && GameBit_Get(state->gameBit) != 0)
+                if ((s8)gDfpTorchSequenceState == 1 && state->colorIdx == 1 && mainGetBit(state->gameBit) != 0)
                 {
-                    GameBit_Set(0x5e2, 1);
+                    mainSetBits(0x5e2, 1);
                     gDfpTorchSequenceState = 2;
                 }
                 state->sfxPending = 1;
@@ -223,18 +223,18 @@ void DFP_Torch_update(int obj)
                 (*gExpgfxInterface)->freeSource((u32)obj);
                 if (state->gameBit != -1)
                 {
-                    if (GameBit_Get(state->gameBit) != 0)
+                    if (mainGetBit(state->gameBit) != 0)
                     {
-                        GameBit_Set(state->gameBit, 0);
+                        mainSetBits(state->gameBit, 0);
                     }
                 }
                 if ((s8)gDfpTorchSequenceState == 1 && state->colorIdx == 0)
                 {
                     gDfpTorchSequenceState = 0;
                 }
-                if ((s8)gDfpTorchSequenceState == 2 && state->colorIdx == 1 && GameBit_Get(0x5e2) == 0)
+                if ((s8)gDfpTorchSequenceState == 2 && state->colorIdx == 1 && mainGetBit(0x5e2) == 0)
                 {
-                    GameBit_Set(0x5e2, 0);
+                    mainSetBits(0x5e2, 0);
                     gDfpTorchSequenceState = 0;
                 }
             }

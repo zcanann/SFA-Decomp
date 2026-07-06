@@ -85,7 +85,7 @@ void dll_19A_update(int obj)
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
-    if (GameBit_Get(GAMEBIT_DLL19A_RESET) != 0)
+    if (mainGetBit(GAMEBIT_DLL19A_RESET) != 0)
     {
         ((GameObject*)obj)->unkF8 = 0;
         *state = 100;
@@ -95,7 +95,7 @@ void dll_19A_update(int obj)
     }
     else
     {
-        if ((((GameObject*)obj)->unkF8 == 0) && (GameBit_Get(((Dll19APlacement*)setup)->gateBitIndex + GAMEBIT_DLL19A_GATE_BASE) != 0))
+        if ((((GameObject*)obj)->unkF8 == 0) && (mainGetBit(((Dll19APlacement*)setup)->gateBitIndex + GAMEBIT_DLL19A_GATE_BASE) != 0))
         {
             res = Resource_Acquire(0x82, 1);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
@@ -124,7 +124,7 @@ void dll_19A_update(int obj)
             newObj->unk30 = 0xffff;
             newObj->rotByte = ((GameObject*)obj)->anim.rotX >> 8;
             newObj->unk2B = 2;
-            if (GameBit_Get(GAMEBIT_DLL19A_GATE_BASE + 1) != 0)
+            if (mainGetBit(GAMEBIT_DLL19A_GATE_BASE + 1) != 0)
             {
                 newObj->unk22 = 0x49;
             }

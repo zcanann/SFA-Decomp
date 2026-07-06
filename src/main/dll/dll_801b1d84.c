@@ -77,8 +77,8 @@ void DIMwooddoor_updateFallingDebris(int* obj)
                     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
             }
-            if ((GameBit_Get(2142) != 0 && GameBit_Get(3117) == 0) ||
-                (GameBit_Get(2164) != 0 && GameBit_Get(3118) == 0))
+            if ((mainGetBit(2142) != 0 && mainGetBit(3117) == 0) ||
+                (mainGetBit(2164) != 0 && mainGetBit(3118) == 0))
             {
                 ((GameObject*)obj)->unkF4 = 1200;
             }

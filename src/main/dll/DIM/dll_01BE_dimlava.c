@@ -21,7 +21,7 @@
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
- * (imicemountain_getExtraSize == 0x14).
+ * (IMIceMountain_getExtraSize == 0x14).
  */
 typedef struct IMIceMountainState
 {
@@ -167,7 +167,7 @@ int lavaball1be_getObjectTypeId(int* obj)
     return 0x2;
 }
 
-u32 lavaball1be_func11(int* obj) { return *((u8*)(int*)((GameObject*)obj)->extra + 0x10) & LAVA1BE_FLAG_INACTIVE; }
+u32 lavaball1be_isInactive(int* obj) { return *((u8*)(int*)((GameObject*)obj)->extra + 0x10) & LAVA1BE_FLAG_INACTIVE; }
 
 
 void lavaball1be_free(int obj)
@@ -372,7 +372,7 @@ void lavaball1be_update(s16* obj)
     }
 }
 
-void lavaball1be_setScale(s16* obj, int vertSpeed, int horizSpeed)
+void lavaball1be_relaunch(s16* obj, int vertSpeed, int horizSpeed)
 {
     Lavaball1beState* state;
     u8* setup;

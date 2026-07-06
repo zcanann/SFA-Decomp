@@ -17,7 +17,7 @@ STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
-/* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
+/* DIM2PathGenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
@@ -83,7 +83,7 @@ void dim2lavacontrol_setScale(void* obj)
             if (((Dim2lavacontrolState*)sub)->countdown == 0)
             {
                 ((Dim2lavacontrolState*)sub)->flags = (s8)(*(u8*)&((Dim2lavacontrolState*)sub)->flags | 1);
-                GameBit_Set(((Dim2lavacontrolPlacement*)p)->gameBit, 1);
+                mainSetBits(((Dim2lavacontrolPlacement*)p)->gameBit, 1);
             }
         }
     }
@@ -132,9 +132,9 @@ void dim2lavacontrol_update(int obj)
     switch (((Dim2lavacontrolState*)obj)->phase)
     {
     case DIM2LAVACONTROL_PHASE_WAIT:
-        if (GameBit_Get(0xacd) != 0)
+        if (mainGetBit(0xacd) != 0)
         {
-            GameBit_Set(0xcc3, 1);
+            mainSetBits(0xcc3, 1);
             ((Dim2lavacontrolState*)obj)->phase = DIM2LAVACONTROL_PHASE_TRIGGERED;
         }
         break;
@@ -203,7 +203,7 @@ void dim2lavacontrol_init(int obj, int param2)
     state = *(int*)&((GameObject*)obj)->extra;
     ((Dim2lavacontrolState*)state)->countdown = (s8) * (s16*)(param2 + 0x1a);
     ((Dim2lavacontrolState*)state)->countdownSave = *(u8*)&((Dim2lavacontrolState*)state)->countdown;
-    if (GameBit_Get(((Dim2lavacontrolPlacement*)param2)->gameBit) != 0)
+    if (mainGetBit(((Dim2lavacontrolPlacement*)param2)->gameBit) != 0)
     {
         gameBitState = 1;
     }

@@ -9,7 +9,7 @@
  * Each duster activates from its placement game bit; once active it settles
  * to the nearest floor hit, drifts (driftDir / random heading), advances its
  * canned move, and reacts to priority hits. When the player is close and
- * facing it (fn_8029622C), it is either picked up (ObjMsg DUSTER_MSG_REQUEST_
+ * facing it (Obj_IsParentSlackClear), it is either picked up (ObjMsg DUSTER_MSG_REQUEST_
  * PICKUP, gated by game bit 0xcc0) or deposited directly if the current
  * character's duster collection isn't full. Depositing (DUSTER_MSG_DEPOSIT)
  * sets the object's completeGameBit, bumps the collected count, spawns the
@@ -34,7 +34,7 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z,
                                 void* outHits, int e, int f);
-extern int fn_8029622C(int obj);
+extern int Obj_IsParentSlackClear(int obj);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern f32 lbl_803E38B0;
 extern f32 gDusterObjHitDetectRadius;
@@ -168,7 +168,7 @@ void duster_update(int obj)
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
-            GameBit_Set(state->completeGameBit, 1);
+            mainSetBits(state->completeGameBit, 1);
             mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
             mapState->collectedCount =
                 (mapState->maxCollectedCount < (next = mapState->collectedCount + 1))
@@ -183,7 +183,7 @@ void duster_update(int obj)
     {
         if (state->active == 0)
         {
-            state->active = GameBit_Get(state->activeGameBit);
+            state->active = mainGetBit(state->activeGameBit);
             state->settleTimer = 0;
         }
         return;
@@ -313,14 +313,14 @@ void duster_update(int obj)
     }
     if (floorDelta < gDusterObjPickupRangeY &&
         Vec_xzDistance(&playerObj->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) < gDusterObjPickupRangeXZ &&
-        fn_8029622C(player) != 0)
+        Obj_IsParentSlackClear(player) != 0)
     {
-        if (GameBit_Get(GAMEBIT_DUSTER_CARRIED) == 0)
+        if (mainGetBit(GAMEBIT_DUSTER_CARRIED) == 0)
         {
             state->heldObjectId = -1;
             ObjHits_DisableObject(obj);
             ObjMsg_SendToObject(player, DUSTER_MSG_REQUEST_PICKUP, obj, &state->heldObjectId);
-            GameBit_Set(GAMEBIT_DUSTER_CARRIED, 1);
+            mainSetBits(GAMEBIT_DUSTER_CARRIED, 1);
         }
         else
         {
@@ -331,7 +331,7 @@ void duster_update(int obj)
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
-                GameBit_Set(state->completeGameBit, 1);
+                mainSetBits(state->completeGameBit, 1);
                 mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
                 mapState->collectedCount =
                     (mapState->maxCollectedCount < (next = mapState->collectedCount + 1))
@@ -368,10 +368,10 @@ void duster_init(int obj, u8* params)
     }
     else
     {
-        state->active = GameBit_Get(state->activeGameBit);
+        state->active = mainGetBit(state->activeGameBit);
         state->completeGameBit = state->activeGameBit + 0x64;
     }
-    state->complete = GameBit_Get(state->completeGameBit);
+    state->complete = mainGetBit(state->completeGameBit);
     hitData = ((GameObject*)obj)->anim.hitReactState;
     if (hitData != NULL && state->active == 0)
     {

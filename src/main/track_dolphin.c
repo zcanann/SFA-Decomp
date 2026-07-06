@@ -5176,7 +5176,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
 /* hitDetect_800667ec -- sweep each input sphere against the gathered triangle
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
 char sTrackHitOverflowError[] = "HIT OVERFLOW\n";
-extern void fn_80137948(char* fmt, ...);
+extern void logPrintf(char* fmt, ...);
 
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
@@ -5577,7 +5577,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                 bounces++;
                 if (bounces > 10)
                 {
-                    fn_80137948(sTrackHitOverflowError);
+                    logPrintf(sTrackHitOverflowError);
                     cur[0] = svFromp[0];
                     cur[1] = svFromp[1];
                     cur[2] = svFromp[2];

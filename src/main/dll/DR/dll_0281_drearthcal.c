@@ -39,7 +39,7 @@ void drearthcal_update(int obj)
 
     player = Obj_GetPlayerObject();
     searchDist = lbl_803E6C08;
-    if (fn_802972A8() != NULL)
+    if (playerGetFocusObject() != NULL)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags &= ~(INTERACT_FLAG_PROMPT_SUPPRESSED | INTERACT_FLAG_DISABLED);
         if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)

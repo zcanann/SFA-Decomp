@@ -51,16 +51,16 @@ void ccqueen_update(int* obj)
     int* player;
 
     charState = ((GameObject*)obj)->extra;
-    if (GameBit_Get(GAMEBIT_QUEEN_LATCHED) == 0 && GameBit_Get(GAMEBIT_GAS_PUZZLE_DONE) != 0)
+    if (mainGetBit(GAMEBIT_QUEEN_LATCHED) == 0 && mainGetBit(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
         player = Obj_GetPlayerObject();
         if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
             18225.0f)
         {
-            GameBit_Set(GAMEBIT_QUEEN_LATCHED, 1);
+            mainSetBits(GAMEBIT_QUEEN_LATCHED, 1);
         }
     }
-    if (GameBit_Get(GAMEBIT_QUEEN_RETIRED) != 0)
+    if (mainGetBit(GAMEBIT_QUEEN_RETIRED) != 0)
     {
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCQUEEN_OBJFLAG_UPDATE_DISABLED);

@@ -148,7 +148,7 @@ void dll_1DB_update(int obj)
             ((Dll1DBState*)sub)->state = STATE_FALLING;
             ((Dll1DBState*)sub)->velocity = lbl_803E4B0C;
         }
-        if (GameBit_Get(((Dll1DBPlacement*)state)->triggerBit) != 0)
+        if (mainGetBit(((Dll1DBPlacement*)state)->triggerBit) != 0)
         {
             Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt3);
             ((Dll1DBState*)sub)->state = STATE_FALLING;
@@ -165,18 +165,18 @@ void dll_1DB_update(int obj)
                 ((Dll1DBState*)sub)->state = STATE_RISING;
                 ((Dll1DBState*)sub)->velocity = lbl_803E4B0C;
                 ((Dll1DBState*)sub)->boardedFlag = 0;
-                GameBit_Set(((Dll1DBPlacement*)state)->boardedBit, 0);
+                mainSetBits(((Dll1DBPlacement*)state)->boardedBit, 0);
             }
         }
         else
         {
-            if (GameBit_Get(((Dll1DBPlacement*)state)->triggerBit) == 0)
+            if (mainGetBit(((Dll1DBPlacement*)state)->triggerBit) == 0)
             {
                 Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt3);
                 ((Dll1DBState*)sub)->state = STATE_RISING;
                 ((Dll1DBState*)sub)->velocity = lbl_803E4B0C;
                 ((Dll1DBState*)sub)->boardedFlag = 0;
-                GameBit_Set(((Dll1DBPlacement*)state)->boardedBit, 0);
+                mainSetBits(((Dll1DBPlacement*)state)->boardedBit, 0);
             }
         }
         break;
@@ -218,14 +218,14 @@ void dll_1DB_update(int obj)
             Sfx_PlayFromObject(obj, SFXchar_on_firelp);
             ((GameObject*)obj)->anim.localPosY = ((Dll1DBPlacement*)state)->topPosY - lbl_803E4B24;
             ((Dll1DBState*)sub)->state = STATE_BOTTOM;
-            GameBit_Set(((Dll1DBPlacement*)state)->boardedBit, 1);
+            mainSetBits(((Dll1DBPlacement*)state)->boardedBit, 1);
         }
         if (((Dll1DBState*)sub)->boardedFlag == 0)
         {
-            if (GameBit_Get(((Dll1DBPlacement*)state)->triggerBit) == 0)
+            if (mainGetBit(((Dll1DBPlacement*)state)->triggerBit) == 0)
             {
                 ((Dll1DBState*)sub)->state = STATE_RISING;
-                GameBit_Set(((Dll1DBPlacement*)state)->boardedBit, 0);
+                mainSetBits(((Dll1DBPlacement*)state)->boardedBit, 0);
             }
         }
         break;
@@ -237,7 +237,7 @@ void dll_1DB_init(void* obj, void* p)
     void* sub = ((GameObject*)obj)->extra;
     s16 t = (s16)((s32)((Dll1DBPlacement*)p)->rotXByte << 8);
     ((GameObject*)obj)->anim.rotX = t;
-    if (GameBit_Get(((Dll1DBPlacement*)p)->boardedBit) != 0)
+    if (mainGetBit(((Dll1DBPlacement*)p)->boardedBit) != 0)
     {
         ((Dll1DBState*)sub)->state = STATE_BOTTOM;
     }

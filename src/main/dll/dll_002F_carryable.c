@@ -49,7 +49,7 @@ typedef struct CarryableUpdateHeldState
 extern void playerSetHeldObject(void* player, int held);
 extern u32 buttonGetDisabled(int port);
 extern void buttonDisable(int port, u32 mask);
-extern int fn_80295BF0(void* player);
+extern int isTrickyNear(void* player);
 
 extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern f32 timeDelta;
@@ -81,7 +81,7 @@ void Carryable_stopCarrying(int* obj, u8* param2)
     }
 }
 
-void Carryable_setFlag08(u8* state, u8 enable)
+void Carryable_setSuppressPositionSave(u8* state, u8 enable)
 {
     if (enable != 0)
     {
@@ -93,9 +93,9 @@ void Carryable_setFlag08(u8* state, u8 enable)
     }
 }
 
-s32 Carryable_getFlag04(u8* state) { return (((CarryableUpdateHeldState*)state)->flags & 4) != 0; }
+s32 Carryable_getDropDisabled(u8* state) { return (((CarryableUpdateHeldState*)state)->flags & 4) != 0; }
 
-void Carryable_setFlag04(u8* state, u8 enable)
+void Carryable_setDropDisabled(u8* state, u8 enable)
 {
     if (enable != 0)
     {
@@ -107,7 +107,7 @@ void Carryable_setFlag04(u8* state, u8 enable)
     }
 }
 
-void Carryable_setFlag02Inverted(u8* state, u8 clear)
+void Carryable_setGravityEnabled(u8* state, u8 clear)
 {
     if (clear != 0)
     {
@@ -121,9 +121,9 @@ void Carryable_setFlag02Inverted(u8* state, u8 clear)
 
 u8 Carryable_getSurfaceType(u8* state) { return ((CarryableUpdateHeldState*)state)->surfaceType; }
 
-s32 Carryable_getFlag01(u8* state) { return ((CarryableUpdateHeldState*)state)->flags & 1; }
+s32 Carryable_wasJustGrabbed(u8* state) { return ((CarryableUpdateHeldState*)state)->flags & 1; }
 
-s32 Carryable_isHeld(u8* state) { return ((CarryableUpdateHeldState*)state)->carryState; }
+s32 Carryable_getCarryState(u8* state) { return ((CarryableUpdateHeldState*)state)->carryState; }
 
 void Carryable_free(int obj) { ObjGroup_RemoveObject(obj, CARRYABLE_OBJGROUP); }
 
@@ -247,7 +247,7 @@ int Carryable_updateHeld(u8* obj)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
         {
-            if ((((CarryableUpdateHeldState*)held)->flags & 4) != 0 || fn_80295BF0(player) == 0)
+            if ((((CarryableUpdateHeldState*)held)->flags & 4) != 0 || isTrickyNear(player) == 0)
             {
                 Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
             }

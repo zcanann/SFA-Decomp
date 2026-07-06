@@ -162,12 +162,12 @@ void SB_KyteCage_update(int obj)
     }
     if ((((GameObject*)obj)->anim.resetHitboxFlags & SB_KYTECAGE_HIT_OPEN) != 0)
     {
-        if (GameBit_Get(GAMEBIT_KYTE_OPENED) == 0)
+        if (mainGetBit(GAMEBIT_KYTE_OPENED) == 0)
         {
             buttonDisable(0, PAD_BUTTON_A);
             (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
             (*gObjectTriggerInterface)->runSequence(SB_KYTECAGE_TRIGGER_OPEN, (void*)obj, -1);
-            GameBit_Set(GAMEBIT_KYTE_OPENED, 1);
+            mainSetBits(GAMEBIT_KYTE_OPENED, 1);
             return;
         }
     }
@@ -214,7 +214,7 @@ void SB_KyteCage_init(GameObject* obj, int* params)
     obj->anim.rotX = (s16)((s8) * (s8*)&((ObjHitsPriorityState*)params)->localPosZ << 8);
     obj->objectFlags = (u16)(obj->objectFlags | SB_KYTECAGE_INIT_FLAGS);
     state->seqLatch = 0;
-    if ((u32)GameBit_Get(GAMEBIT_KYTE_CAGED) == 0u)
+    if ((u32)mainGetBit(GAMEBIT_KYTE_CAGED) == 0u)
     {
         getLActions(obj, obj, SB_KYTECAGE_LACTION_A, 0, 0, 0);
         getLActions(obj, obj, SB_KYTECAGE_LACTION_B, 0, 0, 0);

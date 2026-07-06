@@ -252,12 +252,12 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
 }
 #pragma opt_dead_assignments reset
 
-int xyzanimator_getExtraSize(void)
+int XyzAnimator_getExtraSize(void)
 {
     return 0x50;
 }
 
-void xyzanimator_free(int obj, int flag)
+void XyzAnimator_free(int obj, int flag)
 {
     extern int mapGetBlock(int blockIdx);
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
@@ -290,13 +290,13 @@ void xyzanimator_free(int obj, int flag)
     ObjGroup_RemoveObject(obj, XYZANIMATOR_OBJGROUP);
 }
 
-void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void XyzAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4004);
 }
 
-void xyzanimator_update(int obj)
+void XyzAnimator_update(int obj)
 {
     extern void fn_80194C40(u8* setup, u8* state, int block);
     extern void fn_80194964(u8* setup, u8* state, int block);
@@ -347,13 +347,13 @@ void xyzanimator_update(int obj)
         }
         else
         {
-            ((XyzAnimatorState*)state)->gameBitValue = GameBit_Get(((XyzAnimatorPlacement*)setup)->triggerGameBit);
+            ((XyzAnimatorState*)state)->gameBitValue = mainGetBit(((XyzAnimatorPlacement*)setup)->triggerGameBit);
         }
         ((XyzAnimatorState*)state)->unk8 = ((MapBlockData*)block)->edgeCount;
         ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->startX;
         ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->startY;
         ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->startZ;
-        if (((XyzAnimatorPlacement*)setup)->doneGameBit != -1 && GameBit_Get(((XyzAnimatorPlacement*)setup)->doneGameBit) != 0)
+        if (((XyzAnimatorPlacement*)setup)->doneGameBit != -1 && mainGetBit(((XyzAnimatorPlacement*)setup)->doneGameBit) != 0)
         {
             ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->targetX;
             ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->targetY;
@@ -401,7 +401,7 @@ void xyzanimator_update(int obj)
     }
     if (((XyzAnimatorPlacement*)setup)->mode == 2)
     {
-        t = GameBit_Get(((XyzAnimatorPlacement*)setup)->triggerGameBit);
+        t = mainGetBit(((XyzAnimatorPlacement*)setup)->triggerGameBit);
         if (((XyzAnimatorState*)state)->gameBitValue != t)
         {
             ((XyzAnimatorState*)state)->gameBitValue = t;
@@ -409,7 +409,7 @@ void xyzanimator_update(int obj)
             {
                 if (((XyzAnimatorPlacement*)setup)->doneGameBit > -1)
                 {
-                    GameBit_Set(((XyzAnimatorPlacement*)setup)->doneGameBit, 0);
+                    mainSetBits(((XyzAnimatorPlacement*)setup)->doneGameBit, 0);
                 }
             }
             if (((XyzAnimatorState*)state)->loopCount > 2)
@@ -434,7 +434,7 @@ void xyzanimator_update(int obj)
         }
         if (((XyzAnimatorState*)state)->gameBitValue == 0)
         {
-            ((XyzAnimatorState*)state)->gameBitValue = GameBit_Get(((XyzAnimatorPlacement*)setup)->triggerGameBit);
+            ((XyzAnimatorState*)state)->gameBitValue = mainGetBit(((XyzAnimatorPlacement*)setup)->triggerGameBit);
             if (((XyzAnimatorState*)state)->gameBitValue == 0)
             {
                 goto no_update;
@@ -516,7 +516,7 @@ void xyzanimator_update(int obj)
         {
             if (((XyzAnimatorPlacement*)setup)->doneGameBit != -1)
             {
-                GameBit_Set(((XyzAnimatorPlacement*)setup)->doneGameBit, 1);
+                mainSetBits(((XyzAnimatorPlacement*)setup)->doneGameBit, 1);
             }
             ((XyzAnimatorState*)state)->loopCount += 1;
         }
@@ -670,7 +670,7 @@ void xyzanimator_update(int obj)
             {
                 if (((XyzAnimatorPlacement*)setup)->doneGameBit != -1)
                 {
-                    GameBit_Set(((XyzAnimatorPlacement*)setup)->doneGameBit, 1);
+                    mainSetBits(((XyzAnimatorPlacement*)setup)->doneGameBit, 1);
                 }
                 ((XyzAnimatorState*)state)->loopCount += 1;
             }
@@ -755,7 +755,7 @@ no_update:
     return;
 }
 
-void xyzanimator_init(int obj)
+void XyzAnimator_init(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
     int id;

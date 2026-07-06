@@ -59,35 +59,35 @@ extern void WM_newcrystalFn_800969b0(int* obj, void* params, f32 a, f32 b, f32 c
 extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int kind, int mode, int chance,
                                         f32 speed, void* origin, int flags);
 
-int wmnewcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor);
-int wmnewcrystal_getExtraSize(void);
-int wmnewcrystal_getObjectTypeId(void);
-void wmnewcrystal_free(void);
-void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
-void wmnewcrystal_hitDetect(void);
-void wmnewcrystal_update(void);
-void wmnewcrystal_init(GameObject* obj, void* setup);
-void wmnewcrystal_release(void);
-void wmnewcrystal_initialise(void);
+int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor);
+int WM_newcrystal_getExtraSize(void);
+int WM_newcrystal_getObjectTypeId(void);
+void WM_newcrystal_free(void);
+void WM_newcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
+void WM_newcrystal_hitDetect(void);
+void WM_newcrystal_update(void);
+void WM_newcrystal_init(GameObject* obj, void* setup);
+void WM_newcrystal_release(void);
+void WM_newcrystal_initialise(void);
 
 ObjectDescriptor gWM_newcrystalObjDescriptor = {
     0,
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    wmnewcrystal_initialise,
-    wmnewcrystal_release,
+    WM_newcrystal_initialise,
+    WM_newcrystal_release,
     0,
-    (ObjectDescriptorCallback)wmnewcrystal_init,
-    wmnewcrystal_update,
-    wmnewcrystal_hitDetect,
-    (ObjectDescriptorCallback)wmnewcrystal_render,
-    wmnewcrystal_free,
-    (ObjectDescriptorCallback)wmnewcrystal_getObjectTypeId,
-    wmnewcrystal_getExtraSize,
+    (ObjectDescriptorCallback)WM_newcrystal_init,
+    WM_newcrystal_update,
+    WM_newcrystal_hitDetect,
+    (ObjectDescriptorCallback)WM_newcrystal_render,
+    WM_newcrystal_free,
+    (ObjectDescriptorCallback)WM_newcrystal_getObjectTypeId,
+    WM_newcrystal_getExtraSize,
 };
 
-int wmnewcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
+int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
 {
     WmNewCrystalState* state;
     WmNewCrystalParticleParams params;
@@ -112,7 +112,7 @@ int wmnewcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
             obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
             if (obj->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE)
             {
-                GameBit_Set(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 0);
+                mainSetBits(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 0);
             }
             break;
         case 2:
@@ -121,14 +121,14 @@ int wmnewcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
         }
     }
 
-    if (GameBit_Get(WMNEWCRYSTAL_GAMEBIT_ACTIVE) == 0)
+    if (mainGetBit(WMNEWCRYSTAL_GAMEBIT_ACTIVE) == 0)
     {
         return 0;
     }
 
     if (obj->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE)
     {
-        if (GameBit_Get(WMNEWCRYSTAL_GAMEBIT_AMBIENT_FX) == 0)
+        if (mainGetBit(WMNEWCRYSTAL_GAMEBIT_AMBIENT_FX) == 0)
         {
             (*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, NULL, 2, -1, NULL);
             /* params is uninitialized here on purpose - retail passes the raw
@@ -157,43 +157,43 @@ int wmnewcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
     return 0;
 }
 
-int wmnewcrystal_getExtraSize(void) { return sizeof(WmNewCrystalState); }
+int WM_newcrystal_getExtraSize(void) { return sizeof(WmNewCrystalState); }
 
-int wmnewcrystal_getObjectTypeId(void) { return 0x0; }
+int WM_newcrystal_getObjectTypeId(void) { return 0x0; }
 
-void wmnewcrystal_free(void)
+void WM_newcrystal_free(void)
 {
 }
 
-void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+void WM_newcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f); /* literal, not the named 1.0 extern (#71 pool shape) */
 }
 
-void wmnewcrystal_hitDetect(void)
+void WM_newcrystal_hitDetect(void)
 {
 }
 
-void wmnewcrystal_update(void)
+void WM_newcrystal_update(void)
 {
 }
 
-void wmnewcrystal_init(GameObject* obj, void* setup)
+void WM_newcrystal_init(GameObject* obj, void* setup)
 {
     WmNewCrystalState* state = obj->extra;
-    obj->animEventCallback = wmnewcrystal_SeqFn;
+    obj->animEventCallback = WM_newcrystal_SeqFn;
     if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) > 1)
     {
-        GameBit_Set(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 1);
+        mainSetBits(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 1);
         state->active = 1;
     }
 }
 
-void wmnewcrystal_release(void)
+void WM_newcrystal_release(void)
 {
 }
 
-void wmnewcrystal_initialise(void)
+void WM_newcrystal_initialise(void)
 {
 }
 
@@ -216,66 +216,66 @@ extern u8 dll_21B_initialise_nop[];
 extern u8 dll_21B_release_nop[];
 extern u8 dll_21B_render_nop[];
 extern u8 dll_21B_update[];
-extern u8 vfpladders_free[];
-extern u8 vfpladders_getExtraSize[];
-extern u8 vfpladders_getObjectTypeId[];
-extern u8 vfpladders_hitDetect[];
-extern u8 vfpladders_init[];
-extern u8 vfpladders_initialise[];
-extern u8 vfpladders_release[];
-extern u8 vfpladders_render[];
-extern u8 vfpladders_update[];
-extern u8 vfplevelcontrol_free[];
-extern u8 vfplevelcontrol_getExtraSize[];
-extern u8 vfplevelcontrol_getObjectTypeId[];
-extern u8 vfplevelcontrol_hitDetect[];
-extern u8 vfplevelcontrol_init[];
-extern u8 vfplevelcontrol_initialise[];
-extern u8 vfplevelcontrol_release[];
-extern u8 vfplevelcontrol_render[];
-extern u8 vfplevelcontrol_update[];
-extern u8 vfplift_free[];
-extern u8 vfplift_getExtraSize[];
-extern u8 vfplift_getObjectTypeId[];
-extern u8 vfplift_hitDetect[];
-extern u8 vfplift_init[];
-extern u8 vfplift_initialise[];
-extern u8 vfplift_release[];
-extern u8 vfplift_render[];
-extern u8 vfplift_update[];
-extern u8 vfpminifire_free[];
-extern u8 vfpminifire_getExtraSize[];
-extern u8 vfpminifire_getObjectTypeId[];
-extern u8 vfpminifire_hitDetect[];
-extern u8 vfpminifire_init[];
-extern u8 vfpminifire_initialise[];
-extern u8 vfpminifire_release[];
-extern u8 vfpminifire_render[];
-extern u8 vfpminifire_update[];
-extern u8 vfpobjcreator_free[];
-extern u8 vfpobjcreator_getExtraSize[];
-extern u8 vfpobjcreator_getObjectTypeId[];
-extern u8 vfpobjcreator_hitDetect[];
-extern u8 vfpobjcreator_init[];
-extern u8 vfpobjcreator_initialise[];
-extern u8 vfpobjcreator_release[];
-extern u8 vfpobjcreator_render[];
-extern u8 vfpobjcreator_update[];
-extern u8 vfpstatueball_free[];
-extern u8 vfpstatueball_getExtraSize[];
-extern u8 vfpstatueball_getObjectTypeId[];
-extern u8 vfpstatueball_hitDetect[];
-extern u8 vfpstatueball_init[];
-extern u8 vfpstatueball_initialise[];
-extern u8 vfpstatueball_release[];
-extern u8 vfpstatueball_render[];
-extern u8 vfpstatueball_update[];
+extern u8 VFP_Ladders_free[];
+extern u8 VFP_Ladders_getExtraSize[];
+extern u8 VFP_Ladders_getObjectTypeId[];
+extern u8 VFP_Ladders_hitDetect[];
+extern u8 VFP_Ladders_init[];
+extern u8 VFP_Ladders_initialise[];
+extern u8 VFP_Ladders_release[];
+extern u8 VFP_Ladders_render[];
+extern u8 VFP_Ladders_update[];
+extern u8 VFP_LevelControl_free[];
+extern u8 VFP_LevelControl_getExtraSize[];
+extern u8 VFP_LevelControl_getObjectTypeId[];
+extern u8 VFP_LevelControl_hitDetect[];
+extern u8 VFP_LevelControl_init[];
+extern u8 VFP_LevelControl_initialise[];
+extern u8 VFP_LevelControl_release[];
+extern u8 VFP_LevelControl_render[];
+extern u8 VFP_LevelControl_update[];
+extern u8 VFPLift_free[];
+extern u8 VFPLift_getExtraSize[];
+extern u8 VFPLift_getObjectTypeId[];
+extern u8 VFPLift_hitDetect[];
+extern u8 VFPLift_init[];
+extern u8 VFPLift_initialise[];
+extern u8 VFPLift_release[];
+extern u8 VFPLift_render[];
+extern u8 VFPLift_update[];
+extern u8 VFP_MiniFire_free[];
+extern u8 VFP_MiniFire_getExtraSize[];
+extern u8 VFP_MiniFire_getObjectTypeId[];
+extern u8 VFP_MiniFire_hitDetect[];
+extern u8 VFP_MiniFire_init[];
+extern u8 VFP_MiniFire_initialise[];
+extern u8 VFP_MiniFire_release[];
+extern u8 VFP_MiniFire_render[];
+extern u8 VFP_MiniFire_update[];
+extern u8 VFP_ObjCreator_free[];
+extern u8 VFP_ObjCreator_getExtraSize[];
+extern u8 VFP_ObjCreator_getObjectTypeId[];
+extern u8 VFP_ObjCreator_hitDetect[];
+extern u8 VFP_ObjCreator_init[];
+extern u8 VFP_ObjCreator_initialise[];
+extern u8 VFP_ObjCreator_release[];
+extern u8 VFP_ObjCreator_render[];
+extern u8 VFP_ObjCreator_update[];
+extern u8 VFP_statueball_free[];
+extern u8 VFP_statueball_getExtraSize[];
+extern u8 VFP_statueball_getObjectTypeId[];
+extern u8 VFP_statueball_hitDetect[];
+extern u8 VFP_statueball_init[];
+extern u8 VFP_statueball_initialise[];
+extern u8 VFP_statueball_release[];
+extern u8 VFP_statueball_render[];
+extern u8 VFP_statueball_update[];
 
-u32 gVFP_LevelControlObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)vfplevelcontrol_initialise, (u32)vfplevelcontrol_release, 0x00000000, (u32)vfplevelcontrol_init, (u32)vfplevelcontrol_update, (u32)vfplevelcontrol_hitDetect, (u32)vfplevelcontrol_render, (u32)vfplevelcontrol_free, (u32)vfplevelcontrol_getObjectTypeId, (u32)vfplevelcontrol_getExtraSize };
-u32 gVFP_ObjCreatorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)vfpobjcreator_initialise, (u32)vfpobjcreator_release, 0x00000000, (u32)vfpobjcreator_init, (u32)vfpobjcreator_update, (u32)vfpobjcreator_hitDetect, (u32)vfpobjcreator_render, (u32)vfpobjcreator_free, (u32)vfpobjcreator_getObjectTypeId, (u32)vfpobjcreator_getExtraSize };
-u32 lbl_80328F00[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)vfpminifire_initialise, (u32)vfpminifire_release, 0x00000000, (u32)vfpminifire_init, (u32)vfpminifire_update, (u32)vfpminifire_hitDetect, (u32)vfpminifire_render, (u32)vfpminifire_free, (u32)vfpminifire_getObjectTypeId, (u32)vfpminifire_getExtraSize };
+u32 gVFP_LevelControlObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)VFP_LevelControl_initialise, (u32)VFP_LevelControl_release, 0x00000000, (u32)VFP_LevelControl_init, (u32)VFP_LevelControl_update, (u32)VFP_LevelControl_hitDetect, (u32)VFP_LevelControl_render, (u32)VFP_LevelControl_free, (u32)VFP_LevelControl_getObjectTypeId, (u32)VFP_LevelControl_getExtraSize };
+u32 gVFP_ObjCreatorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)VFP_ObjCreator_initialise, (u32)VFP_ObjCreator_release, 0x00000000, (u32)VFP_ObjCreator_init, (u32)VFP_ObjCreator_update, (u32)VFP_ObjCreator_hitDetect, (u32)VFP_ObjCreator_render, (u32)VFP_ObjCreator_free, (u32)VFP_ObjCreator_getObjectTypeId, (u32)VFP_ObjCreator_getExtraSize };
+u32 lbl_80328F00[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)VFP_MiniFire_initialise, (u32)VFP_MiniFire_release, 0x00000000, (u32)VFP_MiniFire_init, (u32)VFP_MiniFire_update, (u32)VFP_MiniFire_hitDetect, (u32)VFP_MiniFire_render, (u32)VFP_MiniFire_free, (u32)VFP_MiniFire_getObjectTypeId, (u32)VFP_MiniFire_getExtraSize };
 u32 dll_219[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_219_initialise_nop, (u32)dll_219_release_nop, 0x00000000, (u32)dll_219_init, (u32)dll_219_update, (u32)dll_219_hitDetect_nop, (u32)dll_219_render_nop, (u32)dll_219_free, (u32)dll_219_getObjectTypeId, (u32)dll_219_getExtraSize_ret_4 };
-u32 gVFP_statueballObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)vfpstatueball_initialise, (u32)vfpstatueball_release, 0x00000000, (u32)vfpstatueball_init, (u32)vfpstatueball_update, (u32)vfpstatueball_hitDetect, (u32)vfpstatueball_render, (u32)vfpstatueball_free, (u32)vfpstatueball_getObjectTypeId, (u32)vfpstatueball_getExtraSize };
+u32 gVFP_statueballObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)VFP_statueball_initialise, (u32)VFP_statueball_release, 0x00000000, (u32)VFP_statueball_init, (u32)VFP_statueball_update, (u32)VFP_statueball_hitDetect, (u32)VFP_statueball_render, (u32)VFP_statueball_free, (u32)VFP_statueball_getObjectTypeId, (u32)VFP_statueball_getExtraSize };
 u32 dll_21B[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_21B_initialise_nop, (u32)dll_21B_release_nop, 0x00000000, (u32)dll_21B_init, (u32)dll_21B_update, (u32)dll_21B_hitDetect_nop, (u32)dll_21B_render_nop, (u32)dll_21B_free, (u32)dll_21B_getObjectTypeId, (u32)dll_21B_getExtraSize_ret_4 };
-u32 gVFP_LaddersObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)vfpladders_initialise, (u32)vfpladders_release, 0x00000000, (u32)vfpladders_init, (u32)vfpladders_update, (u32)vfpladders_hitDetect, (u32)vfpladders_render, (u32)vfpladders_free, (u32)vfpladders_getObjectTypeId, (u32)vfpladders_getExtraSize };
-u32 gVFPLiftObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)vfplift_initialise, (u32)vfplift_release, 0x00000000, (u32)vfplift_init, (u32)vfplift_update, (u32)vfplift_hitDetect, (u32)vfplift_render, (u32)vfplift_free, (u32)vfplift_getObjectTypeId, (u32)vfplift_getExtraSize };
+u32 gVFP_LaddersObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)VFP_Ladders_initialise, (u32)VFP_Ladders_release, 0x00000000, (u32)VFP_Ladders_init, (u32)VFP_Ladders_update, (u32)VFP_Ladders_hitDetect, (u32)VFP_Ladders_render, (u32)VFP_Ladders_free, (u32)VFP_Ladders_getObjectTypeId, (u32)VFP_Ladders_getExtraSize };
+u32 gVFPLiftObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)VFPLift_initialise, (u32)VFPLift_release, 0x00000000, (u32)VFPLift_init, (u32)VFPLift_update, (u32)VFPLift_hitDetect, (u32)VFPLift_render, (u32)VFPLift_free, (u32)VFPLift_getObjectTypeId, (u32)VFPLift_getExtraSize };

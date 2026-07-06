@@ -61,9 +61,9 @@ int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
             if (coordsToMapCell(levelObj, ((GameObject*)tricky)->anim.localPosX,
                                 ((GameObject*)tricky)->anim.localPosZ) == 0x38)
             {
-                if ((GameBit_Get(0x385) == 0) && (GameBit_Get(0x384) != 0))
+                if ((mainGetBit(0x385) == 0) && (mainGetBit(0x384) != 0))
                 {
-                    if ((GameBit_Get(0xC1) != 0) || (GameBit_Get(0x12E) != 0))
+                    if ((mainGetBit(0xC1) != 0) || (mainGetBit(0x12E) != 0))
                     {
                         result = 1;
                     }

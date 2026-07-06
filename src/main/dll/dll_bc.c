@@ -4,7 +4,7 @@
  * gameTextFn_80134be8() reports active on-screen text.
  *   - Camera_minimapShowHelpTextForTarget: resets the help-text id and
  *     refreshes the reticle for the camera's current focus target.
- *   - camcontrol_playTargetTypeSfx: shows the A-button icon matching the
+ *   - camcontrol_setAButtonIconForTarget: shows the A-button icon matching the
  *     current target's kind (talk NPC/object, A-button hint, context-B).
  */
 #include "main/dll/dll_BC.h"
@@ -23,7 +23,7 @@ void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
     }
 }
 
-void camcontrol_playTargetTypeSfx(void)
+void camcontrol_setAButtonIconForTarget(void)
 {
     CamcontrolTargetObject* target = (CamcontrolTargetObject*)CAMCONTROL_CAMERA->currentTarget;
     int kind;

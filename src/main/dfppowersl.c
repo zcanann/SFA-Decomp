@@ -31,7 +31,7 @@ void dfppowersl_render(DfpPowerSlObject* obj)
     if ((u32)powerSl != 0)
     {
         state = dfppowersl_getState(powerSl);
-        if (GameBit_Get(state->eventId) == 0)
+        if (mainGetBit(state->eventId) == 0)
         {
             (*gPartfxInterface)->spawnObject(powerSl, state->spawnObjectId, 0,
                                              DFPPOWERSL_SPAWN_MODE_PRELOAD, 0xffffffff, 0);

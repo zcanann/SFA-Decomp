@@ -76,10 +76,10 @@ extern void objfx_spawnArcedBurst(int* obj, int enabled, f32 radius, int particl
                                   int particleId, int lifetime, f32 sx, f32 sy, f32 sz,
                                   void* args, int a);
 
-int magiccavetop_getExtraSize(void) { return 0xc; }
+int MagicCaveTop_getExtraSize(void) { return 0xc; }
 
 
-void magiccavetop_free(int* obj)
+void MagicCaveTop_free(int* obj)
 {
     MagiccavetopState* state = ((GameObject*)obj)->extra;
     MagiccavetopPlacement* def = *(MagiccavetopPlacement**)&((GameObject*)obj)->anim.placementData;
@@ -112,7 +112,7 @@ typedef struct MagicCaveTopFxArgs
     f32 z;
 } MagicCaveTopFxArgs;
 
-void magiccavetop_update(int* obj)
+void MagicCaveTop_update(int* obj)
 {
 
     MagicCaveTopFxArgs fx;
@@ -132,9 +132,9 @@ void magiccavetop_update(int* obj)
     gb = 0;
     if (player != NULL)
     {
-        if (GameBit_Get(MAGICCAVE_GAMEBIT_WARP_READY) != 0)
+        if (mainGetBit(MAGICCAVE_GAMEBIT_WARP_READY) != 0)
         {
-            GameBit_Set(MAGICCAVE_GAMEBIT_WARP_READY, 0);
+            mainSetBits(MAGICCAVE_GAMEBIT_WARP_READY, 0);
             (*gMapEventInterface)->setObjGroupStatus(def->mapId, def->objGroup, 0);
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             unlockLevel(0, 0, 1);
@@ -143,7 +143,7 @@ void magiccavetop_update(int* obj)
         }
         dirIdx = mapGetDirIdx(def->mapId);
         dist = vec3f_distanceSquared(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
-        gb = GameBit_Get(def->visibleGameBit);
+        gb = mainGetBit(def->visibleGameBit);
         switch (sub->subState)
         {
         case MAGICCAVETOP_SUBSTATE_IDLE:
@@ -177,7 +177,7 @@ void magiccavetop_update(int* obj)
             }
             break;
         case MAGICCAVETOP_SUBSTATE_WARPING:
-            GameBit_Set(MAGICCAVE_GAMEBIT_WARP_DEST, def->gameBitValue);
+            mainSetBits(MAGICCAVE_GAMEBIT_WARP_DEST, def->gameBitValue);
             if (def->noLoad != 0)
             {
                 unlockLevel(0, 0, 1);
@@ -192,7 +192,7 @@ void magiccavetop_update(int* obj)
             }
             if (((GameObject*)obj)->anim.mapEventSlot == 0xd)
             {
-                GameBit_Set(MAGICCAVETOP_GAMEBIT_SLOT_D_CLEAR, 0);
+                mainSetBits(MAGICCAVETOP_GAMEBIT_SLOT_D_CLEAR, 0);
             }
             warpToMap(def->warpMapId, 0);
             break;
@@ -338,12 +338,12 @@ void magiccavetop_update(int* obj)
     }
 }
 
-void magiccavetop_init(int* obj, s8* def)
+void MagicCaveTop_init(int* obj, s8* def)
 {
     MagiccavetopState* state = ((GameObject*)obj)->extra;
     int* refs;
     ((GameObject*)obj)->objectFlags = (u16)((u32)((GameObject*)obj)->objectFlags | (MAGICCAVETOP_OBJFLAG_HIDDEN | MAGICCAVETOP_OBJFLAG_HITDETECT_DISABLED));
-    if (GameBit_Get(((MagiccavetopObjectDef*)def)->visibleGameBit) != 0)
+    if (mainGetBit(((MagiccavetopObjectDef*)def)->visibleGameBit) != 0)
     {
         state->fadeTimer = 100.0f;
     }
@@ -351,7 +351,7 @@ void magiccavetop_init(int* obj, s8* def)
     refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel(obj), 0);
     if (((MagiccavetopObjectDef*)def)->swapGameBit > 0)
     {
-        if (GameBit_Get(((MagiccavetopObjectDef*)def)->swapGameBit) != 0)
+        if (mainGetBit(((MagiccavetopObjectDef*)def)->swapGameBit) != 0)
         {
             state->flags = (u8)(state->flags | 0x0c);
             *(u8*)((char*)refs + 8) = 23;

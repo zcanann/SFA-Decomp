@@ -91,12 +91,12 @@ void barrelgener_update(int obj)
     BarrelGeneratorState* state = ((GameObject*)obj)->extra;
     int player = Obj_GetPlayerObject();
 
-    if ((u32)GameBit_Get(GAMEBIT_BARRELGENER_TRIGGERED) == 0)
+    if ((u32)mainGetBit(GAMEBIT_BARRELGENER_TRIGGERED) == 0)
     {
         if (Vec_distance(obj + 24, player + 24) < lbl_803E6C24)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-            GameBit_Set(GAMEBIT_BARRELGENER_TRIGGERED, 1);
+            mainSetBits(GAMEBIT_BARRELGENER_TRIGGERED, 1);
         }
     }
     if (fn_80080150((int)&state->releaseTimer) != 0)

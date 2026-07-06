@@ -84,10 +84,10 @@ void dim_tricky_update(int* obj)
     switch (*(u8*)state)
     {
     case DIMTRICKY_STATE_WAIT_TRIGGER:
-        if (GameBit_Get(0xa1b) != 0)
+        if (mainGetBit(0xa1b) != 0)
         {
-            GameBit_Set(0x4e4, 0);
-            GameBit_Set(0x4e5, 0);
+            mainSetBits(0x4e4, 0);
+            mainSetBits(0x4e5, 0);
             *(s8*)state = DIMTRICKY_STATE_HAND_CONTROL;
         }
         break;

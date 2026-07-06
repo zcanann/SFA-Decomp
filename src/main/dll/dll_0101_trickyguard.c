@@ -3,7 +3,7 @@
  * arming game bit is set, hands the player's Tricky (the fox companion)
  * a stay/guard command at this object's position.
  *
- * Each frame trickyguard_update arms INTERACT_FLAG_DISABLED, gates on the
+ * Each frame TrickyGuard_update arms INTERACT_FLAG_DISABLED, gates on the
  * placement's arming game bit (offset 0x1A; -1 = always armed), fetches
  * the live Tricky object, and - if Tricky is not already busy
  * (TRICKY_VTBL_IS_BUSY) and the player just entered range
@@ -11,7 +11,7 @@
  * tricky, this, 1, 3) before clearing the disable bit and re-running the
  * object render hook.
  *
- * trickyguard_init seeds rotX from the placement yaw byte and marks the
+ * TrickyGuard_init seeds rotX from the placement yaw byte and marks the
  * object with TRICKYGUARD_OBJECT_FLAG.
  *
  * This TU is the shared DLL bundle for objects 0x00FE..0x0103 - it also
@@ -42,7 +42,7 @@ typedef struct TrickyguardPlacement
 
 extern void objRenderFn_80041018(int* obj);
 
-void trickyguard_init(s16* obj, u8* placement)
+void TrickyGuard_init(s16* obj, u8* placement)
 {
     u32 flags;
     *obj = (s16)((u32)((TrickyguardPlacement*)placement)->yawByte << 8);
@@ -51,14 +51,14 @@ void trickyguard_init(s16* obj, u8* placement)
     ((GameObject*)obj)->objectFlags = flags;
 }
 
-void trickyguard_update(int* obj)
+void TrickyGuard_update(int* obj)
 {
     int* tricky;
     TrickyguardPlacement* placement = (TrickyguardPlacement*)((GameObject*)obj)->anim.placementData;
     ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     if (placement->armingGameBit != -1)
     {
-        if ((u32)GameBit_Get(placement->armingGameBit) == 0) return;
+        if ((u32)mainGetBit(placement->armingGameBit) == 0) return;
     }
     tricky = getTrickyObject();
     if (tricky == NULL) return;
@@ -90,13 +90,13 @@ ObjectDescriptor gTrickyWarpObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)trickywarp_init,
-    (ObjectDescriptorCallback)trickywarp_update,
+    (ObjectDescriptorCallback)TrickyWarp_init,
+    (ObjectDescriptorCallback)TrickyWarp_update,
     0,
     0,
-    (ObjectDescriptorCallback)trickywarp_free,
+    (ObjectDescriptorCallback)TrickyWarp_free,
     0,
-    trickywarp_getExtraSize,
+    TrickyWarp_getExtraSize,
 };
 
 ObjectDescriptor gTrickyGuardObjDescriptor = {
@@ -104,8 +104,8 @@ ObjectDescriptor gTrickyGuardObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)trickyguard_init,
-    (ObjectDescriptorCallback)trickyguard_update,
+    (ObjectDescriptorCallback)TrickyGuard_init,
+    (ObjectDescriptorCallback)TrickyGuard_update,
     0,
     0,
     0,
@@ -146,11 +146,11 @@ ObjectDescriptor gCurveFishObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)curvefish_init,
-    (ObjectDescriptorCallback)curvefish_update,
+    (ObjectDescriptorCallback)CurveFish_init,
+    (ObjectDescriptorCallback)CurveFish_update,
     0,
     0,
     0,
     0,
-    curvefish_getExtraSize,
+    CurveFish_getExtraSize,
 };

@@ -140,7 +140,7 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
         }
     }
 
-    if ((u32)GameBit_Get(setupData->raisedBit) != 0)
+    if ((u32)mainGetBit(setupData->raisedBit) != 0)
     {
         ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
 

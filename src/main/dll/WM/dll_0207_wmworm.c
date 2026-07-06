@@ -25,22 +25,22 @@ extern f32 lbl_803E5E5C; /* 0.0 */
 extern f32 lbl_803E5E60; /* 0.01: chase speed factor */
 extern f32 timeDelta;
 
-int wmworm_getExtraSize(void) { return sizeof(WmWormState); }
-int wmworm_getObjectTypeId(void) { return 0x0; }
+int WM_Worm_getExtraSize(void) { return sizeof(WmWormState); }
+int WM_Worm_getObjectTypeId(void) { return 0x0; }
 
-void wmworm_free(int obj)
+void WM_Worm_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void wmworm_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void WM_Worm_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-void wmworm_hitDetect(void)
+void WM_Worm_hitDetect(void)
 {
 }
 
 #pragma opt_common_subs off
-void wmworm_update(GameObject* obj)
+void WM_Worm_update(GameObject* obj)
 {
     float dx;
     float dy;
@@ -120,7 +120,7 @@ void wmworm_update(GameObject* obj)
 }
 
 #pragma opt_common_subs reset
-void wmworm_init(GameObject* obj, WmWormSetup* setup)
+void WM_Worm_init(GameObject* obj, WmWormSetup* setup)
 {
     WmWormState* state;
 
@@ -143,10 +143,10 @@ void wmworm_init(GameObject* obj, WmWormSetup* setup)
     state->homeZ = obj->anim.localPosZ;
 }
 
-void wmworm_release(void)
+void WM_Worm_release(void)
 {
 }
 
-void wmworm_initialise(void)
+void WM_Worm_initialise(void)
 {
 }

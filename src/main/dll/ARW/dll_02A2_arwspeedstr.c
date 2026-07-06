@@ -43,24 +43,24 @@ STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, x)== 0x00);
 STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, y)== 0x04);
 STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, z)== 0x08);
 
-int arwspeedstr_getExtraSize(void) { return 0x1c; }
+int ARWSpeedStr_getExtraSize(void) { return 0x1c; }
 
-int arwspeedstr_getObjectTypeId(void) { return 0; }
+int ARWSpeedStr_getObjectTypeId(void) { return 0; }
 
-void arwspeedstr_free(void)
+void ARWSpeedStr_free(void)
 {
 }
 
-void arwspeedstr_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+void ARWSpeedStr_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7100);
 }
 
-void arwspeedstr_hitDetect(void)
+void ARWSpeedStr_hitDetect(void)
 {
 }
 
-void arwspeedstr_update(int obj)
+void ARWSpeedStr_update(int obj)
 {
     ARWSpeedStrState* state = ((GameObject*)obj)->extra;
     if (state->flags == 0)
@@ -103,16 +103,16 @@ void arwspeedstr_update(int obj)
     }
 }
 
-void arwspeedstr_init(int obj, int setup)
+void ARWSpeedStr_init(int obj, int setup)
 {
     ((GameObject*)obj)->anim.alpha = 0;
 }
 
-void arwspeedstr_release(void)
+void ARWSpeedStr_release(void)
 {
 }
 
-void arwspeedstr_initialise(void)
+void ARWSpeedStr_initialise(void)
 {
 }
 

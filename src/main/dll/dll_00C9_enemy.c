@@ -175,18 +175,18 @@ extern int objIsFrozen(int obj);
 extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
 
 extern f32 enemyRespawnDistanceSq;
-extern void fn_80151954(int obj, u8* state);
-extern void fn_801522E0(int obj, u8* state);
-extern void fn_80152A94(int obj, u8* state);
-extern void fn_80152EC0(int obj, u8* state);
-extern void fn_801534D8(int obj, u8* state);
-extern void fn_80153C90(int obj, u8* state);
+extern void sharpClawInit(int obj, u8* state);
+extern void guardClaw_init(int obj, u8* state);
+extern void gcRobotPatrol_init(int obj, u8* state);
+extern void mikaladon_init(int obj, u8* state);
+extern void vambat_init(int obj, u8* state);
+extern void kooshy_init(int obj, u8* state);
 extern void fn_801542AC(int obj, u8* state);
 extern void mutatedEbaInit(int obj, u8* state);
-extern void iceBaddie_initWhirlpoolState(int obj, u8* state);
+extern void baddie_initWhirlpoolState(int obj, u8* state);
 extern void crawler_initVariant(int obj, u8* state);
-extern void crawler_initScaledVariant(int obj, u8* state);
-extern void fn_8014FF58(int obj, u8* state);
+extern void hoodedZyck_init(int obj, u8* state);
+extern void battleDroidInit(int obj, u8* state);
 extern void crawler_initModelVariant(int obj, u8* state);
 extern void crawler_initTailModel(int obj, u8* state);
 extern void* memset(void* p, int c, int n);
@@ -640,7 +640,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
 
 #pragma scheduling on
 #pragma peephole on
-int Baddie_EnemygetExtraSize(void) { return 0x370; }
+int enemy_getExtraSize(void) { return 0x370; }
 int enemy_getObjectTypeId(void) { return 0x14b; }
 
 void fn_8014C66C(int* obj, int x) { ((EnemyState*)((GameObject*)obj)->extra)->trackedObj = (u8*)x; }
@@ -734,7 +734,7 @@ void fn_8014C540(int* obj, int* outIdx, f32* outA, f32* outB)
     *outIdx = 0;
 }
 
-f32 fn_8014C5D0(register int obj)
+f32 enemy_getHealthFraction(register int obj)
 {
     register u16 a;
     register int* state;
@@ -1045,10 +1045,10 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     return n;
 }
 
-int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdate)
+int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void fn_8014B878(int* node, int* sub);
-    extern void fn_8014BC98(int* node, int* sub);
+    extern void baddieTurnTowardTarget(int* node, int* sub);
     extern void baddieInstantiateWeapon(int* node, int* sub);
     extern void* Obj_GetPlayerObject(void);
     extern void* getTrickyObject(void);
@@ -1112,7 +1112,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
     }
     if ((((TrickyState*)sub)->flags2DC & 0x1800) == 0)
     {
-        fn_8014BC98(node, (int*)sub);
+        baddieTurnTowardTarget(node, (int*)sub);
         fn_8014B878(node, (int*)sub);
     }
     if (n29[0x2e] != -1)
@@ -1410,7 +1410,7 @@ void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledR
 }
 
 #pragma fp_contract off
-void fn_8014BC98(int* node, int* sub)
+void baddieTurnTowardTarget(int* node, int* sub)
 {
     GameObject* target = *(GameObject**)&((TrickyState*)sub)->actionTargetObj;
     if (target != NULL)
@@ -1668,7 +1668,7 @@ void enemy_update(int obj)
 {
     extern void objAnimFn_8014a9f0(int obj, u8* state);
     extern void fn_8014B878(int obj, u8* state);
-    extern void fn_8014BC98(int obj, u8* state);
+    extern void baddieTurnTowardTarget(int obj, u8* state);
     extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
     extern void baddieInstantiateWeapon(int obj, u8* state);
     extern void* Obj_GetPlayerObject(void);
@@ -1740,7 +1740,7 @@ void enemy_update(int obj)
     {
         if (((EnemyPlacement*)setup)->gameBit2 != -1)
         {
-            if (GameBit_Get(((EnemyPlacement*)setup)->gameBit2) == 0)
+            if (mainGetBit(((EnemyPlacement*)setup)->gameBit2) == 0)
             {
                 return;
             }
@@ -1755,7 +1755,7 @@ void enemy_update(int obj)
             player = Obj_GetPlayerObject();
             if (((EnemyPlacement*)setup)->gameBit != -1)
             {
-                if (GameBit_Get(((EnemyPlacement*)setup)->gameBit) != 0)
+                if (mainGetBit(((EnemyPlacement*)setup)->gameBit) != 0)
                 {
                     return;
                 }
@@ -1780,7 +1780,7 @@ void enemy_update(int obj)
         }
         else if (((EnemyPlacement*)setup)->gameBit != -1)
         {
-            if (GameBit_Get(((EnemyPlacement*)setup)->gameBit) != 0)
+            if (mainGetBit(((EnemyPlacement*)setup)->gameBit) != 0)
             {
                 return;
             }
@@ -1873,7 +1873,7 @@ void enemy_update(int obj)
     }
     if ((((EnemyState*)state)->flags2E4 & 0x80000) != 0)
     {
-        if (tricky != NULL && GameBit_Get(0x9e) != 0)
+        if (tricky != NULL && mainGetBit(0x9e) != 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
@@ -1889,7 +1889,7 @@ void enemy_update(int obj)
     baddie_updateWhileFrozen(obj, state, 0);
     if ((((EnemyState*)state)->controlFlags & 0x1800) == 0)
     {
-        fn_8014BC98(obj, state);
+        baddieTurnTowardTarget(obj, state);
         fn_8014B878(obj, state);
     }
     objAnimFn_8014a9f0(obj, state);
@@ -1908,14 +1908,14 @@ void enemy_init(int obj, u8* setup, int flag)
         {
             if (((EnemyPlacement*)setup)->gameBit != -1)
             {
-                if (GameBit_Get(((EnemyPlacement*)setup)->gameBit) == 0)
+                if (mainGetBit(((EnemyPlacement*)setup)->gameBit) == 0)
                 {
-                    ((GameObject*)obj)->unkF4 = GameBit_Get(((EnemyPlacement*)setup)->gameBit2) == 0;
+                    ((GameObject*)obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit2) == 0;
                 }
             }
             else
             {
-                ((GameObject*)obj)->unkF4 = GameBit_Get(((EnemyPlacement*)setup)->gameBit2) == 0;
+                ((GameObject*)obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit2) == 0;
             }
         }
         if (*(u32*)&((ObjPlacement*)setup)->mapId != 0xFFFFFFFF)
@@ -1924,7 +1924,7 @@ void enemy_init(int obj, u8* setup, int flag)
             {
                 if (((EnemyPlacement*)setup)->gameBit != -1)
                 {
-                    ((GameObject*)obj)->unkF4 = GameBit_Get(((EnemyPlacement*)setup)->gameBit);
+                    ((GameObject*)obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit);
                 }
                 if (((GameObject*)obj)->unkF4 == 0)
                 {
@@ -1988,7 +1988,7 @@ void enemy_init(int obj, u8* setup, int flag)
         ((EnemyState*)state)->unk2B6 = ((EnemyState*)state)->unk2B4;
         ((GameObject*)obj)->objectFlags |= ((EnemyPlacement*)setup)->objectFlagBits & 7;
         ((EnemyState*)state)->current = ((EnemyPlacement*)setup)->unk32;
-        ((GameObject*)obj)->animEventCallback = enemy_animEventCallback;
+        ((GameObject*)obj)->animEventCallback = enemy_SeqFn;
         switch (((GameObject*)obj)->anim.seqId)
         {
         case 17:
@@ -1998,24 +1998,24 @@ void enemy_init(int obj, u8* setup, int flag)
         case 1465:
         case 1505:
         case 1958:
-            fn_80151954(obj, state);
+            sharpClawInit(obj, state);
             break;
         case 216:
         case 641:
-            fn_801522E0(obj, state);
+            guardClaw_init(obj, state);
             break;
         case 1555:
-            fn_80152A94(obj, state);
+            gcRobotPatrol_init(obj, state);
             break;
         case 1602:
-            fn_80152EC0(obj, state);
+            mikaladon_init(obj, state);
             break;
         case 1022:
         case 1990:
-            fn_801534D8(obj, state);
+            vambat_init(obj, state);
             break;
         case 1419:
-            fn_80153C90(obj, state);
+            kooshy_init(obj, state);
             break;
         case 873:
             fn_801542AC(obj, state);
@@ -2036,17 +2036,17 @@ void enemy_init(int obj, u8* setup, int flag)
             mutatedEbaInit(obj, state);
             break;
         case 2129:
-            iceBaddie_initWhirlpoolState(obj, state);
+            baddie_initWhirlpoolState(obj, state);
             break;
         case 2114:
         case 2123:
             crawler_initVariant(obj, state);
             break;
         case 1196:
-            crawler_initScaledVariant(obj, state);
+            hoodedZyck_init(obj, state);
             break;
         case 1063:
-            fn_8014FF58(obj, state);
+            battleDroidInit(obj, state);
             break;
         case 1698:
         case 1699:
@@ -2058,7 +2058,7 @@ void enemy_init(int obj, u8* setup, int flag)
             crawler_initTailModel(obj, state);
             break;
         default:
-            fn_8014FF58(obj, state);
+            battleDroidInit(obj, state);
             break;
         }
         ((EnemyState*)state)->max = *(u16*)&((EnemyState*)state)->current;

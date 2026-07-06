@@ -60,11 +60,11 @@ extern f32 gKillerMushroomSpawnYOffset;
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern int objIsFrozen(int* obj);
 extern int EmissionController_IsLingering(u8 * player);
-extern int fn_80296448(u8 * player);
+extern int playerGetFlags3F0Bit5(u8 * player);
 extern f32 fn_8029610C(u8 * player);
 extern void objFn_8002b67c(int* obj);
 extern void Obj_StartModelFadeIn(int* obj, int frames);
-extern void Obj_ResetModelColorState(int* obj);
+extern void Obj_Shatter(int* obj);
 extern int Sfx_PlayFromObject(int* obj, int id);
 
 s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};
@@ -240,7 +240,7 @@ void enemymushroom_update(int* obj)
             hv.z += playerMapOffsetZ;
             objLightFn_8009a1dc(obj, gKillerMushroomHitEffectScale, &hv, 1, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_barrel_bounce1);
-            Obj_ResetModelColorState(obj);
+            Obj_Shatter(obj);
         }
         return;
     }
@@ -264,7 +264,7 @@ void enemymushroom_update(int* obj)
         {
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <= ((
                     EnemyMushroomState*)state)->hitRadius &&
-                !EmissionController_IsLingering(player) && !fn_80296448(player) &&
+                !EmissionController_IsLingering(player) && !playerGetFlags3F0Bit5(player) &&
                 !(((GameObject*)player)->objectFlags & SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK))
             {
                 ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);
@@ -324,7 +324,7 @@ void enemymushroom_update(int* obj)
         {
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <= ((
                     EnemyMushroomState*)state)->hitRadius &&
-                !EmissionController_IsLingering(player) && !fn_80296448(player) &&
+                !EmissionController_IsLingering(player) && !playerGetFlags3F0Bit5(player) &&
                 !(((GameObject*)player)->objectFlags & SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK))
             {
                 ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);
@@ -477,7 +477,7 @@ void enemymushroom_update(int* obj)
                 ((EnemyMushroomState*)state)->stateFlags = (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_HIT_PLAYER);
                 if (((EnemymushroomPlacement*)src)->popGameBit != -1)
                 {
-                    GameBit_Set(((EnemymushroomPlacement*)src)->popGameBit, 1);
+                    mainSetBits(((EnemymushroomPlacement*)src)->popGameBit, 1);
                 }
                 ((EnemyMushroomState*)state)->stateId = 9;
                 ((EnemyMushroomState*)state)->timer = lbl_803E52FC;

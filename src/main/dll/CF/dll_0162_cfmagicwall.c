@@ -59,7 +59,7 @@ void cfmagicwall_update(int obj)
     int player = (int)Obj_GetPlayerObject();
     u8 alpha = 0xff;
 
-    if (GameBit_Get(((CfMagicWallMapData*)placement)->visibleEvent) != 0)
+    if (mainGetBit(((CfMagicWallMapData*)placement)->visibleEvent) != 0)
     {
         int yaw = (s16)Obj_GetYawDeltaToObject(obj, player, NULL);
 

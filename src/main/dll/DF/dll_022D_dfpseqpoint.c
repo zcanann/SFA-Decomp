@@ -49,7 +49,7 @@ typedef struct DfpseqpointPlacement
 extern f32 lbl_803E63B8;
 extern int unlockLevel(s32 val, int idx, int flag);
 
-int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
+int DFP_seqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     extern int unlockLevel(s32 val, int idx, int flag);
     extern int mapGetDirIdx(int idx);
@@ -112,24 +112,24 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int dfpseqpoint_getExtraSize(void) { return 0x10; }
-int dfpseqpoint_getObjectTypeId(void) { return 0x0; }
+int DFP_seqpoint_getExtraSize(void) { return 0x10; }
+int DFP_seqpoint_getObjectTypeId(void) { return 0x0; }
 
-void dfpseqpoint_free(void)
+void DFP_seqpoint_free(void)
 {
 }
 
-void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void DFP_seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E63B8);
 }
 
-void dfpseqpoint_hitDetect(void)
+void DFP_seqpoint_hitDetect(void)
 {
 }
 
-void dfpseqpoint_update(int obj)
+void DFP_seqpoint_update(int obj)
 {
 
     extern f32 Vec_distance(f32* a, f32* b);
@@ -143,7 +143,7 @@ void dfpseqpoint_update(int obj)
     state = self->extra;
     if (((u32)state->flags0F >> 7 & 1) != 0)
     {
-        GameBit_Set(0xef7, 1);
+        mainSetBits(0xef7, 1);
         ((DfpFlags7*)&state->flags0F)->b80 = 0;
     }
     gameBit = state->gameBitDone;
@@ -151,15 +151,15 @@ void dfpseqpoint_update(int obj)
     {
         if (state->doneLatch != 0)
         {
-            if (GameBit_Get(gameBit) != 0)
+            if (mainGetBit(gameBit) != 0)
             {
                 return;
             }
-            GameBit_Set(state->gameBitDone, 1);
+            mainSetBits(state->gameBitDone, 1);
             state->doneLatch = 1;
             return;
         }
-        if (GameBit_Get(gameBit) != 0)
+        if (mainGetBit(gameBit) != 0)
         {
             state->doneLatch = 1;
             return;
@@ -181,7 +181,7 @@ void dfpseqpoint_update(int obj)
         break;
     case DFPSEQPOINT_MODE_GATE:
         gameBit = state->gameBitGate;
-        if (gameBit != -1 && GameBit_Get(gameBit) != 0)
+        if (gameBit != -1 && mainGetBit(gameBit) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                     (void*)obj, -1);
@@ -192,7 +192,7 @@ void dfpseqpoint_update(int obj)
         if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius)
         {
             gameBit = state->gameBitGate;
-            if (gameBit != -1 && GameBit_Get(gameBit) != 0)
+            if (gameBit != -1 && mainGetBit(gameBit) != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                         (void*)obj, -1);
@@ -204,28 +204,28 @@ void dfpseqpoint_update(int obj)
         if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius)
         {
             gameBit = state->gameBitGate;
-            if (gameBit != -1 && GameBit_Get(gameBit) == 0)
+            if (gameBit != -1 && mainGetBit(gameBit) == 0)
             {
                 (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                         (void*)obj, -1);
-                GameBit_Set(state->gameBitGate, 1);
+                mainSetBits(state->gameBitGate, 1);
                 state->doneLatch = 1;
             }
         }
         break;
     case DFPSEQPOINT_MODE_GATE_UNSET:
         gameBit = state->gameBitGate;
-        if (gameBit != -1 && GameBit_Get(gameBit) == 0)
+        if (gameBit != -1 && mainGetBit(gameBit) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                     (void*)obj, -1);
-            GameBit_Set(state->gameBitGate, 1);
+            mainSetBits(state->gameBitGate, 1);
             state->doneLatch = 1;
         }
         break;
     case DFPSEQPOINT_MODE_GATE_REPEAT:
         gameBit = state->gameBitGate;
-        if (gameBit != -1 && GameBit_Get(gameBit) != 0)
+        if (gameBit != -1 && mainGetBit(gameBit) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                     (void*)obj, -1);
@@ -234,11 +234,11 @@ void dfpseqpoint_update(int obj)
     }
 }
 
-void dfpseqpoint_init(int* obj, u8* init)
+void DFP_seqpoint_init(int* obj, u8* init)
 {
     DfpSeqPointState* sub;
     sub = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = dfpseqpoint_SeqFn;
+    ((GameObject*)obj)->animEventCallback = DFP_seqpoint_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
     sub->triggerRadius = (f32)(s32) * (s16*)(init + 0x1a);
     sub->triggerId = *(s16*)(init + 0x1c);
@@ -249,10 +249,10 @@ void dfpseqpoint_init(int* obj, u8* init)
     ((DfpFlags7*)&sub->flags0F)->b80 = 0;
 }
 
-void dfpseqpoint_release(void)
+void DFP_seqpoint_release(void)
 {
 }
 
-void dfpseqpoint_initialise(void)
+void DFP_seqpoint_initialise(void)
 {
 }

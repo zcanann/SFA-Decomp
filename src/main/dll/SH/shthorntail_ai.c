@@ -76,7 +76,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
         {
             fn_8014C66C(objects[index], obj);
             if ((vec3f_distanceSquared(&objects[index]->pos, &obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
-                (GameBit_Get(SHthorntail_GetLinkedGameBit(objects[index]->config)) == 0u))
+                (mainGetBit(SHthorntail_GetLinkedGameBit(objects[index]->config)) == 0u))
             {
                 linkedEventPending = 1;
             }

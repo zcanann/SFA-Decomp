@@ -180,7 +180,7 @@ typedef struct GroundBaddieState {
     s16 triggerId; /* config-sourced id (loaded from config+0x22) handed to gBaddieControlInterface[19]/+0x4C when a move/landing event fires */
     s16 gameBitA; /* set 1 on trigger */
     s16 gameBitB; /* set 1 / cleared 0; also passed to interface[10] */
-    s16 gameBitC; /* gate; checked != -1 + GameBit_Get */
+    s16 gameBitC; /* gate; checked != -1 + mainGetBit */
     u8 unk3F8[2];
     s16 soundIdA; /* config-sourced sound-id (config+32); played via interface[+8]
         on the stop/cleanup path (dll19func12) and passed with soundIdB to the

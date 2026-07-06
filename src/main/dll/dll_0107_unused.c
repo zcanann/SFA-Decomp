@@ -103,7 +103,7 @@ void fn_80185868(int obj, f32 arg)
 int dll_107_getExtraSize_ret_44(void) { return 0x2c; }
 int dll_107_getObjectTypeId(void) { return 0x0; }
 
-void fn_801859D4(int* obj)
+void dll_107_free(int* obj)
 {
     (*gModgfxInterface)->detachSource(obj);
     Resource_Release(lbl_803DDAD0);
@@ -112,7 +112,7 @@ void fn_801859D4(int* obj)
     lbl_803DDAD4 = NULL;
 }
 
-void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
+void dll_107_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
     extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
@@ -179,7 +179,7 @@ void dll_107_hitDetect_nop(void)
 }
 
 #pragma opt_common_subs off
-void fn_80185B74(int obj)
+void dll_107_update(int obj)
 {
     extern void* lbl_803DDAD4;
 
@@ -445,7 +445,7 @@ void fn_80185B74(int obj)
 }
 #pragma opt_common_subs reset
 
-void fn_801862CC(int obj, int p)
+void dll_107_init(int obj, int p)
 {
     extern void* lbl_803DDAD0;
     extern void* lbl_803DDAD4;

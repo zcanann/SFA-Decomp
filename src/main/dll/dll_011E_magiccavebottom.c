@@ -15,28 +15,28 @@ extern void warpToMap(int idx, s8 transType);
 #define MAGICCAVE_GAMEBIT_WARP_READY 0x91e   /* handoff to top: perform warp sequence */
 #define MAGICCAVE_GAMEBIT_WARP_DEST 0x1b8    /* warp destination map index */
 
-/* magiccavebottom_update sequence state machine (state byte at extra[0]) */
+/* MagicCaveBottom_update sequence state machine (state byte at extra[0]) */
 #define MAGICCAVEBOTTOM_STATE_SETUP 0     /* latch active, seed env fx, run intro seq */
 #define MAGICCAVEBOTTOM_STATE_START_MUSIC 1 /* kick off the adventure music */
 #define MAGICCAVEBOTTOM_STATE_IDLE 2      /* show prompt, wait for the player trigger */
 #define MAGICCAVEBOTTOM_STATE_WARP 3      /* latch warp-ready and warp to the destination */
 
-int magiccavebottom_getExtraSize(void)
+int MagicCaveBottom_getExtraSize(void)
 {
     return 1;
 }
 
-void magiccavebottom_free(int obj)
+void MagicCaveBottom_free(int obj)
 {
 
 
     (void)obj;
-    GameBit_Set(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 0);
+    mainSetBits(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 0);
     Music_Trigger(MUSICTRIG_PU3_Adventure, 0);
 }
 
 
-void magiccavebottom_update(int* obj)
+void MagicCaveBottom_update(int* obj)
 {
 
 
@@ -47,7 +47,7 @@ void magiccavebottom_update(int* obj)
     switch (*sub)
     {
     case MAGICCAVEBOTTOM_STATE_SETUP:
-        GameBit_Set(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 1);
+        mainSetBits(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 1);
         envFxActFn_800887f8(0);
         getEnvfxAct(obj, obj, 0x2c, 0);
         getEnvfxAct(obj, obj, 0x2d, 0);
@@ -88,8 +88,8 @@ void magiccavebottom_update(int* obj)
         }
         break;
     case MAGICCAVEBOTTOM_STATE_WARP:
-        GameBit_Set(MAGICCAVE_GAMEBIT_WARP_READY, 1);
-        warpToMap(GameBit_Get(MAGICCAVE_GAMEBIT_WARP_DEST), 0);
+        mainSetBits(MAGICCAVE_GAMEBIT_WARP_READY, 1);
+        warpToMap(mainGetBit(MAGICCAVE_GAMEBIT_WARP_DEST), 0);
         break;
     }
 }

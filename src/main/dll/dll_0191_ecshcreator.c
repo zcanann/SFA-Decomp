@@ -113,7 +113,7 @@ void ecsh_creator_update(GameObject* obj)
 
     def = (u8*)obj->anim.placementData;
     state = (EcshCreatorState*)obj->extra;
-    if (obj->unkF8 == 0 && (u32)GameBit_Get(state->gameBit) != 0)
+    if (obj->unkF8 == 0 && (u32)mainGetBit(state->gameBit) != 0)
     {
         res = Resource_Acquire(ECSH_SHRINE_RESOURCE, 1);
         (*(EcshSetupFn*)(*(int*)res + 4))((s16*)obj, 0, 0, 1, -1, 0);

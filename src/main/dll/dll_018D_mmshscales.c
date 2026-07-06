@@ -60,10 +60,10 @@ extern int* gTitleMenuControlInterfaceCopy;
 
 extern u8 lbl_803DB411;
 
-int mmsh_scales_getExtraSize(void) { return 0x140; }
-int mmsh_scales_getObjectTypeId(void) { return 0xb; }
+int MMSH_Scales_getExtraSize(void) { return 0x140; }
+int MMSH_Scales_getObjectTypeId(void) { return 0xb; }
 
-void mmsh_scales_free(int obj, int keepChild)
+void MMSH_Scales_free(int obj, int keepChild)
 {
     void* child;
     (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
@@ -75,17 +75,17 @@ void mmsh_scales_free(int obj, int keepChild)
     }
 }
 
-void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void MMSH_Scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
-void mmsh_scales_hitDetect(void)
+void MMSH_Scales_hitDetect(void)
 {
 }
 
-void mmsh_scales_update(int objArg)
+void MMSH_Scales_update(int objArg)
 {
     int seqTag;
     int* list;
@@ -131,7 +131,7 @@ void mmsh_scales_update(int objArg)
     }
 }
 
-void mmsh_scales_init(int* obj, s16* def)
+void MMSH_Scales_init(int* obj, s16* def)
 {
     u8* state = ((GameObject*)obj)->extra;
     MmshScalesSpawnSetup* setup;
@@ -167,10 +167,10 @@ void mmsh_scales_init(int* obj, s16* def)
     *(f32*)(*(u8**)&((GameObject*)obj)->childObjs[0] + 8) *= 2.0f;
 }
 
-void mmsh_scales_release(void)
+void MMSH_Scales_release(void)
 {
 }
 
-void mmsh_scales_initialise(void)
+void MMSH_Scales_initialise(void)
 {
 }

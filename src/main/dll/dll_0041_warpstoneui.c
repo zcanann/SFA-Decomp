@@ -6,7 +6,7 @@
  *   1        warpstone texture + intro text (gameText 0x37C..0x37E)
  *   2,3,5    shared status line (gameText 0x3DD)
  *   4        the level-warp menu: builds the selectable list from the six
- *            warpstone game bits (fn_801343CC over gWarpStoneUiEntryTable) and drives
+ *            warpstone game bits (WarpstoneUI_getMenuItems over gWarpStoneUiEntryTable) and drives
  *            the gTitleMenuLinkInterface vtable; a selection issues a map act
  *            on map 0x42.
  * WarpstoneUI_frameStart ramps the overlay opacity (lbl_803DD97C) in/out and
@@ -62,7 +62,7 @@ extern int* gTitleMenuLinkInterface;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
+int WarpstoneUI_getMenuItems(u8* src, u8* dst, u8* ids, int count, int* out)
 {
     int slot;
     u8* idp;
@@ -76,7 +76,7 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
     idp = ids;
     for (; slot < count; slot++)
     {
-        if ((u32)GameBit_Get(*(s16*)idp) != 0)
+        if ((u32)mainGetBit(*(s16*)idp) != 0)
         {
             entry++;
         }
@@ -88,7 +88,7 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
     idp = ids;
     for (entry = 0; entry < count; entry++)
     {
-        if ((u32)GameBit_Get(*(s16*)idp) != 0)
+        if ((u32)mainGetBit(*(s16*)idp) != 0)
         {
             memcpy(dst, src, 0x3c);
             lastDst = dst;
@@ -146,7 +146,7 @@ void WarpstoneUI_showUI(int arg)
         gameTextFn_80016810(0x3dd, 200, lbl_803DBC04);
         if (gWarpStoneUiMenuActive == 0)
         {
-            itemCount = fn_801343CC(gWarpStoneUiMenuItemTemplates, gWarpStoneUiMenuItems, (u8*)gWarpStoneUiEntryTable, WARPSTONE_UI_ENTRY_COUNT, gWarpStoneUiSelectedIndices);
+            itemCount = WarpstoneUI_getMenuItems(gWarpStoneUiMenuItemTemplates, gWarpStoneUiMenuItems, (u8*)gWarpStoneUiEntryTable, WARPSTONE_UI_ENTRY_COUNT, gWarpStoneUiSelectedIndices);
             (**(void (**)(u8*, int, int, int, int, int, int, int, int, int, int, int))
                     ((char*)(*gTitleMenuLinkInterface) + 4))
                 (gWarpStoneUiMenuItems, itemCount, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);

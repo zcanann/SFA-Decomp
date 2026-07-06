@@ -74,7 +74,7 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target)
         (*(int(**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))(
             obj, (int)((LandedArwingTriggerLaunchTargetState*)aux)->launchMoveId, -1, 0);
         (*gPlayerInterface)->spawnPartfx((void*)obj, (void*)target, 0x3c, 0xa, 0);
-        GameBit_Set((int)((LandedArwingTriggerLaunchTargetState*)aux)->triggerGameBit, 1);
+        mainSetBits((int)((LandedArwingTriggerLaunchTargetState*)aux)->triggerGameBit, 1);
         ((LandedArwingTriggerLaunchTargetState*)aux)->unk405 = 0;
     }
     return 0;

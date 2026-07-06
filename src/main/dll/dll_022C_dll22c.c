@@ -4,7 +4,7 @@
  *
  * init seeds the state from the placement record (rotX, two game bits,
  * raise height, an init flag) and sinks the object by 1228.0f.
- * The update state-machine (fn_80204BF8) drives a rise/hold/fall cycle
+ * The update state-machine (dll_22C_update) drives a rise/hold/fall cycle
  * relative to the player:
  *   mode 0  armed - once gameBit is set and the player is within
  *           230.0f, rise by timeDelta to posY+60.0f,
@@ -16,7 +16,7 @@
  *   mode 4  rise by timeDelta to posY+60.0f, then hold (mode 2).
  *
  * Render (dll_22C_render) draws via objRenderModelAndHitVolumes; hitDetect,
- * release, initialise and the SeqFn are stubs. fn_80204B6C frees the
+ * release, initialise and the SeqFn are stubs. dll_22C_free frees the
  * object's expgfx source. The remaining handlers are descriptor
  * callbacks (getExtraSize=0x10, getObjectTypeId=0).
  *
@@ -101,7 +101,7 @@ int dll_22C_SeqFn(void) { return 0x0; }
 int dll_22C_getExtraSize_ret_16(void) { return 0x10; }
 int dll_22C_getObjectTypeId(void) { return 0x0; }
 
-void fn_80204B6C(int p1)
+void dll_22C_free(int p1)
 {
     (*gExpgfxInterface)->freeSource2((u32)p1);
     getLActions(p1, p1, 0, 0, 0, 0);
@@ -116,7 +116,7 @@ void dll_22C_hitDetect_nop(void)
 {
 }
 
-void fn_80204BF8(int obj)
+void dll_22C_update(int obj)
 {
     /* block-scope to override the engine_shared.h prototypes' return/param
        types (GameObject* return, signed args) the codegen here depends on. */
@@ -142,7 +142,7 @@ void fn_80204BF8(int obj)
     switch (blob->mode)
     {
     case DLL22C_MODE_ARMED:
-        if (GameBit_Get(blob->gameBit) != 0 && blob->raiseMode != 1 &&
+        if (mainGetBit(blob->gameBit) != 0 && blob->raiseMode != 1 &&
             Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < 230.0f)
         {
             if (object->anim.localPosY < 60.0f + placement->posY)

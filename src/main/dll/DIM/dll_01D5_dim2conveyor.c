@@ -76,7 +76,7 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
+void dim2conveyor_getScrollVector(int* obj, int unused, f32* outX, f32* outY)
 {
     extern void Music_Trigger(int id, int arg);
     Dim2ConveyorState* state = ((GameObject*)obj)->extra;
@@ -94,23 +94,23 @@ void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
         *outY = state->scrollY;
         break;
     case MAP_ID_DUAL_BELT:
-        if (GameBit_Get(GAMEBIT_CONVEYOR_REVERSE) != 0 && GameBit_Get(GAMEBIT_CONVEYOR_FORWARD) == 0)
+        if (mainGetBit(GAMEBIT_CONVEYOR_REVERSE) != 0 && mainGetBit(GAMEBIT_CONVEYOR_FORWARD) == 0)
         {
             *outX = state->scrollX;
             *outY = state->scrollY;
         }
-        if (GameBit_Get(GAMEBIT_CONVEYOR_FORWARD) != 0 && GameBit_Get(GAMEBIT_CONVEYOR_REVERSE) == 0)
+        if (mainGetBit(GAMEBIT_CONVEYOR_FORWARD) != 0 && mainGetBit(GAMEBIT_CONVEYOR_REVERSE) == 0)
         {
             *outX = -state->scrollX;
             *outY = -state->scrollY;
         }
-        if (GameBit_Get(GAMEBIT_CONVEYOR_FORWARD) != 0)
+        if (mainGetBit(GAMEBIT_CONVEYOR_FORWARD) != 0)
         {
-            GameBit_Set(GAMEBIT_CONVEYOR_REVERSE, 0);
+            mainSetBits(GAMEBIT_CONVEYOR_REVERSE, 0);
         }
-        if (GameBit_Get(GAMEBIT_CONVEYOR_FORWARD) == 0)
+        if (mainGetBit(GAMEBIT_CONVEYOR_FORWARD) == 0)
         {
-            GameBit_Set(GAMEBIT_CONVEYOR_REVERSE, 1);
+            mainSetBits(GAMEBIT_CONVEYOR_REVERSE, 1);
         }
         break;
     default:
@@ -154,31 +154,31 @@ void dim2conveyor_update(int* obj)
     switch (((ObjPlacement*)((GameObject*)obj)->anim.placementData)->mapId)
     {
     case MAP_ID_DUAL_BELT:
-        if (GameBit_Get(GAMEBIT_CONVEYOR_SWAP) != 0)
+        if (mainGetBit(GAMEBIT_CONVEYOR_SWAP) != 0)
         {
             extra->swapTimer = extra->swapTimer + timeDelta;
             if (extra->swapTimer > lbl_803E4A5C)
             {
-                if (GameBit_Get(GAMEBIT_CONVEYOR_FORWARD) != 0)
+                if (mainGetBit(GAMEBIT_CONVEYOR_FORWARD) != 0)
                 {
-                    GameBit_Set(GAMEBIT_CONVEYOR_REVERSE, 1);
-                    GameBit_Set(GAMEBIT_CONVEYOR_FORWARD, 0);
+                    mainSetBits(GAMEBIT_CONVEYOR_REVERSE, 1);
+                    mainSetBits(GAMEBIT_CONVEYOR_FORWARD, 0);
                 }
-                else if (GameBit_Get(GAMEBIT_CONVEYOR_REVERSE) != 0)
+                else if (mainGetBit(GAMEBIT_CONVEYOR_REVERSE) != 0)
                 {
-                    GameBit_Set(GAMEBIT_CONVEYOR_REVERSE, 0);
-                    GameBit_Set(GAMEBIT_CONVEYOR_FORWARD, 1);
+                    mainSetBits(GAMEBIT_CONVEYOR_REVERSE, 0);
+                    mainSetBits(GAMEBIT_CONVEYOR_FORWARD, 1);
                 }
                 extra->swapTimer = lbl_803E4A60;
             }
         }
-        if (GameBit_Get(GAMEBIT_CONVEYOR_FORWARD) != 0)
+        if (mainGetBit(GAMEBIT_CONVEYOR_FORWARD) != 0)
         {
-            GameBit_Set(GAMEBIT_CONVEYOR_REVERSE, 0);
+            mainSetBits(GAMEBIT_CONVEYOR_REVERSE, 0);
         }
-        if (GameBit_Get(GAMEBIT_CONVEYOR_FORWARD) == 0)
+        if (mainGetBit(GAMEBIT_CONVEYOR_FORWARD) == 0)
         {
-            GameBit_Set(GAMEBIT_CONVEYOR_REVERSE, 1);
+            mainSetBits(GAMEBIT_CONVEYOR_REVERSE, 1);
         }
         break;
     case MAP_ID_SINGLE_BELT:
@@ -200,7 +200,7 @@ void dim2conveyor_init(int* obj, u8* params)
     ((GameObject*)obj)->objectFlags |= DIM2CONVEYOR_OBJFLAG_HITDETECT_DISABLED;
     if (((ObjPlacement*)params)->mapId == MAP_ID_DUAL_BELT)
     {
-        GameBit_Set(GAMEBIT_CONVEYOR_REVERSE, 1);
+        mainSetBits(GAMEBIT_CONVEYOR_REVERSE, 1);
     }
 }
 

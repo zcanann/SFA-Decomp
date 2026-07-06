@@ -224,7 +224,7 @@ void dll_19E_update(void* obj)
                 state->resetTimer = 300;
                 if (state->sequenceIndex == 2)
                 {
-                    GameBit_Set(GAMEBIT_TRICKY_EGG_SEQUENCE_DONE, 1);
+                    mainSetBits(GAMEBIT_TRICKY_EGG_SEQUENCE_DONE, 1);
                 }
             }
         }
@@ -264,24 +264,24 @@ void dll_19E_update(void* obj)
                 }
                 while (i < 100);
 
-                if ((state->gameBitId != -1) && (GameBit_Get(state->gameBitId) == 0))
+                if ((state->gameBitId != -1) && (mainGetBit(state->gameBitId) == 0))
                 {
-                    GameBit_Set(state->gameBitId, 1);
+                    mainSetBits(state->gameBitId, 1);
                 }
                 if ((gDimTrickyEggSequenceStage == 0) && (state->sequenceIndex == 0) &&
-                    (GameBit_Get(state->gameBitId) != 0))
+                    (mainGetBit(state->gameBitId) != 0))
                 {
                     gDimTrickyEggSequenceStage = 1;
                 }
                 if ((gDimTrickyEggSequenceStage == 1) && (state->sequenceIndex == 1) &&
-                    (GameBit_Get(state->gameBitId) != 0))
+                    (mainGetBit(state->gameBitId) != 0))
                 {
                     gDimTrickyEggSequenceStage = 2;
                 }
                 if ((gDimTrickyEggSequenceStage == 2) && (state->sequenceIndex == 2) &&
-                    (GameBit_Get(state->gameBitId) != 0))
+                    (mainGetBit(state->gameBitId) != 0))
                 {
-                    GameBit_Set(GAMEBIT_TRICKY_EGG_SEQUENCE_DONE, 1);
+                    mainSetBits(GAMEBIT_TRICKY_EGG_SEQUENCE_DONE, 1);
                     gDimTrickyEggSequenceStage = 3;
                 }
                 state->needsOpenSfx = 1;
@@ -292,9 +292,9 @@ void dll_19E_update(void* obj)
                 ((void (*)(void*, int))Sfx_StopObjectChannel)(obj, 0x40);
                 (*gModgfxInterface)->detachSource(obj);
                 (*gExpgfxInterface)->freeSource((u32)obj);
-                if ((state->gameBitId != -1) && (GameBit_Get(state->gameBitId) != 0))
+                if ((state->gameBitId != -1) && (mainGetBit(state->gameBitId) != 0))
                 {
-                    GameBit_Set(state->gameBitId, 0);
+                    mainSetBits(state->gameBitId, 0);
                 }
                 if ((gDimTrickyEggSequenceStage == 1) && (state->sequenceIndex == 0))
                 {
@@ -305,9 +305,9 @@ void dll_19E_update(void* obj)
                     gDimTrickyEggSequenceStage = 0;
                 }
                 if ((gDimTrickyEggSequenceStage == 3) && (state->sequenceIndex == 2) &&
-                    (GameBit_Get(GAMEBIT_TRICKY_EGG_CUTSCENE_DONE) == 0))
+                    (mainGetBit(GAMEBIT_TRICKY_EGG_CUTSCENE_DONE) == 0))
                 {
-                    GameBit_Set(GAMEBIT_TRICKY_EGG_SEQUENCE_DONE, 0);
+                    mainSetBits(GAMEBIT_TRICKY_EGG_SEQUENCE_DONE, 0);
                     gDimTrickyEggSequenceStage = 0;
                 }
             }

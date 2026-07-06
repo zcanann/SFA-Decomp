@@ -24,14 +24,14 @@ extern f32 lbl_803E6414;
 
 int dfpfloorbar_SeqFn(void) { return 0; }
 
-int dfpfloorbar_getExtraSize(void)
+int DFP_Floorbar_getExtraSize(void)
 {
     return 0xc;
 }
 
-int dfpfloorbar_getObjectTypeId(void) { return 0; }
+int DFP_Floorbar_getObjectTypeId(void) { return 0; }
 
-void dfpfloorbar_free(int* obj)
+void DFP_Floorbar_free(int* obj)
 {
     DfpFloorbarState* state;
 
@@ -41,7 +41,7 @@ void dfpfloorbar_free(int* obj)
     return;
 }
 
-void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void DFP_Floorbar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 t = visible;
     if (t != 0)
@@ -50,7 +50,7 @@ void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void dfpfloorbar_hitDetect(int* obj)
+void DFP_Floorbar_hitDetect(int* obj)
 {
     int* linkedObject;
     int** state;
@@ -82,7 +82,7 @@ u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
     0, 0, 0, 0,
 };
 
-void dfpfloorbar_update(int obj)
+void DFP_Floorbar_update(int obj)
 {
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
     DfpFloorbarState* state = ((GameObject*)obj)->extra;
@@ -102,14 +102,14 @@ void dfpfloorbar_update(int obj)
     {
     case 1:
         if (state->modeIndex > 5) return;
-        if (GameBit_Get(0xe57) != 0)
+        if (mainGetBit(0xe57) != 0)
         {
             ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C;
             return;
         }
         break;
     case 2:
-        if (GameBit_Get(0xe58) != 0)
+        if (mainGetBit(0xe58) != 0)
         {
             ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C;
             return;
@@ -117,8 +117,8 @@ void dfpfloorbar_update(int obj)
         break;
     }
 
-    sequenceValue = (u8)GameBit_Get(0x5e4);
-    if (GameBit_Get(0x5e5) != 0 || sequenceValue != state->lastSequenceValue)
+    sequenceValue = (u8)mainGetBit(0x5e4);
+    if (mainGetBit(0x5e5) != 0 || sequenceValue != state->lastSequenceValue)
     {
         state->active = 0;
     }
@@ -205,12 +205,12 @@ void dfpfloorbar_update(int obj)
                 return;
             }
 
-            GameBit_Set(0x5e5, 1);
+            mainSetBits(0x5e5, 1);
         }
     }
 }
 
-void dfpfloorbar_init(int obj, int params)
+void DFP_Floorbar_init(int obj, int params)
 {
     DfpFloorbarState* state = ((GameObject*)obj)->extra;
 
@@ -227,18 +227,18 @@ void dfpfloorbar_init(int obj, int params)
             lbl_803E6408 / ((f32)(s32)((DfpfloorbarPlacement*)params)->travelRange / 1000.0f);
     }
 
-    if (GameBit_Get((int)state->completionGameBit) != 0)
+    if (mainGetBit((int)state->completionGameBit) != 0)
     {
         state->active = 1;
         ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)params)->posY - lbl_803E640C;
     }
 }
 
-void dfpfloorbar_release(void)
+void DFP_Floorbar_release(void)
 {
 }
 
-void dfpfloorbar_initialise(void)
+void DFP_Floorbar_initialise(void)
 {
     u8* modeRow = gDfpfloorbarModeTable;
     int i;
@@ -257,16 +257,16 @@ ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)dfpfloorbar_initialise,
-        (ObjectDescriptorCallback)dfpfloorbar_release,
+        (ObjectDescriptorCallback)DFP_Floorbar_initialise,
+        (ObjectDescriptorCallback)DFP_Floorbar_release,
         0,
-        (ObjectDescriptorCallback)dfpfloorbar_init,
-        (ObjectDescriptorCallback)dfpfloorbar_update,
-        (ObjectDescriptorCallback)dfpfloorbar_hitDetect,
-        (ObjectDescriptorCallback)dfpfloorbar_render,
-        (ObjectDescriptorCallback)dfpfloorbar_free,
-        (ObjectDescriptorCallback)dfpfloorbar_getObjectTypeId,
-        dfpfloorbar_getExtraSize,
+        (ObjectDescriptorCallback)DFP_Floorbar_init,
+        (ObjectDescriptorCallback)DFP_Floorbar_update,
+        (ObjectDescriptorCallback)DFP_Floorbar_hitDetect,
+        (ObjectDescriptorCallback)DFP_Floorbar_render,
+        (ObjectDescriptorCallback)DFP_Floorbar_free,
+        (ObjectDescriptorCallback)DFP_Floorbar_getObjectTypeId,
+        DFP_Floorbar_getExtraSize,
     },
     0,
 };

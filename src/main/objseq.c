@@ -11,7 +11,7 @@
 extern int getTableFileEntry(int fileId, int index, int* out);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 extern int strncmp(const char* a, const char* b, u32 n);
-extern void fn_80137948(char* fmt, ...);
+extern void logPrintf(char* fmt, ...);
 extern char sObjLoadAnimdataNullACRomTabWarning[];
 extern char sSeqAAnimDataTag;
 extern char sSeqBAnimDataTag;
@@ -36,9 +36,9 @@ extern int gObjSeqMsgIds[];
 extern f32 gObjSeqMsgNearbyRadius;
 extern s8 gObjSeqJumpLatch[];
 int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag);
-extern void fn_80295E90(void* obj, int idx);
-extern void fn_802967E0(void* obj, int idx);
-extern void fn_8029672C(void* obj, int idx);
+extern void playerSetDisguised(void* obj, int idx);
+extern void playerPullOutStaff(void* obj, int idx);
+extern void playerPutAwayStaff(void* obj, int idx);
 extern void Obj_SetActiveModelIndex(u8* obj, int idx);
 extern void playerLock(void* player, int mode);
 extern void setMotionBlur(u8 enabled, f32 amount);
@@ -103,10 +103,10 @@ extern int lbl_803DB71C;
 extern u8 lbl_803DD0D9;
 extern u8 lbl_803DD078;
 extern s16 lbl_8030ECF8[];
-extern int fn_80296C2C(void* obj);
-extern void fn_80297254(void* obj);
-extern void fn_8029726C(void* obj);
-extern void fn_80297284(void* obj);
+extern int playerStatusIsPositive(void* obj);
+extern void playerSetInCutscene(void* obj);
+extern void playerSetCutsceneCameraFlag(void* obj);
+extern void playerSetOverrideParentSlack(void* obj);
 extern void gameTextLoadTaskText(int taskId);
 
 extern int lbl_803DB724;
@@ -377,7 +377,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
     *(s8*)&((ObjSeqState*)seq)->unk79 = (s8)(((ObjSeqState*)seq)->unk79 ^ 1);
     if ((s8)((ObjSeqState*)seq)->unk79 != 0)
     {
-        ObjSeq_ResolveAndAssignTargetObject(obj);
+        ObjSeq_resolveTargetObject(obj);
         seqObj = *(u8**)seq;
         if (seqObj != NULL)
         {
@@ -435,7 +435,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
     return result;
 }
 
-void ObjSeq_run(void)
+void ObjSeq_runBgCmds(void)
 {
     int ok;
     int keepCount;
@@ -542,7 +542,7 @@ void ObjSeq_run(void)
                         ObjSeq_FindTargetObject(candidate) == NULL)
                     {
                         ok = 0;
-                        fn_80137948(sObjSequenceMissingObjectFormat,
+                        logPrintf(sObjSequenceMissingObjectFormat,
                                     *(s16*)(model + 0x1c) - 4);
                     }
                     else
@@ -683,10 +683,10 @@ void objSeqDoBgCmds0D(u8* seq, u8* obj, int skipSpawns)
             }
             break;
         case 0xb:
-            GameBit_Set(cmdParam, 1);
+            mainSetBits(cmdParam, 1);
             break;
         case 0xc:
-            GameBit_Set(cmdParam, 0);
+            mainSetBits(cmdParam, 0);
             break;
         case 0xd:
             if ((u8)skipSpawns == 0)
@@ -864,7 +864,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
                     gObjSeqBoolFlags[(s8)((ObjSeqState*)seq)->slot] = top16;
                     break;
                 case 6:
-                    GameBit_Set(((ObjSeqState*)seq)->gameBit, top16 != 0);
+                    mainSetBits(((ObjSeqState*)seq)->gameBit, top16 != 0);
                     break;
                 case 2:
                     break;
@@ -1224,7 +1224,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
             {
                 cmdArg = 0;
             }
-            fn_80295E90(sourceObj, cmdArg);
+            playerSetDisguised(sourceObj, cmdArg);
         }
         else
         {
@@ -1234,13 +1234,13 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
     case 24:
         if (((GameObject*)sourceObj)->anim.classId == 1)
         {
-            fn_802967E0(sourceObj, cmdArg);
+            playerPullOutStaff(sourceObj, cmdArg);
         }
         break;
     case 25:
         if (((GameObject*)sourceObj)->anim.classId == 1)
         {
-            fn_8029672C(sourceObj, cmdArg);
+            playerPutAwayStaff(sourceObj, cmdArg);
         }
         break;
     case 26:
@@ -1279,19 +1279,19 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         Rcp_SetMonochromeFilterEnabled(0);
         break;
     case 48:
-        GameBit_Set(0x3b0, 1);
+        mainSetBits(0x3b0, 1);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
         break;
     case 49:
-        GameBit_Set(0x3b0, 1);
+        mainSetBits(0x3b0, 1);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x136, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x137, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x143, 0);
         break;
     case 50:
-        GameBit_Set(0x3b0, 0);
+        mainSetBits(0x3b0, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
@@ -3403,7 +3403,7 @@ int ObjSeq_getBool(int index)
     return gObjSeqBoolFlags[index];
 }
 
-void ObjSeq_setFlag(int index, int value)
+void ObjSeq_setBool(int index, int value)
 {
     s8 flag;
 
@@ -3441,7 +3441,7 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
     gObjSeqBgCmds[gObjSeqBgCmdCount++ * 3 + 1] = shortXrot;
 }
 
-void ObjSeq_objLoadAnimData(u8* seq, u8* obj)
+void ObjSeq_objLoadAnimdata(u8* seq, u8* obj)
 {
     u8* base = lbl_80396918;
     s16 size;
@@ -3474,7 +3474,7 @@ void ObjSeq_objLoadAnimData(u8* seq, u8* obj)
 
     if (getTableFileEntry(0xe, animId, &fileOffset) == 0)
     {
-        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        logPrintf(sObjLoadAnimdataNullACRomTabWarning);
         return;
     }
 
@@ -3482,7 +3482,7 @@ void ObjSeq_objLoadAnimData(u8* seq, u8* obj)
     if (strncmp(hdr.tag, &sSeqAAnimDataTag, 4) != 0 &&
         strncmp(hdr.tag, &sSeqBAnimDataTag, 4) != 0)
     {
-        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        logPrintf(sObjLoadAnimdataNullACRomTabWarning);
         return;
     }
 
@@ -3490,14 +3490,14 @@ void ObjSeq_objLoadAnimData(u8* seq, u8* obj)
     ((ObjSeqState*)seq)->cmdCount = hdr.count;
     if (size == 0)
     {
-        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        logPrintf(sObjLoadAnimdataNullACRomTabWarning);
         return;
     }
 
     ((ObjSeqState*)seq)->cmds = mmAlloc(size, 0x11, 0);
     if (((ObjSeqState*)seq)->cmds == NULL)
     {
-        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        logPrintf(sObjLoadAnimdataNullACRomTabWarning);
         return;
     }
 
@@ -3588,31 +3588,31 @@ void ObjSeq_seqState_init(u8* seq)
     }
 }
 
-void fn_80081940(void)
+void ObjSeq_func13(void)
 {
 }
 
-int fn_80081944(void)
-{
-    return 0;
-}
-
-int fn_8008194C(void)
+int ObjSeq_func12(void)
 {
     return 0;
 }
 
-void fn_80081954(int value)
+int ObjSeq_func0E(void)
+{
+    return 0;
+}
+
+void ObjSeq_func11(int value)
 {
     lbl_803DD084 = value;
 }
 
-int fn_8008195C(void)
+int ObjSeq_func10(void)
 {
     return lbl_803DD084;
 }
 
-int fn_80081964(void)
+int ObjSeq_func0F(void)
 {
     return 1;
 }
@@ -3641,7 +3641,7 @@ typedef struct SeqRunTables
     s16 modes[0x55];
 } SeqRunTables;
 
-int objRunSeq(int seqIdx, u8* obj, int flags)
+int ObjSeq_start(int seqIdx, u8* obj, int flags)
 {
     u8* base;
     SeqRunTables* st;
@@ -3811,7 +3811,7 @@ checked:
             objIdU = *(u16*)(walk + 6);
             if (objIdU == 0x1f || objIdU == 0)
             {
-                if (fn_80296C2C(Obj_GetPlayerObject()) == 0)
+                if (playerStatusIsPositive(Obj_GetPlayerObject()) == 0)
                 {
                     return -1;
                 }
@@ -3889,7 +3889,7 @@ checked:
             }
             if (idx == 0 && (*(u16*)(walk2 + 4) & 0x1000) && player != NULL)
             {
-                fn_80297284(player);
+                playerSetOverrideParentSlack(player);
             }
             *(s16*)(setup + 0x18) = packed | (idx & 0xf);
             *(s16*)(setup + 0x1a) = -1;
@@ -3970,7 +3970,7 @@ checked:
             {
                 if (idx == 0 && player != NULL)
                 {
-                    fn_8029726C(player);
+                    playerSetCutsceneCameraFlag(player);
                 }
                 if (lbl_803DD064 == 0 || lbl_803DD064 == ((GameObject*)obj)->seqIndex)
                 {
@@ -3990,7 +3990,7 @@ checked:
             }
             if ((objId == 0x1f || objId == 0) && (((ObjSeqState*)seq)->flags & 1))
             {
-                fn_80297254(player);
+                playerSetInCutscene(player);
             }
             ((ObjSeqState*)seq)->targetObjId = *(int*)walk2;
             ((ObjSeqState*)seq)->savedFlags = ((ObjSeqState*)seq)->flags;
@@ -4086,7 +4086,7 @@ gotFlags:
     return slot;
 }
 
-int ObjSeq_ResolveAndAssignTargetObject(u8* obj)
+int ObjSeq_resolveTargetObject(u8* obj)
 {
     int objectCount;
     void* unused;
@@ -4329,7 +4329,7 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
 #pragma ppc_unroll_speculative off
 #pragma optimization_level 3
 #pragma opt_propagation off
-void objSeq_onMapSetup(void)
+void ObjSeq_onMapSetup(void)
 {
     u8* base = lbl_80396918;
     u8* flagsB;
@@ -4530,7 +4530,7 @@ void ObjSeq_release(void)
 void ObjSeq_initialise(void)
 {
     lbl_803DD0D4 = mmAlloc(0x10, 0x11, 0);
-    objSeq_onMapSetup();
+    ObjSeq_onMapSetup();
     gObjSeqCamModeArgB = 1;
     gObjSeqCamModeArgD = 0x5a;
     gObjSeqCamMode = 0x42;
@@ -5150,24 +5150,24 @@ void* lbl_8030EE34[40] = {
     (void*)ObjSeq_initialise,
     (void*)ObjSeq_release,
     (void*)0,
-    (void*)objSeq_onMapSetup,
+    (void*)ObjSeq_onMapSetup,
     (void*)ObjSeq_addBgCmd,
-    (void*)ObjSeq_setFlag,
+    (void*)ObjSeq_setBool,
     (void*)ObjSeq_getBool,
     (void*)ObjSeq_update,
     (void*)ObjSeq_updateCamera,
-    (void*)ObjSeq_objLoadAnimData,
+    (void*)ObjSeq_objLoadAnimdata,
     (void*)ObjSeq_seqState_init,
     (void*)ObjSeq_seqState_free,
-    (void*)ObjSeq_run,
-    (void*)ObjSeq_ResolveAndAssignTargetObject,
-    (void*)fn_8008194C,
-    (void*)fn_80081964,
-    (void*)fn_8008195C,
-    (void*)fn_80081954,
-    (void*)fn_80081944,
-    (void*)fn_80081940,
-    (void*)objRunSeq,
+    (void*)ObjSeq_runBgCmds,
+    (void*)ObjSeq_resolveTargetObject,
+    (void*)ObjSeq_func0E,
+    (void*)ObjSeq_func0F,
+    (void*)ObjSeq_func10,
+    (void*)ObjSeq_func11,
+    (void*)ObjSeq_func12,
+    (void*)ObjSeq_func13,
+    (void*)ObjSeq_start,
     (void*)endObjSequence,
     (void*)ObjSeq_setCamVars,
     (void*)ObjSeq_preempt,

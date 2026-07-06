@@ -85,7 +85,7 @@ void dimicewall_update(int* obj)
             ((DimicewallState*)extra)->shattered = 1;
             if (((DimicewallPlacement*)def)->shatterGameBit != -1)
             {
-                GameBit_Set(((DimicewallPlacement*)def)->shatterGameBit, 1);
+                mainSetBits(((DimicewallPlacement*)def)->shatterGameBit, 1);
             }
         }
         else
@@ -110,7 +110,7 @@ void dimicewall_init(int obj, s8* p)
     ((DimicewallState*)inner)->hp = (s8) * (s16*)(p + 0x1a);
     if (((DimicewallPlacement*)p)->shatterGameBit != -1)
     {
-        ((DimicewallState*)inner)->shattered = GameBit_Get(((DimicewallPlacement*)p)->shatterGameBit);
+        ((DimicewallState*)inner)->shattered = mainGetBit(((DimicewallPlacement*)p)->shatterGameBit);
     }
     ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
     ((GameObject*)obj)->objectFlags |= DIMICEWALL_OBJFLAG_HIDDEN;

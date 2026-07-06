@@ -51,7 +51,7 @@ STATIC_ASSERT(offsetof(ARWLevelConState, streamId) == 0x1c);
 STATIC_ASSERT(offsetof(ARWLevelConState, ringChoiceTriggerId) == 0x20);
 STATIC_ASSERT(offsetof(ARWLevelConSetup, routeSignature) == 0x14);
 
-void arwlevelcon_commitRingChoice(int obj)
+void arwlevelcon_onSeqFree(int obj)
 {
     ARWLevelConState* state = ((GameObject*)obj)->extra;
 
@@ -66,13 +66,13 @@ void arwlevelcon_commitRingChoice(int obj)
     arwingHudSetVisible(1);
 }
 
-int arwlevelcon_ringEventCallback(int obj, int p2, int data)
+int arwlevelcon_SeqFn(int obj, int p2, int data)
 {
     int i;
     int textId;
     ObjSeqState* seq = (ObjSeqState*)data;
 
-    seq->freeCallback = (ObjAnimSequenceFreeCallback)arwlevelcon_commitRingChoice;
+    seq->freeCallback = (ObjAnimSequenceFreeCallback)arwlevelcon_onSeqFree;
     for (i = 0; i < seq->eventCount; i++)
     {
         u8 eventId = seq->eventIds[i];
@@ -167,9 +167,9 @@ void arwlevelcon_update(int obj)
         }
         (*gObjectTriggerInterface)->runSequence(mode, (void*)obj, -1);
         state->sequenceStarted = 1;
-        GameBit_Set(0x9d6, 0);
-        GameBit_Set(0x9d8, 0);
-        GameBit_Set(0x9d7, 0);
+        mainSetBits(0x9d6, 0);
+        mainSetBits(0x9d8, 0);
+        mainSetBits(0x9d7, 0);
     }
     if (state->ringChoiceTriggered == 0)
     {
@@ -184,11 +184,11 @@ void arwlevelcon_update(int obj)
             collectedRings = arwarwing_getCollectedRingCount(arwing);
             if (collectedRings >= requiredRings)
             {
-                GameBit_Set(0x9d8, 1);
+                mainSetBits(0x9d8, 1);
             }
             else
             {
-                GameBit_Set(0x9d7, 1);
+                mainSetBits(0x9d7, 1);
             }
             state->ringChoiceTriggered = 1;
             Music_Trigger(MUSICTRIG_starfox_rwing_1, 0);
@@ -202,7 +202,7 @@ void arwlevelcon_init(int obj, u8* setup)
     ARWLevelConState* state = ((GameObject*)obj)->extra;
     ARWLevelConSetup* mapData = (ARWLevelConSetup*)setup;
 
-    ((GameObject*)obj)->animEventCallback = arwlevelcon_ringEventCallback;
+    ((GameObject*)obj)->animEventCallback = arwlevelcon_SeqFn;
     state->sequenceSlot = 1;
     state->sequenceCameraId = 0x50;
     {
@@ -218,10 +218,10 @@ void arwlevelcon_init(int obj, u8* setup)
     }
     if (state->sequenceStarted == 0)
     {
-        GameBit_Set(0x9d6, 0);
-        GameBit_Set(0x9d8, 0);
-        GameBit_Set(0x9d7, 0);
-        GameBit_Set(0xe74, 0);
+        mainSetBits(0x9d6, 0);
+        mainSetBits(0x9d8, 0);
+        mainSetBits(0x9d7, 0);
+        mainSetBits(0xe74, 0);
     }
     arwingHudSetVisible(2);
     pauseMenuCreateHeads();

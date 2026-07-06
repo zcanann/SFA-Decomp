@@ -21,13 +21,13 @@ void mcupgrade_update(int obj)
     GameObject* gameObj = (GameObject*)obj;
     McUpgradeSetup* setup = (McUpgradeSetup*)gameObj->anim.placementData;
 
-    if (GameBit_Get(setup->collectedGameBit) != 0)
+    if (mainGetBit(setup->collectedGameBit) != 0)
     {
         gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
     else if (ObjTrigger_IsSet(obj) != 0)
     {
-        GameBit_Set(setup->collectedGameBit, 1);
+        mainSetBits(setup->collectedGameBit, 1);
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
     }
     else

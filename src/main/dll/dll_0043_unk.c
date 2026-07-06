@@ -112,7 +112,7 @@ void camcontrol_releasePathState(void)
     gCamcontrolPathState = NULL;
 }
 
-void CameraModeStaffAnim_copyToCurrent_nop(void)
+void CameraModeStaffAnim_copyToCurrent(void)
 {
 }
 

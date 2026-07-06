@@ -8,6 +8,6 @@
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/objlib.h"
 
-u32 fn_801E2570(void);
+u32 sbGetPropeller(void);
 
 #endif

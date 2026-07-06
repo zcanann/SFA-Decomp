@@ -58,12 +58,12 @@ typedef struct RingGenState
 
 STATIC_ASSERT(sizeof(RingGenState) == 0xc);
 
-int imspaceringgen_getExtraSize(void) { return 0xc; }
-int imspaceringgen_getObjectTypeId(void) { return 0x0; }
+int IMSpaceRingGen_getExtraSize(void) { return 0xc; }
+int IMSpaceRingGen_getObjectTypeId(void) { return 0x0; }
 
-void imspaceringgen_free(void) { lbl_803DDB48 = NULL; }
+void IMSpaceRingGen_free(void) { lbl_803DDB48 = NULL; }
 
-void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void IMSpaceRingGen_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     u8* state = ((GameObject*)obj)->extra;
     if (visible != 0 && (state[8] != 0 || ((GameObject*)obj)->anim.alpha != 0))
@@ -72,11 +72,11 @@ void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-void imspaceringgen_hitDetect(void)
+void IMSpaceRingGen_hitDetect(void)
 {
 }
 
-void imspaceringgen_update(GameObject* obj)
+void IMSpaceRingGen_update(GameObject* obj)
 {
     int i;
     int ring;
@@ -163,16 +163,16 @@ void imspaceringgen_update(GameObject* obj)
     }
 }
 
-void imspaceringgen_init(GameObject* obj)
+void IMSpaceRingGen_init(GameObject* obj)
 {
     obj->unkF4 = 0;
     lbl_803DDB48 = obj;
 }
 
-void imspaceringgen_release(void)
+void IMSpaceRingGen_release(void)
 {
 }
 
-void imspaceringgen_initialise(void)
+void IMSpaceRingGen_initialise(void)
 {
 }

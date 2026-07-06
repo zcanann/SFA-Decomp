@@ -171,7 +171,7 @@ void WM_ObjCreator_update(int obj)
                 if (((GameObject*)obj)->unkF8 == 0)
                 {
                     state = (WmObjCreatorState*)1;
-                    if (GameBit_Get(GAMEBIT_WM_GALLEON_GONE) != 0)
+                    if (mainGetBit(GAMEBIT_WM_GALLEON_GONE) != 0)
                     {
                         state = (WmObjCreatorState*)0;
                     }
@@ -211,7 +211,7 @@ void WM_ObjCreator_update(int obj)
                 break;
             }
         case 1: /* periodic LFXEmitter at the creator, drifting east */
-            if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
+            if ((mainGetBit(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
                 int setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES,
@@ -238,7 +238,7 @@ void WM_ObjCreator_update(int obj)
             }
             break;
         case 5: /* periodic WM_WallCraw near the creator (cut content) */
-            if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
+            if ((mainGetBit(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
                 setup = Obj_AllocObjectSetup(0x24, WMOBJCREATOR_SPAWN_WM_WALLCRAWLER);
@@ -258,11 +258,11 @@ void WM_ObjCreator_update(int obj)
             }
             break;
         case 8: /* one-shot HoodedZyck on the gate bit (bit is consumed) */
-            if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
+            if ((mainGetBit(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
                 setup = Obj_AllocObjectSetup(0x38, WMOBJCREATOR_SPAWN_HOODED_ZYCK);
-                GameBit_Set(state->gameBit, 0);
+                mainSetBits(state->gameBit, 0);
                 ((HoodedZyckSpawnSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
@@ -279,7 +279,7 @@ void WM_ObjCreator_update(int obj)
             }
             break;
         case 2: /* periodic LFXEmitter at the placement, drifting west */
-            if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
+            if ((mainGetBit(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
                 setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES,
@@ -305,7 +305,7 @@ void WM_ObjCreator_update(int obj)
             break;
         case 4: /* two scattering LFXEmitters on the gate bit, with an
                    attached particle trail each (bit is consumed) */
-            if (GameBit_Get(state->gameBit) != 0 || state->gameBit == -1)
+            if (mainGetBit(state->gameBit) != 0 || state->gameBit == -1)
             {
                 n = 2;
                 do
@@ -347,11 +347,11 @@ void WM_ObjCreator_update(int obj)
                     }
                 }
                 while (n != 0);
-                GameBit_Set(state->gameBit, 0);
+                mainSetBits(state->gameBit, 0);
             }
             break;
         case 7: /* periodic LFXEmitter around the placement, random config */
-            if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
+            if ((mainGetBit(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
                 setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES,
@@ -373,7 +373,7 @@ void WM_ObjCreator_update(int obj)
             break;
         case 6: /* falling WM_rock above the creator + a debris-particle
                    burst (bit is consumed) */
-            if (GameBit_Get(state->gameBit) != 0 || state->gameBit == -1)
+            if (mainGetBit(state->gameBit) != 0 || state->gameBit == -1)
             {
                 setup = Obj_AllocObjectSetup(0x24, WMOBJCREATOR_SPAWN_WM_ROCK);
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-0x104, 0x104);
@@ -398,7 +398,7 @@ void WM_ObjCreator_update(int obj)
                     (*gPartfxInterface)->spawnObject((void*)obj, 0x1a6, &vec, 0x10002, -1,
                                                      NULL);
                 }
-                GameBit_Set(state->gameBit, 0);
+                mainSetBits(state->gameBit, 0);
             }
             break;
         }

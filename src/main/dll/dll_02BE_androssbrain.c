@@ -76,25 +76,25 @@ void androssbrain_setState(int obj, int newState, u8 force)
     }
 }
 
-int androssbrain_getExtraSize(void) { return 0x28; }
+int AndrossBrain_getExtraSize(void) { return 0x28; }
 
-int androssbrain_getObjectTypeId(void) { return 0; }
+int AndrossBrain_getObjectTypeId(void) { return 0; }
 
-void androssbrain_free(void)
+void AndrossBrain_free(void)
 {
 }
 
-void androssbrain_render(int obj, int p2, int p3, int p4, int p5)
+void AndrossBrain_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7600);
 }
 
-void androssbrain_hitDetect(void)
+void AndrossBrain_hitDetect(void)
 {
 }
 
 #pragma opt_common_subs off
-void androssbrain_update(int obj)
+void AndrossBrain_update(int obj)
 {
     AndrossBrainState* state = ((GameObject*)obj)->extra;
     u8 stateChanged = 0;
@@ -185,7 +185,7 @@ void androssbrain_update(int obj)
 }
 #pragma opt_common_subs reset
 
-void androssbrain_init(int obj)
+void AndrossBrain_init(int obj)
 {
     AndrossBrainState* state = ((GameObject*)obj)->extra;
 

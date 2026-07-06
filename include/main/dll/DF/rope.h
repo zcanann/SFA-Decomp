@@ -4,9 +4,9 @@
 #include "ghidra_import.h"
 
 void dimbossgut2_updateTracking(int obj, int state);
-void dimbossgut2_free(int param_9);
-void dimbossgut2_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void dimbossgut2_update(int obj);
+void DIM_BossGut2_free(int param_9);
+void DIM_BossGut2_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
+void DIM_BossGut2_update(int obj);
 void DIMbossspit_updateBurst(int obj);
 void DIMbossspit_free(int param_1);
 void DIMbossspit_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);

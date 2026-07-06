@@ -71,14 +71,14 @@ void TrickyCurve_updateBurstTrigger(int obj)
     dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     dz = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
 
-    if ((((TrickyCurveObjState*)state)->gateGameBit != -1) && (GameBit_Get(((TrickyCurveObjState*)state)->gateGameBit) != 0))
+    if ((((TrickyCurveObjState*)state)->gateGameBit != -1) && (mainGetBit(((TrickyCurveObjState*)state)->gateGameBit) != 0))
     {
         return;
     }
 
-    if (GameBit_Get(((TrickyCurveObjState*)state)->triggerGameBit) != 0)
+    if (mainGetBit(((TrickyCurveObjState*)state)->triggerGameBit) != 0)
     {
-        GameBit_Set(((TrickyCurveObjState*)state)->triggerGameBit, 0);
+        mainSetBits(((TrickyCurveObjState*)state)->triggerGameBit, 0);
     }
 
     if (dx <= 0.0f)
@@ -144,9 +144,9 @@ void TrickyCurve_updateBurstTrigger(int obj)
             fxParams.rotX = 0x3fff;
         }
 
-        if (GameBit_Get(0x1d9) != 0)
+        if (mainGetBit(0x1d9) != 0)
         {
-            GameBit_Set(0x468, 1);
+            mainSetBits(0x468, 1);
             ObjMsg_SendToObject(player, DFPFORCEAW_MSG_PLAYER_BURST, obj, 0);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &fxParams, 2, -1, NULL);
             burstParticles = 9;
@@ -167,7 +167,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
             }
             while (burstParticles-- != 0);
         }
-        GameBit_Set(((TrickyCurveObjState*)state)->triggerGameBit, 1);
+        mainSetBits(((TrickyCurveObjState*)state)->triggerGameBit, 1);
         Sfx_PlayFromObject(obj, SFXfoot_water_walk_3);
     }
 

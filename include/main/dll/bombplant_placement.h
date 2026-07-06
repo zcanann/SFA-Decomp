@@ -12,7 +12,7 @@ typedef struct BombplantPlacement
     u8 pad14[0x18 - 0x14];
     s16 growTimer;
     s16 timerBase; /* 0x1a: base value for grow/regrow timer (+ random spread) */
-    s16 gameBit; /* 0x1c: gated GameBit_Get */
+    s16 gameBit; /* 0x1c: gated mainGetBit */
     s8 spawnYawByte; /* 0x1e: spore yaw param (<<8 -> spore spawnYaw) */
     s8 objectTypeParam; /* 0x1f: signed byte, <<8 -> object rotX seed */
 } BombplantPlacement;

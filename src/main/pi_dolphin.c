@@ -3577,12 +3577,12 @@ void fn_8004AFA0(int* q, int* elem, int idx)
                     {
                         s16 ev1;
                         s16 ev2;
-                        GameBit_Get(0x4e2);
+                        mainGetBit(0x4e2);
                         ev1 = *(s16*)(obj + 0x30);
-                        if (ev1 == -1 || GameBit_Get(ev1) != 0)
+                        if (ev1 == -1 || mainGetBit(ev1) != 0)
                         {
                             ev2 = *(s16*)(obj + 0x32);
-                            if (ev2 == -1 || GameBit_Get(ev2) == 0)
+                            if (ev2 == -1 || mainGetBit(ev2) == 0)
                             {
                                 if (!(*(s8*)(obj + 0x1a) == 8 && *(s8*)(node + 0x1a) == 9))
                                 {
@@ -6110,7 +6110,7 @@ void fn_8004CE0C(void* viewMtx)
 extern void printHeapStats(int a);
 extern void defragMemory(int mode);
 extern void debugPrintSetColor(int r, int g, int b, int a);
-extern void fn_80137948(char* fmt, ...);
+extern void logPrintf(char* fmt, ...);
 extern char sAssetHaltFormat[];
 extern int lbl_8035EF48[];
 extern s16 lbl_803DCC78;
@@ -6147,7 +6147,7 @@ void loadDataFiles(int arg)
         if (lbl_8035EF48[i] != -1)
         {
             debugPrintSetColor(0, 0xff, 0, 0xff);
-            fn_80137948(sAssetHaltFormat, sResourceFileNameTable[i]);
+            logPrintf(sAssetHaltFormat, sResourceFileNameTable[i]);
             debugPrintSetColor(0xff, 0xff, 0xff, 0xff);
             lbl_803DCC70 = 1;
             if (mapLoadDataFile(lbl_8035EF48[i], i) != 0)

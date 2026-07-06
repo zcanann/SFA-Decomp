@@ -57,8 +57,8 @@ void ktlazerlight_update(int obj)
     char* extra = ((GameObject*)obj)->extra;
     s16 intensity;
     void* light = *(void**)(extra + 0x4);
-    intensity = GameBit_Get(((KtlazerlightPlacement*)placement)->onIntensityBit);
-    if (intensity >= 1 || GameBit_Get(((KtlazerlightPlacement*)placement)->onStayLitBit) != 0)
+    intensity = mainGetBit(((KtlazerlightPlacement*)placement)->onIntensityBit);
+    if (intensity >= 1 || mainGetBit(((KtlazerlightPlacement*)placement)->onStayLitBit) != 0)
     {
         if (intensity == 0)
         {

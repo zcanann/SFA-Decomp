@@ -1,6 +1,6 @@
 /*
  * effectbox (DLL 0x00EE) - an oriented box trigger volume placed in a
- * level. Each frame effectbox_update transforms a candidate object's
+ * level. Each frame EffectBox_update transforms a candidate object's
  * position into the box's local space (yaw/pitch from the placement) and,
  * if it lies inside the box extents, fires an action on that object.
  *
@@ -51,24 +51,24 @@ typedef struct EffectboxPlacement
 #define EFFECTBOX_OBJFLAG_HIDDEN 0x4000
 #define EFFECTBOX_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-int effectbox_getExtraSize(void) { return 0x0; }
-int effectbox_getObjectTypeId(void) { return 0x0; }
+int EffectBox_getExtraSize(void) { return 0x0; }
+int EffectBox_getObjectTypeId(void) { return 0x0; }
 
-void effectbox_free(void)
+void EffectBox_free(void)
 {
     fn_8002B758();
 }
 
-void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void EffectBox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3508);
 }
 
-void effectbox_hitDetect(void)
+void EffectBox_hitDetect(void)
 {
 }
 
-void effectbox_update(int obj)
+void EffectBox_update(int obj)
 {
     int* list;
     int def;
@@ -93,7 +93,7 @@ void effectbox_update(int obj)
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     gb = ((GameObject*)obj)->unkF8;
-    if ((gb <= -1) || (((EffectboxPlacement*)def)->gameBitValue != GameBit_Get(gb)))
+    if ((gb <= -1) || (((EffectboxPlacement*)def)->gameBitValue != mainGetBit(gb)))
     {
         cosY = mathCosf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / lbl_803E3510);
         sinY = mathSinf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / lbl_803E3510);
@@ -171,7 +171,7 @@ void effectbox_update(int obj)
     }
 }
 
-void effectbox_init(int obj, EffectboxPlacement* def)
+void EffectBox_init(int obj, EffectboxPlacement* def)
 {
     s16 gameBit;
     u32 flags;
@@ -193,11 +193,11 @@ void effectbox_init(int obj, EffectboxPlacement* def)
     ((GameObject*)obj)->objectFlags = flags;
 }
 
-void effectbox_release(void)
+void EffectBox_release(void)
 {
 }
 
-void effectbox_initialise(void)
+void EffectBox_initialise(void)
 {
 }
 
@@ -206,14 +206,14 @@ ObjectDescriptor gEffectBoxObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)effectbox_initialise,
-    (ObjectDescriptorCallback)effectbox_release,
+    (ObjectDescriptorCallback)EffectBox_initialise,
+    (ObjectDescriptorCallback)EffectBox_release,
     0,
-    (ObjectDescriptorCallback)effectbox_init,
-    (ObjectDescriptorCallback)effectbox_update,
-    (ObjectDescriptorCallback)effectbox_hitDetect,
-    (ObjectDescriptorCallback)effectbox_render,
-    (ObjectDescriptorCallback)effectbox_free,
-    (ObjectDescriptorCallback)effectbox_getObjectTypeId,
-    effectbox_getExtraSize,
+    (ObjectDescriptorCallback)EffectBox_init,
+    (ObjectDescriptorCallback)EffectBox_update,
+    (ObjectDescriptorCallback)EffectBox_hitDetect,
+    (ObjectDescriptorCallback)EffectBox_render,
+    (ObjectDescriptorCallback)EffectBox_free,
+    (ObjectDescriptorCallback)EffectBox_getObjectTypeId,
+    EffectBox_getExtraSize,
 };

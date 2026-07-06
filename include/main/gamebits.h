@@ -3,12 +3,12 @@
 
 #include "global.h"
 
-u32 GameBit_Get(int eventId);
-void GameBit_Set(int eventId, int value);
+u32 mainGetBit(int eventId);
+void mainSetBits(int eventId, int value);
 
 /*
  * GameBitId - symbolic ids for the game's persistent quest/story/event flags,
- * the integer `eventId` passed to GameBit_Get / GameBit_Set / gameBitIncrement.
+ * the integer `eventId` passed to mainGetBit / mainSetBits / gameBitIncrement.
  *
  * Most bits are addressed by raw id from level/placement data, so their meaning
  * lives in the data, not the code; the codebase therefore still uses bare
@@ -68,7 +68,7 @@ enum GameBitId {
      * the monster dismisses its skull. Set on defeat by tricky_handleDefeat ->
      * gameBitIncrement (skipped when the baddie is BADDIE_CONTROL_SEQUENCE_DRIVEN).
      * Live-verified: killing the monster flips this 0 -> 1 (region 2, start 2560)
-     * via the caught GameBit_Set; it also gates the enemy's respawn (clearing it
+     * via the caught mainSetBits; it also gates the enemy's respawn (clearing it
      * respawns the monster and re-shows the skull). Per-placement - this is the
      * K1 (first, mandatory) gate's value; other gates carry their own.
      */
@@ -89,7 +89,7 @@ enum GameBitId {
     /*
      * Set when the player collects the K1 Krazoa Spirit at its shrine (the ECSH
      * shrine, dll_018F, anim-event 7 - the same event that calls
-     * fn_80296518(player, 0x08, 1) to set the spirit bit in playerStatus). It is
+     * objSetAnimStateFlags(player, 0x08, 1) to set the spirit bit in playerStatus). It is
      * one of the three guard bits (with 0x316 and 0x511) that disable the K1
      * Krazoa Shrine return transporter pad (dll_012C destinationId 0x43F83 ->
      * map 0x21): once the spirit is taken, the pad locks out. Live-verified that
@@ -102,8 +102,8 @@ enum GameBitId {
      * Mountain - the 'warlock' map, hence the WM dll prefix). Set when the
      * deposit sequence completes at the wmspiritplace pedestal (DLL 0x20C): it
      * is that pedestal's placement sequenceGameBit (+0x1E), written via
-     * GameBit_Set(state->sequenceGameBit) in wmspiritplace_update - i.e.
-     * DATA-DRIVEN, so no GameBit_Set(0x316) literal exists (which is why a code
+     * mainSetBits(state->sequenceGameBit) in WM_spiritplace_update - i.e.
+     * DATA-DRIVEN, so no mainSetBits(0x316) literal exists (which is why a code
      * grep finds no setter; traced live in Dolphin by catching the write, with
      * r28 == 0x316*4 and the wmspiritplace object in r27). Read as a code
      * literal by dll_012C_transporter.c - one of the three 0xBA8/0x316/0x511
@@ -113,7 +113,7 @@ enum GameBitId {
 
     /*
      * World map / Arwing flight-select is available. worldplanet_init force-sets
-     * this (GameBit_Set(0xA63, 1)) every time the map opens, and
+     * this (mainSetBits(0xA63, 1)) every time the map opens, and
      * gWorldPlanetGameBitTable reuses it as planet slot 2's "unlock" entry - which
      * is why Dinosaur Planet is always flyable and is the default selection. Its
      * FIRST set is the first world-map open, right after the K1 Krazoa Spirit is
@@ -129,7 +129,7 @@ enum GameBitId {
      * world map opens (the intro flight to Dinosaur Planet). At the end of a
      * flight the ring-choice trigger (arwlevelcon, dll_02A1) compares collected
      * vs required rings and sets one; the pass/fail follow-up sequence and
-     * arwarwing_update (polling GameBit_Get(0x9d8)) branch on it. Transient -
+     * arwarwing_update (polling mainGetBit(0x9d8)) branch on it. Transient -
      * both are reset to 0 at each flight start (arwlevelcon_init / seq start).
      */
     GAMEBIT_ARWING_FLIGHT_RINGS_PASSED = 0x9D8, /* collected >= required (success) */
@@ -141,7 +141,7 @@ enum GameBitId {
      * flight). The pickup object sh_staff (dll_01B1) sets it in sh_staff_update
      * when the pickup trigger fires (phase 1 -> 2), and checks it in phase 0 to
      * hide the staff if it has already been taken. Live-verified with a write-
-     * watchpoint that caught GameBit_Set(0x18b, 1) at sh_staff_update+0x190
+     * watchpoint that caught mainSetBits(0x18b, 1) at sh_staff_update+0x190
      * during the pickup.
      */
     GAMEBIT_STAFF_ACQUIRED = 0x18B,
@@ -162,7 +162,7 @@ enum GameBitId {
      * Flow:
      *   1. Crossing an invisible proximity Trigger (dll_0126, variant 0x4b, NO
      *      gamebit gate) sets ARENA_ENTERED (0x239); its whole command list is
-     *      the single enter-command GameBit_Set(0x239,1). Staff-gating is
+     *      the single enter-command mainSetBits(0x239,1). Staff-gating is
      *      positional - you cannot reach this corridor before the pickup.
      *   2. Downstream logic reacts to 0x239 (0x239 is read data-driven, not by
      *      any .c): a door opens, four SharpClaws pour out, the door shuts,
@@ -208,7 +208,7 @@ enum GameBitId {
      * text 0x3fd, icon 0xc7a; see cmenu_item_table.h). mcupgrade is generic -
      * every magic-cave ability (Freeze Blast, etc.) is one of these with a
      * different collectedGameBit. Live-verified with a write-watchpoint that
-     * caught GameBit_Set(0x2d, 1) in mcupgrade_update on collection. You then
+     * caught mainSetBits(0x2d, 1) in mcupgrade_update on collection. You then
      * return and shoot the red switch (below) to open the SharpClaw/Queen door.
      */
     GAMEBIT_STAFF_ABILITY_FIRE_BLASTER = 0x2D,
@@ -234,7 +234,7 @@ enum GameBitId {
     /*
      * Arwing world-map (flight-select) destination unlocks. worldplanet_init
      * marks planet slot i selectable - WorldPlanetState.unlockedPlanetMask bit i
-     * - iff GameBit_Get(gWorldPlanetGameBitTable[i]) != 0, so each of these bits
+     * - iff mainGetBit(gWorldPlanetGameBitTable[i]) != 0, so each of these bits
      * ungates one floating-island Arwing destination (an extra per-slot hint gate,
      * gWorldPlanetHintFlagTable + getNextTaskHintText, can still hold it back).
      * Live-verified at the post-prologue map: only Dinosaur Planet's always-on bit
@@ -252,7 +252,7 @@ enum GameBitId {
      * Arwing world-map destination NAME reveals - a SEPARATE gate from the
      * fly-there unlocks above. worldplanet shows each slot's name via
      * pauseMenuSetupTitle(0x2A7, gWorldPlanetTitleStringIds[slot], ...), which only
-     * prints the real name when GameBit_Get(gTaskHintTable[idx].bit_id) != 0 and
+     * prints the real name when mainGetBit(gTaskHintTable[idx].bit_id) != 0 and
      * otherwise falls back to text entry 5 = "?". These four ARE those
      * gTaskHintTable[0..4].bit_id values, so they double as the pause-menu
      * task-hint gate for each area. Live-verified: setting 0xA66 flipped Walled

@@ -183,9 +183,9 @@ void dll_1CE_update(int* obj)
     {
         if ((s8)(sub->igniteCountdown -= 1) > 0) return;
     }
-    GameBit_Set(((Dll1CEPlacement*)q)->gameBitId, 1);
+    mainSetBits(((Dll1CEPlacement*)q)->gameBitId, 1);
     sub->opened = 1;
-    if ((u32)(s16)((Dll1CEPlacement*)q)->spawnGameBitValue != GameBit_Get(0x46d)) return;
+    if ((u32)(s16)((Dll1CEPlacement*)q)->spawnGameBitValue != mainGetBit(0x46d)) return;
     if (Obj_IsLoadingLocked() == 0) return;
     {
         int* no = Obj_AllocObjectSetup(0x30, 0x246);
@@ -216,7 +216,7 @@ void dll_1CE_init(u8* obj, u8* params)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DLL1CE_OBJFLAG_HITDETECT_DISABLED);
     sub = ((GameObject*)obj)->extra;
     sub->igniteCountdown = 1;
-    if (GameBit_Get(((Dll1CEPlacement*)params)->gameBitId) != 0)
+    if (mainGetBit(((Dll1CEPlacement*)params)->gameBitId) != 0)
     {
         sub->igniteCountdown = 0;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;

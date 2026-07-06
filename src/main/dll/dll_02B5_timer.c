@@ -159,7 +159,7 @@ void timer_update(int obj)
     if (fn_80080150((int)state) != 0)
     {
         expiredThisFrame = 0;
-        if (flags->manual == 0 && (void*)GameBit_Get(setup->startGameBit) == NULL)
+        if (flags->manual == 0 && (void*)mainGetBit(setup->startGameBit) == NULL)
         {
             storeZeroToFloatParam((void*)state);
             if (state->mode == TIMER_MODE_GLOBAL)
@@ -177,8 +177,8 @@ void timer_update(int obj)
         }
         if (timerCountDown((void*)state) != 0)
         {
-            GameBit_Set(setup->expiredGameBit, 1);
-            GameBit_Set(setup->startGameBit, 0);
+            mainSetBits(setup->expiredGameBit, 1);
+            mainSetBits(setup->startGameBit, 0);
             expiredThisFrame = 1;
         }
         if (expiredThisFrame == 0)
@@ -205,7 +205,7 @@ void timer_update(int obj)
     }
     else
     {
-        if ((void*)GameBit_Get(setup->startGameBit) != NULL || flags->manual != 0)
+        if ((void*)mainGetBit(setup->startGameBit) != NULL || flags->manual != 0)
         {
             storeZeroToFloatParam((void*)state);
             if (setup->durationMinutes != 0)

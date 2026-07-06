@@ -1316,7 +1316,7 @@ extern u32 lbl_803DCF94;
 extern u32 gNewShadowInverseRampTexture;
 extern u32 gNewShadowFalloffTexture;
 u32 textureFn_8006c5c4(void) { return gNewShadowSmallDiskTexture; }
-u32 getLastRenderedFrame(void) { return (u32)gNewShadowReflectionTexture; }
+u32 getReflectionTexture1(void) { return (u32)gNewShadowReflectionTexture; }
 u32 getTextureFn_8006c744(void) { return lbl_803DCF94; }
 u32 fn_8006C74C(void) { return gNewShadowInverseRampTexture; }
 u32 fn_8006C754(void) { return gNewShadowFalloffTexture; }

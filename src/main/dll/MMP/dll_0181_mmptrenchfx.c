@@ -45,7 +45,7 @@ void mmp_trenchfx_hitDetect(void)
 void mmp_trenchfx_update(int obj)
 {
     MmpTrenchfxState* state = ((GameObject*)obj)->extra;
-    if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0)
+    if (state->enableBit == -1 || mainGetBit(state->enableBit) != 0)
     {
         state->emitCooldown -= timeDelta;
         if (state->emitCooldown < lbl_803E45B0)

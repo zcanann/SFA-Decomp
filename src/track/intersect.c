@@ -2202,7 +2202,7 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     op = ObjModel_GetRenderOp(objB[0], slot);
     tex = textureIdxToPtr(*Shader_getLayer(op, 0));
     GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
-    lbl_803DD010 = GameBit_Get(0x2ba);
+    lbl_803DD010 = mainGetBit(0x2ba);
     tx = lbl_803DD010 / lbl_803DEF38;
     PSMTXTrans(mtx, tx, lbl_803DEEDC, *(f32 *)&lbl_803DEEDC);
     GXLoadTexMtxImm(mtx, 0x1e, 1);
@@ -5905,7 +5905,7 @@ void showMemCardError(u8 err)
     extern void padUpdate(void);
     extern void mmFreeTick(int arg);
     extern void waitNextFrame(void);
-    extern int getLastRenderedFrame(void);
+    extern int getReflectionTexture1(void);
     extern void hudDrawColored(int, int, int, void*, int, int);
     extern void gameTextSetColor(int, int, int, int);
     extern void* gameTextGet(int textId);
@@ -5949,7 +5949,7 @@ void showMemCardError(u8 err)
         timer += 0x3e8;
         waitNextFrame();
         saved = lbl_803DB708;
-        hudDrawColored(getLastRenderedFrame(), 0, 0, &saved, 0x200, 0);
+        hudDrawColored(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
         if (submenu != 0) {
             opts[0] = 6;
             opts[1] = 5;
@@ -6253,7 +6253,7 @@ void cardShowLoadingMsg(u8 kind)
     extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
     extern void curUiDllDraw(int, int, int, int);
     extern int lbl_803DB708;
-    extern int getLastRenderedFrame(void);
+    extern int getReflectionTexture1(void);
     extern void hudDrawColored(int, int, int, void*, int, int);
     extern void gameTextSetColor(int, int, int, int);
     extern void gameTextFn_80016810(int a, int b, int c);
@@ -6286,7 +6286,7 @@ void cardShowLoadingMsg(u8 kind)
             curUiDllDraw(0, 0, 0, 0);
         } else {
             saved = lbl_803DB708;
-            hudDrawColored(getLastRenderedFrame(), 0, 0, &saved, 0x200, 0);
+            hudDrawColored(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
         }
         gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
         if (mode == 1) {

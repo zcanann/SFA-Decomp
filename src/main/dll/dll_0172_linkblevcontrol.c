@@ -109,17 +109,17 @@ void linkb_levcontrol_update(int* obj)
     SCGameBitLatch_Update(state, 8, -1, -1, 0x3a1, state->music);
     if (state->flags & 4)
     {
-        if (GameBit_Get(0x1fd) == 0 && GameBit_Get(0x256) == 0)
+        if (mainGetBit(0x1fd) == 0 && mainGetBit(0x256) == 0)
         {
-            GameBit_Set(0x36e, 0);
+            mainSetBits(0x36e, 0);
             state->flags &= ~4;
         }
     }
     else
     {
-        if (GameBit_Get(0x256) != 0 || GameBit_Get(0x1fd) != 0)
+        if (mainGetBit(0x256) != 0 || mainGetBit(0x1fd) != 0)
         {
-            GameBit_Set(0x36e, 1);
+            mainSetBits(0x36e, 1);
             state->flags |= 4;
         }
     }
@@ -129,7 +129,7 @@ void linkb_levcontrol_update(int* obj)
         switch (state->stage)
         {
         case LINKBLEVCONTROL_STAGE_START:
-            if (GameBit_Get(GAMEBIT_LINKB_STAGE_1) != 0)
+            if (mainGetBit(GAMEBIT_LINKB_STAGE_1) != 0)
             {
                 fn_80138908(tricky, 1);
                 (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
@@ -139,11 +139,11 @@ void linkb_levcontrol_update(int* obj)
             }
             break;
         case LINKBLEVCONTROL_STAGE_1:
-            if (GameBit_Get(0xc1) != 0)
+            if (mainGetBit(0xc1) != 0)
             {
                 if (!(((GameObject*)player)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
                 {
-                    GameBit_Set(GAMEBIT_LINKB_STAGE_2, 1);
+                    mainSetBits(GAMEBIT_LINKB_STAGE_2, 1);
                     fn_80138908(tricky, 1);
                     (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                     state->stage++;
@@ -158,7 +158,7 @@ void linkb_levcontrol_update(int* obj)
                 fn_80138908(tricky, 1);
                 if (state->trickyHitCount-- == -1 && !(((GameObject*)tricky)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
                 {
-                    GameBit_Set(GAMEBIT_LINKB_STAGE_3, 1);
+                    mainSetBits(GAMEBIT_LINKB_STAGE_3, 1);
                     (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                     state->stage++;
                     state->unk_02_low = 0;
@@ -167,20 +167,20 @@ void linkb_levcontrol_update(int* obj)
             }
             break;
         case LINKBLEVCONTROL_STAGE_3:
-            if (GameBit_Get(0x1fd) != 0)
+            if (mainGetBit(0x1fd) != 0)
             {
-                GameBit_Set(GAMEBIT_LINKB_STAGE_4, 1);
+                mainSetBits(GAMEBIT_LINKB_STAGE_4, 1);
                 state->stage++;
                 break;
             }
-            if (GameBit_Get(0x380) != 0)
+            if (mainGetBit(0x380) != 0)
             {
                 state->altPath = 1;
                 break;
             }
             if (state->altPath != 0)
             {
-                GameBit_Set(GAMEBIT_LINKB_STAGE_4, 1);
+                mainSetBits(GAMEBIT_LINKB_STAGE_4, 1);
                 fn_80138908(tricky, 1);
                 (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                 state->stage++;
@@ -189,7 +189,7 @@ void linkb_levcontrol_update(int* obj)
             }
             break;
         case LINKBLEVCONTROL_STAGE_4:
-            if (GameBit_Get(GAMEBIT_LINKB_STAGE_5) != 0)
+            if (mainGetBit(GAMEBIT_LINKB_STAGE_5) != 0)
             {
                 fn_80138908(tricky, 1);
                 (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
@@ -206,16 +206,16 @@ void linkb_levcontrol_update(int* obj)
         {
             state->timer = state->timer + timeDelta;
         }
-        if (GameBit_Get(0x4e3) == 1 && cur[0] >= 4)
+        if (mainGetBit(0x4e3) == 1 && cur[0] >= 4)
         {
-            GameBit_Set(0x4e3, 0xff);
+            mainSetBits(0x4e3, 0xff);
         }
         if (state->timer >= lbl_803E47C8)
         {
             state->timer = state->timer - lbl_803E47C8;
-            if (GameBit_Get(0x4e3) == 0xff && cur[0] < 4)
+            if (mainGetBit(0x4e3) == 0xff && cur[0] < 4)
             {
-                GameBit_Set(0x4e3, 1);
+                mainSetBits(0x4e3, 1);
             }
         }
     }
@@ -229,27 +229,27 @@ void linkb_levcontrol_init(int* obj)
     u8* envBase = (u8*)(int)lbl_803238D8;
     LinkbLevState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (LINKBLEVCONTROL_OBJFLAG_HIDDEN | LINKBLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
-    if (GameBit_Get(0x36e) != 0)
+    if (mainGetBit(0x36e) != 0)
     {
         state->flags &= 4;
     }
-    if (GameBit_Get(GAMEBIT_LINKB_STAGE_5) != 0)
+    if (mainGetBit(GAMEBIT_LINKB_STAGE_5) != 0)
     {
         state->stage = LINKBLEVCONTROL_STAGE_5;
     }
-    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_4) != 0)
+    else if (mainGetBit(GAMEBIT_LINKB_STAGE_4) != 0)
     {
         state->stage = LINKBLEVCONTROL_STAGE_4;
     }
-    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_3) != 0)
+    else if (mainGetBit(GAMEBIT_LINKB_STAGE_3) != 0)
     {
         state->stage = LINKBLEVCONTROL_STAGE_3;
     }
-    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_2) != 0)
+    else if (mainGetBit(GAMEBIT_LINKB_STAGE_2) != 0)
     {
         state->stage = LINKBLEVCONTROL_STAGE_2;
     }
-    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_1) != 0)
+    else if (mainGetBit(GAMEBIT_LINKB_STAGE_1) != 0)
     {
         state->stage = LINKBLEVCONTROL_STAGE_1;
     }

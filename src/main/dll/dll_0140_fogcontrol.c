@@ -3,12 +3,12 @@
  * heavy-fog volume.
  *
  * The fog is gated by a placement game bit (enableGameBit, -1 = always
- * on). While the gate transitions, fogcontrol_update ramps a 0..1 blend
+ * on). While the gate transitions, FogControl_update ramps a 0..1 blend
  * value toward the gated target (ramp speeds 0.005/0.02 scaled by
  * timeDelta, selected by the FOG_FLAG_FAST_* bits) and feeds the
  * resulting fog band/density to enableHeavyFog each frame; at blend
  * <= floor (0.0) the fog is turned off (disableHeavyFog).
- * fogcontrol_init primes the blend from the gate state and fogcontrol_free
+ * FogControl_init primes the blend from the gate state and FogControl_free
  * tears the fog down if it was left active.
  *
  * The fog band is derived from the object's localPosY plus the placement
@@ -67,10 +67,10 @@ typedef struct FogControlState
     u8 rest : 6;
 } FogControlState;
 
-int fogcontrol_getExtraSize(void) { return sizeof(FogControlState); }
-int fogcontrol_getObjectTypeId(void) { return 0x0; }
+int FogControl_getExtraSize(void) { return sizeof(FogControlState); }
+int FogControl_getObjectTypeId(void) { return 0x0; }
 
-void fogcontrol_free(int obj)
+void FogControl_free(int obj)
 {
     FogControlState* st = ((GameObject*)obj)->extra;
     if (st->on)
@@ -79,13 +79,13 @@ void fogcontrol_free(int obj)
     }
 }
 
-void fogcontrol_hitDetect(void)
+void FogControl_hitDetect(void)
 {
 }
 
-/* fogcontrol_update: ramp the fog blend toward the gamebit-selected
+/* FogControl_update: ramp the fog blend toward the gamebit-selected
  * target and feed the heavy fog params. */
-void fogcontrol_update(int obj)
+void FogControl_update(int obj)
 {
     u8* setup = (u8*)((GameObject*)obj)->anim.placement;
     FogControlState* st = ((GameObject*)obj)->extra;
@@ -99,7 +99,7 @@ void fogcontrol_update(int obj)
     }
     else
     {
-        cv = GameBit_Get(((FogcontrolPlacement*)setup)->enableGameBit);
+        cv = mainGetBit(((FogcontrolPlacement*)setup)->enableGameBit);
     }
     if ((cv != 0 && st->full == 0) || (cv == 0 && st->on != 0))
     {
@@ -162,7 +162,7 @@ void fogcontrol_update(int obj)
     }
 }
 
-void fogcontrol_init(int obj, FogcontrolPlacement* placement)
+void FogControl_init(int obj, FogcontrolPlacement* placement)
 {
     FogControlState* st;
     u8 cv;
@@ -181,7 +181,7 @@ void fogcontrol_init(int obj, FogcontrolPlacement* placement)
         }
         else
         {
-            cv = GameBit_Get(placement->enableGameBit);
+            cv = mainGetBit(placement->enableGameBit);
         }
         if (cv != 0)
         {

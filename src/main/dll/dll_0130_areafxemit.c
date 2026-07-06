@@ -1,7 +1,7 @@
 /*
  * areafxemit (DLL 0x130) - a proximity particle-effect emitter object.
  *
- * Each tick areafxemit_update measures the distance from the emitter to
+ * Each tick AreaFxEmit_update measures the distance from the emitter to
  * the player; once inside state->triggerRadius (a sentinel radius means
  * "always") it runs areafxemit_emitEffect. emitType selects how the fx
  * is spawned: 0 = world-positioned local fx (spawn flag 0x200001),
@@ -14,7 +14,7 @@
  * (areafxemit_emitBurst, AREAFXEMIT_APPROACH_BURST_COUNT particles).
  *
  * Gating: state->enableBit (-1 = always) arms the emitter, state->stopBit
- * permanently suppresses it once set. Sequence event id 1 (areafxemit_SeqFn)
+ * permanently suppresses it once set. Sequence event id 1 (AreaFxEmit_SeqFn)
  * also triggers an emit.
  */
 #include "main/dll/CF/CFchuckobj.h"
@@ -243,7 +243,7 @@ void areafxemit_emitEffect(AreaFxEmitObject* obj)
     }
 }
 
-int areafxemit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int AreaFxEmit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     u8 i;
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -258,21 +258,21 @@ int areafxemit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* anim
     return 0;
 }
 
-int areafxemit_getExtraSize(void) { return sizeof(AreaFxEmitState); }
-int areafxemit_getObjectTypeId(void) { return 0x0; }
+int AreaFxEmit_getExtraSize(void) { return sizeof(AreaFxEmitState); }
+int AreaFxEmit_getObjectTypeId(void) { return 0x0; }
 
-void areafxemit_free(AreaFxEmitObject* obj)
+void AreaFxEmit_free(AreaFxEmitObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void AreaFxEmit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-void areafxemit_hitDetect(void)
+void AreaFxEmit_hitDetect(void)
 {
 }
 
-void areafxemit_update(AreaFxEmitObject* obj)
+void AreaFxEmit_update(AreaFxEmitObject* obj)
 {
     AreaFxEmitState* state;
     ObjAnimComponent* player;
@@ -286,12 +286,12 @@ void areafxemit_update(AreaFxEmitObject* obj)
     state = obj->state;
     player = (ObjAnimComponent*)Obj_GetPlayerObject();
     if ((player != NULL) &&
-        ((state->enableBit == -1) || (GameBit_Get(state->enableBit) != 0)))
+        ((state->enableBit == -1) || (mainGetBit(state->enableBit) != 0)))
     {
         switch (state->suppressed)
         {
         case 0:
-            if (GameBit_Get(state->stopBit) != 0)
+            if (mainGetBit(state->stopBit) != 0)
             {
                 state->suppressed = 1;
             }
@@ -329,12 +329,12 @@ void areafxemit_update(AreaFxEmitObject* obj)
     }
 }
 
-void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup)
+void AreaFxEmit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup)
 {
     AreaFxEmitState* state;
     s16 angle;
 
-    obj->seqCallback = areafxemit_SeqFn;
+    obj->seqCallback = AreaFxEmit_SeqFn;
     state = obj->state;
 
     state->triggerRadius = (f32)((s32)setup->triggerRadius << 2);
@@ -368,16 +368,16 @@ void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup)
         obj->emitCooldown = 0;
     }
 
-    if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0)
+    if (state->stopBit != -1 && mainGetBit(state->stopBit) != 0)
     {
         state->suppressed = 1;
     }
 }
 
-void areafxemit_release(void)
+void AreaFxEmit_release(void)
 {
 }
 
-void areafxemit_initialise(void)
+void AreaFxEmit_initialise(void)
 {
 }

@@ -115,14 +115,14 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
         if (inner[0] == MSPLANTING_PHASE_CUT)
         {
             ret = 1;
-            if (GameBit_Get(((MoonSeedPlantingSpotState*)inner)->plantedGameBit) != 0 && GameBit_Get(((MoonSeedPlantingSpotState*)inner)->harvestedGameBit) == 0)
+            if (mainGetBit(((MoonSeedPlantingSpotState*)inner)->plantedGameBit) != 0 && mainGetBit(((MoonSeedPlantingSpotState*)inner)->harvestedGameBit) == 0)
             {
                 inner = ((GameObject*)obj)->extra;
                 placement = *(int**)&((GameObject*)obj)->anim.placementData;
-                if (GameBit_Get(((MoonSeedPlantingSpotState*)inner)->plantedGameBit) != 0)
+                if (mainGetBit(((MoonSeedPlantingSpotState*)inner)->plantedGameBit) != 0)
                 {
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                    GameBit_Set(((MoonSeedPlantingSpotState*)inner)->harvestedGameBit, 1);
+                    mainSetBits(((MoonSeedPlantingSpotState*)inner)->harvestedGameBit, 1);
                     inner[0] = MSPLANTING_PHASE_HARVESTED;
                     ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)placement + 0xc);
                 }
@@ -183,13 +183,13 @@ void MoonSeedPlantingSpot_update(int obj)
     if (((MoonSeedPlantingSpotState*)ex)->flags & MSPLANTING_FLAG_PLANTED)
     {
         ((MoonSeedPlantingSpotState*)ex)->phase = MSPLANTING_PHASE_GROWN;
-        GameBit_Set(((MoonSeedPlantingSpotState*)ex)->plantedGameBit, 1);
+        mainSetBits(((MoonSeedPlantingSpotState*)ex)->plantedGameBit, 1);
         ((MoonSeedPlantingSpotState*)ex)->flags = ((MoonSeedPlantingSpotState*)ex)->flags & ~MSPLANTING_FLAG_PLANTED;
         ((GameObject*)obj)->anim.alpha = 0xff;
     }
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) && !(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED))
     {
-        if (GameBit_Get(GAMEBIT_MOONSEED_COUNT) != 0)
+        if (mainGetBit(GAMEBIT_MOONSEED_COUNT) != 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
@@ -204,22 +204,22 @@ void MoonSeedPlantingSpot_update(int obj)
     case MSPLANTING_PHASE_INIT:
         ((MoonSeedPlantingSpotState*)ex)->phase = MSPLANTING_PHASE_EMPTY;
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY - 10.0f;
-        if (GameBit_Get(((MoonSeedPlantingSpotState*)ex)->plantedGameBit) != 0)
+        if (mainGetBit(((MoonSeedPlantingSpotState*)ex)->plantedGameBit) != 0)
         {
             ((MoonSeedPlantingSpotState*)ex)->phase = MSPLANTING_PHASE_GROWN;
             ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
             ((GameObject*)obj)->anim.alpha = 0xff;
         }
-        if (GameBit_Get(((MoonSeedPlantingSpotState*)ex)->harvestedGameBit) != 0)
+        if (mainGetBit(((MoonSeedPlantingSpotState*)ex)->harvestedGameBit) != 0)
         {
             int setup2;
             int ex2;
             ex2 = *(int*)&((GameObject*)obj)->extra;
             setup2 = *(int*)&((GameObject*)obj)->anim.placementData;
-            if (GameBit_Get(((MoonSeedPlantingSpotState*)ex2)->plantedGameBit) != 0)
+            if (mainGetBit(((MoonSeedPlantingSpotState*)ex2)->plantedGameBit) != 0)
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                GameBit_Set(((MoonSeedPlantingSpotState*)ex2)->harvestedGameBit, 1);
+                mainSetBits(((MoonSeedPlantingSpotState*)ex2)->harvestedGameBit, 1);
                 ((MoonSeedPlantingSpotState*)ex2)->phase = MSPLANTING_PHASE_HARVESTED;
                 ((GameObject*)obj)->anim.localPosY = ((MoonSeedPlantingSpotPlacement*)setup2)->posY;
             }
@@ -229,13 +229,13 @@ void MoonSeedPlantingSpot_update(int obj)
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) &&
             (*gGameUIInterface)->isEventReady(GAMEBIT_MOONSEED_COUNT) != 0)
         {
-            int cnt = GameBit_Get(GAMEBIT_MOONSEED_COUNT);
+            int cnt = mainGetBit(GAMEBIT_MOONSEED_COUNT);
             if (cnt != 0)
             {
                 ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
                 ((GameObject*)obj)->anim.alpha = 0;
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-                GameBit_Set(GAMEBIT_MOONSEED_COUNT, cnt - 1);
+                mainSetBits(GAMEBIT_MOONSEED_COUNT, cnt - 1);
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
         }
@@ -303,17 +303,17 @@ void MoonSeedPlantingSpot_update(int obj)
             {
                 objfx_spawnDirectionalBurst(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, 0, 0);
             }
-            if (((MoonSeedPlantingSpotState*)ex)->growthTimer <= 0.0f && GameBit_Get(((MoonSeedPlantingSpotState*)ex)->plantedGameBit) != 0 &&
-                GameBit_Get(((MoonSeedPlantingSpotState*)ex)->harvestedGameBit) == 0)
+            if (((MoonSeedPlantingSpotState*)ex)->growthTimer <= 0.0f && mainGetBit(((MoonSeedPlantingSpotState*)ex)->plantedGameBit) != 0 &&
+                mainGetBit(((MoonSeedPlantingSpotState*)ex)->harvestedGameBit) == 0)
             {
                 int setup2;
                 int ex2;
                 ex2 = *(int*)&((GameObject*)obj)->extra;
                 setup2 = *(int*)&((GameObject*)obj)->anim.placementData;
-                if (GameBit_Get(((MoonSeedPlantingSpotState*)ex2)->plantedGameBit) != 0)
+                if (mainGetBit(((MoonSeedPlantingSpotState*)ex2)->plantedGameBit) != 0)
                 {
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                    GameBit_Set(((MoonSeedPlantingSpotState*)ex2)->harvestedGameBit, 1);
+                    mainSetBits(((MoonSeedPlantingSpotState*)ex2)->harvestedGameBit, 1);
                     ((MoonSeedPlantingSpotState*)ex2)->phase = MSPLANTING_PHASE_HARVESTED;
                     ((GameObject*)obj)->anim.localPosY = ((MoonSeedPlantingSpotPlacement*)setup2)->posY;
                 }

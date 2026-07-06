@@ -23,16 +23,16 @@ void dfpstatue1_updateState(DfpStatue1Object* obj)
     s16 loopBit;
 
     state = obj->state;
-    loopBit = GameBit_Get(state->loopSfxId);
+    loopBit = mainGetBit(state->loopSfxId);
     if ((state->loopActive == 0) && (loopBit != 0) &&
-        (GameBit_Get(0xedf) != 0))
+        (mainGetBit(0xedf) != 0))
     {
         (*gObjectTriggerInterface)->runSequence(0, obj, 0xffffffff);
         state->loopActive = 1;
     }
-    if ((state->stateFlags != 0) && (state->loopActive != 0) && (GameBit_Get(0xedf) != 0))
+    if ((state->stateFlags != 0) && (state->loopActive != 0) && (mainGetBit(0xedf) != 0))
     {
-        GameBit_Set(state->loopSfxId, 0);
+        mainSetBits(state->loopSfxId, 0);
         (*gObjectTriggerInterface)->runSequence(1, obj, 0xffffffff);
         state->loopActive = 0;
         state->stateFlags = 0;
@@ -47,16 +47,16 @@ void dfpstatue1_updateState(DfpStatue1Object* obj)
             switch (state->loopSfxId)
             {
             case 0x672:
-                GameBit_Set(0x66e, 0);
+                mainSetBits(0x66e, 0);
                 break;
             case 0x673:
-                GameBit_Set(0x66f, 0);
+                mainSetBits(0x66f, 0);
                 break;
             case 0x674:
-                GameBit_Set(0x670, 0);
+                mainSetBits(0x670, 0);
                 break;
             case 0x675:
-                GameBit_Set(0x9f5, 0);
+                mainSetBits(0x9f5, 0);
                 break;
             }
         }
@@ -64,24 +64,24 @@ void dfpstatue1_updateState(DfpStatue1Object* obj)
 }
 #pragma dont_inline reset
 
-int dfpstatue1_getExtraSize(void) { return 0xa; }
-int dfpstatue1_getObjectTypeId(void) { return 0x0; }
+int DFP_Statue1_getExtraSize(void) { return 0xa; }
+int DFP_Statue1_getObjectTypeId(void) { return 0x0; }
 
-void dfpstatue1_free(void)
+void DFP_Statue1_free(void)
 {
 }
 
-void dfpstatue1_render(void)
+void DFP_Statue1_render(void)
 {
 }
 
-void dfpstatue1_hitDetect(void)
+void DFP_Statue1_hitDetect(void)
 {
 }
 
-void dfpstatue1_update(DfpStatue1Object* obj) { dfpstatue1_updateState(obj); }
+void DFP_Statue1_update(DfpStatue1Object* obj) { dfpstatue1_updateState(obj); }
 
-void dfpstatue1_init(DfpStatue1Object* obj, DfpStatue1MapData* mapData)
+void DFP_Statue1_init(DfpStatue1Object* obj, DfpStatue1MapData* mapData)
 {
     DfpStatue1State* state = obj->state;
     s16 yaw = (s16)(mapData->yawByte << 8);
@@ -91,7 +91,7 @@ void dfpstatue1_init(DfpStatue1Object* obj, DfpStatue1MapData* mapData)
     state->effectPairCount = mapData->effectPairCount;
     state->triggerSfxId = mapData->triggerSfxId;
     state->loopSfxId = mapData->loopSfxId;
-    if (GameBit_Get((int)state->loopSfxId) != 0)
+    if (mainGetBit((int)state->loopSfxId) != 0)
     {
         state->loopActive = 1;
     }
@@ -100,11 +100,11 @@ void dfpstatue1_init(DfpStatue1Object* obj, DfpStatue1MapData* mapData)
     obj->objectFlags |= DFPSTATUE1_OBJFLAG_HIDDEN;
 }
 
-void dfpstatue1_release(void)
+void DFP_Statue1_release(void)
 {
 }
 
-void dfpstatue1_initialise(void)
+void DFP_Statue1_initialise(void)
 {
 }
 

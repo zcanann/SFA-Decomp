@@ -12,7 +12,7 @@
  * (MAGICPLANT_MODE_ACTIVE, MagicPlant_updateActive) where it idles, randomly
  * retriggers its sway, plays its ambient buzz loop sfx by player distance, and
  * spawns its gem once loading is locked (MagicPlant_spawnChild). Shooting it
- * pushes it into MAGICPLANT_MODE_HIT_REACT (delegated to fn_8017F334 in sibling
+ * pushes it into MAGICPLANT_MODE_HIT_REACT (delegated to magicPlantDropGem in sibling
  * dll_00FD), which releases the gem (which drops to the floor, collected on touch) with a
  * particle burst and red
  * colour-fade; the fade-out/fade-in modes then ramp model alpha and it re-arms
@@ -55,7 +55,7 @@ extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
-extern void Obj_ResetModelColorState(int obj);
+extern void Obj_Shatter(int obj);
 extern void Obj_FreeObject(int obj);
 extern int objIsFrozen(int obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -279,7 +279,7 @@ void MagicPlant_update(int obj)
             hitPos[2] += playerMapOffsetZ;
             objLightFn_8009a1dc((void*)obj, gMagicPlantHitLightScale, lightPos, 1, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_barrel_bounce1);
-            Obj_ResetModelColorState(obj);
+            Obj_Shatter(obj);
         }
         return;
     }
@@ -324,7 +324,7 @@ void MagicPlant_update(int obj)
         break;
 
     case MAGICPLANT_MODE_HIT_REACT:
-        fn_8017F334(obj, setup, state);
+        magicPlantDropGem(obj, setup, state);
         break;
 
     case MAGICPLANT_MODE_FADE_OUT:
@@ -492,13 +492,13 @@ ObjectDescriptor gTrickyWarpObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)trickywarp_init,
-    (ObjectDescriptorCallback)trickywarp_update,
+    (ObjectDescriptorCallback)TrickyWarp_init,
+    (ObjectDescriptorCallback)TrickyWarp_update,
     0,
     0,
-    (ObjectDescriptorCallback)trickywarp_free,
+    (ObjectDescriptorCallback)TrickyWarp_free,
     0,
-    trickywarp_getExtraSize,
+    TrickyWarp_getExtraSize,
 };
 
 ObjectDescriptor gTrickyGuardObjDescriptor = {
@@ -506,8 +506,8 @@ ObjectDescriptor gTrickyGuardObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)trickyguard_init,
-    (ObjectDescriptorCallback)trickyguard_update,
+    (ObjectDescriptorCallback)TrickyGuard_init,
+    (ObjectDescriptorCallback)TrickyGuard_update,
     0,
     0,
     0,
@@ -548,11 +548,11 @@ ObjectDescriptor gCurveFishObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)curvefish_init,
-    (ObjectDescriptorCallback)curvefish_update,
+    (ObjectDescriptorCallback)CurveFish_init,
+    (ObjectDescriptorCallback)CurveFish_update,
     0,
     0,
     0,
     0,
-    curvefish_getExtraSize,
+    CurveFish_getExtraSize,
 };

@@ -15,32 +15,32 @@
 #include "main/gamebits.h"
 #include "main/audio/music_trigger_ids.h"
 
-extern void cfpowerbase_getExtraSize(void);
-extern void cfmaincrystal_getExtraSize(void);
+extern void CFPowerBase_getExtraSize(void);
+extern void CFMainCrystal_getExtraSize(void);
 
-extern void cfpowerbase_getObjectTypeId(void);
-extern void cfmaincrystal_getObjectTypeId(void);
+extern void CFPowerBase_getObjectTypeId(void);
+extern void CFMainCrystal_getObjectTypeId(void);
 
-extern void cfpowerbase_free(void);
-extern void cfmaincrystal_free(void);
+extern void CFPowerBase_free(void);
+extern void CFMainCrystal_free(void);
 
-extern void cfpowerbase_render(void);
-extern void cfmaincrystal_render(void);
+extern void CFPowerBase_render(void);
+extern void CFMainCrystal_render(void);
 
-extern void cfpowerbase_hitDetect(void);
-extern void cfmaincrystal_hitDetect(void);
+extern void CFPowerBase_hitDetect(void);
+extern void CFMainCrystal_hitDetect(void);
 
-extern void cfpowerbase_update(void);
-extern void cfmaincrystal_update(void);
+extern void CFPowerBase_update(void);
+extern void CFMainCrystal_update(void);
 
-extern void cfpowerbase_init(void);
-extern void cfmaincrystal_init(void);
+extern void CFPowerBase_init(void);
+extern void CFMainCrystal_init(void);
 
-extern void cfpowerbase_release(void);
-extern void cfmaincrystal_release(void);
+extern void CFPowerBase_release(void);
+extern void CFMainCrystal_release(void);
 
-extern void cfpowerbase_initialise(void);
-extern void cfmaincrystal_initialise(void);
+extern void CFPowerBase_initialise(void);
+extern void CFMainCrystal_initialise(void);
 
 #define CFWINDLIFT_OBJGROUP 0x49
 #define CFGUARDIAN_OBJGROUP 0x16 /* DLL 0x148 cfguardian */
@@ -366,11 +366,11 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
     }
 }
 
-int windlift_getExtraSize(void) { return 0x178; }
+int WindLift_getExtraSize(void) { return 0x178; }
 
-int windlift_getObjectTypeId(void) { return 0x0; }
+int WindLift_getObjectTypeId(void) { return 0x0; }
 
-void windlift_free(int* obj)
+void WindLift_free(int* obj)
 {
     void* p = Obj_GetPlayerObject();
     if (p == NULL || Player_GetLiftVelocityY((int)p) == lbl_803E416C)
@@ -380,20 +380,20 @@ void windlift_free(int* obj)
     ObjGroup_RemoveObject(obj, CFWINDLIFT_OBJGROUP);
 }
 
-void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void WindLift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 vis = visible;
     if (vis != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4190);
 }
 
-void windlift_hitDetect(void)
+void WindLift_hitDetect(void)
 {
 }
 
-/* windlift_update: fade the lift opacity with its gamebit, spin up
+/* WindLift_update: fade the lift opacity with its gamebit, spin up
  * over the first second, then assign every nearby group-0x16 object
  * (and the player) to a rider slot and run the lift physics on each. */
-void windlift_update(int* obj)
+void WindLift_update(int* obj)
 {
     u8* def;
     WindLiftSub* sub = ((GameObject*)obj)->extra;
@@ -410,7 +410,7 @@ void windlift_update(int* obj)
     if (sub->active)
     {
         level = (int)(lbl_803E41BC * timeDelta + (f32)(int)((GameObject*)obj)->anim.alpha);
-        if (sub->gamebit != -1 && GameBit_Get(sub->gamebit) == 0)
+        if (sub->gamebit != -1 && mainGetBit(sub->gamebit) == 0)
         {
             sub->active = 0;
         }
@@ -418,7 +418,7 @@ void windlift_update(int* obj)
     else
     {
         level = (int)-(lbl_803E41BC * timeDelta - (f32)(int)((GameObject*)obj)->anim.alpha);
-        if (sub->gamebit != -1 && GameBit_Get(sub->gamebit) != 0)
+        if (sub->gamebit != -1 && mainGetBit(sub->gamebit) != 0)
         {
             sub->active = 1;
         }
@@ -426,25 +426,25 @@ void windlift_update(int* obj)
     ((GameObject*)obj)->anim.alpha = (level < 0) ? 0 : ((level > 0xff) ? 0xff : level);
     /* the fortress lifts (table durations 1-4) stay dead until the
        city's power is restored (0x57, the crystal convergence) */
-    if ((GameBit_Get(0x57) != 0 || sub->duration > 0xa) && sub->active)
+    if ((mainGetBit(0x57) != 0 || sub->duration > 0xa) && sub->active)
     {
         int ticks = sub->timer;
         sub->timer = ticks + 1;
-        if (ticks < 0x3c && GameBit_Get(sub->seqId) == 0)
+        if (ticks < 0x3c && mainGetBit(sub->seqId) == 0)
         {
             ((GameObject*)obj)->anim.rotX -= ((framesThisStep * 100) * (sub->timer * sub->timer)) / 0x3c;
             Obj_SetActiveModelIndex(obj, 0);
             return;
         }
         Obj_SetActiveModelIndex(obj, 1);
-        gb2 = GameBit_Get(sub->delay);
+        gb2 = mainGetBit(sub->delay);
         {
             int rotStep = framesThisStep * 0xb6;
             ((GameObject*)obj)->anim.rotX -= rotStep * ((gb2 << 2) + 0xe);
         }
         pull = (f32)((WindliftPlacement*)def)->pullStrength;
         player = Obj_GetPlayerObject();
-        if (GameBit_Get(sub->seqId) != 0)
+        if (mainGetBit(sub->seqId) != 0)
         {
             if (!sub->musicOn)
             {
@@ -543,10 +543,10 @@ void windlift_update(int* obj)
     }
 }
 
-/* windlift_init: look up the lift's sequence timings, scale its rise
+/* WindLift_init: look up the lift's sequence timings, scale its rise
  * height from the def byte, arm it from the gamebits and clear all 14
  * rider slots. */
-void windlift_init(int* obj, u8* def)
+void WindLift_init(int* obj, u8* def)
 {
     int i;
     WindLiftSub* sub = ((GameObject*)obj)->extra;
@@ -575,14 +575,14 @@ void windlift_init(int* obj, u8* def)
         (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->liftHeight) / gWindLiftDefaultHeight;
     /* skip the rise-in ramp after the convergence cutscene (0x57)
        or for long lifts */
-    if (GameBit_Get(0x57) != 0 || sub->duration >= 0xa)
+    if (mainGetBit(0x57) != 0 || sub->duration >= 0xa)
     {
         sub->timer = 0x3c;
     }
     sub->active = 1;
     if (sub->gamebit != -1)
     {
-        if (GameBit_Get(sub->gamebit) != 0)
+        if (mainGetBit(sub->gamebit) != 0)
         {
             sub->timer = 0x3c;
         }
@@ -608,11 +608,11 @@ void windlift_init(int* obj, u8* def)
     ObjGroup_AddObject(obj, CFWINDLIFT_OBJGROUP);
 }
 
-void windlift_release(void)
+void WindLift_release(void)
 {
 }
 
-void windlift_initialise(void)
+void WindLift_initialise(void)
 {
 }
 
@@ -630,6 +630,6 @@ u8 gWindLiftSeqGamebitTable[] = {
 };
 
 /* descriptor/ptr table auto 0x80322a80-0x80322b28 */
-u32 gWindLiftObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)windlift_initialise, (u32)windlift_release, 0x00000000, (u32)windlift_init, (u32)windlift_update, (u32)windlift_hitDetect, (u32)windlift_render, (u32)windlift_free, (u32)windlift_getObjectTypeId, (u32)windlift_getExtraSize };
-u32 gCFPowerBaseObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cfpowerbase_initialise, (u32)cfpowerbase_release, 0x00000000, (u32)cfpowerbase_init, (u32)cfpowerbase_update, (u32)cfpowerbase_hitDetect, (u32)cfpowerbase_render, (u32)cfpowerbase_free, (u32)cfpowerbase_getObjectTypeId, (u32)cfpowerbase_getExtraSize };
-u32 gCFMainCrystalObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cfmaincrystal_initialise, (u32)cfmaincrystal_release, 0x00000000, (u32)cfmaincrystal_init, (u32)cfmaincrystal_update, (u32)cfmaincrystal_hitDetect, (u32)cfmaincrystal_render, (u32)cfmaincrystal_free, (u32)cfmaincrystal_getObjectTypeId, (u32)cfmaincrystal_getExtraSize };
+u32 gWindLiftObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)WindLift_initialise, (u32)WindLift_release, 0x00000000, (u32)WindLift_init, (u32)WindLift_update, (u32)WindLift_hitDetect, (u32)WindLift_render, (u32)WindLift_free, (u32)WindLift_getObjectTypeId, (u32)WindLift_getExtraSize };
+u32 gCFPowerBaseObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)CFPowerBase_initialise, (u32)CFPowerBase_release, 0x00000000, (u32)CFPowerBase_init, (u32)CFPowerBase_update, (u32)CFPowerBase_hitDetect, (u32)CFPowerBase_render, (u32)CFPowerBase_free, (u32)CFPowerBase_getObjectTypeId, (u32)CFPowerBase_getExtraSize };
+u32 gCFMainCrystalObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)CFMainCrystal_initialise, (u32)CFMainCrystal_release, 0x00000000, (u32)CFMainCrystal_init, (u32)CFMainCrystal_update, (u32)CFMainCrystal_hitDetect, (u32)CFMainCrystal_render, (u32)CFMainCrystal_free, (u32)CFMainCrystal_getObjectTypeId, (u32)CFMainCrystal_getExtraSize };

@@ -79,13 +79,13 @@ typedef struct PlayerMoveBuf
     s8 count;
 } PlayerMoveBuf;
 
-void player_getExtraSize(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd);
+void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd);
 void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5);
 void player_applyVelocityStep(int* p, int* ctx, f32 t);
 void fn_800D8414(int* obj, int* ctx);
 void player_updateParticles(int* p1, int p2, int p3, int count, int mode);
 void player_doProjGfx(int* p1, int p2, int resIdBase, int count, int p5, int mode);
-void player_animFn16(int* obj, int* ctx, int moveA, int moveB);
+void player_updateSecondaryBlend(int* obj, int* ctx, int moveA, int moveB);
 void player_setAnimIds(int unused1, int unused2, u32 a, u32 b);
 void player_clearXZvel(int* obj, int* state);
 void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale);
@@ -98,7 +98,7 @@ void player_rotateTowardEnemy(int* obj, int* ctx, int spd);
 void player_render2(s16* obj, int* state, f32 f1, f32 f2);
 void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2);
 void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3);
-void player_setScale(short* moveState, u32* obj, f32 dt, int flags);
+void player_advanceMove(short* moveState, u32* obj, f32 dt, int flags);
 void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable);
 void playerRunStateMachine(char* pos, char* state, float dt, int stateFns);
 void player_setState(void* ctx, void* p, int new_state);
@@ -110,7 +110,7 @@ void player_release(void);
 void player_initialise(void);
 
 #pragma opt_common_subs off
-void player_getExtraSize(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd)
+void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd)
 {
     f32 dx;
     f32 dz;
@@ -348,7 +348,7 @@ void player_doProjGfx(int* p1, int p2, int resIdBase, int count, int p5, int mod
 }
 
 #pragma opt_common_subs off
-void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
+void player_updateSecondaryBlend(int* obj, int* ctx, int moveA, int moveB)
 {
     f32 mag;
     f32 tmp;
@@ -607,7 +607,7 @@ void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3)
     }
 }
 
-void player_setScale(short* moveState, u32* obj, f32 dt, int flags)
+void player_advanceMove(short* moveState, u32* obj, f32 dt, int flags)
 {
     PlayerMoveBuf buf;
     s8* ptr;

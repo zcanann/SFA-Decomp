@@ -27,13 +27,13 @@ void mcupgradema_update(int obj)
     GameObject* gameObj = (GameObject*)obj;
     McUpgradeMaSetup* setup = (McUpgradeMaSetup*)gameObj->anim.placementData;
 
-    if ((u32)GameBit_Get(setup->collectedGameBit) != 0)
+    if ((u32)mainGetBit(setup->collectedGameBit) != 0)
     {
         *(u8*)&gameObj->anim.resetHitboxMode |= MCUPGRADE_OBJ_FLAG_COLLECTED;
     }
     else if (ObjTrigger_IsSet(obj) != 0)
     {
-        GameBit_Set(setup->collectedGameBit, 1);
+        mainSetBits(setup->collectedGameBit, 1);
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
     }
     else
@@ -57,7 +57,7 @@ int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         return 0;
     }
-    staff = fn_802966CC();
+    staff = objGetFirstChild();
     if ((void*)staff == NULL)
     {
         return 0;

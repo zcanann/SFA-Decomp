@@ -85,7 +85,7 @@ void arwarwinggu_applyTextureFrame(int obj)
 #pragma scheduling on
 #pragma peephole on
 
-int arwarwinggu_getExtraSize(int obj)
+int ARWArwingGu_getExtraSize(int obj)
 {
     switch (((GameObject*)obj)->anim.seqId)
     {
@@ -101,23 +101,23 @@ int arwarwinggu_getExtraSize(int obj)
     }
 }
 
-int arwarwinggu_getObjectTypeId(void) { return 0; }
+int ARWArwingGu_getObjectTypeId(void) { return 0; }
 
-void arwarwinggu_free(void)
+void ARWArwingGu_free(void)
 {
 }
 
-void arwarwinggu_render(void)
+void ARWArwingGu_render(void)
 {
 }
 
-void arwarwinggu_hitDetect(void)
+void ARWArwingGu_hitDetect(void)
 {
 }
 
 #pragma scheduling off
 #pragma peephole off
-void arwarwinggu_update(int obj)
+void ARWArwingGu_update(int obj)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
 
@@ -180,7 +180,7 @@ void arwarwinggu_update(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-void arwarwinggu_init(int obj)
+void ARWArwingGu_init(int obj)
 {
     if (((GameObject*)obj)->anim.seqId == ARWGU_DEF_ENGINE)
     {
@@ -192,10 +192,10 @@ void arwarwinggu_init(int obj)
 #pragma scheduling on
 #pragma peephole on
 
-void arwarwinggu_release(void)
+void ARWArwingGu_release(void)
 {
 }
 
-void arwarwinggu_initialise(void)
+void ARWArwingGu_initialise(void)
 {
 }

@@ -67,11 +67,11 @@ enum DrbarrelgrMode
 };
 
 
-int drbarrelgr_getExtraSize(void) { return 0x12c; }
+int DR_BarrelGr_getExtraSize(void) { return 0x12c; }
 
-int drbarrelgr_getObjectTypeId(void) { return 0; }
+int DR_BarrelGr_getObjectTypeId(void) { return 0; }
 
-void drbarrelgr_free(int obj)
+void DR_BarrelGr_free(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     void* heldObj = *(void**)&((DrbarrelgrState*)state)->heldBarrel;
@@ -83,19 +83,19 @@ void drbarrelgr_free(int obj)
     }
 }
 
-void drbarrelgr_hitDetect(void)
+void DR_BarrelGr_hitDetect(void)
 {
 }
 
-void drbarrelgr_release(void)
+void DR_BarrelGr_release(void)
 {
 }
 
-void drbarrelgr_initialise(void)
+void DR_BarrelGr_initialise(void)
 {
 }
 
-void drbarrelgr_init(int obj, int setup)
+void DR_BarrelGr_init(int obj, int setup)
 {
     int one;
     int state;
@@ -126,7 +126,7 @@ void drbarrelgr_init(int obj, int setup)
     ((GameObject*)obj)->anim.localPosY = ((DrbarrelgrState*)state)->startPosY;
 }
 
-void drbarrelgr_update(int obj)
+void DR_BarrelGr_update(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     int setup = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -158,7 +158,7 @@ void drbarrelgr_update(int obj)
     }
 
     gameBit = ((DrbarrelgrPlacement*)setup)->gameBit;
-    if (gameBit != -1 && GameBit_Get(gameBit) == 0)
+    if (gameBit != -1 && mainGetBit(gameBit) == 0)
     {
         flags->bit40 = 0;
         return;
@@ -303,7 +303,7 @@ void drbarrelgr_update(int obj)
     }
 }
 
-void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
+void DR_BarrelGr_render(int obj, int p2, int p3, int p4, int p5)
 {
     f32* vp2;
     f32* vp1;

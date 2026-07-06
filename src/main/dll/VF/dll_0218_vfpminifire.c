@@ -47,16 +47,16 @@ typedef struct VfpMinifirePartfxArgs
 #define VFPMINIFIRE_SPAWN(obj, id, args, flags) \
     (*gPartfxInterface)->spawnObject((void *)(obj), (id), (args), (flags), -1, NULL)
 
-int vfpminifire_getExtraSize(void) { return 0xc; }
+int VFP_MiniFire_getExtraSize(void) { return 0xc; }
 
-int vfpminifire_getObjectTypeId(void) { return 0x0; }
+int VFP_MiniFire_getObjectTypeId(void) { return 0x0; }
 
-void vfpminifire_free(int obj)
+void VFP_MiniFire_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+void VFP_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
     if (vis == 0 || ((GameObject*)p1)->anim.alpha == 0)
     {
@@ -67,11 +67,11 @@ void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     fn_80053EBC(8);
 }
 
-void vfpminifire_hitDetect(void)
+void VFP_MiniFire_hitDetect(void)
 {
 }
 
-void vfpminifire_update(int obj)
+void VFP_MiniFire_update(int obj)
 {
     /* local override: this TU treats randomGetRange's result as signed
        (vf_shared declares it u32); the int return is load-bearing. */
@@ -170,7 +170,7 @@ void vfpminifire_update(int obj)
     }
 }
 
-void vfpminifire_init(int* obj, u8* init)
+void VFP_MiniFire_init(int* obj, u8* init)
 {
     ((GameObject*)obj)->anim.velocityY = -15.0f;
     ((GameObject*)obj)->anim.localPosY = 400.0f + *(f32*)((char*)init + 0xc);
@@ -180,10 +180,10 @@ void vfpminifire_init(int* obj, u8* init)
     ((GameObject*)obj)->objectFlags |= VFPMINIFIRE_OBJFLAG_HITDETECT_DISABLED;
 }
 
-void vfpminifire_release(void)
+void VFP_MiniFire_release(void)
 {
 }
 
-void vfpminifire_initialise(void)
+void VFP_MiniFire_initialise(void)
 {
 }

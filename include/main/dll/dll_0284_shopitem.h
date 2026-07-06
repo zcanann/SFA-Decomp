@@ -7,6 +7,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-void fn_801E8660(int obj);
+void shopitem_onSeqFree(int obj);
 
 #endif

@@ -64,7 +64,7 @@ void crfueltank_hitDetect(CrFuelTankObject* obj)
             obj->triggered = 1;
             if (def->hitEvent != -1)
             {
-                GameBit_Set(def->hitEvent, 1);
+                mainSetBits(def->hitEvent, 1);
             }
             obj->posX = hitObj->posX;
             obj->posY = lbl_803E6760 + hitObj->posY;
@@ -113,7 +113,7 @@ void crfueltank_init(CrFuelTankObject* obj, CrFuelTankDef* def)
     ObjHits_EnableObject(obj);
     ObjHits_SetHitVolumeSlot(obj, 0x1d, crfueltank_animFrame(def), 0);
     storeZeroToFloatParam(state->timer);
-    if ((def->hitEvent != -1) && (GameBit_Get(def->hitEvent) != 0))
+    if ((def->hitEvent != -1) && (mainGetBit(def->hitEvent) != 0))
     {
         s16toFloat(state->timer, 0x708);
         ObjHits_DisableObject(obj);
@@ -151,27 +151,27 @@ ObjectDescriptor gCrFuelTankObjDescriptor = {
 };
 
 /*__DATA_EXTERNS__*/
-extern void ktrexlevel_getExtraSize();
-extern void ktrexlevel_getObjectTypeId();
-extern void ktrexlevel_free();
-extern void ktrexlevel_render();
-extern void ktrexlevel_hitDetect();
-extern void ktrexlevel_update();
-extern void ktrexlevel_init();
-extern void ktrexlevel_release();
-extern void ktrexlevel_initialise();
-extern void proximitymine_getExtraSize();
-extern void proximitymine_getObjectTypeId();
-extern void proximitymine_free();
-extern void proximitymine_render();
-extern void proximitymine_hitDetect();
-extern void proximitymine_update();
-extern void proximitymine_init();
-extern void proximitymine_release();
-extern void proximitymine_initialise();
+extern void KT_RexLevel_getExtraSize();
+extern void KT_RexLevel_getObjectTypeId();
+extern void KT_RexLevel_free();
+extern void KT_RexLevel_render();
+extern void KT_RexLevel_hitDetect();
+extern void KT_RexLevel_update();
+extern void KT_RexLevel_init();
+extern void KT_RexLevel_release();
+extern void KT_RexLevel_initialise();
+extern void ProximityMine_getExtraSize();
+extern void ProximityMine_getObjectTypeId();
+extern void ProximityMine_free();
+extern void ProximityMine_render();
+extern void ProximityMine_hitDetect();
+extern void ProximityMine_update();
+extern void ProximityMine_init();
+extern void ProximityMine_release();
+extern void ProximityMine_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gProximityMineObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, proximitymine_initialise, proximitymine_release, (void*)0x00000000, proximitymine_init, proximitymine_update, proximitymine_hitDetect, proximitymine_render, proximitymine_free, proximitymine_getObjectTypeId, proximitymine_getExtraSize };
-void* gKtRexLevelObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, ktrexlevel_initialise, ktrexlevel_release, (void*)0x00000000, ktrexlevel_init, ktrexlevel_update, ktrexlevel_hitDetect, ktrexlevel_render, ktrexlevel_free, ktrexlevel_getObjectTypeId, ktrexlevel_getExtraSize };
+void* gProximityMineObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, ProximityMine_initialise, ProximityMine_release, (void*)0x00000000, ProximityMine_init, ProximityMine_update, ProximityMine_hitDetect, ProximityMine_render, ProximityMine_free, ProximityMine_getObjectTypeId, ProximityMine_getExtraSize };
+void* gKtRexLevelObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, KT_RexLevel_initialise, KT_RexLevel_release, (void*)0x00000000, KT_RexLevel_init, KT_RexLevel_update, KT_RexLevel_hitDetect, KT_RexLevel_render, KT_RexLevel_free, KT_RexLevel_getObjectTypeId, KT_RexLevel_getExtraSize };
 u8 lbl_8032A510[12] = { 0, 8, 0, 14, 0, 16, 0, 17, 0, 16, 0, 17 };
 u8 lbl_8032A51C[12] = { 59, 196, 155, 166, 59, 68, 155, 166, 59, 68, 155, 166 };
 u8 lbl_8032A528[12] = { 59, 180, 57, 88, 60, 68, 155, 166, 60, 68, 155, 166 };

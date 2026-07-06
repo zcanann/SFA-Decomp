@@ -116,7 +116,7 @@ extern int objCreateLight(int a, int b);
 extern void skyFn_80088c94(int flags, int mode);
 extern void getEnvfxAct(s16* obj, int* target, int id, int p);
 extern int objIsCurModelNotZero(void* obj);
-extern void fn_80295CF4(int* player, int a);
+extern void staffToggle(int* player, int a);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
 extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
 extern void audioStopByMask(int mask);
@@ -244,7 +244,7 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 
 int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
 {
-    extern void fn_80296518(void* obj, int arg, int enable);
+    extern void objSetAnimStateFlags(void* obj, int arg, int enable);
     extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
     MmShrineAnimObj* obj;
     MmShrineAnimState* state;
@@ -272,9 +272,9 @@ int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
                 state->hasTorchSignal = 1;
                 break;
             case 7:
-                fn_80296518(player, 8, 1);
-                GameBit_Set(0x143, 1);
-                GameBit_Set(GAMEBIT_K1_SPIRIT_COLLECTED, 1);
+                objSetAnimStateFlags(player, 8, 1);
+                mainSetBits(0x143, 1);
+                mainSetBits(GAMEBIT_K1_SPIRIT_COLLECTED, 1);
                 break;
             case 13:
                 (*gObjectTriggerInterface)->setCamVars(0x48, 100, 0, 0x50);
@@ -409,9 +409,9 @@ void ecsh_shrine_free(int* obj)
         *(void**)inner = NULL;
     }
     ObjGroup_RemoveObject((int)obj, ECSHSHRINE_OBJGROUP);
-    GameBit_Set(0xefa, 0);
-    GameBit_Set(0xcbb, 1);
-    GameBit_Set(0xa7f, 1);
+    mainSetBits(0xefa, 0);
+    mainSetBits(0xcbb, 1);
+    mainSetBits(0xa7f, 1);
 }
 
 /* Number of cups in the shuffle puzzle (cupSlotMap[6], cupPos holds 6 (x,z) pairs). */
@@ -469,7 +469,7 @@ void ecsh_shrine_update(s16* obj)
     *(EcshIntPair*)&t[0] = *(EcshIntPair*)&lbl_803E8470;
     if (sub[0x32] == 0)
     {
-        gv = GameBit_Get(GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER);
+        gv = mainGetBit(GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER);
         sub[0x32] = gv;
         if (sub[0x32] != 0)
         {
@@ -490,7 +490,7 @@ void ecsh_shrine_update(s16* obj)
     ecsh_shrine_updateMotion(obj);
     if (player != NULL && objIsCurModelNotZero(player) == 0)
     {
-        fn_80295CF4(player, 0);
+        staffToggle(player, 0);
     }
     msgC = 0;
     while (ObjMsg_Pop(obj, &msgA, &msgB, &msgC) != 0)
@@ -532,7 +532,7 @@ void ecsh_shrine_update(s16* obj)
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
             {
                 sub[0x2f] = 1;
-                GameBit_Set(0x129, 0);
+                mainSetBits(0x129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 Music_Trigger(MUSICTRIG_DIM_Snow, 1);
                 {
@@ -567,7 +567,7 @@ void ecsh_shrine_update(s16* obj)
                 ((EcshShrineState*)sub)->animState = 6;
                 Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
                 ((EcshShrineState*)sub)->animTimer = lbl_803E4FCC;
-                GameBit_Set(0xb9d, 1);
+                mainSetBits(0xb9d, 1);
                 (*gScreenTransitionInterface)->step(0x78, 1);
             }
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -817,15 +817,15 @@ void ecsh_shrine_update(s16* obj)
             }
             break;
         case 10:
-            GameBit_Set(0xa6f, 1);
+            mainSetBits(0xa6f, 1);
             sub[0x2f] = 8;
             break;
         case 6:
-            GameBit_Set(0xb9d, 0);
+            mainSetBits(0xb9d, 0);
             audioStopByMask(3);
             if (objGetAnimStateFlags(player, 8) != 0)
             {
-                GameBit_Set(0x129, 1);
+                mainSetBits(0x129, 1);
                 sub[0x2f] = 7;
             }
             else
@@ -835,7 +835,7 @@ void ecsh_shrine_update(s16* obj)
             }
             break;
         case 7:
-            GameBit_Set(0x129, 0);
+            mainSetBits(0x129, 0);
             sub[0x2f] = 8;
             break;
         case 8:
@@ -848,12 +848,12 @@ void ecsh_shrine_update(s16* obj)
             sub[0x2e] = 0;
             sub[0x30] = 0;
             ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FF0;
-            GameBit_Set(0x129, 1);
-            GameBit_Set(0xb9d, 0);
-            GameBit_Set(0xa6d, 0);
-            GameBit_Set(0xa6f, 0);
-            GameBit_Set(0xa70, 0);
-            GameBit_Set(0x143, 0);
+            mainSetBits(0x129, 1);
+            mainSetBits(0xb9d, 0);
+            mainSetBits(0xa6d, 0);
+            mainSetBits(0xa6f, 0);
+            mainSetBits(0xa70, 0);
+            mainSetBits(0x143, 0);
             sub[0x30] = 0;
             ((EcshShrineState*)sub)->matchFlag = -1;
             break;
@@ -895,15 +895,15 @@ void ecsh_shrine_init(s16* obj, s8* def)
     ((EcshShrineState*)sub)->gameBitLatchState = 0;
     ((GameObject*)obj)->animEventCallback = ecsh_shrine_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
-    GameBit_Set(0xba5, 1);
-    GameBit_Set(0x129, 1);
-    GameBit_Set(0x143, 0);
+    mainSetBits(0xba5, 1);
+    mainSetBits(0x129, 1);
+    mainSetBits(0x143, 0);
     ((EcshShrineState*)sub)->unk18 = 0xc;
     ((EcshShrineState*)sub)->unk1C = 0x1e;
     ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FD0;
     ((EcshShrineState*)sub)->unk1A = 0;
     ((EcshShrineState*)sub)->unk1E = 0;
-    gv = GameBit_Get(GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER);
+    gv = mainGetBit(GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER);
     ((EcshShrineState*)sub)->introTextLatch = gv;
     gEcShShrineActiveObject = obj;
     ObjGroup_AddObject(obj, ECSHSHRINE_OBJGROUP);
@@ -912,7 +912,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     {
         *(int*)sub = objCreateLight(0, 1);
     }
-    GameBit_Set(0xefa, 1);
+    mainSetBits(0xefa, 1);
 }
 
 /* descriptor/ptr table auto 0x80326328-0x80326398 */

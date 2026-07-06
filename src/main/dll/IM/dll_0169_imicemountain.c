@@ -24,7 +24,7 @@
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
- * (imicemountain_getExtraSize == 0x14).
+ * (IMIceMountain_getExtraSize == 0x14).
  */
 typedef struct IMIceMountainState
 {
@@ -60,11 +60,11 @@ extern f32 lbl_803E46DC;
 
 int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-void imicemountain_free(void)
+void IMIceMountain_free(void)
 {
 }
 
-void imicemountain_hitDetect(void)
+void IMIceMountain_hitDetect(void)
 {
 }
 
@@ -72,12 +72,12 @@ void imicemountain_hitDetect(void)
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMapAct((a))
 
-/* imicemountain_init: clear the ice-mountain gamebit block, arm the
+/* IMIceMountain_init: clear the ice-mountain gamebit block, arm the
  * map-event triggers, then branch on the queried level state to set the
  * boulder's start state and fire the appropriate triggers. */
 #pragma scheduling off
 #pragma peephole off
-void imicemountain_init(int* obj)
+void IMIceMountain_init(int* obj)
 {
     IMIceMountainState* sub = ((GameObject*)obj)->extra;
     int i;
@@ -90,7 +90,7 @@ void imicemountain_init(int* obj)
     MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 1, 0);
     MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 5, 1);
     unlockLevel(0, 0, 1);
-    if (GameBit_Get(0x379) != 0)
+    if (mainGetBit(0x379) != 0)
     {
         MEVT_SET(((GameObject *)obj)->anim.mapEventSlot, 2);
     }
@@ -98,29 +98,29 @@ void imicemountain_init(int* obj)
     switch (sub->mapEventState)
     {
     case 1:
-        if (GameBit_Get(0x72) != 0)
+        if (mainGetBit(0x72) != 0)
         {
-            if (GameBit_Get(0x379) != 0)
+            if (mainGetBit(0x379) != 0)
             {
                 sub->eventState = 5;
             }
             else
             {
-                GameBit_Set(0x3a3, 0);
-                GameBit_Set(0x3a2, 0);
-                GameBit_Set(0xcb, 0);
-                GameBit_Set(0x379, 0);
+                mainSetBits(0x3a3, 0);
+                mainSetBits(0x3a2, 0);
+                mainSetBits(0xcb, 0);
+                mainSetBits(0x379, 0);
                 sub->eventState = 3;
             }
         }
         else
         {
             MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0, 1);
-            if (GameBit_Get(0xadc) != 0 && GameBit_Get(0xadd) != 0)
+            if (mainGetBit(0xadc) != 0 && mainGetBit(0xadd) != 0)
             {
                 MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0xb, 1);
             }
-            if (GameBit_Get(0x6e) != 0)
+            if (mainGetBit(0x6e) != 0)
             {
                 sub->eventState = 1;
             }
@@ -135,13 +135,13 @@ void imicemountain_init(int* obj)
         MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 7, 1);
         break;
     case 2:
-        GameBit_Set(0x3a3, 0);
-        GameBit_Set(0x3a2, 0);
-        GameBit_Set(0xce, 0);
-        GameBit_Set(0x37b, 0);
-        GameBit_Set(0xc8, 0);
-        GameBit_Set(0x374, 0);
-        GameBit_Set(0x37c, 0);
+        mainSetBits(0x3a3, 0);
+        mainSetBits(0x3a2, 0);
+        mainSetBits(0xce, 0);
+        mainSetBits(0x37b, 0);
+        mainSetBits(0xc8, 0);
+        mainSetBits(0x374, 0);
+        mainSetBits(0x37c, 0);
         MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 2, 0);
         break;
     case 3:
@@ -154,12 +154,12 @@ void imicemountain_init(int* obj)
 #undef MEVT_QUERY
 #pragma peephole on
 
-int imicemountain_getExtraSize(void) { return 0x14; }
-int imicemountain_getObjectTypeId(void) { return 0x0; }
+int IMIceMountain_getExtraSize(void) { return 0x14; }
+int IMIceMountain_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling on
 #pragma peephole off
-void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void IMIceMountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E46D8);
@@ -175,8 +175,8 @@ int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if (animUpdate->eventIds[i] == 2)
         {
-            GameBit_Set(0x378, 0);
-            GameBit_Set(0x3b9, 0);
+            mainSetBits(0x378, 0);
+            mainSetBits(0x3b9, 0);
         }
     }
     return 0;
@@ -195,55 +195,55 @@ void imicemountain_updateEventState(int* obj)
     switch (extra->eventState)
     {
     case 7:
-        if (GameBit_Get(0x6e) != 0)
+        if (mainGetBit(0x6e) != 0)
         {
             extra->eventState = 1;
             MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 2, 0);
         }
         break;
     case 1:
-        if (GameBit_Get(0xadc) != 0 && GameBit_Get(0xadd) != 0)
+        if (mainGetBit(0xadc) != 0 && mainGetBit(0xadd) != 0)
         {
-            GameBit_Set(0xade, 1);
+            mainSetBits(0xade, 1);
             extra->eventState = 2;
             MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0xb, 1);
         }
-        else if (GameBit_Get(0x70) != 0)
+        else if (mainGetBit(0x70) != 0)
         {
             extra->eventState = 2;
             MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0xb, 1);
         }
         break;
     case 2:
-        if (GameBit_Get(0x70) != 0)
+        if (mainGetBit(0x70) != 0)
         {
             extra->eventState = 3;
             MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 6, 1);
         }
         break;
     case 3:
-        if (GameBit_Get(0x72) != 0)
+        if (mainGetBit(0x72) != 0)
         {
             MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0, 0);
         }
-        if (GameBit_Get(0x3a2) != 0)
+        if (mainGetBit(0x3a2) != 0)
         {
             extra->eventState = 4;
-            GameBit_Set(0xe5d, 1);
-            GameBit_Set(0xe5e, 1);
-            GameBit_Set(0xe5f, 1);
-            GameBit_Set(0xe60, 1);
-            GameBit_Set(0xe61, 1);
-            GameBit_Set(0xe62, 1);
-            GameBit_Set(0xe63, 1);
-            GameBit_Set(0xe64, 1);
-            GameBit_Set(0xe65, 1);
-            GameBit_Set(0xe66, 1);
-            GameBit_Set(0xe67, 1);
-            GameBit_Set(0xe68, 1);
-            GameBit_Set(0xe69, 1);
-            GameBit_Set(0xe6a, 1);
-            GameBit_Set(0xe6b, 1);
+            mainSetBits(0xe5d, 1);
+            mainSetBits(0xe5e, 1);
+            mainSetBits(0xe5f, 1);
+            mainSetBits(0xe60, 1);
+            mainSetBits(0xe61, 1);
+            mainSetBits(0xe62, 1);
+            mainSetBits(0xe63, 1);
+            mainSetBits(0xe64, 1);
+            mainSetBits(0xe65, 1);
+            mainSetBits(0xe66, 1);
+            mainSetBits(0xe67, 1);
+            mainSetBits(0xe68, 1);
+            mainSetBits(0xe69, 1);
+            mainSetBits(0xe6a, 1);
+            mainSetBits(0xe6b, 1);
         }
         if (((GameObject*)obj)->unkF4 == 0)
         {
@@ -281,7 +281,7 @@ void imicemountain_updateEventState(int* obj)
         {
             if (--extra->warpCountdown == 0)
             {
-                GameBit_Set(0x4e5, 0);
+                mainSetBits(0x4e5, 0);
                 warpToMap(0x1a, 0);
             }
         }
@@ -291,9 +291,9 @@ void imicemountain_updateEventState(int* obj)
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
-/* imicemountain_update: lazy-spawn the ambient effects, run the active state,
+/* IMIceMountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
-void imicemountain_update(int* obj)
+void IMIceMountain_update(int* obj)
 {
     IMIceMountainState* extra = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->unkF4 == 0)
@@ -310,7 +310,7 @@ void imicemountain_update(int* obj)
         imicemountain_updateEventState(obj);
         break;
     case 2:
-        if (GameBit_Get(0x3a3) != 0)
+        if (mainGetBit(0x3a3) != 0)
         {
             fn_801AC01C(obj);
         }

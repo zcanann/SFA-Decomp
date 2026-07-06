@@ -1493,35 +1493,35 @@ void Sfx_UpdateObjectSounds(void)
     }
     while (i-- != 0);
 
-    if (GameBit_Get(0xCBB) != 0)
+    if (mainGetBit(0xCBB) != 0)
     {
         globalCtrl = 0xE;
     }
-    else if (GameBit_Get(0xEFA) != 0)
+    else if (mainGetBit(0xEFA) != 0)
     {
         globalCtrl = 0xC;
     }
-    else if (GameBit_Get(0xEFB) != 0)
+    else if (mainGetBit(0xEFB) != 0)
     {
         globalCtrl = 0xD;
     }
-    else if (GameBit_Get(0xEFD) != 0)
+    else if (mainGetBit(0xEFD) != 0)
     {
         globalCtrl = 0xC;
     }
-    else if (GameBit_Get(0xA7F) != 0)
+    else if (mainGetBit(0xA7F) != 0)
     {
         globalCtrl = 0xC;
     }
-    else if (GameBit_Get(0xEFC) != 0)
+    else if (mainGetBit(0xEFC) != 0)
     {
         globalCtrl = 0xC;
     }
-    else if (GameBit_Get(0xEFE) != 0)
+    else if (mainGetBit(0xEFE) != 0)
     {
         globalCtrl = 0xC;
     }
-    else if (GameBit_Get(0xDCF) != 0)
+    else if (mainGetBit(0xDCF) != 0)
     {
         globalCtrl = 0xB;
     }
@@ -2360,7 +2360,7 @@ void Music_Trigger(int id, int arg)
     if (id == 0xeb && arg == 1)
     {
         MusicChannel* ch = Music_FindActiveChannelForTrack(0x5e);
-        if (ch != NULL || GameBit_Get(0xa7f) != 0u)
+        if (ch != NULL || mainGetBit(0xa7f) != 0u)
         {
             return;
         }

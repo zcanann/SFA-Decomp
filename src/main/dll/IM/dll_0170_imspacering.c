@@ -16,24 +16,24 @@ extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern GameObject* lbl_803DDB48;
 extern f32 lbl_803E47B8;
 
-int imspacering_getExtraSize(void) { return 0x0; }
-int imspacering_getObjectTypeId(void) { return 0x0; }
+int IMSpaceRing_getExtraSize(void) { return 0x0; }
+int IMSpaceRing_getObjectTypeId(void) { return 0x0; }
 
-void imspacering_free(void)
+void IMSpaceRing_free(void)
 {
 }
 
-void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void IMSpaceRing_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E47B8);
 }
 
-void imspacering_hitDetect(void)
+void IMSpaceRing_hitDetect(void)
 {
 }
 
-void imspacering_update(GameObject* obj)
+void IMSpaceRing_update(GameObject* obj)
 {
     s16* placement = *(s16**)&obj->anim.placementData;
     if (obj->unkF4 != 0)
@@ -55,16 +55,16 @@ void imspacering_update(GameObject* obj)
     }
 }
 
-void imspacering_init(GameObject* obj, s8* placement)
+void IMSpaceRing_init(GameObject* obj, s8* placement)
 {
     obj->anim.rotX = (s16)((s32)placement[0x18] << 8);
     obj->unkF4 = randomGetRange(0, 1);
 }
 
-void imspacering_release(void)
+void IMSpaceRing_release(void)
 {
 }
 
-void imspacering_initialise(void)
+void IMSpaceRing_initialise(void)
 {
 }

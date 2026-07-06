@@ -5,7 +5,7 @@
  * 4/5), spins, and watches for the Arwing passing through it. The reward on
  * collection depends on the object's seqId (health, max-health, score,
  * ring, laser upgrade, bomb, and the 0x6D8-0x6DB collectibles) and on the
- * pickup's "mode" (handled in arwbombcoll_handleArwingHit). Rings also feed
+ * pickup's "mode" (handled in Ring_onCollect). Rings also feed
  * the ring-count gate driven by arwlevelcon. Collision is checked two ways:
  * an axis-aligned proximity test (flag bit10) or a plane-crossing test that
  * compares the Arwing's current and previous Z against the pickup's Z.
@@ -31,24 +31,24 @@ typedef struct ARWBombCollSetup
 STATIC_ASSERT(sizeof(ARWBombCollSetup) == 0x24);
 STATIC_ASSERT(offsetof(ARWBombCollSetup, rotX) == 0x18);
 
-int arwbombcoll_getExtraSize(void) { return 8; }
+int ARWBombColl_getExtraSize(void) { return 8; }
 
-int arwbombcoll_getObjectTypeId(void) { return 0; }
+int ARWBombColl_getObjectTypeId(void) { return 0; }
 
-void arwbombcoll_free(void)
+void ARWBombColl_free(void)
 {
 }
 
-void arwbombcoll_hitDetect(void)
+void ARWBombColl_hitDetect(void)
 {
 }
 
-void arwbombcoll_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7078);
 }
 
-void arwbombcoll_init(int obj, int setup)
+void ARWBombColl_init(int obj, int setup)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     ARWBombCollSetup* mapData = (ARWBombCollSetup*)setup;
@@ -57,11 +57,11 @@ void arwbombcoll_init(int obj, int setup)
     objAnim->alpha = 0;
 }
 
-void arwbombcoll_release(void)
+void ARWBombColl_release(void)
 {
 }
 
-void arwbombcoll_initialise(void)
+void ARWBombColl_initialise(void)
 {
 }
 
@@ -114,7 +114,7 @@ void arwbombcoll_updateMovingAxis(int obj, RingState* state)
     }
 }
 
-void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
+void Ring_onCollect(int obj, RingState* state, int arwing)
 {
     GameObject* arwingObj = (GameObject*)arwing;
     int setup = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -206,7 +206,7 @@ int arwbombcoll_checkArwingCollision(int obj, RingState* state, int arwing)
     return 0;
 }
 
-void arwbombcoll_update(int obj)
+void ARWBombColl_update(int obj)
 {
     ObjAnimComponent* objAnim;
     ArwBombFlags* flags;

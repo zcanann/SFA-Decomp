@@ -11,6 +11,6 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 
-void fn_801D29E4(int* obj, int* p2);
+void bombplant_throwSpore(int* obj, int* p2);
 
 #endif

@@ -82,7 +82,7 @@ void FUN_8015fae4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 void FUN_8015fb0c(u64 param_1,u64 param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u16 *param_9);
-void iceball_update(u16 *param_1,int param_2);
+void IceBall_update(u16 *param_1,int param_2);
 void FUN_801600a8(u32 param_1);
 void FUN_80160190(u32 param_1);
 void FUN_8016041c(void);

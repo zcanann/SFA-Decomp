@@ -22,23 +22,23 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
-extern void drcreator_getExtraSize(void);
+extern void DR_Creator_getExtraSize(void);
 
-extern void drcreator_getObjectTypeId(void);
+extern void DR_Creator_getObjectTypeId(void);
 
-extern void drcreator_free(void);
+extern void DR_Creator_free(void);
 
-extern void drcreator_render(void);
+extern void DR_Creator_render(void);
 
-extern void drcreator_hitDetect(void);
+extern void DR_Creator_hitDetect(void);
 
-extern void drcreator_update(void);
+extern void DR_Creator_update(void);
 
-extern void drcreator_init(void);
+extern void DR_Creator_init(void);
 
-extern void drcreator_release(void);
+extern void DR_Creator_release(void);
 
-extern void drcreator_initialise(void);
+extern void DR_Creator_initialise(void);
 
 #define KYTESMUM_OBJGROUP 0x3
 
@@ -153,7 +153,7 @@ void kytesmum_update(int obj)
     {
         if (runtime->updateCallback(obj) != 0)
         {
-            GameBit_Set(setup->completionGameBit, 1);
+            mainSetBits(setup->completionGameBit, 1);
             runtime->questComplete = 1;
         }
     }
@@ -168,7 +168,7 @@ void kytesmum_update(int obj)
     }
     if (diff != 0)
     {
-        fn_80137948(sKytesMumYawDiffMessage);
+        logPrintf(sKytesMumYawDiffMessage);
         if (kytesMum->currentMove != runtime->moveSet->moves[2])
         {
             ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[2], lbl_803E698C, 0);
@@ -297,7 +297,7 @@ void kytesmum_init(int obj, KytesMumSetup* setup)
     KytesMumRuntime* runtime = kytesMum->runtime;
     int startMove;
     kytesMum->yaw = (s16)(setup->yaw << 8);
-    if (GameBit_Get(setup->completionGameBit) != 0)
+    if (mainGetBit(setup->completionGameBit) != 0)
     {
         runtime->questComplete = 1;
     }
@@ -324,8 +324,8 @@ void kytesmum_init(int obj, KytesMumSetup* setup)
         break;
     case KYTESMUM_MODE_QUEST_A:
     case KYTESMUM_MODE_QUEST_B:
-        GameBit_Set(0x934, 0);
-        GameBit_Set(0x933, 0);
+        mainSetBits(0x934, 0);
+        mainSetBits(0x933, 0);
         runtime->moveSet = &moveSets[2];
         runtime->updateCallback = (KytesMumUpdateCallback)kytesmum_updateQuestStateCallback;
         runtime->eventSfxTable = (s16*)&lbl_803DC2D0;
@@ -399,7 +399,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8* arg)
     runtime = (KytesMumRuntime*)((GameObject*)obj)->extra;
     saveGame_saveObjectPos(obj);
     ObjHits_DisableObject(obj);
-    for (; questBits[count] != -1 && GameBit_Get(questBits[count]) != 0; count++)
+    for (; questBits[count] != -1 && mainGetBit(questBits[count]) != 0; count++)
     {
         ;
     }
@@ -407,7 +407,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8* arg)
     {
         runtime->idleSfxTable = gKytesMumQuestIdleSfxTable;
     }
-    GameBit_Set(0xeb9, count == 1);
+    mainSetBits(0xeb9, count == 1);
     next = triggerIds[count];
     if (next == -1)
     {
@@ -483,4 +483,4 @@ int gKytesMumQuestIdleSfxTable[] = {
 char sKytesMumYawDiffMessage[] = " YAW DIFF ";
 
 /* descriptor/ptr table auto 0x8032a878-0x8032a8b0 */
-u32 gDrCreatorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)drcreator_initialise, (u32)drcreator_release, 0x00000000, (u32)drcreator_init, (u32)drcreator_update, (u32)drcreator_hitDetect, (u32)drcreator_render, (u32)drcreator_free, (u32)drcreator_getObjectTypeId, (u32)drcreator_getExtraSize };
+u32 gDrCreatorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)DR_Creator_initialise, (u32)DR_Creator_release, 0x00000000, (u32)DR_Creator_init, (u32)DR_Creator_update, (u32)DR_Creator_hitDetect, (u32)DR_Creator_render, (u32)DR_Creator_free, (u32)DR_Creator_getObjectTypeId, (u32)DR_Creator_getExtraSize };

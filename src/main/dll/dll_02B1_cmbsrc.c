@@ -112,7 +112,7 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
     {
         return 0;
     }
-    if (mapData->gameBit != -1 && GameBit_Get(mapData->gameBit) != 0)
+    if (mapData->gameBit != -1 && mainGetBit(mapData->gameBit) != 0)
     {
         result = 1;
     }
@@ -148,7 +148,7 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
     {
         return 0;
     }
-    if (mapData->gameBit != -1 && GameBit_Get(mapData->gameBit) == 0)
+    if (mapData->gameBit != -1 && mainGetBit(mapData->gameBit) == 0)
     {
         result = 1;
     }
@@ -440,7 +440,7 @@ int cmbsrc_update(int obj)
             ObjHits_DisableObject(obj);
             if (setup->gameBit != -1)
             {
-                GameBit_Set(setup->gameBit, 0);
+                mainSetBits(setup->gameBit, 0);
             }
         }
         else
@@ -488,7 +488,7 @@ int cmbsrc_update(int obj)
             }
             if (setup->gameBit != -1)
             {
-                GameBit_Set(setup->gameBit, 1);
+                mainSetBits(setup->gameBit, 1);
             }
             state->hitCharge = CMBSRC_MAX_HIT_CHARGE;
             state->inactiveTimer = lbl_803E7360;

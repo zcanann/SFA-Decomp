@@ -8,7 +8,7 @@
  * SeqFn scrolls the geyser texture each frame.
  *
  * This TU also hosts two helpers shared with the SnowHorn mammoth (DLL
- * 0x1A1): nw_mammoth_SeqFn (fn_801CDE7C), which drives the mammoth's
+ * 0x1A1): nw_mammoth_SeqFn (nw_mammoth_SeqFn), which drives the mammoth's
  * looped audio / path state, and fn_801CDF94, which feeds the mammoth's
  * look-at target into the character eye-animation update.
  */
@@ -53,7 +53,7 @@ int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     u8* animUpdateBytes;
 
     animUpdateBytes = (u8*)animUpdate;
-    if (GameBit_Get(GAMEBIT_GEYSER_OFF) != 0)
+    if (mainGetBit(GAMEBIT_GEYSER_OFF) != 0)
     {
         animUpdateBytes[0x90] = (u8)(animUpdateBytes[0x90] | 4);
     }
@@ -76,14 +76,14 @@ void nw_geyser_free(int* obj)
 
 void nw_geyser_update(int obj)
 {
-    if (GameBit_Get(GAMEBIT_GEYSER_OFF) != 0)
+    if (mainGetBit(GAMEBIT_GEYSER_OFF) != 0)
     {
         ((GameObject*)obj)->anim.flags = OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | NWGEYSER_OBJFLAG_UPDATE_DISABLED);
         Sfx_RemoveLoopedObjectSound(obj, SFX_GEYSER_LOOP_A);
         Sfx_RemoveLoopedObjectSound(obj, SFX_GEYSER_LOOP_B);
         ObjHits_DisableObject((u32)obj);
-        GameBit_Set(0x398, 1);
+        mainSetBits(0x398, 1);
     }
     else
     {
@@ -102,7 +102,7 @@ void nw_geyser_init(int obj)
 
 char* fn_801CDE70(int* obj) { return *(char**)&((GameObject*)obj)->extra + 0xc; }
 
-int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int nw_mammoth_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     u8* state;
     void* audioEvents;

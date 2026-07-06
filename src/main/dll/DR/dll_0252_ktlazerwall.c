@@ -36,11 +36,11 @@ typedef struct KtlazerwallState
     s32 bolt;            /* 0x10: lightning bolt allocation (pointer) */
 } KtlazerwallState;
 
-int ktlazerwall_getExtraSize(void) { return 0x14; }
+int KT_Lazerwall_getExtraSize(void) { return 0x14; }
 
-int ktlazerwall_getObjectTypeId(void) { return 0x0; }
+int KT_Lazerwall_getObjectTypeId(void) { return 0x0; }
 
-void ktlazerwall_free(int obj)
+void KT_Lazerwall_free(int obj)
 {
     char* extra = ((GameObject*)obj)->extra;
     void* bolt = *(void**)&((KtlazerwallState*)extra)->bolt;
@@ -51,7 +51,7 @@ void ktlazerwall_free(int obj)
     }
 }
 
-void ktlazerwall_render(int obj)
+void KT_Lazerwall_render(int obj)
 {
     char* extra = ((GameObject*)obj)->extra;
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -79,16 +79,16 @@ void ktlazerwall_render(int obj)
             mm_free((void*)bolt);
             ((KtlazerwallState*)extra)->bolt = 0;
             *(u8*)extra &= ~8;
-            GameBit_Set(((KtlazerwallPlacement*)placement)->activeBit, 0);
+            mainSetBits(((KtlazerwallPlacement*)placement)->activeBit, 0);
         }
     }
 }
 
-void ktlazerwall_hitDetect(void)
+void KT_Lazerwall_hitDetect(void)
 {
 }
 
-void ktlazerwall_update(int obj)
+void KT_Lazerwall_update(int obj)
 {
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
     u8* flags = ((GameObject*)obj)->extra;
@@ -97,7 +97,7 @@ void ktlazerwall_update(int obj)
     int i;
     flags[1] = flags[0];
     flags[0] &= ~3;
-    intensity = (s16)GameBit_Get(((KtlazerwallPlacement*)placement)->intensityBit);
+    intensity = (s16)mainGetBit(((KtlazerwallPlacement*)placement)->intensityBit);
     if (intensity >= ((KtlazerwallPlacement*)placement)->fireThreshold)
     {
         flags[0] |= 4;
@@ -105,7 +105,7 @@ void ktlazerwall_update(int obj)
     else
     {
         flags[0] &= ~4;
-        if (GameBit_Get(((KtlazerwallPlacement*)placement)->activeBit) == 0)
+        if (mainGetBit(((KtlazerwallPlacement*)placement)->activeBit) == 0)
         {
             return;
         }
@@ -113,7 +113,7 @@ void ktlazerwall_update(int obj)
     ((GameObject*)obj)->anim.rotZ += 910;
     if (intensity >= 15 && (flags[0] & 9) == 0)
     {
-        GameBit_Set(((KtlazerwallPlacement*)placement)->activeBit, 1);
+        mainSetBits(((KtlazerwallPlacement*)placement)->activeBit, 1);
         flags[0] |= 9;
         ktrexfloorswitch_spawnEnergyArc(obj, lbl_803E68B8, 120);
         (*gPartfxInterface)->spawnObject((void*)obj, 1150, NULL, 2, -1, NULL);
@@ -161,7 +161,7 @@ void ktlazerwall_update(int obj)
     }
 }
 
-void ktlazerwall_init(int obj, char* placement)
+void KT_Lazerwall_init(int obj, char* placement)
 {
     char* extra = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)placement[0x18] << 8);
@@ -173,10 +173,10 @@ void ktlazerwall_init(int obj, char* placement)
     }
 }
 
-void ktlazerwall_release(void)
+void KT_Lazerwall_release(void)
 {
 }
 
-void ktlazerwall_initialise(void)
+void KT_Lazerwall_initialise(void)
 {
 }

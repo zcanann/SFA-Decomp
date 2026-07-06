@@ -52,14 +52,14 @@ void dll_19C_update(int* obj)
     sub = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->unkF8 != 0)
     {
-        if (GameBit_Get(0x1d4) != 0)
+        if (mainGetBit(0x1d4) != 0)
         {
             ((GameObject*)obj)->unkF8 = 0;
         }
     }
     if (((GameObject*)obj)->unkF8 == 0)
     {
-        if (GameBit_Get(0x1d3) != 0)
+        if (mainGetBit(0x1d3) != 0)
         {
             res = Resource_Acquire(0x82, 1);
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 0, 0, 1, -1, 0);

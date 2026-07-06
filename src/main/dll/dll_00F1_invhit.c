@@ -14,7 +14,7 @@
  *   5  like 3 but gated on the player having a lock-on target.
  *   6  fixed primary-radius hit volume.
  *   7  self-free once the owner's hit list no longer references it.
- * invhit_free releases the expgfx source for mode 4.
+ * InvHit_free releases the expgfx source for mode 4.
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -60,26 +60,26 @@ extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;
 extern f32 lbl_803E35F4;
 
-void invhit_hitDetect(void)
+void InvHit_hitDetect(void)
 {
 }
 
-void invhit_release(void)
+void InvHit_release(void)
 {
 }
 
-void invhit_initialise(void)
+void InvHit_initialise(void)
 {
 }
 
-int invhit_getExtraSize(void) { return 0xc; }
-int invhit_getObjectTypeId(void) { return 0x0; }
+int InvHit_getExtraSize(void) { return 0xc; }
+int InvHit_getObjectTypeId(void) { return 0x0; }
 
-void invhit_render(int* obj, int a, int b, int c, int d) { objRenderModelAndHitVolumes(obj, a, b, c, d, lbl_803E35E8); }
+void InvHit_render(int* obj, int a, int b, int c, int d) { objRenderModelAndHitVolumes(obj, a, b, c, d, lbl_803E35E8); }
 
 #pragma scheduling off
 #pragma peephole off
-void invhit_free(int obj)
+void InvHit_free(int obj)
 {
     char* inner = ((GameObject*)obj)->extra;
     switch (((InvHitState*)inner)->mode)
@@ -91,7 +91,7 @@ void invhit_free(int obj)
 }
 
 #pragma opt_common_subs off
-void invhit_init(int* obj, u8* def)
+void InvHit_init(int* obj, u8* def)
 {
     InvHitState* state = ((GameObject*)obj)->extra;
     char* sub;
@@ -182,7 +182,7 @@ void invhit_init(int* obj, u8* def)
 }
 #pragma opt_common_subs reset
 
-void invhit_update(int* obj)
+void InvHit_update(int* obj)
 {
     InvHitState* state;
     char* targetObj;

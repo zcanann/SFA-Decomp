@@ -36,7 +36,7 @@ void FUN_801769e8(u64 param_1,double param_2,double param_3,u64 param_4,
 void FUN_80177204(short *param_1,int param_2);
 void FUN_80177208(int param_1);
 void FUN_8017724c(int param_1);
-void invhit_update(int *obj);
+void InvHit_update(int *obj);
 void FUN_801776f0(int param_1);
 void FUN_80177710(u16 *param_1);
 void FUN_80177874(int param_1,int param_2);
@@ -53,12 +53,12 @@ int WarpPoint_getExtraSize(void);
 int WarpPoint_getObjectTypeId(void);
 int WarpPoint_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 
-int invhit_getExtraSize(void);
-int invhit_getObjectTypeId(void);
-void invhit_render(int *obj, int a, int b, int c, int d);
-void invhit_hitDetect(void);
-void invhit_release(void);
-void invhit_initialise(void);
+int InvHit_getExtraSize(void);
+int InvHit_getObjectTypeId(void);
+void InvHit_render(int *obj, int a, int b, int c, int d);
+void InvHit_hitDetect(void);
+void InvHit_release(void);
+void InvHit_initialise(void);
 
 /* iceblast_* callbacks + IceblastPlacement now come from dll_00F2_iceblast.h */
 

@@ -7,6 +7,6 @@
 #include "main/game_object.h"
 #include "main/engine_shared.h"
 
-void spscarab_free(int x);
+void SPScarab_free(int x);
 
 #endif

@@ -7,11 +7,11 @@ struct DFRope;
 
 struct DFRope *DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY,
                              f32 endZ, f32 unused, f32 tickScale);
-void dfropenode_func12(int obj,float value);
-int dfropenode_func11(int obj);
-void dfropenode_func10(int obj,int value);
-void dfropenode_func13(int obj);
-int dfropenode_func0F(int obj);
+void dfropenode_setMinY(int obj,float value);
+int dfropenode_isVisible(int obj);
+void dfropenode_setVisible(int obj,int value);
+void dfropenode_clearLinkedObj(int obj);
+int dfropenode_getAngle(int obj);
 f32 fn_801C1698(f32 *x, f32 *y, f32 *z, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY,
                 f32 endZ);
 

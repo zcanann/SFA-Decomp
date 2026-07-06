@@ -52,13 +52,13 @@ STATIC_ASSERT(offsetof(DrcagewithState, angularVel) == 0x24);
 STATIC_ASSERT(sizeof(DrcagewithState) == 0x34);
 
 
-int drcagewith_setScale(int obj)
+int DR_CageWith_setScale(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
     return state[0x30];
 }
 
-int drcagewith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int DR_CageWith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     char* state = ((GameObject*)obj)->extra;
     int i;
@@ -72,11 +72,11 @@ int drcagewith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState* 
     return 0;
 }
 
-int drcagewith_getExtraSize(void) { return 0x34; }
+int DR_CageWith_getExtraSize(void) { return 0x34; }
 
-int drcagewith_getObjectTypeId(void) { return 0x0; }
+int DR_CageWith_getObjectTypeId(void) { return 0x0; }
 
-void drcagewith_free(int obj, int arg)
+void DR_CageWith_free(int obj, int arg)
 {
     char* state = ((GameObject*)obj)->extra;
     GameObject* linked = ((DrcagewithState*)state)->spawnedObject;
@@ -93,7 +93,7 @@ void drcagewith_free(int obj, int arg)
     ObjGroup_RemoveObject(obj, DRCAGEWITH_OBJGROUP);
 }
 
-void drcagewith_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void DR_CageWith_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     char* state = ((GameObject*)obj)->extra;
     int* linkedObj;
@@ -121,7 +121,7 @@ void drcagewith_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     }
 }
 
-void drcagewith_hitDetect(int obj)
+void DR_CageWith_hitDetect(int obj)
 {
     int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
     u8* state;
@@ -146,7 +146,7 @@ void drcagewith_hitDetect(int obj)
 
     if (((GameObject*)obj)->anim.seqId == 2154 || ((GameObject*)obj)->anim.seqId == 2155)
     {
-        if (GameBit_Get(1545) != 0)
+        if (mainGetBit(1545) != 0)
         {
             ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
@@ -173,7 +173,7 @@ void drcagewith_hitDetect(int obj)
     }
     if (bf31->b0 == 0)
     {
-        if (GameBit_Get(1545) != 0)
+        if (mainGetBit(1545) != 0)
         {
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -221,39 +221,39 @@ void drcagewith_hitDetect(int obj)
     }
     if (bf31->b0 == 0)
     {
-        if (GameBit_Get(3175) != 0)
+        if (mainGetBit(3175) != 0)
         {
             px = ((GameObject*)obj)->anim.localPosX;
             if (px >= lbl_803E6A10 && px <= lbl_803E6A14)
             {
-                GameBit_Set(((DrcagewithPlacement*)placement)->openedGameBit, 1);
+                mainSetBits(((DrcagewithPlacement*)placement)->openedGameBit, 1);
             }
             else
             {
-                GameBit_Set(3748, 1);
+                mainSetBits(3748, 1);
             }
         }
         else
         {
-            GameBit_Set(3748, 0);
+            mainSetBits(3748, 0);
         }
     }
 }
 
-void drcagewith_update(void)
+void DR_CageWith_update(void)
 {
 }
 
-void drcagewith_init(int obj, char* arg)
+void DR_CageWith_init(int obj, char* arg)
 {
     char* state = ((GameObject*)obj)->extra;
     s16 type;
     f32 fz;
-    ((GameObject*)obj)->animEventCallback = drcagewith_toggleRopeStateCallback;
+    ((GameObject*)obj)->animEventCallback = DR_CageWith_toggleRopeStateCallback;
     type = ((GameObject*)obj)->anim.seqId;
     if (type == 0x86a || type == 0x86b)
     {
-        if (GameBit_Get(0x609) == 0)
+        if (mainGetBit(0x609) == 0)
         {
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
@@ -261,7 +261,7 @@ void drcagewith_init(int obj, char* arg)
     else
     {
         ObjHits_EnableObject(obj);
-        if (GameBit_Get(((DrcagewithPlacement*)arg)->openedGameBit) != 0)
+        if (mainGetBit(((DrcagewithPlacement*)arg)->openedGameBit) != 0)
         {
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -269,7 +269,7 @@ void drcagewith_init(int obj, char* arg)
         }
         else
         {
-            GameBit_Set(0x7aa, 5);
+            mainSetBits(0x7aa, 5);
         }
         ((GameObject*)obj)->anim.rotX = (s16)(((DrcagewithPlacement*)arg)->initRotXByte << 8);
         ((DrcagewithState*)state)->unk8 = (f32)((DrcagewithPlacement*)arg)->unk1C;
@@ -284,10 +284,10 @@ void drcagewith_init(int obj, char* arg)
     }
 }
 
-void drcagewith_release(void)
+void DR_CageWith_release(void)
 {
 }
 
-void drcagewith_initialise(void)
+void DR_CageWith_initialise(void)
 {
 }

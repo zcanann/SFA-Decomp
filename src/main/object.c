@@ -317,7 +317,7 @@ void Obj_SetModelColorOverrideRecursive(u8* obj, u8 red, u8 green, u8 blue, u8 a
     }
 }
 
-void Obj_ResetModelColorState(u8* obj)
+void Obj_Shatter(u8* obj)
 {
     ((GameObject*)obj)->colorFadeFrames = 0;
     ((GameObject*)obj)->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_FROZEN;

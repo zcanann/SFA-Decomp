@@ -89,7 +89,7 @@ void cannonclaw_update(u8* obj)
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E2F38, timeDelta, NULL);
     if (trickyState == NULL) return;
-    if (GameBit_Get(((GameObject*)trickyState)->anim.placementData[13]) == 0) return;
+    if (mainGetBit(((GameObject*)trickyState)->anim.placementData[13]) == 0) return;
     ((GameObject*)obj)->unkF4 = 1;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     ObjHits_DisableObject((u32)obj);

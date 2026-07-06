@@ -40,11 +40,11 @@ void sh_tricky_update(int* obj)
     switch (state[0])
     {
     case SHTRICKY_STATE_WAIT_TRIGGER:
-        if (GameBit_Get(0x94) != 0)
+        if (mainGetBit(0x94) != 0)
         {
-            GameBit_Set(0x4e4, 0);
-            GameBit_Set(0x4e5, 0);
-            GameBit_Set(0xc11, 1);
+            mainSetBits(0x4e4, 0);
+            mainSetBits(0x4e5, 0);
+            mainSetBits(0xc11, 1);
             state[0] = SHTRICKY_STATE_HAND_CONTROL;
         }
         break;
@@ -59,11 +59,11 @@ void sh_tricky_update(int* obj)
         }
         break;
     case SHTRICKY_STATE_WATCH_COMPLETE:
-        if (GameBit_Get(0xbf) != 0)
+        if (mainGetBit(0xbf) != 0)
         {
-            GameBit_Set(0x4e4, 1);
-            GameBit_Set(0x4e5, 1);
-            GameBit_Set(0xc11, 0);
+            mainSetBits(0x4e4, 1);
+            mainSetBits(0x4e5, 1);
+            mainSetBits(0xc11, 0);
         }
         break;
     case SHTRICKY_STATE_DONE:
@@ -74,7 +74,7 @@ void sh_tricky_update(int* obj)
 void sh_tricky_init(int* obj)
 {
     u8* state = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0xbf) != 0)
+    if (mainGetBit(0xbf) != 0)
     {
         *state = SHTRICKY_STATE_DONE;
     }

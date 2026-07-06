@@ -3,13 +3,13 @@
  * warp-pad family (WarpPadPlacement / WarpPadState, helpers in
  * CFchuckobj). Each pad is tagged by its placement destinationId (a
  * 32-bit area/event id); the big switches in Transporter_SeqFn and
- * transporter_init drive per-destination level locking/loading, map
+ * Transporter_init drive per-destination level locking/loading, map
  * warps, env-fx and sky restores, and gate a few pads behind GameBits.
  *
- * transporter_init seeds state->flags with the pad's warp-fx class from
+ * Transporter_init seeds state->flags with the pad's warp-fx class from
  * its destinationId (0x68 / 0x08 / 0x30 / 0x10), or sets the
  * gamebit-disabled bit 0x20 when any of a destination's three guard
- * bits is set. transporter_hitDetect raises/lowers the A-button prompt
+ * bits is set. Transporter_hitDetect raises/lowers the A-button prompt
  * through the resetHitboxMode interact bits, and Transporter_SeqFn
  * consumes the anim sequence-event opcodes (1 warp, 2 map
  * progress, 3 unlock, 5/6 block flags, 7 pulse fx, 8 env restore).
@@ -61,7 +61,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             switch (id)
             {
             case 0x49c33:
-                GameBit_Set(0x884, 1);
+                mainSetBits(0x884, 1);
                 (*gMapEventInterface)->setObjGroupStatus(7, 0, 1);
                 (*gMapEventInterface)->setObjGroupStatus(7, 2, 1);
                 (*gMapEventInterface)->setObjGroupStatus(7, 3, 1);
@@ -97,13 +97,13 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 break;
             case 0x48018:
                 unlockLevel(mapGetDirIdx(0x22), 1, 0);
-                GameBit_Set(0x36a, 0);
+                mainSetBits(0x36a, 0);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 0, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 1, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 5, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 10, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 1);
-                GameBit_Set(0xe05, 0);
+                mainSetBits(0xe05, 0);
                 break;
             case 0x45dd6:
                 unlockLevel(0, 0, 1);
@@ -215,7 +215,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 getEnvfxActImmediately(obj, obj, 0x247, 0);
                 getEnvfxActImmediately(obj, obj, 0x248, 0);
                 timeOfDayFn_80055000();
-                GameBit_Set(0xef6, 1);
+                mainSetBits(0xef6, 1);
                 break;
             case 0x4cb6a:
                 getEnvfxActImmediately(obj, obj, 0x238, 0);
@@ -223,7 +223,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 skyFn_80088c94(1, 1);
                 skyFn_80088e54(0, lbl_803E3E98);
             case 0x4cb84:
-                GameBit_Set(0xef6, 0);
+                mainSetBits(0xef6, 0);
                 break;
             }
             break;
@@ -233,12 +233,12 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int transporter_getExtraSize(void)
+int Transporter_getExtraSize(void)
 {
     return 0x10;
 }
 
-void transporter_update(int obj)
+void Transporter_update(int obj)
 {
     register int self = obj;
     register WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)self)->anim.placementData;
@@ -249,7 +249,7 @@ void transporter_update(int obj)
     warpPadFn_8019042c(self);
 }
 
-void transporter_hitDetect(int obj)
+void Transporter_hitDetect(int obj)
 {
     register int self = obj;
     register WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)self)->anim.placementData;
@@ -277,7 +277,7 @@ void transporter_hitDetect(int obj)
             state->flags = (u8)((u32)state->flags & ~WARPPAD_FLAG_INTERACTIVE);
         }
         else if ((int)setup->enableGameBit != -1
-            && GameBit_Get((int)setup->enableGameBit) == 0)
+            && mainGetBit((int)setup->enableGameBit) == 0)
         {
             *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
                 (u32) * &((GameObject*)self)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
@@ -313,11 +313,11 @@ void transporter_hitDetect(int obj)
     state->flags = (u8)((u32)state->flags & ~WARPPAD_FLAG_INTERACTIVE);
 }
 
-void transporter_render(void)
+void Transporter_render(void)
 {
 }
 
-void transporter_init(int obj, u8* params)
+void Transporter_init(int obj, u8* params)
 {
     WarpPadPlacement* placement;
     WarpPadState* state;
@@ -364,37 +364,37 @@ void transporter_init(int obj, u8* params)
          * setter (set from save/level-event data), left as a raw literal in
          * dll_012C_transporter.c until traced.
          */
-        if (GameBit_Get(GAMEBIT_K1_SPIRIT_COLLECTED) != 0 || GameBit_Get(GAMEBIT_K1_SPIRIT_DEPOSITED) != 0 || GameBit_Get(0x511) != 0)
+        if (mainGetBit(GAMEBIT_K1_SPIRIT_COLLECTED) != 0 || mainGetBit(GAMEBIT_K1_SPIRIT_DEPOSITED) != 0 || mainGetBit(0x511) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x2BA7:
-        if (GameBit_Get(0xBFD) != 0 || GameBit_Get(0x29A) != 0 || GameBit_Get(0x29B) != 0)
+        if (mainGetBit(0xBFD) != 0 || mainGetBit(0x29A) != 0 || mainGetBit(0x29B) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x46A40:
-        if (GameBit_Get(0xFF) != 0 || GameBit_Get(0x8A0) != 0 || GameBit_Get(0x8A2) != 0)
+        if (mainGetBit(0xFF) != 0 || mainGetBit(0x8A0) != 0 || mainGetBit(0x8A2) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x497F4:
-        if (GameBit_Get(0xC6E) != 0 || GameBit_Get(0xC70) != 0 || GameBit_Get(0xC71) != 0)
+        if (mainGetBit(0xC6E) != 0 || mainGetBit(0xC70) != 0 || mainGetBit(0xC71) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x4800C:
-        if (GameBit_Get(0xC85) != 0 || GameBit_Get(0xCB5) != 0 || GameBit_Get(0xCB6) != 0)
+        if (mainGetBit(0xC85) != 0 || mainGetBit(0xCB5) != 0 || mainGetBit(0xCB6) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x4A533:
-        if (GameBit_Get(0x174) != 0 || GameBit_Get(0xCB7) != 0 || GameBit_Get(0xCB8) != 0)
+        if (mainGetBit(0x174) != 0 || mainGetBit(0xCB7) != 0 || mainGetBit(0xCB8) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }

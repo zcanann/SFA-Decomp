@@ -3,16 +3,16 @@
 
 #define VORTEX_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-int vortex_getExtraSize(void) { return 0x28; }
+int Vortex_getExtraSize(void) { return 0x28; }
 
-int vortex_getObjectTypeId(void) { return 0; }
+int Vortex_getObjectTypeId(void) { return 0; }
 
-void vortex_free(int obj)
+void Vortex_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void Vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     VortexState* state = ((GameObject*)obj)->extra;
     VortexSetup* setup = (VortexSetup*)((GameObject*)obj)->anim.placementData;
@@ -58,7 +58,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 reverse = 1;
             else
                 reverse = 0;
-            if (setup->invertGameBit != -1 && GameBit_Get(setup->invertGameBit) != 0)
+            if (setup->invertGameBit != -1 && mainGetBit(setup->invertGameBit) != 0)
             {
                 reverse = !reverse;
             }
@@ -198,11 +198,11 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void vortex_hitDetect(void)
+void Vortex_hitDetect(void)
 {
 }
 
-void vortex_init(int obj, int initData)
+void Vortex_init(int obj, int initData)
 {
     f32 (*base)[3] = (f32 (*)[3])gVortexScaleParams;
     VortexSetup* setup = (VortexSetup*)initData;
@@ -212,7 +212,7 @@ void vortex_init(int obj, int initData)
     state->flags.active = 0;
     if (setup->activeGameBit != -1)
     {
-        state->flags.active = GameBit_Get(setup->activeGameBit);
+        state->flags.active = mainGetBit(setup->activeGameBit);
     }
     if (((GameObject*)obj)->anim.seqId == 0x835)
     {
@@ -253,7 +253,7 @@ void vortex_init(int obj, int initData)
         {
             if (setup->invertGameBit != -1)
             {
-                state->flags.active = !GameBit_Get(setup->invertGameBit);
+                state->flags.active = !mainGetBit(setup->invertGameBit);
             }
         }
     }
@@ -267,7 +267,7 @@ void vortex_init(int obj, int initData)
     *(f32*)(obj + 0x40) = *(f32*)(obj + 0x40) * lbl_803E7404;
 }
 
-void vortex_update(int obj)
+void Vortex_update(int obj)
 {
     VortexState* state = ((GameObject*)obj)->extra;
     VortexSetup* setup = (VortexSetup*)((GameObject*)obj)->anim.placementData;
@@ -276,7 +276,7 @@ void vortex_update(int obj)
     state->flags.active = 0;
     if (setup->activeGameBit != -1)
     {
-        state->flags.active = GameBit_Get(setup->activeGameBit);
+        state->flags.active = mainGetBit(setup->activeGameBit);
     }
 
     if (((GameObject*)obj)->anim.seqId == 0x29a || ((GameObject*)obj)->anim.seqId == 0x829)
@@ -285,7 +285,7 @@ void vortex_update(int obj)
         {
             if (setup->invertGameBit != -1)
             {
-                state->flags.active = !GameBit_Get(setup->invertGameBit);
+                state->flags.active = !mainGetBit(setup->invertGameBit);
             }
         }
     }
@@ -318,11 +318,11 @@ void vortex_update(int obj)
     }
 }
 
-void vortex_release(void)
+void Vortex_release(void)
 {
 }
 
-void vortex_initialise(void)
+void Vortex_initialise(void)
 {
 }
 

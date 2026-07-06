@@ -67,7 +67,7 @@ extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CA0;
 extern f32 lbl_803E4CCC;
 
-int dll_DIM_BossGutSpik_update(void* obj, u32 p2, ObjAnimUpdateState* animUpdate)
+int DIMbosstonsil_SeqFn(void* obj, u32 p2, ObjAnimUpdateState* animUpdate)
 {
     extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
@@ -169,7 +169,7 @@ int dll_DIM_BossGutSpik_update(void* obj, u32 p2, ObjAnimUpdateState* animUpdate
             return 1;
         }
         if ((state->eventGameBit != -1) &&
-            (GameBit_Get(state->eventGameBit) != 0))
+            (mainGetBit(state->eventGameBit) != 0))
         {
             (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, config->eventId);
             state->eventGameBit = -1;
@@ -385,10 +385,10 @@ void DIMbosstonsil_init(int obj, u32 p2, int isAltVariant)
         variant = variant | 1;
     }
     (*(void (**)(int, u32, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, p2, state, 2, 2, 0x102, variant, lbl_803E4CCC);
-    ((GameObject*)obj)->animEventCallback = dll_DIM_BossGutSpik_update;
+    ((GameObject*)obj)->animEventCallback = DIMbosstonsil_SeqFn;
     (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
     ((BaddieState*)state)->substate = 0;
-    gDIMbosstonsilRoutePhase = GameBit_Get(0x20c);
+    gDIMbosstonsilRoutePhase = mainGetBit(0x20c);
     if (gDIMbosstonsilRoutePhase < 3)
     {
         *(s8*)(state + DIMBOSSTONSIL_HEALTH_PHASE_OFFSET) = 3 - gDIMbosstonsilRoutePhase;

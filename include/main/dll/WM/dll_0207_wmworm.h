@@ -35,16 +35,16 @@ STATIC_ASSERT(offsetof(WmWormState, burstCount) == 0x08);
 STATIC_ASSERT(offsetof(WmWormState, unk0C) == 0x0c);
 STATIC_ASSERT(offsetof(WmWormState, homeX) == 0x10);
 
-void wmworm_update(GameObject *obj);
-void wmworm_init(GameObject *obj, WmWormSetup *setup);
-void wmworm_release(void);
-void wmworm_initialise(void);
+void WM_Worm_update(GameObject *obj);
+void WM_Worm_init(GameObject *obj, WmWormSetup *setup);
+void WM_Worm_release(void);
+void WM_Worm_initialise(void);
 
 void fn_801F3F18(int obj);
-int wmlevelcontrol_getExtraSize(void);
-int wmlevelcontrol_getObjectTypeId(void);
-void wmlevelcontrol_free(int obj);
-void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void wmlevelcontrol_hitDetect(void);
+int WM_LevelControl_getExtraSize(void);
+int WM_LevelControl_getObjectTypeId(void);
+void WM_LevelControl_free(int obj);
+void WM_LevelControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void WM_LevelControl_hitDetect(void);
 
 #endif /* MAIN_DLL_WM_DLL_0207_WMWORM_H_ */

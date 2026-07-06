@@ -78,7 +78,7 @@ void warpstonelift_update(u8* obj)
         case WARPSTONELIFT_STATE_IDLE:
         case WARPSTONELIFT_STATE_OFFERING:
             getYButtonItem(&item);
-            if ((GameBit_Get(WARPSTONELIFT_ITEM_BIT) != 0 && cMenuGetSelectedItem() != -1) ||
+            if ((mainGetBit(WARPSTONELIFT_ITEM_BIT) != 0 && cMenuGetSelectedItem() != -1) ||
                 item == WARPSTONELIFT_ITEM_BIT)
             {
                 Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
@@ -89,20 +89,20 @@ void warpstonelift_update(u8* obj)
             }
             if (ObjTrigger_IsSetById((int)obj, WARPSTONELIFT_ITEM_BIT) != 0)
             {
-                GameBit_Set(0x886, 1);
-                GameBit_Set(0xC7D, 1);
+                mainSetBits(0x886, 1);
+                mainSetBits(0xC7D, 1);
                 *state = WARPSTONELIFT_STATE_SWAPPED;
                 Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
             }
             else if (ObjTrigger_IsSet((int)obj) != 0)
             {
-                GameBit_Set(0xC7E, 1);
+                mainSetBits(0xC7E, 1);
             }
             break;
         case WARPSTONELIFT_STATE_SWAPPED:
             if (ObjTrigger_IsSet((int)obj) != 0)
             {
-                GameBit_Set(0x886, 1);
+                mainSetBits(0x886, 1);
             }
             break;
         }
@@ -121,7 +121,7 @@ void warpstonelift_init(int obj, s8* def)
     ((GameObject*)obj)->unkF4 = 0;
     for (i = 0; i < 2; i++)
     {
-        if (GameBit_Get(lbl_803DC058[i]) != 0)
+        if (mainGetBit(lbl_803DC058[i]) != 0)
         {
             *(u8*)state = (u8)(i + 1);
         }

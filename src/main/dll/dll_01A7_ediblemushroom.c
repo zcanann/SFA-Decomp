@@ -45,11 +45,11 @@ f32 gEdibleMushroomAnimEventTable[] =
     0.005f, 0.01f, 0.005f, 0.01f, 0.01f, 0.015f, 0.005f, 0.01f, 0.005f, 0.012f, 0.0f
 };
 
-void ediblemushroom_init(int obj, int aux);
-void ediblemushroom_update(u8* self);
-void ediblemushroom_hitDetect(u8* obj);
-void ediblemushroom_free(int obj);
-int ediblemushroom_getExtraSize(void);
+void EdibleMushroom_init(int obj, int aux);
+void EdibleMushroom_update(u8* self);
+void EdibleMushroom_hitDetect(u8* obj);
+void EdibleMushroom_free(int obj);
+int EdibleMushroom_getExtraSize(void);
 
 ObjectDescriptor gEdibleMushroomObjDescriptor = {
     0,
@@ -59,13 +59,13 @@ ObjectDescriptor gEdibleMushroomObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)ediblemushroom_init,
-    (ObjectDescriptorCallback)ediblemushroom_update,
-    (ObjectDescriptorCallback)ediblemushroom_hitDetect,
+    (ObjectDescriptorCallback)EdibleMushroom_init,
+    (ObjectDescriptorCallback)EdibleMushroom_update,
+    (ObjectDescriptorCallback)EdibleMushroom_hitDetect,
     0,
-    (ObjectDescriptorCallback)ediblemushroom_free,
+    (ObjectDescriptorCallback)EdibleMushroom_free,
     0,
-    ediblemushroom_getExtraSize,
+    EdibleMushroom_getExtraSize,
 };
 
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
@@ -375,7 +375,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                 }
                 ((EdibleMushroomState*)state)->sporePuffTimer = 20.0f;
             }
-            if (GameBit_Get(0x12e) == 0)
+            if (mainGetBit(0x12e) == 0)
             {
                 if (!(((GameObject*)player)->objectFlags & EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK))
                 {
@@ -399,10 +399,10 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                         bit = *(s16*)(other + 0x1a);
                         if (bit != -1)
                         {
-                            GameBit_Set(bit, 1);
+                            mainSetBits(bit, 1);
                         }
                         ((EdibleMushroomState*)state)->animState = 8;
-                        GameBit_Set(0x12e, 1);
+                        mainSetBits(0x12e, 1);
                     }
                 }
             }
@@ -538,18 +538,18 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
     return angle;
 }
 
-int ediblemushroom_getExtraSize(void)
+int EdibleMushroom_getExtraSize(void)
 {
     return 0x144;
 }
 
-void ediblemushroom_free(int obj)
+void EdibleMushroom_free(int obj)
 {
     ObjGroup_RemoveObject(obj, EDIBLEMUSHROOM_OBJGROUP);
     ObjGroup_RemoveObject(obj, EDIBLEMUSHROOM_OBJGROUP_SECONDARY);
 }
 
-void ediblemushroom_hitDetect(u8* obj)
+void EdibleMushroom_hitDetect(u8* obj)
 {
     u8* state;
     u8* mapObj;
@@ -586,7 +586,7 @@ void ediblemushroom_hitDetect(u8* obj)
 }
 
 #pragma opt_loop_invariants off
-void ediblemushroom_update(u8* self)
+void EdibleMushroom_update(u8* self)
 {
     extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other);
     u8* state;
@@ -614,7 +614,7 @@ void ediblemushroom_update(u8* self)
             ((GameObject*)self)->anim.flags = (s16)(((GameObject*)self)->anim.flags | OBJANIM_FLAG_HIDDEN);
             ObjHits_DisableObject((u32)(int)self);
             gameBitIncrement(((EdibleMushroomState*)state)->collectedGameBitId);
-            GameBit_Set(0x12E, 0);
+            mainSetBits(0x12E, 0);
             if (((GameObject*)self)->anim.seqId == 0x658)
             {
                 itemPickupDoParticleFx(self, 1.0f, 0xFF, 0x28);
@@ -689,7 +689,7 @@ end:
 }
 #pragma opt_loop_invariants reset
 
-void ediblemushroom_init(int obj, int aux)
+void EdibleMushroom_init(int obj, int aux)
 {
     int state;
     int player;
@@ -704,7 +704,7 @@ void ediblemushroom_init(int obj, int aux)
     ((GameObject*)obj)->animEventCallback = EdibleMushroom_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | EDIBLEMUSHROOM_OBJFLAG_HIDDEN);
 
-    if (GameBit_Get(((EdibleMushroomPlacement*)aux)->gameBitId) != 0)
+    if (mainGetBit(((EdibleMushroomPlacement*)aux)->gameBitId) != 0)
     {
         ((EdibleMushroomState*)state)->animState = 8;
         ObjHits_DisableObject((u32)obj);

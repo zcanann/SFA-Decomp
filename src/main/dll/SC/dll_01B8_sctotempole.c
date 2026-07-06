@@ -58,7 +58,7 @@ int sc_totempole_sortCompletionGameBits(u16* recordBits, u16 newTime)
 
     for (i = 0; i < 3; i++)
     {
-        u16 v = GameBit_Get(recordBits[i]);
+        u16 v = mainGetBit(recordBits[i]);
         times[i] = v;
     }
     times[3] = newTime;
@@ -80,7 +80,7 @@ int sc_totempole_sortCompletionGameBits(u16* recordBits, u16 newTime)
     }
     for (i = 0; i < 3; i++)
     {
-        GameBit_Set(recordBits[i], times[i]);
+        mainSetBits(recordBits[i], times[i]);
     }
     return changed;
 }
@@ -112,7 +112,7 @@ void sc_totempole_update(int obj)
     int i;
 
     state->previousState = state->currentState;
-    state->currentState = GameBit_Get(state->gameBit);
+    state->currentState = mainGetBit(state->gameBit);
     if (state->previousState != state->currentState)
     {
         if (state->currentState != 0)
@@ -120,10 +120,10 @@ void sc_totempole_update(int obj)
             Sfx_PlayFromObject(obj, SFXTRIG_cflap2_c);
             state->animSpeed = lbl_803E55D4;
             playedFanfare = 0;
-            if (GameBit_Get(SC_TOTEMPOLE_GAMEBIT_FRONT) != 0 &&
-                GameBit_Get(SC_TOTEMPOLE_GAMEBIT_LEFT) != 0 &&
-                GameBit_Get(SC_TOTEMPOLE_GAMEBIT_RIGHT) != 0 &&
-                GameBit_Get(SC_TOTEMPOLE_GAMEBIT_REAR) != 0)
+            if (mainGetBit(SC_TOTEMPOLE_GAMEBIT_FRONT) != 0 &&
+                mainGetBit(SC_TOTEMPOLE_GAMEBIT_LEFT) != 0 &&
+                mainGetBit(SC_TOTEMPOLE_GAMEBIT_RIGHT) != 0 &&
+                mainGetBit(SC_TOTEMPOLE_GAMEBIT_REAR) != 0)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
                 playedFanfare = 1;

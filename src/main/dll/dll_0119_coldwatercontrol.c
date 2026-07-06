@@ -9,7 +9,7 @@
  * hit when the timer is fresh, then a repeating hit every lbl_803E3B6C
  * seconds. Failing the gate resets the timer to lbl_803E3B68.
  *
- * extra block (coldwatercontrol_getExtraSize = 8 bytes):
+ * extra block (ColdWaterControl_getExtraSize = 8 bytes):
  *   0x00 f32  immersion timer
  *   0x04 ptr  cached player object (Obj_GetPlayerObject)
  */
@@ -38,19 +38,19 @@ typedef struct ColdwaterControlState {
 STATIC_ASSERT(sizeof(ColdwaterControlState) == 0x8);
 STATIC_ASSERT(offsetof(ColdwaterControlState, playerObj) == 0x4);
 
-int coldwatercontrol_getExtraSize(void) { return 0x8; }
+int ColdWaterControl_getExtraSize(void) { return 0x8; }
 
 #pragma scheduling off
 #pragma peephole off
-void coldwatercontrol_update(int obj)
+void ColdWaterControl_update(int obj)
 {
     ColdwaterControlState* state;
 
     state = ((GameObject*)obj)->extra;
-    if (GameBit_Get(GAMEBIT_COLDWATER_ARM) != 0 && GameBit_Get(GAMEBIT_COLDWATER_DONE) == 0)
+    if (mainGetBit(GAMEBIT_COLDWATER_ARM) != 0 && mainGetBit(GAMEBIT_COLDWATER_DONE) == 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        GameBit_Set(GAMEBIT_COLDWATER_DONE, 1);
+        mainSetBits(GAMEBIT_COLDWATER_DONE, 1);
         return;
     }
 
@@ -82,7 +82,7 @@ void coldwatercontrol_update(int obj)
 }
 
 #pragma scheduling on
-void coldwatercontrol_init(int obj)
+void ColdWaterControl_init(int obj)
 {
     ColdwaterControlState* p = (ColdwaterControlState*)((GameObject*)obj)->extra;
     p->timer = lbl_803E3B68;

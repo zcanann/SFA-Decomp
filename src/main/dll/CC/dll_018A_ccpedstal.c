@@ -50,7 +50,7 @@ int ccpedstal_getExtraSize(void) { return sizeof(CcpedstalState); }
 void ccpedstal_updateGameBitGate(int obj, u8* state2)
 {
     CcpedstalState* state = (CcpedstalState*)state2;
-    if (GameBit_Get(state->gameBit) != 0)
+    if (mainGetBit(state->gameBit) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         Obj_SetActiveModelIndex(obj, 1);
@@ -59,7 +59,7 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2)
     {
         int doMark;
         Obj_SetActiveModelIndex(obj, 0);
-        if (GameBit_Get(0xa9) != 0)
+        if (mainGetBit(0xa9) != 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
@@ -92,7 +92,7 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2)
 void ccpedstal_updateAltVariant(int obj, u8* state2)
 {
     CcpedstalState* state = (CcpedstalState*)state2;
-    if (GameBit_Get(0xdc5) != 0)
+    if (mainGetBit(0xdc5) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     }
@@ -100,7 +100,7 @@ void ccpedstal_updateAltVariant(int obj, u8* state2)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
     }
-    if (GameBit_Get(state->gameBit) != 0)
+    if (mainGetBit(state->gameBit) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         Obj_SetActiveModelIndex(obj, 0);
@@ -132,16 +132,16 @@ void ccpedstal_update(int obj)
     {
         if (state->markFlags & 1)
         {
-            GameBit_Set(state->gameBit, 1);
+            mainSetBits(state->gameBit, 1);
         }
         else
         {
-            GameBit_Set(state->gameBit, 0);
+            mainSetBits(state->gameBit, 0);
         }
         state->markFlags = 0;
-        if (GameBit_Get(0xdf0) == 0 && GameBit_Get(0xaa) != 0)
+        if (mainGetBit(0xdf0) == 0 && mainGetBit(0xaa) != 0)
         {
-            GameBit_Set(0xdf0, 1);
+            mainSetBits(0xdf0, 1);
         }
     }
     (*(void (*)(int, int))state->think)(obj, (int)state);

@@ -12,8 +12,8 @@ extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
 extern void setPendingMapLoad(int v);
 extern void removeButtonObject(int* obj);
-extern int fn_80296C5C(void);
-extern void fn_80296C6C(int* player, int v);
+extern int playerIsDead(void);
+extern void playerSetIsDead(int* player, int v);
 
 
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
@@ -57,25 +57,25 @@ typedef struct
     u8 transitionStarted : 1; // bit 5
 } DeathSeqState;
 
-int deathseq_getExtraSize(void) { return 0x24; }
-int deathseq_getObjectTypeId(void) { return 0x0; }
+int DeathSeq_getExtraSize(void) { return 0x24; }
+int DeathSeq_getObjectTypeId(void) { return 0x0; }
 
-void deathseq_free(int* obj)
+void DeathSeq_free(int* obj)
 {
     setScreenTransitionPause(0);
     setPendingMapLoad(0);
     removeButtonObject(obj);
 }
 
-void deathseq_render(void)
+void DeathSeq_render(void)
 {
 }
 
-void deathseq_hitDetect(void)
+void DeathSeq_hitDetect(void)
 {
 }
 
-void deathseq_update(int* obj)
+void DeathSeq_update(int* obj)
 {
 
     s16* cam = Camera_GetCurrentViewSlot();
@@ -85,7 +85,7 @@ void deathseq_update(int* obj)
     ObjTextureRuntimeSlot* tex;
 
     ready = 0;
-    if (fn_80296C5C() != 0)
+    if (playerIsDead() != 0)
     {
         state->distTarget = lbl_803E3D18;
         if (((GameObject*)obj)->anim.currentMove != 0x92)
@@ -114,7 +114,7 @@ void deathseq_update(int* obj)
             {
                 if (player != NULL)
                 {
-                    fn_80296C6C(player, 0);
+                    playerSetIsDead(player, 0);
                 }
                 cutsceneFadeInOut(0);
                 setPendingMapLoad(0);
@@ -200,7 +200,7 @@ void deathseq_update(int* obj)
     }
 }
 
-void deathseq_init(int* obj)
+void DeathSeq_init(int* obj)
 {
     DeathSeqState* state = ((GameObject*)obj)->extra;
     s16* cam = Camera_GetCurrentViewSlot();
@@ -222,10 +222,10 @@ void deathseq_init(int* obj)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x400);
 }
 
-void deathseq_release(void)
+void DeathSeq_release(void)
 {
 }
 
-void deathseq_initialise(void)
+void DeathSeq_initialise(void)
 {
 }

@@ -11,7 +11,7 @@ extern ObjectDescriptor gCClevcontrolObjDescriptor;
 
 void ccqueen_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 void ccqueen_update(int *obj);
-int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int CClightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void FUN_801aa684(int param_1);
 void FUN_801aa6d8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801aa700(int param_1);
@@ -42,9 +42,9 @@ void FUN_801ac060(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u32 param_9);
 
-int ccsharpclawpad_getExtraSize(void);
-void ccsharpclawpad_update(int obj);
-void ccsharpclawpad_init(int* obj, int* def);
+int CCSharpclawPad_getExtraSize(void);
+void CCSharpclawPad_update(int obj);
+void CCSharpclawPad_init(int* obj, int* def);
 void cclightfoot_init(int* obj, int* def);
 int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 

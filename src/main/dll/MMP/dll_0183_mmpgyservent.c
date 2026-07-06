@@ -50,7 +50,7 @@ void mmp_gyservent_hitDetect(void)
 void mmp_gyservent_update(int obj)
 {
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((MmpGyserventPlacement*)def)->disableBit) != 0) return;
+    if (mainGetBit(((MmpGyserventPlacement*)def)->disableBit) != 0) return;
     ((GameObject*)obj)->unkF4 -= framesThisStep;
     if (((GameObject*)obj)->unkF4 < 0)
     {

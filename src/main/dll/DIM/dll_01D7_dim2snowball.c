@@ -248,7 +248,7 @@ void dim2snowball_update(int* obj)
         if (*(u8*)((char*)*(int**)&((Dim2SnowballState*)extra)->curveData + (((Dim2SnowballState*)extra)->curve.idx >>
             2)) == 32)
         {
-            if (GameBit_Get(GAMEBIT_SNOWBALL_LAUNCH) != 0)
+            if (mainGetBit(GAMEBIT_SNOWBALL_LAUNCH) != 0)
             {
                 int hitCount;
                 ((Dim2SnowballState*)extra)->flagsAC |= 2;

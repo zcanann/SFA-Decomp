@@ -72,7 +72,7 @@ extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, in
 extern int hitDetect_calcSweptSphereBounds(void* bounds, void* start, void* end, void* sphere, int n);
 extern int hitDetectFn_800691c0(int obj, void* p2, int p3, int p4);
 extern int hitDetectFn_80067958(int obj, void* p2, void* p3, int p4, void* p5, int p6);
-void scarab_update(int obj)
+void Scarab_update(int obj)
 {
     extern f32 Vec_xzDistance(f32* a, f32* b);
     extern void PSVECSubtract(void* a, void* b, void* out);
@@ -489,13 +489,13 @@ void scarab_update(int obj)
                 dy = (dy >= lbl_803E39F8) ? dy : -dy;
                 if (dy < lbl_803E3A3C)
                 {
-                    if (GameBit_Get(0x910) == 0)
+                    if (mainGetBit(0x910) == 0)
                     {
                         ((ScarabState*)state)->msgParamA = -1;
                         ((ScarabState*)state)->msgParamB = 0;
                         ((ScarabState*)state)->msgParamC = lbl_803E3A00;
                         ObjMsg_SendToObject(player, SCARAB_MSG_IN_RANGE, obj, state + 0x2c);
-                        GameBit_Set(0x910, 1);
+                        mainSetBits(0x910, 1);
                         ((ScarabState*)state)->flags28 |= 1;
                     }
                     else
@@ -521,7 +521,7 @@ void scarab_update(int obj)
                     dy = (dy >= lbl_803E39F8) ? dy : -dy;
                     if (dy < *(f32*)&lbl_803E3A3C)
                     {
-                        if (GameBit_Get(0x1d9) == 0)
+                        if (mainGetBit(0x1d9) == 0)
                         {
                             ObjMsg_SendToObject(player, SCARAB_MSG_PLAYER_BURST, obj, 1);
                         }
@@ -558,7 +558,7 @@ extern u8 gScarabColorVariantsA;
 extern u8 gScarabColorVariantsB;
 extern u8 gScarabColorVariantsC;
 
-void scarab_init(int* obj, u8* def)
+void Scarab_init(int* obj, u8* def)
 {
     ScarabState* state = ((GameObject*)obj)->extra;
     int* model;
@@ -689,16 +689,16 @@ void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
     }
 }
 
-int scarab_getExtraSize(void)
+int Scarab_getExtraSize(void)
 {
     return 0x34;
 }
 
-void scarab_free(void)
+void Scarab_free(void)
 {
 }
 
-void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void Scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int state;
     int model;

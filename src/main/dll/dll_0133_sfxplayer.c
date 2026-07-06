@@ -174,7 +174,7 @@ void sfxplayerObj_update(u8* obj)
 
     if (*(s16*)(data + 0x18) > 0)
     {
-        bitState = GameBit_Get(*(s16*)(data + 0x18));
+        bitState = mainGetBit(*(s16*)(data + 0x18));
     }
 
     switch (data[0x1d])
@@ -259,7 +259,7 @@ void sfxplayerObj_init(u8* obj, u8* data)
             s16 bit = *(s16*)(data + 0x18);
             if (bit > 0)
             {
-                state->gameBitState = GameBit_Get(bit);
+                state->gameBitState = mainGetBit(bit);
             }
             break;
         }

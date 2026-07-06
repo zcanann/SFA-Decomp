@@ -88,19 +88,19 @@ void pressureSwitch_ensureSharedResource(void)
     }
 }
 
-void hagabon_release(void);
+void Hagabon_release(void);
 
-void hagabon_initialise(void);
+void Hagabon_initialise(void);
 
-void swarmbaddie_hitDetect(void)
+void SwarmBaddie_hitDetect(void)
 {
 }
 
-void swarmbaddie_release(void)
+void SwarmBaddie_release(void)
 {
 }
 
-void swarmbaddie_initialise(void)
+void SwarmBaddie_initialise(void)
 {
 }
 
@@ -109,9 +109,9 @@ void swarmbaddie_initialise(void)
 #define SWARMBADDIE_FLAG_CHASE_LOCKOUT 0x04 /* strayed too far; block re-chase until back near path */
 #define SWARMBADDIE_FLAG_CHASE_MASK 0x06
 
-void hagabon_hitDetect(int obj);
+void Hagabon_hitDetect(int obj);
 
-void swarmbaddie_free(int obj)
+void SwarmBaddie_free(int obj)
 {
     void** state = ((GameObject*)obj)->extra;
     ObjGroup_RemoveObject(obj, SWARMBADDIE_OBJGROUP);
@@ -122,9 +122,9 @@ void swarmbaddie_free(int obj)
     }
 }
 
-void hagabon_free(int obj);
+void Hagabon_free(int obj);
 
-void swarmbaddie_init(int obj, int data, int skip_alloc)
+void SwarmBaddie_init(int obj, int data, int skip_alloc)
 {
     SwarmBaddieState* state = ((GameObject*)obj)->extra;
     state->curveStep = (f32)(s32) * (s16*)(data + 0x1A) / lbl_803E26CC;
@@ -147,16 +147,16 @@ void swarmbaddie_init(int obj, int data, int skip_alloc)
     ((GameObject*)obj)->objectFlags |= SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED;
 }
 
-void hagabon_init(int obj, int data, int skip_alloc);
+void Hagabon_init(int obj, int data, int skip_alloc);
 
-void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void Hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-int hagabon_getExtraSize(void);
-int hagabon_getObjectTypeId(void);
-int swarmbaddie_getExtraSize(void) { return sizeof(SwarmBaddieState); }
-int swarmbaddie_getObjectTypeId(void) { return 0x9; }
+int Hagabon_getExtraSize(void);
+int Hagabon_getObjectTypeId(void);
+int SwarmBaddie_getExtraSize(void) { return sizeof(SwarmBaddieState); }
+int SwarmBaddie_getObjectTypeId(void) { return 0x9; }
 
-void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void SwarmBaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 void fn_8014EE8C(int obj, SwarmBaddieState* state)
 {
@@ -244,7 +244,7 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state)
             mathSinf((gSwarmBaddiePi * state->rollWavePhase) / gSwarmBaddieS16AngleScale)));
 }
 
-void swarmbaddie_update(int obj)
+void SwarmBaddie_update(int obj)
 {
     SwarmBaddieState* state;
     struct
@@ -315,23 +315,23 @@ void swarmbaddie_update(int obj)
     fn_8014EE8C(obj, state);
 }
 
-void hagabon_update(int obj);
+void Hagabon_update(int obj);
 
 ObjectDescriptor gHagabonObjDescriptor = {
     0,
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)hagabon_initialise,
-    (ObjectDescriptorCallback)hagabon_release,
+    (ObjectDescriptorCallback)Hagabon_initialise,
+    (ObjectDescriptorCallback)Hagabon_release,
     0,
-    (ObjectDescriptorCallback)hagabon_init,
-    (ObjectDescriptorCallback)hagabon_update,
-    (ObjectDescriptorCallback)hagabon_hitDetect,
-    (ObjectDescriptorCallback)hagabon_render,
-    (ObjectDescriptorCallback)hagabon_free,
-    (ObjectDescriptorCallback)hagabon_getObjectTypeId,
-    hagabon_getExtraSize,
+    (ObjectDescriptorCallback)Hagabon_init,
+    (ObjectDescriptorCallback)Hagabon_update,
+    (ObjectDescriptorCallback)Hagabon_hitDetect,
+    (ObjectDescriptorCallback)Hagabon_render,
+    (ObjectDescriptorCallback)Hagabon_free,
+    (ObjectDescriptorCallback)Hagabon_getObjectTypeId,
+    Hagabon_getExtraSize,
 };
 
 ObjectDescriptor gSwarmBaddieObjDescriptor = {
@@ -339,14 +339,14 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)swarmbaddie_initialise,
-    (ObjectDescriptorCallback)swarmbaddie_release,
+    (ObjectDescriptorCallback)SwarmBaddie_initialise,
+    (ObjectDescriptorCallback)SwarmBaddie_release,
     0,
-    (ObjectDescriptorCallback)swarmbaddie_init,
-    (ObjectDescriptorCallback)swarmbaddie_update,
-    (ObjectDescriptorCallback)swarmbaddie_hitDetect,
-    (ObjectDescriptorCallback)swarmbaddie_render,
-    (ObjectDescriptorCallback)swarmbaddie_free,
-    (ObjectDescriptorCallback)swarmbaddie_getObjectTypeId,
-    swarmbaddie_getExtraSize,
+    (ObjectDescriptorCallback)SwarmBaddie_init,
+    (ObjectDescriptorCallback)SwarmBaddie_update,
+    (ObjectDescriptorCallback)SwarmBaddie_hitDetect,
+    (ObjectDescriptorCallback)SwarmBaddie_render,
+    (ObjectDescriptorCallback)SwarmBaddie_free,
+    (ObjectDescriptorCallback)SwarmBaddie_getObjectTypeId,
+    SwarmBaddie_getExtraSize,
 };

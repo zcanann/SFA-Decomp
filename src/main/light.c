@@ -26,7 +26,7 @@ extern f32 lbl_803E6150;
 extern ModgfxInterface** gModgfxInterface;
 extern void* gVfpDragHeadResource;
 extern f32 lbl_803E6138;
-extern int fn_801FC6F4(int, int, ObjAnimUpdateState*);
+extern int SeqPoint_SeqFn(int, int, ObjAnimUpdateState*);
 extern f32 lbl_803E6128;
 extern f32 lbl_803E610C;
 extern f32 lbl_803E611C;
@@ -44,24 +44,24 @@ extern s16 gVfpDragHeadSpawnTimer;
 extern u8 gVfpDragHeadActiveIndex;
 extern f32 lbl_803E6108;
 
-int vfpblock1_getExtraSize(void) { return 0x2; }
+int VFP_Block1_getExtraSize(void) { return 0x2; }
 
-int vfpblock1_getObjectTypeId(void) { return 0x0; }
+int VFP_Block1_getObjectTypeId(void) { return 0x0; }
 
-void vfpblock1_render(void)
+void VFP_Block1_render(void)
 {
 }
 
-void vfpblock1_hitDetect(void)
+void VFP_Block1_hitDetect(void)
 {
 }
 
-void vfpblock1_free(int obj)
+void VFP_Block1_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
 }
 
-/* Per-object extra state for SeqPoint (seqpoint_getExtraSize == 0x10). */
+/* Per-object extra state for SeqPoint (SeqPoint_getExtraSize == 0x10). */
 /* SeqPointState.mode: which predicate must hold for the seq point to fire. */
 typedef enum SeqPointMode {
   SEQPOINT_MODE_RADIUS = 0,          /* fire when player is within triggerRadius */
@@ -87,7 +87,7 @@ typedef struct SeqPointState
 STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
 
 #pragma scheduling off
-void vfpblock1_update(int obj)
+void VFP_Block1_update(int obj)
 {
     int player = (int)Obj_GetPlayerObject();
     f32 dist = Vec_distance((void*)(player + 0x18), &((GameObject*)obj)->anim.worldPosX);
@@ -108,83 +108,83 @@ void vfpblock1_update(int obj)
 }
 
 #pragma scheduling on
-void vfpblock1_release(void)
+void VFP_Block1_release(void)
 {
 }
 
-void vfpblock1_initialise(void)
+void VFP_Block1_initialise(void)
 {
 }
 
-void vfpplatform_hitDetect(void)
+void VFP_Platform_hitDetect(void)
 {
 }
 
-void vfpplatform_release(void)
+void VFP_Platform_release(void)
 {
 }
 
-void vfpplatform_initialise(void)
+void VFP_Platform_initialise(void)
 {
 }
 
-void vfpdoorswitch_hitDetect(void)
+void VFP_DoorSwitch_hitDetect(void)
 {
 }
 
-void vfpdoorswitch_release(void)
+void VFP_DoorSwitch_release(void)
 {
 }
 
-void vfpdoorswitch_initialise(void)
+void VFP_DoorSwitch_initialise(void)
 {
 }
 
-void seqpoint_free(void)
+void SeqPoint_free(void)
 {
 }
 
-void seqpoint_hitDetect(void)
+void SeqPoint_hitDetect(void)
 {
 }
 
-void seqpoint_release(void)
+void SeqPoint_release(void)
 {
 }
 
-void seqpoint_initialise(void)
+void SeqPoint_initialise(void)
 {
 }
 
-void vfpdraghead_render(void)
+void VFPDragHead_render(void)
 {
 }
 
-void vfpdraghead_hitDetect(void)
+void VFPDragHead_hitDetect(void)
 {
 }
 
-void vfpdraghead_release(void)
+void VFPDragHead_release(void)
 {
 }
 
-void vfpdraghead_initialise(void)
+void VFPDragHead_initialise(void)
 {
 }
 
-void vfpcoreplat_hitDetect(void)
+void VFP_coreplat_hitDetect(void)
 {
 }
 
-void vfpcoreplat_update(void)
+void VFP_coreplat_update(void)
 {
 }
 
-void vfpcoreplat_release(void)
+void VFP_coreplat_release(void)
 {
 }
 
-void vfpcoreplat_initialise(void)
+void VFP_coreplat_initialise(void)
 {
 }
 
@@ -192,37 +192,37 @@ void dll_224_free_nop(void)
 {
 }
 
-int vfpplatform_getExtraSize(void) { return 0x6; }
-int vfpplatform_getObjectTypeId(void) { return 0x0; }
-int vfpdoorswitch_getExtraSize(void) { return 0x4; }
-int vfpdoorswitch_getObjectTypeId(void) { return 0x0; }
-int seqpoint_getExtraSize(void) { return 0x10; }
-int seqpoint_getObjectTypeId(void) { return 0x0; }
-int vfpdraghead_getExtraSize(void) { return 0xc; }
-int vfpdraghead_getObjectTypeId(void) { return 0x0; }
+int VFP_Platform_getExtraSize(void) { return 0x6; }
+int VFP_Platform_getObjectTypeId(void) { return 0x0; }
+int VFP_DoorSwitch_getExtraSize(void) { return 0x4; }
+int VFP_DoorSwitch_getObjectTypeId(void) { return 0x0; }
+int SeqPoint_getExtraSize(void) { return 0x10; }
+int SeqPoint_getObjectTypeId(void) { return 0x0; }
+int VFPDragHead_getExtraSize(void) { return 0xc; }
+int VFPDragHead_getObjectTypeId(void) { return 0x0; }
 int return0_801FD13C(void) { return 0x0; }
-int vfpcoreplat_getExtraSize(void) { return 0x4; }
-int vfpcoreplat_getObjectTypeId(void) { return 0x0; }
+int VFP_coreplat_getExtraSize(void) { return 0x4; }
+int VFP_coreplat_getObjectTypeId(void) { return 0x0; }
 int dll_224_getExtraSize_ret_6(void) { return 0x6; }
 int dll_224_getObjectTypeId(void) { return 0x0; }
 
-void vfpplatform_free(int obj)
+void VFP_Platform_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
 }
 
-void vfpdoorswitch_free(int obj)
+void VFP_DoorSwitch_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
 }
 
-void vfpcoreplat_free(int obj)
+void VFP_coreplat_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
 }
 
 /* Per-object extra state for the VFP platform family (vfpplatform/vfpblock1/
- * vfpcoreplat). vfpplatform_getExtraSize == 0x6. */
+ * vfpcoreplat). VFP_Platform_getExtraSize == 0x6. */
 typedef struct VfpPlatformState
 {
     s16 gameBitId;  /* drives the open/close state machine */
@@ -235,7 +235,7 @@ STATIC_ASSERT(sizeof(VfpPlatformState) == 0x6);
 
 #pragma scheduling off
 #pragma peephole off
-void vfpblock1_init(int obj, int data)
+void VFP_Block1_init(int obj, int data)
 {
     VfpPlatformState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
@@ -243,7 +243,7 @@ void vfpblock1_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= (LIGHT_OBJFLAG_HIDDEN | LIGHT_OBJFLAG_HITDETECT_DISABLED);
 }
 
-void vfpplatform_init(int obj, int data)
+void VFP_Platform_init(int obj, int data)
 {
     VfpPlatformState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
@@ -253,7 +253,7 @@ void vfpplatform_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
-void vfpcoreplat_init(int obj, int data)
+void VFP_coreplat_init(int obj, int data)
 {
     VfpPlatformState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
@@ -261,12 +261,12 @@ void vfpcoreplat_init(int obj, int data)
     *(int (**)(void))(obj + 0xBC) = return0_801FD13C;
     if (((GameObject*)obj)->anim.seqId == 0x3cb)
     {
-        if (GameBit_Get(0x4e9) != 0)
+        if (mainGetBit(0x4e9) != 0)
         {
             ((GameObject*)obj)->anim.rootMotionScale =
                 lbl_803E6144 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
         }
-        if (GameBit_Get(0x63c) != 0)
+        if (mainGetBit(0x63c) != 0)
         {
             ((GameObject*)obj)->anim.rootMotionScale =
                 lbl_803E6148 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
@@ -291,16 +291,16 @@ void spellStoneUseFn_801fd270(int obj)
     if (player == NULL) return;
     if (state->requiredGameBit != -1)
     {
-        cond = GameBit_Get(state->requiredGameBit);
+        cond = mainGetBit(state->requiredGameBit);
     }
-    if ((s16)GameBit_Get(state->completeGameBit) != 0 || state->used != 0) return;
+    if ((s16)mainGetBit(state->completeGameBit) != 0 || state->used != 0) return;
     if (cond == 0) return;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if ((*gGameUIInterface)->isEventReady(gSpellStoneEventId) != 0)
     {
         if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (char*)player + 0x18) < lbl_803E6150)
         {
-            GameBit_Set(state->completeGameBit, 1);
+            mainSetBits(state->completeGameBit, 1);
             state->used = 1;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
@@ -308,7 +308,7 @@ void spellStoneUseFn_801fd270(int obj)
 }
 
 #pragma peephole on
-void vfpdraghead_free(int obj)
+void VFPDragHead_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
     (*gModgfxInterface)->freeSourceEffects((void*)obj);
@@ -319,7 +319,7 @@ void vfpdraghead_free(int obj)
     gVfpDragHeadResource = NULL;
 }
 
-/* Per-object extra state for VFPDragHead (vfpdraghead_getExtraSize == 0xC). */
+/* Per-object extra state for VFPDragHead (VFPDragHead_getExtraSize == 0xC). */
 typedef struct VfpDragHeadState
 {
     s16 gameBitA; /* toggled by hits; drives the 0x390 breath fx */
@@ -333,7 +333,7 @@ typedef struct VfpDragHeadState
 STATIC_ASSERT(sizeof(VfpDragHeadState) == 0xC);
 
 #pragma peephole off
-void vfpdraghead_init(int obj, int data)
+void VFPDragHead_init(int obj, int data)
 {
     VfpDragHeadState* state = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.seqId == 0x3c5)
@@ -360,10 +360,10 @@ void vfpdraghead_init(int obj, int data)
     gVfpDragHeadResource = Resource_Acquire(0xA5, 1);
 }
 
-void seqpoint_init(int obj, int data)
+void SeqPoint_init(int obj, int data)
 {
     SeqPointState* state = ((GameObject*)obj)->extra;
-    *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801FC6F4;
+    *(void (**)(int))(obj + 0xBC) = (void (*)(int))SeqPoint_SeqFn;
     ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
     state->triggerRadius =  * (s16*)(data + 0x1a);
     state->sequenceId = *(s16*)(data + 0x1c);
@@ -373,13 +373,13 @@ void seqpoint_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
-void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void SeqPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
     if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6128);
 }
 
-void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void VFP_Platform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     VfpPlatformState* state = ((GameObject*)obj)->extra;
     s32 isVisible = visible;
@@ -389,8 +389,8 @@ void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void vfpdoorswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E611C); }
-void vfpcoreplat_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6140); }
+void VFP_DoorSwitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E611C); }
+void VFP_coreplat_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6140); }
 
 typedef struct
 {
@@ -400,7 +400,7 @@ typedef struct
     u8 _state2_lo : 6;
 } VfpDoorSwitchState;
 
-void vfpdoorswitch_update(int obj)
+void VFP_DoorSwitch_update(int obj)
 {
     VfpDoorSwitchState* state;
     if (((GameObject*)obj)->anim.seqId != 0x3e7)
@@ -410,7 +410,7 @@ void vfpdoorswitch_update(int obj)
     }
     state = ((GameObject*)obj)->extra;
     if (state->activated != 0) return;
-    if (GameBit_Get(state->gameBitId) == 0) return;
+    if (mainGetBit(state->gameBitId) == 0) return;
     Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     Sfx_PlayFromObject(obj, SFXsp_skeep_mumb4);
     Sfx_PlayFromObject(obj, SFXTRIG_gate_stops);
@@ -418,14 +418,14 @@ void vfpdoorswitch_update(int obj)
     state->activated = 1;
 }
 
-void vfpdoorswitch_init(int obj, int data)
+void VFP_DoorSwitch_init(int obj, int data)
 {
     VfpDoorSwitchState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
     ((GameObject*)obj)->anim.rotZ = (((s32) * (s8*)(data + 0x19)) << 8);
     ((GameObject*)obj)->anim.rotY = *(s16*)(data + 0x1c);
     state->gameBitId = *(s16*)(data + 0x1e);
-    if (GameBit_Get(state->gameBitId) != 0)
+    if (mainGetBit(state->gameBitId) != 0)
     {
         ((ObjAnimSetProgressObjectFirstFn)ObjAnim_SetMoveProgress)(obj, lbl_803E611C);
         state->activated = 1;
@@ -446,7 +446,7 @@ void vfpdoorswitch_updateExplodingVariant(int obj)
 
     if (state->activated == 0)
     {
-        if (GameBit_Get(state->gameBitId) != 0)
+        if (mainGetBit(state->gameBitId) != 0)
         {
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             Sfx_PlayFromObject(obj, SFXsp_skeep_mumb4);
@@ -480,7 +480,7 @@ void vfpdoorswitch_updateExplodingVariant(int obj)
 void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 #pragma peephole on
-void seqpoint_update(int* obj)
+void SeqPoint_update(int* obj)
 {
     void* player = Obj_GetPlayerObject();
     SeqPointState* self = ((GameObject*)obj)->extra;
@@ -490,12 +490,12 @@ void seqpoint_update(int* obj)
     {
         if (self->done != 0)
         {
-            if (GameBit_Get(key) != 0) return;
-            GameBit_Set(self->disableBit, 1);
+            if (mainGetBit(key) != 0) return;
+            mainSetBits(self->disableBit, 1);
             self->done = 1;
             return;
         }
-        if (GameBit_Get(key) != 0)
+        if (mainGetBit(key) != 0)
         {
             self->done = 1;
             return;
@@ -511,42 +511,42 @@ void seqpoint_update(int* obj)
         break;
     case SEQPOINT_MODE_BIT:
         if (self->conditionBit == -1) return;
-        if (GameBit_Get(self->conditionBit) == 0) return;
+        if (mainGetBit(self->conditionBit) == 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case SEQPOINT_MODE_RADIUS_AND_BIT:
         if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
         if (self->conditionBit == -1) return;
-        if (GameBit_Get(self->conditionBit) == 0) return;
+        if (mainGetBit(self->conditionBit) == 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case SEQPOINT_MODE_RADIUS_BIT_ONCE:
         if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
         if (self->conditionBit == -1) return;
-        if (GameBit_Get(self->conditionBit) != 0) return;
+        if (mainGetBit(self->conditionBit) != 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
-        GameBit_Set(self->conditionBit, 1);
+        mainSetBits(self->conditionBit, 1);
         self->done = 1;
         break;
     case SEQPOINT_MODE_BIT_ONCE:
         if (self->conditionBit == -1) return;
-        if (GameBit_Get(self->conditionBit) != 0) return;
+        if (mainGetBit(self->conditionBit) != 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
-        GameBit_Set(self->conditionBit, 1);
+        mainSetBits(self->conditionBit, 1);
         self->done = 1;
         break;
     case SEQPOINT_MODE_BIT_REPEAT:
         if (self->conditionBit == -1) return;
-        if (GameBit_Get(self->conditionBit) == 0) return;
+        if (mainGetBit(self->conditionBit) == 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         break;
     }
 }
 
 #pragma peephole off
-void vfpdraghead_update(int* obj)
+void VFPDragHead_update(int* obj)
 {
     extern void Obj_FreeObject(int* obj);
     extern int randomGetRange(int lo, int hi);
@@ -557,7 +557,7 @@ void vfpdraghead_update(int* obj)
     {
         self2 = ((GameObject*)obj)->extra;
         gVfpDragHeadSpawnTimer -= (s16)timeDelta;
-        if (GameBit_Get(self2->gameBitB) != 0) return;
+        if (mainGetBit(self2->gameBitB) != 0) return;
         if (gVfpDragHeadSpawnTimer > 0xc8) return;
         if (self2->headIndex != gVfpDragHeadActiveIndex) return;
         if (randomGetRange(0, 2) != 0) return;
@@ -580,7 +580,7 @@ void vfpdraghead_update(int* obj)
     {
         self2 = ((GameObject*)obj)->extra;
         gVfpDragHeadSpawnTimer -= (s16)timeDelta;
-        if (GameBit_Get(0x522) != 0) return;
+        if (mainGetBit(0x522) != 0) return;
         if (gVfpDragHeadSpawnTimer > 0xc8) return;
         if (self2->headIndex != gVfpDragHeadActiveIndex) return;
         if (randomGetRange(0, 2) != 0) return;
@@ -589,7 +589,7 @@ void vfpdraghead_update(int* obj)
     else if (state == 1)
     {
         self2 = ((GameObject*)obj)->extra;
-        if (GameBit_Get(self2->gameBitA) != 0)
+        if (mainGetBit(self2->gameBitA) != 0)
         {
             (*gPartfxInterface)->spawnObject(obj, 0x390, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject(obj, 0x390, NULL, 4, -1, NULL);
@@ -600,12 +600,12 @@ void vfpdraghead_update(int* obj)
         }
         if ((s16)ObjHits_GetPriorityHit((int)obj, 0, 0, 0) != 0)
         {
-            GameBit_Set(self2->gameBitA, 1 - GameBit_Get(self2->gameBitA));
+            mainSetBits(self2->gameBitA, 1 - mainGetBit(self2->gameBitA));
         }
     }
 }
 
-int fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
+int SeqPoint_SeqFn(int obj, int param2, ObjAnimUpdateState* ctx)
 {
     SeqPointState* state = ((GameObject*)obj)->extra;
     int i;
@@ -622,9 +622,9 @@ int fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
             switch (ctx->eventIds[i])
             {
             case 20:
-                GameBit_Set(0x500, 0);
-                GameBit_Set(0xd72, 1);
-                GameBit_Set(0xd44, 1);
+                mainSetBits(0x500, 0);
+                mainSetBits(0xd72, 1);
+                mainSetBits(0xd44, 1);
                 (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 1, 1);
                 (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 2, 1);
                 (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 22, 1);
@@ -660,7 +660,7 @@ void fn_801FBAC8(int obj)
 {
     int params = *(int*)&((GameObject*)obj)->anim.placementData;
     VfpPlatformState* state = ((GameObject*)obj)->extra;
-    if (GameBit_Get(state->gameBitId) != 0)
+    if (mainGetBit(state->gameBitId) != 0)
     {
         state->state = 6;
     }
@@ -685,14 +685,14 @@ void fn_801FBAC8(int obj)
         }
         else
         {
-            if (GameBit_Get(state->gameBitId) == 0)
+            if (mainGetBit(state->gameBitId) == 0)
             {
                 state->state = 3;
             }
         }
         break;
     case 0:
-        if (GameBit_Get(state->gameBitId) == 0)
+        if (mainGetBit(state->gameBitId) == 0)
         {
             state->state = 3;
         }
@@ -766,7 +766,7 @@ void fn_801FBAC8(int obj)
     }
 }
 
-void vfpplatform_update(int obj)
+void VFP_Platform_update(int obj)
 {
     int params = *(int*)&((GameObject*)obj)->anim.placementData;
     VfpPlatformState* state = ((GameObject*)obj)->extra;
@@ -777,7 +777,7 @@ void vfpplatform_update(int obj)
     u8 s3 = state->axisMode;
     if (s3 == 10)
     {
-        if (GameBit_Get(state->gameBitId) != 0)
+        if (mainGetBit(state->gameBitId) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         }
@@ -799,7 +799,7 @@ void vfpplatform_update(int obj)
                 switch (state->state)
                 {
                 case 0:
-                    if (GameBit_Get(state->gameBitId) != 0)
+                    if (mainGetBit(state->gameBitId) != 0)
                     {
                         state->state = 1;
                     }
@@ -1008,14 +1008,14 @@ ObjectDescriptor gVFP_Block1ObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)vfpblock1_initialise,
-    (ObjectDescriptorCallback)vfpblock1_release,
+    (ObjectDescriptorCallback)VFP_Block1_initialise,
+    (ObjectDescriptorCallback)VFP_Block1_release,
     0,
-    (ObjectDescriptorCallback)vfpblock1_init,
-    (ObjectDescriptorCallback)vfpblock1_update,
-    (ObjectDescriptorCallback)vfpblock1_hitDetect,
-    (ObjectDescriptorCallback)vfpblock1_render,
-    (ObjectDescriptorCallback)vfpblock1_free,
-    (ObjectDescriptorCallback)vfpblock1_getObjectTypeId,
-    vfpblock1_getExtraSize,
+    (ObjectDescriptorCallback)VFP_Block1_init,
+    (ObjectDescriptorCallback)VFP_Block1_update,
+    (ObjectDescriptorCallback)VFP_Block1_hitDetect,
+    (ObjectDescriptorCallback)VFP_Block1_render,
+    (ObjectDescriptorCallback)VFP_Block1_free,
+    (ObjectDescriptorCallback)VFP_Block1_getObjectTypeId,
+    VFP_Block1_getExtraSize,
 };

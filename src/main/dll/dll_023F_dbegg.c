@@ -197,7 +197,7 @@ void dbegg_processMessages(int obj)
                 ObjHits_EnableObject(obj);
                 break;
             case 19:
-                GameBit_Set(config->secondaryConditionId, 1);
+                mainSetBits(config->secondaryConditionId, 1);
                 if ((int)config->activationEventId > 0)
                 {
                     gameBitIncrement((int)config->activationEventId);
@@ -241,7 +241,7 @@ void dbegg_setupFromDef(int obj, u8* state)
     config->speedScaleByte * gDbEggSpeedByteScale;
     ((GameObject*)obj)->anim.rootMotionScale =
         ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    state[0x118] = (u8)(GameBit_Get(config->primaryConditionId) != 0 ? 3 : 1);
+    state[0x118] = (u8)(mainGetBit(config->primaryConditionId) != 0 ? 3 : 1);
     if (state[0x118] == 1)
     {
         if (fn_801FE560(obj, &surfaceProbeOut, lbl_803E61C8, *(f32*)&lbl_803E61C8, 1) == 0)
@@ -272,7 +272,7 @@ void dbegg_setupFromDef(int obj, u8* state)
         }
         if (config->behaviorMode == 7) state[0x119] |= 32;
     }
-    state[0x118] = (u8)(GameBit_Get(config->readyConditionId) != 0 ? 5 : 12);
+    state[0x118] = (u8)(mainGetBit(config->readyConditionId) != 0 ? 5 : 12);
     if (state[0x118] == 5)
     {
         ObjGroup_AddObject(obj, DBEGG_OBJGROUP);
@@ -288,7 +288,7 @@ void dbegg_setupFromDef(int obj, u8* state)
 }
 
 #pragma peephole on
-int dbegg_func0B(int obj, f32* v)
+int dbegg_setLaunchVelocity(int obj, f32* v)
 {
     u8* inner = ((GameObject*)obj)->extra;
     if (((DbEggState*)inner)->mode == 0xb)
@@ -616,7 +616,7 @@ void dbegg_update(int obj)
     extern f32 Vec_xzDistance(int, int);
     extern void Vec3_Normalize(int);
     extern f32 PSVECMag(int);
-    extern void fn_80137948(char* fmt, ...);
+    extern void logPrintf(char* fmt, ...);
     extern void ObjHits_EnableObject(int);
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[];
@@ -737,7 +737,7 @@ void dbegg_update(int obj)
                     targetPosY - ((GameObject*)obj)->anim.localPosY) / fz;
                 ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ + (((DbeggPlacement*)data)->
                     targetPosZ - ((GameObject*)obj)->anim.localPosZ) / fz;
-                if (GameBit_Get(0x44d) != 0)
+                if (mainGetBit(0x44d) != 0)
                 {
                     ((DbEggState*)eggState)->mode = DBEGG_MODE_CURVE_INIT;
                 }
@@ -784,13 +784,13 @@ void dbegg_update(int obj)
                         ((GameObject*)obj)->anim.localPosZ, ((GameObject*)obj)->anim.rotX, randomGetRange(1, 10), 1);
                 }
             }
-            if (GameBit_Get(0x426) != 0)
+            if (mainGetBit(0x426) != 0)
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 ((DbEggState*)eggState)->waterOffset = ((DbEggState*)eggState)->waterOffset - lbl_803E623C * timeDelta;
                 if (((DbEggState*)eggState)->waterOffset < lbl_803E61EC)
                 {
-                    GameBit_Set(0x428, GameBit_Get(0x428) + 1);
+                    mainSetBits(0x428, mainGetBit(0x428) + 1);
                     ((DbEggState*)eggState)->mode = DBEGG_MODE_SINKING;
                     fz = lbl_803E61C8;
                     ((GameObject*)obj)->anim.velocityY = lbl_803E61C8;
@@ -815,10 +815,10 @@ void dbegg_update(int obj)
                 placement = *(int*)&((GameObject*)obj)->anim.placementData;
                 ObjGroup_RemoveObject(obj, DBEGG_OBJGROUP);
                 ((DbEggState*)pickupState)->mode = DBEGG_MODE_RELEASED;
-                GameBit_Set(0x3c4, 1);
-                GameBit_Set(0x86d, 1);
+                mainSetBits(0x3c4, 1);
+                mainSetBits(0x86d, 1);
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                GameBit_Set(((DbeggPlacement*)placement)->triggerGameBit, 1);
+                mainSetBits(((DbeggPlacement*)placement)->triggerGameBit, 1);
                 ((DbEggState*)pickupState)->msg11C = -1;
                 ((DbEggState*)pickupState)->msg11E = 0;
                 ((DbEggState*)pickupState)->msg120 = lbl_803E61CC;
@@ -863,7 +863,7 @@ void dbegg_update(int obj)
             }
             break;
         case DBEGG_MODE_RESPAWN_WAIT:
-            if (GameBit_Get(0x42a) != 0)
+            if (mainGetBit(0x42a) != 0)
             {
                 dbegg_setupFromDef(obj, (int*)eggState);
             }
@@ -919,7 +919,7 @@ void dbegg_update(int obj)
                         timeDelta);
                     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * (lbl_803E6254 *
                         timeDelta);
-                    fn_80137948(sAnimGreaterMessage);
+                    logPrintf(sAnimGreaterMessage);
                 }
                 ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + ((GameObject*)obj)->anim.
                     velocityX;
@@ -930,7 +930,7 @@ void dbegg_update(int obj)
             }
             break;
         case DBEGG_MODE_GATED_RESPAWN:
-            if (GameBit_Get(((DbeggPlacement*)data)->activateGameBit) != 0)
+            if (mainGetBit(((DbeggPlacement*)data)->activateGameBit) != 0)
             {
                 ObjGroup_AddObject(obj, DBEGG_OBJGROUP);
                 ((DbEggState*)eggState)->mode = DBEGG_MODE_FALLING;
@@ -976,7 +976,7 @@ void dbegg_update(int obj)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             ObjHits_DisableObject(obj);
-            if (GameBit_Get(((DbeggPlacement*)data)->triggerGameBit) != 0)
+            if (mainGetBit(((DbeggPlacement*)data)->triggerGameBit) != 0)
             {
                 ((DbEggState*)eggState)->flags119 &= ~9;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
@@ -985,7 +985,7 @@ void dbegg_update(int obj)
         }
         else if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
         {
-            if (GameBit_Get(0x3c4) == 0)
+            if (mainGetBit(0x3c4) == 0)
             {
                 if (Vec_xzDistance(obj + 0x18, player + 0x18) < lbl_803E6264)
                 {
@@ -996,10 +996,10 @@ void dbegg_update(int obj)
                         placement = *(int*)&((GameObject*)obj)->anim.placementData;
                         ObjGroup_RemoveObject(obj, DBEGG_OBJGROUP);
                         ((DbEggState*)pickupState)->mode = DBEGG_MODE_RELEASED;
-                        GameBit_Set(0x3c4, 1);
-                        GameBit_Set(0x86d, 1);
+                        mainSetBits(0x3c4, 1);
+                        mainSetBits(0x86d, 1);
                         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                        GameBit_Set(((DbeggPlacement*)placement)->triggerGameBit, 1);
+                        mainSetBits(((DbeggPlacement*)placement)->triggerGameBit, 1);
                         ((DbEggState*)pickupState)->msg11C = -1;
                         ((DbEggState*)pickupState)->msg11E = 0;
                         ((DbEggState*)pickupState)->msg120 = lbl_803E61CC;

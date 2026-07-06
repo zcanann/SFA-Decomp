@@ -147,7 +147,7 @@ void OptionsScreen_initialise(void)
 }
 
 #pragma peephole off
-int OptionsScreen_run(void)
+int OptionsScreen_frameStart(void)
 {
     int step = framesThisStep;
     s8 oldFade = lbl_803DD704;

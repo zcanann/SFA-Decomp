@@ -61,9 +61,9 @@ int drchimmey_countdownCallback(DRChimmeyObject* obj, int amount)
     return state->offeringsRemaining <= 0;
 }
 
-int drchimmey_getExtraSize(void) { return 0x18; }
+int DR_Chimmey_getExtraSize(void) { return 0x18; }
 
-void drchimmey_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void DR_Chimmey_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     if (visible != 0)
     {
@@ -71,13 +71,13 @@ void drchimmey_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     }
 }
 
-void drchimmey_update(DRChimmeyObject* obj)
+void DR_Chimmey_update(DRChimmeyObject* obj)
 {
     DRChimmeySetup* setup = obj->setup;
     DRChimmeyState* state = obj->state;
 
     obj->renderFlags |= 8;
-    if (setup->enableGameBit != -1 && GameBit_Get(setup->enableGameBit) == 0)
+    if (setup->enableGameBit != -1 && mainGetBit(setup->enableGameBit) == 0)
     {
         return;
     }
@@ -87,7 +87,7 @@ void drchimmey_update(DRChimmeyObject* obj)
         {
             state->eventActive = 1;
             s16toFloat(&state->timer, state->timerDuration);
-            GameBit_Set(state->completionGameBit, 1);
+            mainSetBits(state->completionGameBit, 1);
         }
         else
         {
@@ -110,12 +110,12 @@ void drchimmey_update(DRChimmeyObject* obj)
         state->timer = lbl_803E69E4;
         state->eventActive = 0;
         state->offeringsRemaining = 1;
-        GameBit_Set(state->completionGameBit, 0);
-        GameBit_Set(0xea4, 0);
+        mainSetBits(state->completionGameBit, 0);
+        mainSetBits(0xea4, 0);
     }
 }
 
-void drchimmey_init(DRChimmeyObject* obj, DRChimmeySetup* setup)
+void DR_Chimmey_init(DRChimmeyObject* obj, DRChimmeySetup* setup)
 {
     DRChimmeyState* state;
 

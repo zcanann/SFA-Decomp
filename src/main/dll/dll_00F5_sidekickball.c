@@ -1,11 +1,11 @@
 /*
  * DLL 0x00F5 (sidekickball) - the Tricky "fetch" ball.
  *
- * sidekickball_init spawns one ball object (extra size 0x2CC), wires it
+ * SidekickBall_init spawns one ball object (extra size 0x2CC), wires it
  * onto the path-control interface and clears game bit 0x3F8; the free
  * callback re-sets 0x3F8 so the spawner knows the ball is gone.
  *
- * sidekickball_update runs the ball through a small mode machine
+ * SidekickBall_update runs the ball through a small mode machine
  * (SidekickBallMode): IDLE waits for the player to grab/charge a throw
  * (trickyBallFn_801793b8), THROWN/MOVING fly the ball with bounce +
  * floor-depth physics and surface reflection (trickyBallMove), and
@@ -40,7 +40,7 @@ extern f32 gSidekickBallFadeDuration;
 extern const f32 gSidekickBallActiveTimeout;
 extern const f32 gSidekickBallMaxAlpha;
 extern u16 getYButtonItem(s16* out);
-extern int fn_80295BF0(int* player);
+extern int isTrickyNear(int* player);
 extern int fn_8029669C(int* player);
 extern void vecRotateZXY(void* inParams, f32* outVec);
 extern const f32 lbl_803E3688;
@@ -48,7 +48,7 @@ extern const f32 lbl_803E368C;
 extern const f32 lbl_803E3690;
 extern const f32 lbl_803E3694;
 extern const f32 lbl_803E3698;
-extern u32 GameBit_Get(int eventId);
+extern u32 mainGetBit(int eventId);
 extern f32 sqrtf(f32 x);
 extern f32 timeDelta;
 extern void* getTrickyObject(void);
@@ -60,7 +60,7 @@ extern void fn_8002A5DC(int obj);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern void PSVECNormalize(f32 * src, f32 * dst);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
-extern void fn_80137948(char* fmt, ...);
+extern void logPrintf(char* fmt, ...);
 extern const f32 gSidekickBallRestitution;
 extern const f32 lbl_803E36B4;
 extern const f32 gSidekickBallFloorDamping;
@@ -85,13 +85,13 @@ enum SidekickBallMode
     SIDEKICK_BALL_FADING = 5,
 };
 
-int sidekickball_getExtraSize(void) { return 0x2cc; }
+int SidekickBall_getExtraSize(void) { return 0x2cc; }
 
 int fn_801793A4(int* obj) { return *((u8*)(int*)((GameObject*)obj)->extra + 0x274) == 0; }
 
-void sidekickball_free(int obj) { GameBit_Set(0x3F8, 1); }
+void SidekickBall_free(int obj) { mainSetBits(0x3F8, 1); }
 
-void sidekickball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void SidekickBall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (((GameObject*)obj)->unkF8 == 0 || visible == -1)
     {
@@ -171,7 +171,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     btns = getButtonsJustPressed(0);
     if ((btns & PAD_BUTTON_A) != 0 || (yItem == 5 && (getButtonsJustPressed(0) & PAD_BUTTON_Y) != 0))
     {
-        if (fn_80295BF0(player) != 0)
+        if (isTrickyNear(player) != 0)
         {
             params->pad2CA[0] = 0;
         }
@@ -238,7 +238,7 @@ end:
     }
 }
 
-void sidekickball_update(u8* self)
+void SidekickBall_update(u8* self)
 {
     extern int ObjTrigger_IsSet(u8 * obj);
     extern void trickyBallFn_801793b8(int obj, u8 *state);
@@ -262,7 +262,7 @@ void sidekickball_update(u8* self)
         || (otherStatusZeroWord = __cntlzw((u32)((GameObject*)other)->objectFlags),
             otherStatusMask = otherStatusZeroWord >> 5,
             (otherStatusMask & 0x1000) != 0)
-        || GameBit_Get(0xD00) != 0)
+        || mainGetBit(0xD00) != 0)
     {
         Obj_FreeObject(self);
         return;
@@ -474,7 +474,7 @@ u8 trickyBallMove(u8* obj)
         dot = lbl_803E36D0 *
         ((reflectedX * collisionNormal[0]) + (reflectedY * collisionNormal[1]) +
             (reflectedZ * collisionNormal[2]));
-        fn_80137948(sSidekickBallDotFormat, dot);
+        logPrintf(sSidekickBallDotFormat, dot);
         if (dot > lbl_803E369C)
         {
             ((GameObject*)obj)->anim.velocityX = collisionNormal[0] * dot;
@@ -504,10 +504,10 @@ u8 trickyBallMove(u8* obj)
     return 3;
 }
 
-void sidekickball_init(int obj)
+void SidekickBall_init(int obj)
 {
 
-    extern void GameBit_Set(int eventId, int value);
+    extern void mainSetBits(int eventId, int value);
     u8 pathFlag;
     u8* state;
     int objDef;
@@ -528,7 +528,7 @@ void sidekickball_init(int obj)
     ObjHits_DisableObject((u32)obj);
     ((SidekickBallState*)state)->hittableLatch = 0; /* explicit post-memset store in target */
     ObjMsg_AllocQueue((void*)obj, 1);
-    GameBit_Set(0x3f8, 0);
+    mainSetBits(0x3f8, 0);
 }
 
 int area_getExtraSize(void);
@@ -562,4 +562,4 @@ char sSidekickBallYVelDepthFormat[] = "yvel %f, depth %f\n";
 char sSidekickBallDotFormat[] = " dot %f ";
 
 /* .data fill (reconstructed to match dll_00F5_sidekickball.o) */
-ObjectDescriptor gSidekickBallObjDescriptor = { 0, 0, 0, 0x90000, 0, 0, 0, (ObjectDescriptorCallback)sidekickball_init, (ObjectDescriptorCallback)sidekickball_update, 0, (ObjectDescriptorCallback)sidekickball_render, (ObjectDescriptorCallback)sidekickball_free, 0, sidekickball_getExtraSize };
+ObjectDescriptor gSidekickBallObjDescriptor = { 0, 0, 0, 0x90000, 0, 0, 0, (ObjectDescriptorCallback)SidekickBall_init, (ObjectDescriptorCallback)SidekickBall_update, 0, (ObjectDescriptorCallback)SidekickBall_render, (ObjectDescriptorCallback)SidekickBall_free, 0, SidekickBall_getExtraSize };

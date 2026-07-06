@@ -36,7 +36,7 @@ STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
-/* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
+/* DIM2PathGenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
@@ -82,7 +82,7 @@ void dll_1CF_update(void)
 
 void dll_1CF_init(GameObject* obj, Dll1CFObjectDef* def)
 {
-    if ((u32)GameBit_Get(def->gateGameBit) != 0u)
+    if ((u32)mainGetBit(def->gateGameBit) != 0u)
     {
         obj->anim.rotY = (s16)(((s32)def->rotYRaw << 13) / 45);
     }

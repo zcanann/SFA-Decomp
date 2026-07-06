@@ -30,7 +30,7 @@ extern f32 lbl_803E38A0;
 #define TRICKYWARP_OBJ_GROUP 0x4b
 #define ROMCURVE_TYPE_TRICKYWARP '$'
 
-void trickywarp_free(int obj)
+void TrickyWarp_free(int obj)
 {
     TrickyWarpState* state = ((GameObject*)obj)->extra;
     if (state->active != 0)
@@ -39,9 +39,9 @@ void trickywarp_free(int obj)
     }
 }
 
-int trickywarp_getExtraSize(void) { return sizeof(TrickyWarpState); }
+int TrickyWarp_getExtraSize(void) { return sizeof(TrickyWarpState); }
 
-void trickywarp_update(int obj)
+void TrickyWarp_update(int obj)
 {
     TrickyWarpState* state;
     int reachable;
@@ -97,7 +97,7 @@ int fn_8017FFD0(int obj, TrickyWarpState* state)
     int playerObj;
     int playerPatchGroup;
 
-    if (GameBit_Get(GAMEBIT_TRICKY_AVAILABLE) == 0)
+    if (mainGetBit(GAMEBIT_TRICKY_AVAILABLE) == 0)
     {
         return 0;
     }
@@ -155,9 +155,9 @@ int fn_8017FFD0(int obj, TrickyWarpState* state)
             node = (TrickyWarpCurveNode*)(*gRomCurveInterface)->getById(state->curveNodeIds[i]);
             if (node != NULL)
             {
-                if (node->requiredGameBit == -1 || GameBit_Get(node->requiredGameBit) != 0)
+                if (node->requiredGameBit == -1 || mainGetBit(node->requiredGameBit) != 0)
                 {
-                    if (node->forbiddenGameBit == -1 || GameBit_Get(node->forbiddenGameBit) == 0)
+                    if (node->forbiddenGameBit == -1 || mainGetBit(node->forbiddenGameBit) == 0)
                     {
                         if (node->linkPatchGroups[0] == playerPatchGroup)
                         {
@@ -183,7 +183,7 @@ int fn_8017FFD0(int obj, TrickyWarpState* state)
     return getPatchGroup((f32*)(playerObj + 0xc), state->patchGroup);
 }
 
-void trickywarp_init(s16* obj, u8* placement)
+void TrickyWarp_init(s16* obj, u8* placement)
 {
     u32 flags;
     flags = ((GameObject*)obj)->objectFlags;
@@ -211,13 +211,13 @@ ObjectDescriptor gTrickyWarpObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)trickywarp_init,
-    (ObjectDescriptorCallback)trickywarp_update,
+    (ObjectDescriptorCallback)TrickyWarp_init,
+    (ObjectDescriptorCallback)TrickyWarp_update,
     0,
     0,
-    (ObjectDescriptorCallback)trickywarp_free,
+    (ObjectDescriptorCallback)TrickyWarp_free,
     0,
-    trickywarp_getExtraSize,
+    TrickyWarp_getExtraSize,
 };
 
 ObjectDescriptor gTrickyGuardObjDescriptor = {
@@ -225,8 +225,8 @@ ObjectDescriptor gTrickyGuardObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)trickyguard_init,
-    (ObjectDescriptorCallback)trickyguard_update,
+    (ObjectDescriptorCallback)TrickyGuard_init,
+    (ObjectDescriptorCallback)TrickyGuard_update,
     0,
     0,
     0,
@@ -267,11 +267,11 @@ ObjectDescriptor gCurveFishObjDescriptor = {
     0,
     0,
     0,
-    (ObjectDescriptorCallback)curvefish_init,
-    (ObjectDescriptorCallback)curvefish_update,
+    (ObjectDescriptorCallback)CurveFish_init,
+    (ObjectDescriptorCallback)CurveFish_update,
     0,
     0,
     0,
     0,
-    curvefish_getExtraSize,
+    CurveFish_getExtraSize,
 };

@@ -25,29 +25,29 @@ typedef struct DrenergydiscPlacement
     u8 pad22[0x28 - 0x22];
 } DrenergydiscPlacement;
 
-int drenergydisc_getExtraSize(void) { return 1; }
+int DR_EnergyDisc_getExtraSize(void) { return 1; }
 
-int drenergydisc_getObjectTypeId(void) { return 0; }
+int DR_EnergyDisc_getObjectTypeId(void) { return 0; }
 
-void drenergydisc_free(void)
+void DR_EnergyDisc_free(void)
 {
 }
 
-void drenergydisc_render(void)
+void DR_EnergyDisc_render(void)
 {
 }
 
-void drenergydisc_hitDetect(void)
+void DR_EnergyDisc_hitDetect(void)
 {
 }
 
-void drenergydisc_update(int obj)
+void DR_EnergyDisc_update(int obj)
 {
     ObjTextureRuntimeSlot* texture;
     DrEnergyDiscState* state = ((GameObject*)obj)->extra;
     int setup = *(int*)&((GameObject*)obj)->anim.placementData;
 
-    if ((u32)GameBit_Get(((DrenergydiscPlacement*)setup)->activeGameBit) != 0)
+    if ((u32)mainGetBit(((DrenergydiscPlacement*)setup)->activeGameBit) != 0)
     {
         if (state->activated == 0)
         {
@@ -72,13 +72,13 @@ void drenergydisc_update(int obj)
         }
     }
 
-    if ((u32)GameBit_Get(((DrenergydiscPlacement*)setup)->moveGameBit) != 0)
+    if ((u32)mainGetBit(((DrenergydiscPlacement*)setup)->moveGameBit) != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E6BB0, 0);
     }
 }
 
-void drenergydisc_init(u8* obj, u8* setup)
+void DR_EnergyDisc_init(u8* obj, u8* setup)
 {
     ObjTextureRuntimeSlot* texture;
     DrEnergyDiscState* state = ((GameObject*)obj)->extra;
@@ -86,7 +86,7 @@ void drenergydisc_init(u8* obj, u8* setup)
 
     spawnRotX = (s16)((s8)setup[0x18] << 8);
     ((GameObject*)obj)->anim.rotX = spawnRotX;
-    if ((u32)GameBit_Get(((DrenergydiscPlacement*)setup)->activeGameBit) != 0)
+    if ((u32)mainGetBit(((DrenergydiscPlacement*)setup)->activeGameBit) != 0)
     {
         state->activated = 1;
         Sfx_PlayFromObject((int)obj, SFXfend_rob_servo2);
@@ -108,10 +108,10 @@ void drenergydisc_init(u8* obj, u8* setup)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (DRENERGYDISC_OBJFLAG_HIDDEN | DRENERGYDISC_OBJFLAG_HITDETECT_DISABLED));
 }
 
-void drenergydisc_release(void)
+void DR_EnergyDisc_release(void)
 {
 }
 
-void drenergydisc_initialise(void)
+void DR_EnergyDisc_initialise(void)
 {
 }

@@ -74,23 +74,23 @@ extern f32 lbl_803E2F60;
 extern f32 lbl_803E2F64;
 extern f32 lbl_803E2F68;
 
-void tumbleweedbush_free(void)
+void TumbleWeedBush_free(void)
 {
 }
 
-void tumbleweedbush_hitDetect(void)
+void TumbleWeedBush_hitDetect(void)
 {
 }
 
-void tumbleweedbush_release(void)
+void TumbleWeedBush_release(void)
 {
 }
 
-void tumbleweedbush_initialise(void)
+void TumbleWeedBush_initialise(void)
 {
 }
 
-void tumbleweedbush_init(u8* obj, u8* params, int param3)
+void TumbleWeedBush_init(u8* obj, u8* params, int param3)
 {
     u8* sub;
     f32 t;
@@ -147,11 +147,11 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3)
     }
 }
 
-int tumbleweedbush_getExtraSize(void) { return 0x54; }
-int tumbleweedbush_getObjectTypeId(void) { return 0x0; }
+int TumbleWeedBush_getExtraSize(void) { return 0x54; }
+int TumbleWeedBush_getObjectTypeId(void) { return 0x0; }
 
 #pragma optimization_level 2
-void tumbleweedbush_update(int* obj)
+void TumbleWeedBush_update(int* obj)
 {
     TumbleweedBushState* state;
     int* player;
@@ -215,7 +215,7 @@ void fn_80163980(int* obj)
     *((u8*)(int*)((GameObject*)obj)->extra + 0x278) = v;
 }
 
-void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void TumbleWeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2F44);
@@ -255,7 +255,7 @@ void* tumbleweedbush_findNearestActive(f32* p_pos)
     return bestObj;
 }
 
-void tumbleweedbush_setScale(u8* obj, void* match)
+void TumbleWeedBush_setScale(u8* obj, void* match)
 {
     TumbleweedBushState* state;
     int i;
@@ -427,17 +427,17 @@ ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)tumbleweedbush_initialise,
-        (ObjectDescriptorCallback)tumbleweedbush_release,
+        (ObjectDescriptorCallback)TumbleWeedBush_initialise,
+        (ObjectDescriptorCallback)TumbleWeedBush_release,
         0,
-        (ObjectDescriptorCallback)tumbleweedbush_init,
-        (ObjectDescriptorCallback)tumbleweedbush_update,
-        (ObjectDescriptorCallback)tumbleweedbush_hitDetect,
-        (ObjectDescriptorCallback)tumbleweedbush_render,
-        (ObjectDescriptorCallback)tumbleweedbush_free,
-        (ObjectDescriptorCallback)tumbleweedbush_getObjectTypeId,
-        tumbleweedbush_getExtraSize,
-        (ObjectDescriptorCallback)tumbleweedbush_setScale,
+        (ObjectDescriptorCallback)TumbleWeedBush_init,
+        (ObjectDescriptorCallback)TumbleWeedBush_update,
+        (ObjectDescriptorCallback)TumbleWeedBush_hitDetect,
+        (ObjectDescriptorCallback)TumbleWeedBush_render,
+        (ObjectDescriptorCallback)TumbleWeedBush_free,
+        (ObjectDescriptorCallback)TumbleWeedBush_getObjectTypeId,
+        TumbleWeedBush_getExtraSize,
+        (ObjectDescriptorCallback)TumbleWeedBush_setScale,
     },
     0,
 };

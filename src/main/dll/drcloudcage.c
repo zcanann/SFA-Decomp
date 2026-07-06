@@ -9,7 +9,7 @@
  *                inserts a new fully-opaque point pair at the head of one of the
  *                nine trail buffers; every existing pair's alpha decays by
  *                timeDelta and exhausted trails are freed.
- *   fn_801EA240  drives the wind/engine sfx channels (8,1,2,4) by distance and
+ *   drcloudcage_updateEngineFx  drives the wind/engine sfx channels (8,1,2,4) by distance and
  *                rotZ, clamps each channel volume, and spawns two light pulses;
  *                then advances the trails via fn_801E9C00.
  *   fn_801EA678  returns a distance/route-rank weighted scalar (pitch/intensity)
@@ -417,7 +417,7 @@ typedef struct DRCloudCagePulseParams
     f32 unk14;
 } DRCloudCagePulseParams;
 
-void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unused, u8 channelFlags)
+void drcloudcage_updateEngineFx(f32 distanceScale, int obj, int state, int intensity, int unused, u8 channelFlags)
 {
     f32 clamped;
     f32 d;

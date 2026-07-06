@@ -12,9 +12,9 @@
 
 /* perch anim-event callback: stop the sequence once the old
  * CloudRunner has been freed from his cage (0x4D) */
-int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int CFPerch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    if (GameBit_Get(0x4d) != 0)
+    if (mainGetBit(0x4d) != 0)
     {
         animUpdate->sequenceControlFlags = OBJSEQ_CONTROL_SET_LATCH_A;
     }
@@ -42,7 +42,7 @@ void cfperch_update(int* obj)
 {
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if (GameBit_Get(0x50) == 0)
+        if (mainGetBit(0x50) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
@@ -53,7 +53,7 @@ void cfperch_update(int* obj)
 void cfperch_init(int* obj)
 {
     ((GameObject*)obj)->unkF4 = 1;
-    ((GameObject*)obj)->animEventCallback = fn_801A04F4;
+    ((GameObject*)obj)->animEventCallback = CFPerch_SeqFn;
 }
 
 void cfperch_release(void)

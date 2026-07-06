@@ -7,7 +7,7 @@
  * one fires it grants that row's reward bits, optionally unlocks a cheat
  * (rows 0-2), records the row's dialogue id as a pending trigger, and
  * runs sequence 0 with input disabled. The pending dialogue is shown the
- * next time event 1 is received (gmmazewell_clearPendingTriggerCallback).
+ * next time event 1 is received (GM_MazeWell_SeqFn).
  *
  * On enter it stamps a savepoint at the player and plays maze-well music
  * (track 0x36, gated by game bit 0xEFC); leaving stops both. The prompt
@@ -46,7 +46,7 @@ STATIC_ASSERT(sizeof(GmmazewellState) == 0x8);
 
 #define MAZEWELL_DEFAULT_DIALOGUE 1316
 
-int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int GM_MazeWell_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GmmazewellState* state = ((GameObject*)obj)->extra;
     int i;
@@ -61,20 +61,20 @@ int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateSta
     return 0;
 }
 
-int gmmazewell_getExtraSize(void) { return sizeof(GmmazewellState); }
+int GM_MazeWell_getExtraSize(void) { return sizeof(GmmazewellState); }
 
-void gmmazewell_free(void)
+void GM_MazeWell_free(void)
 {
-    GameBit_Set(GAMEBIT_MAZEWELL_ACTIVE, 0);
+    mainSetBits(GAMEBIT_MAZEWELL_ACTIVE, 0);
     Music_Trigger(MUSIC_MAZEWELL, 0);
 }
 
-void gmmazewell_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
+void GM_MazeWell_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6978);
 }
 
-void gmmazewell_update(unsigned int obj)
+void GM_MazeWell_update(unsigned int obj)
 {
     int objId;
     s16* questBits = lbl_8032A730;
@@ -100,7 +100,7 @@ void gmmazewell_update(unsigned int obj)
 
     for (i = 0, questBitPtr = questBits; (u32)i < QUEST_BIT_COUNT; i++)
     {
-        if (GameBit_Get(*questBitPtr) != 0)
+        if (mainGetBit(*questBitPtr) != 0)
         {
             matchedBit = questBits[i];
             goto checkValue;
@@ -134,12 +134,12 @@ checkValue:
                     case 0:
                     case 1:
                     case 2:
-                        GameBit_Set(questBits[i + QUEST_REWARD_BASE], 1);
+                        mainSetBits(questBits[i + QUEST_REWARD_BASE], 1);
                         saveFileStruct_unlockCheat((u8)i);
                         break;
                     }
                     state->pendingDialogue = questBits32[i + QUEST_DIALOGUE_BASE32];
-                    GameBit_Set(questBits[i + QUEST_FOLLOWUP_BASE], 1);
+                    mainSetBits(questBits[i + QUEST_FOLLOWUP_BASE], 1);
                 }
                 else
                 {
@@ -152,11 +152,11 @@ checkValue:
                     case 0:
                     case 1:
                     case 2:
-                        GameBit_Set(questBits[i + QUEST_REWARD_BASE], 1);
+                        mainSetBits(questBits[i + QUEST_REWARD_BASE], 1);
                         saveFileStruct_unlockCheat((u8)i);
                         break;
                     }
-                    GameBit_Set(questBits[i + QUEST_FOLLOWUP_BASE], 1);
+                    mainSetBits(questBits[i + QUEST_FOLLOWUP_BASE], 1);
                 }
                 found = 1;
                 goto checkFound;
@@ -175,11 +175,11 @@ checkValue:
     objRenderFn_80041018(obj);
 }
 
-void gmmazewell_init(int obj)
+void GM_MazeWell_init(int obj)
 {
     GmmazewellState* state = ((GameObject*)obj)->extra;
     state->unk0 = 0;
-    GameBit_Set(GAMEBIT_MAZEWELL_ACTIVE, 1);
+    mainSetBits(GAMEBIT_MAZEWELL_ACTIVE, 1);
     Music_Trigger(MUSIC_MAZEWELL, 1);
-    ((GameObject*)obj)->animEventCallback = gmmazewell_clearPendingTriggerCallback;
+    ((GameObject*)obj)->animEventCallback = GM_MazeWell_SeqFn;
 }

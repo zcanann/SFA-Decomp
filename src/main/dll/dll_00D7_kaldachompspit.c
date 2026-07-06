@@ -51,46 +51,46 @@ extern f32 lbl_803E30FC;
 extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
-int kaldachompme_getExtraSize(void);
+int KaldaChompMe_getExtraSize(void);
 
-int kaldachompme_getObjectTypeId(void);
+int KaldaChompMe_getObjectTypeId(void);
 
-void kaldachompme_free(void);
+void KaldaChompMe_free(void);
 
-void kaldachompme_render(int p1, int p2, int p3, int p4, int p5, s8 renderFlag);
+void KaldaChompMe_render(int p1, int p2, int p3, int p4, int p5, s8 renderFlag);
 
-void kaldachompme_hitDetect(void);
+void KaldaChompMe_hitDetect(void);
 
-void kaldachompme_update(int obj);
+void KaldaChompMe_update(int obj);
 
-void kaldachompme_init(int obj, int params);
+void KaldaChompMe_init(int obj, int params);
 
-void kaldachompme_release(void);
+void KaldaChompMe_release(void);
 
-void kaldachompme_initialise(void);
+void KaldaChompMe_initialise(void);
 
 ObjectDescriptor gKaldaChompMeObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)kaldachompme_initialise,
-    (ObjectDescriptorCallback)kaldachompme_release,
+    (ObjectDescriptorCallback)KaldaChompMe_initialise,
+    (ObjectDescriptorCallback)KaldaChompMe_release,
     0,
-    (ObjectDescriptorCallback)kaldachompme_init,
-    (ObjectDescriptorCallback)kaldachompme_update,
-    (ObjectDescriptorCallback)kaldachompme_hitDetect,
-    (ObjectDescriptorCallback)kaldachompme_render,
-    (ObjectDescriptorCallback)kaldachompme_free,
-    (ObjectDescriptorCallback)kaldachompme_getObjectTypeId,
-    kaldachompme_getExtraSize,
+    (ObjectDescriptorCallback)KaldaChompMe_init,
+    (ObjectDescriptorCallback)KaldaChompMe_update,
+    (ObjectDescriptorCallback)KaldaChompMe_hitDetect,
+    (ObjectDescriptorCallback)KaldaChompMe_render,
+    (ObjectDescriptorCallback)KaldaChompMe_free,
+    (ObjectDescriptorCallback)KaldaChompMe_getObjectTypeId,
+    KaldaChompMe_getExtraSize,
 };
 
-void kaldachompspit_hitDetect(void)
+void KaldaChompSpit_hitDetect(void)
 {
 }
 
-int kaldachompspit_getExtraSize(void) { return 0x4; }
-int kaldachompspit_getObjectTypeId(void) { return 0x0; }
+int KaldaChompSpit_getExtraSize(void) { return 0x4; }
+int KaldaChompSpit_getObjectTypeId(void) { return 0x0; }
 
-void kaldachompspit_free(int* obj)
+void KaldaChompSpit_free(int* obj)
 {
     void* light = *(void**)((GameObject*)obj)->extra;
     if (light != NULL)
@@ -99,7 +99,7 @@ void kaldachompspit_free(int* obj)
     }
 }
 
-void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
+void KaldaChompSpit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     u8* light = **(u8***)&((GameObject*)obj)->extra;
@@ -115,7 +115,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 
 void kaldachompspit_burst(int obj);
 
-void kaldachompspit_update(int obj)
+void KaldaChompSpit_update(int obj)
 {
     extern int getTrickyObject(void);
     extern int Obj_GetPlayerObject(void);
@@ -255,7 +255,7 @@ void kaldachompspit_burst(int obj)
     }
 }
 
-void kaldachompspit_init(int obj)
+void KaldaChompSpit_init(int obj)
 {
     int* extra;
 
@@ -303,11 +303,11 @@ void kaldachompspit_init(int obj)
     }
 }
 
-void kaldachompspit_release(void)
+void KaldaChompSpit_release(void)
 {
 }
 
-void kaldachompspit_initialise(void)
+void KaldaChompSpit_initialise(void)
 {
 }
 
@@ -316,16 +316,16 @@ ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)kaldachompspit_initialise,
-    (ObjectDescriptorCallback)kaldachompspit_release,
+    (ObjectDescriptorCallback)KaldaChompSpit_initialise,
+    (ObjectDescriptorCallback)KaldaChompSpit_release,
     0,
-    (ObjectDescriptorCallback)kaldachompspit_init,
-    (ObjectDescriptorCallback)kaldachompspit_update,
-    (ObjectDescriptorCallback)kaldachompspit_hitDetect,
-    (ObjectDescriptorCallback)kaldachompspit_render,
-    (ObjectDescriptorCallback)kaldachompspit_free,
-    (ObjectDescriptorCallback)kaldachompspit_getObjectTypeId,
-    kaldachompspit_getExtraSize,
+    (ObjectDescriptorCallback)KaldaChompSpit_init,
+    (ObjectDescriptorCallback)KaldaChompSpit_update,
+    (ObjectDescriptorCallback)KaldaChompSpit_hitDetect,
+    (ObjectDescriptorCallback)KaldaChompSpit_render,
+    (ObjectDescriptorCallback)KaldaChompSpit_free,
+    (ObjectDescriptorCallback)KaldaChompSpit_getObjectTypeId,
+    KaldaChompSpit_getExtraSize,
 };
 
 ObjectDescriptor gPinPonSpikeObjDescriptor = {
@@ -350,16 +350,16 @@ ObjectDescriptor gPollenObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pollen_initialise,
-    (ObjectDescriptorCallback)pollen_release,
+    (ObjectDescriptorCallback)Pollen_initialise,
+    (ObjectDescriptorCallback)Pollen_release,
     0,
-    (ObjectDescriptorCallback)pollen_init,
-    (ObjectDescriptorCallback)pollen_update,
-    (ObjectDescriptorCallback)pollen_hitDetect,
-    (ObjectDescriptorCallback)pollen_render,
-    (ObjectDescriptorCallback)pollen_free,
-    (ObjectDescriptorCallback)pollen_getObjectTypeId,
-    pollen_getExtraSize,
+    (ObjectDescriptorCallback)Pollen_init,
+    (ObjectDescriptorCallback)Pollen_update,
+    (ObjectDescriptorCallback)Pollen_hitDetect,
+    (ObjectDescriptorCallback)Pollen_render,
+    (ObjectDescriptorCallback)Pollen_free,
+    (ObjectDescriptorCallback)Pollen_getObjectTypeId,
+    Pollen_getExtraSize,
 };
 
 PollenFragmentConfig lbl_80320538 = {

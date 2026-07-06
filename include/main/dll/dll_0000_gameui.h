@@ -120,7 +120,7 @@ typedef struct
 
 
 /* extern-cleanup: defining-file public prototypes */
-void fn_8012C000(void);
+void pauseMenuAnimateCarousel(void);
 void pauseMenuInit(void);
 void CMenu_SetFadeCounter(s16 v);
 void pauseMenuDoSave(void);

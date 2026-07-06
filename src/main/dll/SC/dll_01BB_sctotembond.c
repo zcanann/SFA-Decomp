@@ -129,7 +129,7 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
     }
 }
 
-u32 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, u32 unused, ObjAnimUpdateState* animUpdate)
+u32 sc_totembond_SeqFn(ScTotemBondObject* obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
     ScTotemBondState* state;
     int countForEvent2;
@@ -232,7 +232,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
         state->ringIndex = (s16)(u16)((s32)obj->yaw / SC_TOTEMBOND_ORB_ANGLE_STEP);
         ObjHits_DisableObject((u32)obj);
         sc_totembond_spawnGameBitOrbs(obj, state, gTotemBondOrbSpawnRadius);
-        GameBit_Set(gTotemBondRingGameBits[state->ringIndex], 1);
+        mainSetBits(gTotemBondRingGameBits[state->ringIndex], 1);
         obj->mapAlpha = 0;
         state->eventFlags &= ~SC_TOTEMBOND_EVENT_START_ORBS;
         state->eventFlags |= SC_TOTEMBOND_EVENT_ORBS_ACTIVE;
@@ -266,7 +266,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
                 fn_80296124(player, NULL, NULL, 0);
                 ObjHits_EnableObject((u32)obj);
                 hudFn_8011f38c(0);
-                GameBit_Set(0x2bc, 1);
+                mainSetBits(0x2bc, 1);
                 state->eventFlags = 0;
                 Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 0);
                 return;
@@ -274,13 +274,13 @@ void sc_totembond_update(ScTotemBondObject* obj)
         }
         else
         {
-            if (GameBit_Get(SC_TOTEMBOND_ORB_TRIGGER_EVENT) != 0)
+            if (mainGetBit(SC_TOTEMBOND_ORB_TRIGGER_EVENT) != 0)
             {
-                GameBit_Set(SC_TOTEMBOND_ORB_TRIGGER_EVENT, 0);
+                mainSetBits(SC_TOTEMBOND_ORB_TRIGGER_EVENT, 0);
                 availableCount = orbIndex = 0;
                 for (; orbIndex < SC_TOTEMBOND_ORB_COUNT; orbIndex++)
                 {
-                    if (GameBit_Get(gTotemBondOrbGameBits[orbIndex]) == 0)
+                    if (mainGetBit(gTotemBondOrbGameBits[orbIndex]) == 0)
                     {
                         availableOrbs[availableCount++] = orbIndex;
                     }
@@ -294,7 +294,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
                     nextRing = availableOrbs[randomGetRange(0, availableCount - 1)];
                     if (state->ringIndex == nextRing)
                     {
-                        GameBit_Set(gTotemBondRingGameBits[state->ringIndex], 1);
+                        mainSetBits(gTotemBondRingGameBits[state->ringIndex], 1);
                     }
                     if (state->ringIndex != nextRing)
                     {
@@ -326,7 +326,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
                 state->ringIndex
                 )
                 {
-                    GameBit_Set(gTotemBondRingGameBits[state->ringIndex], 1);
+                    mainSetBits(gTotemBondRingGameBits[state->ringIndex], 1);
                 }
             }
         }
@@ -357,7 +357,7 @@ void sc_totembond_init(ScTotemBondObject* obj, int params)
     s16 hi = (s16)(u16)((s32)obj->yaw / 8192);
     state = obj->state;
     state->ringIndex = hi;
-    obj->animEventCallback = sc_totempuzzle_processAnimEvents;
+    obj->animEventCallback = sc_totembond_SeqFn;
     flags = obj->objectFlags | (SC_TOTEMBOND_OBJFLAG_HIDDEN | SC_TOTEMBOND_OBJFLAG_HITDETECT_DISABLED);
     obj->objectFlags = flags;
 }
@@ -370,7 +370,7 @@ int fn_801DE320(u16* gameBitIds, u16 newValue)
 
     for (i = 0; i < 3; i++)
     {
-        u16 value = GameBit_Get(gameBitIds[i]);
+        u16 value = mainGetBit(gameBitIds[i]);
         values[i] = value;
     }
     values[3] = newValue;
@@ -392,7 +392,7 @@ int fn_801DE320(u16* gameBitIds, u16 newValue)
     }
     for (i = 0; i < 3; i++)
     {
-        GameBit_Set(gameBitIds[i], values[i]);
+        mainSetBits(gameBitIds[i], values[i]);
     }
     return changed;
 }

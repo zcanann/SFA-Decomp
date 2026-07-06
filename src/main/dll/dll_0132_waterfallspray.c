@@ -22,7 +22,7 @@ typedef struct WaterFallSprayPlacement
 {
     u8 pad0[0x14 - 0x0];
     s32 mapId;       /* 0x14: selects the alternate SFX-id pair */
-    s16 gameBit;     /* 0x18: gating GameBit_Get (-1 = always on) */
+    s16 gameBit;     /* 0x18: gating mainGetBit (-1 = always on) */
     s8 rotZSeed;     /* 0x1a: <<8 -> anim.rotZ */
     s8 rotYSeed;     /* 0x1b: <<8 -> anim.rotY */
     s8 rotXSeed;     /* 0x1c: <<8 -> anim.rotX */
@@ -82,7 +82,7 @@ void WaterFallSpray_update(int* objParam)
     {
         if (data->gameBit != -1)
         {
-            i = GameBit_Get(data->gameBit);
+            i = mainGetBit(data->gameBit);
         }
         else
         {

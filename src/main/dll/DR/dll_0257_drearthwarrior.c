@@ -462,8 +462,8 @@ void DR_EarthWarrior_func17(int obj, int param)
     inner->sub.rideState = param;
     if (param == 0)
     {
-        GameBit_Set(0x7bc, 0);
-        GameBit_Set(0x7d4, 1);
+        mainSetBits(0x7bc, 0);
+        mainSetBits(0x7d4, 1);
         inner->unk9FD &= ~1;
         ((ByteFlags*)&inner->sub.flags994)->b02 = 0;
         (*gGameUIInterface)->airMeterSetShutdown();
@@ -475,8 +475,8 @@ void DR_EarthWarrior_func17(int obj, int param)
         ((ByteFlags*)&inner2->sub.flags994)->b02 = 1;
         (*gGameUIInterface)->initAirMeter(((DREarthWarriorPlacement*)placement)->airMeterMax, 0x5cf);
         (*gGameUIInterface)->runAirMeter(inner2->sub.health);
-        GameBit_Set(0x7bc, 1);
-        GameBit_Set(0x7d4, 0);
+        mainSetBits(0x7bc, 1);
+        mainSetBits(0x7d4, 0);
     }
 }
 
@@ -502,7 +502,7 @@ void DR_EarthWarrior_func22(int obj, f32 scale)
     fn_8003B950((int)gEarthWarriorMatrix);
 }
 
-int fn_802BDBE8(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int DR_EarthWarrior_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     int i;
@@ -1276,7 +1276,7 @@ void DR_EarthWarrior_update(int obj)
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
             buttonDisable(0, PAD_BUTTON_A);
             inner->sub.health += 4;
-            GameBit_Set(0xc1, GameBit_Get(0xc1) - 1);
+            mainSetBits(0xc1, mainGetBit(0xc1) - 1);
         }
         else if (inner->sub.interactSequenceId != -1)
         {
@@ -1347,7 +1347,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     r2 = lbl_802C2CA8;
     r1 = lbl_802C2CB4;
     ((GameObject*)obj)->anim.rotX = (s16)(((DREarthWarriorPlacement*)p2)->spawnYaw << 8);
-    ((GameObject*)obj)->animEventCallback = fn_802BDBE8;
+    ((GameObject*)obj)->animEventCallback = DR_EarthWarrior_SeqFn;
     ObjGroup_AddObject(obj, DREARTHWARRIOR_OBJGROUP);
     ((DREarthWarriorState*)inner)->unk14E8 = ((DREarthWarriorPlacement*)p2)->unk19;
     ((DREarthWarriorState*)inner)->unk14DE = 5;
@@ -1402,7 +1402,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     ((ByteFlags*)((char*)inner + 0x14ec))->b02 = 0;
     ((DREarthWarriorState*)inner)->unk14F5 = 1;
     ((DREarthWarriorState*)inner)->helperObj = 0;
-    if (GameBit_Get(0x9ec) != 0)
+    if (mainGetBit(0x9ec) != 0)
     {
         ((DREarthWarriorState*)inner)->unk14ED = 1;
     }

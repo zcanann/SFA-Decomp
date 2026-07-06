@@ -18,15 +18,15 @@ typedef struct NwIceState
     int* linkedObj;
 } NwIceState;
 
-int nw_ice_getExtraSize(void) { return 0x4; }
+int NW_ice_getExtraSize(void) { return 0x4; }
 
-void nw_ice_free(int obj) { ObjGroup_RemoveObject(obj, NWICE_OBJGROUP); }
+void NW_ice_free(int obj) { ObjGroup_RemoveObject(obj, NWICE_OBJGROUP); }
 
-void nw_ice_render(void)
+void NW_ice_render(void)
 {
 }
 
-void nw_ice_update(int* obj)
+void NW_ice_update(int* obj)
 {
     extern int Obj_GetPlayerObject(void); /* #57 */
     int** scan;
@@ -85,4 +85,4 @@ void nw_ice_update(int* obj)
     }
 }
 
-void nw_ice_init(int obj) { ObjGroup_AddObject(obj, NWICE_OBJGROUP); }
+void NW_ice_init(int obj) { ObjGroup_AddObject(obj, NWICE_OBJGROUP); }

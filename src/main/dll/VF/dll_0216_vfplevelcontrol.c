@@ -104,10 +104,10 @@ void fn_801F9804(int obj)
 
     if (state->latch.fields.sequenceStep < 4)
     {
-        bits[0] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_0);
-        bits[1] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_1);
-        bits[2] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_2);
-        bits[3] = GameBit_Get(GAMEBIT_VFP_SEQ_STEP_3);
+        bits[0] = mainGetBit(GAMEBIT_VFP_SEQ_STEP_0);
+        bits[1] = mainGetBit(GAMEBIT_VFP_SEQ_STEP_1);
+        bits[2] = mainGetBit(GAMEBIT_VFP_SEQ_STEP_2);
+        bits[3] = mainGetBit(GAMEBIT_VFP_SEQ_STEP_3);
         i = state->latch.fields.sequenceStep;
         p = &bits[i];
         for (; i < 4; i++)
@@ -119,17 +119,17 @@ void fn_801F9804(int obj)
                     state->latch.fields.sequenceStep++;
                     if (state->latch.fields.sequenceStep == 4)
                     {
-                        GameBit_Set(GAMEBIT_VFP_SEQ_DONE, 1);
+                        mainSetBits(GAMEBIT_VFP_SEQ_DONE, 1);
                     }
                 }
             }
             else if (*p != 0)
             {
                 state->latch.fields.sequenceStep = 0;
-                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_0, 0);
-                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_1, 0);
-                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_2, 0);
-                GameBit_Set(GAMEBIT_VFP_SEQ_STEP_3, 0);
+                mainSetBits(GAMEBIT_VFP_SEQ_STEP_0, 0);
+                mainSetBits(GAMEBIT_VFP_SEQ_STEP_1, 0);
+                mainSetBits(GAMEBIT_VFP_SEQ_STEP_2, 0);
+                mainSetBits(GAMEBIT_VFP_SEQ_STEP_3, 0);
                 break;
             }
             p++;
@@ -138,40 +138,40 @@ void fn_801F9804(int obj)
 }
 #pragma dont_inline reset
 
-int vfplevelcontrol_getExtraSize(void) { return 0x1c; }
+int VFP_LevelControl_getExtraSize(void) { return 0x1c; }
 
-int vfplevelcontrol_getObjectTypeId(void) { return 0x0; }
+int VFP_LevelControl_getObjectTypeId(void) { return 0x0; }
 
-void vfplevelcontrol_free(int obj)
+void VFP_LevelControl_free(int obj)
 {
     timeOfDayFn_80055000();
     ObjGroup_RemoveObject(obj, VFPLEVELCONTROL_OBJGROUP);
     Music_Trigger(VFP_MUSIC_A, 0);
 }
 
-void vfplevelcontrol_render(void)
+void VFP_LevelControl_render(void)
 {
 }
 
-void vfplevelcontrol_hitDetect(void)
+void VFP_LevelControl_hitDetect(void)
 {
 }
 
-void vfplevelcontrol_update(int obj)
+void VFP_LevelControl_update(int obj)
 {
     VfpLevelControlState* state = ((GameObject*)obj)->extra;
     int player = (int)Obj_GetPlayerObject();
     u8 mapEventState;
 
-    if (((GameObject*)obj)->unkF4 == 0 && GameBit_Get(GAMEBIT_VFP_INTRO_DONE) == 0u)
+    if (((GameObject*)obj)->unkF4 == 0 && mainGetBit(GAMEBIT_VFP_INTRO_DONE) == 0u)
     {
-        if (GameBit_Get(GAMEBIT_VFP_SKY_PENDING) != 0u)
+        if (mainGetBit(GAMEBIT_VFP_SKY_PENDING) != 0u)
         {
             getEnvfxActImmediately(obj, obj, VFP_ENVFX_INTRO_0, 0);
             getEnvfxActImmediately(obj, obj, VFP_ENVFX_INTRO_1, 0);
             getEnvfxActImmediately(obj, obj, VFP_ENVFX_INTRO_2, 0);
             skyFn_80088e54(1, lbl_803E6060);
-            GameBit_Set(GAMEBIT_VFP_SKY_PENDING, 0);
+            mainSetBits(GAMEBIT_VFP_SKY_PENDING, 0);
         }
         ((GameObject*)obj)->unkF4 = 1;
     }
@@ -192,15 +192,15 @@ void vfplevelcontrol_update(int obj)
             }
         }
         Obj_GetPlayerObject();
-        if (GameBit_Get(0x4ec) == 0u && GameBit_Get(0x9b1) != 0u &&
-            GameBit_Get(0x9b2) != 0u)
+        if (mainGetBit(0x4ec) == 0u && mainGetBit(0x9b1) != 0u &&
+            mainGetBit(0x9b2) != 0u)
         {
-            GameBit_Set(0x4ec, 1);
+            mainSetBits(0x4ec, 1);
         }
-        if (GameBit_Get(0xd6d) != 0u && GameBit_Get(0xd6e) != 0u &&
-            GameBit_Get(0xd6f) != 0u && GameBit_Get(0xd70) != 0u)
+        if (mainGetBit(0xd6d) != 0u && mainGetBit(0xd6e) != 0u &&
+            mainGetBit(0xd6f) != 0u && mainGetBit(0xd70) != 0u)
         {
-            GameBit_Set(0xcfb, 1);
+            mainSetBits(0xcfb, 1);
         }
         break;
     case 2:
@@ -231,7 +231,7 @@ void vfplevelcontrol_update(int obj)
     SCGameBitLatch_Update(state->latch.raw, 2, -1, -1, GAMEBIT_VFP_LATCH, VFP_MUSIC_B);
 }
 
-void vfplevelcontrol_init(int* obj, u8* init)
+void VFP_LevelControl_init(int* obj, u8* init)
 {
     VfpLevelControlState* state = ((GameObject*)obj)->extra;
     VfpLevelControlSetup* setup = (VfpLevelControlSetup*)init;
@@ -253,26 +253,26 @@ void vfplevelcontrol_init(int* obj, u8* init)
     state->unk02[5] = 0;
     ((GameObject*)obj)->objectFlags |= (VFPLEVELCONTROL_OBJFLAG_HIDDEN | VFPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
     timeOfDayFn_80055038();
-    GameBit_Set(GAMEBIT_VFP_LATCH, 1);
+    mainSetBits(GAMEBIT_VFP_LATCH, 1);
     unlockLevel(0, 0, 1);
-    if ((u32)GameBit_Get(GAMEBIT_VFP_SEQ_DONE) != 0)
+    if ((u32)mainGetBit(GAMEBIT_VFP_SEQ_DONE) != 0)
     {
         state->latch.fields.sequenceStep = 4;
     }
     else
     {
-        GameBit_Set(GAMEBIT_VFP_SEQ_STEP_0, 0);
-        GameBit_Set(GAMEBIT_VFP_SEQ_STEP_1, 0);
-        GameBit_Set(GAMEBIT_VFP_SEQ_STEP_2, 0);
-        GameBit_Set(GAMEBIT_VFP_SEQ_STEP_3, 0);
+        mainSetBits(GAMEBIT_VFP_SEQ_STEP_0, 0);
+        mainSetBits(GAMEBIT_VFP_SEQ_STEP_1, 0);
+        mainSetBits(GAMEBIT_VFP_SEQ_STEP_2, 0);
+        mainSetBits(GAMEBIT_VFP_SEQ_STEP_3, 0);
     }
 }
 
-void vfplevelcontrol_release(void)
+void VFP_LevelControl_release(void)
 {
 }
 
-void vfplevelcontrol_initialise(void)
+void VFP_LevelControl_initialise(void)
 {
     lbl_803DC148 = VFP_TIMER_INIT;
 }

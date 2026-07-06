@@ -109,10 +109,10 @@ void nw_levcontrol_update(int objArg)
     if (status == 1)
     {
         (*gMapEventInterface)->setMapAct(7, 2);
-        GameBit_Set(0xf22, 1);
-        GameBit_Set(0xf23, 1);
-        GameBit_Set(0xf24, 1);
-        GameBit_Set(0xf25, 1);
+        mainSetBits(0xf22, 1);
+        mainSetBits(0xf23, 1);
+        mainSetBits(0xf24, 1);
+        mainSetBits(0xf25, 1);
     }
     sunPos = (*gSkyInterface)->getSunPosition(0);
     if (sunPos != 0)
@@ -142,15 +142,15 @@ void nw_levcontrol_update(int objArg)
     SCGameBitLatch_Update(&state->flags, 0x20, -1, -1, 0x393, 0x36);
     SCGameBitLatch_Update(&state->flags, 0x40, -1, -1, 0xcbb, 0xc4);
     timerActive = 0;
-    gameBit = GameBit_Get(0x19f);
-    rescueBit = GameBit_Get(0x19d);
+    gameBit = mainGetBit(0x19f);
+    rescueBit = mainGetBit(0x19d);
     if (((rescueBit ^ gameBit) != 0) && (timerRunning = gameTimerIsRunning(), timerRunning != 0))
     {
         timerActive = 1;
     }
-    GameBit_Set(0xf31, timerActive);
+    mainSetBits(0xf31, timerActive);
     SCGameBitLatch_Update(&state->flags, 0x80, -1, -1, 0xf31, 0xaf);
-    gameBit = GameBit_Get(0x398);
+    gameBit = mainGetBit(0x398);
     if ((gameBit != 0) &&
         (status = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), status == 0)
     )
@@ -167,19 +167,19 @@ void nw_levcontrol_update(int objArg)
         switch (state->mode)
         {
         case NWLEVCONTROL_MODE_WAIT_START:
-            gameBit = GameBit_Get(0x19d);
+            gameBit = mainGetBit(0x19d);
             if (gameBit != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 state->mode = NWLEVCONTROL_MODE_WALK_TABLE;
-                GameBit_Set(0xecd, 1);
+                mainSetBits(0xecd, 1);
             }
             break;
         case NWLEVCONTROL_MODE_INIT_START:
             (*gObjectTriggerInterface)->preempt(obj, 0x64a);
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 0x20);
             state->mode = NWLEVCONTROL_MODE_WALK_TABLE;
-            GameBit_Set(0xecd, 1);
+            mainSetBits(0xecd, 1);
             break;
         case NWLEVCONTROL_MODE_WALK_TABLE:
             obj = fn_801CFD68((u8*)state);
@@ -227,7 +227,7 @@ void nw_levcontrol_update(int objArg)
                     state->flags = state->flags & ~4;
                     gameTimerStop();
                     Music_Trigger((int*)0xaf, 0);
-                    GameBit_Set(0x19f, 1);
+                    mainSetBits(0x19f, 1);
                 }
                 else
                 {
@@ -242,10 +242,10 @@ void nw_levcontrol_update(int objArg)
             }
             break;
         case NWLEVCONTROL_MODE_CLEANUP:
-            gameBit = GameBit_Get(0xecd);
+            gameBit = mainGetBit(0xecd);
             if (gameBit != 0)
             {
-                GameBit_Set(0xecd, 0);
+                mainSetBits(0xecd, 0);
             }
             break;
         case NWLEVCONTROL_MODE_RESCUE_RETRIGGER:
@@ -267,11 +267,11 @@ void nw_levcontrol_init(int* obj)
     Obj_GetPlayerObject();
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWLEVCONTROL_OBJFLAG_HIDDEN | NWLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
 
-    if (GameBit_Get(0x19f) != 0)
+    if (mainGetBit(0x19f) != 0)
     {
         state->mode = NWLEVCONTROL_MODE_RESCUE_RETRIGGER;
     }
-    else if (GameBit_Get(0x19d) != 0)
+    else if (mainGetBit(0x19d) != 0)
     {
         state->mode = NWLEVCONTROL_MODE_INIT_START;
     }

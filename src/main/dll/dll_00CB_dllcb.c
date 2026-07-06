@@ -246,7 +246,7 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             return 1;
         }
         fn_8016083C((int*)obj, (GroundBaddieState*)sub, (GroundBaddieState*)sub);
-        if (((GroundBaddieState*)sub)->gameBitC != -1 && GameBit_Get(((GroundBaddieState*)sub)->gameBitC) != 0)
+        if (((GroundBaddieState*)sub)->gameBitC != -1 && mainGetBit(((GroundBaddieState*)sub)->gameBitC) != 0)
         {
             (*gObjectTriggerInterface)->yield((ObjSeqState*)e, ((DllCBPlacement*)setup)->gameBitId);
             ((GroundBaddieState*)sub)->gameBitC = -1;
@@ -309,23 +309,23 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
 #pragma scheduling on
 #pragma peephole on
 
-void chukchuk_free(void);
-void chukchuk_hitDetect(void);
-void chukchuk_release(void);
-void chukchuk_initialise(void);
+void ChukChuk_free(void);
+void ChukChuk_hitDetect(void);
+void ChukChuk_release(void);
+void ChukChuk_initialise(void);
 
 /*
  * Per-object extra state for the ChukChuk ice-spitter
- * (chukchuk_getExtraSize == 0x18).
+ * (ChukChuk_getExtraSize == 0x18).
  */
 
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
-void chukchuk_init(u8* obj, u8* params);
-void iceball_hitDetect(void);
-void iceball_release(void);
-void iceball_initialise(void);
+void ChukChuk_init(u8* obj, u8* params);
+void IceBall_hitDetect(void);
+void IceBall_release(void);
+void IceBall_initialise(void);
 
 void dll_CB_func0B_nop(void)
 {
@@ -410,10 +410,10 @@ void dll_CB_update(int* obj)
     ((GameObject*)obj)->anim.localPosZ = path->posZ;
 }
 
-int chukchuk_getExtraSize(void);
-int chukchuk_getObjectTypeId(void);
-int iceball_getExtraSize(void);
-int iceball_getObjectTypeId(void);
+int ChukChuk_getExtraSize(void);
+int ChukChuk_getObjectTypeId(void);
+int IceBall_getExtraSize(void);
+int IceBall_getObjectTypeId(void);
 int fn_8016052C(void) { return 0x6; }
 int dll_CB_getExtraSize_ret_1040(void) { return 0x410; }
 int dll_CB_getObjectTypeId(void) { return 0x14b; }
@@ -422,12 +422,12 @@ s16 dll_CB_setScale(int* obj) { return ((BaddieState*)((GameObject*)obj)->extra)
 
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 
-void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void iceball_free(void);
-void chukchuk_update(short* obj);
-void chukchuk_setScale(int obj, int v);
-void iceball_init(void* obj);
+void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void IceBall_free(void);
+void ChukChuk_update(short* obj);
+void ChukChuk_setScale(int obj, int v);
+void IceBall_init(void* obj);
 
 #pragma scheduling on
 int fn_8016050C(int p1, u8* obj)
@@ -587,8 +587,8 @@ int fn_80160534(int* obj)
     }
     if (((GameObject*)obj)->anim.alpha == 0)
     {
-        GameBit_Set(sub->gameBitB, 0);
-        GameBit_Set(sub->gameBitA, 1);
+        mainSetBits(sub->gameBitB, 0);
+        mainSetBits(sub->gameBitA, 1);
     }
     return 0;
 }
@@ -615,17 +615,17 @@ ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)chukchuk_initialise,
-        (ObjectDescriptorCallback)chukchuk_release,
+        (ObjectDescriptorCallback)ChukChuk_initialise,
+        (ObjectDescriptorCallback)ChukChuk_release,
         0,
-        (ObjectDescriptorCallback)chukchuk_init,
-        (ObjectDescriptorCallback)chukchuk_update,
-        (ObjectDescriptorCallback)chukchuk_hitDetect,
-        (ObjectDescriptorCallback)chukchuk_render,
-        (ObjectDescriptorCallback)chukchuk_free,
-        (ObjectDescriptorCallback)chukchuk_getObjectTypeId,
-        chukchuk_getExtraSize,
-        (ObjectDescriptorCallback)chukchuk_setScale,
+        (ObjectDescriptorCallback)ChukChuk_init,
+        (ObjectDescriptorCallback)ChukChuk_update,
+        (ObjectDescriptorCallback)ChukChuk_hitDetect,
+        (ObjectDescriptorCallback)ChukChuk_render,
+        (ObjectDescriptorCallback)ChukChuk_free,
+        (ObjectDescriptorCallback)ChukChuk_getObjectTypeId,
+        ChukChuk_getExtraSize,
+        (ObjectDescriptorCallback)ChukChuk_setScale,
     },
     0,
 };
@@ -635,14 +635,14 @@ ObjectDescriptor gIceBallObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)iceball_initialise,
-    (ObjectDescriptorCallback)iceball_release,
+    (ObjectDescriptorCallback)IceBall_initialise,
+    (ObjectDescriptorCallback)IceBall_release,
     0,
-    (ObjectDescriptorCallback)iceball_init,
-    (ObjectDescriptorCallback)iceball_update,
-    (ObjectDescriptorCallback)iceball_hitDetect,
-    (ObjectDescriptorCallback)iceball_render,
-    (ObjectDescriptorCallback)iceball_free,
-    (ObjectDescriptorCallback)iceball_getObjectTypeId,
-    iceball_getExtraSize,
+    (ObjectDescriptorCallback)IceBall_init,
+    (ObjectDescriptorCallback)IceBall_update,
+    (ObjectDescriptorCallback)IceBall_hitDetect,
+    (ObjectDescriptorCallback)IceBall_render,
+    (ObjectDescriptorCallback)IceBall_free,
+    (ObjectDescriptorCallback)IceBall_getObjectTypeId,
+    IceBall_getExtraSize,
 };

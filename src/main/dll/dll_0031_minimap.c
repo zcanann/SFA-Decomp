@@ -34,7 +34,7 @@
 /* group owned by another DLL, queried here */
 #define FUELCELL_OBJGROUP 0x4f /* DLL 0x123 fuelcell */
 
-extern void fn_80133F70(void);
+extern void dll_3F_updateTimerReadout(void);
 
 extern void dll_3F_frameEnd_nop(void);
 
@@ -121,7 +121,7 @@ MinimapMapEntry gMinimapCellTable[25] = {
     { lbl_8031C4F4, 0x07DD, 0x02, 1 },
 };
 
-void fn_80133718(void);
+void Minimap_drawCompassBlip(void);
 void fn_8013351C(void);
 
 
@@ -295,7 +295,7 @@ int Minimap_update(void)
         }
         while (!found && i < 0x19)
         {
-            if (cell == gMinimapCellTable[i].cellId && GameBit_Get(gMinimapCellTable[i].gameBit) != 0)
+            if (cell == gMinimapCellTable[i].cellId && mainGetBit(gMinimapCellTable[i].gameBit) != 0)
             {
                 found = 1;
             }
@@ -326,7 +326,7 @@ int Minimap_update(void)
                 if (fx >= row->x0 && fx < row->x1 &&
                     fz >= row->z0 && fz < row->z1 &&
                     (s16)yi >= row->y0 && (s16)yi < row->y1 &&
-                    GameBit_Get(row->gameBit) != 0)
+                    mainGetBit(row->gameBit) != 0)
                 {
                     j = 0;
                     v = rows[k].mapId;
@@ -357,7 +357,7 @@ int Minimap_update(void)
                 }
             }
         }
-        if ((gMinimapEnabled == 0 && lbl_803DD7BA == 0) || GameBit_Get(0x58d) != 0)
+        if ((gMinimapEnabled == 0 && lbl_803DD7BA == 0) || mainGetBit(0x58d) != 0)
         {
             marker = 0;
         }
@@ -582,7 +582,7 @@ int Minimap_update(void)
                 }
                 break;
             case MINIMAP_VIEW_MODE_RADAR:
-                fn_80133718();
+                Minimap_drawCompassBlip();
                 if ((u32)lbl_803DD934 == 0)
                 {
                     fn_8013351C();
@@ -683,7 +683,7 @@ int Minimap_update(void)
 
 u16 getMinimapY(void) { return lbl_803DD938; }
 
-int titlescreen_getObjectTypeId(u8* obj);
+int TitleScreen_getObjectTypeId(u8* obj);
 
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     {
@@ -691,22 +691,22 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)titlescreen_initialise,
-        (ObjectDescriptorCallback)titlescreen_release,
+        (ObjectDescriptorCallback)TitleScreen_initialise,
+        (ObjectDescriptorCallback)TitleScreen_release,
         0,
-        (ObjectDescriptorCallback)titlescreen_init,
-        (ObjectDescriptorCallback)titlescreen_update,
-        (ObjectDescriptorCallback)titlescreen_hitDetect,
-        (ObjectDescriptorCallback)titlescreen_render,
-        (ObjectDescriptorCallback)titlescreen_free,
-        (ObjectDescriptorCallback)titlescreen_getObjectTypeId,
-        titlescreen_getExtraSize,
+        (ObjectDescriptorCallback)TitleScreen_init,
+        (ObjectDescriptorCallback)TitleScreen_update,
+        (ObjectDescriptorCallback)TitleScreen_hitDetect,
+        (ObjectDescriptorCallback)TitleScreen_render,
+        (ObjectDescriptorCallback)TitleScreen_free,
+        (ObjectDescriptorCallback)TitleScreen_getObjectTypeId,
+        TitleScreen_getExtraSize,
     },
     0,
 };
 
 #pragma dont_inline on
-void fn_80133818(void)
+void Minimap_setupCompassBlip(void)
 {
     f32 scale;
     f32 posZ;
@@ -736,7 +736,7 @@ void fn_80133818(void)
 }
 #pragma dont_inline reset
 
-void fn_80133718(void)
+void Minimap_drawCompassBlip(void)
 {
     u8 count;
     u8 i;
@@ -813,7 +813,7 @@ void fn_80133934(void)
 
 #pragma scheduling off
 #pragma peephole off
-u8 fn_801334E0(void)
+u8 isAreaNameTextActive(void)
 {
     u32 act = 0;
     if (gMinimapViewMode == MINIMAP_VIEW_MODE_AREA_NAME && gMinimapEnabled != 0)
@@ -862,7 +862,7 @@ void fn_8013351C(void)
                     gMinimapF110 - cc2, y - s2, &c2);
 }
 
-void fn_8013396C(void)
+void Minimap_frameStart(void)
 {
     int player;
     int sfx;
@@ -926,7 +926,7 @@ void fn_8013396C(void)
             if (gMinimapRadarInited == 0)
             {
                 gMinimapRadarInited = 1;
-                fn_80133818();
+                Minimap_setupCompassBlip();
             }
             held = (u16)getButtonsHeld(0);
             pressed = (u16)getButtonsJustPressed(0);
@@ -1076,5 +1076,5 @@ void fn_8013396C(void)
     }
 }
 
-u32 lbl_8031C5D0[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00040000, (u32)Minimap_initialise, (u32)Minimap_release, 0x00000000, (u32)fn_8013396C, (u32)Minimap_update, 0x00000000 };
-u32 lbl_8031C5F8[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, (u32)dll_3F_initialise, (u32)dll_3F_release, 0x00000000, (u32)dll_3F_frameStart_ret_0, (u32)dll_3F_frameEnd_nop, (u32)fn_80133F70 };
+u32 lbl_8031C5D0[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00040000, (u32)Minimap_initialise, (u32)Minimap_release, 0x00000000, (u32)Minimap_frameStart, (u32)Minimap_update, 0x00000000 };
+u32 lbl_8031C5F8[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, (u32)dll_3F_initialise, (u32)dll_3F_release, 0x00000000, (u32)dll_3F_frameStart_ret_0, (u32)dll_3F_frameEnd_nop, (u32)dll_3F_updateTimerReadout };

@@ -64,9 +64,9 @@ extern f32 gCollectibleLaunchSpeed;
 extern f32 gCollectibleLaunchAngle;
 extern f32 lbl_803E348C;
 extern void fn_8003B608(s16 a, s16 b, s16 c);
-extern u8* fn_802972A8(void);
+extern u8* playerGetFocusObject(void);
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern int fn_8029622C(u8 * player);
+extern int Obj_IsParentSlackClear(u8 * player);
 extern f32 gCollectiblePickupRange;
 extern f32 gCollectibleSpinDamping;
 extern f32 gCollectibleSpinRate;
@@ -81,7 +81,7 @@ extern f32 gCollectibleDefaultScale;
 extern f32 gCollectibleLifetimeTimer;
 extern f32 lbl_803E349C;
 extern f32 lbl_803E34A0;
-extern void gcbaddieshield_update(int* obj);
+extern void GCbaddieShield_update(int* obj);
 
 
 
@@ -99,7 +99,7 @@ extern void staff_func10(int* obj, s32 v);
 extern void staff_setHitReactValue(int* obj, s32 v);
 extern void staff_addHitReactValue(int* obj, s32 delta);
 extern void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
-extern void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
+extern void staff_startSwipe(int* obj, s16 idx, f32 f1, f32 f2);
 extern void staffFn_80170380(int* obj, int cmd);
 
 
@@ -121,12 +121,12 @@ extern void staffFn_80170380(int* obj, int cmd);
 
 
 
-extern void shield_init(int* obj, void* initData);
-extern void shield_update(int* obj);
+extern void Shield_init(int* obj, void* initData);
+extern void Shield_update(int* obj);
 
 
 
-extern void mikabombshadow_update(int* obj);
+extern void MikaBombShadow_update(int* obj);
 extern void restartmarker_init(int* obj, int* state);
 extern void dll_F7_init(int* obj, int* params);
 extern void dll_F7_update(int* obj);
@@ -138,30 +138,30 @@ extern void dll_F7_update(int* obj);
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)mikabomb_initialise,
-    (ObjectDescriptorCallback)mikabomb_release,
+    (ObjectDescriptorCallback)MikaBomb_initialise,
+    (ObjectDescriptorCallback)MikaBomb_release,
     0,
-    (ObjectDescriptorCallback)mikabomb_init,
-    (ObjectDescriptorCallback)mikabomb_update,
-    (ObjectDescriptorCallback)mikabomb_hitDetect,
-    (ObjectDescriptorCallback)mikabomb_render,
-    (ObjectDescriptorCallback)mikabomb_free,
-    (ObjectDescriptorCallback)mikabomb_getObjectTypeId,
-    mikabomb_getExtraSize,
+    (ObjectDescriptorCallback)MikaBomb_init,
+    (ObjectDescriptorCallback)MikaBomb_update,
+    (ObjectDescriptorCallback)MikaBomb_hitDetect,
+    (ObjectDescriptorCallback)MikaBomb_render,
+    (ObjectDescriptorCallback)MikaBomb_free,
+    (ObjectDescriptorCallback)MikaBomb_getObjectTypeId,
+    MikaBomb_getExtraSize,
 };
 
 ObjectDescriptor gMikaBombShadowObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)mikabombshadow_initialise,
-    (ObjectDescriptorCallback)mikabombshadow_release,
+    (ObjectDescriptorCallback)MikaBombShadow_initialise,
+    (ObjectDescriptorCallback)MikaBombShadow_release,
     0,
-    (ObjectDescriptorCallback)mikabombshadow_init,
-    (ObjectDescriptorCallback)mikabombshadow_update,
-    (ObjectDescriptorCallback)mikabombshadow_hitDetect,
-    (ObjectDescriptorCallback)mikabombshadow_render,
-    (ObjectDescriptorCallback)mikabombshadow_free,
-    (ObjectDescriptorCallback)mikabombshadow_getObjectTypeId,
-    mikabombshadow_getExtraSize,
+    (ObjectDescriptorCallback)MikaBombShadow_init,
+    (ObjectDescriptorCallback)MikaBombShadow_update,
+    (ObjectDescriptorCallback)MikaBombShadow_hitDetect,
+    (ObjectDescriptorCallback)MikaBombShadow_render,
+    (ObjectDescriptorCallback)MikaBombShadow_free,
+    (ObjectDescriptorCallback)MikaBombShadow_getObjectTypeId,
+    MikaBombShadow_getExtraSize,
 };
 
 ObjectDescriptor gStaticCameraObjDescriptor = {
@@ -180,30 +180,30 @@ ObjectDescriptor gStaticCameraObjDescriptor = {
 
 ObjectDescriptor gGCbaddieShieldObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)gcbaddieshield_initialise,
-    (ObjectDescriptorCallback)gcbaddieshield_release,
+    (ObjectDescriptorCallback)GCbaddieShield_initialise,
+    (ObjectDescriptorCallback)GCbaddieShield_release,
     0,
-    (ObjectDescriptorCallback)gcbaddieshield_init,
-    (ObjectDescriptorCallback)gcbaddieshield_update,
-    (ObjectDescriptorCallback)gcbaddieshield_hitDetect,
-    (ObjectDescriptorCallback)gcbaddieshield_render,
-    (ObjectDescriptorCallback)gcbaddieshield_free,
-    (ObjectDescriptorCallback)gcbaddieshield_getObjectTypeId,
-    gcbaddieshield_getExtraSize,
+    (ObjectDescriptorCallback)GCbaddieShield_init,
+    (ObjectDescriptorCallback)GCbaddieShield_update,
+    (ObjectDescriptorCallback)GCbaddieShield_hitDetect,
+    (ObjectDescriptorCallback)GCbaddieShield_render,
+    (ObjectDescriptorCallback)GCbaddieShield_free,
+    (ObjectDescriptorCallback)GCbaddieShield_getObjectTypeId,
+    GCbaddieShield_getExtraSize,
 };
 
 ObjectDescriptor gBaddieInterestPObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)baddieinterestp_initialise,
-    (ObjectDescriptorCallback)baddieinterestp_release,
+    (ObjectDescriptorCallback)BaddieInterestP_initialise,
+    (ObjectDescriptorCallback)BaddieInterestP_release,
     0,
-    (ObjectDescriptorCallback)baddieinterestp_init,
-    (ObjectDescriptorCallback)baddieinterestp_update,
-    (ObjectDescriptorCallback)baddieinterestp_hitDetect,
-    (ObjectDescriptorCallback)baddieinterestp_render,
-    (ObjectDescriptorCallback)baddieinterestp_free,
-    (ObjectDescriptorCallback)baddieinterestp_getObjectTypeId,
-    baddieinterestp_getExtraSize,
+    (ObjectDescriptorCallback)BaddieInterestP_init,
+    (ObjectDescriptorCallback)BaddieInterestP_update,
+    (ObjectDescriptorCallback)BaddieInterestP_hitDetect,
+    (ObjectDescriptorCallback)BaddieInterestP_render,
+    (ObjectDescriptorCallback)BaddieInterestP_free,
+    (ObjectDescriptorCallback)BaddieInterestP_getObjectTypeId,
+    BaddieInterestP_getExtraSize,
 };
 
 u32 lbl_80320700[] = {
@@ -360,8 +360,8 @@ ObjectDescriptor23 gStaffObjDescriptor = {
     (ObjectDescriptorCallback)staff_addHitReactValue,
     (ObjectDescriptorCallback)staff_getHitReactValue,
     (ObjectDescriptorCallback)staff_getHitGeometryPoints,
-    (ObjectDescriptorCallback)staff_func15,
-    (ObjectDescriptorCallback)staff_func16,
+    (ObjectDescriptorCallback)staff_startSwipe,
+    (ObjectDescriptorCallback)staff_getSwipeTextureIndex,
 };
 
 u32 lbl_80320978[] = {
@@ -373,16 +373,16 @@ u32 lbl_80320978[] = {
 ObjectDescriptor10WithPadding gFireballObjDescriptor = {
     {
         0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)fireball_initialise,
-        (ObjectDescriptorCallback)fireball_release,
+        (ObjectDescriptorCallback)Fireball_initialise,
+        (ObjectDescriptorCallback)Fireball_release,
         0,
-        (ObjectDescriptorCallback)fireball_init,
-        (ObjectDescriptorCallback)fireball_update,
-        (ObjectDescriptorCallback)fireball_hitDetect,
-        (ObjectDescriptorCallback)fireball_render,
-        (ObjectDescriptorCallback)fireball_free,
-        (ObjectDescriptorCallback)fireball_getObjectTypeId,
-        fireball_getExtraSize,
+        (ObjectDescriptorCallback)Fireball_init,
+        (ObjectDescriptorCallback)Fireball_update,
+        (ObjectDescriptorCallback)Fireball_hitDetect,
+        (ObjectDescriptorCallback)Fireball_render,
+        (ObjectDescriptorCallback)Fireball_free,
+        (ObjectDescriptorCallback)Fireball_getObjectTypeId,
+        Fireball_getExtraSize,
     },
     0,
 };
@@ -437,16 +437,16 @@ f32 lbl_80320A28[] = {
 
 ObjectDescriptor gShieldObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)shield_initialise,
-    (ObjectDescriptorCallback)shield_release,
+    (ObjectDescriptorCallback)Shield_initialise,
+    (ObjectDescriptorCallback)Shield_release,
     0,
-    (ObjectDescriptorCallback)shield_init,
-    (ObjectDescriptorCallback)shield_update,
-    (ObjectDescriptorCallback)shield_hitDetect,
-    (ObjectDescriptorCallback)shield_render,
-    (ObjectDescriptorCallback)shield_free,
-    (ObjectDescriptorCallback)shield_getObjectTypeId,
-    shield_getExtraSize,
+    (ObjectDescriptorCallback)Shield_init,
+    (ObjectDescriptorCallback)Shield_update,
+    (ObjectDescriptorCallback)Shield_hitDetect,
+    (ObjectDescriptorCallback)Shield_render,
+    (ObjectDescriptorCallback)Shield_free,
+    (ObjectDescriptorCallback)Shield_getObjectTypeId,
+    Shield_getExtraSize,
 };
 
 u32 jumptable_80320AA0[] = {
@@ -473,7 +473,7 @@ ObjectDescriptor12 gCurveObjDescriptor = {
     (ObjectDescriptorCallback)curve_getObjectTypeId,
     curve_getExtraSize,
     (ObjectDescriptorCallback)curve_setScale,
-    (ObjectDescriptorCallback)curve_func11,
+    (ObjectDescriptorCallback)curve_func0B,
 };
 
 ObjectDescriptor gReStartMarkerObjDescriptor = {
@@ -522,16 +522,16 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-u8 collectible_func0F(int* obj) { return ((CollectibleState*)((GameObject*)obj)->extra)->visibilityBitClear; }
+u8 collectible_getVisibilityBitClear(int* obj) { return ((CollectibleState*)((GameObject*)obj)->extra)->visibilityBitClear; }
 
-int collectible_setScale(int* obj) { return ((GameObject*)obj)->unkF4; }
+int collectible_getIsHidden(int* obj) { return ((GameObject*)obj)->unkF4; }
 
-void collectible_func0E(int* obj, u32 v)
+void collectible_setVisibilityBitClear(int* obj, u32 v)
 {
     ((CollectibleState*)((GameObject*)obj)->extra)->visibilityBitClear = v;
 }
 
-void collectible_render2(int* obj, f32 f1, f32 f2, f32 f3)
+void collectible_startBounceMotion(int* obj, f32 f1, f32 f2, f32 f3)
 {
     s32 v = 0x8;
     ((CollectibleState*)((GameObject*)obj)->extra)->bounceTimer = v;
@@ -540,7 +540,7 @@ void collectible_render2(int* obj, f32 f1, f32 f2, f32 f3)
     ((GameObject*)obj)->anim.velocityZ = f3;
 }
 
-void collectible_func10(int* obj, f32 f1, f32 f2, f32 f3)
+void collectible_setPosition(int* obj, f32 f1, f32 f2, f32 f3)
 {
     char* inner = (char*)((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.localPosX = f1;
@@ -549,13 +549,13 @@ void collectible_func10(int* obj, f32 f1, f32 f2, f32 f3)
     ((CollectibleState*)inner)->basePosY = f2;
     ((GameObject*)obj)->anim.localPosZ = f3;
     ((CollectibleState*)inner)->basePosZ = f3;
-    if (GameBit_Get(((CollectibleState*)inner)->hideGameBit) == 0)
+    if (mainGetBit(((CollectibleState*)inner)->hideGameBit) == 0)
     {
         saveGame_saveObjectPos((int)obj);
     }
 }
 
-void collectible_func0B(int* obj, int flag)
+void collectible_setDisabled(int* obj, int flag)
 {
     char* inner = (char*)((GameObject*)obj)->extra;
     ((CollectibleState*)inner)->disabled = flag;
@@ -565,14 +565,14 @@ void collectible_func0B(int* obj, int flag)
     }
     else
     {
-        if (GameBit_Get(((CollectibleState*)inner)->hideGameBit) == 0)
+        if (mainGetBit(((CollectibleState*)inner)->hideGameBit) == 0)
         {
             ObjHits_EnableObject((u32)obj);
         }
     }
 }
 
-int collectible_modelMtxFn(int* obj)
+int collectible_getHitRegionId(int* obj)
 {
     int* inner = (int*)*(int*)&((GameObject*)obj)->extra;
     if (((CollectibleState*)inner)->hitRegionId == -2)
@@ -611,12 +611,12 @@ void collectible_applyPickup(int* obj)
     }
     if (((CollectibleState*)state)->hideGameBit != -1)
     {
-        GameBit_Set(((CollectibleState*)state)->hideGameBit, 1);
+        mainSetBits(((CollectibleState*)state)->hideGameBit, 1);
         saveGame_unsaveObjectPos(obj);
     }
     if (((CollectibleSetup*)params)->collectGameBit != -1)
     {
-        GameBit_Set(((CollectibleSetup*)params)->collectGameBit, 1);
+        mainSetBits(((CollectibleSetup*)params)->collectGameBit, 1);
     }
     if (((CollectibleSetup*)params)->counterGameBit > 0)
     {
@@ -633,18 +633,18 @@ void collectible_applyPickup(int* obj)
             break;
         case 793:
             Sfx_PlayFromObject(obj, SFXTRIG_bapt11_c);
-            GameBit_Set(1001, 1);
+            mainSetBits(1001, 1);
             ((CollectibleState*)state)->hideFrames = 1200;
             itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
             break;
         case 1702:
             {
-                s8 c = GameBit_Get(2154);
+                s8 c = mainGetBit(2154);
                 if (c < 7)
                 {
                     c = c + 1;
                 }
-                GameBit_Set(2154, c);
+                mainSetBits(2154, c);
                 itemPickupDoParticleFx(obj, lbl_803E3454, 6, 40);
                 Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
                 break;
@@ -787,7 +787,7 @@ int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (((CollectibleState*)state)->visibilityGameBit != -1)
     {
-        ((CollectibleState*)state)->visibilityBitClear = (u8)(GameBit_Get((s32)((CollectibleState*)state)->visibilityGameBit) == 0);
+        ((CollectibleState*)state)->visibilityBitClear = (u8)(mainGetBit((s32)((CollectibleState*)state)->visibilityGameBit) == 0);
     }
     if (((CollectibleState*)state)->visibilityBitClear == 0)
     {
@@ -857,7 +857,7 @@ void collectible_checkProximityPickup(int obj, u8* state)
     {
         return;
     }
-    focus = fn_802972A8();
+    focus = playerGetFocusObject();
     if (focus == NULL)
     {
         focus = player;
@@ -868,16 +868,16 @@ void collectible_checkProximityPickup(int obj, u8* state)
     {
         dy = -dy;
     }
-    if (dy < gCollectiblePickupRange && dist < ((CollectibleState*)state)->scale && fn_8029622C(player) != 0)
+    if (dy < gCollectiblePickupRange && dist < ((CollectibleState*)state)->scale && Obj_IsParentSlackClear(player) != 0)
     {
         ((CollectibleState*)state)->pickupMsgValue = -1;
         switch (((GameObject*)obj)->anim.seqId)
         {
         case 0xb:
-            if (GameBit_Get(0x90e) == 0)
+            if (mainGetBit(0x90e) == 0)
             {
                 ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
-                GameBit_Set(0x90e, 1);
+                mainSetBits(0x90e, 1);
             }
             else
             {
@@ -892,10 +892,10 @@ void collectible_checkProximityPickup(int obj, u8* state)
         case 0x49:
         case 0x2da:
         case 0x3cd:
-            if (GameBit_Get(0x90f) == 0)
+            if (mainGetBit(0x90f) == 0)
             {
                 ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
-                GameBit_Set(0x90f, 1);
+                mainSetBits(0x90f, 1);
             }
             else
             {
@@ -904,10 +904,10 @@ void collectible_checkProximityPickup(int obj, u8* state)
             state[0x37] |= 1;
             break;
         case 0x6a6:
-            if (GameBit_Get(0x9a8) == 0)
+            if (mainGetBit(0x9a8) == 0)
             {
                 ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
-                GameBit_Set(0x9a8, 1);
+                mainSetBits(0x9a8, 1);
             }
             else
             {
@@ -918,7 +918,7 @@ void collectible_checkProximityPickup(int obj, u8* state)
         default:
             if (ObjTrigger_IsSet(obj) != 0)
             {
-                GameBit_Set(0xa7b, 1);
+                mainSetBits(0xa7b, 1);
                 ((CollectibleState*)state)->pickupMsgValue = attach[0xf];
                 ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
                 state[0x37] |= 1;
@@ -967,7 +967,7 @@ void collectible_update(int obj)
     }
     if (((CollectibleState*)state)->visibilityGameBit != -1)
     {
-        ((CollectibleState*)state)->visibilityBitClear = (u8)(GameBit_Get((s32)((CollectibleState*)state)->visibilityGameBit) == 0);
+        ((CollectibleState*)state)->visibilityBitClear = (u8)(mainGetBit((s32)((CollectibleState*)state)->visibilityGameBit) == 0);
     }
     if (((CollectibleState*)state)->visibilityBitClear != 0 || state[0xf] != 0)
     {
@@ -1033,7 +1033,7 @@ void collectible_update(int obj)
             hitState->flags |= OBJHITS_PRIORITY_STATE_HIT_EXCLUDED;
         }
         ObjHits_DisableObject((u32)obj);
-        if (((CollectibleState*)state)->hideGameBit != -1 && GameBit_Get((s32)((CollectibleState*)state)->hideGameBit) == 0)
+        if (((CollectibleState*)state)->hideGameBit != -1 && mainGetBit((s32)((CollectibleState*)state)->hideGameBit) == 0)
         {
             ((GameObject*)obj)->unkF4 = 0;
         }
@@ -1176,12 +1176,12 @@ void collectible_init(int obj, int setup)
     if (((CollectibleState*)state)->visibilityGameBit != -1)
     {
         ((CollectibleState*)state)->visibilityBitClear = (u8)(
-            (u32)__cntlzw(GameBit_Get(((CollectibleState*)state)->visibilityGameBit)) >> 5);
+            (u32)__cntlzw(mainGetBit(((CollectibleState*)state)->visibilityGameBit)) >> 5);
     }
     ((CollectibleState*)state)->hideGameBit = ((CollectibleSetup*)setup)->hideGameBit;
     if (((CollectibleState*)state)->hideGameBit != -1)
     {
-        *(u32*)&((GameObject*)obj)->unkF4 = GameBit_Get(((CollectibleState*)state)->hideGameBit);
+        *(u32*)&((GameObject*)obj)->unkF4 = mainGetBit(((CollectibleState*)state)->hideGameBit);
     }
     else
     {

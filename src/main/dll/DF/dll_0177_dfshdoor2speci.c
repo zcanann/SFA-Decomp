@@ -54,7 +54,7 @@ int DFSH_Door2Speci_SeqFn(int obj)
     switch (extra->state)
     {
     case DFSH_DOOR2SPECI_STATE_WAIT_FOR_GAMEBIT:
-        if (GameBit_Get(((DFSHDoor2SpeciPlacement*)objDef)->gameBit) != 0)
+        if (mainGetBit(((DFSHDoor2SpeciPlacement*)objDef)->gameBit) != 0)
         {
             extra->state = DFSH_DOOR2SPECI_STATE_FADE_IN;
         }
@@ -87,21 +87,21 @@ int DFSH_Door2Speci_SeqFn(int obj)
     return 0;
 }
 
-int dfsh_door2speci_getExtraSize(void)
+int DFSH_Door2Speci_getExtraSize(void)
 {
     return sizeof(DFDoorSpeciExtra);
 }
 
-int dfsh_door2speci_getObjectTypeId(void)
+int DFSH_Door2Speci_getObjectTypeId(void)
 {
     return 0;
 }
 
-void dfsh_door2speci_free(void)
+void DFSH_Door2Speci_free(void)
 {
 }
 
-void dfsh_door2speci_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void DFSH_Door2Speci_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 visibleFlag;
 
@@ -112,22 +112,22 @@ void dfsh_door2speci_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void dfsh_door2speci_hitDetect(void)
+void DFSH_Door2Speci_hitDetect(void)
 {
 }
 
-void dfsh_door2speci_update(void)
+void DFSH_Door2Speci_update(void)
 {
 }
 
-void dfsh_door2speci_init(int obj, int def)
+void DFSH_Door2Speci_init(int obj, int def)
 {
     int state;
     ObjTextureRuntimeSlot* texture;
 
     state = *(int*)&((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = DFSH_Door2Speci_SeqFn;
-    if (GameBit_Get((int)*(short*)(def + 0x22)) != 0)
+    if (mainGetBit((int)*(short*)(def + 0x22)) != 0)
     {
         *(unsigned char*)(state + 3) = 2;
     }
@@ -150,10 +150,10 @@ void dfsh_door2speci_init(int obj, int def)
     *(short*)state = 0;
 }
 
-void dfsh_door2speci_release(void)
+void DFSH_Door2Speci_release(void)
 {
 }
 
-void dfsh_door2speci_initialise(void)
+void DFSH_Door2Speci_initialise(void)
 {
 }

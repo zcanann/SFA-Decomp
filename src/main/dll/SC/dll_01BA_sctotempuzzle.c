@@ -1,7 +1,7 @@
 /*
  * sctotempuzzle (DLL 0x1BA) - head of the SC totem-pole puzzle pair.
  * Holds dll 0x1BA's descriptor fns (gResourceDescriptors[0x1BA]); the unit
- * ends at 0x801DDA28 (initialise end). sc_totempuzzle_processAnimEvents
+ * ends at 0x801DDA28 (initialise end). sc_totembond_SeqFn
  * (0x801DDC20) lives in the 01BB unit - it sits in dll 0x1BB's helper gap,
  * interleaved with sc_totembond_spawnGameBitOrbs (both DLLs shared one
  * original TU).
@@ -223,7 +223,7 @@ extern f32 lbl_803E5628;
 s16 gTotemPuzzleStepAngles[6] = {-8192, 0, 8192, 16384, 24576, -32768};
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
-extern void fn_801DD170(int obj);
+extern void sc_totempuzzle_animEventCallback(int obj);
 extern int randomGetRange(int lo, int hi);
 
 void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
@@ -241,7 +241,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     state = obj->state;
     hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitNx, &hitNy, &hitNz, &lightArgs[3],
                                                  &lightArgs[4], &lightArgs[5]);
-    if ((obj->puzzleIndex == SC_TOTEMPUZZLE_CAP_INDEX) || (GameBit_Get(0x639) != 0) || (GameBit_Get(0xc10) == 0))
+    if ((obj->puzzleIndex == SC_TOTEMPUZZLE_CAP_INDEX) || (mainGetBit(0x639) != 0) || (mainGetBit(0xc10) == 0))
     {
         if ((hitKind != 0) && (hitKind != 0x11))
         {
@@ -264,7 +264,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         {
             if (state->pulseTimer != lbl_803E55F4)
             {
-                GameBit_Set(0x639, ((u8 (*)(ScTotemPuzzleObject*, ScTotemPuzzleState*))sc_totempuzzle_checkSolvedSequence)(obj, state));
+                mainSetBits(0x639, ((u8 (*)(ScTotemPuzzleObject*, ScTotemPuzzleState*))sc_totempuzzle_checkSolvedSequence)(obj, state));
             }
             objects = ObjList_GetObjects(&startA, &countA);
             while (startA < countA)
@@ -374,7 +374,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
         }
     }
     state->stepIndex = obj->puzzleIndex;
-    if (GameBit_Get(0x639) == 0)
+    if (mainGetBit(0x639) == 0)
     {
         state->angle = (f32)(s32)gTotemPuzzleStepAngles[state->stepIndex];
     }
@@ -398,7 +398,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
         state->flags = 1;
     }
     state->peerPhaseOffset = lbl_803E55FC;
-    obj->animEventCallback = fn_801DD170;
+    obj->animEventCallback = sc_totempuzzle_animEventCallback;
     obj->objectFlags = (u16)(obj->objectFlags | (SC_TOTEMPUZZLE_OBJFLAG_HIDDEN | SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED));
 }
 

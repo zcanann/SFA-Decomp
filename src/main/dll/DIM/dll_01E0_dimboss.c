@@ -270,8 +270,8 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
             break;
         case DIMBOSS_EVENT_TRIGGER_DEFEAT_FLAGS:
             topState->defeatTimer = DIMBOSS_DEFEAT_TIMER_START;
-            GameBit_Set(DIMBOSS_GAMEBIT_DEFEAT_STATE_A, 1);
-            GameBit_Set(DIMBOSS_GAMEBIT_DEFEAT_STATE_B, 1);
+            mainSetBits(DIMBOSS_GAMEBIT_DEFEAT_STATE_A, 1);
+            mainSetBits(DIMBOSS_GAMEBIT_DEFEAT_STATE_B, 1);
             Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE, 0);
             Music_Trigger(DIMBOSS_MUSIC_BOSS_THEME, 0);
             Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP, 0);
@@ -361,7 +361,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
             ((ObjAnimComponent*)obj->childObject)->parent = obj->anim.parent;
         }
         if ((runtime->eventGameBit != -1) &&
-            (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0))
+            (statusFlags = mainGetBit((int)runtime->eventGameBit), statusFlags != 0))
         {
             DIMboss_GetObjectTriggerInterface()->triggerEvent(animUpdate, config->eventId);
             runtime->eventGameBit = -1;
@@ -434,12 +434,12 @@ void DIMboss_free(DIMbossObject* obj)
     void* effect;
 
     runtime = obj->runtime;
-    GameBit_Set(DIMBOSS_GAMEBIT_BOSS_ACTIVE, 0);
-    GameBit_Set(0xc1e, 1);
-    GameBit_Set(0xc1f, 0);
-    GameBit_Set(0xc20, 0);
-    GameBit_Set(0xd8f, 0);
-    GameBit_Set(0x3e2, 0);
+    mainSetBits(DIMBOSS_GAMEBIT_BOSS_ACTIVE, 0);
+    mainSetBits(0xc1e, 1);
+    mainSetBits(0xc1f, 0);
+    mainSetBits(0xc20, 0);
+    mainSetBits(0xd8f, 0);
+    mainSetBits(0x3e2, 0);
     obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_ACTIVE;
     Camera_DisableViewYOffset();
     ObjGroup_RemoveObject(obj, DIMBOSS_OBJGROUP);
@@ -534,13 +534,13 @@ void DIMboss_update(DIMbossObject* obj)
                 runtime->stateFlags &= ~DIMBOSS_STATE_FLAG_START_MOVE;
                 obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
                 obj->objectFlags |= DIMBOSS_OBJECT_FLAG_ACTIVE;
-                gameBitCount = GameBit_Get(DIMBOSS_GAMEBIT_TONSIL_HIT_COUNT);
+                gameBitCount = mainGetBit(DIMBOSS_GAMEBIT_TONSIL_HIT_COUNT);
                 if (gameBitCount >= 3)
                 {
                     runtime->phase = DIMBOSS_PHASE_GAMEBIT_COUNT_MET;
                     runtime->animMode = 3;
                     obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
-                    GameBit_Set(DIMBOSS_GAMEBIT_LIGHTFOOT_SNOWBALL_GATE, 0);
+                    mainSetBits(DIMBOSS_GAMEBIT_LIGHTFOOT_SNOWBALL_GATE, 0);
                 }
                 else
                 {
@@ -548,7 +548,7 @@ void DIMboss_update(DIMbossObject* obj)
                     runtime->animMode = 3;
                     obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
                     topState->launchLift = lbl_803E4C44;
-                    GameBit_Set(DIMBOSS_GAMEBIT_LIGHTFOOT_SNOWBALL_GATE, 1);
+                    mainSetBits(DIMBOSS_GAMEBIT_LIGHTFOOT_SNOWBALL_GATE, 1);
                 }
             }
             if ((runtime->phase == DIMBOSS_PHASE_START) || (runtime->phase == DIMBOSS_PHASE_NO_RENDER))
@@ -630,12 +630,12 @@ void DIMboss_init(DIMbossObject* obj, u32 params, int isAltVariant)
     runtime->animMode = 3;
     obj->objectFlags = (u8)(obj->objectFlags |
         (DIMBOSS_OBJECT_FLAG_HIDDEN | DIMBOSS_OBJECT_FLAG_ACTIVE));
-    if (GameBit_Get(DIMBOSS_GAMEBIT_RENDER_PAUSE) != 0)
+    if (mainGetBit(DIMBOSS_GAMEBIT_RENDER_PAUSE) != 0)
     {
         runtime->phase = DIMBOSS_PHASE_RENDER_PAUSE;
         obj->renderPause = 1;
     }
-    if (GameBit_Get(DIMBOSS_GAMEBIT_SPIT_ACTIVE) != 0)
+    if (mainGetBit(DIMBOSS_GAMEBIT_SPIT_ACTIVE) != 0)
     {
         runtime->phase = DIMBOSS_PHASE_NO_RENDER;
     }
@@ -647,7 +647,7 @@ void DIMboss_init(DIMbossObject* obj, u32 params, int isAltVariant)
     topState->effect = NULL;
     lbl_803DDB84 = 0;
     gDIMbossSequenceFlags = 0;
-    GameBit_Set(DIMBOSS_GAMEBIT_TRICKY_BOSS_MODE, 1);
+    mainSetBits(DIMBOSS_GAMEBIT_TRICKY_BOSS_MODE, 1);
     dll_2E_func05(obj, gDIMbossAnimController, 0xffffd8e4, 0x1c71, 6);
     dll_2E_func09(gDIMbossAnimController, &localVec, &localVec, 6);
     animFlagsByte = (u8*)((int)gDIMbossAnimController + DIMBOSS_ANIM_CONTROLLER_FLAGS_OFFSET);
@@ -656,7 +656,7 @@ void DIMboss_init(DIMbossObject* obj, u32 params, int isAltVariant)
     topState->steamFlags.bits.sfxPending = 1;
     gDIMbossHitEffectResource =
         Resource_Acquire(DIMBOSS_HIT_EFFECT_ID, DIMBOSS_HIT_EFFECT_RESOURCE_COUNT);
-    if (GameBit_Get(DIMBOSS_GAMEBIT_INTRO_SEEN) == 0)
+    if (mainGetBit(DIMBOSS_GAMEBIT_INTRO_SEEN) == 0)
     {
         topState->stompDustDelay = 2;
         topState->introSinkHeight = lbl_803E4C78;
@@ -671,15 +671,15 @@ void DIMboss_init(DIMbossObject* obj, u32 params, int isAltVariant)
     {
         (*gMapEventInterface)->setAreaState(7, 3);
     }
-    GameBit_Set(DIMBOSS_GAMEBIT_BOSS_ACTIVE, 1);
+    mainSetBits(DIMBOSS_GAMEBIT_BOSS_ACTIVE, 1);
     unlockLevel(0, 0, 1);
     mapDir = mapGetDirIdx(DIMBOSS_MAP_DIR);
     lockLevel(mapDir, 1);
     mapDir = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
     lockLevel(mapDir, 0);
-    GameBit_Set(DIMBOSS_GAMEBIT_SHRINE_MUSIC_LOCK, 0);
+    mainSetBits(DIMBOSS_GAMEBIT_SHRINE_MUSIC_LOCK, 0);
     Music_Trigger(DIMBOSS_MUSIC_BOSS_THEME, 1);
-    GameBit_Set(DIMBOSS_GAMEBIT_DIM2_PROJECTILE_DONE, 0);
+    mainSetBits(DIMBOSS_GAMEBIT_DIM2_PROJECTILE_DONE, 0);
     Music_Trigger(DIMBOSS_MUSIC_DIM2_PROJECTILE, 0);
     Music_Trigger(DIMBOSS_MUSIC_DIM2_PROJECTILE_ALT, 0);
 }

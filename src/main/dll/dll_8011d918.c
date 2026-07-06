@@ -1,7 +1,7 @@
 /*
  * C-menu item-select SFX dispatcher.
  *
- * cMenuPlaySelectedItemSfx maps the just-activated entry id (gCMenuActivatedId)
+ * cMenuPlayTrickyCommandSfx maps the just-activated entry id (gCMenuActivatedId)
  * to a per-entry UI sound and plays it limited from the menu object. It is
  * called from cMenuRun's tricky branch, where gCMenuActivatedId is the Tricky
  * command index (0-5) and the sounds (0x3f7-0x3fc) are Fox's voice clips for
@@ -16,7 +16,7 @@ extern s16 gCMenuActivatedId;
  * call site, unlike the int-sfxId decl in sfx.h/engine_shared.h. */
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit);
 
-void cMenuPlaySelectedItemSfx(int obj)
+void cMenuPlayTrickyCommandSfx(int obj)
 {
     int sfx = 0;
     switch (gCMenuActivatedId)
