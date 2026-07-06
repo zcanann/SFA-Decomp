@@ -140,7 +140,7 @@ void CameraModeTitle_update(CameraObject* camera)
     if (gCamTitleCurPose != gCamTitlePrevPose)
     {
         u8* save = getSaveFileStruct();
-        f32 v;
+        f32 ease;
         f32 bf0;
 
         titleScreenCamProgress = titleScreenCamProgress + gCamTitleProgressStep;
@@ -179,23 +179,23 @@ void CameraModeTitle_update(CameraObject* camera)
 
         if (titleScreenCamProgress < 0.5f)
         {
-            v = 0.5f *
+            ease = 0.5f *
                 ((2.0f * titleScreenCamProgress) * (2.0f * titleScreenCamProgress));
         }
         else
         {
             f32 w = -(2.0f * (titleScreenCamProgress - 0.5f) - 1.0f);
             w = w * w;
-            v = (1.0f - w) * 0.5f + 0.5f;
+            ease = (1.0f - w) * 0.5f + 0.5f;
         }
-        v = v * ((-1.0f * v) * v) + (0.5f * v + (1.5f * v) * v);
+        ease = ease * ((-1.0f * ease) * ease) + (0.5f * ease + (1.5f * ease) * ease);
 
         camera->anim.localPosX =
-            v * (gCamTitlePoseTable[gCamTitleCurPose].x - gCamTitleStartPose.x) + gCamTitleStartPose.x;
+            ease * (gCamTitlePoseTable[gCamTitleCurPose].x - gCamTitleStartPose.x) + gCamTitleStartPose.x;
         camera->anim.localPosY =
-            v * (gCamTitlePoseTable[gCamTitleCurPose].y - gCamTitleStartPose.y) + gCamTitleStartPose.y;
+            ease * (gCamTitlePoseTable[gCamTitleCurPose].y - gCamTitleStartPose.y) + gCamTitleStartPose.y;
         camera->anim.localPosZ =
-            v * (gCamTitlePoseTable[gCamTitleCurPose].z - gCamTitleStartPose.z) + gCamTitleStartPose.z;
+            ease * (gCamTitlePoseTable[gCamTitleCurPose].z - gCamTitleStartPose.z) + gCamTitleStartPose.z;
 
         {
             u16 sy = gCamTitleStartPose.yaw;
@@ -203,11 +203,11 @@ void CameraModeTitle_update(CameraObject* camera)
             if (__fabs((f32)d) > gCamTitleAngleWrapThreshold)
             {
                 int d2 = (s16)gCamTitlePoseTable[gCamTitleCurPose].yaw - (s16)sy;
-                camera->anim.rotX = (s16)(s32)(v * d2 + (f32)(s16)sy);
+                camera->anim.rotX = (s16)(s32)(ease * d2 + (f32)(s16)sy);
             }
             else
             {
-                *(u16*)&camera->anim.rotX = v * d + sy;
+                *(u16*)&camera->anim.rotX = ease * d + sy;
             }
         }
         {
@@ -216,11 +216,11 @@ void CameraModeTitle_update(CameraObject* camera)
             if (__fabs((f32)d) > gCamTitleAngleWrapThreshold)
             {
                 int d2 = (s16)gCamTitlePoseTable[gCamTitleCurPose].pitch - (s16)sy;
-                camera->anim.rotY = (s16)(s32)(v * d2 + (f32)(s16)sy);
+                camera->anim.rotY = (s16)(s32)(ease * d2 + (f32)(s16)sy);
             }
             else
             {
-                *(u16*)&camera->anim.rotY = v * d + sy;
+                *(u16*)&camera->anim.rotY = ease * d + sy;
             }
         }
         {
@@ -229,11 +229,11 @@ void CameraModeTitle_update(CameraObject* camera)
             if (__fabs((f32)d) > gCamTitleAngleWrapThreshold)
             {
                 int d2 = (s16)gCamTitlePoseTable[gCamTitleCurPose].roll - (s16)sy;
-                camera->anim.rotZ = (s16)(s32)(v * d2 + (f32)(s16)sy);
+                camera->anim.rotZ = (s16)(s32)(ease * d2 + (f32)(s16)sy);
             }
             else
             {
-                *(u16*)&camera->anim.rotZ = v * d + sy;
+                *(u16*)&camera->anim.rotZ = ease * d + sy;
             }
         }
     }
