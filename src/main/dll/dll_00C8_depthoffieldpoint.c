@@ -639,53 +639,53 @@ enum
 
 void depthoffieldpoint_init(int* obj)
 {
-    DofState* s = ((GameObject*)obj)->extra;
-    s->enabled = 0;
+    DofState* state = ((GameObject*)obj)->extra;
+    state->enabled = 0;
     ((GameObject*)obj)->animEventCallback = depthoffieldpoint_SeqFn;
-    s->mode0 = 0;
+    state->mode0 = 0;
     ((GameObject*)obj)->objectFlags |= DEPTHOFFIELDPOINT_OBJFLAG_HIDDEN;
 }
 
 void depthoffieldpoint_update(int* obj)
 {
-    DofState* s = ((GameObject*)obj)->extra;
-    if (s->enabled)
+    DofState* state = ((GameObject*)obj)->extra;
+    if (state->enabled)
     {
-        s->enabled = 0;
+        state->enabled = 0;
         Rcp_DisableBlurFilter();
     }
 }
 
 int depthoffieldpoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    DofState* s = ((GameObject*)obj)->extra;
-    int i;
-    if (s->enabled)
+    DofState* state = ((GameObject*)obj)->extra;
+    int ev;
+    if (state->enabled)
     {
         turnOnBlurFilter(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
-                         ((GameObject*)obj)->anim.worldPosZ, s->mode0, s->mode1);
+                         ((GameObject*)obj)->anim.worldPosZ, state->mode0, state->mode1);
     }
-    for (i = 0; i < animUpdate->eventCount; i++)
+    for (ev = 0; ev < animUpdate->eventCount; ev++)
     {
-        switch (animUpdate->eventIds[i])
+        switch (animUpdate->eventIds[ev])
         {
         case DOF_SEQEV_ENABLE:
-            s->enabled = 1;
-            s->mode0 = 0;
+            state->enabled = 1;
+            state->mode0 = 0;
             break;
         case DOF_SEQEV_DISABLE:
-            s->enabled = 0;
+            state->enabled = 0;
             Rcp_DisableBlurFilter();
             break;
         case DOF_SEQEV_ENABLE_MODE0:
-            s->enabled = 1;
-            s->mode0 = 1;
-            s->mode1 = 0;
+            state->enabled = 1;
+            state->mode0 = 1;
+            state->mode1 = 0;
             break;
         case DOF_SEQEV_ENABLE_MODE1:
-            s->enabled = 1;
-            s->mode1 = 1;
-            s->mode0 = 0;
+            state->enabled = 1;
+            state->mode1 = 1;
+            state->mode0 = 0;
             break;
         }
     }
