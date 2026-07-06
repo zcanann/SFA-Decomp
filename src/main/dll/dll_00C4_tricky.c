@@ -16,6 +16,9 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* group owned by another DLL, queried here */
+#define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
+
 #define TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT 0x00000008
 #define TRICKY_CONTROL_FLAG_USE_SPECIAL_FLOOR_Y 0x08000000
 #define TRICKY_CONTROL_FLAG_OFFSET_FLOOR_Y 0x20000000
@@ -2949,7 +2952,7 @@ u8* Tricky_findNearestGroup4BObject(u8* obj, TrickyState* state)
     int i;
 
     result = 0;
-    objs = ObjGroup_GetObjects(0x4b, count);
+    objs = ObjGroup_GetObjects(TRICKYWARP_OBJ_GROUP, count);
     d = getXZDistance(&((GameObject*)state->playerObj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
     if ((d >= lbl_803E2538) || (state->unk71C > lbl_803E23DC))
     {
