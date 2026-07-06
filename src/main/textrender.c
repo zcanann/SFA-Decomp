@@ -2823,9 +2823,12 @@ void setLanguageFn_8001ad64(void* reqp)
         *(int**)(cs->entries + i * 12 + 8) = strs + *(int*)(cs->entries + i * 12 + 8);
     }
     txt = (u8*)(table + numStrings) + 4;
-    for (i = 0; i < numStrings; i++)
     {
-        strs[i] = strs[i] + (int)txt;
+        int j;
+        for (j = 0; j < numStrings; j++)
+        {
+            strs[j] = strs[j] + (int)txt;
+        }
     }
     texHdr = (int*)(txt + ofs);
     p = (u16*)((u8*)texHdr + texHdr[0]);
