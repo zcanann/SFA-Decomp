@@ -26,20 +26,20 @@ extern u8 gInpChannelDefaults[];
  *
  * EN v1.1 Address: 0x80281A30, size 244b
  */
-void inpResetMidiCtrl(u8 a, u8 b, u32 mode)
+void inpResetMidiCtrl(u8 channel, u8 key, u32 mode)
 {
     u8* dst;
     u8* src;
 
     src = (mode != 0) ? sInpMidiCtrlFullResetPreset : sInpMidiCtrlMaskedResetPreset;
 
-    if (b != INP_INVALID_SLOT)
+    if (key != INP_INVALID_SLOT)
     {
-        dst = gInpMidiCtrlByKey + b * INP_MIDI_KEY_STRIDE + a * INP_MIDI_CTRL_BANK_SIZE;
+        dst = gInpMidiCtrlByKey + key * INP_MIDI_KEY_STRIDE + channel * INP_MIDI_CTRL_BANK_SIZE;
     }
     else
     {
-        dst = gInpMidiCtrl + a * INP_MIDI_CTRL_BANK_SIZE;
+        dst = gInpMidiCtrl + channel * INP_MIDI_CTRL_BANK_SIZE;
     }
 
     if (mode != 0)
@@ -58,7 +58,7 @@ void inpResetMidiCtrl(u8 a, u8 b, u32 mode)
         }
     }
 
-    inpSetMidiLastNote(a, b, 0xff);
+    inpSetMidiLastNote(channel, key, 0xff);
 }
 
 /*
@@ -140,13 +140,13 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
  *
  * EN v1.1 Address: 0x80281DB0, size 60b
  */
-u8* inpGetChannelDefaults(u8 a, u8 b)
+u8* inpGetChannelDefaults(u8 channel, u8 key)
 {
-    if (b == INP_INVALID_SLOT)
+    if (key == INP_INVALID_SLOT)
     {
-        return &gInpChannelDefaults[a];
+        return &gInpChannelDefaults[channel];
     }
-    return &gInpChannelDefaultsByKey[b][a];
+    return &gInpChannelDefaultsByKey[key][channel];
 }
 
 /*
@@ -154,24 +154,24 @@ u8* inpGetChannelDefaults(u8 a, u8 b)
  *
  * EN v1.1 Address: 0x80281DEC, size 68b
  */
-void inpResetChannelDefaults(u8 a, u8 b)
+void inpResetChannelDefaults(u8 channel, u8 key)
 {
     u8* p;
-    if (b != INP_INVALID_SLOT)
+    if (key != INP_INVALID_SLOT)
     {
-        p = &gInpChannelDefaultsByKey[b][a];
+        p = &gInpChannelDefaultsByKey[key][channel];
     }
     else
     {
-        p = &gInpChannelDefaults[a];
+        p = &gInpChannelDefaults[channel];
     }
     *p = 2;
 }
 
 /*
  * Push an event onto a 4-slot ring at obj+0x22. Resets counter when
- * the input flag (d) is zero. Slot layout: [b, d|0x10 or transformed
- * b, _, _, c, _, _, _].
+ * the flags byte is zero. Slot layout: [ctrl, flags|0x10 or translated
+ * ctrl, _, _, value, _, _, _].
  *
  * EN v1.1 Address: 0x80281E30, size 156b
  */
@@ -188,11 +188,11 @@ typedef struct InpCtrlRing
     u8 count; /* 0x22 */
 } InpCtrlRing;
 
-void inpAddCtrl(int obj, int b, int c, int d, u32 flag)
+void inpAddCtrl(int obj, int ctrl, int value, int flags, u32 flag)
 {
     InpCtrlRing* ring = (InpCtrlRing*)obj;
     u8 counter;
-    if ((d & 0xff) == 0)
+    if ((flags & 0xff) == 0)
     {
         ring->count = 0;
     }
@@ -201,15 +201,15 @@ void inpAddCtrl(int obj, int b, int c, int d, u32 flag)
         counter = ring->count++;
         if (flag == 0)
         {
-            b = inpTranslateExCtrl(b);
+            ctrl = inpTranslateExCtrl(ctrl);
         }
         else
         {
-            d |= 0x10;
+            flags |= 0x10;
         }
-        ring->slots[counter].ctrl = b;
-        ring->slots[counter].flags = d;
-        ring->slots[counter].value = c;
+        ring->slots[counter].ctrl = ctrl;
+        ring->slots[counter].flags = flags;
+        ring->slots[counter].value = value;
     }
 }
 
@@ -277,15 +277,15 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
  *
  * EN v1.1 Address: 0x80281FE8, size 68b
  */
-void inpSetMidiLastNote(u8 a, u8 b, u8 v)
+void inpSetMidiLastNote(u8 channel, u8 key, u8 v)
 {
-    if (b != INP_INVALID_SLOT)
+    if (key != INP_INVALID_SLOT)
     {
-        lbl_803CD760[b][a] = v;
+        lbl_803CD760[key][channel] = v;
     }
     else
     {
-        gInpMidiLastNote[a] = v;
+        gInpMidiLastNote[channel] = v;
     }
 }
 
@@ -295,13 +295,13 @@ void inpSetMidiLastNote(u8 a, u8 b, u8 v)
  *
  * EN v1.1 Address: 0x8028202C, size 68b
  */
-u8 inpGetMidiLastNote(u8 a, u8 b)
+u8 inpGetMidiLastNote(u8 channel, u8 key)
 {
-    if (b != INP_INVALID_SLOT)
+    if (key != INP_INVALID_SLOT)
     {
-        return lbl_803CD760[b][a];
+        return lbl_803CD760[key][channel];
     }
-    return gInpMidiLastNote[a];
+    return gInpMidiLastNote[channel];
 }
 
 u8 gInpMidiCtrlByKey[0x4300];
