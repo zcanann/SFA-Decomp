@@ -1736,10 +1736,10 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
     int pos;
     u8 found;
     u32 mask;
-    int* q;
+    int* row;
     int j;
-    int m;
-    int v;
+    int minVal;
+    int entry;
     s16 t;
     int step;
     int n2;
@@ -1826,43 +1826,43 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
         }
         if (flag == 0)
         {
-            m = count;
-            v = tbl[0x21];
-            if (v != -1 && v < count)
-                m = v;
+            minVal = count;
+            entry = tbl[0x21];
+            if (entry != -1 && entry < count)
+                minVal = entry;
             j = 0;
             for (n2 = 0; n2 < 4; n2++, j += 7)
             {
-                q = (int*)tbl + j + n2;
-                v = q[0];
-                if (v != -1 && v < m)
-                    m = v;
-                v = q[1];
-                if (v != -1 && v < m)
-                    m = v;
-                v = q[2];
-                if (v != -1 && v < m)
-                    m = v;
-                v = q[3];
-                if (v != -1 && v < m)
-                    m = v;
-                v = q[4];
-                if (v != -1 && v < m)
-                    m = v;
-                v = q[5];
-                if (v != -1 && v < m)
-                    m = v;
-                v = q[6];
-                if (v != -1 && v < m)
-                    m = v;
-                v = q[7];
-                if (v != -1 && v < m)
-                    m = v;
+                row = (int*)tbl + j + n2;
+                entry = row[0];
+                if (entry != -1 && entry < minVal)
+                    minVal = entry;
+                entry = row[1];
+                if (entry != -1 && entry < minVal)
+                    minVal = entry;
+                entry = row[2];
+                if (entry != -1 && entry < minVal)
+                    minVal = entry;
+                entry = row[3];
+                if (entry != -1 && entry < minVal)
+                    minVal = entry;
+                entry = row[4];
+                if (entry != -1 && entry < minVal)
+                    minVal = entry;
+                entry = row[5];
+                if (entry != -1 && entry < minVal)
+                    minVal = entry;
+                entry = row[6];
+                if (entry != -1 && entry < minVal)
+                    minVal = entry;
+                entry = row[7];
+                if (entry != -1 && entry < minVal)
+                    minVal = entry;
             }
-            tbl[0x22] = m;
-            v = tbl[0x21];
-            if (v != -1)
-                tbl[0x20] = v;
+            tbl[0x22] = minVal;
+            entry = tbl[0x21];
+            if (entry != -1)
+                tbl[0x20] = entry;
             else
                 tbl[0x20] = count;
         }
