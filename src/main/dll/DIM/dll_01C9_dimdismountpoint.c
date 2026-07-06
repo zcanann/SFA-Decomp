@@ -30,15 +30,57 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 lbl_803E490C;
 
+void dimdismountpoint_func11(int obj, int flag)
+{
+    (*gObjectTriggerInterface)->runSequence((flag ^ 1) + 2, (void*)obj, -1);
+}
+
+int dimdismountpoint_setScale(int obj)
+{
+    int* player = (int*)Obj_GetPlayerObject();
+    int* state = ((GameObject*)obj)->extra;
+    f32 result;
+    int side;
+
+    result = ((DimdismountpointState*)state)->planeD +
+    (((DimdismountpointState*)state)->planeNZ * ((GameObject*)player)->anim.localPosZ +
+        (((DimdismountpointState*)state)->planeNX * ((GameObject*)player)->anim.localPosX +
+            ((DimdismountpointState*)state)->planeNY * ((GameObject*)player)->anim.localPosY));
+
+    if (result >= lbl_803E4908)
+    {
+        side = 0;
+    }
+    else
+    {
+        side = 1;
+    }
+    (*gObjectTriggerInterface)->runSequence(side, (void*)obj, -1);
+    return side;
+}
+
+int dimdismountpoint_getExtraSize(void) { return 0x10; }
+
+int dimdismountpoint_getObjectTypeId(void) { return 0; }
+
+void dimdismountpoint_free(int obj) { ObjGroup_RemoveObject(obj, DIMDISMOUNT_GROUP); }
+
+void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+{
+    if (visible == 0 || ((GameObject*)obj)->unkF8 != 0)
+    {
+        if (((GameObject*)obj)->unkF8 != 0)
+        {
+            objRenderFn_80041018(obj);
+        }
+    }
+    else
+    {
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E490C);
+    }
+}
+
 void dimdismountpoint_hitDetect(void)
-{
-}
-
-void dimdismountpoint_release(void)
-{
-}
-
-void dimdismountpoint_initialise(void)
 {
 }
 
@@ -93,53 +135,10 @@ void dimdismountpoint_init(u8* obj, u8* params)
     ((GameObject*)obj)->unkF8 = 1;
 }
 
-int dimdismountpoint_getExtraSize(void) { return 0x10; }
-
-void dimdismountpoint_free(int obj) { ObjGroup_RemoveObject(obj, DIMDISMOUNT_GROUP); }
-
-
-int dimdismountpoint_getObjectTypeId(void) { return 0; }
-
-void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void dimdismountpoint_release(void)
 {
-    if (visible == 0 || ((GameObject*)obj)->unkF8 != 0)
-    {
-        if (((GameObject*)obj)->unkF8 != 0)
-        {
-            objRenderFn_80041018(obj);
-        }
-    }
-    else
-    {
-        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E490C);
-    }
 }
 
-void dimdismountpoint_func11(int obj, int flag)
+void dimdismountpoint_initialise(void)
 {
-    (*gObjectTriggerInterface)->runSequence((flag ^ 1) + 2, (void*)obj, -1);
-}
-
-int dimdismountpoint_setScale(int obj)
-{
-    int* player = (int*)Obj_GetPlayerObject();
-    int* state = ((GameObject*)obj)->extra;
-    f32 result;
-    int side;
-
-    result = ((DimdismountpointState*)state)->planeD +
-    (((DimdismountpointState*)state)->planeNZ * ((GameObject*)player)->anim.localPosZ +
-        (((DimdismountpointState*)state)->planeNX * ((GameObject*)player)->anim.localPosX +
-            ((DimdismountpointState*)state)->planeNY * ((GameObject*)player)->anim.localPosY));
-
-    if (result >= lbl_803E4908)
-    {
-        side = 0;
-    }
-    else
-    {
-        side = 1;
-    }
-    (*gObjectTriggerInterface)->runSequence(side, (void*)obj, -1);
-    return side;
 }
