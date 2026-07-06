@@ -53,6 +53,27 @@ extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
 
 
+int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    int def;
+
+    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    if (animUpdate->triggerCommand != 0)
+    {
+        if (((((DoorlockPlacement*)def)->modeBits & 4) != 0) && (animUpdate->triggerCommand == 1))
+        {
+            GameBit_Set(((DoorlockPlacement*)def)->lockGameBit, 1);
+        }
+        if ((animUpdate->triggerCommand == 2) && (((DoorlockPlacement*)def)->queuedSequenceId != 0))
+        {
+            (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, ((DoorlockPlacement*)def)->queuedSequenceId);
+        }
+        animUpdate->triggerCommand = 0;
+    }
+    ((GameObject*)obj)->unkF8 = 0;
+    return 0;
+}
+
 int doorlock_getExtraSize(void) { return 0x1; }
 
 void doorlock_free(int obj) { ObjGroup_RemoveObject(obj, DOORLOCK_OBJGROUP); }
@@ -75,27 +96,6 @@ void doorlock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 render_basic:
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3798);
-}
-
-int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    int def;
-
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (animUpdate->triggerCommand != 0)
-    {
-        if (((((DoorlockPlacement*)def)->modeBits & 4) != 0) && (animUpdate->triggerCommand == 1))
-        {
-            GameBit_Set(((DoorlockPlacement*)def)->lockGameBit, 1);
-        }
-        if ((animUpdate->triggerCommand == 2) && (((DoorlockPlacement*)def)->queuedSequenceId != 0))
-        {
-            (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, ((DoorlockPlacement*)def)->queuedSequenceId);
-        }
-        animUpdate->triggerCommand = 0;
-    }
-    ((GameObject*)obj)->unkF8 = 0;
-    return 0;
 }
 
 void doorlock_update(int obj)
