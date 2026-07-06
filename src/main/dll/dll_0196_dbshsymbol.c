@@ -70,7 +70,7 @@ static const f32 lbl_803E5118 = 50.0f;
 
 int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
 {
-    int v;
+    int volume;
     int* list;
     int idx;
     int count;
@@ -222,12 +222,12 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
         f32 vol = (lbl_803E5108 * state->spinSpeed >= lbl_803E50EC)
                       ? lbl_803E5108 * state->spinSpeed
                       : -(lbl_803E5108 * state->spinSpeed);
-        v = (int)vol;
-        if (v > 100)
+        volume = (int)vol;
+        if (volume > 100)
         {
-            v = 100;
+            volume = 100;
         }
-        Sfx_SetObjectSfxVolume(obj, SFXTRIG_blockscrape_lp, (u8)v, lbl_803E50E0);
+        Sfx_SetObjectSfxVolume(obj, SFXTRIG_blockscrape_lp, (u8)volume, lbl_803E50E0);
     }
     return 0;
 }
