@@ -55,6 +55,11 @@ int vfpstatueball_getExtraSize(void) { return 0xc; }
 
 int vfpstatueball_getObjectTypeId(void) { return 0x0; }
 
+void vfpstatueball_free(int obj)
+{
+    (*gExpgfxInterface)->freeSource(obj);
+}
+
 void vfpstatueball_render(void)
 {
 }
@@ -164,19 +169,6 @@ void vfpstatueball_update(int* obj)
     }
 }
 
-void vfpstatueball_release(void)
-{
-}
-
-void vfpstatueball_initialise(void)
-{
-}
-
-void vfpstatueball_free(int obj)
-{
-    (*gExpgfxInterface)->freeSource(obj);
-}
-
 void vfpstatueball_init(int* obj, u8* init)
 {
     VfpStatueBallPlacement* setup = (VfpStatueBallPlacement*)init;
@@ -195,4 +187,12 @@ void vfpstatueball_init(int* obj, u8* init)
     }
     Obj_SetActiveModelIndex((int)obj, setup->variant);
     state->active = GameBit_Get(state->gameBit);
+}
+
+void vfpstatueball_release(void)
+{
+}
+
+void vfpstatueball_initialise(void)
+{
 }
