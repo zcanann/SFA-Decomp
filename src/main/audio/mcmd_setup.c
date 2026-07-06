@@ -20,13 +20,13 @@ extern f32 lbl_803E77F8; /* decay scale epsilon */
 typedef struct SampleInfo
 {
     u32 info;
-    u32 unk04;
-    u32 unk08;
+    u32 addr;
+    u32 extraData;
     u32 offset;
     u32 length;
-    u32 unk14;
-    u32 unk18;
-    u32 unk1C;
+    u32 loop;
+    u32 loopLength;
+    u32 compType;
 } SampleInfo;
 
 extern SampleInfo dataSampleInfo;
