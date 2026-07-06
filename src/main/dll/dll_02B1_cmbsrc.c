@@ -170,7 +170,7 @@ void cmbsrc_hitDetect(int obj)
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
     CmbSrcState* state = cmbsrc->state;
-    int v;
+    int charge;
 
     state->priorityHitType = 0;
     if ((setup->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) != 0)
@@ -194,16 +194,16 @@ void cmbsrc_hitDetect(int obj)
                 }
             }
         }
-        v = state->hitCharge;
-        if (v < 0)
+        charge = state->hitCharge;
+        if (charge < 0)
         {
-            v = 0;
+            charge = 0;
         }
-        else if (v > CMBSRC_MAX_HIT_CHARGE)
+        else if (charge > CMBSRC_MAX_HIT_CHARGE)
         {
-            v = CMBSRC_MAX_HIT_CHARGE;
+            charge = CMBSRC_MAX_HIT_CHARGE;
         }
-        state->hitCharge = v;
+        state->hitCharge = charge;
     }
 }
 
