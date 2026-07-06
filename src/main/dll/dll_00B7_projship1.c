@@ -32,5 +32,13 @@ char sProjship1DoNoLongerSupported[] = "<projship1 Do>No Longer supported \n";
 extern void projwallpower_doUnsupported();
 extern void projwallpower_release();
 extern void projwallpower_initialise();
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* lbl_80319840[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projwallpower_initialise, projwallpower_release, (void*)0x00000000, projwallpower_doUnsupported };
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs).
+ * Union u64 member forces the retail 8-byte alignment after the 0x24-byte
+ * string (retail pad gap_07_8031983C_data). Same idiom as
+ * dll_00B1_projlightning3. */
+typedef union DllDescriptorTable {
+    void* ptrs[8];
+    u64 align8;
+} DllDescriptorTable;
+
+DllDescriptorTable lbl_80319840 = { { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projwallpower_initialise, projwallpower_release, (void*)0x00000000, projwallpower_doUnsupported } };
