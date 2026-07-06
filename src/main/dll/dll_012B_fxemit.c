@@ -218,7 +218,7 @@ int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     FxEmitPlacement* def;
     u8 event;
     int i;
-    s8 delta;
+    s8 rotStep;
 
     state = obj->state;
     def = (FxEmitPlacement*)obj->objAnim.placementData;
@@ -238,34 +238,34 @@ int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (state->seqToggle != 0)
     {
-        delta = def->yawStep;
-        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        rotStep = def->yawStep;
+        if (rotStep == FXEMIT_ROTATION_STEP_AUTO)
         {
             obj->objAnim.rotX = obj->objAnim.rotX + framesThisStep * 10;
         }
         else
         {
-            obj->objAnim.rotX = obj->objAnim.rotX + delta * framesThisStep * 100;
+            obj->objAnim.rotX = obj->objAnim.rotX + rotStep * framesThisStep * 100;
         }
 
-        delta = def->pitchStep;
-        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        rotStep = def->pitchStep;
+        if (rotStep == FXEMIT_ROTATION_STEP_AUTO)
         {
             obj->objAnim.rotY = obj->objAnim.rotY + framesThisStep * 10;
         }
         else
         {
-            obj->objAnim.rotY = obj->objAnim.rotY + delta * framesThisStep * 100;
+            obj->objAnim.rotY = obj->objAnim.rotY + rotStep * framesThisStep * 100;
         }
 
-        delta = def->rollStep;
-        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        rotStep = def->rollStep;
+        if (rotStep == FXEMIT_ROTATION_STEP_AUTO)
         {
             obj->objAnim.rotZ = obj->objAnim.rotZ + framesThisStep * 10;
         }
         else
         {
-            obj->objAnim.rotZ = obj->objAnim.rotZ + delta * framesThisStep * 100;
+            obj->objAnim.rotZ = obj->objAnim.rotZ + rotStep * framesThisStep * 100;
         }
         fxemit_emitEffect(obj);
     }
@@ -300,8 +300,8 @@ void fxemit_update(FxEmitObject* obj)
     FxEmitState* state;
     FxEmitPlacement* def;
     ObjAnimComponent* player;
-    s16 e;
-    s8 delta;
+    s16 emitCount;
+    s8 rotStep;
     f32 dx;
     f32 dy;
     f32 dz;
@@ -350,34 +350,34 @@ void fxemit_update(FxEmitObject* obj)
             state->sfxTimer -= framesThisStep;
         }
 
-        delta = def->yawStep;
-        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        rotStep = def->yawStep;
+        if (rotStep == FXEMIT_ROTATION_STEP_AUTO)
         {
             obj->objAnim.rotX = obj->objAnim.rotX + framesThisStep * 10;
         }
         else
         {
-            obj->objAnim.rotX = obj->objAnim.rotX + delta * framesThisStep * 100;
+            obj->objAnim.rotX = obj->objAnim.rotX + rotStep * framesThisStep * 100;
         }
 
-        delta = def->pitchStep;
-        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        rotStep = def->pitchStep;
+        if (rotStep == FXEMIT_ROTATION_STEP_AUTO)
         {
             obj->objAnim.rotY = obj->objAnim.rotY + framesThisStep * 10;
         }
         else
         {
-            obj->objAnim.rotY = obj->objAnim.rotY + delta * framesThisStep * 100;
+            obj->objAnim.rotY = obj->objAnim.rotY + rotStep * framesThisStep * 100;
         }
 
-        delta = def->rollStep;
-        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        rotStep = def->rollStep;
+        if (rotStep == FXEMIT_ROTATION_STEP_AUTO)
         {
             obj->objAnim.rotZ = obj->objAnim.rotZ + framesThisStep * 10;
         }
         else
         {
-            obj->objAnim.rotZ = obj->objAnim.rotZ + delta * framesThisStep * 100;
+            obj->objAnim.rotZ = obj->objAnim.rotZ + rotStep * framesThisStep * 100;
         }
 
         if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0)
@@ -394,13 +394,13 @@ void fxemit_update(FxEmitObject* obj)
                     {
                         state->suppressed = 1;
                     }
-                    e = state->emitCount;
-                    if (e >= 0 || (e < 0 && obj->emitCooldown <= 0))
+                    emitCount = state->emitCount;
+                    if (emitCount >= 0 || (emitCount < 0 && obj->emitCooldown <= 0))
                     {
                         dx = obj->objAnim.worldPosX - player->worldPosX;
                         dy = obj->objAnim.worldPosY - player->worldPosY;
                         dz = obj->objAnim.worldPosZ - player->worldPosZ;
-                        if (e == 0)
+                        if (emitCount == 0)
                         {
                             state->suppressed = 1;
                         }
@@ -411,7 +411,7 @@ void fxemit_update(FxEmitObject* obj)
                         }
                         obj->emitCooldown = -state->emitCount;
                     }
-                    else if (e < 0 && obj->emitCooldown > 0)
+                    else if (emitCount < 0 && obj->emitCooldown > 0)
                     {
                         obj->emitCooldown -= framesThisStep;
                     }
