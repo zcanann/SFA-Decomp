@@ -370,20 +370,20 @@ void dll_16C_update(int* obj)
         ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, blend, (f32)(u32)framesThisStep, NULL);
         if (extra->linkedObj != NULL)
         {
-            f32 t;
+            f32 fade;
             int* player = (int*)Obj_GetPlayerObject();
-            t = Vec_distance(&((GameObject*)extra->linkedObj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
-            t = (t - lbl_803E475C) / lbl_803E4760;
-            if (t < lbl_803E4748)
+            fade = Vec_distance(&((GameObject*)extra->linkedObj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
+            fade = (fade - lbl_803E475C) / lbl_803E4760;
+            if (fade < lbl_803E4748)
             {
-                t = lbl_803E4748;
+                fade = lbl_803E4748;
             }
-            else if (t > lbl_803E4758)
+            else if (fade > lbl_803E4758)
             {
-                t = lbl_803E4758;
+                fade = lbl_803E4758;
             }
-            t = lbl_803E4758 - t;
-            extra->opacity = lbl_803E4764 * t;
+            fade = lbl_803E4758 - fade;
+            extra->opacity = lbl_803E4764 * fade;
             if (((GameObject*)obj)->anim.modelState != NULL)
             {
                 ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
