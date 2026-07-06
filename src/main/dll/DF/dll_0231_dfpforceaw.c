@@ -30,7 +30,7 @@ typedef struct TrickyCurveObjectDef
 
 extern int Obj_GetPlayerObject(void);
 extern u32 ObjMsg_SendToObject();
-extern f32 lbl_803E70E0;
+extern f32 lbl_803E6448;
 
 typedef struct TrickyCurveBurstFxParams
 {
@@ -135,7 +135,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
         fxParams.xOffset = dx;
         fxParams.yOffset = dy;
         fxParams.zOffset = dz;
-        fxParams.scale = lbl_803E70E0;
+        fxParams.scale = lbl_803E6448;
         fxParams.rotZ = 0;
         fxParams.rotY = 0;
         fxParams.rotX = 0;
@@ -178,6 +178,14 @@ void TrickyCurve_updateBurstTrigger(int obj)
 
 #pragma scheduling off
 #pragma peephole off
+int TrickyCurve_getExtraSize(void) { return 0x14; }
+int TrickyCurve_getObjectTypeId(void) { return 0x0; }
+
+void TrickyCurve_free(int obj)
+{
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
 void TrickyCurve_render(void)
 {
 }
@@ -185,18 +193,6 @@ void TrickyCurve_render(void)
 void TrickyCurve_hitDetect(void)
 {
 }
-
-void TrickyCurve_release(void)
-{
-}
-
-void TrickyCurve_initialise(void)
-{
-}
-
-
-int TrickyCurve_getExtraSize(void) { return 0x14; }
-int TrickyCurve_getObjectTypeId(void) { return 0x0; }
 
 void TrickyCurve_update(int* obj)
 {
@@ -220,11 +216,6 @@ void TrickyCurve_update(int* obj)
     }
 }
 
-void TrickyCurve_free(int obj)
-{
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
-
 void TrickyCurve_init(int* obj, u8* def)
 {
     u8* state = ((GameObject*)obj)->extra;
@@ -240,4 +231,12 @@ void TrickyCurve_init(int* obj, u8* def)
     ((TrickyCurveObjState*)state)->triggerGameBit = ((TrickyCurveObjectDef*)def)->triggerGameBit;
     ((TrickyCurveObjState*)state)->unk6 = 0;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED);
+}
+
+void TrickyCurve_release(void)
+{
+}
+
+void TrickyCurve_initialise(void)
+{
 }
