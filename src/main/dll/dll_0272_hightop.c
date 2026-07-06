@@ -1074,7 +1074,7 @@ int hightop_stateHandler02(int obj, int stateArg, f32 dt)
 int hightop_stateHandler09(int obj, int stateArg)
 {
     HighTopRuntime* state = ((GameObject*)obj)->extra;
-    int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
+    int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
     int i;
     int prevCount;
     int* weight;
@@ -1116,7 +1116,7 @@ int hightop_stateHandler09(int obj, int stateArg)
             return 0xb;
         }
     }
-    if (GameBit_Get(((HightopPlacement*)sub)->gameBitId) == 0)
+    if (GameBit_Get(((HightopPlacement*)placement)->gameBitId) == 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (randFn_80080100(0x64) != 0)
