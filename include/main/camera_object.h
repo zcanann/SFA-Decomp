@@ -49,8 +49,8 @@ typedef struct CameraObject {
     u8 pad120[4];
     void *currentTarget;
     u8 pad128[4];
-    f32 unk12C;
-    f32 unk130;
+    f32 boundHitZLower; /* 0x12C: Z of the nearest below-camera vertical-bound collision hit (hits[i][2]); reset with boundHitZUpper */
+    f32 boundHitZUpper; /* 0x130: Z of the nearest above-camera vertical-bound collision hit (hits[i][2]) */
     u8 pad134[0x13B - 0x134];
     s8 letterboxTargetOffset;
     s8 letterboxStep;

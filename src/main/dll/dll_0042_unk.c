@@ -152,7 +152,7 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
                     if (diff < bestLower)
                     {
                         *lowerBound = pt0;
-                        camera->unk12C = (*(float**)(hits + off))[2];
+                        camera->boundHitZLower = (*(float**)(hits + off))[2];
                         bestLower = diff;
                     }
                 }
@@ -178,7 +178,7 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
                     if (diff < bestUpper)
                     {
                         *upperBound = pt0;
-                        camera->unk130 = (*(float**)(hits + off2))[2];
+                        camera->boundHitZUpper = (*(float**)(hits + off2))[2];
                         bestUpper = diff;
                     }
                 }
@@ -785,8 +785,8 @@ void CameraModeNormal_update(u8* obj)
     else
     {
         fa = lbl_803E16AC;
-        camera->unk130 = fa;
-        camera->unk12C = fa;
+        camera->boundHitZUpper = fa;
+        camera->boundHitZLower = fa;
         if ((*(u8*)((int)camera + 0xa2) == 1) && (*(f32*)((u8*)camera + 0x38) < fa))
         {
             gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
