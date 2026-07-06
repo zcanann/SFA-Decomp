@@ -64,42 +64,42 @@ extern int* gTitleMenuLinkInterface;
 #pragma peephole off
 int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
 {
-    int k;
+    int slot;
     u8* idp;
     u8* lastDst;
     int yoff;
-    int n;
+    int entry;
 
     lastDst = NULL;
-    n = 0;
-    k = 0;
+    entry = 0;
+    slot = 0;
     idp = ids;
-    for (; k < count; k++)
+    for (; slot < count; slot++)
     {
         if ((u32)GameBit_Get(*(s16*)idp) != 0)
         {
-            n++;
+            entry++;
         }
         idp += 4;
     }
-    n = (count - n) * 0x2a / 2 + 0x52;
-    k = 0;
-    yoff = n;
+    entry = (count - entry) * 0x2a / 2 + 0x52;
+    slot = 0;
+    yoff = entry;
     idp = ids;
-    for (n = 0; n < count; n++)
+    for (entry = 0; entry < count; entry++)
     {
         if ((u32)GameBit_Get(*(s16*)idp) != 0)
         {
             memcpy(dst, src, 0x3c);
             lastDst = dst;
             *(s16*)(dst + 6) = yoff;
-            *(s8*)(dst + 0x1a) = (s8)(k - 1);
-            *(s8*)(dst + 0x1b) = (s8)(k + 1);
-            *out = n;
+            *(s8*)(dst + 0x1a) = (s8)(slot - 1);
+            *(s8*)(dst + 0x1b) = (s8)(slot + 1);
+            *out = entry;
             out++;
             dst += 0x3c;
             yoff += 0x2a;
-            k++;
+            slot++;
         }
         idp += 4;
         src += 0x3c;
@@ -108,7 +108,7 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
     {
         *(s8*)(lastDst + 0x1b) = -1;
     }
-    return k;
+    return slot;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -122,7 +122,7 @@ void WarpstoneUI_showUI(int arg)
 {
     int sel;
     int idx;
-    int n;
+    int itemCount;
 
     CMenu_SetFadeCounter(0);
     switch (warpstoneUIState)
@@ -146,10 +146,10 @@ void WarpstoneUI_showUI(int arg)
         gameTextFn_80016810(0x3dd, 200, lbl_803DBC04);
         if (gWarpStoneUiMenuActive == 0)
         {
-            n = fn_801343CC(gWarpStoneUiMenuItemTemplates, gWarpStoneUiMenuItems, (u8*)gWarpStoneUiEntryTable, WARPSTONE_UI_ENTRY_COUNT, gWarpStoneUiSelectedIndices);
+            itemCount = fn_801343CC(gWarpStoneUiMenuItemTemplates, gWarpStoneUiMenuItems, (u8*)gWarpStoneUiEntryTable, WARPSTONE_UI_ENTRY_COUNT, gWarpStoneUiSelectedIndices);
             (**(void (**)(u8*, int, int, int, int, int, int, int, int, int, int, int))
                     ((char*)(*gTitleMenuLinkInterface) + 4))
-                (gWarpStoneUiMenuItems, n, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
+                (gWarpStoneUiMenuItems, itemCount, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
             gWarpStoneUiMenuActive = 1;
         }
         sel = (**(int (**)(void))((char*)(*gTitleMenuLinkInterface) + 0xc))();
@@ -176,7 +176,7 @@ void WarpstoneUI_frameEnd(void)
 #pragma scheduling off
 int WarpstoneUI_frameStart(void)
 {
-    f32 v;
+    f32 alpha;
     if (warpstoneUIState == 0)
     {
         lbl_803DD97C = lbl_803DD97C - (lbl_803E22D8 * timeDelta);
@@ -185,12 +185,12 @@ int WarpstoneUI_frameStart(void)
     {
         lbl_803DD97C = lbl_803DD97C + (lbl_803E22D8 * timeDelta);
     }
-    v = lbl_803DD97C;
-    if (v > *(f32*)&lbl_803E22DC)
+    alpha = lbl_803DD97C;
+    if (alpha > *(f32*)&lbl_803E22DC)
     {
         lbl_803DD97C = lbl_803E22DC;
     }
-    else if (v < *(f32*)&lbl_803E22E0)
+    else if (alpha < *(f32*)&lbl_803E22E0)
     {
         lbl_803DD97C = lbl_803E22E0;
     }
