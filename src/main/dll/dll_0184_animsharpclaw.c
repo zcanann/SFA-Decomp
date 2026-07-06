@@ -63,11 +63,11 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
 {
     int i;
     int child;
-    int alloc;
+    int newChild;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        u8 v = animUpdate->eventIds[i];
-        switch (v)
+        u8 eventId = animUpdate->eventIds[i];
+        switch (eventId)
         {
         case 1:
             ((GameObject*)obj)->unkF8 = ANIMSHARPCLAW_CHILD_SETUP_ID;
@@ -77,10 +77,10 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
                 ObjLink_DetachChild(obj, child);
                 Obj_FreeObject(child);
             }
-            alloc = Obj_AllocObjectSetup(32, ((GameObject*)obj)->unkF8);
-            alloc = Obj_SetupObject(alloc, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
+            newChild = Obj_AllocObjectSetup(32, ((GameObject*)obj)->unkF8);
+            newChild = Obj_SetupObject(newChild, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                     *(int*)&((GameObject*)obj)->anim.parent);
-            ObjLink_AttachChild(obj, alloc, 0);
+            ObjLink_AttachChild(obj, newChild, 0);
             break;
         case 2:
             child = (int)((GameObject*)obj)->childObjs[0];
@@ -122,8 +122,8 @@ void animsharpclaw_free(int obj)
 
 void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    s32 isVisible = visible;
+    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 #pragma peephole on
 
@@ -137,9 +137,9 @@ void animsharpclaw_update(int* obj)
 {
     int* placement;
     int kind;
-    int kind2;
+    int kindExt;
     int matchCount;
-    int* objects;
+    int* objList;
     int* inner;
     int found;
     int i;
@@ -155,26 +155,26 @@ void animsharpclaw_update(int* obj)
         {
             kind = *(s8*)&((AnimsharpclawState*)inner)->kind;
             found = 0;
-            objects = (int*)ObjList_GetObjects(&i, &count);
+            objList = (int*)ObjList_GetObjects(&i, &count);
             matchCount = 0;
-            for (i = 0, kind2 = (int)(s8)kind; i < count; i++)
+            for (i = 0, kindExt = (int)(s8)kind; i < count; i++)
             {
-                int o = *objects;
-                if (((GameObject*)o)->seqIndex == kind)
+                int other = *objList;
+                if (((GameObject*)other)->seqIndex == kind)
                 {
-                    found = o;
+                    found = other;
                 }
-                if (((GameObject*)o)->seqIndex == -2 && ((GameObject*)o)->anim.classId == 0x10 &&
-                    kind2 == *(s8*)((char*)*(int**)&((GameObject*)o)->extra + 0x57))
+                if (((GameObject*)other)->seqIndex == -2 && ((GameObject*)other)->anim.classId == 0x10 &&
+                    kindExt == *(s8*)((char*)*(int**)&((GameObject*)other)->extra + 0x57))
                 {
                     matchCount++;
                 }
-                objects = objects + 1;
+                objList = objList + 1;
             }
             if (matchCount <= 1 && (u32)found != 0 && ((GameObject*)found)->seqIndex != -1)
             {
                 ((GameObject*)found)->seqIndex = -1;
-                (*gObjectTriggerInterface)->endSequence(kind2);
+                (*gObjectTriggerInterface)->endSequence(kindExt);
             }
             ((GameObject*)obj)->seqIndex = -1;
         }
@@ -184,7 +184,7 @@ void animsharpclaw_update(int* obj)
 void animsharpclaw_init(int* obj, u8* init)
 {
     int* inner;
-    int f4;
+    int prevLinkCount;
 
     ((GameObject*)obj)->animEventCallback = NULL;
     objSetSlot(obj, 0x64);
@@ -196,13 +196,13 @@ void animsharpclaw_init(int* obj, u8* init)
     ((AnimsharpclawState*)inner)->unk98 = 0;
     ((AnimsharpclawState*)inner)->unk94 = 0;
     ((GameObject*)obj)->unkF8 = -1;
-    f4 = ((GameObject*)obj)->unkF4;
-    if (f4 == 0 && ((AnimsharpclawPlacement*)init)->linkIndex != 1)
+    prevLinkCount = ((GameObject*)obj)->unkF4;
+    if (prevLinkCount == 0 && ((AnimsharpclawPlacement*)init)->linkIndex != 1)
     {
         (*gObjectTriggerInterface)->loadAnimData((u8*)inner, init);
         ((GameObject*)obj)->unkF4 = ((AnimsharpclawPlacement*)init)->linkIndex + 1;
     }
-    else if (f4 != 0 && ((AnimsharpclawPlacement*)init)->linkIndex != f4 - 1)
+    else if (prevLinkCount != 0 && ((AnimsharpclawPlacement*)init)->linkIndex != prevLinkCount - 1)
     {
         (*gObjectTriggerInterface)->freeState((u8*)inner);
         if (((AnimsharpclawPlacement*)init)->linkIndex != -1)
