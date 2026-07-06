@@ -17,6 +17,8 @@ extern u8** ObjGroup_GetObjects(int kind, int* count);
 extern int trickyFn_8013b368(u8* arg1, f32 dist, u8* arg2);
 extern void objAnimFn_8013a3f0(u8* self, int a, f32 f1, int b);
 
+#define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
+
 #pragma peephole on
 void trickyFn_8013d8f0(u8* self, u8* state)
 {
@@ -51,7 +53,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
         return;
     }
 
-    objsList = ObjGroup_GetObjects(0x4B, &count);
+    objsList = ObjGroup_GetObjects(TRICKYWARP_OBJ_GROUP, &count);
     i = 0;
     objs = objsList;
     rejectDist = lbl_803E24C4;
