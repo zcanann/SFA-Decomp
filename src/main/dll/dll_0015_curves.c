@@ -1480,8 +1480,8 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
     extern int ObjHits_IsObjectEnabled(int obj);
     f32 maxX;
     f32 minX;
-    f32 r;
-    f32 v;
+    f32 radius;
+    f32 bound;
     f32 minY;
     f32 maxZ;
     f32 minZ;
@@ -1491,7 +1491,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
     int byteOff;
     int n;
     CurvesCollisionState* radSrc;
-    f32 c;
+    f32 radiusScale;
     f32* radDst;
     f32* radWrite;
     f32* ptsRead;
@@ -1560,14 +1560,14 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
         radSrc = state;
         radWrite = radii;
         radDst = radii;
-        c = lbl_803E06C0;
+        radiusScale = lbl_803E06C0;
         for (; i < (int)(u32)state->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
         {
             pin = (f32*)((u8*)state->segmentLocalPoints + byteOff);
             Matrix_TransformPoint(m, pin[0], pin[1], pin[2], ptsWalk,
                                   pts + (idx3 + 1), pts + (idx3 + 2));
             *radDst = radSrc->segmentRadii[0];
-            *radDst = sqrtf((c * *radDst) * *radDst);
+            *radDst = sqrtf((radiusScale * *radDst) * *radDst);
             ptsWalk = ptsWalk + 3;
             byteOff = byteOff + 0xc;
             idx3 = idx3 + 3;
@@ -1582,65 +1582,65 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
         minZ = minX;
         for (n = 0; n < ((int)(u32)state->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT); n++)
         {
-            v = *ptsRead + (r = *radWrite);
-            if (v > maxX)
+            bound = *ptsRead + (radius = *radWrite);
+            if (bound > maxX)
             {
-                maxX = v;
+                maxX = bound;
             }
-            v = *ptsRead - r;
-            if (v < minX)
+            bound = *ptsRead - radius;
+            if (bound < minX)
             {
-                minX = v;
+                minX = bound;
             }
-            v = ptsRead[1] + r;
-            if (v > maxY)
+            bound = ptsRead[1] + radius;
+            if (bound > maxY)
             {
-                maxY = v;
+                maxY = bound;
             }
-            v = ptsRead[1] - r;
-            if (v < minY)
+            bound = ptsRead[1] - radius;
+            if (bound < minY)
             {
-                minY = v;
+                minY = bound;
             }
-            v = ptsRead[2] + r;
-            if (v > maxZ)
+            bound = ptsRead[2] + radius;
+            if (bound > maxZ)
             {
-                maxZ = v;
+                maxZ = bound;
             }
-            v = ptsRead[2] - r;
-            if (v < minZ)
+            bound = ptsRead[2] - radius;
+            if (bound < minZ)
             {
-                minZ = v;
+                minZ = bound;
             }
-            v = state->traceStart[n][0] + r;
-            if (v > maxX)
+            bound = state->traceStart[n][0] + radius;
+            if (bound > maxX)
             {
-                maxX = v;
+                maxX = bound;
             }
-            v = state->traceStart[n][0] - r;
-            if (v < minX)
+            bound = state->traceStart[n][0] - radius;
+            if (bound < minX)
             {
-                minX = v;
+                minX = bound;
             }
-            v = state->traceStart[n][1] + r;
-            if (v > maxY)
+            bound = state->traceStart[n][1] + radius;
+            if (bound > maxY)
             {
-                maxY = v;
+                maxY = bound;
             }
-            v = state->traceStart[n][1] - r;
-            if (v < minY)
+            bound = state->traceStart[n][1] - radius;
+            if (bound < minY)
             {
-                minY = v;
+                minY = bound;
             }
-            v = state->traceStart[n][2] + r;
-            if (v > maxZ)
+            bound = state->traceStart[n][2] + radius;
+            if (bound > maxZ)
             {
-                maxZ = v;
+                maxZ = bound;
             }
-            r = state->traceStart[n][2] - r;
-            if (r < minZ)
+            radius = state->traceStart[n][2] - radius;
+            if (radius < minZ)
             {
-                minZ = r;
+                minZ = radius;
             }
             ptsRead = ptsRead + 3;
             radWrite = radWrite + 1;
