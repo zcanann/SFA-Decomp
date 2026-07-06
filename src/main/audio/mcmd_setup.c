@@ -266,12 +266,12 @@ void mcmdVibrato(McmdVoiceState* svoice, McmdCommandArgs* cstep)
  */
 void DoSetPitch(McmdVoiceState* svoice)
 {
-    u32 f;
-    u32 of;
+    u32 ratio;
+    u32 ratioInt;
     u32 i;
     u32 frq;
     u32 ofrq;
-    u32 no;
+    u32 octave;
     s32 key;
     u8 oKey;
     u16* kf = (u16*)lbl_8032EDD0;
@@ -286,54 +286,54 @@ void DoSetPitch(McmdVoiceState* svoice)
     }
     else if (ofrq < frq)
     {
-        f = (frq << 12) / ofrq;
-        of = f >> 12;
+        ratio = (frq << 12) / ofrq;
+        ratioInt = ratio >> 12;
 
-        for (no = 0; no < 11; no++)
+        for (octave = 0; octave < 11; octave++)
         {
-            if (of < (1 << (no + 1)))
+            if (ratioInt < (1 << (octave + 1)))
             {
                 break;
             }
         }
 
-        f /= (1 << no);
+        ratio /= (1 << octave);
 
         for (i = 11;; i--)
         {
-            if (f > kf[i])
+            if (ratio > kf[i])
             {
                 break;
             }
         }
 
-        svoice->key = (svoice->prevSampleId >> 24) + (no * 12) + i;
-        svoice->fineTune = ((f - kf[i]) * 100) / (kf[i + 1] - kf[i]);
+        svoice->key = (svoice->prevSampleId >> 24) + (octave * 12) + i;
+        svoice->fineTune = ((ratio - kf[i]) * 100) / (kf[i + 1] - kf[i]);
     }
     else
     {
-        f = (ofrq << 12) / frq;
-        of = f >> 12;
+        ratio = (ofrq << 12) / frq;
+        ratioInt = ratio >> 12;
 
-        for (no = 0; no < 11; no++)
+        for (octave = 0; octave < 11; octave++)
         {
-            if (of < (1 << (no + 1)))
+            if (ratioInt < (1 << (octave + 1)))
             {
                 break;
             }
         }
 
-        f /= (1 << no);
+        ratio /= (1 << octave);
 
         for (i = 11;; i--)
         {
-            if (f > kf[i])
+            if (ratio > kf[i])
             {
                 break;
             }
         }
 
-        key = i + (no * 12);
+        key = i + (octave * 12);
         oKey = (svoice->prevSampleId >> 24);
         if (key > oKey)
         {
@@ -342,7 +342,7 @@ void DoSetPitch(McmdVoiceState* svoice)
         else
         {
             svoice->key = oKey - key;
-            svoice->fineTune = ((kf[i] - f) * 100) / (kf[i + 1] - kf[i]);
+            svoice->fineTune = ((kf[i] - ratio) * 100) / (kf[i + 1] - kf[i]);
         }
     }
 }
