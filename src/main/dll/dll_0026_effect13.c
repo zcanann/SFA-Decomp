@@ -420,18 +420,20 @@ u32 FUN_800c9030(u32 key, int* outIndex)
 }
 #endif
 
-extern f32 lbl_803E0180;
-extern f32 lbl_803E0184;
-extern f32 lbl_803E0188;
-extern f32 lbl_803E018C;
-extern f32 lbl_803E0190;
-extern f32 lbl_803E0194;
-extern f32 lbl_803E0198;
-extern f32 lbl_803E019C;
-extern f32 lbl_803E01A0;
-extern f32 lbl_803E01A4;
-extern f32 lbl_803E01A8;
-extern f32 lbl_803E01AC;
+/* .sdata2 constant pool */
+static const f32 lbl_803E0180 = 0.0f;
+static const f32 lbl_803E0184 = 0.025f;
+static const f32 lbl_803E0188 = 0.02f;
+static const f32 lbl_803E018C = 0.01f;
+static const f32 lbl_803E0190 = 0.08f;
+static const f32 lbl_803E0194 = 610.0f;
+static const f32 lbl_803E0198 = 0.0023f;
+static const f32 lbl_803E019C = 1.0f;
+static const f32 lbl_803E01A0 = 4.0f;
+static const f32 lbl_803E01A4 = 0.0001f;
+static const f32 lbl_803E01A8 = 110.0f;
+static const f32 lbl_803E01AC = 0.0003f;
+static const f64 lbl_803E01B0 = 4503601774854144.0;
 
 extern WaterfxCfg gEffect13DefaultSplashParams;
 
