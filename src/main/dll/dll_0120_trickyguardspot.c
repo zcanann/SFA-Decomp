@@ -28,15 +28,15 @@ void trickyguardspot_render(void)
 void trickyguardspot_update(TrickyGuardSpotObject* obj)
 {
 
-    u8* sub;
-    u8* def;
+    u8* state;
+    u8* placement;
     ObjAnimComponent* tricky;
     TrickyGuardSpotStateFlags* flags;
 
-    sub = ((GameObject*)obj)->extra;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
+    placement = *(u8**)&((GameObject*)obj)->anim.placementData;
     tricky = (ObjAnimComponent*)getTrickyObject();
-    flags = (TrickyGuardSpotStateFlags*)(sub + 4);
+    flags = (TrickyGuardSpotStateFlags*)(state + 4);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
         (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | TRICKY_GUARD_SPOT_ACTIVE_HITBOX_FLAG);
     flags->trickyInRange = 0;
@@ -45,14 +45,14 @@ void trickyguardspot_update(TrickyGuardSpotObject* obj)
         if ((u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) != 0)
         {
             if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
-                               (f32*)((char*)tricky + 0x18)) < (f32)(s32)((TrickyguardspotPlacement*)def)->triggerRange)
+                               (f32*)((char*)tricky + 0x18)) < (f32)(s32)((TrickyguardspotPlacement*)placement)->triggerRange)
             {
-                *(int*)sub = *(int*)sub - framesThisStep;
+                *(int*)state = *(int*)state - framesThisStep;
                 flags->trickyInRange = 1;
             }
         }
     }
-    if (*(u32*)sub != 0)
+    if (*(u32*)state != 0)
     {
         if (tricky != NULL && (u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) == 0)
         {
@@ -69,9 +69,9 @@ void trickyguardspot_update(TrickyGuardSpotObject* obj)
     else if (tricky != NULL)
     {
         TRICKY_GUARD_SPOT_VTABLE(tricky)->resetGuardSpotAction(tricky);
-        *(int*)sub = def[0x19] * 0x3c;
+        *(int*)state = placement[0x19] * 0x3c;
     }
-    GameBit_Set(((TrickyguardspotPlacement*)def)->trickyInRangeGameBit, flags->trickyInRange);
+    GameBit_Set(((TrickyguardspotPlacement*)placement)->trickyInRangeGameBit, flags->trickyInRange);
 }
 
 int trickyguardspot_getExtraSize(void) { return 0x8; }
