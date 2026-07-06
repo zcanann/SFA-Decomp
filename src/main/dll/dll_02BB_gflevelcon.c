@@ -181,17 +181,17 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
     }
 
     {
-        s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->scrollA;
-        if (p != NULL)
+        s16* scroll = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->scrollA;
+        if (scroll != NULL)
         {
-            *p += (s16)(lbl_803E748C * timeDelta);
+            *scroll += (s16)(lbl_803E748C * timeDelta);
         }
     }
     {
-        s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->scrollB;
-        if (p != NULL)
+        s16* scroll = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->scrollB;
+        if (scroll != NULL)
         {
-            *p -= (s16)(lbl_803E748C * timeDelta);
+            *scroll -= (s16)(lbl_803E748C * timeDelta);
         }
     }
     return 0;
@@ -309,8 +309,8 @@ void fn_80239EAC(int obj, int state)
     int defNo;
 
     {
-        int* t = ObjGroup_GetObjects(2, &count);
-        for (i = 0, objs = t; i < count; i++)
+        int* objList = ObjGroup_GetObjects(2, &count);
+        for (i = 0, objs = objList; i < count; i++)
         {
             cur = *objs;
             defNo = *(s16*)(*(int*)&((GameObject*)cur)->anim.placementData);
