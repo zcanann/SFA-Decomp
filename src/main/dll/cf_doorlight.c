@@ -109,6 +109,84 @@ int kaldachom_stateHandlerB03(int obj, GroundBaddieState* state)
     return 0;
 }
 
+int kaldachom_stateHandlerB02(int obj, GroundBaddieState* p2)
+{
+    int sub = *(int*)&((GameObject*)obj)->extra;
+
+    if ((s32)(s8)p2->baddie.moveJustStartedB != 0)
+    {
+        ((CfDoorlightState*)sub)->control->soundFlags = 0;
+        (*gPlayerInterface)->setState((void*)obj, p2, 7);
+        ObjHits_DisableObject(obj);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        ((CfDoorlightState*)sub)->flags400 = (u16)(((CfDoorlightState*)sub)->flags400 | 0x20);
+        ((CfDoorlightState*)sub)->unk3E8 = lbl_803E3078;
+        ((CfDoorlightState*)sub)->unk3EC = lbl_803E307C;
+    }
+    else if ((s32)(s8)p2->baddie.moveDone != 0)
+    {
+        if (((GameObject*)obj)->anim.placementData == NULL)
+        {
+            Obj_FreeObject(obj);
+            return 0;
+        }
+        return 4;
+    }
+    return 0;
+}
+
+int kaldachom_stateHandlerB01(int* obj, GroundBaddieState* state)
+{
+    KaldaChomControl* control = ((CfDoorlightState*)((GameObject*)obj)->extra)->control;
+    if (state->baddie.controlMode == BADDIE_CONTROL_MODE_RETURN)
+    {
+        f32 zero;
+        f32 timer;
+        if ((s8)state->baddie.moveJustStartedB != 0)
+        {
+            control->returnStateTimer = lbl_803E3080;
+        }
+        timer = control->returnStateTimer;
+        zero = lbl_803E3060;
+        if (timer != zero)
+        {
+            control->returnStateTimer = timer - timeDelta;
+            if (control->returnStateTimer < zero)
+            {
+                control->returnStateTimer = zero;
+            }
+        }
+        else
+        {
+            return 6;
+        }
+    }
+    else
+    {
+        if ((s8)state->baddie.moveDone != 0) return 6;
+    }
+    return 0;
+}
+
+int kaldachom_stateHandlerB00(int* obj, GroundBaddieState* state)
+{
+    if (state->baddie.targetObj != NULL)
+    {
+        if ((s8)state->baddie.moveJustStartedB != 0)
+        {
+            f32 fz = lbl_803E3060;
+            state->baddie.animSpeedB = fz;
+            state->baddie.animSpeedA = fz;
+            (*gPlayerInterface)->setState(obj, state, 0);
+        }
+        else if ((s8)state->baddie.moveDone != 0)
+        {
+            return 6;
+        }
+    }
+    return 0;
+}
+
 int kaldachom_stateHandlerA07(int obj, int p)
 {
     int state;
@@ -169,83 +247,5 @@ int kaldachom_stateHandlerA07(int obj, int p)
     }
     ((GameObject*)obj)->anim.alpha =
         (lbl_803E3078 - ((GameObject*)obj)->anim.currentMoveProgress) * lbl_803E308C;
-    return 0;
-}
-
-int kaldachom_stateHandlerB01(int* obj, GroundBaddieState* state)
-{
-    KaldaChomControl* control = ((CfDoorlightState*)((GameObject*)obj)->extra)->control;
-    if (state->baddie.controlMode == BADDIE_CONTROL_MODE_RETURN)
-    {
-        f32 zero;
-        f32 timer;
-        if ((s8)state->baddie.moveJustStartedB != 0)
-        {
-            control->returnStateTimer = lbl_803E3080;
-        }
-        timer = control->returnStateTimer;
-        zero = lbl_803E3060;
-        if (timer != zero)
-        {
-            control->returnStateTimer = timer - timeDelta;
-            if (control->returnStateTimer < zero)
-            {
-                control->returnStateTimer = zero;
-            }
-        }
-        else
-        {
-            return 6;
-        }
-    }
-    else
-    {
-        if ((s8)state->baddie.moveDone != 0) return 6;
-    }
-    return 0;
-}
-
-int kaldachom_stateHandlerB00(int* obj, GroundBaddieState* state)
-{
-    if (state->baddie.targetObj != NULL)
-    {
-        if ((s8)state->baddie.moveJustStartedB != 0)
-        {
-            f32 fz = lbl_803E3060;
-            state->baddie.animSpeedB = fz;
-            state->baddie.animSpeedA = fz;
-            (*gPlayerInterface)->setState(obj, state, 0);
-        }
-        else if ((s8)state->baddie.moveDone != 0)
-        {
-            return 6;
-        }
-    }
-    return 0;
-}
-
-int kaldachom_stateHandlerB02(int obj, GroundBaddieState* p2)
-{
-    int sub = *(int*)&((GameObject*)obj)->extra;
-
-    if ((s32)(s8)p2->baddie.moveJustStartedB != 0)
-    {
-        ((CfDoorlightState*)sub)->control->soundFlags = 0;
-        (*gPlayerInterface)->setState((void*)obj, p2, 7);
-        ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-        ((CfDoorlightState*)sub)->flags400 = (u16)(((CfDoorlightState*)sub)->flags400 | 0x20);
-        ((CfDoorlightState*)sub)->unk3E8 = lbl_803E3078;
-        ((CfDoorlightState*)sub)->unk3EC = lbl_803E307C;
-    }
-    else if ((s32)(s8)p2->baddie.moveDone != 0)
-    {
-        if (((GameObject*)obj)->anim.placementData == NULL)
-        {
-            Obj_FreeObject(obj);
-            return 0;
-        }
-        return 4;
-    }
     return 0;
 }
