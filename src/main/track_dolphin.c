@@ -3808,8 +3808,11 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
         *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
         *(f32*)((char*)out + 0x30) = __AR_Callback;
         *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
-        len = lbl_803DECC4 / sqrtf(*(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x2c) +
-            *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x34));
+        {
+            f32 sqA = *(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x2c);
+            f32 sqB = *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x34);
+            len = lbl_803DECC4 / sqrtf(sqA + sqB);
+        }
         *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x2c) * len;
         *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x34) * len;
         *(f32*)((char*)out + 0x38) = -(*(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x4) +
@@ -3839,8 +3842,11 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
         *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
         *(f32*)((char*)out + 0x20) = __AR_Callback;
         *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
-        len = lbl_803DECC4 / sqrtf(*(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x1c) +
-            *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x24));
+        {
+            f32 sqA = *(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x1c);
+            f32 sqB = *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x24);
+            len = lbl_803DECC4 / sqrtf(sqA + sqB);
+        }
         *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x1c) * len;
         *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x24) * len;
         *(f32*)((char*)out + 0x3c) = *(f32*)((char*)out + 0xc) + hx;
