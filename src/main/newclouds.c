@@ -469,7 +469,7 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
 {
     f32 accX;
     f32 accZ;
-    f32 d;
+    f32 delta;
     f32 dxSq;
     f32 dSq;
     f32 dists[NEWCLOUD_WIND_SOURCE_COUNT];
@@ -483,11 +483,11 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
     accZ = 0.0f;
     for (i = 0; i < NEWCLOUD_WIND_SOURCE_COUNT; i++)
     {
-        d = gNewCloudWindSources[i].x - pos[0];
-        dxSq = d * d;
-        d = gNewCloudWindSources[i].z - pos[2];
-        d = d * d;
-        dSq = dxSq + d;
+        delta = gNewCloudWindSources[i].x - pos[0];
+        dxSq = delta * delta;
+        delta = gNewCloudWindSources[i].z - pos[2];
+        delta = delta * delta;
+        dSq = dxSq + delta;
         if (dSq)
         {
             dists[i] = sqrtf__inline(dSq);
