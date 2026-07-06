@@ -79,7 +79,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int player;
     int* list;
     int* p;
-    int o;
+    int totemObj;
     int i;
     u8 ev;
     int buttons;
@@ -133,8 +133,8 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 if ((GameObject*)list[idx2] != self &&
                     ((GameObject*)list[idx2])->anim.seqId == SC_SEQ_TOTEMPOLE)
                 {
-                    o = list[idx2];
-                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 2);
+                    totemObj = list[idx2];
+                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 2);
                     break;
                 }
             }
@@ -146,8 +146,8 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 if ((GameObject*)list[idx3] != self &&
                     ((GameObject*)list[idx3])->anim.seqId == SC_SEQ_TOTEMPOLE)
                 {
-                    o = list[idx3];
-                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 3);
+                    totemObj = list[idx3];
+                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 3);
                     break;
                 }
             }
@@ -187,11 +187,11 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             ObjAnim_SetCurrentMove(player, PLATFORM1_PLAYER_PULL_MOVE_ID,
                                    playerObj->anim.currentMoveProgress, 0);
         }
-        o = st->linkedObject;
-        if (((GameObject*)o)->anim.currentMove != PLATFORM1_IDLE_PULL_MOVE_ID)
+        totemObj = st->linkedObject;
+        if (((GameObject*)totemObj)->anim.currentMove != PLATFORM1_IDLE_PULL_MOVE_ID)
         {
-            ObjAnim_SetCurrentMove(o, PLATFORM1_IDLE_PULL_MOVE_ID,
-                                   ((GameObject*)o)->anim.currentMoveProgress, 0);
+            ObjAnim_SetCurrentMove(totemObj, PLATFORM1_IDLE_PULL_MOVE_ID,
+                                   ((GameObject*)totemObj)->anim.currentMoveProgress, 0);
         }
         animUpdate->hitVolumePair = -1;
         animUpdate->sequenceEventActive = 0;
@@ -236,8 +236,8 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     if ((GameObject*)list[idx4] != self &&
                         ((GameObject*)list[idx4])->anim.seqId == SC_SEQ_TOTEMPOLE)
                     {
-                        o = list[idx4];
-                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 4);
+                        totemObj = list[idx4];
+                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 4);
                         break;
                     }
                 }
@@ -263,8 +263,8 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     if ((GameObject*)list[idx5] != self &&
                         ((GameObject*)list[idx5])->anim.seqId == SC_SEQ_TOTEMPOLE)
                     {
-                        o = list[idx5];
-                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 4);
+                        totemObj = list[idx5];
+                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 4);
                         break;
                     }
                 }
