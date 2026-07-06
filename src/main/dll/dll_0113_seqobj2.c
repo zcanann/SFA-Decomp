@@ -122,7 +122,7 @@ void SeqObj2_initialise(void)
 int seqobj2_getExtraSize(void) { return 0x1; }
 int seqobj2_getObjectTypeId(void) { return 0x0; }
 
-void seqobj2_free(int x) { ObjGroup_RemoveObject(x, SEQOBJ2_OBJGROUP); }
+void seqobj2_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJ2_OBJGROUP); }
 
 void seqobj2_init(int* obj, SeqObjectPlacement* def)
 {
