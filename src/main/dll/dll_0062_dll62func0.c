@@ -152,17 +152,17 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
     GfxCmd* e = buf.entries;
     u8* base = (u8*)(int)lbl_803129C8;
     u8 cnt;
-    f32 v;
-    v = lbl_803E0898;
+    f32 posX;
+    posX = lbl_803E0898;
     cnt = *(u8*)(*(u8**)&((GameObject*)sourceObj)->anim.placementData + 0x1a);
     if (variant == 1)
     {
         *(s16*)&base[478] = 0;
-        v = lbl_803E089C;
+        posX = lbl_803E089C;
     }
     else if (variant == 2)
     {
-        v = lbl_803E08A0;
+        posX = lbl_803E08A0;
         cnt = 6;
     }
     e[0].layer = 0;
@@ -211,7 +211,7 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[6].flags = 0x3a;
     e[6].tex = 0;
     e[6].mode = 0x1800000;
-    e[6].x = v;
+    e[6].x = posX;
     e[6].y = lbl_803E08A0;
     e[6].z = lbl_803E08B4;
     e[7].layer = 2;
@@ -225,7 +225,7 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[8].flags = 0x3a;
     e[8].tex = 0;
     e[8].mode = 0x1800000;
-    e[8].x = v;
+    e[8].x = posX;
     e[8].y = lbl_803E08A0;
     e[8].z = lbl_803E08B4;
     e[9].layer = 3;
