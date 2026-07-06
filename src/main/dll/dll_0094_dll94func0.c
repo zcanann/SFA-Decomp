@@ -39,14 +39,6 @@ extern f32 lbl_803E1288;
 extern f32 lbl_803E128C;
 extern f32 lbl_803E1290;
 
-void dll_94_func01_nop(void)
-{
-}
-
-void dll_94_func00_nop(void)
-{
-}
-
 void dll_95_func01_nop(void); /* forward decl to align function set with v1.0 asm; defined in dll_0095 */
 
 typedef struct
@@ -213,3 +205,11 @@ void dll_94_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
     dll_94_func03Body(lbl_80317488, sourceObj, variant, posSource, flags, arg5, extraArgs);
 }
 #pragma inline_max_size reset
+
+void dll_94_func01_nop(void)
+{
+}
+
+void dll_94_func00_nop(void)
+{
+}
