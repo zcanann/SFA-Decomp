@@ -66,18 +66,18 @@ extern f32 lbl_803E40BC;
 
 void sfxplayerObj_init(u8* obj, u8* data)
 {
-    SfxplayerObjState* sub = ((GameObject*)obj)->extra;
-    int type;
+    SfxplayerObjState* state = ((GameObject*)obj)->extra;
+    int mode;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SFXPLAYER_OBJECT_FLAGS);
-    type = data[0x1d];
-    switch (type)
+    mode = data[0x1d];
+    switch (mode)
     {
     case SFXPLAYER_MODE_GAMEBIT:
         {
             s16 bit = *(s16*)(data + 0x18);
             if (bit > 0)
             {
-                sub->gameBitState = GameBit_Get(bit);
+                state->gameBitState = GameBit_Get(bit);
             }
             break;
         }
@@ -85,10 +85,10 @@ void sfxplayerObj_init(u8* obj, u8* data)
         break;
     case SFXPLAYER_MODE_RANDOM_DELAY:
         {
-            int v = randomGetRange(data[0x1e], data[0x1f]);
-            f32 fv = v;
-            fv = lbl_803E40BC * fv;
-            sub->delayTimer = fv;
+            int delay = randomGetRange(data[0x1e], data[0x1f]);
+            f32 delayF = delay;
+            delayF = lbl_803E40BC * delayF;
+            state->delayTimer = delayF;
             break;
         }
     }
@@ -97,10 +97,10 @@ void sfxplayerObj_init(u8* obj, u8* data)
 void sfxplayerObj_free(u8* obj)
 {
     u8* data = *(u8**)&((GameObject*)obj)->anim.placementData;
-    SfxplayerObjState* sub = ((GameObject*)obj)->extra;
-    u8 flag = sub->flags;
+    SfxplayerObjState* state = ((GameObject*)obj)->extra;
+    u8 flag = state->flags;
     if ((flag & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0) return;
-    sub->flags = (u8)(flag & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG);
+    state->flags = (u8)(flag & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG);
     if (data[0x1d] == SFXPLAYER_MODE_LOOPED)
     {
         u16 sfx1 = *(u16*)(data + 0x1a);
