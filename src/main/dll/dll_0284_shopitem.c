@@ -253,10 +253,10 @@ int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
             f32 t = ((ShopItemState*)sub)->splineT;
             if (t > lbl_803E5A30)
             {
-                u32 v;
+                u32 segCounter;
                 ((ShopItemState*)sub)->splineT = t - lbl_803E5A30;
-                v = ((ShopItemState*)sub)->segCounter;
-                if (v >= 4)
+                segCounter = ((ShopItemState*)sub)->segCounter;
+                if (segCounter >= 4)
                 {
                     ((ShopItemState*)sub)->segCounter += 1;
                 }
@@ -405,10 +405,10 @@ void shopitem_update(int obj)
                     f32 t = ((ShopItemState*)state)->splineT;
                     if (t > lbl_803E5A30)
                     {
-                        u32 v;
+                        u32 segCounter;
                         ((ShopItemState*)state)->splineT = t - lbl_803E5A30;
-                        v = ((ShopItemState*)state)->segCounter;
-                        if (v >= 4)
+                        segCounter = ((ShopItemState*)state)->segCounter;
+                        if (segCounter >= 4)
                         {
                             ((ShopItemState*)state)->segCounter++;
                         }
