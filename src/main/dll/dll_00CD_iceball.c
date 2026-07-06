@@ -71,7 +71,7 @@ void fn_8015FBEC(int obj)
 }
 #pragma dont_inline reset
 
-static inline u8 scarab_isObjectInList(void* o)
+static inline u8 scarab_isObjectInList(void* obj)
 {
     extern void* ObjList_GetObjects(int* outA, int* outB);
     int i;
@@ -79,7 +79,7 @@ static inline u8 scarab_isObjectInList(void* o)
     int* objs = ObjList_GetObjects(&i, &count);
     while (i < count)
     {
-        if (o == (void*)objs[i++])
+        if (obj == (void*)objs[i++])
         {
             return 1;
         }
@@ -147,46 +147,46 @@ void fn_8015FCCC(int obj)
 
 void iceball_update(u16* obj, int unused)
 {
-    int p;
+    int objInt;
 
-    p = (int)obj;
-    ((GameObject*)p)->unkF4 = (s32)((f32)((GameObject*)p)->unkF4 - timeDelta);
-    if (((GameObject*)p)->unkF4 < 0)
+    objInt = (int)obj;
+    ((GameObject*)objInt)->unkF4 = (s32)((f32)((GameObject*)objInt)->unkF4 - timeDelta);
+    if (((GameObject*)objInt)->unkF4 < 0)
     {
-        Obj_FreeObject((int*)p);
+        Obj_FreeObject((int*)objInt);
         return;
     }
-    if (((GameObject*)p)->anim.alpha == 0)
+    if (((GameObject*)objInt)->anim.alpha == 0)
     {
         return;
     }
     /* raw offsets (rotX/rotZ/rotY +0/4/2, velocity +0x24/0x28/0x2c): the
        named-field form is fuzzy-100 but perturbs the .o; raw is byte-exact */
-    ((GameObject*)p)->anim.velocityY = ((GameObject*)p)->anim.velocityY - lbl_803E2E54 * timeDelta;
-    ((GameObject*)p)->anim.velocityY = ((GameObject*)p)->anim.velocityY * lbl_803E2E58;
-    ((GameObject*)p)->anim.rotX += 910;
-    ((GameObject*)p)->anim.rotZ += 910;
-    ((GameObject*)p)->anim.rotY += 910;
-    objMove(p, ((GameObject*)p)->anim.velocityX * timeDelta, ((GameObject*)p)->anim.velocityY * timeDelta,
-            ((GameObject*)p)->anim.velocityZ * timeDelta);
-    ObjHits_SetHitVolumeSlot(p, 10, 1, 0);
-    ObjHitbox_SetSphereRadius(p, 5);
-    ObjHits_EnableObject(p);
-    if ((*(ObjHitsPriorityState**)&((GameObject*)p)->anim.hitReactState)->lastHitObject != 0 &&
-        ((*(ObjHitsPriorityState**)&((GameObject*)p)->anim.hitReactState)->lastHitObject == Obj_GetPlayerObject() ||
-            (*(ObjHitsPriorityState**)&((GameObject*)p)->anim.hitReactState)->lastHitObject == getTrickyObject()))
+    ((GameObject*)objInt)->anim.velocityY = ((GameObject*)objInt)->anim.velocityY - lbl_803E2E54 * timeDelta;
+    ((GameObject*)objInt)->anim.velocityY = ((GameObject*)objInt)->anim.velocityY * lbl_803E2E58;
+    ((GameObject*)objInt)->anim.rotX += 910;
+    ((GameObject*)objInt)->anim.rotZ += 910;
+    ((GameObject*)objInt)->anim.rotY += 910;
+    objMove(objInt, ((GameObject*)objInt)->anim.velocityX * timeDelta, ((GameObject*)objInt)->anim.velocityY * timeDelta,
+            ((GameObject*)objInt)->anim.velocityZ * timeDelta);
+    ObjHits_SetHitVolumeSlot(objInt, 10, 1, 0);
+    ObjHitbox_SetSphereRadius(objInt, 5);
+    ObjHits_EnableObject(objInt);
+    if ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject != 0 &&
+        ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject == Obj_GetPlayerObject() ||
+            (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject == getTrickyObject()))
     {
-        fn_8015FCCC(p);
-        ((GameObject*)p)->anim.alpha = 0;
-        ((GameObject*)p)->unkF4 = 120;
-        (*(ObjHitsPriorityState**)&((GameObject*)p)->anim.hitReactState)->flags &= ~1;
+        fn_8015FCCC(objInt);
+        ((GameObject*)objInt)->anim.alpha = 0;
+        ((GameObject*)objInt)->unkF4 = 120;
+        (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->flags &= ~1;
     }
-    else if ((*(ObjHitsPriorityState**)&((GameObject*)p)->anim.hitReactState)->contactFlags != 0)
+    else if ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->contactFlags != 0)
     {
-        fn_8015FBEC(p);
-        ((GameObject*)p)->anim.alpha = 0;
-        ((GameObject*)p)->unkF4 = 120;
-        (*(ObjHitsPriorityState**)&((GameObject*)p)->anim.hitReactState)->flags &= ~1;
+        fn_8015FBEC(objInt);
+        ((GameObject*)objInt)->anim.alpha = 0;
+        ((GameObject*)objInt)->unkF4 = 120;
+        (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->flags &= ~1;
     }
 }
 
@@ -227,8 +227,8 @@ void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole off
 void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2E50);
+    s32 visible32 = visible;
+    if (visible32 != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2E50);
 }
 void iceball_free(void) { Camera_DisableViewYOffset(); }
 
