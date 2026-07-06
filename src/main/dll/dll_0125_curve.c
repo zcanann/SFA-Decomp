@@ -693,8 +693,6 @@ void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderModelAndHitVolumes(lbl_803E33F0);
 }
 
-#pragma opt_common_subs reset
-
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 
 static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
@@ -717,5 +715,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
-
-#pragma opt_common_subs off
