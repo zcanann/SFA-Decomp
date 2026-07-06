@@ -40,14 +40,6 @@ extern f32 lbl_803E1308;
 extern f32 lbl_803E130C;
 extern f32 lbl_803E1310;
 
-void dll_97_func01_nop(void)
-{
-}
-
-void dll_97_func00_nop(void)
-{
-}
-
 typedef struct
 {
     GfxCmd* cmds; /* +0x00 */
@@ -208,4 +200,12 @@ void dll_97_func03(int sourceObj, int variant, int posSource, u32 flags, u32 unu
     dll_97_func03Body(lbl_80317810, sourceObj, variant, posSource, flags, unused, extraArgs);
 }
 #pragma inline_max_size reset
+
+void dll_97_func01_nop(void)
+{
+}
+
+void dll_97_func00_nop(void)
+{
+}
 
