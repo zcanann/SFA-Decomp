@@ -719,9 +719,9 @@ void modelLightChannel_configure(int i, int mode, int matSrc)
     gModelLightChannelStates[i].active = 1;
 }
 
-void modelLightChannels_reset(u8 v)
+void modelLightChannels_reset(u8 useModelRelative)
 {
-    gModelLightUseModelRelativePositions = v;
+    gModelLightUseModelRelativePositions = useModelRelative;
     gModelLightNextGXLightId = 1;
     gModelLightChannelStates[0].active = 0;
     gModelLightChannelStates[1].active = 0;
