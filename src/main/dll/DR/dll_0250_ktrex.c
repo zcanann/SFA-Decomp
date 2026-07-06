@@ -108,7 +108,7 @@ typedef struct KTRexWork
 typedef struct KtrexPlacement
 {
     u8 pad0[0x38 - 0x0];
-    f32 unk38;
+    f32 laneSpeed; /* 0x38: lane traversal speed, read into runtime laneSpeed */
     u8 pad3C[0x40 - 0x3C];
 } KtrexPlacement;
 
@@ -118,7 +118,7 @@ typedef struct KtrexState
     u8 pad0[0x38 - 0x0];
     f32 unk38;
     u8 pad3C[0x274 - 0x3C];
-    s16 unk274;
+    s16 scale; /* 0x274: returned by ktrex_setScale */
     u8 pad276[0x5A4 - 0x276];
 } KtrexState;
 
@@ -386,7 +386,7 @@ int ktrex_setScale(int obj)
 {
     void* p = ((GameObject*)obj)->extra;
     gKTRexRuntime = p;
-    return ((KtrexState*)p)->unk274;
+    return ((KtrexState*)p)->scale;
 }
 
 void ktrex_initialise(void)
@@ -1628,7 +1628,7 @@ int ktrex_stateHandlerA05(int obj, int runtime)
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 1);
         ((KTRexArenaState*)gKTRexState)->laneIndex = 1;
         p = (char*)p + ((KTRexArenaState*)gKTRexState)->laneIndex * 4;
-        ((KTRexRuntime*)runtime)->laneSpeed = ((KtrexPlacement*)p)->unk38 / lbl_803E67C4;
+        ((KTRexRuntime*)runtime)->laneSpeed = ((KtrexPlacement*)p)->laneSpeed / lbl_803E67C4;
     }
     if (RandomTimer_UpdateRangeTrigger((char*)gKTRexState + 0x190, lbl_803E67C8, lbl_803E67CC) != 0)
     {
