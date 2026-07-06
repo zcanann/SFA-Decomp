@@ -13,6 +13,18 @@
 
 /* the player object's own group (joined at init, left on free) */
 #define PLAYER_OBJGROUP 0x25
+/* groups owned by other DLLs the player queries */
+#define CFGUARDIAN_OBJGROUP 0x16      /* DLL 0x148 cfguardian */
+#define BABYCLOUDRUNNER_OBJGROUP 0x20 /* DLL 0x14C babycloudrunner (secondary) */
+#define LANTERNFIREFLY_OBJGROUP 0x30  /* DLL 0x10C lanternfirefly */
+#define STAFFACTIVATED_OBJ_GROUP 0x41 /* DLL 0x11C staffactivated */
+
+/* GameCube controller button masks (tested against PlayerState.buttons* fields) */
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
+#define PAD_BUTTON_X 0x400
+#define PAD_BUTTON_Y 0x800
+#define PAD_TRIGGER_L 0x40
 
 void fn_802960E4(void)
 {
@@ -536,7 +548,7 @@ u8 fn_80296414(int obj, int otherObj, u8* out)
 int fn_80295C88(int obj)
 {
     f32 dist = lbl_803E7EDC;
-    return ObjGroup_FindNearestObject(0x30, obj, &dist);
+    return ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, obj, &dist);
 }
 
 void fn_8029697C(int obj, s16* out1, s16* out2)
@@ -1523,7 +1535,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
     }
     if (((PlayerState*)state)->baddie.targetObj == NULL)
     {
-        if ((((PlayerState*)inner)->buttonsJustPressed & 0x200) != 0 ||
+        if ((((PlayerState*)inner)->buttonsJustPressed & PAD_BUTTON_B) != 0 ||
             inner->curAnimId != 0x52)
         {
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029A420;
@@ -1786,7 +1798,7 @@ int fn_802A5384(int obj, int state)
                 calm = 0;
             }
         }
-        if (calm && (((PlayerState*)inner)->buttonsJustPressed & 0x400) != 0)
+        if (calm && (((PlayerState*)inner)->buttonsJustPressed & PAD_BUTTON_X) != 0)
         {
             fn_802AED2C(obj, inner, state);
         }
@@ -5034,12 +5046,12 @@ int fn_8029ABD8(int obj, int state, f32 fv)
             }
         }
     }
-    else if (inner->deferredItemCommand != -1 || (inner->buttonsJustPressed & 0x800) != 0)
+    else if (inner->deferredItemCommand != -1 || (inner->buttonsJustPressed & PAD_BUTTON_Y) != 0)
     {
         int yitem;
         u16 b28;
         s16 item;
-        if (inner->buttonsJustPressed & 0x800)
+        if (inner->buttonsJustPressed & PAD_BUTTON_Y)
         {
             yitem = getYButtonItem(&item);
             b28 = 0x800;
@@ -5312,7 +5324,7 @@ int fn_8029AF9C(int obj, int state)
                 int yitem;
                 u16 b28;
                 s16 item;
-                if (inner->buttonsJustPressed & 0x800)
+                if (inner->buttonsJustPressed & PAD_BUTTON_Y)
                 {
                     yitem = getYButtonItem(&item);
                     b28 = 0x800;
@@ -5323,7 +5335,7 @@ int fn_8029AF9C(int obj, int state)
                     item = gPlayerSelectedItem;
                     b28 = 0x100;
                 }
-                if ((inner->buttonsJustPressed & 0x100) != 0 ||
+                if ((inner->buttonsJustPressed & PAD_BUTTON_A) != 0 ||
                     (yitem == 1 && (item == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || item == GAMEBIT_STAFF_ABILITY_FREEZE_BLAST)))
                 {
                     buttonDisable(0, 0x900);
@@ -5405,7 +5417,7 @@ int fn_8029AF9C(int obj, int state)
         lbl_803DE430 = lbl_803E7EA4;
         break;
     }
-    if ((inner->buttonsJustPressed & 0x200) != 0 || inner->curAnimId != 0x52)
+    if ((inner->buttonsJustPressed & PAD_BUTTON_B) != 0 || inner->curAnimId != 0x52)
     {
         *(u32*)&((PlayerState*)inner)->flags360 &= ~0x2000000LL;
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029A420;
@@ -5900,7 +5912,7 @@ int fn_8029EBCC(int obj, int state)
     {
         inner->actionCooldown = *(f32*)&lbl_803E7EA4;
     }
-    if ((inner->buttonsJustPressed & 0x100) != 0)
+    if ((inner->buttonsJustPressed & PAD_BUTTON_A) != 0)
     {
         if (inner->actionCooldown <= lbl_803E7EA4)
         {
@@ -7118,7 +7130,7 @@ int fn_802AD2F4(int obj, int inner, int state)
         }
     }
     if (((ByteFlags*)((char*)inner + 0x3f2))->b08 != 0 &&
-        (((PlayerState*)inner)->buttonsJustPressed & 0x400) != 0)
+        (((PlayerState*)inner)->buttonsJustPressed & PAD_BUTTON_X) != 0)
     {
         ((ByteFlags*)((char*)inner + 0x3f2))->b02 = 1;
         ((PlayerState*)inner)->buttonsJustPressed = ((PlayerState*)inner)->buttonsJustPressed & ~0x400;
@@ -7984,7 +7996,7 @@ int fn_802A6694(int obj, int state, f32 fv)
             calm = 0;
         }
     }
-    if (calm && (((PlayerState*)inner)->buttonsJustPressed & 0x400) != 0)
+    if (calm && (((PlayerState*)inner)->buttonsJustPressed & PAD_BUTTON_X) != 0)
     {
         fn_802AED2C(obj, inner, state);
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -9712,7 +9724,7 @@ void fn_802A93F4(int obj, int p2, int p3)
     inner->unk8C4 = 2;
     if (gPlayerChildObject != NULL)
     {
-        found = (void*)ObjGroup_FindNearestObject(0x20, obj, &dist);
+        found = (void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, obj, &dist);
         if (found != NULL)
         {
             (*(void (*)(void*))(*(int*)((char*)*(int*)*(int*)((char*)found + 0x68) + 0x24)))(found);
@@ -10957,7 +10969,7 @@ void fn_802B18BC(int obj, int state, f32 fv)
 {
     f32 v;
 
-    if ((((PlayerState*)state)->buttonsHeld & 0x100) && fn_802A9A0C(obj, state))
+    if ((((PlayerState*)state)->buttonsHeld & PAD_BUTTON_A) && fn_802A9A0C(obj, state))
     {
         ((ByteFlags*)((char*)state + 0x3f4))->b20 = 1;
         ((PlayerState*)state)->buttonHoldTimer += fv;
@@ -11138,7 +11150,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             break;
         case 29:
             queryParams[0] = lbl_803E8150;
-            found = (void*)ObjGroup_FindNearestObject(0x16, obj, queryParams);
+            found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_OBJGROUP, obj, queryParams);
             if (found != 0)
             {
                 (*(void (*)(f32, int, int, f32*, f32*))(*(int*)(*(int*)(*(int*)((char*)found + 0x68)) + 0x20)))(
@@ -13448,7 +13460,7 @@ int fn_8029A5E4(int obj, int state)
     }
     if (((PlayerState*)state)->baddie.targetObj == NULL)
     {
-        if ((inner->buttonsJustPressed & 0x200) != 0 ||
+        if ((inner->buttonsJustPressed & PAD_BUTTON_B) != 0 ||
             inner->curAnimId != 0x52)
         {
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029A420;
@@ -13610,7 +13622,7 @@ int fn_8029B7B0(int obj, int state)
             break;
         }
     }
-    if ((inner->buttonsJustPressed & 0x200) != 0 || inner->curAnimId != 0x52)
+    if ((inner->buttonsJustPressed & PAD_BUTTON_B) != 0 || inner->curAnimId != 0x52)
     {
         buttonDisable(0, 0x200);
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029A420;
@@ -13997,7 +14009,7 @@ int fn_802A418C(int obj, int state, f32 fv)
         if (*(void**)((char*)inner + 0x7f8) == NULL &&
             ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
-            list = (int*)ObjGroup_GetObjects(0x41, &cnt41);
+            list = (int*)ObjGroup_GetObjects(STAFFACTIVATED_OBJ_GROUP, &cnt41);
             for (i = 0; i < cnt41; i++)
             {
                 int o = *list;
@@ -14043,7 +14055,7 @@ int fn_802A418C(int obj, int state, f32 fv)
             }
         }
     ui_block:
-        ((void (*)(int, int*))ObjGroup_GetObjects)(0x20, &cnt20);
+        ((void (*)(int, int*))ObjGroup_GetObjects)(BABYCLOUDRUNNER_OBJGROUP, &cnt20);
         GameBit_Set(0xeb5, !cnt20);
         if ((*gGameUIInterface)->isCurrentTriggerClear() != 0)
         {
@@ -14104,7 +14116,7 @@ int fn_802A418C(int obj, int state, f32 fv)
         if (inner->curAnimId != 0x44 &&
             (*gGameUIInterface)->isCurrentTriggerClear() != 0 &&
             (*gGameUIInterface)->isEventReady(0x13e) != 0 &&
-            (((void (*)(int, int*))ObjGroup_GetObjects)(0x30, &cnt30), cnt30 == 0))
+            (((void (*)(int, int*))ObjGroup_GetObjects)(LANTERNFIREFLY_OBJGROUP, &cnt30), cnt30 == 0))
         {
             gameBitDecrement(0x13d);
             if (Obj_IsLoadingLocked() != 0)
@@ -14464,7 +14476,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
     {
         ok = 0;
     }
-    if (ok != 0 && (((PlayerState *)inner)->buttonsHeld & 0x40) != 0 && getCurSeqNo() == 0)
+    if (ok != 0 && (((PlayerState *)inner)->buttonsHeld & PAD_TRIGGER_L) != 0 && getCurSeqNo() == 0)
     {
         if (!((ByteFlags*)((char*)inner + 0x3f1))->b20 &&
             !((ByteFlags*)((char*)inner + 0x3f0))->b10)
@@ -17277,7 +17289,7 @@ int fn_80298E54(int obj, int state, f32 fv)
             f32 prog;
             setAButtonIcon(2);
             lbl_803DE488 = lbl_803DE488 - lbl_803E7EE0;
-            if ((inner->buttonsJustPressedIfNotBusy & 0x100) != 0 || getCurSeqNo() != 0)
+            if ((inner->buttonsJustPressedIfNotBusy & PAD_BUTTON_A) != 0 || getCurSeqNo() != 0)
             {
                 buttonDisable(0, 0x100);
                 lbl_803DE460 = lbl_803DE460 - fv;
@@ -17350,7 +17362,7 @@ int fn_80298E54(int obj, int state, f32 fv)
         break;
     case 0xb2:
         cfPrisonGuard_setLiftHeight(gPlayerInteractTarget, 0x800);
-        if ((inner->buttonsJustPressed & 0x200) != 0)
+        if ((inner->buttonsJustPressed & PAD_BUTTON_B) != 0)
         {
             buttonDisable(0, 0x200);
             Sfx_PlayFromObject(obj, SFXmammoth_breath1);
@@ -17490,7 +17502,7 @@ int fn_802994D0(int obj, int state, f32 fv)
             ObjAnim_SetCurrentMove(obj, 0x87, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
         }
-        else if ((inner->buttonsJustPressed & 0x200) != 0)
+        else if ((inner->buttonsJustPressed & PAD_BUTTON_B) != 0)
         {
             buttonDisable(0, 0x200);
             ObjAnim_SetCurrentMove(obj, 0x44, lbl_803E7EA4, 0);
@@ -18469,10 +18481,10 @@ void playerProcessQueuedItemCommand(int obj, int state)
     s16 cmd;
     s16 item;
 
-    if (((PlayerState*)state)->buttonsJustPressed & 0x800)
+    if (((PlayerState*)state)->buttonsJustPressed & PAD_BUTTON_Y)
     {
         int yButtonItemResult;
-        if (((PlayerState*)state)->buttonsJustPressed & 0x800)
+        if (((PlayerState*)state)->buttonsJustPressed & PAD_BUTTON_Y)
         {
             yButtonItemResult = getYButtonItem(&item);
         }
