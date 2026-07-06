@@ -16,8 +16,8 @@
  * setting the enable game bit and jumping straight to phase 1.
  *
  * Render/hitDetect/free/release/initialise are empty; behaviour is driven
- * entirely by update() and the sequence callback. Exported through
- * gAreaObjDescriptor (the name is reused per-DLL) with 10 callback slots.
+ * entirely by update() and the sequence callback. The object descriptor
+ * lives in the sibling area unit's table (dll_00F6_area .data+0x38).
  */
 #include "main/dll/tFrameAnimator.h"
 #include "main/dll/levelnamestate_struct.h"
@@ -32,16 +32,6 @@ extern f32 lbl_803E36E0;
 extern f32 lbl_803E36E4;
 extern f32 lbl_803E36E8;
 
-int area_getExtraSize(void);
-int area_getObjectTypeId(void);
-void area_free(void);
-void area_render(void);
-void area_hitDetect(void);
-void area_update(void);
-void area_init(GameObject* obj);
-void area_release(void);
-void area_initialise(void);
-
 #define LEVELNAME_PHASE_WAIT 0
 #define LEVELNAME_PHASE_SLIDE_IN 1
 #define LEVELNAME_PHASE_HOLD 2
@@ -55,6 +45,28 @@ void area_initialise(void);
 #define LEVELNAME_SEQEV_SHOW 1     /* anim event id that triggers the banner */
 #define LEVELNAME_SEQFN_HANDLED 4  /* levelname_SeqFn return when the show event fired */
 
+int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    int* state = ((GameObject*)obj)->extra;
+    int i;
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        if (animUpdate->eventIds[i] == LEVELNAME_SEQEV_SHOW)
+        {
+            if (((TFrameAnimatorState*)state)->enableGameBit != -1)
+            {
+                GameBit_Set(((TFrameAnimatorState*)state)->enableGameBit, 1);
+            }
+            ((TFrameAnimatorState*)state)->phase = LEVELNAME_PHASE_SLIDE_IN;
+            return LEVELNAME_SEQFN_HANDLED;
+        }
+    }
+    return 0;
+}
+
+int levelname_getExtraSize(void) { return 0x18; }
+int levelname_getObjectTypeId(void) { return 0x0; }
+
 void levelname_free(void)
 {
 }
@@ -64,14 +76,6 @@ void levelname_render(void)
 }
 
 void levelname_hitDetect(void)
-{
-}
-
-void levelname_release(void)
-{
-}
-
-void levelname_initialise(void)
 {
 }
 
@@ -154,38 +158,10 @@ void levelname_init(int obj, int objDef)
     ((GameObject*)obj)->objectFlags |= LEVELNAME_OBJFLAG_HITDETECT_DISABLED;
 }
 
-int levelname_getExtraSize(void) { return 0x18; }
-int levelname_getObjectTypeId(void) { return 0x0; }
-
-int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+void levelname_release(void)
 {
-    int* state = ((GameObject*)obj)->extra;
-    int i;
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        if (animUpdate->eventIds[i] == LEVELNAME_SEQEV_SHOW)
-        {
-            if (((TFrameAnimatorState*)state)->enableGameBit != -1)
-            {
-                GameBit_Set(((TFrameAnimatorState*)state)->enableGameBit, 1);
-            }
-            ((TFrameAnimatorState*)state)->phase = LEVELNAME_PHASE_SLIDE_IN;
-            return LEVELNAME_SEQFN_HANDLED;
-        }
-    }
-    return 0;
 }
 
-ObjectDescriptor gAreaObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)area_initialise,
-    (ObjectDescriptorCallback)area_release,
-    0,
-    (ObjectDescriptorCallback)area_init,
-    (ObjectDescriptorCallback)area_update,
-    (ObjectDescriptorCallback)area_hitDetect,
-    (ObjectDescriptorCallback)area_render,
-    (ObjectDescriptorCallback)area_free,
-    (ObjectDescriptorCallback)area_getObjectTypeId,
-    area_getExtraSize,
-};
+void levelname_initialise(void)
+{
+}
