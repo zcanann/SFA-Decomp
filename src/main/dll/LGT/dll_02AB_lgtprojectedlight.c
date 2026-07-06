@@ -98,11 +98,11 @@ void projectedlight_free(int obj)
     }
 }
 
-void projectedlight_hitDetect(void)
+void projectedlight_render(void)
 {
 }
 
-void projectedlight_render(void)
+void projectedlight_hitDetect(void)
 {
 }
 
@@ -139,14 +139,14 @@ void projectedlight_init(int obj, int setup)
     if (state->light != NULL)
     {
         modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_PROJECTED);
-        modelLightStruct_setPosition(state->light, lbl_803E7270, lbl_803E7270, lbl_803E7270);
+        modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 0.0f);
         modelLightStruct_setDirection(state->light, vec.x, vec.y, vec.z);
         modelLightStruct_setDiffuseColor(state->light, setupData->diffuseR,
                                          setupData->diffuseG, setupData->diffuseB, setupData->alpha);
         modelLightStruct_setDistanceAttenuation(state->light, (f32)(u32)setupData->distanceNear,
                                                 (f32)(u32)setupData->distanceFar);
         modelLightStruct_setProjectedLightChannelPreference(state->light, setupData->channelPreference);
-        modelLightStruct_setEnabled(state->light, setupData->enabled, lbl_803E7270);
+        modelLightStruct_setEnabled(state->light, setupData->enabled, 0.0f);
 
         if (state->texture == NULL)
         {
@@ -163,14 +163,14 @@ void projectedlight_init(int obj, int setup)
 
         if (setupData->projectionMode == PROJECTEDLIGHT_PROJECTION_ORTHO)
         {
-            f32 halfHeight = (f32)(u32)setupData->projectionHeight / lbl_803E7274;
+            f32 halfHeight = (f32)(u32)setupData->projectionHeight / 10.0f;
             f32 halfWidth;
             f32 nearDepth, farDepth;
             if (halfHeight < lbl_803E7260)
             {
                 halfHeight = lbl_803E7260;
             }
-            halfWidth = (f32)(u32)setupData->projectionWidth / lbl_803E7274;
+            halfWidth = (f32)(u32)setupData->projectionWidth / 10.0f;
             if (halfWidth < lbl_803E7260)
             {
                 halfWidth = lbl_803E7260;
@@ -191,13 +191,13 @@ void projectedlight_init(int obj, int setup)
         }
         else
         {
-            f32 height = (f32)(u32)setupData->projectionHeight / lbl_803E7274;
+            f32 height = (f32)(u32)setupData->projectionHeight / 10.0f;
             f32 width;
             if (height < lbl_803E7260)
             {
                 height = lbl_803E7260;
             }
-            width = (f32)(u32)setupData->projectionWidth / lbl_803E7274;
+            width = (f32)(u32)setupData->projectionWidth / 10.0f;
             if (width < lbl_803E7260)
             {
                 width = lbl_803E7260;
