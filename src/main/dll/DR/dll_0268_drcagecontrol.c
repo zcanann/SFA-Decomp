@@ -24,81 +24,6 @@ STATIC_ASSERT(offsetof(CageControlPlacement, armGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(CageControlPlacement, watchGameBit) == 0x20);
 STATIC_ASSERT(sizeof(CageControlPlacement) == 0x28);
 
-void cagecontrol_free(void)
-{
-}
-
-int cagecontrol_getExtraSize(void) { return 0x4; }
-
-int cagecontrol_getObjectTypeId(void) { return 0x0; }
-
-void cagecontrol_hitDetect(void)
-{
-}
-
-void cagecontrol_initialise(void)
-{
-}
-
-void cagecontrol_release(void)
-{
-}
-
-void cagecontrol_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
-{
-    if (visible != 0)
-    {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69D8);
-    }
-}
-
-void cagecontrol_init(int obj, char* arg)
-{
-    char* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = cagecontrol_updateTriggerCallback;
-    if (GameBit_Get(((CageControlPlacement*)arg)->armGameBit) != 0)
-    {
-        ((BitFlags8*)(state + 0x4))->b2 = 1;
-        *(int*)state = 2;
-    }
-    else
-    {
-        *(int*)state = 0;
-    }
-}
-
-void cagecontrol_update(int obj)
-{
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    char* state = ((GameObject*)obj)->extra;
-    if (((BitFlags8*)(state + 0x4))->b1 != 0)
-    {
-        return;
-    }
-    if (*(int*)state == 0 && GameBit_Get(((CageControlPlacement*)placement)->armGameBit) != 0)
-    {
-        ((BitFlags8*)(state + 0x4))->b1 = 1;
-        *(int*)state = 2;
-    }
-    if (((BitFlags8*)(state + 0x4))->b2 != 0)
-    {
-        ((BitFlags8*)(state + 0x4))->b1 = 1;
-        (*gObjectTriggerInterface)->preempt(obj, 0x76c);
-        if (GameBit_Get(0x9f3) != 0)
-        {
-            (*gObjectTriggerInterface)->runSequence(*(int*)state, (void*)obj, 0x60);
-        }
-        else
-        {
-            (*gObjectTriggerInterface)->runSequence(*(int*)state, (void*)obj, 0x70);
-        }
-    }
-    else
-    {
-        (*gObjectTriggerInterface)->runSequence(*(int*)state, (void*)obj, -1);
-    }
-}
-
 int cagecontrol_updateTriggerCallback(int obj)
 {
     int ret;
@@ -135,4 +60,79 @@ int cagecontrol_updateTriggerCallback(int obj)
         }
     }
     return ret;
+}
+
+int cagecontrol_getExtraSize(void) { return 0x4; }
+
+int cagecontrol_getObjectTypeId(void) { return 0x0; }
+
+void cagecontrol_free(void)
+{
+}
+
+void cagecontrol_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+{
+    if (visible != 0)
+    {
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69D8);
+    }
+}
+
+void cagecontrol_hitDetect(void)
+{
+}
+
+void cagecontrol_update(int obj)
+{
+    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    char* state = ((GameObject*)obj)->extra;
+    if (((BitFlags8*)(state + 0x4))->b1 != 0)
+    {
+        return;
+    }
+    if (*(int*)state == 0 && GameBit_Get(((CageControlPlacement*)placement)->armGameBit) != 0)
+    {
+        ((BitFlags8*)(state + 0x4))->b1 = 1;
+        *(int*)state = 2;
+    }
+    if (((BitFlags8*)(state + 0x4))->b2 != 0)
+    {
+        ((BitFlags8*)(state + 0x4))->b1 = 1;
+        (*gObjectTriggerInterface)->preempt(obj, 0x76c);
+        if (GameBit_Get(0x9f3) != 0)
+        {
+            (*gObjectTriggerInterface)->runSequence(*(int*)state, (void*)obj, 0x60);
+        }
+        else
+        {
+            (*gObjectTriggerInterface)->runSequence(*(int*)state, (void*)obj, 0x70);
+        }
+    }
+    else
+    {
+        (*gObjectTriggerInterface)->runSequence(*(int*)state, (void*)obj, -1);
+    }
+}
+
+void cagecontrol_init(int obj, char* arg)
+{
+    char* state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->animEventCallback = cagecontrol_updateTriggerCallback;
+    if (GameBit_Get(((CageControlPlacement*)arg)->armGameBit) != 0)
+    {
+        ((BitFlags8*)(state + 0x4))->b2 = 1;
+        *(int*)state = 2;
+    }
+    else
+    {
+        *(int*)state = 0;
+    }
+}
+
+void cagecontrol_release(void)
+{
+}
+
+void cagecontrol_initialise(void)
+{
 }
