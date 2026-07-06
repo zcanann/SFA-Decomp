@@ -88,4 +88,4 @@ Select an object from the left sidebar to begin diffing. Changes to the project 
 
 # Acknowledgements
 
-Much of the function and symbol naming in this project draws on [Rena Kunisaki](https://github.com/RenaKunisaki)'s extensive Star Fox Adventures reverse-engineering work — in particular the symbol map from the [StarFoxAdventures](https://github.com/RenaKunisaki/StarFoxAdventures) research repo. Thank you to Rena for making that work available.
+Much of the function and symbol naming in this project draws on [Rena Kunisaki](https://github.com/RenaKunisaki)'s extensive Star Fox Adventures reverse-engineering work — in particular the symbol map from the [StarFoxAdventures](https://github.com/RenaKunisaki/StarFoxAdventures) research repo. Reference notes from Rena's [SFA wiki](https://github.com/RenaKunisaki/StarFoxAdventures/wiki), cross-referenced to this codebase, are collected under [`docs/wiki/`](docs/wiki/). Thank you to Rena for making that work available.
