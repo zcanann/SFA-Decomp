@@ -81,14 +81,6 @@ extern f32 lbl_803E1200;
 extern f32 lbl_803E1204;
 extern f32 lbl_803E1208;
 
-void dll_91_func01_nop(void)
-{
-}
-
-void dll_91_func00_nop(void)
-{
-}
-
 typedef struct
 {
     GfxCmd* cmds; /* +0x00 */
@@ -290,6 +282,14 @@ void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)gDll91Func0ResourceBlob, 0x10, base + 0xb4, 0x45, 0);
+}
+
+void dll_91_func01_nop(void)
+{
+}
+
+void dll_91_func00_nop(void)
+{
 }
 
 u8 gDll91Func0ResourceBlob[420] = {
