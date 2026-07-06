@@ -161,7 +161,7 @@ void CameraModeArwing_update(u8* obj)
 {
     int yaw0, pitch0;
     u8* state = *(u8**)&((GameObject*)obj)->anim.targetObj;
-    int d;
+    int angleDelta;
 
     ((GameObject*)obj)->anim.worldPosX = gCamArwingWork[0] * ((CameraArwingWork*)gCamArwingWork)->xScale;
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.worldPosX + ((CameraArwingWork*)gCamArwingWork)->basePosX;
@@ -202,29 +202,29 @@ void CameraModeArwing_update(u8* obj)
             obj, &va, &vb, &vc, &vd, lbl_803E1BA4, 0);
         ((GameObject*)obj)->anim.rotZ = work->rollRate * timeDelta +
             (f32)((GameObject*)obj)->anim.rotZ;
-        d = 0x8000 - (u16)getAngle(va, vc);
+        angleDelta = 0x8000 - (u16)getAngle(va, vc);
         yaw0 = (u16)getAngle(vb, vd);
-        d -= (u16)((GameObject*)obj)->anim.rotX;
-        if (d > 0x8000)
+        angleDelta -= (u16)((GameObject*)obj)->anim.rotX;
+        if (angleDelta > 0x8000)
         {
-            d = d - 0xffff;
+            angleDelta = angleDelta - 0xffff;
         }
-        if (d < -0x8000)
+        if (angleDelta < -0x8000)
         {
-            d = d + 0xffff;
+            angleDelta = angleDelta + 0xffff;
         }
-        step = (s32)((f32)d * timeDelta);
+        step = (s32)((f32)angleDelta * timeDelta);
         ((GameObject*)obj)->anim.rotX = step * gCamArwingRotEaseScale + (f32) * (s16*)obj;
-        d = yaw0 - (u16)((GameObject*)obj)->anim.rotY;
-        if (d > 0x8000)
+        angleDelta = yaw0 - (u16)((GameObject*)obj)->anim.rotY;
+        if (angleDelta > 0x8000)
         {
-            d = d - 0xffff;
+            angleDelta = angleDelta - 0xffff;
         }
-        if (d < -0x8000)
+        if (angleDelta < -0x8000)
         {
-            d = d + 0xffff;
+            angleDelta = angleDelta + 0xffff;
         }
-        step = (s32)((f32)d * timeDelta);
+        step = (s32)((f32)angleDelta * timeDelta);
         ((GameObject*)obj)->anim.rotY = step * gCamArwingRotEaseScale + (f32)((GameObject*)obj)->anim.rotY;
     }
     else if (arwarwing_isExplodingOrWarping((int)state) != 0)
