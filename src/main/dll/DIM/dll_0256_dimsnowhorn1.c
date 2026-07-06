@@ -564,15 +564,15 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
     int* o1;
     int* o2;
     int phase;
-    f32 f;
+    f32 resetValue;
 
-    f = lbl_803E8234;
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = f;
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedB = f;
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = f;
-    ((GameObject*)obj)->anim.velocityX = f;
-    ((GameObject*)obj)->anim.velocityY = f;
-    ((GameObject*)obj)->anim.velocityZ = f;
+    resetValue = lbl_803E8234;
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = resetValue;
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedB = resetValue;
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = resetValue;
+    ((GameObject*)obj)->anim.velocityX = resetValue;
+    ((GameObject*)obj)->anim.velocityY = resetValue;
+    ((GameObject*)obj)->anim.velocityZ = resetValue;
     *(int*)state |= 0x200000;
 
     inner = ((GameObject*)obj)->extra;
@@ -676,7 +676,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     int p2;
     int changed;
     int useNormal;
-    f32 v;
+    f32 speed;
     f32 target;
     f32 f2;
     f32 blend;
@@ -710,20 +710,20 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
         return 8;
     }
 
-    v = ((DIMSnowHorn1State*)state)->baddie.inputMagnitude;
-    if (v < *(f32*)&lbl_803E8234)
+    speed = ((DIMSnowHorn1State*)state)->baddie.inputMagnitude;
+    if (speed < *(f32*)&lbl_803E8234)
     {
-        v = lbl_803E8234;
+        speed = lbl_803E8234;
     }
-    if (v > lbl_803E8258)
+    if (speed > lbl_803E8258)
     {
-        v = lbl_803E8258;
+        speed = lbl_803E8258;
     }
     if (inner->airMeterValue == 0)
     {
-        v = lbl_803E8234;
+        speed = lbl_803E8234;
     }
-    target = lbl_803E825C * v;
+    target = lbl_803E825C * speed;
     if (target < lbl_803E8234)
     {
         target = lbl_803E8234;
@@ -1243,8 +1243,8 @@ void DIMSnowHorn1_update(int obj)
     u8* base = (u8*)(int)gDIMSnowHorn1ConfigTable;
     int player = (int)Obj_GetPlayerObject();
     int data;
-    s8 c = -1;
-    s16 d;
+    s8 modeIndex = -1;
+    s16 angleDelta;
     char* found;
     int statePtr;
     char* playerObj;
@@ -1348,16 +1348,16 @@ void DIMSnowHorn1_update(int obj)
                     (*gMapEventInterface)->restartPoint((void*)(player + 0xc), 0x584, layer, 0);
                     buttonDisable(0, PAD_BUTTON_A);
                     GameBit_Set(GAMEBIT_SNOWHORN_RIDING, 1);
-                    d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
-                    if (d > 0x8000)
+                    angleDelta = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
+                    if (angleDelta > 0x8000)
                     {
-                        d = d - 0xffff;
+                        angleDelta = angleDelta - 0xffff;
                     }
-                    if (d < -0x8000)
+                    if (angleDelta < -0x8000)
                     {
-                        d = d + 0xffff;
+                        angleDelta = angleDelta + 0xffff;
                     }
-                    if (d > 0x4000 || d < -0x4000)
+                    if (angleDelta > 0x4000 || angleDelta < -0x4000)
                     {
                         GameBit_Set(0x18, 1);
                     }
@@ -1385,40 +1385,40 @@ void DIMSnowHorn1_update(int obj)
                     switch (((DIMSnowHorn1State*)data)->mode)
                     {
                     case 1:
-                        c = 0;
+                        modeIndex = 0;
                         break;
                     case 3:
-                        c = 1;
+                        modeIndex = 1;
                         break;
                     case 4:
-                        c = 2;
+                        modeIndex = 2;
                         break;
                     }
-                    d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
-                    if (d > 0x8000)
+                    angleDelta = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
+                    if (angleDelta > 0x8000)
                     {
-                        d = d - 0xffff;
+                        angleDelta = angleDelta - 0xffff;
                     }
-                    if (d < -0x8000)
+                    if (angleDelta < -0x8000)
                     {
-                        d = d + 0xffff;
+                        angleDelta = angleDelta + 0xffff;
                     }
-                    if (c >= 0)
+                    if (modeIndex >= 0)
                     {
                         SnowHornEntry* tbl = (SnowHornEntry*)base;
                         int bit2;
                         int cc;
-                        GameBit_Set(tbl[c].h1e, *(s16*)(*(int*)&((GameObject*)found)->anim.placementData + 0x1a));
-                        bit2 = tbl[c].h20;
-                        cc = c;
+                        GameBit_Set(tbl[modeIndex].h1e, *(s16*)(*(int*)&((GameObject*)found)->anim.placementData + 0x1a));
+                        bit2 = tbl[modeIndex].h20;
+                        cc = modeIndex;
                         flip = 0;
-                        if (d > 0x4000 || d < -0x4000)
+                        if (angleDelta > 0x4000 || angleDelta < -0x4000)
                         {
                             flip = 1;
                         }
                         GameBit_Set(bit2, cc ^ flip);
                     }
-                    if (d > 0x4000 || d < -0x4000)
+                    if (angleDelta > 0x4000 || angleDelta < -0x4000)
                     {
                         GameBit_Set(0x19, 1);
                     }
