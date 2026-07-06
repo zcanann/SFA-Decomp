@@ -16,7 +16,6 @@
 #define SPIRITDOORSPIRIT_OBJGROUP 0x4e
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern f32 lbl_803E42B8;
 extern f32 lbl_803DBE78;
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
@@ -35,18 +34,6 @@ typedef struct SpiritdoorspiritPlacement
 
 STATIC_ASSERT(offsetof(SpiritdoorspiritPlacement, gateGameBit) == 0x1E);
 
-void spiritdoorspirit_hitDetect(void)
-{
-}
-
-void spiritdoorspirit_release(void)
-{
-}
-
-void spiritdoorspirit_initialise(void)
-{
-}
-
 int spiritdoorspirit_getExtraSize(void) { return 0x1; }
 int spiritdoorspirit_getObjectTypeId(void) { return 0x0; }
 
@@ -57,11 +44,19 @@ void spiritdoorspirit_free(int x) { ObjGroup_RemoveObject(x, SPIRITDOORSPIRIT_OB
 #pragma scheduling off
 #pragma peephole off
 
-void spiritdoorspirit_init(int* obj)
+void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     SpiritDoorSpiritState* state = ((GameObject*)obj)->extra;
-    state->active = 0;
-    *(s8*)&((GameObject*)obj)->anim.alpha = 0;
+    if (visible == 0 || state->active == 0)
+    {
+        return;
+    }
+
+    ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+}
+
+void spiritdoorspirit_hitDetect(void)
+{
 }
 
 void spiritdoorspirit_update(int* obj)
@@ -99,16 +94,20 @@ void spiritdoorspirit_update(int* obj)
     }
 }
 
-void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void spiritdoorspirit_init(int* obj)
 {
     SpiritDoorSpiritState* state = ((GameObject*)obj)->extra;
-    if (visible == 0 || state->active == 0)
-    {
-        return;
-    }
-
-    ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E42B8);
+    state->active = 0;
+    *(s8*)&((GameObject*)obj)->anim.alpha = 0;
 }
 
 #pragma peephole reset
 #pragma scheduling reset
+
+void spiritdoorspirit_release(void)
+{
+}
+
+void spiritdoorspirit_initialise(void)
+{
+}
