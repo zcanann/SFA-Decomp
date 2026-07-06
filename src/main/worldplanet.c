@@ -355,8 +355,8 @@ void worldplanet_update(int obj)
         prevPlanet = state->selectedPlanet;
         {
             u8 ok;
-            u32 m = 0;
-            int k = m;
+            u32 mask = 0;
+            int k = mask;
             int* ids = tbl[3];
             u8* hints = gWorldPlanetHintFlagTable;
             do
@@ -370,7 +370,7 @@ void worldplanet_update(int obj)
                     }
                     if (ok)
                     {
-                        m |= 1 << k;
+                        mask |= 1 << k;
                     }
                 }
                 ids += 1;
@@ -378,7 +378,7 @@ void worldplanet_update(int obj)
                 k += 1;
             }
             while (k < 5);
-            state->unlockedPlanetMask = m;
+            state->unlockedPlanetMask = mask;
         }
         if (gWorldPlanetSelectConfirmTimer == 0 && (u8)state->selectionLocked == 0)
         {
@@ -412,10 +412,10 @@ void worldplanet_update(int obj)
                 }
                 gWorldPlanetPathProgress = lbl_803E65F8;
                 {
-                    int p = ObjList_FindObjectById(tbl[0][gWorldPlanetSelectionToIndex[prevPlanet]]);
-                    ((WorldObjState*)((GameObject*)p)->extra)->effectState = 0;
-                    p = ObjList_FindObjectById(tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
-                    ((WorldObjState*)((GameObject*)p)->extra)->effectState = 1;
+                    int planetObj = ObjList_FindObjectById(tbl[0][gWorldPlanetSelectionToIndex[prevPlanet]]);
+                    ((WorldObjState*)((GameObject*)planetObj)->extra)->effectState = 0;
+                    planetObj = ObjList_FindObjectById(tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+                    ((WorldObjState*)((GameObject*)planetObj)->extra)->effectState = 1;
                 }
                 ((GameObject*)obj)->unkF4 = 1;
             }
@@ -584,29 +584,29 @@ void worldplanet_update(int obj)
             f32 r;
             for (b = 0; b < WORLDPLANET_PLANET_COUNT; b++)
             {
-                int p = ObjList_FindObjectById(tbl[2][b]);
-                ((GameObject*)p)->anim.rotZ = -ang;
+                int planetObj = ObjList_FindObjectById(tbl[2][b]);
+                ((GameObject*)planetObj)->anim.rotZ = -ang;
             }
             for (b = 0, r = gWorldPlanetOrbitRadius; b < WORLDPLANET_PLANET_COUNT; b++)
             {
-                s16* p = (s16*)ObjList_FindObjectById(tbl[0][b]);
+                s16* rotPtr = (s16*)ObjList_FindObjectById(tbl[0][b]);
                 if (tbl[0][b] == WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID)
                 {
-                    *p = ang + tbl[1][b] + 0x4000;
+                    *rotPtr = ang + tbl[1][b] + 0x4000;
                 }
                 else
                 {
-                    *p += 0x3c;
+                    *rotPtr += 0x3c;
                 }
                 if (state->orbitSoundFrameCount > 2)
                 {
-                    Sfx_KeepAliveLoopedObjectSound((u32)p, SFXTRIG_crf_babyambi2);
+                    Sfx_KeepAliveLoopedObjectSound((u32)rotPtr, SFXTRIG_crf_babyambi2);
                 }
-                *(f32*)(p + 6) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fcos16Approx(3000) + ((GameObject*)obj)->anim
+                *(f32*)(rotPtr + 6) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fcos16Approx(3000) + ((GameObject*)obj)->anim
                     .localPosX;
-                *(f32*)(p + 8) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fsin16Approx(3000) + ((GameObject*)obj)->anim
+                *(f32*)(rotPtr + 8) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fsin16Approx(3000) + ((GameObject*)obj)->anim
                     .localPosY;
-                *(f32*)(p + 10) = r * fcos16Approx((ang + tbl[1][b]) & 0xffff) + ((GameObject*)obj)->anim.localPosZ;
+                *(f32*)(rotPtr + 10) = r * fcos16Approx((ang + tbl[1][b]) & 0xffff) + ((GameObject*)obj)->anim.localPosZ;
             }
         }
         state->orbitSoundFrameCount += 1;
