@@ -1351,7 +1351,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_016B_magiclight.c"),
             Object(NonMatching, "main/dll/dll_016C_dll16c.c"),
             Object(MatchingFor("GSAE01"), "main/dll/IM/dll_016D_imicepillar.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "main/dll/IM/dll_016E_imanimspacecraft.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/IM/dll_016E_imanimspacecraft.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/IM/dll_016F_imspacethruster.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/IM/dll_0170_imspacering.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/IM/dll_0171_imspaceringgen.c", cflags=cflags_dll_noopt),

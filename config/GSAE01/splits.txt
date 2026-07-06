@@ -1712,7 +1712,6 @@ main/dll/IM/dll_016D_imicepillar.c:
 
 main/dll/IM/dll_016E_imanimspacecraft.c:
 	.text       start:0x801AE144 end:0x801AE508
-	.data       start:0x803237F4 end:0x80323814
 
 main/dll/IM/dll_016F_imspacethruster.c:
 	.text       start:0x801AE508 end:0x801AE984
