@@ -394,7 +394,7 @@ int fn_8017DCD4(int p, int state, f32 y)
                 f32 q;
                 f32 t;
                 f32 r;
-                m = m + ((AppleOnTreeState*)state)->unk3C;
+                m = m + ((AppleOnTreeState*)state)->extraAccel;
                 g = lbl_803E37D8 * m;
                 q = sqrtf(b * b - g * ((AppleOnTreeState*)state)->dropHeight);
                 t = lbl_803E37DC * m;
@@ -437,7 +437,7 @@ int fn_8017DCD4(int p, int state, f32 y)
 
 int fn_8017DF34(int p, int state, f32 y)
 {
-    if (lbl_803E37D4 == ((AppleOnTreeState*)state)->unk3C)
+    if (lbl_803E37D4 == ((AppleOnTreeState*)state)->extraAccel)
     {
         if (((AppleOnTreeState*)state)->dropHeight - (((AppleOnTreeState*)state)->posY - y) <= lbl_803E37D4)
         {
@@ -485,7 +485,7 @@ int fn_8017DF34(int p, int state, f32 y)
                 f32 g2 = lbl_803E37DC * ((AppleOnTreeState*)state)->gravity;
                 ((AppleOnTreeState*)state)->bounceVel = g2 * r + ((AppleOnTreeState*)state)->bounceVel;
             }
-            ((AppleOnTreeState*)state)->unk3C = ((AppleOnTreeState*)state)->velY;
+            ((AppleOnTreeState*)state)->extraAccel = ((AppleOnTreeState*)state)->velY;
             ((WaterfxSpawnSplashBurstAtPointFn)(*gWaterfxInterface)->spawnSplashBurst)(
                 (void*)p, ((GameObject*)p)->anim.localPosX, ((AppleOnTreeState*)state)->splashPosY,
                 ((GameObject*)p)->anim.localPosZ);
@@ -500,7 +500,7 @@ int fn_8017DF34(int p, int state, f32 y)
     else if (y - ((AppleOnTreeState*)state)->posY >= lbl_803E37D4)
     {
         f32 b;
-        f32 m = ((AppleOnTreeState*)state)->gravity + ((AppleOnTreeState*)state)->unk3C;
+        f32 m = ((AppleOnTreeState*)state)->gravity + ((AppleOnTreeState*)state)->extraAccel;
         f32 g;
         f32 q;
         f32 t;
@@ -533,7 +533,7 @@ int fn_8017DF34(int p, int state, f32 y)
         }
         ((AppleOnTreeState*)state)->flightTime = ((AppleOnTreeState*)state)->flightTime - r;
         ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
-        ((AppleOnTreeState*)state)->unk3C = lbl_803E37FC;
+        ((AppleOnTreeState*)state)->extraAccel = lbl_803E37FC;
         ((AppleOnTreeState*)state)->bounceVel = lbl_803E3800;
         return 0;
     }

@@ -20,7 +20,7 @@ typedef struct AppleOnTreeState
     u16 healthRestore;
     u8 animState;
     u8 pad3B;
-    f32 unk3C;
+    f32 extraAccel;
     f32 gravity;
     f32 bounceVel;
     s16 rotX;
