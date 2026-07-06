@@ -47,7 +47,7 @@ void DSPReset(void);
 void DSPHalt(void);
 void DSPUnhalt(void);
 u32 DSPGetDMAStatus(void);
-__declspec(weak) DSPTaskInfo* DSPAddTask(DSPTaskInfo* task);
+DSPTaskInfo* DSPAddTask(DSPTaskInfo* task);
 DSPTaskInfo* DSPCancelTask(DSPTaskInfo* task);
 DSPTaskInfo* DSPAssertTask(DSPTaskInfo* task);
 
