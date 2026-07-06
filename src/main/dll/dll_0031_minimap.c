@@ -31,6 +31,9 @@
 #include "main/lightmap.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* group owned by another DLL, queried here */
+#define FUELCELL_OBJGROUP 0x4f /* DLL 0x123 fuelcell */
+
 extern void fn_80133F70(void);
 
 extern void dll_3F_frameEnd_nop(void);
@@ -1012,7 +1015,7 @@ void fn_8013396C(void)
                     Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
                     gMinimapZoomSfxActive = 0;
                 }
-                lbl_803DD934 = ObjGroup_FindNearestObject(0x4f, player, &dist);
+                lbl_803DD934 = ObjGroup_FindNearestObject(FUELCELL_OBJGROUP, player, &dist);
                 if ((void*)lbl_803DD934 != NULL)
                 {
                     if (dist < gMinimapBlipNearDist)
