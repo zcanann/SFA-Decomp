@@ -12,21 +12,19 @@ typedef struct NwIcePlacement
 } NwIcePlacement;
 
 extern void fn_80296D20(int obj, void* arg);
-extern f32 lbl_803E5270;
-extern f32 lbl_803E5274;
 
 typedef struct NwIceState
 {
     int* linkedObj;
 } NwIceState;
 
-void nw_ice_render(void)
-{
-}
-
 int nw_ice_getExtraSize(void) { return 0x4; }
 
 void nw_ice_free(int x) { ObjGroup_RemoveObject(x, NWICE_OBJGROUP); }
+
+void nw_ice_render(void)
+{
+}
 
 void nw_ice_update(int* obj)
 {
@@ -40,7 +38,7 @@ void nw_ice_update(int* obj)
     int count;
     f32 nearestDist;
 
-    nearestDist = lbl_803E5270;
+    nearestDist = 3.4028235e38f;
     state = ((GameObject*)obj)->extra;
     if (state->linkedObj != NULL)
     {
@@ -60,7 +58,7 @@ void nw_ice_update(int* obj)
             ObjHits_EnableObject((u32)obj);
         }
 
-        if ((((GameObject*)state->linkedObj)->anim.alpha < 0xc0) || (nearestDist < lbl_803E5274))
+        if ((((GameObject*)state->linkedObj)->anim.alpha < 0xc0) || (nearestDist < 120.0f))
         {
             ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x100);
         }
@@ -88,4 +86,3 @@ void nw_ice_update(int* obj)
 }
 
 void nw_ice_init(int x) { ObjGroup_AddObject(x, NWICE_OBJGROUP); }
-

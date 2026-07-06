@@ -1981,6 +1981,7 @@ main/dll/NW/dll_01A3_nwanimice.c:
 
 main/dll/NW/dll_01A4_nwice.c:
 	.text       start:0x801CFBB4 end:0x801CFD68
+	.sdata2     start:0x803E5270 end:0x803E5278
 
 main/dll/NW/dll_01A5_nwlevcontrol.c:
 	.text       start:0x801CFD68 end:0x801D069C
