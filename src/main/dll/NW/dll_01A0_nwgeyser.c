@@ -47,13 +47,27 @@ void fn_801CDF94(int obj, int state, int flag);
 #define NWGEYSER_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define NWGEYSER_OBJFLAG_UPDATE_DISABLED 0x8000
 
-void nw_geyser_init(int obj)
+int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWGEYSER_OBJFLAG_HIDDEN | NWGEYSER_OBJFLAG_HITDETECT_DISABLED));
-    ((GameObject*)obj)->animEventCallback = NW_geyser_SeqFn;
-}
+    ObjTextureRuntimeSlot* tex0;
+    u8* animUpdateBytes;
 
-char* fn_801CDE70(int* obj) { return *(char**)&((GameObject*)obj)->extra + 0xc; }
+    animUpdateBytes = (u8*)animUpdate;
+    if (GameBit_Get(GAMEBIT_GEYSER_OFF) != 0)
+    {
+        animUpdateBytes[0x90] = (u8)(animUpdateBytes[0x90] | 4);
+    }
+    tex0 = objFindTexture(obj, 0, 0);
+    objFindTexture(obj, 1, 0);
+    tex0->offsetT = (s16)(tex0->offsetT + (s32)(lbl_803E5200 * timeDelta));
+    if (tex0->offsetT > 0x4e80)
+    {
+        tex0->offsetT -= 0x4e80;
+    }
+    animUpdate->hitVolumePair = (s16)(animUpdate->activeHitVolumePair & ~0x40);
+    animUpdate->sequenceEventActive = 0;
+    return 0;
+}
 
 void nw_geyser_free(int* obj)
 {
@@ -80,27 +94,13 @@ void nw_geyser_update(int obj)
     }
 }
 
-int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+void nw_geyser_init(int obj)
 {
-    ObjTextureRuntimeSlot* tex0;
-    u8* animUpdateBytes;
-
-    animUpdateBytes = (u8*)animUpdate;
-    if (GameBit_Get(GAMEBIT_GEYSER_OFF) != 0)
-    {
-        animUpdateBytes[0x90] = (u8)(animUpdateBytes[0x90] | 4);
-    }
-    tex0 = objFindTexture(obj, 0, 0);
-    objFindTexture(obj, 1, 0);
-    tex0->offsetT = (s16)(tex0->offsetT + (s32)(lbl_803E5200 * timeDelta));
-    if (tex0->offsetT > 0x4e80)
-    {
-        tex0->offsetT -= 0x4e80;
-    }
-    animUpdate->hitVolumePair = (s16)(animUpdate->activeHitVolumePair & ~0x40);
-    animUpdate->sequenceEventActive = 0;
-    return 0;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWGEYSER_OBJFLAG_HIDDEN | NWGEYSER_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->animEventCallback = NW_geyser_SeqFn;
 }
+
+char* fn_801CDE70(int* obj) { return *(char**)&((GameObject*)obj)->extra + 0xc; }
 
 int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
