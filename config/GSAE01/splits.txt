@@ -425,6 +425,7 @@ main/dll/dll_0072_dll72func0.c:
 
 main/dll/dll_0073_dll73func0.c:
 	.text       start:0x800F1D64 end:0x800F220C
+	.sdata2     start:0x803E0BB0 end:0x803E0BB8
 
 main/dll/dll_0074_dll74func0.c:
 	.text       start:0x800F220C end:0x800F2694
@@ -443,6 +444,7 @@ main/dll/dll_0077_dll77func0.c:
 
 main/dll/dll_0078_dll78func0.c:
 	.text       start:0x800F2F4C end:0x800F3400
+	.sdata2     start:0x803E0CA8 end:0x803E0CB0
 
 main/dll/dll_0079_dll79func0.c:
 	.text       start:0x800F3400 end:0x800F3CD0
