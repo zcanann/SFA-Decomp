@@ -97,10 +97,10 @@ typedef struct EarthWarriorSub
     u8 pad40C[4];
     f32 footstepCooldown; /* 0x410: per-tick countdown gating footstep rumble/sfx */
     u8 pad414[0xc];
-    f32 yawStepRate; /* 0x420: base per-frame yaw-turn step (yawStepScale*yawStepRate*timeDelta caps unk478 turn) */
+    f32 yawStepRate; /* 0x420: base per-frame yaw-turn step (yawStepScale*yawStepRate*timeDelta caps appliedYaw turn) */
     u8 pad424[4];
-    f32 yawSmoothDivisor; /* 0x428: divides smoothing const (K/yawSmoothDivisor) = interpolate() rate for unk478 yaw turn */
-    f32 yawStepScale; /* 0x42C: multiplier on yawStepRate for the unk478 yaw-turn per-frame cap */
+    f32 yawSmoothDivisor; /* 0x428: divides smoothing const (K/yawSmoothDivisor) = interpolate() rate for appliedYaw yaw turn */
+    f32 yawStepScale; /* 0x42C: multiplier on yawStepRate for the appliedYaw yaw-turn per-frame cap */
     f32 currentYawSmoothDivisor; /* 0x430: divides smoothing const for the currentYaw turn (parallel to yawSmoothDivisor) */
     f32 currentYawStepRate; /* 0x434: per-frame step cap (currentYawStepRate*timeDelta) for the currentYaw turn */
     f32 animSpeedSmoothing; /* 0x438: interpolate() rate/gain closing animSpeedC toward targetAnimSpeed (copied from unk830) */
@@ -113,10 +113,10 @@ typedef struct EarthWarriorSub
     u8 pad464[0xc];
     f32 unk470;
     int unk474;
-    s16 unk478; /* yaw latch */
+    s16 appliedYaw; /* 0x478: yaw written to anim.rotX each frame; turned toward target (accum += degToAngle*step) and latched from currentYaw/leapStartYaw at state entry */
     u8 pad47A[2];
-    int yawTurnProgress; /* 0x47C: interpolate() source (cast f32) for the unk478 yaw turn; reset to 0 on state entry */
-    int yawTurnDir; /* 0x480: sign source (<0 => negate) for the unk478 yaw-turn direction; reset to 0 on state entry */
+    int yawTurnProgress; /* 0x47C: interpolate() source (cast f32) for the appliedYaw yaw turn; reset to 0 on state entry */
+    int yawTurnDir; /* 0x480: sign source (<0 => negate) for the appliedYaw yaw-turn direction; reset to 0 on state entry */
     s16 currentYaw; /* current yaw */
     u8 pad486[2];
     int frameCounter;
@@ -165,7 +165,7 @@ typedef struct EarthWarriorSub
     u8 pad988[2];
     s16 health; /* 0x98a */
     u16 flags98C;
-    u8 unk98E; /* 2 = stunned/ridden */
+    u8 rideState; /* 0x98E: interaction mode set by func17(param); 2 = stunned/ridden (A-button icon, interaction disabled), 0 = normal */
     u8 pad98F;
     u8 unk990;
     u8 pad991;
@@ -174,7 +174,7 @@ typedef struct EarthWarriorSub
     u8 flags994; /* ByteFlags: b01/b02/b08/b10/b80 */
     u8 unk995;
     u8 pad996[6];
-    s8 unk99C;
+    s8 interactSequenceId; /* 0x99C: fallback sequence id passed to runSequence when interacted-with but event not ready; -1 = none */
     u8 unk99D;
     u8 pad99E[2];
     int modelChain; /* spawned helper object */
@@ -362,7 +362,7 @@ int DR_EarthWarrior_stateHandler03(int obj, int p2)
     }
     if (*(s8*)&((BaddieState*)p2)->moveDone != 0)
     {
-        if (inner->sub.unk98E == 2)
+        if (inner->sub.rideState == 2)
         {
             inner->sub.health -= 1;
             if (inner->sub.health <= 0)
@@ -459,7 +459,7 @@ void DR_EarthWarrior_func23(int obj, int mode)
 void DR_EarthWarrior_func17(int obj, int param)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
-    inner->sub.unk98E = param;
+    inner->sub.rideState = param;
     if (param == 0)
     {
         GameBit_Set(0x7bc, 0);
@@ -588,7 +588,7 @@ void fn_802BE6E8(int obj, int t, int p3)
     (*gPathControlInterface)->update((void*)obj, (void*)(inner + 4), timeDelta);
     (*gPathControlInterface)->apply((void*)obj, (void*)(inner + 4));
     (*gPathControlInterface)->advance((void*)obj, (void*)(inner + 4), timeDelta);
-    ((GameObject*)obj)->anim.rotX = ((EarthWarriorSub*)sub)->unk478;
+    ((GameObject*)obj)->anim.rotX = ((EarthWarriorSub*)sub)->appliedYaw;
 }
 
 #pragma dont_inline on
@@ -611,7 +611,7 @@ int fn_802BC830(int obj, int sub, int state)
         ((EarthWarriorSub*)sub)->leapStartYaw = ((EarthWarriorSub*)sub)->currentYaw;
         ((EarthWarriorSub*)sub)->animSpeedRate = (lbl_803E8308 + (*(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x14) + ((
             BaddieState*)state)->animSpeedC)) / lbl_803E830C;
-        ((EarthWarriorSub*)sub)->unk478 = ((EarthWarriorSub*)sub)->currentYaw;
+        ((EarthWarriorSub*)sub)->appliedYaw = ((EarthWarriorSub*)sub)->currentYaw;
         ((EarthWarriorSub*)sub)->currentYaw += 0x8000;
         ((BaddieState*)state)->animSpeedC = -((BaddieState*)state)->animSpeedC;
         ((BaddieState*)state)->animSpeedA = -((BaddieState*)state)->animSpeedA;
@@ -778,7 +778,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         ((EarthWarriorState*)state)->baddie.moveSpeed = lbl_803E8300;
         {
             s16 yaw = (lbl_803E8320 * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(s32)((EarthWarriorSub*)q)->leapStartYaw);
-            *(s16*)&((EarthWarriorSub*)q)->unk478 = yaw;
+            *(s16*)&((EarthWarriorSub*)q)->appliedYaw = yaw;
             ((EarthWarriorSub*)q)->savedYaw = yaw;
         }
         if (*(s8*)&((EarthWarriorState*)state)->baddie.moveDone != 0)
@@ -786,7 +786,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             s16 sw;
             ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 = 0;
             sw = ((EarthWarriorSub*)q)->currentYaw;
-            ((EarthWarriorSub*)q)->unk478 = sw;
+            ((EarthWarriorSub*)q)->appliedYaw = sw;
             ((EarthWarriorSub*)q)->savedYaw = sw;
             *(u8*)&((EarthWarriorSub*)q)->attackPhase = 0xc;
             ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b04 = 1;
@@ -859,7 +859,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             {
                 v = -v;
             }
-            *(s16*)&((EarthWarriorSub*)q)->unk478 = (gEarthWarriorDegToAngle * v + (f32)(s32)((EarthWarriorSub*)q)->unk478);
+            *(s16*)&((EarthWarriorSub*)q)->appliedYaw = (gEarthWarriorDegToAngle * v + (f32)(s32)((EarthWarriorSub*)q)->appliedYaw);
         }
         if (((EarthWarriorSub*)q)->frameCounter < 0x96)
         {
@@ -1076,7 +1076,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         {
             v = -v;
         }
-        *(s16*)&q->unk478 = (gEarthWarriorDegToAngle * v + (f32)(s32)q->unk478);
+        *(s16*)&q->appliedYaw = (gEarthWarriorDegToAngle * v + (f32)(s32)q->appliedYaw);
     }
     {
         f32 v = interpolate((f32)(s32)q->frameCounter, lbl_803E8338 / q->currentYawSmoothDivisor, timeDelta);
@@ -1129,13 +1129,13 @@ void DR_EarthWarrior_hitDetect(int obj)
         {
             doRumble(lbl_803E8330);
         }
-        ((GameObject*)obj)->anim.rotX = inner->sub.unk478;
+        ((GameObject*)obj)->anim.rotX = inner->sub.appliedYaw;
         if (inner->baddie.controlMode != 3)
         {
             int hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, 0, &hx, &hy, &hz);
             if (hit != 0)
             {
-                if (objGetFlagsE5_2(obj) != 0 && inner->sub.unk98E == 2)
+                if (objGetFlagsE5_2(obj) != 0 && inner->sub.rideState == 2)
                 {
                     return;
                 }
@@ -1243,7 +1243,7 @@ void DR_EarthWarrior_update(int obj)
     }
     inner->sub.unk986 = 5;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-    if (inner->sub.unk98E == 2)
+    if (inner->sub.rideState == 2)
     {
         setAButtonIcon(0x13);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
@@ -1278,14 +1278,14 @@ void DR_EarthWarrior_update(int obj)
             inner->sub.health += 4;
             GameBit_Set(0xc1, GameBit_Get(0xc1) - 1);
         }
-        else if (inner->sub.unk99C != -1)
+        else if (inner->sub.interactSequenceId != -1)
         {
             if ((*gGameUIInterface)->isCurrentTriggerClear() == 0)
             {
                 if (((ByteFlags*)&inner->sub.flags994)->b08 == 0)
                 {
                     (*gObjectTriggerInterface)->runSequence(
-                        inner->sub.unk99C, (void*)obj, -1);
+                        inner->sub.interactSequenceId, (void*)obj, -1);
                     buttonDisable(0, PAD_BUTTON_A);
                 }
                 else
