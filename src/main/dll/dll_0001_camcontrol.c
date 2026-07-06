@@ -408,14 +408,14 @@ void camcontrol_getRelativePosition(f32 heightOffset, int targetObj, f32* outX, 
 
 void camcontrol_initialise(f32* dst, f32 numerator, f32 denominator, f32 minValue, f32 y, f32 z)
 {
-    f32 x;
+    f32 ratio;
 
-    x = numerator / denominator;
-    if (x < minValue)
+    ratio = numerator / denominator;
+    if (ratio < minValue)
     {
-        x = minValue;
+        ratio = minValue;
     }
-    dst[0] = x;
+    dst[0] = ratio;
     dst[1] = y;
     dst[2] = gCamcontrolNormalizedMin;
     dst[3] = z;
