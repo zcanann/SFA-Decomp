@@ -21,12 +21,14 @@
 
 #define PAD_BUTTON_A 0x100
 
-typedef struct IntVec3
+/* Set of 3 item ids copied from a placement's item-set table and passed
+ * (as an s32[3]) to isOneOfItemsBeingUsed to test the player's held item. */
+typedef struct ItemIdSet3
 {
-    int unk0;
-    int unk4;
-    int unk8;
-} IntVec3;
+    int itemId0;
+    int itemId1;
+    int itemId2;
+} ItemIdSet3;
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
@@ -49,11 +51,11 @@ void fn_801F20D4(int obj)
     extern f32 gArwingAttachmentU32ToDoubleBias;
 
     int state;
-    IntVec3 itemSet;
+    ItemIdSet3 itemSet;
 
     state = *(int*)&((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
-    itemSet = *(IntVec3*)gArwingAttachmentItemSetIdle;
+    itemSet = *(ItemIdSet3*)gArwingAttachmentItemSetIdle;
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= INTERACT_FLAG_DISABLED;
@@ -370,12 +372,12 @@ void fn_801F2290(int obj)
     f32 dy;
     f32 dist;
     f32 spd;
-    IntVec3 itemSet;
+    ItemIdSet3 itemSet;
     ObjAnimEventList animEvents;
 
     state = ((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
-    itemSet = *(IntVec3*)gArwingAttachmentItemSetWander;
+    itemSet = *(ItemIdSet3*)gArwingAttachmentItemSetWander;
     ((GameObject*)obj)->anim.localPosY = state->homeY;
     if (GameBit_Get(0x1fc) != 0)
     {
