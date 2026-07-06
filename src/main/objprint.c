@@ -2061,7 +2061,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
             modelLightChannels_reset(0);
             modelLightChannel_configure(2, 0, 0);
             GXSetChanAmbColor(GX_ALPHA0, *(ObjPrintGXColor*)&lbl_803DB470);
-            GXSetChanMatColor(2, *(ObjPrintGXColor*)&lbl_803DB468);
+            GXSetChanMatColor(GX_ALPHA0, *(ObjPrintGXColor*)&lbl_803DB468);
             modelLightStruct_loadChannelLight(2, lt, obj);
             modelLightChannels_applyGXControls();
             ModelLightStruct_free(lt);
