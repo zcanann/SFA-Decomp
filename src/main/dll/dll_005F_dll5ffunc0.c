@@ -1,24 +1,14 @@
 /*
- * dll5ffunc0 (DLL 0x5F) - save-game / gameplay-preview support.
+ * dll5ffunc0 (DLL 0x5F) - a thin gameplay-effect DLL.
  *
- * Holds the global gameplay-preview settings block (debug-option/cheat
- * bitset, preview RGB tint), the save-file struct accessor, and the
- * save/load orchestration that snapshots the player position, writes the
- * preview settings out and reloads them (loadSaveSettings, FUN_800e8f58,
- * FUN_800e9e9c). FUN_800e95e8 toggles a map-event "act" flag and mirrors
- * it across the cached map-event flag words plus a 20-entry map-visit
- * history; FUN_800ea9b8 records map visits into that history. dll_5F_func03
- * builds a fixed modgfx effect command list and spawns it.
- *
- * The 0x800e... functions are the DLL's exported entry points (called from
- * other TUs by address), not internal helpers:
- *   FUN_800e82d8 - returns pointer to the save-file struct base at DAT_803a4460.
- *   FUN_800e8630 - snapshots a game-object's placement id and position into the
- *                  player-save slot.
- *   FUN_800e87a8 - returns pointer to DAT_803a45b0, a save-data pointer field.
- *   FUN_800e8b98 - returns the load-state flag DAT_803de100.
- *   FUN_800ea8c8 - dispatches a graphics call through the save-struct's current slot.
- *   FUN_800ea9ac - returns the 5th byte of the save-struct, the current slot index.
+ * Real exports (per the DLL's .text):
+ *   dll_5F_func00_nop / dll_5F_func01_nop - empty entry-point stubs.
+ *   dll_5F_func03 - builds a 13-command Modgfx effect command list on the
+ *     stack (textures/half-words sourced from lbl_80312650, colours/positions
+ *     from the lbl_803E08xx float pool) and submits it via
+ *     gModgfxInterface->spawnEffect. When the caller's flags bit 0 is set the
+ *     effect is positioned from the source object or, if none, from the
+ *     PartFxSpawnParams pos fields.
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -41,26 +31,6 @@ STATIC_ASSERT(offsetof(GfxCmd, flags) == 0x14);
 
 extern ModgfxInterface** gModgfxInterface;
 
-#define PREVIEW_CHANNEL_DEFAULT 0x7f
-
-extern u32 FUN_80006768();
-extern u32 FUN_8000676c();
-extern u32 FUN_80006c20();
-extern u32 FUN_80017500();
-extern u32 FUN_8005d018();
-extern u8 gGameplayPreviewSettings;
-extern u32 DAT_803a3e26;
-extern u32 DAT_803a3e27;
-extern u32 DAT_803a3e28;
-extern u32 DAT_803a3e2a;
-extern u32 DAT_803a3e2c;
-extern u32 DAT_803a3e2d;
-extern u32 gGameplayPreviewColorRed;
-extern u32 gGameplayPreviewColorGreen;
-extern u32 gGameplayPreviewColorBlue;
-extern u32 gGameplayRegisteredDebugOptions;
-extern u32* DAT_803dd6d0;
-extern u32* DAT_803dd6e8;
 extern u8 lbl_80312650[];
 extern f32 lbl_803E0800;
 extern f32 lbl_803E0804;
@@ -78,51 +48,6 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
-void saveFileStruct_unlockCheat(u32 cheatId)
-{
-    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
-}
-
-u32 isCheatUnlocked(u32 cheatId)
-{
-    return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
-}
-
-void saveFileStruct_resetVolumes(void)
-{
-    gGameplayPreviewColorRed = PREVIEW_CHANNEL_DEFAULT;
-    gGameplayPreviewColorGreen = PREVIEW_CHANNEL_DEFAULT;
-    gGameplayPreviewColorBlue = PREVIEW_CHANNEL_DEFAULT;
-}
-
-u8* getSaveFileStruct(void)
-{
-    return &gGameplayPreviewSettings;
-}
-
-void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
-                      u64 arg5, u64 arg6, u64 arg7,
-                      u64 arg8)
-{
-    FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, DAT_803a3e26);
-    FUN_80006c20(DAT_803a3e2c);
-    FUN_80006768(DAT_803a3e2d, '\0');
-    (**(VtableFn**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
-    (**(VtableFn**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
-}
-
-void dll_5F_func01_nop(void)
-{
-}
-
-void dll_5F_func00_nop(void)
-{
 }
 
 void dll_5F_func03(int sourceObj, int variant, int posSource, u32 flags)
@@ -281,4 +206,12 @@ void dll_5F_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80312650, 0xc, &base[140], 0x48, 0);
+}
+
+void dll_5F_func01_nop(void)
+{
+}
+
+void dll_5F_func00_nop(void)
+{
 }
