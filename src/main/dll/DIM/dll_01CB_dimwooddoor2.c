@@ -38,25 +38,12 @@ extern f32 lbl_803E49DC;
 extern f32 lbl_803E49E0;
 extern f32 lbl_803E49E4;
 
+int dimwooddoor2_getExtraSize(void) { return 0xc; }
+int dimwooddoor2_getObjectTypeId(void) { return 0x0; }
+
 void dimwooddoor2_free(void)
 {
 }
-
-void dimwooddoor2_hitDetect(void)
-{
-}
-
-void dimwooddoor2_release(void)
-{
-}
-
-void dimwooddoor2_initialise(void)
-{
-}
-
-
-int dimwooddoor2_getExtraSize(void) { return 0xc; }
-int dimwooddoor2_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling off
 #pragma peephole off
@@ -66,30 +53,9 @@ void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E49D0);
 }
 
-
-void dimwooddoor2_init(u8* obj, u8* params)
+void dimwooddoor2_hitDetect(void)
 {
-    DimWoodDoor2State* sub;
-    ObjHitsPriorityState* hitState;
-    f32 fz;
-    ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8
-    )
-    ;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (DIMWOODDOOR2_OBJFLAG_HIDDEN | DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED));
-    sub = ((GameObject*)obj)->extra;
-    sub->burnState = 3;
-    fz = lbl_803E49D4;
-    sub->animSpeed = fz;
-    sub->riseSpeed = fz;
-    if (GameBit_Get(((Dimwooddoor2Placement*)params)->openedGameBit) != 0)
-    {
-        sub->burnState = 0;
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->flags &= ~1;
-        ((GameObject*)obj)->anim.alpha = 0;
-    }
 }
-
 
 void dimwooddoor2_update(int* obj)
 {
@@ -139,4 +105,35 @@ void dimwooddoor2_update(int* obj)
             Sfx_PlayFromObject((int)obj, SFXTRIG_wp_dsmk2_c);
         }
     }
+}
+
+void dimwooddoor2_init(u8* obj, u8* params)
+{
+    DimWoodDoor2State* sub;
+    ObjHitsPriorityState* hitState;
+    f32 fz;
+    ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8
+    )
+    ;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (DIMWOODDOOR2_OBJFLAG_HIDDEN | DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED));
+    sub = ((GameObject*)obj)->extra;
+    sub->burnState = 3;
+    fz = lbl_803E49D4;
+    sub->animSpeed = fz;
+    sub->riseSpeed = fz;
+    if (GameBit_Get(((Dimwooddoor2Placement*)params)->openedGameBit) != 0)
+    {
+        sub->burnState = 0;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->flags &= ~1;
+        ((GameObject*)obj)->anim.alpha = 0;
+    }
+}
+
+void dimwooddoor2_release(void)
+{
+}
+
+void dimwooddoor2_initialise(void)
+{
 }
