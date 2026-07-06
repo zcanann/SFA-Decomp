@@ -197,7 +197,7 @@ void pressureswitchfb_update(int obj)
     u32 nearest;
     int slots2;
     int base2;
-    u32 o;
+    u32 otherObj;
     f32 nearDist;
     FxArgs fx;
 
@@ -277,12 +277,12 @@ void pressureswitchfb_update(int obj)
         found = 0;
         for (j2 = 0; j2 < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; j2++)
         {
-            o = *(u32*)(slots2 + j2 * 4 + 4);
-            if (o != 0)
+            otherObj = *(u32*)(slots2 + j2 * 4 + 4);
+            if (otherObj != 0)
             {
                 base2 = slots2 + j2 * 8;
-                if ((*(f32*)(base2 + 0x2c) == ((GameObject*)o)->anim.localPosX) &&
-                    (*(f32*)(base2 + 0x30) == ((GameObject*)o)->anim.localPosZ))
+                if ((*(f32*)(base2 + 0x2c) == ((GameObject*)otherObj)->anim.localPosX) &&
+                    (*(f32*)(base2 + 0x30) == ((GameObject*)otherObj)->anim.localPosZ))
                 {
                     found = 1;
                 }

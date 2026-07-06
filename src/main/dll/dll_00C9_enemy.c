@@ -206,7 +206,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
     u32 flags;
     int mode;
     int i;
-    f32 v;
+    f32 vel;
     f32 c;
     f32 phase;
     f32 outY;
@@ -530,12 +530,12 @@ void objAnimFn_8014a9f0(short* obj, int state)
     {
         vy = -(((TrickyState*)state)->gravity * timeDelta - ((GameObject*)obj)->anim.velocityY);
     }
-    v = ((GameObject*)obj)->anim.velocityX;
-    ((GameObject*)obj)->anim.velocityX = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
-    v = ((GameObject*)obj)->anim.velocityY;
-    ((GameObject*)obj)->anim.velocityY = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
-    v = ((GameObject*)obj)->anim.velocityZ;
-    ((GameObject*)obj)->anim.velocityZ = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
+    vel = ((GameObject*)obj)->anim.velocityX;
+    ((GameObject*)obj)->anim.velocityX = (vel < lbl_803E25CC) ? lbl_803E25CC : ((vel > lbl_803E25D0) ? lbl_803E25D0 : vel);
+    vel = ((GameObject*)obj)->anim.velocityY;
+    ((GameObject*)obj)->anim.velocityY = (vel < lbl_803E25CC) ? lbl_803E25CC : ((vel > lbl_803E25D0) ? lbl_803E25D0 : vel);
+    vel = ((GameObject*)obj)->anim.velocityZ;
+    ((GameObject*)obj)->anim.velocityZ = (vel < lbl_803E25CC) ? lbl_803E25CC : ((vel > lbl_803E25D0) ? lbl_803E25D0 : vel);
     mode = 0;
     if (((((TrickyState*)state)->controlFlags & 0x80) != 0) && (((TrickyState*)state)->flags323 != 0))
     {
