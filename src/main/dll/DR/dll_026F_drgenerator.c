@@ -40,31 +40,6 @@ STATIC_ASSERT(offsetof(DrgeneratorState, hitsRemaining) == 0x19A);
 STATIC_ASSERT(sizeof(DrgeneratorState) == 0x19C);
 
 
-int drgenerator_getExtraSize(void) { return 0x19c; }
-
-int drgenerator_getObjectTypeId(void) { return 0x0; }
-
-void drgenerator_initialise(void)
-{
-}
-
-void drgenerator_release(void)
-{
-}
-
-void drgenerator_free(int obj)
-{
-    ObjGroup_RemoveObject(obj, DRGENERATOR_OBJGROUP);
-}
-
-void drgenerator_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
-{
-    if (visible != 0)
-    {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6B58);
-    }
-}
-
 int drgenerator_eventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -82,57 +57,21 @@ int drgenerator_eventCallback(int obj, int unused, ObjAnimUpdateState* animUpdat
     return 0;
 }
 
-void drgenerator_init(int obj, char* arg)
+int drgenerator_getExtraSize(void) { return 0x19c; }
+
+int drgenerator_getObjectTypeId(void) { return 0x0; }
+
+void drgenerator_free(int obj)
 {
-    char* state = ((GameObject*)obj)->extra;
-    f32 fv;
-    if (((GameObject*)obj)->anim.seqId == 0x72e)
+    ObjGroup_RemoveObject(obj, DRGENERATOR_OBJGROUP);
+}
+
+void drgenerator_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+{
+    if (visible != 0)
     {
-        ObjTextureRuntimeSlot* t;
-        ((GameObject*)obj)->animEventCallback = drgenerator_eventCallback;
-        t = objFindTexture((void*)obj, 0, 0);
-        if (t != 0)
-        {
-            t->textureId = 0x100;
-        }
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6B58);
     }
-    ((DrgeneratorState*)state)->hitsRemaining = 2;
-    ObjHits_EnableObject(obj);
-    if (GameBit_Get(((DrgeneratorPlacement*)arg)->completionGameBit) != 0)
-    {
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        Obj_RemoveFromUpdateList(obj);
-        ObjHits_DisableObject(obj);
-    }
-    ObjGroup_AddObject(obj, DRGENERATOR_OBJGROUP);
-    *(int*)state = 0;
-    ((BitFlags8*)(state + 0x19b))->b3 = 1;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
-    {
-        int duration = *(s16*)(arg + 0x1a);
-        switch (duration)
-        {
-        case 0:
-            duration = 0x14;
-            break;
-        }
-        ((DrgeneratorState*)state)->timerDuration = duration;
-    }
-    ((DrgeneratorState*)state)->timerDuration = ((DrgeneratorState*)state)->timerDuration * 0x3c;
-    ((DrgeneratorState*)state)->unk124 = lbl_803E6B68;
-    if (GameBit_Get(0x9b9) != 0)
-    {
-        ((BitFlags8*)(state + 0x19b))->b0 = 1;
-        ((BitFlags8*)(state + 0x19b))->b4 = 1;
-    }
-    else
-    {
-        ((BitFlags8*)(state + 0x19b))->b4 = 0;
-    }
-    fv = lbl_803E6B6C;
-    ((GameObject*)obj)->anim.velocityZ = fv;
-    ((GameObject*)obj)->anim.velocityY = fv;
-    ((GameObject*)obj)->anim.velocityX = fv;
 }
 
 void drgenerator_hitDetect(int obj)
@@ -239,3 +178,65 @@ loop:
     }
     while (n-- != 0);
 }
+
+void drgenerator_init(int obj, char* arg)
+{
+    char* state = ((GameObject*)obj)->extra;
+    f32 fv;
+    if (((GameObject*)obj)->anim.seqId == 0x72e)
+    {
+        ObjTextureRuntimeSlot* t;
+        ((GameObject*)obj)->animEventCallback = drgenerator_eventCallback;
+        t = objFindTexture((void*)obj, 0, 0);
+        if (t != 0)
+        {
+            t->textureId = 0x100;
+        }
+    }
+    ((DrgeneratorState*)state)->hitsRemaining = 2;
+    ObjHits_EnableObject(obj);
+    if (GameBit_Get(((DrgeneratorPlacement*)arg)->completionGameBit) != 0)
+    {
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        Obj_RemoveFromUpdateList(obj);
+        ObjHits_DisableObject(obj);
+    }
+    ObjGroup_AddObject(obj, DRGENERATOR_OBJGROUP);
+    *(int*)state = 0;
+    ((BitFlags8*)(state + 0x19b))->b3 = 1;
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
+    {
+        int duration = *(s16*)(arg + 0x1a);
+        switch (duration)
+        {
+        case 0:
+            duration = 0x14;
+            break;
+        }
+        ((DrgeneratorState*)state)->timerDuration = duration;
+    }
+    ((DrgeneratorState*)state)->timerDuration = ((DrgeneratorState*)state)->timerDuration * 0x3c;
+    ((DrgeneratorState*)state)->unk124 = lbl_803E6B68;
+    if (GameBit_Get(0x9b9) != 0)
+    {
+        ((BitFlags8*)(state + 0x19b))->b0 = 1;
+        ((BitFlags8*)(state + 0x19b))->b4 = 1;
+    }
+    else
+    {
+        ((BitFlags8*)(state + 0x19b))->b4 = 0;
+    }
+    fv = lbl_803E6B6C;
+    ((GameObject*)obj)->anim.velocityZ = fv;
+    ((GameObject*)obj)->anim.velocityY = fv;
+    ((GameObject*)obj)->anim.velocityX = fv;
+}
+
+void drgenerator_release(void)
+{
+}
+
+void drgenerator_initialise(void)
+{
+}
+
