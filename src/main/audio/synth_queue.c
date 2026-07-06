@@ -104,6 +104,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     long i;
     u32* tracktab;
     SynthArrangement* arr;
+    u8 prg;
 
     ms = midiSetup;
     if ((nseq = gSynthFreeVoices) == 0)
@@ -270,7 +271,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     {
         for (i = 0; i < 16; i++)
         {
-            u8 prg = ms[4];
+            prg = ms[4];
             lbl_803BCC90[gSynthCurrentVoiceSlotIndex][(u8)i] = 0xFFFF;
             if ((u8)i != 9)
             {
