@@ -43,29 +43,6 @@ STATIC_ASSERT(sizeof(CcpedstalState) == 0x8);
 
 int ccpedstal_getExtraSize(void) { return sizeof(CcpedstalState); }
 
-void ccpedstal_init(int* obj, u8* params)
-{
-    CcpedstalState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((u32)params[0x1a] << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCPEDSTAL_OBJFLAG_HIDDEN);
-    switch (*(int*)(params + 0x14))
-    {
-    case PEDSTAL_DEF_ALT:
-        state->think = ccpedstal_updateAltVariant;
-        state->gameBit = 0xaa;
-        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
-        break;
-    case PEDSTAL_DEF_GATE_A:
-        state->think = ccpedstal_updateGameBitGate;
-        state->gameBit = 0xf1;
-        break;
-    case PEDSTAL_DEF_GATE_B:
-        state->think = ccpedstal_updateGameBitGate;
-        state->gameBit = 0xfe;
-        break;
-    }
-}
-
 /* If the pedestal's gameBit is set, lights the model (index 1, hitbox bit 8).
  * Otherwise shows model 0 and, while gameBit 0xA9 is set and the object's
  * 0xA9 trigger fires, runs sequence 0, decrements 0xA9 and marks the one-shot;
@@ -168,4 +145,27 @@ void ccpedstal_update(int obj)
         }
     }
     (*(void (*)(int, int))state->think)(obj, (int)state);
+}
+
+void ccpedstal_init(int* obj, u8* params)
+{
+    CcpedstalState* state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)params[0x1a] << 8);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCPEDSTAL_OBJFLAG_HIDDEN);
+    switch (*(int*)(params + 0x14))
+    {
+    case PEDSTAL_DEF_ALT:
+        state->think = ccpedstal_updateAltVariant;
+        state->gameBit = 0xaa;
+        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
+        break;
+    case PEDSTAL_DEF_GATE_A:
+        state->think = ccpedstal_updateGameBitGate;
+        state->gameBit = 0xf1;
+        break;
+    case PEDSTAL_DEF_GATE_B:
+        state->think = ccpedstal_updateGameBitGate;
+        state->gameBit = 0xfe;
+        break;
+    }
 }
