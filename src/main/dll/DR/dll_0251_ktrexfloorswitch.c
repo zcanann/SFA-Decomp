@@ -57,12 +57,12 @@ typedef struct KtrexfloorswitchSpawnEnergyArcState
 {
     u8 pad0[0x8 - 0x0];
     f32 unk8;
-    f32 unkC;
+    f32 angleScale;      /* 0xC: multiplier applied to `angle` to build the arc's dir[1] */
     void* boltObj;       /* 0x10: lightning bolt object (ktlazerwall overlay) */
 } KtrexfloorswitchSpawnEnergyArcState;
 
 STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, unk8) == 0x8);
-STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, unkC) == 0xC);
+STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, angleScale) == 0xC);
 STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, boltObj) == 0x10);
 
 
@@ -161,7 +161,7 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle)
     dir[0] = lbl_803E6898;
     {
         f32 fr = angle;
-        fr = fr * runtime->unkC;
+        fr = fr * runtime->angleScale;
         dir[1] = -(fr * lbl_803E689C);
     }
     dir[2] = scale;
