@@ -101,7 +101,7 @@ void dfplevelcontrol_release(void)
 int dfplevelcontrol_getExtraSize(void) { return 0xc; }
 int dfplevelcontrol_getObjectTypeId(void) { return 0x0; }
 
-void dfplevelcontrol_free(int x) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(x, DFPLEVELCONTROL_OBJGROUP); }
+void dfplevelcontrol_free(int obj) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(obj, DFPLEVELCONTROL_OBJGROUP); }
 
 int dfplevelcontrol_SeqFn(int p1)
 {
