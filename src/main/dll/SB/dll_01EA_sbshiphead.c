@@ -83,10 +83,10 @@ extern void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4,
     {
         u8 pad[6];
         u16 mode;
-        f32 a;
-        f32 b;
-        f32 c;
-        f32 d;
+        f32 scale;
+        f32 dx;
+        f32 dy;
+        f32 dz;
     } stk;
 
     o = (GameObject*)obj;
@@ -109,12 +109,12 @@ extern void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4,
             {
                 state->swayB += lbl_803E5830;
             }
-            stk.a = lbl_803E583C;
+            stk.scale = lbl_803E583C;
             stk.mode = 0xc0a;
-            ObjPath_GetPointWorldPosition((int)obj, 0xd, &stk.b, &stk.c, &stk.d, 0);
-            stk.b = stk.b - o->anim.worldPosX;
-            stk.c = stk.c - o->anim.worldPosY;
-            stk.d = stk.d - o->anim.worldPosZ;
+            ObjPath_GetPointWorldPosition((int)obj, 0xd, &stk.dx, &stk.dy, &stk.dz, 0);
+            stk.dx = stk.dx - o->anim.worldPosX;
+            stk.dy = stk.dy - o->anim.worldPosY;
+            stk.dz = stk.dz - o->anim.worldPosZ;
             for (i = 0; i < framesThisStep; i++)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x7aa, stk.pad, 2, -1, NULL);
@@ -129,7 +129,7 @@ void SB_ShipHead_update(int obj)
     f32 ddx;
     f32 ddy;
     f32 ddz;
-    f32 s;
+    f32 speedScale;
     int player;
     u8 fireCue;
     u8* galleon;
@@ -254,10 +254,10 @@ void SB_ShipHead_update(int obj)
             ddx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)proj)->anim.localPosX;
             ddy = (((GameObject*)player)->anim.worldPosY - gSbShipHeadFireballSpeed) - ((GameObject*)proj)->anim.localPosY;
             ddz = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)proj)->anim.localPosZ;
-            s = gSbShipHeadFireballSpeed / sqrtf(ddz * ddz + (ddx * ddx + ddy * ddy));
-            ((GameObject*)proj)->anim.velocityX = ddx * s;
-            ((GameObject*)proj)->anim.velocityY = ddy * s;
-            ((GameObject*)proj)->anim.velocityZ = ddz * s;
+            speedScale = gSbShipHeadFireballSpeed / sqrtf(ddz * ddz + (ddx * ddx + ddy * ddy));
+            ((GameObject*)proj)->anim.velocityX = ddx * speedScale;
+            ((GameObject*)proj)->anim.velocityY = ddy * speedScale;
+            ((GameObject*)proj)->anim.velocityZ = ddz * speedScale;
             ((GameObject*)proj)->unkF4 = 0x78;
             ((GameObject*)proj)->unkF8 = hs->target;
         }
