@@ -62,23 +62,23 @@ void dimmagicbridge_initialise(void)
 #pragma peephole off
 void dimmagicbridge_init(u8* obj, u8* params)
 {
-    DimMagicBridgeState * sub;
+    DimMagicBridgeState * state;
     int i;
     s32 minY;
     int model;
     int modelData;
-    f32* p;
+    f32* pair;
     int j;
-    int stable;
-    f32 a, b;
-    int v;
-    s16 hh;
+    int sorted;
+    f32 first, second;
+    int vtx;
+    s16 vertexY;
 
     ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8
     )
     ;
     ((GameObject*)obj)->animEventCallback = dimmagicbridge_flameSeqFn;
-    sub = ((GameObject*)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     minY = 0;
     model = Obj_GetActiveModel((int)obj);
     modelData = *(int*)model;
@@ -86,50 +86,50 @@ void dimmagicbridge_init(u8* obj, u8* params)
     i = 0;
     while (i < *(u16*)(modelData + 0xe4))
     {
-        v = ObjModel_GetCurrentVertexCoords(model, i);
-        hh = *(s16*)(v + 4);
-        if (hh < minY)
+        vtx = ObjModel_GetCurrentVertexCoords(model, i);
+        vertexY = *(s16*)(vtx + 4);
+        if (vertexY < minY)
         {
-            minY = hh;
+            minY = vertexY;
         }
         i++;
     }
 
-    stable = 0;
-    while (stable == 0)
+    sorted = 0;
+    while (sorted == 0)
     {
-        stable = 1;
+        sorted = 1;
         j = 0;
-        p = (f32*)sub;
-        while (j < sub->segmentCount - 1)
+        pair = (f32*)state;
+        while (j < state->segmentCount - 1)
         {
-            a = p[1];
-            b = p[2];
-            if (a < b)
+            first = pair[1];
+            second = pair[2];
+            if (first < second)
             {
-                p[1] = b;
-                p[2] = (f32)(s32)
-                a;
-                stable = 0;
+                pair[1] = second;
+                pair[2] = (f32)(s32)
+                first;
+                sorted = 0;
             }
-            p++;
+            pair++;
             j++;
         }
     }
 
-    sub->segmentCount = 0xa;
-    sub->minVertexY = minY;
+    state->segmentCount = 0xa;
+    state->minVertexY = minY;
 
     if (GameBit_Get(DIMMAGICBRIDGE_GAMEBIT_IGNITED) != 0)
     {
-        sub->ignited = 1;
+        state->ignited = 1;
     }
-    if (sub->ignited != 0)
+    if (state->ignited != 0)
     {
-        for (i = 0; i < sub->segmentCount; i++)
+        for (i = 0; i < state->segmentCount; i++)
         {
-            sub->segmentGlow[i] = 0xff;
-            sub->segmentLit[i] = 1;
+            state->segmentGlow[i] = 0xff;
+            state->segmentLit[i] = 1;
             fn_80065574(0x11, 0, 0);
         }
     }
@@ -140,8 +140,8 @@ int dimmagicbridge_getObjectTypeId(void) { return 0x0; }
 
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A18);
+    s32 isVisible = visible;
+    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A18);
 }
 
 #pragma peephole on
@@ -173,9 +173,9 @@ void dimmagicbridge_update(int obj)
 #pragma dont_inline on
 void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 {
-    DimMagicBridgeState* sub = (DimMagicBridgeState*)obj;
+    DimMagicBridgeState* state = (DimMagicBridgeState*)obj;
     ObjTextureRuntimeSlot* tex;
-    s32 v;
+    s32 phase;
 
     tex = objFindTexture((void*)arg1, 0, 0);
     tex->offsetT += 0x14;
@@ -194,12 +194,12 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
     {
         tex->offsetT -= 10000;
     }
-    v = (s32)sub->wavePhase + framesThisStep * 0x100;
-    if (v > 0xffff) v = v - 0xffff;
-    sub->wavePhase = v;
-    v = (s32)sub->wavePhaseB + framesThisStep * 0x80;
-    if (v > 0xffff) v = v - 0xffff;
-    sub->wavePhaseB = v;
+    phase = (s32)state->wavePhase + framesThisStep * 0x100;
+    if (phase > 0xffff) phase = phase - 0xffff;
+    state->wavePhase = phase;
+    phase = (s32)state->wavePhaseB + framesThisStep * 0x80;
+    if (phase > 0xffff) phase = phase - 0xffff;
+    state->wavePhaseB = phase;
 }
 #pragma dont_inline reset
 
@@ -261,17 +261,17 @@ void dimmagicbridge_updateVertexWave(int obj, u8* sub)
     {
         s16* vc = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
         s16* vb = (s16*)ObjModel_GetBaseVertexCoords(mdl, i);
-        int u = (u16)(int)(amp * ((f32)(int)vc[2] / state->minVertexY));
-        u = u + state->wavePhase;
+        int wavePos = (u16)(int)(amp * ((f32)(int)vc[2] / state->minVertexY));
+        wavePos = wavePos + state->wavePhase;
         if (*vb > 0)
         {
-            *vc = lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)u) / lbl_803E4A0C
+            *vc = lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)wavePos) / lbl_803E4A0C
             )
             +(f32)(int) * vb;
         }
         else
         {
-            *vc = -(lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)u) / lbl_803E4A0C) - (f32)(int) * vb
+            *vc = -(lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)wavePos) / lbl_803E4A0C) - (f32)(int) * vb
             )
             ;
         }
