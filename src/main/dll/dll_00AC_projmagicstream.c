@@ -25,5 +25,12 @@ void projmagicstream_initialise(void)
 {
 }
 
-/* descriptor/ptr table auto 0x80319410-0x80319430 */
-u32 lbl_80319410[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projmagicemmit1_initialise, (u32)projmagicemmit1_release, 0x00000000, (u32)projmagicemmit1_doUnsupported };
+/* descriptor/ptr table auto 0x80319410-0x80319430.
+ * Union u64 member forces the retail 8-byte alignment (table follows an odd-length
+ * string; retail pads to an 8-aligned table start). Same idiom as dll_000A_expgfx. */
+typedef union DllDescriptorTable {
+    u32 words[8];
+    u64 align8;
+} DllDescriptorTable;
+
+DllDescriptorTable lbl_80319410 = { { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projmagicemmit1_initialise, (u32)projmagicemmit1_release, 0x00000000, (u32)projmagicemmit1_doUnsupported } };
