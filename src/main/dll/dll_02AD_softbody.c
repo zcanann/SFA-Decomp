@@ -62,43 +62,6 @@ void softbody_hitDetect(void)
 {
 }
 
-void softbody_init(int obj, int setup)
-{
-    GameObject* object = (GameObject*)obj;
-    SoftBodySetup* setupData = (SoftBodySetup*)setup;
-
-    object->anim.rotZ = (s16)(setupData->rotZ << 8);
-    object->anim.rotY = (s16)(setupData->rotY << 8);
-    object->anim.rotX = (s16)(setupData->rotX << 8);
-    if (setupData->scale != 0)
-    {
-        object->anim.rootMotionScale = (f32)(u32)setupData->scale / lbl_803E7294;
-        if (object->anim.rootMotionScale == lbl_803E7298)
-        {
-            object->anim.rootMotionScale = lbl_803E7288;
-        }
-        object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
-    }
-    object->objectFlags |= SOFTBODY_OBJECT_FLAGS_INIT;
-    ObjAnim_SetCurrentMove(obj, 0, lbl_803E7298, 0);
-    if (object->anim.hitReactState != NULL)
-    {
-        ObjHitbox_SetSphereRadius(obj,
-                                  (s16)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius * object->anim.rootMotionScale));
-    }
-}
-
-void softbody_release(void)
-{
-}
-
-void softbody_initialise(void)
-{
-    lbl_803DDD98 = NULL;
-    lbl_803DDDA0 = lbl_803E7298;
-    lbl_803DDD9C = lbl_803E7298;
-}
-
 void softbody_update(int obj)
 {
     GameObject* object = (GameObject*)obj;
@@ -140,4 +103,41 @@ void softbody_update(int obj)
         ObjAnim_SetCurrentMove(obj, 0, lbl_803DDD9C, 0);
         break;
     }
+}
+
+void softbody_init(int obj, int setup)
+{
+    GameObject* object = (GameObject*)obj;
+    SoftBodySetup* setupData = (SoftBodySetup*)setup;
+
+    object->anim.rotZ = (s16)(setupData->rotZ << 8);
+    object->anim.rotY = (s16)(setupData->rotY << 8);
+    object->anim.rotX = (s16)(setupData->rotX << 8);
+    if (setupData->scale != 0)
+    {
+        object->anim.rootMotionScale = (f32)(u32)setupData->scale / lbl_803E7294;
+        if (object->anim.rootMotionScale == lbl_803E7298)
+        {
+            object->anim.rootMotionScale = lbl_803E7288;
+        }
+        object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
+    }
+    object->objectFlags |= SOFTBODY_OBJECT_FLAGS_INIT;
+    ObjAnim_SetCurrentMove(obj, 0, lbl_803E7298, 0);
+    if (object->anim.hitReactState != NULL)
+    {
+        ObjHitbox_SetSphereRadius(obj,
+                                  (s16)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius * object->anim.rootMotionScale));
+    }
+}
+
+void softbody_release(void)
+{
+}
+
+void softbody_initialise(void)
+{
+    lbl_803DDD98 = NULL;
+    lbl_803DDDA0 = lbl_803E7298;
+    lbl_803DDD9C = lbl_803E7298;
 }
