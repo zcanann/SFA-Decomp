@@ -100,20 +100,20 @@ void setGameState(int state)
     gameState = state;
 }
 
-void setTimeStop(int v)
+void setTimeStop(int stop)
 {
-    timeStop = v;
+    timeStop = stop;
 }
 
-void setShouldResetNextFrame(int v)
+void setShouldResetNextFrame(int reset)
 {
-    shouldResetNextFrame = v;
+    shouldResetNextFrame = reset;
 }
 
 #pragma peephole on
-void setFrameCountdown_800202c4(u8 v)
+void setFrameCountdown_800202c4(u8 count)
 {
-    frameCountdown = v;
+    frameCountdown = count;
 }
 
 int getHudHiddenFrameCount(void)
@@ -165,20 +165,20 @@ void mainLoopDoGameText(void);
 
 void blankScreen(int frames)
 {
-    s16 v = frames;
-    screenBlankFrameCount = v;
-    if (v < 0)
+    s16 count = frames;
+    screenBlankFrameCount = count;
+    if (count < 0)
     {
         screenBlankFrameCount = 0;
     }
 }
 
 #pragma peephole on
-void addButtonObject(void* v)
+void addButtonObject(void* obj)
 {
     int i = gGameLoopButtonObjectCount;
     gGameLoopButtonObjectCount = i + 1;
-    gGameLoopButtonObjects[i] = (int)v;
+    gGameLoopButtonObjects[i] = (int)obj;
 }
 
 int mmSetFreeDelay(int v);
@@ -313,9 +313,9 @@ typedef f32 Mtx[3][4];
 extern void cutsceneEnterExit(int a, int b);
 
 #pragma dont_inline off
-void cutsceneFadeInOut(int a)
+void cutsceneFadeInOut(int enter)
 {
-    cutsceneEnterExit(a, 1);
+    cutsceneEnterExit(enter, 1);
 }
 
 int gameBitDecrement(int bit)
@@ -379,15 +379,15 @@ int cacheAllocAndCopy(u32 srcAddr, u32 size, u32* cacheCursor, u32* outEnd, u32 
 
 
 #pragma dont_inline on
-void* animationLoad(int id, s16 a, s16 b, int e, int f)
+void* animationLoad(int id, s16 animId, s16 moveIndex, int cache, int animDef)
 {
     gGameLoopAssetReq.f0 = 1;
     gGameLoopAssetReq.f1 = 7;
-    gGameLoopAssetReq.f4 = a;
+    gGameLoopAssetReq.f4 = animId;
     gGameLoopAssetReq.f8 = id;
-    gGameLoopAssetReq.fc = b;
-    gGameLoopAssetReq.f20 = e;
-    gGameLoopAssetReq.f24 = f;
+    gGameLoopAssetReq.fc = moveIndex;
+    gGameLoopAssetReq.f20 = cache;
+    gGameLoopAssetReq.f24 = animDef;
     loadAsset(&gGameLoopAssetReq);
 }
 
@@ -1245,15 +1245,15 @@ void cutsceneEnterExit(int entering, int affectSounds)
 void removeButtonObject(u32 h)
 {
     int* p;
-    int n;
+    int count;
     int i;
     int idx;
 
     idx = -1;
     i = 0;
     p = gGameLoopButtonObjects;
-    n = gGameLoopButtonObjectCount;
-    for (; i < n; i++)
+    count = gGameLoopButtonObjectCount;
+    for (; i < count; i++)
     {
         if (*p == h)
         {
@@ -1262,7 +1262,7 @@ void removeButtonObject(u32 h)
         }
         p++;
     }
-    for (i = idx; i < n - 1; i++)
+    for (i = idx; i < count - 1; i++)
     {
         gGameLoopButtonObjects[i] = gGameLoopButtonObjects[i + 1];
     }
