@@ -49,7 +49,7 @@ typedef struct ExplodeanimatorPlacement
 int explodeanimator_getExtraSize(void) { return 0x4; }
 int explodeanimator_getObjectTypeId(void) { return 0x0; }
 
-void explodeanimator_free(int x) { ObjGroup_RemoveObject(x, EXPLODEANIMATOR_OBJGROUP); }
+void explodeanimator_free(int obj) { ObjGroup_RemoveObject(obj, EXPLODEANIMATOR_OBJGROUP); }
 
 void explodeanimator_render(void)
 {
