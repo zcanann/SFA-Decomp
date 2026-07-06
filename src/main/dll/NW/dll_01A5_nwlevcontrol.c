@@ -79,13 +79,13 @@ void nw_levcontrol_update(int objArg)
 {
     int obj;
     short* player;
-    u8 mode;
-    int val;
-    u32 bitVal;
-    u32 bitVal3;
-    u8 flag;
-    int bitVal2;
-    u32 bitVal4;
+    u8 status;
+    int sunPos;
+    u32 gameBit;
+    u32 rescueBit;
+    u8 timerRunning;
+    int flags;
+    u32 timerActive;
     NwLevControlState* state;
 
     obj = objArg;
@@ -100,13 +100,13 @@ void nw_levcontrol_update(int objArg)
             state->countdown = *(f32 *)&lbl_803E5278;
         }
     }
-    mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
-    if (mode != 1)
+    status = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
+    if (status != 1)
     {
         (*gMapEventInterface)->setMapAct((int)((GameObject*)obj)->anim.mapEventSlot, 1);
     }
-    mode = (*gMapEventInterface)->getMapAct(7);
-    if (mode == 1)
+    status = (*gMapEventInterface)->getMapAct(7);
+    if (status == 1)
     {
         (*gMapEventInterface)->setMapAct(7, 2);
         GameBit_Set(0xf22, 1);
@@ -114,8 +114,8 @@ void nw_levcontrol_update(int objArg)
         GameBit_Set(0xf24, 1);
         GameBit_Set(0xf25, 1);
     }
-    val = (*gSkyInterface)->getSunPosition(0);
-    if (val != 0)
+    sunPos = (*gSkyInterface)->getSunPosition(0);
+    if (sunPos != 0)
     {
         if (state->dayNightMusic != -1)
         {
@@ -141,18 +141,18 @@ void nw_levcontrol_update(int objArg)
     SCGameBitLatch_Update(&state->flags, 0x10, -1, -1, 0x3a1, (int*)(int)state->dayNightMusic);
     SCGameBitLatch_Update(&state->flags, 0x20, -1, -1, 0x393, 0x36);
     SCGameBitLatch_Update(&state->flags, 0x40, -1, -1, 0xcbb, 0xc4);
-    bitVal4 = 0;
-    bitVal = GameBit_Get(0x19f);
-    bitVal3 = GameBit_Get(0x19d);
-    if (((bitVal3 ^ bitVal) != 0) && (flag = gameTimerIsRunning(), flag != 0))
+    timerActive = 0;
+    gameBit = GameBit_Get(0x19f);
+    rescueBit = GameBit_Get(0x19d);
+    if (((rescueBit ^ gameBit) != 0) && (timerRunning = gameTimerIsRunning(), timerRunning != 0))
     {
-        bitVal4 = 1;
+        timerActive = 1;
     }
-    GameBit_Set(0xf31, bitVal4);
+    GameBit_Set(0xf31, timerActive);
     SCGameBitLatch_Update(&state->flags, 0x80, -1, -1, 0xf31, 0xaf);
-    bitVal = GameBit_Get(0x398);
-    if ((bitVal != 0) &&
-        (mode = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), mode == 0)
+    gameBit = GameBit_Get(0x398);
+    if ((gameBit != 0) &&
+        (status = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), status == 0)
     )
     {
         (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f, 1);
@@ -167,8 +167,8 @@ void nw_levcontrol_update(int objArg)
         switch (state->mode)
         {
         case NWLEVCONTROL_MODE_WAIT_START:
-            bitVal = GameBit_Get(0x19d);
-            if (bitVal != 0)
+            gameBit = GameBit_Get(0x19d);
+            if (gameBit != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 state->mode = NWLEVCONTROL_MODE_WALK_TABLE;
@@ -212,18 +212,18 @@ void nw_levcontrol_update(int objArg)
         case NWLEVCONTROL_MODE_TIMER_STEP:
             if ((*(u16*)(player + 0x58) & 0x1000) == 0)
             {
-                bitVal2 = state->flags;
-                if ((bitVal2 & 1) != 0)
+                flags = state->flags;
+                if ((flags & 1) != 0)
                 {
-                    state->flags = bitVal2 & ~1;
+                    state->flags = flags & ~1;
                     state->flags = state->flags | 2;
                     gameTimerInit(0x15, (u32)state->timerMinutes);
                     timerSetToCountUp();
                     (*gMapEventInterface)->savePoint((int)(player + 6), (int)*player, 0, 0);
                 }
-                else if ((bitVal2 & 4) != 0)
+                else if ((flags & 4) != 0)
                 {
-                    state->flags = bitVal2 & ~2;
+                    state->flags = flags & ~2;
                     state->flags = state->flags & ~4;
                     gameTimerStop();
                     Music_Trigger((int*)0xaf, 0);
@@ -242,8 +242,8 @@ void nw_levcontrol_update(int objArg)
             }
             break;
         case NWLEVCONTROL_MODE_CLEANUP:
-            bitVal = GameBit_Get(0xecd);
-            if (bitVal != 0)
+            gameBit = GameBit_Get(0xecd);
+            if (gameBit != 0)
             {
                 GameBit_Set(0xecd, 0);
             }
@@ -349,9 +349,9 @@ int nw_levcontrol_getExtraSize(void)
 void nw_levcontrol_free(GameObject* obj)
 {
     extern void envFxActFn_800887f8(u8 value);
-    s8 v = obj->anim.mapEventSlot;
-    int ret = (*gMapEventInterface)->getObjGroupStatus((s32)v, 0);
-    if ((u8)ret == 0)
+    s8 slot = obj->anim.mapEventSlot;
+    int groupStatus = (*gMapEventInterface)->getObjGroupStatus((s32)slot, 0);
+    if ((u8)groupStatus == 0)
     {
         envFxActFn_800887f8(0);
     }
