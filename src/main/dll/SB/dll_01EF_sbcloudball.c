@@ -73,25 +73,9 @@ extern f32 gSbCloudBallTrailVelScale;
 extern f32 gSbCloudBallTrailParticleScale;
 
 
-void SB_CloudBall_release(void)
-{
-}
-
-void SB_CloudBall_initialise(void)
-{
-}
-
-
 int SB_CloudBall_getExtraSize(void) { return 0x24; }
 int SB_CloudBall_getObjectTypeId(void) { return 0x0; }
 int SB_KyteCage_getExtraSize(void);
-
-void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E58E8);
-}
-
 
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
  * splits at wrong addresses; these stubs ensure every asm symbol has a src
@@ -115,6 +99,12 @@ void SB_CloudBall_free(GameObject* obj)
     }
 }
 
+void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E58E8);
+}
+
 void SB_CloudBall_hitDetect(GameObject* obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
@@ -134,32 +124,6 @@ void SB_CloudBall_hitDetect(GameObject* obj)
     state->fadeTimer = gSbCloudBallFadeTime;
     obj->anim.alpha = 0;
     projectileParticleFxFn_80099660((int*)obj, lbl_803E58E8, 2);
-}
-
-void SB_CloudBall_init(GameObject* obj)
-{
-    extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-    extern void lightSetFieldBC_8001db14(int light, int v);
-    extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);
-    extern void modelLightStruct_setLightKind(int light, int v);
-    extern int objCreateLight(int* obj, int mode);
-    SBCloudBallState* state = obj->extra;
-
-    ObjAnim_GetPriorityHitState(&obj->anim)->flags =
-        (s16)(ObjAnim_GetPriorityHitState(&obj->anim)->flags & ~1);
-    ObjAnim_GetPriorityHitState(&obj->anim)->trackContactMask =
-        (u16)(ObjAnim_GetPriorityHitState(&obj->anim)->trackContactMask | 1);
-    if ((void*)state->light == NULL)
-    {
-        state->light = objCreateLight((int*)obj, 1);
-        if ((void*)state->light != NULL)
-        {
-            modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
-            modelLightStruct_setDiffuseColor(state->light, 0, 90, 150, 0);
-            lightSetFieldBC_8001db14(state->light, 1);
-            modelLightStruct_setDistanceAttenuation(state->light, gSbCloudBallLightAttenNear, gSbCloudBallLightAttenFar);
-        }
-    }
 }
 
 void SB_CloudBall_update(GameObject* obj)
@@ -236,6 +200,40 @@ void SB_CloudBall_update(GameObject* obj)
         objfx_spawnFlaggedTrailBurst((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156, 0xf, particleVelocity);
         (*gPartfxInterface)->spawnObject((void*)obj, 0xa8, NULL, 2, -1, NULL);
     }
+}
+
+void SB_CloudBall_init(GameObject* obj)
+{
+    extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
+    extern void lightSetFieldBC_8001db14(int light, int v);
+    extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);
+    extern void modelLightStruct_setLightKind(int light, int v);
+    extern int objCreateLight(int* obj, int mode);
+    SBCloudBallState* state = obj->extra;
+
+    ObjAnim_GetPriorityHitState(&obj->anim)->flags =
+        (s16)(ObjAnim_GetPriorityHitState(&obj->anim)->flags & ~1);
+    ObjAnim_GetPriorityHitState(&obj->anim)->trackContactMask =
+        (u16)(ObjAnim_GetPriorityHitState(&obj->anim)->trackContactMask | 1);
+    if ((void*)state->light == NULL)
+    {
+        state->light = objCreateLight((int*)obj, 1);
+        if ((void*)state->light != NULL)
+        {
+            modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
+            modelLightStruct_setDiffuseColor(state->light, 0, 90, 150, 0);
+            lightSetFieldBC_8001db14(state->light, 1);
+            modelLightStruct_setDistanceAttenuation(state->light, gSbCloudBallLightAttenNear, gSbCloudBallLightAttenFar);
+        }
+    }
+}
+
+void SB_CloudBall_release(void)
+{
+}
+
+void SB_CloudBall_initialise(void)
+{
 }
 
 
