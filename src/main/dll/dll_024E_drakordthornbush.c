@@ -98,15 +98,15 @@ void drakord_thornbush_free(int obj)
 void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
     int inner = *(int*)&((GameObject*)p1)->extra;
-    f32 v;
+    f32 lightScale;
     if (((GameObject*)p1)->anim.seqId == THORNBUSH_SEQ_LIGHTNING)
     {
-        v = ((DrakordThornbushState*)inner)->lightScale;
-        if (v < lbl_803E6590)
+        lightScale = ((DrakordThornbushState*)inner)->lightScale;
+        if (lightScale < lbl_803E6590)
         {
-            v = gThornBushLightScaleMax;
+            lightScale = gThornBushLightScaleMax;
         }
-        ((void (*)(int, int, int, f32, int))Obj_UpdateLightningCluster)(p1, inner + 0x14, 3, v, inner + 0x64);
+        ((void (*)(int, int, int, f32, int))Obj_UpdateLightningCluster)(p1, inner + 0x14, 3, lightScale, inner + 0x64);
     }
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6594);
 }
