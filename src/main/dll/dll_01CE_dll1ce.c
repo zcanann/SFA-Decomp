@@ -100,22 +100,18 @@ typedef struct Dll1CESpawnSetup
 
 
 
-void dll_1CE_hitDetect(void)
-{
-}
-
-void dll_1CE_release(void)
-{
-}
-
-void dll_1CE_initialise(void)
-{
-}
-
-
 int dll_1CE_getExtraSize(void) { return 0xc; }
 int dll_1CE_getObjectTypeId(void) { return 0x0; }
 int dimmagicbridge_getExtraSize(void);
+
+void dll_1CE_free(void)
+{
+    if (lbl_803DDB78 != NULL)
+    {
+        Resource_Release(lbl_803DDB78);
+    }
+    lbl_803DDB78 = NULL;
+}
 
 #pragma peephole off
 void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -126,13 +122,8 @@ void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 
 #pragma peephole on
-void dll_1CE_free(void)
+void dll_1CE_hitDetect(void)
 {
-    if (lbl_803DDB78 != NULL)
-    {
-        Resource_Release(lbl_803DDB78);
-    }
-    lbl_803DDB78 = NULL;
 }
 
 /* dimwooddoor2 variant: trigger-init that loads a different float
@@ -146,33 +137,8 @@ void dll_1CE_free(void)
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
 
-#pragma scheduling off
-#pragma peephole off
-void dll_1CE_init(u8* obj, u8* params)
-{
-    Dll1CEState* sub;
-    ObjHitsPriorityState* hitState;
-    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
-    )
-    ;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DLL1CE_OBJFLAG_HITDETECT_DISABLED);
-    sub = ((GameObject*)obj)->extra;
-    sub->igniteCountdown = 1;
-    if (GameBit_Get(((Dll1CEPlacement*)params)->gameBitId) != 0)
-    {
-        sub->igniteCountdown = 0;
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->flags &= ~1;
-        ((GameObject*)obj)->anim.alpha = 0;
-    }
-    sub->openVelocity = lbl_803E49F0;
-}
-
-
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
@@ -182,6 +148,8 @@ void dll_1CE_init(u8* obj, u8* params)
  * the lid open with clamped velocity while idle, and once a key object is
  * nearby, count down then ring the gamebit and (if the load isn't locked)
  * spawn the contents object seeded from the door's transform. */
+#pragma scheduling off
+#pragma peephole off
 #pragma opt_strength_reduction off
 void dll_1CE_update(int* obj)
 {
@@ -255,6 +223,36 @@ void dll_1CE_update(int* obj)
     }
 }
 #pragma opt_strength_reduction reset
+
+void dll_1CE_init(u8* obj, u8* params)
+{
+    Dll1CEState* sub;
+    ObjHitsPriorityState* hitState;
+    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
+    )
+    ;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DLL1CE_OBJFLAG_HITDETECT_DISABLED);
+    sub = ((GameObject*)obj)->extra;
+    sub->igniteCountdown = 1;
+    if (GameBit_Get(((Dll1CEPlacement*)params)->gameBitId) != 0)
+    {
+        sub->igniteCountdown = 0;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->flags &= ~1;
+        ((GameObject*)obj)->anim.alpha = 0;
+    }
+    sub->openVelocity = lbl_803E49F0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+void dll_1CE_release(void)
+{
+}
+
+void dll_1CE_initialise(void)
+{
+}
 
 FbWGPipe GXWGFifo : (0xCC008000);
 
