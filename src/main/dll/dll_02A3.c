@@ -32,14 +32,6 @@ int dll_2A3_getExtraSize_ret_12(void) { return sizeof(Dll2A3State); }
 
 int dll_2A3_getObjectTypeId(void) { return 0x0; }
 
-void dll_2A3_release_nop(void)
-{
-}
-
-void dll_2A3_initialise_nop(void)
-{
-}
-
 void dll_2A3_free(void) { lbl_803DDD90 = lbl_803DDD90 - 1; }
 
 void dll_2A3_render(int obj, int p2, int p3, int p4, int p5)
@@ -102,15 +94,23 @@ void dll_2A3_init(int obj)
     lbl_803DDD90 = lbl_803DDD90 + 1;
 }
 
-void fn_8023137C(int obj, f32* velocity)
+void dll_2A3_release_nop(void)
 {
-    ((GameObject*)obj)->anim.velocityX = velocity[0];
-    ((GameObject*)obj)->anim.velocityY = velocity[1];
-    ((GameObject*)obj)->anim.velocityZ = velocity[2];
+}
+
+void dll_2A3_initialise_nop(void)
+{
 }
 
 void fn_8023134C(int obj, int lifetime)
 {
     Dll2A3State* state = ((GameObject*)obj)->extra;
     state->lifetime = lifetime;
+}
+
+void fn_8023137C(int obj, f32* velocity)
+{
+    ((GameObject*)obj)->anim.velocityX = velocity[0];
+    ((GameObject*)obj)->anim.velocityY = velocity[1];
+    ((GameObject*)obj)->anim.velocityZ = velocity[2];
 }
