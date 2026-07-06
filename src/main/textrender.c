@@ -2928,7 +2928,8 @@ extern u16 gGameTextSjisGlyphTable[];
 extern int lbl_803DB3C4;
 
 #pragma ppc_unroll_speculative off
-#pragma ppc_unroll_instructions_limit 16
+#pragma ppc_unroll_instructions_limit 32
+#pragma opt_loop_invariants off
 void gameTextLoadGraphicsFn_8001a918(void)
 {
     int wbytes;
@@ -3050,21 +3051,12 @@ void gameTextLoadGraphicsFn_8001a918(void)
             wbytes++;
         }
         {
+            int j;
             u32* q = (u32*)buf;
-            int j = 0x47;
-            while (j > 0)
+            j = 0x48;
+            while (j--)
             {
-                q[0] = 0;
-                q[1] = 0;
-                q[2] = 0;
-                q[3] = 0;
-                q[4] = 0;
-                q[5] = 0;
-                q[6] = 0;
-                q[7] = 0;
-                q[8] = 0;
-                q += 9;
-                j -= 9;
+                *q++ = 0;
             }
         }
         OSGetFontTexel(s, buf, 0, 6, &width);
@@ -3087,15 +3079,14 @@ void gameTextLoadGraphicsFn_8001a918(void)
             u32* src = (u32*)buf;
             int tx = *(u16*)(glyph + 4) >> 3;
             int ty = *(u16*)(glyph + 6) >> 3;
+            int row = ty;
             int txEnd = tx + 3;
             int tyEnd = ty + 3;
-            int cnt = txEnd - tx;
-            int row;
-            for (row = ty; row < tyEnd; row++)
+            for (; row < tyEnd; row++)
             {
+                int j2 = tx;
                 int off = tx << 5;
-                int j2;
-                for (j2 = tx; j2 < txEnd; j2++)
+                for (; j2 < txEnd; j2++)
                 {
                     u8* dst = *(u8**)(base31 + 0x60) + off;
                     u32 tmp;
@@ -3124,6 +3115,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
     testAndSet_onlyUseHeap3(savedHeap);
     *(int*)(base31 + 0x6c) = 2;
 }
+#pragma opt_loop_invariants reset
 #pragma ppc_unroll_instructions_limit 96
 #pragma ppc_unroll_speculative on
 
