@@ -133,7 +133,7 @@ int DIMSnowHorn1_stateHandler02(int obj, int state, f32 fv)
 {
     DIMSnowHorn1State* inner = ((GameObject*)obj)->extra;
     f32 k = lbl_803E8234;
-    s16 v;
+    s16 timer;
 
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
@@ -150,9 +150,9 @@ int DIMSnowHorn1_stateHandler02(int obj, int state, f32 fv)
     }
 
     inner->countdownTimer = randomGetRange(0x4b0, 0x960);
-    v = inner->countdownTimer - (int)fv;
-    inner->countdownTimer = v;
-    if (v <= 0)
+    timer = inner->countdownTimer - (int)fv;
+    inner->countdownTimer = timer;
+    if (timer <= 0)
     {
         return -4;
     }
@@ -210,7 +210,7 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
 {
     DIMSnowHorn1State* inner = ((GameObject*)obj)->extra;
     f32 k = lbl_803E8234;
-    s16 v;
+    s16 timer;
 
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
@@ -230,9 +230,9 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
         inner->countdownTimer = randomGetRange(0x4b0, 0x960);
     }
 
-    v = inner->countdownTimer - (int)fv;
-    inner->countdownTimer = v;
-    if (v <= 0)
+    timer = inner->countdownTimer - (int)fv;
+    inner->countdownTimer = timer;
+    if (timer <= 0)
     {
         return -3;
     }
@@ -306,7 +306,7 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
     int near;
     DIMSnowHorn1State* inner;
     f32 sp = lbl_803E8240;
-    s16 d;
+    s16 turnRate;
 
     near = ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &sp);
     inner = ((GameObject*)obj)->extra;
@@ -322,12 +322,12 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
     {
         ((DIMSnowHorn1State*)state)->baddie.turnRate = -((DIMSnowHorn1State*)state)->baddie.turnRate;
     }
-    d = ((DIMSnowHorn1State*)state)->baddie.turnRate;
-    if (d > 0 && ((GameObject*)obj)->anim.currentMove != 0x201)
+    turnRate = ((DIMSnowHorn1State*)state)->baddie.turnRate;
+    if (turnRate > 0 && ((GameObject*)obj)->anim.currentMove != 0x201)
     {
         ObjAnim_SetCurrentMove(obj, 0x201, lbl_803E8234, 0);
     }
-    else if (d <= 0)
+    else if (turnRate <= 0)
     {
         if (((GameObject*)obj)->anim.currentMove != 0x200)
         {
