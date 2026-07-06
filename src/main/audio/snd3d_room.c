@@ -14,7 +14,6 @@ extern f32 lbl_803E7880;
 extern f32 lbl_803E7890;
 extern f32 gSnd3dRoomFadeFixedToFloat;
 extern f64 lbl_803E7898;
-extern f32 lbl_803E78A0;
 extern void synthActivateStudio(u8 studio, int active, int unk);
 extern void synthDeactivateStudio(u8 studio);
 extern void synthAddStudioInput(u8 studio, u8* input);
@@ -432,10 +431,9 @@ void s3dAllocateRoomStudios(void)
 void s3dUpdateDoorStudioInputs(void)
 {
     SndStudioInputLink* link;
-    f32 scale;
-    s32 v0, v1;
+    f32 f;
+    f32 v;
 
-    scale = lbl_803E78A0;
     for (link = s3dDoorRoot; link != NULL; link = link->next)
     {
         if ((link->flags & 0x80000000) == 0)
@@ -444,11 +442,11 @@ void s3dUpdateDoorStudioInputs(void)
             {
                 if (link->target->assignedVoice != 0xff)
                 {
-                    v0 = (s32)(scale * link->inputScale);
-                    v1 = (s32)((f32)link->sendLevel * link->inputScale);
-                    link->studioInput[1] = v1;
+                    v = link->inputScale;
+                    f = (1.0f - v) * v; /* dead (fully DCE'd) but its stack slot shapes the frame; cf. MusyX CalcDoorParameters */
+                    link->studioInput[1] = (s32)((f32)link->sendLevel * v);
                     link->studioInput[2] = 0;
-                    link->studioInput[0] = v0;
+                    link->studioInput[0] = (s32)(127.0f * v);
                     if ((link->flags & 1) != 0)
                     {
                         link->studioInput[3] = link->target->assignedVoice;
@@ -479,11 +477,11 @@ void s3dUpdateDoorStudioInputs(void)
             }
             else
             {
-                v0 = (s32)(scale * link->inputScale);
-                v1 = (s32)((f32)link->sendLevel * link->inputScale);
-                link->studioInput[1] = v1;
+                v = link->inputScale;
+                f = (1.0f - v) * v;
+                link->studioInput[1] = (s32)((f32)link->sendLevel * v);
                 link->studioInput[2] = 0;
-                link->studioInput[0] = v0;
+                link->studioInput[0] = (s32)(127.0f * v);
             }
         }
     }
