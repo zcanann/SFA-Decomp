@@ -85,7 +85,7 @@ void dfpobjcreator_initialise(void)
 int dfpobjcreator_getExtraSize(void) { return 0x1c; }
 int dfpobjcreator_getObjectTypeId(void) { return 0x0; }
 
-void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void dfpobjcreator_render(int obj, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 void dfpobjcreator_free(int obj, int flag)
 {
@@ -118,7 +118,7 @@ void dfpobjcreator_init(int obj, s8* def)
 void dfpobjcreator_update(int obj)
 {
 
-    extern void* Obj_AllocObjectSetup(int size, int b);
+    extern void* Obj_AllocObjectSetup(int size, int id);
     extern u8*Obj_SetupObject(u8*, int, int, int, int);
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
     DfpObjCreatorState* state = ((GameObject*)obj)->extra;
