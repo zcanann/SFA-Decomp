@@ -26,28 +26,20 @@ int dll_299_getExtraSize_ret_2(void) { return 0x2; }
 
 int dll_299_getObjectTypeId(void) { return 0x0; }
 
-void dll_299_render_nop(void)
-{
-}
-
-void dll_299_hitDetect_nop(void)
-{
-}
-
-void dll_299_release_nop(void)
-{
-}
-
-void dll_299_initialise_nop(void)
-{
-}
-
 void dll_299_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects((void*)obj);
     Resource_Release(lbl_803DDD80);
     lbl_803DDD80 = NULL;
+}
+
+void dll_299_render_nop(void)
+{
+}
+
+void dll_299_hitDetect_nop(void)
+{
 }
 
 void dll_299_update(int obj)
@@ -70,4 +62,12 @@ void dll_299_init(int obj, int setup)
     (*gPartfxInterface)->spawnObject((void*)obj, 0x545, NULL, 0x802, -1, NULL);
     (*gPartfxInterface)->spawnObject((void*)obj, 0x545, NULL, 0x802, -1, NULL);
     (*gPartfxInterface)->spawnObject((void*)obj, 0x546, NULL, 0x802, -1, NULL);
+}
+
+void dll_299_release_nop(void)
+{
+}
+
+void dll_299_initialise_nop(void)
+{
 }
