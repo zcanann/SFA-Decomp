@@ -153,11 +153,11 @@ void chukchuk_update(short* obj)
     f32 dz;
     struct
     {
-        int c;
-        int b;
-        int a;
-        f32 d[3];
-    } stk;
+        int hitVolume;
+        int sphereIndex;
+        int hitObject;
+        f32 toPlayer[3];
+    } hit;
 
     v = ((GameObject*)obj)->extra;
     if (v->steamTimer != lbl_803E2E34)
@@ -213,10 +213,10 @@ void chukchuk_update(short* obj)
             }
             if ((v->flags & (CHUKCHUK_FLAG_PRIMED | CHUKCHUK_FLAG_FORCED_ATTACK)) != 0)
             {
-                stk.d[0] = ((GameObject*)pl)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-                stk.d[1] = ((GameObject*)pl)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-                stk.d[2] = ((GameObject*)pl)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-                ang = getAngle(stk.d[0], stk.d[2]) & 0xffff;
+                hit.toPlayer[0] = ((GameObject*)pl)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+                hit.toPlayer[1] = ((GameObject*)pl)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+                hit.toPlayer[2] = ((GameObject*)pl)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+                ang = getAngle(hit.toPlayer[0], hit.toPlayer[2]) & 0xffff;
                 ang -= ((GameObject*)obj)->anim.rotX & 0xffff;
                 if (ang > 0x8000)
                 {
@@ -251,7 +251,7 @@ void chukchuk_update(short* obj)
             Sfx_PlayFromObject(obj, SFXkr_impact2);
         }
         v->prevDistance = di;
-        if (ObjHits_GetPriorityHit(obj, &stk.a, &stk.b, &stk.c) == 14)
+        if (ObjHits_GetPriorityHit(obj, &hit.hitObject, &hit.sphereIndex, &hit.hitVolume) == 14)
         {
             v->hitsLeft -= 1;
             if (v->hitsLeft < 1)
