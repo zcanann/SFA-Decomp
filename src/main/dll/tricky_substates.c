@@ -535,8 +535,6 @@ typedef struct
     u8 rest : 5;
 } FlagByte728;
 
-#pragma opt_propagation off
-#pragma opt_propagation reset
 void trickyFn_80142524(u8* obj, u8* state)
 {
     u8* base;
