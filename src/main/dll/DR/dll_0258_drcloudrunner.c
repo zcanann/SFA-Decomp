@@ -26,6 +26,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define PAD_BUTTON_A 0x100
+
 #define DRCLOUDRUNNER_OBJGROUP 0xa
 #define ARWARWING_OBJGROUP 0x26
 
@@ -771,7 +773,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     }
     if (((ByteFlags*)&inner->flagsBC0)->b08 == 0 && (*(int*)&((CloudRunnerState*)baddie)->baddie.unk31C & 0x100))
     {
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         moveId = 0x20d;
         animSpd = lbl_803E83F0;
         ((ByteFlags*)&inner->flagsBC0)->b08 = 1;
@@ -1126,7 +1128,7 @@ void DR_CloudRunner_update(int obj)
             if (((ByteFlags*)&inner->flagsBC0)->b10)
             {
                 f32 vec[3];
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 if ((*gMapEventInterface)->getRestartGameNotCleared() == 0)
                 {
                     vec[0] = lbl_803E8418;
@@ -1142,7 +1144,7 @@ void DR_CloudRunner_update(int obj)
             }
             else
             {
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 {
                     s8 t = inner->sequenceIndex;
                     if (t != -1)
