@@ -200,7 +200,7 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
     BoneSpawnData data;
     GameObject* cam;
     u8 found;
-    u8 t;
+    u8 surfType;
     int i;
     f32 dx;
     f32 dy;
@@ -218,7 +218,7 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
     f32 p2z;
     f32 r1;
     f32 r2;
-    f32 s;
+    f32 sqrtR2;
     f32 w0;
     f32 w1;
     f32 w2;
@@ -235,8 +235,8 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
     dz = cam->anim.localPosZ - obj->anim.localPosZ;
     for (i = 0; i < count; i++)
     {
-        t = hits[i].surfaceType;
-        if ((s8)t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || (s8)t == 0x17)
+        surfType = hits[i].surfaceType;
+        if ((s8)surfType == 0x12 || (u8)(surfType - 0x10) <= 1 || (u8)(surfType - 0x14) <= 1 || (s8)surfType == 0x17)
         {
             gPlayerShadowCamDelta[0] = dx;
             gPlayerShadowCamDelta[1] = dy;
@@ -271,34 +271,34 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
         int j;
         for (j = 0; j < count; j++)
         {
-            PlayerShadowTriHit* e = &hits[j];
-            u8 t = e->surfaceType;
-            if ((s8)t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || (s8)t == 0x17)
+            PlayerShadowTriHit* hit = &hits[j];
+            u8 surfType = hit->surfaceType;
+            if ((s8)surfType == 0x12 || (u8)(surfType - 0x10) <= 1 || (u8)(surfType - 0x14) <= 1 || (s8)surfType == 0x17)
             {
                 int rt;
-                p0x = obj->anim.localPosX + ((f32)e->vertX[0] - offsX);
-                p0y = (f32)e->vertY[0];
-                p0z = obj->anim.localPosZ + ((f32)e->vertZ[0] - offsZ);
-                p1x = obj->anim.localPosX + ((f32)e->vertX[1] - offsX);
-                p1y = (f32)e->vertY[1];
-                p1z = obj->anim.localPosZ + ((f32)e->vertZ[1] - offsZ);
-                p2x = obj->anim.localPosX + ((f32)e->vertX[2] - offsX);
-                p2y = (f32)e->vertY[2];
-                p2z = obj->anim.localPosZ + ((f32)e->vertZ[2] - offsZ);
+                p0x = obj->anim.localPosX + ((f32)hit->vertX[0] - offsX);
+                p0y = (f32)hit->vertY[0];
+                p0z = obj->anim.localPosZ + ((f32)hit->vertZ[0] - offsZ);
+                p1x = obj->anim.localPosX + ((f32)hit->vertX[1] - offsX);
+                p1y = (f32)hit->vertY[1];
+                p1z = obj->anim.localPosZ + ((f32)hit->vertZ[1] - offsZ);
+                p2x = obj->anim.localPosX + ((f32)hit->vertX[2] - offsX);
+                p2y = (f32)hit->vertY[2];
+                p2z = obj->anim.localPosZ + ((f32)hit->vertZ[2] - offsZ);
                 r1 = randomGetRange(1, 1000) / lbl_803DF474;
                 r2 = randomGetRange(1, 1000) / lbl_803DF474;
-                s = sqrtf(r2);
-                w0 = lbl_803DF470 - s;
+                sqrtR2 = sqrtf(r2);
+                w0 = lbl_803DF470 - sqrtR2;
                 {
                     f32 omr = lbl_803DF470 - r1;
-                    w1 = omr * s;
+                    w1 = omr * sqrtR2;
                 }
-                w2 = r1 * s;
+                w2 = r1 * sqrtR2;
                 data.x = w0 * p0x + w1 * p1x + w2 * p2x;
                 data.y = w0 * p0y + w1 * p1y + w2 * p2y;
                 data.z = w0 * p0z + w1 * p1z + w2 * p2z;
                 data.y = data.y + lbl_803DF478;
-                rt = (s8)e->surfaceType;
+                rt = (s8)hit->surfaceType;
                 if (rt == 0x12 || rt == 0x10)
                 {
                     if (randomGetRange(0, 0x1e) == 1)
