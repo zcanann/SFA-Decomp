@@ -5,6 +5,7 @@ extern SynthVoiceRuntime lbl_803AF550;
 #define SYNTH_VOICE_RUNTIME() (&lbl_803AF550)
 
 #define SYNTH_VOICE_STUDIO_MAP_OFFSET ((u32)&(((SynthVoice*)0)->studioMap))
+#define SYNTH_RUNTIME_VOICES_OFFSET ((u32)&(((SynthVoiceRuntime*)0)->voices))
 
 extern void synthVolume(u32 value0, u32 value1, u8 studio, u32 mode, u32 handle);
 extern void sndSeqVolume(u32 value0, u16 value1, u32 handle, u32 mode);
@@ -44,28 +45,32 @@ typedef struct SynthStartParams
  */
 void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode)
 {
-    SynthVoice* voice;
     SynthVoiceRuntime* runtime;
-    u8* voiceCursor;
+    u8* voiceBase;
     u8* voiceBytes;
+    u8* voiceCursor;
+    SynthVoice* voice;
+    SynthVoice* walker;
     u32 voiceIndex;
     u32 studioIndex;
+    u32 pubHandle;
 
     runtime = SYNTH_VOICE_RUNTIME();
-    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
+    pubHandle = handle;
+    for (walker = gSynthQueuedVoices; walker != 0; walker = walker->next)
     {
-        if (voice->handle == (handle & SYNTH_HANDLE_ID_MASK))
+        if (walker->handle == (handle & SYNTH_HANDLE_ID_MASK))
         {
-            studioIndex = (handle & SYNTH_HANDLE_QUEUED_FLAG) | voice->slotIndex;
+            studioIndex = (handle & SYNTH_HANDLE_QUEUED_FLAG) | walker->slotIndex;
             goto resolved;
         }
     }
 
-    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
+    for (walker = gSynthAllocatedVoices; walker != 0; walker = walker->next)
     {
-        if (voice->handle == (handle & SYNTH_HANDLE_ID_MASK))
+        if (walker->handle == (handle & SYNTH_HANDLE_ID_MASK))
         {
-            studioIndex = (handle & SYNTH_HANDLE_QUEUED_FLAG) | voice->slotIndex;
+            studioIndex = (handle & SYNTH_HANDLE_QUEUED_FLAG) | walker->slotIndex;
             goto resolved;
         }
     }
@@ -77,14 +82,15 @@ resolved:
     {
         if ((studioIndex & SYNTH_HANDLE_QUEUED_FLAG) == 0)
         {
-            synthVolume(value0, value1, runtime->voices[studioIndex].currentStudio, mode, handle);
-            voice = &runtime->voices[studioIndex];
+            voiceBase = (u8*)runtime + studioIndex * sizeof(SynthVoice);
+            synthVolume(value0, value1, ((SynthVoice*)(voiceBase + SYNTH_RUNTIME_VOICES_OFFSET))->currentStudio, mode, pubHandle);
+            voice = (SynthVoice*)(voiceBase + SYNTH_RUNTIME_VOICES_OFFSET);
             voiceBytes = (u8*)voice;
             voiceCursor = (u8*)voice;
             voiceIndex = 0;
             do
             {
-                if (voiceBytes[SYNTH_VOICE_STUDIO_MAP_OFFSET] != runtime->voices[studioIndex].currentStudio)
+                if (voiceBytes[SYNTH_VOICE_STUDIO_MAP_OFFSET] != voice->currentStudio)
                 {
                     synthVolume(value0, value1, voiceCursor[SYNTH_VOICE_STUDIO_MAP_OFFSET], 0, SYNTH_HANDLE_INVALID);
                 }
@@ -96,22 +102,22 @@ resolved:
         }
         else
         {
-            voiceIndex = studioIndex & SYNTH_HANDLE_ID_MASK;
+            handle = studioIndex & SYNTH_HANDLE_ID_MASK;
             switch (mode & 0xF)
             {
             case 0:
-                runtime->voices[voiceIndex].pendingUpdate.studio = value0;
+                runtime->voices[handle].pendingUpdate.studio = value0;
                 break;
             case 1:
-                runtime->voices[voiceIndex].pendingUpdate.output = 0;
+                runtime->voices[handle].pendingUpdate.output = 0;
                 break;
             case 2:
-                runtime->voices[voiceIndex].pendingUpdate.flags |= SYNTH_PENDING_FLAG_STUDIO_MODE2;
-                runtime->voices[voiceIndex].pendingUpdate.studio = value0;
+                runtime->voices[handle].pendingUpdate.flags |= SYNTH_PENDING_FLAG_STUDIO_MODE2;
+                runtime->voices[handle].pendingUpdate.studio = value0;
                 break;
             case 3:
-                runtime->voices[voiceIndex].pendingUpdate.flags |= SYNTH_PENDING_FLAG_STUDIO_MODE3;
-                runtime->voices[voiceIndex].pendingUpdate.studio = value0;
+                runtime->voices[handle].pendingUpdate.flags |= SYNTH_PENDING_FLAG_STUDIO_MODE3;
+                runtime->voices[handle].pendingUpdate.studio = value0;
                 break;
             }
         }
