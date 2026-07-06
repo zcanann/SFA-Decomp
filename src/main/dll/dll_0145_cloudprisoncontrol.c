@@ -81,7 +81,7 @@ void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visibl
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4108);
 }
 
-void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
+void cloudprisoncontrol_init(int obj) { ObjMsg_AllocQueue(obj, 0xa); }
 
 void cloudprisoncontrol_update(int obj)
 {
