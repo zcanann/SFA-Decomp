@@ -71,7 +71,6 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 lbl_803E5A30;
 extern void fn_801E83B0(int obj, int, int, int, int);
 extern void GXSetBlendMode(int type, int src, int dst, int op);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
@@ -96,22 +95,11 @@ extern void* Obj_GetActiveModel(int);
 extern void ObjModel_SetPostRenderCallback(u8* model, void* callback);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void fn_801F4C28(int, int);
-extern f32 lbl_803E5A60;
-extern f32 lbl_803E5A64;
-extern f32 lbl_803E5A68;
 extern void ObjMsg_SendToObject(void* to, int msg, int obj, void* data);
 extern void forceAButtonIcon(int icon);
 
 extern void objRenderFn_80041018(int obj);
 extern f32 Curve_EvalBSpline(int p, f32 t, int m);
-extern f32 lbl_803E5A34;
-extern f32 lbl_803E5A38;
-extern f32 lbl_803E5A3C;
-extern f32 lbl_803E5A40;
-extern f32 lbl_803E5A44;
-extern f32 lbl_803E5A48;
-extern f32 lbl_803E5A4C;
-extern f32 lbl_803E5A50;
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern void lightningRender(void *p);
@@ -122,6 +110,127 @@ extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, in
 extern void fn_801F4D54(int obj, int sub);
 extern void fn_801F4ECC(int obj, int sub);
 extern int getAngle(float y, float x);
+
+/* .sdata2 constant pool */
+static const f32 lbl_803E5A30 = 1.0f;
+static const f32 lbl_803E5A34 = 3.5f;
+static const f32 lbl_803E5A38 = 4.5f;
+static const f32 lbl_803E5A3C = 0.5f;
+static const f32 lbl_803E5A40 = 0.0017f;
+static const f32 lbl_803E5A44 = 0.003f;
+static const f32 lbl_803E5A48 = 4.0f;
+static const f32 lbl_803E5A4C = 0.2f;
+static const f32 lbl_803E5A50 = 0.0f;
+static const f64 lbl_803E5A58 = 4503601774854144.0;
+static const f32 lbl_803E5A60 = 0.005f;
+static const f32 lbl_803E5A64 = 10000.0f;
+static const f32 lbl_803E5A68 = 20.0f;
+
+void fn_801E832C(int obj)
+{
+    if (*(u8*)(obj + 0x37) == 0xFF)
+    {
+        GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+    }
+    else
+    {
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
+    }
+    gxSetZMode_(1, GX_LEQUAL, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+}
+
+void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
+{
+    ShopItemState* state = *(ShopItemState**)&((GameObject*)obj)->extra;
+    u8 i;
+    u8 spawned = 0;
+    ShopSparkleSpawn v;
+    PushcartState97* b = (PushcartState97*)&state->flagsE8;
+    f32 scale;
+
+    if (b->flag_40)
+    {
+        objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A34, 0, 0);
+    }
+    else
+    {
+        objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, 0, 0);
+    }
+    {
+        int renderOp = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(obj), 0);
+        *(u8*)(renderOp + 0x43) = 0x7F;
+    }
+    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5A30);
+    for (i = 0; i < 10; i++)
+    {
+        if (*(void**)&state->lightningHandles[i] != NULL)
+        {
+            lightningRender(*(void**)&state->lightningHandles[i]);
+            if (getHudHiddenFrameCount() == 0)
+            {
+                state->lightningTimers[i] += timeDelta;
+                *(u16*)(state->lightningHandles[i] + 0x20) = (u16)(int)(lbl_803E5A3C + state->lightningTimers[i]);
+                if (*(u16*)(state->lightningHandles[i] + 0x20) > 0x14)
+                {
+                    mm_free_(state->lightningHandles[i]);
+                    state->lightningHandles[i] = 0;
+                }
+            }
+        }
+        else
+        {
+            if (spawned == 0 && getHudHiddenFrameCount() == 0)
+            {
+                v.owner = obj;
+                v.x = ((GameObject*)obj)->anim.localPosX;
+                v.y = ((GameObject*)obj)->anim.localPosY;
+                v.z = ((GameObject*)obj)->anim.localPosZ;
+                if ((u32)v.owner == obj)
+                {
+                    if (b->flag_40)
+                    {
+                        scale = lbl_803E5A40;
+                    }
+                    else
+                    {
+                        scale = lbl_803E5A44;
+                    }
+                    v.x = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.x;
+                    v.y = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.y;
+                    v.z = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.z;
+                }
+                state->lightningHandles[i] =
+                    lightningCreate((f32*)(obj + 0xC), &v, lbl_803E5A48, lbl_803E5A4C, 0x14, 0x40, 0);
+                state->lightningTimers[i] = lbl_803E5A50;
+                spawned = 1;
+            }
+        }
+    }
+}
+
+void fn_801E8660(int obj)
+{
+    int state = *(int*)&((GameObject*)obj)->extra;
+    int def = *(int*)&((GameObject*)obj)->anim.placementData;
+    PushcartState97* b = (PushcartState97*)(state + 0x97);
+    if (b->flag_40 == 0)
+    {
+        int* vptr = (int*)((ShopItemState*)state)->vendorObj;
+        int* cls = **(int***)((char*)vptr + 0x68);
+        if ((*(int (*)(int*, int))cls[0x2C / 4])(vptr, ((ShopItemDef*)def)->itemSlot) != 0)
+        {
+            b->flag_80 = 1;
+        }
+    }
+    hudFn_8011f38c(0);
+    {
+        int* vptr2 = (int*)((ShopItemState*)state)->vendorObj;
+        int* cls2 = **(int***)((char*)vptr2 + 0x68);
+        (*(void (*)(int*, int))cls2[0x40 / 4])(vptr2, -1);
+    }
+}
 
 int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
 {
@@ -177,20 +286,19 @@ int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
     return 0;
 }
 
-void shopitem_hitDetect(void)
-{
-}
-
-void shopitem_release(void)
-{
-}
-
-void shopitem_initialise(void)
-{
-}
-
 int shopitem_getExtraSize(void) { return sizeof(ShopItemState); }
 int shopitem_getObjectTypeId(void) { return 0x0; }
+
+void shopitem_free(int obj)
+{
+    (*gExpgfxInterface)->freeSource(obj);
+    switch (((GameObject*)obj)->anim.seqId)
+    {
+    case SHOPITEM_SEQ_SPARKLE:
+        ObjGroup_RemoveObject(obj, SHOPITEM_OBJGROUP);
+        break;
+    }
+}
 
 void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -207,83 +315,8 @@ void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void shopitem_free(int obj)
+void shopitem_hitDetect(void)
 {
-    (*gExpgfxInterface)->freeSource(obj);
-    switch (((GameObject*)obj)->anim.seqId)
-    {
-    case SHOPITEM_SEQ_SPARKLE:
-        ObjGroup_RemoveObject(obj, SHOPITEM_OBJGROUP);
-        break;
-    }
-}
-
-void fn_801E832C(int obj)
-{
-    if (*(u8*)(obj + 0x37) == 0xFF)
-    {
-        GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-    }
-    else
-    {
-        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
-    }
-    gxSetZMode_(1, GX_LEQUAL, 0);
-    gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-}
-
-void shopitem_init(int obj, int data)
-{
-    ObjAnimComponent* objAnim;
-    int state = *(int*)&((GameObject*)obj)->extra;
-
-    objAnim = (ObjAnimComponent*)obj;
-    ((GameObject*)obj)->objectFlags |= SHOPITEM_OBJFLAG_HITDETECT_DISABLED;
-    ((GameObject*)obj)->animEventCallback = fn_801E86F4;
-    objAnim->bankIndex = (s8)((ShopItemDef*)data)->bankIndex;
-    ((GameObject*)obj)->anim.rotX = (s16)(((ShopItemDef*)data)->rotXByte << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)(((ShopItemDef*)data)->rotYByte << 8);
-    if ((s32)objAnim->bankIndex >= objAnim->modelInstance->modelCount)
-    {
-        objAnim->bankIndex = 0;
-    }
-    switch (((GameObject*)obj)->anim.seqId)
-    {
-    case SHOPITEM_SEQ_BSPLINE:
-        fn_801F4C28(obj, state);
-        break;
-    case SHOPITEM_SEQ_AMBIENT:
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x3F1, NULL, 4,
-                                         -1, NULL);
-        break;
-    case SHOPITEM_SEQ_SPARKLE:
-        ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_801E832C);
-        ObjGroup_AddObject(obj, SHOPITEM_OBJGROUP);
-        break;
-    }
-}
-
-void fn_801E8660(int obj)
-{
-    int state = *(int*)&((GameObject*)obj)->extra;
-    int def = *(int*)&((GameObject*)obj)->anim.placementData;
-    PushcartState97* b = (PushcartState97*)(state + 0x97);
-    if (b->flag_40 == 0)
-    {
-        int* vptr = (int*)((ShopItemState*)state)->vendorObj;
-        int* cls = **(int***)((char*)vptr + 0x68);
-        if ((*(int (*)(int*, int))cls[0x2C / 4])(vptr, ((ShopItemDef*)def)->itemSlot) != 0)
-        {
-            b->flag_80 = 1;
-        }
-    }
-    hudFn_8011f38c(0);
-    {
-        int* vptr2 = (int*)((ShopItemState*)state)->vendorObj;
-        int* cls2 = **(int***)((char*)vptr2 + 0x68);
-        (*(void (*)(int*, int))cls2[0x40 / 4])(vptr2, -1);
-    }
 }
 
 void shopitem_update(int obj)
@@ -415,71 +448,41 @@ void shopitem_update(int obj)
     }
 }
 
-void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
+void shopitem_init(int obj, int data)
 {
-    ShopItemState* state = *(ShopItemState**)&((GameObject*)obj)->extra;
-    u8 i;
-    u8 spawned = 0;
-    ShopSparkleSpawn v;
-    PushcartState97* b = (PushcartState97*)&state->flagsE8;
-    f32 scale;
+    ObjAnimComponent* objAnim;
+    int state = *(int*)&((GameObject*)obj)->extra;
 
-    if (b->flag_40)
+    objAnim = (ObjAnimComponent*)obj;
+    ((GameObject*)obj)->objectFlags |= SHOPITEM_OBJFLAG_HITDETECT_DISABLED;
+    ((GameObject*)obj)->animEventCallback = fn_801E86F4;
+    objAnim->bankIndex = (s8)((ShopItemDef*)data)->bankIndex;
+    ((GameObject*)obj)->anim.rotX = (s16)(((ShopItemDef*)data)->rotXByte << 8);
+    ((GameObject*)obj)->anim.rotY = (s16)(((ShopItemDef*)data)->rotYByte << 8);
+    if ((s32)objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
-        objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A34, 0, 0);
+        objAnim->bankIndex = 0;
     }
-    else
+    switch (((GameObject*)obj)->anim.seqId)
     {
-        objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, 0, 0);
+    case SHOPITEM_SEQ_BSPLINE:
+        fn_801F4C28(obj, state);
+        break;
+    case SHOPITEM_SEQ_AMBIENT:
+        (*gPartfxInterface)->spawnObject((void*)obj, 0x3F1, NULL, 4,
+                                         -1, NULL);
+        break;
+    case SHOPITEM_SEQ_SPARKLE:
+        ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_801E832C);
+        ObjGroup_AddObject(obj, SHOPITEM_OBJGROUP);
+        break;
     }
-    {
-        int renderOp = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(obj), 0);
-        *(u8*)(renderOp + 0x43) = 0x7F;
-    }
-    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5A30);
-    for (i = 0; i < 10; i++)
-    {
-        if (*(void**)&state->lightningHandles[i] != NULL)
-        {
-            lightningRender(*(void**)&state->lightningHandles[i]);
-            if (getHudHiddenFrameCount() == 0)
-            {
-                state->lightningTimers[i] += timeDelta;
-                *(u16*)(state->lightningHandles[i] + 0x20) = (u16)(int)(lbl_803E5A3C + state->lightningTimers[i]);
-                if (*(u16*)(state->lightningHandles[i] + 0x20) > 0x14)
-                {
-                    mm_free_(state->lightningHandles[i]);
-                    state->lightningHandles[i] = 0;
-                }
-            }
-        }
-        else
-        {
-            if (spawned == 0 && getHudHiddenFrameCount() == 0)
-            {
-                v.owner = obj;
-                v.x = ((GameObject*)obj)->anim.localPosX;
-                v.y = ((GameObject*)obj)->anim.localPosY;
-                v.z = ((GameObject*)obj)->anim.localPosZ;
-                if ((u32)v.owner == obj)
-                {
-                    if (b->flag_40)
-                    {
-                        scale = lbl_803E5A40;
-                    }
-                    else
-                    {
-                        scale = lbl_803E5A44;
-                    }
-                    v.x = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.x;
-                    v.y = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.y;
-                    v.z = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.z;
-                }
-                state->lightningHandles[i] =
-                    lightningCreate((f32*)(obj + 0xC), &v, lbl_803E5A48, lbl_803E5A4C, 0x14, 0x40, 0);
-                state->lightningTimers[i] = lbl_803E5A50;
-                spawned = 1;
-            }
-        }
-    }
+}
+
+void shopitem_release(void)
+{
+}
+
+void shopitem_initialise(void)
+{
 }
