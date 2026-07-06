@@ -76,33 +76,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-
-void dim2conveyor_hitDetect(void)
-{
-}
-
-void dim2conveyor_release(void)
-{
-}
-
-void dim2conveyor_initialise(void)
-{
-}
-
-
-int dim2conveyor_getExtraSize(void) { return 0x14; }
-int dim2conveyor_getObjectTypeId(void) { return 0x0; }
-
-void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A58);
-}
-
-
-void dim2conveyor_free(int obj) { ObjGroup_RemoveObject(obj, OBJ_GROUP_CONVEYORS); }
-
 void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
 {
     extern void Music_Trigger(int id, int arg);
@@ -147,22 +120,21 @@ void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
     }
 }
 
-void dim2conveyor_init(int* obj, u8* params)
+int dim2conveyor_getExtraSize(void) { return 0x14; }
+
+int dim2conveyor_getObjectTypeId(void) { return 0x0; }
+
+void dim2conveyor_free(int obj) { ObjGroup_RemoveObject(obj, OBJ_GROUP_CONVEYORS); }
+
+void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    f32 scale = (f32) * (s16*)((char*)params + 0x1a) / lbl_803E4A64;
-    Dim2ConveyorState* extra;
-    *(s16*)obj = (s16)(*(s8*)((char*)params + 0x18) << 8);
-    extra = ((GameObject*)obj)->extra;
-    extra->scrollX = scale * mathSinf(lbl_803E4A68 * (f32) * (s16*)obj / lbl_803E4A6C);
-    extra->scrollY = scale * mathCosf(lbl_803E4A68 * (f32) * (s16*)obj / lbl_803E4A6C);
-    extra->swapTimer = lbl_803E4A60;
-    extra->musicHold = 0;
-    ObjGroup_AddObject((u32)obj, OBJ_GROUP_CONVEYORS);
-    ((GameObject*)obj)->objectFlags |= DIM2CONVEYOR_OBJFLAG_HITDETECT_DISABLED;
-    if (((ObjPlacement*)params)->mapId == MAP_ID_DUAL_BELT)
-    {
-        GameBit_Set(GAMEBIT_CONVEYOR_REVERSE, 1);
-    }
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A58);
+}
+
+void dim2conveyor_hitDetect(void)
+{
 }
 
 void dim2conveyor_update(int* obj)
@@ -212,4 +184,30 @@ void dim2conveyor_update(int* obj)
     case MAP_ID_SINGLE_BELT:
         break;
     }
+}
+
+void dim2conveyor_init(int* obj, u8* params)
+{
+    f32 scale = (f32) * (s16*)((char*)params + 0x1a) / lbl_803E4A64;
+    Dim2ConveyorState* extra;
+    *(s16*)obj = (s16)(*(s8*)((char*)params + 0x18) << 8);
+    extra = ((GameObject*)obj)->extra;
+    extra->scrollX = scale * mathSinf(lbl_803E4A68 * (f32) * (s16*)obj / lbl_803E4A6C);
+    extra->scrollY = scale * mathCosf(lbl_803E4A68 * (f32) * (s16*)obj / lbl_803E4A6C);
+    extra->swapTimer = lbl_803E4A60;
+    extra->musicHold = 0;
+    ObjGroup_AddObject((u32)obj, OBJ_GROUP_CONVEYORS);
+    ((GameObject*)obj)->objectFlags |= DIM2CONVEYOR_OBJFLAG_HITDETECT_DISABLED;
+    if (((ObjPlacement*)params)->mapId == MAP_ID_DUAL_BELT)
+    {
+        GameBit_Set(GAMEBIT_CONVEYOR_REVERSE, 1);
+    }
+}
+
+void dim2conveyor_release(void)
+{
+}
+
+void dim2conveyor_initialise(void)
+{
 }
