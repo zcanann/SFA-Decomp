@@ -828,30 +828,30 @@ void fn_801DFA28(u8* obj)
             ((SBGalleonState*)state)->moveScale = *(f32*)&lbl_803E57A4;
         }
         blendK = lbl_803E57B4;
-        ((SBGalleonState*)state)->unk5C += blendK * (timeDelta * (ambA - ((SBGalleonState*)state)->unk5C));
-        ((SBGalleonState*)state)->unk60 += blendK * (timeDelta * (ambC - ((SBGalleonState*)state)->unk60));
-        ((SBGalleonState*)state)->unk64 += blendK * (timeDelta * (ambB - ((SBGalleonState*)state)->unk64));
+        ((SBGalleonState*)state)->swayScaleSmooth += blendK * (timeDelta * (ambA - ((SBGalleonState*)state)->swayScaleSmooth));
+        ((SBGalleonState*)state)->rollScaleSmooth += blendK * (timeDelta * (ambC - ((SBGalleonState*)state)->rollScaleSmooth));
+        ((SBGalleonState*)state)->swayResponseSmooth += blendK * (timeDelta * (ambB - ((SBGalleonState*)state)->swayResponseSmooth));
         if (((SBGalleonState*)state)->phase == 0)
         {
-            zRatio = (f32) * (s16*)(int)(tricky + 0x2) / ((SBGalleonState*)state)->unk5C;
+            zRatio = (f32) * (s16*)(int)(tricky + 0x2) / ((SBGalleonState*)state)->swayScaleSmooth;
             ((SBGalleonState*)state)->swayZ +=
-                timeDelta * (((SBGalleonState*)state)->unk64 *
-                    ((f32) - *(s16*)(int)(tricky + 0x4) / ((SBGalleonState*)state)->unk5C - ((SBGalleonState*)state)->
+                timeDelta * (((SBGalleonState*)state)->swayResponseSmooth *
+                    ((f32) - *(s16*)(int)(tricky + 0x4) / ((SBGalleonState*)state)->swayScaleSmooth - ((SBGalleonState*)state)->
                         swayZ));
             ((SBGalleonState*)state)->swayY +=
-                timeDelta * (((SBGalleonState*)state)->unk64 * (zRatio - ((SBGalleonState*)state)->swayY));
+                timeDelta * (((SBGalleonState*)state)->swayResponseSmooth * (zRatio - ((SBGalleonState*)state)->swayY));
             zero = lbl_803E56CC;
             ((SBGalleonState*)state)->swayX = zero;
             ((SBGalleonState*)state)->swayY = zero;
-            rollA = (s16)(-((SBGalleonState*)state)->swayZ * ((SBGalleonState*)state)->unk60);
-            rollB = (s16)(lbl_803E57B8 * (-((SBGalleonState*)state)->swayY * ((SBGalleonState*)state)->unk60));
+            rollA = (s16)(-((SBGalleonState*)state)->swayZ * ((SBGalleonState*)state)->rollScaleSmooth);
+            rollB = (s16)(lbl_803E57B8 * (-((SBGalleonState*)state)->swayY * ((SBGalleonState*)state)->rollScaleSmooth));
         }
         else
         {
             ((SBGalleonState*)state)->swayZ -= timeDelta * (((SBGalleonState*)state)->swayZ * ((SBGalleonState*)state)->
-                unk64);
+                swayResponseSmooth);
             ((SBGalleonState*)state)->swayY -= timeDelta * (((SBGalleonState*)state)->swayY * ((SBGalleonState*)state)->
-                unk64);
+                swayResponseSmooth);
             rollA = 0;
             rollB = rollA;
         }

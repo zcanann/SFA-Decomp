@@ -37,9 +37,12 @@ typedef struct SBGalleonState {
     f32 homeX;       /* 0x50 */
     f32 homeY;       /* 0x54 */
     f32 homeZ;       /* 0x58 */
-    f32 unk5C;       /* 0x5c */
-    f32 unk60;       /* 0x60 */
-    f32 unk64;       /* 0x64 */
+    f32 swayScaleSmooth;     /* 0x5c: smoothed toward ambA; used as the sway
+                                denominator that scales tricky pos deltas */
+    f32 rollScaleSmooth;     /* 0x60: smoothed toward ambC; multiplies sway to
+                                produce the ship roll */
+    f32 swayResponseSmooth;  /* 0x64: smoothed toward ambB; the per-frame lerp
+                                response rate applied to swayY/swayZ */
     u16 shieldAngle; /* 0x68 */
     u8 pad6A[2];
     s16 fadeTimer;   /* 0x6c */
