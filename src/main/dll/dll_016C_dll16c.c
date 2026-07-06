@@ -64,7 +64,8 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Obj_FreeObject(int*);
-void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
+void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible,
+                                    int opacity, int reissueMove);
 extern int objUpdateOpacity(int* obj);
 extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
 extern f32 Vec_distance(f32* a, f32* b);
@@ -257,37 +258,38 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 /* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
  * extra block, optionally re-issuing a move on the sub-object first. */
-void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i)
+void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible,
+                                    int opacity, int reissueMove)
 {
-    if (i != 0 && (s8)g != 0 && h > 0)
+    if (reissueMove != 0 && (s8)visible != 0 && opacity > 0)
     {
-        u8 saved = *(u8*)((char*)b + 0x37);
-        *(u8*)((char*)b + 0x37) = h;
-        (*(void (**)(void*, int, int, int, int, int))(**(int**)&((GameObject*)b)->anim.dll + 0x10))(b, c, d, e, f, -1);
-        *(u8*)((char*)b + 0x37) = saved;
+        u8 saved = *(u8*)((char*)src + 0x37);
+        *(u8*)((char*)src + 0x37) = opacity;
+        (*(void (**)(void*, int, int, int, int, int))(**(int**)&((GameObject*)src)->anim.dll + 0x10))(src, p1, p2, p3, p4, -1);
+        *(u8*)((char*)src + 0x37) = saved;
     }
-    ((GameObject*)a)->anim.previousWorldPosX = ((GameObject*)a)->anim.worldPosX;
-    ((GameObject*)a)->anim.previousWorldPosY = ((GameObject*)a)->anim.worldPosY;
-    ((GameObject*)a)->anim.previousWorldPosZ = ((GameObject*)a)->anim.worldPosZ;
-    ((GameObject*)a)->anim.previousLocalPosX = ((GameObject*)a)->anim.localPosX;
-    ((GameObject*)a)->anim.previousLocalPosY = ((GameObject*)a)->anim.localPosY;
-    ((GameObject*)a)->anim.previousLocalPosZ = ((GameObject*)a)->anim.localPosZ;
+    ((GameObject*)dst)->anim.previousWorldPosX = ((GameObject*)dst)->anim.worldPosX;
+    ((GameObject*)dst)->anim.previousWorldPosY = ((GameObject*)dst)->anim.worldPosY;
+    ((GameObject*)dst)->anim.previousWorldPosZ = ((GameObject*)dst)->anim.worldPosZ;
+    ((GameObject*)dst)->anim.previousLocalPosX = ((GameObject*)dst)->anim.localPosX;
+    ((GameObject*)dst)->anim.previousLocalPosY = ((GameObject*)dst)->anim.localPosY;
+    ((GameObject*)dst)->anim.previousLocalPosZ = ((GameObject*)dst)->anim.localPosZ;
     {
         f32 x, y, z;
-        (*(void (**)(void*, f32*, f32*, f32*))(**(int**)&((GameObject*)b)->anim.dll + 0x28))(b, &x, &y, &z);
-        ((GameObject*)a)->anim.localPosX = x;
-        ((GameObject*)a)->anim.localPosY = y;
-        ((GameObject*)a)->anim.localPosZ = z;
+        (*(void (**)(void*, f32*, f32*, f32*))(**(int**)&((GameObject*)src)->anim.dll + 0x28))(src, &x, &y, &z);
+        ((GameObject*)dst)->anim.localPosX = x;
+        ((GameObject*)dst)->anim.localPosY = y;
+        ((GameObject*)dst)->anim.localPosZ = z;
     }
-    ((GameObject*)a)->anim.rotX = ((GameObject*)b)->anim.rotX;
-    ((GameObject*)a)->anim.rotY = ((GameObject*)b)->anim.rotY;
-    ((GameObject*)a)->anim.rotZ = ((GameObject*)b)->anim.rotZ;
-    ((GameObject*)a)->anim.worldPosX = ((GameObject*)a)->anim.localPosX;
-    ((GameObject*)a)->anim.worldPosY = ((GameObject*)a)->anim.localPosY;
-    ((GameObject*)a)->anim.worldPosZ = ((GameObject*)a)->anim.localPosZ;
-    ((GameObject*)a)->anim.velocityX = ((GameObject*)b)->anim.velocityX;
-    ((GameObject*)a)->anim.velocityY = ((GameObject*)b)->anim.velocityY;
-    ((GameObject*)a)->anim.velocityZ = ((GameObject*)b)->anim.velocityZ;
+    ((GameObject*)dst)->anim.rotX = ((GameObject*)src)->anim.rotX;
+    ((GameObject*)dst)->anim.rotY = ((GameObject*)src)->anim.rotY;
+    ((GameObject*)dst)->anim.rotZ = ((GameObject*)src)->anim.rotZ;
+    ((GameObject*)dst)->anim.worldPosX = ((GameObject*)dst)->anim.localPosX;
+    ((GameObject*)dst)->anim.worldPosY = ((GameObject*)dst)->anim.localPosY;
+    ((GameObject*)dst)->anim.worldPosZ = ((GameObject*)dst)->anim.localPosZ;
+    ((GameObject*)dst)->anim.velocityX = ((GameObject*)src)->anim.velocityX;
+    ((GameObject*)dst)->anim.velocityY = ((GameObject*)src)->anim.velocityY;
+    ((GameObject*)dst)->anim.velocityZ = ((GameObject*)src)->anim.velocityZ;
 }
 
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
