@@ -19,7 +19,7 @@ typedef struct FireFlyLanternSpawnSetup {
   f32 z;
   u8 pad14[0x18 - 0x14];
   u8 field18;
-  u8 field19;
+  u8 spawnMode;         /* 0x19: 1 = single hidden-lantern firefly; else firefly swarm */
   s16 field1A;
   s16 field1C;
   u8 pad1E[0x24 - 0x1E];
@@ -28,7 +28,7 @@ typedef struct FireFlyLanternSpawnSetup {
 STATIC_ASSERT(sizeof(FireFlyLanternSpawnSetup) == 0x24);
 STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, x) == 0x08);
 STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field18) == 0x18);
-STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field19) == 0x19);
+STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, spawnMode) == 0x19);
 STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field1A) == 0x1A);
 STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field1C) == 0x1C);
 

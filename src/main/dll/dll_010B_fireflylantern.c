@@ -33,7 +33,7 @@ int FireFlyLantern_spawnFireFly(int* obj)
     setup->x = ((GameObject*)obj)->anim.localPosX;
     setup->y = lbl_803E3AE8 + ((GameObject*)obj)->anim.localPosY;
     setup->z = ((GameObject*)obj)->anim.localPosZ;
-    setup->field19 = 4;
+    setup->spawnMode = 4;
     setup->field1A = 0x514;
     setup->field1C = 40;
     setup->field18 = 30;
@@ -112,7 +112,7 @@ void FireFlyLantern_update(int obj)
     def = *(FireFlyLanternSpawnSetup**)&((GameObject*)obj)->anim.placementData;
     shouldFree = 0;
 
-    if ((s8)def->field19 == 1)
+    if ((s8)def->spawnMode == 1)
     {
         if (state->fireflyCount != 0)
         {
@@ -167,7 +167,7 @@ void FireFlyLantern_init(int obj, int def)
     state->fireflyCount = 0;
     state->remainingCount = GameBit_Get(state->gameBit);
 
-    if ((s8)((FireFlyLanternSpawnSetup*)def)->field19 == 1)
+    if ((s8)((FireFlyLanternSpawnSetup*)def)->spawnMode == 1)
     {
         if (state->remainingCount != 0)
         {
