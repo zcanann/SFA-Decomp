@@ -167,16 +167,16 @@ int fn_8015DC04(int obj, GroundBaddieState* p)
     int maxr;
     int four;
     int* objs;
-    int r;
+    int result;
     int rnd;
 
     sub = ((GameObject*)obj)->extra;
     if (*(char*)&p->baddie.moveDone != '\0' || *(char*)&p->baddie.moveJustStartedB != '\0')
     {
         hit = *(u8**)&sub->control;
-        r = (*(int (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x44))(
+        result = (*(int (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x44))(
             obj, (u8*)p, (f32)(u32)sub->aggroRange, 1);
-        if (r != 0)
+        if (result != 0)
         {
             hit[9] &= ~2;
             return 5;
@@ -625,8 +625,8 @@ void fn_8015ED1C(int obj, int state, int target)
     extern u8 lbl_8031FF20[];
     extern u8 lbl_803AC580[];
     void* player;
-    char* t;
-    int r;
+    char* targetObj;
+    int result;
     struct
     {
         f32 x, y, z;
@@ -634,12 +634,12 @@ void fn_8015ED1C(int obj, int state, int target)
     f32* dp = &d.x;
 
     player = Obj_GetPlayerObject();
-    t = *(char**)&((GroundBaddieState*)target)->baddie.targetObj;
-    if (t != NULL)
+    targetObj = *(char**)&((GroundBaddieState*)target)->baddie.targetObj;
+    if (targetObj != NULL)
     {
-        d.x = ((GameObject*)t)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        d.y = ((GameObject*)t)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        d.z = ((GameObject*)t)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        d.x = ((GameObject*)targetObj)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        d.y = ((GameObject*)targetObj)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        d.z = ((GameObject*)targetObj)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         ((GroundBaddieState*)target)->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
 
@@ -652,11 +652,11 @@ void fn_8015ED1C(int obj, int state, int target)
     (**(void (**)(int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x54))(
         obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8);
 
-    r = (int)
+    result = (int)
     (**(int (**)(int, int, int, int, u8*, u8*, int, u8*))((char*)(*gBaddieControlInterface) + 0x50))(
         obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, lbl_8031FEA8, lbl_8031FF20, 1, lbl_803AC580);
 
-    if (r != 0)
+    if (result != 0)
     {
         void* pc8 = ((GameObject*)player)->childObjs[0];
         (*(void (**)(void*))(**(int**)&((GameObject*)pc8)->anim.dll + 0x50))(pc8);
@@ -758,7 +758,7 @@ void dll_CE_update(int obj, int p2, int p3)
     GroundBaddieState* sub;
     int setup;
     u8* hit;
-    int n;
+    int spawnCount;
     f32 sunTime;
 
     sub = ((GameObject*)obj)->extra;
@@ -818,13 +818,13 @@ void dll_CE_update(int obj, int p2, int p3)
                 }
                 if ((hit[8] & 4) != 0)
                 {
-                    n = 0;
+                    spawnCount = 0;
                     do
                     {
                         (*gPartfxInterface)->spawnObject((void*)obj, 0x343, NULL, 1, -1, NULL);
-                        n++;
+                        spawnCount++;
                     }
-                    while (n < 10);
+                    while (spawnCount < 10);
                 }
                 hit[8] = 0;
                 (*(void (**)(int, int, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(
