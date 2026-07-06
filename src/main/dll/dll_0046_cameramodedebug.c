@@ -37,6 +37,16 @@ extern f32 gCamDebugPi;
 extern f32 gCamDebugAngleUnitScale;
 extern f32 gCamDebugOrbitRadiusInit;
 
+void CameraModeDebug_copyToCurrent_nop(void)
+{
+}
+
+void CameraModeDebug_free(void)
+{
+    mm_free(gCamDebugState);
+    gCamDebugState = 0;
+}
+
 #pragma opt_common_subs off
 #pragma opt_propagation off
 void CameraModeDebug_update(CameraObject* cam)
@@ -125,22 +135,11 @@ void CameraModeDebug_init(void)
     return;
 }
 
-void CameraModeDebug_copyToCurrent_nop(void)
-{
-}
-
 void CameraModeDebug_release_nop(void)
 {
 }
 
 void CameraModeDebug_initialise_nop(void)
 {
-}
-
-
-void CameraModeDebug_free(void)
-{
-    mm_free(gCamDebugState);
-    gCamDebugState = 0;
 }
 
