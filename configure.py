@@ -1619,7 +1619,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/ARW/dll_02A7_arwproximit.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/ARW/dll_02A8_arwblocker.c"),
             Object(MatchingFor("GSAE01"), "main/dll/LGT/dll_02A9_lgtpointlight.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/LGT/dll_02AA_lgtdirectionallight.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/LGT/dll_02AA_lgtdirectionallight.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/LGT/dll_02AB_lgtprojectedlight.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/LGT/dll_02AC_lgtcontrollight.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02AD_softbody.c", cflags=cflags_dll_noopt),
