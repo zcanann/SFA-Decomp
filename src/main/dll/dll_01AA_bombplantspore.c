@@ -42,7 +42,6 @@ extern const f32 lbl_803E53AC;
 extern f32 lbl_803E53B0;
 extern const f32 lbl_803E53B4;
 
-extern void Sfx_PlayFromObject(void* obj, int id);
 extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
 extern void Obj_FreeObject(u8* obj);
 extern void objMove(void* obj, f32 x, f32 y, f32 z);
