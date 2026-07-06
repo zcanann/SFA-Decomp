@@ -94,7 +94,7 @@ extern void *gKTRexState;
 extern void *gKTRexRuntime;
 extern void ktrex_initialiseStateHandlerTables(void);
 extern int ktrex_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
-extern void objRenderFn_8003b8f4(void *obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
+extern void objRenderModelAndHitVolumes(void *obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void *Obj_GetPlayerObject(void);
 extern void ModelLightStruct_free(void *p);

@@ -6252,7 +6252,7 @@ void cardShowLoadingMsg(u8 kind)
     extern f32 lbl_803DEF98;
     extern f32 lbl_803DEF9C;
 
-    extern void objRenderFn_8003b8f4(int, int, int, int, int, f32);
+    extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
     extern void curUiDllDraw(int, int, int, int);
     extern int lbl_803DB708;
     extern int getLastRenderedFrame(void);
@@ -6283,7 +6283,7 @@ void cardShowLoadingMsg(u8 kind)
             rectAlpha = lbl_803DEF98;
             drawRect(rectAlpha, rectAlpha, 0x280, 0x1E0);
             for (j = 0; j < count; j++) {
-                objRenderFn_8003b8f4(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
+                objRenderModelAndHitVolumes(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
             }
             curUiDllDraw(0, 0, 0, 0);
         } else {

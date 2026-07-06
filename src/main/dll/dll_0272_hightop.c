@@ -425,7 +425,7 @@ void hightop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
         int count;
         int** list;
         int i;
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6AB8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6AB8);
         ObjPath_GetPointWorldPosition((int)obj, 2, &runtime->pathPoint2X, &runtime->pathPoint2Y, &runtime->pathPoint2Z,
                                       0);
         ObjPath_GetPointWorldPositionArray((int)obj, 3, 4, runtime->pathPointWorldPositions);

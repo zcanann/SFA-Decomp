@@ -48,7 +48,7 @@ extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern int gSpiritDoorLockOrbitOffsetBase[4];
@@ -84,7 +84,7 @@ int SpiritDoorLock_getObjectTypeId(void) { return 0x0; }
 void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, gSpiritDoorLockDefaultScale);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, gSpiritDoorLockDefaultScale);
 }
 
 void SpiritDoorLock_free(int obj)

@@ -76,7 +76,7 @@ void ShipBattle_free(int* obj)
 
 void ShipBattle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E595C);
+    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E595C);
     if (((GameObject*)obj)->anim.seqId == SHIPBATTLE_FIRE_SEQ_ID)
     {
         objfx_spawnFlaggedTrailBurst(obj, 0.11f, 4, 389, 5, NULL);

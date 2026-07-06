@@ -45,7 +45,7 @@ void arwbombcoll_hitDetect(void)
 
 void arwbombcoll_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7078);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7078);
 }
 
 void arwbombcoll_init(int obj, int setup)

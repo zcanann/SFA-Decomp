@@ -3,7 +3,7 @@
  *  - init reads its placement bytes for sway magnitude, model bank and
  *    initial yaw, then scales rootMotion (and the shadow model) by a
  *    sway factor derived from the placement byte.
- *  - render forwards a fixed scale to objRenderFn_8003b8f4.
+ *  - render forwards a fixed scale to objRenderModelAndHitVolumes.
  *  - update runs a hit-react cooldown: while the object has a hit-react
  *    state, a 100-frame timer (obj+0xF8) counts down by framesThisStep
  *    and is re-armed whenever the hit-react flags carry bit 8.
@@ -36,7 +36,7 @@ void dll_127_free_nop(void)
 void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
-    if (isVisible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_127_hitDetect_nop(void)

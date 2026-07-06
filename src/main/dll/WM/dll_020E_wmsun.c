@@ -317,7 +317,7 @@ void wmsun_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     if (vis != 0 && state->renderEnabled != 0)
     {
         doNothing_8005D148(p2, 0x10000);
-        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5F24); /* 1.0f */
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5F24); /* 1.0f */
         doNothing_8005D14C(p2, 0x10000);
     }
 }

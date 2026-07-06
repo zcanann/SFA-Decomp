@@ -70,7 +70,7 @@ STATIC_ASSERT(offsetof(ScMusictreeSetup, unk18) == 0x18);
 STATIC_ASSERT(offsetof(ScMusictreeSetup, unk1C) == 0x1C);
 STATIC_ASSERT(offsetof(ScMusictreeSetup, unk26) == 0x26);
 
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void fn_8003B608(int a, int b, int c);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -153,7 +153,7 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (visible == 0) return;
     fn_8003B608((int)((ScMusictreePlacement*)def)->colorR, (int)((ScMusictreePlacement*)def)->colorG,
                 (int)((ScMusictreePlacement*)def)->colorB);
-    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E558C);
+    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E558C);
     if ((state->flags & SCMUSICTREE_FLAG_SATELLITES) != 0)
     {
         for (i = 0; i < 3; i++)

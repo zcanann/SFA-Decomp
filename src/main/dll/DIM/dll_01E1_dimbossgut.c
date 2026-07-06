@@ -7,7 +7,7 @@
 #include "main/dll/DIM/dll_01E1_dimbossgut.h"
 #include "main/game_object.h"
 extern void objSetSlot(u8* obj, s8 slot);
-extern void objRenderFn_8003b8f4(int obj, u32 p2, u32 p3,
+extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3,
                                  u32 p4, u32 p5, double scale);
 
 extern f32 timeDelta;
@@ -38,7 +38,7 @@ void DIMbossgut_render(int obj, u32 p2, u32 p3, u32 p4,
     if (visible != 0)
     {
         ObjAnim_AdvanceCurrentMove(lbl_803E4C80, timeDelta, obj, NULL);
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4C84);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E4C84);
     }
 }
 

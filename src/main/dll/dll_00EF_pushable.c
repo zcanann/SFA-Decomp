@@ -38,7 +38,7 @@ extern u32 ObjGroup_AddObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int gPushableSavedMapIdCount;
 extern int gPushableSavedMapIds[];
-extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
+extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 scale);
 extern int playerIsDisguised(void* player);
 extern int fn_80295A04(void* player, int a);
 extern void pushable_savePos(int* obj);
@@ -1414,6 +1414,6 @@ void pushable_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             char* hdr = (char*)Transporter_GetActiveModel(obj);
             *(u16*)(*(char**)hdr + 2) = *(u16*)(*(char**)hdr + 2) | 2;
         }
-        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E3588);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E3588);
     }
 }

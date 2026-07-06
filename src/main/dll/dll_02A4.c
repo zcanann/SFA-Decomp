@@ -74,7 +74,7 @@ void dll_2A4_initialise_nop(void)
 
 void dll_2A4_render(int obj, int p2, int p3, int p4, int p5)
 {
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7138);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7138);
 }
 
 void dll_2A4_update(int obj)

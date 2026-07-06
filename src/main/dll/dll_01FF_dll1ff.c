@@ -80,7 +80,7 @@ void dll_1FF_init(s16* a, s8* b)
    shadow fade-out on whether a trigger sequence is active. */
 void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
+    extern void objRenderModelAndHitVolumes(void* obj, int p1, int p2, int p3, int p4, f32 scale);
     s32 v;
     if (((GameObject*)obj)->unkF8 != 0)
     {
@@ -103,7 +103,7 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
     }
-    objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5D80);
+    objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E5D80);
 }
 
 void dll_1FF_update(int obj)

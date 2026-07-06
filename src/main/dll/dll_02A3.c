@@ -44,7 +44,7 @@ void dll_2A3_free(void) { lbl_803DDD90 = lbl_803DDD90 - 1; }
 
 void dll_2A3_render(int obj, int p2, int p3, int p4, int p5)
 {
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7118);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7118);
 }
 
 void dll_2A3_hitDetect(void) { lbl_803DDD94 = 0; }

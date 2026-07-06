@@ -19,7 +19,7 @@ typedef struct
 } GreatFoxFxEntry;
 
 extern void ModelLightStruct_free(int model);
-extern void objRenderFn_8003b8f4(f32 e);
+extern void objRenderModelAndHitVolumes(f32 e);
 extern f32 lbl_803E6678;
 extern int randomGetRange(int lo, int hi);
 extern void Camera_ApplyCurrentViewport(int cam);
@@ -668,7 +668,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
     if (modelId == 0x5f5)
     {
-        objRenderFn_8003b8f4(lbl_803E6678);
+        objRenderModelAndHitVolumes(lbl_803E6678);
         return;
     }
     if (visible == 0)
@@ -682,14 +682,14 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     case 0x5de:
         if (state->effectState == 0)
         {
-            objRenderFn_8003b8f4(lbl_803E6678);
+            objRenderModelAndHitVolumes(lbl_803E6678);
         }
         break;
     case 0x5e3:
         if (randomGetRange(0, 0x19) != 0 && state->effectState != 0)
         {
             GXSetScissor(0x1e0, 0x32, 0x82, 0x96);
-            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);
+            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E6678);
             Camera_ApplyCurrentViewport(p2);
         }
         break;
@@ -703,7 +703,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
             }
             else
             {
-                ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);
+                ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E6678);
             }
         }
         else
@@ -716,12 +716,12 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         {
             queueGlowRender(state->light);
         }
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E6678);
         break;
     case 0x5da:
     case 0x5db:
     default:
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E6678);
         break;
     }
 }

@@ -6,7 +6,7 @@
  * Its SeqFn just clears the per-frame sequenceEventActive flag and its
  * init zeroes anim.rotX (obj+0x00) and installs the SeqFn as the anim
  * event callback. render forwards a fixed scale (lbl_803E56C0) to the
- * shared objRenderFn_8003b8f4 when visible.
+ * shared objRenderModelAndHitVolumes when visible.
  *
  * The trailing gFElevControlObjDescriptor (the sibling FElevControl
  * elevator-control object, owned by DLL 0x142) is emitted here too.
@@ -54,7 +54,7 @@ void dll_144_free(void)
 void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E56C0);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E56C0);
 }
 
 void dll_144_hitDetect(void)

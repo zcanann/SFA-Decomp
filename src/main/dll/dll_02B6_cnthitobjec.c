@@ -44,7 +44,7 @@ void cnthitobjec_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     CntHitObjectSetup* setup = (CntHitObjectSetup*)((GameObject*)obj)->anim.placementData;
     if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT && state->flags.disabled == 0)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7430);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7430);
     }
 }
 

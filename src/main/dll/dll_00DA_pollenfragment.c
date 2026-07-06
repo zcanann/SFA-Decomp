@@ -56,7 +56,7 @@ typedef struct PollenFragmentExtra
 
 extern f32 lbl_803E3198;
 extern f32 lbl_803E319C;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int fn_80080150(int p);
 extern f32 lbl_803E3158;
 extern f32 timeDelta;
@@ -274,7 +274,7 @@ void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5)
 {
     int* state = ((GameObject*)obj)->extra;
     if (fn_80080150((int)((char*)state + 0x20)) != 0) return;
-    ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3158);
+    ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3158);
 }
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {

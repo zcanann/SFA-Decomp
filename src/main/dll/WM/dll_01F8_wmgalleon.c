@@ -163,7 +163,7 @@ void WM_Galleon_free(int* obj, int leavingMap)
 
 void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(void* obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
+    extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
     if (GameBit_Get(0x78) != 0)
     {
         return;
@@ -177,7 +177,7 @@ void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
         return;
     }
 
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E5CE8);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5CE8);
 
     if (lbl_803DDC70 != 0)
     {

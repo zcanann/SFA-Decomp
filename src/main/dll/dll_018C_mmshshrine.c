@@ -37,7 +37,7 @@ extern int objGetAnimStateFlags(int obj, int flag);
 
 extern void fn_801C4664(int obj);
 extern int randomGetRange(int lo, int hi);
-extern void objRenderFn_8003b8f4(int p1, u32 p2, u32 p3, u32 p4, u32 p5, f32 f);
+extern void objRenderModelAndHitVolumes(int p1, u32 p2, u32 p3, u32 p4, u32 p5, f32 f);
 extern f32 timeDelta;
 extern f32 lbl_803E4F40;
 extern f32 lbl_803E4F50;
@@ -271,7 +271,7 @@ void mmsh_shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5,
         {
             modelLightStruct_setEnabled((int)runtime->light, 1, lbl_803E4F50);
         }
-        objRenderFn_8003b8f4(obj, a2, a3, a4, a5, lbl_803E4F50);
+        objRenderModelAndHitVolumes(obj, a2, a3, a4, a5, lbl_803E4F50);
         objParticleFn_80099d84(obj, lbl_803E4F50, 7, *(f32*)&lbl_803E4F50, (int)runtime->light);
     }
 }

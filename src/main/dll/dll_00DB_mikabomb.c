@@ -35,7 +35,7 @@ extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();
 extern ModgfxInterface** gModgfxInterface;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E31C0;
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
@@ -91,7 +91,7 @@ int mikabomb_getObjectTypeId(void) { return 0x0; }
 void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E31C0);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E31C0);
 }
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {

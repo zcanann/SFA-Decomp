@@ -20,7 +20,7 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
 extern int ObjPath_GetPointWorldPosition();
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 GameBit_Get(int eventId);
 
 extern void playerAddRemoveMagic(void* player, int n);
@@ -66,15 +66,15 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
-            ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
+            ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5, lbl_803E4288);
         }
     }
     else if (GameBit_Get(0x4d) != 0 && visible != 0)
     {
-        ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
+        ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4288);
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
-            ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
+            ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5, lbl_803E4288);
         }
     }
     else if (sub != NULL && *(void**)&sub->target != NULL)
@@ -85,12 +85,12 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 if (objUpdateOpacity(sub->target) != 0)
                 {
-                    ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(
+                    ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(
                         sub->target, p2, p3, p4, p5, lbl_803E4288);
                     ObjPath_GetPointWorldPosition(sub->target, 0, (char*)obj + 0xc, (char*)obj + 0x10,
                                                   (char*)obj + 0x14, 0);
                 }
-                ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
+                ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4288);
             }
         }
         else
@@ -98,11 +98,11 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             if (objUpdateOpacity(sub->target) != 0)
             {
                 ((void(*)(int, int, int, int, int, f32))
-                    objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
+                    objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5, lbl_803E4288);
             }
             if (visible != 0)
             {
-                ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
+                ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4288);
             }
         }
     }

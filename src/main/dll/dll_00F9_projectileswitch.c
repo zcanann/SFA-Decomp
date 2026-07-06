@@ -119,7 +119,7 @@ void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
             fn_8003B608(((ProjectileSwitchPlacement*)state)->colorR, ((ProjectileSwitchPlacement*)state)->colorG,
                         ((ProjectileSwitchPlacement*)state)->colorB);
         }
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3700);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3700);
     }
 }
 

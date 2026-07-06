@@ -71,7 +71,7 @@ void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     {
         if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
         {
-            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, 1.0f);
+            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, 1.0f);
         }
     }
 }

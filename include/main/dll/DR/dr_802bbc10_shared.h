@@ -60,7 +60,7 @@ extern u32 ObjPath_GetPointModelMtx();
 extern u32 ObjPath_GetPointWorldPosition();
 extern u32 objAnimFn_80038f38();
 extern u32 dll_2E_func03();
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
 extern void fn_8003B950(int mtx);

@@ -63,7 +63,7 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E39A8;
 extern const f32 lbl_803E39AC;
 extern f32 lbl_803E39B8;
@@ -450,7 +450,7 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
             ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
             return;
         }
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E39AC);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E39AC);
     }
 }
 

@@ -21,7 +21,7 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 #define EXPLODED_PHASE_IDLE 0   /* settled; no physics */
 #define EXPLODED_PHASE_ACTIVE 1 /* debris physics stepping until settled */
 #define EXPLODED_PHASE_EXPIRED 2 /* lifetime elapsed; faded out */
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E43F4;
 extern f32 lbl_803E4428;
 extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
@@ -55,7 +55,7 @@ u8 exploded_setScale(int* obj) { return ((ExplodedObjectState*)(int*)((GameObjec
 void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E43F4);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E43F4);
 }
 
 u32 exploded_getObjectTypeId(ExplodedObject* obj) { return (obj->mapData->objectTypeTag << 11) | 0x400; }

@@ -26,7 +26,7 @@
 #define DFSHRINE_MODE_AFTER_FINISH  6 /* one frame after the finish transition */
 #define DFSHRINE_MODE_FINISH        7 /* start the finishing screen transition */
 
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
 extern int mapGetDirIdx(int idx);
@@ -292,7 +292,7 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             modelLightStruct_setEnabled((int)light, 1, lbl_803E4E88);
         }
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4E88);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4E88);
         objParticleFn_80099d84((int*)obj, lbl_803E4E88, 7, *(f32*)&lbl_803E4E88, (int)state->light);
     }
 }

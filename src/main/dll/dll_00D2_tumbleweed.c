@@ -247,8 +247,8 @@ void tumbleweed_free(int* obj)
 
 void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
-    if ((s32)visible >= 1) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E2F80);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
+    if ((s32)visible >= 1) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2F80);
 }
 
 void tumbleweed_update(int obj)

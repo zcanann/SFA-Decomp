@@ -51,7 +51,7 @@ typedef struct GunpowderbarrelPlacement
 
 extern u32* gCarryableInterface;
 extern f32 lbl_803E42DC;
-extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 e);
+extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 e);
 extern int barrelgener_getLinkId();
 extern void saveGame_saveObjectPos(int* obj);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
@@ -190,7 +190,7 @@ void gunpowderbarrel_render(int* obj, int p2, int p3, int p4, int p5,
     result = (*(int (**)(int*, int))(*(int*)gCarryableInterface + 0xc))(obj, visFlag);
     if (result != 0 || visFlag == -1)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E42DC);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E42DC);
     }
     child = *(int**)&((GunpowderBarrelState*)sub)->linkedTimerObject;
     if (child != 0)

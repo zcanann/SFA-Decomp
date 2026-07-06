@@ -15,7 +15,7 @@
  *   mode 3  fall by timeDelta to posY-1228.0f, then hold (mode 2).
  *   mode 4  rise by timeDelta to posY+60.0f, then hold (mode 2).
  *
- * Render (dll_22C_render) draws via objRenderFn_8003b8f4; hitDetect,
+ * Render (dll_22C_render) draws via objRenderModelAndHitVolumes; hitDetect,
  * release, initialise and the SeqFn are stubs. fn_80204B6C frees the
  * object's expgfx source. The remaining handlers are descriptor
  * callbacks (getExtraSize=0x10, getObjectTypeId=0).
@@ -109,7 +109,7 @@ void fn_80204B6C(int p1)
 
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+    if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_22C_hitDetect_nop(void)

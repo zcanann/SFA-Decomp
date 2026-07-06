@@ -72,7 +72,7 @@ void lightsource_free(int obj)
 
 void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 alpha);
+    extern void objRenderModelAndHitVolumes(void* obj, int p1, int p2, int p3, int p4, f32 alpha);
     void* light = (*(LightSourceState**)&((GameObject*)obj)->extra)->light;
     if (light != NULL && ((LightGlow*)light)->glowType != 0 && ((LightGlow*)light)->enabled != 0)
     {
@@ -80,7 +80,7 @@ void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible)
     }
     if (visible != 0)
     {
-        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, 1.0f);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
     }
 }
 

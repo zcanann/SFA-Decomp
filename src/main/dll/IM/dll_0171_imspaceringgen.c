@@ -16,7 +16,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 extern int randomGetRange(int lo, int hi);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
@@ -68,7 +68,7 @@ void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     u8* state = ((GameObject*)obj)->extra;
     if (visible != 0 && (state[8] != 0 || ((GameObject*)obj)->anim.alpha != 0))
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E47C0);
+        ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E47C0);
     }
 }
 

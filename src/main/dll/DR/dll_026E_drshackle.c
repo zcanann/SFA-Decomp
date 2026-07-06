@@ -132,7 +132,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     }
     ObjPath_GetPointWorldPosition(a, b, (f32*)((char*)obj + 0xc), (f32*)((char*)obj + 0x10),
                                   (f32*)((char*)obj + 0x14), 0);
-    objRenderFn_8003b8f4((void*)obj, c, d, e, f, (double)lbl_803E6A2C);
+    objRenderModelAndHitVolumes((void*)obj, c, d, e, f, (double)lbl_803E6A2C);
 
     for (i = 0, a = (int)p; i < ((DrshackleState*)p)->slotCount; i++)
     {
@@ -209,7 +209,7 @@ void drshackle_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     int i;
     if (((BitFlags8*)(state + 0x1a))->b0 == 0 && visible != 0)
     {
-        objRenderFn_8003b8f4((void*)obj, p2, p3, p4, p5, (double)lbl_803E6A2C);
+        objRenderModelAndHitVolumes((void*)obj, p2, p3, p4, p5, (double)lbl_803E6A2C);
         for (i = 0; i < ((DrshackleState*)state)->slotCount; i++)
         {
             int* entry = ((int**)state)[i];

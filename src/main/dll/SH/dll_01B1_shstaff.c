@@ -139,7 +139,7 @@ extern f32 gShStaffHazeScale;
 
 void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
+    extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
     ShStaffState* state;
     int player;
     int i;
@@ -188,7 +188,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
         else
         {
-            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E54D0);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E54D0);
         }
         ObjPath_GetPointWorldPosition(obj, 0, &x0, &y0, &z0, 0);
         ObjPath_GetPointWorldPosition(obj, 1, &x1, &y1, &z1, 0);

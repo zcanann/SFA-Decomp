@@ -81,7 +81,7 @@ extern f32 lbl_803E66EC;
 extern int gSnowClawDropBombAngle;
 extern void storeZeroToFloatParam(void* p);
 extern void objSeqInitFn_80080078(void* table, int n);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int randomGetRange(int lo, int hi);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
@@ -428,7 +428,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis)
                 ObjLink_AttachChild(obj, near, 0);
             }
         }
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E670C);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E670C);
         ObjPath_GetPointWorldPosition(obj, 1, &((SnowclawState*)inner)->posX, &((SnowclawState*)inner)->posY,
                                       &((SnowclawState*)inner)->posZ, 0);
         *(u8*)((char*)obj + 0x37) = oldFlag;

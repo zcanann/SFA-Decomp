@@ -1,7 +1,7 @@
 /* DLL 0x194 — GP/SH scene controller [801C70F0-801C7724) */
 #include "main/screen_transition.h"
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
+/* render-with-objRenderModelAndHitVolumes pattern. */
 
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
@@ -34,7 +34,7 @@ int gpsh_scene_getObjectTypeId(void) { return 0x0; }
 void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5058);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5058);
 }
 
 

@@ -59,7 +59,7 @@ typedef struct DoorState
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 
 extern f32 lbl_803E3780;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 gDoorRootMotionScaleFactor;
 extern f32 lbl_803E3788;
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
@@ -67,7 +67,7 @@ extern int Sfx_StopFromObject(int obj, int sfxId);
 
 int Door_getExtraSize(void) { return 0x8; }
 
-void Door_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3780); }
+void Door_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3780); }
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 

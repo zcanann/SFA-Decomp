@@ -18,7 +18,7 @@ extern void* gVfpLavaPoolEffectResource;
 extern void objRenderFn_80041018(int* obj);
 extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern f32 lbl_803E6168;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 gVfpLavaPoolWaveSin;
 extern f32 lbl_803E6158;
 extern f32 lbl_803E6160;
@@ -194,7 +194,7 @@ void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     if (visible != 0)
     {
         fn_8003B608(0xff, 0xe6, 0xd7);
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E6168);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E6168);
     }
 }
 

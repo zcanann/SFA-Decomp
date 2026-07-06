@@ -7,7 +7,7 @@
 #include "main/engine_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 extern void modelLightStruct_freeSlot(void* handle);
-extern void objRenderFn_8003b8f4(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4,
+extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4,
                                  u32 fwdArg5, double scale);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void* effect);
@@ -91,7 +91,7 @@ void proximitymine_render(ProximityMineObject* obj, u32 p2, u32 p3,
     {
         queueGlowRender(effect);
     }
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6778);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6778);
     return;
 }
 

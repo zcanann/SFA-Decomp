@@ -146,7 +146,7 @@ void arwarwing_render(int obj, int p2, int p3, int p4, int p5)
         ((GameObject*)obj)->anim.rotY = (s16)(((GameObject*)obj)->anim.rotY + dx);
         ((GameObject*)obj)->anim.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + dy);
     }
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6ED0);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6ED0);
     if (state->hitShake != 0)
     {
         ((GameObject*)obj)->anim.rotY = (s16)(((GameObject*)obj)->anim.rotY - dx);

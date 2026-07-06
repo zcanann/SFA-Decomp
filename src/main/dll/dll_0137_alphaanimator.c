@@ -14,7 +14,7 @@
  *       transition (when modeFlags>>2 set) and sets/clears the completion bit
  *   3 - timeDelta-based float fade (fadeA/fadeB), sets completion bit at fadeMax
  * doneCount counts finished ramps and freezes the object once it exceeds 2.
- * alphaanimator_render draws via objRenderFn_8003b8f4; alphaanimator_free
+ * alphaanimator_render draws via objRenderModelAndHitVolumes; alphaanimator_free
  * releases the mode-3 buffer.
  */
 #include "main/game_object.h"
@@ -27,7 +27,7 @@
 #include "main/mm.h"
 #include "main/sfa_shared_decls.h"
 extern void* mapGetBlock(int i);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Sfx_PlayFromObject(int* obj, int id);
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -75,7 +75,7 @@ void alphaanimator_free(int* obj)
 #pragma peephole off
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+    if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void alphaanimator_hitDetect(void)

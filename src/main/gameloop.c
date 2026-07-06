@@ -1033,7 +1033,7 @@ void gameLoop(void)
                 p = (int*)&gGameLoopButtonObjects;
                 for (; i < gGameLoopButtonObjectCount; i++)
                 {
-                    objRenderFn_8003b8f4(*p, 0, 0, 0, 0, lbl_803DE7A8);
+                    objRenderModelAndHitVolumes(*p, 0, 0, 0, 0, lbl_803DE7A8);
                     if (((GameObject*)*p)->anim.seqId == 0x882 ||
                         ((GameObject*)*p)->anim.seqId == 0x887)
                     {

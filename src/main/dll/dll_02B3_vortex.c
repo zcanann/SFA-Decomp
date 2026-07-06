@@ -107,7 +107,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             *(u8*)(obj + 0x37) =
                 state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
-            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E73E0);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
         }
         ((GameObject*)obj)->anim.rootMotionScale = objScale;
         ((GameObject*)obj)->anim.alpha = objAlpha;
@@ -145,7 +145,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 ((GameObject*)obj)->anim.localPosY = objZ - r * state->alpha;
             }
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
-            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E73E0);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
         }
         ((GameObject*)obj)->anim.rootMotionScale = objScale;
         ((GameObject*)obj)->anim.alpha = objAlpha;
@@ -189,7 +189,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 ((GameObject*)obj)->anim.localPosY = r * state->alpha + objZ;
             }
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
-            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E73E0);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
         }
         ((GameObject*)obj)->anim.rootMotionScale = objScale;
         ((GameObject*)obj)->anim.alpha = objAlpha;

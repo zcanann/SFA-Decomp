@@ -62,7 +62,7 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Obj_FreeObject(int*);
 void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 extern int objUpdateOpacity(int* obj);
@@ -152,14 +152,14 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             {
                 *(u8*)((char*)obj + 0x37) = extra->opacity;
             }
-            ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4758);
+            ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E4758);
             ObjPath_GetPointWorldPosition(obj, 1, &extra->pathPointX, &extra->pathPointY, &extra->pathPointZ, 0);
             *(u8*)((char*)obj + 0x37) = saved;
         }
     }
     else
     {
-        ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4758);
+        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E4758);
     }
 }
 

@@ -108,7 +108,7 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         }
         ((void (*)(int, int, int, f32, int))Obj_UpdateLightningCluster)(p1, inner + 0x14, 3, v, inner + 0x64);
     }
-    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E6594);
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6594);
 }
 
 void drakord_thornbush_update(int obj)

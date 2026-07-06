@@ -54,7 +54,7 @@ extern int unlockLevel(s32 val, int idx, int flag);
 extern int mapGetDirIdx(int idx);
 extern int lockLevel(s32 val, int idx);
 extern void modelLightStruct_setEnabled(int light, int enabled, double scale);
-extern void objRenderFn_8003b8f4(int obj, u32 p2, u32 p3, u32 p4, u32 p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern void fn_80296518(int obj, int flag, int set);
 extern void* objCreateLight(int arg, u8 addToList);
@@ -169,7 +169,7 @@ void dbsh_shrine_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
         {
             modelLightStruct_setEnabled((int)runtime->light, 1, (double)lbl_803E50D8);
         }
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E50D8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E50D8);
         objParticleFn_80099d84(obj, lbl_803E50D8, 7, *(f32*)&lbl_803E50D8, (int)runtime->light);
     }
 }

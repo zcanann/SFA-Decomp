@@ -56,7 +56,7 @@ extern void Obj_StartModelFadeIn(FirePipeObject* obj, int timer);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject();
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, double scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, double scale);
 extern void queueGlowRender(void);
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);
@@ -478,7 +478,7 @@ void firepipe_render(FirePipeObject* obj, int p1, int p2, int p3, int p4, char v
     }
     if (visible != 0 && (u32)((extra->flags >> 1) & 1) != 0)
     {
-        objRenderFn_8003b8f4((int)obj, p1, p2, p3, p4, (double)lbl_803E6B78);
+        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, (double)lbl_803E6B78);
     }
 }
 

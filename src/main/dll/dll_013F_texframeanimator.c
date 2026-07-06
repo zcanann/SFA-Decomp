@@ -146,7 +146,7 @@ int texframeanimator_getObjectTypeId(void) { return 0x0; }
 void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4060);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4060);
 }
 
 

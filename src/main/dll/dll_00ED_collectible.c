@@ -1073,7 +1073,7 @@ void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
         {
             fn_8003B608(((CollectibleState*)state)->colorR, ((CollectibleState*)state)->colorG, ((CollectibleState*)state)->colorB);
         }
-        objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3454);
+        objRenderModelAndHitVolumes(obj, a, b, c, d, lbl_803E3454);
         if (((GameObject*)obj)->anim.seqId == 0xa8)
         {
             objfx_spawnDirectionalBurst(obj, 7, lbl_803E3454, 5, 1, 10, lbl_803E348C, 0, 0x20000000);

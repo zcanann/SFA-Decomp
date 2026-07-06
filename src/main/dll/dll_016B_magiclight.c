@@ -26,7 +26,7 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
 extern u32 getLActions();
 extern int randomGetRange(int lo, int hi);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 Vec_distance(f32* a, f32* b);
 
 #pragma scheduling off
@@ -84,7 +84,7 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW && visible != 0)
     {
-        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, 1.0f);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
     }
 }
 

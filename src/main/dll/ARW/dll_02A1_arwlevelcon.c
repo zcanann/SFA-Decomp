@@ -119,7 +119,7 @@ void arwlevelcon_free(void)
 
 void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
 {
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E70E0);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E70E0);
 }
 
 void arwlevelcon_hitDetect(void)

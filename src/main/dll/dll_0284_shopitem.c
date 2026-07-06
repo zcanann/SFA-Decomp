@@ -70,7 +70,7 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
 extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5A30;
 extern void fn_801E83B0(int obj, int, int, int, int);
 extern void GXSetBlendMode(int type, int src, int dst, int op);
@@ -202,7 +202,7 @@ void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
         else
         {
-            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E5A30);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5A30);
         }
     }
 }
@@ -436,7 +436,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
         int renderOp = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(obj), 0);
         *(u8*)(renderOp + 0x43) = 0x7F;
     }
-    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5A30);
+    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5A30);
     for (i = 0; i < 10; i++)
     {
         if (*(void**)&state->lightningHandles[i] != NULL)

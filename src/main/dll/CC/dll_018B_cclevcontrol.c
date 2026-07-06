@@ -21,7 +21,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #define CCLEVCONTROL_OBJFLAG_PARENT_SLACK 0x1000
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
 
 
@@ -50,7 +50,7 @@ void cclevcontrol_free(void)
     Music_Trigger(MUSICTRIG_Arwing_Crash, 0);
 }
 
-void cclevcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f); }
+void cclevcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f); }
 
 void cclevcontrol_update(int obj)
 {

@@ -286,7 +286,7 @@ extern void Rcp_SetSpiritVisionEnabled(int enabled);
 extern void setAButtonIcon(int iconId);
 extern int getSkyColorFn_80088e08(int skyId);
 extern void fn_80296518(int obj, int arg, int enable);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 Vec_distance(void *a, void *b);
 extern int ObjList_FindObjectById(int objectId);
 extern f32 lbl_803E5F10;

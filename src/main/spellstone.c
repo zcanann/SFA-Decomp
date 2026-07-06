@@ -15,7 +15,7 @@
 extern f32 Vec_distance(void* posA, void* posB);
 
 extern void Obj_RemoveFromUpdateList(void* obj);
-extern void objRenderFn_8003b8f4(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4,
+extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4,
                                  u32 fwdArg5, double scale);
 
 
@@ -69,7 +69,7 @@ void spellstone_render(SpellStoneObject* obj, u32 p2, u32 p3,
     state = obj->state;
     if ((visible != 0) && (state->state != SPELLSTONE_STATE_HIDDEN))
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6754);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6754);
     }
     return;
 }

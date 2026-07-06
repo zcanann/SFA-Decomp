@@ -25,7 +25,7 @@ extern void Obj_FreeObject(int obj);
 extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);
 
 
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
 extern s16 gRollingBarrelExplodingCount;
 extern int gRollingBarrelCurveInitPair;
@@ -69,7 +69,7 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         return;
     }
 
-    ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4474);
+    ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E4474);
 }
 
 void RollingBarrel_free(int obj)

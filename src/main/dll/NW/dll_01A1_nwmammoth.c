@@ -633,12 +633,12 @@ void nw_mammoth_free(void* obj)
 void nw_mammoth_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag); /* #57 */
-    extern void objRenderFn_8003b8f4(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale); /* #57 */
+    extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale); /* #57 */
     int i;
     void* node;
 
     node = ((GameObject*)obj)->extra;
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5210);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5210);
     for (i = 0; i < 4; i++)
     {
         ObjPath_GetPointWorldPosition(obj, i,

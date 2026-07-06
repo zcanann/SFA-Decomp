@@ -139,7 +139,7 @@ void andross_hitDetect(void)
 
 void andross_render(int obj, int p2, int p3, int p4, int p5)
 {
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E74DC);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E74DC);
 }
 
 void andross_setPartSignal(int obj, int signal)

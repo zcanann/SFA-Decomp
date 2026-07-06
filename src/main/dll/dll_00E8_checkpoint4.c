@@ -5,7 +5,7 @@
  * builds an oriented plane (normal + signed distance via setMatrixFromObjectPos
  * / Matrix_TransformPoint) from the placement's radius/rotX, seeds a small table
  * of random headings, and stows the checkpoint index. checkpoint4_render emits a
- * fixed-scale model draw (objRenderFn_8003b8f4). Its lifecycle hooks
+ * fixed-scale model draw (objRenderModelAndHitVolumes). Its lifecycle hooks
  * (setScale/free/hitDetect/update/release/initialise) are empty stubs;
  * getExtraSize=0x40, getObjectTypeId=0x10.
  *
@@ -40,7 +40,7 @@ extern f32 lbl_803E3430;
 
 void mikabomb_free(int obj, int mode);
 
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -223,7 +223,7 @@ void staticCamera_init(short* obj, int placement, int addToGroup)
 
 void checkpoint4_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3420);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3420);
 }
 
 void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* placement)

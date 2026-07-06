@@ -604,7 +604,7 @@ void scarab_init(int* obj, u8* def)
 }
 
 extern int Obj_GetActiveModel(int obj);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objfx_spawnDirectionalBurst(int obj, u8 idx, f32 scale, int model, int mode, u8 chance,
                                         f32 alpha, int flags, int unused);
 
@@ -741,7 +741,7 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             return;
         }
 
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3A00);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3A00);
         if ((visible != 0) && (((GameObject*)obj)->anim.alpha != 0))
         {
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, (u8)((ScarabState*)state)->burstModel, 1, 0x14,

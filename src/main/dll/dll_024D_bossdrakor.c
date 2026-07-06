@@ -897,7 +897,7 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     f32 pos0;
     int light;
     int val;
-    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E651C);
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E651C);
     ObjPath_GetPointWorldPosition(p1, 0, &((BossDrakorState*)inner)->homePosX, &((BossDrakorState*)inner)->homePosY,
                                   &((BossDrakorState*)inner)->homePosZ, 0);
     if (*(void* *)&((BossDrakorState*)inner)->lightObj != NULL)

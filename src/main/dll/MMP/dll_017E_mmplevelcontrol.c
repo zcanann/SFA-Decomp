@@ -17,7 +17,7 @@
 #include "main/lightmap.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/music_trigger_ids.h"
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Music_Trigger(int id, int arg);
 
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
@@ -77,7 +77,7 @@ void MMP_levelcontrol_free(int obj)
 void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void MMP_levelcontrol_hitDetect(void)

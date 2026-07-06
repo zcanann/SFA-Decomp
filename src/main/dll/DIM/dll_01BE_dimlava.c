@@ -50,7 +50,7 @@ void imicepillar_free(void);
 int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);
 
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -190,7 +190,7 @@ void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
             queueGlowRender((int*)state->light);
         }
     }
-    ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E47F0);
+    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E47F0);
 }
 
 typedef struct

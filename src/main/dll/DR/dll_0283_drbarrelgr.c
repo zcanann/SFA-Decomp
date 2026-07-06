@@ -317,7 +317,7 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
     DrBarrelGrRenderParams params;
     extern void objfx_spawnLightPulse(int obj, f32 a, int b, int c, int d, f32 e, void* params);
 
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6CA0);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6CA0);
     ObjPath_GetPointWorldPosition(obj, 0, (f32*)(state + 0x14), (f32*)(state + 0x18),
                                   (f32*)(state + 0x1c), 0);
     params.a = 0;
@@ -349,7 +349,7 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
             ((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosX = ((DrbarrelgrState*)state)->grabX;
             ((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosY = ((DrbarrelgrState*)state)->grabY;
             ((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosZ = ((DrbarrelgrState*)state)->grabZ;
-            objRenderFn_8003b8f4(((DrbarrelgrState*)state)->heldBarrel, p2, p3, p4, p5, lbl_803E6CA0);
+            objRenderModelAndHitVolumes(((DrbarrelgrState*)state)->heldBarrel, p2, p3, p4, p5, lbl_803E6CA0);
         }
     }
 }

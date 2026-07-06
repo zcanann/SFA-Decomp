@@ -34,7 +34,7 @@ void crcloudrace_render(u32 obj,u32 p2,u32 p3,
 
   draw = visible;
   if (draw != 0) {
-    ((CrCloudRaceRenderScaleFn)objRenderFn_8003b8f4)((double)lbl_803E6748);
+    ((CrCloudRaceRenderScaleFn)objRenderModelAndHitVolumes)((double)lbl_803E6748);
   }
   return;
 }

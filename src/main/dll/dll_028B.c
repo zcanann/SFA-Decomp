@@ -60,7 +60,7 @@ void dll_28B_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     int state = *(int*)&((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6D18);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6D18);
         dll_2E_func06(obj, (int)((Dll28BState*)state)->moveLib, 0);
     }
 }

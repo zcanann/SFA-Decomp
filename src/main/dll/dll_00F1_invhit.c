@@ -50,7 +50,7 @@ typedef struct InvhitObjectDef
 extern void Obj_FreeObject(int* obj);
 extern int ObjList_ContainsObject(int obj);
 extern f32 lbl_803E35E8;
-extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
+extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 scale);
 
 extern void* getTrickyObject(void);
  /* single-precision override for codegen */
@@ -75,7 +75,7 @@ void invhit_initialise(void)
 int invhit_getExtraSize(void) { return 0xc; }
 int invhit_getObjectTypeId(void) { return 0x0; }
 
-void invhit_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E35E8); }
+void invhit_render(int* obj, int a, int b, int c, int d) { objRenderModelAndHitVolumes(obj, a, b, c, d, lbl_803E35E8); }
 
 #pragma scheduling off
 #pragma peephole off

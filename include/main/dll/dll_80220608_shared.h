@@ -33,7 +33,7 @@ extern void mm_free(void *ptr);
 extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E6BC8;
 extern void cloudClearOverridePosition(int obj);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern f32 lbl_803E6C20;

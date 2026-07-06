@@ -54,7 +54,7 @@ typedef struct MmpMoonrockPlacement
 } MmpMoonrockPlacement;
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
 
 #pragma scheduling on
@@ -243,7 +243,7 @@ void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)
             (obj, p2, p3, p4, p5, lbl_803E457C);
     }
 }

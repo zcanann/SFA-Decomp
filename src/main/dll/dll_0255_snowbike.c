@@ -115,7 +115,7 @@ extern f32 lbl_803E5B94;
 extern f32 lbl_803E5B98;
 extern void* mapRomListFindItem(int a, int b, int c, int d, int e);
 extern int gSnowBikeMountRomListTable[];
-extern void objRenderFn_8003b8f4(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
+extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void fn_801E991C(void* obj, void* path);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern void fn_801EB940(int obj, u8* state);
@@ -486,12 +486,12 @@ void SnowBike_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     fn_801E991C(obj, path);
     if (visible == -1)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);
         ObjPath_GetPointWorldPosition(obj, 0, (char*)path + 0x3e8, (char*)path + 0x3ec, (char*)path + 0x3f0, 0);
     }
     else
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);
         ObjPath_GetPointWorldPosition(obj, 0, (char*)path + 0x3e8, (char*)path + 0x3ec, (char*)path + 0x3f0, 0);
     }
 }

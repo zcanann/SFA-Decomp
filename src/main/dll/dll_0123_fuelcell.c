@@ -32,7 +32,7 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 #define FUELCELL_GAMEBIT_CARRIED 0xe97 /* global: a fuel cell is currently held */
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void ObjModel_SetPostRenderCallback(u8* model, void* callback);
 extern void mm_free_(void* ptr);
 extern f32 Vec_distance(f32* a, f32* b);
@@ -254,7 +254,7 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
             int op = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(obj), 0);
             *(u8*)(op + 0x43) = 0x7f;
         }
-        ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3CCC);
+        ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3CCC);
 
         for (i = 0; i < 10; i++)
         {

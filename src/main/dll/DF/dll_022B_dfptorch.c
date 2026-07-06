@@ -17,7 +17,7 @@
 /* DfpTorchState.mode: torch behaviour selected from placement->mode */
 #define DFPTORCH_MODE_ALWAYS_LIT 0 /* permanently burning, ignited at init */
 #define DFPTORCH_MODE_LIGHTABLE 1  /* player-toggled; burn timer + gamebit latch */
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 sqrtf(f32 x);
 extern int randomGetRange(int lo, int hi);
 extern ModgfxInterface** gModgfxInterface;
@@ -67,7 +67,7 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     else
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         if (state->lit != 0)
         {
             state->visibleLatch = 1;

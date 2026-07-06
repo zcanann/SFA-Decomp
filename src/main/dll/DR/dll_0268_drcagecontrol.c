@@ -48,7 +48,7 @@ void cagecontrol_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     if (visible != 0)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E69D8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69D8);
     }
 }
 

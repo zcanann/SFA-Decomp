@@ -68,8 +68,8 @@ int treasurechest_getObjectTypeId(void)
 }
 
 extern f32 lbl_803E3C20;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
-void treasurechest_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E3C20); }
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+void treasurechest_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3C20); }
 
 extern void* lbl_803DDAE0;
 void treasurechest_free(void) { Resource_Release(lbl_803DDAE0); }

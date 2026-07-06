@@ -59,7 +59,7 @@ extern void* Obj_GetPlayerObject(void);
 extern int Sfx_PlayFromObject(int* obj, int sfx);
 extern float sqrtf(float x);
 extern f32 lbl_803E2F44;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 gTumbleweedBushNearestInitDist;
@@ -218,7 +218,7 @@ void fn_80163980(int* obj)
 void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E2F44);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2F44);
 }
 
 void* tumbleweedbush_findNearestActive(f32* p_pos)

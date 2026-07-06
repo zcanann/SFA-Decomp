@@ -167,7 +167,7 @@ void wmnewcrystal_free(void)
 
 void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
-    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f); /* literal, not the named 1.0 extern (#71 pool shape) */
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f); /* literal, not the named 1.0 extern (#71 pool shape) */
 }
 
 void wmnewcrystal_hitDetect(void)

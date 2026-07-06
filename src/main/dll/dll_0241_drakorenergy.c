@@ -10,7 +10,7 @@
  *
  * The standard object hooks (init/update/render/getExtraSize/...) are wired
  * through the DLL's ObjectDescriptor elsewhere; rendering uses a shared glow
- * draw helper (objRenderFn_8003b8f4) and particle bursts come from
+ * draw helper (objRenderModelAndHitVolumes) and particle bursts come from
  * gPartfxInterface / objfx_spawnFlaggedTrailBurst.
  */
 #include "main/dll/drakorenergystate_struct.h"
@@ -20,7 +20,7 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
-extern void objRenderFn_8003b8f4(int obj, int p1, int p2, int p3, int p4, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4, f32 scale);
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
 extern void objMove(int, f32, f32, f32);
@@ -136,7 +136,7 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     u32 t = inner->mode;
     if (t != DRAKORENERGY_MODE_IDLE && t != DRAKORENERGY_MODE_COLLECTED)
     {
-        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E6278);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E6278);
     }
 }
 

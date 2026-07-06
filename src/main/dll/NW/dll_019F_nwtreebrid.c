@@ -16,7 +16,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E51F8;
 extern f32 lbl_803E51FC;
 
@@ -143,7 +143,7 @@ void treebird_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     float fx, fy, fz;
 
     state = ((GameObject*)obj)->extra;
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E51F8);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E51F8);
     if (state->targetObj != NULL)
     {
         ObjPath_GetPointWorldPosition(obj, 0, &fx, &fy, &fz, 0);

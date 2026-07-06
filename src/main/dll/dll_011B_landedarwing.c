@@ -100,7 +100,7 @@ extern f32 timeDelta;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderModelAndHitVolumes(f32);
 extern void Obj_FreeObject(int obj);
 
 void landed_arwing_free(int obj)
@@ -121,7 +121,7 @@ void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0)
     {
-        objRenderFn_8003b8f4(lbl_803E3BA4);
+        objRenderModelAndHitVolumes(lbl_803E3BA4);
         landed_arwing_renderPathEffects(obj);
     }
 }

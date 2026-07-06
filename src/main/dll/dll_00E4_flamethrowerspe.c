@@ -716,7 +716,7 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-void flamethrowerspe_render(void) { objRenderFn_8003b8f4(lbl_803E3388); }
+void flamethrowerspe_render(void) { objRenderModelAndHitVolumes(lbl_803E3388); }
 void flamethrowerspe_func0B(int* obj)
 {
     s32 v = 0x1;

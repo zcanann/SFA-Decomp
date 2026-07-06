@@ -61,7 +61,7 @@ enum
 
 extern void dll_2E_func06();
 extern f32 lbl_803E59D8;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Stack_Free();
 extern void* lbl_803AD068[8];
 extern void* lbl_803DDC58;
@@ -156,7 +156,7 @@ void shopkeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     fxParams[0] = lbl_803E59D8;
     if (((ShopkeeperState*)state)->controlMode != 7 && visible != 0)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)
             (obj, p2, p3, p4, p5, lbl_803E59D8);
         dll_2E_func06(obj, state + 0x35c, 0);
     }

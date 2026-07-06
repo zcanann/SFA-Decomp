@@ -14,7 +14,7 @@
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E6618;
 extern int unlockLevel(s32 val, int idx, int flag);
 /* unlock gamebit per WorldPlanetSlot: [0] Walled City, [1] CloudRunner,
@@ -99,7 +99,7 @@ void worldplanet_render(u32 obj, u32 p2, u32 p3,
     draw = visible;
     if (draw != 0)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6618);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6618);
     }
     return;
 }

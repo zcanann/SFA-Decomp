@@ -450,7 +450,7 @@ extern f32 lbl_803E7FD4;
 extern f32 lbl_803E7FCC;
 extern void showDeathMenu(void);
 extern int gPlayerPendingHealth;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E8188;
 extern int lbl_80333250[];
 extern int gPlayerMoveTableA[];

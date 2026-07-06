@@ -40,7 +40,7 @@ extern u32 ObjHits_DisableObject();
 extern void* Obj_GetPlayerObject(void);
 extern void* gRockfallResource;
 extern f32 lbl_803E4708;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;
@@ -83,7 +83,7 @@ void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     CrRockfallState* state = ((GameObject*)obj)->extra;
     if (state->mode != zcEn3_ROCKFALL_MODE_SHATTERED && visible != 0)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4708);
+        ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E4708);
     }
 }
 

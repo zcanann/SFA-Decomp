@@ -14267,7 +14267,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.modelState->overrideWorldPosZ;
         }
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->sinkOffsetY;
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, a, b, c, d, lbl_803E7EE0);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, a, b, c, d, lbl_803E7EE0);
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - ((PlayerState*)inner)->sinkOffsetY;
         if ((*(u32*)&((PlayerState*)inner)->flags360 & 0x8000000) != 0)
         {

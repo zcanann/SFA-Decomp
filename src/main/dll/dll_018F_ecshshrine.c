@@ -377,7 +377,7 @@ void ecsh_shrine_hitDetect(void)
 void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objParticleFn_80099d84(int obj, f32 a, int kind, f32 b, int h);
-    extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 scale);
+    extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
     extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
     void** inner = ((GameObject*)obj)->extra;
     if (visible == 0)
@@ -392,7 +392,7 @@ void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         modelLightStruct_setEnabled((int)*inner, 1, lbl_803E4FC8);
     }
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E4FC8);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4FC8);
     objParticleFn_80099d84(obj, lbl_803E4FC8, 7, *(f32*)&lbl_803E4FC8, (int)*inner);
 }
 

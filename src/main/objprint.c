@@ -260,7 +260,7 @@ void objAudioFn_80039270(u32 obj, void* p, u16 sfxId)
     }
 }
 
-void objRenderFn_8003b8f4(int* obj)
+void objRenderModelAndHitVolumes(int* obj)
 {
     int** table = OBJPRINT_BANK_TABLE(obj);
     if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL)

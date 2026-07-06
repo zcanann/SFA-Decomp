@@ -181,7 +181,7 @@ void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (visible != 0)
     {
         fn_8003B608(setup->colorR, setup->colorG, setup->colorB);
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7308);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7308);
         if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
         {
             for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)

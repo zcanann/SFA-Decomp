@@ -230,13 +230,13 @@ void drcagewith_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     int* linkedObj;
     if (visible != 0)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E69F0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69F0);
         if (((DrcagewithState*)state)->spawnedObject != 0)
         {
             ObjPath_GetPointWorldPosition((int)obj, 0, &((DrcagewithState*)state)->spawnedObject->anim.localPosX,
                                           &((DrcagewithState*)state)->spawnedObject->anim.localPosY,
                                           &((DrcagewithState*)state)->spawnedObject->anim.localPosZ, 0);
-            objRenderFn_8003b8f4(((DrcagewithState*)state)->spawnedObject, p2, p3, p4, p5, (double)lbl_803E69F0);
+            objRenderModelAndHitVolumes(((DrcagewithState*)state)->spawnedObject, p2, p3, p4, p5, (double)lbl_803E69F0);
             linkedObj = *(int**)&((DrcagewithState*)state)->linkedObject;
             if (linkedObj != 0)
             {
@@ -246,7 +246,7 @@ void drcagewith_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
                                               &((GameObject*)linkedObj)->anim.localPosX,
                                               &((GameObject*)linkedObj)->anim.localPosY,
                                               &((GameObject*)linkedObj)->anim.localPosZ, 0);
-                objRenderFn_8003b8f4(linkedObj, p2, p3, p4, p5, (double)lbl_803E69F0);
+                objRenderModelAndHitVolumes(linkedObj, p2, p3, p4, p5, (double)lbl_803E69F0);
             }
         }
     }

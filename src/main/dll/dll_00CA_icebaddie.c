@@ -1190,7 +1190,7 @@ void iceBaddie_free(int obj)
 
 void iceBaddie_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(int obj, int arg1, int arg2, int arg3, int arg4, f32 scale); /* #57 */
+    extern void objRenderModelAndHitVolumes(int obj, int arg1, int arg2, int arg3, int arg4, f32 scale); /* #57 */
     GroundBaddieState* state = ((GameObject*)obj)->extra;
 
     if (visible == 0 || ((GameObject*)obj)->unkF4 != 0 || state->targetState == 0)
@@ -1202,7 +1202,7 @@ void iceBaddie_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visibl
     {
         fn_8003B5E0(0xc8, 0, 0, state->glowAlpha);
     }
-    objRenderFn_8003b8f4(obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
+    objRenderModelAndHitVolumes(obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
     iceBaddie_updateEffectAnchors(obj, (int)state);
 }
 

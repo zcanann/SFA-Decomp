@@ -4,7 +4,7 @@
  * the placement's scroll step rates and game bit into its extra state
  * (TexScrollState, 0x1C bytes) and zeroes the running UV offsets on a
  * cold load (loadFlags == 0). update/hitDetect are stubs here; render
- * just forwards a fixed scale to objRenderFn_8003b8f4 when visible.
+ * just forwards a fixed scale to objRenderModelAndHitVolumes when visible.
  * init guards on state == NULL before writing (absent in texscroll2).
  *
  * gTexscrollObjDescriptor is declared extern in mmp_moonrock.h but is
@@ -23,7 +23,7 @@ void texscroll_free(void)
 void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void texscroll_hitDetect(void)

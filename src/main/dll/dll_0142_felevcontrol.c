@@ -6,7 +6,7 @@
  * FEseqobject_spawnEffect / FEseqobject_findControlObject helpers with
  * sibling DLLs 0x143 (feseqobject) and 0x144 (dll144). The render
  * function passes lbl_803E56B8 (the elevator's render scale / distance
- * threshold) to the common objRenderFn_8003b8f4.
+ * threshold) to the common objRenderModelAndHitVolumes.
  */
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/feseqobjecteffectparams_struct.h"
@@ -71,7 +71,7 @@ int FElevControl_getObjectTypeId(void) { return 0x0; }
 
 void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E56B8);
+    if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E56B8);
 }
 
 void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }

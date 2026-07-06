@@ -11,7 +11,7 @@
 #include "main/game_object.h"
 #include "main/engine_shared.h"
 
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern GameObject* lbl_803DDB48;
 extern f32 lbl_803E47B8;
@@ -26,7 +26,7 @@ void imspacering_free(void)
 void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E47B8);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E47B8);
 }
 
 void imspacering_hitDetect(void)

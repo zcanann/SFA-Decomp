@@ -34,7 +34,7 @@ extern u32 ObjGroup_AddObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_GetYawDeltaToObject();
 extern u32 objAnimFn_80038f38();
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E4228;
 extern f32 lbl_803E422C;
 extern f32 lbl_803E4244;
@@ -213,7 +213,7 @@ void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     isVisible = visible;
     if (isVisible != 0)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E4228);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4228);
     }
     return;
 }

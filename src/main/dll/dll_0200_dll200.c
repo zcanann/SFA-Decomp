@@ -6,7 +6,7 @@
  * bits, runs trigger sequences (dll_200_SeqFn / fn_801F2974), and in
  * mode 2 (fn_801F2290) steers a wandering attachment toward scripted
  * targets (gArwingAttachmentTargets) via getAngle/sqrtf. Object body is Dll200State
- * (0x28); render scales through objRenderFn_8003b8f4 and gates on
+ * (0x28); render scales through objRenderModelAndHitVolumes and gates on
  * GameBit 0x2bd when the placement's map-act is 4.
  */
 #include "main/dll/dll200state_struct.h"
@@ -168,20 +168,20 @@ int dll_200_getObjectTypeId(void) { return 0x1; }
 
 /* returns immediately if not visible; when the placement's map-act is 4,
  * gate render on GameBit 0x2bd, otherwise render directly via
- * objRenderFn_8003b8f4. */
+ * objRenderModelAndHitVolumes. */
 void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
+    extern void objRenderModelAndHitVolumes(void* obj, int p1, int p2, int p3, int p4, f32 scale);
     int areaId;
     if (visible == 0) return;
     areaId = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
     if ((u8)areaId == 4)
     {
         if ((u32)GameBit_Get(0x2bd) == 0u) return;
-        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5DC0);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E5DC0);
         return;
     }
-    objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5DC0);
+    objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E5DC0);
 }
 
 int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);

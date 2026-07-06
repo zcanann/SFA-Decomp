@@ -55,7 +55,7 @@ extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjMsg_Pop();
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void queueGlowRender(void* light);
 extern u32* gBaddieControlInterface;
 extern f32 lbl_803E4CF0;
@@ -201,7 +201,7 @@ void dimbossgut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5,
+        ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
                                                                       lbl_803E4CF0);
         light = (u8*)((Dimbossgut2Curve*)((Dimbossgut2State*)light)->curveData)->light;
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))

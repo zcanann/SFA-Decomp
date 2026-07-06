@@ -690,7 +690,7 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
 void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E33F0);
+    if (v != 0) objRenderModelAndHitVolumes(lbl_803E33F0);
 }
 
 #pragma opt_common_subs reset

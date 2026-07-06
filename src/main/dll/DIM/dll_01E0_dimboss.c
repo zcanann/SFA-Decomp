@@ -58,7 +58,7 @@ extern u32 ModelLightStruct_free();
 extern void Obj_FreeObject(u8* obj);
 extern u32 Obj_GetPlayerObject();
 extern u32 ObjHits_RegisterActiveHitVolumeObject();
-extern void objRenderFn_8003b8f4(DIMbossObject* obj, u32 p2, u32 p3,
+extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
                                  u32 p4, u32 p5, f32 scale);
 
 extern void queueGlowRender(void* effect);
@@ -475,7 +475,7 @@ void DIMboss_render(DIMbossObject* obj, u32 p2, u32 p3, u32 p4,
         return;
     }
 
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E4C44);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4C44);
     DIM2icicle_updateBossSequenceEffects(obj, runtime);
     dll_2E_func06(obj, gDIMbossAnimController, 0);
 

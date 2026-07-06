@@ -21,7 +21,7 @@
  * Unimplemented trailing functions (not in scope here):
  *   EN v1.0 0x80206474  8b   trivial 0-returner.
  *   EN v1.0 0x80206484  8b   trivial 0-returner.
- *   EN v1.0 0x802064D0  48b  if (p6) objRenderFn_8003b8f4(lbl_803E6408).
+ *   EN v1.0 0x802064D0  48b  if (p6) objRenderModelAndHitVolumes(lbl_803E6408).
  *   EN v1.0 0x80206500  44b  if (b->_8 && (b->_8->_6 & 0x40)) clear.
  */
 #include "main/dll/dll22cstate_struct.h"
@@ -32,7 +32,7 @@
 #include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/dfp_types.h"
 #include "main/main.h"
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -968,7 +968,7 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 fn_8003B5E0(0xc8, 0, 0, state->glowAlpha);
             }
-            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E62C8);
+            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E62C8);
             if ((state->flags400 & 0x60) != 0)
             {
                 objParticleFn_80099d84(obj, lbl_803E62C8, 3, state->glowAlpha, 0);
@@ -977,7 +977,7 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             if (path != NULL && *(void**)(path + 0x50) != NULL)
             {
                 ObjPath_GetPointWorldPosition(obj, 3, path + 0xc, path + 0x10, path + 0x14, 0);
-                ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(
+                ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(
                     sub->linkedObj, p2, p3, p4, p5, lbl_803E62C8);
             }
         }
@@ -2560,7 +2560,7 @@ int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t)
 
 /* EN v1.0 0x80206484  size: 8b   trivial 0-returner. */
 
-/* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408). */
+/* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderModelAndHitVolumes(lbl_803E6408). */
 
 /* EN v1.0 0x80206500  size: 44b   if (b->_8 && (b->_8->_6 & 0x40)) clear. */
 

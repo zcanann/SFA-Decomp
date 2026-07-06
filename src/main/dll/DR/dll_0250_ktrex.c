@@ -623,7 +623,7 @@ void ktrex_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     {
         fn_8003B5E0(200, 0, 0, (int)((KTRexRuntime*)gKTRexRuntime)->unk3E8);
     }
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6818);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6818);
     ObjPath_GetPointWorldPosition((int)obj, 1, (f32*)((char*)gKTRexState + 0x130), (f32*)((char*)gKTRexState + 0x134),
                                   (f32*)((char*)gKTRexState + 0x138), 0);
     ObjPath_GetPointWorldPosition((int)obj, 2, (f32*)((char*)gKTRexState + 0x148), (f32*)((char*)gKTRexState + 0x14c),

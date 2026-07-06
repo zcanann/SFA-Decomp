@@ -121,7 +121,7 @@ extern void ObjGroup_AddObject();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern void WCPushBlock_SpawnFromPath(s16 *path, u8 *state);
 
-extern void objRenderFn_8003b8f4(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5C70;
 extern void objSetMtxFn_800412d4(u32 x);
 
@@ -433,7 +433,7 @@ void SB_CloudRunner_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 v
     f32 mtx[16];
     if (visible == -1)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E5C74);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5C74);
         ObjPath_GetPointWorldPosition((int)obj, 3, state, state + 1, state + 2, 0);
         if (obj->anim.parent != NULL)
         {
@@ -445,7 +445,7 @@ void SB_CloudRunner_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 v
     }
     else if (visible != 0)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E5C74);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5C74);
         ObjPath_GetPointWorldPosition((int)obj, 3, state, state + 1, state + 2, 0);
         if (obj->anim.parent != NULL)
         {

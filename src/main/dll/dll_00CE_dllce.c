@@ -687,7 +687,7 @@ void dll_CE_func0B(int obj, int v)
 
 void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2E10;
@@ -703,7 +703,7 @@ extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 sc
     {
         fn_8003B5E0(200, 0, 0, t);
     }
-    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5,
+    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5,
                                                                    lbl_803E2E10);
 }
 

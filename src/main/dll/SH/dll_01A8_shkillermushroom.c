@@ -138,11 +138,11 @@ void enemymushroom_free(EnemyMushroomObject* obj)
 
 void enemymushroom_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
-    extern void objRenderFn_8003b8f4(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
+    extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
     void* state = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5310);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5310);
         ObjPath_GetPointWorldPosition(obj, 0, (char*)state + 0x20, (char*)state + 0x24, (char*)state + 0x28, 0);
     }
 }

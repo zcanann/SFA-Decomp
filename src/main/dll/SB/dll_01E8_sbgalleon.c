@@ -88,7 +88,7 @@ extern f32 lbl_803E57F0;
 extern f32 lbl_803E5724;
 extern u8 framesThisStep;
 extern u32 gSbGalleon;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E57FC;
 extern f32 lbl_803E5800;
 extern f32 lbl_803E5804;
@@ -449,7 +449,7 @@ void SB_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
             stk.a = lbl_803E5808;
             (*gPartfxInterface)->spawnObject((void*)obj, SBGALLEON_FX_WANDER, stk.pad, 2, -1, NULL);
         }
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)((int)obj, p2, p3, p4, p5, lbl_803E57A4);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E57A4);
     }
 }
 

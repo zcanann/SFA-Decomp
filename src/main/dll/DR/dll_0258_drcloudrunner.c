@@ -309,13 +309,13 @@ void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     {
         if (vis == -1)
         {
-            objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E83A8);
+            objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E83A8);
             ObjPath_GetPointWorldPosition(p1, 3, (char*)(int)((char*)inner + 0xae8), (char*)(int)((char*)inner + 0xaec),
                                           (char*)(int)((char*)inner + 0xaf0), 0);
         }
         if (inner->flightState != CLOUDRUNNER_FLIGHT_MOUNTED && vis != 0)
         {
-            objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E83A8);
+            objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E83A8);
             dll_2E_func06(p1, (char*)(int)((char*)inner + 0x4c4), 0);
         }
     }

@@ -125,7 +125,7 @@ extern u64 FUN_80039468();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int arg5,
                                 int arg6);
 extern f32 getXZDistance(f32* a, f32* b);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int objModelGetVecFn_800395d8(int obj, int target);
 extern void freeAndNull(void* p);
 extern void trickyVoxAllocFn_8004b5d4(void* out);
@@ -2621,7 +2621,7 @@ void Tricky_render(int obj, int p2, int p3, int p4, int p5, char doRender)
     if (doRender != '\0')
     {
         state = *(int*)&((GameObject*)obj)->extra;
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E23E8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E23E8);
         pathState = *(int*)&((GameObject*)obj)->extra;
         i = 0;
         pathPoint = pathState;
@@ -2660,7 +2660,7 @@ void Tricky_render(int obj, int p2, int p3, int p4, int p5, char doRender)
                     ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosY = ((TrickyState*)state)->renderPosY;
                     ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosZ = ((TrickyState*)state)->renderPosZ;
                 }
-                objRenderFn_8003b8f4(*(int*)&((TrickyState*)state)->unk700, p2, p3, p4, p5,
+                objRenderModelAndHitVolumes(*(int*)&((TrickyState*)state)->unk700, p2, p3, p4, p5,
                                      lbl_803E23E8);
             }
         }

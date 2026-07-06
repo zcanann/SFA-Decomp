@@ -49,7 +49,7 @@ extern f32 lbl_803E5EA0; /* 1.1: sword scale-up */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjLink_DetachChild(int* parent, int* child);
 extern f32 lbl_803E5EA4; /* 1.0: render scale */
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -158,7 +158,7 @@ void wmgeneralscales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible
     WmGeneralScalesState* state = ((GameObject*)obj)->extra;
     if (state->phase == WMGENERALSCALES_PHASE_HIDDEN) return;
     if (visible == 0) return;
-    ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5EA4);
+    ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5EA4);
 }
 
 void wmgeneralscales_hitDetect(void)

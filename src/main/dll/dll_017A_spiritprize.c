@@ -17,7 +17,7 @@
 #include "main/lightmap.h"
 #include "main/audio/sfx_trigger_ids.h"
 extern void ModelLightStruct_free(void* light);
-extern void objRenderFn_8003b8f4(int* obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 
 extern void Obj_FreeObject(int obj);
@@ -165,7 +165,7 @@ void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     v = visible;
     if (v != 0)
     {
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E4E98);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4E98);
         if (state->useDetachedLight != 0)
         {
             objParticleFn_80099d84(obj, lbl_803E4E98, 7, *(f32*)&lbl_803E4E98, (int)state->light);

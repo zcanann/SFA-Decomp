@@ -34,7 +34,7 @@ void iceblast_free(void)
 
 void iceblast_render(int* obj, int p1, int p2, int p3, int p4)
 {
-    objRenderFn_8003b8f4((int)obj, p1, p2, p3, p4, 1.0f);
+    objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, 1.0f);
 }
 
 void iceblast_hitDetect(void)

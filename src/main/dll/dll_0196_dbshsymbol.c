@@ -60,7 +60,7 @@ STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
 STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5118;
 
 int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
@@ -294,7 +294,7 @@ void dbsh_symbol_free(void)
 
 void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5104);
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5104);
 }
 
 void dbsh_symbol_init(int* obj)

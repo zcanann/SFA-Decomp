@@ -18,7 +18,7 @@
 
 extern f32 lbl_803E1628; /* reticle rootMotionScale constant */
 
-extern void objRenderFn_8003b8f4(GameObject *reticle, u32 a, u32 b, u32 c,
+extern void objRenderModelAndHitVolumes(GameObject *reticle, u32 a, u32 b, u32 c,
                                  u32 d, f32 f);
 
 #define RETICLE_BANK_LOCKON 0
@@ -96,7 +96,7 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
         reticle->anim.rotZ = 0;
         reticle->anim.rootMotionScale = lbl_803E1628;
         ((u8 *)reticle)[0x37] = reticle->anim.alpha;
-        objRenderFn_8003b8f4(reticle, arg3, arg4, arg5, arg6, gCamcontrolNormalizedMax);
+        objRenderModelAndHitVolumes(reticle, arg3, arg4, arg5, arg6, gCamcontrolNormalizedMax);
     } else {
         reticle->anim.parent = NULL;
     }

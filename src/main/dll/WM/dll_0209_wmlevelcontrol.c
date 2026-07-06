@@ -83,7 +83,7 @@ extern f32 gWmLevelControlBlendDecayPerTick;   /* 0.02: blend decay per tick */
 extern f32 gWmLevelControlLightIntensityBase;   /* 32.0: light-intensity base */
 extern f32 gWmLevelControlLightIntensityRange;   /* 128.0: light-intensity blend range */
 extern f32 gWmLevelControlOverrideLightIntensity;   /* 100.0: override light intensity */
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 typedef struct
 {
@@ -214,7 +214,7 @@ void wmlevelcontrol_free(int obj)
 void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5E74);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5E74);
 }
 
 void wmlevelcontrol_hitDetect(void)

@@ -10,7 +10,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/engine_shared.h"
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, u32* outHitVolume);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void ObjHits_AddContactObject(int obj, int contactObj);
@@ -47,7 +47,7 @@ void dll_1DA_free(void)
 void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4AD8);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4AD8);
 }
 
 void dll_1DA_hitDetect(int obj)

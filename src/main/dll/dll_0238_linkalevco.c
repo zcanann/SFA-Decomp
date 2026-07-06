@@ -167,8 +167,8 @@ void fireObj_free(void)
 
 void fireObj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(int, int, int, int, int, f32);
-    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E64D8);
+    extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E64D8);
 }
 
 void fireObj_hitDetect(void)
