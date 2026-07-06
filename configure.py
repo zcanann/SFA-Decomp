@@ -1337,7 +1337,7 @@ config.libs = [
             Object(NonMatching, "main/dll/MMP/dll_0181_mmptrenchfx.c"),
             Object(NonMatching, "main/dll/MMP/dll_0183_mmpgyservent.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_0184_animsharpclaw.c"),
-            Object(NonMatching, "main/dll/dll_025B_msplantings.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_025B_msplantings.c"),
             Object(NonMatching, "main/dll/CC/dll_0185_ccgasvent.c"),
             Object(NonMatching, "main/dll/CC/dll_0186_ccgasventcontrol.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/CC/dll_0187_ccqueen.c", cflags=cflags_dll_noopt),

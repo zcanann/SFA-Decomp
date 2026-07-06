@@ -1636,6 +1636,7 @@ main/dll/dll_0184_animsharpclaw.c:
 
 main/dll/dll_025B_msplantings.c:
 	.text       start:0x801A9468 end:0x801A9E74
+	.sdata2     start:0x803E45D8 end:0x803E460C
 
 main/dll/CC/dll_0185_ccgasvent.c:
 	.text       start:0x801A9E74 end:0x801A9FA8
