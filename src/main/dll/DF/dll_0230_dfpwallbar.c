@@ -63,63 +63,63 @@ void chuka_update(int obj)
     extern f32 lbl_803E63F8;
     extern f32 lbl_803E63FC;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
-    int blob = *(int*)&((GameObject*)obj)->extra;
-    int ch;
-    int* base;
-    int o;
+    int state = *(int*)&((GameObject*)obj)->extra;
+    int linkedObj;
+    int* objList;
+    int candidate;
     int i;
-    int h;
-    int idx;
-    int cnt;
+    int height;
+    int firstIdx;
+    int count;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
 
-    ch = ((ChukaState*)blob)->linkedObject;
-    if ((u32)ch != 0)
+    linkedObj = ((ChukaState*)state)->linkedObject;
+    if ((u32)linkedObj != 0)
     {
-        if (((GameObject*)ch)->anim.flags & 0x40)
+        if (((GameObject*)linkedObj)->anim.flags & 0x40)
         {
-            ((ChukaState*)blob)->linkedObject = 0;
+            ((ChukaState*)state)->linkedObject = 0;
             return;
         }
     }
-    if ((void*)ch == NULL)
+    if ((void*)linkedObj == NULL)
     {
-        base = ObjList_GetObjects(&idx, &cnt);
-        for (i = idx; i < cnt; i++)
+        objList = ObjList_GetObjects(&firstIdx, &count);
+        for (i = firstIdx; i < count; i++)
         {
-            o = base[i];
-            if (((GameObject*)o)->anim.seqId == 0x431)
+            candidate = objList[i];
+            if (((GameObject*)candidate)->anim.seqId == 0x431)
             {
-                ((ChukaState*)blob)->linkedObject = o;
-                i = cnt;
+                ((ChukaState*)state)->linkedObject = candidate;
+                i = count;
             }
         }
-        if (*(void**)&((ChukaState*)blob)->linkedObject == NULL)
+        if (*(void**)&((ChukaState*)state)->linkedObject == NULL)
         {
             return;
         }
     }
-    ch = ((ChukaState*)blob)->linkedObject;
-    (*(void (**)(int, u8*))(*((GameObject*)ch)->anim.dll + 8))(ch, gChukaModeTable);
+    linkedObj = ((ChukaState*)state)->linkedObject;
+    (*(void (**)(int, u8*))(*((GameObject*)linkedObj)->anim.dll + 8))(linkedObj, gChukaModeTable);
     if (GameBit_Get(0x5e4) == 0)
     {
-        ((ChukaState*)blob)->mode = 0;
+        ((ChukaState*)state)->mode = 0;
     }
     else
     {
-        ((ChukaState*)blob)->mode = gChukaModeTable[((ChukaState*)blob)->modeIndex];
+        ((ChukaState*)state)->mode = gChukaModeTable[((ChukaState*)state)->modeIndex];
     }
-    switch (((ChukaState*)blob)->mode)
+    switch (((ChukaState*)state)->mode)
     {
     case 0:
         if (objAnim->bankIndex != 0)
         {
             Obj_SetActiveModelIndex(obj, 0);
         }
-        h = ((ChukaPlacement*)data)->barHeight;
-        if (h != 0)
+        height = ((ChukaPlacement*)data)->barHeight;
+        if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
         }
         break;
     case 1:
@@ -127,10 +127,10 @@ void chuka_update(int obj)
         {
             Obj_SetActiveModelIndex(obj, 1);
         }
-        h = ((ChukaPlacement*)data)->barHeight;
-        if (h != 0)
+        height = ((ChukaPlacement*)data)->barHeight;
+        if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
         }
         if (((GameObject*)obj)->anim.rotZ != 0)
         {
@@ -142,10 +142,10 @@ void chuka_update(int obj)
         {
             Obj_SetActiveModelIndex(obj, 2);
         }
-        h = ((ChukaPlacement*)data)->barHeight;
-        if (h != 0)
+        height = ((ChukaPlacement*)data)->barHeight;
+        if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
         }
         if (((GameObject*)obj)->anim.rotZ != 0)
         {
@@ -157,10 +157,10 @@ void chuka_update(int obj)
         {
             Obj_SetActiveModelIndex(obj, 2);
         }
-        h = ((ChukaPlacement*)data)->barHeight;
-        if (h != 0)
+        height = ((ChukaPlacement*)data)->barHeight;
+        if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
         }
         if (((GameObject*)obj)->anim.rotZ != 0x3fff)
         {
@@ -172,10 +172,10 @@ void chuka_update(int obj)
         {
             Obj_SetActiveModelIndex(obj, 1);
         }
-        h = ((ChukaPlacement*)data)->barHeight;
-        if (h != 0)
+        height = ((ChukaPlacement*)data)->barHeight;
+        if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
         }
         if (((GameObject*)obj)->anim.rotZ != 0x3fff)
         {
@@ -187,10 +187,10 @@ void chuka_update(int obj)
         {
             Obj_SetActiveModelIndex(obj, 0);
         }
-        h = ((ChukaPlacement*)data)->barHeight;
-        if (h != 0)
+        height = ((ChukaPlacement*)data)->barHeight;
+        if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
         }
         if (((GameObject*)obj)->anim.rotZ != 0)
         {
