@@ -467,8 +467,8 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         }
         else
         {
-            MeasGlyph* found = (MeasGlyph*)gameTextFonts->field0;
-            int n = gameTextFonts->field8;
+            MeasGlyph* found = (MeasGlyph*)gameTextFonts->glyphs;
+            int n = gameTextFonts->glyphCount;
             while (n-- != 0)
             {
                 if (found->key != ch || found->lang != langIdx)

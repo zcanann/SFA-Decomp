@@ -453,9 +453,9 @@ typedef struct {
     u8 pad[0xa];
 } GlyphEntry;
 typedef struct {
-    int field0;
+    int glyphs;
     GlyphEntry* entries;
-    int field8;
+    int glyphCount;
     int count;
     u8 pad[0xc];
     int mode;
