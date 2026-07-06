@@ -33,23 +33,11 @@ STATIC_ASSERT(offsetof(ExplodePlanPlacement, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(ExplodePlanPlacement, removeGameBit) == 0x1E);
 STATIC_ASSERT(sizeof(ExplodePlanPlacement) == 0x20);
 
-void explodeplan_free(void)
-{
-}
-
 int explodeplan_getExtraSize(void) { return sizeof(ExplodePlanState); }
 
 int explodeplan_getObjectTypeId(void) { return EXPLODEPLAN_OBJECT_TYPE_ID; }
 
-void explodeplan_hitDetect(void)
-{
-}
-
-void explodeplan_initialise(void)
-{
-}
-
-void explodeplan_release(void)
+void explodeplan_free(void)
 {
 }
 
@@ -58,6 +46,25 @@ void explodeplan_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     if (visible != 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69D0);
+    }
+}
+
+void explodeplan_hitDetect(void)
+{
+}
+
+void explodeplan_update(int obj)
+{
+    ExplodePlanPlacement* placement = *(ExplodePlanPlacement**)&((GameObject*)obj)->anim.placementData;
+    if (GameBit_Get(placement->removeGameBit) != 0)
+    {
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        ObjHits_DisableObject(obj);
+    }
+    else
+    {
+        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        ObjHits_EnableObject(obj);
     }
 }
 
@@ -75,18 +82,10 @@ void explodeplan_init(int obj, char* arg)
 }
 #pragma opt_common_subs reset
 
-
-void explodeplan_update(int obj)
+void explodeplan_release(void)
 {
-    ExplodePlanPlacement* placement = *(ExplodePlanPlacement**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(placement->removeGameBit) != 0)
-    {
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        ObjHits_DisableObject(obj);
-    }
-    else
-    {
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ObjHits_EnableObject(obj);
-    }
+}
+
+void explodeplan_initialise(void)
+{
 }
