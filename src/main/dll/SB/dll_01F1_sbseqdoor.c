@@ -43,35 +43,6 @@ STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
-void SB_SeqDoor_free(void)
-{
-}
-
-void SB_SeqDoor_hitDetect(void)
-{
-}
-
-void SB_SeqDoor_release(void)
-{
-}
-
-void SB_SeqDoor_initialise(void)
-{
-}
-
-int SB_SeqDoor_getExtraSize(void) { return 0x0; }
-int SB_SeqDoor_getObjectTypeId(void) { return 0x0; }
-
-int SB_SeqDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
-
-void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0)
-    {
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5920);
-    }
-}
-
 int SB_SeqDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     if (obj->anim.seqId != SB_SEQDOOR_SEQ_ID)
@@ -82,14 +53,23 @@ int SB_SeqDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     return 0;
 }
 
-void SB_SeqDoor_init(GameObject* obj, SBSeqDoorPlacement* placement)
+int SB_SeqDoor_getExtraSize(void) { return 0x0; }
+int SB_SeqDoor_getObjectTypeId(void) { return 0x0; }
+
+void SB_SeqDoor_free(void)
 {
-    obj->animEventCallback = SB_SeqDoor_SeqFn;
-    obj->anim.rotX = (s16)((s32)placement->rotXByte << 8);
+}
+
+void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0)
     {
-        s8 bankSelect = placement->bankSelect;
-        obj->anim.bankIndex = (s8)(((u32)-bankSelect | (u32)bankSelect) >> 31);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5920);
     }
+}
+
+void SB_SeqDoor_hitDetect(void)
+{
 }
 
 void SB_SeqDoor_update(GameObject* obj)
@@ -106,4 +86,22 @@ void SB_SeqDoor_update(GameObject* obj)
         }
     }
     obj->anim.resetHitboxFlags |= SB_SEQDOOR_HITBOX_RESET_BIT;
+}
+
+void SB_SeqDoor_init(GameObject* obj, SBSeqDoorPlacement* placement)
+{
+    obj->animEventCallback = SB_SeqDoor_SeqFn;
+    obj->anim.rotX = (s16)((s32)placement->rotXByte << 8);
+    {
+        s8 bankSelect = placement->bankSelect;
+        obj->anim.bankIndex = (s8)(((u32)-bankSelect | (u32)bankSelect) >> 31);
+    }
+}
+
+void SB_SeqDoor_release(void)
+{
+}
+
+void SB_SeqDoor_initialise(void)
+{
 }
