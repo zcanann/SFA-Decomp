@@ -178,7 +178,7 @@ void LaserBeam_update(int obj2)
     char* t;
     LaserBeamState* b;
     char* player;
-    u8 c;
+    u8 beamKind;
     int i;
     u16 sfx;
     f32 dz;
@@ -205,14 +205,14 @@ void LaserBeam_update(int obj2)
         {
             if (b->sweepDone == 0)
             {
-                c = b->beamKind;
-                if (c == 3 || c == 30)
+                beamKind = b->beamKind;
+                if (beamKind == 3 || beamKind == 30)
                 {
                     b->fireTimer = b->firePeriod;
                 }
                 else
                 {
-                    if (c == 0 && b->emitterSlot != -1)
+                    if (beamKind == 0 && b->emitterSlot != -1)
                     {
                         (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
                     }
@@ -231,8 +231,8 @@ void LaserBeam_update(int obj2)
             if (b->active == 0)
             {
                 b->active = 1;
-                c = b->beamKind;
-                if (c == 1)
+                beamKind = b->beamKind;
+                if (beamKind == 1)
                 {
                     if (gLaserBeamObjModgfxResource != NULL)
                     {
@@ -240,7 +240,7 @@ void LaserBeam_update(int obj2)
                             obj2, 2, 0, 0x10004, -1, 0);
                     }
                 }
-                else if (c != 30 && c != 0)
+                else if (beamKind != 30 && beamKind != 0)
                 {
                     (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
                         obj2, 0, 0, 0x10004, -1, 0);
@@ -258,8 +258,8 @@ void LaserBeam_update(int obj2)
                 if (b->active == 1)
                 {
                     b->active = 2;
-                    c = b->beamKind;
-                    if (c == 1)
+                    beamKind = b->beamKind;
+                    if (beamKind == 1)
                     {
                         if (gLaserBeamObjModgfxResource != NULL)
                         {
@@ -267,7 +267,7 @@ void LaserBeam_update(int obj2)
                                 obj2, 3, 0, 0x10004, -1, 0);
                         }
                     }
-                    else if (c == 30)
+                    else if (beamKind == 30)
                     {
                         if (gLaserBeamObjModgfxResource != NULL)
                         {
@@ -276,7 +276,7 @@ void LaserBeam_update(int obj2)
                                     obj2, 30, 0, 0x10004, -1, 0);
                         }
                     }
-                    else if (c != 0)
+                    else if (beamKind != 0)
                     {
                         if (gLaserBeamObjModgfxResource != NULL)
                         {
@@ -429,12 +429,12 @@ void LaserBeam_update(int obj2)
                         }
                         b->targetX = sinv * spread + ((GameObject*)player)->anim.localPosX;
                         b->targetZ = cosv * spread + ((GameObject*)player)->anim.localPosZ;
-                        c = b->beamKind;
-                        if (c == 0 || c == 1)
+                        beamKind = b->beamKind;
+                        if (beamKind == 0 || beamKind == 1)
                         {
                             ObjMsg_SendToObject(player, 0x60003, (char*)b + 0x34, 0);
                         }
-                        else if ((u8)(c - 2) <= 1 || c == 30)
+                        else if ((u8)(beamKind - 2) <= 1 || beamKind == 30)
                         {
                             ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_BURST, (char*)b + 0x34, 0);
                         }
