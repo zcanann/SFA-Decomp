@@ -20,37 +20,6 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-extern void imicepillar_free(void);
-extern int imicepillar_getObjectTypeId(void);
-extern int imicepillar_getExtraSize(void);
-
-void imicepillar_hitDetect(void);
-
-void imicepillar_update(void);
-
-void imicepillar_init(void);
-
-void imicepillar_release(void);
-
-void imicepillar_initialise(void);
-
-ObjectDescriptor gIMIcePillarObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)imicepillar_initialise,
-    (ObjectDescriptorCallback)imicepillar_release,
-    0,
-    (ObjectDescriptorCallback)imicepillar_init,
-    (ObjectDescriptorCallback)imicepillar_update,
-    (ObjectDescriptorCallback)imicepillar_hitDetect,
-    (ObjectDescriptorCallback)imicepillar_render,
-    (ObjectDescriptorCallback)imicepillar_free,
-    (ObjectDescriptorCallback)imicepillar_getObjectTypeId,
-    imicepillar_getExtraSize,
-};
-
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
