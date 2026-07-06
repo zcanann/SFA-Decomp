@@ -151,7 +151,7 @@ void worldobj_init(int obj, int arg)
     int idx;
     u8 i;
     f32 base;
-    f32 d;
+    f32 dist;
 
     switch (setup->objectId)
     {
@@ -186,8 +186,8 @@ void worldobj_init(int obj, int arg)
         }
         base = (f32)(int)
         randomGetRange(0xc8, 0x190);
-        d = Vec_distance(&((GameObject*)objB)->anim.worldPosX, &((GameObject*)objA)->anim.worldPosX);
-        state->orbitRadiusZ = lbl_803E66C8 * d + base;
+        dist = Vec_distance(&((GameObject*)objB)->anim.worldPosX, &((GameObject*)objA)->anim.worldPosX);
+        state->orbitRadiusZ = lbl_803E66C8 * dist + base;
         state->orbitRadiusX = state->orbitRadiusZ * (lbl_803E66CC * ((f32)(int)
         randomGetRange(0, 0x64) / lbl_803E66B4
         )
@@ -605,18 +605,18 @@ void worldobj_spawnGreatFoxEffects(int obj)
 {
     WorldObjEffectParams params;
     u8 i;
-    f32 s;
-    f32 k;
+    f32 scale;
+    f32 offsetScale;
 
-    for (i = 0, k = lbl_803E6640; i < GREAT_FOX_EFFECT_COUNT; i++)
+    for (i = 0, offsetScale = lbl_803E6640; i < GREAT_FOX_EFFECT_COUNT; i++)
     {
         GreatFoxFxEntry* e;
-        s = ((GameObject*)obj)->anim.rootMotionScale;
+        scale = ((GameObject*)obj)->anim.rootMotionScale;
         e = &gGreatFoxEffects[i];
-        params.offsetX = k * (s * e->f0);
-        params.offsetY = k * (s * e->f4);
-        params.offsetZ = k * (s * e->f8);
-        objfx_spawnMaskedHitEffect(obj, s * e->fc, 3, e->f10, e->f11, &params);
+        params.offsetX = offsetScale * (scale * e->f0);
+        params.offsetY = offsetScale * (scale * e->f4);
+        params.offsetZ = offsetScale * (scale * e->f8);
+        objfx_spawnMaskedHitEffect(obj, scale * e->fc, 3, e->f10, e->f11, &params);
     }
     params.effectScale = lbl_803E6644;
     params.offsetX = lbl_803E6640 * (lbl_803E6648 * ((GameObject*)obj)->anim.rootMotionScale);
