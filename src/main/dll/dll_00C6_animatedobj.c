@@ -941,8 +941,6 @@ void shield_update(int* obj);
 
 void dll_F7_update(int* obj);
 
-#pragma opt_common_subs reset
-
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 
 static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
