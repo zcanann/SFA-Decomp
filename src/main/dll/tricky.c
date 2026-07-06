@@ -705,8 +705,8 @@ void pauseMenuMapFn_8011de20(void *this, u8 a, s16 b, int c)
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xd, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 }
 
 extern volatile s16 lbl_803DBA8A;
@@ -720,8 +720,8 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     GXLoadNrmMtxImm(lbl_803A8830, 0);
     GXSetCurrentMtx(0);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xd, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     x0 -= 0x500;
     y0 -= 0x3c0;
@@ -1238,8 +1238,8 @@ int fn_8011E0D8(int *this, int *p2, int p3)
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xa, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_NRM, GX_DIRECT);
     return 1;
 }
 
