@@ -140,99 +140,36 @@ void hwSetPriority(int slot, u32 value)
 void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32 priority, u32 value18, u32 resetSrc,
                           u32 itdMode)
 {
-    u32 zero;
-    u32 valueB;
-    u32 inputOffset;
-    u8* entry;
-    u32 i;
+    u8 i;
     u32 flags;
-    u32 valueA;
-    u32 offset;
 
-    inputOffset = 0;
-    zero = inputOffset;
     flags = 0;
-    i = 0;
-    offset = slot * 0xf4;
-
-    while ((u8)i <= salTimeOffset)
+    for (i = 0; i <= salTimeOffset; i++)
     {
-        entry = (u8*)dspVoice;
-        entry += inputOffset;
-        entry += 0x24;
-        entry += offset;
-        flags |= *(u32*)entry & 0x20;
-        *(u32*)entry = zero;
-        inputOffset += 4;
-        i++;
+        flags |= dspVoice[slot].changed[i] & 0x20;
+        dspVoice[slot].changed[i] = 0;
     }
 
-    entry = (u8*)dspVoice;
-    entry += offset;
-    ((DSPvoice*)entry)->changed[0] = flags;
-    entry = (u8*)dspVoice;
-    entry += offset;
-    ((DSPvoice*)entry)->prio = priority;
-    entry = (u8*)dspVoice;
-    entry += offset;
-    ((DSPvoice*)entry)->mesgCallBackUserValue = value18;
-    entry = (u8*)dspVoice;
-    entry += offset;
-    ((DSPvoice*)entry)->flags = zero;
-    entry = (u8*)dspVoice;
-    entry += offset;
-    ((DSPvoice*)entry)->smp_id = value70;
-
-    entry = (u8*)dspVoice;
-    entry += offset;
-    valueA = values[0];
-    valueB = values[1];
-    ((u32*)entry)[0x74 / 4 + 0] = valueA;
-    ((u32*)entry)[0x74 / 4 + 1] = valueB;
-    valueA = values[2];
-    valueB = values[3];
-    ((u32*)entry)[0x74 / 4 + 2] = valueA;
-    ((u32*)entry)[0x74 / 4 + 3] = valueB;
-    valueA = values[4];
-    valueB = values[5];
-    ((u32*)entry)[0x74 / 4 + 4] = valueA;
-    ((u32*)entry)[0x74 / 4 + 5] = valueB;
-    valueA = values[6];
-    valueB = values[7];
-    ((u32*)entry)[0x74 / 4 + 6] = valueA;
-    ((u32*)entry)[0x74 / 4 + 7] = valueB;
+    dspVoice[slot].changed[0] = flags;
+    dspVoice[slot].prio = priority;
+    dspVoice[slot].mesgCallBackUserValue = value18;
+    dspVoice[slot].flags = 0;
+    dspVoice[slot].smp_id = value70;
+    dspVoice[slot].smp_info = *(SAMPLE_INFO*)values;
 
     if (resetAdsr != 0)
     {
-        entry = (u8*)dspVoice;
-        entry += offset;
-        ((DSPvoice*)entry)->adsr.mode = zero;
-        entry = (u8*)dspVoice;
-        entry += offset;
-        ((DSPvoice*)entry)->adsr.aTime = zero;
-        entry = (u8*)dspVoice;
-        entry += offset;
-        ((DSPvoice*)entry)->adsr.dTime = zero;
-        entry = (u8*)dspVoice;
-        entry += offset;
-        ((DSPvoice*)entry)->adsr.sLevel = 0x7fff;
-        entry = (u8*)dspVoice;
-        entry += offset;
-        ((DSPvoice*)entry)->adsr.rTime = zero;
+        dspVoice[slot].adsr.mode = 0;
+        dspVoice[slot].adsr.aTime = 0;
+        dspVoice[slot].adsr.dTime = 0;
+        dspVoice[slot].adsr.sLevel = 0x7fff;
+        dspVoice[slot].adsr.rTime = 0;
     }
 
-    entry = (u8*)dspVoice;
-    entry += offset;
-    ((DSPvoice*)entry)->lastUpdate.pitch = 0xff;
-    entry = (u8*)dspVoice;
-    entry += offset;
-    ((DSPvoice*)entry)->lastUpdate.vol = 0xff;
-    entry = (u8*)dspVoice;
-    entry += offset;
-    ((DSPvoice*)entry)->lastUpdate.volA = 0xff;
-    entry = (u8*)dspVoice;
-    entry += offset;
-    ((DSPvoice*)entry)->lastUpdate.volB = 0xff;
+    dspVoice[slot].lastUpdate.pitch = 0xff;
+    dspVoice[slot].lastUpdate.vol = 0xff;
+    dspVoice[slot].lastUpdate.volA = 0xff;
+    dspVoice[slot].lastUpdate.volB = 0xff;
 
     if (resetSrc != 0)
     {
