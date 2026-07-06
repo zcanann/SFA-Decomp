@@ -48,6 +48,11 @@
 
 #define GAMEUI_OBJFLAG_PARENT_SLACK 0x1000
 
+/* GameCube controller button masks (confirm=A, cancel=B, pause=Start/menu) */
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
+#define PAD_BUTTON_MENU 0x1000
+
 extern void saveGame_save();
 extern u8 gPauseMenuTokenConfirmFlag;
 extern u16 lbl_803DD774;
@@ -723,9 +728,9 @@ void timeListFn_8012be84(void)
     {
         Sfx_PlayFromObject(0, SFXsp_sa_def01);
     }
-    if ((buttons & 0x100) != 0)
+    if ((buttons & PAD_BUTTON_A) != 0)
     {
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         if (lbl_803DD75B == 1)
         {
             GameBit_Set(0x2b3, 1);
@@ -740,9 +745,9 @@ void timeListFn_8012be84(void)
         pauseMenuFrameCounter = 0x3c;
         Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
     }
-    if ((buttons & 0x200) != 0)
+    if ((buttons & PAD_BUTTON_B) != 0)
     {
-        buttonDisable(0, 0x200);
+        buttonDisable(0, PAD_BUTTON_B);
         lbl_803DD75B = 0;
         cutsceneFadeInOut(0);
         (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
@@ -941,14 +946,14 @@ void npcTalkFn_8012e880(void)
     if (lbl_803DD8CA == -1)
     {
         s8 dd = 0;
-        if ((getButtonsJustPressed(0) & 0x100) != 0)
+        if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
         {
             dd = 1;
         }
         ((s32*)lbl_803A9440)[3] = dd;
         if (((s32*)lbl_803A9440)[2] == 1)
         {
-            buttonDisable(0, 0x100);
+            buttonDisable(0, PAD_BUTTON_A);
             gCMenuButtons &= ~0x100u;
             lbl_803DD7A8 = 0;
             if (lbl_803DD7A9 != 0)
@@ -1206,10 +1211,10 @@ void pauseMenuFn_8012b77c(void)
     *(f32*)&lbl_803DD760 = v;
 
     if (((int)pauseMenuState >= 0xc || (int)pauseMenuState < 8) &&
-        ((int)btn & 0x200) && speed > lbl_803E2160)
+        ((int)btn & PAD_BUTTON_B) && speed > lbl_803E2160)
     {
         u8 i;
-        buttonDisable(0, 0x200);
+        buttonDisable(0, PAD_BUTTON_B);
         lbl_803DD764 = lbl_803E2168;
         if (lbl_803DD824 == lbl_8031BD30)
         {
@@ -1761,7 +1766,7 @@ void pauseMenuRunSubmenu(int p1)
                 valid = 1;
             }
         }
-        if (((int)gCMenuButtons & 0x100) && tbl != lbl_8031BD30 && lbl_803E1E3C == lbl_803DD7C0)
+        if (((int)gCMenuButtons & PAD_BUTTON_A) && tbl != lbl_8031BD30 && lbl_803E1E3C == lbl_803DD7C0)
         {
             if (valid != 0)
             {
@@ -1777,7 +1782,7 @@ void pauseMenuRunSubmenu(int p1)
                     lbl_803DD768 = lbl_803E1E3C;
                     break;
                 }
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 lbl_803DD75C = 1;
                 lbl_803DD75E = 0x1e;
                 return;
@@ -1848,7 +1853,7 @@ void cMenuRun(void)
         (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || pauseMenuState != 0 ||
         shouldCloseCMenu != 0 || lbl_803DD75B != 0)
     {
-        gCMenuButtons |= 0x200;
+        gCMenuButtons |= PAD_BUTTON_B;
     }
     else
     {
@@ -2052,7 +2057,7 @@ void cMenuRun(void)
                         }
                     }
                 }
-                else if ((int)gCMenuButtons & 0x200)
+                else if ((int)gCMenuButtons & PAD_BUTTON_B)
                 {
                     Sfx_PlayFromObject(0, SFXTRIG_laser_pickup);
                     cMenuOpen = 0;
@@ -2105,7 +2110,7 @@ void cMenuRun(void)
                             {
                                 if (hud->enabled[gCMenuSelIndex] != 0)
                                 {
-                                    if ((b2 & 0x100) || matched != 0)
+                                    if ((b2 & PAD_BUTTON_A) || matched != 0)
                                     {
                                         ObjMsg_SendToObject(player, flags, 0, cMenuSelectedItem);
                                         gCMenuActivatedId = cMenuSelectedItem;
@@ -2125,7 +2130,7 @@ void cMenuRun(void)
                             {
                                 if (hud->enabled[gCMenuSelIndex] != 0)
                                 {
-                                    if ((b2 & 0x100) || matched != 0)
+                                    if ((b2 & PAD_BUTTON_A) || matched != 0)
                                     {
                                         cMenuOpen = 0;
                                         gCMenuActivatedId = cMenuSelectedItem;
@@ -2741,14 +2746,14 @@ void pauseMenuFn_80129ee0(void)
                 {
                     canOpen = 0;
                 }
-                if ((btn & 0x1000) && (s8)pauseMenuFrameCounter == 0 && pauseDisabled == 0 &&
+                if ((btn & PAD_BUTTON_MENU) && (s8)pauseMenuFrameCounter == 0 && pauseDisabled == 0 &&
                     (*gScreenTransitionInterface)->getProgress() == lbl_803E1E3C &&
                     canOpen != 0 && lbl_803DD75B == 0 && getHudHiddenFrameCount() == 0)
                 {
                     pauseMenuFrameCounter = 0x3c;
                     cutsceneFadeInOut(1);
                     setTimeStop(0xff);
-                    buttonDisable(0, 0x1000);
+                    buttonDisable(0, PAD_BUTTON_MENU);
                     pauseMenuInit();
                     lbl_803DBA64 = 5;
                     if (isArwing != 0)
@@ -2893,11 +2898,11 @@ void pauseMenuFn_80129ee0(void)
                     }
                 }
                 b2 = btn;
-                if (b2 & 0x100)
+                if (b2 & PAD_BUTTON_A)
                 {
                     u8 prev;
                     Sfx_PlayFromObject(0, SFXTRIG_wmap_swoosh);
-                    buttonDisable(0, 0x100);
+                    buttonDisable(0, PAD_BUTTON_A);
                     lbl_803DD7BC = 0.0f;
                     lbl_803DD7C0 = 0.0f;
                     lbl_803DD764 = lbl_803E1E60;
@@ -3220,10 +3225,10 @@ void pauseMenuFn_80129ee0(void)
                 lbl_803DD824 = tbl->gridF10;
                 pauseMenuRunSubmenu(0);
                 pauseMenuFn_8012b77c();
-                if ((btn & 0x100) && lbl_803DD764 > lbl_803E2160)
+                if ((btn & PAD_BUTTON_A) && lbl_803DD764 > lbl_803E2160)
                 {
                     Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
-                    buttonDisable(0, 0x100);
+                    buttonDisable(0, PAD_BUTTON_A);
                     lbl_803DD764 = lbl_803E2168;
                 }
             }
@@ -3339,7 +3344,7 @@ void pauseMenuFn_80129ee0(void)
                         }
                     }
                 }
-                if ((btn & 0x100) && lbl_803DD764 > lbl_803E2160 && lbl_803DD760 >= lbl_803E1F60)
+                if ((btn & PAD_BUTTON_A) && lbl_803DD764 > lbl_803E2160 && lbl_803DD760 >= lbl_803E1F60)
                 {
                     if (lbl_803DD758 == 2)
                     {
@@ -3348,13 +3353,13 @@ void pauseMenuFn_80129ee0(void)
                         GameBit_Set(tbl->tokens[lbl_803DD756].bitB, 1);
                     }
                     gPauseMenuTokenConfirmFlag = 1;
-                    buttonDisable(0, 0x100);
+                    buttonDisable(0, PAD_BUTTON_A);
                     lbl_803DD764 = lbl_803E2168;
                 }
-                else if ((btn & 0x200) && lbl_803DD764 > lbl_803E2160 &&
+                else if ((btn & PAD_BUTTON_B) && lbl_803DD764 > lbl_803E2160 &&
                     lbl_803DD760 >= lbl_803E1F60)
                 {
-                    buttonDisable(0, 0x200);
+                    buttonDisable(0, PAD_BUTTON_B);
                     lbl_803DD764 = lbl_803E2168;
                     gPauseMenuTokenConfirmFlag = 0;
                 }
@@ -4016,9 +4021,9 @@ void GameUI_update(void)
     pauseMenuFn_80129ee0();
     if (gHighScoreActiveTableId >= 0)
     {
-        if (((u16)getButtonsJustPressed(0)) & 0x100)
+        if (((u16)getButtonsJustPressed(0)) & PAD_BUTTON_A)
         {
-            buttonDisable(0, 0x100);
+            buttonDisable(0, PAD_BUTTON_A);
             gHighScoreActiveTableId = -1;
             cutsceneFadeInOut(0);
             Music_Trigger(MUSICTRIG_cldrnr_tune1, 0);
@@ -4051,7 +4056,7 @@ void GameUI_update(void)
             pauseMenuState != 0 || getHudHiddenFrameCount() != 0 || lbl_803DD75B != 0)
         {
             allowCStickTarget = 0;
-            gCMenuButtons |= 0x200;
+            gCMenuButtons |= PAD_BUTTON_B;
             gCMenuButtons &= ~0xf0000;
         }
         else
