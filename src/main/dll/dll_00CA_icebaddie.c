@@ -1137,8 +1137,8 @@ void iceBaddie_updateTargetCollision(int obj, int sub, int state)
     if ((((GroundBaddieState*)sub)->configFlags & 0x20) == 0)
     {
         ((void (*)(int, int, int, int, int, int, int))((void**)*gBaddieControlInterface)[15])(
-            obj, state, sub + 0x400, 2, 3, (s32)((GroundBaddieState*)sub)->unk3FC,
-            (s32)((GroundBaddieState*)sub)->unk3FA);
+            obj, state, sub + 0x400, 2, 3, (s32)((GroundBaddieState*)sub)->soundIdB,
+            (s32)((GroundBaddieState*)sub)->soundIdA);
     }
     ((void (*)(int, int, int, int, int, int, int, int))((void**)*gBaddieControlInterface)[21])(
         obj, state, sub + 0x35c, (s32)((GroundBaddieState*)sub)->gameBitB, 0, 0, 0, 8);

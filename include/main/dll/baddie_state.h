@@ -182,8 +182,10 @@ typedef struct GroundBaddieState {
     s16 gameBitB; /* set 1 / cleared 0; also passed to interface[10] */
     s16 gameBitC; /* gate; checked != -1 + GameBit_Get */
     u8 unk3F8[2];
-    s16 unk3FA; /* pair passed to the interface with unk3FC */
-    s16 unk3FC;
+    s16 soundIdA; /* config-sourced sound-id (config+32); played via interface[+8]
+        on the stop/cleanup path (dll19func12) and passed with soundIdB to the
+        route/move interface [+0x3c] (dllcb/dllce/icebaddie) */
+    s16 soundIdB; /* config-sourced sound-id (config+30); paired with soundIdA */
     u16 aggroRange; /* target-acquire radius passed to interface+0x48; (f32)(u32) conversions */
 /* flags400 bit: baddie is advancing along its ROM curve path. Set once the
  * RomCurveWalker is successfully initialised (dll19func0), then each update

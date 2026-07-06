@@ -149,12 +149,12 @@ void dll_19_func12(int* obj, int* state, u8 flag)
     if ((((GroundBaddieState*)state)->configFlags & flag) == 0)
     {
         s16 soundId;
-        soundId = ((GroundBaddieState*)state)->unk3FC;
+        soundId = ((GroundBaddieState*)state)->soundIdB;
         if (soundId != 0)
         {
             (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, soundId, 0, 0, 0);
         }
-        soundId = ((GroundBaddieState*)state)->unk3FA;
+        soundId = ((GroundBaddieState*)state)->soundIdA;
         if (soundId != 0)
         {
             (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, soundId, 0, 0, 0);
@@ -876,13 +876,13 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | ((s8)state[1032] & 7);
     if ((flags & 8) != 0)
     {
-        ((GroundBaddieState*)state)->unk3FA = *(s16*)(config + 32);
-        ((GroundBaddieState*)state)->unk3FC = *(s16*)(config + 30);
+        ((GroundBaddieState*)state)->soundIdA = *(s16*)(config + 32);
+        ((GroundBaddieState*)state)->soundIdB = *(s16*)(config + 30);
     }
     else
     {
-        ((GroundBaddieState*)state)->unk3FA = 0;
-        ((GroundBaddieState*)state)->unk3FC = 0;
+        ((GroundBaddieState*)state)->soundIdA = 0;
+        ((GroundBaddieState*)state)->soundIdB = 0;
     }
     ((GroundBaddieState*)state)->flags400 = 0;
     ((GroundBaddieState*)state)->aggroRange = (u16)(config[41] << 3);

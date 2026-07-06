@@ -201,7 +201,7 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
     if ((sub->configFlags & 1) == 0)
     {
         (*(void (**)(int*, u8*, u8*, int, int, int, int))(*(int*)gBaddieControlInterface + 0x3c))(
-            obj, (u8*)p, (u8*)&sub->flags400, 2, 3, sub->unk3FC, sub->unk3FA);
+            obj, (u8*)p, (u8*)&sub->flags400, 2, 3, sub->soundIdB, sub->soundIdA);
     }
     (*(void (**)(int*, u8*, u8*, int, u8*, int, int, int))(*(int*)gBaddieControlInterface +
         0x54))(

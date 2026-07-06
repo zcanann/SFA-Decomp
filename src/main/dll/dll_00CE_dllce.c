@@ -646,7 +646,7 @@ void fn_8015ED1C(int obj, int state, int target)
     if ((((GroundBaddieState*)state)->configFlags & 0x20) == 0)
     {
         (**(void (**)(int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x3c))(
-            obj, target, state + 0x400, 2, 3, (s32)((GroundBaddieState*)state)->unk3FA, (s32)((GroundBaddieState*)state)->unk3FC);
+            obj, target, state + 0x400, 2, 3, (s32)((GroundBaddieState*)state)->soundIdA, (s32)((GroundBaddieState*)state)->soundIdB);
     }
 
     (**(void (**)(int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x54))(
