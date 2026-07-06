@@ -9,7 +9,7 @@
  * the launch position from the rotated heading and the path's world
  * point, then integrates localPos by velocity*timeDelta every frame.
  * The placement's useAltHitVolume byte selects the hit-volume slot (3 when set,
- * else 1). The 4-byte extra holds only the countdown timer.
+ * else 1). The extra block is an IceblastState (just the countdown timer).
  */
 #include "main/dll/dll_00F2_iceblast.h"
 #include "main/objhits.h"
@@ -18,9 +18,13 @@
 #include "main/frame_timing.h"
 #include "main/dll/vecrotatezxy.h"
 
+STATIC_ASSERT(offsetof(IceblastPlacement, useAltHitVolume) == 0x19);
+STATIC_ASSERT(offsetof(IceblastPlacement, initialTimer) == 0x1a);
+STATIC_ASSERT(sizeof(IceblastState) == 0x4);
+
 int iceblast_getExtraSize(void)
 {
-    return 0x4;
+    return sizeof(IceblastState);
 }
 
 int iceblast_getObjectTypeId(void)
@@ -32,7 +36,7 @@ void iceblast_free(void)
 {
 }
 
-void iceblast_render(int* obj, int p1, int p2, int p3, int p4)
+void iceblast_render(GameObject* obj, int p1, int p2, int p3, int p4)
 {
     objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, 1.0f);
 }
@@ -45,7 +49,7 @@ void iceblast_update(GameObject* obj)
 {
     GameObject* path;
     GameObject* player = Obj_GetPlayerObject();
-    f32* timer = obj->extra;
+    IceblastState* state = obj->extra;
     IceblastPlacement* def = (IceblastPlacement*)obj->anim.placementData;
     VecRotateZXYArg vec;
     if (player != NULL && (path = player->childObjs[0]) != NULL)
@@ -60,10 +64,10 @@ void iceblast_update(GameObject* obj)
     }
     ObjHits_SetHitVolumeSlot((u32)obj, 0x10, def->useAltHitVolume != 0 ? 3 : 1, 0);
 
-    timer[0] -= timeDelta;
-    if (timer[0] <= 0.0f)
+    state->timer -= timeDelta;
+    if (state->timer <= 0.0f)
     {
-        timer[0] += 24.0f;
+        state->timer += 24.0f;
         obj->anim.velocityX = 0.0f;
         obj->anim.velocityZ = 0.0f;
         obj->anim.velocityY = -3.0f;
@@ -89,7 +93,8 @@ void iceblast_update(GameObject* obj)
 
 void iceblast_init(GameObject* obj, IceblastPlacement* def)
 {
-    *(f32*)obj->extra = def->initialTimer;
+    IceblastState* state = obj->extra;
+    state->timer = def->initialTimer;
     ObjHits_SetTargetMask((int)obj, 1);
 }
 

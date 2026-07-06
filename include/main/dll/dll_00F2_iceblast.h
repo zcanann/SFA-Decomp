@@ -17,10 +17,16 @@ typedef struct IceblastPlacement
     u8 pad1C[4];
 } IceblastPlacement;
 
+/* Per-object extra state (getExtraSize bytes). */
+typedef struct IceblastState
+{
+    f32 timer; /* 0x00: per-frame countdown; re-seeds the launch on expiry */
+} IceblastState;
+
 int iceblast_getExtraSize(void);
 int iceblast_getObjectTypeId(void);
 void iceblast_free(void);
-void iceblast_render(int* obj, int p1, int p2, int p3, int p4);
+void iceblast_render(GameObject* obj, int p1, int p2, int p3, int p4);
 void iceblast_hitDetect(void);
 void iceblast_update(GameObject* obj);
 void iceblast_init(GameObject* obj, IceblastPlacement* def);
