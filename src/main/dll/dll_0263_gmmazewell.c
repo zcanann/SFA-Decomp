@@ -46,28 +46,6 @@ STATIC_ASSERT(sizeof(GmmazewellState) == 0x8);
 
 #define MAZEWELL_DEFAULT_DIALOGUE 1316
 
-int gmmazewell_getExtraSize(void) { return sizeof(GmmazewellState); }
-
-void gmmazewell_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6978);
-}
-
-void gmmazewell_free(void)
-{
-    GameBit_Set(GAMEBIT_MAZEWELL_ACTIVE, 0);
-    Music_Trigger(MUSIC_MAZEWELL, 0);
-}
-
-void gmmazewell_init(int obj)
-{
-    GmmazewellState* state = ((GameObject*)obj)->extra;
-    state->unk0 = 0;
-    GameBit_Set(GAMEBIT_MAZEWELL_ACTIVE, 1);
-    Music_Trigger(MUSIC_MAZEWELL, 1);
-    ((GameObject*)obj)->animEventCallback = gmmazewell_clearPendingTriggerCallback;
-}
-
 int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GmmazewellState* state = ((GameObject*)obj)->extra;
@@ -81,6 +59,19 @@ int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateSta
         }
     }
     return 0;
+}
+
+int gmmazewell_getExtraSize(void) { return sizeof(GmmazewellState); }
+
+void gmmazewell_free(void)
+{
+    GameBit_Set(GAMEBIT_MAZEWELL_ACTIVE, 0);
+    Music_Trigger(MUSIC_MAZEWELL, 0);
+}
+
+void gmmazewell_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6978);
 }
 
 void gmmazewell_update(unsigned int obj)
@@ -182,4 +173,13 @@ checkValue:
     }
 
     objRenderFn_80041018(obj);
+}
+
+void gmmazewell_init(int obj)
+{
+    GmmazewellState* state = ((GameObject*)obj)->extra;
+    state->unk0 = 0;
+    GameBit_Set(GAMEBIT_MAZEWELL_ACTIVE, 1);
+    Music_Trigger(MUSIC_MAZEWELL, 1);
+    ((GameObject*)obj)->animEventCallback = gmmazewell_clearPendingTriggerCallback;
 }
