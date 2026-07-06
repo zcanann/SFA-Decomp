@@ -77,7 +77,7 @@ void drcagewith_hitDetect(int obj)
     int i;
     int spawned;
     int* nearest;
-    f32 v;
+    f32 angVel;
     f32 clamped;
     f32 px;
     f32 div;
@@ -133,12 +133,12 @@ void drcagewith_hitDetect(int obj)
             }
             return;
         }
-        v = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX);
-        v = v * lbl_803E69FC;
-        v = interpolate(v - ((DrcagewithState*)state)->angularVel, lbl_803E6A00, timeDelta);
-        clamped = (v < gDrCageWithAngVelRateMin * timeDelta)
+        angVel = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX);
+        angVel = angVel * lbl_803E69FC;
+        angVel = interpolate(angVel - ((DrcagewithState*)state)->angularVel, lbl_803E6A00, timeDelta);
+        clamped = (angVel < gDrCageWithAngVelRateMin * timeDelta)
                       ? gDrCageWithAngVelRateMin * timeDelta
-                      : ((v > gDrCageWithAngVelRateMax * timeDelta) ? gDrCageWithAngVelRateMax * timeDelta : v);
+                      : ((angVel > gDrCageWithAngVelRateMax * timeDelta) ? gDrCageWithAngVelRateMax * timeDelta : angVel);
         ((DrcagewithState*)state)->angularVel = ((DrcagewithState*)state)->angularVel + clamped;
         for (i = 0, div = lbl_803E6A0C; i < 9; i++)
         {
