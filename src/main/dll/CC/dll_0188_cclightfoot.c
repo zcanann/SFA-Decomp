@@ -212,8 +212,8 @@ void cclightfoot_update(int obj)
     f32 dists[2];
     f32 hitPos[3];
     int animId;
-    s16 t;
-    u8 m;
+    s16 move;
+    u8 stateId;
 
     fallback = 0;
     if (tbl->stateFlags[state->state] & 1)
@@ -474,12 +474,12 @@ void cclightfoot_update(int obj)
         }
         break;
     case CCLIGHTFOOT_STATE_STRIKE_WATCH:
-        t = ((GameObject*)targetObj)->anim.currentMove;
-        if (t == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress > lbl_803E467C)
+        move = ((GameObject*)targetObj)->anim.currentMove;
+        if (move == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress > lbl_803E467C)
         {
             state->state = CCLIGHTFOOT_STATE_PARRY;
         }
-        else if (t == 0x19)
+        else if (move == 0x19)
         {
             state->state = CCLIGHTFOOT_STATE_GUARD;
         }
@@ -489,9 +489,9 @@ void cclightfoot_update(int obj)
         }
         break;
     case CCLIGHTFOOT_STATE_PARRY:
-        t = ((GameObject*)targetObj)->anim.currentMove;
-        if (t != 0x18 ||
-            (t == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress < lbl_803E467C))
+        move = ((GameObject*)targetObj)->anim.currentMove;
+        if (move != 0x18 ||
+            (move == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress < lbl_803E467C))
         {
             state->state = CCLIGHTFOOT_STATE_RECOVER;
         }
@@ -501,20 +501,20 @@ void cclightfoot_update(int obj)
         }
         break;
     case CCLIGHTFOOT_STATE_PARRY_HELD:
-        t = ((GameObject*)targetObj)->anim.currentMove;
-        if (t != 0x18 ||
-            (t == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress < lbl_803E467C))
+        move = ((GameObject*)targetObj)->anim.currentMove;
+        if (move != 0x18 ||
+            (move == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress < lbl_803E467C))
         {
             state->state = CCLIGHTFOOT_STATE_RECOVER;
         }
         break;
     case CCLIGHTFOOT_STATE_RECOVER:
-        t = ((GameObject*)targetObj)->anim.currentMove;
-        if (t == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress > lbl_803E467C)
+        move = ((GameObject*)targetObj)->anim.currentMove;
+        if (move == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress > lbl_803E467C)
         {
             state->state = CCLIGHTFOOT_STATE_PARRY;
         }
-        else if (t == 0x19)
+        else if (move == 0x19)
         {
             state->state = CCLIGHTFOOT_STATE_GUARD;
         }
@@ -583,8 +583,8 @@ void cclightfoot_update(int obj)
         ObjHits_DisableObject(obj);
         return;
     }
-    m = state->state;
-    if (m >= CCLIGHTFOOT_STATE_GUARD && m <= CCLIGHTFOOT_STATE_RECOVER)
+    stateId = state->state;
+    if (stateId >= CCLIGHTFOOT_STATE_GUARD && stateId <= CCLIGHTFOOT_STATE_RECOVER)
     {
         if (ObjHits_PollPriorityHitWithCooldown(obj, gCcLightfootHitCooldown, 0, hitPos) != 0)
         {
@@ -600,16 +600,16 @@ void cclightfoot_update(int obj)
     {
         if (ObjHits_GetPriorityHit(obj, &hitObj, 0, 0) != 0)
         {
-            t = ((GameObject*)hitObj)->anim.seqId;
-            if (t == 0x11 || t == 0x33)
+            move = ((GameObject*)hitObj)->anim.seqId;
+            if (move == 0x11 || move == 0x33)
             {
                 Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
             }
         }
     }
-    m = state->state;
+    stateId = state->state;
     {
-        u8* pa = &tbl->stateFlags[m];
+        u8* pa = &tbl->stateFlags[stateId];
         animId = pa[0x10];
         if (animId != ((GameObject*)obj)->anim.currentMove)
         {
