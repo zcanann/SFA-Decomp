@@ -1397,6 +1397,7 @@ main/dll/dll_0120_trickyguardspot.c:
 
 main/dll/dll_0121_infotext.c:
 	.text       start:0x8018B9F0 end:0x8018BB00
+	.sdata2     start:0x803E3C80 end:0x803E3C88
 
 main/dll/CC/dll_0122_cctestinfot.c:
 	.text       start:0x8018BB00 end:0x8018BC48
