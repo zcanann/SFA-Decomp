@@ -1,8 +1,7 @@
 /*
- * dll_801814d0 - a multi-object DLL bundling six unrelated placeable
- * object classes, each exported through its own ObjectDescriptor:
- * MagicPlant, TrickyWarp, TrickyGuard, StayPoint, Duster and CurveFish
- * (all using the 10-slot descriptor flag).
+ * dll_801814d0 - Duster hit-response split of the MagicPlant/TrickyWarp/
+ * TrickyGuard/StayPoint/Duster/CurveFish multi-object DLL (the shared
+ * ObjectDescriptor table lives in dll_0100_trickywarp, its retail home).
  *
  * The one resident function defined here is fn_801814D0, the Duster's
  * hit-response handler: it reads the highest-priority hit on the object,
@@ -14,7 +13,6 @@
  */
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
-#include "main/dll/dll_00FE_magicplant.h"
 #include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 extern void Obj_StartModelFadeIn(int obj, int frames);
@@ -138,87 +136,3 @@ void fn_801814D0(int obj, int arg, u8* state)
         }
     }
 }
-
-ObjectDescriptor gMagicPlantObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_init,
-    (ObjectDescriptorCallback)MagicPlant_update,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_render,
-    (ObjectDescriptorCallback)MagicPlant_free,
-    (ObjectDescriptorCallback)MagicPlant_getObjectTypeId,
-    MagicPlant_getExtraSize,
-};
-
-ObjectDescriptor gTrickyWarpObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickywarp_init,
-    (ObjectDescriptorCallback)trickywarp_update,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickywarp_free,
-    0,
-    trickywarp_getExtraSize,
-};
-
-ObjectDescriptor gTrickyGuardObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)trickyguard_init,
-    (ObjectDescriptorCallback)trickyguard_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gStayPointObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)StayPoint_init,
-    (ObjectDescriptorCallback)StayPoint_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gDusterObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)duster_init,
-    (ObjectDescriptorCallback)duster_update,
-    (ObjectDescriptorCallback)duster_hitDetect,
-    (ObjectDescriptorCallback)duster_render,
-    0,
-    0,
-    duster_getExtraSize,
-};
-
-ObjectDescriptor gCurveFishObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)curvefish_init,
-    (ObjectDescriptorCallback)curvefish_update,
-    0,
-    0,
-    0,
-    0,
-    curvefish_getExtraSize,
-};
