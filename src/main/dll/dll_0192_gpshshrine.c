@@ -301,7 +301,7 @@ void gpsh_shrine_update(int obj)
     u8 b14a;
     u8 b14b;
     int* objs;
-    f32 t;
+    f32 idleSfxTimer;
     f32 k;
 
     count = 0;
@@ -376,9 +376,9 @@ void gpsh_shrine_update(int obj)
             {
             case 0:
                 ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-                t = ((GpshShrineState*)data)->sfxTimer - timeDelta;
-                ((GpshShrineState*)data)->sfxTimer = t;
-                if (t <= k)
+                idleSfxTimer = ((GpshShrineState*)data)->sfxTimer - timeDelta;
+                ((GpshShrineState*)data)->sfxTimer = idleSfxTimer;
+                if (idleSfxTimer <= k)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_spirit_voice);
                     ((GpshShrineState*)data)->sfxTimer = (f32)(int)
