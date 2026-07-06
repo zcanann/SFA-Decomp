@@ -208,28 +208,28 @@ void Trigger_free(void* obj)
 
 void Trigger_init(u8* obj, u8* params)
 {
-    u8* sub;
-    f32 t;
+    u8* state;
+    f32 range;
 
     objSetSlot(obj, 0x28);
-    sub = ((GameObject*)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     switch (((TriggerPlacement*)params)->typeId)
     {
     case 0x4b:
-        t = (f32)(s32)(params[0x3a] * 2);
-        ((TriggerState*)sub)->rangeSq = t * t;
+        range = (f32)(s32)(params[0x3a] * 2);
+        ((TriggerState*)state)->rangeSq = range * range;
         ((GameObject*)obj)->anim.rotZ = 0;
         ((GameObject*)obj)->anim.rotY = 0;
         ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
-        ((GameObject*)obj)->anim.rootMotionScale = t / lbl_803E40F8;
+        ((GameObject*)obj)->anim.rootMotionScale = range / lbl_803E40F8;
         break;
     case 0x4c:
-        ((TriggerState*)sub)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
+        ((TriggerState*)state)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
         objFn_80198fa4(obj, params);
         break;
     case 0x230:
-        ((TriggerState*)sub)->rangeSq = (f32)(s32)(params[0x3a] * 2);
-        ((TriggerState*)sub)->rangeSq = ((TriggerState*)sub)->rangeSq * ((TriggerState*)sub)->rangeSq;
+        ((TriggerState*)state)->rangeSq = (f32)(s32)(params[0x3a] * 2);
+        ((TriggerState*)state)->rangeSq = ((TriggerState*)state)->rangeSq * ((TriggerState*)state)->rangeSq;
         break;
     case 0x4d:
         ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
@@ -237,11 +237,11 @@ void Trigger_init(u8* obj, u8* params)
         ((GameObject*)obj)->anim.rotZ = 0;
         break;
     case 0x54:
-        ((TriggerState*)sub)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
-        ((TriggerState*)sub)->gateBits[1] = ((TriggerPlacement*)params)->gateBitSrc[1];
-        ((TriggerState*)sub)->gateBits[2] = ((TriggerPlacement*)params)->gateBitSrc[2];
-        ((TriggerState*)sub)->gateBits[3] = ((TriggerPlacement*)params)->gateBitSrc[3];
-        ((TriggerFlags8A*)(sub + 0x8a))->bit7 = 0;
+        ((TriggerState*)state)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
+        ((TriggerState*)state)->gateBits[1] = ((TriggerPlacement*)params)->gateBitSrc[1];
+        ((TriggerState*)state)->gateBits[2] = ((TriggerPlacement*)params)->gateBitSrc[2];
+        ((TriggerState*)state)->gateBits[3] = ((TriggerPlacement*)params)->gateBitSrc[3];
+        ((TriggerFlags8A*)(state + 0x8a))->bit7 = 0;
         break;
     case 0x4e:
     case 0x4f:
@@ -252,12 +252,12 @@ void Trigger_init(u8* obj, u8* params)
     default:
         break;
     }
-    ((TriggerState*)sub)->gameBit = ((TriggerPlacement*)params)->gameBitSrc;
-    if (GameBit_Get(((TriggerState*)sub)->gameBit) == 1)
+    ((TriggerState*)state)->gameBit = ((TriggerPlacement*)params)->gameBitSrc;
+    if (GameBit_Get(((TriggerState*)state)->gameBit) == 1)
     {
-        sub[0] = (u8)(sub[0] | TRIGGER_SFLAG_DISABLED);
+        state[0] = (u8)(state[0] | TRIGGER_SFLAG_DISABLED);
     }
-    sub[0] = (u8)(sub[0] | TRIGGER_SFLAG_SEED_TARGET);
+    state[0] = (u8)(state[0] | TRIGGER_SFLAG_SEED_TARGET);
 }
 
 int Trigger_getExtraSize(void) { return 0xac; }
@@ -279,7 +279,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
     u32 v;
     u32 bit;
     u32 sel;
-    s16 d;
+    s16 angleDiff;
     int ang;
     int count;
     int first;
@@ -640,22 +640,22 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     break;
                 case 0x1f:
                     t = Obj_GetPlayerObject();
-                    d = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)t;
-                    if (d > 0x8000)
+                    angleDiff = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)t;
+                    if (angleDiff > 0x8000)
                     {
-                        d = (d - 0x10000) + 1;
+                        angleDiff = (angleDiff - 0x10000) + 1;
                     }
-                    if (d < -0x8000)
+                    if (angleDiff < -0x8000)
                     {
-                        d = (d + 0x10000) - 1;
+                        angleDiff = (angleDiff + 0x10000) - 1;
                     }
-                    if (d >= 0)
+                    if (angleDiff >= 0)
                     {
-                        ang = d;
+                        ang = angleDiff;
                     }
                     else
                     {
-                        ang = -d;
+                        ang = -angleDiff;
                     }
                     if (ang > 0x4000)
                     {
