@@ -21,24 +21,6 @@
 #include "main/dll/modgfx.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0015_curves.h"
-extern u32 FUN_80006768();
-extern u32 FUN_8000676c();
-extern u32 FUN_80006c20();
-extern u32 FUN_80017500();
-extern u32 FUN_8005d018();
-extern u8 gGameplayPreviewSettings;
-extern u32 DAT_803a3e26;
-extern u32 DAT_803a3e27;
-extern u32 DAT_803a3e28;
-extern u32 DAT_803a3e2a;
-extern u32 DAT_803a3e2c;
-extern u32 DAT_803a3e2d;
-extern u32 gGameplayPreviewColorRed;
-extern u32 gGameplayPreviewColorGreen;
-extern u32 gGameplayPreviewColorBlue;
-extern u32 gGameplayRegisteredDebugOptions;
-extern u32* DAT_803dd6d0;
-extern u32* gEnterSaveNameTotalWidth;
 extern void mm_free(u32);
 
 extern u32 lbl_803DD4A0;
@@ -54,118 +36,6 @@ extern int getCurGameText(void);
 extern void gameTextLoadDir(int dirId);
 extern void loadAssetFileById(void** out, int id);
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
-void saveFileStruct_unlockCheat(u32 cheatId)
-{
-    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
-    return;
-}
-
-u32 isCheatUnlocked(u32 cheatId)
-{
-    return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
-}
-
-void saveFileStruct_resetVolumes(void)
-{
-    gGameplayPreviewColorRed = 0x7f;
-    gGameplayPreviewColorGreen = 0x7f;
-    gGameplayPreviewColorBlue = 0x7f;
-    return;
-}
-
-u8* getSaveFileStruct(void)
-{
-    return &gGameplayPreviewSettings;
-}
-
-void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
-                      u64 arg5, u64 arg6, u64 arg7,
-                      u64 arg8)
-{
-    FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, DAT_803a3e26);
-    FUN_80006c20(DAT_803a3e2c);
-    FUN_80006768(DAT_803a3e2d, '\0');
-    (**(VtableFn**)(*gEnterSaveNameTotalWidth + 0x50))(DAT_803a3e27);
-    (**(VtableFn**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
-    return;
-}
-
-void screens_release(void)
-{
-}
-
-enum
-{
-    SAVEGAME_EMPTY_TASK_HINT = -1,
-    SAVEGAME_DEFAULT_VOLUME = 0x7f,
-};
-
-u8 getNextTaskHintText(void)
-{
-    u8* p = getLastSavedGameTexts();
-    return p[5];
-}
-
-void screens_initialise(void)
-{
-    lbl_803DD4AC = (u32) - 1;
-    lbl_803DD4A0 = 0;
-    lbl_803DD4A4 = 0;
-    lbl_803DD4A8 = 0;
-}
-
-void* saveGameGetCurHint(void)
-{
-    u8* texts = getLastSavedGameTexts();
-    return gameTextGet((s32)texts[5] + 0xf4);
-}
-
-void loadTaskTexts(void)
-{
-    char** pp;
-    int i;
-    u8* name;
-    int idx;
-    u8* dst;
-    int n = 0xd;
-    dst = &lbl_803A4218[0xd];
-    while (dst--, n-- != 0)
-    {
-        *dst = 0xff;
-    }
-    i = 0x49;
-    pp = &sMapDirectoryNameTable[0x49];
-    while (pp--, i-- != 0)
-    {
-        name = (u8*)*pp;
-        if (name[0] == 'T' && name[1] == 'a' && name[2] == 's' && name[3] == 'k' &&
-            name[4] == 'T' && name[5] == 'e' && name[6] == 'x' && name[7] == 't' && name[8] == 's')
-        {
-            idx = (name[9] - '0') * 100 + (name[10] - '0') * 10 + (name[11] - '0');
-            if (idx < 0xd)
-            {
-                lbl_803A4218[idx] = i;
-            }
-        }
-    }
-}
-
-u8 getCurTaskHintTextMap(void)
-{
-    u8* texts = getLastSavedGameTexts();
-    return (u8)(s32)lbl_803119E0[texts[5]];
-}
-
 void hintTextFn_800ea174(u8* out)
 {
     u8* texts = getLastSavedGameTexts();
@@ -177,12 +47,30 @@ void hintTextFn_800ea174(u8* out)
     out[lbl_803119E0[texts[5]]] = 1;
 }
 
+u8 getCurTaskHintTextMap(void)
+{
+    u8* texts = getLastSavedGameTexts();
+    return (u8)(s32)lbl_803119E0[texts[5]];
+}
+
+void* saveGameGetCurHint(void)
+{
+    u8* texts = getLastSavedGameTexts();
+    return gameTextGet((s32)texts[5] + 0xf4);
+}
+
 int hintTextMapFn_800ea264(void)
 {
     int ret = getCurGameText();
     u8* texts = getLastSavedGameTexts();
     gameTextLoadDir(lbl_803A4218[lbl_803119E0[texts[5]]]);
     return ret;
+}
+
+u8 getNextTaskHintText(void)
+{
+    u8* p = getLastSavedGameTexts();
+    return p[5];
 }
 
 static inline void markTaskBit(u8 id)
@@ -277,15 +165,33 @@ void gameBitFn_800ea2e0(u8 id)
     }
 }
 
-void screens_remove(void)
+void loadTaskTexts(void)
 {
-    if (lbl_803DD4A0 != 0)
+    char** pp;
+    int i;
+    u8* name;
+    int idx;
+    u8* dst;
+    int n = 0xd;
+    dst = &lbl_803A4218[0xd];
+    while (dst--, n-- != 0)
     {
-        mm_free(lbl_803DD4A0);
-        lbl_803DD4A0 = 0;
-        lbl_803DD4AC = (u32) - 1;
-        lbl_803DD4A4 = 0;
-        lbl_803DD4A8 = 0;
+        *dst = 0xff;
+    }
+    i = 0x49;
+    pp = &sMapDirectoryNameTable[0x49];
+    while (pp--, i-- != 0)
+    {
+        name = (u8*)*pp;
+        if (name[0] == 'T' && name[1] == 'a' && name[2] == 's' && name[3] == 'k' &&
+            name[4] == 'T' && name[5] == 'e' && name[6] == 'x' && name[7] == 't' && name[8] == 's')
+        {
+            idx = (name[9] - '0') * 100 + (name[10] - '0') * 10 + (name[11] - '0');
+            if (idx < 0xd)
+            {
+                lbl_803A4218[idx] = i;
+            }
+        }
     }
 }
 
@@ -297,6 +203,18 @@ void screens_remove2(void)
         lbl_803DD4A0 = 0;
         lbl_803DD4A4 = 0;
         lbl_803DD4AC = (u32) - 1;
+    }
+}
+
+void screens_remove(void)
+{
+    if (lbl_803DD4A0 != 0)
+    {
+        mm_free(lbl_803DD4A0);
+        lbl_803DD4A0 = 0;
+        lbl_803DD4AC = (u32) - 1;
+        lbl_803DD4A4 = 0;
+        lbl_803DD4A8 = 0;
     }
 }
 
@@ -328,4 +246,16 @@ void screens_show(int id)
         lbl_803DD4AC = id;
     }
     lbl_803DD4A8 = 1;
+}
+
+void screens_release(void)
+{
+}
+
+void screens_initialise(void)
+{
+    lbl_803DD4AC = (u32) - 1;
+    lbl_803DD4A0 = 0;
+    lbl_803DD4A4 = 0;
+    lbl_803DD4A8 = 0;
 }
