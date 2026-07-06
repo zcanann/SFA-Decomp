@@ -81,7 +81,7 @@ void spscarab_hitDetect(void)
 int spscarab_getExtraSize(void) { return 0x14; }
 int spscarab_getObjectTypeId(void) { return 0x0; }
 
-void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, SFXTRIG_scarab_runloop); }
+void spscarab_free(int obj) { Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_scarab_runloop); }
 
 void spscarab_update(int obj)
 {
@@ -162,18 +162,18 @@ void spscarab_init(int obj, int def)
     extern int Obj_GetActiveModel(int obj);
 
     ObjAnimComponent* objAnim;
-    int p_b8;
+    int state;
     int model;
     struct
     {
-        u16 a;
-        u8 b;
+        u16 pairAB;
+        u8 byteC;
     } paletteBytes;
 
     objAnim = (ObjAnimComponent*)obj;
-    p_b8 = *(int*)&((GameObject*)obj)->extra;
-    paletteBytes.a = gSpScarabPaletteBytesA;
-    paletteBytes.b = gSpScarabPaletteByteB;
+    state = *(int*)&((GameObject*)obj)->extra;
+    paletteBytes.pairAB = gSpScarabPaletteBytesA;
+    paletteBytes.byteC = gSpScarabPaletteByteB;
 
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | (SPSCARAB_OBJFLAG_HIDDEN | SPSCARAB_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(s8) * (u8*)(def + 0x18) << 8);
@@ -187,9 +187,9 @@ void spscarab_init(int obj, int def)
 
     objAnim->bankIndex = (s8)(1 - *(u8*)(def + 0x19));
 
-    ((SpscarabState*)p_b8)->groundY = (f32)(s32) * (s16*)(def + 0x1a);
-    ((SpscarabState*)p_b8)->speedScale = gSpScarabBaseSpeedScale + randomGetRange(0, 0x64) / gSpScarabPickupRadius;
-    ((SpscarabState*)p_b8)->vendorObj = *(int*)(def + 0x14);
+    ((SpscarabState*)state)->groundY = (f32)(s32) * (s16*)(def + 0x1a);
+    ((SpscarabState*)state)->speedScale = gSpScarabBaseSpeedScale + randomGetRange(0, 0x64) / gSpScarabPickupRadius;
+    ((SpscarabState*)state)->vendorObj = *(int*)(def + 0x14);
     *(int*)(def + 0x14) = -1;
 
     Sfx_AddLoopedObjectSound(obj, SFXTRIG_scarab_runloop);
@@ -199,14 +199,14 @@ void spscarab_init(int obj, int def)
     {
     case 0:
         *(u8*)(*(int*)(model + 0x34) + 8) = *((u8*)&paletteBytes + randomGetRange(0, 2));
-        ((SpscarabState*)p_b8)->sfxId = 0x41;
-        ((SpscarabState*)p_b8)->mode = 4;
-        ((SpscarabState*)p_b8)->burstCount = 2;
+        ((SpscarabState*)state)->sfxId = 0x41;
+        ((SpscarabState*)state)->mode = 4;
+        ((SpscarabState*)state)->burstCount = 2;
         break;
     case 1:
-        ((SpscarabState*)p_b8)->sfxId = 0x42;
-        ((SpscarabState*)p_b8)->mode = 1;
-        ((SpscarabState*)p_b8)->burstCount = 0;
+        ((SpscarabState*)state)->sfxId = 0x42;
+        ((SpscarabState*)state)->mode = 1;
+        ((SpscarabState*)state)->burstCount = 0;
         break;
     }
 }
