@@ -271,9 +271,9 @@ void chukchuk_update(short* obj)
 
 #pragma scheduling on
 #pragma peephole on
-void chukchuk_setScale(int obj, int v)
+void chukchuk_setScale(int obj, int message)
 {
-    switch ((u8)v)
+    switch ((u8)message)
     {
     case 0x80:
         Sfx_PlayFromObject(obj, SFXkr_jump1);
