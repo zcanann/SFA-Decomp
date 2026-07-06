@@ -92,17 +92,17 @@ typedef struct EarthWarriorSub
     int moveTable; /* config row pointer */
     int unk3FC;
     int configRow; /* config row pointer */
-    f32 unk404;
+    f32 animSpeedMax; /* 0x404: upper clamp for BaddieState.animSpeedC (and symmetric +/-max fallback) */
     f32 targetAnimSpeed; /* 0x408: interpolate() target for BaddieState.animSpeedC, clamped to configRow[0xc] floor */
     u8 pad40C[4];
     f32 footstepCooldown; /* 0x410: per-tick countdown gating footstep rumble/sfx */
     u8 pad414[0xc];
-    f32 unk420;
+    f32 yawStepRate; /* 0x420: base per-frame yaw-turn step (yawStepScale*yawStepRate*timeDelta caps unk478 turn) */
     u8 pad424[4];
-    f32 unk428;
-    f32 unk42C;
-    f32 unk430;
-    f32 unk434;
+    f32 yawSmoothDivisor; /* 0x428: divides smoothing const (K/yawSmoothDivisor) = interpolate() rate for unk478 yaw turn */
+    f32 yawStepScale; /* 0x42C: multiplier on yawStepRate for the unk478 yaw-turn per-frame cap */
+    f32 currentYawSmoothDivisor; /* 0x430: divides smoothing const for the currentYaw turn (parallel to yawSmoothDivisor) */
+    f32 currentYawStepRate; /* 0x434: per-frame step cap (currentYawStepRate*timeDelta) for the currentYaw turn */
     f32 animSpeedSmoothing; /* 0x438: interpolate() rate/gain closing animSpeedC toward targetAnimSpeed (copied from unk830) */
     u8 pad43C[0x14];
     int unk450;
@@ -115,8 +115,8 @@ typedef struct EarthWarriorSub
     int unk474;
     s16 unk478; /* yaw latch */
     u8 pad47A[2];
-    int unk47C;
-    int unk480;
+    int yawTurnProgress; /* 0x47C: interpolate() source (cast f32) for the unk478 yaw turn; reset to 0 on state entry */
+    int yawTurnDir; /* 0x480: sign source (<0 => negate) for the unk478 yaw-turn direction; reset to 0 on state entry */
     s16 currentYaw; /* current yaw */
     u8 pad486[2];
     int frameCounter;
@@ -125,12 +125,12 @@ typedef struct EarthWarriorSub
     int savedYaw;
     u8 pad498[0x3a];
     s16 aimHalfY; /* 0x4D2: aimAccumY/2; written to secondary look-bone (vec9) */
-    s16 aimAccumY; /* 0x4D4: integrated aim angle (accum += delta*timeDelta) toward clamped target from unk480; written to look-bone vec0[1] */
+    s16 aimAccumY; /* 0x4D4: integrated aim angle (accum += delta*timeDelta) toward clamped target from yawTurnDir; written to look-bone vec0[1] */
     s16 aimAccumX; /* 0x4D6: integrated aim angle (accum += delta) from spawnRotY phase; written negated to look-bone vec0[0] */
     u8 pad4D8[0x308];
     f32 unk7E0;
     u8 pad7E4[0x48];
-    f32 unk82C;
+    f32 animSpeedASmoothing; /* 0x82C: interpolate() rate closing BaddieState.animSpeedA toward animSpeedC */
     f32 unk830;
     f32 unk834;
     u8 pad838[8];
@@ -641,7 +641,7 @@ void fn_802BCA10(int obj, int sub, int state)
     int delta;
     s16* vec0;
     s16* vec9;
-    angle = ((EarthWarriorSub*)sub)->unk480 << 1;
+    angle = ((EarthWarriorSub*)sub)->yawTurnDir << 1;
     if (angle < -0x41)
     {
         delta = -0x41;
@@ -757,7 +757,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     }
     *(int*)state |= 0x800000;
     *(s16*)((char*)state + 0x278) = 0;
-    ((EarthWarriorSub*)q)->unk404 = lbl_803E82E8;
+    ((EarthWarriorSub*)q)->animSpeedMax = lbl_803E82E8;
     if (*(s8*)&((EarthWarriorState*)state)->baddie.moveJustStartedA != 0)
     {
         ((EarthWarriorSub*)q)->currentYaw += ((EarthWarriorSub*)q)->turnDegrees * 0xb6;
@@ -768,7 +768,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         f32 a;
         f32 ph = (((BaddieState*)state)->inputMagnitude - lbl_803E8308) / lbl_803E82FC;
         f32 t;
-        a = ((EarthWarriorSub*)q)->unk404 - lbl_803E833C;
+        a = ((EarthWarriorSub*)q)->animSpeedMax - lbl_803E833C;
         t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         ((EarthWarriorSub*)q)->targetAnimSpeed = a * (t * ((EarthWarriorSub*)q)->unk840);
     }
@@ -820,10 +820,10 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         {
             f32 m2;
             f32 m1;
-            ((EarthWarriorSub*)q)->unk428 *= (m1 = lbl_803E8314);
-            ((EarthWarriorSub*)q)->unk42C *= (m2 = lbl_803E8318);
-            ((EarthWarriorSub*)q)->unk430 *= m1;
-            ((EarthWarriorSub*)q)->unk434 *= m2;
+            ((EarthWarriorSub*)q)->yawSmoothDivisor *= (m1 = lbl_803E8314);
+            ((EarthWarriorSub*)q)->yawStepScale *= (m2 = lbl_803E8318);
+            ((EarthWarriorSub*)q)->currentYawSmoothDivisor *= m1;
+            ((EarthWarriorSub*)q)->currentYawStepRate *= m2;
         }
         ((EarthWarriorSub*)q)->targetAnimSpeed *= lbl_803E831C;
         if (((EarthWarriorSub*)q)->targetAnimSpeed < *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc))
@@ -848,14 +848,14 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     {
         if (((EarthWarriorSub*)q)->frameCounter < 0x96)
         {
-            f32 v = interpolate((f32)(s32)((EarthWarriorSub*)q)->unk47C, lbl_803E8338 / ((EarthWarriorSub*)q)->unk428,
+            f32 v = interpolate((f32)(s32)((EarthWarriorSub*)q)->yawTurnProgress, lbl_803E8338 / ((EarthWarriorSub*)q)->yawSmoothDivisor,
                                 timeDelta);
-            f32 cap = timeDelta * (((EarthWarriorSub*)q)->unk42C * ((EarthWarriorSub*)q)->unk420);
+            f32 cap = timeDelta * (((EarthWarriorSub*)q)->yawStepScale * ((EarthWarriorSub*)q)->yawStepRate);
             if (v > cap)
             {
                 v = cap;
             }
-            if (((EarthWarriorSub*)q)->unk480 < 0)
+            if (((EarthWarriorSub*)q)->yawTurnDir < 0)
             {
                 v = -v;
             }
@@ -864,8 +864,8 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         if (((EarthWarriorSub*)q)->frameCounter < 0x96)
         {
             f32 v = interpolate((f32)(s32)((EarthWarriorSub*)q)->frameCounter,
-                                lbl_803E8338 / ((EarthWarriorSub*)q)->unk430, timeDelta);
-            f32 cap = ((EarthWarriorSub*)q)->unk434 * timeDelta;
+                                lbl_803E8338 / ((EarthWarriorSub*)q)->currentYawSmoothDivisor, timeDelta);
+            f32 cap = ((EarthWarriorSub*)q)->currentYawStepRate * timeDelta;
             if (v > cap)
             {
                 v = cap;
@@ -897,19 +897,19 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             f32 vv = ((EarthWarriorState*)state)->baddie.animSpeedC;
             f32 lo = *(f32*)((EarthWarriorSub*)q)->configRow;
             ((EarthWarriorState*)state)->baddie.animSpeedC =
-                (vv < lo) ? lo : ((vv > ((EarthWarriorSub*)q)->unk404) ? ((EarthWarriorSub*)q)->unk404 : vv);
+                (vv < lo) ? lo : ((vv > ((EarthWarriorSub*)q)->animSpeedMax) ? ((EarthWarriorSub*)q)->animSpeedMax : vv);
         }
         ((EarthWarriorState*)state)->baddie.animSpeedB = lbl_803E8304;
     }
     else
     {
-        f32 h = ((EarthWarriorSub*)q)->unk404;
+        f32 h = ((EarthWarriorSub*)q)->animSpeedMax;
         f32 vv = ((EarthWarriorState*)state)->baddie.animSpeedC;
         ((EarthWarriorState*)state)->baddie.animSpeedC = (vv < -h) ? -h : ((vv > h) ? h : vv);
     }
     ((EarthWarriorState*)state)->baddie.animSpeedA += interpolate(
         ((EarthWarriorState*)state)->baddie.animSpeedC - ((EarthWarriorState*)state)->baddie.animSpeedA,
-        ((EarthWarriorSub*)q)->unk82C, timeDelta);
+        ((EarthWarriorSub*)q)->animSpeedASmoothing, timeDelta);
     if (!((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 &&
         !((ByteFlags*)((char*)inner + 0x14ec))->b01)
     {
@@ -958,7 +958,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
                     {
                         blend = lbl_803E8350;
                     }
-                    if (v294 < ((EarthWarriorSub*)q)->unk404)
+                    if (v294 < ((EarthWarriorSub*)q)->animSpeedMax)
                     {
                         *(u8*)&((EarthWarriorSub*)q)->attackPhase += 4;
                     }
@@ -1003,7 +1003,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     {
         ((BaddieState*)p2)->animSpeedC = lbl_803E8304;
     }
-    ((BaddieState*)p2)->animSpeedA -= interpolate(((BaddieState*)p2)->animSpeedA, q->unk82C, timeDelta);
+    ((BaddieState*)p2)->animSpeedA -= interpolate(((BaddieState*)p2)->animSpeedA, q->animSpeedASmoothing, timeDelta);
     if (((BaddieState*)p2)->animSpeedA <= *(f32*)((char*)lbl_8033527C + 0x8))
     {
         ((BaddieState*)p2)->animSpeedA = lbl_803E8304;
@@ -1032,20 +1032,20 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     }
     moveId = *(s16*)q->moveTable;
     *(s16*)((char*)p2 + 0x278) = 0;
-    q->unk404 = lbl_803E82E8;
+    q->animSpeedMax = lbl_803E82E8;
     {
         f32 a;
         f32 ph = (((BaddieState*)p2)->inputMagnitude - lbl_803E8308) / lbl_803E82FC;
         f32 t;
-        a = q->unk404 - lbl_803E833C;
+        a = q->animSpeedMax - lbl_803E833C;
         t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         q->targetAnimSpeed = a * (t * q->unk840);
     }
     ((BaddieState*)p2)->animSpeedC += interpolate(q->targetAnimSpeed - ((BaddieState*)p2)->animSpeedC, q->animSpeedSmoothing, timeDelta);
     if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
     {
-        q->unk47C = 0;
-        q->unk480 = 0;
+        q->yawTurnProgress = 0;
+        q->yawTurnDir = 0;
         q->frameCounter = 0;
         q->turnDegrees = 0;
         q->unk8A6 = 8;
@@ -1069,18 +1069,18 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         ((BaddieState*)p2)->moveSpeed = lbl_803E8354;
     }
     {
-        f32 v = interpolate((f32)(s32)q->unk47C, lbl_803E8338 / q->unk428, timeDelta);
-        f32 cap = timeDelta * (q->unk42C * q->unk420);
+        f32 v = interpolate((f32)(s32)q->yawTurnProgress, lbl_803E8338 / q->yawSmoothDivisor, timeDelta);
+        f32 cap = timeDelta * (q->yawStepScale * q->yawStepRate);
         v = (v < cap) ? v : cap;
-        if (q->unk480 < 0)
+        if (q->yawTurnDir < 0)
         {
             v = -v;
         }
         *(s16*)&q->unk478 = (gEarthWarriorDegToAngle * v + (f32)(s32)q->unk478);
     }
     {
-        f32 v = interpolate((f32)(s32)q->frameCounter, lbl_803E8338 / q->unk430, timeDelta);
-        f32 cap = q->unk434 * timeDelta;
+        f32 v = interpolate((f32)(s32)q->frameCounter, lbl_803E8338 / q->currentYawSmoothDivisor, timeDelta);
+        f32 cap = q->currentYawStepRate * timeDelta;
         v = (v < cap) ? v : cap;
         if (q->turnDegrees < 0)
         {
@@ -1202,7 +1202,7 @@ void DR_EarthWarrior_hitDetect(int obj)
                 inner->baddie.animSpeedA = -((GameObject*)obj)->anim.velocityZ * vsin - ((GameObject*)obj)->anim.
                     velocityX * vcos;
                 inner->baddie.animSpeedA *= lbl_803E8314;
-                inner->baddie.animSpeedA = (inner->baddie.animSpeedA < lbl_803E8378) ? lbl_803E8378 : ((inner->baddie.animSpeedA > inner->sub.unk404) ? inner->sub.unk404 : inner->baddie.animSpeedA);
+                inner->baddie.animSpeedA = (inner->baddie.animSpeedA < lbl_803E8378) ? lbl_803E8378 : ((inner->baddie.animSpeedA > inner->sub.animSpeedMax) ? inner->sub.animSpeedMax : inner->baddie.animSpeedA);
                 inner->baddie.animSpeedA = (inner->baddie.animSpeedA < lbl_803E8304) ? lbl_803E8304 : ((inner->baddie.animSpeedA > spd) ? spd : inner->baddie.animSpeedA);
                 if (!((ByteFlags*)&inner->sub.flags3F0)->b40)
                 {
