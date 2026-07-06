@@ -232,7 +232,7 @@ void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
     *out_b4 = b[4];
 }
 
-int shop_getItemPrice(int p, int idx)
+int shop_getItemPrice(int obj, int idx)
 {
     if (idx >= 0 && idx < SHOP_ITEM_ROW_COUNT)
     {
@@ -241,7 +241,7 @@ int shop_getItemPrice(int p, int idx)
     return 0;
 }
 
-s16 shop_getItemTextId(int p, int idx)
+s16 shop_getItemTextId(int obj, int idx)
 {
     if (idx >= 0 && idx < SHOP_ITEM_ROW_COUNT)
     {
@@ -251,7 +251,7 @@ s16 shop_getItemTextId(int p, int idx)
     return 0;
 }
 
-u8 shop_getItemField4(int p, int idx)
+u8 shop_getItemField4(int obj, int idx)
 {
     if (idx >= 0 && idx < SHOP_ITEM_ROW_COUNT)
     {
@@ -260,7 +260,7 @@ u8 shop_getItemField4(int p, int idx)
     return 0;
 }
 
-u8 shop_getItemMinPrice(int p, int idx)
+u8 shop_getItemMinPrice(int obj, int idx)
 {
     if (idx >= 0 && idx < SHOP_ITEM_ROW_COUNT)
     {
@@ -296,7 +296,7 @@ void shop_init(int obj, int objDef)
 /* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
  * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and
  * unset.  (i.e. open by default, gated when slot != -1.) */
-int shop_isItemAvailable(int p, int idx)
+int shop_isItemAvailable(int obj, int idx)
 {
 
     s16 slot;
@@ -313,7 +313,7 @@ int shop_isItemAvailable(int p, int idx)
 
 /* EN v1.0 0x801E62F0  size: 104b  Returns 1 when shop item's "bought"
  * GameBit (slot at lbl_80327FD0[idx*12 + 8]) is set; else 0. */
-int shop_isItemBought(int p, int idx)
+int shop_isItemBought(int obj, int idx)
 {
 
     s16 slot;
