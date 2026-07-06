@@ -123,12 +123,12 @@ extern int objSeqObjs;
 extern int lbl_803DD07C;
 extern u8 lbl_803DD078;
 
-int ObjSeq_SetObjs(int a, int b, int c)
+int ObjSeq_SetObjs(int objs, int arg, int flags)
 {
-    u8 v = (u8)c;
-    objSeqObjs = a;
-    lbl_803DD07C = b;
-    lbl_803DD078 = v;
+    u8 flagsByte = (u8)flags;
+    objSeqObjs = objs;
+    lbl_803DD07C = arg;
+    lbl_803DD078 = flagsByte;
     return 1;
 }
 
@@ -280,13 +280,13 @@ void objModelResetVecFn_80080548(int obj)
 extern u8 lbl_803DD124;
 extern int gObjSeqPreemptList[][2];
 
-void ObjSeq_preempt(int a, int b)
+void ObjSeq_preempt(int key, int value)
 {
-    u8 c = lbl_803DD124;
-    int i = (s8)c;
+    u8 count = lbl_803DD124;
+    int i = (s8)count;
     if (i >= 40) return;
-    gObjSeqPreemptList[i][0] = a;
-    gObjSeqPreemptList[i][1] = b;
+    gObjSeqPreemptList[i][0] = key;
+    gObjSeqPreemptList[i][1] = value;
     lbl_803DD124++;
 }
 
