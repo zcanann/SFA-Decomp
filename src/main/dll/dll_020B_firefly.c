@@ -116,9 +116,9 @@ void FireFlyFn_801f4f88(int obj)
     int player = (int)Obj_GetPlayerObject();
     if ((int)objAnim->alpha < FIREFLY_ALPHA_OPAQUE)
     {
-        int v = (int)(lbl_803E5EDC * timeDelta + (f32)(int)objAnim->alpha); /* 2.0f */
-        if (v > FIREFLY_ALPHA_OPAQUE) v = FIREFLY_ALPHA_OPAQUE;
-        objAnim->alpha = v;
+        int newAlpha = (int)(lbl_803E5EDC * timeDelta + (f32)(int)objAnim->alpha); /* 2.0f */
+        if (newAlpha > FIREFLY_ALPHA_OPAQUE) newAlpha = FIREFLY_ALPHA_OPAQUE;
+        objAnim->alpha = newAlpha;
     }
     if (state->splineT > lbl_803E5EB4) /* 1.0f */
     {
@@ -169,8 +169,8 @@ void FireFlyFn_801f4f88(int obj)
     if (Vec_xzDistance((f32*)(player + 0x18), &((GameObject*)obj)->anim.placement->posX) <
         state->playerRadius)
     {
-        f32 lim;
-        f32 a;
+        f32 maxAlpha;
+        f32 curAlpha;
         if (state->kind == FIREFLY_KIND_BLUE_NEAR)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, FIREFLY_PARTFX_BLUE_NEAR, NULL,
@@ -186,26 +186,26 @@ void FireFlyFn_801f4f88(int obj)
             (*gPartfxInterface)->spawnObject((void*)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL,
                                              FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
         }
-        if ((a = state->proximityAlpha) < (lim = lbl_803E5EE0)) /* 0.003f */
+        if ((curAlpha = state->proximityAlpha) < (maxAlpha = lbl_803E5EE0)) /* 0.003f */
         {
-            state->proximityAlpha = a + lbl_803E5EE4; /* 0.00001f */
-            if (state->proximityAlpha > lim)
+            state->proximityAlpha = curAlpha + lbl_803E5EE4; /* 0.00001f */
+            if (state->proximityAlpha > maxAlpha)
             {
-                state->proximityAlpha = lim;
+                state->proximityAlpha = maxAlpha;
             }
         }
     }
     else
     {
-        f32 lim;
-        f32 a;
+        f32 minAlpha;
+        f32 curAlpha;
 
-        if ((a = state->proximityAlpha) > (lim = lbl_803E5EE8)) /* 0.001f */
+        if ((curAlpha = state->proximityAlpha) > (minAlpha = lbl_803E5EE8)) /* 0.001f */
         {
-            state->proximityAlpha = a - lbl_803E5EE4;
-            if (state->proximityAlpha < lim)
+            state->proximityAlpha = curAlpha - lbl_803E5EE4;
+            if (state->proximityAlpha < minAlpha)
             {
-                state->proximityAlpha = lim;
+                state->proximityAlpha = minAlpha;
             }
         }
     }
