@@ -597,7 +597,7 @@ void pauseMenuDrawElement(void *element, f32 fx, f32 fy, int depthZ, u8 paletteI
     dy = (*(u16*)((char*)element + 0xc) << 2) * (u16)scalePercent / 256;
     fx = lbl_803E1E80 * fx;
     fy = lbl_803E1E80 * fy;
-    GXBegin(0x80, 1, 4);
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
     GXWGFifo.s16 = fx;
     GXWGFifo.s16 = fy;
     GXWGFifo.s16 = (s16)(depthZ << 2);
@@ -692,10 +692,10 @@ void pauseMenuMapFn_8011de20(void *this, u8 a, s16 b, int c)
     {
         GXSetNumTevStages(1);
     }
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
     if ((u8)c != 0)
     {
-        GXSetBlendMode(1, 4, 1, 5);
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
     }
     else
     {
@@ -722,7 +722,7 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     GXClearVtxDesc();
     GXSetVtxDesc(9, 1);
     GXSetVtxDesc(0xd, 1);
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
     x0 -= 0x500;
     y0 -= 0x3c0;
     x1 -= 0x500;
@@ -731,7 +731,7 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     y0 = (f32)y0 * lbl_803DBA8C;
     x1 = (f32)x1 * lbl_803DBA8C;
     y1 = (f32)y1 * lbl_803DBA8C;
-    GXBegin(0x80, 1, 4);
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
     z = (s16)(lbl_803DBA8A << 2);
     GXWGFifo.s16 = (s16)(x0 + 0x500);
     GXWGFifo.s16 = (s16)(y0 + 0x3c0);
@@ -772,7 +772,7 @@ void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, 
     p9 / *(u16*)((char*)this + 0xc);
     u1 = (f32)(u32)(p6 + p8) / *(u16*)((char*)this + 0xa);
     v1 = (f32)(u32)(p7 + p9) / *(u16*)((char*)this + 0xc);
-    GXBegin(0x80, 1, 4);
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
     GXWGFifo.s16 = f1;
     GXWGFifo.s16 = f2;
     GXWGFifo.s16 = (s16)(p4 << 2);
@@ -827,7 +827,7 @@ void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, 
         va = lbl_803E1E3C;
         vb = tv;
     }
-    GXBegin(0x80, 1, 4);
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
     GXWGFifo.s16 = f1;
     GXWGFifo.s16 = f2;
     GXWGFifo.s16 = (s16)(p4 << 2);
@@ -1227,13 +1227,13 @@ int fn_8011E0D8(int *this, int *p2, int p3)
     GXSetTevAlphaOp(2, 1, 0, 0, 1, 0);
     if (((GameObject*)this)->anim.seqId == 0x755)
     {
-        GXSetCullMode(1);
+        GXSetCullMode(GX_CULL_FRONT);
     }
     else
     {
-        GXSetCullMode(2);
+        GXSetCullMode(GX_CULL_BACK);
     }
-    GXSetBlendMode(1, 4, 5, 5);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetZMode_(0, 7, 0);
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(7, 0, 0, 7, 0);
