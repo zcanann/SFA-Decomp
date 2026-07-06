@@ -36,14 +36,6 @@ extern f32 lbl_803E0A44;
 extern f32 lbl_803E0A48;
 extern f32 lbl_803E0A4C;
 
-void dll_6A_func01_nop(void)
-{
-}
-
-void dll_6A_func00_nop(void)
-{
-}
-
 void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32 flags)
 {
     struct
@@ -178,4 +170,12 @@ void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_803138A0, 0x10, &((u8*)(int)lbl_803138A0)[180], 0x3e, 0);
+}
+
+void dll_6A_func01_nop(void)
+{
+}
+
+void dll_6A_func00_nop(void)
+{
 }
