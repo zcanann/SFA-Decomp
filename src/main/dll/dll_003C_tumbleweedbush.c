@@ -840,77 +840,77 @@ void linkDrawFn_801302c0(void)
     extern s8 gTumbleweedBushItemCount; /* #57 */
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     LinkMenuItemDB* sel;
-    int four;
-    void* tex;
+    int resetTimer;
+    void* iconTex;
     int i;
     int selLeft;
     int selRight;
     int itemLeft;
     int itemRight;
-    int w;
+    int iconWidth;
 
-    four = 4;
-    gTumbleweedBushItems[linkSelected].timer = four;
+    resetTimer = 4;
+    gTumbleweedBushItems[linkSelected].timer = resetTimer;
     sel = &gTumbleweedBushItems[linkSelected];
     if (((sel->flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)sel->slots[0] != -1))
     {
-        tex = *(void**)(linkTextures + sel->slots[0] * 8);
+        iconTex = *(void**)(linkTextures + sel->slots[0] * 8);
     }
     else
     {
-        tex = sel->texture;
+        iconTex = sel->texture;
     }
-    if (tex != NULL)
+    if (iconTex != NULL)
     {
-        w = ((Texture*)tex)->height;
+        iconWidth = ((Texture*)iconTex)->height;
         selLeft = sel->iconLeft;
     }
     else
     {
         if (getCurLanguage() == 4)
         {
-            w = *(u16*)(lbl_802C8680 + 0xa) + 2;
+            iconWidth = *(u16*)(lbl_802C8680 + 0xa) + 2;
         }
         else
         {
-            w = *(u16*)(lbl_802C8680 + 0x4a) + 2;
+            iconWidth = *(u16*)(lbl_802C8680 + 0x4a) + 2;
         }
         selLeft = sel->textLeft - 2;
     }
-    selRight = selLeft + w;
+    selRight = selLeft + iconWidth;
     for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
         if (i != linkSelected)
         {
             if (((gTumbleweedBushItems[i].flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)gTumbleweedBushItems[i].slots[0] != -1))
             {
-                tex = *(void**)(linkTextures + gTumbleweedBushItems[i].slots[0] * 8);
+                iconTex = *(void**)(linkTextures + gTumbleweedBushItems[i].slots[0] * 8);
             }
             else
             {
-                tex = gTumbleweedBushItems[i].texture;
+                iconTex = gTumbleweedBushItems[i].texture;
             }
-            if (tex != NULL)
+            if (iconTex != NULL)
             {
-                w = ((Texture*)tex)->height;
+                iconWidth = ((Texture*)iconTex)->height;
                 itemLeft = gTumbleweedBushItems[i].iconLeft;
             }
             else
             {
                 if (getCurLanguage() == 4)
                 {
-                    w = *(u16*)(lbl_802C8680 + 0xa) + 2;
+                    iconWidth = *(u16*)(lbl_802C8680 + 0xa) + 2;
                 }
                 else
                 {
-                    w = *(u16*)(lbl_802C8680 + 0x4a) + 2;
+                    iconWidth = *(u16*)(lbl_802C8680 + 0x4a) + 2;
                 }
                 itemLeft = gTumbleweedBushItems[i].textLeft - 2;
             }
-            itemRight = itemLeft + w;
+            itemRight = itemLeft + iconWidth;
             if (itemLeft < selRight && itemRight > selLeft)
             {
-                gTumbleweedBushItems[i].timer = four;
+                gTumbleweedBushItems[i].timer = resetTimer;
             }
         }
     }
@@ -920,13 +920,13 @@ void linkDrawFn_80130484(void)
 {
     extern s8 gTumbleweedBushItemCount; /* #57 */
     extern LinkMenuItemDB gTumbleweedBushItems[40];
-    LinkMenuItemDB* p;
-    void* tex;
+    LinkMenuItemDB* item;
+    void* iconTex;
     int i;
     int minX;
     int maxX;
-    int w;
-    int x;
+    int iconWidth;
+    int left;
     int right;
 
     minX = 480;
@@ -934,36 +934,36 @@ void linkDrawFn_80130484(void)
     i = 0;
     for (; i < gTumbleweedBushItemCount; i++)
     {
-        p = &gTumbleweedBushItems[i];
-        if (((p->flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)p->slots[0] != -1))
+        item = &gTumbleweedBushItems[i];
+        if (((item->flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)item->slots[0] != -1))
         {
-            tex = *(void**)(linkTextures + p->slots[0] * 8);
+            iconTex = *(void**)(linkTextures + item->slots[0] * 8);
         }
         else
         {
-            tex = p->texture;
+            iconTex = item->texture;
         }
-        if (tex != NULL)
+        if (iconTex != NULL)
         {
-            w = ((Texture*)tex)->height;
-            x = p->iconLeft;
+            iconWidth = ((Texture*)iconTex)->height;
+            left = item->iconLeft;
         }
         else
         {
             if (getCurLanguage() == 4)
             {
-                w = *(u16*)(lbl_802C8680 + 0xa) + 2;
+                iconWidth = *(u16*)(lbl_802C8680 + 0xa) + 2;
             }
             else
             {
-                w = *(u16*)(lbl_802C8680 + 0x4a) + 2;
+                iconWidth = *(u16*)(lbl_802C8680 + 0x4a) + 2;
             }
-            x = p->textLeft - 2;
+            left = item->textLeft - 2;
         }
-        right = x + w;
-        if (x < minX)
+        right = left + iconWidth;
+        if (left < minX)
         {
-            minX = x;
+            minX = left;
         }
         if (right > maxX)
         {
