@@ -82,7 +82,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
     u8* player;
     int sval;
-    u32 k;
+    u32 animState;
     int curMove;
     int moveId;
     int bit;
@@ -90,7 +90,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
     f32 dx;
     f32 speed;
     f32 rangeSq;
-    f32 t;
+    f32 timer;
     s16 ang;
     f32 animOut[7];
     struct
@@ -163,8 +163,8 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         }
         else
         {
-            t = (((EdibleMushroomState*)state)->tailSwingFxTimer -= timeDelta);
-            if (t <= lbl_803E5288)
+            timer = (((EdibleMushroomState*)state)->tailSwingFxTimer -= timeDelta);
+            if (timer <= lbl_803E5288)
             {
                 if (((GameObject*)obj)->objectFlags & EDIBLEMUSHROOM_OBJFLAG_RENDERED)
                 {
@@ -348,9 +348,9 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
             ((EdibleMushroomState*)state)->burrowAttackTimer = (f32)(int)
             randomGetRange(0xf0, 0x12c);
         }
-        t = ((EdibleMushroomState*)state)->burrowAttackTimer - timeDelta;
-        ((EdibleMushroomState*)state)->burrowAttackTimer = t;
-        if (t <= lbl_803E5288)
+        timer = ((EdibleMushroomState*)state)->burrowAttackTimer - timeDelta;
+        ((EdibleMushroomState*)state)->burrowAttackTimer = timer;
+        if (timer <= lbl_803E5288)
         {
             ObjHits_SetSourceMask((int)obj, 1);
             (*gExpgfxInterface)->freeSource((int)obj);
@@ -359,9 +359,9 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         }
         else
         {
-            t = ((EdibleMushroomState*)state)->sporePuffTimer - timeDelta;
-            ((EdibleMushroomState*)state)->sporePuffTimer = t;
-            if (t <= lbl_803E5288)
+            timer = ((EdibleMushroomState*)state)->sporePuffTimer - timeDelta;
+            ((EdibleMushroomState*)state)->sporePuffTimer = timer;
+            if (timer <= lbl_803E5288)
             {
                 fx.x = lbl_803E5294;
                 fx.y = lbl_803E529C;
@@ -434,12 +434,12 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         ((EdibleMushroomState*)state)->flags &= ~EDIBLEMUSHROOM_FLAG_ANIM_DONE;
     }
 
-    k = ((EdibleMushroomState*)state)->animState;
-    if (k == 1)
+    animState = ((EdibleMushroomState*)state)->animState;
+    if (animState == 1)
     {
         speed = ((EdibleMushroomState*)state)->lungeRootSpeedScale * (animOut[0] * oneOverTimeDelta);
     }
-    else if (k == 5)
+    else if (animState == 5)
     {
         speed = animOut[2] * oneOverTimeDelta;
     }
