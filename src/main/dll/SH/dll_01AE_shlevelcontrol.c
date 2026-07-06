@@ -236,7 +236,6 @@ void SH_LevelControl_setMusic(short* obj)
 {
 
     extern void Music_Trigger(int id, int arg);
-    extern void SH_LevelControl_setMusic(void* p);
 
     if ((*gSkyInterface)->getSunPosition(0) != 0)
     {
