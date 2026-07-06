@@ -408,7 +408,7 @@ void kaldachom_update(int obj)
     ref = *(int*)&((GameObject*)obj)->anim.placementData;
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if ((((CampfireState*)state)->unk270 != 3) &&
+        if ((((CampfireState*)state)->substate != 3) &&
             (cond = (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)ref)->mapId), cond != 0))
         {
             (*(void (**)(int, int, int, int, int, int, int, double))(*(int*)gBaddieControlInterface + 0x58))(obj, ref, state, 8, 6, 0, 0x26, (double)lbl_803E30C8);

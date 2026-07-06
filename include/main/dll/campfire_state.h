@@ -12,7 +12,7 @@
  */
 typedef struct CampfireState {
     u8 unk0[0x270 - 0x0];
-    s16 unk270;
+    s16 substate; /* 0x270: CA-family substate; gates map-event re-register when != 3 */
     u8 unk272[0x274 - 0x272];
     s16 controlMode;
     u8 unk276[0x2D0 - 0x276];
