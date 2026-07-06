@@ -23,19 +23,6 @@ typedef struct DimbosscrackparPlacement
 
 extern f32 lbl_803E4D98;
 
-void dimbosscrackpar_hitDetect(void)
-{
-}
-
-void dimbosscrackpar_release(void)
-{
-}
-
-void dimbosscrackpar_initialise(void)
-{
-}
-
-
 int dimbosscrackpar_SeqFn(int* obj)
 {
     int* side = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -49,6 +36,20 @@ int dimbosscrackpar_SeqFn(int* obj)
     return 0;
 }
 
+int dimbosscrackpar_getExtraSize(void) { return 0x0; }
+int dimbosscrackpar_getObjectTypeId(void) { return 0x0; }
+
+void dimbosscrackpar_free(int* obj)
+{
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+
+void dimbosscrackpar_hitDetect(void)
+{
+}
+
 void dimbosscrackpar_update(int* obj)
 {
     int* side = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -60,13 +61,6 @@ void dimbosscrackpar_update(int* obj)
     }
 }
 
-void dimbosscrackpar_free(int* obj)
-{
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
-
-void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-
 void dimbosscrackpar_init(s16* obj, s8* def)
 {
     ((GameObject*)obj)->anim.rotX = 0;
@@ -77,6 +71,10 @@ void dimbosscrackpar_init(s16* obj, s8* def)
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[0x22] << 8);
 }
 
+void dimbosscrackpar_release(void)
+{
+}
 
-int dimbosscrackpar_getExtraSize(void) { return 0x0; }
-int dimbosscrackpar_getObjectTypeId(void) { return 0x0; }
+void dimbosscrackpar_initialise(void)
+{
+}
