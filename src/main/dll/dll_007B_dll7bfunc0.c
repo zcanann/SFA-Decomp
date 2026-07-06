@@ -1,16 +1,8 @@
 /*
- * dll7bfunc0 (DLL 0x7B) - save-file / game-progress support DLL.
+ * dll7bfunc0 (DLL 0x7B) - save-icon / preview modgfx effect DLL.
  *
- * Exposes the save-file accessors (getSaveFileStruct, cheat-unlock and
- * preview-volume helpers) plus the internal save/load machinery shared by
- * many gameplay DLLs: the per-object placement override table
- * (FUN_800e8630), the map-act flag bookkeeping (FUN_800e95e8), the
- * save-to-card path (FUN_800e8f58 / FUN_800e9e9c) and the visited-map
- * history ring (FUN_800ea9b8). dll_7B_func03 builds a modgfx command list
- * on the stack and submits it (the save-icon / preview effect).
- *
- * The FUN_* entry points are left unrenamed pending symbols.txt updates;
- * renaming them is out of scope here.
+ * dll_7B_func03 builds a modgfx command list on the stack and submits it
+ * (the save-icon / preview effect).
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -30,88 +22,10 @@ typedef struct
 STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
 
 extern ModgfxInterface** gModgfxInterface;
-extern u32 FUN_80006768();
-extern u32 FUN_8000676c();
-extern u32 FUN_80006c20();
-extern u32 FUN_80017500();
-extern u32 FUN_8005d018();
-extern u8 gGameplayPreviewSettings;
-extern u32 DAT_803a3e26;
-extern u32 DAT_803a3e27;
-extern u32 DAT_803a3e28;
-extern u32 DAT_803a3e2a;
-extern u32 DAT_803a3e2c;
-extern u32 DAT_803a3e2d;
-extern u32 gGameplayPreviewColorRed;
-extern u32 gGameplayPreviewColorGreen;
-extern u32 gGameplayPreviewColorBlue;
-extern u32 gGameplayRegisteredDebugOptions;
-extern u32* DAT_803dd6d0;
-extern u32* DAT_803dd6e8;
 extern u8 gDll7BEffectResourceData[];
 extern f32 lbl_803E0D38, lbl_803E0D3C, lbl_803E0D40, lbl_803E0D44, lbl_803E0D48, lbl_803E0D4C;
 extern f32 lbl_803E0D50, lbl_803E0D54, lbl_803E0D58, lbl_803E0D5C, lbl_803E0D60, lbl_803E0D64;
 extern f32 lbl_803E0D68, lbl_803E0D6C, lbl_803E0D70, lbl_803E0D74, lbl_803E0D78;
-
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
-void saveFileStruct_unlockCheat(u32 cheatId)
-{
-    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
-    return;
-}
-
-u32 isCheatUnlocked(u32 cheatId)
-{
-    return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
-}
-
-void saveFileStruct_resetVolumes(void)
-{
-    gGameplayPreviewColorRed = 0x7f;
-    gGameplayPreviewColorGreen = 0x7f;
-    gGameplayPreviewColorBlue = 0x7f;
-    return;
-}
-
-u8* getSaveFileStruct(void)
-{
-    return &gGameplayPreviewSettings;
-}
-
-void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
-                      u64 arg5, u64 arg6, u64 arg7,
-                      u64 arg8)
-{
-    FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, DAT_803a3e26);
-    FUN_80006c20(DAT_803a3e2c);
-    FUN_80006768(DAT_803a3e2d, '\0');
-    (**(VtableFn**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
-    (**(VtableFn**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
-    return;
-}
-
-void dll_7B_func01_nop(void)
-{
-}
-
-void dll_7B_func00_nop(void)
-{
-}
-
-enum
-{
-    SAVEGAME_SLOT_NONE = -1,
-    SAVEGAME_PREVIEW_CHANNEL_DEFAULT = 0x7f,
-};
 
 void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -322,6 +236,14 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)gDll7BEffectResourceData, 0xc, &base[0x8c], 0x8e, 0);
+}
+
+void dll_7B_func01_nop(void)
+{
+}
+
+void dll_7B_func00_nop(void)
+{
 }
 
 u8 gDll7BEffectResourceData[308] = {
