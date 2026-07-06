@@ -2895,7 +2895,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         {
             if (gSkyState != NULL)
             {
-                vis = (gSkyState[0x209] >> 7) & 1;
+                vis = ((SkyBlendStateFlags*)(gSkyState + 0x209))->unused80;
             }
             if (vis == 0 && (u8)visible != 0)
             {
@@ -2908,7 +2908,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         {
             if (gSkyState != NULL)
             {
-                vis = (gSkyState[0x209] >> 7) & 1;
+                vis = ((SkyBlendStateFlags*)(gSkyState + 0x209))->unused80;
             }
             else
             {
