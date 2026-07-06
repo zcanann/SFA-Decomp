@@ -930,8 +930,8 @@ int hightop_stateHandler04(int obj, int stateArg)
             state->flags |= 1;
             if ((int)randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
             {
-                f32 c = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-                f32 ac = c >= lbl_803E6AA8 ? c : -c;
+                f32 deltaY = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+                f32 ac = deltaY >= lbl_803E6AA8 ? deltaY : -deltaY;
                 if (ac < lbl_803E6AEC)
                 {
                     (*gObjectTriggerInterface)->runSequence(9, (void*)obj, -1);
