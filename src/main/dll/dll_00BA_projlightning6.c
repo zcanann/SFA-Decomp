@@ -33,5 +33,12 @@ void projlightning6_initialise(void)
 
 char sProjlightning6DoNoLongerSupported[] = "<projlightning6 Do>No Longer supported \n";
 
-/* descriptor/ptr table auto 0x803196d8-0x803196f8 */
-u32 lbl_803196D8[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projenergise1_initialise, (u32)projenergise1_release, 0x00000000, (u32)projenergise1_doUnsupported };
+/* descriptor/ptr table auto 0x803196d8-0x803196f8 (pointer tables regenerate ADDR32 relocs).
+ * Union u64 member forces the retail 8-byte alignment (table follows an odd-length
+ * string; retail pads to an 8-aligned table start). Same idiom as dll_000A_expgfx. */
+typedef union DllDescriptorTable {
+    void* ptrs[8];
+    u64 align8;
+} DllDescriptorTable;
+
+DllDescriptorTable lbl_803196D8 = { { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projenergise1_initialise, projenergise1_release, (void*)0x00000000, projenergise1_doUnsupported } };
