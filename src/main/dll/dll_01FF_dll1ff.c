@@ -81,16 +81,16 @@ void dll_1FF_init(s16* a, s8* b)
 void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderModelAndHitVolumes(void* obj, int p1, int p2, int p3, int p4, f32 scale);
-    s32 v;
+    s32 isVisible;
     if (((GameObject*)obj)->unkF8 != 0)
     {
-        v = visible;
-        if (v != -1) return;
+        isVisible = visible;
+        if (isVisible != -1) return;
     }
     else
     {
-        v = visible;
-        if (v == 0) return;
+        isVisible = visible;
+        if (isVisible == 0) return;
     }
     if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 2)
     {
