@@ -2062,6 +2062,7 @@ main/dll/SC/dll_01B6_sclevelcontrol.c:
 
 main/dll/SC/dll_01B7_scmusictree.c:
 	.text       start:0x801DBFA0 end:0x801DC8D4
+	.sdata2     start:0x803E5588 end:0x803E55D0
 
 main/dll/SC/dll_01B8_sctotempole.c:
 	.text       start:0x801DC8D4 end:0x801DCC70
