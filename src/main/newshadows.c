@@ -6,7 +6,6 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #define NEW_SHADOW_MAX_CASTERS 100
-extern u32 FUN_800033a8();
 extern u32 FUN_80003494();
 extern u32 FUN_8000693c();
 extern u32 FUN_8000694c();
