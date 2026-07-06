@@ -376,17 +376,17 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity
 }
 
 #pragma opt_common_subs off
-void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
+void Obj_SmoothTurnAnglesTowardVelocity(int obj, int velVec, int turnFrames, f32 rollFactor, f32 pitchFactor)
 {
-    ObjAnimComponent* anim = &((GameObject*)a)->anim;
-    f32* vel = (f32*)b;
+    ObjAnimComponent* anim = &((GameObject*)obj)->anim;
+    f32* vel = (f32*)velVec;
     f32 rate;
     f32 delta;
     f32 clamped;
     f32 dist;
-    int tmp;
+    int rotZ;
 
-    rate = timeDelta / (f32)(u32)(u16)c;
+    rate = timeDelta / (f32)(u32)(u16)turnFrames;
     if (rate > lbl_803E6C6C)
     {
         rate = lbl_803E6C6C;
@@ -407,30 +407,30 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
                   : ((delta > gBarrelGenTurnRateClampMax) ? gBarrelGenTurnRateClampMax : delta);
     anim->rotX += (int)clamped;
 
-    if (d != lbl_803E6C38)
+    if (rollFactor != lbl_803E6C38)
     {
         anim->rotZ = (s16)(lbl_803E6C98 * (f32)anim->rotZ);
-        anim->rotZ = (s16)(oneOverTimeDelta * (lbl_803E6C5C * (clamped * d)) + (f32)anim->rotZ);
-        tmp = anim->rotZ;
-        if (tmp < -0x2000)
+        anim->rotZ = (s16)(oneOverTimeDelta * (lbl_803E6C5C * (clamped * rollFactor)) + (f32)anim->rotZ);
+        rotZ = anim->rotZ;
+        if (rotZ < -0x2000)
         {
-            tmp = -0x2000;
+            rotZ = -0x2000;
         }
-        else if (tmp > 0x2000)
+        else if (rotZ > 0x2000)
         {
-            tmp = 0x2000;
+            rotZ = 0x2000;
         }
-        anim->rotZ = tmp;
+        anim->rotZ = rotZ;
     }
 
-    if (lbl_803E6C38 != e)
+    if (lbl_803E6C38 != pitchFactor)
     {
         {
             f32 xx = vel[0] * vel[0];
             f32 zz = vel[2] * vel[2];
             dist = sqrtf(xx + zz);
         }
-        delta = (f32)(int)((u16)getAngle(vel[1] * e, dist) - (u16)anim->rotY);
+        delta = (f32)(int)((u16)getAngle(vel[1] * pitchFactor, dist) - (u16)anim->rotY);
         if (delta > gBarrelGenAngleHalfRange)
         {
             delta = gBarrelGenAngleWrapNeg + delta;
