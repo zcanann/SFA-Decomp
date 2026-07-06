@@ -30,5 +30,13 @@ void projtesla_initialise(void)
 
 char sProjteslaDoNoLongerSupported[] = "<projtesla Do>No Longer supported \n";
 
-/* descriptor/ptr table auto 0x80319968-0x80319988 */
-u32 lbl_80319968[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projcore1_initialise, (u32)projcore1_release, 0x00000000, (u32)projcore1_doUnsupported };
+/* descriptor/ptr table auto 0x80319968-0x80319988.
+ * Union u64 member forces the retail 8-byte alignment (table follows the
+ * string, which ends 4-aligned; retail pads to an 8-aligned table start).
+ * Same idiom as dll_00AD_projmagicemmit1 / dll_000A_expgfx. */
+typedef union DllDescriptorTable {
+    void* ptrs[8];
+    u64 align8;
+} DllDescriptorTable;
+
+DllDescriptorTable lbl_80319968 = { { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projcore1_initialise, projcore1_release, (void*)0x00000000, projcore1_doUnsupported } };
