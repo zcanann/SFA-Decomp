@@ -9,12 +9,12 @@
 
 typedef struct
 {
-    f32 f0;
-    f32 f4;
-    f32 f8;
-    f32 fc;
-    u8 f10;
-    u8 f11;
+    f32 offsetX;
+    f32 offsetY;
+    f32 offsetZ;
+    f32 effectScale;
+    u8 effectType;
+    u8 mask;
     u8 pad12[2];
 } GreatFoxFxEntry;
 
@@ -613,10 +613,10 @@ void worldobj_spawnGreatFoxEffects(int obj)
         GreatFoxFxEntry* e;
         scale = ((GameObject*)obj)->anim.rootMotionScale;
         e = &gGreatFoxEffects[i];
-        params.offsetX = offsetScale * (scale * e->f0);
-        params.offsetY = offsetScale * (scale * e->f4);
-        params.offsetZ = offsetScale * (scale * e->f8);
-        objfx_spawnMaskedHitEffect(obj, scale * e->fc, 3, e->f10, e->f11, &params);
+        params.offsetX = offsetScale * (scale * e->offsetX);
+        params.offsetY = offsetScale * (scale * e->offsetY);
+        params.offsetZ = offsetScale * (scale * e->offsetZ);
+        objfx_spawnMaskedHitEffect(obj, scale * e->effectScale, 3, e->effectType, e->mask, &params);
     }
     params.effectScale = lbl_803E6644;
     params.offsetX = lbl_803E6640 * (lbl_803E6648 * ((GameObject*)obj)->anim.rootMotionScale);
