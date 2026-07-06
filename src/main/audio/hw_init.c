@@ -10,7 +10,7 @@ extern u8 salNumVoices;
 extern u8 salAuxFrame;
 extern u8 salFrame;
 extern u32 salMessageCallback;
-extern u8* dspVoice;
+extern DSPvoice* dspVoice;
 extern void salExitDspCtrl(void);
 extern u32 salInitDspCtrl(u32 valueA, u32 valueB, u32 enabled);
 
@@ -19,15 +19,9 @@ extern void audioFn_80271498(u32 value);
 
 void snd_handle_irq(void)
 {
-    u32 zero3;
-    u32 zero4;
-    u32 zero2;
-    u32 offset;
-    u32 zero1;
     u32 timeOffset;
-    u32 zero0;
-    u32 voiceIndex;
-    u8* entry;
+    u8 voiceIndex;
+    u8 i;
 
     if (gSynthInitialized == 0)
     {
@@ -43,43 +37,26 @@ void snd_handle_irq(void)
     hwIRQLeaveCritical();
     hwIRQEnterCritical();
 
-    salAuxFrame = (salAuxFrame + 1) % 3;
     salFrame ^= 1;
+    salAuxFrame = (salAuxFrame + 1) % 3;
 
-    offset = 0;
-    zero0 = offset;
-    zero1 = offset;
-    zero2 = offset;
-    zero3 = offset;
-    zero4 = offset;
-    voiceIndex = 0;
-    while ((u8)voiceIndex < salNumVoices)
+    for (voiceIndex = 0; voiceIndex < salNumVoices; voiceIndex++)
     {
-        entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[0] = zero0;
-        entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[1] = zero1;
-        entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[2] = zero2;
-        entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[3] = zero3;
-        entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[4] = zero4;
-        offset += 0xf4;
-        voiceIndex++;
+        for (i = 0; i < 5; i++)
+        {
+            dspVoice[voiceIndex].changed[i] = 0;
+        }
     }
 
     hwIRQLeaveCritical();
 
-    timeOffset = 0;
-    while ((u8)timeOffset < 5)
+    for (timeOffset = 0; (u8)timeOffset < 5; timeOffset++)
     {
         hwIRQEnterCritical();
         hwSetTimeOffset(timeOffset);
         fn_8026EC44(0x100);
         audioFn_80271498(0x100);
         hwIRQLeaveCritical();
-        timeOffset++;
     }
 
     hwIRQEnterCritical();
@@ -139,7 +116,7 @@ u32 hwIsActive(u32 slot)
     int active;
 
     slot *= 0xf4;
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += slot;
     active = entry[0xec];
     return active != 0;
@@ -155,7 +132,7 @@ void hwSetPriority(int slot, u32 value)
     u8* entry;
 
     slot *= 0xf4;
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += slot;
     ((DSPvoice*)entry)->prio = value;
 }
@@ -180,7 +157,7 @@ void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32
 
     while ((u8)i <= salTimeOffset)
     {
-        entry = dspVoice;
+        entry = (u8*)dspVoice;
         entry += inputOffset;
         entry += 0x24;
         entry += offset;
@@ -190,23 +167,23 @@ void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32
         i++;
     }
 
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += offset;
     ((DSPvoice*)entry)->changed[0] = flags;
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += offset;
     ((DSPvoice*)entry)->prio = priority;
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += offset;
     ((DSPvoice*)entry)->mesgCallBackUserValue = value18;
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += offset;
     ((DSPvoice*)entry)->flags = zero;
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += offset;
     ((DSPvoice*)entry)->smp_id = value70;
 
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += offset;
     valueA = values[0];
     valueB = values[1];
@@ -227,33 +204,33 @@ void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32
 
     if (resetAdsr != 0)
     {
-        entry = dspVoice;
+        entry = (u8*)dspVoice;
         entry += offset;
         ((DSPvoice*)entry)->adsr.mode = zero;
-        entry = dspVoice;
+        entry = (u8*)dspVoice;
         entry += offset;
         ((DSPvoice*)entry)->adsr.aTime = zero;
-        entry = dspVoice;
+        entry = (u8*)dspVoice;
         entry += offset;
         ((DSPvoice*)entry)->adsr.dTime = zero;
-        entry = dspVoice;
+        entry = (u8*)dspVoice;
         entry += offset;
         ((DSPvoice*)entry)->adsr.sLevel = 0x7fff;
-        entry = dspVoice;
+        entry = (u8*)dspVoice;
         entry += offset;
         ((DSPvoice*)entry)->adsr.rTime = zero;
     }
 
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += offset;
     ((DSPvoice*)entry)->lastUpdate.pitch = 0xff;
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += offset;
     ((DSPvoice*)entry)->lastUpdate.vol = 0xff;
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += offset;
     ((DSPvoice*)entry)->lastUpdate.volA = 0xff;
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += offset;
     ((DSPvoice*)entry)->lastUpdate.volB = 0xff;
 
