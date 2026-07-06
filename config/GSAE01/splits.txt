@@ -768,6 +768,7 @@ main/dll/dll_0044_cameramodeviewfinder.c:
 
 main/dll/dll_0046_cameramodedebug.c:
 	.text       start:0x80109748 end:0x80109B04
+	.sdata2     start:0x803E1868 end:0x803E1870
 
 main/dll/dll_0048_cameramodestatic.c:
 	.text       start:0x80109B04 end:0x8010A104
@@ -1650,6 +1651,7 @@ main/dll/MMP/dll_0182_mmpmoonrock.c:
 
 main/dll/MMP/dll_0181_mmptrenchfx.c:
 	.text       start:0x801A8A40 end:0x801A8E24
+	.sdata2     start:0x803E45B8 end:0x803E45C0
 
 main/dll/MMP/dll_0183_mmpgyservent.c:
 	.text       start:0x801A8E24 end:0x801A8F88
@@ -1710,6 +1712,7 @@ main/dll/IM/dll_016D_imicepillar.c:
 
 main/dll/IM/dll_016E_imanimspacecraft.c:
 	.text       start:0x801AE144 end:0x801AE508
+	.data       start:0x803237F4 end:0x80323814
 
 main/dll/IM/dll_016F_imspacethruster.c:
 	.text       start:0x801AE508 end:0x801AE984
