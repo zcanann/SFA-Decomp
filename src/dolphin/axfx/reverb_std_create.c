@@ -4,7 +4,7 @@
 extern f32 powf(f32 x, f32 y);
 s32 sReverbStdDelayLengths[4] = { 1789, 1999, 433, 149 };
 
-static void DLsetdelay(AXFX_REVSTD_DELAYLINE *dl, s32 lag)
+static inline void DLsetdelay(AXFX_REVSTD_DELAYLINE *dl, s32 lag)
 {
     dl->outPoint = dl->inPoint - (lag * 4);
     while (dl->outPoint < 0) {
@@ -12,7 +12,7 @@ static void DLsetdelay(AXFX_REVSTD_DELAYLINE *dl, s32 lag)
     }
 }
 
-static void DLcreate(AXFX_REVSTD_DELAYLINE *dl, s32 len)
+static inline void DLcreate(AXFX_REVSTD_DELAYLINE *dl, s32 len)
 {
     dl->length = len * 4;
     dl->inputs = salMalloc(len * 4);
