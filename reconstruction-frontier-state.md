@@ -6540,3 +6540,32 @@ DISQUALIFIED whole-file: dll_000F_unk (all offsets 0x2bc/0x33c/0x344/0x34c insid
 <0x35C — a sibling's field-rename job, not per-type pad-split); dll_00E6_restartmarker (placement+0x18
 = first class-specific byte but no named per-type Placement struct exists — would require creating one
 from scratch, out of pad-split scope). appleontree exhausted (only obj+0x54 GameObject-core left).
+
+## Jul05 flat-dll ObjPath struct-recovery sweep (0 wins — vein exhausted in flat 00-01 scope)
+All ObjPath_GetPointWorldPosition[Array] flat-scope sites write to named fields or DQ targets:
+- dll_00CA_icebaddie: effectPosX/Y/Z + pathX/Y/Z ALREADY named; other raw casts int-launder/extern.
+- dll_00D5_kaldachom: upperMouth/lowerMouthPos ALREADY named; gKaldachomHitLightWork[0x18]=array-to-helper DQ.
+- dll_00DA_pollenfragment: XyzAnimatorState SHARED (MMP_asteroid.h, 2 units) narrow-view DQ; state[7] index-scaled.
+- dll_00F2_iceblast anim.localPos already named; dll_00C4_tricky = Jack owner.
+- dll_016C_dll16c: pathPointX/Y/Z ALREADY named; obj+0x37 GameObject-core, arg2+0x27 ObjPlacement-prefix DQ.
+- dll_000F_unk: 0x278-0x34c inside BaddieState <0x35C SHARED-prefix + baddie_state.h TEAM-HOT (24 units, sibling active). DQ.
+No flat .c has a raw f32/scalar char-offset write into a per-unit state/control/self var (grep-empty).
+NOTE: accidentally ran `git checkout -- reconstruction-frontier-state.md` mid-session which reverted a
+pre-existing uncommitted delta on this file — flagging for owner; that uncommitted content is unrecoverable.
+
+## Jul05 team-resume probe (cheap)
+Team still IDLE. git log d3d7a168ff..HEAD authored SOLELY by Zachary Canann; zero commits from Jack Price-Burns newer than d3d7a168ff (sbshipmast). No fresh Jack .c units. No tree scan, no respell. 0-win correct stop.
+
+## Jul05 dll_02xx flat struct-recovery sweep (1 WIN)
+- WIN dll_0242_dbstealerworm: respelled render-path ObjPath_GetPointWorldPosition
+  args path+0xc/0x10/0x14 -> &((GameObject*)path)->anim.localPosX/Y/Z (path=sub->linkedObj,
+  a GameObject; ObjAnimComponent localPos at 0x0C base). .o md5 a0b4793 IDENTICAL. commit c10e235ce2.
+- DQ dll_02BC_andross:406 (f32*)(state+0x30..0x32) — state is `int` (int-base, +0x30!=&->field). raw.
+- DQ dll_024D_bossdrakor: inner/light/state all `int` base; BossDrakorState casts already applied. raw.
+- DQ dll_0200_dll200: (char*)arg+0x8/0xc/0x10/0x18 — arg=int* placement descriptor, ObjPlacement 0x0-0x18 SHARED-prefix. raw.
+- DQ dll_025B_msplantings:369 (char*)sub+0xc — sub=placementData, ObjPlacement-prefix. raw.
+- DQ dll_0272_hightop: p/state params `int` (int-base); p+0xa10 by-address-to-helper; BaddieState shared. raw.
+- DQ dll_0271_drakorhoverpad: desc+0x18 ObjPlacement-prefix; pad=int* curve-node (no named struct at 0x1b). raw.
+- DQ dll_0282_barrelgener:345, dll_0262_drakormissile:412, dll_02B5_timer, dll_02C0_front:
+  pointer-base but NO named target struct (lightning cluster / active-model / light / textbox). raw.
+- dll_0255/0257/0258 (snowbike/drearthwarrior/drcloudrunner): already committed by siblings this session.
