@@ -2438,6 +2438,7 @@ main/dll/crate.c:
 
 main/dll/DF/dll_0233_dfpstatue1.c:
 	.text       start:0x802081F4 end:0x8020848C
+	.sdata2     start:0x803E6480 end:0x803E6488
 
 main/dll/DF/dll_0234_dfpperchsw.c:
 	.text       start:0x8020848C end:0x80208508
@@ -2748,6 +2749,7 @@ main/dll/dll_02B1_cmbsrc.c:
 
 main/dll/dll_02B2_dustmotesou.c:
 	.text       start:0x80237574 end:0x80237808
+	.sdata2     start:0x803E73C8 end:0x803E73D0
 
 main/dll/dll_02B3_vortex.c:
 	.text       start:0x80237808 end:0x802383E0
