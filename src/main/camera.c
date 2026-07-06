@@ -835,17 +835,17 @@ void Camera_SetCurrentViewIndex(int index)
 f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z)
 {
     CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
-    f32 t;
+    f32 delta;
     f32 dz;
     f32 dx;
     f32 dy;
 
-    t = z - slot->z;
-    dz = t * t;
-    t = x - slot->x;
-    dx = t * t;
-    t = y - slot->y;
-    dy = t * t;
+    delta = z - slot->z;
+    dz = delta * delta;
+    delta = x - slot->x;
+    dx = delta * delta;
+    delta = y - slot->y;
+    dy = delta * delta;
     return sqrtf(dz + (dx + dy));
 }
 
