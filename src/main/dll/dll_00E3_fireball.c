@@ -824,23 +824,23 @@ void fireball_hitDetect(int* obj)
             ((FireballState*)state)->colorIndex = idx;
             if (*(void**)state != NULL)
             {
-                int c = ((FireballState*)state)->colorIndex * 3;
+                int paletteBase = ((FireballState*)state)->colorIndex * 3;
                 u8* pal = (u8*)lbl_80320978;
-                modelLightStruct_setDiffuseColor(*(int**)state, pal[c], pal[c + 1], pal[c + 2], 0);
+                modelLightStruct_setDiffuseColor(*(int**)state, pal[paletteBase], pal[paletteBase + 1], pal[paletteBase + 2], 0);
             }
         }
         ObjHits_EnableObject(obj);
     }
     else
     {
-        u8 v;
+        u8 colorIndex;
         ((FireballState*)state)->fadeoutTimer = lbl_803E3358;
-        v = ((FireballState*)state)->colorIndex;
-        if (v == 0)
+        colorIndex = ((FireballState*)state)->colorIndex;
+        if (colorIndex == 0)
         {
             projectileParticleFxFn_80099660(obj, lbl_803E3354, 3);
         }
-        else if (v == 1)
+        else if (colorIndex == 1)
         {
             projectileParticleFxFn_80099660(obj, lbl_803E3354, 0);
         }
