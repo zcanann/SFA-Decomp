@@ -106,20 +106,20 @@ void cfforcefield_update(u8* obj)
     CfForceFieldMapData* data;
     CfForceFieldState* state;
     int style;
-    f32 val;
-    int isZero;
+    f32 timeLeft;
+    int notCollapsing;
     f32 strength;
-    f32 z;
+    f32 zero;
     f32 mtx[3][4];
     f32 world[6];
     f32 local[3];
 
     data = (CfForceFieldMapData*)((GameObject*)obj)->anim.placement;
     state = ((GameObject*)obj)->extra;
-    z = 0.0f;
-    ((GameObject*)obj)->anim.velocityZ = z;
-    ((GameObject*)obj)->anim.velocityY = z;
-    ((GameObject*)obj)->anim.velocityX = z;
+    zero = 0.0f;
+    ((GameObject*)obj)->anim.velocityZ = zero;
+    ((GameObject*)obj)->anim.velocityY = zero;
+    ((GameObject*)obj)->anim.velocityX = zero;
 
     if (GameBit_Get(data->activeEvent) != 0)
     {
@@ -128,16 +128,16 @@ void cfforcefield_update(u8* obj)
             /* the ring runs at full strength until the collapse timer is
                started, then shrinks with the time left */
             style = data->style % 3;
-            val = state->timer;
-            isZero = (val != z);
-            isZero = !isZero;
-            if (isZero)
+            timeLeft = state->timer;
+            notCollapsing = (timeLeft != zero);
+            notCollapsing = !notCollapsing;
+            if (notCollapsing)
             {
                 strength = 1.0f;
             }
             else
             {
-                strength = 0.016666668f * val;
+                strength = 0.016666668f * timeLeft;
             }
 
             {
@@ -199,9 +199,9 @@ void cfforcefield_init(GameObject* obj, CfForceFieldMapData* data)
 {
     register CfForceFieldState* state = obj->extra;
     {
-        s8 v = data->rotXByte;
-        s16 t = v << 8;
-        obj->anim.rotX = t;
+        s8 rotByte = data->rotXByte;
+        s16 rotX = rotByte << 8;
+        obj->anim.rotX = rotX;
     }
     state->flags.disabled = GameBit_Get(data->collapseEvent);
     storeZeroToFloatParam(&state->timer);
