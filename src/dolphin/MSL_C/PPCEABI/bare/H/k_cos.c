@@ -27,6 +27,7 @@ extern double lbl_803E7A98;
 extern double lbl_803E7AA0;
 extern double lbl_803E7AA8;
 
+#pragma peephole on
 float __kernel_cos(float y, float x) {
     float ax = __fabsf(x);
     float ay = __fabsf(y);
