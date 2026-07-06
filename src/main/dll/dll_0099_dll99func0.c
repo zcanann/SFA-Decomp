@@ -1,8 +1,8 @@
 /*
  * dll99func0 (DLL 0x99) - a model/screen effect emitter sharing foodbag's
  * modgfx command-list pattern (cf. dll_009A_dll9afunc0.c). func00/func01 are
- * empty entry stubs (defined below in reverse address order: func01 then
- * func00); func03 fills a GfxBuf of nine command entries from the
+ * empty entry stubs (defined last, in reverse export order: func01 then
+ * func00, matching the retail address order); func03 fills a GfxBuf of nine command entries from the
  * .sdata2 float table at lbl_803E1340.. and the per-entry flag/texture/anim
  * table at lbl_80317AF8, then dispatches it through gModgfxInterface->spawnEffect.
  *
@@ -62,14 +62,6 @@ extern f32 lbl_803E135C;
 extern f32 lbl_803E1360;
 extern f32 lbl_803E1364;
 extern f32 lbl_803E1368;
-
-void dll_99_func01_nop(void)
-{
-}
-
-void dll_99_func00_nop(void)
-{
-}
 
 #pragma inline_max_size(2000)
 static inline void dll_99_func03Body(u8* table, int sourceObj, int variant, int posSource, u32 flags, int arg5, f32* extraArgs)
@@ -212,4 +204,12 @@ void dll_99_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
     dll_99_func03Body(lbl_80317AF8, sourceObj, variant, posSource, flags, arg5, extraArgs);
 }
 #pragma inline_max_size reset
+
+void dll_99_func01_nop(void)
+{
+}
+
+void dll_99_func00_nop(void)
+{
+}
 
