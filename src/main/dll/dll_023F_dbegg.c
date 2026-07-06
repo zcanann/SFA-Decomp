@@ -660,7 +660,7 @@ void dbegg_update(int obj)
     f32 flockVel[3];
     f32 d[3];
     int curvePair[2];
-    f32 h;
+    f32 surfaceHeight;
 
     player = Obj_GetPlayerObject();
     eggState = *(int*)&((GameObject*)obj)->extra;
@@ -677,12 +677,12 @@ void dbegg_update(int obj)
             {
                 hitState->flags |= 1;
             }
-            if (fn_801FE560(obj, &h, lbl_803E61C8, *(f32*)&lbl_803E61C8, 1) == 0)
+            if (fn_801FE560(obj, &surfaceHeight, lbl_803E61C8, *(f32*)&lbl_803E61C8, 1) == 0)
             {
                 ((DbEggState*)eggState)->mode = DBEGG_MODE_DRIFTING;
                 break;
             }
-            v = h;
+            v = surfaceHeight;
             v = v >= lbl_803E61C8 ? v : -v;
             if (v < lbl_803E6220)
             {
@@ -698,12 +698,12 @@ void dbegg_update(int obj)
                 ((GameObject*)obj)->anim.velocityX = lbl_803E61C8;
                 ((GameObject*)obj)->anim.velocityZ = fz;
                 ((GameObject*)obj)->anim.velocityY = fz;
-                ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + h;
+                ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + surfaceHeight;
             }
             else
             {
                 ((GameObject*)obj)->anim.velocityY += lbl_803E6224;
-                if (h > lbl_803E61C8)
+                if (surfaceHeight > lbl_803E61C8)
                 {
                     ((GameObject*)obj)->anim.velocityY = lbl_803E6228 * -((GameObject*)obj)->anim.velocityY;
                     ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E622C;
@@ -751,18 +751,18 @@ void dbegg_update(int obj)
             ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX + flockVel[0];
             ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + flockVel[1];
             ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ + flockVel[2];
-            if (fn_801FE560(obj, &h, ((GameObject*)obj)->anim.velocityX * timeDelta,
+            if (fn_801FE560(obj, &surfaceHeight, ((GameObject*)obj)->anim.velocityX * timeDelta,
                             ((GameObject*)obj)->anim.velocityZ * timeDelta, 1) != 0)
             {
                 ((GameObject*)obj)->anim.velocityX = lbl_803E6234 * ((GameObject*)obj)->anim.velocityX;
                 ((GameObject*)obj)->anim.velocityZ = lbl_803E6234 * ((GameObject*)obj)->anim.velocityZ;
-                fn_801FE560(obj, &h, ((GameObject*)obj)->anim.velocityX * timeDelta,
+                fn_801FE560(obj, &surfaceHeight, ((GameObject*)obj)->anim.velocityX * timeDelta,
                             ((GameObject*)obj)->anim.velocityZ * timeDelta, 1);
             }
-            h = h + ((DbEggState*)eggState)->waterOffset;
+            surfaceHeight = surfaceHeight + ((DbEggState*)eggState)->waterOffset;
             if (oneOverTimeDelta != lbl_803E61C8)
             {
-                ((GameObject*)obj)->anim.velocityY = h * (lbl_803E6238 * oneOverTimeDelta);
+                ((GameObject*)obj)->anim.velocityY = surfaceHeight * (lbl_803E6238 * oneOverTimeDelta);
             }
             else
             {
@@ -775,7 +775,7 @@ void dbegg_update(int obj)
             if (randomGetRange(0, 10) == 0)
             {
                 int nb;
-                nb = ((h < lbl_803E6200) >= 0) ? (h < lbl_803E6200) : -(h < lbl_803E6200);
+                nb = ((surfaceHeight < lbl_803E6200) >= 0) ? (surfaceHeight < lbl_803E6200) : -(surfaceHeight < lbl_803E6200);
                 if (nb != 0)
                 {
                     ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
@@ -841,8 +841,8 @@ void dbegg_update(int obj)
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             return;
         case DBEGG_MODE_SINKING:
-            fn_801FE560(obj, &h, lbl_803E61C8, *(f32*)&lbl_803E61C8, 0);
-            v = h;
+            fn_801FE560(obj, &surfaceHeight, lbl_803E61C8, *(f32*)&lbl_803E61C8, 0);
+            v = surfaceHeight;
             v = v >= lbl_803E61C8 ? v : -v;
             if (v < lbl_803E6220)
             {
@@ -854,7 +854,7 @@ void dbegg_update(int obj)
             else
             {
                 ((GameObject*)obj)->anim.velocityY += lbl_803E6244;
-                if (h > lbl_803E61C8)
+                if (surfaceHeight > lbl_803E61C8)
                 {
                     ((GameObject*)obj)->anim.velocityY = lbl_803E6248 * -((GameObject*)obj)->anim.velocityY;
                 }
