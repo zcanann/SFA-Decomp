@@ -352,14 +352,6 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     obj->yaw = (s16)(s32)state->angle;
 }
 
-void sc_totempuzzle_release(void)
-{
-}
-
-void sc_totempuzzle_initialise(void)
-{
-}
-
 void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
 {
     ScTotemPuzzleState* state;
@@ -408,6 +400,14 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     state->peerPhaseOffset = lbl_803E55FC;
     obj->animEventCallback = fn_801DD170;
     obj->objectFlags = (u16)(obj->objectFlags | (SC_TOTEMPUZZLE_OBJFLAG_HIDDEN | SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED));
+}
+
+void sc_totempuzzle_release(void)
+{
+}
+
+void sc_totempuzzle_initialise(void)
+{
 }
 
 /* descriptor/ptr table auto 0x80327a24-0x80327a60 */
