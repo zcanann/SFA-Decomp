@@ -72,11 +72,27 @@ typedef struct
     f32 timer;         /* 0x20 */
 } TextFont;
 
+typedef struct GameTextBox
+{
+    u8 unk00[8];
+    u16 width;
+    u16 height;
+    u8 unk0C[7];
+    u8 style;
+    s16 x;
+    s16 y;
+    s16 cursorX;
+    s16 cursorY;
+    u16 flags;
+    u8 alpha;
+    u8 unk1F;
+} GameTextBox;
+
 extern int curLanguage;
 extern TextFont* gameTextFonts;
 extern void* gameTextDrawFunc;
 extern char* sLanguageNameTable[][2];
-extern u8 gTextBoxes[];
+extern GameTextBox gTextBoxes[];
 extern u8 lbl_802C8680[];
 extern f32 lbl_803DE704;
 extern f32 lbl_803DE708;
@@ -575,7 +591,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
     }
 
     if (curLanguage != 4 && mode == 1 && saveFileStruct_isCheatActive(3) &&
-        win == gTextBoxes + 0x140)
+        win == (u8*)gTextBoxes + 0x140)
     {
         translateToDinoLanguage(str);
     }
@@ -593,7 +609,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
     x = x + (f32) * (s16*)(win + 0x14);
     y = y + (f32) * (s16*)(win + 0x16);
-    winBase = gTextBoxes;
+    winBase = (u8*)gTextBoxes;
 
     while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0)
     {
@@ -1574,14 +1590,14 @@ void gameTextSetWindow(u8* textBox)
         i = lbl_803DC9C8;
         lbl_803DC9C8 = i + 1;
         s = &lbl_8033A540[i];
-        idx = (textBox - gTextBoxes) / 0x20;
+        idx = (textBox - (u8*)gTextBoxes) / 0x20;
         if (idx == 0xff)
         {
             gCurTextBox = NULL;
         }
         else
         {
-            gCurTextBox = gTextBoxes + idx * 0x20;
+            gCurTextBox = (u8*)gTextBoxes + idx * 0x20;
         }
         s->opcode = 8;
         s->arg0 = idx;
@@ -1724,16 +1740,12 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
 }
 
 #pragma dont_inline off
-#pragma optimization_level 2
 void gameTextSetWindowStrPos(int idx, int x, int y)
 {
     if (gameTextDrawFunc != NULL)
     {
-        s16 sx = x;
-        s16* base = (s16*)gTextBoxes;
-        s16* box = base + idx * 0x10;
-        box[0xc] = sx;
-        box[0xd] = y;
+        gTextBoxes[idx].cursorX = x;
+        gTextBoxes[idx].cursorY = y;
     }
     else
     {
@@ -1747,7 +1759,6 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
         s->arg2 = y;
     }
 }
-#pragma optimization_level reset
 
 extern void* gSubtitleBoxTextures[];
 void* gSubtitleLineTable[0x100];
@@ -1974,7 +1985,7 @@ void gameTextInitFn_8001a234(void)
     gameTextBase = gGameTextBase;
 
     i = 0x94;
-    p = textWindow = gTextBoxes + 0x1280;
+    p = textWindow = (u8*)gTextBoxes + 0x1280;
     while (p -= 0x20, i-- != 0)
     {
         *(u16*)(p + 8) = *(u16*)(p + 2);
@@ -2182,7 +2193,7 @@ void gameTextRun(void)
         gameTextFonts->timer = lbl_803DE704;
     }
 
-    textWindow = gTextBoxes;
+    textWindow = (u8*)gTextBoxes;
     for (i = 148; i != 0; i--)
     {
         *(u16*)(textWindow + 0x1c) &= ~1;
@@ -2213,7 +2224,7 @@ void gameTextRun(void)
             {
                 int t1 = cmd->arg2;
                 s16 t2 = cmd->arg1;
-                textWindow = gTextBoxes + cmd->arg0 * 0x20;
+                textWindow = (u8*)gTextBoxes + cmd->arg0 * 0x20;
                 *(s16*)(textWindow + 0x18) = t2;
                 *(s16*)(textWindow + 0x1a) = t1;
                 break;
@@ -2227,7 +2238,7 @@ void gameTextRun(void)
         case 5:
             if (gCurTextBox != NULL)
             {
-                gameTextRenderStrs(cmd->arg0, ((u8*)gCurTextBox - gTextBoxes) / 0x20);
+                gameTextRenderStrs(cmd->arg0, ((u8*)gCurTextBox - (u8*)gTextBoxes) / 0x20);
             }
             break;
         case 6:
@@ -2238,7 +2249,7 @@ void gameTextRun(void)
                 int t3 = cmd->arg3;
                 int t2 = cmd->arg1;
                 int t1 = cmd->arg0;
-                textWindow = gTextBoxes + t2 * 0x20;
+                textWindow = (u8*)gTextBoxes + t2 * 0x20;
                 *(s16*)(textWindow + 0x18) = cmd->arg2;
                 *(s16*)(textWindow + 0x1a) = t3;
                 gameTextRenderStrs(t1, t2);
@@ -2251,7 +2262,7 @@ void gameTextRun(void)
             }
             else
             {
-                gCurTextBox = gTextBoxes + cmd->arg0 * 0x20;
+                gCurTextBox = (u8*)gTextBoxes + cmd->arg0 * 0x20;
             }
             break;
         case 9:
@@ -2309,7 +2320,7 @@ void gameTextRun(void)
     lbl_803DC9C4 = gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET;
 
     i = 0x94;
-    textWindow = gTextBoxes + 0x1280;
+    textWindow = (u8*)gTextBoxes + 0x1280;
     while (textWindow -= 0x20, i-- != 0)
     {
         *(s16*)(textWindow + 0x18) = 0;
@@ -2562,22 +2573,6 @@ extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int scale, int
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int part, int flag);
 extern void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag);
 
-typedef struct GameTextBox
-{
-    u8 unk00[8];
-    u16 width;
-    u16 height;
-    u8 unk0C[7];
-    u8 style;
-    s16 x;
-    s16 y;
-    s16 cursorX;
-    s16 cursorY;
-    u16 flags;
-    u8 alpha;
-    u8 unk1F;
-} GameTextBox;
-
 STATIC_ASSERT(offsetof(GameTextBox, style) == 0x13);
 STATIC_ASSERT(offsetof(GameTextBox, alpha) == 0x1E);
 
@@ -2669,7 +2664,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         }
         else if ((u32)boxId != 0)
         {
-            gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c6x0, &c6x1, &c6y0, &c6y1);
+            gameTextBoxFn_800164b0(boxId, (int)(box - (u8*)gTextBoxes) / 0x20, &c6x0, &c6x1, &c6y0, &c6y1);
         }
         gameTextSetWindow(cur);
         hw = (c6x1 - c6x0) >> 1;
@@ -2697,7 +2692,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         }
         else if ((u32)boxId != 0)
         {
-            gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
+            gameTextBoxFn_800164b0(boxId, (int)(box - (u8*)gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
         }
         gameTextSetWindow(cur);
         drawTexture(gSubtitleBoxTextures[0], (f32)(c3x0 - 0x16), (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100);
@@ -3446,7 +3441,7 @@ void subtitleBuildLineTable(void)
         gameTextSetCharset(1, 1);
     }
     t = (SubtitleTextEntry*)gameTextGet(gGameTextPendingTextId);
-    win = gTextBoxes + 0x140;
+    win = (u8*)gTextBoxes + 0x140;
     gSubtitleLineCount = 0;
     gSubtitleBlockCount = 0;
     for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
