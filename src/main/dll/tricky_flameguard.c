@@ -95,7 +95,6 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
         TRICKY_RUNTIME(st)->unk0D = -1; \
     }
 
-extern void* ObjGroup_GetObjects();
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
 extern f32 getXZDistance(f32* a, f32* b);
 
