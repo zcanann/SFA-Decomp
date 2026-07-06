@@ -535,5 +535,3 @@ void Effect18_release(void)
 void Effect18_initialise(void)
 {
 }
-
-#pragma dont_inline reset
