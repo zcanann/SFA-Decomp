@@ -5692,7 +5692,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             {
                 ((void (*)(int, int, int, int, int))ObjHits_RecordObjectHit)(
                     inner->lastHitObject, obj, 0xb, 1, 0);
-                *(u8*)&((PlayerState*)inner)->hitCount = *(u8*)&((PlayerState*)inner)->hitCount + 1;
+                (*(u8*)&((PlayerState*)inner)->hitCount)++;
                 inner->hitTimer = (f32)(u8)
                 inner->hitInterval;
             }
