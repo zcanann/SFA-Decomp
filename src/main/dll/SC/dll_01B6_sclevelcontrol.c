@@ -32,7 +32,6 @@ STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 #define GAMEBIT_WATER_SPELLSTONE_PLACED 0x5f3 /* mode 1 -> 2 */
 #define GAMEBIT_TOTEMBOND_COMPLETE 0x2d0      /* mode 2 -> 6 */
 
-extern f32 lbl_803E5554;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void gameTimerStop(void);
 extern void Music_Trigger(int id, int arg);
@@ -41,18 +40,10 @@ extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);
 
 
-extern f32 lbl_803E5550;
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
 extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int getSaveGameLoadStatus(void);
-extern f32 lbl_803E5580;
-extern f32 lbl_803E5564;
-extern f32 lbl_803E5568;
-extern f32 lbl_803E5570;
-extern f32 lbl_803E5574;
-extern f32 lbl_803E5578;
-extern f32 lbl_803E557C;
 extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
@@ -64,44 +55,21 @@ extern void warpToMap(int idx, s8 transType);
 
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern u16 gScLevelControlMusicStepSequence[4];
-extern const f32 lbl_803E5558;
-extern f32 lbl_803E555C;
-extern f32 lbl_803E5560;
-extern f32 lbl_803E556C;
 
-void sc_levelcontrol_hitDetect(void)
-{
-}
-
-void sc_levelcontrol_release(void)
-{
-}
-
-void sc_levelcontrol_initialise(void)
-{
-}
-
-int sc_levelcontrol_getExtraSize(void) { return 0x24; }
-int sc_levelcontrol_getObjectTypeId(void) { return 0x0; }
-
-u8 sc_levelcontrol_getAnimEventState(int* obj) { return ((ScLevelControlState*)((GameObject*)obj)->extra)->mode; }
-
-void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5554);
-}
-
-void sc_levelcontrol_free(int obj)
-{
-    gameTimerStop();
-    disableHeavyFog();
-    Music_Trigger(MUSICTRIG_PU3_Adventure_c4, 0);
-    Music_Trigger(MUSICTRIG_Teleport, 0);
-    Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
-    Music_Trigger(MUSICTRIG_fox_arwing, 0);
-    Music_Trigger(MUSICTRIG_trex_chase, 0);
-}
+/* .sdata2 constant pool */
+static const f32 lbl_803E5550 = 120.0f;
+static const f32 lbl_803E5554 = 1.0f;
+static const f32 lbl_803E5558 = 0.0f;
+static const f32 lbl_803E555C = -1000.0f;
+static const f32 lbl_803E5560 = 0.35f;
+static const f32 lbl_803E5564 = -1200.0f;
+static const f32 lbl_803E5568 = -0.35f;
+static const f32 lbl_803E556C = -1080.0f;
+static const f32 lbl_803E5570 = 50.0f;
+static const f32 lbl_803E5574 = 1000.0f;
+static const f32 lbl_803E5578 = 0.1f;
+static const f32 lbl_803E557C = 0.0005f;
+static const f32 lbl_803E5580 = 300.0f;
 
 int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -147,6 +115,8 @@ int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdate
     return 0;
 }
 
+u8 sc_levelcontrol_getAnimEventState(int* obj) { return ((ScLevelControlState*)((GameObject*)obj)->extra)->mode; }
+
 void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -189,43 +159,28 @@ void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
     }
 }
 
-void sc_levelcontrol_init(int obj)
-{
-    ScLevelControlState* st = ((GameObject*)obj)->extra;
-    int state = (int)st;
-    f32 v;
+int sc_levelcontrol_getExtraSize(void) { return 0x24; }
+int sc_levelcontrol_getObjectTypeId(void) { return 0x0; }
 
-    ((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 = 0;
-    ((ScLevelControlState*)state)->areaCell = 0xff;
-    ((ScLevelControlState*)state)->mode = 0;
-    ((GameObject*)obj)->animEventCallback = sc_levelcontrol_processAnimEventsCallback;
-    GameBit_Set(0x60f, 1);
-    GameBit_Set(0x2b8, 0);
-    GameBit_Set(0x4bd, 1);
-    GameBit_Set(GAMEBIT_TOTEMPOLE_FRONT, 0);
-    GameBit_Set(GAMEBIT_TOTEMPOLE_LEFT, 0);
-    GameBit_Set(GAMEBIT_TOTEMPOLE_RIGHT, 0);
-    GameBit_Set(GAMEBIT_TOTEMPOLE_REAR, 0);
-    st->fog0C = lbl_803E5580;
-    v = lbl_803E5564;
-    st->fogNear = lbl_803E5564;
-    st->fog04 = v;
-    st->fog08 = lbl_803E5568;
-    enableHeavyFog(lbl_803E5570 + st->fogNear, st->fogNear, lbl_803E5574, lbl_803E5578, lbl_803E557C, 0);
-    if ((u32)GameBit_Get(0x7a) != 0)
-    {
-        GameBit_Set(0x85, 1);
-    }
-    unlockLevel(mapGetDirIdx(0xe), 0, 0);
-    if (getSaveGameLoadStatus() != 0)
-    {
-        ((GameObject*)obj)->unkF4 = 2;
-    }
-    else
-    {
-        ((GameObject*)obj)->unkF4 = 1;
-    }
-    ((GameObject*)obj)->unkF8 = 1;
+void sc_levelcontrol_free(int obj)
+{
+    gameTimerStop();
+    disableHeavyFog();
+    Music_Trigger(MUSICTRIG_PU3_Adventure_c4, 0);
+    Music_Trigger(MUSICTRIG_Teleport, 0);
+    Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
+    Music_Trigger(MUSICTRIG_fox_arwing, 0);
+    Music_Trigger(MUSICTRIG_trex_chase, 0);
+}
+
+void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5554);
+}
+
+void sc_levelcontrol_hitDetect(void)
+{
 }
 
 /* Per-frame driver: replays the env-fx set on map (re)entry, advances the
@@ -306,7 +261,7 @@ void sc_levelcontrol_update(int obj)
             return;
         }
     }
-    if (((ScLevelControlState*)state)->fadeTimer != lbl_803E5558 &&
+    if (((ScLevelControlState*)state)->fadeTimer &&
         (((GameObject*)player)->objectFlags & SCLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
     {
         if (lbl_803E5550 == ((ScLevelControlState*)state)->fadeTimer)
@@ -314,7 +269,7 @@ void sc_levelcontrol_update(int obj)
             (*gScreenTransitionInterface)->start(0x73, 1);
         }
         ((ScLevelControlState*)state)->fadeTimer -= timeDelta;
-        if (((ScLevelControlState*)state)->fadeTimer <= *(f32*)&lbl_803E5558)
+        if (((ScLevelControlState*)state)->fadeTimer <= lbl_803E5558)
         {
             ((ScLevelControlState*)state)->fadeTimer = lbl_803E5558;
             ((ScLevelControlState*)state)->timer10 = lbl_803E5558;
@@ -328,7 +283,7 @@ void sc_levelcontrol_update(int obj)
             GameBit_Set(0x7cf, 1);
         }
     }
-    else if (((ScLevelControlState*)state)->timer10 != *(f32*)&lbl_803E5558 &&
+    else if (((ScLevelControlState*)state)->timer10 &&
              (((GameObject*)player)->objectFlags & SCLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
     {
         if (lbl_803E5550 == ((ScLevelControlState*)state)->timer10)
@@ -336,7 +291,7 @@ void sc_levelcontrol_update(int obj)
             (*gScreenTransitionInterface)->start(0x73, 1);
         }
         ((ScLevelControlState*)state)->timer10 -= timeDelta;
-        if (((ScLevelControlState*)state)->timer10 <= *(f32*)&lbl_803E5558)
+        if (((ScLevelControlState*)state)->timer10 <= lbl_803E5558)
         {
             GameBit_Set(0x640, 1);
             ((ScLevelControlState*)state)->timer10 = lbl_803E5558;
@@ -356,7 +311,7 @@ void sc_levelcontrol_update(int obj)
         {
             gameTextShow(0x429);
             ((ScLevelControlState*)state)->fog0C -= timeDelta;
-            if (((ScLevelControlState*)state)->fog0C < *(f32*)&lbl_803E5558)
+            if (((ScLevelControlState*)state)->fog0C < lbl_803E5558)
             {
                 ((ScLevelControlState*)state)->fog0C = lbl_803E5558;
             }
@@ -571,4 +526,51 @@ void sc_levelcontrol_update(int obj)
         GameBit_Set(0x60e, 1);
         ((ScLevelControlState*)state)->flags1F &= ~2;
     }
+}
+
+void sc_levelcontrol_init(int obj)
+{
+    ScLevelControlState* st = ((GameObject*)obj)->extra;
+    int state = (int)st;
+    f32 v;
+
+    ((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 = 0;
+    ((ScLevelControlState*)state)->areaCell = 0xff;
+    ((ScLevelControlState*)state)->mode = 0;
+    ((GameObject*)obj)->animEventCallback = sc_levelcontrol_processAnimEventsCallback;
+    GameBit_Set(0x60f, 1);
+    GameBit_Set(0x2b8, 0);
+    GameBit_Set(0x4bd, 1);
+    GameBit_Set(GAMEBIT_TOTEMPOLE_FRONT, 0);
+    GameBit_Set(GAMEBIT_TOTEMPOLE_LEFT, 0);
+    GameBit_Set(GAMEBIT_TOTEMPOLE_RIGHT, 0);
+    GameBit_Set(GAMEBIT_TOTEMPOLE_REAR, 0);
+    st->fog0C = lbl_803E5580;
+    v = lbl_803E5564;
+    st->fogNear = lbl_803E5564;
+    st->fog04 = v;
+    st->fog08 = lbl_803E5568;
+    enableHeavyFog(lbl_803E5570 + st->fogNear, st->fogNear, lbl_803E5574, lbl_803E5578, lbl_803E557C, 0);
+    if ((u32)GameBit_Get(0x7a) != 0)
+    {
+        GameBit_Set(0x85, 1);
+    }
+    unlockLevel(mapGetDirIdx(0xe), 0, 0);
+    if (getSaveGameLoadStatus() != 0)
+    {
+        ((GameObject*)obj)->unkF4 = 2;
+    }
+    else
+    {
+        ((GameObject*)obj)->unkF4 = 1;
+    }
+    ((GameObject*)obj)->unkF8 = 1;
+}
+
+void sc_levelcontrol_release(void)
+{
+}
+
+void sc_levelcontrol_initialise(void)
+{
 }

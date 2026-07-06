@@ -2058,6 +2058,7 @@ main/dll/SH/dll_01B4_shemptytumblew.c:
 
 main/dll/SC/dll_01B6_sclevelcontrol.c:
 	.text       start:0x801DB098 end:0x801DBFA0
+	.sdata2     start:0x803E5550 end:0x803E5584
 
 main/dll/SC/dll_01B7_scmusictree.c:
 	.text       start:0x801DBFA0 end:0x801DC8D4
