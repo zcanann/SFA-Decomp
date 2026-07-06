@@ -95,46 +95,46 @@ void wmtorch_update(int obj)
 
 void wmtorch_init(u8* obj, u8* params)
 {
-    WmTorchState* sub;
+    WmTorchState* state;
     void* res;
-    f32 v[5]; /* flame params; only [4] is set, the rest raw on purpose */
+    f32 flameParams[5]; /* flame params; only [4] is set, the rest raw on purpose */
 
-    sub = ((GameObject*)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     if (((WmTorchPlacement*)params)->unk1A != 0)
     {
-        sub->unk04 = (f32)(s32)((WmTorchPlacement*)params)->unk1A;
+        state->unk04 = (f32)(s32)((WmTorchPlacement*)params)->unk1A;
     }
     else
     {
-        sub->unk04 = lbl_803E5DEC;
+        state->unk04 = lbl_803E5DEC;
     }
     if (((WmTorchPlacement*)params)->unk1C != 0)
     {
-        sub->unk0A = ((WmTorchPlacement*)params)->unk1C;
+        state->unk0A = ((WmTorchPlacement*)params)->unk1C;
     }
     else
     {
-        sub->unk0A = 0x8c;
+        state->unk0A = 0x8c;
     }
-    sub->torchType = ((WmTorchPlacement*)params)->torchType;
-    v[4] = lbl_803E5DF0;
-    if (sub->torchType == 0)
+    state->torchType = ((WmTorchPlacement*)params)->torchType;
+    flameParams[4] = lbl_803E5DF0;
+    if (state->torchType == 0)
     {
         res = Resource_Acquire(0x69, 1);
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 1, v, 0x10004, -1, 0);
+        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 1, flameParams, 0x10004, -1, 0);
     }
-    else if (sub->torchType == 0x7f)
+    else if (state->torchType == 0x7f)
     {
         res = Resource_Acquire(0x69, 1);
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 2, v, 0x10004, -1, 0);
+        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 2, flameParams, 0x10004, -1, 0);
     }
     else
     {
         res = Resource_Acquire(0x63, 1);
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 2, v, 0x10004, -1, 0);
+        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 2, flameParams, 0x10004, -1, 0);
     }
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF8;
     Resource_Release(res);
