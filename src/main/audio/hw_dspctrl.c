@@ -1094,6 +1094,7 @@ int salSynthSendMessage(int synth, int msg)
 
 void salActivateVoice(SalVoice* voice, u8 idx)
 {
+    u32 i;
     u8* st;
 
     if (voice->active != 0)
@@ -1101,7 +1102,9 @@ void salActivateVoice(SalVoice* voice, u8 idx)
         salDeactivateVoice(voice);
         voice->flags |= 0x20;
     }
-    st = lbl_803CC1E0 + idx * 0xbc;
+    i = idx;
+    i *= 0xbc;
+    st = lbl_803CC1E0 + i;
     voice->pendingDeactivate = 0;
     if ((voice->next = *(SalVoice**)(st += 0x48)) != NULL)
     {
@@ -1116,26 +1119,22 @@ void salActivateVoice(SalVoice* voice, u8 idx)
 
 void salDeactivateVoice(SalVoice* voice)
 {
-    SalVoice* prev;
-    SalVoice* next;
-
     if (voice->active == 0)
     {
         return;
     }
-    prev = voice->prev;
-    if (prev != NULL)
+    if (voice->prev != NULL)
     {
-        prev->next = voice->next;
+        voice->prev->next = voice->next;
     }
     else
     {
-        *(SalVoice**)(lbl_803CC1E0 + voice->studioIndex * 0xbc + 0x48) = voice->next;
+        SalStudio* base = (SalStudio*)lbl_803CC1E0;
+        base[voice->studioIndex].voiceList = voice->next;
     }
-    next = voice->next;
-    if (next != NULL)
+    if (voice->next != NULL)
     {
-        next->prev = voice->prev;
+        voice->next->prev = voice->prev;
     }
     voice->active = 0;
 }
