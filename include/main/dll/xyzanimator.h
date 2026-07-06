@@ -6,13 +6,13 @@
 
 typedef struct PollenFragmentConfig {
   s16 spawnSfxId;
-  s16 field02;
-  s16 field04;
+  s16 loopSfxId;      /* 0x02: looped object sound (Sfx_KeepAliveLoopedObjectSound) */
+  s16 explodeSfxId;   /* 0x04: explosion sfx, -1 = none (Sfx_PlayFromObjectLimited) */
   s16 effectObjectId;
-  s16 field08;
-  s16 field0A;
+  s16 burstFxId;      /* 0x08: burst particle-fx object id (spawnObject) */
+  s16 auraFxId;       /* 0x0A: aura particle-fx object id, -1 = none (spawnObject) */
   f32 scale;
-  s16 field10;
+  s16 targetGroup;    /* 0x10: object-group id for homing (ObjGroup_FindNearestObject) */
   u16 flags;
 } PollenFragmentConfig;
 
