@@ -572,8 +572,8 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         break;
     case 0x20a:
         {
-            f32 a;
-            f32 b;
+            f32 speed;
+            f32 horizSpeed;
             if (spawnParams == 0)
                 FILL350();
             cfg.startPosX = (f32)(s32)
@@ -582,19 +582,19 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
             randomGetRange(1, 5);
             cfg.startPosZ = (f32)(s32)
             randomGetRange(-5, 5);
-            a = lbl_803DF9E0 * (f32)(s32)
+            speed = lbl_803DF9E0 * (f32)(s32)
             randomGetRange(0, 0x258) + lbl_803DFA54;
             cfg.velocityY = lbl_803DFA10 * (f32)(s32)
             randomGetRange(0, 0xc8) + lbl_803DF9D4;
             cfg.velocityX = mathSinf(gEffect3Pi * (f32) * (s16*)sourceObj / gEffect3AngleFullScale);
             cfg.velocityZ = mathCosf(gEffect3Pi * (f32) * (s16*)sourceObj / gEffect3AngleFullScale);
-            b = a * (lbl_803DFA60 * (f32)(s32)
+            horizSpeed = speed * (lbl_803DFA60 * (f32)(s32)
             randomGetRange(0, 0x14)
             )
             +lbl_803DF9D8;
-            cfg.velocityX = cfg.velocityX * b;
-            cfg.velocityZ = cfg.velocityZ * b;
-            cfg.velocityY = cfg.velocityY * a;
+            cfg.velocityX = cfg.velocityX * horizSpeed;
+            cfg.velocityZ = cfg.velocityZ * horizSpeed;
+            cfg.velocityY = cfg.velocityY * speed;
             cfg.scale = lbl_803DFA68 * (f32)(s32)
             randomGetRange(0, 0xa) + lbl_803DFA64;
             cfg.lifetimeFrames = randomGetRange(0xb4, 0xc8);
