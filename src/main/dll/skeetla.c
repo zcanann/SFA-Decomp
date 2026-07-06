@@ -27,6 +27,9 @@
 #include "main/gamebits.h"
 #include "main/lightmap.h"
 
+/* group owned by another DLL, queried here */
+#define SIDEREPEL_OBJGROUP 0x40 /* DLL 0xEB siderepel */
+
 /* Per-node fan-out limit: status[]/bestDistances[]/outRoutes[] hold at most
  * this many linked route candidates (status[8] / f32 bestDistances[8]). */
 #define TRICKY_ROUTE_CANDIDATE_COUNT 8
@@ -1233,7 +1236,7 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
     ObjHitsPriorityState* hitState;
     u16 minRadius;
 
-    objects = ObjGroup_GetObjects(0x40, &count);
+    objects = ObjGroup_GetObjects(SIDEREPEL_OBJGROUP, &count);
     for (i = 0; i < count; i++)
     {
         obj = objects[i];
