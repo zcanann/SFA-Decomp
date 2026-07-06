@@ -35,7 +35,7 @@ typedef struct SynthStartParams
     u8 volume;
     u8 pad11[7];
     u8 active;
-    u8 pad25[15];
+    u8 pad25[3];
 } SynthStartParams;
 
 /*
@@ -124,6 +124,30 @@ resolved:
     }
 }
 
+/* TU-local twin of synthResolveHandle; MWCC auto-inlines it at both call sites. */
+static u32 resolveHandle(u32 handle)
+{
+    SynthVoice* voice;
+
+    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
+    {
+        if (voice->handle == (handle & SYNTH_HANDLE_ID_MASK))
+        {
+            return voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
+        }
+    }
+
+    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
+    {
+        if (voice->handle == (handle & SYNTH_HANDLE_ID_MASK))
+        {
+            return voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
+        }
+    }
+
+    return SYNTH_HANDLE_INVALID;
+}
+
 /*
  * Start or resume a sequence handle from a compact request packet. This is the
  * no-lock backend used by the sequence event runner when it needs to defer a
@@ -132,11 +156,12 @@ resolved:
 void synthStartHandleFromRequest(SynthStartRequest* request, u32* outHandle, u8 noLock)
 {
     SynthVoiceRuntime* runtime;
-    SynthVoice* voice;
     SynthStartParams params;
-    u32 handle;
+    /* Fully DCE'd, but their slots shape the retail frame (cf. MusyX seqCrossFade temporaries). */
+    u32 deadSlot0;
+    u32 deadSlot1;
+    u32 deadSlot2;
     u32 slot;
-    u32 resolvedHandle;
     u32 newHandle;
     u32 mixValue0;
     u32 mixValue1;
@@ -146,31 +171,9 @@ void synthStartHandleFromRequest(SynthStartRequest* request, u32* outHandle, u8 
     SynthVoice* pendingVoice;
     SynthStartRequest* pendingRequest;
 
-    handle = request->handle;
     runtime = SYNTH_VOICE_RUNTIME();
 
-    resolvedHandle = handle & SYNTH_HANDLE_ID_MASK;
-    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
-    {
-        if (voice->handle == resolvedHandle)
-        {
-            slot = voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
-            goto resolved_initial;
-        }
-    }
-
-    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
-    {
-        if (voice->handle == resolvedHandle)
-        {
-            slot = voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
-            goto resolved_initial;
-        }
-    }
-
-    slot = SYNTH_HANDLE_INVALID;
-
-resolved_initial:
+    slot = resolveHandle(request->handle);
     flags = request->flags;
     if ((flags & SYNTH_START_FLAG_PENDING_START) != 0)
     {
@@ -186,38 +189,33 @@ resolved_initial:
 
     if (noLock != 0)
     {
-        fadeTime = request->fadeTime;
-        if (fadeTime < 5)
-        {
-            fadeTime = 5;
-        }
-        mixValue1 = fadeTime;
+        fadeTime = request->fadeTime < 5 ? 5 : request->fadeTime;
         if ((flags & SYNTH_START_FLAG_VOLUME_MODE2) != 0)
         {
-            synthUpdateHandle(0, mixValue1, handle, 2);
+            synthUpdateHandle(0, fadeTime, request->handle, 2);
         }
         else if ((flags & SYNTH_START_FLAG_VOLUME_MODE3) != 0)
         {
-            synthUpdateHandle(0, mixValue1, handle, 3);
+            synthUpdateHandle(0, fadeTime, request->handle, 3);
         }
         else
         {
-            synthUpdateHandle(0, mixValue1, handle, 1);
+            synthUpdateHandle(0, fadeTime, request->handle, 1);
         }
     }
     else
     {
         if ((flags & SYNTH_START_FLAG_VOLUME_MODE2) != 0)
         {
-            sndSeqVolume(0, request->fadeTime, handle, 2);
+            sndSeqVolume(0, request->fadeTime, request->handle, 2);
         }
         else if ((flags & SYNTH_START_FLAG_VOLUME_MODE3) != 0)
         {
-            sndSeqVolume(0, request->fadeTime, handle, 3);
+            sndSeqVolume(0, request->fadeTime, request->handle, 3);
         }
         else
         {
-            sndSeqVolume(0, request->fadeTime, handle, 1);
+            sndSeqVolume(0, request->fadeTime, request->handle, 1);
         }
     }
 
@@ -228,30 +226,7 @@ resolved_initial:
 
     if ((request->flags & SYNTH_START_FLAG_REUSE_HANDLE) != 0)
     {
-        handle = request->reuseHandle;
-        resolvedHandle = handle & SYNTH_HANDLE_ID_MASK;
-        for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
-        {
-            if (voice->handle == resolvedHandle)
-            {
-                slot = voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
-                goto resolved_reuse;
-            }
-        }
-
-        for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
-        {
-            if (voice->handle == resolvedHandle)
-            {
-                slot = voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
-                goto resolved_reuse;
-            }
-        }
-
-        slot = SYNTH_HANDLE_INVALID;
-
-    resolved_reuse:
-        if (slot != SYNTH_HANDLE_INVALID)
+        if ((slot = resolveHandle(request->reuseHandle)) != SYNTH_HANDLE_INVALID)
         {
         if (noLock != 0)
         {
@@ -259,9 +234,10 @@ resolved_initial:
             synthUpdateHandle(request->volume, request->volumeTime, request->reuseHandle, 0);
             if ((request->flags & SYNTH_START_FLAG_MUTE) != 0)
             {
+                newHandle = request->reuseHandle;
                 mixValue1 = request->mixValue1;
                 mixValue0 = request->mixValue0;
-                newHandle = synthResolveHandle(request->reuseHandle);
+                newHandle = synthResolveHandle(newHandle);
                 if (newHandle != SYNTH_HANDLE_INVALID)
                 {
                     if ((newHandle & SYNTH_HANDLE_QUEUED_FLAG) == 0)
@@ -280,8 +256,9 @@ resolved_initial:
             }
             if ((request->flags & SYNTH_START_FLAG_SPEED) != 0)
             {
+                newHandle = request->reuseHandle;
                 speed = request->value16;
-                newHandle = synthResolveHandle(request->reuseHandle);
+                newHandle = synthResolveHandle(newHandle);
                 if ((newHandle & SYNTH_HANDLE_QUEUED_FLAG) == 0)
                 {
                     SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 0) = speed;
