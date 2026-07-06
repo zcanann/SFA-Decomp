@@ -250,8 +250,8 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
     u32 fullKey;
     u8* keymap;
     s32 idx;
-    s32 p;
-    s32 k;
+    s32 panTmp;
+    s32 note;
     s32 kk;
     s32 pp;
     u32 handle;
@@ -270,19 +270,19 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
             {
                 if ((((KeymapEntry*)(keymap + idx))->panning & 0x80) == 0)
                 {
-                    p = keymap[fullKey * 8 + 3] - 0x40;
-                    p += pan;
-                    if (p < 0)
+                    panTmp = keymap[fullKey * 8 + 3] - 0x40;
+                    panTmp += pan;
+                    if (panTmp < 0)
                     {
                         pan = 0;
                     }
-                    else if (p > 0x7F)
+                    else if (panTmp > 0x7F)
                     {
                         pan = 0x7F;
                     }
                     else
                     {
-                        pan = p;
+                        pan = panTmp;
                     }
                 }
                 else
@@ -290,18 +290,18 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     pan = 0x80;
                 }
 
-                k = (fullKey & 0x7F) + ((s8*)((u32)keymap + idx))[2];
-                if (k > 0x7F)
+                note = (fullKey & 0x7F) + ((s8*)((u32)keymap + idx))[2];
+                if (note > 0x7F)
                 {
                     kk = 0x7F;
                 }
-                else if (k < 0)
+                else if (note < 0)
                 {
                     kk = 0;
                 }
                 else
                 {
-                    kk = k;
+                    kk = note;
                 }
 
                 prio += *(s16*)&keymap[idx + 4];
@@ -361,7 +361,7 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
     u32 rejected;
     u32 vid;
     u32 vi;
-    s32 p;
+    s32 prioTmp;
     u8 pri;
     extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
     extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
@@ -372,12 +372,12 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
                                      u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                                      u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 
-    p = prio + prioOffset;
-    if ((u8)p > 0xFF)
+    prioTmp = prio + prioOffset;
+    if ((u8)prioTmp > 0xFF)
     {
-        p = 0xFF;
+        prioTmp = 0xFF;
     }
-    pri = p;
+    pri = prioTmp;
 
     switch (id & 0xC000)
     {
@@ -514,7 +514,7 @@ void LowPrecisionHandler(int voice)
 
     for (j = 0; j < 2; ++j)
     {
-        u32 p;
+        u32 panVal;
         if (sv->panning[j] == sv->panTarget[j])
         {
             continue;
@@ -528,16 +528,16 @@ void LowPrecisionHandler(int voice)
         else
         {
             sv->panning[j] = sv->panTarget[j] - (sv->panTime[j] / 256) * sv->panDelta[j];
-            p = sv->panning[j];
-            if ((s32)p < 0)
+            panVal = sv->panning[j];
+            if ((s32)panVal < 0)
             {
-                p = 0;
+                panVal = 0;
             }
-            else if (p > 0x7F0000)
+            else if (panVal > 0x7F0000)
             {
-                p = 0x7F0000;
+                panVal = 0x7F0000;
             }
-            sv->panning[j] = p;
+            sv->panning[j] = panVal;
         }
         HWVOICE_FLAGS(sv) |= 0x200000000000ULL;
     }
