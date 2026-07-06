@@ -818,50 +818,50 @@ void Trigger_hitDetect(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    int t;
-    int tk;
+    int triggerObj;
+    int trickyObj;
     int target;
     int ok;
     int ok2;
     int inside;
     int wasInside;
     int i;
-    u8 c;
+    u8 targetKind;
     s16 ty;
     f32 dist[1];
 
     dist[0] = lbl_803E4104;
     if (((TriggerPlacement*)def)->unk38 <= 0 || ((TriggerPlacement*)def)->typeId == 0xf4)
     {
-        t = Obj_GetPlayerObject();
-        if ((void*)t != NULL)
+        triggerObj = Obj_GetPlayerObject();
+        if ((void*)triggerObj != NULL)
         {
             inside = fn_802972A8();
             if ((void*)inside != NULL)
             {
-                t = inside;
+                triggerObj = inside;
             }
         }
         else
         {
-            t = getArwing();
+            triggerObj = getArwing();
         }
-        tk = getTrickyObject();
-        if ((void*)t != NULL || (void*)tk != NULL)
+        trickyObj = getTrickyObject();
+        if ((void*)triggerObj != NULL || (void*)trickyObj != NULL)
         {
             if ((*state & TRIGGER_SFLAG_DISABLED) != 0)
             {
-                objInterpretSeq(obj, t, 1, 0);
+                objInterpretSeq(obj, triggerObj, 1, 0);
                 *state &= ~TRIGGER_SFLAG_DISABLED;
                 *state |= TRIGGER_SFLAG_ENTERED;
             }
             else
             {
                 ok = 1;
-                c = def[0x43];
-                if (c > 2)
+                targetKind = def[0x43];
+                if (targetKind > 2)
                 {
-                    target = ObjGroup_FindNearestObject(c - 1, obj, (int)dist);
+                    target = ObjGroup_FindNearestObject(targetKind - 1, obj, (int)dist);
                     if ((void*)target == NULL)
                     {
                         ok = 0;
@@ -869,18 +869,18 @@ void Trigger_hitDetect(int obj)
                 }
                 else
                 {
-                    switch (c)
+                    switch (targetKind)
                     {
                     case 0:
-                        target = t;
-                        if ((void*)t == NULL)
+                        target = triggerObj;
+                        if ((void*)triggerObj == NULL)
                         {
                             ok = 0;
                         }
                         break;
                     case 1:
-                        target = tk;
-                        if ((void*)tk == NULL)
+                        target = trickyObj;
+                        if ((void*)trickyObj == NULL)
                         {
                             ok = 0;
                         }
@@ -997,7 +997,7 @@ void Trigger_hitDetect(int obj)
                     }
                     break;
                 case 0x50:
-                    objInterpretSeq(obj, t, 1, 0);
+                    objInterpretSeq(obj, triggerObj, 1, 0);
                     if (return1_800202BC() != 0)
                     {
                         Obj_FreeObject(obj);
@@ -1018,7 +1018,7 @@ void Trigger_hitDetect(int obj)
                     if (ok && ((TriggerFlags8A*)(state + 0x8a))->bit7 == 0)
                     {
                         ((TriggerFlags8A*)(state + 0x8a))->bit7 = 1;
-                        objInterpretSeq(obj, t, 1, 0);
+                        objInterpretSeq(obj, triggerObj, 1, 0);
                     }
                     if (!ok)
                     {
