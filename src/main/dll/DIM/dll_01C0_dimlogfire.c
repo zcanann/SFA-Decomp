@@ -197,8 +197,8 @@ void dimlogfire_update(int obj)
 {
     extern int getTrickyObject(void); /* #57 */
     extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */
-    int a;
-    int b;
+    int flickerFlagA;
+    int flickerFlagB;
     int rand;
     s16 alpha;
     u32 light;
@@ -223,27 +223,27 @@ void dimlogfire_update(int obj)
         state->flickerTimerA = state->flickerTimerA - timeDelta;
         if (state->flickerTimerA <= lbl_803E4828)
         {
-            a = 7;
+            flickerFlagA = 7;
             state->flickerTimerA = state->flickerTimerA + lbl_803E482C;
         }
         else
         {
-            a = 0;
+            flickerFlagA = 0;
         }
         state->flickerTimerB = state->flickerTimerB - timeDelta;
         if (state->flickerTimerB <= lbl_803E4828)
         {
-            b = 1;
+            flickerFlagB = 1;
             state->flickerTimerB = state->flickerTimerB + lbl_803E4820;
         }
         else
         {
-            b = 0;
+            flickerFlagB = 0;
         }
         vec.x = lbl_803E4828;
         vec.y = lbl_803E482C;
         vec.z = lbl_803E4828;
-        fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 2, a, b, (int)&vec);
+        fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 2, flickerFlagA, flickerFlagB, (int)&vec);
         ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
         break;
     case DIMLOGFIRE_MODE_UNLIT:
