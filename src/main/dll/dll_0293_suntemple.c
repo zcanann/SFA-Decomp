@@ -81,31 +81,6 @@ STATIC_ASSERT(offsetof(SunTempleSetup, preemptSequenceId) == 0x24);
 STATIC_ASSERT(sizeof(SunTempleSetup) == 0x28);
 STATIC_ASSERT(sizeof(SunTempleState) == 2);
 
-int suntemple_getExtraSize(void) { return sizeof(SunTempleState); }
-
-int suntemple_getObjectTypeId(void) { return 0; }
-
-void suntemple_free(void)
-{
-}
-
-void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0)
-    {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6E18);
-    }
-}
-
-void suntemple_hitDetect(int obj)
-{
-    GameObject* gameObj = (GameObject*)obj;
-    if ((gameObj->anim.modelInstance->flags & 1) != 0 && gameObj->anim.hitVolumeTransforms != NULL)
-    {
-        objRenderFn_80041018(obj);
-    }
-}
-
 int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     GameObject* gameObj = (GameObject*)obj;
@@ -142,35 +117,28 @@ int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void suntemple_init(u8* obj, u8* setup)
+int suntemple_getExtraSize(void) { return sizeof(SunTempleState); }
+
+int suntemple_getObjectTypeId(void) { return 0; }
+
+void suntemple_free(void)
+{
+}
+
+void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0)
+    {
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6E18);
+    }
+}
+
+void suntemple_hitDetect(int obj)
 {
     GameObject* gameObj = (GameObject*)obj;
-    SunTempleSetup* cfg = (SunTempleSetup*)setup;
-    SunTempleState* state;
-
-    gameObj->anim.rotX = (s16)(cfg->rotXByte << 8);
-    gameObj->anim.rotY = (s16)(cfg->rotYByte << 8);
-    gameObj->anim.rotZ = (s16)(cfg->rotZByte << 8);
-    gameObj->animEventCallback = suntemple_interactCallback;
-    gameObj->anim.bankIndex = cfg->bankIndex;
-    if (gameObj->anim.bankIndex >= gameObj->anim.modelInstance->modelCount)
+    if ((gameObj->anim.modelInstance->flags & 1) != 0 && gameObj->anim.hitVolumeTransforms != NULL)
     {
-        gameObj->anim.bankIndex = 0;
-    }
-    state = gameObj->extra;
-    state->activationLatched = GameBit_Get(cfg->activationGameBit);
-    state->mapEventMode = (*gMapEventInterface)->getMapAct(gameObj->anim.mapEventSlot);
-    if ((cfg->flags & SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE) != 0 && state->activationLatched != 0)
-    {
-        gameObj->anim.alpha = 0;
-    }
-    if (state->activationLatched != 0)
-    {
-        ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
-        if (texture != NULL)
-        {
-            texture->textureId = SUNTEMPLE_TEXTURE_LATCHED;
-        }
+        objRenderFn_80041018(obj);
     }
 }
 
@@ -303,6 +271,38 @@ void suntemple_update(int obj)
         gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
     gameObj->unkF4 = 1;
+}
+
+void suntemple_init(u8* obj, u8* setup)
+{
+    GameObject* gameObj = (GameObject*)obj;
+    SunTempleSetup* cfg = (SunTempleSetup*)setup;
+    SunTempleState* state;
+
+    gameObj->anim.rotX = (s16)(cfg->rotXByte << 8);
+    gameObj->anim.rotY = (s16)(cfg->rotYByte << 8);
+    gameObj->anim.rotZ = (s16)(cfg->rotZByte << 8);
+    gameObj->animEventCallback = suntemple_interactCallback;
+    gameObj->anim.bankIndex = cfg->bankIndex;
+    if (gameObj->anim.bankIndex >= gameObj->anim.modelInstance->modelCount)
+    {
+        gameObj->anim.bankIndex = 0;
+    }
+    state = gameObj->extra;
+    state->activationLatched = GameBit_Get(cfg->activationGameBit);
+    state->mapEventMode = (*gMapEventInterface)->getMapAct(gameObj->anim.mapEventSlot);
+    if ((cfg->flags & SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE) != 0 && state->activationLatched != 0)
+    {
+        gameObj->anim.alpha = 0;
+    }
+    if (state->activationLatched != 0)
+    {
+        ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
+        if (texture != NULL)
+        {
+            texture->textureId = SUNTEMPLE_TEXTURE_LATCHED;
+        }
+    }
 }
 
 void suntemple_release(void)
