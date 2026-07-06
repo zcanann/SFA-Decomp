@@ -13,6 +13,8 @@
 #define GX_TEV_SWAP0 0
 #define GX_TG_MTX2x4 1
 #define GX_TG_TEX0 4
+#define GX_IDENTITY 60
+#define GX_PTIDENTITY 125
 #define GX_CS_SCALE_1 0
 #define GX_TB_ZERO 0
 #define GX_TEVPREV 0
@@ -3091,7 +3093,7 @@ void skyFn_8008aee8(void)
         GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
+        GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
         GXSetNumIndStages(0);
         GXSetNumChans(0);
         GXSetNumTexGens(1);
