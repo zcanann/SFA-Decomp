@@ -2,27 +2,14 @@
  * dll74func0 (DLL 0x74) - shared save-game / world-progress core lib.
  *
  * A near-clone of the dll_6D core (same exported entry points; this DLL
- * instance differs only in its private effect-list data labels). Owns the
- * gameplay save-state helpers exported through gameplay.h:
- *   - debug-cheat unlock bits (saveFileStruct_unlockCheat / isCheatUnlocked)
- *     packed into gGameplayRegisteredDebugOptions.
- *   - preview color/volume defaults (saveFileStruct_resetVolumes, 0x7f each).
- *   - the save-settings apply path (loadSaveSettings) and the per-map act /
- *     object-position fix-up (FUN_800e8630, name TBD).
- *   - the map-act flag setter that mirrors a flag bit across the map-act table
- *     and maintains the recently-changed history ring (FUN_800e95e8, name TBD).
- *   - new-game / save-slot setup, seeding the map-act table and the save block
- *     (FUN_800e8f58 / FUN_800e9e9c, names TBD).
- *   - the visited-map history ring, most-recent-first, depth 5 (FUN_800ea9b8,
- *     name TBD).
+ * instance differs only in its private effect-list data labels). The retail
+ * dll_0074 object carries only func03/func01/func00; the save/cheat helpers
+ * (saveFileStruct_unlockCheat / isCheatUnlocked / saveFileStruct_resetVolumes /
+ * getSaveFileStruct / loadSaveSettings) are mainDol drift-duplicates whose
+ * retail home is dll_0015_curves.
  *   - dll_74_func03: builds the modgfx command list (the spirit/aura particle
  *     effect, a 0/non-0 variant pair) and submits it via
  *     gModgfxInterface->spawnEffect.
- *
- * The map-act / flag tables live at 0x803a3f08.. and 0x80312460..; the visited
- * history ring at 0x803a3be0. Bit indices are split into (word,bit) by the
- * 0x12f flag-word base. These globals are cross-TU; only this DLL writes the
- * debug-option and preview-color globals.
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -41,82 +28,9 @@ typedef struct
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
-extern u8 gGameplayPreviewSettings;
-extern u32 gGameplayPreviewColorRed;
-extern u32 gGameplayPreviewColorGreen;
-extern u32 gGameplayPreviewColorBlue;
-extern u32 gGameplayRegisteredDebugOptions;
 extern u8 lbl_803146D8[];
 extern f32 lbl_803E0BB8, lbl_803E0BBC, lbl_803E0BC0, lbl_803E0BC4, lbl_803E0BC8, lbl_803E0BCC;
 extern f32 lbl_803E0BD0, lbl_803E0BD4, lbl_803E0BD8, lbl_803E0BDC, lbl_803E0BE0, lbl_803E0BE4;
-
-/* Cross-TU main-lib functions and globals this DLL references (home TUs
-   un-recovered; left as Ghidra FUN_/DAT_ names). */
-
-extern u32 FUN_80006768();
-extern u32 FUN_8000676c();
-extern u32 FUN_80006c20();
-extern u32 FUN_80017500();
-extern u32 FUN_8005d018();
-extern u32 DAT_803a3e26;
-extern u32 DAT_803a3e27;
-extern u32 DAT_803a3e28;
-extern u32 DAT_803a3e2a;
-extern u32 DAT_803a3e2c;
-extern u32 DAT_803a3e2d;
-extern u32* DAT_803dd6d0;
-extern u32* DAT_803dd6e8;
-
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
-void saveFileStruct_unlockCheat(u32 cheatId)
-{
-    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
-}
-
-u32 isCheatUnlocked(u32 cheatId)
-{
-    return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
-}
-
-void saveFileStruct_resetVolumes(void)
-{
-    gGameplayPreviewColorRed = 0x7f;
-    gGameplayPreviewColorGreen = 0x7f;
-    gGameplayPreviewColorBlue = 0x7f;
-}
-
-u8* getSaveFileStruct(void)
-{
-    return &gGameplayPreviewSettings;
-}
-
-void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
-                      u64 arg5, u64 arg6, u64 arg7,
-                      u64 arg8)
-{
-    FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, DAT_803a3e26);
-    FUN_80006c20(DAT_803a3e2c);
-    FUN_80006768(DAT_803a3e2d, '\0');
-    (**(VtableFn**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
-    (**(VtableFn**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
-}
-
-void dll_74_func01_nop(void)
-{
-}
-
-void dll_74_func00_nop(void)
-{
-}
 
 void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -320,4 +234,12 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     {
         (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803146D8, 0x18, &base[0xd4], 0xd9, 0);
     }
+}
+
+void dll_74_func01_nop(void)
+{
+}
+
+void dll_74_func00_nop(void)
+{
 }
