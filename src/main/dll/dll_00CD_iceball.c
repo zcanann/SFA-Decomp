@@ -15,11 +15,7 @@
  *     seqId (0x2cb / 100 / 0x30a).
  * iceball_init primes the lifetime (0xb4) and full alpha; render/free toggle
  * the camera view-Y offset for the impact shake.
- *
- * This TU also owns the ChukChuk object descriptor (gChukChukObjDescriptor);
- * the ChukChuk handlers themselves live in the sibling DLL 0x00CC.
  */
-#include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -145,6 +141,30 @@ void fn_8015FCCC(int obj)
     }
 }
 
+#pragma scheduling on
+#pragma peephole on
+
+int iceball_getExtraSize(void) { return 0x2; }
+int iceball_getObjectTypeId(void) { return 0x0; }
+
+#pragma scheduling off
+#pragma peephole off
+void iceball_free(void) { Camera_DisableViewYOffset(); }
+
+void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 visible32 = visible;
+    if (visible32 != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2E50);
+}
+#pragma scheduling on
+#pragma peephole on
+
+void iceball_hitDetect(void)
+{
+}
+
+#pragma scheduling off
+#pragma peephole off
 void iceball_update(u16* obj, int unused)
 {
     int objInt;
@@ -190,23 +210,14 @@ void iceball_update(u16* obj, int unused)
     }
 }
 
+void iceball_init(GameObject* obj)
+{
+    obj->unkF4 = 0xb4;
+    ObjHits_DisableObject((int)obj);
+    obj->anim.alpha = 0xff;
+}
 #pragma scheduling on
 #pragma peephole on
-
-/* ChukChuk ice-spitter: defined in the sibling TU; this DLL only owns the
-   descriptor below (its extra state is 0x18 bytes, getObjectTypeId 0). */
-void chukchuk_free(void);
-void chukchuk_hitDetect(void);
-void chukchuk_release(void);
-void chukchuk_initialise(void);
-void chukchuk_init(u8* obj, u8* params);
-
-STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
-STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
-
-void iceball_hitDetect(void)
-{
-}
 
 void iceball_release(void)
 {
@@ -215,54 +226,6 @@ void iceball_release(void)
 void iceball_initialise(void)
 {
 }
-
-int chukchuk_getExtraSize(void);
-int chukchuk_getObjectTypeId(void);
-int iceball_getExtraSize(void) { return 0x2; }
-int iceball_getObjectTypeId(void) { return 0x0; }
-
-void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-#pragma scheduling off
-#pragma peephole off
-void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 visible32 = visible;
-    if (visible32 != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2E50);
-}
-void iceball_free(void) { Camera_DisableViewYOffset(); }
-
-void chukchuk_update(short* obj);
-
-void chukchuk_setScale(int obj, int v);
-
-void iceball_init(GameObject* obj)
-{
-    obj->unkF4 = 0xb4;
-    ObjHits_DisableObject((int)obj);
-    obj->anim.alpha = 0xff;
-}
-
-ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)chukchuk_initialise,
-        (ObjectDescriptorCallback)chukchuk_release,
-        0,
-        (ObjectDescriptorCallback)chukchuk_init,
-        (ObjectDescriptorCallback)chukchuk_update,
-        (ObjectDescriptorCallback)chukchuk_hitDetect,
-        (ObjectDescriptorCallback)chukchuk_render,
-        (ObjectDescriptorCallback)chukchuk_free,
-        (ObjectDescriptorCallback)chukchuk_getObjectTypeId,
-        chukchuk_getExtraSize,
-        (ObjectDescriptorCallback)chukchuk_setScale,
-    },
-    0,
-};
 
 ObjectDescriptor gIceBallObjDescriptor = {
     0,
