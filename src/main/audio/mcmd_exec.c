@@ -60,7 +60,7 @@ extern void fn_802712C8(McmdVoiceState * state); /* synthStartSynthJobHandling *
  */
 void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
 {
-    u8 t;
+    u8 tmp;
     s32 i1;
     s32 i2;
     u8 detune;
@@ -74,9 +74,9 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
         detune = args->flags >> 0x18;
         if (((args->flags >> 8) & 0xff) > detune)
         {
-            t = k1;
+            tmp = k1;
             k1 = k2;
-            k2 = t;
+            k2 = tmp;
         }
     }
     else
@@ -1091,12 +1091,12 @@ void macHandleActive(McmdVoiceState* sv)
             {
                 u32 time;
                 u32 phase;
-                u32 n;
+                u32 ctrlIndex;
                 time = (cmd >> 0x10) & 0xffff;
                 sndConvertMs(&time);
-                n = (cmd >> 8) & 0xff;
+                ctrlIndex = (cmd >> 8) & 0xff;
                 {
-                    McmdExCtrlState* ec = &sv->exCtrls[n];
+                    McmdExCtrlState* ec = &sv->exCtrls[ctrlIndex];
                     if (ec->rampFrames != 0)
                     {
                         phase = *para1 & 0xffff;
@@ -1139,12 +1139,12 @@ void macHandleActive(McmdVoiceState* sv)
             break;
         case 0x70: /* if var equal */
             {
-                s32 a;
-                s32 b;
+                s32 lhs;
+                s32 rhs;
                 u8 result;
-                a = varGet32(sv, (cmd >> 8) & 0xff, (cmd >> 0x10) & 0xff);
-                b = varGet32(sv, lbl_803DE2E8.flags >> 0x18, (u8) * para1);
-                result = !(b - a);
+                lhs = varGet32(sv, (cmd >> 8) & 0xff, (cmd >> 0x10) & 0xff);
+                rhs = varGet32(sv, lbl_803DE2E8.flags >> 0x18, (u8) * para1);
+                result = !(rhs - lhs);
                 if (((*para1 >> 8) & 0xff) != 0)
                 {
                     result = !result;
@@ -1157,12 +1157,12 @@ void macHandleActive(McmdVoiceState* sv)
             }
         case 0x71: /* if var less */
             {
-                s32 a;
-                s32 b;
+                s32 lhs;
+                s32 rhs;
                 u8 result;
-                a = varGet32(sv, (cmd >> 8) & 0xff, (cmd >> 0x10) & 0xff);
-                b = varGet32(sv, lbl_803DE2E8.flags >> 0x18, (u8) * para1);
-                result = a < b;
+                lhs = varGet32(sv, (cmd >> 8) & 0xff, (cmd >> 0x10) & 0xff);
+                rhs = varGet32(sv, lbl_803DE2E8.flags >> 0x18, (u8) * para1);
+                result = lhs < rhs;
                 if (((*para1 >> 8) & 0xff) != 0)
                 {
                     result = !result;
