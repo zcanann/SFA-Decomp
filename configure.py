@@ -805,7 +805,7 @@ config.libs = [
             Object(NonMatching, "main/voxmaps.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/modelEngine.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/pad.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/fileio.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/fileio.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/gametext.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/textrender.c"),
             Object(NonMatching, "main/modellight.c", cflags=cflags_dll_noopt),
