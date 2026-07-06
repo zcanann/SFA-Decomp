@@ -353,13 +353,13 @@ void sc_totembond_update(ScTotemBondObject* obj)
 void sc_totembond_init(ScTotemBondObject* obj, int params)
 {
     ScTotemBondState* state;
-    u32 v;
+    u32 flags;
     s16 hi = (s16)(u16)((s32)obj->yaw / 8192);
     state = obj->state;
     state->ringIndex = hi;
     obj->animEventCallback = sc_totempuzzle_processAnimEvents;
-    v = obj->objectFlags | (SC_TOTEMBOND_OBJFLAG_HIDDEN | SC_TOTEMBOND_OBJFLAG_HITDETECT_DISABLED);
-    obj->objectFlags = v;
+    flags = obj->objectFlags | (SC_TOTEMBOND_OBJFLAG_HIDDEN | SC_TOTEMBOND_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags = flags;
 }
 
 int fn_801DE320(u16* gameBitIds, u16 newValue)
@@ -370,8 +370,8 @@ int fn_801DE320(u16* gameBitIds, u16 newValue)
 
     for (i = 0; i < 3; i++)
     {
-        u16 v = GameBit_Get(gameBitIds[i]);
-        values[i] = v;
+        u16 value = GameBit_Get(gameBitIds[i]);
+        values[i] = value;
     }
     values[3] = newValue;
     for (j = 0; j < 3; j++)
