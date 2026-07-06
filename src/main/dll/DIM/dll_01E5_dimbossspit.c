@@ -150,6 +150,10 @@ void DIMbossspit_updateBurst(int obj)
                                      &radius);
 }
 
+int DIMbossspit_getExtraSize(void) { return 0x8; }
+
+int DIMbossspit_getObjectTypeId(void) { return 0x0; }
+
 void DIMbossspit_free(int objArg)
 {
     int obj = objArg;
@@ -180,6 +184,10 @@ void DIMbossspit_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
     return;
+}
+
+void DIMbossspit_hitDetect(void)
+{
 }
 
 void DIMbossspit_update(int obj)
@@ -279,11 +287,6 @@ void DIMbossspit_init(int obj)
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
 }
 
-
-void DIMbossspit_hitDetect(void)
-{
-}
-
 void DIMbossspit_release(void)
 {
 }
@@ -291,7 +294,3 @@ void DIMbossspit_release(void)
 void DIMbossspit_initialise(void)
 {
 }
-
-
-int DIMbossspit_getExtraSize(void) { return 0x8; }
-int DIMbossspit_getObjectTypeId(void) { return 0x0; }
