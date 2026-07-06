@@ -95,7 +95,7 @@ extern f32 lbl_803E2750;
 extern f32 lbl_803E2754;
 extern f32 lbl_803E2760;
 extern f32 lbl_803E2764;
-extern void fn_8014CF7C(int a, int b, f32 e, f32 f, int c, int d);
+extern void fn_8014CF7C(int obj, int state, f32 e, f32 f, int c, int d);
 extern f32 lbl_803E2728;
 extern f32 lbl_803E272C;
 extern f32 lbl_803E2730;
@@ -455,22 +455,22 @@ void fn_8014FF20(void)
 {
 }
 
-void fn_8014FEF8(int p1, int* p2, int p3, int code)
+void fn_8014FEF8(int obj, int* state, int arg, int code)
 {
     if (code == 0x10)
     {
-        ((BaddieState*)p2)->reactionFlags |= 0x20;
+        ((BaddieState*)state)->reactionFlags |= 0x20;
     }
     else
     {
-        ((BaddieState*)p2)->reactionFlags |= 0x8;
+        ((BaddieState*)state)->reactionFlags |= 0x8;
     }
 }
 
-void fn_8014FF24(int a, int b)
+void fn_8014FF24(int obj, int state)
 {
-    f32* p = (f32*)((BaddieState*)b)->trackedObj;
-    fn_8014CF7C(a, b, p[3], p[5], 0xf, 0);
+    f32* pos = (f32*)((BaddieState*)state)->trackedObj;
+    fn_8014CF7C(obj, state, pos[3], pos[5], 0xf, 0);
 }
 
 void fn_8014FF58(int unused, char* p)
