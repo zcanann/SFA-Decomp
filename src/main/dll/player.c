@@ -794,15 +794,15 @@ int playerState09(int obj, int state)
         ObjAnim_SetCurrentMove(obj, 0x419, fz, 1);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7E90;
         ((PlayerState*)inner)->targetYaw =
-            (s16)getAngle(((PlayerState*)inner)->unk5C4, ((PlayerState*)inner)->unk5CC);
+            (s16)getAngle(((PlayerState*)inner)->launchDirX, ((PlayerState*)inner)->launchDirZ);
         ((PlayerState*)inner)->yaw = ((PlayerState*)inner)->targetYaw;
         k = lbl_803E7F10;
         ((GameObject*)obj)->anim.worldPosX =
-            k * ((PlayerState*)inner)->unk5C4 + *(f32*)((int)inner + 0x5d4);
+            k * ((PlayerState*)inner)->launchDirX + *(f32*)((int)inner + 0x5d4);
         ((GameObject*)obj)->anim.worldPosY =
             ((PlayerState*)inner)->unk5AC - ((PlayerState*)inner)->unk874;
         ((GameObject*)obj)->anim.worldPosZ =
-            k * ((PlayerState*)inner)->unk5CC + *(f32*)((int)inner + 0x5dc);
+            k * ((PlayerState*)inner)->launchDirZ + *(f32*)((int)inner + 0x5dc);
         Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                        ((GameObject*)obj)->anim.worldPosZ, &((GameObject*)obj)->anim.localPosX,
                                        &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ,
@@ -920,7 +920,7 @@ int playerState0B(int obj, int state)
             ObjAnim_SetCurrentMove(obj, lbl_80332EF0[gPlayerCurrentMoveId], lbl_803E7EA4, 0);
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xa);
             inner->targetYaw = inner->yaw =
-                (s16)getAngle(inner->unk5C4, inner->unk5CC);
+                (s16)getAngle(inner->launchDirX, inner->launchDirZ);
             Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                            ((GameObject*)obj)->anim.worldPosZ, (f32*)((char*)obj + 0xc),
                                            (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
@@ -1046,7 +1046,7 @@ int playerStateGrabLedge(int obj, int state)
     default:
     {
         int m;
-        int d = (u16)getAngle(((PlayerState*)inner)->unk5C4, ((PlayerState*)inner)->unk5CC) -
+        int d = (u16)getAngle(((PlayerState*)inner)->launchDirX, ((PlayerState*)inner)->launchDirZ) -
             ((PlayerState*)inner)->targetYaw;
         if (d > 0x8000)
         {
@@ -6755,14 +6755,14 @@ int playerStateClimbLedge(int obj, int state, f32 fv)
         break;
     case 7:
         {
-            f32 c5cc = ((PlayerState*)inner)->unk5CC;
+            f32 c5cc = ((PlayerState*)inner)->launchDirZ;
             f32 k = lbl_803E7E98 + lbl_803DC6C0;
-            f32 c5dc = ((PlayerState*)inner)->unk5DC;
+            f32 c5dc = ((PlayerState*)inner)->launchAnchorZ;
             f32 y2 = c5cc * k + c5dc;
             s16 ang;
             ((GameObject*)obj)->anim.localPosX =
                 ((GameObject*)obj)->anim.currentMoveProgress *
-                ((((PlayerState*)inner)->unk5C4 * k + ((PlayerState*)inner)->unk5D4) -
+                ((((PlayerState*)inner)->launchDirX * k + ((PlayerState*)inner)->launchAnchorX) -
                     ((PlayerState*)inner)->moveStartX) +
                 ((PlayerState*)inner)->moveStartX;
             ((GameObject*)obj)->anim.localPosZ =
@@ -6844,7 +6844,7 @@ int playerStateClimbLedge(int obj, int state, f32 fv)
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 10);
         {
             s16 ang =
-                getAngle(((PlayerState*)inner)->unk5C4, ((PlayerState*)inner)->unk5CC);
+                getAngle(((PlayerState*)inner)->launchDirX, ((PlayerState*)inner)->launchDirZ);
             ((PlayerState*)inner)->yaw = ang;
             ((PlayerState*)inner)->targetYaw = ang;
         }
@@ -6862,8 +6862,8 @@ int playerStateClimbLedge(int obj, int state, f32 fv)
             if (xf != NULL)
             {
                 ((void (*)(f32, f32, f32, void*, void*, void*, char*))Obj_TransformWorldPointToLocal)(
-                    ((PlayerState*)inner)->unk5D4, ((PlayerState*)inner)->unk5D8,
-                    ((PlayerState*)inner)->unk5DC, (void*)(inner + 0x5d4),
+                    ((PlayerState*)inner)->launchAnchorX, ((PlayerState*)inner)->launchAnchorY,
+                    ((PlayerState*)inner)->launchAnchorZ, (void*)(inner + 0x5d4),
                     (void*)(inner + 0x5d8), (void*)(inner + 0x5dc), xf);
                 ((void (*)(f32, f32, f32, void*, void*, void*, int))Obj_TransformWorldPointToLocal)(
                     ((PlayerState*)inner)->moveEndX, ((PlayerState*)inner)->moveEndY,

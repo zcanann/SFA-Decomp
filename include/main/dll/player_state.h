@@ -190,13 +190,13 @@ typedef struct PlayerState {
     f32 moveStartY;
     f32 moveStartZ;
     int launchYaw; /* heading captured (*(s16*)obj) when a jump/launch move starts; base angle for the airborne arc yaw (case 7) */
-    f32 unk5C4;
+    f32 launchDirX; /* planar launch/arc direction vector X; getAngle(launchDirX,launchDirZ) sets targetYaw, worldPos = k*launchDir + launchAnchor (jump case 7 airborne arc) */
     u8 pad5C8[0x5CC - 0x5C8];
-    f32 unk5CC;
+    f32 launchDirZ;
     u8 pad5D0[0x5D4 - 0x5D0];
-    f32 unk5D4;
-    f32 unk5D8;
-    f32 unk5DC;
+    f32 launchAnchorX; /* launch base world position (X,Y,Z); world->local transformed like moveEnd; worldPos = k*launchDir + launchAnchor */
+    f32 launchAnchorY;
+    f32 launchAnchorZ;
     u8 pad5E0[0x5EC - 0x5E0];
     f32 moveEndX; /* local-space target position for the move lerp (paired with moveStart) */
     f32 moveEndY;
