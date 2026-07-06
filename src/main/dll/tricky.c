@@ -29,6 +29,7 @@
 #include "main/dll/tricky.h"
 #include "main/dll/dll_0000_gameui.h"
 #include "main/rcp_dolphin.h"
+#include "dolphin/gx/GXEnum.h"
 #include "main/lightmap.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "sfa_light_decls.h"
@@ -698,7 +699,7 @@ void pauseMenuMapFn_8011de20(void *this, u8 a, s16 b, int c)
     }
     else
     {
-        GXSetBlendMode(1, 4, 5, 5);
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     }
     gxSetZMode_(0, 7, 0);
     gxSetPeControl_ZCompLoc_(1);
