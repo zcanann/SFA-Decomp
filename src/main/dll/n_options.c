@@ -109,11 +109,11 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     GXSetNumTexGens(2);
-    GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
-    GXSetTexCoordGen2(1, 1, 4, 0x3c, 0, 0x7d);
+    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+    GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetNumTevStages(4);
     GXSetNumIndStages(0);
-    GXSetTevOrder(0, 1, 1, 0xff);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
     GXSetTevDirect(0);
     GXSetTevColorIn(0, 0xf, 8, 0xe, 2);
     GXSetTevColorOp(0, 0, 0, 0, 0, 0);
