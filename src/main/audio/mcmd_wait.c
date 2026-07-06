@@ -23,7 +23,7 @@ extern u64 macRealTimeHi; /* u64 macRealTime: lo word = macRealTimeLo */
  */
 int mcmdWait(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
-    u32 w;
+    u32 useMs;
     u32 ms;
 
     if ((ms = cstep->value >> 0x10))
@@ -66,7 +66,7 @@ int mcmdWait(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 
         if (ms != 0xFFFF)
         {
-            if ((w = ((u8)(cstep->value >> 8) & 1) != 0))
+            if ((useMs = ((u8)(cstep->value >> 8) & 1) != 0))
             {
                 sndConvertMs(&ms);
             }
@@ -75,7 +75,7 @@ int mcmdWait(McmdVoiceState* svoice, McmdCommandArgs* cstep)
                 sndConvertTicks(&ms, svoice);
             }
 
-            if (w != 0)
+            if (useMs != 0)
             {
                 if ((u8)cstep->value & 1)
                 {
