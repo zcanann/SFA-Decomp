@@ -333,25 +333,25 @@ void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
     int val;
     int i;
     int j;
-    int h;
+    int gap;
 
-    h = 1;
-    while (h <= (n - 1) / 9)
+    gap = 1;
+    while (gap <= (n - 1) / 9)
     {
-        h = h * 3 + 1;
+        gap = gap * 3 + 1;
     }
-    for (; h > 0; h /= 3)
+    for (; gap > 0; gap /= 3)
     {
-        for (i = h + 1; i < n; i++)
+        for (i = gap + 1; i < n; i++)
         {
             key = arr[i].key;
             val = arr[i].val;
             j = i;
-            while (j > h && arr[j - h].key > key)
+            while (j > gap && arr[j - gap].key > key)
             {
-                arr[j].key = arr[j - h].key;
-                arr[j].val = arr[j - h].val;
-                j -= h;
+                arr[j].key = arr[j - gap].key;
+                arr[j].val = arr[j - gap].val;
+                j -= gap;
             }
             arr[j].key = key;
             arr[j].val = val;
@@ -1006,14 +1006,14 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
                         t = *(u64*)(gSaveCardImageBuffer + 0x2a40);
                         if (t != *(u64*)(lbl_803DD044 + 0xa40))
                         {
-                            int e;
+                            int writeResult;
                             *(u64*)(lbl_803DD044 + 0xa40) = t;
-                            e = saveGame_doWrite(2);
-                            if (e == 0)
+                            writeResult = saveGame_doWrite(2);
+                            if (writeResult == 0)
                             {
-                                e = saveGame_doWrite(1);
+                                writeResult = saveGame_doWrite(1);
                             }
-                            result = e;
+                            result = writeResult;
                         }
                     }
                 }
@@ -1261,14 +1261,14 @@ extern f32 gObjSeqSlotStreamTimeTable[];
 int seqStreamFn_8008023c(int x)
 {
     int seqId = gObjSeqSlotSeqIdTable[x] - 1;
-    f32 v;
+    f32 streamTime;
 
     if (gObjSeqStreamSuppressed != 0 || AudioStream_IsPreparing() != 0)
     {
         return 0;
     }
-    v = gObjSeqSlotStreamTimeTable[x] - (f32)lbl_803DB728;
-    lbl_803DD074 = v;
+    streamTime = gObjSeqSlotStreamTimeTable[x] - (f32)lbl_803DB728;
+    lbl_803DD074 = streamTime;
     if (lbl_803DEFB0 != lbl_803DD074)
     {
         lbl_803DB724 = x;
