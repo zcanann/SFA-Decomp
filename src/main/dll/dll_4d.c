@@ -7,9 +7,9 @@
  * row through the title-menu item interface. When cheat 3 is unlocked
  * and not already shown (lbl_803DC968), it links in and creates a second
  * row reflecting that cheat's active state; otherwise that row is hidden.
- * The created rows are focused/laid out through the title-menu link
- * interface and the panel's render-stale countdown (lbl_803DD706) is
- * reset so the new layout draws.
+ * The created rows are focused through the title-menu item interface,
+ * laid out through the title-menu link interface, and the panel's
+ * render-stale countdown (lbl_803DD706) is reset so the new layout draws.
  */
 #include "main/dll/dll_4D.h"
 #include "main/dll/DR/dr_shared.h"
@@ -23,13 +23,13 @@
 /* TitleMenuTextEntry.flags: row is hidden / non-selectable */
 #define TITLE_MENU_TEXT_ENTRY_HIDDEN 0x4000
 
-/* title-menu item-interface vtable slot: create a menu row, returns widget */
-#define TITLE_MENU_ITEM_CREATE_ROW 3
+/* title-menu item-interface vtable slots */
+#define TITLE_MENU_ITEM_CREATE_ROW 3 /* create a menu row, returns widget */
+#define TITLE_MENU_ITEM_FOCUS_ROW 8
 
 /* title-menu link-interface vtable slots */
 #define TITLE_MENU_LINK_RESET_PANEL 2
 #define TITLE_MENU_LINK_LAYOUT_ROWS 1
-#define TITLE_MENU_LINK_FOCUS_ROW 8
 
 /* lbl_803DBA28 active-panel id and lbl_803DD706 render-stale countdown
    are owned by dll_0037_optionsscreen.c */
@@ -72,7 +72,7 @@ void languageMenuInit(void)
         panel->entries[panel->count - 1].flags |= TITLE_MENU_TEXT_ENTRY_HIDDEN;
     }
 
-    ((void (**)(int, int))gTitleMenuLinkInterface->vtable)[TITLE_MENU_LINK_FOCUS_ROW](lbl_803A87D0[0], 1);
+    ((void (**)(int, int))gTitleMenuItemInterface->vtable)[TITLE_MENU_ITEM_FOCUS_ROW](lbl_803A87D0[0], 1);
 
     ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int, int))
         gTitleMenuLinkInterface->vtable)[TITLE_MENU_LINK_LAYOUT_ROWS](
