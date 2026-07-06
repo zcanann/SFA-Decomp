@@ -2463,16 +2463,17 @@ void fn_8006CB50(void)
         fy = y - Udchuff_803DEDAC;
         for (; x < 0x100; x++)
         {
+            char* row;
             char* addr;
             f32 fx;
             f32 dist;
             f32 ny;
             f32 nx;
             f32 s;
-            addr = (char*)lbl_803DCFBC + ylo;
-            addr += yhi;
-            addr += (x & 3) * 8;
-            addr += (x >> 2) * 0x800;
+            row = (char*)lbl_803DCFBC + ylo;
+            row += yhi;
+            row += (x & 3) * 8;
+            addr = row + (x >> 2) * 0x800;
             fx = x - Udchuff_803DEDAC;
             dist = sqrtf(fy * fy + fx * fx);
             ny = fy / dist;
