@@ -74,7 +74,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     u32 seqId;
     u32 bpm;
     u8* page;
-    u8 b;
+    u8 note;
     u8 j;
 
     if ((nseq = gSynthFreeVoices) == 0)
@@ -105,18 +105,18 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     nseq->groupId = sgid;
 
     page = nseq->normtab;
-    for (b = 0; b < 0x80; b++)
+    for (note = 0; note < 0x80; note++)
     {
-        nseq->normTrans[b] = 0xFF;
+        nseq->normTrans[note] = 0xFF;
     }
     for (j = 0; page[4] != 0xFF; j++, page += 6)
     {
         nseq->normTrans[page[4]] = j;
     }
     page = nseq->drumtab;
-    for (b = 0; b < 0x80; b++)
+    for (note = 0; note < 0x80; note++)
     {
-        nseq->drumTrans[b] = 0xFF;
+        nseq->drumTrans[note] = 0xFF;
     }
     for (j = 0; page[4] != 0xFF; j++, page += 6)
     {
