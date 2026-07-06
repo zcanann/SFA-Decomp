@@ -60,7 +60,7 @@ typedef struct TriggerPlacement
 {
     s16 typeId; /* 0x0: object-sequence type id dispatched by Trigger_init */
     u8 pad2[0x38 - 0x2];
-    s16 unk38;
+    s16 triggerId; /* 0x38: id matched against dispatched trigger message id */
     u8 pad3A[0x44 - 0x3A];
     s16 gameBitSrc; /* 0x44: game-bit id copied into TriggerState.gameBit */
     u16 triggerDelayFrames; /* 0x46: frames the timer must reach before firing */
@@ -103,7 +103,7 @@ typedef struct
 } TriggerFlags8A;
 
 STATIC_ASSERT(offsetof(TriggerPlacement, typeId) == 0x0);
-STATIC_ASSERT(offsetof(TriggerPlacement, unk38) == 0x38);
+STATIC_ASSERT(offsetof(TriggerPlacement, triggerId) == 0x38);
 STATIC_ASSERT(offsetof(TriggerPlacement, gameBitSrc) == 0x44);
 STATIC_ASSERT(offsetof(TriggerPlacement, triggerDelayFrames) == 0x46);
 STATIC_ASSERT(offsetof(TriggerPlacement, gateBitSrc) == 0x48);
@@ -518,7 +518,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         case 0x50:
                         case 0x54:
                         case 0x230:
-                            if (((TriggerPlacement*)tbl)->unk38 == id)
+                            if (((TriggerPlacement*)tbl)->triggerId == id)
                             {
                                 objInterpretSeq(t2, seqArg, legCode, distSq);
                             }
@@ -831,7 +831,7 @@ void Trigger_hitDetect(int obj)
     f32 dist[1];
 
     dist[0] = lbl_803E4104;
-    if (((TriggerPlacement*)def)->unk38 <= 0 || ((TriggerPlacement*)def)->typeId == 0xf4)
+    if (((TriggerPlacement*)def)->triggerId <= 0 || ((TriggerPlacement*)def)->typeId == 0xf4)
     {
         triggerObj = Obj_GetPlayerObject();
         if ((void*)triggerObj != NULL)
