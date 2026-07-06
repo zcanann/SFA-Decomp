@@ -62,35 +62,6 @@ void drlightbea_free(int obj)
     }
 }
 
-void drlightbea_hitDetect(void)
-{
-}
-
-void drlightbea_update(int obj)
-{
-    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
-    if (state->flags.bit40)
-    {
-        Obj_FreeObject(obj);
-    }
-}
-
-void drlightbea_init(int obj)
-{
-    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
-    state->flags.bit80 = 0;
-    state->handle = NULL;
-    state->flags.bit40 = 0;
-}
-
-void drlightbea_release(void)
-{
-}
-
-void drlightbea_initialise(void)
-{
-}
-
 void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
 {
     DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
@@ -157,4 +128,33 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
                                                               lbl_803E6BC0, randomGetRange(5, 0xf), 0x60, 0);
         }
     }
+}
+
+void drlightbea_hitDetect(void)
+{
+}
+
+void drlightbea_update(int obj)
+{
+    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
+    if (state->flags.bit40)
+    {
+        Obj_FreeObject(obj);
+    }
+}
+
+void drlightbea_init(int obj)
+{
+    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
+    state->flags.bit80 = 0;
+    state->handle = NULL;
+    state->flags.bit40 = 0;
+}
+
+void drlightbea_release(void)
+{
+}
+
+void drlightbea_initialise(void)
+{
 }
