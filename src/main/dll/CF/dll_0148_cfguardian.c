@@ -62,7 +62,8 @@ typedef struct
 /* active/idle heading-pair template (gCfGuardianHeadingTemplate) used by cfguardian_SeqFn */
 typedef struct
 {
-    int a, b, c, d;
+    int activeMoveA, activeMoveB; /* heading pair used in every non-landing state */
+    int idleMoveA, idleMoveB;     /* heading pair used while landing */
 } GuardianMsg;
 
 typedef struct CfGuardianMapData
@@ -268,8 +269,8 @@ int cfguardianFlyAlongPath(int obj, int walker, f32 t, int pointId, int outPhase
     int moved;
     u8 sel;
     int pt;
-    s16 v;
-    int cmd[2];
+    s16 yawDelta;
+    int curveArgs[2];
     RomCurveTarget tgt;
     f32 ground;
 
@@ -290,9 +291,9 @@ int cfguardianFlyAlongPath(int obj, int walker, f32 t, int pointId, int outPhase
         tgt.angle = ((RomCurvePlacementDef*)pt)->rotZ << 8;
         if (cfguardianSteerToward((int*)obj, (int*)&tgt.angle, t, outPhase) != 0)
         {
-            cmd[0] = 0x19;
-            cmd[1] = 0x15;
-            (*gRomCurveInterface)->initCurve((void*)walker, (void*)obj, lbl_803E4120, cmd, sel);
+            curveArgs[0] = 0x19;
+            curveArgs[1] = 0x15;
+            (*gRomCurveInterface)->initCurve((void*)walker, (void*)obj, lbl_803E4120, curveArgs, sel);
             ((GameObject*)obj)->unkF4 = 1;
             moved = 1;
         }
@@ -320,18 +321,18 @@ int cfguardianFlyAlongPath(int obj, int walker, f32 t, int pointId, int outPhase
     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, t, (float*)outPhase);
     if (moved != 0)
     {
-        v = (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
+        yawDelta = (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
                            ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ) + 0x8000);
-        v = v - (u16)((GameObject*)obj)->anim.rotX;
-        if (v > 0x8000)
+        yawDelta = yawDelta - (u16)((GameObject*)obj)->anim.rotX;
+        if (yawDelta > 0x8000)
         {
-            v = v - 0xffff;
+            yawDelta = yawDelta - 0xffff;
         }
-        if (v < -0x8000)
+        if (yawDelta < -0x8000)
         {
-            v = v + 0xffff;
+            yawDelta = yawDelta + 0xffff;
         }
-        ((GameObject*)obj)->anim.rotX = *(s16*)(int)obj + (v >> 3);
+        ((GameObject*)obj)->anim.rotX = *(s16*)(int)obj + (yawDelta >> 3);
     }
     if (((GameObject*)obj)->anim.currentMove != GUARDIAN_MOVE_FLY)
     {
@@ -351,7 +352,7 @@ int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
     f32 dx;
     f32 dy;
     f32 dz;
-    s16 d;
+    s16 yawDelta;
     if (target == NULL)
     {
         return 0;
@@ -368,16 +369,16 @@ int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
     ((GameObject*)obj)->anim.velocityX = timeDelta * (dx * speed);
     ((GameObject*)obj)->anim.velocityY = timeDelta * (dy * speed);
     ((GameObject*)obj)->anim.velocityZ = timeDelta * (dz * speed);
-    d = (((GameObject*)target)->anim.rotX + 0x8000) - (u16)((GameObject*)obj)->anim.rotX;
-    if (d > 0x8000)
+    yawDelta = (((GameObject*)target)->anim.rotX + 0x8000) - (u16)((GameObject*)obj)->anim.rotX;
+    if (yawDelta > 0x8000)
     {
-        d = d - 0xffff;
+        yawDelta = yawDelta - 0xffff;
     }
-    if (d < -0x8000)
+    if (yawDelta < -0x8000)
     {
-        d = d + 0xffff;
+        yawDelta = yawDelta + 0xffff;
     }
-    ((GameObject*)obj)->anim.rotX = (f32)*(s16*)(int)obj + ((lbl_803E4128 + d) * (speed * timeDelta)) / dist;
+    ((GameObject*)obj)->anim.rotX = (f32)*(s16*)(int)obj + ((lbl_803E4128 + yawDelta) * (speed * timeDelta)) / dist;
     objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
     if (((GameObject*)obj)->anim.currentMove != GUARDIAN_MOVE_FLY)
@@ -393,25 +394,25 @@ int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
 int* findRomCurvePointNearObject(int* obj, int curveGroup, int* outVec, int mode)
 {
     int* result = NULL;
-    int local[2];
+    int findParams[2];
     int found;
 
     if (mode == 1)
     {
-        local[0] = 0;
-        local[1] = 0;
+        findParams[0] = 0;
+        findParams[1] = 0;
     }
     else
     {
-        local[0] = 25;
-        local[1] = 21;
+        findParams[0] = 25;
+        findParams[1] = 21;
     }
 
     found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
         ((GameObject*)obj)->anim.localPosX,
         ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ,
-        local, 2, curveGroup);
+        findParams, 2, curveGroup);
 
     if (found > -1)
     {
@@ -558,14 +559,14 @@ int cfguardian_updateMain(int obj)
                     ObjAnim_SetCurrentMove(obj, 0, lbl_803E4110, 0);
                     {
                         RomCurvePlacementDef* pt = (RomCurvePlacementDef*)findRomCurvePointNearObject((int*)obj, 0, 0, 2);
-                        f32 d;
+                        f32 homeDistY;
                         sub->homeX = pt->base.x;
                         sub->homeY = pt->base.y;
                         sub->homeZ = pt->base.z;
                         sub->homeYaw = (s16)(pt->rotZ << 8);
-                        d = sub->homeY - ((GameObject*)obj)->anim.localPosY;
-                        d = (d >= lbl_803E4110) ? d : -d;
-                        if (d < lbl_803E413C)
+                        homeDistY = sub->homeY - ((GameObject*)obj)->anim.localPosY;
+                        homeDistY = (homeDistY >= lbl_803E4110) ? homeDistY : -homeDistY;
+                        if (homeDistY < lbl_803E413C)
                         {
                             ObjGroup_AddObject(obj, CFGUARDIAN_OBJGROUP);
                             sub->questState = CFGUARDIAN_FLY_TO_TALK;
@@ -913,11 +914,11 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (sub->questState != CFGUARDIAN_LANDING)
     {
-        sel = &stk.a;
+        sel = &stk.activeMoveA;
     }
     else
     {
-        sel = &stk.c;
+        sel = &stk.idleMoveA;
     }
     if (animatedObjGetSeqId((int*)animUpdate) != 0x283)
     {
