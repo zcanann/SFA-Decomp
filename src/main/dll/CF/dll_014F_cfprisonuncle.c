@@ -87,8 +87,9 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(
                         sub->target, p2, p3, p4, p5, lbl_803E4288);
-                    ObjPath_GetPointWorldPosition(sub->target, 0, (char*)obj + 0xc, (char*)obj + 0x10,
-                                                  (char*)obj + 0x14, 0);
+                    ObjPath_GetPointWorldPosition(sub->target, 0, &((GameObject*)obj)->anim.localPosX,
+                                                  &((GameObject*)obj)->anim.localPosY,
+                                                  &((GameObject*)obj)->anim.localPosZ, 0);
                 }
                 ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4288);
             }
