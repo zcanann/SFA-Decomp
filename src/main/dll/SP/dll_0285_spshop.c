@@ -93,40 +93,36 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Music_Trigger(int id, int arg);
 
 
-void shop_hitDetect(void)
-{
-}
-
-void shop_release(void)
-{
-}
-
-void shop_initialise(void)
-{
-}
-
 int SB_CloudBall_getExtraSize(void);
-int shop_getExtraSize(void) { return 0x5; }
-int shop_getObjectTypeId(void) { return 0x0; }
 
-s32 shop_getStateField1(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex; }
-s32 shop_setScale(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->unk0; }
-
-void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+/* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
+ * (sign-extended) into *out_b3, *out_b2, *out_b4. */
+void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E59C8);
+    s8* b = ((GameObject*)obj)->extra;
+    *out_b2 = b[2];
+    *out_b3 = b[3];
+    *out_b4 = b[4];
 }
 
-/* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
- * splits at wrong addresses; these stubs ensure every asm symbol has a src
- * definition so future hunters can fill bodies one at a time. */
+/* EN v1.0 0x801E607C  size: 40b  Increment-and-store: obj->_b8[2] += p3,
+ * obj->_b8[3] += p2. */
+void shop_func16(int* obj, int p2, int p3)
+{
+    s8* b = ((GameObject*)obj)->extra;
+    b[2] = (s8)(b[2] + p3);
+    b[3] = (s8)(b[3] + p2);
+}
 
-/* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
- * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
-
-/* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
- * call ObjLink_DetachChild(obj). */
+/* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
+ * and obj->_b8[3], stash v in obj->_b8[4]. */
+void shop_func15(int* obj, int v)
+{
+    s8* b = ((GameObject*)obj)->extra;
+    b[2] = 0;
+    b[3] = 0;
+    b[4] = v;
+}
 
 void shop_buyItem(int obj, int price)
 {
@@ -185,60 +181,12 @@ void shop_buyItem(int obj, int price)
     }
 }
 
-void shop_free(int* obj)
-{
-    skyFn_80088c94(7, 0);
-    ObjGroup_RemoveObject(obj, SPSHOP_OBJGROUP);
-    Music_Trigger(MUSICTRIG_communicator, 0);
-    GameBit_Set(3838, 0);
-}
+s32 shop_getStateField1(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex; }
 
-void shop_func0B(int* obj, int v, int p3)
+void shop_setStateField1(int* obj, int v)
 {
     s8* state = ((GameObject*)obj)->extra;
-    state[0] = v;
-    if (v != 0)
-    {
-        (*gObjectTriggerInterface)->runSequence(p3, obj, -1);
-    }
-}
-
-/* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
- * and obj->_b8[3], stash v in obj->_b8[4]. */
-void shop_func15(int* obj, int v)
-{
-    s8* b = ((GameObject*)obj)->extra;
-    b[2] = 0;
-    b[3] = 0;
-    b[4] = v;
-}
-
-/* EN v1.0 0x801E607C  size: 40b  Increment-and-store: obj->_b8[2] += p3,
- * obj->_b8[3] += p2. */
-void shop_func16(int* obj, int p2, int p3)
-{
-    s8* b = ((GameObject*)obj)->extra;
-    b[2] = (s8)(b[2] + p3);
-    b[3] = (s8)(b[3] + p2);
-}
-
-/* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
- * (sign-extended) into *out_b3, *out_b2, *out_b4. */
-void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
-{
-    s8* b = ((GameObject*)obj)->extra;
-    *out_b2 = b[2];
-    *out_b3 = b[3];
-    *out_b4 = b[4];
-}
-
-int shop_getItemPrice(int obj, int idx)
-{
-    if (idx >= 0 && idx < SHOP_ITEM_ROW_COUNT)
-    {
-        return ((ShopItemRow*)lbl_80327FD0)[idx].price;
-    }
-    return 0;
+    state[1] = v;
 }
 
 s16 shop_getItemTextId(int obj, int idx)
@@ -247,6 +195,15 @@ s16 shop_getItemTextId(int obj, int idx)
     {
         ShopItemRow* rows = (ShopItemRow*)lbl_80327FD0;
         return rows[idx].textId;
+    }
+    return 0;
+}
+
+int shop_getItemPrice(int obj, int idx)
+{
+    if (idx >= 0 && idx < SHOP_ITEM_ROW_COUNT)
+    {
+        return ((ShopItemRow*)lbl_80327FD0)[idx].price;
     }
     return 0;
 }
@@ -269,28 +226,21 @@ u8 shop_getItemMinPrice(int obj, int idx)
     return 0;
 }
 
-#pragma inline_max_size(1000)
-static inline void shop_initBody(int obj, int objDef)
+/* EN v1.0 0x801E62F0  size: 104b  Returns 1 when shop item's "bought"
+ * GameBit (slot at lbl_80327FD0[idx*12 + 8]) is set; else 0. */
+int shop_isItemBought(int obj, int idx)
 {
-    u8* item;
-    int i;
 
-    ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex = -1;
-    ObjGroup_AddObject(obj, SPSHOP_OBJGROUP);
-    for (i = 0, item = lbl_80327FD0; i < SHOP_ITEM_ROW_COUNT; i++)
+    s16 slot;
+    int result;
+    Obj_GetPlayerObject();
+    result = 0;
+    slot = ((ShopItemRow*)lbl_80327FD0)[idx].boughtBit;
+    if (slot != -1 && GameBit_Get(slot) != 0u)
     {
-        item[5] = item[randomGetRange(0, 2) + 1];
-        item += 0xc;
+        result = 1;
     }
-    Music_Trigger(MUSICTRIG_communicator, 1);
-    ((GameObject*)obj)->unkF8 = 0;
-    GameBit_Set(0xefe, 1);
-}
-#pragma inline_max_size reset
-
-void shop_init(int obj, int objDef)
-{
-    shop_initBody(obj, objDef);
+    return result;
 }
 
 /* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
@@ -311,27 +261,38 @@ int shop_isItemAvailable(int obj, int idx)
     return result;
 }
 
-/* EN v1.0 0x801E62F0  size: 104b  Returns 1 when shop item's "bought"
- * GameBit (slot at lbl_80327FD0[idx*12 + 8]) is set; else 0. */
-int shop_isItemBought(int obj, int idx)
-{
-
-    s16 slot;
-    int result;
-    Obj_GetPlayerObject();
-    result = 0;
-    slot = ((ShopItemRow*)lbl_80327FD0)[idx].boughtBit;
-    if (slot != -1 && GameBit_Get(slot) != 0u)
-    {
-        result = 1;
-    }
-    return result;
-}
-
-void shop_setStateField1(int* obj, int v)
+void shop_func0B(int* obj, int v, int p3)
 {
     s8* state = ((GameObject*)obj)->extra;
-    state[1] = v;
+    state[0] = v;
+    if (v != 0)
+    {
+        (*gObjectTriggerInterface)->runSequence(p3, obj, -1);
+    }
+}
+
+s32 shop_setScale(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->unk0; }
+
+int shop_getExtraSize(void) { return 0x5; }
+
+int shop_getObjectTypeId(void) { return 0x0; }
+
+void shop_free(int* obj)
+{
+    skyFn_80088c94(7, 0);
+    ObjGroup_RemoveObject(obj, SPSHOP_OBJGROUP);
+    Music_Trigger(MUSICTRIG_communicator, 0);
+    GameBit_Set(3838, 0);
+}
+
+void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E59C8);
+}
+
+void shop_hitDetect(void)
+{
 }
 
 void shop_update(int obj)
@@ -368,4 +329,36 @@ void shop_update(int obj)
     {
         ((GameObject*)obj)->unkF8 = 0;
     }
+}
+
+#pragma inline_max_size(1000)
+static inline void shop_initBody(int obj, int objDef)
+{
+    u8* item;
+    int i;
+
+    ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex = -1;
+    ObjGroup_AddObject(obj, SPSHOP_OBJGROUP);
+    for (i = 0, item = lbl_80327FD0; i < SHOP_ITEM_ROW_COUNT; i++)
+    {
+        item[5] = item[randomGetRange(0, 2) + 1];
+        item += 0xc;
+    }
+    Music_Trigger(MUSICTRIG_communicator, 1);
+    ((GameObject*)obj)->unkF8 = 0;
+    GameBit_Set(0xefe, 1);
+}
+#pragma inline_max_size reset
+
+void shop_init(int obj, int objDef)
+{
+    shop_initBody(obj, objDef);
+}
+
+void shop_release(void)
+{
+}
+
+void shop_initialise(void)
+{
 }
