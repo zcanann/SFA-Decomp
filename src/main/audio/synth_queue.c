@@ -495,17 +495,15 @@ void synthFreeHandle(u32 handle)
 {
     SynthVoice* voice;
     SynthSeqRuntime* runtime;
-    u32 key;
     u32 found;
     u32 i;
 
     runtime = &lbl_803AF550;
-    key = handle & 0x7fffffffu;
 
     voice = gSynthQueuedVoices;
     while (voice != 0)
     {
-        if (voice->handle == key)
+        if (voice->handle == (handle & 0x7fffffffu))
         {
             found = voice->slotIndex | (handle & 0x80000000);
             goto done;
@@ -516,7 +514,7 @@ void synthFreeHandle(u32 handle)
     voice = gSynthAllocatedVoices;
     while (voice != 0)
     {
-        if (voice->handle == key)
+        if (voice->handle == (handle & 0x7fffffffu))
         {
             found = voice->slotIndex | (handle & 0x80000000);
             goto done;
@@ -533,7 +531,8 @@ done:
 
     if ((found & 0x80000000) == 0)
     {
-        switch (voice = &runtime->voices[found], runtime->voices[found].state)
+        voice = &runtime->voices[found];
+        switch (runtime->voices[found].state)
         {
         case SYNTH_VOICE_STATE_QUEUED:
             if (voice->prev != 0)
