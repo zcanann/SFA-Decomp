@@ -268,7 +268,7 @@ void crawler_nop(void)
 {
 }
 
-void hagabonMK2_stopLoopSfx(int x) { Sfx_StopFromObject(x, SFXTRIG_baddie_rach_death); }
+void hagabonMK2_stopLoopSfx(int obj) { Sfx_StopFromObject(obj, SFXTRIG_baddie_rach_death); }
 
 void firecrawler_spawnFirepipe(int* obj)
 {
