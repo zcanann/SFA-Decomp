@@ -57,36 +57,6 @@ STATIC_ASSERT(offsetof(DrCloudPerObject, state) == 0xb8);
 #define DRCLOUDPER_MAP_ANIM_EVENT 0x0c
 #define DRCLOUDPER_OBJECT_FLAGS 0xe000
 
-int drcloudper_getExtraSize(void) { return 0x10; }
-
-int drcloudper_getObjectTypeId(void) { return 0; }
-
-void drcloudper_free(int obj)
-{
-    ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_TRIGGER);
-    ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_SURFACE);
-}
-
-void drcloudper_render(void)
-{
-}
-
-void drcloudper_hitDetect(void)
-{
-}
-
-void drcloudper_update(void)
-{
-}
-
-void drcloudper_release(void)
-{
-}
-
-void drcloudper_initialise(void)
-{
-}
-
 int drcloudper_setScale(int obj)
 {
     DrCloudPerObject* cloud = (DrCloudPerObject*)obj;
@@ -109,6 +79,28 @@ int drcloudper_selectActiveCloud(int obj)
     GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
     (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
     return 0;
+}
+
+int drcloudper_getExtraSize(void) { return 0x10; }
+
+int drcloudper_getObjectTypeId(void) { return 0; }
+
+void drcloudper_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_TRIGGER);
+    ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_SURFACE);
+}
+
+void drcloudper_render(void)
+{
+}
+
+void drcloudper_hitDetect(void)
+{
+}
+
+void drcloudper_update(void)
+{
 }
 
 void drcloudper_init(int obj, int setup)
@@ -138,3 +130,12 @@ void drcloudper_init(int obj, int setup)
         (*gMapEventInterface)->setObjGroupStatus(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     }
 }
+
+void drcloudper_release(void)
+{
+}
+
+void drcloudper_initialise(void)
+{
+}
+
