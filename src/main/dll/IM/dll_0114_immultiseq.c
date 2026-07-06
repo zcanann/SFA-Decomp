@@ -78,7 +78,7 @@ int immultiseq_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 int immultiseq_getExtraSize(void) { return 0x2; }
 int immultiseq_getObjectTypeId(void) { return 0x0; }
 
-void immultiseq_free(int x) { ObjGroup_RemoveObject(x, IMMULTISEQ_OBJGROUP); }
+void immultiseq_free(int obj) { ObjGroup_RemoveObject(obj, IMMULTISEQ_OBJGROUP); }
 
 void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
