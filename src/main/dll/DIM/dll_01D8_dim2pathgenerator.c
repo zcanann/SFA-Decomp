@@ -125,30 +125,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 }
 
 
-void dim2pathgenerator_free(void)
-{
-}
-
-void dim2pathgenerator_render(void)
-{
-}
-
-void dim2pathgenerator_hitDetect(void)
-{
-}
-
-void dim2pathgenerator_release(void)
-{
-}
-
-void dim2pathgenerator_initialise(void)
-{
-}
-
-int dim2pathgenerator_getExtraSize(void) { return 0x9a8; }
-int dim2pathgenerator_getObjectTypeId(void) { return 0x0; }
-
-
 u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -162,28 +138,19 @@ u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** 
     return ((Dim2PathGeneratorState*)state)->curveValid;
 }
 
+int dim2pathgenerator_getExtraSize(void) { return 0x9a8; }
+int dim2pathgenerator_getObjectTypeId(void) { return 0x0; }
 
-void dim2pathgenerator_init(int* obj, int* def)
+void dim2pathgenerator_free(void)
 {
-    Dim2PathGeneratorState* state;
-    *(s16*)obj = (s16)((u32) * (u8*)((char*)def + 28) << 8);
-    state = ((GameObject*)obj)->extra;
-    state->spawnPeriod = ((Dim2pathgeneratorObjectDef*)def)->spawnPeriod;
-    state->spawnTimer = (s16) * (u8*)((char*)def + 29);
-    state->spawnTypes[0] = (s16)((Dim2pathgeneratorObjectDef*)def)->spawnType0;
-    {
-        s16 v = ((Dim2pathgeneratorObjectDef*)def)->spawnType1;
-        if (v == -1)
-        {
-            state->spawnTypes[1] = (s16)((Dim2pathgeneratorObjectDef*)def)->spawnType0;
-        }
-        else
-        {
-            state->spawnTypes[1] = v;
-        }
-    }
-    state->flags = (u8)(state->flags | 4);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIM2PATHGENERATOR_OBJFLAG_HITDETECT_DISABLED);
+}
+
+void dim2pathgenerator_render(void)
+{
+}
+
+void dim2pathgenerator_hitDetect(void)
+{
 }
 
 
@@ -280,4 +247,36 @@ void dim2pathgenerator_update(int* obj)
         Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
         ((Dim2PathGeneratorState*)extra)->flags |= (toggle ^ 1) & 1;
     }
+}
+
+
+void dim2pathgenerator_init(int* obj, int* def)
+{
+    Dim2PathGeneratorState* state;
+    *(s16*)obj = (s16)((u32) * (u8*)((char*)def + 28) << 8);
+    state = ((GameObject*)obj)->extra;
+    state->spawnPeriod = ((Dim2pathgeneratorObjectDef*)def)->spawnPeriod;
+    state->spawnTimer = (s16) * (u8*)((char*)def + 29);
+    state->spawnTypes[0] = (s16)((Dim2pathgeneratorObjectDef*)def)->spawnType0;
+    {
+        s16 v = ((Dim2pathgeneratorObjectDef*)def)->spawnType1;
+        if (v == -1)
+        {
+            state->spawnTypes[1] = (s16)((Dim2pathgeneratorObjectDef*)def)->spawnType0;
+        }
+        else
+        {
+            state->spawnTypes[1] = v;
+        }
+    }
+    state->flags = (u8)(state->flags | 4);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIM2PATHGENERATOR_OBJFLAG_HITDETECT_DISABLED);
+}
+
+void dim2pathgenerator_release(void)
+{
+}
+
+void dim2pathgenerator_initialise(void)
+{
 }
