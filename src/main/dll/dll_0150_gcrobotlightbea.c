@@ -139,9 +139,8 @@ void gcrobotlightbea_render(void)
 {
 }
 
-/* EN v1.0 0x801A01E8  size: 296b  gcrobotlightbea_hitDetect: clear the hit
- * flag, then re-set it only if the priority hit is the (undisguised) player
- * and lands inside the beacon's bounding box. */
+/* Clear the hit flag, then re-set it only if the priority hit is the
+ * (undisguised) player and lands inside the beacon's bounding box. */
 void gcrobotlightbea_hitDetect(int obj)
 {
     float out[22];

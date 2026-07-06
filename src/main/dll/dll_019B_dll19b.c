@@ -456,36 +456,7 @@ void dll_19B_init(u8* obj, u8* params)
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
 }
 
-/*
- * Function: dll_19C_init
- * EN v1.0 Address: 0x801CC950
- * EN v1.0 Size: 64b
- */
 void dll_19C_init(int obj, u8* initData);
-
-/*
- * Function: dll_19D_free
- * EN v1.0 Address: 0x801CC9A8
- * EN v1.0 Size: 132b
- */
-
-/*
- * Function: dll_19D_init
- * EN v1.0 Address: 0x801CCECC
- * EN v1.0 Size: 208b
- */
-
-/*
- * Function: dll_19D_hitDetect
- * EN v1.0 Address: 0x801CCA30
- * EN v1.0 Size: 276b
- */
-
-/*
- * Function: dll_19D_update
- * EN v1.0 Address: 0x801CCB44
- * EN v1.0 Size: 904b
- */
 
 /*__DATA_EXTERNS__*/
 extern void nw_geyser_free();

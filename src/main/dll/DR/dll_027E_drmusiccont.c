@@ -155,7 +155,7 @@ void drmusiccont_update(int obj)
             ((DrmusiccontState*)state)->stingerTimer = st - timeDelta;
             if (((DrmusiccontState*)state)->stingerTimer <= zero)
             {
-                Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_4bd); /* sfx id */
+                Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_4bd);
             }
         }
     }

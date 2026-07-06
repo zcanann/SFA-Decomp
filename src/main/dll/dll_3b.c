@@ -13,8 +13,8 @@
  * buffer, runs THPAudioDecode into a free AttractMovieAudioBuffer, and posts
  * it. Two thread entry points feed it: AudioDecoderForOnMemory walks an
  * in-memory THP (honoring the loop flag), AudioDecoder consumes streamed read
- * buffers from picmenu's reader queue. ThreadStart/ThreadCancel are the
- * resume/cancel hooks used by dll_3e.
+ * buffers from picmenu's reader queue. AudioDecodeThreadStart/
+ * AudioDecodeThreadCancel are the resume/cancel hooks used by dll_3e.
  */
 #include "main/dll/FRONT/dll_3B.h"
 #include "dolphin/os.h"

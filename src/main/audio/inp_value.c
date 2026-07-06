@@ -243,11 +243,6 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u32 midiSlo
 
 /*
  * Volume accessor: bit 0x1, slot at +0x218, cached u16 at +0x238.
- *
- * EN v1.0 Address: 0x80282078
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x802824F8
- * EN v1.1 Size: 72b
  */
 u16 inpGetVolume(McmdVoiceState* state)
 {
@@ -262,9 +257,6 @@ u16 inpGetVolume(McmdVoiceState* state)
 
 /*
  * Panning accessor: bit 0x2, slot at +0x23c, cached u16 at +0x25c.
- *
- * EN v1.1 Address: 0x80282540
- * EN v1.1 Size: 72b
  */
 u16 inpGetPanning(McmdVoiceState* state)
 {

@@ -34,8 +34,6 @@ extern f32 timeDelta;
 
 extern void padGetAnalogInput(int pad, s8* y, s8* x);
 
-/* ===== EN v1.0 retargeted leaves ========================================= */
-
 s32 Menu_func0B(void) { return lbl_803DD8F0; }
 #pragma peephole off
 void Menu_func0A(int v) { lbl_803DD8E8 = v; }
@@ -184,7 +182,6 @@ u8 gHudButtonIcons[] =
     0x00, 0x1D, 0x00, 0x0C, 0x00, 0x49, 0x00, 0x0C,
 };
 
-/* auto 0x8031b818-0x8031c1a8 */
 extern void CMenu_GetState(void);
 extern void CMenu_SetShouldClose(void);
 extern void GameUI_airMeterInitType0(void);

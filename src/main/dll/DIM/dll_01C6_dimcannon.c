@@ -119,9 +119,6 @@ typedef struct DimcannonState
     u8 padC[0x10 - 0xC];
 } DimcannonState;
 
-/* dimcannon extra block (0xb4); the head is the per-cannonball column
- * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
-
 int dimcannon_getExtraSize(int* obj)
 {
     if (((GameObject*)obj)->anim.seqId == 0x1d6) return 0xc;

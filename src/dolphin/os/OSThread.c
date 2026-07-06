@@ -1,6 +1,3 @@
-/* TODO: restore stripped imported address metadata if needed. */
-
-
 #include "dolphin/os/__os.h"
 
 #define ENQUEUE_THREAD(thread, queue, link)       \

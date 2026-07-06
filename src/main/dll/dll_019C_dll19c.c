@@ -92,12 +92,6 @@ void dll_19C_update(int* obj)
     }
 }
 
-
-/*
- * Function: dll_19C_init
- * EN v1.0 Address: 0x801CC950
- * EN v1.0 Size: 64b
- */
 void dll_19C_init(int obj, u8* initData)
 {
     register int self = obj;
@@ -120,27 +114,4 @@ void dll_19C_initialise(void)
 }
 
 
-/*
- * Function: dll_19D_free
- * EN v1.0 Address: 0x801CC9A8
- * EN v1.0 Size: 132b
- */
 void dll_19D_free(int obj);
-
-/*
- * Function: dll_19D_init
- * EN v1.0 Address: 0x801CCECC
- * EN v1.0 Size: 208b
- */
-
-/*
- * Function: dll_19D_hitDetect
- * EN v1.0 Address: 0x801CCA30
- * EN v1.0 Size: 276b
- */
-
-/*
- * Function: dll_19D_update
- * EN v1.0 Address: 0x801CCB44
- * EN v1.0 Size: 904b
- */

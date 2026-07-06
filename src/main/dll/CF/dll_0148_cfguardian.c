@@ -53,7 +53,7 @@ typedef struct CfCurveWalker
     f32 posZ;    /* 0x70 */
 } CfCurveWalker;
 
-/* hitbox/heading template (gCfGuardianHitboxTemplateA/CC), copied to the stack at init */
+/* hitbox/heading template (gCfGuardianHitboxTemplateA/B), copied to the stack at init */
 typedef struct
 {
     s16 v[5];
@@ -428,7 +428,7 @@ int* findRomCurvePointNearObject(int* obj, int curveGroup, int* outVec, int mode
 }
 #pragma dont_inline reset
 
-/* cfguardian_updateMain: the Queen's brain - the sixteen-state quest
+/* cfguardian_updateMain: the Queen's brain - the fifteen-state quest
  * progression (path flights, landing physics, dialogue triggers and idle
  * chatter) that runs from her caged release through to the spell-stone
  * see-off. */

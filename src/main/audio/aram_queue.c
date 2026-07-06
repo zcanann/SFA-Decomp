@@ -30,11 +30,6 @@ typedef struct AramTransferQueue
  * queue at lbl_803D3F60 (or lbl_803D41E4 for the secondary pool)
  * and invokes any pending entry's callback whose request handle
  * matches `req`. Decrements the count when done.
- *
- * EN v1.0 Address: 0x80283FA0
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x80283FA0
- * EN v1.1 Size: 152b
  */
 #pragma scheduling on
 void aramQueueCallback(void* req)
@@ -58,11 +53,6 @@ void aramQueueCallback(void* req)
  * slot in the 16-entry ring, fills in the request fields, calls
  * ARQPostRequest, then bumps the head/count and restores interrupts.
  * If the queue is full, just unlocks and retries (busy-loop).
- *
- * EN v1.0 Address: 0x8028401C
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x80284038
- * EN v1.1 Size: 464b
  */
 #pragma scheduling on
 void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 callbackArg)
@@ -105,9 +95,6 @@ void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 call
 
 /*
  * Wait until ARQ count drops to zero.
- *
- * EN v1.1 Address: 0x8028420C
- * EN v1.1 Size: 20b
  */
 void aramSyncTransferQueue(void)
 {

@@ -147,8 +147,8 @@ void appleontree_func0B(int obj, float* pos)
  * particle FX + sfx + free-or-disable. */
 void appleontree_handleCollectableHit(int obj)
 {
-    extern void playerAddHealth(int player, u16 amount); /* #57 */
-    extern int Obj_GetPlayerObject(void); /* #57 */
+    extern void playerAddHealth(int player, u16 amount);
+    extern int Obj_GetPlayerObject(void);
     int state = *(int*)&((GameObject*)obj)->extra;
     int player = Obj_GetPlayerObject();
 
@@ -201,7 +201,7 @@ void appleontree_free(int* obj)
 
 void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4, f32 scale); /* #57 */
+    extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4, f32 scale);
     AppleOnTreeState* inner = ((GameObject*)obj)->extra;
     if ((inner->flags & 2) == 0)
     {
@@ -544,8 +544,6 @@ int fn_8017DF34(int p, int state, f32 y)
     }
 }
 
-/* segment pragma-stack balance (re-split): */
-
 typedef struct AppleontreeObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -564,9 +562,9 @@ typedef struct AppleontreeObjectDef
 #pragma inline_max_size(1)
 void appleontree_update(int objArg)
 {
-    extern void playerAddHealth(u8* player, int v); /* #57 */
-    extern u8* Obj_GetPlayerObject(void); /* #57 */
-    extern u64 ObjHits_DisableObject(); /* #57 */
+    extern void playerAddHealth(u8* player, int v);
+    extern u8* Obj_GetPlayerObject(void);
+    extern u64 ObjHits_DisableObject();
     float fa;
     int obj;
     int val;

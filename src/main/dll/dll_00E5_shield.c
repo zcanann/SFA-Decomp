@@ -276,14 +276,12 @@ void staffFn_80170380(int* obj, int cmd)
                 f32* t1;
                 int i;
                 f32 k;
-                /* kc inlined as lbl_803E33C8 (created after bias) */
                 ((ShieldState*)state)->fadeRate = amp;
                 i = 0;
                 hw = state;
                 w = state;
                 t1 = (f32*)((char*)tbl + 0x10);
                 k = lbl_803E33A8;
-                /* kc inlined below */
                 for (; i < 4; i++)
                 {
                     f32 wave;
@@ -406,14 +404,12 @@ void staffFn_80170380(int* obj, int cmd)
                 u8* w;
                 f32* t1;
                 f32 k;
-                /* kc inlined as lbl_803E33C8 (created after bias) */
                 i = 0;
                 hw = state;
                 t0 = (f32*)((char*)tbl + 0x20);
                 w = state;
                 t1 = (f32*)((char*)tbl + 0x30);
                 k = lbl_803E33A8;
-                /* kc inlined below */
                 for (; i < 4; i++)
                 {
                     f32 wave;

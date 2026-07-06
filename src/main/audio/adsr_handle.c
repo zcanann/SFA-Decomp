@@ -48,8 +48,6 @@ int adsrStartRelease(int state, u32 divisor)
 
 /*
  * Wrapper for adsrStartRelease: dispatches when state mode is 0 or 1.
- *
- * EN v1.1 Address: 0x8027AA50, size 68b
  */
 int adsrRelease(int state)
 {

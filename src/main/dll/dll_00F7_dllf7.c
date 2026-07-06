@@ -20,7 +20,6 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-/* object group: dllf7 object */
 #define DLLF7_OBJGROUP 0x3e
 
 #define DLLF7_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -146,8 +145,8 @@ void dll_F7_hitDetect(void)
 
 void dll_F7_update(int* obj)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfx); /* #57 */
-    extern u32 ObjGroup_FindNearestObject(); /* #57 */
+    extern void Sfx_PlayFromObject(int* obj, int sfx);
+    extern u32 ObjGroup_FindNearestObject();
     DllF7State* state = ((GameObject*)obj)->extra;
     DllF7HitBlock blk;
     f32 radius;

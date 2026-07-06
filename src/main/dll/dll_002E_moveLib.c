@@ -313,8 +313,8 @@ typedef struct CurvePointResult
     f32 z; /* 0x14 */
 } CurvePointResult;
 
-/* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
- * angle into the caller's record. */
+/* Copies a curve point's position and packed angle into the caller's
+ * record. */
 int dll_2E_func0A(int idx, char* outArg)
 {
     CurvePointResult* out = (CurvePointResult*)outArg;
@@ -337,9 +337,9 @@ int dll_2E_func0A(int idx, char* outArg)
     return 0;
 }
 
-/* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
- * caller's record and aims its angle at the nearest group-8 object (falling
- * back to the point's packed angle). */
+/* Copies a curve point's position into the caller's record and aims its
+ * angle at the nearest group-8 object (falling back to the point's packed
+ * angle). */
 int dll_2E_func0C(int idx, char* outArg)
 {
     CurvePointResult* out = (CurvePointResult*)outArg;
@@ -370,11 +370,8 @@ int dll_2E_func0C(int idx, char* outArg)
     return 0;
 }
 
-/* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
- * current target and turns the yaw by the buffered turn rate. */
-
-/* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
- * primes the animation channel tables. */
+/* Initializes the movement-state block and primes the animation channel
+ * tables. */
 void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
 {
     extern void* seqFn_800394a0(void); /* #57 */
@@ -406,8 +403,8 @@ void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
     dll_2E_func09((int)st, gMoveLibDefaultMoveData, gMoveLibDefaultMoveData);
 }
 
-/* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
- * first use and refreshes the current path point position. */
+/* Latches the path-relative start offset on first use and refreshes the
+ * current path point position. */
 void dll_2E_func06(int obj, char* st, int point)
 {
     extern void* seqFn_800394a0(void); /* #57 */
@@ -447,14 +444,8 @@ void dll_2E_func06(int obj, char* st, int point)
     s->targetZ = v.z0;
 }
 
-/* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
- * distance from an object to its target, updating the wide-turn flag. */
-
-/* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
- * the object for walkable space, returning a bitmask of clear directions. */
-
-/* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
- * curve, snapping to ground and easing the yaw toward the path direction. */
+/* Advances the object along its movement curve, snapping to ground and
+ * easing the yaw toward the path direction. */
 int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int p4, int c, f32* d, int* flags)
 {
     int moved;
@@ -518,8 +509,8 @@ int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int p4, int c, f32*
     return hit;
 }
 
-/* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
- * arms the move, phase 5 walks the setup/playback sub-phases. */
+/* Object-sequence scripted-move step: phase 4 arms the move, phase 5 walks
+ * the setup/playback sub-phases. */
 #pragma optimization_level 2
 int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
 {
@@ -603,11 +594,8 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
 }
 #pragma optimization_level 4
 
-/* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
- * object's facing plane and returns the lateral offset of the result. */
-
-/* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
- * given speed, snapping when close, easing yaw and pacing the walk anim. */
+/* Homes the object toward its target at the given speed, snapping when
+ * close, easing yaw and pacing the walk anim. */
 int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
 {
     f32 dz;

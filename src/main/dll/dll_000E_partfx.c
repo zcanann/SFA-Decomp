@@ -79,8 +79,8 @@ extern f32 gPartfxPi;
 extern f32 lbl_803DF71C;
 
 
-/* EN v1.0 0x800AEC50  size: 1992b  tick global effect phases and expire
- * the 20 cached particle resource slots. */
+/* Tick global effect phases and expire the 20 cached particle resource
+ * slots. */
 void partfx_updateFrameState(void)
 {
     gPartfxFrameAnimPhase0 = gPartfxFrameAnimPhase0 + lbl_803DF4C8 * timeDelta;
@@ -247,8 +247,8 @@ void partfx_updateFrameState(void)
     }
 }
 
-/* EN v1.0 0x800AF41C  size: 560b  partfx_release: clear the 20-slot
- * effect-id table and free all 20 cached particle resources. */
+/* Clear the 20-slot effect-id table and free all 20 cached particle
+ * resources. */
 void partfx_release(void)
 {
     s16* p;

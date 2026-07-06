@@ -185,7 +185,6 @@ void fn_80174BFC(int obj, int ext)
 {
     extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, u8 p9, int p10); /* #57 */
     extern int Sfx_PlayFromObject(int a, int b); /* #57 */
- /* #57 */
     extern void saveGame_saveObjectPos(int obj); /* #57 */
     int def;
     int i;
@@ -436,7 +435,6 @@ u32 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
 
 void fn_80175428(int obj)
 {
- /* #57 */
     PushableState* state;
     int msgSender;
     int msg;

@@ -369,7 +369,7 @@ void GXGetVtxAttrFmt(GXVtxFmt fmt, GXAttr attr, GXCompCnt *cnt, GXCompType *type
     case GX_VA_POS:
         *cnt  = GET_REG_FIELD(*va, 1, 0);
         *type = GET_REG_FIELD(*va, 3, 1);
-        *frac = (u8)(*va >> 4) & 0x1F;  // GET_REG_FIELD(*va, 5, 4)
+        *frac = (u8)(*va >> 4) & 0x1F;
         return;
     case GX_VA_NRM:
     case GX_VA_NBT:

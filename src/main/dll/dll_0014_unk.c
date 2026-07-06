@@ -28,9 +28,6 @@
 #include "main/game_object.h"
 extern void OSReport(const char* msg, ...);
 
-/* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
- * deref-cleanup wave; curves.h re-exports it). */
-
 #include "main/dll/dll_0015_curves.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
@@ -974,8 +971,8 @@ void doNothing_onTrickyInit(void)
 #pragma peephole off
 int fn_800D9F38(void* walker, void* curve)
 {
-    extern float mathCosf(float x); /* #57 */
-    extern float mathSinf(float x); /* #57 */
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     char* A = walker;
     char* B = curve;
     if (*(u32*)(A + 0xa0) == 0 || *(u32*)(A + 0xa4) == 0 || curve == 0) return 1;
@@ -1017,8 +1014,8 @@ int fn_800D9F38(void* walker, void* curve)
 
 void RomCurve_setA4(void* walker, void* curve)
 {
-    extern float mathCosf(float x); /* #57 */
-    extern float mathSinf(float x); /* #57 */
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     char* A = walker;
     f32 t;
     if (curve != 0 && (u32)curve != *(u32*)(A + 0xa4))
@@ -1041,8 +1038,8 @@ void RomCurve_setA4(void* walker, void* curve)
 
 int RomCurve_setClosed(RomCurveWalker* state, int closed)
 {
-    extern float mathCosf(float x); /* #57 */
-    extern float mathSinf(float x); /* #57 */
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     float savedPhase;
     float t;
     void* tmpCurve;
@@ -1154,8 +1151,8 @@ int RomCurve_setClosed(RomCurveWalker* state, int closed)
 
 u8 RomCurve_goNextPoint(RomCurveWalker* state)
 {
-    extern float mathCosf(float x); /* #57 */
-    extern float mathSinf(float x); /* #57 */
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     char* stateBytes;
     int low;
     int high;
@@ -1292,8 +1289,8 @@ clearAndReturn:
 #pragma peephole on
 static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset, int useCos)
 {
-    extern float mathCosf(float x); /* #57 */
-    extern float mathSinf(float x); /* #57 */
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     f32 angle;
     f32 trig;
 
@@ -1379,8 +1376,8 @@ static inline int RomCurve_pickRandomControlPointId_2B(int curve)
 #pragma peephole off
 int RomCurve_func29(RomCurveWalker* state, int pickIdx)
 {
-    extern float mathCosf(float x); /* #57 */
-    extern float mathSinf(float x); /* #57 */
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     char* stateBytes;
     int nextId;
     int nextCurve;
@@ -1513,8 +1510,8 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx)
 
 int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* outPhase)
 {
-    extern u32 RomCurve_getAdjacentWindow(); /* #57 */
-    extern int RomCurve_projectPointToAdjacentWindow(); /* #57 */
+    extern u32 RomCurve_getAdjacentWindow();
+    extern int RomCurve_projectPointToAdjacentWindow();
     int projected;
     int linkId;
     float lateralOffset;
@@ -1622,8 +1619,8 @@ void curves_getPos(int curve, float* outX, float* outY, float* outZ, f32 phase)
 
 int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 {
-    extern float mathCosf(float x); /* #57 */
-    extern float mathSinf(float x); /* #57 */
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     char* stateBytes;
     u32 currentCurve;
     int nextId;
@@ -1700,8 +1697,8 @@ fail:
 
 int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType, f32 maxDistance)
 {
-    extern float mathCosf(float x); /* #57 */
-    extern float mathSinf(float x); /* #57 */
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     char* stateBytes;
     int curveId;
     u32 currentCurve;
@@ -2660,7 +2657,7 @@ int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
 
 int RomCurve_func16(double x, double y, double z)
 {
-    extern int curves_distFn15(); /* #57 */
+    extern int curves_distFn15();
     u32 candidateIds[20];
     u32* top;
     int candidateCount;
@@ -2736,7 +2733,7 @@ void fn_800D9EE8(float* p)
 #pragma scheduling off
 int fn_800DB240(int p1, f32* outVec, u16 id)
 {
-    extern f32 vec3f_distanceSquared(int, int); /* #57 */
+    extern f32 vec3f_distanceSquared(int, int);
     u8 i;
     f32 d1;
 
@@ -3665,8 +3662,8 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
 #pragma opt_propagation off
 int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ, s8* outTypes)
 {
-    extern float mathCosf(float x); /* #57 */
-    extern float mathSinf(float x); /* #57 */
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     u32 mask;
     u32* lp;
     RomCurvePlacementDef* next;
@@ -4287,9 +4284,6 @@ void curves_remove(RomCurveDef* curve)
     }
 }
 
-/*
- * Retail source-tag string: Hcurves.c: MAX_ROMCURVES exceeded!!
- */
 void curves_addCurveDef(RomCurveDef* curve)
 {
     int sortedCurveCount;

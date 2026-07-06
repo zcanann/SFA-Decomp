@@ -188,11 +188,6 @@ void portalspelldoor_update(int obj)
     }
 }
 
-/* portalspelldoor_init: byte<<8 / halfword<<8 stash at obj+0..+2, prime
- * obj+8 with lbl_803E3A8C, derive sub+4 = obj->_a8 * obj+8 * lbl_803E3A90,
- * GameBit-gated bit-set on obj+6 (0x4000) and obj+b0 (0xe000), then
- * latch sub+8 = -1. */
-
 void portalspelldoor_init(u8* obj, u8* data)
 {
     PortalSpellDoorState* sub = ((GameObject*)obj)->extra;

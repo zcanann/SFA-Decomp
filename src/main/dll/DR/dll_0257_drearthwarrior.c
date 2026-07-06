@@ -169,7 +169,7 @@ typedef struct EarthWarriorSub
     u8 pad991;
     u8 unk992;
     u8 unk993;
-    u8 flags994; /* ByteFlags: b01/b02/b80 */
+    u8 flags994; /* ByteFlags: b01/b02/b08/b10/b80 */
     u8 unk995;
     u8 pad996[6];
     s8 unk99C;

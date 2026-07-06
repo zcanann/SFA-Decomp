@@ -1,6 +1,6 @@
 #include "dolphin/os.h"
 
-extern int lbl_803DE3E8;  // was __initialized; lives in sbss outside this TU's range
+extern int lbl_803DE3E8;  // lives in sbss outside this TU's range
 
 const double lbl_802C2920[3] = {
     0.0,

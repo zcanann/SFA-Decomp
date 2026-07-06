@@ -209,7 +209,7 @@ void cmbsrc_hitDetect(int obj)
 
 int cmbsrc_cycleColor(int obj, int state)
 {
-    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a); /* #57 */
+    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -295,7 +295,7 @@ void cmbsrc_updateVisuals(int obj, int state)
         {
             if (setup->colorIndex == CMBSRC_MODE_COLOR_CYCLE)
             {
-                extern u8 cmbsrc_cycleColor(int obj, int state); /* #11 */
+                extern u8 cmbsrc_cycleColor(int obj, int state);
                 colorIdx = cmbsrc_cycleColor(obj, state);
             }
             else
@@ -417,8 +417,8 @@ void cmbsrc_updateVisuals(int obj, int state)
 
 int cmbsrc_update(int obj)
 {
-    extern u8 cmbsrc_shouldDeactivate(int obj, int state, int setup); /* #57 */
-    extern u8 cmbsrc_shouldActivate(int obj, int state, int setup); /* #57 */
+    extern u8 cmbsrc_shouldDeactivate(int obj, int state, int setup);
+    extern u8 cmbsrc_shouldActivate(int obj, int state, int setup);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* state = cmbsrc->state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -500,7 +500,7 @@ int cmbsrc_update(int obj)
 
 void cmbsrc_init(int obj, u8* setup)
 {
-    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a); /* #57 */
+    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     u8* c2;
     u8* c1;

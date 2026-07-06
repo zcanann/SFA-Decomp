@@ -340,7 +340,6 @@ void wcpressures_initialise(void)
 
 char sWCPressuresActivateFormat[] = " Avitvate %i ";
 
-/* descriptor/ptr table auto 0x8032b230-0x8032b348 */
 u32 gWCTrexStatuObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)wctrexstatu_initialise, (u32)wctrexstatu_release, 0x00000000, (u32)wctrexstatu_init, (u32)wctrexstatu_update, (u32)wctrexstatu_hitDetect, (u32)wctrexstatu_render, (u32)wctrexstatu_free, (u32)wctrexstatu_getObjectTypeId, (u32)wctrexstatu_getExtraSize };
 u32 gSunTempleObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)suntemple_initialise, (u32)suntemple_release, 0x00000000, (u32)suntemple_init, (u32)suntemple_update, (u32)suntemple_hitDetect, (u32)suntemple_render, (u32)suntemple_free, (u32)suntemple_getObjectTypeId, (u32)suntemple_getExtraSize };
 u32 gWCTempleObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)wctemple_initialise, (u32)wctemple_release, 0x00000000, (u32)wctemple_init, (u32)wctemple_update, (u32)wctemple_hitDetect, (u32)wctemple_render, (u32)wctemple_free, (u32)wctemple_getObjectTypeId, (u32)wctemple_getExtraSize };

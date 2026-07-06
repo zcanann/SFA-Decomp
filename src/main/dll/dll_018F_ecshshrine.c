@@ -27,7 +27,7 @@
  * ecsh_shrine_checkCupPick (the PICK CHECK: sets matchFlag = guess==spiritCup,
  * called from ecsh_cup_update), ecsh_shrine_getCupPos / ecsh_shrine_setCupPos
  * (read/write a cup's (x,z) via the slot->cup map gEcShShrineCupSlotMap), plus
- * modelMtxFn and setScale.
+ * setScale.
  *
  * The DLL owns a cluster of GameBits set on init/free/transition (0xefa,
  * 0xcbb, 0xa7f, 0xb9d, 0x129, 0x143, ...). It also reads the entrance-intro

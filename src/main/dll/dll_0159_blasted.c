@@ -18,10 +18,10 @@ extern void objSetSlot(int* obj, int slot);
 
 #define BLASTED_GAMEBIT_DAMAGE_BASE 0x2de /* base of per-damage-step progress GameBit array */
 
-/* EN v1.0 0x801A27B8  size: 280b  Flags every trigger/volume in the map
- * block under the object that carries the given event id: sets bits 0..1
- * on matching block entries and bit 1 on matching group records. Returns 0
- * when the block is missing or not trigger-enabled. */
+/* Flags every trigger/volume in the map block under the object that
+ * carries the given event id: sets bits 0..1 on matching block entries
+ * and bit 1 on matching group records. Returns 0 when the block is
+ * missing or not trigger-enabled. */
 #pragma dont_inline on
 int fn_801A27B8(int obj, int id)
 {
@@ -118,11 +118,11 @@ STATIC_ASSERT(offsetof(BlastedTargetState, triggerFired) == 0x0C);
 STATIC_ASSERT(offsetof(BlastedTargetState, damageStep) == 0x11);
 STATIC_ASSERT(sizeof(BlastedTargetState) == 0x14);
 
-/* EN v1.0 0x801A2928  size: 464b  Blasted-target update: once the target's
- * GameBit is latched, fires the map trigger; otherwise scans the model's
- * hit nodes for newly-destroyed (state 5) pieces, records each unique piece,
- * advances the damage model index, and on the final piece latches the
- * GameBit, fires the trigger, and swaps to the destroyed model. */
+/* Blasted-target update: once the target's GameBit is latched, fires the
+ * map trigger; otherwise scans the model's hit nodes for newly-destroyed
+ * (state 5) pieces, records each unique piece, advances the damage model
+ * index, and on the final piece latches the GameBit, fires the trigger,
+ * and swaps to the destroyed model. */
 #pragma opt_loop_invariants off
 void blasted_update(int obj)
 {
@@ -204,9 +204,6 @@ void blasted_update(int obj)
     }
 }
 #pragma opt_loop_invariants reset
-
-/* Tail of the TU (0x801A2AF8..0x801A2BDC) - formerly the head of
- * gasventControl.c. */
 
 typedef struct BlastedState
 {

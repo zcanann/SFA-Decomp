@@ -63,8 +63,8 @@ void texframeanimator_hitDetect(void)
 
 void texframeanimator_update(int* obj)
 {
-    extern void* mapGetBlock(int i); /* #57 */
-    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
+    extern void* mapGetBlock(int i);
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     TexFrameAnimatorState* state;
     u8* params;
     int* block;
@@ -149,9 +149,6 @@ void texframeanimator_initialise(void)
 }
 
 
-/* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-
-/* descriptor/ptr table auto 0x80322400-0x803224e0 */
 extern u8 WaterFallSpray_free[];
 extern u8 WaterFallSpray_getExtraSize[];
 extern u8 WaterFallSpray_init[];

@@ -23,11 +23,6 @@ extern AramStreamBufferEntry lbl_803D4468[];
  * Allocate+DMA: copies `size` bytes from `src` into the audio
  * memory pool, returning the pre-write cursor. With a registered
  * chunking callback, copies in pieces of at most aramChunkSize bytes.
- *
- * EN v1.0 Address: 0x80284468
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x802844C0
- * EN v1.1 Size: 240b
  */
 u32 aramStoreData(void* src, u32 size)
 {
@@ -62,9 +57,6 @@ u32 aramStoreData(void* src, u32 size)
 
 /*
  * Rewind cursor by aligned size.
- *
- * EN v1.1 Address: 0x80284558
- * EN v1.1 Size: 24b
  */
 void aramRemoveData(void* unused, u32 size)
 {
@@ -76,9 +68,6 @@ void aramRemoveData(void* unused, u32 size)
  * Initialize the 64-element stream-buffer free list at lbl_803D4468.
  * The allocator uses the first word of each 0x10-byte entry as the next
  * pointer, and the setup loop links eight entries per iteration.
- *
- * EN v1.1 Address: 0x80284570
- * EN v1.1 Size: 196b
  */
 void aramInitStreamBuffers(void)
 {
@@ -106,9 +95,6 @@ void fn_80284634(void)
 /*
  * Look up stream-buffer metadata; if outPos != NULL, store the current
  * position, and return the ARAM address.
- *
- * EN v1.1 Address: 0x80284638
- * EN v1.1 Size: 56b
  */
 u32 aramGetStreamBufferAddress(u8 idx, u32* outPos)
 {

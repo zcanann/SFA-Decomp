@@ -55,8 +55,6 @@ extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern float mathCosf(float x);
 
-/* ===== EN v1.0 retargeted leaves ========================================= */
-
 extern u32 lbl_803DD9B8;
 extern u32 lbl_803DD9BC;
 extern u8 lbl_803DD9AB;
@@ -64,28 +62,22 @@ extern u8 showCredits;
 
 u8 shouldShowCredits(void) { return showCredits; }
 
-/* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
-
-/* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
+/* Two-word setter for state pair. */
 void fn_80135814(u32 a, u32 b)
 {
     lbl_803DD9BC = a;
     lbl_803DD9B8 = b;
 }
 
-/* EN v1.0 0x801368D4  size: 12b  Clear lbl_803DD9AB to 0. */
 void titleScreenFn_801368d4(void) { lbl_803DD9AB = 0; }
 
-/* EN v1.0 0x80135BC4  size: 8b   titlescreen_getExtraSize -> 56. */
 int titlescreen_getExtraSize(void) { return 56; }
 
-/* EN v1.0 0x80135CC4  size: 4b   titlescreen_hitDetect (empty stub). */
 void titlescreen_hitDetect(void)
 {
 }
 
-/* EN v1.0 0x80135BCC  size: 36b  titlescreen_getObjectTypeId: returns 74 if
- * obj->_46  is in [1917, 1920], else returns 0. */
+/* Returns 74 if seqId is in [1917, 1920], else returns 0. */
 int titlescreen_getObjectTypeId(u8* obj)
 {
     s16 v = ((GameObject*)obj)->anim.seqId;
@@ -117,10 +109,9 @@ extern void* gTitleScreenMainTex;
 void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
 extern u8 gTitleScreenSetupDone;
 
-/* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
- * buffer at gTitleScreenMainTex and walk the 19-slot table at gTitleScreenTextures
- * releasing each non-null entry, then clear the busy byte at
- * gTitleScreenSetupDone. */
+/* Free the main buffer at gTitleScreenMainTex and walk the 19-slot table at
+ * gTitleScreenTextures releasing each non-null entry, then clear the busy
+ * byte at gTitleScreenSetupDone. */
 #pragma scheduling off
 #pragma peephole off
 void titlescreen_release(void)
@@ -159,10 +150,9 @@ u8 gTitleScreenMtx[0x34];
 extern s16 gTitleScreenTextureIds[];
 extern void PSMTXIdentity(void*);
 
-/* EN v1.0 0x8013695C  size: 228b  titlescreen_initialise: reset state
- * bytes, load the main texture (asset 0x647 or 0xC5 depending on
- * lbl_803DC968), identity the matrix, then load the 19-entry texture
- * table from the id list at gTitleScreenTextureIds into gTitleScreenTextures. */
+/* Reset state bytes, load the main texture (asset 0x647 or 0xC5 depending on
+ * lbl_803DC968), identity the matrix, then load the 19-entry texture table
+ * from the id list at gTitleScreenTextureIds into gTitleScreenTextures. */
 void titlescreen_initialise(void)
 {
     int i;
@@ -197,9 +187,9 @@ extern u8 gTitleScreenCreditsStarted;
 extern int gTitleScreenCreditsEndTriggered;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-/* EN v1.0 0x80135C2C  size: 152b  titlescreen_render: when visible and
- * ready, render via objRenderFn; once the credits flag fires, set the
- * one-shot trigger 0x57 and release the attract-mode movie buffers. */
+/* When visible and ready, render via objRenderFn; once the credits flag
+ * fires, set the one-shot trigger 0x57 and release the attract-mode movie
+ * buffers. */
 void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -224,8 +214,7 @@ extern TitleAnimMoves gTitleScreenAnimMoves[];
 extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 
-/* EN v1.0 0x801367A8  size: 252b  titlescreen_init: seed the object's
- * state from its descriptor id (obj->_46), pick the anim move and blend
+/* Seed the object's state from its seqId, pick the anim move and blend
  * float per id range, and for the attract id install the movie draw
  * callback. */
 void titlescreen_init(u8* obj, u8* p)
@@ -270,9 +259,8 @@ extern void PSMTXTrans(void*, f32, f32, f32);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void* Obj_GetActiveModel(u8* obj);
 
-/* EN v1.0 0x80135820  size: 136b  Set up the title-screen translation
- * matrix at gTitleScreenMtx and derive the three normalized cursor
- * positions from the supplied (a, b) coordinates. */
+/* Set up the title-screen translation matrix at gTitleScreenMtx and derive
+ * the three normalized cursor positions from the supplied (a, b) coordinates. */
 #pragma peephole on
 void titleScreenPositionElements(f32 a, f32 b)
 {
@@ -282,8 +270,8 @@ void titleScreenPositionElements(f32 a, f32 b)
     gTitleScreenCursorX = lbl_803E2318 - gTitleScreenCursorY;
 }
 
-/* EN v1.0 0x801368A4  size: 32b  Two-byte state push: if arg differs
- * from lbl_803DD991, save old to lbl_803DBC09 and set new. */
+/* Two-byte state push: if arg differs from lbl_803DD991, save old to
+ * lbl_803DBC09 and set new. */
 void titleScreenFn_801368a4(s8 arg)
 {
     s8 cur;
@@ -292,8 +280,8 @@ void titleScreenFn_801368a4(s8 arg)
     lbl_803DD991 = arg;
 }
 
-/* EN v1.0 0x801368C4  size: 16b  Two-byte state push (no equality
- * check): copy lbl_803DD990 to lbl_803DBC08 and write new value. */
+/* Two-byte state push (no equality check): copy lbl_803DD990 to
+ * lbl_803DBC08 and write new value. */
 void titleScreenFn_801368c4(u8 arg)
 {
     lbl_803DBC08 = lbl_803DD990;
@@ -307,8 +295,8 @@ extern s16 gTitleScreenCreditDelay;
 extern int getCurUiDll(void);
 extern f32 timeDelta;
 
-/* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
- * latch showCredits = 1 and zero five halfword/byte counters. */
+/* Reset the per-frame state group: latch showCredits = 1 and zero five
+ * halfword/byte counters. */
 void creditsStart(void)
 {
     showCredits = 1;
@@ -319,8 +307,8 @@ void creditsStart(void)
     gTitleScreenCreditsStarted = 0;
 }
 
-/* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
- * from getCurUiDll is in {2..6} or equals 7, else 0. */
+/* Predicate. Returns 1 when the value from getCurUiDll is in {2..6} or
+ * equals 7, else 0. */
 int gameTextFn_80134be8(void)
 {
     int x = getCurUiDll();
@@ -331,8 +319,8 @@ int gameTextFn_80134be8(void)
     return 0;
 }
 
-/* EN v1.0 0x80135BF0  size: 60b  titlescreen_free: if obj->_46 == 0x77d,
- * trigger Music_Trigger(MUSICTRIG_lose_ice_race, 0) and clear showCredits. */
+/* If seqId == 0x77d, trigger Music_Trigger(MUSICTRIG_lose_ice_race, 0)
+ * and clear showCredits. */
 extern void Music_Trigger(int id, int arg);
 
 void titlescreen_free(u8* obj)
@@ -351,8 +339,7 @@ extern f32 lbl_803E2320;
 extern f32 lbl_803E2324;
 extern void* gameTextGet(int textId);
 
-/* EN v1.0 0x80134C28  size: 280b  titleScreenShowCopyright: drive the
- * copyright/title text fade and push text box 0x3d9. */
+/* Drive the copyright/title text fade and push text box 0x3d9. */
 #pragma scheduling off
 #pragma peephole off
 void titleScreenShowCopyright(u8 arg)
@@ -499,10 +486,9 @@ extern f32 lbl_803DBC0C;
 u8 gTitleScreenSfxFlagGrid[0x48];
 void fn_80134870(int obj, u8* arr);
 
-/* EN v1.0 0x80135CC8  size: 2784b  titlescreen_update: drive the title
- * screen actor anim state machine, the per-actor footstep/voice sfx flag
- * grid at gTitleScreenSfxFlagGrid, the random blink blend, and the one-shot envfx/sky
- * setup. */
+/* Drive the title screen actor anim state machine, the per-actor
+ * footstep/voice sfx flag grid at gTitleScreenSfxFlagGrid, the random blink
+ * blend, and the one-shot envfx/sky setup. */
 void titlescreen_update(u8* obj)
 {
     extern int randomGetRange(int lo, int hi);

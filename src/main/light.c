@@ -13,10 +13,10 @@
 #define LIGHT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /*
- * DLL 0x021E (gVFP_Block1ObjDescriptor) fragment.
- * Only getExtraSize/getObjectTypeId/free/render/hitDetect fall in this object's
+ * DLL 0x021E (gVFP_Block1ObjDescriptor).
+ * getExtraSize/getObjectTypeId/free/render/hitDetect fall in this object's
  * .text range here (0x801FB9AC-0x801FB9F4); update/init/release/initialise for
- * this DLL live in the adjacent unit main/light.c (next .text range).
+ * this DLL follow later in this same file (next .text range).
  */
 
 extern f32 lbl_803E6100;

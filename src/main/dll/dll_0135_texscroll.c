@@ -6,9 +6,6 @@
  * cold load (loadFlags == 0). update/hitDetect are stubs here; render
  * just forwards a fixed scale to objRenderModelAndHitVolumes when visible.
  * init guards on state == NULL before writing (absent in texscroll2).
- *
- * gTexscrollObjDescriptor is declared extern in mmp_moonrock.h but is
- * not defined in this TU (deferred to the parent multi-TU descriptor file).
  */
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/VF/vf_shared.h"

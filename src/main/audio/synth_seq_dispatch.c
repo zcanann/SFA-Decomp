@@ -148,16 +148,16 @@ typedef struct
     u8 unk36[2]; // 0x36
 } SeqQueue; // size 0x38
 
-/*
- * Dispatch a queued voice/MIDI channel event by type, then pull the next
- * event for the channel.
- */
 extern int fn_8026CF78(u8 voice);
 
 extern f32 lbl_803E7780;
 extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
 
+/*
+ * Dispatch a queued voice/MIDI channel event by type, then pull the next
+ * event for the channel.
+ */
 int fn_8026E0E4(int event, u8 voice, u32* flag)
 {
     SynthMidiCtrlBlock* base = (SynthMidiCtrlBlock*)lbl_803AF550;
@@ -489,8 +489,6 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
 /*
  * Iterate 64 voice slots: for each active one, append it to the studio's
  * voice list. Uses an indirection table when present.
- *
- * EN v1.1 Address: 0x8026E864, size 168b
  */
 void fn_8026E864(void)
 {

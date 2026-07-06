@@ -16,11 +16,6 @@ extern f32 lbl_803E7838;
  * Mark all entries of the MIDI voice-id table and direct voice-id table
  * as free. The asm has the inner stb's unrolled to two MIDI rows per
  * loop iter, and the direct-voice table is fully unrolled.
- *
- * EN v1.0 Address: 0x8027A270
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x8027A330
- * EN v1.1 Size: 432b
  */
 void voiceInitRegistrationTables(void)
 {
@@ -103,11 +98,6 @@ void voiceInitRegistrationTables(void)
 /*
  * Convert a u16 sample-rate-style value to a scaled int via the magic
  * f64 conversion trick.
- *
- * EN v1.0 Address: 0x8027A294
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x8027A4E0
- * EN v1.1 Size: 60b
  */
 int voiceScaleSampleRate(u16 x)
 {
@@ -119,11 +109,6 @@ int voiceScaleSampleRate(u16 x)
  * input (high byte = base note, low byte = fractional semitone),
  * pick a base frequency from one of two tables (above/below center
  * note), scale by fraction, then convert to a u32 sample-rate ratio.
- *
- * EN v1.0 Address: 0x8027A298
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x8027A51C
- * EN v1.1 Size: 240b
  */
 u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
 {
@@ -157,11 +142,6 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
 
 /*
  * dB-to-linear-level conversion via pow + magic conversion.
- *
- * EN v1.0 Address: 0x8027A29C
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x8027A60C
- * EN v1.1 Size: 84b
  */
 u32 voiceConvertDbToLinear(u32 dbCents)
 {

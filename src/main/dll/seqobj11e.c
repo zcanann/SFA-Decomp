@@ -67,8 +67,8 @@ void fn_80152440(GameObject* obj, int p, int p3, int msg)
 }
 #pragma opt_common_subs reset
 
-/* EN v1.0 0x80152514  size: 1408b  main update: child-zap timer, curve
- * follow, heading steps, landing sfx, light-pulse fx, child spark spawn. */
+/* fn_80152514: main update: child-zap timer, curve follow, heading steps,
+ * landing sfx, light-pulse fx, child spark spawn. */
 
 
 extern void Obj_FreeObject(int* obj);
@@ -300,8 +300,8 @@ void fn_80152514(int* obj, u8* state)
     }
 }
 
-/* EN v1.0 0x80152B90  size: 816b  firefly hover update: circle drift, bob
- * between heights, periodically drop a spawned object, ambient sfx timers. */
+/* fn_80152B90: firefly hover update: circle drift, bob between heights,
+ * periodically drop a spawned object, ambient sfx timers. */
 
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
@@ -504,9 +504,8 @@ void fn_801522E0(int* obj, u8* state)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
 }
 
-/* EN v1.0 0x80152040  size: 672b  state-table driver: walks the 12-byte
- * gSeq11EStateTable state rows, advancing on GameBit + sequence flags and kicking
- * the matching anim. */
+/* fn_80152040: state-table driver: walks the 12-byte gSeq11EStateTable state
+ * rows, advancing on GameBit + sequence flags and kicking the matching anim. */
 
 typedef struct
 {

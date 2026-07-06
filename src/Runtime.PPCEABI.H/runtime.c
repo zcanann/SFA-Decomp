@@ -1,5 +1,3 @@
-/* TODO: restore stripped imported address metadata if needed. */
-
 #include <dolphin.h>
 
 #ifdef __cplusplus

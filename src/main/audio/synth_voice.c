@@ -434,9 +434,7 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
 
 /*
  * Low-precision per-voice update: LFOs, vibrato, pitch sweeps, pan ramps,
- * pitch bend/portamento and final pitch computation (LowPrecisionHandler).
- *
- * EN v1.0 Address: 0x80270184, size 1972b
+ * pitch bend/portamento and final pitch computation.
  */
 void LowPrecisionHandler(int voice)
 {
@@ -677,9 +675,7 @@ end:
 
 /*
  * Zero-offset per-voice update: volume envelope, tremolo, panning and final
- * volume/aux sends (ZeroOffsetHandler).
- *
- * EN v1.0 Address: 0x80270938, size 1712b
+ * volume/aux sends.
  */
 #pragma fp_contract off
 void ZeroOffsetHandler(int voice)
@@ -868,10 +864,7 @@ end:
 #pragma fp_contract reset
 
 /*
- * Event per-voice update: pedal state, deferred hardware start and key-off
- * (EventHandler).
- *
- * EN v1.0 Address: 0x80270FE8, size 400b
+ * Event per-voice update: pedal state, deferred hardware start and key-off.
  */
 void EventHandler(int voice)
 {
@@ -913,8 +906,6 @@ end:
 /*
  * Queue one of a fade's embedded delayed-action nodes into the 32-bucket
  * scheduler ring.
- *
- * EN v1.1 Address: 0x80271178, size 336b
  */
 typedef struct SynthJobTab
 {
@@ -1014,8 +1005,6 @@ void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay)
 /*
  * Reset four pos/timer fields on the handle, then advance both
  * channels (modes 0 and 1).
- *
- * EN v1.1 Address: 0x802712C8, size 100b
  */
 void fn_802712C8(SynthDelayedNode* fade)
 {
@@ -1029,8 +1018,6 @@ void fn_802712C8(SynthDelayedNode* fade)
 
 /*
  * Advance both channels (modes 0 and 1) of the handle.
- *
- * EN v1.1 Address: 0x8027132C, size 68b
  */
 void synthQueueVoicePrimaryUpdates(SynthDelayedNode* fade)
 {
@@ -1040,8 +1027,6 @@ void synthQueueVoicePrimaryUpdates(SynthDelayedNode* fade)
 
 /*
  * Wrapper for synthQueueDelayedUpdate(handle, 2, 0).
- *
- * EN v1.1 Address: 0x80271370, size 40b
  */
 void synthQueueVoiceInputUpdate(SynthDelayedNode* fade)
 {
@@ -1051,8 +1036,6 @@ void synthQueueVoiceInputUpdate(SynthDelayedNode* fade)
 /*
  * Walk a voice linked-list, marking each entry's slot 9 as 0xff and
  * invoking the callback for entries whose voice's 0x11c field is 0.
- *
- * EN v1.1 Address: 0x80271398, size 148b
  */
 #pragma dont_inline on
 void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback callback)
@@ -1077,8 +1060,6 @@ void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback
 
 /*
  * Dispatch a completed fade action based on its type byte.
- *
- * EN v1.1 Address: 0x8027142C, size 108b
  */
 void synthDispatchFadeAction(SynthFade* fade)
 {
@@ -1102,8 +1083,6 @@ void synthDispatchFadeAction(SynthFade* fade)
 /*
  * Periodic synth tick: drains delayed-action buckets, advances fade ramps,
  * runs AUX callbacks, and advances the global synth timer.
- *
- * EN v1.1 Address: 0x80271498, size 792b
  */
 void audioFn_80271498(u32 delta)
 {
@@ -1215,7 +1194,7 @@ void audioFn_80271498(u32 delta)
 }
 
 /*
- * synthFXStart - start an FX sample by id, applying default volume/pan sentinels.
+ * Start an FX sample by id, applying default volume/pan sentinels.
  */
 typedef struct SynthFxSampleInfo
 {

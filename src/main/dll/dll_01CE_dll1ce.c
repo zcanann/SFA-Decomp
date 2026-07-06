@@ -126,28 +126,10 @@ void dll_1CE_hitDetect(void)
 {
 }
 
-/* dimwooddoor2 variant: trigger-init that loads a different float
- * (lbl_803E49F0) into the extra block's [4]. */
-
-/* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
- * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
- * when GameBit 0x1ef is on and the player's emission controller is lingering,
- * latch GameBit 0x1e8. */
-
-/* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
- * and using mask 0x6000 + initial state byte 3 at +0. */
-
-/* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
- * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
-
-/* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
- * every 16 frames, and ramp each active slot's alpha toward full; then update
- * the animated bridge mesh. */
-
-/* EN v1.0 0x801B5AA0  size: 496b  dll_1CE_update: hatch-door logic - coast
- * the lid open with clamped velocity while idle, and once a key object is
- * nearby, count down then ring the gamebit and (if the load isn't locked)
- * spawn the contents object seeded from the door's transform. */
+/* dll_1CE_update: hatch-door logic - coast the lid open with clamped
+ * velocity while idle, and once a key object is nearby, count down then
+ * ring the gamebit and (if the load isn't locked) spawn the contents
+ * object seeded from the door's transform. */
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_strength_reduction off

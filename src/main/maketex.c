@@ -324,8 +324,7 @@ typedef struct
     int val;
 } SeqSortPair;
 
-/* EN v1.0 0x8007FEAC  size: 332b  Shell sort over (key, val) pairs,
- * ascending by key. */
+/* Shell sort over (key, val) pairs, ascending by key. */
 #pragma dont_inline on
 void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
 {
@@ -363,8 +362,7 @@ void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
 }
 #pragma dont_inline reset
 
-/* EN v1.0 0x80080078  size: 136b  Spin-delay then sort when the pair list
- * is large enough. */
+/* Spin-delay then sort when the pair list is large enough. */
 void objSeqInitFn_80080078(SeqSortPair* arr, int n)
 {
     int i;
@@ -390,10 +388,6 @@ extern void* lbl_803DD0B8;
 extern int lbl_803DB720;
 extern int lbl_803DD064;
 
-/* EN v1.0 0x80080C18  size: 464b  Tears down an object sequence: unbinds
- * every object still tagged with the sequence id, runs each freed object's
- * completion callback, frees the collected objects, and resets the global
- * sequence/camera state when this was the active sequence. */
 extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDDelete(s32 chan, char* fileName);
@@ -402,8 +396,8 @@ extern char* sMemoryCardFileName;
 extern u64 lbl_803DD050;
 extern u32 lbl_803DD054;
 
-/* EN v1.0 0x8007E7C0  size: 900b  Checksums the save buffer, writes it to the
- * memory card, then reads it back and verifies the checksum. */
+/* Checksums the save buffer, writes it to the memory card, then reads it
+ * back and verifies the checksum. */
 int saveGame_doWrite(int slot)
 {
     u64 x[1];
@@ -476,9 +470,9 @@ extern u8 lbl_803DC968;
 extern int gSaveCardImageBuffer;
 extern char sMemoryCardFileNameString[];
 
-/* EN v1.0 0x8007F358  size: 1372b  Builds the memory card comment strings
- * (Shift-JIS title on JP cards), loads the banner/icon images from disc, and
- * checksums both halves of the card image buffer. */
+/* Builds the memory card comment strings (Shift-JIS title on JP cards),
+ * loads the banner/icon images from disc, and checksums both halves of the
+ * card image buffer. */
 void loadMemCardImages(void)
 {
     char* names = sMemoryCardFileNameString;
@@ -630,9 +624,9 @@ extern u8 lbl_803DD05A;
 #define CARD_RESULT_INSSPACE -9
 #define CARD_RESULT_ENCODING -13
 
-/* EN v1.0 0x8007F818  size: 1468b  Mounts the memory card, validates its
- * serial number, opens or creates the save file (writing the card image
- * buffer for a fresh file), and maps any CARD error to a status code. */
+/* Mounts the memory card, validates its serial number, opens or creates the
+ * save file (writing the card image buffer for a fresh file), and maps any
+ * CARD error to a status code. */
 int saveGame(int writeImages)
 {
     u8 created;
@@ -856,9 +850,9 @@ int saveGame(int writeImages)
     return ret;
 }
 
-/* EN v1.0 0x8007EB04  size: 1948b  Saves the game: verifies the existing save
- * slots' checksums, rewrites stale slots and card images, then runs the
- * caller's callback and maps the result to a status code. */
+/* Saves the game: verifies the existing save slots' checksums, rewrites
+ * stale slots and card images, then runs the caller's callback and maps the
+ * result to a status code. */
 int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD,
                              int (*cb)(int, int, int, int))
 {
@@ -1086,9 +1080,9 @@ typedef struct ObjSeqTurnState {
   s16 savedVecX;     /* 0x116 */
 } ObjSeqTurnState;
 
-/* EN v1.0 0x800805A4  size: 1564b  Object-sequence turn-to-face-player step:
- * starts (mode 4) or advances (mode 5) a smooth turn of the object toward the
- * player, blending the model vector and animation as it goes. */
+/* Object-sequence turn-to-face-player step: starts (mode 4) or advances
+ * (mode 5) a smooth turn of the object toward the player, blending the model
+ * vector and animation as it goes. */
 int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
 {
     int player;
@@ -1258,8 +1252,8 @@ extern f32 lbl_803DD074;
 extern int lbl_803DB724;
 extern f32 gObjSeqSlotStreamTimeTable[];
 
-/* EN v1.0 0x8008023C  size: 260b  Starts the prepared audio stream for a
- * sequence slot and records its subtitle timing. */
+/* Starts the prepared audio stream for a sequence slot and records its
+ * subtitle timing. */
 int seqStreamFn_8008023c(int x)
 {
     int seqId = gObjSeqSlotSeqIdTable[x] - 1;
@@ -1362,7 +1356,6 @@ void endObjSequence(int seq)
 
 char sMemoryCardFileNameString[20] = "Star Fox Adventures";
 
-/*__DATA_EXTERNS__*/
 extern void showMemCardError();
 extern void cardGetMessage();
 extern void cardDeleteFn_8007d99c();

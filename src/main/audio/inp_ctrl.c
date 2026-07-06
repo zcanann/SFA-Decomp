@@ -73,8 +73,6 @@ s16 sndSintab[1036] = {
 
 /*
  * Bit-11 (0x800) accessor - slot at +0x3a4, cached u16 at +0x3c4.
- *
- * EN v1.1 Address: 0x802827C8, size 72b
  */
 extern u8 lbl_803BDA74[];
 extern u8 lbl_803BDEF4[];
@@ -95,8 +93,6 @@ u16 inpGetPostAuxB(McmdVoiceState* state)
 
 /*
  * Bit-12 (0x1000) accessor - slot at +0x3c8, cached u16 at +0x3e8.
- *
- * EN v1.1 Address: 0x80282810, size 72b
  */
 u16 inpGetTremolo(McmdVoiceState* state)
 {
@@ -170,10 +166,7 @@ u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
 }
 
 /*
- * inpInit - input/controller state init.
- *
- * EN v1.0 Address: 0x802829D0
- * EN v1.0 Size: 740b (0x2E4)
+ * Input/controller state init.
  */
 void inpInit(u32 state)
 {
@@ -330,8 +323,6 @@ void inpInit(u32 state)
 /*
  * Map an input byte (0x80..0x88) to a packed table value via a
  * jumptable, falling through for inputs outside that range.
- *
- * EN v1.1 Address: 0x80282CB4, size 112b
  */
 #pragma dont_inline on
 u32 inpTranslateExCtrl(u32 input)
@@ -416,8 +407,6 @@ void inpSetExCtrl(McmdVoiceState* state, u32 ctrl, s16 value)
 
 /*
  * Pseudo-random number generator (linear congruential).
- *
- * EN v1.1 Address: 0x80282E5C, size 32b
  */
 u16 sndRand(void)
 {
@@ -428,8 +417,6 @@ u16 sndRand(void)
 /*
  * Look up s16 from a 4-zone table based on the input's low 12 bits.
  * Upper two zones return sign-flipped values.
- *
- * EN v1.1 Address: 0x80282E7C, size 108b
  */
 s16 sndSin(u32 packed)
 {
@@ -495,8 +482,6 @@ void* sndBSearch(void* key, void* base, int count, u32 stride, int (*cmp)(void*,
 
 /*
  * Shift the value at *p left by 8 bits.
- *
- * EN v1.1 Address: 0x80282F80, size 16b
  */
 void sndConvertMs(u32* p)
 {
@@ -506,8 +491,6 @@ void sndConvertMs(u32* p)
 /*
  * Compute a normalized scaled-1000-divided-by-32 value at *p using a
  * helper-derived divisor.
- *
- * EN v1.1 Address: 0x80282F90, size 72b
  */
 void sndConvertTicks(u32* p, int x)
 {
@@ -517,8 +500,6 @@ void sndConvertTicks(u32* p, int x)
 
 /*
  * Right-shift by 8 (truncate ramp index).
- *
- * EN v1.1 Address: 0x80282FD8, size 8b
  */
 u32 sndConvert2Ms(u32 x)
 {

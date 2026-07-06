@@ -19,10 +19,10 @@
  * thrown sub-object.
  *
  * Unimplemented trailing functions (not in scope here):
- *   EN v1.0 0x80206474  8b   trivial 0-returner.
- *   EN v1.0 0x80206484  8b   trivial 0-returner.
- *   EN v1.0 0x802064D0  48b  if (p6) objRenderModelAndHitVolumes(lbl_803E6408).
- *   EN v1.0 0x80206500  44b  if (b->_8 && (b->_8->_6 & 0x40)) clear.
+ *   Trivial 0-returner.
+ *   Trivial 0-returner.
+ *   if (p6) objRenderModelAndHitVolumes(lbl_803E6408).
+ *   if (b->_8 && (b->_8->_6 & 0x40)) clear.
  */
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
@@ -71,8 +71,6 @@ STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
-
-/* chuka extra block (extraSize 0xC). */
 
 typedef struct DbstealerwormPlacement
 {
@@ -2556,13 +2554,13 @@ int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t)
     return 0;
 }
 
-/* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
+/* Trivial 0-returner. */
 
-/* EN v1.0 0x80206484  size: 8b   trivial 0-returner. */
+/* Trivial 0-returner. */
 
-/* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderModelAndHitVolumes(lbl_803E6408). */
+/* if (p6) objRenderModelAndHitVolumes(lbl_803E6408). */
 
-/* EN v1.0 0x80206500  size: 44b   if (b->_8 && (b->_8->_6 & 0x40)) clear. */
+/* if (b->_8 && (b->_8->_6 & 0x40)) clear. */
 
 int gDbStealerwormSfxIds[] = {
     498, 498, 498, 149, 149, 5, 5, 5,
@@ -2573,7 +2571,6 @@ int gDbStealerwormSfxIds[] = {
     -1, -1, -65536,
 };
 
-/* auto 0x803296fc-0x80329940 */
 extern void dbholecontrol1_free(void);
 extern void dbholecontrol1_getExtraSize(void);
 extern void dbholecontrol1_getObjectTypeId(void);

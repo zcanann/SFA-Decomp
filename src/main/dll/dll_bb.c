@@ -15,8 +15,6 @@
  *
  * The Camera_func* setters poke the camera target/frame flag bytes and the
  * letterbox target; CAMCONTROL_CAMERA is the global working state.
- *
- * EN v1.0: camcontrol_applyState 0x80101980, camcontrol_applyQueuedAction 0x80101EBC.
  */
 #include "main/dll/dll_BB.h"
 #include "main/camera.h"

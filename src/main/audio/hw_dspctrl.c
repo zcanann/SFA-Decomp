@@ -51,7 +51,6 @@ typedef struct SalStudio
 } SalStudio;
 
 /* ================= MusyX hardware DSP control (hw_dspctrl.c) =================
- * salBuildCommandList (was fn_8027C48C) (EN v1.0 0x8027C48C, 10828b).
  * Recovered against the public MusyX runtime source (hw_dspctrl.c,
  * MUSY_VERSION <= 2.0.0 paths), adapted to SFA's symbol set. */
 
@@ -62,32 +61,32 @@ typedef struct SalStudio
 #define dspStudio ((DSPstudioinfo *)lbl_803CC1E0)
 #define dspSortedVoices ((DSPvoice **)(lbl_803CC1E0 + 0x5e0))
 
-extern u16* dspCmdLastLoad; /* dspCmdLastLoad */
-extern u16* dspCmdLastBase; /* dspCmdLastBase */
-extern u16 dspCmdLastSize; /* dspCmdLastSize */
-extern u16* dspCmdCurBase; /* dspCmdCurBase */
-extern u16* dspCmdMaxPtr; /* dspCmdMaxPtr */
-extern u16* dspCmdPtr; /* dspCmdPtr */
+extern u16* dspCmdLastLoad;
+extern u16* dspCmdLastBase;
+extern u16 dspCmdLastSize;
+extern u16* dspCmdCurBase;
+extern u16* dspCmdMaxPtr;
+extern u16* dspCmdPtr;
 extern u16 dspCmdFirstSize;
 extern u16* dspCmdList;
 extern u32 dspHRTFOn;
-extern u32 dspARAMZeroBuffer; /* dspARAMZeroBuffer */
+extern u32 dspARAMZeroBuffer;
 extern s32* dspSurround;
 extern u8 salFrame;
 extern u16 dspMixerCycles[]; /* dspMixerCycles[32] */
 extern u16 pbOffsets[]; /* pbOffsets[9] */
-extern u16 dspSRCCycles[4][3]; /* dspSRCCycles */
+extern u16 dspSRCCycles[4][3];
 
 #define __OSBusClock (*(u32 *)0x800000F8)
 
 extern int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u16 targetVol,
-                                         u16* resetFlags, u16 resetMask); /* salCheckVolErrorAndResetDelta */
-extern void HandleDepopVoice(DSPstudioinfo * stp, DSPvoice * dsp_vptr); /* HandleDepopVoice */
-extern void SortVoices(DSPvoice** voices, int l, int r); /* SortVoices */
-extern int adsrSetup(ADSR_VARS * adsr); /* adsrSetup */
-extern u32 adsrStartRelease(ADSR_VARS* adsr, u32 rtime); /* adsrStartRelease */
-extern int adsrRelease(ADSR_VARS * adsr); /* adsrRelease */
-extern u32 adsrHandle(ADSR_VARS * adsr, u16 * adsr_start, u16 * adsr_delta); /* adsrHandle */
+                                         u16* resetFlags, u16 resetMask);
+extern void HandleDepopVoice(DSPstudioinfo * stp, DSPvoice * dsp_vptr);
+extern void SortVoices(DSPvoice** voices, int l, int r);
+extern int adsrSetup(ADSR_VARS * adsr);
+extern u32 adsrStartRelease(ADSR_VARS* adsr, u32 rtime);
+extern int adsrRelease(ADSR_VARS * adsr);
+extern u32 adsrHandle(ADSR_VARS * adsr, u16 * adsr_start, u16 * adsr_delta);
 
 int salSynthSendMessage(int synth, int msg);
 void salDeactivateVoice(SalVoice* voice);

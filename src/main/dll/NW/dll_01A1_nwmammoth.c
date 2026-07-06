@@ -389,7 +389,7 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
 
 void fn_801CE2BC(int* obj, u8* st, short* objDef)
 {
-    extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
+    extern f32 vec3f_distanceSquared(void* a, void* b);
     NwMammothState* state = (NwMammothState*)st;
     int* tw2;
     int* tw;
@@ -619,7 +619,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
 
 void nw_mammoth_free(void* obj)
 {
-    extern void ObjGroup_RemoveObject(void* obj, int group); /* #57 */
+    extern void ObjGroup_RemoveObject(void* obj, int group);
     void* node;
 
     node = ((GameObject*)obj)->extra;
@@ -632,8 +632,8 @@ void nw_mammoth_free(void* obj)
 
 void nw_mammoth_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
-    extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag); /* #57 */
-    extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale); /* #57 */
+    extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
+    extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
     int i;
     void* node;
 
@@ -667,11 +667,11 @@ enum NwMammothStateFlag
 #pragma inline_max_size(4000)
 static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
 {
-    extern void fn_801CE2BC(int obj, void* state, void* objDef); /* #57 */
-    extern void fn_801CEA14(int obj, void* state, void* objDef); /* #57 */
-    extern void fn_801CED2C(int obj, void* state, void* objDef); /* #57 */
-    extern void fn_801CEE0C(int obj, void* state, void* objDef); /* #57 */
-    extern f32 vec3f_distanceSquared(f32 * obj, f32 * p2); /* #57 */
+    extern void fn_801CE2BC(int obj, void* state, void* objDef);
+    extern void fn_801CEA14(int obj, void* state, void* objDef);
+    extern void fn_801CED2C(int obj, void* state, void* objDef);
+    extern void fn_801CEE0C(int obj, void* state, void* objDef);
+    extern f32 vec3f_distanceSquared(f32 * obj, f32 * p2);
     extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry * reactionEntryTable, u32 reactionEntryCount,
                                  u32 reactionState, float* reactionStepScale);
     int triggerIndex;

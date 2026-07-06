@@ -199,11 +199,6 @@ void FEseqobject_update(int obj)
     }
 }
 
-/*
- * Function: FEseqobject_init
- * EN v1.0 Address: 0x801DF8F4
- * EN v1.0 Size: 56b
- */
 void FEseqobject_init(int obj)
 {
     *(short*)obj = 0;

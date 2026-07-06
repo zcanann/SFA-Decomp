@@ -183,11 +183,7 @@ extern f32 lbl_803DF9D4;
 
 extern f32 gEffect1AnimRampC;
 extern f32 gEffect1AnimRampD;
-// VERIFY lbl_803DF720 may already exist in modgfx.c
-// VERIFY lbl_803DF724 may already exist in modgfx.c
-// VERIFY lbl_803DF728 may already exist in modgfx.c
 extern f32 lbl_803DF72C;
-// VERIFY lbl_803DF730 may already exist in modgfx.c
 extern f32 lbl_803DF734;
 extern f32 lbl_803DF738;
 extern f32 lbl_803DF73C;
@@ -263,10 +259,7 @@ extern f32 lbl_803DF850;
 extern f32 lbl_803DF854;
 extern f32 lbl_803DF858;
 extern FxNode9 lbl_8039C320;
-/* MtxBuildArg, vecRotateZXY, randFn_80080100, gExpgfxInterface, randomGetRange
-   already declared in modgfx.c. */
 
-/* ===== (2) FILL macro ===== */
 #define FILL320() do {                          \
     lbl_8039C320.posX = 0.0f;             \
     lbl_8039C320.posY = 0.0f;            \

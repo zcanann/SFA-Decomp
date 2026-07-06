@@ -280,37 +280,3 @@ void CameraModeArwing_update(u8* obj)
 }
 #pragma opt_propagation reset
 #pragma opt_common_subs reset
-
-/* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
- * angle into the caller's record. */
-
-/* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
- * caller's record and aims its angle at the nearest group-8 object (falling
- * back to the point's packed angle). */
-
-/* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
- * current target and turns the yaw by the buffered turn rate. */
-
-/* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
- * primes the animation channel tables. */
-
-/* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
- * first use and refreshes the current path point position. */
-
-/* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
- * distance from an object to its target, updating the wide-turn flag. */
-
-/* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
- * the object for walkable space, returning a bitmask of clear directions. */
-
-/* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
- * curve, snapping to ground and easing the yaw toward the path direction. */
-
-/* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
- * arms the move, phase 5 walks the setup/playback sub-phases. */
-
-/* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
- * object's facing plane and returns the lateral offset of the result. */
-
-/* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
- * given speed, snapping when close, easing yaw and pacing the walk anim. */

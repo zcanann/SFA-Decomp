@@ -25,16 +25,7 @@ typedef struct DIMwooddoorUpdateFallingDebrisState
     u8 padC[0x10 - 0xC];
 } DIMwooddoorUpdateFallingDebrisState;
 
-/* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
- * present in the trigger list, latching the gamebit. */
-
 extern u8 framesThisStep;
-
-/* dimbarrier_update: while a live type-470 object is in the list, count down the
- * arm timer; on expiry fade the barrier out and latch its gamebit. */
-
-/* dimsnowball1c2_update: on a timer, if loading allows and the player is clear,
- * spawn a rolling snowball seeded from the placement params. */
 
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern void ObjHits_SetHitVolumeSlot(int* obj, int a, u8 b, int c);
@@ -114,6 +105,3 @@ void DIMwooddoor_updateFallingDebris(int* obj)
         *(s8*)&((DIMwooddoorUpdateFallingDebrisState*)extra)->unk7 = 0;
     }
 }
-
-/* dimicewall_update: on shatter, emit two snow particle bursts and latch the
- * gamebit; otherwise let Tricky push through it. */

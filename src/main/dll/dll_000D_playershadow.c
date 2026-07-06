@@ -9,8 +9,6 @@
  * walks those hits and, for surface types 0x10-0x17, scatters bone/foot
  * particle effects (partfx ids 0x72/0x73/0x190) at random barycentric points
  * on the struck triangles relative to the camera.
- *
- * This object's address range is 0x800A3AF0..0x800A4338.
  */
 #include "main/dll/bonespawndata_struct.h"
 #include "main/game_object.h"

@@ -224,9 +224,9 @@ void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-/* EN v1.0 0x8019E568  size: 352b  sandworm_turnTowardTargetAnim: turn toward the target by
- * a fraction of the yaw delta; when roughly aligned play/advance the idle
- * move, otherwise start or speed-scale the turn move by the delta. */
+/* Turn toward the target by a fraction of the yaw delta; when roughly aligned
+ * play/advance the idle move, otherwise start or speed-scale the turn move by
+ * the delta. */
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
@@ -276,10 +276,9 @@ void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* su
 #pragma peephole on
 #pragma dont_inline reset
 
-/* EN v1.0 0x8019E6C8  size: 316b  babycloudrunner_func0B: when the player
- * gets within the trigger radius and the runner is in state 3, fire its
- * burst (notify, bump the counter, set the gamebit); otherwise just play
- * the idle audio cue. */
+/* When the player gets within the trigger radius and the runner is in state 3,
+ * fire its burst (notify, bump the counter, set the gamebit); otherwise just
+ * play the idle audio cue. */
 #pragma peephole off
 int babycloudrunner_func0B(void* p)
 {
@@ -385,9 +384,9 @@ void babycloudrunner_free(int* obj)
 }
 
 
-/* EN v1.0 0x8019E3F4  size: 372b  fn_8019E3F4: pick the burrow/surface move
- * from the vertical speed, clamp the playback rate, latch the spit SFX
- * while surfacing fast, and advance the current move. */
+/* Pick the burrow/surface move from the vertical speed, clamp the playback
+ * rate, latch the spit SFX while surfacing fast, and advance the current
+ * move. */
 #pragma dont_inline on
 #pragma opt_common_subs off
 int fn_8019E3F4(int* obj)
@@ -437,9 +436,9 @@ int fn_8019E3F4(int* obj)
 #pragma opt_common_subs reset
 #pragma dont_inline reset
 
-/* EN v1.0 0x8019E81C  size: 920b  babycloudrunner_SeqFn: range-check the
- * runner against the player and its trigger radii, chirp for queued cues,
- * then steer toward the player (or Tricky) per the current behaviour state. */
+/* Range-check the runner against the player and its trigger radii, chirp for
+ * queued cues, then steer toward the player (or Tricky) per the current
+ * behaviour state. */
 int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     BabyCloudRunnerPlacement* def = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
@@ -555,10 +554,9 @@ typedef struct
     f32 x, y, z;
 } RunnerTarget;
 
-/* EN v1.0 0x8019EC34  size: 1908b  babycloudrunner_update: full runner brain -
- * despawn on its gamebit, run the captured/timer flow, follow its rom curve
- * while fleeing, hand off to the nearest sandworm, and once freed steer home
- * to the roost point. */
+/* Full runner brain - despawn on its gamebit, run the captured/timer flow,
+ * follow its rom curve while fleeing, hand off to the nearest sandworm, and
+ * once freed steer home to the roost point. */
 #pragma opt_common_subs off
 void babycloudrunner_update(int* obj)
 {

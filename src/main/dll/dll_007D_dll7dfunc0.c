@@ -7,8 +7,7 @@
  * non-null) or a separate position source, then spawns it through
  * gModgfxInterface->spawnEffect. lbl_803DD4B0 is a 0..4 rotating slot
  * counter advanced per spawn. The trailing func01/func00 nops are this
- * DLL's empty lifecycle stubs; the next DLL's nop is forward-declared per
- * the family convention.
+ * DLL's empty lifecycle stubs.
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

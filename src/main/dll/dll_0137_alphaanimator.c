@@ -85,7 +85,6 @@ void alphaanimator_hitDetect(void)
 #pragma scheduling off
 void alphaanimator_update(int* obj)
 {
- /* #57 */
     AlphaanimatorPlacement* d;
     AlphaAnimatorState* s;
     int mode;

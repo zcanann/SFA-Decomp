@@ -226,11 +226,13 @@ int coordsToMapCell(f32 x, f32 z)
 }
 
 /*
- * DAT_803dda68 is the lightmap/scene render-state bitfield. The setters below
- * decode as: 0x00020000 reflection-pass enable (FUN_8005cff0), 0x8 shadow-map
- * enable (FUN_8005d018, also swaps the shadow bias lbl_803DC2D0/lbl_803DF89C),
- * 0x40 lights enable (FUN_8005d0ac, mirrored into env-state bit 3), 0x50
- * clouds+lights (FUN_8005d17c), 0x1000 pending-map-load (FUN_8005d1e8).
+ * DAT_803dda68 is the shadow-map render-state bitfield used by FUN_8005d018
+ * (0x8 shadow-map enable, also swaps the shadow bias lbl_803DC2D0/lbl_803DF89C)
+ * and its getter FUN_8005d06c. The related renderFlags draw-mode bits are set
+ * by gameFlagFn_8005cd24 (0x20000 reflection-pass enable), setDrawLights (0x40
+ * lights enable, mirrored into env-state offset 0x40 bit 3),
+ * setDrawCloudsAndLights (0x50 clouds+lights), and setPendingMapLoad
+ * (0x1000 pending-map-load).
  */
 u32 FUN_8005d018(char enable)
 {

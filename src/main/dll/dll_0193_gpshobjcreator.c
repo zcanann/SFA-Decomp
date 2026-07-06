@@ -73,7 +73,7 @@ void gpsh_objcreator_hitDetect(void)
 
 void gpsh_objcreator_update(int* obj)
 {
-    extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d); /* #57 */
+    extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
     u8* sub;
     GpshObjcreatorSpawnSetup* setup;
 

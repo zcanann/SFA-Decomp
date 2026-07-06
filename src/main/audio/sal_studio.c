@@ -9,26 +9,21 @@
 /* MusyX runtime DSP control (hw_dspctrl.c, MUSY_VERSION <= 2.0.0 paths),
  * recovered against the public MusyX runtime source. */
 
-extern void* dspCmdBuffer; /* dspHrtfHistoryBuffer */
+extern void* dspCmdBuffer;
 extern DSPvoice* dspVoice;
 extern void* dspITDBuffer;
 extern s32* dspSurround;
 extern void* dspCmdList;
-extern u32 dspARAMZeroBuffer; /* dspARAMZeroBuffer */
+extern u32 dspARAMZeroBuffer;
 u8 lbl_803CC1E0[0x6E0];
 extern u8 salMaxStudioNum;
 extern u8 salNumVoices;
 
 #define dspStudio ((DSPstudioinfo*)lbl_803CC1E0)
 
-void salInitHRTFBuffer(void); /* salInitHRTFBuffer */
-void salActivateStudio(u8 studio, u32 isMaster, u32 type); /* salActivateStudio */
+void salInitHRTFBuffer(void);
+void salActivateStudio(u8 studio, u32 isMaster, u32 type);
 
-/*
- * salInitDspCtrl
- *
- * EN v1.0 Address: 0x8027BA04, size 932b
- */
 u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
 {
     u32 i;
@@ -126,22 +121,12 @@ u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
     return 0;
 }
 
-/*
- * salInitHRTFBuffer
- *
- * EN v1.0 Address: 0x8027BDA8, size 56b
- */
 void salInitHRTFBuffer(void)
 {
     memset(dspCmdBuffer, 0, 0x100);
     DCFlushRangeNoSync(dspCmdBuffer, 0x100);
 }
 
-/*
- * salExitDspCtrl
- *
- * EN v1.0 Address: 0x8027BDE0, size 220b
- */
 int salExitDspCtrl(void)
 {
     u8 i;
@@ -164,11 +149,6 @@ int salExitDspCtrl(void)
     return 1;
 }
 
-/*
- * salActivateStudio
- *
- * EN v1.0 Address: 0x8027BEBC, size 264b
- */
 void salActivateStudio(u8 studio, u32 isMaster, u32 type)
 {
     DSPstudioinfo* base = dspStudio;
@@ -196,11 +176,6 @@ void salActivateStudio(u8 studio, u32 isMaster, u32 type)
     base[studio].auxAHandler = base[studio].auxBHandler = NULL;
 }
 
-/*
- * salDeactivateStudio
- *
- * EN v1.0 Address: 0x8027BFC4, size 32b
- */
 void salDeactivateStudio(u8 studio)
 {
     DSPstudioinfo* base = dspStudio;
@@ -208,11 +183,6 @@ void salDeactivateStudio(u8 studio)
     base[studio].state = 0;
 }
 
-/*
- * salCheckVolErrorAndResetDelta
- *
- * EN v1.0 Address: 0x8027BFE4, size 244b
- */
 int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u16 targetVol, u16* resetFlags,
                                   u16 resetMask)
 {
@@ -261,11 +231,6 @@ static void AddDpop(s32* sum, s16 delta)
     *sum = (*sum > 0x7fffff) ? 0x7fffff : (*sum < -0x7fffff ? -0x7fffff : *sum);
 }
 
-/*
- * HandleDepopVoice
- *
- * EN v1.0 Address: 0x8027C0D8, size 696b
- */
 void HandleDepopVoice(DSPstudioinfo* stp, DSPvoice* dsp_vptr)
 {
     _PB* pb;
@@ -305,11 +270,6 @@ void HandleDepopVoice(DSPstudioinfo* stp, DSPvoice* dsp_vptr)
     }
 }
 
-/*
- * SortVoices
- *
- * EN v1.0 Address: 0x8027C390, size 252b
- */
 void SortVoices(DSPvoice** voices, int l, int r)
 {
     int i;

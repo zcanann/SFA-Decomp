@@ -72,7 +72,7 @@ void cf_doorlight_hitDetect(void)
 }
 
 /* obj is a word here, not a pointer: target colors it r30 UNDER the state
-   copy (r31) = the integral-param pool (CLAUDE.md recipe #126). */
+   copy (r31) = the integral-param pool. */
 void cf_doorlight_update(int obj)
 {
     CfDoorLightState* state;

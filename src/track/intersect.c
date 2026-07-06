@@ -251,8 +251,7 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
 
 #pragma opt_common_subs reset
 
-/* EN v1.0 Size: 256b. Per-iteration byte decrement of two parallel
- * arrays. */
+/* Per-iteration byte decrement of two parallel arrays. */
 #pragma opt_common_subs off
 void timeFn_8006f400(f32 step)
 {
@@ -692,7 +691,7 @@ void normalize(f32* x, f32* y, f32* z)
 extern f32 lbl_803DEE98;
 extern f32 lbl_803DEE9C;
 
-/* EN v1.0 Size: 132b. 4x4 identity fill. */
+/* 4x4 identity fill. */
 void fn_80070234(f32* mat)
 {
     int i = 0, j;
@@ -5652,7 +5651,6 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/* EN v1.0 Size: 108b. */
 void fn_8007D670(void)
 {
     f32* base = (f32*)&lbl_803967C0;

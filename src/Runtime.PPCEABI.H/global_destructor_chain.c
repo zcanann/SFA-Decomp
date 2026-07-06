@@ -1,5 +1,3 @@
-/* TODO: restore stripped imported address metadata if needed. */
-
 #include "PowerPC_EABI_Support/Runtime/NMWException.h"
 #include "PowerPC_EABI_Support/Runtime/MWCPlusLib.h"
 

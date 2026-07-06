@@ -180,8 +180,6 @@ void iceball_update(u16* obj, int unused)
     {
         return;
     }
-    /* raw offsets (rotX/rotZ/rotY +0/4/2, velocity +0x24/0x28/0x2c): the
-       named-field form is fuzzy-100 but perturbs the .o; raw is byte-exact */
     ((GameObject*)objInt)->anim.velocityY = ((GameObject*)objInt)->anim.velocityY - lbl_803E2E54 * timeDelta;
     ((GameObject*)objInt)->anim.velocityY = ((GameObject*)objInt)->anim.velocityY * lbl_803E2E58;
     ((GameObject*)objInt)->anim.rotX += 910;

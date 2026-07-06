@@ -25,7 +25,7 @@
 #define PAD_BUTTON_A 0x100
 
 /* 0x2C-byte Obj_AllocObjectSetup(0x2C, 0xD4) buffer composed in
- * hightop_takeHit when the air meter empties (death follow-up spawn). */
+ * hightop_hitDetect when the air meter empties (death follow-up spawn). */
 typedef struct HighTopDeathSpawn
 {
     ObjPlacement base; /* 0x00..0x17 */

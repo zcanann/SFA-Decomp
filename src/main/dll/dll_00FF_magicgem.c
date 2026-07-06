@@ -11,9 +11,6 @@
 #define MAGICGEM_MSG_IN_RANGE               0x7000a /* sent to player when in pickup range */
 #define MAGICGEM_MSG_PICKUP                 0x7000b /* collect: award magic + burst */
 #define MAGICGEM_GAMEBIT_CLAIMED            0x90d   /* per-frame single-pickup latch */
-/* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICGEM family; the
- * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
- * verified). File rename parked as a repo-owner proposal. */
 
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();

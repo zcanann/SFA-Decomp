@@ -37,11 +37,6 @@ extern f32 lbl_803E51B8;
 int dll_19D_getExtraSize(void) { return 0x38; }
 int dll_19D_getObjectTypeId(void) { return 0x0; }
 
-/*
- * Function: dll_19D_free
- * EN v1.0 Address: 0x801CC9A8
- * EN v1.0 Size: 132b
- */
 void dll_19D_free(int obj)
 {
     register int self = obj;
@@ -58,11 +53,6 @@ void dll_19D_render(void)
 {
 }
 
-/*
- * Function: dll_19D_hitDetect
- * EN v1.0 Address: 0x801CCA30
- * EN v1.0 Size: 276b
- */
 void dll_19D_hitDetect(int obj)
 {
     register int self = obj;
@@ -88,11 +78,6 @@ void dll_19D_hitDetect(int obj)
     ((Dll19DState*)state)->despawnTimer = 0x32;
 }
 
-/*
- * Function: dll_19D_update
- * EN v1.0 Address: 0x801CCB44
- * EN v1.0 Size: 904b
- */
 void dll_19D_update(int obj)
 {
     register int self = obj;
@@ -182,11 +167,6 @@ void dll_19D_update(int obj)
     }
 }
 
-/*
- * Function: dll_19D_init
- * EN v1.0 Address: 0x801CCECC
- * EN v1.0 Size: 208b
- */
 void dll_19D_init(int obj)
 {
     register int self = obj;

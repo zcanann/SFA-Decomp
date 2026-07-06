@@ -180,11 +180,6 @@ DSError TRKValidMemory32(const void* addr, size_t length, ValidMemoryOptions rea
  * @note Address: TODO
  * @note Size: TODO
  */
-
-/**
- * @note Address: TODO
- * @note Size: TODO
- */
 #ifdef __MWERKS__ // clang-format off
 static asm void TRK_ppc_memcpy(register void* dest, register const void* src, register int n, register u32 param_4, register u32 param_5){
 	#define msr		r8
@@ -1010,11 +1005,6 @@ static inline BOOL TRKTargetCheckStep()
 
 	return gTRKStepStatus.active;
 }
-
-/**
- * @note Address: TODO
- * @note Size: TODO
- */
 
 /**
  * @note Address: TODO

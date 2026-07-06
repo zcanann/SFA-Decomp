@@ -14,9 +14,6 @@ extern f32 lbl_803E78E4;
  * hwSetVolume - large mix-volume setter; computes 4-channel pan from
  * 3-axis float input via salCalcVolumeMatrix, clamps each to s16, and writes
  * back to the voice's pan/volume table.
- *
- * EN v1.0 Address: 0x8028383C
- * EN v1.0 Size: 720b (0x2D0)
  */
 void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
 {
@@ -97,11 +94,6 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
 
 /*
  * Disable a voice slot.
- *
- * EN v1.0 Address: 0x80283AB0
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x80283B0C
- * EN v1.1 Size: 44b
  */
 void hwOff(int slot)
 {
@@ -110,11 +102,6 @@ void hwOff(int slot)
 
 /*
  * Set the four AUX-mix DSP processing callbacks for a voice slot.
- *
- * EN v1.0 Address: 0x80283AB4
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x80283B38
- * EN v1.1 Size: 40b
  */
 void hwSetAUXProcessingCallbacks(u8 idx, void* cb0, void* cb1, void* cb2, void* cb3)
 {
@@ -127,9 +114,6 @@ void hwSetAUXProcessingCallbacks(u8 idx, void* cb0, void* cb1, void* cb2, void* 
 
 /*
  * Activate the audio "studio" effect chain - thin wrapper.
- *
- * EN v1.1 Address: 0x80283B60
- * EN v1.1 Size: 32b
  */
 void hwActivateStudio(void)
 {
@@ -138,9 +122,6 @@ void hwActivateStudio(void)
 
 /*
  * Deactivate the audio "studio" effect chain - thin wrapper.
- *
- * EN v1.1 Address: 0x80283B80
- * EN v1.1 Size: 32b
  */
 void hwDeactivateStudio(void)
 {

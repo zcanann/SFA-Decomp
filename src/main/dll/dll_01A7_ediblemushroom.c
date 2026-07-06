@@ -588,7 +588,7 @@ void ediblemushroom_hitDetect(u8* obj)
 #pragma opt_loop_invariants off
 void ediblemushroom_update(u8* self)
 {
-    extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other); /* #57 */
+    extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other);
     u8* state;
     u8* other;
     u8* player;

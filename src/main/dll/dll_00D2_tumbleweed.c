@@ -209,7 +209,7 @@ int tumbleweed_getExtraSize(void)
 
 void tumbleweed_free(int* obj)
 {
-    extern void ObjGroup_RemoveObject(int* obj, int group); /* #57 */
+    extern void ObjGroup_RemoveObject(int* obj, int group);
     int* items;
     int counter;
     int limit;
@@ -247,7 +247,7 @@ void tumbleweed_free(int* obj)
 
 void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     if ((s32)visible >= 1) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2F80);
 }
 
@@ -266,7 +266,7 @@ void tumbleweed_update(int obj)
 
 void tumbleweed_updateStateMachine(int obj)
 {
-    extern void tumbleweed_updateRollingMotion(int obj, int aux); /* #57 */
+    extern void tumbleweed_updateRollingMotion(int obj, int aux);
     int aux;
     int sphereIndex;
     u32 hitVolume;
@@ -617,7 +617,7 @@ void tumbleweed_updateEffects(int obj)
 
 void tumbleweed_updateTargetedStateMachine(int obj)
 {
-    extern void tumbleweed_updateRollingMotion(int obj, int aux); /* #57 */
+    extern void tumbleweed_updateRollingMotion(int obj, int aux);
     int sphereIndex;
     u32 hitVolume;
     int hitObject;

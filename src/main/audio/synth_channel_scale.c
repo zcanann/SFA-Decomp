@@ -78,7 +78,6 @@ void synthSetStudioChannelScale(int value, u8 bank, u8 key);
 
 /*
  * fn_8026EC44 - per-song pitch/mod LFO + event update pass.
- * EN v1.0 Address: 0x8026EC44, size 1736b
  */
 #pragma fp_contract off
 static inline f32 sal_fmod(f32 x, f32 y, f64 absy)
@@ -302,7 +301,6 @@ extern SynthPool lbl_803AF550;
 
 /*
  * fn_8026F30C - synth song/callback pool init.
- * EN v1.0 Address: 0x8026F30C, size 560b
  */
 int fn_8026F30C(void)
 {
@@ -375,8 +373,6 @@ void synthSetStudioChannelScale(int value, u8 bank, u8 key)
 
 /*
  * Look up an int from a 2D table indexed by state's ID bytes.
- *
- * EN v1.1 Address: 0x8026F584, size 52b
  */
 int synthGetVoiceSlotChannelScale(u8* state)
 {
@@ -389,8 +385,7 @@ int synthGetVoiceSlotChannelScale(u8* state)
 }
 
 /*
- * fn_8026F5B8 - flag-check and conditional store (~120 instructions).
- * Stubbed.
+ * Flag-check and conditional store.
  */
 void fn_8026F5B8(int state)
 {

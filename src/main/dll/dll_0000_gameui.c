@@ -426,13 +426,13 @@ extern int cMenuSetItems(int handle, int flag);
 extern void* fn_802972A8(void* player);
 
 /* ===== EN v1.0 retargeted leaves ========================================== */
-/* EN v1.0 0x8012DDA4  size: 8b   getter for the u8 at gPauseMenuTokenConfirmFlag. */
+/* Getter for the u8 at gPauseMenuTokenConfirmFlag. */
 u8 fn_8012DDA4(void)
 {
     return gPauseMenuTokenConfirmFlag;
 }
 
-/* EN v1.0 0x8012DDAC  size: 12b  Read gWorldMapVoiceoverTimer (u16) narrowed to
+/* Read gWorldMapVoiceoverTimer (u16) narrowed to
  * its low byte. Nonzero = a world-map briefing/hint voiceover is playing (the
  * drawWorldMapHud scheduler's rate-limit timer); worldplanet/worldobj poll this
  * to hide the Great Fox galleon and skip effect rendering while it talks. */
@@ -441,37 +441,37 @@ u8 getWorldMapVoiceoverTimer(void)
     return gWorldMapVoiceoverTimer;
 }
 
-/* EN v1.0 0x8012EA44  size: 12b  Signed-byte getter for lbl_803DD7A8. */
+/* Signed-byte getter for lbl_803DD7A8. */
 s32 isTalkingToNpc(void)
 {
     return lbl_803DD7A8;
 }
 
-/* EN v1.0 0x8012EA50  size: 12b  Companion setter; clears lbl_803DD7A8. */
+/* Companion setter; clears lbl_803DD7A8. */
 void GameUI_finishNpcDialogue(void)
 {
     lbl_803DD7A8 = 0;
 }
 
-/* EN v1.0 0x8012EB24  size: 12b  Latch the u8 flag at lbl_803DD840 to 1. */
+/* Latch the u8 flag at lbl_803DD840 to 1. */
 void GameUI_func07(void)
 {
     lbl_803DD840 = 1;
 }
 
-/* EN v1.0 0x8012EB68  size: 8b   Signed-halfword getter for lbl_803DD8BA. */
+/* Signed-halfword getter for lbl_803DD8BA. */
 s16 GameUI_func0D(void)
 {
     return lbl_803DD8BA;
 }
 
-/* EN v1.0 0x8012EB70  size: 12b  Signed-byte getter for cMenuState. */
+/* Signed-byte getter for cMenuState. */
 s32 CMenu_GetState(void)
 {
     return *(s8*)&cMenuState;
 }
 
-/* EN v1.0 0x8012EB08  size: 28b  Three s16 UI setters. */
+/* Three s16 UI setters. */
 void GameUI_func0F(s32 a, s32 b, s32 c)
 {
     gMinimapInfoTextId = a;
@@ -479,7 +479,7 @@ void GameUI_func0F(s32 a, s32 b, s32 c)
     gMinimapInfoTextX = c;
 }
 
-/* EN v1.0 0x8012EB30  size: 56b  Iterate a 0x10-stride struct array at
+/* Iterate a 0x10-stride struct array at
  * gCMenuSections clearing the s16 at +0x4 until the u32 key at +0x0 is
  * zero, then reset gCMenuActivatedId to -1 and gCMenuCloseSfx to 0. */
 typedef struct CMenuSectionEntry
@@ -501,7 +501,7 @@ void GameUI_unselectAllItems(void)
     gCMenuCloseSfx = 0;
 }
 
-/* EN v1.0 0x8012DDB8  size: 32b  Set gWorldMapVoiceoverTimer to 1 if param is
+/* Set gWorldMapVoiceoverTimer to 1 if param is
  * nonzero else 0. */
 void fn_8012DDB8(u32 val)
 {
@@ -511,7 +511,7 @@ void fn_8012DDB8(u32 val)
         gWorldMapVoiceoverTimer = 0;
 }
 
-/* EN v1.0 0x8012DD7C  size: 40b  Cancel/clear helper. Stores the new u8
+/* Cancel/clear helper. Stores the new u8
  * state byte and, when the caller resets it to 0, also clears the active
  * tween halfwords and drops the active-id sentinel to -1. */
 void setShowWorldMapHud(u8 param)
@@ -523,7 +523,7 @@ void setShowWorldMapHud(u8 param)
     lbl_803DBA5C = -1;
 }
 
-/* EN v1.0 0x8012DD14  size: 104b  Tween advance: when the active counter
+/* Tween advance: when the active counter
  * lbl_803DD774 is non-zero, add the per-frame step framesThisStep. The
  * direction toggle in lbl_803DD77F gates the "approaching peak" half of
  * the trajectory. Once the counter overshoots 0xFF it resets to 0 and
@@ -548,7 +548,7 @@ void gameTextFadeOut(void)
 }
 #pragma dont_inline reset
 
-/* EN v1.0 0x80129C74  size: 72b  Render-block teardown for the snowworm
+/* Render-block teardown for the snowworm
  * scene: drops to layer 0, optionally tears the cached effect down, and
  * issues the close/restore pair before returning to the parent renderer. */
 void viewFn_80129c74(void)
@@ -564,7 +564,7 @@ void viewFn_80129c74(void)
     Camera_ApplyFullViewport();
 }
 
-/* EN v1.0 0x8012DF14  size: 84b  Death sequence trigger: latches the
+/* Death sequence trigger: latches the
  * "dead/cleanup" byte at lbl_803DD75B and dispatches vtable slot +0x24
  * on the singleton at gCameraInterface with the worm-death event id 0x94,
  * then runs the standard player-input-disable + alpha-fade-to-FF pair. */
@@ -576,7 +576,7 @@ void timeListFn_8012df14(void)
     setTimeStop(0xff);
 }
 
-/* EN v1.0 0x8012EA5C  size: 172b  Spawn/queue helper for the snowworm
+/* Spawn/queue helper for the snowworm
  * death FX. If `id == -1` or the active game-text id at curGameText is
  * already occupied, do nothing. Otherwise: ping the death sound, latch
  * the dying-state bytes (lbl_803DD7A8 / lbl_803DD8C8), publish the new
@@ -615,7 +615,7 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
 #define PAUSEMENU_TITLE_FLAG_MIRROR     0x02 /* mirror active counter past peak, clear dir */
 #define PAUSEMENU_TITLE_FLAG_SET_DIR    0x01 /* set direction byte to 1 */
 
-/* EN v1.0 0x8012DDD8  size: 316b  State setter with bit-flag dispatch.
+/* State setter with bit-flag dispatch.
  * Args: (s32 fade_target, u8 idx, u8 flags, u8 q).
  *   flags & 0x08 : commit `idx` to gPauseMenuHintIndex and consult the bit
  *                  table at gTaskHintTable (stride 0x1c, halfword field
@@ -682,7 +682,7 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
 }
 #pragma dont_inline reset
 
-/* EN v1.0 0x8012BE84  size: 380b  Pause-menu input poll. While the
+/* Pause-menu input poll. While the
  * pauseMenuState byte is clear, polls the digital pad via
  * getButtonsJustPressed / padGetAnalogInput. The byte read into buf[0] is the d-pad
  * direction (1 = right, -1 = left, 0 = neutral) and lbl_803DD75B
@@ -752,7 +752,7 @@ void timeListFn_8012be84(void)
 }
 #pragma dont_inline reset
 
-/* EN v1.0 0x8012B6BC  size: 192b  Snowworm "should-spawn" gate: 9-entry
+/* Snowworm "should-spawn" gate: 9-entry
  * table lookup with the same shape as the previously-matched
  * fn_8012B9F8. Returns 1 if the candidate slot is OK to spawn into,
  * 0 if any of the table entries match the slot's lookup byte. */
@@ -789,7 +789,7 @@ int pauseMenuIsFox(void)
 }
 #pragma dont_inline reset
 
-/* EN v1.0 0x80129698  size: 196b  Pickup-pickup state hook: latches the
+/* Pickup-pickup state hook: latches the
  * resulting object id from insertHighScore into gHighScoreHighlightRow, and on the
  * "post-collect" mode codes (1 or 2) optionally fires off the cleanup
  * trio (Music_Trigger / cutsceneFadeInOut / setTimeStop) when no slot was active
@@ -811,7 +811,7 @@ int registerNewScore(s8 tableId, int score, u8 kind, int mode)
     return 1;
 }
 
-/* EN v1.0 0x80129CBC  size: 248b  Render block setup with explicit
+/* Render block setup with explicit
  * viewport sized to (320 x 240) centered on the supplied (x, y).
  * Caches FOV via Camera_GetFovY, replaces it with arg0, activates render
  * layer 1, captures depth bias, snaps clip planes (0,0,0), restores
@@ -836,7 +836,7 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
     }
 }
 
-/* EN v1.0 0x8012C558  size: 340b  Snowworm scene shutdown / setup.
+/* Snowworm scene shutdown / setup.
  * Walks 6 candidate slots (lbl_803A9410[i]) but only acts on the first
  * 4. For each empty slot, allocates a 0x20-byte block via
  * Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]) and chains it through Obj_SetupObject
@@ -886,7 +886,7 @@ void pauseMenuInit(void)
 }
 #pragma dont_inline reset
 
-/* EN v1.0 0x8012E880  size: 452b  Per-frame death-FX state machine.
+/* Per-frame death-FX state machine.
  *
  * 1. While the dying byte at lbl_803DD7A8 is non-zero, hold the FX
  *    progress halfword at 0xff and (when lbl_803DD8C8 is also set)
@@ -985,7 +985,7 @@ void npcTalkFn_8012e880(void)
 }
 #pragma dont_inline reset
 
-/* EN v1.0 0x80129DB4  size: 300b  Conditional render setup gated on
+/* Conditional render setup gated on
  * pauseMenuState. While a pause-menu state is active, runs the layer-1
  * render block: snaps clip planes (0,0,0), restores ZBuf window
  * 0x8000, saves current FOV before swapping in 43.0f, then
@@ -1028,7 +1028,7 @@ void perspectiveFn_80129db4(void)
     Camera_ApplyFullViewport();
 }
 
-/* EN v1.0 0x8012D77C  size: 496b  Title-card overlay draw routine.
+/* Title-card overlay draw routine.
  * Gated on (lbl_803DD774 != 0) && (gWorldMapVoiceoverTimer == 0). Saves the
  * current sprite-batch state via gameTextGetCharset, sets sub-batch via
  * gameTextSetCharset(gPauseMenuTextCharset, 3), grabs a slot handle from
@@ -1121,7 +1121,7 @@ void pauseMenuDrawText(void)
     gameTextSetCharset(saved, 3);
 }
 
-/* EN v1.0 0x8012B4C4  size: 504b  Pause-menu grid cursor stepper. Reads the
+/* Pause-menu grid cursor stepper. Reads the
  * C-stick X axis, derives a one-step direction, and tweens the grid cursor
  * offsets toward the next cell, clamping when the tween crosses zero. */
 #pragma dont_inline on
@@ -1190,7 +1190,7 @@ int pauseMenuGridFn_8012b4c4(void)
 }
 #pragma dont_inline reset
 
-/* EN v1.0 0x8012B77C  size: 508b  Pause-menu open/close animator. Advances
+/* Pause-menu open/close animator. Advances
  * the open tween, clamps it, then on the close button fires the per-state
  * close SFX and kicks the menu-item exit animations. */
 void pauseMenuFn_8012b77c(void)
@@ -1242,7 +1242,7 @@ void pauseMenuFn_8012b77c(void)
     fn_8012C000();
 }
 
-/* EN v1.0 0x8012975C  size: 632b  Draws the help-text frame: a base panel
+/* Draws the help-text frame: a base panel
  * then a row of edge/corner segments tweened in from both directions. */
 void boxDrawFn_8012975c(void)
 {
@@ -1290,8 +1290,6 @@ void boxDrawFn_8012975c(void)
     }
 }
 
-/* EN v1.0 0x80128120  size: 848b  Draws the pause-menu task panel layout and
- * lights the task-progress pips according to the current hint text level. */
 /* Draws the pause-menu task-hint panel: the framed backing (corners/edges via
  * pauseMenuDrawElement/drawFn_8011eb3c) plus a six-segment progress bar whose
  * lit-segment count scales with the current task-hint text level. `alpha` is
@@ -1333,7 +1331,7 @@ void fn_80128120(int unused, int alpha)
     }
 }
 
-/* EN v1.0 0x8012C6AC  size: 848b  Draws a 9-patch HUD box: center fill, the
+/* Draws a 9-patch HUD box: center fill, the
  * four edges (stretched), and the four 5x5 corners, from hudTextures. */
 void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
 {
@@ -1351,7 +1349,7 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
     drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 2);
 }
 
-/* EN v1.0 0x8012D96C  size: 936b  World-map HUD voiceover scheduler: rate
+/* World-map HUD voiceover scheduler: rate
  * limits, picks the quest-progress hint stream and starts it. */
 #pragma dont_inline on
 void drawWorldMapHud(void)
@@ -1494,7 +1492,7 @@ void drawWorldMapHud(void)
 /* Number of best-time entries in the race-times list (bits[6]). */
 #define GAMEUI_TIME_LIST_COUNT 6
 
-/* EN v1.0 0x80128E70  size: 812b  Draws the race-times list panel and the six
+/* Draws the race-times list panel and the six
  * best-time entries with a pulsing header. */
 void timeListDraw(void)
 {
@@ -1566,7 +1564,7 @@ void timeListDraw(void)
     MWTRACE(0xff);
 }
 
-/* EN v1.0 0x8012919C  size: 1276b  High-score screen: draws the 9-patch box
+/* High-score screen: draws the 9-patch box
  * around the text area, the track title, and five score rows with the
  * selection pulse highlight. */
 void highScoreScreenDraw(int p1, int p2, int p3)
@@ -1631,7 +1629,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
     gameTextFn_80016810(0x346, 0, 0x104);
 }
 
-/* EN v1.0 0x8012B978  size: 1292b  Pause-menu submenu driver: input nav,
+/* Pause-menu submenu driver: input nav,
  * voiceover scheduling, selection SFX, and title refresh. */
 void pauseMenuRunSubmenu(int p1)
 {
@@ -1808,7 +1806,7 @@ void pauseMenuRunSubmenu(int p1)
     }
 }
 
-/* EN v1.0 0x8012DF68  size: 2328b  C-menu per-frame driver: input gating,
+/* C-menu per-frame driver: input gating,
  * item set selection, Y-button assignment, scroll, select/close handling. */
 #pragma dont_inline on
 void cMenuRun(void)
@@ -2198,7 +2196,7 @@ void cMenuRun(void)
 
 void fn_80128A7C(u8 i, int alpha, int flag);
 
-/* EN v1.0 0x80128470  size: 1548b  Pause-menu grid renderer: draws all cells
+/* Pause-menu grid renderer: draws all cells
  * (selection last), the breathing selected cell, header/footer text, and the
  * flashing corner cursor. */
 #pragma opt_common_subs off
@@ -2329,7 +2327,7 @@ void fn_80128470(int alpha)
 }
 #pragma opt_common_subs reset
 
-/* EN v1.0 0x8012C9FC  size: 3456b  Map screen HUD: rising panel with quest
+/* Map screen HUD: rising panel with quest
  * hint voice line and dust shimmer while opening, then the full two-panel
  * map layout with location labels. */
 void mapScreenDrawHud(int p1, int p2, int p3)
@@ -2570,7 +2568,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     }
 }
 
-/* EN v1.0 0x80129EE0  size: 5604b  Pause menu master state machine. */
+/* Pause menu master state machine. */
 #pragma dont_inline on
 void pauseMenuFn_80129ee0(void)
 {
@@ -3375,7 +3373,7 @@ void pauseMenuFn_80129ee0(void)
 }
 #pragma dont_inline reset
 
-/* EN v1.0 0x801299D4  size: 672b  Pause-menu save-screen render pass.
+/* Pause-menu save-screen render pass.
  * Saves the live FOV, swaps to view 1 at the origin facing 0x8000,
  * sets the viewport from the global render obj, then renders slots
  * 1..5 of lbl_803A9410 (clearing the model dirty bit and forcing the
@@ -3459,7 +3457,7 @@ void pauseMenuDoSave(void)
     }
 }
 
-/* EN v1.0 0x80128A7C  size: 1012b  Draws one pause-menu grid cell with its
+/* Draws one pause-menu grid cell with its
  * motion trail: each trail step (count, stepping by 4) redraws the cell's
  * texture offset along the entry's trail vector, fading via the scaled
  * alpha. The selected cell on the main grid breathes (sin pulse) and slides
@@ -3576,7 +3574,7 @@ void fn_80128A7C(u8 i, int alpha, int flag)
     }
 }
 
-/* EN v1.0 0x8012C000  size: 1368b  Pause-menu character carousel driver:
+/* Pause-menu character carousel driver:
  * eases the swivel angle gPauseMenuSwivelAngle toward the selected slot, spins the
  * podium objects (lbl_803DD868), then bobs/sways each character model in
  * lbl_803A9410 with phase-shifted sine waves around the podium centre. */
@@ -3692,13 +3690,13 @@ void fn_8012C000(void)
 }
 
 /* ===== EN v1.0 retargeted leaves ========================================== */
-/* EN v1.0 0x8012EBC8  size: 8b   s16 getter for cMenuSelectedItem. */
+/* s16 getter for cMenuSelectedItem. */
 s16 cMenuGetSelectedItem(void)
 {
     return cMenuSelectedItem;
 }
 
-/* EN v1.0 0x8012EBD0  size: 36b  Match-and-consume helper. If the s32
+/* Match-and-consume helper. If the s32
  * argument equals the active id at gCMenuActivatedId, clear the busy flag
  * gCMenuCloseSfx and return 1; else return 0. */
 int GameUI_isItemBeingUsed(s32 id)
@@ -3711,14 +3709,14 @@ int GameUI_isItemBeingUsed(s32 id)
     return 0;
 }
 
-/* EN v1.0 0x8012EBF4  size: 32b  Sign-of-active-id predicate. Returns 1
+/* Sign-of-active-id predicate. Returns 1
  * when the current id at gCMenuActivatedId is non-negative, 0 otherwise. */
 int GameUI_isAnyItemBeingUsed(void)
 {
     return gCMenuActivatedId > -1;
 }
 
-/* EN v1.0 0x8012EB7C  size: 76b  Linear search through a 4-byte array
+/* Linear search through a 4-byte array
  * for the active id at gCMenuActivatedId. On hit, clears the busy flag at
  * gCMenuCloseSfx and returns the matched value; on miss returns -1. */
 s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
@@ -3735,7 +3733,7 @@ s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
     return -1;
 }
 
-/* EN v1.0 0x8012EF30  size: 16b  Latch helper: set busy byte
+/* Latch helper: set busy byte
  * gGameUiHelpTextPending and stash s16 arg in gGameUiHelpTextId. */
 void showHelpText(s16 val)
 {
@@ -3743,19 +3741,19 @@ void showHelpText(s16 val)
     gGameUiHelpTextId = val;
 }
 
-/* EN v1.0 0x8012FB88  size: 8b  u8 setter for gGameUiUnusedHudSetting. */
+/* u8 setter for gGameUiUnusedHudSetting. */
 void GameUI_setUnusedHudSetting(u8 val)
 {
     gGameUiUnusedHudSetting = val;
 }
 
-/* EN v1.0 0x8012FB90  size: 12b  s8 setter for shouldCloseCMenu. */
+/* s8 setter for shouldCloseCMenu. */
 void CMenu_SetShouldClose(int val)
 {
     shouldCloseCMenu = val;
 }
 
-/* EN v1.0 0x8012FB2C  size: 92b  Per-frame state advance dispatcher.
+/* Per-frame state advance dispatcher.
  * Gated on the gameUiResourcesLoaded enable flag; when zero, fast-returns 0.
  * Otherwise: optionally runs drawWorldMapHud (if mapScreenVisible set), runs
  * gameTextFadeOut, optionally runs cMenuRun (if cMenuEnabled set),
@@ -3825,7 +3823,7 @@ void fn_8012FA70(int idx, s8 flag)
 }
 #pragma dont_inline reset
 
-/* EN v1.0 0x8012FB9C  size: 336b  Frees all cached HUD/item textures and
+/* Frees all cached HUD/item textures and
  * resets the item slot tables. */
 #pragma opt_propagation off
 void GameUI_release(void)
@@ -3894,7 +3892,7 @@ void GameUI_release(void)
 }
 #pragma opt_propagation reset
 
-/* EN v1.0 0x8012EC14  size: 796b  Top-level per-frame HUD draw dispatcher. */
+/* Top-level per-frame HUD draw dispatcher. */
 void GameUI_hudDraw(int a, int b, int c)
 {
     void* player = Obj_GetPlayerObject();
@@ -3989,7 +3987,7 @@ void GameUI_hudDraw(int a, int b, int c)
     bButtonIcon = 0;
 }
 
-/* EN v1.0 0x8012EF40  size: 2676b  Per-frame UI/pause-menu update + dispatch. */
+/* Per-frame UI/pause-menu update + dispatch. */
 void GameUI_update(void)
 {
     u8* player = Obj_GetPlayerObject();
@@ -4391,9 +4389,6 @@ void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
 void Pause_ResetMenuFrameCounter(void) { pauseMenuFrameCounter = 60; }
 void CMenu_SetFadeCounter(s16 v) { cMenuFadeCounter = v; }
 
-/* Stubs added to align function set with v1.0 asm. Source had many Ghidra
- * FUN_xxx splits at wrong addresses; these stubs (no body yet) ensure the
- * asm symbol set is fully present so future hunters can fill bodies. */
 void GameUI_initialise(void)
 {
     int res;
@@ -4432,12 +4427,7 @@ void GameUI_initialise(void)
     airMeter = 0;
 }
 
-/* .bss glue 0x803A89B0 */
 u8 hudTextures[0x198];
-
-
-
-/* ---- dll_0000_gameui .data (0x8031B074-0x8031B6F0) ---- */
 
 TaskHintEntry gTaskHintTable[] =
 {

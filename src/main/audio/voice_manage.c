@@ -73,8 +73,6 @@ void voiceInitPriorityTables(void)
 /*
  * Voice cleanup: if voice handle is valid, break the active voice and
  * reset its id slot.
- *
- * EN v1.1 Address: 0x80279FAC, size 128b
  */
 void voiceBreakAndFree(u32 voice)
 {
@@ -90,8 +88,6 @@ void voiceBreakAndFree(u32 voice)
 
 /*
  * Voice teardown: clears state flags then breaks the voice.
- *
- * EN v1.1 Address: 0x8027A02C, size 160b
  */
 void voiceKill(u32 voice)
 {
@@ -114,8 +110,6 @@ void voiceKill(u32 voice)
 /*
  * Walk the synth's voice list for the given id, breaking each match.
  * Returns 0 if at least one match was broken, else -1.
- *
- * EN v1.1 Address: 0x8027A0CC, size 272b
  */
 int voiceKillById(u32 id)
 {
@@ -153,8 +147,6 @@ int voiceKillById(u32 id)
 /*
  * Returns 1 if state's voice id is currently registered in the
  * appropriate slot table, else 0.
- *
- * EN v1.1 Address: 0x8027A1DC, size 124b
  */
 int voiceIsRegistered(int state)
 {
@@ -180,8 +172,6 @@ fail:
 
 /*
  * Register the state's voice id in either the 1D or 2D slot table.
- *
- * EN v1.1 Address: 0x8027A258, size 92b
  */
 void voiceRegister(int state)
 {

@@ -1,5 +1,3 @@
-/* TODO: restore stripped imported address metadata if needed. */
-
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
 
 TRKBuffer gTRKMessageBuffers[3];
@@ -97,7 +95,7 @@ DSError TRKSetBufferPosition(TRKBuffer* msg, u32 pos) {
 
 #pragma dont_inline on
 DSError TRKAppendBuffer(TRKBuffer* msg, const void* data, unsigned int length) {
-    DSError error = DS_NoError;  // r31
+    DSError error = DS_NoError;
     u32 bytesLeft;
 
     // Return if no bytes to append
@@ -290,7 +288,6 @@ DSError TRKReadBuffer1_ui32(TRKBuffer* buffer, u32* data) {
     }
 
     return err;
-    // UNUSED FUNCTION
 }
 
 DSError TRKReadBuffer1_ui64(TRKBuffer* buffer, u64* data) {

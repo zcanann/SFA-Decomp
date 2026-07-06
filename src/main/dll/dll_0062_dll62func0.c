@@ -37,20 +37,6 @@ extern f32 lbl_803E08AC;
 extern f32 lbl_803E08B0;
 extern f32 lbl_803E08B4;
 
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* lbl = N (byte) */
-
-/* 12b 3-insn patterns. */
-
-/* misc 8b leaves */
-
-/* if (lbl) fn(lbl); */
-
 enum
 {
     SAVEGAME_EMPTY_TASK_HINT = -1,

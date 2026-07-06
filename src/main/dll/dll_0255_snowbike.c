@@ -716,7 +716,7 @@ typedef struct
 #pragma inline_max_size(4000)
 static inline void SnowBike_initBody(int obj, u8* params, int flag)
 {
-    extern void fn_801EC928(int obj, u8* state); /* #57 */
+    extern void fn_801EC928(int obj, u8* state);
     f32 fv;
     f32 fz;
     s16 rot;
@@ -908,7 +908,7 @@ typedef struct
 #pragma opt_common_subs off
 void SnowBike_update(int obj)
 {
-    extern void fn_801EC7A0(int obj, u8* state); /* #57 */
+    extern void fn_801EC7A0(int obj, u8* state);
     u8* state = ((GameObject*)obj)->extra;
     f32 mtx1[16];
     f32 mtx2[16];

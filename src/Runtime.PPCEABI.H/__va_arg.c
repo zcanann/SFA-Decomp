@@ -1,5 +1,3 @@
-/* TODO: restore stripped imported address metadata if needed. */
-
 #include "PowerPC_EABI_Support/Runtime/__va_arg.h"
 
 #undef __va_arg

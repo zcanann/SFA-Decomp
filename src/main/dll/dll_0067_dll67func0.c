@@ -7,10 +7,6 @@
  * the spawn position is offset from either the source object's world
  * position or the caller's spawn-param packet. func00/func01 are the
  * DLL's unused entry-point stubs.
- *
- * (The save/cheat helper cluster formerly carried here was mainDol
- * drift-duplicate code; the retail dll_0067 object contains only the
- * three functions below - canonical helper bodies live in dll_0015.)
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

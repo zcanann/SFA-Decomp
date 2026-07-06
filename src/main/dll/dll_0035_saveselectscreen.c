@@ -819,7 +819,6 @@ SaveSelectPanel gSaveSelectPanels[] = {
 };
 
 extern void fn_80007F78();
-/* .data fill (reconstructed to match dll_0035_saveselectscreen.o) */
 u8 lbl_8031A7F8[12] = { 0, 0, 5, 213, 0, 0, 5, 214, 0, 0, 5, 212 };
 void* lbl_8031A804[4] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
 u8 saveFileSelect_debugCheatSequence[12] = { 64, 0, 128, 0, 64, 0, 128, 0, 0, 4, 0, 0 };

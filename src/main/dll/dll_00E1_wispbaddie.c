@@ -279,8 +279,6 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
     swarmbaddie_getExtraSize,
 };
 
-/* segment pragma-stack balance (re-split): */
-
 void wispbaddie_update(int obj)
 {
     WispBaddieState* state;

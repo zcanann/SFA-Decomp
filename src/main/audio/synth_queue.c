@@ -58,9 +58,7 @@ extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void inpResetChannelDefaults(u8 a, u8 b);
 
 /*
- * Start playback of a sequence arrangement (seqStartPlay).
- *
- * EN v1.0 Address: 0x8026C488, size 2800b
+ * Start playback of a sequence arrangement.
  */
 extern int voiceKillById(u32 id);
 
@@ -318,8 +316,6 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
 
 /*
  * Advance the master (tempo) track of one sequence section (HandleMasterTrack).
- *
- * EN v1.0 Address: 0x8026CF78, size 232b
  */
 void fn_8026CF78(int secIndex)
 {
@@ -356,8 +352,6 @@ void fn_8026CF78(int secIndex)
 /*
  * Move a voice node from the queued list to the head of the allocated
  * list and mark it active.
- *
- * EN v1.0 Address: 0x8026D060, size 100b
  */
 void synthQueueVoice(SynthVoice* voice)
 {
@@ -384,9 +378,6 @@ void synthQueueVoice(SynthVoice* voice)
 
 /*
  * Move a queued handle to the allocated list after a delayed fade completes.
- *
- * EN v1.0 Address: 0x8026D0C4
- * EN v1.0 Size: 436b
  */
 void synthQueueHandle(u32 handle)
 {
@@ -484,9 +475,6 @@ done:
 /*
  * Stop a sequence voice, clean up callbacks, and return the voice to the
  * free list. Deferred handles clear the pending output word instead.
- *
- * EN v1.0 Address: 0x8026D278
- * EN v1.0 Size: 464b
  */
 void synthFreeHandle(u32 handle)
 {
@@ -606,9 +594,6 @@ done:
 /*
  * Update sequence playback speed immediately, or queue it for a deferred
  * handle update.
- *
- * EN v1.0 Address: 0x8026D448
- * EN v1.0 Size: 220b
  */
 void synthSetHandleValue16(u32 handle, u32 speed)
 {
@@ -674,9 +659,6 @@ done:
 /*
  * Continue a stopped sequence voice by moving it from the allocated list
  * back to the queued list, or clear the deferred continue flag.
- *
- * EN v1.0 Address: 0x8026D524
- * EN v1.0 Size: 268b
  */
 void synthRestoreQueuedHandle(u32 handle)
 {

@@ -9,11 +9,6 @@ u8 synthVirtualSampleState[0x950];
  * still matches the active sample, fire the global "done" callback
  * with kind=2, then clear the entry's mode and free the slot back to
  * the index pool.
- *
- * EN v1.0 Address: 0x8027ADC0
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x8027AFC0
- * EN v1.1 Size: 168b
  */
 void synthHandleVirtualSampleDone(u32 packed)
 {

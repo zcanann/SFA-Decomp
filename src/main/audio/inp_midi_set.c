@@ -29,9 +29,6 @@ extern void synthQueueVoiceInputUpdate(McmdVoiceState * voice);
 
 /*
  * inpSetMidiCtrl - combined RPN/MIDI controller setter.
- *
- * EN v1.0 Address: 0x80281338
- * EN v1.0 Size: 1488b (0x5D0)
  */
 void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
 {

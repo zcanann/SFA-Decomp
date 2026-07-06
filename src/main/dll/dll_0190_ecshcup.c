@@ -260,7 +260,6 @@ void ecsh_cup_release(void)
 
 void ecsh_cup_init(int obj, int def)
 {
- /* #57 */
     int state;
     f32 dist;
 

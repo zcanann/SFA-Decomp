@@ -199,11 +199,6 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
  * Voice "is loud" predicate: returns 1 if voice is active (state != 4),
  * the global active mask has its bit set, AND its current volume
  * (offset 0x5dc) > target volume (offset 0x5d8). Otherwise 0.
- *
- * EN v1.0 Address: 0x80271970
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x80271F5C
- * EN v1.1 Size: 84b
  */
 int synthIsFadeOutActive(u8 voiceIdx)
 {
@@ -220,9 +215,6 @@ int synthIsFadeOutActive(u8 voiceIdx)
 
 /*
  * Set a single byte field on a voice slot.
- *
- * EN v1.1 Address: 0x80271FB0
- * EN v1.1 Size: 40b
  */
 void synthSetMusicVolumeType(u32 voiceIdx, u8 value)
 {
@@ -239,11 +231,6 @@ void synthSetMusicVolumeType(u32 voiceIdx, u8 value)
  *   1 -> voiceKill
  *   2 -> claim virtual sample slot
  *   3 -> simple vacate via hwGetVirtualSampleID + synthHandleVirtualSampleDone
- *
- * EN v1.0 Address: 0x802719B0
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x80271FD8
- * EN v1.1 Size: 204b
  */
 int synthHWMessageHandler(int mode, u32 arg)
 {

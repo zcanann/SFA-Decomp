@@ -268,8 +268,6 @@ _fail:
 /*
  * Release a voice slot: clear voice flags, unlink from id table,
  * decrement counter, and mark id slot as free (-1).
- *
- * EN v1.1 Address: 0x80279B98, size 228b
  */
 void voiceFree(int state)
 {

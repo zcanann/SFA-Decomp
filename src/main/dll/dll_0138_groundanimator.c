@@ -122,7 +122,7 @@ void groundanimator_init(int* obj, int* desc)
 
 void groundanimator_free(int* obj, int flag)
 {
-    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     void* entry;
     void* vtx;
     int innoff;
@@ -230,7 +230,7 @@ f32 groundanimator_setScale(int* obj, int* target)
 
 void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
 {
-    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     void* entry;
     void* vtx;
     int fallInn;
@@ -311,7 +311,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
 #pragma fp_contract off
 void groundanimator_update(int* obj)
 {
-    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     int off2[2];
     int hoffVtx;
     u8 oldbit;

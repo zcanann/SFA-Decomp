@@ -44,8 +44,6 @@ extern u8* synthVoice;
 
 /*
  * MusyX sequence volume API, wrapping the underlying synth volume helper.
- *
- * EN v1.1 Address: 0x80272720, size 100b
  */
 void sndSeqVolume(int seqId, int volume, int time, int mode)
 {
@@ -56,8 +54,6 @@ void sndSeqVolume(int seqId, int volume, int time, int mode)
 
 /*
  * Look up a sequence MIDI priority halfword from a 2D table.
- *
- * EN v1.1 Address: 0x80272788, size 32b
  */
 u16 seqGetMIDIPriority(u8 slot, u8 event)
 {
@@ -66,8 +62,6 @@ u16 seqGetMIDIPriority(u8 slot, u8 event)
 
 /*
  * MusyX FX controller wrapper.
- *
- * EN v1.1 Address: 0x802727A8, size 96b
  */
 int sndFXCtrl(int handle, u8 controller, u8 value)
 {
@@ -80,8 +74,6 @@ int sndFXCtrl(int handle, u8 controller, u8 value)
 
 /*
  * MusyX FX 14-bit controller wrapper.
- *
- * EN v1.1 Address: 0x80272808, size 96b
  */
 int sndFXCtrl14(int handle, u8 controller, u16 value)
 {
@@ -95,8 +87,6 @@ int sndFXCtrl14(int handle, u8 controller, u16 value)
 /*
  * MusyX FX key-off wrapper. Rena's SFA-Amethyst export also names this
  * address audioStopSound, matching the game-facing behavior.
- *
- * EN v1.1 Address: 0x80272868, size 64b
  */
 int sndFXKeyOff(int handle)
 {
@@ -109,8 +99,6 @@ int sndFXKeyOff(int handle)
 
 /*
  * MusyX FX start wrapper, adding the current studio's cached aux index.
- *
- * EN v1.1 Address: 0x802728A8, size 132b
  */
 int sndFXStartEx(u32 fxId, u8 volume, u8 pan, u8 studio)
 {
@@ -126,8 +114,6 @@ int sndFXStartEx(u32 fxId, u8 volume, u8 pan, u8 studio)
 /*
  * Map id -> slot via vidGetInternalId, returns -1 sentinel if not found,
  * else returns the input id.
- *
- * EN v1.1 Address: 0x8027292C, size 68b
  */
 int sndFXCheck(u32 id)
 {
@@ -142,8 +128,6 @@ int sndFXCheck(u32 id)
 
 /*
  * MusyX sequence volume-group volume wrapper.
- *
- * EN v1.1 Address: 0x80272970, size 96b
  */
 void sndVolume(u8 volume, u16 time, u8 group)
 {
@@ -155,8 +139,6 @@ void sndVolume(u8 volume, u16 time, u8 group)
 /*
  * MusyX master-volume wrapper. The two flags gate the 0x15 and 0x16
  * controller updates.
- *
- * EN v1.1 Address: 0x802729D0, size 148b
  */
 void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag)
 {
@@ -175,8 +157,6 @@ void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag)
 /*
  * MusyX output-mode setter. It toggles the HRTF/stereo bits in
  * synthFlags and marks all voices dirty when the output mask changes.
- *
- * EN v1.1 Address: 0x80272A64, size 248b
  */
 void sndOutputMode(int mode)
 {
@@ -213,8 +193,6 @@ void sndOutputMode(int mode)
 /*
  * Configure studio AUX A/B processing callbacks and cache the callback
  * routing indices used by synth voice updates.
- *
- * EN v1.1 Address: 0x80272B5C, size 360b
  */
 void sndSetAuxProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser, u8 auxAIndex,
                                   void* auxAData, void* auxBCallback, void* auxBUser,
@@ -258,8 +236,6 @@ void sndSetAuxProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser
 /*
  * Reset a slot's tracking state (clear two ptr arrays + 0xFF in two
  * byte arrays + zero in a third) and call hwActivateStudio.
- *
- * EN v1.1 Address: 0x80272CC4, size 176b
  */
 void synthActivateStudio(u8 slot, int a, int b)
 {
@@ -277,8 +253,6 @@ void synthActivateStudio(u8 slot, int a, int b)
 /*
  * Deactivate a studio: clear routed AUX callbacks and release/off any voices
  * currently assigned to that studio.
- *
- * EN v1.1 Address: 0x80272D74, size 240b
  */
 void synthDeactivateStudio(u8 slot)
 {
@@ -318,8 +292,6 @@ void synthDeactivateStudio(u8 slot)
 
 /*
  * Wrapper for hwAddInput.
- *
- * EN v1.1 Address: 0x80272E64, size 32b
  */
 void synthAddStudioInput(u8 idx, void* input)
 {
@@ -328,8 +300,6 @@ void synthAddStudioInput(u8 idx, void* input)
 
 /*
  * Wrapper for hwRemoveInput.
- *
- * EN v1.1 Address: 0x80272E84, size 32b
  */
 void synthRemoveStudioInput(u8 idx, void* input)
 {

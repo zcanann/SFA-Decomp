@@ -95,7 +95,7 @@ extern void Music_Trigger(int id, int arg);
 
 int SB_CloudBall_getExtraSize(void);
 
-/* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
+/* Triple s8 fan-out: write obj->_b8[2/3/4]
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */
 void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
 {
@@ -105,7 +105,7 @@ void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
     *out_b4 = b[4];
 }
 
-/* EN v1.0 0x801E607C  size: 40b  Increment-and-store: obj->_b8[2] += p3,
+/* Increment-and-store: obj->_b8[2] += p3,
  * obj->_b8[3] += p2. */
 void shop_func16(int* obj, int p2, int p3)
 {
@@ -114,7 +114,7 @@ void shop_func16(int* obj, int p2, int p3)
     b[3] = (s8)(b[3] + p2);
 }
 
-/* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
+/* Shop state reset/seed: zero obj->_b8[2]
  * and obj->_b8[3], stash v in obj->_b8[4]. */
 void shop_func15(int* obj, int v)
 {
@@ -226,7 +226,7 @@ u8 shop_getItemMinPrice(int obj, int idx)
     return 0;
 }
 
-/* EN v1.0 0x801E62F0  size: 104b  Returns 1 when shop item's "bought"
+/* Returns 1 when shop item's "bought"
  * GameBit (slot at lbl_80327FD0[idx*12 + 8]) is set; else 0. */
 int shop_isItemBought(int obj, int idx)
 {
@@ -243,7 +243,7 @@ int shop_isItemBought(int obj, int idx)
     return result;
 }
 
-/* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
+/* Returns 1 unless the item's
  * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and
  * unset.  (i.e. open by default, gated when slot != -1.) */
 int shop_isItemAvailable(int obj, int idx)

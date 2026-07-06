@@ -11,8 +11,7 @@
  * back to camera mode 0x42.
  *
  * Also hosts the shared force-behind / cloud-runner camera no-op and free
- * callbacks referenced from the sibling camera-mode DLLs, plus two drifted
- * helpers (FUN_8010de18_v11_drift, FUN_801115e0) that the camera DLLs call.
+ * callbacks referenced from the sibling camera-mode DLLs.
  */
 #include "main/mm.h"
 #include "main/camera_object.h"
@@ -36,7 +35,7 @@ void dll_54_func06_nop(void)
 
 void dll_54_func05(void)
 {
-    extern void mm_free(u32); /* #57 */
+    extern void mm_free(u32);
     mm_free((u32)gCameraModeNpcSpeakState);
     gCameraModeNpcSpeakState = NULL;
 }

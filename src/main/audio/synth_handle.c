@@ -41,8 +41,6 @@ typedef struct SynthStartParams
  * sndSeqVolume backend. Resolves a sequence handle across queued and active
  * voices; active voices update immediately, queued voices cache a pending
  * studio-volume change until they are started.
- *
- * EN v1.0 Address: 0x8026D6E4, size 0x19C
  */
 void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode)
 {

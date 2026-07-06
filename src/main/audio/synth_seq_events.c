@@ -133,9 +133,6 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
 
 /*
  * Sorted-by-time insert into a channel event queue.
- *
- * EN v1.0 Address: 0x8026E070
- * EN v1.0 Size: 116b
  */
 void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event)
 {

@@ -703,7 +703,7 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
     return;
 }
 
-/* Tricky_update: 8672b - Tricky sidekick command state machine and per-frame update. */
+/* Tricky sidekick command state machine and per-frame update. */
 typedef struct
 {
     u8 slotA : 2;
@@ -1920,7 +1920,7 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
     return gTrickyNearestObject;
 }
 
-/* baddie_updateWhileFrozen: 2796b - shared frozen-state update + per-baddie reaction dispatch. */
+/* Shared frozen-state update + per-baddie reaction dispatch. */
 typedef struct
 {
     s16 rot[3];

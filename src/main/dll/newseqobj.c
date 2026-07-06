@@ -1,8 +1,7 @@
 /*
- * sidekick-toy baddie reaction + update handlers (EN v1.0 0x801504F8,
- * 0x80150910, 0x80150EDC). The object is a curve-following toy/pet baddie
- * driven by per-family anim tables keyed off BaddieState.inWhirlpoolGroup
- * (state[0x33b]):
+ * sidekick-toy baddie reaction + update handlers. The object is a
+ * curve-following toy/pet baddie driven by per-family anim tables keyed off
+ * BaddieState.inWhirlpoolGroup (state[0x33b]):
  *   - fn_801504F8: hit/message reaction handler. Maps incoming message ids
  *     (0xe..0x1f) onto reaction flags (BaddieState.reactionFlags 8/0x10/0x28),
  *     starts a new anim move from the per-family row tables, decrements the
@@ -261,9 +260,8 @@ int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int d
     return ret;
 }
 
-/* EN v1.0 0x80150EDC  size: 870b  sidekick-toy anim-chain advance: timer-driven
- * 16-stride SeqRow16 chain + curve-follow speed shaping, called from the
- * fn_80150910 update path. */
+/* sidekick-toy anim-chain advance: timer-driven 16-stride SeqRow16 chain +
+ * curve-follow speed shaping, called from the fn_80150910 update path. */
 void fn_80150EDC(void* obj, void* state)
 {
     u8* table = lbl_8031DD30;
@@ -377,8 +375,8 @@ void fn_80150EDC(void* obj, void* state)
     }
 }
 
-/* EN v1.0 0x80150910  size: 1484b  sidekick-toy main update: timer-driven
- * 16-stride anim chain, curve chase with speed/turn shaping, idle anims. */
+/* sidekick-toy main update: timer-driven 16-stride anim chain, curve chase
+ * with speed/turn shaping, idle anims. */
 
 void fn_80150910(int* obj, u8* state)
 {

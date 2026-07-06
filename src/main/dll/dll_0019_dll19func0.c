@@ -146,7 +146,7 @@ int dll_19_func1B(int obj)
 
 void dll_19_func12(int* obj, int* state, u8 flag)
 {
-    extern void mm_free(u32); /* #57 */
+    extern void mm_free(u32);
     Sfx_StopObjectChannel(obj, 127);
     if ((((GroundBaddieState*)state)->configFlags & flag) == 0)
     {
@@ -314,8 +314,8 @@ void dll_19_func0C(int obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16
 
 int dll_19_func13(int obj, u8* state, f32 distThreshold, int requireFar)
 {
-    extern f32 lbl_803E1C68; /* #57 */
-    extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i); /* #57 */
+    extern f32 lbl_803E1C68;
+    extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i);
     int player = Obj_GetPlayerObject();
     int result = 0;
 
@@ -358,7 +358,7 @@ int dll_19_func13(int obj, u8* state, f32 distThreshold, int requireFar)
 
 int dll_19_func10(int obj, u8* state, int moveArg0, int moveArg1, s16 controlMode, f32* destX, f32* destZ, int* reachedOut)
 {
-    extern f32 lbl_803E1C68; /* #57 */
+    extern f32 lbl_803E1C68;
     f32 dx, dz, dist;
     f32 zero;
 
@@ -457,9 +457,9 @@ int dll_19_func17(int obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 
 #pragma opt_loop_invariants off
 int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
 {
-    extern f32 lbl_803E1C68; /* #57 */
-    extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i); /* #57 */
-    extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e); /* #57 */
+    extern f32 lbl_803E1C68;
+    extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i);
+    extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
     f32 bboxOut[20];
     int objs[3];
     f32 diff[3];
@@ -1104,15 +1104,8 @@ u16 dll_19_func0A(int obj)
     return 0xd2;
 }
 
-/* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
- * angle into the caller's record. */
-
-/* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
- * caller's record and aims its angle at the nearest group-8 object (falling
- * back to the point's packed angle). */
-
-/* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
- * current target and turns the yaw by the buffered turn rate. */
+/* Steps the movement blend factors toward the current target and turns the
+ * yaw by the buffered turn rate. */
 void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed)
 {
     if (((BaddieState*)st)->inputMagnitude < lbl_803E1C78)
@@ -1140,14 +1133,8 @@ void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed)
     }
 }
 
-/* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
- * primes the animation channel tables. */
-
-/* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
- * first use and refreshes the current path point position. */
-
-/* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
- * distance from an object to its target, updating the wide-turn flag. */
+/* Computes the yaw step, signed yaw delta and distance from an object to its
+ * target, updating the wide-turn flag. */
 void dll_19_func07(int obj, int target, int div, u16* outYaw, u16* outDelta, u16* outDist)
 {
     char* st = ((GameObject*)obj)->extra;
@@ -1203,13 +1190,13 @@ void dll_19_func07(int obj, int target, int div, u16* outYaw, u16* outDelta, u16
     }
 }
 
-/* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
- * the object for walkable space, returning a bitmask of clear directions. */
+/* Probes the four compass directions around the object for walkable space,
+ * returning a bitmask of clear directions. */
 u8 dll_19_func08(int obj, char* st, f32 dist)
 {
-    extern const f32 lbl_803E1C68; /* #57 */
-    extern int objBboxFn_800640cc(void* pos, f32* world, f32 rad, int a, void* out, int obj, int b, int c, int d, int e); /* #57 */
-    extern u8 voxmaps_traceLine(int* from, int* to, int a, u8* outFlag, int b); /* #57 */
+    extern const f32 lbl_803E1C68;
+    extern int objBboxFn_800640cc(void* pos, f32* world, f32 rad, int a, void* out, int obj, int b, int c, int d, int e);
+    extern u8 voxmaps_traceLine(int* from, int* to, int a, u8* outFlag, int b);
     u16 i;
     u8 mask;
     u8 hitFlag;
@@ -1268,14 +1255,8 @@ u8 dll_19_func08(int obj, char* st, f32 dist)
     return mask;
 }
 
-/* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
- * curve, snapping to ground and easing the yaw toward the path direction. */
-
-/* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
- * arms the move, phase 5 walks the setup/playback sub-phases. */
-
-/* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
- * object's facing plane and returns the lateral offset of the result. */
+/* Constrains a follow point against the object's facing plane and returns
+ * the lateral offset of the result. */
 f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
 {
     f32 dist;
@@ -1327,6 +1308,3 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
     s = mathCosf(gDll19AnglePi * (f32)(((GameObject*)obj)->anim.rotX + 0x4000) / gDll19BinaryAngleScale);
     return -(-(((GameObject*)obj)->anim.localPosX * c + ((GameObject*)obj)->anim.localPosZ * s) + (c * fx + s * fz));
 }
-
-/* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
- * given speed, snapping when close, easing yaw and pacing the walk anim. */

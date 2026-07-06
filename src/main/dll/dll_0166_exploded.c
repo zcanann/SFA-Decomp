@@ -10,8 +10,6 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 extern void Model_GetVertexPosition(int model, int i, f32* out);
 
-/* segment pragma-stack balance (re-split): */
-
 #include "main/dll/IM/IMicicle.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -110,17 +108,6 @@ check:
     }
 }
 
-/* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
- * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
- * (state[0] bits 5..7) through the door's open/close machine. Returns 1
- * while in the static states (0/1) and 0 while in transition (2/3). */
-
-/* slidingdoor_update: triggered-once handler. If obj->_f4 is already set,
- * skip. Otherwise: if data->_1c (event id) is non-zero AND obj->_b8->_0
- * bits 5..7 are set, preempt the event. Then if data->_1e is not -1,
- * run that sequence with obj, -1.
- * Finally latch obj->_f4 = 1. */
-
 /* exploded_init: store the map object tag, scale the model using the map
  * byte, then enable physics if any initial velocity/acceleration is present. */
 void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
@@ -148,15 +135,6 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
         state->explodePhase = EXPLODED_PHASE_IDLE;
     }
 }
-
-/* attractor_func0B: dispatch on obj->_4c->_19 - state 0/3+ store NULL,
- * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
- * (truncated to int), latches angle+0x8000 into obj+0, then stores obj. */
-
-/* slidingdoor_init: clear obj+0xf4, copy data[0x1f]<<8 into obj+0; install
- * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
- * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
- * obj->_b8->_0. */
 
 void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data,
                               int computeModelCenter, ExplodedObjectState* state)

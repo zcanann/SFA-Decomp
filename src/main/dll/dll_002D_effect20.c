@@ -13,8 +13,8 @@
  * (gEffect20StepScrollA/88C scroll accumulators wrapped at 1.0, and the
  * gEffect20SinePhase0/404 sine sweeps clamped to 0x7FFF).
  *
- * The remaining FUN_/fn_ entry points are uncalled drift duplicates of
- * helpers that live in the sibling effect DLLs.
+ * Effect20_func03_nop, Effect20_release, and Effect20_initialise are empty
+ * stubs.
  */
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"

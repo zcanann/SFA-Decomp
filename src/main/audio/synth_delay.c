@@ -14,8 +14,6 @@ extern u8* synthVoice;
 /*
  * synthFXSetCtrl - sndFXCtrl underlying impl.
  * Walks the handle's voice-slot chain, dispatching inpSetMidiCtrl per slot.
- *
- * EN v1.0 Address: 0x8027186C, size 0xE8
  */
 u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value)
 {
@@ -52,8 +50,6 @@ u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value)
 
 /*
  * synthFXSetCtrl14 - sndFXCtrl14 underlying impl.
- *
- * EN v1.0 Address: 0x80271954, size 0xE8
  */
 u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value)
 {
@@ -91,8 +87,6 @@ u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value)
 /*
  * synthFXCloneMidiSetup - copies the five FX-stage controllers
  * (volume, pan, expression, reverb, chorus) between two handles.
- *
- * EN v1.0 Address: 0x80271A3C, size 0x84
  */
 void synthFXCloneMidiSetup(u32 dstHandle, u32 srcHandle)
 {
@@ -106,8 +100,6 @@ void synthFXCloneMidiSetup(u32 dstHandle, u32 srcHandle)
 /*
  * synthSendKeyOff - sndFXKeyOff underlying impl.
  * Walks the handle's voice-slot chain and signals key-off on each slot.
- *
- * EN v1.0 Address: 0x80271AC0, size 0x8C
  */
 u32 synthSendKeyOff(u32 handle)
 {

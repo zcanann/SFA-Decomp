@@ -74,8 +74,7 @@ void dimsnowball_hitDetect(int* obj)
 
 void dimsnowball_update(int obj)
 {
-    extern int Obj_GetPlayerObject(void); /* #57 */
- /* #57 */
+    extern int Obj_GetPlayerObject(void);
     s16 idx[4];
     f32 x[4];
     f32 y[4];
@@ -217,7 +216,7 @@ typedef struct DimSnowballDef
 
 void dimsnowball_init(DimSnowballObject* objArg, DimSnowballDef* def)
 {
-    extern u8* ObjList_FindObjectById(int objectId); /* #57 */
+    extern u8* ObjList_FindObjectById(int objectId);
     DimSnowballObject* obj = objArg;
     DimSnowballState* state;
 

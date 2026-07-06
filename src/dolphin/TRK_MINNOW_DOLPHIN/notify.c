@@ -1,5 +1,3 @@
-/* TODO: restore stripped imported address metadata if needed. */
-
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
 inline DSError TRKDoNotifyStopped_Inline(TRKBuffer* msg, MessageCommandID cmd) {

@@ -242,12 +242,6 @@ void InsertData(u16 id, void* data, u8 dataType, u32 remove)
     }
 }
 
-/*
- * EN v1.0 Address: 0x8027B260
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x8027B690
- * EN v1.1 Size: 156b
- */
 #pragma dont_inline on
 void audioFn_8027b690(u16* ref, void* data, u8 dataType, u32 remove)
 {

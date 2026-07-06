@@ -187,30 +187,14 @@ extern u16 gDebugScreenHeight;
 extern u32 gDebugMarginRight;
 extern u32 gDebugMarginBottom;
 
-/* ===== EN v1.0 retargeted leaves ========================================= */
-
 void reportAllocFail(void)
 {
 }
 
-/* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
-
-/* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
-
-/* EN v1.0 0x801368D4  size: 12b  Clear lbl_803DD9AB to 0. */
-
-/* EN v1.0 0x80138F78  size: 12b  obj->_b8->_14 . */
 f32 fn_80138F78(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk14; }
-/* EN v1.0 0x80138F84  size: 12b  obj->_b8->_24 . */
 u32 fn_80138F84(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk24; }
-/* EN v1.0 0x80138F90  size: 12b  obj->_b8->_414 . */
 s16 fn_80138F90(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk414; }
-/* EN v1.0 0x80138F9C  size: 12b  Returns Tricky's queued path particle position. */
 void* trickyGetQueuedPathParticlePos(void* obj) { return &((TrickyImpressState*)((GameObject*)obj)->extra)->renderPosX; }
-
-/* EN v1.0 0x80135BC4  size: 8b   titlescreen_getExtraSize -> 56. */
-
-/* EN v1.0 0x80135CC4  size: 4b   titlescreen_hitDetect (empty stub). */
 
 int titlescreen_getObjectTypeId(u8* obj);
 
@@ -234,8 +218,7 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     0,
 };
 
-/* EN v1.0 0x80139164  size: 252b  Tricky_emitQueuedPathParticles: when b->_54 carries the
- * spawn flag, build a particle descriptor on the stack from a's heading
+/* When b->_54 carries the spawn flag, build a particle descriptor on the stack from a's heading
  * and the delta to b's position, then emit it 20 times via the partfx
  * interface and clear the flag. */
 #pragma peephole off
@@ -334,8 +317,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
 }
 
 #pragma optimization_level reset
-/* EN v1.0 0x80138F14  size: 100b  GameBit-gated bit toggle on
- * obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
+/* GameBit-gated bit toggle on obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
  * checks bit 0x10. Returns 1 only when the post-OR check passes. */
 int trickyFn_80138f14(u8* obj)
 {
@@ -351,9 +333,8 @@ int trickyFn_80138f14(u8* obj)
     return 0;
 }
 
-/* EN v1.0 0x80137998  size: 104b  Title-screen system init. Calls
- * getScreenResolution, primes the two float counters, clears two state bytes,
- * acquires three sized buffers (605/1/2 bytes) and primes the
+/* Title-screen system init. Calls getScreenResolution, primes the two float counters, clears
+ * two state bytes, acquires three sized buffers (605/1/2 bytes) and primes the
  * debugLogEnd cursor to the start of the 0x1100-byte arena. */
 #pragma peephole on
 void fn_80137998(void)
@@ -369,9 +350,8 @@ void fn_80137998(void)
     debugLogEnd = debugLogBuffer;
 }
 
-/* EN v1.0 0x80137520  size: 128b  Emit a SetColor record (tag 0x81 +
- * 4 RGBA bytes + 0 terminator) into the debug log; aborts when the
- * record counter at gDebugRecordCount has already exceeded 0xFA. */
+/* Emit a SetColor record (tag 0x81 + 4 RGBA bytes + 0 terminator) into the debug log; aborts
+ * when the record counter at gDebugRecordCount has already exceeded 0xFA. */
 #pragma optimization_level 1
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
@@ -394,7 +374,7 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 }
 #pragma optimization_level reset
 
-/* EN v1.0 0x80138920  size: 192b  Drop-anim trigger guard. Returns 1
+/* Drop-anim trigger guard. Returns 1
  * (and dispatches the drop anim via objAudioFn_800393f8) only when:
  *   - bit 0x40 of obj->_b8->_58 is clear,
  *   - the target halfword obj->_a0 is OUTSIDE the [41, 47] window,
@@ -438,24 +418,7 @@ void fn_80137948(char* fmt, ...)
 {
 }
 
-/* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
- * the buffers at minimapTexture and lbl_803DD940 (the first only if
- * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
- * tearing down each non-null entry via Obj_FreeObject. Both buffer
- * pointers are zeroed at the end. */
-
-/* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
- * via textureFree. */
-
-/* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
-
-/* EN v1.0 0x801368A4  size: 32b  Two-byte state push: if arg differs
- * from lbl_803DD991, save old to lbl_803DBC09 and set new. */
-
-/* EN v1.0 0x801368C4  size: 16b  Two-byte state push (no equality
- * check): copy lbl_803DD990 to lbl_803DBC08 and write new value. */
-
-/* EN v1.0 0x80138EF8  size: 28b  Set bit 0x80000000 of obj->_b8->_54
+/* Set bit 0x80000000 of obj->_b8->_54
  * and store lbl_803E2408 into obj->_b8->_808. */
 void trickyImpress(u8* obj)
 {
@@ -464,21 +427,7 @@ void trickyImpress(u8* obj)
     ((TrickyImpressState*)b)->unk808 = lbl_803E2408;
 }
 
-/* EN v1.0 0x80134808  size: 44b  Release two buffer slots in sequence:
- * textureFree(lbl_803DD984) then textureFree(lbl_803DD980). */
-
-/* EN v1.0 0x801347A4  size: 100b  Per-frame integrator with clamp.
- * Adds (or subtracts, when warpstoneUIState != 0) lbl_803E22D8*timeDelta
- * to lbl_803DD97C, then clamps to [lbl_803E22E0, lbl_803E22DC]. */
-
-/* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
- * from getCurUiDll is in {2..6} or equals 7, else 0. */
-
-/* EN v1.0 0x80133934  size: 52b  Release-and-clear pair: when
- * minimapTexture is non-null, release via textureFree and zero both
- * minimapTexture and lbl_803DD92C. */
-
-/* EN v1.0 0x801375A0  size: 40b  Reset debug log/print state: rewind
+/* Reset debug log/print state: rewind
  * debugLogEnd to the start of the buffer and reload the print x/y
  * coordinates from saved values. */
 #pragma peephole off
@@ -493,14 +442,14 @@ void fn_801375A0(void)
     debugPrintXpos = xp;
 }
 
-/* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58. */
+/* Bit setter at bit 6 (0x40) of obj->_b8->_58. */
 struct Bits58 { u8 _pad[0x58]; u8 b7:1; u8 b6:1; u8 lo:6; };
 void fn_80138908(u8* obj, int v)
 {
     ((struct Bits58*)((GameObject*)obj)->extra)->b6 = v;
 }
 
-/* EN v1.0 0x801388D0  size: 56b  Stash 4 args to four globals and resume
+/* Stash 4 args to four globals and resume
  * the thread at &gErrDisplayThread. */
 void fn_801388D0(s16 a, u32 b, u32 c, u32 d)
 {
@@ -661,7 +610,7 @@ typedef struct {
     u8 rest : 6;
 } TumbleweedBlendFlags;
 
-/* Tricky_updateBlendChannelWeight: weighted blend-channel animator. On state[0x82e] bit 0x80,
+/* Weighted blend-channel animator. On state[0x82e] bit 0x80,
  * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
  * the active flag. While bit 0x40 is set, ramps state[0x830] toward
  * data[0] / data[1] with acceleration lbl_803E23E4 and damping
@@ -1185,10 +1134,6 @@ int fn_80136E00(int p1, u8* p)
 }
 #pragma optimization_level reset
 
-/* EN v1.0 0x80137DF8  size: 2776b  fn_80137DF8: error display thread.
- * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
- * stack trace and GPR dump via debugPrintfxy, draws the underline and
- * box pixels directly into the framebuffer, and flips buffers forever. */
 static inline void errDisplayFillBackdrop(int x, int xcb)
 {
     int row;
@@ -1449,7 +1394,7 @@ void fn_80137DF8(void)
 }
 #pragma opt_strength_reduction on
 
-/* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
+/* Lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
  * the passes when the log produced any extent. */
 void debugPrintDraw(int ctx)

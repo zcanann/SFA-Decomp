@@ -9,14 +9,9 @@ extern void* aramChunkCallback;
 
 /*
  * Initializes the AR-side audio data buffer: allocates a 0x500-byte
- * scratch buffer in main RAM, zeroes it (1280 bytes = 8 unrolled
- * iterations of 80 halfwords each), DMAs it to AR memory at the base
- * address, then sets up the global allocator pointers.
- *
- * EN v1.0 Address: 0x80284224
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x80284410
- * EN v1.1 Size: 540b
+ * scratch buffer in main RAM, zeroes it (640 halfwords = 1280 bytes),
+ * DMAs it to AR memory at the base address, then sets up the global
+ * allocator pointers.
  */
 void aramInit(u32 extraSize)
 {
@@ -58,8 +53,6 @@ void aramInit(u32 extraSize)
 
 /*
  * Empty stub (4 bytes: just blr).
- *
- * EN v1.1 Address: 0x80284444
  */
 void aramGetZeroBuffer(void)
 {
@@ -67,8 +60,6 @@ void aramGetZeroBuffer(void)
 
 /*
  * Returns AR base address.
- *
- * EN v1.1 Address: 0x80284448
  */
 u32 aramGetBaseAddress(void)
 {

@@ -279,7 +279,6 @@ void goToNextMapLayer(void)
     renderFlags |= 0x4000;
 }
 
-/* 132b per-block flag scan. */
 typedef struct
 {
     u32 field_0;

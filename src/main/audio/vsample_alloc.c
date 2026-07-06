@@ -37,9 +37,7 @@ typedef struct VS
 extern u8 synthVirtualSampleState[];
 
 /*
- * vsInit - reset the virtual sample stream buffer table.
- *
- * EN v1.1 Address: 0x8027ACB8, size 288b
+ * Reset the virtual sample stream buffer table.
  */
 void synthInitVirtualSampleTable(void)
 {
@@ -101,8 +99,8 @@ static u16 vsNewInstanceID(VS* v)
 }
 
 /*
- * vsSampleStartNotify - allocate a stream buffer for the voice and set up
- * its virtual sample loop buffer.
+ * Allocate a stream buffer for the voice and set up its virtual sample
+ * loop buffer.
  */
 u32 synthClaimVirtualSampleSlot(u8 voiceID)
 {

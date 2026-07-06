@@ -34,11 +34,6 @@ extern u16 synthLoadedGroupCount;
  * or runs sample-completion logic (mode 2 - checks current sample
  * id matches expected and triggers a stop+vacate when threshold
  * elapsed).
- *
- * EN v1.0 Address: 0x8027B25C
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x8027B41C
- * EN v1.1 Size: 452b
  */
 void synthUpdateVirtualSamples(void)
 {
@@ -137,9 +132,6 @@ void synthUpdateVirtualSamples(void)
 
 /*
  * Reset the loaded sound-group table count.
- *
- * EN v1.1 Address: 0x8027B420
- * EN v1.1 Size: 12b
  */
 void synthResetLoadedGroupCount(void)
 {

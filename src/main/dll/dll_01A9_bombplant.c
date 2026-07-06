@@ -109,10 +109,6 @@ void fn_801D2B70(int* obj, int unused, int* p3)
     }
 }
 
-/* EN v1.0 0x801D27B8  size: 172b  Mushroom enemy constructor: seeds the state
- * block, clamps the spin period, offsets the spawn height, flags the model,
- * optionally resets to spawn, and registers in object group 3. */
-
 typedef struct
 {
     s16 pos[3];
@@ -137,7 +133,7 @@ typedef struct
     u8 pad1e[0x24 - 0x1e];
 } BombplantSporeSpawn;
 
-/* EN v1.0 0x801D29E4  size: 336b  Spawns a spore object: builds a matrix from
+/* Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
 #pragma opt_common_subs off
 void fn_801D29E4(int* obj, int* p2)
@@ -176,7 +172,7 @@ void fn_801D29E4(int* obj, int* p2)
 }
 #pragma opt_common_subs reset
 
-/* EN v1.0 0x801D286C  size: 376b  Bombplant per-tick sequencer: on the armed
+/* Bombplant per-tick sequencer: on the armed
  * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps
  * the loop sfx alive, jitters the fuse, and fires the spark particle. */
 int bombplant_SeqFn(int* obj)
@@ -227,9 +223,6 @@ int bombplant_SeqFn(int* obj)
     }
     return 0;
 }
-
-/* EN v1.0 0x801D1E24  size: 2452b  Mushroom enemy state machine: dormant ->
- * inflate -> chase -> deflate cycle, hit reaction, pop and respawn. */
 
 void bombplant_init(void* obj, void* param, int flag)
 {

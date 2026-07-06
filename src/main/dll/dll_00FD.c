@@ -1,4 +1,4 @@
-/* DLL 0x00FD — baby CloudRunner objects [8017EF6C-8017EFF0) */
+/* DLL 0x00FD — baby CloudRunner objects [8017EF6C-8017F4F4) */
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objlib.h"

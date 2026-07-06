@@ -42,7 +42,6 @@ asm void InitMetroTRK()
 	stw r4, ProcessorState_PPC.Default.PC(r3)
 	mfcr r4
 	stw r4, ProcessorState_PPC.Default.CR(r3)
-	//???
 	mfmsr r4
 	ori r3, r4, (1 << (31 - 16))
 	xori r3, r3, (1 << (31 - 16))

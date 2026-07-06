@@ -131,11 +131,6 @@ static inline void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* p
                  pi->rpan_fm * tabs->pan[pi->rpan_im + 1]);
 }
 
-/*
- * salCalcVolumeMatrix
- * EN v1.0 Address: 0x8027F2AC
- * EN v1.0 Size: 1944b
- */
 void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2,
                          f32 vol, f32 auxa, f32 auxb)
 {

@@ -1,4 +1,4 @@
-/* DLL 0x0120 (trickyguardspot) — Tricky guard spot object [0x8018B7B0-0x8018B9F0). */
+/* DLL 0x0120 (trickyguardspot) — Tricky guard spot object. */
 
 #include "main/dll/CF/CFtoggleswitch.h"
 #include "main/dll/cannon.h"

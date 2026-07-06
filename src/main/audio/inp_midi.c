@@ -23,8 +23,6 @@ extern u8 gInpChannelDefaults[];
 /*
  * Reset a MIDI-controller/default table from one of two preset banks,
  * then mark the last-note/controller slot dirty via inpSetMidiLastNote.
- *
- * EN v1.1 Address: 0x80281A30, size 244b
  */
 void inpResetMidiCtrl(u8 channel, u8 key, u32 mode)
 {
@@ -137,8 +135,6 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
 
 /*
  * Returns pointer into either 1D or 2D voice-state table.
- *
- * EN v1.1 Address: 0x80281DB0, size 60b
  */
 u8* inpGetChannelDefaults(u8 channel, u8 key)
 {
@@ -151,8 +147,6 @@ u8* inpGetChannelDefaults(u8 channel, u8 key)
 
 /*
  * Stores 2 into voice-state slot (1D or 2D variant).
- *
- * EN v1.1 Address: 0x80281DEC, size 68b
  */
 void inpResetChannelDefaults(u8 channel, u8 key)
 {
@@ -172,8 +166,6 @@ void inpResetChannelDefaults(u8 channel, u8 key)
  * Push an event onto a 4-slot ring at obj+0x22. Resets counter when
  * the flags byte is zero. Slot layout: [ctrl, flags|0x10 or translated
  * ctrl, _, _, value, _, _, _].
- *
- * EN v1.1 Address: 0x80281E30, size 156b
  */
 typedef struct InpCtrlRing
 {
@@ -274,8 +266,6 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
 /*
  * Set a byte in either gInpMidiLastNote[a] (1D, when b == 0xff) or
  * lbl_803CD760[b][a] (2D).
- *
- * EN v1.1 Address: 0x80281FE8, size 68b
  */
 void inpSetMidiLastNote(u8 channel, u8 key, u8 v)
 {
@@ -292,8 +282,6 @@ void inpSetMidiLastNote(u8 channel, u8 key, u8 v)
 /*
  * Get a byte from either gInpMidiLastNote[a] (1D, when b == 0xff) or
  * lbl_803CD760[b][a] (2D).
- *
- * EN v1.1 Address: 0x8028202C, size 68b
  */
 u8 inpGetMidiLastNote(u8 channel, u8 key)
 {

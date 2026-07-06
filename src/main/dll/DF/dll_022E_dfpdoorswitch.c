@@ -33,8 +33,6 @@ void doorswitch_initialise(void)
 
 char sDoorswitchInitNoLongerSupported[] = "<doorswitch Init>No Longer supported \n";
 
-/* descriptor/ptr table auto 0x80329968-0x803299d8 */
-
 ObjectDescriptor gDFP_seqpointObjDescriptor = {
     0x00000000, 0x00000000, 0x00000000,
     0x00090000,

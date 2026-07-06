@@ -168,10 +168,6 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
     return 1;
 }
 
-/*
- * Retail source-tag string: Hcurves.c: MAX_ROMCURVES exceeded!!
- */
-
 #pragma opt_loop_invariants off
 void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
 {

@@ -163,7 +163,7 @@ void WM_Galleon_free(int* obj, int leavingMap)
 
 void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
+    extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
     if (GameBit_Get(0x78) != 0)
     {
         return;

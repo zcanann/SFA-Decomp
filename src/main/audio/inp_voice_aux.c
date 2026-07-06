@@ -11,9 +11,6 @@ u16 inpGetDoppler(McmdVoiceState* state)
     return _GetInputValue(state, &state->dopplerInput, state->midiSlot, state->midiEvent);
 }
 
-/*
- * Function: inpGetModulation
- */
 u16 inpGetModulation(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
@@ -25,9 +22,6 @@ u16 inpGetModulation(McmdVoiceState* state)
     return _GetInputValue(state, &state->modulationInput, state->midiSlot, state->midiEvent);
 }
 
-/*
- * Function: inpGetPedal
- */
 u16 inpGetPedal(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
@@ -39,9 +33,6 @@ u16 inpGetPedal(McmdVoiceState* state)
     return _GetInputValue(state, &state->pedalInput, state->midiSlot, state->midiEvent);
 }
 
-/*
- * Function: inpGetPreAuxA
- */
 u16 inpGetPreAuxA(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
@@ -53,9 +44,6 @@ u16 inpGetPreAuxA(McmdVoiceState* state)
     return _GetInputValue(state, &state->preAuxAInput, state->midiSlot, state->midiEvent);
 }
 
-/*
- * Function: inpGetReverb
- */
 u16 inpGetReverb(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
@@ -67,9 +55,6 @@ u16 inpGetReverb(McmdVoiceState* state)
     return _GetInputValue(state, &state->reverbInput, state->midiSlot, state->midiEvent);
 }
 
-/*
- * Function: inpGetPreAuxB
- */
 u16 inpGetPreAuxB(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;

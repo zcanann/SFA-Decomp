@@ -52,7 +52,6 @@ enum
     PAYMENT_KIOSK_SEQEV_PAY = 2
 };
 
-/* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
 u32 PaymentKiosk_testEvent(int obj, int unused, int ev)
 {
     PaymentKioskMapData* setup = (PaymentKioskMapData*)((GameObject*)obj)->anim.placementData;
@@ -95,7 +94,6 @@ u32 PaymentKiosk_testEvent(int obj, int unused, int ev)
     return r;
 }
 
-/* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
 int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     PaymentKioskState* st = ((GameObject*)obj)->extra;
@@ -151,7 +149,6 @@ void paymentkiosk_hitDetect(void)
 {
 }
 
-/* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
 void paymentkiosk_update(int obj)
 {
     PaymentKioskState* st = ((GameObject*)obj)->extra;

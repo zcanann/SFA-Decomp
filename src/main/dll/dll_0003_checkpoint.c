@@ -41,7 +41,7 @@ extern f32 lbl_803E04E4;
 #pragma dont_inline on
 CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
 {
-    extern s32 gCheckpointRouteCount; /* #57 */
+    extern s32 gCheckpointRouteCount;
     s32 high;
     s32 low;
     s32 mid;
@@ -205,12 +205,12 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
 
 u32 Checkpoint_func0E(s32* p)
 {
-    extern u32 lbl_803DD418; /* #57 */
+    extern u32 lbl_803DD418;
     *p = lbl_803DD414;
     return lbl_803DD418;
 }
 
-/* Rank object r3 against array at lbl_803DD418 by (priority, distSq) descending. */
+/* Rank object p against array at lbl_803DD418 by (priority, distSq) descending. */
 typedef struct PartFxItem
 {
     u8 pad00[0xc];
@@ -219,7 +219,7 @@ typedef struct PartFxItem
     s32 priority;
 } PartFxItem;
 
-extern void* lbl_803DD418; /* #57 */
+extern void* lbl_803DD418;
 
 s32 Checkpoint_func0F(PartFxItem* p)
 {
@@ -370,7 +370,7 @@ void Checkpoint_func0C(CheckpointRouteState* o)
 
 void Checkpoint_func0D(u32 v)
 {
-    extern u32 lbl_803DD41C; /* #57 */
+    extern u32 lbl_803DD41C;
     if (lbl_803DD416 >= 10) return;
     ((u32*)lbl_803DD41C)[lbl_803DD416++] = v;
 }
@@ -407,7 +407,7 @@ STATIC_ASSERT(offsetof(CheckpointNavState, branchFlag) == 0x30);
  * clamping t to [0,1]; crossing a segment end hands off to the next checkpoint. */
 s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s32 p3, u8 flag)
 {
-    extern u16 getAngle(f32 a, f32 b); /* #57 */
+    extern u16 getAngle(f32 a, f32 b);
     f32 v1[4];
     f32 v2[4];
     f32 v3[4];
@@ -541,7 +541,7 @@ s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s3
 
 void Checkpoint_onGameLoop(void)
 {
-    extern void* lbl_803DD41C; /* #57 */
+    extern void* lbl_803DD41C;
     void* tmp = lbl_803DD418;
     lbl_803DD418 = lbl_803DD41C;
     lbl_803DD41C = tmp;
@@ -562,7 +562,7 @@ extern f32 lbl_803E0518; /* used by Checkpoint_func07/06 */
  * cursor forward or back and returning the segment heading. */
 int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
 {
-    extern int getAngle(f32 dx, f32 dz); /* #57 */
+    extern int getAngle(f32 dx, f32 dz);
     s32 slotC;
     s32 slot8;
     CheckpointRouteEntry* cp;
@@ -673,15 +673,15 @@ void Checkpoint_release(void)
 {
 }
 
-void Checkpoint_reset(void) { extern u32 gCheckpointRouteCount; /* #57 */ gCheckpointRouteCount = 0x0; }
+void Checkpoint_reset(void) { extern u32 gCheckpointRouteCount; gCheckpointRouteCount = 0x0; }
 
 u32 gCheckpointPartFxListBuffer[0x14];
 
 #pragma scheduling off
 void Checkpoint_initialise(void)
 {
-    extern void* lbl_803DD41C; /* #57 */
-    extern u32 gCheckpointRouteCount; /* #57 */
+    extern void* lbl_803DD41C;
+    extern u32 gCheckpointRouteCount;
     gCheckpointRouteCount = 0;
     lbl_803DD41C = gCheckpointPartFxListBuffer;
     lbl_803DD418 = (void*)((u8*)gCheckpointPartFxListBuffer + 0x28);
@@ -690,7 +690,7 @@ void Checkpoint_initialise(void)
 #pragma peephole off
 void Checkpoint_Add(CheckpointRouteEntry* entry)
 {
-    extern u32 gCheckpointRouteCount; /* #57 */
+    extern u32 gCheckpointRouteCount;
     int i = 0;
     CheckpointSlot* p = gCheckpointRouteTable;
     int count;
@@ -716,7 +716,7 @@ void Checkpoint_Add(CheckpointRouteEntry* entry)
 #pragma opt_common_subs off
 void Checkpoint_remove(CheckpointRouteEntry* obj)
 {
-    extern u32 gCheckpointRouteCount; /* #57 */
+    extern u32 gCheckpointRouteCount;
     int count;
     int i = 0;
     CheckpointSlot* p = gCheckpointRouteTable;
@@ -753,7 +753,7 @@ extern f32 lbl_803E0538;
 #pragma opt_propagation off
 void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
 {
-    extern u32 gCheckpointRouteCount; /* #57 */
+    extern u32 gCheckpointRouteCount;
     int stack[64];
     char visited[200];
     s32 cur;

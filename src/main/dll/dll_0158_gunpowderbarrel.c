@@ -200,9 +200,8 @@ void gunpowderbarrel_render(int* obj, int p2, int p3, int p4, int p5,
     }
 }
 
-/* EN v1.0 0x801A1230  size: 708b  gunpowderbarrel_triggerExplosion: when hit
- * (or touched while resting on a damage source) blow the barrel up, optionally
- * re-saving its position at the owning generator first. */
+/* When hit (or touched while resting on a damage source) blow the barrel up,
+ * optionally re-saving its position at the owning generator first. */
 void gunpowderbarrel_triggerExplosion(int obj)
 {
     u8* sub;
@@ -310,8 +309,7 @@ void gunpowderbarrel_triggerExplosion(int obj)
     }
 }
 
-/* EN v1.0 0x801A14F4  size: 928b  gunpowderbarrel_updatePhysics: gravity,
- * velocity clamps, ground probe + landing sfx, contact handling. */
+/* Gravity, velocity clamps, ground probe + landing sfx, contact handling. */
 void gunpowderbarrel_updatePhysics(int* obj)
 {
     u8* sub;
@@ -588,10 +586,10 @@ copy_end:
     barrel->anim.previousLocalPosZ = barrel->anim.localPosZ;
 }
 
-/* EN v1.0 0x801A25E8  size: 464b  Gunpowder-barrel setup: registers with the
- * carryable interface and obj groups, zeroes the roll/contact state, seeds
- * the hit radius from the model's bound halfword, and latches the
- * indestructible bit for the cannon-range variant (type 0x754). */
+/* Gunpowder-barrel setup: registers with the carryable interface and obj
+ * groups, zeroes the roll/contact state, seeds the hit radius from the
+ * model's bound halfword, and latches the indestructible bit for the
+ * cannon-range variant (type 0x754). */
 void gunpowderbarrel_init(int obj, u8* def)
 {
     GunpowderBarrelState* state = ((GameObject*)obj)->extra;
@@ -639,11 +637,11 @@ void gunpowderbarrel_init(int obj, u8* def)
     }
 }
 
-/* EN v1.0 0x801A1D48  size: 2208b  Gunpowder-barrel per-frame driver: runs
- * the fuse/respawn timers, manages the cannon attach link, drains the
- * held/released message queue, grows the hitbox while the fuse burns and
- * hands the barrel back to its generator, and handles the pickup/steal/toss
- * transitions against the player's carry state. */
+/* Gunpowder-barrel per-frame driver: runs the fuse/respawn timers, manages
+ * the cannon attach link, drains the held/released message queue, grows the
+ * hitbox while the fuse burns and hands the barrel back to its generator,
+ * and handles the pickup/steal/toss transitions against the player's carry
+ * state. */
 void gunpowderbarrel_update(int obj)
 {
     extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
@@ -938,8 +936,7 @@ void gunpowderbarrel_update(int obj)
 
 u32 gunpowderbarrel_isHeld(int* obj) { return (((GunpowderBarrelState*)((GameObject*)obj)->extra)->heldFlags >> 5) & 1; }
 
-/* EN v1.0 0x801A0BDC  size: 56b  gunpowderbarrel_setHeldState: flag the
- * barrel as held, mark obj active, and clear its physics-sleep bit. */
+/* Flag the barrel as held, mark obj active, and clear its physics-sleep bit. */
 void gunpowderbarrel_setHeldState(int* obj)
 {
     GunpowderBarrelState* sub = ((GameObject*)obj)->extra;
@@ -948,9 +945,8 @@ void gunpowderbarrel_setHeldState(int* obj)
     sub->motionFlags = (u8)(sub->motionFlags & ~2);
 }
 
-/* EN v1.0 0x801A0B90  size: 76b  gunpowderbarrel_clearHeldState: zero the
- * barrel's velocity/throw vectors, mark it sleeping, clear obj-active and
- * the held flag. */
+/* Zero the barrel's velocity/throw vectors, mark it sleeping, clear
+ * obj-active and the held flag. */
 void gunpowderbarrel_clearHeldState(int* obj)
 {
     GunpowderBarrelState* sub = ((GameObject*)obj)->extra;
@@ -964,9 +960,8 @@ void gunpowderbarrel_clearHeldState(int* obj)
     ((GpbHeldFlags*)&sub->heldFlags)->held = 0;
 }
 
-/* EN v1.0 0x801A0E04  size: 244b  gunpowderbarrel_setPlayerHeldState: when
- * grabbed by the player, copy the held-pose and enable hit reactions; when
- * released, restore the default pose and clear them. */
+/* When grabbed by the player, copy the held-pose and enable hit reactions;
+ * when released, restore the default pose and clear them. */
 void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
 {
     GunpowderBarrelState* sub;
@@ -1105,10 +1100,9 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
     }
 }
 
-/* EN v1.0 0x801A0F58  size: 728b  gunpowderbarrel_homeOnTarget: home the object on the nearest
- * group-0x1e object above it, scaling velocity and the two heading words by
- * approach rate; on a steep approach play the dive cue and bump the target's
- * cycle phase. */
+/* Home the object on the nearest group-0x1e object above it, scaling
+ * velocity and the two heading words by approach rate; on a steep approach
+ * play the dive cue and bump the target's cycle phase. */
 void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
 {
     f32 dx;

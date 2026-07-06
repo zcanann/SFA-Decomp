@@ -77,13 +77,6 @@ int SB_CloudBall_getExtraSize(void) { return 0x24; }
 int SB_CloudBall_getObjectTypeId(void) { return 0x0; }
 int SB_KyteCage_getExtraSize(void);
 
-/* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
- * splits at wrong addresses; these stubs ensure every asm symbol has a src
- * definition so future hunters can fill bodies one at a time. */
-
-/* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
- * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
-
 void SB_CloudBall_free(GameObject* obj)
 {
     extern void ModelLightStruct_free(int* p);
@@ -235,23 +228,3 @@ void SB_CloudBall_release(void)
 void SB_CloudBall_initialise(void)
 {
 }
-
-
-/* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
- * call ObjLink_DetachChild(obj). */
-
-/* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
- * and obj->_b8[3], stash v in obj->_b8[4]. */
-
-/* EN v1.0 0x801E607C  size: 40b  Increment-and-store: obj->_b8[2] += p3,
- * obj->_b8[3] += p2. */
-
-/* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
- * (sign-extended) into *out_b3, *out_b2, *out_b4. */
-
-/* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
- * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and
- * unset.  (i.e. open by default, gated when slot != -1.) */
-
-/* EN v1.0 0x801E62F0  size: 104b  Returns 1 when shop item's "bought"
- * GameBit (slot at lbl_80327FD0[idx*12 + 8]) is set; else 0. */

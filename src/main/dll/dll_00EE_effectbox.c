@@ -193,8 +193,6 @@ void effectbox_init(int obj, EffectboxPlacement* def)
     ((GameObject*)obj)->objectFlags = flags;
 }
 
-/* gEffectBoxObjDescriptor (.data 0x80320D10) lives in a separate DLL
- * entry TU; this TU owns only the .text callbacks. */
 void effectbox_release(void)
 {
 }

@@ -18,16 +18,6 @@ extern void objfx_spawnDirectionalBurst(u8* obj, int idx, double radius, int kin
 
 int lightning_getExtraSize(void) { return 0x28; }
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* state encode: ((obj->_X)->_Y << shift) | const. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
-
-/* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-
-/* segment pragma-stack balance (re-split): */
-
 typedef struct LightningPlacement
 {
     u8 pad0[0x14 - 0x0];
@@ -50,9 +40,6 @@ void lightning_free(u8* obj, int p2)
         mm_free(handle);
     }
 }
-
-/* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
- * lightningRender(handle). */
 
 void lightning_render(u8* obj)
 {
@@ -244,16 +231,3 @@ void lightning_init(u8* obj, u8* data)
 
     state->countdown = (f32)(s32)((u32)data[0x22] * 0x3c);
 }
-
-/* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
- * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then
- * pick one of two SFX-id pairs based on the range of obj->_4c->_14. */
-
-/* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch
- * on data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
- * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
- * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
-
-/* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
- * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
- * data->_1d: 1 → Sfx_RemoveLoopedObjectSound, else Sfx_StopFromObject. */

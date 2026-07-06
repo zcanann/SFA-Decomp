@@ -398,8 +398,7 @@ void LanternFireFly_initialise(void)
 {
 }
 
-/* Helpers placed last (anti-inline): LanternFireFly_update above calls
- * both via what were extern bls before the re-split. */
+/* Helpers placed last (anti-inline): LanternFireFly_update above calls both. */
 void fn_801868D0(int obj)
 {
     typedef struct

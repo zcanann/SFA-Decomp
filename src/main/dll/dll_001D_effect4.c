@@ -1300,15 +1300,8 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     return spawnResult;
 }
 
-// VERIFY lbl_803DF720 may already exist in modgfx.c
-// VERIFY lbl_803DF724 may already exist in modgfx.c
-// VERIFY lbl_803DF728 may already exist in modgfx.c
-// VERIFY lbl_803DF730 may already exist in modgfx.c
 extern FxNode9 lbl_8039C320;
-/* MtxBuildArg, vecRotateZXY, randFn_80080100, gExpgfxInterface, randomGetRange
-   already declared in modgfx.c. */
 
-/* ===== (2) FILL macro ===== */
 #define FILL320() do {                          \
     lbl_8039C320.posX = 0.0f;             \
     lbl_8039C320.posY = 0.0f;            \

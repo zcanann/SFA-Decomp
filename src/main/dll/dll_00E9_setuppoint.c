@@ -14,8 +14,7 @@
  * extraSize callbacks (the bodies live in their own DLLs).
  *
  * The only real function bodies kept here are the staticcamera callbacks
- * (free/render/init) plus the flamethrowerspe render thunk fn_801719F8,
- * and the GX write-gather FIFO swipe helpers at the tail.
+ * (free/render/init) and the GX write-gather FIFO swipe helpers at the tail.
  */
 #include "main/dll/genprops.h"
 #include "main/dll/genpropswgpipe_struct.h"

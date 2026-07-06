@@ -3,7 +3,6 @@
  * The player holds Z (bit 3) to zoom in and R (bit 2) to zoom out;
  * the C-stick pans yaw/pitch; pressing B (bit 1) exits back to the
  * default camcontrol action (0x42).  Orbit radius is spring-damped.
- * CameraModeStatic symbols at the end are co-linked with this DLL.
  */
 #include "main/camera_interface.h"
 #include "main/camera_object.h"

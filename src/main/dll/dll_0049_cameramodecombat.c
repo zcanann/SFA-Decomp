@@ -142,7 +142,7 @@ void CameraModeCombat_free(CameraObject* camera)
 #pragma opt_common_subs off
 void CameraModeCombat_update(short* cam)
 {
-    extern void fn_8010BF08(CameraObject* camera, f32* dx, f32* dy, f32* dz, f32* ty); /* #57 */
+    extern void fn_8010BF08(CameraObject* camera, f32* dx, f32* dy, f32* dz, f32* ty);
     f32 vec[3];
     f32 prevZ;
     f32 prevY;

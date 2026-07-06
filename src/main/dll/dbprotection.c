@@ -1,7 +1,7 @@
 /*
  * dbprotection - galleon damage-phase + boss handlers for the SB_Galleon boss.
  * Runs on the SB_Galleon object (extra == SBGalleonState) alongside the
- * SB_Galleon handlers in DBstealerworm.c.
+ * SB_Galleon handlers in dll_01E8_sbgalleon.c.
  *
  * fn_801DFA28 is the per-step movement/flight driver: it locates the
  * "tricky" target object (seqId 0x8C), runs the wander/drift bob in phase

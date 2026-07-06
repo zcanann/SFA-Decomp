@@ -424,7 +424,7 @@ extern void textRenderSetupFn_80079804(void);
 extern void gxBlendFn_80078b4c(void);
 extern void drawFn_8005cf8c(void* a, void* b, int count);
 
-/* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
+/* Per-bone particle vertex update + draw. */
 
 extern const f32 lbl_803DF438;
 
@@ -603,8 +603,7 @@ void fn_800A081C(int state, int cmd, int mode)
     }
 }
 
-/* EN v1.0 0x800A09C4  size: 240b  modgfx_stepS16VectorLerp: integer-vector lerp setup.
- * On mode 1, snap or step-interpolate the rotation offset triple
+/* Integer-vector lerp setup. On mode 1, snap or step-interpolate the rotation offset triple
  * toward the rounded params, then advance it by the per-step delta. */
 void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
 {
@@ -637,8 +636,8 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
     ((ModgfxState*)obj)->rotOffsetX += ((ModgfxState*)obj)->rotStepX;
 }
 
-/* EN v1.0 0x800A113C  size: 276b  dll_0B_func0E: flag every active effect
- * whose owner object has the 0x800 state bit by setting its byte _13e. */
+/* Flag every active effect whose owner object has the 0x800 state bit
+ * by setting its frameUpdated flag. */
 void dll_0B_func0E(void)
 {
     PartfxEffectState* effect;
@@ -1669,7 +1668,7 @@ void dll_0B_func05(void)
     BoneSpawnData tmpl;
     int objCount;
     int objIdx;
-    extern int randomGetRange(int min, int max); /* #57 signed-return override */
+    extern int randomGetRange(int min, int max);
 
     emIdx = 0;
     gExpgfxUpdatingActivePools = 2;

@@ -107,8 +107,6 @@ int fn_8027A660(int state)
 
 /*
  * Reset state's submode and call fn_8027A660.
- *
- * EN v1.1 Address: 0x8027A8D4, size 40b
  */
 int adsrSetup(int state)
 {

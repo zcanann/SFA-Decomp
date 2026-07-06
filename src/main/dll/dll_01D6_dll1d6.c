@@ -50,30 +50,11 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-/* dimwooddoor2 variant: trigger-init that loads a different float
- * (lbl_803E49F0) into the extra block's [4]. */
-
-/* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
- * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
- * when GameBit 0x1ef is on and the player's emission controller is lingering,
- * latch GameBit 0x1e8. */
-
-/* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
- * and using mask 0x6000 + initial state byte 3 at +0. */
-
-/* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
- * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
 extern u8 framesThisStep;
-
-/* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
- * every 16 frames, and ramp each active slot's alpha toward full; then update
- * the animated bridge mesh. */
 
 extern f32 timeDelta;
 
 FbWGPipe GXWGFifo : (0xCC008000);
-
-/* segment pragma-stack balance (re-split): */
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
@@ -155,9 +136,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A78);
 }
 
-
-/* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
- * return 1 if the signed result dropped to or below 0. */
 
 void dll_1D6_free(int* obj)
 {

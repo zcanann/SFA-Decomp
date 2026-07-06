@@ -1,13 +1,6 @@
 /* DLL — collectible objects [80173224-801732A4) */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/magicgemstate_struct.h"
-/* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICGEM family; the
- * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
- * verified). File rename parked as a repo-owner proposal. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-fn(lbl) (no visibility check). */
 
 #include "main/obj_placement.h"
 #include "main/dll/pushable.h"

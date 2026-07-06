@@ -145,7 +145,6 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 {
     extern f32 sqrtf(f32); /* #57 */
- /* #57 */
     f32 z2, y2, x2, z, y, x;
     u8 hitEdge;
     s16 angle;
@@ -205,7 +204,6 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 int grimble_stateHandlerA00(int obj, char* state, f32 arg)
 {
     extern f32 sqrtf(f32); /* #57 */
- /* #57 */
     u16 zone;
     u16 pad;
     u16 dist;

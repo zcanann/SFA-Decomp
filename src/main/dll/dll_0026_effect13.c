@@ -441,9 +441,6 @@ extern WaterfxCfg gEffect13DefaultSplashParams;
 
 #pragma dont_inline off
 
-/* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
- * NOTE: stuck at ~78% ? instruction scheduling differs. */
-
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
  * the consumer-side definition of this 0x64-byte spawn request consumed by

@@ -96,7 +96,6 @@ extern void CameraModeTestStrength_initialise(void);
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
 extern int dll_19_func1B(int p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
 extern f32 fn_8014C5D0(register int obj); /* target reticle distance for the enemy objType group */
- /* target reticle distance for the largecrate objType group */
 extern f32 sqrtf(f32 x);
 u8 gCamcontrolStateStorage[0x148];
 extern CamcontrolBaddieControlInterface** gBaddieControlInterface;

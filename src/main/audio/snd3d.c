@@ -215,11 +215,6 @@ void s3dHandle(void)
 
 /*
  * Reset 3D sound bookkeeping and store a stereo flag.
- *
- * EN v1.0 Address: 0x80280BD8
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x80280FFC
- * EN v1.1 Size: 68b
  */
 #pragma dont_inline on
 void s3dInit(u32 flags)
@@ -239,8 +234,6 @@ void s3dInit(u32 flags)
 
 /*
  * Empty stub.
- *
- * EN v1.1 Address: 0x80281040
  */
 void s3dExit(void)
 {
@@ -250,11 +243,6 @@ void s3dExit(void)
  * Sound init: clamps voice/stream counts, calls hwInit, then walks
  * a chain of subsystem inits if hwInit succeeded; sets the
  * gSynthInitialized flag last.
- *
- * EN v1.0 Address: 0x80280BDC
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x80281044
- * EN v1.1 Size: 280b
  */
 int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void* data)
 {

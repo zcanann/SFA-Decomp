@@ -286,8 +286,3 @@ void Door_init(int* obj, u8* def)
     }
 }
 
-/* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
- * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
- * its GameBit, compare against the def[0x30] mask bit for that slot, and
- * if the polarity flips (GameBit != mask bit) end the current sequence.
- * Always latches state[1] bit 0 before returning 0. */

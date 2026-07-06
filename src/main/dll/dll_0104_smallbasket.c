@@ -7,13 +7,13 @@
  * (0x3cf -> 0x60, 0x662 -> 0x37d, otherwise 0x4a).
  *
  * smallbasket_update drives the lifecycle: a respawn countdown
- * (CfperchState.unk12) that scatters basket contents and warps the object
+ * (CfperchState.respawnTimer) that scatters basket contents and warps the object
  * back to its placement, fade-in via anim.alpha, the carry/throw state
- * machine on unk5/unk9 (A-button grab, charged vs. normal throw via the
+ * machine on carryState/throwState (A-button grab, charged vs. normal throw via the
  * player query helpers fn_80295BF0/fn_8029669C/fn_802966B4), in-flight
  * physics integration calling smallbasket_resolveCollision each step for swept-sphere
- * ground/wall collision, leash to the placement origin (unkC range), and
- * the periodic ambient sfx (0x6c/0x6d) keyed on the object subtype unk1E.
+ * ground/wall collision, leash to the placement origin (leashRange), and
+ * the periodic ambient sfx (0x6c/0x6d) keyed on the object subtype.
  *
  * fn_801816F8 spawns the basket "contents" on break/throw: it dispatches on
  * the contents mode (data+0x1e, or a health-weighted random roll when 7),
@@ -80,8 +80,8 @@ typedef struct SmallBasketThrowSetup
     s16 field2C;         /* 0x2C init -1 */
 } SmallBasketThrowSetup;
 
-/* mirrors CfperchState for the fields used here, but unk6/unk9 are s8 (not u8)
-   - the sign-checked reads in smallbasket_update treat them as signed. */
+/* CfperchState's carryAttached/throwState fields are u8 in the header, but the
+   sign-checked reads in smallbasket_update treat them as signed (s8). */
 /* engine/runtime symbols (game bits, object spawn/group, hit-detect, sky,
    player query) and this object's tuning floats (lbl_803Exxxx) - no home
    header in the import skeleton; declared locally. */

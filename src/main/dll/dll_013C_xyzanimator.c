@@ -93,8 +93,8 @@ typedef struct EdgeVerts
 #pragma opt_lifetimes off
 void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block)
 {
-    extern u32 mapBlockFn_80060678(int* block); /* #57 */
-    extern void* mapBlockFn_800606ec(int* obj, int idx); /* #57 */
+    extern u32 mapBlockFn_80060678(int* block);
+    extern void* mapBlockFn_800606ec(int* obj, int idx);
     int edgeOffset[1];
     int coordOffset[1];
     int triangleOffset[1];
@@ -166,8 +166,8 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
 #pragma opt_dead_assignments off
 void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
 {
-    extern u32 mapBlockFn_80060678(int* block); /* #57 */
-    extern void* mapBlockFn_800606ec(int* obj, int idx); /* #57 */
+    extern u32 mapBlockFn_80060678(int* block);
+    extern void* mapBlockFn_800606ec(int* obj, int idx);
     VertexS16* vtx;
     int vertexOffset[1];
     int edgeData;
@@ -259,8 +259,8 @@ int xyzanimator_getExtraSize(void)
 
 void xyzanimator_free(int obj, int flag)
 {
-    extern int mapGetBlock(int blockIdx); /* #57 */
-    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
+    extern int mapGetBlock(int blockIdx);
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     int block;
     XyzAnimatorState* state;
     XyzAnimatorPlacement* setup;
@@ -298,12 +298,12 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void xyzanimator_update(int obj)
 {
-    extern void fn_80194C40(u8* setup, u8* state, int block); /* #57 */
-    extern void fn_80194964(u8* setup, u8* state, int block); /* #57 */
-    extern int mapBlockFn_80060678(void); /* #57 */
-    extern u8* mapBlockFn_800606ec(int block, int idx); /* #57 */
-    extern int* mapGetBlock(int idx); /* #57 */
-    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
+    extern void fn_80194C40(u8* setup, u8* state, int block);
+    extern void fn_80194964(u8* setup, u8* state, int block);
+    extern int mapBlockFn_80060678(void);
+    extern u8* mapBlockFn_800606ec(int block, int idx);
+    extern int* mapGetBlock(int idx);
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
     u8* state = ((GameObject*)obj)->extra;
     int block;

@@ -285,10 +285,6 @@ void OSInit(void)
         OSReport("Kernel built : %s %s\n", "Jun  5 2002", "02:09:12");
         OSReport("Console Type : ");
 
-        // inputConsoleType = OSGetConsoleType();
-
-        // inputConsoleType = (BootInfo == NULL || (inputConsoleType = BootInfo->consoleType) == 0) ?
-        // 0x10000002 : BootInfo->consoleType;
         if (BootInfo == NULL || (inputConsoleType = BootInfo->consoleType) == 0) {
             inputConsoleType = OS_CONSOLE_ARTHUR; // default console type
         }
@@ -297,7 +293,6 @@ void OSInit(void)
         }
 
         // work out what console type this corresponds to and report it
-        // consoleTypeSwitchHi = inputConsoleType & 0xF0000000;
         inputConsoleType = OSGetConsoleType();
         if ((inputConsoleType & 0x10000000) == OS_CONSOLE_RETAIL) { // check "first" byte
             OSReport("Retail %d\n", inputConsoleType);

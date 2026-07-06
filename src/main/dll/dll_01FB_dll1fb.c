@@ -41,10 +41,6 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/game_object.h"
 #include "main/objlib.h"

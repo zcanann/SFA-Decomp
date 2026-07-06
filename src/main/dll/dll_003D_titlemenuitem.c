@@ -72,13 +72,11 @@ void TitleMenuItem_setVal(TitleMenuItem* item, int val)
     item->frameDelay = 2;
 }
 
-/* EN v1.0 0x80131590  size: 8b   Getter for item->value. */
 s16 TitleMenuItem_getVal(TitleMenuItem* item)
 {
     return item->value;
 }
 
-/* EN v1.0 0x80131598  size: 116b  Toggle enabled bit on item->flags. */
 void TitleMenuItem_setEnabled(TitleMenuItem* item, int flag)
 {
     if (flag != 0)
@@ -96,13 +94,11 @@ void TitleMenuItem_setEnabled(TitleMenuItem* item, int flag)
     }
 }
 
-/* EN v1.0 0x8013160C  size: 12b  Read enabled bit from item->flags. */
 int TitleMenuItem_isEnabled(TitleMenuItem* item)
 {
     return item->flags & TITLE_MENU_FLAG_ENABLED;
 }
 
-/* EN v1.0 0x80131618  size: 808b  Render title menu item. */
 void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
 {
     void* texture;
@@ -175,7 +171,6 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     }
 }
 
-/* EN v1.0 0x80131940  size: 948b  Update title menu item input state. */
 void TitleMenuItem_update(TitleMenuItem* item)
 {
     s16 oldValue;
@@ -324,13 +319,11 @@ void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
     }
 }
 
-/* EN v1.0 0x80131CF4  size: 32b  Wrapper for mm_free. */
 void TitleMenuItem_free(void)
 {
     mm_free();
 }
 
-/* EN v1.0 0x80131FE0  size: 40b  Zero 6 u32s at lbl_803A9DB8. */
 void TitleMenuItem_initialise(void)
 {
     void** slots = lbl_803A9DB8;
@@ -342,7 +335,6 @@ void TitleMenuItem_initialise(void)
     slots[5] = NULL;
 }
 
-/* EN v1.0 0x80131D14  size: 168b  Create text-window title menu item. */
 TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 minValue,
                                               s16 maxValue, s16 value)
 {
@@ -369,7 +361,6 @@ TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 mi
     return item;
 }
 
-/* EN v1.0 0x80131DBC  size: 164b  Create simple title menu item. */
 TitleMenuItem* TitleMenuItem_create(s16 x, s16 y, s16 minValue, s16 maxValue, s16 value)
 {
     TitleMenuItem* item;
@@ -395,7 +386,6 @@ TitleMenuItem* TitleMenuItem_create(s16 x, s16 y, s16 minValue, s16 maxValue, s1
     return item;
 }
 
-/* EN v1.0 0x80131E60  size: 172b  Create text-backed title menu item. */
 TitleMenuItem* TitleMenuItem_createWithText(s16 x, s16 y, s16 minValue, s16 maxValue,
                                             s16 value, int textId)
 {

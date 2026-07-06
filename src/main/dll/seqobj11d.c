@@ -14,8 +14,8 @@
  * fn_80151C68 is a pay-to-trigger interaction (spends 25 money, sets a
  * placement game bit, runs object trigger sequences). fn_80151DB8 pushes
  * the player out of a cylinder around the object. fn_80152004 plays a dirt
- * step sfx and sets a reaction flag. FUN_80151844 (still referenced by the
- * wisp baddie DLL) is a shared variant of the sequence stepper.
+ * step sfx and sets a reaction flag. fn_801513AC is also referenced
+ * directly by the wisp baddie DLL.
  */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"

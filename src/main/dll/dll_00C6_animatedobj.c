@@ -726,7 +726,7 @@ void StaticCamera_init(int* obj, int* params, int flag);
 
 void animatedobj_free(int* obj, int seqFlag)
 {
-    extern void Obj_FreeObject(u8* obj); /* #57 */
+    extern void Obj_FreeObject(u8* obj);
     (*gObjectTriggerInterface)
         ->freeState(((GameObject*)obj)->extra);
     ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
@@ -798,7 +798,7 @@ void mikabomb_init(int* obj);
 #pragma opt_loop_invariants on
 void animatedobj_update(int* obj)
 {
-    extern void Obj_FreeObject(u8* obj); /* #57 */
+    extern void Obj_FreeObject(u8* obj);
     ObjSeqState* seq = ((GameObject*)obj)->extra;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
