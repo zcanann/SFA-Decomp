@@ -1,24 +1,8 @@
 /*
- * dll6ffunc0 (DLL 0x6F) - shared save-game / world-progress core lib.
- *
- * Owns the gameplay save-state helpers exported through gameplay.h:
- *   - debug-cheat unlock bits (saveFileStruct_unlockCheat / isCheatUnlocked)
- *     packed into gGameplayRegisteredDebugOptions.
- *   - preview color/volume defaults (saveFileStruct_resetVolumes, 0x7f each).
- *   - the save-settings apply path (loadSaveSettings) and the per-map act /
- *     object-position fix-up (FUN_800e8630).
- *   - FUN_800e95e8: the map-act flag setter that mirrors a flag bit across the
- *     map-act table and maintains the recently-changed history ring.
- *   - FUN_800e8f58 / FUN_800e9e9c: new-game / save-slot setup, seeding the
- *     map-act table and the save block.
- *   - FUN_800ea9b8: the visited-map history ring (most-recent-first, depth 5).
- *   - dll_6F_func03: builds a 32-entry modgfx command list (the spirit/aura
- *     particle effect) and submits it via gModgfxInterface->spawnEffect.
- *
- * The map-act / flag tables live at 0x803a3f08.. and 0x80312460..; the visited
- * history ring at 0x803a3be0. Bit indices are split into (word,bit) by the
- * 0x12f flag-word base. These globals are cross-TU; only this DLL writes the
- * debug-option and preview-color globals.
+ * dll6ffunc0 (DLL 0x6F, foodbag family, func03 slot): dll_6F_func03 builds a
+ * 32-entry modgfx command list (the spirit/aura particle effect) and submits
+ * it via gModgfxInterface->spawnEffect. func00/func01 are the DLL's empty
+ * entry-point slots.
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -38,27 +22,6 @@ typedef struct GfxCmd
 
 extern ModgfxInterface** gModgfxInterface;
 
-/* Cross-TU main-lib functions and globals this DLL references (home TUs
-   un-recovered; left as Ghidra FUN_/DAT_ names). */
-
-extern u32 FUN_80006768();
-extern u32 FUN_8000676c();
-extern u32 FUN_80006c20();
-extern u32 FUN_80017500();
-extern u32 FUN_8005d018();
-extern u8 gGameplayPreviewSettings;
-extern u32 DAT_803a3e26;
-extern u32 DAT_803a3e27;
-extern u32 DAT_803a3e28;
-extern u32 DAT_803a3e2a;
-extern u32 DAT_803a3e2c;
-extern u32 DAT_803a3e2d;
-extern u32 gGameplayPreviewColorRed;
-extern u32 gGameplayPreviewColorGreen;
-extern u32 gGameplayPreviewColorBlue;
-extern u32 gGameplayRegisteredDebugOptions;
-extern u32* DAT_803dd6d0;
-extern u32* DAT_803dd6e8;
 extern u8 gDll6FGfxCmdResourceTable[];
 extern u8 gDll6FGfxCmdTexture;
 extern f32 lbl_803E0AB8;
@@ -76,58 +39,6 @@ extern f32 lbl_803E0AE4;
 extern f32 lbl_803E0AE8;
 extern f32 lbl_803E0AEC;
 extern f32 lbl_803E0AF0;
-
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
-void saveFileStruct_unlockCheat(u32 cheatId)
-{
-    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
-}
-
-u32 isCheatUnlocked(u32 cheatId)
-{
-    return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
-}
-
-void saveFileStruct_resetVolumes(void)
-{
-    gGameplayPreviewColorRed = 0x7f;
-    gGameplayPreviewColorGreen = 0x7f;
-    gGameplayPreviewColorBlue = 0x7f;
-}
-
-u8* getSaveFileStruct(void)
-{
-    return &gGameplayPreviewSettings;
-}
-
-void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
-                      u64 arg5, u64 arg6, u64 arg7,
-                      u64 arg8)
-{
-    FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, DAT_803a3e26);
-    FUN_80006c20(DAT_803a3e2c);
-    FUN_80006768(DAT_803a3e2d, '\0');
-    (**(VtableFn**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
-    (**(VtableFn**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
-    return;
-}
-
-void dll_6F_func01_nop(void)
-{
-}
-
-void dll_6F_func00_nop(void)
-{
-}
 
 void dll_6F_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
@@ -404,6 +315,14 @@ void dll_6F_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x18, (u8*)(int)gDll6FGfxCmdResourceTable, 0x10, &base[240], 0x48, 0);
+}
+
+void dll_6F_func01_nop(void)
+{
+}
+
+void dll_6F_func00_nop(void)
+{
 }
 
 u8 gDll6FGfxCmdResourceTable[440] = {
