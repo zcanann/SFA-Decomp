@@ -231,14 +231,14 @@ int arwarwing_getCollectedRingCount(int arwing)
 void arwarwing_addScore(int arwing, u8 amount)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    int v;
+    int clamped;
     state->score += amount;
-    v = state->score;
-    if ((u32)v > 0x270f)
+    clamped = state->score;
+    if ((u32)clamped > 0x270f)
     {
-        v = 0x270f;
+        clamped = 0x270f;
     }
-    state->score = v;
+    state->score = clamped;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -247,12 +247,12 @@ void arwarwing_addScore(int arwing, u8 amount)
 int arwarwing_getScore(int arwing)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    int v = state->score;
-    if ((u32)v > 0x270f)
+    int clamped = state->score;
+    if ((u32)clamped > 0x270f)
     {
-        v = 0x270f;
+        clamped = 0x270f;
     }
-    state->score = v;
+    state->score = clamped;
     return state->score;
 }
 #pragma peephole reset
@@ -287,16 +287,16 @@ int arwarwing_incrementPickup6D8Count(int arwing)
 int arwarwing_incrementCollectedRingCount(int arwing)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    int v;
+    int clamped;
     if (state->collectedRings == 9)
     {
         state->score += 0x64;
-        v = state->score;
-        if ((u32)v > 0x270f)
+        clamped = state->score;
+        if ((u32)clamped > 0x270f)
         {
-            v = 0x270f;
+            clamped = 0x270f;
         }
-        state->score = v;
+        state->score = clamped;
     }
     return (state->collectedRings)++;
 }
@@ -314,18 +314,18 @@ void arwarwing_addMaxHealth(int arwing, int amount)
 void arwarwing_addHealth(int arwing, int amount)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    int v;
+    int clamped;
 
     *(s8*)&state->health = state->health + amount;
     if (*(s8*)&state->health < 0)
     {
-        v = 0;
+        clamped = 0;
     }
     else
     {
-        v = (*(s8*)&state->health > *(s8*)&state->maxHealth) ? *(s8*)&state->maxHealth : *(s8*)&state->health;
+        clamped = (*(s8*)&state->health > *(s8*)&state->maxHealth) ? *(s8*)&state->maxHealth : *(s8*)&state->health;
     }
-    *(s8*)&state->health = v;
+    *(s8*)&state->health = clamped;
     if (*(s8*)&state->health > 3)
     {
         Sfx_StopObjectChannel(arwing, 4);
@@ -468,8 +468,8 @@ void arwarwing_update(int obj)
     s16 camRot[3];
     f32 camPos[2];
     u8 mode;
-    s16 p;
-    f32 t;
+    s16 wingRot;
+    f32 timer;
     f32 throttle;
     int vv;
 
@@ -481,9 +481,9 @@ void arwarwing_update(int obj)
     mode = ((ArwingState*)state)->mode;
     if (mode == ARWING_MODE_EXPLODE)
     {
-        t = ((ArwingState*)state)->modeTimer - timeDelta;
-        ((ArwingState*)state)->modeTimer = t;
-        if (t <= lbl_803E6ECC)
+        timer = ((ArwingState*)state)->modeTimer - timeDelta;
+        ((ArwingState*)state)->modeTimer = timer;
+        if (timer <= lbl_803E6ECC)
         {
             ((ArwingState*)state)->mode = ARWING_MODE_WARPOUT;
             (*gScreenTransitionInterface)->start(0x14, 1);
@@ -493,9 +493,9 @@ void arwarwing_update(int obj)
     }
     if (mode == ARWING_MODE_WARPOUT)
     {
-        t = ((ArwingState*)state)->modeTimer - timeDelta;
-        ((ArwingState*)state)->modeTimer = t;
-        if (t <= lbl_803E6ECC)
+        timer = ((ArwingState*)state)->modeTimer - timeDelta;
+        ((ArwingState*)state)->modeTimer = timer;
+        if (timer <= lbl_803E6ECC)
         {
             if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
             {
@@ -513,9 +513,9 @@ void arwarwing_update(int obj)
     }
     if (mode == ARWING_MODE_DEAD)
     {
-        t = ((ArwingState*)state)->modeTimer - timeDelta;
-        ((ArwingState*)state)->modeTimer = t;
-        if (t <= lbl_803E6ECC)
+        timer = ((ArwingState*)state)->modeTimer - timeDelta;
+        ((ArwingState*)state)->modeTimer = timer;
+        if (timer <= lbl_803E6ECC)
         {
             ((ArwingState*)state)->mode = ARWING_MODE_EXPLODE;
             ((ArwingState*)state)->modeTimer = gArwingExplodeModeTime;
@@ -574,37 +574,37 @@ void arwarwing_update(int obj)
             (s16)((f32)(-((ArwingState*)state)->rotZCur) * ((ArwingState*)state)->wingFlexScale);
         *(s16*)(((ArwingState*)state)->wingVec[1] + 4) =
             (s16)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
-        p = (s16)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
-        *(s16*)(((ArwingState*)state)->wingVec[2] + 4) = p;
-        *(s16*)(((ArwingState*)state)->wingVec[2] + 0) = p;
-        p = (s16)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
-        *(s16*)(((ArwingState*)state)->wingVec[3] + 4) = p;
-        *(s16*)(((ArwingState*)state)->wingVec[3] + 0) = p;
+        wingRot = (s16)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
+        *(s16*)(((ArwingState*)state)->wingVec[2] + 4) = wingRot;
+        *(s16*)(((ArwingState*)state)->wingVec[2] + 0) = wingRot;
+        wingRot = (s16)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
+        *(s16*)(((ArwingState*)state)->wingVec[3] + 4) = wingRot;
+        *(s16*)(((ArwingState*)state)->wingVec[3] + 0) = wingRot;
 
-        p = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+        wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
                   (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 0));
-        *(s16*)(((ArwingState*)state)->wingVec[0] + 0) = p;
-        p = (s16)((f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale +
+        *(s16*)(((ArwingState*)state)->wingVec[0] + 0) = wingRot;
+        wingRot = (s16)((f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale +
                   (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 4));
-        *(s16*)(((ArwingState*)state)->wingVec[0] + 4) = p;
-        p = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+        *(s16*)(((ArwingState*)state)->wingVec[0] + 4) = wingRot;
+        wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
                   (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 0));
-        *(s16*)(((ArwingState*)state)->wingVec[1] + 0) = p;
-        p = (s16)((f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale +
+        *(s16*)(((ArwingState*)state)->wingVec[1] + 0) = wingRot;
+        wingRot = (s16)((f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale +
                   (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 4));
-        *(s16*)(((ArwingState*)state)->wingVec[1] + 4) = p;
-        p = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+        *(s16*)(((ArwingState*)state)->wingVec[1] + 4) = wingRot;
+        wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
                   (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 0));
-        *(s16*)(((ArwingState*)state)->wingVec[2] + 0) = p;
-        p = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+        *(s16*)(((ArwingState*)state)->wingVec[2] + 0) = wingRot;
+        wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
                   (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 4));
-        *(s16*)(((ArwingState*)state)->wingVec[2] + 4) = p;
-        p = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+        *(s16*)(((ArwingState*)state)->wingVec[2] + 4) = wingRot;
+        wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
                   (f32) * (s16*)(((ArwingState*)state)->wingVec[3] + 0));
-        *(s16*)(((ArwingState*)state)->wingVec[3] + 0) = p;
-        p = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+        *(s16*)(((ArwingState*)state)->wingVec[3] + 0) = wingRot;
+        wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
                   (f32) * (s16*)((vv = ((ArwingState*)state)->wingVec[3]) + 4));
-        *(s16*)(vv + 4) = p;
+        *(s16*)(vv + 4) = wingRot;
     }
 
     arwarwing_updateRollAndEngine(obj, state);
@@ -826,13 +826,13 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 
     if ((u32)vec != 0)
     {
-        s16 n;
+        s16 flex;
         ((ArwingState*)state)->wingFlexCur +=
             lbl_803E6EF8 * (((ArwingState*)state)->wingFlexTarget - ((ArwingState*)state)->wingFlexCur);
-        n = (s16)((ArwingState*)state)->wingFlexCur;
-        *(s16*)(vec + 0xa) = n;
-        *(s16*)(vec + 0x8) = n;
-        *(s16*)(vec + 0x6) = n;
+        flex = (s16)((ArwingState*)state)->wingFlexCur;
+        *(s16*)(vec + 0xa) = flex;
+        *(s16*)(vec + 0x8) = flex;
+        *(s16*)(vec + 0x6) = flex;
     }
 }
 #pragma scheduling reset
@@ -1272,15 +1272,15 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             if (Obj_IsLoadingLocked())
             {
                 int setup = Obj_AllocObjectSetup(0x24, 0x608);
-                int o;
+                int loaded;
                 ((ArwArwingProjectileSetup*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ArwArwingProjectileSetup*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
                 ((ArwArwingProjectileSetup*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
                 ((ArwArwingProjectileSetup*)setup)->field04 = 1;
                 ((ArwArwingProjectileSetup*)setup)->field05 = 1;
-                o = ((int(*)(int,int))loadObjectAtObject)(obj, setup);
-                if ((void*)o != 0)
-                    fn_8022F558(o, 0x12c);
+                loaded = ((int(*)(int,int))loadObjectAtObject)(obj, setup);
+                if ((void*)loaded != 0)
+                    fn_8022F558(loaded, 0x12c);
             }
             break;
         case 0xb:
