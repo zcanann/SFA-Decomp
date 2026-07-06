@@ -71,8 +71,8 @@ extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32
 int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int msg;
-    int v;
-    int w = 0;
+    int sender;
+    int param = 0;
     CfPrisonCageMapData* data = (CfPrisonCageMapData*)((GameObject*)obj)->anim.placement;
     if (GameBit_Get(data->openedBit) != 0)
     {
@@ -84,7 +84,7 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         return 0;
     }
-    while (ObjMsg_Pop(obj, &msg, &v, &w) != 0)
+    while (ObjMsg_Pop(obj, &msg, &sender, &param) != 0)
     {
         switch (msg)
         {
@@ -129,8 +129,8 @@ void cfprisoncage_free(void)
 
 void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E42B0);
+    s32 isVisible = visible;
+    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E42B0);
 }
 
 void cfprisoncage_hitDetect(int* obj)
@@ -144,18 +144,18 @@ void cfprisoncage_hitDetect(int* obj)
 
 void cfprisoncage_update(int* obj)
 {
-    int v;
+    int seqIndex;
     if (((GameObject*)obj)->unkF4 != 0)
     {
         switch (((GameObject*)obj)->anim.seqId)
         {
-        case CFPRISONCAGE_TYPE_CAGE: v = 0;
+        case CFPRISONCAGE_TYPE_CAGE: seqIndex = 0;
             break;
         case CFPRISONCAGE_TYPE_SWITCH:
-        default: v = 1;
+        default: seqIndex = 1;
             break;
         }
-        (*gObjectTriggerInterface)->runSequence(v, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(seqIndex, obj, -1);
         ((GameObject*)obj)->unkF4 = 0;
     }
 }
