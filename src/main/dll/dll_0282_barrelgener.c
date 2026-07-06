@@ -146,7 +146,7 @@ void barrelgener_update(int obj)
 }
 
 #pragma optimization_level 2
-void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 c)
+void Obj_SteerVelocityTowardVector(int out, f32* currentVel, f32* desiredDir, f32 maxSpeed, f32 maxSpeedDelta, f32 maxTurnAngle)
 {
     f32 mtx[12];
     f32 n1[3];
@@ -156,13 +156,13 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
     int gt;
     f64 gtf;
 
-    mag1 = PSVECMag(v1);
+    mag1 = PSVECMag(currentVel);
     if (mag1 > lbl_803E6C38)
     {
         f32 inv = lbl_803E6C6C / mag1;
-        n1[0] = v1[0] * inv;
-        n1[1] = v1[1] * inv;
-        n1[2] = v1[2] * inv;
+        n1[0] = currentVel[0] * inv;
+        n1[1] = currentVel[1] * inv;
+        n1[2] = currentVel[2] * inv;
         PSVECNormalize(n1, n1);
     }
     else
@@ -171,13 +171,13 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
         n1[1] = lbl_803E6C38;
         n1[2] = lbl_803E6C38;
     }
-    mag2 = PSVECMag(v2);
+    mag2 = PSVECMag(desiredDir);
     if (mag2 > lbl_803E6C38)
     {
         f32 inv = lbl_803E6C6C / mag2;
-        n2[0] = v2[0] * inv;
-        n2[1] = v2[1] * inv;
-        n2[2] = v2[2] * inv;
+        n2[0] = desiredDir[0] * inv;
+        n2[1] = desiredDir[1] * inv;
+        n2[2] = desiredDir[2] * inv;
     }
     else
     {
@@ -189,83 +189,83 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
     if (PSVECMag(cross) > lbl_803E6C38)
     {
         ang = fn_80291FF4(PSVECDotProduct(n1, n2));
-        gt = (ang > c);
+        gt = (ang > maxTurnAngle);
         gtf = __fabs((f32)gt);
         if (gtf != lbl_803E6C38)
         {
-            PSMTXRotAxisRad(mtx, cross, c * (ang > lbl_803E6C38 ? lbl_803E6C6C : lbl_803E6C70));
+            PSMTXRotAxisRad(mtx, cross, maxTurnAngle * (ang > lbl_803E6C38 ? lbl_803E6C6C : lbl_803E6C70));
             PSMTXMultVecSR(mtx, n1, n2);
         }
     }
     t = mag2 * lbl_803E6C74;
-    if (t > mag1 + b)
-        t = mag1 + b;
-    else if (t < mag1 - b)
-        t = mag1 - b;
-    if (t > a)
-        t = a;
+    if (t > mag1 + maxSpeedDelta)
+        t = mag1 + maxSpeedDelta;
+    else if (t < mag1 - maxSpeedDelta)
+        t = mag1 - maxSpeedDelta;
+    if (t > maxSpeed)
+        t = maxSpeed;
     ((GameObject*)out)->anim.velocityX = n2[0] * t;
     ((GameObject*)out)->anim.velocityY = n2[1] * t;
     ((GameObject*)out)->anim.velocityZ = n2[2] * t;
 }
 #pragma optimization_level reset
 
-int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c, int flag)
+int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 advanceStep, f32 arriveRadius, f32 speed, int flag)
 {
     int result;
-    f32 d[3];
+    f32 delta[3];
     f32 dist, ang;
 
     result = 0;
-    d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-    d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
-    dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
-    if (dist < b)
+    delta[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
+    delta[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+    dist = sqrtf(delta[0] * delta[0] + delta[2] * delta[2]);
+    if (dist < arriveRadius)
     {
-        if (Curve_AdvanceAlongPath((RomCurveWalker*)routePtr, a) != 0 || ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath((RomCurveWalker*)routePtr, advanceStep) != 0 || ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint((RomCurveWalker*)routePtr) != 0)
                 result = -1;
             else
                 result = *(s8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
         }
-        c = lbl_803E6C78 * a;
+        speed = lbl_803E6C78 * advanceStep;
     }
-    d[0] = ((RomCurveWalker*)routePtr)->posX - ((GameObject*)obj)->anim.localPosX;
-    d[1] = ((RomCurveWalker*)routePtr)->posY - ((GameObject*)obj)->anim.localPosY;
-    d[2] = ((RomCurveWalker*)routePtr)->posZ - ((GameObject*)obj)->anim.localPosZ;
+    delta[0] = ((RomCurveWalker*)routePtr)->posX - ((GameObject*)obj)->anim.localPosX;
+    delta[1] = ((RomCurveWalker*)routePtr)->posY - ((GameObject*)obj)->anim.localPosY;
+    delta[2] = ((RomCurveWalker*)routePtr)->posZ - ((GameObject*)obj)->anim.localPosZ;
     if ((u8)flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
         s16 raw;
-        d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-        d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
-        raw = (s16)getAngle(d[0], d[2]);
+        delta[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
+        delta[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+        raw = (s16)getAngle(delta[0], delta[2]);
         ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velZ = c * -mathSinf(ang);
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velX = c * -mathCosf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velZ = speed * -mathSinf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velX = speed * -mathCosf(ang);
     }
     else
     {
-        Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, d, c, c / lbl_803E6C7C,
+        Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, delta, speed, speed / lbl_803E6C7C,
                                       lbl_803E6C80);
     }
     return result;
 }
 
-int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b, f32 c, int flag, int* pickIdx)
+int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 advanceStep, f32 arriveRadius, f32 speed, int flag, int* pickIdx)
 {
     int result;
-    f32 d[3];
+    f32 delta[3];
     f32 dist, ang;
 
     result = 0;
-    d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-    d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
-    dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
-    if (dist < b)
+    delta[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
+    delta[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+    dist = sqrtf(delta[0] * delta[0] + delta[2] * delta[2]);
+    if (dist < arriveRadius)
     {
-        if (Curve_AdvanceAlongPath((RomCurveWalker*)routePtr, a) != 0 || ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath((RomCurveWalker*)routePtr, advanceStep) != 0 || ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPointIndexed((RomCurveWalker*)routePtr, *pickIdx) != 0)
                 result = -1;
@@ -273,25 +273,25 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
                 result = *(s8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
             *pickIdx = 0;
         }
-        c = lbl_803E6C78 * a;
+        speed = lbl_803E6C78 * advanceStep;
     }
-    d[0] = ((RomCurveWalker*)routePtr)->posX - ((GameObject*)obj)->anim.localPosX;
-    d[1] = ((RomCurveWalker*)routePtr)->posY - ((GameObject*)obj)->anim.localPosY;
-    d[2] = ((RomCurveWalker*)routePtr)->posZ - ((GameObject*)obj)->anim.localPosZ;
+    delta[0] = ((RomCurveWalker*)routePtr)->posX - ((GameObject*)obj)->anim.localPosX;
+    delta[1] = ((RomCurveWalker*)routePtr)->posY - ((GameObject*)obj)->anim.localPosY;
+    delta[2] = ((RomCurveWalker*)routePtr)->posZ - ((GameObject*)obj)->anim.localPosZ;
     if ((u8)flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
         s16 raw;
-        d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-        d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
-        raw = (s16)getAngle(d[0], d[2]);
+        delta[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
+        delta[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+        raw = (s16)getAngle(delta[0], delta[2]);
         ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velZ = c * -mathSinf(ang);
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velX = c * -mathCosf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velZ = speed * -mathSinf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velX = speed * -mathCosf(ang);
     }
     else
     {
-        Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, d, c, c / lbl_803E6C7C,
+        Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, delta, speed, speed / lbl_803E6C7C,
                                       lbl_803E6C80);
     }
     return result;
