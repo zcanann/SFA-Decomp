@@ -43,17 +43,6 @@ void dustmotesou_hitDetect(void)
 {
 }
 
-void dustmotesou_init(int obj, int setup)
-{
-    DustMoteSouObject* source = (DustMoteSouObject*)obj;
-    DustMoteSouMapData* mapData = (DustMoteSouMapData*)setup;
-
-    source->objAnim.rotZ = (s16)(mapData->rotZ << 8);
-    source->objAnim.rotY = (s16)(mapData->rotY << 8);
-    source->objAnim.rotX = (s16)(mapData->rotX << 8);
-    source->objectFlags |= DUSTMOTESOU_OBJECT_FLAG_SPAWN_EFFECTS;
-}
-
 void dustmotesou_update(int obj)
 {
     DustMoteSouObject* source = (DustMoteSouObject*)obj;
@@ -107,6 +96,17 @@ void dustmotesou_update(int obj)
             obj, mapData->effectId, mapData->effectParamA, mapData->effectParamB,
             mapData->scale, mapData->effectFlags, (f32)(u32)mapData->spreadX, 0, 0);
     }
+}
+
+void dustmotesou_init(int obj, int setup)
+{
+    DustMoteSouObject* source = (DustMoteSouObject*)obj;
+    DustMoteSouMapData* mapData = (DustMoteSouMapData*)setup;
+
+    source->objAnim.rotZ = (s16)(mapData->rotZ << 8);
+    source->objAnim.rotY = (s16)(mapData->rotY << 8);
+    source->objAnim.rotX = (s16)(mapData->rotX << 8);
+    source->objectFlags |= DUSTMOTESOU_OBJECT_FLAG_SPAWN_EFFECTS;
 }
 
 void dustmotesou_release(void)
