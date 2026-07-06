@@ -16,6 +16,10 @@ extern char sObjLoadAnimdataNullACRomTabWarning[];
 extern char sSeqAAnimDataTag;
 extern char sSeqBAnimDataTag;
 
+/* GameCube controller button masks */
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
+
 /* GameObject::objectFlags bit: object is bound to an active sequence (set when
    it becomes a seq callback target, cleared on release; tested elsewhere as the
    "under sequence control / blocked from normal update" gate). */
@@ -2940,10 +2944,10 @@ int ObjSeq_update(u8* obj, f32 t)
             switch (op)
             {
             case 0x12:
-                pressed = (getButtonsJustPressed(0) & 0x100) != 0;
+                pressed = (getButtonsJustPressed(0) & PAD_BUTTON_A) != 0;
                 break;
             case 0x13:
-                pressed = (getButtonsJustPressed(0) & 0x200) != 0;
+                pressed = (getButtonsJustPressed(0) & PAD_BUTTON_B) != 0;
                 break;
             case 0x14:
             case 0x15:
