@@ -33,14 +33,6 @@ extern f32 lbl_803E0704;
 extern f32 lbl_803E0708;
 extern f32 lbl_803E070C;
 
-void dll_59_func01_nop(void)
-{
-}
-
-void dll_59_func00_nop(void)
-{
-}
-
 void dll_59_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     struct
@@ -172,4 +164,12 @@ void dll_59_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x11, (u8*)(int)lbl_80311C58, 8, &base[172], 0xc0d, 0);
+}
+
+void dll_59_func01_nop(void)
+{
+}
+
+void dll_59_func00_nop(void)
+{
 }
