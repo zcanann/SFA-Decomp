@@ -91,43 +91,43 @@ typedef struct SAL_PANINFO
 static inline void CalcBus(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
 {
     u32 i;
-    f32 f;
-    f32 v;
+    f32 level;
+    f32 frac;
 
     i = 127.0f * vol;
-    v = (127.0f * vol) - (f32)i;
-    f = (1.0f - v) * vol_tab[i] + v * vol_tab[i + 1];
-    v_out[2] = 0.7079f * (f * ((1.0f - pi->span_f) * tabs->pan[pi->span_i] +
+    frac = (127.0f * vol) - (f32)i;
+    level = (1.0f - frac) * vol_tab[i] + frac * vol_tab[i + 1];
+    v_out[2] = 0.7079f * (level * ((1.0f - pi->span_f) * tabs->pan[pi->span_i] +
                                pi->span_f * tabs->pan[pi->span_i + 1]));
-    f = f * ((1.0f - pi->span_fm) * tabs->pan[pi->span_im] +
+    level = level * ((1.0f - pi->span_fm) * tabs->pan[pi->span_im] +
              pi->span_fm * tabs->pan[pi->span_im + 1]);
-    v_out[1] = f * ((1.0f - pi->pan_f) * tabs->pan[pi->pan_i] +
+    v_out[1] = level * ((1.0f - pi->pan_f) * tabs->pan[pi->pan_i] +
                pi->pan_f * tabs->pan[pi->pan_i + 1]);
-    v_out[0] = f * ((1.0f - pi->pan_fm) * tabs->pan[pi->pan_im] +
+    v_out[0] = level * ((1.0f - pi->pan_fm) * tabs->pan[pi->pan_im] +
                pi->pan_fm * tabs->pan[pi->pan_im + 1]);
 }
 
 static inline void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
 {
     u32 i;
-    f32 f;
-    f32 v;
-    f32 vs;
+    f32 frac;
+    f32 level;
+    f32 surround;
 
     i = 127.0f * vol;
-    f = (127.0f * vol) - (f32)i;
-    v = (1.0f - f) * vol_tab[i] + f * vol_tab[i + 1];
-    vs = v * ((1.0f - pi->span_f) * tabs->pan[pi->span_i] +
+    frac = (127.0f * vol) - (f32)i;
+    level = (1.0f - frac) * vol_tab[i] + frac * vol_tab[i + 1];
+    surround = level * ((1.0f - pi->span_f) * tabs->pan[pi->span_i] +
               pi->span_f * tabs->pan[pi->span_i + 1]);
-    v = v * ((1.0f - pi->span_fm) * tabs->pan[pi->span_im] +
+    level = level * ((1.0f - pi->span_fm) * tabs->pan[pi->span_im] +
              pi->span_fm * tabs->pan[pi->span_im + 1]);
-    v_out[1] = v * ((1.0f - pi->pan_f) * tabs->pan[pi->pan_i] +
+    v_out[1] = level * ((1.0f - pi->pan_f) * tabs->pan[pi->pan_i] +
                 pi->pan_f * tabs->pan[pi->pan_i + 1]);
-    v_out[0] = v * ((1.0f - pi->pan_fm) * tabs->pan[pi->pan_im] +
+    v_out[0] = level * ((1.0f - pi->pan_fm) * tabs->pan[pi->pan_im] +
                 pi->pan_fm * tabs->pan[pi->pan_im + 1]);
-    v_out[7] = vs * ((1.0f - pi->rpan_f) * tabs->pan_dpl2[pi->rpan_i] +
+    v_out[7] = surround * ((1.0f - pi->rpan_f) * tabs->pan_dpl2[pi->rpan_i] +
                  pi->rpan_f * tabs->pan[pi->rpan_i + 1]);
-    v_out[6] = vs * ((1.0f - pi->rpan_fm) * tabs->pan_dpl2[pi->rpan_im] +
+    v_out[6] = surround * ((1.0f - pi->rpan_fm) * tabs->pan_dpl2[pi->rpan_im] +
                  pi->rpan_fm * tabs->pan[pi->rpan_im + 1]);
 }
 
@@ -141,8 +141,8 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
 {
     SalVolTab* tabs;
     f32* vol_tab;
-    f32 p, sp, t;
-    u32 pan2, span2;
+    f32 panPos, spanPos, rearPan;
+    u32 panAdj, spanAdj;
     SAL_PANINFO pi;
 
     tabs = &gSnd3dRoomVolTable;
@@ -156,48 +156,48 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
 
     if (pan <= 0x10000)
     {
-        pan2 = 0;
+        panAdj = 0;
     }
     else
     {
-        pan2 = pan - 0x10000;
+        panAdj = pan - 0x10000;
     }
     if (span <= 0x10000)
     {
-        span2 = 0;
+        spanAdj = 0;
     }
     else
     {
-        span2 = span - 0x10000;
+        spanAdj = span - 0x10000;
     }
 
-    p = 2.4220301e-07f * pan2;
-    sp = 2.4220301e-07f * span2;
+    panPos = 2.4220301e-07f * panAdj;
+    spanPos = 2.4220301e-07f * spanAdj;
 
     if (dpl2 != 0)
     {
-        pi.rpan_f = sal_fmod(p, 1.0f);
-        pi.rpan_i = p;
-        t = 2.0f - p;
-        pi.rpan_fm = sal_fmod(t, 1.0f);
-        pi.rpan_im = t;
+        pi.rpan_f = sal_fmod(panPos, 1.0f);
+        pi.rpan_i = panPos;
+        rearPan = 2.0f - panPos;
+        pi.rpan_fm = sal_fmod(rearPan, 1.0f);
+        pi.rpan_im = rearPan;
     }
 
     if (itd != 0)
     {
-        p = 1.0f + 0.76604f * (p - 1.0f);
+        panPos = 1.0f + 0.76604f * (panPos - 1.0f);
     }
 
-    pi.pan_f = sal_fmod(p, 1.0f);
-    pi.pan_i = p;
-    pi.span_f = sal_fmod(sp, 1.0f);
-    pi.span_i = sp;
-    p = 2.0f - p;
-    sp = 2.0f - sp;
-    pi.pan_fm = sal_fmod(p, 1.0f);
-    pi.pan_im = p;
-    pi.span_fm = sal_fmod(sp, 1.0f);
-    pi.span_im = sp;
+    pi.pan_f = sal_fmod(panPos, 1.0f);
+    pi.pan_i = panPos;
+    pi.span_f = sal_fmod(spanPos, 1.0f);
+    pi.span_i = spanPos;
+    panPos = 2.0f - panPos;
+    spanPos = 2.0f - spanPos;
+    pi.pan_fm = sal_fmod(panPos, 1.0f);
+    pi.pan_im = panPos;
+    pi.span_fm = sal_fmod(spanPos, 1.0f);
+    pi.span_im = spanPos;
 
     if (dpl2 == 0)
     {
