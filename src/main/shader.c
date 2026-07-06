@@ -1990,12 +1990,12 @@ extern void Obj_SetupObject(u32 setup, int a, int b, int c, char* d);
 #pragma opt_propagation off
 void mapLoadUnloadObjects(int flag)
 {
-    int b;
-    int k;
+    int grpBit;
+    int slot;
     int i;
-    int n;
+    int objCount;
     s16 list[8];
-    s16* q;
+    s16* idPtr;
     char* base;
     s16 count;
     char* obj;
@@ -2006,9 +2006,9 @@ void mapLoadUnloadObjects(int flag)
     int bit;
     u32 cur;
     u32 end;
-    u32 o;
+    u32 objStart;
     u8* bp;
-    u8 m;
+    u8 mask;
     int vis;
     int idx;
 
@@ -2018,11 +2018,11 @@ void mapLoadUnloadObjects(int flag)
     tp = (int*)(base + 0x41E0);
     for (; i < 5; i++)
     {
-        k = 0;
-        q = (s16*)(*tp + 0x594);
-        for (; k < 3; k++)
+        slot = 0;
+        idPtr = (s16*)(*tp + 0x594);
+        for (; slot < 3; slot++)
         {
-            s16 id = *q;
+            s16 id = *idPtr;
             if (id >= 0 && id < 80 && *(void**)(base + (0x83A8 + id * 4)) != 0)
             {
                 s16 dup = 0;
@@ -2040,13 +2040,13 @@ void mapLoadUnloadObjects(int flag)
                 if (dup == 0)
                     list[count++] = id;
             }
-            q++;
+            idPtr++;
         }
         tp++;
     }
     {
-        int* objs = ObjList_GetObjects(&i, &n);
-        while (i < n)
+        int* objs = ObjList_GetObjects(&i, &objCount);
+        while (i < objCount)
         {
             obj = (char*)objs[i];
             fp = (void*)((GameObject*)obj)->anim.placementData;
@@ -2109,7 +2109,7 @@ void mapLoadUnloadObjects(int flag)
                 }
                 Obj_FreeObject(obj);
                 i--;
-                n--;
+                objCount--;
             }
         }
     }
@@ -2122,16 +2122,16 @@ void mapLoadUnloadObjects(int flag)
                 bits = (*gMapEventInterface)->getObjGroups(i);
                 if (bits != 0)
                 {
-                    b = 0;
+                    grpBit = 0;
                     while (bits != 0)
                     {
-                        if ((bits & 1) && (s8)SaveGame_findTransientMapBit(i, b) == -1)
+                        if ((bits & 1) && (s8)SaveGame_findTransientMapBit(i, grpBit) == -1)
                         {
-                            mapInstantiateObjects(((char**)(base + 0x83A8))[i], i, b, 0);
-                            mapClearBit(i, b);
+                            mapInstantiateObjects(((char**)(base + 0x83A8))[i], i, grpBit, 0);
+                            mapClearBit(i, grpBit);
                         }
                         bits >>= 1;
-                        b++;
+                        grpBit++;
                     }
                 }
             }
@@ -2143,15 +2143,15 @@ void mapLoadUnloadObjects(int flag)
                 char* page = *(char**)(base + (0x83A8 + list[i] * 4));
                 if (page != 0)
                 {
-                    m = 1;
+                    mask = 1;
                     bit = 0;
                     cur = *(u32*)(page + 0x20);
                     bp = *(u8**)(page + 0x10);
                     end = cur + *(int*)(base + (0x4290 + list[i] * 0x8C));
                     while (cur < end)
                     {
-                        o = cur;
-                        if ((*bp & m) == 0 && objShouldLoad(cur, 0, list[i]) != 0)
+                        objStart = cur;
+                        if ((*bp & mask) == 0 && objShouldLoad(cur, 0, list[i]) != 0)
                         {
                             if (bit >= 0)
                             {
@@ -2163,17 +2163,17 @@ void mapLoadUnloadObjects(int flag)
                                 *(s8*)(*(int*)(pg + 0x10) + ix2) =
                                     *(u8*)(*(int*)(pg + 0x10) + ix2) | msk;
                             }
-                            Obj_SetupObject(o, 1, list[i], bit, 0);
+                            Obj_SetupObject(objStart, 1, list[i], bit, 0);
                         }
                         bit++;
-                        m = (u8)(m << 1);
-                        if (m == 0)
+                        mask = (u8)(mask << 1);
+                        if (mask == 0)
                         {
                             bp++;
                             while (*bp == -1)
                             {
                                 bit += 8;
-                                cur += *(u8*)(o + 2) * 4;
+                                cur += *(u8*)(objStart + 2) * 4;
                                 cur += *(u8*)(cur + 2) * 4;
                                 cur += *(u8*)(cur + 2) * 4;
                                 cur += *(u8*)(cur + 2) * 4;
@@ -2181,19 +2181,19 @@ void mapLoadUnloadObjects(int flag)
                                 cur += *(u8*)(cur + 2) * 4;
                                 cur += *(u8*)(cur + 2) * 4;
                                 cur += *(u8*)(cur + 2) * 4;
-                                o = cur;
+                                objStart = cur;
                                 bp++;
                             }
-                            m = 1;
+                            mask = 1;
                         }
-                        cur += *(u8*)(o + 2) * 4;
+                        cur += *(u8*)(objStart + 2) * 4;
                     }
                 }
             }
         }
         {
-            int* objs2 = ObjGroup_GetObjects(6, &n);
-            for (i = 0; i < n; i++)
+            int* objs2 = ObjGroup_GetObjects(6, &objCount);
+            for (i = 0; i < objCount; i++)
             {
                 char* obj2 = (char*)objs2[i];
                 u32 mid2 = *(u8*)(obj2 + 0x34);
@@ -2207,16 +2207,16 @@ void mapLoadUnloadObjects(int flag)
                     bits = (*gMapEventInterface)->getObjGroups(mid2);
                     if (bits != 0)
                     {
-                        b = 0;
+                        grpBit = 0;
                         while (bits != 0)
                         {
-                            if ((bits & 1) && (s8)SaveGame_findTransientMapBit(mid2, b) == -1)
+                            if ((bits & 1) && (s8)SaveGame_findTransientMapBit(mid2, grpBit) == -1)
                             {
-                                mapInstantiateObjects(page2, mid2, b, obj2);
+                                mapInstantiateObjects(page2, mid2, grpBit, obj2);
                             }
                             bits >>= 1;
-                            mapClearBit(mid2, b);
-                            b++;
+                            mapClearBit(mid2, grpBit);
+                            grpBit++;
                         }
                     }
                     while (cur < end)
