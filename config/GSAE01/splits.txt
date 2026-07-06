@@ -2685,6 +2685,7 @@ main/dll/ARW/dll_029C_arwarwingbo.c:
 
 main/dll/ARW/dll_029D_arwarwinggu.c:
 	.text       start:0x8022F1D8 end:0x8022F52C
+	.sdata2     start:0x803E7068 end:0x803E7070
 
 main/dll/dll_029E_Dummy29E.c:
 	.text       start:0x8022F52C end:0x8022F588
