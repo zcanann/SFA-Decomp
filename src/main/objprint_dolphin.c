@@ -55,6 +55,7 @@
 #define GX_VA_CLR0 11
 #define GX_VA_TEX0 13
 #define GX_VA_TEX1 14
+#define GX_VA_NBT 25
 #define GX_TRIANGLES 0x90
 #define GX_VTXFMT7 7
 #define GX_CULL_NONE 0
@@ -1568,7 +1569,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         back = 8;
         if (p3[0] != 0 || p3[1] != 0)
         {
-            if (*(u32*)&((ModelFileHeader*)m)->unk34 != 0)
+            if (*(u32*)&((ModelFileHeader*)m)->texCoords != 0)
             {
                 GXSetVtxDesc(GX_VA_TEX0MTXIDX, GX_DIRECT);
                 next = 3;
@@ -1666,7 +1667,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         }
         if (hdr[0x24] & 8)
         {
-            GXSetVtxDesc(0x19, b ? 3 : 2);
+            GXSetVtxDesc(GX_VA_NBT, b ? 3 : 2);
         }
         else
         {
@@ -1709,7 +1710,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         i = 0;
         for (; i < m[0x41]; i++)
         {
-            GXSetVtxDesc(i + 0xd, b ? 3 : 2);
+            GXSetVtxDesc(i + GX_VA_TEX0, b ? 3 : 2);
         }
     }
 }
@@ -1851,7 +1852,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
     if (gObjCachedModel != (u32)m)
     {
         GXSetArray(GX_VA_POS, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
-        GXSetArray(GX_VA_TEX0, *(int*)&((ModelFileHeader*)m)->unk34, 4);
+        GXSetArray(GX_VA_TEX0, *(int*)&((ModelFileHeader*)m)->texCoords, 4);
         gObjCachedModel = (u32)m;
     }
     shaderSetGxFlags((u8*)obj, m, ((ModelFileHeader*)m)->renderOps);
@@ -2496,9 +2497,9 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     {
         GXSetArray(GX_VA_NRM, *(int*)((char*)am + 0x24), 3);
     }
-    GXSetArray(GX_VA_CLR0, *(int*)&((ModelFileHeader*)m)->unk30, 2);
-    GXSetArray(GX_VA_TEX0, *(int*)&((ModelFileHeader*)m)->unk34, 4);
-    GXSetArray(GX_VA_TEX1, *(int*)&((ModelFileHeader*)m)->unk34, 4);
+    GXSetArray(GX_VA_CLR0, *(int*)&((ModelFileHeader*)m)->colors, 2);
+    GXSetArray(GX_VA_TEX0, *(int*)&((ModelFileHeader*)m)->texCoords, 4);
+    GXSetArray(GX_VA_TEX1, *(int*)&((ModelFileHeader*)m)->texCoords, 4);
     done = 0;
     while (!done)
     {

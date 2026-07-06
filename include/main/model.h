@@ -24,8 +24,8 @@ typedef struct ModelFileHeader {
     u8 unk25[3];
     u8 *vertices; /* 6 bytes each, vertexCount */
     u8 *normals;  /* 3 or 9 bytes each, normalCount */
-    u8 *unk30;
-    u8 *unk34;
+    u8 *colors;   /* GX_VA_CLR0 array, stride 2 */
+    u8 *texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
     u8 *renderOps; /* 0x44 each, renderOpCount */
     u8 *jointData;
     u8 *unk40;
@@ -39,7 +39,7 @@ typedef struct ModelFileHeader {
     u8 *animationHeaderBuffer; /* per-joint s16 table */
     u8 unk70[0x10];
     s32 animationDataFileOffset;
-    s16 unk84;
+    s16 headerSize; /* roundUpTo8(loaded header size) + 0xb0; read back into size table */
     u8 unk86[4];
     u16 vertexAnimCount; /* count of 0x74-stride entries at vertexAnimEntries */
     u8 unk8C[8];

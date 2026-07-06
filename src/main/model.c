@@ -372,13 +372,13 @@ void ObjModel_RelocateModelData(u8* m)
     {
         ((ModelFileHeader*)m)->normals = m + *(u32*)&((ModelFileHeader*)m)->normals;
     }
-    if (*(u32*)&((ModelFileHeader*)m)->unk30)
+    if (*(u32*)&((ModelFileHeader*)m)->colors)
     {
-        ((ModelFileHeader*)m)->unk30 = m + *(u32*)&((ModelFileHeader*)m)->unk30;
+        ((ModelFileHeader*)m)->colors = m + *(u32*)&((ModelFileHeader*)m)->colors;
     }
-    if (*(u32*)&((ModelFileHeader*)m)->unk34)
+    if (*(u32*)&((ModelFileHeader*)m)->texCoords)
     {
-        ((ModelFileHeader*)m)->unk34 = m + *(u32*)&((ModelFileHeader*)m)->unk34;
+        ((ModelFileHeader*)m)->texCoords = m + *(u32*)&((ModelFileHeader*)m)->texCoords;
     }
     if (*(u32*)&((ModelFileHeader*)m)->instrs)
     {
@@ -454,7 +454,7 @@ void* ObjModel_LoadModelData(int id)
     amapSize = modelGetAmapSize(id, amapFlag, animCount);
     model = (void*)roundUpTo16((int)mmAlloc(dataLen + amapSize + 0x1f4, 9, 0));
     loadAndDecompressDataFile(0x2b, model, fileOffset, dataLen, 0, id, 0);
-    ((ModelFileHeader*)model)->unk84 = headerSize;
+    ((ModelFileHeader*)model)->headerSize = headerSize;
     *(u16*)((u8*)model + 0x4) = id; /* modelId (in unk04) */
     ((ModelFileHeader*)model)->animationCount = animCount;
     ((ModelFileHeader*)model)->flags &= ~MODEL_FLAG_VERTEX_ANIM_AREA;
@@ -2178,7 +2178,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     sizes[3] = 0;
     if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) != 0)
     {
-        sizes[5] = ((ModelFileHeader*)hdr)->unk84;
+        sizes[5] = ((ModelFileHeader*)hdr)->headerSize;
         while ((sizes[5] & 7) != 0)
         {
             *(int*)((int)sizes + 0x14) = *(int*)((int)sizes + 0x14) + 1;
@@ -2944,7 +2944,7 @@ void modelAnimFn_800246a0(u8* dst, u8* model, u8* channel, f32 t, int flags, int
     p = channel + idxA * 4;
     *(f32*)(stk + 0x14) = *(f32*)(p + 0x14);
     *(f32*)(stk + 4) = *(f32*)(p + 4);
-    *(int*)(stk + 0x34) = *(int*)&((ModelFileHeader*)p)->unk34;
+    *(int*)(stk + 0x34) = *(int*)&((ModelFileHeader*)p)->texCoords;
     idxB = (u8)slotB;
     p = channel + idxB;
     *(u8*)(stk + 0x61) = *(u8*)(p + 0x60);
