@@ -6752,3 +6752,42 @@ remaining candidate is a documented disqualifier:
 CONCLUSION: constant-offset clean vein exhausted; the one true field-match (pushable.flags)
 is a confirmed non-neutral canonical-raw self-read. No commits. Tree clean (only this MD +
 untracked memory/tools). all_source untouched.
+
+## Field-naming sweep (Opus, 2026-07-05)
+- WIN: AppleOnTreeState.unk3C -> extraAccel (dll_0117_appleontree.c). Seeded from
+  velY on splash, added to gravity to form combined projectile accel (m = gravity +
+  extraAccel), zero-gated, then reset. .o md5-identical. Commit adecada39e.
+- Surveyed unit-local State structs (grep single-.c owner) with unk scalar fields.
+  Overwhelming majority of remaining unk scalars are WRITE-ONLY / INIT-ONLY within
+  their TU -> correctly left opaque per the "wrong name worse than none" rule:
+  TreasureChestState (unk0/25F/270/349/405 all init=0), CrackAnimState (unk20/24/28/
+  3C/40/44/54 all init-only), BackpackState (unk298/29A/29C/279 init-only),
+  InfopointState (unk08/10/18 init-only), CfDoorlightState (unk3E8/3EC init-only),
+  Dll19CState (unk2/8/C/10/2C-36 unreferenced padding).
+- GrimbleControl.unk50 (grimble.c) is READ (>threshold gates bone-particle fx) but
+  never written in-TU and semantically opaque -> left as unk (a guess would be worse).
+- Skipped multi-owner: MagicGemState (2 .c), Dll200State (3), ShipBattleState (7),
+  DfpObjCreatorState (5), WindLift107State (4). GroundBaddieState/BaddieState unk
+  fields seen via casts in dll19 are shared engine structs (out of scope).
+
+## Jul05 correctness+extern sweep (Opus 4.8) — 0 wins, scope exhausted
+Built opcode-multiset scanner over ~400 eligible non-100% functions (excl audio/dolphin/
+player/MSL/drshackle) to surface correctness signals: cmpwi<->cmplwi, lwz<->lhz/lha,
+fmadds<->fnmadds/fneg, __cvt_fp2unsigned count deltas, extsb count deltas. Surfaced
+candidates all resolved to COUPLED caps, NO clean isolated correctness bug:
+- gameloop.c removeButtonObject 98.09%: target unfuses `srwi`+`cmplwi` (peephole OFF)
+  BUT keeps the 8x-unrolled memmove copy in DISPLACEMENT form (`lwz 4(r4);stw 0(r4)`
+  ... `addi r4,r4,32` once/8). `#pragma peephole off` unfuses the srwi. but ALSO
+  de-coalesces the copy to `addi r4,r4,4` per element (60->67 instrs, WORSE). Coupled
+  peephole trade, no lever. Reverted, tree clean.
+- dll_0003 Checkpoint_func06 98.35%: loop-bound reshaped — target `cmpwi r3,0;ble`
+  (remaining-count induction) vs current `cmpw i,n;bge` + strength-reduce diffs.
+  Deep loop-shape, banked-adjacent (dll_0003 already in MEMORY).
+- objseq ObjSeq_RebuildCurveStateToFrame 97.61%: extsb from param coupled to r27<->r30
+  coloring (MEMORY extsb-removal-always-swaps-coloring pattern). No net gain.
+- voxmapsFn_80010ff4 97.38% / animobjd2 fn_8013E0D0 96.92% / modelLoad_calcSizes 93.53%:
+  pure scheduling reorder (add/lwz/addi/li permutations), length-shifted diffs.
+EXTERN HYGIENE (job B): single-occurrence scan over all eligible .c found ZERO genuinely-
+unused inline externs (all lbl_/proto decls load-bearing; headers not #included). Confirms
+prior pass. No byte-neutral removals available. `grep undefined4|undefined2` = 1 hit
+(a comment, not code). Codebase correctness-bug frontier is exhausted in this scope.
