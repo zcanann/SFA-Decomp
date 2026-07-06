@@ -237,7 +237,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                 s.sz = 0;
                 s.sy = 0;
                 s.sx = 0;
-                jb = (u8*)((int*)m)[(*(u16*)((u8*)m + 0x18) & 1) + 3];
+                jb = (u8*)m[(*(u16*)((u8*)m + 0x18) & 1) + 3];
                 {
                     u8* idr2 = base + gBoneParticleStageIndex * 5;
                     idr2 = idr2 + j;
