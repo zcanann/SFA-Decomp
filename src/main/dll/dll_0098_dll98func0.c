@@ -59,14 +59,6 @@ extern f32 lbl_803E1334;
 extern f32 lbl_803E1338;
 extern f32 lbl_803E133C;
 
-void dll_98_func01_nop(void)
-{
-}
-
-void dll_98_func00_nop(void)
-{
-}
-
 void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, int extraArgs)
 {
     GfxBuf buf;
@@ -229,4 +221,12 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
     (*gModgfxInterface)
         ->spawnEffect(&buf, 0, 0x12, (u32)extraArgs != 0 ? table + 0xb4 : (u8*)(int)lbl_803178B0, 0x10,
                       table + 0x168, anim, 0);
+}
+
+void dll_98_func01_nop(void)
+{
+}
+
+void dll_98_func00_nop(void)
+{
 }
