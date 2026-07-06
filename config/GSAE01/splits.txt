@@ -462,6 +462,7 @@ main/dll/dll_007B_dll7bfunc0.c:
 main/dll/dll_007C_dll7cfunc0.c:
 	.text       start:0x800F472C end:0x800F4C70
 	.data       start:0x80314E08 end:0x80315998
+	.sdata2     start:0x803E0D88 end:0x803E0DD8
 
 main/dll/dll_007D_dll7dfunc0.c:
 	.text       start:0x800F4C70 end:0x800F4FA4
@@ -825,6 +826,7 @@ main/dll/dll_0051_cameramodecannon.c:
 
 main/dll/dll_0052_cameramodeforcebehind.c:
 	.text       start:0x8010FC74 end:0x801101E4
+	.sdata2     start:0x803E1B10 end:0x803E1B18
 
 main/dll/dll_0053_cameramodecloudrunner.c:
 	.text       start:0x801101E4 end:0x801106B4
@@ -2746,6 +2748,7 @@ main/dll/ARW/dll_02A8_arwblocker.c:
 
 main/dll/LGT/dll_02A9_lgtpointlight.c:
 	.text       start:0x80233B0C end:0x8023404C
+	.sdata2     start:0x803E7230 end:0x803E7250
 
 main/dll/LGT/dll_02AA_lgtdirectionallight.c:
 	.text       start:0x8023404C end:0x80234748
