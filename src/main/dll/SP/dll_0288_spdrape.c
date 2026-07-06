@@ -71,6 +71,33 @@ typedef struct SpdrapeState
 
 STATIC_ASSERT(sizeof(SpdrapeState) == 0x18);
 
+int spdrape_getExtraSize(void);
+int spdrape_getObjectTypeId(void);
+void spdrape_free(void);
+void spdrape_render(void);
+void spdrape_hitDetect(void);
+void spdrape_update(int obj);
+void spdrape_init(int* obj, u8* def);
+void spdrape_release(void);
+void spdrape_initialise(void);
+
+ObjectDescriptor gSPDrapeObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)spdrape_initialise,
+    (ObjectDescriptorCallback)spdrape_release,
+    0,
+    (ObjectDescriptorCallback)spdrape_init,
+    (ObjectDescriptorCallback)spdrape_update,
+    (ObjectDescriptorCallback)spdrape_hitDetect,
+    (ObjectDescriptorCallback)spdrape_render,
+    (ObjectDescriptorCallback)spdrape_free,
+    (ObjectDescriptorCallback)spdrape_getObjectTypeId,
+    spdrape_getExtraSize,
+};
+
 int spdrape_getExtraSize(void)
 {
     return 0x18;
@@ -190,14 +217,6 @@ void spdrape_update(int obj)
         obj, *state, timeDelta, NULL);
 }
 
-void spdrape_release(void)
-{
-}
-
-void spdrape_initialise(void)
-{
-}
-
 void spdrape_init(int* obj, u8* def)
 {
 
@@ -235,19 +254,10 @@ void spdrape_init(int* obj, u8* def)
     }
 }
 
-ObjectDescriptor gSPDrapeObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)spdrape_initialise,
-    (ObjectDescriptorCallback)spdrape_release,
-    0,
-    (ObjectDescriptorCallback)spdrape_init,
-    (ObjectDescriptorCallback)spdrape_update,
-    (ObjectDescriptorCallback)spdrape_hitDetect,
-    (ObjectDescriptorCallback)spdrape_render,
-    (ObjectDescriptorCallback)spdrape_free,
-    (ObjectDescriptorCallback)spdrape_getObjectTypeId,
-    spdrape_getExtraSize,
-};
+void spdrape_release(void)
+{
+}
+
+void spdrape_initialise(void)
+{
+}
