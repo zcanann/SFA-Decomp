@@ -18,7 +18,6 @@
 #include "main/dll/dll_0000_gameui.h"
 extern u32 FUN_800069f4();
 extern u32 mapBlockRender_setVtxDcrs();
-extern u32 builtin_strncpy();
 extern u32 DAT_8037ed10;
 extern int DAT_8037ed20;
 extern u32 DAT_8037ed28;
