@@ -12,7 +12,7 @@ extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void cmbsrc_setExternalActive(int obj, int active);
 extern void Obj_FreeObject(int obj);
 extern void objSetSlot(int obj, int slot);
-extern int* gTitleMenuControlInterface;
+extern int* gTitleMenuControlInterfaceCopy;
 extern u8 lbl_803DB411;    /* trigger-interface update parameter */
 extern f32 lbl_803E55E0;   /* render fade alpha / posOffsetDecay base */
 
@@ -56,7 +56,7 @@ void sc_cloudrunnera_free(int* obj)
 {
     void* inner = ((GameObject*)obj)->extra;
     (*gObjectTriggerInterface)->freeState(inner);
-    ((void (*)(int*, int, int, int, int))(*(int*)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
+    ((void (*)(int*, int, int, int, int))(*(int*)(*gTitleMenuControlInterfaceCopy + 0x8)))(obj, 0xffff, 0, 0, 0);
 }
 
 void sc_cloudrunnera_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
