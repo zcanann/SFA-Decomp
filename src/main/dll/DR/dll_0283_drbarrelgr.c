@@ -17,6 +17,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DRBARRELGR_OBJFLAG_RENDERED 0x800
+#define GUNPOWDERBARREL_UPDATE_OBJGROUP 0x19 /* DLL 0x158 gunpowderbarrel (update group) */
 
 typedef struct DrbarrelgrPlacement
 {
@@ -338,7 +339,7 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
     objRef = *(u32*)&((DrbarrelgrState*)state)->heldBarrel;
     if ((u32)objRef != 0)
     {
-        nearest = ObjGroup_FindNearestObject(0x19, obj, 0);
+        nearest = ObjGroup_FindNearestObject(GUNPOWDERBARREL_UPDATE_OBJGROUP, obj, 0);
         match = 0;
         if ((u32)nearest != 0 && (u32)objRef == nearest)
         {
