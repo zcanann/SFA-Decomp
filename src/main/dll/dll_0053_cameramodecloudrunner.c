@@ -152,22 +152,22 @@ void CameraModeCloudRunner_init(int* camera, int radius, f32* focus)
         lbl_803DD5B8 = (CameraModeCloudRunnerState*)mmAlloc(sizeof(CameraModeCloudRunnerState), 15, 0);
     }
     {
-        f32 r;
+        f32 computedRadius;
         if (focus != NULL)
         {
             lbl_803DD5B8->focusX = focus[0];
             lbl_803DD5B8->focusY = focus[1];
             lbl_803DD5B8->focusZ = focus[2];
-            r = focus[3];
+            computedRadius = focus[3];
         }
         else
         {
             lbl_803DD5B8->focusX = ((GameObject*)targetObj)->anim.worldPosX;
             lbl_803DD5B8->focusY = ((GameObject*)targetObj)->anim.worldPosY;
             lbl_803DD5B8->focusZ = ((GameObject*)targetObj)->anim.worldPosZ;
-            r = radius;
+            computedRadius = radius;
         }
-        lbl_803DD5B8->radius = r;
+        lbl_803DD5B8->radius = computedRadius;
     }
     getAngle(
         ((GameObject*)camera)->anim.worldPosX - lbl_803DD5B8->focusX,
