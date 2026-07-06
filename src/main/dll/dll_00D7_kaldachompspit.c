@@ -92,10 +92,10 @@ int kaldachompspit_getObjectTypeId(void) { return 0x0; }
 
 void kaldachompspit_free(int* obj)
 {
-    void* p = *(void**)((GameObject*)obj)->extra;
-    if (p != NULL)
+    void* light = *(void**)((GameObject*)obj)->extra;
+    if (light != NULL)
     {
-        ModelLightStruct_free(p);
+        ModelLightStruct_free(light);
     }
 }
 
@@ -127,8 +127,8 @@ void kaldachompspit_update(int obj)
     int rnd;
     f32 vy;
     f32 vz;
-    s16 v;
-    f32 t;
+    s16 color;
+    f32 alphaDecay;
 
     objAnim = &((GameObject*)obj)->anim;
     state = ((GameObject*)obj)->extra;
@@ -143,9 +143,9 @@ void kaldachompspit_update(int obj)
         if (((GameObject*)obj)->unkF4 < 0x11b)
         {
             ((GameObject*)obj)->anim.velocityY = -(lbl_803E30F0 * timeDelta - ((GameObject*)obj)->anim.velocityY);
-            if ((f32)(u32)objAnim->alpha - (t = lbl_803E30F4 * timeDelta) > lbl_803E30F8)
+            if ((f32)(u32)objAnim->alpha - (alphaDecay = lbl_803E30F4 * timeDelta) > lbl_803E30F8)
             {
-                objAnim->alpha = (f32)(u32)objAnim->alpha - t;
+                objAnim->alpha = (f32)(u32)objAnim->alpha - alphaDecay;
             }
             else
             {
@@ -207,18 +207,18 @@ void kaldachompspit_update(int obj)
             {
                 rnd = randomGetRange(-0x19, 0x19);
                 ptr = *state;
-                v = *(u8*)(ptr + 0x2f9) + *(s8*)(ptr + 0x2fa) + rnd;
-                if (v < 0)
+                color = *(u8*)(ptr + 0x2f9) + *(s8*)(ptr + 0x2fa) + rnd;
+                if (color < 0)
                 {
-                    v = 0;
+                    color = 0;
                     *(u8*)(ptr + 0x2fa) = 0;
                 }
-                else if (v > 0xff)
+                else if (color > 0xff)
                 {
-                    v = 0xff;
+                    color = 0xff;
                     *(u8*)(ptr + 0x2fa) = 0;
                 }
-                *(u8*)(*state + 0x2f9) = v;
+                *(u8*)(*state + 0x2f9) = color;
             }
         }
     }
@@ -275,8 +275,8 @@ void kaldachompspit_init(int obj)
     }
     if (*(void**)extra != NULL)
     {
-        f32 k = lbl_803E30F8;
-        modelLightStruct_setPosition(*extra, k, k, k);
+        f32 lightPos = lbl_803E30F8;
+        modelLightStruct_setPosition(*extra, lightPos, lightPos, lightPos);
         if (((GameObject*)obj)->anim.seqId == 0x869)
         {
             modelLightStruct_setDiffuseColor(*extra, 0xff, 0xc0, 0, 0xff);
@@ -294,8 +294,8 @@ void kaldachompspit_init(int obj)
             modelLightStruct_setDiffuseTargetColor(*extra, 0, 0xff, 0, 0xff);
         }
         {
-            int a = (int)(lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale);
-            modelLightStruct_setDistanceAttenuation(*extra, a, (f32)(a + 0x28));
+            int nearDist = (int)(lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale);
+            modelLightStruct_setDistanceAttenuation(*extra, nearDist, (f32)(nearDist + 0x28));
         }
         lightSetField4D(*extra, 1);
         modelLightStruct_setEnabled(*extra, 1, lbl_803E30E0);
