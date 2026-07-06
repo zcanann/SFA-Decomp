@@ -207,7 +207,7 @@ void lavaball1bf_update(int* obj)
     u8* setup;
     Lavaball1bfState* state;
     int* spawned;
-    f32 t;
+    f32 timer;
 
     state = ((GameObject*)obj)->extra;
     setup = *(u8**)&((GameObject*)obj)->anim.placementData;
@@ -245,23 +245,23 @@ void lavaball1bf_update(int* obj)
             s, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     }
     spawned = state->spawnedObj;
-    t = state->fireTimer - timeDelta;
-    state->fireTimer = t;
-    if (t <= lbl_803E4814 && ((int (*)(int*))((void**)*(void**)*(int*)&((GameObject*)spawned)->anim.dll)[9])(spawned) != 0)
+    timer = state->fireTimer - timeDelta;
+    state->fireTimer = timer;
+    if (timer <= lbl_803E4814 &&((int (*)(int*))((void**)*(void**)*(int*)&((GameObject*)spawned)->anim.dll)[9])(spawned) != 0)
     {
         if (state->gbState != 0)
         {
-            int a;
+            int rot;
             if (GameBit_Get(((Lavaball1bfPlacement*)setup)->triggerGameBit) != 0 && state->gateB == 0)
             {
-                a = setup[0x20];
+                rot = setup[0x20];
                 state->gateB = 1;
             }
             else
             {
-                a = setup[0x1a];
+                rot = setup[0x1a];
             }
-            ((void (*)(int*, int, int))((void**)*(void**)*(int*)&((GameObject*)spawned)->anim.dll)[8])(spawned, a, setup[0x1b]);
+            ((void (*)(int*, int, int))((void**)*(void**)*(int*)&((GameObject*)spawned)->anim.dll)[8])(spawned, rot, setup[0x1b]);
         }
         state->fireTimer = state->firePeriod + (f32)(int)
         randomGetRange(0, 0x3c);

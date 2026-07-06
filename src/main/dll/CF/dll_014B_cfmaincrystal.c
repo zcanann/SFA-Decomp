@@ -351,9 +351,9 @@ void cfmaincrystal_update(int* obj)
     u32 payload;
     u32 msgType;
     u32 srcObjId;
-    s8 t;
-    t = ((s8*)((GameObject*)obj)->anim.placement)[0x19];
-    switch (t)
+    s8 mode;
+    mode = ((s8*)((GameObject*)obj)->anim.placement)[0x19];
+    switch (mode)
     {
     case 0:
         fn_8019D9F0(obj);

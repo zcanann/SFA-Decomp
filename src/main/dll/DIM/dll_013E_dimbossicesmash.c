@@ -360,7 +360,7 @@ void dimbossicesmash_init(GameObject* obj, u8* params)
 {
     u8* state;
     f32 fz;
-    u8 t;
+    u8 initState;
     u8 buf[8];
 
     buf[0] = 5;
@@ -371,8 +371,8 @@ void dimbossicesmash_init(GameObject* obj, u8* params)
     ((DimBossIceSmashState*)state)->spawnScaleY = fz;
     ((DimBossIceSmashState*)state)->spawnScaleZ = fz;
     fn_80196520((u8*)obj, state, params);
-    t = (GameBit_Get(((DimbossicesmashPlacement*)params)->activateGameBit) != 0) ? 2 : 0;
-    state[0x29e] = t;
+    initState = (GameBit_Get(((DimbossicesmashPlacement*)params)->activateGameBit) != 0) ? 2 : 0;
+    state[0x29e] = initState;
     lbl_803DDB00 = 0;
     if ((((DimbossicesmashPlacement*)params)->flags & 2) != 0)
     {
