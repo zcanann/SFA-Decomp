@@ -44,7 +44,7 @@ typedef struct HightopPlacement
 {
     s32 unk0;
     u8 pad4[0x19 - 0x4];
-    s8 unk19;
+    s8 spawnVariant; /* 0x19: nonzero -> initial state handler returns 0xa */
     u8 pad1A[0x1E - 0x1A];
     s16 gameBitId;
     u8 pad20[0x25F - 0x20];
@@ -228,7 +228,7 @@ void hightop_free(int obj)
 int hightop_stateHandler00(int obj)
 {
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (((HightopPlacement*)placement)->unk19 != 0)
+    if (((HightopPlacement*)placement)->spawnVariant != 0)
     {
         return 0xa;
     }
