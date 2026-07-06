@@ -21,37 +21,11 @@
 #define SWITCH_MODE_MOMENTARY 2 /* activates, then auto-clears after cooldownFrames */
 #define SWITCH_MODE_DELAYED 3   /* hit arms an activation wind-up before turning on */
 
-int area_getExtraSize(void);
-int area_getObjectTypeId(void);
-
-void area_free(void);
-
-void area_render(void);
-
-void area_hitDetect(void);
-
-void area_update(void);
-
-void area_init(u16* obj);
-
-void area_release(void);
-
-void area_initialise(void);
-
 extern u8 framesThisStep;
 
 extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
 extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern u8 lbl_80321008[];
-extern f32 lbl_803E3700;
-extern f32 lbl_803E3704;
-extern f32 lbl_803E3708;
-extern const f32 lbl_803E3718;
-extern f32 lbl_803E3728;
-
-void ProjectileSwitch_free(void)
-{
-}
 
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
@@ -67,19 +41,9 @@ int ProjectileSwitch_getObjectTypeId(int* obj)
     return ((u32)v << 11) | 0x400;
 }
 
-ObjectDescriptor gAreaObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)area_initialise,
-    (ObjectDescriptorCallback)area_release,
-    0,
-    (ObjectDescriptorCallback)area_init,
-    (ObjectDescriptorCallback)area_update,
-    (ObjectDescriptorCallback)area_hitDetect,
-    (ObjectDescriptorCallback)area_render,
-    (ObjectDescriptorCallback)area_free,
-    (ObjectDescriptorCallback)area_getObjectTypeId,
-    area_getExtraSize,
-};
+void ProjectileSwitch_free(void)
+{
+}
 
 typedef struct ProjectileSwitchPlacement
 {
@@ -119,7 +83,7 @@ void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
             fn_8003B608(((ProjectileSwitchPlacement*)state)->colorR, ((ProjectileSwitchPlacement*)state)->colorG,
                         ((ProjectileSwitchPlacement*)state)->colorB);
         }
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3700);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -191,7 +155,7 @@ void ProjectileSwitch_hitDetect(int obj)
         if ((((ProjectileSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK) == SWITCH_MODE_MOMENTARY)
         {
             ((ProjectileSwitchState*)state)->cooldownTimer =
-                lbl_803E3704 * (lbl_803E3708 *
+                60.0f * (0.1f *
                 (f32)((ProjectileSwitchPlacement*)state2)->cooldownFrames);
         }
     }
@@ -225,14 +189,14 @@ void ProjectileSwitch_update(int obj)
             ((ProjectileSwitchState*)state2)->isOn = 1;
         }
     }
-    if (((ProjectileSwitchState*)state)->cooldownTimer > lbl_803E3718)
+    if (((ProjectileSwitchState*)state)->cooldownTimer > 0.0f)
     {
         ((ProjectileSwitchState*)state)->cooldownTimer =
             ((ProjectileSwitchState*)state)->cooldownTimer - (f32)(u32)
         framesThisStep;
-        if (((ProjectileSwitchState*)state)->cooldownTimer <= lbl_803E3718)
+        if (((ProjectileSwitchState*)state)->cooldownTimer <= 0.0f)
         {
-            ((ProjectileSwitchState*)state)->cooldownTimer = lbl_803E3718;
+            ((ProjectileSwitchState*)state)->cooldownTimer = 0.0f;
             GameBit_Set((int)((ProjectileSwitchState*)state)->gameBitId, 0);
         }
     }
@@ -258,7 +222,7 @@ void ProjectileSwitch_init(int obj, u8* initData)
     else
     {
         f32 scaledRadius = (f32)(u32)initData[0x1d] * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-        ((GameObject*)obj)->anim.rootMotionScale = scaledRadius * lbl_803E3728;
+        ((GameObject*)obj)->anim.rootMotionScale = scaledRadius / 64.0f;
     }
     ObjHitbox_SetSphereRadius(
         obj,
