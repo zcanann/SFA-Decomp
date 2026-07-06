@@ -496,7 +496,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
     short startTime;
     short cycleTime;
     u32 bitVal;
-    u32 val;
+    u32 flagValue;
 
     extra = obj->extra;
     if ((int)mapData->scale != 0)
@@ -600,22 +600,22 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         }
         if ((mapData->flags & 1) != 0)
         {
-            val = 0;
+            flagValue = 0;
         }
         else
         {
-            val = 1;
+            flagValue = 1;
         }
-        ((FirePipeBitFlags*)&extra->flags)->renderEnabled = val;
+        ((FirePipeBitFlags*)&extra->flags)->renderEnabled = flagValue;
         if ((mapData->flags & 2) != 0)
         {
-            val = 0;
+            flagValue = 0;
         }
         else
         {
-            val = 1;
+            flagValue = 1;
         }
-        ((FirePipeBitFlags*)&extra->flags)->glowEnabled = val;
+        ((FirePipeBitFlags*)&extra->flags)->glowEnabled = flagValue;
         storeZeroToFloatParam(&extra->emitTimer);
         s16toFloat(&extra->emitTimer, 0x14);
         ObjGroup_AddObject(obj, FIREPIPE_OBJGROUP);
