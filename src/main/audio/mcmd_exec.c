@@ -1603,17 +1603,15 @@ u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
  */
 void macInit(void)
 {
-    int off;
     u32 i;
 
-    macRealTimeLo = off = 0;
     macActiveRoot = 0;
     macTimeQueueRoot = 0;
-    macRealTimeHi = 0;
-    for (i = 0; i < lbl_803BD150[0x210]; off += SYNTH_VOICE_STRIDE, i++)
+    *(u64*)&macRealTimeHi = 0;
+    for (i = 0; i < lbl_803BD150[0x210]; i++)
     {
-        *(u32*)&((McmdVoiceState*)(synthVoice + off))->macroBase = 0;
-        ((McmdVoiceState*)(synthVoice + off))->queueMode = 2;
-        ((McmdVoiceState*)(synthVoice + off))->loopCounter = 0;
+        ((McmdVoiceState*)synthVoice)[i].macroBase = 0;
+        ((McmdVoiceState*)synthVoice)[i].queueMode = 2;
+        ((McmdVoiceState*)synthVoice)[i].loopCounter = 0;
     }
 }
