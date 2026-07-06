@@ -102,56 +102,6 @@ int dbstealerworm_stateHandlerA03(int obj, int p);
 
 int dbstealerworm_stateHandlerA01(int obj, int p);
 
-void dbholecontrol1_hitDetect(void)
-{
-}
-
-void dbholecontrol1_release(void)
-{
-}
-
-void dbholecontrol1_initialise(void)
-{
-}
-
-void dbholecontrol1_update(int* obj)
-{
-
-    u8* def;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((Dbholecontrol1Placement*)def)->hideGameBit) != 0)
-    {
-        Obj_RemoveFromUpdateList(obj);
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-    }
-    else if (GameBit_Get(((Dbholecontrol1Placement*)def)->triggerGameBit) != 0)
-    {
-        (*gObjectTriggerInterface)->runSequence(*(s8*)(def + 0x19), obj, -1);
-    }
-}
-
-void dbholecontrol1_init(int* obj, u8* params)
-{
-    extern u32 ObjGroup_AddObject();
-    DbHoleControl1State* state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, DBHOLECONTROL1_OBJGROUP);
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = dbholecontrol1_SeqFn;
-    state->gameBitA = ((Dbholecontrol1Placement*)params)->gameBitA;
-    state->gameBitB = ((Dbholecontrol1Placement*)params)->gameBitB;
-}
-
-int dbholecontrol1_getExtraSize(void) { return 0xc; }
-int dbholecontrol1_getObjectTypeId(void) { return 0x0; }
-
-void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 enabled = visible;
-    if (enabled != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6390);
-}
-
-void dbholecontrol1_free(int obj) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(obj, DBHOLECONTROL1_OBJGROUP); }
-
 int dbstealerworm_stateHandlerB00(int p1, int p2);
 
 int dbstealerworm_stateHandlerB03(int p1, int p2);
@@ -160,9 +110,37 @@ int dbstealerworm_stateHandlerB01(int p1, int p2);
 
 int dbstealerworm_stateHandlerA00(int obj, int p2);
 
+void DBstealerwo_setFuncPtrs_80203c78(void)
+{
+    gDBStealerWormStateHandlersA[0] = (int)dbstealerworm_stateHandlerA00;
+    gDBStealerWormStateHandlersA[1] = (int)dbstealerworm_stateHandlerA01;
+    gDBStealerWormStateHandlersA[2] = (int)dbstealerworm_stateHandlerA02;
+    gDBStealerWormStateHandlersA[3] = (int)dbstealerworm_stateHandlerA03;
+    gDBStealerWormStateHandlersA[4] = (int)dbstealerworm_stateHandlerA04;
+    gDBStealerWormStateHandlersA[5] = (int)dbstealerworm_stateHandlerA05;
+    gDBStealerWormStateHandlersA[6] = (int)dbstealerworm_stateHandlerA06;
+    gDBStealerWormStateHandlersA[7] = (int)dbstealerworm_stateHandlerA07;
+    gDBStealerWormStateHandlersA[8] = (int)dbstealerworm_stateHandlerA08;
+    gDBStealerWormStateHandlersA[9] = (int)dbstealerworm_stateHandlerA09;
+    gDBStealerWormStateHandlersA[10] = (int)dbstealerworm_stateHandlerA0A;
+    gDBStealerWormStateHandlersA[11] = (int)dbstealerworm_stateHandlerA0B;
+    gDBStealerWormStateHandlersA[12] = (int)dbstealerworm_stateHandlerA0C;
+    gDBStealerWormStateHandlersA[13] = (int)dbstealerworm_stateHandlerA0D;
+    gDBStealerWormStateHandlersA[14] = (int)dbstealerworm_stateHandlerA0E;
+    gDBStealerWormStateHandlersA[15] = (int)dbstealerworm_stateHandlerA0F;
+    gDBStealerWormStateHandlersB[0] = (int)dbstealerworm_stateHandlerB00;
+    gDBStealerWormStateHandlersB[1] = (int)dbstealerworm_stateHandlerB01;
+    gDBStealerWormStateHandlersB[2] = (int)dbstealerworm_stateHandlerB02;
+    gDBStealerWormStateHandlersB[3] = (int)dbstealerworm_stateHandlerB03;
+    gDBStealerWormStateHandlersB[4] = (int)dbstealerworm_stateHandlerB04;
+    gDBStealerWormStateHandlersB[5] = (int)dbstealerworm_stateHandlerB05;
+    gDBStealerWormStateHandlersB[6] = (int)dbstealerworm_stateHandlerB06;
+}
+
 int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
 
+    extern u64 ObjGroup_RemoveObject();
     extern void*mapRomListFindItem(int, int, int, int, int);
     extern int Obj_AllocObjectSetup(int, int);
     extern void memcpy(int, void*, int);
@@ -211,32 +189,54 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
+int dbholecontrol1_getExtraSize(void) { return 0xc; }
+int dbholecontrol1_getObjectTypeId(void) { return 0x0; }
 
-void DBstealerwo_setFuncPtrs_80203c78(void)
+void dbholecontrol1_free(int obj) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(obj, DBHOLECONTROL1_OBJGROUP); }
+
+void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    gDBStealerWormStateHandlersA[0] = (int)dbstealerworm_stateHandlerA00;
-    gDBStealerWormStateHandlersA[1] = (int)dbstealerworm_stateHandlerA01;
-    gDBStealerWormStateHandlersA[2] = (int)dbstealerworm_stateHandlerA02;
-    gDBStealerWormStateHandlersA[3] = (int)dbstealerworm_stateHandlerA03;
-    gDBStealerWormStateHandlersA[4] = (int)dbstealerworm_stateHandlerA04;
-    gDBStealerWormStateHandlersA[5] = (int)dbstealerworm_stateHandlerA05;
-    gDBStealerWormStateHandlersA[6] = (int)dbstealerworm_stateHandlerA06;
-    gDBStealerWormStateHandlersA[7] = (int)dbstealerworm_stateHandlerA07;
-    gDBStealerWormStateHandlersA[8] = (int)dbstealerworm_stateHandlerA08;
-    gDBStealerWormStateHandlersA[9] = (int)dbstealerworm_stateHandlerA09;
-    gDBStealerWormStateHandlersA[10] = (int)dbstealerworm_stateHandlerA0A;
-    gDBStealerWormStateHandlersA[11] = (int)dbstealerworm_stateHandlerA0B;
-    gDBStealerWormStateHandlersA[12] = (int)dbstealerworm_stateHandlerA0C;
-    gDBStealerWormStateHandlersA[13] = (int)dbstealerworm_stateHandlerA0D;
-    gDBStealerWormStateHandlersA[14] = (int)dbstealerworm_stateHandlerA0E;
-    gDBStealerWormStateHandlersA[15] = (int)dbstealerworm_stateHandlerA0F;
-    gDBStealerWormStateHandlersB[0] = (int)dbstealerworm_stateHandlerB00;
-    gDBStealerWormStateHandlersB[1] = (int)dbstealerworm_stateHandlerB01;
-    gDBStealerWormStateHandlersB[2] = (int)dbstealerworm_stateHandlerB02;
-    gDBStealerWormStateHandlersB[3] = (int)dbstealerworm_stateHandlerB03;
-    gDBStealerWormStateHandlersB[4] = (int)dbstealerworm_stateHandlerB04;
-    gDBStealerWormStateHandlersB[5] = (int)dbstealerworm_stateHandlerB05;
-    gDBStealerWormStateHandlersB[6] = (int)dbstealerworm_stateHandlerB06;
+    s32 enabled = visible;
+    if (enabled != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6390);
+}
+
+void dbholecontrol1_hitDetect(void)
+{
+}
+
+void dbholecontrol1_update(int* obj)
+{
+
+    u8* def;
+    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    if (GameBit_Get(((Dbholecontrol1Placement*)def)->hideGameBit) != 0)
+    {
+        Obj_RemoveFromUpdateList(obj);
+        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+    }
+    else if (GameBit_Get(((Dbholecontrol1Placement*)def)->triggerGameBit) != 0)
+    {
+        (*gObjectTriggerInterface)->runSequence(*(s8*)(def + 0x19), obj, -1);
+    }
+}
+
+void dbholecontrol1_init(int* obj, u8* params)
+{
+    extern u32 ObjGroup_AddObject();
+    DbHoleControl1State* state = ((GameObject*)obj)->extra;
+    ObjGroup_AddObject(obj, DBHOLECONTROL1_OBJGROUP);
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    ((GameObject*)obj)->animEventCallback = dbholecontrol1_SeqFn;
+    state->gameBitA = ((Dbholecontrol1Placement*)params)->gameBitA;
+    state->gameBitB = ((Dbholecontrol1Placement*)params)->gameBitB;
+}
+
+void dbholecontrol1_release(void)
+{
+}
+
+void dbholecontrol1_initialise(void)
+{
 }
 
 int dbstealerworm_stateHandlerA04(int obj, int param2);
