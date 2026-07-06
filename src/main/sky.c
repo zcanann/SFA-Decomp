@@ -1978,8 +1978,8 @@ void sky2_update(int a, int b, u8* cfg)
                 *(f32*)((&gSky2State)[b1] + i * 4 + 0x280) =
                     (f32)(u32) * (u16*)(cfg + gSkyConfigFieldIndices[i] * 2 + 0x2e);
             }
-            *(int*)((&gSky2State)[b1] + 0x3c) = ((Sky2Config*)cfg)->unk2A;
-            *(int*)((&gSky2State)[b1] + 0x40) = ((Sky2Config*)cfg)->unk2C;
+            *(int*)((&gSky2State)[b1] + 0x3c) = ((Sky2Config*)cfg)->fadeDurationA;
+            *(int*)((&gSky2State)[b1] + 0x40) = ((Sky2Config*)cfg)->fadeDurationB;
             *(s8*)((&gSky2State)[b1] + 0x314) = -1;
             if ((((Sky2Config*)cfg)->flags2 & 0x20) != 0)
             {
@@ -2087,33 +2087,33 @@ void fn_8008C9F4(u8* cfg, u8 flags)
     *(f32*)((&gSky2State)[z[1]] + 0x68) = lbl_803DF108;
     *(s8*)((&gSky2State)[z[1]] + 0x314) = -1;
     *(f32*)((&gSky2State)[z[1]] + 0x6c) = lbl_803DF108;
-    if (((Sky2Config*)cfg)->unk2A == 0)
+    if (((Sky2Config*)cfg)->fadeDurationA == 0)
     {
-        ((Sky2Config*)cfg)->unk2A = 1;
+        ((Sky2Config*)cfg)->fadeDurationA = 1;
     }
-    if (((Sky2Config*)cfg)->unk2A != 0)
+    if (((Sky2Config*)cfg)->fadeDurationA != 0)
     {
-        *(int*)((&gSky2State)[z[1]] + 0x3c) = ((Sky2Config*)cfg)->unk2A;
+        *(int*)((&gSky2State)[z[1]] + 0x3c) = ((Sky2Config*)cfg)->fadeDurationA;
         *(int*)((&gSky2State)[z[1]] + 0x48) = 1;
         *(int*)((&gSky2State)[z[1]] + 8) = ((Sky2Config*)cfg)->skyTexId0;
-        *(f32*)((&gSky2State)[z[1]] + 0x5c) = lbl_803DF114 / (f32)(u32)((Sky2Config*)cfg)->unk2A;
+        *(f32*)((&gSky2State)[z[1]] + 0x5c) = lbl_803DF114 / (f32)(u32)((Sky2Config*)cfg)->fadeDurationA;
     }
     else
     {
         *(int*)((&gSky2State)[z[1]] + 0x3c) = 0;
         *(f32*)((&gSky2State)[z[1]] + 0x5c) = lbl_803DF114;
     }
-    if (((Sky2Config*)cfg)->unk2C == 0)
+    if (((Sky2Config*)cfg)->fadeDurationB == 0)
     {
-        ((Sky2Config*)cfg)->unk2C = 1;
+        ((Sky2Config*)cfg)->fadeDurationB = 1;
     }
-    if (((Sky2Config*)cfg)->unk2C != 0)
+    if (((Sky2Config*)cfg)->fadeDurationB != 0)
     {
-        *(int*)((&gSky2State)[z[1]] + 0x40) = ((Sky2Config*)cfg)->unk2C;
+        *(int*)((&gSky2State)[z[1]] + 0x40) = ((Sky2Config*)cfg)->fadeDurationB;
         *(f32*)((&gSky2State)[z[1]] + 0x58) =
-            lbl_803DF118 / (lbl_803DF11C * ((f32)(u32)((Sky2Config*)cfg)->unk2C / lbl_803DF120));
+            lbl_803DF118 / (lbl_803DF11C * ((f32)(u32)((Sky2Config*)cfg)->fadeDurationB / lbl_803DF120));
         *(int*)((&gSky2State)[z[1]] + 0xc) = 0x5dc;
-        *(f32*)((&gSky2State)[z[1]] + 0x60) = lbl_803DF114 / (f32)(u32)((Sky2Config*)cfg)->unk2C;
+        *(f32*)((&gSky2State)[z[1]] + 0x60) = lbl_803DF114 / (f32)(u32)((Sky2Config*)cfg)->fadeDurationB;
     }
     else
     {
@@ -3178,10 +3178,10 @@ void Sky_func03(int a, int b, u8* cfg)
                 *(f32*)(gSkyState + iofs + 0x6c) = (f32)(u32)((Sky2Config*)cfg)->color3R;
                 *(f32*)(gSkyState + iofs + 0x70) = (f32)(u32)((Sky2Config*)cfg)->color3R;
                 *(f32*)(gSkyState + iofs + 0xb8) = EXIInputFlag;
-                if (((Sky2Config*)cfg)->unk2A != 0)
+                if (((Sky2Config*)cfg)->fadeDurationA != 0)
                 {
                     *(f32*)(gSkyState + iofs + 0xb4) =
-                        EXIInputFlag / (lbl_803DF104 * (f32)(u32)((Sky2Config*)cfg)->unk2A);
+                        EXIInputFlag / (lbl_803DF104 * (f32)(u32)((Sky2Config*)cfg)->fadeDurationA);
                 }
                 else
                 {
@@ -3246,10 +3246,10 @@ void Sky_func03(int a, int b, u8* cfg)
             if ((((u32)(u8)((SkyState*)gSkyState)->flags255 >> 7) & 1) != 0)
             {
                 ((SkyState*)gSkyState)->fadeFactor = EXIInputFlag;
-                if (((Sky2Config*)cfg)->unk2A != 0)
+                if (((Sky2Config*)cfg)->fadeDurationA != 0)
                 {
                     ((SkyState*)gSkyState)->fadeRate =
-                        EXIInputFlag / (lbl_803DF104 * (f32)(u32)((Sky2Config*)cfg)->unk2A);
+                        EXIInputFlag / (lbl_803DF104 * (f32)(u32)((Sky2Config*)cfg)->fadeDurationA);
                 }
                 else
                 {

@@ -88,8 +88,8 @@ typedef struct Sky2Config {
     u8 unk20[4];
     u16 unk24;
     u8 unk26[4];
-    u16 unk2A;
-    u16 unk2C;
+    u16 fadeDurationA; /* 0x2A: clamped to >=1; state+0x3c=this, rate at +0x5c = k/this (per-frame fade increment) */
+    u16 fadeDurationB; /* 0x2C: clamped to >=1; state+0x40=this, rate at +0x58/+0x60 = k/this */
     u16 skyTexId0;   /* sky texture id slot 0 (+0xc38); also staged to slot+8 */
     u16 skyTexId1;   /* sky texture id slot 1 (+0xc38) */
     u16 skyTexId2;   /* sky texture id slot 2 (+0xc38) */
@@ -109,7 +109,7 @@ typedef struct Sky2Config {
     u8 unk5E[2];
 } Sky2Config;
 
-STATIC_ASSERT(offsetof(Sky2Config, unk2A) == 0x2A);
+STATIC_ASSERT(offsetof(Sky2Config, fadeDurationA) == 0x2A);
 STATIC_ASSERT(offsetof(Sky2Config, flags) == 0x58);
 
 int getSkyStructField24C(void);
