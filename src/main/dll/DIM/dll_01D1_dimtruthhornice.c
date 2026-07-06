@@ -80,7 +80,9 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 }
 
 
-int dimtruthhornice_getExtraSize(void) { return 0x8; }
+
+
+
 
 int fn_801B6D40(int* obj, int damage)
 {
@@ -90,23 +92,7 @@ int fn_801B6D40(int* obj, int damage)
 }
 
 
-void dimtruthhornice_init(int* obj, int* def)
-{
-    TruthHornIceState* state = ((GameObject*)obj)->extra;
-    state->hitsLeft = (s8)((DimtruthhorniceObjectDef*)def)->hitsLeft;
-    state->gameBit = ((DimtruthhorniceObjectDef*)def)->gameBit;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMTRUTHHORNICE_OBJFLAG_HIDDEN);
-    {
-        s16 slot = state->gameBit;
-        if (slot != -1 && GameBit_Get(slot) != 0u)
-        {
-            ObjHits_DisableObject(obj);
-            state->phase = TRUTHHORNICE_PHASE_SHATTERED;
-            ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        }
-    }
-}
-
+int dimtruthhornice_getExtraSize(void) { return 0x8; }
 
 void dimtruthhornice_update(int* obj)
 {
@@ -175,5 +161,23 @@ void dimtruthhornice_update(int* obj)
     case TRUTHHORNICE_PHASE_SHATTERED:
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
+    }
+}
+
+
+void dimtruthhornice_init(int* obj, int* def)
+{
+    TruthHornIceState* state = ((GameObject*)obj)->extra;
+    state->hitsLeft = (s8)((DimtruthhorniceObjectDef*)def)->hitsLeft;
+    state->gameBit = ((DimtruthhorniceObjectDef*)def)->gameBit;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMTRUTHHORNICE_OBJFLAG_HIDDEN);
+    {
+        s16 slot = state->gameBit;
+        if (slot != -1 && GameBit_Get(slot) != 0u)
+        {
+            ObjHits_DisableObject(obj);
+            state->phase = TRUTHHORNICE_PHASE_SHATTERED;
+            ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+        }
     }
 }
