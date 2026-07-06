@@ -5521,7 +5521,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                     *(u8*)((char*)state + 0x34a) = *(u8*)((char*)state + 0x34a) | 4;
                     *(int*)&((PlayerState*)state)->baddie.unk31C = *(int*)&((PlayerState*)state)->baddie.unk31C & ~
                         0x100;
-                    buttonDisable(0, 0x100);
+                    buttonDisable(0, PAD_BUTTON_A);
                     inner->unk8C0 = *(u8*)((char*)state + 0x34b);
                 }
                 if ((*(u8*)((char*)state + 0x34a) & 4) != 0 &&
@@ -5916,7 +5916,7 @@ int fn_8029EBCC(int obj, int state)
     {
         if (inner->actionCooldown <= lbl_803E7EA4)
         {
-            buttonDisable(0, 0x100);
+            buttonDisable(0, PAD_BUTTON_A);
             ((void (*)(int, int, f32, f32))fn_802AA014)(obj, state, inner->aimInputZ, lbl_803E7EA4);
             inner->actionCooldown = lbl_803E7F10;
         }
@@ -7133,7 +7133,7 @@ int fn_802AD2F4(int obj, int inner, int state)
         (((PlayerState*)inner)->buttonsJustPressed & PAD_BUTTON_X) != 0)
     {
         ((ByteFlags*)((char*)inner + 0x3f2))->b02 = 1;
-        ((PlayerState*)inner)->buttonsJustPressed = ((PlayerState*)inner)->buttonsJustPressed & ~0x400;
+        ((PlayerState*)inner)->buttonsJustPressed = ((PlayerState*)inner)->buttonsJustPressed & ~PAD_BUTTON_X;
     }
     if (((ByteFlags*)((char*)inner + 0x3f0))->b01 != 0 &&
         ((ByteFlags*)((char*)inner + 0x3f2))->b02 != 0 &&
@@ -13057,7 +13057,7 @@ void fn_802AF7F8(int obj, int state)
             fn_80295E90(obj, 0);
             ((PlayerState*)state)->animState = -1;
             ((PlayerState*)state)->queuedItemCommand = -1;
-            buttonDisable(0, 0x200);
+            buttonDisable(0, PAD_BUTTON_B);
         }
         ((PlayerState*)state)->stateTimer = ((PlayerState*)state)->stateTimer - timeDelta;
         if (((PlayerState*)state)->stateTimer <= lbl_803E7EA4)
@@ -13624,7 +13624,7 @@ int fn_8029B7B0(int obj, int state)
     }
     if ((inner->buttonsJustPressed & PAD_BUTTON_B) != 0 || inner->curAnimId != 0x52)
     {
-        buttonDisable(0, 0x200);
+        buttonDisable(0, PAD_BUTTON_B);
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029A420;
         return 0x2c;
     }
@@ -14023,7 +14023,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                         setAButtonIcon(2);
                         if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
                         {
-                            buttonDisable(0, 0x100);
+                            buttonDisable(0, PAD_BUTTON_A);
                             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_80298924;
                             return 0x34;
                         }
@@ -14033,7 +14033,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                         setAButtonIcon(0xe);
                         if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
                         {
-                            buttonDisable(0, 0x100);
+                            buttonDisable(0, PAD_BUTTON_A);
                             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_80298924;
                             return 0x36;
                         }
@@ -14042,7 +14042,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                         setAButtonIcon(2);
                         if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
                         {
-                            buttonDisable(0, 0x100);
+                            buttonDisable(0, PAD_BUTTON_A);
                             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_80298924;
                             return 0x35;
                         }
@@ -14063,7 +14063,7 @@ int fn_802A418C(int obj, int state, f32 fv)
             {
                 char* found;
                 s16* def = NULL;
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 found = ((char *(*)(int, int, f32*))ObjGroup_FindNearestObject)(0xf, obj, &dist);
                 if (found != NULL)
                 {
@@ -14082,7 +14082,7 @@ int fn_802A418C(int obj, int state, f32 fv)
             {
                 int player;
                 void* att;
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
                 {
                     inner->staffActionRequest = 1;
@@ -17261,14 +17261,14 @@ int fn_80298E54(int obj, int state, f32 fv)
             flags = inner->buttonsJustPressed;
             if ((flags & 0x100) != 0)
             {
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 lbl_803DE488 = lbl_803E7ED8;
                 ObjAnim_SetCurrentMove(obj, 0xac, lbl_803E7EA4, 0);
                 ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EA4;
             }
             else if ((flags & 0x200) != 0)
             {
-                buttonDisable(0, 0x200);
+                buttonDisable(0, PAD_BUTTON_B);
                 Sfx_PlayFromObject(obj, SFXmammoth_breath1);
                 ObjAnim_SetCurrentMove(obj, 0xd1, lbl_803E7EA4, 0);
                 ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F4C;
@@ -17291,7 +17291,7 @@ int fn_80298E54(int obj, int state, f32 fv)
             lbl_803DE488 = lbl_803DE488 - lbl_803E7EE0;
             if ((inner->buttonsJustPressedIfNotBusy & PAD_BUTTON_A) != 0 || getCurSeqNo() != 0)
             {
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 lbl_803DE460 = lbl_803DE460 - fv;
                 if (lbl_803DE460 < lbl_803E7EA4)
                 {
@@ -17364,7 +17364,7 @@ int fn_80298E54(int obj, int state, f32 fv)
         cfPrisonGuard_setLiftHeight(gPlayerInteractTarget, 0x800);
         if ((inner->buttonsJustPressed & PAD_BUTTON_B) != 0)
         {
-            buttonDisable(0, 0x200);
+            buttonDisable(0, PAD_BUTTON_B);
             Sfx_PlayFromObject(obj, SFXmammoth_breath1);
             ObjAnim_SetCurrentMove(obj, 0xad, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F4C;
@@ -17504,7 +17504,7 @@ int fn_802994D0(int obj, int state, f32 fv)
         }
         else if ((inner->buttonsJustPressed & PAD_BUTTON_B) != 0)
         {
-            buttonDisable(0, 0x200);
+            buttonDisable(0, PAD_BUTTON_B);
             ObjAnim_SetCurrentMove(obj, 0x44, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F80;
         }
@@ -18399,7 +18399,7 @@ int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
             }
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
             {
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 switch (*(int*)((char*)r4c + 0x14))
                 {
                 case 0x46a51:
@@ -18490,8 +18490,8 @@ void playerProcessQueuedItemCommand(int obj, int state)
         }
         if (yButtonItemResult == 1)
         {
-            buttonDisable(0, 0x800);
-            ((PlayerState*)state)->buttonsJustPressed &= ~0x800;
+            buttonDisable(0, PAD_BUTTON_Y);
+            ((PlayerState*)state)->buttonsJustPressed &= ~PAD_BUTTON_Y;
             ((PlayerState*)state)->queuedItemCommand = item;
         }
     }
