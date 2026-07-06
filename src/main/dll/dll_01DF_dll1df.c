@@ -49,51 +49,20 @@ STATIC_ASSERT(offsetof(Dll1DFPlaceData, scaleByte) == 0x1B);
 STATIC_ASSERT(offsetof(Dll1DFState, unk10) == 0x10);
 STATIC_ASSERT(offsetof(Dll1DFState, spawnTimer) == 0x24);
 
+int dll_1DF_getExtraSize(void) { return 0x28; }
+int dll_1DF_getObjectTypeId(void) { return 0x0; }
+
 void dll_1DF_free(void)
 {
 }
-
-void dll_1DF_hitDetect(void)
-{
-}
-
-void dll_1DF_release(void)
-{
-}
-
-void dll_1DF_initialise(void)
-{
-}
-
-int dll_1DF_getExtraSize(void) { return 0x28; }
-int dll_1DF_getObjectTypeId(void) { return 0x0; }
 
 void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B98);
 }
 
-void dll_1DF_init(GameObject* obj, Dll1DFPlaceData* p)
+void dll_1DF_hitDetect(void)
 {
-    u32 scaleParam;
-    void* objDef;
-    void* modelState;
-    obj->anim.rotZ = (s16)((u32)p->rotZByte << 8);
-    obj->anim.rotY = (s16)((u32)p->rotYByte << 8);
-    obj->anim.rotX = (s16)((u32)p->rotXByte << 8);
-    scaleParam = p->scaleByte;
-    if (scaleParam != 0)
-    {
-        objDef = *(void**)&obj->anim.modelInstance;
-        obj->anim.rootMotionScale = ((ObjDef*)objDef)->rootMotionScaleBase * ((f32)scaleParam / lbl_803E4BA8);
-    }
-    ((Dll1DFState*)obj->extra)->unk10 = lbl_803E4BAC;
-    modelState = *(void**)&obj->anim.modelState;
-    if (modelState != NULL)
-    {
-        ((ObjModelState*)modelState)->flags |= 0x810;
-    }
-    obj->objectFlags |= DLL1DF_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dll_1DF_update(GameObject* obj)
@@ -134,4 +103,35 @@ void dll_1DF_update(GameObject* obj)
             sub->spawnTimer = lbl_803E4BA4;
         }
     }
+}
+
+void dll_1DF_init(GameObject* obj, Dll1DFPlaceData* p)
+{
+    u32 scaleParam;
+    void* objDef;
+    void* modelState;
+    obj->anim.rotZ = (s16)((u32)p->rotZByte << 8);
+    obj->anim.rotY = (s16)((u32)p->rotYByte << 8);
+    obj->anim.rotX = (s16)((u32)p->rotXByte << 8);
+    scaleParam = p->scaleByte;
+    if (scaleParam != 0)
+    {
+        objDef = *(void**)&obj->anim.modelInstance;
+        obj->anim.rootMotionScale = ((ObjDef*)objDef)->rootMotionScaleBase * ((f32)scaleParam / lbl_803E4BA8);
+    }
+    ((Dll1DFState*)obj->extra)->unk10 = lbl_803E4BAC;
+    modelState = *(void**)&obj->anim.modelState;
+    if (modelState != NULL)
+    {
+        ((ObjModelState*)modelState)->flags |= 0x810;
+    }
+    obj->objectFlags |= DLL1DF_OBJFLAG_HITDETECT_DISABLED;
+}
+
+void dll_1DF_release(void)
+{
+}
+
+void dll_1DF_initialise(void)
+{
 }
