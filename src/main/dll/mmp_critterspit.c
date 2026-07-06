@@ -20,6 +20,7 @@
 #include "main/gamebits.h"
 
 #define MMPCRITTERSPIT_OBJFLAG_PARENT_SLACK 0x1000
+#define PRESSURESWITCHFB_REMOVE_GROUP_ID 0x53 /* DLL 0xFB pressureswitchfb (self-registers) */
 extern f32 lbl_803E242C; /* initial search radius for ObjGroup_FindNearestObject */
 extern f32 lbl_803E24C4; /* squared eating-range threshold */
 extern u8* ObjGroup_FindNearestObject(int kind, u8* self, f32* outDist);
@@ -46,7 +47,7 @@ int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
         result = 1;
     }
 
-    if (ObjGroup_FindNearestObject(0x53, tricky, &dist) != NULL)
+    if (ObjGroup_FindNearestObject(PRESSURESWITCHFB_REMOVE_GROUP_ID, tricky, &dist) != NULL)
     {
         return 0;
     }
