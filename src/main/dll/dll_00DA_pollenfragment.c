@@ -339,7 +339,7 @@ void pollenfragment_update(int obj)
     u8* nearObj;
     void* hit;
     int i;
-    f32 w;
+    f32 horizDamping;
     f32 t;
     XyzVec dir;
     XyzVec sc;
@@ -438,8 +438,8 @@ void pollenfragment_update(int obj)
                 ((lbl_803E315C + ((PollenFragmentExtra*)extra)->timer) * (lbl_803E316C * (dir.y * ((PollenFragmentExtra*)extra)->speed))) / lbl_803E3164;
         }
     }
-    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (w = lbl_803E3170);
-    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * w;
+    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (horizDamping = lbl_803E3170);
+    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * horizDamping;
     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E3174;
     if ((((PollenFragmentExtra*)extra)->def)->noVertical)
     {
