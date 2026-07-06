@@ -2139,6 +2139,7 @@ main/dll/SB/dll_01EF_sbcloudball.c:
 
 main/dll/SB/dll_01F0_sbkytecage.c:
 	.text       start:0x801E4AC0 end:0x801E4F14
+	.sdata2     start:0x803E5918 end:0x803E5920
 
 main/dll/SB/dll_01F2_sbcagekyte.c:
 	.text       start:0x801E4F14 end:0x801E5060

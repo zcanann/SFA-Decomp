@@ -26,10 +26,8 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 extern int getLActions();
 extern int ObjLink_DetachChild();
 extern int ObjLink_AttachChild();
-extern f32 lbl_803E5918; /* ObjAnim_AdvanceCurrentMove speed */
 
 extern int* objModelGetVecFn_800395d8(int obj, int idx);
-extern f32 lbl_803E591C; /* ObjAnim_SetCurrentMove blend time */
 
 /* objType of the loose Kyte child the cage attaches */
 #define SB_KYTE_OBJECT_TYPE 0x121
@@ -71,25 +69,6 @@ enum
     SB_KYTECAGE_HIT_RELEASE = 0x1
 };
 
-void SB_KyteCage_render(void)
-{
-}
-
-void SB_KyteCage_hitDetect(void)
-{
-}
-
-void SB_KyteCage_release(void)
-{
-}
-
-void SB_KyteCage_initialise(void)
-{
-}
-
-int SB_KyteCage_getExtraSize(void) { return sizeof(SBKyteCageState); }
-int SB_KyteCage_getObjectTypeId(void) { return 0x0; }
-
 /* SB_KyteCage_SeqFn anim-event opcodes (written into state->seqLatch) */
 enum
 {
@@ -125,7 +104,7 @@ int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     if (obj->seqIndex != -1)
     {
         animUpdate->hitVolumePair &= ~4;
-        if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5918,
+        if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, 0.004f,
                                                                          timeDelta, NULL) != 0)
         {
             Sfx_PlayFromObject((int*)obj, SFXfend_rob_beep2);
@@ -136,6 +115,9 @@ int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     return 0;
 }
 
+int SB_KyteCage_getExtraSize(void) { return sizeof(SBKyteCageState); }
+int SB_KyteCage_getObjectTypeId(void) { return 0x0; }
+
 void SB_KyteCage_free(GameObject* obj)
 {
     void* child = ((SBKyteCageState*)obj->extra)->kyte;
@@ -145,18 +127,12 @@ void SB_KyteCage_free(GameObject* obj)
     }
 }
 
-void SB_KyteCage_init(GameObject* obj, int* params)
+void SB_KyteCage_render(void)
 {
-    SBKyteCageState* state = obj->extra;
-    obj->animEventCallback = SB_KyteCage_SeqFn;
-    obj->anim.rotX = (s16)((s8) * (s8*)&((ObjHitsPriorityState*)params)->localPosZ << 8);
-    obj->objectFlags = (u16)(obj->objectFlags | SB_KYTECAGE_INIT_FLAGS);
-    state->seqLatch = 0;
-    if ((u32)GameBit_Get(GAMEBIT_KYTE_CAGED) == 0u)
-    {
-        getLActions(obj, obj, SB_KYTECAGE_LACTION_A, 0, 0, 0);
-        getLActions(obj, obj, SB_KYTECAGE_LACTION_B, 0, 0, 0);
-    }
+}
+
+void SB_KyteCage_hitDetect(void)
+{
 }
 
 void SB_KyteCage_update(int obj)
@@ -216,17 +192,39 @@ void SB_KyteCage_update(int obj)
         if (mvec != 0 && kind < 9 && ((GameObject*)obj)->anim.currentMove != SB_KYTECAGE_MOVE_NEAR)
         {
             *(s16*)((char*)mvec + 4) = ((GameObject*)((GameObject*)obj)->anim.parent)->anim.rotZ;
-            ObjAnim_SetCurrentMove(obj, SB_KYTECAGE_MOVE_NEAR, lbl_803E591C, 0);
+            ObjAnim_SetCurrentMove(obj, SB_KYTECAGE_MOVE_NEAR, 0.0f, 0);
         }
         else if (mvec != 0 && kind >= 9 && ((GameObject*)obj)->anim.currentMove != SB_KYTECAGE_MOVE_FAR)
         {
             *(s16*)((char*)mvec + 4) = 0;
-            ObjAnim_SetCurrentMove(obj, SB_KYTECAGE_MOVE_FAR, lbl_803E591C, 0);
+            ObjAnim_SetCurrentMove(obj, SB_KYTECAGE_MOVE_FAR, 0.0f, 0);
         }
     }
-    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5918,
+    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, 0.004f,
                                                                      timeDelta, NULL) != 0)
     {
         Sfx_PlayFromObject((int*)obj, SFXfend_rob_beep2);
     }
+}
+
+void SB_KyteCage_init(GameObject* obj, int* params)
+{
+    SBKyteCageState* state = obj->extra;
+    obj->animEventCallback = SB_KyteCage_SeqFn;
+    obj->anim.rotX = (s16)((s8) * (s8*)&((ObjHitsPriorityState*)params)->localPosZ << 8);
+    obj->objectFlags = (u16)(obj->objectFlags | SB_KYTECAGE_INIT_FLAGS);
+    state->seqLatch = 0;
+    if ((u32)GameBit_Get(GAMEBIT_KYTE_CAGED) == 0u)
+    {
+        getLActions(obj, obj, SB_KYTECAGE_LACTION_A, 0, 0, 0);
+        getLActions(obj, obj, SB_KYTECAGE_LACTION_B, 0, 0, 0);
+    }
+}
+
+void SB_KyteCage_release(void)
+{
+}
+
+void SB_KyteCage_initialise(void)
+{
 }
