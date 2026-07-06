@@ -79,13 +79,55 @@ extern f32 getXZDistance(f32* a, f32* b);
 
 extern f32 lbl_803E461C;
 
-int ccgasventcontrol_getExtraSize(void) { return sizeof(CcgasventcontrolState); }
-
-void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+int CCGasVentControl_SeqFn(int obj)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4620);
+    CCGasVentControlFn_801a9fd0(obj, *(int*)&((GameObject*)obj)->extra);
+    return 0;
 }
+
+#pragma dont_inline on
+u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
+{
+    u8 i;
+    u8 count = 0;
+    if (GameBit_Get(GAMEBIT_GAS_ACTIVE) != 0)
+    {
+        int cnt;
+        int* list = ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
+        f32 thr;
+        i = 0;
+        thr = lbl_803E4618;
+        for (; i < 4; i++)
+        {
+            int other = ObjGroup_FindNearestObject(5, list[i], 0);
+            if (getXZDistance((f32*)(list[i] + 0x18), (f32*)(other + 0x18)) > thr)
+            {
+                count = count + 1u;
+            }
+        }
+    }
+    if (count != 0)
+    {
+        if (((CcgasventcontrolState*)extra)->soundActive == 0)
+        {
+            Sfx_AddLoopedObjectSound(obj, SFXTRIG_en_diallp_c_223);
+            ((CcgasventcontrolState*)extra)->soundActive = 1;
+        }
+        Sfx_SetObjectSfxVolume(obj, SFXTRIG_en_diallp_c_223, (u8)(count * 0xf + 0x28), lbl_803E461C);
+    }
+    else
+    {
+        if (((CcgasventcontrolState*)extra)->soundActive != 0)
+        {
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_en_diallp_c_223);
+            ((CcgasventcontrolState*)extra)->soundActive = 0;
+        }
+    }
+    return count;
+}
+#pragma dont_inline reset
+
+int ccgasventcontrol_getExtraSize(void) { return sizeof(CcgasventcontrolState); }
 
 void ccgasventcontrol_free(int obj)
 {
@@ -98,21 +140,10 @@ void ccgasventcontrol_free(int obj)
     (*gGameUIInterface)->airMeterSetShutdown();
 }
 
-void ccgasventcontrol_init(int obj, u8* p)
+void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    char* inner = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = CCGasVentControl_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)((u32)p[0x1a] << 8);
-    if (GameBit_Get(GAMEBIT_GAS_PUZZLE_DONE) != 0)
-    {
-        ((CcgasventcontrolState*)inner)->state = CCGASVENT_STATE_DONE;
-    }
-}
-
-int CCGasVentControl_SeqFn(int obj)
-{
-    CCGasVentControlFn_801a9fd0(obj, *(int*)&((GameObject*)obj)->extra);
-    return 0;
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4620);
 }
 
 void ccgasventcontrol_update(int obj)
@@ -218,42 +249,13 @@ void ccgasventcontrol_update(int obj)
     }
 }
 
-u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
+void ccgasventcontrol_init(int obj, u8* p)
 {
-    u8 i;
-    u8 count = 0;
-    if (GameBit_Get(GAMEBIT_GAS_ACTIVE) != 0)
+    char* inner = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->animEventCallback = CCGasVentControl_SeqFn;
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)p[0x1a] << 8);
+    if (GameBit_Get(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
-        int cnt;
-        int* list = ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
-        f32 thr;
-        i = 0;
-        thr = lbl_803E4618;
-        for (; i < 4; i++)
-        {
-            int other = ObjGroup_FindNearestObject(5, list[i], 0);
-            if (getXZDistance((f32*)(list[i] + 0x18), (f32*)(other + 0x18)) > thr)
-            {
-                count = count + 1u;
-            }
-        }
+        ((CcgasventcontrolState*)inner)->state = CCGASVENT_STATE_DONE;
     }
-    if (count != 0)
-    {
-        if (((CcgasventcontrolState*)extra)->soundActive == 0)
-        {
-            Sfx_AddLoopedObjectSound(obj, SFXTRIG_en_diallp_c_223);
-            ((CcgasventcontrolState*)extra)->soundActive = 1;
-        }
-        Sfx_SetObjectSfxVolume(obj, SFXTRIG_en_diallp_c_223, (u8)(count * 0xf + 0x28), lbl_803E461C);
-    }
-    else
-    {
-        if (((CcgasventcontrolState*)extra)->soundActive != 0)
-        {
-            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_en_diallp_c_223);
-            ((CcgasventcontrolState*)extra)->soundActive = 0;
-        }
-    }
-    return count;
 }
