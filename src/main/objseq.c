@@ -718,8 +718,8 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
     int result;
     int j;
     int found;
-    u8 v;
-    int n;
+    u8 slotVal;
+    int eventIdx;
     int slot;
 
     i = 0;
@@ -779,12 +779,12 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
                 freeSlot = -1;
                 for (j = 0; j < 10; j++)
                 {
-                    v = seq[j + 0x12c];
-                    if (v == arg10)
+                    slotVal = seq[j + 0x12c];
+                    if (slotVal == arg10)
                     {
                         found = 1;
                     }
-                    if (v == 0)
+                    if (slotVal == 0)
                     {
                         freeSlot = j;
                     }
@@ -840,11 +840,11 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
                 {
                 case 0:
                     ((ObjSeqState*)seq)->unk80 = top16;
-                    n = ((ObjSeqState*)seq)->eventCount;
-                    if ((u32)n < 10)
+                    eventIdx = ((ObjSeqState*)seq)->eventCount;
+                    if ((u32)eventIdx < 10)
                     {
                         ((ObjSeqState*)seq)->eventCount += 1;
-                        ((ObjSeqState*)seq)->eventIds[n] = top16;
+                        ((ObjSeqState*)seq)->eventIds[eventIdx] = top16;
                     }
                     break;
                 case 1:
