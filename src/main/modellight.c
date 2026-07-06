@@ -419,42 +419,42 @@ void modelLightStruct_getProjectionTevModes(ModelLightStruct* p, void** a, void*
     *b = (void*)p->projectionTevAlphaMode;
 }
 
-void modelLightStruct_setSpecularTargetColor(ModelLightStruct* p, u8 a, u8 b, u8 c, u8 d)
+void modelLightStruct_setSpecularTargetColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
 {
-    p->specularFadeTargetColor[0] = a;
-    p->specularFadeTargetColor[1] = b;
-    p->specularFadeTargetColor[2] = c;
-    p->specularFadeTargetColor[3] = d;
+    p->specularFadeTargetColor[0] = r;
+    p->specularFadeTargetColor[1] = g;
+    p->specularFadeTargetColor[2] = b;
+    p->specularFadeTargetColor[3] = a;
 }
 
-void modelLightStruct_setDiffuseTargetColor(ModelLightStruct* p, u8 a, u8 b, u8 c, u8 d)
+void modelLightStruct_setDiffuseTargetColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
 {
-    p->diffuseFadeTargetColor[0] = a;
-    p->diffuseFadeTargetColor[1] = b;
-    p->diffuseFadeTargetColor[2] = c;
-    p->diffuseFadeTargetColor[3] = d;
+    p->diffuseFadeTargetColor[0] = r;
+    p->diffuseFadeTargetColor[1] = g;
+    p->diffuseFadeTargetColor[2] = b;
+    p->diffuseFadeTargetColor[3] = a;
 }
 
-void modelLightStruct_getPosition(ModelLightStruct* p, f32* a, f32* b, f32* c)
+void modelLightStruct_getPosition(ModelLightStruct* p, f32* x, f32* y, f32* z)
 {
-    *a = p->viewX;
-    *b = p->viewY;
-    *c = p->viewZ;
+    *x = p->viewX;
+    *y = p->viewY;
+    *z = p->viewZ;
 }
 
-void modelLightStruct_getWorldPosition(ModelLightStruct* p, f32* a, f32* b, f32* c)
+void modelLightStruct_getWorldPosition(ModelLightStruct* p, f32* x, f32* y, f32* z)
 {
-    *a = p->worldX;
-    *b = p->worldY;
-    *c = p->worldZ;
+    *x = p->worldX;
+    *y = p->worldY;
+    *z = p->worldZ;
 }
 
-void lightSetColor(int i, u8 a, u8 b, u8 c)
+void lightSetColor(int i, u8 r, u8 g, u8 b)
 {
     u8* base = &gModelLightColorTable;
-    base[i * 4] = a;
-    base[i * 4 + 1] = b;
-    base[i * 4 + 2] = c;
+    base[i * 4] = r;
+    base[i * 4 + 1] = g;
+    base[i * 4 + 2] = b;
 }
 
 void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct* p, int n)
@@ -470,20 +470,20 @@ extern f32 lbl_803DE788;
 extern f32 lbl_803DE794;
 extern f32 lbl_803DE798;
 
-void modelLightStruct_getSpecularColor(ModelLightStruct* p, u8* a, u8* b, u8* c, u8* d)
+void modelLightStruct_getSpecularColor(ModelLightStruct* p, u8* r, u8* g, u8* b, u8* a)
 {
-    *a = p->specularColor[0];
-    *b = p->specularColor[1];
-    *c = p->specularColor[2];
-    *d = p->specularColor[3];
+    *r = p->specularColor[0];
+    *g = p->specularColor[1];
+    *b = p->specularColor[2];
+    *a = p->specularColor[3];
 }
 
-void modelLightStruct_getDiffuseColor(ModelLightStruct* p, u8* a, u8* b, u8* c, u8* d)
+void modelLightStruct_getDiffuseColor(ModelLightStruct* p, u8* r, u8* g, u8* b, u8* a)
 {
-    *a = p->diffuseColor[0];
-    *b = p->diffuseColor[1];
-    *c = p->diffuseColor[2];
-    *d = p->diffuseColor[3];
+    *r = p->diffuseColor[0];
+    *g = p->diffuseColor[1];
+    *b = p->diffuseColor[2];
+    *a = p->diffuseColor[3];
 }
 
 void modelLightStruct_setAngularAttenuation(ModelLightStruct* p, f32 a, f32 b, f32 c)
@@ -491,36 +491,36 @@ void modelLightStruct_setAngularAttenuation(ModelLightStruct* p, f32 a, f32 b, f
     GXInitLightAttnA((u8*)p + 0x68, a, b, c);
 }
 
-void modelLightStruct_setSpecularColor(ModelLightStruct* p, u8 a, u8 b, u8 c, u8 d)
+void modelLightStruct_setSpecularColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
 {
-    p->specularFadeStartColor[0] = a;
-    p->specularColor[0] = a;
-    p->specularFadeStartColor[1] = b;
-    p->specularColor[1] = b;
-    p->specularFadeStartColor[2] = c;
-    p->specularColor[2] = c;
-    p->specularFadeStartColor[3] = d;
-    p->specularColor[3] = d;
+    p->specularFadeStartColor[0] = r;
+    p->specularColor[0] = r;
+    p->specularFadeStartColor[1] = g;
+    p->specularColor[1] = g;
+    p->specularFadeStartColor[2] = b;
+    p->specularColor[2] = b;
+    p->specularFadeStartColor[3] = a;
+    p->specularColor[3] = a;
 }
 
-void modelLightStruct_setDiffuseColor(ModelLightStruct* p, u8 a, u8 b, u8 c, u8 d)
+void modelLightStruct_setDiffuseColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
 {
-    p->diffuseFadeStartColor[0] = a;
-    p->diffuseColor[0] = a;
-    p->diffuseFadeStartColor[1] = b;
-    p->diffuseColor[1] = b;
-    p->diffuseFadeStartColor[2] = c;
-    p->diffuseColor[2] = c;
-    p->diffuseFadeStartColor[3] = d;
-    p->diffuseColor[3] = d;
+    p->diffuseFadeStartColor[0] = r;
+    p->diffuseColor[0] = r;
+    p->diffuseFadeStartColor[1] = g;
+    p->diffuseColor[1] = g;
+    p->diffuseFadeStartColor[2] = b;
+    p->diffuseColor[2] = b;
+    p->diffuseFadeStartColor[3] = a;
+    p->diffuseColor[3] = a;
 }
 
-void lightGetColor(int i, u8* a, u8* b, u8* c)
+void lightGetColor(int i, u8* r, u8* g, u8* b)
 {
     u8* base = &gModelLightColorTable;
-    *a = base[i * 4];
-    *b = base[i * 4 + 1];
-    *c = base[i * 4 + 2];
+    *r = base[i * 4];
+    *g = base[i * 4 + 1];
+    *b = base[i * 4 + 2];
 }
 
 void modelLightStruct_updateColorFade(ModelLightStruct* light)
@@ -711,11 +711,11 @@ typedef struct
 
 ModelLightChannelState gModelLightChannelStates[0x60 / sizeof(ModelLightChannelState)];
 
-void modelLightChannel_configure(int i, int a, int b)
+void modelLightChannel_configure(int i, int mode, int matSrc)
 {
-    gModelLightChannelStates[i].mode = a;
+    gModelLightChannelStates[i].mode = mode;
     gModelLightChannelStates[i].lightMask = 0;
-    gModelLightChannelStates[i].matSrc = b;
+    gModelLightChannelStates[i].matSrc = matSrc;
     gModelLightChannelStates[i].active = 1;
 }
 
@@ -1159,10 +1159,10 @@ void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int 
     }
 }
 
-void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b)
+void modelLightStruct_setDistanceAttenuation(u8* obj, f32 near, f32 far)
 {
-    ((ModelLightStruct*)obj)->attenuationNear = a;
-    ((ModelLightStruct*)obj)->attenuationFar = b;
+    ((ModelLightStruct*)obj)->attenuationNear = near;
+    ((ModelLightStruct*)obj)->attenuationFar = far;
     GXInitLightDistAttn(obj + 0x68, ((ModelLightStruct*)obj)->attenuationNear, lbl_803DE758, GX_DA_MEDIUM);
     GXGetLightAttnK(obj + 0x68, &((ModelLightStruct*)obj)->attenuationK0, &((ModelLightStruct*)obj)->attenuationK1,
                     &((ModelLightStruct*)obj)->attenuationK2);
@@ -1524,7 +1524,7 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
 
 void modelLightStruct_updateGlowAlpha(ModelLightStruct* light)
 {
-    s16 v;
+    s16 newAlpha;
 
     if (light->glowType == 0)
     {
@@ -1534,28 +1534,28 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct* light)
     {
         return;
     }
-    v = light->glowAlpha + light->glowAlphaStep;
-    if (v < 0)
+    newAlpha = light->glowAlpha + light->glowAlphaStep;
+    if (newAlpha < 0)
     {
-        v = 0;
+        newAlpha = 0;
         light->glowAlphaStep = 0;
     }
-    else if (v > 0xff)
+    else if (newAlpha > 0xff)
     {
-        v = 0xff;
+        newAlpha = 0xff;
         light->glowAlphaStep = 0;
     }
-    light->glowAlpha = v;
+    light->glowAlpha = newAlpha;
 }
 
 extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
 #pragma opt_common_subs off
-void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 a, f32 b)
+void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 fovY, f32 aspect)
 {
     f32 z;
-    obj->projectionFovY = a;
-    obj->projectionAspect = b;
+    obj->projectionFovY = fovY;
+    obj->projectionAspect = aspect;
     obj->projectionType = 1;
     z = lbl_803DE790;
     C_MTXLightPerspective(obj->lightProjectionTexMtx, obj->projectionFovY, obj->projectionAspect,
@@ -1570,19 +1570,19 @@ extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 
                             f32 transS, f32 transT);
 
 #pragma opt_common_subs off
-void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f)
+void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 top, f32 bottom, f32 left, f32 right, f32 scaleT, f32 scaleS)
 {
     f32 fScale;
     f32 eScale;
     f32 unit;
 
-    obj->projectionTop = a;
-    obj->projectionBottom = b;
-    obj->projectionLeft = c;
-    obj->projectionRight = d;
+    obj->projectionTop = top;
+    obj->projectionBottom = bottom;
+    obj->projectionLeft = left;
+    obj->projectionRight = right;
     obj->projectionType = 0;
-    fScale = f * lbl_803DE790;
-    eScale = e * lbl_803DE790;
+    fScale = scaleS * lbl_803DE790;
+    eScale = scaleT * lbl_803DE790;
     C_MTXLightOrtho(obj->lightProjectionTexMtx, obj->projectionTop, obj->projectionBottom,
                     obj->projectionLeft, obj->projectionRight, fScale, eScale, fScale,
                     eScale);
@@ -1593,14 +1593,14 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 a, f32 b, 
 #pragma opt_common_subs reset
 
 #pragma opt_propagation off
-void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b)
+void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f32 brightness)
 {
     u8* lightObj;
     f32 zero;
     f32 atten;
 
-    obj->specularAttenuationScale = a;
-    obj->specularBrightness = b;
+    obj->specularAttenuationScale = scale;
+    obj->specularBrightness = brightness;
     atten = obj->specularAttenuationScale * lbl_803DE790;
     lightObj = (u8*)obj + 0xc0;
     zero = lbl_803DE75C;
