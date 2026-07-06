@@ -25,7 +25,7 @@ typedef struct Dll19DState
     s16 rotVelX; /* 0x2e: per-frame rotX spin rate */
     s16 effectTimer;
     s16 despawnTimer;
-    u16 unk34;
+    u16 spinPhase; /* 0x34: free-running u16 phase accumulated each step (+framesThisStep*0x5dc) */
     u8 flags;
     u8 pad37[0x38 - 0x37];
 } Dll19DState;
@@ -152,7 +152,7 @@ void dll_19D_update(int obj)
         ((Dll19DState*)state)->posX = ((GameObject*)self)->anim.velocityX * timeDelta + ((Dll19DState*)state)->posX;
         ((Dll19DState*)state)->posY = ((GameObject*)self)->anim.velocityY * timeDelta + ((Dll19DState*)state)->posY;
         ((Dll19DState*)state)->posZ = ((GameObject*)self)->anim.velocityZ * timeDelta + ((Dll19DState*)state)->posZ;
-        ((Dll19DState*)state)->unk34 = ((Dll19DState*)state)->unk34 + framesThisStep * 0x5dc;
+        ((Dll19DState*)state)->spinPhase = ((Dll19DState*)state)->spinPhase + framesThisStep * 0x5dc;
         ((GameObject*)self)->anim.localPosX = ((Dll19DState*)state)->posX;
         ((GameObject*)self)->anim.localPosY = ((Dll19DState*)state)->posY;
         ((GameObject*)self)->anim.localPosZ = ((Dll19DState*)state)->posZ;
