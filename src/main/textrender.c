@@ -2211,9 +2211,10 @@ void gameTextRun(void)
         {
         case 3:
             {
-                u8 c1 = cmd->arg1;
-                u8 c2 = cmd->arg2;
-                u8 c3 = cmd->arg3;
+                u8 c1, c2, c3;
+                c3 = cmd->arg3;
+                c2 = cmd->arg2;
+                c1 = cmd->arg1;
                 lbl_803DC9A7 = cmd->arg0;
                 lbl_803DC9A6 = c1;
                 lbl_803DC9A5 = c2;
@@ -2223,10 +2224,8 @@ void gameTextRun(void)
         case 4:
             {
                 int t1 = cmd->arg2;
-                s16 t2 = cmd->arg1;
-                textWindow = (u8*)gTextBoxes + cmd->arg0 * 0x20;
-                *(s16*)(textWindow + 0x18) = t2;
-                *(s16*)(textWindow + 0x1a) = t1;
+                *(s16*)((u8*)gTextBoxes + cmd->arg0 * 0x20 + 0x18) = (s16)cmd->arg1;
+                *(s16*)((u8*)gTextBoxes + cmd->arg0 * 0x20 + 0x1a) = t1;
                 break;
             }
         case 1:
@@ -2284,8 +2283,9 @@ void gameTextRun(void)
             break;
         case 14:
             {
-                u8 e1 = cmd->arg1;
-                u8 e2 = cmd->arg2;
+                u8 e1, e2;
+                e2 = cmd->arg2;
+                e1 = cmd->arg1;
                 lbl_803DC992 = cmd->arg0;
                 lbl_803DC991 = e1;
                 lbl_803DC990 = e2;
@@ -2299,7 +2299,7 @@ void gameTextRun(void)
                 break;
             }
         case 15:
-            gameTextFonts = (TextFont*)(gameTextBase + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET + cmd->arg0 * 0x28);
+            gameTextFonts = (TextFont*)(gameTextBase + cmd->arg0 * 0x28 + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET);
             gameTextCharset = cmd->arg0;
             if (cmd->arg0 == 2)
             {
