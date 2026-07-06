@@ -144,7 +144,7 @@ void kytesmum_update(int obj)
     KytesMumSetup* setup = kytesMum->setup;
     f32 nearDist;
     s16 diff;
-    int d;
+    int absDiff;
     short moveIdx;
     int nearest;
 
@@ -175,9 +175,9 @@ void kytesmum_update(int obj)
         }
         kytesMum->yaw = (s16)(kytesMum->yaw + ((diff + 1) >> 4));
         runtime->animSpeed = lbl_803E699C * (f32)(diff / 1024);
-        d = diff;
-        d = (d >= 0) ? d : -d;
-        if (d < 0x400)
+        absDiff = diff;
+        absDiff = (absDiff >= 0) ? absDiff : -absDiff;
+        if (absDiff < 0x400)
         {
             kytesMum->yaw = (s16)(setup->yaw << 8);
             ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[randomGetRange(0, 1)],
