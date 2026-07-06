@@ -26,6 +26,8 @@
 #define DRAKORHOVERPAD_SUBTYPE_FREE 1048     /* free curve-follow, no tracking */
 #define DRAKORHOVERPAD_OBJGROUP 0x46
 #define DRAKORHOVERPAD_OBJGROUP_SECONDARY 0xa
+/* group owned by another DLL, queried here */
+#define BOSSDRAKOR_OBJGROUP 0x45 /* DLL 0x24D bossdrakor */
 
 /*
  * A ROM curve network node (the record returned by gRomCurveInterface->getById
@@ -579,7 +581,7 @@ void drakorhoverpad_updateMain(int obj)
         ((DrakorHoverpadUpdateMainState*)p)->anglePhase + framesThisStep * 0x320);
     if (g->f10 != 0)
     {
-        nearest = ObjGroup_FindNearestObject(0x45, obj, 0);
+        nearest = ObjGroup_FindNearestObject(BOSSDRAKOR_OBJGROUP, obj, 0);
         if ((u32)nearest != 0)
         {
             yawDelta = Obj_GetYawDeltaToObject(obj, nearest, 0);
