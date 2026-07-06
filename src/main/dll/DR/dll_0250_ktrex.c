@@ -446,14 +446,14 @@ void ktrex_free(int obj)
 
 int ktrex_shouldAdvanceArenaPhase(void)
 {
-    u8 a;
-    u8 b;
+    u8 currentMask;
+    u8 activeMask;
     KTRexArenaState* s = (KTRexArenaState*)gKTRexState;
     int r6;
     r6 = s->timerFA & 1;
-    a = s->currentLaneMask;
-    b = s->activeLaneMask;
-    if ((a & ((KTRexArenaState*)gKTRexState)->activeLaneMask) != 0)
+    currentMask = s->currentLaneMask;
+    activeMask = s->activeLaneMask;
+    if ((currentMask & ((KTRexArenaState*)gKTRexState)->activeLaneMask) != 0)
     {
         if (r6 != 0)
         {
@@ -473,17 +473,17 @@ int ktrex_shouldAdvanceArenaPhase(void)
     }
     if (r6 != 0)
     {
-        if ((a == 8 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 1)) ||
-            (a == 2 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 8)) ||
-            (a == 4 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 2)) ||
-            (a == 1 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 4)))
+        if ((currentMask == 8 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 1)) ||
+            (currentMask == 2 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 8)) ||
+            (currentMask == 4 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 2)) ||
+            (currentMask == 1 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 4)))
         {
             return 1;
         }
         return 0;
     }
-    if ((a == 1 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 8)) || (a == 4 && (b & 1)) || (a == 2 && (b & 4)) ||
-        (a == 8 && (b & 2)))
+    if ((currentMask == 1 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 8)) || (currentMask == 4 && (activeMask & 1)) || (currentMask == 2 && (activeMask & 4)) ||
+        (currentMask == 8 && (activeMask & 2)))
     {
         return 1;
     }
