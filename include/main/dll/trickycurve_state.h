@@ -10,7 +10,7 @@
  * span covers every observed access - the true allocation may be larger.
  */
 typedef struct TrickyCurveObjState {
-    u8 unk0[0x2 - 0x0];
+    s16 rangeX; /* accessed via raw *(s16*)state; X-axis half-extent (parallel to rangeY/rangeZ) */
     s16 rangeZ;
     s16 rangeY;
     s16 unk6;

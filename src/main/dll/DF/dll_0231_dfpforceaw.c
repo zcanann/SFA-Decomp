@@ -21,7 +21,7 @@ typedef struct TrickyCurveObjectDef
     u8 pad0[0x18 - 0x0];
     s8 rangeYRaw; /* 0x18 << 2 -> state.rangeY */
     u8 pad19[0x1A - 0x19];
-    s16 unk1A;
+    s16 rangeX;         /* 0x1A -> state.rangeX (X-axis half-extent) */
     s16 rangeZ;         /* 0x1C -> state.rangeZ */
     s16 triggerGameBit; /* 0x1E -> state.triggerGameBit */
     s16 gateGameBit;    /* 0x20 -> state.gateGameBit */
@@ -221,7 +221,7 @@ void TrickyCurve_init(int* obj, u8* def)
     u8* state = ((GameObject*)obj)->extra;
     state[0xc] = def[0x19];
     ((TrickyCurveObjState*)state)->rangeY = (s16)((s32)((TrickyCurveObjectDef*)def)->rangeYRaw << 2);
-    *(s16*)state = ((TrickyCurveObjectDef*)def)->unk1A;
+    *(s16*)state = ((TrickyCurveObjectDef*)def)->rangeX;
     ((TrickyCurveObjState*)state)->rangeZ = ((TrickyCurveObjectDef*)def)->rangeZ;
     state[0xe] = def[0x19];
     state[0x10] = 0;
