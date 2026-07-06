@@ -91,19 +91,20 @@ typedef struct Dll1DBState
 
 STATIC_ASSERT(sizeof(Dll1DBState) == 0x8);
 
+int dll_1DB_getExtraSize(void) { return 0x8; }
+int dll_1DB_getObjectTypeId(void) { return 0x0; }
+
 void dll_1DB_free(void)
 {
 }
 
+void dll_1DB_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B08);
+}
+
 void dll_1DB_hitDetect(void)
-{
-}
-
-void dll_1DB_release(void)
-{
-}
-
-void dll_1DB_initialise(void)
 {
 }
 
@@ -231,15 +232,6 @@ void dll_1DB_update(int obj)
     }
 }
 
-int dll_1DB_getExtraSize(void) { return 0x8; }
-int dll_1DB_getObjectTypeId(void) { return 0x0; }
-
-void dll_1DB_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B08);
-}
-
 void dll_1DB_init(void* obj, void* p)
 {
     void* sub = ((GameObject*)obj)->extra;
@@ -254,4 +246,12 @@ void dll_1DB_init(void* obj, void* p)
         ((Dll1DBState*)sub)->state = STATE_TOP;
     }
     ((GameObject*)obj)->objectFlags |= DLL1DB_OBJFLAG_HITDETECT_DISABLED;
+}
+
+void dll_1DB_release(void)
+{
+}
+
+void dll_1DB_initialise(void)
+{
 }
