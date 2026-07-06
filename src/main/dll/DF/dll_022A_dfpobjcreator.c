@@ -70,22 +70,8 @@ STATIC_ASSERT(sizeof(DfpobjcreatorSetup) == 0x24);
 
 extern int dbstealerworm_stateHandlerA02();
 
-void dfpobjcreator_hitDetect(void)
-{
-}
-
-void dfpobjcreator_release(void)
-{
-}
-
-void dfpobjcreator_initialise(void)
-{
-}
-
 int dfpobjcreator_getExtraSize(void) { return 0x1c; }
 int dfpobjcreator_getObjectTypeId(void) { return 0x0; }
-
-void dfpobjcreator_render(int obj, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 void dfpobjcreator_free(int obj, int flag)
 {
@@ -100,17 +86,10 @@ void dfpobjcreator_free(int obj, int flag)
     }
 }
 
-void dfpobjcreator_init(int obj, s8* def)
+void dfpobjcreator_render(int obj, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+
+void dfpobjcreator_hitDetect(void)
 {
-    DfpObjCreatorState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
-    state->gameBit = ((DfpobjcreatorObjectDef*)def)->gameBit;
-    state->spawnPeriod = ((DfpobjcreatorObjectDef*)def)->spawnPeriod;
-    state->spawnTimer = state->spawnPeriod;
-    state->unk12 = (s16)(s32)
-    def[0x1F];
-    state->unk14 = (s16)((s32)(u8)def[0x20] << 1);
-    state->unk16 = 100;
 }
 
 #pragma dont_inline on
@@ -154,5 +133,26 @@ void dfpobjcreator_update(int obj)
     }
 }
 #pragma dont_inline reset
+
+void dfpobjcreator_init(int obj, s8* def)
+{
+    DfpObjCreatorState* state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
+    state->gameBit = ((DfpobjcreatorObjectDef*)def)->gameBit;
+    state->spawnPeriod = ((DfpobjcreatorObjectDef*)def)->spawnPeriod;
+    state->spawnTimer = state->spawnPeriod;
+    state->unk12 = (s16)(s32)
+    def[0x1F];
+    state->unk14 = (s16)((s32)(u8)def[0x20] << 1);
+    state->unk16 = 100;
+}
+
+void dfpobjcreator_release(void)
+{
+}
+
+void dfpobjcreator_initialise(void)
+{
+}
 
 int dbstealerworm_stateHandlerA02(int obj, int p2);
