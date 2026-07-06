@@ -274,7 +274,7 @@ void fn_801627F4(int obj)
     f32 dist;
     f32 hitY;
     f32 unk;
-    f32 f;
+    f32 progress;
     int* ptr;
     char* state;
     int i;
@@ -336,19 +336,19 @@ void fn_801627F4(int obj)
             ((GrimbleControl*)sub)->reversed = facing;
             ((GameObject*)obj)->anim.rotX = ((GrimbleControl*)sub)->baseRotX + (!((GrimbleControl*)sub)->reversed <<
                 15);
-            f = ((GrimbleControl*)sub)->pathProgress -
+            progress = ((GrimbleControl*)sub)->pathProgress -
                 (f32)((((GrimbleControl*)sub)->reversed << 1) - 1) *
                 ((f32)(int)
             randomGetRange(0xa, 0x3c) / lbl_803E2F24
             )
             ;
-            ((GrimbleControl*)sub)->targetProgress = f;
-            f = ((GrimbleControl*)sub)->targetProgress;
-            f = (f > lbl_803E2EBC) ? f : lbl_803E2EBC;
-            ((GrimbleControl*)sub)->targetProgress = f;
-            f = ((GrimbleControl*)sub)->targetProgress;
-            f = (f < lbl_803E2F0C) ? f : lbl_803E2F0C;
-            ((GrimbleControl*)sub)->targetProgress = f;
+            ((GrimbleControl*)sub)->targetProgress = progress;
+            progress = ((GrimbleControl*)sub)->targetProgress;
+            progress = (progress > lbl_803E2EBC) ? progress : lbl_803E2EBC;
+            ((GrimbleControl*)sub)->targetProgress = progress;
+            progress = ((GrimbleControl*)sub)->targetProgress;
+            progress = (progress < lbl_803E2F0C) ? progress : lbl_803E2F0C;
+            ((GrimbleControl*)sub)->targetProgress = progress;
         }
     }
 }
