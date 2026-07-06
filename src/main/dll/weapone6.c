@@ -14,7 +14,12 @@
  * localized bark sfx unless one is already on object channel 16. Debug strings
  * are emitted via
  * trickyDebugPrint. tricky_state.h owns the TrickyState layout; the lbl_803E*
- * floats are this TU's tuning constants (.sdata2).
+ * floats are pooled .sdata2 tuning constants shared with the sibling tricky_*
+ * TUs (not ownable by this unit).
+ *
+ * fn_8013F100's case numbering/fallthrough (0 into 1, 4 into 5 via the label
+ * inside the if) is ground truth from the retail jump table at 0x8031D910 --
+ * do not renumber or "un-nest" case 5.
  */
 #include "main/audio/sfx.h"
 #include "main/frustum.h"
@@ -106,6 +111,8 @@ void fn_8013F100(int obj, register int state)
         *(float*)&((TrickyState*)state)->unk704 = lbl_803E24EC;
         ((TrickyState*)state)->substate = 1;
         ((TrickyState*)state)->unk7A4 = (f32)(s32)randomGetRange(150, 300);
+        /* fall through */
+    case 1:
         if (fn_80179650(*(int*)&((TrickyState*)state)->unk700) != 0)
         {
             status = trickyFn_8013b368(obj, lbl_803E24F0, state);
@@ -293,7 +300,7 @@ void fn_8013F100(int obj, register int state)
             }
         }
         break;
-    case 1:
+    case 6:
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E24FC)
         {
             status = *(int*)&((TrickyState*)state)->unk700;
@@ -338,7 +345,7 @@ void fn_8013F100(int obj, register int state)
             }
         }
         break;
-    case 3:
+    case 7:
         status = trickyFn_8013b368(obj, lbl_803E2408, state);
         if (status != 1)
         {
@@ -378,13 +385,13 @@ void fn_8013F100(int obj, register int state)
             ((TrickyState*)state)->substate = 1;
         }
         break;
-    case 4:
+    case 3:
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E24A8)
         {
             ((TrickyState*)state)->substate = 4;
         }
         break;
-    case 5:
+    case 4:
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E24D0)
         {
             targetPos = *(u8**)&((TrickyState*)state)->playerObj + 24;
@@ -400,6 +407,7 @@ void fn_8013F100(int obj, register int state)
                 *(short*)&((TrickyState*)state)->unkD2 = 0;
             }
             ((TrickyState*)state)->substate = 5;
+    case 5:
             if (trickyFn_8013b368(obj, lbl_803E24C8, state) == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
@@ -429,9 +437,6 @@ void fn_8013F100(int obj, register int state)
                 ((TrickyState*)state)->substate = 6;
             }
         }
-        break;
-    case 6:
-    case 7:
         break;
     }
     if (((((TrickyState*)state)->stateFlags & TRICKY_STATE_RESET_FLAG_10000) != 0) &&
