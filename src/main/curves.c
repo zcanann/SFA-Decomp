@@ -436,15 +436,15 @@ f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent)
     f32 p1;
     f32 p2;
     f32 p0;
-    f32 m;
+    f32 mid;
     f32 quadratic;
     f32 linear;
 
     cubic = values[3];
     cubic += (k668 = lbl_803DE668) * (p2 = values[2]) +
-        (-(p0 = values[0]) + (m = (k664 = lbl_803DE664) * (p1 = values[1])));
+        (-(p0 = values[0]) + (mid = (k664 = lbl_803DE664) * (p1 = values[1])));
     quadratic = k664 * p2 + (k664 * p0 + lbl_803DE66C * p1);
-    linear = k668 * p0 + m;
+    linear = k668 * p0 + mid;
 
     if (outTangent != NULL)
     {
@@ -504,13 +504,13 @@ f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent)
     f32 p1;
     f32 p0;
     f32 p2;
-    f32 m;
+    f32 mid;
     f32 constant;
 
     cubic = values[3] + (-3.0f * (p2 = values[2]) + (-(p0 = values[0]) + 3.0f * (p1 = values[1])));
-    m = 3.0f * p2;
-    quadratic = m + (3.0f * p0 + -6.0f * p1);
-    linear = -3.0f * p0 + m;
+    mid = 3.0f * p2;
+    quadratic = mid + (3.0f * p0 + -6.0f * p1);
+    linear = -3.0f * p0 + mid;
     constant = p2 + (p0 + 4.0f * p1);
 
     if (outTangent != NULL)
