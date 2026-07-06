@@ -59,8 +59,9 @@ extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
 extern u8 lbl_803DB411;
-extern f32 lbl_803E4F68;
-extern f32 lbl_803E4F78;
+
+int mmsh_scales_getExtraSize(void) { return 0x140; }
+int mmsh_scales_getObjectTypeId(void) { return 0xb; }
 
 void mmsh_scales_free(int obj, int keepChild)
 {
@@ -72,6 +73,16 @@ void mmsh_scales_free(int obj, int keepChild)
     {
         Obj_FreeObject(child);
     }
+}
+
+void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+}
+
+void mmsh_scales_hitDetect(void)
+{
 }
 
 void mmsh_scales_update(int objArg)
@@ -120,27 +131,6 @@ void mmsh_scales_update(int objArg)
     }
 }
 
-void mmsh_scales_hitDetect(void)
-{
-}
-
-void mmsh_scales_release(void)
-{
-}
-
-void mmsh_scales_initialise(void)
-{
-}
-
-int mmsh_scales_getExtraSize(void) { return 0x140; }
-int mmsh_scales_getObjectTypeId(void) { return 0xb; }
-
-void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4F68);
-}
-
 void mmsh_scales_init(int* obj, s16* def)
 {
     u8* state = ((GameObject*)obj)->extra;
@@ -148,7 +138,7 @@ void mmsh_scales_init(int* obj, s16* def)
     int loadedBank;
     ((MmshScalesState*)state)->unk6A = def[13];
     ((MmshScalesState*)state)->unk6E = -1;
-    ((MmshScalesState*)state)->dampingFactor = lbl_803E4F68 / (lbl_803E4F68 + (f32)(u32)((u8*)def)[36]);
+    ((MmshScalesState*)state)->dampingFactor = 1.0f / (1.0f + (f32)(u32)((u8*)def)[36]);
     ((MmshScalesState*)state)->unk28 = -1;
     loadedBank = ((GameObject*)obj)->unkF4;
     if (loadedBank == 0 && def[12] != 1)
@@ -174,6 +164,13 @@ void mmsh_scales_init(int* obj, s16* def)
     setup->color[1] = 4;
     setup->color[3] = 0xff;
     ((GameObject*)obj)->childObjs[0] = Obj_SetupObject((u8*)setup, 5, -1, -1, 0);
-    *(f32*)(*(u8**)&((GameObject*)obj)->childObjs[0] + 8) = *(f32*)(*(u8**)&((GameObject*)obj)->childObjs[0] + 8) *
-        lbl_803E4F78;
+    *(f32*)(*(u8**)&((GameObject*)obj)->childObjs[0] + 8) *= 2.0f;
+}
+
+void mmsh_scales_release(void)
+{
+}
+
+void mmsh_scales_initialise(void)
+{
 }

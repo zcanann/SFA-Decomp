@@ -1899,6 +1899,7 @@ main/dll/dll_018C_mmshshrine.c:
 
 main/dll/dll_018D_mmshscales.c:
 	.text       start:0x801C53A0 end:0x801C578C
+	.sdata2     start:0x803E4F68 end:0x803E4F7C
 
 main/dll/dll_018E_mmshwaterspike.c:
 	.text       start:0x801C578C end:0x801C5990
