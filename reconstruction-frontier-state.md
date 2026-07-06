@@ -6569,3 +6569,24 @@ Team still IDLE. git log d3d7a168ff..HEAD authored SOLELY by Zachary Canann; zer
 - DQ dll_0282_barrelgener:345, dll_0262_drakormissile:412, dll_02B5_timer, dll_02C0_front:
   pointer-base but NO named target struct (lightning cluster / active-model / light / textbox). raw.
 - dll_0255/0257/0258 (snowbike/drearthwarrior/drcloudrunner): already committed by siblings this session.
+
+## 2026-07-05 probe — team still idle
+git log -60: all authored "Zachary Canann". No Jack Price-Burns commit newer than d3d7a168ff (dll_01EB sbshipmast). No fresh Jack units. Cheap 0-win stop, no tree scan.
+
+## Catch-all struct-recovery sweep (Jul05 late) — drshackle 3-site path-point + exhaustion
+- dll_026E drshackle: respelled 3 ObjPath_GetPointWorldPosition raw casts to
+  &((GameObject*)entry)->anim.localPos* (2 loop callsites, entry char*/int*) +
+  reused the pre-existing dead `objAnim` (ObjAnimComponent*)obj local for the
+  main setScale call. .o md5 22a9c89b... byte-identical before/after. Committed a961f079a9.
+- dbstealerworm render path point already landed (c10e235ce2, a0b47931... identical).
+- SWEEP EXHAUSTED for the clean pointer-base path-point pattern. Remaining raw
+  ObjPath/casts left raw with disqualifiers:
+  * firecrawler:795 setup+8 = int-launder (int setup). firecrawler:279 child+0x8 =
+    ObjPlacement SHARED-prefix 0x0-0x18 view.
+  * drbarrelgr:321 state+0x14 = int-launder (int state = *(int*)&extra).
+  * andross:406 state+0x30/0x31/0x32 = 1-byte-apart, not a f32 vec (suspicious/narrow).
+  * worldobj:403 pathPoint+0x10 = Jack-owned + path-point-work struct not named.
+  * tricky/magicplant callsites = Jack Price-Burns owned (skip).
+  * player.c = skip per remit.
+  * modelEngine/light/objprint_dolphin char*-base casts = core-engine narrow per-unit
+    / shared structs, out of flat-DLL catch-all remit.
