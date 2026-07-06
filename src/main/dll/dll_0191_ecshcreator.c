@@ -85,24 +85,12 @@ STATIC_ASSERT(offsetof(EcshCreatorState, gameBit) == 4);
 STATIC_ASSERT(offsetof(EcshCreatorState, groupSlot) == 8);
 STATIC_ASSERT(sizeof(EcshCreatorState) == 0xa);
 
+int ecsh_creator_getExtraSize(void) { return 0xa; }
+int ecsh_creator_getObjectTypeId(void) { return 0x0; }
+
 void ecsh_creator_free(void)
 {
 }
-
-void ecsh_creator_hitDetect(void)
-{
-}
-
-void ecsh_creator_release(void)
-{
-}
-
-void ecsh_creator_initialise(void)
-{
-}
-
-int ecsh_creator_getExtraSize(void) { return 0xa; }
-int ecsh_creator_getObjectTypeId(void) { return 0x0; }
 
 void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -111,18 +99,8 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4FF8);
 }
 
-void ecsh_creator_init(GameObject* obj, s8* def)
+void ecsh_creator_hitDetect(void)
 {
-    EcshCreatorState* state = (EcshCreatorState*)obj->extra;
-    obj->anim.rotX = (s16)((s32)def[0x1e] << 8);
-    obj->unkF8 = 0;
-    state->countdown = ECSH_COUNTDOWN_START;
-    state->active = 0;
-    *(u8*)((char*)obj + 0x37) = 0xff; /* anim.pad37[0], adjacent to anim.alpha */
-    obj->anim.alpha = 0xff;
-    state->gameBit = *(s16*)(def + 0x18);
-    state->groupSlot = 2;
-    state->groupSlot += (u8)def[0x20];
 }
 
 void ecsh_creator_update(GameObject* obj)
@@ -185,4 +163,26 @@ void ecsh_creator_update(GameObject* obj)
         state->countdown = ECSH_COUNTDOWN_START;
         state->active = 0;
     }
+}
+
+void ecsh_creator_init(GameObject* obj, s8* def)
+{
+    EcshCreatorState* state = (EcshCreatorState*)obj->extra;
+    obj->anim.rotX = (s16)((s32)def[0x1e] << 8);
+    obj->unkF8 = 0;
+    state->countdown = ECSH_COUNTDOWN_START;
+    state->active = 0;
+    *(u8*)((char*)obj + 0x37) = 0xff; /* anim.pad37[0], adjacent to anim.alpha */
+    obj->anim.alpha = 0xff;
+    state->gameBit = *(s16*)(def + 0x18);
+    state->groupSlot = 2;
+    state->groupSlot += (u8)def[0x20];
+}
+
+void ecsh_creator_release(void)
+{
+}
+
+void ecsh_creator_initialise(void)
+{
 }
