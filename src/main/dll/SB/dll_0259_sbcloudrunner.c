@@ -263,8 +263,8 @@ void SB_CloudRunner_UpdateSteer(s16 *obj, u8 *state)
     int doSpawn;
     int yawTarget;
     int pitchTarget;
-    int d;
-    int v;
+    int angleDelta;
+    int clampedRot;
     f32 spd;
 
     yawTarget = (-((SBCloudRunnerState *)state)->stickY * 6000) / 70;
@@ -276,35 +276,35 @@ void SB_CloudRunner_UpdateSteer(s16 *obj, u8 *state)
     }
     ((SBCloudRunnerState *)state)->rotXAccum -= (((SBCloudRunnerState *)state)->rotXAccum * framesThisStep) >> 5;
 
-    d = yawTarget - (u16)((GameObject *)obj)->anim.rotY;
-    if (d > 0x8000)
+    angleDelta = yawTarget - (u16)((GameObject *)obj)->anim.rotY;
+    if (angleDelta > 0x8000)
     {
-        d = (d - 0x10000) + 1;
+        angleDelta = (angleDelta - 0x10000) + 1;
     }
-    if (d < -0x8000)
+    if (angleDelta < -0x8000)
     {
-        d = (d + 0x10000) - 1;
+        angleDelta = (angleDelta + 0x10000) - 1;
     }
-    ((GameObject *)obj)->anim.rotY = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32) * (s16 *)(int)(obj + 1);
+    ((GameObject *)obj)->anim.rotY = lbl_803E5CA8 * ((f32)angleDelta * timeDelta) + (f32) * (s16 *)(int)(obj + 1);
 
-    d = pitchTarget - (u16) * (s16 *)(state + 0x2e);
-    if (d > 0x8000)
+    angleDelta = pitchTarget - (u16) * (s16 *)(state + 0x2e);
+    if (angleDelta > 0x8000)
     {
-        d = (d - 0x10000) + 1;
+        angleDelta = (angleDelta - 0x10000) + 1;
     }
-    if (d < -0x8000)
+    if (angleDelta < -0x8000)
     {
-        d = (d + 0x10000) - 1;
+        angleDelta = (angleDelta + 0x10000) - 1;
     }
-    ((SBCloudRunnerState *)state)->rotZ = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32) * (s16 *)(int)(state + 0x2e);
+    ((SBCloudRunnerState *)state)->rotZ = lbl_803E5CA8 * ((f32)angleDelta * timeDelta) + (f32) * (s16 *)(int)(state + 0x2e);
 
-    v = ((GameObject *)obj)->anim.rotY;
-    v = (v < -8000) ? -8000 : ((v > 8000) ? 8000 : v);
-    ((GameObject *)obj)->anim.rotY = v;
+    clampedRot = ((GameObject *)obj)->anim.rotY;
+    clampedRot = (clampedRot < -8000) ? -8000 : ((clampedRot > 8000) ? 8000 : clampedRot);
+    ((GameObject *)obj)->anim.rotY = clampedRot;
 
-    v = ((SBCloudRunnerState *)state)->rotZ;
-    v = (v < -13000) ? -13000 : ((v > 13000) ? 13000 : v);
-    ((SBCloudRunnerState *)state)->rotZ = v;
+    clampedRot = ((SBCloudRunnerState *)state)->rotZ;
+    clampedRot = (clampedRot < -13000) ? -13000 : ((clampedRot > 13000) ? 13000 : clampedRot);
+    ((SBCloudRunnerState *)state)->rotZ = clampedRot;
 
     ((GameObject *)obj)->anim.rotX = ((SBCloudRunnerState *)state)->rotXAccum + 0x4000;
     ((GameObject *)obj)->anim.rotZ = ((SBCloudRunnerState *)state)->rotZ;
