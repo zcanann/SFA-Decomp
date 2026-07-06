@@ -101,7 +101,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 }
 
 
-void dim2conveyor_free(int x) { ObjGroup_RemoveObject(x, OBJ_GROUP_CONVEYORS); }
+void dim2conveyor_free(int obj) { ObjGroup_RemoveObject(obj, OBJ_GROUP_CONVEYORS); }
 
 void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
 {
