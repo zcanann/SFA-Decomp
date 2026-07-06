@@ -184,7 +184,7 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
                 int* target;
                 if ((int)randomGetRange(0, 9) == 0 && !state->unkBit5)
                 {
-                    list = ObjGroup_GetObjects(0x4f, &objCount);
+                    list = ObjGroup_GetObjects(FUELCELL_OBJGROUP, &objCount);
                     for (j = 0; j < objCount; j++)
                     {
                         int ofs = (int)(u16)j * 4;
