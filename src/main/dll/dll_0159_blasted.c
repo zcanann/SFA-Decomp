@@ -18,33 +18,6 @@ extern void objSetSlot(int* obj, int slot);
 
 #define BLASTED_GAMEBIT_DAMAGE_BASE 0x2de /* base of per-damage-step progress GameBit array */
 
-int blasted_getExtraSize(void)
-{
-    return 0x14;
-}
-
-int blasted_getObjectTypeId(void)
-{
-    return 0;
-}
-
-void blasted_free(void)
-{
-}
-
-void blasted_hitDetect(void)
-{
-}
-
-void blasted_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    int* state = ((GameObject*)obj)->extra;
-    if (visible != 0 && state[3] == 0)
-    {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4348);
-    }
-}
-
 /* EN v1.0 0x801A27B8  size: 280b  Flags every trigger/volume in the map
  * block under the object that carries the given event id: sets bits 0..1
  * on matching block entries and bit 1 on matching group records. Returns 0
@@ -91,6 +64,33 @@ int fn_801A27B8(int obj, int id)
     return 1;
 }
 #pragma dont_inline reset
+
+int blasted_getExtraSize(void)
+{
+    return 0x14;
+}
+
+int blasted_getObjectTypeId(void)
+{
+    return 0;
+}
+
+void blasted_free(void)
+{
+}
+
+void blasted_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int* state = ((GameObject*)obj)->extra;
+    if (visible != 0 && state[3] == 0)
+    {
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4348);
+    }
+}
+
+void blasted_hitDetect(void)
+{
+}
 
 typedef struct BlastedTargetSetup
 {
