@@ -2695,6 +2695,7 @@ main/dll/dll_02A4.c:
 
 main/dll/ARW/dll_02A5_arwgenerato.c:
 	.text       start:0x80231964 end:0x80231A90
+	.sdata2     start:0x803E7158 end:0x803E7160
 
 main/dll/ARW/dll_02A6_arwsquadron.c:
 	.text       start:0x80231A90 end:0x802331B0
