@@ -62,39 +62,12 @@ void arwblocker_free(void)
 {
 }
 
-void arwblocker_hitDetect(void)
-{
-}
-
 void arwblocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7218);
 }
 
-#pragma scheduling off
-#pragma peephole off
-void arwblocker_init(int obj, int setup)
-{
-    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
-    ARWBlockerState* state = ((GameObject*)obj)->extra;
-    ARWBlockerSetup* mapData = (ARWBlockerSetup*)setup;
-
-    ((GameObject*)obj)->anim.rotX = -0x8000;
-    ((GameObject*)obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
-    ((GameObject*)obj)->animEventCallback = arwblocker_getBlockState;
-    state->sequenceMode = mapData->sequenceMode;
-    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    objAnim->alpha = 0;
-    ObjHits_DisableObject(obj);
-}
-
-#pragma scheduling on
-#pragma peephole on
-void arwblocker_release(void)
-{
-}
-
-void arwblocker_initialise(void)
+void arwblocker_hitDetect(void)
 {
 }
 
@@ -135,4 +108,29 @@ void arwblocker_update(int obj)
             ((GameObject*)obj)->unkF4 = 1;
         }
     }
+}
+
+void arwblocker_init(int obj, int setup)
+{
+    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
+    ARWBlockerState* state = ((GameObject*)obj)->extra;
+    ARWBlockerSetup* mapData = (ARWBlockerSetup*)setup;
+
+    ((GameObject*)obj)->anim.rotX = -0x8000;
+    ((GameObject*)obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
+    ((GameObject*)obj)->animEventCallback = arwblocker_getBlockState;
+    state->sequenceMode = mapData->sequenceMode;
+    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    objAnim->alpha = 0;
+    ObjHits_DisableObject(obj);
+}
+
+#pragma scheduling on
+#pragma peephole on
+void arwblocker_release(void)
+{
+}
+
+void arwblocker_initialise(void)
+{
 }
