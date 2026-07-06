@@ -33,6 +33,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define PAD_BUTTON_B 0x200
+#define PAD_TRIGGER_Z 0x010
 
 /* ViewfinderState.mode state machine (see file header) */
 #define VIEWFINDER_MODE_ENTER_BLEND 0
@@ -350,7 +351,7 @@ void CameraModeViewfinder_update(s16* obj)
             Rcp_SetViewFinderHudEnabled(1);
         }
         firstPersonDoControls(obj);
-        if (getButtonsJustPressed(0) & 0x210)
+        if (getButtonsJustPressed(0) & (PAD_BUTTON_B | PAD_TRIGGER_Z))
         {
             buttonDisable(0, PAD_BUTTON_B);
             firstPersonExit((CameraObject*)obj);
