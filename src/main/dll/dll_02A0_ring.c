@@ -157,7 +157,7 @@ void ring_update(int obj)
     int arwing;
     RingPlacement* setup;
     int bit;
-    int r;
+    int alpha;
     int hitA;
     int hitB;
     int hit;
@@ -174,13 +174,13 @@ void ring_update(int obj)
     switch (state->phase)
     {
     case RING_PHASE_HIDDEN:
-        r = (int)((f32)(u32)((GameObject*)obj)->anim.alpha - lbl_803E70B4 * timeDelta);
-        if (r < 0)
+        alpha = (int)((f32)(u32)((GameObject*)obj)->anim.alpha - lbl_803E70B4 * timeDelta);
+        if (alpha < 0)
         {
-            r = 0;
+            alpha = 0;
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | RING_OBJFLAG_HIDDEN);
         }
-        ((GameObject*)obj)->anim.alpha = r;
+        ((GameObject*)obj)->anim.alpha = alpha;
         bit = setup->activateBit;
         if (bit > -1)
         {
@@ -200,9 +200,9 @@ void ring_update(int obj)
         }
         return;
     case RING_PHASE_ACTIVE:
-        r = (int)((f32)(u32)((GameObject*)obj)->anim.alpha + lbl_803E70B4 * timeDelta);
-        if (r > RING_ALPHA_OPAQUE) r = RING_ALPHA_OPAQUE;
-        ((GameObject*)obj)->anim.alpha = r;
+        alpha = (int)((f32)(u32)((GameObject*)obj)->anim.alpha + lbl_803E70B4 * timeDelta);
+        if (alpha > RING_ALPHA_OPAQUE) alpha = RING_ALPHA_OPAQUE;
+        ((GameObject*)obj)->anim.alpha = alpha;
         bit = setup->activateBit;
         if (bit > -1)
         {
