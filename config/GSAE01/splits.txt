@@ -2744,6 +2744,7 @@ main/dll/LGT/dll_02AA_lgtdirectionallight.c:
 
 main/dll/LGT/dll_02AB_lgtprojectedlight.c:
 	.text       start:0x80234748 end:0x80234C10
+	.sdata2     start:0x803E7268 end:0x803E7280
 
 main/dll/LGT/dll_02AC_lgtcontrollight.c:
 	.text       start:0x80234C10 end:0x80234DC8
