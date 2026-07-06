@@ -155,7 +155,7 @@ void largecrate_updateConveyorSlide(int obj, int def)
     f32 oldVel;
     int sum;
     u32 adj;
-    u32 v;
+    u32 linkedId;
     f32 limit;
 
     state31 = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -173,12 +173,12 @@ void largecrate_updateConveyorSlide(int obj, int def)
         if ((oldVel <= 0.0f && ((GameObject*)obj)->anim.velocityX >= 0.0f) ||
             (oldVel >= 0.0f && ((GameObject*)obj)->anim.velocityX <= 0.0f))
         {
-            v = *(u32*)(state31 + 0x14);
-            adj = v - LARGECRATE_LINKED_ID_BASE;
+            linkedId = *(u32*)(state31 + 0x14);
+            adj = linkedId - LARGECRATE_LINKED_ID_BASE;
             if ((adj == LARGECRATE_ROB_WAVE_ID_65D7) ||
                 ((adj - LARGECRATE_ROB_WAVE_ID_65D5) <=
                     (LARGECRATE_ROB_WAVE_ID_65D6 - LARGECRATE_ROB_WAVE_ID_65D5)) ||
-                (v == LARGECRATE_ROB_WAVE_DIRECT_ID) || (adj == LARGECRATE_ROB_WAVE_ID_65D0) ||
+                (linkedId == LARGECRATE_ROB_WAVE_DIRECT_ID) || (adj == LARGECRATE_ROB_WAVE_ID_65D0) ||
                 (adj == LARGECRATE_ROB_WAVE_ID_65D2))
             {
                 if (Vec_distance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
