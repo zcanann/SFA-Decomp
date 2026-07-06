@@ -298,10 +298,10 @@ void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff)
 void CameraShake_SetAllMagnitudes(f32 magnitude)
 {
     CameraViewSlot* slot = gCameraShakeSlots;
-    int v;
+    int group;
     int i;
 
-    for (v = 0; v < 2; v++)
+    for (group = 0; group < 2; group++)
     {
         for (i = 0; i < 6; i++)
         {
@@ -382,20 +382,20 @@ void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* tr
 
 void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32* outZ)
 {
-    f32 t;
+    f32 coord;
 
     if (outX != NULL)
     {
-        t = ndcX * (f32)(gCameraViewportScreenParams[0] >> 2);
-        t = t + (f32)(gCameraViewportScreenParams[4] >> 2);
-        *outX = t;
+        coord = ndcX * (f32)(gCameraViewportScreenParams[0] >> 2);
+        coord = coord + (f32)(gCameraViewportScreenParams[4] >> 2);
+        *outX = coord;
     }
 
     if (outY != NULL)
     {
-        t = ndcY * (f32)(gCameraViewportScreenParams[1] >> 2);
-        t = t + (f32)(gCameraViewportScreenParams[5] >> 2);
-        *outY = t;
+        coord = ndcY * (f32)(gCameraViewportScreenParams[1] >> 2);
+        coord = coord + (f32)(gCameraViewportScreenParams[5] >> 2);
+        *outY = coord;
         *outY = 0x1E0 - *outY;
     }
 
@@ -412,7 +412,7 @@ void screenFn_8000e944(void* viewportArg)
     u32* viewportFlags;
     u32 height;
     u8 viewIndex;
-    u32 t;
+    u32 halfHeight;
 
     gCameraCurrentViewIndex = 4;
     resolution = getScreenResolution();
@@ -423,16 +423,16 @@ void screenFn_8000e944(void* viewportArg)
     if ((*(int*)((u8*)viewportFlags + gCameraCurrentViewIndex * 0x34) & 1) == 0)
     {
         gxSetScissorRect(0, 0, 0, 0, height - 1, width - 1);
-        t = height >> 1;
+        halfHeight = height >> 1;
         viewIndex = gCameraCurrentViewIndex;
         if ((*(int*)((u8*)viewportFlags + viewIndex * 0x34) & 1) == 0)
         {
-            s16 halfHeight;
-            gCameraViewportScreenParams[viewIndex * 8 + 4] = (s16)(t << 2);
-            halfHeight = (s16)((width >> 1) << 2);
-            gCameraViewportScreenParams[viewIndex * 8 + 5] = halfHeight;
-            gCameraViewportScreenParams[viewIndex * 8 + 0] = (s16)(t << 2);
-            gCameraViewportScreenParams[viewIndex * 8 + 1] = halfHeight;
+            s16 halfWidth;
+            gCameraViewportScreenParams[viewIndex * 8 + 4] = (s16)(halfHeight << 2);
+            halfWidth = (s16)((width >> 1) << 2);
+            gCameraViewportScreenParams[viewIndex * 8 + 5] = halfWidth;
+            gCameraViewportScreenParams[viewIndex * 8 + 0] = (s16)(halfHeight << 2);
+            gCameraViewportScreenParams[viewIndex * 8 + 1] = halfWidth;
         }
     }
     else
