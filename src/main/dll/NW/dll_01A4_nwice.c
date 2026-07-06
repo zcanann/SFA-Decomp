@@ -20,7 +20,7 @@ typedef struct NwIceState
 
 int nw_ice_getExtraSize(void) { return 0x4; }
 
-void nw_ice_free(int x) { ObjGroup_RemoveObject(x, NWICE_OBJGROUP); }
+void nw_ice_free(int obj) { ObjGroup_RemoveObject(obj, NWICE_OBJGROUP); }
 
 void nw_ice_render(void)
 {
@@ -85,4 +85,4 @@ void nw_ice_update(int* obj)
     }
 }
 
-void nw_ice_init(int x) { ObjGroup_AddObject(x, NWICE_OBJGROUP); }
+void nw_ice_init(int obj) { ObjGroup_AddObject(obj, NWICE_OBJGROUP); }
