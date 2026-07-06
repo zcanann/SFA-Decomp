@@ -159,16 +159,16 @@ int andross_updateModelAlpha(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     int i;
-    f32 v;
+    f32 fade;
     f32 alpha;
     int model;
     int op;
 
     *(f32*)(state + 0x68) = lbl_803E74D4;
-    v = ((AndrossState*)state)->fadeAlpha;
+    fade = ((AndrossState*)state)->fadeAlpha;
     model = *(int*)Obj_GetActiveModel(obj);
     i = 0;
-    alpha = gAndrossAlpha255 * v;
+    alpha = gAndrossAlpha255 * fade;
     for (; i < *(u8*)(model + 0xf8); i++)
     {
         op = ObjModel_GetRenderOp(model, i);

@@ -244,22 +244,22 @@ void waterflowwe_update(int obj)
     }
     if ((u32)obj == gWaterFlowPhaseDriver)
     {
-        f32 a;
+        f32 phase;
 
-        a = gWaterFlowIdlePhaseRate * timeDelta + gWaterFlowIdlePhase;
-        gWaterFlowIdlePhase = a;
-        while (a > *(f32*)&lbl_803E72E8)
+        phase = gWaterFlowIdlePhaseRate * timeDelta + gWaterFlowIdlePhase;
+        gWaterFlowIdlePhase = phase;
+        while (phase > *(f32*)&lbl_803E72E8)
         {
-            a -= *(f32*)&lbl_803E72E8;
+            phase -= *(f32*)&lbl_803E72E8;
         }
-        gWaterFlowIdlePhase = a;
-        a = gWaterFlowFlowPhaseRate * timeDelta + gWaterFlowFlowPhase;
-        gWaterFlowFlowPhase = a;
-        while (a > *(f32*)&lbl_803E72E8)
+        gWaterFlowIdlePhase = phase;
+        phase = gWaterFlowFlowPhaseRate * timeDelta + gWaterFlowFlowPhase;
+        gWaterFlowFlowPhase = phase;
+        while (phase > *(f32*)&lbl_803E72E8)
         {
-            a -= *(f32*)&lbl_803E72E8;
+            phase -= *(f32*)&lbl_803E72E8;
         }
-        gWaterFlowFlowPhase = a;
+        gWaterFlowFlowPhase = phase;
     }
     if (lbl_803E72B0 == vx && lbl_803E72B0 == vz)
     {
