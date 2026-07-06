@@ -469,21 +469,21 @@ void firstperson_updatePitch(f32 targetY, f32 dist, CameraObject* camera)
 {
     extern u32 getAngle();
     extern f32 interpolate(f32 a, f32 t, f32 exp);
-    int v;
+    int pitchDelta;
 
-    v = getAngle((f64)(camera->anim.worldPosY -
+    pitchDelta = getAngle((f64)(camera->anim.worldPosY -
         (targetY + gCamcontrolModeSettings->targetHeight)), dist) & 0xffff;
-    v -= camera->anim.rotY & 0xffff;
-    if (v > 0x8000)
+    pitchDelta -= camera->anim.rotY & 0xffff;
+    if (pitchDelta > 0x8000)
     {
-        v -= 0xffff;
+        pitchDelta -= 0xffff;
     }
-    if (v < -0x8000)
+    if (pitchDelta < -0x8000)
     {
-        v += 0xffff;
+        pitchDelta += 0xffff;
     }
     camera->anim.rotY = (s16)(camera->anim.rotY +
-        (int)interpolate((f64)(f32)v,
+        (int)interpolate((f64)(f32)pitchDelta,
                          (f64)(lbl_803E16A4 / gCamcontrolModeSettings->yawResponseFrames),
                          timeDelta));
 }
