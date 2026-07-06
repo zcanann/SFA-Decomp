@@ -161,9 +161,9 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
         currentX = currentX / hasCurrent;
         currentZ = currentZ / hasCurrent;
         {
-            f32 k = gWaterFlowFilterCoeff;
-            current->currentX = current->currentX - k * currentX;
-            current->currentZ = current->currentZ - k * currentZ;
+            f32 filterCoeff = gWaterFlowFilterCoeff;
+            current->currentX = current->currentX - filterCoeff * currentX;
+            current->currentZ = current->currentZ - filterCoeff * currentZ;
         }
         current->currentX = current->currentX * gWaterFlowDecayCoeff;
         current->currentZ = current->currentZ * gWaterFlowDecayCoeff;
@@ -179,9 +179,9 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
     }
     else
     {
-        f32 z = lbl_803E72B0;
-        *vx = z;
-        *vz = z;
+        f32 zero = lbl_803E72B0;
+        *vx = zero;
+        *vz = zero;
     }
 }
 
