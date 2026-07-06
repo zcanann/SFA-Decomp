@@ -11,8 +11,6 @@ extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 
-void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
-
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/obj_placement.h"
