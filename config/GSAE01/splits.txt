@@ -1283,6 +1283,7 @@ main/dll/dll_00F8_levelname.c:
 
 main/dll/dll_00F9_projectileswitch.c:
 	.text       start:0x8017A350 end:0x8017A8EC
+	.sdata2     start:0x803E3700 end:0x803E3730
 
 main/dll/dll_00FA_invisiblehitswitch.c:
 	.text       start:0x8017A8EC end:0x8017AC2C
@@ -1640,6 +1641,7 @@ main/dll/dll_0166_exploded.c:
 
 main/dll/dll_0167_spiritdoorlock.c:
 	.text       start:0x801A57E8 end:0x801A5D88
+	.sdata2     start:0x803E4438 end:0x803E4440
 
 main/dll/dll_017D_rollingbarrel.c:
 	.text       start:0x801A5D88 end:0x801A6638
