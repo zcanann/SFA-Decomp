@@ -322,13 +322,13 @@ void cfccrate_update(int obj)
         {
             f32 fx, fy, fz;
             f32 dist;
-            int p;
+            int player;
 
             ((GameObject*)obj)->anim.rotZ = (s16)(lbl_803E3E18 * (double)-(s32)*(s16*)(cam + 4));
-            p = (int)Obj_GetPlayerObject();
-            fx = ((GameObject*)p)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-            fz = ((GameObject*)p)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-            fy = ((GameObject*)p)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+            player = (int)Obj_GetPlayerObject();
+            fx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+            fz = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+            fy = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
             dist = sqrtf(fy * fy + (fx * fx + fz * fz));
             if (dist < lbl_803E3E20 && state->proximityLatch == 1)
             {
