@@ -30,6 +30,9 @@ typedef struct MmpGyserventPlacement
 
 extern u8 framesThisStep;
 
+int mmp_gyservent_getExtraSize(void) { return 0x0; }
+int mmp_gyservent_getObjectTypeId(void) { return 0x0; }
+
 void mmp_gyservent_free(void)
 {
 }
@@ -41,17 +44,6 @@ void mmp_gyservent_render(void)
 void mmp_gyservent_hitDetect(void)
 {
 }
-
-void mmp_gyservent_release(void)
-{
-}
-
-void mmp_gyservent_initialise(void)
-{
-}
-
-int mmp_gyservent_getExtraSize(void) { return 0x0; }
-int mmp_gyservent_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling off
 #pragma peephole off
@@ -84,4 +76,12 @@ void mmp_gyservent_init(int obj)
     *(u32*)&((GameObject*)obj)->unkF4 = randomGetRange(0xa, 0xc8);
     ((GameObject*)obj)->anim.alpha = 0;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+}
+
+void mmp_gyservent_release(void)
+{
+}
+
+void mmp_gyservent_initialise(void)
+{
 }
