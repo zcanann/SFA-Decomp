@@ -30,5 +30,12 @@ void projenergise2_initialise(void)
 extern void projrobotfire_doUnsupported();
 extern void projrobotfire_release();
 extern void projrobotfire_initialise();
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* lbl_80319768[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projrobotfire_initialise, projrobotfire_release, (void*)0x00000000, projrobotfire_doUnsupported };
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs).
+ * Union u64 member forces the retail 8-byte alignment. Same idiom as
+ * dll_00B1_projlightning3. */
+typedef union DllDescriptorTable {
+    void* ptrs[8];
+    u64 align8;
+} DllDescriptorTable;
+
+DllDescriptorTable lbl_80319768 = { { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projrobotfire_initialise, projrobotfire_release, (void*)0x00000000, projrobotfire_doUnsupported } };
