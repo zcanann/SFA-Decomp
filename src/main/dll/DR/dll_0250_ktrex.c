@@ -193,8 +193,8 @@ typedef struct KTRexRuntime
     u8 moveJustStartedA; /* 0x27A: baddie one-shot, gates per-state move setup (BaddieState.moveJustStartedA) */
     u8 unk27B; /* player-control handoff latch (BaddieState.moveJustStartedB @ 0x27B) */
     u8 pad27C[4];
-    f32 unk280;
-    f32 unk284;
+    f32 localOffsetZ; /* 0x280: local-space Z offset fed (negated) as Z arg to Matrix_TransformPoint -> anim.velocityZ */
+    f32 localOffsetX; /* 0x284: local-space X offset fed as X arg to Matrix_TransformPoint -> anim.velocityX */
     u8 pad288[0xc];
     f32 laneSpeed; /* 0x294: lane traversal speed (from placement->unk38), integrated into laneLerpT */
     u8 pad298[8];
@@ -216,8 +216,8 @@ typedef struct KTRexRuntime
     u8 pad350[4];
     u8 hitCountdown;
     u8 pad355[0x93];
-    f32 unk3E8;
-    f32 unk3EC;
+    f32 bobPhase; /* 0x3E8: ping-pong accumulator (+= timeDelta*bobRate), clamped [0,max], reflects+reverses bobRate at max */
+    f32 bobRate; /* 0x3EC: per-frame rate for bobPhase; negated when bobPhase bounces off its max */
     u8 pad3F0[4];
     s16 unk3F4;
     u8 pad3F6[0x16];
@@ -619,9 +619,9 @@ void ktrex_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
             }
         }
     }
-    if (((KTRexRuntime*)gKTRexRuntime)->unk3E8 != lbl_803E67B8)
+    if (((KTRexRuntime*)gKTRexRuntime)->bobPhase != lbl_803E67B8)
     {
-        fn_8003B5E0(200, 0, 0, (int)((KTRexRuntime*)gKTRexRuntime)->unk3E8);
+        fn_8003B5E0(200, 0, 0, (int)((KTRexRuntime*)gKTRexRuntime)->bobPhase);
     }
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6818);
     ObjPath_GetPointWorldPosition((int)obj, 1, (f32*)((char*)gKTRexState + 0x130), (f32*)((char*)gKTRexState + 0x134),
@@ -758,8 +758,8 @@ int ktrex_stateHandlerB05(int obj, int runtime)
         ObjAnim_SetCurrentMove(obj, (&lbl_803DC250)[((KTRexArenaState*)gKTRexState)->laneIndex], lbl_803E67B8, 0);
         ((KTRexRuntime*)runtime)->curvePhase = lbl_803E6810;
         z = lbl_803E67B8;
-        ((KTRexRuntime*)runtime)->unk280 = z;
-        ((KTRexRuntime*)runtime)->unk284 = z;
+        ((KTRexRuntime*)runtime)->localOffsetZ = z;
+        ((KTRexRuntime*)runtime)->localOffsetX = z;
     }
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 1) != 0)
     {
@@ -815,8 +815,8 @@ int ktrex_stateHandlerB06(int obj, int runtime)
         Sfx_PlayFromObject(obj, SFXTRIG_rexelctro11);
         ((KTRexRuntime*)runtime)->curvePhase = lbl_803E680C;
         z = lbl_803E67B8;
-        ((KTRexRuntime*)runtime)->unk280 = z;
-        ((KTRexRuntime*)runtime)->unk284 = z;
+        ((KTRexRuntime*)runtime)->localOffsetZ = z;
+        ((KTRexRuntime*)runtime)->localOffsetX = z;
     }
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 1) != 0)
     {
@@ -841,8 +841,8 @@ int ktrex_stateHandlerB03(int obj, int runtime)
         ObjAnim_SetCurrentMove(obj, 15, lbl_803E67B8, 0);
         ((KTRexRuntime*)runtime)->curvePhase = lbl_803E6810;
         z = lbl_803E67B8;
-        ((KTRexRuntime*)runtime)->unk280 = z;
-        ((KTRexRuntime*)runtime)->unk284 = z;
+        ((KTRexRuntime*)runtime)->localOffsetZ = z;
+        ((KTRexRuntime*)runtime)->localOffsetX = z;
         ((KTRexArenaState*)gKTRexState)->homeYaw = ((GameObject*)obj)->anim.rotX;
     }
     if (dir != 0)
@@ -867,8 +867,8 @@ int ktrex_stateHandlerB04(int obj, int runtime)
         ObjAnim_SetCurrentMove(obj, (&lbl_803DC260)[((KTRexArenaState*)gKTRexState)->moveVariant], lbl_803E67B8, 0);
         ((KTRexRuntime*)runtime)->curvePhase = lbl_8032A51C[((KTRexArenaState*)gKTRexState)->moveVariant];
         z = lbl_803E67B8;
-        ((KTRexRuntime*)runtime)->unk280 = z;
-        ((KTRexRuntime*)runtime)->unk284 = z;
+        ((KTRexRuntime*)runtime)->localOffsetZ = z;
+        ((KTRexRuntime*)runtime)->localOffsetX = z;
     }
     mask = (&lbl_803DC288)[((KTRexArenaState*)gKTRexState)->moveVariant];
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 1) != 0)
@@ -900,8 +900,8 @@ int ktrex_stateHandlerB01(int obj, int runtime)
     {
         ObjAnim_SetCurrentMove(obj, (&lbl_803DC258)[((KTRexArenaState*)gKTRexState)->laneIndex], lbl_803E67B8, 0);
         z = lbl_803E67B8;
-        ((KTRexRuntime*)runtime)->unk280 = z;
-        ((KTRexRuntime*)runtime)->unk284 = z;
+        ((KTRexRuntime*)runtime)->localOffsetZ = z;
+        ((KTRexRuntime*)runtime)->localOffsetX = z;
     }
     mask = (&lbl_803DC268)[((KTRexArenaState*)gKTRexState)->laneIndex];
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 4) != 0)
@@ -983,7 +983,7 @@ int ktrex_stateHandlerB02(int obj, int runtime)
     pos.y = lbl_803E67B8;
     pos.z = lbl_803E67B8;
     setMatrixFromObjectPos(mtx, &pos);
-    Matrix_TransformPoint(mtx, ((KTRexRuntime*)runtime)->unk284, lbl_803E67B8, -((KTRexRuntime*)runtime)->unk280,
+    Matrix_TransformPoint(mtx, ((KTRexRuntime*)runtime)->localOffsetX, lbl_803E67B8, -((KTRexRuntime*)runtime)->localOffsetZ,
                           &((GameObject*)obj)->anim.velocityX, &tmpY, &((GameObject*)obj)->anim.velocityZ);
     if (dir != 0)
     {
@@ -1311,19 +1311,19 @@ void ktrex_updateContactEffects(int obj, void* runtime)
     {
         gKTRexContactEffectCooldown -= 1;
     }
-    if (((KTRexRuntime*)gKTRexRuntime)->unk3E8 > lbl_803E67B8)
+    if (((KTRexRuntime*)gKTRexRuntime)->bobPhase > lbl_803E67B8)
     {
-        ((KTRexRuntime*)gKTRexRuntime)->unk3E8 =
-            timeDelta * ((KTRexRuntime*)gKTRexRuntime)->unk3EC + ((KTRexRuntime*)gKTRexRuntime)->unk3E8;
-        if (((KTRexRuntime*)gKTRexRuntime)->unk3E8 < lbl_803E67B8)
+        ((KTRexRuntime*)gKTRexRuntime)->bobPhase =
+            timeDelta * ((KTRexRuntime*)gKTRexRuntime)->bobRate + ((KTRexRuntime*)gKTRexRuntime)->bobPhase;
+        if (((KTRexRuntime*)gKTRexRuntime)->bobPhase < lbl_803E67B8)
         {
-            ((KTRexRuntime*)gKTRexRuntime)->unk3E8 = lbl_803E67B8;
+            ((KTRexRuntime*)gKTRexRuntime)->bobPhase = lbl_803E67B8;
         }
-        else if (((KTRexRuntime*)gKTRexRuntime)->unk3E8 > lbl_803E6820)
+        else if (((KTRexRuntime*)gKTRexRuntime)->bobPhase > lbl_803E6820)
         {
-            ((KTRexRuntime*)gKTRexRuntime)->unk3E8 =
-                lbl_803E6820 - (((KTRexRuntime*)gKTRexRuntime)->unk3E8 - lbl_803E6820);
-            ((KTRexRuntime*)gKTRexRuntime)->unk3EC = -((KTRexRuntime*)gKTRexRuntime)->unk3EC;
+            ((KTRexRuntime*)gKTRexRuntime)->bobPhase =
+                lbl_803E6820 - (((KTRexRuntime*)gKTRexRuntime)->bobPhase - lbl_803E6820);
+            ((KTRexRuntime*)gKTRexRuntime)->bobRate = -((KTRexRuntime*)gKTRexRuntime)->bobRate;
         }
     }
     hit = ObjHits_GetPriorityHit(obj, &hitA, &hitType, &hitC);
