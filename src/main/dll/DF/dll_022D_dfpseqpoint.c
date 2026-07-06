@@ -159,7 +159,7 @@ void dfpseqpoint_update(int obj)
     GameObject* self;
     GameObject* player;
     DfpSeqPointState* state;
-    int h;
+    int gameBit;
 
     self = (GameObject*)obj;
     player = (GameObject*)Obj_GetPlayerObject();
@@ -169,12 +169,12 @@ void dfpseqpoint_update(int obj)
         GameBit_Set(0xef7, 1);
         ((DfpFlags7*)&state->flags0F)->b80 = 0;
     }
-    h = state->gameBitDone;
-    if (h != -1)
+    gameBit = state->gameBitDone;
+    if (gameBit != -1)
     {
         if (state->doneLatch != 0)
         {
-            if (GameBit_Get(h) != 0)
+            if (GameBit_Get(gameBit) != 0)
             {
                 return;
             }
@@ -182,7 +182,7 @@ void dfpseqpoint_update(int obj)
             state->doneLatch = 1;
             return;
         }
-        if (GameBit_Get(h) != 0)
+        if (GameBit_Get(gameBit) != 0)
         {
             state->doneLatch = 1;
             return;
@@ -203,8 +203,8 @@ void dfpseqpoint_update(int obj)
         }
         break;
     case DFPSEQPOINT_MODE_GATE:
-        h = state->gameBitGate;
-        if (h != -1 && GameBit_Get(h) != 0)
+        gameBit = state->gameBitGate;
+        if (gameBit != -1 && GameBit_Get(gameBit) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                     (void*)obj, -1);
@@ -214,8 +214,8 @@ void dfpseqpoint_update(int obj)
     case DFPSEQPOINT_MODE_RADIUS_AND_GATE:
         if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius)
         {
-            h = state->gameBitGate;
-            if (h != -1 && GameBit_Get(h) != 0)
+            gameBit = state->gameBitGate;
+            if (gameBit != -1 && GameBit_Get(gameBit) != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                         (void*)obj, -1);
@@ -226,8 +226,8 @@ void dfpseqpoint_update(int obj)
     case DFPSEQPOINT_MODE_RADIUS_AND_UNSET:
         if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius)
         {
-            h = state->gameBitGate;
-            if (h != -1 && GameBit_Get(h) == 0)
+            gameBit = state->gameBitGate;
+            if (gameBit != -1 && GameBit_Get(gameBit) == 0)
             {
                 (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                         (void*)obj, -1);
@@ -237,8 +237,8 @@ void dfpseqpoint_update(int obj)
         }
         break;
     case DFPSEQPOINT_MODE_GATE_UNSET:
-        h = state->gameBitGate;
-        if (h != -1 && GameBit_Get(h) == 0)
+        gameBit = state->gameBitGate;
+        if (gameBit != -1 && GameBit_Get(gameBit) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                     (void*)obj, -1);
@@ -247,8 +247,8 @@ void dfpseqpoint_update(int obj)
         }
         break;
     case DFPSEQPOINT_MODE_GATE_REPEAT:
-        h = state->gameBitGate;
-        if (h != -1 && GameBit_Get(h) != 0)
+        gameBit = state->gameBitGate;
+        if (gameBit != -1 && GameBit_Get(gameBit) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                     (void*)obj, -1);
