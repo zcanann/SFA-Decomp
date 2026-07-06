@@ -459,8 +459,8 @@ void ecsh_shrine_update(s16* obj)
     u8 gv;
     int pick;
     int n;
-    s16 sc;
-    f32 z;
+    s16 swapSlot;
+    f32 zero;
     f32 fv;
 
     ps = (EcshPuzzleState*)gEcShShrinePuzzleState;
@@ -499,12 +499,12 @@ void ecsh_shrine_update(s16* obj)
     SCGameBitLatch_Update(sub + 0x34, 2, -1, -1, 0xb9d, 0xd);
     SCGameBitLatch_UpdateInverted(sub + 0x34, 1, -1, -1, 0xcbb, 8);
     SCGameBitLatch_Update(sub + 0x34, 0x10, -1, -1, 0xcbb, 0xc4);
-    if (((EcshShrineState*)sub)->cooldownTimer > (z = *(f32*)&lbl_803E4FCC))
+    if (((EcshShrineState*)sub)->cooldownTimer > (zero = *(f32*)&lbl_803E4FCC))
     {
         ((EcshShrineState*)sub)->cooldownTimer = ((EcshShrineState*)sub)->cooldownTimer - timeDelta;
-        if (((EcshShrineState*)sub)->cooldownTimer <= z)
+        if (((EcshShrineState*)sub)->cooldownTimer <= zero)
         {
-            ((EcshShrineState*)sub)->cooldownTimer = z;
+            ((EcshShrineState*)sub)->cooldownTimer = zero;
         }
     }
     else
@@ -523,7 +523,7 @@ void ecsh_shrine_update(s16* obj)
             ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             fv = *(f32*)(sub + 0x10) - timeDelta;
             *(f32*)(sub + 0x10) = fv;
-            if (fv <= z)
+            if (fv <= zero)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_spirit_voice);
                 *(f32*)(sub + 0x10) = (f32)(int)
@@ -684,31 +684,31 @@ void ecsh_shrine_update(s16* obj)
                         }
                         else if (pick == 2)
                         {
-                            sc = ps->cupSlotMap[0];
+                            swapSlot = ps->cupSlotMap[0];
                             ps->cupSlotMap[0] = ps->cupSlotMap[2];
                             ps->cupSlotMap[2] = ps->cupSlotMap[4];
-                            ps->cupSlotMap[4] = sc;
+                            ps->cupSlotMap[4] = swapSlot;
                         }
                         else if (pick == 3)
                         {
-                            sc = ps->cupSlotMap[4];
+                            swapSlot = ps->cupSlotMap[4];
                             ps->cupSlotMap[4] = ps->cupSlotMap[0];
                             ps->cupSlotMap[0] = ps->cupSlotMap[2];
-                            ps->cupSlotMap[2] = sc;
+                            ps->cupSlotMap[2] = swapSlot;
                         }
                         else if (pick == 4)
                         {
-                            sc = ps->cupSlotMap[1];
+                            swapSlot = ps->cupSlotMap[1];
                             ps->cupSlotMap[1] = ps->cupSlotMap[3];
                             ps->cupSlotMap[3] = ps->cupSlotMap[5];
-                            ps->cupSlotMap[5] = sc;
+                            ps->cupSlotMap[5] = swapSlot;
                         }
                         else if (pick == 5)
                         {
-                            sc = ps->cupSlotMap[5];
+                            swapSlot = ps->cupSlotMap[5];
                             ps->cupSlotMap[5] = ps->cupSlotMap[1];
                             ps->cupSlotMap[1] = ps->cupSlotMap[3];
-                            ps->cupSlotMap[3] = sc;
+                            ps->cupSlotMap[3] = swapSlot;
                         }
                         else if (pick == 6)
                         {
@@ -840,7 +840,7 @@ void ecsh_shrine_update(s16* obj)
             break;
         case 8:
             sub[0x2f] = 0;
-            ((EcshShrineState*)sub)->animTimer = z;
+            ((EcshShrineState*)sub)->animTimer = zero;
             ((EcshShrineState*)sub)->unk20 = 0;
             ((EcshShrineState*)sub)->shuffleCount = 0;
             ((EcshShrineState*)sub)->animState = 0;
