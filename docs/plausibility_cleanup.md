@@ -33,7 +33,7 @@ A unit is *finished* when all six hold. The catch: only some are per-file; the r
 1. **Fully linked** — `metadata.complete == true`, `MatchingFor`, data byte-matched (Phase 0
    done). *Per-file.*
 2. **No matching hacks** — no `f32 zero` trick, no launder that exists only to bend codegen
-   (keep + comment the ones that are the faithful original). *Per-file (§1–§5).*
+   (keep the ones that are the faithful original, unannotated — §12). *Per-file (§1–§5).*
 3. **Data resolved** — unit-owned constants inlined; shared-pool `lbl_` *named*, not raw.
    Inlining is per-file; **naming a shared `lbl_` is cross-cutting** (it's one symbol used by
    many units).
@@ -72,10 +72,12 @@ Three mantras:
    Batching edits means a regression tells you nothing about which one broke it.
 2. **A regression is information, not failure.** If a "cosmetic" change drops the
    match, you just discovered a *load-bearing* quirk — that quirk is the faithful
-   original. Revert and keep it (often with a one-line comment saying why).
-3. **Load-bearing ≠ ugly-forever.** Sometimes the quirk can be re-expressed (a raw
-   offset → a typed field is byte-neutral). Sometimes it can't (a store order). Learn
-   which by measuring.
+   original. Silently revert and move on — do **not** annotate it "load-bearing" (§12):
+   that's noise, and it discourages the next pass from re-attempting it.
+3. **Load-bearing ≠ ugly-forever, and ≠ permanent.** Sometimes the quirk can be
+   re-expressed now (a raw offset → a typed field is byte-neutral); sometimes it can't
+   yet (a store order). A quirk that resists today is a lever not-yet-found — leave it
+   unmarked so a later pass tries again, don't enshrine it.
 
 ---
 
@@ -464,12 +466,17 @@ Comments are byte-neutral, so they're free to fix and easy to leave wrong. Two r
   with no referent, commented-out dead code, decompiler provenance stubs (`/* EN v1.0
   0x... size: ... */`), and half-sentences stranded by an earlier edit. Cut them.
 
-Keep the comments that earn their place: the class/file overview, struct field offsets, an
-explanation of a **load-bearing quirk** (why a launder / store order / `int` type is
-required — so the next reader doesn't "fix" it), and genuinely non-obvious intent. The
-test: a good comment tells a future reader something the code *can't*, about the code *as it
-is now*. If it restates the code, names something that's gone, or is a decompiler artifact,
-delete it.
+Keep the comments that earn their place: the class/file overview, struct field offsets, and
+genuinely non-obvious intent. The test: a good comment tells a future reader something the
+code *can't*, about the code *as it is now*. If it restates the code, names something that's
+gone, or is a decompiler artifact, delete it.
+
+**Do not annotate load-bearing quirks.** When a change regresses and you revert it, do *not*
+leave a "this is load-bearing / don't `&`-collapse this / order matters" comment. It reads
+as noise, and worse, it tells the next agent not to bother — but a quirk that resisted one
+cleanup is a lever not-yet-found, not a law (CLAUDE.md, "fresh eyes"). Let the next pass
+re-attempt it with the verification loop; that's cheap and sometimes it now falls. Silently
+revert and move on.
 
 ---
 
@@ -488,8 +495,9 @@ grounds without the verification loop:
   returns changes the branches. Keep the shape that matches.
 - **Pragmas / `-opt` flags** (§9) — each was verified necessary.
 
-When a quirk is load-bearing **and** can't be re-expressed, leave it and add a short
-comment. It is the faithful recovery, not a mistake to fix.
+When a quirk is load-bearing **and** can't be re-expressed, silently leave it as-is — the
+faithful recovery. Don't mark it "load-bearing" (§12): a later pass should be free to
+re-attempt it, and the annotation only discourages that.
 
 ---
 
