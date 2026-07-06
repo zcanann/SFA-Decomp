@@ -62,19 +62,42 @@ extern void inpResetChannelDefaults(u8 a, u8 b);
  */
 extern int voiceKillById(u32 id);
 
+typedef struct SynthPage
+{
+    u16 macro;
+    u8 prio;
+    u8 maxVoices;
+    u8 index;
+    u8 reserved;
+} SynthPage;
+
+static void BuildTransTab(u8* tab, SynthPage* page)
+{
+    u8 i;
+
+    for (i = 0; i < 128; ++i)
+    {
+        tab[i] = 0xff;
+    }
+
+    for (i = 0; page->index != 0xFF; ++i, ++page)
+    {
+        tab[page->index] = i;
+    }
+}
+
 u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* para, u8 studio, u16 sgid)
 {
-    SynthArrangement* arr;
-    u32* tracktab;
-    s32 i;
-    SynthVoice* nseq;
+    u8 seqId;
     SynthVoice* oldCSeq;
-    u32 seqId;
     u32 bpm;
-    u8* page;
-    u8 note;
-    u8 j;
+    SynthVoice* nseq;
+    u8* ms;
+    long i;
+    u32* tracktab;
+    SynthArrangement* arr;
 
+    ms = midiSetup;
     if ((nseq = gSynthFreeVoices) == 0)
     {
         return SYNTH_HANDLE_INVALID;
@@ -102,24 +125,8 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     nseq->arrbase = song;
     nseq->groupId = sgid;
 
-    page = nseq->normtab;
-    for (note = 0; note < 0x80; note++)
-    {
-        nseq->normTrans[note] = 0xFF;
-    }
-    for (j = 0; page[4] != 0xFF; j++, page += 6)
-    {
-        nseq->normTrans[page[4]] = j;
-    }
-    page = nseq->drumtab;
-    for (note = 0; note < 0x80; note++)
-    {
-        nseq->drumTrans[note] = 0xFF;
-    }
-    for (j = 0; page[4] != 0xFF; j++, page += 6)
-    {
-        nseq->drumTrans[page[4]] = j;
-    }
+    BuildTransTab(nseq->normTrans, (SynthPage*)nseq->normtab);
+    BuildTransTab(nseq->drumTrans, (SynthPage*)nseq->drumtab);
 
     nseq->currentStudio = seqId + 23;
     for (i = 0; i < 64; i++)
@@ -188,7 +195,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     arr = (SynthArrangement*)song;
     if (arr->info & 0x80000000)
     {
-        nseq->keyGroupMap = song + arr->trackSectionTableOffset;
+        nseq->keyGroupMap = (u8*)(arr->trackSectionTableOffset + (u32)song);
     }
     else
     {
@@ -204,10 +211,10 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     for (i = 0; i < 16; i++)
     {
         nseq->section[i].bpm = bpm;
-        synthSetStudioChannelScale(bpm >> 10, seqId, i);
+        synthSetStudioChannelScale(bpm >> 10, seqId, (u8)i);
         if (arr->masterTrackOffset != 0)
         {
-            nseq->section[i].masterTrackBase = song + arr->masterTrackOffset;
+            nseq->section[i].masterTrackBase = (u8*)(arr->masterTrackOffset + (u32)song);
             nseq->section[i].masterTrackCursor =
                 nseq->section[i].masterTrackBase;
         }
@@ -219,14 +226,14 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
         nseq->section[i].loopCount = 0;
     }
 
-    tracktab = (u32*)(song + arr->trackTableOffset);
+    tracktab = (u32*)(arr->trackTableOffset + (u32)song);
     for (i = 0; i < 64; i++)
     {
         lbl_803BD964[i] = 0x7F;
         SYNTH_SEQUENCE_STATE(nseq, i)->stream = 0;
         if (tracktab[i] != 0)
         {
-            SYNTH_TRACK_CURSOR(nseq, i)->current = SYNTH_TRACK_CURSOR(nseq, i)->base = song + tracktab[i];
+            SYNTH_TRACK_CURSOR(nseq, i)->current = SYNTH_TRACK_CURSOR(nseq, i)->base = (u8*)(tracktab[i] + (u32)song);
         }
         else
         {
@@ -251,20 +258,20 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
         inpResetChannelDefaults((u8)i, seqId);
     }
 
-    if (midiSetup != 0)
+    if (ms != 0)
     {
         for (i = 0; i < 16; i++)
         {
-            u8 prg = midiSetup[4];
+            u8 prg = ms[4];
             lbl_803BCC90[gSynthCurrentVoiceSlotIndex][(u8)i] = 0xFFFF;
             if ((u8)i != 9)
             {
                 prg = nseq->normTrans[prg];
                 if (prg != 0xFF)
                 {
-                    nseq->prgState[i].macId = *(u16*)(nseq->normtab + prg * 6);
-                    nseq->prgState[i].priority = nseq->normtab[prg * 6 + 2];
-                    nseq->prgState[i].maxVoices = nseq->normtab[prg * 6 + 3];
+                    nseq->prgState[(u8)i].macId = *(u16*)(nseq->normtab + prg * 6);
+                    nseq->prgState[(u8)i].priority = nseq->normtab[prg * 6 + 2];
+                    nseq->prgState[(u8)i].maxVoices = nseq->normtab[prg * 6 + 3];
                 }
             }
             else
@@ -272,16 +279,16 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
                 prg = nseq->drumTrans[prg];
                 if (prg != 0xFF)
                 {
-                    nseq->prgState[i].macId = *(u16*)(nseq->drumtab + prg * 6);
-                    nseq->prgState[i].priority = nseq->drumtab[prg * 6 + 2];
-                    nseq->prgState[i].maxVoices = nseq->drumtab[prg * 6 + 3];
+                    nseq->prgState[(u8)i].macId = *(u16*)(nseq->drumtab + prg * 6);
+                    nseq->prgState[(u8)i].priority = nseq->drumtab[prg * 6 + 2];
+                    nseq->prgState[(u8)i].maxVoices = nseq->drumtab[prg * 6 + 3];
                 }
             }
-            inpSetMidiCtrl(MCMD_CTRL_VOLUME, i, seqId, midiSetup[5]);
-            inpSetMidiCtrl(MCMD_CTRL_PANNING, i, seqId, midiSetup[6]);
-            inpSetMidiCtrl(MCMD_CTRL_REVERB, i, seqId, midiSetup[7]);
-            inpSetMidiCtrl(MCMD_CTRL_POST_AUX_B, i, seqId, midiSetup[8]);
-            midiSetup += 5;
+            inpSetMidiCtrl(MCMD_CTRL_VOLUME, i, seqId, ms[5]);
+            inpSetMidiCtrl(MCMD_CTRL_PANNING, i, seqId, ms[6]);
+            inpSetMidiCtrl(MCMD_CTRL_REVERB, i, seqId, ms[7]);
+            inpSetMidiCtrl(MCMD_CTRL_POST_AUX_B, i, seqId, ms[8]);
+            ms += 5;
         }
     }
 
@@ -310,8 +317,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     gSynthCurrentVoice = nseq;
     fn_8026E864();
     gSynthCurrentVoice = oldCSeq;
-    seqId = synthAssignHandle(seqId);
-    return seqId;
+    return synthAssignHandle(seqId);
 }
 
 /*
