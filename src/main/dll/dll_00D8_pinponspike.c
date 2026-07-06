@@ -13,10 +13,6 @@
  *
  * fn_80169EF4 computes the launch angle that lands a projectile of the
  * given speed under gravity at a target offset (used cross-TU by duster).
- *
- * This TU also hosts the object descriptors for the sibling
- * kaldachompspit / pollen / pollenfragment objects (their code lives in
- * the neighbouring DLLs) plus the pollen-fragment spawn config table.
  */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
@@ -29,9 +25,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 #define PINPONSPIKE_OBJFLAG_HIDDEN 0x4000
 #define PINPONSPIKE_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-/* sibling kaldachompspit descriptor callbacks (code in a neighbouring DLL);
-   the remaining callbacks (render/hitDetect/init/release/initialise) are in xyzanimator.h */
 
 extern f32 lbl_803E3110;
 extern f32 lbl_803E3114;
@@ -47,175 +40,6 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 
 
 extern void* getTrickyObject(void);
-
-void pinponspike_render(void)
-{
-}
-
-void pinponspike_hitDetect(void)
-{
-}
-
-void pinponspike_release(void)
-{
-}
-
-void pinponspike_initialise(void)
-{
-}
-
-void pinponspike_free(int obj)
-{
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
-
-void pinponspike_init(int obj)
-{
-    ((GameObject*)obj)->unkF4 = 0;
-    ObjHits_DisableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0xff;
-    Sfx_PlayFromObject(obj, SFXsc_attack02);
-    ((GameObject*)obj)->objectFlags |= (PINPONSPIKE_OBJFLAG_HIDDEN | PINPONSPIKE_OBJFLAG_HITDETECT_DISABLED);
-}
-
-int pinponspike_getExtraSize(void) { return 0x0; }
-int pinponspike_getObjectTypeId(void) { return 0x0; }
-
-ObjectDescriptor gKaldaChompSpitObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)kaldachompspit_initialise,
-    (ObjectDescriptorCallback)kaldachompspit_release,
-    0,
-    (ObjectDescriptorCallback)kaldachompspit_init,
-    (ObjectDescriptorCallback)kaldachompspit_update,
-    (ObjectDescriptorCallback)kaldachompspit_hitDetect,
-    (ObjectDescriptorCallback)kaldachompspit_render,
-    (ObjectDescriptorCallback)kaldachompspit_free,
-    (ObjectDescriptorCallback)kaldachompspit_getObjectTypeId,
-    kaldachompspit_getExtraSize,
-};
-
-ObjectDescriptor gPinPonSpikeObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pinponspike_initialise,
-    (ObjectDescriptorCallback)pinponspike_release,
-    0,
-    (ObjectDescriptorCallback)pinponspike_init,
-    (ObjectDescriptorCallback)pinponspike_update,
-    (ObjectDescriptorCallback)pinponspike_hitDetect,
-    (ObjectDescriptorCallback)pinponspike_render,
-    (ObjectDescriptorCallback)pinponspike_free,
-    (ObjectDescriptorCallback)pinponspike_getObjectTypeId,
-    pinponspike_getExtraSize,
-};
-
-ObjectDescriptor gPollenObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pollen_initialise,
-    (ObjectDescriptorCallback)pollen_release,
-    0,
-    (ObjectDescriptorCallback)pollen_init,
-    (ObjectDescriptorCallback)pollen_update,
-    (ObjectDescriptorCallback)pollen_hitDetect,
-    (ObjectDescriptorCallback)pollen_render,
-    (ObjectDescriptorCallback)pollen_free,
-    (ObjectDescriptorCallback)pollen_getObjectTypeId,
-    pollen_getExtraSize,
-};
-
-PollenFragmentConfig lbl_80320538 = {
-    0x0000,
-    0x049F,
-    0x00B9,
-    0x04BA,
-    0x04BA,
-    -1,
-    0.2f,
-    0x0000,
-    0xC000,
-};
-
-PollenFragmentConfig lbl_8032054C = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x7000,
-};
-
-PollenFragmentConfig lbl_80320560 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x2000,
-};
-
-PollenFragmentConfig lbl_80320574 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    -1,
-    0.2f,
-    0x0000,
-    0x2000,
-};
-
-PollenFragmentConfig lbl_80320588 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x3000,
-};
-
-PollenFragmentConfig* lbl_8032059C[] = {
-    &lbl_80320538,
-    &lbl_8032054C,
-    &lbl_80320560,
-    &lbl_80320574,
-    &lbl_80320588,
-};
-
-ObjectDescriptor gPollenFragmentObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pollenfragment_initialise,
-    (ObjectDescriptorCallback)pollenfragment_release,
-    0,
-    (ObjectDescriptorCallback)pollenfragment_init,
-    (ObjectDescriptorCallback)pollenfragment_update,
-    (ObjectDescriptorCallback)pollenfragment_hitDetect,
-    (ObjectDescriptorCallback)pollenfragment_render,
-    (ObjectDescriptorCallback)pollenfragment_free,
-    (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
-    pollenfragment_getExtraSize,
-};
 
 int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
 {
@@ -254,6 +78,23 @@ int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
         }
     }
     return 0x2000;
+}
+
+int pinponspike_getExtraSize(void) { return 0x0; }
+
+int pinponspike_getObjectTypeId(void) { return 0x0; }
+
+void pinponspike_free(int obj)
+{
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void pinponspike_render(void)
+{
+}
+
+void pinponspike_hitDetect(void)
+{
 }
 
 void pinponspike_update(int obj)
@@ -317,4 +158,21 @@ void pinponspike_update(int obj)
             Obj_FreeObject(obj);
         }
     }
+}
+
+void pinponspike_init(int obj)
+{
+    ((GameObject*)obj)->unkF4 = 0;
+    ObjHits_DisableObject(obj);
+    ((GameObject*)obj)->anim.alpha = 0xff;
+    Sfx_PlayFromObject(obj, SFXsc_attack02);
+    ((GameObject*)obj)->objectFlags |= (PINPONSPIKE_OBJFLAG_HIDDEN | PINPONSPIKE_OBJFLAG_HITDETECT_DISABLED);
+}
+
+void pinponspike_release(void)
+{
+}
+
+void pinponspike_initialise(void)
+{
 }
