@@ -357,7 +357,6 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
     union { s64 v; int w[2]; } frac;
 
     addrB = posA + curB;
-    curB = addrB;
     end = (u32)(dst + 3);
     t = t - floorf(t);
     t = t * lbl_803DE544;
