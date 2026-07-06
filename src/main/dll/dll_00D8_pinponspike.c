@@ -221,11 +221,11 @@ int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
 {
     f32 sp2;
     f32 dist;
-    f32 a;
+    f32 coeff;
     f32 dx;
     f32 dy;
     f32 dz;
-    f32 t;
+    f32 time;
     f32 disc;
 
     dx = from[0] - to[0];
@@ -234,23 +234,23 @@ int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
     dy = from[1] - to[1];
     dist = dist * lbl_803E3110;
     sp2 = lbl_803E3114 * grav;
-    a = sp2 * grav;
+    coeff = sp2 * grav;
     {
         f32 vel = -(grav * dy) - (sp2 = speed * speed); /* sp2 is speed^2 */
-        disc = vel * vel - (lbl_803E3118 * a) * (dy * dy + dist * dist);
+        disc = vel * vel - (lbl_803E3118 * coeff) * (dy * dy + dist * dist);
         if (disc >= lbl_803E311C)
         {
             if (flag)
             {
-                t = (lbl_803E3120 * (-vel + sqrtf(disc))) / a;
+                time = (lbl_803E3120 * (-vel + sqrtf(disc))) / coeff;
             }
             else
             {
-                t = (lbl_803E3120 * (-vel - sqrtf(disc))) / a;
+                time = (lbl_803E3120 * (-vel - sqrtf(disc))) / coeff;
             }
-            t = sqrtf(t);
-            a = dist / t; /* a is now the horizontal velocity */
-            return getAngle(sqrtf(-(a * a - sp2)), a);
+            time = sqrtf(time);
+            coeff = dist / time; /* coeff is now the horizontal velocity */
+            return getAngle(sqrtf(-(coeff * coeff - sp2)), coeff);
         }
     }
     return 0x2000;
