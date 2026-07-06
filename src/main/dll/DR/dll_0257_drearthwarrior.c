@@ -120,7 +120,7 @@ typedef struct EarthWarriorSub
     s16 currentYaw; /* current yaw */
     u8 pad486[2];
     int frameCounter;
-    int unk48C;
+    int turnDegrees; /* 0x48C: signed turn in degrees; magnitude*0xb6 (deg->binary angle) accumulated into currentYaw, sign gives direction */
     u8 pad490[4];
     int savedYaw;
     u8 pad498[0x3a];
@@ -760,9 +760,9 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     ((EarthWarriorSub*)q)->unk404 = lbl_803E82E8;
     if (*(s8*)&((EarthWarriorState*)state)->baddie.moveJustStartedA != 0)
     {
-        ((EarthWarriorSub*)q)->currentYaw += ((EarthWarriorSub*)q)->unk48C * 0xb6;
+        ((EarthWarriorSub*)q)->currentYaw += ((EarthWarriorSub*)q)->turnDegrees * 0xb6;
         ((EarthWarriorSub*)q)->frameCounter = 0;
-        ((EarthWarriorSub*)q)->unk48C = 0;
+        ((EarthWarriorSub*)q)->turnDegrees = 0;
     }
     {
         f32 a;
@@ -870,7 +870,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             {
                 v = cap;
             }
-            if (((EarthWarriorSub*)q)->unk48C < 0)
+            if (((EarthWarriorSub*)q)->turnDegrees < 0)
             {
                 v = -v;
             }
@@ -880,7 +880,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         else if (((EarthWarriorState*)state)->baddie.animSpeedC <= *(f32*)(((EarthWarriorSub*)q)->configRow + 0x4) &&
             ((EarthWarriorState*)state)->baddie.animSpeedA <= *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc))
         {
-            ((EarthWarriorSub*)q)->currentYaw += ((EarthWarriorSub*)q)->unk48C * 0xb6;
+            ((EarthWarriorSub*)q)->currentYaw += ((EarthWarriorSub*)q)->turnDegrees * 0xb6;
         }
     }
     if (!((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b04)
@@ -1047,7 +1047,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         q->unk47C = 0;
         q->unk480 = 0;
         q->frameCounter = 0;
-        q->unk48C = 0;
+        q->turnDegrees = 0;
         q->unk8A6 = 8;
         q->attackStage = 0;
         ((BaddieState*)p2)->velSmoothTime = lbl_803E835C;
@@ -1082,7 +1082,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         f32 v = interpolate((f32)(s32)q->frameCounter, lbl_803E8338 / q->unk430, timeDelta);
         f32 cap = q->unk434 * timeDelta;
         v = (v < cap) ? v : cap;
-        if (q->unk48C < 0)
+        if (q->turnDegrees < 0)
         {
             v = -v;
         }
