@@ -362,7 +362,7 @@ s8 slot;
     SaveGameDefaultPosition defaultPos;
     int i;
     u8* dst;
-    u8 c;
+    u8 ch;
     u8* save;
 
     defaultPos = gSaveGameDefaultPosition;
@@ -435,11 +435,11 @@ s8 slot;
         dst = gSaveGameData + SAVEGAME_PLAYER_NAME_OFFSET;
         do
         {
-            c = *(u8*)name;
+            ch = *(u8*)name;
             name++;
-            *dst++ = c;
+            *dst++ = ch;
         }
-        while (c != '\0');
+        while (ch != '\0');
     }
     else
     {
@@ -903,7 +903,7 @@ void saveGame_saveObjectPos(int* obj);
 
 void saveGame_saveObjectPos(int* obj)
 {
-    int v;
+    int objectId;
     int i;
     if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0 || (s32)saveGameLoadStatus != 0)
     {
@@ -911,9 +911,9 @@ void saveGame_saveObjectPos(int* obj)
     }
     for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
     {
-        v = ((SaveGameImage*)gSaveGameData)->positions[i].objectId;
-        if (v == 0) break;
-        if (*(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14) == v) break;
+        objectId = ((SaveGameImage*)gSaveGameData)->positions[i].objectId;
+        if (objectId == 0) break;
+        if (*(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14) == objectId) break;
     }
     if (i == SAVEGAME_OBJECT_POSITION_COUNT) return;
     *(u32*)((int)gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET + (i << 4)) = *(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14);
@@ -1138,12 +1138,12 @@ void SaveGame_gplaySetAct(int idx, int act)
     }
 }
 
-s8 SaveGame_findTransientMapBit(int a, int b)
+s8 SaveGame_findTransientMapBit(int mapId, int shift)
 {
     int i;
     for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
     {
-        if (a == gTransientMapBits[i].mapId && b == gTransientMapBits[i].shift)
+        if (mapId == gTransientMapBits[i].mapId && shift == gTransientMapBits[i].shift)
         {
             return i;
         }
