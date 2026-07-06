@@ -816,18 +816,18 @@ void staff_modelMtxFn(int* obj, int p4, int p5)
 void staff_addHitReactValue(int* obj, s32 delta)
 {
     s16* p = &((StaffState*)(int*)((GameObject*)obj)->extra)->hitReactValue;
-    s32 v;
+    s32 clamped;
     *p = (s16)(*p + delta);
-    v = *p;
-    if (v < 0)
+    clamped = *p;
+    if (clamped < 0)
     {
-        v = 0;
+        clamped = 0;
     }
-    else if (v > 0xff)
+    else if (clamped > 0xff)
     {
-        v = 0xff;
+        clamped = 0xff;
     }
-    *p = v;
+    *p = clamped;
 }
 
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB)
@@ -1074,13 +1074,13 @@ void quakeSpellTextureFn_8016dbf4(void)
 
     if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->active != 0)
     {
-        f32 s;
+        f32 scale;
         f32 z;
         quakeSpellTextureFn_8007366c((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade);
         memcpy(mView, Camera_GetViewMatrix(), 0x30);
         PSMTXRotRad(mRot, 'x', gStaffHalfPi);
-        s = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->scale;
-        PSMTXScale(mScale, s, s * ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale, s);
+        scale = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->scale;
+        PSMTXScale(mScale, scale, scale * ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale, scale);
         PSMTXConcat(mScale, mRot, mScale);
         PSMTXTrans(mTrans, ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posX - playerMapOffsetX,
                    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posY,
@@ -1387,21 +1387,21 @@ void staff_update(int* obj)
                 {
                     f32 k = lbl_803E32F4;
                     f32 t = lbl_803E330C * *(f32*)(state + 0x98) - *(f32*)(vp + 0xc);
-                    f32 v;
+                    f32 clamped;
                     t = k * (t * lbl_803E3310);
                     if (t < lbl_803E32B4)
                     {
-                        v = lbl_803E32B4;
+                        clamped = lbl_803E32B4;
                     }
                     else if (t > k)
                     {
-                        v = k;
+                        clamped = k;
                     }
                     else
                     {
-                        v = t;
+                        clamped = t;
                     }
-                    *(s16*)(vp + 0x10) = k - v;
+                    *(s16*)(vp + 0x10) = k - clamped;
                     *(s16*)(vp + 0x24) = *(s16*)(vp + 0x10);
                 }
                 else
@@ -1454,15 +1454,15 @@ void staff_update(int* obj)
         if (q->active != 0)
         {
             f32 sc = q->scale + lbl_803E32E0;
-            f32 w;
+            f32 fade;
             q->scale = sc;
             ObjHitbox_SetSphereRadius((int)q->object, sc);
             ObjHits_SetHitVolumeSlot((int)q->object, 17, 5, 0);
-            w = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade + lbl_803E32E4;
-            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade = w;
+            fade = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade + lbl_803E32E4;
+            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade = fade;
             ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius * lbl_803E32E8;
             ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale * lbl_803E32EC;
-            ((GameObject*)q->object)->anim.alpha = w;
+            ((GameObject*)q->object)->anim.alpha = fade;
             ((GameObject*)q->object)->anim.rootMotionScale += lbl_803E32F0;
             if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade < lbl_803E3288)
             {
@@ -1656,21 +1656,21 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                         {
                             f32 k = lbl_803E32F4;
                             f32 t = flb - *(f32*)(vp + 0xc);
-                            f32 v;
+                            f32 clamped;
                             t = k * (t * lbl_803E3310);
                             if (t < lbl_803E32B4)
                             {
-                                v = lbl_803E32B4;
+                                clamped = lbl_803E32B4;
                             }
                             else if (t > k)
                             {
-                                v = k;
+                                clamped = k;
                             }
                             else
                             {
-                                v = t;
+                                clamped = t;
                             }
-                            *(s16*)(vp + 0x10) = k - v;
+                            *(s16*)(vp + 0x10) = k - clamped;
                         }
                         *(f32*)(vp + 0x14) = Curve_EvalBSpline(ptAx, frac, NULL);
                         *(f32*)(vp + 0x18) = Curve_EvalBSpline(ptAy, frac, NULL);
@@ -1682,21 +1682,21 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                         {
                             f32 k = lbl_803E32F4;
                             f32 t = flb - *(f32*)(vp + 0x20);
-                            f32 v;
+                            f32 clamped;
                             t = k * (t * lbl_803E3310);
                             if (t < lbl_803E32B4)
                             {
-                                v = lbl_803E32B4;
+                                clamped = lbl_803E32B4;
                             }
                             else if (t > k)
                             {
-                                v = k;
+                                clamped = k;
                             }
                             else
                             {
-                                v = t;
+                                clamped = t;
                             }
-                            *(s16*)(vp + 0x24) = k - v;
+                            *(s16*)(vp + 0x24) = k - clamped;
                         }
                         *(s16*)(slot + 0x12) += 2;
                         *(u16*)(slot + 0xe) += 2;
@@ -1758,25 +1758,25 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
     {
         if (((StaffState*)state)->glowEnable != 0)
         {
-            f32 v;
+            f32 burstScale;
             if (objFn_80296700(obj2) != 0)
             {
                 power = lbl_803E3288;
-                v = lbl_803E3288;
+                burstScale = lbl_803E3288;
             }
             else
             {
                 power = lbl_803E328C;
-                v = lbl_803E3290;
+                burstScale = lbl_803E3290;
             }
             if (((StaffState*)state)->glowAttackType == 7)
             {
-                objfx_spawnArcedBurst(obj, lbl_803E3294, ((StaffState*)state)->glowAttackType, ((StaffState*)state)->glowEnable, 1, (int)(lbl_803E3298 * v),
+                objfx_spawnArcedBurst(obj, lbl_803E3294, ((StaffState*)state)->glowAttackType, ((StaffState*)state)->glowEnable, 1, (int)(lbl_803E3298 * burstScale),
                                       lbl_803E3294, lbl_803E3294, lbl_803E329C * power, 0, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(obj, lbl_803E3288, ((StaffState*)state)->glowAttackType, ((StaffState*)state)->glowEnable, 1, (int)(lbl_803E3298 * v),
+                objfx_spawnArcedBurst(obj, lbl_803E3288, ((StaffState*)state)->glowAttackType, ((StaffState*)state)->glowEnable, 1, (int)(lbl_803E3298 * burstScale),
                                       lbl_803E3288, lbl_803E3288, lbl_803E329C * power, 0, 0);
             }
         }
@@ -1915,7 +1915,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
             break;
         case 134:
             {
-                f32 h;
+                f32 progress;
                 u16 idv;
                 if (GameBit_Get(0xc55) != 0)
                 {
@@ -1926,8 +1926,8 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                     idv = 0xc0e;
                 }
                 fxB.id = idv;
-                h = ((GameObject*)obj2)->anim.currentMoveProgress;
-                if (h < lbl_803E32D0)
+                progress = ((GameObject*)obj2)->anim.currentMoveProgress;
+                if (progress < lbl_803E32D0)
                 {
                     fxB.f1 = lbl_803E32D4;
                     fxB.count = 9;
@@ -1935,9 +1935,9 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                     fxB.f2 = lbl_803E32B4;
                     (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
                 }
-                else if (h < lbl_803E32D8)
+                else if (progress < lbl_803E32D8)
                 {
-                    fxB.f1 = lbl_803E32C4 * (lbl_803E32DC * (h - lbl_803E32D0) - lbl_803E3294);
+                    fxB.f1 = lbl_803E32C4 * (lbl_803E32DC * (progress - lbl_803E32D0) - lbl_803E3294);
                     fxB.count = 9;
                     fxB.f0 = lbl_803E3288;
                     fxB.f2 = lbl_803E32B4;
