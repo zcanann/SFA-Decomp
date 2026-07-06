@@ -134,24 +134,24 @@ void loadTaskTexts(void)
 {
     char** pp;
     int i;
-    u8* s;
+    u8* name;
     int idx;
-    u8* p;
+    u8* dst;
     int n = 0xd;
-    p = &lbl_803A4218[0xd];
-    while (p--, n-- != 0)
+    dst = &lbl_803A4218[0xd];
+    while (dst--, n-- != 0)
     {
-        *p = 0xff;
+        *dst = 0xff;
     }
     i = 0x49;
     pp = &sMapDirectoryNameTable[0x49];
     while (pp--, i-- != 0)
     {
-        s = (u8*)*pp;
-        if (s[0] == 'T' && s[1] == 'a' && s[2] == 's' && s[3] == 'k' &&
-            s[4] == 'T' && s[5] == 'e' && s[6] == 'x' && s[7] == 't' && s[8] == 's')
+        name = (u8*)*pp;
+        if (name[0] == 'T' && name[1] == 'a' && name[2] == 's' && name[3] == 'k' &&
+            name[4] == 'T' && name[5] == 'e' && name[6] == 'x' && name[7] == 't' && name[8] == 's')
         {
-            idx = (s[9] - '0') * 100 + (s[10] - '0') * 10 + (s[11] - '0');
+            idx = (name[9] - '0') * 100 + (name[10] - '0') * 10 + (name[11] - '0');
             if (idx < 0xd)
             {
                 lbl_803A4218[idx] = i;
@@ -179,10 +179,10 @@ void hintTextFn_800ea174(u8* out)
 
 int hintTextMapFn_800ea264(void)
 {
-    int r = getCurGameText();
-    u8* t = getLastSavedGameTexts();
-    gameTextLoadDir(lbl_803A4218[lbl_803119E0[t[5]]]);
-    return r;
+    int ret = getCurGameText();
+    u8* texts = getLastSavedGameTexts();
+    gameTextLoadDir(lbl_803A4218[lbl_803119E0[texts[5]]]);
+    return ret;
 }
 
 static inline void markTaskBit(u8 id)
