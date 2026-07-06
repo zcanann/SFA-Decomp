@@ -2396,6 +2396,7 @@ main/dll/dll_0240_gcrobotblast.c:
 
 main/dll/dll_0241_drakorenergy.c:
 	.text       start:0x801FF9B0 end:0x801FFE18
+	.sdata2     start:0x803E6298 end:0x803E62A0
 
 main/dll/dll_0242_dbstealerworm.c:
 	.text       start:0x801FFE18 end:0x80203C78
