@@ -109,7 +109,7 @@ void dim2lavacontrol_init(int obj, int param2)
     extern void gameBitFn_800ea2e0(int i);
     int state;
     int i;
-    int g;
+    int gameBitState;
     if (getSaveGameLoadStatus() != 0)
     {
         ((GameObject*)obj)->unkF4 = 2;
@@ -127,13 +127,13 @@ void dim2lavacontrol_init(int obj, int param2)
     ((Dim2lavacontrolState*)state)->countdownSave = *(u8*)&((Dim2lavacontrolState*)state)->countdown;
     if (GameBit_Get(((Dim2lavacontrolPlacement*)param2)->gameBit) != 0)
     {
-        g = 1;
+        gameBitState = 1;
     }
     else
     {
-        g = 0;
+        gameBitState = 0;
     }
-    ((Dim2lavacontrolState*)state)->flags = (s8)(*(u8*)&((Dim2lavacontrolState*)state)->flags | g);
+    ((Dim2lavacontrolState*)state)->flags = (s8)(*(u8*)&((Dim2lavacontrolState*)state)->flags | gameBitState);
     ((Dim2lavacontrolState*)state)->musicTrack = 0xd7;
     ((Dim2lavacontrolState*)state)->phase = DIM2LAVACONTROL_PHASE_WAIT;
     if ((((Dim2lavacontrolState*)state)->flags & 1) != 0)
