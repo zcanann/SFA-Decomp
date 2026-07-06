@@ -38,6 +38,11 @@
 /* sfx played on the selection==0 (cancel/back) path; 0x419 has no named entry in sfx_ids.h */
 #define SFX_MENU_CANCEL 0x419
 
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
+/* accept + cancel buttons, disabled once a menu decision is committed */
+#define PAD_CONFIRM_MASK (PAD_BUTTON_A | PAD_BUTTON_B)
+
 typedef struct WeirdMenuWork
 {
     u8 pad0[0x16 - 0x0];   /* 0x00-0x15: unknown, not touched here */
@@ -94,7 +99,7 @@ int WeirdUnusedMenu_run(void)
                 Sfx_PlayFromObject(0, SFXqu_longsob2);
                 loadUiDll(1);
                 cutsceneExit();
-                buttonDisable(0, 0x300);
+                buttonDisable(0, PAD_CONFIRM_MASK);
             }
             else
             {
@@ -114,7 +119,7 @@ int WeirdUnusedMenu_run(void)
             Sfx_PlayFromObject(0, SFX_MENU_CANCEL);
             loadUiDll(1);
             cutsceneExit();
-            buttonDisable(0, 0x300);
+            buttonDisable(0, PAD_CONFIRM_MASK);
         }
     }
     else if (gWeirdMenuPhase == 1)
