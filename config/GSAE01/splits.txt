@@ -2540,6 +2540,7 @@ main/dll/DR/dll_0252_ktlazerwall.c:
 
 main/dll/DR/dll_0253_ktlazerlight.c:
 	.text       start:0x80216B48 end:0x80216D18
+	.sdata2     start:0x803E68C8 end:0x803E68D0
 
 main/dll/DR/dll_0254_ktfallingrocks.c:
 	.text       start:0x80216D18 end:0x80216EAC
