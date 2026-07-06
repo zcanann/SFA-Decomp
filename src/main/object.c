@@ -1815,7 +1815,7 @@ skip:
 
 void Obj_UpdateAllObjects(u8 flags)
 {
-    int f;
+    int updateFlags;
     int off;
     int timeStop;
     u8* obj2;
@@ -1827,10 +1827,10 @@ void Obj_UpdateAllObjects(u8 flags)
     u8* t;
     void (*cb)(int);
 
-    f = flags;
-    gObjUpdateFlags = f;
+    updateFlags = flags;
+    gObjUpdateFlags = updateFlags;
     off = *(s16*)((u8*)&gObjUpdateList + 2);
-    timeStop = f & 1;
+    timeStop = updateFlags & 1;
     if (timeStop == 0)
     {
         objFn_80065604();
@@ -1947,7 +1947,7 @@ void Obj_UpdateAllObjects(u8 flags)
     done:
         (*gWaterfxInterface)->runFrame(framesThisStep);
     }
-    if ((f & 2) == 0)
+    if ((updateFlags & 2) == 0)
     {
         ((ModgfxInterface*)*(void**)gModgfxInterface)->updateActiveEffects(0, 0, 0);
         (*gExpgfxInterface)->updateFrameState(0, framesThisStep, 0, 0);
