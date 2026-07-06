@@ -1011,8 +1011,6 @@ void dim2roofrub_update(int* obj)
 void shield_update(int* obj);
 
 
-#pragma opt_common_subs reset
-
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 
 static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
@@ -1035,5 +1033,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
-
-#pragma opt_common_subs off
