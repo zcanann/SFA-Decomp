@@ -63,16 +63,36 @@ static inline int* DrShackle_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-int drshackle_getExtraSize(void) { return 0x20; }
-
-int drshackle_getObjectTypeId(void) { return 0x0; }
-
-void drshackle_release(void)
+int drshackle_toggleEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    char* state = ((GameObject*)obj)->extra;
+    void* placement = *(void**)state;
+    int i;
+    if (placement != 0)
+    {
+        ((DrshacklePlacement*)placement)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((DrshacklePlacement*)placement)->posY = ((GameObject*)obj)->anim.localPosY;
+        ((DrshacklePlacement*)placement)->posZ = ((GameObject*)obj)->anim.localPosZ;
+    }
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        switch (animUpdate->eventIds[i])
+        {
+        case 1:
+            ((BitFlags8*)(state + 0x1a))->b0 = 0;
+            break;
+        case 2:
+            ((BitFlags8*)(state + 0x1a))->b0 = 1;
+            break;
+        }
+    }
+    return 0;
 }
 
-void drshackle_initialise(void)
+int drshackle_func0B(int obj)
 {
+    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    return ((DrshacklePlacement*)placement)->unk19;
 }
 
 int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
@@ -147,59 +167,13 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     return 0;
 }
 
-int drshackle_func0B(int obj)
-{
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    return ((DrshacklePlacement*)placement)->unk19;
-}
+int drshackle_getExtraSize(void) { return 0x20; }
+
+int drshackle_getObjectTypeId(void) { return 0x0; }
 
 void drshackle_free(int obj)
 {
     ObjGroup_RemoveObject(obj, DRSHACKLE_OBJGROUP);
-}
-
-void drshackle_init(int obj, char* arg)
-{
-    char* state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, DRSHACKLE_OBJGROUP);
-    ((BitFlags8*)(state + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)arg)->activeGameBit) == 0);
-    ((DrshackleState*)state)->pathPointA = arg[0x18] % 2;
-    ((GameObject*)obj)->animEventCallback = drshackle_toggleEventCallback;
-    if (((DrshacklePlacement*)arg)->quarterTurns == 1)
-    {
-        ((DrshackleState*)state)->slotCount = 2;
-        ((DrshackleState*)state)->pathPointB = 1 - ((DrshackleState*)state)->pathPointA;
-    }
-    else
-    {
-        ((DrshackleState*)state)->slotCount = 1;
-    }
-}
-
-int drshackle_toggleEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    char* state = ((GameObject*)obj)->extra;
-    void* placement = *(void**)state;
-    int i;
-    if (placement != 0)
-    {
-        ((DrshacklePlacement*)placement)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((DrshacklePlacement*)placement)->posY = ((GameObject*)obj)->anim.localPosY;
-        ((DrshacklePlacement*)placement)->posZ = ((GameObject*)obj)->anim.localPosZ;
-    }
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        switch (animUpdate->eventIds[i])
-        {
-        case 1:
-            ((BitFlags8*)(state + 0x1a))->b0 = 0;
-            break;
-        case 2:
-            ((BitFlags8*)(state + 0x1a))->b0 = 1;
-            break;
-        }
-    }
-    return 0;
 }
 
 void drshackle_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
@@ -218,6 +192,22 @@ void drshackle_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
                 ObjPath_GetPointWorldPosition(obj, state[i + 0x1b], (f32*)((char*)entry + 0xc),
                                               (f32*)((char*)entry + 0x10), (f32*)((char*)entry + 0x14), 0);
             }
+        }
+    }
+}
+
+void drshackle_hitDetect(unsigned long obj)
+{
+    char* state = ((GameObject*)obj)->extra;
+    if (Sfx_IsPlayingFromObjectChannel(obj, 1) == 0 && ((BitFlags8*)(state + 0x1a))->b0 != 0)
+    {
+        f32 vec[3];
+        int n;
+        PSVECSubtract(&((GameObject*)obj)->anim.localPosX, &((DrshackleState*)state)->savedPosX, vec);
+        n = 0xc8 - (int)(lbl_803E6A30 * PSVECMag(vec));
+        if ((int)randomGetRange(0, (n < 1) ? 1 : ((n > 0xc8) ? 0xc8 : n)) == 0)
+        {
+            Sfx_PlayFromObject(obj, SFXfoot_stone_run_1);
         }
     }
 }
@@ -254,18 +244,28 @@ void drshackle_update(int obj)
     }
 }
 
-void drshackle_hitDetect(unsigned long obj)
+void drshackle_init(int obj, char* arg)
 {
     char* state = ((GameObject*)obj)->extra;
-    if (Sfx_IsPlayingFromObjectChannel(obj, 1) == 0 && ((BitFlags8*)(state + 0x1a))->b0 != 0)
+    ObjGroup_AddObject(obj, DRSHACKLE_OBJGROUP);
+    ((BitFlags8*)(state + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)arg)->activeGameBit) == 0);
+    ((DrshackleState*)state)->pathPointA = arg[0x18] % 2;
+    ((GameObject*)obj)->animEventCallback = drshackle_toggleEventCallback;
+    if (((DrshacklePlacement*)arg)->quarterTurns == 1)
     {
-        f32 vec[3];
-        int n;
-        PSVECSubtract(&((GameObject*)obj)->anim.localPosX, &((DrshackleState*)state)->savedPosX, vec);
-        n = 0xc8 - (int)(lbl_803E6A30 * PSVECMag(vec));
-        if ((int)randomGetRange(0, (n < 1) ? 1 : ((n > 0xc8) ? 0xc8 : n)) == 0)
-        {
-            Sfx_PlayFromObject(obj, SFXfoot_stone_run_1);
-        }
+        ((DrshackleState*)state)->slotCount = 2;
+        ((DrshackleState*)state)->pathPointB = 1 - ((DrshackleState*)state)->pathPointA;
     }
+    else
+    {
+        ((DrshackleState*)state)->slotCount = 1;
+    }
+}
+
+void drshackle_release(void)
+{
+}
+
+void drshackle_initialise(void)
+{
 }
