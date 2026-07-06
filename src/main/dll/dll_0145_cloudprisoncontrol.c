@@ -89,10 +89,10 @@ void cloudprisoncontrol_update(int obj)
     int data;
     int msg[2];
     int i;
-    int n;
+    int count;
     int idx;
     int dval;
-    int m;
+    int msgId;
     CPTargetEntry* p;
     int found;
 
@@ -105,8 +105,8 @@ void cloudprisoncontrol_update(int obj)
     lbl_803DDB08 = 0;
     while (ObjMsg_Pop(obj, msg, &target, &data) != 0)
     {
-        m = msg[0];
-        switch (m)
+        msgId = msg[0];
+        switch (msgId)
         {
         case CPMSG_REGISTER:
             if (((GameObject*)target)->anim.mapEventSlot == ((GameObject*)obj)->anim.mapEventSlot)
@@ -115,8 +115,8 @@ void cloudprisoncontrol_update(int obj)
                 found = 0;
                 p = lbl_803AC7D8;
                 dval = data;
-                n = lbl_803DDB09;
-                for (i = 0; i < n; i++)
+                count = lbl_803DDB09;
+                for (i = 0; i < count; i++)
                 {
                     if (p->obj == tgt)
                     {
@@ -145,16 +145,16 @@ void cloudprisoncontrol_update(int obj)
         case CPMSG_UNREGISTER:
             i = 0;
             p = lbl_803AC7D8;
-            n = lbl_803DDB09;
-            while (i < n && p->obj != (u32)target)
+            count = lbl_803DDB09;
+            while (i < count && p->obj != (u32)target)
             {
                 p++;
                 i++;
             }
             lbl_803DDB09--;
-            n = lbl_803DDB09;
-            p = &lbl_803AC7D8[n];
-            for (; i < n; i++)
+            count = lbl_803DDB09;
+            p = &lbl_803AC7D8[count];
+            for (; i < count; i++)
             {
                 p[-1].obj = p[0].obj;
                 p[-1].value = p[0].value;
@@ -165,7 +165,7 @@ void cloudprisoncontrol_update(int obj)
         default:
             idx = lbl_803DDB08 * 0xc;
             ((CPDeferredMsg*)((char*)lbl_803AC878 + idx))->sender = target;
-            ((CPDeferredMsg*)((char*)lbl_803AC878 + idx))->msgId = m;
+            ((CPDeferredMsg*)((char*)lbl_803AC878 + idx))->msgId = msgId;
             ((CPDeferredMsg*)((char*)lbl_803AC878 + idx))->data = data;
             lbl_803DDB08++;
             break;
