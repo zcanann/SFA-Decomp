@@ -35,6 +35,9 @@
 #define GUNPOWDERBARREL_SEQ_CANNONRANGE 0x754
 /* object group of the barrel generators this barrel returns home to */
 #define GUNPOWDERBARREL_OBJGROUP 0x3a
+/* the barrel's own update group; the generator (DLL 0x282) also adds a
+ * dispensed barrel to this group on release */
+#define GUNPOWDERBARREL_UPDATE_OBJGROUP 0x19
 
 /* Barrel placement data block (obj group 0x3a link id at 0x1A). init reads
  * the respawn byte (respawnByte) and the return-home word (returnHome); the descriptor
@@ -162,7 +165,7 @@ void gunpowderbarrel_free(int obj, int mode)
             ((GunpowderBarrelState*)extra)->linkedTimerObject = 0;
         }
     }
-    ObjGroup_RemoveObject(obj, 0x19);
+    ObjGroup_RemoveObject(obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
     ObjGroup_RemoveObject(obj, 0x16);
     if (((GunpowderBarrelState*)extra)->fuseFrames != 0)
     {
@@ -286,7 +289,7 @@ void gunpowderbarrel_triggerExplosion(int obj)
         /* (void*) respelling keeps this (u32) conversion a distinct expression
          * from the u32 call args above — matching retail, no CSE'd copy of obj
          * survives across the calls (target passes r30 directly here). */
-        ObjGroup_RemoveObject((u32)(void*)obj, 0x19);
+        ObjGroup_RemoveObject((u32)(void*)obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
         if (((GameObject*)obj)->anim.parent != 0)
         {
             ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = lbl_803E42C4;
@@ -596,7 +599,7 @@ void gunpowderbarrel_init(int obj, u8* def)
 
     ((GunpowderBarrelState*)((GameObject*)obj)->extra)->unk07 |= 2;
     (*(void (**)(int, GunpowderBarrelState*, int))((char*)*gCarryableInterface + 0x4))(obj, state, 5);
-    ObjGroup_AddObject(obj, 0x19);
+    ObjGroup_AddObject(obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
     ObjGroup_AddObject(obj, 0x16);
     ObjMsg_AllocQueue((void*)obj, 8);
     ((GameObject*)obj)->unkF8 = 0;
