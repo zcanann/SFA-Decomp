@@ -93,7 +93,7 @@ typedef struct EarthWarriorSub
     int unk3FC;
     int configRow; /* config row pointer */
     f32 unk404;
-    f32 unk408;
+    f32 targetAnimSpeed; /* 0x408: interpolate() target for BaddieState.animSpeedC, clamped to configRow[0xc] floor */
     u8 pad40C[4];
     f32 footstepCooldown; /* 0x410: per-tick countdown gating footstep rumble/sfx */
     u8 pad414[0xc];
@@ -103,7 +103,7 @@ typedef struct EarthWarriorSub
     f32 unk42C;
     f32 unk430;
     f32 unk434;
-    f32 unk438;
+    f32 animSpeedSmoothing; /* 0x438: interpolate() rate/gain closing animSpeedC toward targetAnimSpeed (copied from unk830) */
     u8 pad43C[0x14];
     int unk450;
     int unk454;
@@ -626,8 +626,8 @@ int fn_802BC830(int obj, int sub, int state)
             ((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b80 = 0;
             return 1;
         }
-        ((EarthWarriorSub*)sub)->unk408 = lbl_803E8304;
-        ((EarthWarriorSub*)sub)->unk438 = ((EarthWarriorSub*)sub)->unk830;
+        ((EarthWarriorSub*)sub)->targetAnimSpeed = lbl_803E8304;
+        ((EarthWarriorSub*)sub)->animSpeedSmoothing = ((EarthWarriorSub*)sub)->unk830;
         ((EarthWarriorSub*)sub)->flags8D8 |= 8;
     }
     return 0;
@@ -770,7 +770,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         f32 t;
         a = ((EarthWarriorSub*)q)->unk404 - lbl_803E833C;
         t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
-        ((EarthWarriorSub*)q)->unk408 = a * (t * ((EarthWarriorSub*)q)->unk840);
+        ((EarthWarriorSub*)q)->targetAnimSpeed = a * (t * ((EarthWarriorSub*)q)->unk840);
     }
     if (((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40)
     {
@@ -794,7 +794,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         }
         ((EarthWarriorState*)state)->baddie.animSpeedC = ((EarthWarriorSub*)q)->unk844 * timeDelta + ((EarthWarriorState*)
             state)->baddie.animSpeedC;
-        ((EarthWarriorSub*)q)->unk408 = lbl_803E8304;
+        ((EarthWarriorSub*)q)->targetAnimSpeed = lbl_803E8304;
         if (((GameObject*)obj)->anim.currentMoveProgress > GXInit_ClearColor && ((GameObject*)obj)->anim.
             currentMoveProgress < lbl_803E8318)
         {
@@ -825,10 +825,10 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             ((EarthWarriorSub*)q)->unk430 *= m1;
             ((EarthWarriorSub*)q)->unk434 *= m2;
         }
-        ((EarthWarriorSub*)q)->unk408 *= lbl_803E831C;
-        if (((EarthWarriorSub*)q)->unk408 < *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc))
+        ((EarthWarriorSub*)q)->targetAnimSpeed *= lbl_803E831C;
+        if (((EarthWarriorSub*)q)->targetAnimSpeed < *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc))
         {
-            ((EarthWarriorSub*)q)->unk408 = *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc);
+            ((EarthWarriorSub*)q)->targetAnimSpeed = *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc);
         }
         hitState->hitVolumePriority = 0x15;
         hitState->hitVolumeId = 2;
@@ -885,8 +885,8 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     }
     if (!((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b04)
     {
-        f32 r = interpolate(((EarthWarriorSub*)q)->unk408 - ((EarthWarriorState*)state)->baddie.animSpeedC,
-                            ((EarthWarriorSub*)q)->unk438, timeDelta);
+        f32 r = interpolate(((EarthWarriorSub*)q)->targetAnimSpeed - ((EarthWarriorState*)state)->baddie.animSpeedC,
+                            ((EarthWarriorSub*)q)->animSpeedSmoothing, timeDelta);
         r = (r < lbl_803E834C * timeDelta) ? lbl_803E834C * timeDelta : ((r > GXInit_ClearColor * timeDelta) ? GXInit_ClearColor * timeDelta : r);
         if (((EarthWarriorSub*)q)->frameCounter >= 0x96 && r > lbl_803E8304)
         {
@@ -1039,9 +1039,9 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         f32 t;
         a = q->unk404 - lbl_803E833C;
         t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
-        q->unk408 = a * (t * q->unk840);
+        q->targetAnimSpeed = a * (t * q->unk840);
     }
-    ((BaddieState*)p2)->animSpeedC += interpolate(q->unk408 - ((BaddieState*)p2)->animSpeedC, q->unk438, timeDelta);
+    ((BaddieState*)p2)->animSpeedC += interpolate(q->targetAnimSpeed - ((BaddieState*)p2)->animSpeedC, q->animSpeedSmoothing, timeDelta);
     if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
     {
         q->unk47C = 0;
