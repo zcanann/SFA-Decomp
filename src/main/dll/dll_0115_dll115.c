@@ -38,21 +38,6 @@ enum
 #define DLL115_OBJFLAG_HIDDEN 0x4000
 #define DLL115_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-void dll_115_hitDetect_nop(void)
-{
-}
-
-int dll_115_getExtraSize_ret_2(void) { return 0x2; }
-int dll_115_getObjectTypeId(void) { return 0x0; }
-
-void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37B0);
-}
-
-void dll_115_free(int obj) { ObjGroup_RemoveObject(obj, DLL115_OBJGROUP); }
-
 /* Sequence-event callback: while a trigger sequence is running on an
  * indexed step, end it once the NEXT step's gate bit (placement+0x28) has
  * gone set and differs from this step's gate bit. Always latches state[1]
@@ -86,6 +71,21 @@ int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
     }
     state[1] = (u8)(state[1] | 1);
     return 0;
+}
+
+int dll_115_getExtraSize_ret_2(void) { return 0x2; }
+int dll_115_getObjectTypeId(void) { return 0x0; }
+
+void dll_115_free(int obj) { ObjGroup_RemoveObject(obj, DLL115_OBJGROUP); }
+
+void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37B0);
+}
+
+void dll_115_hitDetect_nop(void)
+{
 }
 
 typedef struct Dll115Placement
