@@ -16,7 +16,6 @@ extern u8 lbl_803BD150[];
 extern int macActiveRoot;
 extern int macTimeQueueRoot;
 extern int macRealTimeHi;
-extern int macRealTimeLo;
 extern void synthQueueVoicePrimaryUpdates(void* state);
 extern void voiceKill(u32 voice);
 extern u32 lbl_803BDA34[];
