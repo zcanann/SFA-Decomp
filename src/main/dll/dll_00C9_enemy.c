@@ -650,7 +650,7 @@ void fn_8014C66C(int* obj, int x) { ((EnemyState*)((GameObject*)obj)->extra)->tr
 void fn_8014C5C0(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
-    ((EnemyState*)state)->unk2B0 = 0;
+    ((EnemyState*)state)->current = 0;
 }
 
 void fn_8014C63C(int* obj)
@@ -741,10 +741,10 @@ f32 fn_8014C5D0(register int obj)
     u16 b;
     state = ((GameObject*)obj)->extra;
     if (state == NULL) return lbl_803E2574;
-    a = ((EnemyState*)state)->unk2B2;
+    a = ((EnemyState*)state)->max;
     if (a != 0)
     {
-        b = *(u16*)&((EnemyState*)state)->unk2B0;
+        b = *(u16*)&((EnemyState*)state)->current;
         if (b != 0)
         {
             return (f32)(u32)
@@ -1987,7 +1987,7 @@ void enemy_init(int obj, u8* setup, int flag)
         ((EnemyState*)state)->unk2B4 = -1;
         ((EnemyState*)state)->unk2B6 = ((EnemyState*)state)->unk2B4;
         ((GameObject*)obj)->objectFlags |= ((EnemyPlacement*)setup)->objectFlagBits & 7;
-        ((EnemyState*)state)->unk2B0 = ((EnemyPlacement*)setup)->unk32;
+        ((EnemyState*)state)->current = ((EnemyPlacement*)setup)->unk32;
         ((GameObject*)obj)->animEventCallback = enemy_animEventCallback;
         switch (((GameObject*)obj)->anim.seqId)
         {
@@ -2061,7 +2061,7 @@ void enemy_init(int obj, u8* setup, int flag)
             fn_8014FF58(obj, state);
             break;
         }
-        ((EnemyState*)state)->unk2B2 = *(u16*)&((EnemyState*)state)->unk2B0;
+        ((EnemyState*)state)->max = *(u16*)&((EnemyState*)state)->current;
         if (((EnemyPlacement*)setup)->unk34 != 0)
         {
             *(int*)&((EnemyState*)state)->flags2E4 = *(int*)&((EnemyState*)state)->flags2E4 & -39;
