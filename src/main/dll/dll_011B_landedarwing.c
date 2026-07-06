@@ -27,6 +27,9 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_011B_landedarwing.h"
 
+/* group owned by another DLL, queried here */
+#define STAFFACTIVATED_OBJ_GROUP 0x41 /* DLL 0x11C staffactivated */
+
 /* object group queried to find the nearby target */
 #define LANDEDARWING_TARGET_OBJGROUP 0xf
 
@@ -595,7 +598,7 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
                 break;
             case 1:
                 range = lbl_803E3BC0;
-                other = ObjGroup_FindNearestObject(0x41, obj, &range);
+                other = ObjGroup_FindNearestObject(STAFFACTIVATED_OBJ_GROUP, obj, &range);
                 if ((void*)other != NULL)
                 {
                     otherState = ((GameObject*)other)->extra;
