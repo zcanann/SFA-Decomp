@@ -30,6 +30,9 @@
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
+
+/* group owned by another DLL, queried here */
+#define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
 #define ANIMOBJD2_OBJFLAG_FREED 0x40
 
 /* fn_8013E0D0 circling substate machine (TrickyState.substate; this object's
@@ -476,7 +479,7 @@ void fn_8013E0D0(int* obj, u8* st)
             }
             else
             {
-                void** list = (void**)ObjGroup_GetObjects(0x4b, &count);
+                void** list = (void**)ObjGroup_GetObjects(TRICKYWARP_OBJ_GROUP, &count);
                 int i = 0;
                 f32 ratio;
                 p = list;
