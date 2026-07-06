@@ -167,14 +167,14 @@ void CameraModeCombat_update(short* cam)
     f32 mag;
     f32 speed;
     f32 lim;
-    f32 c;
-    f32 sn;
+    f32 sinAngle;
+    f32 cosAngle;
     f32 t;
     f32 fa;
     f32 fb;
     int ang;
     int diff;
-    u32 ad;
+    u32 binAngleDelta;
     short classId;
 
     if (gCamCombatState->invalidTarget != 0)
@@ -309,8 +309,8 @@ void CameraModeCombat_update(short* cam)
                             py = lbl_803E18D8 + ty;
                             pz = lbl_803E18D4 * dz + focus->anim.worldPosZ;
                             ang = getAngle(dx, dz);
-                            ad = (ang & 0xffff) + 0x8000;
-                            diff = (int)*cam - ((0x8000 - ad) & 0xffff);
+                            binAngleDelta = (ang & 0xffff) + 0x8000;
+                            diff = (int)*cam - ((0x8000 - binAngleDelta) & 0xffff);
                             if (diff > 0x8000)
                             {
                                 diff = diff - 0xffff;
@@ -373,11 +373,11 @@ void CameraModeCombat_update(short* cam)
                                 fb / lbl_803E18F4 - gCamCombatState->zoomOffset,
                                 lbl_803E18F8, timeDelta);
                             gCamCombatState->zoomOffset = gCamCombatState->zoomOffset + step;
-                            c = mathSinf((gCamCombatPi * (f32)(s32) * cam) / gCamCombatBinAngleHalfCircle);
-                            sn = mathCosf((gCamCombatPi * (f32)(s32) * cam) / gCamCombatBinAngleHalfCircle);
-                            t = gCamCombatState->followDistance * c;
+                            sinAngle = mathSinf((gCamCombatPi * (f32)(s32) * cam) / gCamCombatBinAngleHalfCircle);
+                            cosAngle = mathCosf((gCamCombatPi * (f32)(s32) * cam) / gCamCombatBinAngleHalfCircle);
+                            t = gCamCombatState->followDistance * sinAngle;
                             n[0] = px + t;
-                            t = gCamCombatState->followDistance * sn;
+                            t = gCamCombatState->followDistance * cosAngle;
                             n[2] = pz - t;
                             dy = dy * lbl_803E1904;
                             dy = ty - dy;
@@ -422,16 +422,16 @@ void CameraModeCombat_update(short* cam)
                             fa = *(f32*)(view + 0x14) - t;
                             t = sqrtf(fb * fb + fa * fa);
                             ang = getAngle(dy, t) & 0xffff;
-                            ad = ang - ((int)cam[1] & 0xffffU);
-                            if ((int)ad > 0x8000)
+                            binAngleDelta = ang - ((int)cam[1] & 0xffffU);
+                            if ((int)binAngleDelta > 0x8000)
                             {
-                                ad = ad - 0xffff;
+                                binAngleDelta = binAngleDelta - 0xffff;
                             }
-                            if ((int)ad < -0x8000)
+                            if ((int)binAngleDelta < -0x8000)
                             {
-                                ad = ad + 0xffff;
+                                binAngleDelta = binAngleDelta + 0xffff;
                             }
-                            step = interpolate((f32)(s32)ad, lbl_803E1920, timeDelta);
+                            step = interpolate((f32)(s32)binAngleDelta, lbl_803E1920, timeDelta);
                             cam[1] = (s16)
                             ((f32)(s32)
                             cam[1] + step
