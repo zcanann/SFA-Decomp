@@ -2339,6 +2339,7 @@ main/dll/VF/dll_021A_vfpstatueball.c:
 
 main/dll/dll_021B.c:
 	.text       start:0x801FAC6C end:0x801FAFEC
+	.sdata2     start:0x803E60D0 end:0x803E60D8
 
 main/dll/VF/dll_021C_vfpladders.c:
 	.text       start:0x801FAFEC end:0x801FB220

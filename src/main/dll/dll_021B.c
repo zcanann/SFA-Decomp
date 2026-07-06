@@ -18,21 +18,6 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
-extern f32 lbl_803E60D0; /* slide limit offset from posZ */
-extern f32 lbl_803E60D4; /* per-frame slide step */
-
-int dll_21B_getExtraSize_ret_4(void) { return 0x4; }
-
-int dll_21B_getObjectTypeId(void) { return 0x0; }
-
-void dll_21B_render_nop(void)
-{
-}
-
-void dll_21B_hitDetect_nop(void)
-{
-}
-
 #define DLL_21B_ENABLE_BIT_A 0x503
 #define DLL_21B_ENABLE_BIT_B 0x504
 #define DLL_21B_REACHED_BIT 0x4ec
@@ -71,25 +56,21 @@ STATIC_ASSERT(offsetof(Dll21BPlacement, initRotByte) == 0x18);
 STATIC_ASSERT(offsetof(Dll21BPlacement, direction) == 0x19);
 STATIC_ASSERT(offsetof(Dll21BPlacement, driveGameBit) == 0x1e);
 
-void dll_21B_release_nop(void)
-{
-}
+int dll_21B_getExtraSize_ret_4(void) { return 0x4; }
 
-void dll_21B_initialise_nop(void)
-{
-}
+int dll_21B_getObjectTypeId(void) { return 0x0; }
 
 void dll_21B_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void dll_21B_init(int* obj, Dll21BPlacement* init)
+void dll_21B_render_nop(void)
 {
-    Dll21BState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)(init->initRotByte << 8);
-    state->driveGameBit = init->driveGameBit;
-    ((GameObject*)obj)->objectFlags |= (DLL_21B_OBJFLAG_HIDDEN | DLL_21B_OBJFLAG_HITDETECT_DISABLED);
+}
+
+void dll_21B_hitDetect_nop(void)
+{
 }
 
 void dll_21B_update(int obj)
@@ -100,17 +81,17 @@ void dll_21B_update(int obj)
     if (setup->direction == 1)
     {
         if (DLL_21B_BIT_SET(state->driveGameBit) &&
-            ((GameObject*)obj)->anim.localPosZ > setup->base.posZ - lbl_803E60D0)
+            ((GameObject*)obj)->anim.localPosZ > setup->base.posZ - 60.0f)
         {
-            ((GameObject*)obj)->anim.localPosZ -= lbl_803E60D4;
+            ((GameObject*)obj)->anim.localPosZ -= 0.4f;
             if (DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_A) &&
                 DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_B))
             {
                 GameBit_Set(DLL_21B_MOVING_BIT, 1);
             }
-            if (((GameObject*)obj)->anim.localPosZ <= setup->base.posZ - lbl_803E60D0)
+            if (((GameObject*)obj)->anim.localPosZ <= setup->base.posZ - 60.0f)
             {
-                ((GameObject*)obj)->anim.localPosZ = setup->base.posZ - lbl_803E60D0;
+                ((GameObject*)obj)->anim.localPosZ = setup->base.posZ - 60.0f;
                 if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A))
                 {
                     return;
@@ -126,7 +107,7 @@ void dll_21B_update(int obj)
         if (DLL_21B_BIT_CLEAR(state->driveGameBit) &&
             ((GameObject*)obj)->anim.localPosZ < setup->base.posZ)
         {
-            ((GameObject*)obj)->anim.localPosZ -= lbl_803E60D4;
+            ((GameObject*)obj)->anim.localPosZ -= 0.4f;
             if (DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_A) &&
                 DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_B))
             {
@@ -147,17 +128,17 @@ void dll_21B_update(int obj)
     else
     {
         if (DLL_21B_BIT_SET(state->driveGameBit) &&
-            ((GameObject*)obj)->anim.localPosZ < lbl_803E60D0 + setup->base.posZ)
+            ((GameObject*)obj)->anim.localPosZ < 60.0f + setup->base.posZ)
         {
-            ((GameObject*)obj)->anim.localPosZ += lbl_803E60D4;
+            ((GameObject*)obj)->anim.localPosZ += 0.4f;
             if (DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_A) &&
                 DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_B))
             {
                 GameBit_Set(DLL_21B_MOVING_BIT, 1);
             }
-            if (((GameObject*)obj)->anim.localPosZ >= lbl_803E60D0 + setup->base.posZ)
+            if (((GameObject*)obj)->anim.localPosZ >= 60.0f + setup->base.posZ)
             {
-                ((GameObject*)obj)->anim.localPosZ = lbl_803E60D0 + setup->base.posZ;
+                ((GameObject*)obj)->anim.localPosZ = 60.0f + setup->base.posZ;
                 if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A))
                 {
                     return;
@@ -173,7 +154,7 @@ void dll_21B_update(int obj)
         if (DLL_21B_BIT_CLEAR(state->driveGameBit) &&
             ((GameObject*)obj)->anim.localPosZ > setup->base.posZ)
         {
-            ((GameObject*)obj)->anim.localPosZ -= lbl_803E60D4;
+            ((GameObject*)obj)->anim.localPosZ -= 0.4f;
             if (DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_A) &&
                 DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_B))
             {
@@ -191,4 +172,20 @@ void dll_21B_update(int obj)
             }
         }
     }
+}
+
+void dll_21B_init(int* obj, Dll21BPlacement* init)
+{
+    Dll21BState* state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.rotX = (s16)(init->initRotByte << 8);
+    state->driveGameBit = init->driveGameBit;
+    ((GameObject*)obj)->objectFlags |= (DLL_21B_OBJFLAG_HIDDEN | DLL_21B_OBJFLAG_HITDETECT_DISABLED);
+}
+
+void dll_21B_release_nop(void)
+{
+}
+
+void dll_21B_initialise_nop(void)
+{
 }
