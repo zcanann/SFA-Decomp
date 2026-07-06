@@ -2587,7 +2587,7 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
         vec[1] = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 0xc);
         vec[2] = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 0x10);
         *(f32*)(st->cur + off[1]) = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 4) * (motionScale = ((GameObject*)obj)->anim.rootMotionScale);
-        PSMTXMultVec((f32*)mtx, vec, (f32*)(st->cur + (off[1] + 4)));
+        PSMTXMultVec((f32*)mtx, vec, (f32*)((st->cur + 4) + off[1]));
         *(f32*)(prevSphere + 4) = (lbl_803DCED0 + *(f32*)(prevSphere + 4)) - playerMapOffsetX;
         *(f32*)(prevSphere + 0xc) = (lbl_803DCECC + *(f32*)(prevSphere + 0xc)) - playerMapOffsetZ;
         off[0] += 0x18;
