@@ -39,6 +39,19 @@ extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(f32* a, f32* b);
 
+/* .sdata2 constant pool */
+static const f32 lbl_803E3A58 = 0.0f;
+static const f32 lbl_803E3A5C = 1.0f;
+static const f32 lbl_803E3A60 = 2.2f;
+static const f32 lbl_803E3A64 = 0.75f;
+static const f32 lbl_803E3A68 = -2.2f;
+static const f32 lbl_803E3A6C = -0.75f;
+static const f32 lbl_803E3A70 = -10.0f;
+static const f32 gWindLift107LaunchGravity = -0.12f;
+static const f64 lbl_803E3A78 = 4503601774854144.0;
+static const f32 gWindLift107RadiusScale = 10.0f;
+static const f32 gWindLift107DefaultRadius = 50.0f;
+
 #pragma dont_inline on
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDAD0;
@@ -49,7 +62,6 @@ void fn_80185868(int obj, f32 arg)
 {
     extern void* lbl_803DDAD0;
     extern void* lbl_803DDAD4;
-    extern f32 lbl_803E3A58;
 
     struct
     {
@@ -88,11 +100,22 @@ void fn_80185868(int obj, f32 arg)
 #pragma opt_common_subs reset
 #pragma dont_inline reset
 
+int dll_107_getExtraSize_ret_44(void) { return 0x2c; }
+int dll_107_getObjectTypeId(void) { return 0x0; }
+
+void fn_801859D4(int* obj)
+{
+    (*gModgfxInterface)->detachSource(obj);
+    Resource_Release(lbl_803DDAD0);
+    lbl_803DDAD0 = NULL;
+    Resource_Release(lbl_803DDAD4);
+    lbl_803DDAD4 = NULL;
+}
+
 void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
     extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
-    extern f32 lbl_803E3A5C;
     WindLift107State* state;
     s16 t;
 
@@ -151,21 +174,14 @@ void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
 end:;
 }
 
+void dll_107_hitDetect_nop(void)
+{
+}
+
 #pragma opt_common_subs off
 void fn_80185B74(int obj)
 {
     extern void* lbl_803DDAD4;
-    extern f32 lbl_803E3A58;
-    extern f32 lbl_803E3A5C;
-    extern f32 lbl_803E3A60;
-    extern f32 lbl_803E3A64;
-    extern f32 lbl_803E3A68;
-    extern f32 lbl_803E3A6C;
-    extern f32 lbl_803E3A70;
-    extern f32 gWindLift107LaunchGravity;
-    extern f64 lbl_803E3A78;
-
-
 
     extern f32 getXZDistance(f32* a, f32* b);
     typedef struct
@@ -433,9 +449,6 @@ void fn_801862CC(int obj, int p)
 {
     extern void* lbl_803DDAD0;
     extern void* lbl_803DDAD4;
-    extern f32 lbl_803E3A78;
-    extern f32 gWindLift107RadiusScale;
-    extern f32 gWindLift107DefaultRadius;
     WindLift107State* sub;
     int p54;
     int p64;
@@ -494,26 +507,10 @@ void fn_801862CC(int obj, int p)
     }
 }
 
-void dll_107_hitDetect_nop(void)
-{
-}
-
 void dll_107_release_nop(void)
 {
 }
 
 void dll_107_initialise_nop(void)
 {
-}
-
-int dll_107_getExtraSize_ret_44(void) { return 0x2c; }
-int dll_107_getObjectTypeId(void) { return 0x0; }
-
-void fn_801859D4(int* obj)
-{
-    (*gModgfxInterface)->detachSource(obj);
-    Resource_Release(lbl_803DDAD0);
-    lbl_803DDAD0 = NULL;
-    Resource_Release(lbl_803DDAD4);
-    lbl_803DDAD4 = NULL;
 }
