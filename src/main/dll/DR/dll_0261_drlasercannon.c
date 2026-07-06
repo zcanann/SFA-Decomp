@@ -314,14 +314,14 @@ int drlasercannon_getTrackedTarget(int obj, int* arg)
 {
     int* tricky = getTrickyObject();
     void* player;
-    void* r;
-    int t;
+    void* target;
+    int cooldown;
     if (tricky != 0 && arg != 0 &&
         (u8)(*(int (**)(int*))((char*)*(void**)*(void**)((char*)tricky + 0x68) + 0x40))(tricky))
     {
-        t = *arg - framesThisStep;
-        *arg = t;
-        if (t < 0)
+        cooldown = *arg - framesThisStep;
+        *arg = cooldown;
+        if (cooldown < 0)
         {
             (*(void (**)(int*, int, int))((char*)*(void**)*(void**)((char*)tricky + 0x68) + 0x34))(tricky, 0, 0);
             *arg = DR_LASERCANNON_TRICKY_COOLDOWN;
@@ -331,10 +331,10 @@ int drlasercannon_getTrackedTarget(int obj, int* arg)
     player = Obj_GetPlayerObject();
     if (player != 0)
     {
-        r = (void*)fn_802972A8();
-        if (r != 0 && (((GameObject*)r)->objectFlags & DRLASERCANNON_OBJFLAG_PARENT_SLACK) == 0)
+        target = (void*)fn_802972A8();
+        if (target != 0 && (((GameObject*)target)->objectFlags & DRLASERCANNON_OBJFLAG_PARENT_SLACK) == 0)
         {
-            return (int)r;
+            return (int)target;
         }
         if ((((GameObject*)player)->objectFlags & DRLASERCANNON_OBJFLAG_PARENT_SLACK) == 0)
         {
