@@ -608,6 +608,7 @@ main/dll/dll_00A9_dlla9func0.c:
 
 main/dll/dll_00AA_dllaafunc0.c:
 	.text       start:0x801002C0 end:0x80100550
+	.sdata2     start:0x803E1600 end:0x803E1628
 
 main/dll/dll_00AB_projdummy.c:
 	.text       start:0x80100550 end:0x80100588
@@ -2731,6 +2732,7 @@ main/dll/LGT/dll_02AC_lgtcontrollight.c:
 
 main/dll/dll_02AD_softbody.c:
 	.text       start:0x80234DC8 end:0x8023503C
+	.sdata2     start:0x803E72A0 end:0x803E72B0
 
 main/dll/dll_02AE_waterflowwe.c:
 	.text       start:0x8023503C end:0x802356CC
