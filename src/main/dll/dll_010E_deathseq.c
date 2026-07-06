@@ -204,7 +204,7 @@ void deathseq_init(int* obj)
 {
     DeathSeqState* state = ((GameObject*)obj)->extra;
     s16* cam = Camera_GetCurrentViewSlot();
-    f32 f;
+    f32 dist;
 
     setScreenTransitionPause(1);
     (*gScreenTransitionInterface)->start(1, 1);
@@ -215,9 +215,9 @@ void deathseq_init(int* obj)
     state->camZ = ((GameObject*)cam)->anim.localPosZ;
     state->camRotY = cam[0];
     state->camRotX = cam[1];
-    f = lbl_803E3D2C;
-    state->dist = f;
-    state->distTarget = f;
+    dist = lbl_803E3D2C;
+    state->dist = dist;
+    state->distTarget = dist;
     addButtonObject(obj);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x400);
 }
