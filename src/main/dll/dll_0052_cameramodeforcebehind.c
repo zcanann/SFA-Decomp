@@ -5,9 +5,7 @@
  * it eases yaw/pitch toward the target's aim angles, re-derives the orbit
  * position, traces against geometry (camcontrol_traceFromTarget) and converts
  * the result back to the target's local space. The empty release/free/copy
- * stubs are the mode's vtable no-ops. fn_801101E8 (at 0x801101E8) is a related
- * free-function just past the mode's range that frees the shared cloudrunner
- * state (lbl_803DD5B8).
+ * stubs are the mode's vtable no-ops.
  */
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
@@ -30,31 +28,12 @@ extern f32 gCamForceBehindTraceDistance; /* derived horizontal trace distance */
 extern f32 gCamForceBehindPlacementRadius; /* derived orbit radius used to place the camera */
 extern f32 gCamForceBehindEaseRate; /* yaw/pitch ease rate fed to interpolate() */
 
-void CameraModeForceBehind_func06_nop(void);
-void CameraModeForceBehind_func05_nop(void);
 void CameraModeForceBehind_release(void);
 void CameraModeForceBehind_initialise(void);
 void CameraModeForceBehind_copyToCurrent(void);
 void CameraModeForceBehind_free(void);
-void fn_801101E8(void);
 void CameraModeForceBehind_init(u8* obj, int p2, f32* p3);
 void CameraModeForceBehind_update(u8* obj);
-
-void CameraModeForceBehind_func06_nop(void)
-{
-}
-
-void CameraModeForceBehind_func05_nop(void)
-{
-}
-
-void CameraModeForceBehind_release(void)
-{
-}
-
-void CameraModeForceBehind_initialise(void)
-{
-}
 
 void CameraModeForceBehind_copyToCurrent(void)
 {
@@ -63,45 +42,6 @@ void CameraModeForceBehind_copyToCurrent(void)
 void CameraModeForceBehind_free(void)
 {
 }
-
-#pragma opt_propagation off
-void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
-{
-    CameraObject* camera = (CameraObject*)obj;
-    GameObject* target = (GameObject*)camera->anim.targetObj;
-    f32 angle;
-    f32 cosv, sinv;
-    f32 baseX, baseZ;
-    f32 pos[3];
-    f32 extra;
-    f32 dx, dz;
-
-    {
-        s16 a = target->anim.rotX;
-        angle = gCamForceBehindPi * a / gCamForceBehindBamsToRadDivisor;
-    }
-    cosv = mathSinf(angle);
-    sinv = mathCosf(angle);
-    pos[0] = cosv * gCamForceBehindOrbitRadius + (baseX = target->anim.worldPosX);
-    pos[1] = gCamForceBehindHeightOffset + target->anim.worldPosY;
-    baseZ = target->anim.worldPosZ;
-    pos[2] = sinv * gCamForceBehindOrbitRadius + baseZ;
-    camcontrol_traceFromTarget(pos, target, pos, &extra);
-    dx = pos[0] - baseX;
-    dz = pos[2] - baseZ;
-    gCamForceBehindTraceDistance = sqrtf(dx * dx + dz * dz);
-    if (p3 != NULL)
-    {
-        gCamForceBehindOrbitRadius = p3[0];
-        gCamForceBehindActiveHeightOffset = p3[1];
-    }
-    else
-    {
-        gCamForceBehindOrbitRadius = gCamForceBehindDefaultOrbitRadius;
-        gCamForceBehindActiveHeightOffset = gCamForceBehindHeightOffset;
-    }
-}
-#pragma opt_propagation reset
 
 #pragma opt_common_subs off
 #pragma opt_propagation off
@@ -181,3 +121,50 @@ void CameraModeForceBehind_update(u8* obj)
 }
 #pragma opt_propagation reset
 #pragma opt_common_subs reset
+
+#pragma opt_propagation off
+void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
+{
+    CameraObject* camera = (CameraObject*)obj;
+    GameObject* target = (GameObject*)camera->anim.targetObj;
+    f32 angle;
+    f32 cosv, sinv;
+    f32 baseX, baseZ;
+    f32 pos[3];
+    f32 extra;
+    f32 dx, dz;
+
+    {
+        s16 a = target->anim.rotX;
+        angle = gCamForceBehindPi * a / gCamForceBehindBamsToRadDivisor;
+    }
+    cosv = mathSinf(angle);
+    sinv = mathCosf(angle);
+    pos[0] = cosv * gCamForceBehindOrbitRadius + (baseX = target->anim.worldPosX);
+    pos[1] = gCamForceBehindHeightOffset + target->anim.worldPosY;
+    baseZ = target->anim.worldPosZ;
+    pos[2] = sinv * gCamForceBehindOrbitRadius + baseZ;
+    camcontrol_traceFromTarget(pos, target, pos, &extra);
+    dx = pos[0] - baseX;
+    dz = pos[2] - baseZ;
+    gCamForceBehindTraceDistance = sqrtf(dx * dx + dz * dz);
+    if (p3 != NULL)
+    {
+        gCamForceBehindOrbitRadius = p3[0];
+        gCamForceBehindActiveHeightOffset = p3[1];
+    }
+    else
+    {
+        gCamForceBehindOrbitRadius = gCamForceBehindDefaultOrbitRadius;
+        gCamForceBehindActiveHeightOffset = gCamForceBehindHeightOffset;
+    }
+}
+#pragma opt_propagation reset
+
+void CameraModeForceBehind_release(void)
+{
+}
+
+void CameraModeForceBehind_initialise(void)
+{
+}
