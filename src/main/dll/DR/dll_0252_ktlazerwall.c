@@ -40,18 +40,6 @@ int ktlazerwall_getExtraSize(void) { return 0x14; }
 
 int ktlazerwall_getObjectTypeId(void) { return 0x0; }
 
-void ktlazerwall_hitDetect(void)
-{
-}
-
-void ktlazerwall_initialise(void)
-{
-}
-
-void ktlazerwall_release(void)
-{
-}
-
 void ktlazerwall_free(int obj)
 {
     char* extra = ((GameObject*)obj)->extra;
@@ -63,16 +51,41 @@ void ktlazerwall_free(int obj)
     }
 }
 
-void ktlazerwall_init(int obj, char* placement)
+void ktlazerwall_render(int obj)
 {
     char* extra = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)placement[0x18] << 8);
-    ((KtlazerwallState*)extra)->reloadTimer = lbl_803E6898;
-    ((KtlazerwallState*)extra)->driftSpeed = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
-    if ((s32)randomGetRange(0, 1) != 0)
+    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    int bolt;
+    if (*(void**)&((KtlazerwallState*)extra)->bolt != 0)
     {
-        ((KtlazerwallState*)extra)->driftSpeed = -((KtlazerwallState*)extra)->driftSpeed;
+        ((KtlazerwallState*)extra)->driftTimer -= timeDelta;
+        if (((KtlazerwallState*)extra)->driftTimer <= lbl_803E6898)
+        {
+            f32 kick = lbl_803E68B0 * ((KtlazerwallState*)extra)->driftSpeed;
+            bolt = ((KtlazerwallState*)extra)->bolt;
+            *(f32*)(bolt + 0x10) -= kick * lbl_803E68B4;
+            ((KtlazerwallState*)extra)->driftTimer = (f32)(int)randomGetRange(0xa, 0x78);
+        }
+        else
+        {
+            bolt = ((KtlazerwallState*)extra)->bolt;
+            *(f32*)(bolt + 0x10) += ((KtlazerwallState*)extra)->driftSpeed * timeDelta;
+        }
+        lightningRender(*(void**)&((KtlazerwallState*)extra)->bolt);
+        *(u16*)(((KtlazerwallState*)extra)->bolt + 0x20) += framesThisStep;
+        bolt = ((KtlazerwallState*)extra)->bolt;
+        if (*(u16*)(bolt + 0x20) >= *(u16*)(bolt + 0x22))
+        {
+            mm_free((void*)bolt);
+            ((KtlazerwallState*)extra)->bolt = 0;
+            *(u8*)extra &= ~8;
+            GameBit_Set(((KtlazerwallPlacement*)placement)->activeBit, 0);
+        }
     }
+}
+
+void ktlazerwall_hitDetect(void)
+{
 }
 
 void ktlazerwall_update(int obj)
@@ -148,35 +161,22 @@ void ktlazerwall_update(int obj)
     }
 }
 
-void ktlazerwall_render(int obj)
+void ktlazerwall_init(int obj, char* placement)
 {
     char* extra = ((GameObject*)obj)->extra;
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    int bolt;
-    if (*(void**)&((KtlazerwallState*)extra)->bolt != 0)
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)placement[0x18] << 8);
+    ((KtlazerwallState*)extra)->reloadTimer = lbl_803E6898;
+    ((KtlazerwallState*)extra)->driftSpeed = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
+    if ((s32)randomGetRange(0, 1) != 0)
     {
-        ((KtlazerwallState*)extra)->driftTimer -= timeDelta;
-        if (((KtlazerwallState*)extra)->driftTimer <= lbl_803E6898)
-        {
-            f32 kick = lbl_803E68B0 * ((KtlazerwallState*)extra)->driftSpeed;
-            bolt = ((KtlazerwallState*)extra)->bolt;
-            *(f32*)(bolt + 0x10) -= kick * lbl_803E68B4;
-            ((KtlazerwallState*)extra)->driftTimer = (f32)(int)randomGetRange(0xa, 0x78);
-        }
-        else
-        {
-            bolt = ((KtlazerwallState*)extra)->bolt;
-            *(f32*)(bolt + 0x10) += ((KtlazerwallState*)extra)->driftSpeed * timeDelta;
-        }
-        lightningRender(*(void**)&((KtlazerwallState*)extra)->bolt);
-        *(u16*)(((KtlazerwallState*)extra)->bolt + 0x20) += framesThisStep;
-        bolt = ((KtlazerwallState*)extra)->bolt;
-        if (*(u16*)(bolt + 0x20) >= *(u16*)(bolt + 0x22))
-        {
-            mm_free((void*)bolt);
-            ((KtlazerwallState*)extra)->bolt = 0;
-            *(u8*)extra &= ~8;
-            GameBit_Set(((KtlazerwallPlacement*)placement)->activeBit, 0);
-        }
+        ((KtlazerwallState*)extra)->driftSpeed = -((KtlazerwallState*)extra)->driftSpeed;
     }
+}
+
+void ktlazerwall_release(void)
+{
+}
+
+void ktlazerwall_initialise(void)
+{
 }
