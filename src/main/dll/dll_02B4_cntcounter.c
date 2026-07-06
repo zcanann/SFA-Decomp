@@ -39,19 +39,12 @@ void cntcounter_free(int obj)
     }
 }
 
-void cntcounter_hitDetect(void)
-{
-}
-
 void cntcounter_render(void)
 {
 }
 
-void cntcounter_init(int obj)
+void cntcounter_hitDetect(void)
 {
-    CntCounterState* state = ((GameObject*)obj)->extra;
-    state->displayHud = 0;
-    state->remainingCount = 0;
 }
 
 void cntcounter_update(int obj)
@@ -91,6 +84,13 @@ void cntcounter_update(int obj)
             state->remainingCount = setup->initialCount;
         }
     }
+}
+
+void cntcounter_init(int obj)
+{
+    CntCounterState* state = ((GameObject*)obj)->extra;
+    state->displayHud = 0;
+    state->remainingCount = 0;
 }
 
 void cntcounter_release(void)
