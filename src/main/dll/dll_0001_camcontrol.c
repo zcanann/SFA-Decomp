@@ -355,10 +355,10 @@ void Camera_setTargetReticleOverride(int target)
     CAMCONTROL_CAMERA->targetReticleOverride = target;
 }
 
-void Camera_setTarget(int x)
+void Camera_setTarget(int target)
 {
-    CAMCONTROL_CAMERA->overrideTarget = x;
-    CAMCONTROL_CAMERA->currentTarget = x;
+    CAMCONTROL_CAMERA->overrideTarget = target;
+    CAMCONTROL_CAMERA->currentTarget = target;
 }
 
 int Camera_getTarget(void)
