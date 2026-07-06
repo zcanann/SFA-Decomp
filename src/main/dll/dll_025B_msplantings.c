@@ -3,7 +3,7 @@
  *
  * Each spot is a placeable object identified by its placement mapId; init maps
  * that id to a pair of game bits: one tracking whether a seed has been planted
- * here (sub+8), the other whether the grown plant has been harvested (sub+0xa).
+ * here (inner+8), the other whether the grown plant has been harvested (inner+0xa).
  * The object walks a small state machine in update (phase byte at extra+0):
  * INIT -> EMPTY (alpha fades in, posY raised) -> GROWN/idle (pulses colour,
  * spawns directional fx, accepts a priority hit of type 0x1a to be cut) -> CUT
@@ -95,7 +95,7 @@ int MoonSeedPlantingSpot_func0B(void) { return 0x0; }
 #pragma optimization_level 2
 int MoonSeedPlantingSpot_setScale(int* obj, int arg)
 {
-    int* sub;
+    int* placement;
     u8* inner;
     int ret;
 
@@ -118,13 +118,13 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
             if (GameBit_Get(((MoonSeedPlantingSpotState*)inner)->plantedGameBit) != 0 && GameBit_Get(((MoonSeedPlantingSpotState*)inner)->harvestedGameBit) == 0)
             {
                 inner = ((GameObject*)obj)->extra;
-                sub = *(int**)&((GameObject*)obj)->anim.placementData;
+                placement = *(int**)&((GameObject*)obj)->anim.placementData;
                 if (GameBit_Get(((MoonSeedPlantingSpotState*)inner)->plantedGameBit) != 0)
                 {
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                     GameBit_Set(((MoonSeedPlantingSpotState*)inner)->harvestedGameBit, 1);
                     inner[0] = MSPLANTING_PHASE_HARVESTED;
-                    ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)sub + 0xc);
+                    ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)placement + 0xc);
                 }
             }
         }
@@ -330,63 +330,63 @@ void MoonSeedPlantingSpot_update(int obj)
 
 void MoonSeedPlantingSpot_init(int* obj, MoonSeedPlantingSpotPlacement* init)
 {
-    u8* sub;
+    u8* inner;
     int mapId;
 
-    sub = ((GameObject*)obj)->extra;
+    inner = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = MoonSeedPlantingSpot_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(init->rotByte << 8);
-    sub[0] = MSPLANTING_PHASE_INIT;
+    inner[0] = MSPLANTING_PHASE_INIT;
     ObjGroup_AddObject((int)obj, MSPLANTING_OBJ_GROUP);
     mapId = init->mapId;
     switch (mapId)
     {
     case 0x41a5b:
-        ((MoonSeedPlantingSpotState*)sub)->plantedGameBit = 0x866;
-        ((MoonSeedPlantingSpotState*)sub)->harvestedGameBit = 0x856;
+        ((MoonSeedPlantingSpotState*)inner)->plantedGameBit = 0x866;
+        ((MoonSeedPlantingSpotState*)inner)->harvestedGameBit = 0x856;
         break;
     case 0x41a59:
-        ((MoonSeedPlantingSpotState*)sub)->plantedGameBit = 0x867;
-        ((MoonSeedPlantingSpotState*)sub)->harvestedGameBit = 0x858;
+        ((MoonSeedPlantingSpotState*)inner)->plantedGameBit = 0x867;
+        ((MoonSeedPlantingSpotState*)inner)->harvestedGameBit = 0x858;
         break;
     case 0x41a5c:
-        ((MoonSeedPlantingSpotState*)sub)->plantedGameBit = 0x868;
-        ((MoonSeedPlantingSpotState*)sub)->harvestedGameBit = 0x85a;
+        ((MoonSeedPlantingSpotState*)inner)->plantedGameBit = 0x868;
+        ((MoonSeedPlantingSpotState*)inner)->harvestedGameBit = 0x85a;
         break;
     case 0x41a5d:
-        ((MoonSeedPlantingSpotState*)sub)->plantedGameBit = 0x869;
-        ((MoonSeedPlantingSpotState*)sub)->harvestedGameBit = 0x864;
+        ((MoonSeedPlantingSpotState*)inner)->plantedGameBit = 0x869;
+        ((MoonSeedPlantingSpotState*)inner)->harvestedGameBit = 0x864;
         break;
     case 0x43e04:
-        ((MoonSeedPlantingSpotState*)sub)->plantedGameBit = 0x9a2;
-        ((MoonSeedPlantingSpotState*)sub)->harvestedGameBit = 0x99a;
+        ((MoonSeedPlantingSpotState*)inner)->plantedGameBit = 0x9a2;
+        ((MoonSeedPlantingSpotState*)inner)->harvestedGameBit = 0x99a;
         break;
     case 0x43e1f:
-        ((MoonSeedPlantingSpotState*)sub)->plantedGameBit = 0x9a3;
-        ((MoonSeedPlantingSpotState*)sub)->harvestedGameBit = 0x99c;
+        ((MoonSeedPlantingSpotState*)inner)->plantedGameBit = 0x9a3;
+        ((MoonSeedPlantingSpotState*)inner)->harvestedGameBit = 0x99c;
         break;
     case 0x43e20:
-        ((MoonSeedPlantingSpotState*)sub)->plantedGameBit = 0x9a4;
-        ((MoonSeedPlantingSpotState*)sub)->harvestedGameBit = 0x99e;
+        ((MoonSeedPlantingSpotState*)inner)->plantedGameBit = 0x9a4;
+        ((MoonSeedPlantingSpotState*)inner)->harvestedGameBit = 0x99e;
         break;
     case 0x43e21:
-        ((MoonSeedPlantingSpotState*)sub)->plantedGameBit = 0x9a5;
-        ((MoonSeedPlantingSpotState*)sub)->harvestedGameBit = 0x9a0;
+        ((MoonSeedPlantingSpotState*)inner)->plantedGameBit = 0x9a5;
+        ((MoonSeedPlantingSpotState*)inner)->harvestedGameBit = 0x9a0;
         break;
     case 0x476ae:
-        ((MoonSeedPlantingSpotState*)sub)->plantedGameBit = 0x3d5;
-        ((MoonSeedPlantingSpotState*)sub)->harvestedGameBit = 0x3d2;
+        ((MoonSeedPlantingSpotState*)inner)->plantedGameBit = 0x3d5;
+        ((MoonSeedPlantingSpotState*)inner)->harvestedGameBit = 0x3d2;
         break;
     case 0x4b26e:
-        ((MoonSeedPlantingSpotState*)sub)->plantedGameBit = 0xd4d;
-        ((MoonSeedPlantingSpotState*)sub)->harvestedGameBit = 0xd4b;
+        ((MoonSeedPlantingSpotState*)inner)->plantedGameBit = 0xd4d;
+        ((MoonSeedPlantingSpotState*)inner)->harvestedGameBit = 0xd4b;
         break;
     case 0x4bea3:
-        ((MoonSeedPlantingSpotState*)sub)->plantedGameBit = 0xe21;
-        ((MoonSeedPlantingSpotState*)sub)->harvestedGameBit = 0xe10;
+        ((MoonSeedPlantingSpotState*)inner)->plantedGameBit = 0xe21;
+        ((MoonSeedPlantingSpotState*)inner)->harvestedGameBit = 0xe10;
         break;
     }
-    sub[1] = 0;
+    inner[1] = 0;
 }
 
 void MoonSeedPlantingSpot_release(void)
