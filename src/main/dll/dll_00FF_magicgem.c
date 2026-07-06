@@ -166,9 +166,6 @@ void magicgem_update(GameObject* obj)
         ref = (int)obj->anim.modelState;
         if ((u32)ref != 0)
         {
-            /* the long-long mask is load-bearing: ~0x1000LL clears
-               OBJ_MODEL_STATE_SHADOW_FADE_OUT via a 64-bit constant, which the
-               named 32-bit define does not reproduce. */
             obj->anim.modelState->flags &= ~0x1000LL;
         }
         state->unk25B = 1;
@@ -283,8 +280,6 @@ void magicgem_update(GameObject* obj)
                 val = GameBit_Get(MAGICGEM_GAMEBIT_CLAIMED);
                 if (val == 0)
                 {
-                    /* s16 store is load-bearing: writing 0xffff through the s16 view
-                       differs in codegen from a plain u16 field store. */
                     *(s16*)&state->pickupMsgArg = 0xffff;
                     ObjMsg_SendToObject(player, MAGICGEM_MSG_IN_RANGE, obj, (int)state + 0x280);
                     ObjHits_DisableObject(obj);

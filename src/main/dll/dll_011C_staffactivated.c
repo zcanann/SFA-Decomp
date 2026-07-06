@@ -300,8 +300,6 @@ void staffactivated_init(GameObject* obj, StaffActivatedSetup* setupData)
     }
 
     obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase * scale;
-    /* the *(f32*)& launder on the min-scale constant is load-bearing here (the
-       plain compare regresses); keep the forced load feeding the branch. */
     if (obj->anim.rootMotionScale < *(f32*)&gStaffActivatedMinRootMotionScale)
     {
         obj->anim.rootMotionScale = gStaffActivatedMinRootMotionScale;

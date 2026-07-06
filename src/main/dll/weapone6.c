@@ -549,8 +549,6 @@ void fn_8013FBE4(int obj, register int state)
         trackedObj = (u8*)tumbleweedbush_findNearestActive();
         if (trackedObj != 0 && **(u8**)state != 0)
         {
-            /* &unk704 as a raw (state + 0x704) is load-bearing here: the typed
-               field form reorders the address calc and regresses this fn. */
             if (trackedObj != *(u8**)&((TrickyState*)state)->unk710 &&
                 ((TrickyState*)state)->targetPosPtr != (u8*)(state + 0x704))
             {
