@@ -2088,8 +2088,8 @@ void gxTextureFn_80052efc(void)
             matColor.g = 0;
             matColor.b = (((RcpDistortSlot*)slots)[i].colB * ((RcpDistortSlot*)slots)[i].scaleB) >> 8;
             matColor.a = 0xff;
-            GXSetChanMatColor(4, matColor);
-            GXSetChanMatColor(5, matColor);
+            GXSetChanMatColor(GX_COLOR0A0, matColor);
+            GXSetChanMatColor(GX_COLOR1A1, matColor);
             textureFn_80052bb4(((RcpDistortSlot*)slots)[i].model, ((RcpDistortSlot*)slots)[i].params);
             resetLotsOfRenderVars();
             textureFn_8004ff20(gRcpDistortTexture, mtx, &outColor, 0);
@@ -2106,7 +2106,7 @@ void gxTextureFn_80052efc(void)
     resetLotsOfRenderVars();
     textureFn_800524ec(&gRcpDistortMatColor);
     textureFn_800528bc();
-    GXSetChanMatColor(0, *(GXColor8*)&gRcpDistortMatColor);
+    GXSetChanMatColor(GX_COLOR0, *(GXColor8*)&gRcpDistortMatColor);
     clearSlot = 5;
     k = 5;
     e = gRcpDistortSlots + 0x8c; /* &slots[5]; +0 texture, +0xe tex refCount, +0x1a group, +0x1b mode */
