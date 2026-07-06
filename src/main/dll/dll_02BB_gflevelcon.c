@@ -243,7 +243,7 @@ void gf_levelcon_findLinkedObjects(int obj)
     int* objects;
     int objectIndex;
     int objectCount;
-    int o;
+    int linkedObj;
 
     ((GfLevelconFindLinkedObjectsState*)state)->light = 0;
     ((GfLevelconFindLinkedObjectsState*)state)->scrollA = 0;
@@ -251,19 +251,19 @@ void gf_levelcon_findLinkedObjects(int obj)
     objects = ObjList_GetObjects(&objectIndex, &objectCount);
     for (; objectIndex < objectCount; objectIndex++)
     {
-        o = objects[objectIndex];
-        if ((u32)o != obj && *(void**)(o + 0x4c) != NULL)
+        linkedObj = objects[objectIndex];
+        if ((u32)linkedObj != obj && *(void**)(linkedObj + 0x4c) != NULL)
         {
-            switch (*(int*)(*(int*)(o + 0x4c) + 0x14))
+            switch (*(int*)(*(int*)(linkedObj + 0x4c) + 0x14))
             {
             case GFLEVELCON_LINK_LIGHT:
-                ((GfLevelconFindLinkedObjectsState*)state)->light = o;
+                ((GfLevelconFindLinkedObjectsState*)state)->light = linkedObj;
                 break;
             case GFLEVELCON_LINK_SCROLL_A:
-                ((GfLevelconFindLinkedObjectsState*)state)->scrollA = o;
+                ((GfLevelconFindLinkedObjectsState*)state)->scrollA = linkedObj;
                 break;
             case GFLEVELCON_LINK_SCROLL_B:
-                ((GfLevelconFindLinkedObjectsState*)state)->scrollB = o;
+                ((GfLevelconFindLinkedObjectsState*)state)->scrollB = linkedObj;
                 break;
             }
         }
