@@ -2605,6 +2605,7 @@ main/dll/DR/dll_027E_drmusiccont.c:
 
 main/dll/DR/dll_0280_drcloudper.c:
 	.text       start:0x80221178 end:0x80221430
+	.sdata2     start:0x803E6C00 end:0x803E6C08
 
 main/dll/DR/dll_0281_drearthcal.c:
 	.text       start:0x80221430 end:0x80221670
