@@ -64,16 +64,16 @@ int fn_801601C4(int obj, GroundBaddieState* p)
     extern f32 lbl_803E2E78;
     GroundBaddieState* sub;
     char* wp;
-    f32 z;
+    f32 zero;
 
     sub = ((GameObject*)obj)->extra;
     if (*(void**)&p->baddie.targetObj != NULL)
     {
         (*gPlayerInterface)->setState((void*)obj, p, 1);
         wp = (char*)sub->route35C;
-        z = lbl_803E2E68;
-        p->baddie.moveInputX = z;
-        p->baddie.moveInputZ = z;
+        zero = lbl_803E2E68;
+        p->baddie.moveInputX = zero;
+        p->baddie.moveInputZ = zero;
         memcpy(wp, &((GameObject*)obj)->anim.localPosX, 12);
         memcpy((void*)(sub->route35C + 0xc), (void*)&((GameObject*)p->baddie.targetObj)->anim.localPosX, 12);
         voxmaps_updateRoutePath(wp, (char*)(sub->route35C + 0x28));
@@ -177,8 +177,8 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
     extern int* gBaddieControlInterface;
     extern u8 lbl_80320008[];
     extern u8 lbl_80320080[];
-    char* o;
-    int t;
+    char* targetObj;
+    int stateResult;
     struct
     {
         f32 x, y, z;
@@ -189,12 +189,12 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
     {
         *(int*)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x30) = *(int*)&((GameObject*)obj)->anim.parent;
     }
-    o = *(char**)&p->baddie.targetObj;
-    if (o != NULL)
+    targetObj = *(char**)&p->baddie.targetObj;
+    if (targetObj != NULL)
     {
-        d.x = ((GameObject*)o)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        d.y = ((GameObject*)o)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        d.z = ((GameObject*)o)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        d.x = ((GameObject*)targetObj)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        d.y = ((GameObject*)targetObj)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        d.z = ((GameObject*)targetObj)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         p->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
     characterDoEyeAnims(obj, sub->route35C + 0x50);
@@ -206,10 +206,10 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
     (*(void (**)(int*, u8*, u8*, int, u8*, int, int, int))(*(int*)gBaddieControlInterface +
         0x54))(
         obj, (u8*)p, sub->route35C, sub->gameBitB, &sub->subMode, 0, 0, 0);
-    t = (*(int (**)(int*, u8*, u8*, int, u8*, u8*, int, int))(*(int*)gBaddieControlInterface +
+    stateResult = (*(int (**)(int*, u8*, u8*, int, u8*, u8*, int, int))(*(int*)gBaddieControlInterface +
         0x50))(
         obj, (u8*)p, sub->route35C, sub->gameBitB, lbl_80320008, lbl_80320080, 1, 0);
-    if (t >= 4)
+    if (stateResult >= 4)
     {
         *(s8*)&sub->subMode = 2;
         *(int*)&p->baddie.targetObj = Obj_GetPlayerObject();
