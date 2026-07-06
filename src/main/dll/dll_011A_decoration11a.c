@@ -160,16 +160,16 @@ void decoration11a_update(void)
 #pragma peephole on
 void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
 {
-    f32 v;
-    v = vertex[0];
-    if (v > maxOut[0]) maxOut[0] = v;
-    else if (v < minOut[0]) minOut[0] = v;
-    v = vertex[1];
-    if (v > maxOut[1]) maxOut[1] = v;
-    else if (v < minOut[1]) minOut[1] = v;
-    v = vertex[2];
-    if (v > maxOut[2]) maxOut[2] = v;
-    else if (v < minOut[2]) minOut[2] = v;
+    f32 component;
+    component = vertex[0];
+    if (component > maxOut[0]) maxOut[0] = component;
+    else if (component < minOut[0]) minOut[0] = component;
+    component = vertex[1];
+    if (component > maxOut[1]) maxOut[1] = component;
+    else if (component < minOut[1]) minOut[1] = component;
+    component = vertex[2];
+    if (component > maxOut[2]) maxOut[2] = component;
+    else if (component < minOut[2]) minOut[2] = component;
 }
 #pragma dont_inline reset
 #pragma peephole off
