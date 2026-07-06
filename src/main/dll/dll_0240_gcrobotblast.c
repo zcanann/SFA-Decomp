@@ -22,16 +22,16 @@ int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     extern f32 lbl_803E6270;
     extern f32 lbl_803E6274;
 
-    int sub = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&((GameObject*)obj)->extra;
     int i;
 
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        ((BlastFlags4*)&((GCRobotBlastState*)sub)->flags04)->b80 = animUpdate->eventIds[i];
+        ((BlastFlags4*)&((GCRobotBlastState*)state)->flags04)->b80 = animUpdate->eventIds[i];
     }
-    if (((BlastFlags4*)&((GCRobotBlastState*)sub)->flags04)->b80 != 0)
+    if (((BlastFlags4*)&((GCRobotBlastState*)state)->flags04)->b80 != 0)
     {
-        switch (((GCRobotBlastState*)sub)->mode)
+        switch (((GCRobotBlastState*)state)->mode)
         {
         case 0:
         case 1:
@@ -62,10 +62,10 @@ void GCRobotBlast_update(void)
 {
 }
 
-void GCRobotBlast_init(int obj, s8* p)
+void GCRobotBlast_init(int obj, s8* def)
 {
     GCRobotBlastState* state = ((GameObject*)obj)->extra;
-    state->mode = p[0x19];
+    state->mode = def[0x19];
     ((BlastFlags4*)&state->flags04)->b80 = 0;
     ((GameObject*)obj)->animEventCallback = GCRobotBlast_SeqFn;
 }
