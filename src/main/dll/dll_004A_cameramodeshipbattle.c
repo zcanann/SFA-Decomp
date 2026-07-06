@@ -33,18 +33,18 @@ void CameraModeShipBattle_update(short* cam)
     f32 fa;
     f32 fb;
     f32 fc;
-    f32 r;
-    CameraModeShipBattleState* s;
-    int m = 0;
+    f32 lateralStep;
+    CameraModeShipBattleState* state;
+    int mode = 0;
     GameObject* focus = (GameObject*)((CameraObject*)cam)->anim.targetObj;
     if (focus != NULL)
     {
-        m = shipBattleFn_801eed24((int)focus);
+        mode = shipBattleFn_801eed24((int)focus);
     }
-    s = gCamShipBattleState;
-    if (m != s->mode)
+    state = gCamShipBattleState;
+    if (mode != state->mode)
     {
-        if (m == 2)
+        if (mode == 2)
         {
             fa = lbl_803E1948;
         }
@@ -52,7 +52,7 @@ void CameraModeShipBattle_update(short* cam)
         {
             fa = lbl_803E194C;
         }
-        if (m != 2 && m != 5)
+        if (mode != 2 && mode != 5)
         {
             fb = lbl_803E1950;
             fc = lbl_803E1954;
@@ -60,9 +60,9 @@ void CameraModeShipBattle_update(short* cam)
         else
         {
             fb = lbl_803E1958;
-            fc = s->smoothedYOffset;
+            fc = state->smoothedYOffset;
         }
-        s->mode = m;
+        state->mode = mode;
         gCamShipBattleState->lateralDelta = fa - gCamShipBattleState->targetLateralOffset;
         gCamShipBattleState->startLateralOffset = gCamShipBattleState->targetLateralOffset;
         gCamShipBattleState->verticalDelta = fb - (gCamShipBattleState->verticalOffset + fc);
@@ -81,7 +81,7 @@ void CameraModeShipBattle_update(short* cam)
         gCamShipBattleState->verticalOffset = gCamShipBattleState->blendTimer * gCamShipBattleState->verticalDelta + gCamShipBattleState->
             startVerticalOffset;
     }
-    if (m != 2 && m != 5)
+    if (mode != 2 && mode != 5)
     {
         fa = (f32)focus->anim.rotZ / lbl_803E1964;
         gCamShipBattleState->smoothedZOffset = -(fa * timeDelta - gCamShipBattleState->smoothedZOffset);
@@ -120,18 +120,18 @@ void CameraModeShipBattle_update(short* cam)
     cam[0] = 0x4000;
     cam[2] = (s16)(-focus->anim.rotZ >> 3);
     ((CameraObject*)cam)->fov = gCamShipBattleFov;
-    s = gCamShipBattleState;
-    r = (s->targetLateralOffset - s->lateralOffset) / lbl_803E1978;
-    if (r > lbl_803E197C)
+    state = gCamShipBattleState;
+    lateralStep = (state->targetLateralOffset - state->lateralOffset) / lbl_803E1978;
+    if (lateralStep > lbl_803E197C)
     {
-        r = lbl_803E197C;
+        lateralStep = lbl_803E197C;
     }
-    else if (r < lbl_803E1980)
+    else if (lateralStep < lbl_803E1980)
     {
-        r = lbl_803E1980;
+        lateralStep = lbl_803E1980;
     }
-    r = r * timeDelta;
-    s->lateralOffset = s->lateralOffset + r;
+    lateralStep = lateralStep * timeDelta;
+    state->lateralOffset = state->lateralOffset + lateralStep;
     Obj_TransformWorldPointToLocal(((CameraObject*)cam)->anim.worldPosX, ((CameraObject*)cam)->anim.worldPosY,
                                    ((CameraObject*)cam)->anim.worldPosZ,
                                    &((CameraObject*)cam)->anim.localPosX, &((CameraObject*)cam)->anim.localPosY,
