@@ -12458,15 +12458,13 @@ void fn_802AC32C(int p1, int p2, int p3)
     if (near != NULL && ((ByteFlags*)((char*)p3 + 0x3f0))->b80 == 0 &&
         ((ByteFlags*)((char*)p3 + 0x3f0))->b40 == 0)
     {
-        s16 cd = *(s16*)&((PlayerState*)p3)->lookAtTimer - 1;
         f32 ratio;
         f32 clamped;
         f32 f5;
         f32 result;
         int delta;
 
-        *(s16*)&((PlayerState*)p3)->lookAtTimer = cd;
-        if (cd <= 0)
+        if (--*(s16*)&((PlayerState*)p3)->lookAtTimer <= 0)
         {
             *(s16*)&((PlayerState*)p3)->lookAtTimer = (s16)randomGetRange(0x78, 0xf0);
             *(s16*)&((PlayerState*)p3)->lookAtRandOffset = (s16)randomGetRange(0, 0x28);
