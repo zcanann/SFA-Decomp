@@ -569,7 +569,7 @@ void SB_Galleon_init(GameObject* obj)
     Music_Trigger(state->musicIdB, 1);
 }
 
-void SB_Galleon_free(GameObject* obj, int p2)
+void SB_Galleon_free(GameObject* obj, int leavingMap)
 {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     if ((void*)gSbGalleonSkyTexA != NULL)
@@ -583,7 +583,7 @@ void SB_Galleon_free(GameObject* obj, int p2)
         gSbGalleonSkyTexB = 0;
     }
     ObjGroup_RemoveObject((u32)obj, SBGALLEON_OBJGROUP);
-    if (state->musicLatch != 0 && p2 == 0)
+    if (state->musicLatch != 0 && leavingMap == 0)
     {
         state->musicLatch = 0;
     }
