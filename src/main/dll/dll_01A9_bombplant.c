@@ -215,10 +215,10 @@ int bombplant_SeqFn(int* obj)
         flags = ((EnemyMushroomState*)state)->flags;
         if (flags & BOMBPLANT_FLAG_STATE_ENTERED)
         {
-            int v;
+            int timerValue;
             ((EnemyMushroomState*)state)->flags = (u8)(flags & ~BOMBPLANT_FLAG_STATE_ENTERED);
-            v = ((BombplantPlacement*)base)->timerBase + randomGetRange(-0x32, 0x32);
-            ((EnemyMushroomState*)state)->timer = v;
+            timerValue = ((BombplantPlacement*)base)->timerBase + randomGetRange(-0x32, 0x32);
+            ((EnemyMushroomState*)state)->timer = timerValue;
         }
         if (((GameObject*)obj)->objectFlags & BOMBPLANT_OBJFLAG_RENDERED)
         {
