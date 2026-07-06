@@ -261,7 +261,7 @@ void drshackle_hitDetect(unsigned long obj)
     {
         f32 vec[3];
         int n;
-        PSVECSubtract(&((GameObject*)obj)->anim.localPosX, (f32*)(state + 0x8), vec);
+        PSVECSubtract(&((GameObject*)obj)->anim.localPosX, &((DrshackleState*)state)->savedPosX, vec);
         n = 0xc8 - (int)(lbl_803E6A30 * PSVECMag(vec));
         if ((int)randomGetRange(0, (n < 1) ? 1 : ((n > 0xc8) ? 0xc8 : n)) == 0)
         {
