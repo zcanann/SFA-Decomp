@@ -30,23 +30,6 @@ extern int* mapTextureOverrideGetEntry(int idx);
 extern void fn_80137948(char* fmt, ...);
 extern f32 lbl_803E4060;
 
-void texframeanimator_free(void)
-{
-}
-
-void texframeanimator_hitDetect(void)
-{
-}
-
-void texframeanimator_release(void)
-{
-}
-
-void texframeanimator_initialise(void)
-{
-}
-
-
 typedef struct TexFrameAnimatorState
 {
     int textureSlot;
@@ -60,6 +43,23 @@ typedef struct TexFrameAnimatorState
     u8 active : 1;
     u8 flagLow : 5;
 } TexFrameAnimatorState;
+
+int texframeanimator_getExtraSize(void) { return 0x18; }
+int texframeanimator_getObjectTypeId(void) { return 0x0; }
+
+void texframeanimator_free(void)
+{
+}
+
+void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4060);
+}
+
+void texframeanimator_hitDetect(void)
+{
+}
 
 void texframeanimator_update(int* obj)
 {
@@ -140,13 +140,12 @@ void texframeanimator_init(int* obj, u8* params)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | TEXFRAMEANIMATOR_OBJFLAG_HIDDEN);
 }
 
-int texframeanimator_getExtraSize(void) { return 0x18; }
-int texframeanimator_getObjectTypeId(void) { return 0x0; }
-
-void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void texframeanimator_release(void)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4060);
+}
+
+void texframeanimator_initialise(void)
+{
 }
 
 
@@ -174,7 +173,16 @@ extern u8 sfxplayerObj_getExtraSize[];
 extern u8 sfxplayerObj_init[];
 extern u8 sfxplayerObj_update[];
 
-u32 gFogControlObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)fogcontrol_init, (u32)fogcontrol_update, (u32)fogcontrol_hitDetect, 0x00000000, (u32)fogcontrol_free, (u32)fogcontrol_getObjectTypeId, (u32)fogcontrol_getExtraSize };
-u32 gLightningObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)lightning_init, (u32)lightning_update, 0x00000000, (u32)lightning_render, (u32)lightning_free, 0x00000000, (u32)lightning_getExtraSize };
-u32 gWaterFallSprayObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)WaterFallSpray_init, (u32)WaterFallSpray_update, 0x00000000, (u32)WaterFallSpray_render, (u32)WaterFallSpray_free, 0x00000000, (u32)WaterFallSpray_getExtraSize };
-u32 gSfxPlayerObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)sfxplayerObj_init, (u32)sfxplayerObj_update, 0x00000000, 0x00000000, (u32)sfxplayerObj_free, 0x00000000, (u32)sfxplayerObj_getExtraSize };
+/* Union u64 member forces the retail 8-byte alignment after the 0x12-byte
+ * debug string (retail pad gap_07_803223FA_data), placing the descriptors
+ * at .data+0x18/0x50/0x88/0xC0 as in the target obj. Same idiom as
+ * dll_00B1_projlightning3. */
+typedef union ObjDescriptorTable {
+    u32 words[14];
+    u64 align8;
+} ObjDescriptorTable;
+
+ObjDescriptorTable gFogControlObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)fogcontrol_init, (u32)fogcontrol_update, (u32)fogcontrol_hitDetect, 0x00000000, (u32)fogcontrol_free, (u32)fogcontrol_getObjectTypeId, (u32)fogcontrol_getExtraSize } };
+ObjDescriptorTable gLightningObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)lightning_init, (u32)lightning_update, 0x00000000, (u32)lightning_render, (u32)lightning_free, 0x00000000, (u32)lightning_getExtraSize } };
+ObjDescriptorTable gWaterFallSprayObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)WaterFallSpray_init, (u32)WaterFallSpray_update, 0x00000000, (u32)WaterFallSpray_render, (u32)WaterFallSpray_free, 0x00000000, (u32)WaterFallSpray_getExtraSize } };
+ObjDescriptorTable gSfxPlayerObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)sfxplayerObj_init, (u32)sfxplayerObj_update, 0x00000000, 0x00000000, (u32)sfxplayerObj_free, 0x00000000, (u32)sfxplayerObj_getExtraSize } };
