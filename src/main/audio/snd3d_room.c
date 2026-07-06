@@ -63,8 +63,12 @@ extern f32 voiceAdsrSustainTable[129];
 static inline f32 sal_fmod(f32 x, f32 y)
 {
     s64 n;
+    f32 ay;
+    f32 ax;
 
-    if (__fabsf(y) > __fabsf(x))
+    ay = __fabsf(y);
+    ax = __fabsf(x);
+    if (ay > ax)
     {
         return x;
     }
@@ -88,6 +92,7 @@ typedef struct SAL_PANINFO
     f32 rpan_fm;
 } SAL_PANINFO;
 
+/* The +1 pan lookups read the global directly so &pan[1] stays one shared address constant. */
 static inline void CalcBus(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
 {
     u32 i;
@@ -98,13 +103,13 @@ static inline void CalcBus(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, S
     frac = (127.0f * vol) - (f32)i;
     level = (1.0f - frac) * vol_tab[i] + frac * vol_tab[i + 1];
     v_out[2] = 0.7079f * (level * ((1.0f - pi->span_f) * tabs->pan[pi->span_i] +
-                               pi->span_f * tabs->pan[pi->span_i + 1]));
+                               pi->span_f * gSnd3dRoomVolTable.pan[pi->span_i + 1]));
     level = level * ((1.0f - pi->span_fm) * tabs->pan[pi->span_im] +
-             pi->span_fm * tabs->pan[pi->span_im + 1]);
+             pi->span_fm * gSnd3dRoomVolTable.pan[pi->span_im + 1]);
     v_out[1] = level * ((1.0f - pi->pan_f) * tabs->pan[pi->pan_i] +
-               pi->pan_f * tabs->pan[pi->pan_i + 1]);
+               pi->pan_f * gSnd3dRoomVolTable.pan[pi->pan_i + 1]);
     v_out[0] = level * ((1.0f - pi->pan_fm) * tabs->pan[pi->pan_im] +
-               pi->pan_fm * tabs->pan[pi->pan_im + 1]);
+               pi->pan_fm * gSnd3dRoomVolTable.pan[pi->pan_im + 1]);
 }
 
 static inline void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
@@ -118,17 +123,17 @@ static inline void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* p
     frac = (127.0f * vol) - (f32)i;
     level = (1.0f - frac) * vol_tab[i] + frac * vol_tab[i + 1];
     surround = level * ((1.0f - pi->span_f) * tabs->pan[pi->span_i] +
-              pi->span_f * tabs->pan[pi->span_i + 1]);
+              pi->span_f * gSnd3dRoomVolTable.pan[pi->span_i + 1]);
     level = level * ((1.0f - pi->span_fm) * tabs->pan[pi->span_im] +
-             pi->span_fm * tabs->pan[pi->span_im + 1]);
+             pi->span_fm * gSnd3dRoomVolTable.pan[pi->span_im + 1]);
     v_out[1] = level * ((1.0f - pi->pan_f) * tabs->pan[pi->pan_i] +
-                pi->pan_f * tabs->pan[pi->pan_i + 1]);
+                pi->pan_f * gSnd3dRoomVolTable.pan[pi->pan_i + 1]);
     v_out[0] = level * ((1.0f - pi->pan_fm) * tabs->pan[pi->pan_im] +
-                pi->pan_fm * tabs->pan[pi->pan_im + 1]);
+                pi->pan_fm * gSnd3dRoomVolTable.pan[pi->pan_im + 1]);
     v_out[7] = surround * ((1.0f - pi->rpan_f) * tabs->pan_dpl2[pi->rpan_i] +
-                 pi->rpan_f * tabs->pan[pi->rpan_i + 1]);
+                 pi->rpan_f * gSnd3dRoomVolTable.pan[pi->rpan_i + 1]);
     v_out[6] = surround * ((1.0f - pi->rpan_fm) * tabs->pan_dpl2[pi->rpan_im] +
-                 pi->rpan_fm * tabs->pan[pi->rpan_im + 1]);
+                 pi->rpan_fm * gSnd3dRoomVolTable.pan[pi->rpan_im + 1]);
 }
 
 void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2,
