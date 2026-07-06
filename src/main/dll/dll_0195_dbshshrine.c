@@ -214,9 +214,9 @@ void dbsh_shrine_update(DbshShrineObject* obj)
     case DBSH_SHRINE_STATE_WAITING:
         obj->flags &= ~DBSH_SHRINE_OBJ_FLAG_ACTIVE;
         {
-            f32 t = runtime->idleSfxTimer - timeDelta;
-            runtime->idleSfxTimer = t;
-            if (t <= lbl_803E50DC)
+            f32 idleSfxTimer = runtime->idleSfxTimer - timeDelta;
+            runtime->idleSfxTimer = idleSfxTimer;
+            if (idleSfxTimer <= lbl_803E50DC)
             {
                 Sfx_PlayFromObject(obj, DBSH_SHRINE_IDLE_SFX);
                 runtime->idleSfxTimer = (f32)(int)randomGetRange(500, 1000);
