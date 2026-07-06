@@ -1106,7 +1106,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
     u8* slotPtr;
     int pair[2];
     u8* player;
-    u8 v;
+    u8 flags;
     u8* slotFlags;
     int trackId;
     int slot;
@@ -1165,14 +1165,14 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
             break;
         }
         slotFlags = base + (s8)((ObjSeqState*)seq)->slot;
-        v = *(slotFlags += 0x3538);
-        if ((v & 0x10) != 0)
+        flags = *(slotFlags += 0x3538);
+        if ((flags & 0x10) != 0)
         {
-            *slotFlags = v & ~0x10;
+            *slotFlags = flags & ~0x10;
         }
         else
         {
-            *slotFlags = v | 0x10;
+            *slotFlags = flags | 0x10;
         }
         break;
     case 14:
