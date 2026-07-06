@@ -141,8 +141,8 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             *(u8*)(obj + 0x37) =
                 state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
             {
-                f32 r = radiusScaleDiv * state->radiusScale[i];
-                ((GameObject*)obj)->anim.localPosY = objZ - r * state->alpha;
+                f32 radius = radiusScaleDiv * state->radiusScale[i];
+                ((GameObject*)obj)->anim.localPosY = objZ - radius * state->alpha;
             }
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
             objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
@@ -185,8 +185,8 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             *(u8*)(obj + 0x37) =
                 state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
             {
-                f32 r = radiusScaleDiv * state->radiusScale[i];
-                ((GameObject*)obj)->anim.localPosY = r * state->alpha + objZ;
+                f32 radius = radiusScaleDiv * state->radiusScale[i];
+                ((GameObject*)obj)->anim.localPosY = radius * state->alpha + objZ;
             }
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
             objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
