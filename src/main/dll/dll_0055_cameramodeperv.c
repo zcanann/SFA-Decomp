@@ -28,18 +28,12 @@ void CameraModePerv_copyToCurrent(void)
 {
 }
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
 void CameraModePerv_free(void)
 {
     extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD5C8);
     lbl_803DD5C8 = NULL;
 }
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void CameraModePerv_update(u8* obj)
 {
