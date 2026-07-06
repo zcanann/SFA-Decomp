@@ -207,7 +207,7 @@ void dll_199_update(int obj)
     int msg;
     int param;
     f32 dz;
-    u32 n;
+    u32 brightness;
     int delta;
 
     state = ((GameObject*)obj)->extra;
@@ -293,18 +293,18 @@ void dll_199_update(int obj)
                 {
                     state[4] = 0x1e;
                 }
-                n = (int)((f32)state[4] * ((dz - lbl_803E5164) / lbl_803E5170));
-                if ((s16)n < 1)
+                brightness = (int)((f32)state[4] * ((dz - lbl_803E5164) / lbl_803E5170));
+                if ((s16)brightness < 1)
                 {
-                    n = 1;
+                    brightness = 1;
                 }
-                (**(void (**)(int, int))(*gTitleMenuControlInterface + 0x38))(3, n & 0xff);
-                n = (int)((f32)state[2] * ((lbl_803E5170 - (dz - lbl_803E5164)) / *(f32*)&lbl_803E5170));
-                if ((s16)n < 1)
+                (**(void (**)(int, int))(*gTitleMenuControlInterface + 0x38))(3, brightness & 0xff);
+                brightness = (int)((f32)state[2] * ((lbl_803E5170 - (dz - lbl_803E5164)) / *(f32*)&lbl_803E5170));
+                if ((s16)brightness < 1)
                 {
-                    n = 1;
+                    brightness = 1;
                 }
-                (**(void (**)(int, int))(*gTitleMenuControlInterface + 0x38))(2, n & 0xff);
+                (**(void (**)(int, int))(*gTitleMenuControlInterface + 0x38))(2, brightness & 0xff);
             }
         }
         switch (((Dll199State*)state)->phase)
