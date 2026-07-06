@@ -21,7 +21,15 @@ extern f32 lbl_803E6408;
 extern f32 lbl_803E640C;
 extern f32 lbl_803E6410;
 extern f32 lbl_803E6414;
-extern f32 lbl_803E642C;
+
+int dfpfloorbar_SeqFn(void) { return 0; }
+
+int dfpfloorbar_getExtraSize(void)
+{
+    return 0xc;
+}
+
+int dfpfloorbar_getObjectTypeId(void) { return 0; }
 
 void dfpfloorbar_free(int* obj)
 {
@@ -31,15 +39,6 @@ void dfpfloorbar_free(int* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
     state->linkedObject = NULL;
     return;
-}
-
-int dfpfloorbar_SeqFn(void) { return 0; }
-
-int dfpfloorbar_getObjectTypeId(void) { return 0; }
-
-int dfpfloorbar_getExtraSize(void)
-{
-    return 0xc;
 }
 
 void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -211,10 +210,6 @@ void dfpfloorbar_update(int obj)
     }
 }
 
-void dfpfloorbar_release(void)
-{
-}
-
 void dfpfloorbar_init(int obj, int params)
 {
     DfpFloorbarState* state = ((GameObject*)obj)->extra;
@@ -229,7 +224,7 @@ void dfpfloorbar_init(int obj, int params)
     if (((DfpfloorbarPlacement*)params)->travelRange != 0)
     {
         ((GameObject*)obj)->anim.rootMotionScale =
-            lbl_803E6408 / ((f32)(s32)((DfpfloorbarPlacement*)params)->travelRange / lbl_803E642C);
+            lbl_803E6408 / ((f32)(s32)((DfpfloorbarPlacement*)params)->travelRange / 1000.0f);
     }
 
     if (GameBit_Get((int)state->completionGameBit) != 0)
@@ -237,6 +232,10 @@ void dfpfloorbar_init(int obj, int params)
         state->active = 1;
         ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)params)->posY - lbl_803E640C;
     }
+}
+
+void dfpfloorbar_release(void)
+{
 }
 
 void dfpfloorbar_initialise(void)
