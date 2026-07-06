@@ -60,38 +60,24 @@ extern f32 lbl_803E4B78;
 extern f32 lbl_803E4B7C;
 extern f32 lbl_803E4B68;
 
+int dim2icicle_getExtraSize(void) { return 0xc; }
+
+int dim2icicle_getObjectTypeId(void) { return 0x0; }
+
+
 void dim2icicle_free(void)
 {
 }
 
+void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B68);
+}
+
+
 void dim2icicle_hitDetect(void)
 {
-}
-
-void dim2icicle_release(void)
-{
-}
-
-void dim2icicle_initialise(void)
-{
-}
-
-void dim2icicle_init(int obj, s8* p)
-{
-    char* inner = ((GameObject*)obj)->extra;
-    if (GameBit_Get(((Dim2iciclePlacement*)p)->impactGameBit) != 0)
-    {
-        inner[6] = DIM2ICICLE_MODE_IMPACTED;
-        ((GameObject*)obj)->anim.alpha = 0;
-    }
-    else
-    {
-        inner[6] = DIM2ICICLE_MODE_WAIT_HIT;
-        ((GameObject*)obj)->anim.alpha = 0xff;
-    }
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
-    ((GameObject*)obj)->anim.velocityY = lbl_803E4B80;
-    ((GameObject*)obj)->objectFlags |= DIM2ICICLE_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dim2icicle_update(int obj)
@@ -206,11 +192,28 @@ void dim2icicle_update(int obj)
     }
 }
 
-int dim2icicle_getExtraSize(void) { return 0xc; }
-int dim2icicle_getObjectTypeId(void) { return 0x0; }
-
-void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dim2icicle_init(int obj, s8* p)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B68);
+    char* inner = ((GameObject*)obj)->extra;
+    if (GameBit_Get(((Dim2iciclePlacement*)p)->impactGameBit) != 0)
+    {
+        inner[6] = DIM2ICICLE_MODE_IMPACTED;
+        ((GameObject*)obj)->anim.alpha = 0;
+    }
+    else
+    {
+        inner[6] = DIM2ICICLE_MODE_WAIT_HIT;
+        ((GameObject*)obj)->anim.alpha = 0xff;
+    }
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
+    ((GameObject*)obj)->anim.velocityY = lbl_803E4B80;
+    ((GameObject*)obj)->objectFlags |= DIM2ICICLE_OBJFLAG_HITDETECT_DISABLED;
+}
+
+void dim2icicle_release(void)
+{
+}
+
+void dim2icicle_initialise(void)
+{
 }
