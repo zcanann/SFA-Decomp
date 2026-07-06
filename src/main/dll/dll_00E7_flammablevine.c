@@ -75,7 +75,7 @@ extern void* getTrickyObject(void);
 int flammablevine_getExtraSize(void) { return 0x14; }
 int flammablevine_getObjectTypeId(void) { return 0x0; }
 
-void flammablevine_free(int x) { ObjGroup_RemoveObject(x, FLAMMABLEVINE_OBJGROUP); }
+void flammablevine_free(int obj) { ObjGroup_RemoveObject(obj, FLAMMABLEVINE_OBJGROUP); }
 
 void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
