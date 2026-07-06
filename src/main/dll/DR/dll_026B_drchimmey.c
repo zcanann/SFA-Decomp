@@ -54,6 +54,13 @@ STATIC_ASSERT(offsetof(DRChimmeyObject, setup) == 0x4c);
 STATIC_ASSERT(offsetof(DRChimmeyObject, renderFlags) == 0xaf);
 STATIC_ASSERT(offsetof(DRChimmeyObject, state) == 0xb8);
 
+int drchimmey_countdownCallback(DRChimmeyObject* obj, int amount)
+{
+    DRChimmeyState* state = obj->state;
+    state->offeringsRemaining -= amount;
+    return state->offeringsRemaining <= 0;
+}
+
 int drchimmey_getExtraSize(void) { return 0x18; }
 
 void drchimmey_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
@@ -62,25 +69,6 @@ void drchimmey_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69E0);
     }
-}
-
-void drchimmey_init(DRChimmeyObject* obj, DRChimmeySetup* setup)
-{
-    DRChimmeyState* state;
-
-    obj->yaw = (s16)(setup->yawByte << 8);
-    state = obj->state;
-    state->timerDuration = lbl_803E69E8;
-    state->completionGameBit = setup->completionGameBit;
-    state->offeringsRemaining = 3;
-    storeZeroToFloatParam(&state->timer);
-}
-
-int drchimmey_countdownCallback(DRChimmeyObject* obj, int amount)
-{
-    DRChimmeyState* state = obj->state;
-    state->offeringsRemaining -= amount;
-    return state->offeringsRemaining <= 0;
 }
 
 void drchimmey_update(DRChimmeyObject* obj)
@@ -125,4 +113,16 @@ void drchimmey_update(DRChimmeyObject* obj)
         GameBit_Set(state->completionGameBit, 0);
         GameBit_Set(0xea4, 0);
     }
+}
+
+void drchimmey_init(DRChimmeyObject* obj, DRChimmeySetup* setup)
+{
+    DRChimmeyState* state;
+
+    obj->yaw = (s16)(setup->yawByte << 8);
+    state = obj->state;
+    state->timerDuration = lbl_803E69E8;
+    state->completionGameBit = setup->completionGameBit;
+    state->offeringsRemaining = 3;
+    storeZeroToFloatParam(&state->timer);
 }
