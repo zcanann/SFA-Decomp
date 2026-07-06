@@ -49,46 +49,6 @@ typedef struct DfpseqpointPlacement
 extern f32 lbl_803E63B8;
 extern int unlockLevel(s32 val, int idx, int flag);
 
-void dfpseqpoint_free(void)
-{
-}
-
-void dfpseqpoint_hitDetect(void)
-{
-}
-
-void dfpseqpoint_release(void)
-{
-}
-
-void dfpseqpoint_initialise(void)
-{
-}
-
-void dfpseqpoint_init(int* obj, u8* init)
-{
-    DfpSeqPointState* sub;
-    sub = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = dfpseqpoint_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
-    sub->triggerRadius = (f32)(s32) * (s16*)(init + 0x1a);
-    sub->triggerId = *(s16*)(init + 0x1c);
-    sub->triggerMode = init[0x19];
-    sub->gameBitGate = *(s16*)(init + 0x1e);
-    sub->gameBitDone = *(s16*)(init + 0x20);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DFPSEQPOINT_OBJFLAG_HITDETECT_DISABLED);
-    ((DfpFlags7*)&sub->flags0F)->b80 = 0;
-}
-
-int dfpseqpoint_getExtraSize(void) { return 0x10; }
-int dfpseqpoint_getObjectTypeId(void) { return 0x0; }
-
-void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E63B8);
-}
-
 int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     extern int unlockLevel(s32 val, int idx, int flag);
@@ -150,6 +110,23 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
         animUpdate->eventIds[i] = 0;
     }
     return 0;
+}
+
+int dfpseqpoint_getExtraSize(void) { return 0x10; }
+int dfpseqpoint_getObjectTypeId(void) { return 0x0; }
+
+void dfpseqpoint_free(void)
+{
+}
+
+void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E63B8);
+}
+
+void dfpseqpoint_hitDetect(void)
+{
 }
 
 void dfpseqpoint_update(int obj)
@@ -255,4 +232,27 @@ void dfpseqpoint_update(int obj)
         }
         break;
     }
+}
+
+void dfpseqpoint_init(int* obj, u8* init)
+{
+    DfpSeqPointState* sub;
+    sub = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->animEventCallback = dfpseqpoint_SeqFn;
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
+    sub->triggerRadius = (f32)(s32) * (s16*)(init + 0x1a);
+    sub->triggerId = *(s16*)(init + 0x1c);
+    sub->triggerMode = init[0x19];
+    sub->gameBitGate = *(s16*)(init + 0x1e);
+    sub->gameBitDone = *(s16*)(init + 0x20);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DFPSEQPOINT_OBJFLAG_HITDETECT_DISABLED);
+    ((DfpFlags7*)&sub->flags0F)->b80 = 0;
+}
+
+void dfpseqpoint_release(void)
+{
+}
+
+void dfpseqpoint_initialise(void)
+{
 }
