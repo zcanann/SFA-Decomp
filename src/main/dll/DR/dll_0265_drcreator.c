@@ -74,23 +74,65 @@ STATIC_ASSERT(offsetof(DrcreatorState, velocityZ) == 0x2C);
 STATIC_ASSERT(offsetof(DrcreatorState, creatorObj) == 0xC4);
 
 
-void drcreator_free(void)
+int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    int i;
+    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    char* runtime;
+    int setup;
+    int projectile;
+    fn_80137948(sDrCreatorTimeFormat, *(s16*)(placement + 0x1a), *(s16*)((u8*)animUpdate + 0x58));
+    if (Obj_IsLoadingLocked() == 0)
+    {
+        return 0;
+    }
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        switch (((DrcreatorPlacement*)placement)->behaviorMode)
+        {
+        case 3:
+        case 4:
+        case 9:
+            runtime = ((GameObject*)obj)->extra;
+            if (GameBit_Get(((DrcreatorSpawnProjectileCallbackState*)runtime)->spawnGameBit) != 0)
+            {
+                setup = Obj_AllocObjectSetup(36, 1725);
+                ((DrcreatorSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
+                ((DrcreatorSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
+                ((DrcreatorSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+                ((DrcreatorSetup*)setup)->base.color[0] = 1;
+                ((DrcreatorSetup*)setup)->base.color[1] = 1;
+                ((DrcreatorSetup*)setup)->base.color[2] = 255;
+                ((DrcreatorSetup*)setup)->base.color[3] = 255;
+                ((DrcreatorSetup*)setup)->unk19 = 2;
+                projectile = Obj_SetupObject(setup, 5, -1, -1, 0);
+                if ((void*)projectile != NULL)
+                {
+                    ((DrcreatorState*)projectile)->unk2 = 0;
+                    ((GameObject*)projectile)->anim.rotX = randomGetRange(0, 65535);
+                    ((DrcreatorState*)projectile)->velocityX =
+                        lbl_803E69A8 * (f32)(int)randomGetRange(
+                                                 -((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread,
+                                                 ((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread);
+                    ((DrcreatorState*)projectile)->velocityY = lbl_803E69A8 * (f32) * (int*)runtime;
+                    ((DrcreatorState*)projectile)->velocityZ =
+                        lbl_803E69A8 * (f32)(int)randomGetRange(
+                                                 -((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread,
+                                                 ((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread);
+                    ((DrcreatorState*)projectile)->creatorObj = obj;
+                }
+            }
+            break;
+        }
+    }
+    return 0;
 }
 
 int drcreator_getExtraSize(void) { return 0x1c; }
 
 int drcreator_getObjectTypeId(void) { return 0x0; }
 
-void drcreator_hitDetect(void)
-{
-}
-
-void drcreator_initialise(void)
-{
-}
-
-void drcreator_release(void)
+void drcreator_free(void)
 {
 }
 
@@ -98,18 +140,8 @@ void drcreator_render(void)
 {
 }
 
-void drcreator_init(int obj, char* arg)
+void drcreator_hitDetect(void)
 {
-    char* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)(((DrcreatorPlacement*)arg)->rotXByte << 8);
-    ((DrcreatorState*)state)->gameBitId = ((DrcreatorPlacement*)arg)->gameBitId;
-    ((DrcreatorState*)state)->spawnInterval = ((DrcreatorPlacement*)arg)->spawnInterval;
-    ((DrcreatorState*)state)->spawnTimer = randomGetRange(0, ((DrcreatorState*)state)->spawnInterval);
-    ((DrcreatorState*)state)->timerVariance = ((DrcreatorPlacement*)arg)->timerVariance;
-    *(int*)state = ((DrcreatorPlacement*)arg)->speedScale;
-    ((BitFlags8*)(state + 0x18))->b0 = 1;
-    GameBit_Set(0x5dd, 0);
-    ((GameObject*)obj)->animEventCallback = drcreator_spawnProjectileCallback;
 }
 
 void drcreator_update(int obj)
@@ -181,58 +213,26 @@ void drcreator_update(int obj)
     }
 }
 
-int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+void drcreator_init(int obj, char* arg)
 {
-    int i;
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    char* runtime;
-    int setup;
-    int projectile;
-    fn_80137948(sDrCreatorTimeFormat, *(s16*)(placement + 0x1a), *(s16*)((u8*)animUpdate + 0x58));
-    if (Obj_IsLoadingLocked() == 0)
-    {
-        return 0;
-    }
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        switch (((DrcreatorPlacement*)placement)->behaviorMode)
-        {
-        case 3:
-        case 4:
-        case 9:
-            runtime = ((GameObject*)obj)->extra;
-            if (GameBit_Get(((DrcreatorSpawnProjectileCallbackState*)runtime)->spawnGameBit) != 0)
-            {
-                setup = Obj_AllocObjectSetup(36, 1725);
-                ((DrcreatorSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
-                ((DrcreatorSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
-                ((DrcreatorSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
-                ((DrcreatorSetup*)setup)->base.color[0] = 1;
-                ((DrcreatorSetup*)setup)->base.color[1] = 1;
-                ((DrcreatorSetup*)setup)->base.color[2] = 255;
-                ((DrcreatorSetup*)setup)->base.color[3] = 255;
-                ((DrcreatorSetup*)setup)->unk19 = 2;
-                projectile = Obj_SetupObject(setup, 5, -1, -1, 0);
-                if ((void*)projectile != NULL)
-                {
-                    ((DrcreatorState*)projectile)->unk2 = 0;
-                    ((GameObject*)projectile)->anim.rotX = randomGetRange(0, 65535);
-                    ((DrcreatorState*)projectile)->velocityX =
-                        lbl_803E69A8 * (f32)(int)randomGetRange(
-                                                 -((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread,
-                                                 ((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread);
-                    ((DrcreatorState*)projectile)->velocityY = lbl_803E69A8 * (f32) * (int*)runtime;
-                    ((DrcreatorState*)projectile)->velocityZ =
-                        lbl_803E69A8 * (f32)(int)randomGetRange(
-                                                 -((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread,
-                                                 ((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread);
-                    ((DrcreatorState*)projectile)->creatorObj = obj;
-                }
-            }
-            break;
-        }
-    }
-    return 0;
+    char* state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.rotX = (s16)(((DrcreatorPlacement*)arg)->rotXByte << 8);
+    ((DrcreatorState*)state)->gameBitId = ((DrcreatorPlacement*)arg)->gameBitId;
+    ((DrcreatorState*)state)->spawnInterval = ((DrcreatorPlacement*)arg)->spawnInterval;
+    ((DrcreatorState*)state)->spawnTimer = randomGetRange(0, ((DrcreatorState*)state)->spawnInterval);
+    ((DrcreatorState*)state)->timerVariance = ((DrcreatorPlacement*)arg)->timerVariance;
+    *(int*)state = ((DrcreatorPlacement*)arg)->speedScale;
+    ((BitFlags8*)(state + 0x18))->b0 = 1;
+    GameBit_Set(0x5dd, 0);
+    ((GameObject*)obj)->animEventCallback = drcreator_spawnProjectileCallback;
+}
+
+void drcreator_release(void)
+{
+}
+
+void drcreator_initialise(void)
+{
 }
 
 char sDrCreatorTimeFormat[15] = " Time %i : %i \000";
