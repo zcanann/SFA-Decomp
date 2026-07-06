@@ -54,16 +54,16 @@ typedef struct VoicePrioPrev
  */
 void voiceSetPriority(McmdVoiceState* svoice, u8 prio)
 {
-    u32 v;
+    u32 voiceIdx;
     VidListTables* vb;
     u16 li;
     SynthVoiceListNode* vps;
     u16 root;
     u16 i;
 
-    v = (u8)svoice->voiceHandle;
+    voiceIdx = (u8)svoice->voiceHandle;
     vb = (VidListTables*)vidListNodes;
-    vps = VB_PRIO_LINK(vb, v);
+    vps = VB_PRIO_LINK(vb, voiceIdx);
     if (vps->user == 1)
     {
         if (svoice->priorityGroup == prio)
@@ -78,7 +78,7 @@ void voiceSetPriority(McmdVoiceState* svoice, u8 prio)
     vps->prev = 0xff;
     if ((vps->next = VB_PRIO_HEAD(vb, prio)) != 0xFF)
     {
-        VB_PRIO_LINK(vb, VB_PRIO_HEAD(vb, prio))->prev = v;
+        VB_PRIO_LINK(vb, VB_PRIO_HEAD(vb, prio))->prev = voiceIdx;
     }
     else if ((root = voicePrioSortRootListRoot) != 0xFFFF)
     {
@@ -116,7 +116,7 @@ void voiceSetPriority(McmdVoiceState* svoice, u8 prio)
         voicePrioSortRootListRoot = prio;
     }
 
-    VB_PRIO_HEAD(vb, prio) = v;
+    VB_PRIO_HEAD(vb, prio) = voiceIdx;
     svoice->priorityGroup = prio;
     hwSetPriority(svoice->voiceHandle & 0xFF, ((u32)prio << 24) | (svoice->priorityValue >> 15));
 }
