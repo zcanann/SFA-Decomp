@@ -52,59 +52,8 @@ typedef struct MoonSeedBushPlacement
 
 STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 
-void MoonSeedBush_free(void)
-{
-}
-
-void MoonSeedBush_hitDetect(void)
-{
-}
-
-void MoonSeedBush_release(void)
-{
-}
-
-void MoonSeedBush_initialise(void)
-{
-}
-
-int MoonSeedBush_getExtraSize(void) { return sizeof(MoonSeedBushState); }
-int MoonSeedBush_getObjectTypeId(void) { return 0x0; }
-
 #pragma peephole off
-void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E44D0);
-}
-#pragma reset
-
 #pragma scheduling off
-void MoonSeedBush_update(int obj)
-{
-    MoonSeedBushState* state = ((GameObject*)obj)->extra;
-    int def = *(int*)&((GameObject*)obj)->anim.placementData;
-    int preemptSlot;
-    if ((state->flags & 1) == 0) return;
-    if (((MoonSeedBushPlacement*)def)->preemptSeq != 0 && state->seedState != MOONSEEDBUSH_SEED_UNGROWN)
-    {
-        preemptSlot = ((MoonSeedBushPlacement*)def)->preemptSlot;
-        (*gObjectTriggerInterface)->preempt(obj, ((MoonSeedBushPlacement*)def)->preemptSeq);
-    }
-    else
-    {
-        preemptSlot = -1;
-    }
-    {
-        s32 idx = (s32)(s8) * (u8*)(def + 0x1E); /* placement->sequence */
-        if (idx != -1)
-        {
-            (*gObjectTriggerInterface)->runSequence(idx, (void*)obj, preemptSlot);
-        }
-    }
-    state->flags &= ~1;
-}
-
 int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     MoonSeedBushState* state = ((GameObject*)obj)->extra;
@@ -140,6 +89,54 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return state->seedState != MOONSEEDBUSH_SEED_GROWN;
 }
+#pragma peephole reset
+#pragma scheduling reset
+
+int MoonSeedBush_getExtraSize(void) { return sizeof(MoonSeedBushState); }
+int MoonSeedBush_getObjectTypeId(void) { return 0x0; }
+
+void MoonSeedBush_free(void)
+{
+}
+
+#pragma peephole off
+void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E44D0);
+}
+#pragma peephole reset
+
+void MoonSeedBush_hitDetect(void)
+{
+}
+
+#pragma peephole off
+#pragma scheduling off
+void MoonSeedBush_update(int obj)
+{
+    MoonSeedBushState* state = ((GameObject*)obj)->extra;
+    int def = *(int*)&((GameObject*)obj)->anim.placementData;
+    int preemptSlot;
+    if ((state->flags & 1) == 0) return;
+    if (((MoonSeedBushPlacement*)def)->preemptSeq != 0 && state->seedState != MOONSEEDBUSH_SEED_UNGROWN)
+    {
+        preemptSlot = ((MoonSeedBushPlacement*)def)->preemptSlot;
+        (*gObjectTriggerInterface)->preempt(obj, ((MoonSeedBushPlacement*)def)->preemptSeq);
+    }
+    else
+    {
+        preemptSlot = -1;
+    }
+    {
+        s32 idx = (s32)(s8) * (u8*)(def + 0x1E); /* placement->sequence */
+        if (idx != -1)
+        {
+            (*gObjectTriggerInterface)->runSequence(idx, (void*)obj, preemptSlot);
+        }
+    }
+    state->flags &= ~1;
+}
 
 void MoonSeedBush_init(int obj, int data)
 {
@@ -165,7 +162,16 @@ void MoonSeedBush_init(int obj, int data)
         state->seedState = MOONSEEDBUSH_SEED_UNGROWN;
     }
 }
-#pragma reset
+#pragma peephole reset
+#pragma scheduling reset
+
+void MoonSeedBush_release(void)
+{
+}
+
+void MoonSeedBush_initialise(void)
+{
+}
 
 ObjectDescriptor gMoonSeedBushObjDescriptor = {
     0,
