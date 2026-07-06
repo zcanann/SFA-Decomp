@@ -475,7 +475,7 @@ config.libs = [
     DolphinLib(
         "dsp",
         [
-            Object(NonMatching, "dolphin/dsp/dsp.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/dsp/dsp.c"),
             Object(MatchingFor("GSAE01"), "dolphin/dsp/dsp_task.c"),
             Object(MatchingFor("GSAE01"), "dolphin/dsp/dsp_debug.c"),
         ],
@@ -691,7 +691,7 @@ config.libs = [
             ),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c"),
             Object(NonMatching, "main/dll/DIM/dll_01C2_dimsnowball1c2.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/DIM/dll_01C3_dimgate.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/DIM/dll_01C3_dimgate.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DIM/dll_01C4_dimicewall.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DIM/dll_01C5_dimbarrier.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_801b1d84.c", cflags=cflags_dll_noopt),
@@ -1180,7 +1180,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_00CB_dllcb.c"),
             Object(NonMatching, "main/dll/dll_80161130.c"),
             Object(NonMatching, "main/dll/dll_00D0_grimble.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_00CF_cannonclaw.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_00CF_cannonclaw.c"),
             Object(NonMatching, "main/dll/dll_00D1_tumbleweedbush.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00D2_tumbleweed.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/backpack.c", cflags=cflags_dll_noopt),
