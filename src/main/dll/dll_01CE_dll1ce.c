@@ -213,12 +213,12 @@ void dll_1CE_update(int* obj)
         int off;
         int i;
         int* list;
-        int n;
+        int count;
         int found = 0;
         off = 0;
         list = *(int**)((char*)obj + 0x58);
-        n = (s8) * (s8*)((char*)list + 0x10f);
-        for (i = 0; i < n; i++)
+        count = (s8) * (s8*)((char*)list + 0x10f);
+        for (i = 0; i < count; i++)
         {
             int* o = *(int**)((char*)list + off + 0x100);
             if (((GameObject*)o)->anim.seqId == 0x18f || ((GameObject*)o)->anim.seqId == 0x1d6)
