@@ -63,7 +63,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     if (mode == MCLIGHTNING_PHASE_ARMED)
     {
         int count;
-        int* objs = ObjGroup_GetObjects(0x48, &count);
+        int* objs = ObjGroup_GetObjects(MCLIGHTNING_OBJGROUP, &count);
         int i;
         for (i = 0; i < count; i++)
         {
