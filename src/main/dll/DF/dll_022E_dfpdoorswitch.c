@@ -7,6 +7,11 @@
 #include "main/dll/anim.h"
 #include "main/engine_shared.h"
 
+int doorswitch_getExtraSize(void) { return 0x0; }
+int doorswitch_getObjectTypeId(void) { return 0x0; }
+
+void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
+
 void doorswitch_render(void)
 {
 }
@@ -15,6 +20,9 @@ void doorswitch_hitDetect(void)
 {
 }
 
+void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
+void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
+
 void doorswitch_release(void)
 {
 }
@@ -22,13 +30,6 @@ void doorswitch_release(void)
 void doorswitch_initialise(void)
 {
 }
-
-int doorswitch_getExtraSize(void) { return 0x0; }
-int doorswitch_getObjectTypeId(void) { return 0x0; }
-
-void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
-void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
-void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 
 char sDoorswitchInitNoLongerSupported[] = "<doorswitch Init>No Longer supported \n";
 
