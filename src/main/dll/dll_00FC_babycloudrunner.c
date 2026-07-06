@@ -75,18 +75,12 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void objRenderFn_80041018(int* obj);
 
 
-void dll_FC_initialise_nop(void);
-void dll_FC_release_nop(void);
-void dll_FC_init(int obj, int objDef);
-void dll_FC_update(int obj);
-void dll_FC_hitDetect(int* obj);
+int dll_FC_getExtraSize_ret_8(void) { return sizeof(BabyCloudRunnerState); }
+int dll_FC_getObjectTypeId(void) { return 0x0; }
 
 void dll_FC_free_nop(void)
 {
 }
-
-int dll_FC_getExtraSize_ret_8(void) { return sizeof(BabyCloudRunnerState); }
-int dll_FC_getObjectTypeId(void) { return 0x0; }
 
 void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -101,23 +95,6 @@ void dll_FC_hitDetect(int* obj)
     if (objAnim->hitVolumeTransforms == NULL) return;
     objRenderFn_80041018(obj);
 }
-
-ObjectDescriptor gDllFCObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)dll_FC_initialise_nop,
-    (ObjectDescriptorCallback)dll_FC_release_nop,
-    0,
-    (ObjectDescriptorCallback)dll_FC_init,
-    (ObjectDescriptorCallback)dll_FC_update,
-    (ObjectDescriptorCallback)dll_FC_hitDetect,
-    (ObjectDescriptorCallback)dll_FC_render,
-    (ObjectDescriptorCallback)dll_FC_free_nop,
-    (ObjectDescriptorCallback)dll_FC_getObjectTypeId,
-    dll_FC_getExtraSize_ret_8,
-};
 
 void dll_FC_update(int obj)
 {
