@@ -357,7 +357,7 @@ void ecsh_shrine_setScale(s16* out)
     int* state;
     if (obj == NULL) return;
     state = ((GameObject*)obj)->extra;
-    *out = *(s16*)((char*)state + 0x20);
+    *out = ((EcshShrineState*)state)->unk20;
 }
 
 int ecsh_shrine_getExtraSize(void)
