@@ -82,6 +82,19 @@ STATIC_ASSERT(offsetof(WCAperturesSetup, modelIndex) == WCAPERTURES_SETUP_MODEL_
 STATIC_ASSERT(offsetof(WCAperturesSetup, openBit) == WCAPERTURES_SETUP_OPEN_BIT_OFFSET);
 STATIC_ASSERT(offsetof(WCAperturesSetup, armBit) == WCAPERTURES_SETUP_ARM_BIT_OFFSET);
 
+int wcapertures_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
+{
+    int i;
+    WCAperturesState* state = ((GameObject*)obj)->extra;
+
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        if (animUpdate->eventIds[i] == WCAPERTURES_CALLBACK_ARM)
+            state->mode = WCAPERTURES_MODE_ARMED;
+    }
+    return 0;
+}
+
 int wcapertures_getExtraSize(void) { return WCAPERTURES_EXTRA_SIZE; }
 
 int wcapertures_getObjectTypeId(int obj)
@@ -157,62 +170,6 @@ void wcapertures_hitDetect(int obj)
         modelLightStruct_updateGlowAlpha(state->light);
 }
 
-void wcapertures_release(void)
-{
-}
-
-void wcapertures_initialise(void)
-{
-}
-
-int wcapertures_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
-{
-    int i;
-    WCAperturesState* state = ((GameObject*)obj)->extra;
-
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        if (animUpdate->eventIds[i] == WCAPERTURES_CALLBACK_ARM)
-            state->mode = WCAPERTURES_MODE_ARMED;
-    }
-    return 0;
-}
-
-void wcapertures_init(int obj, int initData)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    WCAperturesState* state = ((GameObject*)obj)->extra;
-    WCAperturesSetup* setup = (WCAperturesSetup*)initData;
-
-    ((GameObject*)obj)->anim.rotX = (s16)(setup->type << 8);
-    ((GameObject*)obj)->animEventCallback = wcapertures_interactCallback;
-    *(u8*)&objAnim->bankIndex = setup->modelIndex;
-    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
-        objAnim->bankIndex = 0;
-    if ((u32)GameBit_Get(setup->armBit) != 0)
-    {
-        if ((u32)GameBit_Get(setup->openBit) != 0)
-            state->mode = WCAPERTURES_MODE_OPEN;
-        else
-            state->mode = WCAPERTURES_MODE_ARMED;
-    }
-    objAnim->alpha = WCAPERTURES_INITIAL_ALPHA;
-    state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
-    state->light = objCreateLight(obj, 1);
-    if (state->light != NULL)
-    {
-        modelLightStruct_setLightKind(state->light, WCAPERTURES_LIGHT_KIND);
-        if (objAnim->bankIndex == 0)
-            modelLightStruct_setupGlow(state->light, 0, 0xff, 0xff, WCAPERTURES_LIGHT_BLUE_LO,
-                                       WCAPERTURES_LIGHT_BLUE_HI, lbl_803E6E3C);
-        else
-            modelLightStruct_setupGlow(state->light, 0, WCAPERTURES_LIGHT_BLUE_LO,
-                                       WCAPERTURES_LIGHT_BLUE_LO, 0xff, 0xff, lbl_803E6E3C);
-        modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E6E40);
-    }
-}
-
 void wcapertures_update(int obj)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
@@ -279,4 +236,47 @@ void wcapertures_update(int obj)
             modelLightStruct_setEnabled(light, 0, lbl_803E6E2C);
         }
     }
+}
+
+void wcapertures_init(int obj, int initData)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    WCAperturesState* state = ((GameObject*)obj)->extra;
+    WCAperturesSetup* setup = (WCAperturesSetup*)initData;
+
+    ((GameObject*)obj)->anim.rotX = (s16)(setup->type << 8);
+    ((GameObject*)obj)->animEventCallback = wcapertures_interactCallback;
+    *(u8*)&objAnim->bankIndex = setup->modelIndex;
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+        objAnim->bankIndex = 0;
+    if ((u32)GameBit_Get(setup->armBit) != 0)
+    {
+        if ((u32)GameBit_Get(setup->openBit) != 0)
+            state->mode = WCAPERTURES_MODE_OPEN;
+        else
+            state->mode = WCAPERTURES_MODE_ARMED;
+    }
+    objAnim->alpha = WCAPERTURES_INITIAL_ALPHA;
+    state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
+    state->light = objCreateLight(obj, 1);
+    if (state->light != NULL)
+    {
+        modelLightStruct_setLightKind(state->light, WCAPERTURES_LIGHT_KIND);
+        if (objAnim->bankIndex == 0)
+            modelLightStruct_setupGlow(state->light, 0, 0xff, 0xff, WCAPERTURES_LIGHT_BLUE_LO,
+                                       WCAPERTURES_LIGHT_BLUE_HI, lbl_803E6E3C);
+        else
+            modelLightStruct_setupGlow(state->light, 0, WCAPERTURES_LIGHT_BLUE_LO,
+                                       WCAPERTURES_LIGHT_BLUE_LO, 0xff, 0xff, lbl_803E6E3C);
+        modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E6E40);
+    }
+}
+
+void wcapertures_release(void)
+{
+}
+
+void wcapertures_initialise(void)
+{
 }
