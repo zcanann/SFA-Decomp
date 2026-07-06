@@ -9,7 +9,13 @@
 extern ObjectDescriptor gDoorLockObjDescriptor;
 extern ObjectDescriptor gSeqObjectObjDescriptor;
 extern ObjectDescriptor gSeqObj2ObjDescriptor;
-extern ObjectDescriptor gIMMultiSeqObjDescriptor;
+/* 8-aligned via union so MWCC emits the 4-byte retail pad (gap_07_803213EC_data) before it;
+ * same idiom as dll_013F_texframeanimator / dll_00B1_projlightning3. */
+typedef union ObjDescriptorAlign8 {
+    ObjectDescriptor desc;
+    u64 align8;
+} ObjDescriptorAlign8;
+extern ObjDescriptorAlign8 gIMMultiSeqObjDescriptor;
 
 typedef struct DoorLockPlacement {
     ObjPlacement base;

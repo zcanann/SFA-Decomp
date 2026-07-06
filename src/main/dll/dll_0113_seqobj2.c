@@ -103,45 +103,6 @@ STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 #define SEQOBJECT_OBJFLAG_HIDDEN 0x4000
 #define SEQOBJECT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-void seqobj2_render(void)
-{
-}
-
-void seqobj2_hitDetect(void)
-{
-}
-
-void SeqObj2_release(void)
-{
-}
-
-void SeqObj2_initialise(void)
-{
-}
-
-int seqobj2_getExtraSize(void) { return 0x1; }
-int seqobj2_getObjectTypeId(void) { return 0x0; }
-
-void seqobj2_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJ2_OBJGROUP); }
-
-void seqobj2_init(int* obj, SeqObjectPlacement* def)
-{
-    SeqObj2State* state = ((GameObject*)obj)->extra;
-    OSReport(sSeqObjNeedBitUsedBitFormat, def->base.mapId, def->triggerGameBit, def->openGameBit);
-    ((GameObject*)obj)->anim.rotX = (s16)((u32)def->initialYaw << 8);
-    ((GameObject*)obj)->animEventCallback = seqobj2_SeqFn;
-    if (def->preemptSequenceId > -1)
-    {
-        s16 slot = def->openGameBit;
-        if (slot != -1 && GameBit_Get(slot) != 0u)
-        {
-            state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
-        }
-    }
-    ObjGroup_AddObject((u32)obj, SEQOBJ2_OBJGROUP);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SEQOBJECT_OBJFLAG_HIDDEN | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED));
-}
-
 int seqobj2_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {
     SeqObjectPlacement * def = (SeqObjectPlacement*)((GameObject*)obj)->anim.placementData;
@@ -165,6 +126,19 @@ int seqobj2_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
     }
     state->flags = (u8)(state->flags | SEQOBJECT_STATE_TRIGGER_SEQUENCE);
     return 0;
+}
+
+int seqobj2_getExtraSize(void) { return 0x1; }
+int seqobj2_getObjectTypeId(void) { return 0x0; }
+
+void seqobj2_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJ2_OBJGROUP); }
+
+void seqobj2_render(void)
+{
+}
+
+void seqobj2_hitDetect(void)
+{
 }
 
 void seqobj2_update(int* obj)
@@ -231,6 +205,32 @@ void seqobj2_update(int* obj)
     }
 }
 
+void seqobj2_init(int* obj, SeqObjectPlacement* def)
+{
+    SeqObj2State* state = ((GameObject*)obj)->extra;
+    OSReport(sSeqObjNeedBitUsedBitFormat, def->base.mapId, def->triggerGameBit, def->openGameBit);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)def->initialYaw << 8);
+    ((GameObject*)obj)->animEventCallback = seqobj2_SeqFn;
+    if (def->preemptSequenceId > -1)
+    {
+        s16 slot = def->openGameBit;
+        if (slot != -1 && GameBit_Get(slot) != 0u)
+        {
+            state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
+        }
+    }
+    ObjGroup_AddObject((u32)obj, SEQOBJ2_OBJGROUP);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SEQOBJECT_OBJFLAG_HIDDEN | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED));
+}
+
+void SeqObj2_release(void)
+{
+}
+
+void SeqObj2_initialise(void)
+{
+}
+
 
 ObjectDescriptor gSeqObj2ObjDescriptor = {
     0,
@@ -254,8 +254,9 @@ const char sSeqObjNeedBitClearDuringSequenceFormat[] = "newseqobj %d: need bit c
 const char lbl_80321208[444] = "newseqobj %d: used bit set during sequence\n\000newseqobj %d: need bit clear before preempting sequence\n\000\000\000\000newseqobj %d: used bit set before preempting sequence\n\000\000newseqobj %d: about to prempt the sequence - objs %d\n\000\000\000newseqobj %d: need bit clear after sequence\n\000\000\000\000newseqobj %d: used bit set after sequence\n\000\000newseqobj %d: need bit clear before sequence\n\000\000\000newseqobj %d: used bit set before sequence\n\000newseqobj %d: about to start the sequence\n\000\000";
 const char sSeqObjNeedBitUsedBitFormat[40] = "newseqobj %d: Need Bit %d, Used Bit %d\n\000";
 
-/* descriptor/ptr table auto 0x803213f0-0x80321460 */
-ObjectDescriptor gIMMultiSeqObjDescriptor = {
+/* descriptor/ptr table auto 0x803213f0-0x80321460; 8-aligned union places it at
+ * 0x803213F0 after the 4-byte retail pad gap_07_803213EC_data (dll_013F idiom) */
+ObjDescriptorAlign8 gIMMultiSeqObjDescriptor = { {
     0x00000000, 0x00000000, 0x00000000,
     0x00090000,
     (ObjectDescriptorCallback)immultiseq_initialise,
@@ -268,5 +269,5 @@ ObjectDescriptor gIMMultiSeqObjDescriptor = {
     (ObjectDescriptorCallback)immultiseq_free,
     (ObjectDescriptorCallback)immultiseq_getObjectTypeId,
     immultiseq_getExtraSize,
-};
+} };
 u32 lbl_80321428[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_115_initialise_nop, (u32)dll_115_release_nop, 0x00000000, (u32)dll_115_init, (u32)dll_115_update, (u32)dll_115_hitDetect_nop, (u32)dll_115_render, (u32)dll_115_free, (u32)dll_115_getObjectTypeId, (u32)dll_115_getExtraSize_ret_2 };
