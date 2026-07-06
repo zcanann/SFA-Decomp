@@ -512,8 +512,8 @@ void SnowBike_hitDetect(int obj)
     u8* other;
     int vol;
     f32 mag;
-    f32 k;
-    f32 k2;
+    f32 velScale;
+    f32 velScaleDefault;
     f32 value;
     f32 clamped;
     f32 limit;
@@ -589,25 +589,25 @@ void SnowBike_hitDetect(int obj)
     }
     if (*(void**)&state->linkedObj != NULL)
     {
-        k = lbl_803E5C00;
+        velScale = lbl_803E5C00;
         OSReport(&sSnowBikeVelDebugFmt, mag);
         if (((GameObject*)state->linkedObj)->anim.seqId == 909
             || ((GameObject*)state->linkedObj)->anim.seqId == 910
             || ((GameObject*)state->linkedObj)->anim.seqId == 1236)
         {
-            k = lbl_803E5B88;
+            velScale = lbl_803E5B88;
         }
-        ((GameObject*)obj)->anim.velocityX = k * (oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject
+        ((GameObject*)obj)->anim.velocityX = velScale * (oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject
             *)obj)->anim.previousLocalPosX));
-        ((GameObject*)obj)->anim.velocityZ = k * (oneOverTimeDelta * (((GameObject*)obj)->anim.localPosZ - ((GameObject
+        ((GameObject*)obj)->anim.velocityZ = velScale * (oneOverTimeDelta * (((GameObject*)obj)->anim.localPosZ - ((GameObject
             *)obj)->anim.previousLocalPosZ));
     }
     else
     {
-        k2 = lbl_803E5B88;
-        ((GameObject*)obj)->anim.velocityX = k2 * (oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject
+        velScaleDefault = lbl_803E5B88;
+        ((GameObject*)obj)->anim.velocityX = velScaleDefault * (oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject
             *)obj)->anim.previousLocalPosX));
-        ((GameObject*)obj)->anim.velocityZ = k2 * (oneOverTimeDelta * (((GameObject*)obj)->anim.localPosZ - ((GameObject
+        ((GameObject*)obj)->anim.velocityZ = velScaleDefault * (oneOverTimeDelta * (((GameObject*)obj)->anim.localPosZ - ((GameObject
             *)obj)->anim.previousLocalPosZ));
     }
     Matrix_TransformPoint((f32*)((u8*)state + 0x12c), ((GameObject*)obj)->anim.velocityX, lbl_803E5AE8,
