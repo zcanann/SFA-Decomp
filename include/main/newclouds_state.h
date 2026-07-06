@@ -87,7 +87,7 @@ typedef struct NewCloud {
     f32 driftRate;
     s16 lightningTimer;
     u8 flags144A;
-    u8 unk144B;
+    u8 lightningFlags; /* 0x144B: lightning cadence bits (NEWCLOUD_LTG_*), set from CloudSpawnParams.flags59 */
     u8 unk144C;
     u8 stationary;
     u8 anchoredToObj;

@@ -26,7 +26,7 @@
 #define NEWCLOUD_CMD_KILL       0x20 /* kill snow cloud */
 #define NEWCLOUD_CMD_ROTFIXED   0x80 /* fixed flash rotation (cloudType 4) */
 
-/* CloudSpawnParams.flags59 / NewCloud.unk144B — lightning cadence bits */
+/* CloudSpawnParams.flags59 / NewCloud.lightningFlags — lightning cadence bits */
 #define NEWCLOUD_LTG_SLOW       0x8  /* slow lightning cadence */
 #define NEWCLOUD_LTG_MED        0x10 /* medium lightning cadence */
 #define NEWCLOUD_LTG_FAST       0x20 /* fast lightning cadence */
@@ -1452,7 +1452,7 @@ void snowReposSnowCloud(int cloudId)
     ((NewCloud*)gNewClouds[i])->lightningTimer =
         (f32)((NewCloud*)gNewClouds[i])->lightningTimer - timeDelta;
     q = gNewClouds[cloudId];
-    if (((NewCloud*)q)->cloudType == 4 && (((NewCloud*)q)->unk144B & 0x38) != 0 &&
+    if (((NewCloud*)q)->cloudType == 4 && (((NewCloud*)q)->lightningFlags & 0x38) != 0 &&
         ((NewCloud*)q)->lightningTimer <= 0 && ((NewCloud*)q)->stationary == 0 && lbl_803DD19C == 0)
     {
         if (((NewCloud*)q)->followCamera != 0 && cam != NULL)
@@ -1516,7 +1516,7 @@ void snowReposSnowCloud(int cloudId)
             extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
             Sfx_PlayAtPositionFromObject(0, from[0], from[1], from[2], SFXTRIG_barrelgrabber_suck);
         }
-        fl = ((NewCloud*)gNewClouds[cloudId])->unk144B;
+        fl = ((NewCloud*)gNewClouds[cloudId])->lightningFlags;
         if (fl & NEWCLOUD_LTG_SLOW)
         {
             ((NewCloud*)gNewClouds[cloudId])->lightningTimer = randomGetRange(0x78, 0xf0);
@@ -1598,7 +1598,7 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
     ((NewCloud*)NC_CLOUD)->cloudType = params->cloudType;
     *(void**)(NC_CLOUD + 0x0) = owner;
     ((NewCloud*)NC_CLOUD)->flags144A = params->flags58;
-    ((NewCloud*)NC_CLOUD)->unk144B = params->flags59;
+    ((NewCloud*)NC_CLOUD)->lightningFlags = params->flags59;
     ((NewCloud*)NC_CLOUD)->worldPosX = x;
     ((NewCloud*)NC_CLOUD)->worldPosY = y;
     ((NewCloud*)NC_CLOUD)->worldPosZ = z;
@@ -1662,7 +1662,7 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
         }
     }
     ((NewCloud*)NC_CLOUD)->active = 1;
-    fl = ((NewCloud*)NC_CLOUD)->unk144B;
+    fl = ((NewCloud*)NC_CLOUD)->lightningFlags;
     if (fl & NEWCLOUD_LTG_SLOW)
     {
         ((NewCloud*)NC_CLOUD)->lightningTimer = 0x320;
