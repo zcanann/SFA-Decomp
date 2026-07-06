@@ -39,25 +39,6 @@ STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
-void SB_CageKyte_free(void)
-{
-}
-
-void SB_CageKyte_hitDetect(void)
-{
-}
-
-void SB_CageKyte_release(void)
-{
-}
-
-void SB_CageKyte_initialise(void)
-{
-}
-
-int SB_CageKyte_getExtraSize(void) { return 0x2; }
-int SB_CageKyte_getObjectTypeId(void) { return 0x1; }
-
 int SB_CageKyte_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int holdTimer = obj->unkF4;
@@ -71,10 +52,11 @@ int SB_CageKyte_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     return 0;
 }
 
-void SB_CageKyte_init(GameObject* obj)
+int SB_CageKyte_getExtraSize(void) { return 0x2; }
+int SB_CageKyte_getObjectTypeId(void) { return 0x1; }
+
+void SB_CageKyte_free(void)
 {
-    obj->animEventCallback = SB_CageKyte_SeqFn;
-    obj->objectFlags = (u16)((u32)obj->objectFlags | (SB_CAGEKYTE_OBJFLAG_HIDDEN | SB_CAGEKYTE_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -83,6 +65,10 @@ void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
+}
+
+void SB_CageKyte_hitDetect(void)
+{
 }
 
 void SB_CageKyte_update(GameObject* obj)
@@ -112,4 +98,18 @@ void SB_CageKyte_update(GameObject* obj)
         }
         *timer = randomGetRange(SB_CAGEKYTE_CHIRP_MIN, SB_CAGEKYTE_CHIRP_MAX);
     }
+}
+
+void SB_CageKyte_init(GameObject* obj)
+{
+    obj->animEventCallback = SB_CageKyte_SeqFn;
+    obj->objectFlags = (u16)((u32)obj->objectFlags | (SB_CAGEKYTE_OBJFLAG_HIDDEN | SB_CAGEKYTE_OBJFLAG_HITDETECT_DISABLED));
+}
+
+void SB_CageKyte_release(void)
+{
+}
+
+void SB_CageKyte_initialise(void)
+{
 }
