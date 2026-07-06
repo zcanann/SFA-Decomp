@@ -54,8 +54,59 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnimatorState* state,
-                            HitAnimatorPlacement* desc);
+#pragma dont_inline on
+void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnimatorState* state, HitAnimatorPlacement* desc)
+{
+    int i;
+    HitAnimatorPolyGroup* poly;
+
+    if ((desc->flags & HITANIMATOR_SETUP_FLAG_SKIP_POLYS) == 0)
+    {
+        for (i = 0; i < block->polyGroupCount; i++)
+        {
+            poly = mapBlockFn_800606ec(block, i);
+            if (desc->blockEffectId == mapBlockFn_80060678(poly))
+            {
+                if (state->activeBit != 0)
+                {
+                    poly->flags &= ~2LL;
+                    if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
+                    {
+                        poly->flags &= ~1LL;
+                    }
+                }
+                else
+                {
+                    poly->flags |= 2;
+                    if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
+                    {
+                        poly->flags |= 1;
+                    }
+                }
+            }
+        }
+    }
+    if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
+    {
+        for (i = 0; i < block->layerCount; i++)
+        {
+            HitAnimatorShader* shader = fn_8006070C(block, i);
+            u8* layer = Shader_getLayer(shader, 0);
+            if (desc->blockEffectId == layer[5])
+            {
+                if (state->activeBit != 0)
+                {
+                    shader->flags &= ~2LL;
+                }
+                else
+                {
+                    shader->flags |= 2;
+                }
+            }
+        }
+    }
+}
+#pragma dont_inline reset
 
 int hitanimator_getExtraSize(void) { return HITANIMATOR_EXTRA_STATE_BYTES; }
 
@@ -157,56 +208,4 @@ void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
     state->gameBitValue = gameBitValue;
     state->previousGameBitValue = gameBitValue;
     obj->objectFlags |= HITANIMATOR_OBJECT_FLAGS_ENABLED;
-}
-
-void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnimatorState* state, HitAnimatorPlacement* desc)
-{
-    int i;
-    HitAnimatorPolyGroup* poly;
-
-    if ((desc->flags & HITANIMATOR_SETUP_FLAG_SKIP_POLYS) == 0)
-    {
-        for (i = 0; i < block->polyGroupCount; i++)
-        {
-            poly = mapBlockFn_800606ec(block, i);
-            if (desc->blockEffectId == mapBlockFn_80060678(poly))
-            {
-                if (state->activeBit != 0)
-                {
-                    poly->flags &= ~2LL;
-                    if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
-                    {
-                        poly->flags &= ~1LL;
-                    }
-                }
-                else
-                {
-                    poly->flags |= 2;
-                    if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
-                    {
-                        poly->flags |= 1;
-                    }
-                }
-            }
-        }
-    }
-    if ((desc->flags & HITANIMATOR_SETUP_FLAG_AFFECT_SHADERS) != 0)
-    {
-        for (i = 0; i < block->layerCount; i++)
-        {
-            HitAnimatorShader* shader = fn_8006070C(block, i);
-            u8* layer = Shader_getLayer(shader, 0);
-            if (desc->blockEffectId == layer[5])
-            {
-                if (state->activeBit != 0)
-                {
-                    shader->flags &= ~2LL;
-                }
-                else
-                {
-                    shader->flags |= 2;
-                }
-            }
-        }
-    }
 }
