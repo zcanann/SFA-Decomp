@@ -24,7 +24,7 @@
 typedef struct LightfootState
 {
     u8 pad0[0x40C - 0x0];
-    s32 unk40C;
+    s32 subObj; /* -> LightfootSub sub-object; deref for lifeTimer/anim */
 } LightfootState;
 
 
@@ -119,7 +119,7 @@ void lightfoot_update(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
     int p30 = *(int*)&((GameObject*)obj)->anim.placementData;
-    int anim = ((LightfootState*)inner)->unk40C;
+    int anim = ((LightfootState*)inner)->subObj;
     f32 snd[3];
     f32 buf[6];
     u8 i;
@@ -260,7 +260,7 @@ void lightfoot_update(int obj)
         Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
         if ((((GroundBaddieState*)inner)->configFlags & 1) && (((GameObject*)obj)->objectFlags & LIGHTFOOT_OBJFLAG_RENDERED))
         {
-            int a40c = ((LightfootState*)inner)->unk40C;
+            int a40c = ((LightfootState*)inner)->subObj;
             ((LightfootSub*)a40c)->animTimer -= timeDelta;
             if (((LightfootSub*)a40c)->animTimer <= lbl_803E8180)
             {
@@ -299,7 +299,7 @@ void lightfoot_init(int obj, int p2, int p3)
     ((GroundBaddieState*)inner)->baddie.controlMode = 0;
     ((GroundBaddieState*)inner)->baddie.substate = 0;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED);
-    sub = ((LightfootState*)inner)->unk40C;
+    sub = ((LightfootState*)inner)->subObj;
     ((LightfootSub*)sub)->unk26 = -1;
     ((LightfootSub*)sub)->unk28 = ((LightfootSub*)sub)->unk26;
     ((GameObject*)obj)->objectFlags =
