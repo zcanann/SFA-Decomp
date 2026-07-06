@@ -122,7 +122,7 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     GXSetTevKColorSel(0, 0xc);
     GXSetTevKAlphaSel(0, 0x1c);
     GXSetTevSwapMode(0, 0, 0);
-    GXSetTevOrder(1, 1, 2, 0xff);
+    GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP2, GX_COLOR_NULL);
     GXSetTevDirect(1);
     GXSetTevColorIn(1, 0xf, 8, 0xe, 0);
     GXSetTevColorOp(1, 0, 0, 1, 0, 0);
@@ -131,14 +131,14 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     GXSetTevKColorSel(1, 0xd);
     GXSetTevKAlphaSel(1, 0x1d);
     GXSetTevSwapMode(1, 0, 0);
-    GXSetTevOrder(2, 0, 0, 0xff);
+    GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
     GXSetTevDirect(2);
     GXSetTevColorIn(2, 0xf, 8, 0xc, 0);
     GXSetTevColorOp(2, 0, 0, 0, 1, 0);
     GXSetTevAlphaIn(2, 4, 7, 7, 0);
     GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
     GXSetTevSwapMode(2, 0, 0);
-    GXSetTevOrder(3, 0xff, 0xff, 0xff);
+    GXSetTevOrder(GX_TEVSTAGE3, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
     GXSetTevDirect(3);
     GXSetTevColorIn(3, 1, 0, 0xe, 0xf);
     GXSetTevColorOp(3, 0, 0, 0, 1, 0);
