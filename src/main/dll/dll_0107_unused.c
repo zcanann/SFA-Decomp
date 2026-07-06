@@ -117,7 +117,7 @@ void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
     extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
     WindLift107State* state;
-    s16 t;
+    s16 spitTimer;
 
     state = ((GameObject*)obj)->extra;
     if (state->ventState != 0 && state->ventState <= 50)
@@ -148,10 +148,10 @@ void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
             goto end;
         }
     }
-    t = state->spitTimer;
-    if (t != 0)
+    spitTimer = state->spitTimer;
+    if (spitTimer != 0)
     {
-        if (t < 60)
+        if (spitTimer < 60)
         {
             state->glowPulse = state->glowPulse + framesThisStep * 10;
             if (state->glowPulse > 0x80)
@@ -160,7 +160,7 @@ void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
             }
             fn_8003B5E0(200, 30, 30, state->glowPulse);
         }
-        else if (t < 240)
+        else if (spitTimer < 240)
         {
             state->glowPulse = state->glowPulse + framesThisStep * 5;
             if (state->glowPulse > 0x80)
