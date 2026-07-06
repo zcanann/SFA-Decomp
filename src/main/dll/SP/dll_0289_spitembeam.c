@@ -40,10 +40,8 @@ typedef struct SpitembeamPlacement
 
 STATIC_ASSERT(sizeof(SpitembeamPlacement) == 0x20);
 
-void spitembeam_init(int obj)
-{
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SPITEMBEAM_OBJFLAG_HIDDEN | SPITEMBEAM_OBJFLAG_HITDETECT_DISABLED));
-}
+int spitembeam_getExtraSize(void) { return 0x0; }
+int spitembeam_getObjectTypeId(void) { return 0x0; }
 
 void spitembeam_free(void)
 {
@@ -54,14 +52,6 @@ void spitembeam_render(void)
 }
 
 void spitembeam_hitDetect(void)
-{
-}
-
-void spitembeam_release(void)
-{
-}
-
-void spitembeam_initialise(void)
 {
 }
 
@@ -101,8 +91,18 @@ void spitembeam_update(int* obj)
     }
 }
 
-int spitembeam_getExtraSize(void) { return 0x0; }
-int spitembeam_getObjectTypeId(void) { return 0x0; }
+void spitembeam_init(int obj)
+{
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SPITEMBEAM_OBJFLAG_HIDDEN | SPITEMBEAM_OBJFLAG_HITDETECT_DISABLED));
+}
+
+void spitembeam_release(void)
+{
+}
+
+void spitembeam_initialise(void)
+{
+}
 
 ObjectDescriptor gSPitembeamObjDescriptor = {
     0,
