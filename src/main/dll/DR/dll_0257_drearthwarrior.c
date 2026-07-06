@@ -124,9 +124,9 @@ typedef struct EarthWarriorSub
     u8 pad490[4];
     int savedYaw;
     u8 pad498[0x3a];
-    s16 unk4D2;
-    s16 unk4D4;
-    s16 unk4D6;
+    s16 aimHalfY; /* 0x4D2: aimAccumY/2; written to secondary look-bone (vec9) */
+    s16 aimAccumY; /* 0x4D4: integrated aim angle (accum += delta*timeDelta) toward clamped target from unk480; written to look-bone vec0[1] */
+    s16 aimAccumX; /* 0x4D6: integrated aim angle (accum += delta) from spawnRotY phase; written negated to look-bone vec0[0] */
     u8 pad4D8[0x308];
     f32 unk7E0;
     u8 pad7E4[0x48];
@@ -323,8 +323,8 @@ void DR_EarthWarrior_func18(int obj, f32* a, int* b)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     *a = (f32)(s32)
-    inner->sub.unk4D4;
-    *b = inner->sub.unk4D6;
+    inner->sub.aimAccumY;
+    *b = inner->sub.aimAccumX;
 }
 
 void DR_EarthWarrior_release(void)
@@ -655,7 +655,7 @@ void fn_802BCA10(int obj, int sub, int state)
         delta = angle;
     }
     delta = delta * 0xb6;
-    delta -= (u16)((EarthWarriorSub*)sub)->unk4D4;
+    delta -= (u16)((EarthWarriorSub*)sub)->aimAccumY;
     if (delta > 0x8000)
     {
         delta = delta - 0xffff;
@@ -666,13 +666,13 @@ void fn_802BCA10(int obj, int sub, int state)
     }
     delta = (int)((f32)delta * lbl_803E8324);
     delta = (delta < -0x16c) ? -0x16c : ((delta > 0x16c) ? 0x16c : delta);
-    ((EarthWarriorSub*)sub)->unk4D4 = delta * timeDelta + (f32)(s32)((EarthWarriorSub*)sub)->unk4D4;
-    ((EarthWarriorSub*)sub)->unk4D2 = ((EarthWarriorSub*)sub)->unk4D4 / 2;
+    ((EarthWarriorSub*)sub)->aimAccumY = delta * timeDelta + (f32)(s32)((EarthWarriorSub*)sub)->aimAccumY;
+    ((EarthWarriorSub*)sub)->aimHalfY = ((EarthWarriorSub*)sub)->aimAccumY / 2;
     {
         f32 ph = (f32)(s32)((BaddieState*)state)->spawnRotY / lbl_803E8328;
         f32 t = (ph < lbl_803E8334) ? lbl_803E8334 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         delta = (int)(lbl_803E832C * (lbl_803E8330 * -t));
-        delta -= (u16)((EarthWarriorSub*)sub)->unk4D6;
+        delta -= (u16)((EarthWarriorSub*)sub)->aimAccumX;
     }
     if (delta > 0x8000)
     {
@@ -682,7 +682,7 @@ void fn_802BCA10(int obj, int sub, int state)
     {
         delta = delta + 0xffff;
     }
-    ((EarthWarriorSub*)sub)->unk4D6 += delta;
+    ((EarthWarriorSub*)sub)->aimAccumX += delta;
     vec0 = objModelGetVecFn_800395d8(obj, 0);
     vec9 = objModelGetVecFn_800395d8(obj, 9);
     objModelGetVecFn_800395d8(obj, 4);
@@ -690,8 +690,8 @@ void fn_802BCA10(int obj, int sub, int state)
     if (vec0 != NULL)
     {
         int sv;
-        vec0[0] = -((EarthWarriorSub*)sub)->unk4D6;
-        vec0[1] = ((EarthWarriorSub*)sub)->unk4D4 / 2;
+        vec0[0] = -((EarthWarriorSub*)sub)->aimAccumX;
+        vec0[1] = ((EarthWarriorSub*)sub)->aimAccumY / 2;
         sv = vec0[1];
         if (sv < -4000)
         {
@@ -708,7 +708,7 @@ void fn_802BCA10(int obj, int sub, int state)
     {
         int sv;
         int t;
-        vec9[1] = ((EarthWarriorSub*)sub)->unk4D2;
+        vec9[1] = ((EarthWarriorSub*)sub)->aimHalfY;
         sv = vec9[1];
         if (sv < -3000)
         {
@@ -719,7 +719,7 @@ void fn_802BCA10(int obj, int sub, int state)
             sv = 3000;
         }
         vec9[1] = sv;
-        t = ((EarthWarriorSub*)sub)->unk4D2;
+        t = ((EarthWarriorSub*)sub)->aimHalfY;
         if (t < 0)
         {
             t = -t;
