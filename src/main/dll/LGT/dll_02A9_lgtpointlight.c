@@ -87,10 +87,6 @@ STATIC_ASSERT(offsetof(PointLightSetup, glowEnabled) == 0x3E);
 STATIC_ASSERT(offsetof(PointLightSetup, affectsAabbLightSelection) == 0x3F);
 STATIC_ASSERT(sizeof(PointLightSetup) == 0x40);
 
-int pointlight_getExtraSize(void) { return sizeof(PointLightState); }
-
-int pointlight_getObjectTypeId(void) { return 0; }
-
 void pointlight_setEffectState(int obj, int enabled)
 {
     GameObject* object = (GameObject*)obj;
@@ -98,9 +94,13 @@ void pointlight_setEffectState(int obj, int enabled)
     ModelLight* light = state->light;
     if (light != NULL)
     {
-        modelLightStruct_setEnabled(light, enabled, lbl_803E7230);
+        modelLightStruct_setEnabled(light, enabled, 0.0f);
     }
 }
+
+int pointlight_getExtraSize(void) { return sizeof(PointLightState); }
+
+int pointlight_getObjectTypeId(void) { return 0; }
 
 void pointlight_free(int obj)
 {
@@ -149,7 +149,7 @@ void pointlight_update(int obj)
         if (bit > 0 && GameBit_Get(bit) == 0)
         {
             state->enabled = 0;
-            modelLightStruct_setEnabled(state->light, 0, lbl_803E7234);
+            modelLightStruct_setEnabled(state->light, 0, 1.0f);
         }
         if ((setup->flags & POINTLIGHT_FLAG_USE_AMBIENT_COLOR) != 0)
         {
@@ -164,7 +164,7 @@ void pointlight_update(int obj)
         if (bit > 0 && GameBit_Get(bit) != 0)
         {
             state->enabled = 1;
-            modelLightStruct_setEnabled(state->light, 1, lbl_803E7234);
+            modelLightStruct_setEnabled(state->light, 1, 1.0f);
         }
     }
 
@@ -221,7 +221,7 @@ void pointlight_init(int obj, int setup)
             modelLightStruct_setSpotAttenuation(state->light, brightness, setupData->spotMode);
         }
 
-        modelLightStruct_setEnabled(state->light, setupData->enabled, lbl_803E7230);
+        modelLightStruct_setEnabled(state->light, setupData->enabled, 0.0f);
         state->enabled = setupData->enabled;
         modelLightStruct_startColorFade(state->light, setupData->colorFadeSpeed, setupData->colorFadeFrames);
         modelLightStruct_setDirection(state->light, vec.x, vec.y, vec.z);
@@ -240,7 +240,7 @@ void pointlight_init(int obj, int setup)
             modelLightStruct_setupGlow(state->light, setupData->glowTexture, setupData->glowR,
                                        setupData->glowG, setupData->glowB, setupData->glowAlpha,
                                        (f32)(u32)setupData->glowScale);
-            modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E7240);
+            modelLightStruct_setGlowProjectionRadius(state->light, 12.0f);
         }
 
         if (setupData->affectsAabbLightSelection != 0)
