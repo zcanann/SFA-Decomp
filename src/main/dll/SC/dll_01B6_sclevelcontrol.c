@@ -120,15 +120,15 @@ u8 sc_levelcontrol_getAnimEventState(int* obj) { return ((ScLevelControlState*)(
 void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    u8 v;
+    u8 mode;
 
     ((ScLevelControlState*)state)->mode = scale;
-    v = ((ScLevelControlState*)state)->mode;
-    if (v == 2)
+    mode = ((ScLevelControlState*)state)->mode;
+    if (mode == 2)
     {
         ((ScLevelControlState*)state)->mode = 0;
     }
-    else if (v == 5)
+    else if (mode == 5)
     {
         GameBit_Set(0x2b8, 1);
         GameBit_Set(0x4bd, 0);
@@ -137,21 +137,21 @@ void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
         Music_Trigger(MUSICTRIG_CRF_Suspense, 1);
         timerSetToCountUp();
     }
-    else if (v == 3)
+    else if (mode == 3)
     {
         gameTimerInit(0x1d, 0x3c);
         ((ScLevelControlState*)state)->mode = 0;
         Music_Trigger(MUSICTRIG_trex_chase, 1);
         timerSetToCountUp();
     }
-    else if (v == 6)
+    else if (mode == 6)
     {
         Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
         ((ScLevelControlState*)state)->mode = 0;
         ((ScLevelControlState*)state)->fadeTimer = lbl_803E5550;
         gameTimerStop();
     }
-    else if (v == 4)
+    else if (mode == 4)
     {
         ((ScLevelControlState*)state)->mode = 0;
         Music_Trigger(MUSICTRIG_trex_chase, 0);
@@ -532,7 +532,7 @@ void sc_levelcontrol_init(int obj)
 {
     ScLevelControlState* st = ((GameObject*)obj)->extra;
     int state = (int)st;
-    f32 v;
+    f32 fogNear;
 
     ((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 = 0;
     ((ScLevelControlState*)state)->areaCell = 0xff;
@@ -546,9 +546,9 @@ void sc_levelcontrol_init(int obj)
     GameBit_Set(GAMEBIT_TOTEMPOLE_RIGHT, 0);
     GameBit_Set(GAMEBIT_TOTEMPOLE_REAR, 0);
     st->fog0C = lbl_803E5580;
-    v = lbl_803E5564;
+    fogNear = lbl_803E5564;
     st->fogNear = lbl_803E5564;
-    st->fog04 = v;
+    st->fog04 = fogNear;
     st->fog08 = lbl_803E5568;
     enableHeavyFog(lbl_803E5570 + st->fogNear, st->fogNear, lbl_803E5574, lbl_803E5578, lbl_803E557C, 0);
     if ((u32)GameBit_Get(0x7a) != 0)
