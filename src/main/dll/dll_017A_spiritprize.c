@@ -159,11 +159,11 @@ int SpiritPrize_getObjectTypeId(void) { return 0x8; }
 void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     SpiritPrizeState* state;
-    s32 v;
+    s32 isVisible;
 
     state = ((GameObject*)obj)->extra;
-    v = visible;
-    if (v != 0)
+    isVisible = visible;
+    if (isVisible != 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4E98);
         if (state->useDetachedLight != 0)
