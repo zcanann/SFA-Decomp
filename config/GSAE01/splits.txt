@@ -1644,6 +1644,7 @@ main/dll/dll_025B_msplantings.c:
 
 main/dll/CC/dll_0185_ccgasvent.c:
 	.text       start:0x801A9E74 end:0x801A9FA8
+	.sdata2     start:0x803E4610 end:0x803E4618
 
 main/dll/CC/dll_0186_ccgasventcontrol.c:
 	.text       start:0x801A9FA8 end:0x801AA558

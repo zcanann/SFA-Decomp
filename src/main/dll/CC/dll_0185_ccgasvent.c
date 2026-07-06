@@ -3,14 +3,12 @@
  * gas-vent group (CCGASVENT_GROUP); the controller object (ccgasventcontrol,
  * DLL 0x0186) tracks the whole group. While the room's gas gameBit (0x1C0)
  * is set the vent watches the nearest group-5 object: once it is far enough
- * away (lbl_803E4614) it starts spawning the gas particle effect each tick.
+ * away (>= 10.0) it starts spawning the gas particle effect each tick.
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern f32 lbl_803E4610; /* search radius seed for FindNearestObject */
-extern f32 lbl_803E4614; /* distance at which the vent activates */
 
 #define CCGASVENT_GROUP 0x3f
 #define CCGASVENT_GAS_GAMEBIT 0x1c0
@@ -21,23 +19,19 @@ extern f32 lbl_803E4614; /* distance at which the vent activates */
 
 int ccgasvent_getExtraSize(void) { return 0x1; }
 
+#pragma scheduling off
+void ccgasvent_free(int obj) { ObjGroup_RemoveObject(obj, CCGASVENT_GROUP); }
+#pragma scheduling reset
+
 void ccgasvent_render(void)
 {
 }
 
 #pragma scheduling off
-void ccgasvent_free(int obj) { ObjGroup_RemoveObject(obj, CCGASVENT_GROUP); }
-#pragma scheduling reset
-
-#pragma scheduling off
-void ccgasvent_init(int obj) { ObjGroup_AddObject(obj, CCGASVENT_GROUP); }
-#pragma scheduling reset
-
-#pragma scheduling off
 #pragma peephole off
 void ccgasvent_update(int* obj)
 {
-    f32 dist = lbl_803E4610;
+    f32 dist = 3.4028235e38f;
     u8* state = ((GameObject*)obj)->extra;
     if (GameBit_Get(CCGASVENT_GAS_GAMEBIT) != 0)
     {
@@ -45,13 +39,13 @@ void ccgasvent_update(int* obj)
         switch (state[0])
         {
         case CCGASVENT_STATE_IDLE:
-            if (dist >= lbl_803E4614)
+            if (dist >= 10.0f)
             {
                 state[0] = CCGASVENT_STATE_SPAWNING;
             }
             break;
         case CCGASVENT_STATE_SPAWNING:
-            if (dist < lbl_803E4614)
+            if (dist < 10.0f)
             {
                 state[0] = CCGASVENT_STATE_IDLE;
             }
@@ -64,4 +58,8 @@ void ccgasvent_update(int* obj)
     }
 }
 #pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+void ccgasvent_init(int obj) { ObjGroup_AddObject(obj, CCGASVENT_GROUP); }
 #pragma scheduling reset
