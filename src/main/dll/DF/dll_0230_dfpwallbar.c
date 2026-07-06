@@ -33,10 +33,6 @@ typedef struct ChukaPlacement
     u8 pad2F[0x30 - 0x2F];
 } ChukaPlacement;
 
-void chuka_render(void)
-{
-}
-
 int chuka_SeqFn(void) { return 0x0; }
 int chuka_getExtraSize(void) { return 0xc; }
 int chuka_getObjectTypeId(void) { return 0x0; }
@@ -44,6 +40,10 @@ int chuka_getObjectTypeId(void) { return 0x0; }
 void chuka_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void chuka_render(void)
+{
 }
 
 void chuka_hitDetect(int obj)
@@ -60,8 +60,6 @@ void chuka_update(int obj)
 {
 
     extern u8 gChukaModeTable[];
-    extern f32 lbl_803E63F8;
-    extern f32 lbl_803E63FC;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
     int state = *(int*)&((GameObject*)obj)->extra;
     int linkedObj;
@@ -119,7 +117,7 @@ void chuka_update(int obj)
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
         break;
     case 1:
@@ -130,7 +128,7 @@ void chuka_update(int obj)
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
         if (((GameObject*)obj)->anim.rotZ != 0)
         {
@@ -145,7 +143,7 @@ void chuka_update(int obj)
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
         if (((GameObject*)obj)->anim.rotZ != 0)
         {
@@ -160,7 +158,7 @@ void chuka_update(int obj)
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
         if (((GameObject*)obj)->anim.rotZ != 0x3fff)
         {
@@ -175,7 +173,7 @@ void chuka_update(int obj)
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
         if (((GameObject*)obj)->anim.rotZ != 0x3fff)
         {
@@ -190,7 +188,7 @@ void chuka_update(int obj)
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)height / lbl_803E63FC);
+            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
         if (((GameObject*)obj)->anim.rotZ != 0)
         {
@@ -201,8 +199,6 @@ void chuka_update(int obj)
 }
 
 extern u8 gChukaModeTable[9];
-extern f32 lbl_803E63F8;
-extern f32 lbl_803E63FC;
 
 void chuka_init(int obj, int params)
 {
@@ -218,7 +214,7 @@ void chuka_init(int obj, int params)
     if (placement->barHeight != 0)
     {
         ((GameObject*)obj)->anim.rootMotionScale =
-            lbl_803E63F8 / ((f32)placement->barHeight / lbl_803E63FC);
+            1.0f / ((f32)placement->barHeight / 1000.0f);
     }
 
     if (placement->rotZInit != 0)
@@ -250,4 +246,24 @@ void chuka_initialise(void)
 
 u8 gChukaModeTable[9] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0,
+};
+
+ObjectDescriptor10WithPadding gChukaObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        (ObjectDescriptorCallback)chuka_initialise,
+        (ObjectDescriptorCallback)chuka_release,
+        0,
+        (ObjectDescriptorCallback)chuka_init,
+        (ObjectDescriptorCallback)chuka_update,
+        (ObjectDescriptorCallback)chuka_hitDetect,
+        (ObjectDescriptorCallback)chuka_render,
+        (ObjectDescriptorCallback)chuka_free,
+        (ObjectDescriptorCallback)chuka_getObjectTypeId,
+        chuka_getExtraSize,
+    },
+    0,
 };
