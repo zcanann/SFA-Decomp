@@ -125,19 +125,20 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
     }
 }
 
+int texscroll2_getExtraSize(void) { return TEXSCROLL2_EXTRA_STATE_BYTES; }
+int texscroll2_getObjectTypeId(void) { return 0x0; }
+
 void texscroll2_free(void)
 {
 }
 
+void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3F30);
+}
+
 void texscroll2_hitDetect(void)
-{
-}
-
-void texscroll2_release(void)
-{
-}
-
-void texscroll2_initialise(void)
 {
 }
 
@@ -178,9 +179,6 @@ void texscroll2_update(TexScroll2Object* obj)
     }
 }
 
-int texscroll2_getExtraSize(void) { return TEXSCROLL2_EXTRA_STATE_BYTES; }
-int texscroll2_getObjectTypeId(void) { return 0x0; }
-
 void texscroll2_init(TexScroll2Object* obj, TexScrollPlacement* placement, int loadFlags)
 {
     TexScroll2State* state = obj->state;
@@ -196,8 +194,10 @@ void texscroll2_init(TexScroll2Object* obj, TexScrollPlacement* placement, int l
     state->previousGameBitValue = -1;
 }
 
-void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void texscroll2_release(void)
 {
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3F30);
+}
+
+void texscroll2_initialise(void)
+{
 }
