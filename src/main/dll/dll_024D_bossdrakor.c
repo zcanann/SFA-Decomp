@@ -25,6 +25,9 @@
 #include "main/audio/music_trigger_ids.h"
 
 #define BOSSDRAKOR_OBJGROUP 0x45
+/* groups owned by other DLLs, queried here */
+#define DRAKORHOVERPAD_OBJGROUP 0x46 /* DLL 0x271 drakorhoverpad */
+#define DBHOLECONTROL1_OBJGROUP 0x1e /* DLL 0x243 dbholecontrol1 */
 
 #define MODEL_LIGHT_KIND_POINT 2
 
@@ -730,7 +733,7 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
             ((BossDrakorState*)state)->curveFollowState = 1;
         }
     case 24:
-        found = ObjGroup_FindNearestObject(0x46, obj, 0);
+        found = ObjGroup_FindNearestObject(DRAKORHOVERPAD_OBJGROUP, obj, 0);
         if ((void*)found != NULL)
         {
             drakorhoverpad_resetPendingMotion(found);
@@ -816,7 +819,7 @@ int bossdrakor_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
         switch (eventId)
         {
         case 6:
-            target = ObjGroup_FindNearestObject(0x1e, obj, 0);
+            target = ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, obj, 0);
             if ((void*)target != NULL && ((GameObject*)obj)->childCount != 0)
             {
                 (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)target)->anim.dll) + 0x20)))(target, 2);
@@ -824,7 +827,7 @@ int bossdrakor_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
             }
             break;
         case 7:
-            target = ObjGroup_FindNearestObject(0x1e, obj, 0);
+            target = ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, obj, 0);
             if ((void*)target != NULL)
             {
                 (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)target)->anim.dll) + 0x20)))(target, 0);
