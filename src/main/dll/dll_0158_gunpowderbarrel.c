@@ -38,6 +38,10 @@
 /* the barrel's own update group; the generator (DLL 0x282) also adds a
  * dispensed barrel to this group on release */
 #define GUNPOWDERBARREL_UPDATE_OBJGROUP 0x19
+/* groups owned by other DLLs the barrel queries/registers into */
+#define CFGUARDIAN_OBJGROUP 0x16     /* DLL 0x148 cfguardian */
+#define TIMER_OBJGROUP 0x4c          /* DLL 0x2B5 timer */
+#define DBHOLECONTROL1_OBJGROUP 0x1e /* DLL 0x243 dbholecontrol1 */
 
 /* Barrel placement data block (obj group 0x3a link id at 0x1A). init reads
  * the respawn byte (respawnByte) and the return-home word (returnHome); the descriptor
@@ -166,7 +170,7 @@ void gunpowderbarrel_free(int obj, int mode)
         }
     }
     ObjGroup_RemoveObject(obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
-    ObjGroup_RemoveObject(obj, 0x16);
+    ObjGroup_RemoveObject(obj, CFGUARDIAN_OBJGROUP);
     if (((GunpowderBarrelState*)extra)->fuseFrames != 0)
     {
         (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -553,7 +557,7 @@ void gunpowderbarrel_hitDetect(int obj)
         (s8) * ((u8*)&collision_buf[0] + 0x51) == 3)
     {
         gunpowderbarrel_setPlayerHeldState((int*)obj, 0);
-        ObjGroup_RemoveObject(obj, 0x16);
+        ObjGroup_RemoveObject(obj, CFGUARDIAN_OBJGROUP);
         goto copy_end;
     }
 
@@ -600,7 +604,7 @@ void gunpowderbarrel_init(int obj, u8* def)
     ((GunpowderBarrelState*)((GameObject*)obj)->extra)->unk07 |= 2;
     (*(void (**)(int, GunpowderBarrelState*, int))((char*)*gCarryableInterface + 0x4))(obj, state, 5);
     ObjGroup_AddObject(obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
-    ObjGroup_AddObject(obj, 0x16);
+    ObjGroup_AddObject(obj, CFGUARDIAN_OBJGROUP);
     ObjMsg_AllocQueue((void*)obj, 8);
     ((GameObject*)obj)->unkF8 = 0;
     state->homingHeadingA = 0;
@@ -704,7 +708,7 @@ void gunpowderbarrel_update(int obj)
     if (((GameObject*)obj)->childObjs[0] == NULL)
     {
         f32 range = lbl_803E4338;
-        if ((u32)(state->linkedTimerObject = ObjGroup_FindNearestObject(0x4c, obj, &range)) != 0 &&
+        if ((u32)(state->linkedTimerObject = ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, &range)) != 0 &&
             timer_isEffectMode(state->linkedTimerObject) != 0 &&
             ((GameObject*)state->linkedTimerObject)->ownerObj == NULL)
         {
@@ -735,7 +739,7 @@ void gunpowderbarrel_update(int obj)
                 gunpowderbarrel_setPlayerHeldState((int*)obj, 0);
                 if (arg != 0)
                 {
-                    ObjGroup_AddObject((u32)(GameObject*)obj, 0x16);
+                    ObjGroup_AddObject((u32)(GameObject*)obj, CFGUARDIAN_OBJGROUP);
                 }
                 break;
             }
@@ -886,11 +890,11 @@ void gunpowderbarrel_update(int obj)
                 ((GameObject*)obj)->anim.localPosZ =
                     lbl_803DBE80 * -mathCosf(gGunpowderBarrelPi * (f32) ((GameObject*)player)->anim.rotX / gGunpowderBarrelHalfAngleUnit) +
                     ((GameObject*)obj)->anim.localPosZ;
-                ObjGroup_AddObject(obj, 0x16);
+                ObjGroup_AddObject(obj, CFGUARDIAN_OBJGROUP);
             }
             /* faithful double-add: retail emits two adjacent ObjGroup_AddObject
              * (target 0x19b8/0x19c4) when the inner branch is taken. */
-            ObjGroup_AddObject(obj, 0x16);
+            ObjGroup_AddObject(obj, CFGUARDIAN_OBJGROUP);
         }
         gunpowderbarrel_updatePhysics((int*)obj);
     }
@@ -903,7 +907,7 @@ void gunpowderbarrel_update(int obj)
             {
                 timer_forceStart(state->linkedTimerObject);
             }
-            ObjGroup_RemoveObject(obj, 0x16);
+            ObjGroup_RemoveObject(obj, CFGUARDIAN_OBJGROUP);
         }
         state->heldByCarryInterface = 1;
         ((GpbHeldFlags*)&state->heldFlags)->pendingThrowVelCapture = 1;
@@ -1120,7 +1124,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     char* near;
     f32 radius = lbl_803E42E0;
     player = Obj_GetPlayerObject();
-    near = (char*)ObjGroup_FindNearestObject(0x1e, (u32)obj, &radius);
+    near = (char*)ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, (u32)obj, &radius);
     if (near == NULL)
     {
         return;
