@@ -69,7 +69,7 @@ int SB_ShipHead_getObjectTypeId(void) { return 0x1; }
 
 u32 getSbGalleon(void);
 
-void SB_ShipHead_free(int x) { ObjGroup_RemoveObject((u32)x, SBSHIPHEAD_OBJGROUP); }
+void SB_ShipHead_free(int obj) { ObjGroup_RemoveObject((u32)obj, SBSHIPHEAD_OBJGROUP); }
 
 void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
