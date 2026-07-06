@@ -50,9 +50,6 @@ extern void dll_115_initialise_nop(void);
 /* object group this object joins while active */
 #define SEQOBJ2_OBJGROUP 0xf
 
-extern u32 FUN_80017690();
-extern void FUN_80017698(u32 gameBit, u32 value);
-extern void FUN_800723a0(void);
 extern const char sSeqObjNeedBitUsedBitFormat[];
 extern const char sSeqObjNeedBitClearDuringSequenceFormat[];
 extern const char lbl_80321208[];
