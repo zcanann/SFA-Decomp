@@ -44,44 +44,6 @@ typedef struct DimbridgecogmaiPlacement
 } DimbridgecogmaiPlacement;
 
 extern f32 lbl_803E4900;
-
-void dimbridgecogmai_hitDetect(void)
-{
-}
-
-void dimbridgecogmai_initialise(void)
-{
-}
-
-int dimbridgecogmai_getExtraSize(void) { return 0x1; }
-int dimbridgecogmai_getObjectTypeId(void) { return 0x0; }
-
-void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4900);
-}
-
-void dimbridgecogmai_free(int obj) { ObjGroup_RemoveObject(obj, DIMBRIDGECOG_GROUP); }
-
-void dimbridgecogmai_release(void)
-{
-}
-
-
-void dimbridgecogmai_init(int* obj, int* def)
-{
-    *(u8*)((GameObject*)obj)->extra = 100;
-    ((GameObject*)obj)->anim.rotX = (s16)((u32)((DimbridgecogmaiObjectDef*)def)->rotationAngle << 8);
-    ((GameObject*)obj)->animEventCallback = dimbridgecogmai_SeqFn;
-    ObjGroup_AddObject((u32)obj, DIMBRIDGECOG_GROUP);
-    if ((u8)GameBit_Get(((DimbridgecogmaiObjectDef*)def)->watchGameBit) != 0)
-    {
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMBRIDGECOGMAI_OBJFLAG_UPDATE_DISABLED);
-    }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (DIMBRIDGECOGMAI_OBJFLAG_HIDDEN | DIMBRIDGECOGMAI_OBJFLAG_HITDETECT_DISABLED));
-}
-
 int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     char* param = *(char**)&((GameObject*)obj)->anim.placementData;
@@ -92,6 +54,21 @@ int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         animUpdate->triggerCommand = 0;
     }
     return 0;
+}
+
+int dimbridgecogmai_getExtraSize(void) { return 0x1; }
+int dimbridgecogmai_getObjectTypeId(void) { return 0x0; }
+
+void dimbridgecogmai_free(int obj) { ObjGroup_RemoveObject(obj, DIMBRIDGECOG_GROUP); }
+
+void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4900);
+}
+
+void dimbridgecogmai_hitDetect(void)
+{
 }
 
 void dimbridgecogmai_update(int* obj)
@@ -158,4 +135,25 @@ void dimbridgecogmai_update(int* obj)
             GameBit_Set(((DimbridgecogmaiPlacement*)def)->doneGameBit, 1);
         }
     }
+}
+
+void dimbridgecogmai_init(int* obj, int* def)
+{
+    *(u8*)((GameObject*)obj)->extra = 100;
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)((DimbridgecogmaiObjectDef*)def)->rotationAngle << 8);
+    ((GameObject*)obj)->animEventCallback = dimbridgecogmai_SeqFn;
+    ObjGroup_AddObject((u32)obj, DIMBRIDGECOG_GROUP);
+    if ((u8)GameBit_Get(((DimbridgecogmaiObjectDef*)def)->watchGameBit) != 0)
+    {
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMBRIDGECOGMAI_OBJFLAG_UPDATE_DISABLED);
+    }
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (DIMBRIDGECOGMAI_OBJFLAG_HIDDEN | DIMBRIDGECOGMAI_OBJFLAG_HITDETECT_DISABLED));
+}
+
+void dimbridgecogmai_release(void)
+{
+}
+
+void dimbridgecogmai_initialise(void)
+{
 }
