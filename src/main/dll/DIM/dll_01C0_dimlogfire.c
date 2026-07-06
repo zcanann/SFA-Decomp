@@ -181,7 +181,7 @@ typedef struct DimlogfirePlacement
     u8 pad0[0x1E - 0x0];
     s16 douseGameBit;
     u8 pad20[0x68 - 0x20];
-    void* unk68;
+    void* linkedObjPtr; /* 0x68 pointer to an object; its vtable[0x28/4] method is invoked */
     u8 pad6C[0x70 - 0x6C];
 } DimlogfirePlacement;
 
@@ -263,7 +263,7 @@ void dimlogfire_update(int obj)
         {
             if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
             {
-                (*(void (**)(int, int, int, int))(**(int**)&((DimlogfirePlacement*)tricky)->unk68 + 0x28))(
+                (*(void (**)(int, int, int, int))(**(int**)&((DimlogfirePlacement*)tricky)->linkedObjPtr + 0x28))(
                     tricky, obj, 1, 4);
             }
             ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
