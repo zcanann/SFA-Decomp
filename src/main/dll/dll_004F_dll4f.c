@@ -36,7 +36,7 @@ void dll_4F_update(int* obj)
     f32 fz;
     f32 sn;
     f32 cs;
-    s16 a;
+    s16 angle;
 
     camera = (CameraObject*)obj;
     pts[0] = 0.0f;
@@ -44,12 +44,12 @@ void dll_4F_update(int* obj)
     pts[2] = 0.0f;
     pts[3] = 0.0f;
     fz = Curve_EvalHermite(pts, gCameraMode4FState->blendProgress, 0);
-    a = (s16)(0x8000 - ((GameObject*)camera->anim.targetObj)->anim.rotX);
-    a += (s32)(14560.0f * fz);
+    angle = (s16)(0x8000 - ((GameObject*)camera->anim.targetObj)->anim.rotX);
+    angle += (s32)(14560.0f * fz);
     target = (GameObject*)camera->anim.targetObj;
     {
         f32 t = (3.1415927f * (f32)(s32)
-        a
+        angle
         )
         /
         32768.0f;
@@ -60,7 +60,7 @@ void dll_4F_update(int* obj)
     camera->anim.localPosZ = target->anim.worldPosZ + (20.0f * cs + -10.0f * sn);
     camera->anim.localPosY = (35.0f + target->anim.worldPosY) - 15.0f * fz;
     camera->anim.rotY = (s16)(0x11c6 - (s32)(35.0f * (182.0f * fz)));
-    camera->anim.rotX = (s16)(a + 0x1ffe);
+    camera->anim.rotX = (s16)(angle + 0x1ffe);
     camera->anim.rotZ = 0;
     camera->letterboxTargetOffset = 0;
     camera->fov = 60.0f;
