@@ -94,7 +94,7 @@ void wctemplebri_updateModelWarp(int obj, int p2)
 {
     WCTempleBriState* state = (WCTempleBriState*)p2;
     ObjTextureRuntimeSlot* tex;
-    int v;
+    int phase;
 
     tex = objFindTexture((void*)obj, 0, 0);
     tex->offsetT += WCTEMPLEBRI_UV0_V_STEP;
@@ -104,12 +104,12 @@ void wctemplebri_updateModelWarp(int obj, int p2)
     tex = objFindTexture((void*)obj, 1, 0);
     tex->offsetT += WCTEMPLEBRI_UV1_V_STEP;
     if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP) tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
-    v = state->wavePhaseA + (framesThisStep << WCTEMPLEBRI_WAVE_A_STEP_SHIFT);
-    if (v > WCTEMPLEBRI_WAVE_WRAP) v = (v - 0x10000) + 1;
-    state->wavePhaseA = v;
-    v = state->wavePhaseB + (framesThisStep << WCTEMPLEBRI_WAVE_B_STEP_SHIFT);
-    if (v > WCTEMPLEBRI_WAVE_WRAP) v = (v - 0x10000) + 1;
-    state->wavePhaseB = v;
+    phase = state->wavePhaseA + (framesThisStep << WCTEMPLEBRI_WAVE_A_STEP_SHIFT);
+    if (phase > WCTEMPLEBRI_WAVE_WRAP) phase = (phase - 0x10000) + 1;
+    state->wavePhaseA = phase;
+    phase = state->wavePhaseB + (framesThisStep << WCTEMPLEBRI_WAVE_B_STEP_SHIFT);
+    if (phase > WCTEMPLEBRI_WAVE_WRAP) phase = (phase - 0x10000) + 1;
+    state->wavePhaseB = phase;
 }
 
 int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
