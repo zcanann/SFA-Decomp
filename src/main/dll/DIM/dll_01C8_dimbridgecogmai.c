@@ -62,7 +62,7 @@ void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4900);
 }
 
-void dimbridgecogmai_free(int x) { ObjGroup_RemoveObject(x, DIMBRIDGECOG_GROUP); }
+void dimbridgecogmai_free(int obj) { ObjGroup_RemoveObject(obj, DIMBRIDGECOG_GROUP); }
 
 void dimbridgecogmai_release(void)
 {
