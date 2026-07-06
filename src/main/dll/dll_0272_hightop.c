@@ -955,7 +955,7 @@ int hightop_stateHandler02(int obj, int stateArg, f32 dt)
     u32 band;
     int idx;
     int changed;
-    f32 v;
+    f32 inputMag;
     f32 lateralSpeed;
     f32 ang;
     f32 moveSpeed;
@@ -994,16 +994,16 @@ int hightop_stateHandler02(int obj, int stateArg, f32 dt)
         vec[1] = (vec[1] < -0x1555) ? -0x1555 : ((vec[1] > 0x1555) ? 0x1555 : vec[1]);
         vec[1] = (vec[1] < -0x1555) ? -0x1555 : ((vec[1] > 0x1555) ? 0x1555 : vec[1]);
     }
-    v = ((HighTopRuntime*)stateArg)->baddie.inputMagnitude;
-    if (v < 0.0f)
+    inputMag = ((HighTopRuntime*)stateArg)->baddie.inputMagnitude;
+    if (inputMag < 0.0f)
     {
-        v = 0.0f;
+        inputMag = 0.0f;
     }
-    if (v > lbl_803E6AB8)
+    if (inputMag > lbl_803E6AB8)
     {
-        v = lbl_803E6AB8;
+        inputMag = lbl_803E6AB8;
     }
-    lateralSpeed = lbl_803E6ADC * v;
+    lateralSpeed = lbl_803E6ADC * inputMag;
     if (lateralSpeed < 0.0f)
     {
         lateralSpeed = 0.0f;
