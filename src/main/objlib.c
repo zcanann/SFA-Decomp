@@ -1566,12 +1566,12 @@ u32 Obj_IsObjectAlive(u32 obj)
 
 bool ObjTrigger_UpdateIdBlockFlag(int obj)
 {
-    int val;
+    int disguised;
     u8 flags;
 
-    val = (int)Obj_GetPlayerObject();
-    val = playerIsDisguised(val);
-    if (val != 0)
+    disguised = (int)Obj_GetPlayerObject();
+    disguised = playerIsDisguised(disguised);
+    if (disguised != 0)
     {
         flags = *(u8*)(obj + OBJTRIGGER_FLAGS_OFFSET) | OBJTRIGGER_ID_BLOCK_FLAG;
         *(u8*)(obj + OBJTRIGGER_FLAGS_OFFSET) = flags;
@@ -1793,7 +1793,7 @@ u32 ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback)
 
 u32 ObjTrigger_IsSetById(int obj, short eventId)
 {
-    int val;
+    int playerState;
     int triggerFlags;
     int flagEnabled;
     int flagBlocked;
@@ -1803,10 +1803,10 @@ u32 ObjTrigger_IsSetById(int obj, short eventId)
     if (flagEnabled != 0)
     {
         flagBlocked = triggerFlags & OBJTRIGGER_ID_BLOCK_FLAG;
-        if ((flagBlocked == 0) && (val = (*gGameUIInterface)->isEventReady((int)eventId), val != 0))
+        if ((flagBlocked == 0) && (playerState = (*gGameUIInterface)->isEventReady((int)eventId), playerState != 0))
         {
-            val = objGetAnimState80A(Obj_GetPlayerObject());
-            if (val == OBJTRIGGER_PLAYER_STATE_NONE)
+            playerState = objGetAnimState80A(Obj_GetPlayerObject());
+            if (playerState == OBJTRIGGER_PLAYER_STATE_NONE)
             {
                 buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX,OBJTRIGGER_BUTTON_DISABLE_FLAG);
                 return 1;
@@ -1819,7 +1819,7 @@ u32 ObjTrigger_IsSetById(int obj, short eventId)
 u32 ObjTrigger_IsSet(int obj)
 {
     u32 flags;
-    int val;
+    int playerState;
     int triggerFlags;
     int flagEnabled;
     int flagBlocked;
@@ -1836,10 +1836,10 @@ u32 ObjTrigger_IsSet(int obj)
         if (flagEnabled != 0)
         {
             flagBlocked = triggerFlags & OBJTRIGGER_CURRENT_BLOCK_FLAG;
-            if ((flagBlocked == 0) && (val = (*gGameUIInterface)->isCurrentTriggerClear(), val == 0))
+            if ((flagBlocked == 0) && (playerState = (*gGameUIInterface)->isCurrentTriggerClear(), playerState == 0))
             {
-                val = objGetAnimState80A(Obj_GetPlayerObject());
-                if ((val == OBJTRIGGER_PLAYER_STATE_NONE) || (val == OBJTRIGGER_PLAYER_STATE_CLEAR))
+                playerState = objGetAnimState80A(Obj_GetPlayerObject());
+                if ((playerState == OBJTRIGGER_PLAYER_STATE_NONE) || (playerState == OBJTRIGGER_PLAYER_STATE_CLEAR))
                 {
                     buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX,OBJTRIGGER_BUTTON_DISABLE_FLAG);
                     return 1;
