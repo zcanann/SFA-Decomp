@@ -7,8 +7,17 @@
 #include "main/dll/VF/vf_shared.h"
 extern f32 lbl_803E5058;
 
+int gpsh_scene_getExtraSize(void) { return 0x0; }
+int gpsh_scene_getObjectTypeId(void) { return 0x0; }
+
 void gpsh_scene_free(void)
 {
+}
+
+void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5058);
 }
 
 void gpsh_scene_hitDetect(void)
@@ -19,25 +28,6 @@ void gpsh_scene_update(void)
 {
 }
 
-void gpsh_scene_release(void)
-{
-}
-
-void gpsh_scene_initialise(void)
-{
-}
-
-
-int gpsh_scene_getExtraSize(void) { return 0x0; }
-int gpsh_scene_getObjectTypeId(void) { return 0x0; }
-
-void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5058);
-}
-
-
 void gpsh_scene_init(int* obj, int* def)
 {
     ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
@@ -45,5 +35,13 @@ void gpsh_scene_init(int* obj, int* def)
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+}
+
+void gpsh_scene_release(void)
+{
+}
+
+void gpsh_scene_initialise(void)
+{
 }
 
