@@ -1237,7 +1237,6 @@ void staff_hitDetectGeometry(int* obj)
         }
     }
 }
-#pragma opt_common_subs reset
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
 
