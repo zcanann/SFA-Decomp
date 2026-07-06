@@ -32,5 +32,13 @@ void projquakeshock_initialise(void)
 
 char sProjquakeshockDoNoLongerSupported[] = "<projquakeshock Do>No Longer supported \n";
 
-/* descriptor/ptr table auto 0x803198d8-0x803198f8 */
-u32 lbl_803198D8[8] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)projsunshock_initialise, (u32)projsunshock_release, 0x00000000, (u32)projsunshock_doUnsupported };
+/* descriptor/ptr table auto 0x803198d8-0x803198f8 (8-byte aligned in retail;
+ * pointer tables regenerate ADDR32 relocs). Union u64 member forces the
+ * retail 8-byte alignment after the 0x29-byte string (retail pad
+ * gap_07_803198D1_data). Same idiom as dll_00B1_projlightning3. */
+typedef union DllDescriptorTable {
+    void* ptrs[8];
+    u64 align8;
+} DllDescriptorTable;
+
+DllDescriptorTable lbl_803198D8 = { { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projsunshock_initialise, projsunshock_release, (void*)0x00000000, projsunshock_doUnsupported } };
