@@ -318,16 +318,16 @@ typedef struct CurvePointResult
 int dll_2E_func0A(int idx, char* outArg)
 {
     CurvePointResult* out = (CurvePointResult*)outArg;
-    int r;
+    int curveId;
 
     if (idx >= 0x1c)
     {
         return 0;
     }
-    r = ((int (*)(int))(*gRomCurveInterface)->slot40)(idx);
-    if (r > -1)
+    curveId = ((int (*)(int))(*gRomCurveInterface)->slot40)(idx);
+    if (curveId > -1)
     {
-        RomCurvePlacementDef* p = (RomCurvePlacementDef*)(*gRomCurveInterface)->getById(r);
+        RomCurvePlacementDef* p = (RomCurvePlacementDef*)(*gRomCurveInterface)->getById(curveId);
         out->x = p->base.x;
         out->y = p->base.y;
         out->z = p->base.z;
@@ -344,13 +344,13 @@ int dll_2E_func0C(int idx, char* outArg)
 {
     CurvePointResult* out = (CurvePointResult*)outArg;
     f32 range;
-    int r;
+    int curveId;
 
     range = lbl_803E1C8C;
-    r = ((int (*)(int))(*gRomCurveInterface)->slot40)(idx);
-    if (r > -1)
+    curveId = ((int (*)(int))(*gRomCurveInterface)->slot40)(idx);
+    if (curveId > -1)
     {
-        RomCurvePlacementDef* p = (RomCurvePlacementDef*)(*gRomCurveInterface)->getById(r);
+        RomCurvePlacementDef* p = (RomCurvePlacementDef*)(*gRomCurveInterface)->getById(curveId);
         char* q;
         out->x = p->base.x;
         out->y = p->base.y;
@@ -509,11 +509,11 @@ int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int p4, int c, f32*
     }
     if (moved != 0 && (*flags & 0x2) != 0)
     {
-        int t = (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
+        int targetAngle = (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
                                ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ) +
             0x8000);
         ((GameObject*)obj)->anim.rotX =
-            (s16)(((GameObject*)obj)->anim.rotX + ((t - ((GameObject*)obj)->anim.rotX) >> 3));
+            (s16)(((GameObject*)obj)->anim.rotX + ((targetAngle - ((GameObject*)obj)->anim.rotX) >> 3));
     }
     return hit;
 }
@@ -710,7 +710,7 @@ void dll_2E_func03(u16* obj, int state, int unused)
     register int yawDelta;
     register int seqHandle;
     register u32 target;
-    void* t;
+    void* targetObj;
     int bit1;
     int ival;
     float dist;
@@ -767,15 +767,15 @@ void dll_2E_func03(u16* obj, int state, int unused)
         }
         else
         {
-            t = s->lockTarget;
-            target = (u32)(t != NULL ? t : (t = (void*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, obj, &sv)));
-            if (t != NULL)
+            targetObj = s->lockTarget;
+            target = (u32)(targetObj != NULL ? targetObj : (targetObj = (void*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, obj, &sv)));
+            if (targetObj != NULL)
             {
                 if ((s->modeBits & 0x20) != 0)
                 {
-                    sv.dx = s->targetX - ((GameObject*)t)->anim.localPosX;
-                    sv.dy = s->targetY - ((GameObject*)t)->anim.localPosY;
-                    sv.dz = s->targetZ - ((GameObject*)t)->anim.localPosZ;
+                    sv.dx = s->targetX - ((GameObject*)targetObj)->anim.localPosX;
+                    sv.dy = s->targetY - ((GameObject*)targetObj)->anim.localPosY;
+                    sv.dz = s->targetZ - ((GameObject*)targetObj)->anim.localPosZ;
                     blendA = sv.dx * sv.dx;
                     blendB = sv.dz * sv.dz;
                     dist = sqrtf(blendA + blendB);
