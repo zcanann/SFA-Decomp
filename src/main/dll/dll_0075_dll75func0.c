@@ -24,14 +24,6 @@ extern f32 lbl_803E0C00, lbl_803E0C04, lbl_803E0C08, lbl_803E0C0C, lbl_803E0C10,
 extern f32 lbl_803E0C18, lbl_803E0C1C, lbl_803E0C20, lbl_803E0C24, lbl_803E0C28, lbl_803E0C2C;
 extern f32 lbl_803E0C30, lbl_803E0C34, lbl_803E0C38, lbl_803E0C3C;
 
-void dll_75_func01_nop(void)
-{
-}
-
-void dll_75_func00_nop(void)
-{
-}
-
 void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     struct
@@ -223,6 +215,14 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
+}
+
+void dll_75_func01_nop(void)
+{
+}
+
+void dll_75_func00_nop(void)
+{
 }
 
 /*__DATA_EXTERNS__*/
