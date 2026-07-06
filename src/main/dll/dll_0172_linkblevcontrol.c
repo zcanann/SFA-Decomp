@@ -9,9 +9,6 @@
  *
  * init seeds stage from the highest set progress bit (0x543/0x387/0x386/
  * 0x385/0x384) and primes the ambient env fx by save-load status.
- *
- * The unit also exports gIMIcePillarObjDescriptor (the imicepillar object,
- * whose callbacks live in other TUs).
  */
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -49,33 +46,6 @@ enum
     GAMEBIT_LINKB_STAGE_5 = 0x543
 };
 
-void imicepillar_free(void);
-int imicepillar_getExtraSize(void);
-int imicepillar_getObjectTypeId(void);
-void imicepillar_hitDetect(void);
-void imicepillar_update(void);
-void imicepillar_init(void);
-void imicepillar_release(void);
-void imicepillar_initialise(void);
-void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-ObjectDescriptor gIMIcePillarObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)imicepillar_initialise,
-    (ObjectDescriptorCallback)imicepillar_release,
-    0,
-    (ObjectDescriptorCallback)imicepillar_init,
-    (ObjectDescriptorCallback)imicepillar_update,
-    (ObjectDescriptorCallback)imicepillar_hitDetect,
-    (ObjectDescriptorCallback)imicepillar_render,
-    (ObjectDescriptorCallback)imicepillar_free,
-    (ObjectDescriptorCallback)imicepillar_getObjectTypeId,
-    imicepillar_getExtraSize,
-};
-
 int linkb_levcontrol_getExtraSize(void) { return 0x10; }
 
 enum LinkbLevStage
@@ -100,58 +70,6 @@ typedef struct LinkbLevState
     f32 timer;
     s16 music;
 } LinkbLevState;
-
-void linkb_levcontrol_init(int* obj)
-{
-    extern int getEnvfxAct(int a, int b, u16 idx, int d); /* #57 */
-    /* the (u8*)(int) launder is load-bearing: it makes the fn_80088870 arg
-     * reuse envBase's register instead of re-materializing the address */
-    u8* envBase = (u8*)(int)lbl_803238D8;
-    LinkbLevState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (LINKBLEVCONTROL_OBJFLAG_HIDDEN | LINKBLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
-    if (GameBit_Get(0x36e) != 0)
-    {
-        state->flags &= 4;
-    }
-    if (GameBit_Get(GAMEBIT_LINKB_STAGE_5) != 0)
-    {
-        state->stage = LINKBLEVCONTROL_STAGE_5;
-    }
-    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_4) != 0)
-    {
-        state->stage = LINKBLEVCONTROL_STAGE_4;
-    }
-    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_3) != 0)
-    {
-        state->stage = LINKBLEVCONTROL_STAGE_3;
-    }
-    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_2) != 0)
-    {
-        state->stage = LINKBLEVCONTROL_STAGE_2;
-    }
-    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_1) != 0)
-    {
-        state->stage = LINKBLEVCONTROL_STAGE_1;
-    }
-    fn_80088870(envBase + 0x38, (u8*)(int)lbl_803238D8, envBase + 0x70, envBase + 0xa8);
-    if (getSaveGameLoadStatus() != 0)
-    {
-        if ((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0)
-        {
-            envFxActFn_800887f8(0x3f);
-        }
-        getEnvfxActImmediately(0, 0, 0x23c, 0);
-    }
-    else
-    {
-        if ((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0)
-        {
-            envFxActFn_800887f8(0x1f);
-        }
-        getEnvfxAct(0, 0, 0x23c, 0);
-    }
-    state->music = 0;
-}
 
 void linkb_levcontrol_update(int* obj)
 {
@@ -301,4 +219,56 @@ void linkb_levcontrol_update(int* obj)
             }
         }
     }
+}
+
+void linkb_levcontrol_init(int* obj)
+{
+    extern int getEnvfxAct(int a, int b, u16 idx, int d); /* #57 */
+    /* the (u8*)(int) launder is load-bearing: it makes the fn_80088870 arg
+     * reuse envBase's register instead of re-materializing the address */
+    u8* envBase = (u8*)(int)lbl_803238D8;
+    LinkbLevState* state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (LINKBLEVCONTROL_OBJFLAG_HIDDEN | LINKBLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
+    if (GameBit_Get(0x36e) != 0)
+    {
+        state->flags &= 4;
+    }
+    if (GameBit_Get(GAMEBIT_LINKB_STAGE_5) != 0)
+    {
+        state->stage = LINKBLEVCONTROL_STAGE_5;
+    }
+    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_4) != 0)
+    {
+        state->stage = LINKBLEVCONTROL_STAGE_4;
+    }
+    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_3) != 0)
+    {
+        state->stage = LINKBLEVCONTROL_STAGE_3;
+    }
+    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_2) != 0)
+    {
+        state->stage = LINKBLEVCONTROL_STAGE_2;
+    }
+    else if (GameBit_Get(GAMEBIT_LINKB_STAGE_1) != 0)
+    {
+        state->stage = LINKBLEVCONTROL_STAGE_1;
+    }
+    fn_80088870(envBase + 0x38, (u8*)(int)lbl_803238D8, envBase + 0x70, envBase + 0xa8);
+    if (getSaveGameLoadStatus() != 0)
+    {
+        if ((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0)
+        {
+            envFxActFn_800887f8(0x3f);
+        }
+        getEnvfxActImmediately(0, 0, 0x23c, 0);
+    }
+    else
+    {
+        if ((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0)
+        {
+            envFxActFn_800887f8(0x1f);
+        }
+        getEnvfxAct(0, 0, 0x23c, 0);
+    }
+    state->music = 0;
 }
