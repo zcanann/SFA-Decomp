@@ -563,7 +563,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
     int id_a, id_b, id_c, id_d;
     int* o1;
     int* o2;
-    int v;
+    int phase;
     f32 f;
 
     f = lbl_803E8234;
@@ -628,8 +628,8 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
     else
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        v = inner->proximityPhase;
-        switch (v)
+        phase = inner->proximityPhase;
+        switch (phase)
         {
         case 1:
             if (Vec_distance((char*)player + 0x18, (void*)&((GameObject*)obj)->anim.worldPosX) < lbl_803E8290)
@@ -643,7 +643,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
             break;
         case 0:
         case 2:
-            if ((u32)v == 0 ||
+            if ((u32)phase == 0 ||
                 Vec_distance((char*)player + 0x18, (void*)&((GameObject*)obj)->anim.worldPosX) > lbl_803E8240)
             {
                 o1 = ObjList_FindObjectById(id_a);
