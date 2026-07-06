@@ -32,21 +32,6 @@ extern void objRenderFn_80041018(int* obj);
 extern f32 lbl_803E4880;
 extern f32 lbl_803E4884;
 
-int dimicewall_getExtraSize(void) { return 0x2; }
-
-void dimicewall_init(int obj, s8* p)
-{
-    char* inner = ((GameObject*)obj)->extra;
-    ((DimicewallState*)inner)->hp = (s8) * (s16*)(p + 0x1a);
-    if (((DimicewallPlacement*)p)->shatterGameBit != -1)
-    {
-        ((DimicewallState*)inner)->shattered = GameBit_Get(((DimicewallPlacement*)p)->shatterGameBit);
-    }
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
-    ((GameObject*)obj)->objectFlags |= DIMICEWALL_OBJFLAG_HIDDEN;
-}
-
-
 int fn_801B17F4(int obj, int delta)
 {
     DimicewallState* inner = ((GameObject*)obj)->extra;
@@ -54,6 +39,7 @@ int fn_801B17F4(int obj, int delta)
     return inner->hp <= 0;
 }
 
+int dimicewall_getExtraSize(void) { return 0x2; }
 
 void dimicewall_update(int* obj)
 {
@@ -116,4 +102,16 @@ void dimicewall_update(int* obj)
             }
         }
     }
+}
+
+void dimicewall_init(int obj, s8* p)
+{
+    char* inner = ((GameObject*)obj)->extra;
+    ((DimicewallState*)inner)->hp = (s8) * (s16*)(p + 0x1a);
+    if (((DimicewallPlacement*)p)->shatterGameBit != -1)
+    {
+        ((DimicewallState*)inner)->shattered = GameBit_Get(((DimicewallPlacement*)p)->shatterGameBit);
+    }
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
+    ((GameObject*)obj)->objectFlags |= DIMICEWALL_OBJFLAG_HIDDEN;
 }
