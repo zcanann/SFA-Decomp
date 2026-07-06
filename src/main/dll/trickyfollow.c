@@ -243,7 +243,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     }
     if ((targetWg != 0) && (targetWg == ((TrickyState*)state)->activeWalkGroup))
     {
-        *(s16*)&((TrickyState*)state)->unkD2 = 0;
+        *(s16*)&((TrickyState*)state)->linkedWalkGroup = 0;
     }
     else
     {
@@ -254,7 +254,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             {
                 if ((prod == wgi.patch[i]) && (((1 << i) & wgi.mask) != 0))
                 {
-                    *(s16*)&((TrickyState*)state)->unkD2 = link;
+                    *(s16*)&((TrickyState*)state)->linkedWalkGroup = link;
                     ((TrickyPoint3*)(state + 0xd4))->x = ((TrickyPoint3*)target)->x;
                     ((TrickyPoint3*)(state + 0xd4))->y = ((TrickyPoint3*)target)->y;
                     ((TrickyPoint3*)(state + 0xd4))->z = ((TrickyPoint3*)target)->z;
@@ -282,7 +282,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             }
         }
     }
-    if (*(s16*)&((TrickyState*)state)->unkD2 != 0)
+    if (*(s16*)&((TrickyState*)state)->linkedWalkGroup != 0)
     {
         trickyDebugPrint(strs + 0x328, ((TrickyPoint3*)(state + 0xd4))->x,
                          ((TrickyPoint3*)(state + 0xd4))->y, ((TrickyPoint3*)(state + 0xd4))->z);
@@ -390,7 +390,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                             tp = getPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->activeWalkGroup) & 0xffff;
                             if ((u32)tp != 0)
                             {
-                                if (*(s16*)&((TrickyState*)state)->unkD2 == tp)
+                                if (*(s16*)&((TrickyState*)state)->linkedWalkGroup == tp)
                                 {
                                     ((TrickyState*)state)->followPhase = 3;
                                 }
@@ -440,7 +440,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                         if (isPointWithinPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->activeWalkGroup,
                                                     (targetWg = targetWg * wg & 0xffff)) != 0)
                         {
-                            if (*(s16*)&((TrickyState*)state)->unkD2 == targetWg)
+                            if (*(s16*)&((TrickyState*)state)->linkedWalkGroup == targetWg)
                             {
                                 ((TrickyState*)state)->followPhase = 3;
                             }
@@ -460,7 +460,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                                     break;
                                 }
                             }
-                            if ((i == 4) || (targetWg != *(s16*)&((TrickyState*)state)->unkD2))
+                            if ((i == 4) || (targetWg != *(s16*)&((TrickyState*)state)->linkedWalkGroup))
                             {
                                 ((TrickyState*)state)->followPhase = 5;
                             }
@@ -488,7 +488,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                                     ((TrickyState*)state)->followPhase = 4;
                                 }
                             }
-                            else if (*(s16*)&((TrickyState*)state)->unkD2 == p)
+                            else if (*(s16*)&((TrickyState*)state)->linkedWalkGroup == p)
                             {
                                 ((TrickyState*)state)->followPhase = 3;
                             }

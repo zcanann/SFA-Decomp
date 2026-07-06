@@ -909,7 +909,7 @@ void Tricky_update(int obj)
         if ((((TrickyState*)state)->stateFlags & 0x10) != 0)
         {
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x10LL;
-            ((TrickyState*)state)->unk374 = 2;
+            ((TrickyState*)state)->groundSnapCounter = 2;
             (*gPathControlInterface)->attachObject((void*)obj,
                                                    &((TrickyState*)state)->pathControlFlags);
             ((GameObject*)obj)->anim.localPosX = ((TrickyState*)state)->homePosX;
@@ -1195,7 +1195,7 @@ void Tricky_update(int obj)
                     {
                         *(u32*)&((TrickyState*)state)->targetPosPtr = target;
                         *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
-                        ((TrickyState*)state)->unkD2 = 0;
+                        ((TrickyState*)state)->linkedWalkGroup = 0;
                     }
                     ((TrickyState*)state)->substate = 0;
                     ((TrickyState*)state)->unk08 = 0xb;
@@ -1212,7 +1212,7 @@ void Tricky_update(int obj)
                         {
                             *(u32*)&((TrickyState*)state)->targetPosPtr = step + 0x18;
                             *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
-                            ((TrickyState*)state)->unkD2 = 0;
+                            ((TrickyState*)state)->linkedWalkGroup = 0;
                         }
                         ((TrickyState*)state)->unk08 = 0xd;
                         ((TrickyState*)state)->substate = 0;
@@ -1255,7 +1255,7 @@ void Tricky_update(int obj)
             {
                 *(u32*)&((TrickyState*)state)->targetPosPtr = (u32) & ((TrickyState*)state)->unk72C;
                 ((TrickyState*)state)->stateFlags &= ~0x400LL;
-                ((TrickyState*)state)->unkD2 = 0;
+                ((TrickyState*)state)->linkedWalkGroup = 0;
             }
         }
     }
@@ -1601,7 +1601,7 @@ void Tricky_init(int obj)
     (*gPathControlInterface)->attachObject((void*)obj, (void*)pathState);
     doNothing_onTrickyInit();
     walkgroupFindExitPointFn_800dc398();
-    ((TrickyState*)state)->unk374 = 2;
+    ((TrickyState*)state)->groundSnapCounter = 2;
     ((TrickyInitFlags*)&((TrickyState*)state)->unk82E)->initBit7 = 1;
     ((TrickyState*)state)->unkD = -1;
 }
@@ -2659,8 +2659,8 @@ void Tricky_render(int obj, int p2, int p3, int p4, int p5, char doRender)
         }
         Tricky_emitQueuedPathParticles(obj, state);
         ObjPath_GetPointWorldPositionArray(obj, 4, 4, (float*)((TrickyState*)state)->pad7D8);
-        ((TrickyState*)state)->unk838 = ((TrickyState*)state)->unk838 - timeDelta;
-        if (((TrickyState*)state)->unk838 > lbl_803E23DC)
+        ((TrickyState*)state)->particleTimer = ((TrickyState*)state)->particleTimer - timeDelta;
+        if (((TrickyState*)state)->particleTimer > lbl_803E23DC)
         {
             objParticleFn_80099d84(obj, lbl_803E253C, 6, lbl_803E23E8, 0);
         }
@@ -3027,7 +3027,7 @@ void trickyFn_80144f50(int obj, int state)
             {
                 objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
                 ((TrickyState*)state)->unk79C = lbl_803E2440;
-                ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             }
             else

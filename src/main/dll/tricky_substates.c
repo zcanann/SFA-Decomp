@@ -190,7 +190,7 @@ void trickyDigTunnel(u8* obj, u8* state)
                 m = ~0x400;
                 *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
             }
-            ((TrickyState*)state)->unkD2 = 0;
+            ((TrickyState*)state)->linkedWalkGroup = 0;
         }
         state[0xa] = 1;
     case 1:
@@ -344,7 +344,7 @@ void trickyDigTunnel(u8* obj, u8* state)
             {
                 objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
                 ((TrickyState*)state)->unk79C = lbl_803E2440;
-                ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint((char*)(base + 0x184));
             }
             else
@@ -423,7 +423,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
                         m = ~0x400;
                         *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
                     }
-                    ((TrickyState*)state)->unkD2 = 0;
+                    ((TrickyState*)state)->linkedWalkGroup = 0;
                 }
             }
             else
@@ -576,7 +576,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                                 m = ~0x400;
                                 *(u32*)&((TrickyState*)other)->stateFlags = f2 & m;
                             }
-                            ((TrickyState*)other)->unkD2 = 0;
+                            ((TrickyState*)other)->linkedWalkGroup = 0;
                         }
                         other[0xa] = 0;
                         other[0x8] = 10;
@@ -625,7 +625,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                     {
                         objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
                         ((TrickyState*)state)->unk79C = lbl_803E2440;
-                        ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                        ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                         trickyDebugPrint((char*)(base + 0x184));
                     }
                     else
@@ -723,7 +723,7 @@ void trickyFn_80142524(u8* obj, u8* state)
             {
                 objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
                 ((TrickyState*)state)->unk79C = lbl_803E2440;
-                ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                ((TrickyState*)state)->particleTimer = lbl_803E23DC;
             }
             else
             {
@@ -972,7 +972,7 @@ int trickyFn_80142eb0(int obj, int state)
             {
                 objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
                 ((TrickyState*)state)->unk79C = lbl_803E2440;
-                ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             }
             else
@@ -1418,7 +1418,7 @@ int trickyFn_80143c04(int obj, int state)
             m = ~0x400;
             *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
         }
-        *(short*)&((TrickyState*)state)->unkD2 = 0;
+        *(short*)&((TrickyState*)state)->linkedWalkGroup = 0;
     }
     if (lbl_803E23DC == ((TrickyState*)state)->unk71C)
     {
@@ -1644,7 +1644,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
                 m = ~0x400;
                 *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
             }
-            ((TrickyState*)state)->unkD2 = 0;
+            ((TrickyState*)state)->linkedWalkGroup = 0;
         }
         ((FlagByte728*)(state + 0x728))->bf5 = 0;
         state[0xa] = 0xc;
@@ -1665,7 +1665,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
                 m = ~0x400;
                 *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
             }
-            ((TrickyState*)state)->unkD2 = 0;
+            ((TrickyState*)state)->linkedWalkGroup = 0;
         }
         state[0xa] = 8;
         break;
@@ -1796,7 +1796,7 @@ int trickyFoodFn_8014460c(int obj, int* state)
                     {
                         objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
                         ((TrickyState*)b)->unk79C = lbl_803E2440;
-                        ((TrickyState*)b)->unk838 = lbl_803E23DC;
+                        ((TrickyState*)b)->particleTimer = lbl_803E23DC;
                         trickyDebugPrint(sInWaterMessage);
                     }
                     else
@@ -1851,7 +1851,7 @@ int trickyFoodFn_8014460c(int obj, int* state)
                     {
                         objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
                         ((TrickyState*)b)->unk79C = lbl_803E2440;
-                        ((TrickyState*)b)->unk838 = lbl_803E23DC;
+                        ((TrickyState*)b)->particleTimer = lbl_803E23DC;
                         trickyDebugPrint(sInWaterMessage);
                     }
                     else
@@ -1908,7 +1908,7 @@ int trickyFoodFn_8014460c(int obj, int* state)
                 {
                     objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
                     ((TrickyState*)b)->unk79C = lbl_803E2440;
-                    ((TrickyState*)b)->unk838 = lbl_803E23DC;
+                    ((TrickyState*)b)->particleTimer = lbl_803E23DC;
                     trickyDebugPrint(sInWaterMessage);
                 }
                 else

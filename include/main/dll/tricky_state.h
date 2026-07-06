@@ -62,7 +62,7 @@ typedef struct TrickyState {
                      indexed s16 copy loop stays raw */
     u8 padA0[0xD0 - 0xA0]; /* 0xA0: f32 triples at stride 0xC (walker, raw) */
     u16 activeWalkGroup; /* current active walk-group id (getPatchGroup/walkGroupFn arg; tracked vs targetWg) */
-    u16 unkD2;
+    u16 linkedWalkGroup; /* walk-group/patch id linked to activeWalkGroup: set to the intersected walk-group product, compared == targetWg/getPatchGroup results, cleared to 0 (trickyfollow/tricky_substates) */
     u8 padD4[0xE0 - 0xD4];
     f32 homePosX; /* home position, init from obj world pos */
     f32 homePosY;
@@ -132,7 +132,7 @@ typedef struct TrickyState {
     int light; /* object link */
     int modelChain; /* ObjModelChain handle toggled via ObjModelChain_SetEnabled */
     f32 hitCooldown;
-    u8 unk374;
+    u8 groundSnapCounter; /* frame countdown that forces the ground-snap path: != 0 -> decrement and do the height snap; primed to 2 on state entry (tricky/skeetla) */
     u8 pad375[0x378 - 0x375];
     u8 unk378;
     u8 pad379[0x37C - 0x379];
@@ -157,7 +157,7 @@ typedef struct TrickyState {
     RomCurveWalker route;
     u8 unk528;
     u8 pad529[3];
-    void *unk52C;
+    void *validatedRouteEntry; /* route entry pointer validated via skeetla_validateRouteEntry (skeetla) */
     u16 unk530;
     u16 walkGroup; /* current walk-group id (route/path selection; compared to targetWg and node group bytes) */
     u16 savedWalkGroup; /* mirrored from walkGroup (dll_DF); retained group used to gate route re-seeding */
@@ -217,7 +217,7 @@ typedef struct TrickyState {
     u8 unk82D;
     u8 unk82E; /* bit flags 5/6/7 (collectable.c overlays) */
     u8 pad82F[0x838 - 0x82F];
-    f32 unk838;
+    f32 particleTimer; /* f32 countdown decremented by timeDelta; while > threshold the queued particle effect keeps emitting; reset to a float sentinel on state entry (tricky/skeetla/weapone6/tricky_substates/mmp_cratercritter/animobjd2) */
     u8 pad83C[0x840 - 0x83C];
 } TrickyState;
 

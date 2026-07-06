@@ -117,9 +117,9 @@ void trickyUpdateCollisionAndPathState(u8* obj)
 
     state->stateFlags &= ~0x80000LL;
 
-    if (state->unk374 != 0)
+    if (state->groundSnapCounter != 0)
     {
-        state->unk374 -= 1;
+        state->groundSnapCounter -= 1;
         doGroundSnap = 1;
     }
     else if ((state->stateFlags & 0x2000) != 0)
@@ -238,7 +238,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         }
         break;
     case 0x1f:
-        state->unk838 = lbl_803E2438;
+        state->particleTimer = lbl_803E2438;
         break;
     }
 
@@ -518,7 +518,7 @@ int trickyMove(u8* obj, f32* targetPos)
         {
             objAnimFn_8013a3f0((int)obj, 7, lbl_803E2468, 0x2000000);
             ((TrickyState*)state)->unk79C = lbl_803E2440;
-            ((TrickyState*)state)->unk838 = lbl_803E23DC;
+            ((TrickyState*)state)->particleTimer = lbl_803E23DC;
             trickyDebugPrint(debugStrings + 0x184);
             goto ret_one;
         }
@@ -598,7 +598,7 @@ int trickyMove(u8* obj, f32* targetPos)
             trickyDebugPrint(debugStrings + 0x1bc);
             objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
             ((TrickyState*)state)->unk79C = lbl_803E2440;
-            ((TrickyState*)state)->unk838 = lbl_803E23DC;
+            ((TrickyState*)state)->particleTimer = lbl_803E23DC;
         }
         else
         {
@@ -914,7 +914,7 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
         (((TrickyState*)state)->unk530 == ((TrickyState*)state)->walkGroup) &&
         (((TrickyState*)state)->unk536 == (routeFlagValue & 0xff)))
     {
-        entry = skeetla_validateRouteEntry(((TrickyState*)state)->unk52C);
+        entry = skeetla_validateRouteEntry(((TrickyState*)state)->validatedRouteEntry);
     }
 
     if (entry == NULL)
@@ -951,7 +951,7 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
     }
 
     *(u8**)&((TrickyState*)state)->unk528 = routeDef;
-    ((TrickyState*)state)->unk52C = entry;
+    ((TrickyState*)state)->validatedRouteEntry = entry;
     ((TrickyState*)state)->unk530 = ((TrickyState*)state)->walkGroup;
     ((TrickyState*)state)->unk536 = routeFlagValue;
     return entry;

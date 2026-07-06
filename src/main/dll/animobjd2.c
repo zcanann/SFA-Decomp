@@ -236,7 +236,7 @@ void fn_8013E0D0(int* obj, u8* st)
                     {
                         objAnimFn_8013a3f0((int*)gobj, 8, lbl_803E243C, 0);
                         t->unk79C = lbl_803E2440;
-                        t->unk838 = lbl_803E23DC;
+                        t->particleTimer = lbl_803E23DC;
                         trickyDebugPrint(str + 0x184);
                     }
                     else
@@ -561,7 +561,7 @@ void fn_8013E0D0(int* obj, u8* st)
                     {
                         objAnimFn_8013a3f0((int*)gobj, 8, lbl_803E243C, 0);
                         t->unk79C = lbl_803E2440;
-                        t->unk838 = lbl_803E23DC;
+                        t->particleTimer = lbl_803E23DC;
                         trickyDebugPrint(str + 0x184);
                     }
                     else

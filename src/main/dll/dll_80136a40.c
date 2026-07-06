@@ -308,7 +308,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
         {
             ((TrickyState*)state)->targetPosPtr = targetPos;
             *(u32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
-            ((TrickyState*)state)->unkD2 = 0;
+            ((TrickyState*)state)->linkedWalkGroup = 0;
         }
     }
 

@@ -195,7 +195,7 @@ void fn_8013F100(int obj, register int state)
                     {
                         objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
                         ((TrickyState*)state)->unk79C = lbl_803E2440;
-                        ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                        ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                         trickyDebugPrint(sInWaterMessage);
                     }
                     else
@@ -289,7 +289,7 @@ void fn_8013F100(int obj, register int state)
                 {
                     objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
                     ((TrickyState*)state)->unk79C = lbl_803E2440;
-                    ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                    ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                     trickyDebugPrint(sInWaterMessage);
                 }
                 else
@@ -341,7 +341,7 @@ void fn_8013F100(int obj, register int state)
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                     *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
                 }
-                *(short*)&((TrickyState*)state)->unkD2 = 0;
+                *(short*)&((TrickyState*)state)->linkedWalkGroup = 0;
             }
         }
         break;
@@ -369,7 +369,7 @@ void fn_8013F100(int obj, register int state)
             {
                 objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
                 ((TrickyState*)state)->unk79C = lbl_803E2440;
-                ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             }
             else
@@ -404,7 +404,7 @@ void fn_8013F100(int obj, register int state)
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                     *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
                 }
-                *(short*)&((TrickyState*)state)->unkD2 = 0;
+                *(short*)&((TrickyState*)state)->linkedWalkGroup = 0;
             }
             ((TrickyState*)state)->substate = 5;
     case 5:
@@ -497,7 +497,7 @@ void fn_8013F9E4(int obj, int state)
             {
                 objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
                 ((TrickyState*)state)->unk79C = lbl_803E2440;
-                ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             }
             else
@@ -564,7 +564,7 @@ void fn_8013FBE4(int obj, register int state)
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                     *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
                 }
-                *(short*)&((TrickyState*)state)->unkD2 = 0;
+                *(short*)&((TrickyState*)state)->linkedWalkGroup = 0;
             }
             dx = *targetPos - ((GameObject*)obj)->anim.worldPosX;
             dz = targetPos[2] - ((GameObject*)obj)->anim.worldPosZ;
@@ -600,7 +600,7 @@ void fn_8013FBE4(int obj, register int state)
                 {
                     objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
                     ((TrickyState*)state)->unk79C = lbl_803E2440;
-                    ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                    ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                     trickyDebugPrint(sInWaterMessage);
                 }
                 else
@@ -651,7 +651,7 @@ void fn_8013FEC0(int obj, int state)
         {
             objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
             ((TrickyState*)state)->unk79C = lbl_803E2440;
-            ((TrickyState*)state)->unk838 = lbl_803E23DC;
+            ((TrickyState*)state)->particleTimer = lbl_803E23DC;
             trickyDebugPrint(sInWaterMessage);
         }
         else

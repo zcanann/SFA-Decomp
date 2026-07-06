@@ -81,7 +81,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
         {
             ((TrickyState*)state)->targetPosPtr = nearest + 0x18;
             *(s32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
-            ((TrickyState*)state)->unkD2 = 0;
+            ((TrickyState*)state)->linkedWalkGroup = 0;
         }
         if (trickyFn_8013b368(self, lbl_803E247C, state) == 1) return;
     }
@@ -107,7 +107,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     {
         objAnimFn_8013a3f0(self, 8, lbl_803E243C, 0);
         ((TrickyState*)state)->unk79C = lbl_803E2440;
-        ((TrickyState*)state)->unk838 = lbl_803E23DC;
+        ((TrickyState*)state)->particleTimer = lbl_803E23DC;
         trickyDebugPrint(sInWaterMessage);
     }
     else
