@@ -1430,8 +1430,8 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
     int c2c = sub->msgMode;
     int tmpB;
     int tmpA;
-    int t;
-    int q;
+    int target;
+    int msgStack;
     f32 z;
     f32 dist;
     struct
@@ -1451,31 +1451,31 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
     {
         tmpA = sub->objGroup;
         tmpB = sub->msgMode;
-        q = sub->msgStack;
+        msgStack = sub->msgStack;
         msgA[0] = sub->msgCode;
         msgA[1] = tmpB;
         msgA[2] = tmpA;
-        if (Stack_IsFull(q) == 0)
+        if (Stack_IsFull(msgStack) == 0)
         {
-            Stack_Push(q, msgA);
+            Stack_Push(msgStack, msgA);
         }
-        q = sub->msgStack;
+        msgStack = sub->msgStack;
         msgB[0] = 8;
         msgB[1] = c2c;
         msgB[2] = c30;
-        if (Stack_IsFull(q) == 0)
+        if (Stack_IsFull(msgStack) == 0)
         {
-            Stack_Push(q, msgB);
+            Stack_Push(msgStack, msgB);
         }
         sub->msgAdvance = 1;
         tmpA = sub->msgSlotIndex;
-        q = sub->msgStack;
+        msgStack = sub->msgStack;
         msgC[0] = 9;
         msgC[1] = 0;
         msgC[2] = tmpA;
-        if (Stack_IsFull(q) == 0)
+        if (Stack_IsFull(msgStack) == 0)
         {
-            Stack_Push(q, msgC);
+            Stack_Push(msgStack, msgC);
         }
         sub->msgAdvance = 1;
         return 0;
@@ -1485,10 +1485,10 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
         sub->flags15 |= 4;
         if (*(void**)&sub->linkedObj != NULL && (s32)(((BaddieState*)p2)->eventFlags & BADDIE_EVENT_LANDING) != 0)
         {
-            t = *(int*)&((BaddieState*)p2)->targetObj;
-            stk.v[0] = ((GameObject*)t)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-            stk.v[1] = ((GameObject*)t)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-            stk.v[2] = ((GameObject*)t)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+            target = *(int*)&((BaddieState*)p2)->targetObj;
+            stk.v[0] = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+            stk.v[1] = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+            stk.v[2] = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
             {
                 f32 sqx = stk.v[0] * stk.v[0];
                 f32 sqz = stk.v[2] * stk.v[2];
