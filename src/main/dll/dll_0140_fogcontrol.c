@@ -91,7 +91,7 @@ void fogcontrol_update(int obj)
     FogControlState* st = ((GameObject*)obj)->extra;
     u8 cv;
     u8 run;
-    f32 t;
+    f32 fogY;
 
     if (((FogcontrolPlacement*)setup)->enableGameBit == -1)
     {
@@ -149,11 +149,11 @@ void fogcontrol_update(int obj)
                 st->blend = 1.0f;
                 st->full = 1;
             }
-            t = st->blend * ((f32)((FogcontrolPlacement*)setup)->fogTop - (f32)((FogcontrolPlacement*)setup)->fogBase) +
+            fogY = st->blend * ((f32)((FogcontrolPlacement*)setup)->fogTop - (f32)((FogcontrolPlacement*)setup)->fogBase) +
                 (f32)((FogcontrolPlacement*)setup)->fogBase;
-            t = ((GameObject*)obj)->anim.localPosY + t;
-            enableHeavyFog(t,
-                           ((f32)((FogcontrolPlacement*)setup)->fogBottom + t) - (f32)((FogcontrolPlacement*)setup)->fogTop,
+            fogY = ((GameObject*)obj)->anim.localPosY + fogY;
+            enableHeavyFog(fogY,
+                           ((f32)((FogcontrolPlacement*)setup)->fogBottom + fogY) - (f32)((FogcontrolPlacement*)setup)->fogTop,
                            (f32)((FogcontrolPlacement*)setup)->fogRed,
                            (f32)((FogcontrolPlacement*)setup)->fogGreen / 65535.0f,
                            0.0001f,
@@ -166,7 +166,7 @@ void fogcontrol_init(int obj, FogcontrolPlacement* placement)
 {
     FogControlState* st;
     u8 cv;
-    f32 t;
+    f32 fogY;
 
     st = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | FOGCONTROL_OBJFLAG_HIDDEN);
@@ -188,11 +188,11 @@ void fogcontrol_init(int obj, FogcontrolPlacement* placement)
             st->full = 1;
             st->on = 1;
             st->blend = 1.0f;
-            t = st->blend * ((f32)placement->fogTop - placement->fogBase) +
+            fogY = st->blend * ((f32)placement->fogTop - placement->fogBase) +
                 placement->fogBase;
-            t = ((GameObject*)obj)->anim.localPosY + t;
-            enableHeavyFog(t,
-                           ((f32)placement->fogBottom + t) - placement->fogTop,
+            fogY = ((GameObject*)obj)->anim.localPosY + fogY;
+            enableHeavyFog(fogY,
+                           ((f32)placement->fogBottom + fogY) - placement->fogTop,
                            placement->fogRed,
                            placement->fogGreen / 65535.0f,
                            0.0001f, *(u8*)&placement->flags & FOG_FLAG_MODE);
