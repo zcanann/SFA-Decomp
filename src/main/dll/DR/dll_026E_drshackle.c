@@ -15,6 +15,7 @@
 #include "main/audio/sfx_ids.h"
 
 #define DRSHACKLE_OBJGROUP 0x37
+#define DFROPENODE_OBJGROUP 0x17 /* DLL 0x175 dfropenode (path nodes) */
 
 typedef struct DrshacklePlacement
 {
@@ -222,7 +223,7 @@ void drshackle_update(int obj)
     int* list;
     if (((DrshacklePlacement*)placement)->pathObjGroupBase != 0 && *(void**)state == 0)
     {
-        list = ObjGroup_GetObjects(0x17, &count);
+        list = ObjGroup_GetObjects(DFROPENODE_OBJGROUP, &count);
         while (count-- != 0)
         {
             sub = *(int*)(*list + 0x4c);
