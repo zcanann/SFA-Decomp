@@ -33,22 +33,6 @@ int ktlazerlight_getExtraSize(void) { return 0x14; }
 
 int ktlazerlight_getObjectTypeId(void) { return 0x0; }
 
-void ktlazerlight_hitDetect(void)
-{
-}
-
-void ktlazerlight_initialise(void)
-{
-}
-
-void ktlazerlight_release(void)
-{
-}
-
-void ktlazerlight_render(void)
-{
-}
-
 void ktlazerlight_free(int obj)
 {
     void* extra = ((GameObject*)obj)->extra;
@@ -59,16 +43,12 @@ void ktlazerlight_free(int obj)
     }
 }
 
-void ktlazerlight_init(int obj, char* placement)
+void ktlazerlight_render(void)
 {
-    char* extra = ((GameObject*)obj)->extra;
-    *(void**)(extra + 0x4) = objCreateLight(0, 1);
-    if (*(void**)(extra + 0x4) != 0)
-    {
-        modelLightStruct_setLightKind(*(void**)(extra + 0x4), 2);
-        modelLightStruct_setPosition(*(void**)(extra + 0x4), ((KtlazerlightPlacement*)placement)->posX, ((KtlazerlightPlacement*)placement)->posY, ((KtlazerlightPlacement*)placement)->posZ);
-        modelLightStruct_setAffectsAabbLightSelection(*(void**)(extra + 0x4), 1);
-    }
+}
+
+void ktlazerlight_hitDetect(void)
+{
 }
 
 void ktlazerlight_update(int obj)
@@ -98,4 +78,24 @@ void ktlazerlight_update(int obj)
             modelLightStruct_setEnabled(light, 0, lbl_803E68C0);
         }
     }
+}
+
+void ktlazerlight_init(int obj, char* placement)
+{
+    char* extra = ((GameObject*)obj)->extra;
+    *(void**)(extra + 0x4) = objCreateLight(0, 1);
+    if (*(void**)(extra + 0x4) != 0)
+    {
+        modelLightStruct_setLightKind(*(void**)(extra + 0x4), 2);
+        modelLightStruct_setPosition(*(void**)(extra + 0x4), ((KtlazerlightPlacement*)placement)->posX, ((KtlazerlightPlacement*)placement)->posY, ((KtlazerlightPlacement*)placement)->posZ);
+        modelLightStruct_setAffectsAabbLightSelection(*(void**)(extra + 0x4), 1);
+    }
+}
+
+void ktlazerlight_release(void)
+{
+}
+
+void ktlazerlight_initialise(void)
+{
 }
