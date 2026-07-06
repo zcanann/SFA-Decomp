@@ -53,15 +53,15 @@ void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dfpfloorbar_hitDetect(int* obj)
 {
-    int* x;
-    int** b;
-    s32 v;
-    b = (int**)*(int*)&((GameObject*)obj)->extra;
-    x = b[2];
-    if (x == NULL) return;
-    v = *(s16*)((char*)x + 6) & 0x40;
-    if (v == 0) return;
-    b[2] = NULL;
+    int* linkedObject;
+    int** state;
+    s32 hitFlag;
+    state = (int**)*(int*)&((GameObject*)obj)->extra;
+    linkedObject = state[2];
+    if (linkedObject == NULL) return;
+    hitFlag = *(s16*)((char*)linkedObject + 6) & 0x40;
+    if (hitFlag == 0) return;
+    state[2] = NULL;
 }
 
 typedef struct DfpfloorbarPlacement
