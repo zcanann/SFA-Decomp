@@ -458,6 +458,7 @@ main/dll/dll_007A_dll7afunc0.c:
 main/dll/dll_007B_dll7bfunc0.c:
 	.text       start:0x800F4174 end:0x800F472C
 	.data       start:0x80314CB0 end:0x80314E08
+	.sdata2     start:0x803E0D80 end:0x803E0D88
 
 main/dll/dll_007C_dll7cfunc0.c:
 	.text       start:0x800F472C end:0x800F4C70
@@ -1680,6 +1681,8 @@ main/dll/CC/dll_0185_ccgasvent.c:
 
 main/dll/CC/dll_0186_ccgasventcontrol.c:
 	.text       start:0x801A9FA8 end:0x801AA558
+	.data       start:0x803233B0 end:0x803233CC
+	.sdata2     start:0x803E4648 end:0x803E4650
 
 main/dll/CC/dll_0187_ccqueen.c:
 	.text       start:0x801AA558 end:0x801AA734
