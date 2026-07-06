@@ -231,9 +231,7 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
         ((BaddieState*)state)->moveInputZ = lbl_803E057C;
     }
 }
-#pragma opt_common_subs reset
 
-#pragma opt_common_subs off
 void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 {
     f32 ang, vx, vz, q, w, dist, c, s;
@@ -508,8 +506,6 @@ void player_getExtraSize(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 s
         ((BaddieState*)ctx)->moveInputZ = lbl_803E057C;
     }
 }
-#pragma opt_common_subs reset
-#pragma opt_common_subs off
 void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 {
     f32 mag;
