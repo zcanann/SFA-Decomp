@@ -82,10 +82,10 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 
 int dimtruthhornice_getExtraSize(void) { return 0x8; }
 
-int fn_801B6D40(int* obj, int v)
+int fn_801B6D40(int* obj, int damage)
 {
     u8* state = ((GameObject*)obj)->extra;
-    *(s8*)(state + 2) = (s8)(state[2] - v);
+    *(s8*)(state + 2) = (s8)(state[2] - damage);
     return *(s8*)(state + 2) <= 0;
 }
 
