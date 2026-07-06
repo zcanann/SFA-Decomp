@@ -99,26 +99,12 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
+int dim2snowball_getExtraSize(void) { return 0xb0; }
+int dim2snowball_getObjectTypeId(void) { return 0x0; }
 
 void dim2snowball_free(void)
 {
 }
-
-void dim2snowball_hitDetect(void)
-{
-}
-
-void dim2snowball_release(void)
-{
-}
-
-void dim2snowball_initialise(void)
-{
-}
-
-
-int dim2snowball_getExtraSize(void) { return 0xb0; }
-int dim2snowball_getObjectTypeId(void) { return 0x0; }
 
 void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -127,25 +113,9 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4AA0);
 }
 
-void dim2snowball_init(int* obj, int* def)
+void dim2snowball_hitDetect(void)
 {
-    Dim2SnowballState* state = ((GameObject*)obj)->extra;
-    state->targetId = ((Dim2snowballObjectDef*)def)->targetId;
-    state->flagsAC = (u8)(state->flagsAC | 4);
-    ((Dim2snowballObjectDef*)def)->targetId = -1;
-    *(s16*)obj = (s16)((s32)((Dim2snowballObjectDef*)def)->initRotationByte << 8);
-    *(s8*)&((GameObject*)obj)->anim.alpha = 0;
-    {
-        ObjModelState* p = ((GameObject*)obj)->anim.modelState;
-        if (p != NULL)
-        {
-            p->flags |= 0xA10;
-        }
-    }
-    state->targetObj = (int*)ObjList_FindObjectById(state->targetId);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIM2SNOWBALL_OBJFLAG_HITDETECT_DISABLED);
 }
-
 
 void dim2snowball_update(int* obj)
 {
@@ -320,4 +290,31 @@ void dim2snowball_update(int* obj)
         }
     }
     Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_firlp6);
+}
+
+void dim2snowball_init(int* obj, int* def)
+{
+    Dim2SnowballState* state = ((GameObject*)obj)->extra;
+    state->targetId = ((Dim2snowballObjectDef*)def)->targetId;
+    state->flagsAC = (u8)(state->flagsAC | 4);
+    ((Dim2snowballObjectDef*)def)->targetId = -1;
+    *(s16*)obj = (s16)((s32)((Dim2snowballObjectDef*)def)->initRotationByte << 8);
+    *(s8*)&((GameObject*)obj)->anim.alpha = 0;
+    {
+        ObjModelState* p = ((GameObject*)obj)->anim.modelState;
+        if (p != NULL)
+        {
+            p->flags |= 0xA10;
+        }
+    }
+    state->targetObj = (int*)ObjList_FindObjectById(state->targetId);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIM2SNOWBALL_OBJFLAG_HITDETECT_DISABLED);
+}
+
+void dim2snowball_release(void)
+{
+}
+
+void dim2snowball_initialise(void)
+{
 }
