@@ -198,7 +198,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     u16 adsr_delta;
     u16 old_adsr_delta;
     s32 current_delta;
-    s32 v;
+    s32 voiceIdx;
     _PB* pb;
     _PB* last_pb;
     u32 VoiceDone;
@@ -275,18 +275,18 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                 cyclesUsed += 0x294D;
             }
             last_pb = 0;
-            v = 0;
+            voiceIdx = 0;
             for (dsp_vptr = stp->voiceRoot; dsp_vptr; dsp_vptr = dsp_vptr->next)
             {
-                dspSortedVoices[v] = dsp_vptr;
-                v++;
+                dspSortedVoices[voiceIdx] = dsp_vptr;
+                voiceIdx++;
             }
-            voiceNum = v;
+            voiceNum = voiceIdx;
             SortVoices(dspSortedVoices, 0, voiceNum - 1);
             procVoiceFlag = 0;
-            for (v = voiceNum; v > 0; v--)
+            for (voiceIdx = voiceNum; voiceIdx > 0; voiceIdx--)
             {
-                dsp_vptr = dspSortedVoices[v - 1];
+                dsp_vptr = dspSortedVoices[voiceIdx - 1];
                 if (dsp_vptr->state != 0)
                 {
                     u8 i;
@@ -931,14 +931,14 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         }
                         salDeactivateVoice((SalVoice*)dsp_vptr);
                         salSynthSendMessage((int)dsp_vptr, 1);
-                        for (v = v - 1; v > 0; v--)
+                        for (voiceIdx = voiceIdx - 1; voiceIdx > 0; voiceIdx--)
                         {
-                            if (dspSortedVoices[v - 1]->state == 2)
+                            if (dspSortedVoices[voiceIdx - 1]->state == 2)
                             {
-                                HandleDepopVoice(stp, dspSortedVoices[v - 1]);
+                                HandleDepopVoice(stp, dspSortedVoices[voiceIdx - 1]);
                             }
-                            salDeactivateVoice((SalVoice*)dspSortedVoices[v - 1]);
-                            salSynthSendMessage((int)dspSortedVoices[v - 1], 1);
+                            salDeactivateVoice((SalVoice*)dspSortedVoices[voiceIdx - 1]);
+                            salSynthSendMessage((int)dspSortedVoices[voiceIdx - 1], 1);
                         }
                         for (st1 = st + 1; st1 < salMaxStudioNum; st1++)
                         {
