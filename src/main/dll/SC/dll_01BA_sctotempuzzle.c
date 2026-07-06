@@ -364,8 +364,8 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
 {
     ScTotemPuzzleState* state;
     ObjTextureRuntimeSlot* tex;
-    int r;
-    f32 fz;
+    int pulseFrames;
+    f32 pulseTime;
 
     state = obj->state;
     obj->puzzleIndex = params->puzzleIndex;
@@ -396,11 +396,11 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
         }
     }
     obj->yaw = (s16)(s32)state->angle;
-    r = randomGetRange(7, 10);
-    fz = r;
-    fz = lbl_803E5630 * fz;
-    state->pulseTimerReset = fz;
-    state->pulseTimer = fz;
+    pulseFrames = randomGetRange(7, 10);
+    pulseTime = pulseFrames;
+    pulseTime = lbl_803E5630 * pulseTime;
+    state->pulseTimerReset = pulseTime;
+    state->pulseTimer = pulseTime;
     if (obj->puzzleIndex & 1)
     {
         state->flags = 1;
