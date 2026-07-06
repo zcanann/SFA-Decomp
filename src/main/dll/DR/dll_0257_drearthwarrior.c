@@ -135,7 +135,7 @@ typedef struct EarthWarriorSub
     f32 unk834;
     u8 pad838[8];
     f32 unk840;
-    f32 unk844;
+    f32 animSpeedRate; /* 0x844: per-frame anim-speed rate integrated into animSpeedC (animSpeedRate*timeDelta); captured from animSpeedA */
     u8 pad848[0x10];
     int unk858;
     u8 pad85C[0x4a];
@@ -609,7 +609,7 @@ int fn_802BC830(int obj, int sub, int state)
         ObjAnim_SetCurrentMove(obj, *(s16*)((char*)((EarthWarriorSub*)sub)->moveTable + 0x3a), lbl_803E8304, 0);
         ObjAnim_SetCurrentEventStepFrames((struct ObjAnimComponent*)obj, 0x10);
         ((EarthWarriorSub*)sub)->unk858 = ((EarthWarriorSub*)sub)->currentYaw;
-        ((EarthWarriorSub*)sub)->unk844 = (lbl_803E8308 + (*(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x14) + ((
+        ((EarthWarriorSub*)sub)->animSpeedRate = (lbl_803E8308 + (*(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x14) + ((
             BaddieState*)state)->animSpeedC)) / lbl_803E830C;
         ((EarthWarriorSub*)sub)->unk478 = ((EarthWarriorSub*)sub)->currentYaw;
         ((EarthWarriorSub*)sub)->currentYaw += 0x8000;
@@ -792,7 +792,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b04 = 1;
             ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b08 = 1;
         }
-        ((EarthWarriorState*)state)->baddie.animSpeedC = ((EarthWarriorSub*)q)->unk844 * timeDelta + ((EarthWarriorState*)
+        ((EarthWarriorState*)state)->baddie.animSpeedC = ((EarthWarriorSub*)q)->animSpeedRate * timeDelta + ((EarthWarriorState*)
             state)->baddie.animSpeedC;
         ((EarthWarriorSub*)q)->targetAnimSpeed = lbl_803E8304;
         if (((GameObject*)obj)->anim.currentMoveProgress > GXInit_ClearColor && ((GameObject*)obj)->anim.
@@ -840,7 +840,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     {
         ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 = 1;
         *(u32*)&((EarthWarriorSub*)q)->unk360 |= 0x1000000LL;
-        ((EarthWarriorSub*)q)->unk844 = ((EarthWarriorState*)state)->baddie.animSpeedA;
+        ((EarthWarriorSub*)q)->animSpeedRate = ((EarthWarriorState*)state)->baddie.animSpeedA;
         ObjAnim_SetCurrentMove(obj, *(s16*)(((EarthWarriorSub*)q)->moveTable + 0x3c), lbl_803E8304, 0);
         ((EarthWarriorState*)state)->baddie.moveSpeed = lbl_803E82EC;
     }
