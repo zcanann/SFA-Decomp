@@ -118,18 +118,12 @@ void CameraModeWorldMap_copyToCurrent(int* p1, int kind)
     }
 }
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
 void CameraModeWorldMap_free(void)
 {
     extern void mm_free(u32); /* #57 */
     mm_free((u32)gCamWorldMapState);
     gCamWorldMapState = NULL;
 }
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma opt_common_subs off
 #pragma opt_propagation off
