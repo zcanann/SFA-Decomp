@@ -71,14 +71,6 @@ extern void envFxActFn_800887f8(u8 value);
 extern u8 lbl_803DBF28[8];
 extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e1, int e2);
 
-int dim2lavacontrol_getExtraSize(void) { return 0x10; }
-
-void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B90);
-}
-
 void dim2lavacontrol_setScale(void* obj)
 {
     void* sub = ((GameObject*)obj)->extra;
@@ -97,6 +89,8 @@ void dim2lavacontrol_setScale(void* obj)
     }
 }
 
+int dim2lavacontrol_getExtraSize(void) { return 0x10; }
+
 void dim2lavacontrol_free(void)
 {
     fn_8004C1E4(0xC0, lbl_803E4B90);
@@ -104,52 +98,10 @@ void dim2lavacontrol_free(void)
     timeOfDayFn_80055000();
 }
 
-void dim2lavacontrol_init(int obj, int param2)
+void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void gameBitFn_800ea2e0(int i);
-    int state;
-    int i;
-    int gameBitState;
-    if (getSaveGameLoadStatus() != 0)
-    {
-        ((GameObject*)obj)->unkF4 = 2;
-    }
-    else
-    {
-        ((GameObject*)obj)->unkF4 = 1;
-    }
-    for (i = 1; (u8)i <= 0x2d; i++)
-    {
-        gameBitFn_800ea2e0(i);
-    }
-    state = *(int*)&((GameObject*)obj)->extra;
-    ((Dim2lavacontrolState*)state)->countdown = (s8) * (s16*)(param2 + 0x1a);
-    ((Dim2lavacontrolState*)state)->countdownSave = *(u8*)&((Dim2lavacontrolState*)state)->countdown;
-    if (GameBit_Get(((Dim2lavacontrolPlacement*)param2)->gameBit) != 0)
-    {
-        gameBitState = 1;
-    }
-    else
-    {
-        gameBitState = 0;
-    }
-    ((Dim2lavacontrolState*)state)->flags = (s8)(*(u8*)&((Dim2lavacontrolState*)state)->flags | gameBitState);
-    ((Dim2lavacontrolState*)state)->musicTrack = 0xd7;
-    ((Dim2lavacontrolState*)state)->phase = DIM2LAVACONTROL_PHASE_WAIT;
-    if ((((Dim2lavacontrolState*)state)->flags & 1) != 0)
-    {
-        *(u8*)&((Dim2lavacontrolState*)state)->countdown = 0;
-        ((Dim2lavacontrolState*)state)->sfxLevel = lbl_803DBF28[0];
-        fn_8004C1E4(lbl_803DBF28[0], lbl_803E4B90);
-    }
-    else
-    {
-        *(u8*)&((Dim2lavacontrolState*)state)->countdown = 3;
-        ((Dim2lavacontrolState*)state)->sfxLevel = lbl_803DBF28[3];
-        fn_8004C1E4(lbl_803DBF28[3], lbl_803E4B90);
-    }
-    Music_Trigger(MUSICTRIG_WLC_Corridors, 1);
-    envFxActFn_800887f8(0);
+    s32 v = visible;
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B90);
 }
 
 #pragma opt_common_subs off
@@ -227,4 +179,53 @@ void dim2lavacontrol_update(int obj)
     SCGameBitLatch_Update((char*)obj + 8, 8, -1, -1, 0xf04, 0x96);
     SCGameBitLatch_UpdateInverted((char*)obj + 8, 0x10, -1, -1, 0xf04, 0x2c);
     SCGameBitLatch_Update((char*)obj + 8, 4, -1, -1, 0xcbb, 0xc4);
+}
+#pragma opt_common_subs reset
+
+void dim2lavacontrol_init(int obj, int param2)
+{
+    extern void gameBitFn_800ea2e0(int i);
+    int state;
+    int i;
+    int gameBitState;
+    if (getSaveGameLoadStatus() != 0)
+    {
+        ((GameObject*)obj)->unkF4 = 2;
+    }
+    else
+    {
+        ((GameObject*)obj)->unkF4 = 1;
+    }
+    for (i = 1; (u8)i <= 0x2d; i++)
+    {
+        gameBitFn_800ea2e0(i);
+    }
+    state = *(int*)&((GameObject*)obj)->extra;
+    ((Dim2lavacontrolState*)state)->countdown = (s8) * (s16*)(param2 + 0x1a);
+    ((Dim2lavacontrolState*)state)->countdownSave = *(u8*)&((Dim2lavacontrolState*)state)->countdown;
+    if (GameBit_Get(((Dim2lavacontrolPlacement*)param2)->gameBit) != 0)
+    {
+        gameBitState = 1;
+    }
+    else
+    {
+        gameBitState = 0;
+    }
+    ((Dim2lavacontrolState*)state)->flags = (s8)(*(u8*)&((Dim2lavacontrolState*)state)->flags | gameBitState);
+    ((Dim2lavacontrolState*)state)->musicTrack = 0xd7;
+    ((Dim2lavacontrolState*)state)->phase = DIM2LAVACONTROL_PHASE_WAIT;
+    if ((((Dim2lavacontrolState*)state)->flags & 1) != 0)
+    {
+        *(u8*)&((Dim2lavacontrolState*)state)->countdown = 0;
+        ((Dim2lavacontrolState*)state)->sfxLevel = lbl_803DBF28[0];
+        fn_8004C1E4(lbl_803DBF28[0], lbl_803E4B90);
+    }
+    else
+    {
+        *(u8*)&((Dim2lavacontrolState*)state)->countdown = 3;
+        ((Dim2lavacontrolState*)state)->sfxLevel = lbl_803DBF28[3];
+        fn_8004C1E4(lbl_803DBF28[3], lbl_803E4B90);
+    }
+    Music_Trigger(MUSICTRIG_WLC_Corridors, 1);
+    envFxActFn_800887f8(0);
 }
