@@ -139,28 +139,41 @@ loads it. An un-owned constant sits in the shared auto pool and the unit referen
 `fuzzy_match_percent`, which is blind to it). Why it belongs here: the inline literal is
 what lets MWCC drop the §4 scaffolding.
 
-**The ownership gate — inline a constant only if your unit references it ALONE.** This is
-the rule that decides which `lbl_` you can retire and which must stay `extern`. A constant
-used by many units lives in the shared pool; inlining it just adds a *redundant* local
-copy while the retail object still points at the pool — no data matched, and you've made
-the unit's data *worse*. Check every candidate:
+**The ownership model — a unit owns a contiguous `.sdata2` slice; the rest of the pool is
+external and that is faithful.** A `complete` unit owns a small local `.sdata2` (the
+constants at addresses in *its* retail slice) **and** still reaches the rest of the pool via
+`extern lbl_` — both correct, because the retail object does exactly that. Confirm against
+the target `.o`:
 
 ```sh
-# how many units reference this constant? 1 = yours to inline; >1 = shared, keep the extern
-for lbl in $(grep -oE 'extern f32 lbl_[0-9A-Fa-f]+' src/main/dll/<unit>.c | grep -oE 'lbl_[0-9A-Fa-f]+'); do
-  echo "$(grep -rl "${lbl}@sda21" build/GSAE01/asm/ | wc -l)  $lbl"
-done
-# value of an exclusive one (to write the literal): grep -A1 '.obj lbl_XXXX,' build/GSAE01/asm/auto_*_sdata2.s
+build/binutils/powerpc-eabi-objdump -h  build/GSAE01/obj/<unit>.o | grep sdata2   # owned slice (may be absent)
+build/binutils/powerpc-eabi-objdump -dr build/GSAE01/obj/<unit>.o | grep 'R_PPC_EMB_SDA21.*lbl_'  # rightfully-external refs
+```
+(`cfcrate`, complete, owns a 2-float slice **and** references 45 pool constants externally;
+`ediblemushroom`, not complete, owns nothing yet.)
+
+So the job is: find the constants that are **rightfully this unit's** — a contiguous address
+range referenced **only by this unit's functions** — inline + claim those (the real split:
+`splits.txt` range → `Matching` → `.sdata2` byte-diff identical, per
+[data_split_inlining.md](data_split_inlining.md)). Leave the genuinely-external ones: they
+belong to other units and get inlined when *those* units split — a **codebase-wide job done
+unit by unit, never a permanent "leave it."**
+
+**Ownership is per-`.fn`, not per-file.** The auto `.s` blobs bundle many handlers, so
+"another *file* references it" almost always means "another function in the *same* original
+object does." A `grep -rl '<lbl>@sda21' | wc -l` file count **over-reports sharing** and will
+wrongly tell you to abandon your own constants — do not use it for the decision. Use the
+`.fn` check (data_split_inlining.md §2):
+
+```sh
+# which .fn references each constant — a contiguous range hit only by YOUR functions is yours
+awk '/^\.fn /{fn=$2} /lbl_803E[0-9A-F]{2}@sda21/{print fn": "$0}' build/GSAE01/asm/<the .s>
+# value to inline: grep -A1 '.obj lbl_XXXX,' build/GSAE01/asm/auto_*_sdata2.s
 ```
 
-Worked example — `weapone6.c` has 22 `extern f32 lbl_803E2xxx`, but only **3** are
-unit-exclusive (`13.0`, `0.03`, `0.65`); the other 19 (`0.0` alone is shared by ~21 units)
-are pool constants that **stay `extern`**. So "the file is still full of `lbl_`" is the
-*correct* end state here — most of them are not yours to inline. Inline the 3, leave the
-19. Don't confuse "an extern remained" with "a step was skipped."
-
-`char lbl_XXXX[]` / non-`f32` `lbl_` are data arrays and tables with real addresses — never
-inline candidates; leave them.
+"Still has some `lbl_`" is fine **only** for the genuinely-external refs — it is not a
+license to skip your rightful slice. `char lbl_XXXX[]` / non-`f32` `lbl_` are data arrays
+with real addresses — never inline candidates.
 
 ---
 
