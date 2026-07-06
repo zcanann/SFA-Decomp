@@ -80,9 +80,6 @@ void CameraModeTitle_loadVolumes(void)
 
 void dll_4F_init(void);
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
 void CameraModeTitle_init(CameraObject* camera)
 {
     gCamTitleCurPose = TITLE_CAM_REST_POSE;
@@ -127,9 +124,6 @@ f32 titleScreenGetCamProgress(void) { return titleScreenCamProgress; }
 void CameraModeWorldMap_free(void);
 
 void CameraModeCloudRunner_free(void);
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void CameraModeTitle_update(CameraObject* camera)
 {
