@@ -1091,6 +1091,7 @@ main/dll/dll_00CC_chukchuk.c:
 main/dll/dll_00CD_iceball.c:
 	.text       start:0x8015FBEC end:0x801601C4
 	.data       start:0x8031FFD0 end:0x80320178
+	.sdata2     start:0x803E2E60 end:0x803E2E68
 
 main/dll/dll_00CB_dllcb.c:
 	.text       start:0x801601C4 end:0x80161130
@@ -2156,6 +2157,7 @@ main/dll/SB/dll_01E8_sbgalleon.c:
 
 main/dll/SB/dll_01E9_sbpropeller.c:
 	.text       start:0x801E2570 end:0x801E2B28
+	.sdata2     start:0x803E5828 end:0x803E5830
 
 main/dll/SB/dll_01EA_sbshiphead.c:
 	.text       start:0x801E2B28 end:0x801E32BC
