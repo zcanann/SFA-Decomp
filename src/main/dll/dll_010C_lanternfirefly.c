@@ -97,7 +97,7 @@ void LanternFireFly_func0B(int obj)
     } LFFlags;
     LanternFireFlyState* state;
     int setup;
-    int p;
+    int player;
     f32 vec[3];
     f32* vp = vec;
     f32 px;
@@ -111,13 +111,13 @@ void LanternFireFly_func0B(int obj)
     state->driftRangeZ = (f32)(int)((LanternFireFlyPlacement*)setup)->driftRangeZ;
     state->field6F = 0;
     objHitDetectFn_80062e84(obj, 0, 1);
-    p = Obj_GetPlayerObject();
-    px = ((GameObject*)p)->anim.worldPosX;
+    player = Obj_GetPlayerObject();
+    px = ((GameObject*)player)->anim.worldPosX;
     vec[0] = px;
-    vec[1] = ((GameObject*)p)->anim.worldPosY;
-    vec[2] = ((GameObject*)p)->anim.worldPosZ;
-    vec[1] = ((GameObject*)p)->anim.worldPosY + lbl_803E3AA4;
-    y2 = lbl_803E3AA8 + ((GameObject*)p)->anim.worldPosY;
+    vec[1] = ((GameObject*)player)->anim.worldPosY;
+    vec[2] = ((GameObject*)player)->anim.worldPosZ;
+    vec[1] = ((GameObject*)player)->anim.worldPosY + lbl_803E3AA4;
+    y2 = lbl_803E3AA8 + ((GameObject*)player)->anim.worldPosY;
     {
         LanternFireFlyState* st = ((GameObject*)obj)->extra;
         st->anchorX = px;
@@ -415,7 +415,7 @@ void fn_801868D0(int obj)
     extern f32 lbl_803E3ABC;
     LFRot rot;
     LanternFireFlyState* state;
-    s16 r;
+    s16 angleDelta;
     f32 fz;
 
     state = ((GameObject*)obj)->extra;
@@ -432,8 +432,8 @@ void fn_801868D0(int obj)
             (f32)(int)
         randomGetRange(0x14, (s16)(int)state->driftRangeZ);
     }
-    r = randomGetRange(3000, 5000);
-    state->randAngle += r;
+    angleDelta = randomGetRange(3000, 5000);
+    state->randAngle += angleDelta;
     fz = lbl_803E3AB8;
     rot.x = fz;
     rot.y = fz;
