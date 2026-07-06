@@ -1554,6 +1554,7 @@ main/dll/dll_0132_waterfallspray.c:
 
 main/dll/dll_0133_sfxplayer.c:
 	.text       start:0x80198194 end:0x80198A00
+	.sdata2     start:0x803E40C0 end:0x803E40C8
 
 main/dll/dll_80198a00.c:
 	.text       start:0x80198A00 end:0x80198FA4
@@ -2131,6 +2132,7 @@ main/dll/dll_801dd170.c:
 main/dll/SC/dll_01BA_sctotempuzzle.c:
 	.text       start:0x801DD1A8 end:0x801DDA28
 	.data       start:0x80327A18 end:0x80327A60
+	.sdata2     start:0x803E5610 end:0x803E5618
 
 main/dll/SC/dll_01BB_sctotembond.c:
 	.text       start:0x801DDA28 end:0x801DE430
