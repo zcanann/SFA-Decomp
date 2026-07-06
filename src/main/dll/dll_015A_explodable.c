@@ -140,20 +140,20 @@ void explodable_free(int obj, int flag)
 {
     int state;
     int i = -1;
-    int p;
-    void* o;
+    int slotPtr;
+    void* child;
 
     state = *(int*)&((GameObject*)obj)->extra;
     ObjGroup_RemoveObject(obj, EXPLODABLE_OBJ_GROUP);
     if (flag == 0)
     {
-        p = state - 4;
-        while (p += 4, ++i < 15)
+        slotPtr = state - 4;
+        while (slotPtr += 4, ++i < 15)
         {
-            o = *(void* *)&((DrExplodableState*)p)->children[0];
-            if (o != NULL)
+            child = *(void* *)&((DrExplodableState*)slotPtr)->children[0];
+            if (child != NULL)
             {
-                Obj_FreeObject((int)o);
+                Obj_FreeObject((int)child);
             }
         }
     }
@@ -161,12 +161,12 @@ void explodable_free(int obj, int flag)
 
 void explodable_update(int obj)
 {
-    int p;
+    int slotPtr;
     int def;
     int i;
     int state;
-    int r;
-    int o;
+    int status;
+    int fragObj;
 
     state = *(int*)&((GameObject*)obj)->extra;
     def = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -192,19 +192,19 @@ void explodable_update(int obj)
         else
         {
             i = 0;
-            p = state;
+            slotPtr = state;
             do
             {
-                o = *(int*)(p + 0x690);
-                if ((void*)o != NULL)
+                fragObj = *(int*)(slotPtr + 0x690);
+                if ((void*)fragObj != NULL)
                 {
-                    r = (*(VtableFn*)(*(int*)*(int*)(o + 0x68) + FRAGMENT_VTABLE_STATUS))(o);
-                    switch (r)
+                    status = (*(VtableFn*)(*(int*)*(int*)(fragObj + 0x68) + FRAGMENT_VTABLE_STATUS))(fragObj);
+                    switch (status)
                     {
                     case 2:
                         GameBit_Set(((ExplodablePlacement*)def)->doneGameBit, 1);
-                        Obj_FreeObject(*(int*)(p + 0x690));
-                        *(int*)(p + 0x690) = 0;
+                        Obj_FreeObject(*(int*)(slotPtr + 0x690));
+                        *(int*)(slotPtr + 0x690) = 0;
                         break;
                     case 0:
                         GameBit_Set(((ExplodablePlacement*)def)->doneGameBit, 1);
@@ -215,7 +215,7 @@ void explodable_update(int obj)
                         break;
                     }
                 }
-                p += 4;
+                slotPtr += 4;
                 i++;
             }
             while (i < 0xf);
@@ -353,10 +353,10 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
     int i13;
     int objType;
     u8 entMode;
-    int j;
+    int vertexIdx;
     int model;
     GasVentTableEntry* e;
-    f32 z;
+    f32 zero;
     struct
     {
         f32 v[3];
@@ -379,24 +379,24 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
             c->spinScale = entMode;
             if (skipCentroid == 0)
             {
-                z = lbl_803E4368;
-                c->centroidX = z;
-                c->centroidY = z;
-                c->centroidZ = z;
+                zero = lbl_803E4368;
+                c->centroidX = zero;
+                c->centroidY = zero;
+                c->centroidZ = zero;
                 model = *(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks + i14));
-                s.acc[0] = z;
-                s.acc[1] = z;
-                s.acc[2] = z;
-                for (j = 0; j < *(u16*)(model + 0xe4); j++)
+                s.acc[0] = zero;
+                s.acc[1] = zero;
+                s.acc[2] = zero;
+                for (vertexIdx = 0; vertexIdx < *(u16*)(model + 0xe4); vertexIdx++)
                 {
-                    Model_GetVertexPosition(model, j, s.v);
+                    Model_GetVertexPosition(model, vertexIdx, s.v);
                     s.acc[0] = s.v[0] + s.acc[0];
                     s.acc[1] = s.v[1] + s.acc[1];
                     s.acc[2] = s.v[2] + s.acc[2];
                 }
-                c->centroidX = s.acc[0] * ((z = lbl_803E436C) / (f32)(u32) * (u16*)(model + 0xe4));
-                c->centroidY = s.acc[1] * (z / (f32)(u32) * (u16*)(model + 0xe4));
-                c->centroidZ = s.acc[2] * (z / (f32)(u32) * (u16*)(model + 0xe4));
+                c->centroidX = s.acc[0] * ((zero = lbl_803E436C) / (f32)(u32) * (u16*)(model + 0xe4));
+                c->centroidY = s.acc[1] * (zero / (f32)(u32) * (u16*)(model + 0xe4));
+                c->centroidZ = s.acc[2] * (zero / (f32)(u32) * (u16*)(model + 0xe4));
             }
             c->offX = c->centroidX;
             c->offY = c->centroidY;
