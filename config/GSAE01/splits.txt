@@ -1264,6 +1264,7 @@ main/dll/dll_00FB_pressureswitchfb.c:
 
 main/dll/dll_0110_door.c:
 	.text       start:0x8017B5C8 end:0x8017BB80
+	.sdata2     start:0x803E3780 end:0x803E3798
 
 main/dll/MMP/dll_010F_mmpbridge.c:
 	.text       start:0x8017BB80 end:0x8017BCF8

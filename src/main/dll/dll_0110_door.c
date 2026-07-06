@@ -58,107 +58,9 @@ typedef struct DoorState
 
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 
-extern f32 lbl_803E3780;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 gDoorRootMotionScaleFactor;
-extern f32 lbl_803E3788;
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern int Sfx_StopFromObject(int obj, int sfxId);
-
-int Door_getExtraSize(void) { return 0x8; }
-
-void Door_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3780); }
-
-int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-
-void Door_init(int* obj, u8* def)
-{
-    DoorState* state = (DoorState*)((GameObject*)obj)->extra;
-    state->initPending = 1;
-    ((GameObject*)obj)->anim.rotX = (s16)(def[0x1f] << 8);
-    ((GameObject*)obj)->animEventCallback = Door_SeqFn;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DOOR_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)((DoorObjectDef*)def)->rootMotionScaleInput * gDoorRootMotionScaleFactor;
-    if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E3788)
-    {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3780;
-    }
-    ((GameObject*)obj)->anim.rootMotionScale =
-        ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    if (((DoorObjectDef*)def)->latchGameBit != -1)
-    {
-        state->phase = GameBit_Get(((DoorObjectDef*)def)->latchGameBit);
-    }
-    else
-    {
-        state->phase = DOOR_PHASE_IDLE;
-    }
-    state->flags = 0;
-    if (GameBit_Get(((DoorObjectDef*)def)->openGameBit) != 0) state->flags = (u8)(state->flags | 1);
-    if (GameBit_Get(((DoorObjectDef*)def)->closeGameBit) != 0) state->flags = (u8)(state->flags | 2);
-    {
-        s16 model = ((GameObject*)obj)->anim.seqId;
-        switch (model)
-        {
-        case 1101:
-            {
-                s32 subtype = ((GameObject*)obj)->anim.mapEventSlot;
-                if (subtype < 40)
-                {
-                    if (subtype >= 35)
-                        goto close;
-                    if (subtype >= 31)
-                        goto open;
-                    goto close;
-                }
-                if (subtype >= 43)
-                    goto close;
-            open:
-                state->openSfx = 832;
-                state->latchSfx = 833;
-                break;
-            close:
-                state->openSfx = 1154;
-                state->latchSfx = 1155;
-                break;
-            }
-        case 358:
-            state->openSfx = 275;
-            state->latchSfx = 504;
-            break;
-        }
-    }
-}
-
-void Door_update(int obj)
-{
-    DoorState* state;
-    DoorPlacement* def;
-    int triggerArg;
-    int triggerId;
-
-    state = (DoorState*)((GameObject*)obj)->extra;
-    def = (DoorPlacement*)((GameObject*)obj)->anim.placementData;
-    if (state->initPending != 0)
-    {
-        triggerId = def->triggerSequenceId;
-        if ((triggerId != 0) && (state->phase != DOOR_PHASE_IDLE))
-        {
-            triggerArg = def->triggerArg & 0x7f;
-            (*gObjectTriggerInterface)->preempt(obj, triggerId);
-        }
-        else
-        {
-            triggerArg = -1;
-        }
-        if ((s8)def->runSequenceId != -1)
-        {
-            (*gObjectTriggerInterface)->runSequence((int)(s8)def->runSequenceId, (void*)obj, triggerArg);
-        }
-        state->initPending = 0;
-    }
-}
-
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -290,6 +192,98 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         ret = 1;
     }
     return ret;
+}
+
+int Door_getExtraSize(void) { return 0x8; }
+
+void Door_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f); }
+
+void Door_update(int obj)
+{
+    DoorState* state;
+    DoorPlacement* def;
+    int triggerArg;
+    int triggerId;
+
+    state = (DoorState*)((GameObject*)obj)->extra;
+    def = (DoorPlacement*)((GameObject*)obj)->anim.placementData;
+    if (state->initPending != 0)
+    {
+        triggerId = def->triggerSequenceId;
+        if ((triggerId != 0) && (state->phase != DOOR_PHASE_IDLE))
+        {
+            triggerArg = def->triggerArg & 0x7f;
+            (*gObjectTriggerInterface)->preempt(obj, triggerId);
+        }
+        else
+        {
+            triggerArg = -1;
+        }
+        if ((s8)def->runSequenceId != -1)
+        {
+            (*gObjectTriggerInterface)->runSequence((int)(s8)def->runSequenceId, (void*)obj, triggerArg);
+        }
+        state->initPending = 0;
+    }
+}
+
+void Door_init(int* obj, u8* def)
+{
+    DoorState* state = (DoorState*)((GameObject*)obj)->extra;
+    state->initPending = 1;
+    ((GameObject*)obj)->anim.rotX = (s16)(def[0x1f] << 8);
+    ((GameObject*)obj)->animEventCallback = Door_SeqFn;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DOOR_OBJFLAG_HITDETECT_DISABLED);
+    ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)((DoorObjectDef*)def)->rootMotionScaleInput / 64.0f;
+    if (!((GameObject*)obj)->anim.rootMotionScale)
+    {
+        ((GameObject*)obj)->anim.rootMotionScale = 1.0f;
+    }
+    ((GameObject*)obj)->anim.rootMotionScale =
+        ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+    if (((DoorObjectDef*)def)->latchGameBit != -1)
+    {
+        state->phase = GameBit_Get(((DoorObjectDef*)def)->latchGameBit);
+    }
+    else
+    {
+        state->phase = DOOR_PHASE_IDLE;
+    }
+    state->flags = 0;
+    if (GameBit_Get(((DoorObjectDef*)def)->openGameBit) != 0) state->flags = (u8)(state->flags | 1);
+    if (GameBit_Get(((DoorObjectDef*)def)->closeGameBit) != 0) state->flags = (u8)(state->flags | 2);
+    {
+        s16 model = ((GameObject*)obj)->anim.seqId;
+        switch (model)
+        {
+        case 1101:
+            {
+                s32 subtype = ((GameObject*)obj)->anim.mapEventSlot;
+                if (subtype < 40)
+                {
+                    if (subtype >= 35)
+                        goto close;
+                    if (subtype >= 31)
+                        goto open;
+                    goto close;
+                }
+                if (subtype >= 43)
+                    goto close;
+            open:
+                state->openSfx = 832;
+                state->latchSfx = 833;
+                break;
+            close:
+                state->openSfx = 1154;
+                state->latchSfx = 1155;
+                break;
+            }
+        case 358:
+            state->openSfx = 275;
+            state->latchSfx = 504;
+            break;
+        }
+    }
 }
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
