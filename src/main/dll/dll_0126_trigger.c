@@ -37,6 +37,9 @@
 #include "main/shader.h"
 #include "main/sfa_shared_decls.h"
 
+/* group owned by another DLL, queried here */
+#define TIMER_OBJGROUP 0x4c /* DLL 0x2B5 timer */
+
 /*
  * TriggerState+0 status byte (`*state`). See objInterpretSeq / Trigger_hitDetect.
  */
@@ -580,7 +583,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     OSReport(desc + 0x114, p[2], p[3]);
                     break;
                 case 0x2f:
-                    t = ObjGroup_FindNearestObject(0x4c, obj, 0);
+                    t = ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, 0);
                     if ((void*)t != NULL)
                     {
                         timer_addDuration(t, p[3] * 0x3c);
