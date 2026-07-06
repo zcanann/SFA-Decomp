@@ -60,10 +60,10 @@ int SB_CageKyte_getObjectTypeId(void) { return 0x1; }
 
 int SB_CageKyte_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int v = obj->unkF4;
-    if (v > 0)
+    int holdTimer = obj->unkF4;
+    if (holdTimer > 0)
     {
-        obj->unkF4 = v - 1;
+        obj->unkF4 = holdTimer - 1;
     }
     obj->anim.resetHitboxFlags |= SB_CAGEKYTE_HITBOX_RESET_BIT;
     animUpdate->hitVolumePair = -2;
@@ -71,10 +71,10 @@ int SB_CageKyte_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     return 0;
 }
 
-void SB_CageKyte_init(GameObject* p)
+void SB_CageKyte_init(GameObject* obj)
 {
-    p->animEventCallback = SB_CageKyte_SeqFn;
-    p->objectFlags = (u16)((u32)p->objectFlags | (SB_CAGEKYTE_OBJFLAG_HIDDEN | SB_CAGEKYTE_OBJFLAG_HITDETECT_DISABLED));
+    obj->animEventCallback = SB_CageKyte_SeqFn;
+    obj->objectFlags = (u16)((u32)obj->objectFlags | (SB_CAGEKYTE_OBJFLAG_HIDDEN | SB_CAGEKYTE_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
