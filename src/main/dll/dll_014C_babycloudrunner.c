@@ -231,31 +231,31 @@ STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void sandworm_turnTowardTargetAnim(int a, int b, BabyCloudRunnerState* c, int d)
+void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* sub, int playMove)
 {
     int shifted;
-    fn_8003ADC4((int*)a, (int*)b, c->lookBlock, 0x28, 0, 3);
-    shifted = Obj_GetYawDeltaToObject(a, b, 0);
-    *(s16*)a += (shifted >>= 3);
-    if (d == 0) return;
+    fn_8003ADC4((int*)obj, (int*)target, sub->lookBlock, 0x28, 0, 3);
+    shifted = Obj_GetYawDeltaToObject(obj, target, 0);
+    *(s16*)obj += (shifted >>= 3);
+    if (playMove == 0) return;
     if ((s16)shifted > -200 && (s16)shifted < 200)
     {
-        if (c->turnLatch != 0)
+        if (sub->turnLatch != 0)
         {
-            c->turnLatch = 0;
-            ObjAnim_SetCurrentMove(a, 0, lbl_803E4218, 0);
+            sub->turnLatch = 0;
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E4218, 0);
         }
         else
         {
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(a, lbl_803E423C, timeDelta, 0);
+            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E423C, timeDelta, 0);
         }
     }
     else
     {
-        if (c->turnLatch == 0)
+        if (sub->turnLatch == 0)
         {
-            c->turnLatch = 1;
-            ObjAnim_SetCurrentMove(a, 9, lbl_803E4218, 0);
+            sub->turnLatch = 1;
+            ObjAnim_SetCurrentMove(obj, 9, lbl_803E4218, 0);
         }
         else
         {
@@ -268,7 +268,7 @@ void sandworm_turnTowardTargetAnim(int a, int b, BabyCloudRunnerState* c, int d)
             {
                 t = -(s16)shifted >> 2;
             }
-            ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(a, (f32)(s16)t / lbl_803E4240, timeDelta, 0);
+            ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, (f32)(s16)t / lbl_803E4240, timeDelta, 0);
         }
     }
 }
