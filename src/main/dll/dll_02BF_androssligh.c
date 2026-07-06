@@ -42,78 +42,6 @@ STATIC_ASSERT(offsetof(AndrosslighState, boltAge) == 0x8);
 STATIC_ASSERT(offsetof(AndrosslighState, state) == 0xC);
 STATIC_ASSERT(offsetof(AndrosslighState, prevState) == 0xD);
 
-int androssligh_getExtraSize(void) { return sizeof(AndrosslighState); }
-
-int androssligh_getObjectTypeId(void) { return 0; }
-
-void androssligh_free(void)
-{
-}
-
-void androssligh_render(int obj)
-{
-    void* bolt = ((AndrosslighState*)((GameObject*)obj)->extra)->bolt;
-
-    if (bolt != NULL)
-    {
-        lightningRender(bolt);
-    }
-}
-
-void androssligh_setState(int obj, int newState, u8 force)
-{
-    AndrosslighState* state;
-
-    if ((void*)obj == NULL)
-    {
-        return;
-    }
-    state = ((GameObject*)obj)->extra;
-    if (state->state == ANDROSSLIGH_DONE)
-    {
-        if (force == 0)
-        {
-            return;
-        }
-    }
-    state->state = newState;
-}
-
-void androssligh_hitDetect(void)
-{
-}
-
-void androssligh_init(void)
-{
-}
-
-void androssligh_update(int obj)
-{
-    AndrosslighState* state = ((GameObject*)obj)->extra;
-
-    if (state->anchor == NULL)
-    {
-        state->anchor = (void*)ObjList_FindObjectById(ANDROSSLIGH_ANCHOR_OBJ_ID);
-    }
-    if (state->anchor != NULL)
-    {
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)state->anchor)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)state->anchor)->anim.localPosY;
-        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)state->anchor)->anim.localPosZ;
-    }
-    state->prevState = state->state;
-    switch (state->state)
-    {
-    case ANDROSSLIGH_IDLE:
-        break;
-    case ANDROSSLIGH_ACTIVE:
-        androssligh_updateBeam(obj, (int)state);
-        break;
-    case ANDROSSLIGH_DONE:
-        break;
-    }
-}
-
 void androssligh_updateBeam(int obj, int beam)
 {
     extern void PSVECAdd(f32* a, f32* b, f32* ab);
@@ -163,4 +91,76 @@ void androssligh_updateBeam(int obj, int beam)
             *(int*)(beam + 4) = 0;
         }
     }
+}
+
+void androssligh_setState(int obj, int newState, u8 force)
+{
+    AndrosslighState* state;
+
+    if ((void*)obj == NULL)
+    {
+        return;
+    }
+    state = ((GameObject*)obj)->extra;
+    if (state->state == ANDROSSLIGH_DONE)
+    {
+        if (force == 0)
+        {
+            return;
+        }
+    }
+    state->state = newState;
+}
+
+int androssligh_getExtraSize(void) { return sizeof(AndrosslighState); }
+
+int androssligh_getObjectTypeId(void) { return 0; }
+
+void androssligh_free(void)
+{
+}
+
+void androssligh_render(int obj)
+{
+    void* bolt = ((AndrosslighState*)((GameObject*)obj)->extra)->bolt;
+
+    if (bolt != NULL)
+    {
+        lightningRender(bolt);
+    }
+}
+
+void androssligh_hitDetect(void)
+{
+}
+
+void androssligh_update(int obj)
+{
+    AndrosslighState* state = ((GameObject*)obj)->extra;
+
+    if (state->anchor == NULL)
+    {
+        state->anchor = (void*)ObjList_FindObjectById(ANDROSSLIGH_ANCHOR_OBJ_ID);
+    }
+    if (state->anchor != NULL)
+    {
+        ((GameObject*)obj)->anim.localPosX = ((GameObject*)state->anchor)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosY = ((GameObject*)state->anchor)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)state->anchor)->anim.localPosZ;
+    }
+    state->prevState = state->state;
+    switch (state->state)
+    {
+    case ANDROSSLIGH_IDLE:
+        break;
+    case ANDROSSLIGH_ACTIVE:
+        androssligh_updateBeam(obj, (int)state);
+        break;
+    case ANDROSSLIGH_DONE:
+        break;
+    }
+}
+
+void androssligh_init(void)
+{
 }
