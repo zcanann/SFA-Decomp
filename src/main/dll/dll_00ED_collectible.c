@@ -944,7 +944,7 @@ void collectible_update(int obj)
     ObjHitsPriorityState* hitState;
     int msgParam;
     int msg;
-    int t;
+    int hideFrames;
     f32 timer;
     f32 zero;
 
@@ -1011,8 +1011,8 @@ void collectible_update(int obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x319:
-        t = ((CollectibleState*)state)->hideFrames;
-        if (t != 0)
+        hideFrames = ((CollectibleState*)state)->hideFrames;
+        if (hideFrames != 0)
         {
             ((CollectibleState*)state)->hideFrames -= framesThisStep;
             if (((CollectibleState*)state)->hideFrames <= 0)
