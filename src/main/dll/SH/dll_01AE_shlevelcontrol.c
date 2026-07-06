@@ -968,11 +968,11 @@ void sh_levelcontrol_init(int obj)
 
     int* state = ((GameObject*)obj)->extra;
     int i;
-    u32 v;
+    u32 objectFlags;
 
     ((GameObject*)obj)->animEventCallback = SH_LevelControl_SeqFn;
-    v = (u32)((GameObject*)obj)->objectFlags | SHOPKEEPER_OBJFLAG_HIDDEN;
-    ((GameObject*)obj)->objectFlags = v;
+    objectFlags = (u32)((GameObject*)obj)->objectFlags | SHOPKEEPER_OBJFLAG_HIDDEN;
+    ((GameObject*)obj)->objectFlags = objectFlags;
     ((GameObject*)obj)->unkF8 = 3;
 
     if (getSaveGameLoadStatus() != 0)

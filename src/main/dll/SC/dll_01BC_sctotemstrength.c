@@ -86,7 +86,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
     f32 wob1, wob2, push;
     f32 diff;
     f32 absDiff;
-    f32 t;
+    f32 progress;
     int vol;
     int ret;
     int idx1, cnt1, cnt2, idx2, cnt3, idx3, cnt4, idx4, cnt5, idx5;
@@ -297,10 +297,10 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 st->linkedObject, ((f32)st->currentTrackOffset - st->prevTrackOffset) / lbl_803E569C,
                 timeDelta, 0) != 0)
             {
-                t = ((GameObject*)st->linkedObject)->anim.currentMoveProgress;
-                if (t < lbl_803E5678)
+                progress = ((GameObject*)st->linkedObject)->anim.currentMoveProgress;
+                if (progress < lbl_803E5678)
                 {
-                    ((GameObject*)st->linkedObject)->anim.currentMoveProgress = lbl_803E567C + t;
+                    ((GameObject*)st->linkedObject)->anim.currentMoveProgress = lbl_803E567C + progress;
                 }
             }
             st->prevTrackOffset = st->currentTrackOffset;

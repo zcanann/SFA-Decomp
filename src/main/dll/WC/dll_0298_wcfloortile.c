@@ -161,30 +161,30 @@ void wcfloortile_update(int obj)
             localPosY;
         {
             f32 d = setup->base.posY - ((GameObject*)obj)->anim.localPosY;
-            f32 t;
+            f32 alpha;
             if (d < lbl_803E6EAC)
             {
-                t = lbl_803E6EB0;
+                alpha = lbl_803E6EB0;
             }
             else if (d > lbl_803E6EB4)
             {
-                t = lbl_803E6E9C;
+                alpha = lbl_803E6E9C;
             }
             else
             {
-                t = (d - lbl_803E6EAC) / lbl_803E6EB8;
-                t = lbl_803E6E98 - t;
-                if (t > lbl_803E6E98)
+                alpha = (d - lbl_803E6EAC) / lbl_803E6EB8;
+                alpha = lbl_803E6E98 - alpha;
+                if (alpha > lbl_803E6E98)
                 {
-                    t = lbl_803E6E98;
+                    alpha = lbl_803E6E98;
                 }
-                else if (t < lbl_803E6E9C)
+                else if (alpha < lbl_803E6E9C)
                 {
-                    t = lbl_803E6E9C;
+                    alpha = lbl_803E6E9C;
                 }
-                t = t * lbl_803E6EB0;
+                alpha = alpha * lbl_803E6EB0;
             }
-            objAnim->alpha = (u8)(int)t;
+            objAnim->alpha = (u8)(int)alpha;
         }
         if (objAnim->alpha == 0)
         {
