@@ -208,11 +208,11 @@ void renderClouds(int a, int b, int c, int d)
         {
             GXGetScissor(&savedClipX, &savedClipY, &savedClipW, &savedClipH);
             GXSetScissor(clipX, clipY, clipW, clipH);
-            *(u16*)(*(int*)model + 2) = *(u16*)(*(int*)model + 2) | 0x2000;
+            model->file->flags = model->file->flags | 0x2000;
             fn_8003BB7C(0x80);
             GXSetColorUpdate(0);
             objRender(a, b, c, d, (int)lbl_8039AB28.mainCloudObj, 1);
-            *(u16*)(*(int*)model + 2) = *(u16*)(*(int*)model + 2) & ~0x2000;
+            model->file->flags = model->file->flags & ~0x2000;
             fn_8003BB7C(0);
             GXSetColorUpdate(1);
             GXSetScissor(savedClipX, savedClipY, savedClipW, savedClipH);
