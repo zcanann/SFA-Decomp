@@ -275,7 +275,6 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData)
                          1, lbl_803E1A20);
 }
 #undef target
-#pragma opt_common_subs reset
 
 void CameraModeNpcSpeak_update(u8* obj)
 {
