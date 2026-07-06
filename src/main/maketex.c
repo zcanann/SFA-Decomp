@@ -1090,7 +1090,7 @@ typedef struct ObjSeqTurnState {
 int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
 {
     int player;
-    s16* v;
+    s16* modelVec;
     int yawd;
     s16 turn;
     int mode;
@@ -1098,7 +1098,7 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
     f32 d[3];
     f32 dist;
     f32 rate;
-    f32 g;
+    f32 yaw;
 
     player = Obj_GetPlayerObject();
     p4 = (s16)(182.04445f * p4);
@@ -1108,8 +1108,8 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
     if (mode == 4)
     {
         ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~2;
-        v = (s16*)objModelGetVecFn_800395d8(obj, 0);
-        if (v != NULL)
+        modelVec = (s16*)objModelGetVecFn_800395d8(obj, 0);
+        if (modelVec != NULL)
         {
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~8;
         }
@@ -1196,20 +1196,20 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
             ((ObjSeqTurnState*)state)->blend = 1.0001f;
         }
         ((GameObject*)obj)->anim.rotX += (s16)(((ObjSeqTurnState*)state)->turnRate * (f32)((ObjSeqTurnState*)state)->turnAmount);
-        v = (s16*)objModelGetVecFn_800395d8(obj, 0);
-        if (v != NULL)
+        modelVec = (s16*)objModelGetVecFn_800395d8(obj, 0);
+        if (modelVec != NULL)
         {
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~8;
             yawd = Obj_GetYawDeltaToObject((u16*)obj, player, (float*)0);
-            g = (f32)(s16)
+            yaw = (f32)(s16)
             yawd;
             {
-                f32 cur = (f32)v[1];
-                g = cur * (1.0f - ((ObjSeqTurnState*)state)->blend) + g * ((ObjSeqTurnState*)state)->blend;
+                f32 cur = (f32)modelVec[1];
+                yaw = cur * (1.0f - ((ObjSeqTurnState*)state)->blend) + yaw * ((ObjSeqTurnState*)state)->blend;
             }
-            g = (g < (f32) - p5) ? (f32) - p5 : ((g > (f32)p5) ? (f32)p5 : g);
-            v[1] = g;
-            v[0] = (f32)((ObjSeqTurnState*)state)->targetPitch * ((ObjSeqTurnState*)state)->blend;
+            yaw = (yaw < (f32) - p5) ? (f32) - p5 : ((yaw > (f32)p5) ? (f32)p5 : yaw);
+            modelVec[1] = yaw;
+            modelVec[0] = (f32)((ObjSeqTurnState*)state)->targetPitch * ((ObjSeqTurnState*)state)->blend;
         }
         if (p6 != -1)
         {
@@ -1227,11 +1227,11 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         {
             ((ObjSeqTurnState*)state)->mode = 0;
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags | 8;
-            v = (s16*)objModelGetVecFn_800395d8(obj, 0);
-            if (v != NULL)
+            modelVec = (s16*)objModelGetVecFn_800395d8(obj, 0);
+            if (modelVec != NULL)
             {
-                ((ObjSeqTurnState*)state)->savedVecY = v[1];
-                ((ObjSeqTurnState*)state)->savedVecX = v[0];
+                ((ObjSeqTurnState*)state)->savedVecY = modelVec[1];
+                ((ObjSeqTurnState*)state)->savedVecX = modelVec[0];
             }
             else
             {
