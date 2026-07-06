@@ -457,10 +457,10 @@ void LaserBeam_update(int obj2)
         }
     }
     fz = lbl_803E5D10;
-    b->unk04 = fz;
+    b->beamY = fz;
     b->beamX = fz;
     b->beamZ = fz;
-    b->unk08 = b->unk04;
+    b->beamY2 = b->beamY;
     b->beamX2 = b->beamX;
     b->beamZ2 = b->beamZ + dz;
     b->rangeOffset = 8;

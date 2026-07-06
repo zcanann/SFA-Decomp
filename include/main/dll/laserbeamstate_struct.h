@@ -6,8 +6,8 @@
 typedef struct LaserBeamState
 {
     int texture;
-    f32 unk04; /* 0x04: cur/prev pair A (reset each update) */
-    f32 unk08;
+    f32 beamY; /* 0x04: beam base Y (paired with beamX/beamZ), reset each update */
+    f32 beamY2; /* 0x08: beam endpoint Y (paired with beamX2/beamZ2) */
 
     f32 beamX; /* 0x0c: beam base position */
     f32 beamX2; /* 0x10 */
