@@ -220,9 +220,9 @@ typedef struct PlayerState {
     f32 unk628;
     f32 unk62C;
     f32 unk630;
-    f32 unk634;
-    u8 pad638[0x63C - 0x638];
-    f32 unk63C;
+    f32 travelDirX; /* travel/move direction unit vector (X,Y,Z); written by PSVECNormalize, PSVECScale(dir,out,traveledDistance); getAngle(-X,-Z) sets targetYaw */
+    f32 travelDirY;
+    f32 travelDirZ;
     f32 traveledDistance;
     f32 travelTargetDistance; /* PSVECMag(start->target); traveledDistance is compared against it */
     f32 avoidVelX; /* planar steering/separation velocity X: nudged by cos/sin avoidance sums, damped, magnitude-clamped, *= timeDelta -> position delta */

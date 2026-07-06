@@ -17736,7 +17736,7 @@ int playerState1B(int obj, int state, f32 fv)
             else
             {
                 inner->targetYaw =
-                    (s16)getAngle(-*(f32*)((char*)inner + 0x634), -inner->unk63C);
+                    (s16)getAngle(-*(f32*)((char*)inner + 0x634), -inner->travelDirZ);
                 inner->yaw = inner->targetYaw;
                 ((GameObject*)obj)->anim.rotY = 0;
             }
