@@ -780,6 +780,7 @@ main/dll/dll_0046_cameramodedebug.c:
 
 main/dll/dll_0048_cameramodestatic.c:
 	.text       start:0x80109B04 end:0x8010A104
+	.sdata2     start:0x803E1880 end:0x803E1888
 
 main/dll/dll_8010a104.c:
 	.text       start:0x8010A104 end:0x8010A590
