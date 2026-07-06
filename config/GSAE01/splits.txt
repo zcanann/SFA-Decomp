@@ -1143,6 +1143,7 @@ main/dll/dll_00D7_kaldachompspit.c:
 
 main/dll/dll_00D8_pinponspike.c:
 	.text       start:0x80169EF4 end:0x8016A3C8
+	.sdata2     start:0x803E3130 end:0x803E3138
 
 main/dll/dll_00D9_pollen.c:
 	.text       start:0x8016A3C8 end:0x8016A8E0
@@ -2441,6 +2442,7 @@ main/dll/DF/dll_0230_dfpwallbar.c:
 main/dll/DF/dll_022F_dfpfloorbar.c:
 	.text       start:0x80206474 end:0x80206968
 	.data       start:0x80329A20 end:0x80329AD8
+	.sdata2     start:0x803E6418 end:0x803E6438
 
 main/dll/tesla.c:
 	.text       start:0x80206968 end:0x80206F30
@@ -2789,6 +2791,7 @@ main/dll/dll_02B5_timer.c:
 
 main/dll/dll_02B6_cnthitobjec.c:
 	.text       start:0x80238AB0 end:0x80238FA4
+	.sdata2     start:0x803E7428 end:0x803E7440
 
 main/dll/dll_02B7_mcupgrade.c:
 	.text       start:0x80238FA4 end:0x80239114
@@ -2801,6 +2804,7 @@ main/dll/dll_02B9_mcstaffeffe.c:
 
 main/dll/dll_02BA_mclightning.c:
 	.text       start:0x8023938C end:0x80239858
+	.sdata2     start:0x803E7448 end:0x803E7450
 
 main/dll/dll_02BB_gflevelcon.c:
 	.text       start:0x80239858 end:0x8023A688
