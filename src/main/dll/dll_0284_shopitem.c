@@ -29,6 +29,7 @@
 #define PAD_BUTTON_A 0x100
 
 /* anim.seqId variants selecting per-item behaviour (see file header) */
+#define SHOPITEM_MSG_IN_RANGE 0x7000a /* sent to player when purchase is offered */
 #define SHOPITEM_SEQ_AMBIENT   0x462 /* spawns an ambient particle fx on init */
 #define SHOPITEM_SEQ_STATIC    0x464 /* static item, no spline advance */
 #define SHOPITEM_SEQ_BSPLINE   0x467 /* rides a B-spline path with trailing particles */
@@ -338,7 +339,7 @@ void shopitem_update(int obj)
     else if (b->flag_80)
     {
         ((ShopItemState*)state)->msgParam = -1;
-        ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x7000A, obj, (void*)(state + 0x88));
+        ObjMsg_SendToObject(Obj_GetPlayerObject(), SHOPITEM_MSG_IN_RANGE, obj, (void*)(state + 0x88));
         b->flag_80 = 0;
         b->flag_40 = 1;
     }
