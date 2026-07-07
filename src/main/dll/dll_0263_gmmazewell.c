@@ -46,6 +46,21 @@ STATIC_ASSERT(sizeof(GmmazewellState) == 0x8);
 
 #define MAZEWELL_DEFAULT_DIALOGUE 1316
 
+/* Row indices into gQuestBitTable[]; rows 0-3 map 1:1 to enum CheatId, rows 4-7
+ * grant no cheat, row 8 is the unused/dead 9th token. */
+enum QuestWellRow
+{
+    QUESTWELL_CREDITS        = 0, /* ThornTail Shop      -> CHEAT_SHOW_CREDITS */
+    QUESTWELL_SEPIA          = 1, /* Cape Claw           -> CHEAT_SEPIA_MODE */
+    QUESTWELL_MUSIC_TEST     = 2, /* Ice Mountain        -> CHEAT_MUSIC_TEST */
+    QUESTWELL_DINO_LANGUAGE  = 3, /* Moon Mtn Pass       -> CHEAT_DINO_LANGUAGE (non-Japanese only) */
+    QUESTWELL_LIGHTFOOT      = 4, /* LightFoot Village   -> nothing */
+    QUESTWELL_OCEAN_FP       = 5, /* Ocean Force Point   -> nothing */
+    QUESTWELL_VOLCANO_FP     = 6, /* Volcano Force Point -> nothing */
+    QUESTWELL_SNOWHORN       = 7, /* SnowHorn Wastes     -> nothing */
+    QUESTWELL_UNUSED         = 8  /* Nowhere - dead 9th token */
+};
+
 int GM_MazeWell_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GmmazewellState* state = ((GameObject*)obj)->extra;
@@ -83,7 +98,7 @@ void GM_MazeWell_update(unsigned int obj)
     u8* player;
     int matchedBit;
     s16* questBitPtr;
-    int i;
+    enum QuestWellRow i;
 
     if (state->savepointSet == 0)
     {
