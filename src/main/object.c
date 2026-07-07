@@ -1223,7 +1223,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     tmpl.ff2 = n;
     if (n == 0)
     {
-        tmpl.ff2 = *(u8*)(tmpl.def + 0x8e);
+        tmpl.ff2 = ((ObjModelInstance*)tmpl.def)->defaultModelVariant;
     }
     else
     {
@@ -1231,9 +1231,9 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         tmpl.ff2 = n;
     }
     tmpl.dll = NULL;
-    if ((int)*(s16*)(def + 0x50) != -1)
+    if ((int)modelDef->dllId != -1)
     {
-        tmpl.dll = Resource_Acquire(*(s16*)(def + 0x50) & 0xffff, 6);
+        tmpl.dll = Resource_Acquire(modelDef->dllId & 0xffff, 6);
     }
     switch (tmpl.seqId)
     {
@@ -1436,7 +1436,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         max = max * ((lbl_803DE8CC * cullScale) / lbl_803DE8D0);
     }
     obj->cullDist = max;
-    if (*(u8*)(def + 0x61) != 0)
+    if (modelDef->hitboxStateCount != 0)
     {
         cursor = ObjHits_AllocObjectState((int)obj, cursor);
         if ((s8)modelDef->primaryHitboxShapeFlags & 8)
@@ -1462,7 +1462,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         obj->hitVolumeTransforms = (ObjHitVolumeRuntimeTransform*)tmp;
         cursor = tmp + modelDef->hitVolumeCount * 0x18;
     }
-    if (*(u8*)(def + 0x61) != 0 && *(u8*)(def + 0x66) != 0)
+    if (modelDef->hitboxStateCount != 0 && modelDef->hitReactStateCount != 0)
     {
         tmp = roundUpTo4(cursor);
         cursor = ObjHitReact_InitState(obj->seqId, (ObjAnimBank*)*(u8**)obj->models,
@@ -2540,7 +2540,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     {
         size = roundUpTo4(size) + 0x44;
     }
-    if (*(u8*)(def + 0x61) != 0)
+    if (modelDef->hitboxStateCount != 0)
     {
         size = roundUpTo4(size) + 0xb8;
         if ((s8)modelDef->primaryHitboxShapeFlags & 8)
@@ -2563,7 +2563,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
         r = roundUpTo4(size);
         size = r + modelDef->hitVolumeCount * 0x18;
     }
-    if (*(u8*)(def + 0x61) != 0 && *(u8*)(def + 0x66) != 0)
+    if (modelDef->hitboxStateCount != 0 && modelDef->hitReactStateCount != 0)
     {
         size = roundUpTo8(size) + 0x12c;
     }

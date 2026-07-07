@@ -222,7 +222,9 @@ typedef struct ObjDef {
   s16 shadowTextureId;
   u8 pad4C[0x4E - 0x4C];
   s16 hitboxFlags;
-  u8 pad50[0x55 - 0x50];
+  s16 dllId;
+  s16 pad52;
+  u8 pad54;
   s8 modelCount;
   s8 group8RegistrationCount;
   u8 pad57[0x59 - 0x57];
@@ -232,12 +234,12 @@ typedef struct ObjDef {
   u8 sequenceCount;
   u8 renderFlags;
   u8 hitboxStateIndex;
-  u8 pad61;
+  u8 hitboxStateCount;
   u8 primaryHitboxRadius;
   u8 lateralResponseWeight;
   u8 axialResponseWeight;
   u8 primaryHitboxShapeFlags;
-  u8 pad66;
+  u8 hitReactStateCount;
   u8 targetHitMask;
   s16 primaryCapsuleOffsetA;
   s16 primaryCapsuleOffsetB;
@@ -256,7 +258,7 @@ typedef struct ObjDef {
   s16 helpTextIds[8];
   u8 pad8C;
   u8 modelLightMaskIndex;
-  u8 pad8E;
+  u8 defaultModelVariant;
   u8 fallbackHitSphereRadius;
   u8 secondaryHitboxShapeFlags;
   u8 pad91[0x94 - 0x91];
