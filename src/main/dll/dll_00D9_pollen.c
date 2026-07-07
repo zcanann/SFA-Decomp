@@ -32,6 +32,8 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* getTrickyObject(void);
 
+#define POLLEN_PARTFX_MOTE 0x4ba
+
 #pragma dont_inline on
 void Pollen_burst(int obj)
 {
@@ -328,7 +330,7 @@ void Pollen_update(int obj)
             i = 2;
             do
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x4ba, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, POLLEN_PARTFX_MOTE, NULL, 1, -1, NULL);
             }
             while (i-- != 0);
         }
