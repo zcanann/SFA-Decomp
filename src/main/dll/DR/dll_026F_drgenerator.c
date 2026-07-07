@@ -11,6 +11,7 @@
 
 #define DRGENERATOR_OBJGROUP 0x3
 #define TIMER_OBJGROUP 0x4c
+#define DRGENERATOR_PARTFX 0x690
 
 typedef struct DrgeneratorPlacement
 {
@@ -174,7 +175,7 @@ loop:
     n = 1;
     do
     {
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x690, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, DRGENERATOR_PARTFX, NULL, 1, -1, NULL);
     }
     while (n-- != 0);
 }
