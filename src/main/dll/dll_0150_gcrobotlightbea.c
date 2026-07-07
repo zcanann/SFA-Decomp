@@ -29,6 +29,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/modgfx.h"
 #include "main/sky_state.h"
+#define GCROBOTLIGHTBEA_HIT_VOLUME_SLOT 0x17
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
@@ -183,7 +184,7 @@ void gcrobotlightbea_update(int* obj)
             modelLightStruct_setDistanceAttenuation(sub->light, lbl_803DBE58, 12.0f + lbl_803DBE58);
         }
     }
-    ObjHits_SetHitVolumeSlot(obj, 0x17, 0, 0);
+    ObjHits_SetHitVolumeSlot(obj, GCROBOTLIGHTBEA_HIT_VOLUME_SLOT, 0, 0);
     vec[0] = lbl_80322C38[0];
     vec[1] = lbl_80322C38[1];
     vec[2] = lbl_80322C38[2];
