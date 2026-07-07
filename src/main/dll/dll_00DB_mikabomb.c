@@ -16,6 +16,7 @@
 #include "main/resource.h"
 #include "main/objprint.h"
 #include "main/obj_placement.h"
+#define MIKABOMB_HIT_VOLUME_SLOT 5
 
 /* Shadow-bomb object spawned at init, cached into MikabombState.shadowObj. */
 #define MIKABOMB_CHILD_OBJ_SHADOW 0xc
@@ -134,7 +135,7 @@ void MikaBomb_update(int* obj)
     {
         u32 localB;
         u32 localA;
-        ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, MIKABOMB_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject(obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject())
