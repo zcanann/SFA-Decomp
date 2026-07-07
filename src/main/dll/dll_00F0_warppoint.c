@@ -32,6 +32,10 @@
 #define WARPPOINT_MAP_SAVE_A 0x4B675
 #define WARPPOINT_MAP_SAVE_B 0x46882
 
+/* seqId variant that records a save point (sets GAMEBIT_WARPPOINT_SAVED
+   and calls the map-event savePoint) before running its sequence. */
+#define WARPPOINT_SEQID_SAVEPOINT 0x27e
+
 /* def->mode behavior selector (see file header) */
 #define WARPPOINT_MODE_PROXIMITY    0 /* proximity warp / trigger-sequence near player */
 #define WARPPOINT_MODE_HINT_TIMER   1 /* trigger while hint flag set, on a timer */
@@ -150,7 +154,7 @@ void WarpPoint_update(int* obj)
                 dist < ((WarpPointState*)state)->triggerRadius &&
                 *(u32*)&((GameObject*)player)->anim.parent == *(u32*)&((GameObject*)obj)->anim.parent)
             {
-                if (((GameObject*)obj)->anim.seqId == 0x27e)
+                if (((GameObject*)obj)->anim.seqId == WARPPOINT_SEQID_SAVEPOINT)
                 {
                     mainSetBits(GAMEBIT_WARPPOINT_SAVED, 1);
                     (*gMapEventInterface)->savePoint(
