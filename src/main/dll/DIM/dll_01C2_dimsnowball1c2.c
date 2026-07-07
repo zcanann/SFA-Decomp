@@ -10,6 +10,9 @@
 #define DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMSNOWBALL1C2_OBJFLAG_HIDDEN 0x4000
 
+/* child object id periodically spawned in dimsnowball1c2_update (role un-pinnable per gate) */
+#define DIMSNOWBALL1C2_CHILD_OBJ 406
+
 typedef struct Dimsnowball1c2State
 {
     s8 countdown;
@@ -78,7 +81,7 @@ void dimsnowball1c2_update(int* obj)
                 ObjPlacement* np;
                 Dimsnowball1c2Placement* def;
                 def = *(Dimsnowball1c2Placement**)&((GameObject*)obj)->anim.placementData;
-                np = (ObjPlacement*)Obj_AllocObjectSetup(36, 406);
+                np = (ObjPlacement*)Obj_AllocObjectSetup(36, DIMSNOWBALL1C2_CHILD_OBJ);
                 np->color[0] = def->colorR;
                 np->color[2] = def->colorB;
                 np->color[1] = def->colorG;
