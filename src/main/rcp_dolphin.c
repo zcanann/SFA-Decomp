@@ -227,7 +227,7 @@ void fn_80054F74(int* p, f32* vec)
 
 /* Pending warp destination saved by warpToMap from the map-warp tab entry and
  * applied to the player position on map reload (vec3 + two orientation s16s
- * truncated into the pos angle bytes). */
+ * truncated into the pos angle bytes). 16-byte record of WARPTAB.bin (fileId 0x1c). */
 typedef struct WarpDestination {
     f32 x;
     f32 y;
