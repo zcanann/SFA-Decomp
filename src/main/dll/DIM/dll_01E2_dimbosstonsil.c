@@ -256,7 +256,6 @@ void DIMbosstonsil_free(void* obj)
     }
 }
 
-#pragma opt_propagation off
 void DIMbosstonsil_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     struct
@@ -292,7 +291,6 @@ void DIMbosstonsil_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visibl
         }
     }
 }
-#pragma opt_propagation reset
 
 void DIMbosstonsil_hitDetect(void* obj)
 {
