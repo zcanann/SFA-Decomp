@@ -23,6 +23,8 @@ extern int unlockLevel(s32 val, int idx, int flag);
 extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
+#define NWSH_LEVCON_MAP_SHRINE 0xb /* Krazoa shrine map triggered on activation */
+
 #define NWSH_LEVCON_ENVFX_A 0xd1
 #define NWSH_LEVCON_ENVFX_B 0xd6
 #define NWSH_LEVCON_ENVFX_C 0x222
@@ -44,11 +46,11 @@ int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             case 1:
                 objSetAnimStateFlags(player, 0x10, 1);
                 mainSetBits(0x174, 1);
-                (*gMapEventInterface)->setObjGroupStatus(0xb, 4, 1);
-                (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1d, 1);
-                (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1e, 1);
-                (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1f, 1);
-                (*gMapEventInterface)->setMapAct(0xb, 6);
+                (*gMapEventInterface)->setObjGroupStatus(NWSH_LEVCON_MAP_SHRINE, 4, 1);
+                (*gMapEventInterface)->setObjGroupStatus(NWSH_LEVCON_MAP_SHRINE, 0x1d, 1);
+                (*gMapEventInterface)->setObjGroupStatus(NWSH_LEVCON_MAP_SHRINE, 0x1e, 1);
+                (*gMapEventInterface)->setObjGroupStatus(NWSH_LEVCON_MAP_SHRINE, 0x1f, 1);
+                (*gMapEventInterface)->setMapAct(NWSH_LEVCON_MAP_SHRINE, 6);
                 break;
             default:
                 break;
