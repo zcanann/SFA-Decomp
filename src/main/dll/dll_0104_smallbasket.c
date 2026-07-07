@@ -39,6 +39,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define SMALLBASKET_HIT_VOLUME_SLOT 0xe
 
 extern void largecrate_getExtraSize(void);
 
@@ -1068,7 +1069,7 @@ void SmallBasket_update(int obj)
             ((CfperchState*)state)->respawnTimer -= framesThisStep;
             if (*(s8*)&((CfperchState*)state)->throwState == 1)
             {
-                ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
+                ObjHits_SetHitVolumeSlot(obj, SMALLBASKET_HIT_VOLUME_SLOT, 1, 0);
                 if (((GameObject*)obj)->anim.velocityY > lbl_803E3994)
                 {
                     ((GameObject*)obj)->anim.velocityY = lbl_803E3998 * timeDelta + ((GameObject*)obj)->anim.velocityY;
