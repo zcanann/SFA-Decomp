@@ -24,6 +24,7 @@ extern void Obj_FreeObject(int obj);
 
 extern void* objCreateLight(int* obj, int v);
 extern void modelLightStruct_setLightKind(void* light, int v);
+#define MODEL_LIGHT_KIND_POINT 2
 extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern u8 lbl_803DB411;
@@ -147,7 +148,7 @@ afterTrigger:;
         state->light = objCreateLight(state->useDetachedLight != 0 ? NULL : obj, 1);
         if (state->light != NULL)
         {
-            modelLightStruct_setLightKind(state->light, 2);
+            modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(state->light, 0x96, 0x32, 0xff, 0xff);
             modelLightStruct_setDistanceAttenuation(state->light, lbl_803E4EB0, lbl_803E4EB4);
         }
