@@ -675,17 +675,17 @@ void Sfx_UpdateLoopedObjectSounds(void)
     u32* op;
     u16* ip;
     u8* fp;
+    s16 i;
     int index;
     int index2;
-    s16 i;
     u32 obj;
     int removeSound;
     u16 sz;
 
     i = (s16)(gSfxLoopedObjectSoundCount - 1);
-    fp = &table->flags[i];
-    op = (u32*)&table->flags[(i << 2) + 384];
-    ip = (u16*)&table->flags[(i << 1) + 128];
+    fp = table->flags + i;
+    op = (u32*)table->objects + i;
+    ip = (u16*)table->ids + i;
     for (; i >= 0; i--)
     {
         removeSound = 0;
@@ -700,16 +700,16 @@ void Sfx_UpdateLoopedObjectSounds(void)
             Sfx_StopFromObject(obj, *ip);
             gSfxLoopedObjectSoundCount--;
             sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
-            memmove(&table->flags[(index << 2) + 384],
-                    &table->flags[((index2 = index + 1) << 2) + 384], sz);
-            memmove(&table->flags[(index << 1) + 128], &table->flags[(index2 << 1) + 128],
+            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1),
+                    sz);
+            memmove((u16*)table->ids + index, (u16*)table->ids + index2,
                     (u16)((gSfxLoopedObjectSoundCount - index) << 1));
-            memmove(&table->flags[index], &table->flags[index2],
+            memmove(table->flags + index, table->flags + index2,
                     (u16)(gSfxLoopedObjectSoundCount - index));
         }
         else
         {
-            *fp = *(u8*)(int)fp & ~SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
+            *fp &= ~SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
         }
         fp--;
         op--;
@@ -808,7 +808,7 @@ void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
     u16 sz;
 
     i = (s16)(gSfxLoopedObjectSoundCount - 1);
-    op = (u32*)&(&table->flags[i << 2])[384];
+    op = &table->objects[i];
     for (; i >= 0; i--)
     {
         if (*op == obj)
@@ -816,11 +816,11 @@ void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
             Sfx_StopFromObject(obj, table->ids[i]);
             gSfxLoopedObjectSoundCount--;
             sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
-            memmove(&table->flags[(index << 2) + 384],
-                    &table->flags[((index2 = index + 1) << 2) + 384], sz);
-            memmove(&table->flags[(index << 1) + 128], &table->flags[(index2 << 1) + 128],
+            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1),
+                    sz);
+            memmove((u16*)table->ids + index, (u16*)table->ids + index2,
                     (u16)((gSfxLoopedObjectSoundCount - index) << 1));
-            memmove(&table->flags[index], &table->flags[index2],
+            memmove(table->flags + index, table->flags + index2,
                     (u16)(gSfxLoopedObjectSoundCount - index));
             return;
         }
@@ -840,10 +840,8 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
     u16 sz;
 
     i = (s16)(gSfxLoopedObjectSoundCount - 1);
-    op = (u32*)&table->flags[i << 2];
-    op += 96;
-    ip = (u16*)&table->flags[i << 1];
-    ip += 64;
+    op = (u32*)table->objects + i;
+    ip = (u16*)table->ids + i;
     sfx16 = sfxId;
     for (; i >= 0; i--)
     {
@@ -851,11 +849,11 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
         {
             gSfxLoopedObjectSoundCount--;
             sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
-            memmove(&table->flags[(index << 2) + 384],
-                    &table->flags[((index2 = index + 1) << 2) + 384], sz);
-            memmove(&table->flags[(index << 1) + 128], &table->flags[(index2 << 1) + 128],
+            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1),
+                    sz);
+            memmove((u16*)table->ids + index, (u16*)table->ids + index2,
                     (u16)((gSfxLoopedObjectSoundCount - index) << 1));
-            memmove(&table->flags[index], &table->flags[index2],
+            memmove(table->flags + index, table->flags + index2,
                     (u16)(gSfxLoopedObjectSoundCount - index));
             Sfx_StopFromObject(obj, sfxId);
             return;
