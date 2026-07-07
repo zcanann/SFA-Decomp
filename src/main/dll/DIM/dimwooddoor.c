@@ -12,6 +12,7 @@
 #include "main/sfa_shared_decls.h"
 
 #define DIMWOODDOOR_OBJFLAG_PARENT_SLACK 0x1000
+#define DIMWOODDOOR_CHILD_OBJ_SHARD 0x1d6 /* debris shard projectile spawned by DIMwooddoor_spawnShard */
 
 typedef struct DIMWoodDoorConfig
 {
@@ -100,7 +101,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     }
 
     modelVec = objModelGetVecFn_800395d8(obj, 0);
-    setup = Obj_AllocObjectSetup(0x24, 0x1d6);
+    setup = Obj_AllocObjectSetup(0x24, DIMWOODDOOR_CHILD_OBJ_SHARD);
     setup[4] = config->setup04;
     setup[6] = config->setup06;
     setup[5] = config->setup05;
