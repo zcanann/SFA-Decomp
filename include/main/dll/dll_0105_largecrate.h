@@ -17,6 +17,14 @@
 #define LARGECRATE_OBJECT_FLAGS 0x2000
 #define LARGECRATE_RANDOM_BOB_MAX 200
 
+/* Object ids spawned as drop contents, dispatched on LargeCrateState.dropType. */
+#define LARGECRATE_DROP_FRUIT_A 0x3D3 /* dropType 1 */
+#define LARGECRATE_DROP_FRUIT_B 0x3D4 /* dropType 2 */
+#define LARGECRATE_DROP_FRUIT_C 0x3D5 /* dropType 3 */
+#define LARGECRATE_DROP_GAS 0xB       /* dropType 5 (collectible, DLL 0x00ED) */
+#define LARGECRATE_DROP_GAS_ALT 0x3CD /* dropType 6 */
+#define LARGECRATE_DROP_PICKUP 0x259  /* dropType 9 */
+
 #define LARGECRATE_VARIANT_A 0x3DE
 #define LARGECRATE_VARIANT_B 0x49F
 #define LARGECRATE_VARIANT_C 0x7BE

@@ -225,7 +225,7 @@ int largecrate_spawnDropContents(int obj, int player, int state)
     switch (((LargeCrateState*)state)->dropType)
     {
     case 1:
-        setup = Obj_AllocObjectSetup(0x24, 0x3d3);
+        setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_A);
         ((CrateFragmentSetup*)setup)->head.posX = ((GameObject*)obj)->anim.localPosX;
         ((CrateFragmentSetup*)setup)->head.posY = ((GameObject*)obj)->anim.localPosY;
         ((CrateFragmentSetup*)setup)->head.posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -272,7 +272,7 @@ int largecrate_spawnDropContents(int obj, int player, int state)
         *(s16*)newObj = angle;
         break;
     case 2:
-        setup = Obj_AllocObjectSetup(0x24, 0x3d4);
+        setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_B);
         ((CrateFragmentSetup*)setup)->spinSeed = randomGetRange(-0x7f, 0x7e);
         ((CrateFragmentSetup*)setup)->head.posX = ((GameObject*)obj)->anim.localPosX;
         ((CrateFragmentSetup*)setup)->head.posY = ((GameObject*)obj)->anim.localPosY;
@@ -320,7 +320,7 @@ int largecrate_spawnDropContents(int obj, int player, int state)
         *(s16*)newObj = angle;
         break;
     case 3:
-        setup = Obj_AllocObjectSetup(0x24, 0x3d5);
+        setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_C);
         ((CrateFragmentSetup*)setup)->spinSeed = randomGetRange(-0x7f, 0x7e);
         ((CrateFragmentSetup*)setup)->head.posX = ((GameObject*)obj)->anim.localPosX;
         ((CrateFragmentSetup*)setup)->head.posY = ((GameObject*)obj)->anim.localPosY;
@@ -371,11 +371,11 @@ int largecrate_spawnDropContents(int obj, int player, int state)
     case 6:
         if (((LargeCrateState*)state)->dropType == 5)
         {
-            setup = Obj_AllocObjectSetup(0x30, 0xb);
+            setup = Obj_AllocObjectSetup(0x30, LARGECRATE_DROP_GAS);
         }
         else
         {
-            setup = Obj_AllocObjectSetup(0x30, 0x3cd);
+            setup = Obj_AllocObjectSetup(0x30, LARGECRATE_DROP_GAS_ALT);
         }
         ((CrateGasSetup*)setup)->field1A = 0x14;
         ((CrateGasSetup*)setup)->field2C = -1;
@@ -396,7 +396,7 @@ int largecrate_spawnDropContents(int obj, int player, int state)
     case 9:
         if (Obj_IsLoadingLocked() != 0)
         {
-            setup = Obj_AllocObjectSetup(0x24, 0x259);
+            setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_PICKUP);
             ((CratePickupSetup*)setup)->head.posX = ((GameObject*)obj)->anim.localPosX;
             ((CratePickupSetup*)setup)->head.posY = lbl_803E39A8 + ((GameObject*)obj)->anim.localPosY;
             ((CratePickupSetup*)setup)->head.posZ = ((GameObject*)obj)->anim.localPosZ;
