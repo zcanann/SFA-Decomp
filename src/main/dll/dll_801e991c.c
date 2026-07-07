@@ -1,5 +1,6 @@
 /* DLL 0x801E991C - SPScarab [801E991C-...) */
 #include "main/dll/DR/dll_0287_spscarab.h"
+#include "dolphin/gx/GXEnum.h"
 #include "main/dll/shwgpipe_struct.h"
 #include "main/camera.h"
 #include "main/sky_state.h"
@@ -93,7 +94,7 @@ void fn_801E991C(int p1, char* table)
     textureSetupFn_800799c0();
     geomDrawFn_800796f0();
     textRenderSetupFn_80079804();
-    GXSetTevColor(2, color);
+    GXSetTevColor(GX_TEVREG1, color);
     gxSetZMode_(1, GX_LEQUAL, 0);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetPeControl_ZCompLoc_(1);
