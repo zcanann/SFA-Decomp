@@ -37,6 +37,7 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 #define GX_CULL_BACK 2
 #define GX_VA_PNMTXIDX 0
 #define GX_VA_TEX0MTXIDX 1
+#define GX_PNMTX0 0
 #define GX_VA_POS 9
 #define GX_VA_CLR0 11
 #define GX_VA_TEX0 13
@@ -87,7 +88,7 @@ void waterfx_setupSplashDropPointRender(void)
     GXSetPointSize(0x12, 5);
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-    GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
+    GXLoadPosMtxImm(Camera_GetViewMatrix(), GX_PNMTX0);
     GXSetCurrentMtx(0);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
