@@ -51,7 +51,6 @@ extern int unlockLevel(s32 val, int idx, int flag);
 
 int DFP_seqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
-    extern int unlockLevel(s32 val, int idx, int flag);
     extern int mapGetDirIdx(int idx);
     extern int lockLevel(s32 val, int idx);
     extern void warpToMap(int idx, s8 transType);
