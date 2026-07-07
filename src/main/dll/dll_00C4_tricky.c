@@ -8,6 +8,7 @@
 #include "main/objhits.h"
 #include "dolphin/mtx.h"
 #include "main/dll/dll_00C4_tricky.h"
+#include "main/dll/cmenu_item_table.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie/skeetla.h"
 #include "main/dll/path_control_interface.h"
@@ -2923,10 +2924,10 @@ int Tricky_getAvailableCommands(void)
     int r = 0;
     if (mainGetBit(0x4e4) != 0)
     {
-        r = 0xa;
-        if (mainGetBit(0xdd) != 0) r |= 0x1;
-        if (mainGetBit(0x25) != 0) r |= 0x20;
-        if (mainGetBit(0x245) != 0) r |= 0x10;
+        r = TRICKY_ABILITY_FIND_SECRET | TRICKY_ABILITY_STAY;
+        if (mainGetBit(0xdd) != 0) r |= TRICKY_ABILITY_CALL;
+        if (mainGetBit(0x25) != 0) r |= TRICKY_ABILITY_THROW_BALL;
+        if (mainGetBit(0x245) != 0) r |= TRICKY_ABILITY_FLAME;
     }
     return r;
 }
