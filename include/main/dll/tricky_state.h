@@ -206,7 +206,7 @@ typedef struct TrickyState {
     u8 pad7D0[0x7D4 - 0x7D0];
     u8 *pendingFollowObj; /* target object handed off to a sibling Tricky: read into `target`, then assigned to other->followObj and other->targetPosPtr = target+0x18 (tricky_substates) */
     u8 pad7D8[0x808 - 0x7D8];
-    f32 unk808;
+    f32 impressTimer; /* impress-move countdown: primed to lbl_803E2408 by trickyImpress (which sets stateFlags 0x80000000); while that flag is set, -= timeDelta each cycle, and on reaching floor lbl_803E23DC the flag is cleared and a TRICKY_VOICE line fires (tricky) */
     f32 sidestepScale; /* per-axis scale applied to sidestepDelta under TRICKY_STATE_FLAG_SIDESTEP: localPos += sidestepDelta * (dir * sidestepScale) */
     f32 verticalScale; /* scale applied to verticalDelta under TRICKY_STATE_FLAG_VERTICAL_MOVE: localPosY += verticalScale * verticalDelta */
     f32 backstepScale; /* per-axis scale applied to backstepDelta under TRICKY_STATE_FLAG_BACKSTEP: localPos += backstepDelta * (dir * -backstepScale) */
