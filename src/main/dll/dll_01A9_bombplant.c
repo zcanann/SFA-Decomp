@@ -10,6 +10,7 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_01A9_bombplant.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define BOMBPLANT_HIT_VOLUME_SLOT 5
 #define BOMBPLANT_PARTFX 0x7f1
 #define BOMBPLANT_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define BOMBPLANT_OBJFLAG_RENDERED 0x800
@@ -452,7 +453,7 @@ void bombplant_update(void* obj)
 
     if ((entry[8] & 0x10) != 0)
     {
-        ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, BOMBPLANT_HIT_VOLUME_SLOT, 1, 0);
     }
     else
     {
