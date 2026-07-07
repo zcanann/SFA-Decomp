@@ -9444,8 +9444,8 @@ int playerStateClimbOntoWall(int obj, int state)
         inner->targetYaw =
             (s16)getAngle(*(f32*)((int)inner + 0x56c), inner->groundNormalZ);
         inner->yaw = inner->targetYaw;
-        ((GameObject*)obj)->anim.localPosX = inner->unk58C;
-        ((GameObject*)obj)->anim.localPosZ = inner->unk594;
+        ((GameObject*)obj)->anim.localPosX = inner->climbStartPosX;
+        ((GameObject*)obj)->anim.localPosZ = inner->climbStartPosZ;
         if (flag549 != 0)
         {
             tbl = &lbl_803DC69C;
@@ -13149,9 +13149,9 @@ int playerState11(int obj, int state)
             ((PlayerState*)inner)->targetYaw =
                 getAngle(((PlayerState*)inner)->groundNormalX, ((PlayerState*)inner)->groundNormalZ);
             ((PlayerState*)inner)->yaw = ((PlayerState*)inner)->targetYaw;
-            ((GameObject*)obj)->anim.localPosX = ((PlayerState*)inner)->unk58C;
+            ((GameObject*)obj)->anim.localPosX = ((PlayerState*)inner)->climbStartPosX;
             ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->savedPosY;
-            ((GameObject*)obj)->anim.localPosZ = ((PlayerState*)inner)->unk594;
+            ((GameObject*)obj)->anim.localPosZ = ((PlayerState*)inner)->climbStartPosZ;
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E800C;
             break;
         }
@@ -15316,15 +15316,15 @@ int playerStateClimbOntoLadder(int obj, int state, f32 fv)
         }
         if (flag)
         {
-            vb.vx = -inner->unk50C;
-            vb.vy = -inner->unk514;
-            vb.vz = -inner->unk518;
+            vb.vx = -inner->moveDirX;
+            vb.vy = -inner->moveDirY;
+            vb.vz = -inner->moveDirZ;
         }
         else
         {
-            vb.vx = inner->unk50C;
-            vb.vy = inner->unk514;
-            vb.vz = inner->unk518;
+            vb.vx = inner->moveDirX;
+            vb.vy = inner->moveDirY;
+            vb.vz = inner->moveDirZ;
         }
         {
             int delta = (u16)getAngle(vb.vx, vb.vy) - inner->targetYaw;
@@ -15339,10 +15339,10 @@ int playerStateClimbOntoLadder(int obj, int state, f32 fv)
             inner->targetYaw += delta;
             inner->yaw = inner->targetYaw;
         }
-        inner->unk504 = ((GameObject*)obj)->anim.localPosX;
-        inner->unk508 = ((GameObject*)obj)->anim.localPosZ;
-        ((GameObject*)obj)->anim.localPosX = inner->unk52C;
-        ((GameObject*)obj)->anim.localPosZ = inner->unk534;
+        inner->savedLocalPosX = ((GameObject*)obj)->anim.localPosX;
+        inner->savedLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
+        ((GameObject*)obj)->anim.localPosX = inner->moveStartPosX;
+        ((GameObject*)obj)->anim.localPosZ = inner->moveStartPosZ;
         sel = inner->unk4FC >= *(f32*)&lbl_803E7EA4 ? 0 : 4;
         if (flag)
         {

@@ -146,16 +146,16 @@ typedef struct PlayerState {
     f32 climbStartY;  /* localPosY at climb-step start; lerp base: localPosY = progress*(climbTargetY-climbStartY) + climbStartY */
     f32 unk4FC;
     f32 moveStartPosY; /* localPosY captured at the start of the 0x35/0x37 vertical moves; the per-frame Y is interpolated between this anchor and the current localPosY by currentMoveProgress */
-    f32 unk504;
-    f32 unk508;
-    f32 unk50C;
+    f32 savedLocalPosX; /* localPosX saved at the vertical-move start (backed up before localPos is overwritten with moveStartPosX) */
+    f32 savedLocalPosZ; /* localPosZ saved at the vertical-move start (backed up before localPos is overwritten with moveStartPosZ) */
+    f32 moveDirX;       /* move direction vector X; (moveDirX,moveDirY,moveDirZ) is negated when flag set and fed to getAngle()->targetYaw and fn_802A71E0 */
     u8 pad510[0x514 - 0x510];
-    f32 unk514;
-    f32 unk518;
+    f32 moveDirY;       /* move direction vector Y */
+    f32 moveDirZ;       /* move direction vector Z */
     u8 pad51C[0x52C - 0x51C];
-    f32 unk52C;
+    f32 moveStartPosX;  /* localPosX assigned at the vertical-move start */
     u8 pad530[0x534 - 0x530];
-    f32 unk534;
+    f32 moveStartPosZ;  /* localPosZ assigned at the vertical-move start */
     f32 unk538[3];
     s16 unk544;
     s8 unk546;
@@ -177,9 +177,9 @@ typedef struct PlayerState {
     f32 slopeTangentY; /* ground-tangent Y component, always 0 (the tangent is horizontal) */
     f32 slopeTangentZ; /* ground-tangent Z component (= groundNormalX) */
     f32 slopePlaneD; /* signed plane-distance term for the slope-tangent plane: -(point . slopeTangent), computed when the ground tangent is captured */
-    f32 unk58C;
+    f32 climbStartPosX; /* localPosX assigned at the climb move start (getAngle drives targetYaw from 0x56c/groundNormalZ) */
     u8 pad590[0x594 - 0x590];
-    f32 unk594;
+    f32 climbStartPosZ; /* localPosZ assigned at the climb move start */
     u8 pad598[0x5A4 - 0x598];
     s16 animEventState; /* anim event-state word written each frame via ObjAnim_WriteStateWord(...EVENT_STATE); from fn_802A71E0 or a scaled move-blend factor */
     s16 moveAltToggle; /* alternating selector for a paired repeating move: !=0 picks move 0x15, ==0 picks 0x16; XOR-toggled each cycle (e.g. left/right climb step) */
