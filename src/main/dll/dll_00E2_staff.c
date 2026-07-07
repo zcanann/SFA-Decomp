@@ -45,6 +45,12 @@
 #define STAFF_OBJGROUP 7
 /* quake-spell effect object (cached into StaffQuakeSpellState.object by superQuake) */
 #define STAFF_CHILD_OBJ_QUAKE 0x63c
+/* partfx spawned at player position when the quake spell activates (ground burst) */
+#define STAFF_PARTFX_QUAKE 0x565
+/* swipe/attack spread burst: spawned in 4x clusters per attack type (spark spread) */
+#define STAFF_PARTFX_SWIPE_BURST 0x7b2
+/* swipe/attack lingering trail: single follow-up spawn after the burst cluster */
+#define STAFF_PARTFX_SWIPE_TRAIL 0x7b3
 
 extern u32 FUN_8003b818();
 
@@ -1146,7 +1152,7 @@ void superQuakeFn_8016d9fc(f32* pos)
         v.h0 = 0;
         v.h2 = 0;
         v.h1 = 0;
-        (*gPartfxInterface)->spawnObject(player, 0x565, &v, 0x200000, -1, NULL);
+        (*gPartfxInterface)->spawnObject(player, STAFF_PARTFX_QUAKE, &v, 0x200000, -1, NULL);
         setup = Obj_AllocObjectSetup(36, STAFF_CHILD_OBJ_QUAKE);
         ((ObjPlacement*)setup)->color[0] = 1;
         ((ObjPlacement*)setup)->color[2] = 0xff;
@@ -1794,15 +1800,15 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
             fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E3298));
             fxB.f1 = lbl_803E32A4 * (power / lbl_803E32A8 - lbl_803E3294);
             fxB.id = 0xc94;
-            (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
             fxB.count = 9;
             fxB.f0 = lbl_803E32B0 * (power / lbl_803E32A8) + lbl_803E32AC;
             fxB.f2 = lbl_803E32B4;
             fxB.id = 0xc0e;
-            (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
             break;
         case 67:
             if (power > lbl_803E32B4)
@@ -1816,7 +1822,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                 fxB.f0 = lbl_803E32B0 * (power / lbl_803E32A8) + lbl_803E32AC;
                 fxB.f2 = lbl_803E32B4;
                 fxB.id = 0xc0e;
-                (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
             }
             break;
         case 136:
@@ -1825,10 +1831,10 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
             fxB.f2 = lbl_803E32B4;
             fxB.f1 = lbl_803E32B8;
             fxB.id = 0xc0e;
-            (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
             fxB.count = 18;
             fxB.f2 = lbl_803E32BC;
-            (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
             break;
         case 127:
             fxB.f0 = lbl_803E32C0;
@@ -1836,7 +1842,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
             fxB.f2 = lbl_803E32BC;
             fxB.f1 = lbl_803E32B8;
             fxB.id = 0xc0e;
-            (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
             break;
         case 133:
             if (power > lbl_803E32B4)
@@ -1853,10 +1859,10 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                     fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - power / lbl_803E32A8);
                     fxB.id = 0xc94;
                 }
-                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
-                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
-                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
-                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
                 fxB.count = 9;
                 if (mainGetBit(0xc55) != 0)
                 {
@@ -1869,7 +1875,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                     fxB.id = 0xc0e;
                 }
                 fxB.f2 = lbl_803E32B4;
-                (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
             }
             break;
         case 1135:
@@ -1878,15 +1884,15 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                 fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32C8));
                 fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - power / lbl_803E32C8);
                 fxB.id = 0xc94;
-                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
-                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
-                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
-                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
                 fxB.count = 9;
                 fxB.f0 = lbl_803E32B0 * (power / lbl_803E32C8) + lbl_803E32AC;
                 fxB.f2 = lbl_803E32B4;
                 fxB.id = 0xc0e;
-                (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
             }
             break;
         case 1128:
@@ -1936,7 +1942,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                     fxB.count = 9;
                     fxB.f0 = lbl_803E3288;
                     fxB.f2 = lbl_803E32B4;
-                    (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
                 }
                 else if (progress < lbl_803E32D8)
                 {
@@ -1944,7 +1950,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                     fxB.count = 9;
                     fxB.f0 = lbl_803E3288;
                     fxB.f2 = lbl_803E32B4;
-                    (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
                 }
                 break;
             }
