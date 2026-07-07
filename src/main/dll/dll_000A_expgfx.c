@@ -2313,10 +2313,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 ratio = lbl_803DF354;
             }
             alpha = (int)
-            ((f32)(u32)
-            slot->initialAlpha * ratio
-            )
-            ;
+            ((f32)(u32)slot->initialAlpha * ratio);
         }
         else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE) != 0)
         {
