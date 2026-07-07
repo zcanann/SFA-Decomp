@@ -141,8 +141,6 @@ void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data,
 {
     extern void Model_GetVertexPosition(int, int, f32*);
     extern void vecRotateYXZ(int, int);
-    extern const f32 lbl_803E43F0;
-    extern f32 lbl_803E43F4;
 
     obj->x = data->positionX;
     obj->y = data->positionY;
