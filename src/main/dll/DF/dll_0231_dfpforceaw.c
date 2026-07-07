@@ -16,6 +16,11 @@
 #define DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DFPFORCEAW_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
 
+/* partfx ids spawned on the player-burst trigger: single burst flash plus a
+ * 10-count spray of burst particles (same shape in both mainGetBit(0x1d9) arms) */
+#define DFPFORCEAW_PARTFX_BURST 0x5ed       /* spawned once */
+#define DFPFORCEAW_PARTFX_BURST_PARTICLE 0x5fd /* spawned 10x */
+
 typedef struct TrickyCurveObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -148,22 +153,22 @@ void TrickyCurve_updateBurstTrigger(int obj)
         {
             mainSetBits(0x468, 1);
             ObjMsg_SendToObject(player, DFPFORCEAW_MSG_PLAYER_BURST, obj, 0);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &fxParams, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, DFPFORCEAW_PARTFX_BURST, &fxParams, 2, -1, NULL);
             burstParticles = 9;
             do
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x5fd, &fxParams, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, DFPFORCEAW_PARTFX_BURST_PARTICLE, &fxParams, 2, -1, NULL);
             }
             while (burstParticles-- != 0);
         }
         else
         {
             ObjMsg_SendToObject(player, DFPFORCEAW_MSG_PLAYER_BURST, obj, 1);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &fxParams, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, DFPFORCEAW_PARTFX_BURST, &fxParams, 2, -1, NULL);
             burstParticles = 9;
             do
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x5fd, &fxParams, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, DFPFORCEAW_PARTFX_BURST_PARTICLE, &fxParams, 2, -1, NULL);
             }
             while (burstParticles-- != 0);
         }
