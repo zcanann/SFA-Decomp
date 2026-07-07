@@ -15,6 +15,10 @@
 #include "main/game_object.h"
 #include "main/audio/music_trigger_ids.h"
 
+/* env effects co-activated once with the sky preset; opaque distinct roles */
+#define ARWLEVELCON_ENVFX_A 0x21f
+#define ARWLEVELCON_ENVFX_B 0x22b
+
 
 typedef struct ARWLevelConSetup
 {
@@ -144,8 +148,8 @@ void arwlevelcon_update(int obj)
             skyFn_800895e0(7, 0x96, 0x64, 0xf0, 0, 0);
         }
         skyFn_800894a8(7, lbl_803E70E4, *(f32*)&lbl_803E70E4, lbl_803E70E0);
-        getEnvfxAct(0, 0, 0x21f, 0);
-        getEnvfxAct(0, 0, 0x22b, 0);
+        getEnvfxAct(0, 0, ARWLEVELCON_ENVFX_A, 0);
+        getEnvfxAct(0, 0, ARWLEVELCON_ENVFX_B, 0);
         setIsOvercast(0);
         state->skyConfigured = 1;
         setDrawLights(0);
