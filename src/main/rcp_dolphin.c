@@ -31,6 +31,8 @@
 #define GX_VA_POS 9
 #define GX_VA_NRM 10
 #define GX_PNMTX0 0
+#define GX_TEXMTX0 0x1e
+#define GX_MTX2x4 1
 #define GX_DIRECT 1
 #define GX_TRIANGLESTRIP 0x98
 #define GX_VTXFMT4 4
@@ -2067,7 +2069,7 @@ void gxTextureFn_80052efc(void)
     PSMTXScale(mtx, lbl_803DEB74, lbl_803DEB80, lbl_803DEB74);
     mtx[3] = lbl_803DEB74;
     mtx[7] = lbl_803DEB74;
-    GXLoadTexMtxImm(mtx, 0x1e, 1);
+    GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
     GXSetChanAmbColor(GX_COLOR0A0, *(GXColor8*)&gRcpDistortAmbColor);
     GXSetChanAmbColor(GX_COLOR1A1, *(GXColor8*)&gRcpDistortAmbColor);
     GXSetTexCopyDst(0x20, 0x20, GX_TF_RGBA8, GX_FALSE);
