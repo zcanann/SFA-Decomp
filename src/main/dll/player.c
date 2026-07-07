@@ -2293,7 +2293,7 @@ int playerStateOnLadder(int obj, int state)
     gPlayerPrevMoveId = gPlayerCurrentMoveId;
     if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) != 0)
     {
-        switch (((PlayerState*)inner)->unk546)
+        switch (((PlayerState*)inner)->footstepSurface)
         {
         case 4:
             Sfx_PlayFromObject(obj, SFXTRIG_foot_33a);
@@ -13940,22 +13940,22 @@ int playerState08(int obj, int state, f32 fv)
     }
     if ((s8)c == -1)
     {
-        inner->unk8C2 = -1;
-        inner->unk8C3 = 0;
+        inner->climbProbeResult = -1;
+        inner->climbProbeStableCount = 0;
     }
-    else if ((s8)c == inner->unk8C2)
+    else if ((s8)c == inner->climbProbeResult)
     {
-        if (++inner->unk8C3 > 200)
+        if (++inner->climbProbeStableCount > 200)
         {
-            inner->unk8C3 = 200;
+            inner->climbProbeStableCount = 200;
         }
     }
     else
     {
-        inner->unk8C2 = c;
-        inner->unk8C3 = 0;
+        inner->climbProbeResult = c;
+        inner->climbProbeStableCount = 0;
     }
-    switch (inner->unk8C2)
+    switch (inner->climbProbeResult)
     {
     case 0:
         if (((ByteFlags*)((char*)inner + 0x3f1))->b01)
@@ -15277,7 +15277,7 @@ int playerStateClimbOntoLadder(int obj, int state, f32 fv)
     }
     if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) != 0)
     {
-        switch (inner->unk546)
+        switch (inner->footstepSurface)
         {
         case 4:
             Sfx_PlayFromObject(obj, SFXdrak_roar1);

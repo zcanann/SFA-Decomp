@@ -158,7 +158,7 @@ typedef struct PlayerState {
     f32 moveStartPosZ;  /* localPosZ assigned at the vertical-move start */
     f32 unk538[3];
     s16 unk544;
-    s8 unk546;
+    s8 footstepSurface; /* footstep surface/material selector; switched to pick the footstep sfx variant (case 4 -> foot_33a, default -> foot_var) on anim foot events */
     u8 unk547;
     u8 pad548[0x549 - 0x548];
     s8 unk549;
@@ -372,8 +372,8 @@ typedef struct PlayerState {
     u8 unk8BF;
     u8 unk8C0;
     u8 unk8C1;
-    s8 unk8C2;
-    u8 unk8C3;
+    s8 climbProbeResult; /* debounced playerCheckIfClimbingOntoWall() result; -1 = none, else the wall/climb type switched on to pick the climb move */
+    u8 climbProbeStableCount; /* consecutive frames climbProbeResult has held the same value (capped at 200); reset to 0 on change */
     u8 unk8C4;
     u8 emissionState; /* emission-controller lifecycle state code (0-4) set by the staff/move handler keyed on current move; returned by EmissionController_IsLingering */
     u8 pad8C6[0x8C7 - 0x8C6];
