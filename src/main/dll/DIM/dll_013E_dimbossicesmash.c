@@ -11,6 +11,9 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/dll/path_control_interface.h"
 #include "main/gamebits.h"
 
+/* ice-debris particle spawned along the smash sweep between the previous and current position */
+#define DIMBOSSICESMASH_PARTFX 1000
+
 typedef struct DimbossicesmashPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -347,7 +350,7 @@ void DIMBossIceSmash_update(u8* obj)
                     stk.pos[0] = dx * k + ((GameObject*)obj)->anim.previousLocalPosX;
                     stk.pos[1] = dy * k + ((GameObject*)obj)->anim.previousLocalPosY;
                     stk.pos[2] = dz * k + ((GameObject*)obj)->anim.previousLocalPosZ;
-                    (*gPartfxInterface)->spawnObject(obj, 1000, &stk, 0x200001, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, DIMBOSSICESMASH_PARTFX, &stk, 0x200001, -1, NULL);
                     i++;
                 }
                 while (i < 2);
