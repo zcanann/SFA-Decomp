@@ -32,6 +32,14 @@ STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 #define GAMEBIT_WATER_SPELLSTONE_PLACED 0x5f3 /* mode 1 -> 2 */
 #define GAMEBIT_TOTEMBOND_COMPLETE 0x2d0      /* mode 2 -> 6 */
 
+/* env-effect ids replayed on map (re)entry (index-style; roles opaque).
+   D vs E is selected by the map-event 0xe / objgroup 5 status. */
+#define SCLEVELCONTROL_ENVFX_A 0x4f
+#define SCLEVELCONTROL_ENVFX_B 0x50
+#define SCLEVELCONTROL_ENVFX_C 0x245
+#define SCLEVELCONTROL_ENVFX_D 0x246
+#define SCLEVELCONTROL_ENVFX_E 0x51
+
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void gameTimerStop(void);
 extern void Music_Trigger(int id, int arg);
@@ -198,30 +206,30 @@ void sc_levelcontrol_update(int obj)
         envFxActFn_800887f8(0);
         if (((GameObject*)obj)->unkF4 == 2)
         {
-            getEnvfxActImmediately(0, 0, 0x4f, 0);
-            getEnvfxActImmediately(0, 0, 0x50, 0);
-            getEnvfxActImmediately(0, 0, 0x245, 0);
+            getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
+            getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
+            getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
             if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(0xe, 5) != 0)
             {
-                getEnvfxActImmediately(0, 0, 0x246, 0);
+                getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
             }
             else
             {
-                getEnvfxActImmediately(0, 0, 0x51, 0);
+                getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
             }
         }
         else
         {
-            getEnvfxAct(0, 0, 0x4f, 0);
-            getEnvfxAct(0, 0, 0x50, 0);
-            getEnvfxAct(0, 0, 0x245, 0);
+            getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
+            getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
+            getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
             if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(0xe, 5) != 0)
             {
-                getEnvfxAct(0, 0, 0x246, 0);
+                getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
             }
             else
             {
-                getEnvfxAct(0, 0, 0x51, 0);
+                getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
             }
         }
         ((GameObject*)obj)->unkF4 = 0;
