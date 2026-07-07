@@ -19,6 +19,9 @@
 #define ARWLEVELCON_ENVFX_A 0x21f
 #define ARWLEVELCON_ENVFX_B 0x22b
 
+/* camera mode DLL 0x56 = dll_0056_cameramodearwing */
+#define ARWLEVELCON_CAMMODE_ARWING 0x56
+
 
 typedef struct ARWLevelConSetup
 {
@@ -86,7 +89,7 @@ int arwlevelcon_SeqFn(int obj, int p2, int data)
         u8 eventId = seq->eventIds[i];
         if (eventId == 1)
         {
-            (*gObjectTriggerInterface)->setCamVars(0x56, 0, 0, 0);
+            (*gObjectTriggerInterface)->setCamVars(ARWLEVELCON_CAMMODE_ARWING, 0, 0, 0);
         }
         else if (eventId == 4)
         {
