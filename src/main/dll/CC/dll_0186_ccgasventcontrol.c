@@ -26,6 +26,8 @@
 /* Release camera back to the default gameplay mode (cameramode DLL 0x42). */
 #define CCGASVENTCONTROL_CAMMODE_DEFAULT 0x42
 
+#define CCGASVENTCONTROL_AIRMETER_BGTEXTURE 0x603 /* air-meter background texture id */
+
 #define CCGASVENT_GROUP 0x3f
 #define CCGASVENTCONTROL_TARGET_OBJGROUP 5
 #define GAMEBIT_GAS_ACTIVE 0x1c0       /* gas filling the room */
@@ -174,7 +176,7 @@ void ccgasventcontrol_update(int obj)
         }
         break;
     case CCGASVENT_STATE_INIT_METER:
-        (*gGameUIInterface)->initAirMeter(6000, 0x603);
+        (*gGameUIInterface)->initAirMeter(6000, CCGASVENTCONTROL_AIRMETER_BGTEXTURE);
         ((CcgasventcontrolState*)ex)->airMeter = gCcGasVentAirMeterMax;
         ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_ACTIVE;
         ((CcgasventcontrolState*)ex)->ventCount = b;
