@@ -26,6 +26,7 @@
 
 #define BOSSDRAKOR_OBJGROUP 0x45
 #define BOSSDRAKOR_PARTFX 0x7ad
+#define BOSSDRAKOR_HIT_VOLUME_SLOT 5
 /* groups owned by other DLLs, queried here */
 #define DRAKORHOVERPAD_OBJGROUP 0x46 /* DLL 0x271 drakorhoverpad */
 #define DBHOLECONTROL1_OBJGROUP 0x1e /* DLL 0x243 dbholecontrol1 */
@@ -277,7 +278,7 @@ void bossdrakor_update(int obj)
                 }
                 else
                 {
-                    ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
+                    ObjHits_SetHitVolumeSlot(obj, BOSSDRAKOR_HIT_VOLUME_SLOT, 1, 0);
                     ((BossDrakorState*)state)->moveState = 0x15;
                     ((BossDrakorState*)state)->moveSpeed = lbl_803E6574;
                 }
