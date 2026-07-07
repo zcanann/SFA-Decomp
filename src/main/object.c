@@ -25,6 +25,10 @@
 #define OBJECT_FLAG_IN_UPDATE_LIST 0x10 /* registered in gObjList / gObjUpdateList */
 #define OBJECT_FLAG_FREED 0x40          /* Obj_FreeObject ran (double-free guard) */
 
+/* ObjGroup ids (registered/unregistered in Obj_SetupObject / Obj_FreeObject) */
+#define OBJECT_OBJGROUP_HITBOX 6      /* joined when modelInstance flags & 0x40 (SKIP_RESET_UPDATE) */
+#define OBJECT_OBJGROUP_GROUP8 8      /* joined when modelInstance->group8RegistrationCount > 0 */
+
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DE88C;
@@ -1531,7 +1535,7 @@ void objFreeObjDef(u8* obj, int flag)
     (*gExpgfxInterface)->freeOwner3((u32)obj);
     if (((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE)
     {
-        ObjGroup_RemoveObject((u32)obj, 6);
+        ObjGroup_RemoveObject((u32)obj, OBJECT_OBJGROUP_HITBOX);
         if (flag == 0)
         {
             count = 0;
@@ -1579,7 +1583,7 @@ void objFreeObjDef(u8* obj, int flag)
     }
     if (((ObjAnimComponent*)obj)->modelInstance->group8RegistrationCount > 0)
     {
-        ObjGroup_RemoveObject((u32)obj, 8);
+        ObjGroup_RemoveObject((u32)obj, OBJECT_OBJGROUP_GROUP8);
     }
     if (((ObjAnimComponent*)obj)->modelState != NULL)
     {
@@ -2226,7 +2230,7 @@ void Obj_RegisterObject(u8* obj, int flags)
     }
     if (object->modelInstance->flags & 0x40)
     {
-        ObjGroup_AddObject((u32)obj, 6);
+        ObjGroup_AddObject((u32)obj, OBJECT_OBJGROUP_HITBOX);
         if (object->activeHitboxMode != 0x5a && (object->modelInstance->flags & 0x40))
         {
             object->activeHitboxMode = 0x5a;
@@ -2258,7 +2262,7 @@ void Obj_RegisterObject(u8* obj, int flags)
     }
     if (object->modelInstance->group8RegistrationCount > 0)
     {
-        ObjGroup_AddObject((u32)obj, 8);
+        ObjGroup_AddObject((u32)obj, OBJECT_OBJGROUP_GROUP8);
     }
     if (object->modelInstance->flags & 1)
     {
