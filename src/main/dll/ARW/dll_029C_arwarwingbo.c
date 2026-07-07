@@ -13,6 +13,7 @@
 #include "main/audio/sfx_ids.h"
 
 #define ARWARWINGBO_OBJGROUP 0x52
+#define ARWARWINGBO_PARTFX 0x79e
 
 #define ARWARWINGBO_OBJFLAG_PARENT_SLACK 0x1000
 #define PAD_BUTTON_B 0x200
@@ -104,9 +105,9 @@ void arwarwingbo_update(int obj)
             ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
             objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
         }
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x79e, NULL, 1, -1,
+        (*gPartfxInterface)->spawnObject((void*)obj, ARWARWINGBO_PARTFX, NULL, 1, -1,
                                          &objAnim->velocityX);
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x79e, NULL, 1, -1,
+        (*gPartfxInterface)->spawnObject((void*)obj, ARWARWINGBO_PARTFX, NULL, 1, -1,
                                          &objAnim->velocityX);
     }
     else
