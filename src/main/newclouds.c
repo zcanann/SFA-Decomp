@@ -281,7 +281,7 @@ void dll_07_func07(int arg)
     int total;
     NewCloud* snow;
 
-    GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f,
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f,
              *(FogColor*)&gNewCloudSnowFogColor);
     for (i = 0, total = 0; i < 8; i++)
     {
@@ -586,7 +586,7 @@ void lightningRender(void* state)
     fn_800788DC();
     fn_8006C51C(&tex);
     selectTexture(tex, 0);
-    GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, color);
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, color);
     Camera_UpdateViewMatrices();
     GXLoadPosMtxImm(Camera_GetViewMatrix(), GX_PNMTX0);
     GXSetCurrentMtx(0);
@@ -790,7 +790,7 @@ void drawSkyStars(void)
     textRenderSetupFn_80079804();
     gxBlendFn_800789ac();
     color = *(FogColor*)&gNewCloudStarFogColor;
-    GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, color);
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, color);
     Camera_UpdateViewMatrices();
     GXLoadPosMtxImm(Camera_GetViewRotationMatrix(), GX_PNMTX0);
     GXSetCurrentMtx(0);
