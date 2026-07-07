@@ -30,6 +30,8 @@
 #include "main/vecmath.h"
 #include "main/dll/dll_0158_gunpowderbarrel.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST 5
+#define GUNPOWDERBARREL_HIT_VOLUME_SLOT_BODY 0xe
 
 /* seqId of the indestructible cannon-range barrel variant */
 #define GUNPOWDERBARREL_SEQ_CANNONRANGE 0x754
@@ -277,7 +279,7 @@ void gunpowderbarrel_triggerExplosion(int obj)
         ObjHits_SetSourceMask(obj, 1);
         ObjHitbox_SetCapsuleBounds(obj, 0x14, -5, 0x14);
         ObjHits_EnableObject(obj);
-        ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
+        ObjHits_SetHitVolumeSlot(obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
         Sfx_PlayFromObject(obj, SFXsk_bapt11_c);
         ((GameObject*)obj)->anim.localPosY += lbl_803E4308;
         spawnExplosion((int*)obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
@@ -342,7 +344,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
     }
     if (((GunpowderBarrelState*)sub)->detonateTrigger == 0 && ((((GunpowderBarrelState*)sub)->motionFlags & 2) || ((GunpowderBarrelState*)sub)->throwVelY > lbl_803E430C))
     {
-        ObjHits_SetHitVolumeSlot((u32)obj, 0xe, 1, 0);
+        ObjHits_SetHitVolumeSlot((u32)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BODY, 1, 0);
         ObjHits_EnableObject((u32)obj);
     }
     if (!((GpbHeldFlags*)&((GunpowderBarrelState*)sub)->heldFlags)->playerHeld)
