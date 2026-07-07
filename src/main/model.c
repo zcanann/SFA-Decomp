@@ -1905,12 +1905,12 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     if (szs[1] > 0)
     {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out2)->unk48 = pos;
+        *(int*)&((ObjModel*)out2)->hitSphereBuf0 = pos;
         o2 = ((ModelFileHeader*)p)->hitSphereCount;
         pos += o2 * 0x10;
-        *(int*)&((ObjModel*)out2)->unk4C = pos;
+        *(int*)&((ObjModel*)out2)->hitSphereBuf1 = pos;
         pos += ((ModelFileHeader*)p)->hitSphereCount * 0x10;
-        *(int*)&((ObjModel*)out2)->unk50 = *(int*)&((ObjModel*)out2)->unk48;
+        *(int*)&((ObjModel*)out2)->hitSphereBufActive = *(int*)&((ObjModel*)out2)->hitSphereBuf0;
     }
     if (((ModelFileHeader*)p)->jointData != NULL && ((ModelFileHeader*)p)->jointCount != 0 && ((
         ModelFileHeader*)p)->unk18 != NULL && ((ModelFileHeader*)p)->unk1C != NULL)
