@@ -33,6 +33,7 @@ void boneParticleEffect_func03_nop(void)
 {
 }
 
+#define BONE_PARTICLE_EFFECT_PARTFX 0x28c
 #define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
 #define BONE_PARTICLE_EFFECT_BUFFER_BYTES 0x140
 #define BONE_PARTICLE_EFFECT_SLOT_COUNT 20
@@ -320,9 +321,9 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     setTextColor(ctx, 0xff, 0xff, 0xff, 0xff);
     if (gBoneParticleEffectTimer != 0)
     {
-        (*gPartfxInterface)->spawnObject(obj, 0x28c, NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x28c, NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x28c, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
         if ((int)randomGetRange(0, 1) != 0)
         {
             textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
