@@ -43,6 +43,15 @@
 #define TRICKY_TARGET_OBJGROUP 0x32          /* nearest object searched from the tricky object */
 #define TRICKY_TARGET_OBJGROUP_FALLBACK 0x31 /* fallback group when TRICKY_TARGET_OBJGROUP has none */
 
+/* Env-effect ids co-activated by the type-3 command (p[3] sub-case); the A set
+   runs for sub-cases 0/1, the B set for sub-case 2. Opaque distinct roles per index. */
+#define TRIGGER_ENVFX_A0 0x134
+#define TRIGGER_ENVFX_A1 0x135
+#define TRIGGER_ENVFX_A2 0x142
+#define TRIGGER_ENVFX_B0 0x136
+#define TRIGGER_ENVFX_B1 0x137
+#define TRIGGER_ENVFX_B2 0x143
+
 /*
  * TriggerState+0 status byte (`*state`). See objInterpretSeq / Trigger_hitDetect.
  */
@@ -753,22 +762,22 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         {
                         case 0:
                             mainSetBits(0x3b0, 1);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
                             break;
                         case 1:
                             mainSetBits(0x3b0, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
                             envFxFn_800887cc();
                             break;
                         case 2:
                             mainSetBits(0x3b0, 1);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x136, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x137, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x143, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B0, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B1, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B2, 0);
                             break;
                         }
                         break;
