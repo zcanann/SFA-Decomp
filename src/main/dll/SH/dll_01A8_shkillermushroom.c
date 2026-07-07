@@ -503,5 +503,4 @@ void enemymushroom_update(int* obj)
         ((EnemyMushroomState*)state)->stateFlags = (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_ANIM_DONE);
     }
 }
-#pragma opt_common_subs reset
 
