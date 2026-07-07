@@ -26,6 +26,7 @@
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/objhits.h"
+#define STAFFACTION_HIT_VOLUME_SLOT 9
 
 /* object group this object belongs to */
 #define STAFFACTION_OBJGROUP 3
@@ -484,7 +485,7 @@ u32 fn_801659B8(s16* obj, u32* params)
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FDC;
     }
-    ObjHits_SetHitVolumeSlot((u32)obj, 9, 1, -1);
+    ObjHits_SetHitVolumeSlot((u32)obj, STAFFACTION_HIT_VOLUME_SLOT, 1, -1);
     *(u8*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6c) = 9;
     *(u8*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6d) = 1;
     ObjHits_RegisterActiveHitVolumeObject((int)obj);
