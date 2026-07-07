@@ -482,7 +482,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         gotGlyph:
             if (found != NULL)
             {
-                int advance = (found->f9 + found->f8) + found->fC;
+                int advance = (found->fC + found->f8) + found->f9;
                 penX += height * (f32)(int)
                 advance;
                 if (penX >= width)
