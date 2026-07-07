@@ -33,6 +33,7 @@
 
 /* Dust child; the spawned object is cached in control->spawnedDustObj. */
 #define KALDACHOM_CHILD_OBJ_DUST 0x55e
+#define KALDACHOM_PARTFX_DUST 0x717 /* dust-puff particle burst kicked up on landing */
 
 /* Mouth-point projectile spawned in kaldaChomFn_80168374 at the upper/lower
  * mouth path points and given target-aimed velocity (docblock: "Mouth-point
@@ -99,7 +100,7 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
     work = 0x28;
     do
     {
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x717, 0, 4, 0xffffffff, &gKaldachomDustSpawnScratch);
+        (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOM_PARTFX_DUST, 0, 4, 0xffffffff, &gKaldachomDustSpawnScratch);
         work--;
     }
     while (work != 0);
