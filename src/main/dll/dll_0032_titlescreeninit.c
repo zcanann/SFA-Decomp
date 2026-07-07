@@ -44,6 +44,15 @@ extern f32 gTitleScreenInitAlphaMax;
 extern f32 gTitleScreenInitFadeFrames;
 extern f32 lbl_803E1D00;
 
+/* Boot-sequence map ids (docblock): unload the prior map, force-load the
+ * title map, then warp to the intro map. */
+#define TITLESCREENINIT_MAP_PRIOR 0x3d
+#define TITLESCREENINIT_MAP_TITLE 0x3f
+#define TITLESCREENINIT_MAP_WARP  0x12
+
+/* Localized DVD-read-error string (docblock: "localized error string (text id 0x565)"). */
+#define TITLESCREENINIT_TEXT_DVD_ERROR 0x565
+
 typedef struct LoadingScreenTexture
 {
     u8 _00[0xa];
@@ -162,7 +171,7 @@ void runLoadingScreens(void)
     if ((gTitleScreenInitDvdErrorLatched != 0) && (gTitleScreenInitLoadingFrameCounter > 0x258) && (*(u8*)&gDvdErrorPauseActive == 0))
     {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        gameTextShowStr(gameTextGetStr(0x565), 0, 0x118, 300);
+        gameTextShowStr(gameTextGetStr(TITLESCREENINIT_TEXT_DVD_ERROR), 0, 0x118, 300);
     }
 }
 
@@ -242,12 +251,12 @@ void TitleScreenInit_initialise(void)
 {
     gTitleScreenInitFrameStartPending = 1;
     lbl_803DD5F4 = lbl_803E1D00;
-    mapUnload(0x3d, 0x10000000);
+    mapUnload(TITLESCREENINIT_MAP_PRIOR, 0x10000000);
     setForceLoadImmediately();
-    loadMapAndParent(0x3f);
+    loadMapAndParent(TITLESCREENINIT_MAP_TITLE);
     clearForceLoadImmediately();
     loadSunAndMoon();
     gameUiLoadResources();
     lockIconInit();
-    warpToMap(0x12, 0);
+    warpToMap(TITLESCREENINIT_MAP_WARP, 0);
 }
