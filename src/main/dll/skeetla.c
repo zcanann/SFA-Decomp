@@ -911,7 +911,7 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
     entry = NULL;
 
     if ((*(u8**)&((TrickyState*)state)->cachedRouteDef == routeDef) &&
-        (((TrickyState*)state)->unk530 == ((TrickyState*)state)->walkGroup) &&
+        (((TrickyState*)state)->cachedWalkGroup == ((TrickyState*)state)->walkGroup) &&
         (((TrickyState*)state)->cachedRouteFlags == (routeFlagValue & 0xff)))
     {
         entry = skeetla_validateRouteEntry(((TrickyState*)state)->validatedRouteEntry);
@@ -952,7 +952,7 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
 
     *(u8**)&((TrickyState*)state)->cachedRouteDef = routeDef;
     ((TrickyState*)state)->validatedRouteEntry = entry;
-    ((TrickyState*)state)->unk530 = ((TrickyState*)state)->walkGroup;
+    ((TrickyState*)state)->cachedWalkGroup = ((TrickyState*)state)->walkGroup;
     ((TrickyState*)state)->cachedRouteFlags = routeFlagValue;
     return entry;
 }

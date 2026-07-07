@@ -158,7 +158,7 @@ typedef struct TrickyState {
     u8 cachedRouteDef; /* low byte of the cached routeDef pointer (accessed as *(u8**)&): route-select memo key, compared == routeDef then re-stored; when it + the cached walkGroup (unk530) + cachedRouteFlags all match, validatedRouteEntry is reused (skeetla) */
     u8 pad529[3];
     void *validatedRouteEntry; /* route entry pointer validated via skeetla_validateRouteEntry (skeetla) */
-    u16 unk530;
+    u16 cachedWalkGroup; /* route-select memo key: the walkGroup value that validatedRouteEntry was resolved for; compared == walkGroup (alongside cachedRouteDef/cachedRouteFlags) to reuse the cached entry, re-stored = walkGroup on a memo miss (skeetla); also gates the follow-slot walk-group update (trickyfollow) */
     u16 walkGroup; /* current walk-group id (route/path selection; compared to targetWg and node group bytes) */
     u16 savedWalkGroup; /* mirrored from walkGroup (dll_DF); retained group used to gate route re-seeding */
     u8 cachedRouteFlags; /* cached (routeFlagValue & 0xff): route-select memo key stored alongside cachedRouteDef; compared == (routeFlagValue & 0xff) to reuse validatedRouteEntry (skeetla) */

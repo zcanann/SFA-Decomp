@@ -328,7 +328,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                         }
                         if (i == 4)
                         {
-                            if (tp & !(0xff - ((TrickyState*)state)->unk530))
+                            if (tp & !(0xff - ((TrickyState*)state)->cachedWalkGroup))
                             {
                                 ((TrickyState*)state)->walkGroup = (int)(tp & 0xff00) >> 8;
                             }
