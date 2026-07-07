@@ -16,6 +16,10 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+/* anim.seqId of the puzzle controller object this bar links to (docblock:
+ * "the puzzle controller object (seqId 0x431)"). */
+#define DFPFLOORBAR_CONTROLLER_SEQID 0x431
+
 extern f32 lbl_803E6408;
 
 extern f32 lbl_803E640C;
@@ -134,7 +138,7 @@ void DFP_Floorbar_update(int obj)
         idx = idx_init;
         for (; idx < count; idx++)
         {
-            if (((GameObject*)items[idx])->anim.seqId == 0x431)
+            if (((GameObject*)items[idx])->anim.seqId == DFPFLOORBAR_CONTROLLER_SEQID)
             {
                 state->linkedObject = (int*)items[idx];
                 idx = count;
