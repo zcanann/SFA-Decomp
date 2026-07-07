@@ -21,6 +21,12 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_descriptor.h"
+
+/* partfx ids (docblock: "spawns 0x1a3 spark particles" on activation;
+ * render "emitting the 0x1f7 sparkle particle"). */
+#define DLL197_PARTFX_SPARK 0x1a3
+#define DLL197_PARTFX_SPARKLE 0x1f7
+
 extern int Obj_GetPlayerObject(void);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
@@ -169,7 +175,7 @@ void dll_197_update(int obj)
 
         for (effect = 0; effect < 200; effect++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x1a3, NULL, 0,
+            (*gPartfxInterface)->spawnObject((void*)obj, DLL197_PARTFX_SPARK, NULL, 0,
                                              -1, NULL);
         }
 
@@ -299,7 +305,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         particleParams.pos[0] = lbl_803E5130;
         particleParams.pos[1] = lbl_803E5134;
         particleParams.pos[2] = lbl_803E5130;
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x1f7, &particleParams,
+        (*gPartfxInterface)->spawnObject((void*)obj, DLL197_PARTFX_SPARKLE, &particleParams,
                                          0x12, -1, NULL);
     }
 
