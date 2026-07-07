@@ -31,6 +31,10 @@ extern f32 lbl_803E0D18;
 extern f32 lbl_803E0D1C;
 extern f32 lbl_803E0D20, lbl_803E0D24, lbl_803E0D28, lbl_803E0D2C;
 
+/* spawnEffect effect ids per variant (textureAssetId arg). */
+#define DLL7A_EFFECT_ID_VARIANT0 0x156
+#define DLL7A_EFFECT_ID_VARIANT1 0xc0d
+
 int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     struct
@@ -169,12 +173,12 @@ int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     if (variant == 0)
     {
         buf.v58 = 0;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314BD0, 8, &base[0x5c], 0x156, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314BD0, 8, &base[0x5c], DLL7A_EFFECT_ID_VARIANT0, 0);
     }
     else if (variant == 1)
     {
         buf.v58 = 0;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314BD0, 8, &base[0x5c], 0xc0d, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314BD0, 8, &base[0x5c], DLL7A_EFFECT_ID_VARIANT1, 0);
     }
     return ret;
 }
