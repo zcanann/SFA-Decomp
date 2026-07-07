@@ -35,11 +35,7 @@ extern f32 gEffect20SineValue0;
 extern f32 gEffect20Pi;
 extern f32 lbl_803E0348;
 
-#pragma dont_inline on
-
 extern float mathCosf(float x);
-
-#pragma dont_inline off
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
@@ -3160,4 +3156,3 @@ void Effect20_initialise(void)
 {
 }
 
-#pragma dont_inline reset
