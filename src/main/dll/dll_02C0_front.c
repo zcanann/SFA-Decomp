@@ -416,7 +416,7 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
     GXLoadPosMtxImm((f32*)gTitleScreenMtx, GX_PNMTX0);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -449,7 +449,7 @@ void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32
 void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
     GXLoadPosMtxImm((f32*)gTitleScreenMtx, GX_PNMTX0);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
