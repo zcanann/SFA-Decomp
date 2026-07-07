@@ -32,8 +32,6 @@
 #define SWARMBADDIE_OBJGROUP 3
 
 #define SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED 0x2000
-extern u32 FUN_80006b0c();
-extern u32 FUN_80006b14();
 extern u32 DAT_803de6d0;
 extern int ObjHits_GetPriorityHitWithPosition();
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
