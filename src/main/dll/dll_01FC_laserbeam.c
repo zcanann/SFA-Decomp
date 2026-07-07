@@ -33,6 +33,7 @@ extern ModgfxInterface** gModgfxInterface;
 
 #define LASERBEAM_MSG_PLAYER_HIT 0x60003 /* message the player on a standard beam hit */
 #define LASERBEAM_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
+#define LASERBEAM_PARTFX_HIT 0x198 /* spark burst spawned on the player when the beam connects */
 
 typedef struct Dll1FBSetup
 {
@@ -425,7 +426,7 @@ void LaserBeam_update(int obj2)
                         Sfx_PlayFromObject((int)player, sfx);
                         for (i = 0; i < 4; i++)
                         {
-                            (*gPartfxInterface)->spawnObject(Obj_GetPlayerObject(), 0x198,
+                            (*gPartfxInterface)->spawnObject(Obj_GetPlayerObject(), LASERBEAM_PARTFX_HIT,
                                                              NULL, 4, -1, NULL);
                         }
                         b->targetX = sinv * spread + ((GameObject*)player)->anim.localPosX;
