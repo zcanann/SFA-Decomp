@@ -43,6 +43,8 @@
 
 /* object group the staff joins while active */
 #define STAFF_OBJGROUP 7
+/* quake-spell effect object (cached into StaffQuakeSpellState.object by superQuake) */
+#define STAFF_CHILD_OBJ_QUAKE 0x63c
 
 extern u32 FUN_8003b818();
 
@@ -1145,7 +1147,7 @@ void superQuakeFn_8016d9fc(f32* pos)
         v.h2 = 0;
         v.h1 = 0;
         (*gPartfxInterface)->spawnObject(player, 0x565, &v, 0x200000, -1, NULL);
-        setup = Obj_AllocObjectSetup(36, 0x63c);
+        setup = Obj_AllocObjectSetup(36, STAFF_CHILD_OBJ_QUAKE);
         ((ObjPlacement*)setup)->color[0] = 1;
         ((ObjPlacement*)setup)->color[2] = 0xff;
         ((ObjPlacement*)setup)->color[1] = 2;
