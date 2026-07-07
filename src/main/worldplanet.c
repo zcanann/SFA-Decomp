@@ -12,6 +12,8 @@
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define WORLDPLANET_CAMMODE_WORLDMAP 0x4e /* cameramode DLL dll_004E_cameramodeworldmap */
+
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -312,7 +314,7 @@ void worldplanet_update(int obj)
         setFrameCountdown_800202c4(1);
         if ((state->flags & WORLDPLANET_STATE_FLAG_CAMERA_SET) == 0)
         {
-            (*gCameraInterface)->setMode(0x4e, 1, 0, 0, NULL, 0, 0xff);
+            (*gCameraInterface)->setMode(WORLDPLANET_CAMMODE_WORLDMAP, 1, 0, 0, NULL, 0, 0xff);
             (*gCameraInterface)->setFocus((void*)obj, 0);
             state->flags |= WORLDPLANET_STATE_FLAG_CAMERA_SET;
         }
