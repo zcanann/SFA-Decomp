@@ -7375,19 +7375,19 @@ void playerUpdate(int obj)
                 }
             }
             fn_802B066C(obj, inner);
-            if (((PlayerState*)inner)->unk8CA == 1)
+            if (((PlayerState*)inner)->teleportAnimActive == 1)
             {
-                ((PlayerState*)inner)->unk7D0 =
-                    ((PlayerState*)inner)->unk7CC * timeDelta + ((PlayerState*)inner)->unk7D0;
-                if (((PlayerState*)inner)->unk7D0 >= lbl_803E80C4)
+                ((PlayerState*)inner)->teleportAnimProgress =
+                    ((PlayerState*)inner)->teleportAnimRate * timeDelta + ((PlayerState*)inner)->teleportAnimProgress;
+                if (((PlayerState*)inner)->teleportAnimProgress >= lbl_803E80C4)
                 {
-                    ((PlayerState*)inner)->unk7D0 = lbl_803E80C4;
-                    ((PlayerState*)inner)->unk7CC = lbl_803E7EA4;
+                    ((PlayerState*)inner)->teleportAnimProgress = lbl_803E80C4;
+                    ((PlayerState*)inner)->teleportAnimRate = lbl_803E7EA4;
                 }
-                else if (((PlayerState*)inner)->unk7D0 <= lbl_803E7EA4)
+                else if (((PlayerState*)inner)->teleportAnimProgress <= lbl_803E7EA4)
                 {
-                    ((PlayerState*)inner)->unk7D0 = lbl_803E7EA4;
-                    ((PlayerState*)inner)->unk7CC = lbl_803E7F14;
+                    ((PlayerState*)inner)->teleportAnimProgress = lbl_803E7EA4;
+                    ((PlayerState*)inner)->teleportAnimRate = lbl_803E7F14;
                 }
             }
             fn_802AFB0C(obj, inner, inner);
@@ -13719,11 +13719,11 @@ void objDoTeleportAnim(int obj)
     f32 base = lbl_803E80C4;
     int i;
 
-    dy = base - inner->unk7D0;
+    dy = base - inner->teleportAnimProgress;
     buf.y = dy;
     if (lbl_803DE478 < lbl_803E80D8)
     {
-        inner->unk8CA = 0;
+        inner->teleportAnimActive = 0;
         return;
     }
     if (dy <= lbl_803E7EA4)
@@ -14251,7 +14251,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         {
             fn_802A9D0C(obj, inner, ((PlayerState*)inner)->focusObject, a, b, c, d, 1);
         }
-        if (((PlayerState*)inner)->unk8CA == 1)
+        if (((PlayerState*)inner)->teleportAnimActive == 1)
         {
             playerDrawTeleportAnim(obj);
         }
@@ -15895,7 +15895,7 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
                                                      NULL, 0x64, NULL);
     }
     ((PlayerState*)inner)->pendingBoneEffectId = 0;
-    if (((PlayerState*)inner)->unk8CA == 1)
+    if (((PlayerState*)inner)->teleportAnimActive == 1)
     {
         objDoTeleportAnim(obj);
     }
@@ -18642,7 +18642,7 @@ void playerDrawTeleportAnim(int obj)
     } xf;
     f32 mtx[16];
 
-    height = ((PlayerState*)state)->unk7D0;
+    height = ((PlayerState*)state)->teleportAnimProgress;
     setTextColor((u32*)0, 0xff, 0xff, 0xff, 0x80);
     textureSetupFn_800799c0();
     textRenderSetupFn_800795e8();
@@ -18691,7 +18691,7 @@ void playerDrawTeleportAnim(int obj)
     GXLoadPosMtxImm(mtx, 0);
     drawFn_8005cf8c(vp, lbl_802C2B30, 0xc);
 
-    if (((PlayerState*)state)->unk7D0 >= lbl_803E80E0)
+    if (((PlayerState*)state)->teleportAnimProgress >= lbl_803E80E0)
     {
         int t = ((GameObject*)obj)->anim.alpha - (framesThisStep << 2);
         if (t < 0)

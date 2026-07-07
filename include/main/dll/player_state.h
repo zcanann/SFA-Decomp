@@ -287,8 +287,8 @@ typedef struct PlayerState {
     f32 aimInputZ; /* smoothed aim-stick Z (eased from baddie.moveInputZ, clamped); drives aimScreenX and the world aim direction */
     u8 pad7C0[0x7C8 - 0x7C0];
     f32 sinkOffsetY; /* vertical sink/bob offset added to localPosY (e.g. sinking into snow during the snowstep move); accumulates and clamps, decays back toward 0 */
-    f32 unk7CC;
-    f32 unk7D0;
+    f32 teleportAnimRate;     /* growth rate for teleportAnimProgress (+= *timeDelta): reset to the forward rate (lbl_803E7F14) at the low end and to 0 at the high end to stop */
+    f32 teleportAnimProgress; /* teleport/warp draw-effect progress (0..lbl_803E80C4): accumulates teleportAnimRate*timeDelta while teleportAnimActive, drives the drawn column geometry (base - progress) and its alpha fade past a threshold in playerDrawTeleportAnim */
     f32 chargeLevel; /* charge/breath meter: builds (+= K*fv) while a charge move's button is held, drains (-= K*dt) and floors at 0 otherwise; at capacity (unk41C) fires the charged attack; (u8) value fed to fn_8011F34C */
     f32 boulderChargeLevel; /* second charge/hold meter (sibling of chargeLevel): reset to 0 on move start, builds (+= K*timeDelta) while inside the staff-boulder-drop hit window and first-cross-from-0 fires SFXTRIG_staff_boulder_drops, clamped to a max; decays (-= K*timeDelta, same rate as chargeLevel) and floors at 0 otherwise; exposed via fn_802961A4 when controlMode==0x26 */
     f32 unk7DC;
@@ -380,7 +380,7 @@ typedef struct PlayerState {
     u8 staffUnlockedFlags;
     u8 curAnimId; /* current move/anim id (0x44 = default) */
     u8 cameraFlags; /* flags word accumulated via |= (e.g. bit 2) and passed to the camera interface (gCameraInterface slot 0x68) on state change; reset to 0 on state entry */
-    u8 unk8CA;
+    u8 teleportAnimActive; /* 1 while the teleport/warp draw effect is running; gates playerDrawTeleportAnim + the teleportAnimProgress accumulation, cleared to 0 when the trigger condition drops */
     u8 pad8CB[0x8CC - 0x8CB];
     s8 gaitLevel; /* locomotion gait level, stepped by 4 in [0,0x14] by speed thresholds; /4*2 indexes the move/gait tables (drives gaitStepLevel 1-4) */
     s8 activeHitWindow; /* index (0-2) of the currently-active hit window in the move's HitDesc list; -1 = none active */
