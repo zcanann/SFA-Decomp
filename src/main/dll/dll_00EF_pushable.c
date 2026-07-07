@@ -497,8 +497,6 @@ int pushable_func0B(int obj, int other)
         ((PushableState*)state)->cullDistance;
 }
 
-#pragma scheduling on
-#pragma peephole on
 static inline int* Transporter_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
