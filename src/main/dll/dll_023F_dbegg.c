@@ -50,6 +50,7 @@
 #define DBEGG_OBJGROUP 0x24
 #define PAD_BUTTON_A 0x100
 #define DBEGG_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
+#define DBEGG_MSG_PLAYER_GRAB 0x100008 /* tells player to grab/hold the egg */
 extern const f32 lbl_803E61C8;
 extern const f32 gDbEggSpeedByteScale;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
@@ -833,7 +834,7 @@ void dbegg_update(int obj)
             else
             {
                 hitState->flags &= ~1;
-                ObjMsg_SendToObject(player, 0x100008, obj, 0x38000);
+                ObjMsg_SendToObject(player, DBEGG_MSG_PLAYER_GRAB, obj, 0x38000);
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
             break;
