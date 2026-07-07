@@ -24,6 +24,9 @@
 
 #define PAD_BUTTON_A 0x100
 
+/* Death follow-up spawn's effect id (docblock: HighTopDeathSpawn.effectId = 0x675). */
+#define HIGHTOP_DEATH_EFFECT_ID 0x675
+
 /* 0x2C-byte Obj_AllocObjectSetup(0x2C, 0xD4) buffer composed in
  * HighTop_hitDetect when the air meter empties (death follow-up spawn). */
 typedef struct HighTopDeathSpawn
@@ -666,7 +669,7 @@ void HighTop_hitDetect(int obj)
                 spawn->base.posX = ((GameObject*)obj)->anim.localPosX;
                 spawn->base.posY = ((GameObject*)obj)->anim.localPosY;
                 spawn->base.posZ = ((GameObject*)obj)->anim.localPosZ;
-                spawn->effectId = 0x675;
+                spawn->effectId = HIGHTOP_DEATH_EFFECT_ID;
                 spawn->unk1C = 0;
                 spawn->gameBit = -1;
                 Obj_SetupObject((int)spawn, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
