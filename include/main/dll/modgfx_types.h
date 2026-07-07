@@ -120,8 +120,8 @@ typedef struct ModgfxSpawnContext
     f32 posY;
     f32 posZ;
     f32 scale;
-    int word3C;
-    int word40;
+    int drawGroupStride; /* 0x3C: copied into PartfxEffectState.drawGroupStride on spawn */
+    int drawGroupCount;  /* 0x40: copied into PartfxEffectState.drawGroupCount on spawn */
     s16 sourceModeCopy;
     s16 sequenceParams[7];
     u32 flags;

@@ -305,8 +305,8 @@ void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
     gModgfxSpawnContext.vecZ = fz;
     fz2 = lbl_803DF434;
     gModgfxSpawnContext.scale = fz2;
-    gModgfxSpawnContext.word40 = word40;
-    gModgfxSpawnContext.word3C = word3C;
+    gModgfxSpawnContext.drawGroupCount = word40;
+    gModgfxSpawnContext.drawGroupStride = word3C;
     gModgfxSpawnContext.byte59 = flagByte;
     gModgfxSpawnContext.byte5A = 0;
     gModgfxSpawnContext.byte5B = 0;
@@ -837,9 +837,9 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         ((PartfxEffectState**)gPartfxActiveEffects)[slot]->baseColorBuffer = bufp + 0x80;
     }
 
-    if (st->word40 != 0)
+    if (st->drawGroupCount != 0)
     {
-        divThresh = e / st->word40;
+        divThresh = e / st->drawGroupCount;
     }
     else
     {
@@ -861,7 +861,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
             {
                 if ((st->flags & 0x8000000) && j == divThresh)
                 {
-                    bias = st->word3C;
+                    bias = st->drawGroupStride;
                 }
                 dstc[1] = sd[0] - bias;
                 dstc[2] = sd[1] - bias;
@@ -1032,8 +1032,8 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceObject = *(void**)(st + 4);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->instanceObject = NULL;
     *(u8*)&((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceYawIndex = st->sourceYawIndex;
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupCount = st->word40;
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupStride = st->word3C;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupCount = st->drawGroupCount;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupStride = st->drawGroupStride;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->initialStateByte = st->byte59;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->soundHandle = 0;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->activeVertexBufferIndex = 0;
