@@ -23,10 +23,6 @@ static const f64 lbl_803E01B0 = 4503601774854144.0;
 
 extern WaterfxCfg gEffect13DefaultSplashParams;
 
-#pragma dont_inline on
-
-#pragma dont_inline off
-
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
  * the consumer-side definition of this 0x64-byte spawn request consumed by
@@ -202,5 +198,3 @@ void Effect13_initialise(void)
 {
 }
 
-#pragma dont_inline reset
-#pragma dont_inline reset
