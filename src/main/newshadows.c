@@ -31,8 +31,6 @@ extern int FUN_80017a54();
 extern u32 FUN_8003b7dc();
 extern u32 FUN_8003b878();
 extern u32 FUN_80040cd0();
-extern u32 FUN_80048048();
-extern char FUN_80048094();
 extern int FUN_800537a0();
 extern u32 FUN_8005d00c();
 extern u32 FUN_8005d06c();
@@ -1201,7 +1199,7 @@ void newshadows_updateFrameState(void)
     {
         view = FUN_8000697c();
         focusDepth = (double)*(float*)(view + 0x1c);
-        FUN_80048048(&farDepth, &nearDepth);
+        FUN_80048048((u32*)&farDepth, (u32*)&nearDepth);
         depth = (double)farDepth;
         if (focusDepth < depth)
         {
