@@ -438,4 +438,3 @@ void CameraModeWorldMap_update(u8* obj)
                                    *(int*)&camera->anim.parent);
 }
 #pragma opt_propagation reset
-#pragma opt_common_subs reset
