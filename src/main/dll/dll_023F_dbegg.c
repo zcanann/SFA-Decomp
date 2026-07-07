@@ -52,6 +52,11 @@
 #define PAD_BUTTON_A 0x100
 #define DBEGG_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 #define DBEGG_MSG_PLAYER_GRAB 0x100008 /* tells player to grab/hold the egg */
+
+/* ambient particle spawned randomly while dormant in DBEGG_MODE_RESPAWN_WAIT */
+#define DBEGG_PARTFX_RESPAWN_WAIT 0x3be
+/* speed-scaled trail spawned while homing to the target in DBEGG_MODE_HOMING */
+#define DBEGG_PARTFX_HOMING_TRAIL 0x345
 extern const f32 lbl_803E61C8;
 extern const f32 gDbEggSpeedByteScale;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
@@ -869,7 +874,7 @@ void dbegg_update(int obj)
             }
             else if (randomGetRange(0, 10) == 0)
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x3be, NULL, 0, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, DBEGG_PARTFX_RESPAWN_WAIT, NULL, 0, -1, NULL);
             }
             break;
         case DBEGG_MODE_CURVE_INIT:
@@ -965,7 +970,7 @@ void dbegg_update(int obj)
                 n = (int)(PSVECMag(obj + 0x24) / lbl_803E6260);
                 for (i = 0; i < n; i++)
                 {
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x345, NULL, 1, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, DBEGG_PARTFX_HOMING_TRAIL, NULL, 1, -1, NULL);
                 }
                 objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                         ((GameObject*)obj)->anim.velocityY * timeDelta, ((GameObject*)obj)->anim.velocityZ * timeDelta);
