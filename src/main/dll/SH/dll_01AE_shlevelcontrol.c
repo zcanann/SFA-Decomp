@@ -85,6 +85,15 @@ extern f32 gShLevelControlHudTextDuration;
    ("slack"); the level-control sequences wait for it to clear before advancing. */
 #define SHLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 
+/* env-effect ids per area-state (gamebit 0xd36 / 0xd35 / default): ENVFX_D is
+   the common base in all three; A/B/C the 0xd36 set, A/E/F the 0xd35 set */
+#define SHLEVELCONTROL_ENVFX_A 0x1bf
+#define SHLEVELCONTROL_ENVFX_B 0x231
+#define SHLEVELCONTROL_ENVFX_C 0x232
+#define SHLEVELCONTROL_ENVFX_D 0x244
+#define SHLEVELCONTROL_ENVFX_E 0x1be
+#define SHLEVELCONTROL_ENVFX_F 0x1c0
+
 int SH_LevelControl_getExtraSize(void)
 {
     return 0x14;
