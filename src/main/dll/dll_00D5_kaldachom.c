@@ -18,6 +18,7 @@
 #include "main/dll/texscroll2.h"
 #include "main/mapEventTypes.h"
 #include "main/obj_placement.h"
+#include "main/objanim.h"
 #include "main/objfx.h"
 #include "main/objtexture.h"
 #include "main/resource.h"
@@ -424,7 +425,7 @@ void kaldachom_update(int obj)
             (*(void (**)(int, int, int, int, int, int, int, double))(*(int*)gBaddieControlInterface + 0x58))(obj, ref, state, 8, 6, 0, 0x26, (double)lbl_803E30C8);
             ((GroundBaddieState*)state)->targetState = 0;
             Sfx_PlayFromObject(obj, SFXkr_pullup1);
-            ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
+            ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
             ((GroundBaddieState*)state)->baddie.moveDone = 0;
             ((GameObject*)obj)->anim.alpha = 0xff;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.
@@ -512,7 +513,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
     (*(void (**)(int, int, int, int, int, int, u8, double))(*(int*)gBaddieControlInterface + 0x58))(obj, data, state, 8, 6, 0, initMode, (double)lbl_803E30C8);
     ((GameObject*)obj)->animEventCallback = NULL;
     control = ((CampfireState*)state)->control;
-    ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
+    ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
     ((GameObject*)obj)->anim.currentMoveProgress = lbl_803E307C;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     (*(VtableFn*)(*gPlayerInterface + 0x14))(obj, state, 0);

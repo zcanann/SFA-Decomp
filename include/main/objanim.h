@@ -30,6 +30,11 @@ extern char gObjAnimMissingCachedMoveWarning[];
 #define OBJANIM_STATE_WORD_EVENT_STATE 1
 #define OBJANIM_STATE_WORD_PREV_EVENT_STATE 2
 
+/* moveControlFlags bits for ObjAnim_SetCurrentMove (mirror of objanim_internal.h). */
+#ifndef OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN
+#define OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN 0x10
+#endif
+
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           u32 moveId,int eventState);
 void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,int eventState);
