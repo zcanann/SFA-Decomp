@@ -17,6 +17,10 @@
 #include "main/audio/music_trigger_ids.h"
 
 /* shrine-lantern state machine (state->mode) */
+#define DFSH_SHRINE_ENVFX_A 0x78
+#define DFSH_SHRINE_ENVFX_B 0x79
+#define DFSH_SHRINE_ENVFX_C 0x222
+
 #define DFSHRINE_MODE_IDLE          0 /* orbit/chime; wait for player activation */
 #define DFSHRINE_MODE_AWAIT_OPEN    1 /* wait for the open sequence to finish */
 #define DFSHRINE_MODE_GRANT_REWARDS 2 /* timed reward-bit granting loop */
@@ -337,9 +341,9 @@ void DFSH_Shrine_update(int objArg)
         if (obj->unkF4 == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxAct((int)obj, player, 0x78, 0);
-            getEnvfxAct((int)obj, player, 0x79, 0);
-            getEnvfxAct((int)obj, player, 0x222, 0);
+            getEnvfxAct((int)obj, player, DFSH_SHRINE_ENVFX_A, 0);
+            getEnvfxAct((int)obj, player, DFSH_SHRINE_ENVFX_B, 0);
+            getEnvfxAct((int)obj, player, DFSH_SHRINE_ENVFX_C, 0);
         }
     }
     fn_801C2914((int)obj);
