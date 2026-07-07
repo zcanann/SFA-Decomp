@@ -13,6 +13,9 @@
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL72_EFFECT_ID 0x154
+
 extern ModgfxInterface** gModgfxInterface;
 
 extern u8 lbl_80314288[];
