@@ -241,7 +241,8 @@ typedef struct ObjDef {
   u8 pad54;
   s8 modelCount;
   s8 group8RegistrationCount;
-  u8 pad57[0x59 - 0x57];
+  u8 unk57;
+  u8 unk58;
   u8 textureSlotCount;
   u8 jointCount;
   u8 pad5B[0x5E - 0x5B];

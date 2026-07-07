@@ -13892,7 +13892,7 @@ int playerState25(int obj, int state)
     ;
     inner->yaw = inner->targetYaw;
     *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000000LL;
-    fn_802ABFBC(obj, state, (int)inner);
+    fn_802ABFBC(obj, state, inner);
     return 0;
 }
 
@@ -15578,64 +15578,66 @@ int playerStateMountBike(int obj, int state, f32 fv)
     return 0;
 }
 
-#pragma opt_propagation reset
-void fn_802ABFBC(int obj, int state, int inner)
+#pragma opt_lifetimes off
+void fn_802ABFBC(int obj, int state, PlayerState* inner)
 {
-    void* sub;
-    f32 dx, dy, dz;
     f32 x1, y1, z1;
-    f32 pos2[3];
+    f32 pos[3];
+    GameObject* sub;
 
-    ((PlayerState*)inner)->headPitch =
-        (f32)((PlayerState*)inner)->headPitch * powfBitEstimate(lbl_803E7FF4, timeDelta);
-    sub = ((PlayerState*)inner)->cameraTargetObject;
-    if (sub != NULL && *(u8*)(*(int*)((char*)sub + 0x50) + 0x58) != 0)
+    inner->headPitch *= powfBitEstimate(lbl_803E7FF4, timeDelta);
+    sub = inner->cameraTargetObject;
+    if (sub != NULL && sub->anim.modelInstance->unk58 != 0)
     {
-        int d;
-
         ObjPath_GetPointWorldPosition(obj, 5, &x1, &y1, &z1, 0);
         if (objModelGetVecFn_800395d8((int)sub, 0) != 0)
         {
-            objPosFn_80039510((int)sub, 0, pos2);
+            objPosFn_80039510((int)sub, 0, pos);
         }
         else
         {
-            pos2[0] = *(f32*)((char*)sub + 0xc);
-            pos2[1] = *(f32*)((char*)sub + 0x10);
-            pos2[2] = ((PlayerState*)sub)->baddie.posX;
+            pos[0] = sub->anim.localPosX;
+            pos[1] = sub->anim.localPosY;
+            pos[2] = sub->anim.localPosZ;
         }
-        dx = pos2[0] - x1;
-        dy = pos2[1] - y1;
-        dz = pos2[2] - z1;
 
-        d = getAngle(-dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
-        d = d - (u16)((PlayerState*)inner)->headYaw;
-        if (d > 0x8000) d = d - 0xffff;
-        if (d < -0x8000) d = d + 0xffff;
-        d = (f32)d * lbl_803E7EB4;
-        ((PlayerState*)inner)->headYaw =
-            (f32)d * timeDelta + (f32) * (s16*)((int)inner + 0x4d6);
+        {
+            f32 dx = pos[0] - x1;
+            f32 dy = pos[1] - y1;
+            f32 dz = pos[2] - z1;
 
-        d = getAngle(-dx, -dz) & 0xffff;
-        d = d - (u16)((PlayerState*)inner)->targetYaw;
-        if (d > 0x8000) d = d - 0xffff;
-        if (d < -0x8000) d = d + 0xffff;
-        d = (d < -0x1c70) ? -0x1c70 : ((d > 0x1c70) ? 0x1c70 : d);
-        d = d - (u16)((PlayerState*)inner)->bodyLeanAngle;
-        if (d > 0x8000) d = d - 0xffff;
-        if (d < -0x8000) d = d + 0xffff;
-        d = (f32)d * lbl_803E7EB4;
-        ((PlayerState*)inner)->bodyLeanAngle =
-            (f32)d * timeDelta + (f32) * (s16*)((int)inner + 0x4d4);
-        ((PlayerState*)inner)->bodyLeanHalf = ((PlayerState*)inner)->bodyLeanAngle / 2;
+            int d = getAngle(-dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
+            d -= (u16)inner->headYaw;
+            if (d > 0x8000) d = d - 0xffff;
+            if (d < -0x8000) d = d + 0xffff;
+            d = (f32)d * lbl_803E7EB4;
+            inner->headYaw += (f32)d * timeDelta;
+
+            d = getAngle(-dx, -dz) & 0xffff;
+            d -= (u16)inner->targetYaw;
+
+            if (d > 0x8000) d = d - 0xffff;
+            if (d < -0x8000) d = d + 0xffff;
+
+            d = (d < -0x1c70) ? -0x1c70 : ((d > 0x1c70) ? 0x1c70 : d);
+            d -= (u16)inner->bodyLeanAngle;
+
+            if (d > 0x8000) d = d - 0xffff;
+            if (d < -0x8000) d = d + 0xffff;
+
+            d = (f32)d * lbl_803E7EB4;
+            inner->bodyLeanAngle += (f32)d * timeDelta;
+            inner->bodyLeanHalf = inner->bodyLeanAngle / 2;
+        }
     }
     else
     {
-        ((PlayerState*)inner)->headYaw =
-            (f32)((PlayerState*)inner)->headYaw * powfBitEstimate(lbl_803E7F1C, timeDelta);
+        inner->headYaw *= powfBitEstimate(lbl_803E7F1C, timeDelta);
     }
 }
+#pragma opt_lifetimes reset
 
+#pragma opt_propagation reset
 int playerState24(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
@@ -15703,7 +15705,7 @@ int playerState24(int obj, int state, f32 fv)
     inner->targetYaw += (int)((f32)inner->targetObjectBearing / lbl_803E7FC0);
     inner->yaw = inner->targetYaw;
     *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000000LL;
-    fn_802ABFBC(obj, state, (int)inner);
+    fn_802ABFBC(obj, state, inner);
     return 0;
 }
 
