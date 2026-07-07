@@ -70,6 +70,7 @@ extern void largecrate_initialise(void);
 #define SMALLBASKET_CHILD_OBJ_FRUIT_C 0x3d5
 #define SMALLBASKET_CHILD_OBJ_EFFECT 0xb
 #define SMALLBASKET_CHILD_OBJ_EFFECT_ALT 0x3cd
+#define SMALLBASKET_RESOURCE_ID 0x5b /* basket object resource -> gSmallBasketResource */
 
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
 
@@ -776,7 +777,7 @@ void SmallBasket_init(int obj, int def)
         ((CfperchState*)state)->respawnDelay = v1c * 0x3c;
     }
 
-    gSmallBasketResource = Resource_Acquire(0x5b, 1);
+    gSmallBasketResource = Resource_Acquire(SMALLBASKET_RESOURCE_ID, 1);
     ((CfperchState*)state)->randomTimer = (s16)(randomGetRange(0, 0x64) + 0x12c);
     ((CfperchState*)state)->unk1F = (u8)((SmallbasketObjectDef*)def)->unk1A;
     ((GameObject*)obj)->anim.rotX = (s16)(((SmallbasketObjectDef*)def)->rotX << 8);
