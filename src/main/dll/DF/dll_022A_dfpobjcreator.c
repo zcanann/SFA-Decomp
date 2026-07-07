@@ -92,8 +92,6 @@ void DFP_ObjCreator_hitDetect(void)
 {
 }
 
-#pragma dont_inline on
-
 void DFP_ObjCreator_update(int obj)
 {
 
@@ -132,7 +130,6 @@ void DFP_ObjCreator_update(int obj)
         }
     }
 }
-#pragma dont_inline reset
 
 void DFP_ObjCreator_init(int obj, s8* def)
 {
