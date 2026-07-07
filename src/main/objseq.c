@@ -8,6 +8,20 @@
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
 #include "main/maketex.h"
+
+/* Camera mode ids passed to gCameraInterface->setMode; each == cameramode DLL number. */
+#define OBJSEQ_CAMMODE_DEFAULT 0x42      /* default gameplay cameramode DLL */
+#define OBJSEQ_CAMMODE_VIEWFINDER 0x44   /* dll_0044 viewfinder */
+#define OBJSEQ_CAMMODE_CAMTALK 0x45      /* dll_0045_camTalk */
+#define OBJSEQ_CAMMODE_TESTSTRENGTH 0x47 /* dll_0047_cameramodeteststrength */
+#define OBJSEQ_CAMMODE_STATIC 0x48       /* dll_0048_cameramodestatic */
+#define OBJSEQ_CAMMODE_COMBAT 0x49       /* dll_0049_cameramodecombat */
+#define OBJSEQ_CAMMODE_SHIPBATTLE 0x4a   /* dll_004A_cameramodeshipbattle */
+#define OBJSEQ_CAMMODE_CAMDEBUG 0x4c     /* dll_004C_camDebug */
+#define OBJSEQ_CAMMODE_CLOUDRUNNER 0x53  /* dll_0053_cameramodecloudrunner */
+#define OBJSEQ_CAMMODE_ARWING 0x56       /* dll_0056_cameramodearwing */
+#define OBJSEQ_CAMMODE_TITLE 0x57        /* dll_0057_cameramodetitle */
+
 extern int getTableFileEntry(int fileId, int index, int* out);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 extern int strncmp(const char* a, const char* b, u32 n);
@@ -984,7 +998,7 @@ void ObjSeq_updateCamera(void)
             {
                 block.fov = gObjSeqCameraFov;
             }
-            (*gCameraInterface)->setMode(0x4c, 0, 1, 0x144, &block, model[0x24], 0xff);
+            (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_CAMDEBUG, 0, 1, 0x144, &block, model[0x24], 0xff);
             gObjSeqCameraActive = 1;
         }
         else
@@ -1029,7 +1043,7 @@ void ObjSeq_updateCamera(void)
                 case 0x47:
                     mode47.mode = gObjSeqCamModeArgB;
                     mode47.flag = gObjSeqCamModeArgC;
-                    (*gCameraInterface)->setMode(0x47, 1, 3, 8, &mode47, gObjSeqCamModeArgD, 0xff);
+                    (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_TESTSTRENGTH, 1, 3, 8, &mode47, gObjSeqCamModeArgD, 0xff);
                     break;
                 case 0x48:
                     mode48.mode = gObjSeqCamModeArgB;
@@ -1037,10 +1051,10 @@ void ObjSeq_updateCamera(void)
                     {
                         mode48.flag = 1;
                     }
-                    (*gCameraInterface)->setMode(0x48, 1, 3, 8, &mode48, code, 0xff);
+                    (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_STATIC, 1, 3, 8, &mode48, code, 0xff);
                     break;
                 case 0x4a:
-                    (*gCameraInterface)->setMode(0x4a, 1, 0, 0, NULL, gObjSeqCamModeArgD, 0xff);
+                    (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_SHIPBATTLE, 1, 0, 0, NULL, gObjSeqCamModeArgD, 0xff);
                     break;
                 case 0x4c:
                     block.posB[0] = gObjSeqSavedCamPosX;
@@ -1050,10 +1064,10 @@ void ObjSeq_updateCamera(void)
                     block.rot[1] = gObjSeqSavedCamYaw;
                     block.rot[2] = gObjSeqSavedCamRoll;
                     block.fov = gObjSeqSavedCamFov;
-                    (*gCameraInterface)->setMode(0x4c, 1, 0, 0x144, &block, 0, 0xff);
+                    (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_CAMDEBUG, 1, 0, 0x144, &block, 0, 0xff);
                     break;
                 case 0x45:
-                    (*gCameraInterface)->setMode(0x45, 1, 0, 0, NULL, gObjSeqCamModeArgD, 0xff);
+                    (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_CAMTALK, 1, 0, 0, NULL, gObjSeqCamModeArgD, 0xff);
                     break;
                 case 0x44:
                     if (gObjSeqCamModeArgB != 0)
@@ -1061,27 +1075,27 @@ void ObjSeq_updateCamera(void)
                         fblock.a = lbl_803DEFF4;
                         fblock.b = lbl_803DEFF8;
                         fblock.c = 5;
-                        (*gCameraInterface)->setMode(0x44, 1, 1, 0xc, &fblock, 0, 0xff);
+                        (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_VIEWFINDER, 1, 1, 0xc, &fblock, 0, 0xff);
                     }
                     else
                     {
                         fblock.a = lbl_803DEFF4;
                         fblock.b = lbl_803DEFF8;
                         fblock.c = 0x1e;
-                        (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &fblock, 0, 0xff);
+                        (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_VIEWFINDER, 1, 0, 0xc, &fblock, 0, 0xff);
                     }
                     break;
                 case 0x49:
-                    (*gCameraInterface)->setMode(0x49, 1, 0, gObjSeqCamModeArgB, &gObjSeqCamModeArgC, gObjSeqCamModeArgD, 0xff);
+                    (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_COMBAT, 1, 0, gObjSeqCamModeArgB, &gObjSeqCamModeArgC, gObjSeqCamModeArgD, 0xff);
                     break;
                 case 0x53:
-                    (*gCameraInterface)->setMode(0x53, 1, 0, 0, NULL, 0, 0xff);
+                    (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_CLOUDRUNNER, 1, 0, 0, NULL, 0, 0xff);
                     break;
                 case 0x56:
-                    (*gCameraInterface)->setMode(0x56, 1, gObjSeqCamModeArgB, 0, NULL, 0, 0);
+                    (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_ARWING, 1, gObjSeqCamModeArgB, 0, NULL, 0, 0);
                     break;
                 case 0x57:
-                    (*gCameraInterface)->setMode(0x57, 0, 3, 0, NULL, 0, 0);
+                    (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_TITLE, 0, 3, 0, NULL, 0, 0);
                     (*gCameraInterface)->setFocus(*(void**)ObjGroup_GetObjects(OBJSEQ_TARGET_OBJGROUP, &groupObjs), 0);
                     break;
                 default:
@@ -1089,7 +1103,7 @@ void ObjSeq_updateCamera(void)
                     {
                         gObjSeqCamModeArgB = 1;
                     }
-                    (*gCameraInterface)->setMode(0x42, 0, gObjSeqCamModeArgB, 0, NULL, gObjSeqCamModeArgD, 0xff);
+                    (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_DEFAULT, 0, gObjSeqCamModeArgB, 0, NULL, gObjSeqCamModeArgD, 0xff);
                     break;
                 }
             }
