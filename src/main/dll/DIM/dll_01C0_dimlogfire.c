@@ -43,23 +43,6 @@ extern int randomGetRange(int lo, int hi);
 
 
 
-ObjectDescriptor gIMIcePillarObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)imicepillar_initialise,
-    (ObjectDescriptorCallback)imicepillar_release,
-    0,
-    (ObjectDescriptorCallback)imicepillar_init,
-    (ObjectDescriptorCallback)imicepillar_update,
-    (ObjectDescriptorCallback)imicepillar_hitDetect,
-    (ObjectDescriptorCallback)imicepillar_render,
-    (ObjectDescriptorCallback)imicepillar_free,
-    (ObjectDescriptorCallback)imicepillar_getObjectTypeId,
-    imicepillar_getExtraSize,
-};
-
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
 extern void ModelLightStruct_free(void* light);
@@ -82,32 +65,6 @@ extern f32 lbl_803E4838;
 extern f32 lbl_803E483C;
 
 #define DIMLOGFIRE_GROUP 0x31
-
-int DIMLogFire_getExtraSize(void) { return 0x24; }
-int DIMLogFire_getObjectTypeId(void) { return 0x1; }
-
-int fn_801B0784(int obj, int delta)
-{
-    DimLogFireState* inner = ((GameObject*)obj)->extra;
-    inner->strengthInit = (s8)(inner->strengthInit - delta);
-    return inner->strengthInit <= 0;
-}
-
-void DIMLogFire_free(int* obj, int mode)
-{
-    extern void Obj_FreeObject(void* o); /* #57 */
-    DimLogFireState* inner = ((GameObject*)obj)->extra;
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-    if ((void*)inner->subObj != NULL && mode == 0)
-    {
-        Obj_FreeObject((int*)inner->subObj);
-    }
-    ObjGroup_RemoveObject(obj, DIMLOGFIRE_GROUP);
-    if ((void*)inner->light != NULL)
-    {
-        ModelLightStruct_free((void*)inner->light);
-    }
-}
 
 int DIMLogFire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -144,6 +101,32 @@ int DIMLogFire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     animUpdate->triggerCommand = 0;
     return 0;
+}
+
+int fn_801B0784(int obj, int delta)
+{
+    DimLogFireState* inner = ((GameObject*)obj)->extra;
+    inner->strengthInit = (s8)(inner->strengthInit - delta);
+    return inner->strengthInit <= 0;
+}
+
+int DIMLogFire_getExtraSize(void) { return 0x24; }
+int DIMLogFire_getObjectTypeId(void) { return 0x1; }
+
+void DIMLogFire_free(int* obj, int mode)
+{
+    extern void Obj_FreeObject(void* o); /* #57 */
+    DimLogFireState* inner = ((GameObject*)obj)->extra;
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+    if ((void*)inner->subObj != NULL && mode == 0)
+    {
+        Obj_FreeObject((int*)inner->subObj);
+    }
+    ObjGroup_RemoveObject(obj, DIMLOGFIRE_GROUP);
+    if ((void*)inner->light != NULL)
+    {
+        ModelLightStruct_free((void*)inner->light);
+    }
 }
 
 void DIMLogFire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
