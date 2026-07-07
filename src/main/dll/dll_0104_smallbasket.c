@@ -63,6 +63,14 @@ extern void largecrate_initialise(void);
 #define SMALLBASKET_MSG_PLAYER_GRAB 0x100010 /* tells player to grab/hold the basket */
 #define PAD_BUTTON_A 0x100
 
+/* Contents object DLL-ids spawned by fn_801816F8 on break/throw (roles from
+   the file docblock: 0x3d3/0x3d4/0x3d5 fruit variants, 0xb/0x3cd effect). */
+#define SMALLBASKET_CHILD_OBJ_FRUIT_A 0x3d3
+#define SMALLBASKET_CHILD_OBJ_FRUIT_B 0x3d4
+#define SMALLBASKET_CHILD_OBJ_FRUIT_C 0x3d5
+#define SMALLBASKET_CHILD_OBJ_EFFECT 0xb
+#define SMALLBASKET_CHILD_OBJ_EFFECT_ALT 0x3cd
+
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
 
 /* Spawn-setup record smallbasket hands to Obj_SetupObject for its thrown
@@ -251,7 +259,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     switch (mode)
     {
     case 1:
-        setup = Obj_AllocObjectSetup(0x24, 0x3d3);
+        setup = Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_A);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -314,7 +322,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         ((GameObject*)spawned)->anim.rotX = diff;
         break;
     case 2:
-        setup = Obj_AllocObjectSetup(0x24, 0x3d4);
+        setup = Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_B);
         ((SmallBasketThrowSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
@@ -378,7 +386,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         ((GameObject*)spawned)->anim.rotX = diff;
         break;
     case 3:
-        setup = Obj_AllocObjectSetup(0x24, 0x3d5);
+        setup = Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_C);
         ((SmallBasketThrowSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
@@ -445,11 +453,11 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     case 6:
         if (data[0x1e] == 5)
         {
-            setup = Obj_AllocObjectSetup(0x30, 0xb);
+            setup = Obj_AllocObjectSetup(0x30, SMALLBASKET_CHILD_OBJ_EFFECT);
         }
         else
         {
-            setup = Obj_AllocObjectSetup(0x30, 0x3cd);
+            setup = Obj_AllocObjectSetup(0x30, SMALLBASKET_CHILD_OBJ_EFFECT_ALT);
         }
         setup[0x1a] = 0x14;
         ((SmallBasketThrowSetup*)setup)->field2C = -1;
