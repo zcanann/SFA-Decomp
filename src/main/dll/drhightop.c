@@ -37,6 +37,8 @@ extern f32 PSVECDotProduct(void* a, void* b);
 extern int randomGetRange(int lo, int hi);
 extern void setMotionBlur(u8 enabled, f32 amount);
 
+/* particle spray spawned in a burst loop (~0x32/framesThisStep) on a bike collision */
+#define DRHIGHTOP_PARTFX_COLLISION_SPRAY 0x553
 
 
 
@@ -463,7 +465,7 @@ void fn_801EB634(int obj, int stateRaw)
             burstCount = 0x32 / framesThisStep;
             while (burstCount-- != 0)
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x553, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, DRHIGHTOP_PARTFX_COLLISION_SPRAY, NULL, 2, -1, NULL);
             }
             st->collisionFxTimer = lbl_803E5AF4;
             st->collisionFxDamping = lbl_803E5AEC;
