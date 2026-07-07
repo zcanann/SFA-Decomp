@@ -14,6 +14,9 @@
 
 #define MAIN_LAVAPOOL_RESOURCE_ID 0xa6
 
+#define MAIN_LAVAPOOL_PARTFX 0x3a2
+#define MAIN_LAVASTAR_PARTFX 0x3a4
+
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803DC074;
 extern void* gVfpLavaPoolEffectResource;
@@ -297,7 +300,7 @@ void fn_801FD6B4(int obj)
         parm.value = state->amplitude;
         if (((GameObject*)obj)->objectFlags & MAIN_OBJFLAG_RENDERED)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x3a2, &parm, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MAIN_LAVAPOOL_PARTFX, &parm, 2, -1, NULL);
         }
     }
     phase = state->phase;
@@ -377,7 +380,7 @@ void VFP_lavastar_update(int obj)
     }
     if (state->particleToggle == 0)
     {
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x3a4, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, MAIN_LAVASTAR_PARTFX, NULL, 2, -1, NULL);
     }
     state->particleToggle ^= 1;
 }
