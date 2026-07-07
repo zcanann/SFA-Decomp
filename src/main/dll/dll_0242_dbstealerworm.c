@@ -57,6 +57,9 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 /* spray burst (spawned 10x when DBWORM_FLAG14_FX_SPRAY is set) */
 #define DBSTEALERWORM_PARTFX_SPRAY 0x343
 
+/* hit-volume slot reconfigured across the worm's movement states */
+#define DBSTEALERWORM_HIT_VOLUME_SLOT 10
+
 /*
  * DbStealerwormControl - the per-family control record hung off
  * GroundBaddieState.control (state+0x40C) for dbstealerworm
@@ -407,7 +410,7 @@ int dbstealerworm_stateHandlerA03(int obj, int baddie)
     {
         ObjHits_EnableObject(obj);
     }
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    ObjHits_SetHitVolumeSlot(obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
     ((BaddieState*)baddie)->moveSpeed = lbl_803E62F4;
     if (*(char*)&((BaddieState*)baddie)->moveJustStartedA != '\0')
     {
@@ -612,7 +615,7 @@ int dbstealerworm_stateHandlerA00(int obj, int baddie)
     }
     else
     {
-        ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+        ObjHits_SetHitVolumeSlot(obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
     }
 
     if ((s32)(s8)bs->moveDone != 0)
@@ -714,7 +717,7 @@ int dbstealerworm_stateHandlerA04(int obj, int param2)
     {
         ObjHits_EnableObject(obj);
     }
-    ObjHits_SetHitVolumeSlot(obj, 0xa, 1, -1);
+    ObjHits_SetHitVolumeSlot(obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
     bs->moveSpeed = lbl_803E62F4;
     if (*(s8*)&bs->moveJustStartedA != 0)
     {
@@ -916,7 +919,7 @@ int dbstealerworm_stateHandlerA02(int obj, int baddie)
     {
         ObjHits_EnableObject(obj);
     }
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    ObjHits_SetHitVolumeSlot(obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
     if (*(s8*)&bs->moveJustStartedA != 0)
     {
         if ((int)randomGetRange(0, 1) != 0)
