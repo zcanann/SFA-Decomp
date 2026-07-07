@@ -150,6 +150,10 @@ u8 gTitleScreenMtx[0x34];
 extern s16 gTitleScreenTextureIds[];
 extern void PSMTXIdentity(void*);
 
+/* Main title-screen texture asset ids (docblock: "the main texture (asset 0x647 or 0xC5)"). */
+#define FRONT_MAIN_TEXTURE_ID_A 0x647
+#define FRONT_MAIN_TEXTURE_ID_B 0xC5
+
 /* Reset state bytes, load the main texture (asset 0x647 or 0xC5 depending on
  * lbl_803DC968), identity the matrix, then load the 19-entry texture table
  * from the id list at gTitleScreenTextureIds into gTitleScreenTextures. */
@@ -162,11 +166,11 @@ void TitleScreen_initialise(void)
     lbl_803DD991 = 0;
     if (lbl_803DC968 != 0)
     {
-        gTitleScreenMainTex = textureLoadAsset(0x647);
+        gTitleScreenMainTex = textureLoadAsset(FRONT_MAIN_TEXTURE_ID_A);
     }
     else
     {
-        gTitleScreenMainTex = textureLoadAsset(0xC5);
+        gTitleScreenMainTex = textureLoadAsset(FRONT_MAIN_TEXTURE_ID_B);
     }
     lbl_803DD9D0 = lbl_803E2318;
     lbl_803DD9CC = lbl_803E2318;
