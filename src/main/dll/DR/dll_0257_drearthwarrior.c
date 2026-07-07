@@ -6,6 +6,7 @@
 #define PAD_BUTTON_A 0x100
 
 #define DREARTHWARRIOR_OBJGROUP 0xa
+#define DREARTHWARRIOR_PARTFX 0x7e6
 
 #define DREARTHWARRIOR_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -1328,7 +1329,7 @@ void DR_EarthWarrior_update(int obj)
             w.angles[0] = 2;
             for (j = 2; j != 0; j--)
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7e6, &w, 0x200001, -1, vecA);
+                (*gPartfxInterface)->spawnObject((void*)obj, DREARTHWARRIOR_PARTFX, &w, 0x200001, -1, vecA);
             }
             placement += 0xc;
         }
