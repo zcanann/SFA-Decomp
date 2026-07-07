@@ -33,6 +33,9 @@
 
 /* object group this object belongs to */
 #define DLLCE_OBJGROUP 3
+
+/* child object id spawned in fn_8015EA48 (role un-pinnable per gate: generic locals, no cache field/spawn-fn/docstring) */
+#define DLLCE_CHILD_OBJ 778
 extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_SetHitVolumeSlot();
@@ -534,7 +537,7 @@ void fn_8015EA48(int obj, GroundBaddieState* state)
 
     if (Obj_IsLoadingLocked() == 0)
     {
-        setup = Obj_AllocObjectSetup(36, 778);
+        setup = Obj_AllocObjectSetup(36, DLLCE_CHILD_OBJ);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = lbl_803E2DF4 + ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
