@@ -568,8 +568,8 @@ void ObjSeq_runBgCmds(void)
                 seqp = *(u8**)(candidate + 0xb8);
                 if (ok != 0)
                 {
-                    ((ObjSeqState*)seqp)->unk7E = 2;
-                    ((ObjSeqState*)seqp)->unk5E = xrot;
+                    ((ObjSeqState*)seqp)->runState = 2;
+                    ((ObjSeqState*)seqp)->pendingStartFrame = xrot;
                     ObjSeq_update(candidate, lbl_803DEFC8);
                     Obj_GetWorldPosition(candidate, &((GameObject*)candidate)->anim.worldPosX,
                                          &((GameObject*)candidate)->anim.worldPosY,
@@ -577,7 +577,7 @@ void ObjSeq_runBgCmds(void)
                 }
                 else
                 {
-                    ((ObjSeqState*)seqp)->unk7E = 3;
+                    ((ObjSeqState*)seqp)->runState = 3;
                 }
             }
             mp++;
@@ -891,7 +891,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
                 }
                 ((ObjSeqState*)seq)->curFrame = xrot;
                 ((ObjSeqState*)seq)->prevFrame = xrot;
-                *(s8*)&((ObjSeqState*)seq)->unk7C = (s8)(arg10 + 1);
+                *(s8*)&((ObjSeqState*)seq)->pendingConditionId = (s8)(arg10 + 1);
                 gObjSeqJumpLatch[(s8)((ObjSeqState*)seq)->slot] = 1;
                 return 1;
             case 5:
@@ -1161,7 +1161,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         {
             break;
         }
-        ((ObjSeqState*)seq)->unk7F |= 1;
+        ((ObjSeqState*)seq)->stateFlags |= 1;
         break;
     case 18:
         if (flag != 0)
@@ -2163,11 +2163,11 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
             tex2 = objFindTexture(seqObj, 4, 0);
             if (tex5 != NULL)
             {
-                tex5->textureId = (s16)((ObjSeqState*)seq)->unk8D << 8;
+                tex5->textureId = (s16)((ObjSeqState*)seq)->texId5 << 8;
             }
             if (tex2 != NULL)
             {
-                tex2->textureId = (s16)((ObjSeqState*)seq)->unk8E << 8;
+                tex2->textureId = (s16)((ObjSeqState*)seq)->texId4 << 8;
             }
         }
     }
@@ -2240,7 +2240,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         {
             ((ObjSeqState*)seq)->moveId += 0x531;
         }
-        ((ObjSeqState*)seq)->unk8C = (*(s16*)(cmd + 2) >> 8) & 0xf0;
+        ((ObjSeqState*)seq)->moveBlendParam = (*(s16*)(cmd + 2) >> 8) & 0xf0;
         if (action == NULL)
         {
             break;
@@ -2308,7 +2308,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         }
         ((ObjSeqState*)seq)->fade = lbl_803DEFC8;
         ObjAnim_SetCurrentMove((int)activeObj, ((ObjSeqState*)seq)->moveId,
-                               (f32)((ObjSeqState*)seq)->unk8C * lbl_803DF02C, 0);
+                               (f32)((ObjSeqState*)seq)->moveBlendParam * lbl_803DF02C, 0);
         break;
     case 1:
         if (flag8 != 0)
@@ -2507,22 +2507,22 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             {
                 break;
             }
-            ((ObjSeqState*)seq)->unk8D = (u8)(*(s16*)(cmd + 2) & 0xfff);
-            ((ObjSeqState*)seq)->unk8E = ((ObjSeqState*)seq)->unk8D;
+            ((ObjSeqState*)seq)->texId5 = (u8)(*(s16*)(cmd + 2) & 0xfff);
+            ((ObjSeqState*)seq)->texId4 = ((ObjSeqState*)seq)->texId5;
             break;
         case 0xe:
             if (flag8 != 0)
             {
                 break;
             }
-            ((ObjSeqState*)seq)->unk8D = (u8)(*(s16*)(cmd + 2) & 0xfff);
+            ((ObjSeqState*)seq)->texId5 = (u8)(*(s16*)(cmd + 2) & 0xfff);
             break;
         case 0xf:
             if (flag8 != 0)
             {
                 break;
             }
-            ((ObjSeqState*)seq)->unk8E = (u8)(*(s16*)(cmd + 2) & 0xfff);
+            ((ObjSeqState*)seq)->texId4 = (u8)(*(s16*)(cmd + 2) & 0xfff);
             break;
         }
         break;
@@ -2617,7 +2617,7 @@ int ObjSeq_update(u8* obj, f32 t)
     }
 
     seq = ((GameObject*)obj)->extra;
-    if ((((ObjSeqState*)seq)->unk7F & 2) != 0)
+    if ((((ObjSeqState*)seq)->stateFlags & 2) != 0)
     {
         setJoypadDisabled();
     }
@@ -2627,7 +2627,7 @@ int ObjSeq_update(u8* obj, f32 t)
     lbl_803DD112 = 0;
     lbl_803DD111 = 0;
 
-    if (((ObjSeqState*)seq)->unk7E == 3)
+    if (((ObjSeqState*)seq)->runState == 3)
     {
         if (((ObjSeqState*)seq)->targetObj != NULL)
         {
@@ -2668,7 +2668,7 @@ int ObjSeq_update(u8* obj, f32 t)
     do
     {
         lbl_803DD113 = 0;
-        if (((ObjSeqState*)seq)->unk7E == 0)
+        if (((ObjSeqState*)seq)->runState == 0)
         {
             obj[0x36] = 0;
             return 1;
@@ -2730,7 +2730,7 @@ int ObjSeq_update(u8* obj, f32 t)
             (base + (s8)((ObjSeqState*)seq)->slot)[0x3a40] = 0;
         }
 
-        if (((ObjSeqState*)seq)->unk7E == 2)
+        if (((ObjSeqState*)seq)->runState == 2)
         {
             ObjSeq_SetupInitialPlaybackState(obj, &activeObj, seq, model, (void**)&action);
             return 0;
@@ -2768,11 +2768,11 @@ int ObjSeq_update(u8* obj, f32 t)
             ((ObjSeqState*)seq)->heading = ((s16*)(base + 0x35e8))[slot];
         }
 
-        if ((s8)((ObjSeqState*)seq)->unk7C != 0)
+        if ((s8)((ObjSeqState*)seq)->pendingConditionId != 0)
         {
-            if (ObjSeq_EvaluateCondition((s8)((ObjSeqState*)seq)->unk7C - 1, seq, (int)model) == 0)
+            if (ObjSeq_EvaluateCondition((s8)((ObjSeqState*)seq)->pendingConditionId - 1, seq, (int)model) == 0)
             {
-                ((ObjSeqState*)seq)->unk7C = 0;
+                ((ObjSeqState*)seq)->pendingConditionId = 0;
             }
             else
             {
@@ -3136,7 +3136,7 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
         gObjSeqCamMode = 0x42;
     }
 
-    ((ObjSeqState*)seq)->curFrame = ((ObjSeqState*)seq)->unk5E;
+    ((ObjSeqState*)seq)->curFrame = ((ObjSeqState*)seq)->pendingStartFrame;
     ((ObjSeqState*)seq)->prevFrame = -0x3c;
     ObjSeq_ApplyFrameCurves(obj, *seqObj, seq, 0);
     ObjSeq_RebuildCurveStateToFrame(obj, *seqObj, seq, 1);
@@ -3166,9 +3166,9 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
     }
 
     ObjSeq_ApplyLinkedObjectTransform(obj, *seqObj, seq);
-    ((ObjSeqState*)seq)->unk8D = 0;
-    ((ObjSeqState*)seq)->unk8E = 0;
-    ((ObjSeqState*)seq)->unk7E = 1;
+    ((ObjSeqState*)seq)->texId5 = 0;
+    ((ObjSeqState*)seq)->texId4 = 0;
+    ((ObjSeqState*)seq)->runState = 1;
     ((ObjSeqState*)seq)->prevFrame = ((ObjSeqState*)seq)->curFrame;
     if ((s8)gObjSeqStop != 0)
     {
@@ -3515,11 +3515,11 @@ void ObjSeq_objLoadAnimdata(u8* seq, u8* obj)
 
     if ((s8)obj[0x22] != 0)
     {
-        ((ObjSeqState*)seq)->unk7E = 2;
+        ((ObjSeqState*)seq)->runState = 2;
     }
     else
     {
-        ((ObjSeqState*)seq)->unk7E = 0;
+        ((ObjSeqState*)seq)->runState = 0;
     }
     ObjSeq_seqState_init(seq);
 }
@@ -3960,11 +3960,11 @@ checked:
             }
             if (*(u16*)(walk2 + 4) & 0x80)
             {
-                ((ObjSeqState*)seq)->unk7F = ((ObjSeqState*)seq)->unk7F | 4;
+                ((ObjSeqState*)seq)->stateFlags = ((ObjSeqState*)seq)->stateFlags | 4;
             }
             if (*(u16*)(walk2 + 4) & 0x40)
             {
-                ((ObjSeqState*)seq)->unk7F = ((ObjSeqState*)seq)->unk7F | 2;
+                ((ObjSeqState*)seq)->stateFlags = ((ObjSeqState*)seq)->stateFlags | 2;
             }
             if (*(u16*)(walk2 + 4) & 0x2000)
             {
@@ -4925,7 +4925,7 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
         lbl_803DB720 = -1;
     }
 
-    if (((ObjSeqState*)seq)->unk7E != 0)
+    if (((ObjSeqState*)seq)->runState != 0)
     {
         if ((s8)((ObjSeqState*)seq)->unk7B != 0)
         {
@@ -4954,7 +4954,7 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
         }
     }
 
-    ((ObjSeqState*)seq)->unk7E = 0;
+    ((ObjSeqState*)seq)->runState = 0;
 }
 
 f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)

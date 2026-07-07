@@ -115,7 +115,7 @@ struct ObjSeqState {
     s16 curFrame;
     s16 prevFrame;
     s16 endFrame;
-    s16 unk5E;
+    s16 pendingStartFrame; /* frame stashed with runState=2; restored into curFrame on start */
     s16 seqCounter; /* signed script register: set/added by sequence opcodes, sign-tested by ObjSeq_EvaluateCondition */
     s16 cmdCount;
     s16 animCount;
@@ -131,16 +131,16 @@ struct ObjSeqState {
     u8 unk79;
     u8 unk7A;
     u8 unk7B;
-    u8 unk7C;
+    u8 pendingConditionId; /* 1-based; ObjSeq_EvaluateCondition(pendingConditionId-1), cleared when satisfied */
     u8 unk7D;
-    u8 unk7E;
-    u8 unk7F;
+    u8 runState; /* 0=inactive, 1=running, 2=start/setup, 3=defer-attach-to-parent */
+    u8 stateFlags; /* bit 1 set on jump, bit 2/4 = pending transitions */
     u8 unk80;
     u8 eventIds[0xA];
     u8 eventCount;
-    u8 unk8C;
-    u8 unk8D;
-    u8 unk8E;
+    u8 moveBlendParam; /* (cmd>>8)&0xf0; scaled and passed as ObjAnim_SetCurrentMove blend arg */
+    u8 texId5; /* texture id for objFindTexture channel 5 (<<8 into textureId) */
+    u8 texId4; /* texture id for objFindTexture channel 4 (<<8 into textureId) */
     u8 unk8F;
     u8 sequenceControlFlags;
     u8 unk91[3];
