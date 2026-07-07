@@ -55,6 +55,10 @@ extern u32 dll_2E_func04();
 
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern u32 ModelLightStruct_free();
+
+/* Env-fx ids co-activated on the steam/warp transition (getEnvfxAct 3rd arg) */
+#define DIMBOSS_ENVFX_A 0xdb
+#define DIMBOSS_ENVFX_B 0xdc
 extern void Obj_FreeObject(u8* obj);
 extern u32 Obj_GetPlayerObject();
 extern u32 ObjHits_RegisterActiveHitVolumeObject();
@@ -567,8 +571,8 @@ void DIMboss_update(DIMbossObject* obj)
                 }
                 if (topState->steamFlags.bits.sfxPending != 0)
                 {
-                    getEnvfxAct(0, 0, 0xdb, 0);
-                    getEnvfxAct(0, 0, 0xdc, 0);
+                    getEnvfxAct(0, 0, DIMBOSS_ENVFX_A, 0);
+                    getEnvfxAct(0, 0, DIMBOSS_ENVFX_B, 0);
                     skyFn_80089710(7, 1, 0);
                     skyFn_800894a8(7, lbl_803E4C4C, lbl_803E4C50, lbl_803E4C54);
                     skyFn_800895e0(7, 0xa0, 0xa0, 0xff, 0x7f, 0x28);
