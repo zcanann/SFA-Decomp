@@ -42,15 +42,6 @@ typedef struct TrickyguardPlacement
 
 extern void objRenderFn_80041018(int* obj);
 
-void TrickyGuard_init(s16* obj, u8* placement)
-{
-    u32 flags;
-    *obj = (s16)((u32)((TrickyguardPlacement*)placement)->yawByte << 8);
-    flags = ((GameObject*)obj)->objectFlags;
-    flags |= TRICKYGUARD_OBJECT_FLAG;
-    ((GameObject*)obj)->objectFlags = flags;
-}
-
 void TrickyGuard_update(int* obj)
 {
     int* tricky;
@@ -69,6 +60,15 @@ void TrickyGuard_update(int* obj)
     }
     ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
     objRenderFn_80041018(obj);
+}
+
+void TrickyGuard_init(s16* obj, u8* placement)
+{
+    u32 flags;
+    *obj = (s16)((u32)((TrickyguardPlacement*)placement)->yawByte << 8);
+    flags = ((GameObject*)obj)->objectFlags;
+    flags |= TRICKYGUARD_OBJECT_FLAG;
+    ((GameObject*)obj)->objectFlags = flags;
 }
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
