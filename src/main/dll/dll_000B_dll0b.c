@@ -28,6 +28,10 @@
 
 #define DLL0B_OBJFLAG_RENDERED 0x800
 
+/* DLL-id of the object spawned to back a modgfx effect slot (generic effect
+   object; no cache field / spawn-fn / kind name -> suffixless per role-gate). */
+#define DLL0B_CHILD_OBJ 0x66
+
 typedef struct ModgfxEffectSlot
 {
     u8 pad0[0x4 - 0x0];
@@ -1792,7 +1796,7 @@ void dll_0B_func05(void)
                                 tmpl.y = ((ModgfxEffectSlot*)eff)->posOffsetY + tmpl.y;
                                 tmpl.z = ((ModgfxEffectSlot*)eff)->posOffsetZ + tmpl.z;
                             }
-                            o = Obj_AllocObjectSetup(0x20, 0x66);
+                            o = Obj_AllocObjectSetup(0x20, DLL0B_CHILD_OBJ);
                             ((GameObject*)o)->anim.rootMotionScale = tmpl.x;
                             ((GameObject*)o)->anim.localPosX = tmpl.y;
                             *(f32*)&((ObjDef*)o)->jointData = tmpl.z;
