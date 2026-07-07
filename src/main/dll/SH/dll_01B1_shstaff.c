@@ -19,6 +19,15 @@
 
 int sh_staff_getExtraSize(void) { return 0x74; }
 
+/* ShStaffState.phase pickup / carry state machine (see file header) */
+#define SHSTAFF_PHASE_IDLE 0          /* wait for the staff object / acquired game bit */
+#define SHSTAFF_PHASE_ARMED 1         /* proximity map load; wait for the pickup trigger */
+#define SHSTAFF_PHASE_PICKUP 2        /* acquired; fade in and unload the pickup map */
+#define SHSTAFF_PHASE_CARRY_ATTACH 3  /* build the carry matrix from the world transform */
+#define SHSTAFF_PHASE_CARRY_LOCAL 4   /* build the carry matrix from the hand's local matrix */
+#define SHSTAFF_PHASE_CARRY_RENDER 5  /* settled carry: render attached to the hand */
+#define SHSTAFF_PHASE_DONE 6          /* deactivated */
+
 #pragma opt_strength_reduction on
 void sh_staff_free(int* obj, int p2)
 {
@@ -168,19 +177,19 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     player = (int)Obj_GetPlayerObject();
     if (visible != 0)
     {
-        if (state->phase == 3)
+        if (state->phase == SHSTAFF_PHASE_CARRY_ATTACH)
         {
             Obj_BuildWorldTransformMatrix(obj, mtxB, 0);
             PSMTXInverse((int)ObjPath_GetPointModelMtx((void*)player, 0), mtxA);
             PSMTXConcat(mtxA, mtxB, state->carryMtx);
-            state->phase = 5;
+            state->phase = SHSTAFF_PHASE_CARRY_RENDER;
         }
-        if (state->phase == 4)
+        if (state->phase == SHSTAFF_PHASE_CARRY_LOCAL)
         {
             ObjPath_GetPointLocalMtx((void*)player, 0, state->carryMtx);
-            state->phase = 5;
+            state->phase = SHSTAFF_PHASE_CARRY_RENDER;
         }
-        if (state->phase == 5)
+        if (state->phase == SHSTAFF_PHASE_CARRY_RENDER)
         {
             PSMTXConcat((f32*)ObjPath_GetPointModelMtx((void*)player, 0), state->carryMtx, mtxB);
             objSetMtxFn_800412d4(mtxB);
@@ -394,7 +403,7 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (v)
         {
         case 0:
-            state->phase = 3;
+            state->phase = SHSTAFF_PHASE_CARRY_ATTACH;
             break;
         case 1:
             state->hudFlag = 1;
@@ -406,7 +415,7 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             sh_staff_deactivate(obj, state, 1);
             break;
         case 4:
-            state->phase = 4;
+            state->phase = SHSTAFF_PHASE_CARRY_LOCAL;
             break;
         case 5:
             hudFn_8011f38c(1);
@@ -488,7 +497,7 @@ void sh_staff_deactivate(int obj, ShStaffState* state, int clearChildren)
         }
     }
 
-    state->phase = 6;
+    state->phase = SHSTAFF_PHASE_DONE;
 }
 #pragma opt_strength_reduction reset
 #pragma dont_inline reset
@@ -501,7 +510,7 @@ void sh_staff_update(int obj)
     f32 dist = getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)((int)player + 0x18));
     u8 mode = state->phase;
 
-    if (mode == 0)
+    if (mode == SHSTAFF_PHASE_IDLE)
     {
         if (player == NULL) goto end;
         if ((void*)Player_GetStaffObject((int)player) == NULL) goto end;
@@ -517,7 +526,7 @@ void sh_staff_update(int obj)
             ((GameObject*)obj)->anim.rotY = (s16)(((ShStaffPlacement*)setup)->rotYByte << 8);
             ((GameObject*)obj)->anim.rotZ = (s16)(((ShStaffPlacement*)setup)->rotZByte << 8);
             ((GameObject*)obj)->animEventCallback = sh_staff_SeqFn;
-            state->phase = 1;
+            state->phase = SHSTAFF_PHASE_ARMED;
             if (Obj_IsLoadingLocked() == 0)
             {
                 loadResult = 0;
@@ -533,13 +542,13 @@ void sh_staff_update(int obj)
             state->sfxTimer = gShStaffFizzSfxTimerInit;
         }
     }
-    else if (mode == 1)
+    else if (mode == SHSTAFF_PHASE_ARMED)
     {
         if (ObjTrigger_IsSet(obj) != 0)
         {
             int target = ObjGroup_FindNearestObject(0xf, obj, 0);
             (*gObjectTriggerInterface)->runSequence(0, (void*)target, -1);
-            state->phase = 2;
+            state->phase = SHSTAFF_PHASE_PICKUP;
             state->fadeTimer = gShStaffFadeTimerMax;
             mainSetBits(GAMEBIT_STAFF_ACQUIRED, 1);
         }
@@ -580,7 +589,7 @@ end:
     if (state->sfxTimer > lbl_803E54D0)
     {
         state->sfxTimer = lbl_803E54D4;
-        if (state->phase == 1)
+        if (state->phase == SHSTAFF_PHASE_ARMED)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_pk_staff_fizz);
         }
