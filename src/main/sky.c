@@ -11,6 +11,7 @@
 #define SKY_CONFIG_FIELD_COUNT 0xb
 #define SKY_CHILD_OBJ_SUN 0x62b  /* spawned into gSkySunObject */
 #define SKY_CHILD_OBJ_MOON 0x62c /* spawned into gSkyMoonObject */
+#define SKY_TEXTURE_SKY 0x5fa /* gSkySkyTexture */
 #define GX_FALSE 0
 #define GX_TEV_SWAP0 0
 #define GX_TG_MTX2x4 1
@@ -917,7 +918,7 @@ void loadLightFn_8008bbc4(void)
     gSkyMoonDirection[0] = pEXIInputFlag;
     gSkyMoonDirection[1] = lbl_803DF06C;
     gSkyMoonDirection[2] = pEXIInputFlag;
-    gSkySkyTexture = textureLoadAsset(0x5fa);
+    gSkySkyTexture = textureLoadAsset(SKY_TEXTURE_SKY);
 }
 
 void dll_06_func06(int obj)
