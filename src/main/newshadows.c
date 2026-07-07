@@ -2844,5 +2844,3 @@ void renderShadows(void)
     Camera_ApplyFullViewport();
     Camera_EnableViewYOffset();
 }
-#pragma opt_loop_invariants reset
-#pragma opt_common_subs reset
