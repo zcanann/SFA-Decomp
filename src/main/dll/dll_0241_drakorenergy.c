@@ -40,6 +40,7 @@ extern u8 framesThisStep;
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
 /* DrakorEnergyState.mode values (see file header comment) */
+#define DRAKORENERGY_PARTFX 0x357
 #define DRAKORENERGY_MODE_IDLE 0     /* wait for the placement game bit */
 #define DRAKORENERGY_MODE_FALLING 1  /* fall + bounce to a resting height */
 #define DRAKORENERGY_MODE_BOBBING 2  /* sine bob + seek the player */
@@ -155,7 +156,7 @@ void drakorenergy_update(int obj)
         trio[2] = 0xff;
         trio[1] = 0xff - ((DrakorEnergyState*)blob)->phase % 0x500;
         trio[0] = 0xff;
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x357, trio, 0, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, DRAKORENERGY_PARTFX, trio, 0, -1, NULL);
         break;
     case DRAKORENERGY_MODE_BOBBING:
         ((GameObject*)obj)->anim.velocityY = gDrakorEnergyBobAmplitude * mathSinf(
