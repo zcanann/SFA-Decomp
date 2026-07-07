@@ -133,4 +133,3 @@ int fn_801B9ECC(int a, int obj)
     return 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
