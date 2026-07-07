@@ -34,6 +34,11 @@
 /* Dust child; the spawned object is cached in control->spawnedDustObj. */
 #define KALDACHOM_CHILD_OBJ_DUST 0x55e
 
+/* Mouth-point projectile spawned in kaldaChomFn_80168374 at the upper/lower
+ * mouth path points and given target-aimed velocity (docblock: "Mouth-point
+ * projectiles are spawned from anim events at the upper/lower mouth path points"). */
+#define KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE 0x51b
+
 extern int randomGetRange(int lo, int hi);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
@@ -129,7 +134,7 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
     if (Obj_IsLoadingLocked() != 0)
     {
         heightOffset = lbl_803E30A0 + (f32)(s32) * (s8*)(ref + 0x28) / lbl_803E30A4;
-        ref = Obj_AllocObjectSetup(0x24, 0x51b);
+        ref = Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE);
         if (useUpperMouthPoint != 0)
         {
             ((ObjPlacement*)ref)->posX = control->upperMouthPosX;
