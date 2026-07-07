@@ -38,6 +38,11 @@
 /* attached gadget-unit child (arwarwinggu_*); cached in state->childObject */
 #define LANDEDARWING_CHILD_OBJ_GADGET_UNIT 0x606
 
+/* debris spawned (x spawnCount) in landed_arwing_updateHitReaction reactionType
+ * case 0 (docblock: "on impact either spawns debris, damages a nearby sibling,
+ * or jitters its own rotation depending on the placement reaction type"). */
+#define LANDEDARWING_CHILD_OBJ_DEBRIS 0x259
+
 typedef struct LandedArwingPlacement
 {
     u8 pad0[0x14 - 0x0];
@@ -588,7 +593,7 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
                     yOffset = lbl_803E3BB8;
                     while (i < ((LandedArwingUpdateHitReactionPlacement*)def)->spawnCount)
                     {
-                        setup = Obj_AllocObjectSetup(0x24, 0x259);
+                        setup = Obj_AllocObjectSetup(0x24, LANDEDARWING_CHILD_OBJ_DEBRIS);
                         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                         ((ObjPlacement*)setup)->posY = yOffset + ((GameObject*)obj)->anim.localPosY;
                         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
