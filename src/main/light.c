@@ -12,6 +12,8 @@
 #define LIGHT_OBJFLAG_HIDDEN 0x4000
 #define LIGHT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+#define LIGHT_DRAGHEAD_RESOURCE_ID 0xA5
+
 /*
  * DLL 0x021E (gVFP_Block1ObjDescriptor).
  * getExtraSize/getObjectTypeId/free/render/hitDetect fall in this object's
@@ -357,7 +359,7 @@ void VFPDragHead_init(int obj, int data)
             ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * lbl_803E6138;
     }
     ((GameObject*)obj)->objectFlags |= (LIGHT_OBJFLAG_HIDDEN | LIGHT_OBJFLAG_HITDETECT_DISABLED);
-    gVfpDragHeadResource = Resource_Acquire(0xA5, 1);
+    gVfpDragHeadResource = Resource_Acquire(LIGHT_DRAGHEAD_RESOURCE_ID, 1);
 }
 
 void SeqPoint_init(int obj, int data)
