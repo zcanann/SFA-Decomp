@@ -16,6 +16,9 @@
 #include "main/gameplay_runtime.h"
 extern ModgfxInterface** gModgfxInterface;
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLLA6_EFFECT_ID 0x26a
+
 typedef struct
 {
     u32 mode; /* +0x00 */
@@ -215,7 +218,7 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
             buf.pos[2] = buf.pos[2] + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 3, lbl_80318DF0, 1, &lbl_803DB980, 0x26a, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 3, lbl_80318DF0, 1, &lbl_803DB980, DLLA6_EFFECT_ID, 0);
 }
 #pragma opt_propagation reset
 
