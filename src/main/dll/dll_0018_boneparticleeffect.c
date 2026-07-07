@@ -36,6 +36,9 @@ void boneParticleEffect_func03_nop(void)
 #define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
 #define BONE_PARTICLE_EFFECT_BUFFER_BYTES 0x140
 #define BONE_PARTICLE_EFFECT_SLOT_COUNT 20
+/* the two bone-particle texture assets loaded at init (gBoneParticleTextureA/B) */
+#define BONE_PARTICLE_TEXTURE_A_ID 0x16b
+#define BONE_PARTICLE_TEXTURE_B_ID 0x201
 extern void*gBoneParticleEffectBuffers[];
 extern void* gBoneParticleTextureA;
 extern void* gBoneParticleTextureB;
@@ -454,8 +457,8 @@ void boneParticleEffect_initialise(void)
     int i;
     int j;
 
-    gBoneParticleTextureA = textureLoadAsset(0x16b);
-    gBoneParticleTextureB = textureLoadAsset(0x201);
+    gBoneParticleTextureA = textureLoadAsset(BONE_PARTICLE_TEXTURE_A_ID);
+    gBoneParticleTextureB = textureLoadAsset(BONE_PARTICLE_TEXTURE_B_ID);
     gBoneParticleEffectBuffers[0] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
     gBoneParticleEffectBuffers[1] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
     gBoneParticleEffectBuffers[2] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
