@@ -22,6 +22,7 @@
 #include "main/audio/sfx.h"
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define FLAMMABLEVINE_HIT_VOLUME_SLOT 9
 
 /* object group this object joins while active */
 #define FLAMMABLEVINE_OBJGROUP 0x31
@@ -149,7 +150,7 @@ checked_vine_use:
     {
         if (state->setupParam == 0)
         {
-            ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
+            ObjHits_SetHitVolumeSlot(obj, FLAMMABLEVINE_HIT_VOLUME_SLOT, 1, 0);
         }
         ObjHits_EnableObject(obj);
 
