@@ -1512,7 +1512,7 @@ typedef struct EnemyPlacement
     s8 triggerSeqId;
     u8 healthByte; /* 0x2F */
     u8 pad30[0x32 - 0x30];
-    u8 unk32; /* 0x32 */
+    u8 hitPoints; /* 0x32: spawn hit-point count -> EnemyState.current (health numerator) */
     u8 pad33[0x34 - 0x33];
     u16 unk34;
     u8 pad36[0x38 - 0x36];
@@ -1987,7 +1987,7 @@ void enemy_init(int obj, u8* setup, int flag)
         ((EnemyState*)state)->unk2B4 = -1;
         ((EnemyState*)state)->unk2B6 = ((EnemyState*)state)->unk2B4;
         ((GameObject*)obj)->objectFlags |= ((EnemyPlacement*)setup)->objectFlagBits & 7;
-        ((EnemyState*)state)->current = ((EnemyPlacement*)setup)->unk32;
+        ((EnemyState*)state)->current = ((EnemyPlacement*)setup)->hitPoints;
         ((GameObject*)obj)->animEventCallback = enemy_SeqFn;
         switch (((GameObject*)obj)->anim.seqId)
         {
