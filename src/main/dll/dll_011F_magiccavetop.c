@@ -9,6 +9,9 @@ extern void* Obj_GetPlayerObject(void);
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* Release camera back to the default gameplay mode (cameramode DLL 0x42). */
+#define MAGICCAVETOP_CAMMODE_DEFAULT 0x42
+
 #define MAGICCAVETOP_OBJFLAG_HIDDEN 0x4000
 #define MAGICCAVETOP_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MAGICCAVE_GAMEBIT_WARP_READY 0x91e   /* handoff from bottom: perform warp sequence */
@@ -173,7 +176,7 @@ void MagicCaveTop_update(int* obj)
                 (*gMapEventInterface)->setObjGroupStatus(def->mapId, def->objGroup, 1);
                 (*gMapEventInterface)->setMapAct(def->mapId, def->mapAct);
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-                (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
+                (*gCameraInterface)->setMode(MAGICCAVETOP_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
             }
             break;
         case MAGICCAVETOP_SUBSTATE_WARPING:
