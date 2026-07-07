@@ -16,7 +16,7 @@ extern int saveFileStruct_isCheatActive(u8 idx);
  * set the mode; the realign switch reads it back to place the line.
  */
 #define TEXT_CTRL_SCALE 0xf8f4
-#define TEXT_CTRL_LANGUAGE 0xf8f7
+#define TEXT_CTRL_FONT 0xf8f7
 #define TEXT_CTRL_ALIGN_LEFT 0xf8f8
 #define TEXT_CTRL_ALIGN_RIGHT 0xf8f9
 #define TEXT_CTRL_ALIGN_CENTER 0xf8fa
@@ -633,7 +633,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             case TEXT_CTRL_SCALE:
                 lbl_803DC9A0 = params[0] * lbl_803DE708;
                     break;
-                case TEXT_CTRL_LANGUAGE:
+                case TEXT_CTRL_FONT:
                     glyphLang = params[0];
                     break;
                 case TEXT_CTRL_ALIGN_LEFT:
@@ -996,7 +996,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
             case TEXT_CTRL_SCALE:
                 scale = params[0] * lbl_803DE708;
                 break;
-            case TEXT_CTRL_LANGUAGE:
+            case TEXT_CTRL_FONT:
                 glyphLang = params[0];
                 tbl = &lbl_802C8680[glyphLang * 16];
                 if (glyphLang != 5)
