@@ -21,6 +21,9 @@
 
 #define WMLEVELCONTROL_OBJGROUP 9
 
+/* LightFoot Village map-event id (seeded from the palace spirit chain). */
+#define WMLEVELCONTROL_MAP_LIGHTFOOT 0xe
+
 /* per-object extra state (getExtraSize == 0x1C) */
 typedef struct WmLevelControlState
 {
@@ -284,8 +287,8 @@ void WM_LevelControl_init(int obj)
     switch (mode)
     {
     case 1:
-        (*gMapEventInterface)->setMapAct(0xe, 1);
-        (*gMapEventInterface)->setObjGroupStatus(0xe, 0, 1);
+        (*gMapEventInterface)->setMapAct(WMLEVELCONTROL_MAP_LIGHTFOOT, 1);
+        (*gMapEventInterface)->setObjGroupStatus(WMLEVELCONTROL_MAP_LIGHTFOOT, 0, 1);
         break;
     case 2:
         mainSetBits(0xd1b, 1);
