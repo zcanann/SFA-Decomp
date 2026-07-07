@@ -337,7 +337,10 @@ typedef struct ObjAnimComponent {
   void *parent;
   u8 pad34[2]; /* +0x35 is the signed yaw transform-table index. */
   u8 alpha;
-  u8 pad37[0x44 - 0x37];
+  u8 pad37[0x38 - 0x37];
+  void *next; /* 0x38: intrusive object-list link (wiki ObjInstance.next); list not ordered */
+  f32 loadDistance; /* 0x3C: wiki ObjInstance.loadDistance (same value as cullDistance2) */
+  f32 cullDistance2; /* 0x40: wiki ObjInstance.cullDistance2 - camera-distance opacity term */
   s16 classId;
   s16 seqId;
   s16 defId;
@@ -598,6 +601,9 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, velocityY) == 0x28);
 STATIC_ASSERT(offsetof(ObjAnimComponent, velocityZ) == 0x2C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, parent) == 0x30);
 STATIC_ASSERT(offsetof(ObjAnimComponent, alpha) == 0x36);
+STATIC_ASSERT(offsetof(ObjAnimComponent, next) == 0x38);
+STATIC_ASSERT(offsetof(ObjAnimComponent, loadDistance) == 0x3C);
+STATIC_ASSERT(offsetof(ObjAnimComponent, cullDistance2) == 0x40);
 STATIC_ASSERT(offsetof(ObjAnimComponent, classId) == 0x44);
 STATIC_ASSERT(offsetof(ObjAnimComponent, seqId) == 0x46);
 STATIC_ASSERT(offsetof(ObjAnimComponent, defId) == 0x48);
