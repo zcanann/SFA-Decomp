@@ -71,8 +71,10 @@ extern u8 lbl_80327FD0[];
 
 typedef struct ShopItemRow
 {
-    u8 price; /* 0x0 */
-    u8 pad1[0x4 - 0x1];
+    u8 price; /* 0x0 "P$" */
+    u8 discount1; /* 0x1 "D1" */
+    u8 discount2; /* 0x2 "D2" */
+    u8 discount3; /* 0x3 "D3" (observed always == price) */
     u8 field4; /* 0x4 */
     u8 minPrice; /* 0x5 */
     s16 availBit; /* 0x6 "available" GameBit slot (-1 = always available) */
