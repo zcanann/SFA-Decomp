@@ -39,6 +39,11 @@ project matches more.
 - Branch off main; rebase + `ninja EXIT=0` before each commit; commit only when asked. One owner per `.c`.
 - Edit SJIS-bearing files byte-wise (python rb/wb). Never `git stash` in a worktree — use `git checkout -- <file>`.
 
+## House rules
+- NEVER write comments unless explicitly stated otherwise.
+- When updating comments NEVER track history, stuff like "used to be named x" always keep comments current.
+- 
+
 ## A few MWCC facts (high-frequency only — NOT a map; derive everything else fresh)
 - Compare opcode tracks operand width/sign **when it feeds a branch**: `u16`/unsigned → `cmplwi`, `int`/`long` → `cmpwi`. Type the local/field to the field width. (Inert against a runtime `int` operand.)
 - Single-bit clear: write `x &= ~0x80` (→ `rlwinm`), not `x &= 0xff7f` (→ `andi`).

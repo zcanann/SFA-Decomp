@@ -11399,14 +11399,14 @@ int playerStopRidingObject(int obj)
     sub = inner->focusObject;
     if ((void*)sub != NULL)
     {
-        (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x3c)))(sub, 0);
+        (*(void (**)(int, int))((char*)*((GameObject*)sub)->anim.dll + 0x3c))(sub, 0);
         (*gCameraInterface)->setFocus((void*)obj, 0);
-        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~8;
+        ((GameObject*)obj)->anim.flags &= ~8;
         ((GameObject*)obj)->anim.modelState->flags &= ~0x1000LL;
         inner->focusObject = 0;
         ((GameObject*)obj)->anim.activeMove = -1;
-        (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
-        *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A514C;
+        (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner, 1);
+        *(int*)&inner->baddie.unk304 = (int)fn_802A514C;
         Music_Trigger(MUSICTRIG_inside_warlock, 0);
         Music_Trigger(MUSICTRIG_drako_2, 0);
         Music_Trigger(MUSICTRIG_starfox_rwing_1_e6, 0);
