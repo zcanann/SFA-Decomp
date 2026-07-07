@@ -12,6 +12,9 @@
 extern f32 Curve_EvalLinear(float* values, f32 t, float* outTangent);
 extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
 
+/* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
+#define CAMTESTSTRENGTH_CAMMODE_DEFAULT 0x42
+
 extern CamCannonState* lbl_803DD560;
 extern f32 lbl_803E1888;
 extern f32 lbl_803E188C;
@@ -206,7 +209,7 @@ void CameraModeTestStrength_update(short* cam)
 
     if (lbl_803DD560->pathFailed != 0)
     {
-        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
+        (*gCameraInterface)->setMode(CAMTESTSTRENGTH_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
     }
     else
     {
