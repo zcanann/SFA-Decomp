@@ -170,6 +170,14 @@ void dimbossgut2_updateTracking(int obj, int state)
     return;
 }
 
+void DIM_BossGut2_func0B(void)
+{
+}
+
+int DIM_BossGut2_setScale(void) { return 0x0; }
+int DIM_BossGut2_getExtraSize(void) { return 0x42c; }
+int DIM_BossGut2_getObjectTypeId(void) { return 0x49; }
+
 void DIM_BossGut2_free(int arg9)
 {
     int obj = arg9;
@@ -210,6 +218,10 @@ void DIM_BossGut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
     return;
+}
+
+void DIM_BossGut2_hitDetect(void)
+{
 }
 
 void DIM_BossGut2_update(int obj)
@@ -359,14 +371,6 @@ void DIM_BossGut2_init(int obj, int def, int p3)
     }
 }
 
-void DIM_BossGut2_func0B(void)
-{
-}
-
-void DIM_BossGut2_hitDetect(void)
-{
-}
-
 void DIM_BossGut2_release(void)
 {
 }
@@ -374,8 +378,3 @@ void DIM_BossGut2_release(void)
 void DIM_BossGut2_initialise(void)
 {
 }
-
-
-int DIM_BossGut2_setScale(void) { return 0x0; }
-int DIM_BossGut2_getExtraSize(void) { return 0x42c; }
-int DIM_BossGut2_getObjectTypeId(void) { return 0x49; }
