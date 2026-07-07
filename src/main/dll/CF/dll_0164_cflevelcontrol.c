@@ -27,6 +27,9 @@
 #define CFLEVELCONTROL_ENVFX_E 0x7e
 #define CFLEVELCONTROL_ENVFX_F 0x7d
 
+/* CloudRunner Fortress map-event id advanced by the level controller (getMapAct/setMapAct) */
+#define CFLEVELCONTROL_MAP_FORTRESS 0x1d
+
 typedef struct CflevelcontrolState
 {
     u8 pad0[0x8 - 0x0];
@@ -139,10 +142,10 @@ void cflevelcontrol_update(int obj)
         ((CfLevelControlFlags*)&state[0xc])->b3 = 0;
     }
 
-    if ((*gMapEventInterface)->getMapAct(0x1d) == 1 &&
+    if ((*gMapEventInterface)->getMapAct(CFLEVELCONTROL_MAP_FORTRESS) == 1 &&
         mainGetBit(0x40) != 0)
     {
-        (*gMapEventInterface)->setMapAct(0x1d, 2);
+        (*gMapEventInterface)->setMapAct(CFLEVELCONTROL_MAP_FORTRESS, 2);
     }
 
     /* sting on the first of the two fortress alarm bits, fanfare once
