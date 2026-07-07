@@ -26,6 +26,8 @@
 
 #define GAMEBIT_ANDROSS_HIT_CUE_BASE 0x108 /* six consecutive random-hit cue bits */
 
+#define ANDROSS_CHILD_OBJ_SPAWNED 0x819 /* cached into state->spawnedObj w/ spawnedObjLifetime */
+
 typedef struct
 {
     u8 f80 : 1;
@@ -1586,7 +1588,7 @@ void andross_update(int obj)
                 &&
                 ((short)ref > delayPair[(u8)work])) && (Obj_IsLoadingLocked() != 0))
             {
-                found = Obj_AllocObjectSetup(0x24, 0x819);
+                found = Obj_AllocObjectSetup(0x24, ANDROSS_CHILD_OBJ_SPAWNED);
                 *(f32*)&((AndrossState*)found)->handObjB = ((AndrossState*)state)->cachedPosX;
                 *(f32*)&((AndrossState*)found)->lightAnchorObj = ((AndrossState*)state)->cachedPosY;
                 *(f32*)&((AndrossState*)found)->effectHandle = ((AndrossState*)state)->cachedPosZ;
