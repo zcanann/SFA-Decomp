@@ -2456,7 +2456,7 @@ countBank1:
     gRcpTexBankCount[1] = n - 1;
 doneBank1:
     bankWord = gRcpTexBankTable[bank][id16];
-    mips = (bankWord >> 24) & 0x3f;
+    mips = (bankWord >> TEX_TAB_MIP_COUNT_SHIFT) & TEX_TAB_MIP_COUNT_MASK;
     bankWordSaved = bankWord;
     if (mips == 1)
     {

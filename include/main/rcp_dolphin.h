@@ -3,6 +3,13 @@
 
 #include "ghidra_import.h"
 
+/* TEX0.tab/TEX1.tab/TEXPRE.tab entry (bankWord): high bits select source map, */
+/* bits 29..24 are the mipmap/animation-frame count. */
+#define TEX_TAB_MAP_A           0x80000000u
+#define TEX_TAB_MAP_B           0x40000000u
+#define TEX_TAB_MIP_COUNT_SHIFT 24
+#define TEX_TAB_MIP_COUNT_MASK  0x3f
+
 void FUN_80051868(int param_1,float *param_2,int param_3);
 void FUN_80051b04(int param_1,float *param_2,int param_3,char *param_4);
 void FUN_80051d64(int param_1,float *param_2,int param_3,char *param_4);
