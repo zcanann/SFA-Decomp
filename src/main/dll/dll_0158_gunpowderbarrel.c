@@ -27,6 +27,7 @@
 #include "main/dll/DR/gunpowderbarrel_state.h"
 #include "main/dll/player_motion.h"
 #include "main/objlib.h"
+#include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_0158_gunpowderbarrel.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -985,7 +986,7 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
         *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         ((GpbHeldFlags*)&sub->heldFlags)->playerHeld = 1;
         sub->motionFlags = (u8)(sub->motionFlags & ~2);
-        ObjHits_SetFlags(o, 0x480);
+        ObjHits_SetFlags(o, OBJHITS_PRIORITY_STATE_IMMOVABLE | 0x80);
         ObjHits_ClearSourceMask(o, 1);
         ObjHits_EnableObject(o);
         ObjHits_SyncObjectPositionIfDirty(o);
@@ -996,7 +997,7 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
         h[0x6b] = (*(u8**)&((GameObject*)o)->anim.modelInstance)[0x64];
         ((GpbHeldFlags*)&sub->heldFlags)->playerHeld = 0;
         *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
-        ObjHits_ClearFlags(o, 0x400);
+        ObjHits_ClearFlags(o, OBJHITS_PRIORITY_STATE_IMMOVABLE);
         sub->motionFlags = (u8)(sub->motionFlags | 1);
     }
 }
