@@ -9,6 +9,8 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
+#define DRCAGEWITH_CHILD_OBJ 1143
+
 #define DRCAGEWITH_OBJGROUP 0x18
 
 #define DRCAGEWITH_OBJFLAG_FREED 0x40
@@ -156,7 +158,7 @@ void DR_CageWith_hitDetect(int obj)
     {
         if (Obj_IsLoadingLocked())
         {
-            spawned = Obj_AllocObjectSetup(32, 1143);
+            spawned = Obj_AllocObjectSetup(32, DRCAGEWITH_CHILD_OBJ);
             *(u8*)(spawned + 4) = 2;
             *(u8*)(spawned + 5) = 1;
             *(u8*)(spawned + 5) = (u8)(*(u8*)(spawned + 5) | (((DrcagewithPlacement*)placement)->flags & 0x18));
