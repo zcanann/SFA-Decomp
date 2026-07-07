@@ -35,6 +35,11 @@
 /* set on both menu widgets while the save dialog is up */
 #define WIDGET_FLAG_SAVING 0x1000
 
+/* the three menu texture assets loaded at init (gWeirdMenuTextureA/B/C) */
+#define WEIRDMENU_TEXTURE_A_ID 0x31e
+#define WEIRDMENU_TEXTURE_B_ID 0x310
+#define WEIRDMENU_TEXTURE_C_ID 0x31f
+
 /* sfx played on the selection==0 (cancel/back) path; 0x419 has no named entry in sfx_ids.h */
 #define SFX_MENU_CANCEL 0x419
 
@@ -160,9 +165,9 @@ void WeirdUnusedMenu_release(void)
 
 void WeirdUnusedMenu_initialise(void)
 {
-    gWeirdMenuTextureA = textureLoadAsset(0x31e);
-    gWeirdMenuTextureB = textureLoadAsset(0x310);
-    gWeirdMenuTextureC = textureLoadAsset(0x31f);
+    gWeirdMenuTextureA = textureLoadAsset(WEIRDMENU_TEXTURE_A_ID);
+    gWeirdMenuTextureB = textureLoadAsset(WEIRDMENU_TEXTURE_B_ID);
+    gWeirdMenuTextureC = textureLoadAsset(WEIRDMENU_TEXTURE_C_ID);
     gWeirdMenuTextHandle = gameTextGet(0);
     (*(void (*)(u32*, int, int, u32*, int, int, int, int, int, int, int, int))(*(int*)(*gTitleMenuLinkInterface +
         TITLEMENULINK_SETUP_WIDGETS)))(
