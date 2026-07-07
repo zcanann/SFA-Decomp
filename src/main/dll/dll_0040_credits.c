@@ -12,6 +12,10 @@
  */
 #include "main/texture.h"
 #include "main/engine_shared.h"
+
+/* credits texture asset loaded at init (freed in Credits_release) */
+#define CREDITS_TEXTURE_ID 0xC5
+
 extern f32 lbl_803DD968;
 extern u8 lbl_803DD970;
 extern void* lbl_803DD974;
@@ -240,7 +244,7 @@ void Credits_release(void)
 #pragma scheduling off
 void Credits_initialise(void)
 {
-    lbl_803DD974 = textureLoadAsset(0xC5);
+    lbl_803DD974 = textureLoadAsset(CREDITS_TEXTURE_ID);
     lbl_803DD96C = gameTextGet(0x1FD);
     lbl_803DD970 = 0;
     lbl_803DD968 = lbl_803E22A8;
