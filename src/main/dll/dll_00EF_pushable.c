@@ -544,13 +544,6 @@ void pushable_free(int* obj)
 int pushable_getExtraSize(void) { return 0x148; }
 int pushable_getObjectTypeId(void) { return 0x48; }
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-
-#pragma opt_common_subs reset
-
 void pushable_update(int* obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
