@@ -52,6 +52,9 @@ STATIC_ASSERT(sizeof(Dll19ASpawnSetup) == 0x38);
 #define GAMEBIT_DLL19A_RESET 0x5b9
 #define GAMEBIT_DLL19A_GATE_BASE 0x1cd
 
+/* type id of the child object spawned into a Dll19ASpawnSetup once the gate bit + timer elapse */
+#define DLL19A_CHILD_OBJ 0x2d0
+
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int typeId);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
@@ -111,7 +114,7 @@ void dll_19A_update(int obj)
         }
         if ((*state <= 0) && (Obj_IsLoadingLocked() != 0))
         {
-            newObj = (Dll19ASpawnSetup*)Obj_AllocObjectSetup(0x38, 0x2d0);
+            newObj = (Dll19ASpawnSetup*)Obj_AllocObjectSetup(0x38, DLL19A_CHILD_OBJ);
             newObj->posX = ((ObjPlacement*)setup)->posX;
             newObj->posY = ((ObjPlacement*)setup)->posY;
             newObj->posZ = ((ObjPlacement*)setup)->posZ;
