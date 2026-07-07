@@ -1,5 +1,6 @@
 #include "main/engine_shared.h"
 #include "main/game_object.h"
+#include "dolphin/gx/GXEnum.h"
 
 f32 gObjInverseYawTransformMatrices[0x1E][16];
 f32 gObjYawTransformMatrices[0x22][16];
@@ -375,7 +376,7 @@ void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* tr
     }
 
     PSMTXConcat(gCameraViewMatrix, lbl_803967C0, lbl_803967C0);
-    GXLoadPosMtxImm(lbl_803967C0, 0);
+    GXLoadPosMtxImm(lbl_803967C0, GX_PNMTX0);
     transform->x += playerMapOffsetX;
     transform->z += playerMapOffsetZ;
 }
