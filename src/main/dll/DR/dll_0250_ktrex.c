@@ -83,6 +83,8 @@ extern void GM_MazeWell_init(void);
 
 #define KTREX_LIGHTNING_COUNT 5
 
+#define CAMMODE_DEFAULT 0x42 /* dll_0042 - default/release camera */
+
 #define KTREX_OBJGROUP 0x3
 #define KTREX_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 #define KTREX_PARTFX_HIT 0x328 /* hit-response effect spawned at the player contact point */
@@ -1758,7 +1760,7 @@ int ktrex_stateHandlerA09(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 8);
-        if ((*gCameraInterface)->getMode() == 66)
+        if ((*gCameraInterface)->getMode() == CAMMODE_DEFAULT)
         {
             (*gCameraInterface)->loadTriggeredCamAction(2, 0, 0);
         }
