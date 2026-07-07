@@ -6,6 +6,8 @@
 #include "main/objhits.h"
 #include "main/resource.h"
 
+#define TREASURECHEST_TARGET_OBJGROUP 4
+
 /* anim-sequence event opcodes consumed by TreasureChest_SeqFn */
 #define TREASURECHEST_SEQEV_DIALOGUE     1 /* show setup dialogue */
 #define TREASURECHEST_SEQEV_STAFFBIT_SET 2 /* set StaffFlags b5 */
@@ -157,7 +159,7 @@ void TreasureChest_update(int obj)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
             playerPullOutStaff(Obj_GetPlayerObject(), 1);
-            nearestObject = ObjGroup_FindNearestObject(4, obj, &nearestDist);
+            nearestObject = ObjGroup_FindNearestObject(TREASURECHEST_TARGET_OBJGROUP, obj, &nearestDist);
             if (nearestObject != 0)
             {
                 (*gObjectTriggerInterface)->setObjects((int)((GameObject*)nearestObject)->anim.seqId, 0, 0);
