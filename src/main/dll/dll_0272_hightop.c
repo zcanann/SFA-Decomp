@@ -24,7 +24,8 @@
 
 #define PAD_BUTTON_A 0x100
 
-/* Death follow-up spawn's effect id (docblock: HighTopDeathSpawn.effectId = 0x675). */
+/* Death follow-up spawn (docblock: "Obj_AllocObjectSetup(0x2C, 0xD4)"): object id and effect id. */
+#define HIGHTOP_DEATH_SPAWN_OBJ_ID 0xd4
 #define HIGHTOP_DEATH_EFFECT_ID 0x675
 
 /* 0x2C-byte Obj_AllocObjectSetup(0x2C, 0xD4) buffer composed in
@@ -664,7 +665,7 @@ void HighTop_hitDetect(int obj)
             mainSetBits(0x634, 0);
             if (Obj_IsLoadingLocked() != 0)
             {
-                HighTopDeathSpawn* spawn = (HighTopDeathSpawn*)Obj_AllocObjectSetup(0x2c, 0xd4);
+                HighTopDeathSpawn* spawn = (HighTopDeathSpawn*)Obj_AllocObjectSetup(0x2c, HIGHTOP_DEATH_SPAWN_OBJ_ID);
                 spawn->base.color[0] = 2;
                 spawn->base.posX = ((GameObject*)obj)->anim.localPosX;
                 spawn->base.posY = ((GameObject*)obj)->anim.localPosY;
