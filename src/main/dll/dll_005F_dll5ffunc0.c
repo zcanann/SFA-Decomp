@@ -50,6 +50,9 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
     return (u8*)objAnim->banks[objAnim->bankIndex];
 }
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL5F_EFFECT_ID 0x48
+
 void dll_5F_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     struct
@@ -205,7 +208,7 @@ void dll_5F_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = lbl_803E0804 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80312650, 0xc, &base[140], 0x48, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80312650, 0xc, &base[140], DLL5F_EFFECT_ID, 0);
 }
 
 void dll_5F_func01_nop(void)
