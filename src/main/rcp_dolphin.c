@@ -5,6 +5,7 @@
 #include "main/mapEvent.h"
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
+#include "main/pi_dolphin.h"
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
 #include "main/mm.h"
@@ -246,7 +247,7 @@ extern u8 lbl_803DCEBD;
 void warpToMap(int idx, s8 transType)
 {
     u8* p = lbl_803DCE78;
-    getTabEntry(p, 28, idx << 4, 16);
+    getTabEntry(p, MLDF_FILEID_WARPTAB_BIN, idx << 4, 16);
     ((WarpDestination*)gRcpPendingWarpDest)->x = *(f32*)(p + 0);
     ((WarpDestination*)gRcpPendingWarpDest)->y = *(f32*)(p + 4);
     ((WarpDestination*)gRcpPendingWarpDest)->z = *(f32*)(p + 8);
@@ -1751,7 +1752,7 @@ void loadTextureFiles(void)
 
     gLoadedTextures = (LoadedTextureEntry*)mmAlloc(0x2bc0, 6, 0);
     gLoadedTextureCount = n = 0;
-    p = getCurrentDataFile(0x24);
+    p = getCurrentDataFile(MLDF_FILEID_TEX0_TAB_A);
     gRcpTexBankTable[0] = p;
     if (gRcpTexBankTable != NULL)
         goto countBank0;
@@ -1765,7 +1766,7 @@ countBank0:
     gRcpTexBankCount[0] = n - 1;
 doneBank0:
     n = 0;
-    p = getCurrentDataFile(0x21);
+    p = getCurrentDataFile(MLDF_FILEID_TEX1_TAB_A);
     gRcpTexBankTable[1] = p;
     if (gRcpTexBankTable != NULL)
         goto countBank1;
@@ -1779,7 +1780,7 @@ countBank1:
     gRcpTexBankCount[1] = n - 1;
 doneBank1:
     n = 0;
-    p = getCurrentDataFile(0x50);
+    p = getCurrentDataFile(MLDF_FILEID_TEXPRE_TAB);
     gRcpTexBankTable[2] = p;
     while (*p != -1)
     {
@@ -1787,7 +1788,7 @@ doneBank1:
         n++;
     }
     gRcpTexBankCount[2] = n - 1;
-    loadAssetFileById(&gRcpTexIdRemap, 0x22);
+    loadAssetFileById(&gRcpTexIdRemap, MLDF_FILEID_TEXTABLE_BIN);
     q = gRcpTexBankTable;
     out = gRcpTexBankCount;
     for (n = 0; n < 2; n++)
@@ -2427,7 +2428,7 @@ resolved:
         id16 = 0;
     }
     n = 0;
-    bankPtr = getCurrentDataFile(0x24);
+    bankPtr = getCurrentDataFile(MLDF_FILEID_TEX0_TAB_A);
     gRcpTexBankTable[0] = bankPtr;
     if (gRcpTexBankTable != NULL)
         goto countBank0;
@@ -2441,7 +2442,7 @@ countBank0:
     gRcpTexBankCount[0] = n - 1;
 doneBank0:
     n = 0;
-    bankPtr = getCurrentDataFile(0x21);
+    bankPtr = getCurrentDataFile(MLDF_FILEID_TEX1_TAB_A);
     gRcpTexBankTable[1] = bankPtr;
     if (gRcpTexBankTable != NULL)
         goto countBank1;
@@ -2455,7 +2456,7 @@ countBank1:
     gRcpTexBankCount[1] = n - 1;
 doneBank1:
     bankWord = gRcpTexBankTable[bank][id16];
-    mips = (bankWord >> 24) & 0x3f;
+    mips = (bankWord >> TEX_TAB_MIP_COUNT_SHIFT) & TEX_TAB_MIP_COUNT_MASK;
     bankWordSaved = bankWord;
     if (mips == 1)
     {

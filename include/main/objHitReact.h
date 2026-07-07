@@ -2,6 +2,7 @@
 #define MAIN_OBJHITREACT_H_
 
 #include "global.h"
+#include "main/pi_dolphin.h"
 
 typedef struct ObjHitReactEntry ObjHitReactEntry;
 typedef struct ObjAnimBank ObjAnimBank;
@@ -66,7 +67,7 @@ extern ObjAnimComponent **gObjHitReactResetObjects;
 #define OBJHITREACT_HIT_EFFECT_NO_SOURCE -1
 #define OBJHITREACT_ALT_EFFECT_COUNT 1
 #define OBJHITREACT_RESET_FRAME_COUNT 0x400
-#define OBJHITREACT_ENTRY_TAB_FILE_ID 0x41
+#define OBJHITREACT_ENTRY_TAB_FILE_ID MLDF_FILEID_OBJHITS_BIN
 #define OBJHITREACT_ENTRY_ARENA_BYTES 300
 #define OBJHITREACT_ACTIVE_HITBOX_MODE 1
 #define OBJHITREACT_SHAPE_RESET_UPDATE 0x08

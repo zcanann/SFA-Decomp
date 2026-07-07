@@ -13,6 +13,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
+#include "main/pi_dolphin.h"
 #include "dolphin/os/OSCache.h"
 #define GX_FALSE 0
 #define GX_TG_MTX2x4 1
@@ -1085,7 +1086,7 @@ void MapBlock_initHits(int obj, int index)
     if (size > 0)
     {
         *(void**)(obj + 0x70) = mmAlloc(size, 5, 0);
-        fileLoadToBufferOffset(0x28, *(void**)(obj + 0x70), fileOff, size);
+        fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, *(void**)(obj + 0x70), fileOff, size);
     }
     *(u16*)(obj + 0x9c) = (u32)size / 20;
     for (i = 0, off = 0; i < *(u16*)(obj + 0x9c); i++)
@@ -1159,7 +1160,7 @@ cont:
     {
         return 0;
     }
-    loadAndDecompressDataFile(0x25, buf, blockOff, compressedLen, 0, 0, 0);
+    loadAndDecompressDataFile(MLDF_FILEID_BLOCKS_BIN_A, buf, blockOff, compressedLen, 0, 0, 0);
     return buf;
 }
 

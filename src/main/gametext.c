@@ -3,7 +3,15 @@
 
 /* In-string formatting control codes (Unicode PUA). */
 #define TEXT_CTRL_SCALE 0xf8f4
-#define TEXT_CTRL_LANGUAGE 0xf8f7
+#define TEXT_CTRL_FONT 0xf8f7
+
+/* Language ids; order fixed by sLanguageNameTable[] below. */
+#define LANGUAGE_ENGLISH 0
+#define LANGUAGE_FRENCH 1
+#define LANGUAGE_GERMAN 2
+#define LANGUAGE_ITALIAN 3
+#define LANGUAGE_JAPANESE 4
+#define LANGUAGE_SPANISH 5
 
 int isSpace(u32 c)
 {
@@ -67,21 +75,21 @@ void gameTextFn_80016810(int a, int b, int c)
     }
 }
 
-int gameTextGetTaskText(int id, int* outA, int* outB)
+int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId)
 {
     int i;
     TaskTextEntry* e = gTaskTextTable;
     for (i = 0; i < 0x7a; i++)
     {
-        if (e->key == id)
+        if (e->objSeqId == id)
         {
-            if (outA != NULL)
+            if (outTextSeqId != NULL)
             {
-                *outA = e->a;
+                *outTextSeqId = e->textSeqId;
             }
-            if (outB != NULL)
+            if (outDirId != NULL)
             {
-                *outB = e->b;
+                *outDirId = e->dirId;
             }
             return 1;
         }
@@ -448,7 +456,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
                 height = (f32)(int)
                 params[0] * lbl_803DE708;
                 break;
-            case TEXT_CTRL_LANGUAGE:
+            case TEXT_CTRL_FONT:
                 langIdx = params[0];
                 sizeEntry = &lbl_802C8680[langIdx];
                 break;
@@ -838,7 +846,7 @@ void gameTextFn_8001658c(int a, int b, int c)
         lbl_803DC9A4 = 255;
     }
 
-    if (def->f5 == 0)
+    if (def->alignH == 0)
     {
         slot->f12 = slot->f10;
     }
@@ -848,13 +856,13 @@ void gameTextFn_8001658c(int a, int b, int c)
     if (lbl_803DC9BC == 0)
     {
         int mode;
-        if (def->f6 == 0)
+        if (def->alignV == 0)
         {
             mode = slot->f11;
         }
         else
         {
-            mode = def->f6;
+            mode = def->alignV;
         }
         if (mode == 2 || mode == 3)
         {

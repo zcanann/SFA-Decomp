@@ -80,7 +80,9 @@ typedef struct ModelFileHeader {
 #define MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS 0x10
 #define MODEL_FLAG_VERTEX_ANIM_AREA 0x40
 
-/* ModelFileHeader.flags24 bit: set = 9-byte (else 3-byte) entries at normals */
+/* ModelFileHeader.flags24 bits */
+#define MODEL_FLAGS24_VERY_BRIGHT 0x02
+/* set = 9-byte (else 3-byte) entries at normals */
 #define MODEL_FLAGS24_NORMALS_9BYTE 0x8
 
 /* ObjModel.bufferFlags bit */

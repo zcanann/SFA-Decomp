@@ -16,8 +16,11 @@ extern int saveFileStruct_isCheatActive(u8 idx);
  * per-window horizontal alignment they select (win[0x12]). The align codes
  * set the mode; the realign switch reads it back to place the line.
  */
+#define TEXT_CTRL_SEQ_ID 0xe000
+#define TEXT_CTRL_SEQ_TIME 0xe018
+#define TEXT_CTRL_HINT_ID 0xe020
 #define TEXT_CTRL_SCALE 0xf8f4
-#define TEXT_CTRL_LANGUAGE 0xf8f7
+#define TEXT_CTRL_FONT 0xf8f7
 #define TEXT_CTRL_ALIGN_LEFT 0xf8f8
 #define TEXT_CTRL_ALIGN_RIGHT 0xf8f9
 #define TEXT_CTRL_ALIGN_CENTER 0xf8fa
@@ -65,6 +68,19 @@ typedef struct
     u8 lang;     /* 0x0e */
     u8 page;     /* 0x0f */
 } TextGlyph;
+
+/* Per-glyph font id stored in TextGlyph.lang (characterStruct.font). Id 1 is unused. */
+#define GAMETEXT_FONT_JAPANESE 0
+#define GAMETEXT_FONT_ICON 2
+#define GAMETEXT_FONT_FLAG 3
+#define GAMETEXT_FONT_LATIN 4
+#define GAMETEXT_FONT_FACE 5
+
+/* Loaded font slot: gGameTextCharsets[] index, one per load purpose/directory. */
+#define GAMETEXT_SLOT_DIALOGUE 0 /* various directories */
+#define GAMETEXT_SLOT_CUTSCENE 1 /* Sequences */
+#define GAMETEXT_SLOT_ERROR 2    /* Boot */
+#define GAMETEXT_SLOT_HUD 3      /* Link */
 
 typedef struct
 {
@@ -634,7 +650,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             case TEXT_CTRL_SCALE:
                 lbl_803DC9A0 = params[0] * lbl_803DE708;
                     break;
-                case TEXT_CTRL_LANGUAGE:
+                case TEXT_CTRL_FONT:
                     glyphLang = params[0];
                     break;
                 case TEXT_CTRL_ALIGN_LEFT:
@@ -806,7 +822,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
         }
         else
         {
-            if (g->lang == 3)
+            if (g->lang == GAMETEXT_FONT_FLAG)
             {
                 int shift = lbl_803DB3CC << 2;
                 fy0 = fy0 - shift;
@@ -814,7 +830,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 GXGetScissor(&scisX, &scisY, &scisW, &scisH);
                 GXSetScissor(scisX, (scisY >= lbl_803DB3CC) ? scisY - lbl_803DB3CC : 0, scisW, scisH);
             }
-            if (g->lang == 5)
+            if (g->lang == GAMETEXT_FONT_FACE)
             {
                 int iw = g->width + (g->advanceX + g->offsetX);
                 int ih = g->height + (g->advanceY + g->offsetY);
@@ -874,7 +890,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 }
             }
 
-            if (lbl_803DC99C != 0 && mode == 0 && g->lang != 5 &&
+            if (lbl_803DC99C != 0 && mode == 0 && g->lang != GAMETEXT_FONT_FACE &&
                 lbl_803DC998 >= lbl_803DC994)
             {
                 setTextColor(0, 0, 0, 0, 0);
@@ -900,13 +916,13 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                                (v0 + (f32)(g->height << 5)) / sH);
             }
 
-            if (g->lang == 3 || g->lang == 5)
+            if (g->lang == GAMETEXT_FONT_FLAG || g->lang == GAMETEXT_FONT_FACE)
             {
                 GXSetScissor(scisX, scisY, scisW, scisH);
             }
         }
 
-        if ((int)g->lang != 5)
+        if ((int)g->lang != GAMETEXT_FONT_FACE)
         {
             x = lbl_803DC9A0 * (f32)(g->width + (g->advanceX + g->offsetX)) + x;
         }
@@ -968,7 +984,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
         }
     }
     tbl = &lbl_802C8680[glyphLang * 16];
-    if (glyphLang != 5)
+    if (glyphLang != GAMETEXT_FONT_FACE)
     {
         if (outMaxAdv != NULL)
         {
@@ -997,10 +1013,10 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
             case TEXT_CTRL_SCALE:
                 scale = params[0] * lbl_803DE708;
                 break;
-            case TEXT_CTRL_LANGUAGE:
+            case TEXT_CTRL_FONT:
                 glyphLang = params[0];
                 tbl = &lbl_802C8680[glyphLang * 16];
-                if (glyphLang != 5)
+                if (glyphLang != GAMETEXT_FONT_FACE)
                 {
                     mAdv = (f32)(u32) * (u16*)(tbl + 8) * scale;
                     if (outMaxAdv != NULL && mAdv > *outMaxAdv)
@@ -1023,7 +1039,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
         {
             continue;
         }
-        if (glyphLang == 5)
+        if (glyphLang == GAMETEXT_FONT_FACE)
         {
             continue;
         }
@@ -1509,8 +1525,8 @@ void gameTextLoadDir(int dirId)
 
     if (dirId == 3)
     {
-        gameTextFonts = (TextFont*)&gGameTextCharsets[2];
-        gameTextCharset = 2;
+        gameTextFonts = (TextFont*)&gGameTextCharsets[GAMETEXT_SLOT_ERROR];
+        gameTextCharset = GAMETEXT_SLOT_ERROR;
         color = gGameTextClearColor;
         hudDrawRect(0, 0, 0xa00, 0x780, &color);
         lbl_803DC99C = 0;
@@ -1520,41 +1536,41 @@ void gameTextLoadDir(int dirId)
             lbl_803DC9C8 = slotIndex + 1;
             cmd = &lbl_8033A540[slotIndex];
             cmd->opcode = 0xf;
-            cmd->arg0 = 2;
+            cmd->arg0 = GAMETEXT_SLOT_ERROR;
         }
     }
     else if (dirId == 0x1c)
     {
         curGameTextDir = (void*)dirId;
-        gameTextFonts = (TextFont*)&gGameTextCharsets[3];
-        gameTextCharset = 3;
+        gameTextFonts = (TextFont*)&gGameTextCharsets[GAMETEXT_SLOT_HUD];
+        gameTextCharset = GAMETEXT_SLOT_HUD;
         if (gameTextDrawFunc == NULL)
         {
             slotIndex = lbl_803DC9C8;
             lbl_803DC9C8 = slotIndex + 1;
             cmd = &lbl_8033A540[slotIndex];
             cmd->opcode = 0xf;
-            cmd->arg0 = 3;
+            cmd->arg0 = GAMETEXT_SLOT_HUD;
         }
-        gameTextLoadForCurMap(3);
+        gameTextLoadForCurMap(GAMETEXT_SLOT_HUD);
     }
     else
     {
-        gameTextFonts = (TextFont*)&gGameTextCharsets[0];
-        gameTextCharset = 0;
+        gameTextFonts = (TextFont*)&gGameTextCharsets[GAMETEXT_SLOT_DIALOGUE];
+        gameTextCharset = GAMETEXT_SLOT_DIALOGUE;
         if (gameTextDrawFunc == NULL)
         {
             slotIndex = lbl_803DC9C8;
             lbl_803DC9C8 = slotIndex + 1;
             cmd = &lbl_8033A540[slotIndex];
             cmd->opcode = 0xf;
-            cmd->arg0 = 0;
+            cmd->arg0 = GAMETEXT_SLOT_DIALOGUE;
         }
         curGameTextDir = (void*)dirId;
         if ((subtitleIsActive() == 0 || gameTextFn_8001b44c(dirId) == 0) &&
             (int)curGameTextDir != gGameTextLastDir)
         {
-            gameTextLoadForCurMap(0);
+            gameTextLoadForCurMap(GAMETEXT_SLOT_DIALOGUE);
         }
     }
 }
@@ -3448,7 +3464,7 @@ void subtitleBuildLineTable(void)
     for (i = 0; i < t->count; i++)
     {
         str = t->strs[i];
-        n = GameText_FindControlCodeArgs((u8*)str, 0xE018, args);
+        n = GameText_FindControlCodeArgs((u8*)str, TEXT_CTRL_SEQ_TIME, args);
         if (n != 0)
         {
             q = args[2] / 60;
