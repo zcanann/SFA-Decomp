@@ -20,6 +20,7 @@
 #define UNUSED_OBJGROUP 0x10
 
 #define PAD_BUTTON_A 0x100
+#define UNUSED107_PARTFX 0x51c
 #define UNUSED107_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
 #define UNUSED107_MSG_PLAYER_GRAB 0x100010 /* tells player to grab/hold this object */
 
@@ -239,7 +240,7 @@ void dll_107_update(int obj)
         state->spitTimer -= framesThisStep;
         if ((int)randomGetRange(0, 2) == 2)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x51c, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, UNUSED107_PARTFX, NULL, 1, -1, NULL);
         }
         if (state->spitTimer <= 0)
         {
