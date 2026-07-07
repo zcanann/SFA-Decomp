@@ -37,6 +37,10 @@
 
 #define ARWARWING_OBJFLAG_PARENT_SLACK 0x1000
 
+#define ARWARWING_CHILD_OBJ_LASERSHOT 0x604
+#define ARWARWING_CHILD_OBJ_THRUSTER 0x6de
+#define ARWARWING_CHILD_OBJ_BOMB 0x608
+
 /* ArwingState.flags477 bits */
 #define ARWING_FLAG_ACTIVE     0x1   /* Arwing is active / engaged */
 #define ARWING_FLAG_ROLL_LEFT  0x2   /* barrel-rolling left */
@@ -642,7 +646,7 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
         arwarwinggu_setActiveVisible(((ArwingState*)state)->gunObjR, 1, level == 2);
     }
     {
-        ArwArwingProjectileSetup* setup = (ArwArwingProjectileSetup*)Obj_AllocObjectSetup(0x20, 0x604);
+        ArwArwingProjectileSetup* setup = (ArwArwingProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_LASERSHOT);
         setup->posX = px;
         setup->posY = py;
         setup->posZ = pz;
@@ -899,11 +903,11 @@ void arwarwing_initAttachments(int obj, int state)
     if (*(void**)&((ArwingState*)state)->thrusterL == 0 && *(void**)&((ArwingState*)state)->thrusterR == 0)
     {
         int setup;
-        setup = Obj_AllocObjectSetup(0x20, 0x6de);
+        setup = Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_THRUSTER);
         ((ArwArwingProjectileSetup*)setup)->field04 = 1;
         ((ArwArwingProjectileSetup*)setup)->field05 = 1;
         ((ArwingState*)state)->thrusterL = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
-        setup = Obj_AllocObjectSetup(0x20, 0x6de);
+        setup = Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_THRUSTER);
         ((ArwArwingProjectileSetup*)setup)->field04 = 1;
         ((ArwArwingProjectileSetup*)setup)->field05 = 1;
         ((ArwingState*)state)->thrusterR = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
@@ -1271,7 +1275,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 0xa:
             if (Obj_IsLoadingLocked())
             {
-                int setup = Obj_AllocObjectSetup(0x24, 0x608);
+                int setup = Obj_AllocObjectSetup(0x24, ARWARWING_CHILD_OBJ_BOMB);
                 int loaded;
                 ((ArwArwingProjectileSetup*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ArwArwingProjectileSetup*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
