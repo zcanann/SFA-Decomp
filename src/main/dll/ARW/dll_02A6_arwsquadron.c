@@ -6,6 +6,8 @@
 #define ARW_SQUADRON_PARTFX_SMOKE 0x7d0 /* damage smoke effect (pfx.f8 = damageSmokeScale) */
 #define ARW_SQUADRON_PARTFX_FIRE  0x7d1 /* fire effect (pfx.f8 = fireFxScale) */
 
+#define ARWSQUADRON_HIT_VOLUME_SLOT 0x13
+
 #define ARW_SQUADRON_STATE_WAITING 0
 #define ARW_SQUADRON_STATE_ACTIVE 1
 #define ARW_SQUADRON_STATE_DEAD 3
@@ -811,7 +813,7 @@ void ARWSquadron_update(int obj)
             if (flags->f80)
             {
                 ArwSquadronSetup* setupF = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
-                ObjHits_SetHitVolumeSlot(obj, 0x13, state->hitVolumeMode, 0);
+                ObjHits_SetHitVolumeSlot(obj, ARWSQUADRON_HIT_VOLUME_SLOT, state->hitVolumeMode, 0);
                 if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
                     arwsquadron_updateVolley(obj, (int)state, (int)setupF);
             }
