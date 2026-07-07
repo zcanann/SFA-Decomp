@@ -22,6 +22,11 @@ extern f32 lbl_803E5158;
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern ModgfxInterface** gModgfxInterface;
 
+/* Env-fx ids activated per anim seq event (getEnvfxAct 3rd arg):
+ * A on event 1, B on event 2 (default id when no override is set). */
+#define DLL199_ENVFX_A 0xc3
+#define DLL199_ENVFX_B 0x14
+
 extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern u32 lbl_803DDBD8;
@@ -117,12 +122,12 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
             ((Dll197State*)st)->menuState = 7;
             break;
         case 1:
-            getEnvfxAct(obj, obj, 0xc3, 0);
+            getEnvfxAct(obj, obj, DLL199_ENVFX_A, 0);
             break;
         case 2:
             if (lbl_803DB610 == -1)
             {
-                getEnvfxAct(obj, obj, 0x14, 0);
+                getEnvfxAct(obj, obj, DLL199_ENVFX_B, 0);
             }
             else
             {
