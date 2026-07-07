@@ -378,7 +378,7 @@ void fn_80152B90(int* obj, u8* state)
                     if (spawned != 0)
                     {
                         *(int**)((char*)spawned + 0xc4) = obj;
-                        Sfx_PlayFromObject((u32)obj, 0x249);
+                        Sfx_PlayFromObject((u32)obj, SFXfox_cough2);
                     }
                 }
             }
@@ -400,13 +400,13 @@ void fn_80152B90(int* obj, u8* state)
     if (*(f32*)(state + 0x334) <= lbl_803E2868)
     {
         *(f32*)(state + 0x334) = (f32)(int)randomGetRange(0x3c, 0x78);
-        Sfx_PlayFromObject((u32)obj, 0x31);
+        Sfx_PlayFromObject((u32)obj, SFXen_mazewall);
     }
     *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
     if (*(f32*)(state + 0x330) <= lbl_803E2868)
     {
         *(f32*)(state + 0x330) = lbl_803E286C;
-        Sfx_PlayFromObject((u32)obj, 0x24a);
+        Sfx_PlayFromObject((u32)obj, SFXfox_bigfallrecover1);
     }
 }
 
