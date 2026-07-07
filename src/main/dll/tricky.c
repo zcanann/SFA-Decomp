@@ -36,6 +36,11 @@
 
 #define TRICKY_OBJFLAG_PARENT_SLACK 0x1000
 
+/* cMenu ring child object-type ids spawned in gameUiLoadResources; roles pinned
+ * by the render callbacks they install. */
+#define TRICKY_CHILD_OBJ_RING_MODEL 0x65e /* -> cMenuRingModelRenderFn */
+#define TRICKY_CHILD_OBJ_RING_ICON 0x65f  /* -> cMenuRingIconRenderFn */
+
 typedef struct GameUIWork10
 {
     u8 pad0[0x8 - 0x0];
@@ -104,14 +109,14 @@ void gameUiLoadResources(void)
         fc = lbl_803E1E44;
         for (; i < 3; i++)
         {
-            *arrA = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x65e), 4, -1, -1, 0);
+            *arrA = Obj_SetupObject(Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_RING_MODEL), 4, -1, -1, 0);
             ((GameObject*)(*arrA))->anim.localPosX = fa;
             ((GameObject*)(*arrA))->anim.localPosY = fb;
             ((GameObject*)(*arrA))->anim.localPosZ = fc;
             ((GameObject*)(*arrA))->anim.rotX = val;
             *(s8*)(*arrA + 0xad) = i;
             ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrA), cMenuRingModelRenderFn);
-            *arrB = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x65f), 4, -1, -1, 0);
+            *arrB = Obj_SetupObject(Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_RING_ICON), 4, -1, -1, 0);
             ((GameObject*)(*arrB))->anim.localPosX = fa;
             ((GameObject*)(*arrB))->anim.localPosY = fb;
             ((GameObject*)(*arrB))->anim.localPosZ = fc;
