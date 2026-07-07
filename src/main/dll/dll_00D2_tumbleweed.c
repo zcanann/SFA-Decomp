@@ -396,7 +396,7 @@ void tumbleweed_updateStateMachine(int obj)
             dist = getXZDistance(&player->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
             if (dist < lbl_803E2FB8)
             {
-                ((BackpackState*)aux)->unk298 = 0x195;
+                ((BackpackState*)aux)->triggerGameBit = 0x195;
                 ((BackpackState*)aux)->unk29A = 0;
                 ((BackpackState*)aux)->unk29C = lbl_803E2F98;
                 ObjMsg_SendToObject(player, TUMBLEWEED_MSG_IN_RANGE, (void*)obj, (u32)(aux + 0x298));

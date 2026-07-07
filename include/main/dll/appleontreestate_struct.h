@@ -31,7 +31,11 @@ typedef struct AppleOnTreeState
     u8 pad54[6];
     u8 flags;
     u8 pad5B;
-    s16 unk5C;
+    s16 triggerGameBit; /* 0x5C: head of the ObjMsg 0x7000a grab-trigger descriptor
+                           (&triggerGameBit passed as the msg param). The player's
+                           0x7000a handler reads *param as this gamebit id: bit>0 ->
+                           mainGetBit(bit) gates + mainSetBits(bit,1), else the no-bit
+                           grab path; -1 = no gamebit (player.c). */
     s16 unk5E;
     f32 unk60;
 } AppleOnTreeState;

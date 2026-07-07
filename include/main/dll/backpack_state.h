@@ -29,7 +29,11 @@ typedef struct BackpackState {
     f32 anchorPosZ;
     f32 *targetPos;
     f32 speed;
-    s16 unk298;
+    s16 triggerGameBit; /* 0x298: head of the ObjMsg 0x7000a grab-trigger descriptor
+                           (&triggerGameBit passed as the msg param). The player's
+                           0x7000a handler reads *param as this gamebit id: bit>0 ->
+                           mainGetBit(bit) gates + mainSetBits(bit,1), else no-bit grab
+                           path (player.c). */
     s16 unk29A;
     f32 unk29C;
     f32 phaseTimer;
@@ -50,7 +54,7 @@ STATIC_ASSERT(offsetof(BackpackState, anchorPosX) == 0x288);
 STATIC_ASSERT(offsetof(BackpackState, anchorPosZ) == 0x28C);
 STATIC_ASSERT(offsetof(BackpackState, targetPos) == 0x290);
 STATIC_ASSERT(offsetof(BackpackState, speed) == 0x294);
-STATIC_ASSERT(offsetof(BackpackState, unk298) == 0x298);
+STATIC_ASSERT(offsetof(BackpackState, triggerGameBit) == 0x298);
 STATIC_ASSERT(offsetof(BackpackState, unk29A) == 0x29A);
 STATIC_ASSERT(offsetof(BackpackState, unk29C) == 0x29C);
 STATIC_ASSERT(offsetof(BackpackState, phaseTimer) == 0x2A0);
