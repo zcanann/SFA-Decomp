@@ -1045,7 +1045,6 @@ main/dll/dll_00DF_hagabon.c:
 main/dll/dll_00E0_swarmbaddie.c:
 	.text       start:0x8014EE8C end:0x8014F620
 	.data       start:0x8031DCC0 end:0x8031DCF8
-	.sdata2     start:0x803E26A8 end:0x803E26B0
 
 main/dll/dll_00E1_wispbaddie.c:
 	.text       start:0x8014F620 end:0x801504F8
@@ -1760,7 +1759,6 @@ main/dll/DIM/dll_01BF_dimlavaball.c:
 
 main/dll/DIM/dll_01C0_dimlogfire.c:
 	.text       start:0x801B0670 end:0x801B0DD4
-	.sdata2     start:0x803E4840 end:0x803E4848
 
 main/dll/DIM/dll_01C1_dimsnowball.c:
 	.text       start:0x801B0DD4 end:0x801B13E8
