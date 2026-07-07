@@ -37,7 +37,7 @@ typedef struct ModelFileHeader {
     u8 *animationModelPtrs;
     u8 *animationDataSection;
     u8 *animationHeaderBuffer; /* per-joint s16 table */
-    u8 unk70[0x10];
+    s16 animGroupBaseIndices[8]; /* 0x70: wiki Idx0..Idx7; group-base indices from modelLoadAnimations scanning for -1 markers */
     s32 animationDataFileOffset;
     s16 headerSize; /* roundUpTo8(loaded header size) + 0xb0; read back into size table */
     u8 unk86[4];
