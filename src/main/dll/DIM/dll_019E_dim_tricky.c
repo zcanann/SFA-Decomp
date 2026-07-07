@@ -27,6 +27,11 @@ extern f32 lbl_803E51E0;
 extern f32 gDimTrickyScaleTimerDivisor;
 extern f32 lbl_803E51E8;
 
+/* Partfx: idle sparkle emitted in render while the object is visible (losVisible);
+ * the egg-activation burst emitted 100x in update when the egg turns active. */
+#define DIMTRICKY_PARTFX_IDLE_SPARKLE 0x1f7
+#define DIMTRICKY_PARTFX_EGG_ACTIVATE 0x1a3
+
 int dll_19E_getExtraSize(void) { return 0x10; }
 int dll_19E_getObjectTypeId(void) { return 0x1; }
 
@@ -142,7 +147,7 @@ void dll_19E_render(int obj, int p2, int p3, int p4,
                 stk.args.x = lbl_803E51D8;
                 stk.args.y = lbl_803E51DC;
                 stk.args.z = lbl_803E51D8;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x1f7, &stk.args, 0x12, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, DIMTRICKY_PARTFX_IDLE_SPARKLE, &stk.args, 0x12, -1, NULL);
             }
             state->delayTimer = (s16)(randomGetRange(-10, 10) + 0x3c);
         }
@@ -259,7 +264,7 @@ void dll_19E_update(void* obj)
                 i = 0;
                 do
                 {
-                    (*gPartfxInterface)->spawnObject(obj, 0x1a3, NULL, 0, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, DIMTRICKY_PARTFX_EGG_ACTIVATE, NULL, 0, -1, NULL);
                     i++;
                 }
                 while (i < 100);
