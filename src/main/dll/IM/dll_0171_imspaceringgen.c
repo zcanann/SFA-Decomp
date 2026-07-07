@@ -31,6 +31,9 @@ extern f32 lbl_803E47C4; /* Y offset applied when chasing ring A */
 #define SEQID_RING_A 0x164
 #define SEQID_RING_B 0x168
 
+/* loose ring-piece object spawned (x10) as ImSpaceRingSetup with random spin/tilt */
+#define IMSPACERINGGEN_CHILD_OBJ_RING_PIECE 0x301
+
 /* spawn buffer for the loose ring pieces (Obj_AllocObjectSetup(0x24)).
    Head is the common ObjPlacement; the tail is file-local. */
 typedef struct ImSpaceRingSetup
@@ -128,7 +131,7 @@ void IMSpaceRingGen_update(GameObject* obj)
         {
             for (i = 0; i < 10; i++)
             {
-                ring = Obj_AllocObjectSetup(0x24, 0x301);
+                ring = Obj_AllocObjectSetup(0x24, IMSPACERINGGEN_CHILD_OBJ_RING_PIECE);
                 ((ImSpaceRingSetup*)ring)->base.posX = obj->anim.localPosX;
                 ((ImSpaceRingSetup*)ring)->base.posY = obj->anim.localPosY;
                 ((ImSpaceRingSetup*)ring)->base.posZ = obj->anim.localPosZ;
