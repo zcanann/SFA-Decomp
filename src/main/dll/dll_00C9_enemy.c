@@ -681,9 +681,6 @@ null_state:
 
 void fn_8014D08C(int obj, int state, f32 mult, int a, int b, u8 c)
 {
-    extern f32 lbl_803E256C;
-    extern f32 lbl_803E2570;
-    extern f32 lbl_803E2574;
     ObjHitsPriorityState* hitState;
 
     ((BaddieState*)state)->unk308 = lbl_803E256C / (lbl_803E2570 * mult);
