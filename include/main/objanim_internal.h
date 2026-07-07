@@ -228,7 +228,7 @@ typedef struct ObjDef {
   u8 pad4C[0x4E - 0x4C];
   s16 hitboxFlags;
   s16 dllId;
-  s16 pad52;
+  s16 category;
   u8 pad54;
   s8 modelCount;
   s8 group8RegistrationCount;
@@ -477,6 +477,8 @@ STATIC_ASSERT(offsetof(ObjDef, flags) == 0x44);
 STATIC_ASSERT(offsetof(ObjDef, shadowType) == 0x48);
 STATIC_ASSERT(offsetof(ObjDef, shadowTextureId) == 0x4A);
 STATIC_ASSERT(offsetof(ObjDef, hitboxFlags) == 0x4E);
+STATIC_ASSERT(offsetof(ObjDef, dllId) == 0x50);
+STATIC_ASSERT(offsetof(ObjDef, category) == 0x52);
 STATIC_ASSERT(offsetof(ObjDef, modelCount) == 0x55);
 STATIC_ASSERT(offsetof(ObjDef, group8RegistrationCount) == 0x56);
 STATIC_ASSERT(offsetof(ObjDef, textureSlotCount) == 0x59);

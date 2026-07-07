@@ -1197,7 +1197,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         return NULL;
     }
     modelDef = (ObjModelInstance*)def;
-    tmpl.f44 = *(s16*)(def + 0x52);
+    tmpl.f44 = modelDef->category;
     tmpl.scale = modelDef->rootMotionScaleBase;
     tmpl.flags06 = 2;
     if (modelDef->flags & 0x80)
