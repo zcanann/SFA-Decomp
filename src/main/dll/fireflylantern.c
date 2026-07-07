@@ -25,6 +25,8 @@
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define FIREFLYLANTERN_HIT_VOLUME_SLOT 0xe
+
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
 extern int playerGetFlags3F0Bit5(int obj);
@@ -110,7 +112,7 @@ void fn_80154870(int obj, int* state)
     {
         *(u32*)&state[0xb7] &= ~0x2000LL;
     }
-    ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
+    ObjHits_SetHitVolumeSlot(obj, FIREFLYLANTERN_HIT_VOLUME_SLOT, 1, 0);
     flag = playerGetFlags3F0Bit5(Obj_GetPlayerObject());
     dvec[0] = *(f32*)(state[0xa7] + 0xc) - ((GameObject*)obj)->anim.localPosX;
     dvec[1] = lbl_803E2990;
