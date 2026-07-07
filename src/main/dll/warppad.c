@@ -59,6 +59,11 @@ extern void setAButtonIcon(int x);
 /* one-shot latch: gates the first A-prompt trigger sequence for any warp pad */
 #define GAMEBIT_WARPPAD_PROMPT_SHOWN 0x912
 
+/* recurring shimmer emitted randomly across all warp-pulse stages */
+#define WARPPAD_PARTFX_PULSE 0x7ca
+/* surge burst emitted at the stage-2 transition and the stage-3 latch release */
+#define WARPPAD_PARTFX_SURGE 0x7d2
+
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
 
 void warpPadFn_8019042c(int obj)
@@ -164,7 +169,7 @@ void warpPadFn_8019042c(int obj)
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0
             )
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7ca, &fx, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
         }
         else if (state->pulseTimer < gWarpPadPulseStage2Time)
@@ -172,12 +177,12 @@ void warpPadFn_8019042c(int obj)
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / lbl_803E3EBC
             )
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7ca, &fx, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
             fx.count = 0x28;
             fx.unk0 = 0;
             fx.scale = lbl_803E3EC0 * ((state->pulseTimer - gWarpPadPulseStage1Time) / lbl_803E3EC4);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7d2, &fx, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_SURGE, &fx, 2, -1, NULL);
             state->flags = state->flags | WARPPAD_FLAG_LATCH;
         }
         else if (state->pulseTimer < gWarpPadPulseStage3Time)
@@ -185,7 +190,7 @@ void warpPadFn_8019042c(int obj)
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0
             )
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7ca, &fx, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
             if ((state->flags & WARPPAD_FLAG_LATCH) != 0)
             {
@@ -194,7 +199,7 @@ void warpPadFn_8019042c(int obj)
                 fx.scale = lbl_803E3ECC;
                 for (i = 0xf; i != 0; i--)
                 {
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7d2, &fx, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_SURGE, &fx, 2, -1, NULL);
                 }
             }
         }
