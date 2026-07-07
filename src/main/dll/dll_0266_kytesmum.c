@@ -49,6 +49,7 @@ extern void DR_Creator_initialise(void);
 
 #define KYTESMUM_OBJECT_TYPE_ID 0x43
 #define KYTESMUM_EXTRA_SIZE 0x6ec
+#define KYTESMUM_HIT_VOLUME_SLOT 0xb
 
 #define KYTESMUM_MODE_QUEST_A 0    /* shares the quest-state path with mode 3 */
 #define KYTESMUM_MODE_STATIONARY 1
@@ -380,7 +381,7 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8* arg)
     {
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 4;
-        ObjHits_SetHitVolumeSlot(obj, 0xb, 4, 7);
+        ObjHits_SetHitVolumeSlot(obj, KYTESMUM_HIT_VOLUME_SLOT, 4, 7);
         ObjHits_RegisterActiveHitVolumeObject(obj);
     }
     return 0;
