@@ -42,6 +42,9 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 
 #define SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
 
+#define SHKILLERMUSHROOM_PARTFX_HIT  0x3eb /* poison hit effect at hitEffectX/Y/Z */
+#define SHKILLERMUSHROOM_PARTFX_STUN 0x51d /* stun effect (gKillerMushroomStunFxInterval-timed) */
+
 /* EnemyMushroomState::stateFlags bits (killer-mushroom local) */
 #define MUSHROOM_STATEFLAG_HIT_PLAYER 0x1 /* player already hit this attack cycle */
 #define MUSHROOM_STATEFLAG_ANIM_DONE  0x2 /* current move finished this frame */
@@ -284,7 +287,7 @@ void enemymushroom_update(int* obj)
             int base = 0x200000;
             while (k != 0)
             {
-                (*gPartfxInterface)->spawnObject(obj, 0x3eb, &hv, base + 1,
+                (*gPartfxInterface)->spawnObject(obj, SHKILLERMUSHROOM_PARTFX_HIT, &hv, base + 1,
                                                  -1, NULL);
                 k--;
             }
@@ -349,7 +352,7 @@ void enemymushroom_update(int* obj)
             int base = 0x200000;
             while (k != 0)
             {
-                (*gPartfxInterface)->spawnObject(obj, 0x3eb, &hv, base + 1,
+                (*gPartfxInterface)->spawnObject(obj, SHKILLERMUSHROOM_PARTFX_HIT, &hv, base + 1,
                                                  -1, NULL);
                 k--;
             }
@@ -414,7 +417,7 @@ void enemymushroom_update(int* obj)
                 {
                     hv.x = lbl_803E532C;
                     hv.y = lbl_803E5330;
-                    (*gPartfxInterface)->spawnObject(obj, 0x51d, &hv, 2, -1,
+                    (*gPartfxInterface)->spawnObject(obj, SHKILLERMUSHROOM_PARTFX_STUN, &hv, 2, -1,
                                                      NULL);
                     ((EnemyMushroomState*)state)->effectTimer = gKillerMushroomStunFxInterval;
                 }
