@@ -29,6 +29,7 @@
 
 /* group owned by another DLL, queried here */
 #define SIDEREPEL_OBJGROUP 0x40 /* DLL 0xEB siderepel */
+#define SKEETLA_TARGET_OBJGROUP 5
 
 /* Per-node fan-out limit: status[]/bestDistances[]/outRoutes[] hold at most
  * this many linked route candidates (status[8] / f32 bestDistances[8]). */
@@ -248,7 +249,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     }
 
     if ((coordsToMapCell(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ) == 0xe) ||
-        ((u32)ObjGroup_FindNearestObject(5, obj, &nearestDistance) != 0u))
+        ((u32)ObjGroup_FindNearestObject(SKEETLA_TARGET_OBJGROUP, obj, &nearestDistance) != 0u))
     {
         state->pathControlFlags &= ~4;
     }
