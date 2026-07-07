@@ -18,27 +18,8 @@
 #include "main/dll/dll_0000_gameui.h"
 extern u32 FUN_800069f4();
 extern u32 mapBlockRender_setVtxDcrs();
-extern u32 DAT_8037ed10;
-extern int DAT_8037ed20;
-extern u32 DAT_8037ed28;
-extern u32 DAT_80382efc;
-extern u32 DAT_80382f00;
-extern int DAT_80382f14;
-extern int DAT_80382f24;
-extern int DAT_803870c8;
 extern ModgfxInterface** gModgfxInterface;
-extern u32* DAT_803dd718;
-extern u32 DAT_803dda50;
-extern u32 DAT_803dda54;
 extern u32 DAT_803dda68;
-extern u32 DAT_803ddab0;
-extern u32 DAT_803ddb08;
-extern u32 DAT_803ddb18;
-extern u32 DAT_803ddb1c;
-extern u32 DAT_803ddb24;
-extern u32 DAT_803ddb28;
-extern u32 DAT_803ddb40;
-extern u32 DAT_cc008000;
 extern f64 DOUBLE_803df840;
 extern f32 lbl_803DC2D0;
 extern f32 lbl_803DDA58;
