@@ -30,6 +30,7 @@
 
 /* object group this object belongs to */
 #define SWARMBADDIE_OBJGROUP 3
+#define SWARMBADDIE_PARTFX 0x336
 
 #define SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern u32 DAT_803de6d0;
@@ -216,7 +217,7 @@ void SwarmBaddie_update(int obj)
             gSwarmBaddieS16AngleScale) +
         volume,
         obj, 0x40, (int)(lbl_803E26BC * volume));
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x336, NULL, 2, -1,
+    (*gPartfxInterface)->spawnObject((void*)obj, SWARMBADDIE_PARTFX, NULL, 2, -1,
                                      &state->hitVolumeEnvelope);
     state->player = Obj_GetPlayerObject();
     if (state->player != NULL)
