@@ -884,7 +884,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
     }
     DCInvalidateRange((void*)lbl_803DD044, 0x2000);
     result = CARDRead(lbl_80396900, (void*)lbl_803DD044, 0x2000, 0x2000);
-    if (result == 0)
+    if (result == CARD_RESULT_READY)
     {
         p = (u64*)lbl_803DD044;
         x[0] = 0;
@@ -901,7 +901,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
         {
             DCInvalidateRange((void*)lbl_803DD044, 0x2000);
             result = CARDRead(lbl_80396900, (void*)lbl_803DD044, 0x2000, 0x4000);
-            if (result == 0)
+            if (result == CARD_RESULT_READY)
             {
                 p = (u64*)lbl_803DD044;
                 x2[0] = 0;
@@ -969,7 +969,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
             return 0;
         }
         result = CARDRead(lbl_80396900, m, 0x2000, 0);
-        if (result == 0)
+        if (result == CARD_RESULT_READY)
         {
             p = (u64*)gSaveCardImageBuffer;
             x[0] = 0;
@@ -997,7 +997,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
                     {
                         CARDDelete(0, sMemoryCardFileName);
                     }
-                    if (result == 0)
+                    if (result == CARD_RESULT_READY)
                     {
                         t = *(u64*)(gSaveCardImageBuffer + 0x2a40);
                         if (t != *(u64*)(lbl_803DD044 + 0xa40))
