@@ -10,6 +10,7 @@
 #define DREARTHWARRIOR_OBJFLAG_PARENT_SLACK 0x1000
 
 #define DREARTHWARRIOR_CHILD_OBJ_HELPER 0x6f5
+#define DREARTHWARRIOR_EFFECT_RESOURCE_ID 0x5a /* shared effect resource -> gEarthWarriorResource */
 
 typedef struct DREarthWarriorPlacement
 {
@@ -390,7 +391,7 @@ void DR_EarthWarrior_initialise(void)
     gDREarthWarriorDefaultStateHandler = DR_EarthWarrior_defaultStateHandler;
     if (gEarthWarriorResource == NULL)
     {
-        gEarthWarriorResource = Resource_Acquire(0x5a, 1);
+        gEarthWarriorResource = Resource_Acquire(DREARTHWARRIOR_EFFECT_RESOURCE_ID, 1);
     }
 }
 
