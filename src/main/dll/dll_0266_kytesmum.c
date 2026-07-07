@@ -41,6 +41,7 @@ extern void DR_Creator_release(void);
 extern void DR_Creator_initialise(void);
 
 #define KYTESMUM_OBJGROUP 0x3
+#define KYTESMUM_TARGET_OBJGROUP 0x1
 
 #define KYTESMUM_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -201,7 +202,7 @@ void kytesmum_update(int obj)
     kytesmum_playAnimationEventSfx(obj, runtime->animEvents, runtime->eventSfxTable);
     characterDoEyeAnims(obj, runtime->eyeAnimState);
     objAnimFn_80038f38(obj, runtime->modelSoundState);
-    nearest = ObjGroup_FindNearestObject(1, obj, &nearDist);
+    nearest = ObjGroup_FindNearestObject(KYTESMUM_TARGET_OBJGROUP, obj, &nearDist);
     if ((void*)nearest != NULL)
     {
         (*(void (**)(int, int, int, int))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x28))(
