@@ -959,8 +959,8 @@ void Sfx_StopAllObjectSounds(void)
     SfxObjectChannel* objectChannel;
 
     objectChannel = gSfxObjectChannels;
-    i = SFX_OBJECT_CHANNEL_COUNT - 1;
-    do
+    i = SFX_OBJECT_CHANNEL_COUNT;
+    while (i-- != 0)
     {
         if (objectChannel->handle != (u32) - 1)
         {
@@ -969,7 +969,6 @@ void Sfx_StopAllObjectSounds(void)
         }
         objectChannel++;
     }
-    while (i-- != 0);
 }
 #pragma dont_inline reset
 
@@ -1478,8 +1477,8 @@ void Sfx_UpdateObjectSounds(void)
     u32 globalCtrl;
 
     objectChannel = gSfxObjectChannels;
-    i = SFX_OBJECT_CHANNEL_COUNT - 1;
-    do
+    i = SFX_OBJECT_CHANNEL_COUNT;
+    while (i-- != 0)
     {
         if ((objectChannel->handle != (u32) - 1) && ((u32)sndFXCheck(objectChannel->handle) == (u32) - 1))
         {
@@ -1487,7 +1486,6 @@ void Sfx_UpdateObjectSounds(void)
         }
         objectChannel++;
     }
-    while (i-- != 0);
 
     if (mainGetBit(0xCBB) != 0)
     {
@@ -1534,8 +1532,8 @@ void Sfx_UpdateObjectSounds(void)
     {
         objectChannel = gSfxObjectChannels;
         gSfxGlobalCtrlLevel = (u8)((u8)globalCtrl * 5);
-        i = SFX_OBJECT_CHANNEL_COUNT - 1;
-        do
+        i = SFX_OBJECT_CHANNEL_COUNT;
+        while (i-- != 0)
         {
             if ((objectChannel->handle != (u32) - 1) && (objectChannel->globalCtrlDisabled == 0))
             {
@@ -1543,12 +1541,11 @@ void Sfx_UpdateObjectSounds(void)
             }
             objectChannel++;
         }
-        while (i-- != 0);
     }
 
     objectChannel = gSfxObjectChannels;
-    i = SFX_OBJECT_CHANNEL_COUNT - 1;
-    do
+    i = SFX_OBJECT_CHANNEL_COUNT;
+    while (i-- != 0)
     {
         if ((objectChannel->handle != (u32) - 1) && (objectChannel->hasPosition != 0))
         {
@@ -1573,7 +1570,6 @@ void Sfx_UpdateObjectSounds(void)
         }
         objectChannel++;
     }
-    while (i-- != 0);
 }
 
 #pragma dont_inline on
