@@ -19,6 +19,8 @@
 #include "main/dll/VF/vf_shared.h"
 
 #define DLL1DF_OBJFLAG_HITDETECT_DISABLED 0x2000
+/* particle effect seeded on the proximity-countdown tick while the player is near */
+#define DLL1DF_PARTFX 525
 extern f32 lbl_803E4B98;
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4, lbl_803E4BA8, lbl_803E4BAC;
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
@@ -99,7 +101,7 @@ void dll_1DF_update(GameObject* obj)
         sub->spawnTimer = t;
         if (t < lbl_803E4B9C)
         {
-            (*gPartfxInterface)->spawnObject(obj, 525, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, DLL1DF_PARTFX, NULL, 2, -1, NULL);
             sub->spawnTimer = lbl_803E4BA4;
         }
     }
