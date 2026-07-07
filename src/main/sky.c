@@ -9,6 +9,8 @@
 #define SKY_ENVFX_UPDATE_PENDING 0x10 /* sun position changed; process this frame */
 #define SKY_ENVFX_IMMEDIATE 0x20 /* fire acts immediately vs deferred */
 #define SKY_CONFIG_FIELD_COUNT 0xb
+#define SKY_CHILD_OBJ_SUN 0x62b  /* spawned into gSkySunObject */
+#define SKY_CHILD_OBJ_MOON 0x62c /* spawned into gSkyMoonObject */
 #define GX_FALSE 0
 #define GX_TEV_SWAP0 0
 #define GX_TG_MTX2x4 1
@@ -151,8 +153,8 @@ void loadSunAndMoon(void)
 
     if (gSkyObjectsInitialized == 0)
     {
-        gSkySunObject = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x62b), 4, -1, -1, NULL);
-        moonObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x62c), 4, -1, -1, NULL);
+        gSkySunObject = Obj_SetupObject(Obj_AllocObjectSetup(0x20, SKY_CHILD_OBJ_SUN), 4, -1, -1, NULL);
+        moonObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, SKY_CHILD_OBJ_MOON), 4, -1, -1, NULL);
         gSkyMoonObject = moonObj;
         gSkyObjectsInitialized = 1;
         ObjModel_SetRenderCallback(Obj_GetActiveModel(moonObj), moonFxCb_80074110);
