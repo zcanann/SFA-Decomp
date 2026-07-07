@@ -163,6 +163,7 @@ typedef struct DFSHLaserBeamObject
 #define DFSH_LASER_PROXIMITY_MODE(runtime) (*(u8 *)((u8 *)(runtime) + 0x4A))
 #define DFSH_LASER_RANGE_VALUE(runtime) (*(f32 *)((u8 *)(runtime) + 0x18))
 #define DFSH_LASER_FLAGS(runtime) (*(s32 *)((u8 *)(runtime) + 0x18))
+#define DFSH_MSG_PLAYER_HIT 0x60003 /* message the player on a laser hit */
 
 #define MODGFX_DETACH(obj) (*gModgfxInterface)->detachSource(obj)
 #define PARTFX_SPAWN(obj,id,a,b,c,d) \
@@ -366,7 +367,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                         if ((DFSH_LASER_PROXIMITY_MODE(runtime) == 0) ||
                             (DFSH_LASER_PROXIMITY_MODE(runtime) == 1))
                         {
-                            ObjMsg_SendToObject(playerObj, 0x60003,DFSH_LASER_HIT_POS(runtime), 0);
+                            ObjMsg_SendToObject(playerObj, DFSH_MSG_PLAYER_HIT,DFSH_LASER_HIT_POS(runtime), 0);
                         }
                         DFSH_LASER_DAMAGE_COOLDOWN(runtime) = 0x14;
                     }
