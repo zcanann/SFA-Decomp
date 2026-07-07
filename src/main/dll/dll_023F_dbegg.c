@@ -48,6 +48,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DBEGG_OBJGROUP 0x24
+#define DBEGG_SIBLING_OBJGROUP 0x14
 #define PAD_BUTTON_A 0x100
 #define DBEGG_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 #define DBEGG_MSG_PLAYER_GRAB 0x100008 /* tells player to grab/hold the egg */
@@ -493,7 +494,7 @@ void fn_801FE774(int obj, f32* vel)
 
     int* objList;
     sumZ = sumX = lbl_803E61C8;
-    objList = (int*)ObjGroup_GetObjects(0x14, &count);
+    objList = (int*)ObjGroup_GetObjects(DBEGG_SIBLING_OBJGROUP, &count);
     for (i = 0, objCursor = objList, limit = lbl_803E61E8; i < count; i++)
     {
         f32 dy;
