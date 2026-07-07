@@ -174,8 +174,8 @@ typedef struct SfxTriggerFull {
     u8 volRand;
     u8 pitchBase;
     u8 pitchRand;
-    u16 field_6;
-    u16 field_8;
+    u16 nearDistanceRaw;
+    u16 farDistanceRaw;
     u16 sfxIds[6];
     u8 weights[6];
     u16 selectRange;
