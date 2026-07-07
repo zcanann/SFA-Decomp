@@ -21,6 +21,7 @@
 
 #define PAD_BUTTON_A 0x100
 #define UNUSED107_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
+#define UNUSED107_MSG_PLAYER_GRAB 0x100010 /* tells player to grab/hold this object */
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
@@ -328,7 +329,7 @@ void dll_107_update(int obj)
             {
                 state->ventState = 0;
                 state->holdTimer = 0;
-                ObjMsg_SendToObject(player, 0x100010, obj,
+                ObjMsg_SendToObject(player, UNUSED107_MSG_PLAYER_GRAB, obj,
                                     (state->yawHigh << 0x10) | ((u16)state->yawLow));
             }
             if (((GameObject*)obj)->unkF8 == 1)
