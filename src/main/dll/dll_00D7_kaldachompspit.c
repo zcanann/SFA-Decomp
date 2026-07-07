@@ -17,6 +17,8 @@
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define KALDACHOMPSPIT_HIT_VOLUME_SLOT_EXPLOSIVE 0x1f
+#define KALDACHOMPSPIT_HIT_VOLUME_SLOT_DEFAULT 0xa
 
 #define KALDACHOMPSPIT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -199,13 +201,13 @@ void KaldaChompSpit_update(int obj)
         objMove(obj, vx, vy, vz);
         if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
         {
-            ObjHits_SetHitVolumeSlot((u32)obj, 0x1f, 1, 0);
+            ObjHits_SetHitVolumeSlot((u32)obj, KALDACHOMPSPIT_HIT_VOLUME_SLOT_EXPLOSIVE, 1, 0);
             ((GameObject*)obj)->anim.rotX += 0x100;
             ((GameObject*)obj)->anim.rotY += 0x800;
         }
         else
         {
-            ObjHits_SetHitVolumeSlot((u32)obj, 0xa, 1, 0);
+            ObjHits_SetHitVolumeSlot((u32)obj, KALDACHOMPSPIT_HIT_VOLUME_SLOT_DEFAULT, 1, 0);
             ((GameObject*)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
             ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         }
