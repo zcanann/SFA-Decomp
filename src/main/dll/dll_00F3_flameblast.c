@@ -14,6 +14,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/vecrotatezxy.h"
 #include "main/dll/dll_80136a40.h"
+#define FLAMEBLAST_HIT_VOLUME_SLOT 0x1a
 
 #define FLAMEBLAST_OBJFLAG_RENDERED 0x800
 
@@ -127,7 +128,7 @@ void flameblast_update(GameObject* obj)
         {
             if (state->hitVolumeDelay == 0)
             {
-                ObjHits_SetHitVolumeSlot((u32)obj, 0x1a, 1, 0);
+                ObjHits_SetHitVolumeSlot((u32)obj, FLAMEBLAST_HIT_VOLUME_SLOT, 1, 0);
             }
         }
     }
