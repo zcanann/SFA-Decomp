@@ -41,6 +41,10 @@
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/dll/objfsa.h"
 
+/* object-type id of the pollen-spit projectile spawned by pollenFn_80155b10
+ * (see file docblock). */
+#define DUSTER_CHILD_OBJ_POLLEN_SPIT 0x47b
+
 /*
  * DusterState - file-local overlay naming the PER-FAMILY scratch that
  * baddie_state.h leaves raw for the duster creatures. phaseTimer/decoyTimer
@@ -470,7 +474,7 @@ void pollenFn_80155b10(u32 obj, int state)
         {
             velY = lbl_803E2A60;
         }
-        setup = Obj_AllocObjectSetup(0x24, 0x47b);
+        setup = Obj_AllocObjectSetup(0x24, DUSTER_CHILD_OBJ_POLLEN_SPIT);
         ((ObjPlacement*)setup)->posX = a[0];
         ((ObjPlacement*)setup)->posY = a[1];
         ((ObjPlacement*)setup)->posZ = a[2];
