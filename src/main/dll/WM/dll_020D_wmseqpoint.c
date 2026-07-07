@@ -83,6 +83,17 @@ enum
 
 #define WMSEQPOINT_SPIRIT_COUNT 5
 
+/* Env-effect ids co-activated when the sky toggles; the NIGHT set runs when the
+   sky turns off, the DAY set when it turns on. Opaque distinct roles per index. */
+#define WMSEQPOINT_ENVFX_NIGHT_A 0x22d
+#define WMSEQPOINT_ENVFX_NIGHT_B 0x22c
+#define WMSEQPOINT_ENVFX_NIGHT_C 0x229
+#define WMSEQPOINT_ENVFX_NIGHT_D 0x22a
+#define WMSEQPOINT_ENVFX_DAY_A 0x217
+#define WMSEQPOINT_ENVFX_DAY_B 0x216
+#define WMSEQPOINT_ENVFX_DAY_C 0x84
+#define WMSEQPOINT_ENVFX_DAY_D 0x8a
+
 void wmseqpoint_onSeqFree(int obj);
 int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor);
 int wmseqpoint_getExtraSize(void);
@@ -137,20 +148,20 @@ void wmseqpoint_onSeqFree(int obj)
         skyOn = getSkyColorFn_80088e08(0) & 0xff;
         if (state->skyEnabledLatch != 0 && skyOn == 0)
         {
-            getEnvfxActImmediately(0, 0, 0x22d, 0);
-            getEnvfxActImmediately(obj, obj, 0x22c, 0);
-            getEnvfxActImmediately(obj, obj, 0x229, 0);
-            getEnvfxActImmediately(obj, obj, 0x22a, 0);
+            getEnvfxActImmediately(0, 0, WMSEQPOINT_ENVFX_NIGHT_A, 0);
+            getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_NIGHT_B, 0);
+            getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_NIGHT_C, 0);
+            getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_NIGHT_D, 0);
             (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 4, 1);
             (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 10, 0);
             (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0xb, 0);
         }
         else if (state->skyEnabledLatch == 0 && skyOn != 0)
         {
-            getEnvfxActImmediately(0, 0, 0x217, 0);
-            getEnvfxActImmediately(obj, obj, 0x216, 0);
-            getEnvfxActImmediately(obj, obj, 0x84, 0);
-            getEnvfxActImmediately(obj, obj, 0x8a, 0);
+            getEnvfxActImmediately(0, 0, WMSEQPOINT_ENVFX_DAY_A, 0);
+            getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_DAY_B, 0);
+            getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_DAY_C, 0);
+            getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_DAY_D, 0);
             (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 4, 0);
             (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 10, 1);
             (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
@@ -204,10 +215,10 @@ int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
             case 0xb:
                 if ((u32)(getSkyColorFn_80088e08(0) & 0xff) != 0)
                 {
-                    getEnvfxActImmediately(0, 0, 0x217, 0);
-                    getEnvfxActImmediately(obj, obj, 0x216, 0);
-                    getEnvfxActImmediately(obj, obj, 0x84, 0);
-                    getEnvfxActImmediately(obj, obj, 0x8a, 0);
+                    getEnvfxActImmediately(0, 0, WMSEQPOINT_ENVFX_DAY_A, 0);
+                    getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_DAY_B, 0);
+                    getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_DAY_C, 0);
+                    getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_DAY_D, 0);
                     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 4, 0);
                     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 10, 1);
                     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
@@ -216,10 +227,10 @@ int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
             case 0xa:
                 if ((u32)(getSkyColorFn_80088e08(0) & 0xff) == 0)
                 {
-                    getEnvfxActImmediately(0, 0, 0x22d, 0);
-                    getEnvfxActImmediately(obj, obj, 0x22c, 0);
-                    getEnvfxActImmediately(obj, obj, 0x229, 0);
-                    getEnvfxActImmediately(obj, obj, 0x22a, 0);
+                    getEnvfxActImmediately(0, 0, WMSEQPOINT_ENVFX_NIGHT_A, 0);
+                    getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_NIGHT_B, 0);
+                    getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_NIGHT_C, 0);
+                    getEnvfxActImmediately(obj, obj, WMSEQPOINT_ENVFX_NIGHT_D, 0);
                     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 4, 1);
                     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 10, 0);
                     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0xb, 0);
