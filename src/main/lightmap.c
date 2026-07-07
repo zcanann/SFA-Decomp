@@ -1876,4 +1876,3 @@ void updateEnvironment(int mode)
         }
     }
 }
-#pragma fp_contract reset
