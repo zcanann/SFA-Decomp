@@ -93,7 +93,7 @@ void bombplant_explode(int* obj, int unused, int* p3)
     Sfx_PlayFromObject(obj, SFXmv_curtainrustle);
     {
         int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | 0x40);
+        ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
     }
     spawnExplosion((int)obj, gBombPlantExplosionScale, 0, 1, 1, 1, 0, 1, 0);
     ((BombPlantState*)p3)->stateIndex = 1;
