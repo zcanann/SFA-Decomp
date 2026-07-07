@@ -36,6 +36,9 @@
 #define SHOPITEM_SEQ_BSPLINE   0x467 /* rides a B-spline path with trailing particles */
 #define SHOPITEM_SEQ_SPARKLE   0x468 /* sparkle/lightning item with custom post-render pass */
 
+/* ambient particle spawned on init for the SHOPITEM_SEQ_AMBIENT item */
+#define SHOPITEM_PARTFX_AMBIENT 0x3F1
+
 typedef struct ShopSparkleSpawn
 {
     f32 x;
@@ -471,7 +474,7 @@ void shopitem_init(int obj, int data)
         fn_801F4C28(obj, state);
         break;
     case SHOPITEM_SEQ_AMBIENT:
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x3F1, NULL, 4,
+        (*gPartfxInterface)->spawnObject((void*)obj, SHOPITEM_PARTFX_AMBIENT, NULL, 4,
                                          -1, NULL);
         break;
     case SHOPITEM_SEQ_SPARKLE:
