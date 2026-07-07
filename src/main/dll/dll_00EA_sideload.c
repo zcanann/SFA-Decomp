@@ -17,6 +17,9 @@
 #include "main/objlib.h"
 #include "main/gamebits.h"
 
+/* object id sideload_update defers into existence once its arming game bit is set */
+#define SIDELOAD_CHILD_OBJ 0x24
+
 extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 
@@ -67,7 +70,7 @@ void sideload_update(int self)
     if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) &&
         (getTrickyObject() == 0) && (mainGetBit((int)((SideloadPlacement*)state)->armGameBit) != 0))
     {
-        obj = Obj_AllocObjectSetup(0x18, 0x24);
+        obj = Obj_AllocObjectSetup(0x18, SIDELOAD_CHILD_OBJ);
         *(u8*)((char*)obj + 4) = 2;
         *(u8*)((char*)obj + 5) = 4;
         *(u8*)((char*)obj + 7) = 0xff;
