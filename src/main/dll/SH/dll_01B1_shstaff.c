@@ -28,6 +28,7 @@ int sh_staff_getExtraSize(void) { return 0x74; }
 #define SHSTAFF_PHASE_CARRY_RENDER 5  /* settled carry: render attached to the hand */
 #define SHSTAFF_PHASE_DONE 6          /* deactivated */
 #define SHSTAFF_CHILD_OBJ_HAZE_FLAME 0x659 /* staff-haze child flame (SH_StaffHaze_update), spawned by sh_staff_SeqFn */
+#define SHSTAFF_TARGET_OBJGROUP 0xf /* player-target group; the nearest object gets the pickup sequence */
 
 #pragma opt_strength_reduction on
 void sh_staff_free(int* obj, int p2)
@@ -547,7 +548,7 @@ void sh_staff_update(int obj)
     {
         if (ObjTrigger_IsSet(obj) != 0)
         {
-            int target = ObjGroup_FindNearestObject(0xf, obj, 0);
+            int target = ObjGroup_FindNearestObject(SHSTAFF_TARGET_OBJGROUP, obj, 0);
             (*gObjectTriggerInterface)->runSequence(0, (void*)target, -1);
             state->phase = SHSTAFF_PHASE_PICKUP;
             state->fadeTimer = gShStaffFadeTimerMax;
