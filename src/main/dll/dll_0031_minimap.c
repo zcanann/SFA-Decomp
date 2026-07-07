@@ -31,6 +31,8 @@
 #include "main/lightmap.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
+
 /* group owned by another DLL, queried here */
 #define FUELCELL_OBJGROUP 0x4f /* DLL 0x123 fuelcell */
 
@@ -364,7 +366,7 @@ int Minimap_update(void)
         {
             marker = 0;
         }
-        if ((*gCameraInterface)->getMode() == 0x44 ||
+        if ((*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
             (gMinimapEnabled == 0 && lbl_803DD7BA == 0) ||
             Camera_GetViewportYOffset() != 0 ||
             (((GameObject*)player)->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
@@ -883,7 +885,7 @@ void Minimap_frameStart(void)
     sfx = 0;
     player = (int)Obj_GetPlayerObject();
     if ((void*)player == NULL ||
-        (*gCameraInterface)->getMode() == 0x44 ||
+        (*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
         Camera_GetViewportYOffset() != 0 ||
         (((GameObject*)player)->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
         objIsCurModelNotZero(player) == 0 ||
