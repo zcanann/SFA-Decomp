@@ -224,4 +224,3 @@ void wallanimator_init(s16* obj, s16* placement)
         state->timer = WALLANIMATOR_DONE_TIMER;
     }
 }
-#pragma peephole reset
