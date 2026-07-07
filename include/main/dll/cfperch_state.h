@@ -11,8 +11,8 @@
  * larger.
  */
 typedef struct CfperchState {
-    s16 unk0;
-    s16 unk2;
+    s16 carryAngle;      /* 0x0 low half of the 0x100010 carry message (fixed -0x8000); packed but ignored by the player handler */
+    s16 carryParam;      /* 0x2 high half of the 0x100010 carry message; the player reads it as (param>>16) into its held-object slot */
     u8 unk4[0x5 - 0x4];
     s8 carryState;       /* 0x5 carry/throw state machine: 0 idle, 1 grabbed, 2 carried */
     u8 carryAttached;    /* 0x6 set while held by player; gates the per-frame carry message */

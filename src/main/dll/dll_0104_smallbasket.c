@@ -936,8 +936,8 @@ void SmallBasket_update(int obj)
                 if (((buttonGetDisabled(0) & PAD_BUTTON_A) == 0) && (((GameObject*)obj)->unkF8 == 0) &&
                     (ObjTrigger_IsSet(obj) != 0))
                 {
-                    ((CfperchState*)state)->unk0 = -0x8000;
-                    ((CfperchState*)state)->unk2 = 0;
+                    ((CfperchState*)state)->carryAngle = -0x8000;
+                    ((CfperchState*)state)->carryParam = 0;
                     ObjHits_DisableObject(obj);
                     flag = 1;
                 }
@@ -1049,7 +1049,7 @@ void SmallBasket_update(int obj)
                     ((CfperchState*)state)->disableTimer = 0;
                     ((CfperchState*)state)->hiddenTimer = 0;
                     ObjMsg_SendToObject(player, 0x100010, obj,
-                                        (((CfperchState*)state)->unk2 << 16) | ((u16)((CfperchState*)state)->unk0));
+                                        (((CfperchState*)state)->carryParam << 16) | ((u16)((CfperchState*)state)->carryAngle));
                 }
             }
         }
