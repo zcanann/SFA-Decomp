@@ -35,6 +35,9 @@
 #define PAD_BUTTON_B 0x200
 #define PAD_TRIGGER_Z 0x010
 
+/* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
+#define VIEWFINDER_CAMMODE_DEFAULT 0x42
+
 /* ViewfinderState.mode state machine (see file header) */
 #define VIEWFINDER_MODE_ENTER_BLEND 0
 #define VIEWFINDER_MODE_YAW_SETTLE 1
@@ -449,7 +452,7 @@ void CameraModeViewfinder_update(s16* obj)
         }
         if (brightness != 0)
         {
-            (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
+            (*gCameraInterface)->setMode(VIEWFINDER_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
             targetObj = (u8*)((GameObject*)obj)->anim.targetObj;
             if (targetObj != NULL)
             {
@@ -479,7 +482,7 @@ void CameraModeViewfinder_update(s16* obj)
         ((GameObject*)obj)->anim.worldPosX = lbl_803DD548->posXCurve.end;
         ((GameObject*)obj)->anim.worldPosY = lbl_803DD548->posYCurve.end;
         ((GameObject*)obj)->anim.worldPosZ = lbl_803DD548->posZCurve.end;
-        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0);
+        (*gCameraInterface)->setMode(VIEWFINDER_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0);
     }
     logPrintf(&sCam5BYDebugFormat, ((GameObject*)obj)->anim.worldPosY);
     Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
