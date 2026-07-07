@@ -10,6 +10,7 @@
 #define ECSHCUP_PARTFX_IDLE 0x270
 /* periodic particle emitted during the rise (mode 6) / sink (mode 7) sequences */
 #define ECSHCUP_PARTFX_TRANSITION 0x271
+#define ECSHCUP_HIT_VOLUME_SLOT 10
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E5060;
@@ -139,7 +140,7 @@ void ecsh_cup_update(short* obj)
             ((GameObject*)obj)->anim.localPosZ = state->velZ * timeDelta + ((GameObject*)obj)->anim.
                 localPosZ;
             ObjHits_EnableObject((int)obj);
-            ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
+            ObjHits_SetHitVolumeSlot((int)obj, ECSHCUP_HIT_VOLUME_SLOT, 1, 0);
             ObjHits_SyncObjectPositionIfDirty((int)obj);
         }
         else
