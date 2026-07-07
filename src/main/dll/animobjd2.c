@@ -308,11 +308,11 @@ void fn_8013E0D0(int* obj, u8* st)
                                 slots[0] = -1;
                                 slots[1] = -1;
                                 slots[2] = -1;
-                                if (t->unk7A8 != NULL)
+                                if (t->childA != NULL)
                                 {
                                     slots[((TrickyPackedSlots*)((char*)t + 0x7bc))->a] = 1;
                                 }
-                                if (t->unk7B0 != NULL)
+                                if (t->childB != NULL)
                                 {
                                     slots[((TrickyPackedSlots*)((char*)t + 0x7bc))->b] = 1;
                                 }

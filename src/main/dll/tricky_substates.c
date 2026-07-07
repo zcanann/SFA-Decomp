@@ -1004,7 +1004,7 @@ int trickyFn_801430e0(u8* obj, u8* state)
     }
     if ((u8)trickyFn_8013b368((int)obj, lbl_803E2418, state) != 1)
     {
-        if (((TrickyState*)state)->unk7B0 != NULL)
+        if (((TrickyState*)state)->childB != NULL)
         {
             ptr = ((GameObject*)obj)->extra;
             if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
@@ -1296,11 +1296,11 @@ int trickyFoodFn_801437d4(int obj, int* state)
         slots[0] = -1;
         slots[1] = -1;
         slots[2] = -1;
-        if (((TrickyState*)state)->unk7A8 != NULL)
+        if (((TrickyState*)state)->childA != NULL)
         {
             slots[((TrickyPackedSlots*)((u8*)state + 0x7bc))->a] = 1;
         }
-        if (((TrickyState*)state)->unk7B0 != NULL)
+        if (((TrickyState*)state)->childB != NULL)
         {
             slots[((TrickyPackedSlots*)((u8*)state + 0x7bc))->b] = 1;
         }
@@ -1572,7 +1572,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
         }
         else
         {
-            if ((u32)((TrickyState*)trickyState)->unk7B0 != 0)
+            if ((u32)((TrickyState*)trickyState)->childB != 0)
             {
                 extra = *(int*)&((GameObject*)obj)->extra;
                 if ((((*(u8*)(extra + 0x58) >> 6 & 1) == 0U) &&
