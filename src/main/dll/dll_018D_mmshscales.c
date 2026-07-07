@@ -19,6 +19,9 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 
+/* Child object spawned at init and cached in childObjs[0] (scaled x2). */
+#define MMSHSCALES_CHILD_OBJ 0x1b8
+
 typedef struct MmshScalesState
 {
     u8 pad0[0xC - 0x0];
@@ -156,7 +159,7 @@ void MMSH_Scales_init(int* obj, s16* def)
         ((GameObject*)obj)->unkF4 = def[12] + 1;
     }
     if (Obj_IsLoadingLocked() == 0) return;
-    setup = Obj_AllocObjectSetup(0x24, 0x1b8);
+    setup = Obj_AllocObjectSetup(0x24, MMSHSCALES_CHILD_OBJ);
     setup->posX = ((GameObject*)obj)->anim.localPosX;
     setup->posY = ((GameObject*)obj)->anim.localPosY;
     setup->posZ = ((GameObject*)obj)->anim.localPosZ;
