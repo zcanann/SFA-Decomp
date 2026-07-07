@@ -167,6 +167,9 @@ extern f32 timeDelta;
 #define ANIMATEDOBJ_OBJGROUP 7
 
 #define ANIMATEDOBJ_OBJFLAG_UPDATE_DISABLED 0x8000
+/* DLL-id spawned+child-attached on seq event 0xa (generic child; no cache
+   field / named spawn-fn / kind name -> suffixless per role-gate). */
+#define ANIMATEDOBJ_CHILD_OBJ 0x69
 
 typedef struct AnimatedobjPlacement
 {
@@ -860,7 +863,7 @@ void animatedobj_update(int* obj)
                     {
                         void* alloc;
                         int* child;
-                        alloc = Obj_AllocObjectSetup(0x18, 0x69);
+                        alloc = Obj_AllocObjectSetup(0x18, ANIMATEDOBJ_CHILD_OBJ);
                         child = Obj_SetupObject(alloc, 4, -1, -1, 0);
                         ObjLink_AttachChild(obj, child, 0);
                         ObjAnim_SetCurrentMove((int)child, 0, lbl_803E322C, 0);
