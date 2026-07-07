@@ -50,6 +50,13 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void fn_801AC108(int* obj, int* extra);
 
+/* Ambient env-fx ids lazy-spawned once per object (getEnvfxAct 3rd arg).
+ * A/B are shared by both spawn sites; C/D differ per site. */
+#define IMICEMOUNTAIN_ENVFX_A 0xa3
+#define IMICEMOUNTAIN_ENVFX_B 0x9e
+#define IMICEMOUNTAIN_ENVFX_C 0x119
+#define IMICEMOUNTAIN_ENVFX_D 0x104
+
 extern void fn_801AC01C(int* obj);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 
@@ -247,9 +254,9 @@ void imicemountain_updateEventState(int* obj)
         }
         if (((GameObject*)obj)->unkF4 == 0)
         {
-            getEnvfxAct(obj, obj, 0xa3, 0);
-            getEnvfxAct(obj, obj, 0x9e, 0);
-            getEnvfxAct(obj, obj, 0x119, 0);
+            getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_A, 0);
+            getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_B, 0);
+            getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_C, 0);
             getLActions(obj, obj, 0x15b, 0, 0, 0);
             getLActions(obj, obj, 0x15c, 0, 0, 0);
             getLActions(obj, obj, 0x17c, 0, 0, 0);
@@ -298,9 +305,9 @@ void IMIceMountain_update(int* obj)
     IMIceMountainState* extra = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->unkF4 == 0)
     {
-        getEnvfxAct(obj, obj, 0xa3, 0);
-        getEnvfxAct(obj, obj, 0x9e, 0);
-        getEnvfxAct(obj, obj, 0x104, 0);
+        getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_A, 0);
+        getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_B, 0);
+        getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_D, 0);
         (*gCloudActionInterface)->func09Nop(1);
         ((GameObject*)obj)->unkF4 = 1;
     }
