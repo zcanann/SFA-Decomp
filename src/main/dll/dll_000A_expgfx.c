@@ -2148,13 +2148,6 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 #pragma opt_propagation off
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
-    void* dstBuf;
-    u8 trackedFlags;
-    u32 currentTexture;
-    int zCompLoc;
-    int zMode;
-    int blendMode;
-    int alphaMode;
     void* viewMatrix;
     ExpgfxCameraViewSlot* cameraSlot;
     ExpgfxSlot* slot;
@@ -2183,6 +2176,13 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     f32 viewProjW;
     int dummy;
     u32* activeMasks;
+    int alphaMode;
+    int blendMode;
+    int zMode;
+    int zCompLoc;
+    u32 currentTexture;
+    u8 trackedFlags;
+    void* dstBuf;
 
     dstBuf = getCache();
     trackedFlags = 0;
