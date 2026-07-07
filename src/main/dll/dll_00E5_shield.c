@@ -47,6 +47,8 @@ extern void* Obj_GetPlayerObject(void);
 /* anim.seqId of the staff-mode-5 shield variant (docblock: "seqId 0x836 uses
  * staff-mode 5, otherwise mode 7"). */
 #define SHIELD_SEQID_STAFF_MODE5 0x836
+/* shield-ring particle spawned around the object in the deflect loop */
+#define SHIELD_PARTFX 2028
 
 typedef struct ShieldState
 {
@@ -595,7 +597,7 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                             s.pos[1] += ((GameObject*)obj)->anim.localPosY;
                             s.pos[2] += ((GameObject*)obj)->anim.localPosZ;
                             s.alpha = cD;
-                            (*gPartfxInterface)->spawnObject(obj, 2028, &s, 0x200001, -1,
+                            (*gPartfxInterface)->spawnObject(obj, SHIELD_PARTFX, &s, 0x200001, -1,
                                                              NULL);
                         }
                     }
