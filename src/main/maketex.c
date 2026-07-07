@@ -7,6 +7,9 @@
 #include "dolphin/os/OSCache.h"
 #include "main/mm.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#define MAKETEX_CAMMODE_NPCSPEAK 0x4d /* cameramode DLL dll_004D_cameramodenpcspeak */
+#define MAKETEX_CAMMODE_DEFAULT 0x42  /* default gameplay cameramode DLL */
+
 extern int randomGetRange(int lo, int hi);
 extern int lbl_803DD044;
 
@@ -299,7 +302,7 @@ void cameraFocusNpc(int param1, u8* obj)
     } buf;
     f32* p;
 
-    if ((*gCameraInterface)->getMode() == 0x4d) return;
+    if ((*gCameraInterface)->getMode() == MAKETEX_CAMMODE_NPCSPEAK) return;
     focusedNpc = (u32)obj;
     p = *(f32**)(obj + 0x74);
     if (p == NULL || param1 == 7 || param1 == 6)
@@ -315,7 +318,7 @@ void cameraFocusNpc(int param1, u8* obj)
         buf.vec[2] = p[2];
     }
     buf.tag = (u8)param1;
-    (*gCameraInterface)->setMode(0x4d, 1, 0, 0x10, buf.vec, 0, 0xff);
+    (*gCameraInterface)->setMode(MAKETEX_CAMMODE_NPCSPEAK, 1, 0, 0x10, buf.vec, 0, 0xff);
 }
 
 typedef struct
@@ -1342,9 +1345,9 @@ void endObjSequence(int seq)
     }
     if (seq == lbl_803DD064)
     {
-        if ((*gCameraInterface)->getMode() == 0x4d)
+        if ((*gCameraInterface)->getMode() == MAKETEX_CAMMODE_NPCSPEAK)
         {
-            (*gCameraInterface)->setMode(0x42, 0, 3, 0, NULL, 0, 0);
+            (*gCameraInterface)->setMode(MAKETEX_CAMMODE_DEFAULT, 0, 3, 0, NULL, 0, 0);
             lbl_803DD064 = 0;
             curSeqNo = 0;
             Pause_ResetMenuFrameCounter();
