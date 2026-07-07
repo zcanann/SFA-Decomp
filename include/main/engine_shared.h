@@ -332,6 +332,12 @@ typedef struct {
     char name[0xF];  // 0x6
     u8 flag;         // 0x15
 } StreamEntry;
+// StreamEntry.fadeBits/volBits bit layout (see AudioStream_Play in src/main/audio.c)
+#define STREAM_FADEBITS_FLAGA_SHIFT 6    // >>6 & 3, indexes gAudioStreamFadeTable -> gAudioStreamMusicFadeFlagA
+#define STREAM_FADEBITS_FLAGB_SHIFT 4    // >>4 & 3, indexes gAudioStreamFadeTable -> gAudioStreamMusicFadeFlagB
+#define STREAM_FADEBITS_STOPSFX_SHIFT 2  // >>2 & 3, non-zero stops all object sfx
+#define STREAM_VOLBITS_CHANMASK_BIT 7    // >>7 & 1: selects gAudioActiveChannelMask
+#define STREAM_VOLBITS_VOLUME_MASK 0x7F  // base volume 0-127
 typedef struct {
     u16 id;
     u16 track;
