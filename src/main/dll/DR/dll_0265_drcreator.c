@@ -10,6 +10,8 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
+#define DRCREATOR_CHILD_OBJ_PROJECTILE 1725
+
 /* Obj_AllocObjectSetup(36,...) buffer composed in DR_Creator_update and
  * DR_Creator_SeqFn. Head is the common ObjPlacement;
  * tail (0x18..0x23) is file-local. */
@@ -96,7 +98,7 @@ int DR_Creator_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             runtime = ((GameObject*)obj)->extra;
             if (mainGetBit(((DrcreatorSpawnProjectileCallbackState*)runtime)->spawnGameBit) != 0)
             {
-                setup = Obj_AllocObjectSetup(36, 1725);
+                setup = Obj_AllocObjectSetup(36, DRCREATOR_CHILD_OBJ_PROJECTILE);
                 ((DrcreatorSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
                 ((DrcreatorSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
                 ((DrcreatorSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -168,7 +170,7 @@ void DR_Creator_update(int obj)
                 ((DrcreatorState*)runtime)->spawnTimer -= framesThisStep;
                 if (((DrcreatorState*)runtime)->spawnTimer <= 0)
                 {
-                    setup = Obj_AllocObjectSetup(36, 1725);
+                    setup = Obj_AllocObjectSetup(36, DRCREATOR_CHILD_OBJ_PROJECTILE);
                     ((DrcreatorSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
                     ((DrcreatorSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
                     ((DrcreatorSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
