@@ -23,6 +23,10 @@ extern int unlockLevel(s32 val, int idx, int flag);
 extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
+#define NWSH_LEVCON_ENVFX_A 0xd1
+#define NWSH_LEVCON_ENVFX_B 0xd6
+#define NWSH_LEVCON_ENVFX_C 0x222
+
 extern void objSetAnimStateFlags(void* player, int a, int b);
 
 int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -81,9 +85,9 @@ void nwsh_levcon_update(int* obj)
         if (((GameObject*)obj)->unkF4 == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxAct(0, 0, 0xd1, 0);
-            getEnvfxAct(0, 0, 0xd6, 0);
-            getEnvfxAct(0, 0, 0x222, 0);
+            getEnvfxAct(0, 0, NWSH_LEVCON_ENVFX_A, 0);
+            getEnvfxAct(0, 0, NWSH_LEVCON_ENVFX_B, 0);
+            getEnvfxAct(0, 0, NWSH_LEVCON_ENVFX_C, 0);
         }
     }
 }
