@@ -16,6 +16,7 @@
 #include "main/sfa_shared_decls.h"
 
 #define DIMBOSSTONSIL_OBJGROUP 3
+#define DIMBOSSTONSIL_PARTFX 0x4bd
 
 #define MODEL_LIGHT_KIND_POINT 2
 
@@ -276,10 +277,10 @@ void DIMbosstonsil_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visibl
                 objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
                 ObjPath_GetPointWorldPosition(obj, 1, (pp = &pathPoint.x), &pathPoint.y, &pathPoint.z, 0);
-                (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_PARTFX, partfxArgs, 0x200001, -1, NULL);
 
                 ObjPath_GetPointWorldPosition(obj, 0, pp, &pathPoint.y, &pathPoint.z, 0);
-                (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_PARTFX, partfxArgs, 0x200001, -1, NULL);
 
                 if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0)
                 {
