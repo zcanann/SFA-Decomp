@@ -49,6 +49,9 @@ u8 gFoodbagEffectResourceTable[] =
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL7C_EFFECT_ID 0x2e
+
 void dll_7C_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
@@ -262,7 +265,7 @@ void dll_7C_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, base + 0xd4, 0x2e, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, base + 0xd4, DLL7C_EFFECT_ID, 0);
 }
 
 
