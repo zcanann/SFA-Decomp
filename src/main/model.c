@@ -2631,7 +2631,7 @@ void modelInitBoneMtxs(u8* m, u8* out)
     u32 i;
     u8* mtx;
     int boneOff;
-    u8* bone;
+    ModelBone* bone;
     u8* dst;
     f32 tmp[12];
 
@@ -2642,8 +2642,8 @@ void modelInitBoneMtxs(u8* m, u8* out)
     for (; i < ((ModelFileHeader*)hdr)->jointCount; i++)
     {
         mtx = modelGetBoneMtx(m, i);
-        bone = ((ModelFileHeader*)hdr)->jointData + boneOff;
-        PSMTXTrans(tmp, -*(f32*)(bone + 0x10), -*(f32*)(bone + 0x14), -*(f32*)(bone + 0x18));
+        bone = (ModelBone*)(((ModelFileHeader*)hdr)->jointData + boneOff);
+        PSMTXTrans(tmp, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
         PSMTXConcat((f32*)mtx, tmp, tmp);
         PSMTXReorder(tmp, (f32*)dst);
         boneOff += 0x1c;
@@ -2658,7 +2658,7 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
     u8* hdr;
     u32 i;
     u8* mtx;
-    u8* bone;
+    ModelBone* bone;
     f32 tmp[12];
 
     hdr = *(u8**)m;
@@ -2675,8 +2675,8 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
         for (; i < ((ModelFileHeader*)hdr)->jointCount; i++)
         {
             mtx = modelGetBoneMtx(m, i);
-            bone = ((ModelFileHeader*)hdr)->jointData + boneOff;
-            PSMTXTrans(tmp, -*(f32*)(bone + 0x10), -*(f32*)(bone + 0x14), -*(f32*)(bone + 0x18));
+            bone = (ModelBone*)(((ModelFileHeader*)hdr)->jointData + boneOff);
+            PSMTXTrans(tmp, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
             PSMTXConcat((f32*)mtx, tmp, tmp);
             PSMTXReorder(tmp, (f32*)dst);
             PSMTXConcat((f32*)out2, (f32*)mtx, (f32*)mtx);

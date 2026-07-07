@@ -102,6 +102,17 @@ STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);
 STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetCount) == 0xF9);
 STATIC_ASSERT(offsetof(ModelFileHeader, texMtxCount) == 0xFA);
 
+/* ModelFileHeader.jointData entry (wiki: Bone). tail is the inverse bind-pose
+ * translation, negated into PSMTXTrans every frame by modelInitBoneMtxs. */
+typedef struct ModelBone {
+    s8 parent;   /* parent bone index, -1 = none */
+    u8 idx[3];   /* matrix indices to write; high bit is a flag */
+    f32 head[3]; /* translation */
+    f32 tail[3]; /* bind translation */
+} ModelBone;
+
+STATIC_ASSERT(sizeof(ModelBone) == 0x1C);
+
 typedef struct ObjModelJointMatrix {
     f32 row0[3];
     f32 translationX;
