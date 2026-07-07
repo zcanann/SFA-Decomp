@@ -7082,7 +7082,7 @@ void videoInit(void)
     GXLoadPosMtxImm(mtx, GX_PNMTX0);
     GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX3x4);
     GXLoadTexMtxImm(mtx, GX_TEXMTX1, GX_MTX3x4);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
     C_MTXOrtho(hudMatrix, lbl_803DEA94, lbl_803DEA98, lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
     GXSetMisc(GX_MT_XF_FLUSH, 8);
     PPCMtmsr(PPCMfmsr() | MSR_PM);
