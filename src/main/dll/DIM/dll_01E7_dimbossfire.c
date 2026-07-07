@@ -69,6 +69,15 @@ typedef struct DimbossfirePlacement
 #define DIMBOSSFIRE_COOLDOWN_MIN 0xf0  /* minimum random cooldown in frames */
 #define DIMBOSSFIRE_COOLDOWN_MAX 0x1e0 /* maximum random cooldown in frames */
 
+/* partfx ids: burst = spawned 0x32x on START_BURST; sustained = spawned each
+ * active frame. orange = flameColor!=0, green = flameColor==0 (matches the
+ * point-light diffuse colours 0xff7f00 vs 0x7fff00). */
+#define DIMBOSSFIRE_PARTFX_BURST_ORANGE 0x4c9
+#define DIMBOSSFIRE_PARTFX_BURST_GREEN 0x4cc
+#define DIMBOSSFIRE_PARTFX_SUSTAINED 0x4ca
+#define DIMBOSSFIRE_PARTFX_SUSTAINED_ORANGE 0x4cb
+#define DIMBOSSFIRE_PARTFX_SUSTAINED_GREEN 0x4cd
+
 STATIC_ASSERT(offsetof(DimbossfireState, activeTimer) == 0x4);
 STATIC_ASSERT(offsetof(DimbossfireState, initialActiveTimer) == 0x8);
 STATIC_ASSERT(offsetof(DimbossfireState, cooldownTimer) == 0xC);
@@ -161,11 +170,11 @@ void dimbossfire_update(int obj)
                 {
                     if (placement->flameColor != 0)
                     {
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x4c9, NULL, 2, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSFIRE_PARTFX_BURST_ORANGE, NULL, 2, -1, NULL);
                     }
                     else
                     {
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x4cc, NULL, 2, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSFIRE_PARTFX_BURST_GREEN, NULL, 2, -1, NULL);
                     }
                     ref = ref + 1;
                 }
@@ -220,14 +229,14 @@ void dimbossfire_update(int obj)
         }
         else
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x4ca, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSFIRE_PARTFX_SUSTAINED, NULL, 2, -1, NULL);
             if (placement->flameColor != 0)
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x4cb, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSFIRE_PARTFX_SUSTAINED_ORANGE, NULL, 2, -1, NULL);
             }
             else
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x4cd, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSFIRE_PARTFX_SUSTAINED_GREEN, NULL, 2, -1, NULL);
             }
         }
     }
