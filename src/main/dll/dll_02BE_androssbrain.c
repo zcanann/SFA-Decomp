@@ -26,6 +26,7 @@ enum
 
 #define BRAIN_MAX_HEALTH 0x50
 #define ANDROSSBRAIN_HIT_VOLUME_SLOT 5
+#define ANDROSSBRAIN_AIRMETER_BGTEXTURE 0x643
 
 enum
 {
@@ -142,7 +143,7 @@ void AndrossBrain_update(int obj)
         if (stateChanged != 0)
         {
             state->flashTimer = 0x3c;
-            (*gGameUIInterface)->initAirMeter(BRAIN_MAX_HEALTH, 0x643);
+            (*gGameUIInterface)->initAirMeter(BRAIN_MAX_HEALTH, ANDROSSBRAIN_AIRMETER_BGTEXTURE);
         }
         (*gGameUIInterface)->runAirMeter(state->health);
         hit = ObjHits_GetPriorityHit(obj, &hitObj, &sphereIdx, &hitVol);
