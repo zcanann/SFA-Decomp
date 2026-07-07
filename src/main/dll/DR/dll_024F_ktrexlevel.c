@@ -15,6 +15,10 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
+#define KTREXLEVEL_ENVFX_A 0x18f
+#define KTREXLEVEL_ENVFX_B 0x18e
+#define KTREXLEVEL_ENVFX_C 0x190
+
 int KT_RexLevel_getExtraSize(void) { return 0x4; }
 
 int KT_RexLevel_getObjectTypeId(void) { return 0x0; }
@@ -73,9 +77,9 @@ void KT_RexLevel_update(int obj)
     if (((GameObject*)obj)->unkF4 == 0)
     {
         skyFn_80088c94(7, 1);
-        getEnvfxAct(obj, obj, 0x18f, 0);
-        getEnvfxAct(obj, obj, 0x18e, 0);
-        getEnvfxAct(obj, obj, 0x190, 0);
+        getEnvfxAct(obj, obj, KTREXLEVEL_ENVFX_A, 0);
+        getEnvfxAct(obj, obj, KTREXLEVEL_ENVFX_B, 0);
+        getEnvfxAct(obj, obj, KTREXLEVEL_ENVFX_C, 0);
         skyFn_80088e54(1, lbl_803E67A4);
         mainSetBits(0x55e, 1);
         ((GameObject*)obj)->unkF4 = 1;
