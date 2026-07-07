@@ -27,6 +27,9 @@ void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
+/* DLL-id of the object spawned by fn_80153640 (generic spawn; no cache field /
+   named spawn-fn / kind name -> suffixless per role-gate). */
+#define MAGICPLANT_CHILD_OBJ 0x51b
 extern const f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;
 extern f32 lbl_803E28D0;
@@ -353,7 +356,7 @@ void fn_80153640(int obj, int state)
 
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
-        fx = (ObjPlacement*)Obj_AllocObjectSetup(0x24, 0x51b);
+        fx = (ObjPlacement*)Obj_AllocObjectSetup(0x24, MAGICPLANT_CHILD_OBJ);
         fx->posX = ((GameObject*)obj)->anim.localPosX;
         fx->posY = lbl_803E28F0 + ((GameObject*)obj)->anim.localPosY;
         fx->posZ = ((GameObject*)obj)->anim.localPosZ;
