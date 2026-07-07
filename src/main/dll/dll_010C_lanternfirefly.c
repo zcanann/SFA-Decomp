@@ -411,7 +411,6 @@ void fn_801868D0(int obj)
         f32 y;
         f32 z;
     } LFRot;
-    extern f32 lbl_803E3ABC;
     LFRot rot;
     LanternFireFlyState* state;
     s16 angleDelta;
