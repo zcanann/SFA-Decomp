@@ -3883,7 +3883,7 @@ void textureFn_8004c264(u8* tex, int mapId)
     if (*(void**)(tex + 80) != NULL)
     {
         fn_80053C40(tex, lbl_803779A0);
-        GXLoadTexObj(lbl_803779A0, 1);
+        GXLoadTexObj(lbl_803779A0, GX_TEXMAP1);
     }
 }
 
@@ -4592,7 +4592,7 @@ void fn_8004DA54(char* p1)
         }
         else
         {
-            GXLoadTexObj(obj, 2);
+            GXLoadTexObj(obj, GX_TEXMAP2);
         }
     }
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
@@ -4628,7 +4628,7 @@ void fn_8004DA54(char* p1)
         }
         else
         {
-            GXLoadTexObj(obj, 0);
+            GXLoadTexObj(obj, GX_TEXMAP0);
         }
     }
     {
@@ -4655,7 +4655,7 @@ void fn_8004DA54(char* p1)
         }
         else
         {
-            GXLoadTexObj(obj, 1);
+            GXLoadTexObj(obj, GX_TEXMAP1);
         }
     }
     PSMTXScale(mtxf4, SaveEnd_803DEAD4, SaveEnd_803DEAD4, lbl_803DEAC8);
@@ -6045,7 +6045,7 @@ void fn_8004CE0C(void* viewMtx)
         }
         else
         {
-            GXLoadTexObj(obj, 2);
+            GXLoadTexObj(obj, GX_TEXMAP2);
         }
     }
     newshadows_getReflectionScrollOffsets(&sx, &sy);
@@ -6074,7 +6074,7 @@ void fn_8004CE0C(void* viewMtx)
         }
         else
         {
-            GXLoadTexObj(obj, 3);
+            GXLoadTexObj(obj, GX_TEXMAP3);
         }
     }
     mtx40[0][0] = lbl_803DEACC;
