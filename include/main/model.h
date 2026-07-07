@@ -89,6 +89,9 @@ typedef struct ModelFileHeader {
 /* set = 9-byte (else 3-byte) entries at normals */
 #define MODEL_FLAGS24_NORMALS_9BYTE 0x8
 
+/* ModelFileHeader.shaderFlags bit: set = use object color override (gObjOverrideColor) */
+#define MODEL_SHADERFLAGS_USE_OBJ_COLOR 0x2
+
 /* ObjModel.bufferFlags bit */
 #define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED 0x40
 

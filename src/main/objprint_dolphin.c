@@ -1791,7 +1791,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         *(u16*)((char*)am + 0x18) |= 8;
     }
     modelRenderInstrsState_init(&bs, ((ModelFileHeader*)m)->instrs, *(u16*)(m + 0xd8) << 3, *(u16*)(m + 0xd8) << 3);
-    if (((ModelFileHeader*)m)->shaderFlags & 2)
+    if (((ModelFileHeader*)m)->shaderFlags & MODEL_SHADERFLAGS_USE_OBJ_COLOR)
     {
         if (gObjOverrideColorPending != 0)
         {
