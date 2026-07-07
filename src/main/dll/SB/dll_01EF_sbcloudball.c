@@ -75,7 +75,6 @@ extern f32 gSbCloudBallTrailParticleScale;
 
 int SB_CloudBall_getExtraSize(void) { return 0x24; }
 int SB_CloudBall_getObjectTypeId(void) { return 0x0; }
-int SB_KyteCage_getExtraSize(void);
 
 void SB_CloudBall_free(GameObject* obj)
 {
