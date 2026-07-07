@@ -52,6 +52,9 @@ extern const f32 lbl_803E569C;
 extern f32 lbl_803E56A0;
 extern f32 lbl_803E56A4;
 
+/* Camera mode id passed to setMode()/getMode() (== the target camera-mode DLL number). */
+#define CAMMODE_STATIC 0x48 /* dll_0048_cameramodestatic */
+
 #define PLATFORM1_ANCHOR_SEQ_ID 0x3ff
 #define PLATFORM1_PLAYER_PULL_MOVE_ID 0x401
 #define PLATFORM1_IDLE_PULL_MOVE_ID 0
@@ -124,7 +127,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 2:
             st->flags = (u8)(st->flags | PLATFORM1_TRIGGER_FLAG_02);
             st->transitionStep = 0;
-            (*gObjectTriggerInterface)->setCamVars(0x48, 3, 0, 0);
+            (*gObjectTriggerInterface)->setCamVars(CAMMODE_STATIC, 3, 0, 0);
             break;
         case 3:
             list = ObjList_GetObjects(&idx2, &cnt2);
@@ -176,11 +179,11 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     else
     {
-        if ((*gCameraInterface)->getMode() != 0x48)
+        if ((*gCameraInterface)->getMode() != CAMMODE_STATIC)
         {
             evt.mode = 3;
             evt.flag = 1;
-            (*gCameraInterface)->setMode(0x48, 1, 3, 8, &evt, 0, 0xff);
+            (*gCameraInterface)->setMode(CAMMODE_STATIC, 1, 3, 8, &evt, 0, 0xff);
         }
         if (playerObj->anim.currentMove != PLATFORM1_PLAYER_PULL_MOVE_ID)
         {
