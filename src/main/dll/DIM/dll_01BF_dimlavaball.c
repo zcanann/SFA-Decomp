@@ -16,6 +16,9 @@
 #define DIMLAVABALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMLAVABALL_OBJFLAG_HIDDEN 0x4000
 
+/* Lava-ball sub-object id spawned by lavaball1bf_update (docblock: "the 0x18D lava-ball sub-object"). */
+#define DIMLAVABALL_SUBOBJ_ID 0x18d
+
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (IMIceMountain_getExtraSize == 0x14).
@@ -171,7 +174,7 @@ void lavaball1bf_update(int* obj)
     }
     if (*(void**)&state->spawnedObj == NULL && Obj_IsLoadingLocked() != 0)
     {
-        int s = Obj_AllocObjectSetup(0x24, 0x18d);
+        int s = Obj_AllocObjectSetup(0x24, DIMLAVABALL_SUBOBJ_ID);
         Lavaball18dSetup* sp = (Lavaball18dSetup*)s;
         *(u8*)(s + 2) = 9;
         sp->head.color[0] = 2;
