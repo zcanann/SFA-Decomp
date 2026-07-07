@@ -43,6 +43,10 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 
+/* anim.seqId of the staff-mode-5 shield variant (docblock: "seqId 0x836 uses
+ * staff-mode 5, otherwise mode 7"). */
+#define SHIELD_SEQID_STAFF_MODE5 0x836
+
 typedef struct ShieldState
 {
     u8 pad0[0x4 - 0x0];
@@ -702,7 +706,7 @@ void Shield_init(int* obj, void* initData)
 {
     int* model = Obj_GetActiveModel((int)obj);
     ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
-    if (((GameObject*)obj)->anim.seqId == 0x836)
+    if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
     {
         staffFn_80170380(obj, 5);
     }
