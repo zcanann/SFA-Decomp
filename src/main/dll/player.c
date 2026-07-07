@@ -6661,8 +6661,8 @@ int playerStateClimbLedge(int obj, int state, f32 fv)
             f32 v;
             gPlayerCurrentMoveId = 2;
             blend = lbl_803E7EF8;
-            d2 = (lbl_803E7F10 + diff) - ((GameObject*)obj)->anim.localPosY;
-            v = -d2 * lbl_803E8030;
+            v = (5.0f + diff) - ((GameObject*)obj)->anim.localPosY;
+            v = lbl_803E8030 * -v;
             if (v >= lbl_803E7EA4)
             {
                 ((GameObject*)obj)->anim.velocityY = sqrtf(v);
@@ -6755,14 +6755,13 @@ int playerStateClimbLedge(int obj, int state, f32 fv)
         break;
     case 7:
         {
-            f32 c5cc = ((PlayerState*)inner)->launchDirZ;
-            f32 k = lbl_803E7E98 + lbl_803DC6C0;
-            f32 c5dc = ((PlayerState*)inner)->launchAnchorZ;
-            f32 y2 = c5cc * k + c5dc;
+            f32 y2 = ((PlayerState*)inner)->launchDirZ * (lbl_803E7E98 + lbl_803DC6C0) +
+                ((PlayerState*)inner)->launchAnchorZ;
             s16 ang;
             ((GameObject*)obj)->anim.localPosX =
                 ((GameObject*)obj)->anim.currentMoveProgress *
-                ((((PlayerState*)inner)->launchDirX * k + ((PlayerState*)inner)->launchAnchorX) -
+                ((((PlayerState*)inner)->launchDirX * (lbl_803E7E98 + lbl_803DC6C0) +
+                    ((PlayerState*)inner)->launchAnchorX) -
                     ((PlayerState*)inner)->moveStartX) +
                 ((PlayerState*)inner)->moveStartX;
             ((GameObject*)obj)->anim.localPosZ =
