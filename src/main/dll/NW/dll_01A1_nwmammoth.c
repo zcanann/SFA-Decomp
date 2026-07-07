@@ -11,6 +11,7 @@
 #include "main/dll/player_target.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define NWMAMMOTH_PARTFX 0x7f0
 #define NWMAMMOTH_OBJFLAG_PARENT_SLACK 0x1000
 #define NWMAMMOTH_OBJFLAG_RENDERED 0x800
 /* object group scanned for the nearest target (player group) */
@@ -253,7 +254,7 @@ int fn_801CE078(int* obj, u8* st)
                     blk.pos[0] = state->spawnPosX;
                     blk.pos[1] = state->spawnPosY;
                     blk.pos[2] = state->spawnPosZ;
-                    (*gPartfxInterface)->spawnObject(obj, 0x7f0, &blk, 0x200001, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, NWMAMMOTH_PARTFX, &blk, 0x200001, -1, NULL);
                 }
                 state->partfxTimer = lbl_803E5218;
             }
