@@ -233,9 +233,9 @@ int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f3
         }
     }
     *outF7 = (f32)(u32)
-    trigger->field_6;
+    trigger->nearDistanceRaw;
     *outF8 = (f32)(u32)
-    trigger->field_8;
+    trigger->farDistanceRaw;
     *outI9 = (&gSfxTriggerExtraTable)[trigger->e_tableIdx];
     *outI10 = trigger->e_bit0;
     *outI11 = trigger->e_bit3;

@@ -1121,7 +1121,7 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
 
 extern void model_adjustModelList(void* list, int index);
 extern void model_findIdxInModelList(void* list, void* header, int* outIndex);
-extern void* gModelTexAtlasList;
+extern void* gModelAnimCacheList;
 extern void* allocModelStruct(int size, int align);
 extern int* lbl_803DCB5C;
 
@@ -1129,7 +1129,7 @@ void ObjModel_InitResourceCaches(void)
 {
     void* m;
     gModelList = allocModelStruct(0x8c, 4);
-    gModelTexAtlasList = allocModelStruct(0xc4, 4);
+    gModelAnimCacheList = allocModelStruct(0xc4, 4);
     m = mmAlloc(0x830, 0xa, 0);
     gModelResourceBuffer = m;
     gModelAnimOffsetTable = (int*)((u8*)m + 0x800);
@@ -1172,8 +1172,8 @@ void ObjModel_Release(u8* model)
                 void* tex = *(void**)(((ModelFileHeader*)header)->animationModelPtrs + z[1]);
                 if (tex != NULL && (s8)-- * (u8*)tex <= 0)
                 {
-                    model_findIdxInModelList(gModelTexAtlasList, &tex, &idx);
-                    model_adjustModelList(gModelTexAtlasList, idx);
+                    model_findIdxInModelList(gModelAnimCacheList, &tex, &idx);
+                    model_adjustModelList(gModelAnimCacheList, idx);
                     mm_free(tex);
                 }
             }
@@ -1644,13 +1644,13 @@ extern void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
         if ((getLoadedFileFlags(0) & 0x100000) == 0 || *(u16 *)(hdr + 4) == 1 ||      \
             *(u16 *)(hdr + 4) == 3) {                                                 \
             if (v == 0) {                                                             \
-                if (ModelList_getHeader(gModelTexAtlasList, idx, &hp) == 0) {               \
+                if (ModelList_getHeader(gModelAnimCacheList, idx, &hp) == 0) {               \
                     sz4 = *(int *)((u8 *)gModelAnimFlagsTable + idx * 4);                     \
                     loadAndDecompressDataFile(0x30, 0, sz4, 0, (int)&sz, idx, 1);     \
                     hp = mmAlloc(sz, 10, 0);                                    \
                     loadAndDecompressDataFile(0x30, hp, sz4, sz, (int)buf, idx, 0); \
                     *hp = 1;                                                          \
-                    modelInitModelList(gModelTexAtlasList, idx, &hp);                       \
+                    modelInitModelList(gModelAnimCacheList, idx, &hp);                       \
                 } else {                                                              \
                     *hp += 1;                                                         \
                 }                                                                     \
@@ -2071,14 +2071,14 @@ int modelLoadAnimations(void* model, int id, void* animBase)
                 }
                 else
                 {
-                    if (ModelList_getHeader(gModelTexAtlasList, animId, &atlasHdr) == 0)
+                    if (ModelList_getHeader(gModelAnimCacheList, animId, &atlasHdr) == 0)
                     {
                         dataOff = *(int*)((u8*)gModelAnimFlagsTable + animId * 4);
                         loadAndDecompressDataFile(0x30, 0, dataOff, 0, (int)&sz2, animId, 1);
                         atlasHdr = mmAlloc(sz2, 10, 0);
                         loadAndDecompressDataFile(0x30, atlasHdr, dataOff, sz2, (int)buf2, animId, 0);
                         *atlasHdr = 1;
-                        modelInitModelList(gModelTexAtlasList, animId, &atlasHdr);
+                        modelInitModelList(gModelAnimCacheList, animId, &atlasHdr);
                     }
                     else
                     {
@@ -2102,8 +2102,8 @@ int modelLoadAnimations(void* model, int id, void* animBase)
                             newRefCount = (*atlasEntry -= 1);
                             if ((s8)newRefCount <= 0)
                             {
-                                model_findIdxInModelList(gModelTexAtlasList, &atlasEntry, &listIdx);
-                                model_adjustModelList(gModelTexAtlasList, listIdx);
+                                model_findIdxInModelList(gModelAnimCacheList, &atlasEntry, &listIdx);
+                                model_adjustModelList(gModelAnimCacheList, listIdx);
                                 mm_free(atlasEntry);
                             }
                         }
@@ -2386,7 +2386,7 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
     }
     if (bufout == 0)
     {
-        if (ModelList_getHeader(gModelTexAtlasList, (i = id), &ptr) == 0)
+        if (ModelList_getHeader(gModelAnimCacheList, (i = id), &ptr) == 0)
         {
             u8* np;
             int idx2;
@@ -2395,7 +2395,7 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
             ptr = np = mmAlloc(size, 10, 0);
             loadAndDecompressDataFile(0x30, np, v, size, (int)&tmp, i, 0);
             *ptr = 1;
-            modelInitModelList(gModelTexAtlasList, id, &ptr);
+            modelInitModelList(gModelAnimCacheList, id, &ptr);
         }
         else
         {
