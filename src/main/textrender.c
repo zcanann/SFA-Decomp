@@ -73,6 +73,12 @@ typedef struct
 #define GAMETEXT_FONT_LATIN 4
 #define GAMETEXT_FONT_FACE 5
 
+/* Loaded font slot: gGameTextCharsets[] index, one per load purpose/directory. */
+#define GAMETEXT_SLOT_DIALOGUE 0 /* various directories */
+#define GAMETEXT_SLOT_CUTSCENE 1 /* Sequences */
+#define GAMETEXT_SLOT_ERROR 2    /* Boot */
+#define GAMETEXT_SLOT_HUD 3      /* Link */
+
 typedef struct
 {
     TextGlyph* glyphs; /* 0x00 */
@@ -1516,8 +1522,8 @@ void gameTextLoadDir(int dirId)
 
     if (dirId == 3)
     {
-        gameTextFonts = (TextFont*)&gGameTextCharsets[2];
-        gameTextCharset = 2;
+        gameTextFonts = (TextFont*)&gGameTextCharsets[GAMETEXT_SLOT_ERROR];
+        gameTextCharset = GAMETEXT_SLOT_ERROR;
         color = gGameTextClearColor;
         hudDrawRect(0, 0, 0xa00, 0x780, &color);
         lbl_803DC99C = 0;
@@ -1527,41 +1533,41 @@ void gameTextLoadDir(int dirId)
             lbl_803DC9C8 = slotIndex + 1;
             cmd = &lbl_8033A540[slotIndex];
             cmd->opcode = 0xf;
-            cmd->arg0 = 2;
+            cmd->arg0 = GAMETEXT_SLOT_ERROR;
         }
     }
     else if (dirId == 0x1c)
     {
         curGameTextDir = (void*)dirId;
-        gameTextFonts = (TextFont*)&gGameTextCharsets[3];
-        gameTextCharset = 3;
+        gameTextFonts = (TextFont*)&gGameTextCharsets[GAMETEXT_SLOT_HUD];
+        gameTextCharset = GAMETEXT_SLOT_HUD;
         if (gameTextDrawFunc == NULL)
         {
             slotIndex = lbl_803DC9C8;
             lbl_803DC9C8 = slotIndex + 1;
             cmd = &lbl_8033A540[slotIndex];
             cmd->opcode = 0xf;
-            cmd->arg0 = 3;
+            cmd->arg0 = GAMETEXT_SLOT_HUD;
         }
-        gameTextLoadForCurMap(3);
+        gameTextLoadForCurMap(GAMETEXT_SLOT_HUD);
     }
     else
     {
-        gameTextFonts = (TextFont*)&gGameTextCharsets[0];
-        gameTextCharset = 0;
+        gameTextFonts = (TextFont*)&gGameTextCharsets[GAMETEXT_SLOT_DIALOGUE];
+        gameTextCharset = GAMETEXT_SLOT_DIALOGUE;
         if (gameTextDrawFunc == NULL)
         {
             slotIndex = lbl_803DC9C8;
             lbl_803DC9C8 = slotIndex + 1;
             cmd = &lbl_8033A540[slotIndex];
             cmd->opcode = 0xf;
-            cmd->arg0 = 0;
+            cmd->arg0 = GAMETEXT_SLOT_DIALOGUE;
         }
         curGameTextDir = (void*)dirId;
         if ((subtitleIsActive() == 0 || gameTextFn_8001b44c(dirId) == 0) &&
             (int)curGameTextDir != gGameTextLastDir)
         {
-            gameTextLoadForCurMap(0);
+            gameTextLoadForCurMap(GAMETEXT_SLOT_DIALOGUE);
         }
     }
 }
