@@ -9,6 +9,10 @@
 
 /* object group this object belongs to */
 #define FIREFLYLANTERN_OBJGROUP 0xf
+
+/* Firefly object spawned by FireFlyLantern_spawnFireFly. */
+#define FIREFLYLANTERN_CHILD_OBJ_FIREFLY 1084
+
 extern int gameBitDecrement(int bit);
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
@@ -23,8 +27,8 @@ int FireFlyLantern_spawnFireFly(int* obj)
 {
     FireFlyLanternSpawnSetup* setup;
     if (Obj_IsLoadingLocked() == 0) return 0;
-    setup = (FireFlyLanternSpawnSetup*)Obj_AllocObjectSetup(sizeof(FireFlyLanternSpawnSetup), 1084);
-    setup->objectType = 1084;
+    setup = (FireFlyLanternSpawnSetup*)Obj_AllocObjectSetup(sizeof(FireFlyLanternSpawnSetup), FIREFLYLANTERN_CHILD_OBJ_FIREFLY);
+    setup->objectType = FIREFLYLANTERN_CHILD_OBJ_FIREFLY;
     setup->setupType = 9;
     setup->field04 = 2;
     setup->field06 = 0xff;
