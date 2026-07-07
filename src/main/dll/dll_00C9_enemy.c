@@ -36,6 +36,9 @@
 #define ENEMY_OBJGROUP 3
 #define ENEMY_OBJGROUP_SECONDARY 0x50
 
+/* camera mode DLL 0x49 = dll_0049_cameramodecombat */
+#define ENEMY_CAMMODE_COMBAT 0x49
+
 typedef struct BaddieAfterUpdateBonesCbState
 {
     u8 pad0[0x2B0 - 0x0];
@@ -1086,7 +1089,7 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
                 *(u16*)(sub + 0x2b6) = 0x33;
             break;
         case 3:
-            (*gObjectTriggerInterface)->setCamVars(0x49, 4, (int)node, 0x3c);
+            (*gObjectTriggerInterface)->setCamVars(ENEMY_CAMMODE_COMBAT, 4, (int)node, 0x3c);
             break;
         case 6:
             if (*(int**)&((TrickyState*)sub)->modelChain != NULL)
