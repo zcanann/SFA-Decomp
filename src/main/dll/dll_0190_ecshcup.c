@@ -6,6 +6,11 @@
 
 #define ECSHCUP_TARGET_OBJGROUP 0xb
 
+/* periodic particle emitted while the cup is in its normal tracking mode */
+#define ECSHCUP_PARTFX_IDLE 0x270
+/* periodic particle emitted during the rise (mode 6) / sink (mode 7) sequences */
+#define ECSHCUP_PARTFX_TRANSITION 0x271
+
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E5060;
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
@@ -115,7 +120,7 @@ void ecsh_cup_update(short* obj)
                 state->spawnTimer = lbl_803E506C;
                 if (mode != 3 && mode != 6 && mode != 7)
                 {
-                    (*gPartfxInterface)->spawnObject(obj, 0x270, NULL, 0, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, ECSHCUP_PARTFX_IDLE, NULL, 0, -1, NULL);
                 }
             }
         }
@@ -164,7 +169,7 @@ void ecsh_cup_update(short* obj)
             if (state->spawnTimer <= lbl_803E5068)
             {
                 state->spawnTimer = lbl_803E506C;
-                (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, ECSHCUP_PARTFX_TRANSITION, NULL, 0, -1, NULL);
             }
         }
         else if (m == 7)
@@ -178,7 +183,7 @@ void ecsh_cup_update(short* obj)
                     state->spawnTimer = lbl_803E506C;
                     if (mode != 3)
                     {
-                        (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(obj, ECSHCUP_PARTFX_TRANSITION, NULL, 0, -1, NULL);
                     }
                 }
             }
