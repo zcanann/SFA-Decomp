@@ -52,6 +52,11 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 /* projectile spat at the baddie target: velocity aimed at targetObj, ownerObj = worm */
 #define DBSTEALERWORM_CHILD_OBJ_PROJECTILE 0x30a
 
+/* small dust burst (spawned 3x when DBWORM_FLAG14_FX_DUST is set) */
+#define DBSTEALERWORM_PARTFX_DUST 0x345
+/* spray burst (spawned 10x when DBWORM_FLAG14_FX_SPRAY is set) */
+#define DBSTEALERWORM_PARTFX_SPRAY 0x343
+
 /*
  * DbStealerwormControl - the per-family control record hung off
  * GroundBaddieState.control (state+0x40C) for dbstealerworm
@@ -684,15 +689,15 @@ void fn_80203000(int obj, int param2)
     }
     if (state->flags14 & DBWORM_FLAG14_FX_DUST)
     {
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x345, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x345, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x345, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
     }
     if (state->flags14 & DBWORM_FLAG14_FX_SPRAY)
     {
         for (i = 0; i < 0xa; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x343, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_SPRAY, NULL, 1, -1, NULL);
         }
     }
     state->flags14 = 0;
