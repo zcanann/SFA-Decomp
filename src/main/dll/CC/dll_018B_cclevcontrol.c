@@ -21,6 +21,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #define CCLEVCONTROL_OBJFLAG_PARENT_SLACK 0x1000
+#define CCLEVCONTROL_ENVFX_A 0x242
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
 
@@ -155,12 +156,12 @@ void cclevcontrol_init(int* obj)
     if (getSaveGameLoadStatus() != 0)
     {
         envFxActFn_800887f8(0x3f);
-        getEnvfxActImmediately((void*)0, 0, 0x242, 0);
+        getEnvfxActImmediately((void*)0, 0, CCLEVCONTROL_ENVFX_A, 0);
     }
     else
     {
         envFxActFn_800887f8(0x1f);
-        getEnvfxAct(0, 0, 0x242, 0);
+        getEnvfxAct(0, 0, CCLEVCONTROL_ENVFX_A, 0);
     }
     *(f32*)state = 300.0f;
     state[2] = -1;
