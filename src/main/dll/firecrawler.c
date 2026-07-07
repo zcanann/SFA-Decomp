@@ -56,6 +56,7 @@
 #define FIRECRAWLER_PARTFX_MOVE_TURN 0x802
 /* movement dust spawned on the move-loop event: moving straight (turnDelta == 0) */
 #define FIRECRAWLER_PARTFX_MOVE_STRAIGHT 0x809
+#define FIRECRAWLER_HIT_VOLUME_SLOT 9
 
 /* Spawn-setup buffer for the firepipe child (obj id 0x710): ObjPlacement head
  * (pos/color) plus the class-specific fields the parent seeds at +0x18. */
@@ -948,7 +949,7 @@ void hoodedZyck_update(s16* obj, u8* state)
         ((GameObject*)obj)->anim.velocityX = z;
         ((GameObject*)obj)->anim.velocityY = z;
         ((GameObject*)obj)->anim.velocityZ = z;
-        ObjHits_SetHitVolumeSlot((int)obj, 9, 1, -1);
+        ObjHits_SetHitVolumeSlot((int)obj, FIRECRAWLER_HIT_VOLUME_SLOT, 1, -1);
         ang = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                        ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ) &
             0xffff;
