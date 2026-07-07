@@ -10,6 +10,10 @@
 
 #define DLL19B_TARGET_OBJGROUP 0xe
 
+/* env effects driven by anim events; ENVFX_B is the default when no override id set */
+#define DLL19B_ENVFX_A 0xc3
+#define DLL19B_ENVFX_B 0x14
+
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void* return0_8005669C(int);
 extern int lbl_803DB610;
@@ -80,12 +84,12 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             switch (cmd)
             {
             case 1:
-                getEnvfxAct(obj, obj, 0xc3, 0);
+                getEnvfxAct(obj, obj, DLL19B_ENVFX_A, 0);
                 break;
             case 2:
                 if (lbl_803DB610 == -1)
                 {
-                    getEnvfxAct(obj, obj, 0x14, 0);
+                    getEnvfxAct(obj, obj, DLL19B_ENVFX_B, 0);
                 }
                 else
                 {
