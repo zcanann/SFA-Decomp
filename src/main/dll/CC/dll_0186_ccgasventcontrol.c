@@ -24,6 +24,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define CCGASVENT_GROUP 0x3f
+#define CCGASVENTCONTROL_TARGET_OBJGROUP 5
 #define GAMEBIT_GAS_ACTIVE 0x1c0       /* gas filling the room */
 #define GAMEBIT_GAS_PUZZLE_DONE 0xa3
 #define GAMEBIT_GAS_INTRO_TRIGGER 0x3ec /* fires the intro sequence once the vents exist */
@@ -99,7 +100,7 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
         thr = lbl_803E4618;
         for (; i < 4; i++)
         {
-            int other = ObjGroup_FindNearestObject(5, list[i], 0);
+            int other = ObjGroup_FindNearestObject(CCGASVENTCONTROL_TARGET_OBJGROUP, list[i], 0);
             if (getXZDistance((f32*)(list[i] + 0x18), (f32*)(other + 0x18)) > thr)
             {
                 count = count + 1u;
