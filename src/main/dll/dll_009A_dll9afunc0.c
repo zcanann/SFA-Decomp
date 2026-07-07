@@ -37,6 +37,9 @@ typedef struct
 } ScreenSeq;
 
 #pragma opt_propagation off
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL9A_EFFECT_ID 0x31
+
 void dll_9A_func03(int target, int variant, int parent, u32 flags)
 {
     ScreenSeq seq;
@@ -247,7 +250,7 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
             hdr.bz = hdr.bz + *(f32*)(parent + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&hdr, 0, 3, lbl_80317B98, 1, &lbl_803DB958, 0x31, 0);
+    (*gModgfxInterface)->spawnEffect(&hdr, 0, 3, lbl_80317B98, 1, &lbl_803DB958, DLL9A_EFFECT_ID, 0);
 }
 #pragma opt_propagation reset
 
