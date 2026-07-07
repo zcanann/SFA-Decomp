@@ -33,6 +33,9 @@
 #define GX_DIRECT 1
 #define GX_TRIANGLESTRIP 0x98
 #define GX_VTXFMT4 4
+#define GX_TG_MTX2x4 1
+#define GX_IDENTITY 0x3c
+#define GX_PTIDENTITY 0x7d
 #define GX_COLOR0 0
 #define GX_COLOR0A0 4
 #define GX_COLOR1A1 5
@@ -1040,12 +1043,12 @@ void fn_80051868(u8* tex, f32* mtx, int mode)
     if (mtx != NULL)
     {
         GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, GX_FALSE, lbl_803DCD80);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
         lbl_803DCD80 = lbl_803DCD80 + 3;
     }
     else
     {
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, GX_FALSE, 0x7d);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     }
     if (mode == 0)
     {
@@ -1115,12 +1118,12 @@ void fn_80051B00(u8* tex, f32* mtx, int mode, int* kparam)
     if (mtx != NULL)
     {
         GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, GX_FALSE, lbl_803DCD80);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
         lbl_803DCD80 = lbl_803DCD80 + 3;
     }
     else
     {
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, GX_FALSE, 0x7d);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     }
     gxTextureFn_8004bf88(kparam, 1, 0, &sel, &v1);
     GXSetTevKColorSel(lbl_803DCD90, sel);
@@ -1180,12 +1183,12 @@ void fn_80051D5C(u8* tex, f32* mtx, int mode, int* kparam)
     if (mtx != NULL)
     {
         GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, GX_FALSE, lbl_803DCD80);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
         lbl_803DCD80 = lbl_803DCD80 + 3;
     }
     else
     {
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, GX_FALSE, 0x7d);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     }
     gxTextureFn_8004bf88(kparam, 0, 1, &sel, &v1);
     GXSetTevKAlphaSel(lbl_803DCD90, v1);
@@ -1394,12 +1397,12 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
     if (mtx != NULL)
     {
         GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, GX_FALSE, lbl_803DCD80);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
         lbl_803DCD80 = lbl_803DCD80 + 3;
     }
     else
     {
-        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, GX_FALSE, 0x7d);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     }
     if (useK != 0)
     {
