@@ -137,4 +137,3 @@ void fn_801E991C(int p1, char* table)
         p += 8;
     }
 }
-#pragma opt_common_subs reset
