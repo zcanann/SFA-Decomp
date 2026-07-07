@@ -46,7 +46,8 @@ typedef struct EffectboxPlacement
 /* EffectboxPlacement.targetMode values */
 #define EFFECTBOX_TARGET_PLAYER 0 /* Obj_GetPlayerObject */
 #define EFFECTBOX_TARGET_TRICKY 1 /* getTrickyObject */
-#define EFFECTBOX_TARGET_GROUP 2  /* every object in object group 5 */
+#define EFFECTBOX_TARGET_GROUP 2  /* every object in EFFECTBOX_TARGET_OBJGROUP */
+#define EFFECTBOX_TARGET_OBJGROUP 5
 
 #define EFFECTBOX_OBJFLAG_HIDDEN 0x4000
 #define EFFECTBOX_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -123,7 +124,7 @@ void EffectBox_update(int obj)
             count = 1;
             break;
         case EFFECTBOX_TARGET_GROUP:
-            list = (int*)ObjGroup_GetObjects(5, &count);
+            list = (int*)ObjGroup_GetObjects(EFFECTBOX_TARGET_OBJGROUP, &count);
             if (list == NULL)
             {
                 return;
