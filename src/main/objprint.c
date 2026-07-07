@@ -1355,9 +1355,9 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
         }
         else
         {
-            f32 dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(tgt + 0xc);
-            f32 dy = ((GameObject*)obj)->anim.localPosZ - *(f32*)(tgt + 0x14);
-            f32 dz = ((GameObject*)obj)->anim.localPosY - *(f32*)(tgt + 0x10);
+            f32 dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)tgt)->anim.localPosX;
+            f32 dy = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)tgt)->anim.localPosZ;
+            f32 dz = ((GameObject*)obj)->anim.localPosY - ((GameObject*)tgt)->anim.localPosY;
             f32 dist = sqrtf(dx * dx + dy * dy);
             int minB;
             int negA;
@@ -1722,9 +1722,9 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
     f32 dx, dy, dz, dist;
 
     sp2 = spd + 0xf;
-    dx = pos[0] - *(f32*)(tgt + 0xc);
-    dz = pos[2] - *(f32*)(tgt + 0x14);
-    dy = (pos[1] + yOff) - *(f32*)(tgt + 0x10);
+    dx = pos[0] - ((GameObject*)tgt)->anim.localPosX;
+    dz = pos[2] - ((GameObject*)tgt)->anim.localPosZ;
+    dy = (pos[1] + yOff) - ((GameObject*)tgt)->anim.localPosY;
     dist = sqrtf(dx * dx + dz * dz);
 
     src[0] = (s16)getAngle(dx, dz) - (u16)go->anim.rotX;
