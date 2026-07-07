@@ -27,6 +27,7 @@
 #include "main/objlib.h"
 #include "main/mm.h"
 #include "string.h"
+#define SWARMBADDIE_HIT_VOLUME_SLOT 10
 
 /* object group this object belongs to */
 #define SWARMBADDIE_OBJGROUP 3
@@ -204,7 +205,7 @@ void SwarmBaddie_update(int obj)
     {
         state->hitVolumeEnvelope = lbl_803E26B0;
     }
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
+    ObjHits_SetHitVolumeSlot(obj, SWARMBADDIE_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject(obj);
     if (state->hitVolumeEnvelope > lbl_803E26B4)
     {
