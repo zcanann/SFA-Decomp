@@ -23,6 +23,9 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80312BD8[];
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL63_EFFECT_ID 0x40
 extern f32 lbl_803E08C8, lbl_803E08CC, lbl_803E08D0, lbl_803E08D4, lbl_803E08D8, lbl_803E08DC;
 extern f32 lbl_803E08E0, lbl_803E08E4, lbl_803E08E8, lbl_803E08EC, lbl_803E08F0, lbl_803E08F4;
 extern f32 lbl_803E08F8, lbl_803E08FC;
@@ -310,7 +313,7 @@ static inline void dll_63_func03Body(u8* sourceObj, int variant, u8* posSource, 
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x40, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], DLL63_EFFECT_ID, 0);
     base++;
 }
 
