@@ -14,6 +14,11 @@
 
 #define LIGHT_DRAGHEAD_RESOURCE_ID 0xA5
 
+/* Partfx spawned by VFPDragHead_update: BREATH is the hit-driven breath fx
+ * (state 1, gameBitA toggled); IDLE is the ambient periodic fx (states 0/2). */
+#define VFPDRAGHEAD_PARTFX_BREATH 0x390
+#define VFPDRAGHEAD_PARTFX_IDLE 0x391
+
 /*
  * DLL 0x021E (gVFP_Block1ObjDescriptor).
  * getExtraSize/getObjectTypeId/free/render/hitDetect fall in this object's
@@ -563,7 +568,7 @@ void VFPDragHead_update(int* obj)
         if (gVfpDragHeadSpawnTimer > 0xc8) return;
         if (self2->headIndex != gVfpDragHeadActiveIndex) return;
         if (randomGetRange(0, 2) != 0) return;
-        (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_IDLE, NULL, 4, -1, NULL);
     }
     else if (((GameObject*)obj)->anim.seqId == 0x3c5)
     {
@@ -586,18 +591,18 @@ void VFPDragHead_update(int* obj)
         if (gVfpDragHeadSpawnTimer > 0xc8) return;
         if (self2->headIndex != gVfpDragHeadActiveIndex) return;
         if (randomGetRange(0, 2) != 0) return;
-        (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_IDLE, NULL, 4, -1, NULL);
     }
     else if (state == 1)
     {
         self2 = ((GameObject*)obj)->extra;
         if (mainGetBit(self2->gameBitA) != 0)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x390, NULL, 4, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x390, NULL, 4, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_BREATH, NULL, 4, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_BREATH, NULL, 4, -1, NULL);
             if (randomGetRange(0, 1) != 0)
             {
-                (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_IDLE, NULL, 4, -1, NULL);
             }
         }
         if ((s16)ObjHits_GetPriorityHit((int)obj, 0, 0, 0) != 0)
