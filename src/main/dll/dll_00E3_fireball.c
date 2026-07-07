@@ -104,6 +104,11 @@ typedef struct FireballState
 
 #define FIREBALL_OBJFLAG_FREED 0x40
 
+/* anim.seqId of the invisible variant (docblock: "seqId 2110 hides the object"). */
+#define FIREBALL_SEQID_HIDDEN 0x83e
+/* anim.seqId of the hit object that triggers combat-source recolor. */
+#define FIREBALL_SEQID_CMBSRC_RECOLOR 0x6e8
+
 extern u32 ObjHits_ClearHitVolumes();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
@@ -348,7 +353,7 @@ void Fireball_hitDetect(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
     int* target;
-    if (((GameObject*)obj)->anim.seqId == 0x83e) return;
+    if (((GameObject*)obj)->anim.seqId == FIREBALL_SEQID_HIDDEN) return;
     switch (((FireballState*)state)->stateFlags & FIREBALL_FLAG_DISABLED)
     {
     case 0:
@@ -358,7 +363,7 @@ void Fireball_hitDetect(int* obj)
     }
     target = (int*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
     if (target == NULL) return;
-    if (((GameObject*)target)->anim.seqId == 0x6e8)
+    if (((GameObject*)target)->anim.seqId == FIREBALL_SEQID_CMBSRC_RECOLOR)
     {
         int idx = cmbsrc_getColorIndex(target);
         if ((s8)idx != -1)
