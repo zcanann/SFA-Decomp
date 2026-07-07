@@ -22,6 +22,8 @@
 /* Spark fx emitted (1-in-3) while the pylons are still partially charged
    (sum of pylonTimer[0..2] < 0x12c). */
 #define CFMAINCRYSTAL_PARTFX_CHARGE_SPARK 0x81
+/* env effect activated once when all three pylons chime and the main charge begins */
+#define CFMAINCRYSTAL_ENVFX 0x7f
 
 /* beam-report protocol shared with cfpowerbase (dll_014A): probe each
    pylon group (class 0xDA) with its message; the crystal itself answers
@@ -265,7 +267,7 @@ void fn_8019D9F0(int* obj)
             if (sub->charge == 0)
             {
                 Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
-                getEnvfxAct(0, 0, 0x7f, 0);
+                getEnvfxAct(0, 0, CFMAINCRYSTAL_ENVFX, 0);
             }
             sub->charge += framesThisStep;
         }
