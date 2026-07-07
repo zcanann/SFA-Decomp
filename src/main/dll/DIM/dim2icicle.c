@@ -213,6 +213,10 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
 
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
+/* Env-fx ids co-activated on the warp/steam transition (getEnvfxAct 3rd arg) */
+#define DIM2ICICLE_ENVFX_A 0xdb
+#define DIM2ICICLE_ENVFX_B 0xdc
+
 
 extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 
@@ -258,8 +262,8 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRunt
     }
   }
   if (((IcicleWarpFlags *)&topState->steamFlags)->pending) {
-    getEnvfxAct(0, 0, 0xdb, 0);
-    getEnvfxAct(0, 0, 0xdc, 0);
+    getEnvfxAct(0, 0, DIM2ICICLE_ENVFX_A, 0);
+    getEnvfxAct(0, 0, DIM2ICICLE_ENVFX_B, 0);
     skyFn_80089710(7, 1, 0);
     skyFn_800894a8(7, lbl_803E4C4C, lbl_803E4C50, lbl_803E4C54);
     skyFn_800895e0(7, 0xa0, 0xa0, 0xff, 0x7f, 0x28);
