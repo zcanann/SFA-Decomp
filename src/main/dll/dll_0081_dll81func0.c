@@ -16,6 +16,13 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
+/* spawnEffect effect ids per variant (docblock: "0x3e9 for variant 0x1e, 0x23d
+ * for variants 2/3, 0x2e for variants 10..13 and 0xe, 0xd9 otherwise"). */
+#define DLL81_EFFECT_ID_VARIANT1E    0x3e9
+#define DLL81_EFFECT_ID_VARIANT23    0x23d
+#define DLL81_EFFECT_ID_VARIANT10_13 0x2e
+#define DLL81_EFFECT_ID_DEFAULT      0xd9
+
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80315548[];
 extern f32 lbl_803E0E78;
@@ -276,19 +283,19 @@ void dll_81_func03(int sourceObj, int variant, int posSource, u32 flags)
     }
     if (variant == 0x1e)
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, 0x3e9, 0);
+        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_VARIANT1E, 0);
     }
     else if (variant == 2 || variant == 3)
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, 0x23d, 0);
+        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_VARIANT23, 0);
     }
     else if ((u32)(variant - 10) <= 3 || variant == 0xe)
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, 0x2e, 0);
+        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_VARIANT10_13, 0);
     }
     else
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, 0xd9, 0);
+        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_DEFAULT, 0);
     }
 }
 
