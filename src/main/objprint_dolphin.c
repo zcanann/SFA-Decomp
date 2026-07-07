@@ -87,7 +87,7 @@ typedef struct ObjModelRenderOp
     u32 textureId;
     u32 unk1C;
     u8 pad20[0x24 - 0x20];
-    u32 unk24;
+    u32 indirectTextureId;
     u8 pad28[0x34 - 0x28];
     u32 envTextureId;
     u8 pad38[0x3C - 0x38];
@@ -2849,7 +2849,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         {
             nl += 1;
         }
-        envtex = textureFn_80050ad8(t, nl, ((u8*)op)[0x42], ((ObjModelRenderOp*)op)->unk24);
+        envtex = textureFn_80050ad8(t, nl, ((u8*)op)[0x42], ((ObjModelRenderOp*)op)->indirectTextureId);
     }
     if (refs[0] != 0)
     {
