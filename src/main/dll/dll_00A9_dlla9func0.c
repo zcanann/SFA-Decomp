@@ -16,6 +16,9 @@
 
 extern ModgfxInterface** gModgfxInterface;
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLLA9_EFFECT_ID 0x586
+
 typedef struct
 {
     u32 mode; /* +0x00 */
@@ -218,7 +221,7 @@ void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 arg
             buf.pos[2] = lbl_803E15D8 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80319028, 0xc, &tab[0x8c], 0x586, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80319028, 0xc, &tab[0x8c], DLLA9_EFFECT_ID, 0);
 }
 
 void dll_A9_func01_nop(void)
