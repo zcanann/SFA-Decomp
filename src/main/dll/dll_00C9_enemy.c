@@ -638,8 +638,6 @@ void objAnimFn_8014a9f0(short* obj, int state)
     }
 }
 
-#pragma scheduling on
-#pragma peephole on
 int enemy_getExtraSize(void) { return 0x370; }
 int enemy_getObjectTypeId(void) { return 0x14b; }
 
