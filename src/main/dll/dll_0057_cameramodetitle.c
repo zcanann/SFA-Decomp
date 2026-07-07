@@ -17,9 +17,6 @@
 #include "main/dll/FRONT/n_options.h"
 #include "main/dll/dll_80220608_shared.h"
 
-#pragma scheduling on
-#pragma peephole on
-
 /* title-screen music tracks crossfaded as pose 4 is entered/left */
 #define MUSIC_TITLE_TRACK_A 0xbe
 #define MUSIC_TITLE_TRACK_B 0xc1
