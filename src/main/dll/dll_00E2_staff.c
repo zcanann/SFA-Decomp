@@ -1320,7 +1320,7 @@ void staffDrawSwipe(int* obj, int* swipe)
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXLoadPosMtxImm(Camera_GetViewMatrix(), GX_PNMTX0);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
 
     i = 0;
     swp = (SwipeRecord*)swipe;
