@@ -325,18 +325,18 @@ void WM_Galleon_update(int* obj)
     }
     if (gameBitA4 == 0)
     {
-        OBJ_F32(player, 0xc) = lbl_803E5CEC;
-        OBJ_F32(player, 0x10) = lbl_803E5CF0;
-        OBJ_F32(player, 0x14) = lbl_803E5CF4;
+        ((GameObject*)player)->anim.localPosX = lbl_803E5CEC;
+        ((GameObject*)player)->anim.localPosY = lbl_803E5CF0;
+        ((GameObject*)player)->anim.localPosZ = lbl_803E5CF4;
         objHitDetectFn_80062e84(player, (int)obj, 0);
         fn_80296BBC(player);
         OBJ_S32(obj, 0xf8) = 1;
     }
     else if (OBJ_S32(obj, 0xf8) == 1)
     {
-        OBJ_F32(obj, 0xc) = state->savedX;
-        OBJ_F32(obj, 0x10) = state->savedY;
-        OBJ_F32(obj, 0x14) = state->savedZ;
+        ((GameObject*)obj)->anim.localPosX = state->savedX;
+        ((GameObject*)obj)->anim.localPosY = state->savedY;
+        ((GameObject*)obj)->anim.localPosZ = state->savedZ;
         OBJ_S16(obj, 0) = state->savedYaw;
         OBJECT_TRIGGER_REFRESH(0, obj, -1);
         OBJ_S32(obj, 0xf8) = 2;
@@ -361,9 +361,9 @@ void WM_Galleon_init(int* obj, WMGalleonSetup* setup)
     ((GameObject*)obj)->animEventCallback = WM_Galleon_SeqFn;
     OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
     OBJ_S32(obj, 0xf4) = 9;
-    state->savedX = OBJ_F32(obj, 0xc);
-    state->savedY = OBJ_F32(obj, 0x10);
-    state->savedZ = OBJ_F32(obj, 0x14);
+    state->savedX = ((GameObject*)obj)->anim.localPosX;
+    state->savedY = ((GameObject*)obj)->anim.localPosY;
+    state->savedZ = ((GameObject*)obj)->anim.localPosZ;
     state->savedYaw = OBJ_S16(obj, 0);
     fn_80065574(0, obj, 0);
     for (i = 0; i < 5; i++)
