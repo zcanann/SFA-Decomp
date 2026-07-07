@@ -279,4 +279,3 @@ void CameraModeArwing_update(u8* obj)
                                    *(int*)&((GameObject*)obj)->anim.parent);
 }
 #pragma opt_propagation reset
-#pragma opt_common_subs reset
