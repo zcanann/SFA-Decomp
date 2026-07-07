@@ -23,6 +23,9 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* Release camera back to the default gameplay mode (cameramode DLL 0x42). */
+#define CCGASVENTCONTROL_CAMMODE_DEFAULT 0x42
+
 #define CCGASVENT_GROUP 0x3f
 #define CCGASVENTCONTROL_TARGET_OBJGROUP 5
 #define GAMEBIT_GAS_ACTIVE 0x1c0       /* gas filling the room */
@@ -212,7 +215,7 @@ void ccgasventcontrol_update(int obj)
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)player)->anim.localPosY;
                 ((GameObject*)obj)->anim.localPosZ = ((GameObject*)player)->anim.localPosZ;
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
+                (*gCameraInterface)->setMode(CCGASVENTCONTROL_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
                 ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_WARP_BACK;
             }
             if (b != ((CcgasventcontrolState*)ex)->ventCount)
