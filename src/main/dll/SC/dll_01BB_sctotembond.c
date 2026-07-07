@@ -51,6 +51,10 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void Music_Trigger(int id, int arg);
 extern void fn_8011F6D4(u32 x);
 
+/* Camera modes driven by the totem-bond sequence (cameramode DLL numbers). */
+#define SC_TOTEMBOND_CAMMODE_VIEWFINDER 0x44
+#define SC_TOTEMBOND_CAMMODE_DEFAULT 0x42
+
 #define SC_TOTEMBOND_ORB_COUNT 8
 #define SC_TOTEMBOND_ORB_SETUP_SIZE 0x38
 #define SC_TOTEMBOND_ORB_OBJECT_ID 0x27b
@@ -149,7 +153,7 @@ u32 sc_totembond_SeqFn(ScTotemBondObject* obj, u32 unused, ObjAnimUpdateState* a
         {
         case 1:
             state->eventFlags |= 1;
-            (*gObjectTriggerInterface)->setCamVars(0x44, 1, 0, 0);
+            (*gObjectTriggerInterface)->setCamVars(SC_TOTEMBOND_CAMMODE_VIEWFINDER, 1, 0, 0);
             break;
         case 2:
             objects = ObjList_GetObjects(&startForEvent2, &countForEvent2);
@@ -261,7 +265,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
                 state->completionTimer = lbl_803E5654;
                 player = Obj_GetPlayerObject();
                 (*gMapEventInterface)->clearRestartPoint();
-                (*gCameraInterface)->setMode(0x42, 0, 3, 0, NULL, 0, 0);
+                (*gCameraInterface)->setMode(SC_TOTEMBOND_CAMMODE_DEFAULT, 0, 3, 0, NULL, 0, 0);
                 obj->mapAlpha = 0xff;
                 fn_80296124(player, NULL, NULL, 0);
                 ObjHits_EnableObject((u32)obj);
