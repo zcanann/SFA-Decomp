@@ -15,6 +15,10 @@ extern void warpToMap(int idx, s8 transType);
 #define MAGICCAVE_GAMEBIT_WARP_READY 0x91e   /* handoff to top: perform warp sequence */
 #define MAGICCAVE_GAMEBIT_WARP_DEST 0x1b8    /* warp destination map index */
 
+/* Env-fx ids seeded on area setup (getEnvfxAct 3rd arg) */
+#define MAGICCAVEBOTTOM_ENVFX_A 0x2c
+#define MAGICCAVEBOTTOM_ENVFX_B 0x2d
+
 /* MagicCaveBottom_update sequence state machine (state byte at extra[0]) */
 #define MAGICCAVEBOTTOM_STATE_SETUP 0     /* latch active, seed env fx, run intro seq */
 #define MAGICCAVEBOTTOM_STATE_START_MUSIC 1 /* kick off the adventure music */
@@ -49,8 +53,8 @@ void MagicCaveBottom_update(int* obj)
     case MAGICCAVEBOTTOM_STATE_SETUP:
         mainSetBits(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 1);
         envFxActFn_800887f8(0);
-        getEnvfxAct(obj, obj, 0x2c, 0);
-        getEnvfxAct(obj, obj, 0x2d, 0);
+        getEnvfxAct(obj, obj, MAGICCAVEBOTTOM_ENVFX_A, 0);
+        getEnvfxAct(obj, obj, MAGICCAVEBOTTOM_ENVFX_B, 0);
         *sub = MAGICCAVEBOTTOM_STATE_START_MUSIC;
         if (def[0x1b] != 0)
         {
