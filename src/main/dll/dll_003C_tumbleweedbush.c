@@ -153,7 +153,6 @@ u16 fn_80130124(void)
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     return gTumbleweedBushItems[linkSelected].itemId;
 }
-#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void linkInitTextures(LinkMenuItemDB* item)
@@ -192,7 +191,6 @@ void linkInitTextures(LinkMenuItemDB* item)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void Link_func0F(void)
@@ -243,7 +241,6 @@ void Link_copy(u8* srcArg)
         }
     }
 }
-#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void Link_func0B(u8* srcArg)
