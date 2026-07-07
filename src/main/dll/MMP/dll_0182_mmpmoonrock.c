@@ -25,6 +25,7 @@
 
 #define MMPMOONROCK_OBJGROUP 4
 #define CARRYABLE_OBJGROUP 0x10
+#define MMPMOONROCK_PARTFX 0x723
 
 #define MMPMOONROCK_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -712,5 +713,5 @@ void mmp_moonrock_update(int obj)
     *(f32*)(gMoonRockSpawnParams + 0x10) = state->baseY;
     *(f32*)(gMoonRockSpawnParams + 0x14) = ((GameObject*)obj)->anim.localPosZ;
     particleHeight = (int)(((GameObject*)obj)->anim.localPosY - state->baseY);
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x723, gMoonRockSpawnParams, 0x200001, -1, &particleHeight);
+    (*gPartfxInterface)->spawnObject((void*)obj, MMPMOONROCK_PARTFX, gMoonRockSpawnParams, 0x200001, -1, &particleHeight);
 }
