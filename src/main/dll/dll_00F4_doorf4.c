@@ -94,6 +94,12 @@ extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 sqrtf(f32 x);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern f32 lbl_803E3648;
+
+/* Env-fx ids (getEnvfxAct 3rd arg): A/B are the two door-open variants gated by
+ * gamebit 0x57; OFF is activated when the door deactivates (toggled 1 -> 0). */
+#define DOORF4_ENVFX_A 0x7f
+#define DOORF4_ENVFX_B 0x7c
+#define DOORF4_ENVFX_OFF 0xe
 extern f32 lbl_803E3658;
 extern f32 lbl_803E365C;
 extern f32 lbl_803E3660;
@@ -303,11 +309,11 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 if (mainGetBit(0x57) != 0)
                 {
-                    getEnvfxAct(0, 0, 0x7f, 0);
+                    getEnvfxAct(0, 0, DOORF4_ENVFX_A, 0);
                 }
                 else
                 {
-                    getEnvfxAct(0, 0, 0x7c, 0);
+                    getEnvfxAct(0, 0, DOORF4_ENVFX_B, 0);
                 }
             }
             sub->toggled = 1;
@@ -316,7 +322,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (((GameObject*)obj)->anim.seqId == 200 && sd <= lbl_803E3648)
             {
-                getEnvfxAct(0, 0, 0xe, 0);
+                getEnvfxAct(0, 0, DOORF4_ENVFX_OFF, 0);
             }
             sub->toggled = 0;
         }
