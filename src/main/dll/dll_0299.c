@@ -15,6 +15,11 @@
 
 #define DLL0299_RESOURCE_ID 0xa6
 
+/* main particle burst seeded 3x once at init */
+#define DLL0299_PARTFX_INIT 0x545
+/* ambient particle burst spawned 3x every update tick */
+#define DLL0299_PARTFX_AMBIENT 0x547
+
 typedef struct {
     void *pad;
     void (*slot1)(int, int, int, int, int, int);
@@ -50,9 +55,9 @@ void dll_299_update(int obj)
     {
         (*(Dll299Vtable**)lbl_803DDD80)->slot1(obj, 1, 0, 4, -1, 0);
     }
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x547, NULL, 4, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x547, NULL, 4, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x547, NULL, 4, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
 }
 
 void dll_299_init(int obj, int setup)
@@ -60,9 +65,9 @@ void dll_299_init(int obj, int setup)
     ((Dll299State*)((GameObject*)obj)->extra)->id = *(s16*)(setup + 0x1e);
     ((GameObject*)obj)->objectFlags |= DLL0299_OBJFLAG_HITDETECT_DISABLED;
     lbl_803DDD80 = Resource_Acquire(DLL0299_RESOURCE_ID, 1);
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x545, NULL, 0x802, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x545, NULL, 0x802, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x545, NULL, 0x802, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
     (*gPartfxInterface)->spawnObject((void*)obj, 0x546, NULL, 0x802, -1, NULL);
 }
 
