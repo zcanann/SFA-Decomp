@@ -74,6 +74,7 @@ enum
 
 /* state->fxFlags: spawn the spirit particle fx each SeqFn tick */
 #define WMSPIRITPLACE_FX_ACTIVE 0x1
+#define WMSPIRITPLACE_PARTFX 0x7d8
 
 #define WMSPIRITPLACE_OBJFLAG_HIDDEN 0x4000
 #define WMSPIRITPLACE_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -152,8 +153,8 @@ int WM_spiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
     state = ((GameObject*)obj)->extra;
     if ((state->fxFlags & WMSPIRITPLACE_FX_ACTIVE) != 0)
     {
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x7d8, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x7d8, fxPos, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, WMSPIRITPLACE_PARTFX, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, WMSPIRITPLACE_PARTFX, fxPos, 2, -1, NULL);
     }
 
     actor->sequenceEventActive = 0;
