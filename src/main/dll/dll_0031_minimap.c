@@ -46,6 +46,9 @@ extern void dll_3F_initialise(void);
 
 #define MINIMAP_OBJFLAG_PARENT_SLACK 0x1000
 
+/* compass texture asset (loaded into lbl_803DD940; see file header). */
+#define MINIMAP_TEXTURE_COMPASS 0xBE5
+
 /* gMinimapViewMode selector (see file header): the three HUD view modes. */
 #define MINIMAP_VIEW_MODE_MAP 0
 #define MINIMAP_VIEW_MODE_RADAR 1
@@ -797,7 +800,7 @@ void Minimap_release(void)
 
 void Minimap_initialise(void)
 {
-    lbl_803DD940 = textureLoadAsset(0xBE5);
+    lbl_803DD940 = textureLoadAsset(MINIMAP_TEXTURE_COMPASS);
     lbl_803DD938 = 340;
 }
 
