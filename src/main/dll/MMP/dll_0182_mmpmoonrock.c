@@ -24,6 +24,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define MMPMOONROCK_OBJGROUP 4
+#define MMPMOONROCK_HIT_VOLUME_SLOT 14
 #define CARRYABLE_OBJGROUP 0x10
 #define MMPMOONROCK_PARTFX 0x723
 
@@ -99,7 +100,7 @@ void fn_801A7B10(int obj)
     blockIdx = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                               ((GameObject*)obj)->anim.localPosZ);
     if (blockIdx == -1) return;
-    ObjHits_SetHitVolumeSlot(obj, 14, 1, 0);
+    ObjHits_SetHitVolumeSlot(obj, MMPMOONROCK_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject(obj);
     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - gMoonRockGravity * timeDelta;
     {
