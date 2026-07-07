@@ -156,7 +156,7 @@ typedef struct PlayerState {
     f32 moveStartPosX;  /* localPosX assigned at the vertical-move start */
     u8 pad530[0x534 - 0x530];
     f32 moveStartPosZ;  /* localPosZ assigned at the vertical-move start */
-    f32 unk538[3];
+    f32 blendAnchor[3]; /* planar anchor vector (X at +0, Z at +8) fed as the p6 arg to the fn_802A71E0 move-blend; dotted with the p7 direction to form the blend interpolation parameter t; written in another TU */
     s16 eventCountdown; /* move-blend/event countdown from fn_802A71E0; written each frame then pushed as the ObjAnim EVENT_COUNTDOWN state word (ObjAnim_WriteStateWord) */
     s8 footstepSurface; /* footstep surface/material selector; switched to pick the footstep sfx variant (case 4 -> foot_33a, default -> foot_var) on anim foot events */
     u8 unk547;
@@ -238,7 +238,7 @@ typedef struct PlayerState {
     u8 pad670[0x67C - 0x670];
     int contactObject; /* collision hit object the player is anchored to; local-space contact point stored at 0x664/0x668/0x66C, 0 when in free space */
     u8 pad680[0x681 - 0x680];
-    s8 unk681;
+    s8 stickEdgeLatch; /* 0x681: latched flag set to 1 when the stick/collision edge-probe vtable returns result 5 (the case with no latchedStickDir code), reset to 0 when a valid collision surface is captured (with hitObj) and on state resets; read to allow the stick-driven move to proceed even when the 0x100 button is not held */
     u8 surfaceDir; /* dominant surface-normal axis+sign (0=+X,1=-X,2=+Z,3=-Z); picks the wall slide/climb anim variant */
     u8 pad683[0x684 - 0x683];
     int interactObject; /* object the player is interacting with; ObjMsg_SendToObject recipient, cleared after */
@@ -291,7 +291,7 @@ typedef struct PlayerState {
     f32 teleportAnimProgress; /* teleport/warp draw-effect progress (0..lbl_803E80C4): accumulates teleportAnimRate*timeDelta while teleportAnimActive, drives the drawn column geometry (base - progress) and its alpha fade past a threshold in playerDrawTeleportAnim */
     f32 chargeLevel; /* charge/breath meter: builds (+= K*fv) while a charge move's button is held, drains (-= K*dt) and floors at 0 otherwise; at capacity (unk41C) fires the charged attack; (u8) value fed to fn_8011F34C */
     f32 boulderChargeLevel; /* second charge/hold meter (sibling of chargeLevel): reset to 0 on move start, builds (+= K*timeDelta) while inside the staff-boulder-drop hit window and first-cross-from-0 fires SFXTRIG_staff_boulder_drops, clamped to a max; decays (-= K*timeDelta, same rate as chargeLevel) and floors at 0 otherwise; exposed via fn_802961A4 when controlMode==0x26 */
-    f32 pathBearingEyeY; /* per-character vertical offset (set with unk874 by characterId) added to worldPosY before getAngle(dx,dz) computes the bearing toward a path point */
+    f32 pathBearingEyeY; /* per-character vertical offset (set with characterHeightOffset by characterId) added to worldPosY before getAngle(dx,dz) computes the bearing toward a path point */
     f32 curveSpeedScale; /* speed->curve-sample multiplier: u = speed*curveSpeedScale, the eval position into paramCurve0-4 */
     u8 pad7E4[0x7EC - 0x7E4];
     int unk7EC;
@@ -335,7 +335,7 @@ typedef struct PlayerState {
     u8 latchedStickDir; /* latched stick-direction code (0..4) from the prior frame's edge/collision probe; compared against the current stickDirection to detect a held/repeated direction (gates the press-vs-hold move + speed branch); reset to 0 when the direction changes */
     u8 stopMoveIndex; /* cycling index into gPlayerStopMoves[], advanced %3 */
     u8 pad870[0x874 - 0x870];
-    f32 unk874;
+    f32 characterHeightOffset; /* 0x874: per-character vertical height offset (set with pathBearingEyeY by characterId at spawn); subtracted from leapTargetY to convert the leap/ledge world-Y anchor into anim.worldPosY (worldPosY = leapTargetY - characterHeightOffset) */
     f32 particleBurstCooldown; /* f32 countdown decremented by frame-time each tick, floored to 0; while moving fast, on expiry (<=0) spawns a burst of particle FX (spawnObject 0x804) then resets to the burst interval */
     f32 targetSuppressTimer; /* f32 countdown decremented by frame-time each tick, floored to 0; set on a state transition (flag 0x3f2:b40); while active (>0, queried via fn_80295C24) suppresses A-button-hint camera targeting */
     f32 idleDelayTimer; /* idle-eligibility countdown (f32); set positive at state init (lbl_803E7FA4), decremented by frame-time in fn_802B18BC and floored at 0; the default-idle "stay" path requires it == 0 */

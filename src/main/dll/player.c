@@ -800,7 +800,7 @@ int playerState09(int obj, int state)
         ((GameObject*)obj)->anim.worldPosX =
             k * ((PlayerState*)inner)->launchDirX + *(f32*)((int)inner + 0x5d4);
         ((GameObject*)obj)->anim.worldPosY =
-            ((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->unk874;
+            ((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->characterHeightOffset;
         ((GameObject*)obj)->anim.worldPosZ =
             k * ((PlayerState*)inner)->launchDirZ + *(f32*)((int)inner + 0x5dc);
         Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
@@ -1028,7 +1028,7 @@ int playerStateGrabLedge(int obj, int state)
             ((PlayerState*)inner)->moveStartY -
             ((GameObject*)obj)->anim.currentMoveProgress *
             (((PlayerState*)inner)->moveStartY -
-                (((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->unk874));
+                (((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->characterHeightOffset));
         ((GameObject*)obj)->anim.localPosZ =
             c * (((PlayerState*)inner)->moveEnd2Z - ((PlayerState*)inner)->moveStartZ) +
             ((PlayerState*)inner)->moveStartZ;
@@ -4488,7 +4488,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
                 ((PlayerState*)state)->surfaceNormalY = buf.ny;
                 ((PlayerState*)state)->surfaceNormalZ = buf.nz;
                 ((PlayerState*)state)->surfaceNormalW = buf.g38;
-                *(u8*)&((PlayerState*)state)->unk681 = 0;
+                *(u8*)&((PlayerState*)state)->stickEdgeLatch = 0;
                 if ((u32)buf.hitObj != 0)
                 {
                     Obj_TransformWorldPointToLocal(end[0], end[1], end[2], (f32*)(state + 0x664), (f32*)(state + 0x668),
@@ -4517,7 +4517,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             ((PlayerState*)state)->surfaceNormalY = buf.ny;
             ((PlayerState*)state)->surfaceNormalZ = buf.nz;
             ((PlayerState*)state)->surfaceNormalW = buf.g38;
-            *(u8*)&((PlayerState*)state)->unk681 = 0;
+            *(u8*)&((PlayerState*)state)->stickEdgeLatch = 0;
             if ((u32)buf.hitObj != 0)
             {
                 Obj_TransformWorldPointToLocal(end[0], end[1], end[2], (f32*)(state + 0x664), (f32*)(state + 0x668),
@@ -6470,7 +6470,7 @@ int playerState1D(int obj, int state, f32 fv)
         }
     }
     if (((ByteFlags*)((char*)inner + 0x3f3))->b80 == 0 &&
-        ((*(int*)&((PlayerState*)state)->baddie.unk318 & 0x100) == 0 || inner->unk681 != 0 ||
+        ((*(int*)&((PlayerState*)state)->baddie.unk318 & 0x100) == 0 || inner->stickEdgeLatch != 0 ||
             (((ByteFlags*)((char*)inner + 0x3f1))->b01 == 0 &&
                 *(f32*)((char*)state + 0x1b0) >= lbl_803E7F58)))
     {
@@ -6572,7 +6572,7 @@ int playerState1D(int obj, int state, f32 fv)
             }
             else if (res == 5)
             {
-                *(u8*)&((PlayerState*)inner)->unk681 = 1;
+                *(u8*)&((PlayerState*)inner)->stickEdgeLatch = 1;
             }
             else
             {
@@ -6615,7 +6615,7 @@ extern f32 lbl_803E803C;
 int playerStateClimbLedge(int obj, int state, f32 fv)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
-    f32 diff = ((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->unk874;
+    f32 diff = ((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->characterHeightOffset;
     f32 blend;
     f32 z;
     f32 t;
@@ -12769,12 +12769,12 @@ void objLoadPlayerFromSave(int obj)
     if (((PlayerState*)inner)->characterId == 0)
     {
         ((PlayerState*)inner)->pathBearingEyeY = lbl_803E8168;
-        ((PlayerState*)inner)->unk874 = lbl_803E816C;
+        ((PlayerState*)inner)->characterHeightOffset = lbl_803E816C;
     }
     else
     {
         ((PlayerState*)inner)->pathBearingEyeY = lbl_803E8170;
-        ((PlayerState*)inner)->unk874 = lbl_803E8174;
+        ((PlayerState*)inner)->characterHeightOffset = lbl_803E8174;
     }
     gPlayerModelChain = (int)ObjModelChain_Alloc(&gPlayerModelChainConfig, 1);
     *(int*)((char*)obj + 0x108) = (int)playerDoTailAnims;
@@ -15353,7 +15353,7 @@ int playerStateClimbOntoLadder(int obj, int state, f32 fv)
             tbl = lbl_80332F78;
         }
         inner->eventCountdown =
-            fn_802A71E0(obj, tbl[sel], tbl[sel + 2], (int*)inner->unk538, (int*)&vb.vx,
+            fn_802A71E0(obj, tbl[sel], tbl[sel + 2], (int*)inner->blendAnchor, (int*)&vb.vx,
                         lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
         {
             int f9 = 0x34;
@@ -15361,11 +15361,11 @@ int playerStateClimbOntoLadder(int obj, int state, f32 fv)
             {
                 f9 |= 0x40;
             }
-            fn_802A71E0(obj, tbl[sel], tbl[sel + 1], (int*)inner->unk538,
+            fn_802A71E0(obj, tbl[sel], tbl[sel + 1], (int*)inner->blendAnchor,
                         (int*)inner->pad51C, lbl_803E7EA4,
                         ((PlayerState*)state)->baddie.moveSpeed, 0, (u8)f9);
         }
-        fn_802A71E0(obj, tbl[sel + 2], tbl[sel + 3], (int*)inner->unk538,
+        fn_802A71E0(obj, tbl[sel + 2], tbl[sel + 3], (int*)inner->blendAnchor,
                     (int*)inner->pad51C, lbl_803E7EA4,
                     ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
         inner->climbTargetY =
