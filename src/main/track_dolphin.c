@@ -264,7 +264,7 @@ void setupToRenderMapBlock(int* block, void* posMtx)
     tmp[3] = fc;
     tmp[7] = fc;
     tmp[11] = fc;
-    GXLoadNrmMtxImm(tmp, 0);
+    GXLoadNrmMtxImm(tmp, GX_PNMTX0);
     PSMTXConcat(lbl_803967F0, posMtx, out);
     GXLoadTexMtxImm(out, GX_TEXMTX2, GX_MTX3x4);
     GXSetArray(GX_VA_POS, *(void**)((char*)block + 0x58), 6);
