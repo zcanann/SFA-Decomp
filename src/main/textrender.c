@@ -16,6 +16,9 @@ extern int saveFileStruct_isCheatActive(u8 idx);
  * per-window horizontal alignment they select (win[0x12]). The align codes
  * set the mode; the realign switch reads it back to place the line.
  */
+#define TEXT_CTRL_SEQ_ID 0xe000
+#define TEXT_CTRL_SEQ_TIME 0xe018
+#define TEXT_CTRL_HINT_ID 0xe020
 #define TEXT_CTRL_SCALE 0xf8f4
 #define TEXT_CTRL_LANGUAGE 0xf8f7
 #define TEXT_CTRL_ALIGN_LEFT 0xf8f8
@@ -3461,7 +3464,7 @@ void subtitleBuildLineTable(void)
     for (i = 0; i < t->count; i++)
     {
         str = t->strs[i];
-        n = GameText_FindControlCodeArgs((u8*)str, 0xE018, args);
+        n = GameText_FindControlCodeArgs((u8*)str, TEXT_CTRL_SEQ_TIME, args);
         if (n != 0)
         {
             q = args[2] / 60;
