@@ -19,6 +19,10 @@ produce a particular asm shape, find code that already emits it and read the C b
   `.o` that has the shape you want (objdump command below) and open its source.
 - **The MP4 reference decomp** (`reference_projects/marioparty4`, fully matched, same MWCC family) —
   a large known-good C↔asm corpus; read its source for how a given shape was written.
+- **The GC/2.0 reference-asm corpus** (`tools/refcorpus/`, see `docs/refcorpus.md`) — ~42k funcs of
+  SFA-adjacent C (MP4 + Diddy Kong Racing + Jet Force Gemini) recompiled with *our* compiler across
+  the peephole×scheduling profiles. Search asm↔C both ways:
+  `python3 tools/refcorpus/search_corpus.py --asm '<regex>' --show-c` or `--csrc '<c regex>'`.
 A fix derived from a real matched example beats any written recipe, and the corpus only grows as the
 project matches more.
 
