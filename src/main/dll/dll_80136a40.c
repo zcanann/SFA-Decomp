@@ -981,7 +981,7 @@ int debugPrintDrawRecord(int p1, u8* p)
                 colb1[2] = c2;
                 colb1[3] = c3;
                 colw1 = *(u32*)colb1;
-                GXSetTevColor(1, (int*)&colw1);
+                GXSetTevColor(GX_TEVREG0, (int*)&colw1);
             }
             break;
         case 0x87:
