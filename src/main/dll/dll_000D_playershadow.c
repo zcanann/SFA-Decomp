@@ -15,18 +15,6 @@
 #include "main/camera.h"
 #include "main/dll/DR/dr_shared.h"
 
-void playerShadow_func03_nop(void)
-{
-}
-
-void playerShadow_release(void)
-{
-}
-
-void playerShadow_initialise(void)
-{
-}
-
 extern u8 gPlayerShadowMode;
 extern u32 gPlayerShadowDefaultParams[];
 extern const f32 lbl_803DF46C; /* 0.0f */
@@ -64,122 +52,6 @@ STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertY) == 0x16);
 STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertZ) == 0x1c);
 STATIC_ASSERT(offsetof(PlayerShadowTriHit, surfaceType) == 0x48);
 
-void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj);
-
-#pragma peephole off
-void playerShadow_setMode(u8 v)
-{
-    if (v == 0 || v >= 0xa)
-    {
-        gPlayerShadowMode = v;
-    }
-}
-
-struct PlayerShadowParamsBlob
-{
-    u32 a;
-    u32 b;
-    u32 c;
-    u32 d;
-};
-
-#pragma scheduling off
-void playerShadow_renderObject(void* obj)
-{
-    u32* defaults;
-    u32 params[4];
-    int* tileInfo;
-    int hitTable;
-    int hitCount;
-    int hitTableValue;
-    u32 mode;
-    f32 hitData[6];
-    f32 verts[8][3];
-    f32 height;
-    f32 radius;
-
-    defaults = gPlayerShadowDefaultParams;
-    *(struct PlayerShadowParamsBlob*)params = *(struct PlayerShadowParamsBlob*)defaults;
-    hitTable = 0;
-
-    if (gPlayerShadowMode == 0)
-    {
-        return;
-    }
-
-    mode = gPlayerShadowMode - 0xb;
-    switch (mode)
-    {
-    case 0:
-        radius = lbl_803DF488;
-        height = radius;
-        break;
-    case 1:
-        radius = lbl_803DF48C;
-        height = lbl_803DF490;
-        break;
-    case 2:
-        radius = lbl_803DF494;
-        height = lbl_803DF488;
-        break;
-    case 3:
-        radius = lbl_803DF494;
-        height = lbl_803DF488;
-        break;
-    case 4:
-        radius = lbl_803DF498;
-        height = lbl_803DF490;
-        break;
-    case 5:
-        radius = lbl_803DF49C;
-        height = lbl_803DF4A0;
-        break;
-    case 6:
-        radius = lbl_803DF4A4;
-        height = radius;
-        break;
-    default:
-        radius = lbl_803DF46C;
-        height = radius;
-        break;
-    }
-
-    verts[0][0] = ((GameObject*)obj)->anim.localPosX - radius;
-    verts[0][1] = ((GameObject*)obj)->anim.localPosY + height;
-    verts[0][2] = ((GameObject*)obj)->anim.localPosZ - radius;
-    verts[1][0] = ((GameObject*)obj)->anim.localPosX - radius;
-    verts[1][1] = ((GameObject*)obj)->anim.localPosY + height;
-    verts[1][2] = ((GameObject*)obj)->anim.localPosZ + radius;
-    verts[2][0] = ((GameObject*)obj)->anim.localPosX + radius;
-    verts[2][1] = ((GameObject*)obj)->anim.localPosY + height;
-    verts[2][2] = ((GameObject*)obj)->anim.localPosZ + radius;
-    verts[3][0] = ((GameObject*)obj)->anim.localPosX + radius;
-    verts[3][1] = ((GameObject*)obj)->anim.localPosY + height;
-    verts[3][2] = ((GameObject*)obj)->anim.localPosZ - radius;
-    verts[4][0] = ((GameObject*)obj)->anim.localPosX - radius;
-    verts[4][1] = ((GameObject*)obj)->anim.localPosY - height;
-    verts[4][2] = ((GameObject*)obj)->anim.localPosZ - radius;
-    verts[5][0] = ((GameObject*)obj)->anim.localPosX - radius;
-    verts[5][1] = ((GameObject*)obj)->anim.localPosY - height;
-    verts[5][2] = ((GameObject*)obj)->anim.localPosZ + radius;
-    verts[6][0] = ((GameObject*)obj)->anim.localPosX + radius;
-    verts[6][1] = ((GameObject*)obj)->anim.localPosY - height;
-    verts[6][2] = ((GameObject*)obj)->anim.localPosZ + radius;
-    verts[7][0] = ((GameObject*)obj)->anim.localPosX + radius;
-    verts[7][1] = ((GameObject*)obj)->anim.localPosY - height;
-    verts[7][2] = ((GameObject*)obj)->anim.localPosZ - radius;
-
-    hitDetect_calcSweptSphereBounds(hitData, &verts[0], &verts[4], params, 4);
-    hitDetectFn_800691c0(obj, hitData, 0x84, 0);
-    fn_80069968(&hitCount, &hitTable);
-    hitTableValue = hitTable;
-    fn_80069958(&tileInfo);
-    fn_800A3AF0((PlayerShadowTriHit*)hitTableValue, hitCount,
-                ((GameObject*)obj)->anim.localPosX - tileInfo[0],
-                ((GameObject*)obj)->anim.localPosZ - tileInfo[2], obj);
-}
-
-
 f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
 extern s16 lbl_803DD29A;
 extern s16 gPlayerShadowCamRotY;
@@ -188,6 +60,8 @@ extern const f32 lbl_803DF470;
 extern const f32 lbl_803DF474;
 extern const f32 lbl_803DF478;
 
+#pragma peephole off
+#pragma scheduling off
 /* Walks the tri-hit table under the player and, for ground surface types
  * 0x10-0x17, spawns footfall particle effects at a random barycentric point
  * on each struck triangle. offsX/offsZ = obj position minus the tile origin,
@@ -334,4 +208,129 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
             }
         }
     }
+}
+
+#pragma scheduling reset
+void playerShadow_setMode(u8 v)
+{
+    if (v == 0 || v >= 0xa)
+    {
+        gPlayerShadowMode = v;
+    }
+}
+struct PlayerShadowParamsBlob
+{
+    u32 a;
+    u32 b;
+    u32 c;
+    u32 d;
+};
+#pragma scheduling off
+void playerShadow_renderObject(void* obj)
+{
+    u32* defaults;
+    u32 params[4];
+    int* tileInfo;
+    int hitTable;
+    int hitCount;
+    int hitTableValue;
+    u32 mode;
+    f32 hitData[6];
+    f32 verts[8][3];
+    f32 height;
+    f32 radius;
+
+    defaults = gPlayerShadowDefaultParams;
+    *(struct PlayerShadowParamsBlob*)params = *(struct PlayerShadowParamsBlob*)defaults;
+    hitTable = 0;
+
+    if (gPlayerShadowMode == 0)
+    {
+        return;
+    }
+
+    mode = gPlayerShadowMode - 0xb;
+    switch (mode)
+    {
+    case 0:
+        radius = lbl_803DF488;
+        height = radius;
+        break;
+    case 1:
+        radius = lbl_803DF48C;
+        height = lbl_803DF490;
+        break;
+    case 2:
+        radius = lbl_803DF494;
+        height = lbl_803DF488;
+        break;
+    case 3:
+        radius = lbl_803DF494;
+        height = lbl_803DF488;
+        break;
+    case 4:
+        radius = lbl_803DF498;
+        height = lbl_803DF490;
+        break;
+    case 5:
+        radius = lbl_803DF49C;
+        height = lbl_803DF4A0;
+        break;
+    case 6:
+        radius = lbl_803DF4A4;
+        height = radius;
+        break;
+    default:
+        radius = lbl_803DF46C;
+        height = radius;
+        break;
+    }
+
+    verts[0][0] = ((GameObject*)obj)->anim.localPosX - radius;
+    verts[0][1] = ((GameObject*)obj)->anim.localPosY + height;
+    verts[0][2] = ((GameObject*)obj)->anim.localPosZ - radius;
+    verts[1][0] = ((GameObject*)obj)->anim.localPosX - radius;
+    verts[1][1] = ((GameObject*)obj)->anim.localPosY + height;
+    verts[1][2] = ((GameObject*)obj)->anim.localPosZ + radius;
+    verts[2][0] = ((GameObject*)obj)->anim.localPosX + radius;
+    verts[2][1] = ((GameObject*)obj)->anim.localPosY + height;
+    verts[2][2] = ((GameObject*)obj)->anim.localPosZ + radius;
+    verts[3][0] = ((GameObject*)obj)->anim.localPosX + radius;
+    verts[3][1] = ((GameObject*)obj)->anim.localPosY + height;
+    verts[3][2] = ((GameObject*)obj)->anim.localPosZ - radius;
+    verts[4][0] = ((GameObject*)obj)->anim.localPosX - radius;
+    verts[4][1] = ((GameObject*)obj)->anim.localPosY - height;
+    verts[4][2] = ((GameObject*)obj)->anim.localPosZ - radius;
+    verts[5][0] = ((GameObject*)obj)->anim.localPosX - radius;
+    verts[5][1] = ((GameObject*)obj)->anim.localPosY - height;
+    verts[5][2] = ((GameObject*)obj)->anim.localPosZ + radius;
+    verts[6][0] = ((GameObject*)obj)->anim.localPosX + radius;
+    verts[6][1] = ((GameObject*)obj)->anim.localPosY - height;
+    verts[6][2] = ((GameObject*)obj)->anim.localPosZ + radius;
+    verts[7][0] = ((GameObject*)obj)->anim.localPosX + radius;
+    verts[7][1] = ((GameObject*)obj)->anim.localPosY - height;
+    verts[7][2] = ((GameObject*)obj)->anim.localPosZ - radius;
+
+    hitDetect_calcSweptSphereBounds(hitData, &verts[0], &verts[4], params, 4);
+    hitDetectFn_800691c0(obj, hitData, 0x84, 0);
+    fn_80069968(&hitCount, &hitTable);
+    hitTableValue = hitTable;
+    fn_80069958(&tileInfo);
+    fn_800A3AF0((PlayerShadowTriHit*)hitTableValue, hitCount,
+                ((GameObject*)obj)->anim.localPosX - tileInfo[0],
+                ((GameObject*)obj)->anim.localPosZ - tileInfo[2], obj);
+}
+
+#pragma peephole reset
+#pragma scheduling reset
+void playerShadow_func03_nop(void)
+{
+}
+
+void playerShadow_release(void)
+{
+}
+
+void playerShadow_initialise(void)
+{
 }
