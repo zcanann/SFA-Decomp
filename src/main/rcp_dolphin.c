@@ -233,8 +233,8 @@ typedef struct WarpDestination {
     f32 x;
     f32 y;
     f32 z;
-    s16 angle0;
-    s16 angle1;
+    s16 layer;
+    s16 angle;
 } WarpDestination;
 
 extern u8 gRcpPendingWarpDest[];
@@ -251,8 +251,8 @@ void warpToMap(int idx, s8 transType)
     ((WarpDestination*)gRcpPendingWarpDest)->x = *(f32*)(p + 0);
     ((WarpDestination*)gRcpPendingWarpDest)->y = *(f32*)(p + 4);
     ((WarpDestination*)gRcpPendingWarpDest)->z = *(f32*)(p + 8);
-    ((WarpDestination*)gRcpPendingWarpDest)->angle0 = *(s16*)(p + 12);
-    ((WarpDestination*)gRcpPendingWarpDest)->angle1 = *(s16*)(p + 14);
+    ((WarpDestination*)gRcpPendingWarpDest)->layer = *(s16*)(p + 12);
+    ((WarpDestination*)gRcpPendingWarpDest)->angle = *(s16*)(p + 14);
     lbl_803DCEBA = (s16)idx;
     lbl_803DCEBD = 1;
     *(s8*)&gRcpWarpTransitionType = transType;
@@ -1845,8 +1845,8 @@ void loadNextMap(void)
             *(f32*)(pos + 0) = ((WarpDestination*)gRcpPendingWarpDest)->x;
             *(f32*)(pos + 4) = ((WarpDestination*)gRcpPendingWarpDest)->y;
             *(f32*)(pos + 8) = ((WarpDestination*)gRcpPendingWarpDest)->z;
-            *(s8*)(pos + 0xd) = (s8)((WarpDestination*)gRcpPendingWarpDest)->angle0;
-            *(s8*)(pos + 0xc) = (s8)((WarpDestination*)gRcpPendingWarpDest)->angle1;
+            *(s8*)(pos + 0xd) = (s8)((WarpDestination*)gRcpPendingWarpDest)->layer;
+            *(s8*)(pos + 0xc) = (s8)((WarpDestination*)gRcpPendingWarpDest)->angle;
             mapReload();
             lbl_803DCEB8 = lbl_803DCEBA;
             lbl_803DCEBA = -1;
