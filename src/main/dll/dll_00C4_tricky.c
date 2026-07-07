@@ -1361,9 +1361,9 @@ void Tricky_update(int obj)
     if (*(void**)&((TrickyState*)state)->followObj != NULL)
     {
         ((TrickyState*)state)->followPosValid = 1;
-        ((TrickyState*)state)->unk37C = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
-        ((TrickyState*)state)->unk380 = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosY;
-        ((TrickyState*)state)->unk384 = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosZ;
+        ((TrickyState*)state)->followPosX = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
+        ((TrickyState*)state)->followPosY = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosY;
+        ((TrickyState*)state)->followPosZ = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosZ;
     }
     else
     {

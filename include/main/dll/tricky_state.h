@@ -134,11 +134,11 @@ typedef struct TrickyState {
     f32 hitCooldown;
     u8 groundSnapCounter; /* frame countdown that forces the ground-snap path: != 0 -> decrement and do the height snap; primed to 2 on state entry (tricky/skeetla) */
     u8 pad375[0x378 - 0x375];
-    u8 followPosValid; /* 1 when followObj is non-NULL and unk37C/380/384 hold its captured world pos, else 0; the 0x378 record (flag + xyz) is passed to fn_8003A168 (tricky) */
+    u8 followPosValid; /* 1 when followObj is non-NULL and followPosX/Y/Z hold its captured world pos, else 0; the 0x378 record (flag + xyz) is passed to the eye-look / head-aim helpers fn_8003A168 / characterDoEyeAnims (tricky) */
     u8 pad379[0x37C - 0x379];
-    f32 unk37C;
-    f32 unk380;
-    f32 unk384;
+    f32 followPosX; /* captured world position of followObj (copied from followObj->anim.worldPos when followPosValid is set); read as the look/eye-aim target through the 0x378 record pointer (tricky) */
+    f32 followPosY;
+    f32 followPosZ;
     u8 pad388[0x3D8 - 0x388];
     f32 sparkPos0X; /* spark particle emit point 0 (skeetla_spawnLinkedSparks args.xyz) */
     f32 sparkPos0Y;
@@ -155,7 +155,7 @@ typedef struct TrickyState {
     u8 routeSeedDir;
     u8 pad41D[0x420 - 0x41D];
     RomCurveWalker route;
-    u8 cachedRouteDef; /* low byte of the cached routeDef pointer (accessed as *(u8**)&): route-select memo key, compared == routeDef then re-stored; when it + the cached walkGroup (unk530) + cachedRouteFlags all match, validatedRouteEntry is reused (skeetla) */
+    u8 cachedRouteDef; /* low byte of the cached routeDef pointer (accessed as *(u8**)&): route-select memo key, compared == routeDef then re-stored; when it + cachedWalkGroup + cachedRouteFlags all match, validatedRouteEntry is reused (skeetla) */
     u8 pad529[3];
     void *validatedRouteEntry; /* route entry pointer validated via skeetla_validateRouteEntry (skeetla) */
     u16 cachedWalkGroup; /* route-select memo key: the walkGroup value that validatedRouteEntry was resolved for; compared == walkGroup (alongside cachedRouteDef/cachedRouteFlags) to reuse the cached entry, re-stored = walkGroup on a memo miss (skeetla); also gates the follow-slot walk-group update (trickyfollow) */
