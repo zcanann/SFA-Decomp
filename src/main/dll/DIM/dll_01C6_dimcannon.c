@@ -23,6 +23,7 @@
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
 #define DIMCANNON_OBJGROUP 3
+#define DIMCANNON_AIRMETER_BGTEXTURE 0x5d5 /* HUD air-meter background texture id */
 #define DIMCANNON_OBJFLAG_HIDDEN 0x4000
 #define DIMCANNON_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -424,7 +425,7 @@ int DIMCannon_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             ((DimCannonState*)state)->chargeTimer = (s8)(timer - framesThisStep);
             if (((DimCannonState*)state)->chargeTimer <= 0)
             {
-                (*gGameUIInterface)->initAirMeter(gDimCannonMaxCharge, 0x5d5);
+                (*gGameUIInterface)->initAirMeter(gDimCannonMaxCharge, DIMCANNON_AIRMETER_BGTEXTURE);
             }
         }
         else
