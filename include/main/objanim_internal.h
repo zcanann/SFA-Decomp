@@ -516,6 +516,23 @@ STATIC_ASSERT(offsetof(ObjDef, renderFlags) == 0x5F);
  *    with the named renderFlags 0x10 bit to the same behavior.
  */
 #define OBJDEF_FLAG_DEFERRED_RENDER 0x800
+/*
+ * Remaining ObjDef.flags (ObjFileStructFlags44) bits transcribed from the Rena
+ * SFA wiki. 0x400000 and 0x800000 are confirmed live in this repo
+ * (objGetTotalDataSize gates extra alloc on 0x400000; loadCharacter runtime-sets
+ * 0x800000 after model loading); the rest are wiki-only guesses, unused so far.
+ */
+#define OBJDEF_FLAG_HAS_MODELS            0x00000001
+#define OBJDEF_FLAG_DIFFERENT_LIGHT_COLOR 0x00000010
+#define OBJDEF_FLAG_RELATED_TO_MODELS     0x00000020
+#define OBJDEF_FLAG_HAS_CHILDREN          0x00000040
+#define OBJDEF_FLAG_ENABLE_CULLING        0x00000400
+#define OBJDEF_FLAG_CAN_HOLD_PLAYER       0x00008000
+#define OBJDEF_FLAG_DIFFERENT_CULLING     0x00080000
+#define OBJDEF_FLAG_KEEP_HITBOX_INVISIBLE 0x00200000
+#define OBJDEF_FLAG_HAS_EVENT             0x00400000
+#define OBJDEF_FLAG_LOADED_MODELS         0x00800000
+#define OBJDEF_FLAG_RELATED_TO_HIT_DETECT 0x01000000
 STATIC_ASSERT(offsetof(ObjDef, hitboxStateIndex) == 0x60);
 STATIC_ASSERT(offsetof(ObjDef, primaryHitboxRadius) == 0x62);
 STATIC_ASSERT(offsetof(ObjDef, lateralResponseWeight) == 0x63);
