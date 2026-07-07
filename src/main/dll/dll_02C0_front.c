@@ -32,6 +32,9 @@
 
 #define TITLE_SCREEN_TEXTURE_COUNT 19
 
+/* Env-fx id activated on title-screen setup (getEnvfxAct 3rd arg) */
+#define FRONT_ENVFX_TITLE 0x21f
+
 typedef struct TitlescreenState
 {
     s16 unk0;
@@ -799,7 +802,7 @@ void TitleScreen_update(u8* obj)
         }
         if (gTitleScreenSetupDone == 0)
         {
-            getEnvfxAct(0, 0, 0x21f, 0);
+            getEnvfxAct(0, 0, FRONT_ENVFX_TITLE, 0);
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x4b, 0x64, 0x78, 0, 0);
             skyFn_800894a8(7, lbl_803E2318, lbl_803E2388, *(f32*)&lbl_803E2388);
