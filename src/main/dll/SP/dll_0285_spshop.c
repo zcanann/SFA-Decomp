@@ -85,6 +85,44 @@ typedef struct ShopItemRow
 /* number of ShopItemRow entries in lbl_80327FD0
    (data symbol size 0x2D0 / sizeof(ShopItemRow)(0xc) == 0x3c). */
 #define SHOP_ITEM_ROW_COUNT 0x3c
+
+/* Row indices ("No" column) into lbl_80327FD0 / ShopItemRow. Only the
+   non-omitted rows are named; unlisted indices in [0, SHOP_ITEM_ROW_COUNT)
+   are all-zero/unused rows. */
+enum ShopItemIndex
+{
+    SHOP_ITEM_DUMBLEDANG_POD        = 0x00, /* 1/2 heart */
+    SHOP_ITEM_DUMBLEDANG_POD_4X     = 0x01, /* 2 hearts */
+    SHOP_ITEM_PUKPUK_EGG            = 0x02, /* 1 heart */
+    SHOP_ITEM_PUKPUK_EGGS_7X        = 0x03, /* 7 hearts */
+    SHOP_ITEM_BOMB_SPORE            = 0x04,
+    SHOP_ITEM_MOON_SEED             = 0x05,
+    SHOP_ITEM_GRUBTUB_FUNGUS        = 0x06,
+    SHOP_ITEM_FIREFLY               = 0x07,
+    SHOP_ITEM_FUEL_CELL             = 0x08,
+    SHOP_ITEM_TRICKYS_BALL          = 0x14,
+    SHOP_ITEM_FIREFLY_LANTERN       = 0x15,
+    SHOP_ITEM_SNOWHORN_ARTIFACT     = 0x16,
+    SHOP_ITEM_BAFOMDAD_HOLDER       = 0x17,
+    SHOP_ITEM_BAD_GUY_ALERT_UNUSED  = 0x18, /* never available (GAMEBIT_Always0) */
+    SHOP_ITEM_ROCK_CANDY            = 0x19,
+    SHOP_ITEM_PDA_UNUSED            = 0x1A,
+    SHOP_ITEM_VIEWFINDER            = 0x1B,
+    SHOP_ITEM_MAP_DARKICE_MINES     = 0x28,
+    SHOP_ITEM_MAP_CAPE_CLAW         = 0x29,
+    SHOP_ITEM_MAP_THORNTAIL_HOLLOW  = 0x2A,
+    SHOP_ITEM_MAP_MOON_PASS         = 0x2B,
+    SHOP_ITEM_MAP_WALLED_CITY       = 0x2C,
+    SHOP_ITEM_MAP_CLOUDRUNNER_FORT  = 0x2D,
+    SHOP_ITEM_MAP_LIGHTFOOT_VILLAGE = 0x2E,
+    SHOP_ITEM_MAP_DRAGON_ROCK       = 0x2F,
+    SHOP_ITEM_MAP_KRAZOA_PALACE     = 0x30,
+    SHOP_ITEM_MAP_OCEAN_FORCE_POINT = 0x31,
+    SHOP_ITEM_MAP_SNOWHORN_WASTES   = 0x32,
+    SHOP_ITEM_MAP_VOLCANO_FORCE_PT  = 0x33,
+
+    SHOP_ITEM_LAST                  = 0x3B
+};
 extern void staffToggle(int obj, int a);
 extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
@@ -145,35 +183,35 @@ void shop_buyItem(int obj, int price)
 
     switch (((ShopBuyItemState*)state)->itemIndex)
     {
-    case 0:
+    case SHOP_ITEM_DUMBLEDANG_POD:
         playerAddHealth(player, 2);
         break;
-    case 0x17:
+    case SHOP_ITEM_BAFOMDAD_HOLDER:
         *(u8*)(mapEventState + 0xa) = 10;
         break;
-    case 1:
+    case SHOP_ITEM_DUMBLEDANG_POD_4X:
         playerAddHealth(player, 8);
         break;
-    case 2:
+    case SHOP_ITEM_PUKPUK_EGG:
         playerAddHealth(player, 4);
         break;
-    case 3:
+    case SHOP_ITEM_PUKPUK_EGGS_7X:
         playerAddHealth(player, 0x1c);
         break;
-    case 4:
+    case SHOP_ITEM_BOMB_SPORE:
         gameBitIncrement(0x66c);
         break;
-    case 5:
+    case SHOP_ITEM_MOON_SEED:
         gameBitIncrement(0x86a);
         break;
-    case 6:
+    case SHOP_ITEM_GRUBTUB_FUNGUS:
         gameBitIncrement(0xc1);
         break;
-    case 7:
+    case SHOP_ITEM_FIREFLY:
         gameBitIncrement(0x13d);
         gameBitIncrement(0x5d6);
         break;
-    case 8:
+    case SHOP_ITEM_FUEL_CELL:
         gameBitIncrement(0x3f5);
         break;
     }
