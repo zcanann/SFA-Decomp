@@ -224,7 +224,6 @@ extern void* fileLoad(int id, int heap);
 extern void fileLoadToBuffer(int id, void* buf);
 extern void* textureLoad(int texId, u8 flag);
 
-#pragma scheduling on
 #pragma scheduling off
 #pragma peephole off
 void loadAsset(void* reqVoid)
