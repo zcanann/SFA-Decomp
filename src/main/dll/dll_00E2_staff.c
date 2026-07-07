@@ -1103,7 +1103,7 @@ void quakeSpellTextureFn_8016dbf4(void)
         mResult[3] = z;
         mResult[7] = z;
         mResult[11] = z;
-        GXLoadTexMtxImm(mResult, 30, 0);
+        GXLoadTexMtxImm(mResult, GX_TEXMTX0, GX_MTX3x4);
         GXDrawTorus(((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius, 10, 20);
     }
 }
