@@ -25,6 +25,7 @@
 #include "main/audio/sfx_ids.h"
 
 #define PAD_BUTTON_A 0x100
+#define CARRYABLE_MSG_PLAYER_GRAB 0x100008 /* tells player to grab/hold the prop */
 
 /* object group this prop joins at init / leaves on free */
 #define CARRYABLE_OBJGROUP 0x10
@@ -280,7 +281,7 @@ int Carryable_updateHeld(u8* obj)
         }
         if (*(s8*)&((CarryableUpdateHeldState*)held)->isHeld != 0)
         {
-            ObjMsg_SendToObject(player, 0x100008, obj,
+            ObjMsg_SendToObject(player, CARRYABLE_MSG_PLAYER_GRAB, obj,
                                 (((CarryableUpdateHeldState*)held)->unk2 << 16) | (u16) * (s16*)held);
         }
     }
