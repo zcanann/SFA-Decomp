@@ -64,6 +64,9 @@
 #define GX_CA_RASA 5
 #define GX_CA_KONST 6
 #define GX_CA_ZERO 7
+
+#define RCP_DISTORT_TEXTURE_ID 0x5dc
+
 extern u32 FUN_800033a8();
 extern int randomGetRange(int lo, int hi);
 extern u32 FUN_80017830();
@@ -1726,7 +1729,7 @@ void initFn_800534f8(void)
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
-    gRcpDistortTexture = textureLoadAsset(0x5dc);
+    gRcpDistortTexture = textureLoadAsset(RCP_DISTORT_TEXTURE_ID);
 }
 
 extern void* getCurrentDataFile(int id);
