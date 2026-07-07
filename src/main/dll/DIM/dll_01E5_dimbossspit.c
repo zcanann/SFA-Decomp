@@ -15,6 +15,13 @@
 
 #define MODEL_LIGHT_KIND_POINT 2
 
+/* Partfx by phase (state unk0): FLIGHT_TRAIL streams while the spit ball flies
+ * (state 0); BURST is the continuous expanding fx during the burst (takes the
+ * &radius param). The ignition ids 0x340/0x4bb are left raw - interchangeable
+ * one-shot pair on the burst-start tick (state==1). */
+#define DIMBOSSSPIT_PARTFX_FLIGHT_TRAIL 0x4ba
+#define DIMBOSSSPIT_PARTFX_BURST 0x4bc
+
 typedef struct DIMbossspitUpdateBurstState
 {
     u8 pad0[0x4 - 0x0];
@@ -146,7 +153,7 @@ void DIMbossspit_updateBurst(int obj)
             ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
         }
     }
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x4bc, NULL, 1, -1,
+    (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSSPIT_PARTFX_BURST, NULL, 1, -1,
                                      &radius);
 }
 
@@ -218,7 +225,7 @@ void DIMbossspit_update(int obj)
         i = 0;
         do
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x4ba, NULL, 1, -1,
+            (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSSPIT_PARTFX_FLIGHT_TRAIL, NULL, 1, -1,
                                              NULL);
             i = i + 1;
         }
