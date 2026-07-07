@@ -19,6 +19,7 @@
 #include "main/dll/DIM/DIMboulder.h"
 
 #define DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DIMLOGFIRE_HIT_VOLUME_SLOT 0x1f
 #define MODEL_LIGHT_KIND_POINT 2
 
 /* DimLogFireState.mode flame state machine */
@@ -227,7 +228,7 @@ void DIMLogFire_update(int obj)
         vec.y = lbl_803E482C;
         vec.z = lbl_803E4828;
         fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 2, flickerFlagA, flickerFlagB, (int)&vec);
-        ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, DIMLOGFIRE_HIT_VOLUME_SLOT, 1, 0);
         break;
     case DIMLOGFIRE_MODE_UNLIT:
         if (*(int**)&state->light != NULL)
