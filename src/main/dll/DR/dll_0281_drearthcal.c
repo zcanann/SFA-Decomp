@@ -6,6 +6,9 @@
 #define DREARTHCAL_SETUP_YAW 0x18
 #define DREARTHCAL_INIT_FLAGS 0x6000
 
+/* Mount object group: query nearest mount to gate the interact prompt. */
+#define DREARTHCAL_MOUNT_OBJGROUP 0xa
+
 int drearthcal_setScale(void) { return 1; }
 
 int drearthcal_getExtraSize(void) { return 1; }
@@ -65,7 +68,7 @@ void drearthcal_update(int obj)
                 }
             }
         }
-        if ((u32)ObjGroup_FindNearestObject(0xa, obj, &searchDist) == 0)
+        if ((u32)ObjGroup_FindNearestObject(DREARTHCAL_MOUNT_OBJGROUP, obj, &searchDist) == 0)
         {
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
