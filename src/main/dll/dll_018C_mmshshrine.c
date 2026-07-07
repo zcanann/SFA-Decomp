@@ -31,6 +31,11 @@ extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
 
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
+/* env-effect ids fired when the shrine load-trigger timer expires (index-style; roles opaque) */
+#define MMSH_SHRINE_ENVFX_A 0x20d
+#define MMSH_SHRINE_ENVFX_B 0x20e
+#define MMSH_SHRINE_ENVFX_C 0x222
+
 
 
 extern int objGetAnimStateFlags(int obj, int flag);
@@ -292,9 +297,9 @@ void MMSH_Shrine_update(int objArg)
         if (obj->loadTriggerTimer == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxAct((int)obj, playerObj, 0x20d, 0);
-            getEnvfxAct((int)obj, playerObj, 0x20e, 0);
-            getEnvfxAct((int)obj, playerObj, 0x222, 0);
+            getEnvfxAct((int)obj, playerObj, MMSH_SHRINE_ENVFX_A, 0);
+            getEnvfxAct((int)obj, playerObj, MMSH_SHRINE_ENVFX_B, 0);
+            getEnvfxAct((int)obj, playerObj, MMSH_SHRINE_ENVFX_C, 0);
             obj->prevPosX = obj->posX;
             obj->prevPosY = obj->posY;
             obj->prevPosZ = obj->posZ;
