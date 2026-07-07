@@ -51,6 +51,10 @@ typedef struct
    (data symbol size 0x18 / sizeof(WarpstoneEntry) == 6). */
 #define WARPSTONE_UI_ENTRY_COUNT 6
 
+/* Krazoa Palace map-event id (where the WarpStone stands; the warp menu
+   issues the selected destination's act on it). */
+#define WARPSTONEUI_MAPEVENT_KRAZOA 0x42
+
 extern u8 gWarpStoneUiMenuItemTemplates[];
 u8 gWarpStoneUiMenuItems[0x168];
 WarpstoneEntry gWarpStoneUiEntryTable[WARPSTONE_UI_ENTRY_COUNT] = {
@@ -160,7 +164,7 @@ void WarpstoneUI_showUI(int arg)
         idx = (**(int (**)(void))((char*)(*gTitleMenuLinkInterface) + 0x14))();
         if (sel > 0)
         {
-            (*gMapEventInterface)->setMapAct(0x42, gWarpStoneUiEntryTable[gWarpStoneUiSelectedIndices[idx]].mapAct);
+            (*gMapEventInterface)->setMapAct(WARPSTONEUI_MAPEVENT_KRAZOA, gWarpStoneUiEntryTable[gWarpStoneUiSelectedIndices[idx]].mapAct);
         }
         (**(void (**)(int))((char*)(*gTitleMenuLinkInterface) + 0x10))(arg);
         break;
