@@ -131,8 +131,8 @@ extern int loadModLines(int n, s16* out);
 extern void intersectModLineBuild(u8 * buf);
 extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
 extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
-extern f32 lbl_803DCED0;
-extern f32 lbl_803DCECC;
+extern f32 gMapSavedPlayerOffsetX;
+extern f32 gMapSavedPlayerOffsetZ;
 void doNothing_afterRenderObject(void)
 {
 }
@@ -2603,9 +2603,9 @@ void fn_8002A5DC(u8* obj)
 
     len = lbl_803DE888 * ((GameObject*)obj)->anim.hitboxScale;
     denom = len * ((GameObject*)obj)->anim.rootMotionScale;
-    dx = ((((GameObject*)obj)->anim.previousLocalPosZ - lbl_803DCECC) - (((GameObject*)obj)->anim.localPosZ -
+    dx = ((((GameObject*)obj)->anim.previousLocalPosZ - gMapSavedPlayerOffsetZ) - (((GameObject*)obj)->anim.localPosZ -
         playerMapOffsetZ)) / denom;
-    dz = ((((GameObject*)obj)->anim.localPosX - lbl_803DCED0) - (((GameObject*)obj)->anim.previousLocalPosX -
+    dz = ((((GameObject*)obj)->anim.localPosX - gMapSavedPlayerOffsetX) - (((GameObject*)obj)->anim.previousLocalPosX -
         playerMapOffsetX)) / denom;
     sum = dz * dz + dx * dx;
     if (sum > lbl_803DE88C)

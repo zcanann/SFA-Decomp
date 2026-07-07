@@ -2543,7 +2543,7 @@ extern f32 FinishQueue_803DED6C;
 extern u8 lbl_803DB668[8];
 extern f32 lbl_803DB670;
 extern int gRenderModeObj;
-extern f32 lbl_803DCED0, lbl_803DCECC;
+extern f32 gMapSavedPlayerOffsetX, gMapSavedPlayerOffsetZ;
 extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
 
 #pragma opt_common_subs off
@@ -2700,8 +2700,8 @@ void renderShadows(void)
             }
             if (*(u32*)&((GameObject*)obj)->anim.parent == 0)
             {
-                ((GameObject*)slot)->anim.localPosX += lbl_803DCED0;
-                ((GameObject*)slot)->anim.localPosZ += lbl_803DCECC;
+                ((GameObject*)slot)->anim.localPosX += gMapSavedPlayerOffsetX;
+                ((GameObject*)slot)->anim.localPosZ += gMapSavedPlayerOffsetZ;
             }
             vAz = *(f32*)of64;
             vAx = -vAz;

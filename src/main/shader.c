@@ -514,9 +514,9 @@ void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
     }
 }
 
-extern s16* lbl_803DCE94;
+extern s16* gMapBlockIds;
 extern u8 lbl_803DCE98;
-extern u8* lbl_803DCE8C;
+extern u8* gMapBlockRefCounts;
 extern void mapBlockFn_80059354(int p1, int p2, s16* entry, int layer);
 extern int mapCheckCurBlocks(int v);
 
@@ -564,12 +564,12 @@ int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
     statusArr[slotIdx] = -1;
 
     j = 0;
-    arr = lbl_803DCE94;
+    arr = gMapBlockIds;
     for (; j < lbl_803DCE98; j++)
     {
         if (blockId == *arr)
         {
-            lbl_803DCE8C[j]++;
+            gMapBlockRefCounts[j]++;
             statusArr[slotIdx] = j;
             return 1;
         }
@@ -670,7 +670,7 @@ void playerVecFn_8005a9b0(void)
     frustumPlanes_updateAabbCornerIndices(gPlayerRelativeFrustumPlanes, FRUSTUM_PLANE_COUNT);
 }
 
-extern int* lbl_803DCE9C;
+extern int* gMapBlocks;
 
 extern char sTrackLoadBlockOverrunError[];
 
@@ -682,7 +682,7 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     s8* statusArr;
 
     i = 0;
-    arr = lbl_803DCE94;
+    arr = gMapBlockIds;
     count = lbl_803DCE98;
     for (; i < count; i++)
     {
@@ -699,9 +699,9 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     }
     statusArr = (s8*)gMapBlockLayerTables[layer];
     statusArr[slotIdx] = i;
-    lbl_803DCE9C[i] = (int)blk;
-    lbl_803DCE94[i] = blockId;
-    lbl_803DCE8C[i] = 1;
+    gMapBlocks[i] = (int)blk;
+    gMapBlockIds[i] = blockId;
+    gMapBlockRefCounts[i] = 1;
     setMapBlockFlag();
 }
 
@@ -1134,12 +1134,12 @@ void unloadMap(void)
             mapType = cur[i];
             if (mapType >= 0)
             {
-                lbl_803DCE8C[mapType]--;
-                if (lbl_803DCE8C[mapType] == 0)
+                gMapBlockRefCounts[mapType]--;
+                if (gMapBlockRefCounts[mapType] == 0)
                 {
-                    blk = lbl_803DCE9C[mapType];
-                    lbl_803DCE94[mapType] = -1;
-                    lbl_803DCE9C[mapType] = z[0] = 0;
+                    blk = gMapBlocks[mapType];
+                    gMapBlockIds[mapType] = -1;
+                    gMapBlocks[mapType] = z[0] = 0;
                     z[1] = z[0];
                     for (; z[0] < *(u8*)(blk + 0xa2); z[1] += 68, z[0]++)
                     {
@@ -2268,14 +2268,14 @@ void mapLoadUnloadObjects(int flag)
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 extern ModgfxInterface** gModgfxInterface;
-extern int lbl_803DCDD0;
-extern int lbl_803DCDD4;
-extern int lbl_803DCDC8;
-extern int lbl_803DCDCC;
-extern f32 lbl_803DCED0;
-extern f32 lbl_803DCECC;
-extern int lbl_803DCEC0;
-extern u8 lbl_803DCE04;
+extern int gMapBlockOriginX;
+extern int gMapBlockOriginZ;
+extern int gMapBlockOriginWorldX;
+extern int gMapBlockOriginWorldZ;
+extern f32 gMapSavedPlayerOffsetX;
+extern f32 gMapSavedPlayerOffsetZ;
+extern int gMapCurRomListSlot;
+extern u8 gMapLoadDeferred;
 extern u8 bEnableBlurFilter;
 extern u8 bEnableMotionBlur;
 extern f32 lbl_803DB62C;
@@ -2328,33 +2328,33 @@ void beginLoadingMap(void)
     }
     for (j = 0; j < 64; j++)
     {
-        *(s16*)((char*)lbl_803DCE94 + j * 2) = -1;
-        *(int*)((char*)lbl_803DCE9C + j * 4) = 0;
+        *(s16*)((char*)gMapBlockIds + j * 2) = -1;
+        *(int*)((char*)gMapBlocks + j * 4) = 0;
     }
     lbl_803DCE98 = 0;
     gShaderRomListSlotCount = 0;
     mapKind = (*gMapEventInterface)->getCurChar();
     p = (f32*)(*gMapEventInterface)->getCurCharPos();
-    lbl_803DCDD0 = fastFloorf(p[0] / gMapBlockWorldSize);
-    lbl_803DCDD4 = fastFloorf(p[2] / gMapBlockWorldSize);
+    gMapBlockOriginX = fastFloorf(p[0] / gMapBlockWorldSize);
+    gMapBlockOriginZ = fastFloorf(p[2] / gMapBlockWorldSize);
     *(f32*)(base + 0x8588) = p[0];
     *(f32*)(base + 0x858C) = p[1];
     *(f32*)(base + 0x8590) = p[2];
     *(int*)(base + 0x8594) = 1;
-    lbl_803DCDC8 = lbl_803DCDD0 * 640;
-    lbl_803DCDCC = *(volatile int*)&lbl_803DCDD4 * 640;
-    playerMapOffsetX = lbl_803DCDC8;
-    playerMapOffsetZ = lbl_803DCDCC;
-    lbl_803DCED0 = playerMapOffsetX;
-    lbl_803DCECC = playerMapOffsetZ;
+    gMapBlockOriginWorldX = gMapBlockOriginX * 640;
+    gMapBlockOriginWorldZ = *(volatile int*)&gMapBlockOriginZ * 640;
+    playerMapOffsetX = gMapBlockOriginWorldX;
+    playerMapOffsetZ = gMapBlockOriginWorldZ;
+    gMapSavedPlayerOffsetX = playerMapOffsetX;
+    gMapSavedPlayerOffsetZ = playerMapOffsetZ;
     gShaderCurMapEventId = -1;
     gShaderGameTextLoadedMapId = gShaderGameTextLoadedMapId - 1;
-    lbl_803DCEC0 = -1;
+    gMapCurRomListSlot = -1;
     curMapLayer = *(s8*)((char*)p + 0xd);
     renderFlags &= 0x82008;
     renderFlags |= 0x481F0LL;
     renderFlags |= 0x804;
-    lbl_803DCE04 = 0;
+    gMapLoadDeferred = 0;
     bEnableBlurFilter = 0;
     bEnableMotionBlur = 0;
     lbl_803DB62C = lbl_803DEBCC;
@@ -2505,13 +2505,27 @@ extern void clearForceLoadImmediately(void);
 extern void loadModelAndAnimTabs(void);
 
 extern char sTrackPiLockedFormat[];
-extern int lbl_803DCE88;
-extern int lbl_803DCE1C;
-extern int* lbl_803DCDE4;
-extern int lbl_803DCEB0;
+extern s8* gMapLayerCellStates;
+extern int gMapPendingFileFlags;
+extern int* gMapBlockIndexList;
+extern int gMapBlockIndexCount;
 extern s16 lbl_803DCE70;
 extern u8 lbl_803DCDED;
 
+typedef struct MapLoadRec
+{
+    s16 x, z, blockId, layer;
+} MapLoadRec;
+
+typedef struct MapCellEnt
+{
+    s16 x, y, z;
+    s16 state;
+    s16 unk8, unkA;
+} MapCellEnt;
+
+/* Emulates this TU's original per-file optimizer flags for the map-load
+   path (copy propagation and loop transforms disabled); see build notes. */
 #pragma opt_propagation off
 #pragma ppc_unroll_factor_limit 1
 #pragma opt_dead_assignments off
@@ -2547,17 +2561,17 @@ void doPendingMapLoads(void)
     waited = 0;
     if (!(renderFlags & 0x1000))
     {
-        lbl_803DCED0 = playerMapOffsetX;
-        lbl_803DCECC = playerMapOffsetZ;
+        gMapSavedPlayerOffsetX = playerMapOffsetX;
+        gMapSavedPlayerOffsetZ = playerMapOffsetZ;
         if (gShaderCurMapEventId != -1 && gShaderCurMapEventId != gShaderGameTextLoadedMapId &&
             (gShaderGameTextLoadedMapId = gShaderCurMapEventId, gShaderCurMapEventId < 118) &&
             gShaderMapTextDirTable[gShaderCurMapEventId] != -1)
         {
             gameTextLoadDir(gShaderMapTextDirTable[gShaderCurMapEventId]);
         }
-        if (!(renderFlags & 2) && (getLoadedFileFlags(0) != 0 || lbl_803DCE1C == 0))
+        if (!(renderFlags & 2) && (getLoadedFileFlags(0) != 0 || gMapPendingFileFlags == 0))
         {
-            lbl_803DCE1C = getLoadedFileFlags(0);
+            gMapPendingFileFlags = getLoadedFileFlags(0);
         }
         else
         {
@@ -2578,14 +2592,14 @@ void doPendingMapLoads(void)
                         gShaderCurMapEventId != 60 && gShaderCurMapEventId != 61 && gShaderCurMapEventId != 62 &&
                         gShaderCurMapEventId != 28)
                     {
-                        lbl_803DCE04 = 1;
+                        gMapLoadDeferred = 1;
                     }
                 }
                 else
                 {
-                    if (lbl_803DCE04 != 0)
+                    if (gMapLoadDeferred != 0)
                     {
-                        lbl_803DCE04 = 0;
+                        gMapLoadDeferred = 0;
                         doLoad = 1;
                     }
                 }
@@ -2614,7 +2628,7 @@ void doPendingMapLoads(void)
                     {
                         s16* ent = (s16*)*bp2;
                         char* grid = (char*)*ap2;
-                        lbl_803DCE88 = *cp2;
+                        gMapLayerCellStates = (s8*)*cp2;
                         zb[0] = 0;
                         row = 0;
                         rowCursor = recsCursor;
@@ -2628,8 +2642,8 @@ void doPendingMapLoads(void)
                                 c = g2[0];
                                 if (c > -1)
                                 {
-                                    cellCursor[0] = lbl_803DCDD0 + zb[1];
-                                    cellCursor[1] = lbl_803DCDD4 + row;
+                                    cellCursor[0] = gMapBlockOriginX + zb[1];
+                                    cellCursor[1] = gMapBlockOriginZ + row;
                                     cellCursor[3] = layer;
                                     cellCursor[2] = c;
                                     cellCursor += 4;
@@ -2638,7 +2652,7 @@ void doPendingMapLoads(void)
                                     cnt++;
                                 }
                                 g2[0] = -2;
-                                *(s8*)(lbl_803DCE88 + zb[0]) = -1;
+                                *(s8*)(gMapLayerCellStates + zb[0]) = -1;
                                 ent[3] = -3;
                                 ent[0] = -1;
                                 ent[1] = -1;
@@ -2648,8 +2662,8 @@ void doPendingMapLoads(void)
                                 c = g2[1];
                                 if (c > -1)
                                 {
-                                    cellCursor[0] = lbl_803DCDD0 + zb[1];
-                                    cellCursor[1] = lbl_803DCDD4 + row;
+                                    cellCursor[0] = gMapBlockOriginX + zb[1];
+                                    cellCursor[1] = gMapBlockOriginZ + row;
                                     cellCursor[3] = layer;
                                     cellCursor[2] = c;
                                     cellCursor += 4;
@@ -2658,7 +2672,7 @@ void doPendingMapLoads(void)
                                     cnt++;
                                 }
                                 g2[1] = -2;
-                                *(s8*)(lbl_803DCE88 + zb[0]) = -1;
+                                *(s8*)(gMapLayerCellStates + zb[0]) = -1;
                                 ent[9] = -3;
                                 ent[6] = -1;
                                 ent[7] = -1;
@@ -2675,16 +2689,16 @@ void doPendingMapLoads(void)
                     }
                 }
                 {
-                    int nx = gx + lbl_803DCDD0;
+                    int nx = gx + gMapBlockOriginX;
                     int nz;
-                    lbl_803DCDD0 = nx - 7;
-                    nz = gz + lbl_803DCDD4;
-                    lbl_803DCDD4 = nz - 7;
+                    gMapBlockOriginX = nx - 7;
+                    nz = gz + gMapBlockOriginZ;
+                    gMapBlockOriginZ = nz - 7;
                 }
-                playerMapOffsetX = gMapBlockWorldSize * lbl_803DCDD0;
-                playerMapOffsetZ = gMapBlockWorldSize * lbl_803DCDD4;
-                lbl_803DCDC8 = playerMapOffsetX;
-                lbl_803DCDCC = playerMapOffsetZ;
+                playerMapOffsetX = gMapBlockWorldSize * gMapBlockOriginX;
+                playerMapOffsetZ = gMapBlockWorldSize * gMapBlockOriginZ;
+                gMapBlockOriginWorldX = playerMapOffsetX;
+                gMapBlockOriginWorldZ = playerMapOffsetZ;
                 i = 0;
                 if (gShaderRomListSlotCount > 0)
                 {
@@ -2716,8 +2730,8 @@ void doPendingMapLoads(void)
                         }
                     }
                 }
-                gShaderCurMapEventId = mapCoordsToId(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, 0);
-                lbl_803DCEC0 = -1;
+                gShaderCurMapEventId = mapCoordsToId(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, 0);
+                gMapCurRomListSlot = -1;
                 if (gShaderCurMapEventId == -1)
                 {
                     int d = mapGetDirIdx(41);
@@ -2789,23 +2803,23 @@ void doPendingMapLoads(void)
                             }
                         }
                         ((ShaderRomListSlot*)(base + 0x418C))[slot].flag = 1;
-                        lbl_803DCEC0 = slot;
+                        gMapCurRomListSlot = slot;
                         mapGetDirIdx(gShaderCurMapEventId);
                         mapCheckCurBlocks(0);
                         mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), 38);
                         mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), 37);
                         mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), 26);
                         mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), 27);
-                        lbl_803DCDE4 = (int*)getCurrentDataFile(38);
-                        lbl_803DCEB0 = 0;
+                        gMapBlockIndexList = (int*)getCurrentDataFile(38);
+                        gMapBlockIndexCount = 0;
                         {
                             int* p3;
-                            for (p3 = lbl_803DCDE4; lbl_803DCDE4 != 0 && *p3 != -1; p3++)
+                            for (p3 = gMapBlockIndexList; gMapBlockIndexList != 0 && *p3 != -1; p3++)
                             {
-                                lbl_803DCEB0 = lbl_803DCEB0 + 1;
+                                gMapBlockIndexCount = gMapBlockIndexCount + 1;
                             }
                         }
-                        lbl_803DCEB0 = lbl_803DCEB0 - 1;
+                        gMapBlockIndexCount = gMapBlockIndexCount - 1;
                         /* Vestigial grid walk (no observable effect; present in retail:
                            the retail asm keeps the dead g2/t2 updates inside the mtctr-2
                            loop; no known pragma/idiom reproduces that under our flags). */
@@ -2840,10 +2854,10 @@ void doPendingMapLoads(void)
                                 char* g3;
                                 int zz, xx;
                                 s8 cnt2;
-                                mapFn_80057d24(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, rectA, rectB, rectC, rectD,
+                                mapFn_80057d24(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, rectA, rectB, rectC, rectD,
                                                layer, 0, slot);
                                 g3 = (char*)*aBase;
-                                lbl_803DCE88 = *cBase;
+                                gMapLayerCellStates = (s8*)*cBase;
                                 for (zz = rectA[2]; zz <= rectA[3]; zz++)
                                 {
                                     char* gp = g3 + rectA[0] + (zz + 7) * 16;
@@ -2892,8 +2906,8 @@ void doPendingMapLoads(void)
                                     {
                                         for (cc = 0; cc < 16; cc++)
                                         {
-                                            int bx = lbl_803DCDD0 + cc;
-                                            int bz = lbl_803DCDD4 + zc[1];
+                                            int bx = gMapBlockOriginX + cc;
+                                            int bz = gMapBlockOriginZ + zc[1];
                                             if (*(s8*)gp2 == -3)
                                             {
                                                 if (mapLoadBlock(cc, zc[1], bx, bz, layer) == 0)
@@ -2902,7 +2916,7 @@ void doPendingMapLoads(void)
                                                 }
                                                 else
                                                 {
-                                                    *(s8*)(lbl_803DCE88 + zc[0]) = cn2++;
+                                                    *(s8*)(gMapLayerCellStates + zc[0]) = cn2++;
                                                 }
                                             }
                                             zc[0]++;
@@ -2953,16 +2967,16 @@ void doPendingMapLoads(void)
                         s16 mid = o1[2];
                         if (mid >= 0)
                         {
-                            *(u8*)(lbl_803DCE8C + mid) -= 1;
-                            if (*(u8*)(lbl_803DCE8C + mid) == 0)
+                            *(u8*)(gMapBlockRefCounts + mid) -= 1;
+                            if (*(u8*)(gMapBlockRefCounts + mid) == 0)
                             {
-                                int blk = *(int*)((char*)lbl_803DCE9C + mid * 4);
+                                int blk = *(int*)((char*)gMapBlocks + mid * 4);
                                 int z[2];
                                 int rb;
                                 char* p;
                                 int k;
-                                *(s16*)((char*)lbl_803DCE94 + mid * 2) = -1;
-                                z[1] = *(int*)((char*)lbl_803DCE9C + mid * 4) = z[0] = 0;
+                                *(s16*)((char*)gMapBlockIds + mid * 2) = -1;
+                                z[1] = *(int*)((char*)gMapBlocks + mid * 4) = z[0] = 0;
                                 for (; z[0] < *(u8*)(blk + 0xa2); z[1] += 68, z[0]++)
                                 {
                                     rb = *(int*)(blk + 0x64) + z[1];
@@ -3000,16 +3014,17 @@ void doPendingMapLoads(void)
                 lbl_803DCDED = 0;
             }
             mapLoadUnloadObjects(doLoad);
-            lbl_803DCE1C = getLoadedFileFlags(0);
+            gMapPendingFileFlags = getLoadedFileFlags(0);
             renderFlags &= ~0x4000LL;
         }
     }
 }
-
 #pragma opt_propagation reset
-#pragma ppc_unroll_factor_limit 4
 #pragma opt_dead_assignments reset
+#pragma ppc_unroll_factor_limit 4
 #pragma opt_unroll_loops reset
+
+
 
 extern s16 lbl_803DCE90;
 extern int lbl_803DCE84;
@@ -3143,7 +3158,7 @@ void mapDebugRender(int* state)
             }
             else
             {
-                blk = *(char**)((char*)lbl_803DCE9C + ci * 4);
+                blk = *(char**)((char*)gMapBlocks + ci * 4);
             }
         }
         sx = (int)(gMapBlockWorldSize * fastFloorf(*(f32*)((char*)lbl_803DCEA8 + 0xc) /

@@ -150,13 +150,13 @@ void updateVisibleGeometry(void)
 extern s16* lbl_803822A0[];
 extern f32 gMapBlockWorldSize;
 extern float fastFloorf(float x);
-extern int lbl_803DCDD0;
-extern int lbl_803DCDD4;
+extern int gMapBlockOriginX;
+extern int gMapBlockOriginZ;
 
 int coordsToMapCell(f32 x, f32 z)
 {
-    int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
-    int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)lbl_803DCDD4);
+    int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)gMapBlockOriginX);
+    int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)gMapBlockOriginZ);
     if (ix < 0 || ix >= 16) return -1;
     if (iz < 0 || iz >= 16) return -1;
     return *(s16*)((char*)lbl_803822A0[0] + (ix + iz * 16) * 12);
@@ -518,8 +518,8 @@ extern void* gMapBlockLayerTables[];
 
 int isInBounds(f32 x, f32 z)
 {
-    int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
-    int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)lbl_803DCDD4);
+    int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)gMapBlockOriginX);
+    int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)gMapBlockOriginZ);
     int linear;
     void** p;
     if (ix < 0 || ix >= 16) return -1;
@@ -537,12 +537,12 @@ int isInBounds(f32 x, f32 z)
     return 0;
 }
 
-extern void** lbl_803DCE9C;
+extern void** gMapBlocks;
 
 int objPosToMapBlockIdx(f32 x, f32 y, f32 z)
 {
-    int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
-    int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)lbl_803DCDD4);
+    int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)gMapBlockOriginX);
+    int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)gMapBlockOriginZ);
     int i;
     if (ix < 0 || ix >= 16) return -1;
     if (iz < 0 || iz >= 16) return -1;
@@ -553,7 +553,7 @@ int objPosToMapBlockIdx(f32 x, f32 y, f32 z)
         int idx = table[ix];
         if (idx > -1)
         {
-            int* block = lbl_803DCE9C[idx];
+            int* block = gMapBlocks[idx];
             if (y > (f32)(*(s16*)((char*)block + 138) - 50) &&
                 y < (f32)(*(s16*)((char*)block + 140) + 50))
             {
@@ -593,7 +593,7 @@ void* mapGetBlockIdx(int layer)
 void* mapGetBlock(int i)
 {
     if (i < 0 || i >= lbl_803DCE98) return 0;
-    return lbl_803DCE9C[i];
+    return gMapBlocks[i];
 }
 
 void* mapGetBlockAtPos(int x, int y, int layer)
@@ -603,7 +603,7 @@ void* mapGetBlockAtPos(int x, int y, int layer)
     if (x < 0 || y < 0 || x >= 0x10 || y >= 0x10) return 0;
     idx = table[x + (y << 4)];
     if (idx < 0 || idx >= lbl_803DCE98) return 0;
-    return lbl_803DCE9C[idx];
+    return gMapBlocks[idx];
 }
 
 extern f32 shdwChanged_803DEC18;
@@ -1206,8 +1206,8 @@ extern int mapRectFn_8005a728(int row, int col, u8* block);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void renderMapBlock(u8* block, int* p1);
 extern int lbl_8038228C[];
-extern s32 lbl_803DCE88;
-extern s32 lbl_803DCEC0;
+extern s32 gMapLayerCellStates;
+extern s32 gMapCurRomListSlot;
 extern f32 lbl_803DCE58;
 extern f32 lbl_803DCE54;
 
@@ -1251,9 +1251,9 @@ void renderSceneGeometry(int* p1, s8* order)
     do
     {
         table = (s8*)*layerTablePtr;
-        lbl_803DCE88 = *layerFlagPtr;
-        mapFn_80057d24(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, box0, box1, box2, box3, layer, 1,
-                       lbl_803DCEC0);
+        gMapLayerCellStates = *layerFlagPtr;
+        mapFn_80057d24(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, box0, box1, box2, box3, layer, 1,
+                       gMapCurRomListSlot);
         p = map;
         for (k = 0; k < 256; k++)
         {
@@ -1311,7 +1311,7 @@ void renderSceneGeometry(int* p1, s8* order)
                 }
                 else
                 {
-                    blk = lbl_803DCE9C[idx];
+                    blk = gMapBlocks[idx];
                     *(u16*)(blk + 4) ^= 1;
                     if (map[cell] == 0)
                     {
@@ -1590,8 +1590,8 @@ void objDrawFn_8005da48(int* obj)
 }
 
 extern void loadAssetFileById(void** out, int id);
-extern void* lbl_803DCE94;
-extern void* lbl_803DCE8C;
+extern void* gMapBlockIds;
+extern void* gMapBlockRefCounts;
 extern void* lbl_803DCE78;
 extern void* lbl_803DCE7C;
 extern void* lbl_803DCE80;
@@ -1613,9 +1613,9 @@ void initMapBlocks(void)
     int i;
 
     renderFlags = 0;
-    lbl_803DCE9C = mmAlloc(0x100, 5, 0);
-    lbl_803DCE94 = mmAlloc(0x80, 5, 0);
-    lbl_803DCE8C = mmAlloc(0x40, 5, 0);
+    gMapBlocks = mmAlloc(0x100, 5, 0);
+    gMapBlockIds = mmAlloc(0x80, 5, 0);
+    gMapBlockRefCounts = mmAlloc(0x40, 5, 0);
     lbl_803DCE78 = mmAlloc(0xd48, 5, 0);
     *(u32*)(mb + 0x41f4) = (u32)mmAlloc(0x500, 5, 0);
     *(u32*)(mb + 0x41e0) = (u32)mmAlloc(0x3c00, 5, 0);

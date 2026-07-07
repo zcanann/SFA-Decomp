@@ -536,12 +536,12 @@ u32 mapBlockFn_80060678(int* obj)
 /* mapGetBlocks: write a fixed table base and an sbss u32 into two
  * out-pointers. */
 extern u8 gMapBlockLayerTables[];
-extern u32 lbl_803DCE9C;
+extern u32 gMapBlocks;
 
 void mapGetBlocks(void** outPtr, u32* outVal)
 {
     *outPtr = gMapBlockLayerTables;
-    *outVal = lbl_803DCE9C;
+    *outVal = gMapBlocks;
 }
 
 /* playerShadowFn_80062a30 -- if obj[0x64] non-NULL, clear bits 0x2020 in
@@ -720,7 +720,7 @@ void fn_80060BB0(void)
     zero = byteOff;
     for (; i < lbl_803DCE98; i++)
     {
-        blk = *(int**)((char*)lbl_803DCE9C + byteOff);
+        blk = *(int**)((char*)gMapBlocks + byteOff);
         if (blk != NULL)
         {
             j = 0;
@@ -1110,8 +1110,8 @@ void MapBlock_initHits(int obj, int index)
     *(u16*)&((GameObject*)obj)->anim.rotZ = *(u16*)&((GameObject*)obj)->anim.rotZ & ~0x40;
 }
 
-extern int lbl_803DCEB0;
-extern int lbl_803DCDE4;
+extern int gMapBlockIndexCount;
+extern int gMapBlockIndexList;
 extern void checkLoadBlock(int v, int* outA, int* outB);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 
@@ -1123,11 +1123,11 @@ void* MapBlock_loadFromFile(int blockId)
     int blockOff = 0;
     int* table;
     int tableEntry;
-    if (blockId > lbl_803DCEB0)
+    if (blockId > gMapBlockIndexCount)
     {
         goto ret0a;
     }
-    table = (int*)lbl_803DCDE4;
+    table = (int*)gMapBlockIndexList;
     if (table != 0)
     {
         tableEntry = table[blockId];
@@ -4053,8 +4053,8 @@ extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int bas
 extern float fastFloorf(float x);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern f32 PSVECMag(f32 * v);
-extern int lbl_803DCDC8;
-extern int lbl_803DCDCC;
+extern int gMapBlockOriginWorldX;
+extern int gMapBlockOriginWorldZ;
 
 #pragma ppc_unroll_instructions_limit 56
 #pragma opt_propagation off
@@ -4100,10 +4100,10 @@ u8 doEdges;
     int dmaflip;
     f32* vertp;
 
-    x0 = x0 - lbl_803DCDC8;
-    z0 = z0 - lbl_803DCDCC;
-    x1 = x1 - lbl_803DCDC8;
-    z1 = z1 - lbl_803DCDCC;
+    x0 = x0 - gMapBlockOriginWorldX;
+    z0 = z0 - gMapBlockOriginWorldZ;
+    x1 = x1 - gMapBlockOriginWorldX;
+    z1 = z1 - gMapBlockOriginWorldZ;
     if (x0 > x1)
     {
         x0 ^= x1;
@@ -4220,8 +4220,8 @@ u8 doEdges;
         relx1 = x1 - descp[0];
         relz0 = z0 - descp[2];
         relz1 = z1 - descp[2];
-        descp[0] = descp[0] + lbl_803DCDC8;
-        descp[2] = descp[2] + lbl_803DCDCC;
+        descp[0] = descp[0] + gMapBlockOriginWorldX;
+        descp[2] = descp[2] + gMapBlockOriginWorldZ;
         if (relx0 < 0) relx0 = 0;
         if (relx1 > 0x280) relx1 = 0x280;
         if (relz0 < 0) relz0 = 0;

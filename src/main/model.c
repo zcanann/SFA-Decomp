@@ -2488,8 +2488,8 @@ typedef struct ObjHitBufs
 #pragma dont_inline off
 void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u8* obj)
 {
-    extern f32 lbl_803DCED0;
-    extern f32 lbl_803DCECC;
+    extern f32 gMapSavedPlayerOffsetX;
+    extern f32 gMapSavedPlayerOffsetZ;
     u8* mtx;
     int off[2];
     u8* prevSphere;
@@ -2589,8 +2589,8 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
         vec[2] = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 0x10);
         *(f32*)(st->cur + off[1]) = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 4) * (motionScale = ((GameObject*)obj)->anim.rootMotionScale);
         PSMTXMultVec((f32*)mtx, vec, (f32*)((st->cur + 4) + off[1]));
-        *(f32*)(prevSphere + 4) = (lbl_803DCED0 + *(f32*)(prevSphere + 4)) - playerMapOffsetX;
-        *(f32*)(prevSphere + 0xc) = (lbl_803DCECC + *(f32*)(prevSphere + 0xc)) - playerMapOffsetZ;
+        *(f32*)(prevSphere + 4) = (gMapSavedPlayerOffsetX + *(f32*)(prevSphere + 4)) - playerMapOffsetX;
+        *(f32*)(prevSphere + 0xc) = (gMapSavedPlayerOffsetZ + *(f32*)(prevSphere + 0xc)) - playerMapOffsetZ;
         off[0] += 0x18;
         off[1] += 0x10;
         prevSphere += 0x10;
@@ -3615,8 +3615,8 @@ extern void PSMTXIdentity(f32 * m);
 extern f32 fn_802920A4(f32 x);
 extern f32 gModelDotClampMax;
 extern f32 gModelDotClampMin;
-extern f32 lbl_803DCED0;
-extern f32 lbl_803DCECC;
+extern f32 gMapSavedPlayerOffsetX;
+extern f32 gMapSavedPlayerOffsetZ;
 
 #pragma scheduling on
 #pragma peephole on
@@ -3671,10 +3671,10 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
     {
         nextIdx = (*(int***)(chain + 4))[0][i];
         PSMTXMultVec(tmp, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x18), out);
-        target[0] = lbl_803DCED0 + (*(f32*)(*(u8**)chain + i * 0x54) + *(f32*)(*(u8**)chain + i * 0x54 + 0xc)) -
+        target[0] = gMapSavedPlayerOffsetX + (*(f32*)(*(u8**)chain + i * 0x54) + *(f32*)(*(u8**)chain + i * 0x54 + 0xc)) -
             playerMapOffsetX;
         target[1] = *(f32*)(*(u8**)chain + i * 0x54 + 4) + *(f32*)(*(u8**)chain + i * 0x54 + 0x10);
-        target[2] = lbl_803DCECC + (*(f32*)(*(u8**)chain + i * 0x54 + 8) + *(f32*)(*(u8**)chain + i * 0x54 + 0x14)) -
+        target[2] = gMapSavedPlayerOffsetZ + (*(f32*)(*(u8**)chain + i * 0x54 + 8) + *(f32*)(*(u8**)chain + i * 0x54 + 0x14)) -
             playerMapOffsetZ;
         work[0] = *(f32*)(*(u8**)chain + i * 0x54 - 0x3c);
         work[1] = *(f32*)(*(u8**)chain + i * 0x54 - 0x38);
@@ -3767,10 +3767,10 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
     {
         nextIdx = (*(int***)(chain + 4))[0][i];
         PSMTXMultVec(tmp, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x18), out);
-        target[0] = lbl_803DCED0 + (*(f32*)(*(u8**)chain + i * 0x54) + *(f32*)(*(u8**)chain + i * 0x54 + 0xc)) -
+        target[0] = gMapSavedPlayerOffsetX + (*(f32*)(*(u8**)chain + i * 0x54) + *(f32*)(*(u8**)chain + i * 0x54 + 0xc)) -
             playerMapOffsetX;
         target[1] = *(f32*)(*(u8**)chain + i * 0x54 + 4) + *(f32*)(*(u8**)chain + i * 0x54 + 0x10);
-        target[2] = lbl_803DCECC + (*(f32*)(*(u8**)chain + i * 0x54 + 8) + *(f32*)(*(u8**)chain + i * 0x54 + 0x14)) -
+        target[2] = gMapSavedPlayerOffsetZ + (*(f32*)(*(u8**)chain + i * 0x54 + 8) + *(f32*)(*(u8**)chain + i * 0x54 + 0x14)) -
             playerMapOffsetZ;
         work[0] = *(f32*)(*(u8**)chain + i * 0x54 - 0x3c);
         work[1] = *(f32*)(*(u8**)chain + i * 0x54 - 0x38);
@@ -3825,10 +3825,10 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
             }
             m = *(f32**)((u8*)model + ((((ObjModel*)model)->bufferFlags & 1) << 2) + 0xc) + idx * 0x10;
         }
-        *(f32*)(*(u8**)chain + i * 0x54 + 0xc) = work[0] - (lbl_803DCED0 + *(f32*)(*(u8**)chain + i * 0x54) -
+        *(f32*)(*(u8**)chain + i * 0x54 + 0xc) = work[0] - (gMapSavedPlayerOffsetX + *(f32*)(*(u8**)chain + i * 0x54) -
             playerMapOffsetX);
         *(f32*)(*(u8**)chain + i * 0x54 + 0x10) = work[1] - *(f32*)(*(u8**)chain + i * 0x54 + 4);
-        *(f32*)(*(u8**)chain + i * 0x54 + 0x14) = work[2] - (lbl_803DCECC + *(f32*)(*(u8**)chain + i * 0x54 + 8) -
+        *(f32*)(*(u8**)chain + i * 0x54 + 0x14) = work[2] - (gMapSavedPlayerOffsetZ + *(f32*)(*(u8**)chain + i * 0x54 + 8) -
             playerMapOffsetZ);
         *(f32*)(*(u8**)chain + i * 0x54) = work[0];
         *(f32*)(*(u8**)chain + i * 0x54 + 4) = work[1];

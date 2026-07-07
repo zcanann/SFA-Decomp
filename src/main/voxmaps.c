@@ -290,13 +290,13 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     int ay;
     VoxBlock* block;
 
-    ay = obj->z * 10 + 5 - lbl_803DCDCC;
+    ay = obj->z * 10 + 5 - gMapBlockOriginWorldZ;
 
-    gridX = fastFloorf((f32)(obj->x * 10 + 5 - lbl_803DCDC8) / gVoxMapsBlockWorldSize);
+    gridX = fastFloorf((f32)(obj->x * 10 + 5 - gMapBlockOriginWorldX) / gVoxMapsBlockWorldSize);
     gridY = fastFloorf((f32)ay / gVoxMapsBlockWorldSize);
 
-    vm->blockOriginWorldX = lbl_803DCDC8 + gridX * 640;
-    vm->blockOriginWorldZ = lbl_803DCDCC + gridY * 640;
+    vm->blockOriginWorldX = gMapBlockOriginWorldX + gridX * 640;
+    vm->blockOriginWorldZ = gMapBlockOriginWorldZ + gridY * 640;
     vm->blockOriginGridX = *(volatile int*)&vm->blockOriginWorldX / 10;
     vm->blockOriginGridZ = *(volatile int*)&vm->blockOriginWorldZ / 10;
 
