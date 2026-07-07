@@ -27,8 +27,6 @@
 
 extern CameraModeCrawlState* lbl_803DD598;
 
-#pragma scheduling off
-#pragma peephole off
 
 void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 {
