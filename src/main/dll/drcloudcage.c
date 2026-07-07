@@ -86,13 +86,13 @@ typedef struct DRCloudCagePointPair
     f32 startY;
     f32 startZ;
     s16 startAlpha;
-    u8 pad0E;
+    u8 startColorByte;
     u8 pad0F;
     f32 endX;
     f32 endY;
     f32 endZ;
     s16 endAlpha;
-    u8 pad1E;
+    u8 endColorByte;
     u8 pad1F;
 } DRCloudCagePointPair;
 
@@ -394,8 +394,8 @@ void fn_801E9C00(int obj, int state)
             selectedTrail->points[0].endZ = endZ;
             selectedTrail->points[0].startAlpha = 0xff;
             selectedTrail->points[0].endAlpha = 0xff;
-            selectedTrail->points[0].pad0E = ((DRCloudCageState*)state)->trailColorByte;
-            selectedTrail->points[0].pad1E = ((DRCloudCageState*)state)->trailColorByte;
+            selectedTrail->points[0].startColorByte = ((DRCloudCageState*)state)->trailColorByte;
+            selectedTrail->points[0].endColorByte = ((DRCloudCageState*)state)->trailColorByte;
             selectedTrail->count += 2;
             ((DRCloudCageState*)state)->lastSpawnPosX = ((GameObject*)obj)->anim.worldPosX;
             ((DRCloudCageState*)state)->lastSpawnPosY = ((GameObject*)obj)->anim.worldPosY;
