@@ -270,7 +270,7 @@ DSError HandleCloseFileSupportRequest(int replyError, u8* ioResult) {
     return error;
 }
 
-DSError HandlePositionFileSupportRequest(u32 replyErr, u32 param_2, u8 param_3,
+DSError HandlePositionFileSupportRequest(u32 replyErr, u32 filePosition, u8 positionType,
                                          u8* ioResult) {
     DSError error;
     int replyBufferId;
@@ -289,11 +289,11 @@ DSError HandlePositionFileSupportRequest(u32 replyErr, u32 param_2, u8 param_3,
     }
 
     if (error == DS_NoError) {
-        error = TRKAppendBuffer1_ui32(buffer, param_2);
+        error = TRKAppendBuffer1_ui32(buffer, filePosition);
     }
 
     if (error == DS_NoError) {
-        error = TRKAppendBuffer1_ui8(buffer, param_3);
+        error = TRKAppendBuffer1_ui8(buffer, positionType);
     }
 
     if (error == DS_NoError) {
