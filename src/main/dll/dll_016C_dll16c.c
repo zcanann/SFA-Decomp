@@ -22,6 +22,9 @@
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/gamebits.h"
 
+/* seqId variant whose render is gated by GameBit 0x3A2 (docblock: "Render is gated by GameBit 0x3A2 / seqId 883") */
+#define DLL16C_RENDER_GATE_SEQID 883
+
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (IMIceMountain_getExtraSize == 0x14).
@@ -120,7 +123,7 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     int* p;
     int hit;
 
-    if (((GameObject*)obj)->anim.seqId != 883)
+    if (((GameObject*)obj)->anim.seqId != DLL16C_RENDER_GATE_SEQID)
     {
         if (mainGetBit(110) != 0)
         {
@@ -354,7 +357,7 @@ void dll_16C_update(int* obj)
         }
     }
 
-    if (((GameObject*)obj)->anim.seqId == 883 || mainGetBit(0x3a2) != 0)
+    if (((GameObject*)obj)->anim.seqId == DLL16C_RENDER_GATE_SEQID || mainGetBit(0x3a2) != 0)
     {
         int* sub = extra->linkedObj;
         f32 b;
