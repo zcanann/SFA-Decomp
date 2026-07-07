@@ -126,9 +126,9 @@ typedef struct ModgfxSpawnContext
     s16 sequenceParams[7];
     u32 flags;
     u8 modeByte;
-    u8 byte59;
+    u8 initialStateByte; /* 0x59: copied into PartfxEffectState.initialStateByte on spawn */
     u8 byte5A;
-    u8 byte5B;
+    u8 textureFrameTimer; /* 0x5B: copied into PartfxEffectState.textureFrameTimer on spawn */
     u8 sourceYawIndex; /* 0x5C: copied into PartfxEffectState.sourceYawIndex on spawn */
     s8 pendingSpawnCount;
     u8 pad5E[0x60 - 0x5E];

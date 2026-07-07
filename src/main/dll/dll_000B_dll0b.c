@@ -307,9 +307,9 @@ void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
     gModgfxSpawnContext.scale = fz2;
     gModgfxSpawnContext.drawGroupCount = word40;
     gModgfxSpawnContext.drawGroupStride = word3C;
-    gModgfxSpawnContext.byte59 = flagByte;
+    gModgfxSpawnContext.initialStateByte = flagByte;
     gModgfxSpawnContext.byte5A = 0;
-    gModgfxSpawnContext.byte5B = 0;
+    gModgfxSpawnContext.textureFrameTimer = 0;
 }
 
 
@@ -1034,12 +1034,12 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     *(u8*)&((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceYawIndex = st->sourceYawIndex;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupCount = st->drawGroupCount;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupStride = st->drawGroupStride;
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->initialStateByte = st->byte59;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->initialStateByte = st->initialStateByte;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->soundHandle = 0;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->activeVertexBufferIndex = 0;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->byte13B = 0;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->frameUpdated = 0;
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameTimer = st->byte5B;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameTimer = st->textureFrameTimer;
     if (((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameTimer != 0)
     {
         ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameStep = 0x3c / ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameTimer;
