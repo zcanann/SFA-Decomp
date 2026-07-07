@@ -20,6 +20,7 @@
 #include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
+#define UNK0109_HIT_VOLUME_SLOT 5
 
 #define UNK_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -102,7 +103,7 @@ void carryable_break_respawn_update(int obj)
             (*(void (*)(int, Dll109State*))*(int*)((u8*)*gCarryableInterface + 0x30))(obj, state);
             Sfx_PlayFromObject(obj, SFXen_rfall5_c);
             ObjHitbox_SetSphereRadius(obj, 0x28);
-            ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
+            ObjHits_SetHitVolumeSlot(obj, UNK0109_HIT_VOLUME_SLOT, 4, 0);
             if (Obj_IsLoadingLocked() != 0)
             {
                 setup = Obj_AllocObjectSetup(0x24, DLL109_CHILD_OBJ);
