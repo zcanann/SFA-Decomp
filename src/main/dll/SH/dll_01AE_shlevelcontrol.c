@@ -117,6 +117,7 @@ void SH_LevelControl_free(void)
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET 5
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
 #define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS 0x20000000
+#define SHLEVELCONTROL_AIRMETER_BGTEXTURE 0x5db /* air-meter background texture id */
 
 int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* updateState)
 {
@@ -378,7 +379,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         {
             (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
             ((ShLevelcontrolState*)state)->timer8 = gShLevelControlBloopTimeLimit;
-            (*gGameUIInterface)->initAirMeter(100000, 0x5db);
+            (*gGameUIInterface)->initAirMeter(100000, SHLEVELCONTROL_AIRMETER_BGTEXTURE);
             ((ShLevelcontrolState*)state)->eventState = 2;
         }
         break;
