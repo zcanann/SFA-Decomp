@@ -23,6 +23,9 @@ STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll7BEffectResourceData[];
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL7B_EFFECT_ID 0x8e
 extern f32 lbl_803E0D38, lbl_803E0D3C, lbl_803E0D40, lbl_803E0D44, lbl_803E0D48, lbl_803E0D4C;
 extern f32 lbl_803E0D50, lbl_803E0D54, lbl_803E0D58, lbl_803E0D5C, lbl_803E0D60, lbl_803E0D64;
 extern f32 lbl_803E0D68, lbl_803E0D6C, lbl_803E0D70, lbl_803E0D74, lbl_803E0D78;
@@ -235,7 +238,7 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)gDll7BEffectResourceData, 0xc, &base[0x8c], 0x8e, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)gDll7BEffectResourceData, 0xc, &base[0x8c], DLL7B_EFFECT_ID, 0);
 }
 
 void dll_7B_func01_nop(void)
