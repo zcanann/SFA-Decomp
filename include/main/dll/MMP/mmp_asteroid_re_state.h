@@ -11,6 +11,17 @@
 #define ASTEROIDRE_FX_PERIODIC 0x40 /* timed 0x71E periodic fx */
 #define ASTEROIDRE_SEQ_TICK 0x80    /* per-frame seq-ran latch */
 
+/* partfx ids, each gated by the matching eventFlags bit above (roles pinned by
+ * the flag branch that spawns them). Dust is emitted every rise/bob frame. */
+#define MMPASTEROIDRE_PARTFX_DUST 0x722         /* rise/bob-frame ground dust (height param) */
+#define MMPASTEROIDRE_PARTFX_DUST_CLOUD 0x723   /* rise/bob-frame dust cloud (spawn params, 2x) */
+#define MMPASTEROIDRE_PARTFX_SMOKE 0x716        /* ASTEROIDRE_FX_SMOKE (3x) */
+#define MMPASTEROIDRE_PARTFX_DEBRIS 0x71A       /* ASTEROIDRE_FX_DEBRIS */
+#define MMPASTEROIDRE_PARTFX_EXPLODE 0x71B      /* ASTEROIDRE_FX_EXPLODE flash (once) */
+#define MMPASTEROIDRE_PARTFX_EXPLODE_DEBRIS 0x71C /* ASTEROIDRE_FX_EXPLODE debris (0x28x) */
+#define MMPASTEROIDRE_PARTFX_IMPACT 0x71D       /* ASTEROIDRE_FX_IMPACT (2x) */
+#define MMPASTEROIDRE_PARTFX_PERIODIC 0x71E     /* ASTEROIDRE_FX_PERIODIC */
+
 /* MmpAsteroidReState.phase - rise-event progression, persisted to gamebit 0x87B.
  * Field is u8 (see below); these keep u8 storage, so naming the case/assignment
  * constants is byte-neutral. Only 1 and 2 are assigned in code; 0 is the initial

@@ -230,10 +230,10 @@ void mmp_asteroid_re_update(int obj)
             gMmpAsteroidDustSpawnParams.posY = state->baseY - lbl_803E4528;
             gMmpAsteroidDustSpawnParams.posZ = ((GameObject*)obj)->anim.localPosZ;
             gMmpAsteroidDustHeightParam = (int)(((GameObject*)obj)->anim.localPosY - state->baseY);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x722, NULL, 2, -1, &gMmpAsteroidDustHeightParam);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x723, &gMmpAsteroidDustSpawnParams, 0x200001, -1,
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_DUST, NULL, 2, -1, &gMmpAsteroidDustHeightParam);
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_DUST_CLOUD, &gMmpAsteroidDustSpawnParams, 0x200001, -1,
                                              &gMmpAsteroidDustHeightParam);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x723, &gMmpAsteroidDustSpawnParams, 0x200001, -1,
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_DUST_CLOUD, &gMmpAsteroidDustSpawnParams, 0x200001, -1,
                                              &gMmpAsteroidDustHeightParam);
         }
     }
@@ -241,22 +241,22 @@ void mmp_asteroid_re_update(int obj)
     {
         if ((state->eventFlags & ASTEROIDRE_FX_SMOKE) != 0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x716, NULL, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x716, NULL, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x716, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_SMOKE, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_SMOKE, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_SMOKE, NULL, 1, -1, NULL);
         }
         if ((state->eventFlags & ASTEROIDRE_FX_DEBRIS) != 0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x71A, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_DEBRIS, NULL, 2, -1, NULL);
         }
         if ((state->eventFlags & ASTEROIDRE_FX_EXPLODE) != 0)
         {
             int count;
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x71B, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_EXPLODE, NULL, 1, -1, NULL);
             count = 0x28;
             do
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x71C, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_EXPLODE_DEBRIS, NULL, 1, -1, NULL);
                 count--;
             }
             while (count != 0);
@@ -267,8 +267,8 @@ void mmp_asteroid_re_update(int obj)
         }
         if ((state->eventFlags & ASTEROIDRE_FX_IMPACT) != 0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x71D, NULL, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x71D, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_IMPACT, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_IMPACT, NULL, 1, -1, NULL);
         }
         if ((state->eventFlags & ASTEROIDRE_FX_PERIODIC) != 0)
         {
@@ -277,7 +277,7 @@ void mmp_asteroid_re_update(int obj)
             {
                 state->periodicFxTimer = (f32)(int)
                 randomGetRange(10, 0x3C);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x71E, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_PERIODIC, NULL, 1, -1, NULL);
             }
         }
     }
