@@ -31,6 +31,10 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define SB_PROPELLER_SFX_HIT 0x2c7
 #define SB_PROPELLER_SFX_DESTROYED 0x2c8
 
+/* partfx emitted once the propeller is destroyed (health <= 0) */
+#define SB_PROPELLER_PARTFX_SMOKE 0x9f   /* smokeTimer-gated smoke burst at the hub */
+#define SB_PROPELLER_PARTFX_DEBRIS 0x7aa /* bankIndex==1 debris trail from path point 0 */
+
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
@@ -111,7 +115,7 @@ void SB_Propeller_update(int obj)
                 stk.y = objAnim->worldPosY;
                 stk.z = objAnim->worldPosZ;
                 stk.scale = spd;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x9f, stk.pad, 0x200001, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, SB_PROPELLER_PARTFX_SMOKE, stk.pad, 0x200001, -1, NULL);
             }
             state->smokeTimer = (f32)(int)randomGetRange(0x5a, 0xf0);
         }
@@ -125,7 +129,7 @@ void SB_Propeller_update(int obj)
             stk.z = stk.z - objAnim->worldPosZ;
             for (j = 0; j < framesThisStep; j++)
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7aa, stk.pad, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, SB_PROPELLER_PARTFX_DEBRIS, stk.pad, 2, -1, NULL);
             }
         }
     }
