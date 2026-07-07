@@ -23,6 +23,10 @@
 /* anim.seqId of the explosive variant (docblock: "0x869 is the explosive variant"). */
 #define KALDACHOMPSPIT_SEQID_EXPLOSIVE 0x869
 
+/* green poison spit particle fx (docblock: "particle fx 0x714/0x715"). */
+#define KALDACHOMPSPIT_PARTFX_POISON_TRAIL 0x714
+#define KALDACHOMPSPIT_PARTFX_POISON_BURST 0x715
+
 extern int randomGetRange(int lo, int hi);
 extern void queueGlowRender(void* light);
 extern int Obj_FreeObject(int obj);
@@ -112,7 +116,7 @@ void kaldachompspit_burst(int obj)
     {
         for (i = 0; i < 0x19; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
+            (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, &i);
         }
         Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
     }
@@ -231,10 +235,10 @@ void KaldaChompSpit_update(int obj)
             }
             else
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x714, NULL, 2, -1,
+                (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_TRAIL, NULL, 2, -1,
                                                  &objAnim->alpha);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, NULL);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
             }
             ptr = *state;
             if ((ptr != 0) && (*(u8*)(ptr + 0x2f8) != 0) && (*(u8*)(ptr + 0x4c) != 0))
