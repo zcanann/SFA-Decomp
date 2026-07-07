@@ -2583,8 +2583,6 @@ void fn_800213D0(f32 * a, f32 * b, s16 * out0, s16 * out1, s16 * out2);
 
 void fn_8002A5DC(u8* obj)
 {
-    extern f32 lbl_803DCECC;
-    extern f32 lbl_803DCED0;
     extern f32 lbl_803DE888;
     extern f32 lbl_803DE894;
     extern f32 lbl_803DE898;
@@ -2634,8 +2632,6 @@ void fn_8002A5DC(u8* obj)
 
 void modelInitBones(f32 scale, void* model)
 {
-    extern f32 lbl_803DE88C;
-    extern const f32 lbl_803DE890;
     extern f32 lbl_803DE8D4;
     extern f32 lbl_803DE8D8;
     f32* srcP;
