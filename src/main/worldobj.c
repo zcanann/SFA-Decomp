@@ -53,6 +53,10 @@ extern f32 lbl_803E66D8;
 extern f32 lbl_803E665C;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
+/* case 0x5e2 spawns 11 scattered copies of this child; the child (handled in
+ * case 0x5da below) initializes with random rotation on all axes and random
+ * per-axis spin = tumbling debris fragments. */
+#define WORLDOBJ_CHILD_OBJ_DEBRIS 0x5da
 #define GREAT_FOX_EFFECT_COUNT 10
 extern GreatFoxFxEntry gGreatFoxEffects[GREAT_FOX_EFFECT_COUNT];
 extern f32 lbl_803E6640;
@@ -226,7 +230,7 @@ void worldobj_init(int obj, int arg)
             sub = *(int*)&((GameObject*)obj)->anim.placementData;
             if (Obj_IsLoadingLocked() != 0)
             {
-                int o2 = Obj_AllocObjectSetup(0x20, 0x5da);
+                int o2 = Obj_AllocObjectSetup(0x20, WORLDOBJ_CHILD_OBJ_DEBRIS);
                 *(u8*)(o2 + 4) = *(u8*)(sub + 4);
                 *(u8*)(o2 + 6) = *(u8*)(sub + 6);
                 *(u8*)(o2 + 5) = *(u8*)(sub + 5);
