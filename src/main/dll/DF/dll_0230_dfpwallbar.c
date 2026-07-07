@@ -11,6 +11,10 @@
 
 #define DFPWALLBAR_OBJFLAG_HIDDEN 0x4000
 
+/* seqId of the DragonRock spell-puzzle controller object this bar links
+   to (stored as ChukaState.linkedObject; same controller as the floor bar). */
+#define DFPWALLBAR_SEQID_CONTROLLER 0x431
+
 typedef struct ChukaPlacement
 {
     u8 pad0[0x8 - 0x0];
@@ -86,7 +90,7 @@ void chuka_update(int obj)
         for (i = firstIdx; i < count; i++)
         {
             candidate = objList[i];
-            if (((GameObject*)candidate)->anim.seqId == 0x431)
+            if (((GameObject*)candidate)->anim.seqId == DFPWALLBAR_SEQID_CONTROLLER)
             {
                 ((ChukaState*)state)->linkedObject = candidate;
                 i = count;
