@@ -23,6 +23,11 @@ extern void dll_7A_func01_nop(void);
 
 extern void dll_7A_func00_nop(void);
 
+/* spawnEffect effect ids per variant (docblock: "effect id 0x156/0x89/0x23b for variant 0/1/2"). */
+#define DLL79_EFFECT_ID_VARIANT0 0x156
+#define DLL79_EFFECT_ID_VARIANT1 0x89
+#define DLL79_EFFECT_ID_VARIANT2 0x23b
+
 typedef struct
 {
     u32 mode;
@@ -362,19 +367,19 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     if (variant == 0)
     {
         buf.v58 = 0;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll79EffectModelBlock, 8, &base[0x5c], 0x156, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll79EffectModelBlock, 8, &base[0x5c], DLL79_EFFECT_ID_VARIANT0, 0);
     }
     else if (variant == 1)
     {
         buf.v58 = 0;
         buf.flags |= 4;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll79EffectModelBlock, 8, &base[0x5c], 0x89, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll79EffectModelBlock, 8, &base[0x5c], DLL79_EFFECT_ID_VARIANT1, 0);
     }
     else if (variant == 2)
     {
         buf.v58 = 0;
         buf.flags |= 4;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll79EffectModelBlock, 8, &base[0x5c], 0x23b, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll79EffectModelBlock, 8, &base[0x5c], DLL79_EFFECT_ID_VARIANT2, 0);
     }
     return ret;
 }
