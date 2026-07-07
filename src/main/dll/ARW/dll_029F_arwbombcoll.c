@@ -15,6 +15,8 @@
 
 #include "main/audio/sfx_ids.h"
 
+#define ARWBOMBCOLL_HIT_VOLUME_SLOT 0x13
+
 typedef struct ArwbombcollHandleArwingHitPlacement
 {
     u8 pad0[0x1E - 0x0];
@@ -268,7 +270,7 @@ active :
         objAnim->alpha = alpha;
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->anim.rotX = gArwBombCollSpinRate * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
-        ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);
+        ObjHits_SetHitVolumeSlot(obj, ARWBOMBCOLL_HIT_VOLUME_SLOT, 0, 0);
         if (flags->b40 != 0)
         {
             if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
