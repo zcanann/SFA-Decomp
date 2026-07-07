@@ -24,6 +24,11 @@
 #define EDIBLEMUSHROOM_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 #define EDIBLEMUSHROOM_OBJGROUP 0x47
 #define EDIBLEMUSHROOM_OBJGROUP_SECONDARY 0x31
+
+/* effect emitted on the tailSwingFxTimer tick while idle/rendered */
+#define EDIBLEMUSHROOM_PARTFX_TAIL_SWING 0x7f0
+/* spore puff emitted on the sporePuffTimer tick during the burrow/attack state */
+#define EDIBLEMUSHROOM_PARTFX_SPORE_PUFF 0x51d
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
@@ -174,7 +179,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                     fx.x = ((GameObject*)obj)->anim.worldPosX;
                     fx.y = 18.0f + ((GameObject*)obj)->anim.worldPosY;
                     fx.z = ((GameObject*)obj)->anim.worldPosZ;
-                    (*gPartfxInterface)->spawnObject(obj, 0x7f0, &fx,
+                    (*gPartfxInterface)->spawnObject(obj, EDIBLEMUSHROOM_PARTFX_TAIL_SWING, &fx,
                                                      0x200001, -1, NULL);
                 }
                 ((EdibleMushroomState*)state)->tailSwingFxTimer = 30.0f;
@@ -370,7 +375,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                 fx.y = 12.0f;
                 if (((GameObject*)obj)->objectFlags & EDIBLEMUSHROOM_OBJFLAG_RENDERED)
                 {
-                    (*gPartfxInterface)->spawnObject(obj, 0x51d, &fx, 2, -1,
+                    (*gPartfxInterface)->spawnObject(obj, EDIBLEMUSHROOM_PARTFX_SPORE_PUFF, &fx, 2, -1,
                                                      NULL);
                 }
                 ((EdibleMushroomState*)state)->sporePuffTimer = 20.0f;
