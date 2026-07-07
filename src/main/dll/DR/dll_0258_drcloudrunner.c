@@ -31,6 +31,7 @@
 #define DRCLOUDRUNNER_OBJGROUP 0xa
 #define ARWARWING_OBJGROUP 0x26
 #define DRCLOUDRUNNER_PARTFX 0x66
+#define DRCLOUDRUNNER_AIRMETER_BGTEXTURE 0x5de /* HUD air-meter background texture id */
 
 #define DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -1258,7 +1259,7 @@ int DR_CloudRunner_stateHandler04(int obj, int baddie)
         inner2 = ((GameObject*)obj)->extra;
         placement = *(int*)&((GameObject*)obj)->anim.placementData;
         ((ByteFlags*)&inner2->flagsBC0)->b02 = 1;
-        (*gGameUIInterface)->initAirMeter(((DRCloudRunnerPlacement*)placement)->airMeterCapacity, 0x5de);
+        (*gGameUIInterface)->initAirMeter(((DRCloudRunnerPlacement*)placement)->airMeterCapacity, DRCLOUDRUNNER_AIRMETER_BGTEXTURE);
         (*gGameUIInterface)->runAirMeter(inner2->airTimeRemaining);
         *(s16*)((char*)baddie + 0x338) = 0;
         ((CloudRunnerState*)baddie)->baddie.moveSpeed = lbl_803E83F4;
