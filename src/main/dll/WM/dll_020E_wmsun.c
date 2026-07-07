@@ -42,6 +42,10 @@
 #define WMSUN_SEQID_CRYSTAL 0x262
 #define WMSUN_SEQID_SUN 0x2bd
 
+/* Env-fx ids co-activated when the envfx timer expires (getEnvfxAct 3rd arg) */
+#define WMSUN_ENVFX_A 0x30
+#define WMSUN_ENVFX_B 0x34
+
 /* per-glare-sprite flicker table; filled at init by the unreachable
    0x2C2 variant and never read back by this TU */
 typedef struct WmSunGlareParams
@@ -539,8 +543,8 @@ void wmsun_update(int obj)
                     if (gWmSunEnvfxTimer <= 0)
                     {
                         gWmSunEnvfxTimer = 0;
-                        getEnvfxAct(obj, obj, 0x30, 0);
-                        getEnvfxAct(obj, obj, 0x34, 0);
+                        getEnvfxAct(obj, obj, WMSUN_ENVFX_A, 0);
+                        getEnvfxAct(obj, obj, WMSUN_ENVFX_B, 0);
                     }
                 }
                 if ((int)randomGetRange(0, 8) == 0)
