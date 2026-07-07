@@ -4314,9 +4314,6 @@ void RomCurve_add(RomCurveDef* curve)
     romCurves[insertIndex] = curve;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
 void RomCurve_release(void)
 {
 }
