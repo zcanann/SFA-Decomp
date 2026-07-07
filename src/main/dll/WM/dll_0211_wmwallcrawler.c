@@ -24,6 +24,7 @@
 #include "main/dll/WM/dll_0211_wmwallcrawler.h"
 
 #define WMWALLCRAWLER_OBJGROUP 3
+#define WMWALLCRAWLER_PARTFX 0x1a3
 #define WMWALLCRAWLER_TARGET_OBJGROUP 0xa /* nearest group-10 object targeted by the TARGET_NEAREST variant */
 
 typedef struct WmwallcrawlerState
@@ -341,7 +342,7 @@ void wmwallcrawler_update(int obj)
                 {
                     for (k = 0; k < 0x1e; k++)
                     {
-                        (*gPartfxInterface)->spawnObject((void*)ob, 0x1a3, NULL, 0, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)ob, WMWALLCRAWLER_PARTFX, NULL, 0, -1, NULL);
                     }
                     s16toFloat(st + 0x28c, 100);
                     return;
