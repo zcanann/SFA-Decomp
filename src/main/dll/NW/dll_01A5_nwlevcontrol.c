@@ -28,6 +28,10 @@ extern u32 SCGameBitLatch_Update();
 #define NWLEVCONTROL_OBJFLAG_HIDDEN 0x4000
 #define NWLEVCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* SnowHorn Wastes music tracks (Music_Trigger ids). */
+#define NWLEVCONTROL_MUSIC_TRACK 0x1a       /* day/night ambient track */
+#define NWLEVCONTROL_MUSIC_TIMER_END 0xaf   /* timed-challenge completion track */
+
 extern void gameTextShow(int a);
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
@@ -122,18 +126,18 @@ void nw_levcontrol_update(int objArg)
             state->dayNightMusic = -1;
             if (((int)state->flags & 0x10) != 0)
             {
-                Music_Trigger((int*)0x1a, 0);
+                Music_Trigger((int*)NWLEVCONTROL_MUSIC_TRACK, 0);
             }
         }
     }
     else
     {
-        if (state->dayNightMusic != 0x1a)
+        if (state->dayNightMusic != NWLEVCONTROL_MUSIC_TRACK)
         {
-            state->dayNightMusic = 0x1a;
+            state->dayNightMusic = NWLEVCONTROL_MUSIC_TRACK;
             if (((int)state->flags & 0x10) != 0)
             {
-                Music_Trigger((int*)0x1a, 1);
+                Music_Trigger((int*)NWLEVCONTROL_MUSIC_TRACK, 1);
             }
         }
     }
@@ -149,7 +153,7 @@ void nw_levcontrol_update(int objArg)
         timerActive = 1;
     }
     mainSetBits(0xf31, timerActive);
-    SCGameBitLatch_Update(&state->flags, 0x80, -1, -1, 0xf31, 0xaf);
+    SCGameBitLatch_Update(&state->flags, 0x80, -1, -1, 0xf31, NWLEVCONTROL_MUSIC_TIMER_END);
     gameBit = mainGetBit(0x398);
     if ((gameBit != 0) &&
         (status = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), status == 0)
@@ -226,7 +230,7 @@ void nw_levcontrol_update(int objArg)
                     state->flags = flags & ~2;
                     state->flags = state->flags & ~4;
                     gameTimerStop();
-                    Music_Trigger((int*)0xaf, 0);
+                    Music_Trigger((int*)NWLEVCONTROL_MUSIC_TIMER_END, 0);
                     mainSetBits(0x19f, 1);
                 }
                 else
