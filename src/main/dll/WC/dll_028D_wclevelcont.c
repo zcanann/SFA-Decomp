@@ -4,6 +4,12 @@
 
 #define WCLEVELCONT_OBJGROUP 0x9
 
+/* env effects co-activated once on first update (gated by gamebit 0xe05) alongside the sky preset; opaque distinct roles */
+#define WCLEVELCONT_ENVFX_A 0x1fb
+#define WCLEVELCONT_ENVFX_B 0x1ff
+#define WCLEVELCONT_ENVFX_C 0x1fc
+#define WCLEVELCONT_ENVFX_D 0x1fd
+
 void wclevelcont_getSolvedTileXYB(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
@@ -257,10 +263,10 @@ void wclevelcont_update(int obj)
     {
         if ((u32)mainGetBit(0xe05) == 0)
         {
-            getEnvfxActImmediately(obj, obj, 0x1fb, 0);
-            getEnvfxActImmediately(obj, obj, 0x1ff, 0);
-            getEnvfxActImmediately(obj, obj, 0x1fc, 0);
-            getEnvfxActImmediately(obj, obj, 0x1fd, 0);
+            getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_A, 0);
+            getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_B, 0);
+            getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_C, 0);
+            getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_D, 0);
             skyFn_80088e54(0, lbl_803E6DA8);
             mainSetBits(0xe05, 1);
         }
