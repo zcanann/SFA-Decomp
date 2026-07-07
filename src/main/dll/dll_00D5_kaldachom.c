@@ -39,6 +39,7 @@
  * mouth path points and given target-aimed velocity (docblock: "Mouth-point
  * projectiles are spawned from anim events at the upper/lower mouth path points"). */
 #define KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE 0x51b
+#define KALDACHOM_EFFECT_RESOURCE_ID 0x5a /* shared effect resource -> gKaldachomEffectResource */
 
 extern int randomGetRange(int lo, int hi);
 extern int Obj_AllocObjectSetup();
@@ -533,7 +534,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
     ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E30CC * ((GameObject*)obj)->anim.rootMotionScale));
     if (skip_alloc == 0)
     {
-        gKaldachomEffectResource = Resource_Acquire(0x5a, 1);
+        gKaldachomEffectResource = Resource_Acquire(KALDACHOM_EFFECT_RESOURCE_ID, 1);
     }
 }
 
