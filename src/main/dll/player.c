@@ -14793,7 +14793,13 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     f32 y1;
     void** list;
     f32 planes[8];
-    f32 dists[5];
+    struct
+    {
+        f32 x;
+        f32 y;
+        f32 z;
+    } probe;
+    f32 dists[2];
 
     mode = 0;
     inner = *(int*)&((GameObject*)obj)->extra;
@@ -14842,12 +14848,12 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
             verts = lbl_803DCF38;
         }
         planes[0] = out[9];
-        planes[1] = lbl_803E7EA4;
+        planes[1] = 0.0f;
         planes[2] = -out[7];
         planes[3] = -(planes[0] * *(f32*)((char*)cam + 0x4) +
             planes[2] * ((GameObject*)cam)->anim.localPosZ);
         planes[4] = -planes[0];
-        planes[5] = lbl_803E7EA4;
+        planes[5] = 0.0f;
         planes[6] = -planes[2];
         planes[7] = -(planes[4] * ((GameObject*)cam)->anim.rootMotionScale +
             planes[6] * ((GameObject*)cam)->anim.worldPosX);
@@ -14927,16 +14933,13 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         }
         if (wallHit != 0)
         {
-            out[0xb] = out[0xb] + ((lbl_803E7E98 + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
+            out[0xb] = out[0xb] + ((0.5f + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
                 planes[(u32) * (u8*)((char*)out + 0x5f) * 4];
-            out[0xd] = out[0xd] + ((lbl_803E7E98 + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
+            out[0xd] = out[0xd] + ((0.5f + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
                 planes[(u32) * (u8*)((char*)out + 0x5f) * 4 + 2];
         }
-        {
-            f32 e2;
-            out[0x11] = -(out[7] * ((e2 = lbl_803E7E98) + lbl_803DC6C0) - out[0xb]);
-            out[0x13] = -(out[9] * (e2 + lbl_803DC6C0) - out[0xd]);
-        }
+        out[0x11] = -(out[7] * (0.5f + lbl_803DC6C0) - out[0xb]);
+        out[0x13] = -(out[9] * (0.5f + lbl_803DC6C0) - out[0xd]);
         {
             f32 f = lbl_803E7F10;
             out[0x14] = f * out[7] + out[0xb];
@@ -14945,54 +14948,55 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         out[1] = ((GameObject*)cam)->anim.localPosX +
             *(f32*)((char*)cam + 0x48) *
             (((GameObject*)cam)->anim.localPosY - ((GameObject*)cam)->anim.localPosX);
-        dists[2] = out[0x14];
-        dists[3] = out[1];
-        dists[4] = out[0x16];
+        probe.x = out[0x14];
+        probe.y = out[1];
+        probe.z = out[0x16];
         ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
-            &dists[2], &dists[3], &dists[4], *(int*)&((GameObject*)obj)->anim.parent);
+            &probe.x, &probe.y, &probe.z, *(int*)&((GameObject*)obj)->anim.parent);
         {
-            int cnt = hitDetectFn_80065e50(obj, dists[2], dists[3], dists[4], (int***)&list, 0, 0x201);
+            int cnt = hitDetectFn_80065e50(obj, probe.x, probe.y, probe.z, (int***)&list, 0, 0x201);
             if (cnt != 0)
             {
+                void** pp;
                 f32 best = lbl_803E80AC;
                 f32 best2 = best;
                 int bi = -1;
                 int i2 = 0;
-                void** pp = list;
+                pp = list;
                 for (; cnt > 0; cnt--)
                 {
-                    f32 dy = dists[3] - *(f32*)*pp;
+                    f32 dy = probe.y - *(f32*)*pp;
                     if (dy >= lbl_803E7EA4 && (best < lbl_803E7EA4 || dy < best))
                     {
                         best = dy;
                         bi = i2;
                     }
-                    if (((f32*)*pp)[2] > lbl_803E80B0 && dy >= lbl_803E7EA4 &&
-                        (best2 < lbl_803E7EA4 || dy < best2))
+                    if (((f32*)*pp)[2] > lbl_803E80B0 && dy >= 0.0f &&
+                        (best2 < 0.0f || dy < best2))
                     {
                         best2 = dy;
                     }
                     pp++;
                     i2++;
                 }
-                if (best < lbl_803E80C4 && bi != -1 && ((f32*)list[bi])[2] <= lbl_803E80B0 &&
+                if (best < 40.0f && bi != -1 && ((f32*)list[bi])[2] <= lbl_803E80B0 &&
                     ((f32*)list[bi])[2] > lbl_803E7EB0)
                 {
                     return 0;
                 }
-                if (best2 < lbl_803E80C4)
+                if (best2 < 40.0f)
                 {
                     return 0;
                 }
             }
         }
-        dists[2] = out[0x11];
-        dists[3] = out[1];
-        dists[4] = out[0x13];
+        probe.x = out[0x11];
+        probe.y = out[1];
+        probe.z = out[0x13];
         ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
-            &dists[2], &dists[3], &dists[4], *(int*)&((GameObject*)obj)->anim.parent);
+            &probe.x, &probe.y, &probe.z, *(int*)&((GameObject*)obj)->anim.parent);
         if (((int (*)(int, f32, f32, f32, f32*, int))hitDetectFn_800658a4)(
-                obj, dists[2], dists[3], dists[4], out + 0x12, 0x205) == 0)
+                obj, probe.x, probe.y, probe.z, out + 0x12, 0x205) == 0)
         {
             out[0x12] = out[1] - out[0x12];
         }
