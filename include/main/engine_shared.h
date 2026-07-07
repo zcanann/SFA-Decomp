@@ -312,9 +312,9 @@ typedef struct {
     int c;
 } TextCallbackEntry;
 typedef struct {
-    u16 a;
-    u16 b;
-    u16 key;
+    u16 textSeqId;
+    u16 dirId;
+    u16 objSeqId;
 } TaskTextEntry;
 typedef struct MusicTrackSlot {
     s16 id;
@@ -1241,7 +1241,7 @@ void voxmaps_allocRouteWork(void** p);
 void gameTextFreePhrase(int* p);
 void fn_80008EDC(TextCallbackEntry* p);
 void gameTextFn_80016810(int a, int b, int c);
-int gameTextGetTaskText(int id, int* outA, int* outB);
+int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId);
 void gameTextShowTimeStr(char* str);
 void gameTextShow(int a);
 void gameTextShowStr(char *text, int box, int arg2, int arg3);

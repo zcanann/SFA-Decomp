@@ -67,21 +67,21 @@ void gameTextFn_80016810(int a, int b, int c)
     }
 }
 
-int gameTextGetTaskText(int id, int* outA, int* outB)
+int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId)
 {
     int i;
     TaskTextEntry* e = gTaskTextTable;
     for (i = 0; i < 0x7a; i++)
     {
-        if (e->key == id)
+        if (e->objSeqId == id)
         {
-            if (outA != NULL)
+            if (outTextSeqId != NULL)
             {
-                *outA = e->a;
+                *outTextSeqId = e->textSeqId;
             }
-            if (outB != NULL)
+            if (outDirId != NULL)
             {
-                *outB = e->b;
+                *outDirId = e->dirId;
             }
             return 1;
         }
