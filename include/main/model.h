@@ -56,7 +56,8 @@ typedef struct ModelFileHeader {
     u8 *blendAnimBase;
     u8 *displayLists; /* 0x1c-stride entries, displayListCount + shadowDisplayListCount */
     u8 *instrs;
-    u8 unkD8[4];
+    u16 instrsBitLenWords; /* 0xD8: render-instruction stream length; *8 gives bit length (see objprint_dolphin render-instr readers) */
+    u8 unkDA[2];
     u8 *morphTargetPtrs; /* pointer table, morphTargetCount entries */
     u16 cullDistance;
     u16 shaderFlags;
@@ -147,9 +148,9 @@ typedef struct ObjModel {
     void *postRenderCallback;
     s32 *vertexAnimData; /* 0x40: per-entry s32 array (file->vertexAnimCount), filled from vertexAnimEntries[i]+0x60 */
     s32 *blendAnimData;  /* 0x44: per-entry s32 array (file->blendAnimCount), filled from normalBuf + blendAnimEntries[i]+0x60 */
-    u8 *unk48;
-    u8 *unk4C;
-    u8 *unk50;
+    u8 *hitSphereBuf0; /* 0x48: hit-sphere workspace buffer 0 (file->hitSphereCount * 0x10) */
+    u8 *hitSphereBuf1; /* 0x4C: hit-sphere workspace buffer 1 (double-buffered) */
+    u8 *hitSphereBufActive; /* 0x50: current hit-sphere buffer, initialized to hitSphereBuf0 */
     u8 *unk54;
     void *renderAttachment;
     u8 *curMtxBuf;
