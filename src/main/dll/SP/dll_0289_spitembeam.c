@@ -28,6 +28,8 @@ enum
 #define SPITEMBEAM_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SPITEMBEAM_OBJFLAG_UPDATE_DISABLED 0x8000
 
+#define SPITEMBEAM_TARGET_OBJGROUP 9
+
 extern f32 lbl_803E5AD8;
 extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
 
@@ -67,7 +69,7 @@ void spitembeam_update(int* obj)
     searchRadius = lbl_803E5AD8;
     if (shop == NULL)
     {
-        *(int**)&((GameObject*)obj)->unkF4 = ObjGroup_FindNearestObject(9, obj, &searchRadius);
+        *(int**)&((GameObject*)obj)->unkF4 = ObjGroup_FindNearestObject(SPITEMBEAM_TARGET_OBJGROUP, obj, &searchRadius);
     }
     else
     {
