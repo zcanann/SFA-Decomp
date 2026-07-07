@@ -18,6 +18,7 @@
  * objects (defined in sibling TUs); their callbacks are forward-declared
  * here only so the descriptor tables can take their addresses.
  */
+#include "main/objanim.h"
 #include "main/obj_placement.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
@@ -782,7 +783,7 @@ void dll_CE_update(int obj, int p2, int p3)
                 obj, setup, (int)sub, 7, 6, 0x102, 0x26, lbl_803E2E14);
             sub->targetState = 0;
             Sfx_PlayFromObject(obj, SFXfoxcom_find);
-            ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0x10);
+            ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
             *(s8*)&sub->baddie.moveDone = 0;
             ((GameObject*)obj)->anim.alpha = 0xff;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
