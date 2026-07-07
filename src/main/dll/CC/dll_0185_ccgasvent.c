@@ -62,4 +62,3 @@ void ccgasvent_update(int* obj)
 
 #pragma scheduling off
 void ccgasvent_init(int obj) { ObjGroup_AddObject(obj, CCGASVENT_GROUP); }
-#pragma scheduling reset
