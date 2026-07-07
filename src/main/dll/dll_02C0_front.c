@@ -154,6 +154,9 @@ extern void PSMTXIdentity(void*);
 #define FRONT_MAIN_TEXTURE_ID_A 0x647
 #define FRONT_MAIN_TEXTURE_ID_B 0xC5
 
+/* Copyright/title text box shown by titleScreenShowCopyright (docblock: "push text box 0x3d9"). */
+#define FRONT_TEXT_COPYRIGHT 0x3d9
+
 /* Reset state bytes, load the main texture (asset 0x647 or 0xC5 depending on
  * lbl_803DC968), identity the matrix, then load the 19-entry texture table
  * from the id list at gTitleScreenTextureIds into gTitleScreenTextures. */
@@ -368,7 +371,7 @@ void titleScreenShowCopyright(u8 arg)
             gTitleScreenCopyrightLatch = 1;
         }
     }
-    tb = gameTextGet(0x3d9);
+    tb = gameTextGet(FRONT_TEXT_COPYRIGHT);
     if (*(u16*)tb != 0xffff)
     {
         box = gameTextGetBox(*(u8*)((char*)tb + 4));
@@ -379,7 +382,7 @@ void titleScreenShowCopyright(u8 arg)
         *(s16*)((char*)box + 0x16) =
             (s16)(lbl_803E2320 * (lbl_803E2318 - gTitleScreenCopyrightFade) + gTitleScreenCopyrightBaseY);
         gameTextSetColor(0xff, 0xff, 0xff, (s32)(lbl_803E2324 * gTitleScreenCursorX));
-        gameTextShow(0x3d9);
+        gameTextShow(FRONT_TEXT_COPYRIGHT);
     }
 }
 
