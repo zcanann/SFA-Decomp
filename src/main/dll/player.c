@@ -3364,28 +3364,28 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             {
                 if (d > 0x2aaa)
                 {
-                    ((PlayerState*)inner)->unk4DA = -0x2aaa;
-                    ((PlayerState*)inner)->unk4E0 = d - 0x2aaa;
+                    ((PlayerState*)inner)->bodyLeanAimDelta = -0x2aaa;
+                    ((PlayerState*)inner)->aimTurnYaw = d - 0x2aaa;
                 }
                 else
                 {
-                    ((PlayerState*)inner)->unk4DA = -d;
-                    ((PlayerState*)inner)->unk4E0 = 0;
+                    ((PlayerState*)inner)->bodyLeanAimDelta = -d;
+                    ((PlayerState*)inner)->aimTurnYaw = 0;
                 }
             }
             else if (d < -0x2aaa)
             {
-                ((PlayerState*)inner)->unk4DA = 0x2aaa;
-                ((PlayerState*)inner)->unk4E0 = d + 0x2aaa;
+                ((PlayerState*)inner)->bodyLeanAimDelta = 0x2aaa;
+                ((PlayerState*)inner)->aimTurnYaw = d + 0x2aaa;
             }
             else
             {
-                ((PlayerState*)inner)->unk4DA = -d;
-                ((PlayerState*)inner)->unk4E0 = 0;
+                ((PlayerState*)inner)->bodyLeanAimDelta = -d;
+                ((PlayerState*)inner)->aimTurnYaw = 0;
             }
-            ((PlayerState*)inner)->unk4DE = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
+            ((PlayerState*)inner)->headYawAimDelta = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
             {
-                int v = ((PlayerState*)inner)->unk4DE;
+                int v = ((PlayerState*)inner)->headYawAimDelta;
                 if (v < -0x1000)
                 {
                     v = -0x1000;
@@ -3394,7 +3394,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 {
                     v = 0x1000;
                 }
-                ((PlayerState*)inner)->unk4DE = v;
+                ((PlayerState*)inner)->headYawAimDelta = v;
             }
             seq->rotOffsetZ = 0;
             seq->posOffsetScale = lbl_803E7EA4;

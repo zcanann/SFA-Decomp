@@ -129,11 +129,11 @@ typedef struct PlayerState {
     s16 bodyLeanHalf;
     s16 bodyLeanAngle;
     s16 headYaw;
-    s16 unk4D8;
-    s16 unk4DA;
-    s16 unk4DC;
-    s16 unk4DE;
-    s16 unk4E0;
+    s16 bodyLeanAimBase;   /* body-lean joint angle at aim start (= -jointA); the eased body-lean output lerps from this toward bodyLeanAimBase - bodyLeanAimDelta by posOffsetScale, then -> bodyLeanAngle */
+    s16 bodyLeanAimDelta;  /* signed body-lean offset toward the look-at target, clamped to +-0x2aaa; subtracted from bodyLeanAimBase as the ease target */
+    s16 headYawAimBase;    /* head-yaw joint angle at aim start (= -jointB); the eased head-yaw output lerps from this toward headYawAimBase - headYawAimDelta, then -> headYaw */
+    s16 headYawAimDelta;   /* signed head-yaw offset toward the look-at target (getAngle of the vertical/planar delta), clamped to +-0x1000; subtracted from headYawAimBase as the ease target */
+    s16 aimTurnYaw;        /* residual body-turn yaw applied to targetYaw (scaled by the per-frame posOffsetScale increment) when facing the look-at path point */
     u8 pad4E2[0x4E4 - 0x4E2];
     s8 climbStep; /* discrete climb/step level (++ up, -- down by moveInputZ); climbTargetY = climbStep*climbStepHeight + climbBaseY; >3 switches A-button icon */
     s8 climbStepCount; /* 0x4e5: total number of climb steps for the current climbable; climbStep >= climbStepCount-3 (within 3 of the top) selects the top-of-climb transition */
