@@ -746,8 +746,8 @@ void Sfx_UpdateLoopedObjectSounds(void)
 
     i = (s16)(gSfxLoopedObjectSoundCount - 1);
     fp = &table->flags[i];
-    op = (u32*)&(&table->flags[i << 2])[384];
-    ip = (u16*)&(&table->flags[i << 1])[128];
+    op = (u32*)&table->flags[(i << 2) + 384];
+    ip = (u16*)&table->flags[(i << 1) + 128];
     for (; i >= 0; i--)
     {
         removeSound = 0;
