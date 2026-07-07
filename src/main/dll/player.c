@@ -1115,6 +1115,7 @@ void staffShootFireball(int obj, int state, f32 unused)
 {
     int spawned = 0;
     PlayerState* inner = ((GameObject*)obj)->extra;
+    GameObject* fb;
     int slot;
     int setup;
     f32 vec[3];
@@ -1151,12 +1152,12 @@ void staffShootFireball(int obj, int state, f32 unused)
         {
             *(s16*)((char*)setup + 0x1a) = 1;
         }
-        setup = Obj_SetupObject(setup, 5, -1, -1, 0);
-        if ((void*)setup == NULL)
+        fb = (GameObject*)Obj_SetupObject(setup, 5, -1, -1, 0);
+        if (fb == NULL)
         {
             return;
         }
-        *(s16*)((char*)setup + 0x6) = *(s16*)((char*)setup + 0x6) | 0x2000;
+        fb->anim.flags = fb->anim.flags | 0x2000;
         if (((PlayerState*)state)->baddie.targetObj != NULL)
         {
             ObjHitVolumeRuntimeTransform* pt;
@@ -1182,13 +1183,13 @@ void staffShootFireball(int obj, int state, f32 unused)
             }
             setMatrixFromObjectPos(mtx, v.angles);
             Matrix_TransformPoint(mtx, 0.0f, 0.0f, -10.0f,
-                                  (f32*)((char*)setup + 0x24), (f32*)((char*)setup + 0x28),
-                                  (f32*)((char*)setup + 0x2c));
-            *(f32*)((char*)setup + 0x18) = ((ObjPlacement*)setup)->posY;
-            *(f32*)((char*)setup + 0x1c) = ((ObjPlacement*)setup)->posZ;
-            *(f32*)((char*)setup + 0x20) = *(f32*)&((ObjPlacement*)setup)->mapId;
-            *(s16*)((char*)setup + 0x0) = inner->targetYaw;
-            ((ObjPlacement*)setup)->unk02 = *(s16*)((char*)slot + 0x2) / 2;
+                                  &fb->anim.velocityX, &fb->anim.velocityY,
+                                  &fb->anim.velocityZ);
+            fb->anim.worldPosX = fb->anim.localPosX;
+            fb->anim.worldPosY = fb->anim.localPosY;
+            fb->anim.worldPosZ = fb->anim.localPosZ;
+            fb->anim.rotX = inner->targetYaw;
+            fb->anim.rotY = *(s16*)((char*)slot + 0x2) / 2;
         }
         else
         {
@@ -1198,7 +1199,7 @@ void staffShootFireball(int obj, int state, f32 unused)
             f32 cot;
             f32 fx;
             f32 mag;
-            *(s16*)((char*)setup + 0x0) = *(s16*)((char*)slot + 0x0);
+            fb->anim.rotX = *(s16*)((char*)slot + 0x0);
             fov = Camera_GetFovY();
             fov *= 91.022f;
             fov = gPlayerPi * fov / 32768.0f;
@@ -1214,20 +1215,20 @@ void staffShootFireball(int obj, int state, f32 unused)
             vec[1] = cot / mag;
             vec[2] = 100.0f / mag;
             Matrix_TransformVector(fn_8000E814(), vec, vec);
-            *(f32*)((char*)setup + 0x24) = -10.0f * vec[0];
-            *(f32*)((char*)setup + 0x28) = -10.0f * vec[1];
-            *(f32*)((char*)setup + 0x2c) = -10.0f * vec[2];
-            ((ObjPlacement*)setup)->posY = *(f32*)((char*)setup + 0x18) =
-                2.0f * *(f32*)((char*)setup + 0x24) + *(f32*)((char*)slot + 0xc);
-            ((ObjPlacement*)setup)->posZ = *(f32*)((char*)setup + 0x1c) =
-                2.0f * *(f32*)((char*)setup + 0x28) + *(f32*)((char*)slot + 0x10);
-            *(f32*)&((ObjPlacement*)setup)->mapId = *(f32*)((char*)setup + 0x20) =
-                2.0f * *(f32*)((char*)setup + 0x2c) + *(f32*)((char*)slot + 0x14);
-            ((ObjPlacement*)setup)->unk02 = *(s16*)((char*)slot + 0x2) / 2;
-            *(s16*)((char*)setup + 0x0) = -*(s16*)((char*)slot + 0x0);
+            fb->anim.velocityX = -10.0f * vec[0];
+            fb->anim.velocityY = -10.0f * vec[1];
+            fb->anim.velocityZ = -10.0f * vec[2];
+            fb->anim.localPosX = fb->anim.worldPosX =
+                2.0f * fb->anim.velocityX + *(f32*)((char*)slot + 0xc);
+            fb->anim.localPosY = fb->anim.worldPosY =
+                2.0f * fb->anim.velocityY + *(f32*)((char*)slot + 0x10);
+            fb->anim.localPosZ = fb->anim.worldPosZ =
+                2.0f * fb->anim.velocityZ + *(f32*)((char*)slot + 0x14);
+            fb->anim.rotY = *(s16*)((char*)slot + 0x2) / 2;
+            fb->anim.rotX = -*(s16*)((char*)slot + 0x0);
         }
-        *(int*)((char*)setup + 0xf4) = 0x5f;
-        *(int*)((char*)setup + 0xf8) = spawned;
+        *(int*)((char*)fb + 0xf4) = 0x5f;
+        *(int*)((char*)fb + 0xf8) = spawned;
     }
 }
 
