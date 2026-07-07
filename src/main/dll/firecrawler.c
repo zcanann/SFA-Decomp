@@ -46,6 +46,7 @@
 #define LANTERNFIREFLY_OBJGROUP 0x30 /* DLL 0x10C lanternfirefly */
 #define FIRECRAWLER_OBJFLAG_RENDERED 0x800
 #define FIRECRAWLER_OBJFLAG_PARENT_SLACK 0x1000
+#define FIREPIPE_OBJ_ID 0x710 /* child object spawned by firecrawler */
 
 /* Spawn-setup buffer for the firepipe child (obj id 0x710): ObjPlacement head
  * (pos/color) plus the class-specific fields the parent seeds at +0x18. */
@@ -278,7 +279,7 @@ void firecrawler_spawnFirepipe(int* obj)
     int* child;
     if (Obj_IsLoadingLocked() != 0)
     {
-        child = Obj_AllocObjectSetup(0x24, 0x710);
+        child = Obj_AllocObjectSetup(0x24, FIREPIPE_OBJ_ID);
         ObjPath_GetPointWorldPosition(obj, 0, (char*)child + 0x8, (char*)child + 0xc, (char*)child + 0x10, 0);
         ((FirepipeSetup*)child)->head.color[0] = 1;
         ((FirepipeSetup*)child)->head.color[1] = 4;
