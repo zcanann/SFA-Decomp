@@ -5944,8 +5944,9 @@ void fn_8004D230(void)
     player = Obj_GetPlayerObject();
     if (player != NULL)
     {
-        dist = Camera_DistanceToCurrentViewPosition(*(f32*)(player + 0x18), *(f32*)(player + 0x1c),
-                                                    *(f32*)(player + 0x20));
+        dist = Camera_DistanceToCurrentViewPosition(((GameObject*)player)->anim.worldPosX,
+                                                    ((GameObject*)player)->anim.worldPosY,
+                                                    ((GameObject*)player)->anim.worldPosZ);
     }
     else
     {
