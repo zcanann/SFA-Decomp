@@ -11,6 +11,8 @@ extern f32 timeDelta;
 #include "main/audio/sfx_trigger_ids.h"
 extern void ModelLightStruct_free(void* effect);
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 
 extern void queueGlowRender(void* effect);
 extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
@@ -216,7 +218,7 @@ void CampFire_init(int obj, int p2)
     if (state->light != NULL)
     {
         int atten;
-        modelLightStruct_setLightKind((int)state->light, 2);
+        modelLightStruct_setLightKind((int)state->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor((int)state->light, 0xff, 0x7f, 0, 0xff);
         modelLightStruct_setSpecularColor((int)state->light, 0xff, 0x7f, 0, 0xff);
         atten = (int)(20.0f * ((GameObject*)obj)->anim.rootMotionScale);
