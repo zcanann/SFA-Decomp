@@ -61,8 +61,6 @@ extern void* lbl_803DDAD4;
 #pragma opt_common_subs off
 void fn_80185868(int obj, f32 arg)
 {
-    extern void* lbl_803DDAD0;
-    extern void* lbl_803DDAD4;
 
     struct
     {
@@ -182,7 +180,6 @@ void dll_107_hitDetect_nop(void)
 #pragma opt_common_subs off
 void dll_107_update(int obj)
 {
-    extern void* lbl_803DDAD4;
 
     extern f32 getXZDistance(f32* a, f32* b);
     typedef struct
@@ -448,8 +445,6 @@ void dll_107_update(int obj)
 
 void dll_107_init(int obj, int p)
 {
-    extern void* lbl_803DDAD0;
-    extern void* lbl_803DDAD4;
     WindLift107State* sub;
     int p54;
     int p64;
