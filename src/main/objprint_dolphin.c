@@ -50,6 +50,8 @@
 #define GX_VA_TEX0MTXIDX 1
 #define GX_VA_TEX1MTXIDX 2
 #define GX_DIRECT 1
+#define GX_INDEX8 2
+#define GX_INDEX16 3
 #define GX_VA_POS 9
 #define GX_VA_NRM 10
 #define GX_VA_CLR0 11
@@ -1003,8 +1005,8 @@ void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
         {
             GXSetCurrentMtx(gObjGxPosMtxIdTable[0]);
         }
-        GXSetVtxDesc(GX_VA_POS, (flags & 2) ? 3 : 2);
-        GXSetVtxDesc(GX_VA_TEX0, (flags & 4) ? 3 : 2);
+        GXSetVtxDesc(GX_VA_POS, (flags & 2) ? GX_INDEX16 : GX_INDEX8);
+        GXSetVtxDesc(GX_VA_TEX0, (flags & 4) ? GX_INDEX16 : GX_INDEX8);
         gObjGxVtxDescCache = flags;
     }
 }
@@ -1648,7 +1650,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         w |= p[1] << 8;
         w |= p[2] << 16;
         bs->pos = pos + 1;
-        GXSetVtxDesc(GX_VA_POS, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
+        GXSetVtxDesc(GX_VA_POS, (((int)(w >> (pos & 7)) & 1) ? GX_INDEX16 : GX_INDEX8));
     }
     if (m[0x40] & 1)
     {
@@ -1667,11 +1669,11 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         }
         if (hdr[0x24] & 8)
         {
-            GXSetVtxDesc(GX_VA_NBT, b ? 3 : 2);
+            GXSetVtxDesc(GX_VA_NBT, b ? GX_INDEX16 : GX_INDEX8);
         }
         else
         {
-            GXSetVtxDesc(GX_VA_NRM, b ? 3 : 2);
+            GXSetVtxDesc(GX_VA_NRM, b ? GX_INDEX16 : GX_INDEX8);
         }
         *out1 = 1;
     }
@@ -1690,7 +1692,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         w |= p[1] << 8;
         w |= p[2] << 16;
         bs->pos = pos + 1;
-        GXSetVtxDesc(GX_VA_CLR0, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
+        GXSetVtxDesc(GX_VA_CLR0, (((int)(w >> (pos & 7)) & 1) ? GX_INDEX16 : GX_INDEX8));
     }
     {
         int b;
@@ -1710,7 +1712,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         i = 0;
         for (; i < m[0x41]; i++)
         {
-            GXSetVtxDesc(i + GX_VA_TEX0, b ? 3 : 2);
+            GXSetVtxDesc(i + GX_VA_TEX0, b ? GX_INDEX16 : GX_INDEX8);
         }
     }
 }
@@ -2098,7 +2100,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
                 w |= p[1] << 8;
                 w |= p[2] << 16;
                 bs.pos = pos + 1;
-                GXSetVtxDesc(GX_VA_POS, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
+                GXSetVtxDesc(GX_VA_POS, (((int)(w >> (pos & 7)) & 1) ? GX_INDEX16 : GX_INDEX8));
             }
             if (((u8*)op)[0x40] & 1)
             {
