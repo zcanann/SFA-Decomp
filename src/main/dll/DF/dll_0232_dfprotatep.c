@@ -89,8 +89,6 @@ extern int ObjHits_GetPriorityHit(int obj, u32* outHitObject, int* outSphereInde
         } \
     } while (0)
 
-#pragma scheduling off
-#pragma peephole off
 void TrickyCurve_updateEffectHandleRing(int obj)
 {
     struct
