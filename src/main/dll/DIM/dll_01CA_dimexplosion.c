@@ -30,6 +30,7 @@
 
 #define DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MODEL_LIGHT_KIND_POINT 2
+#define DIMEXPLOSION_PARTFX 0x5e
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
@@ -590,7 +591,7 @@ void explosion_update(int obj)
                             break;
                         }
                     }
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x5e, &fake, 0x200001, -1, ang);
+                    (*gPartfxInterface)->spawnObject((void*)obj, DIMEXPLOSION_PARTFX, &fake, 0x200001, -1, ang);
                 }
             }
         }
