@@ -29,6 +29,7 @@ extern u8 framesThisStep;
 
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern void ObjHits_SetHitVolumeSlot(int* obj, int a, u8 b, int c);
+#define DLL801B1D84_HIT_VOLUME_SLOT 5
 extern void ObjHitbox_SetSphereRadius(int* obj, u8 radius);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void Obj_FreeObject(int* obj);
@@ -66,7 +67,8 @@ void DIMwooddoor_updateFallingDebris(int* obj)
             if (hitState != NULL)
             {
                 int* vol;
-                ObjHits_SetHitVolumeSlot(obj, 5, ((DIMwooddoorUpdateFallingDebrisState*)extra)->hitVolumeSlot, 0);
+                ObjHits_SetHitVolumeSlot(obj, DLL801B1D84_HIT_VOLUME_SLOT,
+                                         ((DIMwooddoorUpdateFallingDebrisState*)extra)->hitVolumeSlot, 0);
                 vol = (int*)hitState->lastHitObject;
                 if (vol != NULL && vol != *(int**)extra)
                 {
