@@ -48,7 +48,6 @@ void WM_ObjCreator_free(void)
 
 void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5CC8);
 }
