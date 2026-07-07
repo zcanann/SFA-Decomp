@@ -142,6 +142,8 @@ enum SbGalleonCameraState
 #define SBGALLEON_GAMEBIT_DEFEATED 0xac8 /* set on free */
 #define SBGALLEON_SFX_SPLASH 0x143
 #define SBGALLEON_SFX_SPRAY 0x2c6
+#define SBGALLEON_TEXTURE_SKY_A 0x16d /* gSbGalleonSkyTexA */
+#define SBGALLEON_TEXTURE_SKY_B 0x89  /* gSbGalleonSkyTexB */
 #define SBGALLEON_MUSIC_INTRO 0xa3
 #define SBGALLEON_MAP_PALACE 0xb         /* map-event/dir id this boss locks */
 #define SBGALLEON_SKY_LIGHT_SLOT 7       /* sky override light slot fn_801E1588 drives */
@@ -553,8 +555,8 @@ void SB_Galleon_init(GameObject* obj)
     obj->anim.rotX = 0x4000;
     obj->anim.rotY = 0;
     obj->anim.rotZ = 0;
-    gSbGalleonSkyTexA = (int)textureLoadAsset(0x16d);
-    gSbGalleonSkyTexB = (int)textureLoadAsset(0x89);
+    gSbGalleonSkyTexA = (int)textureLoadAsset(SBGALLEON_TEXTURE_SKY_A);
+    gSbGalleonSkyTexB = (int)textureLoadAsset(SBGALLEON_TEXTURE_SKY_B);
     state->unk84 = 100;
     (*gMapEventInterface)->setMapAct(obj->anim.mapEventSlot, 1);
     getLActions(obj, obj, 0x58, 0, 0, 0);
