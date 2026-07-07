@@ -667,7 +667,7 @@ void pauseMenuDrawStatus_801274A0(int* arg1)
             {
                 f32 fy = lbl_803E1FAC * (f32)(u32)(u16)ii
                 +lbl_803E1F30;
-                pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unk5C, fy, lbl_803E20B4, px, ty,
+                pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->tex5C, fy, lbl_803E20B4, px, ty,
                                      (s32)lbl_803E20B8, 0);
             }
         }
@@ -703,12 +703,12 @@ void pauseMenuDrawStatus_801274A0(int* arg1)
                 }
             }
         }
-        pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkBC, lbl_803DBAD0, lbl_803DBAD4,
+        pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->texBC, lbl_803DBAD0, lbl_803DBAD4,
                              0x100 - lbl_803DD75C, ty,
                              0x100, 0);
         drawFn_8011eb3c(((HudTextures*)hudTextures)->texB8, (f32)(lbl_803DBAD0 + 0x18), lbl_803DBAD4,
                         0x100 - lbl_803DD75C, ty, 0x100, 0x66, 0x12, 0);
-        pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkC0, (f32)(lbl_803DBAD0 + 0x7e), lbl_803DBAD4,
+        pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->texC0, (f32)(lbl_803DBAD0 + 0x7e), lbl_803DBAD4,
                              0x100 - lbl_803DD75C, ty,
                              0x100, 0);
         hudDrawMagicBar((u8)ty, 0x100 - lbl_803DD75C, 1);

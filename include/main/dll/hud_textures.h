@@ -18,13 +18,13 @@ typedef struct HudTextures {
     void * tex3C;
     void * tex40;
     u8 pad44[0x5C - 0x44];
-    void * unk5C;
+    void * tex5C;
     u8 pad60[0x80 - 0x60];
     void * tex80;
     u8 pad84[0xB8 - 0x84];
     void * texB8;
-    void * unkBC;
-    void * unkC0;
+    void * texBC;
+    void * texC0;
     u8 padC4[0xF8 - 0xC4];
     void * texF8;
     void * texFC;
@@ -56,9 +56,9 @@ typedef struct HudTextures {
 
 STATIC_ASSERT(sizeof(HudTextures) == 0x198);
 STATIC_ASSERT(offsetof(HudTextures, tex28) == 0x28);
-STATIC_ASSERT(offsetof(HudTextures, unk5C) == 0x5C);
+STATIC_ASSERT(offsetof(HudTextures, tex5C) == 0x5C);
 STATIC_ASSERT(offsetof(HudTextures, tex80) == 0x80);
-STATIC_ASSERT(offsetof(HudTextures, unkBC) == 0xBC);
+STATIC_ASSERT(offsetof(HudTextures, texBC) == 0xBC);
 STATIC_ASSERT(offsetof(HudTextures, texF8) == 0xF8);
 STATIC_ASSERT(offsetof(HudTextures, tex134) == 0x134);
 STATIC_ASSERT(offsetof(HudTextures, unk13C) == 0x13C);
