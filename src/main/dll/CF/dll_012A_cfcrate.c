@@ -18,6 +18,8 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define CFCRATE_HIT_VOLUME_SLOT 0x13
+
 typedef struct CfccratePlacement
 {
     s16 id;
@@ -185,7 +187,7 @@ void CFCrate_update(int obj)
         break;
     case 0x71b: /* DFP_WaterHi... */
         state->lingerTimer -= framesThisStep;
-        ObjHits_SetHitVolumeSlot(obj, 0x13, 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, CFCRATE_HIT_VOLUME_SLOT, 1, 0);
         if (state->lingerTimer <= 0)
         {
             Obj_FreeObject(obj);
