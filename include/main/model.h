@@ -54,7 +54,7 @@ typedef struct ModelFileHeader {
     u8 unkBC[0xC];
     u8 *blendAnimEntries; /* 0x74-stride entries */
     u8 *blendAnimBase;
-    u8 *displayLists; /* 0x1c-stride entries, unkF5 + shadowDisplayListCount */
+    u8 *displayLists; /* 0x1c-stride entries, displayListCount + shadowDisplayListCount */
     u8 *instrs;
     u8 unkD8[4];
     u8 *morphTargetPtrs; /* pointer table, morphTargetCount entries */
@@ -68,9 +68,9 @@ typedef struct ModelFileHeader {
     u8 textureCount;
     u8 jointCount;
     u8 extraJointCount;
-    u8 unkF5;
-    u8 shadowDisplayListCount; /* count of the 2nd display-list group (shadow), indexed at base unkF5 */
-    u8 unkF7;
+    u8 displayListCount; /* 0xF5: count of the primary (non-shadow) 0x1c-stride display-list group; base index for the shadow group */
+    u8 shadowDisplayListCount; /* count of the 2nd display-list group (shadow), indexed at base displayListCount */
+    u8 hitSphereCount; /* 0xF7: count of 0x10-byte hit-sphere records (double-buffered: pos += hitSphereCount*0x10 twice) */
     u8 renderOpCount;
     u8 morphTargetCount;
 } ModelFileHeader;

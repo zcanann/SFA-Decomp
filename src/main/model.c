@@ -412,7 +412,7 @@ void ObjModel_RelocateModelData(u8* m)
     {
         ((ModelFileHeader*)m)->renderOps = m + *(u32*)&((ModelFileHeader*)m)->renderOps;
     }
-    for (i = 0; i < ((ModelFileHeader*)m)->unkF5 + ((ModelFileHeader*)m)->shadowDisplayListCount; i++)
+    for (i = 0; i < ((ModelFileHeader*)m)->displayListCount + ((ModelFileHeader*)m)->shadowDisplayListCount; i++)
     {
         *(u8**)(((ModelFileHeader*)m)->displayLists + i * 0x1c) = m + *(u32*)(((ModelFileHeader*)m)->displayLists + i *
             0x1c);
@@ -1906,10 +1906,10 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     {
         pos = roundUpTo4(pos);
         *(int*)&((ObjModel*)out2)->unk48 = pos;
-        o2 = ((ModelFileHeader*)p)->unkF7;
+        o2 = ((ModelFileHeader*)p)->hitSphereCount;
         pos += o2 * 0x10;
         *(int*)&((ObjModel*)out2)->unk4C = pos;
-        pos += ((ModelFileHeader*)p)->unkF7 * 0x10;
+        pos += ((ModelFileHeader*)p)->hitSphereCount * 0x10;
         *(int*)&((ObjModel*)out2)->unk50 = *(int*)&((ObjModel*)out2)->unk48;
     }
     if (((ModelFileHeader*)p)->jointData != NULL && ((ModelFileHeader*)p)->jointCount != 0 && ((
@@ -2172,7 +2172,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         sizes[0] = vtxBytes + 0x40;
     }
     {
-        int hitSphereBytes = ((ModelFileHeader*)hdr)->unkF7 << 4;
+        int hitSphereBytes = ((ModelFileHeader*)hdr)->hitSphereCount << 4;
         sizes[1] = hitSphereBytes << 1;
     }
     sizes[3] = 0;

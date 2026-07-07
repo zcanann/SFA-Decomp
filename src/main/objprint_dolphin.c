@@ -1984,7 +1984,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             ObjModel_BlendNormalStream(gObjBoneMtxBuffer, m + 0xac, *(int*)&((ModelFileHeader*)m)->normals,
                                                 *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
         }
-        if (((ModelFileHeader*)m)->unkF7 != 0)
+        if (((ModelFileHeader*)m)->hitSphereCount != 0)
         {
             objUpdateHitSpheres(am, m, obj, 0, obj2);
         }
@@ -2135,7 +2135,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
                 w |= p[1] << 8;
                 w |= p[2] << 16;
                 bs.pos = pos + 8;
-                dl = modelFileGetDisplayList(m, ((ModelFileHeader*)m)->unkF5 + ((w >> (pos & 7)) & 0xff));
+                dl = modelFileGetDisplayList(m, ((ModelFileHeader*)m)->displayListCount + ((w >> (pos & 7)) & 0xff));
                 GXCallDisplayList(*(void**)dl, *(u16*)(dl + 4));
             }
             break;
@@ -2321,7 +2321,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                                                     *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
             }
         }
-        if (((ModelFileHeader*)m)->unkF7 != 0)
+        if (((ModelFileHeader*)m)->hitSphereCount != 0)
         {
             objUpdateHitSpheres(am, m, obj, 0, obj2);
         }
