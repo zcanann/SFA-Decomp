@@ -451,6 +451,7 @@ int fn_8017DF34(int p, int state, f32 y)
             f32 t;
             f32 a;
             f32 r;
+            f32 rad;
             b = ((AppleOnTreeState*)state)->bounceVel;
             g = lbl_803E37D8 * m;
             q = sqrtf(b * b - g * ((AppleOnTreeState*)state)->dropHeight);
@@ -479,7 +480,8 @@ int fn_8017DF34(int p, int state, f32 y)
             }
             ((AppleOnTreeState*)state)->flightTime = ((AppleOnTreeState*)state)->flightTime - r;
             ((AppleOnTreeState*)state)->posY = ((AppleOnTreeState*)state)->posY - ((AppleOnTreeState*)state)->dropHeight;
-            ((AppleOnTreeState*)state)->dropHeight = lbl_803E37D4;
+            rad = lbl_803E37D4;
+            ((AppleOnTreeState*)state)->dropHeight = rad;
             ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
             ((GameObject*)p)->anim.rotX = ((AppleOnTreeState*)state)->rotX;
             ((GameObject*)p)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
@@ -489,9 +491,9 @@ int fn_8017DF34(int p, int state, f32 y)
                 ((AppleOnTreeState*)state)->bounceVel = g2 * r + ((AppleOnTreeState*)state)->bounceVel;
             }
             ((AppleOnTreeState*)state)->extraAccel = ((AppleOnTreeState*)state)->velY;
-            ((WaterfxSpawnSplashBurstAtPointFn)(*gWaterfxInterface)->spawnSplashBurst)(
+            (*gWaterfxInterface)->spawnSplashBurst(
                 (void*)p, ((GameObject*)p)->anim.localPosX, ((AppleOnTreeState*)state)->splashPosY,
-                ((GameObject*)p)->anim.localPosZ);
+                ((GameObject*)p)->anim.localPosZ, rad);
             return 0;
         }
         else
