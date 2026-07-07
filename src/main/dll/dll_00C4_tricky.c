@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frustum.h"
@@ -1619,7 +1620,7 @@ void Tricky_resumeAfterCommand(int obj, int state)
         moveId = ((TrickyState*)state)->moveId0;
         ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->moveSpeedScale0);
         ((TrickyState*)state)->flags323 = 1;
-        ObjAnim_SetCurrentMove(obj, moveId, lbl_803E2574, 0x10);
+        ObjAnim_SetCurrentMove(obj, moveId, lbl_803E2574, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
         if (((GameObject*)obj)->anim.hitReactState != NULL)
         {
             hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
