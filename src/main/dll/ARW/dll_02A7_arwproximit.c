@@ -12,6 +12,8 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+#define ARWPROXIMIT_HIT_VOLUME_SLOT 5
+
 
 typedef struct ARWProximitSetup
 {
@@ -177,7 +179,7 @@ void arwproximit_update(int obj)
                     modelLightStruct_setEnabled(state->light, 0, lbl_803E71D8);
                 spawnExplosion(obj, lbl_803E71E0, 1, 0, 1, 1, 0, 0, 1);
                 ObjHitbox_SetSphereRadius(obj, 0x12c);
-                ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
+                ObjHits_SetHitVolumeSlot(obj, ARWPROXIMIT_HIT_VOLUME_SLOT, 1, 0);
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_MarkObjectPositionDirty(obj);
                 state->phase = ARWPROXIMIT_PHASE_DETONATE;
