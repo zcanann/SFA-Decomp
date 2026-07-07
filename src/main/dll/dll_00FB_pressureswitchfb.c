@@ -34,6 +34,11 @@
 #define PRESSURESWITCHFB_TRACKED_OBJECT_COUNT 10
 #define PRESSURESWITCHFB_TRACKED_OBJECT_BATCH 5
 
+/* anim.seqIds of objects this pad reacts to (docblock: "any tracked object
+ * (player, tricky, or seqId 0x754/0x6d) stands on it"). */
+#define PRESSURESWITCHFB_TRACKED_SEQID_A 0x754
+#define PRESSURESWITCHFB_TRACKED_SEQID_B 0x6d
+
 #define PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET 0x04
 #define PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET 0x2c
 #define PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET 0x7c
@@ -239,7 +244,7 @@ void PressureSwitchFB_update(int obj)
             {
                 other = *(u32*)(*(int*)(obj + 0x58) + off + 0x100);
                 if ((((GameObject*)other)->anim.classId == 1) || (((GameObject*)other)->anim.classId == 2) ||
-                    (((GameObject*)other)->anim.seqId == 0x754) || (((GameObject*)other)->anim.seqId == 0x6d))
+                    (((GameObject*)other)->anim.seqId == PRESSURESWITCHFB_TRACKED_SEQID_A) || (((GameObject*)other)->anim.seqId == PRESSURESWITCHFB_TRACKED_SEQID_B))
                 {
                     isTarget = 1;
                 }
