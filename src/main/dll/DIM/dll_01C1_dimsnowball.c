@@ -244,6 +244,7 @@ void dimsnowball_initialise(void)
 }
 
 /* .data 0x80323BC0-0x80325360 */
+#pragma force_active on
 s16 gDimSnowballCoords[2994] = {
     0, 0, 0, 26, 0, -54, 52, 0, -109, 78, 0, -164, 104, 0, -219, 130,
     0, -274, 156, 0, -329, 182, 0, -384, 208, 0, -439, 234, 0, -494, 260, 0,

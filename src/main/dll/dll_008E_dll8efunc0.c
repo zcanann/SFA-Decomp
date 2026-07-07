@@ -233,6 +233,7 @@ u32 lbl_80316C90[95] = { 0x03e80000, 0x00000000, 0x000002c3, 0x0000fd3d, 0x000f0
 u32 lbl_80316E0C[9] = { 0x00000000, 0x00000000, 0x00000000, 0x00030000, (u32)dll_8F_func00_nop, (u32)dll_8F_func01_nop, 0x00000000, (u32)dll_8F_func03, 0x00000000 };
 
 /* descriptor/ptr table auto 0x803e1178-0x803e1398 */
+#pragma force_active on
 const f32 lbl_803E1178 = 0.0f;
 const f32 lbl_803E117C = 0.2f;
 const f32 lbl_803E1180 = 2.0f;
@@ -289,7 +290,7 @@ const f32 lbl_803E1248 = 0.1f;
 const f32 lbl_803E124C = 10.5f;
 const f32 lbl_803E1250 = 255.0f;
 const f32 lbl_803E1254 = 1.1f;
-const f32 lbl_803E1258[2] = {1.2f, 0.0f};
+const f32 lbl_803E1258 = 1.2f;
 const f64 lbl_803E1260 = 4503601774854144.0;
 const f32 lbl_803E1268 = 1.0f;
 const f32 lbl_803E126C = 0.0f;
@@ -365,3 +366,4 @@ const f32 lbl_803E1388 = 1.8f;
 const f32 lbl_803E138C = 3.0f;
 const f32 lbl_803E1390 = 4.0f;
 const f32 lbl_803E1394 = 200.0f;
+#pragma force_active reset

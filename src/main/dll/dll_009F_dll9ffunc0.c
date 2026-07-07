@@ -259,6 +259,7 @@ void dll_9F_func00_nop(void)
 {
 }
 
+#pragma force_active on
 u8 gDll9fEffectDataTable[520] = {
     0, 0, 3, 232, 0, 0, 0, 0, 0, 0, 3, 98, 1, 244, 0, 0,
     0, 22, 0, 0, 3, 98, 254, 12, 0, 0, 0, 44, 0, 0, 0, 0,
