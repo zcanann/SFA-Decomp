@@ -330,7 +330,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case 3:
-            **(u8**)&((TrickyState*)state)->progressPtr = ((TrickyState*)state)->unk82D;
+            **(u8**)&((TrickyState*)state)->progressPtr = ((TrickyState*)state)->progressValue;
             break;
         case 0x2b:
             ((GameObject*)obj)->anim.modelState->flags &= ~(u64)OBJ_MODEL_STATE_SHADOW_VISIBLE;
@@ -1360,14 +1360,14 @@ void Tricky_update(int obj)
     }
     if (*(void**)&((TrickyState*)state)->followObj != NULL)
     {
-        ((TrickyState*)state)->unk378 = 1;
+        ((TrickyState*)state)->followPosValid = 1;
         ((TrickyState*)state)->unk37C = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
         ((TrickyState*)state)->unk380 = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosY;
         ((TrickyState*)state)->unk384 = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosZ;
     }
     else
     {
-        ((TrickyState*)state)->unk378 = 0;
+        ((TrickyState*)state)->followPosValid = 0;
     }
     if (((GameObject*)obj)->anim.currentMove == 0x2a)
     {

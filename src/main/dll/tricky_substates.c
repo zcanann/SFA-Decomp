@@ -560,7 +560,7 @@ void trickyFn_80142524(u8* obj, u8* state)
             {
             case 1:
             {
-                target = ((TrickyState*)state)->unk7D4;
+                target = ((TrickyState*)state)->pendingFollowObj;
                 other = ((GameObject*)obj)->extra;
                 if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0)
                 {
@@ -584,7 +584,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                     else
                     {
                         other[0x7d0] = 1;
-                        ((TrickyState*)other)->unk7D4 = target;
+                        ((TrickyState*)other)->pendingFollowObj = target;
                         ((TrickyState*)other)->stateFlags |= 0x10000LL;
                     }
                 }
@@ -1817,17 +1817,17 @@ int trickyFoodFn_8014460c(int obj, int* state)
                     }
                     if (cnt > n)
                     {
-                        ((TrickyState*)state)->unk82D = a + (n << 2);
+                        ((TrickyState*)state)->progressValue = a + (n << 2);
                         mainSetBits(0xc1, 0);
                     }
                     else
                     {
-                        ((TrickyState*)state)->unk82D = a + (cnt << 2);
+                        ((TrickyState*)state)->progressValue = a + (cnt << 2);
                         mainSetBits(0xc1, n - cnt);
                     }
-                    if (((TrickyState*)state)->unk82D > *(*(u8**)state + 1))
+                    if (((TrickyState*)state)->progressValue > *(*(u8**)state + 1))
                     {
-                        ((TrickyState*)state)->unk82D = *(*(u8**)state + 1);
+                        ((TrickyState*)state)->progressValue = *(*(u8**)state + 1);
                     }
                     b = ((GameObject*)obj)->extra;
                     ((TrickyState*)b)->stateFlags |= 0x4000;

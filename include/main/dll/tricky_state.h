@@ -134,7 +134,7 @@ typedef struct TrickyState {
     f32 hitCooldown;
     u8 groundSnapCounter; /* frame countdown that forces the ground-snap path: != 0 -> decrement and do the height snap; primed to 2 on state entry (tricky/skeetla) */
     u8 pad375[0x378 - 0x375];
-    u8 unk378;
+    u8 followPosValid; /* 1 when followObj is non-NULL and unk37C/380/384 hold its captured world pos, else 0; the 0x378 record (flag + xyz) is passed to fn_8003A168 (tricky) */
     u8 pad379[0x37C - 0x379];
     f32 unk37C;
     f32 unk380;
@@ -204,7 +204,7 @@ typedef struct TrickyState {
     f32 childPhaseTimer2; /* child-object periodic phase timer: += timeDelta, wraps at lbl_803E24C8, gates the child's 0x4000 anim flag via lbl_803E2408 */
     void *spawnedChild;
     u8 pad7D0[0x7D4 - 0x7D0];
-    u8 *unk7D4;
+    u8 *pendingFollowObj; /* target object handed off to a sibling Tricky: read into `target`, then assigned to other->followObj and other->targetPosPtr = target+0x18 (tricky_substates) */
     u8 pad7D8[0x808 - 0x7D8];
     f32 unk808;
     f32 sidestepScale; /* per-axis scale applied to sidestepDelta under TRICKY_STATE_FLAG_SIDESTEP: localPos += sidestepDelta * (dir * sidestepScale) */
@@ -214,7 +214,7 @@ typedef struct TrickyState {
     s16 rotRate;
     u8 pad81C[0x82C - 0x81C];
     u8 modelVariant; /* progress/10; indexes model bank color */
-    u8 unk82D;
+    u8 progressValue; /* map-event progress byte written out via **progressPtr; computed as base+(count<<2), clamped to a max byte (tricky writes to progressPtr, substates computes/clamps) */
     u8 unk82E; /* bit flags 5/6/7 (collectable.c overlays) */
     u8 pad82F[0x838 - 0x82F];
     f32 particleTimer; /* f32 countdown decremented by timeDelta; while > threshold the queued particle effect keeps emitting; reset to a float sentinel on state entry (tricky/skeetla/weapone6/tricky_substates/mmp_cratercritter/animobjd2) */
