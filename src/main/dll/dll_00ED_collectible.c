@@ -667,12 +667,12 @@ void collectible_applyPickup(int* obj)
     case 4:
         switch (((GameObject*)obj)->anim.seqId)
         {
-        case 11:
+        case COLLECTIBLE_ITEM_ENERGY_EGG:
             Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_lockoff22);
             playerAddHealth(Obj_GetPlayerObject(), 4);
             itemPickupDoParticleFx(obj, lbl_803E3454, 3, 40);
             break;
-        case 973:
+        case COLLECTIBLE_ITEM_APPLE:
             playerAddHealth(Obj_GetPlayerObject(), 2);
             Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_lockoff22);
             itemPickupDoParticleFx(obj, lbl_803E3454, 1, 40);
@@ -878,7 +878,7 @@ void collectible_checkProximityPickup(int obj, u8* state)
         ((CollectibleState*)state)->pickupMsgValue = -1;
         switch (((GameObject*)obj)->anim.seqId)
         {
-        case 0xb:
+        case COLLECTIBLE_ITEM_ENERGY_EGG:
             if (mainGetBit(0x90e) == 0)
             {
                 ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
@@ -896,7 +896,7 @@ void collectible_checkProximityPickup(int obj, u8* state)
             break;
         case 0x49:
         case 0x2da:
-        case 0x3cd:
+        case COLLECTIBLE_ITEM_APPLE:
             if (mainGetBit(0x90f) == 0)
             {
                 ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
@@ -1093,7 +1093,7 @@ void collectible_updateIdleMotion(int obj)
 
     switch (((GameObject*)obj)->anim.seqId)
     {
-    case 0xb:
+    case COLLECTIBLE_ITEM_ENERGY_EGG:
         if ((((CollectibleState*)state)->spinTimer -= framesThisStep) <= 0)
         {
             ((CollectibleState*)state)->spinSpeed = (f32)(int)
@@ -1217,11 +1217,11 @@ void collectible_init(int obj, int setup)
         }
         switch (((GameObject*)obj)->anim.seqId)
         {
-        case 0xb:
+        case COLLECTIBLE_ITEM_ENERGY_EGG:
             ((CollectibleState*)state)->unk40 = lbl_803E345C;
             ((CollectibleState*)state)->lifetimeTimer = gCollectibleLifetimeTimer;
             break;
-        case 0x3cd:
+        case COLLECTIBLE_ITEM_APPLE:
             ((CollectibleState*)state)->unk40 = lbl_803E349C;
             ((CollectibleState*)state)->lifetimeTimer = gCollectibleLifetimeTimer;
             break;

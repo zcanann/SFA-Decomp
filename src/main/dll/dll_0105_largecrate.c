@@ -224,7 +224,7 @@ int largecrate_spawnDropContents(int obj, int player, int state)
     mainSetBits(((LargeCrateState*)state)->brokenGameBit, 1);
     switch (((LargeCrateState*)state)->dropType)
     {
-    case 1:
+    case LARGECRATE_DROPTYPE_FRUIT_A:
         setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_A);
         ((CrateFragmentSetup*)setup)->head.posX = ((GameObject*)obj)->anim.localPosX;
         ((CrateFragmentSetup*)setup)->head.posY = ((GameObject*)obj)->anim.localPosY;
@@ -271,7 +271,7 @@ int largecrate_spawnDropContents(int obj, int player, int state)
         }
         *(s16*)newObj = angle;
         break;
-    case 2:
+    case LARGECRATE_DROPTYPE_FRUIT_B:
         setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_B);
         ((CrateFragmentSetup*)setup)->spinSeed = randomGetRange(-0x7f, 0x7e);
         ((CrateFragmentSetup*)setup)->head.posX = ((GameObject*)obj)->anim.localPosX;
@@ -319,7 +319,7 @@ int largecrate_spawnDropContents(int obj, int player, int state)
         }
         *(s16*)newObj = angle;
         break;
-    case 3:
+    case LARGECRATE_DROPTYPE_FRUIT_C:
         setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_C);
         ((CrateFragmentSetup*)setup)->spinSeed = randomGetRange(-0x7f, 0x7e);
         ((CrateFragmentSetup*)setup)->head.posX = ((GameObject*)obj)->anim.localPosX;
@@ -367,9 +367,9 @@ int largecrate_spawnDropContents(int obj, int player, int state)
         }
         *(s16*)newObj = angle;
         break;
-    case 5:
-    case 6:
-        if (((LargeCrateState*)state)->dropType == 5)
+    case LARGECRATE_DROPTYPE_GAS:
+    case LARGECRATE_DROPTYPE_GAS_ALT:
+        if (((LargeCrateState*)state)->dropType == LARGECRATE_DROPTYPE_GAS)
         {
             setup = Obj_AllocObjectSetup(0x30, LARGECRATE_DROP_GAS);
         }
@@ -389,11 +389,11 @@ int largecrate_spawnDropContents(int obj, int player, int state)
         (**(void (**)(int, f32, f32, f32))(**(int**)&((GameObject*)newObj)->anim.dll + 0x2c))(
             (int)newObj, lbl_803E39B8, lbl_803E39AC, lbl_803E39B8);
         break;
-    case 7:
-    case 8:
+    case LARGECRATE_DROPTYPE_NONE_A:
+    case LARGECRATE_DROPTYPE_NONE_B:
         mainSetBits(((LargeCrateState*)state)->brokenGameBit, 1);
         break;
-    case 9:
+    case LARGECRATE_DROPTYPE_PICKUP:
         if (Obj_IsLoadingLocked() != 0)
         {
             setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_PICKUP);

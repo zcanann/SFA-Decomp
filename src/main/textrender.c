@@ -8,6 +8,7 @@
 #include "main/sfa_extern_decls.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/savedata_struct.h"
 extern int saveFileStruct_isCheatActive(u8 idx);
 
 /*
@@ -594,7 +595,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
         return;
     }
 
-    if (curLanguage != 4 && mode == 1 && saveFileStruct_isCheatActive(3) &&
+    if (curLanguage != 4 && mode == 1 && saveFileStruct_isCheatActive(CHEAT_DINO_LANGUAGE) &&
         win == (u8*)gTextBoxes + 0x140)
     {
         translateToDinoLanguage(str);

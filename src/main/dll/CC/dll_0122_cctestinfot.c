@@ -1,5 +1,5 @@
 /*
- * cctestinfot - Crystal Caves "test info" help-prompt object (DLL 0x0122;
+ * cctestinfot - Cape Claw (mapId 47) "test info" help-prompt object (DLL 0x0122;
  * descriptor gCCTestInfotObjDescriptor is declared extern in CFtoggleswitch.h). The
  * object only reacts while the player is disguised: it caches the disguise
  * state, drives the model's hint-text index / active model from it, and -

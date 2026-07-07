@@ -2147,7 +2147,7 @@ void* Objfsa_FindNearestCurveType24(int pos, int p4_filter, int p5_filter)
     {
         hit = *list;
         if (hit != 0
-            && (s8) * ((u8*)hit + 0x19) == 0x24
+            && (s8) * ((u8*)hit + 0x19) == ROMCURVE_TYPE_TRICKY
             && (p4_filter == -1 || *((u8*)hit + 3) == p4_filter)
             && (p5_filter == -1 || (s8) * ((u8*)hit + 0x1A) == p5_filter))
         {
@@ -2187,7 +2187,7 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
     {
         hit = *list;
         if (hit != 0
-            && (s8) * ((u8*)hit + 0x19) == 0x24
+            && (s8) * ((u8*)hit + 0x19) == ROMCURVE_TYPE_TRICKY
             && (p4_filter == -1 || *((u8*)hit + 3) == p4_filter)
             && (p5_filter == -1 || (s8) * ((u8*)hit + 0x1A) == p5_filter))
         {
@@ -2674,7 +2674,7 @@ int RomCurve_func16(double x, double y, double z)
     for (; i < nRomCurves && candidateCount < 20; i++)
     {
         curve = curveList[i];
-        if (((ObjfsaRomCurveDef*)curve)->type == 0x17)
+        if (((ObjfsaRomCurveDef*)curve)->type == ROMCURVE_TYPE_17)
         {
             candidateIds[candidateCount++] = ((ObjfsaRomCurveDef*)curve)->id;
         }
@@ -3058,7 +3058,7 @@ int curves_findNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
         if (((((GameObject*)obj)->anim.classId == 0x2c) &&
                     (((GameObject*)obj)->anim.mapEventSlot != queryAll)) &&
                 (curve = (RomCurveDef*)((GameObject*)obj)->anim.placementData, curve != NULL) &&
-                curve->type == 0x16)
+                curve->type == ROMCURVE_TYPE_16)
         {
             dx = ((GameObject*)obj)->anim.worldPosX - x;
             dy = ((GameObject*)obj)->anim.worldPosY - y;
