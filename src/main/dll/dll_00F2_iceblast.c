@@ -17,6 +17,7 @@
 #include "main/objlib.h"
 #include "main/frame_timing.h"
 #include "main/dll/vecrotatezxy.h"
+#define ICEBLAST_HIT_VOLUME_SLOT 0x10
 
 STATIC_ASSERT(offsetof(IceblastPlacement, useAltHitVolume) == 0x19);
 STATIC_ASSERT(offsetof(IceblastPlacement, initialTimer) == 0x1a);
@@ -62,7 +63,7 @@ void iceblast_update(GameObject* obj)
     {
         return;
     }
-    ObjHits_SetHitVolumeSlot((u32)obj, 0x10, def->useAltHitVolume != 0 ? 3 : 1, 0);
+    ObjHits_SetHitVolumeSlot((u32)obj, ICEBLAST_HIT_VOLUME_SLOT, def->useAltHitVolume != 0 ? 3 : 1, 0);
 
     state->timer -= timeDelta;
     if (state->timer <= 0.0f)
