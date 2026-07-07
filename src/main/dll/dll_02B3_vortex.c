@@ -3,6 +3,11 @@
 
 #define VORTEX_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* partfx ids emitted per vortex visual variant on the particle-timer tick
+   (index-style; roles opaque). A for the 0x835/0x838 seqId form; B for the default form. */
+#define VORTEX_PARTFX_A 0x7f7
+#define VORTEX_PARTFX_B 0x7c2
+
 int Vortex_getExtraSize(void) { return 0x28; }
 
 int Vortex_getObjectTypeId(void) { return 0; }
@@ -88,7 +93,7 @@ void Vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 ((f32)setup->radiusParam / gVortexRadiusParamScale) *
                 (((GameObject*)obj)->anim.rootMotionScale * state->alpha);
             particleArgs[4] = lbl_803E73D0;
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7f7, particleArgs, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, VORTEX_PARTFX_A, particleArgs, 2, -1, NULL);
         }
 
         model = Obj_GetActiveModel(obj);
@@ -168,7 +173,7 @@ void Vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         particleArgs[2] = ((GameObject*)obj)->anim.rootMotionScale * state->alpha;
         if (hudHidden == 0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7c2, particleArgs, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, VORTEX_PARTFX_B, particleArgs, 2, -1, NULL);
         }
 
         model = Obj_GetActiveModel(obj);
