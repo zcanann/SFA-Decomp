@@ -17,6 +17,10 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
 
+/* Object id of the SpiritPrize object this creator spawns (docblock:
+ * "builds a SpiritPrize object setup (object id 0x11)"). */
+#define DFSHOBJCREATOR_SPIRITPRIZE_OBJ_ID 0x11
+
 /* Obj_AllocObjectSetup(0x38,...) buffer composed in DFSH_ObjCreator_update.
  * Head is the common ObjPlacement; tail (0x18..0x37) is file-local. */
 typedef struct DfshObjCreatorSetup
@@ -110,7 +114,7 @@ void DFSH_ObjCreator_update(int obj)
 
     if (Obj_IsLoadingLocked() != 0 && state->spawnTimer <= 0)
     {
-        spawnSetup = Obj_AllocObjectSetup(0x38, 0x11);
+        spawnSetup = Obj_AllocObjectSetup(0x38, DFSHOBJCREATOR_SPIRITPRIZE_OBJ_ID);
         ((DfshObjCreatorSetup*)spawnSetup)->base.posX = ((ObjPlacement*)setup)->posX;
         ((DfshObjCreatorSetup*)spawnSetup)->base.posY = ((ObjPlacement*)setup)->posY;
         ((DfshObjCreatorSetup*)spawnSetup)->base.posZ = ((ObjPlacement*)setup)->posZ;
