@@ -25,6 +25,9 @@ extern f32 lbl_803E0B74;
 extern f32 lbl_803E0B78;
 extern f32 lbl_803E0B7C;
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL72_EFFECT_ID 0x154
+
 void dll_72_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
@@ -143,7 +146,7 @@ void dll_72_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = lbl_803E0B60 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80314288, 0x18, &base[212], 0x154, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80314288, 0x18, &base[212], DLL72_EFFECT_ID, 0);
 }
 
 void dll_72_func01_nop(void)
