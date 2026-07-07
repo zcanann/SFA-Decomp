@@ -139,7 +139,7 @@ typedef void (*TrickyVtableFn)(int, int, int, int);
 typedef struct PressureswitchfbState
 {
     u8 pad0[0x68 - 0x0];
-    s32 unk68;
+    s32 linkedTrickyObj; /* obj ref; vtable[0x28] invoked to signal linked Tricky-driven object */
     u8 pad6C[0x70 - 0x6C];
 } PressureswitchfbState;
 
@@ -433,7 +433,7 @@ void PressureSwitchFB_update(int obj)
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
             {
-                (*(TrickyVtableFn*)(*(int*)(((PressureswitchfbState*)tmp)->unk68) + 0x28))(tmp, obj, 1, 3);
+                (*(TrickyVtableFn*)(*(int*)(((PressureswitchfbState*)tmp)->linkedTrickyObj) + 0x28))(tmp, obj, 1, 3);
             }
         }
     }
