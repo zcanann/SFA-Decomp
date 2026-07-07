@@ -414,7 +414,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
                 ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ;
                 ObjSeq_UpdateCurvePosition(obj, seq);
             }
-            if ((s8)((ObjSeqState*)seq)->unk7A == 1 &&
+            if ((s8)((ObjSeqState*)seq)->groundSnapEnabled == 1 &&
                 hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                      ((GameObject*)obj)->anim.localPosZ, groundY, 0) == 0)
             {
@@ -1495,8 +1495,8 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     lbl_803DD08A = targetFrame;
     ((ObjSeqState*)seq)->cmdCursor = 0;
     ((ObjSeqState*)seq)->retriggerFrame = -0x32;
-    ((ObjSeqState*)seq)->unk78 = 0;
-    ((ObjSeqState*)seq)->unk7A = 0;
+    ((ObjSeqState*)seq)->useRootMotionSpeed = 0;
+    ((ObjSeqState*)seq)->groundSnapEnabled = 0;
     ((ObjSeqState*)seq)->unk79 = 0;
     ((ObjSeqState*)seq)->targetObj = NULL;
     ((ObjSeqState*)seq)->unk7B = 0;
@@ -1566,7 +1566,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
 
         if (((ObjSeqState*)seq)->curFrame > 0 && mode != 0)
         {
-            if ((s8)((ObjSeqState*)seq)->unk78 == 1 && (s8)((ObjSeqState*)seq)->unk7B == 0 && action != NULL)
+            if ((s8)((ObjSeqState*)seq)->useRootMotionSpeed == 1 && (s8)((ObjSeqState*)seq)->unk7B == 0 && action != NULL)
             {
                 f32 dx = posp[0] - prevX;
                 if (ObjAnim_SampleRootCurvePhase(
@@ -2317,13 +2317,13 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         }
         if ((s8)((ObjSeqState*)seq)->unk7B != 0 && (s8)(base + (s8)((ObjSeqState*)seq)->slot)[0x3a40] != 0)
         {
-            ((ObjSeqState*)seq)->unk78 = 0;
+            ((ObjSeqState*)seq)->useRootMotionSpeed = 0;
             break;
         }
-        *(s8*)&((ObjSeqState*)seq)->unk78 = 1 - ((ObjSeqState*)seq)->unk78;
+        *(s8*)&((ObjSeqState*)seq)->useRootMotionSpeed = 1 - ((ObjSeqState*)seq)->useRootMotionSpeed;
         break;
     case 7:
-        *(s8*)&((ObjSeqState*)seq)->unk7A = 1 - ((ObjSeqState*)seq)->unk7A;
+        *(s8*)&((ObjSeqState*)seq)->groundSnapEnabled = 1 - ((ObjSeqState*)seq)->groundSnapEnabled;
         break;
     case 3:
         if (flag8 != 0)
@@ -2816,7 +2816,7 @@ int ObjSeq_update(u8* obj, f32 t)
 
             if (((ObjSeqState*)seq)->curFrame > 0 && (((ObjSeqState*)seq)->flags & 4) != 0)
             {
-                if ((s8)((ObjSeqState*)seq)->unk78 == 1 && (s8)((ObjSeqState*)seq)->unk7B == 0 && action != NULL)
+                if ((s8)((ObjSeqState*)seq)->useRootMotionSpeed == 1 && (s8)((ObjSeqState*)seq)->unk7B == 0 && action != NULL)
                 {
                     f32 dx = px - prevX;
                     f32 dz = pz - prevZ;
@@ -3019,7 +3019,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 (u16)(int)(SendMailData * ((ObjSeqState*)seq)->fade);
         }
         ObjSeq_UpdateCurvePosition(obj, seq);
-        if ((s8)((ObjSeqState*)seq)->unk7A == 1 &&
+        if ((s8)((ObjSeqState*)seq)->groundSnapEnabled == 1 &&
             hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                  ((GameObject*)obj)->anim.localPosZ, scratch, 0) == 0)
         {
@@ -3150,7 +3150,7 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
     *seqObj = activeObj;
 
     ObjSeq_UpdateCurvePosition(obj, seq);
-    if ((s8)((ObjSeqState*)seq)->unk7A == 1 &&
+    if ((s8)((ObjSeqState*)seq)->groundSnapEnabled == 1 &&
         hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                              ((GameObject*)obj)->anim.localPosZ, groundY, 0) == 0)
     {
@@ -3262,7 +3262,7 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
         }
     }
 
-    if ((s8)((ObjSeqState*)seq)->unk7B != 0 && (s8)((ObjSeqState*)seq)->unk78 != 0)
+    if ((s8)((ObjSeqState*)seq)->unk7B != 0 && (s8)((ObjSeqState*)seq)->useRootMotionSpeed != 0)
     {
         lbl_803DD0B8 = obj;
         lbl_803DD0B6 = framesThisStep;
@@ -4892,7 +4892,7 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
     }
 
     if (RomCurveInterp_EvaluateOffsetPosition(((ObjSeqState*)seq)->curveInterp, offset, outPos,
-                                              (s16*)(seq + 0x1a), ((ObjSeqState*)seq)->unk7A) != 0)
+                                              (s16*)(seq + 0x1a), ((ObjSeqState*)seq)->groundSnapEnabled) != 0)
     {
         ((GameObject*)obj)->anim.localPosX = outPos[0];
         ((GameObject*)obj)->anim.localPosY = outPos[1];
