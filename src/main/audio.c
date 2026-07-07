@@ -735,16 +735,23 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 {
     SfxLoopedObjectSoundTable* table = &gSfxLoopedObjectSoundFlags;
     u8* flags = table->flags;
-    u16 count = gSfxLoopedObjectSoundCount;
-    u16 sameSfxCount = 0;
-    s16 i = 0;
-    u16* ids = table->ids;
-    u16* ip = ids;
-    u32* objects = table->objects;
-    u32* op = objects;
+    s32 count;
+    u16 sameSfxCount;
+    u16* ip;
+    u32* op;
+    u32* objects;
+    u16* ids;
     s16 j;
     int found;
+    s16 i;
 
+    count = gSfxLoopedObjectSoundCount;
+    sameSfxCount = 0;
+    i = 0;
+    ids = table->ids;
+    ip = ids;
+    objects = table->objects;
+    op = objects;
     for (; i < count; i++)
     {
         if (sfxId == *ip)
@@ -777,7 +784,7 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
         }
         found = 0;
     checked:
-        if ((found == 0) && (count != SFX_LOOPED_OBJECT_SOUND_COUNT))
+        if ((found == 0) && (count != sizeof(table->flags)))
         {
             table->objects[count] = obj;
             table->ids[count] = sfxId;
@@ -787,7 +794,7 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
         }
     }
 
-    if (count != gSfxLoopedObjectSoundCount)
+    if ((u32)count != gSfxLoopedObjectSoundCount)
     {
         flags[count] |= SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
     }
@@ -866,10 +873,10 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
 void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
 {
     SfxLoopedObjectSoundTable* table;
+    s16 i;
     u32* objectIt;
     u16* idIt;
-    s16 i;
-    u16 count;
+    s32 count;
     int found;
 
     table = &gSfxLoopedObjectSoundFlags;
@@ -889,7 +896,7 @@ void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
     }
     found = 0;
 checked:
-    if ((found == 0) && (count != SFX_LOOPED_OBJECT_SOUND_COUNT))
+    if ((found == 0) && (count != sizeof(table->flags)))
     {
         table->objects[count] = obj;
         table->ids[count] = sfxId;
