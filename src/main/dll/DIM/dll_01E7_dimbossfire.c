@@ -16,6 +16,7 @@
 #include "main/sfa_shared_decls.h"
 
 #define DIMBOSSFIRE_OBJFLAG_PARENT_SLACK 0x1000
+#define DIMBOSSFIRE_HIT_VOLUME_SLOT 9
 #define DIMBOSSFIRE_OBJFLAG_RENDERED 0x800
 #define MODEL_LIGHT_KIND_POINT 2
 extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
@@ -160,7 +161,7 @@ void dimbossfire_update(int obj)
         if ((state->flags & DIMBOSSFIRE_FLAG_START_BURST) != 0)
         {
             state->flags &= ~DIMBOSSFIRE_FLAG_START_BURST;
-            ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
+            ObjHits_SetHitVolumeSlot(obj, DIMBOSSFIRE_HIT_VOLUME_SLOT, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0xf);
             ObjHits_EnableObject(obj);
             if ((((GameObject*)obj)->objectFlags & DIMBOSSFIRE_OBJFLAG_RENDERED) != 0)
