@@ -26,6 +26,11 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 #define WATERFX_POOL_SIZE 30
 #define WATERFX_MAX_SPLASHES 10
 
+#define WATERFX_TEXTURE_RIPPLE 0x56   /* gWaterfxRippleTexture */
+#define WATERFX_TEXTURE_SPLASH0 0xc2a /* gWaterfxSplashTexture0 */
+#define WATERFX_TEXTURE_SPLASH1 0xc2c /* gWaterfxSplashTexture1 */
+#define WATERFX_TEXTURE_WAKE 0xc2d    /* gWaterfxWakeTexture */
+
 #define GX_BM_BLEND 1
 #define GX_BL_SRCALPHA 4
 #define GX_BL_INVSRCALPHA 5
@@ -707,10 +712,10 @@ void waterfx_initialise(void)
     gWaterfxSplashCount = NULL;
     gWaterfxDropCount = NULL;
     gWaterfxWakeCount = NULL;
-    gWaterfxRippleTexture = (void*)textureLoadAsset(0x56);
-    gWaterfxSplashTexture0 = (void*)textureLoadAsset(0xc2a);
-    gWaterfxSplashTexture1 = (void*)textureLoadAsset(0xc2c);
-    gWaterfxWakeTexture = (void*)textureLoadAsset(0xc2d);
+    gWaterfxRippleTexture = (void*)textureLoadAsset(WATERFX_TEXTURE_RIPPLE);
+    gWaterfxSplashTexture0 = (void*)textureLoadAsset(WATERFX_TEXTURE_SPLASH0);
+    gWaterfxSplashTexture1 = (void*)textureLoadAsset(WATERFX_TEXTURE_SPLASH1);
+    gWaterfxWakeTexture = (void*)textureLoadAsset(WATERFX_TEXTURE_WAKE);
     waterfx_onMapSetup();
     waterfx_drawFn_800953fc();
 }
