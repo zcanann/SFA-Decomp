@@ -31,6 +31,9 @@
 
 #define MODEL_LIGHT_KIND_POINT 2
 
+/* object-type ids of the attack children Drakor spawns (see file docblock). */
+#define BOSSDRAKOR_CHILD_OBJ_MISSILE 0x70f /* drakormissile (drakormissile_startActiveLaunch) */
+
 #define BOSSDRAKOR_OBJFLAG_RENDERED 0x800
 
 void bossdrakor_release(void)
@@ -540,7 +543,7 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
             {
                 if (Obj_IsLoadingLocked() != 0)
                 {
-                    setup = Obj_AllocObjectSetup(0x20, 0x70f);
+                    setup = Obj_AllocObjectSetup(0x20, BOSSDRAKOR_CHILD_OBJ_MISSILE);
                     ((ObjPlacement*)setup)->posX = ((BossDrakorState*)state)->homePosX;
                     ((ObjPlacement*)setup)->posY = ((BossDrakorState*)state)->homePosY;
                     ((ObjPlacement*)setup)->posZ = ((BossDrakorState*)state)->homePosZ;
