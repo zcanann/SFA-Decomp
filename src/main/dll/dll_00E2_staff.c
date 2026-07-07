@@ -33,6 +33,7 @@
 #include "main/gamebits.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXDraw.h"
+#include "dolphin/gx/GXEnum.h"
 #include "string.h"
 #include "main/dll/dll_00E2_staff.h"
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
@@ -1087,7 +1088,7 @@ void quakeSpellTextureFn_8016dbf4(void)
                    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posZ - playerMapOffsetZ);
         PSMTXConcat(mView, mTrans, mView);
         PSMTXConcat(mView, mScale, mResult);
-        GXLoadPosMtxImm(mResult, 0);
+        GXLoadPosMtxImm(mResult, GX_PNMTX0);
         PSMTXConcat(mView, mRot, mResult);
         z = lbl_803E32B4;
         mResult[3] = z;
@@ -1309,7 +1310,7 @@ void staffDrawSwipe(int* obj, int* swipe)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-    GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
+    GXLoadPosMtxImm(Camera_GetViewMatrix(), GX_PNMTX0);
     GXSetCurrentMtx(0);
 
     i = 0;
