@@ -5,6 +5,7 @@
 #include "main/gameplay_runtime.h"
 
 #define DEATHGAS_OBJFLAG_HIDDEN 0x4000
+#define DEATHGAS_AIRMETER_BGTEXTURE 0x603
 extern int playerIsDisguised(void);
 extern f32 timeDelta;
 extern u32 ObjHits_RecordObjectHit();
@@ -103,7 +104,7 @@ void DeathGas_update(int* obj)
     {
         if (!state->draining)
         {
-            (*gGameUIInterface)->initAirMeter(6000, 0x603);
+            (*gGameUIInterface)->initAirMeter(6000, DEATHGAS_AIRMETER_BGTEXTURE);
             state->timer = 6000.0f;
             state->draining = 1;
         }
