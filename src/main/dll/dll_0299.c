@@ -17,6 +17,8 @@
 
 /* main particle burst seeded 3x once at init */
 #define DLL0299_PARTFX_INIT 0x545
+/* second distinct particle seeded once at init alongside the INIT trio */
+#define DLL0299_PARTFX_INIT2 0x546
 /* ambient particle burst spawned 3x every update tick */
 #define DLL0299_PARTFX_AMBIENT 0x547
 
@@ -68,7 +70,7 @@ void dll_299_init(int obj, int setup)
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x546, NULL, 0x802, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT2, NULL, 0x802, -1, NULL);
 }
 
 void dll_299_release_nop(void)
