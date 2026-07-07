@@ -34,6 +34,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E294C;
@@ -81,7 +82,7 @@ void fn_801540A0(int obj, int p)
 
     *(f32*)(p + 0x32c) = lbl_803E294C;
     done = 0;
-    ObjHits_SetHitVolumeSlot(obj, 0x18, 1, -1);
+    ObjHits_SetHitVolumeSlot(obj, FALL_LADDERS_HIT_VOLUME_SLOT, 1, -1);
     if (*(void**)(p + 0x340) != 0)
     {
         done = 1;
