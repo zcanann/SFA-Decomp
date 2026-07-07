@@ -3,6 +3,9 @@
 #include "main/audio/sfx_ids.h"
 
 
+#define ARW_SQUADRON_PARTFX_SMOKE 0x7d0 /* damage smoke effect (pfx.f8 = damageSmokeScale) */
+#define ARW_SQUADRON_PARTFX_FIRE  0x7d1 /* fire effect (pfx.f8 = fireFxScale) */
+
 #define ARW_SQUADRON_STATE_WAITING 0
 #define ARW_SQUADRON_STATE_ACTIVE 1
 #define ARW_SQUADRON_STATE_DEAD 3
@@ -474,7 +477,7 @@ void arwsquadron_emitEffects(int objArg, int stateArg)
                 pfx.s6 = 0x61a8;
             else
                 pfx.s6 = -0x63c0;
-            (*gPartfxInterface)->spawnObject((void*)objArg, 0x7d0, &pfx, 4, -1, &flag);
+            (*gPartfxInterface)->spawnObject((void*)objArg, ARW_SQUADRON_PARTFX_SMOKE, &pfx, 4, -1, &flag);
         }
     }
     if ((s8)state->health <= 1)
@@ -482,7 +485,7 @@ void arwsquadron_emitEffects(int objArg, int stateArg)
         pfx.s6 = 0xc0a;
         ObjPath_GetPointLocalPosition(objArg, 5, &pfx.fx, &pfx.fy, &pfx.fz);
         pfx.f8 = state->fireFxScale;
-        (*gPartfxInterface)->spawnObject((void*)objArg, 0x7d1, &pfx, 4, -1, &flag);
+        (*gPartfxInterface)->spawnObject((void*)objArg, ARW_SQUADRON_PARTFX_FIRE, &pfx, 4, -1, &flag);
     }
     if (state->muzzleCount != 0 && (s8)state->health > 1)
     {
