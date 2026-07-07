@@ -35,6 +35,8 @@ extern f32 lbl_803E2E58;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E2E50;
 
+#define ICEBALL_MSG_NOTIFY_OWNER 0x80 /* vtable msg notifying the owning ChukChuk on impact */
+
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -101,7 +103,7 @@ void fn_8015FCCC(int obj)
             if (scarab_isObjectInList(((GameObject*)obj)->ownerObj))
             {
                 (*(void (**)(void*, int))(**(int**)(*(int*)&((GameObject*)obj)->ownerObj + 0x68) + 0x20))(
-                    ((GameObject*)obj)->ownerObj, 0x80);
+                    ((GameObject*)obj)->ownerObj, ICEBALL_MSG_NOTIFY_OWNER);
             }
         }
         for (n = 0; n < 25; n++)
@@ -116,7 +118,7 @@ void fn_8015FCCC(int obj)
             if (scarab_isObjectInList(((GameObject*)obj)->ownerObj))
             {
                 (*(void (**)(void*, int))(**(int**)(*(int*)&((GameObject*)obj)->ownerObj + 0x68) + 0x24))(
-                    ((GameObject*)obj)->ownerObj, 0x80);
+                    ((GameObject*)obj)->ownerObj, ICEBALL_MSG_NOTIFY_OWNER);
             }
         }
         for (n = 0; n < 25; n++)
@@ -131,7 +133,7 @@ void fn_8015FCCC(int obj)
             if (scarab_isObjectInList(((GameObject*)obj)->ownerObj))
             {
                 (*(void (**)(void*, int, int))(**(int**)(*(int*)&((GameObject*)obj)->ownerObj + 0x68) + 0x24))(
-                    ((GameObject*)obj)->ownerObj, 0x80, 0);
+                    ((GameObject*)obj)->ownerObj, ICEBALL_MSG_NOTIFY_OWNER, 0);
             }
         }
         for (n = 0; n < 25; n++)
