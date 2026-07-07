@@ -6,6 +6,7 @@
 #include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
+#define DLL19D_HIT_VOLUME_SLOT 0xe
 
 typedef struct Dll19DPlacement
 {
@@ -186,7 +187,7 @@ void dll_19D_init(int obj)
     {
         slot = 1;
     }
-    ObjHits_SetHitVolumeSlot(self, 0xe, slot, 0);
+    ObjHits_SetHitVolumeSlot(self, DLL19D_HIT_VOLUME_SLOT, slot, 0);
 
     if ((int)(signed char)((Dll19DPlacement*)state2)->variant == 1)
     {
