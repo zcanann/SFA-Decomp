@@ -171,22 +171,25 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
     default:
         {
             u32 fadeTime = convertedTime;
-            fade = (SynthFade*)(stateBase + SYNTH_FADE_TABLE_OFFSET) + target;
-            fade->delayAction = action;
-            fade->handle = handle;
+            fade = (SynthFade*)(stateBase + target * sizeof(SynthFade));
+            *(u8*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x2c) = action;
+            *(u32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x28) = handle;
             if (fadeTime != 0)
             {
-                fade->start = fade->current;
-                fade->target = lbl_803E7798 * volume;
-                fade->progress = lbl_803E77A8;
-                fade->progressStep = lbl_803E77D4 / fadeTime;
+                *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x08) =
+                    *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x00);
+                *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x04) = lbl_803E7798 * volume;
+                *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x0c) = lbl_803E77A8;
+                *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x10) = lbl_803E77D4 / fadeTime;
             }
             else
             {
-                fade->current = fade->target = lbl_803E7798 * volume;
-                if (fade->handle != SYNTH_INVALID_LINK_ID)
+                *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x00) =
+                    *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x04) = lbl_803E7798 * volume;
+                if (*(u32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x28) != SYNTH_INVALID_LINK_ID)
                 {
-                    synthDispatchFadeAction(fade);
+                    synthDispatchFadeAction(
+                        (SynthFade*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET));
                 }
             }
             synthMasterFaderActiveFlags |= 1U << target;
