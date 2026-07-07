@@ -55,6 +55,9 @@ extern void fn_8011F6D4(u32 x);
 #define SC_TOTEMBOND_CAMMODE_VIEWFINDER 0x44
 #define SC_TOTEMBOND_CAMMODE_DEFAULT 0x42
 
+/* LightFoot Village map-event id ("swapcircle"); mode 6 advances the village */
+#define SC_TOTEMBOND_MAP_SWAPCIRCLE 0xe
+
 #define SC_TOTEMBOND_ORB_COUNT 8
 #define SC_TOTEMBOND_ORB_SETUP_SIZE 0x38
 #define SC_TOTEMBOND_ORB_OBJECT_ID 0x27b
@@ -348,7 +351,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
 
     if ((state->eventFlags & SC_TOTEMBOND_EVENT_SET_MAP_MODE) != 0)
     {
-        (*gMapEventInterface)->setMapAct(0xe, 6);
+        (*gMapEventInterface)->setMapAct(SC_TOTEMBOND_MAP_SWAPCIRCLE, 6);
         state->eventFlags &= ~SC_TOTEMBOND_EVENT_SET_MAP_MODE;
     }
 }
