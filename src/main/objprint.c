@@ -1794,8 +1794,8 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
             int n2;
             for (n2 = 0; n2 < 2; n2++)
             {
-                int lim;
                 s16 v;
+                int lim;
                 if (n2 % 2 != 0)
                 {
                     lim = (s32)(gObjPrintDegToAngle * (f32)sp2[i]);
