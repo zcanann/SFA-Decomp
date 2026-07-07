@@ -291,70 +291,8 @@ static inline SfxObjectChannel* Sfx_FindFreeObjectChannel(void)
     return NULL;
 }
 
-SfxObjectChannel* Sfx_AllocObjectChannel(a, b, pitch, c, d)
-s16 a;
-int b;
-double pitch;
-int c;
+SfxObjectChannel* Sfx_AllocObjectChannel(int a, int b, double pitch, int c, int d);
 
-int d;
-{
-    extern f32 lbl_803DE594;
-    SfxObjectChannel* ch;
-    s32 i;
-    u32 handle;
-
-    if ((int)audioFlagFn_8000a188(4) != 0)
-    {
-        return 0;
-    }
-
-    ch = Sfx_FindFreeObjectChannel();
-    if (ch == NULL)
-    {
-        return 0;
-    }
-
-    handle = sndFXStartEx(a, b, c, 0);
-    if (handle == (u32) - 1)
-    {
-        goto fail;
-    }
-    if (gSfxGlobalCtrlLevel != 0 && d == 0)
-    {
-        sndFXCtrl(handle, 0x5b, gSfxGlobalCtrlLevel);
-    }
-
-    ch->object = 0;
-    ch->channelMask = 0;
-    ch->paused = 0;
-    ch->hasPosition = 0;
-    ch->tracksObjectPosition = 0;
-    ch->handle = handle;
-    {
-        f32 fz = lbl_803DE570;
-        ch->x = fz;
-        ch->y = fz;
-        ch->z = fz;
-    }
-    ch->field08 = a;
-    ch->volume = 0x64;
-    ch->nearDistance = lbl_803DE590;
-    ch->farDistance = lbl_803DE594;
-    ch->globalCtrlDisabled = d;
-
-    {
-        u64 age = gSfxObjectChannelAgeLo | ((u64)gSfxObjectChannelAgeHi << 32);
-        u64 next = age + 1;
-        gSfxObjectChannelAgeLo = next;
-        gSfxObjectChannelAgeHi = (u32)(next >> 32);
-        ch->age = age;
-    }
-    return ch;
-fail:
-    ch->handle = (u32) - 1;
-    return 0;
-}
 
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v)
 {
@@ -1455,6 +1393,66 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
     }
 }
 
+SfxObjectChannel* Sfx_AllocObjectChannel(a, b, pitch, c, d)
+s16 a;
+int b;
+double pitch;
+int c;
+
+int d;
+{
+    extern f32 lbl_803DE594;
+    SfxObjectChannel* ch;
+    s32 i;
+    u32 handle;
+
+    if ((int)audioFlagFn_8000a188(4) != 0)
+    {
+        return 0;
+    }
+
+    ch = Sfx_FindFreeObjectChannel();
+    if (ch == NULL)
+    {
+        return 0;
+    }
+
+    handle = sndFXStartEx(a, b, c, 0);
+    if (handle == (u32) - 1)
+    {
+        goto fail;
+    }
+    if (gSfxGlobalCtrlLevel != 0 && d == 0)
+    {
+        sndFXCtrl(handle, 0x5b, gSfxGlobalCtrlLevel);
+    }
+
+    ch->object = 0;
+    ch->channelMask = 0;
+    ch->paused = 0;
+    ch->hasPosition = 0;
+    ch->tracksObjectPosition = 0;
+    ch->handle = handle;
+    {
+        f32 fz = lbl_803DE570;
+        ch->x = fz;
+        ch->y = fz;
+        ch->z = fz;
+    }
+    ch->field08 = a;
+    ch->volume = 0x64;
+    ch->nearDistance = lbl_803DE590;
+    ch->farDistance = lbl_803DE594;
+    ch->globalCtrlDisabled = d;
+
+    ch->age = gSfxObjectChannelAge++;
+    return ch;
+fail:
+    ch->handle = (u32) - 1;
+    return 0;
+}
+
+
 void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId)
 {
     Sfx_PlayFromObjectEx(obj, NULL, channel, sfxId);
@@ -1598,8 +1596,7 @@ checkNextChannel:
         goto setChannelFree;
     }
 
-    gSfxObjectChannelAgeLo = 0;
-    gSfxObjectChannelAgeHi = 0;
+    gSfxObjectChannelAge = 0;
     objectChannel = gSfxObjectChannels;
     gSfxGlobalCtrlLevel = 0;
     i = SFX_OBJECT_CHANNEL_COUNT - 1;
