@@ -40,6 +40,8 @@
 /* group owned by another DLL, queried here */
 #define TIMER_OBJGROUP 0x4c /* DLL 0x2B5 timer */
 #define TARGET_OBJGROUP 0xf /* player-target group; nearest object gets the trigger's sequence */
+#define TRICKY_TARGET_OBJGROUP 0x32          /* nearest object searched from the tricky object */
+#define TRICKY_TARGET_OBJGROUP_FALLBACK 0x31 /* fallback group when TRICKY_TARGET_OBJGROUP has none */
 
 /*
  * TriggerState+0 status byte (`*state`). See objInterpretSeq / Trigger_hitDetect.
@@ -715,10 +717,10 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                             Obj_FreeObject(getTrickyObject());
                             break;
                         case 2:
-                            t2 = ObjGroup_FindNearestObject(0x32, t, 0);
+                            t2 = ObjGroup_FindNearestObject(TRICKY_TARGET_OBJGROUP, t, 0);
                             if ((void*)t2 == NULL)
                             {
-                                t2 = ObjGroup_FindNearestObject(0x31, t, 0);
+                                t2 = ObjGroup_FindNearestObject(TRICKY_TARGET_OBJGROUP_FALLBACK, t, 0);
                             }
                             if ((void*)t2 != NULL)
                             {
