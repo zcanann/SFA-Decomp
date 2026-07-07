@@ -107,7 +107,6 @@ extern u32 FUN_80017608();
 extern u32 FUN_80017620();
 extern void* FUN_80017624();
 
-extern u32 FUN_8004812c();
 extern void newshadows_getShadowTextureTable4x8();
 extern void gxSetPeControl_ZCompLoc_(u8 zcomploc);
 extern void gxSetZMode_(u8 enable, int func, u8 update);
