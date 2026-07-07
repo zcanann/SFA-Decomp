@@ -1284,7 +1284,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         idx = (flags29 >> 0xb) & 0xf;
         if (idx < count)
         {
-            models[idx] = ObjModel_Load(-(*(int**)(def + 8))[idx], flags29, &size);
+            models[idx] = ObjModel_Load(-modelDef->modelFileIds[idx], flags29, &size);
             offsets[idx] = total;
             total += size;
         }
@@ -1293,7 +1293,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     {
         for (; i < count; i++)
         {
-            models[i] = ObjModel_Load(-(*(int**)(def + 8))[i], flags29, &size);
+            models[i] = ObjModel_Load(-modelDef->modelFileIds[i], flags29, &size);
             offsets[i] = total;
             total += size;
         }

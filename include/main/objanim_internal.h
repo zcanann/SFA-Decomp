@@ -206,7 +206,7 @@ typedef struct ObjTextureRuntimeSlot {
 typedef struct ObjDef {
   u8 pad00[4];
   f32 rootMotionScaleBase;
-  u8 pad08[0x0C - 0x08];
+  s32 *modelFileIds; /* 0x08: table of per-model file ids (negated -> ObjModel_Load), modelCount entries */
   ObjTextureSlotDef *textureSlotDefs;
   s8 *jointData;
   u8 pad14[0x18 - 0x14];
@@ -458,6 +458,7 @@ STATIC_ASSERT(sizeof(ObjTextureRuntimeSlot) == 0x10);
 
 STATIC_ASSERT(sizeof(ObjDef) == 0x94);
 STATIC_ASSERT(offsetof(ObjDef, rootMotionScaleBase) == 0x04);
+STATIC_ASSERT(offsetof(ObjDef, modelFileIds) == 0x08);
 STATIC_ASSERT(offsetof(ObjDef, textureSlotDefs) == 0x0C);
 STATIC_ASSERT(offsetof(ObjDef, jointData) == 0x10);
 STATIC_ASSERT(offsetof(ObjDef, extraSetupData) == 0x18);
