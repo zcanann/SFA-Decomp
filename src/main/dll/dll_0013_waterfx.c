@@ -703,7 +703,7 @@ void waterfx_initialise(void)
  * For each of the 8 bands it builds a model-view matrix (scaled by the burst
  * radius, bulged outward and lifted by a parabolic 'fade' arc, translated to
  * the impact point and multiplied by the camera view), loads it as a posmtx,
- * and writes that band's per-vertex alpha into the color array (s->pad18).
+ * and writes that band's per-vertex alpha into the color array (s->vtxColors).
  * The completed geometry is drawn twice (front then back cull) via the shared
  * display list.
  */
@@ -756,8 +756,8 @@ void fn_80095164(WaterParticle* s)
         mtxIdx += 3;
         colorOut += 4;
     }
-    DCStoreRange(s->pad18, 32);
-    GXSetArray(GX_VA_CLR0, s->pad18, 4);
+    DCStoreRange(s->vtxColors, 32);
+    GXSetArray(GX_VA_CLR0, s->vtxColors, 4);
     GXSetCullMode(GX_CULL_FRONT);
     GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
     GXSetCullMode(GX_CULL_BACK);

@@ -48,7 +48,7 @@ typedef struct {
     f32 f0c;
     f32 f10;
     f32 f14;
-    u8 pad18[0x20];
+    u8 vtxColors[0x20]; /* 0x18: 8 per-vertex RGBA colors, uploaded via GXSetArray(GX_VA_CLR0) */
     u8 active;
     u8 pad39[3];
 } WaterParticle;
