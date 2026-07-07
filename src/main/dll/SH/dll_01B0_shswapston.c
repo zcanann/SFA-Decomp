@@ -413,6 +413,8 @@ typedef struct WarpstoneState
     u8 pad12[0x18 - 0x12];
 } WarpstoneState;
 
+#define SHSWAPSTON_TARGET_OBJGROUP 8
+
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void fn_8003ADC4(int obj, int target, void* state, int a, int b, int c);
 extern s16* objModelGetVecFn_800395d8(int obj, int index);
@@ -497,7 +499,7 @@ void warpstone_update(int obj)
     }
     else
     {
-        target = ObjGroup_FindNearestObject(8, obj, 0);
+        target = ObjGroup_FindNearestObject(SHSWAPSTON_TARGET_OBJGROUP, obj, 0);
     }
 
     ((GameObject*)obj)->anim.localPosY += lbl_803DC040;
