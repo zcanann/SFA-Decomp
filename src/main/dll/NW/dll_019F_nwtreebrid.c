@@ -16,6 +16,9 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
+
+#define NWTREEBRID_TARGET_OBJGROUP 4
+
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E51F8;
 extern f32 lbl_803E51FC;
@@ -163,7 +166,7 @@ void treebird_update(int obj)
     dist = lbl_803E51FC;
     if (state->searchDelay != 0)
     {
-        state->targetObj = (void*)ObjGroup_FindNearestObject(4, obj, &dist);
+        state->targetObj = (void*)ObjGroup_FindNearestObject(NWTREEBRID_TARGET_OBJGROUP, obj, &dist);
         if ((u32)state->targetObj != 0)
         {
             state->searchDelay = 0;
