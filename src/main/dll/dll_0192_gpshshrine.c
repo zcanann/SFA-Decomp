@@ -13,6 +13,11 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+/* env-effect ids fired when the shrine intro countdown expires (index-style; roles opaque) */
+#define GPSH_SHRINE_ENVFX_A 0xcc
+#define GPSH_SHRINE_ENVFX_B 0xcd
+#define GPSH_SHRINE_ENVFX_C 0x222
+
 extern void gpsh_scene_getExtraSize(void);
 extern void ecsh_cup_getExtraSize(void);
 extern void dbsh_shrine_getExtraSize(void);
@@ -352,9 +357,9 @@ void gpsh_shrine_update(int obj)
             if (((GameObject*)obj)->unkF4 == 0)
             {
                 skyFn_80088c94(7, 1);
-                getEnvfxAct(obj, (int)player, 0xcc, 0);
-                getEnvfxAct(obj, (int)player, 0xcd, 0);
-                getEnvfxAct(obj, (int)player, 0x222, 0);
+                getEnvfxAct(obj, (int)player, GPSH_SHRINE_ENVFX_A, 0);
+                getEnvfxAct(obj, (int)player, GPSH_SHRINE_ENVFX_B, 0);
+                getEnvfxAct(obj, (int)player, GPSH_SHRINE_ENVFX_C, 0);
             }
         }
         fn_801C70F0(obj);
