@@ -12,6 +12,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define SNOWBIKE_OBJGROUP 0xa
+#define SNOWBIKE_AIRMETER_BGTEXTURE 0x5cd
 
 typedef struct SnowBikeMountState
 {
@@ -385,7 +386,7 @@ void SnowBike_setRiderMode(int obj, int type)
             ((SnowBikeSetTypeState*)state)->airMeterCurrent = lbl_803E5B94;
             if (((SnowBikeSetTypeState*)state)->bikeType == 2)
             {
-                (*gGameUIInterface)->initAirMeter((int)((SnowBikeSetTypeState*)state)->airMeterMax, 0x5cd);
+                (*gGameUIInterface)->initAirMeter((int)((SnowBikeSetTypeState*)state)->airMeterMax, SNOWBIKE_AIRMETER_BGTEXTURE);
                 (*gGameUIInterface)->airMeterSetRatio(lbl_803E5B98);
             }
         }
@@ -755,7 +756,7 @@ static inline void SnowBike_initBody(int obj, u8* params, int flag)
             ((SnowBikeState*)state)->airMeterCurrent = lbl_803E5B94;
             if (((SnowBikeState*)state)->riderMode == 2)
             {
-                (*gGameUIInterface)->initAirMeter((int)((SnowBikeState*)state)->airMeterMax, 1485);
+                (*gGameUIInterface)->initAirMeter((int)((SnowBikeState*)state)->airMeterMax, SNOWBIKE_AIRMETER_BGTEXTURE);
                 (*gGameUIInterface)->airMeterSetRatio(lbl_803E5B98);
             }
         }
