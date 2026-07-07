@@ -59,6 +59,11 @@
 #define ICEBADDIE_FX_IMPACT 0x10        /* camera shake + 0x28x particle 0x57 */
 #define ICEBADDIE_FX_LANDING 0x20       /* bigger shake + 0x57 burst + 0x58 debris (anim event 0x200) */
 
+/* particle-effect object ids spawned via gPartfxInterface (docblock: contact/puff/debris particles) */
+#define ICEBADDIE_PARTICLE_CONTACT 0x56 /* 4x contact particle */
+#define ICEBADDIE_PARTICLE_PUFF    0x57 /* puff / impact burst particle */
+#define ICEBADDIE_PARTICLE_DEBRIS  0x58 /* landing debris particle */
+
 /*
  * The per-object "control" sub-block (at GroundBaddieState + 0x40c). Only the
  * fields this TU touches are named; the rest is padding. effectFlags is a
@@ -1047,12 +1052,12 @@ void iceBaddie_updateControlEffects(int obj, int state)
     {
         for (i = 0; i < 4; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x56, (void*)(control + 0x20), 0x200001, -1, particleArgs);
+            (*gPartfxInterface)->spawnObject((void*)obj, ICEBADDIE_PARTICLE_CONTACT, (void*)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
     if ((((IceBaddieControl*)control)->effectFlags & ICEBADDIE_FX_PUFF) != 0 && (((GroundBaddieState*)state)->configFlags & 0x40) == 0)
     {
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x57, (void*)(control + 0x20), 0x200001, -1, particleArgs);
+        (*gPartfxInterface)->spawnObject((void*)obj, ICEBADDIE_PARTICLE_PUFF, (void*)(control + 0x20), 0x200001, -1, particleArgs);
     }
     if ((((IceBaddieControl*)control)->effectFlags & ICEBADDIE_FX_IMPACT) != 0)
     {
@@ -1060,7 +1065,7 @@ void iceBaddie_updateControlEffects(int obj, int state)
         CameraShake_SetAllMagnitudes(lbl_803E2D88 * shakeScale);
         for (i = 0; i < 0x28; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x57, (void*)(control + 0x20), 0x200001, -1, particleArgs);
+            (*gPartfxInterface)->spawnObject((void*)obj, ICEBADDIE_PARTICLE_PUFF, (void*)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
     if ((((IceBaddieControl*)control)->effectFlags & ICEBADDIE_FX_LANDING) != 0)
@@ -1069,11 +1074,11 @@ void iceBaddie_updateControlEffects(int obj, int state)
         CameraShake_SetAllMagnitudes(lbl_803E2D8C * shakeScale);
         for (i = 0; i < 0x28; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x57, (void*)(control + 0x20), 0x200001, -1, particleArgs);
+            (*gPartfxInterface)->spawnObject((void*)obj, ICEBADDIE_PARTICLE_PUFF, (void*)(control + 0x20), 0x200001, -1, particleArgs);
         }
         for (i = 0; i < 10; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x58, (void*)(control + 0x20), 0x200001, -1, particleArgs);
+            (*gPartfxInterface)->spawnObject((void*)obj, ICEBADDIE_PARTICLE_DEBRIS, (void*)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
     ((IceBaddieControl*)control)->effectFlags = 0;
