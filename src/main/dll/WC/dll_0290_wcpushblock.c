@@ -193,9 +193,11 @@ void wcpushblock_initialise(void)
 }
 
 #pragma opt_common_subs off
+#pragma opt_dead_assignments off
 void wcpushblock_update(int obj)
 {
 
+    f32 dt;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCPushBlockRuntimeState* state = ((GameObject*)obj)->extra;
     GameObject* player = (GameObject*)Obj_GetPlayerObject();
@@ -404,8 +406,9 @@ void wcpushblock_update(int obj)
             WCPUSHBLOCK_FLAGS(state).sfxActive = 1;
         }
         }
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, lbl_803E6D64,
-                ((GameObject*)obj)->anim.velocityZ * timeDelta);
+        dt = timeDelta;
+        objMove(obj, ((GameObject*)obj)->anim.velocityX * dt, lbl_803E6D64,
+                ((GameObject*)obj)->anim.velocityZ * dt);
         moved = 0;
         {
             if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X)
@@ -633,6 +636,7 @@ void wcpushblock_update(int obj)
     ((GameObject*)obj)->anim.localPosY = WCPUSHBLOCK_BASE_Y(state) + WCPUSHBLOCK_BOB_Y(state);
 }
 #pragma opt_common_subs reset
+#pragma opt_dead_assignments reset
 
 void fn_802251B4(int obj, WcLevelControlState* state)
 {
