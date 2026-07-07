@@ -155,7 +155,7 @@ void DR_BarrelGr_update(int obj)
         int held = ((DrbarrelgrState*)state)->heldBarrel;
         if ((void*)held != NULL)
         {
-            nearest = ObjGroup_FindNearestObject(25, obj, 0);
+            nearest = ObjGroup_FindNearestObject(GUNPOWDERBARREL_UPDATE_OBJGROUP, obj, 0);
             match = 0;
             if ((u32)nearest != 0 && (u32)held == nearest)
             {
@@ -184,7 +184,7 @@ void DR_BarrelGr_update(int obj)
     case DRBARRELGR_MODE_SCAN:
         if (*(void**)&((DrbarrelgrState*)state)->heldBarrel == 0)
         {
-            nearest = ObjGroup_FindNearestObject(25, obj, 0);
+            nearest = ObjGroup_FindNearestObject(GUNPOWDERBARREL_UPDATE_OBJGROUP, obj, 0);
             if ((u32)nearest != 0 &&
                 Vec_xzDistance(obj + 24, nearest + 24) < gDrBarrelGenGrabRange &&
                 ((GameObject*)nearest)->anim.localPosY < ((GameObject*)obj)->anim.localPosY)
