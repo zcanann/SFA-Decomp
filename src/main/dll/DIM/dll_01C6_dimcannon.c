@@ -25,6 +25,10 @@
 #define DIMCANNON_OBJGROUP 3
 #define DIMCANNON_OBJFLAG_HIDDEN 0x4000
 #define DIMCANNON_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+/* Camera mode ids passed to setMode() (== the target camera-mode DLL number). */
+#define CAMMODE_CANNON  0x51 /* dll_0051_cameramodecannon */
+#define CAMMODE_DEFAULT 0x42 /* dll_0042 - default/release camera */
 extern u64 ObjGroup_RemoveObject();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
@@ -279,7 +283,7 @@ void DIMCannon_update(int* obj)
                 ((DimCannonState*)state)->airMeterCharge = 0;
                 ((DimCannonState*)state)->shutdownTimer = 0;
                 focusObj = obj;
-                (*gCameraInterface)->setMode(0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
+                (*gCameraInterface)->setMode(CAMMODE_CANNON, 1, 0, 4, &focusObj, 0x32, 0xff);
                 buttonDisable(0, PAD_BUTTON_A);
                 ((DimCannonState*)state)->fireState = 3;
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
@@ -407,7 +411,7 @@ int DIMCannon_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
         if (camMode != 0x51 && camMode != 0x4c)
         {
             int* focusObj = obj;
-            (*gCameraInterface)->setMode(0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
+            (*gCameraInterface)->setMode(CAMMODE_CANNON, 1, 0, 4, &focusObj, 0x32, 0xff);
         }
         if (camMode != 0x51)
         {
@@ -525,7 +529,7 @@ int DIMCannon_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 buttonDisable(0, PAD_BUTTON_B);
                 hudFn_8011f38c(0);
                 (*gGameUIInterface)->airMeterSetShutdown();
-                (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
+                (*gCameraInterface)->setMode(CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
                 ((DimCannonState*)state)->fireState = 5;
                 *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
                 animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
