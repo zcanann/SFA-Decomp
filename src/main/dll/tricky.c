@@ -668,7 +668,7 @@ void pauseMenuMapFn_8011de20(void *this, u8 a, s16 b, int c)
     GXSetNumChans(0);
     textureFn_8004c264(this, 0);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    GXSetTevKColorSel(0, 0xc);
+    GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
     GXSetTevKColor(0, colB);
     GXSetTevDirect(0);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
@@ -1216,7 +1216,7 @@ int fn_8011E0D8(int *this, int *p2, int p3)
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
     fn_8006C5CC(&tex2);
     selectTexture((void*)tex2, 1);
-    GXSetTevKAlphaSel(2, 0x1c);
+    GXSetTevKAlphaSel(GX_TEVSTAGE2, GX_TEV_KASEL_K0_A);
     GXSetTevKColor(0, *(GXColor*)&gTrickyHudIconKColor);
     GXSetTevDirect(2);
     GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD2, GX_TEXMAP1, GX_COLOR_NULL);
