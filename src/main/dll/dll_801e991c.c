@@ -105,7 +105,7 @@ void fn_801E991C(int p1, char* table)
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXLoadPosMtxImm(Camera_GetViewMatrix(), GX_PNMTX0);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
     getAmbientColor(0, &r, &g, &b);
     i = 0;
     p = table;
