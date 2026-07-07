@@ -40,6 +40,10 @@ extern int getTrickyObject(void);
 #define TRICKY_IFACE_OFFSET 0x68    /* tricky object -> interface vtable pointer */
 #define TRICKY_IFACE_NOTIFY_SLOT 0x28 /* vtable slot invoked when in range */
 
+/* setScale's paired debris/dust particle bursts */
+#define WALLANIMATOR_PARTFX_DEBRIS 0xca
+#define WALLANIMATOR_PARTFX_DUST 0xcb
+
 /* placement record: only the +0x1C short (debris spawn roll) is read here */
 typedef struct WallanimatorPlacement
 {
@@ -109,8 +113,8 @@ f32 wallanimator_setScale(int obj, int target)
         spawn.pos[0] = ((GameObject*)obj)->anim.worldPosX + offset[0];
         spawn.pos[1] = 15.0f + (((GameObject*)obj)->anim.worldPosY + offset[1]);
         spawn.pos[2] = ((GameObject*)obj)->anim.worldPosZ + offset[2];
-        (*gPartfxInterface)->spawnObject((void*)obj, 0xca, spawn.rot, 0x200001, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, 0xcb, spawn.rot, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, WALLANIMATOR_PARTFX_DEBRIS, spawn.rot, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, WALLANIMATOR_PARTFX_DUST, spawn.rot, 0x200001, -1, NULL);
         count--;
     }
     while (count != 0);
