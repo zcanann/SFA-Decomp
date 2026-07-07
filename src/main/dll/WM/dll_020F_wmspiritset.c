@@ -13,6 +13,10 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
+/* romlist object-def variant driving this DLL (see docblock): def 921
+   'WM_SpiritSet' (romlist type 0x264). */
+#define WMSPIRITSET_SEQID_SPIRITSET 0x264
+
 typedef struct WmSpiritSetState
 {
     s16 visibilityGameBit; /* 0x00: game bit gating render (-1 = always visible) */
@@ -64,7 +68,7 @@ void wmspiritset_init(GameObject* obj, WmSpiritSetMapData* mapData)
     WmSpiritSetState* state = obj->extra;
 
     obj->anim.rotX = (s16)(mapData->rotXByte << 8);
-    if (obj->anim.seqId == 0x264)
+    if (obj->anim.seqId == WMSPIRITSET_SEQID_SPIRITSET)
     {
         obj->anim.rootMotionScale = lbl_803E5F94; /* 0.0085f */
     }
