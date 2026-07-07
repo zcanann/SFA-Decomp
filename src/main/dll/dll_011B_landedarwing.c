@@ -35,6 +35,9 @@
 
 #define LANDEDARWING_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* attached gadget-unit child (arwarwinggu_*); cached in state->childObject */
+#define LANDEDARWING_CHILD_OBJ_GADGET_UNIT 0x606
+
 typedef struct LandedArwingPlacement
 {
     u8 pad0[0x14 - 0x0];
@@ -455,7 +458,7 @@ void landed_arwing_update(int obj)
     {
         if (Obj_IsLoadingLocked() != 0)
         {
-            child = Obj_SetupObject(Obj_AllocObjectSetup(0x24, 0x606), 4, -1, -1, 0);
+            child = Obj_SetupObject(Obj_AllocObjectSetup(0x24, LANDEDARWING_CHILD_OBJ_GADGET_UNIT), 4, -1, -1, 0);
             state->childObject = child;
             if ((u32)state->childObject != 0)
             {
