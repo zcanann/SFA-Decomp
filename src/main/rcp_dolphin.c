@@ -507,8 +507,8 @@ void gxFn_80052dc0(void)
     GXSetVtxDesc(GX_VA_NRM, GX_DIRECT);
     PSMTXIdentity(pmtx);
     GXLoadPosMtxImm(pmtx, GX_PNMTX0);
-    GXLoadNrmMtxImm(pmtx, 0);
-    GXSetCurrentMtx(0);
+    GXLoadNrmMtxImm(pmtx, GX_PNMTX0);
+    GXSetCurrentMtx(GX_PNMTX0);
 }
 #pragma opt_common_subs reset
 #pragma dont_inline reset
