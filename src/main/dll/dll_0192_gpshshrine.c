@@ -60,6 +60,7 @@ extern void dbsh_shrine_initialise(void);
 extern void DBSH_Symbol_init(void);
 
 #define GPSHSHRINE_OBJGROUP 0xb
+#define GPSHSHRINE_MAP_SHRINE 0xb
 #define GPSHSHRINE_SPAWNED_OBJGROUP 0x10 /* puzzle-spawned objects, freed on completion */
 extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
@@ -197,7 +198,7 @@ int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 objSetAnimStateFlags(player, 0x80, 1);
                 mainSetBits(0x12b, 1);
                 mainSetBits(0xc85, 1);
-                (*gMapEventInterface)->setMapAct(0xb, 5);
+                (*gMapEventInterface)->setMapAct(GPSHSHRINE_MAP_SHRINE, 5);
                 break;
             case 14:
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
