@@ -114,6 +114,10 @@ typedef struct SCMusicTreeState
 
 /* music-tree flags (setup 0x23 copied to runtime 0x4C); low nibble 0xf is a
    burst count/palette passed to the fx helpers, not individual flag bits */
+/* ambient satellite effect object spawned by sc_musictree_spawnAmbientEffect,
+   cached in state->ambientEffect[idx] */
+#define SCMUSICTREE_CHILD_OBJ_AMBIENT_EFFECT 0x210
+
 #define SCMUSICTREE_FLAG_APPROACH_BURST 0x10 /* emit a burst when player crosses hearRadius */
 #define SCMUSICTREE_FLAG_HIT_ACTIVE 0x20     /* run hit detection this frame */
 #define SCMUSICTREE_FLAG_PRIORITY_HIT 0x40   /* use priority-hit poll + color fade path */
@@ -143,7 +147,7 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 
     if (Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(0x28, 0x210);
+        setup = Obj_AllocObjectSetup(0x28, SCMUSICTREE_CHILD_OBJ_AMBIENT_EFFECT);
         ((ScMusictreeSetup*)setup)->head.color[0] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorR;
         ((ScMusictreeSetup*)setup)->head.color[2] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorB;
         ((ScMusictreeSetup*)setup)->head.color[1] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorG;
