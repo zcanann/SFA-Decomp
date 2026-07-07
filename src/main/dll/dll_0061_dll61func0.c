@@ -38,6 +38,9 @@ enum
 };
 
 #pragma fp_contract off
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL61_EFFECT_ID 0x90
+
 void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     struct
@@ -211,7 +214,7 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = -40.0f + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_803128E8, 8, &base[0x5c], 0x90, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_803128E8, 8, &base[0x5c], DLL61_EFFECT_ID, 0);
 }
 #pragma fp_contract reset
 
