@@ -745,9 +745,9 @@ int trickyFn_80142a14(int obj, int state)
     objPosFn_80039510(*(int*)&((TrickyState*)state)->followObj, 0, pos);
     if (getXZDistance(pos, (float*)(state + 0x72c)) > lbl_803E2424)
     {
-        ((TrickyState*)state)->unk72C = pos[0];
-        *(float*)&((TrickyState*)state)->unk730 = pos[1];
-        ((TrickyState*)state)->unk734 = pos[2];
+        ((TrickyState*)state)->wanderTargetX = pos[0];
+        *(float*)&((TrickyState*)state)->wanderTargetY = pos[1];
+        ((TrickyState*)state)->wanderTargetZ = pos[2];
     }
     if ((((u32)((TrickyState*)state)->stateFlags728 >> 5) & 1) != 0)
     {
@@ -1653,9 +1653,9 @@ void objAnimFn_801441c0(u8* obj, u8* state)
         sv = randomGetRange(0x20, 0xff);
         sv = (s16)((((GameObject*)obj)->anim.rotX + sv) * 0x100);
         ang = lbl_803E2454 * (f32)sv / lbl_803E2458;
-        ((TrickyState*)state)->unk72C = (f32)(lbl_803E2528 * -mathSinf(ang) + ((GameObject*)obj)->anim.localPosX);
-        *(f32*)&((TrickyState*)state)->unk730 = ((GameObject*)obj)->anim.localPosY;
-        ((TrickyState*)state)->unk734 = (f32)(lbl_803E2484 * -mathCosf(ang) + ((GameObject*)obj)->anim.localPosZ);
+        ((TrickyState*)state)->wanderTargetX = (f32)(lbl_803E2528 * -mathSinf(ang) + ((GameObject*)obj)->anim.localPosX);
+        *(f32*)&((TrickyState*)state)->wanderTargetY = ((GameObject*)obj)->anim.localPosY;
+        ((TrickyState*)state)->wanderTargetZ = (f32)(lbl_803E2484 * -mathCosf(ang) + ((GameObject*)obj)->anim.localPosZ);
         if (((TrickyState*)state)->targetPosPtr != state + 0x72c)
         {
             ((TrickyState*)state)->targetPosPtr = state + 0x72c;

@@ -972,7 +972,7 @@ void Tricky_update(int obj)
     }
     else if (((TrickyState*)state)->stateIndex == 8 && cmd == 4)
     {
-        *(u8*)&((TrickyState*)state)->unk734 = *(u8*)&((TrickyState*)state)->unk734 ^ 1;
+        *(u8*)&((TrickyState*)state)->wanderTargetZ = *(u8*)&((TrickyState*)state)->wanderTargetZ ^ 1;
     }
     else if (((TrickyState*)state)->stateIndex == 0xd && cmd == 4 && found == 0)
     {
@@ -1251,9 +1251,9 @@ void Tricky_update(int obj)
             randomGetRange(0x1f4, 0x2ee);
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x40000LL;
             ((TrickyState*)state)->commandPhase = 3;
-            if (*(u32*)&((TrickyState*)state)->targetPosPtr != (u32) & ((TrickyState*)state)->unk72C)
+            if (*(u32*)&((TrickyState*)state)->targetPosPtr != (u32) & ((TrickyState*)state)->wanderTargetX)
             {
-                *(u32*)&((TrickyState*)state)->targetPosPtr = (u32) & ((TrickyState*)state)->unk72C;
+                *(u32*)&((TrickyState*)state)->targetPosPtr = (u32) & ((TrickyState*)state)->wanderTargetX;
                 ((TrickyState*)state)->stateFlags &= ~0x400LL;
                 ((TrickyState*)state)->linkedWalkGroup = 0;
             }
@@ -2983,10 +2983,10 @@ void trickyFn_80144f50(int obj, int state)
 
     if (trickyFoodFn_8014460c(obj, state) == 0)
     {
-        ((TrickyState*)state)->unk72C =
+        ((TrickyState*)state)->wanderTargetX =
             ((GameObject*)obj)->anim.worldPosX - mathSinf((lbl_803E2454 * (f32) * (s16*)obj) / lbl_803E2458);
-        *(f32*)&((TrickyState*)state)->unk730 = ((GameObject*)obj)->anim.worldPosY;
-        ((TrickyState*)state)->unk734 =
+        *(f32*)&((TrickyState*)state)->wanderTargetY = ((GameObject*)obj)->anim.worldPosY;
+        ((TrickyState*)state)->wanderTargetZ =
             ((GameObject*)obj)->anim.worldPosZ - mathCosf((lbl_803E2454 * (f32) * (s16*)obj) / lbl_803E2458);
 
         if (trickyFn_8013b368(obj, lbl_803E247C, state) != 1)

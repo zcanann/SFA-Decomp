@@ -181,9 +181,9 @@ typedef struct TrickyState {
     void *unk724;
     u8 stateFlags728; /* flag byte: 0/1 boolean sets (tricky/animobjd2) plus a bit-5 test (tricky_substates) */
     u8 pad729[0x72C - 0x729];
-    f32 unk72C;
-    u32 unk730;
-    f32 unk734;
+    f32 wanderTargetX; /* wander/return target position X that targetPosPtr is pointed at (&wanderTargetX); written from anim world/local posX plus a sin offset (tricky/tricky_substates) */
+    u32 wanderTargetY; /* wander target position Y (written as f32 from anim world/local posY) */
+    f32 wanderTargetZ; /* wander target position Z: anim world/local posZ plus a cos offset; a rare u8-overlay at this offset toggles a state bit (tricky/tricky_substates) */
     f32 sfxRepeatTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an SFX and re-primes to lbl_803E2440 (tricky_substates) */
     f32 unk73C;
     f32 idleSfxTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an idle vocalization SFX and re-primes to randomGetRange(500,750) (tricky/substates/weapone6) */
