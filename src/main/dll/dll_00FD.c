@@ -134,9 +134,9 @@ void dll_FD_update(u16* obj)
             state->mode = 2;
         }
     }
-    ((GameObject*)obj)->anim.localPosX = *(f32*)(state->anchorObj + 0xc);
-    ((GameObject*)obj)->anim.localPosY = *(f32*)(state->anchorObj + 0x10);
-    ((GameObject*)obj)->anim.localPosZ = *(f32*)(state->anchorObj + 0x14);
+    ((GameObject*)obj)->anim.localPosX = ((GameObject*)state->anchorObj)->anim.localPosX;
+    ((GameObject*)obj)->anim.localPosY = ((GameObject*)state->anchorObj)->anim.localPosY;
+    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)state->anchorObj)->anim.localPosZ;
     ((GameObject*)obj)->anim.rotX = *(s16*)state->anchorObj;
     ((GameObject*)obj)->anim.rotZ = *(s16*)(state->anchorObj + 4);
     ((GameObject*)obj)->anim.rotY = *(s16*)(state->anchorObj + 2);
