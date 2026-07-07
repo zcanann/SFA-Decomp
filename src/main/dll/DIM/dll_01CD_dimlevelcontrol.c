@@ -57,13 +57,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define DIMLEVELCONTROL_MUSIC_DAY   0xc5
 #define DIMLEVELCONTROL_MUSIC_NIGHT 0xe2
 
-/* Env-effect ids co-activated on the unkF4 restore tick (immediately when
-   unkF4==2, else deferred); opaque distinct roles per index. */
-#define DIMLEVELCONTROL_ENVFX_A 0x160
-#define DIMLEVELCONTROL_ENVFX_B 0x15a
-#define DIMLEVELCONTROL_ENVFX_C 0x15c
-#define DIMLEVELCONTROL_ENVFX_D 0x15f
-
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);

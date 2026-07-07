@@ -71,12 +71,6 @@ typedef enum Dim2lavacontrolPhase
     DIM2LAVACONTROL_PHASE_TRIGGERED = 1, /* unlock bit set; control latched */
 } Dim2lavacontrolPhase;
 
-/* env-effect ids co-activated once on the lava-rise env-fx transition (index-style; roles opaque) */
-#define DIM2LAVACONTROL_ENVFX_A 0x163
-#define DIM2LAVACONTROL_ENVFX_B 0x166
-#define DIM2LAVACONTROL_ENVFX_C 0x165
-#define DIM2LAVACONTROL_ENVFX_D 0x164
-
 extern f32 lbl_803E4B90;
 extern void fn_8004C1E4(int sfxId, f32 vol);
 extern void timeOfDayFn_80055000(void);

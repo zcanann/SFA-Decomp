@@ -35,9 +35,6 @@ extern u32 SCGameBitLatch_Update();
 #define NWLEVCONTROL_MUSIC_TRACK 0x1a       /* day/night ambient track */
 #define NWLEVCONTROL_MUSIC_TIMER_END 0xaf   /* timed-challenge completion track */
 
-/* level-init env effect, immediate vs deferred by save-load status */
-#define NWLEVCONTROL_ENVFX_A 0x23c
-
 extern void gameTextShow(int a);
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
