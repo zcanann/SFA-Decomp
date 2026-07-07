@@ -31,6 +31,7 @@ extern int ObjList_FindObjectById(int id);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int objCreateLight(int obj, int arg);
 extern void modelLightStruct_setLightKind(int light, int v);
+#define MODEL_LIGHT_KIND_POINT 2
 extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
@@ -197,7 +198,7 @@ void worldobj_init(int obj, int arg)
         state->light = objCreateLight(obj, 1);
         if (*(void**)&state->light != NULL)
         {
-            modelLightStruct_setLightKind(state->light, 2);
+            modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setPosition(state->light, lbl_803E665C, lbl_803E665C, lbl_803E665C);
             modelLightStruct_setDiffuseColor(state->light, 0xff, 0xff, 0xff, 0);
             modelLightStruct_setDistanceAttenuation(state->light, lbl_803E66AC, lbl_803E66D0);
@@ -513,7 +514,7 @@ void worldobj_update(int obj)
                     state->light = objCreateLight(obj, 1);
                     if (*(void**)&state->light != NULL)
                     {
-                        modelLightStruct_setLightKind(state->light, 2);
+                        modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
                         modelLightStruct_setPosition(state->light, lbl_803E665C, lbl_803E66AC,
                                                      *(f32*)&lbl_803E665C);
                         modelLightStruct_setDiffuseColor(state->light, 0xff, 0, 0, 0xff);
