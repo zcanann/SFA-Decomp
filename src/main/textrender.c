@@ -2035,10 +2035,10 @@ void gameTextInitFn_8001a234(void)
         textWindow[0x1e] = 0xff;
     }
 
-    i = 4;
+    j = 4;
     request = gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET;
     zero = lbl_803DE704;
-    while (request -= 0x28, i-- != 0)
+    while (request -= 0x28, j-- != 0)
     {
         *(int*)(request + 8) = 0;
         *(int*)(request + 0xc) = 0;
@@ -2049,9 +2049,9 @@ void gameTextInitFn_8001a234(void)
         request[0x24] = 0xff;
         request[0x25] = 6;
 
-        j = 3;
+        i = 3;
         clearPtr = request + 0xc;
-        while (clearPtr -= 4, j-- != 0)
+        while (clearPtr -= 4, i-- != 0)
         {
             *(int*)(clearPtr + 0x10) = 0;
         }
@@ -2183,13 +2183,13 @@ void gameTextRun(void)
     }
     while (i-- != 0);
 
-    zero = lbl_803DE704;
-    fadeLimit = gGameTextFadeLimit;
     i = GAMETEXT_LOAD_SLOT_COUNT;
     {
         f32* timer = (f32*)(gameTextBase + 0x40);
         f32* alpha = (f32*)(gameTextBase + 0x20);
         u8* entry = gameTextBase + 0xa0;
+        zero = lbl_803DE704;
+        fadeLimit = gGameTextFadeLimit;
         while (timer--, alpha--, entry -= 0xc, i-- != 0)
         {
             if ((double)*timer > zero)
