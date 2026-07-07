@@ -623,9 +623,6 @@ void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
     extern int getAngle(f32, f32);
     extern f32 sqrtf(f32);
     extern void vecRotateZXY(void*, f32*);
-    extern f32 lbl_803E39F8;
-    extern f32 lbl_803E39FC;
-    extern f32 lbl_803E3A00;
     f32* sub = ((GameObject*)obj)->extra;
     GuardianAngleParams st;
     f32 buf[3];
