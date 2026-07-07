@@ -18,6 +18,9 @@
 #define GX_COLOR0A0 4
 #define GX_COLOR1A1 5
 #define GX_DA_MEDIUM 2
+
+#define MODELLIGHT_DEFAULT_GLOW_TEXTURE_ID 0x605
+
 extern f32 timeDelta;
 void objSetEventName(u8* obj, void* name)
 {
@@ -629,7 +632,7 @@ void modelLightStruct_setupGlow(ModelLightStruct* light, u32 textureId, u8 red, 
     }
     else
     {
-        texture = textureLoadAsset(0x605);
+        texture = textureLoadAsset(MODELLIGHT_DEFAULT_GLOW_TEXTURE_ID);
         light->glowTexture = texture;
         if (texture != NULL)
         {
