@@ -31,6 +31,7 @@
 
 extern int randomGetRange(int lo, int hi);
 extern void modelLightStruct_setLightKind(int light, int value);
+#define MODEL_LIGHT_KIND_POINT 2
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
@@ -252,7 +253,7 @@ void staffFn_80170380(int* obj, int cmd)
             }
             if (*(int**)state != NULL)
             {
-                modelLightStruct_setLightKind(*(int*)state, 2);
+                modelLightStruct_setLightKind(*(int*)state, MODEL_LIGHT_KIND_POINT);
                 modelLightStruct_setPosition(*(int*)state, ((GameObject*)obj)->anim.localPosX,
                                              ((GameObject*)obj)->anim.localPosY - lbl_803E33B8,
                                              ((GameObject*)obj)->anim.localPosZ);
@@ -336,7 +337,7 @@ void staffFn_80170380(int* obj, int cmd)
         }
         if (*(int**)state != NULL)
         {
-            modelLightStruct_setLightKind(*(int*)state, 2);
+            modelLightStruct_setLightKind(*(int*)state, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setPosition(*(int*)state, ((GameObject*)obj)->anim.localPosX,
                                          ((GameObject*)obj)->anim.localPosY - lbl_803E33B8,
                                          ((GameObject*)obj)->anim.localPosZ);
