@@ -10,14 +10,6 @@
 #define OBJHITS_CONTACT_SCRATCH_WORDS 7
 #define OBJHITS_SWEEP_ENTRY_CAPACITY 400
 #define OBJHITS_PRIORITY_INVALID 0x7f
-#define OBJHITS_PRIORITY_STATE_ENABLED 0x0001
-#define OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE 0x0002
-#define OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED 0x0008
-#define OBJHITS_PRIORITY_STATE_POSITION_DIRTY 0x0040
-#define OBJHITS_PRIORITY_STATE_HIT_EXCLUDED 0x0100 /* object skipped when scanning candidate hit pairs (set by collectible.c on pickup/hide before ObjHits_DisableObject; read in ObjHits_Update) */
-#define OBJHITS_PRIORITY_STATE_TRACK_CONTACT 0x0200
-#define OBJHITS_PRIORITY_STATE_IMMOVABLE 0x0400 /* suppresses separation-response displacement of the contacted partner (dbegg.c sets while flocking, cfguardian.c clears on landing; read in the separation-response pass) */
-#define OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED 0x2000
 #define OBJHITS_SHAPE_SPHERE 0x01
 #define OBJHITS_SHAPE_CAPSULE 0x02
 #define OBJHITS_SHAPE_MODEL_HIT_VOLUMES 0x10
