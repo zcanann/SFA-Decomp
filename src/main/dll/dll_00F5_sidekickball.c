@@ -30,6 +30,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #define SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SIDEKICKBALL_OBJFLAG_PARENT_SLACK 0x1000
+#define SIDEKICKBALL_MSG_PLAYER_GRAB 0x100010 /* tells player to grab/hold the ball */
 /* GameCube controller button masks */
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_Y 0x800
@@ -234,7 +235,7 @@ fading:
 end:
     if (params->sendHoldMessage[0] != 0)
     {
-        ObjMsg_SendToObject(player, 0x100010, (void*)obj, 0);
+        ObjMsg_SendToObject(player, SIDEKICKBALL_MSG_PLAYER_GRAB, (void*)obj, 0);
     }
 }
 
