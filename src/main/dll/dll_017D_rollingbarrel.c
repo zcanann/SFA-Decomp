@@ -48,29 +48,48 @@ extern const f32 lbl_803E44B0;
 extern const f32 lbl_803E44B4;
 extern f32 gRollingBarrelCurveInitData;
 
-void RollingBarrel_hitDetect(void)
+#pragma dont_inline on
+void fn_801A5D88(int obj, int explosionVariant)
 {
+    RollingBarrelState* state = ((GameObject*)obj)->extra;
+    u32 debrisType;
+    u32 r2;
+    int player;
+    f32 dist;
+    f32 falloff;
+    gRollingBarrelExplodingCount += 1;
+    Sfx_PlayFromObject(obj, SFXsp_lf_mutter1);
+    if (gRollingBarrelExplodingCount > 1)
+    {
+        debrisType = randomGetRange(0, 1) & 0xff;
+        spawnExplosion(obj, 1, 1, 0, debrisType, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+    }
+    else
+    {
+        debrisType = randomGetRange(0, 1) & 0xff;
+        spawnExplosion(obj, 1, 1, 0, debrisType, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+    }
+    state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
+    state->timer = lbl_803E4468;
+    ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+    ObjHitbox_SetSphereRadius(obj,
+                              (s32)(lbl_803E446C * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
+    player = Obj_GetPlayerObject();
+    if ((((GameObject*)player)->objectFlags & ROLLINGBARREL_OBJFLAG_PARENT_SLACK) == 0)
+    {
+        dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
+        if (dist <= gRollingBarrelShakeMaxDist)
+        {
+            falloff = lbl_803E4474 - dist / gRollingBarrelShakeMaxDist;
+            CameraShake_Start(lbl_803E4478 * falloff, lbl_803E447C * falloff, lbl_803E4480);
+            doRumble(lbl_803E4484 * falloff);
+        }
+    }
 }
-
-void RollingBarrel_release(void)
-{
-}
+#pragma dont_inline reset
 
 int RollingBarrel_getExtraSize(void) { return ROLLINGBARREL_EXTRA_SIZE; }
 int RollingBarrel_getObjectTypeId(void) { return 0x0; }
-
-void RollingBarrel_initialise(void) { gRollingBarrelExplodingCount = 0x0; }
-
-void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
-{
-    RollingBarrelState* state = ((GameObject*)obj)->extra;
-    if (visible == 0 || state->state >= ROLLINGBARREL_STATE_EXPLODED_WAIT)
-    {
-        return;
-    }
-
-    ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E4474);
-}
 
 void RollingBarrel_free(int obj)
 {
@@ -94,30 +113,19 @@ void RollingBarrel_free(int obj)
     }
 }
 
-void RollingBarrel_init(int obj, RollingBarrelMapData* params)
+void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;
-    int tmp[2];
+    if (visible == 0 || state->state >= ROLLINGBARREL_STATE_EXPLODED_WAIT)
+    {
+        return;
+    }
 
-    *(RollingBarrelInitPair*)tmp = *(RollingBarrelInitPair*)&gRollingBarrelCurveInitPair;
-    params->respawnParam = -1;
-    ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
-    ((GameObject*)obj)->anim.rotZ = 0x4000;
+    ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E4474);
+}
 
-    ((GameObject*)obj)->anim.localPosX = params->x;
-    ((GameObject*)obj)->anim.worldPosX = params->x;
-    ((GameObject*)obj)->anim.localPosY = params->y;
-    ((GameObject*)obj)->anim.worldPosY = params->y;
-    ((GameObject*)obj)->anim.localPosZ = params->z;
-    ((GameObject*)obj)->anim.worldPosZ = params->z;
-
-    state->verticalSpeed = params->verticalSpeed / lbl_803E447C;
-    state->curveSpeed = params->curveSpeed / lbl_803E447C;
-    state->state = ROLLINGBARREL_STATE_ROLLING;
-    state->pitchRising = 1;
-    state->timer = lbl_803E4468;
-
-    (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, gRollingBarrelCurveInitData, tmp, -1);
+void RollingBarrel_hitDetect(void)
+{
 }
 
 void RollingBarrel_update(int obj)
@@ -290,40 +298,34 @@ void RollingBarrel_update(int obj)
     }
 }
 
-void fn_801A5D88(int obj, int explosionVariant)
+void RollingBarrel_init(int obj, RollingBarrelMapData* params)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;
-    u32 debrisType;
-    u32 r2;
-    int player;
-    f32 dist;
-    f32 falloff;
-    gRollingBarrelExplodingCount += 1;
-    Sfx_PlayFromObject(obj, SFXsp_lf_mutter1);
-    if (gRollingBarrelExplodingCount > 1)
-    {
-        debrisType = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, debrisType, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
-    }
-    else
-    {
-        debrisType = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, debrisType, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
-    }
-    state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
+    int tmp[2];
+
+    *(RollingBarrelInitPair*)tmp = *(RollingBarrelInitPair*)&gRollingBarrelCurveInitPair;
+    params->respawnParam = -1;
+    ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
+    ((GameObject*)obj)->anim.rotZ = 0x4000;
+
+    ((GameObject*)obj)->anim.localPosX = params->x;
+    ((GameObject*)obj)->anim.worldPosX = params->x;
+    ((GameObject*)obj)->anim.localPosY = params->y;
+    ((GameObject*)obj)->anim.worldPosY = params->y;
+    ((GameObject*)obj)->anim.localPosZ = params->z;
+    ((GameObject*)obj)->anim.worldPosZ = params->z;
+
+    state->verticalSpeed = params->verticalSpeed / lbl_803E447C;
+    state->curveSpeed = params->curveSpeed / lbl_803E447C;
+    state->state = ROLLINGBARREL_STATE_ROLLING;
+    state->pitchRising = 1;
     state->timer = lbl_803E4468;
-    ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-    ObjHitbox_SetSphereRadius(obj,
-                              (s32)(lbl_803E446C * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
-    player = Obj_GetPlayerObject();
-    if ((((GameObject*)player)->objectFlags & ROLLINGBARREL_OBJFLAG_PARENT_SLACK) == 0)
-    {
-        dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
-        if (dist <= gRollingBarrelShakeMaxDist)
-        {
-            falloff = lbl_803E4474 - dist / gRollingBarrelShakeMaxDist;
-            CameraShake_Start(lbl_803E4478 * falloff, lbl_803E447C * falloff, lbl_803E4480);
-            doRumble(lbl_803E4484 * falloff);
-        }
-    }
+
+    (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, gRollingBarrelCurveInitData, tmp, -1);
 }
+
+void RollingBarrel_release(void)
+{
+}
+
+void RollingBarrel_initialise(void) { gRollingBarrelExplodingCount = 0x0; }
