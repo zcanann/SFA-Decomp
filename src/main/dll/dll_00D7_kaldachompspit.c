@@ -35,6 +35,7 @@ extern f32 sqrtf(f32 x);
 extern void ModelLightStruct_free(void* p);
 extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setLightKind(int light, int value);
+#define MODEL_LIGHT_KIND_POINT 2
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
@@ -277,7 +278,7 @@ void KaldaChompSpit_init(int obj)
         *extra = (int)objCreateLight(obj, 1);
         if (*(void**)extra != NULL)
         {
-            modelLightStruct_setLightKind(*extra, 2);
+            modelLightStruct_setLightKind(*extra, MODEL_LIGHT_KIND_POINT);
         }
     }
     if (*(void**)extra != NULL)
