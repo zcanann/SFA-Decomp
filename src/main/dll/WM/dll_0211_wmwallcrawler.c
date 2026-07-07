@@ -296,7 +296,7 @@ void wmwallcrawler_update(int obj)
     best = lbl_803E5FBC;
     player = (((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0
         ? (u32)Obj_GetPlayerObject()
-        : ObjGroup_FindNearestObject(10, ob, &best);
+        : ObjGroup_FindNearestObject(WMWALLCRAWLER_TARGET_OBJGROUP, ob, &best);
     if (player != 0)
     {
         sq = mainGetBit(0x789);
