@@ -960,13 +960,8 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int moveArg0, int moveArg
 {
     extern f32 gDll19SeqMinDist;
     extern s8 gDll19SeqStallCount;
-    extern const f32 lbl_803E1C2C;
     extern f32 gDll19SeqMinDistInit;
     extern f32 lbl_803E1C74;
-    extern const f32 lbl_803E1C6C;
-    extern const f32 lbl_803E1C5C;
-    extern f32 timeDelta;
-    extern f32 sqrtf(f32 x);
     f32 dist;
     f32 nx;
     f32 nz;
