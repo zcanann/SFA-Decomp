@@ -76,6 +76,10 @@ enum
 #define WMSPIRITPLACE_FX_ACTIVE 0x1
 #define WMSPIRITPLACE_PARTFX 0x7d8
 
+/* Env-fx ids re-activated on the SKY_RESTORE seq event (getEnvfxAct 3rd arg) */
+#define WMSPIRITPLACE_ENVFX_A 0x84
+#define WMSPIRITPLACE_ENVFX_B 0x8a
+
 #define WMSPIRITPLACE_OBJFLAG_HIDDEN 0x4000
 #define WMSPIRITPLACE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -206,8 +210,8 @@ int WM_spiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
         case WMSPIRITPLACE_SEQEV_SKY_RESTORE:
             skyFn_80088c94(7, 0);
             setDrawCloudsAndLights(1);
-            getEnvfxAct(obj, obj, 0x84, 0);
-            getEnvfxAct(obj, obj, 0x8a, 0);
+            getEnvfxAct(obj, obj, WMSPIRITPLACE_ENVFX_A, 0);
+            getEnvfxAct(obj, obj, WMSPIRITPLACE_ENVFX_B, 0);
             getEnvfxActImmediately(0, 0, 0x217, 0);
             getEnvfxActImmediately(0, 0, 0x216, 0);
             break;
