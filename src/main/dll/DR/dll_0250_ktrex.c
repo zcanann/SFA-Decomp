@@ -86,6 +86,7 @@ extern void GM_MazeWell_init(void);
 #define KTREX_OBJGROUP 0x3
 #define KTREX_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 #define KTREX_PARTFX_HIT 0x328 /* hit-response effect spawned at the player contact point */
+#define MODEL_LIGHT_KIND_POINT 2
 
 typedef struct KtrexMsgBlob
 {
@@ -1082,7 +1083,7 @@ void ktrex_init(int obj, char* arg, int flag)
     ((KTRexArenaState*)gKTRexState)->light = objCreateLight(0, 1);
     if (((KTRexArenaState*)gKTRexState)->light != 0)
     {
-        modelLightStruct_setLightKind(((KTRexArenaState*)gKTRexState)->light, 2);
+        modelLightStruct_setLightKind(((KTRexArenaState*)gKTRexState)->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setPosition(((KTRexArenaState*)gKTRexState)->light, ((GameObject*)obj)->anim.localPosX,
                                      ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
         modelLightStruct_setDiffuseColor(((KTRexArenaState*)gKTRexState)->light, 0xff, 0, 0, 0);
