@@ -178,8 +178,6 @@ void ARWArwingGu_update(int obj)
     }
 }
 
-#pragma scheduling off
-#pragma peephole off
 void ARWArwingGu_init(int obj)
 {
     if (((GameObject*)obj)->anim.seqId == ARWGU_DEF_ENGINE)
@@ -189,8 +187,6 @@ void ARWArwingGu_init(int obj)
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     ((GameObject*)obj)->anim.alpha = 0;
 }
-#pragma scheduling on
-#pragma peephole on
 
 void ARWArwingGu_release(void)
 {
