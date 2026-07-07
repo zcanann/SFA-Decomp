@@ -83,9 +83,38 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
     KaldaChompMe_getExtraSize,
 };
 
-void KaldaChompSpit_hitDetect(void)
+#pragma dont_inline on
+void kaldachompspit_burst(int obj)
 {
+    int i;
+    u32* state;
+    ObjHitsPriorityState* hitState;
+    u8 rnd;
+
+    state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.alpha = 0;
+    ((GameObject*)obj)->unkF4 = 0xdc;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->flags &= ~1;
+    if (*state != 0)
+    {
+        modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);
+    }
+    if (((GameObject*)obj)->anim.seqId == 0x869)
+    {
+        rnd = randomGetRange(0, 1);
+        spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
+    }
+    else
+    {
+        for (i = 0; i < 0x19; i++)
+        {
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
+        }
+        Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
+    }
 }
+#pragma dont_inline reset
 
 int KaldaChompSpit_getExtraSize(void) { return 0x4; }
 int KaldaChompSpit_getObjectTypeId(void) { return 0x0; }
@@ -113,7 +142,9 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
     }
 }
 
-void kaldachompspit_burst(int obj);
+void KaldaChompSpit_hitDetect(void)
+{
+}
 
 void KaldaChompSpit_update(int obj)
 {
@@ -221,37 +252,6 @@ void KaldaChompSpit_update(int obj)
                 *(u8*)(*state + 0x2f9) = color;
             }
         }
-    }
-}
-
-void kaldachompspit_burst(int obj)
-{
-    int i;
-    u32* state;
-    ObjHitsPriorityState* hitState;
-    u8 rnd;
-
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.alpha = 0;
-    ((GameObject*)obj)->unkF4 = 0xdc;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->flags &= ~1;
-    if (*state != 0)
-    {
-        modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);
-    }
-    if (((GameObject*)obj)->anim.seqId == 0x869)
-    {
-        rnd = randomGetRange(0, 1);
-        spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
-    }
-    else
-    {
-        for (i = 0; i < 0x19; i++)
-        {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
-        }
-        Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
     }
 }
 
