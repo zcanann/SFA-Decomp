@@ -23,6 +23,7 @@
 #include "main/sfa_shared_decls.h"
 
 #define SHOPITEM_OBJGROUP 0x4F
+#define SHOPITEM_TARGET_OBJGROUP 9
 
 #define SHOPITEM_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SHOPITEM_OBJFLAG_UPDATE_DISABLED 0x8000
@@ -348,7 +349,7 @@ void shopitem_update(int obj)
         if (*(u32*)&((ShopItemState*)state)->vendorObj == 0)
         {
             int item;
-            ((ShopItemState*)state)->vendorObj = ObjGroup_FindNearestObject(9, obj, &range);
+            ((ShopItemState*)state)->vendorObj = ObjGroup_FindNearestObject(SHOPITEM_TARGET_OBJGROUP, obj, &range);
             item = ((ShopItemState*)state)->vendorObj;
             if ((u32)item != 0)
             {
