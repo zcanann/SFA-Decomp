@@ -19,6 +19,10 @@
 #define CFMAINCRYSTAL_CHARGE_START 0x5A /* charge frames granted by 0x57 */
 #define CFMAINCRYSTAL_CHARGE_FIRE 0x3C  /* charge at which the bolt fires */
 
+/* Spark fx emitted (1-in-3) while the pylons are still partially charged
+   (sum of pylonTimer[0..2] < 0x12c). */
+#define CFMAINCRYSTAL_PARTFX_CHARGE_SPARK 0x81
+
 /* beam-report protocol shared with cfpowerbase (dll_014A): probe each
    pylon group (class 0xDA) with its message; the crystal itself answers
    position probes (class 0xDC) with CFMAINCRYSTAL_MSG_CRYSTAL. */
@@ -231,7 +235,7 @@ void fn_8019D9F0(int* obj)
         if (sub->pylonTimer[0] + sub->pylonTimer[1] + sub->pylonTimer[2] < 0x12c
             && (int)randomGetRange(0, 3) == 0)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x81, NULL, 0, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, CFMAINCRYSTAL_PARTFX_CHARGE_SPARK, NULL, 0, -1, NULL);
         }
         if (sub->pylonTimer[0] != 0 || sub->pylonTimer[1] != 0 || sub->pylonTimer[2] != 0)
         {
