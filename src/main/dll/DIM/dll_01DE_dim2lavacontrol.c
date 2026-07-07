@@ -33,6 +33,13 @@ extern int getSaveGameLoadStatus(void);
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
 
+/* Env-effect ids co-activated on the unkF4 restore tick (immediately when
+   unkF4==2, else deferred); opaque distinct roles per index. */
+#define DIM2LAVACONTROL_ENVFX_A 0x163
+#define DIM2LAVACONTROL_ENVFX_B 0x166
+#define DIM2LAVACONTROL_ENVFX_C 0x165
+#define DIM2LAVACONTROL_ENVFX_D 0x164
+
 typedef struct Dim2lavacontrolPlacement
 {
     u8 pad0[0x14 - 0x0];
