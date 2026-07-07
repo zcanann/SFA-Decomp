@@ -2754,7 +2754,6 @@ void modelApplyBoneTransforms(int srcVtx, int dstVtx, u16 vtxCount, void* target
 extern void fn_80026308(int* a, int b, u8* p, u8* q, int d, int i);
 extern void fn_80025F38(int* a, int b, u8* p, u8* q);
 
-#pragma peephole on
 #pragma peephole off
 void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
 {
