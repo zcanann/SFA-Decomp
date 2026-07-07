@@ -14,6 +14,21 @@
  * unkC / unk12 are written by init but never read inside this TU, so their
  * meaning is left unverified.
  */
+/* LargeCrateState.dropType selector values dispatched by
+ * largecrate_spawnDropContents. Distinct from the LARGECRATE_DROP_* object ids
+ * in dll_0105_largecrate.h these map to (fruit 0x3d3/4/5, gas 0xb/0x3cd,
+ * pickup 0x259); 7/8 spawn nothing. */
+enum LargeCrateDropType {
+    LARGECRATE_DROPTYPE_FRUIT_A = 1,
+    LARGECRATE_DROPTYPE_FRUIT_B = 2,
+    LARGECRATE_DROPTYPE_FRUIT_C = 3,
+    LARGECRATE_DROPTYPE_GAS = 5,
+    LARGECRATE_DROPTYPE_GAS_ALT = 6,
+    LARGECRATE_DROPTYPE_NONE_A = 7,
+    LARGECRATE_DROPTYPE_NONE_B = 8,
+    LARGECRATE_DROPTYPE_PICKUP = 9
+};
+
 typedef struct LargeCrateState {
     s32 breakTimeBonus;  /* 0x00 amount passed to mapEvent addTime() on break;
                             init = id*SCALE, or sentinel (disabled) / -1 (forever) */
