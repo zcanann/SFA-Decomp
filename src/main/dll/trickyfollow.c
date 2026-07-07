@@ -1053,7 +1053,7 @@ state_selected:
             arc->riseCoeff =
                 -(gTrickyFollowArcCoefficient * k * k - (((GameObject*)node)->anim.localPosX - ((GameObject*)obj)->anim.worldPosY)) / k;
             objAnimFn_8013a3f0(obj, 0x16, v, 0x4000000);
-            ((TrickyState*)state)->unk3C = arc->time / arc->duration;
+            ((TrickyState*)state)->arcMoveProgress = arc->time / arc->duration;
             ((TrickyState*)state)->speed = lbl_803E24A4;
             ((TrickyState*)state)->followPhase = 10;
             if (route->reverse != 0)
@@ -1080,7 +1080,7 @@ state_selected:
         if (arc->time >= arc->duration)
         {
             ((GameObject*)obj)->anim.localPosY = *(f32*)((u8*)route->nodeA0 + 0xc);
-            ((TrickyState*)state)->unk3C = lbl_803E23E8;
+            ((TrickyState*)state)->arcMoveProgress = lbl_803E23E8;
             ((TrickyState*)state)->followPhase = 7;
         }
         else
@@ -1100,27 +1100,27 @@ state_selected:
             v = arc->duration;
             if (v <= lbl_803E24B4)
             {
-                ((TrickyState*)state)->unk3C = arc->time / v;
+                ((TrickyState*)state)->arcMoveProgress = arc->time / v;
             }
             else
             {
                 k = arc->time;
                 if (k <= lbl_803E24B8)
                 {
-                    ((TrickyState*)state)->unk3C = k / lbl_803E24B4;
+                    ((TrickyState*)state)->arcMoveProgress = k / lbl_803E24B4;
                 }
                 else if (k >= v - lbl_803E24B8)
                 {
-                    ((TrickyState*)state)->unk3C = ((lbl_803E24B4 - v) + k) / lbl_803E24B4;
+                    ((TrickyState*)state)->arcMoveProgress = ((lbl_803E24B4 - v) + k) / lbl_803E24B4;
                 }
                 else
                 {
                     k = (k - lbl_803E24B8) / (v - lbl_803E24BC);
-                    ((TrickyState*)state)->unk3C = k * lbl_803E24A8 + lbl_803E24AC;
+                    ((TrickyState*)state)->arcMoveProgress = k * lbl_803E24A8 + lbl_803E24AC;
                 }
             }
             objHitDetectFn_80062e84(obj, 0, 0);
-            ((TrickyState*)state)->unk353 = 0;
+            ((TrickyState*)state)->heightUpdateActive = 0;
         }
         break;
     }
@@ -1220,7 +1220,7 @@ state_selected:
     case 0xc:
     case 0xe:
         trickyDebugPrint(strs + 0x4d4);
-        ((TrickyState*)state)->unk353 = 0;
+        ((TrickyState*)state)->heightUpdateActive = 0;
         trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
         {
             f32 dz;

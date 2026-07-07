@@ -42,7 +42,7 @@ typedef struct TrickyState {
     f32 dirZ;
     f32 moveProgress; /* passed to ObjAnim_SetMoveProgress */
     f32 moveProgressTarget;
-    f32 unk3C;
+    f32 arcMoveProgress; /* normalized jump-arc/tween progress (arc->time / arc->duration, clamped/eased); passed to ObjAnim_SetMoveProgress (trickyfollow sets, tricky reads) */
     f32 sidestepDelta;
     f32 backstepDelta;
     f32 verticalDelta;
@@ -123,7 +123,7 @@ typedef struct TrickyState {
     u8 moveId2;
     u8 flags323; /* anim-active bit flags (0x1/0x2/0x4/0x8) */
     u8 pad324[0x353 - 0x324];
-    u8 unk353;
+    u8 heightUpdateActive; /* set 1 at update-cycle start; cleared to 0 when the object leaves its map block or a ground-snap fires; while (s8)set the water-level / tracked-height float update runs, else velocityY is zeroed (tricky sets, trickyfollow/skeetla clear+read) */
     u8 pad354[0x358 - 0x354];
     s8 unk358;
     u8 pad359[0x360 - 0x359];

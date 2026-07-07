@@ -109,7 +109,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
                              ((GameObject*)obj)->anim.worldPosZ) == -1) &&
         ((state->stateFlags & 0x80000) == 0))
     {
-        state->unk353 = 0;
+        state->heightUpdateActive = 0;
         ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.previousLocalPosX;
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.previousLocalPosY;
         ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
@@ -132,10 +132,10 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                              ((GameObject*)obj)->anim.worldPosZ, &hitOffsetY, 0);
         ((GameObject*)obj)->anim.localPosY -= hitOffsetY;
-        state->unk353 = 0;
+        state->heightUpdateActive = 0;
     }
 
-    if (((s8)state->unk353 != 0) && (((state->statusFlags >> 5) & 1) == 0u))
+    if (((s8)state->heightUpdateActive != 0) && (((state->statusFlags >> 5) & 1) == 0u))
     {
         if (lbl_803E23DC == state->waterLevel)
         {
@@ -242,7 +242,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         break;
     }
 
-    if ((s8)state->unk353 == 0)
+    if ((s8)state->heightUpdateActive == 0)
     {
         (*gPathControlInterface)->attachObject(obj, &state->pathControlFlags);
     }

@@ -1260,7 +1260,7 @@ void Tricky_update(int obj)
         }
     }
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-    ((TrickyState*)state)->unk353 = 1;
+    ((TrickyState*)state)->heightUpdateActive = 1;
     handlerBase = ((TrickyHandlerTable*)base)->handlers;
     handlerBase[((TrickyState*)state)->stateIndex](obj, state);
     ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x2;
@@ -1294,7 +1294,7 @@ void Tricky_update(int obj)
     }
     if (((TrickyState*)state)->moveProgress == lbl_803E23DC)
     {
-        ObjAnim_SetMoveProgress(((TrickyState*)state)->unk3C, (ObjAnimComponent*)obj);
+        ObjAnim_SetMoveProgress(((TrickyState*)state)->arcMoveProgress, (ObjAnimComponent*)obj);
     }
     if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, ((TrickyState*)state)->moveProgress, timeDelta,
                                                                     (void*)(state + 0x80c)) != 0)
