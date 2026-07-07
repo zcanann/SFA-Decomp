@@ -33,6 +33,9 @@ typedef struct
 #define SPAWN_FLAGS_BASE 0xc010480
 #define SPAWN_FLAG_USE_POSITION 1
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLLA0_EFFECT_ID 0x1d9
+
 extern u8 lbl_803186B0[]; /* texture/asset table */
 extern f32 lbl_803E1488;  /* float constant table (0.0f, offsets, etc.) */
 extern f32 lbl_803E148C;
@@ -200,7 +203,7 @@ void dll_A0_func03(u8* sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = lbl_803E1488 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], 0x1d9, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], DLLA0_EFFECT_ID, 0);
 }
 
 void dll_A0_func01_nop(void)
