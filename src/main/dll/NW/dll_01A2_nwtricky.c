@@ -17,6 +17,10 @@
 #define NWTRICKY_OBJFLAG_PARENT_SLACK 0x1000
 #define NWTRICKY_OBJFLAG_HIDDEN 0x4000
 #define NWTRICKY_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+/* anim.seqId of the SnowHorn herd objects Tricky herds (docblock: "the
+ * SnowHorn herd objects (seqId 0x13a)"). */
+#define NWTRICKY_SNOWHORN_HERD_SEQID 0x13a
 extern f32 timeDelta;
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(int* obj, int* target);
@@ -98,7 +102,7 @@ void NW_tricky_update(int* obj)
             objects = ObjGroup_GetObjects(3, &count);
             for (i = 0, scan = objects; i < count; scan++, i++)
             {
-                if (((GameObject*)*scan)->anim.seqId == 0x13a)
+                if (((GameObject*)*scan)->anim.seqId == NWTRICKY_SNOWHORN_HERD_SEQID)
                 {
                     fn_8014C66C(*scan, player);
                 }
@@ -139,7 +143,7 @@ void NW_tricky_update(int* obj)
             objects = ObjGroup_GetObjects(3, &count);
             for (i = 0, scan = objects; i < count; scan++, i++)
             {
-                if (((GameObject*)*scan)->anim.seqId == 0x13a)
+                if (((GameObject*)*scan)->anim.seqId == NWTRICKY_SNOWHORN_HERD_SEQID)
                 {
                     dPlayer = vec3f_distanceSquared(((NwObjPos*)*scan)->worldPos, ((NwObjPos*)player)->worldPos);
                     if (vec3f_distanceSquared(((NwObjPos*)*scan)->worldPos, ((NwObjPos*)tricky)->worldPos) < dPlayer)
