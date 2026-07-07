@@ -25,8 +25,6 @@
 extern f32 sqrtf(f32 x);
 extern CameraMode54State* gCameraModeNpcSpeakState;
 
-#pragma scheduling on
-#pragma peephole on
 #pragma scheduling off
 #pragma peephole off
 void dll_54_func06_nop(void)
