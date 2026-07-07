@@ -46,6 +46,8 @@
 #define PRESSURESWITCHFB_STATE_MODE_OFFSET 0x80
 #define PRESSURESWITCHFB_REMOVE_GROUP_ID 0x53
 
+#define PRESSURESWITCHFB_PRESSED_TEXTURE_ID 0x100
+
 #define PRESSURESWITCHFB_OBJ_LINK_SNOWPR 0x019f
 #define PRESSURESWITCHFB_OBJ_SH_PRESSURE 0x026c
 #define PRESSURESWITCHFB_OBJ_LINK_UNDERW 0x0274
@@ -323,7 +325,7 @@ void PressureSwitchFB_update(int obj)
                         tex = objFindTexture((int*)obj, 0, 0);
                         if (tex != NULL)
                         {
-                            tex->textureId = 0x100;
+                            tex->textureId = PRESSURESWITCHFB_PRESSED_TEXTURE_ID;
                         }
                         ((SwitchFlags*)(state + 0x84))->latched = 1;
                     }
@@ -340,7 +342,7 @@ void PressureSwitchFB_update(int obj)
                             tex = objFindTexture((int*)obj, 0, 0);
                             if (tex != NULL)
                             {
-                                tex->textureId = 0x100;
+                                tex->textureId = PRESSURESWITCHFB_PRESSED_TEXTURE_ID;
                             }
                             ((SwitchFlags*)(state + 0x84))->latched = 1;
                         }
@@ -505,7 +507,7 @@ void PressureSwitchFB_init(u8* obj, u8* params)
             tex = objFindTexture((int*)obj, 0, 0);
             if (tex != NULL)
             {
-                tex->textureId = 0x100;
+                tex->textureId = PRESSURESWITCHFB_PRESSED_TEXTURE_ID;
             }
         }
     }
