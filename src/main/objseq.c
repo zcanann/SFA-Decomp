@@ -420,7 +420,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
             {
                 ((GameObject*)obj)->anim.localPosY =
                     ((GameObject*)obj)->anim.localPosY +
-                    ((((GameObject*)obj)->anim.localPosY - groundY[0]) - *(f32*)(src + 0xc));
+                    ((((GameObject*)obj)->anim.localPosY - groundY[0]) - ((GameObject*)src)->anim.localPosX);
             }
             if ((((ObjSeqState*)seq)->flags & 2) != 0)
             {
