@@ -41,6 +41,24 @@ Validated consequences:
 SpillCode.c (0x57c290 band): what vreg number a spill-split web receives, and
 therefore where it pops. Decode that and the family at 99.6-99.98 closes.
 
+## DECODED (2026-07-07): split-web vreg allocation site
+SpillCode.c 0x57c4c0-0x57c4d5 (and the twin at 0x57c636): when inserting spill
+code for a move whose src (op+0x34) AND dst (op+0x28) webs are both flagged
+spilled (web+0x16 & 1), the new intermediate web's vreg is allocated as
+
+    esi = webEnd[class]          ; 0x5e9b04(,cls,4)
+    webEnd[class]++              ; incl — APPEND at the end
+    assert(esi <= 0x7fff)        ; SpillCode.c line 0xdb
+
+i.e. **spill-split webs are appended past all existing webs** — they carry the
+highest indices in the next Build/Simplify/Select iteration. Named locals keep
+their decl-descending indices below them. So a split web always sits at the
+index extreme, which is why no decl reorder can move a residue caused by one
+(crrockfall idx62, invhit idx86, the playerState1D prev/tbl r30/r31 pair).
+What remains undecoded is only the *pop interleaving* of these appended webs
+across multiple spill rounds — needs the live tracer (gdb absent on this host;
+port select_dump.gdb to lldb/Rosetta to continue).
+
 ## Volatile-class pop order (confirmed on objseq, GC/2.0 noopt)
 A-line streams show volatile FPR/GPR classes pop in strictly DESCENDING web
 index (LIFO of creation), taking the lowest register free of colored
