@@ -77,6 +77,11 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 /* game bit guarding a single carried duster at a time */
 #define GAMEBIT_DUSTER_CARRIED 0xcc0
 
+/* partfx spawned 3x on deposit/place completion (with place-object sfx) */
+#define DUSTER_PARTFX_DEPOSIT 0x51a
+/* partfx spawned 2x on bounce/collision during a move step (with river-loop sfx) */
+#define DUSTER_PARTFX_BOUNCE 0x51f
+
 int duster_SeqFn(u8* obj)
 {
     DusterState* state = ((GameObject*)obj)->extra;
@@ -165,9 +170,9 @@ void duster_update(int obj)
         {
         case DUSTER_MSG_DEPOSIT:
             Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
             mainSetBits(state->completeGameBit, 1);
             mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
             mapState->collectedCount =
@@ -241,8 +246,8 @@ void duster_update(int obj)
             state->priorityHit != 0)
         {
             Sfx_PlayFromObject(obj, SFXen_riverloop11);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x51f, NULL, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x51f, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_BOUNCE, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_BOUNCE, NULL, 2, -1, NULL);
             state->driftDir = randomGetRange(0, 4);
             if (state->useLaunchVelocity != 0)
             {
@@ -328,9 +333,9 @@ void duster_update(int obj)
             if (mapState->collectedCount < mapState->maxCollectedCount)
             {
                 Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
                 mainSetBits(state->completeGameBit, 1);
                 mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
                 mapState->collectedCount =
