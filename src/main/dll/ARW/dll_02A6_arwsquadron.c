@@ -12,6 +12,8 @@
 #define ARW_SQUADRON_VARIANT_ASTEROID 2
 #define ARW_SQUADRON_VARIANT_SHIP 3
 
+#define ARWSQUADRON_CHILD_OBJ_PROJECTILE 0x6ae
+
 typedef struct ArwSquadronSetup
 {
     s16 objectId;
@@ -163,7 +165,7 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag)
     if (Obj_IsLoadingLocked() == 0)
         return;
     ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
-    setup = Obj_AllocObjectSetup(0x20, 0x6ae);
+    setup = Obj_AllocObjectSetup(0x20, ARWSQUADRON_CHILD_OBJ_PROJECTILE);
     ((ArwSquadronProjectileSetup*)setup)->posX = px;
     ((ArwSquadronProjectileSetup*)setup)->posY = py;
     ((ArwSquadronProjectileSetup*)setup)->posZ = pz;
