@@ -1159,20 +1159,20 @@ void staffShootFireball(int obj, int state, f32 unused)
         *(s16*)((char*)setup + 0x6) = *(s16*)((char*)setup + 0x6) | 0x2000;
         if (((PlayerState*)state)->baddie.targetObj != NULL)
         {
-            GameObject* sp = *(GameObject**)&((PlayerState*)state)->baddie.targetObj;
             ObjHitVolumeRuntimeTransform* pt;
             f32 dx;
             f32 dz;
             f32 dy;
-            spawned = (int)sp;
-            pt = &sp->anim.hitVolumeTransforms[sp->hitVolumeIndex];
+            spawned = *(int*)&((PlayerState*)state)->baddie.targetObj;
+            pt = &(*(GameObject**)&((PlayerState*)state)->baddie.targetObj)->anim.hitVolumeTransforms[
+                (*(GameObject**)&((PlayerState*)state)->baddie.targetObj)->hitVolumeIndex];
             dx = pt->jointX - ((GameObject*)gPlayerPathObject)->anim.localPosX;
             dy = pt->jointY - ((GameObject*)gPlayerPathObject)->anim.localPosY;
             dz = pt->jointZ - ((GameObject*)gPlayerPathObject)->anim.localPosZ;
-            v.mat[1] = lbl_803E7EA4;
-            v.mat[2] = lbl_803E7EA4;
-            v.mat[3] = lbl_803E7EA4;
-            v.mat[0] = lbl_803E7EE0;
+            v.mat[1] = 0.0f;
+            v.mat[2] = 0.0f;
+            v.mat[3] = 0.0f;
+            v.mat[0] = 1.0f;
             v.angles[0] = inner->targetYaw;
             v.angles[1] = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
             v.angles[2] = 0;
@@ -1181,7 +1181,7 @@ void staffShootFireball(int obj, int state, f32 unused)
                 v.angles[0] = v.angles[0] + *(s16*)(*(int*)&((GameObject*)obj)->anim.parent);
             }
             setMatrixFromObjectPos(mtx, v.angles);
-            Matrix_TransformPoint(mtx, lbl_803E7EA4, lbl_803E7EA4, lbl_803E80DC,
+            Matrix_TransformPoint(mtx, 0.0f, 0.0f, -10.0f,
                                   (f32*)((char*)setup + 0x24), (f32*)((char*)setup + 0x28),
                                   (f32*)((char*)setup + 0x2c));
             *(f32*)((char*)setup + 0x18) = ((ObjPlacement*)setup)->posY;
@@ -1198,35 +1198,31 @@ void staffShootFireball(int obj, int state, f32 unused)
             f32 cot;
             f32 fx;
             f32 mag;
-            f32 k;
-            f32 m;
             *(s16*)((char*)setup + 0x0) = *(s16*)((char*)slot + 0x0);
             fov = Camera_GetFovY();
-            fov *= lbl_803E80D4;
-            fov = gPlayerPi * fov / lbl_803E7F98;
+            fov *= 91.022f;
+            fov = gPlayerPi * fov / 32768.0f;
             {
                 f32 sn = mathSinf(fov);
-                cot = lbl_803E7F5C * (sn / mathCosf(fov));
+                cot = 100.0f * (sn / mathCosf(fov));
             }
             fx = cot * -((inner->aimScreenY - (f32)(int)((res & 0xffff) >> 1)) /
                 (f32)(int)((res & 0xffff) >> 1) * Camera_GetAspectRatio());
             cot = cot * ((inner->aimScreenX - (f32)half) / (f32)half);
-            mag = sqrtf(lbl_803E80AC + (fx * fx + cot * cot));
+            mag = sqrtf(10000.0f + (fx * fx + cot * cot));
             vec[0] = fx / mag;
             vec[1] = cot / mag;
-            vec[2] = lbl_803E7F5C / mag;
+            vec[2] = 100.0f / mag;
             Matrix_TransformVector(fn_8000E814(), vec, vec);
-            m = lbl_803E80DC;
-            *(f32*)((char*)setup + 0x24) = m * vec[0];
-            *(f32*)((char*)setup + 0x28) = m * vec[1];
-            *(f32*)((char*)setup + 0x2c) = m * vec[2];
-            k = lbl_803E7ED4;
+            *(f32*)((char*)setup + 0x24) = -10.0f * vec[0];
+            *(f32*)((char*)setup + 0x28) = -10.0f * vec[1];
+            *(f32*)((char*)setup + 0x2c) = -10.0f * vec[2];
             ((ObjPlacement*)setup)->posY = *(f32*)((char*)setup + 0x18) =
-                k * *(f32*)((char*)setup + 0x24) + *(f32*)((char*)slot + 0xc);
+                2.0f * *(f32*)((char*)setup + 0x24) + *(f32*)((char*)slot + 0xc);
             ((ObjPlacement*)setup)->posZ = *(f32*)((char*)setup + 0x1c) =
-                k * *(f32*)((char*)setup + 0x28) + *(f32*)((char*)slot + 0x10);
+                2.0f * *(f32*)((char*)setup + 0x28) + *(f32*)((char*)slot + 0x10);
             *(f32*)&((ObjPlacement*)setup)->mapId = *(f32*)((char*)setup + 0x20) =
-                k * *(f32*)((char*)setup + 0x2c) + *(f32*)((char*)slot + 0x14);
+                2.0f * *(f32*)((char*)setup + 0x2c) + *(f32*)((char*)slot + 0x14);
             ((ObjPlacement*)setup)->unk02 = *(s16*)((char*)slot + 0x2) / 2;
             *(s16*)((char*)setup + 0x0) = -*(s16*)((char*)slot + 0x0);
         }
