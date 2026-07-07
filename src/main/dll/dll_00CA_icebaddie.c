@@ -725,7 +725,7 @@ int iceBaddie_updateHideResetState(int obj, int state)
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
 
-    if (((GroundBaddieState*)state)->baddie.unk276 != 4 && (s8)((GroundBaddieState*)state)->baddie.moveJustStartedA !=
+    if (((GroundBaddieState*)state)->baddie.prevControlMode != 4 && (s8)((GroundBaddieState*)state)->baddie.moveJustStartedA !=
         0)
     {
         ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E2D14, 0);

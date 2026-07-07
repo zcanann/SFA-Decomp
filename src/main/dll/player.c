@@ -3448,7 +3448,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner,
                         1);
                     *(void (**)(int, int))((char*)inner + 0x304) = fn_802A514C;
-                    ((PlayerState*)inner)->baddie.unk276 = 1;
+                    ((PlayerState*)inner)->baddie.prevControlMode = 1;
                 }
             }
             else
@@ -3622,7 +3622,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         {
             (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner, 1);
             *(void (**)(int, int))((char*)inner + 0x304) = fn_802A514C;
-            ((PlayerState*)inner)->baddie.unk276 = 1;
+            ((PlayerState*)inner)->baddie.prevControlMode = 1;
         }
     }
     else
@@ -7817,8 +7817,8 @@ int playerStateIdle(int obj, int state, f32 fv)
     inner = *(int*)&((GameObject*)obj)->extra;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        if (((PlayerState*)state)->baddie.unk276 != 0x24 &&
-            ((PlayerState*)state)->baddie.unk276 != 0x25)
+        if (((PlayerState*)state)->baddie.prevControlMode != 0x24 &&
+            ((PlayerState*)state)->baddie.prevControlMode != 0x25)
         {
             ((PlayerState*)state)->baddie.animSpeedC = lbl_803E7EA4;
         }
@@ -8023,7 +8023,7 @@ int playerStateIdle(int obj, int state, f32 fv)
         if (((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 &&
             ((ByteFlags*)((char*)inner + 0x3f1))->b20 == 0)
         {
-            if (((PlayerState*)state)->baddie.unk276 == 2)
+            if (((PlayerState*)state)->baddie.prevControlMode == 2)
             {
                 int mA;
                 int mB;
@@ -15702,7 +15702,7 @@ int playerState24(int obj, int state, f32 fv)
     if (((GameObject*)obj)->anim.currentMove != 0x8c)
     {
         ObjAnim_SetCurrentMove(obj, 0x8c, lbl_803E7EA4, 0);
-        if (((PlayerState*)state)->baddie.unk276 == 0x39)
+        if (((PlayerState*)state)->baddie.prevControlMode == 0x39)
         {
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 8);
         }

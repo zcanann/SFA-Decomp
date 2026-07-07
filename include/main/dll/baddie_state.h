@@ -56,7 +56,7 @@ typedef struct BaddieState {
     s16 substate; /* CA-family substate 0..5; gates the map-event re-register when != 3 */
     s16 prevSubstate; /* latched from substate for change detection (prevSubstate = startState in objseq) */
     s16 controlMode; /* current control move/mode; gPlayerInterface[5](obj,state,N) requests N */
-    s16 unk276; /* compared != 4 */
+    s16 prevControlMode; /* latched from controlMode for change detection (parallels prevSubstate/substate): controlMode != prevControlMode arms moveJustStartedA, then prevControlMode = controlMode; consumers compare it to prior mode ids (dll_000F/icebaddie/player) */
     u8 unk278[2];
     u8 moveJustStartedA; /* one-shot, tested at SeqFn entry */
     u8 moveJustStartedB; /* one-shot, secondary channel (death/cleanup handlers) */
