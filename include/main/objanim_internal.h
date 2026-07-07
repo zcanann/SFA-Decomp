@@ -203,6 +203,15 @@ typedef struct ObjTextureRuntimeSlot {
   u8 pad0F;
 } ObjTextureRuntimeSlot;
 
+/* ObjDef.shadowType (@0x48) selector. */
+enum ObjShadowType {
+  OBJ_SHADOW_TYPE_NONE = 0,
+  OBJ_SHADOW_TYPE_BIG_BOX = 1,
+  OBJ_SHADOW_TYPE_MODEL_GEOMETRIC = 2,
+  OBJ_SHADOW_TYPE_CRASH = 3,
+  OBJ_SHADOW_TYPE_BLUE_GLOW_RECT = 4
+};
+
 /*
  * Minimal recovered shape of the model pointer carried by ObjAnimComponent.
  * The named fields below are shared by root-motion sampling and hit-reaction

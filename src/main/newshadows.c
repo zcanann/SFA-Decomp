@@ -991,7 +991,7 @@ void newshadows_queueShadowCaster(int object)
         }
         slotOff = DAT_803ddbf8 * 0xc;
         *(float*)(&DAT_8038ef0c + slotOff) = (float)((double)((GameObject*)object)->anim.modelState->shadowScale / dist);
-        if (modelDef->shadowType == 2)
+        if (modelDef->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
         {
             (&DAT_8038ef10)[slotOff] = 1;
             if ((modelDef->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) != 0)
@@ -2305,7 +2305,7 @@ void shadowCreate(int* obj)
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
         gNewShadowCasterTable[gNewShadowCasterCount].scale =
             ((GameObject*)obj)->anim.modelState->shadowScale / dist;
-        if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 2)
+        if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
         {
             gNewShadowCasterTable[gNewShadowCasterCount].flags = 1;
             if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)

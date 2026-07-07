@@ -1268,7 +1268,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     {
         flags29 = fnFlags | 1;
     }
-    if (modelDef->shadowType != 0)
+    if (modelDef->shadowType != OBJ_SHADOW_TYPE_NONE)
     {
         flags29 |= OBJLOAD_FLAG_HAS_SHADOW;
     }
@@ -1276,7 +1276,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     {
         flags29 &= ~OBJLOAD_FLAG_HAS_SHADOW;
     }
-    if (modelDef->shadowType == 3)
+    if (modelDef->shadowType == OBJ_SHADOW_TYPE_CRASH)
     {
         flags29 |= OBJLOAD_FLAG_SHADOW_TYPE3;
     }
@@ -1421,7 +1421,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         obj->weaponDaTable->entries = (s16*)cursor;
         cursor += 0x800;
     }
-    if ((flags29 & OBJLOAD_FLAG_HAS_SHADOW) && modelDef->shadowType != 0)
+    if ((flags29 & OBJLOAD_FLAG_HAS_SHADOW) && modelDef->shadowType != OBJ_SHADOW_TYPE_NONE)
     {
         cursor = shadowInit(obj, cursor, 0);
     }
@@ -1591,7 +1591,7 @@ void objFreeObjDef(u8* obj, int flag)
     }
     if (((ObjAnimComponent*)obj)->modelState != NULL)
     {
-        if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 1)
+        if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX)
         {
             setShadowFlag_803db658(1);
         }
@@ -2544,7 +2544,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     {
         size = roundUpTo8(roundUpTo4(size) + 8) + 0x800;
     }
-    if ((flags & 2) && modelDef->shadowType != 0)
+    if ((flags & 2) && modelDef->shadowType != OBJ_SHADOW_TYPE_NONE)
     {
         size = roundUpTo4(size) + 0x44;
     }
