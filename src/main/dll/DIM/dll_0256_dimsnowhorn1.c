@@ -13,6 +13,7 @@
 
 #define OBJGROUP_SNOWHORN_PUZZLE   0x13  /* puzzle-target object group for nearest-object search */
 #define DIMSNOWHORN1_OBJGROUP     0xa   /* snowhorn own add/remove group */
+#define DIMSNOWHORN1_AIRMETER_BGTEXTURE 0x5d0 /* HUD air-meter background texture id */
 #define GAMEBIT_SNOWHORN_RIDING    0x3e3 /* set while Fox is mounted on the SnowHorn */
 #define GAMEBIT_SNOWHORN_AIR_DRAIN 0x3e2 /* set to drain the air meter each frame */
 #define GAMEBIT_SNOWHORN_AIR_RESET 0x3e9 /* set to reset the air meter to full */
@@ -1368,7 +1369,7 @@ void DIMSnowHorn1_update(int obj)
                     if (((DIMSnowHorn1State*)data)->mode == 3)
                     {
                         ((DIMSnowHorn1State*)data)->airMeterValue = 1000;
-                        (*gGameUIInterface)->initAirMeter(1000, 0x5d0);
+                        (*gGameUIInterface)->initAirMeter(1000, DIMSNOWHORN1_AIRMETER_BGTEXTURE);
                     }
                 }
             }
