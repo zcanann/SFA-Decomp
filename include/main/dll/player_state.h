@@ -161,7 +161,7 @@ typedef struct PlayerState {
     s8 footstepSurface; /* footstep surface/material selector; switched to pick the footstep sfx variant (case 4 -> foot_33a, default -> foot_var) on anim foot events */
     u8 unk547;
     u8 pad548[0x549 - 0x548];
-    s8 unk549;
+    s8 climbMoveVariant; /* 0x549: climb-move variant flag (set in another TU); when nonzero selects the alternate climb move table (lbl_803DC69C vs 698), the faster baddie.moveSpeed (lbl_803E7EF8 vs 8008) and the 0x40 blend flag */
     u8 pad54A[0x54C - 0x54A];
     f32 spanTopY;    /* upper Y bound of the collision span (interpolated from SweepHit.g* at hit.gt); localPosY is clamped/checked against [spanBottomY, spanTopY] */
     f32 spanBottomY; /* lower Y bound of the collision span (interpolated from SweepHit.fz0/fz1) */

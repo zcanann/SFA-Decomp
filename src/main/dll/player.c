@@ -9426,7 +9426,7 @@ int playerStateClimbOntoWall(int obj, int state)
         }
         ObjHits_MarkObjectPositionDirty(obj);
     }
-    flag549 = inner->unk549;
+    flag549 = inner->climbMoveVariant;
     if (flag549 != 0)
     {
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
