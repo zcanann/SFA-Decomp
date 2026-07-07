@@ -35,6 +35,11 @@
 #include "main/dll/seqObj11E.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+/* gcRobotPatrol (fn_80152B90): periodically dropped object; parented back to
+ * the dropper via +0xC4 and announced with SFX 0x249. */
+#define SEQOBJ11E_GCROBOT_DROP_OBJ 0x6b5
+
 extern u32 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
 
@@ -361,7 +366,7 @@ void fn_80152B90(int* obj, u8* state)
                     u8* setup;
                     int* spawned;
 
-                    setup = Obj_AllocObjectSetup(0x24, 0x6b5);
+                    setup = Obj_AllocObjectSetup(0x24, SEQOBJ11E_GCROBOT_DROP_OBJ);
                     ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                     ((ObjPlacement*)setup)->posY = lbl_803E2878 + ((GameObject*)obj)->anim.localPosY;
                     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
