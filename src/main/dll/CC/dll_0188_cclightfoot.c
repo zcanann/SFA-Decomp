@@ -12,6 +12,7 @@
 #define GAMEBIT_CC_COMPLETE 0x24
 #define CCLIGHTFOOT_TARGET_ACTOR_A 0x45d7d
 #define CCLIGHTFOOT_TARGET_ACTOR_B 0x45d7f
+#define CCLIGHTFOOT_CHILD_OBJ_MARKER 0x6f1 /* attached child marker (state->childObj, ObjLink_AttachChild) */
 #define CCLIGHTFOOT_OBJFLAG_UPDATE_DISABLED 0x8000
 
 /* CcLightfootState.state - LightFoot combat/lifecycle machine */
@@ -398,7 +399,7 @@ void cclightfoot_update(int obj)
         {
             if (Obj_IsLoadingLocked() != 0)
             {
-                state->childObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6f1), 5, -1, -1,
+                state->childObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, CCLIGHTFOOT_CHILD_OBJ_MARKER), 5, -1, -1,
                                            *(int*)&((GameObject*)obj)->anim.parent);
                 ObjLink_AttachChild(obj, state->childObj, 0);
             }
