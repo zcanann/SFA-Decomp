@@ -16,6 +16,7 @@
 #define NWMAMMOTH_OBJFLAG_RENDERED 0x800
 /* object group scanned for the nearest target (player group) */
 #define NWMAMMOTH_TARGET_OBJGROUP 0xf
+#define NWMAMMOTH_AIRMETER_BGTEXTURE 0x5d0 /* air-meter background texture id */
 enum NwMammothRuntimeFlag
 {
     NW_MAMMOTH_RUNTIME_PATH_CONTROL = 0x01,
@@ -517,7 +518,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             }
             if (!(state->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE))
             {
-                (*gGameUIInterface)->initAirMeter(0xc8, 0x5d0);
+                (*gGameUIInterface)->initAirMeter(0xc8, NWMAMMOTH_AIRMETER_BGTEXTURE);
                 state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_UI_MESSAGE);
             }
             break;
