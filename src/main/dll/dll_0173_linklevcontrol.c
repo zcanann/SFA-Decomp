@@ -52,6 +52,12 @@ extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, in
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
+
+/* env-effect ids activated on entering AREA_CELL_45 (index-style; roles opaque) */
+#define LINKLEVCONTROL_ENVFX_A 0x13e
+#define LINKLEVCONTROL_ENVFX_B 0x140
+#define LINKLEVCONTROL_ENVFX_C 0x13f
+
 extern u8 lbl_803239F0[];
 
 void link_levcontrol_updateAreaMusic(int* obj);
@@ -138,9 +144,9 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
     case AREA_CELL_45:
         skyFn_80088c94(7, 0);
         envFxActFn_800887f8(0);
-        getEnvfxAct(0, 0, 0x13e, 0);
-        getEnvfxAct(0, 0, 0x140, 0);
-        getEnvfxAct(0, 0, 0x13f, 0);
+        getEnvfxAct(0, 0, LINKLEVCONTROL_ENVFX_A, 0);
+        getEnvfxAct(0, 0, LINKLEVCONTROL_ENVFX_B, 0);
+        getEnvfxAct(0, 0, LINKLEVCONTROL_ENVFX_C, 0);
         Music_Trigger(MUSICTRIG_underwater, 1);
         break;
     case AREA_CELL_49:
