@@ -105,8 +105,6 @@ extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, 
 extern u8 lbl_803DDA78;
 extern u8 lbl_803DDA79;
 
-#pragma scheduling on
-#pragma peephole on
 extern f32 lbl_803E2CD8;
 extern f32 lbl_803E2D00;
 extern f32 lbl_803E2D14;
@@ -1559,8 +1557,6 @@ void iceBaddie_init(int obj, u8* params, int flags)
     *(s8*)&sub->baddie.physicsActive = 0;
 }
 
-#pragma scheduling on
-#pragma peephole on
 void iceBaddie_release_nop(void)
 {
 }
