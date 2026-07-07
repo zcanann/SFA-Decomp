@@ -37,6 +37,11 @@
 
 #define WM_SUN_GLARE_COUNT 20
 
+/* romlist object-def variants driving this DLL's seqId branches (see
+   docblock): def 922 'WM_Crystal' (0x262) and def 907 'WM_sun' (0x2BD). */
+#define WMSUN_SEQID_CRYSTAL 0x262
+#define WMSUN_SEQID_SUN 0x2bd
+
 /* per-glare-sprite flicker table; filled at init by the unreachable
    0x2C2 variant and never read back by this TU */
 typedef struct WmSunGlareParams
@@ -342,7 +347,7 @@ void wmsun_update(int obj)
     thresh = 0;
     mult = 1;
     spd = lbl_803E5F20;
-    if (((GameObject*)obj)->anim.seqId == 0x262) /* WM_Crystal */
+    if (((GameObject*)obj)->anim.seqId == WMSUN_SEQID_CRYSTAL) /* WM_Crystal */
     {
         if (mainGetBit(0x38f) != 0)
         {
@@ -569,7 +574,7 @@ void wmsun_init(int obj, int params)
     state->glareParams = NULL;
     state->renderEnabled = 1;
     mode = ((GameObject*)obj)->anim.seqId;
-    if (mode == 0x262) /* WM_Crystal */
+    if (mode == WMSUN_SEQID_CRYSTAL) /* WM_Crystal */
     {
         ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
         state->riseStep = 100;
@@ -582,7 +587,7 @@ void wmsun_init(int obj, int params)
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24; /* 1.0f */
         }
     }
-    else if (mode == 0x2bd) /* WM_sun */
+    else if (mode == WMSUN_SEQID_SUN) /* WM_sun */
     {
         gWmSunEnvfxTimer = 800;
         lbl_803DDCAE = 800;
