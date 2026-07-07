@@ -104,7 +104,6 @@ int fn_8016043C(int obj, GroundBaddieState* p)
 {
     extern int Obj_GetPlayerObject(void);
     extern void ObjMsg_SendToObject(int target, int msg, int from, int a);
-    extern void Obj_FreeObject(int* obj);
     ObjHitsPriorityState* hitState;
 
     if (*(char*)&p->baddie.moveJustStartedB != '\0')
