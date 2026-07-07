@@ -807,6 +807,8 @@ typedef struct Dim2FxVec
 #define DIM2ROOFRUB_EVENT_TOGGLE_HEAVY  2
 #define DIM2ROOFRUB_EVENT_TOGGLE_FX     3
 #define DIM2ROOFRUB_EVENT_SPAWN_DUST    4
+/* dust particle spawned 3x on the SPAWN_DUST anim event */
+#define DIM2ROOFRUB_PARTFX 2046
 
 void dim2roofrub_spawnEffects(int* obj)
 {
@@ -961,7 +963,7 @@ void dim2roofrub_update(int* obj)
                     v.z = ((GameObject*)obj)->anim.localPosZ;
                     for (k = 3; k != 0; k--)
                     {
-                        (*gPartfxInterface)->spawnObject(obj, 2046, &v, 0x200001, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(obj, DIM2ROOFRUB_PARTFX, &v, 0x200001, -1, NULL);
                     }
                     break;
                 }
