@@ -534,7 +534,7 @@ void mmp_moonrock_update(int obj)
     u8 grabbed;
     int particleHeight;
     int count;
-    int def = *(int*)&((GameObject*)obj)->anim.placementData;
+    MmpMoonrockPlacement* def = (MmpMoonrockPlacement*)((GameObject*)obj)->anim.placementData;
     if (objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                             ((GameObject*)obj)->anim.localPosZ) == -1)
     {
@@ -584,7 +584,7 @@ void mmp_moonrock_update(int obj)
     }
     else if ((state->flags & MOONROCK_FLAG_PLACED) == 0)
     {
-        if (((MmpMoonrockPlacement*)def)->gateBit != -1 && mainGetBit(((MmpMoonrockPlacement*)def)->gateBit) == 0)
+        if (def->gateBit != -1 && mainGetBit(def->gateBit) == 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
@@ -620,7 +620,7 @@ void mmp_moonrock_update(int obj)
         (*gCarryableInterface)->setVisible(stateCopy, 0);
         {
             f32 k;
-            def = (int)ObjGroup_GetObjects(CARRYABLE_OBJGROUP, &count);
+            def = (MmpMoonrockPlacement*)ObjGroup_GetObjects(CARRYABLE_OBJGROUP, &count);
             i = 0;
             list = (int*)def;
             k = gMoonRockPickupRange;
