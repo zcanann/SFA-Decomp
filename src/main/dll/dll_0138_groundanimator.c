@@ -16,6 +16,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 
 #define GROUNDANIMATOR_OBJFLAG_FREED 0x40
 #define GROUNDANIMATOR_OBJGROUP 0x31
+#define GROUNDANIMATOR_TARGET_OBJGROUP 0x4
 
 typedef struct GroundanimatorPlacement
 {
@@ -381,7 +382,7 @@ void groundanimator_update(int* obj)
         if (*(void**)&g->linkedObj == NULL)
         {
             nd = lbl_803E3F98;
-            g->linkedObj = ObjGroup_FindNearestObject(4, obj, &nd);
+            g->linkedObj = ObjGroup_FindNearestObject(GROUNDANIMATOR_TARGET_OBJGROUP, obj, &nd);
             near = (void*)g->linkedObj;
             if (near != NULL)
             {
