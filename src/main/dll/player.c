@@ -3343,7 +3343,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             }
             ObjPath_GetPointWorldPosition(obj, 5, (int)&px, (int)&py, (int)&pz, 0);
             dx = ((GameObject*)obj)->anim.worldPosX - npos[0];
-            dy = (((PlayerState*)inner)->unk7DC + ((GameObject*)obj)->anim.worldPosY) - npos[1];
+            dy = (((PlayerState*)inner)->pathBearingEyeY + ((GameObject*)obj)->anim.worldPosY) - npos[1];
             dz = ((GameObject*)obj)->anim.worldPosZ - npos[2];
             {
                 s16 ang = (s16)getAngle(dx, dz);
@@ -7734,13 +7734,13 @@ void fn_802B0EA4(int obj, int inner, int state)
     }
     else
     {
-        if (lbl_803E7EE0 != ((PlayerState*)inner)->unk834)
+        if (lbl_803E7EE0 != ((PlayerState*)inner)->yawSmoothScale)
         {
             f32 base = *(f32*)(((PlayerState*)inner)->moveParams + 0x10);
             f32 frac = (((PlayerState*)state)->baddie.animSpeedA - base) /
                 (((PlayerState*)inner)->maxSpeed - base);
             f32 v430 = ((PlayerState*)inner)->yawSmoothRate;
-            f32 diff = ((PlayerState*)inner)->unk834 - lbl_803E7EE0;
+            f32 diff = ((PlayerState*)inner)->yawSmoothScale - lbl_803E7EE0;
             ((PlayerState*)inner)->yawSmoothRate =
                 v430 * (diff * ((frac < lbl_803E7EA4)
                                     ? lbl_803E7EA4
@@ -11103,7 +11103,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     {
         f32 z = lbl_803E7EE0;
         ((PlayerState*)state)->targetAnimSpeed = z;
-        ((PlayerState*)state)->unk834 = z;
+        ((PlayerState*)state)->yawSmoothScale = z;
     }
     ((PlayerState*)state)->velSmoothRateBase = lbl_803E8144;
     ((PlayerState*)state)->surfaceType = 0;
@@ -11133,13 +11133,13 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
         {
         case 13:
             ((PlayerState*)state)->targetAnimSpeed = lbl_803E8148;
-            ((PlayerState*)state)->unk834 = lbl_803E814C;
+            ((PlayerState*)state)->yawSmoothScale = lbl_803E814C;
             ((PlayerState*)state)->velSmoothRateBase = lbl_803E8118;
             break;
         case 3:
             fv2 = lbl_803E7EE0;
             ((PlayerState*)state)->targetAnimSpeed = fv2;
-            ((PlayerState*)state)->unk834 = fv2;
+            ((PlayerState*)state)->yawSmoothScale = fv2;
             ((PlayerState*)state)->velSmoothRateBase = lbl_803E7F6C;
             break;
         case 6:
@@ -12699,7 +12699,7 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->queuedItemCommand = -1;
     ((PlayerState*)inner)->animState = -1;
     ((PlayerState*)inner)->targetAnimSpeed = fz;
-    ((PlayerState*)inner)->unk834 = fz;
+    ((PlayerState*)inner)->yawSmoothScale = fz;
     ((PlayerState*)inner)->velSmoothRateBase = lbl_803E8144;
     ((ByteFlags*)((char*)inner + 0x3f1))->b01 = 1;
     ((PlayerState*)inner)->idleDelayTimer = lbl_803E7FA4;
@@ -12768,12 +12768,12 @@ void objLoadPlayerFromSave(int obj)
     }
     if (((PlayerState*)inner)->characterId == 0)
     {
-        ((PlayerState*)inner)->unk7DC = lbl_803E8168;
+        ((PlayerState*)inner)->pathBearingEyeY = lbl_803E8168;
         ((PlayerState*)inner)->unk874 = lbl_803E816C;
     }
     else
     {
-        ((PlayerState*)inner)->unk7DC = lbl_803E8170;
+        ((PlayerState*)inner)->pathBearingEyeY = lbl_803E8170;
         ((PlayerState*)inner)->unk874 = lbl_803E8174;
     }
     gPlayerModelChain = (int)ObjModelChain_Alloc(&gPlayerModelChainConfig, 1);

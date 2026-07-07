@@ -291,7 +291,7 @@ typedef struct PlayerState {
     f32 teleportAnimProgress; /* teleport/warp draw-effect progress (0..lbl_803E80C4): accumulates teleportAnimRate*timeDelta while teleportAnimActive, drives the drawn column geometry (base - progress) and its alpha fade past a threshold in playerDrawTeleportAnim */
     f32 chargeLevel; /* charge/breath meter: builds (+= K*fv) while a charge move's button is held, drains (-= K*dt) and floors at 0 otherwise; at capacity (unk41C) fires the charged attack; (u8) value fed to fn_8011F34C */
     f32 boulderChargeLevel; /* second charge/hold meter (sibling of chargeLevel): reset to 0 on move start, builds (+= K*timeDelta) while inside the staff-boulder-drop hit window and first-cross-from-0 fires SFXTRIG_staff_boulder_drops, clamped to a max; decays (-= K*timeDelta, same rate as chargeLevel) and floors at 0 otherwise; exposed via fn_802961A4 when controlMode==0x26 */
-    f32 unk7DC;
+    f32 pathBearingEyeY; /* per-character vertical offset (set with unk874 by characterId) added to worldPosY before getAngle(dx,dz) computes the bearing toward a path point */
     f32 curveSpeedScale; /* speed->curve-sample multiplier: u = speed*curveSpeedScale, the eval position into paramCurve0-4 */
     u8 pad7E4[0x7EC - 0x7E4];
     int unk7EC;
@@ -318,7 +318,7 @@ typedef struct PlayerState {
     f32 hitTimer; /* per-hit countdown for multi-hit moves; -= dt, on <=0 records an ObjHits hit and reloads from hitInterval; gates hitCount */
     f32 targetAnimSpeed; /* interpolate() target for baddie.animSpeedA */
     f32 velSmoothRateBase; /* per-surface default that velSmoothRate is reset to (set by surfaceType: 0x803E8144 default, 0x803E8118 case13, 0x803E7F6C case3) */
-    f32 unk834;
+    f32 yawSmoothScale; /* per-surface yaw-smoothing scale set 1:1 with targetAnimSpeed (init 0, surface case13=lbl_803E814C, case3=0); when nonzero, (yawSmoothScale-0) weighted by the animSpeed fraction multiplies yawSmoothRate */
     f32 waterDepth; /* waterSurfaceY - worldPosY; player's submerged depth, drives splash/ripple FX */
     f32 waterSurfaceY; /* water surface world-Y (from cfg+0x1c0); compared against worldPosY */
     f32 speedScale; /* 0-1 movement-speed multiplier from terrain (water depth / slope); currentSpeed = (maxSpeed-K) * (t * speedScale) */
