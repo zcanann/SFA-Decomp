@@ -9,6 +9,8 @@
 
 #define DREARTHWARRIOR_OBJFLAG_PARENT_SLACK 0x1000
 
+#define DREARTHWARRIOR_CHILD_OBJ_HELPER 0x6f5
+
 typedef struct DREarthWarriorPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -1235,7 +1237,7 @@ void DR_EarthWarrior_update(int obj)
     hitState->hitVolumeId = 0;
     if (*(void* *)&inner->helperObj == NULL && Obj_IsLoadingLocked() != 0)
     {
-        int setup = Obj_AllocObjectSetup(0x18, 0x6f5);
+        int setup = Obj_AllocObjectSetup(0x18, DREARTHWARRIOR_CHILD_OBJ_HELPER);
         int newObj = Obj_SetupObject(setup, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                      *(int*)&((GameObject*)obj)->anim.parent);
         ObjLink_AttachChild(obj, newObj, 2);
