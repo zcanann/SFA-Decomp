@@ -9,6 +9,7 @@ extern f32 timeDelta;
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define CAMPFIRE_HIT_VOLUME_SLOT 0x1f
 extern void ModelLightStruct_free(void* effect);
 
 #define MODEL_LIGHT_KIND_POINT 2
@@ -104,7 +105,7 @@ void CampFire_update(int obj)
         {
             modelLightStruct_setEnabled((int)state->light, 1, 1.0f);
         }
-        ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, CAMPFIRE_HIT_VOLUME_SLOT, 1, 0);
         state->nightTimer -= timeDelta;
         if (state->nightTimer <= 0.0f)
         {
