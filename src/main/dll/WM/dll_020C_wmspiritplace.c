@@ -72,6 +72,9 @@ enum
     WMSPIRITPLACE_MAP_6 = 0x4A5E6
 };
 
+/* Krazoa Palace map-event id (loaded/locked as spirit progress advances). */
+#define WMSPIRITPLACE_MAPEVENT_KRAZOA 0x42
+
 /* state->fxFlags: spawn the spirit particle fx each SeqFn tick */
 #define WMSPIRITPLACE_FX_ACTIVE 0x1
 #define WMSPIRITPLACE_PARTFX 0x7d8
@@ -231,24 +234,24 @@ int WM_spiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
                 (*gMapEventInterface)->setCharacter(1);
                 break;
             case WMSPIRITPLACE_MAP_2:
-                loadMapAndParent(0x42);
-                lockLevel(mapGetDirIdx(0x42), 0);
+                loadMapAndParent(WMSPIRITPLACE_MAPEVENT_KRAZOA);
+                lockLevel(mapGetDirIdx(WMSPIRITPLACE_MAPEVENT_KRAZOA), 0);
                 lockLevel(mapGetDirIdx(0xb), 1);
-                (*gMapEventInterface)->setMapAct(0x42, 3);
+                (*gMapEventInterface)->setMapAct(WMSPIRITPLACE_MAPEVENT_KRAZOA, 3);
                 (*gMapEventInterface)->setMapAct(7, 4);
                 break;
             case WMSPIRITPLACE_MAP_3:
-                loadMapAndParent(0x42);
-                lockLevel(mapGetDirIdx(0x42), 0);
+                loadMapAndParent(WMSPIRITPLACE_MAPEVENT_KRAZOA);
+                lockLevel(mapGetDirIdx(WMSPIRITPLACE_MAPEVENT_KRAZOA), 0);
                 lockLevel(mapGetDirIdx(0xb), 1);
-                (*gMapEventInterface)->setMapAct(0x42, 3);
+                (*gMapEventInterface)->setMapAct(WMSPIRITPLACE_MAPEVENT_KRAZOA, 3);
                 (*gMapEventInterface)->setMapAct(7, 5);
                 break;
             case WMSPIRITPLACE_MAP_4:
-                loadMapAndParent(0x42);
-                lockLevel(mapGetDirIdx(0x42), 0);
+                loadMapAndParent(WMSPIRITPLACE_MAPEVENT_KRAZOA);
+                lockLevel(mapGetDirIdx(WMSPIRITPLACE_MAPEVENT_KRAZOA), 0);
                 lockLevel(mapGetDirIdx(0xb), 1);
-                (*gMapEventInterface)->setMapAct(0x42, 3);
+                (*gMapEventInterface)->setMapAct(WMSPIRITPLACE_MAPEVENT_KRAZOA, 3);
                 (*gMapEventInterface)->setMapAct(7, 7);
                 break;
             }
