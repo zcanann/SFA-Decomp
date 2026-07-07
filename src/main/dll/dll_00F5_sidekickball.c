@@ -160,7 +160,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     {
         params->triggerHit = 1;
         if (params->triggerHit == 0) return;
-        params->pad2CA[0] = 1;
+        params->sendHoldMessage[0] = 1;
         return;
     }
 
@@ -173,7 +173,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     {
         if (isTrickyNear(player) != 0)
         {
-            params->pad2CA[0] = 0;
+            params->sendHoldMessage[0] = 0;
         }
         else
         {
@@ -227,12 +227,12 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
 
 fading:
     params->triggerHit = 0;
-    params->pad2CA[0] = 0;
+    params->sendHoldMessage[0] = 0;
     params->fadeTimer = gSidekickBallFadeDuration;
     params->ballMode = SIDEKICK_BALL_FADING;
 
 end:
-    if (params->pad2CA[0] != 0)
+    if (params->sendHoldMessage[0] != 0)
     {
         ObjMsg_SendToObject(player, 0x100010, (void*)obj, 0);
     }

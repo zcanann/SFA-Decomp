@@ -25,7 +25,7 @@ typedef struct SidekickBallState {
     u8 pad2BC[0x2C8 - 0x2BC];
     u8 triggerArmed; /* 0x2C8 */
     u8 triggerHit;   /* 0x2C9 */
-    u8 pad2CA[2];
+    u8 sendHoldMessage[2]; /* 0x2CA [0]: gates per-frame ObjMsg 0x100010 to player while held */
 } SidekickBallState;
 
 STATIC_ASSERT(offsetof(SidekickBallState, fadeTimer) == 0x26C);
