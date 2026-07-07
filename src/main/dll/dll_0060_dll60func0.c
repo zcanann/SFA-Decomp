@@ -44,6 +44,9 @@ enum
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL60_EFFECT_ID 0x46
+
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     struct
@@ -208,7 +211,7 @@ void dll_60_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
             buf.pos[2] = lbl_803E0830 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80312790, 0xc, &base[140], 0x46, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80312790, 0xc, &base[140], DLL60_EFFECT_ID, 0);
 }
 
 void dll_60_func01_nop(void)
