@@ -2165,7 +2165,7 @@ void mapLoadUnloadObjects(int flag)
                             Obj_SetupObject(objStart, 1, list[i], bit, 0);
                         }
                         bit++;
-                        mask = (u8)(mask << 1);
+                        mask <<= 1;
                         if (mask == 0)
                         {
                             bp++;
