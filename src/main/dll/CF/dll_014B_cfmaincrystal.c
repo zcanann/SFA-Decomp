@@ -22,6 +22,8 @@
 /* Spark fx emitted (1-in-3) while the pylons are still partially charged
    (sum of pylonTimer[0..2] < 0x12c). */
 #define CFMAINCRYSTAL_PARTFX_CHARGE_SPARK 0x81
+/* beam particle spawned along each crystal<->pylon link as the beams[] slot is activated */
+#define CFMAINCRYSTAL_PARTFX_BEAM 0x7f4
 /* env effect activated once when all three pylons chime and the main charge begins */
 #define CFMAINCRYSTAL_ENVFX 0x7f
 
@@ -203,7 +205,7 @@ void fn_8019D9F0(int* obj)
                 dir[1] = -dir[1];
                 dir[2] = -dir[2];
                 pay.d = i;
-                (*gPartfxInterface)->spawnObject(obj, 0x7f4, &pay, 2, -1, dir);
+                (*gPartfxInterface)->spawnObject(obj, CFMAINCRYSTAL_PARTFX_BEAM, &pay, 2, -1, dir);
                 dir[0] = sub->pylonX[i] - ((GameObject*)gCfMainCrystalObj)->anim.localPosX;
                 dir[1] = lbl_803E41E4;
                 dir[2] = sub->pylonZ[i] - ((GameObject*)gCfMainCrystalObj)->anim.localPosZ;
@@ -212,7 +214,7 @@ void fn_8019D9F0(int* obj)
                 pay.y = lbl_803E41DC;
                 pay.z = lbl_803E41E8;
                 pay.d = i + 3;
-                (*gPartfxInterface)->spawnObject(gCfMainCrystalObj, 0x7f4, &pay, 2, -1, dir);
+                (*gPartfxInterface)->spawnObject(gCfMainCrystalObj, CFMAINCRYSTAL_PARTFX_BEAM, &pay, 2, -1, dir);
                 pay.x = sub->pylonX[i];
                 pay.y = sub->pylonY[i];
                 pay.z = sub->pylonZ[i];
