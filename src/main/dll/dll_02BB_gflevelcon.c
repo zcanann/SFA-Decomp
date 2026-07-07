@@ -53,6 +53,9 @@
 #define GFLEVELCON_CHILD_OBJ_PROJECTILE_SPREAD 0x80d
 #define GFLEVELCON_CHILD_OBJ_PROJECTILE_AIMED  0x7e4
 #define GFLEVELCON_CHILD_OBJ_PROJECTILE_RING   0x859
+/* Object loaded at the nearest def-0x7e5 marker in fn_80239DD8, cached in
+ * obj->extra+0x10 and faded in. */
+#define GFLEVELCON_CHILD_OBJ_MARKER_ATTACH     0x608
 /* Spawn-setup buffer for the arwing-projectile children (defNos
  * 0x80d/0x7e4/0x859). Reuses ObjPlacement's pos/color head and adds the
  * class-specific launch fields at 0x18/0x19/0x1a (all u8 stores per asm). */
@@ -288,7 +291,7 @@ void fn_80239DD8(int obj, int state)
         nearObj = (char*)ObjList_FindNearestObjectByDefNo(obj, 0x7e5, &maxDist);
         if (nearObj != NULL)
         {
-            newObj = Obj_AllocObjectSetup(0x24, 0x608);
+            newObj = Obj_AllocObjectSetup(0x24, GFLEVELCON_CHILD_OBJ_MARKER_ATTACH);
             ((ObjPlacement*)newObj)->posX = ((GameObject*)nearObj)->anim.localPosX;
             ((ObjPlacement*)newObj)->posY = ((GameObject*)nearObj)->anim.localPosY;
             ((ObjPlacement*)newObj)->posZ = ((GameObject*)nearObj)->anim.localPosZ;
