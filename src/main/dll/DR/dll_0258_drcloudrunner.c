@@ -30,6 +30,7 @@
 
 #define DRCLOUDRUNNER_OBJGROUP 0xa
 #define ARWARWING_OBJGROUP 0x26
+#define DRCLOUDRUNNER_PARTFX 0x66
 
 #define DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -978,7 +979,7 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
             ((GameObject*)newObj)->anim.rotZ = 0;
             ((GameObject*)newObj)->anim.rotY = 0;
             ((GameObject*)newObj)->anim.rotX = 0;
-            (*gPartfxInterface)->spawnObject(newObj, 0x66, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(newObj, DRCLOUDRUNNER_PARTFX, NULL, 2, -1, NULL);
         }
     }
     return 0;
@@ -1235,7 +1236,7 @@ void fn_802BF4D8(int obj)
     ((GameObject*)newObj)->anim.rotZ = 0;
     ((GameObject*)newObj)->anim.rotY = 0;
     ((GameObject*)newObj)->anim.rotX = 0;
-    (*gPartfxInterface)->spawnObject(newObj, 0x66, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject(newObj, DRCLOUDRUNNER_PARTFX, NULL, 2, -1, NULL);
 }
 
 int DR_CloudRunner_stateHandler04(int obj, int baddie)
