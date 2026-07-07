@@ -13,6 +13,8 @@
 
 #define DRCAGEWITH_OBJGROUP 0x18
 
+#define DRCAGEWITH_TARGET_OBJGROUP 0xa /* nearest group-10 object (seqId 1049) linked as the cage target */
+
 #define DRCAGEWITH_OBJFLAG_FREED 0x40
 
 typedef struct DrcagewithPlacement
@@ -180,7 +182,7 @@ void DR_CageWith_hitDetect(int obj)
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             bf31->b0 = 1;
-            nearest = (int*)ObjGroup_FindNearestObject(10, obj, &maxDist);
+            nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, obj, &maxDist);
             if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == 1049)
             {
                 ((GameObject*)nearest)->unkF4 = 0;
@@ -206,7 +208,7 @@ void DR_CageWith_hitDetect(int obj)
         if (((DrcagewithState*)state)->spawnedObject != NULL)
         {
             ((DrcagewithState*)state)->spawnedObject->anim.rotZ = (s16)((DrcagewithState*)state)->angularVel;
-            nearest = (int*)ObjGroup_FindNearestObject(10, obj, &maxDist);
+            nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, obj, &maxDist);
             if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == 1049)
             {
                 ((GameObject*)nearest)->unkF4 = 1;
