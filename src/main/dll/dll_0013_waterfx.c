@@ -45,6 +45,22 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 #define GX_POINTS 0xb8
 #define GX_TRIANGLESTRIP 152
 #define GX_VTXFMT2 2
+#define GX_TEVSTAGE0 0
+#define GX_TEXCOORD_NULL 0xff
+#define GX_TEXMAP_NULL 0xff
+#define GX_COLOR0A0 4
+#define GX_CC_KONST 0xe
+#define GX_CC_ZERO 0xf
+#define GX_CA_KONST 6
+#define GX_CA_ZERO 7
+#define GX_TEV_SWAP0 0
+#define GX_TEV_ADD 0
+#define GX_TB_ZERO 0
+#define GX_CS_SCALE_1 0
+#define GX_TRUE 1
+#define GX_TEVPREV 0
+#define GX_TEV_KCSEL_K0 0xc
+#define GX_TEV_KASEL_K0_A 0x1c
 
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
@@ -73,19 +89,19 @@ void waterfx_setupSplashDropPointRender(void)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
     GXSetCurrentMtx(0);
-    GXSetTevKColorSel(0, 0xc);
-    GXSetTevKAlphaSel(0, 0x1c);
+    GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
+    GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetNumIndStages(0);
     GXSetNumTexGens(0);
     GXSetNumTevStages(1);
     GXSetNumChans(1);
     GXSetTevDirect(0);
-    GXSetTevOrder(0, 0xff, 0xff, 4);
-    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xe);
-    GXSetTevAlphaIn(0, 7, 7, 7, 6);
-    GXSetTevSwapMode(0, 0, 0);
-    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_KONST);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_KONST);
+    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
