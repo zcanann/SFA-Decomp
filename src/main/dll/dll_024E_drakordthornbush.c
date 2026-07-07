@@ -72,14 +72,6 @@ int drakord_thornbush_getObjectTypeId(void)
     return 0;
 }
 
-void drakord_thornbush_release(void)
-{
-}
-
-void drakord_thornbush_initialise(void)
-{
-}
-
 #pragma opt_common_subs off
 
 void drakord_thornbush_free(int obj)
@@ -109,6 +101,80 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         ((void (*)(int, int, int, f32, int))Obj_UpdateLightningCluster)(p1, inner + 0x14, 3, lightScale, inner + 0x64);
     }
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6594);
+}
+
+void drakord_thornbush_hitDetect(int obj)
+{
+    int inner = *(int*)&((GameObject*)obj)->extra;
+    f32 hitPosZ;
+    f32 hitPosY;
+    f32 hitPosX;
+    int damage;
+    int hitObj;
+    int destroyed;
+    int hit;
+    int setup;
+    if (((DrakordThornbushState*)inner)->health != 0)
+    {
+        destroyed = timerCountDown((f32*)((char*)inner + 0x10));
+        hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, &damage, &hitPosX, &hitPosY, &hitPosZ);
+        if (hit != 0)
+        {
+            if (((GameObject*)hitObj)->anim.seqId != 0x35f &&
+                *(void**)&((DrakordThornbushState*)inner)->lastHitObj != (void*)hitObj &&
+                arrayIndexOf(((DrakordThornbushState*)inner)->hitTable, 2, hit) != -1)
+            {
+                ((DrakordThornbushState*)inner)->lastHitObj = hitObj;
+                Obj_SpawnHitLightAndFade(obj, &hitPosX, lbl_803E6598);
+                ((DrakordThornbushState*)inner)->health -= damage;
+                if (((DrakordThornbushState*)inner)->health <= 0)
+                {
+                    destroyed = 1;
+                }
+                else
+                {
+                    Sfx_PlayFromObject(obj, SFXTRIG_wmap_nameoff_496);
+                }
+            }
+        }
+        else
+        {
+            ((DrakordThornbushState*)inner)->lastHitObj = 0;
+        }
+        if (destroyed != 0)
+        {
+            setup = *(int*)&((GameObject*)obj)->anim.placementData;
+            ((DrakordThornbushState*)inner)->health = 0;
+            switch (((GameObject*)obj)->anim.seqId)
+            {
+            case THORNBUSH_SEQ_THORN:
+                spawnExplosion((int*)obj, (f32)(s32)((DrakordThornbushPlacement*)setup)->baseRadius, 1, 0, 0, 0, 0, 1, 1);
+                break;
+            case THORNBUSH_SEQ_LIGHTNING:
+                Sfx_PlayFromObject(obj, SFXTRIG_awghitobj16);
+                spawnExplosion((int*)obj, (f32)(s32)(((DrakordThornbushState*)inner)->radius << 1), 1, 1, 1, 1, 0, 1,
+                               0);
+                ((void (*)(int, int, int, f32, int))Obj_UpdateLightningCluster)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);
+                break;
+            }
+            if (((DrakordThornbushPlacement*)setup)->regrowDelay != 0)
+            {
+                s16toFloat((void*)&((DrakordThornbushState*)inner)->growth, ((DrakordThornbushPlacement*)setup)->regrowDelay);
+                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                ObjHits_DisableObject(obj);
+            }
+            else if (*(u32*)&((ObjPlacement*)setup)->mapId == 0xffffffff)
+            {
+                Obj_FreeObject(obj);
+            }
+            else
+            {
+                Obj_RemoveFromUpdateList((int*)obj);
+                ObjHits_DisableObject(obj);
+                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            }
+        }
+    }
 }
 
 void drakord_thornbush_update(int obj)
@@ -186,80 +252,6 @@ void drakord_thornbush_update(int obj)
     }
 }
 
-void drakord_thornbush_hitDetect(int obj)
-{
-    int inner = *(int*)&((GameObject*)obj)->extra;
-    f32 hitPosZ;
-    f32 hitPosY;
-    f32 hitPosX;
-    int damage;
-    int hitObj;
-    int destroyed;
-    int hit;
-    int setup;
-    if (((DrakordThornbushState*)inner)->health != 0)
-    {
-        destroyed = timerCountDown((f32*)((char*)inner + 0x10));
-        hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, &damage, &hitPosX, &hitPosY, &hitPosZ);
-        if (hit != 0)
-        {
-            if (((GameObject*)hitObj)->anim.seqId != 0x35f &&
-                *(void**)&((DrakordThornbushState*)inner)->lastHitObj != (void*)hitObj &&
-                arrayIndexOf(((DrakordThornbushState*)inner)->hitTable, 2, hit) != -1)
-            {
-                ((DrakordThornbushState*)inner)->lastHitObj = hitObj;
-                Obj_SpawnHitLightAndFade(obj, &hitPosX, lbl_803E6598);
-                ((DrakordThornbushState*)inner)->health -= damage;
-                if (((DrakordThornbushState*)inner)->health <= 0)
-                {
-                    destroyed = 1;
-                }
-                else
-                {
-                    Sfx_PlayFromObject(obj, SFXTRIG_wmap_nameoff_496);
-                }
-            }
-        }
-        else
-        {
-            ((DrakordThornbushState*)inner)->lastHitObj = 0;
-        }
-        if (destroyed != 0)
-        {
-            setup = *(int*)&((GameObject*)obj)->anim.placementData;
-            ((DrakordThornbushState*)inner)->health = 0;
-            switch (((GameObject*)obj)->anim.seqId)
-            {
-            case THORNBUSH_SEQ_THORN:
-                spawnExplosion((int*)obj, (f32)(s32)((DrakordThornbushPlacement*)setup)->baseRadius, 1, 0, 0, 0, 0, 1, 1);
-                break;
-            case THORNBUSH_SEQ_LIGHTNING:
-                Sfx_PlayFromObject(obj, SFXTRIG_awghitobj16);
-                spawnExplosion((int*)obj, (f32)(s32)(((DrakordThornbushState*)inner)->radius << 1), 1, 1, 1, 1, 0, 1,
-                               0);
-                ((void (*)(int, int, int, f32, int))Obj_UpdateLightningCluster)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);
-                break;
-            }
-            if (((DrakordThornbushPlacement*)setup)->regrowDelay != 0)
-            {
-                s16toFloat((void*)&((DrakordThornbushState*)inner)->growth, ((DrakordThornbushPlacement*)setup)->regrowDelay);
-                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-                ObjHits_DisableObject(obj);
-            }
-            else if (*(u32*)&((ObjPlacement*)setup)->mapId == 0xffffffff)
-            {
-                Obj_FreeObject(obj);
-            }
-            else
-            {
-                Obj_RemoveFromUpdateList((int*)obj);
-                ObjHits_DisableObject(obj);
-                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            }
-        }
-    }
-}
-
 void drakord_thornbush_init(int obj, u8* init)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
@@ -299,3 +291,11 @@ void drakord_thornbush_init(int obj, u8* init)
 }
 
 #pragma opt_common_subs reset
+
+void drakord_thornbush_release(void)
+{
+}
+
+void drakord_thornbush_initialise(void)
+{
+}
