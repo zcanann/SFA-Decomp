@@ -17,6 +17,11 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DRMUSICCONT_ENVFX_A 0x210
+#define DRMUSICCONT_ENVFX_B 0x20f
+#define DRMUSICCONT_ENVFX_C 0x212
+#define DRMUSICCONT_ENVFX_D 0x1ea
+
 typedef struct DrmusiccontState
 {
     u8 pad0[0x4 - 0x0];
@@ -85,10 +90,10 @@ void drmusiccont_update(int obj)
     {
         if ((u32)mainGetBit(0xe7b) == 0)
         {
-            getEnvfxActImmediately(obj, obj, 0x210, 0);
-            getEnvfxActImmediately(obj, obj, 0x20f, 0);
-            getEnvfxActImmediately(obj, obj, 0x212, 0);
-            getEnvfxActImmediately(obj, obj, 0x1ea, 0);
+            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_A, 0);
+            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_B, 0);
+            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_C, 0);
+            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_D, 0);
             skyFn_80088e54(0, lbl_803E6BD8);
             mainSetBits(0xe7b, 1);
         }
