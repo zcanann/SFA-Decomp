@@ -278,7 +278,7 @@ void XyzAnimator_free(int obj, int flag)
                                     (double)((GameObject*)obj)->anim.localPosY,
                                     (double)((GameObject*)obj)->anim.localPosZ);
         block = mapGetBlock(block);
-        if (((void*)block != NULL) && (state->unk4 != 0))
+        if (((void*)block != NULL) && (state->vertexCount != 0))
         {
             fn_80194C40(setup, state, block);
         }
@@ -324,7 +324,7 @@ void XyzAnimator_update(int obj)
     {
         goto no_update;
     }
-    if (((XyzAnimatorState*)state)->unk4 == 0)
+    if (((XyzAnimatorState*)state)->vertexCount == 0)
     {
         for (i = 0; i < ((MapBlockData*)block)->polyGroupCount; i++)
         {
@@ -333,14 +333,14 @@ void XyzAnimator_update(int obj)
             if (((XyzAnimatorPlacement*)setup)->blockLayer == t)
             {
                 ((XyzAnimatorState*)state)->rowCount++;
-                ((XyzAnimatorState*)state)->unk4 += (*(u16*)(row + 0x14) - *(u16*)(row + 0));
+                ((XyzAnimatorState*)state)->vertexCount += (*(u16*)(row + 0x14) - *(u16*)(row + 0));
             }
         }
-        if (((XyzAnimatorState*)state)->unk4 == 0)
+        if (((XyzAnimatorState*)state)->vertexCount == 0)
         {
             goto no_update;
         }
-        ((XyzAnimatorState*)state)->unk4 *= 3;
+        ((XyzAnimatorState*)state)->vertexCount *= 3;
         if (((XyzAnimatorPlacement*)setup)->triggerGameBit == -1)
         {
             ((XyzAnimatorState*)state)->gameBitValue = 1;
@@ -360,12 +360,12 @@ void XyzAnimator_update(int obj)
             ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->targetZ;
             ((XyzAnimatorState*)state)->gameBitValue = 1;
         }
-        t = ((XyzAnimatorState*)state)->unk4 * 6 + ((XyzAnimatorState*)state)->rowCount * 0xc;
+        t = ((XyzAnimatorState*)state)->vertexCount * 6 + ((XyzAnimatorState*)state)->rowCount * 0xc;
         t = t + ((XyzAnimatorState*)state)->unk8 * 0xc;
         alloc = mmAlloc(t, 5, 0);
         ((XyzAnimatorState*)state)->dataBuffer = alloc;
         stride = ((XyzAnimatorState*)state)->rowCount * 2;
-        alloc = alloc + ((XyzAnimatorState*)state)->unk4 * 6;
+        alloc = alloc + ((XyzAnimatorState*)state)->vertexCount * 6;
         ((XyzAnimatorState*)state)->unk18 = alloc;
         alloc = alloc + stride;
         ((XyzAnimatorState*)state)->unk1C = alloc;

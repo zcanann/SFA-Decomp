@@ -29,7 +29,7 @@ void TexFrameAnimator_init(int *obj, u8 *params);
  * 16 int slots, current-offset vec at 0x40, mode/active bytes, looped SFX id. */
 typedef struct XyzAnimatorState {
     int rowCount;
-    int unk4;
+    int vertexCount; /* 0x4: accumulated per-row tex-span (row[0x14]-row[0]) x3 across matching polygroup rows; sizes the vertex-stream data buffer, gates rebuild */
     int unk8;
     int dataBuffer;
     int posABuffer; /* s16 stream: per-block posA coord */

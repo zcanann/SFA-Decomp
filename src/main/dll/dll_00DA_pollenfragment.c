@@ -123,7 +123,7 @@ void pollenfragment_init(int obj, int config)
     }
     ObjHits_SetTargetMask(obj, 4);
     ((XyzAnimatorState*)state)->unk18 = 0;
-    *(f32*)&((XyzAnimatorState*)state)->unk4 = *(f32*)(state[7] + 0xc);
+    *(f32*)&((XyzAnimatorState*)state)->vertexCount = *(f32*)(state[7] + 0xc);
     ((XyzAnimatorState*)state)->rowCount = 0;
     s16toFloat(state + 9, 0xe10);
     storeZeroToFloatParam(state + 8);
