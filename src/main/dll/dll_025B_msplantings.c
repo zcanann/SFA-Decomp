@@ -27,6 +27,7 @@
 #define GAMEBIT_MOONSEED_COUNT 0x86A
 /* object-group id the planting spots register into */
 #define MSPLANTING_OBJ_GROUP 0x2E
+#define MSPLANTING_PARTFX 0x70f
 
 /* phase byte values (state byte at extra[0]) */
 #define MSPLANTING_PHASE_INIT 0
@@ -251,7 +252,7 @@ void MoonSeedPlantingSpot_update(int obj)
                 {
                     ((GameObject*)obj)->anim.localPosY =
                         ((ObjPlacement*)setup)->posY + (f32)(int)randomGetRange(-1, 1);
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x70f, NULL, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, MSPLANTING_PARTFX, NULL, 2, -1, NULL);
                 }
                 ((MoonSeedPlantingSpotState*)ex)->burstTimer = ((MoonSeedPlantingSpotState*)ex)->burstTimer - timeDelta;
                 if (((MoonSeedPlantingSpotState*)ex)->burstTimer <= 0.0f)
