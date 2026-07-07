@@ -758,6 +758,7 @@ end:
     }
 }
 
+#pragma opt_common_subs off
 void mapBlockRender_setupShaderTextures(int shader, int mode)
 {
     int layerIdx;
