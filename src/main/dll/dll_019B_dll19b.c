@@ -7,6 +7,9 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
+
+#define DLL19B_TARGET_OBJGROUP 0xe
+
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void* return0_8005669C(int);
 extern int lbl_803DB610;
@@ -262,7 +265,7 @@ void dll_19B_update(int obj)
     }
     else
     {
-        near = ObjGroup_FindNearestObject(0xe, player, &dist);
+        near = ObjGroup_FindNearestObject(DLL19B_TARGET_OBJGROUP, player, &dist);
         if ((u32)near != 0 && dist < lbl_803E5190 && dist > lbl_803E5194)
         {
             dy = ((GameObject*)near)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
