@@ -31,6 +31,10 @@ extern f32 lbl_803E0E4C;
 extern f32 lbl_803E0E50;
 extern f32 lbl_803E0E54;
 
+/* spawnEffect effect ids per variant (textureAssetId arg). */
+#define DLL7F_EFFECT_ID_VARIANT0 0x156
+#define DLL7F_EFFECT_ID_DEFAULT  0x8a
+
 void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
@@ -217,12 +221,12 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
     if (variant == 0)
     {
         buf.v58 = 0;
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 9, base, 8, base + 0xb8, 0x156, 0);
+        (*gModgfxInterface)->spawnEffect(&buf, 0, 9, base, 8, base + 0xb8, DLL7F_EFFECT_ID_VARIANT0, 0);
     }
     else
     {
         buf.v58 = 0;
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 9, base + 0x5c, 8, base + 0xb8, 0x8a, 0);
+        (*gModgfxInterface)->spawnEffect(&buf, 0, 9, base + 0x5c, 8, base + 0xb8, DLL7F_EFFECT_ID_DEFAULT, 0);
     }
 }
 
