@@ -26,6 +26,13 @@
 #define LIGHTSOURCE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define LIGHTSOURCE_OBJFLAG_RENDERED 0x800
 
+/* anim.seqIds selecting the Arwing-mounted variant (docblock: "seqId
+ * 0x705/0x712 select the Arwing-mounted variant ...; seqId 0x717 takes the
+ * same zero-Y-offset fx path in update"). */
+#define LIGHTSOURCE_SEQID_ARWING_A 0x705
+#define LIGHTSOURCE_SEQID_ARWING_B 0x712
+#define LIGHTSOURCE_SEQID_ARWING_FX 0x717
+
 /* The glow-light object referenced by LightSourceState.light is a shared
    ModelLightStruct (see main/model_light.h).  Only the glow byte-fields used
    in render/update are declared here, to keep the rest of this DLL's call
@@ -162,7 +169,7 @@ void lightsource_update(int obj)
         if (b->fxType != 0 || b->fxArg != 0)
         {
             vec[0] = 0.0f;
-            if (((GameObject*)obj)->anim.seqId == 0x717)
+            if (((GameObject*)obj)->anim.seqId == LIGHTSOURCE_SEQID_ARWING_FX)
             {
                 vec[1] = vec[0];
             }
@@ -200,7 +207,7 @@ void lightsource_update(int obj)
         }
         ((LightGlow*)b->light)->glowAlpha = sum;
     }
-    if (((GameObject*)obj)->anim.seqId != 0x705 && ((GameObject*)obj)->anim.seqId != 0x712)
+    if (((GameObject*)obj)->anim.seqId != LIGHTSOURCE_SEQID_ARWING_A && ((GameObject*)obj)->anim.seqId != LIGHTSOURCE_SEQID_ARWING_B)
     {
         if (b->lit != 0)
         {
@@ -305,7 +312,7 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
         }
         if (state->light != NULL)
         {
-            if (obj->anim.seqId == 0x705 || obj->anim.seqId == 0x712)
+            if (obj->anim.seqId == LIGHTSOURCE_SEQID_ARWING_A || obj->anim.seqId == LIGHTSOURCE_SEQID_ARWING_B)
             {
                 modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 0.0f);
             }
@@ -334,7 +341,7 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
 
             if (setup->flags & LIGHTSOURCE_FLAG_CREATE_GLOW)
             {
-                if (obj->anim.seqId == 0x705 || obj->anim.seqId == 0x712)
+                if (obj->anim.seqId == LIGHTSOURCE_SEQID_ARWING_A || obj->anim.seqId == LIGHTSOURCE_SEQID_ARWING_B)
                 {
                     colorBase = state->fxType * 3;
                     modelLightStruct_setupGlow(state->light, 0, colors.c[colorBase], colors.c[colorBase + 1],
