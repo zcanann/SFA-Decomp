@@ -77,6 +77,9 @@ extern void gpsh_shrine_initialise(void);
 
 #define ECSHSHRINE_OBJGROUP 0xb
 
+/* camera mode DLL 0x48 = dll_0048_cameramodestatic */
+#define ECSHSHRINE_CAMMODE_STATIC 0x48
+
 typedef struct EcshIntPair
 {
     int a;
@@ -283,7 +286,7 @@ int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
                 mainSetBits(GAMEBIT_K1_SPIRIT_COLLECTED, 1);
                 break;
             case 13:
-                (*gObjectTriggerInterface)->setCamVars(0x48, 100, 0, 0x50);
+                (*gObjectTriggerInterface)->setCamVars(ECSHSHRINE_CAMMODE_STATIC, 100, 0, 0x50);
                 break;
             case 14:
                 obj->flags |= MMSHRINE_FLAG_POSE_LOCKED;
