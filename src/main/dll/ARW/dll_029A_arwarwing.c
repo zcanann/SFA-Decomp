@@ -45,6 +45,10 @@
 #define ARWARWING_PARTFX_DAMAGE 0x7d0   /* health <= 4, every other frame */
 #define ARWARWING_PARTFX_CRITICAL 0x7d1 /* health <= 2 (critical) */
 
+/* cross-map destination: Krazoa shrine (0xb) map-event advanced (act 5)
+   before warping out at end of the Arwing course; see setObjGroupStatus(0xb,..) */
+#define ARWARWING_MAPEVENT_SHRINE 0xb
+
 /* ArwingState.flags477 bits */
 #define ARWING_FLAG_ACTIVE     0x1   /* Arwing is active / engaged */
 #define ARWING_FLAG_ROLL_LEFT  0x2   /* barrel-rolling left */
@@ -394,9 +398,9 @@ void arwarwing_warpByCourse(int obj)
         if ((u32)mainGetBit(0xc85) != 0)
         {
             mainSetBits(0x405, 0);
-            (*gMapEventInterface)->setMapAct(0xb, 5);
-            (*gMapEventInterface)->setObjGroupStatus(0xb, 0xa, 1);
-            (*gMapEventInterface)->setObjGroupStatus(0xb, 0xb, 1);
+            (*gMapEventInterface)->setMapAct(ARWARWING_MAPEVENT_SHRINE, 5);
+            (*gMapEventInterface)->setObjGroupStatus(ARWARWING_MAPEVENT_SHRINE, 0xa, 1);
+            (*gMapEventInterface)->setObjGroupStatus(ARWARWING_MAPEVENT_SHRINE, 0xb, 1);
             warpToMap(0x22, 0);
         }
         else
