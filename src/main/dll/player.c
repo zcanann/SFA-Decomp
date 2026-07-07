@@ -16864,9 +16864,7 @@ void playerDoEyeAnims(int obj, int state)
 
 void fn_802ADE80(int obj, int inner, int state)
 {
-    f32 tz;
-    f32 ty;
-    f32 tx;
+    f32 t[3];
     f32 waterX;
     f32 waterZ;
     struct
@@ -16883,8 +16881,14 @@ void fn_802ADE80(int obj, int inner, int state)
         f32 y;
         f32 z;
     } pfx;
-    f32 mtx[20];
+    f32 mtx[16];
     f32 angle;
+    f32 d;
+    f32 accel;
+    f32 vel;
+    f32 cosv;
+    f32 sinv;
+    f32 a;
     int playEffect;
     u8 loopCount;
     int i;
@@ -16895,33 +16899,34 @@ void fn_802ADE80(int obj, int inner, int state)
     *(s16*)&((PlayerState*)inner)->unk89C =
         lbl_803E8114 * timeDelta + (f32)(u32) * (u16*)((char*)inner + 0x89c);
     {
-        f32 d = angle - ((GameObject*)obj)->anim.localPosY;
-        if (d > lbl_803E7FA0)
+        d = angle - ((GameObject*)obj)->anim.localPosY;
+        if (d > 25.0f)
         {
-            d = lbl_803E7FA0;
+            d = 25.0f;
         }
-        d = d / lbl_803E7FA0 * lbl_803E8118;
+        accel = d / lbl_803E7FA0;
+        accel = accel * lbl_803E8118;
         ((GameObject*)obj)->anim.velocityY =
-            d * timeDelta + ((GameObject*)obj)->anim.velocityY;
+            accel * timeDelta + ((GameObject*)obj)->anim.velocityY;
     }
     ((GameObject*)obj)->anim.velocityY =
-        ((GameObject*)obj)->anim.velocityY - lbl_803E7EFC * timeDelta;
+        ((GameObject*)obj)->anim.velocityY - 0.1f * timeDelta;
     ((GameObject*)obj)->anim.velocityY =
         ((GameObject*)obj)->anim.velocityY * powfBitEstimate(lbl_803E7FD0, timeDelta);
     {
-        f32 v = ((GameObject*)obj)->anim.velocityY;
+        vel = ((GameObject*)obj)->anim.velocityY;
         ((GameObject*)obj)->anim.velocityY =
-            (v < lbl_803E811C) ? lbl_803E811C : ((v > lbl_803E8120) ? lbl_803E8120 : v);
+            (vel < -4.0f) ? -4.0f : ((vel > 1.4f) ? 1.4f : vel);
     }
     ((void (*)(f32*, f32*, f32, int))playerCalcWaterCurrent)(&waterX, &waterZ, lbl_803E7EE0, obj);
     {
-        f32 cosv = mathSinf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
-        f32 sinv = mathCosf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
-        f32 a = -waterZ * sinv - waterX * cosv;
+        cosv = mathSinf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
+        sinv = mathCosf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
+        a = -waterZ * sinv - waterX * cosv;
         ((PlayerState*)inner)->waterCurrentVelB +=
-            timeDelta * (lbl_803E7EFC * ((waterX * sinv - waterZ * cosv) - ((PlayerState*)inner)->waterCurrentVelB));
+            timeDelta * (0.1f * ((waterX * sinv - waterZ * cosv) - ((PlayerState*)inner)->waterCurrentVelB));
         ((PlayerState*)inner)->waterCurrentVelA +=
-            timeDelta * (lbl_803E7EFC * (a - ((PlayerState*)inner)->waterCurrentVelA));
+            timeDelta * (0.1f * (a - ((PlayerState*)inner)->waterCurrentVelA));
     }
     playEffect = 0;
     if (((PlayerState*)state)->baddie.controlMode == 1)
@@ -16935,8 +16940,8 @@ void fn_802ADE80(int obj, int inner, int state)
         if (((PlayerState*)inner)->waterDepth < lbl_803E7FA0 &&
             (*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
         {
-            tx = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
-            tz = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
+            t[0] = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
+            t[2] = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
             playEffect = 1;
         }
     }
@@ -16952,19 +16957,19 @@ void fn_802ADE80(int obj, int inner, int state)
             (*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
         {
             s8 c;
-            tx = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
+            t[0] = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
             c = ((PlayerState*)inner)->gaitLevel;
             if (c <= 8)
             {
-                tz = lbl_803E8124;
+                t[2] = lbl_803E8124;
             }
             else if (c <= 0xc)
             {
-                tz = lbl_803E8124;
+                t[2] = lbl_803E8124;
             }
             else
             {
-                tz = lbl_803E8124;
+                t[2] = lbl_803E8124;
             }
             playEffect = 1;
         }
@@ -16979,38 +16984,30 @@ void fn_802ADE80(int obj, int inner, int state)
         v.angles[2] = 0;
         v.mat[0] = lbl_803E7EE0;
         setMatrixFromObjectPos(mtx, v.angles);
-        Matrix_TransformPoint(mtx, tx, lbl_803E7EA4, tz, &tx, &ty, &tz);
+        Matrix_TransformPoint(mtx, t[0], lbl_803E7EA4, t[2], &t[0], &t[1], &t[2]);
         ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
-            tx, ((PlayerState*)inner)->waterSurfaceY, tz, 0, lbl_803E7EA4, 5);
+            t[0], ((PlayerState*)inner)->waterSurfaceY, t[2], 0, lbl_803E7EA4, 5);
         if (((PlayerState*)inner)->waterDepth > lbl_803E8128 &&
             ((PlayerState*)state)->baddie.animSpeedC > lbl_803E7E9C)
         {
             u16 ang = ((PlayerState*)inner)->targetYaw -
                 getAngle(((PlayerState*)state)->baddie.animSpeedB, ((PlayerState*)state)->baddie.animSpeedA);
             ((void (*)(f32, f32, f32, s16, f32))(*gWaterfxInterface)->spawnSimpleRipple)(
-                tx, ((PlayerState*)inner)->waterSurfaceY, tz, ang, lbl_803E7EA4);
+                t[0], ((PlayerState*)inner)->waterSurfaceY, t[2], ang, lbl_803E7EA4);
         }
     }
     ObjPath_GetPointWorldPosition(obj, 0x13, &v.mat[1], &v.mat[2], &v.mat[3], 0);
     loopCount = (((PlayerState*)inner)->waterSurfaceY - v.mat[2] > lbl_803E7F10) ? 1 : 0;
+    for (i = 0; i < loopCount; i++)
     {
-        f32 div0;
-        f32 zero;
-        f32 div1;
-        div0 = lbl_803E7FA4;
-        div1 = lbl_803E808C;
-        zero = lbl_803E7EA4;
-        for (i = 0; i < loopCount; i++)
+        pfx.x = v.mat[1] + (f32)randomGetRange(-0x64, 0x64) / 20.0f;
+        pfx.y = v.mat[2] + (f32)randomGetRange(-0x64, 0x64) / 50.0f;
+        pfx.z = v.mat[3] + (f32)randomGetRange(-0x64, 0x64) / 20.0f;
+        pfx.scale = ((PlayerState*)inner)->waterSurfaceY - pfx.y;
+        if (pfx.scale > 0.0f)
         {
-            pfx.x = v.mat[1] + (f32)randomGetRange(-0x64, 0x64) / div0;
-            pfx.y = v.mat[2] + (f32)randomGetRange(-0x64, 0x64) / div1;
-            pfx.z = v.mat[3] + (f32)randomGetRange(-0x64, 0x64) / div0;
-            pfx.scale = ((PlayerState*)inner)->waterSurfaceY - pfx.y;
-            if (pfx.scale > zero)
-        {
-                (*gPartfxInterface)->spawnObject(
-                    (void*)obj, 0x202, &pfx, 0x200001, -1, NULL);
-            }
+            (*gPartfxInterface)->spawnObject(
+                (void*)obj, 0x202, &pfx, 0x200001, -1, NULL);
         }
     }
 }
