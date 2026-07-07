@@ -1430,7 +1430,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             }
         }
     }
-    cullScale = *(u8*)(obj->def + 0x73);
+    cullScale = ((ObjModelInstance*)obj->def)->cullDistScale;
     if (cullScale != 0)
     {
         max = max * ((lbl_803DE8CC * cullScale) / lbl_803DE8D0);

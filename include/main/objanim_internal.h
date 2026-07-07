@@ -248,7 +248,7 @@ typedef struct ObjDef {
   u8 sourceHitMask;
   u8 runtimeSourceHitMask;
   u8 hitVolumeCount;
-  u8 pad73;
+  u8 cullDistScale; /* 0x73: object.c scales cull distance by this (max *= k*cullDistScale/k2) */
   u8 fixedSortDepth;
   u8 pad75;
   u8 effectFlags;
