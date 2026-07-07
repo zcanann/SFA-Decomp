@@ -311,7 +311,7 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
     int step;
 
     state = ((GameObject*)obj)->extra;
-    ((TrickyState*)state)->unk5A = targetYaw;
+    ((TrickyState*)state)->targetYaw = targetYaw;
 
     delta = (u16)(s16)targetYaw;
     currentYaw = ((GameObject*)obj)->anim.rotX;

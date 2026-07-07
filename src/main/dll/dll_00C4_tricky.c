@@ -35,7 +35,7 @@
 #define TRICKY_STATE_FLAG_SIDESTEP 0x20        /* apply sidestepDelta lateral offset */
 #define TRICKY_STATE_FLAG_BACKSTEP 0x40        /* apply backstepDelta offset */
 #define TRICKY_STATE_FLAG_VERTICAL_MOVE 0x80   /* apply verticalDelta to localPosY */
-#define TRICKY_STATE_FLAG_ROTATE 0x100         /* interpolate rotation toward unk5A target */
+#define TRICKY_STATE_FLAG_ROTATE 0x100         /* interpolate rotation toward targetYaw target */
 /* stateFlags flame-particle child bookkeeping: 0x800 marks the 7 flame children
  * as spawned; on teardown it is cleared and 0x1000 is set. */
 #define TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE 0x800   /* 7 flame child objects are spawned */
@@ -1307,7 +1307,7 @@ void Tricky_update(int obj)
     }
     if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_ROTATE) != 0)
     {
-        diff = ((TrickyState*)state)->unk5A - (u16)((GameObject*)obj)->anim.rotX;
+        diff = ((TrickyState*)state)->targetYaw - (u16)((GameObject*)obj)->anim.rotX;
         if (diff > 0x8000)
         {
             diff -= 0xffff;
@@ -1343,20 +1343,20 @@ void Tricky_update(int obj)
     if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_BACKSTEP) != 0)
     {
         ((GameObject*)obj)->anim.localPosX += ((TrickyState*)state)->backstepDelta * (((TrickyState*)state)->dirX * -((
-            TrickyState*)state)->unk814);
+            TrickyState*)state)->backstepScale);
         ((GameObject*)obj)->anim.localPosZ += ((TrickyState*)state)->backstepDelta * (((TrickyState*)state)->dirZ * -((
-            TrickyState*)state)->unk814);
+            TrickyState*)state)->backstepScale);
     }
     if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_VERTICAL_MOVE) != 0)
     {
-        ((GameObject*)obj)->anim.localPosY += ((TrickyState*)state)->unk810 * ((TrickyState*)state)->verticalDelta;
+        ((GameObject*)obj)->anim.localPosY += ((TrickyState*)state)->verticalScale * ((TrickyState*)state)->verticalDelta;
     }
     if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_SIDESTEP) != 0)
     {
         ((GameObject*)obj)->anim.localPosX += ((TrickyState*)state)->sidestepDelta * (((TrickyState*)state)->dirZ * ((
-            TrickyState*)state)->unk80C);
+            TrickyState*)state)->sidestepScale);
         ((GameObject*)obj)->anim.localPosZ += ((TrickyState*)state)->sidestepDelta * (((TrickyState*)state)->dirX * -((
-            TrickyState*)state)->unk80C);
+            TrickyState*)state)->sidestepScale);
     }
     if (*(void**)&((TrickyState*)state)->followObj != NULL)
     {

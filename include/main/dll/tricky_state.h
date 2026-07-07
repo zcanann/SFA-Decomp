@@ -51,7 +51,7 @@ typedef struct TrickyState {
     u32 stateFlags; /* the TRICKY state flag word (bit masks 0x80..0x100000) */
     u8 statusFlags;
     u8 pad59[0x5A - 0x59];
-    s16 unk5A;
+    s16 targetYaw; /* target facing angle: set from targetYaw (skeetla); tricky interpolates anim.rotX toward it (diff = targetYaw - rotX) under TRICKY_STATE_FLAG_ROTATE */
     u32 heightTrackObjId;
     f32 trackedHeight;
     u8 pad64[0x8C - 0x64];
@@ -207,9 +207,9 @@ typedef struct TrickyState {
     u8 *unk7D4;
     u8 pad7D8[0x808 - 0x7D8];
     f32 unk808;
-    f32 unk80C;
-    f32 unk810;
-    f32 unk814;
+    f32 sidestepScale; /* per-axis scale applied to sidestepDelta under TRICKY_STATE_FLAG_SIDESTEP: localPos += sidestepDelta * (dir * sidestepScale) */
+    f32 verticalScale; /* scale applied to verticalDelta under TRICKY_STATE_FLAG_VERTICAL_MOVE: localPosY += verticalScale * verticalDelta */
+    f32 backstepScale; /* per-axis scale applied to backstepDelta under TRICKY_STATE_FLAG_BACKSTEP: localPos += backstepDelta * (dir * -backstepScale) */
     u8 pad818[2];
     s16 rotRate;
     u8 pad81C[0x82C - 0x81C];
