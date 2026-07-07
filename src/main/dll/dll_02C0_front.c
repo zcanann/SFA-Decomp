@@ -390,6 +390,7 @@ extern void GXBegin(int type, int fmt, int n);
 extern void Camera_RebuildProjectionMatrix(void);
 extern f32 hudMatrix[];
 
+#define GX_PNMTX0 0 /* GXPosNrmMtx (GXEnum.h): GX_PNMTX0=0 */
 #define GX_VA_POS 9
 #define GX_VA_TEX0 13
 #define GX_DIRECT 1
@@ -401,7 +402,7 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
-    GXLoadPosMtxImm((f32*)gTitleScreenMtx, 0);
+    GXLoadPosMtxImm((f32*)gTitleScreenMtx, GX_PNMTX0);
     GXSetCurrentMtx(0);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     GXClearVtxDesc();
@@ -434,7 +435,7 @@ void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32
 
 void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
-    GXLoadPosMtxImm((f32*)gTitleScreenMtx, 0);
+    GXLoadPosMtxImm((f32*)gTitleScreenMtx, GX_PNMTX0);
     GXSetCurrentMtx(0);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     GXClearVtxDesc();
