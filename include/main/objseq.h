@@ -174,4 +174,27 @@ STATIC_ASSERT(offsetof(ObjSeqState, callbackContext) == 0x110);
 STATIC_ASSERT(offsetof(ObjSeqState, conditionFrames) == 0x118);
 STATIC_ASSERT(offsetof(ObjSeqState, conditionOpcodes) == 0x12C);
 
+/* Sequence-action opcodes (ObjSeqState.cmds[i][0]) dispatched by
+ * ObjSeq_ExecuteActionCommand's top-level switch in objseq.c. */
+enum SeqActionOpcode {
+    SEQACT_SETTIME = 0x00,
+    SEQACT_MOVEMODE = 0x01,
+    SEQACT_ANIM = 0x02,
+    SEQACT_OVERRIDE = 0x03,
+    SEQACT_VTXANIM = 0x04,
+    SEQACT_SOFTWARE = 0x05,
+    SEQACT_SFX = 0x06,
+    SEQACT_GROUND_MODE = 0x07,
+    SEQACT_TUNE = 0x08,
+    SEQACT_ANGLE_MODE = 0x09,
+    SEQACT_LOOK_AT = 0x0A,
+    SEQACT_CONDITION = 0x0B,
+    SEQACT_SPEECH = 0x0C,
+    SEQACT_ENVFX = 0x0D,
+    SEQACT_STORYBOARD = 0x0E,
+    SEQACT_SFX_WITH_DURATION = 0x0F,
+    SEQACT_NOP = 0x7F,
+    SEQACT_SET_MAX_TIME = 0xFF
+};
+
 #endif

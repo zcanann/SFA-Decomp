@@ -2256,7 +2256,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
     opcode = (s8)cmd[0];
     switch (opcode)
     {
-    case 2:
+    case SEQACT_ANIM:
         if (flag8 != 0)
         {
             break;
@@ -2336,7 +2336,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         ObjAnim_SetCurrentMove((int)activeObj, ((ObjSeqState*)seq)->moveId,
                                (f32)((ObjSeqState*)seq)->moveBlendParam * lbl_803DF02C, 0);
         break;
-    case 1:
+    case SEQACT_MOVEMODE:
         if (flag8 != 0)
         {
             break;
@@ -2348,10 +2348,10 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         }
         *(s8*)&((ObjSeqState*)seq)->useRootMotionSpeed = 1 - ((ObjSeqState*)seq)->useRootMotionSpeed;
         break;
-    case 7:
+    case SEQACT_GROUND_MODE:
         *(s8*)&((ObjSeqState*)seq)->groundSnapEnabled = 1 - ((ObjSeqState*)seq)->groundSnapEnabled;
         break;
-    case 3:
+    case SEQACT_OVERRIDE:
         if (flag8 != 0)
         {
             break;
@@ -2363,7 +2363,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         activeObj = ObjSeq_ToggleCommand3Target(obj, seq, model);
         ((GameObject*)activeObj)->anim.activeMove = -1;
         break;
-    case 0xb:
+    case SEQACT_CONDITION:
         if (doUpdate != 0 && *(s16*)(cmd + 2) > 0 && lbl_803DD0C0 < 0x14)
         {
             entry = base + lbl_803DD0C0 * 8;
@@ -2375,7 +2375,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         }
         ((ObjSeqState*)seq)->cmdCursor += *(s16*)(cmd + 2);
         break;
-    case 4:
+    case SEQACT_VTXANIM:
         if (flag8 != 0)
         {
             break;
@@ -2415,14 +2415,14 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
                                             t);
         }
         break;
-    case 0xe:
+    case SEQACT_STORYBOARD:
         if (flag8 != 0)
         {
             break;
         }
         (*gGameUIInterface)->showNpcDialogue(*(s16*)(cmd + 2), 0x14, 0x8c, 0);
         break;
-    case 0xd:
+    case SEQACT_ENVFX:
         if (noExec != 0)
         {
             break;
@@ -2449,7 +2449,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             }
         }
         break;
-    case 0:
+    case SEQACT_SETTIME:
         break;
     }
 
@@ -2479,7 +2479,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
 
     switch ((s8)cmd[0])
     {
-    case 6:
+    case SEQACT_SFX:
         if (flag8 != 0)
         {
             break;
@@ -2503,7 +2503,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             ((ObjSeqState*)seq)->sfxId[3] = (s16)(*(s16*)(cmd + 2) & 0xfff);
         }
         break;
-    case 0xd:
+    case SEQACT_ENVFX:
         switch ((*(s16*)(cmd + 2) >> 12) & 0xf)
         {
         case 0:
@@ -2552,7 +2552,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             break;
         }
         break;
-    case 0xf:
+    case SEQACT_SFX_WITH_DURATION:
         if (flag8 != 0)
         {
             break;
