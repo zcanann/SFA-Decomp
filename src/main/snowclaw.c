@@ -9,6 +9,8 @@
 
 /* object group queried to find this object's target */
 #define SNOWCLAW_TARGET_OBJGROUP 0x1e
+/* object group scanned by seqId to find this object's linked mount object */
+#define SNOWCLAW_MOUNT_OBJGROUP 0xa
 
 typedef struct SnowclawState
 {
@@ -616,7 +618,7 @@ void snowclaw_update(int obj)
 
     if (*(void**)inner == NULL)
     {
-        objects = ObjGroup_GetObjects(0xa, &objectCount);
+        objects = ObjGroup_GetObjects(SNOWCLAW_MOUNT_OBJGROUP, &objectCount);
         targetType = seqStreamLookupFn_8007fff8(gSnowClawMoveTable, 6, ((GameObject*)obj)->anim.seqId);
         for (i = 0; i < objectCount; i++)
         {
