@@ -18,6 +18,7 @@
 
 /* Andross body object id, located once and cached in androssObj. */
 #define ANDROSS_OBJ_ID 0x47b77
+#define ANDROSSHAND_HIT_VOLUME_SLOT 5
 
 /* Projectile spawned by the hand; role pinned by arwprojectile_setLifetime/placeForward + AndrossHandShotSetup cast. */
 #define ANDROSSHAND_CHILD_OBJ_SHOT 0x7e4
@@ -119,7 +120,7 @@ void AndrossHand_update(int obj)
     ((GameObject*)obj)->anim.alpha = 0xff;
     ((GameObject*)obj)->anim.rotZ = 0;
     ((GameObject*)obj)->anim.rotY = 0;
-    ObjHits_SetHitVolumeSlot(obj, 5, 2, -1);
+    ObjHits_SetHitVolumeSlot(obj, ANDROSSHAND_HIT_VOLUME_SLOT, 2, -1);
     ObjHits_EnableObject(obj);
 
     if (state->androssObj != 0u)
