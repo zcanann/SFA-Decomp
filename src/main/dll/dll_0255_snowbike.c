@@ -145,6 +145,9 @@ extern void textureFree(u32);
 extern u32 textureLoadAsset(int);
 extern u32 lbl_803DDC60;
 extern char lbl_803284E0[];
+
+/* texture asset loaded into lbl_803DDC60 (this DLL's only texture) */
+#define SNOWBIKE_TEXTURE_ID 0x186
 extern u32 lbl_803E5AE0;
 extern void* memcpy(void* dst, const void* src, int n);
 extern void Obj_ClearModelSlotIndex(int obj);
@@ -698,7 +701,7 @@ void SnowBike_initialise(void)
 {
     if (lbl_803DDC60 == 0)
     {
-        lbl_803DDC60 = textureLoadAsset(0x186);
+        lbl_803DDC60 = textureLoadAsset(SNOWBIKE_TEXTURE_ID);
     }
 }
 
