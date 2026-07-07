@@ -24,6 +24,7 @@ extern f32 lbl_803E4784; /* init position component */
 extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C; /* glow spawn offsets */
 
 /* state->flags */
+#define ANIMSPACECRAFT_PARTFX 0x133
 #define ANIMSPACECRAFT_FLAG_BLINK_ON 0x2
 #define ANIMSPACECRAFT_FLAG_TOGGLE_8 0x8
 #define ANIMSPACECRAFT_FLAG_TOGGLE_4 0x4
@@ -77,11 +78,11 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         *(f32*)(lbl_803AC948 + 0xc) = lbl_803E4770;
         *(f32*)(lbl_803AC948 + 0x10) = lbl_803E4774;
         *(f32*)(lbl_803AC948 + 0x14) = lbl_803E4778;
-        (*gPartfxInterface)->spawnObject(obj, 0x133, lbl_803AC948, 4, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, ANIMSPACECRAFT_PARTFX, lbl_803AC948, 4, -1, NULL);
         *(f32*)(lbl_803AC948 + 0xc) = lbl_803E477C;
         *(f32*)(lbl_803AC948 + 0x10) = lbl_803E4774;
         *(f32*)(lbl_803AC948 + 0x14) = lbl_803E4778;
-        (*gPartfxInterface)->spawnObject(obj, 0x133, lbl_803AC948, 4, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, ANIMSPACECRAFT_PARTFX, lbl_803AC948, 4, -1, NULL);
     }
     tex = objFindTexture(obj, 0, 0);
     tex->textureId = 0x100;
