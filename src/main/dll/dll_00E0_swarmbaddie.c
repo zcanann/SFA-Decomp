@@ -71,92 +71,10 @@ STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 
-void pressureSwitch_freeSharedResource(void)
-{
-    if (DAT_803de6d0 != 0)
-    {
-        FUN_80006b0c(DAT_803de6d0);
-        DAT_803de6d0 = 0;
-    }
-}
-
-void pressureSwitch_ensureSharedResource(void)
-{
-    if (DAT_803de6d0 == 0)
-    {
-        DAT_803de6d0 = FUN_80006b14(0x5a);
-    }
-}
-
-void Hagabon_release(void);
-
-void Hagabon_initialise(void);
-
-void SwarmBaddie_hitDetect(void)
-{
-}
-
-void SwarmBaddie_release(void)
-{
-}
-
-void SwarmBaddie_initialise(void)
-{
-}
-
 #define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
 #define SWARMBADDIE_FLAG_CHASE_PLAYER 0x02
 #define SWARMBADDIE_FLAG_CHASE_LOCKOUT 0x04 /* strayed too far; block re-chase until back near path */
 #define SWARMBADDIE_FLAG_CHASE_MASK 0x06
-
-void Hagabon_hitDetect(int obj);
-
-void SwarmBaddie_free(int obj)
-{
-    void** state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, SWARMBADDIE_OBJGROUP);
-    if (*state != NULL)
-    {
-        mm_free(*state);
-        *state = NULL;
-    }
-}
-
-void Hagabon_free(int obj);
-
-void SwarmBaddie_init(int obj, int data, int skip_alloc)
-{
-    SwarmBaddieState* state = ((GameObject*)obj)->extra;
-    state->curveStep = (f32)(s32) * (s16*)(data + 0x1A) / lbl_803E26CC;
-    state->chaseRadius = lbl_803E2698 * (f32)(s32) * (s8*)(data + 0x19);
-    state->hitVolumeEnvelope = lbl_803E26B4;
-    if (skip_alloc == 0)
-    {
-        *(void**)&state->curve = mmAlloc(0x108, 0x1A, 0);
-        if (*(void**)&state->curve != NULL)
-        {
-            memset(*(void**)&state->curve, 0, 0x108);
-        }
-        if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius,
-                                             &lbl_803DBC78, -1) == 0)
-        {
-            *(u8*)&state->flags |= SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
-        }
-        Sfx_PlayFromObject(obj, SFXfox_treadwater422);
-    }
-    ((GameObject*)obj)->objectFlags |= SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED;
-}
-
-void Hagabon_init(int obj, int data, int skip_alloc);
-
-void Hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-
-int Hagabon_getExtraSize(void);
-int Hagabon_getObjectTypeId(void);
-int SwarmBaddie_getExtraSize(void) { return sizeof(SwarmBaddieState); }
-int SwarmBaddie_getObjectTypeId(void) { return 0x9; }
-
-void SwarmBaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 void fn_8014EE8C(int obj, SwarmBaddieState* state)
 {
@@ -244,6 +162,26 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state)
             mathSinf((gSwarmBaddiePi * state->rollWavePhase) / gSwarmBaddieS16AngleScale)));
 }
 
+int SwarmBaddie_getExtraSize(void) { return sizeof(SwarmBaddieState); }
+int SwarmBaddie_getObjectTypeId(void) { return 0x9; }
+
+void SwarmBaddie_free(int obj)
+{
+    void** state = ((GameObject*)obj)->extra;
+    ObjGroup_RemoveObject(obj, SWARMBADDIE_OBJGROUP);
+    if (*state != NULL)
+    {
+        mm_free(*state);
+        *state = NULL;
+    }
+}
+
+void SwarmBaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+
+void SwarmBaddie_hitDetect(void)
+{
+}
+
 void SwarmBaddie_update(int obj)
 {
     SwarmBaddieState* state;
@@ -315,24 +253,36 @@ void SwarmBaddie_update(int obj)
     fn_8014EE8C(obj, state);
 }
 
-void Hagabon_update(int obj);
+void SwarmBaddie_init(int obj, int data, int skip_alloc)
+{
+    SwarmBaddieState* state = ((GameObject*)obj)->extra;
+    state->curveStep = (f32)(s32) * (s16*)(data + 0x1A) / lbl_803E26CC;
+    state->chaseRadius = lbl_803E2698 * (f32)(s32) * (s8*)(data + 0x19);
+    state->hitVolumeEnvelope = lbl_803E26B4;
+    if (skip_alloc == 0)
+    {
+        *(void**)&state->curve = mmAlloc(0x108, 0x1A, 0);
+        if (*(void**)&state->curve != NULL)
+        {
+            memset(*(void**)&state->curve, 0, 0x108);
+        }
+        if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius,
+                                             &lbl_803DBC78, -1) == 0)
+        {
+            *(u8*)&state->flags |= SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
+        }
+        Sfx_PlayFromObject(obj, SFXfox_treadwater422);
+    }
+    ((GameObject*)obj)->objectFlags |= SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED;
+}
 
-ObjectDescriptor gHagabonObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)Hagabon_initialise,
-    (ObjectDescriptorCallback)Hagabon_release,
-    0,
-    (ObjectDescriptorCallback)Hagabon_init,
-    (ObjectDescriptorCallback)Hagabon_update,
-    (ObjectDescriptorCallback)Hagabon_hitDetect,
-    (ObjectDescriptorCallback)Hagabon_render,
-    (ObjectDescriptorCallback)Hagabon_free,
-    (ObjectDescriptorCallback)Hagabon_getObjectTypeId,
-    Hagabon_getExtraSize,
-};
+void SwarmBaddie_release(void)
+{
+}
+
+void SwarmBaddie_initialise(void)
+{
+}
 
 ObjectDescriptor gSwarmBaddieObjDescriptor = {
     0,
