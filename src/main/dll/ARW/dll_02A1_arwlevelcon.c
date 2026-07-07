@@ -55,6 +55,10 @@ STATIC_ASSERT(offsetof(ARWLevelConState, streamId) == 0x1c);
 STATIC_ASSERT(offsetof(ARWLevelConState, ringChoiceTriggerId) == 0x20);
 STATIC_ASSERT(offsetof(ARWLevelConSetup, routeSignature) == 0x14);
 
+/* env-effect ids co-activated once on the course sky configuration (index-style; roles opaque) */
+#define ARWLEVELCON_ENVFX_A 0x21f
+#define ARWLEVELCON_ENVFX_B 0x22b
+
 void arwlevelcon_onSeqFree(int obj)
 {
     ARWLevelConState* state = ((GameObject*)obj)->extra;
