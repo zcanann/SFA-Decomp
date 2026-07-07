@@ -1979,9 +1979,9 @@ int objShouldUnload(u8* obj)
     }
     if ((flags & 4) && (p = (u8*)Obj_GetPlayerObject()) != NULL && ((GameObject*)obj)->anim.parent == NULL)
     {
-        x = *(f32*)(p + 0x18);
-        y = *(f32*)(p + 0x1c);
-        z = *(f32*)(p + 0x20);
+        x = ((GameObject*)p)->anim.worldPosX;
+        y = ((GameObject*)p)->anim.worldPosY;
+        z = ((GameObject*)p)->anim.worldPosZ;
     }
     else
     {
