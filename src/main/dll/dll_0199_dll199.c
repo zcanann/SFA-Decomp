@@ -14,6 +14,9 @@
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
 
+#define DLL199_TARGET_OBJGROUP_1 0xe
+#define DLL199_TARGET_OBJGROUP_2 0x3
+
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5158;
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
@@ -279,7 +282,7 @@ void dll_199_update(int obj)
     }
     else
     {
-        found = ObjGroup_FindNearestObject(0xe, player, &dist);
+        found = ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_1, player, &dist);
         if ((found != 0) && (dist < lbl_803E5160) && (dist > lbl_803E5164))
         {
             dz = ((GameObject*)found)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
@@ -374,7 +377,7 @@ void dll_199_update(int obj)
             state[5] = 1;
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, 0xffffffff);
             dist = lbl_803E5174;
-            found = ObjGroup_FindNearestObject(3, (char*)obj, &dist);
+            found = ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_2, (char*)obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);
@@ -397,7 +400,7 @@ void dll_199_update(int obj)
             break;
         case 3:
             dist = lbl_803E5174;
-            found = ObjGroup_FindNearestObject(3, (char*)obj, &dist);
+            found = ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_2, (char*)obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);
