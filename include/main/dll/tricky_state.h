@@ -83,9 +83,9 @@ typedef struct TrickyState {
     u8 pad294[0x29C - 0x294];
     u32 actionTargetObj;
     u16 turnOctant; /* (u16 angleDelta >> 13): which 1/8 sector the turn falls in; used as an anim mode */
-    u16 unk2A2;
+    u16 turnAngleDelta; /* signed angle to actionTargetObj minus world rotZ, normalized to +/-0x8000; feeds turnOctant (>>13) */
     u16 targetDist; /* distance to actionTargetObj: (s16)sqrt(dx^2+dy^2+dz^2) */
-    u16 unk2A6;
+    u16 targetHeightDelta; /* (s16)(actionTargetObj.worldPosY - self.worldPosY): vertical offset to target */
     u8 pad2A8[0x2AC - 0x2A8];
     f32 waterLevel;
     f32 eventTime; /* recorded event timestamp (sentinel == lbl_803E2410 means unset) */
@@ -179,7 +179,7 @@ typedef struct TrickyState {
     f32 cooldownA; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC; == floor gates a state/anim transition (tricky/substates/weapone6/tumbleweedbush/mmp) */
     f32 cooldownB; /* f32 countdown paired with cooldownA: -= timeDelta, clamped to floor; == floor gates a move, > floor gates fidget/contact-sfx (tricky/substates/weapone6/tumbleweedbush) */
     void *unk724;
-    u8 unk728;
+    u8 stateFlags728; /* flag byte: 0/1 boolean sets (tricky/animobjd2) plus a bit-5 test (tricky_substates) */
     u8 pad729[0x72C - 0x729];
     f32 unk72C;
     u32 unk730;

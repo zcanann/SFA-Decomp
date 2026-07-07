@@ -1447,7 +1447,7 @@ void baddieTurnTowardTarget(int* node, int* sub)
         raw;
         if (delta > 0x8000) delta -= 0xFFFF;
         if (delta < -0x8000) delta += 0xFFFF;
-        ((TrickyState*)sub)->unk2A2 = delta;
+        ((TrickyState*)sub)->turnAngleDelta = delta;
         ((TrickyState*)sub)->turnOctant = (u32)(u16)delta >> 13;
 
         {
@@ -1468,7 +1468,7 @@ void baddieTurnTowardTarget(int* node, int* sub)
 
         {
             GameObject* t = *(GameObject**)&((TrickyState*)sub)->actionTargetObj;
-            *(s16*)&((TrickyState*)sub)->unk2A6 = (s16)(
+            *(s16*)&((TrickyState*)sub)->targetHeightDelta = (s16)(
                 t->anim.worldPosY - ((GameObject*)node)->anim.worldPosY);
         }
     }

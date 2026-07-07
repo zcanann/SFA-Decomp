@@ -195,7 +195,7 @@ void fn_8013E0D0(int* obj, u8* st)
             }
             if (go != 0)
             {
-                if (*(int*)&t->unk728 == 0)
+                if (*(int*)&t->stateFlags728 == 0)
                 {
                     {
                         void* ct = trickyFindCirclingTarget(gobj, t);
@@ -252,7 +252,7 @@ void fn_8013E0D0(int* obj, u8* st)
         {
             u8 ok;
             int go;
-            trickyDebugPrint(str + 0x5b4, **(u8**)&t->progressPtr, *(int*)&t->unk728);
+            trickyDebugPrint(str + 0x5b4, **(u8**)&t->progressPtr, *(int*)&t->stateFlags728);
             ok = trickyFn_8013b368(gobj, lbl_803E24D4, t);
             if ((t->followObj = trickyFindNearestUsableBaddie(*(void**)&t->playerObj, lbl_803E24D8, 0)) != NULL)
             {
@@ -268,7 +268,7 @@ void fn_8013E0D0(int* obj, u8* st)
             }
             if (go != 0)
             {
-                if (*(int*)&t->unk728 == 0)
+                if (*(int*)&t->stateFlags728 == 0)
                 {
                     {
                         void* ct = trickyFindCirclingTarget(gobj, t);
@@ -291,11 +291,11 @@ void fn_8013E0D0(int* obj, u8* st)
                 {
                     objAnimFn_8013a3f0((int*)gobj, 0x33, lbl_803E243C, 0);
                 }
-                if (*(int*)&t->unk728 != 0)
+                if (*(int*)&t->stateFlags728 != 0)
                 {
                     if (**(u8**)&t->progressPtr < 2)
                     {
-                        *(int*)&t->unk728 = 0;
+                        *(int*)&t->stateFlags728 = 0;
                         if (Obj_IsLoadingLocked() != 0)
                         {
                             t->stateFlags |= TRICKY_STATE_FLAG_4;
@@ -398,7 +398,7 @@ void fn_8013E0D0(int* obj, u8* st)
                 objAnimFn_8013a3f0((int*)gobj, 0x34, lbl_803E2444, 0x4000000);
                 t->stateFlags |= TRICKY_STATE_RESET_FLAG_10;
                 t->substate = ANIMOBJD2_SUBSTATE_SPAWN;
-                *(int*)&t->unk728 = 0;
+                *(int*)&t->stateFlags728 = 0;
             }
             break;
         }
@@ -472,7 +472,7 @@ void fn_8013E0D0(int* obj, u8* st)
             {
                 tgt = (int*)Player_GetTargetObject(t->playerObj);
             }
-            if ((u32)tgt != *(u32*)&t->cooldownB || *(int*)&t->unk728 != 0)
+            if ((u32)tgt != *(u32*)&t->cooldownB || *(int*)&t->stateFlags728 != 0)
             {
                 TRICKY_RETARGET((u8*)t, *(int*)&t->followObj);
                 t->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;

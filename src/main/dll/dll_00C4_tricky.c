@@ -976,11 +976,11 @@ void Tricky_update(int obj)
     }
     else if (((TrickyState*)state)->stateIndex == 0xd && cmd == 4 && found == 0)
     {
-        *(int*)&((TrickyState*)state)->unk728 = 1;
+        *(int*)&((TrickyState*)state)->stateFlags728 = 1;
     }
     else if (((TrickyState*)state)->stateIndex == 0xe && cmd == 4)
     {
-        *(int*)&((TrickyState*)state)->unk728 = 1;
+        *(int*)&((TrickyState*)state)->stateFlags728 = 1;
     }
     else if (cmd == 0)
     {
@@ -1216,7 +1216,7 @@ void Tricky_update(int obj)
                         }
                         ((TrickyState*)state)->stateIndex = 0xd;
                         ((TrickyState*)state)->substate = 0;
-                        *(int*)&((TrickyState*)state)->unk728 = 0;
+                        *(int*)&((TrickyState*)state)->stateFlags728 = 0;
                     }
                 }
                 break;

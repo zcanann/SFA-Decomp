@@ -749,7 +749,7 @@ int trickyFn_80142a14(int obj, int state)
         *(float*)&((TrickyState*)state)->unk730 = pos[1];
         ((TrickyState*)state)->unk734 = pos[2];
     }
-    if ((((u32)((TrickyState*)state)->unk728 >> 5) & 1) != 0)
+    if ((((u32)((TrickyState*)state)->stateFlags728 >> 5) & 1) != 0)
     {
         if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0)
         {
