@@ -59,6 +59,11 @@ extern f32 lbl_803E1334;
 extern f32 lbl_803E1338;
 extern f32 lbl_803E133C;
 
+/* spawnEffect effect ids per variant (textureAssetId arg). */
+#define DLL98_EFFECT_ID_VARIANT0 0x3e9
+#define DLL98_EFFECT_ID_VARIANT1 0x3f0
+#define DLL98_EFFECT_ID_DEFAULT  0x3f3
+
 void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, int extraArgs)
 {
     GfxBuf buf;
@@ -208,15 +213,15 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
     }
     if (variant == 0)
     {
-        anim = 0x3e9;
+        anim = DLL98_EFFECT_ID_VARIANT0;
     }
     else if (variant == 1)
     {
-        anim = 0x3f0;
+        anim = DLL98_EFFECT_ID_VARIANT1;
     }
     else
     {
-        anim = 0x3f3;
+        anim = DLL98_EFFECT_ID_DEFAULT;
     }
     (*gModgfxInterface)
         ->spawnEffect(&buf, 0, 0x12, (u32)extraArgs != 0 ? table + 0xb4 : (u8*)(int)lbl_803178B0, 0x10,
