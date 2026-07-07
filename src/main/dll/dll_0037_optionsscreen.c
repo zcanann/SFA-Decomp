@@ -289,8 +289,6 @@ int OptionsScreen_frameStart(void)
     return 0;
 }
 
-#pragma scheduling on
-#pragma peephole on
 void OptionsScreen_frameEnd(void)
 {
 }
