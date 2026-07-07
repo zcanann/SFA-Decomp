@@ -6,6 +6,9 @@
 #include "main/objtexture.h"
 #include "main/engine_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+#define PROXIMITYMINE_PARTFX 0x51c
+
 extern void modelLightStruct_freeSlot(void* handle);
 extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4,
                                  u32 fwdArg5, double scale);
@@ -309,7 +312,7 @@ void ProximityMine_update(ProximityMineObject* obj)
             obj->prevY = obj->posY;
             obj->prevZ = obj->posZ;
         case PROXIMITYMINE_MODE_ARMED:
-            (*gPartfxInterface)->spawnObject(obj, 0x51c, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, PROXIMITYMINE_PARTFX, NULL, 1, -1, NULL);
             if (timerCountDown(&state->bounceTimer) != 0)
             {
                 ObjHits_EnableObject((u32)obj);
