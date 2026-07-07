@@ -24,6 +24,9 @@
 
 #define DLLF7_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* child object id spawned via DllF7GasSetup buffer (gas cloud) */
+#define DLLF7_CHILD_OBJ_GAS 0xb
+
 extern ModgfxInterface** gModgfxInterface;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -206,7 +209,7 @@ void dll_F7_update(int* obj)
         }
         if (state->byteB == 0 && (u8)Obj_IsLoadingLocked() != 0)
         {
-            s16* alloc = Obj_AllocObjectSetup(0x30, 0xb);
+            s16* alloc = Obj_AllocObjectSetup(0x30, DLLF7_CHILD_OBJ_GAS);
             ((DllF7GasSetup*)alloc)->field1C = -1;
             ((DllF7GasSetup*)alloc)->posX = ((GameObject*)obj)->anim.localPosX;
             ((DllF7GasSetup*)alloc)->posY = lbl_803E3410 + ((GameObject*)obj)->anim.localPosY;
