@@ -41,6 +41,10 @@
 #define ARWARWING_CHILD_OBJ_THRUSTER 0x6de
 #define ARWARWING_CHILD_OBJ_BOMB 0x608
 
+/* Damage partfx emitted in arwarwing_emitDamageEffects, keyed on health. */
+#define ARWARWING_PARTFX_DAMAGE 0x7d0   /* health <= 4, every other frame */
+#define ARWARWING_PARTFX_CRITICAL 0x7d1 /* health <= 2 (critical) */
+
 /* ArwingState.flags477 bits */
 #define ARWING_FLAG_ACTIVE     0x1   /* Arwing is active / engaged */
 #define ARWING_FLAG_ROLL_LEFT  0x2   /* barrel-rolling left */
@@ -365,7 +369,7 @@ void arwarwing_emitDamageEffects(int obj, int state)
                 emit.type = 0x61a8;
             else
                 emit.type = -0x63c0;
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7d0, &emit.pad, 4, -1, &flag);
+            (*gPartfxInterface)->spawnObject((void*)obj, ARWARWING_PARTFX_DAMAGE, &emit.pad, 4, -1, &flag);
         }
     }
     if ((s8)arwing->health <= 2)
@@ -375,7 +379,7 @@ void arwarwing_emitDamageEffects(int obj, int state)
         emit.b = lbl_803E6ECC;
         emit.c = lbl_803E6F1C;
         emit.d = lbl_803E6F20;
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x7d1, &emit.pad, 4, -1, &flag);
+        (*gPartfxInterface)->spawnObject((void*)obj, ARWARWING_PARTFX_CRITICAL, &emit.pad, 4, -1, &flag);
     }
 }
 #pragma scheduling reset
