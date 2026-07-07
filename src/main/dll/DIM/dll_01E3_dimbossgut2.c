@@ -13,6 +13,7 @@
 #include "main/sfa_shared_decls.h"
 
 #define DIMBOSSGUT2_OBJGROUP 3
+#define DIMBOSSGUT2_PARTFX 0x32b
 
 #define MODEL_LIGHT_KIND_POINT 2
 
@@ -278,7 +279,7 @@ void DIM_BossGut2_update(int obj)
                 stk.f48 = ((GameObject*)obj)->anim.localPosZ -
                     xyScale * mathCosf(gDimBossGut2Pi * (f32)((GameObject*)obj)->anim.rotX / gDimBossGut2AngleUnitToRadians);
                 stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - heightDiff / lbl_803E4CDC);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x32b, &stk, 1, -1,
+                (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSGUT2_PARTFX, &stk, 1, -1,
                                                  NULL);
                 posData->timer16 = 0;
             }
