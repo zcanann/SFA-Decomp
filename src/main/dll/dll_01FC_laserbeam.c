@@ -34,6 +34,7 @@ extern ModgfxInterface** gModgfxInterface;
 #define LASERBEAM_MSG_PLAYER_HIT 0x60003 /* message the player on a standard beam hit */
 #define LASERBEAM_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
 #define LASERBEAM_PARTFX_HIT 0x198 /* spark burst spawned on the player when the beam connects */
+#define LASERBEAM_MODGFX_RESOURCE_ID 0x81 /* modgfx beam effect resource -> gLaserBeamObjModgfxResource */
 
 typedef struct Dll1FBSetup
 {
@@ -531,5 +532,5 @@ void LaserBeam_release(void)
 
 void LaserBeam_initialise(void)
 {
-    gLaserBeamObjModgfxResource = Resource_Acquire(0x81, 1);
+    gLaserBeamObjModgfxResource = Resource_Acquire(LASERBEAM_MODGFX_RESOURCE_ID, 1);
 }
