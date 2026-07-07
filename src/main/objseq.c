@@ -3306,97 +3306,97 @@ int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj)
 
     switch (condition)
     {
-    case 0:
+    case OBJSEQ_COND_SEQCOUNTER_LT1:
         if (((ObjSeqState*)seq)->seqCounter <= 0)
         {
             result = 1;
         }
         break;
-    case 1:
+    case OBJSEQ_COND_SEQCOUNTER_GT0:
         if (((ObjSeqState*)seq)->seqCounter > 0)
         {
             result = 1;
         }
         break;
-    case 2:
+    case OBJSEQ_COND_DAYTIME:
         if ((*gSkyInterface)->getSunPosition(&sunTime) == 0)
         {
             result = 1;
         }
         break;
-    case 3:
+    case OBJSEQ_COND_NIGHTTIME:
         if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
             result = 1;
         }
         break;
-    case 4:
+    case OBJSEQ_COND_BOOL_EQ0:
         if (gObjSeqBoolFlags[(s8)((ObjSeqState*)seq)->slot] == 0)
         {
             result = 1;
         }
         break;
-    case 5:
+    case OBJSEQ_COND_BOOL_EQ1:
         if (gObjSeqBoolFlags[(s8)((ObjSeqState*)seq)->slot] == 1)
         {
             result = 1;
         }
         break;
-    case 6:
+    case OBJSEQ_COND_VAR1_EQ0:
         if (gObjSeqCondFlags[(s8)((ObjSeqState*)seq)->slot] == 0)
         {
             result = 1;
         }
         break;
-    case 7:
+    case OBJSEQ_COND_VAR1_NE0:
         if (gObjSeqCondFlags[(s8)((ObjSeqState*)seq)->slot] != 0)
         {
             result = 1;
         }
         break;
-    case 8:
+    case OBJSEQ_COND_GLOBAL1_LE0:
         if (seqGlobal1 <= 0)
         {
             result = 1;
         }
         break;
-    case 9:
+    case OBJSEQ_COND_GLOBAL1_GT0:
         if (seqGlobal1 > 0)
         {
             result = 1;
         }
         break;
-    case 10:
+    case OBJSEQ_COND_GLOBAL2_LE0:
         if (seqGlobal2 <= 0)
         {
             result = 1;
         }
         break;
-    case 11:
+    case OBJSEQ_COND_GLOBAL2_GT0:
         if (seqGlobal2 > 0)
         {
             result = 1;
         }
         break;
-    case 12:
+    case OBJSEQ_COND_TIMER_DISABLED:
         if (isGameTimerDisabled() != 0)
         {
             result = 1;
         }
         break;
-    case 13:
+    case OBJSEQ_COND_TIMER_ENABLED:
         if (isGameTimerDisabled() == 0)
         {
             result = 1;
         }
         break;
-    case 14:
+    case OBJSEQ_COND_GLOBAL3_NE0:
         if (seqGlobal3 != 0)
         {
             result = 1;
         }
         break;
-    case 15:
+    case OBJSEQ_COND_GLOBAL3_EQ0:
         if (seqGlobal3 == 0)
         {
             result = 1;

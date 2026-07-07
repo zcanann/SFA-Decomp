@@ -197,4 +197,25 @@ enum SeqActionOpcode {
     SEQACT_SET_MAX_TIME = 0xFF
 };
 
+/* Condition codes dispatched by ObjSeq_EvaluateCondition's switch in objseq.c;
+ * 16, 17 and any other value fall through to "always true". */
+enum ObjSeqConditionCode {
+    OBJSEQ_COND_SEQCOUNTER_LT1 = 0,  /* seqCounter <= 0 */
+    OBJSEQ_COND_SEQCOUNTER_GT0 = 1,
+    OBJSEQ_COND_DAYTIME = 2,
+    OBJSEQ_COND_NIGHTTIME = 3,
+    OBJSEQ_COND_BOOL_EQ0 = 4,   /* gObjSeqBoolFlags[slot] == 0 */
+    OBJSEQ_COND_BOOL_EQ1 = 5,   /* gObjSeqBoolFlags[slot] == 1 */
+    OBJSEQ_COND_VAR1_EQ0 = 6,   /* gObjSeqCondFlags[slot] == 0 */
+    OBJSEQ_COND_VAR1_NE0 = 7,   /* gObjSeqCondFlags[slot] != 0 */
+    OBJSEQ_COND_GLOBAL1_LE0 = 8,
+    OBJSEQ_COND_GLOBAL1_GT0 = 9,
+    OBJSEQ_COND_GLOBAL2_LE0 = 10,
+    OBJSEQ_COND_GLOBAL2_GT0 = 11,
+    OBJSEQ_COND_TIMER_DISABLED = 12,
+    OBJSEQ_COND_TIMER_ENABLED = 13,
+    OBJSEQ_COND_GLOBAL3_NE0 = 14,
+    OBJSEQ_COND_GLOBAL3_EQ0 = 15
+};
+
 #endif
