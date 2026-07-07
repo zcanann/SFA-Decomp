@@ -460,6 +460,9 @@ typedef struct WindSource
 } WindSource;
 
 #define NEWCLOUD_WIND_SOURCE_COUNT 6
+
+#define NEWCLOUD_TEXTURE_STAR_A 0xc21 /* gNewCloudStarTextureA */
+#define NEWCLOUD_TEXTURE_STAR_B 0xc22 /* gNewCloudStarTextureB */
 WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
 extern s16 renderModeSetOrGet(int mode);
 extern void normalize(f32 * x, f32 * y, f32 * z);
@@ -1262,8 +1265,8 @@ void titleScreenDrawFn_80093db4(void)
         cp += 3;
     }
     gNewCloudStarsInitialized = 1;
-    gNewCloudStarTextureA = textureLoadAsset(0xc21);
-    gNewCloudStarTextureB = textureLoadAsset(0xc22);
+    gNewCloudStarTextureA = textureLoadAsset(NEWCLOUD_TEXTURE_STAR_A);
+    gNewCloudStarTextureB = textureLoadAsset(NEWCLOUD_TEXTURE_STAR_B);
     for (k = 0; k < 0x5c; k++)
     {
         gNewCloudStarDisplayLists[k] = mmAlloc(0x220, 0x7f7f7fff, 0);
