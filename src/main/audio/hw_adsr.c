@@ -26,9 +26,7 @@ void hwSetADSR(int slot, u32* adsr, u8 mode)
         dspVoice[slot].adsr.aTime = envelope->attack;
         dspVoice[slot].adsr.dTime = envelope->decay;
 
-        value = envelope->sustain;
-        value <<= 3;
-        if (value > 0x7fff)
+        if ((value = envelope->sustain << 3) > 0x7fff)
         {
             value = 0x7fff;
         }
