@@ -274,12 +274,12 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         inner->flags &= ~SNOWHORN1_FLAG_HITVOL_PRIO;
-        ((ObjHitsPriorityState*)sub)->flags |= 0x200;
+        ((ObjHitsPriorityState*)sub)->flags |= OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
         ObjAnim_SetCurrentMove(obj, 0x204, k, 0);
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E8238;
         Sfx_PlayFromObject(obj, SFXTRIG_thorntail_chew2);
     }
-    if ((((ObjHitsPriorityState*)sub)->flags & 0x200) && (((ObjHitsPriorityState*)sub)->contactFlags & OBJHITS_CONTACT_FLAG_KIND_NONZERO))
+    if ((((ObjHitsPriorityState*)sub)->flags & OBJHITS_PRIORITY_STATE_TRACK_CONTACT) && (((ObjHitsPriorityState*)sub)->contactFlags & OBJHITS_CONTACT_FLAG_KIND_NONZERO))
     {
         inner->flags |= SNOWHORN1_FLAG_HITVOL_PRIO;
     }
@@ -287,13 +287,13 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
     {
         *(u8*)&((ObjHitsPriorityState*)sub)->hitVolumePriority = 0;
         *(u8*)&((ObjHitsPriorityState*)sub)->hitVolumeId = 0;
-        ((ObjHitsPriorityState*)sub)->flags &= ~0x200;
+        ((ObjHitsPriorityState*)sub)->flags &= ~OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
     }
     else
     {
         *(u8*)&((ObjHitsPriorityState*)sub)->hitVolumePriority = 0xb;
         *(u8*)&((ObjHitsPriorityState*)sub)->hitVolumeId = 1;
-        ((ObjHitsPriorityState*)sub)->flags |= 0x200;
+        ((ObjHitsPriorityState*)sub)->flags |= OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
     }
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E823C)
     {
