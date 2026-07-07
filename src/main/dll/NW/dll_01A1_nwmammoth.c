@@ -13,6 +13,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #define NWMAMMOTH_OBJFLAG_PARENT_SLACK 0x1000
 #define NWMAMMOTH_OBJFLAG_RENDERED 0x800
+/* object group scanned for the nearest target (player group) */
+#define NWMAMMOTH_TARGET_OBJGROUP 0xf
 enum NwMammothRuntimeFlag
 {
     NW_MAMMOTH_RUNTIME_PATH_CONTROL = 0x01,
@@ -389,7 +391,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     NwMammothState* state = (NwMammothState*)st;
     int* tw2;
     int* tw;
-    int nearestObj = ObjGroup_FindNearestObject(0xf, obj, 0);
+    int nearestObj = ObjGroup_FindNearestObject(NWMAMMOTH_TARGET_OBJGROUP, obj, 0);
     switch (state->stateIndex)
     {
     case 9:
