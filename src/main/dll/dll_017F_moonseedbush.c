@@ -45,6 +45,10 @@ typedef struct MoonSeedBushPlacement
 #define MOONSEEDBUSH_SEQEV_PLANT 1
 #define MOONSEEDBUSH_SEQEV_BURST_FX 2
 
+/* seed-burst particle fx: one lead burst + 0x28 spray spawns */
+#define MOONSEEDBUSH_PARTFX_BURST 0x70B
+#define MOONSEEDBUSH_PARTFX_SPRAY 0x70C
+
 /* seedState growth phases */
 #define MOONSEEDBUSH_SEED_UNGROWN 0 /* dormant, watching trigger bit */
 #define MOONSEEDBUSH_SEED_PLANTED 1 /* planted, growing */
@@ -79,10 +83,10 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case MOONSEEDBUSH_SEQEV_BURST_FX:
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x70B, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MOONSEEDBUSH_PARTFX_BURST, NULL, 2, -1, NULL);
             for (j = 0; j < 0x28; j++)
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x70C, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, MOONSEEDBUSH_PARTFX_SPRAY, NULL, 2, -1, NULL);
             }
             break;
         }
