@@ -33,6 +33,7 @@ void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
 /* The magic-plant's one particle-fx effect (spawned per hit-count in the
    attack handler). */
 #define MAGICPLANT_PARTFX 0x802
+#define MAGICPLANT_HIT_VOLUME_SLOT 0xe
 extern const f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;
 extern f32 lbl_803E28D0;
@@ -240,7 +241,7 @@ void fn_80153248(int obj, int state)
             }
         }
     }
-    ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
+    ObjHits_SetHitVolumeSlot(obj, MAGICPLANT_HIT_VOLUME_SLOT, 1, 0);
     trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
     vec[0] = ((GameObject*)trackedObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
     vec[1] = (lbl_803E28D8 + ((GameObject*)trackedObj)->anim.localPosY) - ((GameObject*)obj)->anim.localPosY;
