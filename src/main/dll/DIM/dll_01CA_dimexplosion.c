@@ -101,6 +101,7 @@ extern void GXSetCurrentMtx(u32 id);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXBegin(int prim, int fmt, int n);
 
+#define GX_PNMTX0 0 /* GXPosNrmMtx (GXEnum.h): GX_PNMTX0=0 */
 #define GX_VA_POS 9
 #define GX_VA_TEX0 13
 #define GX_DIRECT 1
@@ -338,7 +339,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                            ((ExplosionDebris*)cursor)->posZ - playerMapOffsetZ);
                 PSMTXConcat(mE, m4, mE);
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
-                GXLoadPosMtxImm(mE, 0);
+                GXLoadPosMtxImm(mE, GX_PNMTX0);
                 ((u8*)&colA)[3] = ((ExplosionDebris*)cursor)->alpha;
                 cv = gExplosionDebrisColorScale * (255.0f * expf(
                     (3.0f * ((f32)((ExplosionDebris*)cursor)->lifetime - (f32)((ExplosionDebris*)cursor)->age)) /
