@@ -28,6 +28,9 @@ extern u32 SCGameBitLatch_Update();
 #define NWLEVCONTROL_OBJFLAG_HIDDEN 0x4000
 #define NWLEVCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* level-init env effect (index-style; immediate vs deferred by save-load status) */
+#define NWLEVCONTROL_ENVFX_A 0x23c
+
 /* SnowHorn Wastes music tracks (Music_Trigger ids). */
 #define NWLEVCONTROL_MUSIC_TRACK 0x1a       /* day/night ambient track */
 #define NWLEVCONTROL_MUSIC_TIMER_END 0xaf   /* timed-challenge completion track */
