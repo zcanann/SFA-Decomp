@@ -21,6 +21,7 @@
  */
 #include "main/game_object.h"
 #include "main/dll/dll_00FE_magicplant.h"
+#include "main/dll/dll_0015_curves.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/gameplay_runtime.h"
@@ -35,7 +36,7 @@ extern f32 timeDelta;
  * .sdata2 (retail 0x803E38E8), followed by the compiler float pool. Read
  * through a volatile view in CurveFish_update so the value is not constant
  * folded away. */
-const u32 gCurveFishCurveQueryKey = 0x23;
+const u32 gCurveFishCurveQueryKey = ROMCURVE_TYPE_CURVEFISH;
 
 /* per-frame cap on the body's yaw turn toward the next path node */
 #define CURVEFISH_MAX_YAW_TURN 0x180
