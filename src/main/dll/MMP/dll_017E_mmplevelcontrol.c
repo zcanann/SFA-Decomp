@@ -84,7 +84,6 @@ void MMP_levelcontrol_hitDetect(void)
 {
 }
 
-#pragma peephole on
 void MMP_levelcontrol_update(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
@@ -186,7 +185,6 @@ void MMP_levelcontrol_update(int obj)
     SCGameBitLatch_Update(&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
 }
 
-#pragma peephole off
 void MMP_levelcontrol_init(int obj)
 {
 
