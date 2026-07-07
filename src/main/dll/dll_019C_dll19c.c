@@ -112,6 +112,3 @@ void dll_19C_release(void)
 void dll_19C_initialise(void)
 {
 }
-
-
-void dll_19D_free(int obj);
