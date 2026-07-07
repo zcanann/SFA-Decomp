@@ -88,6 +88,10 @@ extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern f32 lbl_803E59C8;
+
+/* Env-fx ids co-activated once on gamebit 0xd21 (getEnvfxAct 3rd arg) */
+#define SPSHOP_ENVFX_A 0x1c8
+#define SPSHOP_ENVFX_B 0x1cb
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Music_Trigger(int id, int arg);
@@ -318,8 +322,8 @@ void shop_update(int obj)
     if ((u32)mainGetBit(0xd21) != 0u && ((GameObject*)obj)->unkF8 == 0)
     {
         envFxActFn_800887f8(0);
-        getEnvfxAct(obj, obj, 0x1c8, 0);
-        getEnvfxAct(obj, obj, 0x1cb, 0);
+        getEnvfxAct(obj, obj, SPSHOP_ENVFX_A, 0);
+        getEnvfxAct(obj, obj, SPSHOP_ENVFX_B, 0);
         ((GameObject*)obj)->unkF8 = 1;
         return;
     }
