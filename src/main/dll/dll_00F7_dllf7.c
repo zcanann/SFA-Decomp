@@ -21,6 +21,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DLLF7_OBJGROUP 0x3e
+#define DLLF7_TARGET_OBJGROUP 0x4
 
 #define DLLF7_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -223,7 +224,7 @@ void dll_F7_update(int* obj)
         {
             int* near;
             radius = lbl_803E3414;
-            near = (int*)ObjGroup_FindNearestObject(4, obj, &radius);
+            near = (int*)ObjGroup_FindNearestObject(DLLF7_TARGET_OBJGROUP, obj, &radius);
             if (near != NULL)
             {
                 ((GameObject*)near)->anim.localPosX = ((GameObject*)near)->anim.worldPosX = ((GameObject*)obj)->anim.
