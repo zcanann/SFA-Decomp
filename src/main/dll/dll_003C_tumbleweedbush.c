@@ -17,8 +17,6 @@
  * Item flag bits (LINK_FLAG_*) select draw style; navigation honors
  * LINK_FLAG_DISABLE_NAV_TO / LINK_FLAG_NO_ACCEPT. GameBit 0x44f gates accept.
  */
-#pragma scheduling on
-#pragma peephole on
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 #include "main/gameplay_runtime.h"
 #include "main/texture.h"
