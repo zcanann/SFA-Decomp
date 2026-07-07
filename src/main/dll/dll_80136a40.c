@@ -76,6 +76,8 @@ extern void* gDebugFontTex2;
 extern void* gDebugFontTex1;
 extern void* gDebugFontTex0;
 extern void* debugLogEnd;
+/* debug font glyph-atlas texture asset (gDebugFontTex0) */
+#define DEBUG_FONT_TEXTURE0_ID 0x25D
 u8 debugLogBuffer[0x1100];
 extern u32 getScreenResolution(void);
 extern int gDebugRecordCount;
@@ -344,7 +346,7 @@ void debugPrintInit(void)
     gDebugScaleY = gDebugInitialScale;
     gDebugScaleBiasX = 0;
     gDebugScaleBiasY = 0;
-    gDebugFontTex0 = textureLoadAsset(0x25D);
+    gDebugFontTex0 = textureLoadAsset(DEBUG_FONT_TEXTURE0_ID);
     gDebugFontTex1 = textureLoadAsset(1);
     gDebugFontTex2 = textureLoadAsset(2);
     debugLogEnd = debugLogBuffer;
