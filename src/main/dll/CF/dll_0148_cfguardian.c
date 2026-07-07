@@ -28,6 +28,7 @@
 #include "main/dll/CF/dll_0148_cfguardian.h"
 
 #define CFGUARDIAN_OBJGROUP 0x16
+#define CFGUARDIAN_TARGET_OBJGROUP 0x3
 
 #define PAD_BUTTON_A 0x100
 
@@ -669,7 +670,7 @@ int cfguardian_updateMain(int obj)
         break;
     case CFGUARDIAN_TALK_1: /* talk spot: greet and head-track the player; 0x43 advances */
         {
-            void* found = (void*)ObjGroup_FindNearestObject(3, obj, &nearDist);
+            void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, obj, &nearDist);
             if (found != NULL && nearDist < lbl_803E4158)
             {
                 dll_2E_func04(sub, found);
@@ -715,7 +716,7 @@ int cfguardian_updateMain(int obj)
         break;
     case CFGUARDIAN_TALK_2: /* second talk loop; 0x4be sends her onward */
         {
-            void* found = (void*)ObjGroup_FindNearestObject(3, obj, &nearDist);
+            void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, obj, &nearDist);
             if (found != NULL && nearDist < lbl_803E4158)
             {
                 dll_2E_func04(sub, found);
