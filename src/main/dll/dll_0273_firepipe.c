@@ -100,6 +100,15 @@ extern f32 lbl_803E6BA8;
 #define FIREPIPE_OBJ_FLAME_B 0x70a
 #define FIREPIPE_OBJ_EFFECT 0x1b5
 
+/* emitted effect-type (flavour) per objectId variant (docblock: "0x6f9 -> type
+ * 10 (blue glow), 0x730 -> 0xC, 0x731 -> 0xD, 0x732 -> 0xE, flame/default ->
+ * type 9 (orange flame)"). */
+#define FIREPIPE_EFFECT_TYPE_BLUE  10
+#define FIREPIPE_EFFECT_TYPE_C     0xc
+#define FIREPIPE_EFFECT_TYPE_D     0xd
+#define FIREPIPE_EFFECT_TYPE_E     0xe
+#define FIREPIPE_EFFECT_TYPE_FLAME 9
+
 typedef struct
 {
     u8 lastGameBitState : 1; /* bit7: snapshot of gameBit, for change detection */
@@ -550,29 +559,29 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         switch (obj->objectId)
         {
         case FIREPIPE_OBJ_BLUE:
-            extra->effectType = 10;
+            extra->effectType = FIREPIPE_EFFECT_TYPE_BLUE;
             extra->effectMode = 1;
             extra->effectScale = lbl_803DC340;
             break;
         case FIREPIPE_OBJ_D:
-            extra->effectType = 0xd;
+            extra->effectType = FIREPIPE_EFFECT_TYPE_D;
             extra->effectMode = 2;
             extra->effectScale = lbl_803E6B74;
             break;
         case FIREPIPE_OBJ_C:
-            extra->effectType = 0xc;
+            extra->effectType = FIREPIPE_EFFECT_TYPE_C;
             extra->effectMode = 2;
             extra->effectScale = lbl_803E6B74;
             break;
         case FIREPIPE_OBJ_E:
-            extra->effectType = 0xe;
+            extra->effectType = FIREPIPE_EFFECT_TYPE_E;
             extra->effectMode = 2;
             extra->effectScale = lbl_803E6B74;
             break;
         case FIREPIPE_OBJ_FLAME_A:
         case FIREPIPE_OBJ_FLAME_B:
         default:
-            extra->effectType = 9;
+            extra->effectType = FIREPIPE_EFFECT_TYPE_FLAME;
             extra->effectMode = 0;
             extra->effectScale = -lbl_803DC340;
             extra->clearVolumeA = 0x32c;
