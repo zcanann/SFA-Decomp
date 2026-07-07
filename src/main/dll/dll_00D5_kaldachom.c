@@ -31,6 +31,9 @@
 
 #define KALDACHOM_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* Dust child; the spawned object is cached in control->spawnedDustObj. */
+#define KALDACHOM_CHILD_OBJ_DUST 0x55e
+
 extern int randomGetRange(int lo, int hi);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
@@ -97,7 +100,7 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
     while (work != 0);
     if ((control->spawnedDustObj == NULL) && (loadLocked = Obj_IsLoadingLocked(), loadLocked != '\0'))
     {
-        work = Obj_AllocObjectSetup(0x24, 0x55e);
+        work = Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_DUST);
         ((ObjPlacement*)work)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)work)->posY = lbl_803E30A8 + ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)work)->posZ = ((GameObject*)obj)->anim.localPosZ;
