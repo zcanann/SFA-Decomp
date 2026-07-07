@@ -23,6 +23,10 @@
 
 #define OBJFX_OBJFLAG_PARENT_SLACK 0x1000
 
+/* Shared explosion object spawned by spawnExplosion / DIMexplosionFn_8009a96c
+ * (type 0x24, id 0x253; buffer cast to ExplosionSetup). */
+#define OBJFX_CHILD_OBJ_EXPLOSION 0x253
+
 /*
  * Setup buffer the explosion spawners (DIMexplosionFn_8009a96c / spawnExplosion)
  * fill from Obj_AllocObjectSetup (0x24 bytes, def id 0x253). Embeds the common
@@ -1246,7 +1250,7 @@ void DIMexplosionFn_8009a96c(u8* src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
     u8* obj;
     if (Obj_IsLoadingLocked() != 0)
     {
-        obj = Obj_AllocObjectSetup(0x24, 0x253);
+        obj = Obj_AllocObjectSetup(0x24, OBJFX_CHILD_OBJ_EXPLOSION);
         ((ObjPlacement*)obj)->color[0] = 2;
         ((ObjPlacement*)obj)->color[1] = 1;
         ((GameObject*)obj)->anim.rootMotionScale = vx;
@@ -1297,7 +1301,7 @@ void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
     u8* obj;
     if (Obj_IsLoadingLocked() != 0)
     {
-        obj = Obj_AllocObjectSetup(0x24, 0x253);
+        obj = Obj_AllocObjectSetup(0x24, OBJFX_CHILD_OBJ_EXPLOSION);
         ((ObjPlacement*)obj)->color[0] = 2;
         ((ObjPlacement*)obj)->color[1] = 1;
         ((GameObject*)obj)->anim.rootMotionScale = ((ObjAnimComponent*)src)->worldPosX;
