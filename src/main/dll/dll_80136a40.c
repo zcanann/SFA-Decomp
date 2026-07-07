@@ -477,6 +477,8 @@ void errDisplayInstallHandlers(void)
     OSCreateThread(gErrDisplayThread, errDisplayThreadMain, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
 }
 
+#define TRICKY_BADDIE_TARGET_OBJGROUP 49 /* baddie object group scanned by trickyFindNearestUsableBaddie */
+
 int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
 {
     extern int* ObjGroup_GetObjects(int, int*);
@@ -531,7 +533,7 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
             v2 = mainGetBit(g2);
         }
 
-        if (ObjGroup_ContainsObject(*objs, 49) == 0 &&
+        if (ObjGroup_ContainsObject(*objs, TRICKY_BADDIE_TARGET_OBJGROUP) == 0 &&
             obj_extra > lbl_803E23DC &&
             v1 == 0 &&
             v2 != 0)
