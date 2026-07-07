@@ -7183,6 +7183,15 @@ typedef struct
 
 #pragma opt_propagation off
 #pragma opt_common_subs off
+#pragma opt_propagation off
+#pragma opt_common_subs off
+static inline u32 playerLoadPendingHitBits(char* p)
+{
+    return *(u32*)p;
+}
+#pragma opt_common_subs reset
+#pragma opt_propagation reset
+
 void playerUpdate(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
@@ -7308,7 +7317,7 @@ void playerUpdate(int obj)
             *(int*)((char*)inner + 0x310) = 0;
             for (i = 0; i < ((PlayerState*)inner)->queuedBitCount; i++)
             {
-                u32 acc = *(u32*)((char*)inner + 0x310);
+                u32 acc = playerLoadPendingHitBits((char*)inner + 0x310);
                 int idx = i + 0x8b9;
                 *(u32*)((char*)inner + 0x310) = acc | (1 << *(u8*)((char*)inner + idx));
             }
@@ -13722,7 +13731,8 @@ void objDoTeleportAnim(int obj)
 int playerState25(int obj, int state)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    f32 ratio, c, s, vx, vy, t0, curveOut;
+    f32 ratio, c, s, vx, t0, curveOut;
+    f32 vy;
     int r;
 
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
