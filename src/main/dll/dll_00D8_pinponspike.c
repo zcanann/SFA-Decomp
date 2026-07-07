@@ -21,6 +21,7 @@
 #include "main/objhits.h"
 #include "main/dll/genprops.h"
 #include "main/dll/fx_800944A0_shared.h"
+#define PINPONSPIKE_HIT_VOLUME_SLOT 10
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 #define PINPONSPIKE_PARTFX 0x715
@@ -126,7 +127,7 @@ void pinponspike_update(int obj)
         }
         ((GameObject*)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
         ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
-        ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, PINPONSPIKE_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject(obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
             (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject() ||
