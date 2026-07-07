@@ -24,6 +24,7 @@
  *   if (p6) objRenderModelAndHitVolumes(lbl_803E6408).
  *   if (b->_8 && (b->_8->_6 & 0x40)) clear.
  */
+#include "main/objanim.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/dll/dfptorchstate_struct.h"
@@ -2032,7 +2033,7 @@ void dbstealerworm_update(u8* objp)
                     obj, data, blob, 0x10, 7, 0x10a, 0x26, lbl_803E62FC);
                 ObjGroup_AddObject(obj, DBSTEALERWORM_OBJGROUP);
                 ((GroundBaddieState*)blob)->targetState = 0;
-                ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0x10);
+                ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
                 ((GroundBaddieState*)blob)->baddie.moveDone = 0;
                 ((GameObject*)obj)->anim.alpha = 0xff;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
