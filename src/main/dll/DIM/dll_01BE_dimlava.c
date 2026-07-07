@@ -5,6 +5,7 @@
  */
 
 #define LAVA1BE_SEQID_DEBRIS   0x1fa
+#define LAVA1BE_PARTFX 0x1f5
 
 #define LAVA1BE_FLAG_HOMING_OFF 0x08
 #define LAVA1BE_FLAG_INACTIVE   0x10
@@ -283,7 +284,7 @@ void lavaball1be_update(s16* obj)
             localPosY;
         ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.
             localPosZ;
-        (*gPartfxInterface)->spawnObject(obj, 0x1f5, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, LAVA1BE_PARTFX, NULL, 1, -1, NULL);
         ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + framesThisStep * 0x374;
         ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 0x12c;
         ((GameObject*)obj)->anim.velocityY = -(gDimLavaDebrisGravity * timeDelta - ((GameObject*)obj)->anim.velocityY);
