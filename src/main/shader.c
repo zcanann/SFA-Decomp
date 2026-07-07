@@ -847,7 +847,8 @@ typedef struct ShaderRomListSlot
 {
     void* romlist;
     s16 slot;
-    s16 pad;
+    s8 flag;
+    s8 pad;
 } ShaderRomListSlot;
 
 int mapProcessRomList(int slot)
@@ -2601,22 +2602,23 @@ void doPendingMapLoads(void)
                     int* cp2;
                     int k8;
                     s8 c;
-                    cBase = (int*)(base + 0x41CC);
-                    cp2 = cBase;
-                    aBase = (int*)(base + 0x41F4);
-                    ap2 = aBase;
                     eBase = (int*)(base + 0x41E0);
                     bp2 = eBase;
+                    aBase = (int*)(base + 0x41F4);
+                    ap2 = aBase;
+                    cBase = (int*)(base + 0x41CC);
+                    cp2 = cBase;
                     o1 = recs;
                     recsCursor = o1;
                     for (; layer < 5; layer++)
                     {
                         s16* ent = (s16*)*bp2;
-                        g2 = (char*)*ap2;
+                        char* grid = (char*)*ap2;
                         lbl_803DCE88 = *cp2;
                         zb[0] = 0;
                         row = 0;
                         rowCursor = recsCursor;
+                        g2 = grid;
                         for (; row < 16; row++)
                         {
                             zb[1] = 0;
@@ -2672,18 +2674,17 @@ void doPendingMapLoads(void)
                         cp2++;
                     }
                 }
-                lbl_803DCDD0 = gx + lbl_803DCDD0;
-                lbl_803DCDD0 = lbl_803DCDD0 - 7;
-                lbl_803DCDD4 = gz + lbl_803DCDD4;
-                lbl_803DCDD4 = lbl_803DCDD4 - 7;
+                {
+                    int nx = gx + lbl_803DCDD0;
+                    int nz;
+                    lbl_803DCDD0 = nx - 7;
+                    nz = gz + lbl_803DCDD4;
+                    lbl_803DCDD4 = nz - 7;
+                }
                 playerMapOffsetX = gMapBlockWorldSize * lbl_803DCDD0;
                 playerMapOffsetZ = gMapBlockWorldSize * lbl_803DCDD4;
                 lbl_803DCDC8 = playerMapOffsetX;
                 lbl_803DCDCC = playerMapOffsetZ;
-                /* Manual 8x unroll of the rom-list slot clear (the WALKANIM_COPY_SLOT
-                   pattern from model.c): peel guards + cleanup pointer re-derived from
-                   i. The compiler's own unroller (disabled above) never emits the
-                   retail walking-pointer shape. */
                 i = 0;
                 if (gShaderRomListSlotCount > 0)
                 {
@@ -2691,21 +2692,23 @@ void doPendingMapLoads(void)
                     if (gShaderRomListSlotCount > 8)
                     {
                         s8* p = (s8*)(base + 0x418C);
+                        s8 z0 = i, z1 = i, z2 = i, z3 = i, z4 = i, z5 = i, z6 = i, z7 = i;
                         for (; i < rem; i += 8)
                         {
-                            p[6] = 0;
-                            p[14] = 0;
-                            p[22] = 0;
-                            p[30] = 0;
-                            p[38] = 0;
-                            p[46] = 0;
-                            p[54] = 0;
-                            p[62] = 0;
+                            p[6] = z0;
+                            p[14] = z1;
+                            p[22] = z2;
+                            p[30] = z3;
+                            p[38] = z4;
+                            p[46] = z5;
+                            p[54] = z6;
+                            p[62] = z7;
                             p += 64;
                         }
                     }
                     {
-                        s8* q = (s8*)(base + i * 8 + 0x418C);
+                        s8* q = (s8*)(base + i * 8);
+                        q += 0x418C;
                         for (; i < gShaderRomListSlotCount; i++)
                         {
                             q[6] = 0;
@@ -2785,7 +2788,7 @@ void doPendingMapLoads(void)
                                 *(u8*)&curMapType = *(u8*)&e->mapType;
                             }
                         }
-                        *(s8*)(base + slot * 8 + 0x4192) = 1;
+                        ((ShaderRomListSlot*)(base + 0x418C))[slot].flag = 1;
                         lbl_803DCEC0 = slot;
                         mapGetDirIdx(gShaderCurMapEventId);
                         mapCheckCurBlocks(0);
@@ -2803,11 +2806,9 @@ void doPendingMapLoads(void)
                             }
                         }
                         lbl_803DCEB0 = lbl_803DCEB0 - 1;
-                        /* Vestigial grid walk (no observable effect; present in retail).
-                           Survives DCE only because unrolling is disabled for this
-                           function (see #pragma ppc_unroll_factor_limit 1 /
-                           opt_unroll_loops off above) and the locals live at
-                           function scope. */
+                        /* Vestigial grid walk (no observable effect; present in retail:
+                           the retail asm keeps the dead g2/t2 updates inside the mtctr-2
+                           loop; no known pragma/idiom reproduces that under our flags). */
                         for (i = 0; i < 5; i++)
                         {
                             g2 = (char*)*eBase;
@@ -2834,8 +2835,6 @@ void doPendingMapLoads(void)
                         }
                         loadModelAndAnimTabs();
                         {
-                            int* ap3 = aBase;
-                            int* cp3 = cBase;
                             for (layer = 0; layer < 5; layer++)
                             {
                                 char* g3;
@@ -2843,8 +2842,8 @@ void doPendingMapLoads(void)
                                 s8 cnt2;
                                 mapFn_80057d24(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, rectA, rectB, rectC, rectD,
                                                layer, 0, slot);
-                                g3 = (char*)*ap3;
-                                lbl_803DCE88 = *cp3;
+                                g3 = (char*)*aBase;
+                                lbl_803DCE88 = *cBase;
                                 for (zz = rectA[2]; zz <= rectA[3]; zz++)
                                 {
                                     char* gp = g3 + rectA[0] + (zz + 7) * 16;
@@ -2912,8 +2911,8 @@ void doPendingMapLoads(void)
                                         zc[1]++;
                                     } while (zc[1] < 16);
                                 }
-                                ap3++;
-                                cp3++;
+                                aBase++;
+                                cBase++;
                             }
                         }
                         clearForceLoadImmediately();
@@ -2963,8 +2962,7 @@ void doPendingMapLoads(void)
                                 char* p;
                                 int k;
                                 *(s16*)((char*)lbl_803DCE94 + mid * 2) = -1;
-                                *(int*)((char*)lbl_803DCE9C + mid * 4) = z[0] = 0;
-                                z[1] = z[0];
+                                z[1] = *(int*)((char*)lbl_803DCE9C + mid * 4) = z[0] = 0;
                                 for (; z[0] < *(u8*)(blk + 0xa2); z[1] += 68, z[0]++)
                                 {
                                     rb = *(int*)(blk + 0x64) + z[1];
@@ -2984,8 +2982,7 @@ void doPendingMapLoads(void)
                                         p += 8;
                                     }
                                 }
-                                z[0] = 0;
-                                z[1] = z[0];
+                                z[1] = z[0] = 0;
                                 for (; z[0] < *(u8*)(blk + 0xa0); z[1] += 4, z[0]++)
                                     textureFree(*(int*)(*(int*)(blk + 0x54) + z[1]));
                                 if (*(void**)(blk + 0x74) != NULL)
