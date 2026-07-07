@@ -16,6 +16,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define DFSHSHRINE_MAP_SHRINE 0xb
+
 /* shrine-lantern state machine (state->mode) */
 #define DFSH_SHRINE_ENVFX_A 0x78
 #define DFSH_SHRINE_ENVFX_B 0x79
@@ -193,7 +195,7 @@ int DFSH_Shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 objSetAnimStateFlags(player, 1, 1);
                 mainSetBits(0xbfd, 1);
                 mainSetBits(0x956, 1);
-                (*gMapEventInterface)->setMapAct(0xb, 2);
+                (*gMapEventInterface)->setMapAct(DFSHSHRINE_MAP_SHRINE, 2);
                 break;
             case 0xe:
                 ((GameObject*)objLocal)->anim.flags = (s16)(((GameObject*)objLocal)->anim.flags | OBJANIM_FLAG_HIDDEN);
