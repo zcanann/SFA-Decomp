@@ -38,6 +38,18 @@ typedef struct Dimsnowball1c2Placement
     s16 unk1E;
 } Dimsnowball1c2Placement;
 
+/* Spawn-setup buffer for the DIMSNOWBALL1C2 child (Obj_AllocObjectSetup(0x24)):
+ * ObjPlacement head (color/pos/mapId) + class-specific rotation fields at
+ * 0x18/0x1A/0x1C, sourced from the parent placement's rotByte/childRot/childZOffset. */
+typedef struct Dimsnowball1c2Setup
+{
+    ObjPlacement head; /* 0x00 */
+    s8 rotByte;        /* 0x18 <- def->rotByte */
+    u8 pad19[0x1A - 0x19];
+    s16 childRot;      /* 0x1A <- def->childRot */
+    s16 childZOffset;  /* 0x1C <- def->childZOffset + random */
+} Dimsnowball1c2Setup;
+
 extern int randomGetRange(int lo, int hi);
 extern f32 lbl_803E4860;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -92,10 +104,10 @@ void dimsnowball1c2_update(int* obj)
                 np->mapId = def->mapId;
                 {
                     int t1c = def->rotByte;
-                    *(s8*)((char*)np + 0x18) = t1c;
+                    ((Dimsnowball1c2Setup*)np)->rotByte = t1c;
                 }
-                *(s16*)((char*)np + 0x1a) = def->childRot;
-                *(s16*)((char*)np + 0x1c) =
+                ((Dimsnowball1c2Setup*)np)->childRot = def->childRot;
+                ((Dimsnowball1c2Setup*)np)->childZOffset =
                     (f32)(u32)def->childZOffset +
                     (f32)(int)randomGetRange(0, 100) / lbl_803E4864;
                 Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
