@@ -8,6 +8,7 @@
 #include "main/dll/fx_800944A0_shared.h"
 
 #define CAMERAMODECOMBAT_OBJFLAG_FREED 0x40
+#define CAMERAMODECOMBAT_CAMACTION_DEFAULT 0x42
 #define PAD_BUTTON_B 0x200
 extern CameraModeCombatState* gCamCombatState;
 extern f32 lbl_803E18C0;
@@ -191,7 +192,7 @@ void CameraModeCombat_update(short* cam)
             }
             (*gCameraInterface)->setTarget(0);
         }
-        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
+        (*gCameraInterface)->setMode(CAMERAMODECOMBAT_CAMACTION_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
     }
     else
     {
@@ -210,7 +211,7 @@ void CameraModeCombat_update(short* cam)
                 }
                 (*gCameraInterface)->setTarget(0);
             }
-            (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
+            (*gCameraInterface)->setMode(CAMERAMODECOMBAT_CAMACTION_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
         }
         else
         {
@@ -229,7 +230,7 @@ void CameraModeCombat_update(short* cam)
                     }
                     (*gCameraInterface)->setTarget(0);
                 }
-                (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
+                (*gCameraInterface)->setMode(CAMERAMODECOMBAT_CAMACTION_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
             }
             else
             {
@@ -251,7 +252,7 @@ void CameraModeCombat_update(short* cam)
                             }
                             (*gCameraInterface)->setTarget(0);
                         }
-                        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
+                        (*gCameraInterface)->setMode(CAMERAMODECOMBAT_CAMACTION_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
                     }
                     else
                     {
@@ -300,7 +301,7 @@ void CameraModeCombat_update(short* cam)
                                 }
                                 (*gCameraInterface)->setTarget(0);
                             }
-                            (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
+                            (*gCameraInterface)->setMode(CAMERAMODECOMBAT_CAMACTION_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
                         }
                         else
                         {
