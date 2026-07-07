@@ -425,14 +425,14 @@ void wclevelcont_init(int obj)
     memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
     mainSetBits(0x811, 0);
     memcpy(lbl_803AD298, lbl_8032B088, 0x40);
-    if ((u32)mainGetBit(0x7fa) != 0) state->completionFlags |= 0x8;
-    if ((u32)mainGetBit(0x7f9) != 0) state->completionFlags |= 0x4;
-    if ((u32)mainGetBit(0x813) != 0) state->completionFlags |= 0x20;
-    if ((u32)mainGetBit(0x812) != 0) state->completionFlags |= 0x10;
-    if ((u32)mainGetBit(0x2a5) != 0) state->completionFlags |= 0x40;
-    if ((u32)mainGetBit(0x205) != 0) state->completionFlags |= 0x80;
-    if ((u32)mainGetBit(0xbcf) != 0) state->completionFlags |= 0x100;
-    if ((u32)mainGetBit(0xcac) != 0) state->completionFlags |= 0x200;
+    if ((u32)mainGetBit(0x7fa) != 0) state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_B;
+    if ((u32)mainGetBit(0x7f9) != 0) state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_A;
+    if ((u32)mainGetBit(0x813) != 0) state->completionFlags |= WCLEVELCTL_FLAG_TILE_B;
+    if ((u32)mainGetBit(0x812) != 0) state->completionFlags |= WCLEVELCTL_FLAG_TILE_A;
+    if ((u32)mainGetBit(0x2a5) != 0) state->completionFlags |= WCLEVELCTL_FLAG_TREX;
+    if ((u32)mainGetBit(0x205) != 0) state->completionFlags |= WCLEVELCTL_FLAG_SWITCHES;
+    if ((u32)mainGetBit(0xbcf) != 0) state->completionFlags |= WCLEVELCTL_FLAG_FINAL;
+    if ((u32)mainGetBit(0xcac) != 0) state->completionFlags |= WCLEVELCTL_FLAG_EXTRA;
     flags = state->completionFlags;
     if (flags & 0x200)
     {
