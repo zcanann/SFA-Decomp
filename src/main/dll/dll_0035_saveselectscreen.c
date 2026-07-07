@@ -55,6 +55,9 @@ typedef struct SaveSelectPanel
 /* count of gSaveSelectTextBuffers scratch allocations (symbol size 0x28 / 4). */
 #define SAVE_SELECT_TEXT_BUFFER_COUNT 10
 
+/* texture asset loaded into gSaveSelectTexture */
+#define SAVESELECTSCREEN_TEXTURE_ID 0x2dd
+
 extern void gameTextLoadDir(int dirId);
 extern void* gameTextGet(int textId);
 
@@ -743,7 +746,7 @@ void SaveSelectScreen_initialise(void)
 
     saveFileSelect_saveSlotsBase = mmAlloc(0x6c, 5, 0);
     lbl_803DD6AC = mmAlloc(0x6c, 5, 0);
-    gSaveSelectTexture = textureLoadAsset(0x2dd);
+    gSaveSelectTexture = textureLoadAsset(SAVESELECTSCREEN_TEXTURE_ID);
     gameTextLoadDir(0x15);
 
     if (gSaveSelectCachedText == 0)
