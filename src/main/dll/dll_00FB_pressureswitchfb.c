@@ -24,6 +24,7 @@
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
 
+#define PRESSURESWITCHFB_PARTFX 0x7c3
 #define PRESSURESWITCHFB_STATE_IDLE 0
 #define PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS 1
 #define PRESSURESWITCHFB_STATE_RESET 2
@@ -420,7 +421,7 @@ void PressureSwitchFB_update(int obj)
                 tmp = 0;
                 do
                 {
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7c3, &fx, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, PRESSURESWITCHFB_PARTFX, &fx, 2, -1, NULL);
                     tmp++;
                 }
                 while (tmp < 3);
