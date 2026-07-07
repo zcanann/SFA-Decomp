@@ -1582,7 +1582,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
             u32 t;
             int i = 0;
             t = p5;
-            for (; i < hdr[0xfa]; i++)
+            for (; i < ((ModelFileHeader*)hdr)->texMtxCount; i++)
             {
                 u8 use;
                 if (t == 4 && i == 0)

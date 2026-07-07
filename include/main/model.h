@@ -74,6 +74,7 @@ typedef struct ModelFileHeader {
     u8 hitSphereCount; /* 0xF7: count of 0x10-byte hit-sphere records (double-buffered: pos += hitSphereCount*0x10 twice) */
     u8 renderOpCount;
     u8 morphTargetCount;
+    u8 texMtxCount; /* 0xFA: texture-matrix descriptor count (GX_VA_TEXnMTXIDX loop bound) */
 } ModelFileHeader;
 
 /* ModelFileHeader.flags bits */
@@ -99,6 +100,7 @@ STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
 STATIC_ASSERT(offsetof(ModelFileHeader, blendAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);
 STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetCount) == 0xF9);
+STATIC_ASSERT(offsetof(ModelFileHeader, texMtxCount) == 0xFA);
 
 typedef struct ObjModelJointMatrix {
     f32 row0[3];
