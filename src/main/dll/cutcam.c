@@ -32,6 +32,11 @@
 #define PAD_TRIGGER_Z 0x10
 #define PAD_TRIGGER_L 0x40
 
+/* Camera mode ids passed to setMode() (== the target camera-mode DLL number). */
+#define CAMMODE_CLIMB     0x43 /* dll_0043 climb/path camera */
+#define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
+#define CAMMODE_COMBAT    0x49 /* dll_0049_cameramodecombat (follow) */
+
 extern u16 getPadFn_80014d9c(int controller);
 extern int objBboxFn_800640cc(float* p1, float* p2, float* p3, int* p4, int* p5, int p6, int p7, int p8, int p9);
 extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f);
@@ -221,7 +226,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
         {
         action_49:
             cameraSetInterpMode(1);
-            (*gCameraInterface)->setMode(0x49, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
+            (*gCameraInterface)->setMode(CAMMODE_COMBAT, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
         }
         else if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
                  (cond = objFn_802962b4((int)target), cond != 0))
@@ -230,7 +235,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
             action44Payload.yOffset = cameraMtxVar57->lowerHeightOffset;
             action44Payload.height = cameraMtxVar57->targetHeight;
             cameraSetInterpMode(0);
-            (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &action44Payload, 0xf, 0xfe);
+            (*gCameraInterface)->setMode(CAMMODE_VIEWFINDER, 1, 0, 0xc, &action44Payload, 0xf, 0xfe);
         }
         else
         {
@@ -241,7 +246,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
                 action43Payload.action = 5;
                 action43Payload.enabled = 1;
                 action43Payload.immediate = 1;
-                (*gCameraInterface)->setMode(0x43, 1, 0, 4, &action43Payload, 0, 0xff);
+                (*gCameraInterface)->setMode(CAMMODE_CLIMB, 1, 0, 4, &action43Payload, 0, 0xff);
             }
         }
     }
