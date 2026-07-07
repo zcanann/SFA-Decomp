@@ -350,4 +350,3 @@ void dll_1D6_update(int* obj)
         extra->flags1D &= ~2;
     }
 }
-#pragma opt_common_subs reset
