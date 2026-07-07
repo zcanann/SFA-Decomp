@@ -62,6 +62,9 @@ typedef struct
 } GfxBuf;
 
 #pragma inline_max_size(2000)
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL94_EFFECT_ID 0x3c
+
 static inline void dll_94_func03Body(u8* base, int sourceObj, int variant, int posSource,
                                      u32 flags, int arg5, f32* extraArgs)
 {
@@ -195,7 +198,7 @@ static inline void dll_94_func03Body(u8* base, int sourceObj, int variant, int p
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 6, base, 4, base + 0x3c, 0x3c, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 6, base, 4, base + 0x3c, DLL94_EFFECT_ID, 0);
     base++;
 }
 
