@@ -139,7 +139,7 @@ typedef struct PlayerState {
     s8 climbStepCount; /* 0x4e5: total number of climb steps for the current climbable; climbStep >= climbStepCount-3 (within 3 of the top) selects the top-of-climb transition */
     u8 climbingUp; /* 0x4e6: climb direction, 1 while ascending (forward Y lerp start->target), 0 while descending (reverse lerp) */
     s8 climbSampleDone; /* 0x4e7: one-shot latch for the climb move's initial joint-transform sampling; while 0 (and moveId<=1) samples the start/end root motion into moveStartPosY then sets to 1 */
-    f32 unk4E8;
+    f32 climbEndLocalY; /* target local-Y for the ledge climb-up/down move (case 6/7): anim.localPosY is lerped w*(climbEndLocalY - localPosY)+localPosY by currentMoveProgress, snapped to climbEndLocalY on moveDone; also the camera-focus Y (paired with climbBaseY in camBuf, and lbl_803DE43C = climbEndLocalY + offset) */
     f32 climbBaseY; /* base local-Y for the climb-step lerp: climbTargetY = climbStep*climbStepHeight + climbBaseY */
     f32 climbStepHeight; /* per-step vertical rise; multiplied by climbStep to form climbTargetY */
     f32 climbTargetY; /* target localPosY for the current climb step (climbStep*climbStepHeight + climbBaseY); lerp endpoint */
@@ -290,7 +290,7 @@ typedef struct PlayerState {
     f32 unk7CC;
     f32 unk7D0;
     f32 chargeLevel; /* charge/breath meter: builds (+= K*fv) while a charge move's button is held, drains (-= K*dt) and floors at 0 otherwise; at capacity (unk41C) fires the charged attack; (u8) value fed to fn_8011F34C */
-    f32 unk7D8;
+    f32 boulderChargeLevel; /* second charge/hold meter (sibling of chargeLevel): reset to 0 on move start, builds (+= K*timeDelta) while inside the staff-boulder-drop hit window and first-cross-from-0 fires SFXTRIG_staff_boulder_drops, clamped to a max; decays (-= K*timeDelta, same rate as chargeLevel) and floors at 0 otherwise; exposed via fn_802961A4 when controlMode==0x26 */
     f32 unk7DC;
     f32 curveSpeedScale; /* speed->curve-sample multiplier: u = speed*curveSpeedScale, the eval position into paramCurve0-4 */
     u8 pad7E4[0x7EC - 0x7E4];

@@ -488,7 +488,7 @@ void fn_802961A4(int obj, int* out1, f32* out2)
     *out1 = ((GameObject*)obj)->anim.currentMove;
     if (inner->baddie.controlMode == 0x26)
     {
-        *out2 = inner->unk7D8;
+        *out2 = inner->boulderChargeLevel;
     }
     else
     {
@@ -2335,7 +2335,7 @@ int playerStateOnLadder(int obj, int state)
         }
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->unk4E8;
+            ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->climbEndLocalY;
         }
         else
         {
@@ -2477,7 +2477,7 @@ int playerStateOnLadder(int obj, int state)
                             gPlayerCurrentMoveId = ns;
                         }
                         lbl_803DE438 = ((GameObject*)obj)->anim.localPosY;
-                        lbl_803DE43C = ((PlayerState*)inner)->unk4E8 + lbl_803DAF88[0];
+                        lbl_803DE43C = ((PlayerState*)inner)->climbEndLocalY + lbl_803DAF88[0];
                         if (((PlayerState*)inner)->curAnimId != 0x48 &&
                             ((PlayerState*)inner)->curAnimId != 0x47)
                         {
@@ -2696,7 +2696,7 @@ finish:
         case 7:
             w = ((GameObject*)obj)->anim.currentMoveProgress;
             x = w * (((PlayerState*)inner)->savedPosX - x) + x;
-            y = w * (((PlayerState*)inner)->unk4E8 - ((GameObject*)obj)->anim.localPosY) +
+            y = w * (((PlayerState*)inner)->climbEndLocalY - ((GameObject*)obj)->anim.localPosY) +
                 ((GameObject*)obj)->anim.localPosY;
             zzOut = w * (((PlayerState*)inner)->savedPosZ - zz) + zz;
             break;
@@ -5647,7 +5647,7 @@ int playerStateAttack(int obj, int state, f32 fv)
         }
         {
             f32 z = lbl_803E7EA4;
-            inner->unk7D8 = z;
+            inner->boulderChargeLevel = z;
             inner->hitTimer = z;
             inner->hitCount = 0;
             inner->lastHitObject = 0;
@@ -5663,20 +5663,20 @@ int playerStateAttack(int obj, int state, f32 fv)
             if (((GameObject*)obj)->anim.currentMoveProgress > t &&
                 ((GameObject*)obj)->anim.currentMoveProgress < *(f32*)(slot + 0xa4))
             {
-                if (lbl_803E7EA4 == inner->unk7D8)
+                if (lbl_803E7EA4 == inner->boulderChargeLevel)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_staff_boulder_drops);
                 }
-                inner->unk7D8 =
-                    lbl_803E7ED4 * timeDelta + inner->unk7D8;
-                if (inner->unk7D8 > *(f32*)&lbl_803E7FBC)
+                inner->boulderChargeLevel =
+                    lbl_803E7ED4 * timeDelta + inner->boulderChargeLevel;
+                if (inner->boulderChargeLevel > *(f32*)&lbl_803E7FBC)
                 {
-                    inner->unk7D8 = lbl_803E7FBC;
+                    inner->boulderChargeLevel = lbl_803E7FBC;
                 }
             }
             else
             {
-                inner->unk7D8 = lbl_803E7EA4;
+                inner->boulderChargeLevel = lbl_803E7EA4;
             }
         }
     }
@@ -8208,7 +8208,7 @@ void playerDoHitDetection(int obj)
                     (*(s8*)(sub + 0xad) != 0 && *(s8*)(sub + 0xac) != 0xe)))
             {
                 Player_GetObjHitsState(obj)->suppressOutgoingHits = 1;
-                ((PlayerState*)inner)->unk7D8 = lbl_803E7EA4;
+                ((PlayerState*)inner)->boulderChargeLevel = lbl_803E7EA4;
                 *(u8*)&((PlayerState*)inner)->hitWindowIndex = *(u8*)&((PlayerState*)inner)->activeHitWindow;
                 if ((((HitDesc*)((PlayerState*)inner)->moveSlots +
                         (u32)((PlayerState*)inner)->moveSlotIndex)->flags & 1) != 0)
@@ -8274,7 +8274,7 @@ void playerDoHitDetection(int obj)
             if (Player_GetObjHitsState(obj)->lastHitObject != 0)
             {
                 Player_GetObjHitsState(obj)->suppressOutgoingHits = 1;
-                ((PlayerState*)inner)->unk7D8 = lbl_803E7EA4;
+                ((PlayerState*)inner)->boulderChargeLevel = lbl_803E7EA4;
                 *(u8*)&((PlayerState*)inner)->hitWindowIndex = *(u8*)&((PlayerState*)inner)->activeHitWindow;
                 if ((((HitDesc*)((PlayerState*)inner)->moveSlots +
                         (u32)((PlayerState*)inner)->moveSlotIndex)->flags & 1) != 0)
@@ -11341,10 +11341,10 @@ void playerStaffInit(int obj, int state)
     {
         ((PlayerState*)state)->chargeLevel = lbl_803E7EA4;
     }
-    ((PlayerState*)state)->unk7D8 -= lbl_803E7E98 * timeDelta;
-    if (((PlayerState*)state)->unk7D8 < *(f32*)&lbl_803E7EA4)
+    ((PlayerState*)state)->boulderChargeLevel -= lbl_803E7E98 * timeDelta;
+    if (((PlayerState*)state)->boulderChargeLevel < *(f32*)&lbl_803E7EA4)
     {
-        ((PlayerState*)state)->unk7D8 = lbl_803E7EA4;
+        ((PlayerState*)state)->boulderChargeLevel = lbl_803E7EA4;
     }
 
     fn_8011F34C((u8)(int)((PlayerState*)state)->chargeLevel);
@@ -15380,7 +15380,7 @@ int playerStateClimbOntoLadder(int obj, int state, f32 fv)
                                           jp, scratch);
             lbl_803DE438 = ((GameObject*)obj)->anim.localPosY + jp[1];
             lbl_803DE43C = inner->climbTargetY + lbl_803DAF88[1];
-            camBuf[0] = inner->unk4E8;
+            camBuf[0] = inner->climbEndLocalY;
             camBuf[1] = inner->climbBaseY;
             if (inner->curAnimId != 0x48 && inner->curAnimId != 0x47)
             {
