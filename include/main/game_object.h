@@ -54,7 +54,7 @@ typedef struct GameObject {
         suppresses the fade tick (Obj_*ModelColorFade* family) */
     s16 colorFadeFrames; /* obj+0xE6 frames left; -= framesThisStep, <=0 with
         no ownerObj -> Obj_ClearModelColorFadeRecursive */
-    u8 paletteIndex; /* obj+0xE8 (objprint: paletteIdx = target->...) */
+    u8 hintTextIdx; /* obj+0xE8 written by objSetHintTextIdx (clamped <=4) */
     s8 unkE9;
     u8 unkEA;
     u8 childCount;

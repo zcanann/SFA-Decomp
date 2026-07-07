@@ -394,7 +394,7 @@ void objSetHintTextIdx(int obj, u16 idx)
     {
         idx = 0;
     }
-    ((GameObject*)obj)->paletteIndex = idx;
+    ((GameObject*)obj)->hintTextIdx = idx;
 }
 
 int Obj_IsLoadingLocked(void)
