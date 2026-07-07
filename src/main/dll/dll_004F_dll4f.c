@@ -8,11 +8,8 @@ extern float mathCosf(float x);
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
 
-#pragma scheduling on
-#pragma peephole on
 extern CameraMode4FState* gCameraMode4FState;
 extern f32 Curve_EvalHermite(f32* pts, f32 t, int mode);
-
 
 #pragma scheduling off
 #pragma peephole off
