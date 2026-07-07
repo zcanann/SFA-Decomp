@@ -11,6 +11,10 @@
 
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
+/* Object periodically spawned by DFP_ObjCreator (case 7) from the placement
+ * template; the spawner's whole purpose. */
+#define DFPOBJCREATOR_CHILD_OBJ 0x71b
+
 typedef struct DfpobjcreatorObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -111,7 +115,7 @@ void DFP_ObjCreator_update(int obj)
             if (state->spawnTimer <= 0 && mainGetBit(state->gameBit) != 0)
             {
                 state->spawnTimer = state->spawnPeriod;
-                setup = Obj_AllocObjectSetup(0x24, 0x71b);
+                setup = Obj_AllocObjectSetup(0x24, DFPOBJCREATOR_CHILD_OBJ);
                 ((DfpobjcreatorSetup*)setup)->base.posX = ((DfpobjcreatorPlacement*)data)->posX;
                 ((DfpobjcreatorSetup*)setup)->base.posY = ((DfpobjcreatorPlacement*)data)->posY;
                 ((DfpobjcreatorSetup*)setup)->base.posZ = ((DfpobjcreatorPlacement*)data)->posZ;
