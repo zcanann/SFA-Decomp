@@ -1759,6 +1759,7 @@ main/dll/DIM/dll_01BF_dimlavaball.c:
 
 main/dll/DIM/dll_01C0_dimlogfire.c:
 	.text       start:0x801B0670 end:0x801B0DD4
+	.sdata2     start:0x803E4840 end:0x803E4848
 
 main/dll/DIM/dll_01C1_dimsnowball.c:
 	.text       start:0x801B0DD4 end:0x801B13E8
