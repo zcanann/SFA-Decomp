@@ -21,6 +21,9 @@
 #include "main/track_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define OBJECT_CAMMODE_TITLE 0x57   /* cameramode DLL dll_0057_cameramodetitle */
+#define OBJECT_CAMMODE_DEFAULT 0x42 /* default gameplay cameramode DLL */
+
 /* GameObject::objectFlags lifecycle bits */
 #define OBJECT_FLAG_IN_UPDATE_LIST 0x10 /* registered in gObjList / gObjUpdateList */
 #define OBJECT_FLAG_FREED 0x40          /* Obj_FreeObject ran (double-free guard) */
@@ -2047,14 +2050,14 @@ void mapSetupPlayer(void)
         if ((u32)(uiDll - 2) <= 4 || uiDll == 7)
         {
             (*gCameraInterface)->init(obj, *(f32*)(base + 8), *(f32*)(base + 0xc), *(f32*)(base + 0x10));
-            (*gCameraInterface)->setMode(0x57, 0, 3, 0, NULL, 0, 0);
+            (*gCameraInterface)->setMode(OBJECT_CAMMODE_TITLE, 0, 3, 0, NULL, 0, 0);
             (*gCameraInterface)->setFocus(obj, 0);
             (*gCameraInterface)->update(1);
         }
         else
         {
             (*gCameraInterface)->init(obj, *(f32*)(base + 8), *(f32*)(base + 0xc), *(f32*)(base + 0x10));
-            (*gCameraInterface)->setMode(0x42, 0, 0, 0x20, (u8*)(int)&gObjCameraSetupBlock, 0, 0xff);
+            (*gCameraInterface)->setMode(OBJECT_CAMMODE_DEFAULT, 0, 0, 0x20, (u8*)(int)&gObjCameraSetupBlock, 0, 0xff);
             (*gCameraInterface)->update(1);
         }
         vp = Camera_GetCurrentViewSlot();
