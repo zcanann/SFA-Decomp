@@ -19,6 +19,9 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+/* child object id spawned by fn_8015F5B0 (docblock: IceBall aimed at the player) */
+#define CHUKCHUK_CHILD_OBJ_ICEBALL 1307
+
 /* sub->flags bits (see chukchukstate_struct.h) */
 #define CHUKCHUK_FLAG_PRIMED 0x1
 #define CHUKCHUK_FLAG_DEAD 0x2
@@ -53,7 +56,7 @@ void fn_8015F5B0(short* obj)
     sub = ((GameObject*)obj)->extra;
     if (Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(36, 1307);
+        setup = Obj_AllocObjectSetup(36, CHUKCHUK_CHILD_OBJ_ICEBALL);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = 5.0f + ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
