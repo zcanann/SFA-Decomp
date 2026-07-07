@@ -29,6 +29,9 @@ extern f32 lbl_803E13E4;
 extern f32 lbl_803E13E8;
 
 #pragma optimization_level 2
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL9C_EFFECT_ID 0x154
+
 void dll_9C_func03(int target, int variant, int parent, u32 flags)
 {
     ScreenFxHdr hdr;
@@ -195,7 +198,7 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
             hdr.bz = lbl_803E13C8 + *(f32*)(parent + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, (u8*)(int)lbl_80317E00, 0x18, base + 0xd4, 0x154, 0);
+    (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, (u8*)(int)lbl_80317E00, 0x18, base + 0xd4, DLL9C_EFFECT_ID, 0);
 }
 #pragma optimization_level reset
 
