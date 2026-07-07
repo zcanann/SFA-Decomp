@@ -38,6 +38,11 @@
 
 #define BOSSDRAKOR_OBJFLAG_RENDERED 0x800
 
+/* env effects co-activated on first-frame setup (b10); opaque distinct roles */
+#define BOSSDRAKOR_ENVFX_A 0x144
+#define BOSSDRAKOR_ENVFX_B 0x10d
+#define BOSSDRAKOR_ENVFX_C 0x10e
+
 void bossdrakor_release(void)
 {
 }
@@ -131,9 +136,9 @@ void bossdrakor_update(int obj)
     curveArg = 0x29;
     if (((DrakorFlags*)((char*)state + 0x198))->b10)
     {
-        getEnvfxActImmediately(obj, obj, 0x144, 0);
-        getEnvfxActImmediately(obj, obj, 0x10d, 0);
-        getEnvfxActImmediately(obj, obj, 0x10e, 0);
+        getEnvfxActImmediately(obj, obj, BOSSDRAKOR_ENVFX_A, 0);
+        getEnvfxActImmediately(obj, obj, BOSSDRAKOR_ENVFX_B, 0);
+        getEnvfxActImmediately(obj, obj, BOSSDRAKOR_ENVFX_C, 0);
         skyFn_80088e54(1, lbl_803E6510);
         timeOfDayFn_80055038();
         if ((*gRomCurveInterface)->initCurve((void*)((char*)state + 0x28), (void*)obj, lbl_803E6560, &curveArg, 0xd) !=
