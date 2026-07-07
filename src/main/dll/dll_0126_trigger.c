@@ -76,7 +76,10 @@ typedef struct TriggerPlacement
     s16 typeId; /* 0x0: object-sequence type id dispatched by Trigger_init */
     u8 pad2[0x38 - 0x2];
     s16 triggerId; /* 0x38: id matched against dispatched trigger message id */
-    u8 pad3A[0x44 - 0x3A];
+    u8 size[3]; /* 0x3A: dimensions (x,y,z) */
+    u8 rot[2]; /* 0x3D: rotation (x,y), range 0-255 */
+    u8 pad3F[0x43 - 0x3F];
+    u8 target; /* 0x43: object the trigger applies to / can be activated by */
     s16 gameBitSrc; /* 0x44: game-bit id copied into TriggerState.gameBit */
     u16 triggerDelayFrames; /* 0x46: frames the timer must reach before firing */
     s16 gateBitSrc[4]; /* 0x48/0x4a/0x4c/0x4e: game-bit ids copied into TriggerState.gateBits */
@@ -119,6 +122,9 @@ typedef struct
 
 STATIC_ASSERT(offsetof(TriggerPlacement, typeId) == 0x0);
 STATIC_ASSERT(offsetof(TriggerPlacement, triggerId) == 0x38);
+STATIC_ASSERT(offsetof(TriggerPlacement, size) == 0x3A);
+STATIC_ASSERT(offsetof(TriggerPlacement, rot) == 0x3D);
+STATIC_ASSERT(offsetof(TriggerPlacement, target) == 0x43);
 STATIC_ASSERT(offsetof(TriggerPlacement, gameBitSrc) == 0x44);
 STATIC_ASSERT(offsetof(TriggerPlacement, triggerDelayFrames) == 0x46);
 STATIC_ASSERT(offsetof(TriggerPlacement, gateBitSrc) == 0x48);
@@ -231,11 +237,11 @@ void Trigger_init(u8* obj, u8* params)
     switch (((TriggerPlacement*)params)->typeId)
     {
     case 0x4b:
-        range = (f32)(s32)(params[0x3a] * 2);
+        range = (f32)(s32)(((TriggerPlacement*)params)->size[0] * 2);
         ((TriggerState*)state)->rangeSq = range * range;
         ((GameObject*)obj)->anim.rotZ = 0;
         ((GameObject*)obj)->anim.rotY = 0;
-        ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)(((TriggerPlacement*)params)->rot[0] << 8);
         ((GameObject*)obj)->anim.rootMotionScale = range / lbl_803E40F8;
         break;
     case 0x4c:
@@ -243,12 +249,12 @@ void Trigger_init(u8* obj, u8* params)
         objFn_80198fa4(obj, params);
         break;
     case 0x230:
-        ((TriggerState*)state)->rangeSq = (f32)(s32)(params[0x3a] * 2);
+        ((TriggerState*)state)->rangeSq = (f32)(s32)(((TriggerPlacement*)params)->size[0] * 2);
         ((TriggerState*)state)->rangeSq = ((TriggerState*)state)->rangeSq * ((TriggerState*)state)->rangeSq;
         break;
     case 0x4d:
-        ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
-        ((GameObject*)obj)->anim.rotY = (s16)(params[0x3e] << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)(((TriggerPlacement*)params)->rot[0] << 8);
+        ((GameObject*)obj)->anim.rotY = (s16)(((TriggerPlacement*)params)->rot[1] << 8);
         ((GameObject*)obj)->anim.rotZ = 0;
         break;
     case 0x54:
@@ -873,7 +879,7 @@ void Trigger_hitDetect(int obj)
             else
             {
                 ok = 1;
-                targetKind = def[0x43];
+                targetKind = ((TriggerPlacement*)def)->target;
                 if (targetKind > 2)
                 {
                     target = ObjGroup_FindNearestObject(targetKind - 1, obj, (int)dist);
@@ -909,7 +915,7 @@ void Trigger_hitDetect(int obj)
                 {
                     if ((*state & TRIGGER_SFLAG_SEED_TARGET) != 0)
                     {
-                        switch (def[0x43])
+                        switch (((TriggerPlacement*)def)->target)
                         {
                         case 2:
                             ((TriggerState*)state)->targetPosX = ((GameObject*)target)->anim.worldPosX;
@@ -936,7 +942,7 @@ void Trigger_hitDetect(int obj)
                         ((TriggerState*)state)->targetPosY = ((TriggerState*)state)->prevTargetPosY;
                         ((TriggerState*)state)->targetPosZ = ((TriggerState*)state)->prevTargetPosZ;
                     }
-                    switch (def[0x43])
+                    switch (((TriggerPlacement*)def)->target)
                     {
                     case 0:
                     case 1:
