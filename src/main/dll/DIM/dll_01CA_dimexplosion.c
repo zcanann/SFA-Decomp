@@ -317,7 +317,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         GXClearVtxDesc();
         GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
         GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-        GXSetCurrentMtx(0);
+        GXSetCurrentMtx(GX_PNMTX0);
         for (i = 0, cursor = state; i < ((ExplosionState*)state)->flameCount; i++)
         {
             if (((ExplosionDebris*)cursor)->active != 0)
