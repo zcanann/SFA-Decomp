@@ -528,7 +528,7 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             dt = timeDelta;
         }
-        if (((GameObject*)obj)->anim.seqId == 2102)
+        if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
         {
             for (i = 0; i < 4; i++)
             {
@@ -644,7 +644,7 @@ void Shield_update(int* obj)
             }
         }
     }
-    if (((GameObject*)obj)->anim.seqId == 2102)
+    if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
     {
         ((GameObject*)obj)->anim.alpha = state[1] / state[4] * (f32)(s32)randomGetRange(96, 127);
     }
@@ -677,7 +677,7 @@ void Shield_update(int* obj)
         for (; i < 4; i++)
         {
             ps[26] = (f32)ps[30] * timeDelta + ps[26];
-            if (((GameObject*)obj)->anim.seqId == 2102)
+            if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
             {
                 f32 c = fcos16(ps[26]);
                 c = c * lbl_803E33EC + lbl_803E33C4;
