@@ -21,6 +21,9 @@
 
 #define SCLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 
+/* map-event id of the LightFoot Village map ("swapcircle"); see docblock */
+#define SCLEVELCONTROL_MAP_SWAPCIRCLE 0xe
+
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
 /* the four LightFoot totem-pole lit-state bits, reset on entry */
@@ -209,7 +212,7 @@ void sc_levelcontrol_update(int obj)
             getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
             getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
             getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
-            if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(0xe, 5) != 0)
+            if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(SCLEVELCONTROL_MAP_SWAPCIRCLE, 5) != 0)
             {
                 getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
             }
@@ -223,7 +226,7 @@ void sc_levelcontrol_update(int obj)
             getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
             getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
             getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
-            if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(0xe, 5) != 0)
+            if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(SCLEVELCONTROL_MAP_SWAPCIRCLE, 5) != 0)
             {
                 getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
             }
@@ -236,21 +239,21 @@ void sc_levelcontrol_update(int obj)
     }
     if (((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 == 0 && (u32)mainGetBit(0xc53) != 0)
     {
-        (*gMapEventInterface)->setObjGroupStatus(0xe, 0xa, 1);
+        (*gMapEventInterface)->setObjGroupStatus(SCLEVELCONTROL_MAP_SWAPCIRCLE, 0xa, 1);
         ((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 = 1;
     }
     if (((ScLevelControlState*)state)->areaCell != 0xe)
     {
         if (coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0xe)
         {
-            u8 c = ((int (*)(s32))(*gMapEventInterface)->getMapAct)(0xe);
+            u8 c = ((int (*)(s32))(*gMapEventInterface)->getMapAct)(SCLEVELCONTROL_MAP_SWAPCIRCLE);
             Obj_GetPlayerObject();
             switch (c)
             {
             case 1:
                 if ((u32)mainGetBit(GAMEBIT_WATER_SPELLSTONE_PLACED) != 0)
                 {
-                    (*gMapEventInterface)->setMapAct(0xe, 2);
+                    (*gMapEventInterface)->setMapAct(SCLEVELCONTROL_MAP_SWAPCIRCLE, 2);
                 }
                 break;
             case 2:
@@ -259,7 +262,7 @@ void sc_levelcontrol_update(int obj)
             case 5:
                 if ((u32)mainGetBit(GAMEBIT_TOTEMBOND_COMPLETE) != 0)
                 {
-                    (*gMapEventInterface)->setMapAct(0xe, 6);
+                    (*gMapEventInterface)->setMapAct(SCLEVELCONTROL_MAP_SWAPCIRCLE, 6);
                 }
                 break;
             }
@@ -324,12 +327,12 @@ void sc_levelcontrol_update(int obj)
                 ((ScLevelControlState*)state)->fog0C = lbl_803E5558;
             }
         }
-        if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(0xe, 1) != 0)
+        if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(SCLEVELCONTROL_MAP_SWAPCIRCLE, 1) != 0)
         {
             ((ScLevelControlState*)state)->fog04 = lbl_803E555C;
             ((ScLevelControlState*)state)->fog08 = lbl_803E5560;
         }
-        else if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(0xe, 5) != 0)
+        else if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(SCLEVELCONTROL_MAP_SWAPCIRCLE, 5) != 0)
         {
             ((ScLevelControlState*)state)->fog04 = lbl_803E5564;
             ((ScLevelControlState*)state)->fog08 = lbl_803E5568;
@@ -496,9 +499,9 @@ void sc_levelcontrol_update(int obj)
         if ((u32)mainGetBit(0x2b5) != 0)
         {
             mainSetBits(0x4d0, 1);
-            (*gMapEventInterface)->setObjGroupStatus(0xe, 2, 1);
+            (*gMapEventInterface)->setObjGroupStatus(SCLEVELCONTROL_MAP_SWAPCIRCLE, 2, 1);
             warpToMap(0x50, 0);
-            (*gMapEventInterface)->setObjGroupStatus(0xe, 1, 0);
+            (*gMapEventInterface)->setObjGroupStatus(SCLEVELCONTROL_MAP_SWAPCIRCLE, 1, 0);
         }
     }
     if ((*gSkyInterface)->getSunPosition(0) != 0)
@@ -563,7 +566,7 @@ void sc_levelcontrol_init(int obj)
     {
         mainSetBits(0x85, 1);
     }
-    unlockLevel(mapGetDirIdx(0xe), 0, 0);
+    unlockLevel(mapGetDirIdx(SCLEVELCONTROL_MAP_SWAPCIRCLE), 0, 0);
     if (getSaveGameLoadStatus() != 0)
     {
         ((GameObject*)obj)->unkF4 = 2;
