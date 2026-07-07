@@ -39,6 +39,8 @@ enum
 /* gate for the galleon spawn: set once the palace approach has run */
 #define GAMEBIT_WM_GALLEON_GONE 0x78
 
+#define WMOBJCREATOR_PARTFX_DEBRIS 0x1a6 /* debris-particle burst under the falling WM_rock (case 6) */
+
 int WM_ObjCreator_getExtraSize(void) { return 0x8; }
 int WM_ObjCreator_getObjectTypeId(void) { return 0x0; }
 
@@ -394,7 +396,7 @@ void WM_ObjCreator_update(int obj)
                     vec.pos[1] = (f32)(int)randomGetRange(-200, 200);
                     vec.pos[3] = (f32)(int)randomGetRange(-0x14, 0x14);
                     vec.pos[2] = lbl_803E5CDC;
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x1a6, &vec, 0x10002, -1,
+                    (*gPartfxInterface)->spawnObject((void*)obj, WMOBJCREATOR_PARTFX_DEBRIS, &vec, 0x10002, -1,
                                                      NULL);
                 }
                 mainSetBits(state->gameBit, 0);
