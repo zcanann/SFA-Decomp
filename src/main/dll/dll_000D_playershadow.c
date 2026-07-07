@@ -15,6 +15,13 @@
 #include "main/camera.h"
 #include "main/dll/DR/dr_shared.h"
 
+/* foot/bone particle ids scattered per struck-triangle surface type
+   (index-style; roles opaque). A on surfaces 0x10/0x12; B on 0x11/0x14/0x15;
+   C spawned 3x on surface 0x17. */
+#define PLAYERSHADOW_PARTFX_A 0x72
+#define PLAYERSHADOW_PARTFX_B 0x73
+#define PLAYERSHADOW_PARTFX_C 0x190
+
 extern u8 gPlayerShadowMode;
 extern u32 gPlayerShadowDefaultParams[];
 extern const f32 lbl_803DF46C; /* 0.0f */
@@ -175,35 +182,35 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
                 {
                     if (randomGetRange(0, 0x1e) == 1)
                     {
-                        (*gPartfxInterface)->spawnObject(obj, 0x72, &data, 0x200001, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_A, &data, 0x200001, -1, NULL);
                     }
                 }
                 else if (rt == 0x11)
                 {
                     if (randomGetRange(0, 8) == 2)
                     {
-                        (*gPartfxInterface)->spawnObject(obj, 0x73, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_B, &data, 0x111, -1, NULL);
                     }
                 }
                 else if (rt == 0x14)
                 {
                     if (randomGetRange(0, 8) == 2)
                     {
-                        (*gPartfxInterface)->spawnObject(obj, 0x73, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_B, &data, 0x111, -1, NULL);
                     }
                 }
                 else if (rt == 0x15)
                 {
                     if (randomGetRange(0, 8) == 2)
                     {
-                        (*gPartfxInterface)->spawnObject(obj, 0x73, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_B, &data, 0x111, -1, NULL);
                     }
                 }
                 else if (rt == 0x17)
                 {
-                    (*gPartfxInterface)->spawnObject(obj, 0x190, &data, 0x111, -1, NULL);
-                    (*gPartfxInterface)->spawnObject(obj, 0x190, &data, 0x111, -1, NULL);
-                    (*gPartfxInterface)->spawnObject(obj, 0x190, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_C, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_C, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_C, &data, 0x111, -1, NULL);
                 }
             }
         }
