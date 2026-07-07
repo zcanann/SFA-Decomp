@@ -21,6 +21,7 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
 #include "main/sfa_shared_decls.h"
+#define ICEBALL_HIT_VOLUME_SLOT 10
 extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_DisableObject(u32 objPtr);
@@ -189,7 +190,7 @@ void IceBall_update(u16* obj, int unused)
     ((GameObject*)objInt)->anim.rotY += 910;
     objMove(objInt, ((GameObject*)objInt)->anim.velocityX * timeDelta, ((GameObject*)objInt)->anim.velocityY * timeDelta,
             ((GameObject*)objInt)->anim.velocityZ * timeDelta);
-    ObjHits_SetHitVolumeSlot(objInt, 10, 1, 0);
+    ObjHits_SetHitVolumeSlot(objInt, ICEBALL_HIT_VOLUME_SLOT, 1, 0);
     ObjHitbox_SetSphereRadius(objInt, 5);
     ObjHits_EnableObject(objInt);
     if ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject != 0 &&
