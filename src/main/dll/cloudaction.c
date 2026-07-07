@@ -238,7 +238,7 @@ void renderClouds(int a, int b, int c, int d)
         PSMTXMultVec(viewMtx, pos, pos);
         PSMTXTrans(mtx, pos[0], pos[1], pos[2]);
         GXLoadPosMtxImm(mtx, GX_PNMTX0);
-        GXSetCurrentMtx(0);
+        GXSetCurrentMtx(GX_PNMTX0);
         selectTexture(fn_8008912C(), 0);
         if (cloudT >= lbl_803DF2C8)
         {
