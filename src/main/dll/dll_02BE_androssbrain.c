@@ -25,6 +25,7 @@ enum
 };
 
 #define BRAIN_MAX_HEALTH 0x50
+#define ANDROSSBRAIN_HIT_VOLUME_SLOT 5
 
 enum
 {
@@ -113,7 +114,7 @@ void AndrossBrain_update(int obj)
     {
         state->lightning = (GameObject*)ObjList_FindObjectById(ANDROSSLIGH_OBJ_ID);
     }
-    ObjHits_SetHitVolumeSlot(obj, 5, 2, -1);
+    ObjHits_SetHitVolumeSlot(obj, ANDROSSBRAIN_HIT_VOLUME_SLOT, 2, -1);
     ObjHits_EnableObject(obj);
     if (state->andross != NULL)
     {
