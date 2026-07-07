@@ -28,6 +28,11 @@
 
 #define PAD_TRIGGER_Z 0x10
 
+/* Camera mode ids passed to setMode() (== the target camera-mode DLL number). */
+#define CAMMODE_DEFAULT   0x42 /* dll_0042 - default/release camera */
+#define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder (action) */
+#define CAMMODE_COMBAT    0x49 /* dll_0049_cameramodecombat (follow) */
+
 extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
 extern f32 timeDelta;
@@ -89,7 +94,7 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
         if ((camera->targetFlags & 2) != 0)
         {
         sendFollowAction:
-            (*gCameraInterface)->setMode(0x49, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
+            (*gCameraInterface)->setMode(CAMMODE_COMBAT, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
             goto done;
         }
         if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
@@ -98,7 +103,7 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
             actionPayload.x = gCamcontrolPathState->actionParamX;
             actionPayload.z = gCamcontrolPathState->actionParamZ;
             actionPayload.y = gCamcontrolPathState->actionParamY;
-            (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &actionPayload, 0, 0xff);
+            (*gCameraInterface)->setMode(CAMMODE_VIEWFINDER, 1, 0, 0xc, &actionPayload, 0, 0xff);
         }
     }
 done:
@@ -138,7 +143,7 @@ void camclimb_update(CameraObject* cam)
 
     if (gCamcontrolPathState->active != 0)
     {
-        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
+        (*gCameraInterface)->setMode(CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
     }
     else
     {
@@ -208,7 +213,7 @@ void camclimb_update(CameraObject* cam)
             (cam, (double)target->anim.worldPosY, (double)relDistXZ);
         if (needsReset != 0)
         {
-            (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
+            (*gCameraInterface)->setMode(CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
         }
         camcontrol_updatePathTargetAction(cam, target);
         Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY,
