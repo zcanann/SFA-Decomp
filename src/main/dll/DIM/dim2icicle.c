@@ -19,6 +19,9 @@
 
 #define DIM2ICICLE_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 
+#define DIM2ICICLE_PARTFX_DUST 0x4b7 /* dust particle effect (gDim2IcicleDustFxSource) */
+#define DIM2ICICLE_PARTFX_HIT  0x328 /* icicle hit-response effect (gDim2IcicleHitFxBuffer) */
+
 static inline int *DIM2Icicle_GetActiveModel(void *obj) {
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
   return (int *)objAnim->banks[objAnim->bankIndex];
@@ -121,7 +124,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
     ObjPath_GetPointWorldPosition(objIndex, 7, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->x, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->y, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->z, 0);
     i = 0;
     do {
-      (*gPartfxInterface)->spawnObject((void *)objIndex, 0x4b7, &gDim2IcicleDustFxSource, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)objIndex, DIM2ICICLE_PARTFX_DUST, &gDim2IcicleDustFxSource, 0x200001, -1, NULL);
       i = i + 1;
     } while (i < 0xf);
   }
@@ -129,7 +132,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
     ObjPath_GetPointWorldPosition(objIndex, 8, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->x, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->y, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->z, 0);
     i = 0;
     do {
-      (*gPartfxInterface)->spawnObject((void *)objIndex, 0x4b7, &gDim2IcicleDustFxSource, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)objIndex, DIM2ICICLE_PARTFX_DUST, &gDim2IcicleDustFxSource, 0x200001, -1, NULL);
       i = i + 1;
     } while (i < 0xf);
   }
@@ -137,7 +140,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
     ObjPath_GetPointWorldPosition(objIndex, 9, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->x, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->y, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->z, 0);
     i = 0;
     do {
-      (*gPartfxInterface)->spawnObject((void *)objIndex, 0x4b7, &gDim2IcicleDustFxSource, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)objIndex, DIM2ICICLE_PARTFX_DUST, &gDim2IcicleDustFxSource, 0x200001, -1, NULL);
       i = i + 1;
     } while (i < 0xf);
   }
@@ -145,7 +148,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
     ObjPath_GetPointWorldPosition(objIndex, 10, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->x, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->y, &((IcicleFxPos *)&gDim2IcicleDustFxSource)->z, 0);
     i = 0;
     do {
-      (*gPartfxInterface)->spawnObject((void *)objIndex, 0x4b7, &gDim2IcicleDustFxSource, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)objIndex, DIM2ICICLE_PARTFX_DUST, &gDim2IcicleDustFxSource, 0x200001, -1, NULL);
       i = i + 1;
     } while (i < 0xf);
   }
@@ -350,7 +353,7 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRunt
   if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_ARENA_DUST_BURST) {
     i = 0;
     do {
-      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b7, NULL, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, DIM2ICICLE_PARTFX_DUST, NULL, 1, -1, NULL);
       i = i + 1;
     } while (i < 0x32);
   }
@@ -456,7 +459,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
         ((IcicleHitFx *)gDim2IcicleHitFxBuffer)->x = playerMapOffsetX + base[hitType].px;
         ((IcicleHitFx *)gDim2IcicleHitFxBuffer)->y = base[hitType].py;
         ((IcicleHitFx *)gDim2IcicleHitFxBuffer)->z = playerMapOffsetZ + base[hitType].pz;
-        (*gPartfxInterface)->spawnObject((void *)obj, 0x328, gDim2IcicleHitFxBuffer, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj, DIM2ICICLE_PARTFX_HIT, gDim2IcicleHitFxBuffer, 0x200001, -1, NULL);
         ((IcicleHitFx *)gDim2IcicleHitFxBuffer)->x = ((IcicleHitFx *)gDim2IcicleHitFxBuffer)->x - ((GameObject *)obj)->anim.worldPosX;
         ((IcicleHitFx *)gDim2IcicleHitFxBuffer)->y = ((IcicleHitFx *)gDim2IcicleHitFxBuffer)->y - ((GameObject *)obj)->anim.worldPosY;
         ((IcicleHitFx *)gDim2IcicleHitFxBuffer)->z = ((IcicleHitFx *)gDim2IcicleHitFxBuffer)->z - ((GameObject *)obj)->anim.worldPosZ;
