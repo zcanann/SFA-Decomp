@@ -34,6 +34,11 @@ extern u32 getLActions();
 
 extern f32 lbl_803E51B8;
 
+/* partfx ids: 0x2a0 = impact burst (spawned 3x on hit in dll_19D_hitDetect
+ * and the update hit-link branch); 0x29d = per-frame flight trail. */
+#define DLL19D_PARTFX_IMPACT 0x2a0
+#define DLL19D_PARTFX_TRAIL 0x29d
+
 int dll_19D_getExtraSize(void) { return 0x38; }
 int dll_19D_getObjectTypeId(void) { return 0x0; }
 
@@ -72,9 +77,9 @@ void dll_19D_hitDetect(int obj)
     if (linkSubObj == 0) return;
     if (*(short*)((u8*)linkSubObj + 0x46) == 0x248) return;
 
-    (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
     ((Dll19DState*)state)->despawnTimer = 0x32;
 }
 
@@ -107,9 +112,9 @@ void dll_19D_update(int obj)
     if (*(s8*)(linkObj + 0xad) != 0)
     {
         Sfx_PlayFromObject(self, SFXsc_mpick1_b);
-        (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
         ((Dll19DState*)state)->despawnTimer = 0x32;
     }
 
@@ -139,7 +144,7 @@ void dll_19D_update(int obj)
 
         ((GameObject*)self)->anim.rotX = (s16)(((GameObject*)self)->anim.rotX + ((Dll19DState*)state)->rotVelX * framesThisStep);
         ((GameObject*)self)->anim.rotZ = (s16)(((GameObject*)self)->anim.rotZ + ((Dll19DState*)state)->rotVelZ * framesThisStep);
-        (*gPartfxInterface)->spawnObject((void*)self, 0x29d, vec, 4, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_TRAIL, vec, 4, -1, NULL);
 
         if ((((Dll19DState*)state)->effectTimer -= framesThisStep) <= 0)
         {
