@@ -48,6 +48,9 @@
 
 #define GAMEUI_OBJFLAG_PARENT_SLACK 0x1000
 
+/* blink texture asset (cached into gGameUiBlinkTexture). */
+#define GAMEUI_TEXTURE_BLINK 1280
+
 /* GameCube controller button masks (confirm=A, cancel=B, pause=Start/menu) */
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -4419,7 +4422,7 @@ void GameUI_initialise(void)
     {
         ((void**)hudTextures)[i] = textureLoadAsset(gHudTextureIds[i]);
     }
-    p = textureLoadAsset(1280);
+    p = textureLoadAsset(GAMEUI_TEXTURE_BLINK);
     gGameUiBlinkTexture = p;
     *(short*)((char*)p + 20) = 40;
     lbl_803DD82C = 0x80000;
