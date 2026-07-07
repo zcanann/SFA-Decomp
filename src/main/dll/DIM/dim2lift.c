@@ -17,6 +17,9 @@
 
 #define MODEL_LIGHT_KIND_POINT 2
 
+/* child object id spawned by DIM2icicle_spawnBlueWhiteEffect (DIM2icicleBlueWhiteEffectPlacement cast) */
+#define DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT 656
+
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern u32 ObjMsg_SendToObject();
@@ -145,7 +148,7 @@ void DIM2icicle_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity)
     DIM2icicleBlueWhiteEffectPlacement* setup;
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(36, 656);
+        setup = Obj_AllocObjectSetup(36, DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT);
         setup->base.posX = source->x;
         setup->base.posY = source->y;
         setup->base.posZ = source->z;
