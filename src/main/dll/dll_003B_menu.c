@@ -122,7 +122,6 @@ void Menu_func05(int arg1, int unused2, int arg3, int arg4)
     lbl_803DD8F0++;
 }
 #pragma peephole reset
-#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void Menu_func04(int unused, int v)
@@ -133,7 +132,6 @@ void Menu_func04(int unused, int v)
     lbl_803DD8F4 = -1;
 }
 #pragma peephole reset
-#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void Menu_func03(int v)
