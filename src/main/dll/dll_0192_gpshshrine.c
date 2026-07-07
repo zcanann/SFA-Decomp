@@ -55,6 +55,7 @@ extern void dbsh_shrine_initialise(void);
 extern void DBSH_Symbol_init(void);
 
 #define GPSHSHRINE_OBJGROUP 0xb
+#define GPSHSHRINE_SPAWNED_OBJGROUP 0x10 /* puzzle-spawned objects, freed on completion */
 extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 
@@ -446,7 +447,7 @@ void gpsh_shrine_update(int obj)
                 else if (isGameTimerDisabled())
                 {
                     ((GpshShrineState*)data)->puzzleState = 7;
-                    objs = ObjGroup_GetObjects(0x10, &count);
+                    objs = ObjGroup_GetObjects(GPSHSHRINE_SPAWNED_OBJGROUP, &count);
                     for (; count != 0; count--)
                     {
                         Obj_FreeObject(objs[count - 1]);
