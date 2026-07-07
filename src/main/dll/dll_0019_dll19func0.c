@@ -5,6 +5,7 @@
 
 /* object group this object joins */
 #define DLL19_OBJGROUP 3
+#define DLL19_TARGET_OBJGROUP 4
 #define DLL19_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
@@ -761,7 +762,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
                 }
             }
             nearDist = lbl_803E1C58;
-            gDll19NearestObj = (GameObject*)ObjGroup_FindNearestObject(4, obj, &nearDist);
+            gDll19NearestObj = (GameObject*)ObjGroup_FindNearestObject(DLL19_TARGET_OBJGROUP, obj, &nearDist);
             source->anim.worldPosX = savedX;
             source->anim.worldPosY = savedY;
             source->anim.worldPosZ = savedZ;
