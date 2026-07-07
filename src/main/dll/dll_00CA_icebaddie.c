@@ -45,6 +45,7 @@
 /* object groups this ice baddie joins */
 #define ICEBADDIE_OBJGROUP 3
 #define ICEBADDIE_OBJGROUP_SECONDARY 80
+#define ICEBADDIE_HIT_VOLUME_SLOT 10
 
 /*
  * IceBaddieControl.effectFlags (u8 at +0x44) request bits. Set by the per-move
@@ -1352,7 +1353,7 @@ void iceBaddie_enterWhirlpoolGroup(int obj, GroundBaddieState* state)
         ObjGroup_AddObject(obj, ICEBADDIE_OBJGROUP_SECONDARY);
         state->baddie.inWhirlpoolGroup = 1;
     }
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
+    ObjHits_SetHitVolumeSlot(obj, ICEBADDIE_HIT_VOLUME_SLOT, 1, 0);
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
     ((GameObject*)obj)->anim.rotX -= 256;
