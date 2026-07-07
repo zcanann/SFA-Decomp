@@ -21,6 +21,8 @@
 #include "main/dll/ARW/arwing_state.h"
 #include "main/audio/sfx_ids.h"
 
+#define WCFLOORTILE_CHILD_OBJ_BOMB 0x605
+
 #define PAD_TRIGGER_Z 0x20
 #define PAD_TRIGGER_R 0x40
 #define PAD_BUTTON_B 0x200
@@ -468,7 +470,7 @@ void arwarwing_spawnBomb(int obj, int state, int side)
         ObjPath_GetPointWorldPosition(obj, 5, &px, &py, &pz, 0);
     else
         ObjPath_GetPointWorldPosition(obj, 6, &px, &py, &pz, 0);
-    setup = Obj_AllocObjectSetup(0x20, 0x605);
+    setup = Obj_AllocObjectSetup(0x20, WCFLOORTILE_CHILD_OBJ_BOMB);
     ((ArwingBombSetup*)setup)->head.posX = px;
     ((ArwingBombSetup*)setup)->head.posY = py;
     ((ArwingBombSetup*)setup)->head.posZ = pz;
