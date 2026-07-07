@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 
 #define NWICE_OBJGROUP 0x3c
+#define NWICE_LINK_OBJGROUP 0x3d /* scanned to find the paired ice object by linkId */
 
 typedef struct NwIcePlacement
 {
@@ -69,7 +70,7 @@ void NW_ice_update(int* obj)
     }
     else
     {
-        objects = (int**)ObjGroup_GetObjects(0x3d, &count);
+        objects = (int**)ObjGroup_GetObjects(NWICE_LINK_OBJGROUP, &count);
         setup = *(NwIcePlacement**)&((GameObject*)obj)->anim.placementData;
         for (i = 0, scan = objects; i < count; scan++, i++)
         {
