@@ -51,9 +51,12 @@ enum
 #define FESEQOBJECT_CONTROL_GROUP 3
 #define OBJSEQ_CONTROL_SUPPRESS_MSG 0x80
 
+/* partfx spawned by anim-events 2..6 (docblock: "spawn partfx 0x85 with effect variant 0..4"). */
+#define FESEQOBJECT_PARTFX 0x85
+
 static inline void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params)
 {
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x85, params, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)obj, FESEQOBJECT_PARTFX, params, 1, -1, NULL);
 }
 
 #pragma scheduling off
