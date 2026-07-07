@@ -17,6 +17,9 @@
 
 #define INFOPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* shared font/texture asset loaded at init (see file header). */
+#define INFOPOINT_TEXTURE_FONT 616
+
 #define PAD_BUTTON_A 0x100
 
 typedef struct InfopointObjectDef
@@ -101,7 +104,7 @@ void InfoPoint_init(int* obj, u8* def)
     ((GameObject*)obj)->animEventCallback = InfoPoint_SeqFn;
     if (*(void**)lbl_803219A0 == NULL)
     {
-        *(int*)lbl_803219A0 = textureLoadAsset(616);
+        *(int*)lbl_803219A0 = textureLoadAsset(INFOPOINT_TEXTURE_FONT);
     }
     state->unk08 = (int)lbl_80321990;
     txt = gameTextGet(((InfopointObjectDef*)def)->textId);
