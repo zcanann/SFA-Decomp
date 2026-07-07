@@ -2638,6 +2638,7 @@ main/dll/DR/dll_026F_drgenerator.c:
 main/dll/dll_0273_firepipe.c:
 	.text       start:0x8021F8CC end:0x80220608
 	.data       start:0x8032AC90 end:0x8032ACC8
+	.sdata2     start:0x803E6BA0 end:0x803E6BA8
 
 main/dll/DR/dll_0279_drenergydisc.c:
 	.text       start:0x80220608 end:0x80220808
