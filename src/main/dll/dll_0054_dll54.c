@@ -25,6 +25,9 @@
 extern f32 sqrtf(f32 x);
 extern CameraMode54State* gCameraModeNpcSpeakState;
 
+/* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
+#define DLL54_CAMMODE_DEFAULT 0x42
+
 /* Scene objects the NPC-speak camera frames the player between (docblock). */
 #define DLL54_LOOKAT_SEQID 0x2ab
 #define DLL54_ORIGIN_SEQID 0x4dc
@@ -60,7 +63,7 @@ void dll_54_update(u8* obj)
 
     if (gCameraModeNpcSpeakState->exitRequested != 0)
     {
-        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
+        (*gCameraInterface)->setMode(DLL54_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
     }
     else
     {
