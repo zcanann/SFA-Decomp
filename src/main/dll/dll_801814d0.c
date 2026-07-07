@@ -15,6 +15,9 @@
 #include "main/game_object.h"
 #include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+/* Group of carryable/blockable objects the duster blast applies area damage to. */
+#define DUSTER_AREADAMAGE_OBJGROUP 0x10
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void ObjHits_ClearHitVolumes(int objPtr);
 extern void ObjHits_DisableObject(u32 objPtr);
@@ -95,7 +98,7 @@ void fn_801814D0(int obj, int arg, u8* state)
                     }
                     return;
                 }
-                groupObjects = ObjGroup_GetObjects(0x10, &hitWork[0]);
+                groupObjects = ObjGroup_GetObjects(DUSTER_AREADAMAGE_OBJGROUP, &hitWork[0]);
                 i = 0;
                 objects = groupObjects;
                 for (; i < hitWork[0]; i++)
