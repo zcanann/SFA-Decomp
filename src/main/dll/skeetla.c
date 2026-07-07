@@ -1264,4 +1264,3 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
         }
     }
 }
-#pragma peephole reset
