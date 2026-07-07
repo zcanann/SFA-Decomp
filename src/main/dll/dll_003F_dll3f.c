@@ -28,6 +28,9 @@ extern f32 lbl_803E22A0;
 extern void* lbl_803DD960;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
+/* texture asset loaded into lbl_803DD960 (this DLL's only texture) */
+#define DLL3F_TEXTURE_ID 0x47A
+
 
 
 
@@ -82,7 +85,7 @@ void dll_3F_release(void)
 #pragma scheduling off /* intentional: last fn in TU */
 void dll_3F_initialise(void)
 {
-    lbl_803DD960 = textureLoadAsset(0x47A);
+    lbl_803DD960 = textureLoadAsset(DLL3F_TEXTURE_ID);
 }
 
 PPCWGPipe GXWGFifo : (0xCC008000);
