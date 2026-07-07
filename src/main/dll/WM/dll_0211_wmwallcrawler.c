@@ -24,6 +24,7 @@
 #include "main/dll/WM/dll_0211_wmwallcrawler.h"
 
 #define WMWALLCRAWLER_OBJGROUP 3
+#define WMWALLCRAWLER_TARGET_OBJGROUP 0xa /* nearest group-10 object targeted by the TARGET_NEAREST variant */
 
 typedef struct WmwallcrawlerState
 {
@@ -255,7 +256,7 @@ void wmwallcrawler_hitDetect(int obj)
         }
         else
         {
-            target = ObjGroup_FindNearestObject(0xa, obj, &stk);
+            target = ObjGroup_FindNearestObject(WMWALLCRAWLER_TARGET_OBJGROUP, obj, &stk);
         }
         ObjHits_RecordObjectHit(target, obj, 0xb, 1, 0);
         state->mode = WMWALLCRAWLER_MODE_DIE;
