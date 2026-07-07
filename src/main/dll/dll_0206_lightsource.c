@@ -33,6 +33,8 @@
 #define LIGHTSOURCE_SEQID_ARWING_B 0x712
 #define LIGHTSOURCE_SEQID_ARWING_FX 0x717
 
+#define LIGHTSOURCE_PARTFX_SPARK 0x7cb
+
 /* The glow-light object referenced by LightSourceState.light is a shared
    ModelLightStruct (see main/model_light.h).  Only the glow byte-fields used
    in render/update are declared here, to keep the rest of this DLL's call
@@ -186,7 +188,7 @@ void lightsource_update(int obj)
             if (b->sparkSpawnTimer <= 0.0f)
             {
                 fx.scale = 1.0f;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7cb, &fx, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, LIGHTSOURCE_PARTFX_SPARK, &fx, 2, -1, NULL);
                 b->sparkSpawnTimer += 5.0f;
             }
         }
