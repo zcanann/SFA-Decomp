@@ -11,6 +11,8 @@
 #define TUMBLEWEEDBUSH_SEQ_C 0x4b9 /* -> sibling 0x4ba */
 #define TUMBLEWEEDBUSH_SEQ_D 0x4be /* -> sibling 0x4c1 */
 
+#define TUMBLEWEEDBUSH_OBJGROUP 0x31 /* group scanned to find sibling bushes */
+
 #define TUMBLEWEEDBUSH_SIBLING_A 0x39d
 #define TUMBLEWEEDBUSH_SIBLING_B 0x3fb
 #define TUMBLEWEEDBUSH_SIBLING_C 0x4ba

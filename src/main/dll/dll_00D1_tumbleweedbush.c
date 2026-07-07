@@ -231,7 +231,7 @@ void* tumbleweedbush_findNearestActive(f32* p_pos)
     bestDist = gTumbleweedBushNearestInitDist;
     bestObj = NULL;
     {
-        void** tmp = ObjGroup_GetObjects(0x31, &count);
+        void** tmp = ObjGroup_GetObjects(TUMBLEWEEDBUSH_OBJGROUP, &count);
         i = 0;
         list = tmp;
     }
