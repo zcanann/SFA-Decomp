@@ -68,6 +68,9 @@ STATIC_ASSERT(offsetof(GfxBuf, scale) == 0x38);
 STATIC_ASSERT(offsetof(GfxBuf, entries[0]) == 0x60);
 STATIC_ASSERT(sizeof(GfxBuf) == 0x360);
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL96_EFFECT_ID 0x89
+
 int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     GfxBuf buf;
@@ -176,7 +179,7 @@ int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = lbl_803E12C0 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    return (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803175E8, 0x18, base + 0xd4, 0x89, 0);
+    return (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803175E8, 0x18, base + 0xd4, DLL96_EFFECT_ID, 0);
 }
 
 void dll_96_func01_nop(void)
