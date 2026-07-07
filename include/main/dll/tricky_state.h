@@ -184,7 +184,7 @@ typedef struct TrickyState {
     f32 unk72C;
     u32 unk730;
     f32 unk734;
-    f32 unk738;
+    f32 sfxRepeatTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an SFX and re-primes to lbl_803E2440 (tricky_substates) */
     f32 unk73C;
     f32 idleSfxTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an idle vocalization SFX and re-primes to randomGetRange(500,750) (tricky/substates/weapone6) */
     u8 pad744[0x798 - 0x744];

@@ -1278,8 +1278,8 @@ int trickyFoodFn_801437d4(int obj, int* state)
         ((u8*)state)[0xa] = 0;
         return 1;
     }
-    ((TrickyState*)state)->unk738 -= timeDelta;
-    if (((TrickyState*)state)->unk738 < lbl_803E23DC)
+    ((TrickyState*)state)->sfxRepeatTimer -= timeDelta;
+    if (((TrickyState*)state)->sfxRepeatTimer < lbl_803E23DC)
     {
         ptr = ((GameObject*)obj)->extra;
         if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
@@ -1288,7 +1288,7 @@ int trickyFoodFn_801437d4(int obj, int* state)
         {
             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x29a, 0x100, -1, 0);
         }
-        ((TrickyState*)state)->unk738 = lbl_803E2440;
+        ((TrickyState*)state)->sfxRepeatTimer = lbl_803E2440;
     }
     if (((TrickyState*)state)->child == NULL && Obj_IsLoadingLocked() != 0)
     {
@@ -1550,7 +1550,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
     {
         objAnimFn_8013a3f0(obj, 0x14, lbl_803E2444, 0);
         ((TrickyState*)trickyState)->substate = 3;
-        ((TrickyState*)trickyState)->unk738 = lbl_803E2440;
+        ((TrickyState*)trickyState)->sfxRepeatTimer = lbl_803E2440;
         return 1;
     }
     *(f32*)((int)trickyState + 0x724) = *(f32*)((int)trickyState + 0x724) - timeDelta;
@@ -1563,7 +1563,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
         {
             objAnimFn_8013a3f0(obj, 0x14, lbl_803E2444, 0);
             ((TrickyState*)trickyState)->substate = 3;
-            ((TrickyState*)trickyState)->unk738 = lbl_803E2440;
+            ((TrickyState*)trickyState)->sfxRepeatTimer = lbl_803E2440;
             return 1;
         }
         if (*(f32*)((int)trickyState + 0x71c) > lbl_803E23DC)
