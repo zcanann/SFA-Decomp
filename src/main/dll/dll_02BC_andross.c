@@ -28,6 +28,8 @@
 
 #define ANDROSS_CHILD_OBJ_SPAWNED 0x819 /* cached into state->spawnedObj w/ spawnedObjLifetime */
 
+#define ANDROSS_MAP_SHRINE 0xb /* Krazoa shrine map warped to on fight completion */
+
 typedef struct
 {
     u8 f80 : 1;
@@ -1773,7 +1775,7 @@ void andross_update(int obj)
             mainSetBits(0x4b1, 1);
             ((AndrossState*)state)->actionState = 0x1e;
             unlockLevel(0, 0, 1);
-            objId = mapGetDirIdx(0xb);
+            objId = mapGetDirIdx(ANDROSS_MAP_SHRINE);
             mapUnload(objId, 0x20000000);
             Music_Trigger(MUSICTRIG_Mound_Music, 0);
         }
@@ -2019,10 +2021,10 @@ void andross_update(int obj)
             (ref = mainGetBit(4), (u32)ref != 0))
         {
             mainSetBits(0x405, 0);
-            (*gMapEventInterface)->setMapAct(0xb, 7);
+            (*gMapEventInterface)->setMapAct(ANDROSS_MAP_SHRINE, 7);
             unlockLevel(0, 0, 1);
-            loadMapAndParent(mapGetDirIdx(0xb));
-            objId = mapGetDirIdx(0xb);
+            loadMapAndParent(mapGetDirIdx(ANDROSS_MAP_SHRINE));
+            objId = mapGetDirIdx(ANDROSS_MAP_SHRINE);
             lockLevel(objId, 1);
             warpToMap(0x4e, 0);
             ((AndrossState*)state)->fadeAlpha = lbl_803E74D4;
