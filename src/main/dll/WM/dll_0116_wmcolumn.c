@@ -19,6 +19,7 @@
 
 /* object group this column joins */
 #define WMCOLUMN_OBJGROUP 4
+#define WMCOLUMN_TARGET_OBJGROUP 0x10
 
 #define WMCOLUMN_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -110,7 +111,7 @@ void WM_Column_update(int obj)
             }
         }
         playerFlags = Obj_GetPlayerObject();
-        ObjGroup_FindNearestObject(0x10, obj, &nearest);
+        ObjGroup_FindNearestObject(WMCOLUMN_TARGET_OBJGROUP, obj, &nearest);
         playerFlags = playerGetStateFlag310(playerFlags);
         if (((playerFlags & 0x4000) != 0) && (nearest > lbl_803E37C4))
         {
