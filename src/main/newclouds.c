@@ -2347,17 +2347,17 @@ void dll_07_func06(void)
             lbl_803DD19C = NULL;
         }
     }
-    gNewCloudScrollPhaseA += lbl_803DF254 * timeDelta;
-    wrap = *(f32*)&gNewCloudScrollWrap;
-    if (wrap < gNewCloudScrollPhaseA)
+    t = gNewCloudScrollPhaseA + lbl_803DF254 * timeDelta;
+    gNewCloudScrollPhaseA = t;
+    if (t > *(f32*)&gNewCloudScrollWrap)
     {
-        gNewCloudScrollPhaseA -= wrap;
+        gNewCloudScrollPhaseA = t - *(f32*)&gNewCloudScrollWrap;
     }
-    gNewCloudScrollPhaseB += lbl_803DF25C * timeDelta;
-    wrap = *(f32*)&gNewCloudScrollWrap;
-    if (wrap < gNewCloudScrollPhaseB)
+    t = gNewCloudScrollPhaseB + lbl_803DF25C * timeDelta;
+    gNewCloudScrollPhaseB = t;
+    if (t > *(f32*)&gNewCloudScrollWrap)
     {
-        gNewCloudScrollPhaseB -= wrap;
+        gNewCloudScrollPhaseB = t - *(f32*)&gNewCloudScrollWrap;
     }
     t = gNewCloudScrollPhaseC - lbl_803DF260 * timeDelta;
     gNewCloudScrollPhaseC = t;
@@ -2412,8 +2412,10 @@ void dll_07_func06(void)
                 PSMTXRotRad(mtx, 0x7a, rot);
             }
             PSMTXConcat((void*)m, (void*)mtx, (void*)mtx);
-            PSMTXMultVec(mtx, (f32*)((u32)clouds + 0xd8),
-                         (f32*)((u32)clouds + 0xd8));
+            {
+                f32* m = mtx;
+                PSMTXMultVec(m, (f32*)((u32)clouds + 0xd8), (f32*)((u32)clouds + 0xd8));
+            }
             if (lbl_803DD190 < lbl_803DF278)
             {
                 lbl_803DD190 = lbl_803DD190 + gSnowFlakeSizeLarge;
