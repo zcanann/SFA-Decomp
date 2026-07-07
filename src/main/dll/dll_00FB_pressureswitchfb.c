@@ -51,6 +51,7 @@
 
 #define PRESSURESWITCHFB_STATE_MODE_OFFSET 0x80
 #define PRESSURESWITCHFB_REMOVE_GROUP_ID 0x53
+#define PRESSURESWITCHFB_TARGET_OBJGROUP 5
 
 #define PRESSURESWITCHFB_PRESSED_TEXTURE_ID 0x100
 
@@ -234,7 +235,7 @@ void PressureSwitchFB_update(int obj)
             *state = 0;
         }
         nearDist = lbl_803E3758;
-        nearest = ObjGroup_FindNearestObject(5, obj, &nearDist);
+        nearest = ObjGroup_FindNearestObject(PRESSURESWITCHFB_TARGET_OBJGROUP, obj, &nearDist);
         if (nearest != 0)
         {
             *state = 5;
