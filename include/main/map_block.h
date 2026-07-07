@@ -13,7 +13,7 @@ typedef struct MapBlockData {
     u8 pad0[0x4 - 0x0];
     u16 flags4; /* 0x04: block-state bits; bit 8 = block loaded, bit 1 toggled per tick */
     u8 pad6[0xC - 0x6];
-    s32 unkC;
+    s32 shadowTexHeader; /* 0x0C: pointer to the block's projected-shadow texture header; passed to objectShadow_setup(Swapped)ProjectedTexture, deref +0x60 (GX tex handle vs textureFn_8006c5c4), +0x64 (u8 fill alpha), +0x65 (u8==0xff special-draw select) in track_dolphin.c */
     s32 allocHandle;
     u16 unk14;
     u8 pad16[0x30 - 0x16];

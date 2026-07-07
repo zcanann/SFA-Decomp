@@ -3177,7 +3177,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     col[0] = 0;
     col[1] = 0;
     col[2] = 0;
-    col[3] = *(u8*)(((MapBlockData*)blockData)->unkC + 0x64);
+    col[3] = *(u8*)(((MapBlockData*)blockData)->shadowTexHeader + 0x64);
     f31 = ((GameObject*)obj)->anim.rootMotionScale;
     s31 = ((GameObject*)obj)->anim.rotX;
     s30 = ((GameObject*)obj)->anim.rotZ;
@@ -3205,7 +3205,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
     {
         int c = *(int*)col;
-        objectShadow_setupSwappedProjectedTexture(((MapBlockData*)blockData)->unkC, &c, mtx);
+        objectShadow_setupSwappedProjectedTexture(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx);
     }
     else
     {
@@ -3217,25 +3217,25 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
         if (handle == 0xFFFFFFFF)
         {
             u32 h2 = textureFn_8006c5c4();
-            hdr = ((MapBlockData*)blockData)->unkC;
+            hdr = ((MapBlockData*)blockData)->shadowTexHeader;
             if (*(u32*)(hdr + 0x60) != h2)
                 goto drawSpecial;
         }
         {
             int c = *(int*)col;
-            objectShadow_setupProjectedTexture(((MapBlockData*)blockData)->unkC, &c, mtx);
+            objectShadow_setupProjectedTexture(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx);
         }
         goto afterDraw;
     drawSpecial:
         if (*(u8*)(hdr + 0x65) == 0xff)
         {
             int c = *(int*)col;
-            fn_80077AD8(((MapBlockData*)blockData)->unkC, &c, mtx, f30);
+            fn_80077AD8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
         }
         else
         {
             int c = *(int*)col;
-            fn_80077EF8(((MapBlockData*)blockData)->unkC, &c, mtx, f30);
+            fn_80077EF8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
         }
     afterDraw:;
     }
