@@ -66,6 +66,13 @@ typedef struct
     u8 page;     /* 0x0f */
 } TextGlyph;
 
+/* Per-glyph font id stored in TextGlyph.lang (characterStruct.font). Id 1 is unused. */
+#define GAMETEXT_FONT_JAPANESE 0
+#define GAMETEXT_FONT_ICON 2
+#define GAMETEXT_FONT_FLAG 3
+#define GAMETEXT_FONT_LATIN 4
+#define GAMETEXT_FONT_FACE 5
+
 typedef struct
 {
     TextGlyph* glyphs; /* 0x00 */
@@ -806,7 +813,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
         }
         else
         {
-            if (g->lang == 3)
+            if (g->lang == GAMETEXT_FONT_FLAG)
             {
                 int shift = lbl_803DB3CC << 2;
                 fy0 = fy0 - shift;
@@ -814,7 +821,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 GXGetScissor(&scisX, &scisY, &scisW, &scisH);
                 GXSetScissor(scisX, (scisY >= lbl_803DB3CC) ? scisY - lbl_803DB3CC : 0, scisW, scisH);
             }
-            if (g->lang == 5)
+            if (g->lang == GAMETEXT_FONT_FACE)
             {
                 int iw = g->width + (g->advanceX + g->offsetX);
                 int ih = g->height + (g->advanceY + g->offsetY);
@@ -874,7 +881,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 }
             }
 
-            if (lbl_803DC99C != 0 && mode == 0 && g->lang != 5 &&
+            if (lbl_803DC99C != 0 && mode == 0 && g->lang != GAMETEXT_FONT_FACE &&
                 lbl_803DC998 >= lbl_803DC994)
             {
                 setTextColor(0, 0, 0, 0, 0);
@@ -900,13 +907,13 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                                (v0 + (f32)(g->height << 5)) / sH);
             }
 
-            if (g->lang == 3 || g->lang == 5)
+            if (g->lang == GAMETEXT_FONT_FLAG || g->lang == GAMETEXT_FONT_FACE)
             {
                 GXSetScissor(scisX, scisY, scisW, scisH);
             }
         }
 
-        if ((int)g->lang != 5)
+        if ((int)g->lang != GAMETEXT_FONT_FACE)
         {
             x = lbl_803DC9A0 * (f32)(g->width + (g->advanceX + g->offsetX)) + x;
         }
@@ -968,7 +975,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
         }
     }
     tbl = &lbl_802C8680[glyphLang * 16];
-    if (glyphLang != 5)
+    if (glyphLang != GAMETEXT_FONT_FACE)
     {
         if (outMaxAdv != NULL)
         {
@@ -1000,7 +1007,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
             case TEXT_CTRL_LANGUAGE:
                 glyphLang = params[0];
                 tbl = &lbl_802C8680[glyphLang * 16];
-                if (glyphLang != 5)
+                if (glyphLang != GAMETEXT_FONT_FACE)
                 {
                     mAdv = (f32)(u32) * (u16*)(tbl + 8) * scale;
                     if (outMaxAdv != NULL && mAdv > *outMaxAdv)
@@ -1023,7 +1030,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
         {
             continue;
         }
-        if (glyphLang == 5)
+        if (glyphLang == GAMETEXT_FONT_FACE)
         {
             continue;
         }
