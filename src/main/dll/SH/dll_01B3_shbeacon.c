@@ -21,6 +21,9 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+/* flame child object spawned on ignition, cached in ShBeaconState.childObj */
+#define SHBEACON_CHILD_OBJ_FLAME 0x55
+
 #define SHBEACON_OBJFLAG_HIDDEN 0x4000
 #define SHBEACON_OBJFLAG_RENDERED 0x800
 #define SHBEACON_OBJFLAG_FREED 0x40
@@ -111,7 +114,7 @@ void sh_beacon_update(int obj)
             mainSetBits(((ShBeaconPlacement*)def)->igniteGameBit, 1);
             if (Obj_IsLoadingLocked() != 0)
             {
-                setup = Obj_AllocObjectSetup(0x20, 0x55);
+                setup = Obj_AllocObjectSetup(0x20, SHBEACON_CHILD_OBJ_FLAME);
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
                 ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -238,7 +241,7 @@ void sh_beacon_init(int obj, int defData)
 
     if (((ShBeaconState*)state)->mode != SH_BEACON_MODE_UNLIT && Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(0x20, 0x55);
+        setup = Obj_AllocObjectSetup(0x20, SHBEACON_CHILD_OBJ_FLAME);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
