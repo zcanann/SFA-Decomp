@@ -142,7 +142,6 @@ typedef struct DbeggPlacement
 void dbegg_processMessages(int obj)
 {
     extern int gameBitIncrement(int bit);
-    extern void Obj_RemoveFromUpdateList(int);
     extern void vecRotateZXY(void*, int);
     extern const f32 lbl_803E61C8;
     extern const f32 lbl_803E61CC;
@@ -609,7 +608,6 @@ void dbegg_update(int obj)
     extern int Obj_GetPlayerObject(void);
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     extern void dbegg_processMessages(int);
-    extern int fn_801FE560(int, f32*, f32, f32, int);
     extern void fn_801FE774(int, f32*);
     extern void objMove(int, f32, f32, f32);
 
