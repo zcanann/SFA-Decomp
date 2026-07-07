@@ -23,6 +23,7 @@
 #include "main/dll/fx_800944A0_shared.h"
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
+#define PINPONSPIKE_PARTFX 0x715
 #define PINPONSPIKE_OBJFLAG_HIDDEN 0x4000
 #define PINPONSPIKE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -137,7 +138,7 @@ void pinponspike_update(int obj)
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             for (i = 0; i < 0x19; i++)
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
+                (*gPartfxInterface)->spawnObject((void*)obj, PINPONSPIKE_PARTFX, NULL, 1, -1, &i);
             }
             Sfx_PlayFromObject(obj, SFXsc_attack03);
         }
@@ -149,7 +150,7 @@ void pinponspike_update(int obj)
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             for (i = 0; i < 0x19; i++)
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
+                (*gPartfxInterface)->spawnObject((void*)obj, PINPONSPIKE_PARTFX, NULL, 1, -1, &i);
             }
             Sfx_PlayFromObject(obj, SFXsc_attack03);
         }
