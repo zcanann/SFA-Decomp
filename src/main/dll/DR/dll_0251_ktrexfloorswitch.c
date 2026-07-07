@@ -73,6 +73,10 @@ STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, boltObj) == 0x10);
 #define KTREXFLOORSWITCH_FLAG_CHARGED 0x8       /* charge level reached max (0xf) */
 #define KTREXFLOORSWITCH_FLAG_MOVING (KTREXFLOORSWITCH_FLAG_RISING | KTREXFLOORSWITCH_FLAG_SINKING) /* 0x6 */
 
+/* Partfx spawned while the plate moves vs after it settles. */
+#define KTREXFLOORSWITCH_PARTFX_MOVING 0x488  /* emitted each frame the plate is actively rising/sinking */
+#define KTREXFLOORSWITCH_PARTFX_SETTLED 0x486 /* emitted once the plate has stopped moving */
+
 typedef struct KtrexfloorswitchState
 {
     u8 pad0[0x4 - 0x0];
@@ -312,7 +316,7 @@ void KT_RexFloorSwitch_update(int obj)
             else
             {
                 moved = 1;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x488, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, KTREXFLOORSWITCH_PARTFX_MOVING, NULL, 2, -1, NULL);
             }
         }
     }
@@ -329,7 +333,7 @@ void KT_RexFloorSwitch_update(int obj)
             else
             {
                 moved = 1;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x488, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, KTREXFLOORSWITCH_PARTFX_MOVING, NULL, 2, -1, NULL);
             }
         }
     }
@@ -462,7 +466,7 @@ void KT_RexFloorSwitch_update(int obj)
         }
         if ((((KtrexfloorswitchState*)state)->flags & KTREXFLOORSWITCH_FLAG_MOVING) == 0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x486, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, KTREXFLOORSWITCH_PARTFX_SETTLED, NULL, 2, -1, NULL);
         }
     }
     else
