@@ -20,6 +20,9 @@
 
 #define DFPLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
 
+/* repels the player away from this object and applies status damage (arg = status type) */
+#define DFPLEVELCONTROL_MSG_PLAYER_HIT 0x60005
+
 extern u32 ObjMsg_SendToObject();
 extern void fn_802960E8(void* playerObj, int p2);
 extern s16 lbl_80329848[];
@@ -84,7 +87,7 @@ void fn_80204098(int obj)
         if (mainGetBit(0x5e5) != 0)
         {
             state->timer = 300;
-            ObjMsg_SendToObject(player, 0x60005, obj, 0);
+            ObjMsg_SendToObject(player, DFPLEVELCONTROL_MSG_PLAYER_HIT, obj, 0);
         }
     }
     if (mainGetBit(0x7a1) != 0)
@@ -148,7 +151,7 @@ void fn_80204320(int obj)
         if (mainGetBit(1509) != 0)
         {
             sub->timer = 300;
-            ObjMsg_SendToObject(player, 0x60005, obj, 1);
+            ObjMsg_SendToObject(player, DFPLEVELCONTROL_MSG_PLAYER_HIT, obj, 1);
         }
     }
 }
