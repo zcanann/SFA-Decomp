@@ -21,6 +21,9 @@
 
 #define PAD_BUTTON_A 0x100
 
+/* LightFoot Village map-event id (tug-of-war runs while its mode == 6). */
+#define SCTOTEMSTRENGTH_MAP_LIGHTFOOT 0xe
+
 extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u32 Sfx_KeepAliveLoopedObjectSound();
@@ -406,7 +409,7 @@ void sc_totemstrength_update(u8* obj)
 
     Obj_GetPlayerObject();
     mainSetBits(0xf1d, 0);
-    mapMode = (*gMapEventInterface)->getMapAct(0xe);
+    mapMode = (*gMapEventInterface)->getMapAct(SCTOTEMSTRENGTH_MAP_LIGHTFOOT);
     if (mapMode == 6)
     {
         if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0)
