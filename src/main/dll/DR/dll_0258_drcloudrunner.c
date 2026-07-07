@@ -85,6 +85,9 @@ typedef struct
 
 #define CLOUDRUNNER_ONCLOUD_GAMEBIT 0xed7 /* set while mounted/on cloudrunner */
 
+/* projectile the cloudrunner fires: velocity aimed from rotation, partfx trail */
+#define DRCLOUDRUNNER_CHILD_OBJ_PROJECTILE 0x42a
+
 int DR_CloudRunner_defaultStateHandler(void) { return 0x0; }
 
 void DR_CloudRunner_func21(void)
@@ -945,7 +948,7 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
             return 0;
         }
         Sfx_PlayFromObject(obj, SFXtr_cnflyby6);
-        setup = Obj_AllocObjectSetup(0x18, 0x42a);
+        setup = Obj_AllocObjectSetup(0x18, DRCLOUDRUNNER_CHILD_OBJ_PROJECTILE);
         ((ObjPlacement*)setup)->color[2] = 0xff;
         ((ObjPlacement*)setup)->color[3] = 0xff;
         ((ObjPlacement*)setup)->color[0] = 2;
@@ -1180,7 +1183,7 @@ void fn_802BF4D8(int obj)
         return;
     }
     Sfx_PlayFromObject(obj, SFXtr_cnflyby6);
-    setup = Obj_AllocObjectSetup(0x24, 0x42a);
+    setup = Obj_AllocObjectSetup(0x24, DRCLOUDRUNNER_CHILD_OBJ_PROJECTILE);
     ((ObjPlacement*)setup)->color[2] = 0xff;
     ((ObjPlacement*)setup)->color[3] = 0xff;
     ((ObjPlacement*)setup)->color[0] = 2;
