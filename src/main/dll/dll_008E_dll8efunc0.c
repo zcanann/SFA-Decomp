@@ -42,6 +42,9 @@ extern f32 lbl_803E1168;
 extern f32 lbl_803E116C;
 
 #pragma opt_propagation off
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL8E_EFFECT_ID 0x26a
+
 void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
@@ -209,7 +212,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 3, gDll8EEffectVtxColorTable, 1, &gDll8EEffectSpawnResource, 0x26a, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 3, gDll8EEffectVtxColorTable, 1, &gDll8EEffectSpawnResource, DLL8E_EFFECT_ID, 0);
 }
 #pragma opt_propagation reset
 
