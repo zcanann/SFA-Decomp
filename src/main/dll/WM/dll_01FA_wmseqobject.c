@@ -144,7 +144,6 @@ void WM_seqobject_free(void)
 
 void WM_seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     s32 v = visible;
 
     if (v != 0)
