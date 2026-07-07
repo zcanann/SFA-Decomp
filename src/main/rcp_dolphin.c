@@ -30,6 +30,7 @@
 #define GX_CH_ALPHA 3
 #define GX_VA_POS 9
 #define GX_VA_NRM 10
+#define GX_PNMTX0 0
 #define GX_DIRECT 1
 #define GX_TRIANGLESTRIP 0x98
 #define GX_VTXFMT4 4
@@ -505,7 +506,7 @@ void gxFn_80052dc0(void)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_NRM, GX_DIRECT);
     PSMTXIdentity(pmtx);
-    GXLoadPosMtxImm(pmtx, 0);
+    GXLoadPosMtxImm(pmtx, GX_PNMTX0);
     GXLoadNrmMtxImm(pmtx, 0);
     GXSetCurrentMtx(0);
 }
