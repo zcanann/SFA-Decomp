@@ -281,7 +281,7 @@ typedef struct PlayerState {
     f32 knockbackTimer; /* knockback/stagger countdown (-= timeDelta*knockbackDrainRate); set on knock moves, gates knock FX/sfx (0x394/0x395) while >0, reset to 0 on expiry */
     f32 knockbackHitTimer; /* periodic countdown during knockback drag (-= timeDelta); on expiry fires an ObjHits position-hit and reloads */
     f32 knockbackDrainRate; /* drain multiplier for knockbackTimer (-= timeDelta*this); tracks velocity magnitude, clamped to a range */
-    u8 unk7A8;
+    u8 knockKindBits; /* KnockBits bitfield byte at 0x7a8 (knock:3 top / low:5): .knock set from knockKind; read as (>>5 & 7)-1 to index the knockback particle table */
     u8 pad7A9[0x7B8 - 0x7A9];
     f32 aimInputX; /* smoothed aim-stick X (eased from baddie.moveInputX, clamped); drives aimScreenY and the world aim direction */
     f32 aimInputZ; /* smoothed aim-stick Z (eased from baddie.moveInputZ, clamped); drives aimScreenX and the world aim direction */
@@ -370,8 +370,8 @@ typedef struct PlayerState {
     u8 queuedBitCount; /* count (0..4) of queued bit-index bytes stored in the following array at 0x8b9; a "case 1" push appends a byte and increments this, clamped to 4; on state init the loop ORs (1 << each stored byte) into the bitmask at 0x310 then this is reset to 0 */
     u8 pad8B9[0x8BF - 0x8B9]; /* queued bit-index byte array filled by the queuedBitCount push API */
     u8 unk8BF;
-    u8 unk8C0;
-    u8 unk8C1;
+    u8 moveChainIndex; /* 0x8c0: branch index into the current move slot's next-move table (slot+0x15+moveChainIndex selects the follow-up moveSlotIndex); set 0 or from state+0x34b */
+    u8 attackVariantMode; /* 0x8c1: attack/swing variant (0/1/2) chosen from moveSlotIndex (0x11->0, 0xf/0x1b/else->1/2); read as `mode`, selects camera-flag bits 0x100/0x200/0x400 */
     s8 climbProbeResult; /* debounced playerCheckIfClimbingOntoWall() result; -1 = none, else the wall/climb type switched on to pick the climb move */
     u8 climbProbeStableCount; /* consecutive frames climbProbeResult has held the same value (capped at 200); reset to 0 on change */
     u8 unk8C4;
@@ -394,7 +394,7 @@ typedef struct PlayerState {
     u8 pad8D5[0x8D8 - 0x8D5];
     u16 pendingFxFlags; /* one-shot particle-effect request bits (1/2/8 spray-splash, 4 landing burst); set on events, cleared after the FX is spawned */
     u8 pad8DA[0x8DC - 0x8DA];
-    int unk8DC;
+    int triggerGameBitPtr; /* 0x8dc: pointer (from ObjMsg 0x7000a param) to the sequence-trigger's s16 descriptor; *ptr = gamebit index (mainGetBit/mainSetBits), *(ptr+2) copied into unk688 */
 } PlayerState;
 
 STATIC_ASSERT(sizeof(PlayerState) == 0x8E0);

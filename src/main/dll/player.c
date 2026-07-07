@@ -5503,7 +5503,7 @@ int playerStateAttack(int obj, int state, f32 fv)
                     if (*(u8*)((inner->moveSlots + 0x6c) + (u32)inner->moveSlotIndex * 0xb0) != 0u)
                     {
                         *(u8*)((char*)state + 0x34a) = *(u8*)((char*)state + 0x34a) | 4;
-                        inner->unk8C0 = 0;
+                        inner->moveChainIndex = 0;
                     }
                 }
                 if (((GameObject*)obj)->anim.currentMoveProgress >
@@ -5523,7 +5523,7 @@ int playerStateAttack(int obj, int state, f32 fv)
                     *(int*)&((PlayerState*)state)->baddie.unk31C = *(int*)&((PlayerState*)state)->baddie.unk31C & ~
                         0x100;
                     buttonDisable(0, PAD_BUTTON_A);
-                    inner->unk8C0 = *(u8*)((char*)state + 0x34b);
+                    inner->moveChainIndex = *(u8*)((char*)state + 0x34b);
                 }
                 if ((*(u8*)((char*)state + 0x34a) & 4) != 0 &&
                     (*(u8*)((char*)state + 0x34a) & 2) != 0)
@@ -5534,7 +5534,7 @@ int playerStateAttack(int obj, int state, f32 fv)
                     if (v >= *(f32*)(slot2 + 0x8c))
                     {
                         inner->moveSlotIndex =
-                            *(u8*)((slot2 + 0x15) + (u32)inner->unk8C0);
+                            *(u8*)((slot2 + 0x15) + (u32)inner->moveChainIndex);
                     }
                     else
                     {
@@ -8255,19 +8255,19 @@ void playerDoHitDetection(int obj)
                     u8 c = ((PlayerState*)inner)->moveSlotIndex;
                     if (c == 0xf)
                     {
-                        ((PlayerState*)inner)->unk8C1 = 1;
+                        ((PlayerState*)inner)->attackVariantMode = 1;
                     }
                     else if (c == 0x1b)
                     {
-                        ((PlayerState*)inner)->unk8C1 = 2;
+                        ((PlayerState*)inner)->attackVariantMode = 2;
                     }
                     else if (c == 0x11)
                     {
-                        ((PlayerState*)inner)->unk8C1 = 0;
+                        ((PlayerState*)inner)->attackVariantMode = 0;
                     }
                     else
                     {
-                        ((PlayerState*)inner)->unk8C1 = 1;
+                        ((PlayerState*)inner)->attackVariantMode = 1;
                     }
                 }
             }
@@ -9070,7 +9070,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
             {
                 void* t;
                 s16 bit;
-                ((PlayerState*)inner)->unk8DC = param;
+                ((PlayerState*)inner)->triggerGameBitPtr = param;
                 t = *(void**)(p + 0x64);
                 if (t != NULL)
                 {
@@ -9122,7 +9122,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                                                             -1);
                 }
                 ((PlayerState*)inner)->interactObject = p;
-                ((PlayerState*)inner)->unk688 = *(s16*)(((PlayerState*)inner)->unk8DC + 2);
+                ((PlayerState*)inner)->unk688 = *(s16*)(((PlayerState*)inner)->triggerGameBitPtr + 2);
                 t = *(void**)(((PlayerState*)inner)->interactObject + 0x64);
                 if (t != NULL)
                 {
@@ -13202,7 +13202,7 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
             *flags |= 0x80;
         }
     }
-    mode = inner->unk8C1;
+    mode = inner->attackVariantMode;
     if (mode == 0)
     {
         *flags |= 0x100;
@@ -14357,7 +14357,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             tbl[0] = lbl_803E7E68;
             tbl[1] = lbl_803E7E6C;
             objParticleFn_80099d84(obj, lbl_803E7E9C,
-                                   tbl[((((PlayerState*)inner)->unk7A8 >> 5) & 7) - 1] & 0xff,
+                                   tbl[((((PlayerState*)inner)->knockKindBits >> 5) & 7) - 1] & 0xff,
                                    lbl_803E7EE0, 0);
         }
         if ((((PlayerState*)inner)->pendingFxFlags & 1) != 0)
