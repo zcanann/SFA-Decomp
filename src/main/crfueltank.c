@@ -6,6 +6,7 @@
 /* GameObject anim.flags bit (== OBJANIM_FLAG_HIDDEN): hides the tank from
    render/update; toggled with the hit-volume enable/disable. */
 #define CRFUELTANK_OBJFLAG_HIDDEN 0x4000
+#define CRFUELTANK_HIT_VOLUME_SLOT 0x1d
 
 extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
 extern void ObjHits_DisableObject(void* obj);
@@ -99,7 +100,7 @@ void crfueltank_update(CrFuelTankObject* obj)
         }
         else
         {
-            ObjHits_SetHitVolumeSlot(obj, 0x1d, crfueltank_animFrame(def), 0);
+            ObjHits_SetHitVolumeSlot(obj, CRFUELTANK_HIT_VOLUME_SLOT, crfueltank_animFrame(def), 0);
         }
     }
     return;
@@ -111,7 +112,7 @@ void crfueltank_init(CrFuelTankObject* obj, CrFuelTankDef* def)
 
     state = obj->state;
     ObjHits_EnableObject(obj);
-    ObjHits_SetHitVolumeSlot(obj, 0x1d, crfueltank_animFrame(def), 0);
+    ObjHits_SetHitVolumeSlot(obj, CRFUELTANK_HIT_VOLUME_SLOT, crfueltank_animFrame(def), 0);
     storeZeroToFloatParam(state->timer);
     if ((def->hitEvent != -1) && (mainGetBit(def->hitEvent) != 0))
     {
