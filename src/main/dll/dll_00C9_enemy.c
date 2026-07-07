@@ -8,6 +8,7 @@
  * fools the beam. ("GC" = GameCube; see the dll_0150 header.)
  */
 #include "main/camera_interface.h"
+#include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/objseq.h"
@@ -402,7 +403,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             int moveId = ((TrickyState*)state)->moveId2;
             ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->moveSpeedScale2);
             ((TrickyState*)state)->flags323 = 1;
-            ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E2574, 0x10);
+            ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E2574, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
             if (*(void**)(obj + 0x2a) != 0)
             {
                 *(u8*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x70) = 0;
