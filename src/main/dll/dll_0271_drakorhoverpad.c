@@ -26,6 +26,7 @@
 #define DRAKORHOVERPAD_SUBTYPE_FREE 1048     /* free curve-follow, no tracking */
 #define DRAKORHOVERPAD_OBJGROUP 0x46
 #define DRAKORHOVERPAD_OBJGROUP_SECONDARY 0xa
+#define DRAKORHOVERPAD_HIT_VOLUME_SLOT 8
 /* group owned by another DLL, queried here */
 #define BOSSDRAKOR_OBJGROUP 0x45 /* DLL 0x24D bossdrakor */
 
@@ -539,7 +540,7 @@ void drakorhoverpad_updateMain(int obj)
             ((DrakorHoverpadUpdateMainState*)p)->verticalVel +=
                 (absV > *(f32*)p) ? -limit : limit;
         }
-        ObjHits_SetHitVolumeSlot(obj, 8, 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, DRAKORHOVERPAD_HIT_VOLUME_SLOT, 1, 0);
     }
     else
     {
