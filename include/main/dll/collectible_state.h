@@ -4,6 +4,11 @@
 #include "ghidra_import.h"
 #include "global.h"
 
+/* anim.seqId values identifying the two health-refill collectibles (Tier 3
+ * loot). Same ids spawned by largecrate dropType 5/6 (LARGECRATE_DROP_GAS). */
+#define COLLECTIBLE_ITEM_ENERGY_EGG 0xB   /* +4 health (large refill) */
+#define COLLECTIBLE_ITEM_APPLE      0x3CD /* +2 health (small refill) */
+
 /*
  * CollectibleState - the obj+0xB8 extra record (0x2B8 bytes) for the
  * collectible / pickup family (dll_00ED_collectible.c). Items dropped by
