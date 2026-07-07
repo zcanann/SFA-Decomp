@@ -199,10 +199,10 @@ void fn_8013E0D0(int* obj, u8* st)
                 {
                     {
                         void* ct = trickyFindCirclingTarget(gobj, t);
-                        *(void**)&t->unk720 = ct;
+                        *(void**)&t->cooldownB = ct;
                         if (ct != NULL)
                         {
-                            *(int*)&t->followObj = *(int*)&t->unk720;
+                            *(int*)&t->followObj = *(int*)&t->cooldownB;
                             *(int*)&t->unk724 = 0;
                             t->substate = ANIMOBJD2_SUBSTATE_ORBIT;
                             break;
@@ -222,7 +222,7 @@ void fn_8013E0D0(int* obj, u8* st)
                     t->substate = ANIMOBJD2_SUBSTATE_APPROACH;
                     b = 1;
                     z = lbl_803E23DC;
-                    t->unk71C = z;
+                    t->cooldownA = z;
                     if (z == t->waterLevel)
                     {
                         b = 0;
@@ -272,10 +272,10 @@ void fn_8013E0D0(int* obj, u8* st)
                 {
                     {
                         void* ct = trickyFindCirclingTarget(gobj, t);
-                        *(void**)&t->unk720 = ct;
+                        *(void**)&t->cooldownB = ct;
                         if (ct != NULL)
                         {
-                            *(int*)&t->followObj = *(int*)&t->unk720;
+                            *(int*)&t->followObj = *(int*)&t->cooldownB;
                             *(int*)&t->unk724 = 0;
                             t->substate = ANIMOBJD2_SUBSTATE_ORBIT;
                             break;
@@ -365,10 +365,10 @@ void fn_8013E0D0(int* obj, u8* st)
                     t->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;
                     break;
                 }
-                t->unk71C -= timeDelta;
-                if (t->unk71C < lbl_803E23DC)
+                t->cooldownA -= timeDelta;
+                if (t->cooldownA < lbl_803E23DC)
                 {
-                    t->unk71C = (f32)(s32)
+                    t->cooldownA = (f32)(s32)
                     randomGetRange(0xc8, 0x258) * lbl_803E24A8;
                     TRICKY_BARK((int*)gobj, 0x29b, 0x1000);
                 }
@@ -472,7 +472,7 @@ void fn_8013E0D0(int* obj, u8* st)
             {
                 tgt = (int*)Player_GetTargetObject(t->playerObj);
             }
-            if ((u32)tgt != *(u32*)&t->unk720 || *(int*)&t->unk728 != 0)
+            if ((u32)tgt != *(u32*)&t->cooldownB || *(int*)&t->unk728 != 0)
             {
                 TRICKY_RETARGET((u8*)t, *(int*)&t->followObj);
                 t->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;

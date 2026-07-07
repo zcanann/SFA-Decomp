@@ -29,7 +29,7 @@ typedef struct TrickyState {
     u8 substate; /* anim-sequence substate 0..7 */
     u8 unk0B;
     u8 unk0C;
-    s8 unkD;
+    s8 commandPhase; /* current command-dispatch phase selector (-1 idle, 1..5 active); compared == 3 / != 0 to gate the queued-command state machine (tricky/substates/weapone6/tumbleweedbush/mmp) */
     u8 padE[0x10 - 0xE];
     f32 prevSpeed;
     f32 speed; /* planar speed magnitude, multiplied into dirX/dirZ */
@@ -176,8 +176,8 @@ typedef struct TrickyState {
     u8 *unk70C;
     f32 unk710;
     u8 pad714[0x71C - 0x714];
-    f32 unk71C;
-    f32 unk720;
+    f32 cooldownA; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC; == floor gates a state/anim transition (tricky/substates/weapone6/tumbleweedbush/mmp) */
+    f32 cooldownB; /* f32 countdown paired with cooldownA: -= timeDelta, clamped to floor; == floor gates a move, > floor gates fidget/contact-sfx (tricky/substates/weapone6/tumbleweedbush) */
     void *unk724;
     u8 unk728;
     u8 pad729[0x72C - 0x729];
@@ -186,12 +186,12 @@ typedef struct TrickyState {
     f32 unk734;
     f32 unk738;
     f32 unk73C;
-    f32 unk740;
+    f32 idleSfxTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an idle vocalization SFX and re-primes to randomGetRange(500,750) (tricky/substates/weapone6) */
     u8 pad744[0x798 - 0x744];
-    u8 unk798;
+    u8 commandCount; /* number of queued Tricky commands (0..10); index into the command records at 0x748 (stride 8), bumped on enqueue / dropped on dequeue, used as the scan loop bound (tricky) */
     u8 pad799[0x79C - 0x799];
     f32 unk79C;
-    f32 unk7A0f;
+    f32 voiceCooldown; /* f32 countdown: -= timeDelta, clamped to floor; while > floor a TRICKY_VOICE line is (re)issued (tricky/trickyfollow/skeetla) */
     f32 unk7A4;
     u8 *childA;
     u8 pad7AC[0x7B0 - 0x7AC];

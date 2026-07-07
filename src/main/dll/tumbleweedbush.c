@@ -175,8 +175,8 @@ void trickyGrowl(void* obj, void* trickyState)
             ((TrickyState*)trickyState)->substate = TRICKYGROWL_WINDUP;
             {
                 f32 resetValue = lbl_803E23DC;
-                ((TrickyState*)trickyState)->unk71C = resetValue;
-                ((TrickyState*)trickyState)->unk720 = resetValue;
+                ((TrickyState*)trickyState)->cooldownA = resetValue;
+                ((TrickyState*)trickyState)->cooldownB = resetValue;
             }
             ((TrickyState*)trickyState)->stateFlags &= ~0x10LL;
             ((TrickyState*)trickyState)->stateFlags &= ~0x10000LL;
@@ -184,7 +184,7 @@ void trickyGrowl(void* obj, void* trickyState)
             ((TrickyState*)trickyState)->stateFlags &= ~0x40000LL;
             {
                 s8 mm = -1;
-                ((TrickyState*)trickyState)->unkD = mm;
+                ((TrickyState*)trickyState)->commandPhase = mm;
             }
         }
         else

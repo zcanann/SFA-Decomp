@@ -563,7 +563,7 @@ int trickyMove(u8* obj, f32* targetPos)
 
         if (moveSpeed > lbl_803E246C)
         {
-            ((TrickyState*)state)->unk7A0f = lbl_803E2440;
+            ((TrickyState*)state)->voiceCooldown = lbl_803E2440;
             objAnimFn_8013a3f0((int)obj, 0x30, lbl_803E2468, 0x3000000);
         }
         else if (moveSpeed > lbl_803E23E8)

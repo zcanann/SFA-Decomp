@@ -49,7 +49,7 @@ typedef struct
         {                                                                                                              \
             s8 mm;                                                                                                     \
             mm = -1;                                                                                                   \
-            *(s8*)&((TrickyState*)(st))->unkD = mm;                                                                    \
+            *(s8*)&((TrickyState*)(st))->commandPhase = mm;                                                                    \
         }                                                                                                              \
     }
 
@@ -163,8 +163,8 @@ void fn_8013F100(int obj, register int state)
                 ((TrickyState*)state)->stateIndex = 1;
                 ((TrickyState*)state)->substate = 0;
                 resetTimer = lbl_803E23DC;
-                ((TrickyState*)state)->unk71C = resetTimer;
-                ((TrickyState*)state)->unk720 = resetTimer;
+                ((TrickyState*)state)->cooldownA = resetTimer;
+                ((TrickyState*)state)->cooldownB = resetTimer;
                 TRICKY_CLEAR_RESET_FLAGS(state);
             }
         }
@@ -460,10 +460,10 @@ void fn_8013F9E4(int obj, int state)
     {
         if (trickyFn_8013b368(obj, lbl_803E2488, state) == 0)
         {
-            ((TrickyState*)state)->unk740 -= timeDelta;
-            if (((TrickyState*)state)->unk740 <= lbl_803E23DC)
+            ((TrickyState*)state)->idleSfxTimer -= timeDelta;
+            if (((TrickyState*)state)->idleSfxTimer <= lbl_803E23DC)
             {
-                ((TrickyState*)state)->unk740 = (f32)(s32)randomGetRange(500, 750);
+                ((TrickyState*)state)->idleSfxTimer = (f32)(s32)randomGetRange(500, 750);
                 extra = *(int*)&((GameObject*)obj)->extra;
                 if ((((u32) * (u8*)(extra + 0x58) >> 6) & 1) == 0)
                 {
@@ -615,8 +615,8 @@ void fn_8013FBE4(int obj, register int state)
             ((TrickyState*)state)->stateIndex = 1;
             ((TrickyState*)state)->substate = 0;
             resetTimer = lbl_803E23DC;
-            ((TrickyState*)state)->unk71C = resetTimer;
-            ((TrickyState*)state)->unk720 = resetTimer;
+            ((TrickyState*)state)->cooldownA = resetTimer;
+            ((TrickyState*)state)->cooldownB = resetTimer;
             TRICKY_CLEAR_RESET_FLAGS(state);
         }
         break;

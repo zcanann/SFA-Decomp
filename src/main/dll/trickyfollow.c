@@ -623,7 +623,7 @@ state_selected:
                         ((TrickyState*)state)->speed = gTrickyFollowMaxSpeed;
                         objAnimFn_8013a3f0(obj, 0x15, lbl_803E2468, 0x4000000);
                         ((TrickyState*)state)->followPhase = 9;
-                        ((TrickyState*)state)->unk7A0f = lbl_803E2440;
+                        ((TrickyState*)state)->voiceCooldown = lbl_803E2440;
                         break;
                     case 5:
                         node = route->nodeA0;
@@ -665,7 +665,7 @@ state_selected:
                                 RomCurve_stepClamped(route, lbl_803E23F8);
                             }
                         }
-                        ((TrickyState*)state)->unk7A0f = lbl_803E2440;
+                        ((TrickyState*)state)->voiceCooldown = lbl_803E2440;
                         break;
                     case 6:
                         node = route->nodeA0;
@@ -700,7 +700,7 @@ state_selected:
                                 RomCurve_stepClamped(route, lbl_803E23F8);
                             }
                         }
-                        ((TrickyState*)state)->unk7A0f = lbl_803E2440;
+                        ((TrickyState*)state)->voiceCooldown = lbl_803E2440;
                         break;
                     case 2:
                     case 7:
@@ -970,7 +970,7 @@ state_selected:
                 ((TrickyState*)state)->speed = gTrickyFollowMaxSpeed;
                 objAnimFn_8013a3f0(obj, 0x15, lbl_803E2468, 0x4000000);
                 ((TrickyState*)state)->followPhase = 9;
-                ((TrickyState*)state)->unk7A0f = lbl_803E2440;
+                ((TrickyState*)state)->voiceCooldown = lbl_803E2440;
             }
         }
         break;
@@ -1213,7 +1213,7 @@ state_selected:
                         RomCurve_stepClamped(route, lbl_803E23F8);
                     }
                 }
-                ((TrickyState*)state)->unk7A0f = lbl_803E2440;
+                ((TrickyState*)state)->voiceCooldown = lbl_803E2440;
             }
         }
         break;
@@ -1325,7 +1325,7 @@ state_selected:
                         RomCurve_stepClamped(route, lbl_803E23F8);
                     }
                 }
-                ((TrickyState*)state)->unk7A0f = lbl_803E2440;
+                ((TrickyState*)state)->voiceCooldown = lbl_803E2440;
             }
         }
         break;

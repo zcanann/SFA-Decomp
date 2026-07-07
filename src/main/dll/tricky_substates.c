@@ -364,8 +364,8 @@ void trickyDigTunnel(u8* obj, u8* state)
             state[0x8] = 1;
             state[0xa] = 0;
             z = lbl_803E23DC;
-            ((TrickyState*)state)->unk71C = z;
-            ((TrickyState*)state)->unk720 = z;
+            ((TrickyState*)state)->cooldownA = z;
+            ((TrickyState*)state)->cooldownB = z;
             ((TrickyState*)state)->stateFlags &= ~0x10LL;
             ((TrickyState*)state)->stateFlags &= ~0x10000LL;
             ((TrickyState*)state)->stateFlags &= ~0x20000LL;
@@ -373,7 +373,7 @@ void trickyDigTunnel(u8* obj, u8* state)
             {
             s8 mm;
             mm = -1;
-            ((TrickyState*)state)->unkD = mm;
+            ((TrickyState*)state)->commandPhase = mm;
         }
         }
         break;
@@ -442,8 +442,8 @@ void trickyFn_80141fec(u8* obj, u8* state)
             state[0x8] = 1;
             state[0xa] = 0;
             z = lbl_803E23DC;
-            ((TrickyState*)state)->unk71C = z;
-            ((TrickyState*)state)->unk720 = z;
+            ((TrickyState*)state)->cooldownA = z;
+            ((TrickyState*)state)->cooldownB = z;
             ((TrickyState*)state)->stateFlags &= ~0x10LL;
             ((TrickyState*)state)->stateFlags &= ~0x10000LL;
             ((TrickyState*)state)->stateFlags &= ~0x20000LL;
@@ -451,7 +451,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
             {
             s8 mm;
             mm = -1;
-            ((TrickyState*)state)->unkD = mm;
+            ((TrickyState*)state)->commandPhase = mm;
         }
         }
         break;
@@ -509,8 +509,8 @@ void trickyFn_80141fec(u8* obj, u8* state)
             state[0x8] = 1;
             state[0xa] = 0;
             z = lbl_803E23DC;
-            ((TrickyState*)state)->unk71C = z;
-            ((TrickyState*)state)->unk720 = z;
+            ((TrickyState*)state)->cooldownA = z;
+            ((TrickyState*)state)->cooldownB = z;
             ((TrickyState*)state)->stateFlags &= ~0x10LL;
             ((TrickyState*)state)->stateFlags &= ~0x10000LL;
             ((TrickyState*)state)->stateFlags &= ~0x20000LL;
@@ -518,7 +518,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
             {
             s8 mm;
             mm = -1;
-            ((TrickyState*)state)->unkD = mm;
+            ((TrickyState*)state)->commandPhase = mm;
         }
             trickyPlayWhineSfx(*(u16*)((char*)&sfxTable + randomGetRange(0, 1) * 2), obj);
         }
@@ -591,10 +591,10 @@ void trickyFn_80142524(u8* obj, u8* state)
                 if (trickyFoodFn_8014460c((int)obj, (int*)state) == 0
                     && trickyFn_8013b368((int)obj, lbl_803E2488, state) == 0)
                 {
-                    ((TrickyState*)state)->unk740 -= timeDelta;
-                    if (((TrickyState*)state)->unk740 <= lbl_803E23DC)
+                    ((TrickyState*)state)->idleSfxTimer -= timeDelta;
+                    if (((TrickyState*)state)->idleSfxTimer <= lbl_803E23DC)
                     {
-                        ((TrickyState*)state)->unk740 = (f32)(int)
+                        ((TrickyState*)state)->idleSfxTimer = (f32)(int)
                         randomGetRange(500, 0x2ee);
                         ptr = ((GameObject*)obj)->extra;
                         if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
@@ -663,8 +663,8 @@ void trickyFn_80142524(u8* obj, u8* state)
         state[8] = 1;
         state[0xa] = 0;
         z = lbl_803E23DC;
-        ((TrickyState*)state)->unk71C = z;
-        ((TrickyState*)state)->unk720 = z;
+        ((TrickyState*)state)->cooldownA = z;
+        ((TrickyState*)state)->cooldownB = z;
         ((TrickyState*)state)->stateFlags &= ~0x10LL;
         ((TrickyState*)state)->stateFlags &= ~0x10000LL;
         ((TrickyState*)state)->stateFlags &= ~0x20000LL;
@@ -672,7 +672,7 @@ void trickyFn_80142524(u8* obj, u8* state)
         {
             s8 mm;
             mm = -1;
-            ((TrickyState*)state)->unkD = mm;
+            ((TrickyState*)state)->commandPhase = mm;
         }
         ((GameObject*)obj)->anim.localPosX = *(f32*)(found + 0xc);
         ((GameObject*)obj)->anim.localPosY = *(f32*)(found + 0x10);
@@ -694,10 +694,10 @@ void trickyFn_80142524(u8* obj, u8* state)
     }
     else
     {
-        ((TrickyState*)state)->unk71C -= timeDelta;
-        if (((TrickyState*)state)->unk71C < *(f32*)&lbl_803E23DC)
+        ((TrickyState*)state)->cooldownA -= timeDelta;
+        if (((TrickyState*)state)->cooldownA < *(f32*)&lbl_803E23DC)
         {
-            ((TrickyState*)state)->unk71C = lbl_803E23DC;
+            ((TrickyState*)state)->cooldownA = lbl_803E23DC;
         }
         fn_80144B50(obj, state);
         {
@@ -851,7 +851,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
     buf = *(struct Buf5*)lbl_802C21DC;
     if (trickyFoodFn_8014460c(obj, (int*)state) != 0)
     {
-        ((TrickyState*)state)->unk720 = lbl_803E23DC;
+        ((TrickyState*)state)->cooldownB = lbl_803E23DC;
         {
             u32 m;
             u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
@@ -888,7 +888,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
         }
     }
 skip:
-    if (lbl_803E23DC == ((TrickyState*)state)->unk720)
+    if (lbl_803E23DC == ((TrickyState*)state)->cooldownB)
     {
         {
             u32 m;
@@ -938,7 +938,7 @@ int trickyFn_80142eb0(int obj, int state)
     {
         if (((*(u32*)&((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) &&
             (((*(u32*)&((TrickyState*)state)->stateFlags & 0x10000) != 0 || randomGetRange(0, 2) == 0) ||
-                ((TrickyState*)state)->unk720 > lbl_803E23DC))
+                ((TrickyState*)state)->cooldownB > lbl_803E23DC))
         {
             objAnimFn_8013a3f0(obj, 47, lbl_803E23EC, 0);
         }
@@ -1337,7 +1337,7 @@ int trickyFoodFn_801437d4(int obj, int* state)
         ((TrickyState*)state)->unk7C8 = z;
     }
     if ((*gSkyInterface)->getSunPosition(0) != 0
-        && ((TrickyState*)state)->unk71C <= lbl_803E23DC
+        && ((TrickyState*)state)->cooldownA <= lbl_803E23DC
         && mainGetBit(0xdd) != 0)
     {
         objAnimFn_8013a3f0((int)obj, 0x29, lbl_803E2444, 0);
@@ -1387,7 +1387,7 @@ u32 trickyFn_80143b78(int obj, int* trickyState)
     val = trickyFn_8013b368(obj, lbl_803E2408, trickyState);
     if (val == 1)
     {
-        if (lbl_803E23DC == ((TrickyState*)trickyState)->unk71C)
+        if (lbl_803E23DC == ((TrickyState*)trickyState)->cooldownA)
         {
             ((TrickyState*)trickyState)->substate = 0;
         }
@@ -1420,12 +1420,12 @@ int trickyFn_80143c04(int obj, int state)
         }
         *(short*)&((TrickyState*)state)->linkedWalkGroup = 0;
     }
-    if (lbl_803E23DC == ((TrickyState*)state)->unk71C)
+    if (lbl_803E23DC == ((TrickyState*)state)->cooldownA)
     {
         {
             s8 mm;
             mm = -1;
-            ((TrickyState*)state)->unkD = mm;
+            ((TrickyState*)state)->commandPhase = mm;
         }
         threshold = lbl_803E24C8;
     }
@@ -1433,7 +1433,7 @@ int trickyFn_80143c04(int obj, int state)
     {
         if ((*(u32*)&((TrickyState*)state)->stateFlags & 0x20000) != 0)
         {
-            ((TrickyState*)state)->unkD = 0;
+            ((TrickyState*)state)->commandPhase = 0;
             *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x20000LL;
         }
         threshold = lbl_803E2408;
@@ -1936,19 +1936,19 @@ void fn_80144B50(u8* obj, u8* state)
     f32 fv;
     int inWater;
 
-    ((TrickyState*)state)->unk720 -= timeDelta;
-    if (((TrickyState*)state)->unk720 < *(f32*)&lbl_803E23DC)
+    ((TrickyState*)state)->cooldownB -= timeDelta;
+    if (((TrickyState*)state)->cooldownB < *(f32*)&lbl_803E23DC)
     {
-        ((TrickyState*)state)->unk720 = lbl_803E23DC;
+        ((TrickyState*)state)->cooldownB = lbl_803E23DC;
     }
     if (ObjHits_GetPriorityHit((int)obj, hit, 0, 0) != 0
         && *(u8**)(hit[0] + 0xc4) != NULL
         && *(s16*)(*(u8**)(hit[0] + 0xc4) + 0x44) == 1)
     {
-        fv = ((TrickyState*)state)->unk720;
+        fv = ((TrickyState*)state)->cooldownB;
         if (fv <= lbl_803E23DC)
         {
-            ((TrickyState*)state)->unk720 = fv + lbl_803E24EC;
+            ((TrickyState*)state)->cooldownB = fv + lbl_803E24EC;
             ptr = ((GameObject*)obj)->extra;
             if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
                 && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
@@ -1959,14 +1959,14 @@ void fn_80144B50(u8* obj, u8* state)
         }
         else
         {
-            ((TrickyState*)state)->unk720 = fv + lbl_803E2440;
+            ((TrickyState*)state)->cooldownB = fv + lbl_803E2440;
             if (state[0xa] != 0xb)
             {
                 if (((TrickyState*)state)->stateFlags & 0x10)
                 {
-                    if (((TrickyState*)state)->unk720 > lbl_803E2534)
+                    if (((TrickyState*)state)->cooldownB > lbl_803E2534)
                     {
-                        ((TrickyState*)state)->unk720 *= lbl_803E24A8;
+                        ((TrickyState*)state)->cooldownB *= lbl_803E24A8;
                         if (mainGetBit(0x245) != 0)
                         {
                             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
