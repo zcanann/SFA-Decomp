@@ -36,6 +36,11 @@
 
 /* child object id spawned in fn_8015EA48 (role un-pinnable per gate: generic locals, no cache field/spawn-fn/docstring) */
 #define DLLCE_CHILD_OBJ 778
+
+/* dust burst spawned once when the baddie-control fx flag bit 2 is set */
+#define DLLCE_PARTFX_DUST 0x345
+/* spray burst spawned 10x when the baddie-control fx flag bit 4 is set */
+#define DLLCE_PARTFX_SPRAY 0x343
 extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_SetHitVolumeSlot();
@@ -817,14 +822,14 @@ void dll_CE_update(int obj, int p2, int p3)
                 }
                 if ((hit[8] & 2) != 0)
                 {
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x345, NULL, 1, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, DLLCE_PARTFX_DUST, NULL, 1, -1, NULL);
                 }
                 if ((hit[8] & 4) != 0)
                 {
                     spawnCount = 0;
                     do
                     {
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x343, NULL, 1, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)obj, DLLCE_PARTFX_SPRAY, NULL, 1, -1, NULL);
                         spawnCount++;
                     }
                     while (spawnCount < 10);
