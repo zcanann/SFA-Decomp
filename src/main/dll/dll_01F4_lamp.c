@@ -19,6 +19,11 @@
 
 #define LAMP_OBJFLAG_RENDERED 0x800
 
+/* partfx ids emitted framesThisStep-times while rendered (index-style; roles opaque).
+   A spawned from Lamp_SeqFn anchored at the object body; B from Lamp_update at path point 0. */
+#define LAMP_PARTFX_A 0x7a8
+#define LAMP_PARTFX_B 0x7c7
+
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 
@@ -82,7 +87,7 @@ int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         fx->posZ = fx->posZ - ((GameObject*)obj)->anim.worldPosZ;
         for (i = 0; i < framesThisStep; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7a8, effectArgs, 6, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, LAMP_PARTFX_A, effectArgs, 6, -1, NULL);
         }
     }
     return 0;
@@ -142,7 +147,7 @@ void Lamp_update(int obj)
         }
         for (i = 0; i < framesThisStep; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7c7, effectArgs, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, LAMP_PARTFX_B, effectArgs, 2, -1, NULL);
         }
     }
 }
