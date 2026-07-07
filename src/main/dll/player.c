@@ -13746,7 +13746,8 @@ int playerState25(int obj, int state)
     {
         f32 ang = gPlayerPi * (f32)(int)
         inner->inputHeading / lbl_803E7F98;
-        vx = inner->maxSpeed * (ratio * -mathSinf(ang));
+        vx = ratio * -mathSinf(ang);
+        vx = inner->maxSpeed * vx;
     }
     {
         f32 ang = gPlayerPi * (f32)(int)
@@ -13766,7 +13767,10 @@ int playerState25(int obj, int state)
         f32 v = ((PlayerState*)state)->baddie.animSpeedC;
         f32 lo = *(f32*)inner->moveParams;
         ((PlayerState*)state)->baddie.animSpeedC =
-            (v < lo) ? lo : ((v > inner->maxSpeed) ? inner->maxSpeed : v);
+            (((PlayerState*)state)->baddie.animSpeedC < lo)
+                ? lo
+                : ((v > inner->maxSpeed) ? inner->maxSpeed
+                                         : ((PlayerState*)state)->baddie.animSpeedC);
     }
     {
         f32 ang = gPlayerPi * (f32)inner->targetYaw / lbl_803E7F98;
