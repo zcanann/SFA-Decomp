@@ -27,6 +27,7 @@
 /* Death follow-up spawn (docblock: "Obj_AllocObjectSetup(0x2C, 0xD4)"): object id and effect id. */
 #define HIGHTOP_DEATH_SPAWN_OBJ_ID 0xd4
 #define HIGHTOP_DEATH_EFFECT_ID 0x675
+#define HIGHTOP_AIRMETER_BGTEXTURE 0x5ce
 
 /* 0x2C-byte Obj_AllocObjectSetup(0x2C, 0xD4) buffer composed in
  * HighTop_hitDetect when the air meter empties (death follow-up spawn). */
@@ -872,7 +873,7 @@ int hightop_stateHandler04(int obj, int stateArg)
             (char*)state + 0xa10, obj, 0x3463a, (curve = *gRomCurveInterface));
         state2 = ((GameObject*)obj)->extra;
         state2->flagsC49.b7 = 1;
-        (*gGameUIInterface)->initAirMeter(gHighTopAirMeterInitValue, 0x5ce);
+        (*gGameUIInterface)->initAirMeter(gHighTopAirMeterInitValue, HIGHTOP_AIRMETER_BGTEXTURE);
         (*gGameUIInterface)->runAirMeter(state2->airMeterRemaining);
         fn_80039264((char*)state + 0xb48);
         return 7;
