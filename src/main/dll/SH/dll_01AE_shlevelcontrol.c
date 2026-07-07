@@ -63,6 +63,16 @@ extern void fn_80088870(void* a, void* b, void* c, void* d);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
+
+/* env-effect ids replayed per weather/time state gate (index-style; roles opaque).
+   A/D shared across the states; B/C exclusive to the 0xd36 gate; E/F to the 0xd35 gate. */
+#define SHLEVELCONTROL_ENVFX_A 0x1bf
+#define SHLEVELCONTROL_ENVFX_B 0x231
+#define SHLEVELCONTROL_ENVFX_C 0x232
+#define SHLEVELCONTROL_ENVFX_D 0x244
+#define SHLEVELCONTROL_ENVFX_E 0x1be
+#define SHLEVELCONTROL_ENVFX_F 0x1c0
+
 extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
 extern f32 gShLevelControlHudTextDuration;
@@ -899,17 +909,17 @@ void SH_LevelControl_update(int obj)
             envFxActFn_800887f8(0);
             if (((GameObject*)obj)->unkF4 == 2)
             {
-                getEnvfxActImmediately(0, 0, 0x1bf, 0);
-                getEnvfxActImmediately(0, 0, 0x231, 0);
-                getEnvfxActImmediately(0, 0, 0x232, 0);
-                getEnvfxActImmediately(0, 0, 0x244, 0);
+                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
             }
             else
             {
-                getEnvfxAct(0, 0, 0x1bf, 0);
-                getEnvfxAct(0, 0, 0x231, 0);
-                getEnvfxAct(0, 0, 0x232, 0);
-                getEnvfxAct(0, 0, 0x244, 0);
+                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
             }
         }
     }
@@ -924,18 +934,18 @@ void SH_LevelControl_update(int obj)
                 if (((GameObject*)obj)->unkF4 == 2)
                 {
                     envFxActFn_800887f8(0);
-                    getEnvfxActImmediately(0, 0, 0x1bf, 0);
-                    getEnvfxActImmediately(0, 0, 0x1be, 0);
-                    getEnvfxActImmediately(0, 0, 0x1c0, 0);
-                    getEnvfxActImmediately(0, 0, 0x244, 0);
+                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_E, 0);
+                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_F, 0);
+                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
                 }
                 else
                 {
                     envFxActFn_800887f8(0);
-                    getEnvfxAct(0, 0, 0x1bf, 0);
-                    getEnvfxAct(0, 0, 0x1be, 0);
-                    getEnvfxAct(0, 0, 0x1c0, 0);
-                    getEnvfxAct(0, 0, 0x244, 0);
+                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_E, 0);
+                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_F, 0);
+                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
                 }
             }
         }
@@ -946,14 +956,14 @@ void SH_LevelControl_update(int obj)
             {
                 fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
                 envFxActFn_800887f8(0x3f);
-                getEnvfxActImmediately(0, 0, 0x244, 0);
+                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
                 skyFn_80088e54(0, lbl_803E54B4);
             }
             else
             {
                 fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
                 envFxActFn_800887f8(0x1f);
-                getEnvfxAct(0, 0, 0x244, 0);
+                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
             }
         }
     }
