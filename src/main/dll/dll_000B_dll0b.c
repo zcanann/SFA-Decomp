@@ -1026,7 +1026,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorVertexCount = e;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceObject = *(void**)(st + 4);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->instanceObject = NULL;
-    *(u8*)&((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceYawIndex = st->pad5C;
+    *(u8*)&((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceYawIndex = st->sourceYawIndex;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupCount = st->word40;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupStride = st->word3C;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->initialStateByte = st->byte59;

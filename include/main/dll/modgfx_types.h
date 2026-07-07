@@ -129,7 +129,7 @@ typedef struct ModgfxSpawnContext
     u8 byte59;
     u8 byte5A;
     u8 byte5B;
-    u8 pad5C;
+    u8 sourceYawIndex; /* 0x5C: copied into PartfxEffectState.sourceYawIndex on spawn */
     s8 pendingSpawnCount;
     u8 pad5E[0x60 - 0x5E];
 } ModgfxSpawnContext;
