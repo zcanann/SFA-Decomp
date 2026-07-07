@@ -157,6 +157,7 @@ extern f32 lbl_803DBCEC;
 extern f32 lbl_803E2BA8;
 extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind();
+#define MODEL_LIGHT_KIND_POINT 2
 extern void modelLightStruct_setPosition();
 extern void modelLightStruct_setDiffuseColor();
 extern void modelLightStruct_setSpecularColor();
@@ -1197,7 +1198,7 @@ void hagabonMK2_update(s16* obj, u8* state)
             }
             if (((FireCrawlerState*)state)->engineLight != NULL)
             {
-                modelLightStruct_setLightKind(((FireCrawlerState*)state)->engineLight, 2);
+                modelLightStruct_setLightKind(((FireCrawlerState*)state)->engineLight, MODEL_LIGHT_KIND_POINT);
                 modelLightStruct_setPosition(((FireCrawlerState*)state)->engineLight, ((GameObject*)obj)->anim.localPosX,
                                              ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
                 modelLightStruct_setDiffuseColor(((FireCrawlerState*)state)->engineLight, 0xc0, 0x40, 0xff, 0xff);
@@ -2161,7 +2162,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
             }
             if (((FireCrawlerState*)state)->engineLight != NULL)
             {
-                modelLightStruct_setLightKind(((FireCrawlerState*)state)->engineLight, 2);
+                modelLightStruct_setLightKind(((FireCrawlerState*)state)->engineLight, MODEL_LIGHT_KIND_POINT);
                 modelLightStruct_setPosition(((FireCrawlerState*)state)->engineLight, ((GameObject*)obj)->anim.localPosX,
                                              ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
                 modelLightStruct_setDiffuseColor(((FireCrawlerState*)state)->engineLight, 0xc0, 0x40, 0xff, 0xff);
