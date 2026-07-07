@@ -24,6 +24,7 @@
 /* object def numbers selecting the two thornbush variants (anim.seqId) */
 #define THORNBUSH_SEQ_LIGHTNING 0x709
 #define THORNBUSH_SEQ_THORN     0x727
+#define DRAKORDTHORNBUSH_HIT_VOLUME_SLOT 0xe
 
 typedef struct DrakordThornbushPlacement
 {
@@ -218,7 +219,7 @@ void drakord_thornbush_update(int obj)
             }
             else
             {
-                ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
+                ObjHits_SetHitVolumeSlot(obj, DRAKORDTHORNBUSH_HIT_VOLUME_SLOT, 1, 0);
             }
             break;
         case THORNBUSH_SEQ_LIGHTNING:
