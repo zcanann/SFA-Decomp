@@ -36,7 +36,6 @@ void fn_80204098(int obj)
 {
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern u8 lbl_803DC183;
-    extern s16 lbl_80329848[];
     DfpLevelControlState* state = ((GameObject*)obj)->extra;
     void* player;
     s16 i;
@@ -103,7 +102,6 @@ void fn_80204320(int obj)
 {
 
     extern u8 lbl_803DC182;
-    extern s16 lbl_80329848[];
     DfpLevelControlState* sub;
     void* player;
 
