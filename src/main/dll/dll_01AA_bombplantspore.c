@@ -229,6 +229,11 @@ void bombplantspore_updateDrift(void* obj, void* state)
 #define BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE 0x18e
 #define BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT 10
 
+/* burst spawned per particle on detonation (MSG_DETONATE / fuse timeout) */
+#define BOMBPLANTSPORE_PARTFX_EXPLOSION 0x3f3
+/* effect spawned once when the spore is created in BombPlantSpore_init */
+#define BOMBPLANTSPORE_PARTFX_SPAWN 0x3f1
+
 #define BOMBPLANTSPORE_OBJFLAG_HIDDEN 0x4000
 #define BOMBPLANTSPORE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -268,7 +273,7 @@ void BombPlantSpore_update(void* obj)
                 for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++)
                 {
                     objfx_spawnDirectionalBurst(obj, 5, lbl_803E53B0, 7, 1, 0x3c, lbl_803E53B8, NULL, 0);
-                    (*gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, BOMBPLANTSPORE_PARTFX_EXPLOSION, NULL, 4, -1, NULL);
                 }
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
                 state->detonateTimer = lbl_803E53BC;
@@ -408,7 +413,7 @@ void BombPlantSpore_update(void* obj)
             for (j = 0; j < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; j++)
             {
                 objfx_spawnDirectionalBurst(obj, 5, lbl_803E53B0, 7, 1, 0x3c, lbl_803E53B8, NULL, 0);
-                (*gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, BOMBPLANTSPORE_PARTFX_EXPLOSION, NULL, 4, -1, NULL);
             }
             modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
             state->detonateTimer = lbl_803E53BC;
@@ -440,7 +445,7 @@ void BombPlantSpore_init(void* obj, void* param2)
     (*gPathControlInterface)->init(state->pathState, 0, 0x40002, 1);
     (*gPathControlInterface)->setup(state->pathState, 1, lbl_80326D98, &lbl_803DBFC0, events);
     (*gPathControlInterface)->attachObject(obj, state->pathState);
-    (*gPartfxInterface)->spawnObject(obj, 0x3f1, NULL, 4, -1, NULL);
+    (*gPartfxInterface)->spawnObject(obj, BOMBPLANTSPORE_PARTFX_SPAWN, NULL, 4, -1, NULL);
 
     light = objCreateLight(obj, 1);
     if (light != NULL)
