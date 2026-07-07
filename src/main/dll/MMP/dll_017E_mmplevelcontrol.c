@@ -26,6 +26,18 @@ extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 #define MMPLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
 #define MMPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* env-effect ids for the area weather/sky sets (index-style; roles opaque).
+   A/B layered by anim seq event; C is shared across all three update state
+   gates; D/E in the 0xd47 gate; F/G in the 0xf33 gate; B/H in the map-cell gate. */
+#define MMPLEVELCONTROL_ENVFX_A 0x13b
+#define MMPLEVELCONTROL_ENVFX_B 0x138
+#define MMPLEVELCONTROL_ENVFX_C 0x13a
+#define MMPLEVELCONTROL_ENVFX_D 0x234
+#define MMPLEVELCONTROL_ENVFX_E 0x235
+#define MMPLEVELCONTROL_ENVFX_F 0x10c
+#define MMPLEVELCONTROL_ENVFX_G 0x10d
+#define MMPLEVELCONTROL_ENVFX_H 0x139
+
 
 
 
@@ -53,10 +65,10 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (v)
         {
         case 1:
-            getEnvfxAct(obj, player, 0x13b, 0);
+            getEnvfxAct(obj, player, MMPLEVELCONTROL_ENVFX_A, 0);
             break;
         case 2:
-            getEnvfxAct(obj, player, 0x138, 0);
+            getEnvfxAct(obj, player, MMPLEVELCONTROL_ENVFX_B, 0);
             break;
         }
     }
@@ -114,15 +126,15 @@ void MMP_levelcontrol_update(int obj)
             skyFn_80088c94(7, 1);
             if (((GameObject*)obj)->unkF4 == 2)
             {
-                getEnvfxActImmediately(obj, playerForFx, 0x13a, 0);
-                getEnvfxActImmediately(obj, playerForFx, 0x234, 0);
-                getEnvfxActImmediately(obj, playerForFx, 0x235, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_E, 0);
             }
             else
             {
-                getEnvfxAct(obj, playerForFx, 0x13a, 0);
-                getEnvfxAct(obj, playerForFx, 0x234, 0);
-                getEnvfxAct(obj, playerForFx, 0x235, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_E, 0);
             }
             ((GameObject*)obj)->unkF8 = 0;
         }
@@ -131,15 +143,15 @@ void MMP_levelcontrol_update(int obj)
             skyFn_80088c94(7, 1);
             if (((GameObject*)obj)->unkF4 == 2)
             {
-                getEnvfxActImmediately(obj, playerForFx, 0x13a, 0);
-                getEnvfxActImmediately(obj, playerForFx, 0x10c, 0);
-                getEnvfxActImmediately(obj, playerForFx, 0x10d, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
             }
             else
             {
-                getEnvfxAct(obj, playerForFx, 0x13a, 0);
-                getEnvfxAct(obj, playerForFx, 0x10c, 0);
-                getEnvfxAct(obj, playerForFx, 0x10d, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
             }
             ((GameObject*)obj)->unkF8 = 1;
         }
@@ -148,15 +160,15 @@ void MMP_levelcontrol_update(int obj)
             skyFn_80088c94(7, 0);
             if (((GameObject*)obj)->unkF4 == 2)
             {
-                getEnvfxActImmediately(obj, playerForFx, 0x13a, 0);
-                getEnvfxActImmediately(obj, playerForFx, 0x138, 0);
-                getEnvfxActImmediately(obj, playerForFx, 0x139, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
             }
             else
             {
-                getEnvfxAct(obj, playerForFx, 0x13a, 0);
-                getEnvfxAct(obj, playerForFx, 0x138, 0);
-                getEnvfxAct(obj, playerForFx, 0x139, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
             }
             ((GameObject*)obj)->unkF8 = 0;
         }
@@ -167,17 +179,17 @@ void MMP_levelcontrol_update(int obj)
     if (((GameObject*)obj)->unkF8 != 0 && mainGetBit(0xf33) == 0)
     {
         skyFn_80088c94(7, 0);
-        getEnvfxAct(obj, playerForFx, 0x13a, 0);
-        getEnvfxAct(obj, playerForFx, 0x138, 0);
-        getEnvfxAct(obj, playerForFx, 0x139, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
         ((GameObject*)obj)->unkF8 = 0;
     }
     else if (((GameObject*)obj)->unkF8 == 0 && mainGetBit(0xf33) != 0)
     {
         skyFn_80088c94(7, 1);
-        getEnvfxAct(obj, playerForFx, 0x13a, 0);
-        getEnvfxAct(obj, playerForFx, 0x10c, 0);
-        getEnvfxAct(obj, playerForFx, 0x10d, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
         ((GameObject*)obj)->unkF8 = 1;
     }
 
