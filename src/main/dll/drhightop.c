@@ -39,6 +39,7 @@ extern void setMotionBlur(u8 enabled, f32 amount);
 
 /* particle spray spawned in a burst loop (~0x32/framesThisStep) on a bike collision */
 #define DRHIGHTOP_PARTFX_COLLISION_SPRAY 0x553
+#define DRHIGHTOP_HIT_VOLUME_SLOT 0x15
 
 
 
@@ -414,7 +415,7 @@ void fn_801EB634(int obj, int stateRaw)
     {
         if ((u32)(st->flags428 >> 1 & 1) == 0)
         {
-            ObjHits_SetHitVolumeSlot(obj, 0x15, 1, 0);
+            ObjHits_SetHitVolumeSlot(obj, DRHIGHTOP_HIT_VOLUME_SLOT, 1, 0);
         }
         else
         {
