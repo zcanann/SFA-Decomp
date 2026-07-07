@@ -27,6 +27,12 @@
 #define DIMLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
 
+/* env-effect ids co-activated once on the lava-area env-fx replay (index-style; roles opaque) */
+#define DIMLEVELCONTROL_ENVFX_A 0x160
+#define DIMLEVELCONTROL_ENVFX_B 0x15a
+#define DIMLEVELCONTROL_ENVFX_C 0x15c
+#define DIMLEVELCONTROL_ENVFX_D 0x15f
+
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
@@ -140,17 +146,17 @@ void dim_levelcontrol_update(int obj)
         {
             if (((GameObject*)obj)->unkF4 == 2)
             {
-                getEnvfxActImmediately(0, 0, 0x160, 0);
-                getEnvfxActImmediately(0, 0, 0x15a, 0);
-                getEnvfxActImmediately(0, 0, 0x15c, 0);
-                getEnvfxActImmediately(0, 0, 0x15f, 0);
+                getEnvfxActImmediately(0, 0, DIMLEVELCONTROL_ENVFX_A, 0);
+                getEnvfxActImmediately(0, 0, DIMLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxActImmediately(0, 0, DIMLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately(0, 0, DIMLEVELCONTROL_ENVFX_D, 0);
             }
             else
             {
-                getEnvfxAct(0, 0, 0x160, 0);
-                getEnvfxAct(0, 0, 0x15a, 0);
-                getEnvfxAct(0, 0, 0x15c, 0);
-                getEnvfxAct(0, 0, 0x15f, 0);
+                getEnvfxAct(0, 0, DIMLEVELCONTROL_ENVFX_A, 0);
+                getEnvfxAct(0, 0, DIMLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxAct(0, 0, DIMLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct(0, 0, DIMLEVELCONTROL_ENVFX_D, 0);
             }
         }
         ((GameObject*)obj)->unkF4 = 0;
