@@ -46,6 +46,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
+#define CAMMODE_WORLDMAP 0x4e /* dll_004E_cameramodeworldmap */
+
 #define GAMEUI_OBJFLAG_PARENT_SLACK 0x1000
 
 /* blink texture asset (cached into gGameUiBlinkTexture). */
@@ -1835,7 +1838,7 @@ void cMenuRun(void)
         return;
     }
 
-    if ((*gCameraInterface)->getMode() == 0x44 ||
+    if ((*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
         (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || pauseMenuState != 0)
     {
         buttonDisable(0, 0xe0800);
@@ -1852,7 +1855,7 @@ void cMenuRun(void)
     gCMenuButtons = btn;
     btn16 = btn;
 
-    if ((*gCameraInterface)->getMode() == 0x44 ||
+    if ((*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
         (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || pauseMenuState != 0 ||
         shouldCloseCMenu != 0 || lbl_803DD75B != 0)
     {
@@ -4037,7 +4040,7 @@ void GameUI_update(void)
     {
         if (lbl_803DD75B != 0) timeListFn_8012be84();
 
-        if (playerGetFocusObject(player) != 0 || (*gCameraInterface)->getMode() == 0x44 ||
+        if (playerGetFocusObject(player) != 0 || (*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
             (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || pauseMenuState != 0)
         {
             buttonDisable(0, 0xf0000);
@@ -4054,7 +4057,7 @@ void GameUI_update(void)
             }
         }
 
-        if (playerGetFocusObject(player) != 0 || (*gCameraInterface)->getMode() == 0x44 ||
+        if (playerGetFocusObject(player) != 0 || (*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
             (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || shouldCloseCMenu != 0 ||
             pauseMenuState != 0 || getHudHiddenFrameCount() != 0 || lbl_803DD75B != 0)
         {
@@ -4269,7 +4272,7 @@ void GameUI_update(void)
                 }
             }
         camCheck:
-            if ((*gCameraInterface)->getMode() == 0x4e) cMenuOpen = 0;
+            if ((*gCameraInterface)->getMode() == CAMMODE_WORLDMAP) cMenuOpen = 0;
         }
     afterDispatch:
 
