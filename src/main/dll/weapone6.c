@@ -110,7 +110,7 @@ void fn_8013F100(int obj, register int state)
         ((TrickyState*)state)->unk700 = ((TrickyState*)state)->followObj;
         *(float*)&((TrickyState*)state)->unk704 = lbl_803E24EC;
         ((TrickyState*)state)->substate = 1;
-        ((TrickyState*)state)->unk7A4 = (f32)(s32)randomGetRange(150, 300);
+        ((TrickyState*)state)->sfxIntervalTimer = (f32)(s32)randomGetRange(150, 300);
         /* fall through */
     case 1:
         if (fn_80179650(*(int*)&((TrickyState*)state)->unk700) != 0)
@@ -194,7 +194,7 @@ void fn_8013F100(int obj, register int state)
                     if (useSwimAnim != 0)
                     {
                         objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-                        ((TrickyState*)state)->unk79C = lbl_803E2440;
+                        ((TrickyState*)state)->cooldownC = lbl_803E2440;
                         ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                         trickyDebugPrint(sInWaterMessage);
                     }
@@ -244,10 +244,10 @@ void fn_8013F100(int obj, register int state)
             }
             else if (status == 1)
             {
-                ((TrickyState*)state)->unk7A4 -= timeDelta;
-                if (((TrickyState*)state)->unk7A4 <= lbl_803E23DC)
+                ((TrickyState*)state)->sfxIntervalTimer -= timeDelta;
+                if (((TrickyState*)state)->sfxIntervalTimer <= lbl_803E23DC)
                 {
-                    ((TrickyState*)state)->unk7A4 = (f32)(s32)randomGetRange(150, 300);
+                    ((TrickyState*)state)->sfxIntervalTimer = (f32)(s32)randomGetRange(150, 300);
                     extra = *(int*)&((GameObject*)obj)->extra;
                     if ((((u32) * (u8*)(extra + 0x58) >> 6) & 1) != 0)
                     {
@@ -288,7 +288,7 @@ void fn_8013F100(int obj, register int state)
                 if (useSwimAnim != 0)
                 {
                     objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-                    ((TrickyState*)state)->unk79C = lbl_803E2440;
+                    ((TrickyState*)state)->cooldownC = lbl_803E2440;
                     ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                     trickyDebugPrint(sInWaterMessage);
                 }
@@ -368,7 +368,7 @@ void fn_8013F100(int obj, register int state)
             if (useSwimAnim != 0)
             {
                 objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-                ((TrickyState*)state)->unk79C = lbl_803E2440;
+                ((TrickyState*)state)->cooldownC = lbl_803E2440;
                 ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             }
@@ -496,7 +496,7 @@ void fn_8013F9E4(int obj, int state)
             if (inWater != 0)
             {
                 objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-                ((TrickyState*)state)->unk79C = lbl_803E2440;
+                ((TrickyState*)state)->cooldownC = lbl_803E2440;
                 ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             }
@@ -599,7 +599,7 @@ void fn_8013FBE4(int obj, register int state)
                 if (inWater != 0)
                 {
                     objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-                    ((TrickyState*)state)->unk79C = lbl_803E2440;
+                    ((TrickyState*)state)->cooldownC = lbl_803E2440;
                     ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                     trickyDebugPrint(sInWaterMessage);
                 }
@@ -650,7 +650,7 @@ void fn_8013FEC0(int obj, int state)
         if (inWater != 0)
         {
             objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-            ((TrickyState*)state)->unk79C = lbl_803E2440;
+            ((TrickyState*)state)->cooldownC = lbl_803E2440;
             ((TrickyState*)state)->particleTimer = lbl_803E23DC;
             trickyDebugPrint(sInWaterMessage);
         }

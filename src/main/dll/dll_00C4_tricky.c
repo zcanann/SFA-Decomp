@@ -1410,10 +1410,10 @@ void Tricky_update(int obj)
     {
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x10000LL;
     }
-    ((TrickyState*)state)->unk79C -= timeDelta;
-    if (((TrickyState*)state)->unk79C < lbl_803E23DC)
+    ((TrickyState*)state)->cooldownC -= timeDelta;
+    if (((TrickyState*)state)->cooldownC < lbl_803E23DC)
     {
-        ((TrickyState*)state)->unk79C = lbl_803E23DC;
+        ((TrickyState*)state)->cooldownC = lbl_803E23DC;
     }
     if ((((TrickyState*)state)->stateFlags & 4) != 0)
     {
@@ -3026,7 +3026,7 @@ void trickyFn_80144f50(int obj, int state)
             if (isInWater)
             {
                 objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-                ((TrickyState*)state)->unk79C = lbl_803E2440;
+                ((TrickyState*)state)->cooldownC = lbl_803E2440;
                 ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             }

@@ -106,7 +106,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     if (inWater != 0)
     {
         objAnimFn_8013a3f0(self, 8, lbl_803E243C, 0);
-        ((TrickyState*)state)->unk79C = lbl_803E2440;
+        ((TrickyState*)state)->cooldownC = lbl_803E2440;
         ((TrickyState*)state)->particleTimer = lbl_803E23DC;
         trickyDebugPrint(sInWaterMessage);
     }

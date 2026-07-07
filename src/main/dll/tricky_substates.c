@@ -343,7 +343,7 @@ void trickyDigTunnel(u8* obj, u8* state)
             if (inWater != 0)
             {
                 objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                ((TrickyState*)state)->unk79C = lbl_803E2440;
+                ((TrickyState*)state)->cooldownC = lbl_803E2440;
                 ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint((char*)(base + 0x184));
             }
@@ -624,7 +624,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                     if (inWater != 0)
                     {
                         objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                        ((TrickyState*)state)->unk79C = lbl_803E2440;
+                        ((TrickyState*)state)->cooldownC = lbl_803E2440;
                         ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                         trickyDebugPrint((char*)(base + 0x184));
                     }
@@ -722,7 +722,7 @@ void trickyFn_80142524(u8* obj, u8* state)
             if (inWater != 0)
             {
                 objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                ((TrickyState*)state)->unk79C = lbl_803E2440;
+                ((TrickyState*)state)->cooldownC = lbl_803E2440;
                 ((TrickyState*)state)->particleTimer = lbl_803E23DC;
             }
             else
@@ -971,7 +971,7 @@ int trickyFn_80142eb0(int obj, int state)
             if (b != 0)
             {
                 objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-                ((TrickyState*)state)->unk79C = lbl_803E2440;
+                ((TrickyState*)state)->cooldownC = lbl_803E2440;
                 ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             }
@@ -1795,7 +1795,7 @@ int trickyFoodFn_8014460c(int obj, int* state)
                     if (inWater != 0)
                     {
                         objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                        ((TrickyState*)b)->unk79C = lbl_803E2440;
+                        ((TrickyState*)b)->cooldownC = lbl_803E2440;
                         ((TrickyState*)b)->particleTimer = lbl_803E23DC;
                         trickyDebugPrint(sInWaterMessage);
                     }
@@ -1850,7 +1850,7 @@ int trickyFoodFn_8014460c(int obj, int* state)
                     if (inWater != 0)
                     {
                         objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                        ((TrickyState*)b)->unk79C = lbl_803E2440;
+                        ((TrickyState*)b)->cooldownC = lbl_803E2440;
                         ((TrickyState*)b)->particleTimer = lbl_803E23DC;
                         trickyDebugPrint(sInWaterMessage);
                     }
@@ -1907,7 +1907,7 @@ int trickyFoodFn_8014460c(int obj, int* state)
                 if (inWater != 0)
                 {
                     objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                    ((TrickyState*)b)->unk79C = lbl_803E2440;
+                    ((TrickyState*)b)->cooldownC = lbl_803E2440;
                     ((TrickyState*)b)->particleTimer = lbl_803E23DC;
                     trickyDebugPrint(sInWaterMessage);
                 }

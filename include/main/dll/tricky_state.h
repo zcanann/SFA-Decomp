@@ -190,9 +190,9 @@ typedef struct TrickyState {
     u8 pad744[0x798 - 0x744];
     u8 commandCount; /* number of queued Tricky commands (0..10); index into the command records at 0x748 (stride 8), bumped on enqueue / dropped on dequeue, used as the scan loop bound (tricky) */
     u8 pad799[0x79C - 0x799];
-    f32 unk79C;
+    f32 cooldownC; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC, re-primed to lbl_803E2440; same clamp-to-floor idiom as cooldownA/B (tricky/substates/weapone6/skeetla/animobjd2/mmp) */
     f32 voiceCooldown; /* f32 countdown: -= timeDelta, clamped to floor; while > floor a TRICKY_VOICE line is (re)issued (tricky/trickyfollow/skeetla) */
-    f32 unk7A4;
+    f32 sfxIntervalTimer; /* f32 countdown: -= timeDelta, on reaching floor lbl_803E23DC fires an SFX and re-primes to a randomGetRange interval (skeetla 600..1200, weapone6 150..300) */
     u8 *childA;
     u8 pad7AC[0x7B0 - 0x7AC];
     u8 *childB;

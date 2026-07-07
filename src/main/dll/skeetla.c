@@ -517,7 +517,7 @@ int trickyMove(u8* obj, f32* targetPos)
         if (skeetla_isInWater(state) != 0)
         {
             objAnimFn_8013a3f0((int)obj, 7, lbl_803E2468, 0x2000000);
-            ((TrickyState*)state)->unk79C = lbl_803E2440;
+            ((TrickyState*)state)->cooldownC = lbl_803E2440;
             ((TrickyState*)state)->particleTimer = lbl_803E23DC;
             trickyDebugPrint(debugStrings + 0x184);
             goto ret_one;
@@ -529,10 +529,10 @@ int trickyMove(u8* obj, f32* targetPos)
                      ? skeetla_pathSpeedDelta(obj)
                      : -skeetla_pathSpeedDelta(obj)) > lbl_803E23DC)
             {
-                ((TrickyState*)state)->unk7A4 -= timeDelta;
-                if (((TrickyState*)state)->unk7A4 <= lbl_803E23DC)
+                ((TrickyState*)state)->sfxIntervalTimer -= timeDelta;
+                if (((TrickyState*)state)->sfxIntervalTimer <= lbl_803E23DC)
                 {
-                    ((TrickyState*)state)->unk7A4 = (f32)(int)
+                    ((TrickyState*)state)->sfxIntervalTimer = (f32)(int)
                     randomGetRange(600, 1200);
                     if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
                     {
@@ -597,7 +597,7 @@ int trickyMove(u8* obj, f32* targetPos)
         {
             trickyDebugPrint(debugStrings + 0x1bc);
             objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-            ((TrickyState*)state)->unk79C = lbl_803E2440;
+            ((TrickyState*)state)->cooldownC = lbl_803E2440;
             ((TrickyState*)state)->particleTimer = lbl_803E23DC;
         }
         else
