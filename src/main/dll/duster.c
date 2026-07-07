@@ -44,6 +44,7 @@
 /* object-type id of the pollen-spit projectile spawned by pollenFn_80155b10
  * (see file docblock). */
 #define DUSTER_CHILD_OBJ_POLLEN_SPIT 0x47b
+#define DUSTER_HIT_VOLUME_SLOT 10
 
 /*
  * DusterState - file-local overlay naming the PER-FAMILY scratch that
@@ -365,7 +366,7 @@ void fn_80155948(int* obj, int state)
     else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
         (cond = fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
     {
-        ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
+        ObjHits_SetHitVolumeSlot((int)obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
         move = *(short*)(obj + 0x28);
         if (move == 3)
         {
@@ -685,7 +686,7 @@ void fn_8015625C(u32 obj, int state)
     }
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
+    ObjHits_SetHitVolumeSlot(obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         Sfx_PlayFromObject(obj, SFXfox_cough4);
@@ -779,7 +780,7 @@ void fn_8015652C(u32 obj, int state)
     placement = ((GameObject*)obj)->anim.placement;
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
+    ObjHits_SetHitVolumeSlot(obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         Sfx_PlayFromObject(obj, SFXfox_cough4);
