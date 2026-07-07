@@ -1159,13 +1159,13 @@ void staffShootFireball(int obj, int state, f32 unused)
         *(s16*)((char*)setup + 0x6) = *(s16*)((char*)setup + 0x6) | 0x2000;
         if (((PlayerState*)state)->baddie.targetObj != NULL)
         {
-            int sp = *(int*)&((PlayerState*)state)->baddie.targetObj;
+            GameObject* sp = *(GameObject**)&((PlayerState*)state)->baddie.targetObj;
             ObjHitVolumeRuntimeTransform* pt;
             f32 dx;
             f32 dz;
             f32 dy;
-            spawned = sp;
-            pt = &((GameObject*)sp)->anim.hitVolumeTransforms[((GameObject*)sp)->hitVolumeIndex];
+            spawned = (int)sp;
+            pt = &sp->anim.hitVolumeTransforms[sp->hitVolumeIndex];
             dx = pt->jointX - ((GameObject*)gPlayerPathObject)->anim.localPosX;
             dy = pt->jointY - ((GameObject*)gPlayerPathObject)->anim.localPosY;
             dz = pt->jointZ - ((GameObject*)gPlayerPathObject)->anim.localPosZ;
@@ -5037,10 +5037,12 @@ int playerStateTryCastSpell(int obj, int state, f32 fv)
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
+            int i;
             inner->animState = -1;
             hi = 0;
             lbl_803DE42C = hi;
-            playerFreeSpawnedObjects(gPlayerSpawnedObjects, hi, hi);
+            i = hi;
+            playerFreeSpawnedObjects(gPlayerSpawnedObjects, i, hi);
             if (gPlayerResource != NULL)
             {
                 Resource_Release(gPlayerResource);
@@ -5298,9 +5300,11 @@ int playerStateAimStaff(int obj, int state)
                     *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
                     getCurSeqNo() != 0)
                 {
+                    int i;
                     hi = 0;
                     lbl_803DE42C = hi;
-                    playerFreeSpawnedObjects(gPlayerSpawnedObjects, hi, hi);
+                    i = hi;
+                    playerFreeSpawnedObjects(gPlayerSpawnedObjects, i, hi);
                     if (gPlayerResource != NULL)
                     {
                         Resource_Release(gPlayerResource);
@@ -9907,9 +9911,11 @@ int playerState30(int obj, int state, f32 fv)
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
+            int i;
             hi = 0;
             lbl_803DE42C = hi;
-            playerFreeSpawnedObjects(gPlayerSpawnedObjects, hi, hi);
+            i = hi;
+            playerFreeSpawnedObjects(gPlayerSpawnedObjects, i, hi);
             if (gPlayerResource != NULL)
             {
                 Resource_Release(gPlayerResource);
