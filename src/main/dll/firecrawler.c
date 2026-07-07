@@ -52,6 +52,11 @@
 #define FIRECRAWLER_SEQID_REDEYE      0x6a3 /* RedEye */
 #define FIRECRAWLER_SEQID_SHADOWHUNTER 0x6a4 /* ShadowHunter */
 
+/* movement dust spawned on the move-loop event: turning (turnDelta != 0) */
+#define FIRECRAWLER_PARTFX_MOVE_TURN 0x802
+/* movement dust spawned on the move-loop event: moving straight (turnDelta == 0) */
+#define FIRECRAWLER_PARTFX_MOVE_STRAIGHT 0x809
+
 /* Spawn-setup buffer for the firepipe child (obj id 0x710): ObjPlacement head
  * (pos/color) plus the class-specific fields the parent seeds at +0x18. */
 typedef struct FirepipeSetup
@@ -446,11 +451,11 @@ void crawler_playReactionEffects(int* obj, int* st)
     {
         if (((FCVars*)st)->turnDelta != 0)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x802, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, FIRECRAWLER_PARTFX_MOVE_TURN, NULL, 2, -1, NULL);
         }
         else
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x809, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, FIRECRAWLER_PARTFX_MOVE_STRAIGHT, NULL, 2, -1, NULL);
         }
     }
 }
