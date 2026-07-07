@@ -33,11 +33,14 @@
 #define PAD_BUTTON_B 0x200
 
 /* gSaveSelectPanelIndex: current sub-panel (index into gSaveSelectPanels; -1 = none). */
-#define SAVE_SELECT_PANEL_CHOOSE_SLOT    0 /* pick a save slot */
-#define SAVE_SELECT_PANEL_OPEN_FILE      1 /* opened file: continue / save */
-#define SAVE_SELECT_PANEL_SLOT_ACTION    2 /* copy / erase slot action */
-#define SAVE_SELECT_PANEL_CONFIRM_ERASE  3 /* confirm-erase prompt */
-#define SAVE_SELECT_PANEL_CHAPTER_SELECT 4 /* chapter (act) select */
+typedef enum SaveSelectPanelId
+{
+    SAVE_SELECT_PANEL_CHOOSE_SLOT    = 0, /* pick a save slot */
+    SAVE_SELECT_PANEL_OPEN_FILE      = 1, /* opened file: continue / save */
+    SAVE_SELECT_PANEL_SLOT_ACTION    = 2, /* copy / erase slot action */
+    SAVE_SELECT_PANEL_CONFIRM_ERASE  = 3, /* confirm-erase prompt */
+    SAVE_SELECT_PANEL_CHAPTER_SELECT = 4  /* chapter (act) select */
+} SaveSelectPanelId;
 
 typedef struct SaveSelectPanel
 {
