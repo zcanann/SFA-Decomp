@@ -80,8 +80,9 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
             ctrl = controller & 0xff;
             if (ctrl < 0x40)
             {
-                u8* p = &st->midiCtrl[keyIdx][slotIdx][ctrl & 0x1f];
-                return (u16)(((u32)p[0] << 7) | p[0x20]);
+                u8* base = (u8*)st + keyIdx * INP_MIDI_KEY_STRIDE +
+                    slotIdx * INP_MIDI_CTRL_BANK_SIZE + (ctrl & 0x1f);
+                return (u16)(((u32)base[0xC0] << 7) | base[0xE0]);
             }
             if (ctrl < 0x46)
             {
