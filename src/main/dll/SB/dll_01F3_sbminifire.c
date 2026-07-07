@@ -57,7 +57,6 @@ extern void fn_80053EBC(int);
 
 int SB_MiniFire_getExtraSize(void) { return 0x2; }
 int SB_MiniFire_getObjectTypeId(void) { return 0x0; }
-int ShipBattle_getExtraSize(void);
 
 void SB_MiniFire_free(GameObject* obj)
 {
