@@ -22,6 +22,7 @@
 #define BOMBPLANT_FLAG_MOVE_ACTIVE 0x1
 #define BOMBPLANT_FLAG_STATE_ENTERED 0x2
 #define BOMBPLANT_GAMEBIT_INTRO_SEEN 0x189 /* one-shot: run intro sequence on first approach */
+#define BOMBPLANT_CHILD_OBJ_SPORE 0x198 /* spore object spawned by bombplant_throwSpore */
 extern u32 ObjHits_ClearHitVolumes();
 extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -147,7 +148,7 @@ void bombplant_throwSpore(int* obj, int* p2)
         f32 mtx[4][4];
         f32 tz, ty, tx;
 
-        spore = Obj_AllocObjectSetup(0x24, 0x198);
+        spore = Obj_AllocObjectSetup(0x24, BOMBPLANT_CHILD_OBJ_SPORE);
         bd.pos[0] = ((GameObject*)obj)->anim.rotX;
         bd.pos[1] = ((GameObject*)obj)->anim.rotY;
         bd.pos[2] = ((GameObject*)obj)->anim.rotZ;
