@@ -29,6 +29,11 @@ extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 extern void envFxActFn_800887f8(u8 value);
 extern u8 lbl_803238D8[];
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
+
+/* env-effect id activated on level init (immediate when save already loaded,
+ * else deferred; index-style, role opaque) */
+#define LINKBLEVCONTROL_ENVFX_A 0x23c
+
 extern void* getTrickyObject(void);
 extern void fn_80138908(int* tricky, int mode);
 extern f32 lbl_803E47C8;
@@ -260,7 +265,7 @@ void linkb_levcontrol_init(int* obj)
         {
             envFxActFn_800887f8(0x3f);
         }
-        getEnvfxActImmediately(0, 0, 0x23c, 0);
+        getEnvfxActImmediately(0, 0, LINKBLEVCONTROL_ENVFX_A, 0);
     }
     else
     {
@@ -268,7 +273,7 @@ void linkb_levcontrol_init(int* obj)
         {
             envFxActFn_800887f8(0x1f);
         }
-        getEnvfxAct(0, 0, 0x23c, 0);
+        getEnvfxAct(0, 0, LINKBLEVCONTROL_ENVFX_A, 0);
     }
     state->music = 0;
 }
