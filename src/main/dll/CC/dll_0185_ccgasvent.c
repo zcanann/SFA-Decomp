@@ -12,6 +12,7 @@ extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 
 #define CCGASVENT_GROUP 0x3f
 #define CCGASVENT_GAS_GAMEBIT 0x1c0
+#define CCGASVENT_PARTFX_GAS 0x3df
 
 /* ccgasvent_update state machine */
 #define CCGASVENT_STATE_IDLE 0     /* player near: dormant, watching distance */
@@ -51,7 +52,7 @@ void ccgasvent_update(int* obj)
             }
             else
             {
-                (*gPartfxInterface)->spawnObject(obj, 0x3df, NULL, 0, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, CCGASVENT_PARTFX_GAS, NULL, 0, -1, NULL);
             }
             break;
         }
