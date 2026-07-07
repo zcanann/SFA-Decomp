@@ -20,6 +20,8 @@
 
 #define DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMLOGFIRE_HIT_VOLUME_SLOT 0x1f
+/* smoke particle emitted while the smoke-toggle phase is active */
+#define DIMLOGFIRE_PARTFX_SMOKE 215
 #define MODEL_LIGHT_KIND_POINT 2
 
 /* DimLogFireState.mode flame state machine */
@@ -93,7 +95,7 @@ int DIMLogFire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (state->smokeToggle != 0)
     {
-        (*gPartfxInterface)->spawnObject(obj, 215, NULL, 0, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, DIMLOGFIRE_PARTFX_SMOKE, NULL, 0, -1, NULL);
         Sfx_StopObjectChannel(obj, 5);
     }
     else
