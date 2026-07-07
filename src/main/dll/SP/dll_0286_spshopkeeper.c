@@ -25,6 +25,8 @@
 
 #define SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+#define SPSHOPKEEPER_TARGET_OBJGROUP 9
+
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
@@ -217,7 +219,7 @@ void ShopKeeper_update(int obj)
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     if (*(void**)&((ShopkeeperState*)state)->vendorObj == NULL)
     {
-        ((ShopkeeperState*)state)->vendorObj = ObjGroup_FindNearestObject(9, obj, &dist);
+        ((ShopkeeperState*)state)->vendorObj = ObjGroup_FindNearestObject(SPSHOPKEEPER_TARGET_OBJGROUP, obj, &dist);
     }
     ((ShopkeeperState*)state)->playerMoney = playerGetMoney(player);
     (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, lbl_803AD068,
