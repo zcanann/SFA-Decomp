@@ -136,6 +136,11 @@ extern void dll_F7_update(int* obj);
 #define COLLECTIBLE_MSG_IN_RANGE 0x7000a
 #define COLLECTIBLE_MSG_PICKUP 0x7000b
 
+/* scatter/launch burst spawned 10x on anim-event cmd 3 (after the cmd-1 launch impulse) */
+#define COLLECTIBLE_PARTFX_SCATTER 0x7ef
+/* idle sparkle spawned randomly for the 0x27f seqId variant in collectible_updateIdleMotion */
+#define COLLECTIBLE_PARTFX_IDLE 0x423
+
 ObjectDescriptor gMikaBombObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)MikaBomb_initialise,
@@ -830,7 +835,7 @@ int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 buf[3] = z;
                 buf[4] = z;
                 buf[5] = z;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7ef, buf, 1,
+                (*gPartfxInterface)->spawnObject((void*)obj, COLLECTIBLE_PARTFX_SCATTER, buf, 1,
                                                  -1, NULL);
             }
         }
@@ -1119,7 +1124,7 @@ void collectible_updateIdleMotion(int obj)
         {
             if ((int)randomGetRange(0, 10) == 0)
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x423, NULL, 2,
+                (*gPartfxInterface)->spawnObject((void*)obj, COLLECTIBLE_PARTFX_IDLE, NULL, 2,
                                                  -1, NULL);
             }
             ((GameObject*)obj)->anim.rotX += (s16)(gCollectibleRotRate * timeDelta);
