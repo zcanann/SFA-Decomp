@@ -317,7 +317,7 @@ void ProximityMine_update(ProximityMineObject* obj)
             {
                 ObjHits_EnableObject((u32)obj);
             }
-            ObjHits_SetHitVolumeSlot((u32)obj, 13, 1, 0);
+            ObjHits_SetHitVolumeSlot((u32)obj, PROXIMITYMINE_HIT_VOLUME_SLOT, 1, 0);
             if (state->effectHandle != NULL)
             {
                 if ((state->effectHandle->visible != 0) && (state->effectVisible == 0))

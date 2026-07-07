@@ -41,7 +41,7 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
         spawnExplosion(obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);
     }
     ObjHitbox_SetCapsuleBounds(obj, state->triggerDistance, -5, 10);
-    ObjHits_SetHitVolumeSlot((u32)obj, 13, 1, 0);
+    ObjHits_SetHitVolumeSlot((u32)obj, PROXIMITYMINE_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject((u32)obj);
     if (state->effectHandle != NULL)
     {

@@ -4,6 +4,8 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+#define PROXIMITYMINE_HIT_VOLUME_SLOT 13
+
 /* Runtime state of a proximity mine (ProximityMineState.mode). */
 typedef enum ProximityMineMode {
   PROXIMITYMINE_MODE_LAUNCHING = -1, /* compute launch velocity then fall through to flight */
