@@ -17,6 +17,7 @@
 #include "main/dll/DB/DBstealerworm.h"
 
 #define SBSHIPHEAD_OBJGROUP 3
+#define SBSHIPHEAD_PARTFX 0x7aa
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
@@ -117,7 +118,7 @@ extern void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4,
             stk.dz = stk.dz - o->anim.worldPosZ;
             for (i = 0; i < framesThisStep; i++)
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7aa, stk.pad, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, SBSHIPHEAD_PARTFX, stk.pad, 2, -1, NULL);
             }
         }
     }
