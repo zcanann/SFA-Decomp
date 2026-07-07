@@ -418,7 +418,7 @@ extern void screenFn_8000e944(int v);
 void sceneRender(void)
 {
     renderFlags |= 0x21;
-    if (curMapType == 1 || curMapType == 3)
+    if (curMapType == MAPTYPE_SUBMAP || curMapType == MAPTYPE_SUBMAP_UNUSED)
     {
         renderFlags &= ~1LL;
     }

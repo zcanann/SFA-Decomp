@@ -502,7 +502,7 @@ void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
         curMapType = *(s8*)(tabEntry + 0x1c);
     }
     lbl_803DCEB4 = 0;
-    if (curMapType == 1)
+    if (curMapType == MAPTYPE_SUBMAP)
     {
         lbl_803DCEB6 = mapId;
         lbl_803DCEB4 = *(s16*)(tabEntry + 0x1e);

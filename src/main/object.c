@@ -1999,7 +1999,7 @@ void mapSetupPlayer(void)
 
     base = (u8*)(int)&gObjCameraSetupBlock;
     mapType = getCurMapType();
-    if (mapType == 2 || mapType == 3)
+    if (mapType == MAPTYPE_UNLOAD_UNUSED || mapType == MAPTYPE_SUBMAP_UNUSED)
     {
         OSReport((char*)(base + 0x70));
         Obj_ResetObjectSystem();
@@ -2012,7 +2012,7 @@ void mapSetupPlayer(void)
         y = pos[1];
         z = pos[2];
         obj = 0;
-        if (playerNo > -1 && mapType != 4)
+        if (playerNo > -1 && mapType != MAPTYPE_NO_HUD)
         {
             OSReport((char*)(base + 0x88), mapType, playerNo);
             memset(&spawn, 0, 0x18);

@@ -5,6 +5,16 @@
 #include "main/gamebits.h"
 #include "global.h"
 
+/* MAPINFO.bin per-record map type (curMapType / getCurMapType(), shader.c). */
+typedef enum MapType
+{
+    MAPTYPE_NORMAL        = 0, /* normal outdoor map */
+    MAPTYPE_SUBMAP        = 1, /* normal submap (dungeon/indoor) */
+    MAPTYPE_UNLOAD_UNUSED = 2, /* unused: unloads all objects immediately on load */
+    MAPTYPE_SUBMAP_UNUSED = 3, /* unused: same as MAPTYPE_UNLOAD_UNUSED; only frontend2 has this */
+    MAPTYPE_NO_HUD        = 4, /* hides PDA HUD; title screen + Arwing maps; no player object spawned */
+} MapType;
+
 void objRenderFn_80041018(int obj);
 void loadUiDll(int index);
 void defragMemory(int mode);
