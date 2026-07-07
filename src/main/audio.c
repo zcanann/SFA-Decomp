@@ -1480,6 +1480,7 @@ void Sfx_PlayFromObject(u32 obj, u16 sfxId)
 void Sfx_UpdateObjectSounds(void)
 {
     SfxObjectChannel* objectChannel;
+    SfxObjectChannel* ch;
     s32 i;
     u32 globalCtrl;
 
@@ -1487,9 +1488,13 @@ void Sfx_UpdateObjectSounds(void)
     i = SFX_OBJECT_CHANNEL_COUNT;
     while (i-- != 0)
     {
-        if ((objectChannel->handle != (u32) - 1) && ((u32)sndFXCheck(objectChannel->handle) == (u32) - 1))
+        if (objectChannel->handle != (u32) - 1)
         {
-            objectChannel->handle = (u32) - 1;
+            ch = (SfxObjectChannel*)sndFXCheck(objectChannel->handle);
+            if ((u32)ch == (u32) - 1)
+            {
+                objectChannel->handle = (u32) - 1;
+            }
         }
         objectChannel++;
     }
@@ -1550,32 +1555,32 @@ void Sfx_UpdateObjectSounds(void)
         }
     }
 
-    objectChannel = gSfxObjectChannels;
+    ch = gSfxObjectChannels;
     i = SFX_OBJECT_CHANNEL_COUNT;
     while (i-- != 0)
     {
-        if ((objectChannel->handle != (u32) - 1) && (objectChannel->hasPosition != 0))
+        if ((ch->handle != (u32) - 1) && (ch->hasPosition != 0))
         {
-            if (objectChannel->tracksObjectPosition != 0)
+            if (ch->tracksObjectPosition != 0)
             {
-                if ((((GameObject*)objectChannel->object)->objectFlags & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)
+                if ((((GameObject*)ch->object)->objectFlags & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)
                 {
-                    objectChannel->tracksObjectPosition = 0;
+                    ch->tracksObjectPosition = 0;
                 }
                 else
                 {
-                    objectChannel->x = ((GameObject*)objectChannel->object)->anim.worldPosX;
-                    objectChannel->y = ((GameObject*)objectChannel->object)->anim.worldPosY;
-                    objectChannel->z = ((GameObject*)objectChannel->object)->anim.worldPosZ;
+                    ch->x = ((GameObject*)ch->object)->anim.worldPosX;
+                    ch->y = ((GameObject*)ch->object)->anim.worldPosY;
+                    ch->z = ((GameObject*)ch->object)->anim.worldPosZ;
                 }
             }
 
-            if ((objectChannel->tracksObjectPosition != 0) || (objectChannel->globalCtrlDisabled != 0))
+            if ((ch->tracksObjectPosition != 0) || (ch->globalCtrlDisabled != 0))
             {
-                Sfx_UpdateObjectChannel3D(objectChannel);
+                Sfx_UpdateObjectChannel3D(ch);
             }
         }
-        objectChannel++;
+        ch++;
     }
 }
 
@@ -1583,16 +1588,17 @@ void Sfx_UpdateObjectSounds(void)
 void Sfx_InitObjectChannels(void)
 {
     SfxObjectChannel* objectChannel;
+    s32 n;
     s32 i;
 
-    i = SFX_OBJECT_CHANNEL_COUNT;
+    n = SFX_OBJECT_CHANNEL_COUNT;
     objectChannel = &gSfxObjectChannels[SFX_OBJECT_CHANNEL_COUNT];
     goto checkNextChannel;
 setChannelFree:
     objectChannel->handle = (u32) - 1;
 checkNextChannel:
     objectChannel--;
-    if (i-- != 0)
+    if (n-- != 0)
     {
         goto setChannelFree;
     }
