@@ -15,6 +15,15 @@ typedef enum MapType
     MAPTYPE_NO_HUD        = 4, /* hides PDA HUD; title screen + Arwing maps; no player object spawned */
 } MapType;
 
+/* One 0x20-byte MAPINFO.bin (fileId 0x1f) record, fetched by mapId via getTabEntry. */
+typedef struct MapInfoRecord
+{
+    u8 unk00[0x1c];
+    s8 mapType; /* +0x1c: MapType */
+    u8 unk1d;
+    s16 unk1e; /* +0x1e */
+} MapInfoRecord;
+
 void objRenderFn_80041018(int obj);
 void loadUiDll(int index);
 void defragMemory(int mode);

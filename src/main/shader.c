@@ -459,7 +459,7 @@ extern u32 getDataFileSize(int idx);
 
 void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
 {
-    u8* tabEntry;
+    MapInfoRecord* tabEntry;
     int mapY;
     int mapId;
     int layer;
@@ -498,14 +498,14 @@ void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
     }
     else
     {
-        getTabEntry(tabEntry = lbl_803DCE78, 0x1f, mapId << 5, 0x20);
-        curMapType = *(s8*)(tabEntry + 0x1c);
+        getTabEntry(tabEntry = (MapInfoRecord*)lbl_803DCE78, 0x1f, mapId << 5, 0x20);
+        curMapType = tabEntry->mapType;
     }
     lbl_803DCEB4 = 0;
     if (curMapType == MAPTYPE_SUBMAP)
     {
         lbl_803DCEB6 = mapId;
-        lbl_803DCEB4 = *(s16*)(tabEntry + 0x1e);
+        lbl_803DCEB4 = tabEntry->unk1e;
     }
     *outMapId = mapId;
     if (mapId != -1)
@@ -2780,9 +2780,9 @@ void doPendingMapLoads(void)
                             }
                             else
                             {
-                                u8* e = lbl_803DCE78;
+                                MapInfoRecord* e = (MapInfoRecord*)lbl_803DCE78;
                                 getTabEntry(e, 0x1f, m2 << 5, 0x20);
-                                *(u8*)&curMapType = e[0x1c];
+                                *(u8*)&curMapType = *(u8*)&e->mapType;
                             }
                         }
                         *(s8*)(base + slot * 8 + 0x4192) = 1;
