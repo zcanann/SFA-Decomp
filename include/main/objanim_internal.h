@@ -116,7 +116,10 @@ typedef struct ObjAnimState {
   f32 prevFrameLength;
   u8 *moveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
   u8 *blendMoveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
-  u8 pad2c[8];
+  /* 0x2c: cursor into the current frame's packed bitstream, written by
+     ObjModel_SampleJointTransform and read back as posA in fn_80007F78. */
+  u8 *frameStreamCursor;
+  u8 pad30[4];
   ObjAnimFrameCommand *moveFrameData;
   ObjAnimFrameCommand *prevMoveFrameData;
   ObjAnimFrameCommand *blendFrameData;
@@ -430,6 +433,7 @@ STATIC_ASSERT(offsetof(ObjAnimState, frameLength) == 0x14);
 STATIC_ASSERT(offsetof(ObjAnimState, prevFrameLength) == 0x18);
 STATIC_ASSERT(offsetof(ObjAnimState, moveCache) == 0x1C);
 STATIC_ASSERT(offsetof(ObjAnimState, blendMoveCache) == 0x24);
+STATIC_ASSERT(offsetof(ObjAnimState, frameStreamCursor) == 0x2C);
 STATIC_ASSERT(offsetof(ObjAnimState, moveFrameData) == 0x34);
 STATIC_ASSERT(offsetof(ObjAnimState, prevMoveFrameData) == 0x38);
 STATIC_ASSERT(offsetof(ObjAnimState, blendFrameData) == 0x3C);
