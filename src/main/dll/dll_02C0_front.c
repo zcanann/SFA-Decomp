@@ -35,6 +35,9 @@
 /* Env-fx id activated on title-screen setup (getEnvfxAct 3rd arg) */
 #define FRONT_ENVFX_TITLE 0x21f
 
+/* camera mode DLL 0x57 = dll_0057_cameramodetitle */
+#define FRONT_CAMMODE_TITLE 0x57
+
 typedef struct TitlescreenState
 {
     s16 unk0;
@@ -210,7 +213,7 @@ void TitleScreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (gTitleScreenCreditsStarted != 0) return;
     mainSetBits(0xDF6, 1);
     gTitleScreenCreditsStarted = 1;
-    (*gObjectTriggerInterface)->setCamVars(0x57, 0, 0, 0);
+    (*gObjectTriggerInterface)->setCamVars(FRONT_CAMMODE_TITLE, 0, 0, 0);
     n_attractmode_releaseMovieBuffers();
     gTitleScreenCreditsEndTriggered = 0;
 }
@@ -885,7 +888,7 @@ void creditsStart_(void)
     int alpha;
     if (gTitleScreenCreditIndex >= lbl_803DBC0A)
     {
-        if ((*gCameraInterface)->getMode() == 0x57)
+        if ((*gCameraInterface)->getMode() == FRONT_CAMMODE_TITLE)
         {
             showCredits = 0;
             loadUiDll(4);
