@@ -11,6 +11,8 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 typedef struct KtlazerlightPlacement
 {
     u8 pad0[0x8 - 0x0];
@@ -86,7 +88,7 @@ void ktlazerlight_init(int obj, char* placement)
     *(void**)(extra + 0x4) = objCreateLight(0, 1);
     if (*(void**)(extra + 0x4) != 0)
     {
-        modelLightStruct_setLightKind(*(void**)(extra + 0x4), 2);
+        modelLightStruct_setLightKind(*(void**)(extra + 0x4), MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setPosition(*(void**)(extra + 0x4), ((KtlazerlightPlacement*)placement)->posX, ((KtlazerlightPlacement*)placement)->posY, ((KtlazerlightPlacement*)placement)->posZ);
         modelLightStruct_setAffectsAabbLightSelection(*(void**)(extra + 0x4), 1);
     }
