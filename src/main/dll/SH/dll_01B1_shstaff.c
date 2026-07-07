@@ -27,6 +27,7 @@ int sh_staff_getExtraSize(void) { return 0x74; }
 #define SHSTAFF_PHASE_CARRY_LOCAL 4   /* build the carry matrix from the hand's local matrix */
 #define SHSTAFF_PHASE_CARRY_RENDER 5  /* settled carry: render attached to the hand */
 #define SHSTAFF_PHASE_DONE 6          /* deactivated */
+#define SHSTAFF_CHILD_OBJ_HAZE_FLAME 0x659 /* staff-haze child flame (SH_StaffHaze_update), spawned by sh_staff_SeqFn */
 
 #pragma opt_strength_reduction on
 void sh_staff_free(int* obj, int p2)
@@ -387,7 +388,7 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             else
             {
-                int* newSetup = Obj_AllocObjectSetup(0x20, 0x659);
+                int* newSetup = Obj_AllocObjectSetup(0x20, SHSTAFF_CHILD_OBJ_HAZE_FLAME);
                 ((ObjPlacement*)newSetup)->color[0] = 2;
                 ((ObjPlacement*)newSetup)->color[3] = 0xff;
                 loadResult = loadObjectAtObject(obj, newSetup);
@@ -533,7 +534,7 @@ void sh_staff_update(int obj)
             }
             else
             {
-                int* newSetup = Obj_AllocObjectSetup(0x20, 0x659);
+                int* newSetup = Obj_AllocObjectSetup(0x20, SHSTAFF_CHILD_OBJ_HAZE_FLAME);
                 ((ObjPlacement*)newSetup)->color[0] = 2;
                 ((ObjPlacement*)newSetup)->color[3] = 0xff;
                 loadResult = loadObjectAtObject(obj, newSetup);
