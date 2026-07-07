@@ -11,6 +11,7 @@
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 
 #define CCGASVENT_GROUP 0x3f
+#define CCGASVENT_TARGET_OBJGROUP 5
 #define CCGASVENT_GAS_GAMEBIT 0x1c0
 #define CCGASVENT_PARTFX_GAS 0x3df
 
@@ -36,7 +37,7 @@ void ccgasvent_update(int* obj)
     u8* state = ((GameObject*)obj)->extra;
     if (mainGetBit(CCGASVENT_GAS_GAMEBIT) != 0)
     {
-        ObjGroup_FindNearestObject(5, (u32)obj, &dist);
+        ObjGroup_FindNearestObject(CCGASVENT_TARGET_OBJGROUP, (u32)obj, &dist);
         switch (state[0])
         {
         case CCGASVENT_STATE_IDLE:
