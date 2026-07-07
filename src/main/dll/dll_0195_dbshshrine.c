@@ -15,6 +15,7 @@
 #include "main/audio/music_trigger_ids.h"
 
 #define DBSHSHRINE_OBJGROUP 0xb
+#define DBSHSHRINE_MAP_SHRINE 0xb
 
 #define DBSH_SHRINE_STATE_WAITING 0
 #define DBSH_SHRINE_STATE_RISING 1
@@ -95,7 +96,7 @@ int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
                 objSetAnimStateFlags(player, 2, 1);
                 mainSetBits(DBSH_SHRINE_GB_FIRST_RISE, 1);
                 mainSetBits(0xc6e, 1);
-                (*gMapEventInterface)->setMapAct(0xb, 3);
+                (*gMapEventInterface)->setMapAct(DBSHSHRINE_MAP_SHRINE, 3);
                 unlockLevel(0, 0, 1);
                 lockLevel(mapGetDirIdx(10), 0);
                 break;
