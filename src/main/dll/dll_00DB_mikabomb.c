@@ -17,6 +17,9 @@
 #include "main/objprint.h"
 #include "main/obj_placement.h"
 
+/* Shadow-bomb object spawned at init, cached into MikabombState.shadowObj. */
+#define MIKABOMB_CHILD_OBJ_SHADOW 0xc
+
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();
@@ -198,7 +201,7 @@ void MikaBomb_init(int* obj)
     ((MikabombState*)state)->groundY = ((GameObject*)obj)->anim.localPosY - out;
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
-        alloc = Obj_AllocObjectSetup(0x20, 0xc);
+        alloc = Obj_AllocObjectSetup(0x20, MIKABOMB_CHILD_OBJ_SHADOW);
         alloc->posX = ((GameObject*)obj)->anim.localPosX;
         alloc->posY = ((GameObject*)obj)->anim.localPosY;
         alloc->posZ = ((GameObject*)obj)->anim.localPosZ;
