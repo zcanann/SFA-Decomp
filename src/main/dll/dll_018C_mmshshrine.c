@@ -32,6 +32,8 @@ extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 /* env-effect ids fired when the shrine load-trigger timer expires (index-style; roles opaque) */
+/* camera mode DLL 0x4c = dll_004C_camDebug */
+#define MMSH_SHRINE_CAMMODE_CAMDEBUG 0x4c
 #define MMSH_SHRINE_ENVFX_A 0x20d
 #define MMSH_SHRINE_ENVFX_B 0x20e
 #define MMSH_SHRINE_ENVFX_C 0x222
@@ -332,7 +334,7 @@ void MMSH_Shrine_update(int objArg)
             break;
         }
         runtime->phase = MMSH_SHRINE_PHASE_ACTIVATING;
-        (*gObjectTriggerInterface)->setCamVars(0x4c, 0, 0, 0);
+        (*gObjectTriggerInterface)->setCamVars(MMSH_SHRINE_CAMMODE_CAMDEBUG, 0, 0, 0);
         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         Music_Trigger(MMSH_SHRINE_MUSIC_RUMBLE, 1);
         break;
