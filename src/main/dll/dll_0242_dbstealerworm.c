@@ -49,6 +49,9 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #define DBSTEALERWORM_OBJGROUP 3
 #define DBEGG_OBJGROUP 0x24
 
+/* projectile spat at the baddie target: velocity aimed at targetObj, ownerObj = worm */
+#define DBSTEALERWORM_CHILD_OBJ_PROJECTILE 0x30a
+
 /*
  * DbStealerwormControl - the per-family control record hung off
  * GroundBaddieState.control (state+0x40C) for dbstealerworm
@@ -772,7 +775,7 @@ void fn_80202EF0(int obj, int baddie)
 
     if (Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(0x24, 0x30a);
+        setup = Obj_AllocObjectSetup(0x24, DBSTEALERWORM_CHILD_OBJ_PROJECTILE);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = lbl_803E637C + ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
