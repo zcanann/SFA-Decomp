@@ -30,6 +30,7 @@ extern void warpstone_initialise(void);
 #define THORNTAIL_OBJGROUP 0x4d
 
 #define SHTHORNTAIL_OBJFLAG_RENDERED 0x800
+#define SHTHORNTAIL_PARTFX_TAILSWING 0x7f0 /* tail-swing effect (SHthorntailTailSwingEffectScratch) */
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjTrigger_IsSet(int obj);
 extern void characterDoEyeAnims(int obj, int p2);
@@ -415,7 +416,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             {
                 ObjPath_GetPointWorldPosition(obj, 4, &effectScratch.position.x, &effectScratch.position.y,
                                               &effectScratch.position.z, 0);
-                (*gPartfxInterface)->spawnObject(obj, 0x7f0, effectScratch.particleParams,
+                (*gPartfxInterface)->spawnObject(obj, SHTHORNTAIL_PARTFX_TAILSWING, effectScratch.particleParams,
                                                  0x200001, -1, NULL);
             }
             runtime->effectTimer = lbl_803E5450;
