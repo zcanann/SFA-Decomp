@@ -16,6 +16,10 @@ extern int* gTitleMenuControlInterfaceCopy;
 extern u8 lbl_803DB411;    /* trigger-interface update parameter */
 extern f32 lbl_803E55E0;   /* render fade alpha / posOffsetDecay base */
 
+/* Child object spawned in sc_cloudrunnera_update case 0, cached in childObjs[0]
+ * and attached via ObjLink_AttachChild. */
+#define SCCLOUDRUNNERA_CHILD_OBJ 0x6e8
+
 typedef struct ScCloudrunneraPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -137,7 +141,7 @@ void sc_cloudrunnera_update(int obj)
                 {
                     break;
                 }
-                setup = Obj_AllocObjectSetup(0x30, 0x6e8);
+                setup = Obj_AllocObjectSetup(0x30, SCCLOUDRUNNERA_CHILD_OBJ);
                 ((ScCloudrunneraSetup*)setup)->unk1B = 0x9;
                 ((ScCloudrunneraSetup*)setup)->unk1C = 0;
                 ((ScCloudrunneraSetup*)setup)->unk1D = 0;
