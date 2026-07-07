@@ -30,6 +30,9 @@ void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
 /* DLL-id of the object spawned by fn_80153640 (generic spawn; no cache field /
    named spawn-fn / kind name -> suffixless per role-gate). */
 #define MAGICPLANT_CHILD_OBJ 0x51b
+/* The magic-plant's one particle-fx effect (spawned per hit-count in the
+   attack handler). */
+#define MAGICPLANT_PARTFX 0x802
 extern const f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;
 extern f32 lbl_803E28D0;
@@ -341,7 +344,7 @@ void fn_8015355C(int obj, int state)
         u8 spawn = count;
         while (spawn != 0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x802, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MAGICPLANT_PARTFX, NULL, 2, -1, NULL);
             spawn--;
         }
     }
