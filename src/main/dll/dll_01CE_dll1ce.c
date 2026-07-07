@@ -29,6 +29,13 @@ extern void dimmagicbridge_update(void);
 
 #define DLL1CE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* Key objects that unlock the hatch (docblock: "a key object (seqId 0x18F or 0x1D6)"). */
+#define DLL1CE_KEY_SEQID_A 0x18f
+#define DLL1CE_KEY_SEQID_B 0x1d6
+
+/* Subtype of the contents object spawned on unlock (docblock: "contents object (subtype 0x246)"). */
+#define DLL1CE_CONTENTS_SUBTYPE 0x246
+
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
  * (dimwooddoor2_getExtraSize == 0xC).
@@ -171,7 +178,7 @@ void dll_1CE_update(int* obj)
         for (i = 0; i < count; i++)
         {
             int* o = *(int**)((char*)list + off + 0x100);
-            if (((GameObject*)o)->anim.seqId == 0x18f || ((GameObject*)o)->anim.seqId == 0x1d6)
+            if (((GameObject*)o)->anim.seqId == DLL1CE_KEY_SEQID_A || ((GameObject*)o)->anim.seqId == DLL1CE_KEY_SEQID_B)
             {
                 found = 1;
                 break;
@@ -188,7 +195,7 @@ void dll_1CE_update(int* obj)
     if ((u32)(s16)((Dll1CEPlacement*)q)->spawnGameBitValue != mainGetBit(0x46d)) return;
     if (Obj_IsLoadingLocked() == 0) return;
     {
-        int* no = Obj_AllocObjectSetup(0x30, 0x246);
+        int* no = Obj_AllocObjectSetup(0x30, DLL1CE_CONTENTS_SUBTYPE);
         ((Dll1CESpawnSetup*)no)->posX = ((Dll1CEPlacement*)q)->posX;
         ((Dll1CESpawnSetup*)no)->posY = lbl_803E49FC + ((Dll1CEPlacement*)q)->posYOffset;
         ((Dll1CESpawnSetup*)no)->posZ = ((Dll1CEPlacement*)q)->posZ;
