@@ -15,6 +15,7 @@
 #include "main/pad.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#define UNUSED_HIT_VOLUME_SLOT 0xe
 
 /* object group this object joins */
 #define UNUSED_OBJGROUP 0x10
@@ -94,7 +95,7 @@ void fn_80185868(int obj, f32 arg)
         ObjMsg_SendToObject(Obj_GetPlayerObject(), UNUSED107_MSG_PLAYER_BURST, obj, 0);
     }
     ObjHitbox_SetCapsuleBounds(obj, sub->radius, -5, 10);
-    ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
+    ObjHits_SetHitVolumeSlot(obj, UNUSED_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject(obj);
 }
 #pragma opt_common_subs reset
@@ -385,7 +386,7 @@ void dll_107_update(int obj)
         state->liftTimer -= framesThisStep;
         if (*(s8*)&state->launchPhase == 1)
         {
-            ObjHits_SetHitVolumeSlot(obj, 0xe, 3, 0);
+            ObjHits_SetHitVolumeSlot(obj, UNUSED_HIT_VOLUME_SLOT, 3, 0);
             if (((GameObject*)obj)->anim.velocityY > lbl_803E3A70)
             {
                 ((GameObject*)obj)->anim.velocityY = gWindLift107LaunchGravity * timeDelta + ((GameObject*)obj)->anim.velocityY;
