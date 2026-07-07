@@ -40,14 +40,6 @@ extern f32 lbl_803E0CC8, lbl_803E0CCC, lbl_803E0CD0, lbl_803E0CD4, lbl_803E0CD8,
 extern f32 lbl_803E0CE0, lbl_803E0CE4, lbl_803E0CE8, lbl_803E0CEC, lbl_803E0CF0, lbl_803E0CF4;
 extern f32 lbl_803E0CF8, lbl_803E0CFC;
 
-void dll_79_func01_nop(void)
-{
-}
-
-void dll_79_func00_nop(void)
-{
-}
-
 int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     struct
@@ -385,6 +377,14 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll79EffectModelBlock, 8, &base[0x5c], 0x23b, 0);
     }
     return ret;
+}
+
+void dll_79_func01_nop(void)
+{
+}
+
+void dll_79_func00_nop(void)
+{
 }
 
 u8 gDll79EffectModelBlock[] = {
