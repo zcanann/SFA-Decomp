@@ -7,6 +7,7 @@
 
 #define DREARTHWARRIOR_OBJGROUP 0xa
 #define DREARTHWARRIOR_PARTFX 0x7e6
+#define DREARTHWARRIOR_AIRMETER_BGTEXTURE 0x5cf /* HUD air-meter background texture id */
 
 #define DREARTHWARRIOR_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -477,7 +478,7 @@ void DR_EarthWarrior_func17(int obj, int param)
         EarthWarriorState* inner2 = ((GameObject*)obj)->extra;
         int placement = *(int*)&((GameObject*)obj)->anim.placementData;
         ((ByteFlags*)&inner2->sub.flags994)->b02 = 1;
-        (*gGameUIInterface)->initAirMeter(((DREarthWarriorPlacement*)placement)->airMeterMax, 0x5cf);
+        (*gGameUIInterface)->initAirMeter(((DREarthWarriorPlacement*)placement)->airMeterMax, DREARTHWARRIOR_AIRMETER_BGTEXTURE);
         (*gGameUIInterface)->runAirMeter(inner2->sub.health);
         mainSetBits(0x7bc, 1);
         mainSetBits(0x7d4, 0);
