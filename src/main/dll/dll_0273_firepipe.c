@@ -98,6 +98,7 @@ extern f32 lbl_803E6BA8;
 #define FIREPIPE_OBJ_E 0x732
 #define FIREPIPE_OBJ_FLAME_A 0x4a4
 #define FIREPIPE_OBJ_FLAME_B 0x70a
+#define FIREPIPE_OBJ_EFFECT 0x1b5
 
 typedef struct
 {
@@ -383,7 +384,7 @@ sound_update:
         FirePipeMapData* md3;
         md3 = (FirePipeMapData*)obj->objectDef;
         ex3 = obj->extra;
-        spawnDef = (u8*)Obj_AllocObjectSetup(0x24, 0x1b5);
+        spawnDef = (u8*)Obj_AllocObjectSetup(0x24, FIREPIPE_OBJ_EFFECT);
         ((FirePipeEffectSetup*)spawnDef)->head.color[0] = 2;
         ((FirePipeEffectSetup*)spawnDef)->effectMode = ex3->effectMode;
         ((FirePipeEffectSetup*)spawnDef)->scale = md3->scale;
