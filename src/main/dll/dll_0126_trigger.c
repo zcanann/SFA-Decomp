@@ -39,6 +39,7 @@
 
 /* group owned by another DLL, queried here */
 #define TIMER_OBJGROUP 0x4c /* DLL 0x2B5 timer */
+#define TARGET_OBJGROUP 0xf /* player-target group; nearest object gets the trigger's sequence */
 
 /*
  * TriggerState+0 status byte (`*state`). See objInterpretSeq / Trigger_hitDetect.
@@ -485,7 +486,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     {
                     case 0:
                     case 3:
-                        t = ObjGroup_FindNearestObject(0xf, obj, 0);
+                        t = ObjGroup_FindNearestObject(TARGET_OBJGROUP, obj, 0);
                         if ((void*)t != NULL)
                         {
                             (*gObjectTriggerInterface)
