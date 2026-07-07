@@ -13,6 +13,7 @@
 #define LIGHT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 #define LIGHT_DRAGHEAD_RESOURCE_ID 0xA5
+#define LIGHT_HIT_VOLUME_SLOT 0xE
 
 /* Partfx spawned by VFPDragHead_update: BREATH is the hit-driven breath fx
  * (state 1, gameBitA toggled); IDLE is the ambient periodic fx (states 0/2). */
@@ -348,7 +349,7 @@ void VFPDragHead_init(int obj, int data)
         state->despawnTimer = 0x78;
         ((GameObject*)obj)->anim.rootMotionScale =
             ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * lbl_803E6138;
-        ObjHits_SetHitVolumeSlot(obj, 0xE, 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, LIGHT_HIT_VOLUME_SLOT, 1, 0);
     }
     else
     {
