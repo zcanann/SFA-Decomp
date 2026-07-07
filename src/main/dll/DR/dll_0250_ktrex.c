@@ -85,6 +85,7 @@ extern void GM_MazeWell_init(void);
 
 #define KTREX_OBJGROUP 0x3
 #define KTREX_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
+#define KTREX_PARTFX_HIT 0x328 /* hit-response effect spawned at the player contact point */
 
 typedef struct KtrexMsgBlob
 {
@@ -1366,7 +1367,7 @@ void ktrex_updateContactEffects(int obj, void* runtime)
         ((KTRexWork*)gKTRexEffectSpawnWork)->posX = contactPoints[hitType * 4 + 1] + playerMapOffsetX;
         ((KTRexWork*)gKTRexEffectSpawnWork)->posY = contactPoints[hitType * 4 + 2];
         ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = contactPoints[hitType * 4 + 3] + playerMapOffsetZ;
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x328, gKTRexEffectSpawnWork, 0x200001, -1,
+        (*gPartfxInterface)->spawnObject((void*)obj, KTREX_PARTFX_HIT, gKTRexEffectSpawnWork, 0x200001, -1,
                                          NULL);
         ((KTRexWork*)gKTRexEffectSpawnWork)->posX -= ((GameObject*)obj)->anim.worldPosX;
         ((KTRexWork*)gKTRexEffectSpawnWork)->posY -= ((GameObject*)obj)->anim.worldPosY;
