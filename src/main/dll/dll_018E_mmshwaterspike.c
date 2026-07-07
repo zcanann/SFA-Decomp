@@ -10,6 +10,7 @@
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/MMP/dll_013B_wallanimator.h"
+#define MMSHWATERSPIKE_HIT_VOLUME_SLOT 9
 
 /* placement block read via anim.placementData */
 typedef struct MmshWaterspikePlacement
@@ -68,7 +69,7 @@ void mmsh_waterspike_update(int obj)
     int placement;
 
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
+    ObjHits_SetHitVolumeSlot(obj, MMSHWATERSPIKE_HIT_VOLUME_SLOT, 1, 0);
     animObj = ObjList_FindObjectById(((GameObject*)obj)->unkF8);
     if (animObj != NULL)
     {
