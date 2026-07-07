@@ -232,7 +232,7 @@ int* bs;
         {
             for (i = 0; i < *(u8*)(sh + 0x41); i++)
             {
-                GXSetVtxDesc(i + 13, bit3 ? GX_INDEX16 : GX_INDEX8);
+                GXSetVtxDesc(i + GX_VA_TEX0, bit3 ? GX_INDEX16 : GX_INDEX8);
             }
         }
         else
