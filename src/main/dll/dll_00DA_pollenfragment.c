@@ -17,6 +17,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
+#define POLLENFRAGMENT_HIT_VOLUME_SLOT 0x16
 extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjPath_GetPointWorldPosition();
@@ -463,7 +464,7 @@ void pollenfragment_update(int obj)
     Sfx_KeepAliveLoopedObjectSound(obj, (u16)(((PollenFragmentExtra*)extra)->def)->loopSfx);
     objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
-    ObjHits_SetHitVolumeSlot((u32)obj, 0x16, 1, 0);
+    ObjHits_SetHitVolumeSlot((u32)obj, POLLENFRAGMENT_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject((u32)obj);
     hit = (void*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
     if (hit != NULL && ((GameObject*)hit)->anim.seqId != ((GameObject*)obj)->anim.seqId &&
