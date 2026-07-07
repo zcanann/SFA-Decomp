@@ -124,6 +124,11 @@ extern int randomGetRange(int lo, int hi);
 /* fragment object vtable slot returning its lifecycle status */
 #define FRAGMENT_VTABLE_STATUS 0x20
 
+/* DrExplodableState.phase6E4 progression (see file header) */
+#define EXPLODABLE_PHASE_WAIT 0     /* wait for the activate game bit */
+#define EXPLODABLE_PHASE_BREAKING 1 /* fragments spawned; poll their status */
+#define EXPLODABLE_PHASE_BROKEN 2   /* already broken, nothing to do */
+
 void explodable_render(void)
 {
 }
@@ -170,9 +175,9 @@ void explodable_update(int obj)
 
     state = *(int*)&((GameObject*)obj)->extra;
     def = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (((DrExplodableState*)state)->phase6E4 != 2)
+    if (((DrExplodableState*)state)->phase6E4 != EXPLODABLE_PHASE_BROKEN)
     {
-        if (((DrExplodableState*)state)->phase6E4 == 0)
+        if (((DrExplodableState*)state)->phase6E4 == EXPLODABLE_PHASE_WAIT)
         {
             if ((u32)mainGetBit(((ExplodablePlacement*)def)->activateGameBit) != 0)
             {
@@ -181,7 +186,7 @@ void explodable_update(int obj)
                 {
                     Sfx_PlayFromObject(obj, ((DrExplodableState*)state)->breakSfx & 0xffff);
                 }
-                ((DrExplodableState*)state)->phase6E4 = 1;
+                ((DrExplodableState*)state)->phase6E4 = EXPLODABLE_PHASE_BREAKING;
                 ((GameObject*)obj)->anim.alpha = 0;
             }
             else
@@ -262,7 +267,7 @@ void explodable_init(int obj, int setup)
     ((GameObject*)obj)->anim.rotZ = ((ExplodablePlacement*)setup)->rotZ;
     if ((u32)mainGetBit(((ExplodablePlacement*)setup)->doneGameBit) != 0)
     {
-        ((DrExplodableState*)state)->phase6E4 = 2;
+        ((DrExplodableState*)state)->phase6E4 = EXPLODABLE_PHASE_BROKEN;
     }
     for (base = 0; base < 16; base++)
     {
@@ -409,7 +414,8 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
             i14 += 4;
             i8 += 4;
         }
-        ((DrExplodableState*)state)->phase6E4 = ((u32)mainGetBit(((ExplodablePlacement*)def)->doneGameBit) != 0) ? 1 : 0;
+        ((DrExplodableState*)state)->phase6E4 =
+            ((u32)mainGetBit(((ExplodablePlacement*)def)->doneGameBit) != 0) ? EXPLODABLE_PHASE_BREAKING : EXPLODABLE_PHASE_WAIT;
     }
 }
 
