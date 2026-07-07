@@ -133,9 +133,6 @@ int DIMCannon_getObjectTypeId(int* obj)
     return 0x0;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
 void DIMCannon_free(int* obj)
 {
     if (((GameObject*)obj)->anim.seqId != 0x1d6)
