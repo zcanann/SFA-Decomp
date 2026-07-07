@@ -225,4 +225,3 @@ void wallanimator_init(s16* obj, s16* placement)
     }
 }
 #pragma peephole reset
-#pragma optimization_level reset
