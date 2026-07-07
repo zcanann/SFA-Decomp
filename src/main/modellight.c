@@ -8,6 +8,7 @@
 #include "main/modellight.h"
 #define GX_COLOR0 0
 #define GX_DF_NONE 0
+#define GX_DF_CLAMP 2
 #define GX_FALSE 0
 #define GX_SRC_REG 0
 #define GX_COLOR1 1
@@ -983,7 +984,7 @@ void modelLightChannels_applyGXControls(void)
             {
                 lightMask = entry->lightMask;
                 attnFn = lightMask != 0 ? 1 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, GX_SRC_REG, entry->matSrc, lightMask, lightMask != 0 ? 2 : 0,
+                GXSetChanCtrl(channel, lightMask != 0, GX_SRC_REG, entry->matSrc, lightMask, lightMask != 0 ? GX_DF_CLAMP : GX_DF_NONE,
                               attnFn);
             }
             else if (entry->mode == 2)
