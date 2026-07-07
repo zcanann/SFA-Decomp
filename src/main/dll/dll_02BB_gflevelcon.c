@@ -47,6 +47,12 @@
    into two casts (with differing field types at scrollA/scrollB) is
    matching-required: collapsing to one struct changes the cast keys and
    the codegen. */
+/* Arwing-projectile child object ids; each spawn installs
+ * arwprojectile_setLifetime/placeForward on the returned object and casts
+ * the setup buffer to GfProjectileSetup. */
+#define GFLEVELCON_CHILD_OBJ_PROJECTILE_SPREAD 0x80d
+#define GFLEVELCON_CHILD_OBJ_PROJECTILE_AIMED  0x7e4
+#define GFLEVELCON_CHILD_OBJ_PROJECTILE_RING   0x859
 /* Spawn-setup buffer for the arwing-projectile children (defNos
  * 0x80d/0x7e4/0x859). Reuses ObjPlacement's pos/color head and adds the
  * class-specific launch fields at 0x18/0x19/0x1a (all u8 stores per asm). */
@@ -314,7 +320,7 @@ void fn_80239EAC(int obj, int state)
         {
             cur = *objs;
             defNo = *(s16*)(*(int*)&((GameObject*)cur)->anim.placementData);
-            if (defNo == 0x80d || defNo == 0x859)
+            if (defNo == GFLEVELCON_CHILD_OBJ_PROJECTILE_SPREAD || defNo == GFLEVELCON_CHILD_OBJ_PROJECTILE_RING)
             {
                 dy = *(f32*)(state + 0xc4) - ((GameObject*)cur)->anim.localPosY;
                 dz = *(f32*)(state + 0xc8) - ((GameObject*)cur)->anim.localPosZ;
@@ -339,7 +345,7 @@ void fn_8023A168(int obj, int state)
     {
         yawRnd = (s16)(randomGetRange(-0x1f40, 0x1f40) - 0x8000);
         pitchRnd = randomGetRange(-0x1f40, 0x1f40) >> 8;
-        newObj = Obj_AllocObjectSetup(0x20, 0x80d);
+        newObj = Obj_AllocObjectSetup(0x20, GFLEVELCON_CHILD_OBJ_PROJECTILE_SPREAD);
         ((ObjPlacement*)newObj)->posX = *(f32*)(state + 0xc0);
         ((ObjPlacement*)newObj)->posY = *(f32*)(state + 0xc4);
         ((ObjPlacement*)newObj)->posZ = *(f32*)(state + 0xc8);
@@ -371,7 +377,7 @@ void fn_8023A268(int obj, int state, int p3)
         dist = sqrtf(dx * dx + dz * dz);
         yaw = (u16)getAngle(dx, dz);
         gGfLevelConProjectilePitch = (u16)getAngle(*(f32*)(state + 0xc4) - *(f32*)(*(int*)state + 0x10), dist) >> 8;
-        newObj = Obj_AllocObjectSetup(0x20, 0x7e4);
+        newObj = Obj_AllocObjectSetup(0x20, GFLEVELCON_CHILD_OBJ_PROJECTILE_AIMED);
         ((ObjPlacement*)newObj)->posX = *(f32*)(state + 0xc0);
         ((ObjPlacement*)newObj)->posY = *(f32*)(state + 0xc4);
         ((ObjPlacement*)newObj)->posZ = *(f32*)(state + 0xc8);
@@ -404,7 +410,7 @@ void fn_80239FCC(int obj, int state)
         lbl_803DDDC0 = lbl_803DDDC6;
         rndYaw = randomGetRange(-0x8000, 0x7fff);
         rndDur = randomGetRange(0x64, 0x12c);
-        newObj = Obj_AllocObjectSetup(0x20, 0x859);
+        newObj = Obj_AllocObjectSetup(0x20, GFLEVELCON_CHILD_OBJ_PROJECTILE_RING);
         ang = lbl_803E74A0 * (f32)(int)rndYaw / lbl_803E74A4;
         ((ObjPlacement*)newObj)->posX = (f32)(int)rndDur * mathSinf(ang) + *(f32*)(*(int*)state + 0xc);
         ((ObjPlacement*)newObj)->posY = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)state + 0x10);
