@@ -258,7 +258,7 @@ int playerIsDead(int obj)
 int playerGetTimeScale(int obj, f32* out)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    *out = inner->unk77C;
+    *out = inner->timeScale;
     return inner->unk8C4;
 }
 
@@ -9370,7 +9370,7 @@ int Lightfoot_UpdateProximityInteractionState(int obj, int state)
     if (((PlayerState*)state)->baddie.targetObj != NULL)
     {
         if (*(u16*)((char*)*(int*)((char*)inner + 0x40c) + 0x22) <
-            inner->unk3FE)
+            inner->proximityRange)
         {
             if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedB != 0 || *(s8*)&((PlayerState*)state)->baddie.
                 moveDone != 0 ||
@@ -10687,7 +10687,7 @@ int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv)
         lbl_803E8184 * (lbl_803E8188 -
             (f32)(u16) * (u16*)((char*)sub + 0x22) /
             (f32)(u16)
-    inner->unk3FE
+    inner->proximityRange
     )
     ;
     if (((PlayerState*)state)->baddie.moveSpeed < *(f32*)&lbl_803E818C)
@@ -12695,7 +12695,7 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->yaw = ((GameObject*)obj)->anim.rotX;
     ((PlayerState*)inner)->lastInputHeading = ((GameObject*)obj)->anim.rotX;
     fz = lbl_803E7EE0;
-    ((PlayerState*)inner)->unk77C = fz;
+    ((PlayerState*)inner)->timeScale = fz;
     ((PlayerState*)inner)->queuedItemCommand = -1;
     ((PlayerState*)inner)->animState = -1;
     ((PlayerState*)inner)->targetAnimSpeed = fz;
@@ -15352,7 +15352,7 @@ int playerStateClimbOntoLadder(int obj, int state, f32 fv)
         {
             tbl = lbl_80332F78;
         }
-        inner->unk544 =
+        inner->eventCountdown =
             fn_802A71E0(obj, tbl[sel], tbl[sel + 2], (int*)inner->unk538, (int*)&vb.vx,
                         lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
         {
@@ -15415,7 +15415,7 @@ int playerStateClimbOntoLadder(int obj, int state, f32 fv)
         (obj, OBJANIM_STATE_INDEX_ACTIVE, OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
     ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)
     (obj, OBJANIM_STATE_INDEX_ACTIVE, OBJANIM_STATE_WORD_EVENT_COUNTDOWN,
-     inner->unk544);
+     inner->eventCountdown);
     ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(
         obj, ((PlayerState*)state)->baddie.moveSpeed, fv, 0);
     (*gCameraInterface)->overridePos(

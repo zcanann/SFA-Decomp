@@ -64,7 +64,7 @@ typedef struct PlayerState {
     u8 fallSeverity; /* fall/landing severity tier (0-3) set from the fall height-difference (hdiff vs lbl_803E8104/8108/810C thresholds); selects the landing move/sfx (move 0xa/0x90) and at >=2 fires camera shake + a ground-impact ObjHits; reset to 0 on state change */
     int moveAnimTable; /* s16 anim/move-id table base; fed to ObjAnim_SetCurrentMove */
     u8 pad3FC[0x3FE - 0x3FC];
-    u16 unk3FE;
+    u16 proximityRange; /* u16 range/normalization denominator for proximity interaction: the target's distance word (targetObj+0x22) is compared against it and divided by it to scale baddie.moveSpeed (Lightfoot_UpdateProximityInteractionState) */
     int moveParams; /* ptr to a 0x60 locomotion-parameter block (lbl_80333250); deref'd as f32 speed thresholds/limits at +4/+c/+10/+14/+18/+1c */
     f32 maxSpeed;
     f32 currentSpeed; /* player current movement speed; clamped to [0, maxSpeed], scaled by friction */
@@ -157,7 +157,7 @@ typedef struct PlayerState {
     u8 pad530[0x534 - 0x530];
     f32 moveStartPosZ;  /* localPosZ assigned at the vertical-move start */
     f32 unk538[3];
-    s16 unk544;
+    s16 eventCountdown; /* move-blend/event countdown from fn_802A71E0; written each frame then pushed as the ObjAnim EVENT_COUNTDOWN state word (ObjAnim_WriteStateWord) */
     s8 footstepSurface; /* footstep surface/material selector; switched to pick the footstep sfx variant (case 4 -> foot_33a, default -> foot_var) on anim foot events */
     u8 unk547;
     u8 pad548[0x549 - 0x548];
@@ -272,7 +272,7 @@ typedef struct PlayerState {
     f32 savedPosZ;
     u8 pad774[0x778 - 0x774];
     f32 probeHitDist; /* hit distance (SweepHit.dist) from a directional collision probe (objBboxFn_800640cc); has a getter (fn_802966F4), reset to 0 on state changes */
-    f32 unk77C;
+    f32 timeScale; /* player time-scale factor returned via the out-param of playerGetTimeScale(obj,&out); reset to 0.0 on state init */
     u8 pad780[0x784 - 0x780];
     f32 verticalVel; /* vertical velocity factor applied as anim.velocityY = verticalVel*fv; has dedicated get/set (fn_80296220), drives climb/descend move progress */
     f32 aimScreenY; /* aim-cursor screen Y (centered at halfH), driven by stick aimInputX; unprojected to a world aim direction */
