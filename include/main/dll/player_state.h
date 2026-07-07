@@ -183,9 +183,9 @@ typedef struct PlayerState {
     u8 pad598[0x5A4 - 0x598];
     s16 animEventState; /* anim event-state word written each frame via ObjAnim_WriteStateWord(...EVENT_STATE); from fn_802A71E0 or a scaled move-blend factor */
     s16 moveAltToggle; /* alternating selector for a paired repeating move: !=0 picks move 0x15, ==0 picks 0x16; XOR-toggled each cycle (e.g. left/right climb step) */
-    f32 unk5A8;
-    f32 unk5AC;
-    f32 unk5B0;
+    f32 leapSpeed;   /* leap/launch speed magnitude filled by fn_802A8EE4 (base = &leapSpeed): threshold-compared vs lbl_803E8040/8048 to pick the jump move (0xe/0x16/0x12) then normalized (leapSpeed-lo)/(hi-lo) into the move blend */
+    f32 leapTargetY; /* world-Y leap anchor filled alongside leapSpeed; converted world<->parent-relative (-/+ groundObject.y); feeds worldPosY = leapTargetY - unk874 and the localPosY lerp endpoint */
+    f32 leapBaseY;   /* second world-Y leap anchor (sibling of leapTargetY), same parent-relative conversion applied */
     f32 moveStartX; /* local-space start position captured at move begin; localPos = progress*(moveEnd-moveStart)+moveStart */
     f32 moveStartY;
     f32 moveStartZ;
@@ -204,7 +204,7 @@ typedef struct PlayerState {
     f32 moveEnd2X; /* secondary local-space target position, also lerped from moveStart */
     f32 moveEnd2Y;
     f32 moveEnd2Z;
-    s16 unk604;
+    s16 secondaryBlendAmount; /* clamped (s16) blend amount derived from the leapSpeed normalization; passed to Object_ObjAnimSetSecondaryBlendMove for the paired jump/climb move */
     u8 unk606;
     u8 unk607;
     u8 unk608;

@@ -800,7 +800,7 @@ int playerState09(int obj, int state)
         ((GameObject*)obj)->anim.worldPosX =
             k * ((PlayerState*)inner)->launchDirX + *(f32*)((int)inner + 0x5d4);
         ((GameObject*)obj)->anim.worldPosY =
-            ((PlayerState*)inner)->unk5AC - ((PlayerState*)inner)->unk874;
+            ((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->unk874;
         ((GameObject*)obj)->anim.worldPosZ =
             k * ((PlayerState*)inner)->launchDirZ + *(f32*)((int)inner + 0x5dc);
         Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
@@ -822,10 +822,10 @@ int playerState09(int obj, int state)
                                            *(f32*)((int)inner + 0x600), (f32*)((char*)inner + 0x5f8),
                                            (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
                                            ((PlayerState*)inner)->groundObject);
-            ((PlayerState*)inner)->unk5AC =
-                ((PlayerState*)inner)->unk5AC - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
-            ((PlayerState*)inner)->unk5B0 =
-                ((PlayerState*)inner)->unk5B0 - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
+            ((PlayerState*)inner)->leapTargetY =
+                ((PlayerState*)inner)->leapTargetY - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
+            ((PlayerState*)inner)->leapBaseY =
+                ((PlayerState*)inner)->leapBaseY - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
             ((PlayerState*)inner)->unk609 = 0;
         }
         break;
@@ -892,7 +892,7 @@ int playerState0B(int obj, int state)
                 hi = lbl_803E8044;
                 ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F28;
             }
-            else if ((v = inner->unk5A8) >= lbl_803E8040)
+            else if ((v = inner->leapSpeed) >= lbl_803E8040)
             {
                 gPlayerCurrentMoveId = 0xe;
                 lo = lbl_803E8040;
@@ -913,10 +913,10 @@ int playerState0B(int obj, int state)
                 hi = lbl_803E8048;
                 ((PlayerState*)state)->baddie.moveSpeed = lbl_803E804C;
             }
-            t = (inner->unk5A8 - lo) / (hi - lo);
+            t = (inner->leapSpeed - lo) / (hi - lo);
             t = t * lbl_803E7FAC;
             r = (t < lbl_803E7EA4) ? lbl_803E7EA4 : ((t > lbl_803E7FAC) ? lbl_803E7FAC : t);
-            inner->unk604 = (s16)r;
+            inner->secondaryBlendAmount = (s16)r;
             ObjAnim_SetCurrentMove(obj, lbl_80332EF0[gPlayerCurrentMoveId], lbl_803E7EA4, 0);
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xa);
             inner->targetYaw = inner->yaw =
@@ -943,10 +943,10 @@ int playerState0B(int obj, int state)
                                                *(f32*)((int)inner + 0x600), (f32*)((char*)inner + 0x5f8),
                                                (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
                                                inner->groundObject);
-                inner->unk5AC =
-                    inner->unk5AC - *(f32*)((char*)inner->groundObject + 0x10);
-                inner->unk5B0 =
-                    inner->unk5B0 - *(f32*)((char*)inner->groundObject + 0x10);
+                inner->leapTargetY =
+                    inner->leapTargetY - *(f32*)((char*)inner->groundObject + 0x10);
+                inner->leapBaseY =
+                    inner->leapBaseY - *(f32*)((char*)inner->groundObject + 0x10);
                 inner->unk609 = 0;
             }
             break;
@@ -965,7 +965,7 @@ int playerState0B(int obj, int state)
         (((PlayerState*)inner)->moveEndZ - inner->moveStartZ) +
         inner->moveStartZ;
     Object_ObjAnimSetSecondaryBlendMove(
-        (ObjAnimComponent*)obj, lbl_80332EF0[gPlayerCurrentMoveId + 2], inner->unk604);
+        (ObjAnimComponent*)obj, lbl_80332EF0[gPlayerCurrentMoveId + 2], inner->secondaryBlendAmount);
     fn_802AB5A4(obj, (int)inner, 5);
     return 0;
 }
@@ -1028,7 +1028,7 @@ int playerStateGrabLedge(int obj, int state)
             ((PlayerState*)inner)->moveStartY -
             ((GameObject*)obj)->anim.currentMoveProgress *
             (((PlayerState*)inner)->moveStartY -
-                (((PlayerState*)inner)->unk5AC - ((PlayerState*)inner)->unk874));
+                (((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->unk874));
         ((GameObject*)obj)->anim.localPosZ =
             c * (((PlayerState*)inner)->moveEnd2Z - ((PlayerState*)inner)->moveStartZ) +
             ((PlayerState*)inner)->moveStartZ;
@@ -1097,10 +1097,10 @@ int playerStateGrabLedge(int obj, int state)
                                            *(f32*)((int)inner + 0x600), (f32*)((char*)inner + 0x5f8),
                                            (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
                                            ((PlayerState*)inner)->groundObject);
-            ((PlayerState*)inner)->unk5AC =
-                ((PlayerState*)inner)->unk5AC - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
-            ((PlayerState*)inner)->unk5B0 =
-                ((PlayerState*)inner)->unk5B0 - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
+            ((PlayerState*)inner)->leapTargetY =
+                ((PlayerState*)inner)->leapTargetY - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
+            ((PlayerState*)inner)->leapBaseY =
+                ((PlayerState*)inner)->leapBaseY - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
             ((PlayerState*)inner)->unk609 = 0;
         }
         break;
@@ -6615,7 +6615,7 @@ extern f32 lbl_803E803C;
 int playerStateClimbLedge(int obj, int state, f32 fv)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
-    f32 diff = ((PlayerState*)inner)->unk5AC - ((PlayerState*)inner)->unk874;
+    f32 diff = ((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->unk874;
     f32 blend;
     f32 z;
     f32 t;
@@ -6875,11 +6875,11 @@ int playerStateClimbLedge(int obj, int state, f32 fv)
                     ((PlayerState*)inner)->moveEnd2Z, (void*)(inner + 0x5f8),
                     (void*)(inner + 0x5fc), (void*)(inner + 0x600),
                     ((PlayerState*)inner)->groundObject);
-                ((PlayerState*)inner)->unk5AC =
-                    ((PlayerState*)inner)->unk5AC -
+                ((PlayerState*)inner)->leapTargetY =
+                    ((PlayerState*)inner)->leapTargetY -
                     *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
-                ((PlayerState*)inner)->unk5B0 =
-                    ((PlayerState*)inner)->unk5B0 -
+                ((PlayerState*)inner)->leapBaseY =
+                    ((PlayerState*)inner)->leapBaseY -
                     *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
                 ((PlayerState*)inner)->unk609 = 0;
             }
@@ -15014,10 +15014,10 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
             ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
                 out[0x14], out[0x15], out[0x16], out + 0x14, out + 0x15, out + 0x16,
                 *(int*)&((GameObject*)obj)->anim.parent);
-            ((PlayerState*)inner)->unk5AC =
-                ((PlayerState*)inner)->unk5AC + *(f32*)(*(int*)&((GameObject*)obj)->anim.parent + 0x10);
-            ((PlayerState*)inner)->unk5B0 =
-                ((PlayerState*)inner)->unk5B0 + *(f32*)(*(int*)&((GameObject*)obj)->anim.parent + 0x10);
+            ((PlayerState*)inner)->leapTargetY =
+                ((PlayerState*)inner)->leapTargetY + *(f32*)(*(int*)&((GameObject*)obj)->anim.parent + 0x10);
+            ((PlayerState*)inner)->leapBaseY =
+                ((PlayerState*)inner)->leapBaseY + *(f32*)(*(int*)&((GameObject*)obj)->anim.parent + 0x10);
         }
         *(u8*)((char*)out + 0x61) = 1;
         if (parent != NULL && (((ObjAnimComponent*)parent)->modelInstance->flags & 0x8000) == 0)
