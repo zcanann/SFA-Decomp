@@ -229,8 +229,8 @@ void renderClouds(int a, int b, int c, int d)
         GXSetCullMode(GX_CULL_NONE);
         Camera_RebuildProjectionMatrix();
         GXClearVtxDesc();
-        GXSetVtxDesc(GX_VA_POS, 1);
-        GXSetVtxDesc(GX_VA_TEX0, 1);
+        GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+        GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
         textureSetupFn_800799c0();
         gxTextureFn_800794e0();
         textRenderSetupFn_80079804();
