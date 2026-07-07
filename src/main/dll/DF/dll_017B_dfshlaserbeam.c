@@ -144,6 +144,10 @@ typedef struct DFSHLaserBeamObject
     DFSHLaserBeamRuntime* runtime;
 } DFSHLaserBeamObject;
 
+/* texture asset loaded into runtime->beamTexture */
+#define DFSHLASERBEAM_TEXTURE_ID 0x2E
+#define DFSHLASERBEAM_EFFECT_RESOURCE_ID 0x81
+
 #define DFSH_LASER_ORBIT_A(runtime) (*(s16 *)((u8 *)(runtime) + 0x1E))
 #define DFSH_LASER_ORBIT_B(runtime) (*(s16 *)((u8 *)(runtime) + 0x20))
 #define DFSH_LASER_ORBIT_C(runtime) (*(s16 *)((u8 *)(runtime) + 0x22))
@@ -417,13 +421,13 @@ void DFSH_LaserBeam_init(void* objArg, void* configArg)
     timer = randomGetRange(-0x50, 0x50);
     runtime->lockTimer = (s16)(timer + 0x190);
     *(u8*)((u8*)runtime + 0x49) = 0;
-    gLaserBeamEffectResource = Resource_Acquire(0x81, 1);
+    gLaserBeamEffectResource = Resource_Acquire(DFSHLASERBEAM_EFFECT_RESOURCE_ID, 1);
     runtime->beamVolumeScale = lbl_803E4EC0;
     *(u8*)((u8*)runtime + 0x4A) = config->proximityMode;
     runtime->cycleTimer = 0x118;
     if (runtime->beamTexture == NULL)
     {
-        runtime->beamTexture = textureLoadAsset(0x2E);
+        runtime->beamTexture = textureLoadAsset(DFSHLASERBEAM_TEXTURE_ID);
     }
 }
 
