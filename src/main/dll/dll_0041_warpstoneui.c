@@ -26,6 +26,10 @@ extern u8 warpstoneUIState;
 extern void* lbl_803DD984;
 extern void* lbl_803DD980;
 extern f32 lbl_803DD97C;
+
+/* texture assets loaded by WarpstoneUI_initialise (A -> lbl_803DD984, B -> lbl_803DD980) */
+#define WARPSTONEUI_TEXTURE_A 0x4FA
+#define WARPSTONEUI_TEXTURE_B 0x5E3
 extern int gWarpStoneUiMenuActive;
 extern f32 lbl_803E22E0;
 extern f32 lbl_803E22D8;
@@ -207,8 +211,8 @@ void WarpstoneUI_release(void)
 #pragma scheduling off
 void WarpstoneUI_initialise(void)
 {
-    lbl_803DD984 = textureLoadAsset(0x4FA);
-    lbl_803DD980 = textureLoadAsset(0x5E3);
+    lbl_803DD984 = textureLoadAsset(WARPSTONEUI_TEXTURE_A);
+    lbl_803DD980 = textureLoadAsset(WARPSTONEUI_TEXTURE_B);
     lbl_803DD97C = lbl_803E22E0;
 }
 #pragma scheduling reset
