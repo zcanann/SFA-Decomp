@@ -22,4 +22,13 @@ typedef struct SaveData
     u32 enabledDebugOptions;
 } SaveData;
 
+/* Bit index into registeredDebugOptions/enabledDebugOptions, aka cheatId. */
+enum CheatId
+{
+    CHEAT_SHOW_CREDITS = 0,
+    CHEAT_SEPIA_MODE = 1,
+    CHEAT_MUSIC_TEST = 2,
+    CHEAT_DINO_LANGUAGE = 3
+};
+
 #endif

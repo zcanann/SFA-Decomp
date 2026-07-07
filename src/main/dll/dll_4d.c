@@ -13,12 +13,13 @@
  */
 #include "main/dll/dll_4D.h"
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/savedata_struct.h"
 
 /* misc-panel id stored in lbl_803DBA28 (see dll_0037_optionsscreen.c) */
 #define OPTIONS_PANEL_MISC 3
 
 /* the in-game cheat queried for the second menu row */
-#define LANGUAGE_MENU_CHEAT_ID 3
+#define LANGUAGE_MENU_CHEAT_ID CHEAT_DINO_LANGUAGE
 
 /* TitleMenuTextEntry.flags: row is hidden / non-selectable */
 #define TITLE_MENU_TEXT_ENTRY_HIDDEN 0x4000

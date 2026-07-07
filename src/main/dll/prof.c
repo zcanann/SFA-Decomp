@@ -16,6 +16,7 @@
 #include "main/dll/debug/prof.h"
 #include "main/dll/titlemenuitem_struct.h"
 #include "main/engine_shared.h"
+#include "main/dll/savedata_struct.h"
 extern int saveFileStruct_isCheatActive();
 extern int isCheatUnlocked(u8);
 extern int Rcp_GetColorFilterEnabled(void);
@@ -186,7 +187,7 @@ void optionsMenu_openGeneralPanel(void)
     {
         if (isCheatUnlocked((u8)cheatId) != 0)
         {
-            if (cheatId == 1)
+            if (cheatId == CHEAT_SEPIA_MODE)
             {
                 slot[2] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
                     0x507, cheatId + 0x24, 0, 1, Rcp_GetColorFilterEnabled());

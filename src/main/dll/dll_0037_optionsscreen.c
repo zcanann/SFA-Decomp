@@ -19,6 +19,7 @@
 #include "main/dll/dll_4D.h"
 #include "main/dll/FRONT/title_menu.h"
 #include "main/engine_shared.h"
+#include "main/dll/savedata_struct.h"
 extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
 extern TitleMenuControl* gTitleMenuItemInterface;
 extern TitleMenuControl* gTitleMenuLinkInterface;
@@ -259,7 +260,7 @@ int OptionsScreen_frameStart(void)
                 setSubtitlesEnabled(lbl_803DD708[2]);
                 break;
             default:
-                saveFileStruct_setCheatActive(3,
+                saveFileStruct_setCheatActive(CHEAT_DINO_LANGUAGE,
                                               !((int (**)(int))gTitleMenuItemInterface->vtable)[9](
                                                   lbl_803A87D0[item]));
                 break;
