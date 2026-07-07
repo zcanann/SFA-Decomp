@@ -16,6 +16,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define MMPGYSERVENT_PARTFX_GEYSER 0x724
 #define MMPGYSERVENT_OBJFLAG_HIDDEN 0x4000
 #define MMPGYSERVENT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -65,7 +66,7 @@ void mmp_gyservent_update(int obj)
     }
     else
     {
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x724, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, MMPGYSERVENT_PARTFX_GEYSER, NULL, 2, -1, NULL);
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_en_diallp_c_450);
     }
 }
