@@ -163,7 +163,7 @@ void MagicDust_update(GameObject* obj)
         ref = (int)obj->anim.modelState;
         if ((u32)ref != 0)
         {
-            obj->anim.modelState->flags &= ~0x1000LL;
+            obj->anim.modelState->flags &= ~(long long)OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
         state->unk25B = 1;
         if ((state->flags27A & 3) == 0)
