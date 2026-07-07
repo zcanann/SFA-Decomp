@@ -20,6 +20,10 @@
 
 STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
+/* Partfx effect ids (see docblock): the emit-timer burst vs the per-tick puff. */
+#define MMPTRENCHFX_PARTFX_EMIT 0x71F
+#define MMPTRENCHFX_PARTFX_TICK 0x720
+
 
 extern char lbl_803AC930[];
 extern f32 lbl_803E45C0;
@@ -69,7 +73,7 @@ void mmp_trenchfx_update(int obj)
         state->emitTimer -= timeDelta;
         if (state->emitTimer > lbl_803E45B0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x71F, &state->fxUnk10, 0x200001,
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_EMIT, &state->fxUnk10, 0x200001,
                                              -1, NULL);
         }
         *(f32*)(lbl_803AC930 + 8) = lbl_803E45B4;
@@ -83,7 +87,7 @@ void mmp_trenchfx_update(int obj)
         *(f32*)(lbl_803AC930 + 0xC) += ((GameObject*)obj)->anim.localPosX;
         *(f32*)(lbl_803AC930 + 0x10) += ((GameObject*)obj)->anim.localPosY;
         *(f32*)(lbl_803AC930 + 0x14) += ((GameObject*)obj)->anim.localPosZ;
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x720, lbl_803AC930, 0x200001, -1,
+        (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_TICK, lbl_803AC930, 0x200001, -1,
                                          NULL);
     }
 }
