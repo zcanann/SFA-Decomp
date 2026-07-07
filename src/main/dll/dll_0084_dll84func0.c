@@ -16,6 +16,9 @@
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 gFoodbagFxTextureData[];
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL84_EFFECT_ID 0x3f
 extern f32 lbl_803E0F20;
 extern f32 lbl_803E0F24;
 extern f32 lbl_803E0F28;
@@ -224,7 +227,7 @@ void dll_84_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = lbl_803E0F2C + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x24, (u8*)(int)gFoodbagFxTextureData, 0x10, base + 0x168, 0x3f, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x24, (u8*)(int)gFoodbagFxTextureData, 0x10, base + 0x168, DLL84_EFFECT_ID, 0);
 }
 
 void dll_84_func01_nop(void)
