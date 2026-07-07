@@ -21,6 +21,8 @@
  * one-shot pair on the burst-start tick (state==1). */
 #define DIMBOSSSPIT_PARTFX_FLIGHT_TRAIL 0x4ba
 #define DIMBOSSSPIT_PARTFX_BURST 0x4bc
+#define DIMBOSSSPIT_HIT_VOLUME_SLOT_5 5
+#define DIMBOSSSPIT_HIT_VOLUME_SLOT_9 9
 
 typedef struct DIMbossspitUpdateBurstState
 {
@@ -135,7 +137,7 @@ void DIMbossspit_updateBurst(int obj)
     radius = 0x94 - (burstTimer >> 2);
     if (alpha >= 0)
     {
-        ObjHits_SetHitVolumeSlot(obj, 5, 2, 0);
+        ObjHits_SetHitVolumeSlot(obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_5, 2, 0);
         ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
         ((GameObject*)obj)->anim.alpha = alpha;
     }
@@ -149,7 +151,7 @@ void DIMbossspit_updateBurst(int obj)
         ((GameObject*)obj)->anim.alpha = 0;
         if ((f32)(s32)((radius - 0x40) >> 1) > lbl_803E4D50)
         {
-            ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
+            ObjHits_SetHitVolumeSlot(obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_9, 1, 0);
             ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
         }
     }
@@ -213,7 +215,7 @@ void DIMbossspit_update(int obj)
             Obj_FreeObject(obj);
             return;
         }
-        ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
+        ObjHits_SetHitVolumeSlot(obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_5, 4, 0);
         ObjHitbox_SetSphereRadius(obj, 10);
         ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - gDimBossSpitGravity * timeDelta;
         ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * gDimBossSpitVelocityDamping;
