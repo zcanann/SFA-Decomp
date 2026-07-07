@@ -25,6 +25,10 @@
 extern f32 sqrtf(f32 x);
 extern CameraMode54State* gCameraModeNpcSpeakState;
 
+/* Scene objects the NPC-speak camera frames the player between (docblock). */
+#define DLL54_LOOKAT_SEQID 0x2ab
+#define DLL54_ORIGIN_SEQID 0x4dc
+
 #pragma scheduling off
 #pragma peephole off
 void dll_54_func06_nop(void)
@@ -66,11 +70,11 @@ void dll_54_update(u8* obj)
             for (; i < count; i++)
             {
                 GameObject* o = (GameObject*)arr[i];
-                if (o->anim.seqId == 0x2ab)
+                if (o->anim.seqId == DLL54_LOOKAT_SEQID)
                 {
                     gCameraModeNpcSpeakState->lookAtObj = o;
                 }
-                else if (o->anim.seqId == 0x4dc)
+                else if (o->anim.seqId == DLL54_ORIGIN_SEQID)
                 {
                     gCameraModeNpcSpeakState->originObj = o;
                 }
