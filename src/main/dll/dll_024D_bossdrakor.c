@@ -24,6 +24,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define BOSSDRAKOR_MAP_ARENA 0x1d /* map-event id set to act 3 on boss defeat */
 #define BOSSDRAKOR_OBJGROUP 0x45
 #define BOSSDRAKOR_PARTFX 0x7ad
 #define BOSSDRAKOR_HIT_VOLUME_SLOT 5
@@ -774,7 +775,7 @@ void bossdrakor_hitDetect(int obj)
                 mainSetBits(((BossdrakorPlacement*)setup)->defeatedGameBit, 1);
                 spawnExplosion((int*)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
                 Obj_RemoveFromUpdateList((int*)obj);
-                (*gMapEventInterface)->setMapAct(0x1d, 3);
+                (*gMapEventInterface)->setMapAct(BOSSDRAKOR_MAP_ARENA, 3);
                 mainSetBits(0x83c, 1);
             }
             else
