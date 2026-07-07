@@ -23,6 +23,9 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 
+/* type id of the child object dll_19C_update spawns once its gate bit + spawn timer elapse */
+#define DLL19C_CHILD_OBJ 0x248
+
 int dll_19C_getExtraSize(void) { return 0x8; }
 int dll_19C_getObjectTypeId(void) { return 0x0; }
 
@@ -76,11 +79,11 @@ void dll_19C_update(int* obj)
     }
     if (((Dll19CState*)sub)->spawnTimer <= 0 && (s8)def[0x1f] == 0 && Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(0x18, 0x248);
+        setup = Obj_AllocObjectSetup(0x18, DLL19C_CHILD_OBJ);
         ((ObjPlacement*)setup)->posX = ((Dll19CPlacement*)def)->posX;
         ((ObjPlacement*)setup)->posY = 50.0f + ((Dll19CPlacement*)def)->posY;
         ((ObjPlacement*)setup)->posZ = ((Dll19CPlacement*)def)->posZ;
-        *(s16*)setup = 0x248;
+        *(s16*)setup = DLL19C_CHILD_OBJ;
         ((ObjPlacement*)setup)->mapId = -1;
         *(u8*)((char*)setup + 4) = def[4];
         *(u8*)((char*)setup + 5) = def[5];
