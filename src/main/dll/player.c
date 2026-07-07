@@ -1925,8 +1925,8 @@ int playerStateMoving(int obj, int state)
             {
                 f32 sn = mathCosf((gPlayerPi * (f32) * (s16*)((char*)inner + 0x478)) /
                     lbl_803E7F98);
-                f32 negA = -((PlayerState*)inner)->smoothVelZ;
-                f32 nx = negA * sn - ((PlayerState*)inner)->smoothVelX * t;
+                f32 nx = -((PlayerState*)inner)->smoothVelZ * sn -
+                    ((PlayerState*)inner)->smoothVelX * t;
                 ya = ((PlayerState*)inner)->smoothVelX * sn -
                     ((PlayerState*)inner)->smoothVelZ * t;
                 ((PlayerState*)state)->baddie.animSpeedA =
