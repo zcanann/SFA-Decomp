@@ -25,6 +25,7 @@
 #include "main/audio/music_trigger_ids.h"
 
 #define BOSSDRAKOR_OBJGROUP 0x45
+#define BOSSDRAKOR_PARTFX 0x7ad
 /* groups owned by other DLLs, queried here */
 #define DRAKORHOVERPAD_OBJGROUP 0x46 /* DLL 0x271 drakorhoverpad */
 #define DBHOLECONTROL1_OBJGROUP 0x1e /* DLL 0x243 dbholecontrol1 */
@@ -446,7 +447,7 @@ void bossdrakor_updateHeadTracking(int obj, int state)
                     {
                         prm.mode = 45000;
                         (*gPartfxInterface)->spawnObject(
-                            (void*)obj, 0x7ad, &prm, 1, -1, NULL);
+                            (void*)obj, BOSSDRAKOR_PARTFX, &prm, 1, -1, NULL);
                     }
                 }
             }
