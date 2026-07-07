@@ -10,6 +10,7 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_01A9_bombplant.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define BOMBPLANT_PARTFX 0x7f1
 #define BOMBPLANT_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define BOMBPLANT_OBJFLAG_RENDERED 0x800
 
@@ -219,7 +220,7 @@ int bombplant_SeqFn(int* obj)
         }
         if (((GameObject*)obj)->objectFlags & BOMBPLANT_OBJFLAG_RENDERED)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, BOMBPLANT_PARTFX, NULL, 2, -1, NULL);
         }
     }
     return 0;
@@ -407,7 +408,7 @@ void bombplant_update(void* obj)
         }
         if ((((GameObject*)obj)->objectFlags & BOMBPLANT_OBJFLAG_RENDERED) != 0)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, BOMBPLANT_PARTFX, NULL, 2, -1, NULL);
         }
         break;
     }
