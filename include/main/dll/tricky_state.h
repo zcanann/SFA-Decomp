@@ -24,7 +24,7 @@
 typedef struct TrickyState {
     int progressPtr; /* MapEventInterface getProgressPtr() result (init) */
     int playerObj; /* owning player/sidekick object */
-    u8 unk08;
+    u8 stateIndex; /* primary Tricky state selector (0..0x11); indexes the handlerBase[] per-state handler dispatch table and gates the state machine */
     u8 followPhase; /* follow-handler phase selector (discrete 0..5; gates the pathing/seed branches) */
     u8 substate; /* anim-sequence substate 0..7 */
     u8 unk0B;

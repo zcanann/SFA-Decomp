@@ -434,8 +434,8 @@ int Tricky_updateSideCommandPrompts(int obj)
             ((TrickyState*)state)->unk0B = 0;
         }
         commandMask = ((TrickyState*)state)->unk0B | 9;
-        if (((((TrickyState*)state)->unk08 == 8) || (((TrickyState*)state)->unk08 == 0xd)) ||
-            ((((TrickyState*)state)->unk08 == 0xe && (((TrickyState*)state)->substate == 1))))
+        if (((((TrickyState*)state)->stateIndex == 8) || (((TrickyState*)state)->stateIndex == 0xd)) ||
+            ((((TrickyState*)state)->stateIndex == 0xe && (((TrickyState*)state)->substate == 1))))
         {
             commandMask |= 0x10;
             promptA = true;
@@ -968,17 +968,17 @@ void Tricky_update(int obj)
     }
     if ((((TrickyState*)state)->stateFlags & 0x10) == 0 && trickyFoodFn_8013db3c(obj, state) == 2)
     {
-        ((TrickyState*)state)->unk08 = 0x11;
+        ((TrickyState*)state)->stateIndex = 0x11;
     }
-    else if (((TrickyState*)state)->unk08 == 8 && cmd == 4)
+    else if (((TrickyState*)state)->stateIndex == 8 && cmd == 4)
     {
         *(u8*)&((TrickyState*)state)->unk734 = *(u8*)&((TrickyState*)state)->unk734 ^ 1;
     }
-    else if (((TrickyState*)state)->unk08 == 0xd && cmd == 4 && found == 0)
+    else if (((TrickyState*)state)->stateIndex == 0xd && cmd == 4 && found == 0)
     {
         *(int*)&((TrickyState*)state)->unk728 = 1;
     }
-    else if (((TrickyState*)state)->unk08 == 0xe && cmd == 4)
+    else if (((TrickyState*)state)->stateIndex == 0xe && cmd == 4)
     {
         *(int*)&((TrickyState*)state)->unk728 = 1;
     }
@@ -1011,7 +1011,7 @@ void Tricky_update(int obj)
                     }
                     else
                     {
-                        ((TrickyState*)state)->unk08 = 2;
+                        ((TrickyState*)state)->stateIndex = 2;
                     }
                     break;
                 case 0x160:
@@ -1026,14 +1026,14 @@ void Tricky_update(int obj)
                     }
                     else
                     {
-                        ((TrickyState*)state)->unk08 = 3;
+                        ((TrickyState*)state)->stateIndex = 3;
                     }
                     break;
                 case 0x6a:
                 case 0x193:
                 case 0x3fb:
                 case 0x658:
-                    ((TrickyState*)state)->unk08 = 9;
+                    ((TrickyState*)state)->stateIndex = 9;
                     break;
                 case 0x195:
                     if (**(u8**)state < 2)
@@ -1047,7 +1047,7 @@ void Tricky_update(int obj)
                     }
                     else
                     {
-                        ((TrickyState*)state)->unk08 = 0x10;
+                        ((TrickyState*)state)->stateIndex = 0x10;
                     }
                     break;
                 case 0x352:
@@ -1062,11 +1062,11 @@ void Tricky_update(int obj)
                     }
                     else
                     {
-                        ((TrickyState*)state)->unk08 = 2;
+                        ((TrickyState*)state)->stateIndex = 2;
                     }
                     break;
                 case 0x358:
-                    ((TrickyState*)state)->unk08 = 0xe;
+                    ((TrickyState*)state)->stateIndex = 0xe;
                     break;
                 default:
                     TRICKY_RESET_COMMAND(state);
@@ -1108,15 +1108,15 @@ void Tricky_update(int obj)
                         case 0x475:
                         case 0x546:
                         case 0x7c3:
-                            ((TrickyState*)state)->unk08 = 0xa;
+                            ((TrickyState*)state)->stateIndex = 0xa;
                             ((TrickyState*)state)->unk740 = (f32)(int)
                             randomGetRange(0x1f4, 0x2ee);
                             break;
                         case 0x6f0:
-                            ((TrickyState*)state)->unk08 = 0xe;
+                            ((TrickyState*)state)->stateIndex = 0xe;
                             break;
                         default:
-                            ((TrickyState*)state)->unk08 = 8;
+                            ((TrickyState*)state)->stateIndex = 8;
                             break;
                         }
                     }
@@ -1140,7 +1140,7 @@ void Tricky_update(int obj)
                 {
                     ((TrickyState*)state)->unkD = 4;
                     trickySelectQueuedCommandTarget(state, 4);
-                    ((TrickyState*)state)->unk08 = 7;
+                    ((TrickyState*)state)->stateIndex = 7;
                     switch (((GameObject*)((TrickyState*)state)->followObj)->anim.seqId)
                     {
                     case 0x1c9:
@@ -1198,11 +1198,11 @@ void Tricky_update(int obj)
                         ((TrickyState*)state)->linkedWalkGroup = 0;
                     }
                     ((TrickyState*)state)->substate = 0;
-                    ((TrickyState*)state)->unk08 = 0xb;
+                    ((TrickyState*)state)->stateIndex = 0xb;
                 }
                 break;
             default:
-                if (((TrickyState*)state)->unk08 == 1 && ((TrickyState*)state)->unkD != 0 && (flags & 0x20000) == 0)
+                if (((TrickyState*)state)->stateIndex == 1 && ((TrickyState*)state)->unkD != 0 && (flags & 0x20000) == 0)
                 {
                     step = trickyFindNearestUsableBaddie(((TrickyState*)state)->playerObj, lbl_803E24D8, 0);
                     if ((void*)step != NULL)
@@ -1214,7 +1214,7 @@ void Tricky_update(int obj)
                             *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
                             ((TrickyState*)state)->linkedWalkGroup = 0;
                         }
-                        ((TrickyState*)state)->unk08 = 0xd;
+                        ((TrickyState*)state)->stateIndex = 0xd;
                         ((TrickyState*)state)->substate = 0;
                         *(int*)&((TrickyState*)state)->unk728 = 0;
                     }
@@ -1246,7 +1246,7 @@ void Tricky_update(int obj)
         else if ((flags & 0x40000) != 0)
         {
             *(int*)&((TrickyState*)state)->followObj = obj;
-            ((TrickyState*)state)->unk08 = 0xf;
+            ((TrickyState*)state)->stateIndex = 0xf;
             ((TrickyState*)state)->unk740 = (f32)(int)
             randomGetRange(0x1f4, 0x2ee);
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x40000LL;
@@ -1262,7 +1262,7 @@ void Tricky_update(int obj)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     ((TrickyState*)state)->unk353 = 1;
     handlerBase = ((TrickyHandlerTable*)base)->handlers;
-    handlerBase[((TrickyState*)state)->unk08](obj, state);
+    handlerBase[((TrickyState*)state)->stateIndex](obj, state);
     ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x2;
     ((TrickyState*)state)->animTransitionTimer += timeDelta;
     if (((TrickyState*)state)->animTransitionTimer > lbl_803E247C)
@@ -1582,7 +1582,7 @@ void Tricky_init(int obj)
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[8]);
     ((TrickyState*)state)->progressPtr = (int)(*gMapEventInterface)->getTrickyEnergy();
     ((TrickyState*)state)->playerObj = Obj_GetPlayerObject();
-    ((TrickyState*)state)->unk08 = 0;
+    ((TrickyState*)state)->stateIndex = 0;
     ((TrickyState*)state)->unk0B = 0;
     ((TrickyState*)state)->previousPathPoint = NULL;
     ((TrickyState*)state)->activeWalkGroup = 0;
@@ -2632,7 +2632,7 @@ void Tricky_render(int obj, int p2, int p3, int p4, int p5, char doRender)
         *(s16*)(pathState + 0x414) = *(s16*)(pathInfo + 2);
         if ((((TrickyState*)state)->stateFlags & 0x10) != 0)
         {
-            switch (((TrickyState*)state)->unk08)
+            switch (((TrickyState*)state)->stateIndex)
             {
             case 2:
                 fn_8013ADFC(obj);
@@ -2644,7 +2644,7 @@ void Tricky_render(int obj, int p2, int p3, int p4, int p5, char doRender)
                 }
                 break;
             }
-            if ((((((TrickyState*)state)->stateFlags & 0x200) == 0) && (((TrickyState*)state)->unk08 == 0xb)) &&
+            if ((((((TrickyState*)state)->stateFlags & 0x200) == 0) && (((TrickyState*)state)->stateIndex == 0xb)) &&
                 (((TrickyState*)state)->substate >= 3))
             {
                 if (((TrickyState*)state)->substate != 3)
@@ -2784,7 +2784,7 @@ void trickyFn_801451d8(int obj, int state)
         f32 resetTimer;
 
         ((TrickyState*)state)->walkGroup = pathBytes[0];
-        ((TrickyState*)state)->unk08 = 1;
+        ((TrickyState*)state)->stateIndex = 1;
         ((TrickyState*)state)->substate = 0;
         resetTimer = lbl_803E23DC;
         ((TrickyState*)state)->unk71C = resetTimer;

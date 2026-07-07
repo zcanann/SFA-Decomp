@@ -171,7 +171,7 @@ void trickyGrowl(void* obj, void* trickyState)
                     }
                 }
             }
-            ((TrickyState*)trickyState)->unk08 = 1;
+            ((TrickyState*)trickyState)->stateIndex = 1;
             ((TrickyState*)trickyState)->substate = TRICKYGROWL_WINDUP;
             {
                 f32 resetValue = lbl_803E23DC;

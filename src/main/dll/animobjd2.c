@@ -188,7 +188,7 @@ void fn_8013E0D0(int* obj, u8* st)
             }
             else
             {
-                t->unk08 = 1;
+                t->stateIndex = 1;
                 go = 0;
                 t->substate = go;
                 TRICKY_RESET_TAIL((u8*)t)
@@ -261,7 +261,7 @@ void fn_8013E0D0(int* obj, u8* st)
             }
             else
             {
-                t->unk08 = 1;
+                t->stateIndex = 1;
                 go = 0;
                 t->substate = go;
                 TRICKY_RESET_TAIL((u8*)t)
@@ -388,7 +388,7 @@ void fn_8013E0D0(int* obj, u8* st)
             }
             else
             {
-                t->unk08 = 1;
+                t->stateIndex = 1;
                 go = 0;
                 t->substate = go;
                 TRICKY_RESET_TAIL((u8*)t)

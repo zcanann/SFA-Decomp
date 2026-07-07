@@ -40,7 +40,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
 
     if (trickyFoodFn_8013db3c(self, state) == 0)
     {
-        ((TrickyState*)state)->unk08 = 1;
+        ((TrickyState*)state)->stateIndex = 1;
         ((TrickyState*)state)->substate = 0;
         z = lbl_803E23DC;
         ((TrickyState*)state)->unk71C = z;

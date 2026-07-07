@@ -523,7 +523,7 @@ int trickyMove(u8* obj, f32* targetPos)
             goto ret_one;
         }
 
-        if (((TrickyState*)state)->unk08 == 1)
+        if (((TrickyState*)state)->stateIndex == 1)
         {
             if ((skeetla_pathSpeedDelta(obj) >= lbl_803E23DC
                      ? skeetla_pathSpeedDelta(obj)

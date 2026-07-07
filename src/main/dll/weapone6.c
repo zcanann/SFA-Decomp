@@ -160,7 +160,7 @@ void fn_8013F100(int obj, register int state)
                         }
                     }
                 }
-                ((TrickyState*)state)->unk08 = 1;
+                ((TrickyState*)state)->stateIndex = 1;
                 ((TrickyState*)state)->substate = 0;
                 resetTimer = lbl_803E23DC;
                 ((TrickyState*)state)->unk71C = resetTimer;
@@ -612,7 +612,7 @@ void fn_8013FBE4(int obj, register int state)
         }
         else
         {
-            ((TrickyState*)state)->unk08 = 1;
+            ((TrickyState*)state)->stateIndex = 1;
             ((TrickyState*)state)->substate = 0;
             resetTimer = lbl_803E23DC;
             ((TrickyState*)state)->unk71C = resetTimer;
