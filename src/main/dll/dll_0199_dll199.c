@@ -17,6 +17,8 @@
 #define DLL199_TARGET_OBJGROUP_1 0xe
 #define DLL199_TARGET_OBJGROUP_2 0x3
 
+#define DLL199_MAP_SHRINE 0xb /* NW shrine map-event id (setMapAct) */
+
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5158;
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
@@ -439,7 +441,7 @@ void dll_199_update(int obj)
             (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(
                 3, 0x2c, 0x50, state[4] & 0xff, 0);
             mainSetBits(0x1ce, 1);
-            (*gMapEventInterface)->setMapAct(0xb, 6);
+            (*gMapEventInterface)->setMapAct(DLL199_MAP_SHRINE, 6);
             break;
         }
     }
