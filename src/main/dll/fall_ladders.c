@@ -75,8 +75,6 @@ extern f32 lbl_803E2984;
 extern f32 lbl_803E2988;
 extern f32 lbl_803E298C;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801540A0(int obj, int p)
 {
     u8 done;
