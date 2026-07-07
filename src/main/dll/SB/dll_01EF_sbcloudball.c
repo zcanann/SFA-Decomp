@@ -26,6 +26,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/engine_shared.h"
 
 #define SBCLOUDBALL_OBJFLAG_PARENT_SLACK 0x1000
+#define SBCLOUDBALL_PARTFX 0xa8
 
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
@@ -190,7 +191,7 @@ void SB_CloudBall_update(GameObject* obj)
         objfx_spawnFlaggedTrailBurst((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156, 0xf, particleVelocity);
         objfx_spawnFlaggedTrailBurst((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156, 0xf, particleVelocity);
         objfx_spawnFlaggedTrailBurst((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156, 0xf, particleVelocity);
-        (*gPartfxInterface)->spawnObject((void*)obj, 0xa8, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, SBCLOUDBALL_PARTFX, NULL, 2, -1, NULL);
     }
 }
 
