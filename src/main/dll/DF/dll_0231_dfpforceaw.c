@@ -176,8 +176,6 @@ void TrickyCurve_updateBurstTrigger(int obj)
     state[0x12] = zSide;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int TrickyCurve_getExtraSize(void) { return 0x14; }
 int TrickyCurve_getObjectTypeId(void) { return 0x0; }
 
