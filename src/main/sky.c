@@ -12,6 +12,7 @@
 #define SKY_CHILD_OBJ_SUN 0x62b  /* spawned into gSkySunObject */
 #define SKY_CHILD_OBJ_MOON 0x62c /* spawned into gSkyMoonObject */
 #define SKY_TEXTURE_SKY 0x5fa /* gSkySkyTexture */
+#define MODEL_LIGHT_KIND_DIRECTIONAL 4
 #define GX_FALSE 0
 #define GX_TEV_SWAP0 0
 #define GX_TG_MTX2x4 1
@@ -893,7 +894,7 @@ void loadLightFn_8008bbc4(void)
         gSkySunLight = objCreateLight(0, 1);
         if (gSkySunLight != NULL)
         {
-            modelLightStruct_setLightKind(gSkySunLight, 4);
+            modelLightStruct_setLightKind(gSkySunLight, MODEL_LIGHT_KIND_DIRECTIONAL);
             modelLightStruct_setDirection(gSkySunLight, pEXIInputFlag, lbl_803DF06C, pEXIInputFlag);
             modelLightStruct_setDiffuseColor(gSkySunLight, 0xff, 0xff, 0xff, 0xff);
             modelLightStruct_setSpecularColor(gSkySunLight, 0xff, 0xff, 0xff, 0xff);
@@ -901,7 +902,7 @@ void loadLightFn_8008bbc4(void)
         gSkyMoonLight = objCreateLight(0, 1);
         if (gSkyMoonLight != NULL)
         {
-            modelLightStruct_setLightKind(gSkyMoonLight, 4);
+            modelLightStruct_setLightKind(gSkyMoonLight, MODEL_LIGHT_KIND_DIRECTIONAL);
             modelLightStruct_setDirection(gSkyMoonLight, pEXIInputFlag, EXIInputFlag, pEXIInputFlag);
             modelLightStruct_setDiffuseColor(gSkyMoonLight, 0xff, 0xff, 0xff, 0xff);
             modelLightStruct_setSpecularColor(gSkyMoonLight, 0xff, 0xff, 0xff, 0xff);
