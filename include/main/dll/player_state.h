@@ -214,12 +214,12 @@ typedef struct PlayerState {
     f32 hitNormalY;
     f32 hitNormalZ;
     f32 hitNormalW;
-    f32 unk61C;
-    f32 unk620;
-    f32 unk624;
-    f32 unk628;
-    f32 unk62C;
-    f32 unk630;
+    f32 curveStartX; /* RomCurve segment start point (pt.jointZ/centerX/centerY -> X/Y/Z); PSVECSubtract(curveEnd,curveStart) gives the travel vector normalized into travelDir* and its length into travelTargetDistance */
+    f32 curveStartY;
+    f32 curveStartZ;
+    f32 curveEndX; /* RomCurve segment end point (pt2+0x8/0xc/0x10); paired with curveStart for the travel vector */
+    f32 curveEndY;
+    f32 curveEndZ;
     f32 travelDirX; /* travel/move direction unit vector (X,Y,Z); written by PSVECNormalize, PSVECScale(dir,out,traveledDistance); getAngle(-X,-Z) sets targetYaw */
     f32 travelDirY;
     f32 travelDirZ;
@@ -231,10 +231,10 @@ typedef struct PlayerState {
     f32 surfaceNormalX; /* surface normal from the last collision sweep (SweepHit.n*); dotted with movement dir, drives slide angle (getAngle(X,Z)) and position offset */
     f32 surfaceNormalY;
     f32 surfaceNormalZ;
-    f32 unk660;
-    f32 unk664;
-    f32 unk668;
-    f32 unk66C;
+    f32 surfaceNormalW; /* 4th component (SweepHit.g38) of the ledge/wall surface normal, captured alongside surfaceNormalX/Y/Z */
+    f32 contactPointX; /* local-space contact point: end[] world hit point transformed world->local against contactObject (or stored raw when free space); read back as X/Y/Z into Obj_TransformLocalPointToWorld to recover the world anchor */
+    f32 contactPointY;
+    f32 contactPointZ;
     u8 pad670[0x67C - 0x670];
     int contactObject; /* collision hit object the player is anchored to; local-space contact point stored at 0x664/0x668/0x66C, 0 when in free space */
     u8 pad680[0x681 - 0x680];

@@ -4487,7 +4487,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
                 ((PlayerState*)state)->surfaceNormalX = buf.nx;
                 ((PlayerState*)state)->surfaceNormalY = buf.ny;
                 ((PlayerState*)state)->surfaceNormalZ = buf.nz;
-                ((PlayerState*)state)->unk660 = buf.g38;
+                ((PlayerState*)state)->surfaceNormalW = buf.g38;
                 *(u8*)&((PlayerState*)state)->unk681 = 0;
                 if ((u32)buf.hitObj != 0)
                 {
@@ -4516,7 +4516,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             ((PlayerState*)state)->surfaceNormalX = buf.nx;
             ((PlayerState*)state)->surfaceNormalY = buf.ny;
             ((PlayerState*)state)->surfaceNormalZ = buf.nz;
-            ((PlayerState*)state)->unk660 = buf.g38;
+            ((PlayerState*)state)->surfaceNormalW = buf.g38;
             *(u8*)&((PlayerState*)state)->unk681 = 0;
             if ((u32)buf.hitObj != 0)
             {
@@ -6593,8 +6593,8 @@ int playerState1D(int obj, int state, f32 fv)
     if (doXform != 0)
     {
         ((void (*)(f32, f32, f32, void*, f32*, void*, int))Obj_TransformLocalPointToWorld)(
-            inner->unk664, inner->unk668,
-            inner->unk66C, (void*)(obj + 0xc), &yOut, (void*)(obj + 0x14), sub);
+            inner->contactPointX, inner->contactPointY,
+            inner->contactPointZ, (void*)(obj + 0xc), &yOut, (void*)(obj + 0x14), sub);
         {
             f32 k = lbl_803E7FB8;
             ((GameObject*)obj)->anim.localPosX =
@@ -17784,8 +17784,8 @@ int playerState1B(int obj, int state, f32 fv)
                 int pt = (int)(*gRomCurveInterface)->getById(found);
                 int pt2;
                 *(f32*)((int)inner + 0x61c) = ((ObjHitVolumeRuntimeTransform*)pt)->jointZ;
-                inner->unk620 = ((ObjHitVolumeRuntimeTransform*)pt)->centerX;
-                inner->unk624 = ((ObjHitVolumeRuntimeTransform*)pt)->centerY;
+                inner->curveStartY = ((ObjHitVolumeRuntimeTransform*)pt)->centerX;
+                inner->curveStartZ = ((ObjHitVolumeRuntimeTransform*)pt)->centerY;
                 ((GameObject*)obj)->anim.localPosX = ((ObjHitVolumeRuntimeTransform*)pt)->jointZ;
                 ((GameObject*)obj)->anim.localPosY = ((ObjHitVolumeRuntimeTransform*)pt)->centerX;
                 ((GameObject*)obj)->anim.localPosZ = ((ObjHitVolumeRuntimeTransform*)pt)->centerY;
@@ -17802,8 +17802,8 @@ int playerState1B(int obj, int state, f32 fv)
                 }
                 pt2 = (int)(*gRomCurveInterface)->getById(found);
                 *(f32*)((int)inner + 0x628) = *(f32*)((char*)pt2 + 0x8);
-                inner->unk62C = *(f32*)((char*)pt2 + 0xc);
-                inner->unk630 = *(f32*)((char*)pt2 + 0x10);
+                inner->curveEndY = *(f32*)((char*)pt2 + 0xc);
+                inner->curveEndZ = *(f32*)((char*)pt2 + 0x10);
                 inner->traveledDistance = lbl_803E7EA4;
                 PSVECSubtract((f32*)((char*)inner + 0x628), (f32*)((char*)inner + 0x61c), vec);
                 inner->travelTargetDistance = PSVECMag(vec);
