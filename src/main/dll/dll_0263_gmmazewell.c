@@ -40,8 +40,7 @@ STATIC_ASSERT(sizeof(GmmazewellState) == 0x8);
 #define QUEST_FOLLOWUP_BASE 20
 #define QUEST_DIALOGUE_BASE32 14
 
-/* game bit + music track toggled while the well is active */
-#define GAMEBIT_MAZEWELL_ACTIVE 0xefc
+/* music track toggled while the well is active (game bit is GAMEBIT_MAZEWELL_ACTIVE) */
 #define MUSIC_MAZEWELL 0x36
 
 #define MAZEWELL_DEFAULT_DIALOGUE 1316

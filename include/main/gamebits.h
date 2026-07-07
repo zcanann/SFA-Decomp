@@ -955,6 +955,7 @@ enum GameBitId {
     GAMEBIT_ITEM_SnowHornArtifactEE6 = 0xEE6,            /* table 2; set when using artifact */
     GAMEBIT_ECSH_InShrine = 0xEFA,                       /* table 0; set when entering Krazoa test 1, cleared when leaving */
     GAMEBIT_WarpRelated0EFB = 0xEFB,                     /* table 0; related to warp pads/magic cave; maybe override destination with MagicCaveExitWarp? */
+    GAMEBIT_MAZEWELL_ACTIVE = 0xEFC,                     /* table 0; Music_Trigger(0x36) + Well active/hitbox state */
     GAMEBIT_PlayerInShop = 0xEFE,                        /* table 0 */
     GAMEBIT_LV_LocatedKrazoaShrine = 0xF07,              /* table 0; hint 351 */
     GAMEBIT_NW_DidPadHornTest = 0xF08,                   /* table 0; hint 379 */
