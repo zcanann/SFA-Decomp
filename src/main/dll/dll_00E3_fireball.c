@@ -421,7 +421,7 @@ void Fireball_update(int* obj)
     {
         ((FireballState*)state)->startupDelay = lbl_803E3330;
     }
-    if (((GameObject*)obj)->anim.seqId == 2110)
+    if (((GameObject*)obj)->anim.seqId == FIREBALL_SEQID_HIDDEN)
     {
         if (*(void**)state != NULL)
         {
@@ -613,7 +613,7 @@ void Fireball_init(int* obj)
         }
         ((GameObject*)obj)->animEventCallback = Fireball_SeqFn;
         ObjGroup_AddObject((int)obj, FIREBALL_OBJGROUP);
-        if (((GameObject*)obj)->anim.seqId != 2110 && ((FireballPlacement*)params)->startupDelayEnabled != 0)
+        if (((GameObject*)obj)->anim.seqId != FIREBALL_SEQID_HIDDEN && ((FireballPlacement*)params)->startupDelayEnabled != 0)
         {
             ((FireballState*)state)->startupDelay = lbl_803E3380;
         }
