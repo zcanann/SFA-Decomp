@@ -37,6 +37,8 @@
 /* Helper objects spawned by the fn_8013E0D0 state machine. */
 #define ANIMOBJD2_HELPER_OBJ_ID 0x17b
 #define ANIMOBJD2_DRIP_OBJ_ID 0x4f0
+/* seqId of the special actor Tricky circles when it is the current follow target (docblock: "the special seqId 0x6a3 actor") */
+#define ANIMOBJD2_CIRCLE_TARGET_SEQID 0x6a3
 
 /* fn_8013E0D0 circling substate machine (TrickyState.substate; this object's
  * own values, not a globally shared TrickyState enum). */
@@ -467,7 +469,7 @@ void fn_8013E0D0(int* obj, u8* st)
             void** p;
             int* tgt;
             void* found = trickyFindNearestUsableBaddie(*(void**)&t->playerObj, lbl_803E24D8, 0);
-            if (found != NULL && ((GameObject*)found)->anim.seqId == 0x6a3)
+            if (found != NULL && ((GameObject*)found)->anim.seqId == ANIMOBJD2_CIRCLE_TARGET_SEQID)
             {
                 tgt = found;
             }
@@ -592,7 +594,7 @@ void* trickyFindCirclingTarget(void* obj, void* arg2)
     f32 d1, d2, d3;
 
     target = *(void**)((u8*)arg2 + 0x24);
-    if (((GameObject*)target)->anim.seqId == 0x6a3)
+    if (((GameObject*)target)->anim.seqId == ANIMOBJD2_CIRCLE_TARGET_SEQID)
     {
         return target;
     }
