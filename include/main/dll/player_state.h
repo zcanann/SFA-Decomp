@@ -38,6 +38,24 @@ typedef struct PlayerStatus {
 #define PLAYER_FLAG_TELEPORTED 0x800000LL     /* position/yaw hard-set: set after any teleport/pos/yaw override, gates the snap-facing-to-heading branch then consumed */
 #define PLAYER_FLAG_HEADING_LOCK 0x1000000LL  /* freeze input heading: when set, lastInputHeading is NOT updated from live input; set during committed turn/locomotion moves */
 
+/*
+ * Collision surface type (Polygon Group +0x11; see docs/wiki/Maps.md
+ * "Surface Types" for the full, less-certain wiki list). Only values with a
+ * confirmed gameplay effect in player.c's surfaceType switch are named here.
+ */
+typedef enum SurfaceType {
+    SURFACE_GENERIC       = 0x00,
+    SURFACE_GRASS         = 0x01,
+    SURFACE_SAND          = 0x02,
+    SURFACE_SNOW          = 0x03, /* reduces target anim speed */
+    SURFACE_INSTANT_DEATH = 0x08, /* single lethal hit */
+    SURFACE_ICE           = 0x0D, /* slippery velSmoothRateBase */
+    SURFACE_WATER         = 0x0E,
+    SURFACE_LAVA          = 0x1A, /* periodic burn damage */
+    SURFACE_CONVEYOR      = 0x1D, /* pushes toward CFGUARDIAN_OBJGROUP */
+    SURFACE_METAL         = 0x22
+} SurfaceType;
+
 typedef struct PlayerState {
     BaddieState baddie;
     int playerStatus; /* PlayerStatus*; kept integer while raw decomp arithmetic remains */

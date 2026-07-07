@@ -11131,12 +11131,12 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
         ((PlayerState*)state)->surfaceType = *(u8*)((char*)cfg + 0xbc);
         switch (((PlayerState*)state)->surfaceType)
         {
-        case 13:
+        case SURFACE_ICE:
             ((PlayerState*)state)->targetAnimSpeed = lbl_803E8148;
             ((PlayerState*)state)->yawSmoothScale = lbl_803E814C;
             ((PlayerState*)state)->velSmoothRateBase = lbl_803E8118;
             break;
-        case 3:
+        case SURFACE_SNOW:
             fv2 = lbl_803E7EE0;
             ((PlayerState*)state)->targetAnimSpeed = fv2;
             ((PlayerState*)state)->yawSmoothScale = fv2;
@@ -11149,7 +11149,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 ObjHits_RecordObjectHit(obj, 0, 0x14, 2, 0);
             }
             break;
-        case 29:
+        case SURFACE_CONVEYOR:
             queryParams[0] = lbl_803E8150;
             found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_OBJGROUP, obj, queryParams);
             if (found != 0)
@@ -11158,7 +11158,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                     lbl_803E7EE0, (int)found, obj, &pushX, &pushZ);
             }
             break;
-        case 26:
+        case SURFACE_LAVA:
             if ((*(s16*)&((PlayerState*)state)->hitIntervalTimer -= dt) <= 0)
             {
                 *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0x3c;
@@ -11167,7 +11167,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                     obj, 0, 0x14, 2, 0xffffffff, pos[0], pos[1], pos[2]);
             }
             break;
-        case 8:
+        case SURFACE_INSTANT_DEATH:
             ObjHits_RecordObjectHit(obj, 0, 1, 0, 0);
             break;
         case 28:
