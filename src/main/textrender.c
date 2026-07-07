@@ -28,6 +28,10 @@ extern int saveFileStruct_isCheatActive(u8 idx);
 #define TEXT_ALIGN_CENTER 2
 #define TEXT_ALIGN_JUSTIFY 3
 
+#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_LEFT 0x43b
+#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_MID 0x43e
+#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_RIGHT 0x43d
+
 u16*
 FUN_80017460(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4,
              u64 fwdArg5, u64 fwdArg6, u64 fwdArg7, u64 fwdArg8, u32 arg9
@@ -1841,9 +1845,9 @@ void fn_8001BE2C(int mode)
     switch (mode)
     {
     case 3:
-        gSubtitleBoxTextures[0] = textureLoadAsset(0x43b);
-        gSubtitleBoxTextures[1] = textureLoadAsset(0x43e);
-        gSubtitleBoxTextures[2] = textureLoadAsset(0x43d);
+        gSubtitleBoxTextures[0] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_LEFT);
+        gSubtitleBoxTextures[1] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_MID);
+        gSubtitleBoxTextures[2] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_RIGHT);
         break;
     }
 }
