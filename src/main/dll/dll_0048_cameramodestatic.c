@@ -5,6 +5,9 @@
 #include "main/object_transform.h"
 #include "main/dll/VF/vf_shared.h"
 
+/* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
+#define CAMSTATIC_CAMMODE_DEFAULT 0x42
+
 typedef struct CameraModeStaticPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -84,7 +87,7 @@ void CameraModeStatic_update(short* camObj)
 
     if (lbl_803DD558->missingObject != 0)
     {
-        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
+        (*gCameraInterface)->setMode(CAMSTATIC_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
     }
     else
     {
