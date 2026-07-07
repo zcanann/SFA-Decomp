@@ -13,6 +13,9 @@
 
 #define MODEL_LIGHT_KIND_DIRECTIONAL 4
 
+/* Lock-on / A-button reticle object, cached into gCamcontrolTargetReticle. */
+#define DLLB4_CHILD_OBJ_RETICLE 0x1FE
+
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);
 extern void* Obj_GetActiveModel(u8* obj);
@@ -28,7 +31,7 @@ void lockIconInit(void)
     if (gCamcontrolTargetReticle == NULL)
     {
         gCamcontrolTargetReticle = (CamcontrolReticleObject*)Obj_SetupObject(
-            Obj_AllocObjectSetup(0x18, 0x1FE), 4, -1, -1, 0);
+            Obj_AllocObjectSetup(0x18, DLLB4_CHILD_OBJ_RETICLE), 4, -1, -1, 0);
         ObjModel_SetRenderCallback(Obj_GetActiveModel((u8*)gCamcontrolTargetReticle), lockIconTexCb);
         gCamcontrolTargetReticle->anim.bankIndex = CAMCONTROL_RETICLE_ICON_LOCKON;
         ObjModel_SetRenderCallback(Obj_GetActiveModel((u8*)gCamcontrolTargetReticle), aButtonIconTexCb);
