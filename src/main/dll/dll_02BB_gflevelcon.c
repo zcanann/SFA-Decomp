@@ -56,6 +56,12 @@
 /* Object loaded at the nearest def-0x7e5 marker in fn_80239DD8, cached in
  * obj->extra+0x10 and faded in. */
 #define GFLEVELCON_CHILD_OBJ_MARKER_ATTACH     0x608
+
+/* env-effect ids activated alongside the sky presets (index-style; each id is
+ * shared by two presets - A/D, B/E, C - so roles stay opaque) */
+#define GFLEVELCON_ENVFX_A 0x21f
+#define GFLEVELCON_ENVFX_B 0x21d
+#define GFLEVELCON_ENVFX_C 0x21e
 /* Spawn-setup buffer for the arwing-projectile children (defNos
  * 0x80d/0x7e4/0x859). Reuses ObjPlacement's pos/color head and adds the
  * class-specific launch fields at 0x18/0x19/0x1a (all u8 stores per asm). */
@@ -119,7 +125,7 @@ int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
             skyFn_800894a8(7, lbl_803E7460, lbl_803E7464, lbl_803E7468);
-            getEnvfxAct(obj, obj, 0x21f, 0);
+            getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_START_PROMPT:
             ((GfLevelconHandleScriptEventsState*)state)->promptTimer = lbl_803E746C;
@@ -128,7 +134,7 @@ int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
             skyFn_800894a8(7, lbl_803E7464, lbl_803E747C, *(f32*)&lbl_803E7464);
-            getEnvfxAct(obj, obj, 0x21d, 0);
+            getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_B, 0);
             break;
         case GFLEVELCON_SEQEV_LIGHT_ON:
             gf_levelcon_findLinkedObjects(obj);
@@ -148,7 +154,7 @@ int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
             skyFn_800894a8(7, lbl_803E7480, lbl_803E747C, lbl_803E7464);
-            getEnvfxAct(obj, obj, 0x21e, 0);
+            getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_C, 0);
             break;
         case GFLEVELCON_SEQEV_LOAD_MAP:
             loadMapAndParent(0x29);
@@ -168,13 +174,13 @@ int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
             skyFn_800894a8(7, lbl_803E7484, lbl_803E747C, lbl_803E7464);
-            getEnvfxAct(obj, obj, 0x21f, 0);
+            getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_E:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
             skyFn_800894a8(7, lbl_803E7484, lbl_803E747C, lbl_803E7464);
-            getEnvfxAct(obj, obj, 0x21d, 0);
+            getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_B, 0);
             break;
         }
     }
