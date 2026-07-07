@@ -24,6 +24,7 @@
 #include "main/vecmath.h"
 #include "main/dll/dll_000B_dll0b.h"
 #include "main/objlib.h"
+#include "dolphin/gx/GXEnum.h"
 
 #define DLL0B_OBJFLAG_RENDERED 0x800
 
@@ -1264,7 +1265,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         setMatrixFromObjectPos(mtxB, &xf.ang[0]);
         mtx44Transpose(mtxB, mtxA);
         PSMTXConcat((f32*)Camera_GetViewMatrix(), mtxA, mtxA);
-        GXLoadPosMtxImm(mtxA, 0);
+        GXLoadPosMtxImm(mtxA, GX_PNMTX0);
         tex = ((PartfxEffectState*)p[slot])->textureResource;
         if (tex != NULL)
         {
