@@ -484,7 +484,7 @@ void gpsh_shrine_update(int obj)
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 1, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 5, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 10, 1);
-                    (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(0xd, GPSHSHRINE_OBJGROUP, 1);
                     mainSetBits(0xc91, 1);
                     mainSetBits(0xe05, 0);
                 }
