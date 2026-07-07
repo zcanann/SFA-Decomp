@@ -25,9 +25,6 @@ extern f32 lbl_803E101C;
 extern f32 lbl_803E1020;
 extern f32 lbl_803E1024;
 
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL88_EFFECT_ID 0x205
-
 void dll_88_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
