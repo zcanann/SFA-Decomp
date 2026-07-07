@@ -29,6 +29,7 @@
 #include "main/objlib.h"
 #include "main/mm.h"
 #include "string.h"
+#define HAGABON_HIT_VOLUME_SLOT 10
 
 /* object group this object belongs to */
 #define HAGABON_OBJGROUP 3
@@ -453,7 +454,7 @@ void Hagabon_update(int obj)
                 mainSetBits(((HagabonPlacement*)data)->armGameBit, 1);
             }
         }
-        ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, HAGABON_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject(obj);
     }
 
