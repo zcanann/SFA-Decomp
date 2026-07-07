@@ -8,6 +8,11 @@
 #define SKY_ENVFX_GROUP_D 0x08   /* lbl_803DD134 group (weather) */
 #define SKY_ENVFX_UPDATE_PENDING 0x10 /* sun position changed; process this frame */
 #define SKY_ENVFX_IMMEDIATE 0x20 /* fire acts immediately vs deferred */
+/* env-effect ids activated together when the GROUP_D (weather) flag is clear
+   (index-style; roles opaque) */
+#define SKY_ENVFX_ID_A 0x136
+#define SKY_ENVFX_ID_B 0x137
+#define SKY_ENVFX_ID_C 0x143
 #define SKY_CONFIG_FIELD_COUNT 0xb
 #define SKY_CHILD_OBJ_SUN 0x62b  /* spawned into gSkySunObject */
 #define SKY_CHILD_OBJ_MOON 0x62c /* spawned into gSkyMoonObject */
@@ -66,9 +71,9 @@ void envFxActFn_800887f8(u8 value)
     if (masked == 0)
     {
         player = Obj_GetPlayerObject();
-        getEnvfxAct(player, player, 0x136, 0);
-        getEnvfxAct(player, player, 0x137, 0);
-        getEnvfxAct(player, player, 0x143, 0);
+        getEnvfxAct(player, player, SKY_ENVFX_ID_A, 0);
+        getEnvfxAct(player, player, SKY_ENVFX_ID_B, 0);
+        getEnvfxAct(player, player, SKY_ENVFX_ID_C, 0);
     }
 }
 
