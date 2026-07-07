@@ -16,6 +16,8 @@
 #include "main/sfa_shared_decls.h"
 
 #define MODEL_LIGHT_KIND_POINT 2
+#define DIM2LIFT_HIT_VOLUME_SLOT_10 10
+#define DIM2LIFT_HIT_VOLUME_SLOT_9 9
 
 /* child object id spawned by DIM2icicle_spawnBlueWhiteEffect (DIM2icicleBlueWhiteEffectPlacement cast) */
 #define DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT 656
@@ -245,7 +247,7 @@ int DIMbossHitDetect_liftImpact(int obj, int p2)
     zeroProgress = lbl_803E4BD8;
     ((BaddieState*)p2)->animSpeedA = zeroProgress;
     ((BaddieState*)p2)->animSpeedB = zeroProgress;
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    ObjHits_SetHitVolumeSlot(obj, DIM2LIFT_HIT_VOLUME_SLOT_10, 1, -1);
 
     if ((s32)(s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
@@ -327,7 +329,7 @@ int DIMbossHitDetect_trackTargetMove(int obj, int runtime, f32 hitAmount)
 
 int DIMbossHitDetect_lungeAttack(int obj, int runtime, f32 hitAmount)
 {
-    ObjHits_SetHitVolumeSlot(obj, 9, 1, -1);
+    ObjHits_SetHitVolumeSlot(obj, DIM2LIFT_HIT_VOLUME_SLOT_9, 1, -1);
     if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
         f32 animSpeed;
@@ -510,7 +512,7 @@ int DIMbossHitDetect_randomSwipe(int obj, int runtime, f32 arg)
 {
     int eventFlags;
     f32 animSpeed;
-    ObjHits_SetHitVolumeSlot(obj, 9, 1, -1);
+    ObjHits_SetHitVolumeSlot(obj, DIM2LIFT_HIT_VOLUME_SLOT_9, 1, -1);
     if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
         ((GameObject*)obj)->anim.activeMove = -1;
