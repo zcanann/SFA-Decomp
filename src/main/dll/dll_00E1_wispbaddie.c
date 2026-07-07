@@ -13,6 +13,7 @@
 #include "string.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define WISPBADDIE_HIT_VOLUME_SLOT 10
 
 /* object group this object belongs to */
 #define WISPBADDIE_OBJGROUP 3
@@ -331,7 +332,7 @@ void wispbaddie_update(int obj)
         particleParam = 0;
         (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 2, -1,
                                          &particleParam);
-        ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, WISPBADDIE_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject(obj);
     }
 
