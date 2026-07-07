@@ -20,6 +20,9 @@ extern char sSeqBAnimDataTag;
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
 
+/* player-target group; its first object is used as the camera focus target */
+#define OBJSEQ_TARGET_OBJGROUP 0xf
+
 /* GameObject::objectFlags bit: object is bound to an active sequence (set when
    it becomes a seq callback target, cleared on release; tested elsewhere as the
    "under sequence control / blocked from normal update" gate). */
@@ -1070,7 +1073,7 @@ void ObjSeq_updateCamera(void)
                     break;
                 case 0x57:
                     (*gCameraInterface)->setMode(0x57, 0, 3, 0, NULL, 0, 0);
-                    (*gCameraInterface)->setFocus(*(void**)ObjGroup_GetObjects(0xf, &groupObjs), 0);
+                    (*gCameraInterface)->setFocus(*(void**)ObjGroup_GetObjects(OBJSEQ_TARGET_OBJGROUP, &groupObjs), 0);
                     break;
                 default:
                     if (gObjSeqCamModeArgB == 0)
