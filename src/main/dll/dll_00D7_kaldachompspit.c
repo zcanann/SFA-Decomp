@@ -20,6 +20,9 @@
 
 #define KALDACHOMPSPIT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* anim.seqId of the explosive variant (docblock: "0x869 is the explosive variant"). */
+#define KALDACHOMPSPIT_SEQID_EXPLOSIVE 0x869
+
 extern int randomGetRange(int lo, int hi);
 extern void queueGlowRender(void* light);
 extern int Obj_FreeObject(int obj);
@@ -100,7 +103,7 @@ void kaldachompspit_burst(int obj)
     {
         modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);
     }
-    if (((GameObject*)obj)->anim.seqId == 0x869)
+    if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
     {
         rnd = randomGetRange(0, 1);
         spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
@@ -189,7 +192,7 @@ void KaldaChompSpit_update(int obj)
         vy = ((GameObject*)obj)->anim.velocityY * timeDelta;
         vz = ((GameObject*)obj)->anim.velocityZ * timeDelta;
         objMove(obj, vx, vy, vz);
-        if (((GameObject*)obj)->anim.seqId == 0x869)
+        if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
         {
             ObjHits_SetHitVolumeSlot((u32)obj, 0x1f, 1, 0);
             ((GameObject*)obj)->anim.rotX += 0x100;
@@ -222,7 +225,7 @@ void KaldaChompSpit_update(int obj)
         }
         else
         {
-            if (((GameObject*)obj)->anim.seqId == 0x869)
+            if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
             {
                 fn_80098B18(obj, lbl_803E30E0, 1, 0, 0, 0);
             }
@@ -277,7 +280,7 @@ void KaldaChompSpit_init(int obj)
     {
         f32 lightPos = lbl_803E30F8;
         modelLightStruct_setPosition(*extra, lightPos, lightPos, lightPos);
-        if (((GameObject*)obj)->anim.seqId == 0x869)
+        if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
         {
             modelLightStruct_setDiffuseColor(*extra, 0xff, 0xc0, 0, 0xff);
             modelLightStruct_setSpecularColor(*extra, 0xff, 0xc0, 0, 0xff);
