@@ -536,6 +536,7 @@ enum GameBitId {
     GAMEBIT_ENV_disableDayFX2 = 0x3AC,                   /* table 3; disable an environment effect */
     GAMEBIT_IM_ObjGroups = 0x3AD,                        /* table 3; size 32 */
     GAMEBIT_IM_EnteredHut = 0x3AE,                       /* table 2 */
+    GAMEBIT_ENV_disableDayFX3 = 0x3AF,                   /* table 3; disable an environment effect */
     GAMEBIT_ENV_isOutdoor = 0x3B0,                       /* table 3; disable rain, snow */
     GAMEBIT_CC_ObjGroups = 0x3B7,                        /* table 3; size 32 */
     GAMEBIT_IM_BikeRelated03B9 = 0x3B9,                  /* table 1; set when approaching SharpClaws in hut, cleared after race */
