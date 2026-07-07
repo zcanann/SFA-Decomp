@@ -47,6 +47,10 @@
 #define FIRECRAWLER_OBJFLAG_RENDERED 0x800
 #define FIRECRAWLER_OBJFLAG_PARENT_SLACK 0x1000
 #define FIREPIPE_OBJ_ID 0x710 /* child object spawned by firecrawler */
+/* crawler-family enemy anim.seqIds (docblock table: seqId -> enemy name) */
+#define FIRECRAWLER_SEQID_FIRECRAWLER 0x6a2 /* FireCrawler */
+#define FIRECRAWLER_SEQID_REDEYE      0x6a3 /* RedEye */
+#define FIRECRAWLER_SEQID_SHADOWHUNTER 0x6a4 /* ShadowHunter */
 
 /* Spawn-setup buffer for the firepipe child (obj id 0x710): ObjPlacement head
  * (pos/color) plus the class-specific fields the parent seeds at +0x18. */
@@ -677,7 +681,7 @@ void crawler_initModelVariant(s16* obj, u8* state)
     *(u32*)&((BaddieState*)state)->unk2E4 |= 0x40001040LL;
     switch (((GameObject*)obj)->anim.seqId)
     {
-    case 0x6a3:
+    case FIRECRAWLER_SEQID_REDEYE:
         ((BaddieState*)state)->speedScale = lbl_803E2BE4;
         ((BaddieState*)state)->unk2A8 = lbl_803E2BB8;
         ((BaddieState*)state)->hitCounter = 0x1e;
@@ -690,7 +694,7 @@ void crawler_initModelVariant(s16* obj, u8* state)
         ((BaddieState*)state)->unk31C = lbl_803E2BE8;
         *(u32*)&((BaddieState*)state)->unk2E4 |= 0x400;
         break;
-    case 0x6a2:
+    case FIRECRAWLER_SEQID_FIRECRAWLER:
         ((BaddieState*)state)->speedScale = lbl_803E2BF0;
         ((BaddieState*)state)->unk2A8 = lbl_803E2BB8;
         ((BaddieState*)state)->hitCounter = 0x32;
@@ -703,7 +707,7 @@ void crawler_initModelVariant(s16* obj, u8* state)
         ((BaddieState*)state)->unk31C = lbl_803E2BE8;
         *(u32*)&((BaddieState*)state)->unk2E4 |= 0xc00;
         break;
-    case 0x6a4:
+    case FIRECRAWLER_SEQID_SHADOWHUNTER:
         ((BaddieState*)state)->speedScale = lbl_803E2BF4;
         ((BaddieState*)state)->unk2A8 = lbl_803E2BF8;
         ((BaddieState*)state)->hitCounter = 0xf;
@@ -745,7 +749,7 @@ void crawler_checkNearbyActive(int obj, u8* state)
         {
             u32 objectIndex = (u8)i;
             int e = gCrawlerNearbyObjectBuffer[objectIndex * 2];
-            if (((GameObject*)e)->anim.seqId == 0x6a3)
+            if (((GameObject*)e)->anim.seqId == FIRECRAWLER_SEQID_REDEYE)
             {
                 u32 flags = *(u32*)((char*)((GameObject*)e)->extra + 0x2dc);
                 if ((flags & 0x20000000) != 0 && (flags & 0x1800) == 0)
@@ -1055,7 +1059,7 @@ void crawler_update(int* obj, u8* state)
         {
             (*gCameraInterface)->loadTriggeredCamAction(0, 0x6c, 0);
         }
-        if (((GameObject*)obj)->anim.seqId == 0x6a2 && ((GameObject*)obj)->childObjs[0] != NULL)
+        if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER && ((GameObject*)obj)->childObjs[0] != NULL)
         {
             firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
         }
@@ -1079,7 +1083,7 @@ void crawler_update(int* obj, u8* state)
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x30;
-        if (((GameObject*)obj)->anim.seqId == 0x6a2 && ((GameObject*)obj)->childObjs[0] != NULL)
+        if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER && ((GameObject*)obj)->childObjs[0] != NULL)
         {
             firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
         }
@@ -1484,7 +1488,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         {
             return;
         }
-        if (((GameObject*)obj)->anim.seqId == 0x6a2)
+        if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
         {
             if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
             {
@@ -1538,7 +1542,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
         ((FCVars*)state)->reactStep = tbl[step].next9;
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
-        if (((GameObject*)obj)->anim.seqId == 0x6a2)
+        if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
         {
             if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
             {
@@ -1588,7 +1592,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         {
             ((FCVars*)state)->emergeTimer = lbl_803E2BB0 * (f32) ((FCVars*)state)->hitCountScalar;
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
-            if (((GameObject*)obj)->anim.seqId == 0x6a2)
+            if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
             {
                 if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
                 {
@@ -1615,7 +1619,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         if (v == 1)
         {
             ((FCVars*)state)->emergeTimer = lbl_803E2BB4 * (f32) ((FCVars*)state)->hitCountScalar;
-            if (((GameObject*)obj)->anim.seqId == 0x6a2)
+            if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
             {
                 if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
                 {
@@ -1644,7 +1648,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
 
     if (cmd != 0x11)
     {
-        if (((GameObject*)obj)->anim.seqId == 0x6a2)
+        if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
         {
             if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
             {
@@ -1930,7 +1934,7 @@ void crawler_updateB(s16* obj, u8* state)
         }
         ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD | 0x10;
         ((BaddieState*)state)->seqEntryIndex = 0;
-        if (((GameObject*)obj)->anim.seqId == 0x6a2)
+        if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eggsnatch_var);
             if (((GameObject*)obj)->childObjs[0] != NULL)
@@ -2028,7 +2032,7 @@ void crawler_updateB(s16* obj, u8* state)
         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x30;
-            if (((GameObject*)obj)->anim.seqId == 0x6a2 && ((GameObject*)obj)->childObjs[0] != NULL)
+            if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER && ((GameObject*)obj)->childObjs[0] != NULL)
             {
                 firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
             }
