@@ -400,8 +400,6 @@ void Fireball_hitDetect(int* obj)
     ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
 }
 
-void MikaBomb_init(int* obj);
-
 void Fireball_update(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
