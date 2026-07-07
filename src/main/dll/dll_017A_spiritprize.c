@@ -35,6 +35,10 @@ extern f32 lbl_803E4EB4;
 /* placements carrying this id in their mapId are inert and never spawn */
 #define SPIRITPRIZE_PLACEMENT_DISABLED 0x4ca62
 
+/* the one spawn seqId that gets an object-bound point light; all other
+   seqIds use a detached light (see docblock). */
+#define SPIRITPRIZE_SEQID_OBJECTBOUND_LIGHT 0x1d9
+
 /* anim.classId of a spirit-prize object */
 #define SPIRITPRIZE_CLASS_ID 0x10
 
@@ -134,7 +138,7 @@ void SpiritPrize_init(int* obj, u8* init)
         }
     }
 afterTrigger:;
-    if (((GameObject*)obj)->anim.seqId != 0x1d9)
+    if (((GameObject*)obj)->anim.seqId != SPIRITPRIZE_SEQID_OBJECTBOUND_LIGHT)
     {
         state->useDetachedLight = 1;
     }
