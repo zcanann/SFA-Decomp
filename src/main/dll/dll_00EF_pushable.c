@@ -267,7 +267,7 @@ void fn_80174BFC(int obj, int ext)
                                     }
                                     mainSetBits(((PushablePlacement*)def)->gameBit, 1);
                                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                                    ((PushableState*)ext)->flags |= 0x80;
+                                    ((PushableState*)ext)->flags |= PUSHABLE_FLAG_PUSH_LOCKED;
                                 }
                                 break;
                             case 0x1cb:
@@ -275,7 +275,7 @@ void fn_80174BFC(int obj, int ext)
                                 {
                                     mainSetBits(gamebit, 1);
                                     Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-                                    ((PushableState*)ext)->flags |= 0x80;
+                                    ((PushableState*)ext)->flags |= PUSHABLE_FLAG_PUSH_LOCKED;
                                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                                     saveGame_saveObjectPos(obj);
                                 }
