@@ -7196,20 +7196,17 @@ void playerUpdate(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
     int cam = Camera_GetCurrentViewSlot();
-    f32 cd = ((PlayerState*)inner)->cutsceneTimer;
-    f32 limit = lbl_803E7EF0;
-    if (cd >= limit)
+    if (((PlayerState*)inner)->cutsceneTimer >= 6.0f)
     {
-        f32 zero = lbl_803E7EA4;
-        if (cd > zero)
+        if (((PlayerState*)inner)->cutsceneTimer > 0.0f)
         {
-            ((PlayerState*)inner)->cutsceneTimer = cd - lbl_803E7EE0;
-            if (((PlayerState*)inner)->cutsceneTimer <= zero)
+            ((PlayerState*)inner)->cutsceneTimer -= 1.0f;
+            if (((PlayerState*)inner)->cutsceneTimer <= 0.0f)
             {
                 cutsceneEnterExit(0, 0);
                 ((PlayerState*)inner)->cutsceneEnded = 1;
             }
-            else if (limit == ((PlayerState*)inner)->cutsceneTimer)
+            else if (((PlayerState*)inner)->cutsceneTimer == 6.0f)
             {
                 cutsceneEnterExit(1, 0);
                 setTimeStop(0xfd);
