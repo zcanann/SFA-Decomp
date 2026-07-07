@@ -234,7 +234,6 @@ void wctile_update(int obj)
         break;
     }
 }
-#pragma reset
 
 void wctile_init(u8* obj, u8* setupBytes)
 {
