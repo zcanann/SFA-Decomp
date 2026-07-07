@@ -24,6 +24,7 @@
 #define ARWINGANDROSSSTUFF_OBJGROUP 0x2
 
 #define ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK 0x1000
+#define ARWINGANDROSSSTUFF_HIT_VOLUME_SLOT 0xf
 
 enum ArwSeqId
 {
@@ -261,7 +262,7 @@ void arwingandrossstuff_update(int obj)
             return;
         }
     }
-    ObjHits_SetHitVolumeSlot(obj, 0xf, state->hitVolumeMode, 0);
+    ObjHits_SetHitVolumeSlot(obj, ARWINGANDROSSSTUFF_HIT_VOLUME_SLOT, state->hitVolumeMode, 0);
     ((GameObject*)obj)->anim.alpha = 0xff;
     {
         f32 lt = state->lifetime;
