@@ -12,6 +12,8 @@
 #define MAIN_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MAIN_OBJFLAG_RENDERED 0x800
 
+#define MAIN_LAVAPOOL_RESOURCE_ID 0xa6
+
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803DC074;
 extern void* gVfpLavaPoolEffectResource;
@@ -179,7 +181,7 @@ int fn_801FD4A8(void* obj, int x)
 void VFP_lavastar_initialise(void)
 {
     gVfpLavaPoolEffectResource = NULL;
-    gVfpLavaPoolEffectResource = Resource_Acquire(0xa6, 1);
+    gVfpLavaPoolEffectResource = Resource_Acquire(MAIN_LAVAPOOL_RESOURCE_ID, 1);
 }
 
 void VFP_lavastar_free(int obj)
