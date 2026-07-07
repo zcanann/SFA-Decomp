@@ -27,6 +27,7 @@
 #define BOSSDRAKOR_OBJGROUP 0x45
 #define BOSSDRAKOR_PARTFX 0x7ad
 #define BOSSDRAKOR_HIT_VOLUME_SLOT 5
+#define BOSSDRAKOR_AIRMETER_BGTEXTURE 0x63e /* HUD air-meter background texture id */
 /* groups owned by other DLLs, queried here */
 #define DRAKORHOVERPAD_OBJGROUP 0x46 /* DLL 0x271 drakorhoverpad */
 #define DBHOLECONTROL1_OBJGROUP 0x1e /* DLL 0x243 dbholecontrol1 */
@@ -154,7 +155,7 @@ void bossdrakor_update(int obj)
         ((BossDrakorState*)state)->repeatCount = 0;
         state2 = *(int*)&((GameObject*)obj)->extra;
         ((DrakorFlags*)((char*)state2 + 0x198))->b20 = 1;
-        (*gGameUIInterface)->initAirMeter(((BossDrakorState*)state2)->airMeterHandle, 0x63e);
+        (*gGameUIInterface)->initAirMeter(((BossDrakorState*)state2)->airMeterHandle, BOSSDRAKOR_AIRMETER_BGTEXTURE);
         (*gGameUIInterface)->runAirMeter(((BossDrakorState*)state2)->airMeterHandle);
         ((DrakorFlags*)((char*)state + 0x198))->b10 = 0;
         ((BossDrakorState*)state)->lightObj = objCreateLight(0, 1);
