@@ -47,11 +47,16 @@
 #define GX_TRUE 1
 #define GX_TEVPREV 0
 #define GX_CC_CPREV 0
+#define GX_CC_APREV 1
 #define GX_CC_A0 3
+#define GX_CC_C1 4
+#define GX_CC_C2 6
+#define GX_CC_TEXC 8
 #define GX_CC_RASC 0xa
 #define GX_CC_KONST 0xe
 #define GX_CC_ZERO 0xf
 #define GX_CA_APREV 0
+#define GX_CA_TEXA 4
 #define GX_CA_RASA 5
 #define GX_CA_KONST 6
 #define GX_CA_ZERO 7
@@ -1044,35 +1049,35 @@ void fn_80051868(u8* tex, f32* mtx, int mode)
     }
     if (mode == 0)
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, 8, GX_CC_RASC, GX_CC_ZERO);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
     }
     else if (mode == 8)
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, 8, GX_CC_RASC, 6);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_C2);
     }
     else if (mode == 4)
     {
-        GXSetTevColorIn(lbl_803DCD90, 8, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_TEXC, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
     }
     else if (mode == 6)
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, 8, GX_CC_CPREV, GX_CC_ZERO);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_CPREV, GX_CC_ZERO);
     }
     else if (mode == 9)
     {
-        GXSetTevColorIn(lbl_803DCD90, 8, GX_CC_CPREV, 1, GX_CC_ZERO);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_TEXC, GX_CC_CPREV, GX_CC_APREV, GX_CC_ZERO);
     }
     else
     {
-        GXSetTevColorIn(lbl_803DCD90, 8, GX_CC_CPREV, 1, GX_CC_ZERO);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_TEXC, GX_CC_CPREV, GX_CC_APREV, GX_CC_ZERO);
     }
     if (lbl_803DCD6B != 0)
     {
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, 4, GX_CA_APREV, GX_CA_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_APREV, GX_CA_ZERO);
     }
     else
     {
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, 4, GX_CA_RASA, GX_CA_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
         lbl_803DCD6B = 1;
     }
     GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
@@ -1121,23 +1126,23 @@ void fn_80051B00(u8* tex, f32* mtx, int mode, int* kparam)
     GXSetTevKColorSel(lbl_803DCD90, sel);
     if (mode == 0)
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, 8, GX_CC_KONST, GX_CC_ZERO);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_ZERO);
     }
     else if (mode == 8)
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, 8, GX_CC_KONST, 6);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_C2);
     }
     else
     {
-        GXSetTevColorIn(lbl_803DCD90, 8, GX_CC_CPREV, 1, GX_CC_ZERO);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_TEXC, GX_CC_CPREV, GX_CC_APREV, GX_CC_ZERO);
     }
     if (lbl_803DCD6B != 0)
     {
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, 4, GX_CA_APREV, GX_CA_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_APREV, GX_CA_ZERO);
     }
     else
     {
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, 4, GX_CA_RASA, GX_CA_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
         lbl_803DCD6B = 1;
     }
     GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
@@ -1186,23 +1191,23 @@ void fn_80051D5C(u8* tex, f32* mtx, int mode, int* kparam)
     GXSetTevKAlphaSel(lbl_803DCD90, v1);
     if (mode == 0)
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, 8, GX_CC_RASC, GX_CC_ZERO);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
     }
     else if (mode == 8)
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, 8, GX_CC_RASC, 6);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_C2);
     }
     else
     {
-        GXSetTevColorIn(lbl_803DCD90, 8, GX_CC_CPREV, 1, GX_CC_ZERO);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_TEXC, GX_CC_CPREV, GX_CC_APREV, GX_CC_ZERO);
     }
     if (lbl_803DCD6B != 0)
     {
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, 4, GX_CA_APREV, GX_CA_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_APREV, GX_CA_ZERO);
     }
     else
     {
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, 4, GX_CA_KONST, GX_CA_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_ZERO);
         lbl_803DCD6B = 1;
     }
     GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
@@ -1428,23 +1433,23 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
     }
     if (mode == 0)
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, 8, GX_CC_KONST, GX_CC_ZERO);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_ZERO);
     }
     else if (mode == 8)
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, 8, 4, 6);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_C1, GX_CC_C2);
     }
     else
     {
-        GXSetTevColorIn(lbl_803DCD90, 8, GX_CC_CPREV, 1, GX_CC_ZERO);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_TEXC, GX_CC_CPREV, GX_CC_APREV, GX_CC_ZERO);
     }
     if (lbl_803DCD6B != 0)
     {
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, 4, GX_CA_APREV, GX_CA_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_APREV, GX_CA_ZERO);
     }
     else
     {
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, 4, GX_CA_KONST, GX_CA_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_ZERO);
     }
     GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
@@ -1476,7 +1481,7 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
         GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, 4, GX_CA_KONST, GX_CA_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_ZERO);
         GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     }
