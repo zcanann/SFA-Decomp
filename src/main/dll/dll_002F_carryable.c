@@ -15,7 +15,7 @@
  * shadow-fade based on whether a sequence is playing.
  *
  * flag byte (state[7]) bits: 0x01 just-grabbed, 0x02 (inverted accessor),
- * 0x04, 0x08 suppress position save.
+ * 0x04 drop-disabled, 0x08 suppress position save.
  */
 #include "main/game_object.h"
 #include "main/dll/player_objects.h"
@@ -33,6 +33,11 @@
 #define CARRY_STATE_RESTING 0
 #define CARRY_STATE_GRABBED 1
 #define CARRY_STATE_PUTDOWN 2
+
+/* flag byte (state->flags) bits */
+#define CARRYABLE_FLAG_JUST_GRABBED 0x01
+#define CARRYABLE_FLAG_DROP_DISABLED 0x04
+#define CARRYABLE_FLAG_SUPPRESS_POS_SAVE 0x08
 
 typedef struct CarryableUpdateHeldState
 {
@@ -85,25 +90,25 @@ void Carryable_setSuppressPositionSave(u8* state, u8 enable)
 {
     if (enable != 0)
     {
-        ((CarryableUpdateHeldState*)state)->flags |= 8;
+        ((CarryableUpdateHeldState*)state)->flags |= CARRYABLE_FLAG_SUPPRESS_POS_SAVE;
     }
     else
     {
-        ((CarryableUpdateHeldState*)state)->flags &= ~8;
+        ((CarryableUpdateHeldState*)state)->flags &= ~CARRYABLE_FLAG_SUPPRESS_POS_SAVE;
     }
 }
 
-s32 Carryable_getDropDisabled(u8* state) { return (((CarryableUpdateHeldState*)state)->flags & 4) != 0; }
+s32 Carryable_getDropDisabled(u8* state) { return (((CarryableUpdateHeldState*)state)->flags & CARRYABLE_FLAG_DROP_DISABLED) != 0; }
 
 void Carryable_setDropDisabled(u8* state, u8 enable)
 {
     if (enable != 0)
     {
-        ((CarryableUpdateHeldState*)state)->flags |= 4;
+        ((CarryableUpdateHeldState*)state)->flags |= CARRYABLE_FLAG_DROP_DISABLED;
     }
     else
     {
-        ((CarryableUpdateHeldState*)state)->flags &= ~4;
+        ((CarryableUpdateHeldState*)state)->flags &= ~CARRYABLE_FLAG_DROP_DISABLED;
     }
 }
 
@@ -121,7 +126,7 @@ void Carryable_setGravityEnabled(u8* state, u8 clear)
 
 u8 Carryable_getSurfaceType(u8* state) { return ((CarryableUpdateHeldState*)state)->surfaceType; }
 
-s32 Carryable_wasJustGrabbed(u8* state) { return ((CarryableUpdateHeldState*)state)->flags & 1; }
+s32 Carryable_wasJustGrabbed(u8* state) { return ((CarryableUpdateHeldState*)state)->flags & CARRYABLE_FLAG_JUST_GRABBED; }
 
 s32 Carryable_getCarryState(u8* state) { return ((CarryableUpdateHeldState*)state)->carryState; }
 
@@ -159,7 +164,7 @@ int Carryable_updateHeld(u8* obj)
     u8* held;
     held = ((GameObject*)obj)->extra;
     ((CarryableUpdateHeldState*)held)->surfaceType = 0;
-    ((CarryableUpdateHeldState*)held)->flags &= ~1;
+    ((CarryableUpdateHeldState*)held)->flags &= ~CARRYABLE_FLAG_JUST_GRABBED;
     player = Obj_GetPlayerObject();
     if (((CarryableUpdateHeldState*)held)->carryState == CARRY_STATE_RESTING)
     {
@@ -181,7 +186,7 @@ int Carryable_updateHeld(u8* obj)
         ((CarryableUpdateHeldState*)held)->carryState = newCarryState;
         if (((CarryableUpdateHeldState*)held)->carryState != CARRY_STATE_RESTING)
         {
-            ((CarryableUpdateHeldState*)held)->flags |= 1;
+            ((CarryableUpdateHeldState*)held)->flags |= CARRYABLE_FLAG_JUST_GRABBED;
             ((CarryableUpdateHeldState*)held)->isHeld = 1;
         }
         if (((GameObject*)obj)->unkF8 == 0)
@@ -247,7 +252,7 @@ int Carryable_updateHeld(u8* obj)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
         {
-            if ((((CarryableUpdateHeldState*)held)->flags & 4) != 0 || isTrickyNear(player) == 0)
+            if ((((CarryableUpdateHeldState*)held)->flags & CARRYABLE_FLAG_DROP_DISABLED) != 0 || isTrickyNear(player) == 0)
             {
                 Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
             }
@@ -266,7 +271,7 @@ int Carryable_updateHeld(u8* obj)
             u8* h2 = ((GameObject*)obj)->extra;
             *(u8*)&((CarryableUpdateHeldState*)h2)->carryState = CARRY_STATE_RESTING;
             ((CarryableUpdateHeldState*)h2)->isHeld = 0;
-            if ((((CarryableUpdateHeldState*)h2)->flags & 8) == 0)
+            if ((((CarryableUpdateHeldState*)h2)->flags & CARRYABLE_FLAG_SUPPRESS_POS_SAVE) == 0)
             {
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E06D8;
                 saveGame_saveObjectPos((int*)obj);
