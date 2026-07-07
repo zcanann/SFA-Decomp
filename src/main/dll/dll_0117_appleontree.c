@@ -32,8 +32,6 @@
 #define APPLEONTREE_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 #define APPLEONTREE_MSG_PICKUP   0x7000b /* player collected: restore health + burst */
 
-#define APPLEONTREE_PARTFX_BURST 0x55a /* fx-burst spawned on the transition to APPLEONTREE_STATE_BURST */
-
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
 extern f32 Vec_distance(f32* a, f32* b);
