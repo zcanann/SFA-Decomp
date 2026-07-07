@@ -19,6 +19,8 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/resource.h"
 #include "main/engine_shared.h"
 
+#define SBMINIFIRE_PARTFX 0xa0
+
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
  * (SB_CloudBall_getExtraSize == 0x24).
@@ -102,18 +104,18 @@ void SB_MiniFire_update(GameObject* obj)
     *(s16*)((char*)buf + 4) = 0;
     *(s16*)((char*)buf + 2) = 0;
     *(s16*)((char*)buf + 0) = 0;
-    (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)obj, SBMINIFIRE_PARTFX, buf, 1, -1, NULL);
     dy = obj->anim.localPosY - obj->anim.previousLocalPosY;
     dz = obj->anim.localPosZ - obj->anim.previousLocalPosZ;
     dx = obj->anim.localPosX - obj->anim.previousLocalPosX;
     buf[3] = dx / 3.0f;
     buf[4] = dy / 3.0f;
     buf[5] = dz / 3.0f;
-    (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)obj, SBMINIFIRE_PARTFX, buf, 1, -1, NULL);
     buf[3] *= 2.0f;
     buf[4] *= 2.0f;
     buf[5] *= 2.0f;
-    (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)obj, SBMINIFIRE_PARTFX, buf, 1, -1, NULL);
     obj->anim.rotX = obj->anim.rotX + framesThisStep * 0x374;
     obj->anim.rotY = obj->anim.rotY + framesThisStep * 0x12c;
     obj->unkF4 = obj->unkF4 - framesThisStep;
