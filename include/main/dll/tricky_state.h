@@ -155,13 +155,13 @@ typedef struct TrickyState {
     u8 routeSeedDir;
     u8 pad41D[0x420 - 0x41D];
     RomCurveWalker route;
-    u8 unk528;
+    u8 cachedRouteDef; /* low byte of the cached routeDef pointer (accessed as *(u8**)&): route-select memo key, compared == routeDef then re-stored; when it + the cached walkGroup (unk530) + cachedRouteFlags all match, validatedRouteEntry is reused (skeetla) */
     u8 pad529[3];
     void *validatedRouteEntry; /* route entry pointer validated via skeetla_validateRouteEntry (skeetla) */
     u16 unk530;
     u16 walkGroup; /* current walk-group id (route/path selection; compared to targetWg and node group bytes) */
     u16 savedWalkGroup; /* mirrored from walkGroup (dll_DF); retained group used to gate route re-seeding */
-    u8 unk536;
+    u8 cachedRouteFlags; /* cached (routeFlagValue & 0xff): route-select memo key stored alongside cachedRouteDef; compared == (routeFlagValue & 0xff) to reuse validatedRouteEntry (skeetla) */
     u8 pad537[1];
     u8 voxBlocks[9][0x30]; /* trickyVoxAllocFn_8004b5d4 records, 0x538..0x6E8 */
     void *cachedRouteEntry; /* cached route-entry pointer (validated via skeetla_validateRouteEntry; one u32-spelled site launders) */

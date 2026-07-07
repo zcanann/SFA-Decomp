@@ -910,9 +910,9 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
 
     entry = NULL;
 
-    if ((*(u8**)&((TrickyState*)state)->unk528 == routeDef) &&
+    if ((*(u8**)&((TrickyState*)state)->cachedRouteDef == routeDef) &&
         (((TrickyState*)state)->unk530 == ((TrickyState*)state)->walkGroup) &&
-        (((TrickyState*)state)->unk536 == (routeFlagValue & 0xff)))
+        (((TrickyState*)state)->cachedRouteFlags == (routeFlagValue & 0xff)))
     {
         entry = skeetla_validateRouteEntry(((TrickyState*)state)->validatedRouteEntry);
     }
@@ -950,10 +950,10 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
         }
     }
 
-    *(u8**)&((TrickyState*)state)->unk528 = routeDef;
+    *(u8**)&((TrickyState*)state)->cachedRouteDef = routeDef;
     ((TrickyState*)state)->validatedRouteEntry = entry;
     ((TrickyState*)state)->unk530 = ((TrickyState*)state)->walkGroup;
-    ((TrickyState*)state)->unk536 = routeFlagValue;
+    ((TrickyState*)state)->cachedRouteFlags = routeFlagValue;
     return entry;
 }
 #pragma inline_max_size reset
