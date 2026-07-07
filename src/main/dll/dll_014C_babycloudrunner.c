@@ -25,6 +25,7 @@
 #define BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
 #define BABYCLOUDRUNNER_OBJGROUP 3
 #define BABYCLOUDRUNNER_OBJGROUP_SECONDARY 0x20
+#define BABYCLOUDRUNNER_AIRMETER_BGTEXTURE 0x5d1 /* HUD air-meter background texture id */
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
@@ -644,7 +645,7 @@ void babycloudrunner_update(int* obj)
                     {
                         sub->runnerState = 2;
                         mainSetBits(0x66, 0);
-                        (*gGameUIInterface)->initAirMeter(gBabyCloudRunnerAirMeterValues[sub->runnerIndex], 0x5d1);
+                        (*gGameUIInterface)->initAirMeter(gBabyCloudRunnerAirMeterValues[sub->runnerIndex], BABYCLOUDRUNNER_AIRMETER_BGTEXTURE);
                         s16toFloat((int)&sub->countdownTimer, (s16)gBabyCloudRunnerAirMeterValues[sub->runnerIndex]);
                     }
                     fn_8019E3F4(obj);
