@@ -31,6 +31,7 @@ extern ModgfxInterface** gModgfxInterface;
 
 #define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
 
+#define LASERBEAM_MSG_PLAYER_HIT 0x60003 /* message the player on a standard beam hit */
 #define LASERBEAM_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
 
 typedef struct Dll1FBSetup
@@ -432,7 +433,7 @@ void LaserBeam_update(int obj2)
                         beamKind = b->beamKind;
                         if (beamKind == 0 || beamKind == 1)
                         {
-                            ObjMsg_SendToObject(player, 0x60003, (char*)b + 0x34, 0);
+                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_HIT, (char*)b + 0x34, 0);
                         }
                         else if ((u8)(beamKind - 2) <= 1 || beamKind == 30)
                         {
