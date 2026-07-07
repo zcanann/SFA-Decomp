@@ -218,7 +218,7 @@ int iceBaddie_updateOpenState(int obj, int state)
     }
     {
         int v = *(int*)&((GroundBaddieState*)state)->baddie.eventFlags;
-        if ((v & 0x200) != 0)
+        if ((v & BADDIE_EVENT_LANDING) != 0)
         {
             ((GroundBaddieState*)state)->baddie.eventFlags = v & ~BADDIE_EVENT_LANDING;
             control->effectFlags |= ICEBADDIE_FX_LANDING;
@@ -269,7 +269,7 @@ int iceBaddie_updateOpenHitState(int obj, int state)
     }
     {
         int v = *(int*)&((GroundBaddieState*)state)->baddie.eventFlags;
-        if ((v & 0x200) != 0)
+        if ((v & BADDIE_EVENT_LANDING) != 0)
         {
             ((GroundBaddieState*)state)->baddie.eventFlags = v & ~BADDIE_EVENT_LANDING;
             control->effectFlags |= ICEBADDIE_FX_LANDING;
