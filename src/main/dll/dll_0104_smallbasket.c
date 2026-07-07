@@ -60,6 +60,7 @@ extern void largecrate_initialise(void);
 
 #define SMALLBASKET_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SMALLBASKET_OBJGROUP 0x10
+#define SMALLBASKET_MSG_PLAYER_GRAB 0x100010 /* tells player to grab/hold the basket */
 #define PAD_BUTTON_A 0x100
 
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
@@ -1048,7 +1049,7 @@ void SmallBasket_update(int obj)
                 {
                     ((CfperchState*)state)->disableTimer = 0;
                     ((CfperchState*)state)->hiddenTimer = 0;
-                    ObjMsg_SendToObject(player, 0x100010, obj,
+                    ObjMsg_SendToObject(player, SMALLBASKET_MSG_PLAYER_GRAB, obj,
                                         (((CfperchState*)state)->carryParam << 16) | ((u16)((CfperchState*)state)->carryAngle));
                 }
             }
