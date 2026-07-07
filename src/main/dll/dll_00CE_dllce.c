@@ -41,6 +41,7 @@
 #define DLLCE_PARTFX_DUST 0x345
 /* spray burst spawned 10x when the baddie-control fx flag bit 4 is set */
 #define DLLCE_PARTFX_SPRAY 0x343
+#define DLLCE_HIT_VOLUME_SLOT 10
 extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_SetHitVolumeSlot();
@@ -61,7 +62,7 @@ int fn_8015E3A0(int obj, int state)
     {
         ObjHits_EnableObject(obj);
     }
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    ObjHits_SetHitVolumeSlot(obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -309,7 +310,7 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p)
     {
         ObjHits_EnableObject(obj);
     }
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    ObjHits_SetHitVolumeSlot(obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -504,7 +505,7 @@ int fn_8015E8BC(int obj, GroundBaddieState* p)
     }
     else
     {
-        ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+        ObjHits_SetHitVolumeSlot(obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
         ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -974,7 +975,7 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
     {
         ObjHits_EnableObject(obj);
     }
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    ObjHits_SetHitVolumeSlot(obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
