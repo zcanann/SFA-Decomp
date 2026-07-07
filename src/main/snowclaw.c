@@ -11,6 +11,8 @@
 #define SNOWCLAW_TARGET_OBJGROUP 0x1e
 /* object group scanned by seqId to find this object's linked mount object */
 #define SNOWCLAW_MOUNT_OBJGROUP 0xa
+/* drop-bomb child spawned by snowclaw_spawnDropBomb (obj id 0x5ff) */
+#define SNOWCLAW_CHILD_OBJ_DROP_BOMB 0x5ff
 
 typedef struct SnowclawState
 {
@@ -222,8 +224,8 @@ void snowclaw_spawnDropBomb(int obj, int owner, int launchMode, int unkF4Value)
     player = Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() != 0)
     {
-        obj2 = Obj_AllocObjectSetup(0x24, 0x5ff);
-        *(s16*)(obj2 + 0x0) = 0x5ff;
+        obj2 = Obj_AllocObjectSetup(0x24, SNOWCLAW_CHILD_OBJ_DROP_BOMB);
+        *(s16*)(obj2 + 0x0) = SNOWCLAW_CHILD_OBJ_DROP_BOMB;
         ((ObjPlacement*)obj2)->color[0] = 2;
         ((ObjPlacement*)obj2)->color[2] = 0xff;
         ((ObjPlacement*)obj2)->color[1] = 1;
