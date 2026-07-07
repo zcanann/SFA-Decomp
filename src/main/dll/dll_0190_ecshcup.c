@@ -4,6 +4,8 @@
 #include "main/game_object.h"
 #include "main/engine_shared.h"
 
+#define ECSHCUP_TARGET_OBJGROUP 0xb
+
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E5060;
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
@@ -99,7 +101,7 @@ void ecsh_cup_update(short* obj)
     buf[0] = 0;
     if (gEcShCupNearestObject == 0)
     {
-        gEcShCupNearestObject = ObjGroup_FindNearestObject(0xb, obj, &dist);
+        gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, obj, &dist);
     }
     if (gEcShCupNearestObject != 0 && *(short*)(gEcShCupNearestObject + 0x44) != 0)
     {
@@ -286,7 +288,7 @@ void ecsh_cup_init(int obj, int def)
     ((EcshCupState*)state)->spawnTimer = lbl_803E5068;
     if (gEcShCupNearestObject == 0)
     {
-        gEcShCupNearestObject = ObjGroup_FindNearestObject(0xb, obj, &dist);
+        gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, obj, &dist);
     }
     ObjHits_EnableObject(obj);
     ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
