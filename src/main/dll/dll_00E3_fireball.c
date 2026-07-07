@@ -18,6 +18,7 @@
 #include "main/vecmath.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define FIREBALL_HIT_VOLUME_SLOT 14
 
 /* object group this object joins while active */
 #define FIREBALL_OBJGROUP 2
@@ -437,7 +438,7 @@ void Fireball_update(int* obj)
     ((FireballState*)state)->elapsedTime += timeDelta;
     if (((FireballState*)state)->elapsedTime > ((FireballState*)state)->flightDuration)
     {
-        ObjHits_SetHitVolumeSlot(obj, 14, *(s8*)((char*)params + 0x19) != 0 ? 3 : 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, FIREBALL_HIT_VOLUME_SLOT, *(s8*)((char*)params + 0x19) != 0 ? 3 : 1, 0);
     }
     if ((((FireballState*)state)->stateFlags & FIREBALL_FLAG_POS_LATCHED) == 0)
     {
