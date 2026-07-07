@@ -18,6 +18,7 @@
 #include "main/camera.h"
 #include "main/sfa_extern_decls.h"
 #include "main/object.h"
+#include "main/pi_dolphin.h"
 #include "main/track_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -910,11 +911,11 @@ void objGetWeaponDa(u8* obj, int objType, ObjWeaponDaTable* weaponDaTable, int k
             }
             if (load)
             {
-                getTabEntry(weaponDaTable->entries, 0x34, da2, weaponDaTable->byteCount);
+                getTabEntry(weaponDaTable->entries, MLDF_FILEID_WEAPONDA_BIN, da2, weaponDaTable->byteCount);
             }
             else
             {
-                fileLoadToBufferOffset(0x34, weaponDaTable->entries, da2,
+                fileLoadToBufferOffset(MLDF_FILEID_WEAPONDA_BIN, weaponDaTable->entries, da2,
                                        weaponDaTable->byteCount);
             }
             return;
@@ -948,11 +949,11 @@ void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u
             }
             if (load == 0)
             {
-                getTabEntry(eventTable->entries, 0x40, da2, eventTable->byteCount);
+                getTabEntry(eventTable->entries, MLDF_FILEID_OBJEVENT_BIN, da2, eventTable->byteCount);
             }
             else
             {
-                fileLoadToBufferOffset(0x40, eventTable->entries, da2, eventTable->byteCount);
+                fileLoadToBufferOffset(MLDF_FILEID_OBJEVENT_BIN, eventTable->entries, da2, eventTable->byteCount);
             }
             return;
         }
@@ -2386,14 +2387,14 @@ void Obj_InitObjectSystem(void)
     gObjDeferredFreeList = mmAlloc(0x640, 0xe, 0);
     lbl_803DCB90 = mmAlloc(0x60, 0xe, 0);
     lbl_803DCBC0 = mmAlloc(0x10, 0xe, 0);
-    loadAssetFileById((int)&gObjSeqToObjIdTable, 0x3f);
-    gObjSeqToObjIdMax = (getDataFileSize(0x3f) >> 1) - 1;
+    loadAssetFileById((int)&gObjSeqToObjIdTable, MLDF_FILEID_OBJINDEX_BIN);
+    gObjSeqToObjIdMax = (getDataFileSize(MLDF_FILEID_OBJINDEX_BIN) >> 1) - 1;
     for (p = gObjSeqToObjIdTable + gObjSeqToObjIdMax; *p == 0;)
     {
         p--;
         gObjSeqToObjIdMax--;
     }
-    loadAssetFileById((int)&gObjFileOffsetTable, 0x3d);
+    loadAssetFileById((int)&gObjFileOffsetTable, MLDF_FILEID_OBJECTS_TAB);
     gObjFileCount = 0;
     for (q = gObjFileOffsetTable; *q != -1;)
     {
@@ -2407,8 +2408,8 @@ void Obj_InitObjectSystem(void)
     {
         gObjFileRefCount[i] = 0;
     }
-    loadAssetFileById((int)&gObjTablesBinData, 0x16);
-    loadAssetFileById((int)&gObjTablesBinIndex, 0x17);
+    loadAssetFileById((int)&gObjTablesBinData, MLDF_FILEID_TABLES_BIN);
+    loadAssetFileById((int)&gObjTablesBinIndex, MLDF_FILEID_TABLES_TAB);
     gObjTablesBinCount = 0;
     for (q = gObjTablesBinIndex; *q != -1;)
     {
@@ -2454,7 +2455,7 @@ u8* loadObjectFile(int id)
     buf = mmAlloc(size, 0xe, 0);
     if (buf != 0)
     {
-        fileLoadToBufferOffset(0x3e, buf, base, size);
+        fileLoadToBufferOffset(MLDF_FILEID_OBJECTS_BIN, buf, base, size);
         if (*(void**)(buf + 0x20) != 0)
         {
             *(int*)(buf + 0x20) = (int)buf + *(int*)(buf + 0x20);
@@ -2730,18 +2731,18 @@ int loadModLines(int idx, s16* outCount)
     int start;
 
     result = 0;
-    if (idx > (getDataFileSize(0x38) - 4) >> 2)
+    if (idx > (getDataFileSize(MLDF_FILEID_MODLINES_TAB) - 4) >> 2)
     {
         return 0;
     }
     hdr = mmAlloc(0x10, 0x1a, 0);
-    fileLoadToBufferOffset(0x38, hdr, idx << 2, 8);
+    fileLoadToBufferOffset(MLDF_FILEID_MODLINES_TAB, hdr, idx << 2, 8);
     start = hdr[0];
     size = hdr[1] - hdr[0];
     if (size > 0)
     {
         result = (int)mmAlloc(size, 5, 0);
-        fileLoadToBufferOffset(0x37, (void*)result, start, size);
+        fileLoadToBufferOffset(MLDF_FILEID_MODLINES_BIN, (void*)result, start, size);
     }
     mm_free(hdr);
     *outCount = (u32)size / 20;

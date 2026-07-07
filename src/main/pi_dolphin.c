@@ -6583,8 +6583,8 @@ int initLoadFiles(void)
             ((*(volatile int*)&lbl_803DCC84 & 0x100) == 0 || (*(volatile int*)&lbl_803DCC84 & 0x400) == 0))
         {
             int saved = testAndSet_onlyUseHeap3(0);
-            mapLoadDataFile(5, 0x23);
-            mapLoadDataFile(5, 0x24);
+            mapLoadDataFile(5, MLDF_FILEID_TEX0_BIN_A);
+            mapLoadDataFile(5, MLDF_FILEID_TEX0_TAB_A);
             testAndSet_onlyUseHeap3(saved);
         }
         else if ((*(volatile int*)&lbl_803DCC84 & 0x100) != 0 && (*(volatile int*)&lbl_803DCC84 & 0x400) != 0)
