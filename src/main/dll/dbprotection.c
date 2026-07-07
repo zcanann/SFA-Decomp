@@ -44,6 +44,8 @@
 #define DBPROTECTION_ENVFX_B 0x467e8
 #define DBPROTECTION_PLAYER_ENVFX_FLASH 0x96
 #define DBPROTECTION_PLAYER_ENVFX_SWAP 0x8a
+/* seqId of the "tricky" target object the galleon flight driver locks onto (docblock: "locates the tricky target object (seqId 0x8C)") */
+#define DBPROTECTION_TRICKY_TARGET_SEQID 0x8C
 #define DBPROTECTION_GAMEBIT_DIVE_ACTIVE 0xF1E
 
 extern int randomGetRange(int lo, int hi);
@@ -217,7 +219,7 @@ void fn_801DFA28(u8* obj)
         for (t = objIndex; t < objCount; t++)
         {
             otherObj = *(u8**)(objArray + t * 4);
-            if (((GameObject*)otherObj)->anim.seqId == 0x8C)
+            if (((GameObject*)otherObj)->anim.seqId == DBPROTECTION_TRICKY_TARGET_SEQID)
             {
                 ((SBGalleonState*)state)->targetObj = otherObj;
                 t = objCount;
