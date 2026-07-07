@@ -59,6 +59,9 @@
 #define ICEBADDIE_FX_IMPACT 0x10        /* camera shake + 0x28x particle 0x57 */
 #define ICEBADDIE_FX_LANDING 0x20       /* bigger shake + 0x57 burst + 0x58 debris (anim event 0x200) */
 
+/* child object id spawned by iceBaddie_spawnIceBall (IceBallSetup cast; the armed ice-ball projectile) */
+#define ICEBADDIE_CHILD_OBJ_ICEBALL 100
+
 /* particle-effect object ids spawned via gPartfxInterface (docblock: contact/puff/debris particles) */
 #define ICEBADDIE_PARTICLE_CONTACT 0x56 /* 4x contact particle */
 #define ICEBADDIE_PARTICLE_PUFF    0x57 /* puff / impact burst particle */
@@ -1246,7 +1249,7 @@ void iceBaddie_spawnIceBall(int* obj, int* state)
     int* new_obj;
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
-        alloc = Obj_AllocObjectSetup(36, 100);
+        alloc = Obj_AllocObjectSetup(36, ICEBADDIE_CHILD_OBJ_ICEBALL);
         ((IceBallSetup*)alloc)->head.posX = ((GroundBaddieState*)state)->baddie.posX;
         ((IceBallSetup*)alloc)->head.posY = ((GroundBaddieState*)state)->baddie.posY;
         ((IceBallSetup*)alloc)->head.posZ = ((GroundBaddieState*)state)->baddie.posZ;
