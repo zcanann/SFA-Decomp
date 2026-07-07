@@ -20,6 +20,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define SHQUEENEARTHWALKER_OBJFLAG_HIDDEN 0x4000
+/* object group scanned for the nearest target (player group) */
+#define SHQUEENEARTHWALKER_TARGET_OBJGROUP 0xf
 
 /* QueenEarthWalkerState::flags bits (shared with dll_801d4198.c) */
 #define QEW_FLAG_STARTED 0x1    /* first update ran; per-act logic engaged */
@@ -161,7 +163,7 @@ void sh_queenearthwalker_update(void* obj)
         switch (action)
         {
         case 1:
-            target = ObjGroup_FindNearestObject(0xf, obj, NULL);
+            target = ObjGroup_FindNearestObject(SHQUEENEARTHWALKER_TARGET_OBJGROUP, obj, NULL);
             (*gObjectTriggerInterface)->preempt((int)target, 0x1324);
             (*gObjectTriggerInterface)->runSequence(1, target, 0x10);
             ((QueenEarthWalkerState*)state)->flags |= (QEW_FLAG_LATCHED | QEW_FLAG_EYE_ANIMS);
@@ -194,7 +196,7 @@ void sh_queenearthwalker_update(void* obj)
             ((QueenEarthWalkerState*)state)->stateIndex = 3;
             break;
         case 8:
-            target = ObjGroup_FindNearestObject(0xf, obj, NULL);
+            target = ObjGroup_FindNearestObject(SHQUEENEARTHWALKER_TARGET_OBJGROUP, obj, NULL);
             (*gObjectTriggerInterface)->preempt((int)target, 0x6a4);
             (*gObjectTriggerInterface)->runSequence(7, target, 8);
             ((QueenEarthWalkerState*)state)->stateIndex = 4;
