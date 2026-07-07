@@ -483,7 +483,6 @@ void boneParticleEffect_initialise(void)
 extern void* Obj_GetActiveModel(void);
 extern void PSMTXMultVec(void* m, void* src, void* dst);
 
-#pragma peephole on
 void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8 prob, short* src)
 {
     void* model;
