@@ -1008,7 +1008,14 @@ void macHandleActive(McmdVoiceState* sv)
         case 0x37: /* add priority */
             {
                 s16 prio = sv->priorityGroup + (s16)(cmd >> 0x10);
-                prio = prio < 0 ? 0 : prio > 0xff ? 0xff : prio;
+                if (prio < 0)
+                {
+                    prio = 0;
+                }
+                else if (prio > 0xff)
+                {
+                    prio = 0xff;
+                }
                 voiceSetPriority(sv, prio);
                 break;
             }
