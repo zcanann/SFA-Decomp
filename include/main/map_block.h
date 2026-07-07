@@ -18,11 +18,28 @@ typedef struct MapBlockData {
     u16 unk14;
     u8 pad16[0x30 - 0x16];
     s32 flags;
-    u8 pad34[0x58 - 0x34];
+    u8 pad34[0x4C - 0x34];
+    void* gcPolygons; /* 0x4C: MapTriIndex[] collision mesh (stride 8), count = nPolygons @0x98 */
+    void* polygonGroups; /* 0x50: MapTriGroup[] (stride 0x14), count = polyGroupCount @0x9A */
+    void* textures; /* 0x54: texture IDs */
     s32 vertices; /* 0x58: base of the VertexS16 array (stride 6), walked by index*6 */
-    u8 pad5C[0x90 - 0x5C];
+    void* vertexColors; /* 0x5C: RGBA4444 (stride 2) */
+    void* vertexTexCoords; /* 0x60: vec2s (stride 4) */
+    void* shaders; /* 0x64: MapShader[] (stride 0x44), count = layerCount @0xA2 */
+    void* displayLists; /* 0x68: MapBlockBoundsRec[] (stride 0x1C), count = edgeCount @0xA1 */
+    u8 pad6C[0x70 - 0x6C];
+    void* hits; /* 0x70: from HITS.bin; 0 in file, populated by MapBlock_initHits */
+    u8 pad74[0x78 - 0x74];
+    void* renderInstrsMain; /* 0x78: normal geometry bitstream */
+    void* renderInstrsTransp; /* 0x7C: transparent+glow bitstream */
+    void* renderInstrsWater; /* 0x80: water+reflective bitstream */
+    u16 nRenderInstrsMain; /* 0x84: stream size in bytes */
+    u16 nRenderInstrsTransp; /* 0x86 */
+    u16 nRenderInstrsWater; /* 0x88 */
+    u8 pad8A[0x90 - 0x8A];
     u16 vertexCount; /* 0x90: entries in the vertices array (DCStoreRange size = count*6) */
-    u8 pad92[0x9A - 0x92];
+    u8 pad92[0x98 - 0x92];
+    u16 nPolygons; /* 0x98: entries in gcPolygons (cacheAllocAndCopy size = count<<3) */
     u16 polyGroupCount; /* 0x9A: render/poly groups (mapBlockFn_800606ec index bound) */
     u8 pad9C[0xA1 - 0x9C];
     u8 edgeCount; /* 0xA1: edges (fn_800606FC -> EdgeVerts index bound) */
