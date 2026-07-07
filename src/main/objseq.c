@@ -28,6 +28,15 @@ extern char sSeqBAnimDataTag;
    "under sequence control / blocked from normal update" gate). */
 #define OBJECT_OBJFLAG_SEQ_ATTACHED 0x1000
 
+/* Env-effect ids co-activated by seq opcodes 48/50 (A set) and 49 (B set);
+   opaque distinct roles per index. */
+#define OBJSEQ_ENVFX_A0 0x134
+#define OBJSEQ_ENVFX_A1 0x135
+#define OBJSEQ_ENVFX_A2 0x142
+#define OBJSEQ_ENVFX_B0 0x136
+#define OBJSEQ_ENVFX_B1 0x137
+#define OBJSEQ_ENVFX_B2 0x143
+
 extern u8 lbl_80399E50[];
 extern int lbl_803DD064;
 extern int lbl_803DD084;
@@ -1283,21 +1292,21 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         break;
     case 48:
         mainSetBits(0x3b0, 1);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A0, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A1, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A2, 0);
         break;
     case 49:
         mainSetBits(0x3b0, 1);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x136, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x137, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x143, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B0, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B1, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B2, 0);
         break;
     case 50:
         mainSetBits(0x3b0, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A0, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A1, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A2, 0);
         envFxFn_800887cc();
         break;
     }
