@@ -26,6 +26,9 @@
 #define APPLEONTREE_STATE_BURST 5     /* fx-burst despawn (no fade) */
 #define APPLEONTREE_STATE_FADEOUT 6   /* alpha fade-out despawn */
 
+/* burst-splat particle spawned 8x when the apple enters APPLEONTREE_STATE_BURST */
+#define APPLEONTREE_PARTFX_BURST 0x55a
+
 #define APPLEONTREE_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 #define APPLEONTREE_MSG_PICKUP   0x7000b /* player collected: restore health + burst */
 
@@ -634,7 +637,7 @@ void AppleOnTree_update(int objArg)
                 i = 0;
                 do
                 {
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x55a, NULL, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, APPLEONTREE_PARTFX_BURST, NULL, 2, -1, NULL);
                     i = i + 1;
                 }
                 while (i < 8);
@@ -673,7 +676,7 @@ void AppleOnTree_update(int objArg)
                 i = 0;
                 do
                 {
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x55a, NULL, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, APPLEONTREE_PARTFX_BURST, NULL, 2, -1, NULL);
                     i = i + 1;
                 }
                 while (i < 8);
@@ -692,7 +695,7 @@ void AppleOnTree_update(int objArg)
                     i = 0;
                     do
                     {
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x55a, NULL, 2, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)obj, APPLEONTREE_PARTFX_BURST, NULL, 2, -1, NULL);
                         i = i + 1;
                     }
                     while (i < 8);
