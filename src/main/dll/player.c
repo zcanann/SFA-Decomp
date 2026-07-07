@@ -1161,12 +1161,13 @@ void staffShootFireball(int obj, int state, f32 unused)
         if (((PlayerState*)state)->baddie.targetObj != NULL)
         {
             ObjHitVolumeRuntimeTransform* pt;
+            GameObject* target;
             f32 dx;
             f32 dz;
             f32 dy;
-            spawned = *(int*)&((PlayerState*)state)->baddie.targetObj;
-            pt = &(*(GameObject**)&((PlayerState*)state)->baddie.targetObj)->anim.hitVolumeTransforms[
-                (*(GameObject**)&((PlayerState*)state)->baddie.targetObj)->hitVolumeIndex];
+            target = *(GameObject**)&((PlayerState*)state)->baddie.targetObj;
+            spawned = (int)target;
+            pt = &target->anim.hitVolumeTransforms[target->hitVolumeIndex];
             dx = pt->jointX - ((GameObject*)gPlayerPathObject)->anim.localPosX;
             dy = pt->jointY - ((GameObject*)gPlayerPathObject)->anim.localPosY;
             dz = pt->jointZ - ((GameObject*)gPlayerPathObject)->anim.localPosZ;
@@ -2768,7 +2769,7 @@ int playerStateClimbWall(int obj, int state)
     }
     *(u32*)((char*)state + 4) |= 0x100000;
     {
-        f32 z = 0.0f;
+        f32 z = lbl_803E7EA4;
         ((PlayerState*)state)->baddie.animSpeedA = z;
         ((PlayerState*)state)->baddie.animSpeedB = z;
         *(u32*)state |= 0x200000;
