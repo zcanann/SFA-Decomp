@@ -14,6 +14,7 @@
 
 #define ARWARWINGBO_OBJGROUP 0x52
 #define ARWARWINGBO_PARTFX 0x79e
+#define ARWARWINGBO_HIT_VOLUME_SLOT 5
 
 #define ARWARWINGBO_OBJFLAG_PARENT_SLACK 0x1000
 #define PAD_BUTTON_B 0x200
@@ -102,7 +103,7 @@ void arwarwingbo_update(int obj)
             (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~0x200;
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0x280);
-            ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
+            ObjHits_SetHitVolumeSlot(obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
             objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
         }
         (*gPartfxInterface)->spawnObject((void*)obj, ARWARWINGBO_PARTFX, NULL, 1, -1,
@@ -128,7 +129,7 @@ void arwarwingbo_update(int obj)
         (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~0x200;
         spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
         ObjHitbox_SetSphereRadius(obj, 0x280);
-        ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
+        ObjHits_SetHitVolumeSlot(obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
         objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
     }
     objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta,
