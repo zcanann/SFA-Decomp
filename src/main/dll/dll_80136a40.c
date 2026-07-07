@@ -223,6 +223,8 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
 /* When b->_54 carries the spawn flag, build a particle descriptor on the stack from a's heading
  * and the delta to b's position, then emit it 20 times via the partfx
  * interface and clear the flag. */
+/* The one partfx effect emitted along Tricky's queued impress path. */
+#define TRICKY_PATH_PARTFX 0x533
 #pragma peephole off
 void Tricky_emitQueuedPathParticles(u8* a, u8* b)
 {
@@ -246,7 +248,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
     {
         while (i-- != 0)
         {
-            (*gPartfxInterface)->spawnObject(a, 0x533, &stk, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(a, TRICKY_PATH_PARTFX, &stk, 2, -1, NULL);
         }
         ((TrickyImpressState*)b)->flags54 = ((TrickyImpressState*)b)->flags54 & ~0x1000LL;
     }
