@@ -901,7 +901,7 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     f32 mFinal[12];
 
     ObjSeqState* seq = ((GameObject*)obj)->extra;
-    if ((seq->unk7F & 4) != 0)
+    if ((seq->stateFlags & 4) != 0)
     {
         int* prm;
         s16* cam;

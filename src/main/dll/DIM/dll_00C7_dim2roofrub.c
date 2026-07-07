@@ -886,7 +886,7 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5)
     f32 mFinal[12];
 
     dim2roofrub_spawnEffects(obj);
-    if ((((ObjSeqState*)((GameObject*)obj)->extra)->unk7F & 4) != 0)
+    if ((((ObjSeqState*)((GameObject*)obj)->extra)->stateFlags & 4) != 0)
     {
         int* prm;
         s16* cam;

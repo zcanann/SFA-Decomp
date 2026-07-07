@@ -723,7 +723,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
             (*(void (**)(int*, int))((char*)*((GameObject*)sub)->anim.dll + 0x3c))(sub, 2);
         }
     }
-    if (seq->unk7E == 2)
+    if (seq->runState == 2)
     {
         seq->sequenceControlFlags |= OBJSEQ_CONTROL_CLEAR_LATCH_A;
     }
