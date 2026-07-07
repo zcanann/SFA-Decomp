@@ -33,6 +33,7 @@
 
 /* object-type ids of the attack children Drakor spawns (see file docblock). */
 #define BOSSDRAKOR_CHILD_OBJ_MISSILE 0x70f /* drakormissile (drakormissile_startActiveLaunch) */
+#define BOSSDRAKOR_CHILD_OBJ_ATTACK 0x709 /* spawnAttackObjects: BossdrakorPlacement (airMeterMax/curveStartIndex) */
 
 #define BOSSDRAKOR_OBJFLAG_RENDERED 0x800
 
@@ -590,7 +591,7 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
             {
                 if (Obj_IsLoadingLocked() != 0)
                 {
-                    setup = Obj_AllocObjectSetup(0x24, 0x709);
+                    setup = Obj_AllocObjectSetup(0x24, BOSSDRAKOR_CHILD_OBJ_ATTACK);
                     setup[4] = 2;
                     setup[5] = 1;
                     setup[6] = 0xff;
