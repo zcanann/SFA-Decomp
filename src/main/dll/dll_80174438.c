@@ -15,6 +15,7 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
 
 extern u32 fn_80174BFC();
 
+#define MAGICGEM_TARGET_OBJGROUP 0x11
 
 STATIC_ASSERT(offsetof(MagicGemState, flags27A) == 0x27A);
 
@@ -140,7 +141,7 @@ int fn_80174668(int obj, PushableState* state)
     }
     if (state->nearestObj == NULL)
     {
-        state->nearestObj = (void*)ObjGroup_FindNearestObject(0x11, obj, dist);
+        state->nearestObj = (void*)ObjGroup_FindNearestObject(MAGICGEM_TARGET_OBJGROUP, obj, dist);
     }
     if (state->nearestObj == NULL)
     {
