@@ -22,6 +22,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 
 #define DBHOLECONTROL1_OBJGROUP 0x1e
 #define DBEGG_OBJGROUP 0x24
+#define DBHOLECONTROL1_CHILD_OBJ 1337
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -160,7 +161,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             if (Obj_IsLoadingLocked() == 0) continue;
             res = mapRomListFindItem(0x4658A, 0, 0, 0, 0);
             if (res == NULL) continue;
-            newObj = Obj_AllocObjectSetup(56, 1337);
+            newObj = Obj_AllocObjectSetup(56, DBHOLECONTROL1_CHILD_OBJ);
             memcpy(newObj, res, 56);
             ((GameObject*)newObj)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)newObj)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
