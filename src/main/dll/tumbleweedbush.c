@@ -197,5 +197,4 @@ void trickyGrowl(void* obj, void* trickyState)
         break;
     }
 }
-#pragma opt_propagation reset
 
