@@ -115,6 +115,12 @@ extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
 extern void skyFn_80088c94(int flags, int mode);
 extern void getEnvfxAct(s16* obj, int* target, int id, int p);
+
+/* env-effect ids fired when the shrine intro countdown expires (index-style; roles opaque) */
+#define ECSH_SHRINE_ENVFX_A 0x221
+#define ECSH_SHRINE_ENVFX_B 0x220
+#define ECSH_SHRINE_ENVFX_C 0x222
+
 extern int objIsCurModelNotZero(void* obj);
 extern void staffToggle(int* player, int a);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
@@ -482,9 +488,9 @@ void ecsh_shrine_update(s16* obj)
         if (((GameObject*)obj)->unkF4 == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxAct(obj, player, 0x221, 0);
-            getEnvfxAct(obj, player, 0x220, 0);
-            getEnvfxAct(obj, player, 0x222, 0);
+            getEnvfxAct(obj, player, ECSH_SHRINE_ENVFX_A, 0);
+            getEnvfxAct(obj, player, ECSH_SHRINE_ENVFX_B, 0);
+            getEnvfxAct(obj, player, ECSH_SHRINE_ENVFX_C, 0);
         }
     }
     ecsh_shrine_updateMotion(obj);
