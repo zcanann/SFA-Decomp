@@ -17,6 +17,8 @@
 /* phase values written by the SeqFn (author comment: 1 = hidden,
    2/3 = slam variants, 0 = idle). SLAM0/SLAM1 are neutral names - the
    comment does not distinguish what 2 vs 3 mean. */
+#define WMGENERALSCALES_PARTFX_SLAM 0x556 /* slam impact effect (anim events 2/3) */
+
 #define WMGENERALSCALES_PHASE_IDLE 0
 #define WMGENERALSCALES_PHASE_HIDDEN 1
 #define WMGENERALSCALES_PHASE_SLAM0 2
@@ -85,14 +87,14 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 2: /* slam, tracked fx */
             state->phase = WMGENERALSCALES_PHASE_SLAM0;
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x556, NULL, 2, -1, buf);
+            (*gPartfxInterface)->spawnObject((void*)obj, WMGENERALSCALES_PARTFX_SLAM, NULL, 2, -1, buf);
             Sfx_PlayFromObject(obj, 0x7b);
             Sfx_PlayFromObject(obj, 0x7c);
             state->unk00 = lbl_803E5E98;
             break;
         case 3: /* slam variant */
             state->phase = WMGENERALSCALES_PHASE_SLAM1;
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x556, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, WMGENERALSCALES_PARTFX_SLAM, NULL, 2, -1, NULL);
             Sfx_PlayFromObject(obj, 0x7b);
             Sfx_PlayFromObject(obj, 0x7c);
             state->unk00 = lbl_803E5E9C;
