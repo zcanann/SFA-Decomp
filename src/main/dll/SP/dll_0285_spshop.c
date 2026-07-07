@@ -93,7 +93,6 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Music_Trigger(int id, int arg);
 
 
-int SB_CloudBall_getExtraSize(void);
 
 /* Triple s8 fan-out: write obj->_b8[2/3/4]
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */
