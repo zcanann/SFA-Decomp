@@ -76,4 +76,3 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
     out[0x2a] += endZ;
     return;
 }
-#pragma peephole reset
