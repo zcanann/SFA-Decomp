@@ -838,7 +838,7 @@ void gameTextFn_8001658c(int a, int b, int c)
         lbl_803DC9A4 = 255;
     }
 
-    if (def->f5 == 0)
+    if (def->alignH == 0)
     {
         slot->f12 = slot->f10;
     }
@@ -848,13 +848,13 @@ void gameTextFn_8001658c(int a, int b, int c)
     if (lbl_803DC9BC == 0)
     {
         int mode;
-        if (def->f6 == 0)
+        if (def->alignV == 0)
         {
             mode = slot->f11;
         }
         else
         {
-            mode = def->f6;
+            mode = def->alignV;
         }
         if (mode == 2 || mode == 3)
         {
