@@ -92,6 +92,7 @@ typedef struct TotemBondOrbPlacement
 } TotemBondOrbPlacement;
 STATIC_ASSERT(sizeof(TotemBondOrbPlacement) == 0x38);
 
+#pragma dont_inline on
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
 {
     s32 angleOffset;
@@ -192,6 +193,7 @@ u32 sc_totembond_SeqFn(ScTotemBondObject* obj, u32 unused, ObjAnimUpdateState* a
     return 0;
 }
 
+#pragma dont_inline reset
 void sc_totembond_hitDetect(void)
 {
 }
@@ -219,14 +221,41 @@ void sc_totembond_free(int obj)
     fn_8011F6D4(0);
 }
 
-#pragma dont_inline on
+static inline void sc_totembond_finishOrbGame(ScTotemBondObject* obj, ScTotemBondState* state)
+{
+    int player;
+
+    state->completionTimer = lbl_803E5654;
+    player = Obj_GetPlayerObject();
+    (*gMapEventInterface)->clearRestartPoint();
+    (*gCameraInterface)->setMode(SC_TOTEMBOND_CAMMODE_DEFAULT, 0, 3, 0, NULL, 0, 0);
+    obj->mapAlpha = 0xff;
+    fn_80296124(player, NULL, NULL, 0);
+    ObjHits_EnableObject((u32)obj);
+    hudFn_8011f38c(0);
+    mainSetBits(0x2bc, 1);
+    state->eventFlags = 0;
+    Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 0);
+}
+
+static inline u8 sc_totembond_gatherAvailableOrbs(u8* availableOrbs, u8 availableCount, u8 orbIndex)
+{
+    for (; orbIndex < SC_TOTEMBOND_ORB_COUNT; orbIndex++)
+    {
+        if (mainGetBit(gTotemBondOrbGameBits[orbIndex]) == 0)
+        {
+            availableOrbs[availableCount++] = orbIndex;
+        }
+    }
+    return availableCount;
+}
+
 void sc_totembond_update(ScTotemBondObject* obj)
 {
     ScTotemBondState* state;
     int player;
     u8 availableOrbs[8];
     u8 availableCount;
-    u8 orbIndex;
     u8 nextRing;
     u8 allOrbsCollected;
 
@@ -265,17 +294,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
             state->completionTimer -= timeDelta;
             if (state->completionTimer <= lbl_803E5654)
             {
-                state->completionTimer = lbl_803E5654;
-                player = Obj_GetPlayerObject();
-                (*gMapEventInterface)->clearRestartPoint();
-                (*gCameraInterface)->setMode(SC_TOTEMBOND_CAMMODE_DEFAULT, 0, 3, 0, NULL, 0, 0);
-                obj->mapAlpha = 0xff;
-                fn_80296124(player, NULL, NULL, 0);
-                ObjHits_EnableObject((u32)obj);
-                hudFn_8011f38c(0);
-                mainSetBits(0x2bc, 1);
-                state->eventFlags = 0;
-                Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 0);
+                sc_totembond_finishOrbGame(obj, state);
                 return;
             }
         }
@@ -284,14 +303,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
             if (mainGetBit(SC_TOTEMBOND_ORB_TRIGGER_EVENT) != 0)
             {
                 mainSetBits(SC_TOTEMBOND_ORB_TRIGGER_EVENT, 0);
-                availableCount = orbIndex = 0;
-                for (; orbIndex < SC_TOTEMBOND_ORB_COUNT; orbIndex++)
-                {
-                    if (mainGetBit(gTotemBondOrbGameBits[orbIndex]) == 0)
-                    {
-                        availableOrbs[availableCount++] = orbIndex;
-                    }
-                }
+                availableCount = sc_totembond_gatherAvailableOrbs(availableOrbs, 0, 0);
                 if (availableCount == 0)
                 {
                     allOrbsCollected = 1;
@@ -355,7 +367,6 @@ void sc_totembond_update(ScTotemBondObject* obj)
         state->eventFlags &= ~SC_TOTEMBOND_EVENT_SET_MAP_MODE;
     }
 }
-#pragma dont_inline reset
 
 void sc_totembond_init(ScTotemBondObject* obj, int params)
 {

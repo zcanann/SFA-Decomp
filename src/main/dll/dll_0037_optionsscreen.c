@@ -147,6 +147,20 @@ void OptionsScreen_initialise(void)
     lbl_803DD6F9 = 0;
 }
 
+static inline void optionsScreenFreeMenuItems(void)
+{
+    int i;
+
+    for (i = 0; i < OPTIONSSCREEN_MENU_ITEM_COUNT; i++)
+    {
+        if ((u32)lbl_803A87D0[i] != 0)
+        {
+            ((void (**)(int))gTitleMenuItemInterface->vtable)[4](lbl_803A87D0[i]);
+            lbl_803A87D0[i] = 0;
+        }
+    }
+}
+
 #pragma peephole off
 int OptionsScreen_frameStart(void)
 {
@@ -183,14 +197,7 @@ int OptionsScreen_frameStart(void)
                 ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
                 lbl_803DBA28 = OPTIONSSCREEN_PANEL_NONE;
             }
-            for (i = 0; i < OPTIONSSCREEN_MENU_ITEM_COUNT; i++)
-            {
-                if ((u32)lbl_803A87D0[i] != 0)
-                {
-                    ((void (**)(int))gTitleMenuItemInterface->vtable)[4](lbl_803A87D0[i]);
-                    lbl_803A87D0[i] = 0;
-                }
-            }
+            optionsScreenFreeMenuItems();
             titleScreenFn_8005cdd4(1);
             setDrawCloudsAndLights(1);
             loadUiDll(4);
