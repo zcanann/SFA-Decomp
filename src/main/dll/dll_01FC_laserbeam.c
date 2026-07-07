@@ -35,6 +35,9 @@ extern ModgfxInterface** gModgfxInterface;
 #define LASERBEAM_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
 #define LASERBEAM_PARTFX_HIT 0x198 /* spark burst spawned on the player when the beam connects */
 #define LASERBEAM_MODGFX_RESOURCE_ID 0x81 /* modgfx beam effect resource -> gLaserBeamObjModgfxResource */
+#define LASERBEAM_TEXTURE_KIND30 0x3e9 /* beam texture for beamKind 30 -> b->texture */
+#define LASERBEAM_TEXTURE_KIND1 0x23d /* beam texture for beamKind 1 -> b->texture */
+#define LASERBEAM_TEXTURE_DEFAULT 0xd9 /* beam texture for other beamKinds -> b->texture */
 
 typedef struct Dll1FBSetup
 {
@@ -505,19 +508,19 @@ void LaserBeam_init(s16* obj, char* arg)
     {
         if (*(void**)&b->texture == NULL)
         {
-            b->texture = textureLoadAsset(0x3e9);
+            b->texture = textureLoadAsset(LASERBEAM_TEXTURE_KIND30);
         }
     }
     else if (b->beamKind == 1)
     {
         if (*(void**)&b->texture == NULL)
         {
-            b->texture = textureLoadAsset(0x23d);
+            b->texture = textureLoadAsset(LASERBEAM_TEXTURE_KIND1);
         }
     }
     else if (*(void**)&b->texture == NULL)
     {
-        b->texture = textureLoadAsset(0xd9);
+        b->texture = textureLoadAsset(LASERBEAM_TEXTURE_DEFAULT);
     }
 }
 #pragma opt_strength_reduction reset
