@@ -1131,7 +1131,7 @@ void SmallBasket_update(int obj)
             subtype = ((CfperchState*)state)->subtype;
             if ((subtype == 5) || (subtype == 6))
             {
-                Sfx_PlayFromObject(obj, 0x6c);
+                Sfx_PlayFromObject(obj, SFXTRIG_id_6c);
                 ((CfperchState*)state)->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
             }
             else if (((u8)(subtype - 1) <= 1) || (subtype == 3))
