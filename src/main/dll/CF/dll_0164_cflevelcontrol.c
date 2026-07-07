@@ -18,6 +18,15 @@
 
 #define CFLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 
+/* env-effect ids activated on first update tick: ENVFX_A is always-on; B/C/D
+   are the day-preset set (bit 0xd73), B/E/F the night-preset set (bit 0xdca) */
+#define CFLEVELCONTROL_ENVFX_A 0x56
+#define CFLEVELCONTROL_ENVFX_B 0xd
+#define CFLEVELCONTROL_ENVFX_C 0x11
+#define CFLEVELCONTROL_ENVFX_D 0xe
+#define CFLEVELCONTROL_ENVFX_E 0x7e
+#define CFLEVELCONTROL_ENVFX_F 0x7d
+
 typedef struct CflevelcontrolState
 {
     u8 pad0[0x8 - 0x0];
@@ -160,21 +169,21 @@ void cflevelcontrol_update(int obj)
 
     if (((GameObject*)obj)->unkF4 == 0)
     {
-        getEnvfxActImmediately((void*)obj, (void*)obj, 0x56, 0);
+        getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_A, 0);
         if (mainGetBit(0xd73) == 0)
         {
-            getEnvfxActImmediately((void*)obj, (void*)obj, 0xd, 0);
-            getEnvfxActImmediately((void*)obj, (void*)obj, 0x11, 0);
-            getEnvfxActImmediately((void*)obj, (void*)obj, 0xe, 0);
+            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
+            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_C, 0);
+            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_D, 0);
             skyFn_80088e54(0, lbl_803E43EC);
             mainSetBits(0xd73, 1);
         }
 
         if (mainGetBit(0xdca) != 0)
         {
-            getEnvfxActImmediately((void*)obj, (void*)obj, 0xd, 0);
-            getEnvfxActImmediately((void*)obj, (void*)obj, 0x7e, 0);
-            getEnvfxActImmediately((void*)obj, (void*)obj, 0x7d, 0);
+            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
+            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_E, 0);
+            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_F, 0);
             skyFn_80088e54(1, lbl_803E43EC);
             mainSetBits(0xdca, 0);
             unlockLevel(0, 0, 1);
@@ -202,8 +211,8 @@ void cflevelcontrol_update(int obj)
     {
         (*gMapEventInterface)->restartPoint(&triggerPos, 0, getCurMapLayer(), 1);
         mainSetBits(0xd3d, 0);
-        getEnvfxActImmediately((void*)obj, (void*)obj, 0xd, 0);
-        getEnvfxActImmediately((void*)obj, (void*)obj, 0x11, 0);
+        getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
+        getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_C, 0);
         skyFn_80088e54(1, lbl_803E43E8);
     }
 
