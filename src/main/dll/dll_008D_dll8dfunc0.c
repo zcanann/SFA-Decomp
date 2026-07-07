@@ -20,6 +20,13 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 #include "main/gameplay_runtime.h"
+
+/* spawnEffect effect ids per variant (docblock: "Each variant emits a distinct
+ * effect id (0x156 / 0xc0d / 0x23b)"). */
+#define DLL8D_EFFECT_ID_VARIANT0 0x156
+#define DLL8D_EFFECT_ID_VARIANT1 0xc0d
+#define DLL8D_EFFECT_ID_VARIANT2 0x23b
+
 extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll8DEffectParamBlock[];
 extern f32 lbl_803E10E0;
@@ -413,19 +420,19 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
     if (variant == 0)
     {
         buf.v58 = 0;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll8DEffectParamBlock, 8, base + 0x5c, 0x156, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll8DEffectParamBlock, 8, base + 0x5c, DLL8D_EFFECT_ID_VARIANT0, 0);
     }
     else if (variant == 1)
     {
         buf.v58 = 0;
         buf.flags |= 4;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll8DEffectParamBlock, 8, base + 0x5c, 0xc0d, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll8DEffectParamBlock, 8, base + 0x5c, DLL8D_EFFECT_ID_VARIANT1, 0);
     }
     else if (variant == 2)
     {
         buf.v58 = 0;
         buf.flags |= 4;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll8DEffectParamBlock, 8, base + 0x5c, 0x23b, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll8DEffectParamBlock, 8, base + 0x5c, DLL8D_EFFECT_ID_VARIANT2, 0);
     }
     return ret;
 }
