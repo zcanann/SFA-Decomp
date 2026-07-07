@@ -26,8 +26,6 @@ extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern u32 objAudioFn_8006ef38();
 
-#pragma scheduling on
-#pragma peephole on
 extern f32 timeDelta;
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5218;
@@ -86,8 +84,6 @@ int NW_mammoth_getExtraSize(void)
     return 0x48c;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801CEE0C(int obj, int p2)
 {
     extern int fn_801CE078(int, int);
