@@ -132,4 +132,3 @@ int fn_801B9ECC(int a, int obj)
     DIM2icicle_updateHitResponse(a, (int)state);
     return 0;
 }
-#pragma peephole reset
