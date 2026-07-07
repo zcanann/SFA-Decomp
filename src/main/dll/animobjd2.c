@@ -346,9 +346,9 @@ void fn_8013E0D0(int* obj, u8* st)
                                 ObjLink_AttachChild((int)gobj, *(int*)&t->child, ((TrickyPackedSlots*)((char*)t + 0x7bc))->c);
                                 {
                                     f32 z3 = lbl_803E23DC;
-                                    t->unk7C0 = z3;
-                                    t->unk7C4 = z3;
-                                    t->unk7C8 = z3;
+                                    t->childPhaseTimer0 = z3;
+                                    t->childPhaseTimer1 = z3;
+                                    t->childPhaseTimer2 = z3;
                                 }
                             }
                         }

@@ -1332,9 +1332,9 @@ int trickyFoodFn_801437d4(int obj, int* state)
         ((TrickyState*)state)->child = Obj_SetupObject(e, 4, -1, -1, ((GameObject*)obj)->anim.parent);
         ObjLink_AttachChild(obj, ((TrickyState*)state)->child, ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c);
         z = lbl_803E23DC;
-        ((TrickyState*)state)->unk7C0 = z;
-        ((TrickyState*)state)->unk7C4 = z;
-        ((TrickyState*)state)->unk7C8 = z;
+        ((TrickyState*)state)->childPhaseTimer0 = z;
+        ((TrickyState*)state)->childPhaseTimer1 = z;
+        ((TrickyState*)state)->childPhaseTimer2 = z;
     }
     if ((*gSkyInterface)->getSunPosition(0) != 0
         && ((TrickyState*)state)->cooldownA <= lbl_803E23DC

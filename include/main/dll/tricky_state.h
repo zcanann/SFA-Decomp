@@ -27,7 +27,7 @@ typedef struct TrickyState {
     u8 stateIndex; /* primary Tricky state selector (0..0x11); indexes the handlerBase[] per-state handler dispatch table and gates the state machine */
     u8 followPhase; /* follow-handler phase selector (discrete 0..5; gates the pathing/seed branches) */
     u8 substate; /* anim-sequence substate 0..7 */
-    u8 unk0B;
+    u8 commandRequestBits; /* pending-command request bitmask: |= (1 << commandType) on enqueue, OR'd with 9 into the prompt mask, tested != 0, cleared to 0 (tricky) */
     u8 unk0C;
     s8 commandPhase; /* current command-dispatch phase selector (-1 idle, 1..5 active); compared == 3 / != 0 to gate the queued-command state machine (tricky/substates/weapone6/tumbleweedbush/mmp) */
     u8 padE[0x10 - 0xE];
@@ -199,9 +199,9 @@ typedef struct TrickyState {
     u8 pad7B4[0x7B8 - 0x7B4];
     u8 *child;
     u8 pad7BC[0x7C0 - 0x7BC];
-    f32 unk7C0;
-    f32 unk7C4;
-    f32 unk7C8;
+    f32 childPhaseTimer0; /* child-object periodic phase timer: reset to floor lbl_803E23DC when the child is attached, += timeDelta while it lives, wraps at lbl_803E2550 to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
+    f32 childPhaseTimer1; /* child-object periodic phase timer: += timeDelta, wraps at lbl_803E24D8/lbl_803E2440 to toggle the child's 0x4000 anim flag */
+    f32 childPhaseTimer2; /* child-object periodic phase timer: += timeDelta, wraps at lbl_803E24C8, gates the child's 0x4000 anim flag via lbl_803E2408 */
     void *spawnedChild;
     u8 pad7D0[0x7D4 - 0x7D0];
     u8 *unk7D4;

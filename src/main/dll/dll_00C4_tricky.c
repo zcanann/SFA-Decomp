@@ -368,7 +368,7 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
         trickyReportError(sSidekickCommandDebugTextBlock);
         return;
     }
-    ((TrickyState*)state)->unk0B = (u8)(((TrickyState*)state)->unk0B | (1 << commandType));
+    ((TrickyState*)state)->commandRequestBits = (u8)(((TrickyState*)state)->commandRequestBits | (1 << commandType));
     commandIndex = 0;
     commandEntry = state;
     for (commandCount = (u32)((TrickyState*)state)->commandCount; 0 < commandCount;
@@ -431,9 +431,9 @@ int Tricky_updateSideCommandPrompts(int obj)
     {
         if ((((TrickyState*)state)->stateFlags & 0x10) != 0)
         {
-            ((TrickyState*)state)->unk0B = 0;
+            ((TrickyState*)state)->commandRequestBits = 0;
         }
-        commandMask = ((TrickyState*)state)->unk0B | 9;
+        commandMask = ((TrickyState*)state)->commandRequestBits | 9;
         if (((((TrickyState*)state)->stateIndex == 8) || (((TrickyState*)state)->stateIndex == 0xd)) ||
             ((((TrickyState*)state)->stateIndex == 0xe && (((TrickyState*)state)->substate == 1))))
         {
@@ -449,7 +449,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 promptC = true;
             }
         }
-        if (((TrickyState*)state)->unk0B != 0)
+        if (((TrickyState*)state)->commandRequestBits != 0)
         {
             for (i = 0; i < ((TrickyState*)state)->commandCount; i++)
             {
@@ -493,7 +493,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         {
             commandMask &= ~0x10;
         }
-        ((TrickyState*)state)->unk0B = 0;
+        ((TrickyState*)state)->commandRequestBits = 0;
         if ((cond) && ((((TrickyState*)state)->stateFlags & 0x200) == 0))
         {
             *(float*)(state + 0x7b4) = lbl_803E24F8;
@@ -1504,14 +1504,14 @@ void Tricky_update(int obj)
     ((TrickyState*)state)->prevLocalPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
     if (*(void**)&((TrickyState*)state)->child != NULL)
     {
-        ((TrickyState*)state)->unk7C0 += timeDelta;
-        ((TrickyState*)state)->unk7C4 += timeDelta;
-        ((TrickyState*)state)->unk7C8 += timeDelta;
-        if (((TrickyState*)state)->unk7C8 > lbl_803E24C8)
+        ((TrickyState*)state)->childPhaseTimer0 += timeDelta;
+        ((TrickyState*)state)->childPhaseTimer1 += timeDelta;
+        ((TrickyState*)state)->childPhaseTimer2 += timeDelta;
+        if (((TrickyState*)state)->childPhaseTimer2 > lbl_803E24C8)
         {
-            ((TrickyState*)state)->unk7C8 -= lbl_803E24C8;
+            ((TrickyState*)state)->childPhaseTimer2 -= lbl_803E24C8;
         }
-        if (((TrickyState*)state)->unk7C8 >= lbl_803E2408)
+        if (((TrickyState*)state)->childPhaseTimer2 >= lbl_803E2408)
         {
             *(s16*)(*(int*)&((TrickyState*)state)->child + 6) = *(s16*)(*(int*)&((TrickyState*)state)->child + 6) |
                 0x4000;
@@ -1521,16 +1521,16 @@ void Tricky_update(int obj)
             *(s16*)(*(int*)&((TrickyState*)state)->child + 6) = *(s16*)(*(int*)&((TrickyState*)state)->child + 6) & ~
                 0x4000;
         }
-        if (((TrickyState*)state)->unk7C4 > lbl_803E24D8)
+        if (((TrickyState*)state)->childPhaseTimer1 > lbl_803E24D8)
         {
-            if (((TrickyState*)state)->unk7C4 > lbl_803E2440)
+            if (((TrickyState*)state)->childPhaseTimer1 > lbl_803E2440)
             {
-                ((TrickyState*)state)->unk7C4 -= lbl_803E2440;
+                ((TrickyState*)state)->childPhaseTimer1 -= lbl_803E2440;
             }
             *(s16*)(*(int*)&((TrickyState*)state)->child + 6) = *(s16*)(*(int*)&((TrickyState*)state)->child + 6) |
                 0x4000;
         }
-        if (((TrickyState*)state)->unk7C0 > lbl_803E2550)
+        if (((TrickyState*)state)->childPhaseTimer0 > lbl_803E2550)
         {
             if (mainGetBit(0xc1) != 0)
             {
@@ -1540,7 +1540,7 @@ void Tricky_update(int obj)
             {
                 TRICKY_VOICE(obj, st, 0x298, 0x500);
             }
-            ((TrickyState*)state)->unk7C0 -= lbl_803E2550;
+            ((TrickyState*)state)->childPhaseTimer0 -= lbl_803E2550;
         }
         ObjAnim_AdvanceCurrentMove(lbl_803E23EC, timeDelta, *(int*)&((TrickyState*)state)->child, 0);
     }
@@ -1583,7 +1583,7 @@ void Tricky_init(int obj)
     ((TrickyState*)state)->progressPtr = (int)(*gMapEventInterface)->getTrickyEnergy();
     ((TrickyState*)state)->playerObj = Obj_GetPlayerObject();
     ((TrickyState*)state)->stateIndex = 0;
-    ((TrickyState*)state)->unk0B = 0;
+    ((TrickyState*)state)->commandRequestBits = 0;
     ((TrickyState*)state)->previousPathPoint = NULL;
     ((TrickyState*)state)->activeWalkGroup = 0;
     ((TrickyState*)state)->homePosX = ((GameObject*)obj)->anim.worldPosX;
