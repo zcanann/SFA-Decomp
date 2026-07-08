@@ -52,35 +52,35 @@ extern int ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
 
-int CFPowerBase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)
+int CFPowerBase_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    CfPowerBaseState* sub = ((GameObject*)p1)->extra;
+    CfPowerBaseState* sub = ((GameObject*)obj)->extra;
     u8* animUpdateBytes = (u8*)animUpdate;
     int msgArg;
     int msgType;
     int msgFlag = 0;
     int i;
 
-    while (ObjMsg_Pop(p1, &msgType, &msgArg, &msgFlag) != 0)
+    while (ObjMsg_Pop(obj, &msgType, &msgArg, &msgFlag) != 0)
     {
         switch (msgType)
         {
         case CFPOWERBASE_MSG_PYLON_1:
             if (sub->typeBit == GAMEBIT_CFBASE_1 && *(s16*)(animUpdateBytes + 0x58) > CFPOWERBASE_SEQ_READY)
             {
-                ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_1, p1, 0);
+                ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_1, obj, 0);
             }
             break;
         case CFPOWERBASE_MSG_PYLON_2:
             if (sub->typeBit == GAMEBIT_CFBASE_2 && *(s16*)(animUpdateBytes + 0x58) > CFPOWERBASE_SEQ_READY)
             {
-                ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_2, p1, 0);
+                ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_2, obj, 0);
             }
             break;
         case CFPOWERBASE_MSG_PYLON_3:
             if (sub->typeBit == GAMEBIT_CFBASE_3 && *(s16*)(animUpdateBytes + 0x58) > CFPOWERBASE_SEQ_READY)
             {
-                ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_3, p1, 0);
+                ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_3, obj, 0);
             }
             break;
         case CFPOWERBASE_MSG_POWERED:
