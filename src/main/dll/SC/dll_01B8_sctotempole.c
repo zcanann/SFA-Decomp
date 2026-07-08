@@ -158,10 +158,10 @@ void sc_totempole_update(int obj)
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (f32*)&lbl_803DDC08);
 }
 
-void sc_totempole_init(int obj, int p2)
+void sc_totempole_init(int obj, int def)
 {
     SCTotemPoleState* state = ((GameObject*)obj)->extra;
-    switch (((ObjPlacement*)p2)->mapId)
+    switch (((ObjPlacement*)def)->mapId)
     {
     case SC_TOTEMPOLE_SETUP_REAR:
         state->gameBit = SC_TOTEMPOLE_GAMEBIT_REAR;
@@ -176,7 +176,7 @@ void sc_totempole_init(int obj, int p2)
         state->gameBit = SC_TOTEMPOLE_GAMEBIT_LEFT;
         break;
     }
-    ((GameObject*)obj)->anim.rotX = (s16)((u32)((SCMusicTreeSetup*)p2)->yawByte << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)((SCMusicTreeSetup*)def)->yawByte << 8);
 }
 
 void sc_totempole_release(void)
