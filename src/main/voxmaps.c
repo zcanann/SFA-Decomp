@@ -247,7 +247,7 @@ void voxmaps_initialise(void)
     int* p;
     int i;
 
-    loadAssetFileById((void**)&gVoxMapsMapList, 53);
+    loadAssetFileById((void**)&gVoxMapsMapList, MLDF_FILEID_VOXOBJ_TAB);
     i = 0;
     p = gVoxMapsMapList;
     while (*p != -1)
