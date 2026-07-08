@@ -121,14 +121,14 @@ void Scarab_update(int obj)
     int state;
     int best;
     int flag;
-    int ph;
+    int phaseState;
     s16 mode;
     f32 bestDist;
-    f32 dy;
-    f32 fang;
-    f32 sumsq;
+    f32 deltaY;
+    f32 angleF;
+    f32 speed;
     u32 ang;
-    int diff;
+    int yawDelta;
     int count;
     int i;
     f32** p;
@@ -174,8 +174,8 @@ void Scarab_update(int obj)
     }
     else
     {
-        ph = ((ScarabState*)state)->phase;
-        if ((s8)ph == 0)
+        phaseState = ((ScarabState*)state)->phase;
+        if ((s8)phaseState == 0)
         {
             if (((GameObject*)obj)->anim.hitReactState != NULL)
             {
@@ -246,7 +246,7 @@ void Scarab_update(int obj)
                 }
             }
         }
-        else if ((s8)ph == 2 && mode != 0)
+        else if ((s8)phaseState == 2 && mode != 0)
         {
             if (((ScarabState*)state)->riseAmount < (f32)((ScarabState*)state)->riseLimit)
             {
@@ -284,14 +284,14 @@ void Scarab_update(int obj)
                 ((GameObject*)obj)->anim.velocityZ =
                     ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
                 ((GameObject*)obj)->anim.rotX = 0;
-                sumsq = ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+                speed = ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
                         ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ;
-                if (sumsq != lbl_803E39F8)
+                if (speed != lbl_803E39F8)
                 {
-                    sumsq = sqrtf(sumsq);
+                    speed = sqrtf(speed);
                 }
-                ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX / (dy = lbl_803E39FC * sumsq);
-                ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ / dy;
+                ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX / (deltaY = lbl_803E39FC * speed);
+                ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ / deltaY;
                 ((GameObject*)obj)->anim.rotY = 0;
                 ((GameObject*)obj)->anim.velocityY = lbl_803E3A24;
                 rot.x = lbl_803E39F8;
@@ -303,16 +303,16 @@ void Scarab_update(int obj)
                 rot.ang = randomGetRange(-10000, 10000);
                 vecRotateZXY(&rot, (f32*)(obj + 0x24));
                 ang = (u16)getAngle(((GameObject*)obj)->anim.velocityX, -((GameObject*)obj)->anim.velocityZ);
-                diff = ((GameObject*)obj)->anim.rotX - ang;
-                if (diff > 0x8000)
+                yawDelta = ((GameObject*)obj)->anim.rotX - ang;
+                if (yawDelta > 0x8000)
                 {
-                    diff += -0xffff;
+                    yawDelta += -0xffff;
                 }
-                if (diff < -0x8000)
+                if (yawDelta < -0x8000)
                 {
-                    diff += 0xffff;
+                    yawDelta += 0xffff;
                 }
-                ((GameObject*)obj)->anim.rotX = diff;
+                ((GameObject*)obj)->anim.rotX = yawDelta;
                 ((ScarabState*)state)->phase = 0;
                 ((ScarabState*)state)->riseAmount = lbl_803E39F8;
                 {
@@ -326,7 +326,7 @@ void Scarab_update(int obj)
                 }
             }
         }
-        else if ((s8)ph == 1 && mode != 0)
+        else if ((s8)phaseState == 1 && mode != 0)
         {
             if (((ScarabState*)state)->fleeTimer == 0)
             {
@@ -337,26 +337,26 @@ void Scarab_update(int obj)
                                          ((GameObject*)obj)->anim.localPosZ, &list, 1, 0);
                 for (i = 0; i < count; i++)
                 {
-                    dy = *list[i] - ((GameObject*)obj)->anim.localPosY;
-                    if (dy > lbl_803DBDC8)
+                    deltaY = *list[i] - ((GameObject*)obj)->anim.localPosY;
+                    if (deltaY > lbl_803DBDC8)
                     {
                     }
                     else
                     {
-                        dy = (dy >= *(f32*)&lbl_803E39F8) ? dy : -dy;
-                        if (dy < bestDist)
+                        deltaY = (deltaY >= *(f32*)&lbl_803E39F8) ? deltaY : -deltaY;
+                        if (deltaY < bestDist)
                         {
                             best = i;
-                            bestDist = dy;
+                            bestDist = deltaY;
                         }
                     }
                 }
                 if (list != NULL)
                 {
                     ((GameObject*)obj)->anim.localPosY = *list[best];
-                    dy = list[best][2];
-                    dy = (dy >= lbl_803E39F8) ? dy : -dy;
-                    if (dy < lbl_803DBDC4)
+                    deltaY = list[best][2];
+                    deltaY = (deltaY >= lbl_803E39F8) ? deltaY : -deltaY;
+                    if (deltaY < lbl_803DBDC4)
                     {
                         flag = 1;
                     }
@@ -405,9 +405,9 @@ void Scarab_update(int obj)
                 {
                     f32 k;
                     ang = (u16)getAngle(list[best][1], list[best][3]);
-                    fang = ang;
-                    fang = lbl_803DBDCC * fang + lbl_803E3A2C;
-                    ((GameObject*)obj)->anim.rotX = fang;
+                    angleF = ang;
+                    angleF = lbl_803DBDCC * angleF + lbl_803E3A2C;
+                    ((GameObject*)obj)->anim.rotX = angleF;
                     ((GameObject*)obj)->anim.localPosX =
                         timeDelta * ((k = lbl_803E39F4) * list[best][1]) + ((GameObject*)obj)->anim.localPosX;
                     ((GameObject*)obj)->anim.localPosZ =
@@ -421,9 +421,9 @@ void Scarab_update(int obj)
                         ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
                     ((GameObject*)obj)->anim.localPosZ =
                         ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
-                    sumsq = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+                    speed = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
                                   ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
-                    ObjAnim_SampleRootCurvePhase(sumsq, (ObjAnimComponent*)obj, &phase);
+                    ObjAnim_SampleRootCurvePhase(speed, (ObjAnimComponent*)obj, &phase);
                     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, phase, timeDelta, NULL);
                 }
                 flag = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3A00, 0, bufs.hitResults, obj, 8, -1, 0, 0);
@@ -444,9 +444,9 @@ void Scarab_update(int obj)
                     PSVECSubtract(&((ObjPlacement*)((GameObject*)obj)->anim.placementData)->posX, (void*)(obj + 0xc),
                                   vsub);
                     ang = (u16)getAngle(vsub[0], vsub[2]);
-                    fang = ang;
-                    fang = lbl_803DBDD0 * fang + lbl_803E3A2C;
-                    ((GameObject*)obj)->anim.rotX = fang;
+                    angleF = ang;
+                    angleF = lbl_803DBDD0 * angleF + lbl_803E3A2C;
+                    ((GameObject*)obj)->anim.rotX = angleF;
                 }
             }
             else
@@ -457,15 +457,15 @@ void Scarab_update(int obj)
                                          ((GameObject*)obj)->anim.localPosZ, &list, 1, 0);
                 for (i = 0; i < count; i++)
                 {
-                    dy = *list[i] - ((GameObject*)obj)->anim.localPosY;
-                    if (dy < *(f32*)&lbl_803E39F8)
+                    deltaY = *list[i] - ((GameObject*)obj)->anim.localPosY;
+                    if (deltaY < *(f32*)&lbl_803E39F8)
                     {
-                        dy = dy * *(f32*)&lbl_803E3A34;
+                        deltaY = deltaY * *(f32*)&lbl_803E3A34;
                     }
-                    if (dy < bestDist)
+                    if (deltaY < bestDist)
                     {
                         best = i;
-                        bestDist = dy;
+                        bestDist = deltaY;
                     }
                 }
                 if (list != NULL)
@@ -486,9 +486,9 @@ void Scarab_update(int obj)
             if ((((ScarabState*)state)->fleeTimer != 0 || ((GameObject*)obj)->anim.seqId != 0x3d6) &&
                 Vec_xzDistance(&((GameObject*)player)->anim.worldPosX, (f32*)(obj + 0x18)) < lbl_803E3A38)
             {
-                dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
-                dy = (dy >= lbl_803E39F8) ? dy : -dy;
-                if (dy < lbl_803E3A3C)
+                deltaY = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
+                deltaY = (deltaY >= lbl_803E39F8) ? deltaY : -deltaY;
+                if (deltaY < lbl_803E3A3C)
                 {
                     if (mainGetBit(GAMEBIT_SawScarab) == 0)
                     {
@@ -518,9 +518,9 @@ void Scarab_update(int obj)
             {
                 if (Vec_xzDistance(&((GameObject*)player)->anim.worldPosX, (f32*)(obj + 0x18)) < lbl_803E3A3C)
                 {
-                    dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
-                    dy = (dy >= lbl_803E39F8) ? dy : -dy;
-                    if (dy < *(f32*)&lbl_803E3A3C)
+                    deltaY = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
+                    deltaY = (deltaY >= lbl_803E39F8) ? deltaY : -deltaY;
+                    if (deltaY < *(f32*)&lbl_803E3A3C)
                     {
                         if (mainGetBit(0x1d9) == 0)
                         {
@@ -624,8 +624,8 @@ void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
     extern int getAngle(f32, f32);
     extern f32 sqrtf(f32);
     extern void vecRotateZXY(void*, f32*);
-    f32* sub = ((GameObject*)obj)->extra;
-    GuardianAngleParams st;
+    f32* velCache = ((GameObject*)obj)->extra;
+    GuardianAngleParams rotParams;
     f32 buf[3];
 
     if (mode == 1)
@@ -653,21 +653,21 @@ void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
         }
         ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX / (d = lbl_803E39FC * sq);
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ / d;
-        sub[0] = ((GameObject*)obj)->anim.velocityX;
-        sub[1] = ((GameObject*)obj)->anim.velocityZ;
+        velCache[0] = ((GameObject*)obj)->anim.velocityX;
+        velCache[1] = ((GameObject*)obj)->anim.velocityZ;
         ((GameObject*)obj)->anim.rotX = (u16)getAngle(-p3[0], -p3[2]);
         return;
     }
 
-    st.x = lbl_803E39F8;
-    st.y = lbl_803E39F8;
-    st.z = lbl_803E39F8;
-    st.w = lbl_803E3A00;
-    st.c = 0;
-    st.b = 0;
-    st.a = ((GameObject*)obj)->anim.rotX;
+    rotParams.x = lbl_803E39F8;
+    rotParams.y = lbl_803E39F8;
+    rotParams.z = lbl_803E39F8;
+    rotParams.w = lbl_803E3A00;
+    rotParams.c = 0;
+    rotParams.b = 0;
+    rotParams.a = ((GameObject*)obj)->anim.rotX;
 
-    vecRotateZXY(&st, buf);
+    vecRotateZXY(&rotParams, buf);
 
     if (p2)
     {
