@@ -83,7 +83,7 @@ int Menu_func08(int* sel)
     if (lbl_803DD8E8 != 0)
     {
         input = getButtonsJustPressed(0);
-        if (((input & PAD_ACCEPT_MASK) != 0) && (mainGetBit(0x44F) == 0))
+        if (((input & PAD_ACCEPT_MASK) != 0) && (mainGetBit(GAMEBIT_MenuRelated044F) == 0))
         {
             return lbl_803DD8F5;
         }
