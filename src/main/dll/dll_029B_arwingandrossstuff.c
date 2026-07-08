@@ -378,13 +378,13 @@ void arwingandrossstuff_initialise(void)
 {
 }
 
-void fn_8022ECE0(int obj, f32 param)
+void fn_8022ECE0(int obj, f32 lifetime)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
     f32 mtx[16];
     ArwProjPosSrc src;
 
-    state->lifetime = param;
+    state->lifetime = lifetime;
     src.pos[0] = lbl_803E7044;
     src.pos[1] = lbl_803E7044;
     src.pos[2] = lbl_803E7044;
@@ -397,8 +397,8 @@ void fn_8022ECE0(int obj, f32 param)
                           &((GameObject*)obj)->anim.velocityY, &((GameObject*)obj)->anim.velocityZ);
 }
 
-void fn_8022ED74(int obj, int v)
+void fn_8022ED74(int obj, int scalar)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
-    state->param0.scalar = v;
+    state->param0.scalar = scalar;
 }

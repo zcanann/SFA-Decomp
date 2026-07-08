@@ -244,11 +244,11 @@ void fn_8023A87C(int obj, int state)
     }
     else
     {
-        f32 v = ((AndrossState*)state)->spawnCooldown;
+        f32 cooldown = ((AndrossState*)state)->spawnCooldown;
         f32 zero = lbl_803E74D4;
-        if (v >= zero)
+        if (cooldown >= zero)
         {
-            ((AndrossState*)state)->spawnCooldown = v - timeDelta;
+            ((AndrossState*)state)->spawnCooldown = cooldown - timeDelta;
             if (((AndrossState*)state)->spawnCooldown < zero)
                 fn_80239DD8(obj, state);
         }
@@ -262,7 +262,7 @@ void fn_8023A87C(int obj, int state)
 
 int fn_8023A6A4(int state, f32 clampRange, f32 scale, f32 zVel)
 {
-    f32 val, ang;
+    f32 mag, ang;
     f32 dx, dy, dz, dist;
     int yaw;
     int result;
@@ -276,10 +276,10 @@ int fn_8023A6A4(int state, f32 clampRange, f32 scale, f32 zVel)
     yaw = (s16)getAngle(dx, dy);
     if ((s16)getAngle(dist, dz) > 0x2ee0 && dz > lbl_803DC4C0)
         result = 1;
-    val = (dist / scale < -clampRange) ? -clampRange : ((dist / scale > clampRange) ? clampRange : dist / scale);
+    mag = (dist / scale < -clampRange) ? -clampRange : ((dist / scale > clampRange) ? clampRange : dist / scale);
     ang = lbl_803E74A0 * yaw / lbl_803E74A4;
-    ((AndrossState*)state)->velX = val * mathSinf(ang);
-    ((AndrossState*)state)->velY = val * mathCosf(ang);
+    ((AndrossState*)state)->velX = mag * mathSinf(ang);
+    ((AndrossState*)state)->velY = mag * mathCosf(ang);
     arwarwing_getVelocity((int)vel, *(int*)state);
     ((AndrossState*)state)->velX -= vel[0] * gAndrossArwingVelDamp;
     ((AndrossState*)state)->velY -= vel[1] * gAndrossArwingVelDamp;
