@@ -7035,3 +7035,175 @@ Sub-95 fns found (besides zlbDecompress 73.13, sibling-owned): ONLY TWO, both tr
 VERDICT: zlbDecompress WAS UNIQUE in the dolphin family. The other two dolphin sub-95 fns are ordinary
 reg-perm/spill/scheduling cascades (one T==C, one T-vs-C=+2 fully explained by a spill-mask + FP sched).
 No source-controllable lever survives. No commits (tree clean, all experiments Edit-reverted).
+
+## AUDIO family algorithmic-outlier sweep (Jul08)
+Scope: all src/main/audio/* (MWCC 1.2.5n NOOPT, -opt nopeephole,noschedule). NO pragma levers apply
+(peephole/scheduling off already). Ranked 24 sub-100 audio UNITS from report.json; per-fn measures are
+EMPTY in in-tree report.json, so triaged via ndiff.py .o-direct. Full audio scan classified every sub-100
+fn by C-vs-T instr COUNT (count-delta => source-controllable; C==T => reg-perm welded).
+
+CRACKABLE (C>T, real headroom) — 3 WINS, all pure-source CSE/pointer-reuse (no pragmas):
+- **voiceAllocate (voice_alloc) 299->298 EXACT PARITY** (c98eae8eae): `.user==1` test spelled
+  `vb->freeList[voice].user` while `sfv=vb->freeList+voice` was assigned INSIDE the branch => MWCC
+  materialized base+voice*4+3776 fresh (addi;add;lbz 0) instead of folding 3776 into disp. Hoist sfv +
+  read `sfv->user` => disp-fold, extra `add` gone. Generalizes voiceAllocate into the #112/disp-fold class.
+- **synthFreeHandle (synth_queue) 129->128 EXACT PARITY** (91d7774bcd): `switch(runtime->voices[found].state)`
+  re-indexed voices[found] after `voice=&runtime->voices[found]` already held it => recomputed
+  base+found*6248+5120. Read `voice->state` => reuse pointer, extra base+index add gone.
+- **s3dApplyEmitterControls (snd3d_calc) 154->153, regions 16->10** (80c320d6c3): AGE_OUT volume clamp used
+  an explicit `clampTmp` local (added PRE-style-sweep by d75125813b for a double-store shape that the
+  Jul08 clang-format frame-relayout INVALIDATED). Inlining the single-use expr into its only
+  S3D_CLAMP_7BIT consumer matches the other 3 clamp sites' coloring; residual +1 = #67 age-out FP-temp
+  frame slot (welded). NOTE: prior "add local" wins can INVERT after a frame relayout — re-measure old
+  clampTmp-style commits against current HEAD.
+
+REUSABLE LEVER (audio, but general): **CSE-by-pointer-reuse** — when a struct-array element is BOTH
+taken-address-of (`p=&arr[i]`) AND re-indexed for a field (`arr[i].f`), MWCC noopt does NOT CSE the
+base+index; respell the field access through the existing pointer (`p->f`) to fold the field offset into
+the load/store displacement and drop the recomputed `add`. Same mechanism as #112/voiceAllocate/synthFreeHandle.
+
+WELDED (C==T reg-perm, or count-delta fully explained by capped mechanisms) — banked on sight:
+- synth_seq_dispatch fn_8026E0E4 (T527 C526) arg-eval-order + frame-home; fn_8026E9D0 (T173 C172)
+  bias-double @212-vs-lbl_803E7790(=2^52) #70-neutral + f-reg perm + #67 frame+8. Both welded.
+- fn_8026F30C (synth_channel_scale) +2 = #110 shared-zero (`mr r3,r4` vs two `li ...,0`) + reg-perm.
+- synthInitJobTable, aramInitStreamBuffers: +1 = dead trailing `blr` after unconditional b (noopt tail
+  artifact, not source-expressible).
+- dataRemoveMacro, synthStartSound: +1 = #67 frame-size +8 delta (and synthStartSound also an r0-detour
+  `addi r0,r3,0`). Welded.
+- synthQueueHandle: +1 = #110 shared-zero (`li r31,0` vs `mr r29,r28`). Welded.
+- dataInsertSDir: +1 = r0-detour named-ptr saved-reg init (`mr r31,r0` vs `addi r31,r5,0 RELOC`). Welded.
+- All C<T (negative-delta: salBuildCommandList -4, macHandleActive -3, dataInsertMacro/inpInit/inpGetMidiCtrl/
+  mcmdVarCalculation -2, LowPrecisionHandler/synthVolume -1): all-`replace` regions, no insert/delete — we
+  are already <= target count; pure reg-perm. No add-instr lever (adding would be wrong).
+
+VERDICT: audio family DOES hold a small vein of algorithmic/source-controllable outliers, but NOT the
+zlbDecompress kind (no loop-form/byte-processing lever surfaced). The audio wins are all the SAME
+CSE-by-pointer-reuse mechanism (struct-array element address-of + re-index) — 3 fns cracked, 2 to exact
+parity. Everything else is #108 reg-perm / #67 frame-delta / #110 shared-zero / r0-detour / dead-blr-tail
+= the standard welded cap taxonomy. Vein now exhausted for C>T audio fns; reopen only on new team commits.
+
+## Jul08 (opus) — zlbDecompress OPT-LEVEL SWEEP: stmw r14 IS reachable, but fuzzy-caps at O2 73.13%
+REFINES the Jul04 dd65 "foreign save-strategy, no lever" verdict. That claim (stmw r14 is a per-TU-only
+codegen decision, unreachable per-fn) is WRONG. The `stmw r14`/`lmw r14` inline-save (frame 84) IS
+per-function reachable via the pragma bracket that ALREADY wraps ONLY zlbDecompress (src/main/pi_dolphin.c
+7080-7084: optimize_for_size on / optimization_level 2 / opt_common_subs off / opt_propagation off /
+use_lmw_stmw on; reset at 7567). Swept optimization_level {1,2,3,4} and O2+{opt_lifetimes/loop_invariants/
+strength_reduction/unroll_loops} on, measured report.json fuzzy each (private -o binpb, f3 float decode):
+  - **O2 (baseline, committed): 73.13%** — frame `stmw r23` (9 saved), NO addme/stbu, init loops manual.
+    BEST FUZZY. Preserves the target's LINEAR instruction order (scheduling off since line 2913).
+  - O1: 73.12% — frame `stmw r14` (MATCHES target 18-saved span!), but NO loop conversion -> C=685 (+31
+    vs T=654) of extra manual-loop instrs. ndiff "9 regions" is diff-aligner collapse, not a real match.
+  - O2 + `#pragma opt_lifetimes on`: 71.62% — frame `stmw r14`, addme=2/stbu=3 (target has addme=2/stbu=3),
+    C=664 (closest length to T=654). Gets the copy-loop `lbzu/stbu` + `mcrxr;addme.` idiom AND the frame.
+    But the r14 allocation reshuffles register NUMBERING (15 reg-perm regions) -> net fuzzy DOWN 1.5pt.
+  - O3/O4 (any cs/prop combo): 52-58% — full shape match (stmw r14, bdnz init loops, addme./stbu copy
+    loops byte-identical at 7330-7348, counted memcpy `subf;mtctr;lbzu;stbu;bdnz` for the LZ back-ref) BUT
+    the O3 global optimizer REORDERS the huffman code-length build section vs target -> 453/366-token
+    misaligned blocks. Not fixable by source; not unroll (ppc_unroll_instructions_limit 0 inert = 57.81).
+ROOT of the cap: the TARGET = "O2-order (scheduling off) + loop-conversion (addme/stbu/bdnz) + stmw r14".
+No single config produces all three: loop-conversion+r14 come as a PACKAGE with a register-NUMBERING
+change (O2+lifetimes) whose #108 within-class reg-perm ripple costs more bytes than the idiom match saves.
+LOCAL AXES tried at O2 baseline (all Edit-reverted, all net-NEGATIVE via coloring ripple):
+  - lmscan/dmscan `if(*scan==0)` (u16, cmplwi) -> `if((int)ZW(cnts,i)==0)` (int, cmpwi): the region goes
+    BYTE-PERFECT (add;add;lhz 0(r);cmpwi, matches target 78b0-78d8 exactly) BUT fuzzy 73.13->72.70
+    (dmscan alone 72.60). Confirms #108 coloring-coupling: a perfect local region shifts allocation
+    elsewhere for a net loss. THE signature cap of this fn.
+  - opt_propagation on: 73.13->regress (92 regions). for-form init loops: +guard `b`, worse.
+VERDICT (updated): zlbDecompress is COLORING-WELDED at its fuzzy-optimal config (O2, 73.13%). The
+target's exact allocation (stmw r14 + specific reg numbering) and its exact instruction ORDER cannot be
+produced simultaneously by source/pragma. Prologue frame is reachable (O1/O2+lifetimes) but only by
+trading it for a reg-numbering ripple that nets negative. The 2352B/654-instr size makes every
+allocation perturbation expensive. HARD BANK at 73.13%. No commit (tree byte-identical to HEAD, build
+all_source EXIT=0). The prompt's axes 1-3 (copy-loop stbu/bdnz, mask-width, table lookup) are all
+GATED behind the opt-level package that regresses net fuzzy — individually unreachable at O2.
+
+## Jul08 NOOPT pointer-reuse-fold PATTERN-LENS sweep (cluster A: synth_*/voice_*/vsample_*) — NO WINS, cluster covered
+Ran the pattern-grep lens (address-taken `&arr[i]` + separate `arr[i].f` reuse; repeated `arr[idx].fieldA/B`)
+DISTINCT from the count-delta sweep. Findings:
+- Address-taken grep surfaced only ALREADY-solved/matched cases: synth_voice jobTab (already ptr-form),
+  voice_unregister slot (already `&...`+`*slot`, matched Jun14). synth_queue voice=&gSynthVoices[..] and
+  voice_alloc slot=&voiceFreeListSlots[..] are HOT (siblings solved synthFreeHandle 12:04 / voiceAllocate 12:01).
+- Systematic C>T sweep (folding removes instrs, so fold candidates must have C>T): only 3 in whole cluster:
+  synthStartSound (T177 C178: r0-detour mr + #67 frame-size + r18/r31 web — NOT a fold),
+  synth_channel_scale fn_8026F30C (T148 C150: pure r5<->r7 #108 web perm),
+  synth_queue synthQueueHandle (T122 C123: #110 shared-zero li-remat + reg-perm). None is index-recompute.
+- Equal-count loop fns with C-side `add rN,rN,rN` (synthClaimVirtualSampleSlot, synthRefreshJobVolumes,
+  fn_8026E0E4): the target ALSO emits the same adds (add-count parity) — genuinely-needed distinct-index
+  recomputes, NOT foldable through a single element pointer. synthRefreshJobVolumes already uses the
+  r31 base-pointer disp-fold form; residual is @NNN reloc (#70 neutral) + r3/r5 web (#108).
+CONCLUSION: the noopt pointer-reuse-fold vein in cluster A is EXHAUSTED by the prior count-sweep; the
+pattern-lens found zero instances the count-ranking missed. All remaining C>T deltas are coloring/frame
+caps (#108/#67/#110), not offset-folds. No commits (tree byte-identical to HEAD).
+
+## Jul08 — NOOPT pointer-reuse-fold lens, cluster B (snd_/snd3d/mcmd_/hw_/aram_/adsr_/sal_/inp_/vid_/axart, EXCL synth_/voice_/vsample_)
+PATTERN-GREP for CSE-by-pointer-reuse idiom (address-taken element `&arr[i]` co-used with re-indexed `arr[i].field`). RESULT: **cluster fully covered, ZERO wins available.**
+- Candidates found: aram_queue.c aramUploadData (`&queue->slots[head]` passed to ARQPostRequest + 7 re-indexed `.field` args), inp_midi_set.c inpSetMidiCtrl (`&synthVoice[i]` + `.midiEvent/.midiSlot/.inputDirtyFlags`), hw_adsr.c hwSetADSR + hw_init.c hwInitSamplePlayback (`dspVoice[slot]` 15-17x), snd_groups gs[i], inp_value entries[i], snd3d_calc lbl_803CC910[groupIndex].
+- FINDING (mechanism): in THESE noopt / scheduling-on units the TARGET ITSELF recomputes the element address per access. hwSetADSR target: `lwz r0,dspVoice; add r3,r0,r5` reloaded before every store. aramUploadData target: `lbz r0,640(r31); mulli r0,r0,40; add r3,r31,r0` re-emitted before EVERY field store (head reloaded each time). The raw-index C (`gPtr[i].field` / `queue->slots[head].field`) ALREADY reproduces this exactly. Introducing `T* p=&arr[i]` would FOLD offsets → REGRESS.
+- VERIFICATION: full-cluster ndiff sweep (every F .text sym in all 45 cluster-B objs) → **ZERO functions with C>T**. All candidate fns at count parity: aramUploadData T=C=127, hwSetADSR T=C=127, hwInitSamplePlayback T=C=127, inpSetMidiCtrl T=C=408 (frame#67+reg-perm only), inpSetMidiCtrl14 T=C=81, sndPushGroup 107, seqPlaySong 87, _GetInputValue 296 (pool-reloc), s3dStartQueuedEmitters 148.
+- CONCLUSION: the pointer-reuse-fold lever (sibling wins in synth_/voice_/vsample_) has NO unfound instances in cluster B. The distinction: sibling's winning units keep the element ptr live and fold; cluster-B's noopt/scheduling-on units recompute base+index per access and are matched by raw per-access C. Pattern-lens did NOT beat the count-sweep here — both agree the cluster is exhausted for this lever. No commits.
+
+## RENDER-SDK family re-scan Jul08 (agent: apply audio's source-form lever to -O4,p graphics units) — VERDICT: genuinely reg-perm/#70/#82 welded, ZERO wins
+Prompt hypothesis: audio noopt just yielded 3 CSE-by-pointer wins → hunt the -O4,p render-SDK families (render/newshadows/shader/lightmap/maketex/worldobj/textrender/tex_dolphin/modellight/light) for the -O4,p analogue (base-hoist #16/#80, disp-fold-unweld #112, FP-const-CSE #45/#127, struct respell, f32-not-double, #53 narrow).
+- Ranked in-scope units by fuzzy (fresh objdiff proto -o private, per-fn): render 96.65, newshadows 96.76, shader 98.37, textrender 98.98, lightmap 99.29, maketex 99.48, tex_dolphin 99.62, modellight 99.87, worldobj 99.96, light/dfplightni/worldplanet_lighting 100.
+- **Two structural classes seen, BOTH welded:**
+  1. **C < T (current SHORTER than target)** — render fn_80007F78 (T=589 C=580), shader doPendingMapLoads (T=954 C=942), mapLoadUnloadObjects (T=503 C=500), textrender gameTextInitFn_8001c794 (T=249 C=247). Target keeps extra `mr` copies / 64-bit-temp stack spills / two independent `li 0` (shared-zero #110) / redundant loop `addi` that the current clean C copy-propagates away. To match I'd have to RE-INTRODUCE redundancy the compiler naturally removes — not source-controllable. gameTextInitFn = textbook #110 shared-zero (T `li r30,0; li r9,0` vs C folded `li r4,0`). fn_80007F78 = #67 conversion-temp 64-bit high-half spill (`stw/lwz N(r1)` the current keeps in-reg). doPendingMapLoads = big coloring+loop-scheduling cascade.
+  2. **C == T** — render modelRenderFn_80006744 (256=256, pure r5↔r6/r10↔r11 reg-perm), newshadows fn_8006A028 (1359=1359, no chuff externs, pure reg-perm), fn_8006CB50 (134=134), shader mapLoadUnloadObjects (71/78 regions reg-perm), lightmap renderSceneGeometry (336=336, reg-perm + gLightmapU32ToDoubleBias 0x43300000 bias-double reloc = #70 score-neutral + scheduled-position `addi r30,r1,80` insert/delete net-zero).
+- **NEGATIVE TEST — newshadows Udchuff/Vdchuff sdata2-array respell (the ONE promising structural lever, REVERTED):** fn_8006CB50 references sdata2 pooled floats `Udchuff_803DEDAC/B0/B4/B8/BC` + `Vdchuff_803DEDDx` as SEPARATE per-address externs; TARGET reloc = single base `Udchuff_803DEDA0` / `Vdchuff_803DEDC0` + compile-time addend (+0xc..+0x1c). Symbols.txt confirms `Udchuff=.sdata2:0x803DEDA0 size:0x20` (8 floats, one object). Hypothesis: declare `extern const f32 Udchuff_803DEDA0[8]` + index `[3]..[7]` → base+offset relocs match target, maybe re-numbers the FP web (#82 crack analogue). RESULT: **REGRESSED across the board.** fn_8006CB50 134→140, allocLotsOfTextures 1698(T) C 1699→1704, fn_8006CD20 221(T) C→227, initFn_8006d020 414(T) C→418. MWCC array-index `arr[K]` of an sdata2 const emits `addi`/index address-arith, NOT an SDA21+addend fold — so `[N]` indexing is strictly worse than the separate-extern SDA21 loads. Confirms **#70 named-vs-anon reloc is score-NEUTRAL here** (the addend-0 `Vdchuff_803DEDC0` refs are already 100% with the scalar spelling; only the +offset ones "mismatch" and that mismatch costs ZERO). Reverted via `git show HEAD:` (float values read from orig dol for reference: Udchuff@803DEDA0 = {0.2, 6.284, 65536, 127.5, 100.8, 0.00390625, 112, 128}; Vdchuff@803DEDC0 = {127, 0, 176, -0, 0.0625, 0.4375, 0.01, 0.001}).
+- **VERDICT: the render-SDK -O4,p family does NOT hide source levers like audio did.** Audio's win came from noopt units where the target ITSELF recomputes and clean per-access C reproduces it. The render units are the opposite: heavily-optimized -O4,p where the target's extra instructions come from a LESS-optimal 2002 source structure (extra live copies / spills / un-coalesced zeros) that we cannot reconstruct without guessing register pressure — the current clean C is already at or below target instr count. Every sub-97 render fn is #108 within-class GPR reg-perm (T==C), #82 FP-reg-perm, #67 conversion-temp spill, #110 shared-zero, or #70 bias-double/reloc — all on the bank-on-sight welded list. NO COMMITS. Gate build all_source EXIT=0, tree clean.
+
+## Jul08 — NOOPT audio NON-CSE source-form lever hunt (loop-form/mask-width/f32/narrowing-store/re-derive) — VERDICT: coloring/frame/peephole welded, ZERO net wins
+Prompt: hunt source-controllable levers in audio noopt low-% fns OTHER than the CSE-by-pointer-reuse a sibling owns (#113 loop-form, mask-width, f32-not-double, #53 narrow-store, redundant-recompute-vs-cache, struct respell). Ranked all 53 sub-100 audio fns by fuzzy; deep-triaged ~24 across the whole range.
+- **Every low-% audio fn is dominated by welded classes**: reg-perm (#108 Color_Select lowest-free-index), frame (#67), pool-reloc (#70 score-neutral), sched-order (emission order in noopt), mr-copy (coalescer), peephole branch-fold (`b LBL` vs folded — not source-reproducible in noopt). Class census of triaged set: reg-perm is 80%+ of all regions.
+- **NEGATIVE TEST 1 — StartKeymap (synth_voice, 94.08%, lowest audio fn):** frame -136 vs T -128 (#67, 8-byte extra slot) cascades ALL reg-perm. Tried `note=(fullKey&0x7F)` -> `(key&0x7F)` to hoist the mask early like target's `clrlwi r4,r20,25` at 0x64: it DID move the mask early but reshuffled coloring ADVERSELY (23 divergent regions -> 24; traded 1 ext-delete for 1 sched-order + 2 reg-perm). Also tried dropping the `(u32)keymap` int-launder in `((s8*)((u32)keymap+idx))[2]` -> `((s8*)(keymap+idx))[2]`: made C SHORTER than T (157->156) because target RECOMPUTES `keymap+idx` (`add r7,r3,r0`) where clean pointer-add reuse caches it — the launder is LOAD-BEARING (forces target's recompute). REVERTED both. Frame#67-welded.
+- **NEGATIVE TEST 2 — mcmdVarCalculation (mcmd_exec, 95.46%, C=77 vs T=79):** target's else-branch has `extsh r0,r3; mr r3,r0` (phi-copy for the s16 `rhs` merged from two branches); ours coalesces to `extsh r3,r3`. Tried `rhs=(s16)varGet32(...)` — INERT (varGet32 already returns u32, cast is a no-op). The `mr` is a phi-resolution/coalescer decision (mr-copy class) — source-uncontrollable. REVERTED.
+- **NEGATIVE TEST 3 — inpInit (inp_ctrl, 97.85%, C=189 vs T=191) — THE loop-form case, closest to a win but net-neutral:** the `for(i=0;i<8;i++){u32* row=p+i*16; row[0..15]=0xff;}` zeroing loop. Target = mtctr-counted, unrolled x2, pointer `r8` advances `+64` TWICE per ctr-iter (disp stays 0..60) + keeps a DEAD `i` counter (`addi r6,r6,1`), frame -48. Original C = mtctr, unrolled x2, pointer `+128` ONCE (disp 0..124), NO `i` counter, frame -40. Rewrite `u32* row=p; p+=16;` MADE THE LOOP BODY MATCH EXACTLY (mtctr + `+64` twice) but DROPPED the dead `i` counter AND shrank frame to -32 (freed a saved reg) — net 8 reg-perm regions + wrong-direction frame. The pointer-advance form is a REAL #113 loop-FORM crack for the stride (+64x2 vs +128) but target ALSO wants the live dead-`i` induction var which the strength-reducer removes once `i*16` is gone from the body; can't have both +64-stride AND live-`i` from clean C. Inline `p[i*16+k]` (no row temp) = identical to original (+128). REVERTED. Unroll-dead-counter + frame = #113/#67 welded.
+- **NEGATIVE TEST 4 — hwSetITDMode (hw_voice_params, 97.83%, C=27=T, 4 reg-perm):** `value=DSP_VOICE_ITD_CENTER(16)` reuses param reg r4 in target (`li r4,16`), pointer=r3; ours `li r3,16`, pointer=r4. Tried reordering `value=16` before the flags-set / entry recompute — INERT (Color_Select lowest-free-index unmoved). Welded #108.
+- **VERDICT: audio noopt does NOT hold source-form levers beyond the CSE-pointer-reuse one.** The reason: at THIS frontier the fns are already matched down to the register-allocation residual. loop-FORM (+64x2 stride via `p+=16`) is genuinely source-controllable (inpInit proves it) but only WINS when it's the SOLE delta — here it co-occurs with a dead-`i`/frame#67 cap that the same edit disturbs. mask-width/f32/narrow-store found NO instances (the narrowings present are all phi-merge mr-copies or int-launder-load-bearing). Every remaining C!=T audio delta is #108/#67/#70/#110/peephole-fold/mr-copy — bank-on-sight welded. NO COMMITS. Gate build all_source EXIT=0, tree byte-identical to HEAD (src/).
+
+
+## SEMANTIC SWEEP Jul08 — anonymous/raw struct-type naming (NEGATIVE, vein exhausted)
+Swept for unnamed/generically-tagged struct/union types and raw int/void* fields that are actually known struct pointers. Findings:
+- **Zero hex-address-named tags** (`struct Unk8012...`, `Struct_80xxxxxx`) remain in include/main or src/main — all previously renamed.
+- **Zero generically-named typedef bodies** (Unk/Struct$/_t$/Type\d/Scratch/Anon) among the 72 `typedef struct {` anonymous bodies — every one already carries a meaningful typedef name.
+- **9 anonymous `struct{}` used as named FIELDS** (expgfx parts/actorAimOffset/bits, adsr dls/linear, dsp_voice playInfo/lastUpdate, fruit audio, dimboss bits) are intentional sub-field groupings inside named parents — tagging them adds no readability; dimboss is Jack's domain anyway. Left as-is.
+- **`_unk.h` filenames** (dll_000F/0012/0014/0042) still carry the suffix but the TYPES inside are already properly named (PlayerMoveBuf, CamSlideRot/CamSlideObjectState, etc.). Filename rename is out of scope (not a type name; would churn #include lines, not byte-relevant).
+- **Raw `void *light` fields** (~10 across lightsource/arwing/cmbsrc/firepipe/etc.) point to an engine-allocated opaque light handle — NO canonical named struct exists for it (GX/SDK opaque-pool = NULL SET cap). Retype would risk deref codegen with no target type. Left raw. Same for `void *extra` (game_object.h = Jack/SKIP) and `void *model`/`void *resource`/`void *config`/`void *desc` (opaque or already commented).
+- **No local anonymous structs in .c source** used as var types.
+VERDICT: The anonymous/raw-struct-type naming vein is EXHAUSTED (confirms the Jul05 "zero remaining raw casts against mapped structs" catch-all). NO COMMITS — nothing byte-identical-and-valuable to rename. Repo already thoroughly type-named.
+
+## AUDIO noopt scope — FINISHED sweep (Jul08, all 53 sub-100 audio fns triaged)
+Completed the audio scope (prior agent deep-checked ~24; this pass covered the remaining ~29). NO NEW WINS — every remaining audio sub-100 fn is a proven welded cap. Classification of the undone set:
+- **T==C instr length ⇒ #108 reg-perm WELDED** (Color_Select lowest-free-index, no source cost input): aramInit(151/151), salActivateVoice(44/44), sndBSearch(38/38), synthRefreshJobVolumes(92/92), mcmdSetADSR(162/162, +pool-reloc score-neutral), inpSetExCtrl(40/40), fn_8026F30C(pure reg-perm cascade), Music_Update(46 reg-perm regions), synthStartSound(11 reg-perm+#67 frame), dataRemoveMacro(#67 frame+reg-perm), ZeroOffsetHandler(pool-reloc+reg-perm).
+- **#67 frame-delta (C=T+8 stack, no remat lever)**: dataInsertMacro (frame -40 vs -32; 6 locals, extra slot; the "ext-delete" was a misclassified rlwinm bitfield-extract, real delta is frame+coloring).
+- **r0-detour WELDED** (`addi r0,r5,0` reloc'd table-ptr → `mr rN,r0;mr r3,r0`, instruction-selection-pinned): dataInsertSDir(100/101), CreateAudioDecodeThread(60/61). Tried decl-order-first on dataInsertSDir's `t` — INERT (still 101, still r0-detour). Reverted.
+- **SR/unroll trailing dead-blr WELDED** (peephole branch-fold class, not source-reproducible): synthInitJobTable(59/60) and aramInitStreamBuffers(56/57) BOTH differ ONLY by one trailing `blr` at fn end — target lays the strength-reduced/unrolled remainder block last (ending in unconditional `b`) and drops the following `blr`; noopt C keeps the dead `blr`. Signature: real `blr` mid-fn (epilogue), then an SR remainder block ending in backward `b`, then a redundant `blr` the target omits. Deep in SR/unroll emission; pointer-walk loop-form would change the whole unroll shape (regress risk) — welded.
+- **scheduling/cache-reuse WELDED**: fn_8026E0E4 (target caches `d=event->data` in r25 & reuses — C ALSO caches, delta is pure address-calc scheduling order of the `t` computation, slwi/mulli/add/lwzx reorder). fn_8026EC44 (gSynthCurrentVoice single-load-reuse is reg-perm r3-vs-r4; the `add r0,r0,r3` vs `r0,r3,r0` in `acc+step` is coloring-follows-load-order welded; the `fsubs f25;fmr f1` extra copy comes from the inline `return x` early-exit keeping x live — coloring artifact, not source-controllable). audioFn_80271498 (#67 frame + reg-perm base-computation).
+- **ext-delta welded**: seqStartPlay — the `clrlwi r5,r21,24` (u8 arg zero-extend) count is EQUAL in T and C, just scheduled into a different position next to the call-arg addi; reg-perm/sched, not a type fix.
+- **mr-copy welded**: synthQueueHandle — `mr r29,r28`(T) vs `addi r29,r28,0`(C): functionally identical pointer copy, different instruction selection (r0-detour class). Plus li r0/r31 reg-perm.
+VERDICT: **audio noopt scope is EXHAUSTED for clean source-controllable levers.** The 3 prior wins (voiceAllocate/synthFreeHandle/s3dApplyEmitterControls) captured the CSE-by-pointer-reuse instances; the remaining residual is entirely #108 reg-perm / #67 frame / r0-detour / SR-unroll-tail-blr / scheduling — all proven-welded cap classes. inpInit's loop-form failure (co-occurring #67) generalizes: no remaining audio fn has loop-form (or any lever) as its SOLE delta. Reopen only on new team commits touching audio.
+
+## SEMANTIC SWEEP Jul08 — FLAG-BIT constant naming (byte-identical) — NEGATIVE, roles opaque/collision-blocked
+Swept all `x|=0xN / x&=~0xN / x&0xN` on struct-field flag words across src/main (698 raw sites), grouped by (file,field,mask), scored set/clr/chk triples, filtered to single-bit masks with a set+check pair in files >90min-cold (sibling collision window). Findings:
+- **The pinnable-role candidates are all blocked or genuinely opaque:**
+  - `dll_002E_moveLib.c` `*flags & 0x10` (set on `goNextPoint` path-end, checked as done-guard at fn entry — a CLEAN "curve-walk complete" role) → BLOCKED: moveLib was committed 80min ago by a sibling naming-wave agent (one-owner). Left raw.
+  - `dll_0250_ktrex.c` `phaseFlags` (20 single-bit set/check pairs) + `timerFA` → mostly SCRIPTED per-arena event bits with no self-evident role; `timerFA` bit0 (`^=1` dir toggle) is intertwined with a PACKED phase field (bits1-2 via `>>1&3`) making bit-0 naming ambiguous. Also committed 85min ago (sibling). Left raw.
+  - `dll_80174438.c` (curtain) `PushableState.flags & 0x80` (checked as done-guard, set on reach-target + gamebit) is a clean "opened/done" role BUT `PushableState` is a SHARED struct across 4 files with NO header (per-file def) — cross-file naming risk (shared-prefix cap). Left raw.
+  - `audio/snd3d_room.c` `entry->flags 0x80000000/0x40000000` = fade-in/fade-out one-shots (clean role) BUT bits are SET in a sibling file (snd3d.c/snd3d_calc.c, one committed 1hr ago) — cross-file + collision. The clear-sites use MASK form (`&=0x7fffffff` not `&=~0x80000000`) which is width/token-pinned; renaming would need the cleared-mask constant too. Left raw.
+  - `audio/hw_dspctrl.c` `pb->mixerCtrl` bits 1/2/4/8/0x10 = GC DSP AXPB hardware mixer-channel enables — hardware-register layout, roles not derivable from set/check context (opaque HW). Left raw.
+  - `dll_0272_hightop.c` already names CURVE_FOLLOW/ARMED; residual `&=~0x140` = `CURVE_FOLLOW|0x100` where 0x100 is only-ever-cleared (never set/checked) → role unknown, not nameable. Left raw.
+  - Particle/render flag words (`dll_000B_dll0b.c` PartfxEffectState/ModgfxSpawnContext `flags`, objprint_dolphin `lbl_803DCC80` bit web, modelState `flags` masks 0x4000/0x810/0xb0/0xc00) = the pre-judged OPAQUE render-flag class — skipped by mandate. objprint* is also HOT (uncommitted objprint.c in tree).
+- **VERDICT: the identifiable-flag-bit vein at this frontier is BLOCKED, not merely thin** — the cleanest roles (moveLib path-done, ktrex, snd3d fade, PushableState opened) all fail on either the one-owner/sibling-collision rule (three of them committed <90min ago in an active naming wave) or shared-struct/cross-file byte-risk; the rest are hardware-reg or render-flag opaque. NO COMMITS. Re-open only when the sibling naming-wave on moveLib/ktrex/snd3d goes cold AND a shared-struct owner can name PushableState.flags in one path-scoped pass. Tree byte-identical to HEAD (src/ untouched).
+
+## Jul08 (post-Jack header-wave) generic-local re-scan — SEMANTIC-RECOVERY agent
+Fresh tree-wide grep after Jack's header-extraction/clang-format/typedef-dedup wave. Two byte-identical wins; rest of the vein confirmed leave-raw.
+- **WON objprint.c** (82abe718b4, md5 66ed7786... unchanged): named sound/eye-anim state handlers — `objSoundFn_800392f0` (p1->obj, p2->state, p3->soundDef, flag6->force), `objAudioFn_800393f8` (p1->obj, p2->state, p3->sfx, p4->pitch, p5->volume, p6->force), `objModelAndSoundFn_80039118` (p2->state), `fn_8003B228` (p2->state), `characterDoEyeMovements` (p4->state + fwd decl), `modelMtxFn_8003be38` (p1->def, p3/p4->mtxA/mtxB; p2 genuinely unused, left). objprint.c had ONLY layout/extern/one-decl-order history — semantic rename never ran on it.
+- **WON audio.c** (4cf363f399, md5 98ca3027... unchanged): `audioAllocFn_80008df4` p5/p6/p7 -> cbArg1/cbArg2/cbArg3 (stored to ARQ callback entry a/b/c, later invoked as entry->fn(int,int,int)).
+- **VEIN OTHERWISE CLOSED at core/dll frontier.** Remaining generics all fall in leave-raw classes:
+  - `*_render(p1,p2,p3,p4,p5,visible)` -> objRenderModelAndHitVolumes passthrough (worldasteroids/worldobj/worldplanet/spellstone/crcloudrace/lightmap/light + ~200 dll files) — mandate: leave p2-p5 raw.
+  - `FUN_80080e60`.. in objseq.c = empty `return 0;` decomp STUBS, zero usage -> params unnameable (no usage to derive from).
+  - `*SeqFn(int* obj, int p2, ObjAnimUpdateState*)` (dll_115, Transporter) — p2 UNUSED callback-signature slot, role not derivable.
+  - `extern spawnExplosion(...p3-p9)` (light.c, proximitymine_reset.c) = stale type-mismatched local externs; canonical named proto lives in objfx.c (Jack extern-dedup domain).
+  - shader.c / newshadows.c had renameable locals but were NAMED THIS CYCLE by sibling agents (4bb5817cfa / 1ee1b16a1e @11:06 today) — one-owner collision, skipped.
+  - curves.c p2/p3 already Catmull-Rom control-point math names; newshadows `tmp` already legit math-scratch.
+  - NO Ghidra-style iVar/fVar/uVar/local_ raw-bodies remain anywhere in src/main/dll (tree well-cleaned).
+- all_source EXIT=0, both touched .o md5-identical to pre-edit.
