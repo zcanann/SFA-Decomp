@@ -1473,7 +1473,7 @@ void* shadowInit(int* obj, int size)
     *(int*)&((ObjAnimComponent*)obj)->modelState = rounded;
     modelState = ((ObjAnimComponent*)obj)->modelState;
     texId = ((ObjAnimComponent*)obj)->modelInstance->shadowTextureId;
-    if (texId != -1 && ((ObjAnimComponent*)obj)->modelInstance->shadowType != 2)
+    if (texId != -1 && ((ObjAnimComponent*)obj)->modelInstance->shadowType != OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
     {
         modelState->shadowTexture = (void*)textureLoad(-texId, 0);
     }
@@ -1490,7 +1490,7 @@ void* shadowInit(int* obj, int size)
     {
         modelState->shadowTexture = (void*)textureFn_8006c5c4();
     }
-    if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 1)
+    if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX)
     {
         modelState->shadowRenderResource = NULL;
     }
