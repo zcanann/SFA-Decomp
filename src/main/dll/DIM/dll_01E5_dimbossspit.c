@@ -87,7 +87,7 @@ void DIMbossspit_updateBurst(int obj)
 {
     int state;
     s16 burstTimer;
-    int iVar;
+    int alphaFade;
     int alpha;
     int radius;
     int i;
@@ -125,8 +125,8 @@ void DIMbossspit_updateBurst(int obj)
         }
         return;
     }
-    iVar = (int)(lbl_803E4D48 * ((f32)(s32)burstTimer * gDimBossSpitBurstAlphaScale));
-    alpha = 0xff - iVar;
+    alphaFade = (int)(lbl_803E4D48 * ((f32)(s32)burstTimer * gDimBossSpitBurstAlphaScale));
+    alpha = 0xff - alphaFade;
     radius = 0x94 - (burstTimer >> 2);
     if (alpha >= 0)
     {
