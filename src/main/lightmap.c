@@ -8,6 +8,7 @@
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
 #include "main/gameplay_runtime.h"
+#include "main/pi_dolphin.h"
 #include "dolphin/gx/GXManage.h"
 #include "main/sky_state.h"
 #include "main/mm.h"
@@ -1634,8 +1635,8 @@ void initMapBlocks(void)
     *(u32*)(mb + 0x41f0) = *(volatile u32*)(mb + 0x41ec) + 0xc00;
     *(u32*)(mb + 0x41dc) = *(volatile u32*)(mb + 0x41d8) + 0x100;
 
-    loadAssetFileById(&lbl_803DCE7C, 0x1e);
-    loadAssetFileById(&lbl_803DCE80, 0x29);
+    loadAssetFileById(&lbl_803DCE7C, MLDF_FILEID_MAPS_TAB);
+    loadAssetFileById(&lbl_803DCE80, MLDF_FILEID_HITS_TAB);
 
     q = (u32*)((u8*)(mb + 0x10000) - 0x7c58);
     zero = 0;
@@ -1684,7 +1685,7 @@ void initMapBlocks(void)
         q += 40;
     }
 
-    loadAssetFileById(&lbl_803DCE84, 0x27);
+    loadAssetFileById(&lbl_803DCE84, MLDF_FILEID_TRKBLK_TAB);
 
     lbl_803DCE90 = 0;
     p = lbl_803DCE84;
