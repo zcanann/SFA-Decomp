@@ -136,7 +136,7 @@ void Carryable_free(int obj) { ObjGroup_RemoveObject(obj, CARRYABLE_OBJGROUP); }
 int Carryable_updateRenderState(int* obj, int flag)
 {
     int* p50 = *(int**)&((GameObject*)obj)->anim.modelInstance;
-    if (((ObjDef*)p50)->shadowType == 2)
+    if (((ObjDef*)p50)->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
     {
         if (((GameObject*)obj)->seqIndex == -1)
         {
