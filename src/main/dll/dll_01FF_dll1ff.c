@@ -74,7 +74,7 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
         isVisible = visible;
         if (isVisible == 0) return;
     }
-    if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 2)
+    if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
     {
         if (((GameObject*)obj)->seqIndex == -1)
         {
