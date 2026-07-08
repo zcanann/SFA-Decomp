@@ -195,7 +195,7 @@ void linkInitTextures(LinkMenuItemDB* item)
 #pragma peephole off
 void Link_func0F(void)
 {
-    extern s8 gTumbleweedBushItemCount; /* #57 */
+    extern s8 gTumbleweedBushItemCount;
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     int i;
 
@@ -210,7 +210,7 @@ void Link_func0F(void)
 #pragma scheduling off
 void Link_copy(u8* srcArg)
 {
-    extern u8 gTumbleweedBushItemCount; /* #57 */
+    extern u8 gTumbleweedBushItemCount;
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     LinkMenuItemDB* dst;
     LinkMenuItemDB* src;
@@ -245,7 +245,7 @@ void Link_copy(u8* srcArg)
 #pragma peephole off
 void Link_func0B(u8* srcArg)
 {
-    extern s8 gTumbleweedBushItemCount; /* #57 */
+    extern s8 gTumbleweedBushItemCount;
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     LinkMenuItemDB* src;
     int i;
@@ -302,8 +302,8 @@ typedef struct LinkMenuItemDA
 #pragma peephole off
 void Link_render(void)
 {
-    extern LinkMenuItemDB gTumbleweedBushItems[40]; /* #57 */
-    extern s8 gTumbleweedBushItemCount; /* #57 */
+    extern LinkMenuItemDB gTumbleweedBushItems[40];
+    extern s8 gTumbleweedBushItemCount;
     LinkMenuItemDA* item;
     int i;
     int slotIndex;
@@ -501,8 +501,8 @@ typedef struct LinkMenuItem
 #pragma opt_propagation off
 u32 Link_update(void)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40]; /* #57 */
-    extern s8 gTumbleweedBushItemCount; /* #57 */
+    extern LinkMenuItem gTumbleweedBushItems[40];
+    extern s8 gTumbleweedBushItemCount;
     int result;
     LinkMenuItem* item;
     u32 buttons;
@@ -684,9 +684,9 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
                 int unused1, int unused2, int baseRed, int baseGreen, int baseBlue,
                 int selectedRed, int selectedGreen, int selectedBlue)
 {
-    extern void linkInitTextures(LinkMenuItemDB* item); /* #57 */
-    extern LinkMenuItem gTumbleweedBushItems[40]; /* #57 */
-    extern s8 gTumbleweedBushItemCount; /* #57 */
+    extern void linkInitTextures(LinkMenuItemDB* item);
+    extern LinkMenuItem gTumbleweedBushItems[40];
+    extern s8 gTumbleweedBushItemCount;
     int i;
     LinkMenuItem* item;
     const char* defaultText;
@@ -780,8 +780,8 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 
 void Link_free(void)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40]; /* #57 */
-    extern s8 gTumbleweedBushItemCount; /* #57 */
+    extern LinkMenuItem gTumbleweedBushItems[40];
+    extern s8 gTumbleweedBushItemCount;
     int i;
 
     for (i = 0; i < gTumbleweedBushItemCount; i++)
@@ -797,7 +797,7 @@ void Link_free(void)
 #pragma peephole off
 void linkDrawFn_801302c0(void)
 {
-    extern s8 gTumbleweedBushItemCount; /* #57 */
+    extern s8 gTumbleweedBushItemCount;
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     LinkMenuItemDB* sel;
     int resetTimer;
@@ -878,7 +878,7 @@ void linkDrawFn_801302c0(void)
 
 void linkDrawFn_80130484(void)
 {
-    extern s8 gTumbleweedBushItemCount; /* #57 */
+    extern s8 gTumbleweedBushItemCount;
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     LinkMenuItemDB* item;
     void* iconTex;

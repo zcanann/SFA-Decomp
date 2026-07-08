@@ -97,7 +97,7 @@ void dll_FD_hitDetect(int obj)
 
 void dll_FD_update(u16* obj)
 {
-    extern u32 ObjGroup_FindNearestObject(); /* #57 */
+    extern u32 ObjGroup_FindNearestObject();
     u8 mode;
     u32 found;
     u32 bitVal;

@@ -180,9 +180,9 @@ void bombplant_throwSpore(int* obj, int* p2)
  * the loop sfx alive, jitters the fuse, and fires the spark particle. */
 int bombplant_SeqFn(int* obj)
 {
-    extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id); /* #57 */
-    extern void ObjHits_RefreshObjectState(int* obj); /* #57 */
-    extern int randomGetRange(int lo, int hi); /* #57 */
+    extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
+    extern void ObjHits_RefreshObjectState(int* obj);
+    extern int randomGetRange(int lo, int hi);
     float* state = ((GameObject*)obj)->extra;
 
     if (((EnemyMushroomState*)state)->resetToSpawn != 0)
@@ -229,7 +229,7 @@ int bombplant_SeqFn(int* obj)
 
 void bombplant_init(void* obj, void* param, int flag)
 {
-    extern u32 ObjHits_RefreshObjectState(); /* #57 */
+    extern u32 ObjHits_RefreshObjectState();
     void* state;
     void* p4c;
     s16 bitId;
@@ -277,12 +277,12 @@ void bombplant_init(void* obj, void* param, int flag)
 
 void bombplant_update(void* obj)
 {
-    extern void Obj_StartModelFadeIn(u8* obj, int frames); /* #57 */
-    extern void Sfx_KeepAliveLoopedObjectSound(void* obj, int sndId); /* #57 */
-    extern void Sfx_PlayFromObject(void* obj, int sndId); /* #57 */
-    extern void bombplant_explode(void* obj, void* stateEntry, void* state); /* #57 */
-    extern u32 ObjHits_RefreshObjectState(); /* #57 */
-    extern int randomGetRange(int lo, int hi); /* #57 */
+    extern void Obj_StartModelFadeIn(u8* obj, int frames);
+    extern void Sfx_KeepAliveLoopedObjectSound(void* obj, int sndId);
+    extern void Sfx_PlayFromObject(void* obj, int sndId);
+    extern void bombplant_explode(void* obj, void* stateEntry, void* state);
+    extern u32 ObjHits_RefreshObjectState();
+    extern int randomGetRange(int lo, int hi);
     void* state;
     u8* entry;
     void* param;

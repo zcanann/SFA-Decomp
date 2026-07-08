@@ -431,7 +431,7 @@ void fn_80166E38(f32* out, f32* forward, f32* up)
 
 void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
+    extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     int state;
     f32* slideMtx;
     f32 mtx[15];

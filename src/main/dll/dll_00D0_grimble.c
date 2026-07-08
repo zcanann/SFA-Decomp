@@ -67,7 +67,7 @@ void fn_801627F4(int obj);
 
 int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 {
-    extern f32 sqrtf(f32); /* #57 */
+    extern f32 sqrtf(f32);
     u16 zone;
     u16 pad;
     u16 dist;
@@ -145,7 +145,7 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 
 int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 {
-    extern f32 sqrtf(f32); /* #57 */
+    extern f32 sqrtf(f32);
     f32 z2, y2, x2, z, y, x;
     u8 hitEdge;
     s16 angle;
@@ -204,7 +204,7 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 
 int grimble_stateHandlerA00(int obj, char* state, f32 arg)
 {
-    extern f32 sqrtf(f32); /* #57 */
+    extern f32 sqrtf(f32);
     u16 zone;
     u16 pad;
     u16 dist;

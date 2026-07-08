@@ -51,7 +51,7 @@ void GCbaddieShield_hitDetect(void)
 
 void GCbaddieShield_update(int* obj)
 {
-    extern void Obj_FreeObject(int* obj); /* #57 */
+    extern void Obj_FreeObject(int* obj);
     f32* state = ((GameObject*)obj)->extra;
     state[0] = state[0] - timeDelta;
     if (state[0] <= lbl_803E31FC)

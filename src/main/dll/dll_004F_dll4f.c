@@ -19,7 +19,7 @@ void dll_4F_func06_nop(void)
 
 void dll_4F_func05(void)
 {
-    extern void mm_free(u32); /* #57 */
+    extern void mm_free(u32);
     mm_free((u32)gCameraMode4FState);
     gCameraMode4FState = NULL;
 }

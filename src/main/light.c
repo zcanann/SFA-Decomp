@@ -293,7 +293,7 @@ typedef struct SpellStoneUseState
 
 void spellStoneUseFn_801fd270(int obj)
 {
-    extern u32 gSpellStoneEventId; /* #57 */
+    extern u32 gSpellStoneEventId;
     SpellStoneUseState* state = ((GameObject*)obj)->extra;
     s16 cond = 1;
     void* player = Obj_GetPlayerObject();
@@ -967,7 +967,7 @@ void dll_224_initialise_nop(void)
 
 void dll_224_hitDetect(void* obj)
 {
-    extern void objRenderFn_80041018(int* obj); /* #57 */
+    extern void objRenderFn_80041018(int* obj);
     if (*(void**)((char*)obj + 0x74) != NULL)
     {
         objRenderFn_80041018(obj);
@@ -978,8 +978,8 @@ void dll_224_hitDetect(void* obj)
 #pragma peephole off
 void dll_224_update(void* obj)
 {
-    extern void spellStoneUseFn_801fd270(void* obj); /* #57 */
-    extern int gSpellStoneEventId; /* #57 */
+    extern void spellStoneUseFn_801fd270(void* obj);
+    extern int gSpellStoneEventId;
     int mapAct;
     mapAct = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     switch (mapAct)

@@ -95,11 +95,11 @@ void MikaBomb_hitDetect(void)
 
 void MikaBomb_update(int* obj)
 {
-    extern void objMove(int* obj, f32 x, f32 y, f32 z); /* #57 */
-    extern void Sfx_PlayFromObject(int* obj, int sfx); /* #57 */
-    extern void Obj_FreeObject(int* obj); /* #57 */
-    extern void ObjHits_EnableObject(); /* #57 */
-    extern void ObjHits_DisableObject(); /* #57 */
+    extern void objMove(int* obj, f32 x, f32 y, f32 z);
+    extern void Sfx_PlayFromObject(int* obj, int sfx);
+    extern void Obj_FreeObject(int* obj);
+    extern void ObjHits_EnableObject();
+    extern void ObjHits_DisableObject();
     int* state = ((GameObject*)obj)->extra;
     u32 timer = ((GameObject*)obj)->anim.alpha;
 
@@ -182,7 +182,7 @@ void MikaBomb_update(int* obj)
 
 void MikaBomb_init(int* obj)
 {
-    extern u64 ObjHits_DisableObject(); /* #57 */
+    extern u64 ObjHits_DisableObject();
     int* state = ((GameObject*)obj)->extra;
     f32 out;
     ObjPlacement* alloc;

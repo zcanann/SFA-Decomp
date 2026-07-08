@@ -81,7 +81,7 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 
 void CameraModeCrawl_free(void)
 {
-    extern void mm_free(u32); /* #57 */
+    extern void mm_free(u32);
     mm_free((u32)lbl_803DD598);
     lbl_803DD598 = NULL;
 }

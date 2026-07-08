@@ -187,9 +187,9 @@ ObjectDescriptor gShieldObjDescriptor = {
 #pragma opt_common_subs off
 void staffFn_80170380(int* obj, int cmd)
 {
-    extern int objCreateLight(int* obj, int arg); /* #57 */
-    extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a); /* #57 */
-    extern void Sfx_PlayFromObject(int* obj, int sfx); /* #57 */
+    extern int objCreateLight(int* obj, int arg);
+    extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
+    extern void Sfx_PlayFromObject(int* obj, int sfx);
     f32* tbl = lbl_80320A28;
     u8* state = ((GameObject*)obj)->extra;
     int* glow;

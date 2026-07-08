@@ -4,13 +4,290 @@
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/objseq.h"
-#include "main/sky_80080E58_shared.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/mapEventTypes.h"
+#include "main/objtexture.h"
+#include "main/resource.h"
+#include "main/screen_transition.h"
+#include "main/gamebits.h"
+#include "main/sky_interface.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
 #include "main/maketex.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebit_ids.h"
 #include "main/mldf_fileid.h"
+
+typedef struct ObjSeqBgCmd {
+    int object;
+    s16 param;
+    s8 opcode;
+    s8 pad;
+} ObjSeqBgCmd;
+
+typedef struct RomCurveNode {
+    u8 pad00[0x08];
+    f32 x;
+    f32 y;
+    f32 z;
+    u8 pad14[0x07];
+    s8 directionMask;
+    s32 links[4];
+    s8 yaw;
+    s8 pitch;
+    u8 tangentScale;
+} RomCurveNode;
+
+typedef struct RomCurveInterpState {
+    s32 fromNodeId;
+    s32 toNodeId;
+    f32 fromTime;
+    f32 segmentTime1;
+    f32 segmentTime2;
+    f32 segmentTime3;
+    f32 segmentTime4;
+    f32 segmentTime5;
+    f32 segmentTime6;
+    f32 segmentTime7;
+    f32 toTime;
+} RomCurveInterpState;
+
+#define ROM_CURVE_NODE_ANGLE(v) ((lbl_803DEFE8 * (f32)((s32)(v) << 8)) / lbl_803DEFEC)
+#define ROM_CURVE_NODE_SCALE(node) (lbl_803DF008 * (f32)(u8)((node)->tangentScale))
+
+typedef struct ObjCurveKey {
+    f32 value;
+    s8 tangentAndMode;
+    u8 pad05;
+    s16 frame;
+} ObjCurveKey;
+
+extern void *mmAlloc(int size, int heap, int flags);
+extern void *ObjList_FindObjectById(int id);
+extern void **ObjList_GetObjects(void *unused, int *count);
+extern void getEnvfxAct(void *obj, void *source, int actId, int flags);
+extern void ObjSeq_onMapSetup(void);
+extern void objSeqInitFn_80080078(void *entries, int count);
+extern int ObjSeq_func20(void *obj, u8 *seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
+extern int ObjSeq_EvaluateCondition(int condition, u8 *seq, int obj);
+extern int isGameTimerDisabled(void);
+extern void AudioStream_CancelPrepared(void);
+extern void *Obj_AllocObjectSetup(int size, int objectId);
+extern void *Obj_SetupObject(void *setup, int mode, int mapLayer, int objIndex, void *parent);
+extern int getCurMapLayer(void);
+extern void Obj_GetWorldPosition(void *obj, f32 *x, f32 *y, f32 *z);
+extern int return0xFFFF_80008B6C(int obj, int a, int b, int c, int d, int e, int f);
+extern void ObjSeq_ApplyFrameCurves(u8 *obj, u8 *seqObj, u8 *seq, int frame);
+extern void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode);
+extern void ObjSeq_UpdateCurvePosition(u8 *obj, u8 *seq);
+extern int hitDetectFn_800658a4(void *obj, f32 x, f32 y, f32 z, f32 *out, int flags);
+extern void ObjSeq_ApplyLinkedObjectTransform(u8 *obj, u8 *seqObj, u8 *seq);
+extern void animatedObjFreeAndSavePlayerPos(u8 *obj, u8 *seqObj, u8 *seq);
+extern void objModelClearVecFn_8003aa40(void *obj);
+extern s16 *objModelGetVecFn_800395d8(void *obj, int index);
+extern long long OSGetTime(void);
+extern s16 gObjSeqBgCmds[];
+extern u8 objSeqXrotChanged[];
+extern s16 objSeqXrotValues[];
+extern s8 gObjSeqBoolFlags[];
+extern s8 gObjSeqCondFlags[];
+extern s8 gObjSeqSlotResults[];
+extern ObjSeqBgCmd lbl_8039A5BC[];
+extern u8 lbl_80396918[];
+extern int lbl_8030EDA4[];
+extern int gObjSeqStreamTableA[];
+extern u8 lbl_803DB748;
+extern int lbl_803DB720;
+extern s16 seqGlobal1;
+extern s16 seqGlobal2;
+extern s8 seqGlobal3;
+extern s8 gObjSeqBgCmdCount;
+extern void *lbl_803DD0D4;
+extern u8 lbl_803DD0D8;
+extern u8 gObjSeqStop;
+extern int lbl_803DD090;
+extern int gObjSeqCamModeArgD;
+extern int gObjSeqCamModeArgC;
+extern int gObjSeqCamModeArgB;
+extern int gObjSeqCamMode;
+extern s8 lbl_803DD113;
+extern u8 gObjSeqLinkedTransformValid;
+extern s16 gObjSeqLinkedSavedPitch;
+extern f32 gObjSeqLinkedSavedPosZ;
+extern f32 gObjSeqLinkedSavedPosY;
+extern f32 gObjSeqLinkedSavedPosX;
+extern u16 lbl_803DD0B6;
+extern void *lbl_803DD0B8;
+extern u8 gObjSeqCameraActive;
+extern u8 lbl_803DD124;
+extern f32 lbl_803DD0DC;
+extern u8 lbl_803DD0F8;
+extern f32 lbl_803DEFB0;
+extern f32 lbl_803DEFC8;
+extern f32 lbl_803DEFF0;
+extern f32 lbl_803DF024;
+extern f32 lbl_803DF028;
+extern void* ObjGroup_GetObjects();
+extern void ObjMsg_SendToNearbyObjects(int, f32, int, void *, int, void *);
+extern void ObjMsg_SendToObjects(int, int, void *, int, void *);
+extern void ObjMsg_SendToObject(void *, int, void *, int);
+extern void Music_Trigger(int id, int restart);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 sqrtf(f32 x);
+extern s16 getAngle(f32 x, f32 z);
+extern void Curve_SampleSegmentPoints(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count, void (*evalFn)(f32 *values, f32 *coefficients));
+extern void Curve_BuildHermiteCoeffs(f32 *values, f32 *coefficients);
+extern f32 Curve_EvalHermite(f32 t, f32 *values, f32 *outTangent);
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 lbl_803DEFE8;
+extern f32 lbl_803DEFEC;
+extern f32 lbl_803DF008;
+extern f32 lbl_803DF000;
+extern f32 lbl_803DF01C;
+extern f32 lbl_803DF020;
+void ObjSeq_setCamVars(int camA, int camB, int camC, int camD);
+int objSeqFindLabel(u8 *seq, int label);
+int objSeqFindConditional(u8 *seq, u8 *seqState);
+void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, int action);
+void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns);
+void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void **outAction);
+void ObjSeq_setXrot(int index, int xrot);
+int ObjSeq_getBool(int index);
+void ObjSeq_setBool(int index, int value);
+void ObjSeq_addBgCmd(int index, int xrot, int yrot);
+void ObjSeq_seqState_free(u8 *seq);
+void ObjSeq_seqState_init(u8 *seq);
+void *ObjSeq_FindTargetObject(u8 *obj);
+void ObjSeq_RefreshActionCursor(void *obj, void *seqFile, u8 *seq);
+void ObjSeq_release(void);
+void ObjSeq_initialise(void);
+int ObjSeq_takeXrotChanged(int index);
+void fn_80088730(u8 *out);
+void envFxFn_800887cc(void);
+void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState *out, RomCurveNode *curve, RomCurveNode *next, f32 t, int flag);
+void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState *state, f32 t);
+void RomCurveInterp_InitFromNode(RomCurveInterpState *out, int id);
+int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState *state, f32 *offset, f32 *outPos, s16 *outAngle, int ignoreY);
+f32 objCurveInterpolate(ObjCurveKey *keys, int count, int frame);
+
+int FUN_80080e60(double param_1,double param_2,double param_3,double param_4,u64 param_5,
+                u64 param_6,u64 param_7,u64 param_8,int param_9,
+                u32 param_10,u32 param_11,int *param_12,int *param_13,int param_14,
+                int *param_15,int param_16)
+{
+    return 0;
+}
+
+int FUN_80080e68(int param_1)
+{
+    return 0;
+}
+
+double FUN_80080e88(u64 param_1,u64 param_2,double param_3,float *param_4,int param_5,
+                   int param_6)
+{
+    return 0.0;
+}
+
+u32 FUN_80080e98(u32 param_1,int param_2)
+{
+    return 0;
+}
+
+int FUN_80080eb4(int param_1,u32 param_2)
+{
+    return 0;
+}
+
+short * FUN_80080ed0(double param_1,double param_2,double param_3,double param_4,u64 param_5,
+                    u64 param_6,u64 param_7,u64 param_8,short *param_9,
+                    int *param_10,int param_11,int *param_12,int *param_13,int param_14,
+                    int *param_15,int param_16)
+{
+    return 0;
+}
+
+u8 FUN_80080eec(int param_1)
+{
+    return 0;
+}
+
+u32 FUN_80080f04(void)
+{
+    return 0;
+}
+
+u8 FUN_80080f2c(int param_1)
+{
+    return 0;
+}
+
+u8 FUN_80080f34(int param_1)
+{
+    return 0;
+}
+
+u8 FUN_80080f40(void)
+{
+    return 0;
+}
+
+u32 FUN_80080f48(void)
+{
+    return 0;
+}
+
+u8 FUN_80080f54(int param_1)
+{
+    return 0;
+}
+
+u32 FUN_80080f98(void)
+{
+    return 0;
+}
+
+u32 FUN_80080fa0(void)
+{
+    return 0;
+}
+
+u32 FUN_80080fc0(float *param_1)
+{
+    return 0;
+}
+
+int FUN_80080fec(void)
+{
+    return 0;
+}
+
+double FUN_80081014(void)
+{
+    return 0.0;
+}
+
+u32 FUN_80081084(float *param_1,float *param_2)
+{
+    return 0;
+}
+
+u32 FUN_800810ac(double param_1,float *param_2)
+{
+    return 0;
+}
+
+int FUN_80081134(u64 param_1,double param_2,double param_3,u64 param_4,
+                u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                int param_9,u32 param_10,u32 param_11,u32 param_12,
+                u32 param_13,u32 param_14,u32 param_15,u32 param_16)
+{
+    return 0;
+}
 
 /* Camera mode ids passed to gCameraInterface->setMode; each == cameramode DLL number. */
 #define OBJSEQ_CAMMODE_DEFAULT 0x42      /* default gameplay cameramode DLL */

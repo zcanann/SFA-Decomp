@@ -108,7 +108,7 @@ int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
 
 void gpsh_shrine_free(int* obj)
 {
-    extern void Music_Trigger(int id, int arg); /* #57 */
+    extern void Music_Trigger(int id, int arg);
     void** state = ((GameObject*)obj)->extra;
     void* light = state[0];
 
@@ -174,7 +174,7 @@ STATIC_ASSERT(offsetof(GpshShrineState, puzzleState) == 0x14);
 
 int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void* Obj_GetPlayerObject(void); /* #57 */
+    extern void* Obj_GetPlayerObject(void);
     GpshShrineState* sub;
     int* player;
     int i;
@@ -226,7 +226,7 @@ int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void fn_801C70F0(s16* obj)
 {
-    extern void* Obj_GetPlayerObject(void); /* #57 */
+    extern void* Obj_GetPlayerObject(void);
     u8 buf[32];
     u8* def;
     GpshShrineState* sub;
@@ -291,13 +291,13 @@ void fn_801C70F0(s16* obj)
 
 void gpsh_shrine_update(int obj)
 {
-    extern void Music_Trigger(int id, int arg); /* #57 */
-    extern int objGetAnimStateFlags(int obj, int flag); /* #57 */
-    extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e); /* #57 */
-    extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e); /* #57 */
-    extern void fn_801C70F0(int obj); /* #57 */
-    extern int getEnvfxAct(int a, int b, u16 idx, int d); /* #57 */
-    extern void* Obj_GetPlayerObject(void); /* #57 */
+    extern void Music_Trigger(int id, int arg);
+    extern int objGetAnimStateFlags(int obj, int flag);
+    extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);
+    extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
+    extern void fn_801C70F0(int obj);
+    extern int getEnvfxAct(int a, int b, u16 idx, int d);
+    extern void* Obj_GetPlayerObject(void);
     int count;
     int data = *(int*)&((GameObject*)obj)->extra;
     char* player = Obj_GetPlayerObject();
@@ -526,7 +526,7 @@ void gpsh_shrine_update(int obj)
 
 void gpsh_shrine_init(int* obj, int* def)
 {
-    extern void* objCreateLight(int arg, u8 addToList); /* #57 */
+    extern void* objCreateLight(int arg, u8 addToList);
     u8* state;
 
     state = ((GameObject*)obj)->extra;

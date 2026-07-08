@@ -285,9 +285,9 @@ f32 dll_2E_func0B(int obj, int arg)
 
 void fn_80114B1C(int* obj)
 {
-    extern void* seqFn_800394a0(void); /* #57 */
-    extern void objFn_8003acfc(int* obj, int* types, int count, char* out); /* #57 */
-    extern void fn_8003A9C0(char* p, int count, s16 a, s16 b); /* #57 */
+    extern void* seqFn_800394a0(void);
+    extern void objFn_8003acfc(int* obj, int* types, int count, char* out);
+    extern void fn_8003A9C0(char* p, int count, s16 a, s16 b);
     MoveLibState* state;
     int* types;
 
@@ -374,10 +374,10 @@ int dll_2E_func0C(int idx, char* outArg)
  * tables. */
 void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
 {
-    extern void* seqFn_800394a0(void); /* #57 */
-    extern void objFn_8003acfc(int* obj, int* types, int count, char* out); /* #57 */
-    extern void fn_8003AC14(int obj, void* types, int count); /* #57 */
-    extern void fn_8003A9C0(char* p, int count, s16 a, s16 b); /* #57 */
+    extern void* seqFn_800394a0(void);
+    extern void objFn_8003acfc(int* obj, int* types, int count, char* out);
+    extern void fn_8003AC14(int obj, void* types, int count);
+    extern void fn_8003A9C0(char* p, int count, s16 a, s16 b);
     MoveLibState* s = (MoveLibState*)st;
     f32 z;
 
@@ -407,8 +407,8 @@ void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
  * current path point position. */
 void dll_2E_func06(int obj, char* st, int point)
 {
-    extern void* seqFn_800394a0(void); /* #57 */
-    extern void fn_8003AC14(int obj, void* types, int count); /* #57 */
+    extern void* seqFn_800394a0(void);
+    extern void fn_8003AC14(int obj, void* types, int count);
     MoveLibState* s = (MoveLibState*)st;
     struct
     {
@@ -514,9 +514,9 @@ int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int p4, int c, f32*
 #pragma optimization_level 2
 int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
 {
-    extern void* seqFn_800394a0(void); /* #57 */
-    extern void objFn_8003acfc(int* obj, int* types, int count, char* out); /* #57 */
-    extern int Obj_GetPlayerObject(void); /* #57 */
+    extern void* seqFn_800394a0(void);
+    extern void objFn_8003acfc(int* obj, int* types, int count, char* out);
+    extern int Obj_GetPlayerObject(void);
     MoveLibState* s = (MoveLibState*)st;
     s16 pair[2];
     int mode;
@@ -688,13 +688,13 @@ typedef struct ProjNearSearch
 
 void dll_2E_func03(u16* obj, int state, int unused)
 {
-    extern int fn_8003A8B4(); /* #57 */
-    extern int objMathFn_8003a380(u16* obj, u32 target, float* pos, int pathState, short* turnState, float targetYaw, int mode, short yawLimit); /* #57 */
-    extern int fn_80038F1C(int a, int b); /* #57 */
-    extern void* seqFn_800394a0(); /* #57 */
-    extern int objFn_8003acfc(); /* #57 */
-    extern int fn_8003AC14(); /* #57 */
-    extern int fn_8003A9C0(); /* #57 */
+    extern int fn_8003A8B4();
+    extern int objMathFn_8003a380(u16* obj, u32 target, float* pos, int pathState, short* turnState, float targetYaw, int mode, short yawLimit);
+    extern int fn_80038F1C(int a, int b);
+    extern void* seqFn_800394a0();
+    extern int objFn_8003acfc();
+    extern int fn_8003AC14();
+    extern int fn_8003A9C0();
     register int yawDelta;
     register int seqHandle;
     register u32 target;
@@ -887,10 +887,10 @@ void dll_2E_func03(u16* obj, int state, int unused)
 int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turning,
                        PostControl* control, float* turnSpeed, s16* moves)
 {
-    extern int fn_8003A8B4(PostObjAnimComponent* objAnim, PostMotionTarget* leadAnims, u8 contactAnim, void* secondary); /* #57 */
-    extern s16 objMathFn_8003a380(PostObjAnimComponent* objAnim, PostObject* obj, void* primary, void* secondary, s16* events, double distance, int eventCount, int eventState); /* #57 */
-    extern void fn_80038F1C(int a, int b); /* #57 */
-    extern PostMotionTarget* seqFn_800394a0(void); /* #57 */
+    extern int fn_8003A8B4(PostObjAnimComponent* objAnim, PostMotionTarget* leadAnims, u8 contactAnim, void* secondary);
+    extern s16 objMathFn_8003a380(PostObjAnimComponent* objAnim, PostObject* obj, void* primary, void* secondary, s16* events, double distance, int eventCount, int eventState);
+    extern void fn_80038F1C(int a, int b);
+    extern PostMotionTarget* seqFn_800394a0(void);
     int yawDelta;
     PostMotionTarget* motion;
     s16 hitResult;

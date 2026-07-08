@@ -119,7 +119,7 @@ STATIC_ASSERT(offsetof(WmWallcrawlerSpawnSetup, heightOffset) == 0x1C);
 
 void WM_ObjCreator_update(int obj)
 {
-    extern void* ObjGroup_GetObjects(); /* #57 */
+    extern void* ObjGroup_GetObjects();
     /* setup/spawned/n are FN-SCOPE on purpose: live-range splitting
        re-creates per-arm webs in the retail saved-reg spread, where
        block locals coalesce (#108 crack; case 1 and case 4's setup

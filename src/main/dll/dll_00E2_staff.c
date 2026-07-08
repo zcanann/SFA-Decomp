@@ -940,7 +940,7 @@ extern f32 lbl_803E3324;
 
 void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfx); /* #57 */
+    extern void Sfx_PlayFromObject(int* obj, int sfx);
     int* state = ((GameObject*)obj)->extra;
     if (grow != 0)
     {
@@ -1090,7 +1090,7 @@ typedef struct QuakePartVec
 
 void superQuakeFn_8016d9fc(f32* pos)
 {
-    extern void Obj_FreeObject(int* obj); /* #57 */
+    extern void Obj_FreeObject(int* obj);
     int* player;
 
     if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->active != 0)
@@ -1339,7 +1339,7 @@ extern f32 lbl_803E32F0;
 
 void staff_update(int* obj)
 {
-    extern void Obj_FreeObject(int* obj); /* #57 */
+    extern void Obj_FreeObject(int* obj);
     u8* state = ((GameObject*)obj)->extra;
     SwipeRecord* swp;
     int n;

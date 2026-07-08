@@ -68,7 +68,7 @@ void WM_Column_free(int obj)
 
 void WM_Column_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
+    extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E37B8);

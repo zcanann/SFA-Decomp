@@ -96,11 +96,11 @@ void flamethrowerspe_hitDetect(void)
 #pragma opt_common_subs off
 void flamethrowerspe_update(int* obj)
 {
-    extern int timerCountDown(f32* p); /* #57 */
-    extern void s16toFloat(f32* p, s16 val); /* #57 */
-    extern void objMove(int* obj, f32 x, f32 y, f32 z); /* #57 */
-    extern u32 ObjHits_EnableObject(); /* #57 */
-    extern u64 ObjHits_DisableObject(); /* #57 */
+    extern int timerCountDown(f32* p);
+    extern void s16toFloat(f32* p, s16 val);
+    extern void objMove(int* obj, f32 x, f32 y, f32 z);
+    extern u32 ObjHits_EnableObject();
+    extern u64 ObjHits_DisableObject();
     int* state = ((GameObject*)obj)->extra;
     int* src = *(int**)&((GameObject*)obj)->anim.placementData;
     switch (((FlamethrowerspeState*)state)->phase)
@@ -143,8 +143,8 @@ void flamethrowerspe_update(int* obj)
 
 void flamethrowerspe_init(int* obj, int* params)
 {
-    extern void storeZeroToFloatParam(f32* p); /* #57 */
-    extern u64 ObjHits_DisableObject(); /* #57 */
+    extern void storeZeroToFloatParam(f32* p);
+    extern u64 ObjHits_DisableObject();
     int* state = ((GameObject*)obj)->extra;
     storeZeroToFloatParam(&((FlamethrowerspeState*)state)->lifeTimer);
     {

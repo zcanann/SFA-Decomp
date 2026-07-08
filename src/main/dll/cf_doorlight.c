@@ -40,7 +40,7 @@ extern f32 lbl_803E3080;
 extern f32 lbl_803E3084;
 extern f32 lbl_803E3088;
 extern f32 lbl_803E308C;
-extern int* gBaddieControlInterface; /* main/dll/player_80295318_shared.h */
+extern int* gBaddieControlInterface;
 extern void Obj_FreeObject(int obj);
 
 #define BADDIE_CONTROL_MODE_PULLUP 2

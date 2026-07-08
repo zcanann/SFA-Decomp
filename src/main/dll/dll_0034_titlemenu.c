@@ -156,7 +156,7 @@ void n_attractmode_releaseMovieBuffers(void)
 
 void n_attractmode_prepareMovie(void)
 {
-    extern char sNAttractModeStringBlock[]; /* #57 */
+    extern char sNAttractModeStringBlock[];
     char* attractModeStrings;
     int ok;
     int freeDelay;
@@ -295,7 +295,7 @@ void n_attractmode_prepareMovie(void)
 
 void TitleMenu_render(u8* obj)
 {
-    extern u8 shouldShowCredits(u8 * obj); /* #57 */
+    extern u8 shouldShowCredits(u8 * obj);
     int menuAction;
 
     if (shouldShowCredits(obj) != 0)
@@ -355,7 +355,7 @@ void TitleMenu_frameEnd(void)
 
 int TitleMenu_run(void)
 {
-    extern u8 shouldShowCredits(void); /* #57 */
+    extern u8 shouldShowCredits(void);
     int menuId;
     int buttons;
     int sum;
@@ -619,7 +619,7 @@ void TitleMenu_setSelection(int selection)
 
 void TitleMenu_initialise(void)
 {
-    extern TitleMenuTextEntry sNAttractModeStringBlock[1]; /* #57 */
+    extern TitleMenuTextEntry sNAttractModeStringBlock[1];
     int i;
     int mode;
 

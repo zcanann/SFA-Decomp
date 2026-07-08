@@ -398,7 +398,7 @@ int SnowBike_SeqFn(short* obj, int arg2, ObjSeqState* seq)
 
 void fn_801EB634(int obj, int stateRaw)
 {
-    extern int ObjHits_IsObjectEnabled(int obj); /* #11 */
+    extern int ObjHits_IsObjectEnabled(int obj);
     SnowBikeState* st = (SnowBikeState*)stateRaw;
     int hitKind;
     int hitReact;

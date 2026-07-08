@@ -81,7 +81,7 @@ void MagicDust_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void MagicDust_update(GameObject* obj)
 {
-    extern u32 ObjHits_DisableObject(); /* #57 */
+    extern u32 ObjHits_DisableObject();
     float fval;
     u8 flagsByte;
     int player;
@@ -316,7 +316,7 @@ typedef struct MagicgemObjectDef
 
 void MagicDust_init(GameObject* obj, MagicgemObjectDef* placement)
 {
-    extern u32 ObjHits_DisableObject(); /* #57 */
+    extern u32 ObjHits_DisableObject();
     short mode;
     u32 randVal;
     int ref;

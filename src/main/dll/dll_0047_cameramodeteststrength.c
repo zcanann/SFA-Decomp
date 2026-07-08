@@ -176,14 +176,14 @@ void CameraModeTestStrength_copyToCurrent(void)
 
 void CameraModeTestStrength_free(void)
 {
-    extern void mm_free(u32); /* #57 */
+    extern void mm_free(u32);
     mm_free((u32)lbl_803DD560);
     lbl_803DD560 = 0;
 }
 
 void CameraModeTestStrength_update(short* cam)
 {
-    extern int fn_8010AEA8(short* cam, int flags); /* #57 */
+    extern int fn_8010AEA8(short* cam, int flags);
     int lockRoll;
     int obj;
     int lockPitch;
@@ -361,7 +361,7 @@ void CameraModeTestStrength_update(short* cam)
 
 void CameraModeTestStrength_init(short* cam, int param2, int* param3)
 {
-    extern void cameraModeTestStrengthFn_8010b238(int camera, f32* pos, int pitch, int yaw, int roll); /* #57 */
+    extern void cameraModeTestStrengthFn_8010b238(int camera, f32* pos, int pitch, int yaw, int roll);
     int romNode;
     int obj;
     int curveNode2;

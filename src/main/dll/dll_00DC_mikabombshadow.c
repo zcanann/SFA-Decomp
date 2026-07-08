@@ -60,7 +60,7 @@ void MikaBombShadow_update(int* obj)
 
 void MikaBombShadow_init(int* obj)
 {
-    extern u64 ObjHits_DisableObject(); /* #57 */
+    extern u64 ObjHits_DisableObject();
     int* state = ((GameObject*)obj)->extra;
     f32 out;
     fn_80065684((int)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,

@@ -183,9 +183,9 @@ typedef struct Dll138HitInfo
 
 void fn_80174BFC(int obj, int ext)
 {
-    extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, u8 p9, int p10); /* #57 */
-    extern int Sfx_PlayFromObject(int a, int b); /* #57 */
-    extern void saveGame_saveObjectPos(int obj); /* #57 */
+    extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, u8 p9, int p10);
+    extern int Sfx_PlayFromObject(int a, int b);
+    extern void saveGame_saveObjectPos(int obj);
     int def;
     int i;
     s8 bits;
@@ -342,7 +342,7 @@ void fn_80174BFC(int obj, int ext)
 
 u32 pushable_SeqFn(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
 {
-    extern int Obj_GetPlayerObject(); /* #57 */
+    extern int Obj_GetPlayerObject();
     u32 bitVal;
     int player;
     PushableState* state;
@@ -507,7 +507,7 @@ static inline int* Transporter_GetActiveModel(void* obj)
 #pragma peephole off
 void pushable_free(int* obj)
 {
-    extern int saveGame_saveObjectPos(int* obj); /* #57 */
+    extern int saveGame_saveObjectPos(int* obj);
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     PushableState* sub = ((GameObject*)obj)->extra;
     s16 type = ((GameObject*)obj)->anim.seqId;
@@ -544,8 +544,8 @@ int pushable_getObjectTypeId(void) { return 0x48; }
 
 void pushable_update(int* obj)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
-    extern int saveGame_saveObjectPos(int* obj); /* #57 */
+    extern void Sfx_PlayFromObject(int* obj, int sfxId);
+    extern int saveGame_saveObjectPos(int* obj);
     PushableState* state;
     u8* def;
     void* player;
@@ -633,7 +633,7 @@ void pushable_update(int* obj)
 
 void pushable_init(s16* obj, char* def)
 {
-    extern int fn_80174A80(); /* #57 */
+    extern int fn_80174A80();
     PushableState* state;
     int* model;
     int* entry;
@@ -851,7 +851,7 @@ typedef struct
 #pragma opt_common_subs off
 void pushable_hitDetect(int obj)
 {
-    extern u32 fn_80174BFC(); /* #57 */
+    extern u32 fn_80174BFC();
     int i;
     PushableState* state;
     f32* wp;
@@ -1082,9 +1082,9 @@ typedef struct
 
 int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
 {
-    extern int objBboxFn_800640cc(f32* start, f32* end, f32 radius, int a, int b, int* obj, int c, int d, int e, int f); /* #57 */
-    extern void Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
-    extern u32 fn_80174BFC(); /* #57 */
+    extern int objBboxFn_800640cc(f32* start, f32* end, f32 radius, int a, int b, int* obj, int c, int d, int e, int f);
+    extern void Sfx_PlayFromObject(int* obj, int sfxId);
+    extern u32 fn_80174BFC();
     SetScaleParams* pp;
     PushableState* state;
     char ret;

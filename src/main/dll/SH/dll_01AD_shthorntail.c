@@ -79,9 +79,9 @@ extern f32 lbl_803E545C;
 void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime,
                                          SHthorntailConfig* config)
 {
-    extern int Obj_GetPlayerObject(); /* #57 */
-    extern int randomGetRange(int lo, int hi); /* #57 */
-    extern f32 getXZDistance(int posA, int posB); /* #57 */
+    extern int Obj_GetPlayerObject();
+    extern int randomGetRange(int lo, int hi);
+    extern f32 getXZDistance(int posA, int posB);
     int playerObj;
     int randomIdleWait;
     u8 closeToPlayer;
@@ -196,7 +196,7 @@ void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runti
 void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRuntime* runtime,
                                          SHthorntailConfig* config)
 {
-    extern int randomGetRange(int lo, int hi); /* #57 */
+    extern int randomGetRange(int lo, int hi);
     int linkedEventPending;
     u32 gameBit;
     int randomIdleWait;
@@ -275,7 +275,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
 u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused,
                                                ObjAnimUpdateState* animUpdate)
 {
-    extern int randomGetRange(int lo, int hi); /* #57 */
+    extern int randomGetRange(int lo, int hi);
     SHthorntailRuntime* runtime;
     int randomIdleWait;
     int impactHandled;
@@ -383,8 +383,8 @@ typedef struct SHthorntailTailSwingEffectScratch
 #pragma opt_common_subs off
 void SHthorntail_update(SHthorntailObject* obj)
 {
-    extern int randomGetRange(int lo, int hi); /* #57 */
-    extern f32 getXZDistance(f32 * posA, f32 * posB); /* #57 */
+    extern int randomGetRange(int lo, int hi);
+    extern f32 getXZDistance(f32 * posA, f32 * posB);
     extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry* table, u32 count, u8 state, float* scratch);
     u8* stateTables;
     s8* eventId;
@@ -623,7 +623,7 @@ void SHthorntail_update(SHthorntailObject* obj)
 
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
 {
-    extern int randomGetRange(int lo, int hi); /* #57 */
+    extern int randomGetRange(int lo, int hi);
     SHthorntailRuntime* runtime;
     u32 randomTime;
     int moveScratch;

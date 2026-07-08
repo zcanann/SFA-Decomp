@@ -596,8 +596,8 @@ GenPropsWGPipe GXWGFifo : (0xCC008000);
 
 void collectible_applyPickup(int* obj)
 {
-    extern void itemPickupDoParticleFx(int* obj, f32 f, int a, int b); /* #57 */
-    extern void Sfx_PlayFromObject(int* obj, int sfx); /* #57 */
+    extern void itemPickupDoParticleFx(int* obj, f32 f, int a, int b);
+    extern void Sfx_PlayFromObject(int* obj, int sfx);
     u8* state = ((GameObject*)obj)->extra;
     u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
     u8* setup2 = ((GameObject*)obj)->anim.modelInstance->extraSetupData;
@@ -781,7 +781,7 @@ void collectible_hitDetect(void)
 
 int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f); /* #57 */
+    extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
     int* state = ((GameObject*)obj)->extra;
     f32 buf[6];
     int j;
@@ -845,7 +845,7 @@ int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void collectible_checkProximityPickup(int obj, u8* state)
 {
-    extern void collectible_applyPickup(int obj); /* #57 */
+    extern void collectible_applyPickup(int obj);
     u8* player;
     s16* attach;
     u8* focus;
@@ -940,11 +940,11 @@ void collectible_checkProximityPickup(int obj, u8* state)
 
 void collectible_update(int obj)
 {
-    extern void collectible_updateLooseMotion(int obj); /* #57 */
-    extern void Obj_FreeObject(int obj); /* #57 */
-    extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b); /* #57 */
-    extern void collectible_applyPickup(int obj); /* #57 */
-    extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f); /* #57 */
+    extern void collectible_updateLooseMotion(int obj);
+    extern void Obj_FreeObject(int obj);
+    extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b);
+    extern void collectible_applyPickup(int obj);
+    extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
     u8* state = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
     int msgParam;
@@ -1069,7 +1069,7 @@ void collectible_update(int obj)
 
 void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
 {
-    extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f); /* #57 */
+    extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
     int state = *(int*)&((GameObject*)obj)->extra;
     if (visible != 0 && ((CollectibleState*)state)->despawnTimer == lbl_803E345C && ((GameObject*)obj)->unkF4 == 0
         && (((GameObject*)obj)->anim.seqId == 0x156 || ((CollectibleState*)state)->visibilityBitClear == 0))
@@ -1088,7 +1088,7 @@ void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
 
 void collectible_updateIdleMotion(int obj)
 {
-    extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b); /* #57 */
+    extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b);
     u8* state = ((GameObject*)obj)->extra;
 
     switch (((GameObject*)obj)->anim.seqId)

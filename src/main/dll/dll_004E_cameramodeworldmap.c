@@ -121,7 +121,7 @@ void CameraModeWorldMap_copyToCurrent(int* p1, int kind)
 
 void CameraModeWorldMap_free(void)
 {
-    extern void mm_free(u32); /* #57 */
+    extern void mm_free(u32);
     mm_free((u32)gCamWorldMapState);
     gCamWorldMapState = NULL;
 }

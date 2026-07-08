@@ -71,7 +71,7 @@ extern f32 lbl_803E483C;
 
 int DIMLogFire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern int Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
+    extern int Sfx_PlayFromObject(int* obj, int sfxId);
     DimLogFireState* state = ((GameObject*)obj)->extra;
     if (state->mode == DIMLOGFIRE_MODE_LIT)
     {
@@ -118,7 +118,7 @@ int DIMLogFire_getObjectTypeId(void) { return 0x1; }
 
 void DIMLogFire_free(int* obj, int mode)
 {
-    extern void Obj_FreeObject(void* o); /* #57 */
+    extern void Obj_FreeObject(void* o);
     DimLogFireState* inner = ((GameObject*)obj)->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     if ((void*)inner->subObj != NULL && mode == 0)
@@ -181,8 +181,8 @@ typedef struct DimlogfireObjectDef
 
 void DIMLogFire_update(int obj)
 {
-    extern int getTrickyObject(void); /* #57 */
-    extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */
+    extern int getTrickyObject(void);
+    extern void Sfx_PlayFromObject(int obj, int sfxId);
     int flickerFlagA;
     int flickerFlagB;
     int rand;
@@ -296,12 +296,12 @@ void DIMLogFire_update(int obj)
 
 void DIMLogFire_init(int obj, int def)
 {
-    extern void modelLightStruct_setGlowProjectionRadius(int light, f32 radius); /* #57 */
-    extern void modelLightStruct_setupGlow(int light, int mode, int r, int g, int b, int a, f32 radius); /* #57 */
-    extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far); /* #57 */
-    extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a); /* #57 */
-    extern void modelLightStruct_setLightKind(int light, int value); /* #57 */
-    extern int objCreateLight(int obj, int mode); /* #57 */
+    extern void modelLightStruct_setGlowProjectionRadius(int light, f32 radius);
+    extern void modelLightStruct_setupGlow(int light, int mode, int r, int g, int b, int a, f32 radius);
+    extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
+    extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
+    extern void modelLightStruct_setLightKind(int light, int value);
+    extern int objCreateLight(int obj, int mode);
     int radius;
     DimLogFireState* state;
 

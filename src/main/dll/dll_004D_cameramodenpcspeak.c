@@ -24,7 +24,7 @@ extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int getFocusedNpc(void);
-extern u32 Obj_GetYawDeltaToObject(); /* #57 */
+extern u32 Obj_GetYawDeltaToObject();
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);

@@ -5,9 +5,8 @@
  * (getExtraSize/free/init): a repel-volume object that registers into
  * object group 0x40 and sizes its hit sphere from the placement radius.
  *
- * (The v1.0 "drift" catalogue of foreign ObjectDescriptor tables that
- * previously accreted in this translation unit has been dropped; each of
- * those descriptors is defined by its own DLL.)
+ * Foreign ObjectDescriptor tables are not present in this translation unit;
+ * each descriptor is defined by its own DLL.
  */
 #include "main/game_object.h"
 #include "main/objlib.h"

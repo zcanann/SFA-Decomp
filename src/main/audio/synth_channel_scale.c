@@ -94,7 +94,7 @@ static inline f32 sal_fmod(f32 x, f32 y, f64 absy)
 
 void fn_8026EC44(u32 dt)
 {
-    extern float floorf(float x); /* #57 */
+    extern float floorf(float x);
     SynthSong* cs;
     u32* evt;
     int i;

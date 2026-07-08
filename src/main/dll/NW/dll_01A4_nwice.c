@@ -29,7 +29,7 @@ void NW_ice_render(void)
 
 void NW_ice_update(int* obj)
 {
-    extern int Obj_GetPlayerObject(void); /* #57 */
+    extern int Obj_GetPlayerObject(void);
     int** scan;
     int i;
     NwIcePlacement* setup;

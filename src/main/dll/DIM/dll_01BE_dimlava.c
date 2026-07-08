@@ -270,9 +270,9 @@ void lavaball1be_init(s16* obj, u8* p)
 
 void lavaball1be_update(s16* obj)
 {
-    extern void spawnExplosion(s16* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g); /* #57 */
-    extern int Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
-    extern void Obj_FreeObject(void* o); /* #57 */
+    extern void spawnExplosion(s16* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+    extern int Sfx_PlayFromObject(int* obj, int sfxId);
+    extern void Obj_FreeObject(void* o);
     Lavaball1beState* state;
     int* sub;
 

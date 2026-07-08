@@ -119,7 +119,7 @@ int lavaball1bf_getObjectTypeId(void) { return 0x0; }
 
 void lavaball1bf_free(int obj, int mode)
 {
-    extern void Obj_FreeObject(void* o); /* #57 */
+    extern void Obj_FreeObject(void* o);
     Lavaball1bfState* inner = ((GameObject*)obj)->extra;
     if (mode == 0 && inner->spawnedObj != 0)
     {
@@ -139,7 +139,7 @@ void lavaball1bf_hitDetect(void)
 
 void lavaball1bf_update(int* obj)
 {
-    extern void* Obj_SetupObject(int a, int b, int c, int d, int e); /* #57 */
+    extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     u8* setup;
     Lavaball1bfState* state;
     int* spawned;
