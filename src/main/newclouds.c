@@ -2165,7 +2165,7 @@ void dll_07_func06(void)
         pp += 4;
         p = *pp;
         if (p != NULL &&
-            (*(u8**)p == NULL || (*(u16*)(*(u8**)p + 0xb0) & 0x40)))
+            (*(u8**)p == NULL || (*(u16*)(*(u8**)p + 0xb0) & OBJECT_OBJFLAG_FREED)))
         {
             snowFreeSnowCloud(((NewCloud*)p)->cloudId);
             i++;
