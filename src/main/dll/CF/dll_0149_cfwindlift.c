@@ -426,7 +426,7 @@ void WindLift_update(int* obj)
     ((GameObject*)obj)->anim.alpha = (level < 0) ? 0 : ((level > 0xff) ? 0xff : level);
     /* the fortress lifts (table durations 1-4) stay dead until the
        city's power is restored (0x57, the crystal convergence) */
-    if ((mainGetBit(0x57) != 0 || sub->duration > 0xa) && sub->active)
+    if ((mainGetBit(GAMEBIT_CF_PowerOn) != 0 || sub->duration > 0xa) && sub->active)
     {
         int ticks = sub->timer;
         sub->timer = ticks + 1;
@@ -575,7 +575,7 @@ void WindLift_init(int* obj, u8* def)
         (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->liftHeight) / gWindLiftDefaultHeight;
     /* skip the rise-in ramp after the convergence cutscene (0x57)
        or for long lifts */
-    if (mainGetBit(0x57) != 0 || sub->duration >= 0xa)
+    if (mainGetBit(GAMEBIT_CF_PowerOn) != 0 || sub->duration >= 0xa)
     {
         sub->timer = 0x3c;
     }
