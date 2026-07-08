@@ -85,7 +85,7 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     p.count = 0;
     p.unk04 = -1;
     p.alpha = 0xff;
-    p.unk61 = 0;
+    p.linkGroup = 0;
     p.kind = 0;
     p.colD = 0xffff;
     p.colE = 0xffff;
@@ -210,7 +210,7 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.posZ = lbl_803DFF70 * (f32)(int)randomGetRange(-10, 10);
         p.scale = lbl_803DFF74;
         p.count = randomGetRange(0x78, 0x96);
-        p.unk61 = 0x1e;
+        p.linkGroup = 0x1e;
         p.alpha = 0xff;
         p.flagsA = 0x11;
         p.kind = 0x5f;
@@ -277,7 +277,7 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.velZ = lbl_803DFF74 * (f32)(int)randomGetRange(-0xf, 0xf);
         p.scale = lbl_803DFF84 * (f32)(int)randomGetRange(0x64, 0x96);
         p.count = randomGetRange(0x32, 0x50);
-        p.unk61 = randomGetRange(0xa, 0x1e);
+        p.linkGroup = randomGetRange(0xa, 0x1e);
         p.flagsA = 0x218;
         p.kind = src->rot2;
         break;
@@ -324,7 +324,7 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.scale = lbl_803DFF9C * (f32)(int)randomGetRange(0x14, 0x1e);
         p.alpha = 0xff;
         p.count = 0xf0;
-        p.unk61 = 0x10;
+        p.linkGroup = 0x10;
         p.unk04 = 0x138;
         p.flagsA = 0x480200;
         p.flagsB = 0x100000;
@@ -334,7 +334,7 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.scale = lbl_803DFF7C * (f32)(int)randomGetRange(0x14, 0x1e);
         p.alpha = 0x37;
         p.count = 4;
-        p.unk61 = 0x10;
+        p.linkGroup = 0x10;
         p.flagsA = 0x80201;
         p.flagsB = 2;
         p.kind = 0x167;

@@ -84,7 +84,7 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     p.count = 0;
     p.unk04 = -1;
     p.alpha = 0xff;
-    p.unk61 = 0;
+    p.linkGroup = 0;
     p.kind = 0;
     p.colD = 0xffff;
     p.colE = 0xffff;

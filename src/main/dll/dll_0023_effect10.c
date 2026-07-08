@@ -123,7 +123,7 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     p.count = 0;
     p.unk04 = -1;
     p.alpha = 0xff;
-    p.unk61 = 0;
+    p.linkGroup = 0;
     p.kind = 0;
     p.colD = 0xffff;
     p.colE = 0xffff;
@@ -471,7 +471,7 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.posZ = src->z;
         p.scale = lbl_803DFEB8 * (f32)(int)randomGetRange(5, 0x19) + src->w;
         p.count = 0x1e0;
-        p.unk61 = 0;
+        p.linkGroup = 0;
         p.flagsA = 0x480014;
         p.kind = 0xdf;
         break;
