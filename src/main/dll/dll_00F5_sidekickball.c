@@ -28,6 +28,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gamebit_ids.h"
 #define SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SIDEKICKBALL_OBJFLAG_PARENT_SLACK 0x1000
 #define SIDEKICKBALL_MSG_PLAYER_GRAB 0x100010 /* tells player to grab/hold the ball */
@@ -90,7 +91,7 @@ int SidekickBall_getExtraSize(void) { return 0x2cc; }
 
 int fn_801793A4(int* obj) { return *((u8*)(int*)((GameObject*)obj)->extra + 0x274) == 0; }
 
-void SidekickBall_free(int obj) { mainSetBits(0x3F8, 1); }
+void SidekickBall_free(int obj) { mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 1); }
 
 void SidekickBall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -263,7 +264,7 @@ void SidekickBall_update(u8* self)
         || (otherStatusZeroWord = __cntlzw((u32)((GameObject*)other)->objectFlags),
             otherStatusMask = otherStatusZeroWord >> 5,
             (otherStatusMask & 0x1000) != 0)
-        || mainGetBit(0xD00) != 0)
+        || mainGetBit(GAMEBIT_NoBallsAllowed) != 0)
     {
         Obj_FreeObject(self);
         return;
@@ -529,7 +530,7 @@ void SidekickBall_init(int obj)
     ObjHits_DisableObject((u32)obj);
     ((SidekickBallState*)state)->hittableLatch = 0; /* explicit post-memset store in target */
     ObjMsg_AllocQueue((void*)obj, 1);
-    mainSetBits(0x3f8, 0);
+    mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 0);
 }
 
 int area_getExtraSize(void);
