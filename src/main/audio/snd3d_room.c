@@ -1,6 +1,10 @@
 #include "main/audio/snd3d_room.h"
 #include "main/audio/synth_delay.h"
 
+/* SndSpatialEntry.flags: room-fade one-shots driven per update tick */
+#define S3D_ENTRY_FADE_IN  0x80000000 /* ramp fade up toward full, then clear */
+#define S3D_ENTRY_FADE_OUT 0x40000000 /* ramp fade down toward zero, then clear */
+
 #pragma exceptions on
 
 extern Snd3DEmitter* s3dEmitterRoot;
@@ -376,13 +380,13 @@ void s3dAllocateRoomStudios(void)
             }
             else
             {
-                if ((entry->flags & 0x80000000) != 0)
+                if ((entry->flags & S3D_ENTRY_FADE_IN) != 0)
                 {
                     entry->fade += 0x40000;
                     if (entry->fade >= 0x7f0000)
                     {
                         entry->fade = 0x7f0000;
-                        entry->flags &= 0x7fffffff;
+                        entry->flags &= ~S3D_ENTRY_FADE_IN;
                     }
                     if ((f32)(fadeScale * entry->fade) >= fadeThreshold)
                     {
@@ -393,13 +397,13 @@ void s3dAllocateRoomStudios(void)
                         synthActivateStudio(entry->assignedVoice, 0, 0);
                     }
                 }
-                if ((entry->flags & 0x40000000) != 0)
+                if ((entry->flags & S3D_ENTRY_FADE_OUT) != 0)
                 {
                     entry->fade -= 0x40000;
                     if ((s32)entry->fade >= 0)
                     {
                         entry->fade = 0;
-                        entry->flags &= 0xbfffffff;
+                        entry->flags &= ~S3D_ENTRY_FADE_OUT;
                     }
                     if ((f32)(fadeScale * entry->fade) >= fadeThreshold)
                     {
