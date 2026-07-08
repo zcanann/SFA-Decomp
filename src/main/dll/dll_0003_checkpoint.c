@@ -23,9 +23,9 @@
  * an object onto the route and select the active checkpoint segment.
  */
 #include "main/checkpoint_route.h"
+#include "main/gameplay_runtime.h"
 
 CheckpointSlot gCheckpointRouteTable[0x640 / sizeof(CheckpointSlot)];
-extern int randomGetRange(int lo, int hi);
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
 extern f32 lbl_803E04E8;

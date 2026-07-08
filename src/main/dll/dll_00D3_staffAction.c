@@ -26,6 +26,8 @@
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/objhits.h"
+#include "main/frame_timing.h"
+#include "main/player_control_interface.h"
 #define STAFFACTION_HIT_VOLUME_SLOT 9
 
 /* object group this object belongs to */
@@ -53,7 +55,6 @@ extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern f32 sqrtf(f32 x);
 extern int* gBaddieControlInterface;
-extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern const f32 lbl_803E2FDC;
@@ -855,7 +856,6 @@ typedef struct DllD3Placement
 extern int ObjContact_AddCallback(int* obj, int p2, void* cb);
 extern int ObjList_FindNearestObjectByDefNo(int* obj, int defNo, f32* radius);
 extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, int* out, int* obj, int e, int g, int h, int i);
-extern int* gPlayerInterface;
 extern int lbl_803202E8[];
 extern int lbl_80320360[];
 extern int gStaffActionHitLightParams[];

@@ -7,6 +7,7 @@
 #include "dolphin/os/OSCache.h"
 #include "main/mm.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "main/frame_timing.h"
 #define MAKETEX_CAMMODE_NPCSPEAK 0x4d /* cameramode DLL dll_004D_cameramodenpcspeak */
 #define MAKETEX_CAMMODE_DEFAULT 0x42  /* default gameplay cameramode DLL */
 
@@ -165,8 +166,6 @@ int randFn_80080100(int n)
 {
     return randomGetRange(0, n * 60 / 60) == 0;
 }
-
-extern f32 timeDelta;
 
 int timerCountDown(f32* p)
 {
@@ -1051,7 +1050,6 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
 extern int Obj_GetPlayerObject(void);
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
-extern u8 framesThisStep;
 
 /*
  * Per-object turn-to-face scratch state (carried in GameObject::extra for

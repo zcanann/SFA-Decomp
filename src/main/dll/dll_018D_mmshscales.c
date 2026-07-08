@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
+#include "main/gameplay_runtime.h"
 
 /* Child object spawned at init and cached in childObjs[0] (scaled x2). */
 #define MMSHSCALES_CHILD_OBJ 0x1b8
@@ -57,7 +58,6 @@ extern void Obj_FreeObject(u8* obj);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 

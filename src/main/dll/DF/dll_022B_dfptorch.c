@@ -12,6 +12,8 @@
 #include "main/camera.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
 #define DFPTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* DfpTorchState.mode: torch behaviour selected from placement->mode */
@@ -22,11 +24,8 @@
    visible; IGNITE spawned 100x on the unlit->lit transition (light-up burst) */
 #define DFPTORCH_PARTFX_FLICKER 0x1f7
 #define DFPTORCH_PARTFX_IGNITE 0x1a3
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 sqrtf(f32 x);
-extern int randomGetRange(int lo, int hi);
 extern ModgfxInterface** gModgfxInterface;
-extern f32 timeDelta;
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 

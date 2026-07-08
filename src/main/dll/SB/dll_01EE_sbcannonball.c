@@ -12,14 +12,12 @@
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
-
-extern f32 timeDelta;
-extern u8 framesThisStep;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 typedef struct SBCannonBallState
 {

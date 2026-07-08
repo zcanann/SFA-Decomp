@@ -17,6 +17,7 @@
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/gameplay_runtime.h"
 
 #define LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 #define LINKBLEVCONTROL_OBJFLAG_HIDDEN 0x4000
@@ -28,7 +29,6 @@ extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int c, int d)
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 extern void envFxActFn_800887f8(u8 value);
 extern u8 lbl_803238D8[];
-extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 
 /* env-effect id activated on level init (immediate when save already loaded,
  * else deferred; index-style, role opaque) */

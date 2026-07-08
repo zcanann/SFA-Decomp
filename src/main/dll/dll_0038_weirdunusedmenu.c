@@ -23,6 +23,7 @@
 #include "ghidra_import.h"
 #include "main/sfa_extern_decls.h"
 #include "main/audio/sfx.h"
+#include "main/frame_timing.h"
 
 /* title-menu link interface vtable slot offsets (gTitleMenuLinkInterface) */
 #define TITLEMENULINK_SETUP_WIDGETS 0x4
@@ -61,14 +62,12 @@ extern void saveGame_save();
 extern int* gTitleMenuLinkInterface;
 extern u32 gameTextGet(int textId);
 extern void loadUiDll(int index);
-extern u8 framesThisStep;
 
 extern void textureFree(u32);
 extern u32 gWeirdMenuTextureC, gWeirdMenuTextureB, gWeirdMenuTextureA;
 extern void warpToMap(int idx, s8 transType);
 
 extern void buttonDisable(int port, u32 mask);
-extern f32 timeDelta;
 extern f32 gWeirdMenuSaveTimerLimit;       /* save-phase timer limit */
 extern s8 gWeirdMenuSaveTimer;        /* save-phase frame timer */
 extern s16 gWeirdMenuScrollOffset;       /* scroll offset, clamped to 0x8C */

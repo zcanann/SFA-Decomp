@@ -19,6 +19,7 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/sfa_shared_decls.h"
+#include "main/frame_timing.h"
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -32,7 +33,6 @@ extern s8 lbl_803DD8F5;   /* selected result id */
 extern s8 lbl_803DD8E8;   /* armed flag (ignore input for one frame after build) */
 extern f32 lbl_803DD8EC;  /* scroll timer */
 extern f32 lbl_803E21D8;  /* scroll timer wrap period */
-extern f32 timeDelta;
 
 
 extern void padGetAnalogInput(int pad, s8* y, s8* x);

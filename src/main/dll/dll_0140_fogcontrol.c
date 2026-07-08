@@ -17,6 +17,7 @@
  */
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/frame_timing.h"
 
 #define FOGCONTROL_OBJFLAG_HIDDEN 0x4000
 
@@ -56,7 +57,6 @@ typedef struct FogcontrolPlacement
     s16 unk46;
 } FogcontrolPlacement;
 
-extern f32 timeDelta;
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
 
 typedef struct FogControlState

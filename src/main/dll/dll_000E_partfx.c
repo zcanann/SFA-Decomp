@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 #include "main/resource.h"
 #include "main/sfa_shared_decls.h"
+#include "main/frame_timing.h"
 
 void partfx_onMapSetup(void)
 {
@@ -24,8 +25,6 @@ void partfx_onMapSetup(void)
 
 extern u8 gPartfxCachedResourceCount;
 extern s16 gPartfxResourceTimeouts[];
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern u8 lbl_80380209[];
 
 #pragma scheduling off

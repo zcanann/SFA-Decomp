@@ -40,6 +40,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define DLL22C_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -88,7 +89,6 @@ STATIC_ASSERT(offsetof(Dll22CMapData, gameBit2) == 0x1E);
 STATIC_ASSERT(offsetof(Dll22CMapData, gameBit) == 0x20);
 
 extern int getLActions(int a, int b, u16 idx, int p4, int p5, int p6);
-extern f32 timeDelta;
 
 /* Dll22CState.mode rise/hold/fall cycle (see file-header comment). */
 #define DLL22C_MODE_ARMED   0 /* wait for gameBit + player proximity, then rise -> HOLD_SETUP */

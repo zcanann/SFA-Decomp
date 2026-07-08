@@ -8,6 +8,7 @@
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
 #include "main/maketex.h"
+#include "main/gameplay_runtime.h"
 
 /* Camera mode ids passed to gCameraInterface->setMode; each == cameramode DLL number. */
 #define OBJSEQ_CAMMODE_DEFAULT 0x42      /* default gameplay cameramode DLL */
@@ -67,7 +68,6 @@ extern void playerPullOutStaff(void* obj, int idx);
 extern void playerPutAwayStaff(void* obj, int idx);
 extern void Obj_SetActiveModelIndex(u8* obj, int idx);
 extern void playerLock(void* player, int mode);
-extern void setMotionBlur(u8 enabled, f32 amount);
 extern void Rcp_SetMonochromeFilterEnabled(int enabled);
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
@@ -144,7 +144,6 @@ extern u8 lbl_803DD111;
 extern u8 lbl_803DD112;
 extern f32 lbl_803DF02C;
 extern void ObjModel_SetBlendChannelTargets(void* action, int mode, int target, int channel, int p5, f32 t);
-extern void warpToMap(int idx, s8 transType);
 int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmd, int flags, void* out);
 void* ObjSeq_ToggleCommand3Target(u8 * obj, u8 * seq, u8 * src);
 

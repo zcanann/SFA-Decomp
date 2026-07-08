@@ -11,6 +11,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/objtexture.h"
+#include "main/frame_timing.h"
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
@@ -50,9 +51,7 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern u8 framesThisStep;
 
-extern f32 timeDelta;
 
 FbWGPipe GXWGFifo : (0xCC008000);
 

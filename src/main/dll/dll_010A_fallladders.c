@@ -26,6 +26,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 /* sequence id during which the object reacts to the two game bits */
 #define FALLLADDERS_SEQ_ID 0x548
@@ -60,8 +61,6 @@ typedef struct FallLaddersState
     u8 playStartSound;
     s16 delay;
 } FallLaddersState;
-
-extern f32 timeDelta;
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 

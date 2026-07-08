@@ -8,6 +8,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 #include "main/audio/sfx.h"
+#include "main/frame_timing.h"
 
 #define PROJECTILESWITCH_OBJFLAG_HIDDEN 0x4000
 
@@ -21,7 +22,6 @@
 #define SWITCH_MODE_MOMENTARY 2 /* activates, then auto-clears after cooldownFrames */
 #define SWITCH_MODE_DELAYED 3   /* hit arms an activation wind-up before turning on */
 
-extern u8 framesThisStep;
 
 extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
 extern void fn_8003B608(s16 a, s16 b, s16 c);

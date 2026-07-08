@@ -21,6 +21,7 @@
 #include "main/gameloop.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 /* flame child object spawned on ignition, cached in ShBeaconState.childObj */
 #define SHBEACON_CHILD_OBJ_FLAME 0x55
@@ -47,7 +48,6 @@ typedef enum ShBeaconMode
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 
-extern f32 timeDelta;
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern void Obj_FreeObject(int obj);
 extern u8 Obj_IsLoadingLocked(void);

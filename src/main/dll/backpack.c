@@ -19,6 +19,7 @@
 #include "main/object_descriptor.h"
 #include "main/objlib.h"
 #include "main/player_control_interface.h"
+#include "main/frame_timing.h"
 
 /* obj+0xB8 overlay used only by TriggerLaunchTarget; the named fields line
    up with GroundBaddieState (triggerId/gameBitA at 0x3F0/0x3F2, unk405). */
@@ -40,8 +41,6 @@ extern void fn_80165B3C(int obj, int state);
 extern void landedarwing_moveSurfaceCrawler(int obj, int state);
 extern void fn_80166444(int obj, int state);
 extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
-
-extern u8 framesThisStep;
 
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;

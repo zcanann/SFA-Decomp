@@ -21,8 +21,8 @@
 #include "main/objhits.h"
 #include "main/dll/genprops.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx.h"
 #define PINPONSPIKE_HIT_VOLUME_SLOT 10
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 #define PINPONSPIKE_PARTFX 0x715
 #define PINPONSPIKE_OBJFLAG_HIDDEN 0x4000

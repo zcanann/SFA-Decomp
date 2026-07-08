@@ -4,9 +4,9 @@
  */
 #include "main/dll/baddie_state.h"
 #include "main/gameplay_runtime.h"
+#include "main/player_control_interface.h"
 
 extern int* gBaddieControlInterface;
-extern int* gPlayerInterface;
 extern u8 lbl_803DDB84;
 extern u8 lbl_80325960[];
 extern u8 gDIMbossAnimController[];

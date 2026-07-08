@@ -22,6 +22,7 @@
 #include "dolphin/gx/GXGet.h"
 #include "main/dll/tricky.h"
 #include "main/dll/dll_B4.h"
+#include "main/gameplay_runtime.h"
 extern void hudDrawColored(int texture, int x, int y, u32* color, u32 scale, int flags);
 extern void drawTexture(double x, double y, int texture, u32 alpha, u32 flags);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
@@ -30,7 +31,6 @@ extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern int mapUnload(int mapId, int flags);
 extern int loadMapAndParent(int mapId);
 extern void loadSunAndMoon(void);
-extern void warpToMap(int idx, s8 transType);
 extern void loadUiDll(int index);
 extern int gTitleScreenInitLoadingTextures[];
 extern u8 gDvdErrorPauseActive;

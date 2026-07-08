@@ -9,6 +9,7 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
+#include "main/frame_timing.h"
 
 extern void DeathSeq_getExtraSize(void);
 extern void dll_127_getExtraSize_ret_0(void);
@@ -81,7 +82,6 @@ extern void FxEmit_initialise(void);
 extern int ObjTrigger_IsSet();
 extern int playerIsDisguised(void);
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
-extern f32 timeDelta;
 extern f32 lbl_803E3C88; /* hold-time reset value when the trigger fires */
 extern f32 lbl_803E3C8C; /* hold-time ceiling / minimum to keep showing text */
 

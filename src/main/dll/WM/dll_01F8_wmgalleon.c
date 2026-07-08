@@ -6,6 +6,7 @@
 #include "main/resource.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/frame_timing.h"
 
 /* TU-boundary copies of the WM_ObjCreator records (canonical copies in
    dll_01F9_wmobjcreator.c) - this TU hosts WM_ObjCreator_init. */
@@ -48,7 +49,6 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
 extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 extern u32 lbl_803DC0F0;
-extern u8 framesThisStep;
 extern s8 lbl_803DDC70;
 extern int* gScreensInterface;
 extern u32* lbl_803DCA94;

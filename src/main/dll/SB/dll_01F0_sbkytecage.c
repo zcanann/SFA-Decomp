@@ -17,9 +17,9 @@
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
+#include "main/frame_timing.h"
 
 #define PAD_BUTTON_A 0x100
-extern f32 timeDelta;
 
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 

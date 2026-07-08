@@ -27,6 +27,7 @@
 #include "main/game_object.h"
 #include "main/dll/tricky_state.h"
 #include "main/gameplay_runtime.h"
+#include "main/frame_timing.h"
 
 #define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
 #define TRICKY_STATE_RESET_FLAG_10     0x00000010
@@ -70,7 +71,6 @@ extern float mathCosf(float x);
 extern void Obj_FreeObject(int obj);
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
-extern f32 timeDelta;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E2408;

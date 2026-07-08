@@ -10,11 +10,11 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define DFPSTATUE1_OBJFLAG_HIDDEN 0x4000
 
 extern u32 sfxplayer_updateState(int obj, u32 unused, int animUpdate);
-extern f32 timeDelta;
 
 #pragma dont_inline on
 void dfpstatue1_updateState(DfpStatue1Object* obj)

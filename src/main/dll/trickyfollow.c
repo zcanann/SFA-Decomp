@@ -13,7 +13,7 @@
 #include "main/gamebits.h"
 #include "main/dll/modgfx.h"
 #include "main/sfa_shared_decls.h"
-extern f32 timeDelta;
+#include "main/frame_timing.h"
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;

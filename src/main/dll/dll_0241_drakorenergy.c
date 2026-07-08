@@ -20,6 +20,7 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4, f32 scale);
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
@@ -34,8 +35,6 @@ extern void PSVECSubtract(f32*, f32*, f32*);
 extern void PSVECNormalize(f32*, f32*);
 extern void PSVECScale(f32*, f32*, f32);
 extern void objfx_spawnFlaggedTrailBurst(int, f32, int, int, int, int);
-extern f32 timeDelta;
-extern u8 framesThisStep;
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
