@@ -17,6 +17,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/gamebit_ids.h"
 
 typedef struct CfPrisonCageMapData
 {
@@ -95,7 +96,7 @@ int CFPrisonCage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     /* 0x44: the free-the-prisoner event (also stands the guard down -
        see cfprisonguard) */
-    if (mainGetBit(0x44) != 0)
+    if (mainGetBit(GAMEBIT_ITEM_PrisonKey_Got) != 0)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
