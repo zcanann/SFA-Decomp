@@ -36,6 +36,7 @@
 #include "main/rcp_dolphin.h"
 #include "main/shader.h"
 #include "main/sfa_shared_decls.h"
+#include "main/gamebit_ids.h"
 
 /* group owned by another DLL, queried here */
 #define TIMER_OBJGROUP 0x4c /* DLL 0x2B5 timer */
@@ -657,7 +658,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     (*gMapEventInterface)->setMapAct(p[3], p[2]);
                     break;
                 case 0x11:
-                    mainSetBits(0x4e3, (p[2] << 8) | p[3]);
+                    mainSetBits(GAMEBIT_TrickyTalk, (p[2] << 8) | p[3]);
                     break;
                 case 0x1f:
                     t = Obj_GetPlayerObject();
@@ -743,10 +744,10 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                             }
                             break;
                         case 3:
-                            mainSetBits(0xd00, 0);
+                            mainSetBits(GAMEBIT_NoBallsAllowed, 0);
                             break;
                         case 4:
-                            mainSetBits(0xd00, 1);
+                            mainSetBits(GAMEBIT_NoBallsAllowed, 1);
                             break;
                         }
                     }
@@ -755,32 +756,32 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     switch (p[2])
                     {
                     case 0:
-                        mainSetBits(0x3ab, p[3] == 0);
+                        mainSetBits(GAMEBIT_ENV_disableDayFX1, p[3] == 0);
                         break;
                     case 1:
-                        mainSetBits(0x3ac, p[3] == 0);
+                        mainSetBits(GAMEBIT_ENV_disableDayFX2, p[3] == 0);
                         break;
                     case 2:
-                        mainSetBits(0x3af, p[3] == 0);
+                        mainSetBits(GAMEBIT_ENV_disableDayFX3, p[3] == 0);
                         break;
                     case 3:
                         switch (p[3])
                         {
                         case 0:
-                            mainSetBits(0x3b0, 1);
+                            mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
                             break;
                         case 1:
-                            mainSetBits(0x3b0, 0);
+                            mainSetBits(GAMEBIT_ENV_isOutdoor, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
                             envFxFn_800887cc();
                             break;
                         case 2:
-                            mainSetBits(0x3b0, 1);
+                            mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B0, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B1, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B2, 0);
@@ -792,15 +793,15 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                 case 0x1d:
                     if (p[2] != 0)
                     {
-                        mainSetBits(0x966, 0);
-                        mainSetBits(0x967, 0);
-                        mainSetBits(0x968, 0);
+                        mainSetBits(GAMEBIT_ITEM_DinoHorn_Disabled, 0);
+                        mainSetBits(GAMEBIT_ITEM_Firefly_Disabled, 0);
+                        mainSetBits(GAMEBIT_Tricky_CantFeed, 0);
                     }
                     else
                     {
-                        mainSetBits(0x966, 1);
-                        mainSetBits(0x967, 1);
-                        mainSetBits(0x968, 1);
+                        mainSetBits(GAMEBIT_ITEM_DinoHorn_Disabled, 1);
+                        mainSetBits(GAMEBIT_ITEM_Firefly_Disabled, 1);
+                        mainSetBits(GAMEBIT_Tricky_CantFeed, 1);
                     }
                     break;
                 case 0x2c:
