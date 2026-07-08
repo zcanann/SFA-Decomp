@@ -5,6 +5,7 @@
 #include "main/camera.h"
 #include "main/sky_state.h"
 #include "main/sfa_extern_decls.h"
+#include "dolphin/gx/GXGeometry.h"
 
 
 /* gSPScarabObjDescriptor drift copy removed: retail home is the
@@ -49,11 +50,8 @@ extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 extern void GXSetCullMode(int mode);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXSetCurrentMtx(u32 id);
-extern void GXBegin(int prim, int fmt, int n);
 
 #define GX_BM_BLEND 1
 #define GX_BL_SRCALPHA 4

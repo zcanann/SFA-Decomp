@@ -28,10 +28,10 @@
 #include "main/rcp_dolphin.h"
 #include "main/lightmap.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/frame_timing.h"
+#include "main/textrender.h"
 extern u64 camcontrol_setAButtonIconForTarget();
 extern u64 runLoadingScreens();
-
-extern f32 timeDelta;
 
 void* gameTextGetStr(int textId);
 
@@ -50,7 +50,6 @@ void doNothing_onSaveSelectScreenExit(void)
 int return1_800202BC(void) { return 0x1; }
 int return0_8002969C(void);
 
-extern u8 framesThisStep;
 /* Top-level boot / soft-reset state machine (the global gameState). */
 typedef enum GameLoopState {
   GAMELOOP_STATE_BOOTING = 0,            /* loading; the gameUpdate frame is skipped */
@@ -185,10 +184,6 @@ int mmSetFreeDelay(int v);
 
 int testAndSet_onlyUseHeap3(int v);
 
-void* getCache(void);
-
-extern void gameTextLoadDir(int dirId);
-
 void cutsceneExit(void)
 {
     hudHiddenFrameCount = 0;
@@ -295,8 +290,6 @@ void* loadTextureFile(int id, int arg)
     loadAsset(&gGameLoopAssetReq);
 }
 
-void gameTextLoadDir(int dirId);
-
 void* getTabEntry(void* dst, int fileId, int offset, int size)
 {
     gGameLoopAssetReq.pending = 1;
@@ -335,11 +328,7 @@ void mmFreeTick(int arg);
 
 extern void* lbl_803DCAFC;
 
-void mmInit(void);
-
 extern void* memcpy(void* dst, const void* src, int n);
-
-void copyToCache(void* dst, void* src, u32 count);
 
 int cacheAllocAndCopy(u32 srcAddr, u32 size, u32* cacheCursor, u32* outEnd, u32 limit)
 {
@@ -624,7 +613,6 @@ void gameTextRun(void);
 extern void videoInit(void* rmode, int arg);
 
 extern void initLoadingScreenTextures(void);
-extern void mmInit(void);
 
 extern void Camera_InitState(void);
 

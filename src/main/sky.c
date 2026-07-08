@@ -4,6 +4,10 @@
 #include "main/sky_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/mm.h"
+#include "main/texture.h"
 
 typedef struct SkyBlendStateFlags {
     u8 unused80 : 1;
@@ -90,9 +94,6 @@ extern void setDrawCloudsAndLights(int mode);
 extern void fn_8008C9F4(u8 *cfg, u8 flags);
 extern u8 gSkyConfigFieldIndices[];
 extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
-extern void *mmAlloc(int size, int heap, int flags);
-extern void mm_free(void *ptr);
-extern void *Obj_GetPlayerObject(void);
 extern void getEnvfxAct(void *obj, void *source, int actId, int flags);
 extern void playerEnvFxFn_80088ad4(u8 envFxValue);
 extern void renderSunAndMoon();
@@ -110,7 +111,6 @@ extern void Obj_BuildWorldTransformMatrix(void *obj, f32 mtx[3][4], int flags);
 extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
 extern s16 *Camera_GetCurrentViewSlot(void);
-extern int randomGetRange(int min, int max);
 extern int lbl_803DD130;
 extern int lbl_803DD134;
 extern int lbl_803DD138;
@@ -133,7 +133,6 @@ extern void *gSkySunLight;
 extern f32 gSkyOverrideLightDirection[];
 extern const f32 pEXIInputFlag;
 extern const f32 EXIInputFlag;
-extern f32 timeDelta;
 extern f32 lbl_803DF060;
 extern const f32 lbl_803DF06C;
 extern f32 init_803DF080;
@@ -199,7 +198,6 @@ extern u8 *gSky2State;
 extern u8 *lbl_803DD19C;
 extern void PSVECNormalize(void *src, void *dst);
 extern u8 gSkySunPositionPrev;
-extern void getEnvfxActImmediately(void *obj, void *target, int effectId, int flags);
 extern void padUpdate(void);
 extern void checkReset(void);
 void skyFn_80088c94(int flags, int mode);
@@ -215,13 +213,11 @@ extern int getLoadedFileFlags(int);
 extern void *objCreateLight(int, int);
 extern void modelLightStruct_setLightKind(void *, int);
 extern void modelLightStruct_setSpecularColor(void *, int, int, int, int);
-extern void *textureLoadAsset(int);
 extern u8 gDvdErrorPauseActive;
 extern f32 gSkySunDirection[];
 extern f32 gSkyMoonDirection[];
 void skyFn_80088e54(int mode, f32 brightness);
 void fn_8008BDA8(void);
-extern void textureFree(void *handle);
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void fogFn_80070404(f32 a, f32 b);
 extern void setTextColor(int unused, int a, int b, int c, int d);
@@ -295,7 +291,6 @@ extern int getSaveGameLoadStatus(void);
 int getEnvFxBit2BA(void);
 void setGameBit2BA(int value);
 void envFxFn_800887cc(void);
-void envFxActFn_800887f8(u8 value);
 void fn_80088870(int a, int b, int c, int d);
 void envFxFn_80088884(void);
 void loadSunAndMoon(void);

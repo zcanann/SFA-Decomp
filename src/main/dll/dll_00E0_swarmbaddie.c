@@ -27,6 +27,7 @@
 #include "main/objlib.h"
 #include "main/mm.h"
 #include "string.h"
+#include "main/frame_timing.h"
 #define SWARMBADDIE_HIT_VOLUME_SLOT 10
 
 /* object group this object belongs to */
@@ -43,7 +44,6 @@ extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
-extern f32 timeDelta;
 extern f32 lbl_803E2678;
 extern f32 lbl_803E267C;
 extern f32 lbl_803E2680;

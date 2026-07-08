@@ -30,6 +30,7 @@
 #include "main/sfa_extern_decls.h"
 #include "main/lightmap.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
 
@@ -177,7 +178,6 @@ extern f32 gMinimapWorldToTexScale;
 extern f32 gMinimapArrowScale2;
 extern f32 gMinimapArrowScale1;
 extern f32 gMinimapArrowScale0;
-extern u8 framesThisStep;
 extern u32 gMinimapBaseColor;
 extern const f32 gMinimapZero;
 extern f32 gMinimapF50;
@@ -216,7 +216,6 @@ extern u8 gMinimapBlipPulse;
 extern f32 gMinimapF110;
 extern f32 gMinimapF43;
 extern f32 gMinimapF390;
-extern f32 timeDelta;
 extern void Sfx_StopFromObject(u32 obj, u32 sfxId);
 extern u32 gMinimapCompassColor;
 extern f32 gMinimapCompassPhase;

@@ -20,6 +20,7 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
@@ -45,8 +46,6 @@ extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, in
 extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;
 extern f32 Vec_distance(f32* a, f32* b);
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern u8 gRockfallCfgTable[];
 extern f32 gRockfallScaleDivisor;
 extern void fn_800628CC(int* obj);
