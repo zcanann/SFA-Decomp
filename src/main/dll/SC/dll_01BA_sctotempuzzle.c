@@ -241,7 +241,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     state = obj->state;
     hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitNx, &hitNy, &hitNz, &lightArgs[3],
                                                  &lightArgs[4], &lightArgs[5]);
-    if ((obj->puzzleIndex == SC_TOTEMPUZZLE_CAP_INDEX) || (mainGetBit(0x639) != 0) || (mainGetBit(0xc10) == 0))
+    if ((obj->puzzleIndex == SC_TOTEMPUZZLE_CAP_INDEX) || (mainGetBit(GAMEBIT_SC_totempuzzle_running) != 0) || (mainGetBit(0xc10) == 0))
     {
         if ((hitKind != 0) && (hitKind != 0x11))
         {
@@ -264,7 +264,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         {
             if (state->pulseTimer != lbl_803E55F4)
             {
-                mainSetBits(0x639, ((u8 (*)(ScTotemPuzzleObject*, ScTotemPuzzleState*))sc_totempuzzle_checkSolvedSequence)(obj, state));
+                mainSetBits(GAMEBIT_SC_totempuzzle_running, ((u8 (*)(ScTotemPuzzleObject*, ScTotemPuzzleState*))sc_totempuzzle_checkSolvedSequence)(obj, state));
             }
             objects = ObjList_GetObjects(&startA, &countA);
             while (startA < countA)
@@ -374,7 +374,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
         }
     }
     state->stepIndex = obj->puzzleIndex;
-    if (mainGetBit(0x639) == 0)
+    if (mainGetBit(GAMEBIT_SC_totempuzzle_running) == 0)
     {
         state->angle = (f32)(s32)gTotemPuzzleStepAngles[state->stepIndex];
     }
