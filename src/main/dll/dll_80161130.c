@@ -81,7 +81,7 @@ void ChukChuk_setScale(int obj, int v);
 void IceBall_init(void* obj);
 
 #pragma peephole off
-int grimble_stateHandlerB03(int p1, GroundBaddieState* state)
+int grimble_stateHandlerB03(int obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.hitPoints < 1)
         return 5;

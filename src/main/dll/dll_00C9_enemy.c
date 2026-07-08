@@ -699,13 +699,13 @@ null_state:
     return 0;
 }
 
-void fn_8014D08C(int obj, int state, f32 mult, int a, int b, u8 c)
+void fn_8014D08C(int obj, int state, f32 rateScale, int moveId, int moveControlFlags, u8 stateByte)
 {
     ObjHitsPriorityState* hitState;
 
-    ((BaddieState*)state)->unk308 = lbl_803E256C / (lbl_803E2570 * mult);
-    *(u8*)(state + 0x323) = c;
-    ObjAnim_SetCurrentMove(obj, (u8)a, lbl_803E2574, b);
+    ((BaddieState*)state)->unk308 = lbl_803E256C / (lbl_803E2570 * rateScale);
+    *(u8*)(state + 0x323) = stateByte;
+    ObjAnim_SetCurrentMove(obj, (u8)moveId, lbl_803E2574, moveControlFlags);
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (hitState != NULL)
     {
