@@ -164,7 +164,7 @@ void WM_Galleon_free(int* obj, int leavingMap)
 void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
-    if (mainGetBit(0x78) != 0)
+    if (mainGetBit(GAMEBIT_WM_Galleon_despawn) != 0)
     {
         return;
     }
@@ -269,7 +269,7 @@ void WM_Galleon_update(int* obj)
     WMGalleonState* state;
     int gameBitA4;
 
-    if (mainGetBit(0x78) != 0)
+    if (mainGetBit(GAMEBIT_WM_Galleon_despawn) != 0)
     {
         return;
     }
@@ -291,13 +291,13 @@ void WM_Galleon_update(int* obj)
             MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 0);
         }
     }
-    else if ((mainGetBit(0xd0) == 0) && ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 2) == 0))
+    else if ((mainGetBit(GAMEBIT_WM_GalleonRelated00D0) == 0) && ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 2) == 0))
     {
         MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 1);
         MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 1);
     }
 
-    if (mainGetBit(0xd0) == 0)
+    if (mainGetBit(GAMEBIT_WM_GalleonRelated00D0) == 0)
     {
         if ((state->mapEventsLatched == 0) && (mainGetBit(WM_GALLEON_GAMEBIT_CUTSCENE_DONE) == 0))
         {
@@ -318,7 +318,7 @@ void WM_Galleon_update(int* obj)
         }
     }
 
-    gameBitA4 = mainGetBit(0xa4);
+    gameBitA4 = mainGetBit(GAMEBIT_WM_GalleonRelated00A4);
     if (gameBitA4 != 0)
     {
         OBJ_S32(obj, 0xf4) = 10;
@@ -349,7 +349,7 @@ void WM_Galleon_init(int* obj, WMGalleonSetup* setup)
     int i;
 
     state = (WMGalleonState*)OBJ_PTR(obj, 0xb8);
-    if (mainGetBit(0x78) != 0)
+    if (mainGetBit(GAMEBIT_WM_Galleon_despawn) != 0)
     {
         return;
     }
@@ -370,7 +370,7 @@ void WM_Galleon_init(int* obj, WMGalleonSetup* setup)
     {
         MAP_EVENT_SET(OBJ_U8(obj, 0x34), i, 0);
     }
-    mainSetBits(0xa4, 1);
+    mainSetBits(GAMEBIT_WM_GalleonRelated00A4, 1);
 }
 
 void WM_Galleon_release(void)
