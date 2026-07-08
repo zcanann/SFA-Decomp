@@ -140,7 +140,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int state)
     }
     if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
-        mainSetBits(0x223, 1);
+        mainSetBits(GAMEBIT_DIM_FoundBelinaTe, 1);
         buttonDisable(0, PAD_BUTTON_A);
     }
     if (RandomTimer_UpdateRangeTrigger((void*)(inner + 0x600), 4.0f, 8.0f))
