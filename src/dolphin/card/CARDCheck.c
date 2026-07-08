@@ -169,7 +169,7 @@ s32 __CARDVerify(CARDControl* card) {
     errors = VerifyDir(card, NULL);
     errors += VerifyFAT(card, NULL);
     switch (errors) {
-    case 0: 
+    case 0:
         ASSERTLINE(301, card->currentDir);
         ASSERTLINE(302, card->currentFat);
         return CARD_RESULT_READY;

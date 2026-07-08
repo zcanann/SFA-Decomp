@@ -13,7 +13,7 @@ extern "C" {
 typedef void (*DSPCallback)(void* task);
 typedef struct STRUCT_DSP_TASK DSPTaskInfo;
 
-typedef struct STRUCT_DSP_TASK {                                   
+typedef struct STRUCT_DSP_TASK {
     /* 0x00 */ volatile u32 state;
     /* 0x04 */ volatile u32 priority;
     /* 0x08 */ volatile u32 flags;

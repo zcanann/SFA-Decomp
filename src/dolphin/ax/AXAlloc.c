@@ -41,7 +41,7 @@ void __AXServiceCallbackStack(void) {
             if (p->callback) {
                 p->callback(p);
             }
-    
+
             __AXRemoveFromStack(p);
             __AXPushFreeStack(p);
         }
@@ -177,7 +177,7 @@ AXVPB* __AXPopStackFromBottom(u32 priority) {
 
 void AXFreeVoice(AXVPB* p) {
     BOOL old;
-    
+
     ASSERTLINE(322, p);
     ASSERTMSGLINE(326, p->priority != 0, "Calling AXFreeVoice() for voice that is already free\n");
 

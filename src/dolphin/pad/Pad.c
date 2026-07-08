@@ -127,7 +127,7 @@ static inline void DoReset(void) {
         ASSERTLINE(559, 0 <= ResettingChan && ResettingChan < SI_MAX_CHAN);
         chanBit = (PAD_CHAN0_BIT >> ResettingChan);
         ResettingBits &= ~chanBit;
-        
+
         memset(&Origin[ResettingChan], 0, sizeof(PADStatus));
         SIGetTypeAsync(ResettingChan, PADTypeAndStatusCallback);
     }
@@ -205,7 +205,7 @@ static void PADProbeCallback(s32 chan, u32 error, OSContext* context) {
     ASSERTLINE(710, 0 <= ResettingChan && ResettingChan < SI_MAX_CHAN);
     ASSERTLINE(711, chan == ResettingChan);
     ASSERTLINE(713, (Type[chan] & SI_WIRELESS_CONT_MASK) == SI_WIRELESS_CONT && !(Type[chan] & SI_WIRELESS_LITE));
-    
+
     if (!(error & (SI_ERROR_UNDER_RUN | SI_ERROR_OVER_RUN | SI_ERROR_NO_RESPONSE | SI_ERROR_COLLISION)))
     {
         PADEnable(ResettingChan);
@@ -361,7 +361,7 @@ BOOL PADInit() {
     if (Initialized) {
         return 1;
     }
-    
+
     if (__PADSpec)
         PADSetSpec(__PADSpec);
 
@@ -372,7 +372,7 @@ BOOL PADInit() {
         __OSWirelessPadFixMode
             = (u16)((((time)&0xffff) + ((time >> 16) & 0xffff) + ((time >> 32) & 0xffff) + ((time >> 48) & 0xffff))
                     & 0x3fffu);
-    
+
         RecalibrateBits = PAD_CHAN0_BIT | PAD_CHAN1_BIT | PAD_CHAN2_BIT | PAD_CHAN3_BIT;
     }
 
@@ -854,7 +854,7 @@ BOOL PADIsBarrel(s32 chan) {
     if (BarrelBits & (PAD_CHAN0_BIT >> chan)) {
         return TRUE;
     }
-    
+
     return FALSE;
 }
 #endif

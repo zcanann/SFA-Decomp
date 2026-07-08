@@ -149,7 +149,7 @@ void __GXCalculateVLim() {
         vlm += GET_REG_FIELD(vl, 1, 7);
         vlm += GET_REG_FIELD(vl, 1, 8);
         vlm += tbl3[GET_REG_FIELD(vl, 2, 9)];
-        
+
         if (nc == 1) {
             b = 3;
         } else {

@@ -294,7 +294,7 @@ static void CheckRAM(u8 Normal, u32 StartingAddress, u32 Count, GXWarnID WarnID,
                 if (__gxVerif->verifyLevel >= __gxvWarnLev[WarnID]) {
                     __gxVerif->cb(__gxvWarnLev[WarnID], WarnID, Str);
                 }
-                
+
                 printedPreamble = 1;
             }
         }
@@ -322,7 +322,7 @@ static void CheckBumpmapTextures(void) {
         if ((BYTE3(__gxVerif->xfRegs[BumpMapSource + 64]) >> 4) & 7 && __gxVerif->verifyLevel >= __gxvWarnLev[0x51]) {
             __GX_WARNF(0x51, i + numRegularTextures, BumpMapSource);
         }
-    
+
         BumpMapLight = __gxVerif->xfRegs[numRegularTextures + i + 0x40];
         BumpMapLight = (BumpMapLight >> 15) & 7;
         lightRAMOffset = (BumpMapLight * 0x10) + 0x60A;

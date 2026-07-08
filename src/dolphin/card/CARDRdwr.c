@@ -87,7 +87,7 @@ s32 __CARDWrite(s32 chan, u32 addr, s32 length, void* dst, CARDCallback callback
 
     ASSERTLINE(153, 0 < length && length % CARD_PAGE_SIZE == 0);
     ASSERTLINE(154, 0 <= chan && chan < 2);
-    
+
     if (card->attached == 0) {
         return CARD_RESULT_NOCARD;
     }

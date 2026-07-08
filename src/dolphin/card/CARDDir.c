@@ -18,7 +18,7 @@ static void WriteCallback2(s32 chan, s32 result) {
     if (result >= 0) {
         CARDDir* dir0;
         CARDDir* dir1;
-        
+
         dir0 = (CARDDir*)((u8*)card->workArea + 0x2000);
         dir1 = (CARDDir*)((u8*)card->workArea + 0x4000);
 

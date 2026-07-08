@@ -5,7 +5,7 @@ extern inline float sqrtf(float x) {
     static const double _three=3.0;
     volatile float y;
     if(x > 0.0f) {
-        double guess = __frsqrte((double)x);   // returns an approximation to   
+        double guess = __frsqrte((double)x);   // returns an approximation to
         guess = _half*guess*(_three - guess*guess*x);  // now have 12 sig bits
         guess = _half*guess*(_three - guess*guess*x);  // now have 24 sig bits
         guess = _half*guess*(_three - guess*guess*x);  // now have 32 sig bits
@@ -13,14 +13,14 @@ extern inline float sqrtf(float x) {
         return y ;
     }
     return x ;
-}   
+}
 
 extern inline float sqrt(float x) {
     static const double _half=.5;
     static const double _three=3.0;
     volatile float y;
     if(x > 0.0f) {
-        double guess = __frsqrte((double)x);   // returns an approximation to   
+        double guess = __frsqrte((double)x);   // returns an approximation to
         guess = _half*guess*(_three - guess*guess*x);  // now have 12 sig bits
         guess = _half*guess*(_three - guess*guess*x);  // now have 24 sig bits
         guess = _half*guess*(_three - guess*guess*x);  // now have 32 sig bits
@@ -51,15 +51,15 @@ extern inline float cos(float x) {
 }
 
 inline float floor(float x) {
-    int i=(int)x;   
-    float y=x-(float)i; 
+    int i=(int)x;
+    float y=x-(float)i;
 
     if(!y || x > 8388608.0f)
-    return x ;               // x is already an int 
+    return x ;               // x is already an int
 
-    if(x < 0) 
-    return (float)--i;  
-        // x < 0 -> int conversion of x above rounded toward zero(so decrement)                
+    if(x < 0)
+    return (float)--i;
+        // x < 0 -> int conversion of x above rounded toward zero(so decrement)
     return (float)i;
 }
 

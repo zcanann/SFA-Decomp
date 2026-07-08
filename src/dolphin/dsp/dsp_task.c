@@ -38,7 +38,7 @@ void __DSPHandler(__OSInterrupt intr, OSContext* context) {
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(&exceptionContext);
     ASSERTMSGLINE(143, __DSP_curr_task != NULL, "__DSPHandler(): No current task! Someone set us up the bomb!\n");
-    
+
     while (DSPCheckMailFromDSP() == 0)
         ;
 

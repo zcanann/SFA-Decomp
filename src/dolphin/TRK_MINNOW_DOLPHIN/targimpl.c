@@ -189,7 +189,7 @@ static asm void TRK_ppc_memcpy(register void* dest, register const void* src, re
 
 		mfmsr msr
 		li count, 0
-	
+
 	top_loop:
 		cmpw count, n
 		beq out_loop
@@ -595,7 +595,7 @@ L_802CF678:
 	mtcrf 0xff, r3
 	lwz r3, Default_PPC.GPR[3](r2)
 	lwz r2, Default_PPC.GPR[2](r2)
-	rfi 
+	rfi
 L_802CF694:
 	lis r2, TRK_saved_exceptionID_803D82F8@h
 	ori r2, r2, TRK_saved_exceptionID_803D82F8@l
@@ -656,7 +656,7 @@ L_802CF694:
  * @note Size: TODO
  */
 #ifdef __MWERKS__ // clang-format off
-static asm void TRKExceptionHandler(u16 r3){ 
+static asm void TRKExceptionHandler(u16 r3){
 	nofralloc
 	lis r2, gTRKExceptionStatus@h
 	ori r2, r2, gTRKExceptionStatus@l

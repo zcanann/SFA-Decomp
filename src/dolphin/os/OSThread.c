@@ -150,7 +150,7 @@ static inline BOOL __OSIsThreadActive(OSThread* thread) {
     if (thread->state == 0) {
         return FALSE;
     }
-    
+
     for (active = __OSActiveThreadQueue.head; active; active = active->linkActive.next) {
         if (thread == active) {
             return TRUE;
@@ -184,13 +184,13 @@ s32 OSEnableScheduler(void) {
 static inline void SetRun(OSThread* thread) {
     ASSERTLINE(LINE(536, 554, 554), !IsSuspended(thread->suspend));
     ASSERTLINE(LINE(537, 555, 555), thread->state == OS_THREAD_STATE_READY);
-    
+
     ASSERTLINE(LINE(539, 557, 557), OS_PRIORITY_MIN <= thread->priority && thread->priority <= OS_PRIORITY_MAX);
 
     thread->queue = &RunQueue[thread->priority];
 
     ENQUEUE_THREAD(thread, thread->queue, link);
-    
+
     RunQueueBits |= 1 << (OS_PRIORITY_MAX - thread->priority);
     RunQueueHint = 1;
 }
@@ -199,7 +199,7 @@ static void UnsetRun(OSThread* thread) {
     OSThreadQueue* queue;
 
     ASSERTLINE(LINE(560, 578, 578), thread->state == OS_THREAD_STATE_READY);
-    
+
     ASSERTLINE(LINE(562, 580, 580), OS_PRIORITY_MIN <= thread->priority && thread->priority <= OS_PRIORITY_MAX);
     ASSERTLINE(LINE(563, 581, 581), thread->queue == &RunQueue[thread->priority]);
 
@@ -216,7 +216,7 @@ static void UnsetRun(OSThread* thread) {
 s32 __OSGetEffectivePriority(OSThread* thread) {
     s32 priority = thread->base;
     OSMutex* mutex;
-    
+
     for (mutex = thread->queueMutex.head; mutex; mutex = mutex->link.next) {
         OSThread* blocked = mutex->queue.head;
         if (blocked && blocked->priority < priority) {
@@ -394,11 +394,11 @@ void OSExitThread(void* val) {
     BOOL enabled = OSDisableInterrupts();
     OSThread* currentThread = OSGetCurrentThread();
 
-    ASSERTMSGLINE(LINE(943, 974, 974), currentThread, 
+    ASSERTMSGLINE(LINE(943, 974, 974), currentThread,
         "OSExitThread(): current thread does not exist.");
-    ASSERTMSGLINE(LINE(945, 976, 976), currentThread->state == OS_THREAD_STATE_RUNNING, 
+    ASSERTMSGLINE(LINE(945, 976, 976), currentThread->state == OS_THREAD_STATE_RUNNING,
         "OSExitThread(): current thread is not running.");
-    ASSERTMSGLINE(LINE(947, 978, 978), __OSIsThreadActive(currentThread) != 0, 
+    ASSERTMSGLINE(LINE(947, 978, 978), __OSIsThreadActive(currentThread) != 0,
         "OSExitThread(): current thread is not active.");
 
     OSClearContext(&currentThread->context);
@@ -425,7 +425,7 @@ void OSExitThread(void* val) {
 void OSCancelThread(OSThread* thread) {
     BOOL enabled = OSDisableInterrupts();
 
-    ASSERTMSG1LINE(LINE(985, 1016, 1016), __OSIsThreadActive(thread) != 0, 
+    ASSERTMSG1LINE(LINE(985, 1016, 1016), __OSIsThreadActive(thread) != 0,
         "OSExitThread(): thread %p is not active.", thread);
 
     switch(thread->state) {
@@ -515,7 +515,7 @@ s32 OSSuspendThread(OSThread* thread) {
             thread->priority = 0x20;
             ENQUEUE_THREAD(thread, thread->queue, link);
             if (thread->mutex) {
-                ASSERTLINE(LINE(1214, 1245, 1245), thread->mutex->thread); 
+                ASSERTLINE(LINE(1214, 1245, 1245), thread->mutex->thread);
                 UpdatePriority(thread->mutex->thread);
             }
             break;

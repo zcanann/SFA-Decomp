@@ -1315,7 +1315,7 @@ _FCEB_Done:
       _notEnoughBits:
         cmpwi   cnt, 33;
         lwz     tmp, info->c;
-        beq     _getfullword; 
+        beq     _getfullword;
 
         cmpwi   cnt, 32;
         rlwnm   code, cb, code, 27, 31

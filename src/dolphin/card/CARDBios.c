@@ -120,7 +120,7 @@ void __CARDTxHandler(s32 chan, OSContext* context) {
     int err;
 
     ASSERTLINE(365, 0 <= chan && chan < 2);
-    
+
     card = &__CARDBlock[chan];
     err = !EXIDeselect(chan);
     EXIUnlock(chan);
@@ -247,7 +247,7 @@ static s32 Retry(s32 chan) {
     CARDControl* card;
 
     ASSERTLINE(654, 0 <= chan && chan < 2);
-    
+
     card = &__CARDBlock[chan];
     if (!EXISelect(chan, 0, CARDFreq)) {
         EXIUnlock(chan);
@@ -448,7 +448,7 @@ s32 __CARDWritePage(s32 chan, CARDCallback callback) {
             result = CARD_RESULT_READY;
         }
     }
-    
+
     return result;
 }
 

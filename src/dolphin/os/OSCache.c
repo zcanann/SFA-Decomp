@@ -333,7 +333,7 @@ _touchloop:
     oris    r4, r4, 0x100F
     mtspr   HID2, r4
 
-    nop 
+    nop
     nop
     nop
     nop

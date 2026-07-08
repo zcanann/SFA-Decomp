@@ -16,13 +16,13 @@ typedef enum
 
 // ---------------------------------------------------------------------------
 //
-// void EXI2_Init( volatile unsigned char **inputPendingPtrRef, 
+// void EXI2_Init( volatile unsigned char **inputPendingPtrRef,
 //                 EXICallback monitorCallback );
 //
-// Description: Initialize the EXI2 driver (without interrupts).  The 
+// Description: Initialize the EXI2 driver (without interrupts).  The
 //              parameter 'inputPendingPtrref' is a flag showing whether input
-//              is waiting in the EXI2 buffer and 'monitorCallback' is a 
-//              pointer to a callback function that is invoked at the end of 
+//              is waiting in the EXI2 buffer and 'monitorCallback' is a
+//              pointer to a callback function that is invoked at the end of
 //              the EXI2 ISR.
 //
 // ---------------------------------------------------------------------------
@@ -32,10 +32,10 @@ void EXI2_Init(volatile unsigned char **inputPendingPtrRef, EXICallback monitorC
 //
 // void EXI2_EnableInterrupts( void );
 //
-// Description: Enable EXI2 interrupts.  This function must be called to use 
-//              interrupts on the EXI2 interface.  Call this function only 
+// Description: Enable EXI2 interrupts.  This function must be called to use
+//              interrupts on the EXI2 interface.  Call this function only
 //              after EXI2_Init() has been invoked.
-// 
+//
 // ---------------------------------------------------------------------------
 void		EXI2_EnableInterrupts( void );
 
@@ -45,7 +45,7 @@ void		EXI2_EnableInterrupts( void );
 //
 // int EXI2_Poll( void );
 //
-// Description: Returns the number of bytes waiting to be read in the EXI2 
+// Description: Returns the number of bytes waiting to be read in the EXI2
 //              buffer.
 //
 // ---------------------------------------------------------------------------

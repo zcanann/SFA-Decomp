@@ -109,7 +109,7 @@ s32 CARDProbeEx(s32 chan, s32* memSize, s32* sectorSize) {
     else if (IsCard(id)) {
         if (memSize)
             *memSize = (s32)(id & 0xfc);
-        
+
         if (sectorSize)
             *sectorSize = SectorSizeTable[(id & 0x00003800) >> 11];
         result = CARD_RESULT_READY;
@@ -149,7 +149,7 @@ static s32 DoMount(s32 chan) {
         card->cid = id;
         card->size = (u16)(id & 0xFC);
         ASSERTLINE(424, card->size);
-        
+
         card->sectorSize = SectorSizeTable[(id & 0x00003800) >> 11];
         ASSERTLINE(426, card->sectorSize);
 

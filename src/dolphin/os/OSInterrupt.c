@@ -115,7 +115,7 @@ _restore:
 
 __OSInterruptHandler __OSSetInterruptHandler(__OSInterrupt interrupt, __OSInterruptHandler handler) {
     __OSInterruptHandler oldHandler;
- 
+
     ASSERTMSGLINE(411, InterruptHandlerTable, "__OSSetInterruptHandler(): OSInit() must be called in advance.");
     ASSERTMSGLINE(413, interrupt < 0x20, "__OSSetInterruptHandler(): unknown interrupt.");
 
@@ -470,7 +470,7 @@ void __OSDispatchInterrupt(__OSException exception, OSContext* context) {
 static asm void ExternalInterruptHandler(register __OSException exception,
                                          register OSContext* context) {
 #pragma unused(exception)
-    nofralloc 
+    nofralloc
     OS_EXCEPTION_SAVE_GPRS(context)
 
     stwu r1, -0x8(r1)

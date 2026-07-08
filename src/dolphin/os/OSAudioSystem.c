@@ -18,7 +18,7 @@ void __OSInitAudioSystem(void) {
     ASSERTMSGLINE(113, !(__DSPRegs[5] & 0x200), "__OSInitAudioSystem(): ARAM DMA already in progress");
     ASSERTMSGLINE(117, !(__DSPRegs[5] & 0x400), "__OSInitAudioSystem(): DSP DMA already in progress");
     ASSERTMSGLINE(121, (__DSPRegs[5] & 0x004), "__OSInitAudioSystem(): DSP already working");
-    
+
     __DSPRegs[5] = 0x8AC;
     __DSPRegs[5] |= 1;
 
@@ -52,7 +52,7 @@ void __OSInitAudioSystem(void) {
 
     __DSPRegs[5] &= ~0x800;
     while ((__DSPRegs[5]) & 0x400);
-    
+
     __DSPRegs[5] &= ~4;
     errFlag = 0;
 

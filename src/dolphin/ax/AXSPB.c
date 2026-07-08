@@ -61,14 +61,14 @@ void __AXSPBInit(void) {
 #ifdef DEBUG
     OSReport("Initializing AXSPB code module\n");
 #endif
-    __AXSpbAL = 
-    __AXSpbAR = 
-    __AXSpbAS = 
-    __AXSpbAAL = 
-    __AXSpbAAR = 
-    __AXSpbAAS = 
-    __AXSpbABL = 
-    __AXSpbABR = 
+    __AXSpbAL =
+    __AXSpbAR =
+    __AXSpbAS =
+    __AXSpbAAL =
+    __AXSpbAAR =
+    __AXSpbAAS =
+    __AXSpbABL =
+    __AXSpbABR =
     __AXSpbABS = 0;
 }
 

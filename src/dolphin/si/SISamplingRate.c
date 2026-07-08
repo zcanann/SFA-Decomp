@@ -94,7 +94,7 @@ void __SITestSamplingRate(u32 tvmode) {
                     msec, count, line, line * (count - 1) + LATENCY, (line * 636) / 10000, (line * 636) % 10000,
                     ((263 - line * (count - 1)) * 636) / 10000, ((263 - line * (count - 1)) * 636) % 10000);
                 ASSERTLINE(443, line * (count - 1) + LATENCY < 263);
-                
+
                 if (msec != 0) {
                     ASSERTLINE(446, 636 * line < msec * 10000);
                     ASSERTLINE(447, 636 * (263 - line * (count - 1)) < msec * 10000);
@@ -110,7 +110,7 @@ void __SITestSamplingRate(u32 tvmode) {
                     msec, count, line, line * (count - 1) + LATENCY, (line * 640) / 10000, (line * 640) % 10000,
                     ((313 - line * (count - 1)) * 640) / 10000, ((313 - line * (count - 1)) * 640) % 10000);
                 ASSERTLINE(467, line * (count - 1) + LATENCY < 313);
-                
+
                 if (msec != 0) {
                     ASSERTLINE(470, 640 * line < msec * 10000);
                     ASSERTLINE(471, 640 * (313 - line * (count - 1)) < msec * 10000);

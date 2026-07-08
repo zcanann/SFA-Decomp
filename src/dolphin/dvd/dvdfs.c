@@ -75,11 +75,11 @@ static inline BOOL isSame(const char* path, const char* string) {
             return FALSE;
         }
     }
-    
+
     if (*path == '/' || *path == '\0') {
         return TRUE;
     }
-    
+
     return FALSE;
 }
 
@@ -94,11 +94,11 @@ s32 DVDConvertPathToEntrynum(const char* pathPtr) {
     const char* extentionStart;
     BOOL illegal;
     BOOL extention;
-    
+
     ASSERTMSGLINE(318, pathPtr, "DVDConvertPathToEntrynum(): null pointer is specified  ");
-    
+
     dirLookAt = sDvdfsCurrentDirEntry;
-    
+
     while (1) {
         if (*pathPtr == '\0') {
             return dirLookAt;
@@ -122,11 +122,11 @@ s32 DVDConvertPathToEntrynum(const char* pathPtr) {
                 return dirLookAt;
             }
         }
-        
+
         if (__DVDLongFileNameFlag == 0) {
             extention = FALSE;
             illegal = FALSE;
-        
+
             for (ptr = pathPtr; (*ptr != '\0') && (*ptr != '/'); ptr++) {
                 if (*ptr == '.') {
                     if ((ptr - pathPtr > 8) || (extention == TRUE)) {
@@ -135,45 +135,45 @@ s32 DVDConvertPathToEntrynum(const char* pathPtr) {
                     }
                     extention = TRUE;
                     extentionStart = ptr + 1;
-            
+
                 } else if (*ptr == ' ')
                     illegal = TRUE;
             }
-        
+
             if ((extention == TRUE) && (ptr - extentionStart > 3))
                 illegal = TRUE;
-        
+
             if (illegal)
                 OSPanic(sDvdfsFileName, 376, sDVDIllegalPathFormatMessage, origPathPtr);
         } else {
             for (ptr = pathPtr; (*ptr != '\0') && (*ptr != '/'); ptr++)
                 ;
         }
-        
+
         isDir = (*ptr == '\0') ? FALSE : TRUE;
         length = (u32)(ptr - pathPtr);
-        
+
         ptr = pathPtr;
-        
+
         for (i = dirLookAt + 1; i < nextDir(dirLookAt); i = entryIsDir(i) ? nextDir(i) : (i + 1)) {
             if ((entryIsDir(i) == FALSE) && (isDir == TRUE)) {
                 continue;
             }
-        
+
             stringPtr = FstStringStart + stringOff(i);
-        
+
             if (isSame(ptr, stringPtr) == TRUE) {
                 goto next_hier;
             }
         }
-        
+
         return -1;
-    
+
 next_hier:
         if (!isDir) {
             return i;
         }
-        
+
         dirLookAt = i;
         pathPtr += length + 1;
     }
@@ -184,16 +184,16 @@ BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
     ASSERTMSGLINE(455, fileInfo, "DVDFastOpen(): null pointer is specified to file info address  ");
     ASSERTMSG1LINE(458, (entrynum >= 0) && ((u32) entrynum <  MaxEntryNum), "DVDFastOpen(): specified entry number '%d' is out of range  ", entrynum);
     ASSERTMSG1LINE(461, !entryIsDir(entrynum), "DVDFastOpen(): entry number '%d' is assigned to a directory  ", entrynum);
-    
+
     if (entrynum < 0 || entrynum >= MaxEntryNum || entryIsDir(entrynum)) {
         return FALSE;
     }
-    
+
     fileInfo->startAddr = filePosition(entrynum);
     fileInfo->length = fileLength(entrynum);
     fileInfo->callback = (DVDCallback)NULL;
     fileInfo->cb.state = DVD_STATE_END;
-    
+
     return TRUE;
 }
 #endif
@@ -201,28 +201,28 @@ BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
 BOOL DVDOpen(const char* fileName, DVDFileInfo* fileInfo) {
     s32 entry;
     char currentDir[128];
-    
+
     ASSERTMSGLINE(491, fileName, "DVDOpen(): null pointer is specified to file name  ");
     ASSERTMSGLINE(492, fileInfo, "DVDOpen(): null pointer is specified to file info address  ");
-    
+
     entry = DVDConvertPathToEntrynum(fileName);
-    
+
     if (0 > entry) {
         DVDGetCurrentDir(currentDir, 128);
         OSReport(sDVDOpenNotFoundWarningFormat, fileName, currentDir);
         return FALSE;
     }
-    
+
     if (entryIsDir(entry)) {
         ASSERTMSG1LINE(506, !entryIsDir(entry), "DVDOpen(): directory '%s' is specified as a filename  ", fileName);
         return FALSE;
     }
-    
+
     fileInfo->startAddr = filePosition(entry);
     fileInfo->length = fileLength(entry);
     fileInfo->callback = (DVDCallback)NULL;
     fileInfo->cb.state = DVD_STATE_END;
-    
+
     return TRUE;
 }
 
@@ -266,7 +266,7 @@ static u32 entryToPath(u32 entry, char* path, u32 maxlen) {
 
 static inline BOOL DVDConvertEntrynumToPath(s32 entrynum, char* path, u32 maxlen) {
     u32 loc;
-    
+
     ASSERTMSG1LINE(622, (entrynum >= 0) && ((u32)entrynum < MaxEntryNum), "DVDConvertEntrynumToPath: specified entrynum(%d) is out of range  ", entrynum);
     ASSERTMSG1LINE(624, maxlen > 1, "DVDConvertEntrynumToPath: maxlen should be more than 1 (%d is specified)", maxlen);
     ASSERTMSGLINE(629, entryIsDir(entrynum), "DVDConvertEntrynumToPath: cannot convert an entry num for a file to path  ");

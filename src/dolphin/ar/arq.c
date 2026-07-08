@@ -57,11 +57,11 @@ void __ARQInterruptServiceRoutine() {
     if (__ARQCallbackHi) {
         __ARQCallbackHi((u32)__ARQRequestPendingHi);
         __ARQRequestPendingHi = NULL;
-        __ARQCallbackHi = NULL;        
+        __ARQCallbackHi = NULL;
     } else if (__ARQCallbackLo) {
         __ARQCallbackLo((u32)__ARQRequestPendingLo);
         __ARQRequestPendingLo = NULL;
-        __ARQCallbackLo = NULL;        
+        __ARQCallbackLo = NULL;
     }
 
     __ARQPopTaskQueueHi();

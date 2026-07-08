@@ -88,7 +88,7 @@ lbl_800031E8:
     lis r6, InitMetroTRK@ha
     addi r6, r6, InitMetroTRK@l
     mtlr r6
-    blrl 
+    blrl
 
 lbl_800031F8:
     lis r6, 0x8000
@@ -117,11 +117,11 @@ lbl_80003230:
     rlwinm r7, r15, 0, 0, 0x1a
     stw r7, 0(r5)
     b lbl_80003260
-    
+
 lbl_80003258:
     li r14, 0
     li r15, 0
-    
+
 lbl_80003260:
     bl DBInit
     bl OSInit
@@ -133,16 +133,16 @@ lbl_80003260:
     andi. r3, r3, 0x7fff
     cmplwi r3, 1
     bne lbl_8000328C
-    
+
 lbl_80003288:
     bl __check_pad3
-    
+
 lbl_8000328C:
     bl __get_debug_bba
     cmplwi r3, 1
     bne lbl_8000329C
     bl InitMetroTRK_BBA
-    
+
 lbl_8000329C:
     bl __init_user
     mr r3, r14
@@ -191,7 +191,7 @@ SECTION_INIT asm void __init_registers(void) {
     ori r2, r2, _SDA2_BASE_@l
     lis r13, _SDA_BASE_@h
     ori r13, r13, _SDA_BASE_@l
-    blr 
+    blr
     // clang-format on
 }
 

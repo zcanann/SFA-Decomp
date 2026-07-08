@@ -6,9 +6,9 @@ extern unsigned long __float_nan[];
 #endif
 
 #ifdef __STDC__
-static const double 
+static const double
 #else
-static double 
+static double
 #endif
 one=  1.00000000000000000000e+00, /* 0x3FF00000, 0x00000000 */
 pi =  3.14159265358979311600e+00, /* 0x400921FB, 0x54442D18 */
@@ -34,10 +34,10 @@ qS4 =  7.70381505559019352791e-02; /* 0x3FB3B8C5, 0xB12E9282 */
 {
 	double z,p,q,r,w,s,c,df;
 	int hx,ix;
-	
+
 	hx = __HI(x);
 	ix = hx&0x7fffffff;
-	
+
 	if(ix>=0x3ff00000) {	/* |x| >= 1 */
 	    if(((ix-0x3ff00000)|__LO(x))==0) {	/* |x|==1 */
 		if(hx>0) return 0.0;		/* acos(1) = 0  */

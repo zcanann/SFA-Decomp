@@ -463,7 +463,7 @@ void AXFXChorusCallback(AXFX_BUFFERUPDATE* bufferUpdate, AXFX_CHORUS* chorus) {
     for (i = 0; i < 3; i++) {
         chorus->work.src.posHi = chorus->work.currentPosHi;
         chorus->work.src.posLo = chorus->work.currentPosLo;
-        switch (i) {                  
+        switch (i) {
         case 0:
             chorus->work.src.smpBase = chorus->work.lastLeft[0];
             chorus->work.src.dest = bufferUpdate->left;

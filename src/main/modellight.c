@@ -769,7 +769,7 @@ void modelLightStruct_setDirection(ModelLightStruct* s, f32 x, f32 y, f32 z)
     else
     {
         {
-            
+
             *(IVec3*)&s->viewDirX = *(IVec3*)&s->worldDirX;
         }
     }
@@ -803,7 +803,7 @@ void modelLightStruct_setPosition(ModelLightStruct* s, f32 x, f32 y, f32 z)
     else
     {
         {
-            
+
             *(IVec3*)&s->viewX = *(IVec3*)&s->worldX;
         }
     }
@@ -947,7 +947,7 @@ void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
             }
             else
             {
-                
+
                 *(IVec3*)viewDir = *(IVec3*)localDir;
             }
             GXInitSpecularDir(light + 0xc0, viewDir[0], viewDir[1], viewDir[2]);

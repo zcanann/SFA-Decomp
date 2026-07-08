@@ -222,7 +222,7 @@ static void Halt() {
 
     fontData = OSAllocFromArenaLo(0xA1004, DOLPHIN_ALIGNMENT);
     OSLoadFont(fontData, OSGetArenaLo());
-    
+
     xfb = OSAllocFromArenaLo(0x96000, DOLPHIN_ALIGNMENT);
     ScreenClear(xfb, 640, 480, RGB2YUV(fp->bg));
     VISetNextFrameBuffer(xfb);

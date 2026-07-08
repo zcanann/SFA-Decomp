@@ -42,7 +42,7 @@ int OSReceiveMessage(OSMessageQueue* mq, void* msg, s32 flags) {
     if(msg != NULL) {
        *(u32*)msg = ((u32*)mq->msgArray)[mq->firstIndex];
     }
-    
+
     mq->firstIndex = (mq->firstIndex + 1) % mq->msgCount;
     mq->usedCount--;
     OSWakeupThread(&mq->queueSend);

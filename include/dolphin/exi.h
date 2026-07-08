@@ -60,7 +60,7 @@ extern "C" {
 #define EXI_FREQ_32M 5
 
 typedef void (*EXICallback)(s32 chan, OSContext* context);
-typedef struct EXIControl {    
+typedef struct EXIControl {
     EXICallback exiCallback;
     EXICallback tcCallback;
     EXICallback extCallback;

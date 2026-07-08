@@ -131,7 +131,7 @@ void __AXNextFrame(void* sbuffer, void* buffer) {
         __AXWriteToCommandList((u32)__AXCompressorTable);
         __AXCommandListCycles += 0xBB8;
     }
-    
+
     __AXWriteToCommandList(0xE);
     __AXWriteToCommandList((u16)((u32)sbuffer >> 0x10));
     __AXWriteToCommandList((u32)sbuffer);

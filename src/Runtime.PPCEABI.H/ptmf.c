@@ -11,7 +11,7 @@ asm long __ptmf_test(register __ptmf* ptmf) {
     cmpwi r5, 0
     cmpwi cr6, r6, 0
     cmpwi cr7, r7, 0
-    bnelr 
+    bnelr
     bnelr cr6
     bnelr cr7
     li r3, 0

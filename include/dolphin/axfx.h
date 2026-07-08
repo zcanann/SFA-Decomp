@@ -171,7 +171,7 @@ void AXFXChorusCallback(AXFX_BUFFERUPDATE* bufferUpdate, AXFX_CHORUS* chorus);
 void AXFXDelayCallback(AXFX_BUFFERUPDATE* bufferUpdate, AXFX_DELAY* delay);
 int AXFXDelaySettings(AXFX_DELAY* delay);
 int AXFXDelayInit(AXFX_DELAY* delay);
-int AXFXDelayShutdown(AXFX_DELAY* delay); 
+int AXFXDelayShutdown(AXFX_DELAY* delay);
 
 // reverb_hi
 void DoCrossTalk(s32* l, s32* r, f32 cross, f32 invcross);

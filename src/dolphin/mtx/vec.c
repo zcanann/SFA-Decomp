@@ -53,7 +53,7 @@ asm void PSVECScale(register const Vec *src, register Vec *dst, register f32 sca
     psq_st       f0, 0(dst), 0, 0
     ps_muls0     f0, f2, f1
     psq_st       f0, 8(dst), 1, 0
-    blr 
+    blr
 #endif // clang-format on
 }
 
@@ -89,7 +89,7 @@ asm f32 PSVECSquareMag(register const Vec *v) {
     lfs        f1, 8(v)
     ps_madd    f1, f1, f1, f0
     ps_sum0    f1, f1, f0, f0
-    blr 
+    blr
 #endif // clang-format on
 }
 
@@ -126,7 +126,7 @@ asm f32 PSVECDotProduct(const register Vec *vec1, const register Vec *vec2)
     psq_l      f4, 0(r4), 0, 0 /* qr0 */
     ps_madd    f3, f5, f4, f2
     ps_sum0    f1, f3, f2, f2
-    blr 
+    blr
 #endif // clang-format on
 }
 
@@ -148,7 +148,7 @@ asm void PSVECCrossProduct(register const Vec *a, register const Vec *b, registe
     psq_st         f9, 0(axb), 1, 0
     ps_neg         f10, f10
     psq_st         f10, 4(axb), 0, 0
-    blr 
+    blr
 #endif // clang-format on
 }
 
@@ -222,7 +222,7 @@ asm f32 PSVECSquareDistance(register const Vec *a, register const Vec *b) {
     ps_sub     f0, f0, f1
     ps_madd    f1, f0, f0, f2
     ps_sum0    f1, f1, f2, f2
-    blr 
+    blr
 #endif // clang-format on
 }
 

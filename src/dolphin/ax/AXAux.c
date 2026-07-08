@@ -129,7 +129,7 @@ void __AXProcessAux(void) {
             DCInvalidateRange(auxData.l, 0x780);
             __AXCallbackAuxA(&auxData.l, __AXContextAuxA);
             DCFlushRangeNoSync(auxData.l, 0x780);
-        }        
+        }
     }
 
     if (__AXCallbackAuxB && __AXClMode != 2) {
@@ -158,10 +158,10 @@ void __AXProcessAux(void) {
 
 void AXRegisterAuxACallback(void (*callback)(void*, void*), void* context) {
     __AXCallbackAuxA = callback;
-    __AXContextAuxA = context;    
+    __AXContextAuxA = context;
 }
 
 void AXRegisterAuxBCallback(void (*callback)(void*, void*), void* context) {
     __AXCallbackAuxB = callback;
-    __AXContextAuxB = context;    
+    __AXContextAuxB = context;
 }

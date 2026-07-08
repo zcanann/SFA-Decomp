@@ -36,7 +36,7 @@ void __GXVerifySU(void) {
     scis_r = scis_r - (u32)SOME_GET_REG_MACRO(__gxVerif->rasRegs[89], 11, 1);
     scis_t = scis_t - (u32)SOME_GET_REG_MACRO2(__gxVerif->rasRegs[89], 11, 9);
     scis_b = scis_b - (u32)SOME_GET_REG_MACRO2(__gxVerif->rasRegs[89], 11, 9);
-    
+
     if (scis_l < 0 && __gxVerif->verifyLevel >= __gxvWarnLev[GXWARN_SCISSOR_RECT_LEFT]) {
         __GX_WARNF(GXWARN_SCISSOR_RECT_LEFT, 0);
     }
@@ -237,7 +237,7 @@ void __GXVerifyTEX(void) {
             }
             indirect[texId] = 1;
         }
-    
+
         if (enabled) {
             if (__gxVerif->verifyLevel >= GX_WARN_SEVERE) {
                 if (((u32)(__gxVerif->rasRegs[0x80 + SOMEINDEX(texId)] & 0xFF000000) + 0x01000000 == 0
@@ -455,7 +455,7 @@ void __GXVerifyTEV(void) {
                 sprintf(__gxvDummyStr, __gxvWarnings[0x22], "D", i);
                 __gxVerif->cb(1, 0x22U, __gxvDummyStr);
             }
-        
+
             if (!enabled && (u32)GET_REG_FIELD(__gxVerif->rasRegs[(i * 2) + 0xC1], 3, 13) == 4) {
                 sprintf(__gxvDummyStr, __gxvWarnings[0x23], "A", i);
                 __gxVerif->cb(1, 0x23U, __gxvDummyStr);
