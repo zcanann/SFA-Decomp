@@ -211,10 +211,10 @@ void wmwallcrawler_free(int obj)
     ObjGroup_RemoveObject(obj, WMWALLCRAWLER_OBJGROUP);
 }
 
-void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+void wmwallcrawler_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    ObjAnimComponent* objAnim = &((GameObject*)p1)->anim;
-    int* inner = ((GameObject*)p1)->extra;
+    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
+    int* inner = ((GameObject*)obj)->extra;
     if ((((WmwallcrawlerState*)inner)->flags & WMWALLCRAWLER_FLAG_FADE_IN) != 0 && objAnim->alpha < 0xff)
     {
         if (objAnim->alpha > 0xff - framesThisStep)
@@ -229,7 +229,7 @@ void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     }
     if (vis != 0 && ((WmwallcrawlerState*)inner)->despawnTimer == 0)
     {
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5FB4); /* 1.0f */
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5FB4); /* 1.0f */
     }
 }
 

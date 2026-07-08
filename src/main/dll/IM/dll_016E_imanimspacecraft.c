@@ -135,11 +135,11 @@ void imanimspacecraft_free(GameObject* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void imanimspacecraft_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4780);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4780);
 }
 
 void imanimspacecraft_hitDetect(void)

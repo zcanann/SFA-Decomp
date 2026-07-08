@@ -72,13 +72,13 @@ void SB_MiniFire_free(GameObject* obj)
     (*gModgfxInterface)->detachSource(obj);
 }
 
-void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void SB_MiniFire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
     {
         fn_80053ED0(8);
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, 1.0f);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
         fn_80053EBC(8);
     }
 }

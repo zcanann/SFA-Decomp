@@ -58,11 +58,11 @@ void SB_SeqDoor_free(void)
 {
 }
 
-void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void SB_SeqDoor_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5920);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5920);
     }
 }
 

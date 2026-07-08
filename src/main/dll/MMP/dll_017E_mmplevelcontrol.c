@@ -86,11 +86,11 @@ void MMP_levelcontrol_free(int obj)
     Music_Trigger(MUSICTRIG_WLC_Puzzle, 0);
 }
 
-void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void MMP_levelcontrol_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void MMP_levelcontrol_hitDetect(void)

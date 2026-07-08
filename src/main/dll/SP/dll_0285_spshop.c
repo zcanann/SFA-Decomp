@@ -308,11 +308,11 @@ void shop_free(int* obj)
     mainSetBits(GAMEBIT_PlayerInShop, 0);
 }
 
-void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void shop_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E59C8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E59C8);
 }
 
 void shop_hitDetect(void)

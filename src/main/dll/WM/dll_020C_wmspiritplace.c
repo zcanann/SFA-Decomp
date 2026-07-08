@@ -225,7 +225,7 @@ void WM_spiritplace_free(void)
 {
 }
 
-void WM_spiritplace_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void WM_spiritplace_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible == 0)
     {

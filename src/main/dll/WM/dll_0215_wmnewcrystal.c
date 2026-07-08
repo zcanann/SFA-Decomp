@@ -132,9 +132,9 @@ void WM_newcrystal_free(void)
 {
 }
 
-void WM_newcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+void WM_newcrystal_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f); /* literal, not the named 1.0 extern (#71 pool shape) */
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f); /* literal, not the named 1.0 extern (#71 pool shape) */
 }
 
 void WM_newcrystal_hitDetect(void)
