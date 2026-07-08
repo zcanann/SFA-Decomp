@@ -516,7 +516,7 @@ void dbstealerworm_release(void)
 {
 }
 
-void dbstealerworm_init(int* obj, u8* def, int param3)
+void dbstealerworm_init(int* obj, u8* def, int flag)
 {
     extern u32 ObjGroup_AddObject();
     extern u32 ObjHits_EnableObject();
@@ -527,7 +527,7 @@ void dbstealerworm_init(int* obj, u8* def, int param3)
 
     sub = ((GameObject*)obj)->extra;
     mode = 6;
-    if (param3 != 0)
+    if (flag != 0)
     {
         mode |= 1;
     }
@@ -732,13 +732,13 @@ int dbstealerworm_func0B(int obj, u8 msg, int* out)
 }
 
 #pragma dont_inline on
-void fn_80203000(int obj, int param2)
+void fn_80203000(int obj, int baddie)
 {
     int i;
-    DbStealerwormControl* state = (DbStealerwormControl*)*(int*)&((GroundBaddieState*)param2)->control;
-    if ((state->flags14 & DBWORM_FLAG14_ATTACK) && *(void**)&((GroundBaddieState*)param2)->baddie.targetObj != 0)
+    DbStealerwormControl* state = (DbStealerwormControl*)*(int*)&((GroundBaddieState*)baddie)->control;
+    if ((state->flags14 & DBWORM_FLAG14_ATTACK) && *(void**)&((GroundBaddieState*)baddie)->baddie.targetObj != 0)
     {
-        fn_80202EF0(obj, param2);
+        fn_80202EF0(obj, baddie);
     }
     if (state->flags14 & DBWORM_FLAG14_FX_DUST)
     {
@@ -757,10 +757,10 @@ void fn_80203000(int obj, int param2)
 }
 #pragma dont_inline reset
 
-int dbstealerworm_stateHandlerA04(int obj, int param2)
+int dbstealerworm_stateHandlerA04(int obj, int baddie)
 {
     GroundBaddieState* state = ((GameObject*)obj)->extra;
-    BaddieState* bs = (BaddieState*)param2;
+    BaddieState* bs = (BaddieState*)baddie;
     u32 eventFlags;
     DbStealerwormControl* sub;
     if (*(s8*)&bs->moveJustStartedA != 0)
@@ -790,10 +790,10 @@ int dbstealerworm_stateHandlerA04(int obj, int param2)
     return 0;
 }
 
-int dbstealerworm_stateHandlerA0E(int obj, int param2)
+int dbstealerworm_stateHandlerA0E(int obj, int baddie)
 {
     DbStealerwormControl* sub = (DbStealerwormControl*)(*(GroundBaddieState**)&((GameObject*)obj)->extra)->control;
-    BaddieState* bs = (BaddieState*)param2;
+    BaddieState* bs = (BaddieState*)baddie;
     sub->flags14 = sub->flags14 | DBWORM_FLAG14_FX_DUST;
     sub->flags15 = sub->flags15 | 0x4;
     bs->moveSpeed = lbl_803E62E8;
@@ -862,7 +862,7 @@ void fn_80202EF0(int obj, int baddie)
 
 #pragma opt_common_subs off
 #pragma dont_inline on
-int fn_80202C78(int obj, int otherObj, f32 yawOffset, f32 speed, f32 p3, f32 range)
+int fn_80202C78(int obj, int otherObj, f32 yawOffset, f32 speed, f32 unused, f32 range)
 {
     extern f32 lbl_803E6370;
     extern f32 lbl_803E634C;
@@ -914,7 +914,7 @@ int fn_80202C78(int obj, int otherObj, f32 yawOffset, f32 speed, f32 p3, f32 ran
 #pragma opt_common_subs reset
 
 #pragma dont_inline on
-int fn_80202DA4(u8* obj, u8* otherObj, f32 yawOffset, f32 speed, f32 p3, f32 range)
+int fn_80202DA4(u8* obj, u8* otherObj, f32 yawOffset, f32 speed, f32 unused, f32 range)
 {
     extern f32 lbl_803E6378;
     extern f32 lbl_803E634C;
@@ -1231,7 +1231,7 @@ int dbstealerworm_stateHandlerB05(int obj, int baddie)
     return 0;
 }
 
-void fn_80203144(int obj, int p2, int p3)
+void fn_80203144(int obj, int groundState, int baddie)
 {
 
     extern void* Obj_GetPlayerObject(void);
@@ -1240,7 +1240,7 @@ void fn_80203144(int obj, int p2, int p3)
     extern f32 lbl_803E62B0;
     extern f32 lbl_803E6354;
     extern f32 lbl_803E6384;
-    GroundBaddieState* st = (GroundBaddieState*)p2;
+    GroundBaddieState* st = (GroundBaddieState*)groundState;
     DbStealerwormControl* sub = (DbStealerwormControl*)st->control;
     u32 near;
     int data;
@@ -1254,7 +1254,7 @@ void fn_80203144(int obj, int p2, int p3)
 
     stk.range = lbl_803E62B0;
     data = *(int*)&((GameObject*)obj)->anim.placementData;
-    near = (**(u32(**)(int, int, f32, int))((char*)*gBaddieControlInterface + 0x48))(obj, p3, st->aggroRange, 0x8000);
+    near = (**(u32(**)(int, int, f32, int))((char*)*gBaddieControlInterface + 0x48))(obj, baddie, st->aggroRange, 0x8000);
     if (near == 0 && (st->configFlags & 0x10) != 0)
     {
         near = ObjGroup_FindNearestObject(DBEGG_OBJGROUP, obj, &stk.range);
@@ -1267,9 +1267,9 @@ void fn_80203144(int obj, int p2, int p3)
     if (near != 0 && (st->configFlags & 2) == 0)
     {
         (**(void (**)(int, int, int, int, int, int, int, int, int))((char*)*gBaddieControlInterface + 0x28))(
-            obj, p3, p2 + 0x35c, st->gameBitB, 0, 0, 0, 8, -1);
-        *(int*)&((BaddieState*)p3)->targetObj = near;
-        ((BaddieState*)p3)->hasTarget = 0;
+            obj, baddie, groundState + 0x35c, st->gameBitB, 0, 0, 0, 8, -1);
+        *(int*)&((BaddieState*)baddie)->targetObj = near;
+        ((BaddieState*)baddie)->hasTarget = 0;
         ObjGroup_AddObject(obj, DBSTEALERWORM_OBJGROUP);
         *(u16*)&st->targetState = 1;
     }
