@@ -149,11 +149,11 @@ void imanimspacecraft_init(GameObject* obj)
     *(f32*)(lbl_803AC948 + 0xc) = pos;
     *(f32*)(lbl_803AC948 + 0x10) = pos;
     *(f32*)(lbl_803AC948 + 0x14) = pos;
-    mainSetBits(0xbeb, 1);
-    mainSetBits(0xbec, 1);
-    mainSetBits(0xbed, 1);
-    mainSetBits(0xbee, 1);
-    mainSetBits(0xbef, 1);
+    mainSetBits(GAMEBIT_IM_Unk0BEB, 1);
+    mainSetBits(GAMEBIT_IM_Unk0BEC, 1);
+    mainSetBits(GAMEBIT_IM_Unk0BED, 1);
+    mainSetBits(GAMEBIT_IM_Unk0BEE, 1);
+    mainSetBits(GAMEBIT_IM_Unk0BEF, 1);
 }
 
 void imanimspacecraft_release(void)
