@@ -1,4 +1,5 @@
 #include "main/engine_shared.h"
+#include "main/pi_dolphin.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 
 extern f32 lbl_803DE544;
@@ -6,7 +7,7 @@ extern f32 lbl_803DE544;
 int getLActions(int a, int b, u16 idx)
 {
     void* buf = mmAlloc(0x28, -1, NULL);
-    getTabEntry(buf, 0xc, idx * 0x28, 0x28);
+    getTabEntry(buf, MLDF_FILEID_LACTIONS_BIN, idx * 0x28, 0x28);
     mm_free(buf);
     return 0;
 }
@@ -74,7 +75,7 @@ int getEnvfxActImmediately(int a, int b, u16 idx, int d)
     u8 raw[0x80];
     EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);
 
-    getTabEntry(e, 0x57, idx * 0x60, 0x60);
+    getTabEntry(e, MLDF_FILEID_ENVFXACT_BIN, idx * 0x60, 0x60);
     if (e != NULL)
     {
         if (e->kind <= 2 || e->kind == 4)
@@ -104,7 +105,7 @@ int getEnvfxAct(int a, int b, u16 idx, int d)
     u8 raw[0x80];
     EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);
 
-    getTabEntry(e, 0x57, idx * 0x60, 0x60);
+    getTabEntry(e, MLDF_FILEID_ENVFXACT_BIN, idx * 0x60, 0x60);
     if (e != NULL)
     {
         if (e->kind <= 2 || e->kind == 4)
