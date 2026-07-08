@@ -22,10 +22,10 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-int cnthitobjec_SeqFn(int obj, int p2, int p3)
+int cnthitobjec_SeqFn(int obj, int unused, int animEvent)
 {
     int i;
-    CntHitObjectAnimEvent* event = (CntHitObjectAnimEvent*)p3;
+    CntHitObjectAnimEvent* event = (CntHitObjectAnimEvent*)animEvent;
     for (i = 0; i < event->explosionCount; i++)
     {
         spawnExplosion(obj, (f32)(u32)event->explosionIds[i], 1, 1, 1, 1, 0, 1, 0);

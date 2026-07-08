@@ -67,7 +67,7 @@ extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CA0;
 extern f32 lbl_803E4CCC;
 
-int DIMbosstonsil_SeqFn(void* obj, u32 p2, ObjAnimUpdateState* animUpdate)
+int DIMbosstonsil_SeqFn(void* obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
     extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
@@ -371,7 +371,7 @@ void DIMbosstonsil_update(void* obj)
 }
 
 #pragma opt_propagation off
-void DIMbosstonsil_init(int obj, u32 p2, int isAltVariant)
+void DIMbosstonsil_init(int obj, u32 def, int isAltVariant)
 {
     extern u32* gBaddieControlInterface;
     extern void modelLightStruct_setEnabled(void* handle, int enable, f32 fade);
@@ -385,7 +385,7 @@ void DIMbosstonsil_init(int obj, u32 p2, int isAltVariant)
     {
         variant = variant | 1;
     }
-    (*(void (**)(int, u32, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, p2, state, 2, 2, 0x102,
+    (*(void (**)(int, u32, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, def, state, 2, 2, 0x102,
                                                                                            variant, lbl_803E4CCC);
     ((GameObject*)obj)->animEventCallback = DIMbosstonsil_SeqFn;
     (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);

@@ -114,7 +114,7 @@ void CameraModeForceBehind_update(u8* obj)
 #pragma opt_common_subs reset
 
 #pragma opt_propagation off
-void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
+void CameraModeForceBehind_init(u8* obj, int unused, f32* params)
 {
     CameraObject* camera = (CameraObject*)obj;
     GameObject* target = (GameObject*)camera->anim.targetObj;
@@ -139,10 +139,10 @@ void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
     dx = pos[0] - baseX;
     dz = pos[2] - baseZ;
     gCamForceBehindTraceDistance = sqrtf(dx * dx + dz * dz);
-    if (p3 != NULL)
+    if (params != NULL)
     {
-        gCamForceBehindOrbitRadius = p3[0];
-        gCamForceBehindActiveHeightOffset = p3[1];
+        gCamForceBehindOrbitRadius = params[0];
+        gCamForceBehindActiveHeightOffset = params[1];
     }
     else
     {
