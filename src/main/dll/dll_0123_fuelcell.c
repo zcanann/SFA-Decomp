@@ -4,6 +4,7 @@ extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -269,7 +270,7 @@ void FuelCell_update(int* obj)
             {
                 state->grabbed = 0;
                 mainSetBits(setup->offBit, 1);
-                gameBitIncrement(0x3f5);
+                gameBitIncrement(GAMEBIT_ITEM_FuelCell_Count);
                 mainSetBits(FUELCELL_GAMEBIT_CARRIED, 0);
             }
         }
