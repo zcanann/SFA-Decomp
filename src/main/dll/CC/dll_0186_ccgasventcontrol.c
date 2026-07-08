@@ -258,11 +258,11 @@ void ccgasventcontrol_update(int obj)
     }
 }
 
-void ccgasventcontrol_init(int obj, u8* p)
+void ccgasventcontrol_init(int obj, u8* def)
 {
     char* inner = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = CCGasVentControl_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)((u32)p[0x1a] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)def[0x1a] << 8);
     if (mainGetBit(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
         ((CcgasventcontrolState*)inner)->state = CCGASVENT_STATE_DONE;
