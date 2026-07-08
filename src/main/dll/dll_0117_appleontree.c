@@ -158,14 +158,14 @@ void appleontree_handleCollectableHit(int obj)
     if (!(Vec_xzDistance((float*)(player + 0x18), (float*)(obj + 0x18)) < gAppleOnTreePickupXZRange)) return;
     if (!(Vec_distance((float*)(player + 0x18), (float*)(obj + 0x18)) < gAppleOnTreePickupRange)) return;
 
-    if (mainGetBit(0x90f) == 0)
+    if (mainGetBit(GAMEBIT_SawApple) == 0)
     {
         (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
         ((AppleOnTreeState*)state)->triggerGameBit = -1;
         ((AppleOnTreeState*)state)->unk5E = 0;
         ((AppleOnTreeState*)state)->unk60 = lbl_803E37C8;
         ObjMsg_SendToObject(player, APPLEONTREE_MSG_IN_RANGE, obj, (int*)(state + 0x5c));
-        mainSetBits(0x90f, 1);
+        mainSetBits(GAMEBIT_SawApple, 1);
         ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 4);
     }
     else
