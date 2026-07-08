@@ -362,7 +362,7 @@ int Minimap_update(void)
                 }
             }
         }
-        if ((gMinimapEnabled == 0 && lbl_803DD7BA == 0) || mainGetBit(0x58d) != 0)
+        if ((gMinimapEnabled == 0 && lbl_803DD7BA == 0) || mainGetBit(GAMEBIT_NoMapData) != 0)
         {
             marker = 0;
         }
