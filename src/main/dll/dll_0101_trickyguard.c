@@ -71,86 +71,10 @@ void TrickyGuard_init(s16* obj, u8* placement)
     ((GameObject*)obj)->objectFlags = flags;
 }
 
-ObjectDescriptor gMagicPlantObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_init,
-    (ObjectDescriptorCallback)MagicPlant_update,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_render,
-    (ObjectDescriptorCallback)MagicPlant_free,
-    (ObjectDescriptorCallback)MagicPlant_getObjectTypeId,
-    MagicPlant_getExtraSize,
-};
-
-ObjectDescriptor gTrickyWarpObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)TrickyWarp_init,
-    (ObjectDescriptorCallback)TrickyWarp_update,
-    0,
-    0,
-    (ObjectDescriptorCallback)TrickyWarp_free,
-    0,
-    TrickyWarp_getExtraSize,
-};
-
-ObjectDescriptor gTrickyGuardObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)TrickyGuard_init,
-    (ObjectDescriptorCallback)TrickyGuard_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gStayPointObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)StayPoint_init,
-    (ObjectDescriptorCallback)StayPoint_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gDusterObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)duster_init,
-    (ObjectDescriptorCallback)duster_update,
-    (ObjectDescriptorCallback)duster_hitDetect,
-    (ObjectDescriptorCallback)duster_render,
-    0,
-    0,
-    duster_getExtraSize,
-};
-
-ObjectDescriptor gCurveFishObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)CurveFish_init,
-    (ObjectDescriptorCallback)CurveFish_update,
-    0,
-    0,
-    0,
-    0,
-    CurveFish_getExtraSize,
-};
+/*
+ * The ObjectDescriptors for magicplant, trickywarp, trickyguard, staypoint,
+ * duster and curvefish are all defined (and owned in the retail binary) by
+ * dll_0100_trickywarp.c; the retail dll_0101 object contains only the two
+ * functions above (.text 0xfc, no .data). Ghidra over-attributed copies of
+ * those descriptors to this TU - they are not emitted here.
+ */
