@@ -23,6 +23,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 #define BOSSDRAKOR_MAP_ARENA 0x1d /* map-event id set to act 3 on boss defeat */
 #define BOSSDRAKOR_OBJGROUP 0x45
@@ -776,7 +777,7 @@ void bossdrakor_hitDetect(int obj)
                 spawnExplosion((int*)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
                 Obj_RemoveFromUpdateList((int*)obj);
                 (*gMapEventInterface)->setMapAct(BOSSDRAKOR_MAP_ARENA, 3);
-                mainSetBits(0x83c, 1);
+                mainSetBits(GAMEBIT_ITEM_WaterSpellStone2_Got, 1);
             }
             else
             {
@@ -852,10 +853,10 @@ int bossdrakor_seqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             ((DrakorFlags*)((char*)inner + 0x198))->b02 = 1;
             break;
         case 8:
-            mainSetBits(0x5db, 0);
+            mainSetBits(GAMEBIT_DR_ObjGroups, 0);
             (*gMapEventInterface)->setObjGroupStatus(2, 0xf, 1);
             (*gMapEventInterface)->setObjGroupStatus(2, 0x10, 1);
-            mainSetBits(0xe7b, 0);
+            mainSetBits(GAMEBIT_DRArwingRelated0E7B, 0);
             warpToMap(0x79, 0);
             timeOfDayFn_80055000();
             break;
