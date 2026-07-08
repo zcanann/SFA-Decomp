@@ -86,7 +86,6 @@ STATIC_ASSERT(offsetof(ModgfxState, rotOffsetZ) == 0x106);
 
 
 #define PARTFX_ACTIVE_EFFECT_COUNT 0x32
-#define PARTFX_STAGE_COUNT 7
 
 STATIC_ASSERT(sizeof(ModgfxSpawnContext) == 0x60);
 STATIC_ASSERT(offsetof(ModgfxSpawnContext, vecX) == 0x20);
@@ -95,87 +94,6 @@ STATIC_ASSERT(offsetof(ModgfxSpawnContext, sequenceParams) == 0x46);
 STATIC_ASSERT(offsetof(ModgfxSpawnContext, flags) == 0x54);
 STATIC_ASSERT(offsetof(ModgfxSpawnContext, pendingSpawnCount) == 0x5D);
 
-typedef struct PartfxEffectState
-{
-    void* instanceObject;
-    void* sourceObject;
-    void* auxSequenceBuffer;
-    s16 sourceRotX;
-    s16 sourceRotY;
-    s16 sourceRotZ;
-    f32 sourceScale;
-    f32 sourcePosX;
-    f32 sourcePosY;
-    f32 sourcePosZ;
-    f32 posStepX;
-    f32 posStepY;
-    f32 posStepZ;
-    ModgfxScaleChannel scaleChannels[2];
-    f32 drawPosX;
-    f32 drawPosY;
-    f32 drawPosZ;
-    f32 velocityX;
-    f32 velocityY;
-    f32 velocityZ;
-    void* vertexBuffers[3];
-    void* colorBuffers[3];
-    void* baseVertexBuffer;
-    void* baseColorBuffer;
-    void* textureResource;
-    void* emitterCommands;
-    void* auxAllocation;
-    u32 flags;
-    s32 initialDelayFrames;
-    ModgfxAlphaChannel alphaChannels[2];
-    f32 blendColorR;
-    f32 blendColorG;
-    f32 blendColorB;
-    f32 blendColorStepR;
-    f32 blendColorStepG;
-    f32 blendColorStepB;
-    f32 renderScale;
-    u8 padD8[0xE6 - 0xD8];
-    s16 soundHandle;
-    u8 padE8[0xEA - 0xE8];
-    s16 vertexCount;
-    s16 colorVertexCount;
-    s16 stageDurations[PARTFX_STAGE_COUNT];
-    s16 currentStage;
-    s16 stageFrameCountdown;
-    u8 pad100[0x106 - 0x100];
-    s16 rotOffsetZ;
-    s16 rotOffsetY;
-    s16 rotOffsetX;
-    s16 sequenceId;
-    s16 nextStage;
-    s16 stageTimer;
-    u8 pad112[0x114 - 0x112];
-    int word114;
-    int word118;
-    int word11C;
-    s16 vec120;
-    s16 vec122;
-    s16 vec124;
-    s8 byte126;
-    u8 pad127[0x12C - 0x127];
-    void* inlineData;
-    u8 activeVertexBufferIndex;
-    u8 textureFrame;
-    u8 textureFrameTimer;
-    u8 textureFrameStep;
-    u8 textureFrameFadeStep;
-    s8 sourceYawIndex;
-    u8 drawGroupCount;
-    u8 drawGroupStride;
-    u8 initialStateByte;
-    s8 emitterCount;
-    u8 releaseRequested;
-    char byte13B;
-    u8 requestedStage;
-    u8 byte13D;
-    u8 frameUpdated;
-    u8 textureIsBorrowed;
-} PartfxEffectState;
 
 STATIC_ASSERT(sizeof(PartfxEffectState) == 0x140);
 STATIC_ASSERT(offsetof(PartfxEffectState, vertexBuffers) == 0x78);

@@ -15,17 +15,9 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/modgfx_types.h"
 
 extern ModgfxInterface** gModgfxInterface;
-
-typedef struct
-{
-    u32 mode; /* +0x00 */
-    f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex; /* +0x10 */
-    s16 flags; /* +0x14 */
-    u8 layer; /* +0x16 */
-} GfxCmd;
 
 extern u8 lbl_80318E40[];
 extern f32 lbl_803E1570;

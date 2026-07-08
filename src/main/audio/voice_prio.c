@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
+#include "main/audio/vidlisttables.h"
 
 #pragma exceptions on
 
@@ -8,30 +9,6 @@
 
 extern u8 vidListNodes[];
 extern u16 voicePrioSortRootListRoot;
-
-typedef struct SynthRootListNode
-{
-    u16 next;
-    u16 prev;
-} SynthRootListNode;
-
-typedef struct SynthVoiceListNode
-{
-    u8 prev;
-    u8 next;
-    u16 user;
-} SynthVoiceListNode;
-
-typedef struct VidListTables
-{
-    u8 vidLists[0x800];
-    u8 midiKeySlots[0x80];
-    u8 directSlots[0x40];
-    SynthVoiceListNode priorityLinks[0x40];
-    u8 priorityGroupHeads[0x100];
-    SynthRootListNode prioritySortLinks[0x100];
-    SynthVoiceListNode freeList[0x40];
-} VidListTables;
 
 #define VB_PRIO_HEAD(vb, p) \
     (*(u8*)((u8*)&(vb)->priorityGroupHeads[0] + (p)))

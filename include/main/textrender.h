@@ -13,7 +13,6 @@
 void gameTextLoadDir(int dirId);
 int gameTextFn_8001b44c(int x);
 void gameTextLoadForCurMap(int sourceId);
-SubtitleCmd* subtitleParseControlCmds(int str, int* count);
 void fn_8001BDD4(int mode);
 void fn_8001BE2C(int mode);
 

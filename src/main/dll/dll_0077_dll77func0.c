@@ -8,15 +8,7 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
-
-typedef struct GfxCmd
-{
-    u32 mode;
-    f32 x, y, z;
-    void* tex;
-    s16 flags;
-    u8 layer;
-} GfxCmd;
+#include "main/dll/modgfx_types.h"
 
 STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
 

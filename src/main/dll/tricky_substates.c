@@ -27,6 +27,7 @@
 #include "main/gameplay_runtime.h"
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/tricky_state.h"
 extern int ObjGroup_FindNearestObject();
 extern void ObjLink_AttachChild();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
@@ -38,13 +39,6 @@ extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 
 #define THORNTAIL_OBJGROUP 0x4d /* DLL 0x1AD shthorntail */
 
-typedef struct
-{
-    u8 bit7 : 1;
-    u8 bit6 : 1;
-    u8 bit5 : 1;
-    u8 rest : 5;
-} TrickyByteFlags;
 
 /*
  * A ROM/FSA walk-curve node as Tricky's tunnel/follow states see it (via the

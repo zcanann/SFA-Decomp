@@ -2,6 +2,7 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_manage.h"
 #include "main/audio/mcmd_exec.h"
+#include "main/audio/vidlisttables.h"
 extern VoiceIdSlot voiceFreeListSlots[];
 extern u8* synthVoice;
 extern u8 lbl_803BD150[];
@@ -11,30 +12,6 @@ extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
 extern u8 voiceListInsert;
 extern u8 voiceListRoot;
-
-typedef struct SynthRootListNode
-{
-    u16 next;
-    u16 prev;
-} SynthRootListNode;
-
-typedef struct SynthVoiceListNode
-{
-    u8 prev;
-    u8 next;
-    u16 user;
-} SynthVoiceListNode;
-
-typedef struct VidListTables
-{
-    u8 vidLists[0x800];
-    u8 midiKeySlots[0x80];
-    u8 directSlots[0x40];
-    SynthVoiceListNode priorityLinks[0x40];
-    u8 priorityGroupHeads[0x100];
-    SynthRootListNode prioritySortLinks[0x100];
-    SynthVoiceListNode freeList[0x40];
-} VidListTables;
 
 extern u8 vidListNodes[];
 

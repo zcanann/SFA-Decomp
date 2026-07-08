@@ -15,6 +15,7 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/dll/WC/dll_01F9_wmobjcreator.h"
 
 
 extern int lbl_803DDC68; /* live WM_WallCraw population counter */
@@ -58,27 +59,7 @@ void WM_ObjCreator_hitDetect(void)
 {
 }
 
-/* WM_ObjCreator per-object extra state (four s16 slots). */
-typedef struct WmObjCreatorState
-{
-    s16 gameBit; /* 0x00: spawn gate, -1 = always */
-    s16 spawnPeriod; /* 0x02 */
-    s16 spawnTimer; /* 0x04 */
-    s16 spawnJitter; /* 0x06: randomGetRange(0, jitter) added per cycle */
-} WmObjCreatorState;
-
 STATIC_ASSERT(sizeof(WmObjCreatorState) == 0x8);
-
-typedef struct WmObjCreatorPlacement
-{
-    ObjPlacement base;
-    s16 gameBit;
-    s16 spawnMode;
-    s16 spawnPeriod;
-    s8 yaw;
-    s8 spawnJitter;
-    u8 pad20[4];
-} WmObjCreatorPlacement;
 
 STATIC_ASSERT(offsetof(WmObjCreatorPlacement, gameBit) == 0x18);
 STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnMode) == 0x1A);

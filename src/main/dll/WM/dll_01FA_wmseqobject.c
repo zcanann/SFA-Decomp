@@ -2,28 +2,7 @@
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/obj_placement.h"
 
-/* TU-boundary copies of the WM_ObjCreator records (canonical copies
-   in dll_01F9_wmobjcreator.c) */
-typedef struct WmObjCreatorState
-{
-    s16 gameBit; /* 0x00: spawn gate, -1 = always */
-    s16 spawnPeriod; /* 0x02 */
-    s16 spawnTimer; /* 0x04 */
-    s16 spawnJitter; /* 0x06: randomGetRange(0, jitter) added per cycle */
-} WmObjCreatorState;
-
 STATIC_ASSERT(sizeof(WmObjCreatorState) == 0x8);
-
-typedef struct WmObjCreatorPlacement
-{
-    ObjPlacement base;
-    s16 gameBit;
-    s16 spawnMode;
-    s16 spawnPeriod;
-    s8 yaw;
-    s8 spawnJitter;
-    u8 pad20[4];
-} WmObjCreatorPlacement;
 
 STATIC_ASSERT(offsetof(WmObjCreatorPlacement, gameBit) == 0x18);
 STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnMode) == 0x1A);
@@ -31,13 +10,6 @@ STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnPeriod) == 0x1C);
 STATIC_ASSERT(offsetof(WmObjCreatorPlacement, yaw) == 0x1E);
 STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnJitter) == 0x1F);
 STATIC_ASSERT(sizeof(WmObjCreatorPlacement) == 0x24);
-
-typedef struct WmGalleonState
-{
-    u8 pad00[0xC];
-    u8 active; /* 0x0c: cleared on a non-map-change free */
-    u8 pad0D[3];
-} WmGalleonState;
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
@@ -47,6 +19,11 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/dll1fbsetup_struct.h"
+#include "main/dll/wmgalleonsetup_struct.h"
+#include "main/dll/wmseqobjectsetup_struct.h"
+#include "main/dll/wmgalleonstate_struct.h"
+#include "main/dll/dll1fbstate_struct.h"
 extern u8 lbl_803DDC78;
 extern f32 lbl_803E5CF8;
 
@@ -58,48 +35,6 @@ extern f32 lbl_803E5CF8;
     (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 #define SCREEN_TRANSITION_START(kind, value) \
     (*gScreenTransitionInterface)->step((kind), (value))
-
-typedef struct Dll1FBSetup
-{
-    ObjPlacement base;
-    s8 yawByte;
-    s8 baseMove;
-    s16 triggerMode;
-    s16 objectParam;
-} Dll1FBSetup;
-
-typedef struct WMGalleonSetup
-{
-    ObjPlacement base;
-    s8 yawByte;
-} WMGalleonSetup;
-
-typedef struct WMSeqObjectSetup
-{
-    ObjPlacement base;
-    s8 yawByte;
-    s8 setupType;
-} WMSeqObjectSetup;
-
-typedef struct WMGalleonState
-{
-    f32 savedX;
-    f32 savedY;
-    f32 savedZ;
-    u8 mapEventsLatched;
-    u8 pad0D;
-    s16 savedYaw;
-} WMGalleonState;
-
-typedef struct Dll1FBState
-{
-    u8 pad00[4];
-    s16 baseMove;
-    s16 triggerMode;
-    u8 pad08;
-    u8 hideModel;
-    u8 pad0A[2];
-} Dll1FBState;
 
 STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);

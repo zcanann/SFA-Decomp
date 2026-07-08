@@ -16,6 +16,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/modgfx_types.h"
 
 extern void dll_7A_func03(void);
 
@@ -27,15 +28,6 @@ extern void dll_7A_func00_nop(void);
 #define DLL79_EFFECT_ID_VARIANT0 0x156
 #define DLL79_EFFECT_ID_VARIANT1 0x89
 #define DLL79_EFFECT_ID_VARIANT2 0x23b
-
-typedef struct
-{
-    u32 mode;
-    f32 x, y, z;
-    void* tex;
-    s16 flags;
-    u8 layer;
-} GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll79EffectModelBlock[];

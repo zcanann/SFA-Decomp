@@ -26,6 +26,10 @@
 #include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll1fbsetup_struct.h"
+#include "main/dll/wmgalleonsetup_struct.h"
+#include "main/dll/wmseqobjectsetup_struct.h"
+#include "main/dll/wmgalleonstate_struct.h"
 extern void textureFree(u8* tex);
 extern ModgfxInterface** gModgfxInterface;
 
@@ -38,38 +42,6 @@ extern ModgfxInterface** gModgfxInterface;
 #define LASERBEAM_TEXTURE_KIND30 0x3e9 /* beam texture for beamKind 30 -> b->texture */
 #define LASERBEAM_TEXTURE_KIND1 0x23d /* beam texture for beamKind 1 -> b->texture */
 #define LASERBEAM_TEXTURE_DEFAULT 0xd9 /* beam texture for other beamKinds -> b->texture */
-
-typedef struct Dll1FBSetup
-{
-    ObjPlacement base;
-    s8 yawByte;
-    s8 baseMove;
-    s16 triggerMode;
-    s16 objectParam;
-} Dll1FBSetup;
-
-typedef struct WMGalleonSetup
-{
-    ObjPlacement base;
-    s8 yawByte;
-} WMGalleonSetup;
-
-typedef struct WMSeqObjectSetup
-{
-    ObjPlacement base;
-    s8 yawByte;
-    s8 setupType;
-} WMSeqObjectSetup;
-
-typedef struct WMGalleonState
-{
-    f32 savedX;
-    f32 savedY;
-    f32 savedZ;
-    u8 mapEventsLatched;
-    u8 pad0D;
-    s16 savedYaw;
-} WMGalleonState;
 
 STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);

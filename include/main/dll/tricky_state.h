@@ -231,4 +231,13 @@ STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
 
+typedef struct
+{
+    u8 bit7 : 1;
+    u8 bit6 : 1;
+    u8 bit5 : 1;
+    u8 rest : 5;
+} TrickyByteFlags;
+
+
 #endif /* MAIN_DLL_TRICKY_STATE_H_ */

@@ -14,16 +14,7 @@
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
-
-/* one modgfx draw command in the dll_6D_func03 effect list */
-typedef struct
-{
-    u32 mode;
-    f32 x, y, z;
-    void* tex;
-    s16 flags;
-    u8 layer;
-} GfxCmd;
+#include "main/dll/modgfx_types.h"
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80313AF0[];

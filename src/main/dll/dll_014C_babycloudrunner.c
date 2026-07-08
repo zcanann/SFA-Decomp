@@ -21,6 +21,7 @@
 #include "main/objseq.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/dll/babycloudrunnerstate_struct.h"
 
 #define BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
 #define BABYCLOUDRUNNER_OBJGROUP 3
@@ -83,37 +84,6 @@ extern f32 lbl_803E4254;
 
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
-typedef struct BabyCloudRunnerState
-{
-    f32 unk00;
-    u8 pad04[0x38]; /* 0x18: position used for the sandworm handoff */
-    u8 lookBlock[0x30]; /* 0x3c: fn_8003ADC4 head-track block */
-    u8 audioBlock[0x3c]; /* 0x6c: objAudioFn block */
-    f32 animSpeed;
-    f32 scale; /* 0xac: copied to the linked object's scale */
-    int unkB0;
-    int unkB4;
-    int unkB8;
-    int unkBC;
-    int turnLatch; /* 0xc0: sandworm_turnTowardTargetAnim turn/idle move latch */
-    int behaviourState; /* 0xc4: def[0x1c]; SeqFn 0..0xb dispatch */
-    u8 padC8[4];
-    int unkCC;
-    s16 roostYaw; /* 0xd0: heading captured at init */
-    u8 padD2[0x42];
-    void* linkedObj; /* 0x114 */
-    u8 pad118[0xc];
-    u8 curveWalker[0x108]; /* 0x124: rom-curve follow block */
-    u8 flags22C; /* 1 = alive/active */
-    u8 pad22D[3];
-    int runnerState; /* 0x230: 0 curve-seek, 1 follow, 2 chased, 3 freed */
-    int runnerIndex; /* 0x234: gamebit base index, -1 keyed off */
-    f32 countdownTimer; /* 0x238 */
-    f32 curveSpeed; /* 0x23c */
-    void* mutterSfxTable; /* 0x240 */
-    u8 spitFlags; /* 0x244: BabyCloudrunnerFlags / WormSpitByte overlay */
-    u8 pad245[3];
-} BabyCloudRunnerState;
 
 STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 

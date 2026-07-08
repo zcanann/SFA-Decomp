@@ -17,15 +17,7 @@
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
 #include "main/gameplay_runtime.h"
-
-typedef struct
-{
-    u32 mode;
-    f32 x, y, z;
-    void* tex;
-    s16 flags;
-    u8 layer;
-} GfxCmd;
+#include "main/dll/modgfx_types.h"
 
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E0830;

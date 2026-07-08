@@ -12,6 +12,8 @@
 #include "main/sfa_extern_decls.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
+#include "main/textrender.h"
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
 extern void titleScreenShowCopyright(u8 arg);
@@ -75,7 +77,6 @@ extern void titleScreenFn_80130464(u8 v);
 extern void titleScreenFn_801368a4(u8 arg);
 extern void titleScreenFn_801368c4(s8 arg);
 extern void saveFn_8007d960(int);
-extern u8 framesThisStep;
 extern u8 lbl_803DB424;
 extern TitleMenuTextEntry lbl_8031A214[4];
 extern u8 gTitleMenuPreviousSelection;
@@ -96,7 +97,6 @@ extern void audioStopByMask(int mask);
 extern void audioFn_8000b694(int arg);
 extern int getUiDllFn_80014930(void);
 extern void gameTimerStop(void);
-extern void gameTextLoadDir(int dirId);
 
 extern u8* lbl_803DD498;
 

@@ -16,20 +16,11 @@
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
+#include "main/dll/modgfx_types.h"
 
 /* spawnEffect effect ids for the func03 "0/non-0 variant pair" (docblock). */
 #define DLL74_EFFECT_ID_VARIANT0 0x2e
 #define DLL74_EFFECT_ID_DEFAULT  0xd9
-
-/* one modgfx draw command in the dll_74_func03 effect list */
-typedef struct
-{
-    u32 mode;
-    f32 x, y, z;
-    void* tex;
-    s16 flags;
-    u8 layer;
-} GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_803146D8[];

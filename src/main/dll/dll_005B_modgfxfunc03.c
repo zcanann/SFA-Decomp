@@ -15,15 +15,7 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
-
-typedef struct
-{
-    u32 mode;
-    f32 x, y, z;
-    void* tex;
-    s16 flags;
-    u8 layer;
-} GfxCmd;
+#include "main/dll/modgfx_types.h"
 
 STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
 STATIC_ASSERT(offsetof(GfxCmd, tex) == 0x10);

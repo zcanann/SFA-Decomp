@@ -17,6 +17,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/tricky_state.h"
 
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
@@ -214,13 +215,6 @@ extern f32 lbl_803E31C4;
 extern f32 lbl_803E3234;
 extern f32 lbl_803E3244;
 
-typedef struct
-{
-    u8 bit7 : 1;
-    u8 bit6 : 1;
-    u8 bit5 : 1;
-    u8 rest : 5;
-} TrickyByteFlags;
 
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_AddLoopedObjectSound(int obj, int sfxId);

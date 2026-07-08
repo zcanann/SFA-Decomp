@@ -14,6 +14,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/lightningeffect.h"
 
 typedef struct DrlightbeaPlacement
 {
@@ -23,20 +24,6 @@ typedef struct DrlightbeaPlacement
     s16 gameBit;   /* 0x20: enables the beam while set */
     u8 pad22[0x28 - 0x22];
 } DrlightbeaPlacement;
-
-/* Buffer returned by lightningCreate: beam endpoints, radii and lifetime. */
-typedef struct LightningEffect
-{
-    f32 start[3];  /* 0x00: beam source position */
-    f32 end[3];    /* 0x0c: beam target position */
-    f32 radiusX;   /* 0x18 */
-    f32 radiusY;   /* 0x1c */
-    u16 timer;     /* 0x20: frames elapsed */
-    u16 lifetime;  /* 0x22: frames until the beam expires */
-    u16 seed;      /* 0x24 */
-    u8 width;      /* 0x26 */
-    u8 flags;      /* 0x27 */
-} LightningEffect;
 
 /* Per-object extra state block (DR_LightBea_getExtraSize == 0xc): holds the
  * lightningCreate buffer handle at 0 and the active/free bit flags at 4. */

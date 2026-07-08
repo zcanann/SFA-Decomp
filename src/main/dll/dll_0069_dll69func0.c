@@ -14,15 +14,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-
-typedef struct
-{
-    u32 mode;
-    f32 x, y, z;
-    void* tex;
-    s16 flags;
-    u8 layer;
-} GfxCmd;
+#include "main/dll/modgfx_types.h"
 
 extern u8 lbl_803137F8[];
 extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
