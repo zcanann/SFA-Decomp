@@ -93,6 +93,9 @@ STATIC_ASSERT(offsetof(MoveLibState, reattackTimer) == 0x620);
 /* object group queried to find this object's target */
 #define MOVELIB_TARGET_OBJGROUP 8
 
+/* dll_2E_func0E route flags: curve walk reached its final point (done-guard) */
+#define MOVELIB_CURVE_WALK_DONE 0x10
+
 extern u8 gMoveLibDefaultMoveData[];
 extern f32 lbl_803E1C88;
 extern f32 lbl_803E1C8C;
@@ -469,7 +472,7 @@ int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int state, int curv
     hit = 0;
     ground = lbl_803E1C90;
     fl = *flags;
-    if (fl & 0x10)
+    if (fl & MOVELIB_CURVE_WALK_DONE)
     {
         return 1;
     }
@@ -496,7 +499,7 @@ int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int state, int curv
         ((GameObject*)obj)->anim.localPosZ = route->posZ;
         if (hit != 0)
         {
-            *flags |= 0x10;
+            *flags |= MOVELIB_CURVE_WALK_DONE;
         }
     }
     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, phase, rootOut);
