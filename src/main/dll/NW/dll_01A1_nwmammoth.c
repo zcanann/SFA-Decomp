@@ -1,4 +1,5 @@
 #include "main/effect_interfaces.h"
+#include "main/gamebit_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/dll/dll_01A1_nwmammoth.h"
@@ -341,15 +342,15 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
     }
     if (((NwMammothMapData*)mapData)->behaviorMode == 1)
     {
-        if (mainGetBit(0x19d) != 0)
+        if (mainGetBit(GAMEBIT_SnowHornArtifact19D) != 0)
         {
             state->triggerList = lbl_803DBF90;
         }
-        else if (mainGetBit(0x1a2) != 0)
+        else if (mainGetBit(GAMEBIT_ITEM_NWSnowHornArtifact_Got) != 0)
         {
             state->triggerList = lbl_803DBF8C;
         }
-        else if (mainGetBit(0x102) != 0)
+        else if (mainGetBit(GAMEBIT_NW_RescuedSnowHornGateKeeper) != 0)
         {
             state->triggerList = lbl_803DBF88;
         }
@@ -364,15 +365,15 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
     }
     else
     {
-        if (mainGetBit(0x19d) != 0)
+        if (mainGetBit(GAMEBIT_SnowHornArtifact19D) != 0)
         {
             state->triggerList = lbl_803DBFA4;
         }
-        else if (mainGetBit(0x1a2) != 0)
+        else if (mainGetBit(GAMEBIT_ITEM_NWSnowHornArtifact_Got) != 0)
         {
             state->triggerList = lbl_803DBFA0;
         }
-        else if (mainGetBit(0x102) != 0)
+        else if (mainGetBit(GAMEBIT_NW_RescuedSnowHornGateKeeper) != 0)
         {
             state->triggerList = lbl_803DBF9C;
         }
@@ -426,7 +427,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             (*gObjectTriggerInterface)->runSequence(3, (void*)nearestObj, -1);
             state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
             state->stateIndex = 0xd;
-            mainSetBits(0xce1, 1);
+            mainSetBits(GAMEBIT_NW_ReturnedTo, 1);
             mainSetBits(0xd32, 1);
         }
         break;
@@ -576,7 +577,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         {
             if ((*gScreenTransitionInterface)->isFinished() != 0)
             {
-                mainSetBits(0x102, 1);
+                mainSetBits(GAMEBIT_NW_RescuedSnowHornGateKeeper, 1);
                 (*gObjectTriggerInterface)->runSequence(1, (void*)nearestObj, -1);
                 state->stateIndex = 0x13;
             }
@@ -593,7 +594,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             if (mainGetBit(0xea7) == 0)
             {
                 mainSetBits(0xea7, 1);
-                mainSetBits(0x9d5, 1);
+                mainSetBits(GAMEBIT_IncomingCommunication, 1);
             }
             state->triggerList = lbl_803DBFAC;
         }
@@ -833,11 +834,11 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
         break;
     case 2:
         state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_PATH_CONTROL);
-        if (mainGetBit(0x19f) != 0)
+        if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
         {
             state->stateIndex = 6;
         }
-        else if (mainGetBit(0x19d) != 0)
+        else if (mainGetBit(GAMEBIT_SnowHornArtifact19D) != 0)
         {
             state->stateIndex = 5;
         }
@@ -861,11 +862,11 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
         break;
     case 4:
         state->uiMessageCount = mainGetBit(0x48b);
-        if (mainGetBit(0x102) != 0)
+        if (mainGetBit(GAMEBIT_NW_RescuedSnowHornGateKeeper) != 0)
         {
             state->stateIndex = 0x10;
         }
-        else if (mainGetBit(0xce1) != 0)
+        else if (mainGetBit(GAMEBIT_NW_ReturnedTo) != 0)
         {
             state->stateIndex = 0xc;
             if (state->uiMessageCount >= 3)
