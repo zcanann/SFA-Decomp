@@ -443,7 +443,7 @@ void DIMboss_free(DIMbossObject* obj)
     mainSetBits(0xc1f, 0);
     mainSetBits(0xc20, 0);
     mainSetBits(0xd8f, 0);
-    mainSetBits(0x3e2, 0);
+    mainSetBits(GAMEBIT_DIM_TriggerLostInBlizzard, 0);
     obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_ACTIVE;
     Camera_DisableViewYOffset();
     ObjGroup_RemoveObject(obj, DIMBOSS_OBJGROUP);
