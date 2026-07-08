@@ -12,6 +12,7 @@
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
@@ -422,12 +423,12 @@ void sc_levelcontrol_update(int obj)
         {
             if ((u32)mainGetBit(0x627) != 0 && (u32)mainGetBit(0x63e) != 0)
             {
-                mainSetBits(0x61c, 1);
+                mainSetBits(GAMEBIT_LV_DoneTests, 1);
             }
         }
         else
         {
-            if ((u32)mainGetBit(0x61c) != 0)
+            if ((u32)mainGetBit(GAMEBIT_LV_DoneTests) != 0)
             {
                 mainSetBits(0x85, 1);
             }
@@ -457,19 +458,19 @@ void sc_levelcontrol_update(int obj)
             Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
         }
     }
-    if ((u32)mainGetBit(0x647) != 0)
+    if ((u32)mainGetBit(GAMEBIT_ITEM_LVBlock2_Used) != 0)
     {
         mainSetBits(0x612, 1);
         mainSetBits(0x90b, 1);
         mainSetBits(0x87, 1);
     }
-    if ((u32)mainGetBit(0xbde) != 0)
+    if ((u32)mainGetBit(GAMEBIT_ITEM_LVBlock3_Used) != 0)
     {
         mainSetBits(0x2c6, 1);
         mainSetBits(0x2ce, 1);
         mainSetBits(0xbdc, 1);
     }
-    if ((u32)mainGetBit(0xbe5) != 0)
+    if ((u32)mainGetBit(GAMEBIT_ITEM_LVBlock1_Used) != 0)
     {
         mainSetBits(0xbdf, 1);
         mainSetBits(0xbe1, 1);
@@ -496,7 +497,7 @@ void sc_levelcontrol_update(int obj)
     }
     if ((u32)mainGetBit(0x4d0) == 0)
     {
-        if ((u32)mainGetBit(0x2b5) != 0)
+        if ((u32)mainGetBit(GAMEBIT_LV_CapturedByLightFoot) != 0)
         {
             mainSetBits(0x4d0, 1);
             (*gMapEventInterface)->setObjGroupStatus(SCLEVELCONTROL_MAP_SWAPCIRCLE, 2, 1);
