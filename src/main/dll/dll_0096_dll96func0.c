@@ -77,7 +77,7 @@ int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
     u8* base = (u8*)(int)lbl_803175E8;
     GfxCmd* e;
 
-    if (mainGetBit(0x63c) != 0)
+    if (mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) != 0)
     {
         return -1;
     }
@@ -93,7 +93,7 @@ int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[1].flags = 0x15;
     e[1].tex = base + 0x1b0;
     e[1].mode = 2;
-    if (mainGetBit(0x4e9) != 0)
+    if (mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) != 0)
     {
         e[1].x = lbl_803E12C4;
     }
