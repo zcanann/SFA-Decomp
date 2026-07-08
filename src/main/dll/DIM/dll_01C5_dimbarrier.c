@@ -41,10 +41,10 @@ void dimbarrier_free(void)
 {
 }
 
-void dimbarrier_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dimbarrier_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4898);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4898);
 }
 
 void dimbarrier_hitDetect(void)
