@@ -67,23 +67,23 @@ extern int dbstealerworm_stateHandlerA0A();
 extern int dbstealerworm_stateHandlerA04();
 extern int dbstealerworm_stateHandlerA02();
 int dbstealerworm_stateHandlerB04(int obj, int p);
-int dbstealerworm_stateHandlerB02(int obj, int p);
-int dbstealerworm_stateHandlerA09(int obj, int p);
-int dbstealerworm_stateHandlerA06(int obj, int p2);
-int dbstealerworm_stateHandlerA05(int obj, int p);
-int dbstealerworm_stateHandlerA03(int obj, int p);
-int dbstealerworm_stateHandlerA01(int obj, int p);
-int dbstealerworm_stateHandlerB00(int p1, int p2);
-int dbstealerworm_stateHandlerB03(int p1, int p2);
-int dbstealerworm_stateHandlerB01(int p1, int p2);
-int dbstealerworm_stateHandlerA00(int obj, int p2);
-int dbstealerworm_stateHandlerA04(int obj, int param2);
-int dbstealerworm_stateHandlerA0E(int obj, int param2);
-int dbstealerworm_stateHandlerA02(int obj, int p2);
-int dbstealerworm_stateHandlerA0D(int obj, int p2);
-int dbstealerworm_stateHandlerB05(int obj, int p2);
-int dbstealerworm_stateHandlerB06(int obj, int p2);
-int dbstealerworm_stateHandlerA0A(int obj, int p2);
+int dbstealerworm_stateHandlerB02(int obj, int baddie);
+int dbstealerworm_stateHandlerA09(int obj, int baddie);
+int dbstealerworm_stateHandlerA06(int obj, int baddie);
+int dbstealerworm_stateHandlerA05(int obj, int baddie);
+int dbstealerworm_stateHandlerA03(int obj, int baddie);
+int dbstealerworm_stateHandlerA01(int obj, int baddie);
+int dbstealerworm_stateHandlerB00(int obj, int baddie);
+int dbstealerworm_stateHandlerB03(int obj, int baddie);
+int dbstealerworm_stateHandlerB01(int obj, int baddie);
+int dbstealerworm_stateHandlerA00(int obj, int baddie);
+int dbstealerworm_stateHandlerA04(int obj, int baddie);
+int dbstealerworm_stateHandlerA0E(int obj, int baddie);
+int dbstealerworm_stateHandlerA02(int obj, int baddie);
+int dbstealerworm_stateHandlerA0D(int obj, int baddie);
+int dbstealerworm_stateHandlerB05(int obj, int baddie);
+int dbstealerworm_stateHandlerB06(int obj, int baddie);
+int dbstealerworm_stateHandlerA0A(int obj, int baddie);
 
 void DBstealerwo_setFuncPtrs_80203c78(void)
 {
@@ -179,11 +179,11 @@ void dbholecontrol1_free(int obj)
     ObjGroup_RemoveObject(obj, DBHOLECONTROL1_OBJGROUP);
 }
 
-void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dbholecontrol1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 enabled = visible;
     if (enabled != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6390);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6390);
 }
 
 void dbholecontrol1_hitDetect(void)

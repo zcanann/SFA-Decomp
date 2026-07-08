@@ -224,7 +224,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
     int seg4;
     int rem4;
     int w8;
-    int tmp;
+    int seg4Raw;
     int tex;
 
     total = lbl_803A9364[8];
@@ -249,14 +249,14 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         seg2 = 0;
     }
     seg3 = t13 - seg2;
-    tmp = (current - 7) - t13;
-    if (tmp > 5)
+    seg4Raw = (current - 7) - t13;
+    if (seg4Raw > 5)
     {
-        tmp = 5;
+        seg4Raw = 5;
     }
-    if (tmp > 0)
+    if (seg4Raw > 0)
     {
-        seg4 = tmp;
+        seg4 = seg4Raw;
     }
     else
     {
