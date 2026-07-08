@@ -16,6 +16,7 @@
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/gameplay_runtime.h"
 #include "main/gameloop.h"
 #include "main/audio/sfx.h"
@@ -110,7 +111,7 @@ void sh_beacon_update(int obj)
         if (((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0) &&
             ((*gGameUIInterface)->isEventReady(0x194) != 0))
         {
-            gameBitDecrement(0x194);
+            gameBitDecrement(GAMEBIT_ITEM_FireWeed_Count);
             mainSetBits(((ShBeaconPlacement*)def)->igniteGameBit, 1);
             if (Obj_IsLoadingLocked() != 0)
             {
