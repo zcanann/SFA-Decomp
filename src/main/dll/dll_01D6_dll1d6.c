@@ -59,6 +59,7 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/asset_load.h"
+#include "main/pi_dolphin.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
@@ -188,9 +189,9 @@ void dll_1D6_init(int* obj, u8* params)
         }
     }
     extra->bufA = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufA, 12, (&gDll1D6SlotTabIndex)[extra->slot] * 40, 40);
+    getTabEntry(extra->bufA, MLDF_FILEID_LACTIONS_BIN, (&gDll1D6SlotTabIndex)[extra->slot] * 40, 40);
     extra->bufB = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufB, 12,
+    getTabEntry(extra->bufB, MLDF_FILEID_LACTIONS_BIN,
                 ((&gDll1D6SlotTabIndex)[extra->slot] + 1) * 40, 40);
     ((GameObject*)obj)->objectFlags |= DLL1D6_OBJFLAG_HITDETECT_DISABLED;
 }
