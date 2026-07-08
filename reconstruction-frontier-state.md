@@ -6880,3 +6880,11 @@ getLActions p4-p10) untouched; FUN_ ABI-spill args (FUN_80200558 arg1..16 in dbe
 swap/XOR temps (sctotempole/cclightfoot) left as tmp. dbegg had no safe non-render generic target — skipped.
 Collision: no scope file touched <60min at start; sibling agents committed to DIM/DR/audio/other units
 concurrently — my commits path-scoped, interleaved cleanly.
+
+## Jul08 local/param naming wave (engine top-level, byte-identical)
+- newshadows.c: getReflectionScrollOffsets(outScrollX/outScrollY); shadow-placement ptrs p1/p2/p4 -> px/pz/prad. md5-identical.
+- object.c: allocator cursor tmp -> alignedCursor; partition swap void* tmp -> swapObj. md5-identical.
+- sky.c (SJIS): fn_80089A60 sky-state base p3 -> skyEntry. md5-identical.
+- shader.c: mapFindRomListSlot p2->slots; mapLoadForObject p1/p2->mapId/obj; mapInitSetRects p3/p4->originX/originY, pixel idx p->pixelIdx. md5-identical.
+- maketex.c: ObjSeq_func20 s16 params p3-p7 -> turnDegrees/yawThreshold/maxAngle/animRight/animLeft. md5-identical.
+- LEFT RAW: worldobj_render/worldplanet_render/lightmap modelRenderFn_* p1-p5 (render passthroughs); sky.c fn_8008C9F4 unused decl p2; curves.c p0-p3 (already-meaningful spline control-point convention). Commits 1ee1b16a1e, 22db78ed36, 4bb5817cfa, 4f8efb892f.
