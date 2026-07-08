@@ -14,6 +14,7 @@
  * anim.resetHitboxFlags (objanim_internal.h).
  */
 #include "main/dll/WM/wm_shared.h"
+#include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/obj_placement.h"
@@ -335,7 +336,7 @@ void WM_spiritplace_update(GameObject* obj)
                     (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                     mainSetBits(state->promptGameBit, 0);
                     mainSetBits(state->sequenceGameBit, 0);
-                    mainSetBits(0xbfd, 0);
+                    mainSetBits(GAMEBIT_ITEM_TestCombatSpirit_Got, 0);
                 }
                 else
                 {
@@ -499,7 +500,7 @@ void WM_spiritplace_update(GameObject* obj)
                     {
                         state->envFxPending = 0;
                         mainSetBits(state->promptGameBit, 0);
-                        mainSetBits(0xd1f, 1);
+                        mainSetBits(GAMEBIT_WMRelated0D1F, 1);
                         getEnvfxActImmediately(0, 0, 0x217, 0);
                         getEnvfxActImmediately((int)obj, (int)obj, 0x216, 0);
                         getEnvfxActImmediately((int)obj, (int)obj, 0x229, 0);
@@ -588,7 +589,7 @@ void WM_spiritplace_init(GameObject* obj, WmSpiritPlaceMapData* placement)
 
     if (obj->anim.placement->mapId == WMSPIRITPLACE_MAP_2)
     {
-        if (mainGetBit(0x1fc) != 0 || mainGetBit(0xeaf) != 0 || state->mapEventMode > 2)
+        if (mainGetBit(GAMEBIT_WM_FoundKrystal) != 0 || mainGetBit(0xeaf) != 0 || state->mapEventMode > 2)
         {
             obj->anim.localPosX -= 25.0f;
         }
