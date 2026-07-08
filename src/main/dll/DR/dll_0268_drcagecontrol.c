@@ -8,6 +8,7 @@
  * BitFlags8 status byte at offset 4 (b0/b1/b2).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/gamebit_ids.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -99,7 +100,7 @@ void DR_CageControl_update(int obj)
     {
         ((BitFlags8*)(state + 0x4))->b1 = 1;
         (*gObjectTriggerInterface)->preempt(obj, 0x76c);
-        if (mainGetBit(0x9f3) != 0)
+        if (mainGetBit(GAMEBIT_DR_EnteredDrakorTower) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(*(int*)state, (void*)obj, 0x60);
         }
