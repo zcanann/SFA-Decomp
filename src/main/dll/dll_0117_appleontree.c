@@ -353,7 +353,7 @@ void fn_8017D854(int obj, int msg)
 }
 #pragma opt_lifetimes reset
 
-int fn_8017DCD4(int p, int state, f32 y)
+int fn_8017DCD4(int obj, int state, f32 y)
 {
     f32 zero = lbl_803E37D4;
     f32 m = ((AppleOnTreeState*)state)->gravity;
@@ -395,21 +395,21 @@ int fn_8017DCD4(int p, int state, f32 y)
                 ((AppleOnTreeState*)state)->posY =
                     ((AppleOnTreeState*)state)->posY - ((AppleOnTreeState*)state)->dropHeight;
                 ((AppleOnTreeState*)state)->dropHeight = lbl_803E37D4;
-                ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
-                ((GameObject*)p)->anim.rotX = ((AppleOnTreeState*)state)->rotX;
-                ((GameObject*)p)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
-                ((GameObject*)p)->anim.rotZ = ((AppleOnTreeState*)state)->rotZ;
+                ((GameObject*)obj)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
+                ((GameObject*)obj)->anim.rotX = ((AppleOnTreeState*)state)->rotX;
+                ((GameObject*)obj)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
+                ((GameObject*)obj)->anim.rotZ = ((AppleOnTreeState*)state)->rotZ;
                 ((AppleOnTreeState*)state)->bounceVel = -((AppleOnTreeState*)state)->velY;
                 if ((((AppleOnTreeState*)state)->flags & 8) == 0)
                 {
-                    Sfx_PlayFromObject(p, SFXTRIG_pk_fruit_lands);
+                    Sfx_PlayFromObject(obj, SFXTRIG_pk_fruit_lands);
                     ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 8);
                 }
                 return 1;
             }
             else if (b < lbl_803E37F4)
             {
-                ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
+                ((GameObject*)obj)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
                 ((AppleOnTreeState*)state)->gravity = zero;
                 ((AppleOnTreeState*)state)->bounceVel = zero;
                 return 1;
@@ -447,21 +447,21 @@ int fn_8017DCD4(int p, int state, f32 y)
                     r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
                 }
                 ((AppleOnTreeState*)state)->flightTime = ((AppleOnTreeState*)state)->flightTime - r;
-                ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
+                ((GameObject*)obj)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
                 ((AppleOnTreeState*)state)->bounceVel = ((AppleOnTreeState*)state)->bounceVel * lbl_803E37F8;
                 return 0;
             }
         }
         else
         {
-            ((GameObject*)p)->anim.localPosY = y;
+            ((GameObject*)obj)->anim.localPosY = y;
             return 1;
         }
     }
     return 1;
 }
 
-int fn_8017DF34(int p, int state, f32 y)
+int fn_8017DF34(int obj, int state, f32 y)
 {
     if (lbl_803E37D4 == ((AppleOnTreeState*)state)->extraAccel)
     {
@@ -506,23 +506,23 @@ int fn_8017DF34(int p, int state, f32 y)
                 ((AppleOnTreeState*)state)->posY - ((AppleOnTreeState*)state)->dropHeight;
             rad = lbl_803E37D4;
             ((AppleOnTreeState*)state)->dropHeight = rad;
-            ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
-            ((GameObject*)p)->anim.rotX = ((AppleOnTreeState*)state)->rotX;
-            ((GameObject*)p)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
-            ((GameObject*)p)->anim.rotZ = ((AppleOnTreeState*)state)->rotZ;
+            ((GameObject*)obj)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
+            ((GameObject*)obj)->anim.rotX = ((AppleOnTreeState*)state)->rotX;
+            ((GameObject*)obj)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
+            ((GameObject*)obj)->anim.rotZ = ((AppleOnTreeState*)state)->rotZ;
             {
                 f32 g2 = lbl_803E37DC * ((AppleOnTreeState*)state)->gravity;
                 ((AppleOnTreeState*)state)->bounceVel = g2 * r + ((AppleOnTreeState*)state)->bounceVel;
             }
             ((AppleOnTreeState*)state)->extraAccel = ((AppleOnTreeState*)state)->velY;
             (*gWaterfxInterface)
-                ->spawnSplashBurst((void*)p, ((GameObject*)p)->anim.localPosX, ((AppleOnTreeState*)state)->splashPosY,
-                                   ((GameObject*)p)->anim.localPosZ, rad);
+                ->spawnSplashBurst((void*)obj, ((GameObject*)obj)->anim.localPosX,
+                                   ((AppleOnTreeState*)state)->splashPosY, ((GameObject*)obj)->anim.localPosZ, rad);
             return 0;
         }
         else
         {
-            ((GameObject*)p)->anim.localPosY = y;
+            ((GameObject*)obj)->anim.localPosY = y;
             return 1;
         }
     }
@@ -561,14 +561,14 @@ int fn_8017DF34(int p, int state, f32 y)
             r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
         }
         ((AppleOnTreeState*)state)->flightTime = ((AppleOnTreeState*)state)->flightTime - r;
-        ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
+        ((GameObject*)obj)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
         ((AppleOnTreeState*)state)->extraAccel = lbl_803E37FC;
         ((AppleOnTreeState*)state)->bounceVel = lbl_803E3800;
         return 0;
     }
     else
     {
-        ((GameObject*)p)->anim.localPosY = y;
+        ((GameObject*)obj)->anim.localPosY = y;
         return 1;
     }
 }

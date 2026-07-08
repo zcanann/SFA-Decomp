@@ -181,7 +181,7 @@ void CampFire_update(int obj)
     }
 }
 
-void CampFire_init(int obj, int p2)
+void CampFire_init(int obj, int def)
 {
     CampfireExtra* state;
     f32 sunTime;
@@ -189,7 +189,7 @@ void CampFire_init(int obj, int p2)
     s16 bit;
 
     state = ((GameObject*)obj)->extra;
-    size = *(u8*)(p2 + 0x1a);
+    size = *(u8*)(def + 0x1a);
     if (size != 0)
     {
         ((GameObject*)obj)->anim.rootMotionScale = 0.01f * size;
@@ -198,13 +198,13 @@ void CampFire_init(int obj, int p2)
     {
         state->flags |= 1;
     }
-    state->gameBit = *(s16*)(p2 + 0x18);
+    state->gameBit = *(s16*)(def + 0x18);
     bit = state->gameBit;
     if (bit != -1 && mainGetBit(bit) != 0)
     {
         state->flags |= 4;
     }
-    state->unk10 = *(u8*)(p2 + 0x1b);
+    state->unk10 = *(u8*)(def + 0x1b);
     {
         f32 scale =
             ((GameObject*)obj)->anim.rootMotionScale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
