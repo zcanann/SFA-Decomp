@@ -1509,10 +1509,10 @@ void getTextureFn_8006c5e4(u32* p)
     *p = gNewShadowCausticTexture;
 }
 
-void newshadows_getReflectionScrollOffsets(f32* p1, f32* p2)
+void newshadows_getReflectionScrollOffsets(f32* outScrollX, f32* outScrollY)
 {
-    *p1 = gNewShadowReflectionScrollX;
-    *p2 = gNewShadowReflectionScrollY;
+    *outScrollX = gNewShadowReflectionScrollX;
+    *outScrollY = gNewShadowReflectionScrollY;
 }
 
 f32 fn_8006C670(void)
@@ -1856,41 +1856,41 @@ void initFn_8006d020(void)
     e = gNewShadowPlacements;
     while (placed < 0x32 && attempts < 10000u)
     {
-        f32 *p1, *p2, *p4;
+        f32 *px, *pz, *prad;
         e[0] = (f32)(int)randomGetRange(8, 0x10);
         e[3] = Vdchuff_803DEDD8 * (f32)(int)randomGetRange(5, 10);
         e[4] = e[3] * (Vdchuff_803DEDD8 * (f32)(int)randomGetRange(0x14, 0x32));
         attempts = 0;
-        p1 = &e[1];
-        p2 = &e[2];
-        p4 = &e[4];
+        px = &e[1];
+        pz = &e[2];
+        prad = &e[4];
         do
         {
             f32* o;
-            *p1 = Vdchuff_803DEDDC * (f32)(int)randomGetRange(0, 999);
-            *p2 = Vdchuff_803DEDDC * (f32)(int)randomGetRange(0, 999);
+            *px = Vdchuff_803DEDDC * (f32)(int)randomGetRange(0, 999);
+            *pz = Vdchuff_803DEDDC * (f32)(int)randomGetRange(0, 999);
             collide = 0;
             j = 0;
             o = gNewShadowPlacements;
             while (j < placed && !collide)
             {
                 f32 mx, mz, tmp, d;
-                mx = __fabsf(*p1 - o[1]);
-                tmp = __fabsf((lbl_803DED2C + *p1) - o[1]);
+                mx = __fabsf(*px - o[1]);
+                tmp = __fabsf((lbl_803DED2C + *px) - o[1]);
                 if (tmp < mx)
                     mx = tmp;
-                tmp = __fabsf((*p1 - lbl_803DED2C) - o[1]);
+                tmp = __fabsf((*px - lbl_803DED2C) - o[1]);
                 if (tmp < mx)
                     mx = tmp;
-                mz = __fabsf(*p2 - o[2]);
-                tmp = __fabsf((lbl_803DED2C + *p2) - o[2]);
+                mz = __fabsf(*pz - o[2]);
+                tmp = __fabsf((lbl_803DED2C + *pz) - o[2]);
                 if (tmp < mz)
                     mz = tmp;
-                tmp = __fabsf((*p2 - lbl_803DED2C) - o[2]);
+                tmp = __fabsf((*pz - lbl_803DED2C) - o[2]);
                 if (tmp < mz)
                     mz = tmp;
                 d = sqrtf(mx * mx + mz * mz);
-                if (d < *p4 + o[3])
+                if (d < *prad + o[3])
                     collide = 1;
                 o += 5;
                 j++;

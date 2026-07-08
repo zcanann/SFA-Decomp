@@ -1048,7 +1048,7 @@ void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out)
 
 int ObjList_PartitionForRender(int* out)
 {
-    void* tmp;
+    void* swapObj;
     int i;
     int j;
     int hi;
@@ -1092,9 +1092,9 @@ int ObjList_PartitionForRender(int* out)
         }
         if (i < j)
         {
-            tmp = ((void**)gObjList)[i];
+            swapObj = ((void**)gObjList)[i];
             ((void**)gObjList)[i] = ((void**)gObjList)[j];
-            ((void**)gObjList)[j] = tmp;
+            ((void**)gObjList)[j] = swapObj;
             i++;
             j--;
         }
@@ -1171,7 +1171,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     u32 cullScale;
     int size;
     int dllStateSize;
-    int tmp;
+    int alignedCursor;
 
     seq = *data;
     if (flags & 2)
@@ -1405,18 +1405,18 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if ((flags29 & OBJLOAD_FLAG_ANIM_EVENTS) || (((ObjModelInstance*)obj->def)->flags & 0x400000))
     {
         seq2 = obj->seqId;
-        tmp = roundUpTo4(cursor);
-        obj->objAnimEventTable = (ObjAnimEventTable*)tmp;
-        cursor = roundUpTo8(tmp + 8);
+        alignedCursor = roundUpTo4(cursor);
+        obj->objAnimEventTable = (ObjAnimEventTable*)alignedCursor;
+        cursor = roundUpTo8(alignedCursor + 8);
         obj->objAnimEventTable->entries = (s16*)cursor;
         ObjAnim_LoadMoveEvents((u8*)obj, seq2, obj->objAnimEventTable, 0, 1);
         cursor += 0x50;
     }
     if ((flags29 & OBJLOAD_FLAG_WEAPON_DA) && *(void**)obj->models != NULL)
     {
-        tmp = roundUpTo4(cursor);
-        obj->weaponDaTable = (ObjWeaponDaTable*)tmp;
-        cursor = roundUpTo8(tmp + 8);
+        alignedCursor = roundUpTo4(cursor);
+        obj->weaponDaTable = (ObjWeaponDaTable*)alignedCursor;
+        cursor = roundUpTo8(alignedCursor + 8);
         obj->weaponDaTable->entries = (s16*)cursor;
         cursor += 0x800;
     }
@@ -1453,26 +1453,26 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     }
     if (modelDef->jointCount != 0)
     {
-        tmp = roundUpTo4(cursor);
-        obj->f6c = tmp;
-        cursor = tmp + modelDef->jointCount * 0x12;
+        alignedCursor = roundUpTo4(cursor);
+        obj->f6c = alignedCursor;
+        cursor = alignedCursor + modelDef->jointCount * 0x12;
     }
     if (modelDef->textureSlotCount != 0)
     {
-        tmp = roundUpTo4(cursor);
-        obj->textureSlots = (ObjTextureRuntimeSlot*)tmp;
-        cursor = tmp + modelDef->textureSlotCount * sizeof(ObjTextureRuntimeSlot);
+        alignedCursor = roundUpTo4(cursor);
+        obj->textureSlots = (ObjTextureRuntimeSlot*)alignedCursor;
+        cursor = alignedCursor + modelDef->textureSlotCount * sizeof(ObjTextureRuntimeSlot);
     }
     if (modelDef->hitVolumeCount != 0)
     {
-        tmp = roundUpTo4(cursor);
-        obj->hitVolumeTransforms = (ObjHitVolumeRuntimeTransform*)tmp;
-        cursor = tmp + modelDef->hitVolumeCount * 0x18;
+        alignedCursor = roundUpTo4(cursor);
+        obj->hitVolumeTransforms = (ObjHitVolumeRuntimeTransform*)alignedCursor;
+        cursor = alignedCursor + modelDef->hitVolumeCount * 0x18;
     }
     if (modelDef->hitboxStateCount != 0 && modelDef->hitReactStateCount != 0)
     {
-        tmp = roundUpTo4(cursor);
-        cursor = ObjHitReact_InitState(obj->seqId, (ObjAnimBank*)*(u8**)obj->models, obj->hitReactState, tmp,
+        alignedCursor = roundUpTo4(cursor);
+        cursor = ObjHitReact_InitState(obj->seqId, (ObjAnimBank*)*(u8**)obj->models, obj->hitReactState, alignedCursor,
                                        (ObjAnimComponent*)obj);
     }
     if (modelDef->hitVolumeCount != 0)
