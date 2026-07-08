@@ -92,33 +92,6 @@ typedef struct SkyTimeBlend
     u8 texSel;        /* 0x251 */
 } SkyTimeBlend;
 
-int FUN_80080e60(double param_1, double param_2, double param_3, double param_4, u64 param_5, u64 param_6, u64 param_7,
-                 u64 param_8, int param_9, u32 param_10, u32 param_11, int* param_12, int* param_13, int param_14,
-                 int* param_15, int param_16);
-int FUN_80080e68(int param_1);
-double FUN_80080e88(u64 param_1, u64 param_2, double param_3, float* param_4, int param_5, int param_6);
-u32 FUN_80080e98(u32 param_1, int param_2);
-int FUN_80080eb4(int param_1, u32 param_2);
-short* FUN_80080ed0(double param_1, double param_2, double param_3, double param_4, u64 param_5, u64 param_6,
-                    u64 param_7, u64 param_8, short* param_9, int* param_10, int param_11, int* param_12, int* param_13,
-                    int param_14, int* param_15, int param_16);
-u8 FUN_80080eec(int param_1);
-u32 FUN_80080f04(void);
-u8 FUN_80080f2c(int param_1);
-u8 FUN_80080f34(int param_1);
-u8 FUN_80080f40(void);
-u32 FUN_80080f48(void);
-u8 FUN_80080f54(int param_1);
-u32 FUN_80080f98(void);
-u32 FUN_80080fa0(void);
-u32 FUN_80080fc0(float* param_1);
-int FUN_80080fec(void);
-double FUN_80081014(void);
-u32 FUN_80081084(float* param_1, float* param_2);
-u32 FUN_800810ac(double param_1, float* param_2);
-int FUN_80081134(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
-                 u64 param_8, int param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-                 u32 param_15, u32 param_16);
 int getEnvFxBit2BA(void);
 void setGameBit2BA(int value);
 void envFxFn_800887cc(void);
