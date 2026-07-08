@@ -44,7 +44,7 @@ extern f32 lbl_803E37B0;
  * indexed step, end it once the NEXT step's gate bit (placement+0x28) has
  * gone set and differs from this step's gate bit. Always latches state[1]
  * bit 0 so update advances the step next frame. */
-int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
+int dll_115_seqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int step;
     u8* state = ((GameObject*)obj)->extra;

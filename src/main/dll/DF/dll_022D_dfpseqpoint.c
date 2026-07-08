@@ -52,7 +52,7 @@ extern int lockLevel(s32 val, int idx);
 extern void warpToMap(int idx, s8 transType);
 extern f32 Vec_distance(f32* a, f32* b);
 
-int DFP_seqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
+int DFP_seqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int blob = *(int*)&((GameObject*)obj)->extra;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;

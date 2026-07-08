@@ -96,7 +96,7 @@ ObjectDescriptor dll_199 = {
     dll_199_getExtraSize,
 };
 
-int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
+int dll_199_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void* gTitleMenuControlInterface;
     u8* st;

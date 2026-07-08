@@ -1445,7 +1445,7 @@ return0:
     return 0;
 }
 
-void iceBaddie_update(int obj, int p2, int p3)
+void iceBaddie_update(int obj, int unusedA, int unusedB)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern int iceBaddie_updateTargetCollision(int obj, int sub, int sub2);
