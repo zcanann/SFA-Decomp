@@ -14,6 +14,7 @@
 #include "main/objseq.h"
 #include "main/objprint.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/gamebit_ids.h"
 
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
@@ -69,7 +70,7 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5, lbl_803E4288);
         }
     }
-    else if (mainGetBit(0x4d) != 0 && visible != 0)
+    else if (mainGetBit(GAMEBIT_CFPerchRelated004D) != 0 && visible != 0)
     {
         ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4288);
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
@@ -143,7 +144,7 @@ void cfprisonuncle_update(int* obj)
         }
     }
     ObjTrigger_UpdateIdBlockFlag((int)obj);
-    sub->released = mainGetBit(0x4d);
+    sub->released = mainGetBit(GAMEBIT_CFPerchRelated004D);
     if (sub->released == 0)
     {
         player = Obj_GetPlayerObject();
@@ -187,7 +188,7 @@ void cfprisonuncle_init(int* obj)
     state->unk68 = 465;
     state->unk70 = 0;
     state->magicGranted = 0;
-    if ((u32)mainGetBit(0x4d) != 0u)
+    if ((u32)mainGetBit(GAMEBIT_CFPerchRelated004D) != 0u)
     {
         mainSetBits(0x50, 1);
     }
