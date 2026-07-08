@@ -42,7 +42,11 @@ project matches more.
 ## House rules
 - NEVER write comments unless explicitly stated otherwise.
 - When updating comments NEVER track history, stuff like "used to be named x" always keep comments current.
-- 
+- `include/main/gamebit_ids.h`: a NEW `GAMEBIT_*` id ALWAYS goes in the unordered (Rena-imported)
+  section, inserted in ascending-id order — NEVER interleave it into the chronological/story-ordered
+  section at the top, and NEVER split a comment from the entry it describes. An id may be promoted into
+  the ordered section ONLY once its story/activation position has been established by directly debugging
+  the game in Dolphin.
 
 ## A few MWCC facts (high-frequency only — NOT a map; derive everything else fresh)
 - Compare opcode tracks operand width/sign **when it feeds a branch**: `u16`/unsigned → `cmplwi`, `int`/`long` → `cmpwi`. Type the local/field to the field width. (Inert against a runtime `int` operand.)
