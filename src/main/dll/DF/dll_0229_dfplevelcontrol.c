@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/objlib.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/lightmap.h"
@@ -43,8 +44,8 @@ void fn_80204098(int obj)
     player = Obj_GetPlayerObject();
     if (lbl_803DC183 != 0)
     {
-        mainSetBits(0x2d, 1);
-        mainSetBits(0x1d7, 1);
+        mainSetBits(GAMEBIT_STAFF_ABILITY_FIRE_BLASTER, 1);
+        mainSetBits(GAMEBIT_ITEM_DeletedSpell1D7, 1);
         for (i = 0; i < 9; i++)
         {
             lbl_80329848[i] = (s16)randomGetRange(1, 4);
