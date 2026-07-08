@@ -201,7 +201,7 @@ void dll_200_init(int* obj, int* arg)
     state->homeX = *(f32*)((char*)arg + 0x8);
     state->homeY = *(f32*)((char*)arg + 0xc);
     state->homeZ = *(f32*)((char*)arg + 0x10);
-    state->latch24 = mainGetBit(0xd0);
+    state->latch24 = mainGetBit(GAMEBIT_WM_GalleonRelated00D0);
     state->counter27 = 0;
     state->mode = 1;
     state->prevMode = 0xc;
@@ -379,7 +379,7 @@ void fn_801F2290(int obj)
     Obj_GetPlayerObject();
     itemSet = *(ItemIdSet3*)gArwingAttachmentItemSetWander;
     ((GameObject*)obj)->anim.localPosY = state->homeY;
-    if (mainGetBit(0x1fc) != 0)
+    if (mainGetBit(GAMEBIT_WM_FoundKrystal) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
