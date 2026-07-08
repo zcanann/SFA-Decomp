@@ -2806,7 +2806,7 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
     int pb;
     int scale2;
     int ofs;
-    u8* p3;
+    u8* skyEntry;
     f32 bl;
     int scale1;
     u8* prev;
@@ -2860,19 +2860,19 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
         }
         if (((SkyBlendStateFlags*)(gSkyState + slot * 0xa4 + 0xc1))->active != 0)
         {
-            p3 = gSkyState + ofs;
-            dir[0] = *(f32*)(p3 + 0xa8);
-            dir[1] = *(f32*)(p3 + 0xac);
-            dir[2] = *(f32*)(p3 + 0xb0);
-            r = p3[0x7c];
-            g = p3[0x7d];
-            b = p3[0x7e];
-            c01 = p3[0x84];
-            c02 = p3[0x85];
-            c03 = p3[0x86];
-            c11 = p3[0x8c];
-            c12 = p3[0x8d];
-            c13 = p3[0x8e];
+            skyEntry = gSkyState + ofs;
+            dir[0] = *(f32*)(skyEntry + 0xa8);
+            dir[1] = *(f32*)(skyEntry + 0xac);
+            dir[2] = *(f32*)(skyEntry + 0xb0);
+            r = skyEntry[0x7c];
+            g = skyEntry[0x7d];
+            b = skyEntry[0x7e];
+            c01 = skyEntry[0x84];
+            c02 = skyEntry[0x85];
+            c03 = skyEntry[0x86];
+            c11 = skyEntry[0x8c];
+            c12 = skyEntry[0x8d];
+            c13 = skyEntry[0x8e];
             c2 = 0xff;
         }
         else
