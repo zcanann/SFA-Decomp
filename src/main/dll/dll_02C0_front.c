@@ -29,6 +29,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 #define TITLE_SCREEN_TEXTURE_COUNT 19
 
@@ -211,7 +212,7 @@ void TitleScreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2318);
     if (showCredits == 0) return;
     if (gTitleScreenCreditsStarted != 0) return;
-    mainSetBits(0xDF6, 1);
+    mainSetBits(GAMEBIT_CreditsRelated0DF6, 1);
     gTitleScreenCreditsStarted = 1;
     (*gObjectTriggerInterface)->setCamVars(FRONT_CAMMODE_TITLE, 0, 0, 0);
     n_attractmode_releaseMovieBuffers();
