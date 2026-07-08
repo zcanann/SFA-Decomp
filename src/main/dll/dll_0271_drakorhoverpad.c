@@ -367,7 +367,7 @@ int drakorhoverpad_pickMaskedNextPoint(int* pad, int exclude, int maxIndex)
 }
 #pragma dont_inline reset
 
-int drakorhoverpad_update(RomCurveWalker* curve, int arg)
+int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
 {
     u8* p = (u8*)curve;
     u8* cur;
@@ -389,11 +389,11 @@ int drakorhoverpad_update(RomCurveWalker* curve, int arg)
     memcpy(p + 0xe8, p + 0xf8, 16);
     if (*(int*)&((GameObject*)p)->anim.previousLocalPosX != 0)
     {
-        result = drakorhoverpad_pickMaskedNextPoint(*(int**)&((GameObject*)p)->anim.currentMove, -1, arg);
+        result = drakorhoverpad_pickMaskedNextPoint(*(int**)&((GameObject*)p)->anim.currentMove, -1, maxIndex);
     }
     else
     {
-        result = drakorhoverpad_pickUnmaskedNextPoint(*(int**)&((GameObject*)p)->anim.currentMove, -1, arg);
+        result = drakorhoverpad_pickUnmaskedNextPoint(*(int**)&((GameObject*)p)->anim.currentMove, -1, maxIndex);
     }
     if (result == -1)
     {
@@ -694,7 +694,7 @@ void drakorhoverpad_updateMain(int obj)
 #pragma fp_contract reset
 #pragma opt_common_subs reset
 
-int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
+int drakorhoverpad_handlePathPointEvent(int obj, u8 eventCode, u8 subCode, void* out)
 {
     u8* p = ((GameObject*)obj)->extra;
     HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
@@ -706,7 +706,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
 
     player = (int)Obj_GetPlayerObject();
     *(int*)out = -1;
-    switch (a)
+    switch (eventCode)
     {
     case 1:
         player = (int)Obj_GetPlayerObject();
@@ -946,7 +946,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         *(f32*)p = lbl_803E6A3C;
         break;
     }
-    switch (b)
+    switch (subCode)
     {
     case 8:
         if (mainGetBit(0x67f) != 0)
@@ -983,17 +983,17 @@ int drakorhoverpad_render2(int obj)
     return ((p[0x179] >> 2) & 1) == 0;
 }
 
-void drakorhoverpad_func12(int obj, f32* a, int* b)
+void drakorhoverpad_func12(int obj, f32* outFloat, int* outFlag)
 {
-    *a = lbl_803E6A3C;
-    *b = 0;
+    *outFloat = lbl_803E6A3C;
+    *outFlag = 0;
 }
 
-void drakorhoverpad_modelMtxFn(int obj, f32* a, f32* b, f32* c)
+void drakorhoverpad_modelMtxFn(int obj, f32* ox, f32* oy, f32* oz)
 {
-    *a = ((GameObject*)obj)->anim.localPosX;
-    *b = lbl_803E6A40 + ((GameObject*)obj)->anim.localPosY;
-    *c = ((GameObject*)obj)->anim.localPosZ;
+    *ox = ((GameObject*)obj)->anim.localPosX;
+    *oy = lbl_803E6A40 + ((GameObject*)obj)->anim.localPosY;
+    *oz = ((GameObject*)obj)->anim.localPosZ;
 }
 
 f32 drakorhoverpad_func13(int obj, f32* out)
