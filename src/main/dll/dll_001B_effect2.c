@@ -22,6 +22,8 @@
 #include "main/dll/modgfx.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/dll_001B_effect2.h"
+#include "main/dll/dll_000E_partfx.h"
+#include "main/dll/dll_001A_effect1.h"
 
 extern f32 gEffect2ScrollPhaseA;
 extern f32 gEffect2ScrollPhaseB;
@@ -122,16 +124,6 @@ extern f32 lbl_803DF9B4;
 extern f32 lbl_803DF9B8;
 extern f32 lbl_803DF9BC;
 extern s32 gEffect2TextureIdTable[];
-extern void partfx_initialise();
-extern void partfx_release();
-extern void partfx_onMapSetup();
-extern void partfx_spawnObject();
-extern void partfx_updateFrameState();
-extern void Effect1_initialise();
-extern void Effect1_release();
-extern void Effect1_func03_nop();
-extern void Effect1_func04();
-extern void Effect1_func05();
 
 void Effect2_func03_nop(void)
 {

@@ -19,6 +19,8 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/dll/dll_018D_mmshscales.h"
+#include "main/dll/dll_018E_mmshwaterspike.h"
 
 /* env-effect ids fired when the shrine load-trigger timer expires (index-style; roles opaque) */
 /* camera mode DLL 0x4c = dll_004C_camDebug */
@@ -408,25 +410,6 @@ void MMSH_Shrine_initialise(void)
 {
 }
 
-/*__DATA_EXTERNS__*/
-extern void mmsh_waterspike_getExtraSize();
-extern void mmsh_waterspike_getObjectTypeId();
-extern void mmsh_waterspike_free();
-extern void mmsh_waterspike_render();
-extern void mmsh_waterspike_hitDetect();
-extern void mmsh_waterspike_update();
-extern void mmsh_waterspike_init();
-extern void mmsh_waterspike_release();
-extern void mmsh_waterspike_initialise();
-extern void MMSH_Scales_getExtraSize();
-extern void MMSH_Scales_getObjectTypeId();
-extern void MMSH_Scales_free();
-extern void MMSH_Scales_render();
-extern void MMSH_Scales_hitDetect();
-extern void MMSH_Scales_update();
-extern void MMSH_Scales_init();
-extern void MMSH_Scales_release();
-extern void MMSH_Scales_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* gMMSH_ScalesObjDescriptor[14] = {(void*)0x00000000,           (void*)0x00000000,       (void*)0x00000000,
                                        (void*)0x00090000,           MMSH_Scales_initialise,  MMSH_Scales_release,

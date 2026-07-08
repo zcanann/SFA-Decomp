@@ -85,26 +85,8 @@ extern void dimbossfire_initialise(void);
 extern void dimbossfire_release(void);
 extern void dimbossfire_render(void);
 extern void dimbossfire_update(void);
-extern void DIM_BossGut2_free(void);
-extern void DIM_BossGut2_func0B(void);
-extern void DIM_BossGut2_getExtraSize(void);
-extern void DIM_BossGut2_getObjectTypeId(void);
-extern void DIM_BossGut2_hitDetect(void);
-extern void DIM_BossGut2_init(void);
-extern void DIM_BossGut2_initialise(void);
-extern void DIM_BossGut2_release(void);
-extern void DIM_BossGut2_render(void);
-extern void DIM_BossGut2_setScale(void);
-extern void DIM_BossGut2_update(void);
-extern void magicmaker_free(void);
-extern void magicmaker_getExtraSize(void);
-extern void magicmaker_getObjectTypeId(void);
-extern void magicmaker_hitDetect(void);
-extern void magicmaker_init(void);
-extern void magicmaker_initialise(void);
-extern void magicmaker_release(void);
-extern void magicmaker_render(void);
-extern void magicmaker_update(void);
+#include "main/dll/DIM/dll_01E3_dimbossgut2.h"
+#include "main/dll/dll_01E4_magicmaker.h"
 
 int DIM_BossGut_SeqFn(int obj, int runtime, ObjAnimUpdateState* animUpdate)
 {

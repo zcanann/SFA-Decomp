@@ -11,6 +11,8 @@
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
 #include "main/dll/CC/dll_0122_cctestinfot.h"
+#include "main/dll/dll_010E_deathseq.h"
+#include "main/dll/DR/dll_0128_kttorch.h"
 
 #define CCTESTINFOT_OBJFLAG_HIDDEN             0x4000
 #define CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -18,72 +20,54 @@
 extern f32 lbl_803E3C88; /* hold-time reset value when the trigger fires */
 extern f32 lbl_803E3C8C; /* hold-time ceiling / minimum to keep showing text */
 
-extern void DeathSeq_getExtraSize(void);
 extern void dll_127_getExtraSize_ret_0(void);
-extern void KT_Torch_getExtraSize(void);
 extern void CFCrate_getExtraSize(void);
 extern void FxEmit_getExtraSize(void);
 
-extern void DeathSeq_getObjectTypeId(void);
 extern void dll_127_getObjectTypeId(void);
-extern void KT_Torch_getObjectTypeId(void);
 extern void CFCrate_getObjectTypeId(void);
 extern void FxEmit_getObjectTypeId(void);
 
-extern void DeathSeq_free(void);
 extern void dll_127_free_nop(void);
-extern void KT_Torch_free(void);
 extern void CFCrate_free(void);
 extern void FxEmit_free(void);
 
-extern void DeathSeq_render(void);
 extern void dll_127_render(void);
 extern void CampFire_getExtraSize(void);
-extern void KT_Torch_render(void);
 extern void CFCrate_render(void);
 extern void FxEmit_render(void);
 
 extern void FuelCell_getExtraSize(void);
-extern void DeathSeq_hitDetect(void);
 extern void dll_127_hitDetect_nop(void);
 extern void CampFire_getObjectTypeId(void);
-extern void KT_Torch_hitDetect(void);
 extern void CFCrate_hitDetect(void);
 extern void FxEmit_hitDetect(void);
 
 extern void DeathGas_getExtraSize(void);
 extern void FuelCell_free(void);
-extern void DeathSeq_update(void);
 extern void dll_127_update(void);
 extern void CampFire_free(void);
-extern void KT_Torch_update(void);
 extern void CFCrate_update(void);
 extern void FxEmit_update(void);
 
 extern void DeathGas_free(void);
 extern void FuelCell_render(void);
-extern void DeathSeq_init(void);
 extern void dll_127_init(void);
 extern void CampFire_render(void);
-extern void KT_Torch_init(void);
 extern void CFCrate_init(void);
 extern void FxEmit_init(void);
 
 extern void DeathGas_update(void);
 extern void FuelCell_update(void);
-extern void DeathSeq_release(void);
 extern void dll_127_release_nop(void);
 extern void CampFire_update(void);
-extern void KT_Torch_release(void);
 extern void CFCrate_release(void);
 extern void FxEmit_release(void);
 
 extern void DeathGas_init(void);
 extern void FuelCell_init(void);
-extern void DeathSeq_initialise(void);
 extern void dll_127_initialise_nop(void);
 extern void CampFire_init(void);
-extern void KT_Torch_initialise(void);
 extern void CFCrate_initialise(void);
 extern void FxEmit_initialise(void);
 extern int ObjTrigger_IsSet();

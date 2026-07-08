@@ -17,6 +17,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/dll/CF/dll_0149_cfwindlift.h"
+#include "main/dll/CF/dll_014A_cfpowerbase.h"
 
 #define CFWINDLIFT_OBJGROUP 0x49
 #define CFGUARDIAN_OBJGROUP 0x16 /* DLL 0x148 cfguardian */
@@ -78,31 +79,14 @@ extern f32 lbl_803E41B4;
 extern f32 lbl_803E41B8;
 extern f32 lbl_803E41BC;
 
-extern void CFPowerBase_getExtraSize(void);
 extern void CFMainCrystal_getExtraSize(void);
-
-extern void CFPowerBase_getObjectTypeId(void);
 extern void CFMainCrystal_getObjectTypeId(void);
-
-extern void CFPowerBase_free(void);
 extern void CFMainCrystal_free(void);
-
-extern void CFPowerBase_render(void);
 extern void CFMainCrystal_render(void);
-
-extern void CFPowerBase_hitDetect(void);
 extern void CFMainCrystal_hitDetect(void);
-
-extern void CFPowerBase_update(void);
 extern void CFMainCrystal_update(void);
-
-extern void CFPowerBase_init(void);
 extern void CFMainCrystal_init(void);
-
-extern void CFPowerBase_release(void);
 extern void CFMainCrystal_release(void);
-
-extern void CFPowerBase_initialise(void);
 extern void CFMainCrystal_initialise(void);
 
 extern void* ObjGroup_GetObjects();

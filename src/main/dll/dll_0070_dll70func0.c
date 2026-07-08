@@ -14,6 +14,10 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0070_dll70func0.h"
+#include "main/dll/dll_0071_dll71func0.h"
+#include "main/dll/dll_0072_dll72func0.h"
+#include "main/dll/dll_0073_dll73func0.h"
+#include "main/dll/dll_0074_dll74func0.h"
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL70_EFFECT_ID 0x45
@@ -37,19 +41,6 @@ extern f32 lbl_803E0B24;
 extern f32 lbl_803E0B28;
 extern f32 lbl_803E0B2C;
 extern f32 lbl_803E0B30;
-
-extern void dll_71_func00_nop(void);
-extern void dll_71_func01_nop(void);
-extern void dll_71_func03(void);
-extern void dll_72_func00_nop(void);
-extern void dll_72_func01_nop(void);
-extern void dll_72_func03(void);
-extern void dll_73_func00_nop(void);
-extern void dll_73_func01_nop(void);
-extern void dll_73_func03(void);
-extern void dll_74_func00_nop(void);
-extern void dll_74_func01_nop(void);
-extern void dll_74_func03(void);
 
 void dll_70_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

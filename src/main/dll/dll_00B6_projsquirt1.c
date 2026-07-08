@@ -7,22 +7,12 @@
  */
 #include "dolphin/os.h"
 #include "main/dll/dll_70.h"
-
-/* descriptor/ptr table auto 0x803197f8-0x80319818 (8-byte aligned in retail;
- * pointer tables regenerate ADDR32 relocs). Union u64 member forces the
- * retail 8-byte alignment after the 0x26-byte string (retail pad
- * gap_07_803197F6_data). Same idiom as dll_00B1_projlightning3. */
-typedef union DllDescriptorTable
-{
-    void* ptrs[8];
-    u64 align8;
-} DllDescriptorTable;
+#include "main/dll/dll_descriptor_table.h"
+#include "main/dll/dll_72.h"
+#include "main/dll/dll_00B6_projsquirt1.h"
+#include "main/dll/dll_00B7_projship1.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
-
-extern void projship1_doUnsupported(void);
-extern void projship1_release(void);
-extern void projship1_initialise(void);
 
 char sProjsquirt1DoNoLongerSupported[] = "<projsquirt1 Do>No Longer supported \n";
 

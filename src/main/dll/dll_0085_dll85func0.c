@@ -279,7 +279,6 @@ const f32 lbl_803E0FD4 = 0.0f;
 const f32 lbl_803E0FD8 = 1.0f;
 const f32 lbl_803E0FDC = 0.0f;
 
-/*__DATA_EXTERNS__*/
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 extern void dll_86_func00_nop();
 extern void dll_86_func01_nop();

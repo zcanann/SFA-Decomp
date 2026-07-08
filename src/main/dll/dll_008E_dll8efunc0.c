@@ -41,8 +41,7 @@ extern f32 lbl_803E1160;
 extern f32 lbl_803E1164;
 extern f32 lbl_803E1168;
 extern f32 lbl_803E116C;
-extern void dll_8F_func01_nop(void);
-extern void dll_8F_func00_nop(void);
+#include "main/dll/dll_008F_dll8ffunc0.h"
 
 #pragma opt_propagation off
 void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)

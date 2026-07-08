@@ -23,6 +23,7 @@
 #include "main/sfa_shared_decls.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00CD_iceball.h"
+#include "main/dll/dll_00CB_dllcb.h"
 
 #define ICEBALL_HIT_VOLUME_SLOT 10
 
@@ -257,18 +258,6 @@ ObjectDescriptor gIceBallObjDescriptor = {
     IceBall_getExtraSize,
 };
 
-/*__DATA_EXTERNS__*/
-extern void dll_CB_func0B_nop();
-extern void dll_CB_setScale();
-extern void dll_CB_getExtraSize_ret_1040();
-extern void dll_CB_getObjectTypeId();
-extern void dll_CB_free();
-extern void dll_CB_render();
-extern void dll_CB_hitDetect();
-extern void dll_CB_update();
-extern void dll_CB_init();
-extern void dll_CB_release_nop();
-extern void dll_CB_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 u8 lbl_80320008[120] = {0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0,
                         0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2,

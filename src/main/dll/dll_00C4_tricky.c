@@ -2025,6 +2025,7 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
     return gTrickyNearestObject;
 }
 
+/* Shared frozen-state update + per-baddie reaction dispatch. */
 void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
 {
     int player;

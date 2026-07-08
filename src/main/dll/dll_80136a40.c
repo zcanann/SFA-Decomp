@@ -62,7 +62,6 @@ typedef struct TrickyImpressState
     u8 pad80C[0x810 - 0x80C];
 } TrickyImpressState;
 
-/* Bit setter at bit 6 (0x40) of obj->_b8->_58. */
 struct Bits58
 {
     u8 _pad[0x58];

@@ -8,20 +8,11 @@
  */
 #include "main/dll/dll_72.h"
 #include "main/engine_shared.h"
-
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs).
- * Union u64 member forces the retail 8-byte alignment after the 0x24-byte
- * string (retail pad gap_07_8031983C_data). Same idiom as
- * dll_00B1_projlightning3. */
-typedef union DllDescriptorTable
-{
-    void* ptrs[8];
-    u64 align8;
-} DllDescriptorTable;
+#include "main/dll/dll_descriptor_table.h"
+#include "main/dll/dll_00B7_projship1.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
-/*__DATA_EXTERNS__*/
 extern void projwallpower_doUnsupported();
 extern void projwallpower_release();
 extern void projwallpower_initialise();

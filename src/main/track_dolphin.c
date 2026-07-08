@@ -40,6 +40,11 @@ typedef struct TrackBlockDescriptor
     void* alternateCollisionMatrix;
 } TrackBlockDescriptor;
 
+/* TrackTriangle -- the 0x4c-byte collision triangle record packed into
+ * gTrackTriangleBuffer.  Plane and edge-plane normals are prebaked f32;
+ * vertex coordinates are stored as s16 triplets grouped by axis
+ * (x0 x1 x2 / y0 y1 y2 / z0 z1 z2), which the hit-detect code reads both
+ * by field and as an s16 index off the record base. */
 typedef struct TrackTriangle
 {
     f32 planeD;     /* 0x00 plane equation constant */
@@ -57,6 +62,10 @@ typedef struct TrackTriangle
     u8 edgeOutBits; /* 0x4b per-edge outside bits from last query */
 } TrackTriangle;
 
+/* MapTriGroup -- 0x14-byte per-block triangle group header streamed from the
+ * map block (blk+0x50 table).  Holds the first index into the block's 8-byte
+ * MapTriIndex list plus s16 bounds; the list is closed by the NEXT group's
+ * firstTri, so walkers read group[1].firstTri as their end bound. */
 typedef struct MapTriGroup
 {
     u16 firstTri; /* 0x00 first MapTriIndex this group owns */
@@ -70,6 +79,8 @@ typedef struct MapTriGroup
     u32 flags;    /* 0x10 surface kind/filter bits */
 } MapTriGroup;
 
+/* MapTriIndex -- 8-byte triangle: three vertex indices into the block's
+ * packed s16 vertex pool plus a 16-bit x/z grid-cell coverage mask. */
 typedef struct MapTriIndex
 {
     u16 vert[3];  /* 0x00 vertex pool indices */
@@ -84,6 +95,10 @@ typedef struct MapDynamicSlot
     u8 pad15[3];
 } MapDynamicSlot;
 
+/* IntersectLine -- 0x10-byte water/track intersection line record built into
+ * the scratch pool at lbl_803DCF34 (cap 0x5dc) and later compacted into the
+ * owning object's sorted table.  kind's low 6 bits are the sort/group key;
+ * a kind of 0x14 marks a consumed scratch entry. */
 typedef struct IntersectLine
 {
     u8 end0;     /* 0x0 per-endpoint byte from the source segment */
@@ -730,20 +745,6 @@ u8 gTrackGridOrigin[0x104];
 
 TrackBlockDescriptor gTrackBlockDescriptors[20];
 
-/* TrackTriangle -- the 0x4c-byte collision triangle record packed into
- * gTrackTriangleBuffer.  Plane and edge-plane normals are prebaked f32;
- * vertex coordinates are stored as s16 triplets grouped by axis
- * (x0 x1 x2 / y0 y1 y2 / z0 z1 z2), which the hit-detect code reads both
- * by field and as an s16 index off the record base. */
-
-/* MapTriGroup -- 0x14-byte per-block triangle group header streamed from the
- * map block (blk+0x50 table).  Holds the first index into the block's 8-byte
- * MapTriIndex list plus s16 bounds; the list is closed by the NEXT group's
- * firstTri, so walkers read group[1].firstTri as their end bound. */
-
-/* MapTriIndex -- 8-byte triangle: three vertex indices into the block's
- * packed s16 vertex pool plus a 16-bit x/z grid-cell coverage mask. */
-
 #pragma dont_inline on
 void* fn_80069944(u32* outVal)
 {
@@ -768,7 +769,6 @@ u32 mapBlockFn_80060678(int* obj)
 
 /* mapGetBlocks: write a fixed table base and an sbss u32 into two
  * out-pointers. */
-
 void mapGetBlocks(void** outPtr, u32* outVal)
 {
     *outPtr = gMapBlockLayerTables;
@@ -797,7 +797,6 @@ u32 fn_80060668(int* obj)
 
 /* fn_80062894 -- clear two shorts, toggle two bytes (1 - x), clear
  * two more bytes. */
-
 void fn_80062894(void)
 {
     lbl_803DCEF6 = 0;
@@ -976,11 +975,6 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 #pragma dont_inline reset
 
 char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
-
-/* IntersectLine -- 0x10-byte water/track intersection line record built into
- * the scratch pool at lbl_803DCF34 (cap 0x5dc) and later compacted into the
- * owning object's sorted table.  kind's low 6 bits are the sort/group key;
- * a kind of 0x14 marks a consumed scratch entry. */
 
 void intersectModLineBuild(int* obj)
 {
@@ -3955,7 +3949,6 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
 /* fn_80067B84 -- gather model triangles overlapping a swept bbox into the
  * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
  * cursor. */
-
 int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 scale, f32 x0, f32 y0d, f32 z0, f32 x1,
                 f32 y1d, f32 z1)
 {
@@ -4205,7 +4198,6 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
 
 /* mapLoadBlocksFn_800685cc -- gather map-block collision triangles overlapping
  * the query box into the buffer at cur; returns advanced cursor. */
-
 #pragma ppc_unroll_instructions_limit 56
 #pragma opt_propagation off
 int mapLoadBlocksFn_800685cc(cur, x0, y0, z0, x1, y1, z1, flags, doEdges)
@@ -4627,7 +4619,6 @@ u8 doEdges;
 
 /* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
-
 void trackIntersect(void)
 {
     s16 counts[0x47];
@@ -4853,7 +4844,6 @@ void trackIntersect(void)
 
 /* doLotsOfMath -- sweep a 2D segment (with radius) against the intersection
  * line table, sliding/clipping the end point; fills *out with the last hit. */
-
 #pragma optimization_level 2
 int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* obj, int pmask, int seg, int ytol,
                  int self)

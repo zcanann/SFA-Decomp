@@ -42,6 +42,7 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_00CA_icebaddie.h"
 #include "main/sfa_shared_decls.h"
+#include "main/dll/dll_00CD_iceball.h"
 
 /*
  * The per-object "control" sub-block (at GroundBaddieState + 0x40c). Only the
@@ -1551,15 +1552,6 @@ int ChukChuk_getObjectTypeId(void);
 void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void ChukChuk_update(short* obj);
 void ChukChuk_setScale(int obj, int v);
-
-void IceBall_hitDetect(void);
-void IceBall_release(void);
-void IceBall_initialise(void);
-int IceBall_getExtraSize(void);
-int IceBall_getObjectTypeId(void);
-void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void IceBall_free(void);
-void IceBall_init(void* obj);
 
 void iceBaddie_initialise(void)
 {

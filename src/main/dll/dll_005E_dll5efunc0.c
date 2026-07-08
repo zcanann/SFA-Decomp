@@ -16,60 +16,24 @@
 extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll5EFunc03SequenceData[];
 
-extern u8 Dummy58_func03_ret_0[];
-extern u8 Dummy58_initialise[];
-extern u8 Dummy58_release[];
-extern u8 Dummy6C_func03_ret_0[];
-extern u8 Dummy6C_initialise[];
-extern u8 Dummy6C_release[];
-extern u8 dll_5F_func00_nop[];
-extern u8 dll_5F_func01_nop[];
-extern u8 dll_5F_func03[];
-extern u8 dll_60_func00_nop[];
-extern u8 dll_60_func01_nop[];
-extern u8 dll_60_func03[];
-extern u8 dll_61_func00_nop[];
-extern u8 dll_61_func01_nop[];
-extern u8 dll_61_func03[];
-extern u8 dll_62_func00_nop[];
-extern u8 dll_62_func01_nop[];
-extern u8 dll_62_func03[];
-extern u8 dll_63_func00_nop[];
-extern u8 dll_63_func01_nop[];
-extern u8 dll_63_func03[];
-extern u8 dll_64_func00_nop[];
-extern u8 dll_64_func01_nop[];
-extern u8 dll_64_func03[];
-extern u8 dll_65_func00_nop[];
-extern u8 dll_65_func01_nop[];
-extern u8 dll_65_func03[];
-extern u8 dll_66_func00_nop[];
-extern u8 dll_66_func01_nop[];
-extern u8 dll_66_func03[];
-extern u8 dll_67_func00_nop[];
-extern u8 dll_67_func01_nop[];
-extern u8 dll_67_func03[];
-extern u8 dll_68_func00_nop[];
-extern u8 dll_68_func01_nop[];
-extern u8 dll_68_func03[];
-extern u8 dll_69_func00_nop[];
-extern u8 dll_69_func01_nop[];
-extern u8 dll_69_func03[];
-extern u8 dll_6A_func00_nop[];
-extern u8 dll_6A_func01_nop[];
-extern u8 dll_6A_func03[];
-extern u8 dll_6B_func00_nop[];
-extern u8 dll_6B_func01_nop[];
-extern u8 dll_6B_func03[];
-extern u8 dll_6D_func00_nop[];
-extern u8 dll_6D_func01_nop[];
-extern u8 dll_6D_func03[];
-extern u8 dll_6E_func00_nop[];
-extern u8 dll_6E_func01_nop[];
-extern u8 dll_6E_func03[];
-extern u8 dll_A3_func00_nop[];
-extern u8 dll_A3_func01_nop[];
-extern u8 dll_A3_func03[];
+#include "main/dll/dll_0058_dummy58.h"
+#include "main/dll/dll_006C_dummy6c.h"
+#include "main/dll/dll_005F_dll5ffunc0.h"
+#include "main/dll/dll_0060_dll60func0.h"
+#include "main/dll/dll_0061_dll61func0.h"
+#include "main/dll/dll_0062_dll62func0.h"
+#include "main/dll/dll_0063_dll63func0.h"
+#include "main/dll/dll_0064_dll64func0.h"
+#include "main/dll/dll_0065_dll65func0.h"
+#include "main/dll/dll_0066_dll66func0.h"
+#include "main/dll/dll_0067_dll67func0.h"
+#include "main/dll/dll_0068_dll68func0.h"
+#include "main/dll/dll_0069_dll69func0.h"
+#include "main/dll/dll_006A_dll6afunc0.h"
+#include "main/dll/dll_006B_dll6bfunc0.h"
+#include "main/dll/dll_006D_dll6dfunc0.h"
+#include "main/dll/dll_006E_dll6efunc0.h"
+#include "main/dll/dll_00A3_dlla3func0.h"
 
 void dll_5E_func03(int sourceObj, int variant, u8* posSource, u32 flags)
 {

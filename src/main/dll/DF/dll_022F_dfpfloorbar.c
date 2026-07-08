@@ -288,7 +288,6 @@ ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor = {
     0,
 };
 
-/*__DATA_EXTERNS__*/
 extern void sfxplayer_getExtraSize();
 extern void sfxplayer_getObjectTypeId();
 extern void sfxplayer_free();

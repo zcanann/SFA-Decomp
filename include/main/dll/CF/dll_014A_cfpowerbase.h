@@ -17,6 +17,14 @@ STATIC_ASSERT(offsetof(CfPowerBaseMapData, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(CfPowerBaseMapData, typeBit) == 0x1E);
 
 int CFPowerBase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate);
+int CFPowerBase_getExtraSize(void);
+int CFPowerBase_getObjectTypeId(void);
+void CFPowerBase_free(void);
 void CFPowerBase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void CFPowerBase_hitDetect(void);
+void CFPowerBase_update(int* obj);
+void CFPowerBase_init(int* obj, u8* params);
+void CFPowerBase_release(void);
+void CFPowerBase_initialise(void);
 
 #endif /* MAIN_DLL_CF_DLL_014A_CFPOWERBASE_H_ */

@@ -28,6 +28,17 @@ tree-wide; run `clang-format -i` on any file you touch.
 
 Exactly one blank line between every pair of top-level items.
 
+**Externs are a last resort.** A symbol owned by a unit with a per-unit header comes
+from that header — including function addresses feeding pointer tables. A file-local
+extern is only acceptable when no header declares the symbol with the byte-matching
+type spelling. Marker comments like `/*__DATA_EXTERNS__*/` are generator cruft:
+delete them.
+
+**Comments travel with their subject.** A comment documents the declaration or
+definition directly below (or beside) it; whoever moves the subject moves the
+comment — into a header if that is where the subject went. A comment left pointing
+at code that is no longer there is a defect.
+
 ## Per-unit headers
 
 A unit's struct typedefs, their `STATIC_ASSERT`s, and its exported prototypes live in a

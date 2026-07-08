@@ -7,22 +7,10 @@
  */
 #include "main/dll/dll_6A.h"
 #include "dolphin/os.h"
-
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs).
- * Union u64 member forces the retail 8-byte alignment. Same idiom as
- * dll_00B1_projlightning3. */
-typedef union DllDescriptorTable
-{
-    void* ptrs[8];
-    u64 align8;
-} DllDescriptorTable;
+#include "main/dll/dll_descriptor_table.h"
+#include "main/dll/dll_00B2_projrobotfire.h"
 
 #define PROJENERGISE2_UNSUPPORTED -1
-
-/*__DATA_EXTERNS__*/
-extern void projrobotfire_doUnsupported();
-extern void projrobotfire_release();
-extern void projrobotfire_initialise();
 
 char sProjenergise2DoNoLongerSupported[] = "<projenergise2 Do>No Longer supported \n";
 

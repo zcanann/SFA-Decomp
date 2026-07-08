@@ -19,6 +19,7 @@
 #include "main/gamebit_ids.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/dll/WM/dll_020A_wmgeneralscales.h"
 
 /* per-object extra state (getExtraSize == 0x1C) */
 typedef struct WmLevelControlState
@@ -360,16 +361,6 @@ void WM_LevelControl_initialise(void)
 }
 
 /* descriptor/ptr table auto 0x80328bd0-0x80328c08 */
-extern u8 WM_GeneralScales_free[];
-extern u8 WM_GeneralScales_getExtraSize[];
-extern u8 WM_GeneralScales_getObjectTypeId[];
-extern u8 WM_GeneralScales_hitDetect[];
-extern u8 WM_GeneralScales_init[];
-extern u8 WM_GeneralScales_initialise[];
-extern u8 WM_GeneralScales_release[];
-extern u8 WM_GeneralScales_render[];
-extern u8 WM_GeneralScales_update[];
-
 u32 gWM_GeneralScalesObjDescriptor[14] = {0x00000000,
                                           0x00000000,
                                           0x00000000,

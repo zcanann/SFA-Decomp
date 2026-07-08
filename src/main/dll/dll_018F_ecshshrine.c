@@ -48,6 +48,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/dll_0191_ecshcreator.h"
 
 typedef struct EcshIntPair
 {
@@ -128,31 +129,14 @@ extern f32 lbl_803E4FF0;
 extern int lbl_803DDBC0;
 extern EcshIntPair lbl_803E8470;
 
-extern void ecsh_creator_getExtraSize(void);
 extern void gpsh_shrine_getExtraSize(void);
-
-extern void ecsh_creator_getObjectTypeId(void);
 extern void gpsh_shrine_getObjectTypeId(void);
-
-extern void ecsh_creator_free(void);
 extern void gpsh_shrine_free(void);
-
-extern void ecsh_creator_render(void);
 extern void gpsh_shrine_render(void);
-
-extern void ecsh_creator_hitDetect(void);
 extern void gpsh_shrine_hitDetect(void);
-
-extern void ecsh_creator_update(void);
 extern void gpsh_shrine_update(void);
-
-extern void ecsh_creator_init(void);
 extern void gpsh_shrine_init(void);
-
-extern void ecsh_creator_release(void);
 extern void gpsh_shrine_release(void);
-
-extern void ecsh_creator_initialise(void);
 extern void gpsh_shrine_initialise(void);
 
 extern f32 Vec_xzDistance(f32* a, f32* b);

@@ -16,15 +16,10 @@
 #define DLL7C_EFFECT_ID 0x2e
 
 extern ModgfxInterface** gModgfxInterface;
-/*__DATA_EXTERNS__*/
-extern void dll_7D_func00_nop();
-extern void dll_7D_func01_nop();
-extern void dll_7E_func00_nop();
-extern void dll_7E_func01_nop();
-extern void dll_7F_func00_nop();
-extern void dll_7F_func01_nop();
-extern void dll_80_func00_nop();
-extern void dll_80_func01_nop();
+#include "main/dll/dll_007D_dll7dfunc0.h"
+#include "main/dll/dll_007E_dll7efunc0.h"
+#include "main/dll/dll_007F_dll7ffunc0.h"
+#include "main/dll/dll_0080_dll80func0.h"
 extern void dll_81_func00_nop();
 extern void dll_81_func01_nop();
 extern void dll_82_func00_nop();

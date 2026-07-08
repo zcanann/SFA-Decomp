@@ -14,7 +14,6 @@
 #include "main/dll/dll_64.h"
 #include "main/engine_shared.h"
 
-/*__DATA_EXTERNS__*/
 extern void projquakeshock_doUnsupported();
 extern void projquakeshock_release();
 extern void projquakeshock_initialise();

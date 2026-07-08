@@ -10,6 +10,10 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_00E7_flammablevine.h"
+#include "main/dll/dll_0119_coldwatercontrol.h"
+#include "main/dll/dll_00EC_infopoint.h"
+#include "main/dll/dll_011A_decoration11a.h"
 
 typedef struct PortalspelldoorPlacement
 {
@@ -38,73 +42,46 @@ extern void LanternFireFly_func0B(void);
 extern void LanternFireFly_setScale(void);
 
 extern void LanternFireFly_getExtraSize(void);
-extern void FlammableVine_getExtraSize(void);
 extern void dll_109_getExtraSize_ret_16(void);
 extern void Fall_Ladders_getExtraSize(void);
-extern void InfoPoint_getExtraSize(void);
 
 extern void LanternFireFly_getObjectTypeId(void);
-extern void FlammableVine_getObjectTypeId(void);
 extern void dll_109_getObjectTypeId(void);
 extern void Fall_Ladders_getObjectTypeId(void);
-extern void InfoPoint_getObjectTypeId(void);
 
 extern void LanternFireFly_free(void);
-extern void FlammableVine_free(void);
 extern void dll_109_free(void);
 extern void Fall_Ladders_free(void);
-extern void InfoPoint_free(void);
 
 extern void LanternFireFly_render(void);
 extern void FireFlyLantern_getExtraSize(void);
-extern void FlammableVine_render(void);
 extern void dll_109_render(void);
 extern void Fall_Ladders_render(void);
-extern void InfoPoint_render(void);
-extern void decoration11a_getExtraSize(void);
 
 extern void LanternFireFly_hitDetect(void);
 extern void FireFlyLantern_getObjectTypeId(void);
-extern void FlammableVine_hitDetect(void);
 extern void dll_109_hitDetect_nop(void);
 extern void Fall_Ladders_hitDetect(void);
-extern void InfoPoint_hitDetect(void);
-extern void decoration11a_free(void);
 
 extern void LanternFireFly_update(void);
 extern void FireFlyLantern_free(void);
-extern void FlammableVine_update(void);
 extern void carryable_break_respawn_update(void);
 extern void Fall_Ladders_update(void);
-extern void InfoPoint_update(void);
-extern void decoration11a_render(void);
 
 extern void LanternFireFly_init(void);
 extern void FireFlyLantern_render(void);
-extern void FlammableVine_init(void);
 extern void dll_109_init(void);
 extern void Fall_Ladders_init(void);
-extern void ColdWaterControl_getExtraSize(void);
-extern void InfoPoint_init(void);
-extern void decoration11a_hitDetect(void);
 
 extern void LanternFireFly_release(void);
 extern void FireFlyLantern_update(void);
-extern void FlammableVine_release(void);
 extern void dll_109_release_nop(void);
 extern void Fall_Ladders_release(void);
-extern void ColdWaterControl_update(void);
-extern void InfoPoint_release(void);
-extern void decoration11a_update(void);
 
 extern void LanternFireFly_initialise(void);
 extern void FireFlyLantern_init(void);
-extern void FlammableVine_initialise(void);
 extern void dll_109_initialise_nop(void);
 extern void Fall_Ladders_initialise(void);
-extern void ColdWaterControl_init(void);
-extern void InfoPoint_initialise(void);
-extern void decoration11a_init(void);
 
 extern int Obj_GetPlayerObject(void);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);

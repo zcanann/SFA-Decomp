@@ -77,26 +77,11 @@ extern f32 gShLevelControlBloopTimeLimit;
 extern f32 lbl_803E54B4; /* 0.0f floor: bloop-timer expiry, hud-text floor, sky-brightness arg */
 extern f32 gShLevelControlHudTextDuration;
 
-extern void warpstonelift_getExtraSize(void);
+#include "main/dll/SH/dll_01AF_shswaplift.h"
 
-extern void warpstonelift_getObjectTypeId(void);
-
-extern void warpstonelift_free(void);
-
-extern void warpstonelift_render(void);
-
-extern void warpstonelift_hitDetect(void);
-
-extern void warpstonelift_update(void);
 extern void sh_staff_getExtraSize(void);
-
-extern void warpstonelift_init(void);
 extern void sh_staff_free(void);
-
-extern void warpstonelift_release(void);
 extern void sh_staff_render(void);
-
-extern void warpstonelift_initialise(void);
 extern void sh_staff_update(void);
 extern void envFxActFn_800887f8(u8 value);
 extern int mapUnload(int mapId, int flags);

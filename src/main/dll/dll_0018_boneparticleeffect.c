@@ -483,7 +483,6 @@ void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8
     }
 }
 
-/*__DATA_EXTERNS__*/
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* boneParticleEffect_funcs[14] = {(void*)0x00000000,
                                       (void*)0x00000000,

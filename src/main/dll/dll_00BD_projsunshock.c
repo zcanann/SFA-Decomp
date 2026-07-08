@@ -9,7 +9,6 @@
 #include "main/dll/dll_7A.h"
 #include "main/engine_shared.h"
 
-/*__DATA_EXTERNS__*/
 extern void projtesla_doUnsupported();
 extern void projtesla_release();
 extern void projtesla_initialise();

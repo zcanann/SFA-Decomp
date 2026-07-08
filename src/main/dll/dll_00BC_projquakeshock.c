@@ -7,16 +7,7 @@
  */
 #include "dolphin/os.h"
 #include "main/dll/dll_77.h"
-
-/* descriptor/ptr table auto 0x803198d8-0x803198f8 (8-byte aligned in retail;
- * pointer tables regenerate ADDR32 relocs). Union u64 member forces the
- * retail 8-byte alignment after the 0x29-byte string (retail pad
- * gap_07_803198D1_data). Same idiom as dll_00B1_projlightning3. */
-typedef union DllDescriptorTable
-{
-    void* ptrs[8];
-    u64 align8;
-} DllDescriptorTable;
+#include "main/dll/dll_descriptor_table.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 

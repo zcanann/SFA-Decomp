@@ -725,7 +725,6 @@ GreatFoxFxEntry gGreatFoxEffects[] = {
 
 f32 gWorldObjAdvanceMoveTable[4] = {0.02f, 0.01f, 0.01f, 0.02f};
 
-/*__DATA_EXTERNS__*/
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* gWorldObjObjDescriptor[14] = {(void*)0x00000000,        (void*)0x00000000,    (void*)0x00000000,
                                     (void*)0x00090000,        worldobj_initialise,  worldobj_release,

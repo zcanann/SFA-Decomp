@@ -73,7 +73,6 @@ extern void objUpdateOpacity(int obj);
 extern f32 sqrtf(f32 x);
 extern void voxmaps_worldToGrid(f32* in, s16* out);
 extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
-/*__DATA_EXTERNS__*/
 extern void nwsh_levcon_getExtraSize();
 extern void nwsh_levcon_getObjectTypeId();
 extern void nwsh_levcon_free();

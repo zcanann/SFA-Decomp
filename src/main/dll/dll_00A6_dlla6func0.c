@@ -15,6 +15,10 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/dll_00A6_dlla6func0.h"
+#include "main/dll/dll_00A7_dlla7func0.h"
+#include "main/dll/dll_00A8_dlla8func0.h"
+#include "main/dll/dll_00A9_dlla9func0.h"
+#include "main/dll/dll_00AA_dllaafunc0.h"
 
 typedef struct
 {
@@ -237,22 +241,9 @@ void dll_A6_func00_nop(void)
 u8 gDllA6EffectHwWords[] = {0x00, 0x00, 0x00, 0x46, 0x00, 0x46, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-/*__DATA_EXTERNS__*/
 extern void projdummy_doUnsupported();
 extern void projdummy_release();
 extern void projdummy_initialise();
-extern void dll_AA_func03();
-extern void dll_AA_func01_nop();
-extern void dll_AA_func00_nop();
-extern void dll_A9_func03();
-extern void dll_A9_func01_nop();
-extern void dll_A9_func00_nop();
-extern void dll_A8_func03();
-extern void dll_A8_func01_nop();
-extern void dll_A8_func00_nop();
-extern void dll_A7_func03();
-extern void dll_A7_func01_nop();
-extern void dll_A7_func00_nop();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* lbl_80318E20[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_A6_func00_nop, dll_A6_func01_nop, (void*)0x00000000, dll_A6_func03};

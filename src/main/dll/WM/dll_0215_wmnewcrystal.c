@@ -164,80 +164,16 @@ void WM_newcrystal_initialise(void)
 {
 }
 
-/* descriptor/ptr table auto 0x80328e90-0x80329050 */
-extern u8 dll_219_free[];
-extern u8 dll_219_getExtraSize_ret_4[];
-extern u8 dll_219_getObjectTypeId[];
-extern u8 dll_219_hitDetect_nop[];
-extern u8 dll_219_init[];
-extern u8 dll_219_initialise_nop[];
-extern u8 dll_219_release_nop[];
-extern u8 dll_219_render_nop[];
-extern u8 dll_219_update[];
-extern u8 dll_21B_free[];
-extern u8 dll_21B_getExtraSize_ret_4[];
-extern u8 dll_21B_getObjectTypeId[];
-extern u8 dll_21B_hitDetect_nop[];
-extern u8 dll_21B_init[];
-extern u8 dll_21B_initialise_nop[];
-extern u8 dll_21B_release_nop[];
-extern u8 dll_21B_render_nop[];
-extern u8 dll_21B_update[];
-extern u8 VFP_Ladders_free[];
-extern u8 VFP_Ladders_getExtraSize[];
-extern u8 VFP_Ladders_getObjectTypeId[];
-extern u8 VFP_Ladders_hitDetect[];
-extern u8 VFP_Ladders_init[];
-extern u8 VFP_Ladders_initialise[];
-extern u8 VFP_Ladders_release[];
-extern u8 VFP_Ladders_render[];
-extern u8 VFP_Ladders_update[];
-extern u8 VFP_LevelControl_free[];
-extern u8 VFP_LevelControl_getExtraSize[];
-extern u8 VFP_LevelControl_getObjectTypeId[];
-extern u8 VFP_LevelControl_hitDetect[];
-extern u8 VFP_LevelControl_init[];
-extern u8 VFP_LevelControl_initialise[];
-extern u8 VFP_LevelControl_release[];
-extern u8 VFP_LevelControl_render[];
-extern u8 VFP_LevelControl_update[];
-extern u8 VFPLift_free[];
-extern u8 VFPLift_getExtraSize[];
-extern u8 VFPLift_getObjectTypeId[];
-extern u8 VFPLift_hitDetect[];
-extern u8 VFPLift_init[];
-extern u8 VFPLift_initialise[];
-extern u8 VFPLift_release[];
-extern u8 VFPLift_render[];
-extern u8 VFPLift_update[];
-extern u8 VFP_MiniFire_free[];
-extern u8 VFP_MiniFire_getExtraSize[];
-extern u8 VFP_MiniFire_getObjectTypeId[];
-extern u8 VFP_MiniFire_hitDetect[];
-extern u8 VFP_MiniFire_init[];
-extern u8 VFP_MiniFire_initialise[];
-extern u8 VFP_MiniFire_release[];
-extern u8 VFP_MiniFire_render[];
-extern u8 VFP_MiniFire_update[];
-extern u8 VFP_ObjCreator_free[];
-extern u8 VFP_ObjCreator_getExtraSize[];
-extern u8 VFP_ObjCreator_getObjectTypeId[];
-extern u8 VFP_ObjCreator_hitDetect[];
-extern u8 VFP_ObjCreator_init[];
-extern u8 VFP_ObjCreator_initialise[];
-extern u8 VFP_ObjCreator_release[];
-extern u8 VFP_ObjCreator_render[];
-extern u8 VFP_ObjCreator_update[];
-extern u8 VFP_statueball_free[];
-extern u8 VFP_statueball_getExtraSize[];
-extern u8 VFP_statueball_getObjectTypeId[];
-extern u8 VFP_statueball_hitDetect[];
-extern u8 VFP_statueball_init[];
-extern u8 VFP_statueball_initialise[];
-extern u8 VFP_statueball_release[];
-extern u8 VFP_statueball_render[];
-extern u8 VFP_statueball_update[];
+#include "main/dll/dll_0219.h"
+#include "main/dll/dll_021B.h"
+#include "main/dll/VF/dll_021C_vfpladders.h"
+#include "main/dll/VF/dll_0216_vfplevelcontrol.h"
+#include "main/dll/VF/dll_021D_vfplift.h"
+#include "main/dll/VF/dll_0218_vfpminifire.h"
+#include "main/dll/VF/dll_0217_vfpobjcreator.h"
+#include "main/dll/VF/dll_021A_vfpstatueball.h"
 
+/* descriptor/ptr table auto 0x80328e90-0x80329050 */
 u32 gVFP_LevelControlObjDescriptor[14] = {0x00000000,
                                           0x00000000,
                                           0x00000000,

@@ -1278,7 +1278,6 @@ u16 gSaveGameMapObjGroupBits[120] = {
     0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
 };
 
-/*__DATA_EXTERNS__*/
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 extern void Carryable_free();
 extern void Carryable_wasJustGrabbed();

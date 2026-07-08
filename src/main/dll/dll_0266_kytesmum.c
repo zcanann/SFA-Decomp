@@ -22,24 +22,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_0266_kytesmum.h"
-
-extern void DR_Creator_getExtraSize(void);
-
-extern void DR_Creator_getObjectTypeId(void);
-
-extern void DR_Creator_free(void);
-
-extern void DR_Creator_render(void);
-
-extern void DR_Creator_hitDetect(void);
-
-extern void DR_Creator_update(void);
-
-extern void DR_Creator_init(void);
-
-extern void DR_Creator_release(void);
-
-extern void DR_Creator_initialise(void);
+#include "main/dll/DR/dll_0265_drcreator.h"
 
 #define KYTESMUM_OBJGROUP        0x3
 #define KYTESMUM_TARGET_OBJGROUP 0x1

@@ -8,22 +8,15 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0075_dll75func0.h"
+#include "main/dll/dll_0076_dll76func0.h"
+#include "main/dll/dll_0077_dll77func0.h"
+#include "main/dll/dll_0078_dll78func0.h"
 
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E0BE8, lbl_803E0BEC, lbl_803E0BF0, lbl_803E0BF4, lbl_803E0BF8, lbl_803E0BFC;
 extern f32 lbl_803E0C00, lbl_803E0C04, lbl_803E0C08, lbl_803E0C0C, lbl_803E0C10, lbl_803E0C14;
 extern f32 lbl_803E0C18, lbl_803E0C1C, lbl_803E0C20, lbl_803E0C24, lbl_803E0C28, lbl_803E0C2C;
 extern f32 lbl_803E0C30, lbl_803E0C34, lbl_803E0C38, lbl_803E0C3C;
-/*__DATA_EXTERNS__*/
-extern void dll_78_func03();
-extern void dll_78_func01_nop();
-extern void dll_78_func00_nop();
-extern void dll_77_func03();
-extern void dll_77_func01_nop();
-extern void dll_77_func00_nop();
-extern void dll_76_func03();
-extern void dll_76_func01_nop();
-extern void dll_76_func00_nop();
 
 s16 gModgfxFxHwTuning[8] = {0, 155, 200, 155, 0, 0, 0, 0};
 

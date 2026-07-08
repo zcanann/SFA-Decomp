@@ -29,8 +29,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-/* interact-prompt bits live in anim.resetHitboxFlags (INTERACT_FLAG_*). */
-
 typedef struct SunTempleSetup
 {
     ObjPlacement base;
@@ -62,6 +60,8 @@ STATIC_ASSERT(offsetof(SunTempleSetup, gateGameBit) == 0x22);
 STATIC_ASSERT(offsetof(SunTempleSetup, preemptSequenceId) == 0x24);
 STATIC_ASSERT(sizeof(SunTempleSetup) == 0x28);
 STATIC_ASSERT(sizeof(SunTempleState) == 2);
+
+/* interact-prompt bits live in anim.resetHitboxFlags (INTERACT_FLAG_*). */
 
 #define SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE      0x01
 #define SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT  0x04

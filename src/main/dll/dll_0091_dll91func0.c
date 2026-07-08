@@ -61,40 +61,24 @@ extern f32 lbl_803E11FC;
 extern f32 lbl_803E1200;
 extern f32 lbl_803E1204;
 extern f32 lbl_803E1208;
-extern void dll_92_func03(void);
-extern void dll_93_func03(void);
-extern void dll_94_func03(void);
-extern void dll_95_func03(void);
-extern void dll_96_func03(void);
-extern void dll_97_func03(void);
-extern void dll_98_func03(void);
-extern void dll_99_func03(void);
+#include "main/dll/dll_0092_dll92func0.h"
+#include "main/dll/dll_0093_dll93func0.h"
+#include "main/dll/dll_0094_dll94func0.h"
+#include "main/dll/dll_0095_dll95func0.h"
+#include "main/dll/dll_0096_dll96func0.h"
+#include "main/dll/dll_0097_dll97func0.h"
+#include "main/dll/dll_0098_dll98func0.h"
+#include "main/dll/dll_0099_dll99func0.h"
 extern void dll_9A_func03(void);
 extern void dll_9B_func03(void);
 extern void dll_9C_func03(void);
 extern void dll_9D_func03(void);
 extern void dll_9E_func03(void);
-extern void dll_92_func01_nop(void);
-extern void dll_93_func01_nop(void);
-extern void dll_94_func01_nop(void);
-extern void dll_95_func01_nop(void);
-extern void dll_96_func01_nop(void);
-extern void dll_97_func01_nop(void);
-extern void dll_98_func01_nop(void);
-extern void dll_99_func01_nop(void);
 extern void dll_9A_func01_nop(void);
 extern void dll_9B_func01_nop(void);
 extern void dll_9C_func01_nop(void);
 extern void dll_9D_func01_nop(void);
 extern void dll_9E_func01_nop(void);
-extern void dll_92_func00_nop(void);
-extern void dll_93_func00_nop(void);
-extern void dll_94_func00_nop(void);
-extern void dll_95_func00_nop(void);
-extern void dll_96_func00_nop(void);
-extern void dll_97_func00_nop(void);
-extern void dll_98_func00_nop(void);
-extern void dll_99_func00_nop(void);
 extern void dll_9A_func00_nop(void);
 extern void dll_9B_func00_nop(void);
 extern void dll_9C_func00_nop(void);

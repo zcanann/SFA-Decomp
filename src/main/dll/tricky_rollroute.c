@@ -34,11 +34,7 @@
 #define CANNONBALL_HIDE_FLAG        0x10
 #define CANNONBALL_SPEED_DECAY_FLAG 0x10000000
 
-/* getXZDistance/randomGetRange: util; objAudioFn_800393f8: audio;
-   Objfsa_GetWalkGroupIndexAtPoint: objfsa; trickyMove: skeetla (Tricky).
-   trickyFn_8013b368: trickyfollow (block-scope signature override of
-   trickyfollow.h's int(u8*,f32,u8*) for this TU's codegen, recipe #57).
-   lbl_803E2*: this DLL's f32 route/speed constants. */
+/* lbl_803E2*: this DLL's f32 route/speed constants. */
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23F4;
@@ -48,6 +44,10 @@ extern f32 lbl_803E2488;
 extern f32 lbl_803E2508;
 extern f32 lbl_803E250C;
 
+/* getXZDistance/randomGetRange: util; objAudioFn_800393f8: audio;
+   Objfsa_GetWalkGroupIndexAtPoint: objfsa; trickyMove: skeetla (Tricky).
+   trickyFn_8013b368: trickyfollow (block-scope signature override of
+   trickyfollow.h's int(u8*,f32,u8*) for this TU's codegen, recipe #57). */
 extern f32 getXZDistance(f32* a, f32* b);
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);

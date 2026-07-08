@@ -545,7 +545,6 @@ ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     0,
 };
 
-/*__DATA_EXTERNS__*/
 extern void cannonclaw_getExtraSize();
 extern void cannonclaw_getObjectTypeId();
 extern void cannonclaw_free();

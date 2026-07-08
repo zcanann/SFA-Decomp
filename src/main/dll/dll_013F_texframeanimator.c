@@ -3,6 +3,7 @@
 #include "main/map_block.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/dll_0140_fogcontrol.h"
 
 typedef struct TexframeanimatorPlacement
 {
@@ -54,12 +55,6 @@ extern u8 WaterFallSpray_getExtraSize[];
 extern u8 WaterFallSpray_init[];
 extern u8 WaterFallSpray_render[];
 extern u8 WaterFallSpray_update[];
-extern u8 FogControl_free[];
-extern u8 FogControl_getExtraSize[];
-extern u8 FogControl_getObjectTypeId[];
-extern u8 FogControl_hitDetect[];
-extern u8 FogControl_init[];
-extern u8 FogControl_update[];
 extern u8 lightning_free[];
 extern u8 lightning_getExtraSize[];
 extern u8 lightning_init[];

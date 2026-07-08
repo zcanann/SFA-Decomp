@@ -62,6 +62,10 @@ typedef struct
     int len;
 } CtrlCharEntry;
 
+/*
+ * A disc-status message: the id of the equivalent gametext entry, its line
+ * list, and the style word the drawer reads (top byte = text alpha).
+ */
 typedef struct DiscStatusMessage
 {
     u16 textId;    /* 0x00 */
@@ -599,11 +603,6 @@ char* lbl_802C97F8[] = {
     lbl_803DB398, lbl_802C971C, lbl_802C9734, lbl_802C9750, lbl_802C976C,
     lbl_803DB39C, lbl_802C9794, lbl_802C97B0, lbl_802C97CC,
 };
-
-/*
- * A disc-status message: the id of the equivalent gametext entry, its line
- * list, and the style word the drawer reads (top byte = text alpha).
- */
 
 /*
  * The Japanese disc-status resource: the "Now loading..." text, the seven

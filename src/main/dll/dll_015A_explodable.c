@@ -20,6 +20,8 @@
 #include "main/dll/dll_015A_explodable.h"
 #include "main/game_object.h"
 #include "main/sfa_shared_decls.h"
+#include "main/dll/dll_015F_attractor.h"
+#include "main/dll/dll_015D_slidingdoor.h"
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
@@ -51,14 +53,9 @@ extern f32 lbl_803E4378;
 extern f32 lbl_803E437C;
 extern f32 lbl_803E4380;
 
-extern void attractor_getTarget(void);
-
-extern void attractor_setScale(void);
 extern void exploded_setScale(void);
 
 extern void cfforcefield_getExtraSize(void);
-extern void SlidingDoor_getExtraSize(void);
-extern void attractor_getExtraSize(void);
 extern void cfmagicwall_getExtraSize(void);
 extern void cflevelcontrol_getExtraSize(void);
 extern void exploded_getExtraSize(void);
@@ -67,8 +64,6 @@ extern void RollingBarrel_getExtraSize(void);
 extern void MMP_levelcontrol_getExtraSize(void);
 
 extern void cfforcefield_getObjectTypeId(void);
-extern void SlidingDoor_getObjectTypeId(void);
-extern void attractor_getObjectTypeId(void);
 extern void cfmagicwall_getObjectTypeId(void);
 extern void cflevelcontrol_getObjectTypeId(void);
 extern void exploded_getObjectTypeId(void);
@@ -77,8 +72,6 @@ extern void RollingBarrel_getObjectTypeId(void);
 extern void MMP_levelcontrol_getObjectTypeId(void);
 
 extern void cfforcefield_free(void);
-extern void SlidingDoor_free(void);
-extern void attractor_free(void);
 extern void cfmagicwall_free(void);
 extern void cflevelcontrol_free(void);
 extern void exploded_free(void);
@@ -87,8 +80,6 @@ extern void RollingBarrel_free(void);
 extern void MMP_levelcontrol_free(void);
 
 extern void cfforcefield_render(void);
-extern void SlidingDoor_render(void);
-extern void attractor_render(void);
 extern void cfmagicwall_render(void);
 extern void cflevelcontrol_render(void);
 extern void exploded_render(void);
@@ -97,8 +88,6 @@ extern void RollingBarrel_render(void);
 extern void MMP_levelcontrol_render(void);
 
 extern void cfforcefield_hitDetect(void);
-extern void SlidingDoor_hitDetect(void);
-extern void attractor_hitDetect(void);
 extern void cfmagicwall_hitDetect(void);
 extern void cflevelcontrol_hitDetect(void);
 extern void exploded_hitDetect(void);
@@ -107,8 +96,6 @@ extern void RollingBarrel_hitDetect(void);
 extern void MMP_levelcontrol_hitDetect(void);
 
 extern void cfforcefield_update(void);
-extern void SlidingDoor_update(void);
-extern void attractor_update(void);
 extern void cfmagicwall_update(void);
 extern void cflevelcontrol_update(void);
 extern void exploded_update(void);
@@ -117,8 +104,6 @@ extern void RollingBarrel_update(void);
 extern void MMP_levelcontrol_update(void);
 
 extern void cfforcefield_init(void);
-extern void SlidingDoor_init(void);
-extern void attractor_init(void);
 extern void cfmagicwall_init(void);
 extern void cflevelcontrol_init(void);
 extern void exploded_init(void);
@@ -127,8 +112,6 @@ extern void RollingBarrel_init(void);
 extern void MMP_levelcontrol_init(void);
 
 extern void cfforcefield_release(void);
-extern void SlidingDoor_release(void);
-extern void attractor_release(void);
 extern void cfmagicwall_release(void);
 extern void cflevelcontrol_release(void);
 extern void exploded_release(void);
@@ -137,8 +120,6 @@ extern void RollingBarrel_release(void);
 extern void MMP_levelcontrol_release(void);
 
 extern void cfforcefield_initialise(void);
-extern void SlidingDoor_initialise(void);
-extern void attractor_initialise(void);
 extern void cfmagicwall_initialise(void);
 extern void cflevelcontrol_initialise(void);
 extern void exploded_initialise(void);

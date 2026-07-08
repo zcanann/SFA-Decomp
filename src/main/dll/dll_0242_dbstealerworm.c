@@ -45,6 +45,8 @@
 #include "main/vecmath.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_0243_dbholecontrol1.h"
+#include "main/dll/dll_022C_dll22c.h"
 
 typedef struct DbstealerwormPlacement
 {
@@ -136,15 +138,6 @@ extern int ObjGroup_FindNearestObjectForObject();
 extern u32 ObjMsg_SendToObject();
 extern int Obj_GetYawDeltaToObject();
 extern void Stack_Free(int* stack);
-extern void dbholecontrol1_free(void);
-extern void dbholecontrol1_getExtraSize(void);
-extern void dbholecontrol1_getObjectTypeId(void);
-extern void dbholecontrol1_hitDetect(void);
-extern void dbholecontrol1_init(void);
-extern void dbholecontrol1_initialise(void);
-extern void dbholecontrol1_release(void);
-extern void dbholecontrol1_render(void);
-extern void dbholecontrol1_update(void);
 extern void DFP_LevelControl_free(void);
 extern void DFP_LevelControl_getExtraSize(void);
 extern void DFP_LevelControl_getObjectTypeId(void);
@@ -164,13 +157,6 @@ extern void DFP_ObjCreator_initialise(void);
 extern void DFP_ObjCreator_release(void);
 extern void DFP_ObjCreator_render(void);
 extern void DFP_ObjCreator_update(void);
-extern void dll_22C_getExtraSize_ret_16(void);
-extern void dll_22C_getObjectTypeId(void);
-extern void dll_22C_hitDetect_nop(void);
-extern void dll_22C_init(void);
-extern void dll_22C_initialise_nop(void);
-extern void dll_22C_release_nop(void);
-extern void dll_22C_render(void);
 extern void doorswitch_free(void);
 extern void doorswitch_getExtraSize(void);
 extern void doorswitch_getObjectTypeId(void);
@@ -180,8 +166,6 @@ extern void doorswitch_initialise(void);
 extern void doorswitch_release(void);
 extern void doorswitch_render(void);
 extern void doorswitch_update(void);
-extern void dll_22C_free(void);
-extern void dll_22C_update(void);
 
 extern int dbstealerworm_stateHandlerB06();
 extern int dbstealerworm_stateHandlerB05();

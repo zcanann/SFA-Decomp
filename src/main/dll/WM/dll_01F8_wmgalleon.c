@@ -12,6 +12,8 @@
 #include "main/dll/wmseqobjectsetup_struct.h"
 #include "main/dll/wmgalleonstate_struct.h"
 #include "main/dll/dll1fbstate_struct.h"
+#include "main/dll/WM/dll_01FA_wmseqobject.h"
+#include "main/dll/WM/dll_01FD_wmlasertarget.h"
 
 STATIC_ASSERT(sizeof(WmObjCreatorState) == 0x8);
 
@@ -330,15 +332,6 @@ extern u8 LaserBeam_initialise[];
 extern u8 LaserBeam_release[];
 extern u8 LaserBeam_render[];
 extern u8 LaserBeam_update[];
-extern u8 WM_seqobject_free[];
-extern u8 WM_seqobject_getExtraSize[];
-extern u8 WM_seqobject_getObjectTypeId[];
-extern u8 WM_seqobject_hitDetect[];
-extern u8 WM_seqobject_init[];
-extern u8 WM_seqobject_initialise[];
-extern u8 WM_seqobject_release[];
-extern u8 WM_seqobject_render[];
-extern u8 WM_seqobject_update[];
 extern u8 dll_1FB_free_nop[];
 extern u8 dll_1FB_getExtraSize_ret_12[];
 extern u8 dll_1FB_getObjectTypeId[];
@@ -366,15 +359,6 @@ extern u8 PressureSwitch_initialise[];
 extern u8 PressureSwitch_release[];
 extern u8 PressureSwitch_render[];
 extern u8 PressureSwitch_update[];
-extern u8 WM_LaserTarget_free[];
-extern u8 WM_LaserTarget_getExtraSize[];
-extern u8 WM_LaserTarget_getObjectTypeId[];
-extern u8 WM_LaserTarget_hitDetect[];
-extern u8 WM_LaserTarget_init[];
-extern u8 WM_LaserTarget_initialise[];
-extern u8 WM_LaserTarget_release[];
-extern u8 WM_LaserTarget_render[];
-extern u8 WM_LaserTarget_update[];
 
 u32 gWM_seqobjectObjDescriptor[14] = {0x00000000,
                                       0x00000000,

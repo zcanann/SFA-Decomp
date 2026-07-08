@@ -5,6 +5,12 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/DR/dll_0251_ktrexfloorswitch.h"
+#include "main/dll/DR/dll_0252_ktlazerwall.h"
+#include "main/dll/DR/dll_0253_ktlazerlight.h"
+#include "main/dll/DR/dll_0254_ktfallingrocks.h"
+#include "main/dll/DR/dll_0261_drlasercannon.h"
+#include "main/dll/dll_0263_gmmazewell.h"
 
 #define KTREX_LIGHTNING_COUNT 5
 
@@ -152,80 +158,18 @@ typedef struct KTRexRuntime
 STATIC_ASSERT(offsetof(KTRexRuntime, arena) == 0x40c);
 
 extern void drakormissile_abortStraightFlight(void);
-
 extern void drakormissile_modelMtxFn(void);
-
 extern void drakormissile_startStraightLaunch(void);
-
 extern void drakormissile_setScale(void);
-
-extern void KT_RexFloorSwitch_getExtraSize(void);
-extern void KT_Lazerwall_getExtraSize(void);
-extern void ktlazerlight_getExtraSize(void);
-extern void ktfallingrocks_getExtraSize(void);
-extern void DR_LaserCannon_getExtraSize(void);
 extern void drakormissile_getExtraSize(void);
-
-extern void KT_RexFloorSwitch_getObjectTypeId(void);
-extern void KT_Lazerwall_getObjectTypeId(void);
-extern void ktlazerlight_getObjectTypeId(void);
-extern void ktfallingrocks_getObjectTypeId(void);
-extern void DR_LaserCannon_getObjectTypeId(void);
 extern void drakormissile_getObjectTypeId(void);
-
-extern void KT_RexFloorSwitch_free(void);
-extern void KT_Lazerwall_free(void);
-extern void ktlazerlight_free(void);
-extern void ktfallingrocks_free(void);
-extern void DR_LaserCannon_free(void);
 extern void drakormissile_free(void);
-
-extern void KT_RexFloorSwitch_render(void);
-extern void KT_Lazerwall_render(void);
-extern void ktlazerlight_render(void);
-extern void ktfallingrocks_render(void);
-extern void DR_LaserCannon_render(void);
 extern void drakormissile_render(void);
-
-extern void KT_RexFloorSwitch_hitDetect(void);
-extern void KT_Lazerwall_hitDetect(void);
-extern void ktlazerlight_hitDetect(void);
-extern void ktfallingrocks_hitDetect(void);
-extern void DR_LaserCannon_hitDetect(void);
 extern void drakormissile_hitDetect(void);
-extern void GM_MazeWell_getExtraSize(void);
-
-extern void KT_RexFloorSwitch_update(void);
-extern void KT_Lazerwall_update(void);
-extern void ktlazerlight_update(void);
-extern void ktfallingrocks_update(void);
-extern void DR_LaserCannon_update(void);
 extern void drakormissile_update(void);
-extern void GM_MazeWell_free(void);
-
-extern void KT_RexFloorSwitch_init(void);
-extern void KT_Lazerwall_init(void);
-extern void ktlazerlight_init(void);
-extern void ktfallingrocks_init(void);
-extern void DR_LaserCannon_init(void);
 extern void drakormissile_init(void);
-extern void GM_MazeWell_render(void);
-
-extern void KT_RexFloorSwitch_release(void);
-extern void KT_Lazerwall_release(void);
-extern void ktlazerlight_release(void);
-extern void ktfallingrocks_release(void);
-extern void DR_LaserCannon_release(void);
 extern void drakormissile_release(void);
-extern void GM_MazeWell_update(void);
-
-extern void KT_RexFloorSwitch_initialise(void);
-extern void KT_Lazerwall_initialise(void);
-extern void ktlazerlight_initialise(void);
-extern void ktfallingrocks_initialise(void);
-extern void DR_LaserCannon_initialise(void);
 extern void drakormissile_initialise(void);
-extern void GM_MazeWell_init(void);
 
 static inline f32* KTRex_GetActiveContactPointTable(int obj)
 {

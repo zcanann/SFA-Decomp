@@ -10,6 +10,8 @@
 #include "main/object_descriptor.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00F6_area.h"
+#include "main/dll/dll_00F8_levelname.h"
+#include "main/dll/MMP/dll_010F_mmpbridge.h"
 
 #define AREA_OBJFLAG_UPDATE_DISABLED    0x8000
 #define AREA_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -36,24 +38,6 @@ extern void Lock_DoorLock_getExtraSize(void);
 extern void Lock_DoorLock_init(void);
 extern void Lock_DoorLock_render(void);
 extern void Lock_DoorLock_update(void);
-extern void LevelName_free(void);
-extern void LevelName_getExtraSize(void);
-extern void LevelName_getObjectTypeId(void);
-extern void LevelName_hitDetect(void);
-extern void LevelName_init(void);
-extern void LevelName_initialise(void);
-extern void LevelName_release(void);
-extern void LevelName_render(void);
-extern void LevelName_update(void);
-extern void mmp_bridge_free(void);
-extern void mmp_bridge_getExtraSize(void);
-extern void mmp_bridge_getObjectTypeId(void);
-extern void mmp_bridge_hitDetect(void);
-extern void mmp_bridge_init(void);
-extern void mmp_bridge_initialise(void);
-extern void mmp_bridge_release(void);
-extern void mmp_bridge_render(void);
-extern void mmp_bridge_update(void);
 extern void PressureSwitchFB_free(void);
 extern void PressureSwitchFB_getExtraSize(void);
 extern void PressureSwitchFB_init(void);

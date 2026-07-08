@@ -81,15 +81,7 @@ extern const char sSeqObjNeedBitUsedBitFormat[];
 extern const char sSeqObjNeedBitClearDuringSequenceFormat[];
 extern const char lbl_80321208[];
 
-extern void dll_115_getExtraSize_ret_2(void);
-extern void dll_115_getObjectTypeId(void);
-extern void dll_115_free(void);
-extern void dll_115_render(void);
-extern void dll_115_hitDetect_nop(void);
-extern void dll_115_update(void);
-extern void dll_115_init(void);
-extern void dll_115_release_nop(void);
-extern void dll_115_initialise_nop(void);
+#include "main/dll/dll_0115_dll115.h"
 
 int SeqObj2_seqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {

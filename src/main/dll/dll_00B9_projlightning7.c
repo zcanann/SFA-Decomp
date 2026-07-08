@@ -10,16 +10,9 @@
  */
 #include "main/dll/dll_66.h"
 #include "main/engine_shared.h"
-
-/*__DATA_EXTERNS__*/
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs).
- * Union u64 member forces the retail 8-byte alignment (table follows an odd-length
- * string; retail pads to an 8-aligned table start). Same idiom as dll_000A_expgfx. */
-typedef union DllDescriptorTable
-{
-    void* ptrs[8];
-    u64 align8;
-} DllDescriptorTable;
+#include "main/dll/dll_descriptor_table.h"
+#include "main/dll/dll_00B9_projlightning7.h"
+#include "main/dll/dll_00BA_projlightning6.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 

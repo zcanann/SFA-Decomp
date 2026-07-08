@@ -25,6 +25,7 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00CB_dllcb.h"
+#include "main/dll/dll_00CD_iceball.h"
 
 typedef struct DllCBPlacement
 {
@@ -90,19 +91,11 @@ void ChukChuk_hitDetect(void);
 void ChukChuk_release(void);
 void ChukChuk_initialise(void);
 void ChukChuk_init(u8* obj, u8* params);
-void IceBall_hitDetect(void);
-void IceBall_release(void);
-void IceBall_initialise(void);
 int ChukChuk_getExtraSize(void);
 int ChukChuk_getObjectTypeId(void);
-int IceBall_getExtraSize(void);
-int IceBall_getObjectTypeId(void);
 void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void IceBall_free(void);
 void ChukChuk_update(short* obj);
 void ChukChuk_setScale(int obj, int v);
-void IceBall_init(void* obj);
 
 int fn_80160534(int* obj);
 

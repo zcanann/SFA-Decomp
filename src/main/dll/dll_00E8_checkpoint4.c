@@ -16,6 +16,8 @@
 #include "main/objprint.h"
 #include "main/objlib.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/dll/dll_00E9_setuppoint.h"
+#include "main/dll/dll_00EB_siderepel.h"
 
 extern const f32 lbl_803E3420;
 extern f32 lbl_803E3424;
@@ -45,10 +47,6 @@ extern void collectible_update();
 extern void collectible_init();
 extern void collectible_release();
 extern void collectible_initialise();
-extern void setuppoint_init();
-extern void siderepel_getExtraSize();
-extern void siderepel_free();
-extern void siderepel_init();
 
 void checkpoint4_setScale(void)
 {

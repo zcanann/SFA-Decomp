@@ -17,6 +17,11 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/dll_009F_dll9ffunc0.h"
+#include "main/dll/dll_00A0_dlla0func0.h"
+#include "main/dll/dll_00A1_dlla1func0.h"
+#include "main/dll/dll_00A2_dlla2func0.h"
+#include "main/dll/dll_00A4_dummya4.h"
+#include "main/dll/dll_00A5_dlla5func0.h"
 
 typedef struct
 {
@@ -50,23 +55,6 @@ extern f32 lbl_803E1470;
 extern f32 lbl_803E1474;
 extern f32 lbl_803E1478;
 extern f32 lbl_803E147C;
-
-/*__DATA_EXTERNS__*/
-extern void dll_A5_func03();
-extern void dll_A5_func01_nop();
-extern void dll_A5_func00_nop();
-extern void DummyA4_func03_ret_0();
-extern void DummyA4_release();
-extern void DummyA4_initialise();
-extern void dll_A2_func03();
-extern void dll_A2_func01_nop();
-extern void dll_A2_func00_nop();
-extern void dll_A1_func03();
-extern void dll_A1_func01_nop();
-extern void dll_A1_func00_nop();
-extern void dll_A0_func03();
-extern void dll_A0_func01_nop();
-extern void dll_A0_func00_nop();
 
 void dll_9F_func03(short* sourceObj, int variant, int posSource, u32 flags)
 {

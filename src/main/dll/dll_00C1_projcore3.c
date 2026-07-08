@@ -8,14 +8,9 @@
  */
 #include "dolphin/os.h"
 #include "main/dll/modcloudrunner2.h"
+#include "main/dll/dll_descriptor_table.h"
+#include "main/dll/dll_00C1_projcore3.h"
 
-typedef union DllDescriptorTable
-{
-    void* ptrs[8];
-    u64 align8;
-} DllDescriptorTable;
-
-/*__DATA_EXTERNS__*/
 extern void projdfp1r_doUnsupported();
 extern void projdfp1r_release();
 extern void projdfp1r_initialise();
@@ -37,8 +32,6 @@ void projcore3_initialise(void)
 char sProjcore3DoNoLongerSupported[] = "<projcore3 Do>No Longer supported \n";
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs).
- * Union u64 member forces the retail 8-byte alignment (table follows the
- * string, which ends 4-aligned; retail pads to an 8-aligned table start).
  * Same idiom as dll_00AD_projmagicemmit1 / dll_000A_expgfx. */
 DllDescriptorTable lbl_80319A40 = {{(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                                     projdfp1r_initialise, projdfp1r_release, (void*)0x00000000,

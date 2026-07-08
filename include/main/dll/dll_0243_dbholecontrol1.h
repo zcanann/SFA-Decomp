@@ -24,4 +24,14 @@ typedef struct Dbholecontrol1Placement
     u8 pad2F[0x30 - 0x2F];
 } Dbholecontrol1Placement;
 
+int dbholecontrol1_getExtraSize(void);
+int dbholecontrol1_getObjectTypeId(void);
+void dbholecontrol1_free(int obj);
+void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dbholecontrol1_hitDetect(void);
+void dbholecontrol1_update(int* obj);
+void dbholecontrol1_init(int* obj, u8* params);
+void dbholecontrol1_release(void);
+void dbholecontrol1_initialise(void);
+
 #endif
