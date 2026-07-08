@@ -640,7 +640,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     int near;
     DIMSnowHorn1State* inner;
     int phase;
-    int p2;
+    int moveIdx;
     int changed;
     int useNormal;
     f32 speed;
@@ -734,8 +734,8 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     }
 
     f2 = ((DIMSnowHorn1State*)state)->baddie.animSpeedC;
-    p2 = phase * 2;
-    if (f2 < lbl_80335128[p2])
+    moveIdx = phase * 2;
+    if (f2 < lbl_80335128[moveIdx])
     {
         if (phase == 1)
         {
@@ -744,7 +744,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
         phase--;
         changed = 1;
     }
-    else if (f2 >= lbl_80335128[p2 + 1])
+    else if (f2 >= lbl_80335128[moveIdx + 1])
     {
         if (phase == 0)
         {
@@ -1130,7 +1130,7 @@ void DIMSnowHorn1_hitDetect(void)
 {
 }
 
-void fn_802BB4B4(int obj, int a, int slot)
+void fn_802BB4B4(int obj, int frameStep, int slot)
 {
     extern u32 getButtonsJustPressed(int port);
     extern u32 getButtonsHeld(int port);
@@ -1186,7 +1186,7 @@ void fn_802BB4B4(int obj, int a, int slot)
 
     if (*(s8*)&state->baddie.physicsActive != 0)
     {
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - lbl_803E82A4 * (f32)a;
+        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - lbl_803E82A4 * (f32)frameStep;
     }
 
     {
@@ -1466,18 +1466,18 @@ void DIMSnowHorn1_initialise(void)
 }
 #pragma opt_propagation reset
 
-void DIMSnowHorn1_init(int obj, int p2, int p3)
+void DIMSnowHorn1_init(int obj, int def, int spawnFlag)
 {
     u8* base = gDIMSnowHorn1ConfigTable;
     int stk = lbl_803E8230;
     DIMSnowHorn1State* inner;
     u8* pathState;
     s8 idx;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)p2 + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)def + 0x18) << 8);
     ((GameObject*)obj)->animEventCallback = (void*)DIMSnowHorn1_animEventCallback;
     ObjGroup_AddObject(obj, DIMSNOWHORN1_OBJGROUP);
     inner = ((GameObject*)obj)->extra;
-    inner->mode = *(u8*)((char*)p2 + 0x19);
+    inner->mode = *(u8*)((char*)def + 0x19);
     inner->advanceCountThreshold = 5;
     inner->airMeterValue = 0x3e8;
     if (((GameObject*)obj)->anim.modelState != NULL)
@@ -1508,7 +1508,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     }
     dll_2E_func05(obj, (int)inner->lookController, -0x2000, 0x2aaa, 3);
     inner->unk96D |= 8;
-    if (p3 == 0)
+    if (spawnFlag == 0)
     {
         idx = -1;
         switch (inner->mode)
