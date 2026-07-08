@@ -597,7 +597,7 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->pitchCurve.startTangent = zero;
     lbl_803DD548->pitchCurve.endTangent = zero;
     ((CameraObject*)obj)->unk13E = 1;
-    if (mainGetBit(0xc64) != 0)
+    if (mainGetBit(GAMEBIT_ITEM_Viewfinder_Got) != 0)
     {
         lbl_803DD548->flags.zoomHudEnabled = 1;
     }
