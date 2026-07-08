@@ -100,14 +100,6 @@ extern const f32 gDll19AnglePi;
 extern const f32 gDll19BinaryAngleScale;
 extern u8 framesThisStep;
 
-void CameraModeForceBehind_func06_nop(void)
-{
-}
-
-void CameraModeForceBehind_func05_nop(void)
-{
-}
-
 int dll_19_func1B(int obj)
 {
     s16 v = ((GameObject*)obj)->anim.seqId;
