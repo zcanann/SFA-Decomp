@@ -54,9 +54,6 @@ typedef struct HagabonPlacement
 #define HAGABON_FLAG_FADE_IN         0x08
 #define HAGABON_FLAG_FADE_OUT        0x10
 
-extern int FUN_80006b0c(int handle);
-extern int FUN_80006b14(int id);
-extern u32 DAT_803de6d0;   /* pressureSwitch shared resource handle */
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
@@ -111,23 +108,6 @@ int SwarmBaddie_getExtraSize(void);
 int SwarmBaddie_getObjectTypeId(void);
 void SwarmBaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void SwarmBaddie_update(int obj);
-
-void pressureSwitch_freeSharedResource(void)
-{
-    if (DAT_803de6d0 != 0)
-    {
-        FUN_80006b0c(DAT_803de6d0);
-        DAT_803de6d0 = 0;
-    }
-}
-
-void pressureSwitch_ensureSharedResource(void)
-{
-    if (DAT_803de6d0 == 0)
-    {
-        DAT_803de6d0 = FUN_80006b14(0x5a);
-    }
-}
 
 void Hagabon_release(void)
 {
