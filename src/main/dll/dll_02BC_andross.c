@@ -23,6 +23,7 @@
 #include "main/dll/dll_02BC_andross.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 #define GAMEBIT_ANDROSS_HIT_CUE_BASE 0x108 /* six consecutive random-hit cue bits */
 
@@ -245,11 +246,11 @@ void fn_8023A87C(int obj, int state)
             if (((AndrossState*)state)->spawnCooldown < zero)
                 fn_80239DD8(obj, state);
         }
-        else if ((u32)mainGetBit(0x12) != 0)
+        else if ((u32)mainGetBit(GAMEBIT_AndrossRelated0012) != 0)
         {
             ((AndrossState*)state)->spawnCooldown = (f32)(int)
             randomGetRange(1, 0x14);
-            mainSetBits(0x12, 0);
+            mainSetBits(GAMEBIT_AndrossRelated0012, 0);
         }
     }
 }
@@ -2020,7 +2021,7 @@ void andross_update(int obj)
         if ((((u32)ref != 0) || (ref = mainGetBit(3), (u32)ref != 0)) ||
             (ref = mainGetBit(4), (u32)ref != 0))
         {
-            mainSetBits(0x405, 0);
+            mainSetBits(GAMEBIT_WM_ObjGroups, 0);
             (*gMapEventInterface)->setMapAct(ANDROSS_MAP_SHRINE, 7);
             unlockLevel(0, 0, 1);
             loadMapAndParent(mapGetDirIdx(ANDROSS_MAP_SHRINE));
