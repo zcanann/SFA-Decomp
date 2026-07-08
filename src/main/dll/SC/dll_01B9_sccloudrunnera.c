@@ -194,7 +194,7 @@ void sc_cloudrunnera_update(int obj)
     }
 }
 
-void sc_cloudrunnera_init(int obj, int p2)
+void sc_cloudrunnera_init(int obj, int def)
 {
     ObjSeqState* seq;
     f32 base;
@@ -202,29 +202,29 @@ void sc_cloudrunnera_init(int obj, int p2)
 
     objSetSlot(obj, 0x64);
     seq = ((GameObject*)obj)->extra;
-    seq->gameBit = ((ScCloudrunneraPlacement*)p2)->gameBit;
+    seq->gameBit = ((ScCloudrunneraPlacement*)def)->gameBit;
     seq->flags = -1;
     base = lbl_803E55E0;
-    seq->posOffsetDecay = base / (base + (f32)(u32)((ScCloudrunneraPlacement*)p2)->posOffsetDecayFactor);
+    seq->posOffsetDecay = base / (base + (f32)(u32)((ScCloudrunneraPlacement*)def)->posOffsetDecayFactor);
     seq->curveId = -1;
     ((GameObject*)obj)->unkF8 = 0;
 
     objF4 = ((GameObject*)obj)->unkF4;
-    if (objF4 == 0 && ((ScCloudrunneraPlacement*)p2)->animDataIndex != 1)
+    if (objF4 == 0 && ((ScCloudrunneraPlacement*)def)->animDataIndex != 1)
     {
         (*gObjectTriggerInterface)
-            ->loadAnimData((u8*)seq, (u8*)p2);
-        ((GameObject*)obj)->unkF4 = ((ScCloudrunneraPlacement*)p2)->animDataIndex + 1;
+            ->loadAnimData((u8*)seq, (u8*)def);
+        ((GameObject*)obj)->unkF4 = ((ScCloudrunneraPlacement*)def)->animDataIndex + 1;
     }
-    else if (objF4 != 0 && ((ScCloudrunneraPlacement*)p2)->animDataIndex != objF4 - 1)
+    else if (objF4 != 0 && ((ScCloudrunneraPlacement*)def)->animDataIndex != objF4 - 1)
     {
         (*gObjectTriggerInterface)->freeState((u8*)seq);
-        if (((ScCloudrunneraPlacement*)p2)->animDataIndex != -1)
+        if (((ScCloudrunneraPlacement*)def)->animDataIndex != -1)
         {
             (*gObjectTriggerInterface)
-                ->loadAnimData((u8*)seq, (u8*)p2);
+                ->loadAnimData((u8*)seq, (u8*)def);
         }
-        ((GameObject*)obj)->unkF4 = ((ScCloudrunneraPlacement*)p2)->animDataIndex + 1;
+        ((GameObject*)obj)->unkF4 = ((ScCloudrunneraPlacement*)def)->animDataIndex + 1;
     }
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
