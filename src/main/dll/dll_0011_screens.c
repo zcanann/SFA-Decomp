@@ -15,6 +15,7 @@
  * cached-id overlay globals).
  */
 #include "main/asset_load.h"
+#include "main/pi_dolphin.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
@@ -226,7 +227,7 @@ void screens_show(int id)
     int offset, size;
     if ((int)lbl_803DD4AC != id)
     {
-        loadAssetFileById((void**)&asset, 0x19);
+        loadAssetFileById((void**)&asset, MLDF_FILEID_SCREENS_TAB);
         count = 0;
         while (asset[count] != -1)
         {
