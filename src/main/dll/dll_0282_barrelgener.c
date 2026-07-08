@@ -313,7 +313,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 advanceSt
     return result;
 }
 
-void Obj_SpawnHitLightAndFade(int obj, f32* p2)
+void Obj_SpawnHitLightAndFade(int obj, f32* pos)
 {
     struct
     {
@@ -321,9 +321,9 @@ void Obj_SpawnHitLightAndFade(int obj, f32* p2)
         f32 vec[3];
     } s;
 
-    s.vec[0] = p2[0] + playerMapOffsetX;
-    s.vec[1] = p2[1];
-    s.vec[2] = p2[2] + playerMapOffsetZ;
+    s.vec[0] = pos[0] + playerMapOffsetX;
+    s.vec[1] = pos[1];
+    s.vec[2] = pos[2] + playerMapOffsetZ;
     objLightFn_8009a1dc((void*)obj, lbl_803E6C68, &s, 1, 0);
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
@@ -461,7 +461,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(int obj, int velVec, int turnFrames, f32
 #pragma opt_common_subs reset
 
 #pragma opt_loop_invariants off
-int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4)
+int Obj_PredictInterceptPoint(int obj, f32 dt, int targetPos, int outPos)
 {
     f32 pos[3];
     f32 step[3];
@@ -487,30 +487,30 @@ int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4)
     pos[2] = ((GameObject*)obj)->anim.localPosZ;
     for (i = 0; i < 5; i++)
     {
-        PSVECScale(vel, step, PSVECDistance(pos, (void*)p3) / dt);
+        PSVECScale(vel, step, PSVECDistance(pos, (void*)targetPos) / dt);
         PSVECAdd(obj + 0xc, (int)step, (int)pos);
     }
-    *(f32*)(p4 + 0) = pos[0];
-    *(f32*)(p4 + 4) = pos[1];
-    *(f32*)(p4 + 8) = pos[2];
-    voxmaps_worldToGrid((void*)p3, gridA);
+    *(f32*)(outPos + 0) = pos[0];
+    *(f32*)(outPos + 4) = pos[1];
+    *(f32*)(outPos + 8) = pos[2];
+    voxmaps_worldToGrid((void*)targetPos, gridA);
     voxmaps_worldToGrid(pos, gridB);
     return voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) != 0;
 }
 #pragma opt_loop_invariants reset
 
-int voxmaps_traceWorldLine(void* p1, void* p2)
+int voxmaps_traceWorldLine(void* startPos, void* endPos)
 {
     int grid1[2];
     int grid2[2];
     int out[2];
 
-    voxmaps_worldToGrid(p1, grid1);
-    voxmaps_worldToGrid(p2, grid2);
+    voxmaps_worldToGrid(startPos, grid1);
+    voxmaps_worldToGrid(endPos, grid2);
     return voxmaps_traceLine(grid1, grid2, out, 0, 0);
 }
 
-void voxmaps_traceScaledVectorEnd(f32* p1, void* p2, f32* p3, f32 scale)
+void voxmaps_traceScaledVectorEnd(f32* out, void* origin, f32* dir, f32 scale)
 {
     f32 endPos[3];
     f32 scaled[3];
@@ -520,12 +520,12 @@ void voxmaps_traceScaledVectorEnd(f32* p1, void* p2, f32* p3, f32 scale)
     int e0;
     int e1;
 
-    PSVECNormalize(p3, p3);
-    PSVECScale(p3, scaled, scale);
-    PSVECAdd((int)scaled, (int)p2, (int)endPos);
-    voxmaps_worldToGrid(p2, gridA);
+    PSVECNormalize(dir, dir);
+    PSVECScale(dir, scaled, scale);
+    PSVECAdd((int)scaled, (int)origin, (int)endPos);
+    voxmaps_worldToGrid(origin, gridA);
     voxmaps_worldToGrid(endPos, gridB);
     if (voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) == 0)
         voxmaps_gridToWorld(endPos, gridOut);
-    *(SunVec3*)p1 = *(SunVec3*)endPos;
+    *(SunVec3*)out = *(SunVec3*)endPos;
 }
