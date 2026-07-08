@@ -638,18 +638,18 @@ void collectible_applyPickup(int* obj)
             break;
         case 793:
             Sfx_PlayFromObject(obj, SFXTRIG_bapt11_c);
-            mainSetBits(1001, 1);
+            mainSetBits(GAMEBIT_ITEM_NWFood_Got, 1);
             ((CollectibleState*)state)->hideFrames = 1200;
             itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
             break;
         case 1702:
             {
-                s8 c = mainGetBit(2154);
+                s8 c = mainGetBit(GAMEBIT_ITEM_MoonSeed_Count);
                 if (c < 7)
                 {
                     c = c + 1;
                 }
-                mainSetBits(2154, c);
+                mainSetBits(GAMEBIT_ITEM_MoonSeed_Count, c);
                 itemPickupDoParticleFx(obj, lbl_803E3454, 6, 40);
                 Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
                 break;
