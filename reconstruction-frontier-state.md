@@ -6891,3 +6891,21 @@ concurrently — my commits path-scoped, interleaved cleanly.
 - SEMANTIC-RENAME sweep (my niche subdirs ARW/IM/MMP/NW/SB/SH/SP/VF/WM): spshop func16 delta2/delta3, func0B seqId; nwmammoth state handlers p2->baddie; arwsquadron init tmp->curveMode; shstaff_free gate p2->flag; wmsun animEventCallback p1/p2->obj/unused; sbcloudrunner fn_801EEDC0 p1->obj; shswapston SeqFn p2->unused, testEvent p1/p2->obj/unused; arwlevelcon SeqFn p2->unused; arwproximit init p3->flag; shlevelcontrol mapUnloadFn p2->state. Then p1->obj across 35 render fns (IM/MMP/NW/SB/SH/SP/VF/WM). All md5-identical. Commits 0289c9e1e3, 1ad2eeb067, cf80184c6b, 9385b856d9.
 - LEFT RAW (my subdirs): all render p2-p5 passthroughs; extern decls (characterDoEyeAnims/objRenderModelAndHitVolumes/spawnExplosion/getLActions params); sbcloudrunner SB_CloudRunner_UpdateSteer already-named. sbpropeller p1->obj absorbed by concurrent session commit af78b059b5. No generic body-local decls remain in these subdirs.
 - SEMANTIC-RENAME follow-up (Jul08, cast-of-obj + single-role scratch): sbpropeller/sbshiphead cast-view local `o`->`object` (commit af78b059b5); imspaceringgen loop object `o`->`candidate` (avoided existing `ring` local; 648066999a); mmpasteroidre case-3 handler `r`->`timer` (random FX timer; 69c0ea3ca8). All md5-identical. LEFT RAW: shstaff `t` + wmwallcrawler `d` (multi-role math scratch, no single accurate name); sccloudrunnera `n` (conventional loop bound aliasing existing `count`); arwarwing a/b + sbgalleon a-d (struct/partfx-buffer FIELDS = struct domain, not local naming). Niche now genuinely exhausted across ARW/IM/MMP/NW/SB/SH/SP/VF/SC subdirs — remaining short names are all loop counters, multi-role scratch, or struct fields.
+
+## Jul08 dll-root baddie-handler local/param naming wave (byte-identical)
+Session partitioned to dll/ root files (siblings on DR/DIM/CF/CC/WC/SC + subdirs NW/VF/SP; Jack on layout/audio). Densest safe root files worked:
+- dll16c (464f6db): linked-obj ptr `p`->linkedObj (free `child`), across free/render/SeqFn.
+- dllcb (464f6db): baddie handler `GroundBaddieState* p`->state (fn_801601C4/8016043C/801606F0/8016083C); `char* wp`->routePath; fn_801606F0 `void* p2`->seq.
+- kaldachom (10939eb): handleAnimEvents p2/p3->state/eventStateArg.
+- grimble (10939eb): grimble_init p2/p3->def/flag.
+- campfire (f2a2bdb): CampFire_init p2->def.
+- appleontree (f2a2bdb): physics helpers fn_8017DCD4/DF34 `int p`->obj.
+- effect10 (42b0019): Effect10_func04 f32* p6->extraParam.
+- seqobj11e (42b0019): gcRobotPatrol_updateWhileFrozen p/p3->state/unused; gcRobotLight_init p2->childId; gcRobotPatrol_init p->state; mikaladon_updateWhileFrozen p/param3->state/unused.
+- lanternfirefly (55a600d): LanternFireFly_free gate p2->flag.
+- tumbleweed (5383c9f): tumbleweed_render2 p2->targetPos.
+- cf_doorlight (5383c9f): kaldachom_stateHandlerB05/A07 `int p`->baddieState (local `state`=extra, avoid collision); B02 GroundBaddieState* p2->state.
+- dllce (3e7fa37): 6 ice-baddie handlers GroundBaddieState* p->state; dll_CE_init u8* p->def.
+- fall_ladders (3e7fa37): 3 water-creature handlers fn_801540A0/80154584/80154328 `int p`->state (whole-file uniform, all bare p == BaddieState).
+LEFT RAW: render passthrough p1-p5 (dll16c/kaldachom/grimble/campfire/appleontree/smallbasket/shield/lanternfirefly/tumbleweed _render); extern-prototype params (objBboxFn p7-p10, characterDoEyeAnims); shield staffFn table cursors t0/t1 (multi-role); tumbleweed `aux`/dllcb `sub` (already meaningful non-generic); effect10 EffectSpawnParams `p` (200-ref conventional struct alias, high-churn low-value); dbholecontrol1 (prototypes = dbstealerworm handlers, already named elsewhere; render p1-p5). smallbasket/shield fully named already — no target.
+NICHE STATE: dll-root baddie-handler `GroundBaddieState* p`/`int p`/`int p2` params were the last dense vein; now drained. Remaining root p2's are render passthrough or Jack-typed. Sibling domains (DR/DIM/DF/CF/CC/WC/SC) untouched by me (3 agents live there).
