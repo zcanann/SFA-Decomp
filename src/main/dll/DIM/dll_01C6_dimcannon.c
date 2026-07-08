@@ -392,7 +392,7 @@ void DIMCannon_update(int* obj)
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, gDimCannonAnimAdvanceSpeed, timeDelta, NULL);
 }
 
-int DIMCannon_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
+int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void* Obj_GetPlayerObject(void);
     char* state;

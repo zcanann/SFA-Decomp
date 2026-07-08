@@ -1004,14 +1004,14 @@ void DR_CloudRunner_hitDetect(int obj)
     }
 }
 
-void fn_802C11BC(int obj, f32 f, int p2)
+void fn_802C11BC(int obj, f32 f, int triggerFrame)
 {
     CloudRunnerState* inner;
     int flag;
     int slot;
-    if (p2 != -1)
+    if (triggerFrame != -1)
     {
-        flag = (((framesThisStep - 1) - p2) == 0);
+        flag = (((framesThisStep - 1) - triggerFrame) == 0);
     }
     else
     {
