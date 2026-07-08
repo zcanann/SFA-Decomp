@@ -133,7 +133,7 @@ void dimtruthhornice_update(int* obj)
             {
                 int i;
                 extra->phase = TRUTHHORNICE_PHASE_SHATTERED;
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_bounce1);
                 for (i = 30; i != 0; i--)
                 {

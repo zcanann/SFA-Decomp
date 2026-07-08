@@ -15,6 +15,7 @@
 #include "main/dll/SC/SClantern.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -375,7 +376,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
             (*gGameUIInterface)->airMeterShutdown();
             (*gScreenTransitionInterface)->start(0x14, 1);
             ((ShLevelcontrolState*)state)->eventState = 3;
-            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+            Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
         }
         else
         {
@@ -758,7 +759,7 @@ void SH_LevelControl_update(int obj)
         val2 = mainGetBit(GAMEBIT_ITEM_WhiteShroom_Count);
         if ((val2 + val == 6) && (val = mainGetBit(GAMEBIT_SH_Got6WhiteShrooms), val == 0))
         {
-            Sfx_PlayFromObject(obj, SFXmn_sml_trex_fstep);
+            Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
             mainSetBits(GAMEBIT_SH_Got6WhiteShrooms, 1);
         }
         break;

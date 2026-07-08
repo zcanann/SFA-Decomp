@@ -13,6 +13,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #include "main/dll/DR/dll_026E_drshackle.h"
 
@@ -174,7 +175,7 @@ void drshackle_hitDetect(unsigned long obj)
         n = 0xc8 - (int)(lbl_803E6A30 * PSVECMag(vec));
         if ((int)randomGetRange(0, (n < 1) ? 1 : ((n > 0xc8) ? 0xc8 : n)) == 0)
         {
-            Sfx_PlayFromObject(obj, SFXfoot_stone_run_1);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_1b3);
         }
     }
 }

@@ -16,6 +16,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define MODEL_LIGHT_KIND_POINT 2
 
@@ -201,7 +202,7 @@ void drakormissile_startStraightLaunch(int obj, int from, int target, f32 speed)
     ((GameObject*)obj)->anim.alpha = 255;
     ((GameObject*)obj)->anim.rootMotionScale =
         lbl_803E6958 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    Sfx_PlayFromObject(obj, SFXwp_barrel_bounce2);
+    Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_173);
 }
 #pragma fp_contract reset
 #pragma opt_common_subs reset
@@ -241,7 +242,7 @@ void drakormissile_update(int obj)
         if (s->timer > DRAKORMISSILE_CLEAR_TIMER)
         {
             ObjHits_DisableObject(obj);
-            Sfx_StopFromObject(obj, SFXwp_barrel_bounce2);
+            Sfx_StopFromObject(obj, SFXTRIG_dn_boar1_c_173);
             Sfx_StopFromObject(obj, DRAKORMISSILE_ACTIVE_SFX_A);
             s->state = DRAKORMISSILE_STATE_FADEOUT;
         }
@@ -324,7 +325,7 @@ void drakormissile_update(int obj)
             s->timer = 0;
             if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0)
             {
-                Sfx_PlayFromObject(obj, SFXwp_barrel_bounce1);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_blaserrecoil16);
             }
             if (((GameObject*)obj)->anim.mapEventSlot == 2)
             {

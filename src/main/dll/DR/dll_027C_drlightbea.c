@@ -14,6 +14,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/lightningeffect.h"
 
 #include "main/dll/DR/dll_027C_drlightbea.h"
@@ -84,7 +85,7 @@ void DR_LightBea_render(int obj, int p2, int p3, int p4, int p5)
         state->flags.bit80 = mainGetBit(((DrlightbeaPlacement*)setup)->gameBit);
         if (state->flags.bit80)
         {
-            Sfx_PlayFromObject(obj, SFXfend_pep_snoreout);
+            Sfx_PlayFromObject(obj, SFXTRIG_id_30f);
             sourcePos[0] = ((GameObject*)obj)->anim.localPosX;
             sourcePos[1] = ((GameObject*)obj)->anim.localPosY;
             sourcePos[2] = ((GameObject*)obj)->anim.localPosZ;

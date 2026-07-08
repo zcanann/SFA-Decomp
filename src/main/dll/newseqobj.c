@@ -302,7 +302,7 @@ void fn_80150EDC(void* obj, void* state)
 
     if ((((BaddieState*)state)->controlFlags & 0x20000000) != 0 && (*(u32*)((u8*)state + 0x2e0) & 0x20000000) == 0)
     {
-        Sfx_PlayFromObject(obj, SFXdn_boar5_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_sc_mumble02);
         ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
 

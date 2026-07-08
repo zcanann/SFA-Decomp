@@ -190,7 +190,7 @@ void dim2snowball_update(int* obj)
                 {
                     (*(void (**)(int*))(**(int**)&((GameObject*)hit)->anim.dll + 0x20))(hit);
                 }
-                Sfx_PlayFromObject((int)obj, SFXfoot_run_jingle1);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_en_nlite1_c);
             }
             evt[3] = ((GameObject*)obj)->anim.localPosX;
             evt[4] = ((GameObject*)obj)->anim.localPosY;

@@ -15,6 +15,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/VF/dll_021A_vfpstatueball.h"
 
 #define VFPSTATUEBALL_OBJFLAG_HIDDEN 0x4000
@@ -108,7 +109,7 @@ void VFP_statueball_update(int* obj)
             }
             else
             {
-                Sfx_PlayFromObject(0, SFXsc_mpick1_b);
+                Sfx_PlayFromObject(0, SFXTRIG_npu_216);
             }
         }
 
@@ -118,8 +119,8 @@ void VFP_statueball_update(int* obj)
     if ((state->active != 0) && (state->playActivateSfx != 0))
     {
         state->playActivateSfx = 0;
-        Sfx_PlayFromObject((int)obj, SFXmn_sml_trex_snap1);
-        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_cvdrip1c);
+        Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
     }
 
     if (state->active != state->prevActive)

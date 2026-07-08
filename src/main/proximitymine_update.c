@@ -174,13 +174,13 @@ void ProximityMine_update(ProximityMineObject* obj)
             {
                 hitDetectFn_800658a4(obj, obj->posX, obj->posY, obj->posZ, &groundY, 0);
                 obj->posY -= groundY;
-                Sfx_PlayFromObject((u32)obj, SFXnewtricky_01a);
-                Sfx_PlayFromObject((u32)obj, SFXnewtricky_01c);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_id_2e6);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_id_2e8);
             }
             else
             {
-                Sfx_PlayFromObject((u32)obj, SFXnewtricky_01b);
-                Sfx_PlayFromObject((u32)obj, SFXnewtricky_01d);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_id_2e7);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_id_2e9);
             }
         }
         if (state->effectHandle == NULL)
@@ -214,7 +214,7 @@ void ProximityMine_update(ProximityMineObject* obj)
     {
         if (fn_80080150(&state->resetTimer) != 0)
         {
-            Sfx_PlayFromObject((u32)obj, SFXsp_sabrepush163);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_id_ef);
             if (state->effectHandle == NULL)
             {
                 state->effectHandle = modelLightStruct_createPointLight(obj, 0xff, 0, 0, 0);
@@ -278,7 +278,7 @@ void ProximityMine_update(ProximityMineObject* obj)
             params.rotY = 0;
             params.rotX = obj->angle;
             vecRotateZXY(&params, &obj->velocityX);
-            Sfx_PlayFromObject((u32)obj, SFXsp_sabrepush164);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_id_f0);
         }
         case PROXIMITYMINE_MODE_FLIGHT:
             if (timerCountDown(&state->launchTimer) != 0)

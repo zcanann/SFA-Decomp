@@ -36,6 +36,7 @@ FbWGPipe GXWGFifo : (0xCC008000);
 
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
@@ -142,7 +143,7 @@ void dim2conveyor_update(int* obj)
     extern void Music_Trigger(int id, int arg);
 
     Dim2ConveyorState* extra = ((GameObject*)obj)->extra;
-    Sfx_PlayFromObject((int)obj, SFXfoot_metal_scuff);
+    Sfx_PlayFromObject((int)obj, SFXTRIG_mv_liftloop);
     if (extra->musicHold != 0)
     {
         extra->musicHold = extra->musicHold - 1;

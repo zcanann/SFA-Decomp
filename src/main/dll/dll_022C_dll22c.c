@@ -143,7 +143,7 @@ void dll_22C_update(int obj)
             {
                 if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                 {
-                    Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt6);
+                    Sfx_PlayFromObject(obj, SFXTRIG_id_116);
                     blob->sfxLatch = 1;
                 }
                 object->anim.localPosY += timeDelta;

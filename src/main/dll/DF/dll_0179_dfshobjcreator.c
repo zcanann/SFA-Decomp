@@ -6,6 +6,7 @@
  */
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/resource.h"
 #include "main/dll/VF/vf_shared.h"
@@ -106,7 +107,7 @@ void DFSH_ObjCreator_update(int obj)
         resource = Resource_Acquire(0x82, 1);
         (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(obj, 0, 0, 1, -1, 0);
         (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(obj, 1, 0, 1, -1, 0);
-        Sfx_PlayFromObject(obj, SFXsc_gemrun1022);
+        Sfx_PlayFromObject(obj, SFXTRIG_hitpos_6);
         Resource_Release(resource);
         state->spawnTimerStep = 1;
         ((GameObject*)obj)->unkF8 = 1;

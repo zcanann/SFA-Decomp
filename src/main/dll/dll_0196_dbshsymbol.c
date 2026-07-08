@@ -271,7 +271,7 @@ void DBSH_Symbol_update(int obj)
             if (gDbShSymbolScuffPlayed != 0)
             {
                 gDbShSymbolScuffPlayed = 0;
-                Sfx_PlayFromObject(obj, SFXfoot_stone_scuff);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16);
             }
             state->phase = 2;
             gDbShSymbolScuffPlayed = 1;

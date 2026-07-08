@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/dll/ARW/arwing_state.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct WcFloorTileState
 {
@@ -141,7 +142,7 @@ void wcfloortile_update(int obj)
                     GameObject* e = *(GameObject**)(*(int*)(obj + 0x58) + off + 0x100);
                     if (e->anim.classId == 1)
                     {
-                        Sfx_PlayFromObject(obj, SFXsc_strafe_active);
+                        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_c6);
                         state->phase = WCFLOORTILE_PHASE_FALLING;
                         state->shakeTime = z;
                         ((GameObject*)obj)->anim.velocityY = z;
@@ -470,7 +471,7 @@ void arwarwing_spawnBomb(int obj, int state, int side)
     arwing->activeBombObj = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
     fn_8022ED74(arwing->activeBombObj, *(u16*)&arwing->bombProjectileParam);
     fn_8022ECE0(arwing->activeBombObj, arwing->bombProjectileLifetime);
-    Sfx_PlayFromObject(obj, SFXbaddie_rach_call3);
+    Sfx_PlayFromObject(obj, SFXTRIG_ar_badhit16);
 }
 
 void arwarwing_updateThrusters(int obj, int state)
@@ -569,7 +570,7 @@ void arwarwing_readControls(int obj, int state)
         btn = aw->inputFlags;
         if ((btn & PAD_TRIGGER_Z) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
+            Sfx_PlayFromObject(obj, SFXTRIG_wmap_arwingflyby);
             aw->mode = 1;
             aw->barrelRollAngle = ((GameObject*)obj)->anim.rotZ;
             aw->barrelRollDirection = aw->barrelRollSpeed;
@@ -580,7 +581,7 @@ void arwarwing_readControls(int obj, int state)
         }
         else if ((btn & PAD_TRIGGER_R) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
+            Sfx_PlayFromObject(obj, SFXTRIG_wmap_arwingflyby);
             aw->mode = 1;
             aw->barrelRollAngle = ((GameObject*)obj)->anim.rotZ;
             aw->barrelRollDirection = -aw->barrelRollSpeed;

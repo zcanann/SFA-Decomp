@@ -127,7 +127,7 @@ void fn_801540A0(int obj, int p)
         *(f32*)(p + 0x328) = lbl_803E2974;
         fn_8014CF7C(obj, p, ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosX,
                     ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosZ, 1, 0);
-        Sfx_PlayFromObject(obj, SFXfox_healthgasp2);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_25d);
     }
     ((GameObject*)obj)->anim.rotY = ((BaddieState*)p)->spawnRotY;
     ((GameObject*)obj)->anim.rotZ = ((BaddieState*)p)->spawnRotZ;
@@ -249,8 +249,8 @@ void Baddie_HandleHitReaction(int obj, u8* state, int unused, int cmd)
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29A4)
     {
         ((BaddieState*)state)->reactionFlags |= 8;
-        Sfx_PlayFromObject(objCopy, SFXdoor_unlocked);
-        Sfx_PlayFromObject(obj, SFXdoor_creak);
+        Sfx_PlayFromObject(objCopy, SFXTRIG_en_rfall5_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
         ((BaddieState*)state)->hitCounter = 0;
         ((BaddieState*)state)->unk2E4 |= 32;
     }

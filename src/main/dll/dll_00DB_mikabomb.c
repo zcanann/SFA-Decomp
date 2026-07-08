@@ -11,6 +11,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
@@ -152,7 +153,7 @@ void MikaBomb_update(int* obj)
                 int* st = ((GameObject*)obj)->extra;
                 u32 rnd;
                 localB = lbl_803E31A0;
-                Sfx_PlayFromObject(obj, SFXen_weetinklp22);
+                Sfx_PlayFromObject(obj, SFXTRIG_dsmk2_c);
                 rnd = randomGetRange(0, 2);
                 ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(
                     obj, rnd, 0, 2, -1, &localB);
@@ -175,7 +176,7 @@ void MikaBomb_update(int* obj)
                 int* st = ((GameObject*)obj)->extra;
                 u32 rnd;
                 localA = lbl_803E31A0;
-                Sfx_PlayFromObject(obj, SFXen_weetinklp22);
+                Sfx_PlayFromObject(obj, SFXTRIG_dsmk2_c);
                 rnd = randomGetRange(0, 2);
                 ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(
                     obj, rnd, 0, 2, -1, &localA);

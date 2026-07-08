@@ -12,6 +12,7 @@
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/objlib.h"
 #include "main/dll/DB/DBstealerworm.h"
@@ -172,7 +173,7 @@ void SB_ShipHead_update(int obj)
     {
         if (Vec_distance((void*)(player + 0x18), &o->anim.worldPosX) < gSbShipHeadHissSfxDistance)
         {
-            Sfx_PlayFromObject(obj, SFXfend_rob_armin);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_trpopn_c_312);
         }
         else
         {
@@ -212,7 +213,7 @@ void SB_ShipHead_update(int obj)
         (((GameObject*)hit)->anim.seqId != SB_FIREBALL_OBJID))
     {
         Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
-        Sfx_PlayFromObject(obj, SFXen_sbalhis6);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_gcfir1_c_37);
         hs->health -= 1;
         if (hs->health <= 0)
         {
@@ -244,7 +245,7 @@ void SB_ShipHead_update(int obj)
     {
         gSbShipHeadHasFiredFireball = 1;
         o->unkF4 = o->unkF4 + framesThisStep;
-        Sfx_PlayFromObject(obj, SFXen_scrap1_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_gcexp1_c);
         o->anim.localPosY += lbl_803E5848;
         o->anim.localPosZ = o->anim.localPosZ - lbl_803E584C;
         Obj_GetWorldPosition(obj, &px, &py, &pz);
@@ -271,7 +272,7 @@ void SB_ShipHead_update(int obj)
     }
     if ((fireCue == 1) && (Obj_IsLoadingLocked() != 0))
     {
-        Sfx_PlayFromObject(obj, SFXen_scrap1_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_gcexp1_c);
         player = Obj_GetPlayerObject();
         setup = Obj_AllocObjectSetup(0x18, SB_PROJECTILE_OBJID);
         ((ObjPlacement*)setup)->posX = lbl_803E5854 + ((GameObject*)player)->anim.worldPosX;

@@ -4,6 +4,7 @@
  * curve-driven hazard/barrier with per-state update handlers.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/trickycurve_state.h"
@@ -172,7 +173,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
             } while (burstParticles-- != 0);
         }
         mainSetBits(((TrickyCurveObjState*)state)->triggerGameBit, 1);
-        Sfx_PlayFromObject(obj, SFXfoot_water_walk_3);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_fball2_c_1c9);
     }
 
     state[0x10] = xSide;

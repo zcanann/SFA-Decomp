@@ -738,7 +738,7 @@ void timeListFn_8012be84(void)
     }
     if (lbl_803DD75B != prev_state)
     {
-        Sfx_PlayFromObject(0, SFXsp_sa_def01);
+        Sfx_PlayFromObject(0, SFXTRIG_sc_lockedon22);
     }
     if ((buttons & PAD_BUTTON_A) != 0)
     {
@@ -901,7 +901,7 @@ void pauseMenuInit(void)
     }
     Music_Trigger(MUSICTRIG_cldrnr_tune1, 1);
     Sfx_PlayFromObject(0, SFXTRIG_menu_fox_sidekick_up);
-    Sfx_PlayFromObject(0, SFXsp_snrin2_c);
+    Sfx_PlayFromObject(0, SFXTRIG_crf_babyflute);
 }
 #pragma dont_inline reset
 

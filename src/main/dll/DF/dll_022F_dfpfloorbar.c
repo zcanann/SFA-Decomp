@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie/dll_022F_dfpfloorbar.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/mapEvent.h"
 #include "main/objlib.h"
@@ -166,7 +167,7 @@ void DFP_Floorbar_update(int obj)
     active = state->active;
     if (active != 0 && ((GameObject*)obj)->anim.localPosY > ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C)
     {
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXfoot_water_walk_2);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_en_treedrum16_1c8);
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - timeDelta / lbl_803E6410;
         if (((GameObject*)obj)->anim.localPosY <= ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C)
         {

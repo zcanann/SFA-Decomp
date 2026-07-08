@@ -18,6 +18,7 @@
  * adds map time and sets the placement game bit, and re-evaluates chase state.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/hagabonstate_struct.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/pressureSwitch.h"
@@ -246,7 +247,7 @@ void Hagabon_hitDetect(int obj)
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (hitState->lastHitObject != 0)
     {
-        Sfx_PlayFromObject(obj, SFXand_swipe2);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_32b);
     }
 }
 
@@ -254,7 +255,7 @@ void Hagabon_free(int obj)
 {
     void** state = ((GameObject*)obj)->extra;
     ObjGroup_RemoveObject(obj, HAGABON_OBJGROUP);
-    Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
+    Sfx_StopFromObject(obj, SFXTRIG_en_twiggysnap11);
     if (*state != NULL)
     {
         mm_free(*state);
@@ -358,7 +359,7 @@ void Hagabon_update(int obj)
         ((GameObject*)obj)->unkF4 = 0;
         ((GameObject*)obj)->anim.alpha = 1;
         state->flags |= HAGABON_FLAG_FADE_IN;
-        Sfx_PlayFromObject(obj, SFXfox_treadwater122);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_seal4_c);
         return;
     }
 
@@ -366,11 +367,11 @@ void Hagabon_update(int obj)
     dist = Vec_distance((f32*)(obj + 0x18), &player->anim.worldPosX);
     if (dist < lbl_803E2658)
     {
-        Sfx_PlayFromObject(obj, SFXstaff_proj_outofmagic);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_twiggysnap11);
     }
     else if (dist > lbl_803E265C)
     {
-        Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
+        Sfx_StopFromObject(obj, SFXTRIG_en_twiggysnap11);
     }
 
     if ((((GameObject*)obj)->anim.alpha != 0) &&
@@ -384,7 +385,7 @@ void Hagabon_update(int obj)
                 ((GameObject*)obj)->unkF4 = 1;
                 ((GameObject*)obj)->anim.alpha = 0;
                 state->flags &= ~HAGABON_FLAG_FADE_OUT;
-                Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
+                Sfx_StopFromObject(obj, SFXTRIG_en_twiggysnap11);
             }
             ObjHits_DisableObject(obj);
         }
@@ -405,10 +406,10 @@ void Hagabon_update(int obj)
         {
             Sfx_StopObjectChannel(obj, 0x7f);
             state->flags |= HAGABON_FLAG_FADE_OUT;
-            Sfx_PlayFromObject(obj, SFXdoor_unlocked);
-            Sfx_PlayFromObject(obj, SFXdoor_creak);
-            Sfx_PlayFromObject(obj, SFXfox_treadwater222);
-            Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_rfall5_c);
+            Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_238);
+            Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
             lightPos[0] += playerMapOffsetX;
             lightPos[2] += playerMapOffsetZ;
             objLightFn_8009a1dc((void*)obj, lbl_803E2660, effectPos, 3, 0);

@@ -325,32 +325,32 @@ void gpsh_shrine_update(int obj)
             if (!((GpshShrineFlags*)((char*)data + 0x15))->b40 && b149 != 0)
             {
                 ((GpshShrineFlags*)((char*)data + 0x15))->b40 = 1;
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
             else if (!((GpshShrineFlags*)((char*)data + 0x15))->b20 && b14c != 0)
             {
                 ((GpshShrineFlags*)((char*)data + 0x15))->b20 = 1;
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
             else if (!((GpshShrineFlags*)((char*)data + 0x15))->b10 && b14d != 0)
             {
                 ((GpshShrineFlags*)((char*)data + 0x15))->b10 = 1;
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
             else if (!((GpshShrineFlags*)((char*)data + 0x15))->b08 && b14e != 0)
             {
                 ((GpshShrineFlags*)((char*)data + 0x15))->b08 = 1;
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
             else if (!((GpshShrineFlags*)((char*)data + 0x15))->b04 && b14a != 0)
             {
                 ((GpshShrineFlags*)((char*)data + 0x15))->b04 = 1;
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
             else if (!((GpshShrineFlags*)((char*)data + 0x15))->b02 && b14b != 0)
             {
                 ((GpshShrineFlags*)((char*)data + 0x15))->b02 = 1;
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
         }
         if (((GameObject*)obj)->unkF4 != 0)
@@ -449,7 +449,7 @@ void gpsh_shrine_update(int obj)
                     mainSetBits(GAMEBIT_GPSH_TestKnowledgeRunning, 0);
                     ((GpshShrineState*)data)->timer = lbl_803E5040;
                     (*gScreenTransitionInterface)->start(0x1e, 1);
-                    Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+                    Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
                 }
                 else if (isGameTimerDisabled())
                 {

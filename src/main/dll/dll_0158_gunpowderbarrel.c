@@ -280,7 +280,7 @@ void gunpowderbarrel_triggerExplosion(int obj)
         ObjHitbox_SetCapsuleBounds(obj, 0x14, -5, 0x14);
         ObjHits_EnableObject(obj);
         ObjHits_SetHitVolumeSlot(obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
-        Sfx_PlayFromObject(obj, SFXsk_bapt11_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_barrelblow11_d1);
         ((GameObject*)obj)->anim.localPosY += lbl_803E4308;
         spawnExplosion((int*)obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
         if (((GunpowderBarrelState*)sub)->heldByCarryInterface != 0)
@@ -408,7 +408,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
                 {
                     if (((GpbHeldFlags*)&((GunpowderBarrelState*)sub)->heldFlags)->landed)
                     {
-                        Sfx_PlayFromObject((u32)obj, SFXsk_baptr1_c);
+                        Sfx_PlayFromObject((u32)obj, SFXTRIG_barrel_putdown);
                     }
                     else
                     {
@@ -1064,7 +1064,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
     stk[0] = state->launchYaw;
     vecRotateZXY(stk, &state->throwVelX);
     state->motionFlags = (u8)(state->motionFlags | 1);
-    Sfx_PlayFromObject((u32)obj, SFXsk_baptr6_c);
+    Sfx_PlayFromObject((u32)obj, SFXTRIG_barrel_throw_d3);
     state->motionFlags = (u8)(state->motionFlags | 2);
     if (((GpbConfigFlags*)&state->configFlags)->returnHome != 0)
     {

@@ -22,6 +22,7 @@
 #include "main/pad.h"
 #include "main/object_transform.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/mm.h"
 #include "main/dll/modgfx.h"
@@ -417,7 +418,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
         }
         if ((pathAngle > 0x2000) && (settings[2] != 0))
         {
-            Sfx_PlayFromObject(0, SFXsc_snort03);
+            Sfx_PlayFromObject(0, SFXTRIG_mv_totem_stop);
         }
 
         pathScale = gCamcontrolPathState->pathCurve.pathLength;

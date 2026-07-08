@@ -3,6 +3,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/resource.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
@@ -68,7 +69,7 @@ void dll_19C_update(int* obj)
             res = Resource_Acquire(0x82, 1);
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 0, 0, 1, -1, 0);
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 1, -1, 0);
-            Sfx_PlayFromObject(0, SFXsc_gemrun1022);
+            Sfx_PlayFromObject(0, SFXTRIG_hitpos_6);
             Resource_Release(res);
             ((Dll19CState*)sub)->active = 1;
             ((GameObject*)obj)->unkF8 = 1;

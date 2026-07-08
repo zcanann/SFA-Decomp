@@ -212,7 +212,7 @@ checked_vine_use:
         }
         fn_80098B18(obj, 0.65f * (state->burnIntensity * ((GameObject*)obj)->anim.rootMotionScale), 3, 0, pulseStyle,
                     0);
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
     }
 }
 

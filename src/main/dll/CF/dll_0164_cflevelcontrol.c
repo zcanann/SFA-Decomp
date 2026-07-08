@@ -8,6 +8,7 @@
  * event (flood the fortress and lock the map).
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
 #include "main/dll/alphaanim.h"
 #include "main/mapEvent.h"
@@ -165,12 +166,12 @@ void cflevelcontrol_update(int obj)
         {
             if (bit974 != 0 || bit975 != 0)
             {
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
         }
         else if (bit974 != 0 && bit975 != 0)
         {
-            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+            Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
         }
     }
 

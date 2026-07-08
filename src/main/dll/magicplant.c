@@ -135,7 +135,7 @@ void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag)
         if (msgFlag == 16)
         {
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x28;
-            Sfx_PlayFromObject(obj, SFXfox_climbgrunt4);
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_wingflap);
             *(s16*)&((BaddieState*)state)->hitCounter = 0;
         }
     }
@@ -148,7 +148,7 @@ void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag)
         else
         {
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x8;
-            Sfx_PlayFromObject(obj, SFXfox_climbgrunt4);
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_wingflap);
             *(s16*)&((BaddieState*)state)->hitCounter = 0;
         }
     }
@@ -206,7 +206,7 @@ void fn_80153040(int obj, int state)
     if (*(f32*)(state + 0x328) <= lbl_803E28B0)
     {
         *(f32*)(state + 0x328) = lbl_803E28B4;
-        Sfx_PlayFromObject(obj, SFXfox_healthgasp1);
+        Sfx_PlayFromObject(obj, SFXTRIG_mn_heart1_c);
     }
     *(f32*)(state + 0x32c) = lbl_803E28B0;
 }
@@ -228,7 +228,7 @@ void fn_80153248(int obj, int state)
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXfox_climbgrunt3);
+        Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_bombwhistle);
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
@@ -411,12 +411,12 @@ void kooshy_updateWhileFrozen(int obj, int state, int attacker, int msgFlag, int
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x8;
         if (damage > (s32)((BaddieState*)state)->hitCounter)
         {
-            Sfx_PlayFromObject(obj, SFXfox_bigfallgrunt1);
+            Sfx_PlayFromObject(obj, SFXTRIG_sc_walkstep);
             *(s16*)&((BaddieState*)state)->hitCounter = 0;
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXfox_bigfallgrunt2);
+            Sfx_PlayFromObject(obj, SFXTRIG_sc_runstep);
             ((BaddieState*)state)->hitCounter = (u16)(((BaddieState*)state)->hitCounter - damage);
         }
     }
@@ -536,7 +536,7 @@ void fn_8015383C(int obj, int state)
     {
         rnd = randomGetRange(0x96, 0x12c);
         *(f32*)(state + 0x324) = (f32)(s32)rnd;
-        Sfx_PlayFromObject(obj, SFXwatery_bubble3);
+        Sfx_PlayFromObject(obj, SFXTRIG_sc_clubswipe);
     }
 sharedTail:
     fn_8015355C(obj, state);
@@ -623,7 +623,7 @@ checkedKind:
         {
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x8;
             *(s16*)&((BaddieState*)state)->hitCounter = 0;
-            Sfx_PlayFromObject(obj, SFXfox_healthgasp4);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_25f);
         }
     }
     else if (msgFlag == 0x11)
@@ -707,7 +707,7 @@ void fn_80153E0C(int obj, int state)
     {
         rnd = randomGetRange(0x3c, 0x78);
         *(f32*)(state + 0x330) = (f32)(s32)rnd;
-        Sfx_PlayFromObject(obj, SFXfox_healthgasp3);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_25e);
     }
     ctr = ((BaddieState*)state)->inWhirlpoolGroup;
     if (ctr != 0)

@@ -18,6 +18,7 @@
  * directly by the wisp baddie DLL.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
@@ -500,6 +501,6 @@ void fn_80151DB8(int obj, u8* state)
 
 void guardClawUpdateWhileFrozen(int obj, int* state)
 {
-    Sfx_PlayFromObject((u32)obj, SFXen_cavedirt22);
+    Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_pole1_c_23);
     ((GroundBaddieState*)state)->baddie.reactionFlags |= 0x10;
 }

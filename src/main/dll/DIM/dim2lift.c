@@ -7,6 +7,7 @@
  * state-light helpers used by the capture effect.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -271,7 +272,7 @@ int DIMbossHitDetect_liftImpact(int obj, int p2)
     if ((*(int*)&((BaddieState*)p2)->eventFlags & BADDIE_EVENT_FOOTSTEP) != 0)
     {
         gDIMbossSequenceFlags |= 0x4004;
-        Sfx_PlayFromObject(obj, SFXwmap_swoosh);
+        Sfx_PlayFromObject(obj, SFXTRIG_mn_dimbos46);
         Camera_EnableViewYOffset();
         CameraShake_Start(lbl_803E4BC8, lbl_803E4BF4, lbl_803E4BF8);
         doRumble(lbl_803E4BFC);

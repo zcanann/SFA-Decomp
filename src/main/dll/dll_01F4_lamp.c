@@ -13,6 +13,7 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objlib.h"
 #include "main/dll/fx_800944A0_shared.h"
@@ -99,7 +100,7 @@ void Lamp_update(int obj)
     {
         if (distance < 100.0f)
         {
-            Sfx_PlayFromObject((int*)obj, SFXmn_eggylaugh216);
+            Sfx_PlayFromObject((int*)obj, SFXTRIG_mushdizzylp12);
         }
     }
     else if (distance >= 100.0f)

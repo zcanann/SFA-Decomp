@@ -22,6 +22,7 @@ extern int getAngle(float y, float x);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/engine_shared.h"
 
@@ -116,7 +117,7 @@ void SB_CloudBall_hitDetect(GameObject* obj)
         return;
     if (((GameObject*)target)->anim.seqId == CLOUDBALL_TARGET_TYPE_ID)
     {
-        Sfx_PlayFromObject((int*)obj, SFXen_rockshat16);
+        Sfx_PlayFromObject((int*)obj, SFXTRIG_wp_gcfir1_c);
     }
     {
         ObjHitsPriorityState* hits = ObjAnim_GetPriorityHitState(&obj->anim);

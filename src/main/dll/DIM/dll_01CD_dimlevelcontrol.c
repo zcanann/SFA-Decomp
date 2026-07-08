@@ -15,6 +15,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -129,7 +130,7 @@ void dim_levelcontrol_update(int obj)
     st = ((GameObject*)obj)->extra;
     if ((a && !st->b7) || (b && !st->b6) || (c && !st->b5) || (d && !st->b4))
     {
-        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+        Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
     }
     st->b7 = a;
     st->b6 = b;
@@ -137,7 +138,7 @@ void dim_levelcontrol_update(int obj)
     st->b4 = d;
     if (!st->b3 && mainGetBit(GAMEBIT_DIM_CannonRelated0A21) != 0)
     {
-        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+        Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
         st->b3 = 1;
     }
     if (((GameObject*)obj)->unkF4 != 0)

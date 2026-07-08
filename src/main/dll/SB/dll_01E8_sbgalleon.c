@@ -26,6 +26,7 @@
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
@@ -425,7 +426,7 @@ int SB_Galleon_onPartDestroyed(GameObject* obj)
     {
         if (phase >= 2)
         {
-            Sfx_PlayFromObject((int)obj, SFXen_diallp_c);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_sc_npu_216_3f);
         }
         state->stage += 1;
         return 1;

@@ -295,9 +295,9 @@ void crrockfall_update(int* obj)
                     ((GameObject*)obj)->anim.velocityY = lbl_803E46E8;
                     if (((GameObject*)obj)->anim.seqId == CRROCKFALL_SEQ_QUARRY)
                     {
-                        Sfx_PlayFromObject(obj, SFXwp_sexpl2_c);
+                        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_155);
                     }
-                    Sfx_PlayFromObject(obj, SFXmv_blockscrape_lp);
+                    Sfx_PlayFromObject(obj, SFXTRIG_wp_swdwood16);
                     ((ObjHitsPriorityState*)hitState)->flags |= 1;
                 }
                 *(int*)&((ObjHitsPriorityState*)hitState)->objectHitMask = 16;
@@ -335,7 +335,7 @@ void crrockfall_update(int* obj)
                 Sfx_StopObjectChannel(obj, 8);
                 if (((GameObject*)obj)->anim.seqId == CRROCKFALL_SEQ_QUARRY)
                 {
-                    Sfx_PlayFromObject(obj, SFXwp_simp1_c);
+                    Sfx_PlayFromObject(obj, SFXTRIG_mv_dinostomp1);
                 }
                 else
                 {

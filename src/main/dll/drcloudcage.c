@@ -22,6 +22,7 @@
  * pointers immediately following at +0x510/+0x514/+0x518.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/checkpoint_interface.h"
 #include "main/vecmath.h"
 #include "string.h"
@@ -498,7 +499,7 @@ void drcloudcage_updateEngineFx(f32 distanceScale, int obj, int state, int inten
     if (channelFlags & 4)
     {
         Sfx_PlayFromObject(obj, ((DRCloudCageState*)state)->windSfxId);
-        Sfx_PlayFromObject(obj, SFXsp_htop_hurry2);
+        Sfx_PlayFromObject(obj, SFXTRIG_tr_gal_rumblelp11);
         if (intensity > 5)
         {
             ((DRCloudCageState*)state)->channel2Vol = ((DRCloudCageState*)state)->channel2Vol + timeDelta;

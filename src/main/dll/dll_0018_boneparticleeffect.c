@@ -10,6 +10,7 @@
 #include "main/model.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0018_boneparticleeffect.h"
@@ -145,7 +146,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     {
         mainSetBits(GAMEBIT_TRICKYCURVE_PLAYER_HIT, 0);
         gBoneParticleEffectTimer = 0xf;
-        Sfx_PlayFromObject(obj, SFXsc_mumble01);
+        Sfx_PlayFromObject(obj, SFXTRIG_id_281);
     }
     model = Modgfx_GetActiveModel((void*)obj);
     if (gBoneParticleStageIndex > 6)
@@ -166,13 +167,13 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
         gBoneParticleDrift = gBoneParticleDriftMax;
-        Sfx_PlayFromObject(obj, SFXsc_mumble02);
+        Sfx_PlayFromObject(obj, SFXTRIG_id_282);
     }
     else if (gBoneParticleDrift < gBoneParticleDriftMin)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
         gBoneParticleDrift = gBoneParticleDriftMin;
-        Sfx_PlayFromObject(obj, SFXsc_mumble02);
+        Sfx_PlayFromObject(obj, SFXTRIG_id_282);
     }
     slot = 0;
     grp2 = gBoneParticleEffectBuffers;

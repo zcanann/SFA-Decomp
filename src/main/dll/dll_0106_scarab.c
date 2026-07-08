@@ -278,7 +278,7 @@ void Scarab_update(int obj)
             if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
             {
                 ((ScarabState*)state)->fleeTimer = 0xfa;
-                Sfx_PlayFromObject(obj, SFXen_firlp6);
+                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c);
                 ((GameObject*)obj)->anim.velocityX =
                     ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
                 ((GameObject*)obj)->anim.velocityZ =
@@ -533,19 +533,19 @@ void Scarab_update(int obj)
                             ((GameObject*)obj)->anim.localPosZ =
                                 k * -((GameObject*)obj)->anim.velocityZ + ((GameObject*)obj)->anim.localPosZ;
                         }
-                        Sfx_PlayFromObject(obj, SFXen_lwfl1_c);
+                        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_45);
                     }
                 }
                 if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
                 {
                     ((ScarabState*)state)->fleeTimer = 0xfa;
-                    Sfx_PlayFromObject(obj, SFXen_firlp6);
+                    Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c);
                 }
             }
             else if (((ScarabState*)state)->fleeTimer != 0 && ((GameObject*)obj)->anim.seqId == 0x3d6 &&
                      ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
             {
-                Sfx_PlayFromObject(obj, SFXen_mossyloop16);
+                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_46);
                 money3 = gScarabMoneyValues;
                 playerAddMoney(player, *((u8*)&money3 + ((ScarabState*)state)->moneyKind));
                 ((ScarabState*)state)->despawnTimer = 0x50;

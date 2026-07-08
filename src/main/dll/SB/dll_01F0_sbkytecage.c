@@ -13,6 +13,7 @@
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/objseq.h"
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
@@ -107,7 +108,7 @@ int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
         animUpdate->hitVolumePair &= ~4;
         if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, 0.004f, timeDelta, NULL) != 0)
         {
-            Sfx_PlayFromObject((int*)obj, SFXfend_rob_beep2);
+            Sfx_PlayFromObject((int*)obj, SFXTRIG_mv_gdtur2_c);
         }
     }
 
@@ -205,7 +206,7 @@ void SB_KyteCage_update(int obj)
     }
     if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, 0.004f, timeDelta, NULL) != 0)
     {
-        Sfx_PlayFromObject((int*)obj, SFXfend_rob_beep2);
+        Sfx_PlayFromObject((int*)obj, SFXTRIG_mv_gdtur2_c);
     }
 }
 

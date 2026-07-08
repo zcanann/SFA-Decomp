@@ -62,19 +62,19 @@ void fn_80204098(int obj)
     }
     if (mainGetBit(0x5e3) == 0 && mainGetBit(0x5e0) != 0 && mainGetBit(0x5e1) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmn_spithit6);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_espk2_c);
         mainSetBits(0x5e3, 1);
     }
     if (mainGetBit(0x792) == 0 && mainGetBit(0xb8c) != 0 && mainGetBit(0xb8c) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmn_spithit6);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_espk2_c);
         mainSetBits(0x792, 1);
     }
     if (mainGetBit(0xe58) == 0)
     {
         if (mainGetBit(0x635) != 0 && state->sfxLatch == 0)
         {
-            Sfx_PlayFromObject(0, SFXfoot_wood_run_2);
+            Sfx_PlayFromObject(0, SFXTRIG_dn_boar1_c_1c4);
             for (i = 0; i < 9; i++)
             {
                 lbl_80329848[i] = (s16)randomGetRange(1, 4);
@@ -225,7 +225,7 @@ void DFP_LevelControl_update(int obj)
     if ((b1 != 0 && ((u32)state->flags07 >> 7 & 1) == 0) || (b2 != 0 && ((u32)state->flags07 >> 6 & 1) == 0) ||
         (b3 != 0 && ((u32)state->flags07 >> 5 & 1) == 0))
     {
-        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+        Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
     }
     ((DfpFlags7*)&state->flags07)->b80 = b1;
     ((DfpFlags7*)&state->flags07)->b40 = b2;

@@ -281,7 +281,7 @@ void Pollen_update(int obj)
         {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E3138);
-            Sfx_PlayFromObject(obj, SFXsc_objselectyeah22);
+            Sfx_PlayFromObject(obj, SFXTRIG_id_b6);
             ((GameObject*)obj)->anim.alpha = 0;
             extra->fragmentSpawnTimer = 0x3c;
             ObjHits_DisableObject((u32)obj);

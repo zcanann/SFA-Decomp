@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/engine_shared.h"
 
 #define RESOURCE_DESCRIPTOR_COUNT 0x2c1
@@ -793,7 +794,7 @@ void gameTimerRun(void)
     {
         if ((gModelEngineTimerFlags & 8) != 0)
         {
-            Sfx_PlayFromObject(0, SFXsc_clubhit02);
+            Sfx_PlayFromObject(0, SFXTRIG_sc_lockon22);
         }
         gModelEngineTimerState &= ~MODELENGINE_TIMER_RUNNING;
         gModelEngineTimerState |= MODELENGINE_TIMER_DISABLED;
@@ -803,7 +804,7 @@ void gameTimerRun(void)
     {
         f32 panByte;
         f32 volume;
-        Sfx_KeepAliveLoopedObjectSound(0, SFXsc_clubhit01);
+        Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_sc_commsbleep_28c);
         if ((gModelEngineTimerFlags & 1) != 0)
         {
             panByte = (f32)(0x7F - ((int)(lbl_803DE6C0 * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF));
@@ -814,7 +815,7 @@ void gameTimerRun(void)
             panByte = (f32)(((int)(lbl_803DE6C0 * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF) + 0x2F);
             volume = lbl_803DE6C8 * (gModelEngineTimerValue / gModelEngineTimerDuration) + lbl_803DE6CC;
         }
-        Sfx_SetObjectSfxVolume(0, SFXsc_clubhit01, panByte, volume);
+        Sfx_SetObjectSfxVolume(0, SFXTRIG_sc_commsbleep_28c, panByte, volume);
     }
 
     if ((gModelEngineTimerFlags & 0x10) != 0 && pauseMenuState == 0 && getHudHiddenFrameCount() == 0)

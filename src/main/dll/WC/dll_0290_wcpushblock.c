@@ -22,6 +22,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebit_ids.h"
 
@@ -397,8 +398,8 @@ void wcpushblock_update(int obj)
             {
                 dist = gWcPushBlockSlideSfxMaxVolume;
             }
-            Sfx_KeepAliveLoopedObjectSound(obj, SFXsc_lockon2_off);
-            Sfx_SetObjectSfxVolume(obj, SFXsc_lockon2_off, dist, lbl_803E6D78);
+            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_en_treedrum16_c8);
+            Sfx_SetObjectSfxVolume(obj, SFXTRIG_en_treedrum16_c8, dist, lbl_803E6D78);
             WCPUSHBLOCK_FLAGS(state).sfxActive = 1;
         }
     }
@@ -505,14 +506,14 @@ void wcpushblock_update(int obj)
                 {
                     if (gameBitIncrement(WCPUSHBLOCK_GAMEBIT_A_COUNT) != WCPUSHBLOCK_REQUIRED_LOCK_COUNT)
                     {
-                        Sfx_PlayFromObject(0, SFXsc_lockon3_off);
+                        Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_ca);
                     }
                 }
                 else
                 {
                     if (gameBitIncrement(WCPUSHBLOCK_GAMEBIT_B_COUNT) != WCPUSHBLOCK_REQUIRED_LOCK_COUNT)
                     {
-                        Sfx_PlayFromObject(0, SFXsc_lockon3_off);
+                        Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_ca);
                     }
                 }
             }
@@ -522,7 +523,7 @@ void wcpushblock_update(int obj)
                 if (WCPUSHBLOCK_FLAGS(state).sfxActive != 0)
                 {
                     WCPUSHBLOCK_FLAGS(state).sfxActive = 0;
-                    Sfx_PlayFromObject(obj, SFXsc_lockon3_on);
+                    Sfx_PlayFromObject(obj, SFXTRIG_mv_bflconc1);
                 }
             }
             else
@@ -563,7 +564,7 @@ void wcpushblock_update(int obj)
         ObjHits_DisableObject(obj);
         if (objAnim->alpha == WCPUSHBLOCK_ALPHA_OPAQUE)
         {
-            Sfx_PlayFromObject(obj, SFXsc_lifeforcedoor);
+            Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_cb);
         }
         {
             int a = objAnim->alpha - (framesThisStep << WCPUSHBLOCK_ALPHA_STEP_SHIFT);
@@ -601,7 +602,7 @@ void wcpushblock_update(int obj)
         if (objAnim->alpha == 0)
         {
             ObjHits_EnableObject(obj);
-            Sfx_PlayFromObject(0, SFXsc_golfbar_swipe);
+            Sfx_PlayFromObject(0, SFXTRIG_en_cvdrip1c_cc);
         }
         {
             int a = objAnim->alpha + (framesThisStep << WCPUSHBLOCK_ALPHA_STEP_SHIFT);
@@ -659,7 +660,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
             (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
             state->completionFlags |= WCLEVELCTL_FLAG_TREX;
             state->mode = WCLEVELCTL_MODE_IDLE;
-            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+            Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             gameTimerStop();
         }
         else if (isGameTimerDisabled() != 0)
@@ -700,7 +701,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
         if ((u8)mainGetBit(WCPUSHBLOCK_GAMEBIT_A_COUNT) == 4)
         {
             mainSetBits(WCPUSHBLOCK_GAMEBIT_A_SOLVED, 1);
-            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+            Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             state->completionFlags |= WCLEVELCTL_FLAG_TILE_A;
         }
         else if ((u32)mainGetBit(WCPUSHBLOCK_GAMEBIT_A_FADE) != 0)
@@ -725,7 +726,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
         if ((u8)mainGetBit(WCPUSHBLOCK_GAMEBIT_B_COUNT) == 4)
         {
             mainSetBits(WCPUSHBLOCK_GAMEBIT_B_SOLVED, 1);
-            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+            Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             state->completionFlags |= WCLEVELCTL_FLAG_TILE_B;
         }
         else if ((u32)mainGetBit(WCPUSHBLOCK_GAMEBIT_B_FADE) != 0)
@@ -750,22 +751,22 @@ void fn_802251B4(int obj, WcLevelControlState* state)
         if ((u32)mainGetBit(0xc58) != 0 && mainGetBit(0xc59) != 0 && mainGetBit(0xc5a) != 0)
         {
             mainSetBits(0x205, 1);
-            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+            Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             state->completionFlags |= WCLEVELCTL_FLAG_SWITCHES;
         }
         else if (!state->dialogueFlags.b40 && mainGetBit(0xc58) != 0)
         {
-            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+            Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             state->dialogueFlags.b40 = 1;
         }
         else if (!state->dialogueFlags.b20 && mainGetBit(0xc59) != 0)
         {
-            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+            Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             state->dialogueFlags.b20 = 1;
         }
         else if (!state->dialogueFlags.b18 && mainGetBit(0xc5a) != 0)
         {
-            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+            Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             state->dialogueFlags.b18 = 1;
         }
     }
@@ -781,7 +782,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
             mainSetBits(0xbd0, 0);
             player = (GameObject*)Obj_GetPlayerObject();
             (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
-            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+            Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             state->completionFlags |= WCLEVELCTL_FLAG_FINAL;
         }
     }
@@ -816,9 +817,9 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
             state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_A;
             gameTimerStop();
             if ((u32)mainGetBit(0x7fa) != 0)
-                Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+                Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             else
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
             mainSetBits(0xedd, 0);
             if ((u32)mainGetBit(0x7fa) != 0)
@@ -855,9 +856,9 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
             state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_B;
             gameTimerStop();
             if ((u32)mainGetBit(0x7f9) != 0)
-                Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+                Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             else
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
             mainSetBits(0xedc, 0);
             if ((u32)mainGetBit(0x7f9) != 0)

@@ -19,6 +19,7 @@
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
 #include "main/objHitReact.h"
 #include "main/objfx.h"
@@ -239,7 +240,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         objLightFn_8009a1dc(obj, lbl_803E2434, lightArgs, 4, 0);
         if (((GameObject*)lastContactObj)->anim.seqId == 0x69)
         {
-            Sfx_PlayFromObject(obj, SFXfox_outofwater122);
+            Sfx_PlayFromObject(obj, SFXTRIG_stftest_var);
         }
         break;
     case 0x1f:

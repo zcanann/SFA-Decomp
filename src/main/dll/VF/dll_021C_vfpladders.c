@@ -12,6 +12,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/VF/dll_021C_vfpladders.h"
 
 #define VFPLADDERS_TRIGGER_SEQID 0x548
@@ -88,7 +89,7 @@ void VFP_Ladders_update(int obj)
             if (state->delayTimer <= 0)
             {
                 state->phase = VFPLADDERS_PHASE_DROPPING;
-                Sfx_PlayFromObject(obj, SFXen_flybuzz_loop);
+                Sfx_PlayFromObject(obj, SFXTRIG_mv_bodyf4_c);
                 state->delayTimer = 0;
             }
         }

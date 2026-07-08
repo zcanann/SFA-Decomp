@@ -8,6 +8,7 @@
  * landing on a contact object, and a floor clamp), then persists the
  * object's position. Re-split from a former multi-object TU. */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/engine_shared.h"
 
@@ -84,7 +85,7 @@ void dll_1DA_hitDetect(int obj)
         (void)Vec_distance((float*)&((GameObject*)obj)->anim.worldPosX, (float*)((int)player + 0x18));
         ((GameObject*)obj)->anim.velocityX = ((GameObject*)hi)->anim.velocityX * (k = lbl_803E4ADC);
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)hi)->anim.velocityZ * k;
-        Sfx_PlayFromObject(obj, SFXchar_puts_out_fire);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_birdymornin11_1f9);
     }
 }
 

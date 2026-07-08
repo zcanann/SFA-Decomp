@@ -5,6 +5,7 @@
  * that douses the flame when depleted.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
@@ -87,7 +88,7 @@ int DIMLogFire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     DimLogFireState* state = ((GameObject*)obj)->extra;
     if (state->mode == DIMLOGFIRE_MODE_LIT)
     {
-        Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
+        Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
     }
     else
     {
@@ -206,7 +207,7 @@ void DIMLogFire_update(int obj)
         {
             modelLightStruct_setEnabled(state->light, 1, lbl_803E4824);
         }
-        Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
+        Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
         state->flickerTimerA = state->flickerTimerA - timeDelta;
         if (state->flickerTimerA <= lbl_803E4828)
         {

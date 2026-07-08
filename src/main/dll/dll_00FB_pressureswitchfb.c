@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 #include "main/dll/cfguardian_state.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/effect_interfaces.h"
@@ -425,7 +426,7 @@ void PressureSwitchFB_update(int obj)
         }
         if ((s8)i != 0)
         {
-            Sfx_PlayFromObject(obj, SFXms_baddie_beamin);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_firlp6);
         }
         else
         {

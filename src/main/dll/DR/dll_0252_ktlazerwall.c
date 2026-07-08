@@ -15,6 +15,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0252_ktlazerwall.h"
 
 int KT_Lazerwall_getExtraSize(void)
@@ -119,7 +120,7 @@ void KT_Lazerwall_update(int obj)
         (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
         if ((flags[1] & 4) == 0)
         {
-            Sfx_PlayFromObject(obj, SFXmn_sml_trex_snap3);
+            Sfx_PlayFromObject(obj, SFXTRIG_wp_beamhit16);
         }
     }
     if (flags[0] & 8)
@@ -131,7 +132,7 @@ void KT_Lazerwall_update(int obj)
     }
     if ((flags[0] & 8) == 0 && (flags[1] & 8) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_blkhit_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_beamgenlp16);
     }
     {
         f32 timer = ((KtlazerwallState*)flags)->reloadTimer;
@@ -141,7 +142,7 @@ void KT_Lazerwall_update(int obj)
             ((KtlazerwallState*)flags)->reloadTimer = timer - timeDelta;
             if (((KtlazerwallState*)flags)->reloadTimer <= limit)
             {
-                Sfx_PlayFromObject(obj, SFXmv_bflconc1);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_blaserflyby16);
                 ((KtlazerwallState*)flags)->reloadTimer = lbl_803E6898;
             }
         }

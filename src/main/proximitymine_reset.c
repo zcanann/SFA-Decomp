@@ -25,8 +25,8 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
 
     state = obj->state;
     Obj_GetPlayerObject();
-    Sfx_StopFromObject((u32)obj, SFXnewtricky_01d);
-    Sfx_StopFromObject((u32)obj, SFXnewtricky_01c);
+    Sfx_StopFromObject((u32)obj, SFXTRIG_id_2e9);
+    Sfx_StopFromObject((u32)obj, SFXTRIG_id_2e8);
     Sfx_PlayFromObject((u32)obj, SFXTRIG_crthit6);
     zero = lbl_803E6768;
     obj->velocityX = zero;

@@ -16,6 +16,7 @@
  * the hagabon_* and wispbaddie_* callbacks live in the sibling DLLs.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/swarmbaddiestate_struct.h"
 #include "main/dll/hagabonstate_struct.h"
 #include "main/dll/rom_curve_interface.h"
@@ -281,7 +282,7 @@ void SwarmBaddie_init(int obj, int data, int skip_alloc)
         {
             *(u8*)&state->flags |= SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
         }
-        Sfx_PlayFromObject(obj, SFXfox_treadwater422);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_grumb4_c);
     }
     ((GameObject*)obj)->objectFlags |= SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED;
 }

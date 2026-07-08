@@ -159,7 +159,7 @@ void camcontrol_updateTargetFeedback(void)
             }
             else if (targetKind != CAMCONTROL_TARGET_KIND_SUPPRESSED)
             {
-                Sfx_PlayFromObject(0, SFXsc_spotfox01);
+                Sfx_PlayFromObject(0, SFXTRIG_sc_scabshortish32);
                 objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 1);
             }
         }
@@ -186,7 +186,7 @@ void camcontrol_updateTargetFeedback(void)
             }
             else if ((buttonPressed) && (result = isTalkingToNpc(), result == 0))
             {
-                Sfx_PlayFromObject(0, SFXsc_snort04);
+                Sfx_PlayFromObject(0, SFXTRIG_sc_clock_timesup);
             }
         }
         if (gCamcontrolTargetState == '\0')
@@ -233,7 +233,7 @@ void camcontrol_updateTargetFeedback(void)
                 }
                 else if (targetKind != CAMCONTROL_TARGET_KIND_SUPPRESSED)
                 {
-                    Sfx_PlayFromObject(0, SFXsc_spotfox02);
+                    Sfx_PlayFromObject(0, SFXTRIG_sc_gemrun1022);
                 }
             }
         }

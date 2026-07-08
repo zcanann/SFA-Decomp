@@ -11,6 +11,7 @@
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0268_drcagecontrol.h"
 
 int DR_CageControl_SeqFn(int obj)
@@ -27,11 +28,11 @@ int DR_CageControl_SeqFn(int obj)
         }
         if (((BitFlags8*)(state + 4))->b0 != mainGetBit(((CageControlPlacement*)placement)->watchGameBit))
         {
-            Sfx_PlayFromObject(obj, SFXar_ring_pickup);
-            Sfx_PlayFromObject(obj, SFXar_generic_pickup);
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_blkhit_c);
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_persquk2);
             if (mainGetBit(((CageControlPlacement*)placement)->watchGameBit) != 0)
             {
-                Sfx_PlayFromObject(obj, SFXar_bomb_pickup);
+                Sfx_PlayFromObject(obj, SFXTRIG_mv_wickpickup16_194);
             }
             else
             {

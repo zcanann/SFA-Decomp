@@ -3,6 +3,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
@@ -112,7 +113,7 @@ void dll_19D_update(int obj)
     linkObj = *(int*)&((GameObject*)self)->anim.hitReactState;
     if (*(s8*)(linkObj + 0xad) != 0)
     {
-        Sfx_PlayFromObject(self, SFXsc_mpick1_b);
+        Sfx_PlayFromObject(self, SFXTRIG_npu_216);
         (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);

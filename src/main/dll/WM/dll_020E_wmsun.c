@@ -28,6 +28,7 @@
  * flicker table and scroll-fades a texture once bit 0x38F is set.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
@@ -503,7 +504,7 @@ void wmsun_update(int obj)
                 randomGetRange(0, 0xffff);
                 randomGetRange(0, 0xffff);
                 randomGetRange(0, 0xffff);
-                Sfx_PlayFromObject(obj, SFXmn_sml_trex_snap2);
+                Sfx_PlayFromObject(obj, SFXTRIG_en_icecrk16);
             }
             wmsun_updateGlare(obj);
         }

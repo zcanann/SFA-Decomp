@@ -10,6 +10,7 @@
 #include "main/dll/cfprisonguardstate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
@@ -175,7 +176,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (((GameObject*)obj)->anim.currentMove == 0x103 || ((GameObject*)obj)->anim.currentMove == 0x2e)
     {
-        Sfx_PlayFromObject((int)obj, SFXsk_doggydig11);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_foot_water_roll);
     }
     else
     {

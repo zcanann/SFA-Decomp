@@ -9,6 +9,7 @@
  * 0.125/tick back to placement height.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
@@ -123,7 +124,7 @@ void WM_colrise_update(int* obj)
     }
     if ((s8)reached != 0)
     {
-        Sfx_PlayFromObject((int)obj, SFXmn_crusty9c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_en_treedrum16_7d);
     }
     else
     {

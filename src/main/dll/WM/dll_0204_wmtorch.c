@@ -8,6 +8,7 @@
  * object.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
@@ -69,7 +70,7 @@ void wmtorch_update(int obj)
     if (Vec_distance(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
         lbl_803E5DE8)
     {
-        Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
+        Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
     }
     else
     {

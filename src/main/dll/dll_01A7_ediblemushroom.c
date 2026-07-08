@@ -630,7 +630,7 @@ void EdibleMushroom_update(u8* self)
             {
                 itemPickupDoParticleFx(self, 1.0f, 6, 0x28);
             }
-            Sfx_PlayFromObject((u32)self, SFXen_waterblock_stop);
+            Sfx_PlayFromObject((u32)self, SFXTRIG_cam90_c);
         }
         goto end;
     }
@@ -681,7 +681,7 @@ void EdibleMushroom_update(u8* self)
             {
                 if ((((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_STRUCK) == 0)
                 {
-                    Sfx_PlayFromObject((u32)self, SFXmv_curtainloop16);
+                    Sfx_PlayFromObject((u32)self, SFXTRIG_mv_ladderslide16);
                 }
                 ((EdibleMushroomState*)state)->flags =
                     (u8)(((EdibleMushroomState*)state)->flags | EDIBLEMUSHROOM_FLAG_STRUCK);

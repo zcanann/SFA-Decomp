@@ -119,7 +119,7 @@ void cnthitobjec_hitDetect(int obj)
     }
     else
     {
-        Sfx_PlayFromObject(obj, SFXdn_hightop_ambi1);
+        Sfx_PlayFromObject(obj, SFXTRIG_sc_snort03);
     }
 }
 

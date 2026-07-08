@@ -5,6 +5,7 @@
  */
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
@@ -79,11 +80,11 @@ void dimbarrier_update(int obj)
                 {
                     extra->state = DIMBARRIER_STATE_FADING;
                     extra->timer = 30;
-                    Sfx_PlayFromObject(obj, SFXthorntail_chew1);
+                    Sfx_PlayFromObject(obj, SFXTRIG_wp_dsmk2_c_206);
                 }
                 else
                 {
-                    Sfx_PlayFromObject(obj, SFXthorntail_chew2);
+                    Sfx_PlayFromObject(obj, SFXTRIG_wp_dsmk2_c_207);
                 }
             }
             break;

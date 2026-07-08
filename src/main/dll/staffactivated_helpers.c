@@ -91,7 +91,7 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
         {
             if (state->previousLiftHeight > 0)
             {
-                Sfx_PlayFromObject(obj, SFXmn_dimraw36);
+                Sfx_PlayFromObject(obj, SFXTRIG_mammoth_grunt1);
                 rumbleStrength = state->peakLiftHeight / 200;
                 if (rumbleStrength > 0)
                 {

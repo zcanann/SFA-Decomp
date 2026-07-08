@@ -11,6 +11,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0254_ktfallingrocks.h"
 
 int ktfallingrocks_getExtraSize(void)
@@ -65,7 +66,7 @@ void ktfallingrocks_update(int obj)
         (*gPartfxInterface)
             ->spawnObject((void*)obj, ((KtfallingrocksPlacement*)placement)->effectId, &params, 0x200001, -1, NULL);
     }
-    Sfx_PlayFromObject(obj, SFXbaddie_haga_spin);
+    Sfx_PlayFromObject(obj, SFXTRIG_en_birdynight11);
     mainSetBits(((KtfallingrocksPlacement*)placement)->triggerBit, 0);
 }
 

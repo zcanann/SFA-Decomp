@@ -11,6 +11,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef union ArwingBombControl
 {
@@ -102,7 +103,7 @@ void arwarwingbo_update(int obj)
         {
             state = ((GameObject*)obj)->extra;
             arwarwing_clearActiveBomb(getArwing());
-            Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
+            Sfx_PlayFromObject(obj, SFXTRIG_ar_awghitobj16_2a5);
             state->explosionTimer = lbl_803E7040;
             state->control.fuseTimer = lbl_803E7044;
             objAnim->alpha = 0;
@@ -126,7 +127,7 @@ void arwarwingbo_update(int obj)
     {
         state = ((GameObject*)obj)->extra;
         arwarwing_clearActiveBomb(getArwing());
-        Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
+        Sfx_PlayFromObject(obj, SFXTRIG_ar_awghitobj16_2a5);
         state->explosionTimer = lbl_803E7040;
         state->control.fuseTimer = lbl_803E7044;
         objAnim->alpha = 0;

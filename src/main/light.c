@@ -111,7 +111,7 @@ void VFP_Block1_update(int obj)
     {
         if (dist < lbl_803E6100)
         {
-            Sfx_PlayFromObject(obj, SFXsp_guardian_call2);
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_mushdizzylp12);
         }
     }
     else
@@ -478,8 +478,8 @@ void VFP_DoorSwitch_update(int obj)
         return;
     if (mainGetBit(state->gameBitId) == 0)
         return;
-    Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-    Sfx_PlayFromObject(obj, SFXsp_skeep_mumb4);
+    Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
+    Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_10d);
     Sfx_PlayFromObject(obj, SFXTRIG_gate_stops);
     Obj_SetActiveModelIndex(obj, 1);
     state->activated = 1;
@@ -515,8 +515,8 @@ void vfpdoorswitch_updateExplodingVariant(int obj)
     {
         if (mainGetBit(state->gameBitId) != 0)
         {
-            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-            Sfx_PlayFromObject(obj, SFXsp_skeep_mumb4);
+            Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_10d);
             Sfx_PlayFromObject(obj, SFXTRIG_gate_stops);
             state->activated = 1;
         }
@@ -915,12 +915,12 @@ void VFP_Platform_update(int obj)
                         if (yi == tyi - 60)
                         {
                             state->state = 2;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            Sfx_PlayFromObject(obj, SFXTRIG_en_ripefruit11);
                         }
                         if (yi == tyi)
                         {
                             state->state = 3;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            Sfx_PlayFromObject(obj, SFXTRIG_en_ripefruit11);
                         }
                     }
                     else if (s3 == 3)
@@ -928,12 +928,12 @@ void VFP_Platform_update(int obj)
                         if (xi == txi - 60)
                         {
                             state->state = 2;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            Sfx_PlayFromObject(obj, SFXTRIG_en_ripefruit11);
                         }
                         if (xi == txi)
                         {
                             state->state = 3;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            Sfx_PlayFromObject(obj, SFXTRIG_en_ripefruit11);
                         }
                     }
                     else
@@ -941,12 +941,12 @@ void VFP_Platform_update(int obj)
                         if (yi == tyi + 60)
                         {
                             state->state = 4;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            Sfx_PlayFromObject(obj, SFXTRIG_en_ripefruit11);
                         }
                         if (yi == tyi)
                         {
                             state->state = 5;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            Sfx_PlayFromObject(obj, SFXTRIG_en_ripefruit11);
                         }
                     }
                     break;

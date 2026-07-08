@@ -9,6 +9,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
@@ -213,7 +214,7 @@ void dimbossfire_update(int obj)
                     modelLightStruct_setEnabled(state->light, 0, state->activeTimer / lbl_803E4DC0);
                 }
             }
-            Sfx_PlayFromObject(obj, SFXar_boost16);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c_188);
         }
         state->activeTimer = state->activeTimer - timeDelta;
         if (state->activeTimer <= lbl_803E4DA0)

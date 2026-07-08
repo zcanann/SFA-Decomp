@@ -190,7 +190,7 @@ void appleontree_handleCollectableHit(int obj)
     {
         playerAddHealth(player, ((AppleOnTreeState*)state)->healthRestore);
         itemPickupDoParticleFx(obj, lbl_803E37C8, 0xff, 0x28);
-        Sfx_PlayFromObject(obj, SFXen_waterblock_stop);
+        Sfx_PlayFromObject(obj, SFXTRIG_cam90_c);
         state = *(int*)&((GameObject*)obj)->extra;
         if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
         {
@@ -347,7 +347,7 @@ void fn_8017D854(int obj, int msg)
             {
                 ObjHits_DisableObject(obj);
             }
-            Sfx_PlayFromObject(obj, SFXen_bridge_stops);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_tranch_6);
         }
     }
 }
@@ -609,7 +609,7 @@ void AppleOnTree_update(int objArg)
             {
                 playerAddHealth(Obj_GetPlayerObject(), (int)((AppleOnTreeState*)state)->healthRestore);
                 itemPickupDoParticleFx((int)obj, lbl_803E37C8, 0xff, 0x28);
-                Sfx_PlayFromObject((int)obj, SFXen_waterblock_stop);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_cam90_c);
                 val = *(int*)&((GameObject*)obj)->extra;
                 if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)
                 {

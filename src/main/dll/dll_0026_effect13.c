@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/dll/waterfxcfg_struct.h"
 #include "main/dll/partfxspawn_struct.h"
@@ -130,7 +131,7 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         }
         (*gWaterfxInterface)
             ->spawnSplashBurst(NULL, spawnParams->posX, spawnParams->posY, spawnParams->posZ, lbl_803E01A0);
-        Sfx_PlayFromObject((int)sourceObj, SFXsc_snort02);
+        Sfx_PlayFromObject((int)sourceObj, SFXTRIG_blkscrp6);
         cfg.lifetimeFrames = 1;
         cfg.scale = lbl_803E01A4;
         cfg.behaviorFlags = 0x0a000001;
@@ -145,7 +146,7 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.quadVertex3Pad06 = 0x451;
         break;
     case 0x451:
-        Sfx_PlayFromObject((int)sourceObj, SFXsc_snort02);
+        Sfx_PlayFromObject((int)sourceObj, SFXTRIG_blkscrp6);
         cfg.lifetimeFrames = 0x64;
         cfg.scale = lbl_803E01AC * (f32)(s32)cfg.lifetimeFrames;
         cfg.behaviorFlags = 0x0a100201;

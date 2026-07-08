@@ -1099,7 +1099,7 @@ void collectible_updateIdleMotion(int obj)
             ((CollectibleState*)state)->spinSpeed = (f32)(int)
             randomGetRange(600, 800);
             ((CollectibleState*)state)->spinTimer = randomGetRange(180, 240);
-            Sfx_PlayFromObject(obj, SFXwp_whiz3_c);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_169);
         }
         ((GameObject*)obj)->anim.rotY = ((CollectibleState*)state)->spinSpeed;
         ((CollectibleState*)state)->spinSpeed *= gCollectibleSpinDamping;

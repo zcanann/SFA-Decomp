@@ -1815,7 +1815,7 @@ void tricky_handleDefeat(int obj, int state)
             hitState->suppressOutgoingHits = 0;
         }
         ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 | 1;
-        Sfx_PlayFromObject(obj, SFXdoor_creak);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
         if (randomGetRange(0, 100) > 50)
         {
             if ((((TrickyState*)state)->controlFlags & 0x100000) != 0)

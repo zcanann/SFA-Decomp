@@ -21,6 +21,7 @@
 #include "main/game_object.h"
 #include "main/dll/grimble_state.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/scarab.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
@@ -174,7 +175,7 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
     {
         *(int*)&((GroundBaddieState*)state)->baddie.eventFlags =
             *(int*)&((GroundBaddieState*)state)->baddie.eventFlags & ~1;
-        Sfx_PlayFromObject(obj, SFXsc_death01);
+        Sfx_PlayFromObject(obj, SFXTRIG_mv_persquk1);
     }
     (*(void (**)(int, char*, f32))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x28))(
         ((GrimbleControl*)sub)->pathObj, sub + 0x48,
@@ -260,7 +261,7 @@ int grimble_stateHandlerA00(int obj, char* state, f32 arg)
     {
         *(int*)&((GroundBaddieState*)state)->baddie.eventFlags =
             *(int*)&((GroundBaddieState*)state)->baddie.eventFlags & ~1;
-        Sfx_PlayFromObject(obj, SFXsc_death01);
+        Sfx_PlayFromObject(obj, SFXTRIG_mv_persquk1);
     }
     (*(void (**)(int, f32, f32*, f32*, f32*))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x24))(
         ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->pathProgress - lbl_803E2EFC, &x, &y, &z);

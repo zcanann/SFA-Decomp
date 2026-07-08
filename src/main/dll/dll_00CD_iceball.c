@@ -18,6 +18,7 @@
  */
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
 #include "main/sfa_shared_decls.h"
@@ -68,7 +69,7 @@ void fn_8015FBEC(int obj)
         }
     }
 
-    Sfx_PlayFromObject(obj, SFXkr_impact3);
+    Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311_26a);
     Camera_EnableViewYOffset();
     CameraShake_SetAllMagnitudes(lbl_803E2E50);
 }
@@ -97,7 +98,7 @@ void fn_8015FCCC(int obj)
 
     Camera_EnableViewYOffset();
     CameraShake_SetAllMagnitudes(lbl_803E2E50);
-    Sfx_PlayFromObject(obj, SFXkr_impact3);
+    Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311_26a);
     type = ((GameObject*)obj)->anim.seqId;
     if (type == 0x2cb)
     {

@@ -576,7 +576,7 @@ int TitleMenu_run(void)
             titleScreenFn_801368a4(1);
             gTitleMenuLoadDelay = 1;
             titleScreenFn_80130464(1);
-            Sfx_PlayFromObject(0, SFXsp_snrin2_c);
+            Sfx_PlayFromObject(0, SFXTRIG_crf_babyflute);
             switch (gTitleMenuSelection)
             {
             case 0:

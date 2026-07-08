@@ -17,6 +17,7 @@
  */
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/dll/cf_doorlight_state.h"
@@ -218,9 +219,9 @@ int kaldachom_stateHandlerA07(int obj, int p)
     control = ((CfDoorlightState*)state)->control;
     if ((control->soundFlags & SOUNDFLAG_PULLUP_BURST) == 0)
     {
-        Sfx_PlayFromObject(obj, SFXkr_climb2);
-        Sfx_PlayFromObject(obj, SFXsc_attack01);
-        Sfx_PlayFromObject(obj, SFXdoor_unlocked);
+        Sfx_PlayFromObject(obj, SFXTRIG_mn_impyflap16);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_277);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_rfall5_c);
         control->soundFlags |= SOUNDFLAG_PULLUP_BURST;
         {
             char* linkedObj;
@@ -244,7 +245,7 @@ int kaldachom_stateHandlerA07(int obj, int p)
     {
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E3088)
         {
-            Sfx_PlayFromObject(obj, SFXdoor_creak);
+            Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
             control->soundFlags |= SOUNDFLAG_DOOR_CREAK;
         }
     }

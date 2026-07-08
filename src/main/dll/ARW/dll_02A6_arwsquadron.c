@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define ARW_SQUADRON_PARTFX_SMOKE 0x7d0 /* damage smoke effect (pfx.f8 = damageSmokeScale) */
 #define ARW_SQUADRON_PARTFX_FIRE  0x7d1 /* fire effect (pfx.f8 = fireFxScale) */
@@ -191,7 +192,7 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag)
         arwprojectile_createLinkedEffect(proj, 1);
     arwprojectile_setLifetime(proj, 0x4b);
     arwprojectile_placeForward(proj, lbl_803E71A8);
-    Sfx_PlayFromObjectLimited(proj, SFXbaddie_eba_smallswipe1, 4);
+    Sfx_PlayFromObjectLimited(proj, SFXTRIG_wp_blaserhit16, 4);
 }
 #pragma optimization_level reset
 
@@ -532,7 +533,7 @@ void arwsquadron_handleDamage(int obj, int state)
         if (flags->f10)
         {
             if (squad->hitFlashActive == 0)
-                Sfx_PlayFromObjectLimited(obj, SFXbaddie_mika_death, 4);
+                Sfx_PlayFromObjectLimited(obj, SFXTRIG_wmap_nameoff_29e, 4);
             Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
             squad->hitFlashTimer = lbl_803E71B4;
             squad->hitFlashActive = 1;
@@ -574,7 +575,7 @@ void arwsquadron_handleDamage(int obj, int state)
         else
         {
             if (squad->hitFlashActive == 0)
-                Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
+                Sfx_PlayFromObjectLimited(obj, SFXTRIG_ar_laser116, 4);
             squad->hitFlashTimer = lbl_803E71B4;
             squad->hitFlashActive = 1;
         }

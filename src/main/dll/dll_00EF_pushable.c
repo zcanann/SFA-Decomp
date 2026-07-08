@@ -296,7 +296,7 @@ void fn_80174BFC(int obj, int ext)
                                 if (hit.id == 1)
                                 {
                                     mainSetBits(gamebit, 1);
-                                    Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                                    Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
                                     ((PushableState*)ext)->flags |= PUSHABLE_FLAG_PUSH_LOCKED;
                                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                                     saveGame_saveObjectPos(obj);
@@ -308,7 +308,7 @@ void fn_80174BFC(int obj, int ext)
                                 if (t > -1 && t == hit.id)
                                 {
                                     mainSetBits(gamebit, 1);
-                                    Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                                    Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
                                 }
                                 break;
                             }

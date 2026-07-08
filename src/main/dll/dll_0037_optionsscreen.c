@@ -13,6 +13,7 @@
  * Exit (panel 3, item 0) starts the transition out and reloads UI DLL 4.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_4E.h"
 #include "main/screen_transition.h"
 #include "main/dll/gameplay.h"
@@ -210,7 +211,7 @@ int OptionsScreen_frameStart(void)
     item = ((int (**)(void))gTitleMenuLinkInterface->vtable)[5]();
     if (item != lbl_803DD700)
     {
-        Sfx_PlayFromObject(0, SFXsp_sa_off03);
+        Sfx_PlayFromObject(0, SFXTRIG_warningloop);
     }
     lbl_803DD700 = item;
 
@@ -246,7 +247,7 @@ int OptionsScreen_frameStart(void)
     case OPTIONSSCREEN_PANEL_MISC:
         if (selection == 0)
         {
-            Sfx_PlayFromObject(0, SFXsp_snrot1_c);
+            Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
             (*gScreenTransitionInterface)->start(0x14, 5);
             lbl_803DD704 = 0x23;
             lbl_803DD705 = 1;

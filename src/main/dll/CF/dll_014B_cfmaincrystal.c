@@ -10,6 +10,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/CF/dll_014B_cfmaincrystal.h"
 #include "main/dll/fx_800944A0_shared.h"
@@ -263,7 +264,7 @@ void fn_8019D9F0(int* obj)
         {
             if (sub->charge == 0)
             {
-                Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+                Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
                 getEnvfxAct(0, 0, CFMAINCRYSTAL_ENVFX, 0);
             }
             sub->charge += framesThisStep;
@@ -291,7 +292,7 @@ void fn_8019D9F0(int* obj)
     {
         if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x40) == 0)
         {
-            Sfx_PlayFromObject((int)obj, SFXsk_planteater11);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_d5);
             sub->humVolume = gCfMainCrystalHumVolumeFull;
         }
         else
@@ -317,11 +318,11 @@ void fn_8019D9F0(int* obj)
             sub->pylonTimer[i] += framesThisStep;
             if (idx == 1 && sub->pylonTimer[i] > 1)
             {
-                Sfx_PlayFromObject((int)obj, SFXsk_toysq2_c);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_en_icecrk16_d6);
             }
             if (idx < 0x1e && sub->pylonTimer[i] >= 0x1e)
             {
-                Sfx_PlayFromObject((int)obj, SFXsk_trbark1);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_en_lflsh1_c);
             }
         }
         i++;

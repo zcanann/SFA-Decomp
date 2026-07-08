@@ -16,6 +16,7 @@
  * event 2 also calls setMode(0xe, 6) directly.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
@@ -324,7 +325,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
                     if (state->ringIndex != nextRing)
                     {
                         state->ringIndex = nextRing;
-                        Sfx_PlayFromObject((int)obj, SFXtr_jbike_whine2);
+                        Sfx_PlayFromObject((int)obj, SFXTRIG_mv_cagerat01);
                     }
                     allOrbsCollected = 0;
                 }

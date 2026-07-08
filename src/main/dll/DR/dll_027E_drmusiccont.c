@@ -118,11 +118,11 @@ void drmusiccont_update(int obj)
     {
         flags->b_e9c = 1;
         mainSetBits(GAMEBIT_DR_ShutDownRobotShields, 1);
-        Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+        Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
     }
     else if (bit0 != flags->b_e30 || bit1 != flags->b_e31 || bit2 != flags->b_e32 || bit3 != flags->b_e33)
     {
-        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+        Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
     }
     flags->b_e30 = bit0;
     flags->b_e31 = bit1;
@@ -136,11 +136,11 @@ void drmusiccont_update(int obj)
     if (flags->b_e39 == 0 && bit0 && bit1 && bit2 && bit3)
     {
         flags->b_e39 = 1;
-        Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+        Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
     }
     else if (bit0 != flags->b_e38 || bit1 != flags->b_e3c || bit2 != flags->b_e3d || bit3 != flags->b_e3e)
     {
-        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+        Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
     }
     flags->b_e38 = bit0;
     flags->b_e3c = bit1;

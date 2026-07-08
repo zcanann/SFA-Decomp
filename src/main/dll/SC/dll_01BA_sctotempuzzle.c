@@ -219,6 +219,7 @@ void sc_totempuzzle_hitDetect(void)
  * 0x1BA between hitDetect and update; real edge = initialise end). */
 #include "main/dll/SC/sctotembond.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/objfx.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
@@ -245,7 +246,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     {
         if ((hitKind != 0) && (hitKind != 0x11))
         {
-            Sfx_PlayFromObject((int)obj, SFXtr_gal_prophitbird);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_wp_swdtest222);
             lightArgs[3] += playerMapOffsetX;
             lightArgs[5] += playerMapOffsetZ;
             objLightFn_8009a1dc((void*)obj, lbl_803E5618, lightArgs, 1, 0);
@@ -255,7 +256,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
 
     if ((hitKind != 0) && (hitKind != 0x11))
     {
-        Sfx_PlayFromObject((int)obj, SFXtr_gal_prophitbird);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_swdtest222);
         lightArgs[3] += playerMapOffsetX;
         lightArgs[5] += playerMapOffsetZ;
         objLightFn_8009a1dc((void*)obj, lbl_803E5618, lightArgs, 1, 0);
@@ -312,7 +313,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         if (state->pulseTimer < lbl_803E55F4)
         {
             state->flags &= ~SC_TOTEMPUZZLE_PULSE_FLAG;
-            Sfx_PlayFromObjectLimited((int)obj, SFXtr_jbike_whine2, 2);
+            Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_mv_cagerat01, 2);
             if ((state->flags & SC_TOTEMPUZZLE_REVERSED_FLAG) != 0)
             {
                 if (--state->stepIndex < 0)

@@ -8,6 +8,7 @@
 #include "main/resource.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct
 {
@@ -312,7 +313,7 @@ void fn_801FD6B4(int obj)
         state->speedFactor = (f32)(int)randomGetRange(0x32, 100);
         state->amplitude = lbl_803E6168 / ((f32)(int)*(s16*)(def + 0x1a) / (f32)(int)randomGetRange(0x15e, 800));
         state->phase = lbl_803E616C;
-        Sfx_PlayFromObject((u32)obj, SFXsp_lfoot_treasure);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_111);
         speed = lbl_803E6170;
     }
     gVfpLavaPoolWaveSin = wave = mathSinf((gVfpLavaPoolPi * (f32)(s16)(int)state->phase) / lbl_803E6178);

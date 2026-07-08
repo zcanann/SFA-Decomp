@@ -32,6 +32,7 @@
 #include "main/objanim.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/dll/scarab.h"
@@ -374,19 +375,19 @@ int iceBaddie_updateLandingState(int obj, int state)
         player = Obj_GetPlayerObject();
         if (((GameObject*)player)->anim.seqId == 0)
             goto playGroundLandSound;
-        Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
         goto playLandingExtras;
     playGroundLandSound:
-        Sfx_PlayFromObject(obj, SFXfox_treadwater322);
+        Sfx_PlayFromObject(obj, SFXTRIG_swd);
     playLandingExtras:
-        Sfx_PlayFromObject(obj, SFXdoor_unlocked);
-        Sfx_PlayFromObject(obj, SFXkr_panting2);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_rfall5_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_26f);
         ((GroundBaddieState*)state)->baddie.moveEventFlags |= 1;
     }
     if ((((GroundBaddieState*)state)->baddie.moveEventFlags & 2) == 0 &&
         ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2D2C)
     {
-        Sfx_PlayFromObject(obj, SFXdoor_creak);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
         ((GroundBaddieState*)state)->baddie.moveEventFlags |= 2;
         ((void (*)(int, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, sub->triggerId, -1, 0);
     }
@@ -482,12 +483,12 @@ int iceBaddie_updateDropState(int obj, int state)
         player = Obj_GetPlayerObject();
         if (((GameObject*)player)->anim.seqId == 0)
             goto playGroundDropSound;
-        Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
         goto playDropExtras;
     playGroundDropSound:
-        Sfx_PlayFromObject(obj, SFXfox_treadwater322);
+        Sfx_PlayFromObject(obj, SFXTRIG_swd);
     playDropExtras:
-        Sfx_PlayFromObject(obj, SFXkr_panting1);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_26e);
     }
     ((GroundBaddieState*)state)->baddie.stateTag = 3;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D34;
@@ -513,7 +514,7 @@ int iceBaddie_updateCommDownState(int obj, int state)
         control = *(int*)&sub->control;
         ((GroundBaddieState*)state)->baddie.eventFlags &= ~BADDIE_EVENT_FOOTSTEP;
         ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_ARM_ICEBALL;
-        Sfx_PlayFromObject(obj, SFXsc_fox_commdown);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_dsmk2_c_cf);
     }
     ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
@@ -1090,7 +1091,7 @@ void iceBaddie_updateTargetMotion(int obj, int sub, int state)
         if (((GroundBaddieState*)state)->baddie.controlMode == 7 ||
             ((GroundBaddieState*)state)->baddie.controlMode == 8)
         {
-            Sfx_PlayFromObject(obj, SFXkr_jump2);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_26c);
         }
     }
     if ((((GroundBaddieState*)sub)->configFlags & 2) != 0)
@@ -1464,7 +1465,7 @@ void iceBaddie_update(int obj, int p2, int p3)
             (*(void (**)(int, int, int, int, int, int, int, f32))(*(int*)gBaddieControlInterface + 0x58))(
                 obj, setup, (int)sub, 14, 8, 0x102, 0x26, lbl_803E2DB8);
             sub->targetState = 0;
-            Sfx_PlayFromObject(obj, SFXfoxcom_find);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_seal4_c_263);
             ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
             *(s8*)&sub->baddie.moveDone = 0;
             ((GameObject*)obj)->anim.alpha = 0xff;

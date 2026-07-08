@@ -60,7 +60,7 @@ void fn_801A5D88(int obj, int explosionVariant)
     f32 dist;
     f32 falloff;
     gRollingBarrelExplodingCount += 1;
-    Sfx_PlayFromObject(obj, SFXsp_lf_mutter1);
+    Sfx_PlayFromObject(obj, SFXTRIG_wp_dsmk2_c_106);
     if (gRollingBarrelExplodingCount > 1)
     {
         debrisType = randomGetRange(0, 1) & 0xff;

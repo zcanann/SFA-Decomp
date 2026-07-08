@@ -12,6 +12,7 @@
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/scarab.h"
 #include "main/dll/grimble_state.h"
 #include "main/objhits.h"
@@ -111,7 +112,7 @@ int grimble_stateHandlerA08(int* obj, GroundBaddieState* state)
     state->baddie.moveSpeed = lbl_803E2EE8;
     if (((s32)state->baddie.eventFlags & BADDIE_EVENT_LANDING) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXdoor_creak);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
         state->baddie.eventFlags &= ~BADDIE_EVENT_LANDING;
         ((void (*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, sub->triggerId, -1, 1);
     }
@@ -191,7 +192,7 @@ int grimble_stateHandlerA09(int obj, GroundBaddieState* p)
     p->baddie.animSpeedB = spd;
     if ((s8)p->baddie.moveJustStartedA != 0)
     {
-        Sfx_PlayFromObject(obj, SFXsc_death02);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_seal4_c_27c);
         if ((s8)p->baddie.moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E2EB8, 0);
@@ -293,7 +294,7 @@ int grimble_stateHandlerA07(short* obj, GroundBaddieState* p)
     }
     if ((s8)p->baddie.moveJustStartedA != 0)
     {
-        Sfx_PlayFromObject(obj, SFXsc_attack04);
+        Sfx_PlayFromObject(obj, SFXTRIG_ms_windlift_loop);
     }
     p->baddie.moveSpeed = lbl_803E2EEC;
     yaw = ctrl->baseRotX;

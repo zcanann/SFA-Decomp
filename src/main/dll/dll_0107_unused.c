@@ -9,6 +9,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
@@ -76,7 +77,7 @@ void fn_80185868(int obj, f32 arg)
     stk.val = sub->radius;
     (*(VtableFn*)(*(int*)lbl_803DDAD0 + 4))(obj, 0xf, 0, 2, -1, 0);
     (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stk.pad, 2, -1, 0);
-    Sfx_PlayFromObject(obj, SFXmn_eggylaugh116);
+    Sfx_PlayFromObject(obj, SFXTRIG_wp_crthit6);
     fz = lbl_803E3A58;
     ((GameObject*)obj)->anim.velocityX = fz;
     ((GameObject*)obj)->anim.velocityZ = fz;
@@ -242,7 +243,7 @@ void dll_107_update(int obj)
     }
     if (state->spitTimer != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmn_dimspit6);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_70);
         state->spitTimer -= framesThisStep;
         if ((int)randomGetRange(0, 2) == 2)
         {
@@ -363,7 +364,7 @@ void dll_107_update(int obj)
                 rot.b = 0;
                 rot.ang = ((GameObject*)player)->anim.rotX;
                 vecRotateZXY(&rot, &((GameObject*)obj)->anim.velocityX);
-                Sfx_PlayFromObject(obj, SFXmn_dimbos46);
+                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_6a);
             }
             else if ((s8)st21 == 2 && ((GameObject*)obj)->unkF8 == 0)
             {
@@ -374,7 +375,7 @@ void dll_107_update(int obj)
                 ((GameObject*)obj)->anim.velocityX = fz;
                 ((GameObject*)obj)->anim.velocityY = fz;
                 ((GameObject*)obj)->anim.velocityZ = fz;
-                Sfx_PlayFromObject(obj, SFXmn_dimbos46);
+                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_6a);
             }
         }
     }

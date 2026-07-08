@@ -158,12 +158,12 @@ void fn_80154870(int obj, int* state)
             }
             else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
             {
-                Sfx_PlayFromObject((u32)obj, SFXfox_fightbreath1);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_hit);
                 *(f32*)(state + 0xc2) = lbl_803E29D0;
             }
             else
             {
-                Sfx_PlayFromObject((u32)obj, SFXfox_fightbreath2);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_death);
                 *(f32*)(state + 0xc2) = lbl_803E29D4;
             }
         }
@@ -175,12 +175,12 @@ void fn_80154870(int obj, int* state)
                 ((FireflyState*)state)->breathTimer = fval;
                 if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
                 {
-                    Sfx_PlayFromObject((u32)obj, SFXfox_fightbreath1);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_hit);
                     *(f32*)(state + 0xc2) = lbl_803E29D0;
                 }
                 else
                 {
-                    Sfx_PlayFromObject((u32)obj, SFXfox_fightbreath2);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_death);
                     *(f32*)(state + 0xc2) = lbl_803E29B4;
                 }
             }

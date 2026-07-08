@@ -17,6 +17,7 @@
 #include "main/dll/dll_00CA_icebaddie.h"
 #include "main/dll/tricky_state.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
 #include "main/dll_000A_expgfx.h"
@@ -1591,12 +1592,12 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x40) != 0)
             {
-                Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
+                Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
                 objParticleFn_80099d84(obj, lbl_803E256C, 5, ((EnemyState*)state)->particleScale, 0);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x80) != 0)
             {
-                Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
+                Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
                 objParticleFn_80099d84(obj, lbl_803E25F8, 6, ((EnemyState*)state)->particleScale, 0);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x100) != 0)

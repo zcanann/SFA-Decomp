@@ -14,6 +14,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/WM/dll_020A_wmgeneralscales.h"
 
 /* phase values written by the SeqFn (author comment: 1 = hidden,
@@ -78,15 +79,15 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 2: /* slam, tracked fx */
             state->phase = WMGENERALSCALES_PHASE_SLAM0;
             (*gPartfxInterface)->spawnObject((void*)obj, WMGENERALSCALES_PARTFX_SLAM, NULL, 2, -1, buf);
-            Sfx_PlayFromObject(obj, SFXmn_swatk4_6);
-            Sfx_PlayFromObject(obj, SFXmn_swdvot_c);
+            Sfx_PlayFromObject(obj, SFXTRIG_id_7b);
+            Sfx_PlayFromObject(obj, SFXTRIG_id_7c);
             state->unk00 = lbl_803E5E98;
             break;
         case 3: /* slam variant */
             state->phase = WMGENERALSCALES_PHASE_SLAM1;
             (*gPartfxInterface)->spawnObject((void*)obj, WMGENERALSCALES_PARTFX_SLAM, NULL, 2, -1, NULL);
-            Sfx_PlayFromObject(obj, SFXmn_swatk4_6);
-            Sfx_PlayFromObject(obj, SFXmn_swdvot_c);
+            Sfx_PlayFromObject(obj, SFXTRIG_id_7b);
+            Sfx_PlayFromObject(obj, SFXTRIG_id_7c);
             state->unk00 = lbl_803E5E9C;
             break;
         case 4: /* back to idle */

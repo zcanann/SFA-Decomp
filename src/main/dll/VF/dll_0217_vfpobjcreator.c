@@ -16,6 +16,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/VF/dll_0217_vfpobjcreator.h"
 
 #define VFPOBJCREATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -152,7 +153,7 @@ void VFP_ObjCreator_update(int* obj)
             launch.ang[1] = 0;
             launch.ang[0] = ((GameObject*)obj)->anim.rotX;
             vecRotateZXY(launch.ang, (f32*)(spawned + 0x24));
-            Sfx_PlayFromObject((int)spawned, SFXsp_skeep_mumb3);
+            Sfx_PlayFromObject((int)spawned, SFXTRIG_id_10c);
             (*gPartfxInterface)->spawnObject(spawned, 0x39a, NULL, 0x10002, -1, NULL);
             (*gPartfxInterface)->spawnObject(spawned, 0x39b, NULL, 0x10002, -1, NULL);
             (*gPartfxInterface)->spawnObject(spawned, 0x39c, NULL, 0x10002, -1, NULL);

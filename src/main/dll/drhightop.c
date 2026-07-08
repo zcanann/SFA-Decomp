@@ -250,7 +250,7 @@ void fn_801EB0D4(u32 obj, int stateRaw)
             {
                 if (randomGetRange(0, 10) == 0)
                 {
-                    Sfx_PlayFromObject(0, SFXsp_lfoot_taunt7);
+                    Sfx_PlayFromObject(0, SFXTRIG_dn_boar1_c_117);
                 }
                 PSVECScale(&st->velLimitX, &st->velLimitX, lbl_803E5B88);
                 if ((u32)(st->flags428 >> 7 & 1) != 0)

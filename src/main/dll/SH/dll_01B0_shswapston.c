@@ -116,11 +116,11 @@ void warpstone_hitDetect(int obj)
         objLightFn_8009a1dc((void*)obj, lbl_803E54A0, lightPos, 1, 0);
         if (randFn_80080100(3) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
+            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_short_2bc);
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
+            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_short_2bc);
         }
         objAudioFn_800393f8(obj, state + 5, 171, -1280, -1, 0);
     }
@@ -592,7 +592,7 @@ void warpstone_update(int obj)
     case 0x18:
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E546C)
         {
-            Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
+            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_short_2bc);
             ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 1;
         }
         break;

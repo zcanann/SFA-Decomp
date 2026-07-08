@@ -192,7 +192,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
         }
         else
         {
-            Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
+            Sfx_PlayFromObject(0, SFXTRIG_id_10a);
         }
     }
 

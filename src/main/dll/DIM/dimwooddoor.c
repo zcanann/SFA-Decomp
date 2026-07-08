@@ -6,6 +6,7 @@
  * the launch angle and speed from the door's current aim state.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -151,7 +152,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     }
 
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E48B8, 0);
-    Sfx_PlayFromObject(obj, SFXfoot_run_jingle4);
+    Sfx_PlayFromObject(obj, SFXTRIG_tr_jrumbalp);
 }
 
 void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)

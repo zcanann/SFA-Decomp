@@ -7,6 +7,7 @@
 #include "main/game_object.h"
 #include "main/resource.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/texture.h"
 #include "main/objlib.h"
@@ -216,7 +217,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
             if (DFSH_LASER_BLOCKED(runtime) == 0)
             {
                 DFSH_LASER_CYCLE_TIMER(runtime) = 0x190;
-                Sfx_PlayFromObject(obj, SFXmn_spdrcollapse11);
+                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_78);
                 runtime->beamVolumeScale = lbl_803E4EC0;
             }
             else
@@ -229,10 +230,10 @@ void DFSH_LaserBeam_update(u32 objAddr)
         {
             if (DFSH_LASER_BLAST_PHASE(runtime) == 0)
             {
-                Sfx_PlayFromObject(obj, SFXmn_spdrmove11);
+                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_79);
                 if (DFSH_LASER_BLOCKED(runtime) == 0)
                 {
-                    Sfx_PlayFromObject(obj, SFXmn_lummy311);
+                    Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_77);
                 }
                 DFSH_LASER_BLAST_PHASE(runtime) = 1;
                 if (gLaserBeamEffectResource != NULL)
@@ -361,7 +362,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                     if (objGetAnimState80A(playerObj) != 0x1D7)
                     {
                         int i;
-                        Sfx_PlayFromObject(obj, SFXmn_spithit6);
+                        Sfx_PlayFromObject(obj, SFXTRIG_wp_espk2_c);
                         for (i = 0; i < 4; i++)
                         {
                             PARTFX_SPAWN(Obj_GetPlayerObject(), 0x28B, 0, 4, -1, 0);

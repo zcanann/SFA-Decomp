@@ -20,6 +20,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 enum ArwSeqId
 {
@@ -203,7 +204,7 @@ void arwingandrossstuff_hitDetect(int obj)
     {
         if (objAnim->seqId != ARW_SEQID_INVINCIBLE)
         {
-            Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
+            Sfx_PlayFromObjectLimited(obj, SFXTRIG_ar_laser116, 4);
         }
         if (objAnim->seqId == ARW_SEQID_CHARGE)
         {
@@ -291,7 +292,7 @@ void arwingandrossstuff_update(int obj)
         {
             if (((GameObject*)obj)->anim.seqId != ARW_SEQID_INVINCIBLE)
             {
-                Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
+                Sfx_PlayFromObjectLimited(obj, SFXTRIG_ar_laser116, 4);
             }
             state->despawnTimer = lbl_803E7028;
             ((GameObject*)obj)->anim.alpha = 0;

@@ -15,6 +15,7 @@
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 #include "main/engine_shared.h"
@@ -149,8 +150,8 @@ void SB_MiniFire_init(GameObject* obj)
         gSbMiniFireResourceVariant = 1;
     }
     Resource_Release(resource);
-    Sfx_PlayFromObject((int*)obj, SFXen_ripefruit11);
-    Sfx_PlayFromObject((int*)obj, SFXbaddie_crater_call);
+    Sfx_PlayFromObject((int*)obj, SFXTRIG_en_trpopn_c_35);
+    Sfx_PlayFromObject((int*)obj, SFXTRIG_dn_boar1_c_2ca);
 }
 
 void SB_MiniFire_release(void)

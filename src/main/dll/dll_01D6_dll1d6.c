@@ -13,6 +13,7 @@
 #include "main/objtexture.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/asset_load.h"
 #include "main/pi_dolphin.h"
@@ -223,7 +224,7 @@ void dll_1D6_update(int* obj)
         extra->dizzyTimer = extra->dizzyTimer - framesThisStep;
         if (extra->dizzyTimer <= 0)
         {
-            Sfx_PlayFromObject((u32)obj, SFXmv_mushdizzylp12);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_en_trpopn_c_9f);
         }
         if (extra->downTimer <= 0)
         {
@@ -235,7 +236,7 @@ void dll_1D6_update(int* obj)
                 extra->upTimer = 15;
             }
             extra->flags1D &= ~1;
-            Sfx_PlayFromObject((u32)obj, SFXfoot_metal_land);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_1f6);
         }
     }
     else
@@ -260,7 +261,7 @@ void dll_1D6_update(int* obj)
                 extra->downTimer = 15;
             }
             extra->flags1D |= 1;
-            Sfx_PlayFromObject((u32)obj, SFXfoot_ice_scuff);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_1f7);
             extra->dizzyTimer = 20;
         }
     }

@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
@@ -120,11 +121,11 @@ void ProjectileSwitch_hitDetect(int obj)
         stateB = *(int*)&((GameObject*)obj)->extra;
         if (((GameObject*)obj)->anim.mapEventSlot == 0x2c)
         {
-            Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
+            Sfx_PlayFromObject(obj, SFXTRIG_menuups16k);
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXmn_cling01);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_63);
         }
         tex = objFindTexture((void*)obj, 0, 0);
         if (tex != 0)
@@ -139,11 +140,11 @@ void ProjectileSwitch_hitDetect(int obj)
         stateB = *(int*)&((GameObject*)obj)->extra;
         if (((GameObject*)obj)->anim.mapEventSlot == 0x2c)
         {
-            Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
+            Sfx_PlayFromObject(obj, SFXTRIG_menuups16k);
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXms_windlift_loop);
+            Sfx_PlayFromObject(obj, SFXTRIG_wp_mpwru1_62);
         }
         tex = objFindTexture((void*)obj, 0, 0);
         if (tex != 0)

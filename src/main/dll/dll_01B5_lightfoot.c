@@ -168,7 +168,7 @@ void lightfoot_update(int obj)
                     }
                     if (mainGetBit(0xc3b) && mainGetBit(0xc3c) && mainGetBit(0xc3d))
                     {
-                        Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+                        Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
                     }
                     else
                     {
@@ -200,7 +200,7 @@ void lightfoot_update(int obj)
                     }
                     if (mainGetBit(0xc3e) && mainGetBit(0xc3f) && mainGetBit(0xc40))
                     {
-                        Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+                        Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
                     }
                     else
                     {

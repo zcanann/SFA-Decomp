@@ -14,6 +14,7 @@
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/SB/dll_01F7_sbshipgunbroke.h"
 
@@ -58,7 +59,7 @@ void SB_ShipGunBroke_update(GameObject* obj)
     SBShipGunBrokePlacement* placement = (SBShipGunBrokePlacement*)obj->anim.placementData;
     if ((u32)mainGetBit(placement->destroyedGameBit) != 0u)
     {
-        Sfx_PlayFromObject((int*)obj, SFXen_nlite1_c);
+        Sfx_PlayFromObject((int*)obj, SFXTRIG_en_trpopn_c);
     }
 }
 

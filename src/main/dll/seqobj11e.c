@@ -60,8 +60,8 @@ void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int p, int p3, int msg)
     {
         return;
     }
-    Sfx_PlayFromObject((u32)obj, SFXen_cavedirt22);
-    Sfx_PlayFromObject((u32)obj, SFXspirit_voice2);
+    Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_pole1_c_23);
+    Sfx_PlayFromObject((u32)obj, SFXTRIG_en_lrope_powerdown);
     ((BaddieState*)p)->reactionFlags |= 0x8;
     *(f32*)(p + 0x32c) = (f32)(u32)(u16) * (s16*)(sub + 0x2c);
     fn_8014D08C(obj, p, 1, lbl_803E2810, 0, 0);
@@ -194,9 +194,9 @@ void fn_80152514(int* obj, u8* state)
         }
         if (((GameObject*)obj)->anim.localPosY - path->posY < lbl_803E282C)
         {
-            if (Sfx_IsPlayingFromObject((u32)obj, SFXar_laser216) == 0)
+            if (Sfx_IsPlayingFromObject((u32)obj, SFXTRIG_dn_boar1_c_18d) == 0)
             {
-                Sfx_PlayFromObject((u32)obj, SFXar_laser216);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_18d);
             }
             ((BaddieState*)state)->seqEntryIndex = 1;
         }
@@ -209,9 +209,9 @@ void fn_80152514(int* obj, u8* state)
     {
         if (((GameObject*)obj)->anim.localPosY - ((ObjPlacement*)def)->posY < lbl_803E2830)
         {
-            if (Sfx_IsPlayingFromObject((u32)obj, SFXar_laser216) == 0)
+            if (Sfx_IsPlayingFromObject((u32)obj, SFXTRIG_dn_boar1_c_18d) == 0)
             {
-                Sfx_PlayFromObject((u32)obj, SFXar_laser216);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_18d);
             }
             ((BaddieState*)state)->seqEntryIndex = 1;
         }
@@ -257,12 +257,12 @@ void fn_80152514(int* obj, u8* state)
         {
             ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), (int)obj, 0x16, 2, 0);
             gcRobotLight_init((int)obj, 0x3b2);
-            Sfx_PlayFromObject((u32)obj, SFXsp_literun116);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_rolovr_6);
             *(f32*)(state + 0x32c) = lbl_803DBCB4;
         }
         if ((int)randomGetRange(0, (int)(lbl_803E284C * oneOverTimeDelta)) == 0)
         {
-            Sfx_PlayFromObject((u32)obj, SFXsp_literun114);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_sp_literun114);
         }
         child2 = ((GameObject*)obj)->childObjs[0];
         if (child2 != 0)
@@ -377,7 +377,7 @@ void fn_80152B90(int* obj, u8* state)
                     if (spawned != 0)
                     {
                         *(int**)((char*)spawned + 0xc4) = obj;
-                        Sfx_PlayFromObject((u32)obj, SFXfox_cough2);
+                        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_249);
                     }
                 }
             }
@@ -399,13 +399,13 @@ void fn_80152B90(int* obj, u8* state)
     if (*(f32*)(state + 0x334) <= lbl_803E2868)
     {
         *(f32*)(state + 0x334) = (f32)(int)randomGetRange(0x3c, 0x78);
-        Sfx_PlayFromObject((u32)obj, SFXen_mazewall);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_31);
     }
     *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
     if (*(f32*)(state + 0x330) <= lbl_803E2868)
     {
         *(f32*)(state + 0x330) = lbl_803E286C;
-        Sfx_PlayFromObject((u32)obj, SFXfox_bigfallrecover1);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_24a);
     }
 }
 
@@ -461,7 +461,7 @@ void gcRobotPatrol_init(int obj, int p)
     ((BaddieState*)p)->unk31C = fz;
     *(f32*)(p + 0x32c) = lbl_803E2814;
     ((GameObject*)obj)->anim.hitboxScale = lbl_803E2860;
-    Sfx_AddLoopedObjectSound((u32)obj, SFXsp_literun115);
+    Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_tr_bcrek1_c);
 }
 
 void mikaladon_updateWhileFrozen(int obj, int p, int param3, int msg)
@@ -470,7 +470,7 @@ void mikaladon_updateWhileFrozen(int obj, int p, int param3, int msg)
     {
         return;
     }
-    Sfx_PlayFromObject((u32)obj, SFXfox_cough1);
+    Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_248);
     *(s16*)&((BaddieState*)p)->hitCounter = 0;
     *(u32*)&((BaddieState*)p)->unk2E4 |= 0x20;
     ((BaddieState*)p)->reactionFlags |= 0x8;

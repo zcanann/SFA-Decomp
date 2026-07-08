@@ -23,6 +23,7 @@
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
 #include "main/mapEventTypes.h"
@@ -97,7 +98,7 @@ int fn_8015E3A0(int obj, int state)
         ((GroundBaddieState*)state)->baddie.eventFlags =
             ((GroundBaddieState*)state)->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
         *(u8*)(child + 0x8) = (u8)(*(u8*)(child + 0x8) | 0x1);
-        Sfx_PlayFromObject(obj, SFXfoxcom_heel);
+        Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite_266);
     }
     return 0;
 }
@@ -138,25 +139,25 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
         {
             if (((GameObject*)player)->anim.seqId != 0)
             {
-                Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
             }
             else
             {
-                Sfx_PlayFromObject(obj, SFXmv_ropecreak22);
+                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_95);
             }
         }
         else
         {
             if (((GameObject*)player)->anim.seqId != 0)
             {
-                Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
             }
             else
             {
-                Sfx_PlayFromObject(obj, SFXfox_treadwater322);
+                Sfx_PlayFromObject(obj, SFXTRIG_swd);
             }
         }
-        Sfx_PlayFromObject(obj, SFXfoxcom_stay);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_267);
     }
     *(s8*)&state->baddie.stateTag = 3;
     state->baddie.moveSpeed = lbl_803E2DD4;
@@ -410,19 +411,19 @@ int fn_8015E0C8(int obj, GroundBaddieState* p)
     {
         if (((GameObject*)Obj_GetPlayerObject())->anim.seqId != 0)
         {
-            Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
+            Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXfox_treadwater322);
+            Sfx_PlayFromObject(obj, SFXTRIG_swd);
         }
-        Sfx_PlayFromObject(obj, SFXdoor_unlocked);
-        Sfx_PlayFromObject(obj, SFXfoxcom_find);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_rfall5_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_seal4_c_263);
         p->baddie.moveEventFlags |= 1;
     }
     if ((p->baddie.moveEventFlags & 2) == 0 && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2DD0)
     {
-        Sfx_PlayFromObject(obj, SFXdoor_creak);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
         p->baddie.moveEventFlags |= 2;
         (*(void (**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))(obj, sub->triggerId, -1, 0);
     }
@@ -612,7 +613,7 @@ void fn_8015EB6C(int obj, int state, int target)
         {
             if (dist < lbl_803E2E00)
             {
-                Sfx_PlayFromObject(obj, SFXfoxcom_gogetit);
+                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_265);
                 *(f32*)(sub + 4) += (f32)(s32)randomGetRange(50, 250);
             }
         }
@@ -679,7 +680,7 @@ void dll_CE_func0B(int obj, int v)
     {
     case 0x80:
         *(u8*)(*(int*)&sub->control + 9) |= 2;
-        Sfx_PlayFromObject(obj, SFXfoxcom_flame);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_264);
         (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, (int)sub2, 1);
         sub2->baddie.substate = 4;
         *(s8*)&sub2->baddie.moveJustStartedB = 1;
@@ -774,7 +775,7 @@ void dll_CE_update(int obj, int p2, int p3)
             (*(void (**)(int, int, int, int, int, int, int, f32))(*(int*)gBaddieControlInterface + 0x58))(
                 obj, setup, (int)sub, 7, 6, 0x102, 0x26, lbl_803E2E14);
             sub->targetState = 0;
-            Sfx_PlayFromObject(obj, SFXfoxcom_find);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_seal4_c_263);
             ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
             *(s8*)&sub->baddie.moveDone = 0;
             ((GameObject*)obj)->anim.alpha = 0xff;

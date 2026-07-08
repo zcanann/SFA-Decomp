@@ -527,7 +527,7 @@ void DR_LaserCannon_update(int obj)
             hit = drlasercannon_aimAtTarget((GameObject*)obj, (GameObject*)target, &state->aim, 0x168, &state->muzzleX);
             if (hit != 0)
             {
-                Sfx_PlayFromObject(obj, SFXfoot_dirt_run_3);
+                Sfx_PlayFromObject(obj, SFXTRIG_id_1ad);
             }
         }
         else
@@ -585,8 +585,8 @@ void DR_LaserCannon_update(int obj)
                             state->beamObject = spawned;
                             ObjAnim_SetCurrentMove(obj, 1, lbl_803E690C, 0);
                             state->animStepScale = lbl_803E6910;
-                            Sfx_PlayFromObject(obj, SFXfoot_dirt_run_1);
-                            Sfx_PlayFromObject(obj, SFXfoot_dirt_run_2);
+                            Sfx_PlayFromObject(obj, SFXTRIG_wp_cahit2_c);
+                            Sfx_PlayFromObject(obj, SFXTRIG_wp_blasershot11);
                         }
                     }
                     s16toFloat(&state->reloadTimer, (s16)(setup->reloadFrames << 2));

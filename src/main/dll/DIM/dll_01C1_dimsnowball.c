@@ -52,6 +52,7 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
@@ -212,7 +213,7 @@ void dimsnowball_update(int obj)
                ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
         if ((((GameObject*)player)->objectFlags & DIMSNOWBALL_OBJFLAG_PARENT_SLACK) == 0)
         {
-            Sfx_PlayFromObject(obj, SFXfoot_run_jingle2);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_fireup_c_1fb);
         }
         ((DimsnowballState*)state)->jingleCooldown = 0x1e;
     }

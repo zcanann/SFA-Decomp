@@ -29,6 +29,7 @@
 #include "main/sky_interface.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 
@@ -184,7 +185,7 @@ void largecrate_updateConveyorSlide(int obj, int def)
                 {
                     if ((u32)mainGetBit(GAMEBIT_SFX_MUTE) == 0)
                     {
-                        Sfx_PlayFromObject(obj, SFXfend_rob_wave);
+                        Sfx_PlayFromObject(obj, SFXTRIG_tr_jbike_snowhit);
                     }
                 }
             }

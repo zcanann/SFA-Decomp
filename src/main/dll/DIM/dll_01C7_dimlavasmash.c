@@ -7,6 +7,7 @@
 #include "main/dll/DIM/dimcannon_state.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
@@ -142,7 +143,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 if (((GameObject*)hit)->anim.seqId == DIMLAVASMASH_HIT_SEQID_CANNONBALL)
                 {
                     ((DimlavasmashState*)state)->state = 2;
-                    Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff1);
+                    Sfx_PlayFromObject(obj, SFXTRIG_en_mushsporedisp22);
                     objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                         ((GameObject*)obj)->anim.localPosZ);
                     block = mapGetBlock();

@@ -693,15 +693,15 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
         return;
     if (level == 0)
     {
-        Sfx_PlayFromObject(proj, SFXbaddie_rach_call1);
+        Sfx_PlayFromObject(proj, SFXTRIG_ar_brakes16);
     }
     else if (level == 1)
     {
-        Sfx_PlayFromObject(proj, SFXbaddie_rach_call2);
+        Sfx_PlayFromObject(proj, SFXTRIG_ar_englp16);
     }
     else
     {
-        Sfx_PlayFromObject(proj, SFXbaddie_eba_bigswipe);
+        Sfx_PlayFromObject(proj, SFXTRIG_ar_deflect16);
         Obj_SetActiveModelIndex(proj, 1);
     }
     if ((u8)linkEffect != 0)
@@ -768,7 +768,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
     {
         sum = lbl_803E6F48 + fn_802945E0(((ArwingState*)state)->velZ / ((ArwingState*)state)->maxSpeedZ);
         vol = (f32)(sum * lbl_803E6F50);
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXbaddie_pinpon_launch);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_ar_boost16);
         Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
     }
 
@@ -783,7 +783,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
                 ((ArwingState*)state)->flags477 &= ~ARWING_FLAG_ROLL_RIGHT;
                 ((ArwingState*)state)->flags477 |= ARWING_FLAG_ROLL_LEFT;
                 ((ArwingState*)state)->wingFlexTarget = lbl_803E6F58;
-                Sfx_PlayFromObjectLimited(obj, SFXbaddie_eba_smallswipe2, 3);
+                Sfx_PlayFromObjectLimited(obj, SFXTRIG_ar_barrel16_2b6, 3);
             }
         }
         else
@@ -803,7 +803,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
                 ((ArwingState*)state)->flags477 &= ~ARWING_FLAG_ROLL_LEFT;
                 ((ArwingState*)state)->flags477 |= ARWING_FLAG_ROLL_RIGHT;
                 ((ArwingState*)state)->wingFlexTarget = lbl_803E6F60;
-                Sfx_PlayFromObjectLimited(obj, SFXbaddie_kalda_distress, 3);
+                Sfx_PlayFromObjectLimited(obj, SFXTRIG_ar_bblast16, 3);
             }
         }
         else
@@ -1167,7 +1167,7 @@ void arwarwing_handlePathDamage(int obj, int state)
         {
             Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_bomb_pickup);
         }
-        Sfx_PlayFromObject(obj, SFXbaddie_rach_bite);
+        Sfx_PlayFromObject(obj, SFXTRIG_wmap_select);
         ((Arw339Flags*)&((ArwingState*)state)->flags339)->scoreFlag = 1;
         Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
         ((ArwingState*)state)->damageFlashTimer = lbl_803E6F34;
@@ -1210,12 +1210,12 @@ void arwarwing_handleObjectDamage(int obj, int state)
         {
             if (((GameObject*)hitObj)->anim.seqId == 0x6ae && ((ArwingState*)state)->mode == ARWING_MODE_BARRELROLL)
             {
-                Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_movelp);
+                Sfx_PlayFromObject(obj, SFXTRIG_ar_blaunch16);
                 return;
             }
             doRumble(lbl_803E6F2C);
             *(s8*)&((ArwingState*)state)->health = *(s8*)&((ArwingState*)state)->health - hitVol;
-            Sfx_PlayFromObject(obj, SFXbaddie_vambat_death);
+            Sfx_PlayFromObject(obj, SFXTRIG_wmap_select_2ac);
             ((Arw339Flags*)(state + 0x339))->scoreFlag = 1;
             Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
             ((ArwingState*)state)->damageFlashTimer = lbl_803E6F34;

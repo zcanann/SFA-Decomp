@@ -25,6 +25,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/effect_interfaces.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
@@ -100,7 +101,7 @@ void dim2icicle_update(int obj)
         ((Dim2IcicleState*)sub)->mode = DIM2ICICLE_MODE_WOBBLE;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
-        Sfx_PlayFromObject(obj, SFXmv_cflap2_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_sbalhis6);
         break;
     case DIM2ICICLE_MODE_WOBBLE:
         ((GameObject*)obj)->anim.rotY = ((Dim2IcicleState*)sub)->wobbleRotY;
@@ -141,7 +142,7 @@ void dim2icicle_update(int obj)
             ((Dim2IcicleState*)sub)->timer -= framesThisStep;
             if (((Dim2IcicleState*)sub)->timer <= 0)
             {
-                Sfx_PlayFromObject(obj, SFXmv_blockscrape_lp);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_swdwood16);
             }
         }
         ((GameObject*)obj)->anim.velocityY = -(lbl_803E4B74 * timeDelta - ((GameObject*)obj)->anim.velocityY);
@@ -162,7 +163,7 @@ void dim2icicle_update(int obj)
             ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
                 ((GameObject*)obj)->anim.localPosX, ((Dim2IcicleState*)sub)->dropY,
                 ((GameObject*)obj)->anim.localPosZ, 0, lbl_803E4B80, 2);
-            Sfx_PlayFromObject(obj, SFXmv_missingcog_lp);
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_curtainopen16);
             ((Dim2IcicleState*)sub)->timer = 0x96;
         }
         break;
@@ -173,7 +174,7 @@ void dim2icicle_update(int obj)
             ((Dim2IcicleState*)sub)->timer -= framesThisStep;
             if (((Dim2IcicleState*)sub)->timer <= 0)
             {
-                Sfx_PlayFromObject(obj, SFXwp_sexpl2_c);
+                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_155);
             }
         }
         {

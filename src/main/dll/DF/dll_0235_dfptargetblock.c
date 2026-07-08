@@ -4,6 +4,7 @@
  * path points, plays impact/loop sfx and reports completion.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/dll/fruit.h"
 #include "main/mapEvent.h"
@@ -484,7 +485,7 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetB
                 obj->velY = zero;
                 obj->velZ = zero;
             }
-            Sfx_PlayFromObject(obj, SFXfoot_dirt_scuff);
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_bflconc1_1d0);
             return;
         }
         point += DFPTARGETBLOCK_POINT_STRIDE;

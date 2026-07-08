@@ -17,6 +17,7 @@
  * - openSelectedSubmenu: general / audio / language panels.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_4D.h"
 #include "main/dll/dll_4E.h"
@@ -104,7 +105,7 @@ void optionsMenu_applyAudioSetting(int action, int option)
     }
     if (action == OPTIONS_MENU_ACTION_CLOSE)
     {
-        Sfx_PlayFromObject(0, SFXsp_snrot1_c);
+        Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
         (*gScreenTransitionInterface)->start(OPTIONS_MENU_TRANSITION_FRAMES, OPTIONS_MENU_TRANSITION_MODE);
         lbl_803DD704 = OPTIONS_MENU_NEXT_STATE;
         lbl_803DD705 = 1;
@@ -180,7 +181,7 @@ void optionsMenu_applyGameplaySetting(int action, int option)
     }
     if (action == OPTIONS_MENU_ACTION_CLOSE)
     {
-        Sfx_PlayFromObject(0, SFXsp_snrot1_c);
+        Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
         (*gScreenTransitionInterface)->start(OPTIONS_MENU_TRANSITION_FRAMES, OPTIONS_MENU_TRANSITION_MODE);
         lbl_803DD704 = OPTIONS_MENU_NEXT_STATE;
         lbl_803DD705 = 1;
@@ -206,7 +207,7 @@ int optionsMenu_openSelectedSubmenu(int action, int option)
     }
     else if (action == OPTIONS_MENU_ACTION_CLOSE)
     {
-        Sfx_PlayFromObject(0, SFXsp_snrot1_c);
+        Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
         (*gScreenTransitionInterface)->start(OPTIONS_MENU_TRANSITION_FRAMES, OPTIONS_MENU_TRANSITION_MODE);
         lbl_803DD704 = OPTIONS_MENU_NEXT_STATE;
         lbl_803DD705 = 1;

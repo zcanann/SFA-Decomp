@@ -28,6 +28,7 @@
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
@@ -149,13 +150,13 @@ void dll_1DB_update(int obj)
         }
         else if (((Dll1DBState*)sub)->contactLostFlag != 0 && ((Dll1DBState*)sub)->boardedFlag != 0)
         {
-            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt3);
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_wickpickup16);
             ((Dll1DBState*)sub)->state = STATE_FALLING;
             ((Dll1DBState*)sub)->velocity = lbl_803E4B0C;
         }
         if (mainGetBit(((Dll1DBPlacement*)state)->triggerBit) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt3);
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_wickpickup16);
             ((Dll1DBState*)sub)->state = STATE_FALLING;
             ((Dll1DBState*)sub)->velocity = lbl_803E4B0C;
         }
@@ -166,7 +167,7 @@ void dll_1DB_update(int obj)
         {
             if (found == 0)
             {
-                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt3);
+                Sfx_PlayFromObject(obj, SFXTRIG_mv_wickpickup16);
                 ((Dll1DBState*)sub)->state = STATE_RISING;
                 ((Dll1DBState*)sub)->velocity = lbl_803E4B0C;
                 ((Dll1DBState*)sub)->boardedFlag = 0;
@@ -177,7 +178,7 @@ void dll_1DB_update(int obj)
         {
             if (mainGetBit(((Dll1DBPlacement*)state)->triggerBit) == 0)
             {
-                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt3);
+                Sfx_PlayFromObject(obj, SFXTRIG_mv_wickpickup16);
                 ((Dll1DBState*)sub)->state = STATE_RISING;
                 ((Dll1DBState*)sub)->velocity = lbl_803E4B0C;
                 ((Dll1DBState*)sub)->boardedFlag = 0;
@@ -200,7 +201,7 @@ void dll_1DB_update(int obj)
             ((Dll1DBState*)sub)->velocity * timeDelta + ((GameObject*)obj)->anim.localPosY;
         if (((GameObject*)obj)->anim.localPosY > ((Dll1DBPlacement*)state)->topPosY)
         {
-            Sfx_PlayFromObject(obj, SFXchar_on_firelp);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_lflsh2_b);
             ((GameObject*)obj)->anim.localPosY = ((Dll1DBPlacement*)state)->topPosY;
             ((Dll1DBState*)sub)->state = STATE_TOP;
             if (found != 0)
@@ -223,7 +224,7 @@ void dll_1DB_update(int obj)
             ((Dll1DBState*)sub)->velocity * timeDelta + ((GameObject*)obj)->anim.localPosY;
         if (((GameObject*)obj)->anim.localPosY < ((Dll1DBPlacement*)state)->topPosY - lbl_803E4B24)
         {
-            Sfx_PlayFromObject(obj, SFXchar_on_firelp);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_lflsh2_b);
             ((GameObject*)obj)->anim.localPosY = ((Dll1DBPlacement*)state)->topPosY - lbl_803E4B24;
             ((Dll1DBState*)sub)->state = STATE_BOTTOM;
             mainSetBits(((Dll1DBPlacement*)state)->boardedBit, 1);

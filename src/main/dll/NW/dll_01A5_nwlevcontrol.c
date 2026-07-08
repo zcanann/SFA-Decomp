@@ -10,6 +10,7 @@
  * objects (fn_801CFD68) firing their trigger sequences in turn.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
@@ -168,7 +169,7 @@ void nw_levcontrol_update(int objArg)
     }
     if ((((int)state->flags & 2) != 0) && isGameTimerDisabled() != 0)
     {
-        Sfx_PlayFromObject(0, SFXsc_clubhit02);
+        Sfx_PlayFromObject(0, SFXTRIG_sc_lockon22);
         (*gMapEventInterface)->gotoRestartPoint();
     }
     else

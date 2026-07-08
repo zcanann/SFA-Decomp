@@ -210,13 +210,13 @@ void TitleMenuItem_update(TitleMenuItem* item)
 
         if (gatedMove < 0)
         {
-            Sfx_PlayFromObject(0, SFXsp_sa_def01);
+            Sfx_PlayFromObject(0, SFXTRIG_sc_lockedon22);
             item->value--;
             item->flags = (u8)(item->flags | TITLE_MENU_FLAG_MOVED_LEFT);
         }
         else if (gatedMove > 0)
         {
-            Sfx_PlayFromObject(0, SFXsp_sa_def01);
+            Sfx_PlayFromObject(0, SFXTRIG_sc_lockedon22);
             item->value++;
             item->flags = (u8)(item->flags | TITLE_MENU_FLAG_MOVED_RIGHT);
         }
@@ -256,7 +256,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
     default:
         if (((item->flags & TITLE_MENU_FLAG_A_TOGGLE_PENDING) == 0) && ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0))
         {
-            Sfx_PlayFromObject(0, SFXsp_sa_def02);
+            Sfx_PlayFromObject(0, SFXTRIG_sc_lockedon22_f4);
             item->value = (s16)(item->value ^ 1);
         }
         break;

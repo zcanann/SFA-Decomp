@@ -16,6 +16,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define WCPRESSURES_EXTRA_SIZE        0x7c
 #define WCPRESSURES_TRACKED_COUNT     10
@@ -253,7 +254,7 @@ void wcpressures_update(int obj)
     case WCPRESSURES_MODE_RAISED:
         if (state->pressTimer != 0 && ((GameObject*)obj)->anim.localPosY >= thr)
         {
-            Sfx_PlayFromObject(obj, SFXsc_lockon2_on);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_c7);
             state->mode = WCPRESSURES_MODE_LOWERING;
         }
         break;
@@ -269,7 +270,7 @@ void wcpressures_update(int obj)
     case WCPRESSURES_MODE_PRESSED:
         if ((u32)mainGetBit(setup->solvedBit) == 0)
         {
-            Sfx_PlayFromObject(obj, SFXsc_lockon2_on);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_c7);
             state->mode = WCPRESSURES_MODE_RISING;
         }
         break;

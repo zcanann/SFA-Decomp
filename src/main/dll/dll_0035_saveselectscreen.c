@@ -207,7 +207,7 @@ void saveFileSelect_init(int sel, int slot)
     saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
     if (sel == 0)
     {
-        Sfx_PlayFromObject(0, SFXsp_snrot1_c);
+        Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
         (*gScreenTransitionInterface)->start(20, 5);
         lbl_803DD6CF = 0x23;
         lbl_803DD6CC = 1;

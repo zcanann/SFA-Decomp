@@ -18,6 +18,7 @@
  * "(d - 0x10000) + 1" forms below are the shortest-arc angle wrap-clamps.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"
@@ -415,7 +416,7 @@ void SB_CloudRunner_HandlePriorityHit(int obj, u8* state)
             {
                 Obj_SetModelColorFadeRecursive(obj, 175, 200, 0, 0, 1);
                 doRumble(lbl_803E5CB8);
-                Sfx_PlayFromObject(0, SFXtr_bcrek2_c);
+                Sfx_PlayFromObject(0, SFXTRIG_dn_gscsc1_c);
                 if (mainGetBit(GAMEBIT_CLOUDRUNNER_HIT_SFX) != 0)
                 {
                     Sfx_PlayFromObject(obj, SFX_CLOUDRUNNER_HIT);

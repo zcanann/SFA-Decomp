@@ -21,6 +21,7 @@
  * by sibling DLLs.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
 #include "main/obj_placement.h"
@@ -174,7 +175,7 @@ void TumbleWeedBush_update(int* obj)
         if (((GameObject*)hit0)->anim.seqId != TUMBLEWEEDBUSH_SIBLING_C)
         {
             objfx_spawnHitEmitterAtPos(hitExtra, 8, 0xff, 0xff, 0x78);
-            Sfx_PlayFromObject(obj, SFXsc_gethit04);
+            Sfx_PlayFromObject(obj, SFXTRIG_wp_swdtest222_280);
             for (i = 0; (u8)i < state->pieceCount; i++)
             {
                 slot = (int**)&state->pieceObjects[(u8)i];

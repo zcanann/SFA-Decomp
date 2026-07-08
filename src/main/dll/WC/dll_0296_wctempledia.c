@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define WCTEMPLE_DIA_EXTRA_SIZE       0x14
 #define WCTEMPLE_DIA_STAGE_COUNT      3
@@ -154,11 +155,11 @@ void wctempledia_update(int obj)
     }
     state->currentSpeed += timeDelta * (gWcTempleDiaSpeedLerpRate * (state->targetSpeed - state->currentSpeed));
     go->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)go->anim.rotZ);
-    Sfx_KeepAliveLoopedObjectSound(k, SFXmn_sml_trex_roar);
+    Sfx_KeepAliveLoopedObjectSound(k, SFXTRIG_en_treedrum16);
     {
         extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume, f32 volumeScale);
         f32 ratio = state->currentSpeed / state->targetTable[2];
-        Sfx_SetObjectSfxVolume((u32)go, SFXmn_sml_trex_roar, (u8)(lbl_803E6E60 * ratio + lbl_803E6E5C),
+        Sfx_SetObjectSfxVolume((u32)go, SFXTRIG_en_treedrum16, (u8)(lbl_803E6E60 * ratio + lbl_803E6E5C),
                                lbl_803E6E68 * ratio + lbl_803E6E64);
     }
     for (i = 0; i < WCTEMPLE_DIA_STAGE_COUNT; i++)
@@ -202,7 +203,7 @@ void wctempledia_update(int obj)
     if (state->stageMask == WCTEMPLE_DIA_ALL_STAGES_MASK)
     {
         mainSetBits(setup->solvedBit, 1);
-        Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+        Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
         state->flags |= WCTEMPLE_DIA_FLAG_SOLVED;
     }
 }

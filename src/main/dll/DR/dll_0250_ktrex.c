@@ -746,7 +746,7 @@ int ktrex_stateHandlerB08(int obj, int runtime)
         ObjAnim_SetCurrentMove(obj, 13, lbl_803E67B8, 0);
         ((KTRexRuntime*)runtime)->curvePhase =
             lbl_803E67F4 + lbl_803E67F8 * (f32)(int)(((KTRexArenaState*)gKTRexState)->phaseCounter >> 1);
-        Sfx_PlayFromObject(obj, SFXmv_cagesqk11);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexroarlng11);
     }
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 1) != 0)
     {
@@ -1061,35 +1061,35 @@ void ktrex_updateAttackEffects(int obj)
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x40) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_bodyf4_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexroarsht11);
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x80) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_cagerat01);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexroarmed11);
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x100) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_cagesqk11);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexroarlng11);
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x200) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_canras_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexexhale16);
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x10000) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_cogstr_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_fireup_c);
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x40000) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_curtainopen16);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexthrash11);
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x80000) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_deaththud16);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexhurt12);
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x2000) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_deaththud16);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexhurt12);
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x1000) != 0)
     {
@@ -1097,7 +1097,7 @@ void ktrex_updateAttackEffects(int obj)
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x20000) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_cogstr_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_fireup_c);
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(lbl_803E67C8 * mag);
     }
@@ -1113,17 +1113,17 @@ void ktrex_updateAttackEffects(int obj)
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x4000) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_dive4_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexbreathin11);
         ((KTRexArenaState*)gKTRexState)->laneAltSelect ^= 1;
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x8000) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexbreathout11);
         ((KTRexArenaState*)gKTRexState)->laneAltSelect ^= 1;
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x3) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_icesmash16);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexfoot11);
         doRumble(lbl_803E67CC);
         if (mag > lbl_803E67B4)
         {
@@ -1135,7 +1135,7 @@ void ktrex_updateAttackEffects(int obj)
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0xc) != 0)
     {
         doRumble(lbl_803E682C);
-        Sfx_PlayFromObject(obj, SFXmv_ladderslide16);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexfoot11_91);
         if (mag > lbl_803E67B4)
         {
             Camera_EnableViewYOffset();
@@ -1146,7 +1146,7 @@ void ktrex_updateAttackEffects(int obj)
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x30) != 0)
     {
         doRumble(lbl_803E6830);
-        Sfx_PlayFromObject(obj, SFXmv_persquk1);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexfoot11_92);
         if (mag > lbl_803E67B4)
         {
             Camera_EnableViewYOffset();
@@ -1227,7 +1227,7 @@ void ktrex_updateAttackEffects(int obj)
     ((KTRexArenaState*)gKTRexState)->phaseFlags &= 0x1800LL;
     if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject())
     {
-        Sfx_PlayFromObject((int)Obj_GetPlayerObject(), SFXbaddie_haga_talk1);
+        Sfx_PlayFromObject((int)Obj_GetPlayerObject(), SFXTRIG_mv_bflconc1_2b9);
     }
 }
 
@@ -1272,8 +1272,8 @@ void ktrex_updateContactEffects(int obj, void* runtime)
         ((KTRexWork*)gKTRexEffectSpawnWork)->posX = playerMapOffsetX + (pt = contactPoints + hitType * 4)[1];
         ((KTRexWork*)gKTRexEffectSpawnWork)->posY = pt[2];
         ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = playerMapOffsetZ + pt[3];
-        Sfx_PlayFromObject(obj, SFXmv_deaththud16);
-        Sfx_PlayFromObject(obj, SFXmv_roothack16);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexhurt12);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122);
         (*gPartfxInterface)->spawnObject((void*)obj, 0x4b2, gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)obj, 0x4b3, gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         if (hit == 0xe)
@@ -1294,7 +1294,7 @@ void ktrex_updateContactEffects(int obj, void* runtime)
     }
     else if (gKTRexContactEffectCooldown == 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_ropecreak22);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_95);
         contactPoints = KTRex_GetActiveContactPointTable(obj);
         ((KTRexWork*)gKTRexEffectSpawnWork)->posX = contactPoints[hitType * 4 + 1] + playerMapOffsetX;
         ((KTRexWork*)gKTRexEffectSpawnWork)->posY = contactPoints[hitType * 4 + 2];
@@ -1563,7 +1563,7 @@ int ktrex_stateHandlerA05(int obj, int runtime)
     }
     if (RandomTimer_UpdateRangeTrigger((char*)gKTRexState + 0x190, lbl_803E67C8, lbl_803E67CC) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexbreathout11);
     }
     if (ktrex_updateArenaPathProgress(runtime) != 0)
     {
@@ -1740,7 +1740,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     }
     if (RandomTimer_UpdateRangeTrigger((char*)gKTRexState + 0x190, lbl_803E67C8, lbl_803E67CC) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexbreathout11);
     }
     {
         f32 u4 = ((KTRexArenaState*)gKTRexState)->stateTimer - timeDelta;

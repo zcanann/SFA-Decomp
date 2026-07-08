@@ -145,7 +145,7 @@ void MagicDust_update(GameObject* obj)
             obj->anim.rotX = obj->anim.rotX + framesThisStep * 0x100;
             if ((state->ambientTimer -= framesThisStep) < 0)
             {
-                Sfx_PlayFromObject((int)obj, SFXen_statue_wave);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_rfall5_c);
                 val = randomGetRange(0xf0, 300);
                 state->ambientTimer = val;
             }
@@ -207,7 +207,7 @@ void MagicDust_update(GameObject* obj)
                         }
                     }
                     obj->anim.alpha = 1;
-                    Sfx_PlayFromObject((int)obj, SFXen_waterblock_wave);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_en_liftstpc);
                 }
                 objMove((int)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
                         obj->anim.velocityZ * timeDelta);
@@ -234,7 +234,7 @@ void MagicDust_update(GameObject* obj)
                 float mag = sqrtf(vx * vx + vy * vy + vz * vz);
                 if (mag > gMagicGemBounceSfxSpeed)
                 {
-                    Sfx_PlayFromObject((int)obj, SFXwp_iceywindlp16);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_en_lflsh3_c_16b);
                 }
                 if (state->contactNormalY >= gMagicGemFloorNormalThreshold)
                 {

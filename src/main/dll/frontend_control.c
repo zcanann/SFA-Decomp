@@ -13,6 +13,7 @@
  * (HH:MM:SS derived from playTimeSeconds), life count and magic count.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/FRONT/frontend_control.h"
 #include "main/engine_shared.h"
 
@@ -82,7 +83,7 @@ void saveFileSelect_checkCheatCodes(void)
         if (saveFileSelect_debugCheatProgress == CHEAT_SEQUENCE_LEN)
         {
             enableDebugText = 1;
-            Sfx_PlayFromObject(0, SFXen_waterblock_stop);
+            Sfx_PlayFromObject(0, SFXTRIG_cam90_c);
         }
     }
     if (saveFileSelect_debugCheatProgress != 0)
@@ -103,7 +104,7 @@ void saveFileSelect_checkCheatCodes(void)
     {
         saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].cheatFlag = 5;
         saveFileSelect_saveDirty = 1;
-        Sfx_PlayFromObject(0, SFXen_waterblock_stop);
+        Sfx_PlayFromObject(0, SFXTRIG_cam90_c);
     }
 }
 

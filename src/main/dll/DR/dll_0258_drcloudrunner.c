@@ -928,7 +928,7 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
         {
             return 0;
         }
-        Sfx_PlayFromObject(obj, SFXtr_cnflyby6);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_11e);
         setup = Obj_AllocObjectSetup(0x18, DRCLOUDRUNNER_CHILD_OBJ_PROJECTILE);
         ((ObjPlacement*)setup)->color[2] = 0xff;
         ((ObjPlacement*)setup)->color[3] = 0xff;
@@ -1161,7 +1161,7 @@ void fn_802BF4D8(int obj)
     {
         return;
     }
-    Sfx_PlayFromObject(obj, SFXtr_cnflyby6);
+    Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_11e);
     setup = Obj_AllocObjectSetup(0x24, DRCLOUDRUNNER_CHILD_OBJ_PROJECTILE);
     ((ObjPlacement*)setup)->color[2] = 0xff;
     ((ObjPlacement*)setup)->color[3] = 0xff;

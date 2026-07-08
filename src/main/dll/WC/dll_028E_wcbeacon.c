@@ -17,6 +17,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define WCBEACON_EXTRA_SIZE 0x8
 
@@ -151,8 +152,8 @@ void wcbeacon_update(int obj)
         }
         if (state->acceptedInteraction != 0)
         {
-            Sfx_PlayFromObject(obj, SFXmv_mushdizzylp12);
-            Sfx_PlayFromObject(obj, SFXmv_liftloop);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_trpopn_c_9f);
+            Sfx_PlayFromObject(obj, SFXTRIG_forcecryslp11);
             state->phase = WCBEACON_PHASE_ACTIVATING;
             state->timer = lbl_803E6DE4;
         }

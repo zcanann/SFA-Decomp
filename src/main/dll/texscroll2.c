@@ -12,6 +12,7 @@
  * raise/clear gameBitB and drive the linked-mouth mode.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
@@ -40,7 +41,7 @@ int kaldachom_stateHandlerA06(int obj, int statePtr)
             ObjAnim_SetCurrentMove(obj, 8, lbl_803E3060, 0);
             ((GroundBaddieState*)statePtr)->baddie.moveDone = 0;
         }
-        Sfx_PlayFromObject(obj, SFXsc_attack01);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_277);
     }
     ((GameObject*)obj)->anim.rotX += 546;
     ((GroundBaddieState*)statePtr)->baddie.stateTag = 1;
@@ -77,7 +78,7 @@ int kaldachom_stateHandlerA04(int obj, int statePtr)
             ObjAnim_SetCurrentMove(obj, 3, lbl_803E3060, 0);
             ((GroundBaddieState*)statePtr)->baddie.moveDone = 0;
         }
-        Sfx_PlayFromObject(obj, SFXsc_attack01);
+        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_277);
     }
     ((GroundBaddieState*)statePtr)->baddie.stateTag = 3;
     ((GroundBaddieState*)statePtr)->baddie.moveSpeed = lbl_803E3090;

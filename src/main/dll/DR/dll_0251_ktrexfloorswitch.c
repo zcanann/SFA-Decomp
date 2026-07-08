@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/DR/dll_0251_ktrexfloorswitch.h"
 
@@ -377,7 +378,7 @@ void KT_RexFloorSwitch_update(int obj)
     }
     if ((s8)moved != 0 && gKTrexFloorSwitchPrevMoved == 0)
     {
-        Sfx_PlayFromObject(obj, SFXmv_bodyf2_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_birdymornin11);
     }
     gKTrexFloorSwitchPrevMoved = (s8)moved;
     if (((GameObject*)obj)->unkF4 == 2)

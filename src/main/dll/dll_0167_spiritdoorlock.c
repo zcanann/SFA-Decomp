@@ -25,6 +25,7 @@
  * SpiritDoorLockMapData. Both are defined in IMspacecraft.h.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/objtexture.h"
@@ -144,7 +145,7 @@ void SpiritDoorLock_update(int obj)
         {
             if (((GameObject*)obj)->anim.alpha == 255)
             {
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
             if (((GameObject*)obj)->anim.alpha != 0)
             {

@@ -26,6 +26,7 @@
  * point-light that tracks the emitter.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/obj_placement.h"
@@ -420,9 +421,9 @@ sound_update:
     {
         if (flags->wasEmitting == 0)
         {
-            Sfx_PlayFromObjectLimited(obj, SFXand_missilelaunch, 3);
+            Sfx_PlayFromObjectLimited(obj, SFXTRIG_en_cvdrip1c_32c, 3);
         }
-        Sfx_KeepAliveLoopedObjectSoundLimited(obj, SFXand_suck_lp, 2);
+        Sfx_KeepAliveLoopedObjectSoundLimited(obj, SFXTRIG_en_trpopn_c_32d, 2);
     }
     flags->wasEmitting = flags->emitting;
 

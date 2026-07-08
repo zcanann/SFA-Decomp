@@ -20,6 +20,7 @@
 #include "main/dll/barrelgener_state.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct ObjUpdateRomCurveFollowVelocityState
 {
@@ -114,7 +115,7 @@ void barrelgener_update(int obj)
         {
             state->releaseAnimPlaying = 1;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E6C2C, 0);
-            Sfx_PlayFromObject(obj, SFXpda_fper_camoff);
+            Sfx_PlayFromObject(obj, SFXTRIG_barrelgen_slide);
             state->releaseBeepPlayed = 0;
         }
         if (timerCountDown((void*)&state->releaseTimer) != 0)
@@ -147,7 +148,7 @@ void barrelgener_update(int obj)
         {
             if (state->releaseBeepPlayed == 0)
             {
-                Sfx_PlayFromObject(obj, SFXpda_compassbeep);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_mzap2_c);
                 state->releaseBeepPlayed = 1;
             }
         }

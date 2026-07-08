@@ -15,6 +15,7 @@
  * given speed under gravity at a target offset (used cross-TU by duster).
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -148,7 +149,7 @@ void pinponspike_update(int obj)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, PINPONSPIKE_PARTFX, NULL, 1, -1, &i);
             }
-            Sfx_PlayFromObject(obj, SFXsc_attack03);
+            Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
         }
         else if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
@@ -160,7 +161,7 @@ void pinponspike_update(int obj)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, PINPONSPIKE_PARTFX, NULL, 1, -1, &i);
             }
-            Sfx_PlayFromObject(obj, SFXsc_attack03);
+            Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
         }
         else if (((GameObject*)obj)->anim.localPosY < lbl_803E312C)
         {
@@ -174,7 +175,7 @@ void pinponspike_init(int obj)
     ((GameObject*)obj)->unkF4 = 0;
     ObjHits_DisableObject(obj);
     ((GameObject*)obj)->anim.alpha = 0xff;
-    Sfx_PlayFromObject(obj, SFXsc_attack02);
+    Sfx_PlayFromObject(obj, SFXTRIG_whiz3_c);
     ((GameObject*)obj)->objectFlags |= (PINPONSPIKE_OBJFLAG_HIDDEN | PINPONSPIKE_OBJFLAG_HITDETECT_DISABLED);
 }
 

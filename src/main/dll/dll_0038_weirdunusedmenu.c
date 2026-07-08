@@ -20,6 +20,7 @@
  * list with the interface; release frees the textures and warps home.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "ghidra_import.h"
 #include "main/sfa_extern_decls.h"
 #include "main/audio/sfx.h"
@@ -90,14 +91,14 @@ int WeirdUnusedMenu_run(void)
         {
             if (action == 0)
             {
-                Sfx_PlayFromObject(0, SFXqu_longsob2);
+                Sfx_PlayFromObject(0, SFXTRIG_dn_boar1_c_103);
                 loadUiDll(1);
                 cutsceneExit();
                 buttonDisable(0, PAD_CONFIRM_MASK);
             }
             else
             {
-                Sfx_PlayFromObject(0, SFXqu_shortsob1);
+                Sfx_PlayFromObject(0, SFXTRIG_dn_boar1_c_104);
                 gWeirdMenuSaveTimer = 0;
                 gWeirdMenuPhase = 1;
                 gWeirdMenuWidgetWork.widgetFlagsA = (u16)(gWeirdMenuWidgetWork.widgetFlagsA | WIDGET_FLAG_SAVING);

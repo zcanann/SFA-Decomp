@@ -418,7 +418,7 @@ void wispbaddie_init(int obj, int setup, int initialised)
         {
             state->flags = (u8)(state->flags | WISPBADDIE_FLAG_PATH_NEEDS_LINK);
         }
-        Sfx_PlayFromObject(obj, SFXfox_swimstroke122);
+        Sfx_PlayFromObject(obj, SFXTRIG_id_23b);
     }
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | WISPBADDIE_OBJFLAG_HITDETECT_DISABLED);
 }

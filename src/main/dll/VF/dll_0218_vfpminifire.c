@@ -13,6 +13,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/VF/dll_0218_vfpminifire.h"
 
 #define VFPMINIFIRE_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -163,7 +164,7 @@ void VFP_MiniFire_init(int* obj, u8* init)
     ((GameObject*)obj)->anim.localPosY = 400.0f + *(f32*)((char*)init + 0xc);
     ((GameObject*)obj)->anim.rootMotionScale *= 2.0f;
     (*gPartfxInterface)->spawnObject(obj, VFPMINIFIRE_PERSIST_EFFECT, NULL, 2, -1, NULL);
-    Sfx_PlayFromObject((int)obj, SFXqu_longsob2);
+    Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_103);
     ((GameObject*)obj)->objectFlags |= VFPMINIFIRE_OBJFLAG_HITDETECT_DISABLED;
 }
 

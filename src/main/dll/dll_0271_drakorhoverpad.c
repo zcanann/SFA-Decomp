@@ -20,6 +20,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /*
  * A ROM curve network node (the record returned by gRomCurveInterface->getById
@@ -264,7 +265,7 @@ int drakorhoverpad_init(int obj)
                 *(f32*)p = (f->b01 != 0) ? lbl_803E6A74 : lbl_803E6A38;
             }
         }
-        Sfx_PlayFromObject(obj, SFXfend_fox_keytap3);
+        Sfx_PlayFromObject(obj, SFXTRIG_id_309);
     }
     return 0;
 }
@@ -540,8 +541,8 @@ void drakorhoverpad_updateMain(int obj)
             ((GameObject*)obj)->anim.localPosY = ((DrakorHoverpadState*)p)->curve.posY;
             ((GameObject*)obj)->anim.localPosZ = ((DrakorHoverpadState*)p)->curve.posZ;
             *(f32*)p = lbl_803E6A38;
-            Sfx_PlayFromObject(obj, SFXfend_fox_keytap2);
-            Sfx_PlayFromObject(obj, SFXfend_pep_wakeup);
+            Sfx_PlayFromObject(obj, SFXTRIG_id_308);
+            Sfx_PlayFromObject(obj, SFXTRIG_id_30a);
         }
         return;
     }
@@ -814,7 +815,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             f->state = 3;
             *(f32*)p = lbl_803E6A3C;
-            Sfx_PlayFromObject(obj, SFXfend_rob_servo1);
+            Sfx_PlayFromObject(obj, SFXTRIG_id_30b);
         }
         break;
     case 17:
@@ -822,7 +823,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             f->state = 4;
             *(f32*)p = lbl_803E6A3C;
-            Sfx_PlayFromObject(obj, SFXfend_rob_servo1);
+            Sfx_PlayFromObject(obj, SFXTRIG_id_30b);
         }
         break;
     case 10:
@@ -935,7 +936,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             *(f32*)p = lbl_803E6A38 * cur;
         }
-        Sfx_PlayFromObject(obj, SFXfend_fox_keytap3);
+        Sfx_PlayFromObject(obj, SFXTRIG_id_309);
         break;
     case 20:
         g->f10 = !g->f10;

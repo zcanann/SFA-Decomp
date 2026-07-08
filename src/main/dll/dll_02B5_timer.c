@@ -172,7 +172,7 @@ void timer_update(int obj)
                 case TIMER_MAP_NO_FOOTSTEP:
                     break;
                 default:
-                    Sfx_PlayFromObject(obj, SFXmn_sml_trex_fstep);
+                    Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
                     break;
                 }
             }

@@ -850,7 +850,7 @@ void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2)
     {
         if (((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate < lbl_803E32B4)
         {
-            Sfx_PlayFromObject(obj, SFXsc_text_appears_lp);
+            Sfx_PlayFromObject(obj, SFXTRIG_wp_stpos4_b);
         }
         if (flag2 == 0)
         {
@@ -865,7 +865,7 @@ void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2)
     {
         if (((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate > lbl_803E32B4)
         {
-            Sfx_PlayFromObject(obj, SFXsc_nolock);
+            Sfx_PlayFromObject(obj, SFXTRIG_wp_stapo1_b);
         }
         if (flag2 == 0)
         {

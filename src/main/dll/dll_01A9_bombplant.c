@@ -90,7 +90,7 @@ void bombplant_explode(int* obj, int unused, int* p3)
     {
         trickyImpress(trickyObj);
     }
-    Sfx_PlayFromObject(obj, SFXmv_curtainrustle);
+    Sfx_PlayFromObject(obj, SFXTRIG_bombplant_woompf);
     {
         int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
         ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
@@ -356,7 +356,7 @@ void bombplant_update(void* obj)
     case 2:
         if ((((BombPlantState*)state)->flags & BOMBPLANT_FLAG_STATE_ENTERED) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXmv_sliftloop11);
+            Sfx_PlayFromObject(obj, SFXTRIG_bombplant_grows);
             ((BombPlantState*)state)->flags &= ~BOMBPLANT_FLAG_STATE_ENTERED;
             p4c = ((GameObject*)obj)->anim.placementData;
             ((GameObject*)obj)->anim.alpha = 0xff;
@@ -426,7 +426,7 @@ void bombplant_update(void* obj)
             }
             else if ((u32)(hitType - 0xe) <= 1 || hitType == 0x11)
             {
-                Sfx_PlayFromObject(obj, SFXmv_curtainloop16);
+                Sfx_PlayFromObject(obj, SFXTRIG_mv_ladderslide16);
                 hitX = hitX + playerMapOffsetX;
                 hitZ = hitZ + playerMapOffsetZ;
                 objLightFn_8009a1dc(obj, lbl_803E5380, lightVec, 1, 0);

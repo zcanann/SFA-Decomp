@@ -13,6 +13,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #include "main/dll/DR/dll_0279_drenergydisc.h"
 
@@ -52,7 +53,7 @@ void DR_EnergyDisc_update(int obj)
         if (state->activated == 0)
         {
             state->activated = 1;
-            Sfx_PlayFromObject(obj, SFXfend_rob_servo2);
+            Sfx_PlayFromObject(obj, SFXTRIG_id_30c);
         }
 
         texture = objFindTexture((void*)obj, 0, 0);
@@ -89,7 +90,7 @@ void DR_EnergyDisc_init(u8* obj, u8* setup)
     if ((u32)mainGetBit(((DrenergydiscPlacement*)setup)->activeGameBit) != 0)
     {
         state->activated = 1;
-        Sfx_PlayFromObject((int)obj, SFXfend_rob_servo2);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_id_30c);
         texture = objFindTexture(obj, 0, 0);
         if (texture != NULL)
         {

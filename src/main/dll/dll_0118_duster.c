@@ -21,6 +21,7 @@
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
@@ -173,7 +174,7 @@ void duster_update(int obj)
         switch (msg)
         {
         case DUSTER_MSG_DEPOSIT:
-            Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
+            Sfx_PlayFromObject(obj, SFXTRIG_sc_cam90_c);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
@@ -248,7 +249,7 @@ void duster_update(int obj)
                 0 ||
             state->priorityHit != 0)
         {
-            Sfx_PlayFromObject(obj, SFXen_riverloop11);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_lflsh3_c);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_BOUNCE, NULL, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_BOUNCE, NULL, 2, -1, NULL);
             state->driftDir = randomGetRange(0, 4);
@@ -280,7 +281,7 @@ void duster_update(int obj)
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
         {
             state->hitReactActive = 1;
-            Sfx_PlayFromObject(obj, SFXen_trpcls_c);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_4d);
         }
     }
     else
@@ -335,7 +336,7 @@ void duster_update(int obj)
             mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
             if (mapState->collectedCount < mapState->maxCollectedCount)
             {
-                Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
+                Sfx_PlayFromObject(obj, SFXTRIG_sc_cam90_c);
                 (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);

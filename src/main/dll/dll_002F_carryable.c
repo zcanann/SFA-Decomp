@@ -23,6 +23,7 @@
 #include "main/pad.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
 #define PAD_BUTTON_A              0x100
@@ -272,7 +273,7 @@ int Carryable_updateHeld(u8* obj)
             if ((((CarryableUpdateHeldState*)held)->flags & CARRYABLE_FLAG_DROP_DISABLED) != 0 ||
                 isTrickyNear(player) == 0)
             {
-                Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
+                Sfx_PlayFromObject(0, SFXTRIG_id_10a);
             }
             else
             {

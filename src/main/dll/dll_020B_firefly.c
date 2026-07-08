@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 #include "main/dll/WM/wm_shared.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_020B_firefly.h"
 
@@ -223,7 +224,7 @@ void FireFlyFn_801f4f88(int obj)
                         st->despawnTimer = lbl_803E5EA8; /* 180.0f */
                         gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
                         gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
-                        Sfx_PlayFromObject(obj, SFXen_treadlpc);
+                        Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
                     }
                 }
             }
@@ -259,7 +260,7 @@ void firefly_update(int obj)
             st->despawnTimer = 180.0f;
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
-            Sfx_PlayFromObject(obj, SFXen_treadlpc);
+            Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
             break;
         }
         }

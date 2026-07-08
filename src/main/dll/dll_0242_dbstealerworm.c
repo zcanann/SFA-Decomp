@@ -284,7 +284,7 @@ int dbstealerworm_stateHandlerA09(int obj, int baddie)
         sub_40c->msgSlotIndex = slotIndex;
         sub_40c->msgMode = 0;
         ObjMsg_SendToObject(sub_40c->linkedObj, 17, obj, 18);
-        Sfx_PlayFromObject(obj, SFXfoot_ice_run_3);
+        Sfx_PlayFromObject(obj, SFXTRIG_mn_dimspit6);
     }
     *(s8*)&bs->stateTag = 18;
     if (*(char*)&bs->moveJustStartedA != '\0')
@@ -488,7 +488,7 @@ int dbstealerworm_stateHandlerA01(int obj, int baddie)
     }
     if (*(s8*)&bs->moveDone != 0)
     {
-        Sfx_PlayFromObject(obj, SFXfoot_ice_run_2);
+        Sfx_PlayFromObject(obj, SFXTRIG_mn_eggylaugh116);
         sub_40c->unk04 = lbl_803E62C8;
         ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
         *(u32*)&bs->targetObj = 0;
@@ -809,7 +809,7 @@ int dbstealerworm_stateHandlerA0E(int obj, int param2)
         sub->msgSlotIndex = 0x24;
         sub->msgMode = 0;
         ObjMsg_SendToObject(sub->linkedObj, 0x11, obj, 0x12);
-        Sfx_PlayFromObject(obj, SFXfoot_ice_run_3);
+        Sfx_PlayFromObject(obj, SFXTRIG_mn_dimspit6);
     }
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E62EC)
     {

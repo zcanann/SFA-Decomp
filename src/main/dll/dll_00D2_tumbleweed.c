@@ -1,5 +1,6 @@
 /* DLL 0x00D2 (tumbleweed) — Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
@@ -144,11 +145,11 @@ void tumbleweed_updateRollingMotion(int obj, int state)
             }
             if (0x10 < bestHit)
             {
-                Sfx_PlayFromObject(obj, SFXsc_gethit02);
+                Sfx_PlayFromObject(obj, SFXTRIG_mv_roothack16);
                 uval = randomGetRange(0, 5);
                 if (((int)uval == 0) && ((((BackpackState*)state)->flags & 8) != 0))
                 {
-                    Sfx_PlayFromObject(obj, SFXsc_gethit03);
+                    Sfx_PlayFromObject(obj, SFXTRIG_id_27f);
                 }
             }
         }
@@ -435,7 +436,7 @@ void tumbleweed_updateStateMachine(int obj)
                 if (popMsg == TUMBLEWEED_MSG_PICKUP)
                 {
                     gameBitIncrement(GAMEBIT_ITEM_FireWeed_Count);
-                    Sfx_PlayFromObject(obj, SFXen_treadlpc);
+                    Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
                     ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                 }
             }

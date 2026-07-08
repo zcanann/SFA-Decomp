@@ -16,6 +16,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"
@@ -309,7 +310,7 @@ int babycloudrunner_tryCapture(void* p)
         return 1;
     }
     objAudioFn_800393f8((int)obj, sub->audioBlock, 0x296, 0x1000, -1, 1);
-    Sfx_PlayFromObject((int)obj, SFXsk_baptr9_c);
+    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_ice_freeze);
     return 0;
 }
 #pragma peephole reset
@@ -388,7 +389,7 @@ int fn_8019E3F4(int* obj)
         {
             if (!((WormSpitByte*)&sub->spitFlags)->spitLatch)
             {
-                Sfx_PlayFromObject((int)obj, SFXand_spitout);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_mn_heart1_c_334);
                 ((WormSpitByte*)&sub->spitFlags)->spitLatch = 1;
             }
         }
@@ -467,7 +468,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if (animUpdate->eventIds[i] == 1)
         {
-            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+            Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
         }
     }
     sub->behaviourState = 0;
@@ -668,7 +669,7 @@ void babycloudrunner_update(int* obj)
                 {
                     sub->runnerState = 3;
                     (*gGameUIInterface)->airMeterSetShutdown();
-                    Sfx_PlayFromObject((int)obj, SFXsp_lf_mutter4);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_menuups16k);
                     storeZeroToFloatParam(&sub->countdownTimer);
                 }
             }

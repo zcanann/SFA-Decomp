@@ -218,11 +218,11 @@ void fn_801DFA28(u8* obj)
     }
     if (((SBGalleonState*)state)->phase >= 2)
     {
-        Sfx_PlayFromObject((int)obj, SFXwp_cahit2_c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_tr_gal_lightning);
     }
     else
     {
-        Sfx_StopFromObject((int)obj, SFXwp_cahit2_c);
+        Sfx_StopFromObject((int)obj, SFXTRIG_tr_gal_lightning);
     }
     tricky = ((SBGalleonState*)state)->targetObj;
     if (tricky == NULL)
@@ -574,7 +574,7 @@ void fn_801DFA28(u8* obj)
             ((SBGalleonState*)state)->headingLatch = 200;
             sfxObj = sbGetPropeller();
             Sfx_StopFromObject(sfxObj, SFXTRIG_swtst1_c);
-            Sfx_PlayFromObject(sfxObj, SFXwp_dsmk2_c);
+            Sfx_PlayFromObject(sfxObj, SFXTRIG_mv_curtainloop16);
             mainSetBits(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 0);
         }
         else if (((SBGalleonState*)state)->phaseCounter >= 4)
@@ -960,7 +960,7 @@ void DBprotection_updateShield(int* obj)
         {
             if (mainGetBit(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0)
             {
-                Sfx_PlayFromObject((int)obj, SFXwp_crthit6);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_tr_gal_crateslide);
             }
             state->shieldSfxLatch = 1;
         }
@@ -968,7 +968,7 @@ void DBprotection_updateShield(int* obj)
         {
             if (mainGetBit(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0)
             {
-                Sfx_PlayFromObject((int)obj, SFXwp_crtsmsh6);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_tr_gal_sailflap3);
             }
             state->shieldSfxLatch = 1;
         }

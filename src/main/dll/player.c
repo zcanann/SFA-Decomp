@@ -606,7 +606,7 @@ void playerAddRemoveMagic(int obj, int amount)
     *(s16*)((char*)deref + 4) = (s16)m;
     if (amount > 0)
     {
-        Sfx_PlayFromObject(0, SFXmammoth_dirtstep);
+        Sfx_PlayFromObject(0, SFXTRIG_id_21c);
     }
 }
 
@@ -863,7 +863,7 @@ int playerState0B(int obj, int state)
         {
             if (*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x80)
             {
-                Sfx_PlayFromObject(obj, SFXen_littletink22);
+                Sfx_PlayFromObject(obj, SFXTRIG_fox_swimstroke222);
             }
         }
     case 0xe:
@@ -1122,7 +1122,7 @@ void staffShootFireball(int obj, int state, f32 unused)
     slot = Camera_GetCurrentViewSlot();
     if (Obj_IsLoadingLocked())
     {
-        Sfx_PlayFromObject(obj, SFXmammoth_attacks);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_hitpos_6_20a);
         setup = Obj_AllocObjectSetup(0x24, 0x14b);
         *(u8*)((char*)setup + 0x4) = 2;
         *(u8*)((char*)setup + 0x5) = 1;
@@ -4905,7 +4905,7 @@ int playerStateTryCastSpell(int obj, int state, f32 fv)
                 }
                 else
                 {
-                    Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
+                    Sfx_PlayFromObject(0, SFXTRIG_id_10a);
                 }
                 break;
             }
@@ -4922,7 +4922,7 @@ int playerStateTryCastSpell(int obj, int state, f32 fv)
                 }
                 else
                 {
-                    Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
+                    Sfx_PlayFromObject(0, SFXTRIG_id_10a);
                 }
                 break;
             }
@@ -6720,8 +6720,8 @@ int fn_802AD2F4(int obj, int inner, int state)
         if ((((*((int*)(&((PlayerState*)state)->baddie.eventFlags))) & 1) != 0) &&
             (((PlayerState*)inner)->characterId != 0))
         {
-            Sfx_PlayFromObject(obj, SFXthorntail_footstep);
-            Sfx_PlayFromObject(obj, SFXthorntail_injured1);
+            Sfx_PlayFromObject(obj, SFXTRIG_fox_bigfallgrunt2);
+            Sfx_PlayFromObject(obj, SFXTRIG_foot_ladder2);
         }
         if ((*((s8*)(&((PlayerState*)state)->baddie.moveDone))) != 0)
         {
@@ -6762,8 +6762,8 @@ int fn_802AD2F4(int obj, int inner, int state)
             CameraShake_SetAllMagnitudes(lbl_803E7F58);
             ObjAnim_SetCurrentMove(obj, 0xb, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F34;
-            Sfx_PlayFromObject(obj, SFXmammoth_woodstep);
-            Sfx_PlayFromObject(obj, SFXen_gland2_c);
+            Sfx_PlayFromObject(obj, SFXTRIG_foot_crawl2);
+            Sfx_PlayFromObject(obj, SFXTRIG_watery_bubble);
             ObjPath_GetPointWorldPosition(obj, 0xb, &v[3], &v[4], &v[5], 0);
             if (ps->surfaceType == 0x1a)
             {
@@ -10424,11 +10424,11 @@ void playerPlayClimbingSound(int obj, int p2)
         cell = coordsToMapCell(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ);
         if (cell == 0x12)
         {
-            Sfx_PlayFromObject(obj, SFXthorntail_snort1);
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_ropecreak22);
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXdn_rexhurt13);
+            Sfx_PlayFromObject(obj, SFXTRIG_foot);
         }
     }
     if (gPlayerSfxTimerB > 0)
@@ -10778,7 +10778,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 }
                 else
                 {
-                    Sfx_PlayFromObject(obj, SFXmammoth_snowstep);
+                    Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_208);
                     lbl_803DE440 = (f32)(int)randomGetRange(0x27, 0x3c);
                 }
             }
@@ -11046,12 +11046,12 @@ void Lightfoot_ProcessHitResponseFlags(int obj, int inner)
     if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 4)
     {
         *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~4;
-        Sfx_PlayFromObject(obj, SFXtr_gal_prophit);
+        Sfx_PlayFromObject(obj, SFXTRIG_sc_spotfox02);
     }
     if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 2)
     {
         *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~2;
-        Sfx_PlayFromObject(obj, SFXtr_gal_prophit);
+        Sfx_PlayFromObject(obj, SFXTRIG_sc_spotfox02);
     }
     if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 1)
     {
@@ -11064,23 +11064,23 @@ void Lightfoot_ProcessHitResponseFlags(int obj, int inner)
     if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x80)
     {
         *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x80;
-        Sfx_PlayFromObject(obj, SFXtr_jbike_snowhit);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_swdtest322);
     }
     if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x200)
     {
         *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x200;
-        Sfx_PlayFromObject(obj, SFXtr_barrelgrabber_eloop);
+        Sfx_PlayFromObject(obj, SFXTRIG_sk_trwhin3);
     }
     if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x40)
     {
         *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x40;
-        Sfx_PlayFromObject(obj, SFXtr_jbike_snowspray);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_swdtest322_135);
     }
     if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x800)
     {
         *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x800;
         ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 0x19, 2, 1);
-        Sfx_PlayFromObject(obj, SFXtr_jbike_boost);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_simp1_c);
         CameraShake_Start(lbl_803E81CC, lbl_803E81D0, lbl_803E81D4);
         doRumble(lbl_803E81D8);
     }
@@ -11239,7 +11239,7 @@ int playerState34(int obj, int state)
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F48 &&
             (((PlayerState*)state)->baddie.moveEventFlags & 1) == 0)
         {
-            Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff3);
+            Sfx_PlayFromObject(obj, SFXTRIG_recrate_smash);
             ((PlayerState*)state)->baddie.moveEventFlags |= 1;
         }
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
@@ -11361,7 +11361,7 @@ void fn_802AE83C(int obj, int inner)
     }
     if (((GameObject*)obj)->anim.velocityY < lbl_803E812C)
     {
-        Sfx_PlayFromObject(obj, SFXthorntail_snort2);
+        Sfx_PlayFromObject(obj, SFXTRIG_mv_curtainopen16_212);
         (*gWaterfxInterface)
             ->spawnSplashBurst((void*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                ((GameObject*)obj)->anim.localPosZ, lbl_803E7ED8);
@@ -11440,7 +11440,7 @@ int playerState06(int obj, int state)
         {
         case 0x6d:
         case 0x754:
-            Sfx_PlayFromObject(obj, SFXspirit_pool_wobble2);
+            Sfx_PlayFromObject(obj, SFXTRIG_barrel_putdown_31f);
             break;
         case 0x1f4:
         case 0x1f5:
@@ -11452,7 +11452,7 @@ int playerState06(int obj, int state)
             Sfx_PlayFromObject(obj, SFXTRIG_weetinkoneshot);
             break;
         default:
-            Sfx_PlayFromObject(obj, SFXmn_dimraw26);
+            Sfx_PlayFromObject(obj, SFXTRIG_vineclimb116);
             break;
         }
     }
@@ -11624,13 +11624,13 @@ int playerState3C(int obj, int state, f32 fv)
     if ((((PlayerState*)state)->baddie.moveEventFlags & 1) == 0 &&
         ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F14)
     {
-        Sfx_PlayFromObject(obj, SFXdn_hightop_hurt1);
+        Sfx_PlayFromObject(obj, SFXTRIG_sp_sa_def01);
         ((PlayerState*)state)->baddie.moveEventFlags |= 1;
     }
     if ((((PlayerState*)state)->baddie.moveEventFlags & 2) == 0 &&
         ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F18)
     {
-        Sfx_PlayFromObject(obj, SFXen_liftstpc);
+        Sfx_PlayFromObject(obj, SFXTRIG_fox_fightbreath2);
         ((PlayerState*)state)->baddie.moveEventFlags |= 2;
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
@@ -11698,7 +11698,7 @@ int playerState3B(int obj, int state, f32 fv)
     if ((((PlayerState*)state)->baddie.moveEventFlags & 1) == 0 &&
         ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F14)
     {
-        Sfx_PlayFromObject(obj, SFXen_liftstpc);
+        Sfx_PlayFromObject(obj, SFXTRIG_fox_fightbreath2);
         ((PlayerState*)state)->baddie.moveEventFlags |= 1;
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
@@ -11766,7 +11766,7 @@ int playerState3A(int obj, int state, f32 fv)
     if ((((PlayerState*)state)->baddie.moveEventFlags & 1) == 0 &&
         ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F14)
     {
-        Sfx_PlayFromObject(obj, SFXen_liftstpc);
+        Sfx_PlayFromObject(obj, SFXTRIG_fox_fightbreath2);
         ((PlayerState*)state)->baddie.moveEventFlags |= 1;
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
@@ -11889,7 +11889,7 @@ int playerState3D(int obj, int state, f32 fv)
     if ((((PlayerState*)state)->baddie.moveEventFlags & 1) == 0 &&
         ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F14)
     {
-        Sfx_PlayFromObject(obj, SFXdn_hightop_hurt1);
+        Sfx_PlayFromObject(obj, SFXTRIG_sp_sa_def01);
         ((PlayerState*)state)->baddie.moveEventFlags |= 1;
     }
     if ((((PlayerState*)state)->baddie.moveEventFlags & 2) == 0 &&
@@ -12490,7 +12490,7 @@ void playerSetDisguised(int obj, int mode)
             trickyImpress(tricky);
         }
         mainSetBits(GAMEBIT_PlayerIsDisguised, 1);
-        Sfx_PlayFromObject(obj, SFXmn_dimbos36);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_lrope_powerup);
         (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x801, NULL, 0x50, NULL);
         oldModel = Obj_GetActiveModel(obj);
         Obj_SetActiveModelIndex(obj, 2);
@@ -12514,7 +12514,7 @@ void playerSetDisguised(int obj, int mode)
         memcpy((void*)*(int*)((char*)newModel + 0x2c), (void*)*(int*)((char*)oldModel + 0x2c), 0x68);
         memcpy((void*)*(int*)((char*)newModel + 0x30), (void*)*(int*)((char*)oldModel + 0x30), 0x68);
         mainSetBits(GAMEBIT_PlayerIsDisguised, 0);
-        Sfx_PlayFromObject(obj, SFXmn_dimbos36);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_lrope_powerup);
     }
 }
 
@@ -13114,7 +13114,7 @@ int playerStateStartAimStaff(int obj, int state)
         {
             if (inner->staffGrown == 0)
             {
-                Sfx_PlayFromObject(obj, SFXen_lflsh2_b);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_swddirt16);
                 if (gPlayerPathObject != NULL)
                 {
                     b = (((PlayerState*)inner)->flags3F4 >> 6) & 1;
@@ -14755,10 +14755,10 @@ int playerStateClimbOntoLadder(int obj, int state, f32 fv)
         switch (inner->footstepSurface)
         {
         case 4:
-            Sfx_PlayFromObject(obj, SFXdrak_roar1);
+            Sfx_PlayFromObject(obj, SFXTRIG_foot_33a);
             break;
         default:
-            Sfx_PlayFromObject(obj, SFXdn_rexroarlng11);
+            Sfx_PlayFromObject(obj, SFXTRIG_foot_var);
             break;
         }
     }
@@ -15255,7 +15255,7 @@ void fn_802AA014(int obj)
         setup->posX = *(f32*)((char*)slot + 0xc);
         setup->posY = *(f32*)((char*)slot + 0x10);
         setup->posZ = *(f32*)((char*)slot + 0x14);
-        Sfx_PlayFromObject(obj, SFXmammoth_suck);
+        Sfx_PlayFromObject(obj, SFXTRIG_staff_rocket_hitdirt);
         o = (void*)Obj_SetupObject((int)setup, 5, -1, -1, 0);
         if (o != NULL)
         {
@@ -15461,7 +15461,7 @@ void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
     Camera_GetCurrentViewSlot();
     if (Obj_IsLoadingLocked() != 0)
     {
-        Sfx_PlayFromObject(0, SFXmammoth_suck);
+        Sfx_PlayFromObject(0, SFXTRIG_staff_rocket_hitdirt);
         setup = Obj_AllocObjectSetup(0x24, 0x655);
         *(u8*)((char*)setup + 4) = 2;
         *(u8*)((char*)setup + 5) = 1;
@@ -15663,7 +15663,7 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
             int a = v < 0 ? -v : v;
             if (a <= w)
             {
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
                 ((GameObject*)obj)->unkF8 = 2;
             }
             else
@@ -15854,7 +15854,7 @@ void playerCastSpell(int a, int b, int c)
             *(s16*)((char*)sub + 0x4) = v;
         }
         playerSetDisguised(a, 1);
-        Sfx_PlayFromObject(a, SFXmammoth_annoyed);
+        Sfx_PlayFromObject(a, SFXTRIG_dn_boar1_c_209);
         break;
     case 0x5bd:
         c = -1;
@@ -16482,7 +16482,7 @@ int playerStateSlideDownLadder(int obj, int state, f32 fv)
         f32 f3;
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXthorntail_injured2);
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_dive4_c);
         }
         f3 = ((GameObject*)obj)->anim.localPosY - (lbl_803E8010 + inner->climbBaseY);
         if (f3 < lbl_803E7EA4)
@@ -16667,7 +16667,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
         {
             if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7E9C)
             {
-                Sfx_PlayFromObject(obj, SFXmammoth_breath1);
+                Sfx_PlayFromObject(obj, SFXTRIG_staff_rocket_boost);
                 lbl_803DE48C = 1;
             }
         }
@@ -16693,7 +16693,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
         else if ((flags & 0x200) != 0)
         {
             buttonDisable(0, PAD_BUTTON_B);
-            Sfx_PlayFromObject(obj, SFXmammoth_breath1);
+            Sfx_PlayFromObject(obj, SFXTRIG_staff_rocket_boost);
             ObjAnim_SetCurrentMove(obj, 0xd1, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F4C;
         }
@@ -16778,7 +16778,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
         cfPrisonGuard_setLiftHeight(gPlayerInteractTarget, 0x800);
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
+            Sfx_PlayFromObject(obj, SFXTRIG_menuups16k);
             ObjAnim_SetCurrentMove(obj, 0xb2, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
         }
@@ -16788,7 +16788,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
         if ((inner->buttonsJustPressed & PAD_BUTTON_B) != 0)
         {
             buttonDisable(0, PAD_BUTTON_B);
-            Sfx_PlayFromObject(obj, SFXmammoth_breath1);
+            Sfx_PlayFromObject(obj, SFXTRIG_staff_rocket_boost);
             ObjAnim_SetCurrentMove(obj, 0xad, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F4C;
         }
@@ -16859,7 +16859,7 @@ int playerStateStaffBoost(int obj, int state, f32 fv)
         {
             if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F74)
             {
-                Sfx_PlayFromObject(obj, SFXhightop_call1);
+                Sfx_PlayFromObject(obj, SFXTRIG_staff_quake_powerup);
                 lbl_803DE48D = 1;
             }
         }
@@ -16867,7 +16867,7 @@ int playerStateStaffBoost(int obj, int state, f32 fv)
         {
             if ((inner->buttonsHeld & mask) != 0)
             {
-                Sfx_PlayFromObject(obj, SFXhightop_call2);
+                Sfx_PlayFromObject(obj, SFXTRIG_staff_quake_strike);
                 ObjAnim_SetCurrentMove(obj, 0x87, lbl_803E7EA4, 0);
                 ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
             }
@@ -16906,7 +16906,7 @@ int playerStateStaffBoost(int obj, int state, f32 fv)
                     v = *(s16*)((char*)sub + 0x6);
                 }
                 *(s16*)((char*)sub + 0x4) = v;
-                Sfx_PlayFromObject(obj, SFXmammoth_annoyed2);
+                Sfx_PlayFromObject(obj, SFXTRIG_staff_boulder_move2);
                 ObjAnim_SetCurrentMove(obj, 0x88, lbl_803E7EA4, 0);
                 ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F6C;
             }
@@ -16920,7 +16920,7 @@ int playerStateStaffBoost(int obj, int state, f32 fv)
     case 0x43:
         if ((inner->buttonsHeld & mask) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXhightop_call2);
+            Sfx_PlayFromObject(obj, SFXTRIG_staff_quake_strike);
             ObjAnim_SetCurrentMove(obj, 0x87, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
         }
@@ -17467,7 +17467,7 @@ int playerStateSuperQuake(int obj, int state, f32 fv)
             int r35c;
             int v;
             int hi;
-            Sfx_PlayFromObject(obj, SFXmammoth_breath2);
+            Sfx_PlayFromObject(obj, SFXTRIG_fox_roll2);
             amt = -((PlayerState*)inner)->chargeCapacity;
             r35c = *(int*)((char*)(*(int*)&((GameObject*)obj)->extra) + 0x35c);
             v = *(s16*)((char*)r35c + 4) + amt;
@@ -17482,7 +17482,7 @@ int playerStateSuperQuake(int obj, int state, f32 fv)
             *(s16*)((char*)r35c + 4) = v;
             if (amt > 0)
             {
-                Sfx_PlayFromObject(0, SFXmammoth_dirtstep);
+                Sfx_PlayFromObject(0, SFXTRIG_id_21c);
             }
             ObjAnim_SetCurrentMove(obj, 0x86, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
@@ -17497,7 +17497,7 @@ int playerStateSuperQuake(int obj, int state, f32 fv)
             {
                 trickyImpress(tricky);
             }
-            Sfx_PlayFromObject(obj, SFXmammoth_huff1);
+            Sfx_PlayFromObject(obj, SFXTRIG_staff_boulder_move1);
             superQuakeFn_8016d9fc((char*)obj + 0xc);
             ((ByteFlags*)((char*)inner + 0x3f3))->b10 = 1;
             doRumble(lbl_803E7F30);
@@ -17510,7 +17510,7 @@ int playerStateSuperQuake(int obj, int state, f32 fv)
         }
         break;
     default:
-        Sfx_PlayFromObject(obj, SFXmammoth_huff2);
+        Sfx_PlayFromObject(obj, SFXTRIG_staff_boulder_drops);
         f = lbl_803E7EA4;
         ((PlayerState*)state)->baddie.animSpeedC = f;
         ((PlayerState*)state)->baddie.animSpeedB = f;
@@ -18001,7 +18001,7 @@ void playerProcessQueuedItemCommand(int obj, int state)
         }
         if (noMatch)
         {
-            Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
+            Sfx_PlayFromObject(0, SFXTRIG_id_10a);
         }
     }
 

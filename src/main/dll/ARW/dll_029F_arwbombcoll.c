@@ -14,6 +14,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct ArwbombcollHandleArwingHitPlacement
 {
@@ -129,7 +130,7 @@ void Ring_onCollect(int obj, RingState* state, int arwing)
     u8 mode = state->mode;
     if (mode == 0)
     {
-        Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
+        Sfx_PlayFromObject(arwing, SFXTRIG_ar_lsrhitobj16);
         if (arwingObj->anim.seqId == 0x601)
         {
             arwarwing_addHealth(arwing, 1);
@@ -138,7 +139,7 @@ void Ring_onCollect(int obj, RingState* state, int arwing)
     }
     else if (mode == 1)
     {
-        Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
+        Sfx_PlayFromObject(arwing, SFXTRIG_ar_lsrhitobj16);
         if (arwingObj->anim.seqId == 0x601)
         {
             arwarwing_addMaxHealth(arwing, 1);
@@ -147,12 +148,12 @@ void Ring_onCollect(int obj, RingState* state, int arwing)
     }
     else if (mode == 3 || mode == 4)
     {
-        Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
+        Sfx_PlayFromObject(arwing, SFXTRIG_ar_lsrhitobj16);
         gameBitIncrement(((ArwbombcollHandleArwingHitPlacement*)setup)->eventId);
     }
     else
     {
-        Sfx_PlayFromObject(arwing, SFXbaddie_vambat_attack);
+        Sfx_PlayFromObject(arwing, SFXTRIG_ar_laser216);
         if (arwingObj->anim.seqId == 0x601)
         {
             int seg;
@@ -311,29 +312,29 @@ active:
         switch (((GameObject*)obj)->anim.seqId)
         {
         case 0x609:
-            Sfx_PlayFromObject(obj, SFXbaddie_eba_hit);
+            Sfx_PlayFromObject(obj, SFXTRIG_ar_ring_pickup);
             arwarwing_upgradeLaserLevel(arw);
             break;
         case 0x608:
-            Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesclose);
+            Sfx_PlayFromObject(obj, SFXTRIG_ar_largeenergy_pickup);
             arwarwing_addBomb(arw);
             break;
         case 0x60a:
             break;
         case 0x6d8:
-            Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
+            Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
             arwarwing_incrementPickup6D8Count(arw);
             break;
         case 0x6d9:
-            Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
+            Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
             arwarwing_incrementPickup6D9Count(arw);
             break;
         case 0x6db:
-            Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
+            Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
             arwarwing_incrementPickup6DBCount(arw);
             break;
         case 0x6da:
-            Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
+            Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
             arwarwing_incrementPickup6DACount(arw);
             break;
         }

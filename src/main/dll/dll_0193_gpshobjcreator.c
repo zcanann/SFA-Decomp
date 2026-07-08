@@ -2,6 +2,7 @@
 #include "main/dll/gpshshrineflags_struct.h"
 extern int Obj_IsLoadingLocked(void);
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
@@ -100,7 +101,7 @@ void gpsh_objcreator_update(int* obj)
     hitDetectFn_80097070(obj, 0.6f, 2, 1, 1, 0);
     if (*(f32*)sub <= 0.0f)
     {
-        Sfx_PlayFromObjectLimited(0, SFXwp_swtst1_c, 1);
+        Sfx_PlayFromObjectLimited(0, SFXTRIG_wp_hitpos_6_167, 1);
         setup = Obj_AllocObjectSetup(0x24, sub[4] + 0x1f4);
         ((GpshShrineFlags*)(sub + 5))->b80 = 1;
         setup->color[3] = 0xff;

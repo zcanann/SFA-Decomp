@@ -2,6 +2,7 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/obj_placement.h"
@@ -248,7 +249,7 @@ void snowclaw_spawnDropBomb(int obj, int owner, int launchMode, int unkF4Value)
                        8) +
                       0x8000) >>
                      8);
-        Sfx_PlayFromObject(obj, SFXswapstone_mumble);
+        Sfx_PlayFromObject(obj, SFXTRIG_id_2e4);
         switch ((u8)launchMode)
         {
         case 0:
@@ -331,12 +332,12 @@ void snowclaw_updateMountAttack(int obj, int mount)
             if (turnSign == 0)
             {
                 ((SnowclawState*)inner)->unk30 = lbl_803E66F4;
-                Sfx_PlayFromObject(obj, SFXswapstone_handhit);
+                Sfx_PlayFromObject(obj, SFXTRIG_id_2e3);
             }
             else
             {
                 ((SnowclawState*)inner)->unk30 = lbl_803E66F8;
-                Sfx_PlayFromObject(obj, SFXswapstone_breatheout);
+                Sfx_PlayFromObject(obj, SFXTRIG_id_2e2);
             }
             if (turnSign != 0)
             {
@@ -486,8 +487,8 @@ void snowclaw_hitDetect(int obj)
         if (((SnowclawState*)inner)->hitCooldown < 0)
         {
             *(s8*)&((SnowclawState*)inner)->health -= 1;
-            Sfx_PlayFromObject(obj, SFXsp_sa_climb02);
-            Sfx_PlayFromObject(obj, SFXdn_rexthrash11);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_sbalhis6_f2);
+            Sfx_PlayFromObject(obj, SFXTRIG_attack);
             Sfx_PlayFromObject(obj, gSnowClawHurtSfxTable[*(s8*)&((SnowclawState*)inner)->health]);
             ((SnowclawState*)inner)->hitCooldown = 0x14;
             ((SnowclawState*)inner)->attackDelay -= 0x28;
@@ -677,7 +678,7 @@ void snowclaw_update(int obj)
 
     if (randFn_80080100(0x12c) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXswapstone_yawn);
+        Sfx_PlayFromObject(obj, SFXTRIG_id_2e5);
     }
 
     if (*(s8*)&((SnowclawState*)inner)->health < 4)

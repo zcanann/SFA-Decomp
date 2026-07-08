@@ -14,6 +14,7 @@
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/scarab.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
@@ -85,7 +86,7 @@ void ChukChuk_setScale(int obj, int message)
     switch ((u8)message)
     {
     case 0x80:
-        Sfx_PlayFromObject(obj, SFXkr_jump1);
+        Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite_26b);
         break;
     }
 }
@@ -220,23 +221,23 @@ void ChukChuk_update(short* obj)
                     roll = randomGetRange(0, 99);
                     if (roll < v->attackChance || (v->flags & CHUKCHUK_FLAG_FORCED_ATTACK) != 0)
                     {
-                        Sfx_PlayFromObject(obj, SFXkr_impact1);
+                        Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_lash_268);
                         fn_8015F5B0(obj);
                     }
                     else
                     {
-                        Sfx_PlayFromObject(obj, SFXkr_impact2);
+                        Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_call02);
                     }
                 }
                 else
                 {
-                    Sfx_PlayFromObject(obj, SFXkr_impact2);
+                    Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_call02);
                 }
             }
         }
         else if ((v->flags & CHUKCHUK_FLAG_PRIMED) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXkr_impact2);
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_call02);
         }
         v->prevDistance = di;
         if (ObjHits_GetPriorityHit(obj, &hit.hitObject, &hit.sphereIndex, &hit.hitVolume) == 14)
@@ -247,10 +248,10 @@ void ChukChuk_update(short* obj)
                 ObjHits_DisableObject(obj);
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 v->flags |= CHUKCHUK_FLAG_DEAD;
-                Sfx_PlayFromObject(obj, SFXkr_impact3);
+                Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311_26a);
                 mainSetBits(v->gameBit, 1);
                 v->steamTimer = 60.0f;
-                Sfx_PlayFromObject(obj, SFXfoot_ice_run_4);
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_lash);
             }
         }
         v->flags &= ~(CHUKCHUK_FLAG_PRIMED | CHUKCHUK_FLAG_FORCED_ATTACK);

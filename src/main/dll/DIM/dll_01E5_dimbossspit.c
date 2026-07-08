@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/objlib.h"
 #include "main/objhits.h"
 
@@ -105,8 +106,8 @@ void DIMbossspit_updateBurst(int obj)
             i = i + 1;
         } while (i < 0x12);
         (*gPartfxInterface)->spawnObject((void*)obj, 0x4bb, NULL, 1, -1, NULL);
-        Sfx_PlayFromObject(obj, SFXwmap_name);
-        Sfx_PlayFromObject(obj, SFXar_bblast16);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_gcexp1_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311);
         CameraShake_SetAllMagnitudes(lbl_803E4D3C);
         doRumble(lbl_803E4D40);
         if (*(void**)&((DIMbossspitUpdateBurstState*)state)->light != NULL)

@@ -367,7 +367,7 @@ void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int s
     }
     if (cmd == 0x1a)
         return;
-    Sfx_PlayFromObject(obj, SFXen_blkscrp6);
+    Sfx_PlayFromObject(obj, SFXTRIG_stftest);
 }
 
 void snowworm_applyReactionState(int* obj, int* st)
@@ -423,7 +423,7 @@ void crawler_playReactionEffects(int* obj, int* st)
             }
             else
             {
-                Sfx_PlayFromObject((int)obj, SFXfox_fightbreath4);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_call1);
             }
         }
         break;
