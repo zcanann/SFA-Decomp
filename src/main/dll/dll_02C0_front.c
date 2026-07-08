@@ -244,12 +244,12 @@ extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 rend
 /* Seed the object's state from its seqId, pick the anim move and blend
  * float per id range, and for the attract id install the movie draw
  * callback. */
-void TitleScreen_init(u8* obj, u8* p)
+void TitleScreen_init(u8* obj, u8* def)
 {
     u8* state = ((GameObject*)obj)->extra;
     s16 seqId;
     ((TitlescreenState*)state)->animPhase = 0;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)p[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)def[0x18] << 8);
     seqId = ((GameObject*)obj)->anim.seqId;
     if (seqId >= 0x77d && seqId < 0x781)
     {
