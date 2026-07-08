@@ -136,8 +136,8 @@ void cclevcontrol_update(int obj)
             (*gCameraInterface)->loadTriggeredCamAction(1, 1, 0);
         }
     }
-    collectBitA = mainGetBit(0x3f0);
-    collectBitB = mainGetBit(0xaf7);
+    collectBitA = mainGetBit(GAMEBIT_ITEM_CCGoldBar_Used);
+    collectBitB = mainGetBit(GAMEBIT_ITEM_CCGoldBar_Count);
     if (collectBitB + collectBitA == 4 && mainGetBit(0xf26) == 0)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
