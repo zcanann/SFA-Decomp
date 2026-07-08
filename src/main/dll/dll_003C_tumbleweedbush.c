@@ -606,7 +606,7 @@ u32 Link_update(void)
         if (acceptPressed)
         {
             if (((gTumbleweedBushItems[linkSelected].flags & LINK_FLAG_NO_ACCEPT) == 0) &&
-                (mainGetBit(0x44f) == 0))
+                (mainGetBit(GAMEBIT_MenuRelated044F) == 0))
             {
                 buttonDisable(0, PAD_ACCEPT_MASK);
                 result = 1;
