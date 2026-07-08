@@ -185,9 +185,9 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             goto _fail;
         }
 
-        if (vb->freeList[voice].user == 1)
+        sfv = vb->freeList + voice;
+        if (sfv->user == 1)
         {
-            sfv = vb->freeList + voice;
             i = sfv->prev;
 
             if (i != 0xff)
