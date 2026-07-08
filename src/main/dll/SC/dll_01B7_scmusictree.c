@@ -138,10 +138,10 @@ typedef struct ScMusictreeState
 } ScMusictreeState;
 
 #pragma dont_inline on
-void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
+void sc_musictree_spawnAmbientEffect(int obj, int extra, int unused, s8 idx)
 {
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
-    SCMusicTreeState* state = (SCMusicTreeState*)p2;
+    SCMusicTreeState* state = (SCMusicTreeState*)extra;
     int setup;
 
     if (Obj_IsLoadingLocked() != 0)
@@ -170,27 +170,27 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void sc_musictree_handleHitObject(int p1, int p2, int effectType)
+void sc_musictree_handleHitObject(int obj, int extra, int effectType)
 {
-    int id = ((ObjPlacement*)((GameObject*)p1)->anim.placementData)->mapId;
-    SCMusicTreeState* state = (SCMusicTreeState*)p2;
+    int id = ((ObjPlacement*)((GameObject*)obj)->anim.placementData)->mapId;
+    SCMusicTreeState* state = (SCMusicTreeState*)extra;
     (void)effectType;
 
     switch (id)
     {
     case SC_MUSICTREE_MAP_TOTEM_1:
-        Sfx_PlayFromObject(p1, SFXTRIG_sdrstp_c);
-        Sfx_PlayFromObject(p1, SFXTRIG_gland2_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_sdrstp_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_gland2_c);
         mainSetBits(GAMEBIT_TOTEM_COMBO_1, 1);
         break;
     case SC_MUSICTREE_MAP_TOTEM_2:
-        Sfx_PlayFromObject(p1, SFXTRIG_en_sdrstp_c);
-        Sfx_PlayFromObject(p1, SFXTRIG_gland2_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_sdrstp_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_gland2_c);
         mainSetBits(GAMEBIT_TOTEM_COMBO_2, 1);
         break;
     case SC_MUSICTREE_MAP_TOTEM_3:
-        Sfx_PlayFromObject(p1, SFXTRIG_en_sdrstp_c_12d);
-        Sfx_PlayFromObject(p1, SFXTRIG_gland2_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_sdrstp_c_12d);
+        Sfx_PlayFromObject(obj, SFXTRIG_gland2_c);
         mainSetBits(GAMEBIT_TOTEM_COMBO_3, 1);
         break;
     case SC_MUSICTREE_MAP_GATE_1:
