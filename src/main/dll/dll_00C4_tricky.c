@@ -142,7 +142,7 @@ extern void trickyImpress(int obj);
 extern int trickyFoodFn_8014460c(int obj, int state);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 extern int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2);
-extern void fn_8013ADFC(int obj);
+extern void skeetla_spawnLinkedSparks(int obj);
 extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
 extern void objSetAnimSpeedTo1(int obj);
@@ -2637,12 +2637,12 @@ void Tricky_render(int obj, int p2, int p3, int p4, int p5, char doRender)
             switch (((TrickyState*)state)->stateIndex)
             {
             case 2:
-                fn_8013ADFC(obj);
+                skeetla_spawnLinkedSparks(obj);
                 break;
             case 3:
                 if (((TrickyState*)state)->substate == 4)
                 {
-                    fn_8013ADFC(obj);
+                    skeetla_spawnLinkedSparks(obj);
                 }
                 break;
             }
