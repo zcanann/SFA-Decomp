@@ -66,7 +66,7 @@ int n_rareware_frameStart(void)
     }
     if ((s8)gNrarewareTransitionStarted != 0)
     {
-        mainSetBits(0x44f, 0);
+        mainSetBits(GAMEBIT_MenuRelated044F, 0);
         loadUiDll(4);
     }
     gNrarewareFrameCounter += framesThisStep;
