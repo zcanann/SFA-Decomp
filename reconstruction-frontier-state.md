@@ -6931,3 +6931,107 @@ No edits/commits (audit only).
 - maybetemplate: hudDrawMagicBar tmp->seg4Raw (4th magic-bar segment fill count pre-clamp). md5-identical. (4af1541cd2)
 - dbholecontrol1 (dll_0243): aligned 17 external dbstealerworm_stateHandler* proto params p/p1/p2/param2 -> obj/baddie (match sibling dll_0242 defs); render p1->obj (p2-p5 stay render-passthrough). md5-identical. (4af1541cd2)
 - REMAINING in DLL grep pool all render-passthrough (p2-p5 to objRenderModelAndHitVolumes) or extern-proto only (dbegg, snowclaw, staffAction, scarab[Jack]) -> correctly left raw. Pocket exhausted for genuine substate/scratch generics in the checked set.
+
+## FUZZY-MATCH deep re-triage (2026-07-08, Opus, fuzzy-specialist) — band confirmed coloring-capped, ZERO source levers survive
+Regenerated report.json + proto; decoded per-fn fuzzy; deep-triaged ALL 244 -O4,p main fns in 95.0-99.6
+(audio/noopt/dolphin/player/model/sdk excluded) with `ndiff.py --classify` per-region + hand-inspection
+of every non-perm class + one LIVE lever attempt.
+
+WHOLE-BAND region-class histogram (244 fns): reg-perm 5598 | pool-reloc 1054 (score-neutral #70) |
+li-const 157 | mr-copy 100 | fcmpo-swap 85 | deref-via-copy 18 | ext-insert 16 | ext-delete 15 |
+sched-order 13 | frame 2 | branch-over-branch 1. reg-perm dominates by ~35x. T==C 163 / T!=C 81.
+
+HAND-VERIFIED the promising non-perm tags -> ALL welded:
+- fcmpo-swap (85): wrote a TRUE-swap detector (same 2 fregs reversed on the actual replace line, not context).
+  16 genuine isolated swaps found (expgfx_updateActivePools, ObjSeq_update/RebuildCurve, arwarwing_updateBarrelRoll,
+  CameraModeViewfinder, ObjHits_CheckSkeletonPair x4, sky2_run x2, DR_EarthWarrior_stateHandler02 x2, andross,
+  maybetemplate pauseMenuDrawStatus, titleScreenDrawFn). Inspected arwarwing (`rotZBlend < lbl_803E6ECC`) and
+  expgfx: the compared VALUE is ALREADY loaded first / is already the LEFT operand in BOTH T and C. The delta is
+  purely WHICH f-register the const lands in (f0 vs f1) = #82 FP-perm, NOT the "value-first load order" theory the
+  prior (Jul05 analyst) note posited. The Jul05 note's fcmpo-operand lever premise is INCORRECT for this band --
+  these are register-numbering, source-uncontrollable. maybetemplate's "swap" was a context-line false-positive
+  (real diff = whole-fn r27<->r31 GPR-perm).
+- mr-copy (100): sampled voxmaps_resetLoadedMaps (T=45 C=46, single `mr r24,r3`), shader mapLoadBlock (`mr r27,r28`
+  vs `li r27,0`). Former = r0-detour/.data-ptr-into-saved-reg (target `addi r24,r3,0`, current `addi r3,r3,0; mr`);
+  latter = #110 shared-zero (`i=0;byteOff=i` copy-props the mr away). Both banked caps.
+- li-const (157): dll_0B_func09 etc = li-placement/scheduling inside reg-perm (coupled-li cap).
+- ext-insert/delete (16/15): NO isolated extsh/extsb insert/delete exists in the T==C band (scanned all) --
+  every one is bundled inside a reg-perm replace block (e.g. objhits CheckHitVolumes r26<->r30 struct-loop). No
+  clean #53 narrowing-store lever remains.
+
+LIVE ATTEMPT (1, reverted): voxmaps_resetLoadedMaps base-hoist `VoxMaps* mgr=&gVoxMaps` (matching the sibling
+voxmaps_initialise pattern in-file). NO effect -- MWCC still materializes `&gVoxMaps` into r3 + `mr r24,r3`.
+Confirms #16/#80 base-hoist is inert against the r0-detour instruction-selection pin. Reverted (T=45 C=46 baseline).
+
+VERDICT: No source-controllable lever survives in the 95.0-99.6 -O4,p band. Corroborates the Jul05 exhaustion
+finding with a fresh full-band per-region census + true-swap detector + inspection of every non-perm class.
+Residual is 100% coloring/FP-perm/r0-detour/shared-zero/coupled-li/pool-reloc -- all banked caps. Reopen only on
+new team commits (new C -> new webs). No commits this cycle (correct: nothing gained).
+
+## Jul08 95.0-98.0 slice re-triage (fuzzy specialist, per-unit report.json only)
+In-tree report.json has NO per-fn data -> ranked by UNIT fuzzy, then per-fn via ndiff (reads .o direct).
+Only 5 -O4,p units in 95.0-98.0 band: render 96.65, newshadows 96.76, dll_000A_expgfx 97.04,
+animobjd2 97.40, dll_0145_cloudprisoncontrol 97.83. Ran per-symbol region census across all.
+Candidates probed:
+- CloudPrisonControl_update (T=C=234, 19 rgn): #53-ish extsh/sth split in the `if(!found)` e->value=data
+  store. Reorder `lbl_803DDB09++` before `e->value=data` shuffled 19->18 but did NOT true-match the
+  target's scheduler interleave (extsh-early/sth-late spanning the incr) -- reg-perm (r3/r0/r4) welded. REVERTED.
+- shadowCreate (T=C=92): sqrtf() 3-iter NR expansion is STRUCTURALLY IDENTICAL to target; delta is pure
+  #82 FP-reg numbering (f4<->f2). Welded. The sqrtf inline (line 1746, 3 iterations) is correct.
+- allocLotsOfTextures (T=1698/C=1699, 236 rgn): 76 "nonperm" = 13 li-const + 11 fcmpo-swap + 7 pool-reloc
+  + 2 mr-copy + 1 ext-insert (a lone clrlwi,24 before one stbx in the ramp store; present in TARGET too at
+  4904 -- CSE'd stack temp reload). Dropping the `(u8)` cast on `(u8)(255-i)` (line 2182-2191) did NOT drop
+  the clrlwi. Off-by-one across a 1698-instr reg-perm/li-const/fcmpo cascade -- not tractable. REVERTED.
+- expgfx_onMapSetup / _updateSourceFrameFlags / fn_80006B1C / render_copyPackedU64*: all reg-perm (#108)
+  or r0-detour (addi r0,r3,0; mr rN,r0) or jumptable pool-reloc (#70, score-neutral). Welded on sight.
+VERDICT: the 95.0-98.0 -O4,p slice holds NO surviving source-controllable lever. Every near-miss is a
+whole-fn coloring/FP-perm/r0-detour/li-const/pool-reloc cascade (T==C length). Confirms the standing
+exhaustion finding. No commits this cycle (correct -- nothing gained; the one 19->18 shuffle was reverted
+as non-structural). Reopen only on new team commits.
+
+## Jul08 sub-92 OUTLIER HUNT (fuzzy specialist; zlbDecompress-class search)
+GOAL: find match-score outliers like zlbDecompress (73%, NOT reg-perm-welded). Decoded IN-TREE
+report.json -- it DOES have per-fn data (units[].functions[].fuzzy_match_percent), contra prior note.
+CENSUS: exactly ONE function in the WHOLE binary is <92%: zlbDecompress (pi_dolphin.c, sibling owns).
+Overall fuzzy 99.6269. The 92-97 band non-capped (excl render/shader/newshadows/lightmap/maketex/
+player/model/*_dolphin/audio/musyx) = 16 fns. Classified ALL via ndiff --classify:
+- gameTextInitFn_8001c794 (textrender 93.38, T=249/C=247, only 6 reg-perm+2 li-const+1 mr-copy = LEAST
+  welded): loop is #113 unroll-factor. ppc_unroll_instructions_limit is BINARY here: <=96 -> 1x unroll
+  (C=200), >=100 -> 2x (C=247). Target=249 sits at 2x + 2 EXTRA li (shared-zero #110). Swept 64/80/96/
+  100/112/120/128; 128 (current) is optimal. The 2-instr residual = #110 shared-zero (x=0;x0=0 -> li;mr
+  coalesce); swapping init order inert. WELDED at 93.38. REVERTED (no change committed).
+- voxmaps_resetLoadedMaps (96.92, T=45/C=46, ONLY 3 rgn, 1 mr-copy): target `addi r24,r3,0` (r0-detour)
+  uses one base reg for all field+disp; C emits base in r3 + spurious `mr r24,r3`. Tried VoxMaps* mgr
+  base-hoist (#16) AND ((VoxMaps*)slotOrigin)->field derivation -- mr persists both ways. r0-detour cap
+  (instruction-selection-pinned per MEMORY). REVERTED.
+- dll_0B_func04 (94.22, T=C=627, 113/122 reg-perm), walkgroupFindExitPointFn (95.38, T~=C, 99 reg-perm),
+  gametext textMeasureFn (95.33, 69 reg-perm), curves_getCurves (96.92, T=C=118, 25/25 ALL reg-perm),
+  waterfx_func05 (96.91, T=C=270, 26 reg-perm), animobjd2 fn_8013E0D0 (96.92, T=973/C=981; the 8-instr
+  gap is r31-vs-r29 BASE-reg numbering rippling into extra copies -- reg-perm at root): ALL #108 welded.
+- expgfx family (getSlot/resetAllPools/initialise/onMapSetup): r0-detour + #110 shared-zero + reg-perm.
+VERDICT: zlbDecompress is the ONLY genuine sub-92 outlier in the binary. The corpus (99.6269) is
+saturated: every other sub-97 non-capped fn is a whole-fn reg-perm/r0-detour/shared-zero/unroll-binary
+cascade (T==C or T-vs-C explained by base-reg numbering). NO source-controllable lever survives outside
+zlbDecompress. No commits (nothing gained; all experiments reverted, tree clean).
+
+## DOLPHIN-FAMILY algorithmic-outlier sweep (Jul08, opus) — zlbDecompress was UNIQUE in the family
+Scope: all *_dolphin.c in src/main (objprint/pi/rcp/tex/track_dolphin), EXCL pi_dolphin.c (zlb sibling),
+audio/MSL (noopt), player/model. These 5 units map to main/main/*_dolphin in report.json (they are SFA
+main-lib -O4,p code, NOT real SDK). All main/dolphin/ SDK units <100 are MSL math (k_cos/k_tan/e_rem_pio2/
+s_floor/s_sin/exponentialsf) = noopt 1.2.5n, out of scope.
+Sub-95 fns found (besides zlbDecompress 73.13, sibling-owned): ONLY TWO, both track_dolphin.c:
+- **fn_80069B1C 93.92** (texture-blend fmt4/fmt6 double loop). ndiff T=235 C=235 EQUAL length.
+  Diff-tool chunks show phantom "insert" blocks but totals are equal => pure #108 within-class reg-perm +
+  scheduling. Addressing ALREADY matched (target re-adds per-base offset i6+i4+i5+i12 to each of src1/src2/
+  dst, no hoist; our C does same). WELDED. No lever.
+- **renderGlows 94.72** (sun-flare + glow-quad GXWGFifo writer). ndiff T=499 C=501 (+2). Attacked:
+  * spurious `clrlwi;stb` on `colorScale=alpha` (u8 global = int local). Target emits bare `stb r29` because
+    it SPILLS alpha to stack (140(r1)) and reloads — narrowing pass never sees an in-reg value. Ours keeps
+    alpha in-reg => mask. Typing `alpha` u8 RELOCATES the mask to the `alpha=(int)(...)` store (still +1, net
+    neutral) — reverted. Spill-driven, not source-forceable without net-negative.
+  * FP-const reload check: lbl_803DEBCC loaded 10x in BOTH (matched); WaitingBits 2x both. No #45/#127 lever.
+  * remaining +1 = FP store scheduling in the quad (fadds/fsubs interleave order, Scheduler.c). Capped.
+  => coloring/scheduling/spill-capped. No algorithmic axis.
+VERDICT: zlbDecompress WAS UNIQUE in the dolphin family. The other two dolphin sub-95 fns are ordinary
+reg-perm/spill/scheduling cascades (one T==C, one T-vs-C=+2 fully explained by a spill-mask + FP sched).
+No source-controllable lever survives. No commits (tree clean, all experiments Edit-reverted).
