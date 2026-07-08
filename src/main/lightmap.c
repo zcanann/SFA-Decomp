@@ -393,7 +393,7 @@ void renderObjects(s8* arg0)
                 *(u32*)((u8*)&q->d + lbl_803DCE30 * 16) = 2;
                 lbl_803DCE30++;
             }
-            else if (((GameObject*)obj)->anim.modelInstance->shadowType == 3 && (((GameObject*)obj)->anim.flags
+            else if (((GameObject*)obj)->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH && (((GameObject*)obj)->anim.flags
                 & OBJANIM_FLAG_HIDDEN) == 0 && (((GameObject*)obj)->anim.modelState->flags &
                 OBJ_MODEL_STATE_SHADOW_VISIBLE))
             {
@@ -1581,7 +1581,7 @@ void objDrawFn_8005da48(int* obj)
         {
             objShadowFn_80062498(obj, 0, 0, framesThisStep);
         }
-        else if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 3)
+        else if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH)
         {
             objDrawFn_80061654(obj, model);
         }
