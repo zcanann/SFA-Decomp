@@ -112,9 +112,9 @@ void FUN_80064384(int param_1);
 
 
 /* extern-cleanup: defining-file public prototypes */
-int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8, int p9);
+int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32 offX, f32 offZ, int p8, int kindMask);
 void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* p7, void* buf48, f32 f);
-void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e);
+void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int allowDown);
 void initTextures(void);
 void fn_80060BB0(void);
 void* fn_800606DC(int* obj, int idx);

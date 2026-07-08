@@ -56,7 +56,7 @@ void FUN_8003cb48(u32 param_1,u32 param_2,int param_3);
 
 
 /* extern-cleanup: defining-file public prototypes */
-void modelCalcVtxGroupMtxs(int p1, int p2);
+void modelCalcVtxGroupMtxs(int def, int model);
 void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c);
 void fn_80039B54(int obj, s16* curve, s16* state, f32 val);
 

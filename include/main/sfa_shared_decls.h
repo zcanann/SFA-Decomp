@@ -171,7 +171,7 @@ void mtxRotateByVec3s(f32* mtx, void* transform);
 void normalize(f32 * x, f32 * y, f32 * z);
 void objAudioFn_80039270(int obj, void* p, int id);
 void objGetColor(int slot, u8* red, u8* green, u8* blue);
-void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
+void objShadowFn_80062498(int* obj, int param2, int p3, u8 frames);
 void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 void padClearAnalogInputX(int port);
 void padClearAnalogInputY(int port);

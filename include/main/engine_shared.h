@@ -1239,7 +1239,7 @@ void streamsLoadedCallback(int status, void* fileInfo);
 void voxmaps_updateTimers(void);
 void voxmaps_gridToWorld(f32* out, s16* grid);
 void fn_80008F38(void* addr, u32 dest, u32 size);
-void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5, u32 p6, u32 p7);
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3);
 int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
 void voxmaps_worldToGrid(f32* in, s16* out);
 void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);

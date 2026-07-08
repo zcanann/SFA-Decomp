@@ -842,6 +842,6 @@ void gameTextSetDrawFunc(void* fn);
 void fn_80293018(int q, float* sin_out, float* cos_out);
 void titleScreenFn_8005cdd4(int v);
 void fn_80292E20(int q, float* sin_out, float* cos_out);
-void baddieAfterUpdateBonesCb(int obj, int* p2);
+void baddieAfterUpdateBonesCb(int obj, int* bones);
 
 #endif /* MAIN_AUDIO_SFX_IDS_H_ */
