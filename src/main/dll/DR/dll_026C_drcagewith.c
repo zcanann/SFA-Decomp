@@ -7,6 +7,7 @@
  * that marks the cage already opened (openedGameBit).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/gamebit_ids.h"
 #include "main/game_object.h"
 
 #define DRCAGEWITH_CHILD_OBJ 1143
@@ -257,7 +258,7 @@ void DR_CageWith_init(int obj, char* arg)
     type = ((GameObject*)obj)->anim.seqId;
     if (type == 0x86a || type == 0x86b)
     {
-        if (mainGetBit(0x609) == 0)
+        if (mainGetBit(GAMEBIT_DR_RescuedCloudRunner) == 0)
         {
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
