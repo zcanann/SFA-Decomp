@@ -7,6 +7,7 @@
  * the full per-frame tick.
  */
 #include "main/dll/DIM/dll_802B9780_shared.h"
+#include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -119,9 +120,9 @@ int DIMSnowHorn1_stateHandler00(int obj)
         if (mainGetBit(0x1db)) return 8;
         return 6;
     case 1:
-        if (mainGetBit(0x16f)) return 8;
-        if (mainGetBit(0x28)) return 7;
-        if (mainGetBit(0x27)) return 7;
+        if (mainGetBit(GAMEBIT_ITEM_DIMAlpineRoot_16F)) return 8;
+        if (mainGetBit(GAMEBIT_ITEM_AlpineRoot_028)) return 7;
+        if (mainGetBit(GAMEBIT_DIM_FoundInjuredSnowHorn)) return 7;
         return 6;
     case 3:
         return 8;
@@ -511,24 +512,24 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
         if ((*gGameUIInterface)->isEventReady(GAMEBIT_SNOWHORN_PUZZLE) != 0)
         {
             u8 bit170 = mainGetBit(GAMEBIT_SNOWHORN_PUZZLE);
-            if (mainGetBit(0x28) == 0)
+            if (mainGetBit(GAMEBIT_ITEM_AlpineRoot_028) == 0)
             {
                 switch (bit170)
                 {
                 case 1:
-                    mainSetBits(0x28, 1);
+                    mainSetBits(GAMEBIT_ITEM_AlpineRoot_028, 1);
                     inner->triggerMode = 2;
                     break;
                 case 2:
                     inner->triggerMode = 4;
-                    mainSetBits(0x16f, 1);
+                    mainSetBits(GAMEBIT_ITEM_DIMAlpineRoot_16F, 1);
                     break;
                 }
             }
             else
             {
                 inner->triggerMode = 4;
-                mainSetBits(0x16f, 1);
+                mainSetBits(GAMEBIT_ITEM_DIMAlpineRoot_16F, 1);
             }
             (*gObjectTriggerInterface)->runSequence(
                 inner->triggerMode, (void*)obj, -1);
@@ -539,7 +540,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
         {
             if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
             {
-                if (mainGetBit(0x28) != 0)
+                if (mainGetBit(GAMEBIT_ITEM_AlpineRoot_028) != 0)
                 {
                     inner->triggerMode = 3;
                 }
@@ -614,8 +615,8 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
         {
         case 1:
             inner->triggerMode = 0;
-            mainSetBits(0x245, 1);
-            mainSetBits(0x27, 1);
+            mainSetBits(GAMEBIT_ITEM_TrickyFlame_Got, 1);
+            mainSetBits(GAMEBIT_DIM_FoundInjuredSnowHorn, 1);
             break;
         case 4:
             inner->triggerMode = 9;
@@ -942,7 +943,7 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* anim
         {
             for (i = 0; i < (int)(u32)animUpdate->eventCount; i++)
             {
-                mainSetBits(0x17b, 1);
+                mainSetBits(GAMEBIT_ITEM_DIMCog1_Got, 1);
                 state->flags |= SNOWHORN1_FLAG_SEQ_TRIGGERED;
             }
         }
@@ -1360,11 +1361,11 @@ void DIMSnowHorn1_update(int obj)
                     }
                     if (angleDelta > 0x4000 || angleDelta < -0x4000)
                     {
-                        mainSetBits(0x18, 1);
+                        mainSetBits(GAMEBIT_NW_ClimbOnSnowHorn, 1);
                     }
                     else
                     {
-                        mainSetBits(0x5ba, 1);
+                        mainSetBits(GAMEBIT_NW_SnowHown05BA, 1);
                     }
                     if (((DIMSnowHorn1State*)data)->mode == 3)
                     {
@@ -1421,11 +1422,11 @@ void DIMSnowHorn1_update(int obj)
                     }
                     if (angleDelta > 0x4000 || angleDelta < -0x4000)
                     {
-                        mainSetBits(0x19, 1);
+                        mainSetBits(GAMEBIT_NW_ClimbOffSnowHorn, 1);
                     }
                     else
                     {
-                        mainSetBits(0x5bb, 1);
+                        mainSetBits(GAMEBIT_NW_SnowHown05BB, 1);
                     }
                     *(int*)&((DIMSnowHorn1State*)data)->baddie.unk31C = 0;
                     (*gGameUIInterface)->airMeterSetShutdown();
@@ -1545,7 +1546,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
         switch (inner->mode)
         {
         case 1:
-            if (mainGetBit(0x16f))
+            if (mainGetBit(GAMEBIT_ITEM_DIMAlpineRoot_16F))
             {
                 idx = 0;
             }
