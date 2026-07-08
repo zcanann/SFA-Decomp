@@ -85,7 +85,7 @@ typedef struct HightopPlacement
     u8 pad355[0x9FD - 0x355];
     u8 flags;
     u8 pad9FE[0xC16 - 0x9FE];
-    s16 unkC16;
+    s16 turnRateThreshold;
     s16 airMeterCapacity;
     u8 padC1A[0xC28 - 0xC1A];
     f32 curveFollowSpeedScale;
