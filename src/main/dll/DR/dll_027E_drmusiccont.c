@@ -13,6 +13,7 @@
  * DrMusicContFlags cache at 0x8.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -64,7 +65,7 @@ void drmusiccont_init(int obj)
     flags->b_e31 = mainGetBit(0xe31);
     flags->b_e32 = mainGetBit(0xe32);
     flags->b_e33 = mainGetBit(0xe33);
-    flags->b_e9c = mainGetBit(0xe9c);
+    flags->b_e9c = mainGetBit(GAMEBIT_DR_ShutDownRobotShields);
     flags->b_e38 = mainGetBit(0xe38);
     flags->b_e3c = mainGetBit(0xe3c);
     flags->b_e3d = mainGetBit(0xe3d);
@@ -88,14 +89,14 @@ void drmusiccont_update(int obj)
     cloudSetOverridePosition(obj, gDrMusicControlCloudOverridePosX, gDrMusicControlCloudOverridePosY, gDrMusicControlCloudOverridePosZ);
     if (((GameObject*)obj)->unkF4 == 0)
     {
-        if ((u32)mainGetBit(0xe7b) == 0)
+        if ((u32)mainGetBit(GAMEBIT_DRArwingRelated0E7B) == 0)
         {
             getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_A, 0);
             getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_B, 0);
             getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_C, 0);
             getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_D, 0);
             skyFn_80088e54(0, lbl_803E6BD8);
-            mainSetBits(0xe7b, 1);
+            mainSetBits(GAMEBIT_DRArwingRelated0E7B, 1);
         }
         ((GameObject*)obj)->unkF4 = 1;
     }
@@ -111,7 +112,7 @@ void drmusiccont_update(int obj)
     if (flags->b_e9c == 0 && bit0 && bit1 && bit2 && bit3)
     {
         flags->b_e9c = 1;
-        mainSetBits(0xe9c, 1);
+        mainSetBits(GAMEBIT_DR_ShutDownRobotShields, 1);
         Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
     }
     else if (bit0 != flags->b_e30 || bit1 != flags->b_e31 || bit2 != flags->b_e32 || bit3 != flags->b_e33)
@@ -171,7 +172,7 @@ void drmusiccont_update(int obj)
 
     if (flags->b_state != 0)
     {
-        if ((u32)mainGetBit(0x9f0) == 0 || mainGetBit(0x632) != 0)
+        if ((u32)mainGetBit(0x9f0) == 0 || mainGetBit(GAMEBIT_DR_RescuedHighTop) != 0)
         {
             (*gMapEventInterface)->clearRestartPoint();
             flags->b_state = 0;
@@ -179,7 +180,7 @@ void drmusiccont_update(int obj)
     }
     else
     {
-        if ((u32)mainGetBit(0x9f0) != 0 && mainGetBit(0x632) == 0)
+        if ((u32)mainGetBit(0x9f0) != 0 && mainGetBit(GAMEBIT_DR_RescuedHighTop) == 0)
         {
             f32 vec[3];
             vec[0] = gDrMusicControlRestartPointX;
