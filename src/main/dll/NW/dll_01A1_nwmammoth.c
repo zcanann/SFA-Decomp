@@ -112,13 +112,13 @@ void fn_801CEE0C(int obj, int p2)
         break;
     case 1:
         state->triggerList = lbl_803DBF74;
-        switch (mainGetBit(1400))
+        switch (mainGetBit(GAMEBIT_ITEM_AlpineRoot_Used))
         {
         case 0:
             if (ObjTrigger_IsSetById(obj, 1398) != 0)
             {
-                mainSetBits(1400, 1);
-                gameBitDecrement(1398);
+                mainSetBits(GAMEBIT_ITEM_AlpineRoot_Used, 1);
+                gameBitDecrement(GAMEBIT_ITEM_IMAlpineRoot_Count);
                 (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
                 state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
                 state->stateIndex = 2;
@@ -136,8 +136,8 @@ void fn_801CEE0C(int obj, int p2)
         state->triggerList = lbl_803DBF78;
         if (ObjTrigger_IsSetById(obj, 1398) != 0)
         {
-            mainSetBits(1400, 2);
-            gameBitDecrement(1398);
+            mainSetBits(GAMEBIT_ITEM_AlpineRoot_Used, 2);
+            gameBitDecrement(GAMEBIT_ITEM_IMAlpineRoot_Count);
             (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
             state->stateIndex = 3;
             state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
@@ -163,16 +163,16 @@ void fn_801CED2C(int obj, int p2)
         if (ObjTrigger_IsSetById(obj, 418) != 0)
         {
             state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
-            mainSetBits(413, 1);
-            mainSetBits(419, 1);
-            mainSetBits(3813, 1);
-            mainSetBits(3814, 1);
+            mainSetBits(GAMEBIT_SnowHornArtifact19D, 1);
+            mainSetBits(GAMEBIT_ITEM_NWSnowHornArtifact_Used, 1);
+            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE5, 1);
+            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE6, 1);
             state->stateIndex = 5;
         }
         break;
     case 5:
         state->triggerList = lbl_803DBFB8;
-        if (mainGetBit(415) != 0)
+        if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
         {
             state->stateIndex = 6;
         }
