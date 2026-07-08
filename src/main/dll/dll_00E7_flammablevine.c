@@ -135,7 +135,7 @@ void FlammableVine_update(int obj)
     {
         goto cant_use_vine;
     }
-    if (mainGetBit(0x245) == 0)
+    if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) == 0)
     {
         goto cant_use_vine;
     }
