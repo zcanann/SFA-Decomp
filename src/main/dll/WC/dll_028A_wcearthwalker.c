@@ -166,7 +166,7 @@ void earthwalker_update(int obj)
                 {
                     newState = 3;
                 }
-                else if (mainGetBit(0x7fc) != 0)
+                else if (mainGetBit(GAMEBIT_WC_FoundKing) != 0)
                 {
                     newState = 3;
                 }
@@ -207,7 +207,7 @@ void earthwalker_update(int obj)
                 {
                     newState = 8;
                 }
-                else if (mainGetBit(0x7fc) != 0)
+                else if (mainGetBit(GAMEBIT_WC_FoundKing) != 0)
                 {
                     newState = 8;
                 }
@@ -252,7 +252,7 @@ void earthwalker_update(int obj)
                 {
                     newState = 0xd;
                 }
-                else if (mainGetBit(0x7fc) != 0)
+                else if (mainGetBit(GAMEBIT_WC_FoundKing) != 0)
                 {
                     if (ewState->lastTriggeredState == 0xb)
                     {
@@ -303,7 +303,7 @@ void earthwalker_update(int obj)
                 {
                     newState = 0x10;
                 }
-                else if (mainGetBit(0x7fc) != 0)
+                else if (mainGetBit(GAMEBIT_WC_FoundKing) != 0)
                 {
                     newState = 0x10;
                 }
@@ -311,12 +311,12 @@ void earthwalker_update(int obj)
             case 1:
                 if ((*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
                 {
-                    if (mainGetBit(0xc92) != 0)
+                    if (mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
                     {
                         ewObj->statusFlags |= 8;
                         newState = -1;
                     }
-                    else if (mainGetBit(0x235) != 0)
+                    else if (mainGetBit(GAMEBIT_WC_PlacedSunMoonStones) != 0)
                     {
                         newState = 9;
                     }
@@ -562,7 +562,7 @@ void earthwalker_init(int obj, int setup)
     ewState->encounterType = *(u8*)(setup + 0x19);
     if (ewState->encounterType == 1)
     {
-        if ((int)mainGetBit(0x7fc) != 0 ||
+        if ((int)mainGetBit(GAMEBIT_WC_FoundKing) != 0 ||
             (*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
         {
             ewState->interactionState = 2;
@@ -580,6 +580,7 @@ void earthwalker_init(int obj, int setup)
 }
 
 #include "main/objHitReact.h"
+#include "main/gamebit_ids.h"
 ObjHitReactEntry gEarthWalkerHitReactEntries[1] = {
     { 575, 706, -1, { 0xFF, 0xFF }, 0, { 0, 0, 0 }, 0.01f, { 0, 0, 0, 0 } }
 };
