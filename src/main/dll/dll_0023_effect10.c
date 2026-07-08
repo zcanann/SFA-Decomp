@@ -74,7 +74,7 @@ extern f32 gEffect10Pi;
 extern f32 gEffect10SinePhaseScale;
 extern float mathSinf(float x);
 
-int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByte, f32* p6)
+int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByte, f32* extraParam)
 {
     EffectSpawnParams p;
     u32 hasSrc;
@@ -261,9 +261,9 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     {
         f32 scale;
 
-        if (p6 != NULL)
+        if (extraParam != NULL)
         {
-            scale = *p6;
+            scale = *extraParam;
         }
         else
         {
@@ -292,9 +292,9 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     {
         int mode;
 
-        if (p6 != NULL)
+        if (extraParam != NULL)
         {
-            mode = *(int*)p6;
+            mode = *(int*)extraParam;
         }
         else
         {
@@ -354,9 +354,9 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     {
         int mode;
 
-        if (p6 != NULL)
+        if (extraParam != NULL)
         {
-            mode = *(int*)p6;
+            mode = *(int*)extraParam;
         }
         else
         {

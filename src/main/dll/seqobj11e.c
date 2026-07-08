@@ -47,7 +47,7 @@ extern u32 ObjLink_AttachChild();
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int p, int p3, int msg)
+void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int msg)
 {
     extern void fn_8014D08C(GameObject * obj, int p, int type, f32 t, int a, int b);
     extern f32 lbl_803E2810;
@@ -62,10 +62,10 @@ void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int p, int p3, int msg)
     }
     Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_pole1_c_23);
     Sfx_PlayFromObject((u32)obj, SFXTRIG_en_lrope_powerdown);
-    ((BaddieState*)p)->reactionFlags |= 0x8;
-    *(f32*)(p + 0x32c) = (f32)(u32)(u16) * (s16*)(sub + 0x2c);
-    fn_8014D08C(obj, p, 1, lbl_803E2810, 0, 0);
-    *(u32*)&((BaddieState*)p)->unk2E4 &= ~0x20LL;
+    ((BaddieState*)state)->reactionFlags |= 0x8;
+    *(f32*)(state + 0x32c) = (f32)(u32)(u16) * (s16*)(sub + 0x2c);
+    fn_8014D08C(obj, state, 1, lbl_803E2810, 0, 0);
+    *(u32*)&((BaddieState*)state)->unk2E4 &= ~0x20LL;
     fz = lbl_803E2814;
     obj->anim.velocityZ = lbl_803E2814;
     obj->anim.velocityY = fz;
@@ -409,7 +409,7 @@ void fn_80152B90(int* obj, u8* state)
     }
 }
 
-int gcRobotLight_init(int obj, int p2)
+int gcRobotLight_init(int obj, int childId)
 {
     extern u8* Obj_SetupObject(u8 * obj, int a, int b, int c, int d);
     int sub;
@@ -419,8 +419,8 @@ int gcRobotLight_init(int obj, int p2)
     Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() == 0)
         return 0;
-    setup = Obj_AllocObjectSetup(36, p2);
-    *(s16*)(setup + 0) = p2;
+    setup = Obj_AllocObjectSetup(36, childId);
+    *(s16*)(setup + 0) = childId;
     ((ObjPlacement*)setup)->color[0] = ((ObjPlacement*)sub)->color[0];
     ((ObjPlacement*)setup)->color[2] = ((ObjPlacement*)sub)->color[2];
     ((ObjPlacement*)setup)->color[1] = 1;
@@ -436,7 +436,7 @@ int gcRobotLight_init(int obj, int p2)
 
 /* scheduling stays off; only peephole flips on for the next two handlers */
 #pragma peephole on
-void gcRobotPatrol_init(int obj, int p)
+void gcRobotPatrol_init(int obj, int state)
 {
     extern f32 lbl_803E2850;
     extern f32 lbl_803E2854;
@@ -445,35 +445,35 @@ void gcRobotPatrol_init(int obj, int p)
     extern f32 lbl_803E2860;
     f32 fz;
 
-    ((BaddieState*)p)->speedScale = lbl_803E2850;
-    *(u32*)&((BaddieState*)p)->unk2E4 = 41;
-    *(u32*)&((BaddieState*)p)->unk2E4 |= 0x7000;
-    *(u32*)&((BaddieState*)p)->unk2E4 |= 0x20000LL;
-    ((BaddieState*)p)->unk308 = lbl_803E2854;
-    ((BaddieState*)p)->animDeltaScale = lbl_803E2858;
-    ((BaddieState*)p)->unk304 = lbl_803E285C;
-    ((BaddieState*)p)->unk320 = 0;
+    ((BaddieState*)state)->speedScale = lbl_803E2850;
+    *(u32*)&((BaddieState*)state)->unk2E4 = 41;
+    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x7000;
+    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20000LL;
+    ((BaddieState*)state)->unk308 = lbl_803E2854;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E2858;
+    ((BaddieState*)state)->unk304 = lbl_803E285C;
+    ((BaddieState*)state)->unk320 = 0;
     fz = lbl_803E2820;
-    *(f32*)&((BaddieState*)p)->eventFlags = fz;
-    ((BaddieState*)p)->unk321 = 0;
-    ((BaddieState*)p)->unk318 = fz;
-    ((BaddieState*)p)->unk322 = 0;
-    ((BaddieState*)p)->unk31C = fz;
-    *(f32*)(p + 0x32c) = lbl_803E2814;
+    *(f32*)&((BaddieState*)state)->eventFlags = fz;
+    ((BaddieState*)state)->unk321 = 0;
+    ((BaddieState*)state)->unk318 = fz;
+    ((BaddieState*)state)->unk322 = 0;
+    ((BaddieState*)state)->unk31C = fz;
+    *(f32*)(state + 0x32c) = lbl_803E2814;
     ((GameObject*)obj)->anim.hitboxScale = lbl_803E2860;
     Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_tr_bcrek1_c);
 }
 
-void mikaladon_updateWhileFrozen(int obj, int p, int param3, int msg)
+void mikaladon_updateWhileFrozen(int obj, int state, int unused, int msg)
 {
     if (msg == 16 || msg == 17)
     {
         return;
     }
     Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_248);
-    *(s16*)&((BaddieState*)p)->hitCounter = 0;
-    *(u32*)&((BaddieState*)p)->unk2E4 |= 0x20;
-    ((BaddieState*)p)->reactionFlags |= 0x8;
+    *(s16*)&((BaddieState*)state)->hitCounter = 0;
+    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20;
+    ((BaddieState*)state)->reactionFlags |= 0x8;
 }
 
 extern f32 lbl_803E27F8;
