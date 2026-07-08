@@ -304,7 +304,7 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
     ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E8278;
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 8);
 
-    if (*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & 0x100)
+    if (*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & PAD_BUTTON_A)
     {
         if ((GameObject*)near == NULL ||
             (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
@@ -431,7 +431,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
             return 0xb;
         }
     }
-    if (*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & 0x100)
+    if (*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & PAD_BUTTON_A)
     {
         if (near == NULL || (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
         {
@@ -774,7 +774,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
 
     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
         obj, ((DIMSnowHorn1State*)state)->baddie.animSpeedA, &((DIMSnowHorn1State*)state)->baddie.moveSpeed);
-    if ((*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & 0x100) != 0)
+    if ((*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & PAD_BUTTON_A) != 0)
     {
         if ((void*)near == NULL || (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
         {
