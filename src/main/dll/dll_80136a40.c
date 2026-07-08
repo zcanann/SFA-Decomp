@@ -35,6 +35,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/sfa_extern_decls.h"
 #include "dolphin/os/OSCache.h"
+#include "main/gamebit_ids.h"
 
 typedef struct TrickyImpressState
 {
@@ -321,12 +322,12 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
 }
 
 #pragma optimization_level reset
-/* GameBit-gated bit toggle on obj->_b8->_54: requires mainGetBit(0x4E4); sets bit 0x10000 then
+/* GameBit-gated bit toggle on obj->_b8->_54: requires mainGetBit(GAMEBIT_Tricky_Usable); sets bit 0x10000 then
  * checks bit 0x10. Returns 1 only when the post-OR check passes. */
 int trickyFn_80138f14(u8* obj)
 {
     u8* b = ((GameObject*)obj)->extra;
-    if ((u32)mainGetBit(0x4E4) != 0u)
+    if ((u32)mainGetBit(GAMEBIT_Tricky_Usable) != 0u)
     {
         ((TrickyImpressState*)b)->flags54 |= 0x10000LL;
         if ((((TrickyImpressState*)b)->flags54 & 0x10) != 0u)
