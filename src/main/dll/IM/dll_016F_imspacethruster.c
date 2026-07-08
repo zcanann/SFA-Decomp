@@ -13,8 +13,9 @@
 #include "main/obj_placement.h"
 #include "main/objtexture.h"
 #include "main/mm.h"
+#include "main/pi_dolphin.h"
 #include "main/dll/VF/vf_shared.h"
-extern void getTabEntry(void* dst, int kind, int offset, int size);
+extern void getTabEntry(void* dst, int fileId, int offset, int size);
 extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
 extern s16 gImSpaceThrusterKeyframeIndexA[], gImSpaceThrusterKeyframeIndexB[];
@@ -194,9 +195,9 @@ void imspacethruster_init(GameObject* obj, u8* placement)
         if (kind < 5)
         {
             state->bufA = mmAlloc(0x28, 0x12, 0);
-            getTabEntry(state->bufA, 0xc, gImSpaceThrusterKeyframeIndexA[kind] * 0x28, 0x28);
+            getTabEntry(state->bufA, MLDF_FILEID_LACTIONS_BIN, gImSpaceThrusterKeyframeIndexA[kind] * 0x28, 0x28);
             state->bufB = mmAlloc(0x28, 0x12, 0);
-            getTabEntry(state->bufB, 0xc, gImSpaceThrusterKeyframeIndexB[kind] * 0x28, 0x28);
+            getTabEntry(state->bufB, MLDF_FILEID_LACTIONS_BIN, gImSpaceThrusterKeyframeIndexB[kind] * 0x28, 0x28);
         }
     }
     obj->anim.alpha = 0;
