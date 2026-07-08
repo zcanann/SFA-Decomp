@@ -302,10 +302,10 @@ typedef struct
 extern BlockEntry gShaderRomListSlots[8];
 extern s8 gShaderRomListSlotCount;
 
-static inline int mapFindRomListSlot(char* p2, int id)
+static inline int mapFindRomListSlot(char* slots, int id)
 {
     int i2 = 0;
-    char* q2 = p2;
+    char* q2 = slots;
     int cn = gShaderRomListSlotCount;
     int k;
     for (k = 0; k < cn; k++)
@@ -779,11 +779,11 @@ void mapTextureOverrideSetValue(int type, u32 key, int value)
 
 extern int mapGetRomListAndOffsets(int p1, int b);
 
-void mapLoadForObject(int p1, char* p2)
+void mapLoadForObject(int mapId, char* obj)
 {
     int saved = gShaderCurMapEventId;
     int slot;
-    int romList = mapGetRomListAndOffsets(p1, 1);
+    int romList = mapGetRomListAndOffsets(mapId, 1);
     int i;
     slot = 0x50;
 
@@ -796,8 +796,8 @@ void mapLoadForObject(int p1, char* p2)
         }
         slot++;
     }
-    *(u8*)(p2 + 0x34) = slot;
-    (*gMapEventInterface)->setMapActLut(p1, slot);
+    *(u8*)(obj + 0x34) = slot;
+    (*gMapEventInterface)->setMapActLut(mapId, slot);
     defStartFn_8005972c((char*)romList, (u32*)&lbl_803822C8[slot * 0x8c], slot, 0);
     (*gMapEventInterface)->updateObjGroups(slot);
     gShaderCurMapEventId = saved;
@@ -991,7 +991,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
 }
 
 #pragma dont_inline on
-void mapInitSetRects(s16* rect, u8* bitmap, int p3, int p4, int idx)
+void mapInitSetRects(s16* rect, u8* bitmap, int originX, int originY, int idx)
 {
     u8* self = lbl_803DCE78;
     int tabOff = idx * 7 << 2;
@@ -1000,8 +1000,8 @@ void mapInitSetRects(s16* rect, u8* bitmap, int p3, int p4, int idx)
 
     getTabEntry(self, MLDF_FILEID_MAPS_BIN, offset0, *(int*)((lbl_803DCE7C + 8) + tabOff) - offset0);
     *(int*)(self + 0xc) = (int)self + *(int*)((lbl_803DCE7C + 4) + tabOff) - *(int*)(lbl_803DCE7C + tabOff);
-    rect[0] = p3 - *(s16*)(self + 4);
-    rect[2] = p4 - *(s16*)(self + 6);
+    rect[0] = originX - *(s16*)(self + 4);
+    rect[2] = originY - *(s16*)(self + 6);
     rect[1] = rect[0] + *(s16*)(self + 0) - 1;
     rect[3] = rect[2] + *(s16*)(self + 2) - 1;
     *(s8*)((char*)rect + 8) = *(s16*)(self + 4);
@@ -1010,10 +1010,10 @@ void mapInitSetRects(s16* rect, u8* bitmap, int p3, int p4, int idx)
     {
         for (x = 0; (s16)x < *(s16*)(self + 0); x++)
         {
-            int p = (s16)x + (s16)y * *(s16*)(self + 0);
-            if ((int)(*(u32*)(*(int*)(self + 0xc) + p * 4) >> 23 & 0xff) != 0xff)
+            int pixelIdx = (s16)x + (s16)y * *(s16*)(self + 0);
+            if ((int)(*(u32*)(*(int*)(self + 0xc) + pixelIdx * 4) >> 23 & 0xff) != 0xff)
             {
-                bitmap[p >> 3] |= 1 << (p & 7);
+                bitmap[pixelIdx >> 3] |= 1 << (pixelIdx & 7);
             }
         }
     }
