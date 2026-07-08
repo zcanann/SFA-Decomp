@@ -40,6 +40,7 @@
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gamebit_ids.h"
 #define STAFF_QUAKE_HIT_VOLUME_SLOT 17
 
 /* object group the staff joins while active */
@@ -1129,7 +1130,7 @@ void superQuakeFn_8016d9fc(f32* pos)
         ((ObjPlacement*)setup)->posZ = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posZ;
         ((StaffQuakeSpellState*)gStaffQuakeSpellState)->object = Obj_SetupObject(setup, 5, ((GameObject*)player)->anim.mapEventSlot, -1,
                                                         ((GameObject*)player)->anim.parent);
-        if (mainGetBit(0xc55) != 0)
+        if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0)
         {
             ((ObjAnimComponent*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->bankIndex = 1;
         }
@@ -1813,7 +1814,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
         case 133:
             if (power > lbl_803E32B4)
             {
-                if (mainGetBit(0xc55) != 0)
+                if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0)
                 {
                     fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32B8));
                     fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - power / lbl_803E32B8);
@@ -1830,7 +1831,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                 (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
                 (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
                 fxB.count = 9;
-                if (mainGetBit(0xc55) != 0)
+                if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0)
                 {
                     fxB.f0 = lbl_803E32B0 * (power / lbl_803E32B8) + lbl_803E32AC;
                     fxB.id = 0xc75;
@@ -1892,7 +1893,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
             {
                 f32 progress;
                 u16 idv;
-                if (mainGetBit(0xc55) != 0)
+                if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0)
                 {
                     idv = 0xc75;
                 }

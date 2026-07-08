@@ -33,6 +33,7 @@
 #include "main/lightmap.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "sfa_light_decls.h"
+#include "main/gamebit_ids.h"
 
 #define TRICKY_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -1379,14 +1380,14 @@ void hudDrawFn_80121440(void)
             }
         }
     }
-    if ((u8)alpha != 0 && objIsCurModelNotZero(player) != 0 && mainGetBit(0xeb1) != 0)
+    if ((u8)alpha != 0 && objIsCurModelNotZero(player) != 0 && mainGetBit(GAMEBIT_ITEM_Magic_Got) != 0)
     {
         hudDrawMagicBar(alpha, 0x100, 0);
     }
     magicId = 0;
     if (playerHasKrazoaSpirit(1, 0) != 0) krazoa = 1;
-    if (mainGetBit(0x123) != 0 || mainGetBit(0x83b) != 0) magicId = 0x63;
-    else if (mainGetBit(0x2e8) != 0 || mainGetBit(0x83c) != 0) magicId = 0x64;
+    if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got) != 0 || mainGetBit(GAMEBIT_ITEM_FireSpellStone2_Got) != 0) magicId = 0x63;
+    else if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone1_Got) != 0 || mainGetBit(GAMEBIT_ITEM_WaterSpellStone2_Got) != 0) magicId = 0x64;
     if ((u8)magicId != 0)
     {
         drawTexture(base->icons[(u8)magicId],
@@ -1449,9 +1450,9 @@ void hudDrawFn_80121440(void)
     else
     {
         int style;
-        if (mainGetBit(0x91b) != 0) style = 0xc8;
-        else if (mainGetBit(0x91a) != 0) style = 0x64;
-        else if (mainGetBit(0x919) != 0) style = 0x32;
+        if (mainGetBit(GAMEBIT_ITEM_200ScarabBag_Got) != 0) style = 0xc8;
+        else if (mainGetBit(GAMEBIT_ITEM_100ScarabBag_Got) != 0) style = 0x64;
+        else if (mainGetBit(GAMEBIT_ITEM_50ScarabBag_Got) != 0) style = 0x32;
         else style = 0xa;
         hudDrawCounter(0x1e, (s16) base->moneyValue, (s16)style, (int)base->spiritAnim,
                        (int)base->spiritCur, &hcArg, 0);

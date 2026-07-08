@@ -326,7 +326,7 @@ void shop_free(int* obj)
     skyFn_80088c94(7, 0);
     ObjGroup_RemoveObject(obj, SPSHOP_OBJGROUP);
     Music_Trigger(MUSICTRIG_communicator, 0);
-    mainSetBits(3838, 0);
+    mainSetBits(GAMEBIT_PlayerInShop, 0);
 }
 
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

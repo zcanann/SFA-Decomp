@@ -12,6 +12,7 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 /* env-effect ids fired when the shrine intro countdown expires (index-style; roles opaque) */
 #define GPSH_SHRINE_ENVFX_A 0xcc
@@ -123,7 +124,7 @@ void gpsh_shrine_free(int* obj)
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
     Music_Trigger(MUSICTRIG_krazoa_tunnel_2, 0);
     mainSetBits(GAMEBIT_ECSH_InShrine, 0);
-    mainSetBits(0xcbb, mainGetBit(0xc91) == 0);
+    mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, mainGetBit(0xc91) == 0);
 }
 
 void gpsh_shrine_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -395,7 +396,7 @@ void gpsh_shrine_update(int obj)
                     ((GpshShrineState*)data)->puzzleState = 5;
                     mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
                     mainSetBits(0x5af, 0);
-                    mainSetBits(0xdd2, 1);
+                    mainSetBits(GAMEBIT_GPSH_TestKnowledgeRunning, 1);
                     (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                     Music_Trigger(MUSICTRIG_DIM_Snow, 1);
                 }
@@ -445,7 +446,7 @@ void gpsh_shrine_update(int obj)
                 {
                     ((GpshShrineState*)data)->puzzleState = 6;
                     gameTimerStop();
-                    mainSetBits(0xdd2, 0);
+                    mainSetBits(GAMEBIT_GPSH_TestKnowledgeRunning, 0);
                     ((GpshShrineState*)data)->timer = lbl_803E5040;
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                     Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
@@ -468,7 +469,7 @@ void gpsh_shrine_update(int obj)
                 break;
             case 7:
                 ((GpshShrineState*)data)->puzzleState = 4;
-                mainSetBits(0xdd2, 0);
+                mainSetBits(GAMEBIT_GPSH_TestKnowledgeRunning, 0);
                 mainSetBits(0xe37, 1);
                 break;
             case 6:
@@ -498,7 +499,7 @@ void gpsh_shrine_update(int obj)
             case 4:
                 ((GpshShrineState*)data)->puzzleState = 0;
                 ((GpshShrineFlags*)((char*)data + 0x15))->b80 = 0;
-                mainSetBits(0xdd2, 0);
+                mainSetBits(GAMEBIT_GPSH_TestKnowledgeRunning, 0);
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 mainSetBits(0x149, 0);
                 mainSetBits(0x14c, 0);

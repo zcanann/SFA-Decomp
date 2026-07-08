@@ -15,6 +15,7 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/gamebit_ids.h"
 extern f32 lbl_803E5150;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Music_Trigger(int id, int arg);
@@ -66,7 +67,7 @@ int nwsh_levcon_getObjectTypeId(void) { return 0x0; }
 void nwsh_levcon_free(int obj)
 {
     Music_Trigger(MUSICTRIG_ewt_chase, 0);
-    mainSetBits(0xefd, 0);
+    mainSetBits(GAMEBIT_SETPIECE_ACTIVE, 0);
 }
 
 void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -101,7 +102,7 @@ void nwsh_levcon_init(int* obj)
     Music_Trigger(MUSICTRIG_ewt_chase, 1);
     ((GameObject*)obj)->unkF4 = 1;
     mainSetBits(GAMEBIT_K6_Entered, 1);
-    mainSetBits(0xefd, 1);
+    mainSetBits(GAMEBIT_SETPIECE_ACTIVE, 1);
 }
 
 void nwsh_levcon_release(void)

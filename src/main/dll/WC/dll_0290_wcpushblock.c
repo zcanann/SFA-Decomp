@@ -23,6 +23,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
+#include "main/gamebit_ids.h"
 
 #define WCPUSHBLOCK_EXTRA_SIZE 0x288
 #define WCPUSHBLOCK_RENDER_TYPE_BASE 0x400
@@ -792,12 +793,12 @@ void fn_802251B4(int obj, WcLevelControlState* state)
     }
 
     state->completionFlags &= ~WCLEVELCTL_FLAG_TRIGGERED;
-    if ((u32)mainGetBit(0xc92) != 0)
+    if ((u32)mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
     {
-        mainSetBits(0x4e4, 0);
-        mainSetBits(0x4e5, 0);
-        if ((u32)mainGetBit(0x4e3) == 0xff)
-            mainSetBits(0x4e3, randomGetRange(6, 7));
+        mainSetBits(GAMEBIT_Tricky_Usable, 0);
+        mainSetBits(GAMEBIT_IM_DoneRace, 0);
+        if ((u32)mainGetBit(GAMEBIT_TrickyTalk) == 0xff)
+            mainSetBits(GAMEBIT_TrickyTalk, randomGetRange(6, 7));
     }
 }
 
@@ -813,7 +814,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
         {
             gameTimerInit(0x1d, 0x3c);
             timerSetToCountUp();
-            mainSetBits(0xba6, 1);
+            mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 1);
             mainSetBits(0xedd, 1);
         }
         else if ((u32)mainGetBit(0x7f9) != 0)
@@ -824,7 +825,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
                 Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             else
                 Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-            mainSetBits(0xba6, 0);
+            mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
             mainSetBits(0xedd, 0);
             if ((u32)mainGetBit(0x7fa) != 0)
             {
@@ -842,7 +843,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
         {
             mainSetBits(0x7ef, 0);
             mainSetBits(0x7ed, 0);
-            mainSetBits(0xba6, 0);
+            mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
             mainSetBits(0xedd, 0);
             state->mode = WCLEVELCTL_MODE_IDLE;
         }
@@ -852,7 +853,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
         {
             gameTimerInit(0x1d, 0x50);
             timerSetToCountUp();
-            mainSetBits(0xba6, 1);
+            mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 1);
             mainSetBits(0xedc, 1);
         }
         else if ((u32)mainGetBit(0x7fa) != 0)
@@ -863,7 +864,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
                 Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             else
                 Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-            mainSetBits(0xba6, 0);
+            mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
             mainSetBits(0xedc, 0);
             if ((u32)mainGetBit(0x7f9) != 0)
             {
@@ -881,7 +882,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
         {
             mainSetBits(0x7f0, 0);
             mainSetBits(0x7ee, 0);
-            mainSetBits(0xba6, 0);
+            mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
             mainSetBits(0xedc, 0);
             state->mode = WCLEVELCTL_MODE_IDLE;
         }

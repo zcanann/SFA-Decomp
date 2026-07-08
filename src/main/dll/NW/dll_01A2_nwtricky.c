@@ -13,6 +13,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 
 #define NWTRICKY_OBJFLAG_PARENT_SLACK 0x1000
 #define NWTRICKY_OBJFLAG_HIDDEN 0x4000
@@ -47,7 +48,7 @@ int NW_tricky_SeqFn(void)
 void NW_tricky_free(int obj)
 {
     (void)obj;
-    mainSetBits(0x4e4, 1);
+    mainSetBits(GAMEBIT_Tricky_Usable, 1);
 }
 
 typedef struct NwTrickyState
@@ -107,16 +108,16 @@ void NW_tricky_update(int* obj)
                     fn_8014C66C(*scan, player);
                 }
             }
-            mainSetBits(0x4e4, 1);
+            mainSetBits(GAMEBIT_Tricky_Usable, 1);
             *(u8*)state = 1;
         }
         else
         {
-            if (mainGetBit(0x544))
+            if (mainGetBit(GAMEBIT_ITEM_TrickyStayFind_Got))
             {
                 if (!(*(u8 (**)(int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x40))(tricky))
                 {
-                    mainSetBits(0x4e4, 0);
+                    mainSetBits(GAMEBIT_Tricky_Usable, 0);
                     ((NwTrickyState*)state)->timer = lbl_803E5260;
                 }
 
@@ -163,22 +164,22 @@ void NW_tricky_update(int* obj)
         {
             ((NwTrickyState*)state)->timer += timeDelta;
         }
-        if (mainGetBit(0x4e3) == 1)
+        if (mainGetBit(GAMEBIT_TrickyTalk) == 1)
         {
             if ((*gMapEventInterface)->getTrickyEnergy()[0] >= 4)
             {
-                mainSetBits(0x4e3, 0xff);
+                mainSetBits(GAMEBIT_TrickyTalk, 0xff);
             }
         }
         timer = ((NwTrickyState*)state)->timer;
         if (timer >= lbl_803E5268)
         {
             ((NwTrickyState*)state)->timer = timer - lbl_803E5268;
-            if (mainGetBit(0x4e3) == 0xff)
+            if (mainGetBit(GAMEBIT_TrickyTalk) == 0xff)
             {
                 if ((*gMapEventInterface)->getTrickyEnergy()[0] < 4)
                 {
-                    mainSetBits(0x4e3, 1);
+                    mainSetBits(GAMEBIT_TrickyTalk, 1);
                 }
             }
         }

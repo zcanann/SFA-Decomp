@@ -1500,7 +1500,7 @@ void Sfx_UpdateObjectSounds(void)
         objectChannel++;
     }
 
-    if (mainGetBit(0xCBB) != 0)
+    if (mainGetBit(GAMEBIT_SHRINE_MUSIC_LOCK) != 0)
     {
         globalCtrl = 0xE;
     }
@@ -1512,7 +1512,7 @@ void Sfx_UpdateObjectSounds(void)
     {
         globalCtrl = 0xD;
     }
-    else if (mainGetBit(0xEFD) != 0)
+    else if (mainGetBit(GAMEBIT_SETPIECE_ACTIVE) != 0)
     {
         globalCtrl = 0xC;
     }

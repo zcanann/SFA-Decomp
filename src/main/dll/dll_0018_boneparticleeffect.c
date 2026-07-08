@@ -10,6 +10,7 @@
 #include "main/model.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_ids.h"
+#include "main/gamebit_ids.h"
 
 static inline int* Modgfx_GetActiveModel(void* obj)
 {
@@ -188,9 +189,9 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     f32 dz;
 
     base = (u8*)gBoneParticleConfigTable;
-    if (mainGetBit(0x468) != 0)
+    if (mainGetBit(GAMEBIT_TRICKYCURVE_PLAYER_HIT) != 0)
     {
-        mainSetBits(0x468, 0);
+        mainSetBits(GAMEBIT_TRICKYCURVE_PLAYER_HIT, 0);
         gBoneParticleEffectTimer = 0xf;
         Sfx_PlayFromObject(obj, SFXsc_mumble01);
     }

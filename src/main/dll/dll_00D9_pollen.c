@@ -23,6 +23,7 @@
 #include "main/engine_shared.h"
 #include "main/dll/genprops.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx_ids.h"
 #define POLLEN_HIT_VOLUME_SLOT 0x16
 extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E313C;
@@ -321,7 +322,7 @@ void Pollen_update(int obj)
         {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E3138);
-            Sfx_PlayFromObject(obj, 0xb6);
+            Sfx_PlayFromObject(obj, SFXsc_objselectyeah22);
             ((GameObject*)obj)->anim.alpha = 0;
             extra->fragmentSpawnTimer = 0x3c;
             ObjHits_DisableObject((u32)obj);

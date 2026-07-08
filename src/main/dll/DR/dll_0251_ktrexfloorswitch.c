@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/gamebit_ids.h"
 
 typedef struct Vec3Blob
 {
@@ -209,7 +210,7 @@ void KT_RexFloorSwitch_update(int obj)
             int curveBits;
             ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_RISING;
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
-            curveBits = mainGetBit(0x572) >> 1;
+            curveBits = mainGetBit(GAMEBIT_DR_KTrexPhaseCounter) >> 1;
             curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
                 ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->curveX,
                 ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->baseHeight,
@@ -243,7 +244,7 @@ void KT_RexFloorSwitch_update(int obj)
             int curveBits;
             ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_RISING;
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
-            curveBits = mainGetBit(0x572) >> 1;
+            curveBits = mainGetBit(GAMEBIT_DR_KTrexPhaseCounter) >> 1;
             curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
                 ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->curveX,
                 ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->baseHeight,
@@ -369,15 +370,15 @@ void KT_RexFloorSwitch_update(int obj)
                 ((KtrexfloorswitchState*)state)->flags &= ~KTREXFLOORSWITCH_FLAG_CHARGED;
                 ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED;
                 mainSetBits(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
-                if (mainGetBit(0x55a) != 0)
+                if (mainGetBit(GAMEBIT_DR_KTrexPathA) != 0)
                 {
-                    mainSetBits(0x55a, 0);
-                    mainSetBits(0x55b, 1);
+                    mainSetBits(GAMEBIT_DR_KTrexPathA, 0);
+                    mainSetBits(GAMEBIT_DR_KTrexPathB, 1);
                 }
                 else
                 {
-                    mainSetBits(0x55a, 1);
-                    mainSetBits(0x55b, 0);
+                    mainSetBits(GAMEBIT_DR_KTrexPathA, 1);
+                    mainSetBits(GAMEBIT_DR_KTrexPathB, 0);
                 }
                 ktrexlevel_updatePathGameBits();
             }
@@ -402,15 +403,15 @@ void KT_RexFloorSwitch_update(int obj)
                 ((KtrexfloorswitchState*)state)->flags &= ~KTREXFLOORSWITCH_FLAG_CHARGED;
                 ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED;
                 mainSetBits(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
-                if (mainGetBit(0x55a) != 0)
+                if (mainGetBit(GAMEBIT_DR_KTrexPathA) != 0)
                 {
-                    mainSetBits(0x55a, 0);
-                    mainSetBits(0x55b, 1);
+                    mainSetBits(GAMEBIT_DR_KTrexPathA, 0);
+                    mainSetBits(GAMEBIT_DR_KTrexPathB, 1);
                 }
                 else
                 {
-                    mainSetBits(0x55a, 1);
-                    mainSetBits(0x55b, 0);
+                    mainSetBits(GAMEBIT_DR_KTrexPathA, 1);
+                    mainSetBits(GAMEBIT_DR_KTrexPathB, 0);
                 }
                 ktrexlevel_updatePathGameBits();
             }

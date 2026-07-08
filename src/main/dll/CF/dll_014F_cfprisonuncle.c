@@ -63,7 +63,7 @@ void cfprisonuncle_free(void)
 void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
-    if (mainGetBit(0x50) != 0)
+    if (mainGetBit(GAMEBIT_CF_UncleFlewOff) != 0)
     {
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
@@ -126,7 +126,7 @@ void cfprisonuncle_update(int* obj)
     int* objects;
     int i;
     if (sub == NULL) return;
-    if (mainGetBit(0x50) != 0) return;
+    if (mainGetBit(GAMEBIT_CF_UncleFlewOff) != 0) return;
     if (ObjMsg_Pop(obj, &m1, &m2, &m3) != 0)
     {
         *(void**)&sub->target = NULL;
@@ -190,7 +190,7 @@ void cfprisonuncle_init(int* obj)
     state->magicGranted = 0;
     if ((u32)mainGetBit(GAMEBIT_CFPerchRelated004D) != 0u)
     {
-        mainSetBits(0x50, 1);
+        mainSetBits(GAMEBIT_CF_UncleFlewOff, 1);
     }
 }
 

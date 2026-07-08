@@ -22,6 +22,7 @@
 #include "main/gamebits.h"
 #include "main/camera.h"
 #include "main/sfa_shared_decls.h"
+#include "main/gamebit_ids.h"
 
 /* Per-object extra state for the doorf4 door (DoorF4_getExtraSize == 0x24). */
 typedef struct DoorF4State
@@ -542,7 +543,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 break;
             case 5:
-                if (sub->sfxClose != 0 && mainGetBit(0xcbb) == 0)
+                if (sub->sfxClose != 0 && mainGetBit(GAMEBIT_SHRINE_MUSIC_LOCK) == 0)
                 {
                     Sfx_PlayFromObject(obj, sub->sfxClose);
                 }

@@ -541,7 +541,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             {
                 state->uiMessageCount = 3;
             }
-            mainSetBits(0x48b, state->uiMessageCount);
+            mainSetBits(GAMEBIT_NW_MammothTumbleweedCount, state->uiMessageCount);
             if (state->uiMessageCount >= 3)
             {
                 state->stateIndex = 0x11;
@@ -861,7 +861,7 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
         }
         break;
     case 4:
-        state->uiMessageCount = mainGetBit(0x48b);
+        state->uiMessageCount = mainGetBit(GAMEBIT_NW_MammothTumbleweedCount);
         if (mainGetBit(GAMEBIT_NW_RescuedSnowHornGateKeeper) != 0)
         {
             state->stateIndex = 0x10;

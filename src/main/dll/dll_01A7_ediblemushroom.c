@@ -12,6 +12,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
+#include "main/gamebit_ids.h"
 #define EDIBLEMUSHROOM_OBJFLAG_HIDDEN 0x4000
 #define EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
 #define EDIBLEMUSHROOM_OBJFLAG_RENDERED 0x800
@@ -380,7 +381,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                 }
                 ((EdibleMushroomState*)state)->sporePuffTimer = 20.0f;
             }
-            if (mainGetBit(0x12e) == 0)
+            if (mainGetBit(GAMEBIT_ITEM_TrickyFood_GrabInProgress) == 0)
             {
                 if (!(((GameObject*)player)->objectFlags & EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK))
                 {
@@ -407,7 +408,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                             mainSetBits(bit, 1);
                         }
                         ((EdibleMushroomState*)state)->animState = 8;
-                        mainSetBits(0x12e, 1);
+                        mainSetBits(GAMEBIT_ITEM_TrickyFood_GrabInProgress, 1);
                     }
                 }
             }
@@ -619,7 +620,7 @@ void EdibleMushroom_update(u8* self)
             ((GameObject*)self)->anim.flags = (s16)(((GameObject*)self)->anim.flags | OBJANIM_FLAG_HIDDEN);
             ObjHits_DisableObject((u32)(int)self);
             gameBitIncrement(((EdibleMushroomState*)state)->collectedGameBitId);
-            mainSetBits(0x12E, 0);
+            mainSetBits(GAMEBIT_ITEM_TrickyFood_GrabInProgress, 0);
             if (((GameObject*)self)->anim.seqId == 0x658)
             {
                 itemPickupDoParticleFx(self, 1.0f, 0xFF, 0x28);

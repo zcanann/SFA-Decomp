@@ -16,6 +16,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/textrender.h"
 #include "main/frame_timing.h"
+#include "main/gamebit_ids.h"
 extern float mathSinf(float x);
 extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s32 x, u8 alpha, s32 mode, s32 flag);
 extern u8 hudTextures[0x198];
@@ -599,10 +600,10 @@ void pauseMenuDrawStatus_801274A0(int* arg1)
             ty = (s32)(tmp * lbl_803E2088);
         }
         fn_80128120(arg1, ty);
-        i = mainGetBit(0x63c);
-        j = mainGetBit(0x4e9);
-        i += mainGetBit(0x5f3);
-        gbCount = i + mainGetBit(0x5f4);
+        i = mainGetBit(GAMEBIT_ITEM_SpellStone3_Got);
+        j = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
+        i += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
+        gbCount = i + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
         gbCount += j;
         {
             s8 k;
@@ -613,15 +614,15 @@ void pauseMenuDrawStatus_801274A0(int* arg1)
                 p += 0x20;
             }
         }
-        if (mainGetBit(0x91b) != 0)
+        if (mainGetBit(GAMEBIT_ITEM_200ScarabBag_Got) != 0)
         {
             magicVal = 0xc8;
         }
-        else if (mainGetBit(0x91a) != 0)
+        else if (mainGetBit(GAMEBIT_ITEM_100ScarabBag_Got) != 0)
         {
             magicVal = 0x64;
         }
-        else if (mainGetBit(0x919) != 0)
+        else if (mainGetBit(GAMEBIT_ITEM_50ScarabBag_Got) != 0)
         {
             magicVal = 0x32;
         }

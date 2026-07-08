@@ -40,6 +40,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
 
 #define DLL22C_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -149,7 +150,7 @@ void dll_22C_update(int obj)
             {
                 if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                 {
-                    Sfx_PlayFromObject(obj, 0x116);
+                    Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt6);
                     blob->sfxLatch = 1;
                 }
                 object->anim.localPosY += timeDelta;

@@ -238,7 +238,7 @@ void sc_levelcontrol_update(int obj)
         }
         ((GameObject*)obj)->unkF4 = 0;
     }
-    if (((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 == 0 && (u32)mainGetBit(0xc53) != 0)
+    if (((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 == 0 && (u32)mainGetBit(GAMEBIT_LV_ChallengeGate2Complete) != 0)
     {
         (*gMapEventInterface)->setObjGroupStatus(SCLEVELCONTROL_MAP_SWAPCIRCLE, 0xa, 1);
         ((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 = 1;

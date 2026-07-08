@@ -1036,7 +1036,7 @@ void playerEnvFxFn_80088ad4(u8 idx)
     {
         return;
     }
-    if (mainGetBit(944) != 0)
+    if (mainGetBit(GAMEBIT_ENV_isOutdoor) != 0)
     {
         return;
     }

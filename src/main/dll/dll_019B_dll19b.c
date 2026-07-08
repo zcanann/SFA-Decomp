@@ -7,6 +7,7 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 
 #define DLL19B_TARGET_OBJGROUP 0xe
 
@@ -327,9 +328,9 @@ void dll_19B_update(int obj)
             }
             break;
         case DLL19B_PHASE_COUNTDOWN:
-            if (st->unlockCount == 0 && mainGetBit(0x1d3) == 0)
+            if (st->unlockCount == 0 && mainGetBit(GAMEBIT_WM_KrazTest1TorchesActive) == 0)
             {
-                mainSetBits(0x1d3, 1);
+                mainSetBits(GAMEBIT_WM_KrazTest1TorchesActive, 1);
             }
             if ((u32)mainGetBit(0x1d8) != 0)
             {
@@ -347,7 +348,7 @@ void dll_19B_update(int obj)
                 (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                     3, 0x35, 0x50, st->brightnessB & 0xff, 0);
                 st->brightnessBVel = 1;
-                mainSetBits(0x1d3, 0);
+                mainSetBits(GAMEBIT_WM_KrazTest1TorchesActive, 0);
             }
             else if (st->unlockCount == 1)
             {

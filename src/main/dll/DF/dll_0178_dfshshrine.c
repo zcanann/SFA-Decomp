@@ -245,7 +245,7 @@ void DFSH_Shrine_free(int obj)
     Music_Trigger(MUSICTRIG_CC_Visit1, 0);
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
     mainSetBits(GAMEBIT_ECSH_InShrine, 0);
-    mainSetBits(0xcbb, 1);
+    mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, 1);
 }
 
 typedef struct DfshShrineState

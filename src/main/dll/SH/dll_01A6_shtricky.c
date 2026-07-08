@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/gamebit_ids.h"
 
 #define SHTRICKY_OBJFLAG_HIDDEN 0x4000
 #define SHTRICKY_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -42,9 +43,9 @@ void sh_tricky_update(int* obj)
     case SHTRICKY_STATE_WAIT_TRIGGER:
         if (mainGetBit(0x94) != 0)
         {
-            mainSetBits(0x4e4, 0);
-            mainSetBits(0x4e5, 0);
-            mainSetBits(0xc11, 1);
+            mainSetBits(GAMEBIT_Tricky_Usable, 0);
+            mainSetBits(GAMEBIT_IM_DoneRace, 0);
+            mainSetBits(GAMEBIT_MaybeHaveTricky, 1);
             state[0] = SHTRICKY_STATE_HAND_CONTROL;
         }
         break;
@@ -59,11 +60,11 @@ void sh_tricky_update(int* obj)
         }
         break;
     case SHTRICKY_STATE_WATCH_COMPLETE:
-        if (mainGetBit(0xbf) != 0)
+        if (mainGetBit(GAMEBIT_SH_ReturnedToQueen) != 0)
         {
-            mainSetBits(0x4e4, 1);
-            mainSetBits(0x4e5, 1);
-            mainSetBits(0xc11, 0);
+            mainSetBits(GAMEBIT_Tricky_Usable, 1);
+            mainSetBits(GAMEBIT_IM_DoneRace, 1);
+            mainSetBits(GAMEBIT_MaybeHaveTricky, 0);
         }
         break;
     case SHTRICKY_STATE_DONE:
@@ -74,7 +75,7 @@ void sh_tricky_update(int* obj)
 void sh_tricky_init(int* obj)
 {
     u8* state = ((GameObject*)obj)->extra;
-    if (mainGetBit(0xbf) != 0)
+    if (mainGetBit(GAMEBIT_SH_ReturnedToQueen) != 0)
     {
         *state = SHTRICKY_STATE_DONE;
     }

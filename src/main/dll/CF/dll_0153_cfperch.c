@@ -9,6 +9,7 @@
 #include "main/objseq.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 
 /* perch anim-event callback: stop the sequence once the old
  * CloudRunner has been freed from his cage (0x4D) */
@@ -42,7 +43,7 @@ void cfperch_update(int* obj)
 {
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if (mainGetBit(0x50) == 0)
+        if (mainGetBit(GAMEBIT_CF_UncleFlewOff) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }

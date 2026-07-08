@@ -15,6 +15,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/objseq.h"
+#include "main/gamebit_ids.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
@@ -86,8 +87,8 @@ void dim_tricky_update(int* obj)
     case DIMTRICKY_STATE_WAIT_TRIGGER:
         if (mainGetBit(0xa1b) != 0)
         {
-            mainSetBits(0x4e4, 0);
-            mainSetBits(0x4e5, 0);
+            mainSetBits(GAMEBIT_Tricky_Usable, 0);
+            mainSetBits(GAMEBIT_IM_DoneRace, 0);
             *(s8*)state = DIMTRICKY_STATE_HAND_CONTROL;
         }
         break;

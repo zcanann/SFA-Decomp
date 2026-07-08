@@ -347,7 +347,7 @@ void openPortalFn_801d4364(void* obj, void* state)
     {
         ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTablePortalReady;
     }
-    else if (mainGetBit(0x5bd) != 0)
+    else if (mainGetBit(GAMEBIT_STAFF_ABILITY_OPEN_PORTAL) != 0)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         if (playerHasSpell(player, 3) != 0 &&

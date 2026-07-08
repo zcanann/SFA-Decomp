@@ -3,6 +3,7 @@
 #include "main/objhits.h"
 #include "main/engine_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx_ids.h"
 
 extern void ObjHitbox_SetCapsuleBounds(void* obj, int height, int param3, int param4);
 extern void storeZeroToFloatParam(f32* p);
@@ -23,8 +24,8 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
 
     state = obj->state;
     Obj_GetPlayerObject();
-    Sfx_StopFromObject((u32)obj, 0x2e9);
-    Sfx_StopFromObject((u32)obj, 0x2e8);
+    Sfx_StopFromObject((u32)obj, SFXnewtricky_01d);
+    Sfx_StopFromObject((u32)obj, SFXnewtricky_01c);
     Sfx_PlayFromObject((u32)obj, SFXTRIG_crthit6);
     zero = lbl_803E6768;
     obj->velocityX = zero;

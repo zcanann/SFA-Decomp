@@ -47,6 +47,7 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 extern void ecsh_creator_getExtraSize(void);
 extern void gpsh_shrine_getExtraSize(void);
@@ -419,7 +420,7 @@ void ecsh_shrine_free(int* obj)
     }
     ObjGroup_RemoveObject((int)obj, ECSHSHRINE_OBJGROUP);
     mainSetBits(GAMEBIT_ECSH_InShrine, 0);
-    mainSetBits(0xcbb, 1);
+    mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, 1);
     mainSetBits(GAMEBIT_WMRelated0A7F, 1);
 }
 

@@ -28,6 +28,7 @@
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/tricky_state.h"
+#include "main/gamebit_ids.h"
 extern int ObjGroup_FindNearestObject();
 extern void ObjLink_AttachChild();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
@@ -1332,7 +1333,7 @@ int trickyFoodFn_801437d4(int obj, int* state)
     }
     if ((*gSkyInterface)->getSunPosition(0) != 0
         && ((TrickyState*)state)->cooldownA <= lbl_803E23DC
-        && mainGetBit(0xdd) != 0)
+        && mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) != 0)
     {
         objAnimFn_8013a3f0((int)obj, 0x29, lbl_803E2444, 0);
         ptr = ((GameObject*)obj)->extra;
@@ -1620,7 +1621,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
     {
         lo = 0;
     }
-    if ((*gSkyInterface)->getSunPosition(0) == 0 || mainGetBit(0xdd) == 0)
+    if ((*gSkyInterface)->getSunPosition(0) == 0 || mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) == 0)
     {
         hi = 2;
     }
@@ -1744,7 +1745,7 @@ int trickyFoodFn_8014460c(int obj, int* state)
 
     flag = 0;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
-    n = mainGetBit(0xc1);
+    n = mainGetBit(GAMEBIT_ITEM_TrickyFood_Count);
     if (n != 0)
     {
         getYButtonItem(item);
@@ -1812,12 +1813,12 @@ int trickyFoodFn_8014460c(int obj, int* state)
                     if (cnt > n)
                     {
                         ((TrickyState*)state)->progressValue = a + (n << 2);
-                        mainSetBits(0xc1, 0);
+                        mainSetBits(GAMEBIT_ITEM_TrickyFood_Count, 0);
                     }
                     else
                     {
                         ((TrickyState*)state)->progressValue = a + (cnt << 2);
-                        mainSetBits(0xc1, n - cnt);
+                        mainSetBits(GAMEBIT_ITEM_TrickyFood_Count, n - cnt);
                     }
                     if (((TrickyState*)state)->progressValue > *(*(u8**)state + 1))
                     {
@@ -1869,12 +1870,12 @@ int trickyFoodFn_8014460c(int obj, int* state)
     }
     else
     {
-        gu = mainGetBit(0x4e3);
+        gu = mainGetBit(GAMEBIT_TrickyTalk);
         if (gu != 0xff && cMenuGetSelectedItem() == -1)
         {
             if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
             {
-                mainSetBits(0x4e3, 0xff);
+                mainSetBits(GAMEBIT_TrickyTalk, 0xff);
                 b = ((GameObject*)obj)->extra;
                 g = gu;
                 ((TrickyState*)b)->stateFlags |= 0x4000;
@@ -1961,7 +1962,7 @@ void fn_80144B50(u8* obj, u8* state)
                     if (((TrickyState*)state)->cooldownB > lbl_803E2534)
                     {
                         ((TrickyState*)state)->cooldownB *= lbl_803E24A8;
-                        if (mainGetBit(0x245) != 0)
+                        if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0)
                         {
                             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
                             {

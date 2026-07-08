@@ -7,6 +7,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/gamebit_ids.h"
 
 typedef struct Dll19CPlacement
 {
@@ -62,7 +63,7 @@ void dll_19C_update(int* obj)
     }
     if (((GameObject*)obj)->unkF8 == 0)
     {
-        if (mainGetBit(0x1d3) != 0)
+        if (mainGetBit(GAMEBIT_WM_KrazTest1TorchesActive) != 0)
         {
             res = Resource_Acquire(0x82, 1);
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 0, 0, 1, -1, 0);

@@ -140,7 +140,7 @@ void mmp_asteroid_re_init(int obj)
     ((GameObject*)obj)->animEventCallback = mmp_asteroid_re_SeqFn;
     state->eventFlags = 0;
     state->intensity = mainGetBit(0x88C);
-    state->phase = mainGetBit(0x87B);
+    state->phase = mainGetBit(GAMEBIT_MMPAsteroidRelated087B);
     switch ((s32)state->phase)
     {
     case MMP_ASTEROID_PHASE_HIDDEN:

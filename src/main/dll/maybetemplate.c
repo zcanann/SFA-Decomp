@@ -27,6 +27,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 #define GCMENU_ITEM_ICON_COUNT 7
 #define PAUSE_MENU_HUD_ITEM_COUNT 13
@@ -533,7 +534,7 @@ void pauseMenuDrawStatus(void)
     trickyStatus = PMDS_TRICKY_ENERGY_PTR();
     statuses[0] = Player_GetCurrentHealth(player);
     statuses[7] = Player_GetMaxHealth(player);
-    statuses[1] = mainGetBit(0xC1);
+    statuses[1] = mainGetBit(GAMEBIT_ITEM_TrickyFood_Count);
     if (((PauseMenuHud*)base)->magicValue - Player_GetCurrentMagic(player) < 0)
     {
         delta = -1;
@@ -562,14 +563,14 @@ void pauseMenuDrawStatus(void)
     negDelta = -delta;
     statuses[8] = ((PauseMenuHud*)base)->maxMagicValue + negDelta;
     if ((negDelta != 0) && (lbl_803DD83C != lbl_803E1E3C) &&
-        (objIsCurModelNotZero((void*)player) != 0) && (mainGetBit(0xEB1) != 0))
+        (objIsCurModelNotZero((void*)player) != 0) && (mainGetBit(GAMEBIT_ITEM_Magic_Got) != 0))
     {
         Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_pda_compassbeep_3f0);
     }
     ((PauseMenuHud*)base)->magicLatch = statuses[2];
     ((PauseMenuHud*)base)->maxMagicLatch = statuses[8];
-    statuses[4] = mainGetBit(0x66C);
-    statuses[10] = mainGetBit(0x13D);
+    statuses[4] = mainGetBit(GAMEBIT_ITEM_BombSpore_Count);
+    statuses[10] = mainGetBit(GAMEBIT_ITEM_Firefly_Count);
     if (statuses[10] != ((PauseMenuHud*)base)->spiritBitState)
     {
         u8 flag = 0;
@@ -577,10 +578,10 @@ void pauseMenuDrawStatus(void)
         {
             flag = 1;
         }
-        mainSetBits(0x967, flag);
+        mainSetBits(GAMEBIT_ITEM_Firefly_Disabled, flag);
     }
-    statuses[11] = mainGetBit(0x86A);
-    statuses[12] = mainGetBit(0x3F5);
+    statuses[11] = mainGetBit(GAMEBIT_ITEM_MoonSeed_Count);
+    statuses[12] = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
     statuses[3] = playerGetMoney((void*)player);
     statuses[9] = *trickyStatus;
     if ((((lbl_803DD792 & 1) != 0) ||
@@ -603,7 +604,7 @@ void pauseMenuDrawStatus(void)
             lbl_803DD83C = *(f32 *)&lbl_803E1E3C;
         }
     }
-    if ((cMenuEnabled == 0) && (mainGetBit(0xA7B) != 0))
+    if ((cMenuEnabled == 0) && (mainGetBit(GAMEBIT_EnableCMenu) != 0))
     {
         cMenuEnabled = 1;
     }
@@ -653,27 +654,27 @@ void pauseMenuDrawStatus(void)
             ((int*)(base + 0xB30))[j] = statuses[j];
             ((f32*)(base + 0xAFC))[j] = gHudElemOpacityFloor;
         }
-        if ((mainGetBit(0xB98) != 0) || (statuses[4] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_BombSpore_ShowCount) != 0) || (statuses[4] != 0))
         {
             ((PauseMenuHud*)base)->healthAnim = lbl_803E1FC0;
         }
-        if ((mainGetBit(0xB99) != 0) || (statuses[1] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_TrickyFood_ShowCount) != 0) || (statuses[1] != 0))
         {
             ((PauseMenuHud*)base)->magicCur = lbl_803E1FC0;
         }
-        if ((mainGetBit(0xB9A) != 0) || (statuses[10] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_Firefly_ShowCount) != 0) || (statuses[10] != 0))
         {
             ((PauseMenuHud*)base)->keyAnim = lbl_803E1FC0;
         }
-        if ((mainGetBit(0xB9B) != 0) || (statuses[11] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_MoonSeed_ShowCount) != 0) || (statuses[11] != 0))
         {
             ((PauseMenuHud*)base)->scarabAnim = lbl_803E1FC0;
         }
-        if ((mainGetBit(0xB9C) != 0) || (statuses[3] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_Scarab_ShowCount) != 0) || (statuses[3] != 0))
         {
             ((PauseMenuHud*)base)->moneyAnim = lbl_803E1FC0;
         }
-        if ((mainGetBit(0xD97) != 0) || (statuses[12] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_FuelCell_ShowCount) != 0) || (statuses[12] != 0))
         {
             ((PauseMenuHud*)base)->spiritAnim = lbl_803E1FC0;
         }

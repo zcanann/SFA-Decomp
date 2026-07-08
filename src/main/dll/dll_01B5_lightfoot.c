@@ -16,6 +16,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/player_80295318_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 #define LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define LIGHTFOOT_OBJFLAG_RENDERED 0x800
@@ -377,7 +378,7 @@ void lightfoot_init(int obj, int p2, int p3)
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x10);
             break;
         case 0x46a55:
-            if (mainGetBit(0xc53))
+            if (mainGetBit(GAMEBIT_LV_ChallengeGate2Complete))
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
@@ -386,7 +387,7 @@ void lightfoot_init(int obj, int p2, int p3)
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x10);
             break;
         case 0x49928:
-            if (mainGetBit(0xc54))
+            if (mainGetBit(GAMEBIT_SC_ChallengeGate3Complete))
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);

@@ -18,6 +18,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/tricky_state.h"
+#include "main/gamebit_ids.h"
 
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
@@ -308,8 +309,8 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case 2:
-            mainSetBits(0x186, 1);
-            if ((mainGetBit(0x186) != 0 && *(void**)&((TrickyState*)state)->spawnedChild == NULL) && Obj_IsLoadingLocked())
+            mainSetBits(GAMEBIT_Tricky_LoadBadge, 1);
+            if ((mainGetBit(GAMEBIT_Tricky_LoadBadge) != 0 && *(void**)&((TrickyState*)state)->spawnedChild == NULL) && Obj_IsLoadingLocked())
             {
                 mapBlockFn_80059c2c(blockFlags);
                 if (blockFlags[0xd] != 0)
@@ -422,7 +423,7 @@ int Tricky_updateSideCommandPrompts(int obj)
     promptB = false;
     promptC = false;
     promptTable[0] = lbl_803E23C8;
-    bitVal = mainGetBit(0x4e4);
+    bitVal = mainGetBit(GAMEBIT_Tricky_Usable);
     if (bitVal != 0)
     {
         if ((((TrickyState*)state)->stateFlags & 0x10) != 0)
@@ -465,11 +466,11 @@ int Tricky_updateSideCommandPrompts(int obj)
                 }
             }
         }
-        if (((((TrickyState*)state)->stateFlags & 0x10) == 0) && (bitVal = mainGetBit(0x3f8), bitVal != 0))
+        if (((((TrickyState*)state)->stateFlags & 0x10) == 0) && (bitVal = mainGetBit(GAMEBIT_ITEM_TrickyBall_Usable), bitVal != 0))
         {
             ref = Obj_GetPlayerObject();
             ref = fn_80296240(ref);
-            if ((ref != 0) && (bitVal = mainGetBit(0xd00), bitVal == 0))
+            if ((ref != 0) && (bitVal = mainGetBit(GAMEBIT_NoBallsAllowed), bitVal == 0))
             {
                 if (playerGetFlags3F0Bit5(((TrickyState*)state)->playerObj) == 0)
                 {
@@ -477,7 +478,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 }
             }
         }
-        if (mainGetBit(0xdd) == 0)
+        if (mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) == 0)
         {
             commandMask &= ~1;
         }
@@ -485,7 +486,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         {
             commandMask &= ~4;
         }
-        if (mainGetBit(0x245) == 0)
+        if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) == 0)
         {
             commandMask &= ~0x10;
         }
@@ -832,7 +833,7 @@ void Tricky_update(int obj)
     cmdQuery = *(TrickyCmdQuery*)gTrickyCmdQueryInit;
     pair = lbl_803E23C4;
     walkgroupFindExitPointFn_800dc398();
-    if (mainGetBit(0x186) != 0 && *(void**)&((TrickyState*)state)->spawnedChild == NULL && Obj_IsLoadingLocked())
+    if (mainGetBit(GAMEBIT_Tricky_LoadBadge) != 0 && *(void**)&((TrickyState*)state)->spawnedChild == NULL && Obj_IsLoadingLocked())
     {
         mapBlockFn_80059c2c(blockFlags);
         if (blockFlags[0xd] != 0)
@@ -1402,7 +1403,7 @@ void Tricky_update(int obj)
     }
     if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX) >=
         lbl_803E2538 &&
-        mainGetBit(0x4e4) != 0)
+        mainGetBit(GAMEBIT_Tricky_Usable) != 0)
     {
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x10000LL;
     }
@@ -1528,7 +1529,7 @@ void Tricky_update(int obj)
         }
         if (((TrickyState*)state)->childPhaseTimer0 > lbl_803E2550)
         {
-            if (mainGetBit(0xc1) != 0)
+            if (mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) != 0)
             {
                 TRICKY_VOICE(obj, st, 0x392, 0x500);
             }
@@ -1560,10 +1561,10 @@ void Tricky_init(int obj)
 
     state = *(int*)&((GameObject*)obj)->extra;
     startPath[0] = lbl_803E23C0;
-    mainSetBits(0x4e3, 0xff);
-    if (mainGetBit(0x25) != 0)
+    mainSetBits(GAMEBIT_TrickyTalk, 0xff);
+    if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0)
     {
-        mainSetBits(0x3f8, 1);
+        mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 1);
     }
     ((GameObject*)obj)->animEventCallback = tricky_SeqFn;
     ObjGroup_AddObject(obj, TRICKY_OBJGROUP);
@@ -2802,7 +2803,7 @@ void trickyFn_801451d8(int obj, int state)
 void Tricky_func11(int* obj)
 {
     register u32* p = (u32*)obj[0xb8 / 4];
-    if (mainGetBit(0x4e4))
+    if (mainGetBit(GAMEBIT_Tricky_Usable))
     {
         p[0x54 / 4] |= 0x10000LL;
     }
@@ -2916,12 +2917,12 @@ void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
 int Tricky_getAvailableCommands(void)
 {
     int r = 0;
-    if (mainGetBit(0x4e4) != 0)
+    if (mainGetBit(GAMEBIT_Tricky_Usable) != 0)
     {
         r = TRICKY_ABILITY_FIND_SECRET | TRICKY_ABILITY_STAY;
-        if (mainGetBit(0xdd) != 0) r |= TRICKY_ABILITY_CALL;
-        if (mainGetBit(0x25) != 0) r |= TRICKY_ABILITY_THROW_BALL;
-        if (mainGetBit(0x245) != 0) r |= TRICKY_ABILITY_FLAME;
+        if (mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) != 0) r |= TRICKY_ABILITY_CALL;
+        if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) r |= TRICKY_ABILITY_THROW_BALL;
+        if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0) r |= TRICKY_ABILITY_FLAME;
     }
     return r;
 }

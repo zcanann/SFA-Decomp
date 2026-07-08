@@ -4,6 +4,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 extern void drakormissile_abortStraightFlight(void);
 
@@ -1569,7 +1570,7 @@ int ktrex_stateHandlerA07(int obj, int runtime)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((KTRexArenaState*)gKTRexState)->phaseCounter += 1;
         ktrexlevel_clearPathGameBits();
-        mainSetBits(1394, ((KTRexArenaState*)gKTRexState)->phaseCounter);
+        mainSetBits(GAMEBIT_DR_KTrexPhaseCounter, ((KTRexArenaState*)gKTRexState)->phaseCounter);
         ((KTRexArenaState*)gKTRexState)->timerFA |= 0x10;
         ((KTRexArenaState*)gKTRexState)->timerFA &= ~8;
         Music_Trigger(MUSICTRIG_guard_theme, 0);
@@ -1831,7 +1832,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
             u8 cond;
             u8 fe;
             ((KTRexArenaState*)gKTRexState)->phaseCounter += 1;
-            mainSetBits(0x572, ((KTRexArenaState*)gKTRexState)->phaseCounter);
+            mainSetBits(GAMEBIT_DR_KTrexPhaseCounter, ((KTRexArenaState*)gKTRexState)->phaseCounter);
             ((KTRexArenaState*)gKTRexState)->moveVariant = 0;
             ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x8;
             fe = ((KTRexArenaState*)gKTRexState)->currentLaneMask;
@@ -1887,7 +1888,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
         }
         ktrexlevel_updatePathGameBits();
         (*gCameraInterface)->loadTriggeredCamAction(3, 0, 0);
-        mainSetBits(0x572, ((KTRexArenaState*)gKTRexState)->phaseCounter);
+        mainSetBits(GAMEBIT_DR_KTrexPhaseCounter, ((KTRexArenaState*)gKTRexState)->phaseCounter);
         {
             int popped = 0;
             if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
@@ -1927,16 +1928,16 @@ int ktrex_stateHandlerA01(int obj, int runtime)
             Music_Trigger(MUSICTRIG_menu_page, 0);
             Music_Trigger(MUSICTRIG_guard_theme, 0);
             ((ObjAnimComponent*)obj)->bankIndex = 1;
-            mainSetBits(1380, 1);
-            mainSetBits(874, 0);
+            mainSetBits(GAMEBIT_WC_Unk0564, 1);
+            mainSetBits(GAMEBIT_WC_ObjGroups, 0);
             (*gMapEventInterface)->setObjGroupStatus(13, 0, 1);
             (*gMapEventInterface)->setObjGroupStatus(13, 1, 1);
             (*gMapEventInterface)->setObjGroupStatus(13, 5, 1);
             (*gMapEventInterface)->setObjGroupStatus(13, 10, 1);
             (*gMapEventInterface)->setObjGroupStatus(13, 11, 1);
-            mainSetBits(3589, 0);
+            mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 0);
             unlockLevel(53, 1, 0);
-            mainSetBits(2107, 1);
+            mainSetBits(GAMEBIT_ITEM_FireSpellStone2_Got, 1);
             (*gMapEventInterface)->setMapAct(4, 2);
         }
     }

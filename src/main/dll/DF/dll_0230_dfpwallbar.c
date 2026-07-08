@@ -8,6 +8,7 @@
 #include "main/dll/baddie/chuka.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_80220608_shared.h"
+#include "main/gamebit_ids.h"
 
 #define DFPWALLBAR_OBJFLAG_HIDDEN 0x4000
 
@@ -103,7 +104,7 @@ void chuka_update(int obj)
     }
     linkedObj = ((ChukaState*)state)->linkedObject;
     (*(void (**)(int, u8*))(*((GameObject*)linkedObj)->anim.dll + 8))(linkedObj, gChukaModeTable);
-    if (mainGetBit(0x5e4) == 0)
+    if (mainGetBit(GAMEBIT_DRBOT_SpellPuzzleActive) == 0)
     {
         ((ChukaState*)state)->mode = 0;
     }

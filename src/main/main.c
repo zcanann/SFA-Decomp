@@ -7,6 +7,7 @@
 #include "main/objlib.h"
 #include "main/resource.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx_ids.h"
 
 #define MAIN_OBJFLAG_HIDDEN 0x4000
 #define MAIN_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -288,7 +289,7 @@ void fn_801FD6B4(int obj)
         )
         ;
         state->phase = lbl_803E616C;
-        Sfx_PlayFromObject((u32)obj, 0x111);
+        Sfx_PlayFromObject((u32)obj, SFXsp_lfoot_treasure);
         speed = lbl_803E6170;
     }
     gVfpLavaPoolWaveSin = wave = mathSinf((gVfpLavaPoolPi * (f32)(s16)(int)state->phase) / lbl_803E6178);

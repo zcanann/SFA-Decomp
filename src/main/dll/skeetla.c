@@ -26,6 +26,7 @@
 #include "main/dll/objfsa.h"
 #include "main/gamebits.h"
 #include "main/lightmap.h"
+#include "main/gamebit_ids.h"
 
 /* group owned by another DLL, queried here */
 #define SIDEREPEL_OBJGROUP 0x40 /* DLL 0xEB siderepel */
@@ -546,7 +547,7 @@ int trickyMove(u8* obj, f32* targetPos)
                         {
                             *(u32*)sfxIds = gSkeetlaFootstepSfxIds01;
                             sfxIds[2] = gSkeetlaFootstepSfxId2;
-                            if (mainGetBit(0x25) != 0)
+                            if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0)
                             {
                                 randomGetRange(0, 2);
                             }

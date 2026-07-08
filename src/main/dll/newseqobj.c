@@ -24,6 +24,7 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gamebit_ids.h"
 extern u8 lbl_8031DD30[];   /* per-anim move-progress floats, indexed anim*4 */
 
 /* per-family table-of-tables row (0x28 bytes); holds pointers to the
@@ -272,7 +273,7 @@ void fn_80150EDC(void* obj, void* state)
 
     if (idx == 5 && (((BaddieState*)state)->controlFlags & 0x800000) != 0)
     {
-        mainSetBits(0x1c8, 1);
+        mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
 
     if (((BaddieState*)state)->trackedObj != NULL &&
@@ -392,7 +393,7 @@ void fn_80150910(int* obj, u8* state)
 
     if (state[0x33b] == 5 && (((BaddieState*)state)->controlFlags & 0x800000))
     {
-        mainSetBits(0x1c8, 1);
+        mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
     fn_8015039C(obj, state);
     {

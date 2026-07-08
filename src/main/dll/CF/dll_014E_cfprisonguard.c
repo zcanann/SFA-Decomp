@@ -15,6 +15,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/gamebit_ids.h"
 
 typedef struct CfPrisonGuardMapData
 {
@@ -90,7 +91,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         return 0;
     }
     ObjHits_EnableObject(obj);
-    gb50 = mainGetBit(0x50); /* the old CloudRunner has flown off */
+    gb50 = mainGetBit(GAMEBIT_CF_UncleFlewOff); /* the old CloudRunner has flown off */
     gb48 = mainGetBit(0x48); /* the caged guardian has broken out */
     if ((sub->flags & 2) != 0 && mainGetBit(GAMEBIT_CFPerchRelated004D) != 0)
     {

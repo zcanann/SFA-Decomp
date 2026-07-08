@@ -18,6 +18,7 @@
 #include "main/dll/baddie/MMP_critterspit.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 
 #define MMPCRITTERSPIT_OBJFLAG_PARENT_SLACK 0x1000
 #define PRESSURESWITCHFB_REMOVE_GROUP_ID 0x53 /* DLL 0xFB pressureswitchfb (self-registers) */
@@ -63,7 +64,7 @@ int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
             {
                 if ((mainGetBit(0x385) == 0) && (mainGetBit(0x384) != 0))
                 {
-                    if ((mainGetBit(0xC1) != 0) || (mainGetBit(0x12E) != 0))
+                    if ((mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) != 0) || (mainGetBit(GAMEBIT_ITEM_TrickyFood_GrabInProgress) != 0))
                     {
                         result = 1;
                     }

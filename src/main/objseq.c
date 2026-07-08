@@ -9,6 +9,8 @@
 #include "main/sfa_extern_decls.h"
 #include "main/maketex.h"
 #include "main/gameplay_runtime.h"
+#include "main/gamebit_ids.h"
+#include "main/mldf_fileid.h"
 
 /* Camera mode ids passed to gCameraInterface->setMode; each == cameramode DLL number. */
 #define OBJSEQ_CAMMODE_DEFAULT 0x42      /* default gameplay cameramode DLL */
@@ -1304,19 +1306,19 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         Rcp_SetMonochromeFilterEnabled(0);
         break;
     case 48:
-        mainSetBits(0x3b0, 1);
+        mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A0, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A1, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A2, 0);
         break;
     case 49:
-        mainSetBits(0x3b0, 1);
+        mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B0, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B1, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B2, 0);
         break;
     case 50:
-        mainSetBits(0x3b0, 0);
+        mainSetBits(GAMEBIT_ENV_isOutdoor, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A0, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A1, 0);
         getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A2, 0);
@@ -3489,7 +3491,7 @@ void ObjSeq_objLoadAnimdata(u8* seq, u8* obj)
     animId = *(s16*)(obj + 0x18);
     if ((animId & 0x8000) != 0)
     {
-        getTabEntry(lbl_803DD0D4, 0xf, ((animId & 0x7ff0) >> 4) * 2, 8);
+        getTabEntry(lbl_803DD0D4, MLDF_FILEID_OBJSEQ2C_TAB, ((animId & 0x7ff0) >> 4) * 2, 8);
         animId = *(s16*)lbl_803DD0D4 + (animId & 0xf);
     }
     else
@@ -3788,12 +3790,12 @@ checked:
     }
 
     hdr = mmAlloc(0x20, 0x11, 0);
-    getTabEntry(hdr, 0x3c, seqIdx * 2, 8);
+    getTabEntry(hdr, MLDF_FILEID_OBJSEQ_TAB, seqIdx * 2, 8);
     first = *(s16*)hdr;
     count = *(s16*)(hdr + 2) - first;
     size = count << 3;
     buf = mmAlloc(size, 0x11, 0);
-    getTabEntry(buf, 0x3b, first * 8, size);
+    getTabEntry(buf, MLDF_FILEID_OBJSEQ_BIN, first * 8, size);
     mm_free(hdr);
 
     if (lbl_803DD07C != NULL)

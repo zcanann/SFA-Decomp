@@ -6,6 +6,7 @@
 #include "main/objtexture.h"
 #include "main/engine_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx_ids.h"
 
 #define PROXIMITYMINE_PARTFX 0x51c
 
@@ -177,13 +178,13 @@ void ProximityMine_update(ProximityMineObject* obj)
             {
                 hitDetectFn_800658a4(obj, obj->posX, obj->posY, obj->posZ, &groundY, 0);
                 obj->posY -= groundY;
-                Sfx_PlayFromObject((u32)obj, 0x2e6);
-                Sfx_PlayFromObject((u32)obj, 0x2e8);
+                Sfx_PlayFromObject((u32)obj, SFXnewtricky_01a);
+                Sfx_PlayFromObject((u32)obj, SFXnewtricky_01c);
             }
             else
             {
-                Sfx_PlayFromObject((u32)obj, 0x2e7);
-                Sfx_PlayFromObject((u32)obj, 0x2e9);
+                Sfx_PlayFromObject((u32)obj, SFXnewtricky_01b);
+                Sfx_PlayFromObject((u32)obj, SFXnewtricky_01d);
             }
         }
         if (state->effectHandle == NULL)
@@ -217,7 +218,7 @@ void ProximityMine_update(ProximityMineObject* obj)
     {
         if (fn_80080150(&state->resetTimer) != 0)
         {
-            Sfx_PlayFromObject((u32)obj, 0xef);
+            Sfx_PlayFromObject((u32)obj, SFXsp_sabrepush163);
             if (state->effectHandle == NULL)
             {
                 state->effectHandle = modelLightStruct_createPointLight(obj, 0xff, 0, 0, 0);
@@ -281,7 +282,7 @@ void ProximityMine_update(ProximityMineObject* obj)
                 params.rotY = 0;
                 params.rotX = obj->angle;
                 vecRotateZXY(&params, &obj->velocityX);
-                Sfx_PlayFromObject((u32)obj, 0xf0);
+                Sfx_PlayFromObject((u32)obj, SFXsp_sabrepush164);
             }
         case PROXIMITYMINE_MODE_FLIGHT:
             if (timerCountDown(&state->launchTimer) != 0)

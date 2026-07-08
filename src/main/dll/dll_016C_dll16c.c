@@ -21,6 +21,7 @@
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 
 /* seqId variant whose render is gated by GameBit 0x3A2 (docblock: "Render is gated by GameBit 0x3A2 / seqId 883") */
 #define DLL16C_RENDER_GATE_SEQID 883
@@ -125,9 +126,9 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 
     if (((GameObject*)obj)->anim.seqId != DLL16C_RENDER_GATE_SEQID)
     {
-        if (mainGetBit(110) != 0)
+        if (mainGetBit(GAMEBIT_IM_TrickyRelated006E) != 0)
         {
-            if (mainGetBit(898) == 0) return;
+            if (mainGetBit(GAMEBIT_IM_HutRelated0382) == 0) return;
         }
         extra = ((GameObject*)obj)->extra;
         p = extra->linkedObj;

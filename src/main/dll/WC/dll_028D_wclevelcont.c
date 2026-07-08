@@ -184,14 +184,14 @@ void wclevelcont_free(int obj)
     {
         mainSetBits(0x7ef, 0);
         mainSetBits(0x7ed, 0);
-        mainSetBits(0xba6, 0);
+        mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
         mainSetBits(0xedd, 0);
     }
     else if (mode == 2)
     {
         mainSetBits(0x7f0, 0);
         mainSetBits(0x7ee, 0);
-        mainSetBits(0xba6, 0);
+        mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
         mainSetBits(0xedc, 0);
     }
     gameTimerStop();
@@ -246,7 +246,7 @@ void wclevelcont_syncProgressBits(int stateArg)
     SCGameBitLatch_Update((int)&state->gameBitLatch, 0x10, -1, -1, 0xcd0, 0xd4);
     SCGameBitLatch_Update((int)&state->gameBitLatch, 0x40, -1, -1, 0xcbb, 0xc4);
     flag = 0;
-    if ((u32)mainGetBit(0xba6) == 0 && ((u32)mainGetBit(0xda9) != 0 || gameTimerIsRunning() != 0))
+    if ((u32)mainGetBit(GAMEBIT_WC_PushBlockTimerActive) == 0 && ((u32)mainGetBit(0xda9) != 0 || gameTimerIsRunning() != 0))
     {
         flag = 1;
     }

@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
+#include "main/gamebit_ids.h"
 
 enum DIMwooddoorDebrisState
 {
@@ -78,8 +79,8 @@ void DIMwooddoor_updateFallingDebris(int* obj)
                     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
             }
-            if ((mainGetBit(2142) != 0 && mainGetBit(3117) == 0) ||
-                (mainGetBit(2164) != 0 && mainGetBit(3118) == 0))
+            if ((mainGetBit(GAMEBIT_DIM2_CannonRelated085E) != 0 && mainGetBit(GAMEBIT_CannonRelated0C2D) == 0) ||
+                (mainGetBit(GAMEBIT_DIM2_CannonRelated0874) != 0 && mainGetBit(GAMEBIT_CannonRelated0C2E) == 0))
             {
                 ((GameObject*)obj)->unkF4 = 1200;
             }

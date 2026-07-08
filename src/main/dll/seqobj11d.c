@@ -29,6 +29,7 @@
 #include "main/objseq.h"
 #include "main/dll/player_target.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/gamebit_ids.h"
 
 typedef struct
 {
@@ -221,7 +222,7 @@ void fn_8015165C(int obj, u8* state)
     p28 = *(u8**)(base + 28);
     if (t == 5 && (((GroundBaddieState*)state)->baddie.controlFlags & 0x800000) != 0)
     {
-        mainSetBits(456, 1);
+        mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
     if (((GroundBaddieState*)state)->baddie.trackedObj != NULL && ((GameObject*)*(int*)&((GroundBaddieState*)state)->baddie.
         trackedObj)->anim.classId == 1)

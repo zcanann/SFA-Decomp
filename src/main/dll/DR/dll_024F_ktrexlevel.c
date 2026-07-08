@@ -14,6 +14,7 @@
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/gamebit_ids.h"
 
 #define KTREXLEVEL_ENVFX_A 0x18f
 #define KTREXLEVEL_ENVFX_B 0x18e
@@ -25,13 +26,13 @@ int KT_RexLevel_getObjectTypeId(void) { return 0x0; }
 
 void KT_RexLevel_free(void)
 {
-    mainSetBits(0xefd, 0);
+    mainSetBits(GAMEBIT_SETPIECE_ACTIVE, 0);
     mainSetBits(0xcd1, 0);
     mainSetBits(0xccd, 0);
     mainSetBits(0xccf, 0);
     mainSetBits(0xcd0, 0);
     mainSetBits(0xedb, 0);
-    mainSetBits(0xcbb, 0);
+    mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, 0);
 }
 
 void KT_RexLevel_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
@@ -56,14 +57,14 @@ void ktrexlevel_clearPathGameBits(void)
 
 void ktrexlevel_updatePathGameBits(void)
 {
-    if (mainGetBit(0x55a) != 0)
+    if (mainGetBit(GAMEBIT_DR_KTrexPathA) != 0)
     {
         mainSetBits(0x54a, 2);
         mainSetBits(0x54e, 2);
         mainSetBits(0x552, 1);
         mainSetBits(0x556, 1);
     }
-    else if (mainGetBit(0x55b) != 0)
+    else if (mainGetBit(GAMEBIT_DR_KTrexPathB) != 0)
     {
         mainSetBits(0x54a, 1);
         mainSetBits(0x54e, 1);
@@ -84,25 +85,25 @@ void KT_RexLevel_update(int obj)
         mainSetBits(0x55e, 1);
         ((GameObject*)obj)->unkF4 = 1;
     }
-    lbl_803DDD40 = mainGetBit(0x572);
+    lbl_803DDD40 = mainGetBit(GAMEBIT_DR_KTrexPhaseCounter);
 }
 
 void KT_RexLevel_init(int obj)
 {
     char* extra = ((GameObject*)obj)->extra;
     setDrawCloudsAndLights(0);
-    mainSetBits(0x572, 0);
+    mainSetBits(GAMEBIT_DR_KTrexPhaseCounter, 0);
     mainSetBits(0x56e, 1);
     mainSetBits(0x566, 1);
     mainSetBits(0x569, 1);
     *(f32*)extra = lbl_803E67A8;
-    mainSetBits(0x55a, 1);
+    mainSetBits(GAMEBIT_DR_KTrexPathA, 1);
     mainSetBits(0x54a, 2);
     mainSetBits(0x54e, 2);
     mainSetBits(0x552, 1);
     mainSetBits(0x556, 1);
     ((GameObject*)obj)->unkF4 = 0;
-    mainSetBits(0xefd, 1);
+    mainSetBits(GAMEBIT_SETPIECE_ACTIVE, 1);
 }
 
 void KT_RexLevel_release(void)

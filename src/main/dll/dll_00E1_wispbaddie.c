@@ -13,6 +13,7 @@
 #include "string.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx_ids.h"
 #define WISPBADDIE_HIT_VOLUME_SLOT 10
 
 /* object group this object belongs to */
@@ -416,7 +417,7 @@ void wispbaddie_init(int obj, int setup, int initialised)
         {
             state->flags = (u8)(state->flags | WISPBADDIE_FLAG_PATH_NEEDS_LINK);
         }
-        Sfx_PlayFromObject(obj, 0x23b);
+        Sfx_PlayFromObject(obj, SFXfox_swimstroke122);
     }
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | WISPBADDIE_OBJFLAG_HITDETECT_DISABLED);
 }

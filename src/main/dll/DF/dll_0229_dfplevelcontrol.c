@@ -50,7 +50,7 @@ void fn_80204098(int obj)
         {
             lbl_80329848[i] = (s16)randomGetRange(1, 4);
         }
-        mainSetBits(0x5e4, 0);
+        mainSetBits(GAMEBIT_DRBOT_SpellPuzzleActive, 0);
         state->timer = 0;
         lbl_803DC183 = 0;
     }
@@ -73,7 +73,7 @@ void fn_80204098(int obj)
             {
                 lbl_80329848[i] = (s16)randomGetRange(1, 4);
             }
-            mainSetBits(0x5e4, 1);
+            mainSetBits(GAMEBIT_DRBOT_SpellPuzzleActive, 1);
             state->sfxLatch = 1;
         }
         else
@@ -81,7 +81,7 @@ void fn_80204098(int obj)
             if (mainGetBit(0x635) == 0 && state->sfxLatch == 1)
             {
                 state->sfxLatch = 0;
-                mainSetBits(0x5e4, 0);
+                mainSetBits(GAMEBIT_DRBOT_SpellPuzzleActive, 0);
             }
         }
         if (mainGetBit(0x5e5) != 0)
@@ -118,7 +118,7 @@ void fn_80204320(int obj)
         {
             lbl_80329848[i] = (s16)randomGetRange(1, 4);
         }
-        mainSetBits(1508, 0);
+        mainSetBits(GAMEBIT_DRBOT_SpellPuzzleActive, 0);
         sub->timer = 0;
         lbl_803DC182 = 0;
     }
@@ -139,13 +139,13 @@ void fn_80204320(int obj)
             {
                 lbl_80329848[i] = (s16)randomGetRange(1, 4);
             }
-            mainSetBits(1508, 1);
+            mainSetBits(GAMEBIT_DRBOT_SpellPuzzleActive, 1);
             sub->sfxLatch = 1;
         }
         else if (mainGetBit(1589) == 0 && sub->sfxLatch == 1)
         {
             sub->sfxLatch = 0;
-            mainSetBits(1508, 0);
+            mainSetBits(GAMEBIT_DRBOT_SpellPuzzleActive, 0);
         }
         if (mainGetBit(1509) != 0)
         {

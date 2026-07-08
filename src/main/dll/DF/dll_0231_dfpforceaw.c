@@ -12,6 +12,7 @@
 #include "main/dll/infopoint.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/gamebit_ids.h"
 
 #define DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DFPFORCEAW_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
@@ -151,7 +152,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
 
         if (mainGetBit(0x1d9) != 0)
         {
-            mainSetBits(0x468, 1);
+            mainSetBits(GAMEBIT_TRICKYCURVE_PLAYER_HIT, 1);
             ObjMsg_SendToObject(player, DFPFORCEAW_MSG_PLAYER_BURST, obj, 0);
             (*gPartfxInterface)->spawnObject((void*)obj, DFPFORCEAW_PARTFX_BURST, &fxParams, 2, -1, NULL);
             burstParticles = 9;

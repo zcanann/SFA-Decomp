@@ -30,6 +30,7 @@
 #include "main/dll/wmgalleonsetup_struct.h"
 #include "main/dll/wmseqobjectsetup_struct.h"
 #include "main/dll/wmgalleonstate_struct.h"
+#include "main/gamebit_ids.h"
 extern void textureFree(u8* tex);
 extern ModgfxInterface** gModgfxInterface;
 
@@ -375,7 +376,7 @@ void LaserBeam_update(int obj2)
                 {
                     if (objGetAnimState80A(player) == 0x1d7 && b->beamKind != 1)
                     {
-                        mainSetBits(0x468, 1);
+                        mainSetBits(GAMEBIT_TRICKYCURVE_PLAYER_HIT, 1);
                     }
                     else
                     {

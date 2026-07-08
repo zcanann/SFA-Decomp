@@ -34,6 +34,7 @@
 #include "main/obj_placement.h"
 #include "main/objtexture.h"
 #include "main/mm.h"
+#include "main/gamebit_ids.h"
 
 #define WM_SUN_GLARE_COUNT 20
 
@@ -376,7 +377,7 @@ void wmsun_update(int obj)
             {
                 thresh = 200;
             }
-            if (mainGetBit(0x21d) != 0)
+            if (mainGetBit(GAMEBIT_WM_SpiritHead1Fired) != 0)
             {
                 thresh = 400;
             }
@@ -402,13 +403,13 @@ void wmsun_update(int obj)
                 ((GameObject*)obj)->anim.localPosY = lbl_803E5F7C * (spd * timeDelta) + ((GameObject*)obj)->anim.
                     localPosY;
             }
-            else if (mainGetBit(0x222) != 0 && mainGetBit(0x38d) == 0)
+            else if (mainGetBit(0x222) != 0 && mainGetBit(GAMEBIT_WM_FinaleQuakeActive) == 0)
             {
-                mainSetBits(0x38d, 1);
+                mainSetBits(GAMEBIT_WM_FinaleQuakeActive, 1);
                 mainSetBits(0x370, 0);
                 state->renderEnabled = 0;
             }
-            if (mainGetBit(0x38d) == 0 && state->riseStep > 0x960 && (int)randomGetRange(0, 100) == 0)
+            if (mainGetBit(GAMEBIT_WM_FinaleQuakeActive) == 0 && state->riseStep > 0x960 && (int)randomGetRange(0, 100) == 0)
             {
                 CameraShake_SetAllMagnitudes(lbl_803E5F80 * ((f32)(state->riseStep - 0x960) / lbl_803E5F84));
                 mainSetBits(0x370, 1);
@@ -505,7 +506,7 @@ void wmsun_update(int obj)
     {
         ((GameObject*)obj)->anim.rotZ += state->spinStep;
         ((GameObject*)obj)->anim.rotX += state->riseStep;
-        if (mainGetBit(0x38d) != 0 && objAnim->bankIndex == 0)
+        if (mainGetBit(GAMEBIT_WM_FinaleQuakeActive) != 0 && objAnim->bankIndex == 0)
         {
             if (lbl_803DDCAA == 0)
             {
@@ -519,7 +520,7 @@ void wmsun_update(int obj)
                     if (gWmSunQuakeTimer <= 0)
                     {
                         gWmSunQuakeTimer = 0;
-                        mainSetBits(0x38d, 0);
+                        mainSetBits(GAMEBIT_WM_FinaleQuakeActive, 0);
                         mainSetBits(0x38f, 1);
                     }
                 }

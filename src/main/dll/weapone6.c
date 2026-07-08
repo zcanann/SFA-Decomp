@@ -28,6 +28,7 @@
 #include "main/dll/tricky_state.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
+#include "main/gamebit_ids.h"
 
 #define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
 #define TRICKY_STATE_RESET_FLAG_10     0x00000010
@@ -538,12 +539,12 @@ void fn_8013FBE4(int obj, register int state)
     switch (((TrickyState*)state)->substate)
     {
     case 0:
-        newBit = mainGetBit(0x48b);
+        newBit = mainGetBit(GAMEBIT_NW_MammothTumbleweedCount);
         ((TrickyNibblePair*)&((TrickyState*)state)->unk700)->hi = newBit;
         *(int*)&((TrickyState*)state)->unk710 = 0;
         ((TrickyState*)state)->substate = 1;
     case 1:
-        currentBit = mainGetBit(0x48b);
+        currentBit = mainGetBit(GAMEBIT_NW_MammothTumbleweedCount);
         bitIndex = ((TrickyNibblePair*)&((TrickyState*)state)->unk700)->hi;
         if (bitIndex != currentBit)
         {

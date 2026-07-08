@@ -21,6 +21,16 @@ enum GameBitId {
      * the Krazoa Shrine door stays unlocked. Live-verified in Dolphin: talking
      * to the door EarthWalker flips this 0 -> 1 and the shrine door opens.
      */
+    GAMEBIT_DRBOT_SpellPuzzleActive = 0x5E4,             /* DragonRock Palace spell-puzzle active gate: 1 while the level controller's solution roll is engaged, gating dfpfloorbar/dfpwallbar (chuka) puzzle-mode behavior */
+    GAMEBIT_DR_KTrexPhaseCounter = 0x572,                /* Dragon Rock K.Rex (Galdon) boss-arena phase/stage counter, advanced by the fight's state machine and read by DR floor switches (shifted right 1) to pick their rise curve */
+    GAMEBIT_DR_KTrexPathB = 0x55B,                       /* Alternate branch-path selector for the Galdon T-rex arena (Dragon Rock); mutually exclusive with 0x55a, set when a floor switch's charge cycle maxes out and polled by ktrexlevel_updatePathGameBits to choose the arena's second path-bit layout */
+    GAMEBIT_DR_KTrexPathA = 0x55A,                       /* Dragon Rock K-Trex (Galdon) arena - path A active; toggles with 0x55b when a floor plate is charged to max, selecting which branch-path bits ktrexlevel applies */
+    GAMEBIT_NW_MammothTumbleweedCount = 0x48B,           /* SnowHorn Wastes mammoth's tumbleweed-bush capture count (0-3, persists across reload); reaching 3 completes the air-meter rescue sequence for the SnowHorn Gate Keeper, and Tricky (weapone6.c) polls it to sync its tumbleweed-chase substate */
+    GAMEBIT_TRICKYCURVE_PLAYER_HIT = 0x468,              /* Hard-coded, area-agnostic "TrickyCurve" hazard-trigger hit-while-sliding signal: set by DFP_ForceAw/DFSH_LaserBeam/the generic laserbeam when the player enters the trigger box in the sliding anim state (0x1d7) instead of taking a normal hit; polled and cleared by the generic bone-particle-effect module, which arms a particle timer and plays an SFXsc_mumble01 reaction */
+    GAMEBIT_WM_FinaleQuakeActive = 0x38D,                /* Krazoa Palace finale: set by WM_Crystal (dll_020E) once fully risen after the 6th spirit is returned, gating the WM_sun bank-0 quake/envfx countdown until it clears and 0x38F fires */
+    GAMEBIT_WM_KrazTest1TorchesActive = 0x1D3,           /* Krazoa Test 1 shrine-countdown active; set by dll_019B when the timer starts with no unlocks yet, read by dll_019C torch props to ignite; cleared on test failure */
+    GAMEBIT_ITEM_TrickyFood_GrabInProgress = 0x12E,      /* Global latch: set by dll_01A7 EdibleMushroom when a GrubTub Fungus offers itself to the player (grab in range), cleared once the grab-complete reply lands and TrickyFood_Count (or the seqId-0x658 variant's bit) increments; read by mmp_critterspit's Tricky food check as a stand-in for already owning TrickyFood */
+    GAMEBIT_CF_UncleFlewOff = 0x50,                      /* Set once the old CloudRunner prisoner (cfprisonuncle) has flown off after his cage is opened; gates his own render/update, silences cfperch's squawk sequence, and flips cfprisonguard's alarm behavior */
     GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE = 0x9ad,
 
     /*
@@ -67,6 +77,11 @@ enum GameBitId {
      * respawns the monster and re-shows the skull). Per-placement - this is the
      * K1 (first, mandatory) gate's value; other gates carry their own.
      */
+    GAMEBIT_GPSH_TestKnowledgeRunning = 0xDD2,           /* GPSH shrine (Test Of Knowledge) trial-active latch - set on activation, cleared on solve/timeout/reset; gates MUSICTRIG_krazoa_tunnel_2 via SCGameBitLatch_Update, mirroring GAMEBIT_ECSH_TestObservRunning */
+    GAMEBIT_SHRINE_MUSIC_LOCK = 0xCBB,                   /* Krazoa-shrine music lock: set (success-gated in GPSH) when a Krazoa shrine object (MMSH/ECSH/DFSH/DBSH/GPSH) frees; every area's level-control DLL watches it via SCGameBitLatch_Update to start/stop MUSICTRIG_PU3_Adventure_c4 and hand back its own ambient music, and it also raises audio.c's SFX reverb bus and suppresses doorf4's door-close SFX during the transition */
+    GAMEBIT_SC_ChallengeGate3Complete = 0xC54,           /* One-shot latch: Lightfoot Village's third target-hit challenge gate (encounterType 0x49928) has been completed and its reward sequence (7) already played */
+    GAMEBIT_LV_ChallengeGate2Complete = 0xC53,           /* One-shot reward latch for LightFoot Village challenge-gate NPC 2 (mapId 0x46A55): fires once bits 0xc3b/0xc3c/0xc3d (the three baby-lightfoot-delivered flags) are all set, permanently disabling that NPC's interaction and unlocking swapcircle map objgroup 0xa */
+    GAMEBIT_WC_PushBlockTimerActive = 0xBA6,             /* Set while either Walled City push-block timed puzzle (A or B) is actively counting down/up; cleared on completion, timeout, or reset; gates the ambient-music latch in wclevelcont_syncProgressBits */
     GAMEBIT_K1_GATE_MONSTER_DEFEATED = 0xecb,
 
     /*
@@ -952,6 +967,7 @@ enum GameBitId {
     GAMEBIT_ECSH_InShrine = 0xEFA,                       /* table 0; set when entering Krazoa test 1, cleared when leaving */
     GAMEBIT_WarpRelated0EFB = 0xEFB,                     /* table 0; related to warp pads/magic cave; maybe override destination with MagicCaveExitWarp? */
     GAMEBIT_MAZEWELL_ACTIVE = 0xEFC,                     /* table 0; Music_Trigger(0x36) + Well active/hitbox state */
+    GAMEBIT_SETPIECE_ACTIVE = 0xEFD,                     /* table 0; set 1 for the duration of a major scripted encounter/arena (DIMboss boss fight, KT_RexLevel arena, nwsh_levcon chase) and cleared on exit; read by audio.c's Sfx_UpdateObjectSounds alongside ECSH_InShrine/WarpRelated0EFB/MAZEWELL_ACTIVE/PlayerInShop to select the SFX global-control ducking level */
     GAMEBIT_PlayerInShop = 0xEFE,                        /* table 0 */
     GAMEBIT_LV_LocatedKrazoaShrine = 0xF07,              /* table 0; hint 351 */
     GAMEBIT_NW_DidPadHornTest = 0xF08,                   /* table 0; hint 379 */

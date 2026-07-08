@@ -10,6 +10,7 @@
 #include "main/gamebits.h"
 #include "main/texture.h"
 #include "main/objlib.h"
+#include "main/gamebit_ids.h"
 extern int randomGetRange(int lo, int hi);
 extern f32 timeDelta;
 extern ModgfxInterface** gModgfxInterface;
@@ -377,7 +378,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                     }
                     else
                     {
-                        mainSetBits(0x468, 1);
+                        mainSetBits(GAMEBIT_TRICKYCURVE_PLAYER_HIT, 1);
                     }
                 }
             }

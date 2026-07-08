@@ -41,6 +41,7 @@
 #include "main/dll/firecrawler.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 /* group owned by another DLL, queried here */
 #define LANTERNFIREFLY_OBJGROUP 0x30 /* DLL 0x10C lanternfirefly */
@@ -1586,7 +1587,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         return;
     }
 
-    if ((((BaddieState*)state)->inWhirlpoolGroup == 0 && cmd == 0x11 && mainGetBit(0xc55) != 0)
+    if ((((BaddieState*)state)->inWhirlpoolGroup == 0 && cmd == 0x11 && mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0)
         || ((BaddieState*)state)->inWhirlpoolGroup == 1)
     {
         u8 v;

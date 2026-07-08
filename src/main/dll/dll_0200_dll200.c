@@ -18,6 +18,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_80220608_shared.h"
+#include "main/gamebit_ids.h"
 
 #define PAD_BUTTON_A 0x100
 
@@ -118,7 +119,7 @@ void fn_801F27E4(int obj)
     {
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
-            mainSetBits(208, 1);
+            mainSetBits(GAMEBIT_WM_GalleonRelated00D0, 1);
             ((Dll200State*)state)->latch24 = 1;
             buttonDisable(0, PAD_BUTTON_A);
         }
@@ -281,7 +282,7 @@ int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* ani
             u8 eventId = animUpdate->eventIds[i];
             if (eventId == 1)
             {
-                mainSetBits(208, 1);
+                mainSetBits(GAMEBIT_WM_GalleonRelated00D0, 1);
                 ((Dll200State*)state)->latch24 = 1;
             }
             else if (eventId == 2)

@@ -1,6 +1,7 @@
 /* DLL — SC level-control tail objects [801DBFA0-801DC310) */
 #include "main/obj_placement.h"
 #include "main/dll/scmusictreesetup_struct.h"
+#include "main/gamebit_ids.h"
 
 /* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
 
@@ -17,7 +18,7 @@ STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 int sc_totempuzzle_animEventCallback(void)
 {
     int r;
-    if (mainGetBit(0x639) != 0) { r = 0; }
+    if (mainGetBit(GAMEBIT_SC_totempuzzle_running) != 0) { r = 0; }
     else { r = 1; }
     return r;
 }

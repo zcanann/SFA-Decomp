@@ -14,6 +14,7 @@
 #include "main/game_ui_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"
+#include "main/gamebit_ids.h"
 
 extern void* playerGetFocusObject(void* obj);
 
@@ -29,8 +30,8 @@ void fn_801AC01C(int obj)
     int mode;
     void* player;
 
-    mainSetBits(0x3a3, 0);
-    mainSetBits(0x3a2, 0);
+    mainSetBits(GAMEBIT_IM_BikeRelated03A3, 0);
+    mainSetBits(GAMEBIT_IM_BikeRelated03A2, 0);
     player = playerGetFocusObject(Obj_GetPlayerObject());
     if (player != 0)
     {
@@ -45,15 +46,15 @@ void fn_801AC01C(int obj)
     {
         (*gGameUIInterface)->setShowWorldMapHud(1);
         *(u8*)state = HUD_STATE_WORLDMAP;
-        mainSetBits(0x37b, 1);
+        mainSetBits(GAMEBIT_IMRelated037B, 1);
     }
     else
     {
         *(u8*)state = HUD_STATE_HIDDEN;
-        mainSetBits(0xce, 1);
+        mainSetBits(GAMEBIT_IMRelated00CE, 1);
     }
-    mainSetBits(0x378, 0);
-    mainSetBits(0x3b9, 0);
+    mainSetBits(GAMEBIT_IM_BikeRelated0378, 0);
+    mainSetBits(GAMEBIT_IM_BikeRelated03B9, 0);
 }
 
 void fn_801AC108(int obj, int extra)
@@ -62,12 +63,12 @@ void fn_801AC108(int obj, int extra)
     void* player;
 
     (*gGameUIInterface)->setShowWorldMapHud(0);
-    if (mainGetBit(0x3a3) != 0)
+    if (mainGetBit(GAMEBIT_IM_BikeRelated03A3) != 0)
     {
-        mainSetBits(0x3a3, 0);
-        mainSetBits(0x3a2, 0);
-        mainSetBits(0x378, 0);
-        mainSetBits(0x3b9, 0);
+        mainSetBits(GAMEBIT_IM_BikeRelated03A3, 0);
+        mainSetBits(GAMEBIT_IM_BikeRelated03A2, 0);
+        mainSetBits(GAMEBIT_IM_BikeRelated0378, 0);
+        mainSetBits(GAMEBIT_IM_BikeRelated03B9, 0);
         player = playerGetFocusObject(Obj_GetPlayerObject());
         if (player != 0)
         {
@@ -77,13 +78,13 @@ void fn_801AC108(int obj, int extra)
         {
             mode = 0;
         }
-        mainSetBits(0x4e5, 1);
+        mainSetBits(GAMEBIT_IM_DoneRace, 1);
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 1, 1);
         if (mode == 1)
         {
             (*gGameUIInterface)->setShowWorldMapHud(1);
             *(u8*)extra = HUD_STATE_WORLDMAP;
-            mainSetBits(0x379, 1);
+            mainSetBits(GAMEBIT_IM_BikeRelated0379, 1);
         }
         else
         {

@@ -16,6 +16,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/gamebit_ids.h"
 /* anim.seqId of the puzzle controller object this bar links to (docblock:
  * "the puzzle controller object (seqId 0x431)"). */
 #define DFPFLOORBAR_CONTROLLER_SEQID 0x431
@@ -121,7 +122,7 @@ void DFP_Floorbar_update(int obj)
         break;
     }
 
-    sequenceValue = (u8)mainGetBit(0x5e4);
+    sequenceValue = (u8)mainGetBit(GAMEBIT_DRBOT_SpellPuzzleActive);
     if (mainGetBit(0x5e5) != 0 || sequenceValue != state->lastSequenceValue)
     {
         state->active = 0;
