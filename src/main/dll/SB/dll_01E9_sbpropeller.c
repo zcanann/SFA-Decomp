@@ -63,19 +63,19 @@ int SB_Propeller_getExtraSize(void)
     return sizeof(SBPropellerState);
 }
 
-void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void SB_Propeller_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5810);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5810);
 }
 
 void SB_Propeller_hitDetect(GameObject* obj)
 {
-    GameObject* o = obj;
-    if (o->anim.seqId != SB_PROPELLER_SEQ_ID)
+    GameObject* object = obj;
+    if (object->anim.seqId != SB_PROPELLER_SEQ_ID)
         return;
-    o->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
+    object->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
 }
 
 void SB_Propeller_update(int obj)
@@ -85,7 +85,7 @@ void SB_Propeller_update(int obj)
     int camB;
     int camC;
     int parentTimer;
-    GameObject* o;
+    GameObject* object;
     int i;
     int j;
     int hit;
@@ -101,8 +101,8 @@ void SB_Propeller_update(int obj)
     } stk;
 
     objAnim = (ObjAnimComponent*)obj;
-    o = (GameObject*)obj;
-    state = o->extra;
+    object = (GameObject*)obj;
+    state = object->extra;
     camA = SB_GALLEON_VTBL(*(int*)&objAnim->parent)->getStage(*(int*)&objAnim->parent);
     camB = SB_GALLEON_VTBL(*(int*)&objAnim->parent)->getPhase(*(int*)&objAnim->parent);
     if (((state->health != 0) && (camB < 6)) && (objAnim->seqId != SB_PROPELLER_SEQ_ID))
@@ -155,16 +155,16 @@ void SB_Propeller_update(int obj)
                 state->spinBlend = lbl_803E5820;
             }
         }
-        o->unkF4 = o->unkF4 - framesThisStep;
-        if (o->unkF4 < 0)
+        object->unkF4 = object->unkF4 - framesThisStep;
+        if (object->unkF4 < 0)
         {
-            o->unkF4 = 0;
+            object->unkF4 = 0;
         }
-        if (((((((camB == 1) && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)) && (o->unkF4 == 0)) &&
+        if (((((((camB == 1) && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)) && (object->unkF4 == 0)) &&
                (((void*)hit != NULL && ((void*)hit != (void*)Obj_GetPlayerObject())))) &&
               ((((GameObject*)hit)->anim.seqId != SB_PROPELLER_SEQ_ID &&
                 ((((GameObject*)hit)->anim.seqId != SB_OTHER_SEQ_ID &&
-                  ((o->unkF4 = 0x14, objAnim->parent != NULL))))))) &&
+                  ((object->unkF4 = 0x14, objAnim->parent != NULL))))))) &&
              ((camA == 2 || (camA == 5)))) &&
             (objAnim->seqId == SB_PROPELLER_SEQ_ID))
         {
@@ -181,7 +181,7 @@ void SB_Propeller_update(int obj)
                 Sfx_PlayFromObject(obj, SB_PROPELLER_SFX_DESTROYED);
             }
         }
-        if (o->unkF4 == 0)
+        if (object->unkF4 == 0)
         {
             ((ObjHitsPriorityState*)objAnim->hitReactState)->hitVolumePriority = 6;
             ((ObjHitsPriorityState*)objAnim->hitReactState)->hitVolumeId = 1;
