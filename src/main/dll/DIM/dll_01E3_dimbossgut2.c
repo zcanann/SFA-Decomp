@@ -153,9 +153,9 @@ int DIM_BossGut2_getObjectTypeId(void)
     return 0x49;
 }
 
-void DIM_BossGut2_free(int arg9)
+void DIM_BossGut2_free(int objArg)
 {
-    int obj = arg9;
+    int obj = objArg;
     u32 handle;
     int state;
     void* childObj;
@@ -201,7 +201,7 @@ void DIM_BossGut2_hitDetect(void)
 void DIM_BossGut2_update(int obj)
 {
     int state;
-    int tmpVar;
+    int result;
     u32 randomThreshold;
     u32 brightness;
     Dimbossgut2Curve* posData;
@@ -224,15 +224,15 @@ void DIM_BossGut2_update(int obj)
     state = *(int*)&((GameObject*)obj)->extra;
     if ((((GameObject*)obj)->unkF4 == 0) &&
         ((((GameObject*)obj)->anim.parent != NULL ||
-          (tmpVar = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+          (result = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                         ((GameObject*)obj)->anim.localPosZ),
-           tmpVar >= 0))))
+           result >= 0))))
     {
         msgC = 0;
         do
         {
-            tmpVar = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
-        } while (tmpVar != 0);
+            result = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
+        } while (result != 0);
         posData = (Dimbossgut2Curve*)((Dimbossgut2State*)state)->curveData;
         if ((posData->f0 < lbl_803E4CD0) && (posData->f10 < lbl_803E4CD4))
         {

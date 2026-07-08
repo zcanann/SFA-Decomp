@@ -650,7 +650,7 @@ void explosion_update(int obj)
 }
 
 #pragma opt_propagation on
-void explosion_init(int obj, int p2)
+void explosion_init(int obj, int def)
 {
     f32 vsp[3];
     f32 mB[12];
@@ -661,13 +661,13 @@ void explosion_init(int obj, int p2)
     int i;
     int debrisCount;
     ((ExplosionState*)state)->flameCount = 0;
-    if (*(s16*)((char*)p2 + 0x1a) == 0)
+    if (*(s16*)((char*)def + 0x1a) == 0)
     {
         scale = lbl_803E49A8;
     }
     else
     {
-        scale = (f32)(int)*(s16*)((char*)p2 + 0x1a) * lbl_803E4974;
+        scale = (f32)(int)*(s16*)((char*)def + 0x1a) * lbl_803E4974;
         if (scale > lbl_803E49A8)
         {
             scale = lbl_803E49A8;
@@ -677,9 +677,9 @@ void explosion_init(int obj, int p2)
         obj, lbl_803E49AC * scale, 0, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ);
     ((GameObject*)obj)->objectFlags |= DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED;
-    ((ExplosionState*)state)->modelKind = *(s16*)((char*)p2 + 0x1c) & 3;
+    ((ExplosionState*)state)->modelKind = *(s16*)((char*)def + 0x1c) & 3;
     Obj_SetActiveModelIndex(obj, ((ExplosionState*)state)->modelKind);
-    if (*(s16*)((char*)p2 + 0x1c) & 4)
+    if (*(s16*)((char*)def + 0x1c) & 4)
     {
         ((ExplosionState*)state)->driftYSpeed = lbl_803E49A4;
     }
@@ -702,7 +702,7 @@ void explosion_init(int obj, int p2)
     {
         ((ExplosionState*)state)->groundY = ((GameObject*)obj)->anim.localPosY;
     }
-    if (*(s16*)((char*)p2 + 0x1c) & 0x10)
+    if (*(s16*)((char*)def + 0x1c) & 0x10)
     {
         debrisCount = (int)((f32)(lbl_803E49B8 * scale) / lbl_803E49A8);
         for (i = 0, cursor = state; i < debrisCount; i++)
@@ -758,7 +758,7 @@ void explosion_init(int obj, int p2)
         ((ExplosionState*)state)->debrisCount = 0;
     }
     ((ExplosionState*)state)->light = 0;
-    if (*(s16*)((char*)p2 + 0x1c) & 0x20)
+    if (*(s16*)((char*)def + 0x1c) & 0x20)
     {
         ((ExplosionState*)state)->light = objCreateLight(0, 1);
         if (*(void**)&((ExplosionState*)state)->light != NULL)
@@ -774,7 +774,7 @@ void explosion_init(int obj, int p2)
         }
     }
     ((GameObject*)obj)->anim.alpha = 0xff;
-    if (*(s16*)((char*)p2 + 0x1c) & 8)
+    if (*(s16*)((char*)def + 0x1c) & 8)
     {
         if (((ExplosionState*)state)->nearGround == 0)
         {
