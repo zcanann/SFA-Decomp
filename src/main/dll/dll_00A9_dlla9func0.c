@@ -13,11 +13,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
-
-extern ModgfxInterface** gModgfxInterface;
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLLA9_EFFECT_ID 0x586
+#include "main/dll/dll_00A9_dlla9func0.h"
 
 typedef struct
 {
@@ -28,6 +24,10 @@ typedef struct
     u8 layer;    /* +0x16 */
 } GfxCmd;
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLLA9_EFFECT_ID 0x586
+
+extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80319028[];
 extern f32 lbl_803E15D0;
 extern f32 lbl_803E15D4;

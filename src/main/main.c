@@ -9,86 +9,6 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_ids.h"
 
-#define MAIN_OBJFLAG_HIDDEN             0x4000
-#define MAIN_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define MAIN_OBJFLAG_RENDERED           0x800
-
-#define MAIN_LAVAPOOL_RESOURCE_ID 0xa6
-
-#define MAIN_LAVAPOOL_PARTFX 0x3a2
-#define MAIN_LAVASTAR_PARTFX 0x3a4
-
-extern ModgfxInterface** gModgfxInterface;
-extern f32 lbl_803DC074;
-extern void* gVfpLavaPoolEffectResource;
-extern void objRenderFn_80041018(int* obj);
-extern void fn_8003B608(s16 a, s16 b, s16 c);
-extern f32 lbl_803E6168;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 gVfpLavaPoolWaveSin;
-extern f32 lbl_803E6158;
-extern f32 lbl_803E6160;
-extern f32 lbl_803E6164;
-extern f32 lbl_803E616C;
-extern f32 lbl_803E6170;
-extern f32 gVfpLavaPoolPi;
-extern f32 lbl_803E6178;
-extern f32 lbl_803E617C;
-extern f32 lbl_803E6180;
-extern f32 lbl_803E6184;
-extern f32 lbl_803E6188;
-extern f32 lbl_803E618C;
-extern f32 lbl_803E6190;
-extern f32 lbl_803E6194;
-extern f32 lbl_803E6198;
-extern f32 lbl_803E61B0;
-extern f32 lbl_803E61B4;
-extern void* getTrickyObject(void);
-
-void VFP_lavapool_free_nop(void)
-{
-}
-
-void VFP_lavapool_hitDetect_nop(void)
-{
-}
-
-void VFP_lavapool_release_nop(void)
-{
-}
-
-void VFP_lavapool_initialise_nop(void)
-{
-}
-
-void VFP_lavastar_render(void)
-{
-}
-
-void VFP_lavastar_hitDetect(void)
-{
-}
-
-void VFP_SpellPlace_free(void)
-{
-}
-
-void VFP_SpellPlace_render(void)
-{
-}
-
-void VFP_SpellPlace_hitDetect(void)
-{
-}
-
-void VFP_SpellPlace_release(void)
-{
-}
-
-void VFP_SpellPlace_initialise(void)
-{
-}
-
 typedef struct
 {
     s16 showGameBit;  /* 0x0 */
@@ -149,6 +69,87 @@ STATIC_ASSERT(offsetof(VfpLavaPoolState, timerB) == 0x06);
 STATIC_ASSERT(offsetof(VfpLavaPoolState, amplitude) == 0x08);
 STATIC_ASSERT(offsetof(VfpLavaPoolState, phase) == 0x0C);
 STATIC_ASSERT(offsetof(VfpLavaPoolState, speedFactor) == 0x10);
+
+#define MAIN_OBJFLAG_HIDDEN             0x4000
+#define MAIN_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define MAIN_OBJFLAG_RENDERED           0x800
+
+#define MAIN_LAVAPOOL_RESOURCE_ID 0xa6
+
+#define MAIN_LAVAPOOL_PARTFX 0x3a2
+#define MAIN_LAVASTAR_PARTFX 0x3a4
+
+extern ModgfxInterface** gModgfxInterface;
+extern f32 lbl_803DC074;
+extern void* gVfpLavaPoolEffectResource;
+extern f32 lbl_803E6168;
+extern f32 gVfpLavaPoolWaveSin;
+extern f32 lbl_803E6158;
+extern f32 lbl_803E6160;
+extern f32 lbl_803E6164;
+extern f32 lbl_803E616C;
+extern f32 lbl_803E6170;
+extern f32 gVfpLavaPoolPi;
+extern f32 lbl_803E6178;
+extern f32 lbl_803E617C;
+extern f32 lbl_803E6180;
+extern f32 lbl_803E6184;
+extern f32 lbl_803E6188;
+extern f32 lbl_803E618C;
+extern f32 lbl_803E6190;
+extern f32 lbl_803E6194;
+extern f32 lbl_803E6198;
+extern f32 lbl_803E61B0;
+extern f32 lbl_803E61B4;
+
+extern void objRenderFn_80041018(int* obj);
+extern void fn_8003B608(s16 a, s16 b, s16 c);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void* getTrickyObject(void);
+
+void VFP_lavapool_free_nop(void)
+{
+}
+
+void VFP_lavapool_hitDetect_nop(void)
+{
+}
+
+void VFP_lavapool_release_nop(void)
+{
+}
+
+void VFP_lavapool_initialise_nop(void)
+{
+}
+
+void VFP_lavastar_render(void)
+{
+}
+
+void VFP_lavastar_hitDetect(void)
+{
+}
+
+void VFP_SpellPlace_free(void)
+{
+}
+
+void VFP_SpellPlace_render(void)
+{
+}
+
+void VFP_SpellPlace_hitDetect(void)
+{
+}
+
+void VFP_SpellPlace_release(void)
+{
+}
+
+void VFP_SpellPlace_initialise(void)
+{
+}
 
 int VFP_flamepoint_getExtraSize(void)
 {

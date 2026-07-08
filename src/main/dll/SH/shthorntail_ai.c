@@ -17,17 +17,15 @@
 #include "main/audio/sfx.h"
 #include "main/object_descriptor.h"
 
+#define SHTHORNTAIL_OBJ_TYPE                0x4d7
+#define SHTHORNTAIL_OBJ_GROUP               3
+#define SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES 0x10
+/* player object pos vector lives at +0x18 */
+#define PLAYER_POS_OFFSET 0x18
+
 /* home TU: SHThorntail DLL 0x1AD (gSHthorntailDataTables, the tuning
    floats and the debug string); the rest are engine-wide imports. */
 
-extern f32 getXZDistance(Vec* a, Vec* b);
-extern f32 vec3f_distanceSquared(Vec* a, Vec* b);
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern int randomGetRange(int lo, int hi);
-extern int Obj_GetPlayerObject(void);
-extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
-extern void fn_8014C66C(SHthorntailObject* obj, SHthorntailObject* other);
-extern void OSReport(const char* msg, ...);
 extern u32 gSHthorntailDataTables[][4];
 extern char sSHthorntailAngleYawDebug[];
 extern f32 timeDelta;
@@ -37,11 +35,19 @@ extern f32 SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;
 extern f32 SHTHORNTAIL_TAIL_SWING_RECOVER_TIME;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 
-#define SHTHORNTAIL_OBJ_TYPE                0x4d7
-#define SHTHORNTAIL_OBJ_GROUP               3
-#define SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES 0x10
-/* player object pos vector lives at +0x18 */
-#define PLAYER_POS_OFFSET 0x18
+extern f32 getXZDistance(Vec* a, Vec* b);
+extern f32 vec3f_distanceSquared(Vec* a, Vec* b);
+extern s16 getAngle(f32 deltaX, f32 deltaZ);
+extern int randomGetRange(int lo, int hi);
+extern int Obj_GetPlayerObject(void);
+extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
+extern void fn_8014C66C(SHthorntailObject* obj, SHthorntailObject* other);
+extern void OSReport(const char* msg, ...);
+void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config);
+void SHthorntail_update(SHthorntailObject* obj);
+void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void SHthorntail_free(SHthorntailObject* obj);
+int SHthorntail_getExtraSize(void);
 
 int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
 {
@@ -199,12 +205,6 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
     }
     return SHTHORNTAIL_STATE_MOVE_2;
 }
-
-void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config);
-void SHthorntail_update(SHthorntailObject* obj);
-void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void SHthorntail_free(SHthorntailObject* obj);
-int SHthorntail_getExtraSize(void);
 
 u32 gSHthorntailDataTables[][4] = {
     {0x00044318, 0x0004467F, 0x00044677, 0x0004467B}, {0x000442FB, 0x00044641, 0x0004463F, 0x00044640},

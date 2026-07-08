@@ -35,13 +35,47 @@ typedef struct WarpstoneUpdateMenuAnimObjState
     u8 flagsD4; /* 0xd4: bit2 set on event 0x17 */
 } WarpstoneUpdateMenuAnimObjState;
 
+#define WARPSTONE_MAP_EVENT_SET(mapId, value) (*gMapEventInterface)->setMapAct((mapId), (value))
+#define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value)                                                                \
+    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
+
+extern int lbl_803DC050;
+extern int lbl_803DDBF4;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E54A0;
+extern f32 lbl_803E549C;
+
 extern u32 getButtonsJustPressed(int port);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
 extern int playerHasKrazoaSpirit();
 extern void padGetAnalogInput(int controller, s8* horizontal, s8* vertical);
-extern int lbl_803DC050;
-extern int lbl_803DDBF4;
+extern void loadUiDll(int index);
+extern void ObjLink_DetachChild(int obj, int child);
+extern void Obj_FreeObject(int obj);
+extern int randFn_80080100(int n);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern int Obj_GetPlayerObject(void);
+extern int fn_80296464(void);
+extern int* Obj_GetActiveModel(int player);
+extern void objSetPos(int player, f32 x, f32 y, f32 z);
+extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
+extern int loadMapAndParent(int mapId);
+extern int unlockLevel(s32 val, int idx, int flag);
+extern int mapGetDirIdx(int idx);
+extern int lockLevel(s32 val, int idx);
+extern int mapUnload(int mapId, int flags);
+extern int animatedObjGetSeqId(int obj);
+extern int fn_80080360(int obj, int seqId);
+extern int getCurUiDll(void);
+extern void AudioStream_CancelPrepared(void);
+extern void seqClearTaskTexts(void);
+extern void doNothing_8000CF54(int unused);
+extern void CMenu_SetFadeCounter(s16 v);
+extern void warpToMap(int idx, s8 transType);
+extern int getDLL16(void);
+extern void SHthorntail_updateDustEffects(int obj);
 
 int warpstone_getExtraSize(void)
 {
@@ -53,14 +87,10 @@ int warpstone_getObjectTypeId(void)
     return 0x48;
 }
 
-extern void loadUiDll(int index);
 void warpstone_loadBaseUi(void)
 {
     loadUiDll(0x1);
 }
-
-extern void ObjLink_DetachChild(int obj, int child);
-extern void Obj_FreeObject(int obj);
 
 void warpstone_free(int obj, int mode)
 {
@@ -71,11 +101,6 @@ void warpstone_free(int obj, int mode)
         Obj_FreeObject(state[0]);
     }
 }
-
-extern int randFn_80080100(int n);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803E54A0;
 
 void warpstone_hitDetect(int obj)
 {
@@ -101,14 +126,6 @@ void warpstone_hitDetect(int obj)
     }
 }
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int Obj_GetPlayerObject(void);
-extern int fn_80296464(void);
-extern int* Obj_GetActiveModel(int player);
-extern void objSetPos(int player, f32 x, f32 y, f32 z);
-extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
-extern f32 lbl_803E549C;
-
 void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     void* player;
@@ -133,16 +150,6 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-
-extern int loadMapAndParent(int mapId);
-extern int unlockLevel(s32 val, int idx, int flag);
-extern int mapGetDirIdx(int idx);
-extern int lockLevel(s32 val, int idx);
-extern int mapUnload(int mapId, int flags);
-
-#define WARPSTONE_MAP_EVENT_SET(mapId, value) (*gMapEventInterface)->setMapAct((mapId), (value))
-#define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value)                                                                \
-    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
 int warpstone_testEvent(u32 p1, u32 p2, int option)
 {
@@ -239,17 +246,6 @@ int warpstone_testEvent(u32 p1, u32 p2, int option)
 
     return 0;
 }
-
-extern int animatedObjGetSeqId(int obj);
-extern int fn_80080360(int obj, int seqId);
-extern int getCurUiDll(void);
-extern void AudioStream_CancelPrepared(void);
-extern void seqClearTaskTexts(void);
-extern void doNothing_8000CF54(int unused);
-extern void CMenu_SetFadeCounter(s16 v);
-extern void warpToMap(int idx, s8 transType);
-extern int getDLL16(void);
-extern void SHthorntail_updateDustEffects(int obj);
 
 int warpstone_SeqFn(int obj, u32 p2, int animObj)
 {
@@ -418,15 +414,17 @@ typedef struct WarpstoneState
     u8 pad12[0x18 - 0x12];
 } WarpstoneState;
 
+typedef struct WarpstoneFlags
+{
+    u8 b7 : 1;
+    u8 lookAtPlayer : 1;
+    u8 b5 : 1;
+    u8 sfxFired : 1;
+    u8 lo : 4;
+} WarpstoneFlags;
+
 #define SHSWAPSTON_TARGET_OBJGROUP 8
 
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void fn_8003ADC4(int obj, int target, void* state, int a, int b, int c);
-extern s16* objModelGetVecFn_800395d8(int obj, int index);
-extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);
-
-extern void objAnimFn_80038f38(int obj, int* animState);
-extern void characterDoEyeAnims(int obj, void* state);
 extern s16 lbl_803DC044;
 extern s16 lbl_803DDBF0;
 extern s16 lbl_803DDBF2;
@@ -441,14 +439,12 @@ extern f32 lbl_803E54A4;
 extern f32 lbl_803E54A8;
 extern f32 lbl_803E54AC;
 
-typedef struct WarpstoneFlags
-{
-    u8 b7 : 1;
-    u8 lookAtPlayer : 1;
-    u8 b5 : 1;
-    u8 sfxFired : 1;
-    u8 lo : 4;
-} WarpstoneFlags;
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
+extern void fn_8003ADC4(int obj, int target, void* state, int a, int b, int c);
+extern s16* objModelGetVecFn_800395d8(int obj, int index);
+extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);
+extern void objAnimFn_80038f38(int obj, int* animState);
+extern void characterDoEyeAnims(int obj, void* state);
 
 void warpstone_update(int obj)
 {

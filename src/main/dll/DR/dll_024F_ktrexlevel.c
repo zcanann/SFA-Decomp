@@ -15,6 +15,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/DR/dll_024F_ktrexlevel.h"
 
 #define KTREXLEVEL_ENVFX_A 0x18f
 #define KTREXLEVEL_ENVFX_B 0x18e

@@ -22,61 +22,26 @@
 #include "main/audio/sfx.h"
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_00E7_flammablevine.h"
+
 #define FLAMMABLEVINE_HIT_VOLUME_SLOT 9
 
 /* object group this object joins while active */
 #define FLAMMABLEVINE_OBJGROUP 0x31
 
-typedef struct FlammablevineObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 objId;      /* 0x14 */
-    s8 rotXByte;    /* 0x18: rotX in 1/256 turns */
-    u8 setupParam;  /* 0x19: copied to state, 1 = position-dirty */
-    s16 scaleParam; /* 0x1A: drives rootMotionScale */
-    s16 unk1C;
-    s16 burnedBit; /* 0x1E: game bit set when burned; -1 = none */
-    s16 gateBit;   /* 0x20: game bit gating use; -1 = none */
-    u8 pad22[0x28 - 0x22];
-} FlammablevineObjectDef;
-
-typedef struct TrickyIfaceVtbl
-{
-    u8 pad0[0x28 - 0x0];
-    void (*slot28)(void* iface, int obj, int a, int b); /* 0x28 */
-} TrickyIfaceVtbl;
-
-typedef struct TrickyIface
-{
-    TrickyIfaceVtbl* vtbl; /* 0x0 */
-} TrickyIface;
-
-typedef struct FlammablevineState
-{
-    u8 flags;      /* 0x0: bit0 burning, bit1 consumed */
-    u8 setupParam; /* 0x1: copied from def+0x19 */
-    u8 pad2[0x4 - 0x2];
-    f32 burnTimer; /* 0x4 */
-    u8 pad8[0xc - 0x8];
-    f32 pulseTimer;    /* 0xc */
-    f32 burnIntensity; /* 0x10 */
-} FlammablevineState;
-
 extern void ObjHitbox_SetCapsuleBounds();
 extern void ObjHits_DisableObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-
 extern void Obj_RemoveFromUpdateList(int obj);
-
 extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
-
 extern void* getTrickyObject(void);
 
 int FlammableVine_getExtraSize(void)
 {
     return 0x14;
 }
+
 int FlammableVine_getObjectTypeId(void)
 {
     return 0x0;

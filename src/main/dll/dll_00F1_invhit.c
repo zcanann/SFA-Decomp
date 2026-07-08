@@ -22,18 +22,6 @@
 #include "main/dll/player_target.h"
 #include "main/engine_shared.h"
 
-#define INVHIT_OBJFLAG_HIDDEN             0x4000
-#define INVHIT_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-#define INVHIT_MODE_PROXIMITY_DAMAGE  0 /* scan player/Tricky, bump hit counters in range */
-#define INVHIT_MODE_ATTACH            1 /* attach to owner's hit list */
-#define INVHIT_MODE_PASSIVE_VOLUME    2 /* passive shape/radius hit volume */
-#define INVHIT_MODE_PUBLISH_POS       3 /* publish world position while player exists */
-#define INVHIT_MODE_HOMING_PROJECTILE 4 /* homing/tethered projectile toward owner target */
-#define INVHIT_MODE_LOCKON_GATE       5 /* like publish, gated on player lock-on target */
-#define INVHIT_MODE_FIXED_RADIUS      6 /* fixed primary-radius hit volume */
-#define INVHIT_MODE_SELF_FREE         7 /* self-free once owner hit list drops it */
-
 typedef struct InvHitState
 {
     f32 anchorX;
@@ -47,18 +35,30 @@ typedef struct InvhitObjectDef
     void* anchorObj;
 } InvhitObjectDef;
 
-extern void Obj_FreeObject(int* obj);
-extern int ObjList_ContainsObject(int obj);
-extern f32 lbl_803E35E8;
-extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 scale);
+#define INVHIT_OBJFLAG_HIDDEN             0x4000
+#define INVHIT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern void* getTrickyObject(void);
+#define INVHIT_MODE_PROXIMITY_DAMAGE  0 /* scan player/Tricky, bump hit counters in range */
+#define INVHIT_MODE_ATTACH            1 /* attach to owner's hit list */
+#define INVHIT_MODE_PASSIVE_VOLUME    2 /* passive shape/radius hit volume */
+#define INVHIT_MODE_PUBLISH_POS       3 /* publish world position while player exists */
+#define INVHIT_MODE_HOMING_PROJECTILE 4 /* homing/tethered projectile toward owner target */
+#define INVHIT_MODE_LOCKON_GATE       5 /* like publish, gated on player lock-on target */
+#define INVHIT_MODE_FIXED_RADIUS      6 /* fixed primary-radius hit volume */
+#define INVHIT_MODE_SELF_FREE         7 /* self-free once owner hit list drops it */
+
+extern f32 lbl_803E35E8;
 /* single-precision override for codegen */
 extern f32 lbl_803AC780[];
-extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;
 extern f32 lbl_803E35F4;
+
+extern void Obj_FreeObject(int* obj);
+extern int ObjList_ContainsObject(int obj);
+extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 scale);
+extern void* getTrickyObject(void);
+extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 
 void InvHit_hitDetect(void)
 {

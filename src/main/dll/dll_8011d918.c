@@ -8,6 +8,7 @@
  * each command. Used by the C-menu code in dll 0x00 (gameui).
  */
 #include "ghidra_import.h"
+#include "main/dll/dll_8011d918.h"
 
 #pragma scheduling off
 

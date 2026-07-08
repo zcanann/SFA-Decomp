@@ -4,16 +4,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/dll/fx_800944A0_shared.h"
-extern u32 objInterpretSeq(void* obj, int seqArg, s8 legCode, int distSq);
-extern f32 lbl_803E40C8;
-extern f32 lbl_803E40CC;
-extern f32 lbl_803E40D8;
-
-extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
-extern void OSReport(const char* msg, ...);
-extern const char sMoonrockTriggerIdentFormat[];
-
-#define MOONROCK_ANGLE_TO_RADIANS(angle) ((lbl_803E40C8 * (f32)(s32)(-(angle))) / lbl_803E40CC)
 
 /* Per-object trigger-plane state stashed at obj->extra. Distinct from
  * MmpMoonrockState (which overlays the same slot for the carried-rock class):
@@ -39,6 +29,17 @@ STATIC_ASSERT(offsetof(MmpTriggerPlaneState, ptA) == 0x1C);
 STATIC_ASSERT(offsetof(MmpTriggerPlaneState, ptB) == 0x28);
 STATIC_ASSERT(offsetof(MmpTriggerPlaneState, clipHalfExtent) == 0x34);
 STATIC_ASSERT(offsetof(MmpTriggerPlaneState, mtx) == 0x38);
+
+#define MOONROCK_ANGLE_TO_RADIANS(angle) ((lbl_803E40C8 * (f32)(s32)(-(angle))) / lbl_803E40CC)
+
+extern f32 lbl_803E40C8;
+extern f32 lbl_803E40CC;
+extern f32 lbl_803E40D8;
+extern const char sMoonrockTriggerIdentFormat[];
+
+extern u32 objInterpretSeq(void* obj, int seqArg, s8 legCode, int distSq);
+extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
+extern void OSReport(const char* msg, ...);
 
 void fn_80198A00(u8* obj, int seqArg)
 {

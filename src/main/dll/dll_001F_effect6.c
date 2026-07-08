@@ -21,6 +21,35 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_001F_effect6.h"
+
+extern f32 gEffect6ScrollPhase2;
+extern f32 gEffect6ScrollPhase3;
+extern int gEffect6Osc0Angle;
+extern int gEffect6Osc1Angle;
+extern f32 gEffect6Osc1Value;
+extern f32 gEffect6Osc0Value;
+extern f32 lbl_803DFC80;
+extern f32 lbl_803DFC84;
+extern f32 lbl_803DFC90;
+extern f32 gEffect6Pi;
+extern f32 gEffect6SineAngleScale;
+extern f32 gEffect6ScrollPhase0;
+extern f32 gEffect6ScrollPhase1;
+extern f32 lbl_803DFC8C;
+extern f32 lbl_803DFC94;
+extern f32 lbl_803DFC98;
+extern f32 lbl_803DFC9C;
+extern f32 lbl_803DFCA0;
+extern f32 lbl_803DFCA4;
+extern f32 lbl_803DFCA8;
+extern f32 lbl_803DFCAC;
+extern f32 lbl_803DFCB0;
+extern f32 lbl_803DFCB4;
+extern f32 lbl_803DFCB8;
+extern f32 lbl_803DFCBC;
+extern f32 lbl_803DFCC0;
+extern f32 lbl_803DFCC4;
 
 void Effect6_func03_nop(void)
 {
@@ -58,34 +87,6 @@ char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer 
 static u8 sProjgfxStringPad1[] = {0, 0, 0};
 char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
-
-extern f32 gEffect6ScrollPhase2;
-extern f32 gEffect6ScrollPhase3;
-extern int gEffect6Osc0Angle;
-extern int gEffect6Osc1Angle;
-extern f32 gEffect6Osc1Value;
-extern f32 gEffect6Osc0Value;
-extern f32 lbl_803DFC80;
-extern f32 lbl_803DFC84;
-extern f32 lbl_803DFC90;
-extern f32 gEffect6Pi;
-extern f32 gEffect6SineAngleScale;
-extern f32 gEffect6ScrollPhase0;
-extern f32 gEffect6ScrollPhase1;
-extern f32 lbl_803DFC8C;
-extern f32 lbl_803DFC94;
-extern f32 lbl_803DFC98;
-extern f32 lbl_803DFC9C;
-extern f32 lbl_803DFCA0;
-extern f32 lbl_803DFCA4;
-extern f32 lbl_803DFCA8;
-extern f32 lbl_803DFCAC;
-extern f32 lbl_803DFCB0;
-extern f32 lbl_803DFCB4;
-extern f32 lbl_803DFCB8;
-extern f32 lbl_803DFCBC;
-extern f32 lbl_803DFCC0;
-extern f32 lbl_803DFCC4;
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),

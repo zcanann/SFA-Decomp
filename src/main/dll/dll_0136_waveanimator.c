@@ -19,9 +19,6 @@
  * Field overlay used by waveanimator_modelMtxFn: 0x34 is WaveAnimatorState.flags,
  * 0x36-0x38 are the three dispatch args stored into pad35[1..3].
  */
-
-#define WAVEANIMATOR_OBJGROUP 27
-
 typedef struct WaveanimatorModelMtxCtx
 {
     u8 pad0[0x34 - 0x0];
@@ -37,9 +34,8 @@ STATIC_ASSERT(sizeof(WaveanimatorModelMtxCtx) == 0x3C);
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
-extern float mathSinf(float x);
-extern void ObjGroup_RemoveObject(int* obj, int group);
-extern void ObjGroup_AddObject(int* obj, int group);
+#define WAVEANIMATOR_OBJGROUP 27
+
 extern u8 lbl_803DDAE8;    /* live-instance refcount */
 extern void* lbl_803DDAEC; /* per-cell RGB color field */
 extern void* lbl_803DDAF0; /* per-grid phase table */
@@ -56,6 +52,9 @@ extern f32 lbl_803E3F5C;   /* G ramp slope */
 extern f32 lbl_803E3F60;   /* B ramp base */
 extern f32 lbl_803E3F64;   /* B ramp slope */
 extern f32 lbl_803E3F70;   /* model scale */
+extern float mathSinf(float x);
+extern void ObjGroup_RemoveObject(int* obj, int group);
+extern void ObjGroup_AddObject(int* obj, int group);
 
 void fn_801923F8(int* cfgArg);
 

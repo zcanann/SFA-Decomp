@@ -14,6 +14,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/WM/dll_020A_wmgeneralscales.h"
 
 /* phase values written by the SeqFn (author comment: 1 = hidden,
    2/3 = slam variants, 0 = idle). SLAM0/SLAM1 are neutral names - the
@@ -25,33 +26,21 @@
 #define WMGENERALSCALES_PHASE_SLAM0  2
 #define WMGENERALSCALES_PHASE_SLAM1  3
 
-/* per-object extra state (getExtraSize == 0x8). unk00 is written here
-   (0.0 / 800.0 on the slam events) but only read by other TUs. */
-typedef struct WmGeneralScalesState
-{
-    f32 unk00;    /* 0x00 */
-    u8 phase;     /* 0x04: 1 = hidden, 2/3 = slam variants, 0 = idle */
-    u8 fadeAlpha; /* 0x05: 0 = invisible; ramps by framesThisStep while set */
-    u8 pad06[2];
-} WmGeneralScalesState;
-
-STATIC_ASSERT(sizeof(WmGeneralScalesState) == 0x8);
-
 /* romlist object type of the sword child (retail 'scalessword') */
 #define WMGENERALSCALES_SWORD_OBJECT_TYPE 0x1B8
 
+extern u8 framesThisStep;
+extern f32 lbl_803E5E98; /* 0.0 */
+extern f32 lbl_803E5E9C; /* 800.0 */
+extern f32 lbl_803E5EA0; /* 1.1: sword scale-up */
+extern f32 lbl_803E5EA4; /* 1.0: render scale */
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern u8 framesThisStep;
-extern f32 lbl_803E5E98; /* 0.0 */
-extern f32 lbl_803E5E9C; /* 800.0 */
-extern f32 lbl_803E5EA0; /* 1.1: sword scale-up */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjLink_DetachChild(int* parent, int* child);
-extern f32 lbl_803E5EA4; /* 1.0: render scale */
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)

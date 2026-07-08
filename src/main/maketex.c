@@ -8,11 +8,156 @@
 #include "main/mm.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/frame_timing.h"
+
+typedef struct
+{
+    u8 useWorldSpace : 1;
+} SeqB4Flags;
+
+typedef struct
+{
+    int key;
+    int val;
+} SeqSortPair;
+
+typedef struct
+{
+    u8 pad[0x3c];
+} DVDFileInfoStub;
+
+typedef struct
+{
+    char fileName[32];
+    u32 length;
+    u32 time;
+    u8 gameName[4];
+    u8 company[2];
+    u8 bannerFormat;
+    u8 pad;
+    u32 iconAddr;
+    u16 iconFormat;
+    u16 iconSpeed;
+    u32 commentAddr;
+    u8 pad2[0x30];
+} CARDStatStub;
+
+/*
+ * Per-object turn-to-face scratch state (carried in GameObject::extra for
+ * class-0x10 sequence objects). Only the fields touched by the turn step and
+ * the sequence teardown are named; the rest of the region stays padding.
+ * Field offsets are pinned to the original raw-buffer layout so member
+ * spelling stays byte-neutral.
+ */
+typedef struct ObjSeqTurnState
+{
+    u8 pad00[0x24];
+    f32 turnRate; /* 0x24: per-frame blend increment */
+    u8 pad28[0x40 - 0x28];
+    f32 vecX;        /* 0x40 */
+    f32 vecY;        /* 0x44 */
+    f32 vecZ;        /* 0x48 */
+    f32 blend;       /* 0x4c: 0..1 progress */
+    s16 turnAmount;  /* 0x50 */
+    s16 targetPitch; /* 0x52 */
+    s16 f54;         /* 0x54 */
+    u8 mode;         /* 0x56: 4 = start, 5 = advance */
+    u8 seqId;        /* 0x57 */
+    u8 pad58[0x6E - 0x58];
+    s16 flags; /* 0x6e */
+    u8 pad70[0xE8 - 0x70];
+    void (*resetVecCb)(int); /* 0xe8 */
+    u8 padEC[0x110 - 0xEC];
+    int cbArg;     /* 0x110 */
+    s16 savedVecY; /* 0x114 */
+    s16 savedVecX; /* 0x116 */
+} ObjSeqTurnState;
+
 #define MAKETEX_CAMMODE_NPCSPEAK 0x4d /* cameramode DLL dll_004D_cameramodenpcspeak */
 #define MAKETEX_CAMMODE_DEFAULT  0x42 /* default gameplay cameramode DLL */
 
-extern int randomGetRange(int lo, int hi);
 extern int lbl_803DD044;
+extern u8 curSeqNo;
+extern u32 focusedNpc;
+extern s16 seqGlobal2;
+extern s16 seqGlobal1;
+extern u8 seqGlobal3;
+extern u32 lbl_803DB700;
+extern f32 lbl_803DEFA0;
+extern u32 lbl_803DB714;
+extern u32 lbl_803DB71C;
+extern u8 lbl_803DD0F8;
+extern f32 lbl_803DD0F4;
+extern f32 lbl_803DD0F0;
+extern f32 lbl_803DD0EC;
+extern s16 lbl_803DD0E8;
+extern s16 lbl_803DD0E6;
+extern s16 lbl_803DD0E4;
+extern f32 lbl_803DD0E0;
+extern s16 lbl_8030ECF8[];
+extern s16 gObjSeqSlotSeqIdTable[];
+extern int objSeqObjs;
+extern int lbl_803DD07C;
+extern u8 lbl_803DD078;
+extern u8 lbl_803DD0D9;
+extern f32 objSeqOverridePos[];
+extern u32 lbl_803DB718;
+extern SeqB4Flags lbl_803DD0B4;
+extern u8 lbl_803DD124;
+extern int gObjSeqPreemptList[][2];
+extern char sEndObjSequenceMaxFreesError[];
+extern void* lbl_803DD0B8;
+extern int lbl_803DB720;
+extern int lbl_803DD064;
+extern int lbl_80396900[];
+extern char* sMemoryCardFileName;
+extern u64 lbl_803DD050;
+extern u32 lbl_803DD054;
+extern u8 lbl_803DC968;
+extern int gSaveCardImageBuffer;
+extern char sMemoryCardFileNameString[];
+extern void* lbl_803DD040;
+extern u64 lbl_803DD048;
+extern u8 lbl_803DD059;
+extern u8 lbl_803DD05A;
+extern int gObjSeqStreamSuppressed;
+extern int lbl_803DB728;
+extern f32 lbl_803DEFB0;
+extern f32 lbl_803DD074;
+extern int lbl_803DB724;
+extern f32 gObjSeqSlotStreamTimeTable[];
+
+extern int randomGetRange(int lo, int hi);
+extern u8 AudioStream_IsPreparing(void);
+extern void doNothing_8000CF54(int);
+extern void gameTextLoadTaskText(int taskId);
+extern void subtitleStart(int);
+extern int objModelGetVecFn_800395d8(int obj, int idx);
+extern void debugPrintf(char* fmt, ...);
+extern void AudioStream_CancelPrepared(void);
+extern void Obj_FreeObject(int obj);
+extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
+extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
+extern s32 CARDDelete(s32 chan, char* fileName);
+extern int DVDOpen(char* fileName, DVDFileInfoStub* fi);
+extern int DVDClose(DVDFileInfoStub* fi);
+extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
+extern int cardProbe(int chan);
+extern s32 CARDMount(s32 chan, void* workArea, void (*detachCb)(void));
+extern s32 CARDCheck(s32 chan);
+extern s32 CARDGetSerialNo(s32 chan, u64* serialNo);
+extern s32 CARDOpen(s32 chan, char* fileName, int* fileInfo);
+extern s32 CARDClose(int* fileInfo);
+extern s32 CARDUnmount(s32 chan);
+extern s32 CARDCreate(s32 chan, char* fileName, u32 size, int* fileInfo);
+extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
+extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
+extern int Obj_GetPlayerObject(void);
+extern int getAngle(float y, float x);
+extern f32 sqrtf(f32 x);
+extern void AudioStream_StartPrepared(void);
+extern void showMemCardError();
+extern void cardGetMessage();
+extern void cardDeleteFn_8007d99c();
 
 int saveCb_8007e77c(u8 idx, int unused, void* dst)
 {
@@ -20,11 +165,6 @@ int saveCb_8007e77c(u8 idx, int unused, void* dst)
     return 0;
 }
 
-extern u8 curSeqNo;
-extern u32 focusedNpc;
-extern s16 seqGlobal2;
-extern s16 seqGlobal1;
-extern u8 seqGlobal3;
 u8 getCurSeqNo(void)
 {
     return curSeqNo;
@@ -58,7 +198,6 @@ u8 ObjSeq_getGlobal3(void)
     return seqGlobal3;
 }
 
-extern u32 lbl_803DB700;
 void cardSetStatusNoCard2(void)
 {
     lbl_803DB700 = 0x3;
@@ -69,14 +208,10 @@ void clearCurSeqNo(void)
     curSeqNo = 0x0;
 }
 
-extern f32 lbl_803DEFA0;
 void storeZeroToFloatParam(f32* p)
 {
     *p = lbl_803DEFA0;
 }
-
-extern u32 lbl_803DB714;
-extern u32 lbl_803DB71C;
 
 void seqClearTaskTexts(void)
 {
@@ -84,16 +219,6 @@ void seqClearTaskTexts(void)
     lbl_803DB714 = v;
     lbl_803DB71C = v;
 }
-
-extern u8 lbl_803DD0F8;
-extern f32 lbl_803DD0F4;
-extern f32 lbl_803DD0F0;
-extern f32 lbl_803DD0EC;
-extern s16 lbl_803DD0E8;
-extern s16 lbl_803DD0E6;
-extern s16 lbl_803DD0E4;
-extern f32 lbl_803DD0E0;
-extern s16 lbl_8030ECF8[];
 
 int fn_80080150(f32* p)
 {
@@ -147,8 +272,6 @@ int fn_80080360(int p, int val)
     return 1;
 }
 
-extern s16 gObjSeqSlotSeqIdTable[];
-
 int animatedObjGetSeqId(int obj)
 {
     return gObjSeqSlotSeqIdTable[(s8) * (u8*)(obj + 0x57)] - 1;
@@ -160,10 +283,6 @@ void ObjSeq_yield(ObjSeqState* seq, int value)
     seq->sequenceControlFlags |= OBJSEQ_CONTROL_RESTART_AT_SAVED_FRAME;
 }
 
-extern int objSeqObjs;
-extern int lbl_803DD07C;
-extern u8 lbl_803DD078;
-
 int ObjSeq_SetObjs(int objs, int arg, int flags)
 {
     u8 flagsByte = (u8)flags;
@@ -172,9 +291,6 @@ int ObjSeq_SetObjs(int objs, int arg, int flags)
     lbl_803DD078 = flagsByte;
     return 1;
 }
-
-extern u8 lbl_803DD0D9;
-extern f32 objSeqOverridePos[];
 
 int ObjSeq_setOverridePos(f32 x, f32 y, f32 z)
 {
@@ -221,12 +337,6 @@ int timerCountDown(f32* p)
     return 0;
 }
 
-extern u8 AudioStream_IsPreparing(void);
-extern void doNothing_8000CF54(int);
-extern void gameTextLoadTaskText(int taskId);
-extern void subtitleStart(int);
-extern u32 lbl_803DB718;
-
 void streamCb_80080384(void)
 {
     AudioStream_IsPreparing();
@@ -249,13 +359,6 @@ void s16toFloat(f32* p, s16 val)
 {
     *p = (f32)val;
 }
-
-typedef struct
-{
-    u8 useWorldSpace : 1;
-} SeqB4Flags;
-
-extern SeqB4Flags lbl_803DD0B4;
 
 int ObjSeq_func23(int unused, int x)
 {
@@ -305,8 +408,6 @@ int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
     return 0;
 }
 
-extern int objModelGetVecFn_800395d8(int obj, int idx);
-
 void objModelResetVecFn_80080548(int obj)
 {
     s16* v = (s16*)objModelGetVecFn_800395d8(obj, 0);
@@ -316,9 +417,6 @@ void objModelResetVecFn_80080548(int obj)
         v[0] = 0;
     }
 }
-
-extern u8 lbl_803DD124;
-extern int gObjSeqPreemptList[][2];
 
 void ObjSeq_preempt(int key, int value)
 {
@@ -359,12 +457,6 @@ void cameraFocusNpc(int param1, u8* obj)
     buf.tag = (u8)param1;
     (*gCameraInterface)->setMode(MAKETEX_CAMMODE_NPCSPEAK, 1, 0, 0x10, buf.vec, 0, 0xff);
 }
-
-typedef struct
-{
-    int key;
-    int val;
-} SeqSortPair;
 
 /* Shell sort over (key, val) pairs, ascending by key. */
 #pragma dont_inline on
@@ -421,22 +513,6 @@ void objSeqInitFn_80080078(SeqSortPair* arr, int n)
         objSeqInitFn_8007feac(arr, n);
     }
 }
-
-extern void debugPrintf(char* fmt, ...);
-extern char sEndObjSequenceMaxFreesError[];
-extern void AudioStream_CancelPrepared(void);
-extern void Obj_FreeObject(int obj);
-extern void* lbl_803DD0B8;
-extern int lbl_803DB720;
-extern int lbl_803DD064;
-
-extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
-extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
-extern s32 CARDDelete(s32 chan, char* fileName);
-extern int lbl_80396900[];
-extern char* sMemoryCardFileName;
-extern u64 lbl_803DD050;
-extern u32 lbl_803DD054;
 
 /* Checksums the save buffer, writes it to the memory card, then reads it
  * back and verifies the checksum. */
@@ -498,19 +574,6 @@ int saveGame_doWrite(int slot)
     }
     return result;
 }
-
-typedef struct
-{
-    u8 pad[0x3c];
-} DVDFileInfoStub;
-
-extern int DVDOpen(char* fileName, DVDFileInfoStub* fi);
-extern int DVDClose(DVDFileInfoStub* fi);
-extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
-
-extern u8 lbl_803DC968;
-extern int gSaveCardImageBuffer;
-extern char sMemoryCardFileNameString[];
 
 /* Builds the memory card comment strings (Shift-JIS title on JP cards),
  * loads the banner/icon images from disc, and checksums both halves of the
@@ -624,37 +687,6 @@ void loadMemCardImages(void)
     ((u32*)q)[0xffe] = (u32)(chk >> 32);
     DCFlushRange((void*)gSaveCardImageBuffer, 0x4000);
 }
-
-typedef struct
-{
-    char fileName[32];
-    u32 length;
-    u32 time;
-    u8 gameName[4];
-    u8 company[2];
-    u8 bannerFormat;
-    u8 pad;
-    u32 iconAddr;
-    u16 iconFormat;
-    u16 iconSpeed;
-    u32 commentAddr;
-    u8 pad2[0x30];
-} CARDStatStub;
-
-extern int cardProbe(int chan);
-extern s32 CARDMount(s32 chan, void* workArea, void (*detachCb)(void));
-extern s32 CARDCheck(s32 chan);
-extern s32 CARDGetSerialNo(s32 chan, u64* serialNo);
-extern s32 CARDOpen(s32 chan, char* fileName, int* fileInfo);
-extern s32 CARDClose(int* fileInfo);
-extern s32 CARDUnmount(s32 chan);
-extern s32 CARDCreate(s32 chan, char* fileName, u32 size, int* fileInfo);
-extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
-extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
-extern void* lbl_803DD040;
-extern u64 lbl_803DD048;
-extern u8 lbl_803DD059;
-extern u8 lbl_803DD05A;
 
 #define CARD_RESULT_UNLOCKED 1
 #define CARD_RESULT_READY    0
@@ -1086,41 +1118,6 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
     return 0;
 }
 
-extern int Obj_GetPlayerObject(void);
-extern int getAngle(float y, float x);
-extern f32 sqrtf(f32 x);
-
-/*
- * Per-object turn-to-face scratch state (carried in GameObject::extra for
- * class-0x10 sequence objects). Only the fields touched by the turn step and
- * the sequence teardown are named; the rest of the region stays padding.
- * Field offsets are pinned to the original raw-buffer layout so member
- * spelling stays byte-neutral.
- */
-typedef struct ObjSeqTurnState
-{
-    u8 pad00[0x24];
-    f32 turnRate; /* 0x24: per-frame blend increment */
-    u8 pad28[0x40 - 0x28];
-    f32 vecX;        /* 0x40 */
-    f32 vecY;        /* 0x44 */
-    f32 vecZ;        /* 0x48 */
-    f32 blend;       /* 0x4c: 0..1 progress */
-    s16 turnAmount;  /* 0x50 */
-    s16 targetPitch; /* 0x52 */
-    s16 f54;         /* 0x54 */
-    u8 mode;         /* 0x56: 4 = start, 5 = advance */
-    u8 seqId;        /* 0x57 */
-    u8 pad58[0x6E - 0x58];
-    s16 flags; /* 0x6e */
-    u8 pad70[0xE8 - 0x70];
-    void (*resetVecCb)(int); /* 0xe8 */
-    u8 padEC[0x110 - 0xEC];
-    int cbArg;     /* 0x110 */
-    s16 savedVecY; /* 0x114 */
-    s16 savedVecX; /* 0x116 */
-} ObjSeqTurnState;
-
 /* Object-sequence turn-to-face-player step: starts (mode 4) or advances
  * (mode 5) a smooth turn of the object toward the player, blending the model
  * vector and animation as it goes. */
@@ -1282,14 +1279,6 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
     return 0;
 }
 
-extern void AudioStream_StartPrepared(void);
-extern int gObjSeqStreamSuppressed;
-extern int lbl_803DB728;
-extern f32 lbl_803DEFB0;
-extern f32 lbl_803DD074;
-extern int lbl_803DB724;
-extern f32 gObjSeqSlotStreamTimeTable[];
-
 /* Starts the prepared audio stream for a sequence slot and records its
  * subtitle timing. */
 int seqStreamFn_8008023c(int x)
@@ -1393,9 +1382,6 @@ void endObjSequence(int seq)
 
 char sMemoryCardFileNameString[20] = "Star Fox Adventures";
 
-extern void showMemCardError();
-extern void cardGetMessage();
-extern void cardDeleteFn_8007d99c();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* jumptable_8030EACC[14] = {
     (void*)((u8*)cardDeleteFn_8007d99c + 0x130), (void*)((u8*)cardDeleteFn_8007d99c + 0x158),

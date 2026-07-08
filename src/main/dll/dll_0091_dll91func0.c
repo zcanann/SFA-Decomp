@@ -11,48 +11,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/savegame.h"
-
-extern void dll_92_func03(void);
-extern void dll_93_func03(void);
-extern void dll_94_func03(void);
-extern void dll_95_func03(void);
-extern void dll_96_func03(void);
-extern void dll_97_func03(void);
-extern void dll_98_func03(void);
-extern void dll_99_func03(void);
-extern void dll_9A_func03(void);
-extern void dll_9B_func03(void);
-extern void dll_9C_func03(void);
-extern void dll_9D_func03(void);
-extern void dll_9E_func03(void);
-
-extern void dll_92_func01_nop(void);
-extern void dll_93_func01_nop(void);
-extern void dll_94_func01_nop(void);
-extern void dll_95_func01_nop(void);
-extern void dll_96_func01_nop(void);
-extern void dll_97_func01_nop(void);
-extern void dll_98_func01_nop(void);
-extern void dll_99_func01_nop(void);
-extern void dll_9A_func01_nop(void);
-extern void dll_9B_func01_nop(void);
-extern void dll_9C_func01_nop(void);
-extern void dll_9D_func01_nop(void);
-extern void dll_9E_func01_nop(void);
-
-extern void dll_92_func00_nop(void);
-extern void dll_93_func00_nop(void);
-extern void dll_94_func00_nop(void);
-extern void dll_95_func00_nop(void);
-extern void dll_96_func00_nop(void);
-extern void dll_97_func00_nop(void);
-extern void dll_98_func00_nop(void);
-extern void dll_99_func00_nop(void);
-extern void dll_9A_func00_nop(void);
-extern void dll_9B_func00_nop(void);
-extern void dll_9C_func00_nop(void);
-extern void dll_9D_func00_nop(void);
-extern void dll_9E_func00_nop(void);
+#include "main/dll/dll_0091_dll91func0.h"
 
 typedef struct
 {
@@ -62,24 +21,6 @@ typedef struct
     u16 flags;   /* +0x14 */
     u8 layer;    /* +0x16 */
 } GfxCmd;
-
-extern ModgfxInterface** gModgfxInterface;
-
-extern u8 gDll91Func0ResourceBlob[];
-extern u8 gDll91Func0Tex[8];
-extern f32 lbl_803E11D8;
-extern f32 lbl_803E11DC;
-extern f32 lbl_803E11E0;
-extern f32 lbl_803E11E4;
-extern f32 lbl_803E11E8;
-extern f32 lbl_803E11EC;
-extern f32 lbl_803E11F0;
-extern f32 lbl_803E11F4;
-extern f32 lbl_803E11F8;
-extern f32 lbl_803E11FC;
-extern f32 lbl_803E1200;
-extern f32 lbl_803E1204;
-extern f32 lbl_803E1208;
 
 typedef struct
 {
@@ -103,6 +44,62 @@ typedef struct
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL91_EFFECT_ID 0x45
+
+extern ModgfxInterface** gModgfxInterface;
+extern u8 gDll91Func0ResourceBlob[];
+extern u8 gDll91Func0Tex[8];
+extern f32 lbl_803E11D8;
+extern f32 lbl_803E11DC;
+extern f32 lbl_803E11E0;
+extern f32 lbl_803E11E4;
+extern f32 lbl_803E11E8;
+extern f32 lbl_803E11EC;
+extern f32 lbl_803E11F0;
+extern f32 lbl_803E11F4;
+extern f32 lbl_803E11F8;
+extern f32 lbl_803E11FC;
+extern f32 lbl_803E1200;
+extern f32 lbl_803E1204;
+extern f32 lbl_803E1208;
+extern void dll_92_func03(void);
+extern void dll_93_func03(void);
+extern void dll_94_func03(void);
+extern void dll_95_func03(void);
+extern void dll_96_func03(void);
+extern void dll_97_func03(void);
+extern void dll_98_func03(void);
+extern void dll_99_func03(void);
+extern void dll_9A_func03(void);
+extern void dll_9B_func03(void);
+extern void dll_9C_func03(void);
+extern void dll_9D_func03(void);
+extern void dll_9E_func03(void);
+extern void dll_92_func01_nop(void);
+extern void dll_93_func01_nop(void);
+extern void dll_94_func01_nop(void);
+extern void dll_95_func01_nop(void);
+extern void dll_96_func01_nop(void);
+extern void dll_97_func01_nop(void);
+extern void dll_98_func01_nop(void);
+extern void dll_99_func01_nop(void);
+extern void dll_9A_func01_nop(void);
+extern void dll_9B_func01_nop(void);
+extern void dll_9C_func01_nop(void);
+extern void dll_9D_func01_nop(void);
+extern void dll_9E_func01_nop(void);
+extern void dll_92_func00_nop(void);
+extern void dll_93_func00_nop(void);
+extern void dll_94_func00_nop(void);
+extern void dll_95_func00_nop(void);
+extern void dll_96_func00_nop(void);
+extern void dll_97_func00_nop(void);
+extern void dll_98_func00_nop(void);
+extern void dll_99_func00_nop(void);
+extern void dll_9A_func00_nop(void);
+extern void dll_9B_func00_nop(void);
+extern void dll_9C_func00_nop(void);
+extern void dll_9D_func00_nop(void);
+extern void dll_9E_func00_nop(void);
 
 void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

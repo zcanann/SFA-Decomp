@@ -22,10 +22,6 @@
 #define DFPSEQPOINT_MODE_GATE_UNSET       4 /* gate clear, then set gate */
 #define DFPSEQPOINT_MODE_GATE_REPEAT      5 /* gate set, fire every frame (no latch) */
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-
-STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
-
 typedef struct DfpseqpointPlacement
 {
     u8 pad0[0x8 - 0x0];
@@ -46,14 +42,18 @@ typedef struct DfpseqpointPlacement
     u8 pad2F[0x30 - 0x2F];
 } DfpseqpointPlacement;
 
+STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
+
 extern f32 lbl_803E63B8;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int unlockLevel(s32 val, int idx, int flag);
+extern int mapGetDirIdx(int idx);
+extern int lockLevel(s32 val, int idx);
+extern void warpToMap(int idx, s8 transType);
+extern f32 Vec_distance(f32* a, f32* b);
 
 int DFP_seqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
-    extern int mapGetDirIdx(int idx);
-    extern int lockLevel(s32 val, int idx);
-    extern void warpToMap(int idx, s8 transType);
     int blob = *(int*)&((GameObject*)obj)->extra;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
     int i;
@@ -137,8 +137,6 @@ void DFP_seqpoint_hitDetect(void)
 
 void DFP_seqpoint_update(int obj)
 {
-
-    extern f32 Vec_distance(f32 * a, f32 * b);
     GameObject* self;
     GameObject* player;
     DfpSeqPointState* state;

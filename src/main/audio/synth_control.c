@@ -47,28 +47,6 @@ typedef char synth_ctrl_assert_auxMixSlot[SYNTH_CTRL_OFFSETOF(SynthGlobalState, 
 #define SYNTH_FADE_ONE        sSynthFadeUnit
 #define SYNTH_FADE_TIME_SCALE sSynthFadeTimeScale
 
-extern void* salMalloc(u32 size);
-extern void memset(void* dst, int value, u32 size);
-extern void inpInit(void);
-extern void macInit(void);
-extern void vidInit(void);
-extern void voiceInitPriorityTables(void);
-extern void voiceInitRegistrationTables(void);
-extern void synthHWMessageHandler(void);
-
-extern u8 lbl_803BCD90[];
-extern u32 synthRealTimeLo;
-extern u32 synthRealTimeHi;
-extern u32 synthFlags;
-extern u32 synthMessageCallback;
-extern u32 synthMasterFaderActiveFlags;
-extern u32 synthMasterFaderPauseActiveFlags;
-extern u8* synthVoice;
-extern u8 synthAuxAIndex[8];
-extern u8 synthAuxBIndex[8];
-extern f32 lbl_803E77D0;
-extern f32 lbl_803E77A8;
-
 #define SYNTH_APPLY_FADE(fade, fadeIndex, fadeHandle)                                                                  \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -96,6 +74,27 @@ extern f32 lbl_803E77A8;
         gSynthFadeMask |= 1 << (fadeIndex);                                                                            \
     } while (0)
 
+extern u8 lbl_803BCD90[];
+extern u32 synthRealTimeLo;
+extern u32 synthRealTimeHi;
+extern u32 synthFlags;
+extern u32 synthMessageCallback;
+extern u32 synthMasterFaderActiveFlags;
+extern u32 synthMasterFaderPauseActiveFlags;
+extern u8* synthVoice;
+extern u8 synthAuxAIndex[8];
+extern u8 synthAuxBIndex[8];
+extern f32 lbl_803E77D0;
+extern f32 lbl_803E77A8;
+
+extern void* salMalloc(u32 size);
+extern void memset(void* dst, int value, u32 size);
+extern void inpInit(void);
+extern void macInit(void);
+extern void vidInit(void);
+extern void voiceInitPriorityTables(void);
+extern void voiceInitRegistrationTables(void);
+extern void synthHWMessageHandler(void);
 extern void sndBegin(void);
 extern void sndEnd(void);
 extern void salFree(void* ptr);

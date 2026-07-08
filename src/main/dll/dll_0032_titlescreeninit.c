@@ -23,34 +23,6 @@
 #include "main/dll/tricky.h"
 #include "main/dll/dll_B4.h"
 #include "main/gameplay_runtime.h"
-extern void hudDrawColored(int texture, int x, int y, u32* color, u32 scale, int flags);
-extern void drawTexture(double x, double y, int texture, u32 alpha, u32 flags);
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void* gameTextGetStr(int textId);
-extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
-extern int mapUnload(int mapId, int flags);
-extern int loadMapAndParent(int mapId);
-extern void loadSunAndMoon(void);
-extern int gTitleScreenInitLoadingTextures[];
-extern u8 gDvdErrorPauseActive;
-extern u8 lbl_803DC968;
-extern u8 gTitleScreenInitDvdErrorLatched;
-extern u32 gTitleScreenInitLoadingFrameCounter;
-extern s8 gTitleScreenInitFrameStartPending;
-extern f32 lbl_803DD5F4;
-extern f32 lbl_803E1CF0;
-extern f32 gTitleScreenInitAlphaMax;
-extern f32 gTitleScreenInitFadeFrames;
-extern f32 lbl_803E1D00;
-
-/* Boot-sequence map ids (docblock): unload the prior map, force-load the
- * title map, then warp to the intro map. */
-#define TITLESCREENINIT_MAP_PRIOR 0x3d
-#define TITLESCREENINIT_MAP_TITLE 0x3f
-#define TITLESCREENINIT_MAP_WARP  0x12
-
-/* Localized DVD-read-error string (docblock: "localized error string (text id 0x565)"). */
-#define TITLESCREENINIT_TEXT_DVD_ERROR 0x565
 
 typedef struct LoadingScreenTexture
 {
@@ -73,6 +45,36 @@ typedef struct LoadingScreenTexture
     u8 _49[0x17];
     u8 imageData[1];
 } LoadingScreenTexture;
+
+/* Boot-sequence map ids (docblock): unload the prior map, force-load the
+ * title map, then warp to the intro map. */
+#define TITLESCREENINIT_MAP_PRIOR 0x3d
+#define TITLESCREENINIT_MAP_TITLE 0x3f
+#define TITLESCREENINIT_MAP_WARP  0x12
+
+/* Localized DVD-read-error string (docblock: "localized error string (text id 0x565)"). */
+#define TITLESCREENINIT_TEXT_DVD_ERROR 0x565
+
+extern int gTitleScreenInitLoadingTextures[];
+extern u8 gDvdErrorPauseActive;
+extern u8 lbl_803DC968;
+extern u8 gTitleScreenInitDvdErrorLatched;
+extern u32 gTitleScreenInitLoadingFrameCounter;
+extern s8 gTitleScreenInitFrameStartPending;
+extern f32 lbl_803DD5F4;
+extern f32 lbl_803E1CF0;
+extern f32 gTitleScreenInitAlphaMax;
+extern f32 gTitleScreenInitFadeFrames;
+extern f32 lbl_803E1D00;
+
+extern void hudDrawColored(int texture, int x, int y, u32* color, u32 scale, int flags);
+extern void drawTexture(double x, double y, int texture, u32 alpha, u32 flags);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void* gameTextGetStr(int textId);
+extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
+extern int mapUnload(int mapId, int flags);
+extern int loadMapAndParent(int mapId);
+extern void loadSunAndMoon(void);
 
 void runLoadingScreens(void)
 {

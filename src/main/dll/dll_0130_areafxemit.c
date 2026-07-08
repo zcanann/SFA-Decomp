@@ -24,10 +24,54 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
+typedef struct CFEmitterFxArgs
+{
+    u32 unk0;
+    u32 unk4;
+    f32 scale;
+    f32 pos[3];
+} CFEmitterFxArgs;
+
 enum
 {
     AREAFXEMIT_SEQEV_EMIT = 1
 };
+
+#define CF_EMITTER_RANDOMIZE_OFFSET(state, pos)                                                                        \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        u16 range;                                                                                                     \
+        range = (state)->extentX;                                                                                      \
+        (pos)[0] = (f32)(s32)randomGetRange(-range, range);                                                            \
+        range = (state)->extentY;                                                                                      \
+        (pos)[1] = (f32)(s32)randomGetRange(-range, range);                                                            \
+        range = (state)->extentZ;                                                                                      \
+        (pos)[2] = (f32)(s32)randomGetRange(-range, range);                                                            \
+    } while (0)
+
+#define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, arg6)                                             \
+    (*gPartfxInterface)->spawnObject((void*)(obj), (effectId), (args), (flags), (modelId), (void*)(arg6))
+
+#define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args, rot)                                                            \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        (rot)[0] = (state)->emitAngles[0];                                                                             \
+        (rot)[1] = (state)->emitAngles[1];                                                                             \
+        (rot)[2] = (state)->emitAngles[2];                                                                             \
+        if ((obj)->objAnim.parent != NULL)                                                                             \
+        {                                                                                                              \
+            (rot)[2] += ((ObjAnimComponent*)(obj)->objAnim.parent)->rotZ;                                              \
+        }                                                                                                              \
+        vecRotateZXY((rot), (args)->pos);                                                                              \
+    } while (0)
+
+#define CF_EMITTER_ADD_OBJECT_POSITION(obj, args)                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        (args)->pos[0] += (obj)->objAnim.localPosX;                                                                    \
+        (args)->pos[1] += (obj)->objAnim.localPosY;                                                                    \
+        (args)->pos[2] += (obj)->objAnim.localPosZ;                                                                    \
+    } while (0)
 
 #pragma dont_inline on
 void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
@@ -76,50 +120,6 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
     }
 }
 #pragma dont_inline reset
-
-typedef struct CFEmitterFxArgs
-{
-    u32 unk0;
-    u32 unk4;
-    f32 scale;
-    f32 pos[3];
-} CFEmitterFxArgs;
-
-#define CF_EMITTER_RANDOMIZE_OFFSET(state, pos)                                                                        \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        u16 range;                                                                                                     \
-        range = (state)->extentX;                                                                                      \
-        (pos)[0] = (f32)(s32)randomGetRange(-range, range);                                                            \
-        range = (state)->extentY;                                                                                      \
-        (pos)[1] = (f32)(s32)randomGetRange(-range, range);                                                            \
-        range = (state)->extentZ;                                                                                      \
-        (pos)[2] = (f32)(s32)randomGetRange(-range, range);                                                            \
-    } while (0)
-
-#define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, arg6)                                             \
-    (*gPartfxInterface)->spawnObject((void*)(obj), (effectId), (args), (flags), (modelId), (void*)(arg6))
-
-#define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args, rot)                                                            \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        (rot)[0] = (state)->emitAngles[0];                                                                             \
-        (rot)[1] = (state)->emitAngles[1];                                                                             \
-        (rot)[2] = (state)->emitAngles[2];                                                                             \
-        if ((obj)->objAnim.parent != NULL)                                                                             \
-        {                                                                                                              \
-            (rot)[2] += ((ObjAnimComponent*)(obj)->objAnim.parent)->rotZ;                                              \
-        }                                                                                                              \
-        vecRotateZXY((rot), (args)->pos);                                                                              \
-    } while (0)
-
-#define CF_EMITTER_ADD_OBJECT_POSITION(obj, args)                                                                      \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        (args)->pos[0] += (obj)->objAnim.localPosX;                                                                    \
-        (args)->pos[1] += (obj)->objAnim.localPosY;                                                                    \
-        (args)->pos[2] += (obj)->objAnim.localPosZ;                                                                    \
-    } while (0)
 
 void areafxemit_emitEffect(AreaFxEmitObject* obj)
 {

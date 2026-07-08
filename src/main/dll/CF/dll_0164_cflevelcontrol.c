@@ -17,20 +17,6 @@
 #include "main/audio/sfx.h"
 #include "main/dll/fx_800944A0_shared.h"
 
-#define CFLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
-
-/* env-effect ids activated on first update tick: ENVFX_A is always-on; B/C/D
-   are the day-preset set (bit 0xd73), B/E/F the night-preset set (bit 0xdca) */
-#define CFLEVELCONTROL_ENVFX_A 0x56
-#define CFLEVELCONTROL_ENVFX_B 0xd
-#define CFLEVELCONTROL_ENVFX_C 0x11
-#define CFLEVELCONTROL_ENVFX_D 0xe
-#define CFLEVELCONTROL_ENVFX_E 0x7e
-#define CFLEVELCONTROL_ENVFX_F 0x7d
-
-/* CloudRunner Fortress map-event id advanced by the level controller (getMapAct/setMapAct) */
-#define CFLEVELCONTROL_MAP_FORTRESS 0x1d
-
 typedef struct CflevelcontrolState
 {
     u8 pad0[0x8 - 0x0];
@@ -55,13 +41,28 @@ typedef struct CfLevelControlFlags
     u8 rest : 3;
 } CfLevelControlFlags;
 
-extern void s16toFloat(void* p, int duration);
+#define CFLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 
-extern void storeZeroToFloatParam(void* p);
+/* env-effect ids activated on first update tick: ENVFX_A is always-on; B/C/D
+   are the day-preset set (bit 0xd73), B/E/F the night-preset set (bit 0xdca) */
+#define CFLEVELCONTROL_ENVFX_A 0x56
+#define CFLEVELCONTROL_ENVFX_B 0xd
+#define CFLEVELCONTROL_ENVFX_C 0x11
+#define CFLEVELCONTROL_ENVFX_D 0xe
+#define CFLEVELCONTROL_ENVFX_E 0x7e
+#define CFLEVELCONTROL_ENVFX_F 0x7d
+
+/* CloudRunner Fortress map-event id advanced by the level controller (getMapAct/setMapAct) */
+#define CFLEVELCONTROL_MAP_FORTRESS 0x1d
+
 extern s16 lbl_80323008[];
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-
 extern f32 lbl_803E43E8;
+extern int lbl_802C22E8[];
+extern f32 lbl_803E43EC;
+
+extern void s16toFloat(void* p, int duration);
+extern void storeZeroToFloatParam(void* p);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjList_FindObjectById(int objectId);
 extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
 extern void skyFn_80088e54(int mode, f32 brightness);
@@ -69,8 +70,6 @@ extern int unlockLevel(s32 val, int idx, int flag);
 extern int playerIsDisguised(int obj);
 extern void staffToggle(int obj, int a);
 extern int getCurMapLayer(void);
-extern int lbl_802C22E8[];
-extern f32 lbl_803E43EC;
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
                                   int musicId);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,

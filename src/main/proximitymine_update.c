@@ -10,28 +10,8 @@
 
 #define PROXIMITYMINE_PARTFX 0x51c
 
-extern void modelLightStruct_freeSlot(void* handle);
-extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern void queueGlowRender(void* effect);
-extern int fn_80080150(f32* p);
-extern void storeZeroToFloatParam(f32* p);
-extern void s16toFloat(f32* p, s16 val);
 extern f32 lbl_803E6768;
 extern f32 lbl_803E6778;
-extern void modelLightStruct_updateGlowAlpha(void* light);
-extern int timerCountDown(f32* p);
-extern int objUpdateOpacity(char* obj);
-extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
-extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, int g, int b, int a);
-extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);
-extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
-
-extern f32 Vec_distance(f32* a, f32* b);
-extern f32 Vec_xzDistance(f32* a, f32* b);
-
-extern void vecRotateZXY(void* params, f32* vec);
-extern void Obj_FreeObject(void* obj);
 extern f32 lbl_803DC234;
 extern u8 lbl_803DC238;
 extern f32 lbl_803DC23C;
@@ -42,11 +22,30 @@ extern f32 lbl_803E677C;
 extern f32 lbl_803E6780;
 extern f32 gProximityMineMinVelocityY;
 extern f32 gProximityMineGravityAccel;
-extern void Obj_SetActiveModelIndex(void* obj, int modelIndex);
 extern s32 lbl_803DC230;
 extern f32 lbl_803E6774;
 extern f32 gProximityMineHeightScale;
 extern f32 lbl_803E679C;
+
+extern void modelLightStruct_freeSlot(void* handle);
+extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern void queueGlowRender(void* effect);
+extern int fn_80080150(f32* p);
+extern void storeZeroToFloatParam(f32* p);
+extern void s16toFloat(f32* p, s16 val);
+extern void modelLightStruct_updateGlowAlpha(void* light);
+extern int timerCountDown(f32* p);
+extern int objUpdateOpacity(char* obj);
+extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
+extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, int g, int b, int a);
+extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);
+extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
+extern f32 Vec_distance(f32* a, f32* b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
+extern void vecRotateZXY(void* params, f32* vec);
+extern void Obj_FreeObject(void* obj);
+extern void Obj_SetActiveModelIndex(void* obj, int modelIndex);
 
 int ProximityMine_getExtraSize(void)
 {

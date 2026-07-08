@@ -12,6 +12,19 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
+typedef struct FoodbagFxBuilder
+{
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 flags;
+    void (*nop0)(void);
+    void (*nop1)(void);
+    void (*slot2)(void);
+    void (*build)(int, int, int, u32);
+    void (*slot4)(void);
+} FoodbagFxBuilder;
+
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E0ED8;
 extern f32 lbl_803E0EDC;
@@ -274,19 +287,6 @@ u8 gFoodbagEffectTexData[748] = {
     0x02, 0x94, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xD9, 0x00, 0x00, 0x01, 0xFD, 0x00,
     0x00, 0x02, 0x01, 0x00, 0x00, 0x02, 0x03,
 };
-
-typedef struct FoodbagFxBuilder
-{
-    u32 reserved0;
-    u32 reserved1;
-    u32 reserved2;
-    u32 flags;
-    void (*nop0)(void);
-    void (*nop1)(void);
-    void (*slot2)(void);
-    void (*build)(int, int, int, u32);
-    void (*slot4)(void);
-} FoodbagFxBuilder;
 
 FoodbagFxBuilder lbl_80315C84 = {
     0, 0, 0, 0x00030000, dll_83_func00_nop, dll_83_func01_nop, NULL, dll_83_func03, NULL,

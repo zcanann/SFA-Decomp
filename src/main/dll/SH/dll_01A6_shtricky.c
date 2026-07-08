@@ -11,6 +11,7 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/SH/dll_01A6_shtricky.h"
 
 #define SHTRICKY_OBJFLAG_HIDDEN             0x4000
 #define SHTRICKY_OBJFLAG_HITDETECT_DISABLED 0x2000

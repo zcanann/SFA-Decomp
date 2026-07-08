@@ -7,20 +7,16 @@
  */
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/dll_012F_barrelpad.h"
 
 #define BARRELPAD_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* anim.seqId variants driving the launch particle burst */
 #define BARRELPAD_SEQ_LAUNCH_ACTIVE    0x79  /* active launch burst */
 #define BARRELPAD_SEQ_LAUNCH_SECONDARY 0x748 /* secondary launch state */
+
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
                                   f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
-
-typedef struct BarrelPadParticleArgs
-{
-    u8 pad00[0xc];
-    f32 offset[3];
-} BarrelPadParticleArgs;
 
 int BarrelPad_getExtraSize(void)
 {

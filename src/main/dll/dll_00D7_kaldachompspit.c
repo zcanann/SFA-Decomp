@@ -17,6 +17,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
+
 #define KALDACHOMPSPIT_HIT_VOLUME_SLOT_EXPLOSIVE 0x1f
 #define KALDACHOMPSPIT_HIT_VOLUME_SLOT_DEFAULT   0xa
 
@@ -29,6 +30,17 @@
 #define KALDACHOMPSPIT_PARTFX_POISON_TRAIL 0x714
 #define KALDACHOMPSPIT_PARTFX_POISON_BURST 0x715
 
+#define MODEL_LIGHT_KIND_POINT 2
+
+extern f32 timeDelta;
+extern f32 lbl_803E30E0;
+extern f32 lbl_803E30F0;
+extern f32 lbl_803E30F4;
+extern f32 lbl_803E30F8;
+extern f32 lbl_803E30FC;
+extern f32 lbl_803E3108;
+extern f32 lbl_803E310C;
+
 extern int randomGetRange(int lo, int hi);
 extern void queueGlowRender(void* light);
 extern int Obj_FreeObject(int obj);
@@ -37,7 +49,6 @@ extern f32 sqrtf(f32 x);
 extern void ModelLightStruct_free(void* p);
 extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setLightKind(int light, int value);
-#define MODEL_LIGHT_KIND_POINT 2
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
@@ -52,31 +63,18 @@ extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
-extern f32 timeDelta;
-extern f32 lbl_803E30E0;
-extern f32 lbl_803E30F0;
-extern f32 lbl_803E30F4;
-extern f32 lbl_803E30F8;
-extern f32 lbl_803E30FC;
-extern f32 lbl_803E3108;
-extern f32 lbl_803E310C;
-
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern int getTrickyObject(void);
+extern int Obj_GetPlayerObject(void);
+extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 int KaldaChompMe_getExtraSize(void);
-
 int KaldaChompMe_getObjectTypeId(void);
-
 void KaldaChompMe_free(void);
-
 void KaldaChompMe_render(int p1, int p2, int p3, int p4, int p5, s8 renderFlag);
-
 void KaldaChompMe_hitDetect(void);
-
 void KaldaChompMe_update(int obj);
-
 void KaldaChompMe_init(int obj, int params);
-
 void KaldaChompMe_release(void);
-
 void KaldaChompMe_initialise(void);
 
 ObjectDescriptor gKaldaChompMeObjDescriptor = {
@@ -149,7 +147,6 @@ void KaldaChompSpit_free(int* obj)
 
 void KaldaChompSpit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     u8* light = **(u8***)&((GameObject*)obj)->extra;
     if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
     {
@@ -167,9 +164,6 @@ void KaldaChompSpit_hitDetect(void)
 
 void KaldaChompSpit_update(int obj)
 {
-    extern int getTrickyObject(void);
-    extern int Obj_GetPlayerObject(void);
-    extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
     ObjAnimComponent* objAnim;
     u32* state;
     f32 vx;

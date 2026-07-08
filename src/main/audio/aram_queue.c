@@ -1,30 +1,10 @@
 #include "ghidra_import.h"
+#include "main/audio/aram_queue.h"
 
 #pragma exceptions on
 
 extern u8 lbl_803D3F60[];
 extern u8 lbl_803D41E4[];
-
-typedef struct AramQueueSlot
-{
-    u32 request;
-    u32 owner;
-    u32 type;
-    u32 priority;
-    u32 src;
-    u32 dst;
-    u32 size;
-    void (*arqCallback)(void*);
-    void (*callback)(void*);
-    void* callbackArg;
-} AramQueueSlot;
-
-typedef struct AramTransferQueue
-{
-    AramQueueSlot slots[16];
-    volatile u8 head;
-    volatile u8 count;
-} AramTransferQueue;
 
 /*
  * ARQ DMA completion callback dispatcher: walks the 16-slot ring

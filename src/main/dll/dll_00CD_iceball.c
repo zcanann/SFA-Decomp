@@ -22,7 +22,16 @@
 #include "main/dll/scarab.h"
 #include "main/sfa_shared_decls.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_00CD_iceball.h"
+
 #define ICEBALL_HIT_VOLUME_SLOT 10
+
+#define ICEBALL_MSG_NOTIFY_OWNER 0x80 /* vtable msg notifying the owning ChukChuk on impact */
+
+extern f32 lbl_803E2E54;
+extern f32 lbl_803E2E58;
+extern f32 lbl_803E2E50;
+
 extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_DisableObject(u32 objPtr);
@@ -31,12 +40,8 @@ extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int getTrickyObject(void);
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int* obj);
-extern f32 lbl_803E2E54;
-extern f32 lbl_803E2E58;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 lbl_803E2E50;
-
-#define ICEBALL_MSG_NOTIFY_OWNER 0x80 /* vtable msg notifying the owning ChukChuk on impact */
+extern void* ObjList_GetObjects(int* outA, int* outB);
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -70,7 +75,6 @@ void fn_8015FBEC(int obj)
 
 static inline u8 scarab_isObjectInList(void* obj)
 {
-    extern void* ObjList_GetObjects(int* outA, int* outB);
     int i;
     int count;
     int* objs = ObjList_GetObjects(&i, &count);

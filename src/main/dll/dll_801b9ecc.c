@@ -5,31 +5,15 @@
 #include "main/dll/baddie_state.h"
 #include "main/gameplay_runtime.h"
 #include "main/player_control_interface.h"
+#include "main/dll/dll_801b9ecc.h"
 
 extern int* gBaddieControlInterface;
 extern u8 lbl_803DDB84;
 extern u8 lbl_80325960[];
 extern u8 gDIMbossAnimController[];
-extern void DIM2icicle_updateHitResponse(int obj, int playerObj);
 extern f32 lbl_803E4BB8;
 
-typedef void (*Dim2QueryTargetMoveFn)(int obj, void* targetObj, int queryFlags, u16* animId, s16* outParam,
-                                      u16* targetDistance);
-typedef u8 (*Dim2CheckTargetRangeFn)(int obj, BaddieState* state, f32 rangeScale);
-typedef void (*Dim2RequestControlModeFn)(int obj, BaddieState* state, int controlMode);
-
-typedef struct Dim2BaddieControlInterface
-{
-    u8 pad00[0x14];
-    Dim2QueryTargetMoveFn queryTargetMove;
-    Dim2CheckTargetRangeFn checkTargetRange;
-} Dim2BaddieControlInterface;
-
-typedef struct Dim2PlayerInterface
-{
-    u8 pad00[0x14];
-    Dim2RequestControlModeFn requestControlMode;
-} Dim2PlayerInterface;
+extern void DIM2icicle_updateHitResponse(int obj, int playerObj);
 
 static inline Dim2BaddieControlInterface* DIM2_GetBaddieControlInterface(void)
 {
@@ -40,15 +24,6 @@ static inline Dim2PlayerInterface* DIM2_GetPlayerInterface(void)
 {
     return (Dim2PlayerInterface*)*gPlayerInterface;
 }
-
-typedef struct DimAnimTable
-{
-    u8 pad[0x168];    /* 0x000 */
-    s16 surprised[6]; /* 0x168: far random "surprised" anim ids */
-    s16 group3[8];    /* 0x174: hitPoints==3 round-robin anim ids */
-    s16 group2[8];    /* 0x184: hitPoints==2 round-robin anim ids */
-    s16 group1[8];    /* 0x194: hitPoints==1 round-robin anim ids */
-} DimAnimTable;
 
 #pragma scheduling off
 #pragma peephole off

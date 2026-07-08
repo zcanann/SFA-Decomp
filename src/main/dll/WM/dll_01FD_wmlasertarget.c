@@ -11,35 +11,10 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
+#include "main/dll/WM/dll_01FD_wmlasertarget.h"
 
-typedef struct WmLaserTargetPlacement
-{
-    ObjPlacement base;
-    u8 pad18[2];
-    s16 cooldown; /* 0x1A: frames between accepted toggles */
-    u8 pad1C[2];
-    s16 toggleGameBit; /* 0x1E: the bit the target toggles (also picks
-                           the model bank at init) */
-    s16 pairedGameBit; /* 0x20: second bit kept in sync */
-    u8 pad22[0x28 - 0x22];
-} WmLaserTargetPlacement;
-
-STATIC_ASSERT(offsetof(WmLaserTargetPlacement, cooldown) == 0x1A);
-STATIC_ASSERT(offsetof(WmLaserTargetPlacement, toggleGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(WmLaserTargetPlacement, pairedGameBit) == 0x20);
-STATIC_ASSERT(sizeof(WmLaserTargetPlacement) == 0x28);
-
-typedef struct WmLaserTargetState
-{
-    s16 cooldown;
-    u8 toggleQueued;
-    u8 pad3;
-} WmLaserTargetState;
-
-STATIC_ASSERT(sizeof(WmLaserTargetState) == 0x4);
-
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E5D90; /* 1.0: render scale */
+extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
 int WM_LaserTarget_getExtraSize(void)
 {

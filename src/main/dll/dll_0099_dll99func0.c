@@ -14,6 +14,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/savegame.h"
+#include "main/dll/dll_0099_dll99func0.h"
 
 /* one modgfx command entry; mirrors ScreenFxPart's layout */
 typedef struct
@@ -46,10 +47,10 @@ typedef struct
     GfxCmd entries[32];                        /* +0x60 */
 } GfxBuf;
 
-extern ModgfxInterface** gModgfxInterface;
-
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL99_EFFECT_ID 0x3c
+
+extern ModgfxInterface** gModgfxInterface;
 
 extern u8 lbl_803DB950[8];
 extern u8 lbl_80317AF8[];

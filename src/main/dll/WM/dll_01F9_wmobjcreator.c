@@ -17,54 +17,6 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 
-extern int lbl_803DDC68;       /* live WM_WallCraw population counter */
-extern const f32 lbl_803E5CC8; /* 1.0 */
-extern f32 lbl_803E5CCC;       /* 10.0: eastward drift base velocity */
-extern f32 lbl_803E5CD0;       /* -30.0: westward drift base velocity */
-extern f32 lbl_803E5CD4;       /* 0.1: burst velocity scale */
-extern const f32 lbl_803E5CD8; /* 0.0 */
-extern const f32 lbl_803E5CDC; /* 200.0 */
-
-/* romlist object types this creator spawns (names from the retail
-   OBJECTS.bin; the handling DLL ids confirm the targets). */
-enum
-{
-    WMOBJCREATOR_SPAWN_WM_GALLEON = 0x139,     /* dll 0x1F8 wmgalleon */
-    WMOBJCREATOR_SPAWN_LFX_EMITTER = 0x263,    /* dll 0x12D lfxemitter */
-    WMOBJCREATOR_SPAWN_WM_WALLCRAWLER = 0x275, /* dll 0x211 wmwallcrawler */
-    WMOBJCREATOR_SPAWN_HOODED_ZYCK = 0x4AC,    /* dll 0x0C9 enemy */
-    WMOBJCREATOR_SPAWN_WM_ROCK = 0x2BC         /* dll 0x12A */
-};
-
-/* gate for the galleon spawn: set once the palace approach has run */
-#define GAMEBIT_WM_GALLEON_GONE 0x78
-
-#define WMOBJCREATOR_PARTFX_DEBRIS 0x1a6 /* debris-particle burst under the falling WM_rock (case 6) */
-
-int WM_ObjCreator_getExtraSize(void)
-{
-    return 0x8;
-}
-int WM_ObjCreator_getObjectTypeId(void)
-{
-    return 0x0;
-}
-
-void WM_ObjCreator_free(void)
-{
-}
-
-void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5CC8);
-}
-
-void WM_ObjCreator_hitDetect(void)
-{
-}
-
 STATIC_ASSERT(sizeof(WmObjCreatorState) == 0x8);
 
 STATIC_ASSERT(offsetof(WmObjCreatorPlacement, gameBit) == 0x18);
@@ -123,9 +75,57 @@ typedef struct WmWallcrawlerSpawnSetup
 
 STATIC_ASSERT(offsetof(WmWallcrawlerSpawnSetup, heightOffset) == 0x1C);
 
+/* romlist object types this creator spawns (names from the retail
+   OBJECTS.bin; the handling DLL ids confirm the targets). */
+enum
+{
+    WMOBJCREATOR_SPAWN_WM_GALLEON = 0x139,     /* dll 0x1F8 wmgalleon */
+    WMOBJCREATOR_SPAWN_LFX_EMITTER = 0x263,    /* dll 0x12D lfxemitter */
+    WMOBJCREATOR_SPAWN_WM_WALLCRAWLER = 0x275, /* dll 0x211 wmwallcrawler */
+    WMOBJCREATOR_SPAWN_HOODED_ZYCK = 0x4AC,    /* dll 0x0C9 enemy */
+    WMOBJCREATOR_SPAWN_WM_ROCK = 0x2BC         /* dll 0x12A */
+};
+
+/* gate for the galleon spawn: set once the palace approach has run */
+#define GAMEBIT_WM_GALLEON_GONE 0x78
+
+#define WMOBJCREATOR_PARTFX_DEBRIS 0x1a6 /* debris-particle burst under the falling WM_rock (case 6) */
+
+extern int lbl_803DDC68;       /* live WM_WallCraw population counter */
+extern const f32 lbl_803E5CC8; /* 1.0 */
+extern f32 lbl_803E5CCC;       /* 10.0: eastward drift base velocity */
+extern f32 lbl_803E5CD0;       /* -30.0: westward drift base velocity */
+extern f32 lbl_803E5CD4;       /* 0.1: burst velocity scale */
+extern const f32 lbl_803E5CD8; /* 0.0 */
+extern const f32 lbl_803E5CDC; /* 200.0 */
+extern void* ObjGroup_GetObjects();
+
+int WM_ObjCreator_getExtraSize(void)
+{
+    return 0x8;
+}
+int WM_ObjCreator_getObjectTypeId(void)
+{
+    return 0x0;
+}
+
+void WM_ObjCreator_free(void)
+{
+}
+
+void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5CC8);
+}
+
+void WM_ObjCreator_hitDetect(void)
+{
+}
+
 void WM_ObjCreator_update(int obj)
 {
-    extern void* ObjGroup_GetObjects();
     /* setup/spawned/n are FN-SCOPE on purpose: live-range splitting
        re-creates per-arm webs in the retail saved-reg spread, where
        block locals coalesce (#108 crack; case 1 and case 4's setup

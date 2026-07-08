@@ -21,6 +21,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#include "main/dll/dll_0266_kytesmum.h"
 
 extern void DR_Creator_getExtraSize(void);
 
@@ -55,75 +56,6 @@ extern void DR_Creator_initialise(void);
 #define KYTESMUM_MODE_STATIONARY 1
 #define KYTESMUM_MODE_ROAMING    2
 #define KYTESMUM_MODE_QUEST_B    3
-
-typedef int (*KytesMumUpdateCallback)(int obj);
-
-typedef struct KytesMumMoveSet
-{
-    s16 moves[6];
-} KytesMumMoveSet;
-
-typedef struct KytesMumSetup
-{
-    ObjPlacement base;
-    s8 yaw;
-    s8 mode;
-    s16 interactionRange;
-    u8 pad1C[0x1e - 0x1c];
-    s16 completionGameBit;
-    u8 pad20[0x24 - 0x20];
-} KytesMumSetup;
-
-typedef struct KytesMumRuntime
-{
-    u8 pad000[0x654];
-    u8 eyeAnimState[0x684 - 0x654];
-    u8 modelSoundState[0x6b4 - 0x684];
-    u8 animEvents[0x6d0 - 0x6b4];
-    void* idleSfxTable;
-    KytesMumUpdateCallback updateCallback;
-    s16* eventSfxTable;
-    KytesMumMoveSet* moveSet;
-    f32 animSpeed;
-    s16 idleSfxTimer;
-    u8 questComplete;
-} KytesMumRuntime;
-
-typedef struct KytesMumObject
-{
-    union
-    {
-        ObjAnimComponent anim;
-        struct
-        {
-            s16 yaw;
-            u8 pad02[0x4c - 0x2];
-            KytesMumSetup* setup;
-            u8 pad50[0xa0 - 0x50];
-            s16 currentMove;
-            u8 padA2[0xaf - 0xa2];
-            u8 flagsAF;
-        };
-    };
-    u16 objectFlags;
-    u8 padB2[0xb8 - 0xb2];
-    KytesMumRuntime* runtime;
-    void* interactionCallback;
-} KytesMumObject;
-
-STATIC_ASSERT(sizeof(KytesMumSetup) == 0x24);
-STATIC_ASSERT(offsetof(KytesMumSetup, yaw) == 0x18);
-STATIC_ASSERT(offsetof(KytesMumSetup, mode) == 0x19);
-STATIC_ASSERT(offsetof(KytesMumSetup, interactionRange) == 0x1A);
-STATIC_ASSERT(offsetof(KytesMumSetup, completionGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(KytesMumObject, anim) == 0x00);
-STATIC_ASSERT(offsetof(KytesMumObject, yaw) == offsetof(ObjAnimComponent, rotX));
-STATIC_ASSERT(offsetof(KytesMumObject, setup) == offsetof(ObjAnimComponent, placementData));
-STATIC_ASSERT(offsetof(KytesMumObject, currentMove) == offsetof(ObjAnimComponent, currentMove));
-STATIC_ASSERT(offsetof(KytesMumObject, flagsAF) == offsetof(ObjAnimComponent, resetHitboxFlags));
-STATIC_ASSERT(offsetof(KytesMumObject, objectFlags) == 0xB0);
-STATIC_ASSERT(offsetof(KytesMumObject, runtime) == 0xB8);
-STATIC_ASSERT(offsetof(KytesMumObject, interactionCallback) == 0xBC);
 
 int kytesmum_getExtraSize(void)
 {

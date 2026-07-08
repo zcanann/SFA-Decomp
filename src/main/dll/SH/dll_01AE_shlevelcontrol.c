@@ -25,6 +25,58 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 
+typedef struct ShLevelcontrolState
+{
+    u32 flags;      /* flag word; bit 2 cleared on substate transitions */
+    u8 waitCounter; /* counter incremented before a gated action fires */
+    u8 mapAct;      /* map-event act selecting the active sub-event handler */
+    u8 eventState;  /* bloop-event substate machine 0..7 */
+    u8 pad7;
+    f32 timer8;       /* air-meter countdown */
+    f32 hudTextTimer; /* countdown for the on-screen hint text */
+    s16 unk10;
+    s16 musicLatch; /* current map music/ambient id latch (0xcc/0xf2/0xdb/-1) */
+    u8 pad14[0x18 - 0x14];
+} ShLevelcontrolState;
+
+STATIC_ASSERT(offsetof(ShLevelcontrolState, waitCounter) == 0x4);
+STATIC_ASSERT(offsetof(ShLevelcontrolState, eventState) == 0x6);
+STATIC_ASSERT(offsetof(ShLevelcontrolState, timer8) == 0x8);
+STATIC_ASSERT(offsetof(ShLevelcontrolState, hudTextTimer) == 0xC);
+STATIC_ASSERT(offsetof(ShLevelcontrolState, musicLatch) == 0x12);
+
+/* flags word bits (shared physical field with ShopkeeperLevelControlState.flags) */
+#define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2 /* re-apply map music on next tick; cleared at substate/music transitions */
+#define SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED 0x40 /* ThornTail intro event already fired */
+#define SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED 0x80 /* early cutscene sequence begun */
+
+/* env-effect ids replayed per weather/time state gate (index-style; roles opaque).
+   A/D shared across the states; B/C exclusive to the 0xd36 gate; E/F to the 0xd35 gate. */
+#define SHLEVELCONTROL_ENVFX_A 0x1bf
+#define SHLEVELCONTROL_ENVFX_B 0x231
+#define SHLEVELCONTROL_ENVFX_C 0x232
+#define SHLEVELCONTROL_ENVFX_D 0x244
+#define SHLEVELCONTROL_ENVFX_E 0x1be
+#define SHLEVELCONTROL_ENVFX_F 0x1c0
+
+#define PAD_BUTTON_A    0x100
+#define PAD_BUTTON_B    0x200
+#define PAD_BUTTON_MENU 0x1000
+
+/* GameObject.objectFlags bit set on the player while a parent object holds it
+   ("slack"); the level-control sequences wait for it to clear before advancing. */
+#define SHLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
+
+#define SCTOTEMLOGPUZ_RESET_GAMEBIT          0xBF8
+#define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET  5
+#define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
+#define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS       0x20000000
+#define SHLEVELCONTROL_AIRMETER_BGTEXTURE    0x5db /* air-meter background texture id */
+
+extern f32 gShLevelControlBloopTimeLimit;
+extern f32 lbl_803E54B4; /* 0.0f floor: bloop-timer expiry, hud-text floor, sky-brightness arg */
+extern f32 gShLevelControlHudTextDuration;
+
 extern void warpstonelift_getExtraSize(void);
 
 extern void warpstonelift_getObjectTypeId(void);
@@ -48,11 +100,7 @@ extern void warpstonelift_initialise(void);
 extern void sh_staff_update(void);
 extern void envFxActFn_800887f8(u8 value);
 extern int mapUnload(int mapId, int flags);
-char sSPShopNumBloopsFormat[] = "numBloops %d\n";
-extern f32 gShLevelControlBloopTimeLimit;
-extern f32 lbl_803E54B4; /* 0.0f floor: bloop-timer expiry, hud-text floor, sky-brightness arg */
 extern void logPrintf(char* fmt, ...);
-
 extern int ObjList_FindObjectById(int objectId);
 extern int isScreenTransitionActive(void);
 extern void padClearAnalogInputX(int port);
@@ -64,27 +112,11 @@ extern void fn_80088870(void* a, void* b, void* c, void* d);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
-
-/* env-effect ids replayed per weather/time state gate (index-style; roles opaque).
-   A/D shared across the states; B/C exclusive to the 0xd36 gate; E/F to the 0xd35 gate. */
-#define SHLEVELCONTROL_ENVFX_A 0x1bf
-#define SHLEVELCONTROL_ENVFX_B 0x231
-#define SHLEVELCONTROL_ENVFX_C 0x232
-#define SHLEVELCONTROL_ENVFX_D 0x244
-#define SHLEVELCONTROL_ENVFX_E 0x1be
-#define SHLEVELCONTROL_ENVFX_F 0x1c0
-
 extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
-extern f32 gShLevelControlHudTextDuration;
+extern void Music_Trigger(int id, int arg);
 
-#define PAD_BUTTON_A    0x100
-#define PAD_BUTTON_B    0x200
-#define PAD_BUTTON_MENU 0x1000
-
-/* GameObject.objectFlags bit set on the player while a parent object holds it
-   ("slack"); the level-control sequences wait for it to clear before advancing. */
-#define SHLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
+char sSPShopNumBloopsFormat[] = "numBloops %d\n";
 
 int SH_LevelControl_getExtraSize(void)
 {
@@ -104,12 +136,6 @@ void SH_LevelControl_free(void)
         mainSetBits(GAMEBIT_ITEM_FireWeed_Count, 0);
     }
 }
-
-#define SCTOTEMLOGPUZ_RESET_GAMEBIT          0xBF8
-#define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET  5
-#define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
-#define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS       0x20000000
-#define SHLEVELCONTROL_AIRMETER_BGTEXTURE    0x5db /* air-meter background texture id */
 
 int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* updateState)
 {
@@ -181,8 +207,6 @@ void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetB
                            int musicId)
 {
 
-    extern void Music_Trigger(int id, int arg);
-
     int hasClearIfSetBit = (-1 - clearIfSetBit) | (clearIfSetBit + 1);
     int hasClearIfClearBit = (-1 - clearIfClearBit) | (clearIfClearBit + 1);
     u8 clearIfSetBitValid = (u8)((u32)hasClearIfSetBit >> 31);
@@ -250,8 +274,6 @@ void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 cle
 void SH_LevelControl_setMusic(short* obj)
 {
 
-    extern void Music_Trigger(int id, int arg);
-
     if ((*gSkyInterface)->getSunPosition(0) != 0)
     {
         if (obj[8] == 0x39 || obj[8] == -1)
@@ -308,31 +330,6 @@ void SH_LevelControl_setMusic(short* obj)
     }
 }
 #pragma dont_inline reset
-
-typedef struct ShLevelcontrolState
-{
-    u32 flags;      /* flag word; bit 2 cleared on substate transitions */
-    u8 waitCounter; /* counter incremented before a gated action fires */
-    u8 mapAct;      /* map-event act selecting the active sub-event handler */
-    u8 eventState;  /* bloop-event substate machine 0..7 */
-    u8 pad7;
-    f32 timer8;       /* air-meter countdown */
-    f32 hudTextTimer; /* countdown for the on-screen hint text */
-    s16 unk10;
-    s16 musicLatch; /* current map music/ambient id latch (0xcc/0xf2/0xdb/-1) */
-    u8 pad14[0x18 - 0x14];
-} ShLevelcontrolState;
-
-/* flags word bits (shared physical field with ShopkeeperLevelControlState.flags) */
-#define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2 /* re-apply map music on next tick; cleared at substate/music transitions */
-#define SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED 0x40 /* ThornTail intro event already fired */
-#define SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED 0x80 /* early cutscene sequence begun */
-
-STATIC_ASSERT(offsetof(ShLevelcontrolState, waitCounter) == 0x4);
-STATIC_ASSERT(offsetof(ShLevelcontrolState, eventState) == 0x6);
-STATIC_ASSERT(offsetof(ShLevelcontrolState, timer8) == 0x8);
-STATIC_ASSERT(offsetof(ShLevelcontrolState, hudTextTimer) == 0xC);
-STATIC_ASSERT(offsetof(ShLevelcontrolState, musicLatch) == 0x12);
 
 #pragma dont_inline on
 void SH_LevelControl_runBloopEvent(int obj, int state)
@@ -976,8 +973,6 @@ void SH_LevelControl_update(int obj)
 
 void SH_LevelControl_init(int obj)
 {
-
-    extern void Music_Trigger(int id, int arg);
 
     int* state = ((GameObject*)obj)->extra;
     int i;

@@ -21,27 +21,17 @@
 #include "main/vecmath.h"
 #include "main/object_transform.h"
 #include "main/dll/fx_800944A0_shared.h"
-
-extern int getAngle(float y, float x);
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
-extern int playerGetFocusObject(int obj);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern f32 lbl_803DB9D0;
-extern int lbl_803DB9D4;
+#include "main/dll/dll_0053_cameramodecloudrunner.h"
 
 /* curve-node tag selecting the matrix-based base point in update() */
 #define CLOUDRUNNER_CURVE_TAG 1049
 
-/* object-placement transform fed to setMatrixFromObjectPos() (24 bytes) */
-typedef struct CloudRunnerObjectPos
-{
-    s16 angles[3];
-    s16 pad06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} CloudRunnerObjectPos;
+extern CameraModeCloudRunnerState* lbl_803DD5B8;
+extern f32 lbl_803DB9D0;
+extern int lbl_803DB9D4;
+extern int getAngle(float y, float x);
+extern int playerGetFocusObject(int obj);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 
 void CameraModeCloudRunner_copyToCurrent(void)
 {

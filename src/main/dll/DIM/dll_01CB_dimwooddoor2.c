@@ -19,6 +19,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/DIM/dll_01CB_dimwooddoor2.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 

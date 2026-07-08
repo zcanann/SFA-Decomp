@@ -28,24 +28,6 @@
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_shared.h"
 
-/* placement mapIds that arm the one-shot save-point recording at init */
-#define WARPPOINT_MAP_SAVE_A 0x4B675
-#define WARPPOINT_MAP_SAVE_B 0x46882
-
-/* seqId variant that records a save point (sets GAMEBIT_WARPPOINT_SAVED
-   and calls the map-event savePoint) before running its sequence. */
-#define WARPPOINT_SEQID_SAVEPOINT 0x27e
-
-/* def->mode behavior selector (see file header) */
-#define WARPPOINT_MODE_PROXIMITY   0 /* proximity warp / trigger-sequence near player */
-#define WARPPOINT_MODE_HINT_TIMER  1 /* trigger while hint flag set, on a timer */
-#define WARPPOINT_MODE_GATED_WARP  2 /* game-bit-gated warp, world-space distance */
-#define WARPPOINT_MODE_ONESHOT_SEQ 3 /* one-shot trigger-sequence gated on game bit */
-#define WARPPOINT_MODE_GATED_WARP2 4 /* game-bit-gated warp variant, world-space distance */
-
-/* game bit shared with mode-0 markers to coordinate a single save point */
-#define GAMEBIT_WARPPOINT_SAVED 0xD53
-
 typedef struct WarpPointObjectDef
 {
     ObjPlacement head; /* 0x00: common placement head (color / pos / mapId) */
@@ -76,10 +58,28 @@ typedef struct WarpPointState
     u8 padE[0x10 - 0xE];
 } WarpPointState;
 
-extern void warpToMap(int idx, s8 transType);
+/* placement mapIds that arm the one-shot save-point recording at init */
+#define WARPPOINT_MAP_SAVE_A 0x4B675
+#define WARPPOINT_MAP_SAVE_B 0x46882
+
+/* seqId variant that records a save point (sets GAMEBIT_WARPPOINT_SAVED
+   and calls the map-event savePoint) before running its sequence. */
+#define WARPPOINT_SEQID_SAVEPOINT 0x27e
+
+/* def->mode behavior selector (see file header) */
+#define WARPPOINT_MODE_PROXIMITY   0 /* proximity warp / trigger-sequence near player */
+#define WARPPOINT_MODE_HINT_TIMER  1 /* trigger while hint flag set, on a timer */
+#define WARPPOINT_MODE_GATED_WARP  2 /* game-bit-gated warp, world-space distance */
+#define WARPPOINT_MODE_ONESHOT_SEQ 3 /* one-shot trigger-sequence gated on game bit */
+#define WARPPOINT_MODE_GATED_WARP2 4 /* game-bit-gated warp variant, world-space distance */
+
+/* game bit shared with mode-0 markers to coordinate a single save point */
+#define GAMEBIT_WARPPOINT_SAVED 0xD53
 
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
+
+extern void warpToMap(int idx, s8 transType);
 
 #pragma scheduling off
 #pragma peephole off

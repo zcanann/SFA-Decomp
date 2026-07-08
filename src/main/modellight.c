@@ -7,6 +7,23 @@
 #include "main/texture.h"
 #include "main/modellight.h"
 #include "main/frame_timing.h"
+
+typedef struct
+{
+    u8 active;
+    u8 _1[3];
+    int lightMask;
+    int mode;
+    int matSrc;
+} ModelLightChannelState;
+
+typedef f32 Mtx[3][4];
+
+typedef struct ModelLightCornerBlock
+{
+    f32 v[24];
+} ModelLightCornerBlock;
+
 #define GX_COLOR0    0
 #define GX_DF_NONE   0
 #define GX_DF_CLAMP  2
@@ -21,6 +38,70 @@
 #define GX_DA_MEDIUM 2
 
 #define MODELLIGHT_DEFAULT_GLOW_TEXTURE_ID 0x605
+
+/* per-corner outcode bits for the light-projection frustum clip test */
+#define LIGHTCLIP_LEFT   0x01 /* projected X < 0 */
+#define LIGHTCLIP_RIGHT  0x02 /* projected X > max */
+#define LIGHTCLIP_BOTTOM 0x04 /* projected Y < 0 */
+#define LIGHTCLIP_TOP    0x08 /* projected Y > max */
+#define LIGHTCLIP_NEAR   0x10 /* worldZ < nearZ */
+#define LIGHTCLIP_FAR    0x20 /* worldZ > farZ */
+
+extern u8 gModelLightCount;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803DE750;
+extern f32 lbl_803DE754;
+extern f32 lbl_803DE758;
+extern f32 lbl_803DE760;
+extern f32 lbl_803DE75C;
+extern f32 lbl_803DE76C;
+extern f32 lbl_803DE790;
+extern f32 lbl_803DE79C;
+extern f32 lbl_803DE7A0;
+extern u8 gModelLightColorTable;
+extern f32 lbl_803DE764;
+extern f32 lbl_803DE778;
+extern f32 lbl_803DE78C;
+extern f32 lbl_803DE788;
+extern f32 lbl_803DE794;
+extern f32 lbl_803DE798;
+extern u8 gModelLightUseModelRelativePositions;
+extern int gModelLightNextGXLightId;
+extern f32 lbl_803DE7A4;
+extern f32 lbl_803DE768;
+extern f32 gModelLightCornerBlock[];
+
+extern void GXInitLightDistAttn(u8* lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
+extern void GXGetLightAttnK(u8* lt_obj, f32* k0, f32* k1, f32* k2);
+extern void GXInitLightAttnA(u8* lt_obj, f32 a0, f32 a1, f32 a2);
+extern void GXInitLightAttn(u8* lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
+extern void* memset(void* dst, int val, int n);
+extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
+extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
+extern void Vec_normalize(f32* dst, f32* src);
+extern void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
+extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
+extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
+extern void PSVECSubtract(f32* a, f32* b, f32* out);
+extern void PSVECNormalize(f32* src, f32* dst);
+extern void GXInitSpecularDir(u8* lt_obj, f32 x, f32 y, f32 z);
+extern void GXInitLightColor(u8* lt_obj, void* color);
+extern void GXLoadLightObjImm(u8* lt_obj, int lightId);
+extern void GXInitLightPos(u8* lt_obj, f32 x, f32 y, f32 z);
+extern void GXInitLightDir(u8* lt_obj, f32 x, f32 y, f32 z);
+extern void GXInitLightAttnK(u8* lt_obj, f32 k0, f32 k1, f32 k2);
+extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int lightMask, int diffFn, int attnFn);
+extern void GXSetNumChans(u8 nChans);
+extern void PSVECScale(f32* src, f32* dst, f32 scale);
+extern void PSVECAdd(f32* a, f32* b, f32* out);
+extern f32* Camera_GetInverseViewMatrix(void);
+extern void PSMTXConcat(f32* a, f32* b, f32* ab);
+extern void GXInitLightSpot(u8* lt_obj, f32 cutoff, int spot_func);
+extern f32 PSVECMag(f32* v);
+extern f32 PSVECDotProduct(f32* a, f32* b);
+extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
+extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
 void objSetEventName(u8* obj, void* name)
 {
@@ -92,31 +173,7 @@ void modelLightStruct_setLightKind(ModelLightStruct* p, int v)
     p->lightKind = v;
 }
 
-extern u8 gModelLightCount;
 void* gModelLightList[0x32];
-
-extern void GXInitLightDistAttn(u8* lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
-extern void GXGetLightAttnK(u8* lt_obj, f32* k0, f32* k1, f32* k2);
-extern void GXInitLightAttnA(u8* lt_obj, f32 a0, f32 a1, f32 a2);
-extern void GXInitLightAttn(u8* lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
-extern void* memset(void* dst, int val, int n);
-extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
-extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
-extern void Vec_normalize(f32* dst, f32* src);
-extern void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
-extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
-extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803DE750;
-extern f32 lbl_803DE754;
-extern f32 lbl_803DE758;
-extern f32 lbl_803DE760;
-extern f32 lbl_803DE75C;
-extern f32 lbl_803DE76C;
-extern f32 lbl_803DE790;
-extern f32 lbl_803DE79C;
-extern f32 lbl_803DE7A0;
 
 void* objCreateLight(int arg, u8 addToList)
 {
@@ -405,8 +462,6 @@ void modelLightStruct_setProjectionTevModes(ModelLightStruct* p, void* a, void* 
     p->projectionTevAlphaMode = (int)b;
 }
 
-extern u8 gModelLightColorTable;
-
 void modelLightStruct_setGlowColor(ModelLightStruct* light, u8 red, u8 green, u8 blue, u8 alpha)
 {
     light->glowColor[0] = red;
@@ -464,13 +519,6 @@ void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct* p, int n)
     p->objectLightMaskIndex = n;
     p->objectLightMask = (u8)(1 << n);
 }
-
-extern f32 lbl_803DE764;
-extern f32 lbl_803DE778;
-extern f32 lbl_803DE78C;
-extern f32 lbl_803DE788;
-extern f32 lbl_803DE794;
-extern f32 lbl_803DE798;
 
 void modelLightStruct_getSpecularColor(ModelLightStruct* p, u8* r, u8* g, u8* b, u8* a)
 {
@@ -707,18 +755,6 @@ void modelLightStruct_setProjectionNearZ(ModelLightStruct* p, f32 v)
     p->projectionNearZ = (v < lbl_803DE78C) ? lbl_803DE78C : ((v > p->projectionFarZ) ? p->projectionFarZ : v);
 }
 
-extern u8 gModelLightUseModelRelativePositions;
-extern int gModelLightNextGXLightId;
-
-typedef struct
-{
-    u8 active;
-    u8 _1[3];
-    int lightMask;
-    int mode;
-    int matSrc;
-} ModelLightChannelState;
-
 ModelLightChannelState gModelLightChannelStates[0x60 / sizeof(ModelLightChannelState)];
 
 void modelLightChannel_configure(int i, int mode, int matSrc)
@@ -740,14 +776,6 @@ void modelLightChannels_reset(u8 useModelRelative)
     gModelLightChannelStates[4].active = 0;
     gModelLightChannelStates[5].active = 0;
 }
-
-typedef f32 Mtx[3][4];
-extern void PSVECSubtract(f32* a, f32* b, f32* out);
-extern void PSVECNormalize(f32* src, f32* dst);
-
-void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
-
-void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
 
 void modelLightStruct_setDirection(ModelLightStruct* s, f32 x, f32 y, f32 z)
 {
@@ -814,20 +842,6 @@ void modelLightStruct_setPosition(ModelLightStruct* s, f32 x, f32 y, f32 z)
         }
     }
 }
-
-extern void GXInitSpecularDir(u8* lt_obj, f32 x, f32 y, f32 z);
-extern void GXInitLightColor(u8* lt_obj, void* color);
-extern void GXLoadLightObjImm(u8* lt_obj, int lightId);
-extern void GXInitLightPos(u8* lt_obj, f32 x, f32 y, f32 z);
-extern void GXInitLightDir(u8* lt_obj, f32 x, f32 y, f32 z);
-extern void GXInitLightAttnK(u8* lt_obj, f32 k0, f32 k1, f32 k2);
-extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int lightMask, int diffFn, int attnFn);
-extern void GXSetNumChans(u8 nChans);
-extern void PSVECScale(f32* src, f32* dst, f32 scale);
-extern void PSVECAdd(f32* a, f32* b, f32* out);
-extern f32 lbl_803DE7A4;
-extern f32* Camera_GetInverseViewMatrix(void);
-extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 
 void modelLightStruct_loadDiffuseGXLight(u8* light, u8* obj, int lightId)
 {
@@ -1145,12 +1159,6 @@ void updateLights(void)
     }
 }
 
-extern void GXInitLightSpot(u8* lt_obj, f32 cutoff, int spot_func);
-extern f32 PSVECMag(f32* v);
-extern f32 PSVECDotProduct(f32* a, f32* b);
-extern f32 lbl_803DE768;
-extern f32 gModelLightCornerBlock[];
-
 void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int mode)
 {
     obj->spotCutoff = cutoff;
@@ -1173,19 +1181,6 @@ void modelLightStruct_setDistanceAttenuation(u8* obj, f32 near, f32 far)
     GXGetLightAttnK(obj + 0x68, &((ModelLightStruct*)obj)->attenuationK0, &((ModelLightStruct*)obj)->attenuationK1,
                     &((ModelLightStruct*)obj)->attenuationK2);
 }
-
-typedef struct ModelLightCornerBlock
-{
-    f32 v[24];
-} ModelLightCornerBlock;
-
-/* per-corner outcode bits for the light-projection frustum clip test */
-#define LIGHTCLIP_LEFT   0x01 /* projected X < 0 */
-#define LIGHTCLIP_RIGHT  0x02 /* projected X > max */
-#define LIGHTCLIP_BOTTOM 0x04 /* projected Y < 0 */
-#define LIGHTCLIP_TOP    0x08 /* projected Y > max */
-#define LIGHTCLIP_NEAR   0x10 /* worldZ < nearZ */
-#define LIGHTCLIP_FAR    0x20 /* worldZ > farZ */
 
 u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
 {
@@ -1546,8 +1541,6 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct* light)
     light->glowAlpha = newAlpha;
 }
 
-extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
-
 #pragma opt_common_subs off
 void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 fovY, f32 aspect)
 {
@@ -1561,8 +1554,6 @@ void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 fovY
     C_MTXLightPerspective(obj->lightProjectionClipMtx, obj->projectionFovY, obj->projectionAspect, z, z, z, z);
 }
 #pragma opt_common_subs reset
-
-extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
 #pragma opt_common_subs off
 void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 top, f32 bottom, f32 left, f32 right, f32 scaleT,
@@ -1602,4 +1593,3 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f
     GXInitLightAttn(lightObj, zero, zero, lbl_803DE760, atten, zero, *(f32*)&lbl_803DE760 - atten);
 }
 #pragma opt_propagation reset
-void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);

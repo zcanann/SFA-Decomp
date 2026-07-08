@@ -28,11 +28,14 @@
 #include "main/frame_timing.h"
 
 #define WARPPAD_OBJFLAG_PARENT_SLACK 0x1000
-extern int ObjTrigger_IsSet(int obj);
-extern f32 Vec_xzDistance(f32* a, f32* b);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
-                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
+
+/* one-shot latch: gates the first A-prompt trigger sequence for any warp pad */
+#define GAMEBIT_WARPPAD_PROMPT_SHOWN 0x912
+
+/* recurring shimmer emitted randomly across all warp-pulse stages */
+#define WARPPAD_PARTFX_PULSE 0x7ca
+/* surge burst emitted at the stage-2 transition and the stage-3 latch release */
+#define WARPPAD_PARTFX_SURGE 0x7d2
 
 extern u8 lbl_803DCDE0;
 extern s16 lbl_803DCEB8;
@@ -52,15 +55,12 @@ extern f32 gWarpPadPulseStage3Time;
 extern f32 lbl_803E3ECC;
 extern f32 gWarpPadPulseEndTime;
 extern f32 gWarpPadTriggerDist;
+extern int ObjTrigger_IsSet(int obj);
+extern f32 Vec_xzDistance(f32* a, f32* b);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
+                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 extern void setAButtonIcon(int x);
-
-/* one-shot latch: gates the first A-prompt trigger sequence for any warp pad */
-#define GAMEBIT_WARPPAD_PROMPT_SHOWN 0x912
-
-/* recurring shimmer emitted randomly across all warp-pulse stages */
-#define WARPPAD_PARTFX_PULSE 0x7ca
-/* surge burst emitted at the stage-2 transition and the stage-3 latch release */
-#define WARPPAD_PARTFX_SURGE 0x7d2
 
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
 

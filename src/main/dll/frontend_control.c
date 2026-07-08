@@ -16,7 +16,12 @@
 #include "main/dll/FRONT/frontend_control.h"
 #include "main/engine_shared.h"
 
-extern void drawTexture(void* tex, f32 x, f32 y, int p2, int alpha);
+#define CHEAT_SEQUENCE_LEN  5
+#define CHEAT_INPUT_TIMEOUT 0xF
+#define SECONDS_PER_HOUR    3600
+#define SECONDS_PER_MINUTE  60
+
+#define PAD_TRIGGER_Z 0x10
 
 extern u8 saveFileSelect_debugCheatProgress;
 extern u8 saveFileSelect_saveCheatProgress;
@@ -35,13 +40,7 @@ extern f32 lbl_803E1D60;
 extern char sFrontendTimeFormat[];
 __declspec(section ".sdata") extern char sFrontendCompletionPercentFormat[];
 __declspec(section ".sdata") extern char sFrontendSingleDigitFormat[];
-
-#define CHEAT_SEQUENCE_LEN  5
-#define CHEAT_INPUT_TIMEOUT 0xF
-#define SECONDS_PER_HOUR    3600
-#define SECONDS_PER_MINUTE  60
-
-#define PAD_TRIGGER_Z 0x10
+extern void drawTexture(void* tex, f32 x, f32 y, int p2, int alpha);
 
 void saveFileSelect_checkCheatCodes(void)
 {

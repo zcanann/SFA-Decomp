@@ -32,8 +32,23 @@
 #define QEW_FLAG_ACTIVE    0x10 /* feed sequence completed; suppress idle attacks */
 #define QEW_FLAG_INIT_DONE 0x20 /* per-frame anim-event handshake (cleared each update) */
 
-extern int ObjTrigger_IsSetById();
+extern u8 gQueenEarthWalkerEventTableAct1;
+extern u8 gQueenEarthWalkerEventTableAct2;
+extern u8 gQueenEarthWalkerEventTableFed;
+extern u8 gQueenEarthWalkerEventTableFeed;
+extern u8 gQueenEarthWalkerEventTablePortalDefault;
+extern u8 gQueenEarthWalkerEventTablePortalReady;
+extern u8 gQueenEarthWalkerEventTableSpell;
+extern u8 gQueenEarthWalkerEventTableBerry;
+extern u8 gQueenEarthWalkerEventTableDeparture;
+extern u8 gQueenEarthWalkerEventTableComplete;
+extern f32 lbl_803E53F8;
+extern f32 gQueenEarthWalkerPortalSpellDistance;
+extern f32 gQueenEarthWalkerTrickyFeedDistance;
+extern f32 gQueenEarthWalkerAttackTimerMin;
+extern f32 gQueenEarthWalkerAttackTimerMax;
 
+extern int ObjTrigger_IsSetById();
 extern f32 getXZDistance(f32* a, f32* b);
 extern int fn_8003B500(void* obj, void* p2, f32 f1);
 extern int fn_8003B228(void* obj, void* p2);
@@ -45,23 +60,9 @@ extern int playerHasSpell(void* obj, int param);
 extern void* ObjGroup_FindNearestObject(int group, void* obj, f32* distanceOut);
 extern int ObjTrigger_IsSet(void* obj);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
-extern u8 gQueenEarthWalkerEventTableAct1;
-extern u8 gQueenEarthWalkerEventTableAct2;
-extern u8 gQueenEarthWalkerEventTableFed;
-extern u8 gQueenEarthWalkerEventTableFeed;
-extern u8 gQueenEarthWalkerEventTablePortalDefault;
-extern u8 gQueenEarthWalkerEventTablePortalReady;
-extern u8 gQueenEarthWalkerEventTableSpell;
-extern u8 gQueenEarthWalkerEventTableBerry;
-extern u8 gQueenEarthWalkerEventTableDeparture;
-extern u8 gQueenEarthWalkerEventTableComplete;
+
 s16 gQueenEarthWalkerMoveTable[6] = {34, 34, 34, 5, 28, 0};
 f32 gQueenEarthWalkerMoveSpeedTable[5] = {0.005f, 0.005f, 0.005f, 0.01f, 0.005f};
-extern f32 lbl_803E53F8;
-extern f32 gQueenEarthWalkerPortalSpellDistance;
-extern f32 gQueenEarthWalkerTrickyFeedDistance;
-extern f32 gQueenEarthWalkerAttackTimerMin;
-extern f32 gQueenEarthWalkerAttackTimerMax;
 
 int sh_queenearthwalker_getExtraSize(void)
 {

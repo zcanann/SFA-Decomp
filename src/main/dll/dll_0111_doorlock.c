@@ -22,8 +22,6 @@
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 
-#define PAD_BUTTON_A 0x100
-
 /* placement view used for the def+0xNN byte/halfword derefs in this TU */
 typedef struct DoorlockPlacement
 {
@@ -40,15 +38,18 @@ typedef struct DoorlockPlacement
     s16 modeFlags;        /* 0x26: mode flags */
 } DoorlockPlacement;
 
+#define PAD_BUTTON_A 0x100
+
 /* one-shot global "doors unlocked" game bit gating the bulk unlock sequence */
 #define GAMEBIT_DOORLOCK_UNLOCKED 0x930
 #define DOORLOCK_OBJGROUP         0xf
+
+extern f32 lbl_803E3798;
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objRenderFn_80041018(int obj);
-extern f32 lbl_803E3798;
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
 

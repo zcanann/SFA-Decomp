@@ -22,6 +22,13 @@ typedef struct ARWSpeedStrState
     u8 pad19[3];
 } ARWSpeedStrState;
 
+typedef struct ARWSpeedStrVelocity
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} ARWSpeedStrVelocity;
+
 STATIC_ASSERT(sizeof(ARWSpeedStrState) == 0x1c);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, speed) == 0x00);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, lifeTimer) == 0x04);
@@ -30,14 +37,6 @@ STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadX) == 0x0c);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadY) == 0x10);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, viewZ) == 0x14);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, flags) == 0x18);
-
-typedef struct ARWSpeedStrVelocity
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} ARWSpeedStrVelocity;
-
 STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, x) == 0x00);
 STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, y) == 0x04);
 STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, z) == 0x08);

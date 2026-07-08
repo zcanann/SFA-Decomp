@@ -68,6 +68,12 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 #define GX_TEV_KCSEL_K0   0xc
 #define GX_TEV_KASEL_K0_A 0x1c
 
+extern u16 gWaterfxSplashDisplayListSize;
+extern const f32 lbl_803DF2E0;
+extern const f32 lbl_803DF2F8;
+extern const f32 lbl_803DF304;
+extern f32 gWaterfxPi;
+extern const f32 lbl_803DF314;
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(void* a, void* b, void* ab);
@@ -76,12 +82,6 @@ extern void GXSetMisc(int token, int val);
 extern void GXBeginDisplayList(void* list, u32 size);
 extern int GXEndDisplayList(void);
 extern void GXResetWriteGatherPipe(void);
-extern u16 gWaterfxSplashDisplayListSize;
-extern const f32 lbl_803DF2E0;
-extern const f32 lbl_803DF2F8;
-extern const f32 lbl_803DF304;
-extern f32 gWaterfxPi;
-extern const f32 lbl_803DF314;
 extern f32 fn_802942EC(f32);
 extern f32 fn_80293F7C(f32);
 

@@ -10,6 +10,37 @@
 #include "main/dll/imanimspacecraftstate_struct.h"
 #include "main/dll/DIM/DIMcannon.h"
 
+typedef struct DimsnowballState
+{
+    u8 pad0[0xC - 0x0];
+    s8 jingleCooldown;
+    u8 padD[0x10 - 0xD];
+} DimsnowballState;
+
+typedef struct DimSnowballState
+{
+    void* target;
+    int targetId;
+} DimSnowballState;
+
+typedef struct DimSnowballObject
+{
+    u8 unk0[0x54];
+    u8* handle54;
+    u8 unk58[0xc];
+    u8* handle64;
+    u8 unk68[0x48];
+    u16 flags;
+    u8 unkB2[6];
+    DimSnowballState* state;
+} DimSnowballObject;
+
+typedef struct DimSnowballDef
+{
+    u8 unk0[0x14];
+    int targetId;
+} DimSnowballDef;
+
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
@@ -28,13 +59,6 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 #define DIMSNOWBALL_OBJFLAG_PARENT_SLACK 0x1000
 #define DIMSNOWBALL_OBJFLAG_HIDDEN       0x4000
 #define DIMSNOWBALL_OBJFLAG_FREED        0x40
-
-typedef struct DimsnowballState
-{
-    u8 pad0[0xC - 0x0];
-    s8 jingleCooldown;
-    u8 padD[0x10 - 0xD];
-} DimsnowballState;
 
 extern f32 oneOverTimeDelta;
 extern s16 lbl_803DBEE8;
@@ -223,30 +247,6 @@ void dimsnowball_update(int obj)
         *(int*)&((ObjHitsPriorityState*)model)->skeletonHitMask = 0x10;
     }
 }
-
-typedef struct DimSnowballState
-{
-    void* target;
-    int targetId;
-} DimSnowballState;
-
-typedef struct DimSnowballObject
-{
-    u8 unk0[0x54];
-    u8* handle54;
-    u8 unk58[0xc];
-    u8* handle64;
-    u8 unk68[0x48];
-    u16 flags;
-    u8 unkB2[6];
-    DimSnowballState* state;
-} DimSnowballObject;
-
-typedef struct DimSnowballDef
-{
-    u8 unk0[0x14];
-    int targetId;
-} DimSnowballDef;
 
 void dimsnowball_init(DimSnowballObject* objArg, DimSnowballDef* def)
 {

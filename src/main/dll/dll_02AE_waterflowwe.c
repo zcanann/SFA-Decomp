@@ -20,12 +20,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define WATERFLOWWE_FOLIAGE_GROUP               0x14
-#define WATERFLOWWE_OBJECT_CURRENT_GROUP        0x50
-#define WATERFLOWWE_OBJECT_FLAGS_INIT           0x2000
-#define WATERFLOWWE_FOLIAGE_CURRENT_ENABLED     0x02
-#define WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET 0x84d0
-
 typedef struct WaterFlowWeState
 {
     f32 currentX;
@@ -69,6 +63,12 @@ STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentRadius) == 0x19);
 STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentFlags) == 0x1a);
 STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, radiusCells) == 0x29);
 STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, strengthTenths) == 0x32);
+
+#define WATERFLOWWE_FOLIAGE_GROUP               0x14
+#define WATERFLOWWE_OBJECT_CURRENT_GROUP        0x50
+#define WATERFLOWWE_OBJECT_FLAGS_INIT           0x2000
+#define WATERFLOWWE_FOLIAGE_CURRENT_ENABLED     0x02
+#define WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET 0x84d0
 
 extern const f32 gWaterFlowBandMax;
 extern const f32 gWaterFlowBandMin;

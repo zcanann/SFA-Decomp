@@ -17,57 +17,7 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/sfa_shared_decls.h"
-
-void Effect3_func05_nop(void)
-{
-}
-
-void Effect3_func03_nop(void)
-{
-}
-
-void Effect3_release(void)
-{
-}
-
-void Effect3_initialise(void)
-{
-}
-
-ObjectDescriptor11 projgfx_funcs = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-    projgfx_initialise,
-    (ObjectDescriptorCallback)projgfx_release_doUnsupported,
-    0,
-    projgfx_onMapSetup,
-    (ObjectDescriptorCallback)projgfx_func04_ret_m1,
-    (ObjectDescriptorCallback)projgfx_func05_nop,
-    (ObjectDescriptorCallback)projgfx_func06_nop,
-    (ObjectDescriptorCallback)projgfx_func07_nop,
-    (ObjectDescriptorCallback)projgfx_getObjectTypeId,
-    (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
-    (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
-};
-
-char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
-static u8 sProjgfxStringPad0[] = {0, 0, 0};
-char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
-static u8 sProjgfxStringPad1[] = {0, 0, 0};
-char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
-static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
-
-extern void Sfx_PlayFromObject(void* obj, int id);
-
-/*
- * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
- * the consumer-side definition of this 0x64-byte spawn request consumed by
- * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
- * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
- * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
- */
+#include "main/dll/dll_001C_effect3.h"
 
 extern FxNode9 lbl_8039C350;
 extern f32 lbl_803DF9D0;
@@ -113,6 +63,56 @@ extern f32 lbl_803DFA6C;
 extern f32 lbl_803DFA70;
 extern f32 lbl_803DFA74;
 extern f32 lbl_803DFA78;
+extern void Sfx_PlayFromObject(void* obj, int id);
+
+void Effect3_func05_nop(void)
+{
+}
+
+void Effect3_func03_nop(void)
+{
+}
+
+void Effect3_release(void)
+{
+}
+
+void Effect3_initialise(void)
+{
+}
+
+ObjectDescriptor11 projgfx_funcs = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+    projgfx_initialise,
+    (ObjectDescriptorCallback)projgfx_release_doUnsupported,
+    0,
+    projgfx_onMapSetup,
+    (ObjectDescriptorCallback)projgfx_func04_ret_m1,
+    (ObjectDescriptorCallback)projgfx_func05_nop,
+    (ObjectDescriptorCallback)projgfx_func06_nop,
+    (ObjectDescriptorCallback)projgfx_func07_nop,
+    (ObjectDescriptorCallback)projgfx_getObjectTypeId,
+    (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
+    (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
+};
+
+char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
+static u8 sProjgfxStringPad0[] = {0, 0, 0};
+char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
+static u8 sProjgfxStringPad1[] = {0, 0, 0};
+char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
+static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
+
+/*
+ * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
+ * the consumer-side definition of this 0x64-byte spawn request consumed by
+ * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
+ * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
+ * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
+ */
 
 #define FILL350()                                                                                                      \
     do                                                                                                                 \

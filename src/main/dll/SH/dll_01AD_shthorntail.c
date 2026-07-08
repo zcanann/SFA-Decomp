@@ -9,6 +9,62 @@
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/SH/shthorntail_ai.h"
 
+typedef struct SHthorntailTailSwingEffectScratch
+{
+    u8 particleParams[12];
+    Vec position;
+} SHthorntailTailSwingEffectScratch;
+
+#define THORNTAIL_OBJGROUP 0x4d
+
+#define SHTHORNTAIL_OBJFLAG_RENDERED 0x800
+#define SHTHORNTAIL_PARTFX_TAILSWING 0x7f0 /* tail-swing effect (SHthorntailTailSwingEffectScratch) */
+
+#define SHTHORNTAIL_LEVEL_MODE1_GATE_OPEN_GAMEBIT            0x13E
+#define SHTHORNTAIL_LEVEL_MODE1_FREEZE_GAMEBIT               0x168
+#define SHTHORNTAIL_LEVEL_MODE1_PRIMARY_TRIGGER_GAMEBIT      0xCD5
+#define SHTHORNTAIL_LEVEL_MODE1_SECONDARY_TRIGGER_GAMEBIT    0xCD6
+#define SHTHORNTAIL_LEVEL_MODE1_CLOSE_ATTACK_DISABLE_GAMEBIT 0x1AB
+#define SHTHORNTAIL_LEVEL_MODE0_LOCOMOTION2_GAMEBIT          0x09E
+#define SHTHORNTAIL_LEVELCONTROL_AUDIO_CHANNEL               0x7F
+#define SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG              0x40
+
+#define gSHthorntailPathControlInterface gPathControlInterface
+
+#define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES_OFFSET 0x0A0
+#define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES_OFFSET  0x294
+#define SHTHORNTAIL_STATE_MOVE_IDS_OFFSET           0x488
+#define SHTHORNTAIL_STATE_MOVE_STEP_SCALES_OFFSET   0x4AC
+#define SHTHORNTAIL_STATE_FLAGS_OFFSET              0x4F0
+#define SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET       0x504
+#define SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET       0x528
+
+#define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(tables)                                                                   \
+    ((ObjHitReactEntry*)((tables) + SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES_OFFSET))
+#define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(tables)                                                                    \
+    ((ObjHitReactEntry*)((tables) + SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES_OFFSET))
+#define SHTHORNTAIL_STATE_MOVE_IDS(tables)         ((s16*)((tables) + SHTHORNTAIL_STATE_MOVE_IDS_OFFSET))
+#define SHTHORNTAIL_STATE_MOVE_STEP_SCALES(tables) ((f32*)((tables) + SHTHORNTAIL_STATE_MOVE_STEP_SCALES_OFFSET))
+#define SHTHORNTAIL_STATE_FLAGS(tables)            ((u8*)((tables) + SHTHORNTAIL_STATE_FLAGS_OFFSET))
+#define SHTHORNTAIL_STATE_TRIGGER0_SFX(tables)     ((u16*)((tables) + SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET))
+#define SHTHORNTAIL_STATE_TRIGGER7_SFX(tables)     ((u8*)((tables) + SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET))
+
+extern f32 timeDelta;
+extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
+extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
+extern f32 SHTHORNTAIL_IDLE_COUNTDOWN_TIME;
+extern f32 lbl_803E5448;
+extern SHthorntailDataTables gSHthorntailDataTables;
+extern u8 gSHthorntailPathHeaders[0x30];
+extern u8 gSHthorntailPathData[0x4AC];
+extern u32 lbl_803E5410;
+extern SHthorntailPathControlInterface** gPathControlInterface;
+extern f32 lbl_803E544C;
+extern f32 lbl_803E5450;
+extern f32 lbl_803E5454;
+extern f32 lbl_803E5458;
+extern f32 lbl_803E545C;
+
 extern void warpstone_getExtraSize(void);
 
 extern void warpstone_getObjectTypeId(void);
@@ -27,32 +83,11 @@ extern void warpstone_release(void);
 
 extern void warpstone_initialise(void);
 
-#define THORNTAIL_OBJGROUP 0x4d
-
-#define SHTHORNTAIL_OBJFLAG_RENDERED 0x800
-#define SHTHORNTAIL_PARTFX_TAILSWING 0x7f0 /* tail-swing effect (SHthorntailTailSwingEffectScratch) */
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjTrigger_IsSet(int obj);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
-
-extern f32 timeDelta;
-extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
-extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
-extern f32 SHTHORNTAIL_IDLE_COUNTDOWN_TIME;
-extern f32 lbl_803E5448;
-extern SHthorntailDataTables gSHthorntailDataTables;
-
-#define SHTHORNTAIL_LEVEL_MODE1_GATE_OPEN_GAMEBIT            0x13E
-#define SHTHORNTAIL_LEVEL_MODE1_FREEZE_GAMEBIT               0x168
-#define SHTHORNTAIL_LEVEL_MODE1_PRIMARY_TRIGGER_GAMEBIT      0xCD5
-#define SHTHORNTAIL_LEVEL_MODE1_SECONDARY_TRIGGER_GAMEBIT    0xCD6
-#define SHTHORNTAIL_LEVEL_MODE1_CLOSE_ATTACK_DISABLE_GAMEBIT 0x1AB
-#define SHTHORNTAIL_LEVEL_MODE0_LOCOMOTION2_GAMEBIT          0x09E
-#define SHTHORNTAIL_LEVELCONTROL_AUDIO_CHANNEL               0x7F
-#define SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG              0x40
-
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z,
                                           int useInputPosition);
 extern void objRenderModelAndHitVolumes(SHthorntailObject* obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -67,20 +102,11 @@ extern void dll_2E_func08(int obj, int v1, int v2);
 extern void dll_2E_func03(SHthorntailObject* obj, SHthorntailRuntime* runtime);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern u8 gSHthorntailPathHeaders[0x30];
-extern u8 gSHthorntailPathData[0x4AC];
-extern u32 lbl_803E5410;
-extern SHthorntailPathControlInterface** gPathControlInterface;
-extern f32 lbl_803E544C;
-extern f32 lbl_803E5450;
-extern f32 lbl_803E5454;
-extern f32 lbl_803E5458;
-extern f32 lbl_803E545C;
+extern int Obj_GetPlayerObject();
+extern int randomGetRange(int lo, int hi);
 
 void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {
-    extern int Obj_GetPlayerObject();
-    extern int randomGetRange(int lo, int hi);
     extern f32 getXZDistance(int posA, int posB);
     int playerObj;
     int randomIdleWait;
@@ -194,7 +220,6 @@ void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runti
 
 void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {
-    extern int randomGetRange(int lo, int hi);
     int linkedEventPending;
     u32 gameBit;
     int randomIdleWait;
@@ -272,7 +297,6 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
 
 u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern int randomGetRange(int lo, int hi);
     SHthorntailRuntime* runtime;
     int randomIdleWait;
     int impactHandled;
@@ -345,38 +369,11 @@ void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, 
     } while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
 }
 
-#define gSHthorntailPathControlInterface gPathControlInterface
-
-#define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES_OFFSET 0x0A0
-#define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES_OFFSET  0x294
-#define SHTHORNTAIL_STATE_MOVE_IDS_OFFSET           0x488
-#define SHTHORNTAIL_STATE_MOVE_STEP_SCALES_OFFSET   0x4AC
-#define SHTHORNTAIL_STATE_FLAGS_OFFSET              0x4F0
-#define SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET       0x504
-#define SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET       0x528
-
-#define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(tables)                                                                   \
-    ((ObjHitReactEntry*)((tables) + SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES_OFFSET))
-#define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(tables)                                                                    \
-    ((ObjHitReactEntry*)((tables) + SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES_OFFSET))
-#define SHTHORNTAIL_STATE_MOVE_IDS(tables)         ((s16*)((tables) + SHTHORNTAIL_STATE_MOVE_IDS_OFFSET))
-#define SHTHORNTAIL_STATE_MOVE_STEP_SCALES(tables) ((f32*)((tables) + SHTHORNTAIL_STATE_MOVE_STEP_SCALES_OFFSET))
-#define SHTHORNTAIL_STATE_FLAGS(tables)            ((u8*)((tables) + SHTHORNTAIL_STATE_FLAGS_OFFSET))
-#define SHTHORNTAIL_STATE_TRIGGER0_SFX(tables)     ((u16*)((tables) + SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET))
-#define SHTHORNTAIL_STATE_TRIGGER7_SFX(tables)     ((u8*)((tables) + SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET))
-
-typedef struct SHthorntailTailSwingEffectScratch
-{
-    u8 particleParams[12];
-    Vec position;
-} SHthorntailTailSwingEffectScratch;
-
 #pragma optimization_level 3
 #pragma opt_loop_invariants off
 #pragma opt_common_subs off
 void SHthorntail_update(SHthorntailObject* obj)
 {
-    extern int randomGetRange(int lo, int hi);
     extern f32 getXZDistance(f32 * posA, f32 * posB);
     extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry* table, u32 count, u8 state, float* scratch);
     u8* stateTables;
@@ -595,7 +592,6 @@ void SHthorntail_update(SHthorntailObject* obj)
 
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
 {
-    extern int randomGetRange(int lo, int hi);
     SHthorntailRuntime* runtime;
     u32 randomTime;
     int moveScratch;

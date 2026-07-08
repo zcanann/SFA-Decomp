@@ -12,11 +12,6 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-/* object group this object joins while active */
-#define LANTERNFIREFLY_OBJGROUP 0x30
-
-#define MODEL_LIGHT_KIND_POINT 2
-
 typedef struct LanternFireFlyPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -27,13 +22,23 @@ typedef struct LanternFireFlyPlacement
     u8 pad1E[0x20 - 0x1E];
 } LanternFireFlyPlacement;
 
+typedef struct LanternFireFlyModeBits
+{
+    u8 mode : 2;
+    u8 rest : 6;
+} LanternFireFlyModeBits;
+
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
 STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern void ObjGroup_AddObject(u32 obj, int group);
+/* object group this object joins while active */
+#define LANTERNFIREFLY_OBJGROUP 0x30
+
+#define MODEL_LIGHT_KIND_POINT 2
+
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803E3AA0;
@@ -43,17 +48,7 @@ extern f32 lbl_803E3AB8;
 extern f32 lbl_803E3ABC;
 extern f32 lbl_803E3AC0;
 extern f32 lbl_803E3AC4;
-extern int Obj_GetPlayerObject(void);
-extern void Obj_FreeObject(int obj);
-extern f32 sqrtf(f32 x);
-extern int randomGetRange(int lo, int hi);
-extern void objHitDetectFn_80062e84(int obj, int a, int b);
-extern void vecRotateZXY(void* rotation, f32* outVec);
-
-extern f32 Vec_distance(f32* a, f32* b);
-extern void ModelLightStruct_free(void* p);
 extern u8 lbl_803DDAD8;
-
 extern f32 lbl_803E3A98;
 extern f32 lbl_803E3A9C;
 extern f32 lbl_803E3AC8;
@@ -64,6 +59,16 @@ extern f32 lbl_803E3AD8;
 extern f32 lbl_803E3ADC;
 extern f32 lbl_803E3AE0;
 extern f32 lbl_803DBDD8;
+
+extern void ObjGroup_AddObject(u32 obj, int group);
+extern int Obj_GetPlayerObject(void);
+extern void Obj_FreeObject(int obj);
+extern f32 sqrtf(f32 x);
+extern int randomGetRange(int lo, int hi);
+extern void objHitDetectFn_80062e84(int obj, int a, int b);
+extern void vecRotateZXY(void* rotation, f32* outVec);
+extern f32 Vec_distance(f32* a, f32* b);
+extern void ModelLightStruct_free(void* p);
 extern f32 Curve_EvalBSpline(f32* control, f32 t, f32* out);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);
@@ -71,9 +76,7 @@ extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int
 extern void lightSetFieldBC_8001db14(int light, int value);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-
 extern f32 sqrtf(f32 value);
-
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int LanternFireFly_getExtraSize(void)
@@ -340,12 +343,6 @@ void LanternFireFly_update(int obj)
 #undef LANTERN_SPAWN_FX
 #undef LANTERN_FIREFLY_IS_ACTIVE
 #undef LANTERN_FIREFLY_MODE
-
-typedef struct LanternFireFlyModeBits
-{
-    u8 mode : 2;
-    u8 rest : 6;
-} LanternFireFlyModeBits;
 
 void LanternFireFly_init(int obj, int def)
 {

@@ -23,16 +23,6 @@
 #include "main/dll/fx_800944A0_shared.h"
 
 /*
- * Placement flag bits in data[0x1c] (documented in the file header). These
- * are private to this object type's placement record, so they live here.
- */
-#define SFXPLAYER_FLAG_FORCE_POINT      0x1  /* force point (positional) sound form */
-#define SFXPLAYER_FLAG_TRIGGER_ON_SET   0x2  /* play the pair when the gate bit goes on */
-#define SFXPLAYER_FLAG_TRIGGER_ON_CLEAR 0x4  /* play the pair when the gate bit goes off */
-#define SFXPLAYER_FLAG_ROM_CURVE        0x8  /* feed a rom-curve channel each frame */
-#define SFXPLAYER_FLAG_AT_OBJECT        0x10 /* play at the object's position */
-
-/*
  * Per-instance runtime state stored in GameObject::extra
  * (sfxplayerObj_getExtraSize returns sizeof == 0x8).
  *
@@ -54,14 +44,24 @@ typedef struct SfxplayerObjState
 STATIC_ASSERT(sizeof(SfxplayerObjState) == 0x8);
 STATIC_ASSERT(offsetof(SfxplayerObjState, flags) == 0x4);
 
+/*
+ * Placement flag bits in data[0x1c] (documented in the file header). These
+ * are private to this object type's placement record, so they live here.
+ */
+#define SFXPLAYER_FLAG_FORCE_POINT      0x1  /* force point (positional) sound form */
+#define SFXPLAYER_FLAG_TRIGGER_ON_SET   0x2  /* play the pair when the gate bit goes on */
+#define SFXPLAYER_FLAG_TRIGGER_ON_CLEAR 0x4  /* play the pair when the gate bit goes off */
+#define SFXPLAYER_FLAG_ROM_CURVE        0x8  /* feed a rom-curve channel each frame */
+#define SFXPLAYER_FLAG_AT_OBJECT        0x10 /* play at the object's position */
+
+extern f32 lbl_803E40B8;
+extern f32 lbl_803E40BC;
 extern int getCurSeqNo(void);
 extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);
 extern void Sfx_StopFromObject(u8* obj, u16 sfx);
 extern void Sfx_AddLoopedObjectSound(u8* obj, u16 sfx);
 extern void Sfx_PlayFromObject(u8* obj, u16 sfx);
 extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8* obj, u16 sfx);
-extern f32 lbl_803E40B8;
-extern f32 lbl_803E40BC;
 
 int sfxplayerObj_getExtraSize(void)
 {

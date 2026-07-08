@@ -5,73 +5,36 @@
 #include "main/camera.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
+
+typedef struct NewShadowEntry
+{
+    u8 pad00[0x10];
+    u8 isActive;
+    u8 pad11[0x3];
+} NewShadowEntry;
+
+typedef struct
+{
+    int id;
+    f32 dist;
+    int flags;
+} ShadowSortEntry;
+
+typedef struct
+{
+    int* obj;
+    f32 scale;
+    u8 flags;
+} NewShadowCaster;
+
 #define NEW_SHADOW_MAX_CASTERS 100
-extern u32 FUN_80003494();
-extern u32 FUN_8000693c();
-extern u32 FUN_8000694c();
-extern u32 FUN_80006954();
-extern u32 FUN_80006974();
-extern void* FUN_8000697c();
-extern u32 FUN_80006984();
-extern u32 FUN_80006988();
-extern void* FUN_800069a8();
-extern u32 FUN_800069b8();
-extern u32 FUN_800069bc();
-extern u32 FUN_800069d4();
-extern u32 FUN_800069f4();
-extern double FUN_800069f8();
-extern u32 FUN_80006a00();
-extern int FUN_800176d0();
-extern u32 FUN_80017730();
 
-extern u32 FUN_80017814();
-extern int FUN_80017970();
-extern u32 FUN_80017a50();
-extern int FUN_80017a54();
-extern u32 FUN_8003b7dc();
-extern u32 FUN_8003b878();
-extern u32 FUN_80040cd0();
-extern int FUN_800537a0();
-extern u32 FUN_8005d00c();
-extern u32 FUN_8005d06c();
-extern u32 FUN_800606a4();
-extern u32 FUN_800606a8();
-extern u32 FUN_80060710();
-extern u16 FUN_80061198();
-extern u32 FUN_80064384();
-extern u32 objAudioFn_8006ef38();
-extern u32 FUN_8006f788();
-extern u32 FUN_8006f790();
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern u32 FUN_800709e8();
-extern u32 FUN_80080f6c();
-extern u32 FUN_802420e0();
-extern u32 FUN_802475e4();
-extern u32 FUN_80247618();
-extern u32 FUN_80247a48();
-extern u32 FUN_80247a7c();
-extern u32 FUN_80247b70();
-extern u32 FUN_80247dfc();
-extern u32 FUN_80247edc();
-extern u32 FUN_80247ef8();
+/* Linear search by pointer identity through the shadow entry table.
+ * Clears the active flag when the entry matches the needle. */
+#define NEW_SHADOW_ENTRY_CAPACITY 0x25
 
-extern double FUN_80247f90();
-extern u32 FUN_80258c24();
-extern u32 FUN_80259400();
-extern u32 FUN_80259504();
-extern u32 FUN_80259858();
-extern u32 FUN_80259c0c();
-extern u32 FUN_8025aeac();
-extern u32 FUN_8025b054();
-extern u32 FUN_8025b210();
-extern u32 FUN_8025b280();
-extern u32 FUN_8025d6ac();
-extern u32 FUN_8025da64();
-extern u32 FUN_8025da88();
-extern u32 FUN_8028680c();
-extern u32 FUN_80286858();
-extern u32 FUN_802947f8();
-extern u32 SQRT();
+#define NEW_SHADOW_FRAME_COUNT 3
+
 extern u32 DAT_8038ee3c;
 extern u32 DAT_8038ee48;
 extern int DAT_8038eec8;
@@ -159,6 +122,195 @@ extern f32 lbl_803DFA34;
 extern f32 lbl_803DFA38;
 extern f32 lbl_803DFA3C;
 extern f32 lbl_803DFA40;
+extern u32 gNewShadowSmallDiskTexture;
+extern char* gNewShadowReflectionTexture;
+extern u32 lbl_803DCF94;
+extern u32 gNewShadowInverseRampTexture;
+extern u32 gNewShadowFalloffTexture;
+extern u32 lbl_803DCFC4;
+extern u32 lbl_803DCFC8;
+extern u32 gNewShadowRingTexture;
+extern u32 lbl_803DCFB4;
+extern u32 lbl_803DCFB8;
+extern u32 lbl_803DCFBC;
+extern u32 gNewShadowRadialTexture;
+extern u32 gNewShadowRampTexture;
+extern u32 gNewShadowDiskTexture;
+extern u32 gNewShadowReflectionTexture2;
+extern u32 gNewShadowCausticTexture;
+extern f32 gNewShadowReflectionScrollX;
+extern f32 gNewShadowReflectionScrollY;
+extern f32 lbl_803DCFA4;
+extern u32 gNewShadowBumpTexture;
+extern u32 lbl_803DCFCC;
+extern u32 gNewShadowReflectionSmallTexture;
+extern u8 gNewShadowFrameIndex;
+extern const f32 lbl_803DED28;
+extern u8 lbl_8030E8B0[];
+extern u8 gNewShadowCasterCount;
+extern int* gNewShadowCurrentViewSlot;
+extern f32 Ydchuff_803DED80;
+extern f32 Ydchuff_803DED90;
+extern const double TokenCB_803DED58;
+extern const double DrawDone_803DED60;
+extern const f32 CPUFifo_803DED38;
+extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40;
+extern const f32 lbl_803DED2C;
+extern const f32 Vdchuff_803DEDC0;
+extern const f32 Vdchuff_803DEDD0;
+extern f32 Vdchuff_803DEDD4;
+extern const f32 Uachuff_803DEE00;
+extern const f32 __PADFixBits;
+extern const f32 Yachuff_803DEDE0;
+extern const f32 Yachuff_803DEDE4, Yachuff_803DEDE8;
+extern const f32 Vdchuff_803DEDD8, Vdchuff_803DEDDC;
+extern f32 gNewShadowReflectionScrollY, gNewShadowReflectionScrollX;
+extern const f32 lbl_803DED10;
+extern f32 lbl_803DED34;
+extern const f32 Dev_803DED1C;
+extern const f32 Yachuff_803DEDEC, Yachuff_803DEDF0, Yachuff_803DEDF4, Yachuff_803DEDF8, Yachuff_803DEDFC;
+extern const f32 Uachuff_803DEE04;
+extern const f32 Uachuff_803DEE14, Uachuff_803DEE18, Uachuff_803DEE1C;
+extern const f32 Udchuff_803DEDBC;
+extern u8 lbl_803DCF80;
+extern u16 lbl_803DCFA0;
+extern f32 playerMapOffsetX, playerMapOffsetZ;
+extern f32 lbl_803DED0C;
+extern const f32 lbl_803DED14, Chan_803DED18;
+extern f32 Enabled_803DED20, BarnacleEnabled_803DED24;
+extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
+extern const f32 Udchuff_803DEDAC, Udchuff_803DEDB0, Udchuff_803DEDB4, Udchuff_803DEDB8, Udchuff_803DEDBC;
+extern f32 gNewShadowFovY, lbl_803DED34;
+extern f32 lbl_803DED70, lbl_803DED74, gNewShadowAspectWide, gNewShadowAspectNarrow;
+extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40;
+extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
+extern f32 FinishQueue_803DED68;
+extern f32 FinishQueue_803DED6C;
+extern u8 lbl_803DB668[8];
+extern f32 lbl_803DB670;
+extern int gRenderModeObj;
+extern f32 gMapSavedPlayerOffsetX, gMapSavedPlayerOffsetZ;
+extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
+
+extern u32 FUN_80003494();
+extern u32 FUN_8000693c();
+extern u32 FUN_8000694c();
+extern u32 FUN_80006954();
+extern u32 FUN_80006974();
+extern void* FUN_8000697c();
+extern u32 FUN_80006984();
+extern u32 FUN_80006988();
+extern void* FUN_800069a8();
+extern u32 FUN_800069b8();
+extern u32 FUN_800069bc();
+extern u32 FUN_800069d4();
+extern u32 FUN_800069f4();
+extern double FUN_800069f8();
+extern u32 FUN_80006a00();
+extern int FUN_800176d0();
+extern u32 FUN_80017730();
+extern u32 FUN_80017814();
+extern int FUN_80017970();
+extern u32 FUN_80017a50();
+extern int FUN_80017a54();
+extern u32 FUN_8003b7dc();
+extern u32 FUN_8003b878();
+extern u32 FUN_80040cd0();
+extern int FUN_800537a0();
+extern u32 FUN_8005d00c();
+extern u32 FUN_8005d06c();
+extern u32 FUN_800606a4();
+extern u32 FUN_800606a8();
+extern u32 FUN_80060710();
+extern u16 FUN_80061198();
+extern u32 FUN_80064384();
+extern u32 objAudioFn_8006ef38();
+extern u32 FUN_8006f788();
+extern u32 FUN_8006f790();
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
+extern u32 FUN_800709e8();
+extern u32 FUN_80080f6c();
+extern u32 FUN_802420e0();
+extern u32 FUN_802475e4();
+extern u32 FUN_80247618();
+extern u32 FUN_80247a48();
+extern u32 FUN_80247a7c();
+extern u32 FUN_80247b70();
+extern u32 FUN_80247dfc();
+extern u32 FUN_80247edc();
+extern u32 FUN_80247ef8();
+extern double FUN_80247f90();
+extern u32 FUN_80258c24();
+extern u32 FUN_80259400();
+extern u32 FUN_80259504();
+extern u32 FUN_80259858();
+extern u32 FUN_80259c0c();
+extern u32 FUN_8025aeac();
+extern u32 FUN_8025b054();
+extern u32 FUN_8025b210();
+extern u32 FUN_8025b280();
+extern u32 FUN_8025d6ac();
+extern u32 FUN_8025da64();
+extern u32 FUN_8025da88();
+extern u32 FUN_8028680c();
+extern u32 FUN_80286858();
+extern u32 FUN_802947f8();
+extern u32 SQRT();
+extern void mm_free(u32);
+extern void GXLoadTexObj(void* obj, int id);
+extern void GXLoadTexObjPreLoaded(void* obj, void* region, int id);
+extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
+extern void drawTexture(void* p, f32 f1, f32 f2, int a, int b);
+extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
+extern void GXSetTexCopyDst(u16 wd, u16 ht, GXTexFmt fmt, GXBool mipmap);
+extern void GXCopyTex(void* dest, GXBool clear);
+extern void GXPreLoadEntireTexture(void* obj, void* region);
+extern void GXInvalidateTexAll(void);
+extern float __fabsf(float);
+extern int testAndSet_onlyUseHeap3(int v);
+extern float fn_802943F4(float x);
+extern float floor(float);
+extern void fn_80069EB8();
+extern int getHudHiddenFrameCount(void);
+extern void fn_80060BB0(void);
+extern f32* Camera_GetInverseViewMatrix(void);
+extern void fn_8004C234(f32* a, f32* b);
+extern void Obj_BuildWorldTransformMatrix(int* obj, f32* mtx, int x);
+extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ, f32* outRadiusX,
+                                      f32* outRadiusY, f32* outRadiusZ);
+extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
+extern void set_shadowFlag_803dcc29(int x);
+extern void objRender(int a, int b, int c, int d, int* obj, int e);
+extern int* Obj_GetActiveModel(int* obj);
+extern void Camera_ApplyFullViewport(void);
+extern void Camera_DisableViewYOffset(void);
+extern void Camera_EnableViewYOffset(void);
+extern f32 Camera_GetFovY(void);
+extern void Camera_SetFovY(f32 fovY);
+extern void Camera_SetAspectRatio(f32 aspectRatio);
+extern void Camera_SetCurrentViewIndex(int index);
+extern void Camera_UpdateViewMatrices(void);
+extern void Camera_RebuildProjectionMatrix(void);
+extern void Camera_UpdateProjection(int a, int b);
+extern void fn_80061094(f32* v, f32* out, f32 x);
+extern void mapGetBlocks(int* a, int* b);
+extern u8 fn_800626C8(int* obj, int frames);
+extern void fn_8008923C(int* obj, f32* a, f32* b, f32* c);
+extern void setScreenWidth(int w);
+extern void clearScreenWidth(void);
+extern f32* ObjModel_GetJointMatrix(int* model, int joint);
+extern void C_MTXOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
+extern void GXSetProjection(f32* m, int type);
+extern void PSMTXCopy(f32* s, f32* d);
+extern void PSMTXConcat(f32* a, f32* b, f32* o);
+extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
+extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
+extern void objRenderShadowIfVisible(int* obj, int a, int b, int c, int d, int e);
+extern void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf, const u8 vfilter[7]);
+extern void GXSetScissor(int a, int b, int c, int d);
+extern int getDrawDistanceFlag_8005cd48(void);
+extern void* memcpy(void* d, const void* s, int n);
 
 void fn_8006A028(u8* texData, int size, int window, u32 fill)
 {
@@ -1291,11 +1443,6 @@ void newshadows_buildShadowDirectionTexture(void)
     return;
 }
 
-extern u32 gNewShadowSmallDiskTexture;
-extern char* gNewShadowReflectionTexture;
-extern u32 lbl_803DCF94;
-extern u32 gNewShadowInverseRampTexture;
-extern u32 gNewShadowFalloffTexture;
 u32 textureFn_8006c5c4(void)
 {
     return gNewShadowSmallDiskTexture;
@@ -1317,17 +1464,6 @@ u32 fn_8006C754(void)
     return gNewShadowFalloffTexture;
 }
 
-extern u32 lbl_803DCFC4;
-extern u32 lbl_803DCFC8;
-extern u32 gNewShadowRingTexture;
-extern u32 lbl_803DCFB4;
-extern u32 lbl_803DCFB8;
-extern u32 lbl_803DCFBC;
-extern u32 gNewShadowRadialTexture;
-extern u32 gNewShadowRampTexture;
-extern u32 gNewShadowDiskTexture;
-extern u32 gNewShadowReflectionTexture2;
-extern u32 gNewShadowCausticTexture;
 void fn_8006C4F8(u32* p)
 {
     *p = lbl_803DCFC4;
@@ -1373,22 +1509,16 @@ void getTextureFn_8006c5e4(u32* p)
     *p = gNewShadowCausticTexture;
 }
 
-extern f32 gNewShadowReflectionScrollX;
-extern f32 gNewShadowReflectionScrollY;
-
 void newshadows_getReflectionScrollOffsets(f32* p1, f32* p2)
 {
     *p1 = gNewShadowReflectionScrollX;
     *p2 = gNewShadowReflectionScrollY;
 }
 
-extern f32 lbl_803DCFA4;
 f32 fn_8006C670(void)
 {
     return lbl_803DCFA4;
 }
-
-extern void mm_free(u32);
 
 void fn_8006CB24(void)
 {
@@ -1414,16 +1544,10 @@ void textureFn_8006c4e0(int* p1, int* p2)
     *p2 = 0x10;
 }
 
-extern u32 gNewShadowBumpTexture;
-extern void GXLoadTexObj(void* obj, int id);
-extern void GXLoadTexObjPreLoaded(void* obj, void* region, int id);
-
 void fn_8006C678(int id)
 {
     GXLoadTexObj((char*)gNewShadowBumpTexture + 0x20, id);
 }
-
-extern u32 lbl_803DCFCC;
 
 void fn_8006C6A4(int id)
 {
@@ -1453,8 +1577,6 @@ void selectReflectionTexture(int id)
     }
 }
 
-extern u32 gNewShadowReflectionSmallTexture;
-
 void textureFn_8006c75c(int id)
 {
     register int idCopy = id;
@@ -1469,16 +1591,6 @@ void textureFn_8006c75c(int id)
     }
 }
 
-typedef struct NewShadowEntry
-{
-    u8 pad00[0x10];
-    u8 isActive;
-    u8 pad11[0x3];
-} NewShadowEntry;
-
-/* Linear search by pointer identity through the shadow entry table.
- * Clears the active flag when the entry matches the needle. */
-#define NEW_SHADOW_ENTRY_CAPACITY 0x25
 NewShadowEntry gNewShadowEntries[0x294 / sizeof(NewShadowEntry)];
 
 void findSomething(void* needle)
@@ -1494,8 +1606,6 @@ void findSomething(void* needle)
     }
 }
 
-extern u8 gNewShadowFrameIndex;
-#define NEW_SHADOW_FRAME_COUNT 3
 u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 
 void objShadowFn_8006c5f0(int obj, u32* outTable, f32* outF, int* outX, int* outY)
@@ -1507,8 +1617,6 @@ void objShadowFn_8006c5f0(int obj, u32* outTable, f32* outF, int* outX, int* out
     *outY = (int)((GameObject*)obj)->anim.modelState->shadowOffsetY;
 }
 
-extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
-
 void* textureAlloc512(void)
 {
     Texture* tex = (Texture*)textureAlloc(0x200, 0x200, 1, 0, 0, 0, 0, 0, 0);
@@ -1516,13 +1624,6 @@ void* textureAlloc512(void)
     DCFlushRange((char*)tex + 0x60, *(u32*)((char*)tex + 0x44));
     return tex;
 }
-
-extern const f32 lbl_803DED28;
-extern void drawTexture(void* p, f32 f1, f32 f2, int a, int b);
-extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
-extern void GXSetTexCopyDst(u16 wd, u16 ht, GXTexFmt fmt, GXBool mipmap);
-extern void GXCopyTex(void* dest, GXBool clear);
-extern void GXPreLoadEntireTexture(void* obj, void* region);
 
 #pragma optimization_level 2
 void drawReflectionTexture(void)
@@ -1539,8 +1640,6 @@ void drawReflectionTexture(void)
     }
 }
 #pragma optimization_level reset
-
-extern void GXInvalidateTexAll(void);
 
 void updateReflectionTextures(void)
 {
@@ -1568,13 +1667,6 @@ void updateReflectionTextures(void)
     GXPixModeSync();
 }
 
-typedef struct
-{
-    int id;
-    f32 dist;
-    int flags;
-} ShadowSortEntry;
-
 #pragma dont_inline on
 void fn_8006B830(ShadowSortEntry* arr, int count)
 {
@@ -1601,8 +1693,6 @@ void fn_8006B830(ShadowSortEntry* arr, int count)
     }
 }
 #pragma dont_inline reset
-
-extern u8 lbl_8030E8B0[];
 
 u16 audioPickSoundEffect_8006ed24(s8 a, u8 b)
 {
@@ -1651,21 +1741,8 @@ u16 audioPickSoundEffect_8006ed24(s8 a, u8 b)
     return *(u16*)(base + v * 2);
 }
 
-extern u8 gNewShadowCasterCount;
-extern int* gNewShadowCurrentViewSlot;
-
-typedef struct
-{
-    int* obj;
-    f32 scale;
-    u8 flags;
-} NewShadowCaster;
-
 NewShadowCaster gNewShadowCasterTable[0x36CC / sizeof(NewShadowCaster)];
-extern f32 Ydchuff_803DED80;
-extern f32 Ydchuff_803DED90;
-extern const double TokenCB_803DED58;
-extern const double DrawDone_803DED60;
+
 extern inline float sqrtf(float x)
 {
     volatile float y;
@@ -1680,15 +1757,6 @@ extern inline float sqrtf(float x)
     }
     return x;
 }
-
-extern const f32 CPUFifo_803DED38;
-extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40;
-extern const f32 lbl_803DED2C;
-extern const f32 Vdchuff_803DEDC0;
-extern const f32 Vdchuff_803DEDD0;
-extern f32 Vdchuff_803DEDD4;
-extern const f32 Uachuff_803DEE00;
-extern float __fabsf(float);
 
 /* Sample the animated noise field built from gNewShadowPlacements: sums the
    contribution of every active placement at texel (px,pz) for animation frame
@@ -1763,15 +1831,7 @@ void fn_8006CD20(f32 px, f32 pz, f32 frame, f32* placements, int count, f32* out
     *out2 = acc5;
 }
 
-extern int testAndSet_onlyUseHeap3(int v);
-extern float fn_802943F4(float x);
-extern float floor(float);
-extern const f32 __PADFixBits;
-extern const f32 Yachuff_803DEDE0;
-extern const f32 Yachuff_803DEDE4, Yachuff_803DEDE8;
-extern const f32 Vdchuff_803DEDD8, Vdchuff_803DEDDC;
 f32 gNewShadowPlacements[0x112];
-extern f32 gNewShadowReflectionScrollY, gNewShadowReflectionScrollX;
 
 #pragma opt_common_subs off
 /* Builds the animated water-noise assets: scatters up to 50 non-overlapping random
@@ -1904,14 +1964,6 @@ void initFn_8006d020(void)
 }
 #pragma opt_common_subs reset
 
-extern void fn_80069EB8();
-extern const f32 lbl_803DED10;
-extern f32 lbl_803DED34;
-extern const f32 Dev_803DED1C;
-extern const f32 Yachuff_803DEDEC, Yachuff_803DEDF0, Yachuff_803DEDF4, Yachuff_803DEDF8, Yachuff_803DEDFC;
-extern const f32 Uachuff_803DEE04;
-extern const f32 Uachuff_803DEE14, Uachuff_803DEE18, Uachuff_803DEE1C;
-extern const f32 Udchuff_803DEDBC;
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 #pragma ppc_unroll_speculative off
@@ -2397,12 +2449,6 @@ void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f
     objAudioFn_8006ef38(p1, buf, p5, p6, p7, f1, f2);
 }
 
-extern int getHudHiddenFrameCount(void);
-extern void fn_80060BB0(void);
-extern u8 lbl_803DCF80;
-extern f32* Camera_GetInverseViewMatrix(void);
-extern void fn_8004C234(f32* a, f32* b);
-extern u16 lbl_803DCFA0;
 void maybeHudFn_8006c91c(void)
 {
     f32 hi, lo;
@@ -2438,18 +2484,6 @@ void maybeHudFn_8006c91c(void)
     }
 }
 
-extern void Obj_BuildWorldTransformMatrix(int* obj, f32* mtx, int x);
-extern f32 playerMapOffsetX, playerMapOffsetZ;
-extern f32 lbl_803DED0C;
-extern const f32 lbl_803DED14, Chan_803DED18;
-extern f32 Enabled_803DED20, BarnacleEnabled_803DED24;
-extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ, f32* outRadiusX,
-                                      f32* outRadiusY, f32* outRadiusZ);
-extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
-extern void set_shadowFlag_803dcc29(int x);
-extern void objRender(int a, int b, int c, int d, int* obj, int e);
-extern int* Obj_GetActiveModel(int* obj);
-extern void Camera_ApplyFullViewport(void);
 void shadowRenderFn_8006b558(int* obj)
 {
     f32 mtx[12];
@@ -2503,9 +2537,6 @@ void shadowRenderFn_8006b558(int* obj)
     ((f32*)obj[0x64 / 4])[5] = ((f32*)obj[0x64 / 4])[5] - Dev_803DED1C * ((f32*)obj[0x64 / 4])[0];
     ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] - Dev_803DED1C * ((f32*)obj[0x64 / 4])[0];
 }
-
-extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
-extern const f32 Udchuff_803DEDAC, Udchuff_803DEDB0, Udchuff_803DEDB4, Udchuff_803DEDB8, Udchuff_803DEDBC;
 
 #pragma opt_loop_invariants off
 #pragma opt_propagation off
@@ -2563,48 +2594,6 @@ void fn_8006CB50(void)
 }
 #pragma opt_propagation reset
 #pragma opt_loop_invariants reset
-
-extern void Camera_DisableViewYOffset(void);
-extern void Camera_EnableViewYOffset(void);
-extern f32 Camera_GetFovY(void);
-extern void Camera_SetFovY(f32 fovY);
-extern void Camera_SetAspectRatio(f32 aspectRatio);
-extern void Camera_SetCurrentViewIndex(int index);
-extern void Camera_UpdateViewMatrices(void);
-extern void Camera_RebuildProjectionMatrix(void);
-extern void Camera_UpdateProjection(int a, int b);
-extern void fn_80061094(f32* v, f32* out, f32 x);
-extern void mapGetBlocks(int* a, int* b);
-extern u8 fn_800626C8(int* obj, int frames);
-extern void fn_8008923C(int* obj, f32* a, f32* b, f32* c);
-
-extern void setScreenWidth(int w);
-extern void clearScreenWidth(void);
-extern f32* ObjModel_GetJointMatrix(int* model, int joint);
-extern void C_MTXOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
-extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
-extern void GXSetProjection(f32* m, int type);
-extern void PSMTXCopy(f32* s, f32* d);
-extern void PSMTXConcat(f32* a, f32* b, f32* o);
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void objRenderShadowIfVisible(int* obj, int a, int b, int c, int d, int e);
-extern void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf, const u8 vfilter[7]);
-
-extern void GXSetScissor(int a, int b, int c, int d);
-extern int getDrawDistanceFlag_8005cd48(void);
-extern void* memcpy(void* d, const void* s, int n);
-extern f32 gNewShadowFovY, lbl_803DED34;
-extern f32 lbl_803DED70, lbl_803DED74, gNewShadowAspectWide, gNewShadowAspectNarrow;
-extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40;
-extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
-extern f32 FinishQueue_803DED68;
-extern f32 FinishQueue_803DED6C;
-extern u8 lbl_803DB668[8];
-extern f32 lbl_803DB670;
-extern int gRenderModeObj;
-extern f32 gMapSavedPlayerOffsetX, gMapSavedPlayerOffsetZ;
-extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
 
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off

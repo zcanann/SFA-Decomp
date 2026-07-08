@@ -23,9 +23,6 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 
-/* seqId variant whose render is gated by GameBit 0x3A2 (docblock: "Render is gated by GameBit 0x3A2 / seqId 883") */
-#define DLL16C_RENDER_GATE_SEQID 883
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (IMIceMountain_getExtraSize == 0x14).
@@ -66,18 +63,10 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Obj_FreeObject(int*);
-void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible, int opacity,
-                                    int reissueMove);
-extern int objUpdateOpacity(int* obj);
-extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
-extern f32 Vec_distance(f32* a, f32* b);
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int kind, int id);
-extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
+/* seqId variant whose render is gated by GameBit 0x3A2 (docblock: "Render is gated by GameBit 0x3A2 / seqId 883") */
+#define DLL16C_RENDER_GATE_SEQID 883
+
 extern u8 lbl_802C2308[];
-extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern u8 framesThisStep;
 extern f32 lbl_803E4748;
 extern f32 lbl_803E474C;
@@ -85,6 +74,18 @@ extern f32 lbl_803E4758;
 extern f32 lbl_803E475C;
 extern f32 lbl_803E4760;
 extern f32 lbl_803E4764;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void Obj_FreeObject(int*);
+extern int objUpdateOpacity(int* obj);
+extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
+extern f32 Vec_distance(f32* a, f32* b);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int kind, int id);
+extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
+extern int* ObjGroup_GetObjects(int group, int* countOut);
+
+void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible, int opacity,
+                                    int reissueMove);
 
 void dll_16C_release(void)
 {

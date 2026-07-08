@@ -12,6 +12,24 @@
 #include "main/dll/explosion_state.h"
 #include "main/objtexture.h"
 #include "main/frame_timing.h"
+#include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
+#include "main/asset_load.h"
+#include "main/pi_dolphin.h"
+#include "main/game_object.h"
+#include "main/objhits.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/mm.h"
+#include "main/vecmath.h"
+
+typedef struct Dll1D6Placement
+{
+    u8 pad0[0x1A - 0x0];
+    s16 upTimer;
+    s16 downTimer;
+    u8 pad1E[0x20 - 0x1E];
+} Dll1D6Placement;
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
@@ -51,29 +69,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-FbWGPipe GXWGFifo : (0xCC008000);
-
-#include "main/audio/sfx_ids.h"
-#include "main/audio/sfx.h"
-#include "main/asset_load.h"
-#include "main/pi_dolphin.h"
-#include "main/game_object.h"
-#include "main/objhits.h"
-#include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
-#include "main/mm.h"
-#include "main/vecmath.h"
-
-#define DLL1D6_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-typedef struct Dll1D6Placement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 upTimer;
-    s16 downTimer;
-    u8 pad1E[0x20 - 0x1E];
-} Dll1D6Placement;
-
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
@@ -87,18 +82,23 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
+#define DLL1D6_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 extern const f32 lbl_803E4A78;
 extern u8 gDll1D6SlotInUse;
-extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
-extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
 extern s16 gDll1D6SlotTabIndex;
 extern f32 lbl_803E4A88;
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern const f32 lbl_803E4A7C;
 extern f32 lbl_803E4A80;
 extern f32 lbl_803E4A84;
 extern const f32 lbl_803E4A8C;
 extern const f32 lbl_803E4A90;
+
+extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
+extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+
+FbWGPipe GXWGFifo : (0xCC008000);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {

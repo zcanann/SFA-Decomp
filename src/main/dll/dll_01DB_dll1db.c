@@ -31,35 +31,6 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
-#define DLL1DB_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
-STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
-STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
-STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
-STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
-
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 lbl_803E4B08; /* render scale */
-extern f32 lbl_803E4B0C;
-extern f32 lbl_803E4B10;
-extern f32 lbl_803E4B14;
-extern f32 lbl_803E4B18;
-extern f32 lbl_803E4B1C;
-extern f32 lbl_803E4B20;
-extern f32 lbl_803E4B24;
-
-enum
-{
-    STATE_TOP = 1,
-    STATE_BOTTOM = 2,
-    STATE_RISING = 3,
-    STATE_FALLING = 4
-};
-
 typedef struct Dll1DBPlacement
 {
     u8 pad0[0x1 - 0x0];
@@ -77,9 +48,6 @@ typedef struct Dll1DBPlacement
     u8 pad22[0x28 - 0x22];
 } Dll1DBPlacement;
 
-STATIC_ASSERT(offsetof(Dll1DBPlacement, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(Dll1DBPlacement, boardedBit) == 0x1E);
-
 typedef struct Dll1DBState
 {
     f32 velocity;       /* 0x00 */
@@ -89,7 +57,37 @@ typedef struct Dll1DBState
     u8 pad7;
 } Dll1DBState;
 
+STATIC_ASSERT(offsetof(Dll1DBPlacement, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(Dll1DBPlacement, boardedBit) == 0x1E);
 STATIC_ASSERT(sizeof(Dll1DBState) == 0x8);
+STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
+STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
+STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
+STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
+STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
+
+#define DLL1DB_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+enum
+{
+    STATE_TOP = 1,
+    STATE_BOTTOM = 2,
+    STATE_RISING = 3,
+    STATE_FALLING = 4
+};
+
+extern f32 lbl_803E4B08; /* render scale */
+extern f32 lbl_803E4B0C;
+extern f32 lbl_803E4B10;
+extern f32 lbl_803E4B14;
+extern f32 lbl_803E4B18;
+extern f32 lbl_803E4B1C;
+extern f32 lbl_803E4B20;
+extern f32 lbl_803E4B24;
+
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int dll_1DB_getExtraSize(void)
 {

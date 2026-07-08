@@ -1,33 +1,33 @@
 /* DLL 0x166 - Exploded [801A39B4-801A39D0) */
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
+#include "main/dll/IM/IMicicle.h"
+#include "main/game_object.h"
+#include "main/objseq.h"
+#include "main/engine_shared.h"
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
-extern void Model_GetVertexPosition(int model, int i, f32* out);
-
-#include "main/dll/IM/IMicicle.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
-#include "main/engine_shared.h"
-
 /* ExplodedObjectState.explodePhase */
 #define EXPLODED_PHASE_IDLE    0 /* settled; no physics */
 #define EXPLODED_PHASE_ACTIVE  1 /* debris physics stepping until settled */
 #define EXPLODED_PHASE_EXPIRED 2 /* lifetime elapsed; faded out */
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+
 extern f32 lbl_803E43F4;
 extern f32 lbl_803E4428;
-extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
-extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
 extern const f32 lbl_803E43F0;
 extern f32 lbl_803E4404;
 extern f32 gExplodedGroundFriction;
 extern f32 gExplodedBounceRestitution;
 extern f32 gExplodedGravity;
+extern void Model_GetVertexPosition(int model, int i, f32* out);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
+extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
+extern void vecRotateYXZ(int, int);
 
 void exploded_free(void)
 {
@@ -140,9 +140,6 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
 void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data, int computeModelCenter,
                               ExplodedObjectState* state)
 {
-    extern void Model_GetVertexPosition(int, int, f32*);
-    extern void vecRotateYXZ(int, int);
-
     obj->x = data->positionX;
     obj->y = data->positionY;
     obj->z = data->positionZ;

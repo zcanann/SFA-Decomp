@@ -2,6 +2,10 @@
 #include "main/dll/baddie/MMP_critterspit.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
+#include "main/dll/mmp_cratercritter.h"
+
+#define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
+
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E2410;
 extern f32 lbl_803E2414;
@@ -16,8 +20,6 @@ extern char lbl_8031D478[];    /* "out of water\n" (head of the 0x38C Tricky deb
 extern u8** ObjGroup_GetObjects(int kind, int* count);
 extern int trickyFn_8013b368(u8* arg1, f32 dist, u8* arg2);
 extern void objAnimFn_8013a3f0(u8* self, int a, f32 f1, int b);
-
-#define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
 
 #pragma peephole on
 void trickyFn_8013d8f0(u8* self, u8* state)

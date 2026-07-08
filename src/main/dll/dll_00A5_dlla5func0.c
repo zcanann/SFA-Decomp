@@ -12,8 +12,7 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-
-extern ModgfxInterface** gModgfxInterface;
+#include "main/dll/dll_00A5_dlla5func0.h"
 
 typedef struct
 {
@@ -24,6 +23,10 @@ typedef struct
     u8 layer;    /* +0x16 */
 } GfxCmd;
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLLA5_EFFECT_ID 0x5e0
+
+extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80318D48[];
 extern f32 lbl_803E1508;
 extern f32 lbl_803E150C;
@@ -35,9 +38,6 @@ extern f32 lbl_803E1520;
 extern f32 lbl_803E1524;
 extern u8 lbl_803DB970;
 extern u8 lbl_803DB978;
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLLA5_EFFECT_ID 0x5e0
 
 void dll_A5_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
 {

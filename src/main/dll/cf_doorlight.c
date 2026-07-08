@@ -33,6 +33,14 @@ typedef struct KaldachomPlacement
     u8 aggroChance; /* 0x2F: 0..99 chance to lunge instead of return */
 } KaldachomPlacement;
 
+#define BADDIE_CONTROL_MODE_PULLUP 2
+#define BADDIE_CONTROL_MODE_RETURN 6
+
+#define SOUNDFLAG_PULLUP_BURST 0x1
+#define SOUNDFLAG_DOOR_CREAK   0x2
+
+#define AGGRO_CHANCE_RANGE 0x63
+
 extern f32 lbl_803E3060; /* 0.0f */
 extern f32 lbl_803E3078;
 extern f32 lbl_803E307C;
@@ -42,14 +50,6 @@ extern f32 lbl_803E3088;
 extern f32 lbl_803E308C;
 extern int* gBaddieControlInterface;
 extern void Obj_FreeObject(int obj);
-
-#define BADDIE_CONTROL_MODE_PULLUP 2
-#define BADDIE_CONTROL_MODE_RETURN 6
-
-#define SOUNDFLAG_PULLUP_BURST 0x1
-#define SOUNDFLAG_DOOR_CREAK   0x2
-
-#define AGGRO_CHANCE_RANGE 0x63
 
 int kaldachom_stateHandlerB05(int obj, int p)
 {

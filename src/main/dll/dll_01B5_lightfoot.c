@@ -18,10 +18,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 
-#define LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define LIGHTFOOT_OBJFLAG_RENDERED           0x800
-#define LIGHTFOOT_OBJGROUP                   3
-
 typedef struct LightfootState
 {
     u8 pad0[0x40C - 0x0];
@@ -43,6 +39,10 @@ typedef struct LightfootSub
     u16 unk2A;
     u8 pad2C[0x30 - 0x2C];
 } LightfootSub;
+
+#define LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define LIGHTFOOT_OBJFLAG_RENDERED           0x800
+#define LIGHTFOOT_OBJGROUP                   3
 
 int lightfoot_getExtraSize(void)
 {

@@ -9,31 +9,11 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/dll/ARW/dll_02A8_arwblocker.h"
 
 /* placement sequenceMode: which object sequence the blocker fires on approach */
 #define ARWBLOCKER_SEQMODE_DEFAULT 0 /* fires sequence 0; never reports "armed" */
 #define ARWBLOCKER_SEQMODE_ARMED   1 /* fires sequence 1; reports armed until locked */
-
-typedef struct ARWBlockerSetup
-{
-    ObjPlacement base;
-    s8 rotZ;
-    u8 sequenceMode;
-    u8 pad1A[0x24 - 0x1A];
-} ARWBlockerSetup;
-
-typedef struct ARWBlockerState
-{
-    u8 sequenceMode;
-    u8 sequenceLocked;
-} ARWBlockerState;
-
-STATIC_ASSERT(sizeof(ARWBlockerState) == 0x2);
-STATIC_ASSERT(sizeof(ARWBlockerSetup) == 0x24);
-STATIC_ASSERT(offsetof(ARWBlockerState, sequenceMode) == 0x00);
-STATIC_ASSERT(offsetof(ARWBlockerState, sequenceLocked) == 0x01);
-STATIC_ASSERT(offsetof(ARWBlockerSetup, rotZ) == 0x18);
-STATIC_ASSERT(offsetof(ARWBlockerSetup, sequenceMode) == 0x19);
 
 #pragma peephole off
 int ARWBlocker_SeqFn(int obj)

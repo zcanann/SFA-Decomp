@@ -1,16 +1,16 @@
 #include "main/worldasteroids.h"
 #include "main/engine_shared.h"
 
-extern WorldAsteroidsObject* ObjList_FindObjectById(int objectId);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 fsin16Approx(u16 angle);
-extern f32 fcos16Approx(u16 angle);
 extern f32 lbl_803E65D0;
 extern f32 lbl_803E65E0;
 extern f32 lbl_803E65E4;
 extern f32 lbl_803E65E8;
 extern f32 lbl_803E65EC;
 extern f32 lbl_803E65F0;
+extern WorldAsteroidsObject* ObjList_FindObjectById(int objectId);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern f32 fsin16Approx(u16 angle);
+extern f32 fcos16Approx(u16 angle);
 
 static inline f32 worldasteroids_s32AsFloat(s32 value)
 {

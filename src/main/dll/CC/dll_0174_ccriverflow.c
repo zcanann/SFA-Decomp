@@ -9,6 +9,7 @@
 #include "main/game_object.h"
 #include "main/dll/DF/DFcradle.h"
 #include "main/gamebits.h"
+
 extern f32 lbl_803E4DD0; /* height-offset scale */
 extern f32 lbl_803E4DD4; /* minimum surface height */
 

@@ -16,12 +16,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define SOFTBODY_OBJECT_FLAGS_INIT 0x2000
-
-/* seqId range whose moves are driven by the first shared phase */
-#define SOFTBODY_MOVE_PHASE_A_FIRST 0x6af
-#define SOFTBODY_MOVE_PHASE_A_END   0x6b2
-
 typedef struct SoftBodySetup
 {
     ObjPlacement base;
@@ -37,6 +31,12 @@ STATIC_ASSERT(offsetof(SoftBodySetup, rotZ) == 0x18);
 STATIC_ASSERT(offsetof(SoftBodySetup, scale) == 0x1b);
 STATIC_ASSERT(offsetof(SoftBodySetup, phaseDriverDisabled) == 0x1f);
 STATIC_ASSERT(sizeof(SoftBodySetup) == 0x20);
+
+#define SOFTBODY_OBJECT_FLAGS_INIT 0x2000
+
+/* seqId range whose moves are driven by the first shared phase */
+#define SOFTBODY_MOVE_PHASE_A_FIRST 0x6af
+#define SOFTBODY_MOVE_PHASE_A_END   0x6b2
 
 int SoftBody_getExtraSize(void)
 {

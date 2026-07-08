@@ -1,10 +1,12 @@
 #include "main/audio/adsr.h"
 #include "main/audio/adsr_setup.h"
-extern asm u32 __cvt_fp2unsigned(register f64 d);
-extern int adsrStartRelease(int state, u32 divisor);
+
 extern u8 voiceAdsrDecayTable[];
 extern f32 lbl_803E7848;
 extern u16 lbl_8032F618[];
+extern asm u32 __cvt_fp2unsigned(register f64 d);
+
+extern int adsrStartRelease(int state, u32 divisor);
 
 int adsrStartRelease(int state, u32 divisor)
 {

@@ -35,20 +35,14 @@
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 
+typedef struct
+{
+    int a, b, c;
+} Vec3i;
+
 /* per-file extern decls (homes: engine_shared / dll_80220608_shared /
    objhits / sky_80080E58_shared / gameplay_runtime); the spelling is
    load-bearing for codegen, so they stay local to this TU. */
-extern int Obj_GetPlayerObject(void);
-extern f32 Vec_distance(f32* a, f32* b);
-extern f32 Vec_xzDistance(f32* a, f32* b);
-
-extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
-extern void modelLightStruct_freeSlot(void** lightSlot);
-extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-extern int* ObjGroup_GetObjects(int groupId, int* outCount);
-extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
-extern void PSVECAdd(f32* a, f32* b, f32* out);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int gSpiritDoorLockOrbitOffsetBase[4];
 extern s16 gSpiritDoorLockSpinSpeed;
 extern s32 gSpiritDoorLockTexScrollSpeed;
@@ -61,11 +55,16 @@ extern f32 gSpiritDoorLockScaleDecay;
 extern f32 gSpiritDoorLockSpinDownRate;
 extern f32 gSpiritDoorLockOrbitOffsetY;
 extern const f32 gSpiritDoorLockOrbitMaxDist;
-
-typedef struct
-{
-    int a, b, c;
-} Vec3i;
+extern int Obj_GetPlayerObject(void);
+extern f32 Vec_distance(f32* a, f32* b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
+extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
+extern void modelLightStruct_freeSlot(void** lightSlot);
+extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
+extern int* ObjGroup_GetObjects(int groupId, int* outCount);
+extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
+extern void PSVECAdd(f32* a, f32* b, f32* out);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int SpiritDoorLock_getExtraSize(void)
 {

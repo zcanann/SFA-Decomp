@@ -13,22 +13,15 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/CC/dll_0189_ccsharpclawpad.h"
+
 #define CCSHARPCLAWPAD_OBJFLAG_HIDDEN 0x4000
+
 extern int ObjTrigger_IsSet(int obj);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int playerIsDisguised(int obj);
-
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
                                   f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
-
-typedef struct SharpClawPadParticleArgs
-{
-    u8 pad00[0xc]; /* 0x00: filled in by objfx_spawnArcedBurst, not written here */
-    f32 offset[3]; /* 0x0C: emitter offset x/y/z */
-} SharpClawPadParticleArgs;
-
-STATIC_ASSERT(offsetof(SharpClawPadParticleArgs, offset) == 0xC);
-STATIC_ASSERT(sizeof(SharpClawPadParticleArgs) == 0x18);
 
 int CCSharpclawPad_getExtraSize(void)
 {

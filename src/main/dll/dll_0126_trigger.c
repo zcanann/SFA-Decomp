@@ -37,6 +37,7 @@
 #include "main/shader.h"
 #include "main/sfa_shared_decls.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/dll_0126_trigger.h"
 
 /* group owned by another DLL, queried here */
 #define TIMER_OBJGROUP                  0x4c /* DLL 0x2B5 timer */
@@ -72,72 +73,13 @@
 #define TRIGGER_CMD_UNCONDITIONAL     0x10 /* ignore enter/exit gating */
 #define TRIGGER_CMD_OVERRIDE_DISABLED 0x20 /* run even when SFLAG_DISABLED is set */
 
-typedef struct TriggerPlacement
-{
-    s16 typeId; /* 0x0: object-sequence type id dispatched by Trigger_init */
-    u8 pad2[0x38 - 0x2];
-    s16 triggerId; /* 0x38: id matched against dispatched trigger message id */
-    u8 size[3];    /* 0x3A: dimensions (x,y,z) */
-    u8 rot[2];     /* 0x3D: rotation (x,y), range 0-255 */
-    u8 pad3F[0x43 - 0x3F];
-    u8 target;              /* 0x43: object the trigger applies to / can be activated by */
-    s16 gameBitSrc;         /* 0x44: game-bit id copied into TriggerState.gameBit */
-    u16 triggerDelayFrames; /* 0x46: frames the timer must reach before firing */
-    s16 gateBitSrc[4];      /* 0x48/0x4a/0x4c/0x4e: game-bit ids copied into TriggerState.gateBits */
-} TriggerPlacement;
-
-typedef struct ObjInterpretSeqPlacement
-{
-    u8 pad0[0x2 - 0x0];
-    s8 commandVariant; /* 0x2: sub-selector dispatched per interpret-seq opcode */
-    u8 pad3[0x4 - 0x3];
-    s16 unk4;
-    u8 unk6;
-    u8 pad7[0x8 - 0x7];
-} ObjInterpretSeqPlacement;
-
-typedef struct TriggerState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 rangeSq;
-    u32 timer;
-    u8 padC[0x1C - 0xC];
-    f32 targetPosX;
-    f32 targetPosY;
-    f32 targetPosZ;
-    f32 prevTargetPosX;
-    f32 prevTargetPosY;
-    f32 prevTargetPosZ;
-    u8 pad34[0x80 - 0x34];
-    s16 gameBit;
-    s16 gateBits[4];
-    u8 pad8A[0xAC - 0x8A];
-} TriggerState;
-
-/* flag byte at TriggerState + 0x8A; bit7 = the 0x54 once-only latch */
-typedef struct
-{
-    u8 bit7 : 1;
-    u8 lo : 7;
-} TriggerFlags8A;
-
-STATIC_ASSERT(offsetof(TriggerPlacement, typeId) == 0x0);
-STATIC_ASSERT(offsetof(TriggerPlacement, triggerId) == 0x38);
-STATIC_ASSERT(offsetof(TriggerPlacement, size) == 0x3A);
-STATIC_ASSERT(offsetof(TriggerPlacement, rot) == 0x3D);
-STATIC_ASSERT(offsetof(TriggerPlacement, target) == 0x43);
-STATIC_ASSERT(offsetof(TriggerPlacement, gameBitSrc) == 0x44);
-STATIC_ASSERT(offsetof(TriggerPlacement, triggerDelayFrames) == 0x46);
-STATIC_ASSERT(offsetof(TriggerPlacement, gateBitSrc) == 0x48);
-STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, commandVariant) == 0x2);
-STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk4) == 0x4);
-STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk6) == 0x6);
-STATIC_ASSERT(offsetof(TriggerState, rangeSq) == 0x4);
-STATIC_ASSERT(offsetof(TriggerState, timer) == 0x8);
-STATIC_ASSERT(offsetof(TriggerState, targetPosX) == 0x1C);
-STATIC_ASSERT(offsetof(TriggerState, gameBit) == 0x80);
-STATIC_ASSERT(offsetof(TriggerState, gateBits) == 0x82);
-STATIC_ASSERT(sizeof(TriggerState) == 0xAC);
+extern f32 lbl_803E40F8; /* unnamed f32 constant from the shared .sdata2 pool (range divisor) */
+extern int* gPlayerShadowInterface;
+extern f32 lbl_803E40D8;
+extern f32 lbl_803E40FC;
+extern f32 lbl_803E4100;
+extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (hit-detect distance seed) */
+extern u8 framesThisStep;
 
 extern int getLActions();
 extern int objFn_80198fa4();
@@ -145,36 +87,23 @@ extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
 extern void Sfx_StopFromObject(void* obj, int sfxId);
 extern void objSetSlot(u8* obj, s8 slot);
 extern int mainGetBit(int eventId);
-extern f32 lbl_803E40F8; /* unnamed f32 constant from the shared .sdata2 pool (range divisor) */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int* gPlayerShadowInterface;
-
 extern int Obj_GetPlayerObject(void);
 extern void fn_80295918(int obj, int sel, f32 fval);
-
 extern void fn_8006FC00(int v);
-
 extern void timeOfDayFn_80055038(void);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int ObjList_GetObjects(int* first, int* count);
-
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void textureFree(int tex);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void mainSetBits(int eventId, int value);
-
 extern int getTrickyObject(void);
-
 extern void gameTextFn_80125ba4(int id);
 extern int getArwing(void);
-
 extern void timer_addDuration(int timer, int dur);
 extern void envFxFn_800887cc(void);
-
-extern f32 lbl_803E40D8;
-extern f32 lbl_803E40FC;
-extern f32 lbl_803E4100;
 extern int playerGetFocusObject(void);
 extern int return1_800202BC(void);
 extern int fn_80198B68(int obj, int p2);
@@ -182,8 +111,6 @@ extern void objSeqFn_801992ec(int obj, int target);
 extern void fn_80198DE8(int obj, int target);
 extern void fn_80198A00(int obj, int target);
 extern void objSeqMoveFn_80199188(int obj, int target);
-extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (hit-detect distance seed) */
-extern u8 framesThisStep;
 
 void Trigger_render(void)
 {

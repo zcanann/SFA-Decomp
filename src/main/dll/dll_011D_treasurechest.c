@@ -5,6 +5,43 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/resource.h"
+#include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/objlib.h"
+#include "main/dll/VF/vf_shared.h"
+
+typedef struct ChestHitParams
+{
+    u32 a;
+    u32 b;
+    u32 c;
+    u32 d;
+} ChestHitParams;
+
+typedef struct ChestFlags
+{
+    u8 open : 1;
+    u8 trigger : 1;
+} ChestFlags;
+
+typedef struct ChestHitBlock
+{
+    ChestHitParams params;
+    u16 a;
+    u16 b;
+    u16 c;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z[1];
+} ChestHitBlock;
+
+STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
+STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
+STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
+STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
+STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
+STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
 #define TREASURECHEST_TARGET_OBJGROUP 4
 
@@ -14,12 +51,19 @@
 #define TREASURECHEST_SEQEV_STAFFBIT_CLR 3 /* clear StaffFlags b5 */
 #define TREASURECHEST_SEQEV_OPENED       4 /* hide + disable the chest */
 
-STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
-STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
-STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
-STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
-STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
-STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
+extern f32 lbl_803E3C20;
+extern void* lbl_803DDAE0;
+extern f32 lbl_803E3C24;
+extern ChestHitParams lbl_802C22B0;
+extern int lbl_803DDAE4;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E3C28;
+extern f32 lbl_803E3C2C;
+
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void hitDetectFn_80097070(f32 radius, int obj, int a, int b, int c, int d);
+extern void playerPullOutStaff(void* obj, int enabled);
 
 int TreasureChest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -69,21 +113,15 @@ int TreasureChest_getObjectTypeId(void)
     return 0;
 }
 
-extern f32 lbl_803E3C20;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 void TreasureChest_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3C20);
 }
 
-extern void* lbl_803DDAE0;
 void TreasureChest_free(void)
 {
     Resource_Release(lbl_803DDAE0);
 }
-
-extern f32 lbl_803E3C24;
-extern void hitDetectFn_80097070(f32 radius, int obj, int a, int b, int c, int d);
 
 void TreasureChest_hitDetect(int obj)
 {
@@ -97,46 +135,6 @@ void TreasureChest_hitDetect(int obj)
         hitDetectFn_80097070(lbl_803E3C24, obj, 2, (u8)(setup->hitboxKind + 6), 4, 0);
     }
 }
-
-#include "main/objseq.h"
-#include "main/gamebits.h"
-#include "main/objlib.h"
-#include "main/dll/VF/vf_shared.h"
-
-extern void playerPullOutStaff(void* obj, int enabled);
-
-typedef struct ChestHitParams
-{
-    u32 a;
-    u32 b;
-    u32 c;
-    u32 d;
-} ChestHitParams;
-
-typedef struct ChestFlags
-{
-    u8 open : 1;
-    u8 trigger : 1;
-} ChestFlags;
-
-typedef struct ChestHitBlock
-{
-    ChestHitParams params;
-    u16 a;
-    u16 b;
-    u16 c;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z[1];
-} ChestHitBlock;
-
-extern ChestHitParams lbl_802C22B0;
-extern int lbl_803DDAE4;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803E3C28;
-extern f32 lbl_803E3C2C;
 
 void TreasureChest_update(int obj)
 {

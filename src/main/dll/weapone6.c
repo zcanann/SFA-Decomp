@@ -30,17 +30,17 @@
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
 
-#define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
-#define TRICKY_STATE_RESET_FLAG_10     0x00000010
-#define TRICKY_STATE_RESET_FLAG_10000  0x00010000
-#define TRICKY_STATE_RESET_FLAG_20000  0x00020000
-#define TRICKY_STATE_RESET_FLAG_40000  0x00040000
-
 typedef struct
 {
     u8 hi : 4;
     u8 pad : 4;
 } TrickyNibblePair;
+
+#define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
+#define TRICKY_STATE_RESET_FLAG_10     0x00000010
+#define TRICKY_STATE_RESET_FLAG_10000  0x00010000
+#define TRICKY_STATE_RESET_FLAG_20000  0x00020000
+#define TRICKY_STATE_RESET_FLAG_40000  0x00040000
 
 #define TRICKY_CLEAR_RESET_FLAGS(st)                                                                                   \
     {                                                                                                                  \
@@ -55,21 +55,6 @@ typedef struct
         }                                                                                                              \
     }
 
-extern void objAudioFn_800393f8(int obj, void* audio, int sfxId, int volume, int param5, int param6);
-extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
-extern int trickyFn_8013b368(int obj, f32 speed, int state);
-extern int trickyFoodFn_8014460c(int obj, int state);
-extern int tumbleweedbush_findNearestActive(void);
-extern int fn_801CDE70(int);
-extern f32 sqrtf(f32);
-extern int fn_80179650(int slot);
-extern void fn_80179678(int slot, int obj);
-extern void fn_8017962C(int slot);
-extern int fn_801793A4(int obj);
-extern void fn_801796BC(int slot, int obj, double a, double b, double c);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
-extern void Obj_FreeObject(int obj);
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 extern f32 lbl_803E23DC;
@@ -94,6 +79,21 @@ extern f32 lbl_803E24F4;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
+extern void objAudioFn_800393f8(int obj, void* audio, int sfxId, int volume, int param5, int param6);
+extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
+extern int trickyFn_8013b368(int obj, f32 speed, int state);
+extern int trickyFoodFn_8014460c(int obj, int state);
+extern int tumbleweedbush_findNearestActive(void);
+extern int fn_801CDE70(int);
+extern f32 sqrtf(f32);
+extern int fn_80179650(int slot);
+extern void fn_80179678(int slot, int obj);
+extern void fn_8017962C(int slot);
+extern int fn_801793A4(int obj);
+extern void fn_801796BC(int slot, int obj, double a, double b, double c);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
+extern void Obj_FreeObject(int obj);
 
 void fn_8013F100(int obj, register int state)
 {

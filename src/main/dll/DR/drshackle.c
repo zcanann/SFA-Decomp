@@ -19,19 +19,6 @@
 #include "main/checkpoint_interface.h"
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/DR/DRcloudcage.h"
-extern int fn_801EC870(int p1, int p2);
-extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
-extern f32 lbl_803E5AE8; /* 0.0f  */
-extern f32 lbl_803E5AEC; /* 1.0f  */
-extern f32 lbl_803E5B08; /* 70.0f */
-extern f32 lbl_803E5B10; /* 40.0f */
-extern f32 lbl_803E5B68; /* 180.0f */
-extern f32 lbl_803E5B6C; /* 56.0f */
-extern f32 lbl_803E5B70; /* -1.0f */
-extern f32 lbl_803E5B74; /* -0.05f */
-extern f32 lbl_803E5B78; /* 2.0f */
-
-#define DRSHACKLE_MODEL_OFFSET 0x54
 
 STATIC_ASSERT(offsetof(ShackleSwingState, anchorX) == 0x0C);
 STATIC_ASSERT(offsetof(ShackleSwingState, collider) == 0x28);
@@ -49,6 +36,8 @@ STATIC_ASSERT(offsetof(ShackleSwingState, swingBlend) == 0x45C);
 STATIC_ASSERT(offsetof(ShackleSwingState, unk494) == 0x494);
 STATIC_ASSERT(offsetof(ShackleSwingState, lastPitch) == 0x49C);
 
+#define DRSHACKLE_MODEL_OFFSET 0x54
+
 /* advanceRoute takes a trailing (always-zero) arg not reflected in the shared
  * interface header; cast the slot locally to emit the extra r7=0. */
 #define DRSHACKLE_ADVANCE_ROUTE(iface, out, route, dist, mode, flag)                                                   \
@@ -59,6 +48,18 @@ STATIC_ASSERT(offsetof(ShackleSwingState, lastPitch) == 0x49C);
 #define DRSHACKLE_SWING_BLEND_LIMIT  0x41
 #define DRSHACKLE_SWING_RETURN_LEFT  0x100
 #define DRSHACKLE_ANGLE_RETURN_LIMIT 0x2aaa
+
+extern f32 lbl_803E5AE8; /* 0.0f  */
+extern f32 lbl_803E5AEC; /* 1.0f  */
+extern f32 lbl_803E5B08; /* 70.0f */
+extern f32 lbl_803E5B10; /* 40.0f */
+extern f32 lbl_803E5B68; /* 180.0f */
+extern f32 lbl_803E5B6C; /* 56.0f */
+extern f32 lbl_803E5B70; /* -1.0f */
+extern f32 lbl_803E5B74; /* -0.05f */
+extern f32 lbl_803E5B78; /* 2.0f */
+extern int fn_801EC870(int p1, int p2);
+extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 int drshackle_updateSwingBlend(int obj, int state)
 {

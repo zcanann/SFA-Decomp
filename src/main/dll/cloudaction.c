@@ -20,13 +20,21 @@
 #include "main/model.h"
 #include "dolphin/gx/GXEnum.h"
 
+extern volatile f32 gCloudActionGlareQuadSize;
+extern const f32 lbl_803DF2B4;
+extern const f32 lbl_803DF2C0;
+extern const f32 lbl_803DF2C4;
+extern const f32 lbl_803DF2C8;
+extern const f32 lbl_803DF2CC;
+extern const f32 lbl_803DF2D0;
+extern const f32 lbl_803DF2D4;
+extern const f32 lbl_803DF2D8;
+
 extern void __kill_critical_regions(void);
 
 extern void __begin_critical_region(void);
 
 extern void __end_critical_region(void);
-
-volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 extern void* Camera_GetCurrentViewSlot(void);
 extern void fn_8008DAE8(int obj);
@@ -53,15 +61,8 @@ extern int fn_8008912C(void);
 extern void selectTexture(int tex, int a);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int getHudHiddenFrameCount(void);
-extern volatile f32 gCloudActionGlareQuadSize;
-extern const f32 lbl_803DF2B4;
-extern const f32 lbl_803DF2C0;
-extern const f32 lbl_803DF2C4;
-extern const f32 lbl_803DF2C8;
-extern const f32 lbl_803DF2CC;
-extern const f32 lbl_803DF2D0;
-extern const f32 lbl_803DF2D4;
-extern const f32 lbl_803DF2D8;
+
+volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 static inline void GXPos3f32(f32 x, f32 y, f32 z)
 {

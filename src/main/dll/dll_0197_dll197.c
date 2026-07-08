@@ -22,36 +22,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_descriptor.h"
 
-/* partfx ids (docblock: "spawns 0x1a3 spark particles" on activation;
- * render "emitting the 0x1f7 sparkle particle"). */
-#define DLL197_PARTFX_SPARK   0x1a3
-#define DLL197_PARTFX_SPARKLE 0x1f7
-
-extern int Obj_GetPlayerObject(void);
-extern int randomGetRange(int lo, int hi);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern f32 Vec_distance(f32* a, f32* b);
-extern void objUpdateOpacity(int obj);
-extern f32 sqrtf(f32 x);
-extern void voxmaps_worldToGrid(f32* in, s16* out);
-extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
-extern ModgfxInterface** gModgfxInterface;
-extern u8 framesThisStep;
-extern int gDll197ResourceParamTemplate[];
-extern s8 lbl_803DDBD0; /* shared 0..3 progression latch */
-extern f32 lbl_803E5120;
-extern f32 lbl_803E5124;
-extern f32 lbl_803E5128;
-extern f32 lbl_803E512C;
-extern f32 lbl_803E5130;
-extern f32 lbl_803E5134;
-extern f32 lbl_803E5138;
-extern f32 lbl_803E513C;
-extern f32 lbl_803E5140;
-extern f32 lbl_803E5144;
-
 typedef struct ResourceParamBlob
 {
     int w[4];
@@ -71,7 +41,48 @@ typedef struct Cup197State
     u8 stage;
 } Cup197State;
 
+/* partfx ids (docblock: "spawns 0x1a3 spark particles" on activation;
+ * render "emitting the 0x1f7 sparkle particle"). */
+#define DLL197_PARTFX_SPARK   0x1a3
+#define DLL197_PARTFX_SPARKLE 0x1f7
+
 #define CUP_STAGE_COMPLETE_BIT 0x472
+
+extern ModgfxInterface** gModgfxInterface;
+extern u8 framesThisStep;
+extern int gDll197ResourceParamTemplate[];
+extern s8 lbl_803DDBD0; /* shared 0..3 progression latch */
+extern f32 lbl_803E5120;
+extern f32 lbl_803E5124;
+extern f32 lbl_803E5128;
+extern f32 lbl_803E512C;
+extern f32 lbl_803E5130;
+extern f32 lbl_803E5134;
+extern f32 lbl_803E5138;
+extern f32 lbl_803E513C;
+extern f32 lbl_803E5140;
+extern f32 lbl_803E5144;
+
+extern int Obj_GetPlayerObject(void);
+extern int randomGetRange(int lo, int hi);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
+extern f32 Vec_distance(f32* a, f32* b);
+extern void objUpdateOpacity(int obj);
+extern f32 sqrtf(f32 x);
+extern void voxmaps_worldToGrid(f32* in, s16* out);
+extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
+/*__DATA_EXTERNS__*/
+extern void nwsh_levcon_getExtraSize();
+extern void nwsh_levcon_getObjectTypeId();
+extern void nwsh_levcon_free();
+extern void nwsh_levcon_render();
+extern void nwsh_levcon_hitDetect();
+extern void nwsh_levcon_update();
+extern void nwsh_levcon_init();
+extern void nwsh_levcon_release();
+extern void nwsh_levcon_initialise();
 
 void dll_197_hitDetect(void)
 {
@@ -391,16 +402,6 @@ ObjectDescriptor dll_197 = {
     dll_197_getExtraSize,
 };
 
-/*__DATA_EXTERNS__*/
-extern void nwsh_levcon_getExtraSize();
-extern void nwsh_levcon_getObjectTypeId();
-extern void nwsh_levcon_free();
-extern void nwsh_levcon_render();
-extern void nwsh_levcon_hitDetect();
-extern void nwsh_levcon_update();
-extern void nwsh_levcon_init();
-extern void nwsh_levcon_release();
-extern void nwsh_levcon_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* gNWSH_levconObjDescriptor[14] = {(void*)0x00000000,           (void*)0x00000000,       (void*)0x00000000,
                                        (void*)0x00090000,           nwsh_levcon_initialise,  nwsh_levcon_release,

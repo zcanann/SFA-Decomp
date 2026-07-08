@@ -55,11 +55,11 @@ STATIC_ASSERT(sizeof(Dll19ASpawnSetup) == 0x38);
 /* type id of the child object spawned into a Dll19ASpawnSetup once the gate bit + timer elapse */
 #define DLL19A_CHILD_OBJ 0x2d0
 
+extern f32 lbl_803E5180;
+
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int typeId);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-
-extern f32 lbl_803E5180;
 
 int dll_19A_getExtraSize(void)
 {

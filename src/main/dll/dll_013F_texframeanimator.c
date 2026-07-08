@@ -4,9 +4,6 @@
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 
-#define TEXFRAMEANIMATOR_OBJFLAG_HIDDEN             0x4000
-#define TEXFRAMEANIMATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 typedef struct TexframeanimatorPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -24,12 +21,6 @@ typedef struct TexframeanimatorPlacement
     s16 unk3E;
 } TexframeanimatorPlacement;
 
-char sTexFrameAnimDebugFormat[] = " TEXFRAMEANIM %i ";
-extern int* return0_80056694(int* block, int textureSlot);
-extern int* mapTextureOverrideGetEntry(int idx);
-extern void logPrintf(char* fmt, ...);
-extern f32 lbl_803E4060;
-
 typedef struct TexFrameAnimatorState
 {
     int textureSlot;
@@ -43,6 +34,49 @@ typedef struct TexFrameAnimatorState
     u8 active : 1;
     u8 flagLow : 5;
 } TexFrameAnimatorState;
+
+/* Union u64 member forces the retail 8-byte alignment after the 0x12-byte
+ * debug string (retail pad gap_07_803223FA_data), placing the descriptors
+ * at .data+0x18/0x50/0x88/0xC0 as in the target obj. Same idiom as
+ * dll_00B1_projlightning3. */
+typedef union ObjDescriptorTable
+{
+    u32 words[14];
+    u64 align8;
+} ObjDescriptorTable;
+
+#define TEXFRAMEANIMATOR_OBJFLAG_HIDDEN             0x4000
+#define TEXFRAMEANIMATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+extern f32 lbl_803E4060;
+extern u8 WaterFallSpray_free[];
+extern u8 WaterFallSpray_getExtraSize[];
+extern u8 WaterFallSpray_init[];
+extern u8 WaterFallSpray_render[];
+extern u8 WaterFallSpray_update[];
+extern u8 FogControl_free[];
+extern u8 FogControl_getExtraSize[];
+extern u8 FogControl_getObjectTypeId[];
+extern u8 FogControl_hitDetect[];
+extern u8 FogControl_init[];
+extern u8 FogControl_update[];
+extern u8 lightning_free[];
+extern u8 lightning_getExtraSize[];
+extern u8 lightning_init[];
+extern u8 lightning_render[];
+extern u8 lightning_update[];
+extern u8 sfxplayerObj_free[];
+extern u8 sfxplayerObj_getExtraSize[];
+extern u8 sfxplayerObj_init[];
+extern u8 sfxplayerObj_update[];
+
+extern int* return0_80056694(int* block, int textureSlot);
+extern int* mapTextureOverrideGetEntry(int idx);
+extern void logPrintf(char* fmt, ...);
+extern void* mapGetBlock(int i);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+
+char sTexFrameAnimDebugFormat[] = " TEXFRAMEANIM %i ";
 
 int TexFrameAnimator_getExtraSize(void)
 {
@@ -70,8 +104,6 @@ void TexFrameAnimator_hitDetect(void)
 
 void TexFrameAnimator_update(int* obj)
 {
-    extern void* mapGetBlock(int i);
-    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     TexFrameAnimatorState* state;
     u8* params;
     int* block;
@@ -153,37 +185,6 @@ void TexFrameAnimator_release(void)
 void TexFrameAnimator_initialise(void)
 {
 }
-
-extern u8 WaterFallSpray_free[];
-extern u8 WaterFallSpray_getExtraSize[];
-extern u8 WaterFallSpray_init[];
-extern u8 WaterFallSpray_render[];
-extern u8 WaterFallSpray_update[];
-extern u8 FogControl_free[];
-extern u8 FogControl_getExtraSize[];
-extern u8 FogControl_getObjectTypeId[];
-extern u8 FogControl_hitDetect[];
-extern u8 FogControl_init[];
-extern u8 FogControl_update[];
-extern u8 lightning_free[];
-extern u8 lightning_getExtraSize[];
-extern u8 lightning_init[];
-extern u8 lightning_render[];
-extern u8 lightning_update[];
-extern u8 sfxplayerObj_free[];
-extern u8 sfxplayerObj_getExtraSize[];
-extern u8 sfxplayerObj_init[];
-extern u8 sfxplayerObj_update[];
-
-/* Union u64 member forces the retail 8-byte alignment after the 0x12-byte
- * debug string (retail pad gap_07_803223FA_data), placing the descriptors
- * at .data+0x18/0x50/0x88/0xC0 as in the target obj. Same idiom as
- * dll_00B1_projlightning3. */
-typedef union ObjDescriptorTable
-{
-    u32 words[14];
-    u64 align8;
-} ObjDescriptorTable;
 
 ObjDescriptorTable gFogControlObjDescriptor = {{0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000,
                                                 0x00000000, (u32)FogControl_init, (u32)FogControl_update,

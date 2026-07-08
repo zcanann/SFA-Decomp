@@ -18,16 +18,11 @@
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 #include "main/frame_timing.h"
-
-#define PAD_BUTTON_A 0x100
+#include "main/dll/SB/dll_01F0_sbkytecage.h"
 
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
-extern int getLActions();
-extern int ObjLink_DetachChild();
-extern int ObjLink_AttachChild();
-
-extern int* objModelGetVecFn_800395d8(int obj, int idx);
+#define PAD_BUTTON_A 0x100
 
 /* objType of the loose Kyte child the cage attaches */
 #define SB_KYTE_OBJECT_TYPE 0x121
@@ -76,9 +71,15 @@ enum
     SB_KYTECAGE_SEQEV_LATCH_2 = 2
 };
 
+extern int getLActions();
+extern int ObjLink_DetachChild();
+extern int ObjLink_AttachChild();
+extern int* objModelGetVecFn_800395d8(int obj, int idx);
+extern void* ObjList_GetObjects(int* outA, int* outB);
+extern void Sfx_PlayFromObject(int* obj, int sfxId);
+
 int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     SBKyteCageState* state;
     int i;
 
@@ -142,9 +143,6 @@ void SB_KyteCage_hitDetect(void)
 
 void SB_KyteCage_update(int obj)
 {
-    extern void* ObjList_GetObjects(int* outA, int* outB);
-    extern void Sfx_PlayFromObject(int* obj, int sfxId);
-
     SBKyteCageState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.resetHitboxFlags =
         (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~SB_KYTECAGE_HIT_CLEAR);

@@ -15,11 +15,7 @@
  */
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
-extern f32 lbl_803E59A8;
-extern f32 lbl_803E5998;
-extern f32 lbl_803E599C;
-extern f32 lbl_803E59AC;
-extern f32 lbl_803E59B0;
+#include "main/dll/dll_01F6_flag.h"
 
 enum
 {
@@ -31,6 +27,12 @@ enum
 
 /* placement-record byte seeding the flag's initial rotX */
 #define FLAG_MAPDATA_ROT_X_BYTE_OFF 0x18
+
+extern f32 lbl_803E59A8;
+extern f32 lbl_803E5998;
+extern f32 lbl_803E599C;
+extern f32 lbl_803E59AC;
+extern f32 lbl_803E59B0;
 
 int Flag_getExtraSize(void)
 {

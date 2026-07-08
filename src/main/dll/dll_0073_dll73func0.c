@@ -14,6 +14,10 @@
 #include "main/mapEventTypes.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/dll_0073_dll73func0.h"
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL73_EFFECT_ID 0xd9
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_803144B0[];
@@ -29,9 +33,6 @@ extern f32 lbl_803E0BA0;
 extern f32 lbl_803E0BA4;
 extern f32 lbl_803E0BA8;
 extern f32 lbl_803E0BAC;
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL73_EFFECT_ID 0xd9
 
 void dll_73_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {

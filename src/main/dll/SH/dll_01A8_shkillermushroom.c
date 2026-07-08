@@ -37,8 +37,27 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+typedef struct EnemymushroomPlacement
+{
+    u8 pad0[0x8 - 0x0];
+    f32 posX; /* 0x08 */
+    f32 posY; /* 0x0C */
+    f32 posZ; /* 0x10 */
+    u8 pad14[0x18 - 0x14];
+    u16 regrowDelay; /* 0x18: frames before a deflated mushroom regrows */
+    u8 pad1A[0x1C - 0x1A];
+    s16 popGameBit; /* 0x1C: game bit set when popped (-1 = none) */
+    u8 detectRange; /* 0x1E: proximity-detection range scale */
+    u8 pad1F[0x20 - 0x1F];
+} EnemymushroomPlacement;
+
+typedef struct
+{
+    f32 particleParams[3];
+    f32 x, y, z;
+} MushHitInfo;
+
 #define SHKILLERMUSHROOM_OBJGROUP 3
-extern void ObjGroup_RemoveObject(u32 obj, int group);
 
 #define SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -54,25 +73,8 @@ extern f32 gKillerMushroomRiseStepEpsilon;
 extern const f32 lbl_803E52FC;
 extern f32 gKillerMushroomRiseDurationBase;
 extern f32 gKillerMushroomHeightTargetJitter;
-
-#pragma dont_inline on
-extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern f32 lbl_803E5310;
 extern f32 gKillerMushroomSpawnYOffset;
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
-extern int objIsFrozen(int* obj);
-extern int EmissionController_IsLingering(u8* player);
-extern int playerGetFlags3F0Bit5(u8* player);
-extern f32 fn_8029610C(u8* player);
-extern void objFn_8002b67c(int* obj);
-extern void Obj_StartModelFadeIn(int* obj, int frames);
-extern void Obj_Shatter(int* obj);
-extern int Sfx_PlayFromObject(int* obj, int id);
-
-s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};
-f32 gKillerMushroomStateAnimRates[11] = {
-    0.0f, 0.0f, 0.008f, 0.025f, 0.018f, 0.015f, 0.006f, 0.008f, 0.005f, 0.005f, 0.005f,
-};
 extern f32 gKillerMushroomHitEffectScale;
 extern f32 gKillerMushroomInflateRadiusRate;
 extern f32 gKillerMushroomMaxHitRadius;
@@ -85,6 +87,27 @@ extern f32 gKillerMushroomStunFxInterval;
 extern f32 gKillerMushroomDetectRangeScale;
 extern f32 gKillerMushroomTriggerAnimSpeed;
 extern f32 gKillerMushroomStunAnimProgressDiv;
+
+extern void ObjGroup_RemoveObject(u32 obj, int group);
+extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
+extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
+extern int objIsFrozen(int* obj);
+extern int EmissionController_IsLingering(u8* player);
+extern int playerGetFlags3F0Bit5(u8* player);
+extern f32 fn_8029610C(u8* player);
+extern void objFn_8002b67c(int* obj);
+extern void Obj_StartModelFadeIn(int* obj, int frames);
+extern void Obj_Shatter(int* obj);
+extern int Sfx_PlayFromObject(int* obj, int id);
+extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
+extern void ObjGroup_AddObject(int* obj, int group);
+extern f32 Vec_distance(f32* a, f32* b);
+
+#pragma dont_inline on
+s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};
+f32 gKillerMushroomStateAnimRates[11] = {
+    0.0f, 0.0f, 0.008f, 0.025f, 0.018f, 0.015f, 0.006f, 0.008f, 0.005f, 0.005f, 0.005f,
+};
 
 void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* state, int enableTimer)
 {
@@ -138,7 +161,6 @@ void enemymushroom_free(EnemyMushroomObject* obj)
 
 void enemymushroom_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
-    extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
     void* state = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
@@ -150,20 +172,6 @@ void enemymushroom_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visibl
 void enemymushroom_hitDetect(void)
 {
 }
-
-typedef struct EnemymushroomPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 posX; /* 0x08 */
-    f32 posY; /* 0x0C */
-    f32 posZ; /* 0x10 */
-    u8 pad14[0x18 - 0x14];
-    u16 regrowDelay; /* 0x18: frames before a deflated mushroom regrows */
-    u8 pad1A[0x1C - 0x1A];
-    s16 popGameBit; /* 0x1C: game bit set when popped (-1 = none) */
-    u8 detectRange; /* 0x1E: proximity-detection range scale */
-    u8 pad1F[0x20 - 0x1F];
-} EnemymushroomPlacement;
 
 void enemymushroom_release(void)
 {
@@ -178,7 +186,6 @@ void enemymushroom_initialise(void)
  * in object group 3. */
 void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int flag)
 {
-    extern void ObjGroup_AddObject(int* obj, int group);
     EnemyMushroomState* state = obj->state;
     f32 z = lbl_803E52FC;
 
@@ -202,18 +209,11 @@ void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int
     ObjGroup_AddObject((int*)obj, SHKILLERMUSHROOM_OBJGROUP);
 }
 
-typedef struct
-{
-    f32 particleParams[3];
-    f32 x, y, z;
-} MushHitInfo;
-
 /* Per-frame state machine: dormant -> inflate -> chase -> deflate cycle,
  * hit reaction, pop and respawn. */
 #pragma opt_common_subs off
 void enemymushroom_update(int* obj)
 {
-    extern f32 Vec_distance(f32 * a, f32 * b);
     char* state;
     u8* player;
     int* src;

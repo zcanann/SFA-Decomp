@@ -4,12 +4,12 @@
 #define SYNTH_VOICE_STRIDE 0x404
 #endif
 
+extern u8* synthVoice;
 extern int vidGetInternalId(u32 id);
 extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
 extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
 extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
 extern void macSetExternalKeyoff(McmdVoiceState* slot);
-extern u8* synthVoice;
 
 /*
  * synthFXSetCtrl - sndFXCtrl underlying impl.

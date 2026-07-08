@@ -6,6 +6,7 @@
  */
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
+#include "main/dll/dll_00E6_restartmarker.h"
 
 /* object group this object joins while active */
 #define RESTARTMARKER_OBJGROUP 7

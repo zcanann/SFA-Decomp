@@ -30,16 +30,6 @@
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 
-#define ENEMY_OBJFLAG_PARENT_SLACK 0x1000
-#define ENEMY_OBJFLAG_FREED        0x40
-
-/* object groups: the enemy's own group / secondary group left on a message */
-#define ENEMY_OBJGROUP           3
-#define ENEMY_OBJGROUP_SECONDARY 0x50
-
-/* camera mode DLL 0x49 = dll_0049_cameramodecombat */
-#define ENEMY_CAMMODE_COMBAT 0x49
-
 typedef struct BaddieAfterUpdateBonesCbState
 {
     u8 pad0[0x2B0 - 0x0];
@@ -55,10 +45,6 @@ typedef struct BaddieAfterUpdateBonesCbState
     u8 pad2F5[0x36C - 0x2F5];
     s32 tailBoneChain; /* 0x36C: bone chain passed to playerTailFn_80026b3c for tail sim */
 } BaddieAfterUpdateBonesCbState;
-
-extern int ObjGroup_FindNearestObject();
-extern void* ObjGroup_GetObjects();
-extern u32 fn_80154870();
 
 typedef struct
 {
@@ -77,6 +63,19 @@ typedef struct
     s8 eventCount;
 } TrickyMoveResult;
 
+#define ENEMY_OBJFLAG_PARENT_SLACK 0x1000
+#define ENEMY_OBJFLAG_FREED        0x40
+
+/* object groups: the enemy's own group / secondary group left on a message */
+#define ENEMY_OBJGROUP           3
+#define ENEMY_OBJGROUP_SECONDARY 0x50
+
+/* camera mode DLL 0x49 = dll_0049_cameramodecombat */
+#define ENEMY_CAMMODE_COMBAT 0x49
+
+extern int ObjGroup_FindNearestObject();
+extern void* ObjGroup_GetObjects();
+extern u32 fn_80154870();
 extern void* memcpy(void* dst, void* src, int n);
 extern void characterDoEyeAnims(short* obj, void* p);
 extern void fn_8003B0D0(short* obj, int b, void* c, int d);
@@ -198,6 +197,8 @@ extern f32 lbl_803DBC68;
 extern u8 lbl_8031DBD8[];
 extern u8 lbl_8031DBE4[];
 extern f32 enemySightRange;
+extern void* Obj_GetPlayerObject(void);
+extern void* getTrickyObject(void);
 
 void objAnimFn_8014a9f0(short* obj, int state)
 {
@@ -670,7 +671,6 @@ void fn_8014C5C0(int* obj)
 
 void fn_8014C63C(int* obj)
 {
-    extern void* Obj_GetPlayerObject(void);
     int* state = ((GameObject*)obj)->extra;
     ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
 }
@@ -1064,8 +1064,6 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
     extern void fn_8014B878(int* node, int* sub);
     extern void baddieTurnTowardTarget(int* node, int* sub);
     extern void baddieInstantiateWeapon(int* node, int* sub);
-    extern void* Obj_GetPlayerObject(void);
-    extern void* getTrickyObject(void);
     char* sub = *(char**)&((GameObject*)node)->extra;
     s8* n29 = *(s8**)&((GameObject*)node)->anim.placementData;
     int i;
@@ -1142,8 +1140,6 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
 
 void fn_8014B878(int* arg1, int* sub)
 {
-    extern void* Obj_GetPlayerObject(void);
-    extern void* getTrickyObject(void);
     int* player;
     int* tricky;
     int* target;
@@ -1701,8 +1697,6 @@ void enemy_update(int obj)
     extern void baddieTurnTowardTarget(int obj, u8* state);
     extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
     extern void baddieInstantiateWeapon(int obj, u8* state);
-    extern void* Obj_GetPlayerObject(void);
-    extern void* getTrickyObject(void);
     u8* player;
     u8* state;
     u8* setup;

@@ -11,82 +11,6 @@
 #include "main/texture.h"
 #include "main/objlib.h"
 #include "main/gamebit_ids.h"
-extern int randomGetRange(int lo, int hi);
-extern f32 timeDelta;
-extern ModgfxInterface** gModgfxInterface;
-extern void* gLaserBeamEffectResource;
-extern void* Obj_GetPlayerObject(void);
-extern void Sfx_StopObjectChannel(void* obj, int channel);
-extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
-extern int getAngle(float y, float x);
-extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void fn_8011F6D4(u32 x);
-extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
-extern u8 padGetStickX(int port);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
-extern int objGetAnimState80A(void* obj);
-extern u8 framesThisStep;
-extern f32 lbl_803E4EC0;
-extern f32 lbl_803E4EC4;
-extern f32 lbl_803E4EC8;
-extern f32 lbl_803E4ECC;
-extern const f32 lbl_803E4ED0;
-extern const f32 lbl_803E4ED4;
-extern const f32 gLaserBeamAimPi;
-extern const f32 gLaserBeamAimAngleScale;
-extern const f32 lbl_803E4EE0;
-extern const f32 lbl_803E4EE4;
-extern const f32 lbl_803E4EE8;
-extern const f32 lbl_803E4EEC;
-extern const f32 lbl_803E4EF0;
-extern const f32 lbl_803E4EF4;
-extern const f32 lbl_803E4EF8;
-extern const f32 lbl_803E4F08;
-extern const f32 lbl_803E4F0C;
-extern const f32 lbl_803E4F10;
-extern const f32 lbl_803E4F14;
-extern const f32 gLaserBeamOrbitPi;
-extern const f32 gLaserBeamOrbitAngleScale;
-extern const f32 lbl_803E4F20;
-extern const f32 lbl_803E4F24;
-extern const f32 lbl_803E4F28;
-extern const f32 lbl_803E4F2C;
-extern const f32 lbl_803E4F30;
-extern f32 lbl_803E4F40;
-extern const f32 lbl_803E4F44;
-extern const f32 lbl_803E4F48;
-extern const f32 lbl_803E4F4C;
-
-void DFSH_LaserBeam_free(int* obj)
-{
-    int* state = ((GameObject*)obj)->extra;
-    (*gModgfxInterface)->detachSource(obj);
-    Resource_Release(gLaserBeamEffectResource);
-    gLaserBeamEffectResource = NULL;
-    if (*(void**)state != NULL)
-    {
-        textureFree(*(void**)state);
-    }
-    *(void**)state = NULL;
-}
-
-void DFSH_LaserBeam_render(void)
-{
-}
-
-void DFSH_LaserBeam_hitDetect(void)
-{
-}
-
-int DFSH_LaserBeam_getExtraSize(void)
-{
-    return 0x4c;
-}
-int DFSH_LaserBeam_getObjectTypeId(void)
-{
-    return 0x0;
-}
 
 typedef struct DFSHLaserBeamConfig
 {
@@ -182,9 +106,87 @@ typedef struct DFSHLaserBeamObject
     ((void (*)(void*, int, int, int, int, int))(*(int*)((u8*)*(int*)gLaserBeamEffectResource + 0x4)))(                 \
         obj, id, a, flags, owner, unk)
 
+extern f32 timeDelta;
+extern ModgfxInterface** gModgfxInterface;
+extern void* gLaserBeamEffectResource;
+extern u8 framesThisStep;
+extern f32 lbl_803E4EC0;
+extern f32 lbl_803E4EC4;
+extern f32 lbl_803E4EC8;
+extern f32 lbl_803E4ECC;
+extern const f32 lbl_803E4ED0;
+extern const f32 lbl_803E4ED4;
+extern const f32 gLaserBeamAimPi;
+extern const f32 gLaserBeamAimAngleScale;
+extern const f32 lbl_803E4EE0;
+extern const f32 lbl_803E4EE4;
+extern const f32 lbl_803E4EE8;
+extern const f32 lbl_803E4EEC;
+extern const f32 lbl_803E4EF0;
+extern const f32 lbl_803E4EF4;
+extern const f32 lbl_803E4EF8;
+extern const f32 lbl_803E4F08;
+extern const f32 lbl_803E4F0C;
+extern const f32 lbl_803E4F10;
+extern const f32 lbl_803E4F14;
+extern const f32 gLaserBeamOrbitPi;
+extern const f32 gLaserBeamOrbitAngleScale;
+extern const f32 lbl_803E4F20;
+extern const f32 lbl_803E4F24;
+extern const f32 lbl_803E4F28;
+extern const f32 lbl_803E4F2C;
+extern const f32 lbl_803E4F30;
+extern f32 lbl_803E4F40;
+extern const f32 lbl_803E4F44;
+extern const f32 lbl_803E4F48;
+extern const f32 lbl_803E4F4C;
+
+extern int randomGetRange(int lo, int hi);
+extern void* Obj_GetPlayerObject(void);
+extern void Sfx_StopObjectChannel(void* obj, int channel);
+extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
+extern int getAngle(float y, float x);
+extern f32 Vec_xzDistance(f32* a, f32* b);
+extern void fn_8011F6D4(u32 x);
+extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
+extern u8 padGetStickX(int port);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
+extern int objGetAnimState80A(void* obj);
+extern int Sfx_PlayFromObject(void* obj, int sfxId);
+
+void DFSH_LaserBeam_free(int* obj)
+{
+    int* state = ((GameObject*)obj)->extra;
+    (*gModgfxInterface)->detachSource(obj);
+    Resource_Release(gLaserBeamEffectResource);
+    gLaserBeamEffectResource = NULL;
+    if (*(void**)state != NULL)
+    {
+        textureFree(*(void**)state);
+    }
+    *(void**)state = NULL;
+}
+
+void DFSH_LaserBeam_render(void)
+{
+}
+
+void DFSH_LaserBeam_hitDetect(void)
+{
+}
+
+int DFSH_LaserBeam_getExtraSize(void)
+{
+    return 0x4c;
+}
+int DFSH_LaserBeam_getObjectTypeId(void)
+{
+    return 0x0;
+}
+
 void DFSH_LaserBeam_update(u32 objAddr)
 {
-    extern int Sfx_PlayFromObject(void* obj, int sfxId);
     DFSHLaserBeamConfig* config;
     DFSHLaserBeamRuntime* runtime;
     void* playerObj;

@@ -15,13 +15,14 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
-
-extern u8 lbl_803137F8[];
-extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
+#include "main/dll/dll_0069_dll69func0.h"
 
 /* spawnEffect effect group per variant (docblock: "0xc11 for variant 2, else 0x5e0"). */
 #define DLL69_EFFECT_ID_VARIANT2 0xc11
 #define DLL69_EFFECT_ID_DEFAULT  0x5e0
+
+extern u8 lbl_803137F8[];
+extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
 
 void dll_69_func01_nop(void)
 {

@@ -38,15 +38,6 @@
 
 #define WM_SUN_GLARE_COUNT 20
 
-/* romlist object-def variants driving this DLL's seqId branches (see
-   docblock): def 922 'WM_Crystal' (0x262) and def 907 'WM_sun' (0x2BD). */
-#define WMSUN_SEQID_CRYSTAL 0x262
-#define WMSUN_SEQID_SUN     0x2bd
-
-/* Env-fx ids co-activated when the envfx timer expires (getEnvfxAct 3rd arg) */
-#define WMSUN_ENVFX_A 0x30
-#define WMSUN_ENVFX_B 0x34
-
 /* per-glare-sprite flicker table; filled at init by the unreachable
    0x2C2 variant and never read back by this TU */
 typedef struct WmSunGlareParams
@@ -79,34 +70,6 @@ typedef struct WmSunState
     u8 pad0E[2];
 } WmSunState;
 
-STATIC_ASSERT(offsetof(WmSunGlareParams, angleOffsets) == 0x28);
-STATIC_ASSERT(offsetof(WmSunGlareParams, flickerTimers) == 0x50);
-STATIC_ASSERT(offsetof(WmSunGlareParams, alphaValues) == 0x78);
-STATIC_ASSERT(sizeof(WmSunGlareParams) == 0xA0);
-STATIC_ASSERT(offsetof(WmSunMapData, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(WmSunMapData, bankIndex) == 0x19);
-STATIC_ASSERT(offsetof(WmSunMapData, rootMotionScaleParam) == 0x1C);
-STATIC_ASSERT(sizeof(WmSunMapData) == 0x20);
-STATIC_ASSERT(offsetof(WmSunState, riseStep) == 0x02);
-STATIC_ASSERT(offsetof(WmSunState, spinStep) == 0x04);
-STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
-STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
-STATIC_ASSERT(sizeof(WmSunState) == 0x10);
-
-extern f32 lbl_803E5F8C;     /* 1000.0f */
-extern s16 gWmSunQuakeTimer; /* finale countdowns, see file-top comment */
-extern s16 lbl_803DDCAA;
-extern s16 lbl_803DDCAC;
-extern s16 lbl_803DDCAE;
-extern s16 gWmSunEnvfxTimer;
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
-extern f32 lbl_803E5F20; /* 0.0f */
-extern f32 lbl_803E5F78; /* 0.00375f */
-extern f32 lbl_803E5F7C; /* 50.0f */
-extern f32 lbl_803E5F80; /* 0.8f */
-extern f32 lbl_803E5F84; /* 2400.0f */
-extern f32 lbl_803E5F88; /* 2.8f */
-
 typedef struct
 {
     f32 x, y, z;
@@ -125,6 +88,41 @@ typedef struct
     f32 vz;
 } WmSunGlare;
 
+STATIC_ASSERT(offsetof(WmSunGlareParams, angleOffsets) == 0x28);
+STATIC_ASSERT(offsetof(WmSunGlareParams, flickerTimers) == 0x50);
+STATIC_ASSERT(offsetof(WmSunGlareParams, alphaValues) == 0x78);
+STATIC_ASSERT(sizeof(WmSunGlareParams) == 0xA0);
+STATIC_ASSERT(offsetof(WmSunMapData, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(WmSunMapData, bankIndex) == 0x19);
+STATIC_ASSERT(offsetof(WmSunMapData, rootMotionScaleParam) == 0x1C);
+STATIC_ASSERT(sizeof(WmSunMapData) == 0x20);
+STATIC_ASSERT(offsetof(WmSunState, riseStep) == 0x02);
+STATIC_ASSERT(offsetof(WmSunState, spinStep) == 0x04);
+STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
+STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
+STATIC_ASSERT(sizeof(WmSunState) == 0x10);
+
+/* romlist object-def variants driving this DLL's seqId branches (see
+   docblock): def 922 'WM_Crystal' (0x262) and def 907 'WM_sun' (0x2BD). */
+#define WMSUN_SEQID_CRYSTAL 0x262
+#define WMSUN_SEQID_SUN     0x2bd
+
+/* Env-fx ids co-activated when the envfx timer expires (getEnvfxAct 3rd arg) */
+#define WMSUN_ENVFX_A 0x30
+#define WMSUN_ENVFX_B 0x34
+
+extern f32 lbl_803E5F8C;     /* 1000.0f */
+extern s16 gWmSunQuakeTimer; /* finale countdowns, see file-top comment */
+extern s16 lbl_803DDCAA;
+extern s16 lbl_803DDCAC;
+extern s16 lbl_803DDCAE;
+extern s16 gWmSunEnvfxTimer;
+extern f32 lbl_803E5F20;         /* 0.0f */
+extern f32 lbl_803E5F78;         /* 0.00375f */
+extern f32 lbl_803E5F7C;         /* 50.0f */
+extern f32 lbl_803E5F80;         /* 0.8f */
+extern f32 lbl_803E5F84;         /* 2400.0f */
+extern f32 lbl_803E5F88;         /* 2.8f */
 extern WmSunVec3 gWmSunGlareDir; /* (0, 0, -1) */
 extern WmSunVec3 gWmSunGlareSun; /* (0, 0, -1) */
 extern f32 gWmSunGlareIntensity; /* glare intensity */
@@ -147,6 +145,7 @@ extern f32 lbl_803E5F5C; /* 65535.0f */
 extern f32 lbl_803E5F60; /* 0.001f */
 extern f32 lbl_803E5F64; /* -0.001f */
 extern f32 lbl_803E5F68; /* 0.01f */
+extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern int Camera_GetCurrentViewSlot(void);

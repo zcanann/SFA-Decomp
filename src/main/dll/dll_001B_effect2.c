@@ -21,43 +21,7 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/DR/dr_shared.h"
-
-void Effect2_func03_nop(void)
-{
-}
-
-void Effect2_release(void)
-{
-}
-
-void Effect2_initialise(void)
-{
-}
-
-ObjectDescriptor11 projgfx_funcs = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-    projgfx_initialise,
-    (ObjectDescriptorCallback)projgfx_release_doUnsupported,
-    0,
-    projgfx_onMapSetup,
-    (ObjectDescriptorCallback)projgfx_func04_ret_m1,
-    (ObjectDescriptorCallback)projgfx_func05_nop,
-    (ObjectDescriptorCallback)projgfx_func06_nop,
-    (ObjectDescriptorCallback)projgfx_func07_nop,
-    (ObjectDescriptorCallback)projgfx_getObjectTypeId,
-    (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
-    (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
-};
-
-char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
-static u8 sProjgfxStringPad0[] = {0, 0, 0};
-char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
-static u8 sProjgfxStringPad1[] = {0, 0, 0};
-char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
-static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
+#include "main/dll/dll_001B_effect2.h"
 
 extern f32 gEffect2ScrollPhaseA;
 extern f32 gEffect2ScrollPhaseB;
@@ -71,63 +35,6 @@ extern f32 lbl_803DF878;
 extern f32 lbl_803DF880;
 extern f32 lbl_803DF9C8;
 extern f32 lbl_803DF9CC;
-
-#pragma scheduling off
-#pragma peephole off
-void Effect2_func05(void)
-{
-    f32 sum;
-    f32 step;
-    sum = gEffect2ScrollPhaseA + (step = lbl_803DF870 * timeDelta);
-    gEffect2ScrollPhaseA = sum;
-    if (sum > 1.0f)
-    {
-        gEffect2ScrollPhaseA = lbl_803DF874;
-    }
-    sum = gEffect2ScrollPhaseB + step;
-    gEffect2ScrollPhaseB = sum;
-    if (sum > 1.0f)
-    {
-        gEffect2ScrollPhaseB = lbl_803DF880;
-    }
-    gEffect2SinAngleA = gEffect2SinAngleA + framesThisStep * 0x64;
-    if (gEffect2SinAngleA > 0x7fff)
-    {
-        gEffect2SinAngleA = 0;
-    }
-    gEffect2SinValueA = mathSinf(lbl_803DF9C8 * (f32)(s16)gEffect2SinAngleA / lbl_803DF9CC);
-    gEffect2SinAngleB = gEffect2SinAngleB + framesThisStep * 0x32;
-    if (gEffect2SinAngleB > 0x7fff)
-    {
-        gEffect2SinAngleB = 0;
-    }
-    gEffect2SinValueB = mathSinf(lbl_803DF9C8 * (f32)(s16)gEffect2SinAngleB / lbl_803DF9CC);
-}
-
-/*
- * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
- * the consumer-side definition of this 0x64-byte spawn request consumed by
- * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
- * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
- * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
- */
-
-/* Per-config velocity-range band count (emit[6]/sub[6]/col[6] parallel tables). */
-#define EFFECT2_VELOCITY_RANGE_COUNT 6
-
-typedef struct EmitterCfg
-{
-    f32 vel[7][3];
-    f32 lifetimeRange[3];
-    f32 textureId;
-    int emit[EFFECT2_VELOCITY_RANGE_COUNT];
-    int sub[EFFECT2_VELOCITY_RANGE_COUNT];
-    u16 col[EFFECT2_VELOCITY_RANGE_COUNT];
-    u8 alphaMin;
-    u8 alphaMax;
-    u8 pad[2];
-} EmitterCfg;
-
 extern EmitterCfg gEffect2VelocityRangeTable;
 extern FxNode9 lbl_8039C338;
 extern int lbl_803DD2C4;
@@ -214,6 +121,94 @@ extern f32 lbl_803DF9B0;
 extern f32 lbl_803DF9B4;
 extern f32 lbl_803DF9B8;
 extern f32 lbl_803DF9BC;
+extern s32 gEffect2TextureIdTable[];
+extern void partfx_initialise();
+extern void partfx_release();
+extern void partfx_onMapSetup();
+extern void partfx_spawnObject();
+extern void partfx_updateFrameState();
+extern void Effect1_initialise();
+extern void Effect1_release();
+extern void Effect1_func03_nop();
+extern void Effect1_func04();
+extern void Effect1_func05();
+
+void Effect2_func03_nop(void)
+{
+}
+
+void Effect2_release(void)
+{
+}
+
+void Effect2_initialise(void)
+{
+}
+
+ObjectDescriptor11 projgfx_funcs = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+    projgfx_initialise,
+    (ObjectDescriptorCallback)projgfx_release_doUnsupported,
+    0,
+    projgfx_onMapSetup,
+    (ObjectDescriptorCallback)projgfx_func04_ret_m1,
+    (ObjectDescriptorCallback)projgfx_func05_nop,
+    (ObjectDescriptorCallback)projgfx_func06_nop,
+    (ObjectDescriptorCallback)projgfx_func07_nop,
+    (ObjectDescriptorCallback)projgfx_getObjectTypeId,
+    (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
+    (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
+};
+
+char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
+static u8 sProjgfxStringPad0[] = {0, 0, 0};
+char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
+static u8 sProjgfxStringPad1[] = {0, 0, 0};
+char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
+static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
+
+#pragma scheduling off
+#pragma peephole off
+void Effect2_func05(void)
+{
+    f32 sum;
+    f32 step;
+    sum = gEffect2ScrollPhaseA + (step = lbl_803DF870 * timeDelta);
+    gEffect2ScrollPhaseA = sum;
+    if (sum > 1.0f)
+    {
+        gEffect2ScrollPhaseA = lbl_803DF874;
+    }
+    sum = gEffect2ScrollPhaseB + step;
+    gEffect2ScrollPhaseB = sum;
+    if (sum > 1.0f)
+    {
+        gEffect2ScrollPhaseB = lbl_803DF880;
+    }
+    gEffect2SinAngleA = gEffect2SinAngleA + framesThisStep * 0x64;
+    if (gEffect2SinAngleA > 0x7fff)
+    {
+        gEffect2SinAngleA = 0;
+    }
+    gEffect2SinValueA = mathSinf(lbl_803DF9C8 * (f32)(s16)gEffect2SinAngleA / lbl_803DF9CC);
+    gEffect2SinAngleB = gEffect2SinAngleB + framesThisStep * 0x32;
+    if (gEffect2SinAngleB > 0x7fff)
+    {
+        gEffect2SinAngleB = 0;
+    }
+    gEffect2SinValueB = mathSinf(lbl_803DF9C8 * (f32)(s16)gEffect2SinAngleB / lbl_803DF9CC);
+}
+
+/*
+ * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
+ * the consumer-side definition of this 0x64-byte spawn request consumed by
+ * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
+ * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
+ * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
+ */
 
 #define FILL338()                                                                                                      \
     do                                                                                                                 \
@@ -227,8 +222,6 @@ extern f32 lbl_803DF9BC;
         lbl_8039C338.unk4 = 0;                                                                                         \
         spawnParams = (PartFxSpawnParams*)&lbl_8039C338;                                                               \
     } while (0)
-
-extern s32 gEffect2TextureIdTable[];
 
 int Effect2_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                    s16* extraArgs)
@@ -1217,17 +1210,6 @@ EmitterCfg gEffect2VelocityRangeTable = {
 };
 
 /* --- effect2 .data reconstruction (absorbed 0x80310604-0x80310670) --- */
-extern void partfx_initialise();
-extern void partfx_release();
-extern void partfx_onMapSetup();
-extern void partfx_spawnObject();
-extern void partfx_updateFrameState();
-extern void Effect1_initialise();
-extern void Effect1_release();
-extern void Effect1_func03_nop();
-extern void Effect1_func04();
-extern void Effect1_func05();
-
 void* lbl_80310604[10] = {(void*)0,
                           (void*)0,
                           (void*)0,

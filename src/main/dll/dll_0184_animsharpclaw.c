@@ -15,47 +15,21 @@
 #include "main/objanim_update.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-
-typedef struct AnimsharpclawPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 linkIndex;
-    s16 unk1A;
-    u8 pad1C[0x20 - 0x1C];
-} AnimsharpclawPlacement;
-
-typedef struct AnimsharpclawState
-{
-    u8 pad0[0x24 - 0x0];
-    f32 dampingFactor; /* 0x24: base/(base + placement[0x24]) smoothing coefficient */
-    s32 unk28;
-    u8 pad2C[0x57 - 0x2C];
-    u8 kind;
-    u8 pad58[0x6A - 0x58];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 pad70[0x94 - 0x70];
-    s32 unk94;
-    s32 unk98;
-    u8 pad9C[0x140 - 0x9C];
-} AnimsharpclawState;
-
-extern void ObjLink_DetachChild(int obj, int child);
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern int* gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
-extern void objSetSlot(void* obj, int slot);
-extern u8 framesThisStep;
+#include "main/dll/dll_0184_animsharpclaw.h"
 
 /* child setup-object id spawned on anim sequence event 1 */
 #define ANIMSHARPCLAW_CHILD_SETUP_ID 0x30B
 
-int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate);
+extern int* gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
+extern u8 framesThisStep;
+
+extern void ObjLink_DetachChild(int obj, int child);
+extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
+extern void objSetSlot(void* obj, int slot);
 
 #pragma scheduling off
 #pragma dont_inline on

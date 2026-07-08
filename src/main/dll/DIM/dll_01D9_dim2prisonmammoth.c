@@ -12,59 +12,24 @@
 #include "main/object_descriptor.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/DIM/dll_01D9_dim2prisonmammoth.h"
 
 #define DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define PAD_BUTTON_A                                 0x100
 
-typedef struct Dim2prisonmammothPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s8 rotByte;      /* 0x18 packed into rotX as (s16)(rotByte << 8) at init */
-    s8 spawnVariant; /* 0x19 spawn variant selector (stateHandler00) */
-    u8 pad1A[0x20 - 0x1A];
-} Dim2prisonmammothPlacement;
-
-typedef struct Dim2prisonmammothState
-{
-    s32 flags; /* 0x0 object flag bits (0x8000, 0x400000) */
-    u8 pad4[0x25F - 0x4];
-    u8 unk25F;
-    u8 pad260[0x274 - 0x260];
-    s16 stateIndex; /* 0x274 indexes gPrisonMammothStateFlagsTable */
-    u8 pad276[0x28C - 0x276];
-    f32 unk28C;
-    f32 unk290;
-    u8 pad294[0x318 - 0x294];
-    s32 unk318;
-    s32 unk31C;
-    u8 pad320[0x330 - 0x320];
-    s16 unk330;
-    u8 pad332[0x354 - 0x332];
-    u8 unk354;
-    u8 pad355[0x38C - 0x355];
-    s16 unk38C;
-    u8 pad38E[0x5FC - 0x38E];
-    u8 hitReactState; /* 0x5FC carried in/out of ObjHitReact_Update */
-    u8 pad5FD[0x604 - 0x5FD];
-} Dim2prisonmammothState;
+extern int gDim2PrisonMammothStateHandlers[];
+extern void* gDim2PrisonMammothDefaultStateHandler;
+extern f32 gPrisonMammothMoveSpeedTable;
+extern s16 gPrisonMammothMoveIdTable;
+extern int* gPlayerInterface;
+extern u8 gPrisonMammothStateFlagsTable;
+extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 
 extern void fn_8003A168(int p1, int p2);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void buttonDisable(int port, u32 mask);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void playerTailFn_80026b3c(int* p1, int p2, int p3, void* p4);
-extern int gDim2PrisonMammothStateHandlers[];
-extern void* gDim2PrisonMammothDefaultStateHandler;
-extern int dim2prisonmammoth_stateHandler01(int obj, int p2);
-extern int dim2prisonmammoth_stateHandler02(int obj, int p2);
-extern int dim2prisonmammoth_stateHandler03(int obj, int p2);
-extern f32 gPrisonMammothMoveSpeedTable;
-extern s16 gPrisonMammothMoveIdTable;
-extern int* gPlayerInterface;
-int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState* animUpdate);
-
-extern u8 gPrisonMammothStateFlagsTable;
-extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 extern void saveGame_saveObjectPos(int obj);
 
 int dim2prisonmammoth_defaultStateHandler(void)

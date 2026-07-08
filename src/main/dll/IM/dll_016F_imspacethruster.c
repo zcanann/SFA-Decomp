@@ -15,36 +15,16 @@
 #include "main/mm.h"
 #include "main/pi_dolphin.h"
 #include "main/dll/VF/vf_shared.h"
-extern void getTabEntry(void* dst, int fileId, int offset, int size);
-extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
-extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
+#include "main/dll/IM/dll_016F_imspacethruster.h"
+
 extern s16 gImSpaceThrusterKeyframeIndexA[], gImSpaceThrusterKeyframeIndexB[];
 extern f32 gImSpaceThrusterWeightMax;
 extern f32 gImSpaceThrusterRootMotionScaleKind01, gImSpaceThrusterRootMotionScaleKind23,
     gImSpaceThrusterRootMotionScaleKind56, gImSpaceThrusterRootMotionScaleKind4;
 extern f32 lbl_803E478C, lbl_803E4790, gImSpaceThrusterAlphaToWeightScale, lbl_803E4798;
-
-typedef enum ImSpaceThrusterPhase
-{
-    IMSPACETHRUSTER_PHASE_OFF = 0,
-    IMSPACETHRUSTER_PHASE_ON = 1,
-    IMSPACETHRUSTER_PHASE_FADE_OUT = 2,
-} ImSpaceThrusterPhase;
-
-/* Class-specific placement record: ObjPlacement common head (0x00..0x17)
- * followed by this thruster's setup fields. */
-typedef struct ImSpaceThrusterPlacement
-{
-    ObjPlacement head;
-    s8 rotXByte;   /* 0x18: high byte of the spawn rotX */
-    u8 kind;       /* 0x19: thruster kind 0..6 */
-    s16 rotY;      /* 0x1a */
-    s16 bankIndex; /* 0x1c */
-} ImSpaceThrusterPlacement;
-
-STATIC_ASSERT(offsetof(ImSpaceThrusterPlacement, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(ImSpaceThrusterPlacement, rotY) == 0x1a);
-STATIC_ASSERT(offsetof(ImSpaceThrusterPlacement, bankIndex) == 0x1c);
+extern void getTabEntry(void* dst, int fileId, int offset, int size);
+extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
+extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
 
 static inline int* getActiveModel(void* obj)
 {

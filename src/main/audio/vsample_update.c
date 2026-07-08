@@ -4,12 +4,6 @@
 #include "main/audio/hw_stream.h"
 #include "main/sfa_shared_decls.h"
 
-extern u32 hwGetVirtualSampleState(int slot);
-
-extern u32 hwVoiceInStartup(int slot);
-
-extern u8 synthVirtualSampleState[];
-
 typedef struct
 {
     u8 head[8];
@@ -20,14 +14,18 @@ typedef struct
     } ent[64];
 } VSStateLayout;
 
-extern u8* synthVoice;
-extern u16 synthLoadedGroupCount;
-
 #define SYNTH_VIRTUAL_SAMPLE_VOICE_STRIDE         0x404
 #define SYNTH_VIRTUAL_SAMPLE_VOICE_RELEASE_OFFSET 0x206
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_SCALE        0xa0
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_ROUND        0xfff
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_SHIFT        0x1000
+
+extern u8 synthVirtualSampleState[];
+extern u8* synthVoice;
+extern u16 synthLoadedGroupCount;
+
+extern u32 hwGetVirtualSampleState(int slot);
+extern u32 hwVoiceInStartup(int slot);
 
 /*
  * Periodic virtual-sample tick processor: walks 64 active voices, computes

@@ -11,58 +11,17 @@
 #include "main/dll/mmsh_waterspike.h"
 #include "main/objhits.h"
 #include "main/sfa_shared_decls.h"
+#include "main/dll/DIM/dll_01E3_dimbossgut2.h"
 
 #define DIMBOSSGUT2_OBJGROUP 3
 #define DIMBOSSGUT2_PARTFX   0x32b
 
 #define MODEL_LIGHT_KIND_POINT 2
 
-typedef struct Dimbossgut2State
-{
-    u8 pad0[0x4 - 0x0];
-    s32 unk4;
-    u8 pad8[0x3DC - 0x8];
-    s32 curvePath; /* 0x3DC rom-curve path walker (Curve_AdvanceAlongPath/goNextPoint) */
-    u8 pad3E0[0x400 - 0x3E0];
-    u16 flags400; /* 0x400 bit3 = advancing along path */
-    u8 pad402[0x40C - 0x402];
-    s32 curveData; /* 0x40C Dimbossgut2Curve definition pointer */
-    u8 pad410[0x42C - 0x410];
-} Dimbossgut2State;
-
-typedef struct Dimbossgut2Curve
-{
-    f32 f0;
-    f32 f4;
-    f32 f8;
-    f32 fC;
-    f32 f10;
-    s16 s14;
-    u16 timer16;
-    s32 light;
-} Dimbossgut2Curve;
-
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, f0) == 0x0);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, f4) == 0x4);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, f8) == 0x8);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, fC) == 0xC);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, f10) == 0x10);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, s14) == 0x14);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, timer16) == 0x16);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, light) == 0x18);
-
-extern void ModelLightStruct_free(void* light);
-extern int randomGetRange(int lo, int hi);
-extern void Obj_FreeObject(int obj);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern int ObjMsg_Pop();
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void queueGlowRender(void* light);
 extern u32* gBaddieControlInterface;
 extern f32 lbl_803E4CF0;
 extern u8 framesThisStep;
 extern f32 timeDelta;
-
 extern f32 lbl_803E4CD0;
 extern f32 lbl_803E4CD4;
 extern f32 lbl_803E4CD8;
@@ -72,13 +31,26 @@ extern f32 gDimBossGut2Pi;
 extern f32 gDimBossGut2AngleUnitToRadians;
 extern f32 lbl_803E4CEC;
 extern f32 lbl_803E4D20;
-extern int Curve_AdvanceAlongPath(int a, f32 f);
-extern int getAngle(float y, float x);
-extern int Obj_GetPlayerObject(void);
 extern f32 lbl_803E4D10;
 extern f32 lbl_803E4D14;
 extern f32 lbl_803E4D18;
 extern f32 lbl_803E4D1C;
+extern f32 lbl_803E4D24;
+extern f32 lbl_803E4D28;
+extern f32 lbl_803E4D2C;
+extern f32 lbl_803E4D30;
+extern f32 lbl_803E4D04;
+
+extern void ModelLightStruct_free(void* light);
+extern int randomGetRange(int lo, int hi);
+extern void Obj_FreeObject(int obj);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
+extern int ObjMsg_Pop();
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void queueGlowRender(void* light);
+extern int Curve_AdvanceAlongPath(int a, f32 f);
+extern int getAngle(float y, float x);
+extern int Obj_GetPlayerObject(void);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void* objCreateLight(int arg, u8 addToList);
@@ -87,11 +59,6 @@ extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
-extern f32 lbl_803E4D24;
-extern f32 lbl_803E4D28;
-extern f32 lbl_803E4D2C;
-extern f32 lbl_803E4D30;
-extern f32 lbl_803E4D04;
 
 void dimbossgut2_updateTracking(int obj, int state)
 {

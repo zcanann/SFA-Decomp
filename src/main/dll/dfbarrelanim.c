@@ -18,6 +18,7 @@
 #include "main/dll/DF/dfropenode.h"
 #include "main/mm.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/dll/dfbarrelanim.h"
 
 extern f32 lbl_803E4DF8;
 extern const f32 lbl_803E4DFC;

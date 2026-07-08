@@ -9,9 +9,10 @@
 #include "main/pi_dolphin.h"
 #include "main/dll/objfsa.h"
 #include "main/frame_timing.h"
-extern void Obj_FreeObject(int obj);
 
 extern LfxEmitterConfig lbl_803AC7B0;
+
+extern void Obj_FreeObject(int obj);
 
 /* reports whether the emitter's config record has been loaded yet */
 int lfxemitter_func0B(LfxEmitterObject* obj)

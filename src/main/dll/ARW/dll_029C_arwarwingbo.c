@@ -12,13 +12,6 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
-#define ARWARWINGBO_OBJGROUP        0x52
-#define ARWARWINGBO_PARTFX          0x79e
-#define ARWARWINGBO_HIT_VOLUME_SLOT 5
-
-#define ARWARWINGBO_OBJFLAG_PARENT_SLACK 0x1000
-#define PAD_BUTTON_B                     0x200
-
 typedef union ArwingBombControl
 {
     f32 fuseTimer;
@@ -45,6 +38,13 @@ STATIC_ASSERT(offsetof(ArwingBombState, explosionTimer) == 0x08);
 STATIC_ASSERT(offsetof(ArwingBombSetup, rotZ) == 0x18);
 STATIC_ASSERT(offsetof(ArwingBombSetup, rotY) == 0x19);
 STATIC_ASSERT(offsetof(ArwingBombSetup, rotX) == 0x1A);
+
+#define ARWARWINGBO_OBJGROUP        0x52
+#define ARWARWINGBO_PARTFX          0x79e
+#define ARWARWINGBO_HIT_VOLUME_SLOT 5
+
+#define ARWARWINGBO_OBJFLAG_PARENT_SLACK 0x1000
+#define PAD_BUTTON_B                     0x200
 
 int arwarwingbo_getExtraSize(void)
 {

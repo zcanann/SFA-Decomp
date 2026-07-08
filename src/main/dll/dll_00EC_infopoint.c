@@ -14,6 +14,7 @@
 #include "main/objanim_update.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/infopointstate_struct.h"
+#include "main/dll/dll_00EC_infopoint.h"
 
 #define INFOPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -22,25 +23,12 @@
 
 #define PAD_BUTTON_A 0x100
 
-typedef struct InfopointObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    u16 textId; /* 0x18: game-text id passed to gameTextGet */
-    u8 pad1A[0x1B - 0x1A];
-    u8 unk1B;
-    u8 rotXByte; /* 0x1C: rotX in 1/256 turns (<< 8 into anim.rotX) */
-    u8 pad1D;
-    u8 unk1E;
-    u8 unk1F;
-} InfopointObjectDef;
-
 extern f32 lbl_803E3B70;
+extern int lbl_803219A0[];
+extern int lbl_80321990[];
 extern void buttonDisable(int port, u32 mask);
 extern int textureLoadAsset(int id);
 extern void* gameTextGet(int textId);
-extern int lbl_803219A0[];
-extern int lbl_80321990[];
 
 #pragma scheduling off
 #pragma peephole off

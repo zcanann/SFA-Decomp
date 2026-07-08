@@ -15,9 +15,16 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/fx_800944A0_shared.h"
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 
-extern void Sfx_PlayFromObject(void* obj, int sfxId);
+#define DIMBOSSTONSIL_HIT_EFFECT_ID     0x4b2
+#define DIMBOSSTONSIL_HIT_EFFECT_ALT_ID 0x4b3
+#define DIMBOSSTONSIL_PRIMARY_HIT_SFX   0x18a
+#define DIMBOSSTONSIL_ALT_HIT_SFX       0x18b
+#define DIMBOSSTONSIL_NORMAL_HIT_SFX    0x18c
+#define DIMBOSSTONSIL_HIT_GAMEBIT       0x20c
+#define DIMBOSSTONSIL_ADVANCE_MSG       0xe0001
+/* particle-spawn flag word: bit 0x200000 | bit 0x1 */
+#define DIMBOSSTONSIL_HIT_FX_FLAGS 0x200001
 
 extern void* gBaddieControlInterface;
 extern f32 lbl_803DDB98;
@@ -30,16 +37,8 @@ extern f32 lbl_803E4CA4;
 extern f32 lbl_803E4CA8;
 extern f32 lbl_803E4CAC;
 extern f32 lbl_803E4CB0;
-
-#define DIMBOSSTONSIL_HIT_EFFECT_ID     0x4b2
-#define DIMBOSSTONSIL_HIT_EFFECT_ALT_ID 0x4b3
-#define DIMBOSSTONSIL_PRIMARY_HIT_SFX   0x18a
-#define DIMBOSSTONSIL_ALT_HIT_SFX       0x18b
-#define DIMBOSSTONSIL_NORMAL_HIT_SFX    0x18c
-#define DIMBOSSTONSIL_HIT_GAMEBIT       0x20c
-#define DIMBOSSTONSIL_ADVANCE_MSG       0xe0001
-/* particle-spawn flag word: bit 0x200000 | bit 0x1 */
-#define DIMBOSSTONSIL_HIT_FX_FLAGS 0x200001
+extern void CameraShake_SetAllMagnitudes(f32 magnitude);
+extern void Sfx_PlayFromObject(void* obj, int sfxId);
 
 int DIMbosstonsil_updateHitReaction(void* obj, DIMbosstonsilState* state, int unused)
 {

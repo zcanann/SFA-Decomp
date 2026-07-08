@@ -18,17 +18,6 @@
 #include "main/effect_interfaces.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
-extern f32 lbl_803E5460;                  /* 0.0   timer reset / origin base */
-extern f32 lbl_803E5464;                  /* 55.0  emit position y */
-extern f32 lbl_803E5468;                  /* 120.0 phase 1 threshold */
-extern f32 lbl_803E546C;                  /* 0.5   puff spawn-chance scale */
-extern f32 lbl_803E5470;                  /* 360.0 phase 2 threshold */
-extern f32 lbl_803E5474;                  /* 3.0   puff spawn-chance divisor */
-extern f32 gChiefLightfootDustCloudScale; /* 0.0009 ground-cloud ramp scale */
-extern f32 lbl_803E547C;                  /* 240.0  ground-cloud ramp duration */
-extern f32 lbl_803E5480;                  /* 420.0 phase 3 threshold */
-extern f32 gChiefLightfootDustBurstScale; /* 0.00036 burst-cloud scale */
-extern f32 lbl_803E5488;                  /* 480.0 end threshold */
 
 typedef struct SHthorntailDustEffectParams
 {
@@ -45,6 +34,18 @@ typedef struct SHthorntailDustEffectParams
 #define DUST_PUFF_PARAM_TYPE    0xc0e
 #define DUST_SPAWN_CHANCE_RANGE 0x1e0
 #define DUST_BURST_PUFF_COUNT   0xf
+
+extern f32 lbl_803E5460;                  /* 0.0   timer reset / origin base */
+extern f32 lbl_803E5464;                  /* 55.0  emit position y */
+extern f32 lbl_803E5468;                  /* 120.0 phase 1 threshold */
+extern f32 lbl_803E546C;                  /* 0.5   puff spawn-chance scale */
+extern f32 lbl_803E5470;                  /* 360.0 phase 2 threshold */
+extern f32 lbl_803E5474;                  /* 3.0   puff spawn-chance divisor */
+extern f32 gChiefLightfootDustCloudScale; /* 0.0009 ground-cloud ramp scale */
+extern f32 lbl_803E547C;                  /* 240.0  ground-cloud ramp duration */
+extern f32 lbl_803E5480;                  /* 420.0 phase 3 threshold */
+extern f32 gChiefLightfootDustBurstScale; /* 0.00036 burst-cloud scale */
+extern f32 lbl_803E5488;                  /* 480.0 end threshold */
 
 void SHthorntail_updateDustEffects(SHthorntailObject* obj)
 {

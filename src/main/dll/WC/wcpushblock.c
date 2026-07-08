@@ -22,20 +22,6 @@
 #include "main/sfa_shared_decls.h"
 #include "main/frame_timing.h"
 
-#define WCPUSHBLOCK_SPAWN_OBJECT_ID  0x119
-#define WCPUSHBLOCK_SPAWN_SETUP_SIZE 0x18
-#define WCPUSHBLOCK_SPAWN_PATH_POINT 4
-#define WCPUSHBLOCK_SPAWN_SFX        0x127
-#define WCPUSHBLOCK_SPAWN_IDLE_TIMER 0x5a
-
-#define WCPUSHBLOCK_INPUT_SCALE       70
-#define WCPUSHBLOCK_PITCH_INPUT_SCALE 0x1770
-#define WCPUSHBLOCK_ROLL_INPUT_SCALE  0x2ee0
-#define WCPUSHBLOCK_ANGLE_DAMP_SHIFT  5
-#define WCPUSHBLOCK_MAX_PITCH         0x1f40
-#define WCPUSHBLOCK_MAX_ROLL          0x32c8
-#define WCPUSHBLOCK_RIDE_MOVE_ID      0xf
-
 typedef struct WCPushBlockObjectSetup
 {
     u8 pad0[4];
@@ -121,13 +107,19 @@ typedef struct WCPushBlockCloudActionInterface
     void (*moveRelative)(f32 x, f32 z);
 } WCPushBlockCloudActionInterface;
 
-extern u8 Obj_IsLoadingLocked(void);
-extern void vecRotateZXY(void* angles, void* out);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern WCPushBlockObject* Obj_SetupObject(WCPushBlockObjectSetup* setup, int mode, int mapLayer, int linkId,
-                                          void* parent);
-extern void ObjPath_GetPointWorldPosition(s16* path, int pointIndex, f32* outX, f32* outY, f32* outZ,
-                                          int useInputPosition);
+#define WCPUSHBLOCK_SPAWN_OBJECT_ID  0x119
+#define WCPUSHBLOCK_SPAWN_SETUP_SIZE 0x18
+#define WCPUSHBLOCK_SPAWN_PATH_POINT 4
+#define WCPUSHBLOCK_SPAWN_SFX        0x127
+#define WCPUSHBLOCK_SPAWN_IDLE_TIMER 0x5a
+
+#define WCPUSHBLOCK_INPUT_SCALE       70
+#define WCPUSHBLOCK_PITCH_INPUT_SCALE 0x1770
+#define WCPUSHBLOCK_ROLL_INPUT_SCALE  0x2ee0
+#define WCPUSHBLOCK_ANGLE_DAMP_SHIFT  5
+#define WCPUSHBLOCK_MAX_PITCH         0x1f40
+#define WCPUSHBLOCK_MAX_ROLL          0x32c8
+#define WCPUSHBLOCK_RIDE_MOVE_ID      0xf
 
 extern WCPushBlockCloudActionInterface** gCloudActionInterface;
 extern f32 lbl_803E5C70;
@@ -143,6 +135,14 @@ extern f32 lbl_803E5C94;
 extern f32 lbl_803E5C98;
 extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
+
+extern u8 Obj_IsLoadingLocked(void);
+extern void vecRotateZXY(void* angles, void* out);
+extern void* Obj_AllocObjectSetup(int size, int b);
+extern WCPushBlockObject* Obj_SetupObject(WCPushBlockObjectSetup* setup, int mode, int mapLayer, int linkId,
+                                          void* parent);
+extern void ObjPath_GetPointWorldPosition(s16* path, int pointIndex, f32* outX, f32* outY, f32* outZ,
+                                          int useInputPosition);
 
 void WCPushBlock_SpawnFromPath(s16* path)
 {

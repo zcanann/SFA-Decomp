@@ -16,21 +16,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#define TIMER_OBJGROUP 0x4c
-
-#define TIMER_MODE_GLOBAL 1
-#define TIMER_MODE_EFFECT 2
-
-/* placement mapId excluded from the count-not-started footstep cue */
-#define TIMER_MAP_NO_FOOTSTEP 0x466ED
-
-/* gameTimerInit timer id used by the global-mode timer */
-#define GAME_TIMER_ID 29
-
-/* point-light struct fields gating the glow render (untyped here) */
-#define LIGHT_FIELD_2F8_OFFSET 0x2f8
-#define LIGHT_FIELD_4C_OFFSET  0x4c
-
 typedef struct TimerSetup
 {
     ObjPlacement base;
@@ -62,6 +47,21 @@ STATIC_ASSERT(offsetof(TimerState, lightScale) == 0x08);
 STATIC_ASSERT(offsetof(TimerState, mode) == 0x0C);
 STATIC_ASSERT(offsetof(TimerState, flags) == 0x0D);
 STATIC_ASSERT(sizeof(TimerState) == 0x20);
+
+#define TIMER_OBJGROUP 0x4c
+
+#define TIMER_MODE_GLOBAL 1
+#define TIMER_MODE_EFFECT 2
+
+/* placement mapId excluded from the count-not-started footstep cue */
+#define TIMER_MAP_NO_FOOTSTEP 0x466ED
+
+/* gameTimerInit timer id used by the global-mode timer */
+#define GAME_TIMER_ID 29
+
+/* point-light struct fields gating the glow render (untyped here) */
+#define LIGHT_FIELD_2F8_OFFSET 0x2f8
+#define LIGHT_FIELD_4C_OFFSET  0x4c
 
 int timer_getExtraSize(void)
 {

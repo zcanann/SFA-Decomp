@@ -27,6 +27,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "sfa_light_decls.h"
 #include "main/frame_timing.h"
+#include "main/dll/headdisplay.h"
 
 /* head-display panel scroll-width animation bounds */
 #define HEADPANEL_WIDTH_MAX  0x152
@@ -41,22 +42,6 @@
 #define HEADREC_NPC_DIALOGUE 7 /* u8   */
 #define HEADREC_BOX          8 /* u16  */
 
-extern void doNothing_8000CF54(int a);
-extern void GXSetScissor(int x, int y, int w, int h);
-extern void drawRect(f32 sx, f32 sy, int x, int y);
-
-extern void Camera_SetFovY(f32 fovY);
-extern void Camera_SetCurrentViewIndex(int index);
-
-extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
-extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
-
-extern void objRender(int a, int b, int c, int d, int obj, int flag);
-extern int Obj_GetActiveModel(int obj);
-extern float fsin16Approx(int angle);
-extern void drawPartialTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e, int f);
-extern void drawScaledTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e);
-extern void drawTexture(int tex, f32 x, f32 y, u8 alpha, int scale);
 extern u8 gHeadDisplayActive;
 extern u8 gHeadDisplayEntryIdx;
 extern u8 lbl_803DD7A8;
@@ -82,7 +67,6 @@ extern const f32 lbl_803E204C;
 extern const f32 lbl_803E2050;
 extern f32 lbl_803E2054;
 extern f32 lbl_803E2058;
-extern void Obj_FreeObject(int* obj);
 extern u8 lbl_803DD7A9;
 extern u8 lbl_803DD8C8;
 extern s16 lbl_803DD8CA;
@@ -90,25 +74,9 @@ extern f32 lbl_803DD8CC;
 extern u16 lbl_803DD8D0;
 extern u16 curGameText;
 extern u8 lbl_803A9440[];
-
-extern int AudioStream_Play(int id, void (*preparedCallback)(void));
-extern void* gameTextGetBox(int box);
-extern void gameTextFreePhrase(u8* phrase);
 extern int lbl_8031BF90[];
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern f32 lbl_803E1E5C;
 extern f32 lbl_803E205C;
-extern int* getArwing(void);
-extern int arwarwing_getHealth(int* arwing);
-extern int arwarwing_getMaxHealth(int* arwing);
-extern int arwarwing_getBombCount(int* arwing);
-extern int arwarwing_getCollectedRingCount(int* arwing);
-extern int arwarwing_getRequiredRingCount(int* arwing);
-extern int arwarwing_getScore(int* arwing);
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
-
 extern u8 arwingHudVisible;
 extern s16 arwingHudAlpha;
 extern char sHeadDisplayScoreFmt;
@@ -120,6 +88,34 @@ extern f32 lbl_803E1F9C;
 extern f32 lbl_803E2060;
 extern f32 lbl_803E2064;
 extern f32 lbl_803E2068;
+extern void doNothing_8000CF54(int a);
+extern void GXSetScissor(int x, int y, int w, int h);
+extern void drawRect(f32 sx, f32 sy, int x, int y);
+extern void Camera_SetFovY(f32 fovY);
+extern void Camera_SetCurrentViewIndex(int index);
+extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
+extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
+extern void objRender(int a, int b, int c, int d, int obj, int flag);
+extern int Obj_GetActiveModel(int obj);
+extern float fsin16Approx(int angle);
+extern void drawPartialTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e, int f);
+extern void drawScaledTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e);
+extern void drawTexture(int tex, f32 x, f32 y, u8 alpha, int scale);
+extern void Obj_FreeObject(int* obj);
+extern int AudioStream_Play(int id, void (*preparedCallback)(void));
+extern void* gameTextGetBox(int box);
+extern void gameTextFreePhrase(u8* phrase);
+extern void* Obj_AllocObjectSetup(int size, int b);
+extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
+extern int* getArwing(void);
+extern int arwarwing_getHealth(int* arwing);
+extern int arwarwing_getMaxHealth(int* arwing);
+extern int arwarwing_getBombCount(int* arwing);
+extern int arwarwing_getCollectedRingCount(int* arwing);
+extern int arwarwing_getRequiredRingCount(int* arwing);
+extern int arwarwing_getScore(int* arwing);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 
 void drawFn_80125424(void)
 {

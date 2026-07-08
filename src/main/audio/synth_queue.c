@@ -8,13 +8,6 @@ typedef struct SynthSeqRuntime
     SynthVoice voices[SYNTH_MAX_VOICES];
 } SynthSeqRuntime;
 
-extern SynthSeqRuntime lbl_803AF550;
-
-/* SynthVoice.state - which intrusive list the voice sits on */
-#define SYNTH_VOICE_STATE_FREE      0 /* unallocated */
-#define SYNTH_VOICE_STATE_QUEUED    1 /* on gSynthQueuedVoices; awaiting start */
-#define SYNTH_VOICE_STATE_ALLOCATED 2 /* on gSynthAllocatedVoices; playing */
-
 /* MusyX sequencer arrangement data (ARR). */
 typedef struct SynthArrangement
 {
@@ -56,20 +49,6 @@ typedef struct SynthMasterTrackEvent
     u32 bpm;
 } SynthMasterTrackEvent;
 
-extern u8 lbl_803BD964[0x40];
-extern u16 lbl_803BCC90[8][0x10];
-extern int gSynthCurrentVoiceSlotIndex;
-extern void fn_8026E864(void);
-extern void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
-extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
-extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
-extern void inpResetChannelDefaults(u8 a, u8 b);
-
-/*
- * Start playback of a sequence arrangement.
- */
-extern int voiceKillById(u32 id);
-
 typedef struct SynthPage
 {
     u16 macro;
@@ -78,6 +57,25 @@ typedef struct SynthPage
     u8 index;
     u8 reserved;
 } SynthPage;
+
+/* SynthVoice.state - which intrusive list the voice sits on */
+#define SYNTH_VOICE_STATE_FREE      0 /* unallocated */
+#define SYNTH_VOICE_STATE_QUEUED    1 /* on gSynthQueuedVoices; awaiting start */
+#define SYNTH_VOICE_STATE_ALLOCATED 2 /* on gSynthAllocatedVoices; playing */
+
+extern SynthSeqRuntime lbl_803AF550;
+extern u8 lbl_803BD964[0x40];
+extern u16 lbl_803BCC90[8][0x10];
+extern int gSynthCurrentVoiceSlotIndex;
+extern void fn_8026E864(void);
+extern void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
+extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
+extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
+extern void inpResetChannelDefaults(u8 a, u8 b);
+/*
+ * Start playback of a sequence arrangement.
+ */
+extern int voiceKillById(u32 id);
 
 static void BuildTransTab(u8* tab, SynthPage* page)
 {

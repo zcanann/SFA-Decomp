@@ -23,6 +23,11 @@
 
 #define DLLB6_OBJFLAG_RENDERED 0x800
 #define DLLB6_OBJFLAG_FREED    0x40
+
+extern f32 lbl_803E1644; /* vertical band lower bound */
+extern f32 lbl_803E1648; /* vertical band upper bound; also reused as the camera height offset for the LOS ray origin */
+extern f32 lbl_803E1658; /* 1/5 move-average weight */
+
 extern int objAnimFn_80296328(void);
 extern int fn_80295C24(void* player);
 /* voxel map line-of-sight (engine); int-pointer spellings are required for this TU's match
@@ -31,9 +36,6 @@ extern void voxmaps_worldToGrid(f32* world, int* grid);
 extern u8 voxmaps_traceLine(int* from, int* to, int* out, u8* occOut, int e);
 extern f32 PSVECMag(void* vec);
 extern float sqrtf(float x);
-extern f32 lbl_803E1644; /* vertical band lower bound */
-extern f32 lbl_803E1648; /* vertical band upper bound; also reused as the camera height offset for the LOS ray origin */
-extern f32 lbl_803E1658; /* 1/5 move-average weight */
 
 static inline int camcontrol_isTargetCandidate(GameObject* obj, ObjHitVolumeRuntimeBounds* data)
 {

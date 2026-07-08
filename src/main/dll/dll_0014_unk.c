@@ -26,33 +26,12 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
-extern void OSReport(const char* msg, ...);
-
 #include "main/dll/dll_0015_curves.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/dll/modgfx.h"
 #include "string.h"
 #include "main/dll/dll_0014_unk.h"
-
-RomCurveDef* romCurves[ROMCURVE_MAX_CURVES];
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
-                              int p10);
-
-extern f32 sqrtf(f32 x);
-extern u32 countLeadingZeros();
-extern void voxmaps_worldToGrid(f32* in, s16* out);
-extern int voxmaps_traceLine(s16* start, s16* end, void* coordOut, u8* occOut, int skipFirst);
-extern const f32 lbl_803E063C;
-extern f32 lbl_803E0640;
-extern f32 gFloatOne;
-extern f32 lbl_803E05F0;
-extern f32 lbl_803E0644;
-extern int gObjfsaBlockFlagsChecksum;
-extern int gObjfsaLastWalkGroupIndex;
-extern int gObjfsaPatchCount;
-extern char sObjfsaFoundNewWalkGroupPatch[];
-extern char sObjfsaIsPointWithinPatchGroupError[];
 
 #define OBJFSA_PATCHGROUP_PATCH_COUNT   4
 #define OBJFSA_PATCHGROUP_STRIDE        0x28
@@ -95,13 +74,16 @@ typedef struct ObjfsaWalkGroupPatchInfo
     u16 patchGroupIds[OBJFSA_PATCHGROUP_PATCH_COUNT];
 } ObjfsaWalkGroupPatchInfo;
 
-ObjfsaPatch gObjfsaPatches[0x3000 / sizeof(ObjfsaPatch)];
-ObjfsaWalkGroup gObjfsaWalkGroups[0x1C48 / sizeof(ObjfsaWalkGroup)];
-u8 gObjfsaWalkGroupActive[0xB8];
-
-#pragma scheduling on
-#pragma peephole on
-
+extern const f32 lbl_803E063C;
+extern f32 lbl_803E0640;
+extern f32 gFloatOne;
+extern f32 lbl_803E05F0;
+extern f32 lbl_803E0644;
+extern int gObjfsaBlockFlagsChecksum;
+extern int gObjfsaLastWalkGroupIndex;
+extern int gObjfsaPatchCount;
+extern char sObjfsaFoundNewWalkGroupPatch[];
+extern char sObjfsaIsPointWithinPatchGroupError[];
 extern f32 lbl_803E05C8;
 extern f32 lbl_803E05CC;
 extern f32 lbl_803E05F4;
@@ -111,10 +93,6 @@ extern f32 lbl_803E05D8;
 extern f32 lbl_803E0610;
 extern f32 gRomCurveAnglePi2;
 extern f32 lbl_803E0618;
-extern void Curve_BuildHermiteCoeffs(void);
-extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
-extern void curvesMove(float* state);
-extern void curvesSetupMoveNetworkCurve(float* state);
 extern f32 gFloatZero;
 extern f32 gFloatNegOne;
 extern f32 lbl_803E0648;
@@ -129,11 +107,37 @@ extern f32 lbl_803E0608;
 extern f32 lbl_803E060C;
 extern char sObjfsaMissingPatchExitPoint0[];
 extern char sObjfsaMissingPatchExitPoint1[];
-extern f32 vec3f_distanceSquared(f32* posA, f32* posB);
 extern f32 gFloatHalf;
 extern f32 lbl_803E065C;
 extern f32 lbl_803E0660;
 extern const f32 gRomCurveFindDistInit;
+
+extern void OSReport(const char* msg, ...);
+extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
+                              int p10);
+extern f32 sqrtf(f32 x);
+extern u32 countLeadingZeros();
+extern void voxmaps_worldToGrid(f32* in, s16* out);
+extern int voxmaps_traceLine(s16* start, s16* end, void* coordOut, u8* occOut, int skipFirst);
+extern void Curve_BuildHermiteCoeffs(void);
+extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
+extern void curvesMove(float* state);
+extern void curvesSetupMoveNetworkCurve(float* state);
+extern f32 vec3f_distanceSquared(f32* posA, f32* posB);
+extern float mathCosf(float x);
+extern float mathSinf(float x);
+
+int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx);
+int RomCurve_getControlPointId(int curve, int exclude, int pickIdx);
+int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a, RomCurveDef* b, f32 unusedW);
+
+RomCurveDef* romCurves[ROMCURVE_MAX_CURVES];
+ObjfsaPatch gObjfsaPatches[0x3000 / sizeof(ObjfsaPatch)];
+ObjfsaWalkGroup gObjfsaWalkGroups[0x1C48 / sizeof(ObjfsaWalkGroup)];
+u8 gObjfsaWalkGroupActive[0xB8];
+
+#pragma scheduling on
+#pragma peephole on
 
 static inline ObjfsaPatch* Objfsa_GetPatch(int patchIndex)
 {
@@ -958,8 +962,6 @@ void doNothing_onTrickyInit(void)
 #pragma peephole off
 int fn_800D9F38(void* walker, void* curve)
 {
-    extern float mathCosf(float x);
-    extern float mathSinf(float x);
     char* A = walker;
     char* B = curve;
     if (*(u32*)(A + 0xa0) == 0 || *(u32*)(A + 0xa4) == 0 || curve == 0)
@@ -1002,8 +1004,6 @@ int fn_800D9F38(void* walker, void* curve)
 
 void RomCurve_setNextNode(void* walker, void* curve)
 {
-    extern float mathCosf(float x);
-    extern float mathSinf(float x);
     char* A = walker;
     f32 t;
     if (curve != 0 && (u32)curve != *(u32*)(A + 0xa4))
@@ -1026,8 +1026,6 @@ void RomCurve_setNextNode(void* walker, void* curve)
 
 int RomCurve_setClosed(RomCurveWalker* state, int closed)
 {
-    extern float mathCosf(float x);
-    extern float mathSinf(float x);
     float savedPhase;
     float t;
     void* tmpCurve;
@@ -1121,8 +1119,6 @@ int RomCurve_setClosed(RomCurveWalker* state, int closed)
 
 u8 RomCurve_goNextPoint(RomCurveWalker* state)
 {
-    extern float mathCosf(float x);
-    extern float mathSinf(float x);
     char* stateBytes;
     int low;
     int high;
@@ -1259,8 +1255,6 @@ clearAndReturn:
 #pragma peephole on
 static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset, int useCos)
 {
-    extern float mathCosf(float x);
-    extern float mathSinf(float x);
     f32 angle;
     f32 trig;
 
@@ -1276,9 +1270,6 @@ static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset
     trig = (f32)(u32) * (u8*)((char*)*nodePtr + 0x2e) * trig;
     return lbl_803E05D0 * trig;
 }
-
-int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx);
-int RomCurve_getControlPointId(int curve, int exclude, int pickIdx);
 
 static inline int RomCurve_pickRandomControlPointId_2A(int curve)
 {
@@ -1346,8 +1337,6 @@ static inline int RomCurve_pickRandomControlPointId_2B(int curve)
 #pragma peephole off
 int RomCurve_func29(RomCurveWalker* state, int pickIdx)
 {
-    extern float mathCosf(float x);
-    extern float mathSinf(float x);
     char* stateBytes;
     int nextId;
     int nextCurve;
@@ -1591,8 +1580,6 @@ void curves_getPos(int curve, float* outX, float* outY, float* outZ, f32 phase)
 
 int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 {
-    extern float mathCosf(float x);
-    extern float mathSinf(float x);
     char* stateBytes;
     u32 currentCurve;
     int nextId;
@@ -1669,8 +1656,6 @@ fail:
 
 int RomCurve_initCurve(RomCurveWalker* state, int obj, int* curveTypes, int curveType, f32 maxDistance)
 {
-    extern float mathCosf(float x);
-    extern float mathSinf(float x);
     char* stateBytes;
     int curveId;
     u32 currentCurve;
@@ -2765,8 +2750,6 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId)
     return NULL;
 }
 
-int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a, RomCurveDef* b, f32 unusedW);
-
 static inline RomCurveDef* RomCurve_FindByIdWithLimit(u32 curveId, int lim)
 {
     RomCurveDef* curve;
@@ -3608,8 +3591,6 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
 #pragma opt_propagation off
 int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ, s8* outTypes)
 {
-    extern float mathCosf(float x);
-    extern float mathSinf(float x);
     u32 mask;
     u32* lp;
     RomCurvePlacementDef* next;

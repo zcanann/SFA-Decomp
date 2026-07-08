@@ -2,10 +2,6 @@
 
 #pragma exceptions on
 
-#ifndef NULL
-#define NULL ((void*)0)
-#endif
-
 typedef signed char s8;
 
 typedef struct LAYER
@@ -30,8 +26,11 @@ typedef struct LayerVoice
     u8 pad11D[0x404 - 0x11D];
 } LayerVoice;
 
-extern LayerVoice* synthVoice;
+#ifndef NULL
+#define NULL ((void*)0)
+#endif
 
+extern LayerVoice* synthVoice;
 extern void* dataGetLayer(u16 cid, u16* n);
 extern u16 inpGetMidiCtrl(u8 ctrl, u8 midi, u8 midiSet);
 extern u32 audioFn_8026f630(u8 key, u8 midi, u8 midiSet, u32 newVID, u32* rejected);

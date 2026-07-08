@@ -1,6 +1,5 @@
 #include "main/audio/voice_manage.h"
-extern asm u32 __cvt_fp2unsigned(register f64 d);
-extern f32 powf(f32 x, f32 y);
+
 extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
 extern u8 voiceDirectSlots[];
 extern u8 lbl_803BD150[];
@@ -11,6 +10,8 @@ extern f32 lbl_803E7828;
 extern f32 lbl_803E7830;
 extern f32 lbl_803E7834;
 extern f32 lbl_803E7838;
+extern asm u32 __cvt_fp2unsigned(register f64 d);
+extern f32 powf(f32 x, f32 y);
 
 /*
  * Mark all entries of the MIDI voice-id table and direct voice-id table

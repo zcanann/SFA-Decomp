@@ -8,12 +8,13 @@
  */
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
-
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
+#include "main/dll/SH/dll_01B2_shstaffhaze.h"
 
 extern f32 lbl_803E5518;
 extern f32 lbl_803E551C;
 extern f32 lbl_803E5520;
+
+extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
 void SH_StaffHaze_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5)
 {

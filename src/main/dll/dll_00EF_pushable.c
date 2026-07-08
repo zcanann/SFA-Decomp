@@ -13,6 +13,76 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+typedef struct PushablePlacement
+{
+    u8 pad0[0x18 - 0x0];
+    s16 gameBit;
+    s16 gameBit2; /* 0x1A second gamebit id; copied to PushableState.gameBit2 */
+    s8 unk1C;
+    s8 unk1D;
+    s8 unk1E;
+    u8 unk1F;
+    u8 pad20[0x23 - 0x20];
+    s8 requiredHitId; /* 0x23 hit-region id that triggers this pushable (-1 = none) */
+    u8 pad24[0x28 - 0x24];
+} PushablePlacement;
+
+typedef struct PushableObjectDef
+{
+    u8 pad0[0x18 - 0x0];
+    s16 gameBit;
+    s16 gameBit2; /* 0x1A second gamebit id (sibling of PushablePlacement.gameBit2) */
+    void* unk1C;
+    u16 scaleRaw;
+    u8 rotXByte;
+    u8 requiredHitId; /* 0x23 hit-region id that triggers this pushable (-1 = none) */
+    u8 pad24[0x28 - 0x24];
+} PushableObjectDef;
+
+typedef struct Dll138PoseCopy
+{
+    s16 rot[3];
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} Dll138PoseCopy;
+
+typedef struct Dll138HitInfo
+{
+    u8 pad0[0x1c];
+    f32 angleX;
+    u8 pad1[4];
+    f32 angleZ;
+    u8 pad2[0x29];
+    s8 id;
+    u8 pad3[2];
+} Dll138HitInfo;
+
+typedef struct
+{
+    int a, b, c, d;
+} PushableBox16;
+
+typedef struct
+{
+    u8 pad[0x24];
+    f32 vx;
+    u8 pad2[4];
+    f32 vz;
+} PushableObjPos;
+
+typedef struct
+{
+    f32 r[4];
+    s8 b10;
+    u8 pad1[3];
+    u8 b14;
+    u8 pad2[0x17];
+    s16 h2c;
+    s16 pad3;
+} SetScaleParams;
+
 /* object group this object joins while active */
 #define PUSHABLE_OBJGROUP 5
 
@@ -79,32 +149,6 @@ extern f32 lbl_803E35A0;
 extern f32 lbl_803E35A4;
 extern void fn_8003B5E0(int a, int b, int c, u8 d);
 
-typedef struct PushablePlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 gameBit;
-    s16 gameBit2; /* 0x1A second gamebit id; copied to PushableState.gameBit2 */
-    s8 unk1C;
-    s8 unk1D;
-    s8 unk1E;
-    u8 unk1F;
-    u8 pad20[0x23 - 0x20];
-    s8 requiredHitId; /* 0x23 hit-region id that triggers this pushable (-1 = none) */
-    u8 pad24[0x28 - 0x24];
-} PushablePlacement;
-
-typedef struct PushableObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 gameBit;
-    s16 gameBit2; /* 0x1A second gamebit id (sibling of PushablePlacement.gameBit2) */
-    void* unk1C;
-    u16 scaleRaw;
-    u8 rotXByte;
-    u8 requiredHitId; /* 0x23 hit-region id that triggers this pushable (-1 = none) */
-    u8 pad24[0x28 - 0x24];
-} PushableObjectDef;
-
 void fn_80174A80(int obj, PushableState* ext)
 {
     int def;
@@ -157,26 +201,6 @@ void fn_80174A80(int obj, PushableState* ext)
     tex->colorG = 10;
     tex->colorB = 10;
 }
-
-typedef struct Dll138PoseCopy
-{
-    s16 rot[3];
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} Dll138PoseCopy;
-
-typedef struct Dll138HitInfo
-{
-    u8 pad0[0x1c];
-    f32 angleX;
-    u8 pad1[4];
-    f32 angleZ;
-    u8 pad2[0x29];
-    s8 id;
-    u8 pad3[2];
-} Dll138HitInfo;
 
 void fn_80174BFC(int obj, int ext)
 {
@@ -841,19 +865,6 @@ void pushable_init(s16* obj, char* def)
     }
 }
 
-typedef struct
-{
-    int a, b, c, d;
-} PushableBox16;
-
-typedef struct
-{
-    u8 pad[0x24];
-    f32 vx;
-    u8 pad2[4];
-    f32 vz;
-} PushableObjPos;
-
 #pragma opt_common_subs off
 void pushable_hitDetect(int obj)
 {
@@ -1072,17 +1083,6 @@ void pushable_hitDetect(int obj)
     }
 }
 #pragma opt_common_subs reset
-
-typedef struct
-{
-    f32 r[4];
-    s8 b10;
-    u8 pad1[3];
-    u8 b14;
-    u8 pad2[0x17];
-    s16 h2c;
-    s16 pad3;
-} SetScaleParams;
 
 int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
 {

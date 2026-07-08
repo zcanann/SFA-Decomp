@@ -15,6 +15,9 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 #include "main/gameplay_runtime.h"
+
+#define FX_VARIANT_BURST 4
+
 extern ModgfxInterface** gModgfxInterface;
 extern u8 gFoodbagEffectTemplate[];
 extern u8 lbl_803DB8F0;
@@ -33,8 +36,6 @@ extern f32 lbl_803E0F94;
 extern f32 lbl_803E0F98;
 extern f32 lbl_803E0F9C;
 extern f32 lbl_803E0FA0;
-
-#define FX_VARIANT_BURST 4
 
 void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

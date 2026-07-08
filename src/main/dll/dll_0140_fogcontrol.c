@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_0140_fogcontrol.h"
 
 #define FOGCONTROL_OBJFLAG_HIDDEN 0x4000
 
@@ -27,45 +28,7 @@
 #define FOG_FLAG_FAST_OUT 0x04 /* ramp-out uses fast speed 0.005 (else 0.02) */
 #define FOG_FLAG_ENABLE   0x08 /* fog volume is placed/active */
 
-typedef struct FogcontrolPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 enableGameBit;
-    s16 flags;
-    s16 fogTop;
-    s16 fogBottom;
-    s16 fogBase;
-    s16 fogGreen;
-    s16 fogRed;
-    s16 unk26;
-    s16 unk28;
-    s16 unk2A;
-    s16 unk2C;
-    s16 unk2E;
-    s16 unk30;
-    s16 unk32;
-    s16 unk34;
-    s16 unk36;
-    u16 unk38;
-    u16 unk3A;
-    u8 unk3C;
-    u8 pad3D[0x3E - 0x3D];
-    s16 unk3E;
-    s16 unk40;
-    s16 unk42;
-    s16 unk44;
-    s16 unk46;
-} FogcontrolPlacement;
-
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
-
-typedef struct FogControlState
-{
-    f32 blend;
-    u8 on : 1;
-    u8 full : 1;
-    u8 rest : 6;
-} FogControlState;
 
 int FogControl_getExtraSize(void)
 {

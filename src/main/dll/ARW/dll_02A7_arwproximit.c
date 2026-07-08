@@ -11,36 +11,9 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/dll/ARW/dll_02A7_arwproximit.h"
 
 #define ARWPROXIMIT_HIT_VOLUME_SLOT 5
-
-typedef struct ARWProximitSetup
-{
-    u8 pad00[0x31];
-    u8 textVariant;
-} ARWProximitSetup;
-
-typedef struct ARWProximitState
-{
-    s16 spinSpeed;
-    u8 pad02[2];
-    void* light;
-    u8 pad08[4];
-    f32 warningTimer;
-    f32 despawnTimer;
-    u8 phase;
-    u8 textVariant;
-    u8 pad16[2];
-} ARWProximitState;
-
-STATIC_ASSERT(sizeof(ARWProximitState) == 0x18);
-STATIC_ASSERT(offsetof(ARWProximitState, spinSpeed) == 0x00);
-STATIC_ASSERT(offsetof(ARWProximitState, light) == 0x04);
-STATIC_ASSERT(offsetof(ARWProximitState, warningTimer) == 0x0c);
-STATIC_ASSERT(offsetof(ARWProximitState, despawnTimer) == 0x10);
-STATIC_ASSERT(offsetof(ARWProximitState, phase) == 0x14);
-STATIC_ASSERT(offsetof(ARWProximitState, textVariant) == 0x15);
-STATIC_ASSERT(offsetof(ARWProximitSetup, textVariant) == 0x31);
 
 enum ArwProximitPhase
 {

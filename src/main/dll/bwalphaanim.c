@@ -9,6 +9,7 @@
  */
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/game_object.h"
+#include "main/dll/bwalphaanim.h"
 
 void SB_CloudRunner_onSeqFree(int* obj)
 {

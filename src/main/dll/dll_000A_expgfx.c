@@ -14,6 +14,54 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+typedef union ExpgfxWGPipe
+{
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s8 s8;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+    f64 f64;
+} ExpgfxWGPipe;
+
+typedef struct ExpgfxRotateParams
+{
+    s16 angleX;
+    s16 angleY;
+    s16 angleZ;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} ExpgfxRotateParams;
+
+typedef struct ExpgfxCameraViewSlot
+{
+    s16 yaw;
+    s16 pitch;
+    s16 roll;
+    u8 pad06[0x0C - 0x06];
+    f32 x;
+    f32 y;
+    f32 z;
+} ExpgfxCameraViewSlot;
+
+STATIC_ASSERT(offsetof(ExpgfxCameraViewSlot, x) == 0x0C);
+
+typedef struct ObjFxCrystalBurstTable
+{
+    f32 amps[4];
+    s16 dirs[12][3];
+} ObjFxCrystalBurstTable;
+
+typedef union Dll0BDescriptorTable
+{
+    u32 words[30];
+    u64 align8;
+} Dll0BDescriptorTable;
+
 extern void dll_0B_func18(void);
 
 extern void dll_0B_func17(void);
@@ -87,18 +135,6 @@ extern void dll_0B_initialise(void);
 #define GX_SRC_VTX        1
 #define GX_DF_NONE        0
 #define GX_AF_NONE        2
-
-typedef union ExpgfxWGPipe
-{
-    u8 u8;
-    u16 u16;
-    u32 u32;
-    s8 s8;
-    s16 s16;
-    s32 s32;
-    f32 f32;
-    f64 f64;
-} ExpgfxWGPipe;
 
 ExpgfxWGPipe GXWGFifo : (0xCC008000);
 
@@ -624,30 +660,6 @@ void expgfx_initSlotQuad(void* slotPtr)
     quad[3].texS = texS0;
     quad[3].texT = texT1;
 }
-
-typedef struct ExpgfxRotateParams
-{
-    s16 angleX;
-    s16 angleY;
-    s16 angleZ;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} ExpgfxRotateParams;
-
-typedef struct ExpgfxCameraViewSlot
-{
-    s16 yaw;
-    s16 pitch;
-    s16 roll;
-    u8 pad06[0x0C - 0x06];
-    f32 x;
-    f32 y;
-    f32 z;
-} ExpgfxCameraViewSlot;
-
-STATIC_ASSERT(offsetof(ExpgfxCameraViewSlot, x) == 0x0C);
 
 void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameState)
 {
@@ -3148,12 +3160,6 @@ u8 gExpgfxStaticPoolFrameFlags[112] = {
 };
 
 /* Crystal burst amplitude scales + spawn direction table (referenced by objfx.c). */
-typedef struct ObjFxCrystalBurstTable
-{
-    f32 amps[4];
-    s16 dirs[12][3];
-} ObjFxCrystalBurstTable;
-
 ObjFxCrystalBurstTable gObjFxCrystalAmpTbl = {
     {0.5f, 0.55f, 0.65f, 0.7f},
     {
@@ -3272,12 +3278,6 @@ char sExpgfxInvalidTabIndex[] = "expgfx.c: invalid tabindex\n";
 char sExpgfxScaleOverflow[] = "expgfx.c: scale overflow\n";
 
 /* descriptor/ptr table auto 0x8030fca8-0x8030fd20 (8-byte aligned in retail) */
-typedef union Dll0BDescriptorTable
-{
-    u32 words[30];
-    u64 align8;
-} Dll0BDescriptorTable;
-
 Dll0BDescriptorTable lbl_8030FCA8 = {{0x00000000,
                                       0x00000000,
                                       0x00000000,

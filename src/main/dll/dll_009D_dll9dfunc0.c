@@ -16,19 +16,6 @@
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
 
-/* lbl_80318038: shared texture + halfword table; lbl_803E13F8..1414:
-   gfx-constant pool. Home TU unknown. */
-extern u8 lbl_80318038[];
-extern ModgfxInterface** gModgfxInterface;
-extern f32 lbl_803E13F8;
-extern f32 lbl_803E13FC;
-extern f32 lbl_803E1400;
-extern f32 lbl_803E1404;
-extern f32 lbl_803E1408;
-extern f32 lbl_803E140C;
-extern f32 lbl_803E1410;
-extern f32 lbl_803E1414;
-
 typedef struct
 {
     u32 mode;    /* +0x00 */
@@ -59,6 +46,19 @@ typedef struct
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL9D_EFFECT_ID 0x46c
+
+/* lbl_80318038: shared texture + halfword table; lbl_803E13F8..1414:
+   gfx-constant pool. Home TU unknown. */
+extern u8 lbl_80318038[];
+extern ModgfxInterface** gModgfxInterface;
+extern f32 lbl_803E13F8;
+extern f32 lbl_803E13FC;
+extern f32 lbl_803E1400;
+extern f32 lbl_803E1404;
+extern f32 lbl_803E1408;
+extern f32 lbl_803E140C;
+extern f32 lbl_803E1410;
+extern f32 lbl_803E1414;
 
 void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {

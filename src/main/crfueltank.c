@@ -8,6 +8,8 @@
 #define CRFUELTANK_OBJFLAG_HIDDEN  0x4000
 #define CRFUELTANK_HIT_VOLUME_SLOT 0x1d
 
+extern f32 lbl_803E6760;
+
 extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
 extern void ObjHits_DisableObject(void* obj);
 extern void ObjHits_EnableObject(void* obj);
@@ -17,8 +19,6 @@ extern int fn_80080150(void* timer);
 extern void storeZeroToFloatParam(void* timer);
 extern void s16toFloat(void* timer, int duration);
 extern int timerCountDown(void* timer);
-
-extern f32 lbl_803E6760;
 
 static inline int crfueltank_animFrame(CrFuelTankDef* def)
 {

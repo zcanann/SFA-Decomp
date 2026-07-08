@@ -27,16 +27,18 @@ typedef struct DIMwooddoorUpdateFallingDebrisState
     u8 padC[0x10 - 0xC];
 } DIMwooddoorUpdateFallingDebrisState;
 
-extern void objMove(int* obj, f32 x, f32 y, f32 z);
-extern void ObjHits_SetHitVolumeSlot(int* obj, int a, u8 b, int c);
 #define DLL801B1D84_HIT_VOLUME_SLOT 5
-extern void ObjHitbox_SetSphereRadius(int* obj, u8 radius);
-extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern void Obj_FreeObject(int* obj);
+
 extern f32 lbl_803E48A0;
 extern f32 lbl_803E48A4;
 extern f32 lbl_803E48A8;
 extern f32 lbl_803DBEF0;
+
+extern void objMove(int* obj, f32 x, f32 y, f32 z);
+extern void ObjHits_SetHitVolumeSlot(int* obj, int a, u8 b, int c);
+extern void ObjHitbox_SetSphereRadius(int* obj, u8 radius);
+extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern void Obj_FreeObject(int* obj);
 
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */

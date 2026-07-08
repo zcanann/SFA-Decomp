@@ -22,13 +22,35 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
-extern int getPatchGroup(f32* pos, int patchGroup);
-extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int mode);
-extern f32 lbl_803E38A0;
+
+typedef struct TrickyWarpCurveEntry
+{
+    u8 pad00[3];
+    u8 entryPatchGroup;
+    u8 linkPatchGroups[4];
+    u8 pad08[0xc];
+    u32 nodeId;
+    s8 action;
+    s8 type;
+} TrickyWarpCurveEntry;
+
+typedef struct TrickyWarpCurveNode
+{
+    u8 pad00[4];
+    u8 linkPatchGroups[4];
+    u8 pad08[0x28];
+    s16 requiredGameBit;
+    s16 forbiddenGameBit;
+} TrickyWarpCurveNode;
 
 #define GAMEBIT_TRICKY_AVAILABLE 0x4e5
 #define TRICKYWARP_OBJ_GROUP     0x4b
 #define ROMCURVE_TYPE_TRICKYWARP '$'
+
+extern f32 lbl_803E38A0;
+
+extern int getPatchGroup(f32* pos, int patchGroup);
+extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int mode);
 
 void TrickyWarp_free(int obj)
 {
@@ -67,26 +89,6 @@ void TrickyWarp_update(int obj)
         }
     }
 }
-
-typedef struct TrickyWarpCurveEntry
-{
-    u8 pad00[3];
-    u8 entryPatchGroup;
-    u8 linkPatchGroups[4];
-    u8 pad08[0xc];
-    u32 nodeId;
-    s8 action;
-    s8 type;
-} TrickyWarpCurveEntry;
-
-typedef struct TrickyWarpCurveNode
-{
-    u8 pad00[4];
-    u8 linkPatchGroups[4];
-    u8 pad08[0x28];
-    s16 requiredGameBit;
-    s16 forbiddenGameBit;
-} TrickyWarpCurveNode;
 
 int fn_8017FFD0(int obj, TrickyWarpState* state)
 {

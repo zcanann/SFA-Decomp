@@ -14,6 +14,15 @@
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
 #include "main/gameplay_runtime.h"
+
+typedef struct
+{
+    s16 v[7];
+} ScreenSeq;
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL9A_EFFECT_ID 0x31
+
 extern ModgfxInterface** gModgfxInterface;
 extern u8 gScreenFx9AAnimTemplate[];
 extern u8 lbl_80317B98[];
@@ -31,15 +40,7 @@ extern f32 lbl_803E138C;
 extern f32 lbl_803E1390;
 extern f32 lbl_803E1394;
 
-typedef struct
-{
-    s16 v[7];
-} ScreenSeq;
-
 #pragma opt_propagation off
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL9A_EFFECT_ID 0x31
-
 void dll_9A_func03(int target, int variant, int parent, u32 flags)
 {
     ScreenSeq seq;

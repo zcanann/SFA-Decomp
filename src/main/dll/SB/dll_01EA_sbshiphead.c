@@ -16,13 +16,14 @@
 #include "main/objlib.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/frame_timing.h"
-
-#define SBSHIPHEAD_OBJGROUP 3
-#define SBSHIPHEAD_PARTFX   0x7aa
+#include "main/dll/SB/dll_01EA_sbshiphead.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
+
+#define SBSHIPHEAD_OBJGROUP 3
+#define SBSHIPHEAD_PARTFX   0x7aa
 
 /* parent Galleon anim.seqId variants */
 #define SB_GALLEON_SEQID_FIRING 0x8e
@@ -48,6 +49,8 @@ extern int Obj_SetupObject(u8* setup, int a, int b, int c, int d);
 extern u8 gSbShipHeadHasFiredFireball;
 extern int gSbShipHeadPrevGalleonPhase;
 extern f32 sqrtf(f32);
+extern void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
+u32 getSbGalleon(void);
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E5830 = 1.0f;
@@ -73,8 +76,6 @@ int SB_ShipHead_getObjectTypeId(void)
     return 0x1;
 }
 
-u32 getSbGalleon(void);
-
 void SB_ShipHead_free(int obj)
 {
     ObjGroup_RemoveObject((u32)obj, SBSHIPHEAD_OBJGROUP);
@@ -82,7 +83,6 @@ void SB_ShipHead_free(int obj)
 
 void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(GameObject * obj, int p2, int p3, int p4, int p5, f32 scale);
     int phase;
     int parent;
     SBShipHeadState* state;

@@ -18,6 +18,8 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/audio/sfx.h"
 
+STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
+
 #define DFPLEVELCONTROL_OBJGROUP 0x9
 
 #define DFPLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
@@ -25,18 +27,22 @@
 /* repels the player away from this object and applies status damage (arg = status type) */
 #define DFPLEVELCONTROL_MSG_PLAYER_HIT 0x60005
 
+extern s16 lbl_80329848[];
+extern u8 lbl_803DC183;
+extern u8 lbl_803DC182;
+extern s16 lbl_803DC180;
 extern u32 ObjMsg_SendToObject();
 extern void fn_802960E8(void* playerObj, int p2);
-extern s16 lbl_80329848[];
 extern int dbstealerworm_stateHandlerB06();
+int dbstealerworm_stateHandlerB06(int obj, int p2);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void Music_Trigger(int id, int arg);
-
-STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
+extern void fn_80204098(int);
+extern void SCGameBitLatch_Update(void*, int, int, int, int, int);
+extern void SCGameBitLatch_UpdateInverted(void*, int, int, int, int, int);
 
 void fn_80204098(int obj)
 {
-    extern u8 lbl_803DC183;
     DfpLevelControlState* state = ((GameObject*)obj)->extra;
     void* player;
     s16 i;
@@ -101,8 +107,6 @@ void fn_80204098(int obj)
 
 void fn_80204320(int obj)
 {
-
-    extern u8 lbl_803DC182;
     DfpLevelControlState* sub;
     void* player;
 
@@ -207,10 +211,6 @@ void DFP_LevelControl_update(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
 
-    extern void fn_80204098(int);
-    extern void SCGameBitLatch_Update(void*, int, int, int, int, int);
-    extern void SCGameBitLatch_UpdateInverted(void*, int, int, int, int, int);
-    extern s16 lbl_803DC180;
     DfpLevelControlState* state = ((GameObject*)obj)->extra;
     char* player;
     u8 b1;
@@ -308,5 +308,3 @@ void DFP_LevelControl_initialise(void)
     p[7] = 0;
     p[8] = 0;
 }
-
-int dbstealerworm_stateHandlerB06(int obj, int p2);

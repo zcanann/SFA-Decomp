@@ -19,14 +19,20 @@
 #include "main/dll/kaldachom_state.h"
 #include "main/dll/wallanimator.h"
 #include "main/objhits.h"
+#include "main/dll/texscroll2.h"
 
 #define KALDACHOM_EVENT_MOUTH_LINK 0x1000
 
+extern f32 lbl_803E3060;
+extern f32 lbl_803E3090;
+extern f32 lbl_80320404[];
+extern f32 lbl_803E3094;
+extern f32 lbl_803E307C;
+extern f32 lbl_803E3098;
+extern f32 lbl_803E309C;
+
 int kaldachom_stateHandlerA06(int obj, int statePtr)
 {
-    extern f32 lbl_803E3060;
-    extern f32 lbl_803E3090;
-
     if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)
     {
         if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)
@@ -46,8 +52,6 @@ int kaldachom_stateHandlerA06(int obj, int statePtr)
 int kaldachom_stateHandlerA05(int obj, int statePtr)
 {
     extern char lbl_803203F8[]; /* char[] for pointer-arithmetic *(s16*) access */
-    extern f32 lbl_80320404[];
-    extern f32 lbl_803E3060;
     KaldaChomControl* control = ((GroundBaddieState*)((GameObject*)obj)->extra)->control;
 
     if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)
@@ -66,9 +70,6 @@ int kaldachom_stateHandlerA05(int obj, int statePtr)
 
 int kaldachom_stateHandlerA04(int obj, int statePtr)
 {
-    extern f32 lbl_803E3060;
-    extern f32 lbl_803E3090;
-
     if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)
     {
         if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)
@@ -86,9 +87,6 @@ int kaldachom_stateHandlerA04(int obj, int statePtr)
 
 int kaldachom_stateHandlerA03(int obj, int statePtr)
 {
-    extern f32 lbl_803E3060;
-    extern f32 lbl_803E3094;
-
     if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)
     {
         ObjHits_EnableObject((u32)obj);
@@ -106,8 +104,6 @@ int kaldachom_stateHandlerA03(int obj, int statePtr)
 int kaldachom_stateHandlerA02(int obj, int statePtr)
 {
     extern s16 lbl_803203F8[]; /* s16[] for direct index access */
-    extern f32 lbl_80320404[];
-    extern f32 lbl_803E3060;
     KaldaChomControl* control = ((GroundBaddieState*)((GameObject*)obj)->extra)->control;
 
     if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)
@@ -127,8 +123,6 @@ int kaldachom_stateHandlerA02(int obj, int statePtr)
 
 int kaldachom_stateHandlerA01(int obj, int statePtr)
 {
-    extern f32 lbl_803E3060;
-    extern f32 lbl_803E307C;
     GroundBaddieState* state = ((GameObject*)obj)->extra;
 
     if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)
@@ -162,9 +156,6 @@ int kaldachom_stateHandlerA01(int obj, int statePtr)
 
 int kaldachom_stateHandlerA00(int obj, int statePtr)
 {
-    extern f32 lbl_803E3060;
-    extern f32 lbl_803E3098;
-    extern f32 lbl_803E309C;
     GroundBaddieState* state = ((GameObject*)obj)->extra;
 
     if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)

@@ -15,16 +15,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
-extern f32 lbl_803E5EAC;
-extern f32 lbl_803E5EB0;
-extern f32 lbl_803E5EB4;
-extern f32 lbl_803E5EB8;
-extern f32 lbl_803E5EBC;
-extern f32 lbl_803E5EC0;
-extern f32 lbl_803E5EC4;
-extern f32 lbl_803E5EC8;
-extern void FireFlyFn_801f4f88(int* obj);
-
 /* per-frame angular step bounds (1/65536-turn units) */
 #define FIREFLY_ANGLE_STEP_MIN 0x1f4
 #define FIREFLY_ANGLE_STEP_MAX 0x5dc
@@ -37,6 +27,16 @@ extern void FireFlyFn_801f4f88(int* obj);
 #define FIREFLY_AMP_MAX 0x3c
 /* minimum inward margin when re-rolling the orbit radius */
 #define FIREFLY_RADIUS_MARGIN 0x14
+
+extern f32 lbl_803E5EAC;
+extern f32 lbl_803E5EB0;
+extern f32 lbl_803E5EB4;
+extern f32 lbl_803E5EB8;
+extern f32 lbl_803E5EBC;
+extern f32 lbl_803E5EC0;
+extern f32 lbl_803E5EC4;
+extern f32 lbl_803E5EC8;
+extern void FireFlyFn_801f4f88(int* obj);
 
 int firefly_animEventCallback(int* obj)
 {

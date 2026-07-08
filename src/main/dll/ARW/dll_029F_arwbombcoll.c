@@ -15,8 +15,6 @@
 
 #include "main/audio/sfx_ids.h"
 
-#define ARWBOMBCOLL_HIT_VOLUME_SLOT 0x13
-
 typedef struct ArwbombcollHandleArwingHitPlacement
 {
     u8 pad0[0x1E - 0x0];
@@ -32,6 +30,8 @@ typedef struct ARWBombCollSetup
 
 STATIC_ASSERT(sizeof(ARWBombCollSetup) == 0x24);
 STATIC_ASSERT(offsetof(ARWBombCollSetup, rotX) == 0x18);
+
+#define ARWBOMBCOLL_HIT_VOLUME_SLOT 0x13
 
 int ARWBombColl_getExtraSize(void)
 {

@@ -17,13 +17,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
-#define POLLENFRAGMENT_HIT_VOLUME_SLOT 0x16
-extern int randomGetRange(int lo, int hi);
-extern int ObjGroup_FindNearestObject();
-extern u32 ObjPath_GetPointWorldPosition();
-extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
-extern void s16toFloat(void* timer, int duration);
-extern void storeZeroToFloatParam(void* timer);
 
 typedef struct
 {
@@ -55,10 +48,15 @@ typedef struct PollenFragmentExtra
     PollenFragmentDef* def; /* 0x1C */
 } PollenFragmentExtra;
 
+typedef struct
+{
+    f32 x, y, z;
+} XyzVec;
+
+#define POLLENFRAGMENT_HIT_VOLUME_SLOT 0x16
+
 extern f32 lbl_803E3198;
 extern f32 lbl_803E319C;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int fn_80080150(int p);
 extern f32 lbl_803E3158;
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -74,6 +72,15 @@ extern f32 lbl_803E3174;
 extern f32 lbl_803E3178;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3180;
+
+extern int randomGetRange(int lo, int hi);
+extern int ObjGroup_FindNearestObject();
+extern u32 ObjPath_GetPointWorldPosition();
+extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
+extern void s16toFloat(void* timer, int duration);
+extern void storeZeroToFloatParam(void* timer);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern int fn_80080150(int p);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int getCurSeqNo(void);
 extern int timerCountDown(int timer);
@@ -255,11 +262,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
     pollenfragment_getExtraSize,
 };
-
-typedef struct
-{
-    f32 x, y, z;
-} XyzVec;
 
 void pollenfragment_hitDetect(int obj)
 {

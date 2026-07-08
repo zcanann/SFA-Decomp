@@ -10,8 +10,26 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
+#include "main/dll/dll_007C_dll7cfunc0.h"
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL7C_EFFECT_ID 0x2e
 
 extern ModgfxInterface** gModgfxInterface;
+/*__DATA_EXTERNS__*/
+extern void dll_7D_func00_nop();
+extern void dll_7D_func01_nop();
+extern void dll_7E_func00_nop();
+extern void dll_7E_func01_nop();
+extern void dll_7F_func00_nop();
+extern void dll_7F_func01_nop();
+extern void dll_80_func00_nop();
+extern void dll_80_func01_nop();
+extern void dll_81_func00_nop();
+extern void dll_81_func01_nop();
+extern void dll_82_func00_nop();
+extern void dll_82_func01_nop();
+
 u8 gFoodbagEffectResourceTable[] = {
     0x00, 0x00, 0x00, 0x00, 0x03, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x03, 0x62, 0x00, 0x00, 0x01, 0xF4, 0x00, 0x0B, 0x00,
     0x00, 0x03, 0x62, 0x00, 0x00, 0xFE, 0x0C, 0x00, 0x16, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFC, 0x18, 0x00, 0x20,
@@ -42,9 +60,6 @@ u8 gFoodbagEffectResourceTable[] = {
     0x00, 0x10, 0x00, 0x11, 0x00, 0x12, 0x00, 0x13, 0x00, 0x14, 0x00, 0x00, 0x00, 0x1E, 0x00, 0x3C, 0x00, 0x1E, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL7C_EFFECT_ID 0x2e
 
 void dll_7C_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
@@ -270,20 +285,7 @@ void dll_7C_func00_nop(void)
 {
 }
 
-/*__DATA_EXTERNS__*/
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-extern void dll_7D_func00_nop();
-extern void dll_7D_func01_nop();
-extern void dll_7E_func00_nop();
-extern void dll_7E_func01_nop();
-extern void dll_7F_func00_nop();
-extern void dll_7F_func01_nop();
-extern void dll_80_func00_nop();
-extern void dll_80_func01_nop();
-extern void dll_81_func00_nop();
-extern void dll_81_func01_nop();
-extern void dll_82_func00_nop();
-extern void dll_82_func01_nop();
 void* lbl_80315010[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_7C_func00_nop, dll_7C_func01_nop, (void*)0x00000000, dll_7C_func03};
 u8 lbl_80315030[520] = {

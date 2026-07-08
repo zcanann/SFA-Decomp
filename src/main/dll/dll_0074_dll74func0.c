@@ -17,6 +17,7 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/dll_0074_dll74func0.h"
 
 /* spawnEffect effect ids for the func03 "0/non-0 variant pair" (docblock). */
 #define DLL74_EFFECT_ID_VARIANT0 0x2e

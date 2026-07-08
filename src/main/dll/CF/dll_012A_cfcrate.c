@@ -19,8 +19,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
-#define CFCRATE_HIT_VOLUME_SLOT 0x13
-
 typedef struct CfccratePlacement
 {
     s16 id;
@@ -47,10 +45,12 @@ STATIC_ASSERT(offsetof(CfccratePlacement, param1A) == 0x1A);
 STATIC_ASSERT(offsetof(CfccratePlacement, param1C) == 0x1C);
 STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
 
+#define CFCRATE_HIT_VOLUME_SLOT 0x13
+
+#define PARTFX_SPAWN(obj, fxId, a, b, c, d)                                                                            \
+    (*gPartfxInterface)->spawnObject((void*)(obj), (fxId), (void*)(a), (b), (c), (void*)(d))
+
 extern f32 lbl_803E3DD8;
-extern void Obj_FreeObject(int obj);
-extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
-extern float sqrtf(float x);
 extern f64 lbl_803E3DE0;
 extern const f32 lbl_803E3DE8;
 extern f32 lbl_803E3DEC;
@@ -66,17 +66,18 @@ extern f32 lbl_803E3E10;
 extern f32 lbl_803E3E14;
 extern f64 lbl_803E3E18;
 extern f32 lbl_803E3E20;
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void* gCfCrateDefaultSfxTable;
 extern f32 lbl_803E3E30;
 extern f32 lbl_803E3E34;
 extern f32 lbl_803E3E38;
 extern f32 lbl_803E3E3C;
 extern f32 lbl_803E3E40;
-extern f32 sqrtf(f32);
 
-#define PARTFX_SPAWN(obj, fxId, a, b, c, d)                                                                            \
-    (*gPartfxInterface)->spawnObject((void*)(obj), (fxId), (void*)(a), (b), (c), (void*)(d))
+extern void Obj_FreeObject(int obj);
+extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
+extern float sqrtf(float x);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern f32 sqrtf(f32);
 
 int CFCrate_getExtraSize(void)
 {

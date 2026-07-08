@@ -18,7 +18,6 @@
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
-
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 /* anim.seqId tag identifying a live propeller (vs. a placeholder stand-in) */

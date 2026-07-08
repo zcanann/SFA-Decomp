@@ -14,10 +14,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
-extern ModgfxInterface** gModgfxInterface;
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLLA6_EFFECT_ID 0x26a
+#include "main/dll/dll_00A6_dlla6func0.h"
 
 typedef struct
 {
@@ -28,6 +25,10 @@ typedef struct
     u8 layer;    /* +0x16 */
 } GfxCmd;
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLLA6_EFFECT_ID 0x26a
+
+extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80318DF0[];
 extern u8 gDllA6EffectHwWords[];
 extern u8 lbl_803DB980;

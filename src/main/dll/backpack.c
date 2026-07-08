@@ -33,15 +33,16 @@ typedef struct LandedArwingTriggerLaunchTargetState
     u8 pad406[0x408 - 0x406];
 } LandedArwingTriggerLaunchTargetState;
 
+/* BaddieState+0x27A (moveJustStartedA): just-collided / move-just-started one-shot */
+#define LANDED_ARWING_JUST_COLLIDED 0x27A
+/* BaddieState+0x34D (stateTag): state index written each tick */
+#define LANDED_ARWING_STATE_INDEX 0x34D
+/* surfaceMode value for script/free flight */
+#define LANDED_ARWING_SCRIPT_MODE 6
+/* part of LANDED_ARWING_FLAG_LAUNCHING (0x02004000): mark launch active */
+#define LANDED_ARWING_FLAG_BOUNCE 0x4000
+
 extern void* gBaddieControlInterface;
-
-extern void Obj_FreeObject(int obj);
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern void fn_80165B3C(int obj, int state);
-extern void landedarwing_moveSurfaceCrawler(int obj, int state);
-extern void fn_80166444(int obj, int state);
-extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
-
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E2FE0;
@@ -54,14 +55,21 @@ extern f32 lbl_803E2FF8;
 extern f32 lbl_803E2FFC;
 extern f32 lbl_803E3000;
 
-/* BaddieState+0x27A (moveJustStartedA): just-collided / move-just-started one-shot */
-#define LANDED_ARWING_JUST_COLLIDED 0x27A
-/* BaddieState+0x34D (stateTag): state index written each tick */
-#define LANDED_ARWING_STATE_INDEX 0x34D
-/* surfaceMode value for script/free flight */
-#define LANDED_ARWING_SCRIPT_MODE 6
-/* part of LANDED_ARWING_FLAG_LAUNCHING (0x02004000): mark launch active */
-#define LANDED_ARWING_FLAG_BOUNCE 0x4000
+extern void Obj_FreeObject(int obj);
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern void fn_80165B3C(int obj, int state);
+extern void landedarwing_moveSurfaceCrawler(int obj, int state);
+extern void fn_80166444(int obj, int state);
+extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
+void dll_D3_initialise(void);
+void dll_D3_release_nop(void);
+void dll_D3_init(int obj, int def, int flag);
+void dll_D3_update(int* obj);
+void dll_D3_hitDetect_nop(void);
+void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void dll_D3_free(int obj);
+int dll_D3_getObjectTypeId(void);
+int dll_D3_getExtraSize_ret_1188(void);
 
 int LandedArwing_ReturnZero(void)
 {
@@ -245,16 +253,6 @@ update_action:
     state->scriptTimer -= framesThisStep;
     return 0;
 }
-
-void dll_D3_initialise(void);
-void dll_D3_release_nop(void);
-void dll_D3_init(int obj, int def, int flag);
-void dll_D3_update(int* obj);
-void dll_D3_hitDetect_nop(void);
-void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void dll_D3_free(int obj);
-int dll_D3_getObjectTypeId(void);
-int dll_D3_getExtraSize_ret_1188(void);
 
 ObjectDescriptor dll_D3 = {
     0,

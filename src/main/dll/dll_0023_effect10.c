@@ -26,6 +26,14 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_0023_effect10.h"
+
+/* flags arg bits */
+#define EFFECT10_FLAG_USE_SRC 0x200000 /* copy caller's EffectSrcParams into the spawn */
+/* flagsA template bits */
+#define EFFECT10_FLAGA_POS_RELATIVE 0x1 /* offset start pos by source vector / model xform */
+#define EFFECT10_FLAGA_UNK2         0x2 /* cleared when set alongside POS_RELATIVE; meaning unknown */
+
 extern f32 lbl_803DFEB8;
 extern f32 lbl_803DFEBC;
 extern f32 lbl_803DFEC8;
@@ -65,12 +73,6 @@ extern f32 gEffect10SineValueA;
 extern f32 gEffect10Pi;
 extern f32 gEffect10SinePhaseScale;
 extern float mathSinf(float x);
-
-/* flags arg bits */
-#define EFFECT10_FLAG_USE_SRC 0x200000 /* copy caller's EffectSrcParams into the spawn */
-/* flagsA template bits */
-#define EFFECT10_FLAGA_POS_RELATIVE 0x1 /* offset start pos by source vector / model xform */
-#define EFFECT10_FLAGA_UNK2         0x2 /* cleared when set alongside POS_RELATIVE; meaning unknown */
 
 int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByte, f32* p6)
 {

@@ -16,8 +16,6 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-
 typedef struct BaddieinterestpPlacement
 {
     u8 pad0[0x14 - 0x0];   /* 0x00 */
@@ -33,11 +31,12 @@ typedef struct BaddieinterestpPlacement
     u8 pad2E[0x30 - 0x2E]; /* 0x2E */
 } BaddieinterestpPlacement;
 
-extern void* ObjGroup_GetObjects();
 extern f32 lbl_803E3220;
+extern f32 lbl_803E3224;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void* ObjGroup_GetObjects();
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void fn_801504BC(int* obj, int kind);
-extern f32 lbl_803E3224;
 
 int BaddieInterestP_getExtraSize(void)
 {

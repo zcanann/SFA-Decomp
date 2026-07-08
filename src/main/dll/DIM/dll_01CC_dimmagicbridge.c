@@ -28,16 +28,16 @@ STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 #define DIMMAGICBRIDGE_GAMEBIT_TRIGGER 0x1ef
 #define DIMMAGICBRIDGE_GAMEBIT_LATCH   0x1e8
 
-extern int Obj_GetActiveModel(int obj);
-extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
-extern void fn_80065574(int matchVal, int obj, int flag);
 extern f32 lbl_803E4A18;
-
-extern int EmissionController_IsLingering(void* player);
 extern f32 lbl_803E4A00;
 extern f32 lbl_803E4A04;
 extern f32 lbl_803E4A08;
 extern f32 lbl_803E4A0C;
+
+extern int Obj_GetActiveModel(int obj);
+extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
+extern void fn_80065574(int matchVal, int obj, int flag);
+extern int EmissionController_IsLingering(void* player);
 extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
 extern float mathSinf(float x);
 

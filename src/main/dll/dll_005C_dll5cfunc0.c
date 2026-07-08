@@ -14,6 +14,10 @@
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/dll_005C_dll5cfunc0.h"
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL5C_EFFECT_ID 0x20b
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80311F20[];
@@ -29,9 +33,6 @@ extern f32 lbl_803E0780;
 extern f32 lbl_803E0784;
 extern f32 lbl_803E0788;
 extern f32 lbl_803E078C;
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL5C_EFFECT_ID 0x20b
 
 void dll_5C_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

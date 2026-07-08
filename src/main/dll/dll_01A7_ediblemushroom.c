@@ -13,6 +13,7 @@
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
+
 #define EDIBLEMUSHROOM_OBJFLAG_HIDDEN       0x4000
 #define EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
 #define EDIBLEMUSHROOM_OBJFLAG_RENDERED     0x800
@@ -31,11 +32,13 @@
 #define EDIBLEMUSHROOM_PARTFX_TAIL_SWING 0x7f0
 /* spore puff emitted on the sporePuffTimer tick during the burrow/attack state */
 #define EDIBLEMUSHROOM_PARTFX_SPORE_PUFF 0x51d
+
+extern f32 oneOverTimeDelta;
+
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj, int p7, int p8, int p9,
                               int p10);
-
 extern int getAngle(float y, float x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
@@ -43,17 +46,28 @@ extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
 extern void ObjMsg_SendToObject(u8* obj, int msg, u8* sender, void* data);
 extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
-extern f32 oneOverTimeDelta;
-s16 gEdibleMushroomMoveIdTable[12] = {0, 1, 6, 2, 3, 4, 0, 5, 6, 7, -1, 0};
-
-f32 gEdibleMushroomAnimEventTable[] = {0.005f, 0.01f, 0.005f, 0.01f,  0.01f, 0.015f,
-                                       0.005f, 0.01f, 0.005f, 0.012f, 0.0f};
+extern int objIsFrozen(u8* obj);
+extern int gameBitIncrement(int bit);
+extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
+extern void Obj_StartModelFadeIn(u8* obj, int frames);
+extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
+extern f32 sqrtf(f32 x);
+extern void ObjGroup_AddObject(u32 obj, int group);
+extern void ObjMsg_AllocQueue();
+extern f32 Vec_distance(int a, int b);
 
 void EdibleMushroom_init(int obj, int aux);
 void EdibleMushroom_update(u8* self);
 void EdibleMushroom_hitDetect(u8* obj);
 void EdibleMushroom_free(int obj);
 int EdibleMushroom_getExtraSize(void);
+s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
+
+s16 gEdibleMushroomMoveIdTable[12] = {0, 1, 6, 2, 3, 4, 0, 5, 6, 7, -1, 0};
+
+f32 gEdibleMushroomAnimEventTable[] = {0.005f, 0.01f, 0.005f, 0.01f,  0.01f, 0.015f,
+                                       0.005f, 0.01f, 0.005f, 0.012f, 0.0f};
 
 ObjectDescriptor gEdibleMushroomObjDescriptor = {
     0,
@@ -72,18 +86,6 @@ ObjectDescriptor gEdibleMushroomObjDescriptor = {
     EdibleMushroom_getExtraSize,
 };
 
-s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
-
-extern int objIsFrozen(u8* obj);
-extern int gameBitIncrement(int bit);
-extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void Obj_StartModelFadeIn(u8* obj, int frames);
-extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
-extern f32 sqrtf(f32 x);
-extern void ObjGroup_AddObject(u32 obj, int group);
-extern void ObjMsg_AllocQueue();
-extern f32 Vec_distance(int a, int b);
 #pragma optimization_level 2
 void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
@@ -592,7 +594,6 @@ void EdibleMushroom_hitDetect(u8* obj)
 #pragma opt_loop_invariants off
 void EdibleMushroom_update(u8* self)
 {
-    extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other);
     u8* state;
     u8* other;
     u8* player;

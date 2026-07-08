@@ -12,6 +12,7 @@
 #include "main/dll/fb_cmd.h"
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/dll_0072_dll72func0.h"
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL72_EFFECT_ID 0x154

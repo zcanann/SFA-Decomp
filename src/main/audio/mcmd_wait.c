@@ -5,10 +5,6 @@
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/hw_init.h"
 #include "main/sfa_shared_decls.h"
-extern u16 sndRand(void);
-extern void sndConvertTicks(u32* p, McmdVoiceState* state);
-
-extern u64 macRealTimeHi; /* u64 macRealTime: lo word = macRealTimeLo */
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
 #define MAC_CFLAGS(sv)     (*(u64*)&(sv)->inputFlags)
@@ -18,6 +14,10 @@ extern u64 macRealTimeHi; /* u64 macRealTime: lo word = macRealTimeLo */
 #define MAC_START_TIME(sv) (*(u64*)&(sv)->startTimeHi)
 #define MAC_WAIT_TIME(sv)  (*(u64*)&(sv)->activeTimeHi)
 #define MAC_REALTIME       macRealTimeHi
+
+extern u64 macRealTimeHi; /* u64 macRealTime: lo word = macRealTimeLo */
+extern u16 sndRand(void);
+extern void sndConvertTicks(u32* p, McmdVoiceState* state);
 
 /*
  * Delay/schedule a voice command, optionally randomizing the delay and

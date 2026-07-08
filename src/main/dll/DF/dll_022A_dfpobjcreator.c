@@ -9,12 +9,6 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_80220608_shared.h"
 
-STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
-
-/* Object periodically spawned by DFP_ObjCreator (case 7) from the placement
- * template; the spawner's whole purpose. */
-#define DFPOBJCREATOR_CHILD_OBJ 0x71b
-
 typedef struct DfpobjcreatorObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -71,8 +65,14 @@ STATIC_ASSERT(offsetof(DfpobjcreatorSetup, objDefId) == 0x1A);
 STATIC_ASSERT(offsetof(DfpobjcreatorSetup, gameBit) == 0x1E);
 STATIC_ASSERT(offsetof(DfpobjcreatorSetup, gameBit2) == 0x20);
 STATIC_ASSERT(sizeof(DfpobjcreatorSetup) == 0x24);
+STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
+
+/* Object periodically spawned by DFP_ObjCreator (case 7) from the placement
+ * template; the spawner's whole purpose. */
+#define DFPOBJCREATOR_CHILD_OBJ 0x71b
 
 extern int dbstealerworm_stateHandlerA02();
+int dbstealerworm_stateHandlerA02(int obj, int p2);
 
 int DFP_ObjCreator_getExtraSize(void)
 {
@@ -164,5 +164,3 @@ void DFP_ObjCreator_release(void)
 void DFP_ObjCreator_initialise(void)
 {
 }
-
-int dbstealerworm_stateHandlerA02(int obj, int p2);

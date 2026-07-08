@@ -6,6 +6,8 @@
  */
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/IM/dll_016D_imicepillar.h"
+
 extern f32 lbl_803E4768;
 
 int imicepillar_getExtraSize(void)

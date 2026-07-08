@@ -14,6 +14,7 @@
 #include "main/dll/savegame.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/dll_0096_dll96func0.h"
 
 typedef struct GfxCmd
 {
@@ -23,16 +24,6 @@ typedef struct GfxCmd
     u16 flags;   /* 0x14: per-entry render flags */
     u8 layer;    /* 0x16: draw layer */
 } GfxCmd;
-
-extern ModgfxInterface** gModgfxInterface;
-extern f32 lbl_803E12C0;
-extern f32 lbl_803E12C4;
-extern f32 lbl_803E12C8;
-extern f32 lbl_803E12CC;
-extern f32 lbl_803E12D0;
-extern f32 lbl_803E12D4;
-extern f32 lbl_803E12D8;
-extern u8 lbl_803175E8[];
 
 typedef struct GfxBuf
 {
@@ -70,6 +61,16 @@ STATIC_ASSERT(sizeof(GfxBuf) == 0x360);
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL96_EFFECT_ID 0x89
+
+extern ModgfxInterface** gModgfxInterface;
+extern f32 lbl_803E12C0;
+extern f32 lbl_803E12C4;
+extern f32 lbl_803E12C8;
+extern f32 lbl_803E12CC;
+extern f32 lbl_803E12D0;
+extern f32 lbl_803E12D4;
+extern f32 lbl_803E12D8;
+extern u8 lbl_803175E8[];
 
 int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

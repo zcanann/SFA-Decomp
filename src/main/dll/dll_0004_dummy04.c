@@ -9,6 +9,7 @@
  * return a fixed constant (0, 0x7f, or -1). Used to fill a DLL slot
  * with a known no-op so the dispatch tables stay valid.
  */
+#include "main/dll/dll_0004_dummy04.h"
 
 void Dummy04_func14_nop(void)
 {

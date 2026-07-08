@@ -20,6 +20,7 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/dll_008D_dll8dfunc0.h"
 
 /* spawnEffect effect ids per variant (docblock: "Each variant emits a distinct
  * effect id (0x156 / 0xc0d / 0x23b)"). */

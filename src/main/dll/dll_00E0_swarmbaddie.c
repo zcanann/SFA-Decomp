@@ -28,6 +28,12 @@
 #include "main/mm.h"
 #include "string.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_00E0_swarmbaddie.h"
+
+STATIC_ASSERT(sizeof(HagabonState) == 0x28);
+STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
+STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
+
 #define SWARMBADDIE_HIT_VOLUME_SLOT 10
 
 /* object group this object belongs to */
@@ -35,15 +41,13 @@
 #define SWARMBADDIE_PARTFX   0x336
 
 #define SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+#define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
+#define SWARMBADDIE_FLAG_CHASE_PLAYER    0x02
+#define SWARMBADDIE_FLAG_CHASE_LOCKOUT   0x04 /* strayed too far; block re-chase until back near path */
+#define SWARMBADDIE_FLAG_CHASE_MASK      0x06
+
 extern u32 DAT_803de6d0;
-extern int ObjHits_GetPriorityHitWithPosition();
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
-extern void* Obj_GetPlayerObject(void);
-extern int Curve_AdvanceAlongPath(int curve, f32 t);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern f32 sqrtf(f32 x);
-extern float mathSinf(float x);
 extern f32 lbl_803E2678;
 extern f32 lbl_803E267C;
 extern f32 lbl_803E2680;
@@ -66,15 +70,14 @@ extern f32 lbl_803E26C8;
 extern f32 lbl_803E26CC;
 extern int lbl_803DBC78;
 extern int gSwarmBaddieLastCurvePoint;
-
-STATIC_ASSERT(sizeof(HagabonState) == 0x28);
-STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
-STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
-
-#define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
-#define SWARMBADDIE_FLAG_CHASE_PLAYER    0x02
-#define SWARMBADDIE_FLAG_CHASE_LOCKOUT   0x04 /* strayed too far; block re-chase until back near path */
-#define SWARMBADDIE_FLAG_CHASE_MASK      0x06
+extern int ObjHits_GetPriorityHitWithPosition();
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
+extern void* Obj_GetPlayerObject(void);
+extern int Curve_AdvanceAlongPath(int curve, f32 t);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern f32 sqrtf(f32 x);
+extern float mathSinf(float x);
 
 void fn_8014EE8C(int obj, SwarmBaddieState* state)
 {

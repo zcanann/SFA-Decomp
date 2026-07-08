@@ -27,6 +27,7 @@
 #include "main/gamebits.h"
 #include "main/lightmap.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/skeetla.h"
 
 /* group owned by another DLL, queried here */
 #define SIDEREPEL_OBJGROUP      0x40 /* DLL 0xEB siderepel */
@@ -35,6 +36,13 @@
 /* Per-node fan-out limit: status[]/bestDistances[]/outRoutes[] hold at most
  * this many linked route candidates (status[8] / f32 bestDistances[8]). */
 #define TRICKY_ROUTE_CANDIDATE_COUNT 8
+
+#define SKEETLA_LINKED_SOURCE_ID_OBJ_A 0x1ca
+#define SKEETLA_LINKED_SOURCE_ID_OBJ_B 0x160
+#define SKEETLA_PARTICLE_SPARK_A       0xca
+#define SKEETLA_PARTICLE_SPARK_B       0xcb
+#define SKEETLA_PARTICLE_SPAWN_FLAGS   0x200001
+#define SKEETLA_PARTICLE_RANDOM_RATE   4
 
 extern const f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
@@ -47,17 +55,10 @@ extern f32 lbl_803E242C;
 extern f32 lbl_803E2430;
 extern f32 lbl_803E2434;
 extern f32 lbl_803E2438;
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void Sfx_PlayFromObject(u8* obj, int sfxId);
-
-extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
 extern f32 lbl_803E244C;
 extern f32 lbl_803E2448;
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E2450;
-extern f32 getXZDistance(f32* a, f32* b);
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E2420;
@@ -78,11 +79,15 @@ extern char sSkeetlaVelDebugFmt;
 extern char lbl_8031D2E8[];
 extern u32 gSkeetlaFootstepSfxIds01;
 extern u16 gSkeetlaFootstepSfxId2;
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
+extern void Sfx_PlayFromObject(u8* obj, int sfxId);
+extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
+extern f32 getXZDistance(f32* a, f32* b);
 extern s16 getAngle(f32 x, f32 z);
 extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
 extern void objAudioFn_800393f8(u8* obj, void* audio, int sfxId, int volume, int param5, int param6);
-extern int objAnimFn_8013a3f0(int obj, int newState, f32 speed, u32 flags);
-extern void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint);
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
@@ -1060,25 +1065,6 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
         }
     }
 }
-
-typedef struct SkeetlaParticleSpawnArgs
-{
-    s16 objectId;
-    s16 pad0;
-    u16 sourceId;
-    u16 pad1;
-    u32 pad2;
-    f32 x;
-    f32 y;
-    f32 z;
-} SkeetlaParticleSpawnArgs;
-
-#define SKEETLA_LINKED_SOURCE_ID_OBJ_A 0x1ca
-#define SKEETLA_LINKED_SOURCE_ID_OBJ_B 0x160
-#define SKEETLA_PARTICLE_SPARK_A       0xca
-#define SKEETLA_PARTICLE_SPARK_B       0xcb
-#define SKEETLA_PARTICLE_SPAWN_FLAGS   0x200001
-#define SKEETLA_PARTICLE_RANDOM_RATE   4
 
 void skeetla_spawnLinkedSparks(u8* obj)
 {

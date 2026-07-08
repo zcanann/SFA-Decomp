@@ -4,6 +4,13 @@
 #include "main/audio/sal_dsp.h"
 #include "string.h"
 #include "dolphin/os/OSCache.h"
+
+#define SAL_AI_BUFFER_COUNT        4
+#define SAL_AI_DMA_CHUNK_SIZE      0x280
+#define SAL_AI_DMA_BUFFER_SIZE     (SAL_AI_BUFFER_COUNT * SAL_AI_DMA_CHUNK_SIZE)
+#define SAL_AI_CACHED_BASE         0x80000000U
+#define SAL_AI_OUTPUT_SAMPLE_COUNT 0x7d00
+
 extern u8 lbl_803BD150[];
 extern void* salAiCallback;
 extern u32 salAiDmaBuffer;
@@ -13,12 +20,6 @@ extern volatile u32 salCallbackActive;
 extern volatile u32 salLastTick;
 extern volatile u32 salDspInitIsDone;
 extern u8 salAIBufferIndex;
-
-#define SAL_AI_BUFFER_COUNT        4
-#define SAL_AI_DMA_CHUNK_SIZE      0x280
-#define SAL_AI_DMA_BUFFER_SIZE     (SAL_AI_BUFFER_COUNT * SAL_AI_DMA_CHUNK_SIZE)
-#define SAL_AI_CACHED_BASE         0x80000000U
-#define SAL_AI_OUTPUT_SAMPLE_COUNT 0x7d00
 
 /*
  * AI DMA done callback: bumps the round-robin buffer index and

@@ -23,13 +23,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 
-#define PAD_BUTTON_A 0x100
-
-/* Death follow-up spawn (docblock: "Obj_AllocObjectSetup(0x2C, 0xD4)"): object id and effect id. */
-#define HIGHTOP_DEATH_SPAWN_OBJ_ID 0xd4
-#define HIGHTOP_DEATH_EFFECT_ID    0x675
-#define HIGHTOP_AIRMETER_BGTEXTURE 0x5ce
-
 /* 0x2C-byte Obj_AllocObjectSetup(0x2C, 0xD4) buffer composed in
  * HighTop_hitDetect when the air meter empties (death follow-up spawn). */
 typedef struct HighTopDeathSpawn
@@ -142,10 +135,6 @@ STATIC_ASSERT(offsetof(HighTopRuntime, flags) == 0x9FD);
 STATIC_ASSERT(offsetof(HighTopRuntime, turnRateThreshold) == 0xC16);
 STATIC_ASSERT(offsetof(HighTopRuntime, substate) == 0xC4B);
 
-/* HighTopRuntime.flagsC40 bits (0x140 clear = CURVE_FOLLOW + bit 0x100 together) */
-#define HIGHTOP_FLAG_CURVE_ARMED  0x20 /* curve-follow armed (set with CURVE_FOLLOW) */
-#define HIGHTOP_FLAG_CURVE_FOLLOW 0x40 /* running Obj_UpdateRomCurveFollowVelocity */
-
 typedef struct HighTopObject
 {
     union
@@ -168,6 +157,17 @@ STATIC_ASSERT(offsetof(HighTopObject, anim) == 0x00);
 STATIC_ASSERT(offsetof(HighTopObject, yaw) == offsetof(ObjAnimComponent, rotX));
 STATIC_ASSERT(offsetof(HighTopObject, x) == offsetof(ObjAnimComponent, localPosX));
 STATIC_ASSERT(offsetof(HighTopObject, runtime) == 0xB8);
+
+#define PAD_BUTTON_A 0x100
+
+/* Death follow-up spawn (docblock: "Obj_AllocObjectSetup(0x2C, 0xD4)"): object id and effect id. */
+#define HIGHTOP_DEATH_SPAWN_OBJ_ID 0xd4
+#define HIGHTOP_DEATH_EFFECT_ID    0x675
+#define HIGHTOP_AIRMETER_BGTEXTURE 0x5ce
+
+/* HighTopRuntime.flagsC40 bits (0x140 clear = CURVE_FOLLOW + bit 0x100 together) */
+#define HIGHTOP_FLAG_CURVE_ARMED  0x20 /* curve-follow armed (set with CURVE_FOLLOW) */
+#define HIGHTOP_FLAG_CURVE_FOLLOW 0x40 /* running Obj_UpdateRomCurveFollowVelocity */
 
 #define HIGHTOP_OBJECT_TYPE_ID 0x43
 #define HIGHTOP_OBJGROUP       0xa

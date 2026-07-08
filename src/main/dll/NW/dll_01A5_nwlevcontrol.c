@@ -19,12 +19,24 @@
 #include "main/gamebit_ids.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
-extern u32 Music_Trigger();
-extern u32 gameTimerIsRunning(void);
-extern f32 fn_80014668(void);
-extern void timerSetToCountUp(void);
-extern void gameTimerInit(s8 flags, int minutes);
-extern u32 SCGameBitLatch_Update();
+
+/* obj+0xB8 per-class state block (getExtraSize == 0x14). */
+typedef struct NwLevControlState
+{
+    f32 countdown;   /* 0x00 hint-message countdown */
+    u8 mode;         /* 0x04 state-machine mode */
+    u8 timerMinutes; /* 0x05 challenge timer minutes */
+    u8 pad06[0x08 - 0x06];
+    u32 flags;     /* 0x08 progression flag bits */
+    u8 seqId;      /* 0x0C trigger sequence id */
+    u8 nextMode;   /* 0x0D mode to enter after the timer step */
+    u8 tableIndex; /* 0x0E walk index into the target-object table */
+    u8 pad0F[0x10 - 0x0F];
+    s16 dayNightMusic; /* 0x10 day/night music marker */
+    u8 pad12[0x14 - 0x12];
+} NwLevControlState;
+
+STATIC_ASSERT(sizeof(NwLevControlState) == 0x14);
 
 #define NWLEVCONTROL_OBJFLAG_HIDDEN             0x4000
 #define NWLEVCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -35,20 +47,6 @@ extern u32 SCGameBitLatch_Update();
 /* SnowHorn Wastes music tracks (Music_Trigger ids). */
 #define NWLEVCONTROL_MUSIC_TRACK     0x1a /* day/night ambient track */
 #define NWLEVCONTROL_MUSIC_TIMER_END 0xaf /* timed-challenge completion track */
-
-extern void gameTextShow(int a);
-extern f32 lbl_803E5278;
-extern f32 lbl_803E527C;
-extern f32 lbl_803E5280;
-
-extern int isGameTimerDisabled(void);
-extern void fn_80088870(char* a, char* b, char* c, char* d);
-extern int getSaveGameLoadStatus(void);
-extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern int ObjList_FindObjectById(int objectId);
-extern int ObjTrigger_IsSetById();
-extern void gameTimerStop(void);
 
 /* NwLevControlState.mode: SnowHorn Wastes progression state machine.
  * Modes 3..7 are the intermediate table-walk steps (identical handling,
@@ -66,22 +64,25 @@ enum NwLevControlMode
     NWLEVCONTROL_MODE_RESCUE_RETRIGGER = 0xc /* post-rescue re-trigger, then cleanup */
 };
 
-/* obj+0xB8 per-class state block (getExtraSize == 0x14). */
-typedef struct NwLevControlState
-{
-    f32 countdown;   /* 0x00 hint-message countdown */
-    u8 mode;         /* 0x04 state-machine mode */
-    u8 timerMinutes; /* 0x05 challenge timer minutes */
-    u8 pad06[0x08 - 0x06];
-    u32 flags;     /* 0x08 progression flag bits */
-    u8 seqId;      /* 0x0C trigger sequence id */
-    u8 nextMode;   /* 0x0D mode to enter after the timer step */
-    u8 tableIndex; /* 0x0E walk index into the target-object table */
-    u8 pad0F[0x10 - 0x0F];
-    s16 dayNightMusic; /* 0x10 day/night music marker */
-    u8 pad12[0x14 - 0x12];
-} NwLevControlState;
-STATIC_ASSERT(sizeof(NwLevControlState) == 0x14);
+extern u32 Music_Trigger();
+extern u32 gameTimerIsRunning(void);
+extern f32 fn_80014668(void);
+extern void timerSetToCountUp(void);
+extern void gameTimerInit(s8 flags, int minutes);
+extern u32 SCGameBitLatch_Update();
+extern void gameTextShow(int a);
+extern f32 lbl_803E5278;
+extern f32 lbl_803E527C;
+extern f32 lbl_803E5280;
+extern int isGameTimerDisabled(void);
+extern void fn_80088870(char* a, char* b, char* c, char* d);
+extern int getSaveGameLoadStatus(void);
+extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
+extern int ObjList_FindObjectById(int objectId);
+extern int ObjTrigger_IsSetById();
+extern void gameTimerStop(void);
+extern void envFxActFn_800887f8(u8 value);
 
 void nw_levcontrol_update(int objArg)
 {
@@ -266,7 +267,6 @@ void nw_levcontrol_update(int objArg)
 
 void nw_levcontrol_init(int* obj)
 {
-    extern void envFxActFn_800887f8(u8 value);
     extern char lbl_803269F8[];
     char* base = lbl_803269F8;
     NwLevControlState* state = ((GameObject*)obj)->extra;
@@ -356,7 +356,6 @@ int nw_levcontrol_getExtraSize(void)
  * group is no longer active) and always stop the challenge timer. */
 void nw_levcontrol_free(GameObject* obj)
 {
-    extern void envFxActFn_800887f8(u8 value);
     s8 slot = obj->anim.mapEventSlot;
     int groupStatus = (*gMapEventInterface)->getObjGroupStatus((s32)slot, 0);
     if ((u8)groupStatus == 0)

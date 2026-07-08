@@ -18,6 +18,18 @@
 #include "main/player_control_interface.h"
 #include "main/dll/DIM/dll_223.h"
 #include "main/dll/fx_800944A0_shared.h"
+
+#define DIMBOSSSPIT_MODEL_ACTIVE_FLAG    0x1
+#define DIMBOSSSPIT_OBJECT_DISABLED_FLAG 0x8
+
+#define DIMBOSSSPIT_GAMEBIT_ACTIVE     0x20e
+#define DIMBOSSSPIT_GAMEBIT_ROUTE_LOW  0x268
+#define DIMBOSSSPIT_GAMEBIT_ROUTE_HIGH 0x311
+
+#define DIMBOSSSPIT_ROUTE_HIGH_THRESHOLD  7
+#define DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD 3
+#define DIMBOSSSPIT_RUMBLE_SFX            0x189
+
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
@@ -31,17 +43,6 @@ extern f32 lbl_803E4CB4;
 extern f32 lbl_803E4CB8;
 extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
-
-#define DIMBOSSSPIT_MODEL_ACTIVE_FLAG    0x1
-#define DIMBOSSSPIT_OBJECT_DISABLED_FLAG 0x8
-
-#define DIMBOSSSPIT_GAMEBIT_ACTIVE     0x20e
-#define DIMBOSSSPIT_GAMEBIT_ROUTE_LOW  0x268
-#define DIMBOSSSPIT_GAMEBIT_ROUTE_HIGH 0x311
-
-#define DIMBOSSSPIT_ROUTE_HIGH_THRESHOLD  7
-#define DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD 3
-#define DIMBOSSSPIT_RUMBLE_SFX            0x189
 
 void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state,
                                          DIMbosstonsilState* updateState)

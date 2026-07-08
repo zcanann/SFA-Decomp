@@ -15,7 +15,12 @@
 #include "main/objprint.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/CF/dll_014F_cfprisonuncle.h"
 
+STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
+
+extern f32 lbl_803E428C;
+extern f32 lbl_803E4288;
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
@@ -23,17 +28,12 @@ extern int ObjTrigger_IsSet();
 extern int ObjPath_GetPointWorldPosition();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 mainGetBit(int eventId);
-
 extern void playerAddRemoveMagic(void* player, int n);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern int objModelGetVecFn_800395d8(int obj, int idx);
 extern void objAudioFn_80039270(int obj, void* p, int id);
 extern void* ObjList_GetObjects(int* outA, int* outB);
-extern f32 lbl_803E428C;
 extern int objUpdateOpacity(int sub);
-extern f32 lbl_803E4288;
-
-STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 /* release-sequence callback: on the cued trigger, thank Fox with a
  * one-shot +2 magic (the Power Room key comes from the script) */

@@ -25,6 +25,7 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/VF/vf_shared.h"
 #include "dolphin/gx/GXTransform.h"
+#include "main/dll/cmenu.h"
 
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
 
@@ -34,8 +35,6 @@
    (ids/words/state/flags/textures); matches the s16 saved[64] snapshot. */
 #define CMENU_ITEM_SLOT_COUNT 64
 
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern u8 lbl_803A87F0[];
 extern CMenuItemDef gCMenuStaffAbilities[];
 extern s16 gCMenuForcedSelIndex;
@@ -45,18 +44,7 @@ extern u16 yButtonItem;
 extern s16 yButtonItemTextureId;
 extern int gTrickyHudItemMask;
 extern int gTrickyHudActionMask;
-extern int getTrickyObject(void);
-extern int getLoadedFileFlags(int flags);
 extern u32 lbl_803E1E14;
-extern int ObjModel_GetRenderOp(int model, int p);
-extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
-extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
-extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
-
-extern void hudDrawTimedElement(int obj, void* p);
-
-extern int getHudHiddenFrameCount(void);
-extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern u8 pauseMenuState;
 extern int hudTextures[];
 extern u8 lbl_803A9398[];
@@ -70,22 +58,6 @@ extern u32 lbl_803E1E10;
 extern void* gCMenuRingIconTextures[7];
 extern int gCMenuRingIconActiveFlags[7];
 extern f32 lbl_803E2010;
-extern void gxColorFn_80052764(void* p);
-extern void Camera_SetCurrentViewIndex(int index);
-extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
-extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
-extern void Camera_UpdateViewMatrices(void);
-extern void Camera_ApplyFullViewport(void);
-extern int Camera_IsViewYOffsetEnabled(void);
-extern void Camera_DisableViewYOffset(void);
-extern void Camera_EnableViewYOffset(void);
-extern void Camera_RebuildProjectionMatrix(void);
-extern f32 Camera_GetFovY(void);
-extern void Camera_SetFovY(f32 fovY);
-extern int Obj_GetActiveModel(int obj);
-extern void objRender(int a, int b, int c, int d, int obj, int flag);
-
-extern float mathCosf(float x);
 extern s8 cMenuState;
 extern s16 gCMenuScrollTimer;
 extern s16 cMenuFadeCounter;
@@ -115,6 +87,33 @@ extern f32 lbl_803E2020;
 extern f32 lbl_803E2024;
 extern f64 lbl_803E2028;
 extern f64 lbl_803E2030;
+
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
+extern int getTrickyObject(void);
+extern int getLoadedFileFlags(int flags);
+extern int ObjModel_GetRenderOp(int model, int p);
+extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
+extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
+extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+extern void hudDrawTimedElement(int obj, void* p);
+extern int getHudHiddenFrameCount(void);
+extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
+extern void gxColorFn_80052764(void* p);
+extern void Camera_SetCurrentViewIndex(int index);
+extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
+extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
+extern void Camera_UpdateViewMatrices(void);
+extern void Camera_ApplyFullViewport(void);
+extern int Camera_IsViewYOffsetEnabled(void);
+extern void Camera_DisableViewYOffset(void);
+extern void Camera_EnableViewYOffset(void);
+extern void Camera_RebuildProjectionMatrix(void);
+extern f32 Camera_GetFovY(void);
+extern void Camera_SetFovY(f32 fovY);
+extern int Obj_GetActiveModel(int obj);
+extern void objRender(int a, int b, int c, int d, int obj, int flag);
+extern float mathCosf(float x);
 
 int cMenuSetItems(s16* items, char useTricky)
 {

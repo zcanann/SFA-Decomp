@@ -3,15 +3,12 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 
-void crcloudrace_updateCompletionState(int obj, CrCloudRaceState* state);
-void crcloudrace_updateRaceState(int obj);
+typedef void (*CrCloudRaceRenderScaleFn)(double scale);
 
 extern f32 lbl_803E6748;
-extern u32 playerGetFocusObject(int obj);
 extern f32 lbl_803E6740;
 extern f32 lbl_803E6744;
-
-typedef void (*CrCloudRaceRenderScaleFn)(double scale);
+extern u32 playerGetFocusObject(int obj);
 
 ObjectDescriptor gCrCloudRaceObjDescriptor = {
     0,

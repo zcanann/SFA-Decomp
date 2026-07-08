@@ -23,17 +23,27 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
-extern int randomGetRange(int lo, int hi);
 
-extern int Obj_GetPlayerObject(void);
-extern int getTrickyObject(void);
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int size, int objectId);
-extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
-extern void trickyImpress(int obj);
-extern f32 sqrtf(f32 value);
-extern void vecRotateZXY(void* rotation, void* vec);
-extern u16 getAngle(f32 x, f32 z);
+typedef struct PrisonGuardStateFlags
+{
+    u8 pad[0x1d];
+    u8 active : 1;
+    u8 locked : 1;
+    u8 mirror : 1;
+} PrisonGuardStateFlags;
+
+typedef struct PrisonGuardRotationWork
+{
+    s16 y;
+    s16 x;
+    s16 z;
+    s16 pad;
+    f32 scale;
+    f32 tx;
+    f32 ty;
+    f32 tz;
+} PrisonGuardRotationWork;
+
 extern f32 timeDelta;
 extern const f32 lbl_803E3BBC;
 extern const f32 lbl_803E3BC4;
@@ -43,6 +53,16 @@ extern f32 lbl_803E3BD8;
 extern const f32 lbl_803E3BDC;
 extern const f32 lbl_803E3BE0;
 extern s16 lbl_803DBDE0[4];
+extern int randomGetRange(int lo, int hi);
+extern int Obj_GetPlayerObject(void);
+extern int getTrickyObject(void);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int objectId);
+extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
+extern void trickyImpress(int obj);
+extern f32 sqrtf(f32 value);
+extern void vecRotateZXY(void* rotation, void* vec);
+extern u16 getAngle(f32 x, f32 z);
 
 void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
 {
@@ -99,14 +119,6 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
                                                                 state->liftHeight / lbl_803E3BCC);
 }
 
-typedef struct PrisonGuardStateFlags
-{
-    u8 pad[0x1d];
-    u8 active : 1;
-    u8 locked : 1;
-    u8 mirror : 1;
-} PrisonGuardStateFlags;
-
 void cfPrisonGuard_setGameBitMirror(int obj, u8 flag)
 {
     StaffActivatedSetup* setup = (StaffActivatedSetup*)((GameObject*)obj)->anim.placementData;
@@ -127,18 +139,6 @@ u32 cfPrisonGuard_isGameBitMirrorSet(int* obj)
 {
     return (((StaffActivatedState*)((GameObject*)obj)->extra)->flags >> 5) & 1;
 }
-
-typedef struct PrisonGuardRotationWork
-{
-    s16 y;
-    s16 x;
-    s16 z;
-    s16 pad;
-    f32 scale;
-    f32 tx;
-    f32 ty;
-    f32 tz;
-} PrisonGuardRotationWork;
 
 void staffactivated_spawnMapEventDebris(int obj)
 {

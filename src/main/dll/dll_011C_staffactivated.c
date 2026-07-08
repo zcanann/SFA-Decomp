@@ -17,6 +17,43 @@
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
+
+STATIC_ASSERT(sizeof(StaffActivatedState) == 0x24);
+STATIC_ASSERT(offsetof(StaffActivatedState, targetX) == 0x00);
+STATIC_ASSERT(offsetof(StaffActivatedState, targetZ) == 0x04);
+STATIC_ASSERT(offsetof(StaffActivatedState, liftVelocity) == 0x0c);
+STATIC_ASSERT(offsetof(StaffActivatedState, previousLiftHeight) == 0x10);
+STATIC_ASSERT(offsetof(StaffActivatedState, liftHeight) == 0x14);
+STATIC_ASSERT(offsetof(StaffActivatedState, peakLiftHeight) == 0x18);
+STATIC_ASSERT(offsetof(StaffActivatedState, liftReset) == 0x1c);
+STATIC_ASSERT(offsetof(StaffActivatedState, flags) == 0x1d);
+STATIC_ASSERT(offsetof(StaffActivatedState, hitCooldown) == 0x20);
+STATIC_ASSERT(sizeof(StaffActivatedSetup) == 0x28);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, type) == 0x18);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, mode) == 0x1c);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, size) == 0x1d);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, debrisObjectSet) == 0x1e);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, debrisCount) == 0x1f);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, timedEventSeconds) == 0x20);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, activeGameBit) == 0x22);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
+
+#define STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER 0x04
+#define STAFFACTIVATED_OBJ_FLAG_LOCKED      0x08
+#define STAFFACTIVATED_OBJ_FLAG_DISABLED    0x10
+
+#define STAFFACTIVATED_MODE_ACTION        0
+#define STAFFACTIVATED_MODE_LIFT          2
+#define STAFFACTIVATED_MODE_HIT_REACTION  3
+#define STAFFACTIVATED_MODE_DAMAGE_FIRST  4
+#define STAFFACTIVATED_MODE_DAMAGE_SECOND 5
+
+#define STAFFACTIVATED_TRIGGER_GAMEBIT 0xd2a
+#define STAFFACTIVATED_ENABLE_GAMEBIT  0x957
+#define STAFFACTIVATED_PARTICLE_ID     0x7c3
+
+#define STAFFACTIVATED_OBJ_GROUP 0x41
+
 extern f32 lbl_803E3BBC;
 extern f32 lbl_803E3BDC;
 extern f32 lbl_803E3BF0;
@@ -38,42 +75,6 @@ extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern int playerIsPathFollowing(void);
 extern void landed_arwing_updateHitReaction(GameObject* obj, void* state);
 extern void landed_arwing_updateDamageTexture(GameObject* obj, void* state);
-
-#define STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER 0x04
-#define STAFFACTIVATED_OBJ_FLAG_LOCKED      0x08
-#define STAFFACTIVATED_OBJ_FLAG_DISABLED    0x10
-
-#define STAFFACTIVATED_MODE_ACTION        0
-#define STAFFACTIVATED_MODE_LIFT          2
-#define STAFFACTIVATED_MODE_HIT_REACTION  3
-#define STAFFACTIVATED_MODE_DAMAGE_FIRST  4
-#define STAFFACTIVATED_MODE_DAMAGE_SECOND 5
-
-#define STAFFACTIVATED_TRIGGER_GAMEBIT 0xd2a
-#define STAFFACTIVATED_ENABLE_GAMEBIT  0x957
-#define STAFFACTIVATED_PARTICLE_ID     0x7c3
-
-#define STAFFACTIVATED_OBJ_GROUP 0x41
-
-STATIC_ASSERT(sizeof(StaffActivatedState) == 0x24);
-STATIC_ASSERT(offsetof(StaffActivatedState, targetX) == 0x00);
-STATIC_ASSERT(offsetof(StaffActivatedState, targetZ) == 0x04);
-STATIC_ASSERT(offsetof(StaffActivatedState, liftVelocity) == 0x0c);
-STATIC_ASSERT(offsetof(StaffActivatedState, previousLiftHeight) == 0x10);
-STATIC_ASSERT(offsetof(StaffActivatedState, liftHeight) == 0x14);
-STATIC_ASSERT(offsetof(StaffActivatedState, peakLiftHeight) == 0x18);
-STATIC_ASSERT(offsetof(StaffActivatedState, liftReset) == 0x1c);
-STATIC_ASSERT(offsetof(StaffActivatedState, flags) == 0x1d);
-STATIC_ASSERT(offsetof(StaffActivatedState, hitCooldown) == 0x20);
-STATIC_ASSERT(sizeof(StaffActivatedSetup) == 0x28);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, type) == 0x18);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, mode) == 0x1c);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, size) == 0x1d);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, debrisObjectSet) == 0x1e);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, debrisCount) == 0x1f);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, timedEventSeconds) == 0x20);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, activeGameBit) == 0x22);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
 
 void staffactivated_calcInteractionTargetXZ(int obj, f32* outX, f32* outZ)
 {

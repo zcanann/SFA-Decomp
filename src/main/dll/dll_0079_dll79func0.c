@@ -17,12 +17,7 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/modgfx_types.h"
-
-extern void dll_7A_func03(void);
-
-extern void dll_7A_func01_nop(void);
-
-extern void dll_7A_func00_nop(void);
+#include "main/dll/dll_0079_dll79func0.h"
 
 /* spawnEffect effect ids per variant (docblock: "effect id 0x156/0x89/0x23b for variant 0/1/2"). */
 #define DLL79_EFFECT_ID_VARIANT0 0x156
@@ -36,6 +31,9 @@ extern f32 lbl_803E0CB0, lbl_803E0CB4, lbl_803E0CB8, lbl_803E0CBC, lbl_803E0CC0,
 extern f32 lbl_803E0CC8, lbl_803E0CCC, lbl_803E0CD0, lbl_803E0CD4, lbl_803E0CD8, lbl_803E0CDC;
 extern f32 lbl_803E0CE0, lbl_803E0CE4, lbl_803E0CE8, lbl_803E0CEC, lbl_803E0CF0, lbl_803E0CF4;
 extern f32 lbl_803E0CF8, lbl_803E0CFC;
+extern void dll_7A_func03(void);
+extern void dll_7A_func01_nop(void);
+extern void dll_7A_func00_nop(void);
 
 int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {

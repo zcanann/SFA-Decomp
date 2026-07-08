@@ -17,11 +17,12 @@
 #include "main/objlib.h"
 #include "main/frame_timing.h"
 #include "main/dll/vecrotatezxy.h"
-#define ICEBLAST_HIT_VOLUME_SLOT 0x10
 
 STATIC_ASSERT(offsetof(IceblastPlacement, useAltHitVolume) == 0x19);
 STATIC_ASSERT(offsetof(IceblastPlacement, initialTimer) == 0x1a);
 STATIC_ASSERT(sizeof(IceblastState) == 0x4);
+
+#define ICEBLAST_HIT_VOLUME_SLOT 0x10
 
 int iceblast_getExtraSize(void)
 {

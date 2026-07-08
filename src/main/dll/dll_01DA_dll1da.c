@@ -10,11 +10,25 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/engine_shared.h"
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, u32* outHitVolume);
-extern f32 Vec_distance(f32* a, f32* b);
-extern void ObjHits_AddContactObject(int obj, int contactObj);
-extern void saveGame_saveObjectPos(int obj);
+
+typedef struct Dll1DAState
+{
+    f32 floorHeight; /* 0x00: clamp floor, seeded at init */
+    u8 grounded;     /* 0x04: rock is resting on a contact object */
+    u8 unk5;
+    u8 unk6;
+    u8 pad7[0x8 - 0x7];
+} Dll1DAState;
+
+typedef struct
+{
+    int hit[7];
+    f32 nx;
+    f32 ny;
+    f32 nz;
+    int pad[8];
+} RockHitInfo;
+
 extern f32 lbl_803E4AD8;
 extern f32 lbl_803E4ADC;
 extern f32 lbl_803E4AE0;
@@ -28,14 +42,14 @@ extern f32 lbl_803E4AFC;
 extern f32 lbl_803E4B00;
 extern const f32 lbl_803E4B04;
 
-typedef struct Dll1DAState
-{
-    f32 floorHeight; /* 0x00: clamp floor, seeded at init */
-    u8 grounded;     /* 0x04: rock is resting on a contact object */
-    u8 unk5;
-    u8 unk6;
-    u8 pad7[0x8 - 0x7];
-} Dll1DAState;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, u32* outHitVolume);
+extern f32 Vec_distance(f32* a, f32* b);
+extern void ObjHits_AddContactObject(int obj, int contactObj);
+extern void saveGame_saveObjectPos(int obj);
+extern int objBboxFn_800640cc(int a, int b, f32 r, int c, int* out, int obj, int d, int e, int f, int g);
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* out, int a, int b);
 
 int dll_1DA_getExtraSize(void)
 {
@@ -74,22 +88,10 @@ void dll_1DA_hitDetect(int obj)
     }
 }
 
-typedef struct
-{
-    int hit[7];
-    f32 nx;
-    f32 ny;
-    f32 nz;
-    int pad[8];
-} RockHitInfo;
-
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
 void dll_1DA_update(int obj)
 {
-    extern int objBboxFn_800640cc(int a, int b, f32 r, int c, int* out, int obj, int d, int e, int f, int g);
-    extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-    extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* out, int a, int b);
     int state;
     f32 vx;
     f32 vy;

@@ -17,8 +17,6 @@
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
 
-extern ModgfxInterface** gModgfxInterface;
-
 typedef struct
 {
     u32 mode;    /* +0x00 */
@@ -27,6 +25,11 @@ typedef struct
     u16 flags;   /* +0x14 */
     u8 layer;    /* +0x16 */
 } GfxCmd;
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL9E_EFFECT_ID 0x46c
+
+extern ModgfxInterface** gModgfxInterface;
 
 /* lbl_80318260: shared texture + halfword table; lbl_803E1418..1440:
  * gfx-constant pool. Home TU unknown. */
@@ -42,9 +45,6 @@ extern f32 lbl_803E1434;
 extern f32 lbl_803E1438;
 extern f32 lbl_803E143C;
 extern f32 lbl_803E1440;
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL9E_EFFECT_ID 0x46c
 
 void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {

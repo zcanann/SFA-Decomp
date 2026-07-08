@@ -21,8 +21,13 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/CC/dll_018B_cclevcontrol.h"
+
 #define CCLEVCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 #define CCLEVCONTROL_ENVFX_A              0x242
+
+extern int lbl_80323548[];
+
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern void Music_Trigger(int id, int arg);
@@ -31,7 +36,8 @@ extern void fn_80088870(void* a, void* b, void* c, void* d);
 
 extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern int lbl_80323548[];
+
+extern void* getTrickyObject(void);
 
 int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -60,7 +66,6 @@ void cclevcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void cclevcontrol_update(int obj)
 {
-    extern void* getTrickyObject(void);
     int* state = ((GameObject*)obj)->extra;
     int* tricky;
     u32 collectBitA;

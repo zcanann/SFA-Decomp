@@ -77,6 +77,20 @@
 #define WCPUSHBLOCK_GAMEBIT_B_COUNT     0x811
 #define WCPUSHBLOCK_REQUIRED_LOCK_COUNT 4U
 
+#define WCPUSHBLOCK_CONTROLLER(state)   (((WCPushBlockRuntimeState*)(state))->controller)
+#define WCPUSHBLOCK_IFACE               (*(WCLevelContInterface**)(*(int*)(WCPUSHBLOCK_CONTROLLER(state) + 0x68)))
+#define WCPUSHBLOCK_TARGET_X(state)     (((WCPushBlockRuntimeState*)(state))->targetX)
+#define WCPUSHBLOCK_TARGET_Z(state)     (((WCPushBlockRuntimeState*)(state))->targetZ)
+#define WCPUSHBLOCK_BASE_Y(state)       (((WCPushBlockRuntimeState*)(state))->baseY)
+#define WCPUSHBLOCK_BOB_Y(state)        (((WCPushBlockRuntimeState*)(state))->bobY)
+#define WCPUSHBLOCK_BOB_ANGLE(state)    (((WCPushBlockRuntimeState*)(state))->bobAngle)
+#define WCPUSHBLOCK_TILE_X(state)       (((WCPushBlockRuntimeState*)(state))->tileX)
+#define WCPUSHBLOCK_TILE_Y(state)       (((WCPushBlockRuntimeState*)(state))->tileY)
+#define WCPUSHBLOCK_PUSH_DIR(state)     (((WCPushBlockRuntimeState*)(state))->pushDir)
+#define WCPUSHBLOCK_INITIAL_TILE(state) (((WCPushBlockRuntimeState*)(state))->initialTile)
+#define WCPUSHBLOCK_MOVE_RESULT(state)  (((WCPushBlockRuntimeState*)(state))->moveResult)
+#define WCPUSHBLOCK_FLAGS(state)        (((WCPushBlockRuntimeState*)(state))->flags)
+
 typedef struct WCPushBlockSetup
 {
     ObjPlacement base;
@@ -122,20 +136,6 @@ STATIC_ASSERT(sizeof(WCPushBlockSetup) == 0x24);
 STATIC_ASSERT(offsetof(WCPushBlockSetup, base.posY) == 0xc);
 STATIC_ASSERT(offsetof(WCPushBlockSetup, modelIndex) == WCPUSHBLOCK_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCPushBlockSetup, initialTile) == WCPUSHBLOCK_INITIAL_TILE_OFFSET);
-
-#define WCPUSHBLOCK_CONTROLLER(state)   (((WCPushBlockRuntimeState*)(state))->controller)
-#define WCPUSHBLOCK_IFACE               (*(WCLevelContInterface**)(*(int*)(WCPUSHBLOCK_CONTROLLER(state) + 0x68)))
-#define WCPUSHBLOCK_TARGET_X(state)     (((WCPushBlockRuntimeState*)(state))->targetX)
-#define WCPUSHBLOCK_TARGET_Z(state)     (((WCPushBlockRuntimeState*)(state))->targetZ)
-#define WCPUSHBLOCK_BASE_Y(state)       (((WCPushBlockRuntimeState*)(state))->baseY)
-#define WCPUSHBLOCK_BOB_Y(state)        (((WCPushBlockRuntimeState*)(state))->bobY)
-#define WCPUSHBLOCK_BOB_ANGLE(state)    (((WCPushBlockRuntimeState*)(state))->bobAngle)
-#define WCPUSHBLOCK_TILE_X(state)       (((WCPushBlockRuntimeState*)(state))->tileX)
-#define WCPUSHBLOCK_TILE_Y(state)       (((WCPushBlockRuntimeState*)(state))->tileY)
-#define WCPUSHBLOCK_PUSH_DIR(state)     (((WCPushBlockRuntimeState*)(state))->pushDir)
-#define WCPUSHBLOCK_INITIAL_TILE(state) (((WCPushBlockRuntimeState*)(state))->initialTile)
-#define WCPUSHBLOCK_MOVE_RESULT(state)  (((WCPushBlockRuntimeState*)(state))->moveResult)
-#define WCPUSHBLOCK_FLAGS(state)        (((WCPushBlockRuntimeState*)(state))->flags)
 
 int wcpushblock_getExtraSize(void)
 {

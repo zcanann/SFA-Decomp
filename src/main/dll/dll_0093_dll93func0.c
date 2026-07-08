@@ -12,15 +12,7 @@
 #include "main/effect_interfaces.h"
 #include "ghidra_import.h"
 #include "main/gameplay_runtime.h"
-extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80317260[];
-extern f32 lbl_803E1240;
-extern f32 lbl_803E1244;
-extern f32 lbl_803E1248;
-extern f32 lbl_803E124C;
-extern f32 lbl_803E1250;
-extern f32 lbl_803E1254;
-extern f32 lbl_803E1258;
+#include "main/dll/dll_0093_dll93func0.h"
 
 typedef struct GfxCmd
 {
@@ -56,6 +48,16 @@ typedef struct GfxBuf
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL93_EFFECT_ID 0x89
+
+extern ModgfxInterface** gModgfxInterface;
+extern u8 lbl_80317260[];
+extern f32 lbl_803E1240;
+extern f32 lbl_803E1244;
+extern f32 lbl_803E1248;
+extern f32 lbl_803E124C;
+extern f32 lbl_803E1250;
+extern f32 lbl_803E1254;
+extern f32 lbl_803E1258;
 
 void dll_93_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

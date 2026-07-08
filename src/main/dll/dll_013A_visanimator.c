@@ -15,11 +15,12 @@
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_013A_visanimator.h"
+
+STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 #define VISANIMATOR_OBJFLAG_HIDDEN             0x4000
 #define VISANIMATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 int VisAnimator_getExtraSize(void)
 {

@@ -12,6 +12,7 @@
 #include "main/game_object.h"
 #include "main/dll/TREX/TREX_trex.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/SB/dll_01ED_sbfireball.h"
 
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 
@@ -31,6 +32,8 @@ enum
 
 /* obj->unkF4 life timer set at init, decremented by framesThisStep */
 #define SB_FIREBALL_LIFETIME 0x4b0
+
+extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 
 int SB_FireBall_getExtraSize(void)
 {
@@ -76,8 +79,6 @@ void SB_FireBall_hitDetect(int* obj)
 
 void SB_FireBall_update(GameObject* obj)
 {
-
-    extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
     SBFireBallState* state;
     f32 particleArgs[7];
 #define hits (*(ObjHitsPriorityState**)((char*)obj + 0x54))

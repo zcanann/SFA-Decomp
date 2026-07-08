@@ -6,17 +6,20 @@
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/map_block.h"
+#include "main/dll/dll_0159_blasted.h"
+
+#define BLASTED_GAMEBIT_DAMAGE_BASE 0x2de /* base of per-damage-step progress GameBit array */
+
 extern f32 lbl_803E4348;
+extern int lbl_803DDB18;
+
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void* mapGetBlock(int i);
 extern u8* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
 extern u8* fn_8006070C(void* block, int idx);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern int lbl_803DDB18;
 extern void objSetSlot(int* obj, int slot);
-
-#define BLASTED_GAMEBIT_DAMAGE_BASE 0x2de /* base of per-damage-step progress GameBit array */
 
 /* Flags every trigger/volume in the map block under the object that
  * carries the given event id: sets bits 0..1 on matching block entries
@@ -91,32 +94,6 @@ void blasted_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 void blasted_hitDetect(void)
 {
 }
-
-typedef struct BlastedTargetSetup
-{
-    u8 pad00[0x1A];
-    s16 pieceCount;
-    s16 triggerId;
-    s16 completedGameBit;
-    s16 progressGameBit;
-} BlastedTargetSetup;
-
-typedef struct BlastedTargetState
-{
-    u32 destroyedHitObjects[3];
-    int triggerFired;
-    u8 pad10;
-    u8 damageStep;
-    u8 pad12[2];
-} BlastedTargetState;
-
-STATIC_ASSERT(offsetof(BlastedTargetSetup, pieceCount) == 0x1A);
-STATIC_ASSERT(offsetof(BlastedTargetSetup, triggerId) == 0x1C);
-STATIC_ASSERT(offsetof(BlastedTargetSetup, completedGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(BlastedTargetSetup, progressGameBit) == 0x20);
-STATIC_ASSERT(offsetof(BlastedTargetState, triggerFired) == 0x0C);
-STATIC_ASSERT(offsetof(BlastedTargetState, damageStep) == 0x11);
-STATIC_ASSERT(sizeof(BlastedTargetState) == 0x14);
 
 /* Blasted-target update: once the target's GameBit is latched, fires the
  * map trigger; otherwise scans the model's hit nodes for newly-destroyed
@@ -204,16 +181,6 @@ void blasted_update(int obj)
     }
 }
 #pragma opt_loop_invariants reset
-
-typedef struct BlastedState
-{
-    u8 pad0[0x10 - 0x0];
-    u8 pieceCount;
-    u8 gameBitLatchState;
-    u8 pad12[0x6E4 - 0x12];
-    u8 unk6E4;
-    u8 pad6E5[0x6E8 - 0x6E5];
-} BlastedState;
 
 void blasted_init(int obj, int placement)
 {

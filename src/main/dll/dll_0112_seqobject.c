@@ -18,13 +18,6 @@
 #include "main/objseq.h"
 #include "main/sfa_shared_decls.h"
 
-#define SEQOBJECT_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern u32 ObjGroup_AddObject();
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 lbl_803E37A0;
-
 STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, openGameBit) == 0x18);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, triggerGameBit) == 0x1A);
@@ -37,6 +30,8 @@ STATIC_ASSERT(offsetof(SeqObjectPlacement, sequenceParam) == 0x22);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, warpMapId) == 0x24);
 STATIC_ASSERT(sizeof(SeqObjectState) == 0x3);
 STATIC_ASSERT(offsetof(SeqObjectState, triggerBitState) == 0x1);
+
+#define SEQOBJECT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 #define SEQOBJECT_STATE_OPEN             0x01
 #define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02
@@ -60,6 +55,12 @@ enum
 {
     SEQOBJECT_OBJGROUP = 0xf
 };
+
+extern f32 lbl_803E37A0;
+
+extern void ObjGroup_RemoveObject(u32 obj, int group);
+extern u32 ObjGroup_AddObject();
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 void objCallOnloadCallback(int* obj)
 {

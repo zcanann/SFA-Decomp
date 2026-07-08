@@ -11,6 +11,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/obj_placement.h"
+#include "main/dll/dll_00EB_siderepel.h"
 
 /* object group: side-repel object */
 #define SIDEREPEL_OBJGROUP 0x40
@@ -18,19 +19,6 @@
 #define SIDEREPEL_OBJFLAG_UPDATE_DISABLED    0x8000
 #define SIDEREPEL_OBJFLAG_HIDDEN             0x4000
 #define SIDEREPEL_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-/*
- * SideRepel placement record: the common ObjPlacement head followed by
- * the repel-volume radius at +0x18 (sphere radius >> 3 feeds the hit
- * sphere). Single-owner to siderepel_init.
- */
-typedef struct SideRepelPlacement
-{
-    ObjPlacement head; /* 0x00: common placement head */
-    u16 radius;        /* 0x18: hit-sphere radius source */
-} SideRepelPlacement;
-
-STATIC_ASSERT(offsetof(SideRepelPlacement, radius) == 0x18);
 
 int siderepel_getExtraSize(void)
 {

@@ -10,14 +10,15 @@
 #include "types.h"
 #include "main/engine_shared.h"
 #include "main/texture.h"
-extern u8 lbl_803DD728;
-extern u8* lbl_803DD72C;
-
-extern void warpToMap(int idx, s8 transType);
+#include "main/dll/dll_0039_dummy39.h"
 
 #define DUMMY39_COUNTDOWN_FRAMES 0x28
 #define DUMMY39_WARP_MAP         0x60
 #define DUMMY39_MAX_STEP_FRAMES  3
+
+extern u8 lbl_803DD728;
+extern u8* lbl_803DD72C;
+extern void warpToMap(int idx, s8 transType);
 
 void Dummy39_render(void)
 {

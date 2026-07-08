@@ -17,14 +17,7 @@
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
-extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int extraSize, int id);
-extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-
-extern GameObject* lbl_803DDB48;
-extern f32 lbl_803E47C0; /* render scale */
-extern f32 lbl_803E47C4; /* Y offset applied when chasing ring A */
+#include "main/dll/IM/dll_0171_imspaceringgen.h"
 
 /* anim.seqId of the two reference ring objects the generator tracks */
 #define SEQID_RING_A 0x164
@@ -33,32 +26,13 @@ extern f32 lbl_803E47C4; /* Y offset applied when chasing ring A */
 /* loose ring-piece object spawned (x10) as ImSpaceRingSetup with random spin/tilt */
 #define IMSPACERINGGEN_CHILD_OBJ_RING_PIECE 0x301
 
-/* spawn buffer for the loose ring pieces (Obj_AllocObjectSetup(0x24)).
-   Head is the common ObjPlacement; the tail is file-local. */
-typedef struct ImSpaceRingSetup
-{
-    ObjPlacement base; /* 0x00..0x17 */
-    s8 spinPhase;      /* 0x18 */
-    u8 pad19;          /* 0x19 */
-    s16 spinSpeed;     /* 0x1A */
-    s16 tiltSpeed;     /* 0x1C */
-    u8 pad1E[0x24 - 0x1E];
-} ImSpaceRingSetup;
-
-STATIC_ASSERT(offsetof(ImSpaceRingSetup, spinPhase) == 0x18);
-STATIC_ASSERT(offsetof(ImSpaceRingSetup, spinSpeed) == 0x1A);
-STATIC_ASSERT(offsetof(ImSpaceRingSetup, tiltSpeed) == 0x1C);
-STATIC_ASSERT(sizeof(ImSpaceRingSetup) == 0x24);
-
-/* per-object extra (getExtraSize == 0xc) */
-typedef struct RingGenState
-{
-    GameObject* ringA; /* 0x00 */
-    GameObject* ringB; /* 0x04 */
-    u8 visible;        /* 0x08: ring B currently visible */
-} RingGenState;
-
-STATIC_ASSERT(sizeof(RingGenState) == 0xc);
+extern GameObject* lbl_803DDB48;
+extern f32 lbl_803E47C0; /* render scale */
+extern f32 lbl_803E47C4; /* Y offset applied when chasing ring A */
+extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int extraSize, int id);
+extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 
 int IMSpaceRingGen_getExtraSize(void)
 {

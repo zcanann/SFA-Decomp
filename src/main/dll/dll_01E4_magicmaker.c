@@ -11,46 +11,16 @@
  */
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/dll/dll_01E4_magicmaker.h"
 
 #define MAGICMAKER_SPAWN_GAMEBIT       0x26b /* set-by-others trigger; cleared each spawn attempt */
 #define MAGICMAKER_CREATURE_GROUP      4     /* object group scanned for existing creatures */
 #define MAGICMAKER_CREATURE_TYPE_COUNT 6     /* number of creature type IDs in lbl_80325CE8 */
 #define MAGICMAKER_MAX_CREATURES       10    /* spawn only while fewer than this many exist */
 
-typedef struct MagicmakerPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 colorR; /* 0x4 -> spawn head.color[0] */
-    u8 colorG; /* 0x5 -> spawn head.color[1] */
-    u8 colorB; /* 0x6 -> spawn head.color[2] */
-    u8 colorA; /* 0x7 -> spawn head.color[3] */
-} MagicmakerPlacement;
-
-/*
- * The 0x30-byte spawn descriptor handed back by Obj_AllocObjectSetup.
- * The head (0x00..0x17) is the common ObjPlacement record; the fields
- * past it are this creature class's per-spawn setup slots.
- */
-typedef struct MagicmakerSetup
-{
-    ObjPlacement head;
-    u8 pad18[0x1A - 0x18];
-    u8 unk1A;
-    u8 pad1B[0x1C - 0x1B];
-    s16 unk1C;
-    u8 pad1E[0x24 - 0x1E];
-    s16 gameBit; /* 0x24: GameBit slot (-1 = none) */
-    u8 pad26[0x2C - 0x26];
-    s16 unk2C;
-    s16 unk2E;
-} MagicmakerSetup;
-
-STATIC_ASSERT(offsetof(MagicmakerSetup, unk1A) == 0x1A);
-STATIC_ASSERT(offsetof(MagicmakerSetup, unk1C) == 0x1C);
-STATIC_ASSERT(offsetof(MagicmakerSetup, gameBit) == 0x24);
-STATIC_ASSERT(offsetof(MagicmakerSetup, unk2C) == 0x2C);
-STATIC_ASSERT(offsetof(MagicmakerSetup, unk2E) == 0x2E);
-STATIC_ASSERT(sizeof(MagicmakerSetup) == 0x30);
+extern u16 lbl_80325CE8[];
+extern f32 lbl_803E4D8C;
+extern f32 lbl_803E4D88;
 
 extern int randomGetRange(int lo, int hi);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -60,9 +30,6 @@ extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
 extern void hitDetectFn_80097070(char* obj, f32 f, int a, int b, int c, int d);
-extern u16 lbl_80325CE8[];
-extern f32 lbl_803E4D8C;
-extern f32 lbl_803E4D88;
 
 int magicmaker_getExtraSize(void)
 {

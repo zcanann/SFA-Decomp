@@ -10,6 +10,13 @@
 #include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
+#include "main/dll/CC/dll_0122_cctestinfot.h"
+
+#define CCTESTINFOT_OBJFLAG_HIDDEN             0x4000
+#define CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+extern f32 lbl_803E3C88; /* hold-time reset value when the trigger fires */
+extern f32 lbl_803E3C8C; /* hold-time ceiling / minimum to keep showing text */
 
 extern void DeathSeq_getExtraSize(void);
 extern void dll_127_getExtraSize_ret_0(void);
@@ -82,21 +89,6 @@ extern void FxEmit_initialise(void);
 extern int ObjTrigger_IsSet();
 extern int playerIsDisguised(void);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern f32 lbl_803E3C88; /* hold-time reset value when the trigger fires */
-extern f32 lbl_803E3C8C; /* hold-time ceiling / minimum to keep showing text */
-
-#define CCTESTINFOT_OBJFLAG_HIDDEN             0x4000
-#define CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-typedef struct CctestinfotState
-{
-    f32 holdTimer; /* 0x00: counts down while help text is shown */
-    u8 disguised;  /* 0x04: cached playerIsDisguised() result, hint-text index */
-    u8 pad05[3];
-} CctestinfotState;
-
-STATIC_ASSERT(offsetof(CctestinfotState, disguised) == 0x4);
-STATIC_ASSERT(sizeof(CctestinfotState) == 0x8);
 
 int CCTestInfot_getExtraSize(void)
 {

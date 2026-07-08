@@ -7,8 +7,6 @@
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/sfa_shared_decls.h"
 
-#define MODEL_LIGHT_KIND_POINT 2
-
 typedef struct BombplantsporeStartDriftBurstPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -25,10 +23,30 @@ typedef struct BombplantsporeUpdateDriftPlacement
     u8 pad1E[0x20 - 0x1E];
 } BombplantsporeUpdateDriftPlacement;
 
-extern void ModelLightStruct_free(void* light);
-extern int randomGetRange(int lo, int hi);
-extern void* Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(void* obj, int sndId);
+typedef struct BombPlantSporeStateFlags
+{
+    u8 hitSurface : 1;
+    u8 waitingForDetonateAck : 1;
+    u8 unused : 6;
+} BombPlantSporeStateFlags;
+
+#define MODEL_LIGHT_KIND_POINT 2
+
+#define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES     0x66c
+#define BOMBPLANTSPORE_MSG_DETONATE             0x7000b
+#define BOMBPLANTSPORE_MSG_HIT_PLAYER           0x7000a
+#define BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE       0x18e
+#define BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT 10
+
+/* burst spawned per particle on detonation (MSG_DETONATE / fuse timeout) */
+#define BOMBPLANTSPORE_PARTFX_EXPLOSION 0x3f3
+/* effect spawned once when the spore is created in BombPlantSpore_init */
+#define BOMBPLANTSPORE_PARTFX_SPAWN 0x3f1
+
+#define BOMBPLANTSPORE_OBJFLAG_HIDDEN             0x4000
+#define BOMBPLANTSPORE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+#define BOMBPLANTSPORE_FLAGS(state) ((BombPlantSporeStateFlags*)&(state)->stateFlags)
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -40,20 +58,6 @@ extern const f32 lbl_803E53A8;
 extern const f32 lbl_803E53AC;
 extern f32 lbl_803E53B0;
 extern const f32 lbl_803E53B4;
-
-extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
-extern void Obj_FreeObject(u8* obj);
-extern void objMove(void* obj, f32 x, f32 y, f32 z);
-extern void* objCreateLight(void* obj, int arg);
-extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
-extern void modelLightStruct_setLightKind(void* light, int value);
-extern void modelLightStruct_setDiffuseColor(void* light, int r, int g, int b, int a);
-extern void lightSetFieldBC_8001db14(void* light, int value);
-extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);
-extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 mult,
-                                        void* origin, int flags);
 extern u8 lbl_80326D98[];
 extern u8 lbl_803DBFC0;
 extern f32 lbl_803E5388;
@@ -71,6 +75,24 @@ extern const f32 gBombPlantSporeVelocityDamping;
 extern const f32 lbl_803E53EC;
 extern f32 lbl_803E53F0;
 extern const f32 lbl_803E53F4;
+
+extern void ModelLightStruct_free(void* light);
+extern int randomGetRange(int lo, int hi);
+extern void* Obj_GetPlayerObject(void);
+extern void Sfx_PlayFromObject(void* obj, int sndId);
+extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
+extern void Obj_FreeObject(u8* obj);
+extern void objMove(void* obj, f32 x, f32 y, f32 z);
+extern void* objCreateLight(void* obj, int arg);
+extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
+extern void modelLightStruct_setLightKind(void* light, int value);
+extern void modelLightStruct_setDiffuseColor(void* light, int r, int g, int b, int a);
+extern void lightSetFieldBC_8001db14(void* light, int value);
+extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
+extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);
+extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 mult,
+                                        void* origin, int flags);
 
 int BombPlantSpore_getExtraSize(void)
 {
@@ -221,29 +243,6 @@ void bombplantspore_updateDrift(void* obj, void* state)
                  gBombPlantSporeAngleHalfPeriod);
 }
 #pragma dont_inline reset
-
-#define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES     0x66c
-#define BOMBPLANTSPORE_MSG_DETONATE             0x7000b
-#define BOMBPLANTSPORE_MSG_HIT_PLAYER           0x7000a
-#define BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE       0x18e
-#define BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT 10
-
-/* burst spawned per particle on detonation (MSG_DETONATE / fuse timeout) */
-#define BOMBPLANTSPORE_PARTFX_EXPLOSION 0x3f3
-/* effect spawned once when the spore is created in BombPlantSpore_init */
-#define BOMBPLANTSPORE_PARTFX_SPAWN 0x3f1
-
-#define BOMBPLANTSPORE_OBJFLAG_HIDDEN             0x4000
-#define BOMBPLANTSPORE_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-typedef struct BombPlantSporeStateFlags
-{
-    u8 hitSurface : 1;
-    u8 waitingForDetonateAck : 1;
-    u8 unused : 6;
-} BombPlantSporeStateFlags;
-
-#define BOMBPLANTSPORE_FLAGS(state) ((BombPlantSporeStateFlags*)&(state)->stateFlags)
 
 void BombPlantSpore_update(void* obj)
 {

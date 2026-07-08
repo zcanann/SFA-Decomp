@@ -6,43 +6,7 @@
 #include "main/dll/modgfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/frame_timing.h"
-
-void Effect1_func03_nop(void)
-{
-}
-
-void Effect1_release(void)
-{
-}
-
-void Effect1_initialise(void)
-{
-}
-
-ObjectDescriptor11 projgfx_funcs = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-    projgfx_initialise,
-    (ObjectDescriptorCallback)projgfx_release_doUnsupported,
-    0,
-    projgfx_onMapSetup,
-    (ObjectDescriptorCallback)projgfx_func04_ret_m1,
-    (ObjectDescriptorCallback)projgfx_func05_nop,
-    (ObjectDescriptorCallback)projgfx_func06_nop,
-    (ObjectDescriptorCallback)projgfx_func07_nop,
-    (ObjectDescriptorCallback)projgfx_getObjectTypeId,
-    (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
-    (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
-};
-
-char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
-static u8 sProjgfxStringPad0[] = {0, 0, 0};
-char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
-static u8 sProjgfxStringPad1[] = {0, 0, 0};
-char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
-static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
+#include "main/dll/dll_001A_effect1.h"
 
 extern f32 lbl_803DF720;
 extern f32 lbl_803DF724;
@@ -55,140 +19,17 @@ extern int gEffect1SineWaveAPhase;
 extern int gEffect1SineWaveBPhase;
 extern f32 gEffect1SineWaveB;
 extern f32 gEffect1SineWaveA;
-
-#pragma scheduling off
-void Effect1_func05(void)
-{
-    f32 sum;
-    f32 step;
-    sum = gEffect1AnimRampA + (step = lbl_803DF720 * timeDelta);
-    gEffect1AnimRampA = sum;
-    if (sum > 1.0f)
-    {
-        gEffect1AnimRampA = lbl_803DF724;
-    }
-    sum = gEffect1AnimRampB + step;
-    gEffect1AnimRampB = sum;
-    if (sum > 1.0f)
-    {
-        gEffect1AnimRampB = lbl_803DF730;
-    }
-    gEffect1SineWaveAPhase = gEffect1SineWaveAPhase + framesThisStep * 0x64;
-    if (gEffect1SineWaveAPhase > 0x7fff)
-    {
-        gEffect1SineWaveAPhase = 0;
-    }
-    gEffect1SineWaveA = mathSinf(lbl_803DF868 * (f32)(s16)gEffect1SineWaveAPhase / gEffect1SinePhaseScale);
-    gEffect1SineWaveBPhase = gEffect1SineWaveBPhase + framesThisStep * 0x32;
-    if (gEffect1SineWaveBPhase > 0x7fff)
-    {
-        gEffect1SineWaveBPhase = 0;
-    }
-    gEffect1SineWaveB = mathSinf(lbl_803DF868 * (f32)(s16)gEffect1SineWaveBPhase / gEffect1SinePhaseScale);
-}
-
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
-
-/*
- * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
- * the consumer-side definition of this 0x64-byte spawn request consumed by
- * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
- * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
- * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
- */
-
 extern FxNode9 lbl_8039C398;
-
-#define FILL9()                                                                                                        \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        lbl_8039C398.posX = 0.0f;                                                                                      \
-        lbl_8039C398.posY = 0.0f;                                                                                      \
-        lbl_8039C398.posZ = 0.0f;                                                                                      \
-        lbl_8039C398.scale = 1.0f;                                                                                     \
-        lbl_8039C398.unk0 = 0;                                                                                         \
-        lbl_8039C398.unk2 = 0;                                                                                         \
-        lbl_8039C398.unk4 = 0;                                                                                         \
-        spawnParams = (PartFxSpawnParams*)&lbl_8039C398;                                                               \
-    } while (0)
-
-#undef FILL9
-
 extern FxNode9 lbl_8039C380;
-
-#define FILL8()                                                                                                        \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        lbl_8039C380.posX = 0.0f;                                                                                      \
-        lbl_8039C380.posY = 0.0f;                                                                                      \
-        lbl_8039C380.posZ = 0.0f;                                                                                      \
-        lbl_8039C380.scale = 1.0f;                                                                                     \
-        lbl_8039C380.unk0 = 0;                                                                                         \
-        lbl_8039C380.unk2 = 0;                                                                                         \
-        lbl_8039C380.unk4 = 0;                                                                                         \
-        spawnParams = (PartFxSpawnParams*)&lbl_8039C380;                                                               \
-    } while (0)
-
-#undef FILL8
-
 extern FxNode9 lbl_8039C338;
 extern f32 lbl_803DF884;
-
-#define FILL338()                                                                                                      \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        lbl_8039C338.posX = lbl_803DF884;                                                                              \
-        lbl_8039C338.posY = lbl_803DF884;                                                                              \
-        lbl_8039C338.posZ = lbl_803DF884;                                                                              \
-        lbl_8039C338.scale = lbl_803DF878;                                                                             \
-        lbl_8039C338.unk0 = 0;                                                                                         \
-        lbl_8039C338.unk2 = 0;                                                                                         \
-        lbl_8039C338.unk4 = 0;                                                                                         \
-        spawnParams = (PartFxSpawnParams*)&lbl_8039C338;                                                               \
-    } while (0)
-
-extern void vecRotateZXY(void* obj, f32* vec);
-
-#undef FILL338
-
 extern FxNode9 lbl_8039C368;
 extern f32 lbl_803DFCEC;
-
-#define FILL368()                                                                                                      \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        lbl_8039C368.posX = lbl_803DFCEC;                                                                              \
-        lbl_8039C368.posY = lbl_803DFCEC;                                                                              \
-        lbl_8039C368.posZ = lbl_803DFCEC;                                                                              \
-        lbl_8039C368.scale = lbl_803DFCE0;                                                                             \
-        lbl_8039C368.unk0 = 0;                                                                                         \
-        lbl_8039C368.unk2 = 0;                                                                                         \
-        lbl_8039C368.unk4 = 0;                                                                                         \
-        spawnParams = (PartFxSpawnParams*)&lbl_8039C368;                                                               \
-    } while (0)
-
-#undef FILL368
-
 extern FxNode9 lbl_8039C350;
 extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
-
-#define FILL350()                                                                                                      \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        lbl_8039C350.posX = lbl_803DF9D0;                                                                              \
-        lbl_8039C350.posY = lbl_803DF9D0;                                                                              \
-        lbl_8039C350.posZ = lbl_803DF9D0;                                                                              \
-        lbl_8039C350.scale = lbl_803DF9D4;                                                                             \
-        lbl_8039C350.unk0 = 0;                                                                                         \
-        lbl_8039C350.unk2 = 0;                                                                                         \
-        lbl_8039C350.unk4 = 0;                                                                                         \
-        spawnParams = (PartFxSpawnParams*)&lbl_8039C350;                                                               \
-    } while (0)
-
-#undef FILL350
-
 extern f32 gEffect1AnimRampC;
 extern f32 gEffect1AnimRampD;
 extern f32 lbl_803DF72C;
@@ -267,6 +108,159 @@ extern f32 lbl_803DF850;
 extern f32 lbl_803DF854;
 extern f32 lbl_803DF858;
 extern FxNode9 lbl_8039C320;
+
+extern void vecRotateZXY(void* obj, f32* vec);
+
+void Effect1_func03_nop(void)
+{
+}
+
+void Effect1_release(void)
+{
+}
+
+void Effect1_initialise(void)
+{
+}
+
+ObjectDescriptor11 projgfx_funcs = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+    projgfx_initialise,
+    (ObjectDescriptorCallback)projgfx_release_doUnsupported,
+    0,
+    projgfx_onMapSetup,
+    (ObjectDescriptorCallback)projgfx_func04_ret_m1,
+    (ObjectDescriptorCallback)projgfx_func05_nop,
+    (ObjectDescriptorCallback)projgfx_func06_nop,
+    (ObjectDescriptorCallback)projgfx_func07_nop,
+    (ObjectDescriptorCallback)projgfx_getObjectTypeId,
+    (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
+    (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
+};
+
+char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
+static u8 sProjgfxStringPad0[] = {0, 0, 0};
+char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
+static u8 sProjgfxStringPad1[] = {0, 0, 0};
+char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
+static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
+
+#pragma scheduling off
+void Effect1_func05(void)
+{
+    f32 sum;
+    f32 step;
+    sum = gEffect1AnimRampA + (step = lbl_803DF720 * timeDelta);
+    gEffect1AnimRampA = sum;
+    if (sum > 1.0f)
+    {
+        gEffect1AnimRampA = lbl_803DF724;
+    }
+    sum = gEffect1AnimRampB + step;
+    gEffect1AnimRampB = sum;
+    if (sum > 1.0f)
+    {
+        gEffect1AnimRampB = lbl_803DF730;
+    }
+    gEffect1SineWaveAPhase = gEffect1SineWaveAPhase + framesThisStep * 0x64;
+    if (gEffect1SineWaveAPhase > 0x7fff)
+    {
+        gEffect1SineWaveAPhase = 0;
+    }
+    gEffect1SineWaveA = mathSinf(lbl_803DF868 * (f32)(s16)gEffect1SineWaveAPhase / gEffect1SinePhaseScale);
+    gEffect1SineWaveBPhase = gEffect1SineWaveBPhase + framesThisStep * 0x32;
+    if (gEffect1SineWaveBPhase > 0x7fff)
+    {
+        gEffect1SineWaveBPhase = 0;
+    }
+    gEffect1SineWaveB = mathSinf(lbl_803DF868 * (f32)(s16)gEffect1SineWaveBPhase / gEffect1SinePhaseScale);
+}
+
+/*
+ * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
+ * the consumer-side definition of this 0x64-byte spawn request consumed by
+ * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
+ * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
+ * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
+ */
+
+#define FILL9()                                                                                                        \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        lbl_8039C398.posX = 0.0f;                                                                                      \
+        lbl_8039C398.posY = 0.0f;                                                                                      \
+        lbl_8039C398.posZ = 0.0f;                                                                                      \
+        lbl_8039C398.scale = 1.0f;                                                                                     \
+        lbl_8039C398.unk0 = 0;                                                                                         \
+        lbl_8039C398.unk2 = 0;                                                                                         \
+        lbl_8039C398.unk4 = 0;                                                                                         \
+        spawnParams = (PartFxSpawnParams*)&lbl_8039C398;                                                               \
+    } while (0)
+
+#undef FILL9
+
+#define FILL8()                                                                                                        \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        lbl_8039C380.posX = 0.0f;                                                                                      \
+        lbl_8039C380.posY = 0.0f;                                                                                      \
+        lbl_8039C380.posZ = 0.0f;                                                                                      \
+        lbl_8039C380.scale = 1.0f;                                                                                     \
+        lbl_8039C380.unk0 = 0;                                                                                         \
+        lbl_8039C380.unk2 = 0;                                                                                         \
+        lbl_8039C380.unk4 = 0;                                                                                         \
+        spawnParams = (PartFxSpawnParams*)&lbl_8039C380;                                                               \
+    } while (0)
+
+#undef FILL8
+
+#define FILL338()                                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        lbl_8039C338.posX = lbl_803DF884;                                                                              \
+        lbl_8039C338.posY = lbl_803DF884;                                                                              \
+        lbl_8039C338.posZ = lbl_803DF884;                                                                              \
+        lbl_8039C338.scale = lbl_803DF878;                                                                             \
+        lbl_8039C338.unk0 = 0;                                                                                         \
+        lbl_8039C338.unk2 = 0;                                                                                         \
+        lbl_8039C338.unk4 = 0;                                                                                         \
+        spawnParams = (PartFxSpawnParams*)&lbl_8039C338;                                                               \
+    } while (0)
+
+#undef FILL338
+
+#define FILL368()                                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        lbl_8039C368.posX = lbl_803DFCEC;                                                                              \
+        lbl_8039C368.posY = lbl_803DFCEC;                                                                              \
+        lbl_8039C368.posZ = lbl_803DFCEC;                                                                              \
+        lbl_8039C368.scale = lbl_803DFCE0;                                                                             \
+        lbl_8039C368.unk0 = 0;                                                                                         \
+        lbl_8039C368.unk2 = 0;                                                                                         \
+        lbl_8039C368.unk4 = 0;                                                                                         \
+        spawnParams = (PartFxSpawnParams*)&lbl_8039C368;                                                               \
+    } while (0)
+
+#undef FILL368
+
+#define FILL350()                                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        lbl_8039C350.posX = lbl_803DF9D0;                                                                              \
+        lbl_8039C350.posY = lbl_803DF9D0;                                                                              \
+        lbl_8039C350.posZ = lbl_803DF9D0;                                                                              \
+        lbl_8039C350.scale = lbl_803DF9D4;                                                                             \
+        lbl_8039C350.unk0 = 0;                                                                                         \
+        lbl_8039C350.unk2 = 0;                                                                                         \
+        lbl_8039C350.unk4 = 0;                                                                                         \
+        spawnParams = (PartFxSpawnParams*)&lbl_8039C350;                                                               \
+    } while (0)
+
+#undef FILL350
 
 #define FILL320()                                                                                                      \
     do                                                                                                                 \

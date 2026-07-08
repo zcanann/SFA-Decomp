@@ -12,15 +12,14 @@
    rendered/updated; set when the stone's map event completes. */
 #define SPELLSTONE_OBJFLAG_HIDDEN 0x4000
 
-extern f32 Vec_distance(void* posA, void* posB);
-
-extern void Obj_RemoveFromUpdateList(void* obj);
-extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
-
 extern s16 lbl_803DC228;
 extern f32 lbl_803E6750;
 extern f32 lbl_803E6754;
 extern f32 lbl_803E6758;
+
+extern f32 Vec_distance(void* posA, void* posB);
+extern void Obj_RemoveFromUpdateList(void* obj);
+extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
 
 int spellstone_getState(SpellStoneObject* obj)
 {

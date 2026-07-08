@@ -24,13 +24,9 @@
 #include "main/game_object.h"
 #include "main/dll/tframeanimator_state.h"
 #include "main/engine_shared.h"
+#include "main/dll/dll_00F8_levelname.h"
 
 #define LEVELNAME_OBJFLAG_HITDETECT_DISABLED 0x2000
-extern void mainSetBits(int eventId, int value);
-extern f32 Vec_distance(f32* a, f32* b);
-extern f32 lbl_803E36E0;
-extern f32 lbl_803E36E4;
-extern f32 lbl_803E36E8;
 
 #define LEVELNAME_PHASE_WAIT      0
 #define LEVELNAME_PHASE_SLIDE_IN  1
@@ -44,6 +40,13 @@ extern f32 lbl_803E36E8;
 #define LEVELNAME_BANNER_Y_STEP 4
 #define LEVELNAME_SEQEV_SHOW    1 /* anim event id that triggers the banner */
 #define LEVELNAME_SEQFN_HANDLED 4 /* LevelName_SeqFn return when the show event fired */
+
+extern f32 lbl_803E36E0;
+extern f32 lbl_803E36E4;
+extern f32 lbl_803E36E8;
+
+extern void mainSetBits(int eventId, int value);
+extern f32 Vec_distance(f32* a, f32* b);
 
 int LevelName_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

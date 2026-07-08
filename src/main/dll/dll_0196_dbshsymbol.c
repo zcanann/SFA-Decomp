@@ -21,6 +21,10 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
+STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
+STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
+
 #define DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG OBJ_MODEL_STATE_SHADOW_VISIBLE
 
 /* shared with the shrine object (DLL 0x195) */
@@ -33,11 +37,12 @@
 
 #define PAD_BUTTON_A 0x100
 
+extern u8 gDbShSymbolScuffPlayed;
+
 extern int Obj_GetPlayerObject(void);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern u8 gDbShSymbolScuffPlayed;
 extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void gameTimerInit(s8 flags, int minutes);
@@ -45,11 +50,6 @@ extern void timerSetToCountUp(void);
 extern void gameTimerStop(void);
 extern int isGameTimerDisabled(void);
 extern int getButtonsJustPressedIfNotBusy(int p);
-
-STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
-STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
-STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
-
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 /* .sdata2 constant pool */

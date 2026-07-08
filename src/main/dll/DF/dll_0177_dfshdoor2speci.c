@@ -33,12 +33,13 @@ typedef enum DFSHDoor2SpeciState
     DFSH_DOOR2SPECI_STATE_PULSE = 2,
 } DFSHDoor2SpeciState;
 
-extern float mathCosf(float x);
 extern f32 lbl_803E4E30;
 extern f32 lbl_803E4E34;
 extern f32 lbl_803E4E38;
 extern f32 lbl_803E4E3C;
 extern f32 lbl_803E4E40;
+
+extern float mathCosf(float x);
 
 int DFSH_Door2Speci_SeqFn(int obj)
 {

@@ -12,17 +12,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
-
-extern ModgfxInterface** gModgfxInterface;
-
-extern u8 lbl_80314950[];
-
-static const f32 c999 = 999.0f;
-static const f32 c83 = 83.0f;
-static const f32 c84 = 84.0f;
-static const f32 gZero = 0.0f;
-static const f32 c200 = 200.0f;
-static const f32 c1 = 1.0f;
+#include "main/dll/dll_0076_dll76func0.h"
 
 typedef struct
 {
@@ -42,6 +32,16 @@ typedef struct
     u8 pad1[2];                 /* +0x5e */
     GfxCmd entries[32];         /* +0x60 */
 } GfxBuf;
+
+extern ModgfxInterface** gModgfxInterface;
+extern u8 lbl_80314950[];
+
+static const f32 c999 = 999.0f;
+static const f32 c83 = 83.0f;
+static const f32 c84 = 84.0f;
+static const f32 gZero = 0.0f;
+static const f32 c200 = 200.0f;
+static const f32 c1 = 1.0f;
 
 void dll_76_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

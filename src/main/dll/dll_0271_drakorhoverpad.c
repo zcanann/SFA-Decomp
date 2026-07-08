@@ -21,15 +21,6 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
-/* placement subtype id (desc[0]) selecting the pad behaviour mode */
-#define DRAKORHOVERPAD_SUBTYPE_TRACKING   1812 /* tracks/yaws toward a nearby object */
-#define DRAKORHOVERPAD_SUBTYPE_FREE       1048 /* free curve-follow, no tracking */
-#define DRAKORHOVERPAD_OBJGROUP           0x46
-#define DRAKORHOVERPAD_OBJGROUP_SECONDARY 0xa
-#define DRAKORHOVERPAD_HIT_VOLUME_SLOT    8
-/* group owned by another DLL, queried here */
-#define BOSSDRAKOR_OBJGROUP 0x45 /* DLL 0x24D bossdrakor */
-
 /*
  * A ROM curve network node (the record returned by gRomCurveInterface->getById
  * and walked through anim.currentMove / anim.activeMoveProgress / anim.targetObj
@@ -49,34 +40,6 @@ typedef struct DrakorCurveNode
     s8 tangentPitch; /* 0x2d << 8 -> pitch angle */
     u8 tangentMag;   /* 0x2e magnitude scalar */
 } DrakorCurveNode;
-
-int drakorhoverpad_func0B(void)
-{
-    return 0x1;
-}
-
-int drakorhoverpad_func0E(void)
-{
-    return 0x1;
-}
-
-int drakorhoverpad_func10(void)
-{
-    return 0x0;
-}
-
-void drakorhoverpad_func11(void)
-{
-}
-
-int drakorhoverpad_func14(void)
-{
-    return 0x0;
-}
-
-void drakorhoverpad_func15(void)
-{
-}
 
 typedef struct DrakorHoverpadUpdateMainPlacement
 {
@@ -170,6 +133,43 @@ typedef struct DrakorHoverpadState
 } DrakorHoverpadState;
 
 STATIC_ASSERT(sizeof(DrakorHoverpadState) == 0x17c);
+
+/* placement subtype id (desc[0]) selecting the pad behaviour mode */
+#define DRAKORHOVERPAD_SUBTYPE_TRACKING   1812 /* tracks/yaws toward a nearby object */
+#define DRAKORHOVERPAD_SUBTYPE_FREE       1048 /* free curve-follow, no tracking */
+#define DRAKORHOVERPAD_OBJGROUP           0x46
+#define DRAKORHOVERPAD_OBJGROUP_SECONDARY 0xa
+#define DRAKORHOVERPAD_HIT_VOLUME_SLOT    8
+/* group owned by another DLL, queried here */
+#define BOSSDRAKOR_OBJGROUP 0x45 /* DLL 0x24D bossdrakor */
+
+int drakorhoverpad_func0B(void)
+{
+    return 0x1;
+}
+
+int drakorhoverpad_func0E(void)
+{
+    return 0x1;
+}
+
+int drakorhoverpad_func10(void)
+{
+    return 0x0;
+}
+
+void drakorhoverpad_func11(void)
+{
+}
+
+int drakorhoverpad_func14(void)
+{
+    return 0x0;
+}
+
+void drakorhoverpad_func15(void)
+{
+}
 
 int drakorhoverpad_getExtraSize(void)
 {

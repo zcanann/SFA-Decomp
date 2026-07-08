@@ -15,13 +15,9 @@
 #include "main/objtexture.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
+#include "main/dll/IM/dll_016E_imanimspacecraft.h"
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
-
-extern char lbl_803AC948[];
-extern f32 lbl_803E4780;                                           /* render scale */
-extern f32 lbl_803E4784;                                           /* init position component */
-extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C; /* glow spawn offsets */
 
 /* state->flags */
 #define ANIMSPACECRAFT_PARTFX        0x133
@@ -31,6 +27,11 @@ extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C; /* glow spawn
 
 /* state->maskBits: bits 4..6 toggled together as one group */
 #define ANIMSPACECRAFT_MASK_GROUP 0x70
+
+extern char lbl_803AC948[];
+extern f32 lbl_803E4780;                                           /* render scale */
+extern f32 lbl_803E4784;                                           /* init position component */
+extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C; /* glow spawn offsets */
 
 void imanimspacecraft_modelMtxFn(void)
 {

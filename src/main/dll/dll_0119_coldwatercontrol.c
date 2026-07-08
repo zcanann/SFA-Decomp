@@ -19,9 +19,7 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
-extern int fn_80295C40(int obj);
-extern f32 lbl_803E3B68; /* timer reset / initial value */
-extern f32 lbl_803E3B6C; /* repeat-hit period */
+#include "main/dll/dll_0119_coldwatercontrol.h"
 
 #define GAMEBIT_COLDWATER_ARM  0x1bf
 #define GAMEBIT_COLDWATER_DONE 0x1bd
@@ -31,13 +29,9 @@ extern f32 lbl_803E3B6C; /* repeat-hit period */
 #define COLDWATER_OBJFLAG_HIDDEN             0x4000
 #define COLDWATER_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-typedef struct ColdwaterControlState
-{
-    f32 timer;       /* 0x00 immersion timer */
-    void* playerObj; /* 0x04 cached player object */
-} ColdwaterControlState;
-STATIC_ASSERT(sizeof(ColdwaterControlState) == 0x8);
-STATIC_ASSERT(offsetof(ColdwaterControlState, playerObj) == 0x4);
+extern f32 lbl_803E3B68; /* timer reset / initial value */
+extern f32 lbl_803E3B6C; /* repeat-hit period */
+extern int fn_80295C40(int obj);
 
 int ColdWaterControl_getExtraSize(void)
 {

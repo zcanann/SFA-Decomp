@@ -26,16 +26,24 @@
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 
-extern void dimmagicbridge_update(void);
-
-#define DLL1CE_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-/* Key objects that unlock the hatch (docblock: "a key object (seqId 0x18F or 0x1D6)"). */
-#define DLL1CE_KEY_SEQID_A 0x18f
-#define DLL1CE_KEY_SEQID_B 0x1d6
-
-/* Subtype of the contents object spawned on unlock (docblock: "contents object (subtype 0x246)"). */
-#define DLL1CE_CONTENTS_SUBTYPE 0x246
+/* Spawn-setup buffer seeded by dll_1CE_update for its child (obj id 0x246):
+ * position/color head plus class-specific fields (see the target stb/sth). */
+typedef struct Dll1CESpawnSetup
+{
+    u8 pad0[0x4 - 0x0];
+    u8 color[4]; /* 0x04 */
+    f32 posX;    /* 0x08 */
+    f32 posY;    /* 0x0c */
+    f32 posZ;    /* 0x10 */
+    u8 pad14[0x1a - 0x14];
+    u8 field1A;  /* 0x1a */
+    u8 rotByte;  /* 0x1b */
+    s16 field1C; /* 0x1c */
+    u8 pad1E[0x24 - 0x1e];
+    s16 field24; /* 0x24 */
+    u8 pad26[0x2c - 0x26];
+    s16 field2C; /* 0x2c */
+} Dll1CESpawnSetup;
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
@@ -75,35 +83,40 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
+#define DLL1CE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+/* Key objects that unlock the hatch (docblock: "a key object (seqId 0x18F or 0x1D6)"). */
+#define DLL1CE_KEY_SEQID_A 0x18f
+#define DLL1CE_KEY_SEQID_B 0x1d6
+
+/* Subtype of the contents object spawned on unlock (docblock: "contents object (subtype 0x246)"). */
+#define DLL1CE_CONTENTS_SUBTYPE 0x246
+
 extern f32 lbl_803E49E8;
 extern void* lbl_803DDB78;
 extern f32 lbl_803E49F0;
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
 extern f32 lbl_803E49EC;
 extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
-/* Spawn-setup buffer seeded by dll_1CE_update for its child (obj id 0x246):
- * position/color head plus class-specific fields (see the target stb/sth). */
-typedef struct Dll1CESpawnSetup
-{
-    u8 pad0[0x4 - 0x0];
-    u8 color[4]; /* 0x04 */
-    f32 posX;    /* 0x08 */
-    f32 posY;    /* 0x0c */
-    f32 posZ;    /* 0x10 */
-    u8 pad14[0x1a - 0x14];
-    u8 field1A;  /* 0x1a */
-    u8 rotByte;  /* 0x1b */
-    s16 field1C; /* 0x1c */
-    u8 pad1E[0x24 - 0x1e];
-    s16 field24; /* 0x24 */
-    u8 pad26[0x2c - 0x26];
-    s16 field2C; /* 0x2c */
-} Dll1CESpawnSetup;
+extern void dimmagicbridge_update(void);
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
+extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
+int dimmagicbridge_getExtraSize(void);
+extern u8 dim_levelcontrol_free[];
+extern u8 dim_levelcontrol_getExtraSize[];
+extern u8 dim_levelcontrol_init[];
+extern u8 dim_levelcontrol_render[];
+extern u8 dim_levelcontrol_update[];
+extern u8 dimmagicbridge_free[];
+extern u8 dimmagicbridge_getObjectTypeId[];
+extern u8 dimmagicbridge_hitDetect[];
+extern u8 dimmagicbridge_init[];
+extern u8 dimmagicbridge_initialise[];
+extern u8 dimmagicbridge_release[];
+extern u8 dimmagicbridge_render[];
 
 int dll_1CE_getExtraSize(void)
 {
@@ -113,7 +126,6 @@ int dll_1CE_getObjectTypeId(void)
 {
     return 0x0;
 }
-int dimmagicbridge_getExtraSize(void);
 
 void dll_1CE_free(void)
 {
@@ -272,19 +284,6 @@ ObjectDescriptor dll_1CE = {
 };
 
 /* descriptor/ptr table auto 0x80325600-0x80325670 */
-extern u8 dim_levelcontrol_free[];
-extern u8 dim_levelcontrol_getExtraSize[];
-extern u8 dim_levelcontrol_init[];
-extern u8 dim_levelcontrol_render[];
-extern u8 dim_levelcontrol_update[];
-extern u8 dimmagicbridge_free[];
-extern u8 dimmagicbridge_getObjectTypeId[];
-extern u8 dimmagicbridge_hitDetect[];
-extern u8 dimmagicbridge_init[];
-extern u8 dimmagicbridge_initialise[];
-extern u8 dimmagicbridge_release[];
-extern u8 dimmagicbridge_render[];
-
 u32 gDIMMagicBridgeObjDescriptor[14] = {0x00000000,
                                         0x00000000,
                                         0x00000000,

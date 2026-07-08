@@ -11,17 +11,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define DLL0299_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-#define DLL0299_RESOURCE_ID 0xa6
-
-/* main particle burst seeded 3x once at init */
-#define DLL0299_PARTFX_INIT 0x545
-/* second distinct particle seeded once at init alongside the INIT trio */
-#define DLL0299_PARTFX_INIT2 0x546
-/* ambient particle burst spawned 3x every update tick */
-#define DLL0299_PARTFX_AMBIENT 0x547
-
 typedef struct
 {
     void* pad;
@@ -32,6 +21,17 @@ typedef struct
 {
     s16 id;
 } Dll299State;
+
+#define DLL0299_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+#define DLL0299_RESOURCE_ID 0xa6
+
+/* main particle burst seeded 3x once at init */
+#define DLL0299_PARTFX_INIT 0x545
+/* second distinct particle seeded once at init alongside the INIT trio */
+#define DLL0299_PARTFX_INIT2 0x546
+/* ambient particle burst spawned 3x every update tick */
+#define DLL0299_PARTFX_AMBIENT 0x547
 
 int dll_299_getExtraSize_ret_2(void)
 {

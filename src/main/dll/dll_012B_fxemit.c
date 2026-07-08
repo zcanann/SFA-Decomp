@@ -27,15 +27,6 @@
 #include "main/audio/sfx.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
-/* lbl_803E3E48/4C/50 have no header home; the rest are per-TU externs
-   (the per-file spelling is load-bearing for codegen). */
-
-extern ModgfxInterface** gModgfxInterface;
-extern char sCFTreasSharpyDebugFormat[];
-extern f32 lbl_803E3E48;
-extern f32 lbl_803E3E4C;
-extern f32 lbl_803E3E50;
-
 typedef struct FxEmitWorldSpawnArgs
 {
     s16 yaw;
@@ -46,6 +37,15 @@ typedef struct FxEmitWorldSpawnArgs
     f32 y;
     f32 z;
 } FxEmitWorldSpawnArgs;
+
+/* lbl_803E3E48/4C/50 have no header home; the rest are per-TU externs
+   (the per-file spelling is load-bearing for codegen). */
+
+extern ModgfxInterface** gModgfxInterface;
+extern char sCFTreasSharpyDebugFormat[];
+extern f32 lbl_803E3E48;
+extern f32 lbl_803E3E4C;
+extern f32 lbl_803E3E50;
 
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg)                                                         \
     (*gPartfxInterface)->spawnObject((void*)(obj), id, data, flags, model, (void*)(arg))

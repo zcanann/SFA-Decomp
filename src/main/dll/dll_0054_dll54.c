@@ -22,8 +22,7 @@
 #include "string.h"
 #include "main/object_transform.h"
 #include "main/objlib.h"
-extern f32 sqrtf(f32 x);
-extern CameraMode54State* gCameraModeNpcSpeakState;
+#include "main/dll/dll_0054_dll54.h"
 
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define DLL54_CAMMODE_DEFAULT 0x42
@@ -31,6 +30,9 @@ extern CameraMode54State* gCameraModeNpcSpeakState;
 /* Scene objects the NPC-speak camera frames the player between (docblock). */
 #define DLL54_LOOKAT_SEQID 0x2ab
 #define DLL54_ORIGIN_SEQID 0x4dc
+
+extern CameraMode54State* gCameraModeNpcSpeakState;
+extern f32 sqrtf(f32 x);
 
 #pragma scheduling off
 #pragma peephole off

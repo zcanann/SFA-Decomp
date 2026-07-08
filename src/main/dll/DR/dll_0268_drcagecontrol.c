@@ -10,20 +10,8 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
-
 #include "main/audio/sfx_ids.h"
-
-typedef struct CageControlPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 armGameBit;   /* 0x1E: game bit that pre-opens the cage */
-    s16 watchGameBit; /* 0x20: drives the pickup sfx + completion */
-    u8 pad22[0x28 - 0x22];
-} CageControlPlacement;
-
-STATIC_ASSERT(offsetof(CageControlPlacement, armGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(CageControlPlacement, watchGameBit) == 0x20);
-STATIC_ASSERT(sizeof(CageControlPlacement) == 0x28);
+#include "main/dll/DR/dll_0268_drcagecontrol.h"
 
 int DR_CageControl_SeqFn(int obj)
 {

@@ -16,6 +16,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/savegame.h"
+#include "main/dll/dll_0095_dll95func0.h"
 
 /* one per-part draw command (matches ScreenFxPart, 0x18 bytes) */
 typedef struct GfxCmd
@@ -28,22 +29,6 @@ typedef struct GfxCmd
     u16 flags; /* 0x14 */
     u8 layer;  /* 0x16 */
 } GfxCmd;
-
-extern ModgfxInterface** gModgfxInterface;
-
-extern u8 lbl_80317528[];
-extern u8 lbl_803DB940[8];
-/* contiguous .sdata2 float constant table, 0x803E1298..0x803E12B8 (0x24 bytes);
-   declared as individual scalars because the array form changes the access reloc */
-extern f32 lbl_803E1298;
-extern f32 lbl_803E129C;
-extern f32 lbl_803E12A0;
-extern f32 lbl_803E12A4;
-extern f32 lbl_803E12A8;
-extern f32 lbl_803E12AC;
-extern f32 lbl_803E12B0;
-extern f32 lbl_803E12B4;
-extern f32 lbl_803E12B8;
 
 /* effect header passed to spawnEffect (matches ScreenFxHdr); the part
    command array is inline here rather than a separate buffer */
@@ -79,6 +64,22 @@ STATIC_ASSERT(sizeof(GfxBuf) == 0x360);
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL95_EFFECT_ID 0x46
+
+extern ModgfxInterface** gModgfxInterface;
+
+extern u8 lbl_80317528[];
+extern u8 lbl_803DB940[8];
+/* contiguous .sdata2 float constant table, 0x803E1298..0x803E12B8 (0x24 bytes);
+   declared as individual scalars because the array form changes the access reloc */
+extern f32 lbl_803E1298;
+extern f32 lbl_803E129C;
+extern f32 lbl_803E12A0;
+extern f32 lbl_803E12A4;
+extern f32 lbl_803E12A8;
+extern f32 lbl_803E12AC;
+extern f32 lbl_803E12B0;
+extern f32 lbl_803E12B4;
+extern f32 lbl_803E12B8;
 
 void dll_95_func03(int sourceObj, int variant, int posSource)
 {

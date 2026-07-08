@@ -12,12 +12,6 @@
 #include "main/mapEvent.h"
 #include "main/objlib.h"
 #include "main/frame_timing.h"
-extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int objGetAnimStateFlags(int obj, int flag);
-extern u32 Obj_GetPlayerObject();
-extern ObjAnimEventList gSClanternObjAnimEvents;
-extern f32 lbl_803E5498;
 
 #define SCLANTERN_EVENT_LEFT_SPARK_A  1
 #define SCLANTERN_EVENT_RIGHT_SPARK_A 2
@@ -27,6 +21,13 @@ extern f32 lbl_803E5498;
 #define SCLANTERN_SWING_SFX_ID        0x2f4
 #define SCLANTERN_SPARK_SFX_ID        0x415
 #define SCLANTERN_SPARK_SUPPRESS_MOVE 0x1b
+
+extern ObjAnimEventList gSClanternObjAnimEvents;
+extern f32 lbl_803E5498;
+extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int objGetAnimStateFlags(int obj, int flag);
+extern u32 Obj_GetPlayerObject();
 
 u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {

@@ -29,21 +29,7 @@
 #include "string.h"
 #include "main/vecmath.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
-extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, f32 range, int radii, int hitOut, int objOut,
-                              int pointCount, int mask, int flags, int mode);
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
-extern void hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount, void* outPos, int mode);
-extern void hitDetectFn_800691c0(int obj, u32* bounds, int mask, int flags);
-extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
-                                            int pointCount);
-
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern float mathSinf(float x);
-
-extern f32 fn_802966F4(GameObject* obj);             /* returns a target proximity/distance scalar */
-extern void playerGetTimeScale(int obj, float* out); /* fills out[] with a target motion scalar */
-extern int EmissionController_IsLingering(int obj);
-extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
+#include "main/dll/dll_0042_unk.h"
 
 #define gCamcontrolModeSettings cameraMtxVar57
 
@@ -81,6 +67,20 @@ extern f32 lbl_803E172C;
 extern f32 lbl_803E1730;
 extern f32 lbl_803E1734;
 extern f32 lbl_803E1738;
+
+extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, f32 range, int radii, int hitOut, int objOut,
+                              int pointCount, int mask, int flags, int mode);
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
+extern void hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount, void* outPos, int mode);
+extern void hitDetectFn_800691c0(int obj, u32* bounds, int mask, int flags);
+extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
+                                            int pointCount);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern float mathSinf(float x);
+extern f32 fn_802966F4(GameObject* obj);             /* returns a target proximity/distance scalar */
+extern void playerGetTimeScale(int obj, float* out); /* fills out[] with a target motion scalar */
+extern int EmissionController_IsLingering(int obj);
+extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,
                                      float* lowerBound)
@@ -209,31 +209,6 @@ void CameraModeNormal_func0A(float* minDistanceOut, float* maxDistanceOut, float
         *targetHeightOut = gCamcontrolModeSettings->targetHeight;
     }
 }
-
-typedef struct CamSlideRot
-{
-    s16 angles[4];
-    f32 scale;
-    f32 transX;
-    f32 transY;
-    f32 transZ;
-} CamSlideRot;
-
-STATIC_ASSERT(offsetof(CamSlideRot, angles) == 0x00);
-STATIC_ASSERT(offsetof(CamSlideRot, scale) == 0x08);
-STATIC_ASSERT(offsetof(CamSlideRot, transZ) == 0x14);
-
-typedef struct CamSlideObjectState
-{
-    u8 unk00[0x1A4];
-    f32 vectorX;
-    f32 vectorY;
-    f32 vectorZ;
-} CamSlideObjectState;
-
-STATIC_ASSERT(offsetof(CamSlideObjectState, vectorX) == 0x1A4);
-STATIC_ASSERT(offsetof(CamSlideObjectState, vectorY) == 0x1A8);
-STATIC_ASSERT(offsetof(CamSlideObjectState, vectorZ) == 0x1AC);
 
 void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f32 lowerBound)
 {

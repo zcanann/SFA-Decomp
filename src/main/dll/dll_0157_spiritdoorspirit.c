@@ -12,27 +12,15 @@
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
+#include "main/dll/dll_0157_spiritdoorspirit.h"
 
 #define SPIRITDOORSPIRIT_OBJGROUP 0x4e
+
+extern f32 lbl_803DBE78;
+
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern f32 lbl_803DBE78;
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-
-/* spiritdoorspirit_getExtraSize == 0x1. */
-typedef struct SpiritDoorSpiritState
-{
-    u8 active; /* gamebit not yet set: render + group 0x4e membership */
-} SpiritDoorSpiritState;
-
-typedef struct SpiritdoorspiritPlacement
-{
-    u8 pad0[0x1E];
-    s16 gateGameBit;
-    u8 pad20[0x28 - 0x20];
-} SpiritdoorspiritPlacement;
-
-STATIC_ASSERT(offsetof(SpiritdoorspiritPlacement, gateGameBit) == 0x1E);
 
 int spiritdoorspirit_getExtraSize(void)
 {

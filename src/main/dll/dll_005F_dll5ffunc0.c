@@ -16,10 +16,14 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/dll_005F_dll5ffunc0.h"
 
 STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
 STATIC_ASSERT(offsetof(GfxCmd, tex) == 0x10);
 STATIC_ASSERT(offsetof(GfxCmd, flags) == 0x14);
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL5F_EFFECT_ID 0x48
 
 extern ModgfxInterface** gModgfxInterface;
 
@@ -41,9 +45,6 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (u8*)objAnim->banks[objAnim->bankIndex];
 }
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL5F_EFFECT_ID 0x48
 
 void dll_5F_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

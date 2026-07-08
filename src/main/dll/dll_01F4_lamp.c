@@ -16,6 +16,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objlib.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/dll/dll_01F4_lamp.h"
 
 #define LAMP_OBJFLAG_RENDERED 0x800
 
@@ -24,23 +25,13 @@
 #define LAMP_PARTFX_A 0x7a8
 #define LAMP_PARTFX_B 0x7c7
 
+#define LAMP_SEQ_STATIC 0x3e4 /* seqId using the static rotX byte (no swing) */
+
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
-
 extern f32 Vec_distance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-
-typedef struct LampObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s8 rotXSwing; /* 0x18: rotX byte for the non-static swing seq */
-    u8 pad19[0x1A - 0x19];
-    u8 rotXStatic; /* 0x1A: rotX byte for the static seq */
-    u8 pad1B[0x20 - 0x1B];
-} LampObjectDef;
-
-#define LAMP_SEQ_STATIC 0x3e4 /* seqId using the static rotX byte (no swing) */
 
 int Lamp_getExtraSize(void)
 {

@@ -25,15 +25,6 @@ typedef struct CfPrisonCageMapData
     s16 openedBit; /* 0x18: game bit set once the cage is opened */
 } CfPrisonCageMapData;
 
-/* placement type ids this DLL serves (anim.seqId carries the romlist
-   type; retail names CFPrisonCage / CFCageSwitch): the cage runs
-   sequence 0, the switch reports object type 8 and runs sequence 1. */
-enum
-{
-    CFPRISONCAGE_TYPE_CAGE = 0x127,
-    CFPRISONCAGE_TYPE_SWITCH = 0x128
-};
-
 typedef struct CfPrisonCageObjectDef
 {
     u8 pad0[0x8 - 0x0];
@@ -52,16 +43,25 @@ typedef struct CfPrisonCageObjectDef
 
 STATIC_ASSERT(offsetof(CfPrisonCageMapData, openedBit) == 0x18);
 
+/* placement type ids this DLL serves (anim.seqId carries the romlist
+   type; retail names CFPrisonCage / CFCageSwitch): the cage runs
+   sequence 0, the switch reports object type 8 and runs sequence 1. */
+enum
+{
+    CFPRISONCAGE_TYPE_CAGE = 0x127,
+    CFPRISONCAGE_TYPE_SWITCH = 0x128
+};
+
 /* generic activate message granting the opened bit (switch path only;
    the same id powers a base in cfpowerbase) */
 #define CFPRISONCAGE_MSG_OPEN 0xA0005
 
+extern f32 lbl_803E42B0;
+extern f32 lbl_803E42B4;
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 mainGetBit(int eventId);
-extern f32 lbl_803E42B0;
-extern f32 lbl_803E42B4;
 extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
 /* CFPrisonCage_SeqFn: lock interaction once the opened bit is set;

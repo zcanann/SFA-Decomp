@@ -12,29 +12,11 @@
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#include "main/dll/WM/dll_020F_wmspiritset.h"
 
 /* romlist object-def variant driving this DLL (see docblock): def 921
    'WM_SpiritSet' (romlist type 0x264). */
 #define WMSPIRITSET_SEQID_SPIRITSET 0x264
-
-typedef struct WmSpiritSetState
-{
-    s16 visibilityGameBit; /* 0x00: game bit gating render (-1 = always visible) */
-} WmSpiritSetState;
-
-typedef struct WmSpiritSetMapData
-{
-    ObjPlacement base;
-    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
-    u8 pad19[0x1E - 0x19];
-    s16 visibilityGameBit; /* 0x1E */
-} WmSpiritSetMapData;
-
-STATIC_ASSERT(offsetof(WmSpiritSetState, visibilityGameBit) == 0x0);
-STATIC_ASSERT(sizeof(WmSpiritSetState) == 0x2);
-STATIC_ASSERT(offsetof(WmSpiritSetMapData, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(WmSpiritSetMapData, visibilityGameBit) == 0x1E);
-STATIC_ASSERT(sizeof(WmSpiritSetMapData) == 0x20);
 
 int wmspiritset_getExtraSize(void)
 {

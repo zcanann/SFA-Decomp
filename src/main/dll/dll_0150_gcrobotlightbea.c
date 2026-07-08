@@ -30,25 +30,7 @@
 #include "main/dll/modgfx.h"
 #include "main/sky_state.h"
 #include "main/dll/babycloudrunnerstate_struct.h"
-#define GCROBOTLIGHTBEA_HIT_VOLUME_SLOT 0x17
-extern u32 ObjHits_SetHitVolumeSlot();
-extern u32 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
-extern u32 ObjLink_DetachChild();
-extern void* Obj_GetPlayerObject(void);
-extern void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, int p9, int slot, f32 f, u8 arg8);
-extern void modelLightStruct_freeSlot(int* p);
-extern f32 lbl_80322C38[];
-extern f32 lbl_803DBE58;
-extern f32 lbl_803DBE5C;
-extern void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u8 setFlag);
-extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
-extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
-extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);
-extern f32 PSVECDistance(void* a, void* b);
-extern void PSVECScale(void* in, void* out, f32 scale);
-extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
+#include "main/dll/dll_0150_gcrobotlightbea.h"
 
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
@@ -83,6 +65,28 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
  * (gcrobotlightbea_getExtraSize == 0xc). */
 
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
+
+#define GCROBOTLIGHTBEA_HIT_VOLUME_SLOT 0x17
+
+extern f32 lbl_80322C38[];
+extern f32 lbl_803DBE58;
+extern f32 lbl_803DBE5C;
+
+extern u32 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHits_EnableObject();
+extern int ObjHits_GetPriorityHit();
+extern u32 ObjLink_DetachChild();
+extern void* Obj_GetPlayerObject(void);
+extern void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, int p9, int slot, f32 f, u8 arg8);
+extern void modelLightStruct_freeSlot(int* p);
+extern void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u8 setFlag);
+extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
+extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
+extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
+extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);
+extern f32 PSVECDistance(void* a, void* b);
+extern void PSVECScale(void* in, void* out, f32 scale);
+extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
 #pragma scheduling off
 #pragma peephole off

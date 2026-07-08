@@ -13,11 +13,15 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
+#include "main/dll/DIM/dll_01C7_dimlavasmash.h"
+
+STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
 #define DIMLAVASMASH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+#define DIMLAVASMASH_HIT_SEQID_CANNONBALL 397 /* dimlavaball cannonball (0x18d) */
+
 extern f32 lbl_803E48F8;
-STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int mapBlockFn_800606ec(int arg1, int idx);
@@ -71,28 +75,6 @@ int dimlavasmash_getObjectTypeId(void)
     return 0x0;
 }
 
-typedef struct DimlavasmashPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 triggerGameBit;
-    s16 gateGameBit;
-    u8 pad22[0x28 - 0x22];
-} DimlavasmashPlacement;
-
-typedef struct DimlavasmashState
-{
-    s8 unk0;           /* 0x0 init source: def.unk1C */
-    u8 surfaceLayerId; /* surface material/layer index passed to setBlockSurfaceFlags */
-    u8 state;
-    u8 pad3[0x7 - 0x3];
-    u8 unk7;
-    u8 pad8[0x9 - 0x8];
-    s8 unk9;
-    s8 unkA;
-    s8 unkB;
-    u8 padC[0x10 - 0xC];
-} DimlavasmashState;
-
 #pragma dont_inline on
 #pragma opt_propagation off
 void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
@@ -139,8 +121,6 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
 #pragma opt_propagation reset
 #pragma dont_inline reset
 
-#define DIMLAVASMASH_HIT_SEQID_CANNONBALL 397 /* dimlavaball cannonball (0x18d) */
-
 int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern int mapGetBlock(void);
@@ -185,15 +165,6 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return ((DimlavasmashState*)state)->state == 0;
 }
-
-typedef struct DimlavasmashObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 rotByte;        /* 0x18 rotation byte (read raw as def[0x18] into anim.rotX) */
-    s16 surfaceLayerId; /* 0x1A def source for state.surfaceLayerId */
-    s16 unk1C;
-    s16 gameBit;
-} DimlavasmashObjectDef;
 
 void dimlavasmash_init(s16* obj, s8* def)
 {

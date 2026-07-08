@@ -29,13 +29,13 @@
  */
 #define THP_FRAME_HEADER_SIZE 8
 
+extern int gAttractMovieAudioThreadActive;
 extern void* PopReadedBuffer(void);
 extern void PushReadedBuffer2(void* arg);
 
 OSMessageQueue lbl_803A4460; /* ready-buffer queue */
 OSMessageQueue lbl_803A4480; /* free-buffer queue */
 OSThread lbl_803A54A0;       /* audio decode worker thread */
-extern int gAttractMovieAudioThreadActive;
 
 void* PopDecodedAudioBuffer(int flags)
 {

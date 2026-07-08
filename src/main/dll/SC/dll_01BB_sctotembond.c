@@ -28,47 +28,6 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/music_trigger_ids.h"
-extern f32 timeDelta;
-
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_GetPlayerObject(void);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
-extern u16 gTotemBondRingGameBits[];
-extern u16 gTotemBondOrbGameBits[];
-extern f32 gTotemBondOrbSpawnRadius;
-extern f32 lbl_803E563C;
-extern const f32 lbl_803E5654;
-extern f32 lbl_803E5658;
-extern f32 gTotemBondRingRotateSpeed;
-extern f32 gTotemBondCameraDistance;
-extern void hudFn_8011f38c(u8 x);
-extern void fn_80296124(int player, void* pos, void* obj, int arg);
-extern f32 lbl_803E5650;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Music_Trigger(int id, int arg);
-extern void fn_8011F6D4(u32 x);
-
-/* Camera modes driven by the totem-bond sequence (cameramode DLL numbers). */
-#define SC_TOTEMBOND_CAMMODE_VIEWFINDER 0x44
-#define SC_TOTEMBOND_CAMMODE_DEFAULT    0x42
-
-/* LightFoot Village map-event id ("swapcircle"); mode 6 advances the village */
-#define SC_TOTEMBOND_MAP_SWAPCIRCLE 0xe
-
-#define SC_TOTEMBOND_ORB_COUNT          8
-#define SC_TOTEMBOND_ORB_SETUP_SIZE     0x38
-#define SC_TOTEMBOND_ORB_OBJECT_ID      0x27b
-#define SC_TOTEMBOND_ORB_TRIGGER_EVENT  0x64c
-#define SC_TOTEMBOND_ORB_ANGLE_STEP     0x2000
-#define SC_TOTEMBOND_EVENT_START_ORBS   0x01
-#define SC_TOTEMBOND_EVENT_ORBS_ACTIVE  0x02
-#define SC_TOTEMBOND_EVENT_SET_MAP_MODE 0x10
-
-#define SC_TOTEMBOND_OBJFLAG_HIDDEN             0x4000
-#define SC_TOTEMBOND_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /*
  * Placement record written for each spawned villager/"orb" object
@@ -91,6 +50,48 @@ typedef struct TotemBondOrbPlacement
     u8 pad33[0x38 - 0x33];
 } TotemBondOrbPlacement;
 STATIC_ASSERT(sizeof(TotemBondOrbPlacement) == 0x38);
+
+/* Camera modes driven by the totem-bond sequence (cameramode DLL numbers). */
+#define SC_TOTEMBOND_CAMMODE_VIEWFINDER 0x44
+#define SC_TOTEMBOND_CAMMODE_DEFAULT    0x42
+
+/* LightFoot Village map-event id ("swapcircle"); mode 6 advances the village */
+#define SC_TOTEMBOND_MAP_SWAPCIRCLE 0xe
+
+#define SC_TOTEMBOND_ORB_COUNT          8
+#define SC_TOTEMBOND_ORB_SETUP_SIZE     0x38
+#define SC_TOTEMBOND_ORB_OBJECT_ID      0x27b
+#define SC_TOTEMBOND_ORB_TRIGGER_EVENT  0x64c
+#define SC_TOTEMBOND_ORB_ANGLE_STEP     0x2000
+#define SC_TOTEMBOND_EVENT_START_ORBS   0x01
+#define SC_TOTEMBOND_EVENT_ORBS_ACTIVE  0x02
+#define SC_TOTEMBOND_EVENT_SET_MAP_MODE 0x10
+
+#define SC_TOTEMBOND_OBJFLAG_HIDDEN             0x4000
+#define SC_TOTEMBOND_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+extern f32 timeDelta;
+extern u16 gTotemBondRingGameBits[];
+extern u16 gTotemBondOrbGameBits[];
+extern f32 gTotemBondOrbSpawnRadius;
+extern f32 lbl_803E563C;
+extern const f32 lbl_803E5654;
+extern f32 lbl_803E5658;
+extern f32 gTotemBondRingRotateSpeed;
+extern f32 gTotemBondCameraDistance;
+extern f32 lbl_803E5650;
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_GetPlayerObject(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
+extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
+extern void hudFn_8011f38c(u8 x);
+extern void fn_80296124(int player, void* pos, void* obj, int arg);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void Music_Trigger(int id, int arg);
+extern void fn_8011F6D4(u32 x);
 
 #pragma dont_inline on
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)

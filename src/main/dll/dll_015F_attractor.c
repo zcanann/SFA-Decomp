@@ -19,6 +19,7 @@
 #include "main/obj_placement.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/dll_015F_attractor.h"
 
 #define ATTRACTOR_OBJ_GROUP 0x1e
 
@@ -26,18 +27,6 @@
 #define ATTRACTOR_MODE_NONE        0 /* report nothing */
 #define ATTRACTOR_MODE_RETURN_SELF 1 /* return the object */
 #define ATTRACTOR_MODE_FACE_PLAYER 2 /* face player, then return the object */
-
-typedef struct AttractorMapData
-{
-    ObjPlacement base;
-    s8 setupByte; /* 0x18: -> anim.rotX << 8 */
-    s8 mode;      /* 0x19 */
-    s16 scale;    /* 0x1a */
-} AttractorMapData;
-
-STATIC_ASSERT(offsetof(AttractorMapData, setupByte) == 0x18);
-STATIC_ASSERT(offsetof(AttractorMapData, mode) == 0x19);
-STATIC_ASSERT(offsetof(AttractorMapData, scale) == 0x1a);
 
 void attractor_getTarget(GameObject* obj, void** out)
 {

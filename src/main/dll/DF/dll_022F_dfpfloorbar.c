@@ -17,12 +17,25 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/gamebit_ids.h"
+
+typedef struct DfpfloorbarPlacement
+{
+    u8 pad0[0xC - 0x0];
+    f32 posY;
+    u8 pad10[0x18 - 0x10];
+    u8 rotXByte;  /* 0x18: <<8 seeds anim.rotX */
+    u8 modeIndex; /* 0x19: selects the mode-table row */
+    u8 pad1A[0x1C - 0x1A];
+    s16 travelRange;       /* 0x1C: nonzero scales rootMotionScale */
+    s16 triggerGameBit;    /* 0x1E */
+    s16 completionGameBit; /* 0x20 */
+} DfpfloorbarPlacement;
+
 /* anim.seqId of the puzzle controller object this bar links to (docblock:
  * "the puzzle controller object (seqId 0x431)"). */
 #define DFPFLOORBAR_CONTROLLER_SEQID 0x431
 
 extern f32 lbl_803E6408;
-
 extern f32 lbl_803E640C;
 extern f32 lbl_803E6410;
 extern f32 lbl_803E6414;
@@ -75,19 +88,6 @@ void DFP_Floorbar_hitDetect(int* obj)
         return;
     state[2] = NULL;
 }
-
-typedef struct DfpfloorbarPlacement
-{
-    u8 pad0[0xC - 0x0];
-    f32 posY;
-    u8 pad10[0x18 - 0x10];
-    u8 rotXByte;  /* 0x18: <<8 seeds anim.rotX */
-    u8 modeIndex; /* 0x19: selects the mode-table row */
-    u8 pad1A[0x1C - 0x1A];
-    s16 travelRange;       /* 0x1C: nonzero scales rootMotionScale */
-    s16 triggerGameBit;    /* 0x1E */
-    s16 completionGameBit; /* 0x20 */
-} DfpfloorbarPlacement;
 
 u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

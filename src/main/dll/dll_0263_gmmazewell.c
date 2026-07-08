@@ -16,19 +16,9 @@
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/dll/dll_0263_gmmazewell.h"
 
 #define PAD_BUTTON_A 0x100
-
-typedef struct GmmazewellState
-{
-    u8 unk0;             /* 0x00: cleared at init, never read */
-    u8 savepointSet;     /* 0x01: savepoint stamped once player object is available */
-    u8 pad2[2];          /* 0x02 */
-    s32 pendingDialogue; /* 0x04: dialogue id queued for the next event 1 (-1 = none) */
-} GmmazewellState;
-
-STATIC_ASSERT(offsetof(GmmazewellState, pendingDialogue) == 0x4);
-STATIC_ASSERT(sizeof(GmmazewellState) == 0x8);
 
 /* Quest-bit table layout (gQuestBitTable, 44 s16 entries):
  *   [0..8]   watched quest/event bits

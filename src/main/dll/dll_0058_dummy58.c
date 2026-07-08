@@ -3,6 +3,7 @@
  *
  * The DLL defines no real object behaviour - it exists to occupy its DLL id slot.
  */
+#include "main/dll/dll_0058_dummy58.h"
 
 int Dummy58_func03_ret_0(void)
 {

@@ -9,6 +9,11 @@
 #include "main/dll/dll_7A.h"
 #include "main/engine_shared.h"
 
+/*__DATA_EXTERNS__*/
+extern void projtesla_doUnsupported();
+extern void projtesla_release();
+extern void projtesla_initialise();
+
 int projsunshock_doUnsupported(void)
 {
     OSReport(sProjsunshockDoNoLongerSupported);
@@ -25,10 +30,6 @@ void projsunshock_initialise(void)
 
 char sProjsunshockDoNoLongerSupported[] = "<projsunshock Do>No Longer supported \n";
 
-/*__DATA_EXTERNS__*/
-extern void projtesla_doUnsupported();
-extern void projtesla_release();
-extern void projtesla_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* lbl_80319920[8] = {(void*)0x00000000,    (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          projtesla_initialise, projtesla_release, (void*)0x00000000, projtesla_doUnsupported};

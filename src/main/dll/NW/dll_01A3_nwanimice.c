@@ -8,9 +8,9 @@
  * here - update/render/hitDetect are all stubs; the work lives in nwice.
  */
 #include "main/objlib.h"
-
 #include "main/game_object.h"
 #include "main/dll/NW/nw_shared.h"
+#include "main/dll/NW/dll_01A3_nwanimice.h"
 
 #define NWANIMICE_OBJFLAG_HIDDEN             0x4000
 #define NWANIMICE_OBJFLAG_HITDETECT_DISABLED 0x2000

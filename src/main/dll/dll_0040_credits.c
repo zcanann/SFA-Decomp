@@ -12,6 +12,7 @@
  */
 #include "main/texture.h"
 #include "main/engine_shared.h"
+#include "main/dll/dll_0040_credits.h"
 
 /* credits texture asset loaded at init (freed in Credits_release) */
 #define CREDITS_TEXTURE_ID 0xC5
@@ -25,26 +26,6 @@ extern f32 lbl_803E22AC;
 extern f32 lbl_803E22B0;
 extern f32 lbl_803E22B4;
 extern f32 lbl_803E22B8;
-
-typedef struct
-{
-    u16 t0; /* fade-in start */
-    u16 t1; /* fade-in end / full-alpha start */
-    u16 t2; /* full-alpha end / fade-out start */
-    u16 t3; /* fade-out end */
-    u8 pad8[3];
-    u8 alpha;
-    f32 y;
-} CreditsLine;
-
-typedef struct
-{
-    CreditsLine lines[9];
-    u16 scrollStartTime;
-    u16 endTime;
-    u8 count;
-    u8 pad95[3];
-} CreditsPage;
 
 CreditsPage gCreditsPages[] = {
     {

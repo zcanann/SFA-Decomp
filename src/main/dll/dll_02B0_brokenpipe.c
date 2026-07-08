@@ -11,8 +11,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define BROKENPIPE_OBJFLAG_HIDDEN 0x4000
-
 typedef struct BrokenPipeSetup
 {
     ObjPlacement base;
@@ -33,6 +31,8 @@ typedef struct BrokenPipeState
 } BrokenPipeState;
 
 STATIC_ASSERT(sizeof(BrokenPipeState) == 4);
+
+#define BROKENPIPE_OBJFLAG_HIDDEN 0x4000
 
 int brokenpipe_getExtraSize(void)
 {

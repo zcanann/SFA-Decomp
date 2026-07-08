@@ -16,9 +16,10 @@
 #include "main/camera_object.h"
 #include "main/dll/CAM/camera_mode_cannon_state.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/dll/dll_0051_cameramodecannon.h"
 
-extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern CameraModeCannonState* lbl_803DD5A0;
+extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 
 void CameraModeCannon_copyToCurrent(void)
 {

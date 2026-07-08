@@ -2,9 +2,9 @@
 
 #pragma exceptions on
 
-extern void salActivateVoice(void* entry, u8 studioIndex);
 extern u8* dspVoice;
 extern u8 salTimeOffset;
+extern void salActivateVoice(void* entry, u8 studioIndex);
 
 void hwStart(int slot, u8 studioIndex)
 {

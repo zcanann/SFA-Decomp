@@ -14,33 +14,9 @@
 #include "main/object_descriptor.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/dll_025A_staticcamera.h"
 
 #define STATICCAMERA_OBJGROUP 7
-
-typedef struct StaticCameraState
-{
-    u8 setupParam; /* 0x00: from placement byte 0x19 */
-    u8 unk1;       /* 0x01: cleared at init */
-    u8 pad2[2];
-    f32 unk4; /* 0x04: placement byte 0x1a as float */
-} StaticCameraState;
-
-typedef struct StaticCameraPlacement
-{
-    u8 pad00[0x19];
-    u8 setupParam; /* 0x19 */
-    u8 unkByte1A;  /* 0x1A: stored into extra as float */
-    u8 pad1B;
-    s16 rotX; /* 0x1C: negated into anim.rotX */
-    s16 rotY; /* 0x1E: negated into anim.rotY */
-    s16 rotZ; /* 0x20: negated into anim.rotZ */
-} StaticCameraPlacement;
-
-STATIC_ASSERT(offsetof(StaticCameraPlacement, setupParam) == 0x19);
-STATIC_ASSERT(offsetof(StaticCameraPlacement, unkByte1A) == 0x1A);
-STATIC_ASSERT(offsetof(StaticCameraPlacement, rotX) == 0x1C);
-STATIC_ASSERT(offsetof(StaticCameraPlacement, rotY) == 0x1E);
-STATIC_ASSERT(offsetof(StaticCameraPlacement, rotZ) == 0x20);
 
 int StaticCamera_getExtraSize(void)
 {

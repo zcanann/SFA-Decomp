@@ -21,6 +21,36 @@
 #include "main/game_object.h"
 #include "main/sfa_shared_decls.h"
 
+STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
+
+STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
+STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
+
+#define EXPLODABLE_OBJFLAG_HIDDEN 0x4000
+
+/* object group this prop registers its fragments under */
+#define EXPLODABLE_OBJ_GROUP 0x21
+/* fragment object vtable slot returning its lifecycle status */
+#define FRAGMENT_VTABLE_STATUS 0x20
+
+/* DrExplodableState.phase6E4 progression (see file header) */
+#define EXPLODABLE_PHASE_WAIT     0 /* wait for the activate game bit */
+#define EXPLODABLE_PHASE_BREAKING 1 /* fragments spawned; poll their status */
+#define EXPLODABLE_PHASE_BROKEN   2 /* already broken, nothing to do */
+
+extern GasVentTableEntry gExplodableBreakRecipeTable[];
+extern f32 lbl_803E435C;
+extern f32 lbl_803E4350;
+extern f32 lbl_803E4354;
+extern f32 lbl_803E4358;
+extern f32 lbl_803E4368;
+extern f32 lbl_803E436C;
+extern f32 lbl_803E4370;
+extern f32 lbl_803E4374;
+extern f32 lbl_803E4378;
+extern f32 lbl_803E437C;
+extern f32 lbl_803E4380;
+
 extern void attractor_getTarget(void);
 
 extern void attractor_setScale(void);
@@ -116,34 +146,23 @@ extern void SpiritDoorLock_initialise(void);
 extern void RollingBarrel_initialise(void);
 extern void MMP_levelcontrol_initialise(void);
 extern int randomGetRange(int lo, int hi);
-
-#define EXPLODABLE_OBJFLAG_HIDDEN 0x4000
-
-/* object group this prop registers its fragments under */
-#define EXPLODABLE_OBJ_GROUP 0x21
-/* fragment object vtable slot returning its lifecycle status */
-#define FRAGMENT_VTABLE_STATUS 0x20
-
-/* DrExplodableState.phase6E4 progression (see file header) */
-#define EXPLODABLE_PHASE_WAIT     0 /* wait for the activate game bit */
-#define EXPLODABLE_PHASE_BREAKING 1 /* fragments spawned; poll their status */
-#define EXPLODABLE_PHASE_BROKEN   2 /* already broken, nothing to do */
+extern void Obj_FreeObject(int obj);
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern void Model_GetVertexPosition(int model, int i, f32* out);
+extern void vecRotateZXY(s16* rot, f32* vec);
+extern f32 sqrtf(f32 x);
 
 void explodable_render(void)
 {
 }
-
-STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-
-STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
-STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 int explodable_getExtraSize(void)
 {
     return 0x6e8;
 }
 
-extern void Obj_FreeObject(int obj);
 void explodable_free(int obj, int flag)
 {
     int state;
@@ -230,9 +249,6 @@ void explodable_update(int obj)
     }
 }
 
-extern GasVentTableEntry gExplodableBreakRecipeTable[];
-extern f32 lbl_803E435C;
-
 void explodable_init(int obj, int setup)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -292,13 +308,6 @@ void explodable_init(int obj, int setup)
     }
 }
 
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern f32 lbl_803E4350;
-extern f32 lbl_803E4354;
-extern f32 lbl_803E4358;
-
 int explodable_spawnFragmentObject(int obj, int objType, int chunkSrc, int fragmentIndex)
 {
     ExplodableFragmentSetup* s;
@@ -343,10 +352,6 @@ int explodable_spawnFragmentObject(int obj, int objType, int chunkSrc, int fragm
     s->height = (int)c->height;
     return Obj_SetupObject((int)s, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
 }
-
-extern void Model_GetVertexPosition(int model, int i, f32* out);
-extern f32 lbl_803E4368;
-extern f32 lbl_803E436C;
 
 void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
 {
@@ -417,15 +422,6 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
                                                     : EXPLODABLE_PHASE_WAIT;
     }
 }
-
-extern void vecRotateZXY(s16* rot, f32* vec);
-extern f32 sqrtf(f32 x);
-
-extern f32 lbl_803E4370;
-extern f32 lbl_803E4374;
-extern f32 lbl_803E4378;
-extern f32 lbl_803E437C;
-extern f32 lbl_803E4380;
 
 void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def)
 {

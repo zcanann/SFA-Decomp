@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_02BB_gflevelcon.h"
 
 /* sequence event opcodes consumed by gf_levelcon_SeqFn */
 #define GFLEVELCON_SEQEV_NONE          0
@@ -39,14 +40,6 @@
 #define GFLEVELCON_LINK_SCROLL_A 0x4A946
 #define GFLEVELCON_LINK_SCROLL_B 0x4A947
 
-/* The next two typedefs are two views over the SAME 0x10-byte obj->extra
-   allocation (gf_levelcon_getExtraSize returns 0x10). findLinkedObjects
-   caches the three linked object handles as s32 ids (light, scrollA,
-   scrollB); handleScriptEvents reads scrollA/scrollB back as
-   s16* scroll-offset pointers and promptTimer as the prompt countdown. The split
-   into two casts (with differing field types at scrollA/scrollB) is
-   matching-required: collapsing to one struct changes the cast keys and
-   the codegen. */
 /* Arwing-projectile child object ids; each spawn installs
  * arwprojectile_setLifetime/placeForward on the returned object and casts
  * the setup buffer to GfProjectileSetup. */
@@ -62,52 +55,6 @@
 #define GFLEVELCON_ENVFX_A 0x21f
 #define GFLEVELCON_ENVFX_B 0x21d
 #define GFLEVELCON_ENVFX_C 0x21e
-/* Spawn-setup buffer for the arwing-projectile children (defNos
- * 0x80d/0x7e4/0x859). Reuses ObjPlacement's pos/color head and adds the
- * class-specific launch fields at 0x18/0x19/0x1a (all u8 stores per asm). */
-typedef struct GfProjectileSetup
-{
-    ObjPlacement head; /* 0x00 */
-    u8 roll;           /* 0x18: cleared to 0 */
-    u8 pitch;          /* 0x19 */
-    u8 yawHi;          /* 0x1a */
-} GfProjectileSetup;
-
-typedef struct GfLevelconFindLinkedObjectsState
-{
-    s32 light;
-    s32 scrollA;
-    s32 scrollB;
-    u8 padC[0x10 - 0xC];
-} GfLevelconFindLinkedObjectsState;
-
-typedef struct GfLevelconHandleScriptEventsState
-{
-    s32 light;
-    void* scrollA;
-    void* scrollB;
-    f32 promptTimer;
-} GfLevelconHandleScriptEventsState;
-
-typedef struct GfHitState
-{
-    u8 pad0[0x88];
-    int mode;
-    u8 pad1[0x16];
-    s16 pitchVel;
-    s16 rollVel;
-    u8 pad2[8];
-    u8 hits[4];
-    u8 timer[4];
-    u8 pad3[3];
-    u8 texState[3];
-} GfHitState;
-
-STATIC_ASSERT(offsetof(GfHitState, mode) == 0x88);
-STATIC_ASSERT(offsetof(GfHitState, pitchVel) == 0xA2);
-STATIC_ASSERT(offsetof(GfHitState, hits[0]) == 0xAE);
-STATIC_ASSERT(offsetof(GfHitState, timer[0]) == 0xB2);
-STATIC_ASSERT(offsetof(GfHitState, texState[0]) == 0xB9);
 
 int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
 {

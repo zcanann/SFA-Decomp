@@ -19,22 +19,6 @@
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
 
-#define SC_TOTEMPUZZLE_OBJECT_TYPE       0x3c1
-#define SC_TOTEMPUZZLE_READY_FLAG        0x2
-#define SC_TOTEMPUZZLE_REVERSED_FLAG     0x1
-#define SC_TOTEMPUZZLE_PULSE_FLAG        0x4
-#define SC_TOTEMPUZZLE_FORWARD_STEP      4
-#define SC_TOTEMPUZZLE_SOLVED_COUNT      5
-#define SC_TOTEMPUZZLE_CAP_INDEX         5
-#define SC_TOTEMPUZZLE_SOLVED_TEXTURE_ID 0x100
-
-#define SC_TOTEMPUZZLE_WRONG_SFX    0x487
-#define SC_TOTEMPUZZLE_COMPLETE_SFX 0x7e
-#define SC_TOTEMPUZZLE_PROGRESS_SFX 0x409
-
-#define SC_TOTEMPUZZLE_OBJFLAG_HIDDEN             0x4000
-#define SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 typedef struct SCTotemPuzzleState
 {
     u8 pad00[0xc];
@@ -61,9 +45,22 @@ typedef struct SCTotemPuzzleParticleBox
     f32 z;
 } SCTotemPuzzleParticleBox;
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
-                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
+#define SC_TOTEMPUZZLE_OBJECT_TYPE       0x3c1
+#define SC_TOTEMPUZZLE_READY_FLAG        0x2
+#define SC_TOTEMPUZZLE_REVERSED_FLAG     0x1
+#define SC_TOTEMPUZZLE_PULSE_FLAG        0x4
+#define SC_TOTEMPUZZLE_FORWARD_STEP      4
+#define SC_TOTEMPUZZLE_SOLVED_COUNT      5
+#define SC_TOTEMPUZZLE_CAP_INDEX         5
+#define SC_TOTEMPUZZLE_SOLVED_TEXTURE_ID 0x100
+
+#define SC_TOTEMPUZZLE_WRONG_SFX    0x487
+#define SC_TOTEMPUZZLE_COMPLETE_SFX 0x7e
+#define SC_TOTEMPUZZLE_PROGRESS_SFX 0x409
+
+#define SC_TOTEMPUZZLE_OBJFLAG_HIDDEN             0x4000
+#define SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 extern f32 gTotemPuzzleAngleStep;
 extern f32 lbl_803E55F4;
 extern f32 lbl_803E55F8;
@@ -71,6 +68,21 @@ extern f32 lbl_803E55FC;
 extern f32 lbl_803E5600;
 extern f32 lbl_803E5604;
 extern f32 lbl_803E5608;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E5618;
+extern const f32 lbl_803E561C;
+extern const f32 lbl_803E5620;
+extern f32 gTotemPuzzleAngleWrap;
+extern f32 lbl_803E5628;
+extern f32 lbl_803E562C;
+extern f32 lbl_803E5630;
+
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
+                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
+extern int ObjHits_GetPriorityHitWithPosition();
+extern void sc_totempuzzle_animEventCallback(int obj);
 
 int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleState* state)
 {
@@ -210,19 +222,8 @@ void sc_totempuzzle_hitDetect(void)
 #include "main/objfx.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
-extern int ObjHits_GetPriorityHitWithPosition();
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803E5618;
-extern const f32 lbl_803E561C;
-extern const f32 lbl_803E5620;
-extern f32 gTotemPuzzleAngleWrap;
-extern f32 lbl_803E5628;
 
 s16 gTotemPuzzleStepAngles[6] = {-8192, 0, 8192, 16384, 24576, -32768};
-extern f32 lbl_803E562C;
-extern f32 lbl_803E5630;
-extern void sc_totempuzzle_animEventCallback(int obj);
 
 void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
 {

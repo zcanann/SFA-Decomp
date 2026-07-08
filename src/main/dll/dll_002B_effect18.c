@@ -5,7 +5,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
-extern float mathSinf(float x);
+#include "main/dll/dll_002B_effect18.h"
+
 extern f32 gEffect18Progress2;
 extern f32 gEffect18Progress3;
 extern s32 gEffect18SinePhaseA;
@@ -14,6 +15,7 @@ extern f32 gEffect18SineValueB;
 extern f32 gEffect18SineValueA;
 extern f32 gEffect18Progress0;
 extern f32 gEffect18Progress1;
+extern float mathSinf(float x);
 extern f32 sqrtf(f32);
 
 int Effect18_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,

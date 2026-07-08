@@ -28,10 +28,10 @@
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/DIM/dll_01CA_dimexplosion.h"
 
-#define DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define MODEL_LIGHT_KIND_POINT                  2
-#define DIMEXPLOSION_PARTFX                     0x5e
+typedef void (*ExplosionSpawnFlameSpdFirst)(int obj, f32 spd, int gen, f32 x, f32 y, f32 z);
+typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p3);
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
@@ -45,13 +45,20 @@ STATIC_ASSERT(sizeof(GravityDebris) == 0x24);
 STATIC_ASSERT(offsetof(ExplosionState, debris) == 0x964);
 STATIC_ASSERT(offsetof(GravityDebris, active) == 0x20);
 
+#define DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define MODEL_LIGHT_KIND_POINT                  2
+#define DIMEXPLOSION_PARTFX                     0x5e
+
 #define GEXPLOSION_TEXTURE_COUNT 4
 
-extern void textureFree(int tex);
-extern int gExplosionTextures[GEXPLOSION_TEXTURE_COUNT];
-extern int Obj_GetActiveModel(int obj);
-extern void ModelLightStruct_free(void*);
+#define GX_PNMTX0  0 /* GXPosNrmMtx (GXEnum.h): GX_PNMTX0=0 */
+#define GX_VA_POS  9
+#define GX_VA_TEX0 13
+#define GX_DIRECT  1
+#define GX_QUADS   0x80
+#define GX_VTXFMT2 2
 
+extern int gExplosionTextures[GEXPLOSION_TEXTURE_COUNT];
 extern f32 lbl_803E492C;
 extern f32 lbl_803E4930;
 extern f32 lbl_803E4934;
@@ -93,26 +100,21 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 gExplosionSpreadDirs[];
 extern FbTexTbl gExplosionTexTable;
+
+extern void textureFree(int tex);
+extern int Obj_GetActiveModel(int obj);
+extern void ModelLightStruct_free(void*);
 extern f32 expf(f32 x);
 extern f32 sqrtf(f32 x);
-
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXBegin(int prim, int fmt, int n);
-
-#define GX_PNMTX0  0 /* GXPosNrmMtx (GXEnum.h): GX_PNMTX0=0 */
-#define GX_VA_POS  9
-#define GX_VA_TEX0 13
-#define GX_DIRECT  1
-#define GX_QUADS   0x80
-#define GX_VTXFMT2 2
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXMultVecSR(f32* m, f32* in, f32* out);
-
 extern int fn_8000FA70(void);
 extern int fn_8000FA90(void);
 extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
@@ -133,8 +135,6 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z);
 void explosion_computeColor(f32 age, f32 lifetime, u8 mode, u8* out);
-typedef void (*ExplosionSpawnFlameSpdFirst)(int obj, f32 spd, int gen, f32 x, f32 y, f32 z);
-typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p3);
 
 #pragma scheduling off
 #pragma peephole off

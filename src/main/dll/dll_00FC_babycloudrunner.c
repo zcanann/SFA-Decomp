@@ -25,8 +25,6 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
-#define BABYCLOUDRUNNER_OBJFLAG_HIDDEN 0x4000
-
 typedef struct BabyCloudRunnerPlacement
 {
     ObjPlacement base;
@@ -57,6 +55,8 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, triggerIdMin) == 0x1D);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, triggerIdMax) == 0x1E);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, flags) == 0x1F);
 STATIC_ASSERT(offsetof(BabyCloudRunnerState, target) == 0x4);
+
+#define BABYCLOUDRUNNER_OBJFLAG_HIDDEN 0x4000
 
 /* BabyCloudRunnerState.mode */
 #define BABYCLOUDRUNNER_MODE_UNINIT    0

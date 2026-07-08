@@ -25,6 +25,9 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/DR/dll_0258_drcloudrunner.h"
+
+STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 
 #define PAD_BUTTON_A 0x100
 
@@ -35,55 +38,10 @@
 
 #define DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
 
-STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
-
 /* CloudRunnerState::flightState high-level modes */
 #define CLOUDRUNNER_FLIGHT_GROUNDED   0 /* grounded / scripted */
 #define CLOUDRUNNER_FLIGHT_TRANSITION 1 /* mounting / dismounting */
 #define CLOUDRUNNER_FLIGHT_MOUNTED    2 /* mounted free-flight */
-
-/* placement record passed to init / read by the state handlers */
-typedef struct DRCloudRunnerPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 airMeterCapacity; /* 0x1A: initial air meter capacity */
-    u8 pad1C[0x1E - 0x1C];
-    s16 enableGameBit; /* 0x1E: game bit that enables the mount */
-} DRCloudRunnerPlacement;
-
-/* overlay onto CloudRunnerState for the fields it does not yet name */
-typedef struct DRCloudRunnerState
-{
-    u8 pad0[0xAD5 - 0x0];
-    u8 flagsAD5;
-    u8 padAD6[0xB50 - 0xAD6];
-    f32 unkB50;
-    u8 padB54[0xBAE - 0xB54];
-    s16 unkBAE;
-    s16 altMoveEnabled; /* 0xBB0: from placement+0x1a; when set, move 0x203 switches to alternate move 0x20c */
-    u8 padBB2[0xBB4 - 0xBB2];
-    u8 spawnVariant;
-    u8 padBB5[0xBC4 - 0xBB5];
-    s8 unkBC4;
-    u8 padBC5[0xBC8 - 0xBC5];
-} DRCloudRunnerState;
-
-STATIC_ASSERT(offsetof(DRCloudRunnerPlacement, airMeterCapacity) == 0x1A);
-STATIC_ASSERT(offsetof(DRCloudRunnerPlacement, enableGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(DRCloudRunnerState, flagsAD5) == 0xAD5);
-STATIC_ASSERT(offsetof(DRCloudRunnerState, unkB50) == 0xB50);
-STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBAE) == 0xBAE);
-STATIC_ASSERT(offsetof(DRCloudRunnerState, altMoveEnabled) == 0xBB0);
-STATIC_ASSERT(offsetof(DRCloudRunnerState, spawnVariant) == 0xBB4);
-STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBC4) == 0xBC4);
-STATIC_ASSERT(sizeof(DRCloudRunnerState) == 0xBC8);
-
-typedef struct
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} Vec3x;
 
 #define CLOUDRUNNER_ONCLOUD_GAMEBIT 0xed7 /* set while mounted/on cloudrunner */
 

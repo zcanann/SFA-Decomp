@@ -2,30 +2,42 @@
 #include "main/gameplay_runtime.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/k_cos.h"
 #include "main/frame_timing.h"
-extern float powfBitEstimate(float x, float y);
+
+typedef f32 Mtx[3][4];
 
 extern double lbl_803DE7D8;
-extern float fcos16(int angle);
-extern f32 sqrtf(f32 x);
 extern f32 gVecMathAngleScale;
 extern f32 lbl_803DE808;
 extern f32 lbl_803DE80C;
 extern f32 lbl_803DE7C0;
 extern f32 lbl_803DE7C4;
+extern f32 lbl_803DE810;
+extern f32 lbl_803DE7F8;
+extern f32 lbl_803DE7F0;
+extern f32 gVecMathPi;
+extern f32 lbl_803DE7EC;
+extern f32 gVecMathHalfPi;
+extern f32 gVecMathNegHalfPi;
+extern f32 gVecMathTwoPi;
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803DE7F4;
+
+extern float powfBitEstimate(float x, float y);
+extern float fcos16(int angle);
+extern f32 sqrtf(f32 x);
+extern int rand(void);
+extern f32 fsin16(int angle);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
+extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
+extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
+extern f32 __kernel_sin(f32);
+extern f32 __kernel_cos(f32, f32);
+
 extern void mtxRotateByVec3s(f32* mtx, void* transform);
 extern void mtx44Transpose(f32* src, f32* dst);
 extern void setMatrixFromObjectPos(f32* m, u8* p);
-extern f32 lbl_803DE810;
-extern int rand(void);
-extern f32 lbl_803DE7F8;
-extern f32 fsin16(int angle);
-extern f32 lbl_803DE7F0;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
-extern f32 gVecMathPi;
-extern f32 lbl_803DE7EC;
-extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
-extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
+
 #pragma scheduling off
 #pragma peephole off
 f32 getXZDistance(f32* a, f32* b)
@@ -123,8 +135,6 @@ void Vec3_ReflectAgainstNormal(f32* a, f32* n, f32* out)
         out[2] += n[2];
     }
 }
-
-typedef f32 Mtx[3][4];
 
 void initRotationMtx(f32* m, f32 a, f32 b, f32 c)
 {
@@ -570,11 +580,6 @@ void setMatrixFromObjectPos(f32* m, u8* p)
 #pragma dont_inline on
 void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
 {
-    extern f32 __kernel_sin(f32);
-    extern f32 __kernel_cos(f32, f32);
-    extern f32 gVecMathHalfPi;
-    extern f32 gVecMathNegHalfPi;
-    extern f32 gVecMathTwoPi;
     f32 cross[3];
     f32 sinp;
     f32 c0;
@@ -625,8 +630,6 @@ void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
 #pragma dont_inline off
 int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
 {
-    extern f32 oneOverTimeDelta;
-    extern f32 lbl_803DE7F4;
     f32* timer = timerp;
     int trig;
     int range;

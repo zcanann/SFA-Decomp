@@ -14,6 +14,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
+
+STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
+
 #define DFPTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* DfpTorchState.mode: torch behaviour selected from placement->mode */
@@ -24,10 +27,13 @@
    visible; IGNITE spawned 100x on the unlit->lit transition (light-up burst) */
 #define DFPTORCH_PARTFX_FLICKER 0x1f7
 #define DFPTORCH_PARTFX_IGNITE  0x1a3
-extern f32 sqrtf(f32 x);
-extern ModgfxInterface** gModgfxInterface;
 
-STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
+extern ModgfxInterface** gModgfxInterface;
+extern u8 gDfpTorchSequenceState;
+extern int gDfpTorchEffectParams[];
+extern f32 sqrtf(f32 x);
+extern void voxmaps_worldToGrid(f32* in, s16* out);
+extern void objUpdateOpacity(int);
 
 int DFP_Torch_getExtraSize(void)
 {
@@ -49,7 +55,6 @@ void DFP_Torch_free(int obj)
 void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
 
-    extern void voxmaps_worldToGrid(f32 * in, s16 * out);
     extern int voxmaps_traceLine(s16*, s16*, void*, int, int);
     DfpTorchState* state = ((GameObject*)obj)->extra;
     char* cam;
@@ -141,9 +146,6 @@ void DFP_Torch_update(int obj)
 {
     extern void Sfx_PlayFromObject(int, int);
 
-    extern void objUpdateOpacity(int);
-    extern u8 gDfpTorchSequenceState;
-    extern int gDfpTorchEffectParams[];
     typedef struct
     {
         int m0;

@@ -26,11 +26,6 @@
 #include "main/dll/groundanimator_state.h"
 #include "main/mm.h"
 #include "main/sfa_shared_decls.h"
-extern void* mapGetBlock(int i);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Sfx_PlayFromObject(int* obj, int id);
-extern u8 framesThisStep;
-extern f32 timeDelta;
 
 typedef struct AlphaanimatorPlacement
 {
@@ -61,6 +56,12 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 #define ALPHAANIM_MODE_PINGPONG 1 /* bounce between startAlpha and targetAlpha */
 #define ALPHAANIM_MODE_GATED    2 /* direction follows live gate bit; sfx on gate flip */
 #define ALPHAANIM_MODE_TIMED    3 /* timeDelta float fade (fadeA/fadeMax) */
+
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern void* mapGetBlock(int i);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void Sfx_PlayFromObject(int* obj, int id);
 
 int AlphaAnimator_getExtraSize(void)
 {

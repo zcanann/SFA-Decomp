@@ -11,19 +11,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
-
-typedef struct KtfallingrocksPlacement
-{
-    u8 pad0[0x20 - 0x0];
-    u16 effectId; /* 0x20: particle effect id spawned per rock */
-    u8 pad22[0x24 - 0x22];
-    s16 triggerBit; /* 0x24: game bit; fires the burst then is cleared */
-    u8 pad26[0x28 - 0x26];
-} KtfallingrocksPlacement;
-
-STATIC_ASSERT(offsetof(KtfallingrocksPlacement, effectId) == 0x20);
-STATIC_ASSERT(offsetof(KtfallingrocksPlacement, triggerBit) == 0x24);
-STATIC_ASSERT(sizeof(KtfallingrocksPlacement) == 0x28);
+#include "main/dll/DR/dll_0254_ktfallingrocks.h"
 
 int ktfallingrocks_getExtraSize(void)
 {

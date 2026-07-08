@@ -16,6 +16,7 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/SP/dll_0288_spdrape.h"
 
 #define SPDRAPE_OBJFLAG_HIDDEN             0x4000
 #define SPDRAPE_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -28,8 +29,6 @@ enum
     SPDRAPE_MOVE_CLOSE = 2
 };
 
-extern void Sfx_PlayFromObject(int obj, int sfx);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern f32 gSpDrapeSwingLeftMoveTable;  /* swing-left move-id table */
 extern f32 gSpDrapeSwingRightMoveTable; /* swing-right move-id table */
 extern f32 lbl_803E5AA0;
@@ -45,40 +44,11 @@ extern f32 lbl_803E5AC4;
 extern f32 gSpDrapePi;
 extern f32 lbl_803E5ACC;
 
-typedef struct SpdrapeObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s8 facingByte; /* 0x18: rotX in 1/256 turns */
-    u8 pad19[0x1A - 0x19];
-    s16 motionScaleNum; /* 0x1A: root-motion scale numerator (0 = leave default) */
-    u8 pad1C[0x20 - 0x1C];
-} SpdrapeObjectDef;
-
-STATIC_ASSERT(sizeof(SpdrapeObjectDef) == 0x20);
-
-typedef struct SpdrapeState
-{
-    f32 animSpeed;    /* 0x00: move-advance speed */
-    f32 planeNormalX; /* 0x04: drape-plane normal X */
-    f32 planeNormalZ; /* 0x08: drape-plane normal Z */
-    f32 planeD;       /* 0x0C: drape-plane offset */
-    s32 moveTable;    /* 0x10: &u8[] move-id table for the current swing dir */
-    s16 sfxTimer;     /* 0x14: countdown to the next idle rustle sfx */
-    u8 moveActive;    /* 0x16: ObjAnim_AdvanceCurrentMove result */
-    u8 pad17[0x18 - 0x17];
-} SpdrapeState;
-
-STATIC_ASSERT(sizeof(SpdrapeState) == 0x18);
-
-int spdrape_getExtraSize(void);
-int spdrape_getObjectTypeId(void);
-void spdrape_free(void);
-void spdrape_render(void);
-void spdrape_hitDetect(void);
-void spdrape_update(int obj);
-void spdrape_init(int* obj, u8* def);
-void spdrape_release(void);
-void spdrape_initialise(void);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+extern f32 getXZDistance(f32* a, f32* b);
+extern void* Obj_GetPlayerObject(void);
+extern int randomGetRange(int lo, int hi);
 
 ObjectDescriptor gSPDrapeObjDescriptor = {
     0,
@@ -121,9 +91,6 @@ void spdrape_hitDetect(void)
 
 void spdrape_update(int obj)
 {
-    extern f32 getXZDistance(f32 * a, f32 * b);
-    extern void* Obj_GetPlayerObject(void);
-    extern int randomGetRange(int lo, int hi);
     f32* state;
     char* player;
 
@@ -226,8 +193,6 @@ void spdrape_update(int obj)
 void spdrape_init(int* obj, u8* def)
 {
 
-    extern void* Obj_GetPlayerObject(void);
-    extern int randomGetRange(int lo, int hi);
     f32* state;
     int* player;
     state = ((GameObject*)obj)->extra;

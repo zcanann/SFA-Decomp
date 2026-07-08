@@ -14,9 +14,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
-void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
-#define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
-    fn_8014D08C((int)(obj), (int)(state), (moveId), (speed), (p5), (flags))
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
@@ -27,14 +24,18 @@ void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
+
 /* DLL-id of the object spawned by fn_80153640 (generic spawn; no cache field /
    named spawn-fn / kind name -> suffixless per role-gate). */
 #define MAGICPLANT_CHILD_OBJ 0x51b
+
 /* The magic-plant's one particle-fx effect (spawned per hit-count in the
    attack handler). */
 #define MAGICPLANT_PARTFX          0x802
 #define MAGICPLANT_HIT_VOLUME_SLOT 0xe
+
 extern const f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;
 extern f32 lbl_803E28D0;
@@ -51,10 +52,6 @@ extern f32 lbl_803E28C4;
 extern f32 lbl_803E28C8;
 extern f32 lbl_803E28CC;
 extern int lbl_803DBCB8;
-
-extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
-extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
-extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 extern f32 lbl_803E28A0;
 extern f32 lbl_803E28A4;
 extern f32 lbl_803E28A8;
@@ -83,6 +80,12 @@ extern f32 lbl_803E2954;
 extern f32 lbl_803E2958;
 extern u8 gMagicPlantSeqEntryTable[8];
 extern int lbl_803DBCC8;
+void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
+#define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
+    fn_8014D08C((int)(obj), (int)(state), (moveId), (speed), (p5), (flags))
+extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
+extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
+extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);

@@ -19,15 +19,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/object_transform.h"
 #include "main/frame_timing.h"
-extern s16 getAngle(f32 dx, f32 dz);
-extern f32 sqrtf(f32 x);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
-extern int getFocusedNpc(void);
-extern u32 Obj_GetYawDeltaToObject();
-extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
-
-void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
+#include "main/dll/dll_004D_cameramodenpcspeak.h"
 
 extern CameraModeNpcSpeakState* gCamNpcSpeakState;
 extern f32 gCamNpcSpeakPi;
@@ -59,6 +51,16 @@ extern int lbl_803DB9BC;
 extern f32 lbl_803DD580;
 extern f32 lbl_803DB9C4;
 
+extern s16 getAngle(f32 dx, f32 dz);
+extern f32 sqrtf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
+extern int getFocusedNpc(void);
+extern u32 Obj_GetYawDeltaToObject();
+extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
+
+void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
+
 void CameraModeNpcSpeak_copyToCurrent(void)
 {
 }
@@ -77,14 +79,6 @@ void CameraModeNpcSpeak_release(void)
 void CameraModeNpcSpeak_initialise(void)
 {
 }
-
-typedef struct CameraModeNpcSpeakInitParams
-{
-    f32 anchorX;
-    f32 anchorY;
-    f32 anchorZ;
-    u8 mode;
-} CameraModeNpcSpeakInitParams;
 
 void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData)
 {

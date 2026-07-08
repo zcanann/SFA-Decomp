@@ -10,11 +10,12 @@
  */
 #include "main/game_object.h"
 #include "main/engine_shared.h"
+#include "main/dll/IM/dll_0170_imspacering.h"
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern GameObject* lbl_803DDB48;
 extern f32 lbl_803E47B8;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 
 int IMSpaceRing_getExtraSize(void)
 {

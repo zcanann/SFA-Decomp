@@ -12,6 +12,7 @@
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/objtexture.h"
 #include "main/game_object.h"
+#include "main/dll/SP/dll_0289_spitembeam.h"
 
 /* slots on the shop object's interface vtable (obj+0x68) queried per item */
 enum
@@ -32,15 +33,6 @@ enum
 
 extern f32 lbl_803E5AD8;
 extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
-
-typedef struct SpitembeamPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 itemIndex; /* 0x1A: shop item slot this beam marks */
-    u8 pad1C[0x20 - 0x1C];
-} SpitembeamPlacement;
-
-STATIC_ASSERT(sizeof(SpitembeamPlacement) == 0x20);
 
 int spitembeam_getExtraSize(void)
 {

@@ -17,6 +17,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/modgfx.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_001E_effect5.h"
 
 STATIC_ASSERT(sizeof(PartfxEffectState) == 0x140);
 STATIC_ASSERT(offsetof(PartfxEffectState, vertexBuffers) == 0x78);
@@ -36,18 +37,6 @@ STATIC_ASSERT(offsetof(PartfxEffectState, activeVertexBufferIndex) == 0x130);
 STATIC_ASSERT(offsetof(PartfxEffectState, emitterCount) == 0x139);
 STATIC_ASSERT(offsetof(PartfxEffectState, textureIsBorrowed) == 0x13F);
 
-void Effect5_func03_nop(void);
-void Effect5_release(void);
-void Effect5_initialise(void);
-int Effect5_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                   s16* extraArgs);
-void Effect5_func05(void);
-
-void* lbl_803109B8[10] = {(void*)0x00000000,  (void*)0x00000000, (void*)0x00000000, (void*)0x00050000,
-                          Effect5_initialise, Effect5_release,   (void*)0x00000000, Effect5_func03_nop,
-                          Effect5_func04,     Effect5_func05};
-
-extern float mathSinf(float x);
 extern f32 gEffect5AnimProgressC;
 extern f32 gEffect5AnimProgressD;
 extern int gEffect5SinPhaseA;
@@ -56,6 +45,14 @@ extern f32 gEffect5SinValueB;
 extern f32 gEffect5SinValueA;
 extern f32 gEffect5Pi;
 extern f32 gEffect5SinPhaseScale;
+extern f32 gEffect5AnimProgressA;
+extern f32 gEffect5AnimProgressB;
+extern float mathSinf(float x);
+extern void vecRotateZXY(void* obj, f32* vec);
+
+void* lbl_803109B8[10] = {(void*)0x00000000,  (void*)0x00000000, (void*)0x00000000, (void*)0x00050000,
+                          Effect5_initialise, Effect5_release,   (void*)0x00000000, Effect5_func03_nop,
+                          Effect5_func04,     Effect5_func05};
 
 #pragma scheduling off
 #pragma peephole off
@@ -67,10 +64,6 @@ extern f32 gEffect5SinPhaseScale;
  * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
-
-extern void vecRotateZXY(void* obj, f32* vec);
-extern f32 gEffect5AnimProgressA;
-extern f32 gEffect5AnimProgressB;
 
 int Effect5_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                    s16* extraArgs)

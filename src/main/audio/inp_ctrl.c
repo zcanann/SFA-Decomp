@@ -2,7 +2,15 @@
 #include "main/audio/synth_scale.h"
 
 #pragma exceptions on
+
 extern u32 sndRandSeed;
+extern u8 lbl_803BDA74[];
+extern u8 lbl_803BDEF4[];
+extern u32 lbl_803D3CA0[];
+extern u32 lbl_8032FFE0[];
+extern u32 lbl_8032FFF0[];
+extern u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key);
+
 s16 sndSintab[1036] = {
     0,    6,    12,   18,   25,   31,   37,   43,   50,   56,   62,   69,   75,   81,   87,   94,   100,  106,  113,
     119,  125,  131,  138,  144,  150,  157,  163,  169,  175,  182,  188,  194,  200,  207,  213,  219,  226,  232,
@@ -64,12 +72,6 @@ s16 sndSintab[1036] = {
 /*
  * Bit-11 (0x800) accessor - slot at +0x3a4, cached u16 at +0x3c4.
  */
-extern u8 lbl_803BDA74[];
-extern u8 lbl_803BDEF4[];
-extern u32 lbl_803D3CA0[];
-extern u32 lbl_8032FFE0[];
-extern u32 lbl_8032FFF0[];
-
 u16 inpGetPostAuxB(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
@@ -360,7 +362,6 @@ u32 inpGetExCtrl(McmdVoiceState* state, u32 ctrl)
     default:
         if (state->midiSlot != 0xff)
         {
-            extern u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key);
             value = inpGetMidiCtrl(ctrl, state->midiSlot, state->midiEvent) & 0xffff;
         }
         else

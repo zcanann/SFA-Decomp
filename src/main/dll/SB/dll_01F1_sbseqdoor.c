@@ -19,7 +19,12 @@
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
-extern f32 lbl_803E5920;
+#include "main/dll/SB/dll_01F1_sbseqdoor.h"
+
+STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
+STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
+STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
+STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 /* The sequence-door seqId and the GameBit that arms it. */
 #define SB_SEQDOOR_SEQ_ID      0x173
@@ -28,20 +33,7 @@ extern f32 lbl_803E5920;
 /* anim.resetHitboxMode bit forced on each update tick. */
 #define SB_SEQDOOR_HITBOX_RESET_BIT 0x10
 
-/* Placement record: heading byte + a nonzero->bankIndex selector. */
-typedef struct SBSeqDoorPlacement
-{
-    u8 pad0[0x18];
-    s8 rotXByte;   /* 0x18: heading, scaled to anim.rotX (<<8) */
-    s8 bankSelect; /* 0x19: nonzero picks bank index 1 */
-    u8 unk1A;
-    u8 pad1B[0x20 - 0x1B];
-} SBSeqDoorPlacement;
-
-STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
-STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
-STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
-STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
+extern f32 lbl_803E5920;
 
 int SB_SeqDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

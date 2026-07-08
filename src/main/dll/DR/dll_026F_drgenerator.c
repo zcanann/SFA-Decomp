@@ -8,36 +8,11 @@
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/dll/DR/dll_026F_drgenerator.h"
 
 #define DRGENERATOR_OBJGROUP 0x3
 #define TIMER_OBJGROUP       0x4c
 #define DRGENERATOR_PARTFX   0x690
-
-typedef struct DrgeneratorPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 completionGameBit; /* 0x1E: completion game bit set when destroyed */
-    s16 watchGameBit;      /* 0x20: game bit toggling the generator enabled state */
-    u8 pad22[0x28 - 0x22];
-} DrgeneratorPlacement;
-
-STATIC_ASSERT(offsetof(DrgeneratorPlacement, completionGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(DrgeneratorPlacement, watchGameBit) == 0x20);
-STATIC_ASSERT(sizeof(DrgeneratorPlacement) == 0x28);
-
-typedef struct DrgeneratorState
-{
-    u8 pad0[0x124 - 0x0];
-    f32 unk124;
-    u8 pad128[0x198 - 0x128];
-    s16 timerDuration; /* 0x198: timer duration handed to a linked timer object */
-    u8 hitsRemaining;  /* 0x19A: remaining hit count */
-    u8 pad19B[0x19C - 0x19B];
-} DrgeneratorState;
-
-STATIC_ASSERT(offsetof(DrgeneratorState, timerDuration) == 0x198);
-STATIC_ASSERT(offsetof(DrgeneratorState, hitsRemaining) == 0x19A);
-STATIC_ASSERT(sizeof(DrgeneratorState) == 0x19C);
 
 int drgenerator_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

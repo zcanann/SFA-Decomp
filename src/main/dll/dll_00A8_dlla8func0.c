@@ -13,8 +13,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
-
-extern ModgfxInterface** gModgfxInterface;
+#include "main/dll/dll_00A8_dlla8func0.h"
 
 typedef struct
 {
@@ -25,6 +24,10 @@ typedef struct
     u8 layer;    /* +0x16 */
 } GfxCmd;
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLLA8_EFFECT_ID 0x586
+
+extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80318EE8[];
 extern f32 lbl_803E1598;
 extern f32 lbl_803E159C;
@@ -39,9 +42,6 @@ extern f32 lbl_803E15BC;
 extern f32 lbl_803E15C0;
 extern f32 lbl_803E15C4;
 extern f32 lbl_803E15C8;
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLLA8_EFFECT_ID 0x586
 
 void dll_A8_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 arg5, u8* extraArgs)
 {

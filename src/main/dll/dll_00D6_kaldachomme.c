@@ -19,11 +19,6 @@
 #include "main/obj_placement.h"
 #include "main/dll/VF/vf_shared.h"
 
-#define KALDACHOMME_OBJFLAG_HITDETECT_DISABLED 0x2000
-extern f32 lbl_803E30D0;
-extern f32 lbl_803E30D4;
-extern f32 lbl_803E30D8;
-
 typedef struct KaldaChompMeState
 {
     f32 progress;
@@ -44,6 +39,15 @@ typedef struct KaldaChompMePlacement
 STATIC_ASSERT(offsetof(KaldaChompMePlacement, yawBits) == 0x18);
 STATIC_ASSERT(offsetof(KaldaChompMePlacement, pitchBits) == 0x19);
 STATIC_ASSERT(offsetof(KaldaChompMePlacement, rollBits) == 0x1a);
+
+#define KALDACHOMME_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+extern f32 lbl_803E30D0;
+extern f32 lbl_803E30D4;
+extern f32 lbl_803E30D8;
+
+int KaldaChompSpit_getExtraSize(void);
+int KaldaChompSpit_getObjectTypeId(void);
 
 void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode)
 {
@@ -219,9 +223,6 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
     (ObjectDescriptorCallback)KaldaChompMe_getObjectTypeId,
     KaldaChompMe_getExtraSize,
 };
-
-int KaldaChompSpit_getExtraSize(void);
-int KaldaChompSpit_getObjectTypeId(void);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,

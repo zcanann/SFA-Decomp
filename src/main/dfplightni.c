@@ -2,8 +2,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"
-extern void lightningRender(void* state);
-extern void* lightningCreate(f32* start, f32* end, f32 radiusX, f32 radiusY, int frameCount, int colorAngle, int flags);
+
 extern f32 gDfpLightningTimerMax;
 extern f32 lbl_803E64E4;
 extern f32 gDfpLightningTimerInactiveMax;
@@ -13,6 +12,9 @@ extern f32 gDfpLightningRadiusMin;
 extern const f32 gDfpLightningRadiusMax;
 extern f32 gDfpLightningTriggerTimeBase;
 extern const f32 gDfpLightningRadiusNormDivisor;
+
+extern void lightningRender(void* state);
+extern void* lightningCreate(f32* start, f32* end, f32 radiusX, f32 radiusY, int frameCount, int colorAngle, int flags);
 
 static inline DfpLightniState* dfplightni_getState(DfpLightniObject* obj)
 {

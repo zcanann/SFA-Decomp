@@ -20,16 +20,18 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_02C0_front.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
-extern int ObjGroup_FindNearestObject();
-extern u8 gameTimerIsRunning(void);
-extern void gameTimerRun(void* obj);
+#include "main/dll/dll_003F_dll3f.h"
+
+/* texture asset loaded into lbl_803DD960 (this DLL's only texture) */
+#define DLL3F_TEXTURE_ID 0x47A
 
 extern f32 lbl_803E22A0;
 extern void* lbl_803DD960;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
-/* texture asset loaded into lbl_803DD960 (this DLL's only texture) */
-#define DLL3F_TEXTURE_ID 0x47A
+extern int ObjGroup_FindNearestObject();
+extern u8 gameTimerIsRunning(void);
+extern void gameTimerRun(void* obj);
 
 #pragma scheduling off
 #pragma peephole off

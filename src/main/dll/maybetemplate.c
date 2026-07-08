@@ -30,128 +30,6 @@
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
 
-#define GCMENU_ITEM_ICON_COUNT    7
-#define PAUSE_MENU_HUD_ITEM_COUNT 13
-
-extern int objIsCurModelNotZero(void* obj);
-extern int playerGetMoney(void* player);
-
-extern s8 lbl_803DD7A0;
-extern short lbl_803DD7A2;
-extern short lbl_803DD8D2;
-extern short gMinimapRevealMax;
-extern short lbl_803DBA6E;
-extern u8 lbl_803DBA65;
-extern short gCMenuScrollTimer;
-extern short lbl_803DD78E;
-extern u8 cMenuOpen;
-extern short cMenuFadeCounter;
-extern short gCMenuOpenAnim;
-extern short gCMenuOpenAnimMax;
-extern int gTrickyHudItemMask;
-extern short gCMenuStaffAbilities[];
-extern void pauseMenuDrawElement(int tex, f32 x, f32 y, int a, int b, int c, int d);
-extern void drawPartialTexture(int tex, f32 x, f32 y, int alpha, int arg, int w, int h, int off, int m);
-extern void drawFn_8011eb3c(int tex, f32 x, f32 y, int a, int b, int c, int w, int h, int m);
-extern void drawFn_8011e8d8(int tex, f32 x, f32 y, int a, int b, int w, int h, int off, int m);
-extern void drawScaledTexture(int texture, f32 x, f32 y, int alpha, int arg, int w, int h, int mode);
-extern void drawTexture(int texture, f32 x, f32 y, int alpha, int arg);
-extern int hudTextures[];
-extern int lbl_803A9364[];
-extern int lbl_803DBAD0;
-extern int lbl_803DBAD4;
-extern int gHudMagicBarX;
-extern int gHudMagicBarY;
-extern u8 lbl_803DD7B3;
-
-extern void gameTextSetCharset(int charset, int flags);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
-
-extern char sTemplateProgressCounterFormat[];
-extern char sHudCounterFmt02d;
-extern char sHudCounterFmt03d;
-extern char lbl_803DBB58;
-extern u32 gHudBlankCounterTextA;
-extern u32 gHudBlankCounterTextB;
-extern f32 lbl_803E1E68;
-extern f32 lbl_803E1E70;
-extern f32 lbl_803E1F9C;
-extern f32 lbl_803E1FA8;
-extern f32 lbl_803E1FB8;
-extern int lbl_803A87F0[];
-extern f32 lbl_803DD83C;
-extern u8 lbl_803DD75B;
-extern u8 lbl_803DD792;
-extern u8 lbl_803DD840;
-extern f32 lbl_803DD844;
-extern u8 pauseMenuState;
-extern u8 cMenuEnabled;
-extern int airMeter;
-extern f32 hudElementOpacity;
-extern f32 lbl_803E1E3C;
-extern f32 lbl_803E1FA0;
-extern f32 gHudElemOpacityFloor;
-extern f32 lbl_803E1FC0;
-extern f32 gHudMoneyFlashOpacity;
-extern f32 gHudCounterFlashOpacity;
-extern void hudDrawCMenu(int a, int b, int c);
-extern int gameTextGet();
-extern void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX,
-                                       int* outMinY);
-extern void textureFree(int texture);
-extern int textureLoadAsset(int id);
-extern void setTextColor(int unused, int a, int b, int c, int d);
-extern int gCMenuItemCount;
-extern s16 gCMenuSelIndex;
-extern s8 gCMenuCurSection;
-extern u8 gCMenuItemIcons[GCMENU_ITEM_ICON_COUNT];
-extern u8 lbl_803DD8D4;
-extern int hudYButtonItemIconTexture;
-extern s16 yButtonItemTextureId;
-extern s16 gHudYButtonItemTextureCache;
-extern s16 aButtonIcon;
-extern s16 prevAButtonIcon;
-extern u8 bButtonIcon;
-extern u8 gHudPrevBButtonIcon;
-extern u8 gHudAButtonFlashTimer;
-extern u8 gHudBButtonFlashTimer;
-extern u8 gYButtonInUse;
-extern f32 gYButtonIconAnim;
-extern f32 gHudYButtonIconScale;
-extern f32 gHudYButtonAnimDecayBias;
-extern f32 gHudYButtonAnimXScale;
-extern f32 gHudYButtonAnimYScale;
-extern f32 gHudYButtonAnimRenderScale;
-extern f32 lbl_803DBA84;
-extern s16 gCMenuRowFadeInThreshold;
-extern s16 gCMenuRowFadeOutThreshold;
-extern u8 gHudButtonIcons[];
-extern char sHudEmptyYSlotMark;
-extern u32 gHudBlankButtonLabel;
-extern f64 lbl_803E1EA8;
-extern f32 lbl_803E1FB4;
-extern f32 gHudRightColX;
-extern f32 lbl_803E1FD0;
-extern f32 gHudCMenuColX2;
-extern f32 gHudCMenuRowY2;
-extern f32 gHudSectionIconX;
-extern f32 gHudBtnPrompt0X;
-extern f32 gHudBtnPrompt1X;
-extern f32 gHudBtnPrompt1Y;
-extern f32 gHudBtnPrompt2X;
-extern f32 lbl_803E1FF0;
-extern f32 gHudBtnPrompt3X;
-extern f32 gHudBtnPrompt3Y;
-extern f32 gHudAButtonY;
-extern f32 gHudAButtonIconX;
-extern f32 gHudBButtonY;
-extern f32 gHudBButtonGlyphY;
-extern f32 gHudBButtonIconX;
-extern f32 lbl_803E2010;
-extern f32 gHudYButtonIconX;
-extern f32 lbl_803E2018;
-
 /* File-local overlay for the pause/status HUD block at lbl_803A87F0 (accessed
  * as a raw u8* base here). Only the pure-constant scalar fields are named; the
  * indexed/per-slot arrays in this region are left as raw casts. The lower
@@ -209,6 +87,130 @@ STATIC_ASSERT(offsetof(PauseMenuHud, maxMagicValue) == 0xB50);
 STATIC_ASSERT(offsetof(PauseMenuHud, spiritBitState) == 0xB58);
 STATIC_ASSERT(offsetof(PauseMenuHud, magicLatch) == 0xB7C);
 STATIC_ASSERT(offsetof(PauseMenuHud, maxMagicLatch) == 0xB94);
+
+typedef struct CounterText
+{
+    u32 raw[2];
+} CounterText;
+
+#define GCMENU_ITEM_ICON_COUNT    7
+#define PAUSE_MENU_HUD_ITEM_COUNT 13
+
+extern s8 lbl_803DD7A0;
+extern short lbl_803DD7A2;
+extern short lbl_803DD8D2;
+extern short gMinimapRevealMax;
+extern short lbl_803DBA6E;
+extern u8 lbl_803DBA65;
+extern short gCMenuScrollTimer;
+extern short lbl_803DD78E;
+extern u8 cMenuOpen;
+extern short cMenuFadeCounter;
+extern short gCMenuOpenAnim;
+extern short gCMenuOpenAnimMax;
+extern int gTrickyHudItemMask;
+extern short gCMenuStaffAbilities[];
+extern int hudTextures[];
+extern int lbl_803A9364[];
+extern int lbl_803DBAD0;
+extern int lbl_803DBAD4;
+extern int gHudMagicBarX;
+extern int gHudMagicBarY;
+extern u8 lbl_803DD7B3;
+extern char sTemplateProgressCounterFormat[];
+extern char sHudCounterFmt02d;
+extern char sHudCounterFmt03d;
+extern char lbl_803DBB58;
+extern u32 gHudBlankCounterTextA;
+extern u32 gHudBlankCounterTextB;
+extern f32 lbl_803E1E68;
+extern f32 lbl_803E1E70;
+extern f32 lbl_803E1F9C;
+extern f32 lbl_803E1FA8;
+extern f32 lbl_803E1FB8;
+extern int lbl_803A87F0[];
+extern f32 lbl_803DD83C;
+extern u8 lbl_803DD75B;
+extern u8 lbl_803DD792;
+extern u8 lbl_803DD840;
+extern f32 lbl_803DD844;
+extern u8 pauseMenuState;
+extern u8 cMenuEnabled;
+extern int airMeter;
+extern f32 hudElementOpacity;
+extern f32 lbl_803E1E3C;
+extern f32 lbl_803E1FA0;
+extern f32 gHudElemOpacityFloor;
+extern f32 lbl_803E1FC0;
+extern f32 gHudMoneyFlashOpacity;
+extern f32 gHudCounterFlashOpacity;
+extern int gCMenuItemCount;
+extern s16 gCMenuSelIndex;
+extern s8 gCMenuCurSection;
+extern u8 gCMenuItemIcons[GCMENU_ITEM_ICON_COUNT];
+extern u8 lbl_803DD8D4;
+extern int hudYButtonItemIconTexture;
+extern s16 yButtonItemTextureId;
+extern s16 gHudYButtonItemTextureCache;
+extern s16 aButtonIcon;
+extern s16 prevAButtonIcon;
+extern u8 bButtonIcon;
+extern u8 gHudPrevBButtonIcon;
+extern u8 gHudAButtonFlashTimer;
+extern u8 gHudBButtonFlashTimer;
+extern u8 gYButtonInUse;
+extern f32 gYButtonIconAnim;
+extern f32 gHudYButtonIconScale;
+extern f32 gHudYButtonAnimDecayBias;
+extern f32 gHudYButtonAnimXScale;
+extern f32 gHudYButtonAnimYScale;
+extern f32 gHudYButtonAnimRenderScale;
+extern f32 lbl_803DBA84;
+extern s16 gCMenuRowFadeInThreshold;
+extern s16 gCMenuRowFadeOutThreshold;
+extern u8 gHudButtonIcons[];
+extern char sHudEmptyYSlotMark;
+extern u32 gHudBlankButtonLabel;
+extern f64 lbl_803E1EA8;
+extern f32 lbl_803E1FB4;
+extern f32 gHudRightColX;
+extern f32 lbl_803E1FD0;
+extern f32 gHudCMenuColX2;
+extern f32 gHudCMenuRowY2;
+extern f32 gHudSectionIconX;
+extern f32 gHudBtnPrompt0X;
+extern f32 gHudBtnPrompt1X;
+extern f32 gHudBtnPrompt1Y;
+extern f32 gHudBtnPrompt2X;
+extern f32 lbl_803E1FF0;
+extern f32 gHudBtnPrompt3X;
+extern f32 gHudBtnPrompt3Y;
+extern f32 gHudAButtonY;
+extern f32 gHudAButtonIconX;
+extern f32 gHudBButtonY;
+extern f32 gHudBButtonGlyphY;
+extern f32 gHudBButtonIconX;
+extern f32 lbl_803E2010;
+extern f32 gHudYButtonIconX;
+extern f32 lbl_803E2018;
+extern int objIsCurModelNotZero(void* obj);
+extern int playerGetMoney(void* player);
+extern void pauseMenuDrawElement(int tex, f32 x, f32 y, int a, int b, int c, int d);
+extern void drawPartialTexture(int tex, f32 x, f32 y, int alpha, int arg, int w, int h, int off, int m);
+extern void drawFn_8011eb3c(int tex, f32 x, f32 y, int a, int b, int c, int w, int h, int m);
+extern void drawFn_8011e8d8(int tex, f32 x, f32 y, int a, int b, int w, int h, int off, int m);
+extern void drawScaledTexture(int texture, f32 x, f32 y, int alpha, int arg, int w, int h, int mode);
+extern void drawTexture(int texture, f32 x, f32 y, int alpha, int arg);
+extern void gameTextSetCharset(int charset, int flags);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
+extern void hudDrawCMenu(int a, int b, int c);
+extern int gameTextGet();
+extern void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX,
+                                       int* outMinY);
+extern void textureFree(int texture);
+extern int textureLoadAsset(int id);
+extern void setTextColor(int unused, int a, int b, int c, int d);
 
 void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
 {
@@ -421,11 +423,6 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
     }
 }
-
-typedef struct CounterText
-{
-    u32 raw[2];
-} CounterText;
 
 void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget)
 {

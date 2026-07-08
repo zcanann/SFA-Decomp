@@ -78,6 +78,11 @@ STATIC_ASSERT(offsetof(Lavaball1bePlacement, velScaleY) == 0x1a);
 STATIC_ASSERT(offsetof(Lavaball1bePlacement, velScaleXZ) == 0x1c);
 STATIC_ASSERT(sizeof(Lavaball1bePlacement) == 0x20);
 
+typedef struct
+{
+    f32 x, y, z;
+} LavaVec;
+
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
@@ -195,11 +200,6 @@ void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
     }
     ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E47F0);
 }
-
-typedef struct
-{
-    f32 x, y, z;
-} LavaVec;
 
 void lavaball1be_init(s16* obj, u8* p)
 {

@@ -15,6 +15,8 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/dll_0144_dll144.h"
+
 extern f32 lbl_803E56C0;
 
 int FElevControl_getExtraSize(void);
@@ -26,17 +28,6 @@ void FElevControl_update(void);
 void FElevControl_init(int x);
 void FElevControl_release(void);
 void FElevControl_initialise(void);
-
-int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-int dll_144_getExtraSize(void);
-int dll_144_getObjectTypeId(void);
-void dll_144_free(void);
-void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void dll_144_hitDetect(void);
-void dll_144_update(void);
-void dll_144_init(int obj);
-void dll_144_release(void);
-void dll_144_initialise(void);
 
 int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

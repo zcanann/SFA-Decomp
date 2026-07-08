@@ -27,20 +27,16 @@
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
 
-/* object group this object belongs to */
-#define GRIMBLE_OBJGROUP    3
-#define DFROPENODE_OBJGROUP 0x17 /* DLL 0x175 dfropenode (path nodes) */
-
 typedef struct GrimblePlacement
 {
     u8 pad0[0x14 - 0x0];
     s32 mapId;
 } GrimblePlacement;
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void* ObjGroup_GetObjects(int type, int* outCount);
-extern int getAngle(float y, float x);
-extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
+/* object group this object belongs to */
+#define GRIMBLE_OBJGROUP    3
+#define DFROPENODE_OBJGROUP 0x17 /* DLL 0x175 dfropenode (path nodes) */
+
 extern void* gPlayerInterface;
 extern void* gBaddieControlInterface;
 extern int lbl_803200E0[];
@@ -61,13 +57,29 @@ extern f32 lbl_803E2F1C;
 extern f32 gGrimblePathSearchMaxDist;
 extern f32 lbl_803E2F24;
 extern f32 lbl_803E2F28;
+extern void ObjGroup_RemoveObject(u32 obj, int group);
+extern void* ObjGroup_GetObjects(int type, int* outCount);
+extern int getAngle(float y, float x);
+extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
+extern f32 sqrtf(f32);
+void TumbleWeedBush_free(void);
+void TumbleWeedBush_hitDetect(void);
+void TumbleWeedBush_release(void);
+void TumbleWeedBush_initialise(void);
+void TumbleWeedBush_init(u8* obj, u8* params, int param3);
+int TumbleWeedBush_getExtraSize(void);
+int TumbleWeedBush_getObjectTypeId(void);
+void TumbleWeedBush_update(int* obj);
+void TumbleWeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+/* TumbleWeedBush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
+ * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
+void TumbleWeedBush_setScale(u8* obj, void* match);
 
 int grimble_animEventCallback(void);
 void fn_801627F4(int obj);
 
 int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 {
-    extern f32 sqrtf(f32);
     u16 zone;
     u16 pad;
     u16 dist;
@@ -144,7 +156,6 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 
 int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 {
-    extern f32 sqrtf(f32);
     f32 z2, y2, x2, z, y, x;
     u8 hitEdge;
     s16 angle;
@@ -204,7 +215,6 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 
 int grimble_stateHandlerA00(int obj, char* state, f32 arg)
 {
-    extern f32 sqrtf(f32);
     u16 zone;
     u16 pad;
     u16 dist;
@@ -513,27 +523,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
     (ObjectDescriptorCallback)grimble_getObjectTypeId,
     grimble_getExtraSize,
 };
-
-void TumbleWeedBush_free(void);
-
-void TumbleWeedBush_hitDetect(void);
-
-void TumbleWeedBush_release(void);
-
-void TumbleWeedBush_initialise(void);
-
-void TumbleWeedBush_init(u8* obj, u8* params, int param3);
-
-int TumbleWeedBush_getExtraSize(void);
-int TumbleWeedBush_getObjectTypeId(void);
-
-void TumbleWeedBush_update(int* obj);
-
-void TumbleWeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* TumbleWeedBush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
- * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
-void TumbleWeedBush_setScale(u8* obj, void* match);
 
 ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     {

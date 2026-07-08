@@ -8,6 +8,7 @@
  * release/initialise are the DLL load/unload hooks (no-ops here).
  */
 #include "main/game_ui_interface.h"
+#include "main/dll/dll_0010_uicontroller.h"
 
 extern u8 gameTimerIsRunning(void* context, int arg1, int arg2);
 extern void hudNumberFn_80014060(void* p);

@@ -1,7 +1,6 @@
 #include "main/audio/voice_manage.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_jobs.h"
-extern u32 get_vidlist(u32 id);
 
 typedef struct VoiceListNode
 {
@@ -10,13 +9,7 @@ typedef struct VoiceListNode
     u16 time;
 } VoiceListNode;
 
-static u8 vidListNodes[0x800];
-static u8 midiKeySlots[0x80];
-static u8 directSlots[0x40];
-static VoiceListNode priorityLinks[0x40];
-static u8 priorityGroupHeads[0x100];
-static u16 prioritySortLinks[0x200];
-static VoiceListNode freeList[0x40];
+#define SYNTH_VOICE_STATE(voice) (&synthVoice[voice])
 
 extern SynthVoiceState* synthVoice;
 extern u8 lbl_803BD150[];
@@ -28,8 +21,15 @@ extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
 extern u8 voiceListInsert;
 extern u8 voiceListRoot;
+extern u32 get_vidlist(u32 id);
 
-#define SYNTH_VOICE_STATE(voice) (&synthVoice[voice])
+static u8 vidListNodes[0x800];
+static u8 midiKeySlots[0x80];
+static u8 directSlots[0x40];
+static VoiceListNode priorityLinks[0x40];
+static u8 priorityGroupHeads[0x100];
+static u16 prioritySortLinks[0x200];
+static VoiceListNode freeList[0x40];
 
 static void voiceInitFreeList(void)
 {

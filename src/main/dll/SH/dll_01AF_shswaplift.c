@@ -13,6 +13,7 @@
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "sfa_light_decls.h"
+#include "main/dll/SH/dll_01AF_shswaplift.h"
 
 /* state byte (extra+0) progression */
 #define WARPSTONELIFT_STATE_IDLE     0 /* not yet swapped; character out of / entering range */
@@ -24,8 +25,8 @@
 
 extern f32 lbl_803E54C8;
 extern s32 lbl_803DC058[2]; /* the two "already-swapped" progress bits */
-extern u16 getYButtonItem(s16* out);
 
+extern u16 getYButtonItem(s16* out);
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
 

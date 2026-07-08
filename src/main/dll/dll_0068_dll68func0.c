@@ -16,6 +16,16 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/dll_0068_dll68func0.h"
+
+enum
+{
+    SAVEGAME_EMPTY_TASK_HINT = -1,
+    SAVEGAME_DEFAULT_VOLUME = 0x7f,
+};
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL68_EFFECT_ID 0x41
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_803135C8[];
@@ -32,15 +42,6 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (u8*)objAnim->banks[objAnim->bankIndex];
 }
-
-enum
-{
-    SAVEGAME_EMPTY_TASK_HINT = -1,
-    SAVEGAME_DEFAULT_VOLUME = 0x7f,
-};
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL68_EFFECT_ID 0x41
 
 void dll_68_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

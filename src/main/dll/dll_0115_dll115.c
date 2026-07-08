@@ -19,10 +19,10 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/dll_0115_dll115.h"
 
 /* object group this object joins while active */
 #define DLL115_OBJGROUP 0xf
-extern f32 lbl_803E37B0;
 
 enum
 {
@@ -37,6 +37,8 @@ enum
 
 #define DLL115_OBJFLAG_HIDDEN             0x4000
 #define DLL115_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+extern f32 lbl_803E37B0;
 
 /* Sequence-event callback: while a trigger sequence is running on an
  * indexed step, end it once the NEXT step's gate bit (placement+0x28) has
@@ -97,17 +99,6 @@ void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void dll_115_hitDetect_nop(void)
 {
 }
-
-typedef struct Dll115Placement
-{
-    u8 pad0[0x38 - 0x0];
-    u8 rotByte;        /* 0x38: rotX in 1/256 turns */
-    u8 flags;          /* 0x39: DLL115_PLACEMENT_FINISH_FLAG */
-    u8 finishSeqId;    /* 0x3A: step-9 trigger sequence id */
-    u8 finishSeqParam; /* 0x3B */
-    s16 preemptArg;    /* 0x3C */
-    u8 pad3E[0x40 - 0x3E];
-} Dll115Placement;
 
 void dll_115_update(int obj)
 {

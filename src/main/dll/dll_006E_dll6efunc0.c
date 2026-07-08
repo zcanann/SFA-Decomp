@@ -19,6 +19,10 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/dll_006E_dll6efunc0.h"
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL6E_EFFECT_ID 0x5e
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80313C30[];
@@ -29,9 +33,6 @@ extern f32 lbl_803E0AA4;
 extern f32 lbl_803E0AA8;
 extern f32 lbl_803E0AAC;
 extern f32 lbl_803E0AB0;
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL6E_EFFECT_ID 0x5e
 
 void dll_6E_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

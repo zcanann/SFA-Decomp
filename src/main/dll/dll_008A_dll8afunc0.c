@@ -12,11 +12,11 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
-extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80316650[]; /* effect resource table: tex blob + halfword params */
-
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL8A_EFFECT_ID 0x1fd
+
+extern ModgfxInterface** gModgfxInterface;
+extern u8 lbl_80316650[]; /* effect resource table: tex blob + halfword params */
 extern f32 lbl_803E1050;
 extern f32 lbl_803E1054;
 extern f32 lbl_803E1058;

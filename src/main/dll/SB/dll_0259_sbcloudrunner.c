@@ -28,8 +28,6 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 
-#define SBCLOUDRUNNER_OBJGROUP 0xa
-
 typedef struct SBCloudRunnerState
 {
     u8 pad0[0x10 - 0x0];
@@ -61,6 +59,27 @@ typedef struct SBCloudRunnerState
     u8 pad80 : 7;
 } SBCloudRunnerState;
 
+/* Overlay for the A-held bit at state+0x80. Load-bearing: accessing it
+ * through this separate typed pointer (not SBCloudRunnerState.aButtonHeld)
+ * is what reproduces the retail codegen (md5-verified). */
+typedef struct
+{
+    u8 held : 1;
+} WCButtonFlag;
+
+typedef struct
+{
+    u8 pad[0x1b];
+    s8 sfxFlag;
+} WCAnimEvents;
+
+struct WCPartfxArgs
+{
+    s16 v[3];
+    s16 _pad;
+    f32 scale;
+};
+
 STATIC_ASSERT(offsetof(SBCloudRunnerState, targetObj) == 0x10);
 STATIC_ASSERT(offsetof(SBCloudRunnerState, resource) == 0x14);
 STATIC_ASSERT(offsetof(SBCloudRunnerState, texture0) == 0x18);
@@ -77,6 +96,8 @@ STATIC_ASSERT(offsetof(SBCloudRunnerState, done) == 0x6E);
 STATIC_ASSERT(offsetof(SBCloudRunnerState, stickX) == 0x70);
 STATIC_ASSERT(offsetof(SBCloudRunnerState, steerX) == 0x78);
 STATIC_ASSERT(sizeof(SBCloudRunnerState) == 0x84);
+
+#define SBCLOUDRUNNER_OBJGROUP 0xa
 
 /* object type ids (anim.seqId at obj+0x46) */
 #define SBCLOUDRUNNER_OBJ_TYPE  0x43 /* SB_CloudRunner_getObjectTypeId */
@@ -114,18 +135,7 @@ enum
 
 #define COLORFADE_RUMBLE_PRESET 4000 /* anim.rotY written on a fade hit */
 
-extern void* ObjGroup_GetObjects();
-extern void ObjGroup_RemoveObject();
-extern void ObjGroup_AddObject();
-
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                          int useInputPosition);
-extern void WCPushBlock_SpawnFromPath(s16* path, u8* state);
-
-extern void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5C70;
-extern void objSetMtxFn_800412d4(u32 x);
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E5C98;
@@ -133,24 +143,30 @@ extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
 extern f32 lbl_803E5CB0;
 extern f32 lbl_803E5CB4;
-
-extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
-
 extern const f32 lbl_803E5CB8;
 extern f32 lbl_803E5C74;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
+extern const f32 lbl_803E5CBC;
+extern const f32 lbl_803E5CC0;
+
+extern void* ObjGroup_GetObjects();
+extern void ObjGroup_RemoveObject();
+extern void ObjGroup_AddObject();
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
+                                          int useInputPosition);
+extern void WCPushBlock_SpawnFromPath(s16* path, u8* state);
+extern void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objSetMtxFn_800412d4(u32 x);
+extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
 extern int Obj_GetPlayerObject(void);
 extern void SB_CloudRunner_onSeqFree(void);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
 extern void fn_80295918(int obj, int sel, f32 fval);
-
 extern u8 padGetStickX(int port);
 extern u8 padGetStickY(int port);
-extern const f32 lbl_803E5CBC;
-extern const f32 lbl_803E5CC0;
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);
 extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 
@@ -265,20 +281,6 @@ void fn_801EEE0C(int* obj, f32* x, f32* y, f32* z)
  * Ghidra split this body as FUN_801eeafc). Integrates stick X/Y into the
  * bird's yaw/pitch/roll, clamps to the steer limits, advances the
  * flap/glide animation, and fires the forward burst on a fresh A press. */
-
-/* Overlay for the A-held bit at state+0x80. Load-bearing: accessing it
- * through this separate typed pointer (not SBCloudRunnerState.aButtonHeld)
- * is what reproduces the retail codegen (md5-verified). */
-typedef struct
-{
-    u8 held : 1;
-} WCButtonFlag;
-
-typedef struct
-{
-    u8 pad[0x1b];
-    s8 sfxFlag;
-} WCAnimEvents;
 
 void SB_CloudRunner_UpdateSteer(s16* obj, u8* state)
 {
@@ -397,13 +399,6 @@ void SB_CloudRunner_UpdateSteer(s16* obj, u8* state)
  * fade it red, rumble, play SFX, gate further damage on a GameBit, then
  * if the hit type is HIT_TYPE_BURST emit 3 hit-flash partfx followed by a
  * 10-shot debris burst. */
-
-struct WCPartfxArgs
-{
-    s16 v[3];
-    s16 _pad;
-    f32 scale;
-};
 
 void SB_CloudRunner_HandlePriorityHit(int obj, u8* state)
 {

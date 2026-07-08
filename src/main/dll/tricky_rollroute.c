@@ -25,6 +25,7 @@
 #include "main/dll/tricky_state.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
+#include "main/dll/tricky_rollroute.h"
 
 /* The "ball" is the Tricky cannonball's TrickyState extra block: substate is
  * the init-done byte, speed the roll speed, stateFlags the flag word, route the
@@ -38,11 +39,6 @@
    trickyFn_8013b368: trickyfollow (block-scope signature override of
    trickyfollow.h's int(u8*,f32,u8*) for this TU's codegen, recipe #57).
    lbl_803E2*: this DLL's f32 route/speed constants. */
-extern f32 getXZDistance(f32* a, f32* b);
-extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
-extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
-extern void trickyMove(int obj, void* moveState);
-extern void trickyFn_8013b368(int obj1, int obj2, float arg);
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23F4;
@@ -51,6 +47,12 @@ extern f32 lbl_803E2420;
 extern f32 lbl_803E2488;
 extern f32 lbl_803E2508;
 extern f32 lbl_803E250C;
+
+extern f32 getXZDistance(f32* a, f32* b);
+extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
+extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
+extern void trickyMove(int obj, void* moveState);
+extern void trickyFn_8013b368(int obj1, int obj2, float arg);
 
 void trickyFn_80141290(int obj, int ball)
 {

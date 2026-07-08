@@ -18,32 +18,9 @@
 #include "main/dll/WM/wm_shared.h"
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
+#include "main/dll/dll_020B_firefly.h"
 
 #define FIREFLY_EXTRA_SIZE 0x88
-
-/* state->kind - trail/near particle-fx colour */
-#define FIREFLY_KIND_BLUE_MAIN       1
-#define FIREFLY_KIND_ORANGE_NEAR     3
-#define FIREFLY_KIND_BLUE_NEAR       4
-#define FIREFLY_KIND_ORANGE_ALT_NEAR 5
-
-/* state->flags */
-#define FIREFLY_FLAG_PLAYER_TOUCHED 0x01
-
-#define FIREFLY_ALPHA_OPAQUE        0xff
-#define FIREFLY_OBJFLAG_HIDDEN      0x4000
-#define FIREFLY_MESSAGE_TALK        0x7000a
-#define FIREFLY_MESSAGE_DESPAWN     0x7000b
-#define FIREFLY_FIRST_TOUCH_BIT     0xd28
-#define FIREFLY_COLLECT_COUNT_BIT_A 0x13d
-#define FIREFLY_COLLECT_COUNT_BIT_B 0x5d6
-
-#define FIREFLY_PARTFX_BLUE_TRAIL     0x1a0
-#define FIREFLY_PARTFX_ORANGE_TRAIL   0x1bd
-#define FIREFLY_PARTFX_BLUE_NEAR      0x19f
-#define FIREFLY_PARTFX_ORANGE_NEAR    0x1bc
-#define FIREFLY_PARTFX_KIND           1
-#define FIREFLY_PARTFX_INVALID_HANDLE -1
 
 typedef struct FireFlyState
 {
@@ -75,20 +52,6 @@ typedef struct FireFlyState
     u8 pad82[FIREFLY_EXTRA_SIZE - 0x82];
 } FireFlyState;
 
-typedef struct FireFlyActiveBits
-{
-    u8 active : 1; /* 0x6C & 0x80: lit and wandering */
-} FireFlyActiveBits;
-
-typedef struct FireFlyMapData
-{
-    ObjPlacement base;
-    u8 pad18[2];
-    s16 variantParam; /* 0x1A: only 0x7F is read (arms the 3600-frame life timer) */
-    u8 pad1C[0x20 - 0x1C];
-    s16 requiredGameBit; /* 0x20: game bit gating activation (-1 = none) */
-} FireFlyMapData;
-
 STATIC_ASSERT(offsetof(FireFlyState, light) == 0x00);
 STATIC_ASSERT(offsetof(FireFlyState, splineX) == 0x04);
 STATIC_ASSERT(offsetof(FireFlyState, splineY) == 0x14);
@@ -102,8 +65,30 @@ STATIC_ASSERT(offsetof(FireFlyState, lifeTimer) == 0x74);
 STATIC_ASSERT(offsetof(FireFlyState, flags) == 0x7C);
 STATIC_ASSERT(offsetof(FireFlyState, messageParam) == 0x80);
 STATIC_ASSERT(sizeof(FireFlyState) == FIREFLY_EXTRA_SIZE);
-STATIC_ASSERT(offsetof(FireFlyMapData, variantParam) == 0x1A);
-STATIC_ASSERT(offsetof(FireFlyMapData, requiredGameBit) == 0x20);
+
+/* state->kind - trail/near particle-fx colour */
+#define FIREFLY_KIND_BLUE_MAIN       1
+#define FIREFLY_KIND_ORANGE_NEAR     3
+#define FIREFLY_KIND_BLUE_NEAR       4
+#define FIREFLY_KIND_ORANGE_ALT_NEAR 5
+
+/* state->flags */
+#define FIREFLY_FLAG_PLAYER_TOUCHED 0x01
+
+#define FIREFLY_ALPHA_OPAQUE        0xff
+#define FIREFLY_OBJFLAG_HIDDEN      0x4000
+#define FIREFLY_MESSAGE_TALK        0x7000a
+#define FIREFLY_MESSAGE_DESPAWN     0x7000b
+#define FIREFLY_FIRST_TOUCH_BIT     0xd28
+#define FIREFLY_COLLECT_COUNT_BIT_A 0x13d
+#define FIREFLY_COLLECT_COUNT_BIT_B 0x5d6
+
+#define FIREFLY_PARTFX_BLUE_TRAIL     0x1a0
+#define FIREFLY_PARTFX_ORANGE_TRAIL   0x1bd
+#define FIREFLY_PARTFX_BLUE_NEAR      0x19f
+#define FIREFLY_PARTFX_ORANGE_NEAR    0x1bc
+#define FIREFLY_PARTFX_KIND           1
+#define FIREFLY_PARTFX_INVALID_HANDLE -1
 
 /* The active-flight tick: fade in, advance the B-spline (shifting in a
    new segment and re-targeting while pathAge < 4), spawn the trail fx,

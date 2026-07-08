@@ -34,28 +34,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
-#define ARWARWING_OBJGROUP 0x26
-
-#define ARWARWING_OBJFLAG_PARENT_SLACK 0x1000
-
-#define ARWARWING_CHILD_OBJ_LASERSHOT 0x604
-#define ARWARWING_CHILD_OBJ_THRUSTER  0x6de
-#define ARWARWING_CHILD_OBJ_BOMB      0x608
-
-/* Damage partfx emitted in arwarwing_emitDamageEffects, keyed on health. */
-#define ARWARWING_PARTFX_DAMAGE   0x7d0 /* health <= 4, every other frame */
-#define ARWARWING_PARTFX_CRITICAL 0x7d1 /* health <= 2 (critical) */
-
-/* cross-map destination: Krazoa shrine (0xb) map-event advanced (act 5)
-   before warping out at end of the Arwing course; see setObjGroupStatus(0xb,..) */
-#define ARWARWING_MAPEVENT_SHRINE 0xb
-
-/* ArwingState.flags477 bits */
-#define ARWING_FLAG_ACTIVE     0x1 /* Arwing is active / engaged */
-#define ARWING_FLAG_ROLL_LEFT  0x2 /* barrel-rolling left */
-#define ARWING_FLAG_ROLL_RIGHT 0x4 /* barrel-rolling right */
-#define ARWING_FLAG_ROLLING    0x6 /* ROLL_LEFT | ROLL_RIGHT */
-
 typedef struct ArwarwingState
 {
     u8 pad0[0x47C - 0x0];
@@ -104,6 +82,28 @@ typedef struct ArwArwingVec3
 STATIC_ASSERT(offsetof(ArwArwingVec3, x) == 0x0);
 STATIC_ASSERT(offsetof(ArwArwingVec3, y) == 0x4);
 STATIC_ASSERT(offsetof(ArwArwingVec3, z) == 0x8);
+
+#define ARWARWING_OBJGROUP 0x26
+
+#define ARWARWING_OBJFLAG_PARENT_SLACK 0x1000
+
+#define ARWARWING_CHILD_OBJ_LASERSHOT 0x604
+#define ARWARWING_CHILD_OBJ_THRUSTER  0x6de
+#define ARWARWING_CHILD_OBJ_BOMB      0x608
+
+/* Damage partfx emitted in arwarwing_emitDamageEffects, keyed on health. */
+#define ARWARWING_PARTFX_DAMAGE   0x7d0 /* health <= 4, every other frame */
+#define ARWARWING_PARTFX_CRITICAL 0x7d1 /* health <= 2 (critical) */
+
+/* cross-map destination: Krazoa shrine (0xb) map-event advanced (act 5)
+   before warping out at end of the Arwing course; see setObjGroupStatus(0xb,..) */
+#define ARWARWING_MAPEVENT_SHRINE 0xb
+
+/* ArwingState.flags477 bits */
+#define ARWING_FLAG_ACTIVE     0x1 /* Arwing is active / engaged */
+#define ARWING_FLAG_ROLL_LEFT  0x2 /* barrel-rolling left */
+#define ARWING_FLAG_ROLL_RIGHT 0x4 /* barrel-rolling right */
+#define ARWING_FLAG_ROLLING    0x6 /* ROLL_LEFT | ROLL_RIGHT */
 
 /* ArwingState.mode - the flight state machine. Mode 0 is normal flight
    (never compared against a literal); the others are explicit. */

@@ -5,6 +5,7 @@
  * release and initialise, plus a func03 stub that returns 0. No game
  * objects, state, or behaviour live here.
  */
+#include "main/dll/dll_006C_dummy6c.h"
 
 int Dummy6C_func03_ret_0(void)
 {

@@ -29,31 +29,6 @@
 #include "main/object_descriptor.h"
 #include "dolphin/os.h"
 
-extern void dll_115_getExtraSize_ret_2(void);
-
-extern void dll_115_getObjectTypeId(void);
-
-extern void dll_115_free(void);
-
-extern void dll_115_render(void);
-
-extern void dll_115_hitDetect_nop(void);
-
-extern void dll_115_update(void);
-
-extern void dll_115_init(void);
-
-extern void dll_115_release_nop(void);
-
-extern void dll_115_initialise_nop(void);
-
-/* object group this object joins while active */
-#define SEQOBJ2_OBJGROUP 0xf
-
-extern const char sSeqObjNeedBitUsedBitFormat[];
-extern const char sSeqObjNeedBitClearDuringSequenceFormat[];
-extern const char lbl_80321208[];
-
 STATIC_ASSERT(sizeof(DoorLockPlacement) == 0x28);
 STATIC_ASSERT(offsetof(DoorLockPlacement, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(DoorLockPlacement, rotYByte) == 0x19);
@@ -85,6 +60,9 @@ STATIC_ASSERT(offsetof(SeqObjectState, triggerBitState) == 0x1);
 STATIC_ASSERT(sizeof(SeqObj2State) == 0x1);
 STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 
+/* object group this object joins while active */
+#define SEQOBJ2_OBJGROUP 0xf
+
 #define SEQOBJECT_STATE_OPEN             0x01
 #define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02
 #define SEQOBJECT_STATE_SEQUENCE_DONE    0x04
@@ -98,6 +76,20 @@ STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 
 #define SEQOBJECT_OBJFLAG_HIDDEN             0x4000
 #define SEQOBJECT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+extern const char sSeqObjNeedBitUsedBitFormat[];
+extern const char sSeqObjNeedBitClearDuringSequenceFormat[];
+extern const char lbl_80321208[];
+
+extern void dll_115_getExtraSize_ret_2(void);
+extern void dll_115_getObjectTypeId(void);
+extern void dll_115_free(void);
+extern void dll_115_render(void);
+extern void dll_115_hitDetect_nop(void);
+extern void dll_115_update(void);
+extern void dll_115_init(void);
+extern void dll_115_release_nop(void);
+extern void dll_115_initialise_nop(void);
 
 int SeqObj2_seqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {

@@ -9,7 +9,6 @@
 #include "main/audio/synth_control.h"
 #include "main/audio/snd_synth_api.h"
 #include "main/sfa_shared_decls.h"
-extern void dataInit(int p1, void* p2);
 
 #define S3D_UNLINK_EMITTER(emitter)                                                                                    \
     do                                                                                                                 \
@@ -46,6 +45,7 @@ extern u8 lbl_803DE36D;
 extern f32 lbl_803E7880;
 extern f32 lbl_803E78A4;
 extern f32 lbl_803E78C4;
+extern void dataInit(int p1, void* p2);
 
 void s3dHandle(void)
 {

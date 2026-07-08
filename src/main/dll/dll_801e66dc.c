@@ -14,6 +14,7 @@
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/dll/dll_801e66dc.h"
 
 #define DLL801E66DC_OBJFLAG_RENDERED 0x800
 

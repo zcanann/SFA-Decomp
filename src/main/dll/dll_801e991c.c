@@ -6,6 +6,42 @@
 #include "main/sky_state.h"
 #include "main/sfa_extern_decls.h"
 #include "dolphin/gx/GXGeometry.h"
+#include "main/dll/dll_801e991c.h"
+
+#define GX_BM_BLEND       1
+#define GX_BL_SRCALPHA    4
+#define GX_BL_INVSRCALPHA 5
+#define GX_LO_NOOP        5
+#define GX_LEQUAL         3
+#define GX_ALWAYS         7
+#define GX_AOP_AND        0
+#define GX_CULL_NONE      0
+#define GX_VA_POS         9
+#define GX_VA_CLR0        11
+#define GX_VA_TEX0        13
+#define GX_DIRECT         1
+#define GX_QUADS          0x80
+#define GX_VTXFMT2        2
+
+extern int lbl_803DDC60;
+extern ShColor lbl_803E5AE4;
+extern const f32 lbl_803E5AE8;
+extern const f32 lbl_803E5AEC;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+
+extern void selectTexture(int tex, int p);
+extern void textureSetupFn_800799c0(void);
+extern void geomDrawFn_800796f0(void);
+extern void textRenderSetupFn_80079804(void);
+extern void GXSetTevColor(int reg, ShColor color);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
+extern void GXSetBlendMode(int a, int b, int c, int d);
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
+extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
+extern void GXSetCullMode(int mode);
+extern void GXLoadPosMtxImm(f32* m, int id);
+extern void GXSetCurrentMtx(u32 id);
 
 /* gSPScarabObjDescriptor drift copy removed: retail home is the
  * dll_0287_spscarab target obj (defines it at .data+0, byte-equal; src twin
@@ -33,46 +69,6 @@ static inline void shTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
-
-typedef struct
-{
-    u8 r, g, b, a;
-} ShColor;
-
-extern void selectTexture(int tex, int p);
-extern void textureSetupFn_800799c0(void);
-extern void geomDrawFn_800796f0(void);
-extern void textRenderSetupFn_80079804(void);
-extern void GXSetTevColor(int reg, ShColor color);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void GXSetBlendMode(int a, int b, int c, int d);
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
-extern void GXSetCullMode(int mode);
-extern void GXLoadPosMtxImm(f32* m, int id);
-extern void GXSetCurrentMtx(u32 id);
-
-#define GX_BM_BLEND       1
-#define GX_BL_SRCALPHA    4
-#define GX_BL_INVSRCALPHA 5
-#define GX_LO_NOOP        5
-#define GX_LEQUAL         3
-#define GX_ALWAYS         7
-#define GX_AOP_AND        0
-#define GX_CULL_NONE      0
-#define GX_VA_POS         9
-#define GX_VA_CLR0        11
-#define GX_VA_TEX0        13
-#define GX_DIRECT         1
-#define GX_QUADS          0x80
-#define GX_VTXFMT2        2
-
-extern int lbl_803DDC60;
-extern ShColor lbl_803E5AE4;
-extern const f32 lbl_803E5AE8;
-extern const f32 lbl_803E5AEC;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 #pragma opt_common_subs off
 void fn_801E991C(int p1, char* table)

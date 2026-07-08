@@ -1,8 +1,8 @@
 #include "main/audio/inp_ctrl.h"
 #include "main/audio/inp_midi.h"
 
-extern int varGet(int state, int useExCtrl, u32 index);
 extern u32 synthRealTimeHi;
+extern int varGet(int state, int useExCtrl, u32 index);
 
 /*
  * Evaluate a controller expression list and cache its 14-bit result.

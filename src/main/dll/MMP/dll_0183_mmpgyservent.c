@@ -16,18 +16,11 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/MMP/dll_0183_mmpgyservent.h"
 
 #define MMPGYSERVENT_PARTFX_GEYSER              0x724
 #define MMPGYSERVENT_OBJFLAG_HIDDEN             0x4000
 #define MMPGYSERVENT_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-typedef struct MmpGyserventPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 disableBit; /* 0x1E: gamebit that switches the vent off */
-    u8 unk20;       /* 0x20 */
-    u8 pad21[0x28 - 0x21];
-} MmpGyserventPlacement;
 
 int mmp_gyservent_getExtraSize(void)
 {

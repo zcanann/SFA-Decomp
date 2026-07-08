@@ -10,11 +10,6 @@
 #include "main/game_object.h"
 #include "dolphin/mtx.h"
 
-extern f32 lbl_803E4DF8;
-extern f32 lbl_803E4DFC;
-
-extern void DFPulley_integrateLinks(u8* self);
-
 #define DFBARREL_ROPE_PART_SIZE 0x34
 #define DFBARREL_ROPE_LINK_SIZE 0x24
 
@@ -23,6 +18,11 @@ extern void DFPulley_integrateLinks(u8* self);
 #define DFBARREL_SWAY_DIR_DECREASING 2
 
 #define DFBARREL_NODE_LINKS_OFFSET 0x28
+
+extern f32 lbl_803E4DF8;
+extern f32 lbl_803E4DFC;
+
+extern void DFPulley_integrateLinks(u8* self);
 
 void DFRope_UpdateSimulation(DFRope* self)
 {

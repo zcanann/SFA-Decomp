@@ -10,8 +10,13 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/CC/dll_0187_ccqueen.h"
 
 #define CCQUEEN_OBJFLAG_UPDATE_DISABLED 0x8000
+
+#define GAMEBIT_QUEEN_LATCHED   0x1c2 /* player got close once the gas puzzle was done */
+#define GAMEBIT_QUEEN_RETIRED   0x1c3 /* queen leaves: hidden + hits disabled */
+#define GAMEBIT_GAS_PUZZLE_DONE 0xa3
 
 extern u32 ObjHits_DisableObject();
 extern u32 dll_2E_func03();
@@ -21,17 +26,6 @@ extern void dll_2E_func08(u8* sub, int a, int b);
 extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void characterDoEyeAnims(int obj, void* p);
-
-#define GAMEBIT_QUEEN_LATCHED   0x1c2 /* player got close once the gas puzzle was done */
-#define GAMEBIT_QUEEN_RETIRED   0x1c3 /* queen leaves: hidden + hits disabled */
-#define GAMEBIT_GAS_PUZZLE_DONE 0xa3
-
-typedef struct
-{
-    s16 v[3];
-} Vec3s;
-
-STATIC_ASSERT(sizeof(Vec3s) == 0x6);
 
 static const Vec3s ccqueenEyeSetupA = {{0x1e, 0, 0}};
 static const Vec3s ccqueenEyeSetupB = {{0x19, 0x19, 0x19}};

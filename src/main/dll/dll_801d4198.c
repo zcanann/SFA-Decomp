@@ -14,6 +14,7 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
+#include "main/dll/dll_801d4198.h"
 
 /* QueenEarthWalkerState::flags bits */
 #define QEW_FLAG_EYE_ANIMS 0x8  /* run characterDoEyeAnims vs the bite */
@@ -22,13 +23,13 @@
 #define QEW_FLAG_INIT_DONE 0x20 /* one-shot init guard */
 #define QEW_FLAG_ACTIVE    0x10 /* feed sequence completed; suppress idle attacks */
 
+extern f32 lbl_803E53F8; /* .sdata2 const, shared with SH/dll_01AC_shqueenearthwalker.c */
+
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern int fn_8003B500(void* obj, void* p2, f32 f1);
 extern int fn_8003B228(void* obj, void* p2);
 extern int characterDoEyeAnims(void* obj, void* p2);
-
-extern f32 lbl_803E53F8; /* .sdata2 const, shared with SH/dll_01AC_shqueenearthwalker.c */
 
 int sh_queenearthwalker_processAnimEvents(void* obj, void* unused, ObjAnimUpdateState* animUpdate)
 {

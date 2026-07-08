@@ -7,44 +7,12 @@
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 #include "main/frame_timing.h"
-extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int extraSize, int objType);
-extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
-extern void Obj_FreeObject(int obj);
 
-extern void vecRotateZXY(s16* rotation, f32* outVec);
 typedef struct RingIdPair
 {
     u32 a;
     u32 b;
 } RingIdPair;
-
-/* .sdata2 constant pool */
-static const RingIdPair lbl_803E6450 = {0x00040005, 0x0006000B};
-static const f32 lbl_803E6458 = 1.0f;
-static const f32 lbl_803E645C = 30.0f;
-static const f32 lbl_803E6460 = 0.0f;
-static const f32 lbl_803E6464 = 60.0f;
-static const f32 lbl_803E6468 = 93.0f;
-static const f64 lbl_803E6470 = 4503599627370496.0;
-static const f32 lbl_803E6478 = 0.5f;
-
-#define SFXPLAYER_OBJECT_FLAGS_OFFSET     0xB0
-#define SFXPLAYER_OBJECT_STATE_OFFSET     0xB8
-#define SFXPLAYER_EFFECT_RING_COUNT       4
-#define SFXPLAYER_EFFECT_HANDLES_PER_RING 2
-#define SFXPLAYER_MODE_SEQUENCE           2
-#define SFXPLAYER_RING_START_SFX          0x459
-#define SFXPLAYER_TIMEOUT_RESET_SFX       0x1CE
-#define SFXPLAYER_GAMEBIT_RING_ACTIVE     0xEDF
-#define SFXPLAYER_RING_VISUAL_SETUP_SIZE  0x2C
-#define SFXPLAYER_RING_VISUAL_OBJECT_ID   0x6E8
-#define SFXPLAYER_RING_HIT_SETUP_SIZE     4
-#define SFXPLAYER_RING_HIT_OBJECT_ID      0x71C
-#define SFXPLAYER_RING_SETUP_MODE         5
-#define SFXPLAYER_EFFECT_RING_ROT_STEP    0x3FFF
 
 /* Obj_AllocObjectSetup(0x2C,...) ring-visual spawn buffer composed in
  * sfxplayer_ensureEffectHandlePair. Head is the common ObjPlacement
@@ -77,7 +45,56 @@ STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, gameBit) == 0x24);
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk2A) == 0x2A);
 STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 
+#define SFXPLAYER_OBJECT_FLAGS_OFFSET     0xB0
+#define SFXPLAYER_OBJECT_STATE_OFFSET     0xB8
+#define SFXPLAYER_EFFECT_RING_COUNT       4
+#define SFXPLAYER_EFFECT_HANDLES_PER_RING 2
+#define SFXPLAYER_MODE_SEQUENCE           2
+#define SFXPLAYER_RING_START_SFX          0x459
+#define SFXPLAYER_TIMEOUT_RESET_SFX       0x1CE
+#define SFXPLAYER_GAMEBIT_RING_ACTIVE     0xEDF
+#define SFXPLAYER_RING_VISUAL_SETUP_SIZE  0x2C
+#define SFXPLAYER_RING_VISUAL_OBJECT_ID   0x6E8
+#define SFXPLAYER_RING_HIT_SETUP_SIZE     4
+#define SFXPLAYER_RING_HIT_OBJECT_ID      0x71C
+#define SFXPLAYER_RING_SETUP_MODE         5
+#define SFXPLAYER_EFFECT_RING_ROT_STEP    0x3FFF
+
+#define SFXPLAYER_OBJECT_CALLBACK_OFFSET  0xBC
+#define SFXPLAYER_CONFIG_MAP_ID_OFFSET    0x18
+#define SFXPLAYER_CONFIG_MODE_OFFSET      0x19
+#define SFXPLAYER_CONFIG_EVENT_ID_OFFSET  0x1E
+#define SFXPLAYER_CONFIG_FIELD20_OFFSET   0x20
+#define SFXPLAYER_COMPLETE_RING_COUNT     4
+#define SFXPLAYER_TIMER_ID                0x1D
+#define SFXPLAYER_TIMER_SHORT_FRAMES      0x96
+#define SFXPLAYER_TIMER_LONG_FRAMES       0xB4
+#define SFXPLAYER_MODE_SINGLE             1
+#define SFXPLAYER_GAMEBIT_SINGLE_COMPLETE 0x9F7
+#define SFXPLAYER_SFX_COMPLETE            0x7E
+#define SFXPLAYER_SFX_TIMEOUT_RESET       0x1CE
+#define SFXPLAYER_SFX_RING_HIT            0x409
+#define SFXPLAYER_HIT_TYPE_RING_TARGET    0x13
+#define SFXPLAYER_OBJECT_FLAGS            0x6000
+
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int extraSize, int objType);
+extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
+extern void Obj_FreeObject(int obj);
+extern void vecRotateZXY(s16* rotation, f32* outVec);
 extern int ObjHits_GetPriorityHit(int obj, u32* outHitObject, int* outSphereIndex, u32* outHitVolume);
+
+/* .sdata2 constant pool */
+static const RingIdPair lbl_803E6450 = {0x00040005, 0x0006000B};
+static const f32 lbl_803E6458 = 1.0f;
+static const f32 lbl_803E645C = 30.0f;
+static const f32 lbl_803E6460 = 0.0f;
+static const f32 lbl_803E6464 = 60.0f;
+static const f32 lbl_803E6468 = 93.0f;
+static const f64 lbl_803E6470 = 4503599627370496.0;
+static const f32 lbl_803E6478 = 0.5f;
 
 #define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handleExpr, obj, rot, angleStep)                                            \
     do                                                                                                                 \
@@ -292,23 +309,6 @@ void sfxplayer_render(void)
 void sfxplayer_hitDetect(void)
 {
 }
-
-#define SFXPLAYER_OBJECT_CALLBACK_OFFSET  0xBC
-#define SFXPLAYER_CONFIG_MAP_ID_OFFSET    0x18
-#define SFXPLAYER_CONFIG_MODE_OFFSET      0x19
-#define SFXPLAYER_CONFIG_EVENT_ID_OFFSET  0x1E
-#define SFXPLAYER_CONFIG_FIELD20_OFFSET   0x20
-#define SFXPLAYER_COMPLETE_RING_COUNT     4
-#define SFXPLAYER_TIMER_ID                0x1D
-#define SFXPLAYER_TIMER_SHORT_FRAMES      0x96
-#define SFXPLAYER_TIMER_LONG_FRAMES       0xB4
-#define SFXPLAYER_MODE_SINGLE             1
-#define SFXPLAYER_GAMEBIT_SINGLE_COMPLETE 0x9F7
-#define SFXPLAYER_SFX_COMPLETE            0x7E
-#define SFXPLAYER_SFX_TIMEOUT_RESET       0x1CE
-#define SFXPLAYER_SFX_RING_HIT            0x409
-#define SFXPLAYER_HIT_TYPE_RING_TARGET    0x13
-#define SFXPLAYER_OBJECT_FLAGS            0x6000
 
 void sfxplayer_update(int obj)
 {

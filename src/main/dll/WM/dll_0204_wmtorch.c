@@ -13,43 +13,20 @@
 #include "main/obj_placement.h"
 #include "main/resource.h"
 #include "main/engine_shared.h"
-
-#define WMTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-typedef struct WmTorchPlacement
-{
-    ObjPlacement base;
-    u8 pad18;
-    u8 torchType; /* 0x19: 0 / 0x7F = resource-0x69 flames, else 0x63 */
-    s16 unk1A;    /* 0x1A: state value, default 90.0 when 0 */
-    s16 unk1C;    /* 0x1C: state value, default 0x8C when 0 */
-} WmTorchPlacement;
-
-STATIC_ASSERT(offsetof(WmTorchPlacement, torchType) == 0x19);
-STATIC_ASSERT(offsetof(WmTorchPlacement, unk1C) == 0x1C);
-
-typedef struct WmTorchState
-{
-    void* linkedObj;
-    f32 unk04; /* from placement unk1A */
-    u8 pad08[2];
-    s16 unk0A;    /* from placement unk1C */
-    u8 torchType; /* placement torchType: 0 / 0x7F / other */
-    u8 pad0D[3];
-} WmTorchState;
-
-STATIC_ASSERT(sizeof(WmTorchState) == 0x10);
+#include "main/dll/WM/dll_0204_wmtorch.h"
 
 /* slot 1 of the acquired effect resource's vtable: attach the flame */
 typedef void (*WmTorchAttachFlameFn)(u8* obj, int variant, f32* params, int flags, int p5, int p6);
+
+#define WMTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E5DEC; /* 90.0: unk04 default */
 extern f32 lbl_803E5DF0; /* flame param */
 extern f32 lbl_803E5DF4; /* model scale factor */
 extern f32 lbl_803E5DF8; /* model scale factor */
-extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E5DE8; /* sound-loop radius */
+extern f32 Vec_distance(f32* a, f32* b);
 extern void Obj_FreeObject(u8* obj);
 
 int wmtorch_getExtraSize(void)

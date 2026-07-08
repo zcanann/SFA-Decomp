@@ -15,9 +15,6 @@
 #include "main/dll/vecrotatezxy.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/frame_timing.h"
-#define FLAMEBLAST_HIT_VOLUME_SLOT 0x1a
-
-#define FLAMEBLAST_OBJFLAG_RENDERED 0x800
 
 typedef struct FlameblastState
 {
@@ -40,10 +37,15 @@ typedef struct FlameblastPlacement
     s16 initialTimer; /* 0x1a: seeds the flight timer (scaled at init) */
 } FlameblastPlacement;
 
+#define FLAMEBLAST_HIT_VOLUME_SLOT 0x1a
+
+#define FLAMEBLAST_OBJFLAG_RENDERED 0x800
+
 extern void Obj_FreeObject(int obj);
 extern void fn_80098B18(int obj, f32 f, int a, int b, int c, int d);
-int fn_8017805C(GameObject* obj, FlameblastState* state);
 extern int fn_80138F90(void);
+
+int fn_8017805C(GameObject* obj, FlameblastState* state);
 
 void objSetAnimSpeedTo1(GameObject* obj)
 {

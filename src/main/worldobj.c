@@ -19,27 +19,16 @@ typedef struct
     u8 pad12[2];
 } GreatFoxFxEntry;
 
-extern void ModelLightStruct_free(int model);
-extern void objRenderModelAndHitVolumes(f32 e);
-extern f32 lbl_803E6678;
-extern int randomGetRange(int lo, int hi);
-extern void Camera_ApplyCurrentViewport(int cam);
-extern int gWorldObjEffectRenderDelay;
-extern int modelLightStruct_getActiveState(int model);
-extern void queueGlowRender(int model);
-extern void vecRotateZXY(void* in, void* out);
-extern int ObjList_FindObjectById(int id);
-extern f32 Vec_distance(f32* a, f32* b);
-extern int objCreateLight(int obj, int arg);
-extern void modelLightStruct_setLightKind(int light, int v);
 #define MODEL_LIGHT_KIND_POINT 2
-extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
-extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
+
+/* case 0x5e2 spawns 11 scattered copies of this child; the child (handled in
+ * case 0x5da below) initializes with random rotation on all axes and random
+ * per-axis spin = tumbling debris fragments. */
+#define WORLDOBJ_CHILD_OBJ_DEBRIS 0x5da
+#define GREAT_FOX_EFFECT_COUNT    10
+
+extern f32 lbl_803E6678;
+extern int gWorldObjEffectRenderDelay;
 extern u8 gWorldObjVariantAlphaTable[8];
 extern int gWorldObjEffectTargetObj;
 extern f32 lbl_803E6668;
@@ -52,13 +41,6 @@ extern f32 lbl_803E66A0;
 extern f32 lbl_803E66AC;
 extern f32 lbl_803E66D8;
 extern f32 lbl_803E665C;
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int extraSize, int id);
-/* case 0x5e2 spawns 11 scattered copies of this child; the child (handled in
- * case 0x5da below) initializes with random rotation on all axes and random
- * per-axis spin = tumbling debris fragments. */
-#define WORLDOBJ_CHILD_OBJ_DEBRIS 0x5da
-#define GREAT_FOX_EFFECT_COUNT    10
 extern GreatFoxFxEntry gGreatFoxEffects[GREAT_FOX_EFFECT_COUNT];
 extern f32 lbl_803E6640;
 extern f32 lbl_803E6644;
@@ -70,33 +52,8 @@ extern f32 lbl_803E6658;
 extern f32 lbl_803E6660;
 extern f32 lbl_803E6664;
 extern f32 lbl_803E666C;
-extern void objfx_spawnMaskedHitEffect(int obj, f32 scale, int a, int b, int c, void* params);
-extern void objfx_spawnLightPulse(int obj, f32 scale, int a, int b, int c, f32 arg2, void* params);
-
-int worldobj_getExtraSize(void);
-void worldobj_hitDetect(void);
-void worldobj_release(void);
-void worldobj_initialise(void);
-int worldobj_getObjectTypeId(int* obj);
-void worldobj_free(int obj);
-void worldobj_init(int obj, int arg);
-void worldobj_spawnGreatFoxEffects(int obj);
-void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId);
-void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern float mathCosf(float x);
-extern f32 sqrtf(f32 x);
-extern float mathSinf(float x);
-extern int getAngle(float y, float x);
 extern f32 oneOverTimeDelta;
 extern int gAudioStreamCurrentId;
-extern void Obj_FreeObject(int obj);
-extern void modelLightStruct_setEnabled(int light, int a, f32 b);
-extern void modelLightStruct_updateGlowAlpha(int light);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void modelLightStruct_setDirection(int light, f32 a, f32 b, f32 c);
-extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c, void* vec);
 extern f32 gWorldObjAdvanceMoveTable[];
 extern f32 lbl_803E667C;
 extern f32 gWorldObjPi;
@@ -111,6 +68,51 @@ extern f32 lbl_803E66A4;
 extern f32 lbl_803E66A8;
 extern f32 lbl_803E66B0;
 extern f32 lbl_803E66B8;
+
+extern void ModelLightStruct_free(int model);
+extern void objRenderModelAndHitVolumes(f32 e);
+extern int randomGetRange(int lo, int hi);
+extern void Camera_ApplyCurrentViewport(int cam);
+extern int modelLightStruct_getActiveState(int model);
+extern void queueGlowRender(int model);
+extern void vecRotateZXY(void* in, void* out);
+extern int ObjList_FindObjectById(int id);
+extern f32 Vec_distance(f32* a, f32* b);
+extern int objCreateLight(int obj, int arg);
+extern void modelLightStruct_setLightKind(int light, int v);
+extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
+extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
+extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
+extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int extraSize, int id);
+extern void objfx_spawnMaskedHitEffect(int obj, f32 scale, int a, int b, int c, void* params);
+extern void objfx_spawnLightPulse(int obj, f32 scale, int a, int b, int c, f32 arg2, void* params);
+extern float mathCosf(float x);
+extern f32 sqrtf(f32 x);
+extern float mathSinf(float x);
+extern int getAngle(float y, float x);
+extern void Obj_FreeObject(int obj);
+extern void modelLightStruct_setEnabled(int light, int a, f32 b);
+extern void modelLightStruct_updateGlowAlpha(int light);
+extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_startColorFade(int light, int a, int b);
+extern void modelLightStruct_setDirection(int light, f32 a, f32 b, f32 c);
+extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c, void* vec);
+
+int worldobj_getExtraSize(void);
+void worldobj_hitDetect(void);
+void worldobj_release(void);
+void worldobj_initialise(void);
+int worldobj_getObjectTypeId(int* obj);
+void worldobj_free(int obj);
+void worldobj_init(int obj, int arg);
+void worldobj_spawnGreatFoxEffects(int obj);
+void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId);
+void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 int worldobj_getExtraSize(void)
 {

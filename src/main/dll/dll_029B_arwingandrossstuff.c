@@ -21,11 +21,6 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
-#define ARWINGANDROSSSTUFF_OBJGROUP 0x2
-
-#define ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK 0x1000
-#define ARWINGANDROSSSTUFF_HIT_VOLUME_SLOT      0xf
-
 enum ArwSeqId
 {
     ARW_SEQID_BOMB = 0x80d,
@@ -78,6 +73,11 @@ STATIC_ASSERT(offsetof(ArwProjectileState, rotZSpeed) == 0x1A);
 STATIC_ASSERT(offsetof(ArwProjectileState, rotYSpeed) == 0x1C);
 STATIC_ASSERT(offsetof(ArwProjectileSetup, rotY) == 0x19);
 STATIC_ASSERT(offsetof(ArwProjectileSetup, rotX) == 0x1A);
+
+#define ARWINGANDROSSSTUFF_OBJGROUP 0x2
+
+#define ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK 0x1000
+#define ARWINGANDROSSSTUFF_HIT_VOLUME_SLOT      0xf
 
 #pragma opt_common_subs off
 void arwprojectile_createLinkedEffect(int obj, u8 enable)

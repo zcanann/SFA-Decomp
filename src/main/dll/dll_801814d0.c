@@ -16,27 +16,13 @@
 #include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-/* Group of carryable/blockable objects the duster blast applies area damage to. */
-#define DUSTER_AREADAMAGE_OBJGROUP 0x10
-extern void Obj_StartModelFadeIn(int obj, int frames);
-extern void ObjHits_ClearHitVolumes(int objPtr);
-extern void ObjHits_DisableObject(u32 objPtr);
-extern int ObjHits_IsObjectEnabled();
-extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8 sphereIndex);
-extern int ObjHits_GetPriorityHitWithPosition();
-extern void* ObjGroup_GetObjects();
-extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void fn_801816F8(int obj, int arg, u8* state);
-extern int Sfx_IsPlayingFromObject(int obj, u16 sfxId);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
-extern int lbl_803DBDA0;
-extern f32 lbl_803DBDA4;
-extern f32 lbl_803DBDA8;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803E3934;
-extern f32 lbl_803E3938;
+typedef struct DusterHitEffectPos
+{
+    u8 pad00[0xc];
+    f32 x;
+    f32 y;
+    f32 z;
+} DusterHitEffectPos;
 
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
@@ -55,13 +41,29 @@ STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
-typedef struct DusterHitEffectPos
-{
-    u8 pad00[0xc];
-    f32 x;
-    f32 y;
-    f32 z;
-} DusterHitEffectPos;
+/* Group of carryable/blockable objects the duster blast applies area damage to. */
+#define DUSTER_AREADAMAGE_OBJGROUP 0x10
+
+extern int lbl_803DBDA0;
+extern f32 lbl_803DBDA4;
+extern f32 lbl_803DBDA8;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E3934;
+extern f32 lbl_803E3938;
+
+extern void Obj_StartModelFadeIn(int obj, int frames);
+extern void ObjHits_ClearHitVolumes(int objPtr);
+extern void ObjHits_DisableObject(u32 objPtr);
+extern int ObjHits_IsObjectEnabled();
+extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8 sphereIndex);
+extern int ObjHits_GetPriorityHitWithPosition();
+extern void* ObjGroup_GetObjects();
+extern f32 Vec_xzDistance(f32* a, f32* b);
+extern void fn_801816F8(int obj, int arg, u8* state);
+extern int Sfx_IsPlayingFromObject(int obj, u16 sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 
 void fn_801814D0(int obj, int arg, u8* state)
 {

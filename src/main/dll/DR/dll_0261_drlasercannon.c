@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/DR/dll_0261_drlasercannon.h"
 
 #define DRLASERCANNON_OBJFLAG_PARENT_SLACK 0x1000
 #define DRLASERCANNON_OBJFLAG_FREED        0x40
@@ -66,20 +67,6 @@ typedef struct DrLaserCannonSetup
     s16 warningOffGameBit;
 } DrLaserCannonSetup;
 
-typedef struct DrLaserCannonBeamSetup
-{
-    s16 objectType;
-    u8 field02;
-    u8 pad03;
-    u8 field04;
-    u8 field05;
-    u8 field06;
-    u8 field07;
-    f32 spawnX;
-    f32 spawnY;
-    f32 spawnZ;
-} DrLaserCannonBeamSetup;
-
 typedef struct DrLaserCannonAim
 {
     u8 pad00[DR_LASERCANNON_AIM_YAW];
@@ -125,15 +112,6 @@ STATIC_ASSERT(offsetof(DrLaserCannonSetup, targetRange) == DR_LASERCANNON_SETUP_
 STATIC_ASSERT(offsetof(DrLaserCannonSetup, beamSpeed) == DR_LASERCANNON_SETUP_BEAM_SPEED);
 STATIC_ASSERT(offsetof(DrLaserCannonSetup, destroyedGameBit) == DR_LASERCANNON_SETUP_DESTROYED_GAMEBIT);
 STATIC_ASSERT(offsetof(DrLaserCannonSetup, warningOffGameBit) == DR_LASERCANNON_SETUP_WARNING_OFF_GAMEBIT);
-STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, objectType) == 0x0);
-STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, field02) == 0x2);
-STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, field04) == 0x4);
-STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, field05) == 0x5);
-STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, field06) == 0x6);
-STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, field07) == 0x7);
-STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, spawnX) == 0x8);
-STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, spawnY) == 0xc);
-STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, spawnZ) == 0x10);
 STATIC_ASSERT(offsetof(DrLaserCannonAim, yaw) == DR_LASERCANNON_AIM_YAW);
 STATIC_ASSERT(offsetof(DrLaserCannonAim, pitch) == DR_LASERCANNON_AIM_PITCH);
 STATIC_ASSERT(offsetof(DrLaserCannonState, beamObject) == DR_LASERCANNON_STATE_BEAM_OBJECT);

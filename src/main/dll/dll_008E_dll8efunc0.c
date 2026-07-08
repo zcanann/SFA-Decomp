@@ -17,10 +17,11 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/dll_008E_dll8efunc0.h"
 
-extern void dll_8F_func01_nop(void);
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL8E_EFFECT_ID 0x26a
 
-extern void dll_8F_func00_nop(void);
 extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll8EEffectHwParams[];
 extern u8 gDll8EEffectVtxColorTable[];
@@ -40,11 +41,10 @@ extern f32 lbl_803E1160;
 extern f32 lbl_803E1164;
 extern f32 lbl_803E1168;
 extern f32 lbl_803E116C;
+extern void dll_8F_func01_nop(void);
+extern void dll_8F_func00_nop(void);
 
 #pragma opt_propagation off
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL8E_EFFECT_ID 0x26a
-
 void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;

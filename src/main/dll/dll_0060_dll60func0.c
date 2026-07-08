@@ -18,6 +18,16 @@
 #include "main/mapEventTypes.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/dll_0060_dll60func0.h"
+
+enum
+{
+    SAVEGAME_EMPTY_TASK_HINT = -1,
+    SAVEGAME_DEFAULT_VOLUME = 0x7f,
+};
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL60_EFFECT_ID 0x46
 
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E0830;
@@ -29,15 +39,6 @@ extern f32 lbl_803E0844;
 extern f32 lbl_803E0848;
 extern f32 lbl_803E084C;
 extern u8 lbl_80312790[];
-
-enum
-{
-    SAVEGAME_EMPTY_TASK_HINT = -1,
-    SAVEGAME_DEFAULT_VOLUME = 0x7f,
-};
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL60_EFFECT_ID 0x46
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {

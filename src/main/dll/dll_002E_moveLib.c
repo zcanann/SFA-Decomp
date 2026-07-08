@@ -31,57 +31,6 @@
 #include "main/objlib.h"
 #include "main/frame_timing.h"
 
-extern void TitleScreenInit_render(void);
-extern void n_rareware_render(void);
-
-extern void TitleScreenInit_frameEnd(void);
-extern void n_rareware_frameEnd(void);
-
-extern void TitleScreenInit_frameStart(void);
-extern void n_rareware_frameStart(void);
-
-extern void TitleScreenInit_release(void);
-extern void n_rareware_release(void);
-
-extern void TitleScreenInit_initialise(void);
-extern void n_rareware_initialise(void);
-
-/* object group queried to find this object's target */
-#define MOVELIB_TARGET_OBJGROUP 8
-extern int ObjGroup_FindNearestObjectToPoint();
-extern int objAnimFn_80115650();
-extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
-extern f32 sqrtf(f32 x);
-extern u8 gMoveLibDefaultMoveData[];
-extern f32 lbl_803E1C88;
-extern f32 lbl_803E1C8C;
-extern f32 lbl_803E1C90;
-extern void vecRotateZXY(s16* angles, f32* vec);
-extern f32 lbl_803E1CC8;
-extern const f32 lbl_803E1CCC;
-extern int getAngle(float y, float x);
-extern float mathCosf(float x);
-extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
-extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
-extern f32 lbl_803E1CB0;
-extern s16* objModelGetVecFn_800395d8(int obj, int idx);
-extern f32 lbl_803E1CC4;
-extern void normalize(f32* x, f32* y, f32* z);
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern f32 lbl_803E1CB4;
-extern f32 lbl_803E1CB8;
-extern f32 gMoveLibPi;
-extern f32 gMoveLibAngleHalfScale;
-extern f32 Vec_distance(f32* a, f32* b);
-extern int ObjGroup_FindNearestObject();
-extern int Obj_GetYawDeltaToObject();
-extern f32 lbl_803E1CA4;
-extern f32 lbl_803E1CD0;
-extern f32 lbl_803E1CD4;
-extern f32 lbl_803E1CD8;
-extern f32 lbl_803E1CDC;
-extern f32 lbl_803E1CE0;
-
 /* Persistent movement-state block that sits at the start of the per-object
  * extra for the baddie/object DLLs that use moveLib. The anim-channel table
  * region (0x1c..0x5bb) and the two packed turn/event tables (0x5bc/0x5da) are
@@ -140,6 +89,59 @@ STATIC_ASSERT(offsetof(MoveLibState, phase) == 0x600);
 STATIC_ASSERT(offsetof(MoveLibState, pointCount) == 0x610);
 STATIC_ASSERT(offsetof(MoveLibState, lookAtMaxDistance) == 0x614);
 STATIC_ASSERT(offsetof(MoveLibState, reattackTimer) == 0x620);
+
+/* object group queried to find this object's target */
+#define MOVELIB_TARGET_OBJGROUP 8
+
+extern u8 gMoveLibDefaultMoveData[];
+extern f32 lbl_803E1C88;
+extern f32 lbl_803E1C8C;
+extern f32 lbl_803E1C90;
+extern f32 lbl_803E1CC8;
+extern const f32 lbl_803E1CCC;
+extern f32 lbl_803E1CB0;
+extern f32 lbl_803E1CC4;
+extern f32 lbl_803E1CB4;
+extern f32 lbl_803E1CB8;
+extern f32 gMoveLibPi;
+extern f32 gMoveLibAngleHalfScale;
+extern f32 lbl_803E1CA4;
+extern f32 lbl_803E1CD0;
+extern f32 lbl_803E1CD4;
+extern f32 lbl_803E1CD8;
+extern f32 lbl_803E1CDC;
+extern f32 lbl_803E1CE0;
+
+extern void TitleScreenInit_render(void);
+extern void n_rareware_render(void);
+
+extern void TitleScreenInit_frameEnd(void);
+extern void n_rareware_frameEnd(void);
+
+extern void TitleScreenInit_frameStart(void);
+extern void n_rareware_frameStart(void);
+
+extern void TitleScreenInit_release(void);
+extern void n_rareware_release(void);
+
+extern void TitleScreenInit_initialise(void);
+extern void n_rareware_initialise(void);
+
+extern int ObjGroup_FindNearestObjectToPoint();
+extern int objAnimFn_80115650();
+extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
+extern f32 sqrtf(f32 x);
+extern void vecRotateZXY(s16* angles, f32* vec);
+extern int getAngle(float y, float x);
+extern float mathCosf(float x);
+extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
+extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
+extern s16* objModelGetVecFn_800395d8(int obj, int idx);
+extern void normalize(f32* x, f32* y, f32* z);
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern f32 Vec_distance(f32* a, f32* b);
+extern int ObjGroup_FindNearestObject();
+extern int Obj_GetYawDeltaToObject();
 
 f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
 {

@@ -22,7 +22,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
-extern float mathSinf(float x);
+#include "main/dll/dll_0029_effect16.h"
+
 extern f32 gEffect16ScrollPhaseA;
 extern f32 gEffect16ScrollPhaseB;
 extern f32 gEffect16TimedScrollPhaseA;
@@ -55,6 +56,7 @@ extern f32 lbl_803E00F8;
 extern f32 gEffect16Pi;
 extern f32 gEffect16SinPhaseScale;
 extern WaterfxCfg gEffect16DefaultSpawnSource;
+extern float mathSinf(float x);
 
 int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     s16* extraArgs)

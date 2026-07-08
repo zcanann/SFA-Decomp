@@ -44,6 +44,8 @@
 #define WCTILE_GAMEBIT_B_HIDE 0x813
 #define WCTILE_GAMEBIT_B_FADE 0x809
 
+#define WCTILE_STATE_IFACE(state) (*(WCLevelContInterface**)(*(int*)((state)->controller + 0x68)))
+
 typedef struct WCTileState
 {
     int controller;
@@ -72,8 +74,6 @@ STATIC_ASSERT(sizeof(WCTileSetup) == 0x24);
 STATIC_ASSERT(offsetof(WCTileSetup, base.posY) == 0x0c);
 STATIC_ASSERT(offsetof(WCTileSetup, modelIndex) == WCTILE_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCTileSetup, initialTile) == WCTILE_INITIAL_TILE_OFFSET);
-
-#define WCTILE_STATE_IFACE(state) (*(WCLevelContInterface**)(*(int*)((state)->controller + 0x68)))
 
 int wctile_getExtraSize(void)
 {

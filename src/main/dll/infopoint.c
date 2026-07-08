@@ -8,8 +8,6 @@
  */
 #include "main/dll/infopoint.h"
 #include "main/gameplay_runtime.h"
-extern void fn_802960E4(int obj, f32 xVelocity, f32 zVelocity);
-extern f32 lbl_803E644C;
 
 typedef struct TrickyCurveObject
 {
@@ -27,6 +25,9 @@ typedef struct TrickyCurveState
     s16 halfWidthZ;
     s16 halfHeightY;
 } TrickyCurveState;
+
+extern f32 lbl_803E644C;
+extern void fn_802960E4(int obj, f32 xVelocity, f32 zVelocity);
 
 void TrickyCurve_updateCooldownTrigger(int obj)
 {

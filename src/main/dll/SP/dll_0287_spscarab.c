@@ -18,33 +18,9 @@
 #include "main/engine_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#define SPSCARAB_OBJFLAG_RENDERED           0x800
-#define SPSCARAB_OBJFLAG_HIDDEN             0x4000
-#define SPSCARAB_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define SPSCARAB_OBJFLAG_UPDATE_DISABLED    0x8000
-
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
-
-extern int getAngle(float y, float x);
-extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
-extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);
-extern f32 getXZDistance(int* p1, int* p2);
-extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
-extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
-extern u16 gSpScarabPaletteBytesA;
-extern u8 gSpScarabPaletteByteB;
-extern f32 gSpScarabGravity;             /* gravity */
-extern f32 gSpScarabBounceVelocityY;     /* ground-bounce velocityY */
-extern f32 gSpScarabCollisionRadius;     /* bbox collision radius */
-extern f32 gSpScarabPickupRadius;        /* pickup radius */
-extern f32 gSpScarabPickupParticleScale; /* pickup particle scale */
-extern f32 gSpScarabDustBurstScale;      /* dust-burst scale */
-extern f32 gSpScarabPi;
-extern f32 gSpScarabAngleToRadiansDivisor;
-extern f32 gSpScarabBaseSpeedScale; /* base horizontal speed scale */
 
 /* init() reads the placement raw off def: rotX byte (0x18), kind (0x19),
    vendorObj (int, 0x14) and groundY (s16, 0x1a). */
@@ -69,6 +45,32 @@ typedef struct SpscarabState
 } SpscarabState;
 
 STATIC_ASSERT(sizeof(SpscarabState) == 0x14);
+
+#define SPSCARAB_OBJFLAG_RENDERED           0x800
+#define SPSCARAB_OBJFLAG_HIDDEN             0x4000
+#define SPSCARAB_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define SPSCARAB_OBJFLAG_UPDATE_DISABLED    0x8000
+
+extern u16 gSpScarabPaletteBytesA;
+extern u8 gSpScarabPaletteByteB;
+extern f32 gSpScarabGravity;             /* gravity */
+extern f32 gSpScarabBounceVelocityY;     /* ground-bounce velocityY */
+extern f32 gSpScarabCollisionRadius;     /* bbox collision radius */
+extern f32 gSpScarabPickupRadius;        /* pickup radius */
+extern f32 gSpScarabPickupParticleScale; /* pickup particle scale */
+extern f32 gSpScarabDustBurstScale;      /* dust-burst scale */
+extern f32 gSpScarabPi;
+extern f32 gSpScarabAngleToRadiansDivisor;
+extern f32 gSpScarabBaseSpeedScale; /* base horizontal speed scale */
+
+extern int getAngle(float y, float x);
+extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
+extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);
+extern f32 getXZDistance(int* p1, int* p2);
+extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
+extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
+extern int Obj_GetActiveModel(int obj);
 
 int SPScarab_getExtraSize(void)
 {
@@ -165,8 +167,6 @@ void SPScarab_update(int obj)
 
 void SPScarab_init(int obj, int def)
 {
-    extern int Obj_GetActiveModel(int obj);
-
     ObjAnimComponent* objAnim;
     int state;
     int model;

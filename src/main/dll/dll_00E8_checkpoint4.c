@@ -24,6 +24,31 @@ extern const f32 lbl_803E342C;
 extern f32 lbl_803E3430;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void MagicDust_getExtraSize();
+extern void MagicDust_free();
+extern void MagicDust_render();
+extern void MagicDust_update();
+extern void MagicDust_init();
+extern void collectible_setPosition();
+extern void collectible_getVisibilityBitClear();
+extern void collectible_setVisibilityBitClear();
+extern void collectible_startBounceMotion();
+extern void collectible_getHitRegionId();
+extern void collectible_setDisabled();
+extern void collectible_getIsHidden();
+extern void collectible_getExtraSize();
+extern void collectible_getObjectTypeId();
+extern void collectible_free();
+extern void collectible_render();
+extern void collectible_hitDetect();
+extern void collectible_update();
+extern void collectible_init();
+extern void collectible_release();
+extern void collectible_initialise();
+extern void setuppoint_init();
+extern void siderepel_getExtraSize();
+extern void siderepel_free();
+extern void siderepel_init();
 
 void checkpoint4_setScale(void)
 {
@@ -110,31 +135,6 @@ void checkpoint4_initialise(void)
 {
 }
 
-extern void MagicDust_getExtraSize();
-extern void MagicDust_free();
-extern void MagicDust_render();
-extern void MagicDust_update();
-extern void MagicDust_init();
-extern void collectible_setPosition();
-extern void collectible_getVisibilityBitClear();
-extern void collectible_setVisibilityBitClear();
-extern void collectible_startBounceMotion();
-extern void collectible_getHitRegionId();
-extern void collectible_setDisabled();
-extern void collectible_getIsHidden();
-extern void collectible_getExtraSize();
-extern void collectible_getObjectTypeId();
-extern void collectible_free();
-extern void collectible_render();
-extern void collectible_hitDetect();
-extern void collectible_update();
-extern void collectible_init();
-extern void collectible_release();
-extern void collectible_initialise();
-extern void setuppoint_init();
-extern void siderepel_getExtraSize();
-extern void siderepel_free();
-extern void siderepel_init();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 
 ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {

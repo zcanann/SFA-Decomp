@@ -17,24 +17,9 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/modgfx_types.h"
-
-typedef struct
-{
-    s16 v[5];
-} StaffFxVtx;
-
-typedef struct
-{
-    StaffFxVtx vtx0[3];
-    u8 pad1e[2];
-    StaffFxVtx vtx1[4];
-    s16 col[6];
-    s16 hw[7];
-    u8 pad62[2];
-} StaffFxDesc;
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 
 extern ModgfxInterface** gModgfxInterface;
-
 extern StaffFxDesc lbl_80311DA8;
 extern u8 lbl_803DB898, lbl_803DB8A0, lbl_803DB8A8;
 extern const f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;

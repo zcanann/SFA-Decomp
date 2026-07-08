@@ -108,11 +108,6 @@ typedef struct SynthDataTables
     FX_TAB getFXKey;          /* 0xA62C dataGetFXSearchKey */
 } SynthDataTables;
 
-extern u8 dataSmpSDirTable[];
-extern DATA_TAB dataCurveTable[2048];
-extern DATA_TAB dataKeymapTable[256];
-extern MAC_MAINTAB dataMacroBucketTable[512];
-
 #define dataSmpSDirs           (((SynthDataTables*)dataSmpSDirTable)->sdir)
 #define dataLayerTab           (((SynthDataTables*)dataSmpSDirTable)->layer)
 #define dataMacMainTab         (((SynthDataTables*)dataSmpSDirTable)->macMain)
@@ -121,6 +116,10 @@ extern MAC_MAINTAB dataMacroBucketTable[512];
 #define dataGetLayerSearchKey  (((SynthDataTables*)dataSmpSDirTable)->getLayerKey)
 #define dataGetFXSearchKey     (((SynthDataTables*)dataSmpSDirTable)->getFXKey)
 
+extern u8 dataSmpSDirTable[];
+extern DATA_TAB dataCurveTable[2048];
+extern DATA_TAB dataKeymapTable[256];
+extern MAC_MAINTAB dataMacroBucketTable[512];
 extern u16 dataSmpSDirNum;
 extern u16 dataCurveNum;
 extern u16 dataKeymapNum;

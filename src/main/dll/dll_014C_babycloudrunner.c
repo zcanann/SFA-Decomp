@@ -23,63 +23,6 @@
 #include "main/sfa_shared_decls.h"
 #include "main/dll/babycloudrunnerstate_struct.h"
 
-#define BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
-#define BABYCLOUDRUNNER_OBJGROUP             3
-#define BABYCLOUDRUNNER_OBJGROUP_SECONDARY   0x20
-#define BABYCLOUDRUNNER_AIRMETER_BGTEXTURE   0x5d1 /* HUD air-meter background texture id */
-extern int randomGetRange(int lo, int hi);
-extern u32 ObjHits_DisableObject();
-extern u32 ObjHits_EnableObject();
-extern int ObjGroup_FindNearestObject();
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern int Obj_GetYawDeltaToObject();
-extern u32 objAnimFn_80038f38();
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 lbl_803E4228;
-extern f32 lbl_803E422C;
-extern f32 lbl_803E4244;
-extern f32 lbl_803E4258;
-extern u8 gBabyCloudRunnerMutterSfxTable;
-extern u8 gBabyCloudRunnerMutterSfxTableSpecial;
-extern void storeZeroToFloatParam(void* p);
-extern u32 mainGetBit(int eventId);
-extern int Obj_RemoveFromUpdateList(int* obj);
-extern void* Obj_GetPlayerObject(void);
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-extern f32 lbl_803E4218;
-extern f32 lbl_803E423C;
-extern f32 lbl_803E4240;
-extern f32 timeDelta;
-extern f32 Vec_distance(void* a, void* b);
-extern f32 s16toFloat(int a, int b);
-extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
-
-extern f32 lbl_803E4230;
-extern f32 lbl_803E4234;
-extern f32 lbl_803DBE4C;
-extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void* getTrickyObject(void);
-extern f32 lbl_803E4248;
-extern int fn_80080150(void* p);
-extern int timerCountDown(void* p);
-
-extern void Obj_UpdateRomCurveFollowVelocity(int* obj, void* p, f32 a, f32 b, f32 c, int d);
-extern void Obj_SmoothTurnAnglesTowardVelocity(int* obj, void* p, int n, f32 a, f32 b);
-extern void fn_8014C66C(int* a, void* b);
-extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
-extern int gBabyCloudRunnerAirMeterValues[];
-extern f32 gBabyCloudRunnerTargetNearDist;
-extern f32 gBabyCloudRunnerPlayerFarDist;
-extern f32 lbl_803DBE40;
-extern f32 lbl_803DBE44;
-extern f32 lbl_803DBE48;
-extern f32 lbl_803E4238;
-extern f32 lbl_803E424C;
-extern f32 lbl_803E4250;
-extern f32 lbl_803E4254;
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 
@@ -104,6 +47,100 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, behaviourState) == 0x1c);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, initialYaw) == 0x1d);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, enableBit) == 0x1e);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, runnerGameBit) == 0x22);
+
+/* Per-object extra state for the CloudRunner guardian
+ * (cfguardian_getExtraSize == 0xa9c). */
+STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
+
+/* Per-object extra state for the CloudRunner main crystal
+ * (CFMainCrystal_getExtraSize == 0x160). */
+
+STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
+
+/* Per-object extra state for the CloudRunner power base
+ * (CFPowerBase_getExtraSize == 0x6). */
+
+STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
+
+/* Per-object extra state for the CloudRunner prison guard
+ * (CFPrisonGuard_getExtraSize == 0x3c). */
+
+STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
+
+/* Per-object extra state for the CloudRunner prison uncle
+ * (cfprisonuncle_getExtraSize == 0xa8). */
+
+STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
+
+/* Per-object extra state for the robot light beacon
+ * (gcrobotlightbea_getExtraSize == 0xc). */
+
+STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
+
+typedef struct
+{
+    s16 a, b, c;
+    u8 pad[6];
+    f32 x, y, z;
+} RunnerTarget;
+
+#define BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
+#define BABYCLOUDRUNNER_OBJGROUP             3
+#define BABYCLOUDRUNNER_OBJGROUP_SECONDARY   0x20
+#define BABYCLOUDRUNNER_AIRMETER_BGTEXTURE   0x5d1 /* HUD air-meter background texture id */
+
+extern f32 lbl_803E4228;
+extern f32 lbl_803E422C;
+extern f32 lbl_803E4244;
+extern f32 lbl_803E4258;
+extern u8 gBabyCloudRunnerMutterSfxTable;
+extern u8 gBabyCloudRunnerMutterSfxTableSpecial;
+extern f32 lbl_803E4218;
+extern f32 lbl_803E423C;
+extern f32 lbl_803E4240;
+extern f32 timeDelta;
+extern f32 lbl_803E4230;
+extern f32 lbl_803E4234;
+extern f32 lbl_803DBE4C;
+extern f32 lbl_803E4248;
+extern int gBabyCloudRunnerAirMeterValues[];
+extern f32 gBabyCloudRunnerTargetNearDist;
+extern f32 gBabyCloudRunnerPlayerFarDist;
+extern f32 lbl_803DBE40;
+extern f32 lbl_803DBE44;
+extern f32 lbl_803DBE48;
+extern f32 lbl_803E4238;
+extern f32 lbl_803E424C;
+extern f32 lbl_803E4250;
+extern f32 lbl_803E4254;
+
+extern int randomGetRange(int lo, int hi);
+extern u32 ObjHits_DisableObject();
+extern u32 ObjHits_EnableObject();
+extern int ObjGroup_FindNearestObject();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
+extern int Obj_GetYawDeltaToObject();
+extern u32 objAnimFn_80038f38();
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void storeZeroToFloatParam(void* p);
+extern u32 mainGetBit(int eventId);
+extern int Obj_RemoveFromUpdateList(int* obj);
+extern void* Obj_GetPlayerObject(void);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern f32 Vec_distance(void* a, void* b);
+extern f32 s16toFloat(int a, int b);
+extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern void* getTrickyObject(void);
+extern int fn_80080150(void* p);
+extern int timerCountDown(void* p);
+extern void Obj_UpdateRomCurveFollowVelocity(int* obj, void* p, f32 a, f32 b, f32 c, int d);
+extern void Obj_SmoothTurnAnglesTowardVelocity(int* obj, void* p, int n, f32 a, f32 b);
+extern void fn_8014C66C(int* a, void* b);
+extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
+int CFPrisonGuard_getExtraSize(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -176,10 +213,6 @@ void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 #pragma peephole on
-
-/* Per-object extra state for the CloudRunner guardian
- * (cfguardian_getExtraSize == 0xa9c). */
-STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
 /* Turn toward the target by a fraction of the yaw delta; when roughly aligned
  * play/advance the idle move, otherwise start or speed-scale the turn move by
@@ -281,31 +314,6 @@ int babycloudrunner_tryCapture(void* p)
 }
 #pragma peephole reset
 
-/* Per-object extra state for the CloudRunner main crystal
- * (CFMainCrystal_getExtraSize == 0x160). */
-
-STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
-
-/* Per-object extra state for the CloudRunner power base
- * (CFPowerBase_getExtraSize == 0x6). */
-
-STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
-
-/* Per-object extra state for the CloudRunner prison guard
- * (CFPrisonGuard_getExtraSize == 0x3c). */
-
-STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
-
-/* Per-object extra state for the CloudRunner prison uncle
- * (cfprisonuncle_getExtraSize == 0xa8). */
-
-STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
-
-/* Per-object extra state for the robot light beacon
- * (gcrobotlightbea_getExtraSize == 0xc). */
-
-STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
-
 #pragma scheduling on
 void babycloudrunner_hitDetect(void)
 {
@@ -323,7 +331,6 @@ int babycloudrunner_getExtraSize(void)
 {
     return 0x248;
 }
-int CFPrisonGuard_getExtraSize(void);
 
 int babycloudrunner_getObjectTypeId(void)
 {
@@ -505,13 +512,6 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-typedef struct
-{
-    s16 a, b, c;
-    u8 pad[6];
-    f32 x, y, z;
-} RunnerTarget;
 
 /* Full runner brain - despawn on its gamebit, run the captured/timer flow,
  * follow its rom curve while fleeing, hand off to the nearest sandworm, and

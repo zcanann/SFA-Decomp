@@ -19,49 +19,20 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/dll_018D_mmshscales.h"
 
 /* Child object spawned at init and cached in childObjs[0] (scaled x2). */
 #define MMSHSCALES_CHILD_OBJ 0x1b8
 
-typedef struct MmshScalesState
-{
-    u8 pad0[0xC - 0x0];
-    f32 unkC;
-    u8 pad10[0x14 - 0x10];
-    s32 unk14;
-    u8 pad18[0x24 - 0x18];
-    f32 dampingFactor; /* 0x24: base/(base + def[36]) smoothing coefficient */
-    s32 unk28;
-    u8 pad2C[0x6A - 0x2C];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 pad70[0x140 - 0x70];
-} MmshScalesState;
+extern int* gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
-/* 0x24-byte spawn descriptor handed to Obj_SetupObject for the child
- * object. ObjPlacement-style head (color block + position). */
-typedef struct MmshScalesSpawnSetup
-{
-    u8 pad0[4];  /* 0x00 */
-    u8 color[4]; /* 0x04 */
-    f32 posX;    /* 0x08 */
-    f32 posY;    /* 0x0c */
-    f32 posZ;    /* 0x10 */
-    u8 pad14[0x24 - 0x14];
-} MmshScalesSpawnSetup;
-
-STATIC_ASSERT(offsetof(MmshScalesSpawnSetup, posX) == 0x8);
-STATIC_ASSERT(sizeof(MmshScalesSpawnSetup) == 0x24);
+extern u8 lbl_803DB411;
 
 extern void Obj_FreeObject(u8* obj);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
-extern int* gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-
-extern u8 lbl_803DB411;
 
 int MMSH_Scales_getExtraSize(void)
 {

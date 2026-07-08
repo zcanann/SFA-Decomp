@@ -18,14 +18,6 @@
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/VF/vf_shared.h"
-extern int ObjMsg_Pop();
-extern void ObjMsg_SendToObject();
-extern void ObjMsg_AllocQueue();
-extern s8 lbl_803DBE08;  /* curve-system one-shot init flag */
-extern f32 lbl_803E4108; /* render scale */
-extern s8 lbl_803DDB08;  /* deferred-message queue count */
-extern s8 lbl_803DDB09;  /* registered-target list count */
-extern int lbl_803DDB0C; /* cached rom-curve handle */
 
 /* Registered prison-member entry (list keyed by the controller's map-event slot). */
 typedef struct CPTargetEntry
@@ -44,9 +36,6 @@ typedef struct CPDeferredMsg
     int data;
 } CPDeferredMsg;
 
-CPTargetEntry lbl_803AC7D8[20]; /* registered-target list */
-int lbl_803AC878[0x22];         /* deferred-message queue storage */
-
 /* ObjMsg ids exchanged with prison members */
 enum
 {
@@ -57,6 +46,19 @@ enum
     CPMSG_IGNORED_7 = 0xf0007,
     CPMSG_UNREGISTER = 0xf0008 /* member -> controller: remove */
 };
+
+extern s8 lbl_803DBE08;  /* curve-system one-shot init flag */
+extern f32 lbl_803E4108; /* render scale */
+extern s8 lbl_803DDB08;  /* deferred-message queue count */
+extern s8 lbl_803DDB09;  /* registered-target list count */
+extern int lbl_803DDB0C; /* cached rom-curve handle */
+
+extern int ObjMsg_Pop();
+extern void ObjMsg_SendToObject();
+extern void ObjMsg_AllocQueue();
+
+CPTargetEntry lbl_803AC7D8[20]; /* registered-target list */
+int lbl_803AC878[0x22];         /* deferred-message queue storage */
 
 void CloudPrisonControl_free(void)
 {

@@ -20,7 +20,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
-extern float mathSinf(float x);
+#include "main/dll/dll_002D_effect20.h"
+
 extern f32 gEffect20StepScrollA;
 extern f32 gEffect20StepScrollB;
 extern f32 lbl_803E0310;
@@ -34,8 +35,6 @@ extern f32 gEffect20SineValue0;
 extern f32 gEffect20Pi;
 extern f32 lbl_803E0348;
 
-extern float mathCosf(float x);
-
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
  * the consumer-side definition of this 0x64-byte spawn request consumed by
@@ -43,7 +42,6 @@ extern float mathCosf(float x);
  * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
-
 extern f32 gEffect20SpawnScrollA;
 extern f32 gEffect20SpawnScrollB;
 extern f32 lbl_803E031C;
@@ -150,6 +148,9 @@ extern f32 lbl_803E04BC;
 extern f32 lbl_803E04C0;
 extern f32 lbl_803E04C4;
 extern f32 lbl_803E04C8;
+
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern void vecRotateZXY(void* params, f32* vec);
 extern int randFn_80080100(int n);
 

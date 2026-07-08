@@ -5,17 +5,18 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 
+extern f32 lbl_803E6768;
+extern f32 lbl_803E676C;
+extern f32 lbl_803E6770;
+extern f32 lbl_803E6774;
+extern f32 lbl_803DC24C;
+
 extern void ObjHitbox_SetCapsuleBounds(void* obj, int height, int param3, int param4);
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern void fn_8009A8C8(void* obj, f32 param2);
 extern void spawnExplosion(void* obj, f32 param2, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void modelLightStruct_freeSlot(void* handle);
-extern f32 lbl_803E6768;
-extern f32 lbl_803E676C;
-extern f32 lbl_803E6770;
-extern f32 lbl_803E6774;
-extern f32 lbl_803DC24C;
 
 void proximitymine_resetToIdle(ProximityMineObject* obj)
 {

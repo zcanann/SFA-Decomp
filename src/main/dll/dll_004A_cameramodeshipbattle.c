@@ -6,6 +6,7 @@
 #include "main/game_object.h"
 #include "main/object_transform.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_004A_cameramodeshipbattle.h"
 
 extern CameraModeShipBattleState* gCamShipBattleState;
 extern f32 lbl_803E1948;

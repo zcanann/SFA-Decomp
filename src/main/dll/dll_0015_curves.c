@@ -35,24 +35,36 @@
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
 
-RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj, s8 p7, int p8, int p9,
-                              int p10);
-extern void fn_80063368(short* obj);
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
-extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int pointCount, void* hitResults,
-                                int arg6);
-extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);
-extern void PSVECSubtract(f32* a, f32* b, f32* out);
-extern f32 PSVECMag(f32* v);
-extern f32 sqrtf(f32 x);
-extern void setWidescreen(u8 enabled);
-extern void setSubtitlesEnabled(u8 enabled);
-extern void setRumbleEnabled(u8 enabled);
-extern void audioSetSoundMode(int mode, u8 forceFlag);
-extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
+typedef struct CurvesHitScratch
+{
+    u8 unk0[0x40];
+    f32 scale;
+    u8 unk44[0x10];
+    u8 type;
+    u8 unk55[0x13];
+} CurvesHitScratch;
+
+typedef struct CurvesTransformScratch
+{
+    s16 angles[3];
+    s16 pad06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} CurvesTransformScratch;
+
+typedef struct CurvesSaveGameObjectPosition
+{
+    u32 objectId;
+    f32 x;
+    f32 y;
+    f32 z;
+} CurvesSaveGameObjectPosition;
+
+#define SAVEGAME_OBJECT_POSITION_COUNT  0x3f
+#define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
+
 extern SaveData saveData;
 extern u8 gSaveGameData[];
 extern s32 sCurvesCachedHitCount;
@@ -76,24 +88,25 @@ extern const f32 lbl_803E06B8;
 extern const f32 lbl_803E06BC;
 extern const f32 lbl_803E06C0;
 
-typedef struct CurvesHitScratch
-{
-    u8 unk0[0x40];
-    f32 scale;
-    u8 unk44[0x10];
-    u8 type;
-    u8 unk55[0x13];
-} CurvesHitScratch;
+extern s16 getAngle(f32 deltaX, f32 deltaZ);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj, s8 p7, int p8, int p9,
+                              int p10);
+extern void fn_80063368(short* obj);
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
+extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int pointCount, void* hitResults,
+                                int arg6);
+extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);
+extern void PSVECSubtract(f32* a, f32* b, f32* out);
+extern f32 PSVECMag(f32* v);
+extern f32 sqrtf(f32 x);
+extern void setWidescreen(u8 enabled);
+extern void setSubtitlesEnabled(u8 enabled);
+extern void setRumbleEnabled(u8 enabled);
+extern void audioSetSoundMode(int mode, u8 forceFlag);
+extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
 
-typedef struct CurvesTransformScratch
-{
-    s16 angles[3];
-    s16 pad06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} CurvesTransformScratch;
+RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 
 static inline u32 RomCurve_GetId(RomCurveDef* curve)
 {
@@ -1751,17 +1764,6 @@ void* getLastSavedGameTexts(void)
 {
     return gSaveGameData + 0x558;
 }
-
-#define SAVEGAME_OBJECT_POSITION_COUNT  0x3f
-#define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
-
-typedef struct CurvesSaveGameObjectPosition
-{
-    u32 objectId;
-    f32 x;
-    f32 y;
-    f32 z;
-} CurvesSaveGameObjectPosition;
 
 int pushable_savePos(int obj)
 {

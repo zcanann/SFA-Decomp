@@ -5,6 +5,58 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_0021_effect8.h"
+
+extern f32 lbl_803DB818;
+extern f32 lbl_803DB81C;
+extern int gModgfxSinePhaseA;
+extern int gModgfxSinePhaseB;
+extern f32 gModgfxSineWaveB;
+extern f32 gModgfxSineWaveA;
+extern f32 lbl_803DF878;
+extern f32 lbl_803DFCE0;
+extern f32 lbl_803DFD98;
+extern f32 lbl_803DFD9C;
+extern f32 lbl_803DFDA8;
+extern f32 gModgfxPi;
+extern f32 lbl_803DFE24;
+extern FxNode9 lbl_8039C380;
+extern f32 lbl_803DB810;
+extern f32 lbl_803DB814;
+extern f32 lbl_803DFDA4;
+extern f32 lbl_803DFDB0;
+extern f32 lbl_803DFDB4;
+extern f32 lbl_803DFDB8;
+extern f32 lbl_803DFDBC;
+extern f32 lbl_803DFDC0;
+extern f32 lbl_803DFDC4;
+extern f32 lbl_803DFDC8;
+extern f32 lbl_803DFDCC;
+extern f32 lbl_803DFDD0;
+extern f32 lbl_803DFDD4;
+extern f32 lbl_803DFDD8;
+extern f32 lbl_803DFDDC;
+extern f32 lbl_803DFDE0;
+extern f32 lbl_803DFDE4;
+extern f32 lbl_803DFDE8;
+extern f32 lbl_803DFDEC;
+extern f32 lbl_803DFDF0;
+extern f32 lbl_803DFDF4;
+extern f32 lbl_803DFDF8;
+extern f32 lbl_803DFDFC;
+extern f32 lbl_803DFE00;
+extern f32 lbl_803DFE04;
+extern f32 lbl_803DFE08;
+extern f32 lbl_803DFE0C;
+extern f32 lbl_803DFE10;
+extern FxNode9 lbl_8039C338;
+extern f32 lbl_803DF884;
+extern FxNode9 lbl_8039C368;
+extern f32 lbl_803DFCEC;
+extern FxNode9 lbl_8039C350;
+extern f32 lbl_803DF9D0;
+extern f32 lbl_803DF9D4;
+extern FxNode9 lbl_8039C320;
 
 void Effect8_func03_nop(void)
 {
@@ -42,20 +94,6 @@ char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer 
 static u8 sProjgfxStringPad1[] = {0, 0, 0};
 char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
-
-extern f32 lbl_803DB818;
-extern f32 lbl_803DB81C;
-extern int gModgfxSinePhaseA;
-extern int gModgfxSinePhaseB;
-extern f32 gModgfxSineWaveB;
-extern f32 gModgfxSineWaveA;
-extern f32 lbl_803DF878;
-extern f32 lbl_803DFCE0;
-extern f32 lbl_803DFD98;
-extern f32 lbl_803DFD9C;
-extern f32 lbl_803DFDA8;
-extern f32 gModgfxPi;
-extern f32 lbl_803DFE24;
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
@@ -96,36 +134,6 @@ void Effect8_func05(void)
     }
     gModgfxSineWaveB = mathSinf(gModgfxPi * (f32)(s16)gModgfxSinePhaseB / lbl_803DFE24);
 }
-
-extern FxNode9 lbl_8039C380;
-extern f32 lbl_803DB810;
-extern f32 lbl_803DB814;
-extern f32 lbl_803DFDA4;
-extern f32 lbl_803DFDB0;
-extern f32 lbl_803DFDB4;
-extern f32 lbl_803DFDB8;
-extern f32 lbl_803DFDBC;
-extern f32 lbl_803DFDC0;
-extern f32 lbl_803DFDC4;
-extern f32 lbl_803DFDC8;
-extern f32 lbl_803DFDCC;
-extern f32 lbl_803DFDD0;
-extern f32 lbl_803DFDD4;
-extern f32 lbl_803DFDD8;
-extern f32 lbl_803DFDDC;
-extern f32 lbl_803DFDE0;
-extern f32 lbl_803DFDE4;
-extern f32 lbl_803DFDE8;
-extern f32 lbl_803DFDEC;
-extern f32 lbl_803DFDF0;
-extern f32 lbl_803DFDF4;
-extern f32 lbl_803DFDF8;
-extern f32 lbl_803DFDFC;
-extern f32 lbl_803DFE00;
-extern f32 lbl_803DFE04;
-extern f32 lbl_803DFE08;
-extern f32 lbl_803DFE0C;
-extern f32 lbl_803DFE10;
 
 #define FILL8()                                                                                                        \
     do                                                                                                                 \
@@ -527,9 +535,6 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
 }
 #undef FILL8
 
-extern FxNode9 lbl_8039C338;
-extern f32 lbl_803DF884;
-
 #define FILL338()                                                                                                      \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -544,9 +549,6 @@ extern f32 lbl_803DF884;
     } while (0)
 
 #undef FILL338
-
-extern FxNode9 lbl_8039C368;
-extern f32 lbl_803DFCEC;
 
 #define FILL368()                                                                                                      \
     do                                                                                                                 \
@@ -563,10 +565,6 @@ extern f32 lbl_803DFCEC;
 
 #undef FILL368
 
-extern FxNode9 lbl_8039C350;
-extern f32 lbl_803DF9D0;
-extern f32 lbl_803DF9D4;
-
 #define FILL350()                                                                                                      \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -581,8 +579,6 @@ extern f32 lbl_803DF9D4;
     } while (0)
 
 #undef FILL350
-
-extern FxNode9 lbl_8039C320;
 
 #define FILL320()                                                                                                      \
     do                                                                                                                 \

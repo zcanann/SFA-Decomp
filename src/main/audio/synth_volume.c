@@ -4,17 +4,6 @@
 
 #pragma exceptions on
 
-extern void macSampleEndNotify(void);
-extern u32 hwGetVirtualSampleID(int slot);
-extern u8 lbl_803BCD90[];
-u8 lbl_803BD364[0x600];
-extern u8 gSynthInitialized;
-extern u32 synthMasterFaderActiveFlags;
-extern u8* synthVoice;
-extern f32 lbl_803E7798;
-extern f32 lbl_803E77A8;
-extern f32 lbl_803E77D4;
-
 #define SYNTH_FADE_COUNT                  0x20
 #define SYNTH_FADE_TABLE_OFFSET           0x5d4
 #define SYNTH_FADE_SELECTOR_ACTION_2      0xfa
@@ -30,6 +19,16 @@ extern f32 lbl_803E77D4;
 #define SYNTH_FADE_ACTION_DISABLED        4
 #define SYNTH_INVALID_LINK_ID             0xffffffff
 
+extern void macSampleEndNotify(void);
+extern u32 hwGetVirtualSampleID(int slot);
+extern u8 lbl_803BCD90[];
+u8 lbl_803BD364[0x600];
+extern u8 gSynthInitialized;
+extern u32 synthMasterFaderActiveFlags;
+extern u8* synthVoice;
+extern f32 lbl_803E7798;
+extern f32 lbl_803E77A8;
+extern f32 lbl_803E77D4;
 extern void synthDispatchFadeAction(SynthFade* fade);
 
 /*

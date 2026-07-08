@@ -1,23 +1,13 @@
 /* DLL 0x01A4 - NW ice objects [801CF78C-801CF7E8) */
 #include "main/objlib.h"
 #include "main/game_object.h"
+#include "main/dll/NW/dll_01A4_nwice.h"
 
 #define NWICE_OBJGROUP      0x3c
 #define NWICE_LINK_OBJGROUP 0x3d /* scanned to find the paired ice object by linkId */
 
-typedef struct NwIcePlacement
-{
-    u8 pad0[0x1B - 0x0];
-    u8 linkId; /* pairing key: matched against another nwice's 0x1B to find linkedObj */
-    u8 pad1C[0x20 - 0x1C];
-} NwIcePlacement;
-
 extern void fn_80296D20(int obj, void* arg);
-
-typedef struct NwIceState
-{
-    int* linkedObj;
-} NwIceState;
+extern int Obj_GetPlayerObject(void);
 
 int NW_ice_getExtraSize(void)
 {
@@ -35,7 +25,6 @@ void NW_ice_render(void)
 
 void NW_ice_update(int* obj)
 {
-    extern int Obj_GetPlayerObject(void);
     int** scan;
     int i;
     NwIcePlacement* setup;

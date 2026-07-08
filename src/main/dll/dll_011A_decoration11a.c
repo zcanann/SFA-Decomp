@@ -17,11 +17,7 @@
  */
 #include "main/game_object.h"
 #include "main/engine_shared.h"
-extern void* ObjGroup_GetObjects();
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 Vec_distance(f32* a, f32* b);
-extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
-extern void Model_GetVertexPosition(int* model, int idx, f32* out);
+#include "main/dll/dll_011A_decoration11a.h"
 
 /* model/seq ids of the three variants that carry a collision volume */
 enum
@@ -30,6 +26,12 @@ enum
     DECOR11A_MODEL_B = 0x7a2,
     DECOR11A_MODEL_C = 0x7a3
 };
+
+extern void* ObjGroup_GetObjects();
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern f32 Vec_distance(f32* a, f32* b);
+extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
+extern void Model_GetVertexPosition(int* model, int idx, f32* out);
 
 int decoration11a_getExtraSize(void)
 {

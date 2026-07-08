@@ -12,15 +12,14 @@
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/synth_callback.h"
 #include "main/audio/voice_manage.h"
-extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
-extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux);
-extern void hwRemoveInput(u8 idx, void* input);
-extern void hwActivateStudio(u8 slot, int a, int b);
-extern void hwDeactivateStudio(u8 slot);
-extern void hwSetAUXProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser, void* auxBCallback,
-                                        void* auxBUser);
 
-extern void hwOff(u32 slot);
+#define SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET 0x210
+#define SYNTH_VOICE_DIRTY_FLAGS_OFFSET        0x114
+
+/* sndOutputMode() output configuration (MusyX SND_OUTPUTMODE) */
+#define SND_OUTPUTMODE_MONO     0 /* mono downmix */
+#define SND_OUTPUTMODE_STEREO   1 /* plain stereo */
+#define SND_OUTPUTMODE_SURROUND 2 /* Dolby Pro Logic surround */
 
 extern u8 lbl_803BCC90[];
 extern u8 lbl_803BD150[];
@@ -36,13 +35,14 @@ extern u8 synthAuxAIndex[8];
 extern u32 synthFlags;
 extern u8* synthVoice;
 
-#define SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET 0x210
-#define SYNTH_VOICE_DIRTY_FLAGS_OFFSET        0x114
-
-/* sndOutputMode() output configuration (MusyX SND_OUTPUTMODE) */
-#define SND_OUTPUTMODE_MONO     0 /* mono downmix */
-#define SND_OUTPUTMODE_STEREO   1 /* plain stereo */
-#define SND_OUTPUTMODE_SURROUND 2 /* Dolby Pro Logic surround */
+extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
+extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux);
+extern void hwRemoveInput(u8 idx, void* input);
+extern void hwActivateStudio(u8 slot, int a, int b);
+extern void hwDeactivateStudio(u8 slot);
+extern void hwSetAUXProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser, void* auxBCallback,
+                                        void* auxBUser);
+extern void hwOff(u32 slot);
 
 /*
  * MusyX sequence volume API, wrapping the underlying synth volume helper.

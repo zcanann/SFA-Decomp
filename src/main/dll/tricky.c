@@ -35,13 +35,6 @@
 #include "sfa_light_decls.h"
 #include "main/gamebit_ids.h"
 
-#define TRICKY_OBJFLAG_PARENT_SLACK 0x1000
-
-/* cMenu ring child object-type ids spawned in gameUiLoadResources; roles pinned
- * by the render callbacks they install. */
-#define TRICKY_CHILD_OBJ_RING_MODEL 0x65e /* -> cMenuRingModelRenderFn */
-#define TRICKY_CHILD_OBJ_RING_ICON  0x65f /* -> cMenuRingIconRenderFn */
-
 typedef struct GameUIWork10
 {
     u8 pad0[0x8 - 0x0];
@@ -61,11 +54,96 @@ typedef struct TrickyAirMeter
     u8 pad2E[0x48 - 0x2E];
 } TrickyAirMeter;
 
-extern int ObjGroup_FindNearestObject();
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
+typedef struct
+{
+    u8 r, g, b, a;
+} GXColor;
 
-extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int logicOp);
+typedef struct
+{
+    int w[6];
+} _IndMtx;
+
+typedef struct
+{
+    char pad[0x44];
+    u8 bit7 : 1;
+    u8 bits_0to6 : 7;
+} AirMeterFlags;
+
+/* overlay for lbl_803A87F0; offsets verified against maybetemplate.c */
+typedef struct TrickyHud
+{
+    u8 _pad0[0x1c0];
+    void* icons[0x55]; /* 0x1c0 */
+    void* icon314;     /* 0x314 */
+    void* icon318;     /* 0x318 */
+    void* icon31c;     /* 0x31c */
+    u8 _pad320[0x348 - 0x320];
+    void* icon348; /* 0x348 */
+    u8 _pad34c[0x354 - 0x34c];
+    void* icon354; /* 0x354 */
+    u8 _pad358[0xACC - 0x358];
+    f32 magicAnim; /* 0xacc */
+    u8 _padAD0[0xAD4 - 0xAD0];
+    f32 spiritAnim; /* 0xad4 */
+    f32 healthAnim; /* 0xad8 */
+    u8 _padADC[0xAF0 - 0xADC];
+    f32 keyAnim;    /* 0xaf0 */
+    f32 scarabAnim; /* 0xaf4 */
+    f32 trickyAnim; /* 0xaf8 */
+    f32 magicCur;   /* 0xafc */
+    f32 healthCur;  /* 0xb00 */
+    u8 _padB04[0xB08 - 0xB04];
+    f32 spiritCur; /* 0xb08 */
+    f32 moneyCur;  /* 0xb0c */
+    f32 keyCur;    /* 0xb10 */
+    u8 _padB14[0xB18 - 0xB14];
+    f32 scarabCur; /* 0xb18 */
+    u8 _padB1C[0xB20 - 0xB1C];
+    f32 trickyCur;   /* 0xb20 */
+    f32 magicFlash;  /* 0xb24 */
+    f32 scarabFlash; /* 0xb28 */
+    f32 trickyFlash; /* 0xb2c */
+    u8 _padB30[0xB74 - 0xB30];
+    int magicValue;  /* 0xb74 */
+    int healthValue; /* 0xb78 */
+    u8 _padB7C[0xB80 - 0xB7C];
+    int moneyValue;  /* 0xb80 */
+    int spiritValue; /* 0xb84 */
+    u8 _padB88[0xB90 - 0xB88];
+    int magicCount; /* 0xb90 */
+    u8 _padB94[0xB98 - 0xB94];
+    int scarabCount; /* 0xb98 */
+    int keyValue;    /* 0xb9c */
+    int scarabValue; /* 0xba0 */
+    int trickyValue; /* 0xba4 */
+} TrickyHud;
+
+STATIC_ASSERT(offsetof(TrickyHud, icon314) == 0x314);
+STATIC_ASSERT(offsetof(TrickyHud, icon348) == 0x348);
+STATIC_ASSERT(offsetof(TrickyHud, icon354) == 0x354);
+STATIC_ASSERT(offsetof(TrickyHud, magicAnim) == 0xACC);
+STATIC_ASSERT(offsetof(TrickyHud, magicCur) == 0xAFC);
+STATIC_ASSERT(offsetof(TrickyHud, healthCur) == 0xB00);
+STATIC_ASSERT(offsetof(TrickyHud, spiritCur) == 0xB08);
+STATIC_ASSERT(offsetof(TrickyHud, keyCur) == 0xB10);
+STATIC_ASSERT(offsetof(TrickyHud, scarabCur) == 0xB18);
+STATIC_ASSERT(offsetof(TrickyHud, trickyCur) == 0xB20);
+STATIC_ASSERT(offsetof(TrickyHud, trickyFlash) == 0xB2C);
+STATIC_ASSERT(offsetof(TrickyHud, magicValue) == 0xB74);
+STATIC_ASSERT(offsetof(TrickyHud, moneyValue) == 0xB80);
+STATIC_ASSERT(offsetof(TrickyHud, magicCount) == 0xB90);
+STATIC_ASSERT(offsetof(TrickyHud, scarabCount) == 0xB98);
+STATIC_ASSERT(offsetof(TrickyHud, trickyValue) == 0xBA4);
+
+#define TRICKY_OBJFLAG_PARENT_SLACK 0x1000
+
+/* cMenu ring child object-type ids spawned in gameUiLoadResources; roles pinned
+ * by the render callbacks they install. */
+#define TRICKY_CHILD_OBJ_RING_MODEL 0x65e /* -> cMenuRingModelRenderFn */
+#define TRICKY_CHILD_OBJ_RING_ICON  0x65f /* -> cMenuRingIconRenderFn */
+
 extern f32 gViewFinderFadeLevel;
 extern u8 gameUiResourcesLoaded;
 extern char lbl_803A87F0[];
@@ -76,13 +154,185 @@ extern int lbl_8031BF90[];
 extern const f32 lbl_803E1E3C;
 extern f32 lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
 extern f32 lbl_803E1E50, lbl_803E1E54, lbl_803E1E58, lbl_803E1E5C;
+extern u8 cMenuRingModelRenderFn[];
+extern u8 cMenuRingIconRenderFn[];
+extern u8 pauseMenuState;
+extern u8 lbl_803DD7B3;
+extern u8 lbl_803DD792;
+extern u8 gTrickyHudShowNearestInfo;
+extern u8 lbl_803DBA88;
+extern s16 gFearTestMeterFadeIn;
+extern s16 aButtonIcon;
+extern s16 yButtonItemTextureId;
+extern u16 yButtonState;
+extern u8 bButtonIcon;
+extern u8 fearTestMeterOuterHalfWidth;
+extern u8 fearTestMeterInnerHalfWidth;
+extern s16 fearTestMeterMarkerX;
+extern void* airMeter;
+extern f32 lbl_803E1E60;
+extern f32 lbl_803DD764;
+extern int lbl_803DD8DC;
+extern int lbl_803DD7D8;
+extern int gCMenuScriptedButtons;
+extern s16 lbl_803DD89E;
+extern s16 gCMenuScriptedStickY;
+extern u8 gCMenuScriptedInput;
+extern u8 arwingHudVisible;
+extern s16 arwingHudAlpha;
+extern u16 yButtonItem;
+extern int lbl_803A9398[];
+extern const f32 lbl_803E1E68;
+extern u8 lbl_803DB424;
+extern u8 cMenuEnabled;
+extern u16 curGameText;
+extern s16 lbl_803DD8D0;
+extern u8 lbl_803DD7A8;
+extern s16 lbl_803DD778;
+extern int lbl_803DD730;
+extern s16 lbl_803DD770;
+extern f32 lbl_803DD760;
+extern int lbl_803A9410[];
+extern u8 lbl_803DD75B;
+extern s16 lbl_803DD772;
+extern u8 pauseMenuFrameCounter;
+extern int gCMenuSections[];
+extern u8 framesThisStep;
+extern const f32 hudElementOpacity;
+extern f32 lbl_803E1F9C;
+extern f32 lbl_803E1FA0;
+extern f32 lbl_803E1FA4;
+extern int lbl_803DD740;
+extern int lbl_803A9428[];
+extern f32 lbl_803E1E80;
+extern int lbl_803E1E34;
+extern int lbl_803E1E38;
+extern volatile s16 lbl_803DBA8A;
+extern f32 lbl_803DBA8C;
+extern f32 gTrickyHudIconPosX, gTrickyHudIconPosY, gTrickyHudIconPosZ, gTrickyHudIconScale;
+extern f32 gTrickyHudIconRotZ, gTrickyHudIconRotX, gTrickyHudIconRotY, lbl_803DD7FC;
+extern const f32 lbl_803E1E94;
+extern f32 gTrickyHudPi, lbl_803E1E98;
+extern f32 gTrickyHudTexScaleX, gTrickyHudTexScaleY, gTrickyHudTexScaleZ;
+extern f32 gTrickyHudIconFovY, gTrickyHudIconAspect, gTrickyHudIconNearPlane, gTrickyHudIconFarPlane;
+extern char hudTextures[];
+extern s16 gFearTestMeterAlpha;
+extern u8 gFearTestMeterFadeSpeed;
+extern f32 lbl_803E1E9C;
+extern u8 lbl_803DBAEE;
+extern u8 gFearTestMeterMarkerHalfWidth;
+extern s8 lbl_803DBAEC;
+extern u8 gTrickyAirMeterFillSpeed;
+extern s8 lbl_803DD7F8;
+extern s8 lbl_803DD7F9;
+extern int lbl_803E1E30;
+extern int lbl_802C21AC[];
+extern f32 lbl_803E1E64, lbl_803E1E6C, lbl_803E1E70;
+extern f32 lbl_803DD850;
+extern f32 lbl_80396820[];
+extern f32 gTrickyHudTexMtxScale;
+extern int gTrickyHudIconKColor;
+extern s16 cMenuFadeCounter;
+extern f32 lbl_803DD844, lbl_803DD83C;
+extern const f32 gTrickyHudNearestObjMaxDist;
+extern f32 lbl_803E1FA8, lbl_803E1FAC, lbl_803E1FB0, lbl_803E1FB4;
+extern f32 timeDelta;
+extern const f64 lbl_803E1EA0, lbl_803E1EA8, lbl_803E1EB0, lbl_803E1EB8;
+extern const f64 lbl_803E1EF0, lbl_803E1EF8, lbl_803E1F00, lbl_803E1F20, lbl_803E1F28;
+extern const f32 lbl_803E1EC4, lbl_803E1EC8, lbl_803E1ECC, lbl_803E1ED0;
+extern f32 gViewFinderBaseY;
+extern const f32 lbl_803E1ED4, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE0, lbl_803E1EE4, lbl_803E1EE8;
+extern const f32 lbl_803E1F08, lbl_803E1F0C, lbl_803E1F10, lbl_803E1F14, lbl_803E1F18;
+extern const f32 lbl_803E1F30, lbl_803E1F34, lbl_803E1F48, lbl_803E1F4C;
+extern f32 lbl_803DBAE0, lbl_803DBAE4;
+extern const double lbl_803E1F38, lbl_803E1F40;
+extern const f32 gViewFinderDepthMax;
+extern char lbl_803DBB40;
+extern const f32 gViewFinderBamToDeg, lbl_803E1F90;
+extern const double lbl_803E1F50, lbl_803E1F58, lbl_803E1F60, lbl_803E1F68, lbl_803E1F78, lbl_803E1F80, lbl_803E1F88;
+extern int lbl_803DBAE8;
+extern char sViewFinderDirN, sViewFinderDirE, sViewFinderDirS, sViewFinderDirW, sViewFinderDirNE, sViewFinderDirSE,
+    sViewFinderDirSW, sViewFinderDirNW, lbl_803DBB38;
+extern u16 gViewFinderCamAngle;
+extern int lbl_803E1E2C;
+extern char sTrickyDebugXCoordFormat[];
+
+extern int ObjGroup_FindNearestObject();
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
+extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int logicOp);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* obj, int a, int b, int c, int d);
 extern void* Obj_GetActiveModel(char* obj);
 extern void ObjModel_SetRenderCallback(u8* model, void* callback);
-extern u8 cMenuRingModelRenderFn[];
-extern u8 cMenuRingIconRenderFn[];
 extern int fn_8011E0D8();
+extern void cutsceneFadeInOut(int a);
+extern void setTimeStop(int v);
+extern void gameTextLoadDir(int dirId);
+extern void* memset(void* p, int v, int n);
+extern void Obj_FreeObject(int* obj);
+extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
+extern void GXBegin(int type, int fmt, int n);
+extern void GXSetTevColor(int id, GXColor c);
+extern void GXSetTevKColor(int id, GXColor c);
+extern void GXLoadPosMtxImm(void* m, int id);
+extern void GXLoadNrmMtxImm(void* m, int id);
+extern void GXSetCurrentMtx(u32 id);
+extern void GXSetNumTexGens(u8 nTexGens);
+extern void GXSetNumIndStages(u8 nIndStages);
+extern void GXSetNumChans(u8 nChans);
+extern void textureFn_8004c264(void* this, int x);
+extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
+extern void GXSetTevKColorSel(int stage, int sel);
+extern void GXSetTevDirect(int stage);
+extern void GXSetTevOrder(int stage, int a, int b, int c);
+extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevSwapMode(int stage, int a, int b);
+extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
+extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
+extern void GXSetNumTevStages(u8 nStages);
+extern void GXSetCullMode(int m);
+extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
+extern void GXSetVtxDesc(int a, int b);
+extern void PSMTXRotRad(f32* m, int axis, f32 rad);
+extern void PSMTXConcat(f32* a, f32* b, f32* out);
+extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
+extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
+extern void C_MTXPerspective(f32* m, f32 fovY, f32 aspect, f32 nearP, f32 farP);
+extern void Camera_SetFovY(f32 fovY);
+extern void Camera_SetCurrentViewIndex(int index);
+extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
+extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
+extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
+extern void GXGetScissor(int* a, int* b, int* c, int* d);
+extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
+extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
+extern void PSMTXCopy(f32* src, f32* dst);
+extern void GXLoadTexMtxImm(f32* m, int id, int type);
+extern void GXSetIndTexOrder(int stage, int a, int b);
+extern void GXSetIndTexCoordScale(int stage, int a, int b);
+extern void GXSetIndTexMtx(int id, f32* m, int scale);
+extern void GXSetTevIndirect(int stage, int a, int b, int c, int d, int e, int f, int g, int h, int i);
+extern void GXSetChanCtrl(int chan, int a, int b, int c, int d, int e, int f);
+extern void GXSetChanMatColor(int chan, GXColor c);
+extern void GXSetTevKAlphaSel(int stage, int sel);
+extern void* ObjModel_GetRenderOp(int op, int x);
+extern void* Shader_getLayer(char* base, int idx);
+extern void selectTexture(u8* tex, int mapId);
+extern void fn_8006C5CC(int* out);
+extern int objIsCurModelNotZero(void* obj);
+extern int playerGetFocusObject(int* player);
+extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
+extern void hudDrawCounter(int id, int a, int b, int c, int d, int* e, int f);
+extern int Camera_GetCurrentViewSlot(void);
+extern int getAngle(float y, float x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
+extern void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, u8* color);
+extern f32 fn_8029454C(f32);
+extern int depthReadRequestPoll(int x, int y, void* fn);
+extern void gameTextSetColor(int, int, int, int);
 
 void gameUiLoadResources(void)
 {
@@ -181,11 +431,6 @@ void gameUiLoadResources(void)
 
 #pragma scheduling on
 #pragma peephole on
-extern u8 pauseMenuState;
-extern u8 lbl_803DD7B3;
-extern u8 lbl_803DD792;
-extern u8 gTrickyHudShowNearestInfo;
-extern u8 lbl_803DBA88;
 u8 pauseMenuGetState(void)
 {
     return pauseMenuState;
@@ -207,14 +452,11 @@ void GameUI_func0E(u8 x)
     lbl_803DBA88 = x;
 }
 
-extern s16 gFearTestMeterFadeIn;
-
 void fn_8011F6D4(u32 x)
 {
     gFearTestMeterFadeIn = (s16)(u8)x;
 }
 
-extern s16 aButtonIcon;
 #pragma scheduling reset
 #pragma peephole reset
 void forceAButtonIcon(int icon)
@@ -222,16 +464,11 @@ void forceAButtonIcon(int icon)
     aButtonIcon = icon;
 }
 
-extern s16 yButtonItemTextureId;
-extern u16 yButtonState;
-
 void resetYbutton(void)
 {
     yButtonState = 0;
     yButtonItemTextureId = -1;
 }
-
-extern u8 bButtonIcon;
 
 void setBButtonIcon(int icon)
 {
@@ -249,9 +486,6 @@ void setAButtonIcon(int icon)
     }
 }
 
-extern u8 fearTestMeterOuterHalfWidth;
-extern u8 fearTestMeterInnerHalfWidth;
-extern s16 fearTestMeterMarkerX;
 #pragma scheduling on
 void fearTestMeterSetRange(u8 a, u8 b, s16 c)
 {
@@ -259,8 +493,6 @@ void fearTestMeterSetRange(u8 a, u8 b, s16 c)
     fearTestMeterInnerHalfWidth = b;
     fearTestMeterMarkerX = c;
 }
-
-extern void* airMeter;
 
 void GameUI_airMeterSetField24(float v)
 {
@@ -270,14 +502,6 @@ void GameUI_airMeterSetField24(float v)
     *(f32*)((char*)p + 0x24) = v;
 }
 
-extern void cutsceneFadeInOut(int a);
-extern void setTimeStop(int v);
-
-extern void gameTextLoadDir(int dirId);
-extern f32 lbl_803E1E60;
-extern f32 lbl_803DD764;
-extern int lbl_803DD8DC;
-extern int lbl_803DD7D8;
 #pragma scheduling off
 void cutSceneFn_8011dd30(void)
 {
@@ -290,11 +514,6 @@ void cutSceneFn_8011dd30(void)
     lbl_803DD764 = lbl_803E1E60;
     lbl_803DD7D8 = 1;
 }
-
-extern int gCMenuScriptedButtons;
-extern s16 lbl_803DD89E;
-extern s16 gCMenuScriptedStickY;
-extern u8 gCMenuScriptedInput;
 
 void GameUI_setInputOverride(int x, s16 a, s16 b)
 {
@@ -312,9 +531,6 @@ void GameUI_setInputOverride(int x, s16 a, s16 b)
     gCMenuScriptedInput = 1;
 }
 
-extern u8 arwingHudVisible;
-extern s16 arwingHudAlpha;
-
 void arwingHudSetVisible(u32 x)
 {
     u32 v = x & 0xff;
@@ -331,7 +547,6 @@ void arwingHudSetVisible(u32 x)
     arwingHudAlpha = 0xff;
 }
 
-extern u16 yButtonItem;
 #pragma scheduling on
 u16 getYButtonItem(s16* out)
 {
@@ -345,12 +560,6 @@ u16 getYButtonItem(s16* out)
 }
 
 /* GameUI_airMeterSetShutdown: set bit 7 of (*p)+0x44 if p non-null */
-typedef struct
-{
-    char pad[0x44];
-    u8 bit7 : 1;
-    u8 bits_0to6 : 7;
-} AirMeterFlags;
 #pragma scheduling off
 void GameUI_airMeterSetShutdown(void)
 {
@@ -359,8 +568,6 @@ void GameUI_airMeterSetShutdown(void)
         return;
     p->bit7 = 1;
 }
-
-extern int lbl_803A9398[];
 
 #pragma dont_inline on
 void GameUI_airMeterShutdown(void)
@@ -386,9 +593,6 @@ void GameUI_airMeterShutdown(void)
     airMeter = NULL;
 }
 #pragma dont_inline reset
-
-extern void* memset(void* p, int v, int n);
-extern const f32 lbl_803E1E68;
 
 void GameUI_initAirMeter(int a, int b)
 {
@@ -419,8 +623,6 @@ void GameUI_initAirMeter(int a, int b)
     ((TrickyAirMeter*)m)->unk24 = lbl_803E1E68;
     m[0x10] = 1;
 }
-
-extern u8 lbl_803DB424;
 
 void showDeathMenu(void)
 {
@@ -469,20 +671,6 @@ void GameUI_airMeterRun(int v)
     }
     ((int*)airMeter)[3] = v;
 }
-
-extern u8 cMenuEnabled;
-extern u16 curGameText;
-extern s16 lbl_803DD8D0;
-extern u8 lbl_803DD7A8;
-extern s16 lbl_803DD778;
-extern int lbl_803DD730;
-extern s16 lbl_803DD770;
-extern f32 lbl_803DD760;
-extern int lbl_803A9410[];
-extern u8 lbl_803DD75B;
-extern s16 lbl_803DD772;
-extern u8 pauseMenuFrameCounter;
-extern void Obj_FreeObject(int* obj);
 
 void gameUiResetMenuState(void)
 {
@@ -540,8 +728,6 @@ void GameUI_airMeterInitType0(int a, int b, int c)
     m[0x10] = 0;
 }
 
-extern int gCMenuSections[];
-
 void GameUI_func14(s16 a, int b, int c)
 {
     int* entry = gCMenuSections;
@@ -567,15 +753,6 @@ void GameUI_func14(s16 a, int b, int c)
         ((GameUIWork10*)lbl_803A9398)->unk8 = lbl_803E1E3C;
     }
 }
-
-extern u8 framesThisStep;
-extern const f32 hudElementOpacity;
-extern f32 lbl_803E1F9C;
-extern f32 lbl_803E1FA0;
-extern f32 lbl_803E1FA4;
-extern int lbl_803DD740;
-extern int lbl_803A9428[];
-extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 
 void hudDrawTimedElement(int unused, int* e)
 {
@@ -612,9 +789,6 @@ void hudDrawTimedElement(int unused, int* e)
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-extern void GXBegin(int type, int fmt, int n);
-extern f32 lbl_803E1E80;
-
 void pauseMenuDrawElement(void* element, f32 fx, f32 fy, int depthZ, u8 paletteIndex, int scalePercent, int flags)
 {
     int dx, dy;
@@ -649,36 +823,6 @@ void pauseMenuDrawElement(void* element, f32 fx, f32 fy, int depthZ, u8 paletteI
     GXWGFifo.f32 = c1;
 }
 
-typedef struct
-{
-    u8 r, g, b, a;
-} GXColor;
-
-extern void GXSetTevColor(int id, GXColor c);
-extern void GXSetTevKColor(int id, GXColor c);
-extern void GXLoadPosMtxImm(void* m, int id);
-extern void GXLoadNrmMtxImm(void* m, int id);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXSetNumTexGens(u8 nTexGens);
-extern void GXSetNumIndStages(u8 nIndStages);
-extern void GXSetNumChans(u8 nChans);
-extern void textureFn_8004c264(void* this, int x);
-extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
-extern void GXSetTevKColorSel(int stage, int sel);
-extern void GXSetTevDirect(int stage);
-extern void GXSetTevOrder(int stage, int a, int b, int c);
-extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevSwapMode(int stage, int a, int b);
-extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
-extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
-extern void GXSetNumTevStages(u8 nStages);
-extern void GXSetCullMode(int m);
-extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
-
-extern void GXSetVtxDesc(int a, int b);
-extern int lbl_803E1E34;
-extern int lbl_803E1E38;
 char lbl_803A8830[0x120];
 
 void pauseMenuMapFn_8011de20(void* this, u8 a, s16 b, int c)
@@ -735,9 +879,6 @@ void pauseMenuMapFn_8011de20(void* this, u8 a, s16 b, int c)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 }
-
-extern volatile s16 lbl_803DBA8A;
-extern f32 lbl_803DBA8C;
 
 #pragma opt_propagation off
 void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
@@ -875,25 +1016,6 @@ void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, 
     GXWGFifo.f32 = vb;
 }
 
-extern void PSMTXRotRad(f32* m, int axis, f32 rad);
-extern void PSMTXConcat(f32* a, f32* b, f32* out);
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void C_MTXPerspective(f32* m, f32 fovY, f32 aspect, f32 nearP, f32 farP);
-
-extern void Camera_SetFovY(f32 fovY);
-
-extern void Camera_SetCurrentViewIndex(int index);
-extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
-extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
-
-extern f32 gTrickyHudIconPosX, gTrickyHudIconPosY, gTrickyHudIconPosZ, gTrickyHudIconScale;
-extern f32 gTrickyHudIconRotZ, gTrickyHudIconRotX, gTrickyHudIconRotY, lbl_803DD7FC;
-extern const f32 lbl_803E1E94;
-extern f32 gTrickyHudPi, lbl_803E1E98;
-extern f32 gTrickyHudTexScaleX, gTrickyHudTexScaleY, gTrickyHudTexScaleZ;
-extern f32 gTrickyHudIconFovY, gTrickyHudIconAspect, gTrickyHudIconNearPlane, gTrickyHudIconFarPlane;
-
 #pragma opt_propagation off
 void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
 {
@@ -959,17 +1081,6 @@ void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
 #pragma opt_propagation reset
 #pragma opt_common_subs reset
 
-extern char hudTextures[];
-extern s16 gFearTestMeterAlpha;
-extern u8 gFearTestMeterFadeSpeed;
-extern f32 lbl_803E1E9C;
-extern u8 lbl_803DBAEE;
-extern u8 gFearTestMeterMarkerHalfWidth;
-extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
-extern void GXGetScissor(int* a, int* b, int* c, int* d);
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
-extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
-
 void fearTestMeterDraw(void)
 {
     GXColor col;
@@ -1023,11 +1134,6 @@ void fearTestMeterDraw(void)
     }
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
-
-extern s8 lbl_803DBAEC;
-extern u8 gTrickyAirMeterFillSpeed;
-extern s8 lbl_803DD7F8;
-extern s8 lbl_803DD7F9;
 
 void hudDrawAirMeter(void)
 {
@@ -1123,32 +1229,7 @@ void hudDrawAirMeter(void)
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
 
-extern void PSMTXCopy(f32* src, f32* dst);
-extern void GXLoadTexMtxImm(f32* m, int id, int type);
-extern void GXSetIndTexOrder(int stage, int a, int b);
-extern void GXSetIndTexCoordScale(int stage, int a, int b);
-extern void GXSetIndTexMtx(int id, f32* m, int scale);
-extern void GXSetTevIndirect(int stage, int a, int b, int c, int d, int e, int f, int g, int h, int i);
-extern void GXSetChanCtrl(int chan, int a, int b, int c, int d, int e, int f);
-extern void GXSetChanMatColor(int chan, GXColor c);
-extern void GXSetTevKAlphaSel(int stage, int sel);
-extern void* ObjModel_GetRenderOp(int op, int x);
-extern void* Shader_getLayer(char* base, int idx);
-extern void selectTexture(u8* tex, int mapId);
-extern void fn_8006C5CC(int* out);
-extern int lbl_803E1E30;
-extern int lbl_802C21AC[];
 f32 lbl_803A8950[0x18];
-extern f32 lbl_803E1E64, lbl_803E1E6C, lbl_803E1E70;
-extern f32 lbl_803DD850;
-extern f32 lbl_80396820[];
-extern f32 gTrickyHudTexMtxScale;
-extern int gTrickyHudIconKColor;
-
-typedef struct
-{
-    int w[6];
-} _IndMtx;
 
 int fn_8011E0D8(int* this, int* p2, int p3)
 {
@@ -1255,83 +1336,6 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     GXSetVtxDesc(GX_VA_NRM, GX_DIRECT);
     return 1;
 }
-
-extern int objIsCurModelNotZero(void* obj);
-
-extern int playerGetFocusObject(int* player);
-extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
-extern void hudDrawCounter(int id, int a, int b, int c, int d, int* e, int f);
-extern s16 cMenuFadeCounter;
-extern f32 lbl_803DD844, lbl_803DD83C;
-extern const f32 gTrickyHudNearestObjMaxDist;
-extern f32 lbl_803E1FA8, lbl_803E1FAC, lbl_803E1FB0, lbl_803E1FB4;
-extern f32 timeDelta;
-
-/* overlay for lbl_803A87F0; offsets verified against maybetemplate.c */
-typedef struct TrickyHud
-{
-    u8 _pad0[0x1c0];
-    void* icons[0x55]; /* 0x1c0 */
-    void* icon314;     /* 0x314 */
-    void* icon318;     /* 0x318 */
-    void* icon31c;     /* 0x31c */
-    u8 _pad320[0x348 - 0x320];
-    void* icon348; /* 0x348 */
-    u8 _pad34c[0x354 - 0x34c];
-    void* icon354; /* 0x354 */
-    u8 _pad358[0xACC - 0x358];
-    f32 magicAnim; /* 0xacc */
-    u8 _padAD0[0xAD4 - 0xAD0];
-    f32 spiritAnim; /* 0xad4 */
-    f32 healthAnim; /* 0xad8 */
-    u8 _padADC[0xAF0 - 0xADC];
-    f32 keyAnim;    /* 0xaf0 */
-    f32 scarabAnim; /* 0xaf4 */
-    f32 trickyAnim; /* 0xaf8 */
-    f32 magicCur;   /* 0xafc */
-    f32 healthCur;  /* 0xb00 */
-    u8 _padB04[0xB08 - 0xB04];
-    f32 spiritCur; /* 0xb08 */
-    f32 moneyCur;  /* 0xb0c */
-    f32 keyCur;    /* 0xb10 */
-    u8 _padB14[0xB18 - 0xB14];
-    f32 scarabCur; /* 0xb18 */
-    u8 _padB1C[0xB20 - 0xB1C];
-    f32 trickyCur;   /* 0xb20 */
-    f32 magicFlash;  /* 0xb24 */
-    f32 scarabFlash; /* 0xb28 */
-    f32 trickyFlash; /* 0xb2c */
-    u8 _padB30[0xB74 - 0xB30];
-    int magicValue;  /* 0xb74 */
-    int healthValue; /* 0xb78 */
-    u8 _padB7C[0xB80 - 0xB7C];
-    int moneyValue;  /* 0xb80 */
-    int spiritValue; /* 0xb84 */
-    u8 _padB88[0xB90 - 0xB88];
-    int magicCount; /* 0xb90 */
-    u8 _padB94[0xB98 - 0xB94];
-    int scarabCount; /* 0xb98 */
-    int keyValue;    /* 0xb9c */
-    int scarabValue; /* 0xba0 */
-    int trickyValue; /* 0xba4 */
-} TrickyHud;
-
-STATIC_ASSERT(offsetof(TrickyHud, icon314) == 0x314);
-STATIC_ASSERT(offsetof(TrickyHud, icon348) == 0x348);
-STATIC_ASSERT(offsetof(TrickyHud, icon354) == 0x354);
-STATIC_ASSERT(offsetof(TrickyHud, magicAnim) == 0xACC);
-STATIC_ASSERT(offsetof(TrickyHud, magicCur) == 0xAFC);
-STATIC_ASSERT(offsetof(TrickyHud, healthCur) == 0xB00);
-STATIC_ASSERT(offsetof(TrickyHud, spiritCur) == 0xB08);
-STATIC_ASSERT(offsetof(TrickyHud, keyCur) == 0xB10);
-STATIC_ASSERT(offsetof(TrickyHud, scarabCur) == 0xB18);
-STATIC_ASSERT(offsetof(TrickyHud, trickyCur) == 0xB20);
-STATIC_ASSERT(offsetof(TrickyHud, trickyFlash) == 0xB2C);
-STATIC_ASSERT(offsetof(TrickyHud, magicValue) == 0xB74);
-STATIC_ASSERT(offsetof(TrickyHud, moneyValue) == 0xB80);
-STATIC_ASSERT(offsetof(TrickyHud, magicCount) == 0xB90);
-STATIC_ASSERT(offsetof(TrickyHud, scarabCount) == 0xB98);
-STATIC_ASSERT(offsetof(TrickyHud, trickyValue) == 0xBA4);
 
 void hudDrawFn_80121440(void)
 {
@@ -1476,36 +1480,6 @@ void hudDrawFn_80121440(void)
         hudDrawCounter(0x1c, (s16)base->trickyValue, 0xff, (int)base->trickyAnim, (int)base->trickyFlash, &hcArg, 0);
     }
 }
-
-extern int Camera_GetCurrentViewSlot(void);
-
-extern int getAngle(float y, float x);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
-extern void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, u8* color);
-extern f32 fn_8029454C(f32);
-extern const f64 lbl_803E1EA0, lbl_803E1EA8, lbl_803E1EB0, lbl_803E1EB8;
-extern const f64 lbl_803E1EF0, lbl_803E1EF8, lbl_803E1F00, lbl_803E1F20, lbl_803E1F28;
-extern const f32 lbl_803E1EC4, lbl_803E1EC8, lbl_803E1ECC, lbl_803E1ED0;
-extern f32 gViewFinderFadeLevel, gViewFinderBaseY;
-extern const f32 lbl_803E1ED4, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE0, lbl_803E1EE4, lbl_803E1EE8, lbl_803E1E94;
-extern const f32 lbl_803E1F08, lbl_803E1F0C, lbl_803E1F10, lbl_803E1F14, lbl_803E1F18;
-extern const f32 lbl_803E1F30, lbl_803E1F34, lbl_803E1F48, lbl_803E1F4C;
-extern f32 lbl_803DBAE0, lbl_803DBAE4;
-extern const double lbl_803E1F38, lbl_803E1F40;
-extern const f32 gViewFinderDepthMax;
-extern char lbl_803DBB40;
-extern const f32 gViewFinderBamToDeg, lbl_803E1F90;
-extern const double lbl_803E1F50, lbl_803E1F58, lbl_803E1F60, lbl_803E1F68, lbl_803E1F78, lbl_803E1F80, lbl_803E1F88;
-extern int lbl_803DBAE8;
-extern char sViewFinderDirN, sViewFinderDirE, sViewFinderDirS, sViewFinderDirW, sViewFinderDirNE, sViewFinderDirSE,
-    sViewFinderDirSW, sViewFinderDirNW, lbl_803DBB38;
-
-extern int depthReadRequestPoll(int x, int y, void* fn);
-extern u16 gViewFinderCamAngle;
-extern int lbl_803E1E2C;
-extern char sTrickyDebugXCoordFormat[];
-extern void gameTextSetColor(int, int, int, int);
 
 #define VFTICK(gA1, gA2, A, B, C, AL)                                                                                  \
     do                                                                                                                 \

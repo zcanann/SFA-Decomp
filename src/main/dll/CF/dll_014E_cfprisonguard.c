@@ -41,20 +41,19 @@ typedef struct CfPrisonGuardFlags39
 
 STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 
+extern f32 lbl_803E4268;
+extern f32 lbl_803E4280;
+extern f32 lbl_803E4260;
+extern f32 lbl_803E4264;
+extern f32 lbl_803E4284;
 extern int getLActions();
 extern int ObjHits_DisableObject();
 extern int ObjHits_EnableObject();
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_RemoveFromUpdateList(int* obj);
-
-extern f32 lbl_803E4268;
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
 extern int objGetAnimState80A(void* obj);
-extern f32 lbl_803E4280;
-extern f32 lbl_803E4260;
-extern f32 lbl_803E4264;
-extern f32 lbl_803E4284;
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 
 /* CFPrisonGuard_SeqFn: drive the guard state machine - ramp/reset the

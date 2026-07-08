@@ -19,6 +19,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/dll/dll_0025_effect12.h"
 
 #define EFFECT_FLAG_HAS_SRC 0x200000
 

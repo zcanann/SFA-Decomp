@@ -17,12 +17,12 @@
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/sfa_shared_decls.h"
 
+STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
+
 /* seqId of the render-only glow variant (no MagicLightState, no proximity logic) */
 #define MAGICLIGHT_SEQ_GLOW 0x172
 /* seqId of the main proximity-triggered variant (subtype-selected L-actions) */
 #define MAGICLIGHT_SEQ_PROXIMITY 0x16b
-
-STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
 extern u32 getLActions();
 extern int randomGetRange(int lo, int hi);

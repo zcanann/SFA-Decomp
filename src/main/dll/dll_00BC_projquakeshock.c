@@ -8,13 +8,21 @@
 #include "dolphin/os.h"
 #include "main/dll/dll_77.h"
 
-extern void projsunshock_doUnsupported(void);
-
-extern void projsunshock_release(void);
-
-extern void projsunshock_initialise(void);
+/* descriptor/ptr table auto 0x803198d8-0x803198f8 (8-byte aligned in retail;
+ * pointer tables regenerate ADDR32 relocs). Union u64 member forces the
+ * retail 8-byte alignment after the 0x29-byte string (retail pad
+ * gap_07_803198D1_data). Same idiom as dll_00B1_projlightning3. */
+typedef union DllDescriptorTable
+{
+    void* ptrs[8];
+    u64 align8;
+} DllDescriptorTable;
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
+
+extern void projsunshock_doUnsupported(void);
+extern void projsunshock_release(void);
+extern void projsunshock_initialise(void);
 
 int projquakeshock_doUnsupported(void)
 {
@@ -31,16 +39,6 @@ void projquakeshock_initialise(void)
 }
 
 char sProjquakeshockDoNoLongerSupported[] = "<projquakeshock Do>No Longer supported \n";
-
-/* descriptor/ptr table auto 0x803198d8-0x803198f8 (8-byte aligned in retail;
- * pointer tables regenerate ADDR32 relocs). Union u64 member forces the
- * retail 8-byte alignment after the 0x29-byte string (retail pad
- * gap_07_803198D1_data). Same idiom as dll_00B1_projlightning3. */
-typedef union DllDescriptorTable
-{
-    void* ptrs[8];
-    u64 align8;
-} DllDescriptorTable;
 
 DllDescriptorTable lbl_803198D8 = {{(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                                     projsunshock_initialise, projsunshock_release, (void*)0x00000000,

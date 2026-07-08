@@ -48,21 +48,17 @@
 #define DBPROTECTION_TRICKY_TARGET_SEQID 0x8C
 #define DBPROTECTION_GAMEBIT_DIVE_ACTIVE 0xF1E
 
-extern int randomGetRange(int lo, int hi);
-extern int Obj_GetPlayerObject(void);
-extern int ObjList_FindObjectById(int id);
-extern int ObjList_GetObjects(int* startIndex, int* objectCount);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_StopFromObject(int obj, int sfxId);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
+#define SCREEN_TRANSITION_FADE(kind, value)       (*gScreenTransitionInterface)->start((kind), (value))
+#define SCREEN_TRANSITION_START(kind, value)      (*gScreenTransitionInterface)->step((kind), (value))
+#define SCREEN_TRANSITION_READY()                 (*gScreenTransitionInterface)->isFinished()
+#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
+#define CLOUD_ACTION_SET(a, b)                    (*gCloudActionInterface)->func12Nop((a), (b))
+#define CLOUD_ACTION_ENABLE(flag)                 (*gCloudActionInterface)->func10Nop((flag))
+#define DBPROT_CAMERA_SHAKE(amount, arg)          (*gCameraInterface)->releaseAction((amount), (arg))
+#define DBPROT_MAP_EVENT(layer, a, b)             (*gMapEventInterface)->setObjGroupStatus((layer), (a), (b))
+#define DBPROT_CLOUD_SET_A(flag)                  (*gCloudActionInterface)->func10Nop((flag))
+#define DBPROT_CLOUD_SET_B(flag)                  (*gCloudActionInterface)->func11Nop((flag))
 
-extern f32 sqrtf(f32 x);
-extern int getAngle(float y, float x);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
-extern u32 sbGetPropeller(void);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern s8 lbl_803DDC2C;
@@ -135,16 +131,21 @@ extern f32 lbl_803E57B0;
 extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
-#define SCREEN_TRANSITION_FADE(kind, value)       (*gScreenTransitionInterface)->start((kind), (value))
-#define SCREEN_TRANSITION_START(kind, value)      (*gScreenTransitionInterface)->step((kind), (value))
-#define SCREEN_TRANSITION_READY()                 (*gScreenTransitionInterface)->isFinished()
-#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
-#define CLOUD_ACTION_SET(a, b)                    (*gCloudActionInterface)->func12Nop((a), (b))
-#define CLOUD_ACTION_ENABLE(flag)                 (*gCloudActionInterface)->func10Nop((flag))
-#define DBPROT_CAMERA_SHAKE(amount, arg)          (*gCameraInterface)->releaseAction((amount), (arg))
-#define DBPROT_MAP_EVENT(layer, a, b)             (*gMapEventInterface)->setObjGroupStatus((layer), (a), (b))
-#define DBPROT_CLOUD_SET_A(flag)                  (*gCloudActionInterface)->func10Nop((flag))
-#define DBPROT_CLOUD_SET_B(flag)                  (*gCloudActionInterface)->func11Nop((flag))
+extern int randomGetRange(int lo, int hi);
+extern int Obj_GetPlayerObject(void);
+extern int ObjList_FindObjectById(int id);
+extern int ObjList_GetObjects(int* startIndex, int* objectCount);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
+
+extern f32 sqrtf(f32 x);
+extern int getAngle(float y, float x);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
+extern u32 sbGetPropeller(void);
 
 void fn_801DFA28(u8* obj)
 {

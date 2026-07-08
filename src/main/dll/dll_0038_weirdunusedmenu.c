@@ -24,6 +24,7 @@
 #include "main/sfa_extern_decls.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_0038_weirdunusedmenu.h"
 
 /* title-menu link interface vtable slot offsets (gTitleMenuLinkInterface) */
 #define TITLEMENULINK_SETUP_WIDGETS 0x4
@@ -49,25 +50,8 @@
 /* accept + cancel buttons, disabled once a menu decision is committed */
 #define PAD_CONFIRM_MASK (PAD_BUTTON_A | PAD_BUTTON_B)
 
-typedef struct WeirdMenuWork
-{
-    u8 pad0[0x16 - 0x0];   /* 0x00-0x15: unknown, not touched here */
-    u16 widgetFlagsA;      /* 0x16: OR'd with WIDGET_FLAG_SAVING */
-    u8 pad18[0x52 - 0x18]; /* 0x18-0x51: unknown, not touched here */
-    u16 widgetFlagsB;      /* 0x52: OR'd with WIDGET_FLAG_SAVING */
-    u8 pad54[0x78 - 0x54]; /* 0x54-0x77: unknown, not touched here */
-} WeirdMenuWork;
-
-extern void saveGame_save();
 extern int* gTitleMenuLinkInterface;
-extern u32 gameTextGet(int textId);
-extern void loadUiDll(int index);
-
-extern void textureFree(u32);
 extern u32 gWeirdMenuTextureC, gWeirdMenuTextureB, gWeirdMenuTextureA;
-extern void warpToMap(int idx, s8 transType);
-
-extern void buttonDisable(int port, u32 mask);
 extern f32 gWeirdMenuSaveTimerLimit;       /* save-phase timer limit */
 extern s8 gWeirdMenuSaveTimer;             /* save-phase frame timer */
 extern s16 gWeirdMenuScrollOffset;         /* scroll offset, clamped to 0x8C */
@@ -75,6 +59,12 @@ extern u8 gWeirdMenuPhase;                 /* phase: 0 idle, 1 saving */
 extern WeirdMenuWork gWeirdMenuWidgetWork; /* widget work area */
 extern u32 gWeirdMenuTextHandle;           /* cached menu text handle; written at init, not read in this TU */
 extern u32 gWeirdMenuWidgetLayout[];       /* widget layout descriptor */
+extern void saveGame_save();
+extern u32 gameTextGet(int textId);
+extern void loadUiDll(int index);
+extern void textureFree(u32);
+extern void warpToMap(int idx, s8 transType);
+extern void buttonDisable(int port, u32 mask);
 extern u32 textureLoadAsset(int);
 
 void WeirdUnusedMenu_render(void)

@@ -9,6 +9,7 @@
  */
 #include "main/camera_object.h"
 #include "main/object_transform.h"
+#include "main/dll/dll_004C_camDebug.h"
 
 void CameraModeFixed_copyToCurrent(void)
 {

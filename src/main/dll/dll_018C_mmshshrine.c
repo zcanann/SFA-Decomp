@@ -19,17 +19,6 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
-extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
-extern void ModelLightStruct_free(void* p);
-extern int objCreateLight(int arg, int addToList);
-extern int Obj_GetPlayerObject(void);
-extern void fn_8011F6D4(u32 x);
-extern int fn_801C49B8(int obj);
-extern void objSetAnimStateFlags(int obj, int flag, int set);
-extern void Music_Trigger(int id, int arg);
-extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
-
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 /* env-effect ids fired when the shrine load-trigger timer expires (index-style; roles opaque) */
 /* camera mode DLL 0x4c = dll_004C_camDebug */
@@ -37,19 +26,6 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #define MMSH_SHRINE_ENVFX_A          0x20d
 #define MMSH_SHRINE_ENVFX_B          0x20e
 #define MMSH_SHRINE_ENVFX_C          0x222
-
-extern int objGetAnimStateFlags(int obj, int flag);
-
-extern void fn_801C4664(int obj);
-extern int randomGetRange(int lo, int hi);
-extern void objRenderModelAndHitVolumes(int p1, u32 p2, u32 p3, u32 p4, u32 p5, f32 f);
-extern f32 timeDelta;
-extern f32 lbl_803E4F40;
-extern f32 lbl_803E4F50;
-extern f32 lbl_803E4F54;
-extern f32 lbl_803E4F58;
-extern f32 lbl_803E4F5C;
-extern f32 lbl_803E4F60;
 
 #define MMSH_SHRINE_FLAG_LIT                  0x4000
 #define MMSH_SHRINE_LOAD_MAP_DIR              0x20
@@ -92,6 +68,29 @@ enum MMSHShrinePhase
     MMSH_SHRINE_PHASE_COMPLETE = 4,   /* grant completion game bit           */
     MMSH_SHRINE_PHASE_RESET = 5       /* clear flags, return to idle         */
 };
+
+extern f32 timeDelta;
+extern f32 lbl_803E4F40;
+extern f32 lbl_803E4F50;
+extern f32 lbl_803E4F54;
+extern f32 lbl_803E4F58;
+extern f32 lbl_803E4F5C;
+extern f32 lbl_803E4F60;
+
+extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
+extern void ModelLightStruct_free(void* p);
+extern int objCreateLight(int arg, int addToList);
+extern int Obj_GetPlayerObject(void);
+extern void fn_8011F6D4(u32 x);
+extern int fn_801C49B8(int obj);
+extern void objSetAnimStateFlags(int obj, int flag, int set);
+extern void Music_Trigger(int id, int arg);
+extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
+extern int objGetAnimStateFlags(int obj, int flag);
+extern void fn_801C4664(int obj);
+extern int randomGetRange(int lo, int hi);
+extern void objRenderModelAndHitVolumes(int p1, u32 p2, u32 p3, u32 p4, u32 p5, f32 f);
 
 typedef struct MMSHShrineRuntime
 {

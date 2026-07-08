@@ -20,6 +20,17 @@
 #include "main/object_descriptor.h"
 #include "main/gameplay_runtime.h"
 
+typedef struct Dll1CFObjectDef
+{
+    u8 pad0[0x14 - 0x0];
+    s32 mapId;   /* 0x14: ObjPlacement mapId, not read by this DLL */
+    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
+    u8 pad19[0x1A - 0x19];
+    s16 rotYRaw;     /* 0x1A: scaled into rotY when the gate bit is set */
+    s16 unk1C;       /* 0x1C: not read */
+    s16 gateGameBit; /* 0x1E: game bit that enables the rotY setup */
+} Dll1CFObjectDef;
+
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
@@ -45,17 +56,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define DLL1CF_OBJECT_FLAGS 0xe000
 
 extern f32 lbl_803E4A30;
-
-typedef struct Dll1CFObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 mapId;   /* 0x14: ObjPlacement mapId, not read by this DLL */
-    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
-    u8 pad19[0x1A - 0x19];
-    s16 rotYRaw;     /* 0x1A: scaled into rotY when the gate bit is set */
-    s16 unk1C;       /* 0x1C: not read */
-    s16 gateGameBit; /* 0x1E: game bit that enables the rotY setup */
-} Dll1CFObjectDef;
 
 /* The entry points compile with both passes OFF; the surrounding TU state is
  * the default, so no reset pair is needed. */

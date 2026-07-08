@@ -1,40 +1,6 @@
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 
-/* Standard MIDI controller (CC) numbers dispatched by the sequencer. */
-#define MCMD_CTRL_MODULATION 0x01
-#define MCMD_CTRL_VOLUME     0x07
-#define MCMD_CTRL_PITCH_BEND 0x80
-
-/* Sequencer meta-command sub-codes (carried in the high nibble of a note event). */
-#define SEQ_META_KEY_OFF       0x82
-#define SEQ_META_START_PENDING 0x68
-#define SEQ_META_LOOP_MARK     0x69
-#define SEQ_META_LOOP_MARK_HI  0x6a
-#define SEQ_META_RESET_CTRL    0x79
-#define SEQ_META_ALL_NOTES_OFF 0x7b
-
-/* Empty double-buffered time slot marker. */
-#define SEQ_TIME_EMPTY 0x7fffffff
-extern int synthGetNextChannelEvent(u8 i);
-extern void synthInsertChannelEvent(int slot, int item);
-extern int gSynthCurrentVoice;
-extern int gSynthCurrentVoiceSlotIndex;
-extern u32* gSynthFreeCallbacks;
-extern u8* synthReadVariablePair(u8* p, u16* tagOut, s16* valueOut);
-extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
-extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
-extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
-extern void synthStartHandleFromRequest(int request, u32* outHandle, u8 noLock);
-extern void synthFlushCallbacks(void);
-extern u32* synthAllocCallback(s32 triggerValue, u8 controllerIndex);
-extern int synthStartSound(u32 sampleId, char key, u32 velocity, u32 flags, u32 volume, u32 pan, u32 midi, u32 midiSet,
-                           u8 section, u16 step, u16 trackid, u8 auxIndex, int keyOffset, u8 studio, u32 studioAux);
-
-extern u8 lbl_803AF550[];
-extern u8 lbl_803BDA24[];
-extern u8 lbl_803DE224;
-
 typedef struct
 {
     u16 macroId;   // 0x0
@@ -147,11 +113,44 @@ typedef struct
     u8 unk36[2];            // 0x36
 } SeqQueue;                 // size 0x38
 
-extern int fn_8026CF78(u8 voice);
+/* Standard MIDI controller (CC) numbers dispatched by the sequencer. */
+#define MCMD_CTRL_MODULATION 0x01
+#define MCMD_CTRL_VOLUME     0x07
+#define MCMD_CTRL_PITCH_BEND 0x80
 
+/* Sequencer meta-command sub-codes (carried in the high nibble of a note event). */
+#define SEQ_META_KEY_OFF       0x82
+#define SEQ_META_START_PENDING 0x68
+#define SEQ_META_LOOP_MARK     0x69
+#define SEQ_META_LOOP_MARK_HI  0x6a
+#define SEQ_META_RESET_CTRL    0x79
+#define SEQ_META_ALL_NOTES_OFF 0x7b
+
+/* Empty double-buffered time slot marker. */
+#define SEQ_TIME_EMPTY 0x7fffffff
+
+extern int gSynthCurrentVoice;
+extern int gSynthCurrentVoiceSlotIndex;
+extern u32* gSynthFreeCallbacks;
+extern u8 lbl_803AF550[];
+extern u8 lbl_803BDA24[];
+extern u8 lbl_803DE224;
 extern f32 lbl_803E7780;
 extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
+
+extern int synthGetNextChannelEvent(u8 i);
+extern void synthInsertChannelEvent(int slot, int item);
+extern u8* synthReadVariablePair(u8* p, u16* tagOut, s16* valueOut);
+extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
+extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
+extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
+extern void synthStartHandleFromRequest(int request, u32* outHandle, u8 noLock);
+extern void synthFlushCallbacks(void);
+extern u32* synthAllocCallback(s32 triggerValue, u8 controllerIndex);
+extern int synthStartSound(u32 sampleId, char key, u32 velocity, u32 flags, u32 volume, u32 pan, u32 midi, u32 midiSet,
+                           u8 section, u16 step, u16 trackid, u8 auxIndex, int keyOffset, u8 studio, u32 studioAux);
+extern int fn_8026CF78(u8 voice);
 
 /*
  * Dispatch a queued voice/MIDI channel event by type, then pull the next

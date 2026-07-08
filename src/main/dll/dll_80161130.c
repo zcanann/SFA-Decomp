@@ -17,15 +17,14 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 
-extern int randomGetRange(int lo, int hi);
-extern void Obj_FreeObject(int* obj);
+STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
+STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
+
 extern f32 timeDelta;
-extern int getAngle(float y, float x);
 extern void** gBaddieControlInterface;
 extern void** gPlayerInterface;
 extern f32 lbl_803E2EB8;
 extern f32 lbl_803E2EE8;
-extern f32 sqrtf(f32);
 extern f32 lbl_803E2EB0;
 extern f32 gScarabTargetStandoffDist;
 extern f32 lbl_803E2EBC;
@@ -33,6 +32,20 @@ extern f32 lbl_803E2EC0;
 extern f32 lbl_803E2EC4;
 extern f32 lbl_803E2EC8;
 extern f32 lbl_803E2ECC;
+extern f32 lbl_803E2ED0;
+extern f32 lbl_803E2ED4;
+extern f32 lbl_803E2EE0;
+extern f32 lbl_803E2EE4;
+extern f32 lbl_803E2EF0;
+extern f32 lbl_803E2EF4;
+extern f32 lbl_803E2EF8;
+extern f32 lbl_803E2EFC;
+extern f32 lbl_803E2EEC;
+
+extern int randomGetRange(int lo, int hi);
+extern void Obj_FreeObject(int* obj);
+extern int getAngle(float y, float x);
+extern f32 sqrtf(f32);
 
 void ChukChuk_free(void);
 
@@ -41,9 +54,6 @@ void ChukChuk_hitDetect(void);
 void ChukChuk_release(void);
 
 void ChukChuk_initialise(void);
-
-STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
-STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
 void ChukChuk_init(u8* obj, u8* params);
 void IceBall_hitDetect(void);
@@ -146,8 +156,6 @@ int grimble_stateHandlerB01(int* obj, GroundBaddieState* state)
 
 int grimble_stateHandlerB00(int obj, GroundBaddieState* p)
 {
-    extern f32 lbl_803E2ED0;
-    extern f32 lbl_803E2ED4;
     u16 a;
     u16 b;
     u16 c;
@@ -172,8 +180,6 @@ int grimble_stateHandlerB00(int obj, GroundBaddieState* p)
 
 int grimble_stateHandlerA09(int obj, GroundBaddieState* p)
 {
-    extern f32 lbl_803E2EE0;
-    extern f32 lbl_803E2EE4;
     GroundBaddieState* sub;
     f32 spd;
 
@@ -205,10 +211,6 @@ int grimble_stateHandlerA09(int obj, GroundBaddieState* p)
 
 int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
 {
-    extern f32 lbl_803E2EF0;
-    extern f32 lbl_803E2EF4;
-    extern f32 lbl_803E2EF8;
-    extern f32 lbl_803E2EFC;
     GrimbleControl* ctrl;
     f64 d;
     f32 r;
@@ -278,7 +280,6 @@ int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
 
 int grimble_stateHandlerA07(short* obj, GroundBaddieState* p)
 {
-    extern f32 lbl_803E2EEC;
     GrimbleControl* ctrl;
     s16 yaw;
     int diff;
@@ -322,8 +323,6 @@ int grimble_stateHandlerA07(short* obj, GroundBaddieState* p)
 
 int grimble_stateHandlerA05(short* obj, GroundBaddieState* p)
 {
-    extern f32 lbl_803E2EF0;
-    extern f32 lbl_803E2EFC;
     GrimbleControl* ctrl;
     f64 d;
     f32 r;
@@ -363,8 +362,6 @@ int grimble_stateHandlerA05(short* obj, GroundBaddieState* p)
 
 int grimble_stateHandlerA04(short* obj, GroundBaddieState* p)
 {
-    extern f32 lbl_803E2EF0;
-    extern f32 lbl_803E2EFC;
     GrimbleControl* ctrl;
     f64 d;
     f32 r;
@@ -408,8 +405,6 @@ int grimble_stateHandlerA04(short* obj, GroundBaddieState* p)
 
 int grimble_stateHandlerA03(short* obj, GroundBaddieState* p)
 {
-    extern f32 lbl_803E2EE4;
-    extern f32 lbl_803E2EFC;
     GrimbleControl* ctrl;
     f64 d;
     f32 r;

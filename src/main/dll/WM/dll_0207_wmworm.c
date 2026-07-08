@@ -19,10 +19,11 @@
 #include "main/dll/WM/dll_0207_wmworm.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
-extern f32 Vec_xzDistance(f32* a, f32* b);
+
 extern f32 lbl_803E5E58; /* 440.0: chase range */
 extern f32 lbl_803E5E5C; /* 0.0 */
 extern f32 lbl_803E5E60; /* 0.01: chase speed factor */
+extern f32 Vec_xzDistance(f32* a, f32* b);
 
 int WM_Worm_getExtraSize(void)
 {

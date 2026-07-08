@@ -16,13 +16,13 @@
 #include "main/game_object.h"
 #include "main/object_transform.h"
 
-extern f32 lbl_803E1628; /* reticle rootMotionScale constant */
-
-extern void objRenderModelAndHitVolumes(GameObject* reticle, u32 a, u32 b, u32 c, u32 d, f32 f);
-
 #define RETICLE_BANK_LOCKON  0
 #define RETICLE_BANK_DEFAULT 1
 #define RETICLE_BANK_CONTEXT 2
+
+extern f32 lbl_803E1628; /* reticle rootMotionScale constant */
+
+extern void objRenderModelAndHitVolumes(GameObject* reticle, u32 a, u32 b, u32 c, u32 d, f32 f);
 
 void camcontrol_updateTargetReticle(CamcontrolTargetObject* fallbackTarget, int unused2, u32 arg3, u32 arg4, u32 arg5,
                                     u32 arg6)

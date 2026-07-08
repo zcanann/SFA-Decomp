@@ -27,24 +27,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"
-extern f32 getXZDistance(f32* a, f32* b);
-extern f32 sqrtf(f32 x);
-extern s16 getAngle(f32 dx, f32 dz);
-extern int playerGetFlags3F0Bit5(int obj);
-
-/* ROM curve query key for the fish path curves; first entry of this TU's
- * .sdata2 (retail 0x803E38E8), followed by the compiler float pool. Read
- * through a volatile view in CurveFish_update so the value is not constant
- * folded away. */
-const u32 gCurveFishCurveQueryKey = ROMCURVE_TYPE_CURVEFISH;
-
-/* per-frame cap on the body's yaw turn toward the next path node */
-#define CURVEFISH_MAX_YAW_TURN 0x180
-
-int CurveFish_getExtraSize(void)
-{
-    return 0x120;
-}
 
 typedef struct CurveFishSetup
 {
@@ -88,6 +70,25 @@ typedef enum CurveFishMode
     CURVEFISH_MODE_FADE_IN = 2, /* fade alpha in over one frame-time */
     CURVEFISH_MODE_CRUISE = 3,  /* cruise along the path; reaching the end resets to wait */
 } CurveFishMode;
+
+/* per-frame cap on the body's yaw turn toward the next path node */
+#define CURVEFISH_MAX_YAW_TURN 0x180
+
+extern f32 getXZDistance(f32* a, f32* b);
+extern f32 sqrtf(f32 x);
+extern s16 getAngle(f32 dx, f32 dz);
+extern int playerGetFlags3F0Bit5(int obj);
+
+/* ROM curve query key for the fish path curves; first entry of this TU's
+ * .sdata2 (retail 0x803E38E8), followed by the compiler float pool. Read
+ * through a volatile view in CurveFish_update so the value is not constant
+ * folded away. */
+const u32 gCurveFishCurveQueryKey = ROMCURVE_TYPE_CURVEFISH;
+
+int CurveFish_getExtraSize(void)
+{
+    return 0x120;
+}
 
 void CurveFish_update(int obj)
 {

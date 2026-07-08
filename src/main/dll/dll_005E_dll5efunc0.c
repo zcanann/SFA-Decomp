@@ -11,12 +11,65 @@
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
+#include "main/dll/dll_005E_dll5efunc0.h"
+
 extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll5EFunc03SequenceData[];
 
-void dll_5E_func03(int sourceObj, int variant, u8* posSource, u32 flags);
-void dll_5E_func01_nop(void);
-void dll_5E_func00_nop(void);
+extern u8 Dummy58_func03_ret_0[];
+extern u8 Dummy58_initialise[];
+extern u8 Dummy58_release[];
+extern u8 Dummy6C_func03_ret_0[];
+extern u8 Dummy6C_initialise[];
+extern u8 Dummy6C_release[];
+extern u8 dll_5F_func00_nop[];
+extern u8 dll_5F_func01_nop[];
+extern u8 dll_5F_func03[];
+extern u8 dll_60_func00_nop[];
+extern u8 dll_60_func01_nop[];
+extern u8 dll_60_func03[];
+extern u8 dll_61_func00_nop[];
+extern u8 dll_61_func01_nop[];
+extern u8 dll_61_func03[];
+extern u8 dll_62_func00_nop[];
+extern u8 dll_62_func01_nop[];
+extern u8 dll_62_func03[];
+extern u8 dll_63_func00_nop[];
+extern u8 dll_63_func01_nop[];
+extern u8 dll_63_func03[];
+extern u8 dll_64_func00_nop[];
+extern u8 dll_64_func01_nop[];
+extern u8 dll_64_func03[];
+extern u8 dll_65_func00_nop[];
+extern u8 dll_65_func01_nop[];
+extern u8 dll_65_func03[];
+extern u8 dll_66_func00_nop[];
+extern u8 dll_66_func01_nop[];
+extern u8 dll_66_func03[];
+extern u8 dll_67_func00_nop[];
+extern u8 dll_67_func01_nop[];
+extern u8 dll_67_func03[];
+extern u8 dll_68_func00_nop[];
+extern u8 dll_68_func01_nop[];
+extern u8 dll_68_func03[];
+extern u8 dll_69_func00_nop[];
+extern u8 dll_69_func01_nop[];
+extern u8 dll_69_func03[];
+extern u8 dll_6A_func00_nop[];
+extern u8 dll_6A_func01_nop[];
+extern u8 dll_6A_func03[];
+extern u8 dll_6B_func00_nop[];
+extern u8 dll_6B_func01_nop[];
+extern u8 dll_6B_func03[];
+extern u8 dll_6D_func00_nop[];
+extern u8 dll_6D_func01_nop[];
+extern u8 dll_6D_func03[];
+extern u8 dll_6E_func00_nop[];
+extern u8 dll_6E_func01_nop[];
+extern u8 dll_6E_func03[];
+extern u8 dll_A3_func00_nop[];
+extern u8 dll_A3_func01_nop[];
+extern u8 dll_A3_func03[];
 
 void dll_5E_func03(int sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -96,60 +149,6 @@ u8 gDll5EFunc03SequenceData[748] = {
     25,  0,   26,  0,   0,   0,   10,  0,   120, 0,   80,  0,   10,  0,   0,   0,   0,   0,   0,   0,   0,   1,   217,
     0,   0,   1,   253, 0,   0,   2,   1,   0,   0,   2,   3,
 };
-extern u8 Dummy58_func03_ret_0[];
-extern u8 Dummy58_initialise[];
-extern u8 Dummy58_release[];
-extern u8 Dummy6C_func03_ret_0[];
-extern u8 Dummy6C_initialise[];
-extern u8 Dummy6C_release[];
-extern u8 dll_5F_func00_nop[];
-extern u8 dll_5F_func01_nop[];
-extern u8 dll_5F_func03[];
-extern u8 dll_60_func00_nop[];
-extern u8 dll_60_func01_nop[];
-extern u8 dll_60_func03[];
-extern u8 dll_61_func00_nop[];
-extern u8 dll_61_func01_nop[];
-extern u8 dll_61_func03[];
-extern u8 dll_62_func00_nop[];
-extern u8 dll_62_func01_nop[];
-extern u8 dll_62_func03[];
-extern u8 dll_63_func00_nop[];
-extern u8 dll_63_func01_nop[];
-extern u8 dll_63_func03[];
-extern u8 dll_64_func00_nop[];
-extern u8 dll_64_func01_nop[];
-extern u8 dll_64_func03[];
-extern u8 dll_65_func00_nop[];
-extern u8 dll_65_func01_nop[];
-extern u8 dll_65_func03[];
-extern u8 dll_66_func00_nop[];
-extern u8 dll_66_func01_nop[];
-extern u8 dll_66_func03[];
-extern u8 dll_67_func00_nop[];
-extern u8 dll_67_func01_nop[];
-extern u8 dll_67_func03[];
-extern u8 dll_68_func00_nop[];
-extern u8 dll_68_func01_nop[];
-extern u8 dll_68_func03[];
-extern u8 dll_69_func00_nop[];
-extern u8 dll_69_func01_nop[];
-extern u8 dll_69_func03[];
-extern u8 dll_6A_func00_nop[];
-extern u8 dll_6A_func01_nop[];
-extern u8 dll_6A_func03[];
-extern u8 dll_6B_func00_nop[];
-extern u8 dll_6B_func01_nop[];
-extern u8 dll_6B_func03[];
-extern u8 dll_6D_func00_nop[];
-extern u8 dll_6D_func01_nop[];
-extern u8 dll_6D_func03[];
-extern u8 dll_6E_func00_nop[];
-extern u8 dll_6E_func01_nop[];
-extern u8 dll_6E_func03[];
-extern u8 dll_A3_func00_nop[];
-extern u8 dll_A3_func01_nop[];
-extern u8 dll_A3_func03[];
 
 u32 lbl_8031262C[9] = {
     0x00000000, 0x00000000,         0x00000000, 0x00030000, (u32)dll_5E_func00_nop, (u32)dll_5E_func01_nop,

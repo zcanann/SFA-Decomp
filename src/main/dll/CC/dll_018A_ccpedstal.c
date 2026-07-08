@@ -11,13 +11,9 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/dll/CC/dll_018A_ccpedstal.h"
 
 #define CCPEDSTAL_OBJFLAG_HIDDEN 0x4000
-void ccpedstal_updateGameBitGate(int obj, u8* state2);
-void ccpedstal_updateAltVariant(int obj, u8* state2);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern int gameBitDecrement(int bit);
-extern int gameBitIncrement(int bit);
 
 /* placement def-ids that pick the pedestal's think routine */
 enum
@@ -27,20 +23,9 @@ enum
     PEDSTAL_DEF_GATE_B = 0x45f1c
 };
 
-/* ccpedstal extra block (extraSize 0x8): a think fn-pointer at +0, an
- * s16 GameBit id at +4, and a one-shot flag byte at +6 toggled by the
- * think routines and consumed by ccpedstal_update. */
-typedef struct CcpedstalState
-{
-    void* think;
-    s16 gameBit;
-    u8 markFlags;
-    u8 unk7;
-} CcpedstalState;
-
-STATIC_ASSERT(offsetof(CcpedstalState, gameBit) == 0x4);
-STATIC_ASSERT(offsetof(CcpedstalState, markFlags) == 0x6);
-STATIC_ASSERT(sizeof(CcpedstalState) == 0x8);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern int gameBitDecrement(int bit);
+extern int gameBitIncrement(int bit);
 
 int ccpedstal_getExtraSize(void)
 {

@@ -11,27 +11,9 @@
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/dll/dll_0269_explodeplan.h"
 
 #define EXPLODEPLAN_OBJECT_TYPE_ID 0x0
-
-/* opaque per-instance extra state; no field is read or written by this DLL */
-typedef struct ExplodePlanState
-{
-    u8 pad0[0x4];
-} ExplodePlanState;
-
-/* explodeplan placement record (tail past the common ObjPlacement head) */
-typedef struct ExplodePlanPlacement
-{
-    u8 pad0[0x18];
-    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
-    u8 pad19[0x1E - 0x19];
-    s16 removeGameBit; /* 0x1E: game bit that removes this prop */
-} ExplodePlanPlacement;
-
-STATIC_ASSERT(offsetof(ExplodePlanPlacement, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(ExplodePlanPlacement, removeGameBit) == 0x1E);
-STATIC_ASSERT(sizeof(ExplodePlanPlacement) == 0x20);
 
 int explodeplan_getExtraSize(void)
 {

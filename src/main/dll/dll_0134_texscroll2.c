@@ -17,6 +17,8 @@
 #include "main/map_block.h"
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/VF/vf_shared.h"
+
+extern f32 lbl_803E3F30;
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void* mapGetBlock(int i);
 extern void* getTablesBinEntry(int i);
@@ -26,7 +28,6 @@ extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidth
                                     int secondaryXStep, int secondaryYStep, int texWidthFixed2, int texHeightFixed2);
 extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int secondaryXStep,
                                    int secondaryYStep, int texWidthFixed2, int texHeightFixed2);
-extern f32 lbl_803E3F30;
 
 void texscroll2_setScale(TexScroll2Object* obj, s8 stepY)
 {

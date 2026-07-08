@@ -11,6 +11,26 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 
+typedef struct PortalspelldoorPlacement
+{
+    u8 pad0[0x1E - 0x0];
+    s16 openedGameBit;
+} PortalspelldoorPlacement;
+
+STATIC_ASSERT(sizeof(ScarabState) == 0x34);
+
+STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
+
+STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
+
+#define PORTALSPELLDOOR_OBJFLAG_UPDATE_DISABLED    0x8000
+#define PORTALSPELLDOOR_OBJFLAG_HIDDEN             0x4000
+#define PORTALSPELLDOOR_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+extern f32 lbl_803E3A8C;
+extern f32 lbl_803E3A90;
+extern f32 lbl_803E3A88;
+
 extern void LanternFireFly_modelMtxFn(void);
 
 extern void LanternFireFly_func0B(void);
@@ -86,27 +106,13 @@ extern void ColdWaterControl_init(void);
 extern void InfoPoint_initialise(void);
 extern void decoration11a_init(void);
 
-#define PORTALSPELLDOOR_OBJFLAG_UPDATE_DISABLED    0x8000
-#define PORTALSPELLDOOR_OBJFLAG_HIDDEN             0x4000
-#define PORTALSPELLDOOR_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-typedef struct PortalspelldoorPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 openedGameBit;
-} PortalspelldoorPlacement;
-
-STATIC_ASSERT(sizeof(ScarabState) == 0x34);
-
-STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
-
-STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
-
 extern int Obj_GetPlayerObject(void);
-extern f32 lbl_803E3A8C;
-extern f32 lbl_803E3A90;
-extern f32 lbl_803E3A88;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern int playerHasSpell(int obj, int spell);
+extern int objGetAnimState80A(int player);
+extern void playerCancelSpell(int player, int v);
+extern int getTrickyObject(void);
+extern void trickyImpress(int tricky);
 
 int PortalSpellDoor_getExtraSize(void)
 {
@@ -134,11 +140,6 @@ void PortalSpellDoor_hitDetect(void)
 
 void PortalSpellDoor_update(int obj)
 {
-    extern int playerHasSpell(int obj, int spell);
-    extern int objGetAnimState80A(int player);
-    extern void playerCancelSpell(int player, int v);
-    extern int getTrickyObject(void);
-    extern void trickyImpress(int tricky);
     typedef struct
     {
         u8 open : 1;

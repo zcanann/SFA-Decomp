@@ -42,8 +42,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
-
-#define DLL22C_OBJFLAG_HITDETECT_DISABLED 0x2000
+#include "main/dll/dll_022C_dll22c.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -72,24 +71,7 @@ STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
-typedef struct Dll22CMapData
-{
-    ObjPlacement base;
-    s8 rotXByte;     /* 0x18: rotX in 1/256 turns */
-    s8 unk19;        /* 0x19 */
-    s16 raiseHeight; /* 0x1A */
-    s16 raiseMode;   /* 0x1C: -> state raiseMode */
-    s16 gameBit2;    /* 0x1E */
-    s16 gameBit;     /* 0x20 */
-} Dll22CMapData;
-
-STATIC_ASSERT(offsetof(Dll22CMapData, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(Dll22CMapData, raiseHeight) == 0x1A);
-STATIC_ASSERT(offsetof(Dll22CMapData, raiseMode) == 0x1C);
-STATIC_ASSERT(offsetof(Dll22CMapData, gameBit2) == 0x1E);
-STATIC_ASSERT(offsetof(Dll22CMapData, gameBit) == 0x20);
-
-extern int getLActions(int a, int b, u16 idx, int p4, int p5, int p6);
+#define DLL22C_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* Dll22CState.mode rise/hold/fall cycle (see file-header comment). */
 #define DLL22C_MODE_ARMED      0 /* wait for gameBit + player proximity, then rise -> HOLD_SETUP */
@@ -97,6 +79,8 @@ extern int getLActions(int a, int b, u16 idx, int p4, int p5, int p6);
 #define DLL22C_MODE_HOLD       2 /* hold, then pick DESCEND or ASCEND by player Y */
 #define DLL22C_MODE_DESCEND    3 /* fall to posY-1228.0f, then -> HOLD */
 #define DLL22C_MODE_ASCEND     4 /* rise to posY+60.0f, then -> HOLD */
+
+extern int getLActions(int a, int b, u16 idx, int p4, int p5, int p6);
 
 int dll_22C_SeqFn(void)
 {

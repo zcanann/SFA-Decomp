@@ -10,8 +10,6 @@
 #include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/blastflags4_types.h"
 #include "main/dll/dfp_types.h"
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-
 #include "main/audio/sfx_ids.h"
 #include "main/dll/anim.h"
 #include "main/objseq.h"
@@ -19,10 +17,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/objlib.h"
 #include "main/objhits.h"
 #include "main/dll/fx_800944A0_shared.h"
-
-#define DBHOLECONTROL1_OBJGROUP  0x1e
-#define DBEGG_OBJGROUP           0x24
-#define DBHOLECONTROL1_CHILD_OBJ 1337
+#include "main/dll/dll_0243_dbholecontrol1.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -47,39 +42,23 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
-typedef struct Dbholecontrol1Placement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    s32 mapId;
-    s16 unk18;
-    s16 gameBitA; /* copied into DbHoleControl1State.gameBitA */
-    s16 gameBitB; /* copied into DbHoleControl1State.gameBitB */
-    s16 hideGameBit;
-    s16 triggerGameBit;
-    u8 pad22[0x24 - 0x22];
-    s16 unk24;
-    u8 pad26[0x2B - 0x26];
-    u8 unk2B;
-    u8 pad2C[0x2E - 0x2C];
-    s8 unk2E;
-    u8 pad2F[0x30 - 0x2F];
-} Dbholecontrol1Placement;
-
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
-int dbstealerworm_stateHandlerB04(int obj, int p);
+#define DBHOLECONTROL1_OBJGROUP  0x1e
+#define DBEGG_OBJGROUP           0x24
+#define DBHOLECONTROL1_CHILD_OBJ 1337
 
-int dbstealerworm_stateHandlerB02(int obj, int p);
-
-extern void Obj_RemoveFromUpdateList(int* obj);
 extern f32 lbl_803E6390;
 extern int gDBStealerWormStateHandlersA[];
 extern int gDBStealerWormStateHandlersB[];
+extern int lbl_803DDCE0;
+
+extern void Obj_RemoveFromUpdateList(int* obj);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void* mapRomListFindItem(int, int, int, int, int);
+extern void loadObjectAtObject(int, int);
 extern int dbstealerworm_stateHandlerB06();
 extern int dbstealerworm_stateHandlerB05();
 extern int dbstealerworm_stateHandlerA0E();
@@ -87,24 +66,24 @@ extern int dbstealerworm_stateHandlerA0D();
 extern int dbstealerworm_stateHandlerA0A();
 extern int dbstealerworm_stateHandlerA04();
 extern int dbstealerworm_stateHandlerA02();
-
+int dbstealerworm_stateHandlerB04(int obj, int p);
+int dbstealerworm_stateHandlerB02(int obj, int p);
 int dbstealerworm_stateHandlerA09(int obj, int p);
-
 int dbstealerworm_stateHandlerA06(int obj, int p2);
-
 int dbstealerworm_stateHandlerA05(int obj, int p);
-
 int dbstealerworm_stateHandlerA03(int obj, int p);
-
 int dbstealerworm_stateHandlerA01(int obj, int p);
-
 int dbstealerworm_stateHandlerB00(int p1, int p2);
-
 int dbstealerworm_stateHandlerB03(int p1, int p2);
-
 int dbstealerworm_stateHandlerB01(int p1, int p2);
-
 int dbstealerworm_stateHandlerA00(int obj, int p2);
+int dbstealerworm_stateHandlerA04(int obj, int param2);
+int dbstealerworm_stateHandlerA0E(int obj, int param2);
+int dbstealerworm_stateHandlerA02(int obj, int p2);
+int dbstealerworm_stateHandlerA0D(int obj, int p2);
+int dbstealerworm_stateHandlerB05(int obj, int p2);
+int dbstealerworm_stateHandlerB06(int obj, int p2);
+int dbstealerworm_stateHandlerA0A(int obj, int p2);
 
 void DBstealerwo_setFuncPtrs_80203c78(void)
 {
@@ -137,13 +116,10 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
 
     extern u64 ObjGroup_RemoveObject();
-    extern void* mapRomListFindItem(int, int, int, int, int);
     extern int Obj_AllocObjectSetup(int, int);
     extern void memcpy(int, void*, int);
-    extern void loadObjectAtObject(int, int);
     extern int* ObjGroup_GetObjects(int, int*);
     extern void ObjMsg_SendToObjects(int, int, int, int, int);
-    extern int lbl_803DDCE0;
     int newObj;
     void* res;
     int* objs;
@@ -248,17 +224,3 @@ void dbholecontrol1_release(void)
 void dbholecontrol1_initialise(void)
 {
 }
-
-int dbstealerworm_stateHandlerA04(int obj, int param2);
-
-int dbstealerworm_stateHandlerA0E(int obj, int param2);
-
-int dbstealerworm_stateHandlerA02(int obj, int p2);
-
-int dbstealerworm_stateHandlerA0D(int obj, int p2);
-
-int dbstealerworm_stateHandlerB05(int obj, int p2);
-
-int dbstealerworm_stateHandlerB06(int obj, int p2);
-
-int dbstealerworm_stateHandlerA0A(int obj, int p2);

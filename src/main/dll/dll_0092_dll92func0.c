@@ -15,6 +15,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "main/dll/dll_0092_dll92func0.h"
 
 typedef struct
 {
@@ -24,22 +25,6 @@ typedef struct
     u16 flags;   /* +0x14 */
     u8 layer;    /* +0x16 */
 } GfxCmd;
-
-extern ModgfxInterface** gModgfxInterface;
-
-extern u8 lbl_803171C0[];
-extern u8 lbl_803DB930[8];
-extern f32 lbl_803E1210;
-extern f32 lbl_803E1214;
-extern f32 lbl_803E1218;
-extern f32 lbl_803E121C;
-extern f32 lbl_803E1220;
-extern f32 lbl_803E1224;
-extern f32 lbl_803E1228;
-extern f32 lbl_803E122C;
-extern f32 lbl_803E1230;
-extern f32 lbl_803E1234;
-extern f32 lbl_803E1238;
 
 typedef struct
 {
@@ -61,10 +46,25 @@ typedef struct
     GfxCmd entries[32];                /* +0x60 */
 } GfxBuf;
 
-#pragma inline_max_size(2000)
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL92_EFFECT_ID 0x3c
 
+extern ModgfxInterface** gModgfxInterface;
+extern u8 lbl_803171C0[];
+extern u8 lbl_803DB930[8];
+extern f32 lbl_803E1210;
+extern f32 lbl_803E1214;
+extern f32 lbl_803E1218;
+extern f32 lbl_803E121C;
+extern f32 lbl_803E1220;
+extern f32 lbl_803E1224;
+extern f32 lbl_803E1228;
+extern f32 lbl_803E122C;
+extern f32 lbl_803E1230;
+extern f32 lbl_803E1234;
+extern f32 lbl_803E1238;
+
+#pragma inline_max_size(2000)
 static inline void dll_92_func03Body(u8* base, int sourceObj, int variant, int posSource, u32 flags, u32 arg5,
                                      f32* extraArgs)
 {

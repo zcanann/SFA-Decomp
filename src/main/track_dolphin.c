@@ -15,6 +15,114 @@
 #include "main/track_dolphin.h"
 #include "main/pi_dolphin.h"
 #include "dolphin/os/OSCache.h"
+
+typedef struct TrackP6Entry
+{
+    f32 relX0;
+    f32 relY0;
+    f32 relZ0;
+    f32 relX1;
+    f32 relY1;
+    f32 relZ1;
+    f32 relX2;
+    f32 relY2;
+    f32 relZ2;
+} TrackP6Entry;
+
+typedef struct TrackBlockDescriptor
+{
+    void* object;
+    s16 firstTriangle;
+    u8 pad06[2];
+    void* currentMatrix;
+    void* currentCollisionMatrix;
+    void* alternateMatrix;
+    void* alternateCollisionMatrix;
+} TrackBlockDescriptor;
+
+typedef struct TrackTriangle
+{
+    f32 planeD;     /* 0x00 plane equation constant */
+    f32 planeN[3];  /* 0x04 plane normal xyz */
+    s16 vx[3];      /* 0x10 vertex x coords */
+    s16 vy[3];      /* 0x16 vertex y coords */
+    s16 vz[3];      /* 0x1c vertex z coords */
+    u8 pad22[2];    /* 0x22 */
+    f32 edgeN0[3];  /* 0x24 edge 0 outward normal */
+    f32 edgeN1[3];  /* 0x30 edge 1 outward normal */
+    f32 edgeN2[3];  /* 0x3c edge 2 outward normal */
+    u8 surfaceType; /* 0x48 copied into intersect-line records */
+    s8 flags;       /* 0x49 0x10 = disabled, 0x4 = force */
+    u8 minMaxY;     /* 0x4a lo/hi nibble: s16 index (base 0xb) of min/max height */
+    u8 edgeOutBits; /* 0x4b per-edge outside bits from last query */
+} TrackTriangle;
+
+typedef struct MapTriGroup
+{
+    u16 firstTri; /* 0x00 first MapTriIndex this group owns */
+    s16 minX;     /* 0x02 bounds in block-local units */
+    s16 maxX;     /* 0x04 */
+    s16 minY;     /* 0x06 */
+    s16 maxY;     /* 0x08 */
+    s16 minZ;     /* 0x0a */
+    s16 maxZ;     /* 0x0c */
+    u8 pad0E[2];  /* 0x0e */
+    u32 flags;    /* 0x10 surface kind/filter bits */
+} MapTriGroup;
+
+typedef struct MapTriIndex
+{
+    u16 vert[3];  /* 0x00 vertex pool indices */
+    u16 cellMask; /* 0x06 low byte = x cells, high byte = z cells */
+} MapTriIndex;
+
+typedef struct MapDynamicSlot
+{
+    u32 object;
+    u8 pad04[0x10];
+    u8 cooldown;
+    u8 pad15[3];
+} MapDynamicSlot;
+
+typedef struct IntersectLine
+{
+    u8 end0;     /* 0x0 per-endpoint byte from the source segment */
+    u8 end1;     /* 0x1 */
+    u8 flags;    /* 0x2 bit 0x10 is toggled on import */
+    s8 kind;     /* 0x3 low 6 bits group key; 0x14 = consumed */
+    s16 pt[2];   /* 0x4 indices into the shared point pool */
+    s16 adj[2];  /* 0x8 neighbour line ids sharing pt[0]/pt[1] */
+    s16 param;   /* 0xc s16 payload from the source segment */
+    u8 pad0E[2]; /* 0xe */
+} IntersectLine;
+
+typedef struct AngleXf
+{
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 pad6;
+    f32 scale;
+    f32 tx;
+    f32 ty;
+    f32 tz;
+} AngleXf;
+
+typedef union
+{
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+} GolfWGPipe;
+
+typedef struct
+{
+    u8 r, g, b, a;
+} GlowGXColor;
+
 #define GX_FALSE          0
 #define GX_TG_MTX2x4      1
 #define GX_TG_TEX0        4
@@ -68,25 +176,8 @@
 #define GX_TEXMTX2        0x24
 #define GX_MTX3x4         0
 
-typedef struct TrackP6Entry
-{
-    f32 relX0;
-    f32 relY0;
-    f32 relZ0;
-    f32 relX1;
-    f32 relY1;
-    f32 relZ1;
-    f32 relX2;
-    f32 relY2;
-    f32 relZ2;
-} TrackP6Entry;
+#define MAP_DYNAMIC_SLOT_COUNT 64
 
-#pragma peephole off
-#pragma scheduling off
-extern u32 FUN_80017790();
-extern u32 FUN_8001779c();
-extern void* ObjGroup_GetObjects();
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern u32 DAT_803ddc00;
 extern u32 DAT_803ddc38;
 extern f64 DOUBLE_803df840;
@@ -99,23 +190,12 @@ extern f32 lbl_803DDBD8;
 extern f32 lbl_803DF84C;
 extern f32 lbl_803DF8A0;
 extern const f32 lbl_803DEC50;
-extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 __AR_Callback;
 extern f32 __AR_Size;
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
-extern void vecRotateZXY(void* xf, f32* out);
-f32 lbl_8038D7DC[0x19];
 extern s16 gShadowVisibleCount;
-extern f32 PSVECDotProduct(f32* a, f32* b);
-extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
-extern void PSVECScale(f32* src, f32* dst, f32 s);
 extern const f32 lbl_803DEC6C;
 extern const f32 lbl_803DEC70;
 extern const f32 lbl_803DEC74;
-extern void PSVECNormalize(f32* src, f32* dst);
-extern f32 PSVECSquareMag(f32* v);
-extern f32 sqrtf(f32 x);
-f32 gPrevSunDir[3];
 extern s16 gSunMagnitude;
 extern f32 gSunDotCos;
 extern int gSunDirChanged;
@@ -126,9 +206,6 @@ extern const f32 lbl_803DEC68;
 extern f32 gShadowOffsetX;
 extern f32 gShadowOffsetZ;
 extern f32 gShadowOffsetY;
-extern void* textureLoad(int texId, u8 flag);
-extern int textureAlloc512(void);
-extern u32 textureFn_8006c5c4(void);
 extern f32 lbl_803DB654;
 extern f32 lbl_803DEC90[2];
 extern f32 lbl_803DEC94;
@@ -142,6 +219,216 @@ extern f32 lbl_803DF940;
 extern f32 lbl_803DF944;
 extern f32 lbl_803DF948;
 extern f32 lbl_803DF96C;
+extern f32 lbl_803DEBCC;
+extern u8 lbl_803967F0[];
+extern s8 gShadowFlag;
+extern u8 mapBlockFlag;
+extern u32 gSunFlareScissorX;
+extern u32 gSunFlareScissorY;
+extern u32 gSunFlareScissorWidth;
+extern u32 gSunFlareScissorHeight;
+extern u8 gActiveTrackBlockCount;
+extern u32 gTrackTriangleBuffer;
+extern u8 gMapBlockLayerTables[];
+extern u32 gMapBlocks;
+extern s16 lbl_803DCEF6;
+extern s16 lbl_803DCEFA;
+extern s8 lbl_803DCEEA;
+extern s8 lbl_803DCEEB;
+extern u8 lbl_803DCEE9;
+extern u8 lbl_803DCEE8;
+extern u8 lbl_803DCF4F;
+extern u8 lbl_803DCF4D;
+extern int gMapDynamicSlots;
+extern u8 lbl_803DCE06;
+extern int gGlowLightList[];
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern char gViewFrustumPlanes[];
+extern u8 lbl_803DCE98;
+extern f32* lbl_803DCF38;
+extern s16 gIntersectPointCount;
+extern s16 gIntersectLineCount;
+extern int lbl_803DCF34;
+extern const f32 CurrTiming_803DEC20;
+extern s16 lbl_803DCEF4;
+extern s16 lbl_803DCEF8;
+extern s16 lbl_803DCEFC;
+extern s8 lbl_803DCEEC;
+extern s8 lbl_803DCEED;
+extern s8 lbl_803DCEEE;
+extern int lbl_803DCF04;
+extern int lbl_803DCF08;
+extern int lbl_803DCF0C;
+extern int lbl_803DCF10;
+extern int lbl_803DCF14;
+extern int lbl_803DCF18;
+extern int lbl_803DCF1C;
+extern int lbl_803DCF20;
+extern int lbl_803DCF24;
+extern int lbl_803DCE80;
+extern int gMapBlockIndexCount;
+extern int gMapBlockIndexList;
+extern int gIntersectLineIndexTable;
+extern int gShadowVolumeBuffer;
+extern int lbl_803DCEE0;
+extern int lbl_803DCEE4;
+extern s16 lbl_803DCEF0;
+extern u32 gTrackTriangleBufferEnd;
+extern s16 gTrackTriangleCount;
+extern f32 lbl_803DECC4;
+extern const f32 lbl_803DECB8;
+extern const f32 lbl_803DECBC;
+extern const f32 lbl_803DECC0;
+extern const f32 lbl_803DECC8;
+extern f32 lbl_803DCF54;
+extern f32 lbl_803DCF50;
+extern f32 lbl_803DCF58;
+extern f32 __PADFixBits;
+extern int lbl_803DCF64;
+extern int lbl_803DCF68;
+extern s8 lbl_803DCF60;
+extern const f32 lbl_803DECE8;
+extern const f32 lbl_803DECE0;
+extern const f32 lbl_803DECE4;
+extern const f32 lbl_803DECEC;
+extern volatile GolfWGPipe GXWGFifo : (0xCC008000);
+extern const f32 lbl_803DEC78;
+extern const f32 lbl_803DEC80;
+extern int sSynthFadeUnit;
+extern int renderFlags;
+extern u8 colorScale;
+extern f32 gSunFlareFade;
+extern int gSunOcclusionSampleOffsets[];
+extern f32 lbl_803DEBD4, lbl_803DEBD8, lbl_803DEBDC;
+extern f32 displayOffsetH_803DEBFC, flushFlag_803DEBE4;
+extern f32 Initialized_803DEC30, EnabledBits_803DEC34, ResettingBits_803DEC38;
+extern f32 RecalibrateBits_803DEC3C, WaitingBits_803DEC40;
+extern const f32 __AR_FreeBlocks;
+extern const f32 __AR_StackPointer;
+extern const f32 __AR_ExpansionSize;
+extern const f32 __AR_InternalSize;
+extern u8 lbl_803DCF4C;
+extern const f32 lbl_803DECF0;
+extern const f32 lbl_803DECF4;
+extern const f32 lbl_803DECF8;
+extern int gMapBlockOriginWorldX;
+extern int gMapBlockOriginWorldZ;
+extern u8 lbl_803DCF44;
+extern u32 lbl_803DCF40;
+extern const f32 lbl_803DECCC;
+extern const f32 lbl_803DECD0;
+extern const f32 lbl_803DECD4;
+extern f32 lbl_803DB660;
+
+extern u32 FUN_80017790();
+extern u32 FUN_8001779c();
+extern void* ObjGroup_GetObjects();
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
+extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
+extern void vecRotateZXY(void* xf, f32* out);
+extern f32 PSVECDotProduct(f32* a, f32* b);
+extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
+extern void PSVECScale(f32* src, f32* dst, f32 s);
+extern void PSVECNormalize(f32* src, f32* dst);
+extern f32 PSVECSquareMag(f32* v);
+extern f32 sqrtf(f32 x);
+extern void* textureLoad(int texId, u8 flag);
+extern int textureAlloc512(void);
+extern u32 textureFn_8006c5c4(void);
+extern void GXLoadPosMtxImm(void* mtx, int slot);
+extern void PSMTXCopy(void* src, void* dst);
+extern void GXLoadNrmMtxImm(void* mtx, int slot);
+extern void PSMTXConcat(void* a, void* b, void* out);
+extern void GXLoadTexMtxImm(void* mtx, int slot, int type);
+extern void GXSetArray(int attr, void* base, int stride);
+extern void modelRenderInstrsState_init(int* state, int ptr, int a, int b);
+extern int mapBlockRender_setShader(int a, int* obj, int* state);
+extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
+extern void debugPrintf(char* fmt, ...);
+extern void memcpy(void* dst, void* src, int n);
+extern void checkLoadBlock(int v, int* outA, int* outB);
+extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
+extern int mapTextureOverrideAcquire(int tex, int value, int type);
+extern int shouldDrawShadows(void);
+extern u16 modelFileHeaderGetCullDistance(u8* modelFile);
+extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
+extern void Obj_BuildTransformMatrices(void* obj);
+extern void fn_80296EB4(u8* p1, u8* p2);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void Matrix_TransformVector(void* mtx, f32* in, f32* out);
+extern f32 fn_802925C4(f32 x, f32 y);
+extern float fn_802943F4(float x);
+extern float floor(float x);
+extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
+extern void Obj_BuildWorldTransformMatrix(int obj, f32* out, int flag);
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern void GXSetNumTexGens(u8 nTexGens);
+extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
+extern void GXSetTevKColor(int id, void* color);
+extern void GXSetTevKAlphaSel(int stage, int sel);
+extern void GXSetNumTevStages(u8 nStages);
+extern void GXSetNumIndStages(u8 nIndStages);
+extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
+extern void GXSetNumChans(u8 nChans);
+extern void GXSetTevOrder(int a, int b, int c, int d);
+extern void GXSetTevDirect(int stage);
+extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
+extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
+extern void GXSetCullMode(int mode);
+extern void GXSetCurrentMtx(u32 id);
+extern void GXSetBlendMode(int a, int b, int c, int d);
+extern void selectTexture(int tex, int slot);
+extern void GXBegin(int type, int fmt, int count);
+extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* mtx);
+extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
+extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
+extern void fn_80077EF8(int hdr, void* col, void* mtx, f32 f);
+extern void Camera_RebuildProjectionMatrix(void);
+extern void textureSetupFn_800799c0(void);
+extern void textRenderSetupFn_80079804(void);
+extern void gxTextureFn_800794e0(void);
+extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
+extern void gxBlendFn_800789ac(void);
+extern u8 skyFn_8008919c(int);
+extern void skyBuildSunModelMatrix(f32* out);
+extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
+extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* ox, int* oy, int* oz);
+extern int depthReadRequestPoll(int x, int y, void* p);
+extern u8 pauseMenuGetState(void);
+extern void* fn_8008912C(void);
+extern void _gxSetTevColor2(int r, int g, int b, int a);
+extern void allocLotsOfTextures(void);
+extern u8* fn_80028364(int hdr, int i);
+extern u16* fn_80028354(int hdr, int tri);
+extern s16* ObjModel_GetBaseVertexCoords(int hdr, u32 idx);
+extern u8* mapGetBlockAtPos(int x, int z, int layer);
+extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
+extern float fastFloorf(float x);
+extern void PSVECSubtract(f32* a, f32* b, f32* out);
+extern f32 PSVECMag(f32* v);
+extern u8* mapGetBlockIdx(int layer);
+extern void* mapGetBlock(int i);
+extern int getHudHiddenFrameCount(void);
+extern void logPrintf(char* fmt, ...);
+
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
+extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
+void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
+extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
+extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 c, f32 x0, f32 y0, f32 z0, f32 x1,
+                       f32 y1, f32 z1);
+extern u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots,
+                             int flagsArg);
+extern int doLotsOfMath(void* a, void* b, f32 f, int c, void* d, int* e, int g, int h, int i, int self);
+
+#pragma peephole off
+#pragma scheduling off
+f32 lbl_8038D7DC[0x19];
+f32 gPrevSunDir[3];
 
 void mapBlockRender_setVtxDcrs(flag, obj, sh, bs) u8 flag;
 int* obj;
@@ -149,8 +436,6 @@ int sh;
 
 int* bs;
 {
-    extern void GXClearVtxDesc(void);
-    extern void GXSetVtxDesc(int attr, int type);
     u32 val;
     int pos;
     int off;
@@ -220,15 +505,6 @@ int* bs;
     }
 }
 
-extern void GXLoadPosMtxImm(void* mtx, int slot);
-extern void PSMTXCopy(void* src, void* dst);
-extern void GXLoadNrmMtxImm(void* mtx, int slot);
-extern void PSMTXConcat(void* a, void* b, void* out);
-extern void GXLoadTexMtxImm(void* mtx, int slot, int type);
-extern void GXSetArray(int attr, void* base, int stride);
-extern f32 lbl_803DEBCC;
-extern u8 lbl_803967F0[];
-
 #pragma dont_inline on
 void setupToRenderMapBlock(int* block, void* posMtx)
 {
@@ -251,10 +527,6 @@ void setupToRenderMapBlock(int* block, void* posMtx)
     GXSetArray(GX_VA_TEX1, *(void**)((char*)block + 0x60), 4);
 }
 #pragma dont_inline reset
-
-extern void modelRenderInstrsState_init(int* state, int ptr, int a, int b);
-extern int mapBlockRender_setShader(int a, int* obj, int* state);
-extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
 
 #pragma push
 void renderMapBlock(int* o, u8 type)
@@ -412,8 +684,6 @@ int return0_80060B90(void)
     return 0x0;
 }
 
-extern s8 gShadowFlag;
-extern u8 mapBlockFlag;
 void fn_800628CC(void)
 {
     gShadowFlag = 0x1;
@@ -443,11 +713,6 @@ void* fn_800606DC(int* obj, int idx)
 }
 #pragma dont_inline reset
 
-extern u32 gSunFlareScissorX;
-extern u32 gSunFlareScissorY;
-extern u32 gSunFlareScissorWidth;
-extern u32 gSunFlareScissorHeight;
-
 void fn_80060490(u32* outX, u32* outY, u32* outWidth, u32* outHeight)
 {
     *outX = gSunFlareScissorX;
@@ -461,20 +726,7 @@ void setShadowFlag_803db658(s32 v)
     gShadowFlag = v;
 }
 
-extern u8 gActiveTrackBlockCount;
-extern u32 gTrackTriangleBuffer;
 u8 gTrackGridOrigin[0x104];
-
-typedef struct TrackBlockDescriptor
-{
-    void* object;
-    s16 firstTriangle;
-    u8 pad06[2];
-    void* currentMatrix;
-    void* currentCollisionMatrix;
-    void* alternateMatrix;
-    void* alternateCollisionMatrix;
-} TrackBlockDescriptor;
 
 TrackBlockDescriptor gTrackBlockDescriptors[20];
 
@@ -483,47 +735,14 @@ TrackBlockDescriptor gTrackBlockDescriptors[20];
  * vertex coordinates are stored as s16 triplets grouped by axis
  * (x0 x1 x2 / y0 y1 y2 / z0 z1 z2), which the hit-detect code reads both
  * by field and as an s16 index off the record base. */
-typedef struct TrackTriangle
-{
-    f32 planeD;     /* 0x00 plane equation constant */
-    f32 planeN[3];  /* 0x04 plane normal xyz */
-    s16 vx[3];      /* 0x10 vertex x coords */
-    s16 vy[3];      /* 0x16 vertex y coords */
-    s16 vz[3];      /* 0x1c vertex z coords */
-    u8 pad22[2];    /* 0x22 */
-    f32 edgeN0[3];  /* 0x24 edge 0 outward normal */
-    f32 edgeN1[3];  /* 0x30 edge 1 outward normal */
-    f32 edgeN2[3];  /* 0x3c edge 2 outward normal */
-    u8 surfaceType; /* 0x48 copied into intersect-line records */
-    s8 flags;       /* 0x49 0x10 = disabled, 0x4 = force */
-    u8 minMaxY;     /* 0x4a lo/hi nibble: s16 index (base 0xb) of min/max height */
-    u8 edgeOutBits; /* 0x4b per-edge outside bits from last query */
-} TrackTriangle;
 
 /* MapTriGroup -- 0x14-byte per-block triangle group header streamed from the
  * map block (blk+0x50 table).  Holds the first index into the block's 8-byte
  * MapTriIndex list plus s16 bounds; the list is closed by the NEXT group's
  * firstTri, so walkers read group[1].firstTri as their end bound. */
-typedef struct MapTriGroup
-{
-    u16 firstTri; /* 0x00 first MapTriIndex this group owns */
-    s16 minX;     /* 0x02 bounds in block-local units */
-    s16 maxX;     /* 0x04 */
-    s16 minY;     /* 0x06 */
-    s16 maxY;     /* 0x08 */
-    s16 minZ;     /* 0x0a */
-    s16 maxZ;     /* 0x0c */
-    u8 pad0E[2];  /* 0x0e */
-    u32 flags;    /* 0x10 surface kind/filter bits */
-} MapTriGroup;
 
 /* MapTriIndex -- 8-byte triangle: three vertex indices into the block's
  * packed s16 vertex pool plus a 16-bit x/z grid-cell coverage mask. */
-typedef struct MapTriIndex
-{
-    u16 vert[3];  /* 0x00 vertex pool indices */
-    u16 cellMask; /* 0x06 low byte = x cells, high byte = z cells */
-} MapTriIndex;
 
 #pragma dont_inline on
 void* fn_80069944(u32* outVal)
@@ -549,8 +768,6 @@ u32 mapBlockFn_80060678(int* obj)
 
 /* mapGetBlocks: write a fixed table base and an sbss u32 into two
  * out-pointers. */
-extern u8 gMapBlockLayerTables[];
-extern u32 gMapBlocks;
 
 void mapGetBlocks(void** outPtr, u32* outVal)
 {
@@ -580,12 +797,6 @@ u32 fn_80060668(int* obj)
 
 /* fn_80062894 -- clear two shorts, toggle two bytes (1 - x), clear
  * two more bytes. */
-extern s16 lbl_803DCEF6;
-extern s16 lbl_803DCEFA;
-extern s8 lbl_803DCEEA;
-extern s8 lbl_803DCEEB;
-extern u8 lbl_803DCEE9;
-extern u8 lbl_803DCEE8;
 
 void fn_80062894(void)
 {
@@ -608,9 +819,6 @@ void fn_80069968(s32* out1, u32* out2)
 }
 #pragma dont_inline reset
 
-extern u8 lbl_803DCF4F;
-extern u8 lbl_803DCF4D;
-
 int fn_80065640(void)
 {
     int r = 0;
@@ -618,18 +826,6 @@ int fn_80065640(void)
         r = 1;
     return r;
 }
-
-extern int gMapDynamicSlots;
-
-#define MAP_DYNAMIC_SLOT_COUNT 64
-
-typedef struct MapDynamicSlot
-{
-    u32 object;
-    u8 pad04[0x10];
-    u8 cooldown;
-    u8 pad15[3];
-} MapDynamicSlot;
 
 void objFn_80065604(void)
 {
@@ -671,12 +867,6 @@ void fn_80063368(int target)
 #pragma optimization_level reset
 #pragma peephole reset
 
-extern u8 lbl_803DCE06;
-extern int gGlowLightList[];
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern char gViewFrustumPlanes[];
-
 void queueGlowRender(ModelLightStruct* light)
 {
     u8 i;
@@ -717,8 +907,6 @@ check:
     gGlowLightList[idx] = (int)light;
 }
 
-extern u8 lbl_803DCE98;
-
 #pragma peephole on
 #pragma optimization_level 1
 void fn_80060BB0(void)
@@ -756,9 +944,6 @@ void fn_80060BB0(void)
 #pragma optimization_level reset
 #pragma peephole reset
 
-extern f32* lbl_803DCF38;
-extern s16 gIntersectPointCount;
-
 #pragma dont_inline on
 int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 {
@@ -791,26 +976,11 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 #pragma dont_inline reset
 
 char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
-extern void debugPrintf(char* fmt, ...);
-extern s16 gIntersectLineCount;
-extern int lbl_803DCF34;
-extern void memcpy(void* dst, void* src, int n);
 
 /* IntersectLine -- 0x10-byte water/track intersection line record built into
  * the scratch pool at lbl_803DCF34 (cap 0x5dc) and later compacted into the
  * owning object's sorted table.  kind's low 6 bits are the sort/group key;
  * a kind of 0x14 marks a consumed scratch entry. */
-typedef struct IntersectLine
-{
-    u8 end0;     /* 0x0 per-endpoint byte from the source segment */
-    u8 end1;     /* 0x1 */
-    u8 flags;    /* 0x2 bit 0x10 is toggled on import */
-    s8 kind;     /* 0x3 low 6 bits group key; 0x14 = consumed */
-    s16 pt[2];   /* 0x4 indices into the shared point pool */
-    s16 adj[2];  /* 0x8 neighbour line ids sharing pt[0]/pt[1] */
-    s16 param;   /* 0xc s16 payload from the source segment */
-    u8 pad0E[2]; /* 0xe */
-} IntersectLine;
 
 void intersectModLineBuild(int* obj)
 {
@@ -947,8 +1117,6 @@ void intersectModLineBuild(int* obj)
     gIntersectPointCount = 0;
 }
 
-extern const f32 CurrTiming_803DEC20;
-
 void fn_800605F0(s16* in, f32* out)
 {
     out[0] = (f32)(s32)in[0] * CurrTiming_803DEC20;
@@ -977,22 +1145,6 @@ int fn_80060688(int obj, int type)
     }
     return total;
 }
-
-extern s16 lbl_803DCEF4;
-extern s16 lbl_803DCEF8;
-extern s16 lbl_803DCEFC;
-extern s8 lbl_803DCEEC;
-extern s8 lbl_803DCEED;
-extern s8 lbl_803DCEEE;
-extern int lbl_803DCF04;
-extern int lbl_803DCF08;
-extern int lbl_803DCF0C;
-extern int lbl_803DCF10;
-extern int lbl_803DCF14;
-extern int lbl_803DCF18;
-extern int lbl_803DCF1C;
-extern int lbl_803DCF20;
-extern int lbl_803DCF24;
 
 /* fn_80062808 -- begin a new shadow-volume frame: clear the per-frame
  * counts, flip the three double-buffer selectors, and rotate the current
@@ -1090,8 +1242,6 @@ void MapBlock_init(int obj)
     }
 }
 
-extern int lbl_803DCE80;
-
 void MapBlock_initHits(int obj, int index)
 {
     int off;
@@ -1126,11 +1276,6 @@ void MapBlock_initHits(int obj, int index)
     *(u16*)(obj + 0x9e) = 0;
     *(u16*)&((GameObject*)obj)->anim.rotZ = *(u16*)&((GameObject*)obj)->anim.rotZ & ~0x40;
 }
-
-extern int gMapBlockIndexCount;
-extern int gMapBlockIndexList;
-extern void checkLoadBlock(int v, int* outA, int* outB);
-extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 
 void* MapBlock_loadFromFile(int blockId)
 {
@@ -1181,8 +1326,6 @@ cont:
     return buf;
 }
 
-extern int mapTextureOverrideAcquire(int tex, int value, int type);
-
 void MapBlock_initShaders(int obj)
 {
     char* sh;
@@ -1226,8 +1369,6 @@ void MapBlock_initShaders(int obj)
         outerOff += 0x44;
     }
 }
-
-extern int gIntersectLineIndexTable;
 
 void mapInitFn_80069990(void)
 {
@@ -1627,18 +1768,6 @@ void fn_80069EB8(int param)
 }
 #pragma optimization_level 4
 
-typedef struct AngleXf
-{
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    s16 pad6;
-    f32 scale;
-    f32 tx;
-    f32 ty;
-    f32 tz;
-} AngleXf;
-
 #pragma dont_inline on
 void fn_80061094(f32* vec, f32* out, f32 scale)
 {
@@ -1885,16 +2014,7 @@ void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endP
     }
 }
 
-extern int shouldDrawShadows(void);
-extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
-
-void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
-
 u8 gShadowDrawScratch[0x5DC0];
-extern int gShadowVolumeBuffer;
-extern int lbl_803DCEE0;
-extern int lbl_803DCEE4;
-extern s16 lbl_803DCEF0;
 
 int objShadowFn_80062498(int* obj, int param2)
 {
@@ -1962,14 +2082,6 @@ int objShadowFn_80062498(int* obj, int param2)
     objDrawFn_80061f0c(cache, modelState, obj, gShadowVisibleCount, &drawScratch, buf48, yOff);
     return 0;
 }
-
-extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
-extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 c, f32 x0, f32 y0, f32 z0, f32 x1,
-                       f32 y1, f32 z1);
-extern u16 modelFileHeaderGetCullDistance(u8* modelFile);
-extern u32 gTrackTriangleBufferEnd;
-extern s16 gTrackTriangleCount;
-extern f32 lbl_803DECC4;
 
 void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
 {
@@ -2075,8 +2187,6 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
     gActiveTrackBlockCount = (u8)(desc - gTrackBlockDescriptors);
     desc->firstTriangle = gTrackTriangleCount;
 }
-
-extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 
 #pragma opt_propagation off
 int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32 offX, f32 offZ, int p8, int kindMask)
@@ -2197,14 +2307,6 @@ int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32
 }
 #pragma opt_propagation reset
 
-extern const f32 lbl_803DECB8;
-extern const f32 lbl_803DECBC;
-extern const f32 lbl_803DECC0;
-extern const f32 lbl_803DECC8;
-extern f32 lbl_803DCF54;
-extern f32 lbl_803DCF50;
-extern f32 lbl_803DCF58;
-
 int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 {
     f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, nx, step_y, dot, proj, vy4,
@@ -2282,8 +2384,6 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
     }
     return 0;
 }
-
-extern f32 __PADFixBits;
 
 #pragma optimization_level 2
 #pragma opt_propagation off
@@ -2425,9 +2525,6 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
 #pragma opt_propagation reset
 #pragma optimization_level reset
 
-extern void Obj_BuildTransformMatrices(void* obj);
-extern void fn_80296EB4(u8* p1, u8* p2);
-
 void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
 {
     u8* oldParent;
@@ -2519,11 +2616,6 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
 }
 
 u8 gIntersectSegmentTypeTable[0x424];
-extern int lbl_803DCF64;
-extern int lbl_803DCF68;
-extern s8 lbl_803DCF60;
-extern const f32 lbl_803DECE8;
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 
 int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int mode, int submode)
 {
@@ -2604,10 +2696,6 @@ int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int mode, int 
     *(u8**)out = base + 0x50;
     return lbl_803DCF60;
 }
-
-extern void Matrix_TransformVector(void* mtx, f32* in, f32* out);
-extern const f32 lbl_803DECE0;
-extern const f32 lbl_803DECE4;
 
 void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int allowDown)
 {
@@ -2713,11 +2801,6 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
         lbl_803DCF60++;
     }
 }
-
-extern f32 fn_802925C4(f32 x, f32 y);
-extern float fn_802943F4(float x);
-extern float floor(float x);
-extern const f32 lbl_803DECEC;
 
 int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
 {
@@ -2927,10 +3010,6 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
     return 0;
 }
 
-extern u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots,
-                             int flagsArg);
-extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
-
 u8 hitDetectFn_80067958(void* contactSrc, int startPos, int endPos, int count, void* results)
 {
     void** pp;
@@ -3046,18 +3125,6 @@ u8 hitDetectFn_80067958(void* contactSrc, int startPos, int endPos, int count, v
     return hitCount;
 }
 
-typedef union
-{
-    u8 u8;
-    u16 u16;
-    u32 u32;
-    s16 s16;
-    s32 s32;
-    f32 f32;
-} GolfWGPipe;
-
-extern volatile GolfWGPipe GXWGFifo : (0xCC008000);
-
 static inline void GXPosition3s16(const s16 x, const s16 y, const s16 z)
 {
     GXWGFifo.s16 = x;
@@ -3070,29 +3137,6 @@ static inline void GXTexCoord2s16(const s16 x, const s16 y)
     GXWGFifo.s16 = x;
     GXWGFifo.s16 = y;
 }
-
-extern void Obj_BuildWorldTransformMatrix(int obj, f32* out, int flag);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern void GXSetNumTexGens(u8 nTexGens);
-extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
-extern void GXSetTevKColor(int id, void* color);
-extern void GXSetTevKAlphaSel(int stage, int sel);
-extern void GXSetNumTevStages(u8 nStages);
-extern void GXSetNumIndStages(u8 nIndStages);
-extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
-extern void GXSetNumChans(u8 nChans);
-extern void GXSetTevOrder(int a, int b, int c, int d);
-extern void GXSetTevDirect(int stage);
-extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
-extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
-extern void GXSetCullMode(int mode);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXSetBlendMode(int a, int b, int c, int d);
-extern void selectTexture(int tex, int slot);
-extern void GXBegin(int type, int fmt, int count);
 
 #pragma peephole on
 void objDrawFn_80061654(int obj, int placementObj)
@@ -3265,13 +3309,6 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     planes[0x1b] = -nrm[2];
     planes[0x1c] = -(planes[0x1b] * verts[2] + planes[0x19] * verts[0] + planes[0x1a] * verts[1]);
 }
-
-extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* mtx);
-extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
-extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
-extern void fn_80077EF8(int hdr, void* col, void* mtx, f32 f);
-extern const f32 lbl_803DEC78;
-extern const f32 lbl_803DEC80;
 
 #pragma ppc_unroll_speculative off
 #pragma opt_strength_reduction off
@@ -3454,35 +3491,6 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
 }
 #pragma opt_strength_reduction reset
 #pragma ppc_unroll_speculative on
-
-typedef struct
-{
-    u8 r, g, b, a;
-} GlowGXColor;
-
-extern void Camera_RebuildProjectionMatrix(void);
-extern void textureSetupFn_800799c0(void);
-extern void textRenderSetupFn_80079804(void);
-extern void gxTextureFn_800794e0(void);
-extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
-extern void gxBlendFn_800789ac(void);
-extern u8 skyFn_8008919c(int);
-extern void skyBuildSunModelMatrix(f32* out);
-extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
-extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* ox, int* oy, int* oz);
-extern int depthReadRequestPoll(int x, int y, void* p);
-extern u8 pauseMenuGetState(void);
-extern void* fn_8008912C(void);
-extern void _gxSetTevColor2(int r, int g, int b, int a);
-extern int sSynthFadeUnit;
-extern int renderFlags;
-extern u8 colorScale;
-extern f32 gSunFlareFade;
-extern int gSunOcclusionSampleOffsets[];
-extern f32 lbl_803DEBD4, lbl_803DEBD8, lbl_803DEBDC;
-extern f32 displayOffsetH_803DEBFC, flushFlag_803DEBE4;
-extern f32 Initialized_803DEC30, EnabledBits_803DEC34, ResettingBits_803DEC38;
-extern f32 RecalibrateBits_803DEC3C, WaitingBits_803DEC40;
 
 void renderGlows(void)
 {
@@ -3679,11 +3687,6 @@ void gxErrorFn_80060b40(void)
 }
 
 f32 lbl_8038D77C[0x18];
-extern const f32 __AR_FreeBlocks;
-extern const f32 __AR_StackPointer;
-extern const f32 __AR_ExpansionSize;
-extern const f32 __AR_InternalSize;
-extern void allocLotsOfTextures(void);
 
 #pragma opt_common_subs off
 void initTextures(void)
@@ -3745,9 +3748,7 @@ void initTextures(void)
 }
 #pragma opt_common_subs reset
 
-extern int doLotsOfMath(void* a, void* b, f32 f, int c, void* d, int* e, int g, int h, int i, int self);
 char sTrackNoFreeLastLineError[] = "NO FREE LAST LINE\n";
-extern u8 lbl_803DCF4C;
 
 #pragma opt_common_subs off
 void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, int p8, int p9, int slot, u8 arg8)
@@ -3954,12 +3955,6 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
 /* fn_80067B84 -- gather model triangles overlapping a swept bbox into the
  * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
  * cursor. */
-extern u8* fn_80028364(int hdr, int i);
-extern u16* fn_80028354(int hdr, int tri);
-extern s16* ObjModel_GetBaseVertexCoords(int hdr, u32 idx);
-extern const f32 lbl_803DECF0;
-extern const f32 lbl_803DECF4;
-extern const f32 lbl_803DECF8;
 
 int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 scale, f32 x0, f32 y0d, f32 z0, f32 x1,
                 f32 y1d, f32 z1)
@@ -4210,13 +4205,6 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
 
 /* mapLoadBlocksFn_800685cc -- gather map-block collision triangles overlapping
  * the query box into the buffer at cur; returns advanced cursor. */
-extern u8* mapGetBlockAtPos(int x, int z, int layer);
-extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
-extern float fastFloorf(float x);
-extern void PSVECSubtract(f32* a, f32* b, f32* out);
-extern f32 PSVECMag(f32* v);
-extern int gMapBlockOriginWorldX;
-extern int gMapBlockOriginWorldZ;
 
 #pragma ppc_unroll_instructions_limit 56
 #pragma opt_propagation off
@@ -4639,11 +4627,6 @@ u8 doEdges;
 
 /* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
-extern u8* mapGetBlockIdx(int layer);
-extern void* mapGetBlock(int i);
-extern int getHudHiddenFrameCount(void);
-extern u8 lbl_803DCF44;
-extern u32 lbl_803DCF40;
 
 void trackIntersect(void)
 {
@@ -4870,10 +4853,6 @@ void trackIntersect(void)
 
 /* doLotsOfMath -- sweep a 2D segment (with radius) against the intersection
  * line table, sliding/clipping the end point; fills *out with the last hit. */
-extern const f32 lbl_803DECCC;
-extern const f32 lbl_803DECD0;
-extern const f32 lbl_803DECD4;
-extern f32 lbl_803DB660;
 
 #pragma optimization_level 2
 int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* obj, int pmask, int seg, int ytol,
@@ -5363,7 +5342,6 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
 /* hitDetect_800667ec -- sweep each input sphere against the gathered triangle
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
 char sTrackHitOverflowError[] = "HIT OVERFLOW\n";
-extern void logPrintf(char* fmt, ...);
 
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off

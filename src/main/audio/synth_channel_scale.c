@@ -7,13 +7,6 @@
 #define SYNTH_VOICE_STRIDE 0x404
 #endif
 
-extern u8 lbl_803BCD90[];
-extern u8 lbl_803BD150[];
-extern u8* synthVoice;
-extern u32 vidMakeNew(McmdVoiceState* svoice, u32 isMaster);
-extern void vidRemoveVoice(McmdVoiceState* svoice);
-extern void voiceRegister(McmdVoiceState* svoice);
-
 typedef struct
 {
     u32* base; /* 0x00 */
@@ -55,6 +48,18 @@ typedef struct SynthSong
     SynthStream streams[16]; /* 0x14e8 */
 } SynthSong;
 
+typedef struct
+{
+    u8 callbacks[0x1400]; /* 0x0000: 0x100 nodes of 0x14 */
+    SynthSong songs[8];   /* 0x1400 */
+    u16 lastNotes[8][16]; /* 0xd740 */
+} SynthPool;
+
+#define fabs __fabs
+
+extern u8 lbl_803BCD90[];
+extern u8 lbl_803BD150[];
+extern u8* synthVoice;
 extern SynthSong* gSynthQueuedVoices;
 extern SynthSong* gSynthFreeVoices;
 extern SynthSong* gSynthCurrentVoice;
@@ -63,17 +68,22 @@ extern u8 lbl_803DE224;
 extern u32 gSynthAllocatedVoices;
 extern u32 gSynthNextHandle;
 extern u32* gSynthFreeCallbacks;
+extern f32 lbl_803E7780;
+extern f32 lbl_803E7784;
+extern f32 lbl_803E7788;
+extern SynthPool lbl_803AF550;
+
+extern u32 vidMakeNew(McmdVoiceState* svoice, u32 isMaster);
+extern void vidRemoveVoice(McmdVoiceState* svoice);
+extern void voiceRegister(McmdVoiceState* svoice);
 extern u8 synthIsFadeOutActive(u8 idx);
 extern u32 fn_8026E9D0(u8 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
 extern u32 sndFXCheck(void);
 extern void synthFreeCallback(void* cb);
 extern void synthRecycleVoiceCallbacks(void* song);
-extern f32 lbl_803E7780;
-extern f32 lbl_803E7784;
-extern f32 lbl_803E7788;
+extern float floorf(float x);
 
-#define fabs __fabs
 void synthSetStudioChannelScale(int value, u8 bank, u8 key);
 
 /*
@@ -94,7 +104,6 @@ static inline f32 sal_fmod(f32 x, f32 y, f64 absy)
 
 void fn_8026EC44(u32 dt)
 {
-    extern float floorf(float x);
     SynthSong* cs;
     u32* evt;
     int i;
@@ -283,15 +292,6 @@ void fn_8026EC44(u32 dt)
     }
 }
 #pragma fp_contract reset
-
-typedef struct
-{
-    u8 callbacks[0x1400]; /* 0x0000: 0x100 nodes of 0x14 */
-    SynthSong songs[8];   /* 0x1400 */
-    u16 lastNotes[8][16]; /* 0xd740 */
-} SynthPool;
-
-extern SynthPool lbl_803AF550;
 
 /*
  * fn_8026F30C - synth song/callback pool init.

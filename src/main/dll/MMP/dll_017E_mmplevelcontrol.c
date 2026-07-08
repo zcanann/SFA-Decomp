@@ -18,11 +18,7 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Music_Trigger(int id, int arg);
-
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
+#include "main/dll/MMP/dll_017E_mmplevelcontrol.h"
 
 #define MMPLEVELCONTROL_OBJFLAG_HIDDEN             0x4000
 #define MMPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -39,13 +35,15 @@ extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 #define MMPLEVELCONTROL_ENVFX_G 0x10d
 #define MMPLEVELCONTROL_ENVFX_H 0x139
 
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int setBit,
-                                  int textId);
-
 extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
 
-void MMP_levelcontrol_update(int obj);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void Music_Trigger(int id, int arg);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
+extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
+extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int setBit,
+                                  int textId);
 
 int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

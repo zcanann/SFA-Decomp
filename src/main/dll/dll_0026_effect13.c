@@ -5,6 +5,9 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
+#include "main/dll/dll_0026_effect13.h"
+
+extern WaterfxCfg gEffect13DefaultSplashParams;
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E0180 = 0.0f;
@@ -20,8 +23,6 @@ static const f32 lbl_803E01A4 = 0.0001f;
 static const f32 lbl_803E01A8 = 110.0f;
 static const f32 lbl_803E01AC = 0.0003f;
 static const f64 lbl_803E01B0 = 4503601774854144.0;
-
-extern WaterfxCfg gEffect13DefaultSplashParams;
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),

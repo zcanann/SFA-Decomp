@@ -4,6 +4,100 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSArena.h"
 #include "sfa_light_decls.h"
+
+typedef f32 Mtx[3][4];
+
+typedef struct
+{
+    int numSlots;
+    int slotCount;
+    u8* start;
+    int size;
+    int usedBytes;
+} MmRegion;
+
+typedef struct
+{
+    void* key;
+    int size;
+    s16 type;
+    s16 prev;
+    s16 next;
+    s16 stack;
+    int tag;
+    int allocTick;
+    int allocId;
+} HeapItem;
+
+typedef struct
+{
+    void* ptr;
+    u8 delay;
+    u8 pad[3];
+} DeferredFree;
+
+typedef struct
+{
+    void* buf;
+    void* bufCur;
+    int size;
+    int handle;
+} MmStore;
+
+typedef struct
+{
+    void* stores[0x20];
+    DeferredFree deferred[2000];
+    MmRegion regions[8];
+} MmGlobal;
+
+extern u8 lbl_803DCB10;
+extern int gMmFreeDelay;
+extern int gMmOpCount;
+extern int gMmUseHeap3;
+extern int gMmUseHeaps1and2;
+extern int gAttractMovieState;
+extern void* gAttractMovieScratchBuffer;
+extern u8 gMmRegionCount;
+extern char sMmFreeInvalidLocationError[];
+extern char sMmAllocFreeMessageBlock[];
+extern int gMmLastFreeTick;
+extern char sMmStbfStackTooDeepError[];
+extern s16 gMmDeferredFreeCount;
+extern char sMmShowInfoFBMemoryStoreMessageBlock[];
+extern char sMmStoreAllocationTag;
+extern int gMmNextStoreHandle;
+extern int gMmStatsPrintCounter;
+extern int gMmTickCount;
+extern char sMemStatsFormat[];
+extern int gMmRegion0Used;
+extern int gMmRegion1Used;
+extern int gMmRegion2Used;
+extern int gMmRegion3Used;
+extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
+extern char sMmMemoryStoreMessageBlock[];
+extern int __OSCurrHeap;
+extern int gMmRegion0Size;
+extern void* lbl_803DD498;
+extern void* lbl_803DCAFC;
+extern char sMmSpawnedUnalignedSlotWarning[];
+extern int gMmRegion0SpawnEnabled;
+extern int gMmNextAllocId;
+extern int lbl_803DCC7C;
+extern char sMmFreeMemoryUsageCorruptedError[];
+
+extern void* mmAlloc(int size, int type, int flag);
+extern void LCQueueWait();
+extern void mmFree(void* p);
+extern void mmFreeDeferred(void* p);
+extern asm BOOL OSRestoreInterrupts(register BOOL level);
+extern void heapFree(int region, int slotIdx);
+extern void OSReport(const char* msg, ...);
+extern int GXFlush_(u8 visible, int unused);
+extern void* OSAllocFromHeap(int heap, int size);
+extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);
+extern void* memcpy(void* dst, const void* src, int n);
+
 int roundUpTo4(int x)
 {
     int r = x & 3;
@@ -44,18 +138,10 @@ int roundUpTo32(int x)
     return x;
 }
 
-extern u8 lbl_803DCB10;
-extern void* mmAlloc(int size, int type, int flag);
-
 void texFlagFn_80023cbc(int v)
 {
     lbl_803DCB10 = v;
 }
-
-extern int gMmFreeDelay;
-extern int gMmOpCount;
-extern int gMmUseHeap3;
-extern int gMmUseHeaps1and2;
 
 #pragma dont_inline on
 int mmSetFreeDelay(int v)
@@ -97,9 +183,6 @@ int alignUp2(int x)
     return x;
 }
 
-extern int gAttractMovieState;
-extern void* gAttractMovieScratchBuffer;
-
 void* getCache(void)
 {
     if (gAttractMovieState != 4 && gAttractMovieState != 0)
@@ -108,10 +191,6 @@ void* getCache(void)
     }
     return (void*)0xe0000000;
 }
-
-extern void LCQueueWait();
-extern void mmFree(void* p);
-extern void mmFreeDeferred(void* p);
 
 void cacheQueueWait(int sync)
 {
@@ -133,8 +212,6 @@ void mm_free(void* p)
     }
 }
 
-extern asm BOOL OSRestoreInterrupts(register BOOL level);
-
 void AtomicSList_Push(void** list, void* node)
 {
     int intr = OSDisableInterrupts();
@@ -143,32 +220,7 @@ void AtomicSList_Push(void** list, void* node)
     OSRestoreInterrupts(intr);
 }
 
-typedef f32 Mtx[3][4];
-extern u8 gMmRegionCount;
-
-typedef struct
-{
-    int numSlots;
-    int slotCount;
-    u8* start;
-    int size;
-    int usedBytes;
-} MmRegion;
-
 MmRegion gMmRegionTable[0xA0 / sizeof(MmRegion)];
-
-typedef struct
-{
-    void* key;
-    int size;
-    s16 type;
-    s16 prev;
-    s16 next;
-    s16 stack;
-    int tag;
-    int allocTick;
-    int allocId;
-} HeapItem;
 
 int mmGetRegionForPtr(u8* ptr)
 {
@@ -221,36 +273,9 @@ void* mmInitRegion(u8* buf, int size, int numSlots)
     return gMmRegionTable[regIdx].start;
 }
 
-extern void heapFree(int region, int slotIdx);
-extern char sMmFreeInvalidLocationError[];
-extern char sMmAllocFreeMessageBlock[];
-extern int gMmLastFreeTick;
-extern void OSReport(const char* msg, ...);
-
-extern int GXFlush_(u8 visible, int unused);
-extern char sMmStbfStackTooDeepError[];
-extern s16 gMmDeferredFreeCount;
-
-typedef struct
-{
-    void* ptr;
-    u8 delay;
-    u8 pad[3];
-} DeferredFree;
-
 DeferredFree gMmDeferredFreeStack[0x3E80 / sizeof(DeferredFree)];
-extern char sMmShowInfoFBMemoryStoreMessageBlock[];
-extern char sMmStoreAllocationTag;
-extern int gMmNextStoreHandle;
-void* gMmStoreArray[0x20];
 
-typedef struct
-{
-    void* buf;
-    void* bufCur;
-    int size;
-    int handle;
-} MmStore;
+void* gMmStoreArray[0x20];
 
 #pragma dont_inline off
 int mmCreateMemoryStore(int size)
@@ -352,21 +377,6 @@ void mmFreeDeferred(void* p)
     gMmDeferredFreeStack[gMmDeferredFreeCount].delay = gMmFreeDelay;
     gMmDeferredFreeCount++;
 }
-
-typedef struct
-{
-    void* stores[0x20];
-    DeferredFree deferred[2000];
-    MmRegion regions[8];
-} MmGlobal;
-
-extern int gMmStatsPrintCounter;
-extern int gMmTickCount;
-extern char sMemStatsFormat[];
-extern int gMmRegion0Used;
-extern int gMmRegion1Used;
-extern int gMmRegion2Used;
-extern int gMmRegion3Used;
 
 void mmFreeTick(int arg)
 {
@@ -540,9 +550,6 @@ void mmFree(void* p)
     OSReport(sMmAllocFreeMessageBlock, p);
 }
 
-extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
-extern char sMmMemoryStoreMessageBlock[];
-
 int mmAllocateFromFBMemoryStore(int handle, int size)
 {
     MmStore* found;
@@ -576,12 +583,6 @@ int mmAllocateFromFBMemoryStore(int handle, int size)
     }
     return 0;
 }
-
-extern void* OSAllocFromHeap(int heap, int size);
-extern int __OSCurrHeap;
-extern int gMmRegion0Size;
-extern void* lbl_803DD498;
-extern void* lbl_803DCAFC;
 
 void mmInit(void)
 {
@@ -619,8 +620,6 @@ void mmInit(void)
     gMmDeferredFreeCount = 0;
 }
 
-extern char sMmSpawnedUnalignedSlotWarning[];
-
 int printHeapStats(void)
 {
     OSReport(sMemStatsFormat, gMmRegion0Used, gMmRegionTable[0].size, gMmRegion1Used, gMmRegionTable[1].size,
@@ -633,10 +632,6 @@ int printHeapStats(void)
 
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag);
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, int tag);
-extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);
-extern int gMmRegion0SpawnEnabled;
-extern int gMmNextAllocId;
-extern int lbl_803DCC7C;
 
 int mmAllocFromRegion(int region, int size, int type, int tag)
 {
@@ -868,8 +863,6 @@ int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int 
     return idx;
 }
 
-extern char sMmFreeMemoryUsageCorruptedError[];
-
 void heapFree(int region, int idx)
 {
     s16 next;
@@ -942,8 +935,6 @@ void* AtomicSList_Pop(void** list)
     OSRestoreInterrupts(intr);
     return head;
 }
-
-extern void* memcpy(void* dst, const void* src, int n);
 
 void copyToCache(void* dst, void* src, u32 count)
 {

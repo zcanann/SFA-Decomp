@@ -4,8 +4,6 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/dll/player_objects.h"
-
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
@@ -13,27 +11,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/gamebit_ids.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
-
-#define SPSHOP_OBJGROUP 9
-
-typedef struct ShopBuyItemState
-{
-    s8 unk0;      /* 0x0 */
-    s8 itemIndex; /* 0x1 shop item type: purchase-effect switch + items-table index */
-    u8 pad2[0x4 - 0x2];
-    u8 unk4;
-    u8 pad5[0x56 - 0x5];
-    u8 unk56;
-    u8 pad57[0x6E - 0x57];
-    s16 unk6E;
-    u8 pad70[0x90 - 0x70];
-    u8 unk90;
-    u8 pad91[0x9B0 - 0x91];
-    s32 unk9B0;
-    u8 pad9B4[0x9D6 - 0x9B4];
-    u8 unk9D6;
-    u8 pad9D7[0x9D8 - 0x9D7];
-} ShopBuyItemState;
+#include "main/dll/SP/dll_0285_spshop.h"
 
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
@@ -65,23 +43,7 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
-extern void playerAddMoney(int obj, int amount);
-extern void playerAddHealth(int obj, int amount);
-extern int gameBitIncrement(int bit);
-extern u8 lbl_80327FD0[];
-
-typedef struct ShopItemRow
-{
-    u8 price;      /* 0x0 "P$" */
-    u8 discount1;  /* 0x1 "D1" */
-    u8 discount2;  /* 0x2 "D2" */
-    u8 discount3;  /* 0x3 "D3" (observed always == price) */
-    u8 field4;     /* 0x4 */
-    u8 minPrice;   /* 0x5 */
-    s16 availBit;  /* 0x6 "available" GameBit slot (-1 = always available) */
-    s16 boughtBit; /* 0x8 "bought" GameBit slot (-1 = none) */
-    s16 textId;    /* 0xa */
-} ShopItemRow;
+#define SPSHOP_OBJGROUP 9
 
 /* number of ShopItemRow entries in lbl_80327FD0
    (data symbol size 0x2D0 / sizeof(ShopItemRow)(0xc) == 0x3c). */
@@ -124,15 +86,22 @@ enum ShopItemIndex
 
     SHOP_ITEM_LAST = 0x3B
 };
-extern void staffToggle(int obj, int a);
-extern void skyFn_80088c94(int flags, int mode);
-extern void envFxActFn_800887f8(u8 value);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern f32 lbl_803E59C8;
 
 /* Env-fx ids co-activated once on gamebit 0xd21 (getEnvfxAct 3rd arg) */
 #define SPSHOP_ENVFX_A 0x1c8
 #define SPSHOP_ENVFX_B 0x1cb
+
+extern u8 lbl_80327FD0[];
+extern f32 lbl_803E59C8;
+
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void playerAddMoney(int obj, int amount);
+extern void playerAddHealth(int obj, int amount);
+extern int gameBitIncrement(int bit);
+extern void staffToggle(int obj, int a);
+extern void skyFn_80088c94(int flags, int mode);
+extern void envFxActFn_800887f8(u8 value);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Music_Trigger(int id, int arg);

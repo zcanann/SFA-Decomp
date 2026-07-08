@@ -12,23 +12,28 @@
 #include "main/dll/dll_0235_dfptargetblock.h"
 #include "main/gamebits.h"
 
+typedef struct DfpTargetBlockPartfxArgs
+{
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 pad06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} DfpTargetBlockPartfxArgs;
+
 #define DFPTARGETBLOCK_OBJFLAG_HIDDEN 0x4000
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, DfpTargetBlockObject* obj, int flags,
-                              int mask, int arg9, int arg10);
-extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern const f32 lbl_803E6488;
-extern const f32 lbl_803E648C;
-extern const f32 lbl_803E6490;
 
 #define DFPTARGETBLOCK_POINT_OFFSET_X 0x04
 #define DFPTARGETBLOCK_POINT_OFFSET_Y 0x08
 #define DFPTARGETBLOCK_POINT_OFFSET_Z 0x0C
 #define DFPTARGETBLOCK_POINT_STRIDE   0x0C
 
-extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObject** hitObj, int* priority, int flags);
-extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
-extern f32 sqrtf(f32 value);
+extern const f32 lbl_803E6488;
+extern const f32 lbl_803E648C;
+extern const f32 lbl_803E6490;
 extern f32 timeDelta;
 extern f32 gTargetBlockHomeX;
 extern f32 gTargetBlockHomeZ;
@@ -44,15 +49,23 @@ extern const f32 lbl_803E64B4;
 extern const f32 lbl_803E64B8;
 extern const f32 lbl_803E64BC;
 extern const f32 lbl_803E64C0;
-extern void Model_GetVertexPosition(int modelData, int vertexIndex, float* outPosition);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
-                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 extern s32 gTargetBlockHomePos[];
 extern const f32 lbl_803E64C4;
 extern const f32 lbl_803E64C8;
 extern const f32 gTargetBlockMinVertexYSeed;
 extern const f32 lbl_803E64D0;
 extern const f32 lbl_803E64D4;
+
+extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, DfpTargetBlockObject* obj, int flags,
+                              int mask, int arg9, int arg10);
+extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObject** hitObj, int* priority, int flags);
+extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
+extern f32 sqrtf(f32 value);
+extern void Model_GetVertexPosition(int modelData, int vertexIndex, float* outPosition);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
+                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
 int dfptargetblock_getExtraSize(void)
 {
@@ -79,18 +92,6 @@ void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         return;
     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E6490);
 }
-
-typedef struct DfpTargetBlockPartfxArgs
-{
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    s16 pad06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} DfpTargetBlockPartfxArgs;
 
 static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTargetBlockHome* home,
                                               DfpTargetBlockAudioState* state)

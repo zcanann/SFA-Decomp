@@ -16,22 +16,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/lightningeffect.h"
 
-typedef struct DrlightbeaPlacement
-{
-    u8 pad0[0x19 - 0x0];
-    s8 targetId; /* 0x19: placed-object target id, or 0 to use the player */
-    u8 pad1A[0x20 - 0x1A];
-    s16 gameBit; /* 0x20: enables the beam while set */
-    u8 pad22[0x28 - 0x22];
-} DrlightbeaPlacement;
-
-/* Per-object extra state block (DR_LightBea_getExtraSize == 0xc): holds the
- * lightningCreate buffer handle at 0 and the active/free bit flags at 4. */
-typedef struct DrLightBeaState
-{
-    LightningEffect* handle; /* 0x00: lightningCreate buffer, or NULL */
-    DrLightBeaFlags flags;   /* 0x04 */
-} DrLightBeaState;
+#include "main/dll/DR/dll_027C_drlightbea.h"
 
 int DR_LightBea_getExtraSize(void)
 {

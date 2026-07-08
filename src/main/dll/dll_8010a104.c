@@ -20,6 +20,7 @@
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/dll/CAM/dll_5B.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/dll_8010a104.h"
 
 #define PATHCURVE_NODE_LINK_COUNT 5
 
@@ -46,12 +47,12 @@ typedef struct PathCurveNode
     u8 tag2;
 } PathCurveNode;
 
+#define PATHCAM_NEAR_THRESHOLD lbl_803E1888
+#define PATHCAM_FAR_THRESHOLD  lbl_803E188C
+
 extern f32 lbl_803E1888; /* near distance threshold */
 extern f32 lbl_803E188C; /* far distance threshold */
 extern f32 fn_8010AC48(f32 px, f32 py, f32 pz, int* obj);
-
-#define PATHCAM_NEAR_THRESHOLD lbl_803E1888
-#define PATHCAM_FAR_THRESHOLD  lbl_803E188C
 
 void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
 {

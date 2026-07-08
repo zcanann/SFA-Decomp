@@ -4,25 +4,15 @@
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/dll_0048_cameramodestatic.h"
 
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define CAMSTATIC_CAMMODE_DEFAULT 0x42
 
-typedef struct CameraModeStaticPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    u8 fovByte;
-    u8 flags;
-    s16 yaw;
-    s16 pitch;
-    s16 roll;
-    u8 pad22[0x28 - 0x22];
-} CameraModeStaticPlacement;
-
-extern void* ObjGroup_GetObjects();
-extern f32 sqrtf(f32 x);
 extern CameraModeStaticState* lbl_803DD558;
 extern f32 lbl_803E1878;
+extern void* ObjGroup_GetObjects();
+extern f32 sqrtf(f32 x);
 
 #pragma dont_inline on
 void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)

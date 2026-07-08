@@ -15,39 +15,13 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/camera.h"
+#include "main/dll/WM/dll_0215_wmnewcrystal.h"
 
 #define WMNEWCRYSTAL_GAMEBIT_ACTIVE     0xd27
 #define WMNEWCRYSTAL_GAMEBIT_AMBIENT_FX 0xe49
 #define WMNEWCRYSTAL_OBJECT_BLUE        0x783
 #define WMNEWCRYSTAL_OBJECT_GREEN       0x784
 #define WMNEWCRYSTAL_PARTICLE_ID        0x7ed
-
-typedef struct WmNewCrystalState
-{
-    u8 fxState[0x34];    /* 0x00: primary glow-effect block (WM_newcrystalFn_800969b0) */
-    u8 altFxState[0x34]; /* 0x34: secondary glow-effect block */
-    u8 active;           /* 0x68: green crystal still bursting */
-    u8 pad69[3];
-} WmNewCrystalState;
-
-STATIC_ASSERT(offsetof(WmNewCrystalState, altFxState) == 0x34);
-STATIC_ASSERT(offsetof(WmNewCrystalState, active) == 0x68);
-STATIC_ASSERT(sizeof(WmNewCrystalState) == 0x6C);
-
-/* layout-compatible with the PartFxSpawnParams head (effect_interfaces.h) */
-typedef struct WmNewCrystalParticleParams
-{
-    u8 pad0[6];
-    s16 pathPoint; /* 0x06 */
-    u8 pad8[4];
-    f32 x; /* 0x0C */
-    f32 y; /* 0x10 */
-    f32 z; /* 0x14 */
-} WmNewCrystalParticleParams;
-
-STATIC_ASSERT(offsetof(WmNewCrystalParticleParams, pathPoint) == 0x06);
-STATIC_ASSERT(offsetof(WmNewCrystalParticleParams, x) == 0x0C);
-STATIC_ASSERT(sizeof(WmNewCrystalParticleParams) == 0x18);
 
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern void PSVECNormalize(f32* src, f32* dst);
@@ -57,17 +31,6 @@ extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int 
 extern void WM_newcrystalFn_800969b0(int* obj, void* params, f32 a, f32 b, f32 c, f32 d, f32 e, int enabled);
 extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int kind, int mode, int chance, f32 speed,
                                         void* origin, int flags);
-
-int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor);
-int WM_newcrystal_getExtraSize(void);
-int WM_newcrystal_getObjectTypeId(void);
-void WM_newcrystal_free(void);
-void WM_newcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
-void WM_newcrystal_hitDetect(void);
-void WM_newcrystal_update(void);
-void WM_newcrystal_init(GameObject* obj, void* setup);
-void WM_newcrystal_release(void);
-void WM_newcrystal_initialise(void);
 
 ObjectDescriptor gWM_newcrystalObjDescriptor = {
     0,

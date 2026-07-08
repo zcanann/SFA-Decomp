@@ -17,11 +17,7 @@
 #include "main/mapEventTypes.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/modgfx_types.h"
-
-extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_803128E8[];
-extern int lbl_803DB8C0;
-extern f32 lbl_803E0858;
+#include "main/dll/dll_0061_dll61func0.h"
 
 enum
 {
@@ -29,10 +25,15 @@ enum
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
-#pragma fp_contract off
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL61_EFFECT_ID 0x90
 
+extern ModgfxInterface** gModgfxInterface;
+extern u8 lbl_803128E8[];
+extern int lbl_803DB8C0;
+extern f32 lbl_803E0858;
+
+#pragma fp_contract off
 void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     struct

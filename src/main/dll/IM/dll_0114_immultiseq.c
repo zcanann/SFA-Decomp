@@ -18,10 +18,6 @@
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
 
-#define IMMULTISEQ_OBJGROUP 0xf
-extern void ObjGroup_AddObject();
-extern f32 lbl_803E37A8;
-
 STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 STATIC_ASSERT(sizeof(IMMultiSeqPlacement) == 0x34);
 STATIC_ASSERT(offsetof(IMMultiSeqPlacement, completionGameBits) == 0x18);
@@ -31,11 +27,16 @@ STATIC_ASSERT(offsetof(IMMultiSeqPlacement, modelBankIndex) == 0x2A);
 STATIC_ASSERT(offsetof(IMMultiSeqPlacement, triggerIds) == 0x2C);
 STATIC_ASSERT(offsetof(IMMultiSeqPlacement, polarityMask) == 0x30);
 
+#define IMMULTISEQ_OBJGROUP 0xf
+
 /* state->flags: SeqFn latched a step advance for update() to consume */
 #define IMMULTISEQ_LATCH_ADVANCE_BIT 0x01
 
 #define IMMULTISEQ_OBJFLAG_HIDDEN             0x4000
 #define IMMULTISEQ_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+extern f32 lbl_803E37A8;
+extern void ObjGroup_AddObject();
 
 /* IMMultiSeq_SeqFn: end-of-sequence predicate. With a valid trigger id,
    peek at the next step's active game bit; if its polarity has flipped

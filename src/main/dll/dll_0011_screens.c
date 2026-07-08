@@ -22,17 +22,17 @@
 #include "main/dll/modgfx.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0015_curves.h"
-extern void mm_free(u32);
 
 extern u32 lbl_803DD4A0;
 extern u32 lbl_803DD4A4;
 extern u32 lbl_803DD4A8;
 extern u32 lbl_803DD4AC;
-extern void* gameTextGet(int textId);
-extern void* mmAlloc(int size, int type, int flag);
 extern char* sMapDirectoryNameTable[];
 extern u8 lbl_803A4218[];
 extern s16 lbl_803119E0[];
+extern void mm_free(u32);
+extern void* gameTextGet(int textId);
+extern void* mmAlloc(int size, int type, int flag);
 extern int getCurGameText(void);
 extern void gameTextLoadDir(int dirId);
 extern void loadAssetFileById(void** out, int id);

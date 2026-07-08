@@ -16,13 +16,6 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
-extern f32 lbl_803E5150;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Music_Trigger(int id, int arg);
-extern int mapGetDirIdx(int idx);
-extern int unlockLevel(s32 val, int idx, int flag);
-extern void skyFn_80088c94(int flags, int mode);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 #define NWSH_LEVCON_MAP_SHRINE 0xb /* Krazoa shrine map triggered on activation */
 
@@ -30,6 +23,14 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #define NWSH_LEVCON_ENVFX_B 0xd6
 #define NWSH_LEVCON_ENVFX_C 0x222
 
+extern f32 lbl_803E5150;
+
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void Music_Trigger(int id, int arg);
+extern int mapGetDirIdx(int idx);
+extern int unlockLevel(s32 val, int idx, int flag);
+extern void skyFn_80088c94(int flags, int mode);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void objSetAnimStateFlags(void* player, int a, int b);
 
 int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)

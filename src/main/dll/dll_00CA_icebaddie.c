@@ -43,32 +43,6 @@
 #include "main/dll/dll_00CA_icebaddie.h"
 #include "main/sfa_shared_decls.h"
 
-/* object groups this ice baddie joins */
-#define ICEBADDIE_OBJGROUP           3
-#define ICEBADDIE_OBJGROUP_SECONDARY 80
-#define ICEBADDIE_HIT_VOLUME_SLOT    10
-
-/*
- * IceBaddieControl.effectFlags (u8 at +0x44) request bits. Set by the per-move
- * state handlers, then consumed and cleared once per frame by
- * iceBaddie_updateControlEffects, which dispatches each bit to a specific
- * spawn / camera-shake burst.
- */
-#define ICEBADDIE_FX_SPAWN_ICEBALL 0x01 /* fire the armed ice-ball projectile */
-#define ICEBADDIE_FX_ARM_ICEBALL   0x02 /* stash spawn transform, then request SPAWN_ICEBALL */
-#define ICEBADDIE_FX_BURST         0x04 /* 4x contact particle (obj 0x56) */
-#define ICEBADDIE_FX_PUFF          0x08 /* one puff particle (obj 0x57) */
-#define ICEBADDIE_FX_IMPACT        0x10 /* camera shake + 0x28x particle 0x57 */
-#define ICEBADDIE_FX_LANDING       0x20 /* bigger shake + 0x57 burst + 0x58 debris (anim event 0x200) */
-
-/* child object id spawned by iceBaddie_spawnIceBall (IceBallSetup cast; the armed ice-ball projectile) */
-#define ICEBADDIE_CHILD_OBJ_ICEBALL 100
-
-/* particle-effect object ids spawned via gPartfxInterface (docblock: contact/puff/debris particles) */
-#define ICEBADDIE_PARTICLE_CONTACT 0x56 /* 4x contact particle */
-#define ICEBADDIE_PARTICLE_PUFF    0x57 /* puff / impact burst particle */
-#define ICEBADDIE_PARTICLE_DEBRIS  0x58 /* landing debris particle */
-
 /*
  * The per-object "control" sub-block (at GroundBaddieState + 0x40c). Only the
  * fields this TU touches are named; the rest is padding. effectFlags is a
@@ -100,6 +74,35 @@ typedef struct IceBallSetup
     s16 gameBit;  /* 0x1e (-1 = none) */
     s16 gameBit2; /* 0x20 (-1 = none) */
 } IceBallSetup;
+
+STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
+STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
+
+/* object groups this ice baddie joins */
+#define ICEBADDIE_OBJGROUP           3
+#define ICEBADDIE_OBJGROUP_SECONDARY 80
+#define ICEBADDIE_HIT_VOLUME_SLOT    10
+
+/*
+ * IceBaddieControl.effectFlags (u8 at +0x44) request bits. Set by the per-move
+ * state handlers, then consumed and cleared once per frame by
+ * iceBaddie_updateControlEffects, which dispatches each bit to a specific
+ * spawn / camera-shake burst.
+ */
+#define ICEBADDIE_FX_SPAWN_ICEBALL 0x01 /* fire the armed ice-ball projectile */
+#define ICEBADDIE_FX_ARM_ICEBALL   0x02 /* stash spawn transform, then request SPAWN_ICEBALL */
+#define ICEBADDIE_FX_BURST         0x04 /* 4x contact particle (obj 0x56) */
+#define ICEBADDIE_FX_PUFF          0x08 /* one puff particle (obj 0x57) */
+#define ICEBADDIE_FX_IMPACT        0x10 /* camera shake + 0x28x particle 0x57 */
+#define ICEBADDIE_FX_LANDING       0x20 /* bigger shake + 0x57 burst + 0x58 debris (anim event 0x200) */
+
+/* child object id spawned by iceBaddie_spawnIceBall (IceBallSetup cast; the armed ice-ball projectile) */
+#define ICEBADDIE_CHILD_OBJ_ICEBALL 100
+
+/* particle-effect object ids spawned via gPartfxInterface (docblock: contact/puff/debris particles) */
+#define ICEBADDIE_PARTICLE_CONTACT 0x56 /* 4x contact particle */
+#define ICEBADDIE_PARTICLE_PUFF    0x57 /* puff / impact burst particle */
+#define ICEBADDIE_PARTICLE_DEBRIS  0x58 /* landing debris particle */
 
 extern int randomGetRange(int lo, int hi);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
@@ -178,17 +181,21 @@ extern void voxmaps_updateRoutePath(void* from, void* to);
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
-STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
-STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
+extern int* gPlayerInterface;
+extern f32 lbl_803E2D70;
+extern f32 lbl_803E2D74;
+extern f32 lbl_803E2D78;
+extern f32 lbl_803E2D7C;
+extern f32 lbl_803E2D80;
+extern int* gBaddieControlInterface;
+extern f32 lbl_803E2DB8;
+extern void Obj_FreeObject(int obj);
+extern void objRenderModelAndHitVolumes(int obj, int arg1, int arg2, int arg3, int arg4, f32 scale);
 
 #pragma scheduling off
 #pragma peephole off
 int iceBaddie_updateOpenState(int obj, int state)
 {
-    extern int* gPlayerInterface;
-    extern f32 lbl_803E2D70;
-    extern f32 lbl_803E2D74;
-    extern f32 lbl_803E2D78;
     GroundBaddieState* sub;
     IceBaddieControl* control;
     ObjHitsPriorityState* hitState;
@@ -234,10 +241,6 @@ int iceBaddie_updateOpenState(int obj, int state)
 
 int iceBaddie_updateOpenHitState(int obj, int state)
 {
-    extern int* gPlayerInterface;
-    extern f32 lbl_803E2D78;
-    extern f32 lbl_803E2D7C;
-    extern f32 lbl_803E2D80;
     GroundBaddieState* sub;
     IceBaddieControl* control;
 
@@ -289,7 +292,6 @@ void iceBaddie_spawnIceBall(int* obj, int* state);
 #pragma scheduling off
 void iceBaddie_func0B(int obj, int message)
 {
-    extern int* gPlayerInterface;
     GroundBaddieState* state = ((GameObject*)obj)->extra;
 
     switch ((u8)message)
@@ -305,7 +307,6 @@ void iceBaddie_func0B(int obj, int message)
 #pragma peephole off
 int iceBaddie_stateHandlerB04(int obj, int state)
 {
-    extern int* gPlayerInterface;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
     {
         ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 2);
@@ -329,8 +330,6 @@ int iceBaddie_stateHandlerB03(int obj, int state)
 
 int iceBaddie_stateHandlerB02(int obj, int state)
 {
-    extern int* gPlayerInterface;
-    extern void Obj_FreeObject(int obj);
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
     {
         ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 0xd);
@@ -355,7 +354,6 @@ int iceBaddie_stateHandlerB02(int obj, int state)
 
 int iceBaddie_updateLandingState(int obj, int state)
 {
-    extern int* gBaddieControlInterface;
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int player;
     f32 noBlend;
@@ -498,7 +496,6 @@ int iceBaddie_updateDropState(int obj, int state)
 
 int iceBaddie_updateCommDownState(int obj, int state)
 {
-    extern int* gPlayerInterface;
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int control = *(int*)&sub->control;
 
@@ -523,7 +520,6 @@ int iceBaddie_updateCommDownState(int obj, int state)
 
 int iceBaddie_updateHeightBlendState(int obj, int state)
 {
-    extern int* gPlayerInterface;
     int control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     f32 height;
 
@@ -561,7 +557,6 @@ int iceBaddie_updateHeightBlendState(int obj, int state)
 
 int iceBaddie_stateHandlerA06(int obj, int state)
 {
-    extern int* gPlayerInterface;
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int choice;
 
@@ -617,7 +612,6 @@ int iceBaddie_stateHandlerA06(int obj, int state)
 
 int iceBaddie_stateHandlerA05(int obj, int state)
 {
-    extern int* gPlayerInterface;
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int choice;
 
@@ -759,8 +753,6 @@ int iceBaddie_updateHideResetState(int obj, int state)
 
 int iceBaddie_stateHandlerB06(int obj, int state)
 {
-    extern int* gPlayerInterface;
-    extern int* gBaddieControlInterface;
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int route;
     f32 neutralBlend;
@@ -825,8 +817,6 @@ int iceBaddie_stateHandlerB06(int obj, int state)
 
 int iceBaddie_stateHandlerB07(int obj, int state)
 {
-    extern int* gPlayerInterface;
-    extern int* gBaddieControlInterface;
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
 
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
@@ -1090,8 +1080,6 @@ void iceBaddie_updateControlEffects(int obj, int state)
 
 void iceBaddie_updateTargetMotion(int obj, int sub, int state)
 {
-    extern int* gPlayerInterface;
-    extern int* gBaddieControlInterface;
     int control = *(int*)&((GroundBaddieState*)sub)->control;
 
     ((IceBaddieControl*)control)->ambientSfxTimer += framesThisStep;
@@ -1122,8 +1110,6 @@ void iceBaddie_updateTargetMotion(int obj, int sub, int state)
 #pragma fp_contract off
 void iceBaddie_updateTargetCollision(int obj, int sub, int state)
 {
-    extern int* gPlayerInterface;
-    extern int* gBaddieControlInterface;
     int control = *(int*)&((GroundBaddieState*)sub)->control;
     u8* target;
     int hitInfo[7];
@@ -1190,8 +1176,6 @@ int iceBaddie_getObjectTypeId(void)
 
 void iceBaddie_free(int obj)
 {
-    extern int* gBaddieControlInterface;
-    extern void Obj_FreeObject(int obj);
     GroundBaddieState* state = ((GameObject*)obj)->extra;
 
     Camera_DisableViewYOffset();
@@ -1206,7 +1190,6 @@ void iceBaddie_free(int obj)
 
 void iceBaddie_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(int obj, int arg1, int arg2, int arg3, int arg4, f32 scale);
     GroundBaddieState* state = ((GameObject*)obj)->extra;
 
     if (visible == 0 || ((GameObject*)obj)->unkF4 != 0 || state->targetState == 0)
@@ -1225,7 +1208,6 @@ void iceBaddie_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visibl
 #pragma peephole on
 void iceBaddie_hitDetect(int obj)
 {
-    extern int* gPlayerInterface;
     ((void (*)(int, int, u8*))((void**)*gPlayerInterface)[3])(obj, *(int*)&((GameObject*)obj)->extra,
                                                               gIceBaddieStateHandlersA);
 }
@@ -1282,7 +1264,6 @@ void iceBaddie_spawnIceBall(int* obj, int* state)
 
 int iceBaddie_updateControlMove5State(int* obj, GroundBaddieState* state)
 {
-    extern int* gPlayerInterface;
     IceBaddieControl* control = (IceBaddieControl*)((GroundBaddieState*)((GameObject*)obj)->extra)->control;
     control->effectFlags |= ICEBADDIE_FX_BURST;
     state->baddie.moveSpeed = gIceBaddieMinMoveSpeed;
@@ -1298,7 +1279,6 @@ int iceBaddie_updateControlMove5State(int* obj, GroundBaddieState* state)
 
 int iceBaddie_stateHandlerB05(int* obj, GroundBaddieState* state)
 {
-    extern int* gPlayerInterface;
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
         ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 3);
@@ -1319,7 +1299,6 @@ int iceBaddie_stateHandlerB05(int* obj, GroundBaddieState* state)
 
 int iceBaddie_stateHandlerB01(int* obj, GroundBaddieState* state)
 {
-    extern int* gPlayerInterface;
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     if ((s8)state->baddie.hitPoints < 1)
         return 3;
@@ -1371,8 +1350,6 @@ void iceBaddie_enterWhirlpoolGroup(int obj, GroundBaddieState* state)
 
 void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
 {
-    extern int* gBaddieControlInterface;
-    extern int* gPlayerInterface;
     u32 acquired;
 
     ObjHits_DisableObject(obj);
@@ -1416,8 +1393,6 @@ void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
 
 int iceBaddie_checkTargetState(int obj, int state)
 {
-    extern int* gPlayerInterface;
-    extern int* gBaddieControlInterface;
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     f32 neutralBlend;
 
@@ -1475,9 +1450,6 @@ void iceBaddie_update(int obj, int p2, int p3)
     extern void iceBaddie_updateControlEffects(int obj, int sub);
     extern void iceBaddie_tryAcquireTarget(int obj, int sub, int sub2);
     extern void iceBaddie_updateTargetMotion(int obj, int sub, int sub2);
-    extern int* gBaddieControlInterface;
-    extern f32 gIceBaddieYOffset;
-    extern f32 lbl_803E2DB8;
     GroundBaddieState* sub;
     int setup;
 
@@ -1538,9 +1510,6 @@ void fn_8015DAE8(void);
 
 void iceBaddie_init(int obj, u8* params, int flags)
 {
-    extern int* gBaddieControlInterface;
-    extern int* gPlayerInterface;
-    extern f32 lbl_803E2DB8;
     GroundBaddieState* sub;
     u8 mode;
 

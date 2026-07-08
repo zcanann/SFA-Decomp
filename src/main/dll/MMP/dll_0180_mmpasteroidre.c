@@ -20,11 +20,12 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/MMP/dll_0180_mmpasteroidre.h"
+
+STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
 #define MMPASTEROIDRE_OBJFLAG_HIDDEN             0x4000
 #define MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
@@ -54,8 +55,6 @@ extern f32 lbl_803E4530;
 extern f32 lbl_803E4534;
 extern f32 lbl_803E4538;
 extern f32 lbl_803E453C;
-
-void mmp_asteroid_re_update(int obj);
 
 void mmp_asteroid_re_free(void)
 {

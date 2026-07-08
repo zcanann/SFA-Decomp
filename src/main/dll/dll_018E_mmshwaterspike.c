@@ -11,35 +11,18 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/MMP/dll_013B_wallanimator.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_018E_mmshwaterspike.h"
+
 #define MMSHWATERSPIKE_HIT_VOLUME_SLOT 9
 
-/* placement block read via anim.placementData */
-typedef struct MmshWaterspikePlacement
-{
-    u8 pad0[0xC - 0x0];
-    f32 maxHeight; /* 0x0C: Y ceiling the spike cannot exceed */
-    u8 pad10[0x14 - 0x10];
-    s32 xyzAnimId; /* 0x14: ID of the XYZ-animator driving height (printed on miss) */
-} MmshWaterspikePlacement;
-
-/* object-def layout; unk1A/unk1C pack into the 32-bit XYZ-animator object ID */
-typedef struct MmshWaterspikeObjectDef
-{
-    u8 pad0[0x1A - 0x0];
-    s16 xyzAnimIdLow;  /* 0x1A: low 16 bits of the animator object ID */
-    s16 xyzAnimIdHigh; /* 0x1C: high 16 bits of the animator object ID */
-    u8 pad1E[0x24 - 0x1E];
-    u8 unk24;
-    u8 pad25[0x28 - 0x25];
-} MmshWaterspikeObjectDef;
-
-extern void* ObjList_FindObjectById(int id);
-extern void logPrintf(char* fmt, ...);
 extern char sWaterSpikeInvalidXyzAnimIdWarning[];
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 lbl_803E4F80;
 extern f32 lbl_803E4F84;
 extern f32 lbl_803E4F88;
+
+extern void* ObjList_FindObjectById(int id);
+extern void logPrintf(char* fmt, ...);
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 
 int mmsh_waterspike_getExtraSize(void)
 {

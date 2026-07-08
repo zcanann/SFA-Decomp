@@ -33,7 +33,6 @@
 #include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/dfp_types.h"
 #include "main/main.h"
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -46,43 +45,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/vecmath.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
-
-#define DBSTEALERWORM_OBJGROUP 3
-#define DBEGG_OBJGROUP         0x24
-
-/* projectile spat at the baddie target: velocity aimed at targetObj, ownerObj = worm */
-#define DBSTEALERWORM_CHILD_OBJ_PROJECTILE 0x30a
-
-/* small dust burst (spawned 3x when DBWORM_FLAG14_FX_DUST is set) */
-#define DBSTEALERWORM_PARTFX_DUST 0x345
-/* spray burst (spawned 10x when DBWORM_FLAG14_FX_SPRAY is set) */
-#define DBSTEALERWORM_PARTFX_SPRAY 0x343
-
-/* hit-volume slot reconfigured across the worm's movement states */
-#define DBSTEALERWORM_HIT_VOLUME_SLOT 10
-
-/*
- * DbStealerwormControl - the per-family control record hung off
- * GroundBaddieState.control (state+0x40C) for dbstealerworm
- * (extraSize 0x460 = GroundBaddieState 0x410 + a 0x50 private tail;
- * the control record itself is memset(0x50) in dbstealerworm_init).
- */
-
-STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
-
-STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
-
-STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
-
-STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-
-STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
-
-STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
-
-STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
-
-STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
 typedef struct DbstealerwormPlacement
 {
@@ -120,20 +82,107 @@ typedef struct DbStealerwormFlags44
     u8 low : 4;
 } DbStealerwormFlags44;
 
-extern u32 ObjGroup_ContainsObject();
-extern int ObjGroup_FindNearestObjectForObject();
+/*
+ * DbStealerwormControl - the per-family control record hung off
+ * GroundBaddieState.control (state+0x40C) for dbstealerworm
+ * (extraSize 0x460 = GroundBaddieState 0x410 + a 0x50 private tail;
+ * the control record itself is memset(0x50) in dbstealerworm_init).
+ */
 
-extern u32 ObjMsg_SendToObject();
-extern int Obj_GetYawDeltaToObject();
-extern void Stack_Free(int* stack);
+STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
+
+STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
+
+STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
+
+STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
+
+STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
+
+STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
+
+STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
+
+STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
+
+#define DBSTEALERWORM_OBJGROUP 3
+#define DBEGG_OBJGROUP         0x24
+
+/* projectile spat at the baddie target: velocity aimed at targetObj, ownerObj = worm */
+#define DBSTEALERWORM_CHILD_OBJ_PROJECTILE 0x30a
+
+/* small dust burst (spawned 3x when DBWORM_FLAG14_FX_DUST is set) */
+#define DBSTEALERWORM_PARTFX_DUST 0x345
+/* spray burst (spawned 10x when DBWORM_FLAG14_FX_SPRAY is set) */
+#define DBSTEALERWORM_PARTFX_SPRAY 0x343
+
+/* hit-volume slot reconfigured across the worm's movement states */
+#define DBSTEALERWORM_HIT_VOLUME_SLOT 10
+
 extern void** gBaddieControlInterface;
 extern int* gPlayerInterface;
 extern f32 lbl_803E62A8;
 extern f32 lbl_803E62FC;
 extern u8 lbl_80329514[];
-
 extern int gDBStealerWormStateHandlersA[];
 extern f32 lbl_803E62BC;
+extern f32 lbl_803E62F4;
+extern f32 lbl_803E62E8;
+extern f32 lbl_803E62EC;
+
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern u32 ObjGroup_ContainsObject();
+extern int ObjGroup_FindNearestObjectForObject();
+extern u32 ObjMsg_SendToObject();
+extern int Obj_GetYawDeltaToObject();
+extern void Stack_Free(int* stack);
+extern void dbholecontrol1_free(void);
+extern void dbholecontrol1_getExtraSize(void);
+extern void dbholecontrol1_getObjectTypeId(void);
+extern void dbholecontrol1_hitDetect(void);
+extern void dbholecontrol1_init(void);
+extern void dbholecontrol1_initialise(void);
+extern void dbholecontrol1_release(void);
+extern void dbholecontrol1_render(void);
+extern void dbholecontrol1_update(void);
+extern void DFP_LevelControl_free(void);
+extern void DFP_LevelControl_getExtraSize(void);
+extern void DFP_LevelControl_getObjectTypeId(void);
+extern void DFP_LevelControl_hitDetect(void);
+extern void DFP_LevelControl_init(void);
+extern void DFP_LevelControl_initialise(void);
+extern void DFP_LevelControl_release(void);
+extern void DFP_LevelControl_render(void);
+extern void DFP_LevelControl_setScale(void);
+extern void DFP_LevelControl_update(void);
+extern void DFP_ObjCreator_free(void);
+extern void DFP_ObjCreator_getExtraSize(void);
+extern void DFP_ObjCreator_getObjectTypeId(void);
+extern void DFP_ObjCreator_hitDetect(void);
+extern void DFP_ObjCreator_init(void);
+extern void DFP_ObjCreator_initialise(void);
+extern void DFP_ObjCreator_release(void);
+extern void DFP_ObjCreator_render(void);
+extern void DFP_ObjCreator_update(void);
+extern void dll_22C_getExtraSize_ret_16(void);
+extern void dll_22C_getObjectTypeId(void);
+extern void dll_22C_hitDetect_nop(void);
+extern void dll_22C_init(void);
+extern void dll_22C_initialise_nop(void);
+extern void dll_22C_release_nop(void);
+extern void dll_22C_render(void);
+extern void doorswitch_free(void);
+extern void doorswitch_getExtraSize(void);
+extern void doorswitch_getObjectTypeId(void);
+extern void doorswitch_hitDetect(void);
+extern void doorswitch_init(void);
+extern void doorswitch_initialise(void);
+extern void doorswitch_release(void);
+extern void doorswitch_render(void);
+extern void doorswitch_update(void);
+extern void dll_22C_free(void);
+extern void dll_22C_update(void);
+
 extern int dbstealerworm_stateHandlerB06();
 extern int dbstealerworm_stateHandlerB05();
 extern int dbstealerworm_stateHandlerA0E();
@@ -141,9 +190,8 @@ extern int dbstealerworm_stateHandlerA0D();
 extern int dbstealerworm_stateHandlerA0A();
 extern int dbstealerworm_stateHandlerA04();
 extern int dbstealerworm_stateHandlerA02();
-extern f32 lbl_803E62F4;
-extern f32 lbl_803E62E8;
-extern f32 lbl_803E62EC;
+extern void dbstealerworm_initialise(void);
+extern void dbstealerworm_release(void);
 
 int dbstealerworm_stateHandlerB04(int obj, int baddie)
 {
@@ -2603,55 +2651,6 @@ int gDbStealerwormSfxIds[] = {
     498, 498, 498, 149, 149, 5, 5, 5, 5, 5, 5, 5, 5, 5,  5,  5,  5,  5,  5,  2,  5,      5,
     5,   5,   5,   5,   5,   5, 5, 5, 5, 5, 5, 5, 5, -1, -1, -1, -1, -1, -1, -1, -65536,
 };
-
-extern void dbholecontrol1_free(void);
-extern void dbholecontrol1_getExtraSize(void);
-extern void dbholecontrol1_getObjectTypeId(void);
-extern void dbholecontrol1_hitDetect(void);
-extern void dbholecontrol1_init(void);
-extern void dbholecontrol1_initialise(void);
-extern void dbholecontrol1_release(void);
-extern void dbholecontrol1_render(void);
-extern void dbholecontrol1_update(void);
-extern void dbstealerworm_initialise(void);
-extern void dbstealerworm_release(void);
-extern void DFP_LevelControl_free(void);
-extern void DFP_LevelControl_getExtraSize(void);
-extern void DFP_LevelControl_getObjectTypeId(void);
-extern void DFP_LevelControl_hitDetect(void);
-extern void DFP_LevelControl_init(void);
-extern void DFP_LevelControl_initialise(void);
-extern void DFP_LevelControl_release(void);
-extern void DFP_LevelControl_render(void);
-extern void DFP_LevelControl_setScale(void);
-extern void DFP_LevelControl_update(void);
-extern void DFP_ObjCreator_free(void);
-extern void DFP_ObjCreator_getExtraSize(void);
-extern void DFP_ObjCreator_getObjectTypeId(void);
-extern void DFP_ObjCreator_hitDetect(void);
-extern void DFP_ObjCreator_init(void);
-extern void DFP_ObjCreator_initialise(void);
-extern void DFP_ObjCreator_release(void);
-extern void DFP_ObjCreator_render(void);
-extern void DFP_ObjCreator_update(void);
-extern void dll_22C_getExtraSize_ret_16(void);
-extern void dll_22C_getObjectTypeId(void);
-extern void dll_22C_hitDetect_nop(void);
-extern void dll_22C_init(void);
-extern void dll_22C_initialise_nop(void);
-extern void dll_22C_release_nop(void);
-extern void dll_22C_render(void);
-extern void doorswitch_free(void);
-extern void doorswitch_getExtraSize(void);
-extern void doorswitch_getObjectTypeId(void);
-extern void doorswitch_hitDetect(void);
-extern void doorswitch_init(void);
-extern void doorswitch_initialise(void);
-extern void doorswitch_release(void);
-extern void doorswitch_render(void);
-extern void doorswitch_update(void);
-extern void dll_22C_free(void);
-extern void dll_22C_update(void);
 
 u32 lbl_803296FC[4] = {0x00000000, 0x00000001, 0x00000003, 0x0000000a};
 u32 lbl_8032970C[4] = {0x40000000, 0x40800000, 0x3fc00000, 0x40400000};

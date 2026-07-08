@@ -11,6 +11,10 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/dll_0067_dll67func0.h"
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL67_EFFECT_ID 0xe3
 
 extern ModgfxInterface** gModgfxInterface;
 
@@ -21,9 +25,6 @@ extern f32 lbl_803E09D0;
 extern f32 lbl_803E09D4;
 extern f32 lbl_803E09D8;
 extern f32 lbl_803E09DC;
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL67_EFFECT_ID 0xe3
 
 void dll_67_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

@@ -18,11 +18,6 @@
 #include "main/gamebits.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
-extern f32 lbl_803E56B0; /* 0.0f effect-position seed */
-extern f32 lbl_803E56B4; /* 1.0f effect scale / render distance */
-
-#pragma scheduling on
-#pragma peephole on
 
 /* anim-event opcodes consumed by FEseqobject_SeqFn */
 enum
@@ -53,6 +48,12 @@ enum
 
 /* partfx spawned by anim-events 2..6 (docblock: "spawn partfx 0x85 with effect variant 0..4"). */
 #define FESEQOBJECT_PARTFX 0x85
+
+extern f32 lbl_803E56B0; /* 0.0f effect-position seed */
+extern f32 lbl_803E56B4; /* 1.0f effect scale / render distance */
+
+#pragma scheduling on
+#pragma peephole on
 
 static inline void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params)
 {

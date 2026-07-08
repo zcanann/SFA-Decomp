@@ -22,6 +22,7 @@
 #include "main/objlib.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_025B_msplantings.h"
 
 /* shared "moon seeds carried" counter game bit */
 #define GAMEBIT_MOONSEED_COUNT 0x86A
@@ -43,31 +44,6 @@
 
 /* ObjHits priority-hit result that cuts the plant */
 #define MSPLANTING_HIT_CUT 0x1A
-
-typedef struct MoonSeedPlantingSpotPlacement
-{
-    u8 pad0[0xC - 0x0];
-    f32 posY; /* 0x0c: planted-spot Y position */
-    u8 pad10[0x14 - 0x10];
-    s32 mapId; /* 0x14: ObjPlacement head mapId */
-    u8 pad18[0x1F - 0x18];
-    u8 rotByte; /* 0x1f: rotX in 1/256 turns */
-} MoonSeedPlantingSpotPlacement;
-
-typedef struct MoonSeedPlantingSpotState
-{
-    u8 phase;
-    u8 flags;
-    u8 pad2[0x8 - 0x2];
-    s16 plantedGameBit;
-    s16 harvestedGameBit;
-    s16 colorPhase;
-    u8 padE[0x10 - 0xE];
-    f32 growthTimer;
-    f32 burstTimer;
-} MoonSeedPlantingSpotState;
-
-STATIC_ASSERT(sizeof(MoonSeedPlantingSpotState) == 0x18);
 
 extern int randomGetRange(int lo, int hi);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);

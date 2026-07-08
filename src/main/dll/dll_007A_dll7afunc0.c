@@ -12,6 +12,11 @@
 #include "main/mapEventTypes.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/dll_007A_dll7afunc0.h"
+
+/* spawnEffect effect ids per variant (textureAssetId arg). */
+#define DLL7A_EFFECT_ID_VARIANT0 0x156
+#define DLL7A_EFFECT_ID_VARIANT1 0xc0d
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80314BD0[];
@@ -22,10 +27,6 @@ extern f32 lbl_803E0D14;
 extern f32 lbl_803E0D18;
 extern f32 lbl_803E0D1C;
 extern f32 lbl_803E0D20, lbl_803E0D24, lbl_803E0D28, lbl_803E0D2C;
-
-/* spawnEffect effect ids per variant (textureAssetId arg). */
-#define DLL7A_EFFECT_ID_VARIANT0 0x156
-#define DLL7A_EFFECT_ID_VARIANT1 0xc0d
 
 int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {

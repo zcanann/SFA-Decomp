@@ -3,7 +3,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
-extern float mathSinf(float x);
+#include "main/dll/dll_002A_effect17.h"
+
 extern f32 gEffect17AnimProgressC;
 extern f32 gEffect17AnimProgressD;
 extern s32 gEffect17SinPhaseA;
@@ -12,6 +13,7 @@ extern f32 gEffect17SinValueB;
 extern f32 gEffect17SinValueA;
 extern f32 gEffect17AnimProgressA;
 extern f32 gEffect17AnimProgressB;
+extern float mathSinf(float x);
 
 int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     s16* extraArgs)

@@ -24,15 +24,7 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/dll/wmseqobjectsetup_struct.h"
 #include "main/dll/wmgalleonstate_struct.h"
 #include "main/dll/dll1fbstate_struct.h"
-extern u8 lbl_803DDC78;
-extern f32 lbl_803E5CF8;
-
-#define OBJ_S16(obj, offset) (*(s16*)((u8*)(obj) + (offset)))
-#define OBJ_S32(obj, offset) (*(s32*)((u8*)(obj) + (offset)))
-#define OBJ_PTR(obj, offset) (*(void**)((u8*)(obj) + (offset)))
-
-#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
-#define SCREEN_TRANSITION_START(kind, value)      (*gScreenTransitionInterface)->step((kind), (value))
+#include "main/dll/WM/dll_01FA_wmseqobject.h"
 
 STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
@@ -51,6 +43,16 @@ STATIC_ASSERT(offsetof(Dll1FBSetup, objectParam) == 0x1c);
 STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
+
+#define OBJ_S16(obj, offset) (*(s16*)((u8*)(obj) + (offset)))
+#define OBJ_S32(obj, offset) (*(s32*)((u8*)(obj) + (offset)))
+#define OBJ_PTR(obj, offset) (*(void**)((u8*)(obj) + (offset)))
+
+#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
+#define SCREEN_TRANSITION_START(kind, value)      (*gScreenTransitionInterface)->step((kind), (value))
+
+extern u8 lbl_803DDC78;
+extern f32 lbl_803E5CF8;
 
 int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

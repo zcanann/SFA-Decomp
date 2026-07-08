@@ -14,12 +14,16 @@
 #include "main/objhits.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
+
+#define CANNONCLAW_OBJID_TRICKY 0x1723
+#define CANNONCLAW_MOVE_ARM     0x208
+
 extern void* gGrimbleStateHandlersA[10];
 extern void* gGrimbleStateHandlersB[6];
-extern void* ObjList_FindObjectById(int id);
 extern f32 lbl_803E2F30;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
+extern void* ObjList_FindObjectById(int id);
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -78,9 +82,6 @@ void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void cannonclaw_hitDetect(void)
 {
 }
-
-#define CANNONCLAW_OBJID_TRICKY 0x1723
-#define CANNONCLAW_MOVE_ARM     0x208
 
 void cannonclaw_update(u8* obj)
 {

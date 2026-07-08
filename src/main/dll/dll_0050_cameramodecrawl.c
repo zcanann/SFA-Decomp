@@ -24,6 +24,7 @@
 #include "string.h"
 #include "main/dll/dll_80220608_shared.h"
 #include "main/object_transform.h"
+#include "main/dll/dll_0050_cameramodecrawl.h"
 
 extern CameraModeCrawlState* lbl_803DD598;
 

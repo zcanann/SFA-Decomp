@@ -15,6 +15,7 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/NW/dll_01A2_nwtricky.h"
 
 #define NWTRICKY_OBJFLAG_PARENT_SLACK       0x1000
 #define NWTRICKY_OBJFLAG_HIDDEN             0x4000
@@ -23,6 +24,7 @@
 /* anim.seqId of the SnowHorn herd objects Tricky herds (docblock: "the
  * SnowHorn herd objects (seqId 0x13a)"). */
 #define NWTRICKY_SNOWHORN_HERD_SEQID 0x13a
+
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(int* obj, int* target);
 extern f32 enemy_getHealthFraction(int* obj);
@@ -50,23 +52,6 @@ void NW_tricky_free(int obj)
     (void)obj;
     mainSetBits(GAMEBIT_Tricky_Usable, 1);
 }
-
-typedef struct NwTrickyState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 timer;
-} NwTrickyState;
-
-typedef struct NwTrickyIds
-{
-    int ids[3];
-} NwTrickyIds;
-
-typedef struct NwObjPos
-{
-    u8 pad[0x18];
-    f32 worldPos[3];
-} NwObjPos;
 
 #pragma opt_loop_invariants off
 void NW_tricky_update(int* obj)

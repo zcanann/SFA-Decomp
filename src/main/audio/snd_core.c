@@ -1,14 +1,15 @@
 #include "main/audio/snd_core.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_control.h"
+
+#define MIDI_DIRTY_GROUP_STRIDE 0x40
+#define MIDI_DIRTY_ENTRY_STRIDE 4
+
 extern u8 lbl_803BD150[];
 extern u8 lbl_803D3CA0[];
 extern u8 gSynthInitialized;
 extern void IFFifoAlloc(void);
 extern double __frsqrte(double x);
-
-#define MIDI_DIRTY_GROUP_STRIDE 0x40
-#define MIDI_DIRTY_ENTRY_STRIDE 4
 
 void sndQuit(void)
 {

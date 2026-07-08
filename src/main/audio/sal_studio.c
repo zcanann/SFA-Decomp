@@ -1,3 +1,5 @@
+/* MusyX runtime DSP control (hw_dspctrl.c, MUSY_VERSION <= 2.0.0 paths),
+ * recovered against the public MusyX runtime source. */
 #include "main/unknown/autos/musyx_dsp.h"
 #include "string.h"
 #include "dolphin/os/OSCache.h"
@@ -6,9 +8,6 @@
 
 #pragma exceptions on
 
-/* MusyX runtime DSP control (hw_dspctrl.c, MUSY_VERSION <= 2.0.0 paths),
- * recovered against the public MusyX runtime source. */
-
 extern void* dspCmdBuffer;
 extern DSPvoice* dspVoice;
 extern void* dspITDBuffer;
@@ -16,10 +15,9 @@ extern s32* dspSurround;
 extern void* dspCmdList;
 extern u32 dspARAMZeroBuffer;
 u8 lbl_803CC1E0[0x6E0];
+#define dspStudio ((DSPstudioinfo*)lbl_803CC1E0)
 extern u8 salMaxStudioNum;
 extern u8 salNumVoices;
-
-#define dspStudio ((DSPstudioinfo*)lbl_803CC1E0)
 
 void salInitHRTFBuffer(void);
 void salActivateStudio(u8 studio, u32 isMaster, u32 type);

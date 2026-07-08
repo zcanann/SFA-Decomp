@@ -53,15 +53,6 @@ typedef struct PswContactList
     s8 count; /* 0x10F */
 } PswContactList;
 
-/* Re-derefs the +0x58 list pointer per use. */
-#define PSW_CONTACT_LIST(obj) ((PswContactList*)*(char**)((obj) + 0x58))
-
-/* seqIds of objects this pad reacts to (compared against ent->anim.seqId). */
-#define PSWITCH_TRIGGER_SEQ_ID 0x6d
-#define PSWITCH_CHIME_SEQ_ID   0x146
-
-STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
-
 /* PressureSwitch_getExtraSize == 0x8. */
 typedef struct PressureSwitchState
 {
@@ -80,7 +71,15 @@ typedef struct PressureSwitchFlags
     u8 otherFlags : 6;
 } PressureSwitchFlags;
 
+STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
+
+/* Re-derefs the +0x58 list pointer per use. */
+#define PSW_CONTACT_LIST(obj) ((PswContactList*)*(char**)((obj) + 0x58))
+
+/* seqIds of objects this pad reacts to (compared against ent->anim.seqId). */
+#define PSWITCH_TRIGGER_SEQ_ID 0x6d
+#define PSWITCH_CHIME_SEQ_ID   0x146
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 

@@ -16,18 +16,9 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-
-typedef struct CfPowerBaseMapData
-{
-    ObjPlacement base;
-    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
-    u8 pad19[5];
-    s16 typeBit; /* 0x1E: type game bit (0x54..0x56) */
-} CfPowerBaseMapData;
+#include "main/dll/CF/dll_014A_cfpowerbase.h"
 
 STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
-STATIC_ASSERT(offsetof(CfPowerBaseMapData, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(CfPowerBaseMapData, typeBit) == 0x1E);
 
 /* pylon beam-report protocol shared with cfmaincrystal (dll_014B): the
    crystal probes each pylon with the matching message; the powered base
@@ -54,18 +45,15 @@ enum
 /* trigger-sequence progress past which pylon messages are answered */
 #define CFPOWERBASE_SEQ_READY 175
 
+extern f32 lbl_803E41D0;
+
 extern int ObjMsg_Pop();
 extern int ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
-extern f32 lbl_803E41D0;
-
-int CFPowerBase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate);
-void CFPowerBase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 int CFPowerBase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern int ObjMsg_Pop(int, int*, int*, int*);
     CfPowerBaseState* sub = ((GameObject*)p1)->extra;
     u8* animUpdateBytes = (u8*)animUpdate;
     int msgArg;

@@ -31,24 +31,6 @@
 
 /* interact-prompt bits live in anim.resetHitboxFlags (INTERACT_FLAG_*). */
 
-#define SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE      0x01
-#define SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT  0x04
-#define SUNTEMPLE_FLAG_CLEAR_GATE_BIT        0x08
-#define SUNTEMPLE_FLAG_GATE_REENABLES_HITBOX 0x10
-#define SUNTEMPLE_FLAG_PREEMPT_ARG_2         0x20
-#define SUNTEMPLE_FLAG_PREEMPT_ARG_3         0x40
-#define SUNTEMPLE_FLAG_PREEMPT_ARG_4         0x80
-
-#define SUNTEMPLE_SEQUENCE_INVALID    -1
-#define SUNTEMPLE_SEQ_WC_INV_USE      0x526
-#define SUNTEMPLE_SEQ_TIMER_LOCKOUT   0x830
-#define SUNTEMPLE_TEXTURE_LATCHED     0x100 /* coincidentally equal to SUNTEMPLE_BUTTON_DISABLE_MASK */
-#define SUNTEMPLE_BUTTON_DISABLE_MASK 0x100 /* coincidentally equal to SUNTEMPLE_TEXTURE_LATCHED */
-#define SUNTEMPLE_GAMEBIT_WC_INV_A    0x25a
-#define SUNTEMPLE_GAMEBIT_WC_INV_B    0x25b
-#define SUNTEMPLE_GAMEBIT_WC_INV_C    0x202
-#define SUNTEMPLE_GAMEBIT_WC_INV_D    0x243
-
 typedef struct SunTempleSetup
 {
     ObjPlacement base;
@@ -80,6 +62,24 @@ STATIC_ASSERT(offsetof(SunTempleSetup, gateGameBit) == 0x22);
 STATIC_ASSERT(offsetof(SunTempleSetup, preemptSequenceId) == 0x24);
 STATIC_ASSERT(sizeof(SunTempleSetup) == 0x28);
 STATIC_ASSERT(sizeof(SunTempleState) == 2);
+
+#define SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE      0x01
+#define SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT  0x04
+#define SUNTEMPLE_FLAG_CLEAR_GATE_BIT        0x08
+#define SUNTEMPLE_FLAG_GATE_REENABLES_HITBOX 0x10
+#define SUNTEMPLE_FLAG_PREEMPT_ARG_2         0x20
+#define SUNTEMPLE_FLAG_PREEMPT_ARG_3         0x40
+#define SUNTEMPLE_FLAG_PREEMPT_ARG_4         0x80
+
+#define SUNTEMPLE_SEQUENCE_INVALID    -1
+#define SUNTEMPLE_SEQ_WC_INV_USE      0x526
+#define SUNTEMPLE_SEQ_TIMER_LOCKOUT   0x830
+#define SUNTEMPLE_TEXTURE_LATCHED     0x100 /* coincidentally equal to SUNTEMPLE_BUTTON_DISABLE_MASK */
+#define SUNTEMPLE_BUTTON_DISABLE_MASK 0x100 /* coincidentally equal to SUNTEMPLE_TEXTURE_LATCHED */
+#define SUNTEMPLE_GAMEBIT_WC_INV_A    0x25a
+#define SUNTEMPLE_GAMEBIT_WC_INV_B    0x25b
+#define SUNTEMPLE_GAMEBIT_WC_INV_C    0x202
+#define SUNTEMPLE_GAMEBIT_WC_INV_D    0x243
 
 int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {

@@ -12,6 +12,7 @@
 #include "main/game_object.h"
 #include "string.h"
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_801c0bf8.h"
 
 /* .sdata2 shared constants. */
 extern f32 lbl_803E4DE0; /* 100.0f  - world-units -> fixed-point vertex scale   */

@@ -17,7 +17,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
-extern float mathSinf(float x);
+#include "main/dll/dll_002C_effect19.h"
+
 extern f32 gEffect19ScrollPhase2;
 extern f32 gEffect19ScrollPhase3;
 extern s32 gEffect19Osc0Angle;
@@ -26,6 +27,7 @@ extern f32 gEffect19Osc1Value;
 extern f32 gEffect19Osc0Value;
 extern f32 gEffect19ScrollPhase0;
 extern f32 gEffect19ScrollPhase1;
+extern float mathSinf(float x);
 
 int Effect19_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     f32* extraArgs)

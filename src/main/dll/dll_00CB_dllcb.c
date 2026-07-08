@@ -24,9 +24,7 @@
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
-
-/* object group this object belongs to */
-#define DLLCB_OBJGROUP 3
+#include "main/dll/dll_00CB_dllcb.h"
 
 typedef struct DllCBPlacement
 {
@@ -46,22 +44,72 @@ typedef struct DllCBPlacement
     u8 pad2F[0x30 - 0x2F];
 } DllCBPlacement;
 
+/*
+ * Per-object extra state for the ChukChuk ice-spitter
+ * (ChukChuk_getExtraSize == 0x18).
+ */
+
+STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
+STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
+
+/* object group this object belongs to */
+#define DLLCB_OBJGROUP 3
+
+extern f32 lbl_803E2E68;
+extern f32 lbl_803E2E6C;
+extern f32 lbl_803E2E70;
+extern f32 lbl_803E2E74;
+extern f32 lbl_803E2E78;
+extern f32 lbl_803E2E9C;
+extern int* gBaddieControlInterface;
+extern void* gDllCBStateHandlers[];
+extern u8 lbl_80320008[];
+extern u8 lbl_80320080[];
+extern f32 lbl_803E2E8C;
+extern f32 lbl_803E2E98;
+extern f32 lbl_803E2EA8;
+extern f32 lbl_803E2E7C;
+extern f64 lbl_803E2E80;
+extern f32 lbl_803E2E88;
+extern f32 lbl_803E2E90;
+extern f32 lbl_803E2E94;
+
 extern u64 ObjGroup_RemoveObject();
+extern void Obj_FreeObject(int* obj);
+extern void* memcpy(void* dst, const void* src, int n);
+extern void voxmaps_updateRoutePath(char* a, char* b);
+extern int Obj_GetPlayerObject(void);
+extern void ObjMsg_SendToObject(int target, int msg, int from, int a);
+extern void characterDoEyeAnims(int* obj, u8* a);
+extern f32 sqrtf(f32);
+extern int Curve_AdvanceAlongPath(int* p, f32 t);
+extern int getAngle(float y, float x);
+extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
+void ChukChuk_free(void);
+void ChukChuk_hitDetect(void);
+void ChukChuk_release(void);
+void ChukChuk_initialise(void);
+void ChukChuk_init(u8* obj, u8* params);
+void IceBall_hitDetect(void);
+void IceBall_release(void);
+void IceBall_initialise(void);
+int ChukChuk_getExtraSize(void);
+int ChukChuk_getObjectTypeId(void);
+int IceBall_getExtraSize(void);
+int IceBall_getObjectTypeId(void);
+void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void IceBall_free(void);
+void ChukChuk_update(short* obj);
+void ChukChuk_setScale(int obj, int v);
+void IceBall_init(void* obj);
+
+int fn_80160534(int* obj);
 
 #pragma scheduling off
 #pragma peephole off
-
-extern void Obj_FreeObject(int* obj);
-
 int fn_801601C4(int obj, GroundBaddieState* p)
 {
-    extern void* memcpy(void* dst, const void* src, int n);
-    extern void voxmaps_updateRoutePath(char* a, char* b);
-    extern f32 lbl_803E2E68;
-    extern f32 lbl_803E2E6C;
-    extern f32 lbl_803E2E70;
-    extern f32 lbl_803E2E74;
-    extern f32 lbl_803E2E78;
     GroundBaddieState* sub;
     char* wp;
     f32 zero;
@@ -104,8 +152,6 @@ int fn_801601C4(int obj, GroundBaddieState* p)
 
 int fn_8016043C(int obj, GroundBaddieState* p)
 {
-    extern int Obj_GetPlayerObject(void);
-    extern void ObjMsg_SendToObject(int target, int msg, int from, int a);
     ObjHitsPriorityState* hitState;
 
     if (*(char*)&p->baddie.moveJustStartedB != '\0')
@@ -134,10 +180,7 @@ int fn_8016043C(int obj, GroundBaddieState* p)
 #pragma dont_inline on
 void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
 {
-    extern int* gBaddieControlInterface;
-    extern void* gDllCBStateHandlers[];
     extern void* gDllCBMoveHandlers[];
-    extern f32 lbl_803E2E9C;
     int setup;
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -171,12 +214,6 @@ void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
 #pragma dont_inline on
 void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
 {
-    extern void characterDoEyeAnims(int* obj, u8* a);
-    extern f32 sqrtf(f32);
-    extern int Obj_GetPlayerObject(void);
-    extern int* gBaddieControlInterface;
-    extern u8 lbl_80320008[];
-    extern u8 lbl_80320080[];
     char* targetObj;
     int stateResult;
     struct
@@ -218,14 +255,7 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
 int dll_CB_seqFn(short* obj, int p2, u8* e)
 {
 
-    extern int Curve_AdvanceAlongPath(int* p, f32 t);
-    extern int getAngle(float y, float x);
-    extern int* gBaddieControlInterface;
-    extern void* gDllCBStateHandlers[];
     extern void* gDllCBMoveHandlers[];
-    extern f32 lbl_803E2E8C;
-    extern f32 lbl_803E2E98;
-    extern f32 lbl_803E2E9C;
     int setup;
     RomCurveWalker* path;
     int sub;
@@ -304,24 +334,6 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
 #pragma scheduling on
 #pragma peephole on
 
-void ChukChuk_free(void);
-void ChukChuk_hitDetect(void);
-void ChukChuk_release(void);
-void ChukChuk_initialise(void);
-
-/*
- * Per-object extra state for the ChukChuk ice-spitter
- * (ChukChuk_getExtraSize == 0x18).
- */
-
-STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
-STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
-
-void ChukChuk_init(u8* obj, u8* params);
-void IceBall_hitDetect(void);
-void IceBall_release(void);
-void IceBall_initialise(void);
-
 void dll_CB_func0B_nop(void)
 {
 }
@@ -330,13 +342,10 @@ void dll_CB_release_nop(void)
 {
 }
 
-extern f32 lbl_803E2EA8;
-
 #pragma scheduling off
 #pragma peephole off
 void dll_CB_init(int* obj, u8* params, int extra)
 {
-    extern int* gBaddieControlInterface;
     GroundBaddieState* sub;
     u8 flags;
 
@@ -359,13 +368,8 @@ void dll_CB_init(int* obj, u8* params, int extra)
     }
 }
 
-extern int Curve_AdvanceAlongPath(int* p, f32 t);
-extern int getAngle(float y, float x);
-extern f32 lbl_803E2E98;
-
 void dll_CB_update(int* obj)
 {
-    extern int* gBaddieControlInterface;
     RomCurveWalker* path;
     GroundBaddieState* sub;
     u8* def;
@@ -410,10 +414,6 @@ void dll_CB_update(int* obj)
     ((GameObject*)obj)->anim.localPosZ = path->posZ;
 }
 
-int ChukChuk_getExtraSize(void);
-int ChukChuk_getObjectTypeId(void);
-int IceBall_getExtraSize(void);
-int IceBall_getObjectTypeId(void);
 int fn_8016052C(void)
 {
     return 0x6;
@@ -432,15 +432,6 @@ s16 dll_CB_setScale(int* obj)
     return ((BaddieState*)((GameObject*)obj)->extra)->controlMode;
 }
 
-extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
-
-void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void IceBall_free(void);
-void ChukChuk_update(short* obj);
-void ChukChuk_setScale(int obj, int v);
-void IceBall_init(void* obj);
-
 #pragma scheduling on
 int fn_8016050C(int p1, u8* obj)
 {
@@ -448,8 +439,6 @@ int fn_8016050C(int p1, u8* obj)
         return 3;
     return 6;
 }
-
-extern int* gBaddieControlInterface;
 
 #pragma scheduling off
 int fn_801603E8(int* obj, u8* obj2)
@@ -470,7 +459,6 @@ void dll_CB_hitDetect(int* obj)
     (*gPlayerInterface)->updateVelocityState(obj, a, gDllCBMoveHandlers);
 }
 
-extern f32 lbl_803E2E8C;
 #pragma scheduling on
 #pragma peephole off
 void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -487,7 +475,6 @@ void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-extern f32 lbl_803E2E68;
 #pragma scheduling off
 #pragma peephole on
 int fn_801605A8(short* out, u8* obj)
@@ -513,10 +500,6 @@ int fn_80160690(short* out, u8* obj)
     (*gPlayerInterface)->rotateTowardTarget(out, obj, 5);
     return 0;
 }
-
-extern f32 lbl_803E2E7C;
-extern f64 lbl_803E2E80;
-extern f32 lbl_803E2E88;
 
 #pragma peephole off
 int fn_8016032C(int* obj, GroundBaddieState* state)
@@ -546,12 +529,6 @@ int fn_8016032C(int* obj, GroundBaddieState* state)
     }
     return 0;
 }
-
-extern void* gDllCBStateHandlers[];
-int fn_80160534(int* obj);
-
-extern f32 lbl_803E2E90;
-extern f32 lbl_803E2E94;
 
 int fn_801605D4(int* obj, GroundBaddieState* def)
 {

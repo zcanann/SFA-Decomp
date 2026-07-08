@@ -23,6 +23,100 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+typedef struct ObjListObjectDef
+{
+    u8 pad00[0x14];
+    u32 objectId;
+} ObjListObjectDef;
+
+typedef struct ObjListObject
+{
+    u8 pad00[0x4c];
+    ObjListObjectDef* def;
+} ObjListObject;
+
+typedef f32 Mtx[3][4];
+
+/* rotation(s16)+scale+position transform block consumed by mtxRotateByVec3s */
+typedef struct ObjLocalTransform
+{
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 pad;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} ObjLocalTransform;
+
+typedef struct LoadedObj
+{
+    u8 pad00[0x06];
+    s16 flags06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+    u8 pad18[0x18];
+    void* parent;
+    u8 pad34[0x2];
+    u8 f36;
+    u8 pad37[0x5];
+    f32 f3c;
+    f32 f40;
+    s16 f44;
+    s16 seqId;
+    s16 typeId;
+    u8 pad4a[0x2];
+    s16* data;
+    u8* def;
+    ObjHitReactState* hitReactState;
+    u8 pad58[0x4];
+    ObjWeaponDaTable* weaponDaTable;
+    ObjAnimEventTable* objAnimEventTable;
+    u8 pad64[0x4];
+    int** dll;
+    int f6c;
+    ObjTextureRuntimeSlot* textureSlots;
+    ObjHitVolumeRuntimeTransform* hitVolumeTransforms;
+    ObjHitVolumeRuntimeBounds* hitVolumeBounds;
+    u8** models;
+    u8 pad80[0x22];
+    s16 fa2;
+    u8 pada4[0x4];
+    f32 cullDist;
+    s8 fac;
+    u8 padad[0x3];
+    u16 fb0;
+    s16 fb2;
+    s16 fb4;
+    u8 padb6[0x2];
+    int fb8;
+    u8 padbc[0x20];
+    int fdc;
+    u8 pade0[0x11];
+    u8 ff1;
+    u8 ff2;
+    u8 padf3[0x15];
+    int f108;
+} LoadedObj;
+
+typedef struct CharSpawn
+{
+    s16 id;
+    u8 unk2;
+    u8 unk3;
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    f32 x;
+    f32 y;
+    f32 z;
+    int mapId;
+} CharSpawn;
+
 #define OBJECT_CAMMODE_TITLE   0x57 /* cameramode DLL dll_0057_cameramodetitle */
 #define OBJECT_CAMMODE_DEFAULT 0x42 /* default gameplay cameramode DLL */
 
@@ -34,9 +128,58 @@
 #define OBJECT_OBJGROUP_HITBOX 6 /* joined when modelInstance flags & 0x40 (SKIP_RESET_UPDATE) */
 #define OBJECT_OBJGROUP_GROUP8 8 /* joined when modelInstance->group8RegistrationCount > 0 */
 
+/* loadCharacter model-load config word (flags29), passed to ObjModel_Load etc. */
+#define OBJLOAD_FLAG_HAS_SHADOW    0x0002 /* modelDef->shadowType != 0 */
+#define OBJLOAD_FLAG_ANIM_EVENTS   0x0040 /* allocate anim move-event table */
+#define OBJLOAD_FLAG_WEAPON_DA     0x0100 /* allocate weapon-DA table */
+#define OBJLOAD_FLAG_SINGLE_MODEL  0x0200 /* skip multi-model loop (modelDef->flags & 1) */
+#define OBJLOAD_FLAG_INDEXED_MODEL 0x0400 /* load one model at index (flags29>>11 & 0xf) */
+#define OBJLOAD_FLAG_SHADOW_TYPE3  0x8000 /* modelDef->shadowType == 3 */
+
 extern f32 lbl_803DE88C;
 extern f32 gObjColorFadeRate;
 extern f32 gObjColorFadeAlphaMax;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern s8 gObjPtrTableCount;
+extern int gObjPtrTable[];
+extern int gObjTablesBinCount;
+extern int* gObjTablesBinIndex;
+extern u8* gObjTablesBinData;
+extern int gObjUpdateList;
+extern int gObjCount;
+extern void* gObjList;
+extern const f32 lbl_803DE890;
+extern const f32 lbl_803DE8B8;
+extern int gObjDeferredFreeCount;
+extern void** gObjDeferredFreeList;
+extern char sObjSetupObjectLoadingLockedWarning[];
+extern char sObjDebugStrings[];
+extern s16 gObjPartitionPivot;
+extern int gObjSeqToObjIdMax;
+extern s16* gObjSeqToObjIdTable;
+extern f32 lbl_803DE8CC;
+extern f32 lbl_803DE8D0;
+extern void* gTitleMenuControlInterface;
+extern void* gModgfxInterface;
+extern u8* gObjFileRefCount;
+extern u8* gObjFileBufferTable;
+extern u32 gObjUpdateFlags;
+extern s16 gObjPlayerSpawnIdTable[2];
+extern f32 lbl_803DE8BC;
+extern f32 gObjPi;
+extern f32 lbl_803DE8C4;
+extern f32 lbl_803DE8C8;
+extern int lbl_803DCB70;
+extern int gObjDefCaptureMode;
+extern int lbl_803DCB8C;
+extern void* lbl_803DCB90;
+extern void* lbl_803DCBC0;
+extern int* gObjFileOffsetTable;
+extern int gObjFileCount;
+extern f32 gMapSavedPlayerOffsetX;
+extern f32 gMapSavedPlayerOffsetZ;
+
 extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 extern void* memset(void* dst, int val, int n);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
@@ -44,40 +187,16 @@ extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 extern void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
 extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern int getLoadedFileFlags(int);
-extern s8 gObjPtrTableCount;
-extern int gObjPtrTable[];
 extern void objList_remove(void* list, void* item);
-extern int gObjTablesBinCount;
-extern int* gObjTablesBinIndex;
-extern u8* gObjTablesBinData;
-extern int gObjUpdateList;
 extern f32 sqrtf(f32 x);
-extern int gObjCount;
-extern void* gObjList;
-extern const f32 lbl_803DE890;
 extern void mtx44Transpose(f32* src, f32* dst);
 extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void OSReport(const char* msg, ...);
 extern void* memcpy(void* dst, const void* src, int n);
-extern const f32 lbl_803DE8B8;
 extern void objFreeObjDef(u8* def, int flags);
-extern int gObjDeferredFreeCount;
-extern void** gObjDeferredFreeList;
 extern void Obj_RegisterObject(u8* obj, int b);
-extern char sObjSetupObjectLoadingLockedWarning[];
-extern char sObjDebugStrings[];
 extern void objLoadPlayerFromSave(u8* obj);
-extern s16 gObjPartitionPivot;
-extern int gObjSeqToObjIdMax;
-extern s16* gObjSeqToObjIdTable;
-char sObjUnknownTypeUsingDummyObjectWarning[] =
-    "Warning: Unknown object type '%d/%d romdefno %d', using DummyObject (128)\n";
-extern f32 lbl_803DE8CC;
-extern f32 lbl_803DE8D0;
-
 extern void modelInitBones(f32 scale, void* model);
 extern int shadowInit(void* obj, int cursor, int arg);
 extern void debugPrintf(char* fmt, ...);
@@ -85,52 +204,52 @@ extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();
 extern int getDataFileSize(int id);
-extern void* gTitleMenuControlInterface;
-extern void* gModgfxInterface;
 extern void fn_802B4DE0(u8* obj, int flag);
 extern void Obj_FreeObject(u8* obj);
 extern void fn_80059A50(int arg);
 extern void* textureFn_8006c5c4(void);
-extern u8* gObjFileRefCount;
-extern u8* gObjFileBufferTable;
-char sObjFreeObjdefError[] = "objFreeObjdef: Error!! (%d)\n";
 extern void playerUpdateWhileTimeStopped(u8* obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8* obj);
-extern u32 gObjUpdateFlags;
-
 extern int Obj_BuildTransformMatrixSlot(int obj);
 extern void playerDoHitDetection(int obj);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
+extern int getCurUiDll(void);
+extern void fn_80013B6C(int* p, int n);
+extern void AudioStream_StopAll(void);
+extern void mapLoadForObject(int id, void* obj);
+extern int loadModLines(int n, s16* out);
+extern void intersectModLineBuild(u8* buf);
+extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
+extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
+void* ObjModel_GetRenderOp(u8* model, int renderOpIndex);
+u16 modelFileHeaderGetCullDistance(u8* modelFile);
+void ObjModel_ClearRenderAttachment(u8* model);
+void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
+void ObjModel_SetRenderCallback(u8* model, void* callback);
+int roundUpTo32(int x);
+void* loadAssetFileById(int id, int arg);
+void ObjModel_LoadRenderOpTextures(u8* model, int arg);
+void setMatrixFromObjectTransposed(void* obj, f32* out);
+void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);
+void* ObjModel_LoadAnimData(u8* p, int b, int c);
+void* ObjModel_Load(int id, int arg2, int* outSize);
+void ObjModel_Release(u8* model);
+void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2);
+
+char sObjUnknownTypeUsingDummyObjectWarning[] =
+    "Warning: Unknown object type '%d/%d romdefno %d', using DummyObject (128)\n";
+
+char sObjFreeObjdefError[] = "objFreeObjdef: Error!! (%d)\n";
 
 u8 gObjCameraSetupBlock[32] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x3C, 0x00, 0x5A, 0x00, 0x55, 0x1E, 0x14,
 };
-extern s16 gObjPlayerSpawnIdTable[2];
-extern f32 lbl_803DE8BC;
-extern f32 gObjPi;
-extern f32 lbl_803DE8C4;
-extern f32 lbl_803DE8C8;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
-extern int getCurUiDll(void);
-extern int lbl_803DCB70;
-extern void fn_80013B6C(int* p, int n);
-extern void AudioStream_StopAll(void);
-extern int gObjDefCaptureMode;
-extern int lbl_803DCB8C;
-extern void mapLoadForObject(int id, void* obj);
+
 char sObjFreeNonExistentObjectWarning[] = "Tried to free non-existent object\n";
-extern void* lbl_803DCB90;
-extern void* lbl_803DCBC0;
-extern int* gObjFileOffsetTable;
-extern int gObjFileCount;
-extern int loadModLines(int n, s16* out);
-extern void intersectModLineBuild(u8* buf);
-extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
-extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
-extern f32 gMapSavedPlayerOffsetX;
-extern f32 gMapSavedPlayerOffsetZ;
+
 void doNothing_afterRenderObject(void)
 {
 }
@@ -142,16 +261,6 @@ void doNothing_beforeRenderObject(void)
 void fn_8002B85C(void)
 {
 }
-
-void* ObjModel_GetRenderOp(u8* model, int renderOpIndex);
-
-u16 modelFileHeaderGetCullDistance(u8* modelFile);
-
-void ObjModel_ClearRenderAttachment(u8* model);
-
-void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
-
-void ObjModel_SetRenderCallback(u8* model, void* callback);
 
 #pragma scheduling off
 #pragma peephole off
@@ -382,8 +491,6 @@ int objGetFlagsE5_2(u8* obj)
     return ((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE;
 }
 
-int roundUpTo32(int x);
-
 #pragma scheduling off
 #pragma peephole off
 void objSetHintTextIdx(int obj, u16 idx)
@@ -497,8 +604,6 @@ void* ObjList_GetObjects(int* outA, int* outB)
     return gObjList;
 }
 
-void* loadAssetFileById(int id, int arg);
-
 void Obj_SetActiveModelIndex(u8* obj, int idx)
 {
     ObjAnimComponent* objAnim;
@@ -522,18 +627,6 @@ void Obj_SetActiveModelIndex(u8* obj, int idx)
     }
     objAnim->bankIndex = idx;
 }
-
-typedef struct ObjListObjectDef
-{
-    u8 pad00[0x14];
-    u32 objectId;
-} ObjListObjectDef;
-
-typedef struct ObjListObject
-{
-    u8 pad00[0x4c];
-    ObjListObjectDef* def;
-} ObjListObject;
 
 void* getTrickyObject(void)
 {
@@ -565,8 +658,6 @@ ObjListObject* ObjList_FindObjectById(u32 objectId)
     return NULL;
 }
 
-typedef f32 Mtx[3][4];
-
 void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst)
 {
     f32 mtx[16];
@@ -592,19 +683,6 @@ void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag)
     dst[0] += playerMapOffsetX;
     dst[2] += playerMapOffsetZ;
 }
-
-/* rotation(s16)+scale+position transform block consumed by mtxRotateByVec3s */
-typedef struct ObjLocalTransform
-{
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    s16 pad;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} ObjLocalTransform;
 
 void objWorldToLocalPos(f32* out, u8* transform, f32* in)
 {
@@ -652,8 +730,6 @@ void* Obj_AllocObjectSetup(int size, int type)
     return p;
 }
 
-void ObjModel_LoadRenderOpTextures(u8* model, int arg);
-
 int objMove(u8* obj, f32 dx, f32 dy, f32 dz)
 {
     int n;
@@ -663,10 +739,6 @@ int objMove(u8* obj, f32 dx, f32 dy, f32 dz)
     ObjGroup_GetObjects(0, &n);
     return 0;
 }
-
-void mtx44Transpose(f32* src, f32* dst);
-
-void setMatrixFromObjectTransposed(void* obj, f32* out);
 
 void objFn_8002b67c(u8* obj)
 {
@@ -788,12 +860,6 @@ void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int y
     }
 }
 
-void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);
-
-void* ObjModel_LoadAnimData(u8* p, int b, int c);
-
-void* ObjModel_Load(int id, int arg2, int* outSize);
-
 void* Obj_SetupObject(int data, int flags, int arg2, int arg3, int parent)
 {
     void* obj;
@@ -834,8 +900,6 @@ void* loadObjectAtObject(u8* src, int arg1)
     }
     return obj;
 }
-
-void ObjModel_Release(u8* model);
 
 void Obj_RunInitCallback(u8* obj, int cb, int unused)
 {
@@ -1076,66 +1140,6 @@ void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags)
         PSMTXConcat((f32*)parentMtx, mtx, mtx);
     }
 }
-
-typedef struct LoadedObj
-{
-    u8 pad00[0x06];
-    s16 flags06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-    u8 pad18[0x18];
-    void* parent;
-    u8 pad34[0x2];
-    u8 f36;
-    u8 pad37[0x5];
-    f32 f3c;
-    f32 f40;
-    s16 f44;
-    s16 seqId;
-    s16 typeId;
-    u8 pad4a[0x2];
-    s16* data;
-    u8* def;
-    ObjHitReactState* hitReactState;
-    u8 pad58[0x4];
-    ObjWeaponDaTable* weaponDaTable;
-    ObjAnimEventTable* objAnimEventTable;
-    u8 pad64[0x4];
-    int** dll;
-    int f6c;
-    ObjTextureRuntimeSlot* textureSlots;
-    ObjHitVolumeRuntimeTransform* hitVolumeTransforms;
-    ObjHitVolumeRuntimeBounds* hitVolumeBounds;
-    u8** models;
-    u8 pad80[0x22];
-    s16 fa2;
-    u8 pada4[0x4];
-    f32 cullDist;
-    s8 fac;
-    u8 padad[0x3];
-    u16 fb0;
-    s16 fb2;
-    s16 fb4;
-    u8 padb6[0x2];
-    int fb8;
-    u8 padbc[0x20];
-    int fdc;
-    u8 pade0[0x11];
-    u8 ff1;
-    u8 ff2;
-    u8 padf3[0x15];
-    int f108;
-} LoadedObj;
-
-/* loadCharacter model-load config word (flags29), passed to ObjModel_Load etc. */
-#define OBJLOAD_FLAG_HAS_SHADOW    0x0002 /* modelDef->shadowType != 0 */
-#define OBJLOAD_FLAG_ANIM_EVENTS   0x0040 /* allocate anim move-event table */
-#define OBJLOAD_FLAG_WEAPON_DA     0x0100 /* allocate weapon-DA table */
-#define OBJLOAD_FLAG_SINGLE_MODEL  0x0200 /* skip multi-model loop (modelDef->flags & 1) */
-#define OBJLOAD_FLAG_INDEXED_MODEL 0x0400 /* load one model at index (flags29>>11 & 0xf) */
-#define OBJLOAD_FLAG_SHADOW_TYPE3  0x8000 /* modelDef->shadowType == 3 */
 
 void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused)
 {
@@ -1965,21 +1969,6 @@ void Obj_UpdateAllObjects(u8 flags)
     }
 }
 
-typedef struct CharSpawn
-{
-    s16 id;
-    u8 unk2;
-    u8 unk3;
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    f32 x;
-    f32 y;
-    f32 z;
-    int mapId;
-} CharSpawn;
-
 void mapSetupPlayer(void)
 {
     u8* base;
@@ -2576,8 +2565,6 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     }
     return roundUpTo32(size);
 }
-
-void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2);
 
 void fn_8002A5DC(u8* obj)
 {

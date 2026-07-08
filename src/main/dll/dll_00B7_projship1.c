@@ -6,11 +6,25 @@
  * message and returns -1. release/initialise are empty lifecycle hooks
  * kept so the object descriptor / DLL loader still resolves.
  */
-
 #include "main/dll/dll_72.h"
 #include "main/engine_shared.h"
 
+/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs).
+ * Union u64 member forces the retail 8-byte alignment after the 0x24-byte
+ * string (retail pad gap_07_8031983C_data). Same idiom as
+ * dll_00B1_projlightning3. */
+typedef union DllDescriptorTable
+{
+    void* ptrs[8];
+    u64 align8;
+} DllDescriptorTable;
+
 #define PROJECTILE_UNSUPPORTED_RETURN -1
+
+/*__DATA_EXTERNS__*/
+extern void projwallpower_doUnsupported();
+extern void projwallpower_release();
+extern void projwallpower_initialise();
 
 int projship1_doUnsupported(void)
 {
@@ -27,20 +41,6 @@ void projship1_initialise(void)
 }
 
 char sProjship1DoNoLongerSupported[] = "<projship1 Do>No Longer supported \n";
-
-/*__DATA_EXTERNS__*/
-extern void projwallpower_doUnsupported();
-extern void projwallpower_release();
-extern void projwallpower_initialise();
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs).
- * Union u64 member forces the retail 8-byte alignment after the 0x24-byte
- * string (retail pad gap_07_8031983C_data). Same idiom as
- * dll_00B1_projlightning3. */
-typedef union DllDescriptorTable
-{
-    void* ptrs[8];
-    u64 align8;
-} DllDescriptorTable;
 
 DllDescriptorTable lbl_80319840 = {{(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                                     projwallpower_initialise, projwallpower_release, (void*)0x00000000,

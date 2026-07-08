@@ -25,12 +25,37 @@
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTexture.h"
 #include "dolphin/gx/GXBump.h"
+
+typedef struct
+{
+    u32 a;
+    u32 b;
+} TevColorS10Pair;
+
+#define MOVIE_VOLUME_MAX      0x7f
+#define MOVIE_FADE_FRAMES_MAX 60000
+#define S16_MIN               (-0x8000)
+#define S16_MAX               0x7fff
+
+extern TevColorS10Pair lbl_803E1D30; /* TEV color-S10 / k-color constants */
+extern u32 lbl_803E1D38;
+extern u32 lbl_803E1D3C;
+extern u32 lbl_803E1D40;
+extern s32 gAttractMovieState;
+extern s32 lbl_803DD660;               /* texture-set free queue active */
+extern AIDCallback lbl_803DD668;       /* AI DMA done callback */
+extern s32 lbl_803DD66C;               /* DMA callback phase */
+extern u32 lbl_803DD670;               /* previous/pending DMA source addr */
+extern u32 lbl_803DD674;               /* queued next DMA source addr */
+extern u32 lbl_803DD678;               /* AI DMA double-buffer index */
+extern f32 lbl_803E1D50;               /* playback time accumulator */
+extern OSMessageQueue lbl_803A5CCC[1]; /* spent texture-set queue */
+
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
                               GXBool normalize, u32 pt_texmtx);
 extern void GXSetNumTexGens(u8 nTexGens);
-
 extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
 extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
 extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
@@ -50,6 +75,7 @@ extern void GXSetNumTevStages(u8 nStages);
 extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int width, int height);
 extern u8* ObjModel_GetRenderOp(int model, int idx);
 extern void PushFreeTextureSet(OSMessage msg);
+
 u16 gAttractMovieVolumeScale[128] = {
     0,     2,     8,     18,    32,    50,    73,    99,    130,   164,   203,   245,   292,   343,   398,   457,
     520,   587,   658,   733,   812,   895,   983,   1074,  1170,  1269,  1373,  1481,  1592,  1708,  1828,  1952,
@@ -60,30 +86,7 @@ u16 gAttractMovieVolumeScale[128] = {
     18723, 19115, 19511, 19911, 20316, 20724, 21136, 21553, 21974, 22398, 22827, 23260, 23696, 24137, 24582, 25031,
     25484, 25941, 26402, 26868, 27337, 27810, 28288, 28769, 29255, 29744, 30238, 30736, 31238, 31744, 32254, 32768,
 };
-typedef struct
-{
-    u32 a;
-    u32 b;
-} TevColorS10Pair;
-extern TevColorS10Pair lbl_803E1D30; /* TEV color-S10 / k-color constants */
-extern u32 lbl_803E1D38;
-extern u32 lbl_803E1D3C;
-extern u32 lbl_803E1D40;
-extern s32 gAttractMovieState;
-extern s32 lbl_803DD660;               /* texture-set free queue active */
-extern AIDCallback lbl_803DD668;       /* AI DMA done callback */
-extern s32 lbl_803DD66C;               /* DMA callback phase */
-extern u32 lbl_803DD670;               /* previous/pending DMA source addr */
-extern u32 lbl_803DD674;               /* queued next DMA source addr */
-extern u32 lbl_803DD678;               /* AI DMA double-buffer index */
-extern f32 lbl_803E1D50;               /* playback time accumulator */
-char lbl_803A57C0[0x50C];              /* AI DMA double buffer */
-extern OSMessageQueue lbl_803A5CCC[1]; /* spent texture-set queue */
-
-#define MOVIE_VOLUME_MAX      0x7f
-#define MOVIE_FADE_FRAMES_MAX 60000
-#define S16_MIN               (-0x8000)
-#define S16_MAX               0x7fff
+char lbl_803A57C0[0x50C]; /* AI DMA double buffer */
 
 void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u32 height)
 {

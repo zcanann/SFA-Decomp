@@ -26,23 +26,6 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
 
-STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
-STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
-STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
-STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
-
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-
-extern void objRenderFn_80041018(int obj);
-extern int getTrickyObject(void);
-
-#define TRICKY_IFACE_OFFSET      0x68 /* tricky object -> interface vtable pointer */
-#define TRICKY_IFACE_NOTIFY_SLOT 0x28 /* vtable slot invoked when in range */
-
-/* setScale's paired debris/dust particle bursts */
-#define WALLANIMATOR_PARTFX_DEBRIS 0xca
-#define WALLANIMATOR_PARTFX_DUST   0xcb
-
 /* placement record: only the +0x1C short (debris spawn roll) is read here */
 typedef struct WallanimatorPlacement
 {
@@ -64,7 +47,22 @@ typedef struct WallanimatorState
     u8 pad5[0x8 - 0x5];
 } WallanimatorState;
 
+STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
+STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
+STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
+STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 STATIC_ASSERT(sizeof(WallanimatorState) == 8);
+
+#define TRICKY_IFACE_OFFSET      0x68 /* tricky object -> interface vtable pointer */
+#define TRICKY_IFACE_NOTIFY_SLOT 0x28 /* vtable slot invoked when in range */
+
+/* setScale's paired debris/dust particle bursts */
+#define WALLANIMATOR_PARTFX_DEBRIS 0xca
+#define WALLANIMATOR_PARTFX_DUST   0xcb
+
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderFn_80041018(int obj);
+extern int getTrickyObject(void);
 
 u8 wallanimator_modelMtxFn(int* obj)
 {

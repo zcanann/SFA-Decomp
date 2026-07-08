@@ -20,11 +20,6 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
 
-#define WMLEVELCONTROL_OBJGROUP 9
-
-/* LightFoot Village map-event id (seeded from the palace spirit chain). */
-#define WMLEVELCONTROL_MAP_LIGHTFOOT 0xe
-
 /* per-object extra state (getExtraSize == 0x1C) */
 typedef struct WmLevelControlState
 {
@@ -47,27 +42,25 @@ STATIC_ASSERT(offsetof(WmLevelControlState, latchesDisabled) == 0x14);
 STATIC_ASSERT(offsetof(WmLevelControlState, frameCounter) == 0x18);
 STATIC_ASSERT(sizeof(WmLevelControlState) == 0x1C);
 
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void gameTextShow(int a);
-extern int getCurSeqNo(void);
-extern f32 lbl_803E5E70; /* 0.0 */
-extern int mapGetDirIdx(int idx);
-extern int unlockLevel(s32 val, int idx, int flag);
-extern int lockLevel(s32 val, int idx);
-extern f32 gWmLevelControlIntroMessageDuration; /* 300.0: intro-message duration */
-extern void setDrawLights(int v);
-extern int getSkyColorFn_80088e08(int slot);
-extern void skySetOverrideLightColorEnabled(u8 enabled);
-extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
-extern void skyFn_80089710(int flags, int enabled, int startComplete);
-extern f32 fn_8008ED88(void);
-extern void skyFn_800895e0(int flags, int red, int green, int blue, int m1, int m2);
-extern void fn_80089510(int flags, int red, int green, int blue);
-extern void fn_80089578(int flags, int red, int green, int blue);
-extern void skySetOverrideLightDirectionEnabled(u8 enabled);
-extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
-extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
-extern void Music_Trigger(int id, int arg);
+typedef struct
+{
+    f32 x, y, z;
+} LightVec3;
+
+typedef struct
+{
+    LightVec3 light;
+    LightVec3 color;
+    LightVec3 fog;
+} LightVecSet;
+
+#define WMLEVELCONTROL_OBJGROUP 9
+
+/* LightFoot Village map-event id (seeded from the palace spirit chain). */
+#define WMLEVELCONTROL_MAP_LIGHTFOOT 0xe
+
+extern f32 lbl_803E5E70;                          /* 0.0 */
+extern f32 gWmLevelControlIntroMessageDuration;   /* 300.0: intro-message duration */
 extern f32 gWmLevelControlSkyVecTable[];          /* sky light/color/fog vector table */
 extern u8 gWmLevelControlSkyColorFrom;            /* sky-color blend source triplet */
 extern u8 gWmLevelControlSkyColorTo;              /* sky-color blend target triplet */
@@ -86,19 +79,26 @@ extern f32 gWmLevelControlBlendDecayPerTick;      /* 0.02: blend decay per tick 
 extern f32 gWmLevelControlLightIntensityBase;     /* 32.0: light-intensity base */
 extern f32 gWmLevelControlLightIntensityRange;    /* 128.0: light-intensity blend range */
 extern f32 gWmLevelControlOverrideLightIntensity; /* 100.0: override light intensity */
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextShow(int a);
+extern int getCurSeqNo(void);
+extern int mapGetDirIdx(int idx);
+extern int unlockLevel(s32 val, int idx, int flag);
+extern int lockLevel(s32 val, int idx);
+extern void setDrawLights(int v);
+extern int getSkyColorFn_80088e08(int slot);
+extern void skySetOverrideLightColorEnabled(u8 enabled);
+extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
+extern void skyFn_80089710(int flags, int enabled, int startComplete);
+extern f32 fn_8008ED88(void);
+extern void skyFn_800895e0(int flags, int red, int green, int blue, int m1, int m2);
+extern void fn_80089510(int flags, int red, int green, int blue);
+extern void fn_80089578(int flags, int red, int green, int blue);
+extern void skySetOverrideLightDirectionEnabled(u8 enabled);
+extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
+extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
+extern void Music_Trigger(int id, int arg);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-
-typedef struct
-{
-    f32 x, y, z;
-} LightVec3;
-
-typedef struct
-{
-    LightVec3 light;
-    LightVec3 color;
-    LightVec3 fog;
-} LightVecSet;
 
 void fn_801F3F18(int obj)
 {

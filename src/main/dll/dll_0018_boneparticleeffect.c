@@ -12,6 +12,50 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_0018_boneparticleeffect.h"
+
+#define BONE_PARTICLE_EFFECT_PARTFX       0x28c
+#define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
+#define BONE_PARTICLE_EFFECT_BUFFER_BYTES 0x140
+#define BONE_PARTICLE_EFFECT_SLOT_COUNT   20
+
+/* the two bone-particle texture assets loaded at init (gBoneParticleTextureA/B) */
+#define BONE_PARTICLE_TEXTURE_A_ID 0x16b
+#define BONE_PARTICLE_TEXTURE_B_ID 0x201
+
+#define GX_CULL_NONE 0
+
+extern void* gBoneParticleEffectBuffers[];
+extern void* gBoneParticleTextureA;
+extern void* gBoneParticleTextureB;
+extern s16 gBoneParticleEffectTimer;
+extern s16 gBoneParticleStageIndex;
+extern s32 lbl_803DD2B0;
+extern s32 gBoneParticleScrollOffset;
+extern f32 gBoneParticleDrift;
+extern f32 gBoneParticleDriftVelocity;
+extern s32 gBoneParticleBufferFlip;
+extern const f32 lbl_803DF4A8;
+extern f32 gBoneParticleDriftMax;
+extern f32 lbl_803DF4B0;
+extern f32 gBoneParticleDriftMin;
+extern const f32 lbl_803DF4B8;
+extern const f32 lbl_803DF4BC;
+extern f32 lbl_803DF4C0;
+extern f32 lbl_803DF4C4;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+
+extern void Sfx_PlayFromObject(void* obj, int id);
+extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void Camera_LoadModelViewMatrix(void* a, int b, void* c, f32 e, f32 f, int d);
+extern void GXSetCullMode(int mode);
+extern void setTextColor(void* ctx, int r, int g, int b, int a);
+extern void _textSetColor(void* ctx, int r, int g, int b, int a);
+extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d, int e);
+extern void drawFn_8005cf8c(void* a, void* b, int count);
+extern void* Obj_GetActiveModel(void);
+extern void PSMTXMultVec(void* m, void* src, void* dst);
 
 static inline int* Modgfx_GetActiveModel(void* obj)
 {
@@ -34,17 +78,6 @@ void boneParticleEffect_func04_nop(void)
 void boneParticleEffect_func03_nop(void)
 {
 }
-
-#define BONE_PARTICLE_EFFECT_PARTFX       0x28c
-#define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
-#define BONE_PARTICLE_EFFECT_BUFFER_BYTES 0x140
-#define BONE_PARTICLE_EFFECT_SLOT_COUNT   20
-/* the two bone-particle texture assets loaded at init (gBoneParticleTextureA/B) */
-#define BONE_PARTICLE_TEXTURE_A_ID 0x16b
-#define BONE_PARTICLE_TEXTURE_B_ID 0x201
-extern void* gBoneParticleEffectBuffers[];
-extern void* gBoneParticleTextureA;
-extern void* gBoneParticleTextureB;
 
 /* scheduling-off intentionally stays in effect through end-of-file (release/update/initialise/
    spawnAtBones); peephole is re-enabled at boneParticleEffect_spawnAtBones below. Do not close. */
@@ -69,7 +102,6 @@ void boneParticleEffect_release(void)
         textureFree(gBoneParticleTextureB);
 }
 
-extern void Sfx_PlayFromObject(void* obj, int id);
 f32 gBoneParticleConfigTable[108] = {
     -1500.0f, 0.0f,     -1500.0f, -1500.0f, 0.0f,     1500.0f, 1500.0f, 0.0f,    1500.0f, 1500.0f,  0.0f,    -1500.0f,
     -1500.0f, 0.0f,     -1500.0f, -1500.0f, 0.0f,     1500.0f, 1500.0f, 0.0f,    1500.0f, 1500.0f,  0.0f,    -1500.0f,
@@ -81,56 +113,6 @@ f32 gBoneParticleConfigTable[108] = {
     -1500.0f, -1500.0f, 0.0f,     1500.0f,  -1500.0f, 0.0f,    1500.0f, 1500.0f, 0.0f,    -1500.0f, 1500.0f, 0.0f,
     -1500.0f, -1500.0f, 0.0f,     1500.0f,  -1500.0f, 0.0f,    1500.0f, 1500.0f, 0.0f,    -1500.0f, 1500.0f, 0.0f,
 };
-extern s16 gBoneParticleEffectTimer;
-extern s16 gBoneParticleStageIndex;
-extern s32 lbl_803DD2B0;
-extern s32 gBoneParticleScrollOffset;
-extern f32 gBoneParticleDrift;
-extern f32 gBoneParticleDriftVelocity;
-extern s32 gBoneParticleBufferFlip;
-extern const f32 lbl_803DF4A8;
-extern f32 gBoneParticleDriftMax;
-extern f32 lbl_803DF4B0;
-extern f32 gBoneParticleDriftMin;
-extern const f32 lbl_803DF4B8;
-extern const f32 lbl_803DF4BC;
-extern f32 lbl_803DF4C0;
-extern f32 lbl_803DF4C4;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-typedef u8 BoneFxJRow[16];
-
-typedef struct BoneFxVtx
-{
-    u16 sx;
-    u16 sy;
-    u16 sz;
-    u16 pad;
-    f32 w;
-    f32 vx;
-    f32 vy;
-    f32 vz;
-} BoneFxVtx;
-
-/* One 0x10-byte rendered particle slot in a gBoneParticleEffectBuffers buffer. */
-typedef struct ParticleSlot
-{
-    s16 posX, posY, posZ;
-    u16 pad;
-    s16 texU, texV;
-    u8 red, green, blue, alpha;
-} ParticleSlot;
-
-extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void Camera_LoadModelViewMatrix(void* a, int b, void* c, f32 e, f32 f, int d);
-extern void GXSetCullMode(int mode);
-extern void setTextColor(void* ctx, int r, int g, int b, int a);
-
-#define GX_CULL_NONE 0
-extern void _textSetColor(void* ctx, int r, int g, int b, int a);
-extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d, int e);
-
-extern void drawFn_8005cf8c(void* a, void* b, int count);
 
 /* Per-bone particle vertex update + draw. */
 #pragma opt_propagation off
@@ -453,9 +435,6 @@ void boneParticleEffect_initialise(void)
         }
     }
 }
-
-extern void* Obj_GetActiveModel(void);
-extern void PSMTXMultVec(void* m, void* src, void* dst);
 
 void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8 prob, short* src)
 {

@@ -27,13 +27,11 @@ STATIC_ASSERT(offsetof(CfMagicWallMapData, visibleEvent) == 0x20);
 /* a quarter turn: the wall is invisible when viewed from behind */
 #define CFMAGICWALL_SIDE_ANGLE 0x4000
 
-extern int Obj_GetYawDeltaToObject();
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-
-extern f32 Vec_distance(f32* a, f32* b);
-
 extern f32 lbl_803E43D8; /* render scale */
 extern f32 lbl_803E43DC; /* 255.0f - full alpha */
+extern int Obj_GetYawDeltaToObject();
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern f32 Vec_distance(f32* a, f32* b);
 
 int cfmagicwall_getExtraSize(void)
 {

@@ -12,6 +12,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/VF/dll_021C_vfpladders.h"
 
 #define VFPLADDERS_TRIGGER_SEQID 0x548
 #define VFPLADDERS_DROP_DELAY    0x5a /* frames between trigger and drop */
@@ -25,32 +26,6 @@ enum
     VFPLADDERS_PHASE_DROPPING = 1,
     VFPLADDERS_PHASE_SETTLED = 2
 };
-
-typedef struct VfpLaddersState
-{
-    s16 baseGameBit;    /* 0x00 */
-    s16 triggerGameBit; /* 0x02 */
-    s16 phase;          /* 0x04: VFPLADDERS_PHASE_* */
-    s16 delayTimer;     /* 0x06 */
-} VfpLaddersState;
-
-typedef struct VfpLaddersSetup
-{
-    u8 pad00[0x0C];
-    f32 baseY; /* 0x0C: placed height */
-    u8 pad10[0x1E - 0x10];
-    s16 baseGameBit;    /* 0x1E */
-    s16 triggerGameBit; /* 0x20 */
-} VfpLaddersSetup;
-
-STATIC_ASSERT(sizeof(VfpLaddersState) == 0x08);
-STATIC_ASSERT(offsetof(VfpLaddersState, baseGameBit) == 0x00);
-STATIC_ASSERT(offsetof(VfpLaddersState, triggerGameBit) == 0x02);
-STATIC_ASSERT(offsetof(VfpLaddersState, phase) == 0x04);
-STATIC_ASSERT(offsetof(VfpLaddersState, delayTimer) == 0x06);
-STATIC_ASSERT(offsetof(VfpLaddersSetup, baseY) == 0x0C);
-STATIC_ASSERT(offsetof(VfpLaddersSetup, baseGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(VfpLaddersSetup, triggerGameBit) == 0x20);
 
 int vfpladders_SeqFn(void)
 {

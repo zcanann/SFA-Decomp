@@ -11,44 +11,6 @@
 #include "main/dll/savedata_struct.h"
 #include "main/frame_timing.h"
 #include "main/textrender.h"
-extern int saveFileStruct_isCheatActive(u8 idx);
-
-/*
- * In-string formatting control codes (Unicode PUA, 0xe000..0xf8ff) and the
- * per-window horizontal alignment they select (win[0x12]). The align codes
- * set the mode; the realign switch reads it back to place the line.
- */
-#define TEXT_CTRL_SEQ_ID        0xe000
-#define TEXT_CTRL_SEQ_TIME      0xe018
-#define TEXT_CTRL_HINT_ID       0xe020
-#define TEXT_CTRL_SCALE         0xf8f4
-#define TEXT_CTRL_FONT          0xf8f7
-#define TEXT_CTRL_ALIGN_LEFT    0xf8f8
-#define TEXT_CTRL_ALIGN_RIGHT   0xf8f9
-#define TEXT_CTRL_ALIGN_CENTER  0xf8fa
-#define TEXT_CTRL_ALIGN_JUSTIFY 0xf8fb
-#define TEXT_CTRL_COLOR         0xf8ff
-
-#define TEXT_ALIGN_LEFT    0
-#define TEXT_ALIGN_RIGHT   1
-#define TEXT_ALIGN_CENTER  2
-#define TEXT_ALIGN_JUSTIFY 3
-
-#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_LEFT  0x43b
-#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_MID   0x43e
-#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_RIGHT 0x43d
-
-u16* FUN_80017460(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4, u64 fwdArg5, u64 fwdArg6, u64 fwdArg7,
-                  u64 fwdArg8, u32 arg9, int arg10, u32 arg11, u32 arg12, u32 arg13, u32 arg14, u32 arg15, u32 arg16)
-{
-    return 0;
-}
-
-u16* FUN_80017468(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4, u64 fwdArg5, u64 fwdArg6, u64 fwdArg7,
-                  u64 fwdArg8, u32 arg9, u32 arg10, u32 arg11, u32 arg12, u32 arg13, u32 arg14, u32 arg15, u32 arg16)
-{
-    return 0;
-}
 
 typedef struct
 {
@@ -64,19 +26,6 @@ typedef struct
     u8 lang;     /* 0x0e */
     u8 page;     /* 0x0f */
 } TextGlyph;
-
-/* Per-glyph font id stored in TextGlyph.lang (characterStruct.font). Id 1 is unused. */
-#define GAMETEXT_FONT_JAPANESE 0
-#define GAMETEXT_FONT_ICON     2
-#define GAMETEXT_FONT_FLAG     3
-#define GAMETEXT_FONT_LATIN    4
-#define GAMETEXT_FONT_FACE     5
-
-/* Loaded font slot: gGameTextCharsets[] index, one per load purpose/directory. */
-#define GAMETEXT_SLOT_DIALOGUE 0 /* various directories */
-#define GAMETEXT_SLOT_CUTSCENE 1 /* Sequences */
-#define GAMETEXT_SLOT_ERROR    2 /* Boot */
-#define GAMETEXT_SLOT_HUD      3 /* Link */
 
 typedef struct
 {
@@ -104,6 +53,147 @@ typedef struct GameTextBox
     u8 alpha;
     u8 unk1F;
 } GameTextBox;
+STATIC_ASSERT(offsetof(GameTextBox, style) == 0x13);
+STATIC_ASSERT(offsetof(GameTextBox, alpha) == 0x1E);
+
+typedef struct
+{
+    u32 key;
+    int len;
+} CtrlCharEntry;
+
+typedef struct DiscStatusMessage
+{
+    u16 textId;    /* 0x00 */
+    u16 lineCount; /* 0x02 */
+    u32 style;     /* 0x04 */
+    char** lines;  /* 0x08 */
+} DiscStatusMessage;
+
+typedef struct
+{
+    u8 _pad[0x1c];
+    int state;
+    u8 _pad2[8];
+} GameTextStateElem;
+
+typedef struct
+{
+    int opcode;
+    int arg0;
+    int arg1;
+    int arg2;
+    int arg3;
+} GameTextSlot;
+
+typedef f32 Mtx[3][4];
+
+typedef struct
+{
+    int state;
+    u8 pad04[4];
+    u8 dirId;
+    u8 languageId;
+    u8 pad0a[0x1e];
+} GameTextLoadRequest;
+
+typedef struct
+{
+    u8 pad00[0x3c];
+    void* loadHandle;
+    void* dvdFileInfo;
+    int state;
+    u8 dirId;
+    u8 languageId;
+    u8 active;
+    u8 sourceId;
+} GameTextLoadSlot;
+
+typedef struct GameTextCharset
+{
+    u8* strings;
+    u8* entries;
+    int headerCount;
+    int count;
+    u8 pad10[0xc];
+    int status;
+} GameTextCharset;
+
+typedef struct
+{
+    u32 code;
+    u16 r, g, b, a;
+} SubtitleCmd;
+
+#define SUBTITLE_LINE_COUNT 256
+
+typedef struct SubtitleLineTable
+{
+    void* blocks[SUBTITLE_LINE_COUNT];
+    char* lines[SUBTITLE_LINE_COUNT];
+    f32 times[SUBTITLE_LINE_COUNT];
+} SubtitleLineTable;
+
+typedef struct SubtitleTextEntry
+{
+    u8 pad0[2];
+    u16 count;
+    u8 pad4[4];
+    char** strs;
+} SubtitleTextEntry;
+
+/*
+ * In-string formatting control codes (Unicode PUA, 0xe000..0xf8ff) and the
+ * per-window horizontal alignment they select (win[0x12]). The align codes
+ * set the mode; the realign switch reads it back to place the line.
+ */
+#define TEXT_CTRL_SEQ_ID        0xe000
+#define TEXT_CTRL_SEQ_TIME      0xe018
+#define TEXT_CTRL_HINT_ID       0xe020
+#define TEXT_CTRL_SCALE         0xf8f4
+#define TEXT_CTRL_FONT          0xf8f7
+#define TEXT_CTRL_ALIGN_LEFT    0xf8f8
+#define TEXT_CTRL_ALIGN_RIGHT   0xf8f9
+#define TEXT_CTRL_ALIGN_CENTER  0xf8fa
+#define TEXT_CTRL_ALIGN_JUSTIFY 0xf8fb
+#define TEXT_CTRL_COLOR         0xf8ff
+
+#define TEXT_ALIGN_LEFT    0
+#define TEXT_ALIGN_RIGHT   1
+#define TEXT_ALIGN_CENTER  2
+#define TEXT_ALIGN_JUSTIFY 3
+
+#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_LEFT  0x43b
+#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_MID   0x43e
+#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_RIGHT 0x43d
+
+/* Per-glyph font id stored in TextGlyph.lang (characterStruct.font). Id 1 is unused. */
+#define GAMETEXT_FONT_JAPANESE 0
+#define GAMETEXT_FONT_ICON     2
+#define GAMETEXT_FONT_FLAG     3
+#define GAMETEXT_FONT_LATIN    4
+#define GAMETEXT_FONT_FACE     5
+
+/* Loaded font slot: gGameTextCharsets[] index, one per load purpose/directory. */
+#define GAMETEXT_SLOT_DIALOGUE 0 /* various directories */
+#define GAMETEXT_SLOT_CUTSCENE 1 /* Sequences */
+#define GAMETEXT_SLOT_ERROR    2 /* Boot */
+#define GAMETEXT_SLOT_HUD      3 /* Link */
+
+#define GAMETEXT_PATH_BUFFER_OFFSET           0x380
+#define GAMETEXT_COMMAND_STRING_BUFFER_OFFSET 0x3c0
+#define GAMETEXT_LOAD_REQUESTS_OFFSET         0x15dc
+#define GAMETEXT_SEQUENCE_LOAD_STATE_OFFSET   0x1604
+#define GAMETEXT_FONT_SLOT_OFFSET             0x1610
+#define GAMETEXT_LOAD_SLOTS_OFFSET            0x1660
+#define GAMETEXT_PENDING_REQUEST_SCAN_OFFSET  (GAMETEXT_LOAD_REQUESTS_OFFSET - 0x1c)
+#define GAMETEXT_LOAD_SLOT_COUNT              8
+#define GAMETEXT_PENDING_SOURCE_COUNT         4
+#define GAMETEXT_INVALID_DIR                  0xff
+#define GAMETEXT_INVALID_LANGUAGE             6
+#define GAMETEXT_MAP_DIR_COUNT                0x49
+#define GAMETEXT_LANGUAGE_COUNT               6
+#define GAMETEXT_SEQUENCE_SOURCE_ID           1
 
 extern int curLanguage;
 extern TextFont* gameTextFonts;
@@ -134,14 +224,166 @@ extern int gGameTextShadowOffsetY;
 extern int lbl_803DC99C;
 extern int gameTextCharset;
 extern int lbl_803DB3CC;
-
-typedef struct
-{
-    u32 key;
-    int len;
-} CtrlCharEntry;
-
 extern CtrlCharEntry lbl_802C86F0[];
+
+/*
+ * Shared disc-status lines living outside this unit (0x803DB37C..): mostly
+ * empty/spacer lines reused by every message.
+ */
+extern char lbl_803DB37C[];
+extern char lbl_803DB380[];
+extern char lbl_803DB384[];
+extern char lbl_803DB388[];
+extern char lbl_803DB38C[];
+extern char lbl_803DB390[];
+extern char lbl_803DB394[];
+extern char lbl_803DB398[];
+extern char lbl_803DB39C[];
+extern char lbl_803DB3A4[];
+extern char lbl_803DB3A8[];
+extern char lbl_803DB3B0[];
+extern char lbl_803DB3BC[];
+extern char* lbl_803DB3A0[];
+extern char* lbl_803DB3AC[];
+extern char* lbl_803DB3B4[];
+extern char* lbl_803DB3C0[];
+
+extern u8 sGameTextGlyphOrder[];
+extern char gGameTextFontData[];
+extern u8 gGameTextBase[];
+extern u8 lbl_803399A0[];
+extern u8 lbl_803399C0[];
+extern int gGameTextFallbackBuf;
+extern u8* gGameTextLastEntry;
+extern int gCurTextBuffer;
+extern int gGameTextBufferIndex;
+extern f32 gGameTextFadeLimit;
+extern char lbl_803DB3D4;
+extern char* sMapDirectoryNameTable[];
+extern void* curGameTextDir;
+extern int gGameTextSequenceMode;
+extern int gSubtitleActive;
+extern void* gGameTextPendingDir;
+extern u8 lbl_803DC980;
+extern int gSubtitlesEnabled;
+extern u16 lbl_803DC9AA;
+extern u16 lbl_803DC9A8;
+extern int lbl_803DC9C8;
+extern GameTextSlot lbl_8033A540[];
+extern int gGameTextClearColor;
+extern int gGameTextLastDir;
+extern void* gCurTextBox;
+extern int gGameTextSavedDir;
+extern s16 gGameTextTaskTextAllowList[];
+extern int gGameTextPendingTextId;
+extern u8 gSubtitleColorR;
+extern u8 gSubtitleColorG;
+extern u8 gSubtitleColorB;
+extern u8 gSubtitleColorA;
+extern void* gSubtitleBoxTextures[];
+extern int gSubtitleBlockCount;
+extern int lbl_803DC9D0;
+extern int lbl_803DC9D4;
+extern int gGameTextLastLanguage;
+extern char sGameTextMapPathFormat[];
+extern char sGameTextSequencePathFormat[];
+extern int lbl_803DC984;
+extern u8 lbl_803DC990;
+extern u8 lbl_803DC991;
+extern u8 lbl_803DC992;
+extern u8* lbl_803DC9C4;
+extern int lbl_803DB378;
+extern void* lbl_8033BE40[];
+extern int gGameTextBoxCornerInset;
+extern void* gGameTextBoxCornerTexture;
+extern void* gGameTextBoxBgTexture;
+extern u32 gGameTextBoxFillColor;
+extern u8 lbl_803DC968;
+extern u16 gGameTextSjisGlyphTable[];
+extern int lbl_803DB3C4;
+extern int gSubtitleLineIndex;
+extern f32 gSubtitleCurTime;
+extern int gSubtitleElapsedFrames;
+extern int gSubtitleLineCount;
+extern f32 gSubtitleFramesPerSecond;
+extern int gGameTextBoxInset;
+extern int gGameTextBoxColorR;
+extern int gGameTextBoxColorG;
+extern int gGameTextBoxColorB;
+extern int gGameTextBoxColorA;
+extern void* gGameTextBoxEdgeTexture;
+extern s16 gGameTextBoxTexAssets;
+extern u16 gGameTextBoxCornerTexSrc[];
+extern u16 lbl_802CA100[];
+extern f32 lbl_803DE730;
+extern f32 gSubtitleNoTimeSentinel;
+extern u32 lbl_80339C40[];
+
+extern int saveFileStruct_isCheatActive(u8 idx);
+extern int utf8GetNextChar(u8* p, int* outLen);
+extern void setTextColor(int unused, int a, int b, int c, int d);
+extern void _textSetColor(int unused, int a, int b, int c, int d);
+extern void textureSetupFn_800799c0(void);
+extern void textRenderSetup(void);
+extern void textRenderSetupFn_80079804(void);
+extern void textRenderSetupFn_800795e8(void);
+extern void textBlendSetupFn_80078a7c(void);
+extern void selectTexture(u8* tex, int mapId);
+extern void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht);
+extern void gxSetScissorRect(int a, int b, int c, int d, int e, int f);
+extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
+int getGameState(void);
+int getHudHiddenFrameCount(void);
+int mmSetFreeDelay(int v);
+int testAndSet_onlyUseHeap3(int v);
+extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
+extern int gameTextGetTaskText(int taskId, int* textId, int* dirId);
+int mmCreateMemoryStore(int size);
+extern void* memcpy(void* dst, const void* src, int n);
+extern void setFileInfo(void* fileInfo);
+extern void* loadFileByPathAsync(char* path, void* fileInfo, int flags, void* callback);
+extern void DVDCancelAsync(void* fileInfo, void* callback);
+extern void textDisplayFn_800168dc(int a, int b);
+extern void gameTextFn_8001658c(int a, int b, int c);
+extern void gameTextRenderStrs(int a, int b);
+extern u8* gameTextGetCurBox(void);
+extern void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
+extern void gameTextBoxFn_800164b0(int id, int idx, int* x0, int* x1, int* y0, int* y1);
+extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int scale);
+extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int flag);
+extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int part, int flag);
+extern void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag);
+extern int mmSetFreeDelay(int v);
+extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
+extern u16 OSGetFontEncode(void);
+extern void OSLoadFont(void* buf, void* tmp);
+extern void OSGetFontWidth(u8* s, int* width);
+extern void OSGetFontTexel(u8* s, void* img, int pos, int stride, int* width);
+extern void gameTextShowStr(int str, int a, int b, int c);
+extern char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH);
+
+void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
+extern void translateToDinoLanguage(u8* str);
+extern void* gameTextGet(int textId);
+extern void subtitleFn_8001b700(void);
+extern void loadGameTextSequence();
+extern void setLanguageFn_8001ad64(void* slot);
+extern void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box);
+extern SubtitleCmd* subtitleParseControlCmds(int str, int* count);
+int GameText_CountPrintableChars(u8* str);
+int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
+
+u16* FUN_80017460(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4, u64 fwdArg5, u64 fwdArg6, u64 fwdArg7,
+                  u64 fwdArg8, u32 arg9, int arg10, u32 arg11, u32 arg12, u32 arg13, u32 arg14, u32 arg15, u32 arg16)
+{
+    return 0;
+}
+
+u16* FUN_80017468(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4, u64 fwdArg5, u64 fwdArg6, u64 fwdArg7,
+                  u64 fwdArg8, u32 arg9, u32 arg10, u32 arg11, u32 arg12, u32 arg13, u32 arg14, u32 arg15, u32 arg16)
+{
+    return 0;
+}
 
 /*
  * Retail .data begins here with the disc-error/loading screens'
@@ -248,28 +490,6 @@ char gGameTextFontData[1360] = {
     0x4E, 0x2D, 0x00, 0x4B, 0x00, 0x43, 0x01, 0x02, 0x00, 0x00, 0x12, 0x15, 0x00, 0x00, 0x00, 0x00, 0x20, 0x26, 0x00,
     0x5E, 0x00, 0x43, 0x01, 0x02, 0x08, 0x09, 0x12, 0x04, 0x00, 0x00,
 };
-
-/*
- * Shared disc-status lines living outside this unit (0x803DB37C..): mostly
- * empty/spacer lines reused by every message.
- */
-extern char lbl_803DB37C[];
-extern char lbl_803DB380[];
-extern char lbl_803DB384[];
-extern char lbl_803DB388[];
-extern char lbl_803DB38C[];
-extern char lbl_803DB390[];
-extern char lbl_803DB394[];
-extern char lbl_803DB398[];
-extern char lbl_803DB39C[];
-extern char lbl_803DB3A4[];
-extern char lbl_803DB3A8[];
-extern char lbl_803DB3B0[];
-extern char lbl_803DB3BC[];
-extern char* lbl_803DB3A0[];
-extern char* lbl_803DB3AC[];
-extern char* lbl_803DB3B4[];
-extern char* lbl_803DB3C0[];
 
 /* Japanese disc-status message lines (UTF-8 encoded). */
 /* "An error has occurred." */
@@ -384,13 +604,6 @@ char* lbl_802C97F8[] = {
  * A disc-status message: the id of the equivalent gametext entry, its line
  * list, and the style word the drawer reads (top byte = text alpha).
  */
-typedef struct DiscStatusMessage
-{
-    u16 textId;    /* 0x00 */
-    u16 lineCount; /* 0x02 */
-    u32 style;     /* 0x04 */
-    char** lines;  /* 0x08 */
-} DiscStatusMessage;
 
 /*
  * The Japanese disc-status resource: the "Now loading..." text, the seven
@@ -524,21 +737,6 @@ int getControlCharLen(u32 c)
     }
     return 0;
 }
-
-extern int utf8GetNextChar(u8* p, int* outLen);
-void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
-extern void translateToDinoLanguage(u8* str);
-extern void setTextColor(int unused, int a, int b, int c, int d);
-extern void _textSetColor(int unused, int a, int b, int c, int d);
-extern void textureSetupFn_800799c0(void);
-extern void textRenderSetup(void);
-extern void textRenderSetupFn_80079804(void);
-extern void textRenderSetupFn_800795e8(void);
-extern void textBlendSetupFn_80078a7c(void);
-extern void selectTexture(u8* tex, int mapId);
-extern void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht);
-extern void gxSetScissorRect(int a, int b, int c, int d, int e, int f);
-extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 
 static inline TextGlyph* findGlyph(u32 ch, int glyphLang)
 {
@@ -1028,8 +1226,6 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
     }
 }
 
-extern u8 sGameTextGlyphOrder[];
-
 void translateToDinoLanguage(u8* str)
 {
     int byteOff = 0;
@@ -1070,20 +1266,6 @@ void translateToDinoLanguage(u8* str)
         byteOff += charLen;
     }
 }
-
-extern char gGameTextFontData[];
-extern u8 gGameTextBase[];
-extern u8 lbl_803399A0[];
-extern u8 lbl_803399C0[];
-extern int gGameTextFallbackBuf;
-extern u8* gGameTextLastEntry;
-extern int gCurTextBuffer;
-extern int gGameTextBufferIndex;
-extern f32 gGameTextFadeLimit;
-extern char lbl_803DB3D4;
-extern char* sMapDirectoryNameTable[];
-extern void* curGameTextDir;
-extern void* gameTextGet(int textId);
 
 #pragma peephole on
 void* gameTextGetPhrase(int textId, int phraseIndex)
@@ -1331,10 +1513,6 @@ u8* FUN_80017998(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4, u64 fwdArg5
     return 0;
 }
 
-int getGameState(void);
-
-int getHudHiddenFrameCount(void);
-
 int getCurLanguage(void)
 {
     return curLanguage;
@@ -1362,13 +1540,6 @@ f32 gameTextFn_80019c00(void)
     return gameTextFonts->timer;
 }
 
-typedef struct
-{
-    u8 _pad[0x1c];
-    int state;
-    u8 _pad2[8];
-} GameTextStateElem;
-
 GameTextStateElem gGameTextCharsets[0xA0 / sizeof(GameTextStateElem)];
 
 #pragma dont_inline on
@@ -1378,10 +1549,6 @@ int gameTextGetState(int i)
 {
     return gGameTextCharsets[i].state;
 }
-
-extern int gGameTextSequenceMode;
-extern int gSubtitleActive;
-extern void* gGameTextPendingDir;
 
 #pragma dont_inline off
 void mainLoopDoGameText(void)
@@ -1402,35 +1569,12 @@ void mainLoopDoGameText(void)
     }
 }
 
-int mmSetFreeDelay(int v);
-
-int testAndSet_onlyUseHeap3(int v);
-
-extern u8 lbl_803DC980;
-
 void gameTextInit(void)
 {
     gameTextInitFn_8001c794();
     lbl_803DC980 = 1;
     gameTextLoadDir(0x1c);
 }
-
-extern void subtitleFn_8001b700(void);
-extern int gSubtitlesEnabled;
-extern u16 lbl_803DC9AA;
-extern u16 lbl_803DC9A8;
-extern int lbl_803DC9C8;
-
-typedef struct
-{
-    int opcode;
-    int arg0;
-    int arg1;
-    int arg2;
-    int arg3;
-} GameTextSlot;
-
-extern GameTextSlot lbl_8033A540[];
 
 int setSubtitlesEnabled(int enabled)
 {
@@ -1442,10 +1586,6 @@ int setSubtitlesEnabled(int enabled)
     }
     return old;
 }
-
-extern int gGameTextClearColor;
-extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
-extern int gGameTextLastDir;
 
 #pragma dont_inline on
 void gameTextSetCharset(int charset, int flags)
@@ -1549,8 +1689,6 @@ void gameTextResetCursor(int flags)
     }
 }
 
-extern void* gCurTextBox;
-
 void gameTextSetWindow(u8* textBox)
 {
     int i;
@@ -1603,17 +1741,6 @@ void gameTextSetCursor(u16 x, u16 y, int flags)
         s->arg1 = (u16)y;
     }
 }
-
-typedef f32 Mtx[3][4];
-extern int gGameTextSavedDir;
-extern s16 gGameTextTaskTextAllowList[];
-extern int gGameTextPendingTextId;
-extern u8 gSubtitleColorR;
-extern u8 gSubtitleColorG;
-extern u8 gSubtitleColorB;
-extern u8 gSubtitleColorA;
-extern int gameTextGetTaskText(int taskId, int* textId, int* dirId);
-extern void loadGameTextSequence();
 
 int gameTextFn_8001b44c(int x)
 {
@@ -1692,10 +1819,6 @@ int subtitleIsActive(void)
     return ret;
 }
 
-int mmCreateMemoryStore(int size);
-
-extern void* memcpy(void* dst, const void* src, int n);
-
 #pragma dont_inline on
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
 {
@@ -1741,9 +1864,7 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
     }
 }
 
-extern void* gSubtitleBoxTextures[];
 void* gSubtitleLineTable[0x100];
-extern int gSubtitleBlockCount;
 
 #pragma opt_unroll_loops off
 void gameTextInitFn_8001bd14(void)
@@ -1892,61 +2013,6 @@ void gameTextOpenCallback_8001b3d0(int status, u8* match)
         }
     }
 }
-
-typedef struct
-{
-    int state;
-    u8 pad04[4];
-    u8 dirId;
-    u8 languageId;
-    u8 pad0a[0x1e];
-} GameTextLoadRequest;
-
-typedef struct
-{
-    u8 pad00[0x3c];
-    void* loadHandle;
-    void* dvdFileInfo;
-    int state;
-    u8 dirId;
-    u8 languageId;
-    u8 active;
-    u8 sourceId;
-} GameTextLoadSlot;
-
-#define GAMETEXT_PATH_BUFFER_OFFSET           0x380
-#define GAMETEXT_COMMAND_STRING_BUFFER_OFFSET 0x3c0
-#define GAMETEXT_LOAD_REQUESTS_OFFSET         0x15dc
-#define GAMETEXT_SEQUENCE_LOAD_STATE_OFFSET   0x1604
-#define GAMETEXT_FONT_SLOT_OFFSET             0x1610
-#define GAMETEXT_LOAD_SLOTS_OFFSET            0x1660
-#define GAMETEXT_PENDING_REQUEST_SCAN_OFFSET  (GAMETEXT_LOAD_REQUESTS_OFFSET - 0x1c)
-#define GAMETEXT_LOAD_SLOT_COUNT              8
-#define GAMETEXT_PENDING_SOURCE_COUNT         4
-#define GAMETEXT_INVALID_DIR                  0xff
-#define GAMETEXT_INVALID_LANGUAGE             6
-#define GAMETEXT_MAP_DIR_COUNT                0x49
-#define GAMETEXT_LANGUAGE_COUNT               6
-#define GAMETEXT_SEQUENCE_SOURCE_ID           1
-
-extern int lbl_803DC9D0;
-extern int lbl_803DC9D4;
-extern int gGameTextLastLanguage;
-extern char sGameTextMapPathFormat[];
-extern char sGameTextSequencePathFormat[];
-extern void setFileInfo(void* fileInfo);
-extern void* loadFileByPathAsync(char* path, void* fileInfo, int flags, void* callback);
-extern void DVDCancelAsync(void* fileInfo, void* callback);
-extern void setLanguageFn_8001ad64(void* slot);
-extern void textDisplayFn_800168dc(int a, int b);
-extern void gameTextFn_8001658c(int a, int b, int c);
-extern void gameTextRenderStrs(int a, int b);
-extern int lbl_803DC984;
-extern u8 lbl_803DC990;
-extern u8 lbl_803DC991;
-extern u8 lbl_803DC992;
-extern u8* lbl_803DC9C4;
-extern int lbl_803DB378;
 
 void gameTextInitFn_8001a234(void)
 {
@@ -2504,24 +2570,6 @@ void gameTextLoadForCurMap(int sourceId)
     testAndSet_onlyUseHeap3(oldHeap);
 }
 
-extern void* lbl_8033BE40[];
-extern int gGameTextBoxCornerInset;
-extern void* gGameTextBoxCornerTexture;
-extern void* gGameTextBoxBgTexture;
-extern u32 gGameTextBoxFillColor;
-extern u8* gameTextGetCurBox(void);
-extern void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
-extern void gameTextBoxFn_800164b0(int id, int idx, int* x0, int* x1, int* y0, int* y1);
-extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int scale);
-extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int flag);
-extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int part, int flag);
-extern void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag);
-
-STATIC_ASSERT(offsetof(GameTextBox, style) == 0x13);
-STATIC_ASSERT(offsetof(GameTextBox, alpha) == 0x1E);
-
-extern void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box);
-
 #pragma dont_inline on
 void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
 {
@@ -2683,19 +2731,6 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     ((GameTextBox*)box)->cursorX = savedX;
     ((GameTextBox*)box)->cursorY = savedY;
 }
-
-extern int mmSetFreeDelay(int v);
-extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
-
-typedef struct GameTextCharset
-{
-    u8* strings;
-    u8* entries;
-    int headerCount;
-    int count;
-    u8 pad10[0xc];
-    int status;
-} GameTextCharset;
 
 #pragma dont_inline off
 void setLanguageFn_8001ad64(void* reqp)
@@ -2863,14 +2898,6 @@ void setLanguageFn_8001ad64(void* reqp)
     cs->status = 2;
     *(int*)(req + 0x44) = 3;
 }
-
-extern u16 OSGetFontEncode(void);
-extern void OSLoadFont(void* buf, void* tmp);
-extern void OSGetFontWidth(u8* s, int* width);
-extern void OSGetFontTexel(u8* s, void* img, int pos, int stride, int* width);
-extern u8 lbl_803DC968;
-extern u16 gGameTextSjisGlyphTable[];
-extern int lbl_803DB3C4;
 
 #pragma ppc_unroll_speculative off
 #pragma ppc_unroll_instructions_limit 32
@@ -3064,22 +3091,8 @@ void gameTextLoadGraphicsFn_8001a918(void)
 #pragma ppc_unroll_instructions_limit 96
 #pragma ppc_unroll_speculative on
 
-extern int gSubtitleLineIndex;
-extern f32 gSubtitleCurTime;
-extern int gSubtitleElapsedFrames;
-extern int gSubtitleLineCount;
 int gSubtitleLineStrs[0x100];
 f32 gSubtitleLineTimes[0x100];
-extern f32 gSubtitleFramesPerSecond;
-
-typedef struct
-{
-    u32 code;
-    u16 r, g, b, a;
-} SubtitleCmd;
-
-extern SubtitleCmd* subtitleParseControlCmds(int str, int* count);
-extern void gameTextShowStr(int str, int a, int b, int c);
 
 void subtitleUpdateAndDraw(int a)
 {
@@ -3143,13 +3156,6 @@ void subtitleUpdateAndDraw(int a)
     }
 }
 
-extern int gGameTextBoxInset;
-extern int gGameTextBoxColorR;
-extern int gGameTextBoxColorG;
-extern int gGameTextBoxColorB;
-extern int gGameTextBoxColorA;
-extern void* gGameTextBoxEdgeTexture;
-
 void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
 {
     int x;
@@ -3185,10 +3191,6 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
     ((void (*)(void*, f32, f32, int, int, int, int, int))drawScaledTexture)(
         gGameTextBoxEdgeTexture, midX, midY, alpha, 0x100, halfW + gGameTextBoxInset, halfH + gGameTextBoxInset, 3);
 }
-
-extern s16 gGameTextBoxTexAssets;
-extern u16 gGameTextBoxCornerTexSrc[];
-extern u16 lbl_802CA100[];
 
 #pragma opt_strength_reduction off
 #pragma opt_propagation off
@@ -3323,29 +3325,6 @@ void gameTextInitFn_8001c794(void)
 #pragma opt_propagation reset
 #pragma peephole reset
 #pragma ppc_unroll_instructions_limit 96
-
-extern f32 lbl_803DE730;
-extern f32 gSubtitleNoTimeSentinel;
-int GameText_CountPrintableChars(u8* str);
-int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
-extern char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH);
-
-#define SUBTITLE_LINE_COUNT 256
-
-typedef struct SubtitleLineTable
-{
-    void* blocks[SUBTITLE_LINE_COUNT];
-    char* lines[SUBTITLE_LINE_COUNT];
-    f32 times[SUBTITLE_LINE_COUNT];
-} SubtitleLineTable;
-
-typedef struct SubtitleTextEntry
-{
-    u8 pad0[2];
-    u16 count;
-    u8 pad4[4];
-    char** strs;
-} SubtitleTextEntry;
 
 #pragma opt_strength_reduction on
 #pragma optimization_level 1
@@ -3525,8 +3504,6 @@ int GameText_FindControlCodeArgs(u8* str, u32 target, int* out)
     }
     return 0;
 }
-
-extern u32 lbl_80339C40[];
 
 SubtitleCmd* subtitleParseControlCmds(int str, int* count)
 {

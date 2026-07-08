@@ -19,38 +19,36 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_80220608_shared.h"
 #include "main/gamebit_ids.h"
-
-#define PAD_BUTTON_A 0x100
-
-/* Set of 3 item ids copied from a placement's item-set table and passed
- * (as an s32[3]) to isOneOfItemsBeingUsed to test the player's held item. */
-typedef struct ItemIdSet3
-{
-    int itemId0;
-    int itemId1;
-    int itemId2;
-} ItemIdSet3;
+#include "main/dll/dll_0200_dll200.h"
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
+
+#define PAD_BUTTON_A 0x100
 
 /* Dll200State.mode high bit: set while an ObjHitReact reaction is playing,
  * which suspends the normal map-act scripted update for that tick. */
 #define DLL200_MODE_HITREACTING 0x80
 
-extern void playerAddRemoveMagic(int obj, int amount);
-extern void playerSetHaveSpell(int player, int a, int b);
 extern ObjHitReactEntry gArwingAttachmentHitReactTable[];
 extern f32 lbl_803E5DC0;
 extern f32 lbl_803E5D98;
+extern int gArwingAttachmentItemSetIdle[];
+extern f32 lbl_803E5D9C;
+extern f32 gArwingAttachmentU32ToDoubleBias;
+extern int gArwingAttachmentItemSetWander[];
+extern ArwAttachTarget gArwingAttachmentTargets[];
+extern char sArwingAttachmentDiffFormat[];
+extern f32 lbl_803E5DA8;
+extern f32 lbl_803E5DAC;
+extern f32 lbl_803E5DB0;
+extern f32 lbl_803E5DB4;
+extern void playerAddRemoveMagic(int obj, int amount);
+extern void playerSetHaveSpell(int player, int a, int b);
+extern int playerGetCurMagic(void);
 
 #pragma dont_inline on
 void fn_801F20D4(int obj)
 {
-    extern int gArwingAttachmentItemSetIdle[];
-    extern f32 lbl_803E5D98;
-    extern f32 lbl_803E5D9C;
-    extern f32 gArwingAttachmentU32ToDoubleBias;
-
     int state;
     ItemIdSet3 itemSet;
 
@@ -98,11 +96,6 @@ void fn_801F20D4(int obj)
 #pragma dont_inline on
 void fn_801F27E4(int obj)
 {
-    extern int playerGetCurMagic(void);
-    extern f32 lbl_803E5D98;
-    extern f32 lbl_803E5D9C;
-    extern f32 gArwingAttachmentU32ToDoubleBias;
-
     int state;
 
     state = *(int*)&((GameObject*)obj)->extra;
@@ -192,8 +185,6 @@ void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E5DC0);
 }
 
-int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
-
 void dll_200_init(int* obj, int* arg)
 {
     Dll200State* state;
@@ -215,8 +206,6 @@ void dll_200_init(int* obj, int* arg)
     state->animSpeed = lbl_803E5D98;
     state->unk14 = lbl_803E5DC0;
 }
-
-int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 
 #pragma opt_strength_reduction off
 int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
@@ -304,12 +293,8 @@ int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* ani
 }
 #pragma opt_strength_reduction reset
 
-void fn_801F2290(int obj);
-
 void dll_200_update(int obj)
 {
-    extern f32 lbl_803E5D98;
-    extern f32 lbl_803E5D9C;
     u8 ev;
     u8 ret;
     Dll200State* state;
@@ -354,25 +339,8 @@ void dll_200_update(int obj)
     }
 }
 
-typedef struct ArwAttachTarget
-{
-    f32 x;
-    f32 y;
-    f32 moveId;
-    f32 altMoveId;
-    f32 speed;
-} ArwAttachTarget;
-
 void fn_801F2290(int obj)
 {
-    extern int gArwingAttachmentItemSetWander[];
-    extern ArwAttachTarget gArwingAttachmentTargets[];
-    extern char sArwingAttachmentDiffFormat[];
-    extern f32 lbl_803E5D98;
-    extern f32 lbl_803E5DA8;
-    extern f32 lbl_803E5DAC;
-    extern f32 lbl_803E5DB0;
-    extern f32 lbl_803E5DB4;
     Dll200State* state;
     u8 mode;
     s16 ang;

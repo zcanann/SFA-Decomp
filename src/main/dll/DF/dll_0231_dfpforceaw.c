@@ -14,14 +14,6 @@
 #include "main/audio/sfx.h"
 #include "main/gamebit_ids.h"
 
-#define DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define DFPFORCEAW_MSG_PLAYER_BURST           0x60004 /* knock the player back with a burst hit */
-
-/* partfx ids spawned on the player-burst trigger: single burst flash plus a
- * 10-count spray of burst particles (same shape in both mainGetBit(0x1d9) arms) */
-#define DFPFORCEAW_PARTFX_BURST          0x5ed /* spawned once */
-#define DFPFORCEAW_PARTFX_BURST_PARTICLE 0x5fd /* spawned 10x */
-
 typedef struct TrickyCurveObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -33,10 +25,6 @@ typedef struct TrickyCurveObjectDef
     s16 gateGameBit;    /* 0x20 -> state.gateGameBit */
     u8 pad22[0x28 - 0x22];
 } TrickyCurveObjectDef;
-
-extern int Obj_GetPlayerObject(void);
-extern u32 ObjMsg_SendToObject();
-extern f32 lbl_803E6448;
 
 typedef struct TrickyCurveBurstFxParams
 {
@@ -50,6 +38,17 @@ typedef struct TrickyCurveBurstFxParams
     f32 zOffset;
 } TrickyCurveBurstFxParams;
 
+#define DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DFPFORCEAW_MSG_PLAYER_BURST           0x60004 /* knock the player back with a burst hit */
+
+/* partfx ids spawned on the player-burst trigger: single burst flash plus a
+ * 10-count spray of burst particles (same shape in both mainGetBit(0x1d9) arms) */
+#define DFPFORCEAW_PARTFX_BURST          0x5ed /* spawned once */
+#define DFPFORCEAW_PARTFX_BURST_PARTICLE 0x5fd /* spawned 10x */
+
+extern f32 lbl_803E6448;
+extern int Obj_GetPlayerObject(void);
+extern u32 ObjMsg_SendToObject();
 extern void fn_80206C18(int* obj);
 extern void fn_80206968(int* obj);
 

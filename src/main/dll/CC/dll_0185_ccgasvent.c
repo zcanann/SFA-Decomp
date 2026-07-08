@@ -8,7 +8,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
+#include "main/dll/CC/dll_0185_ccgasvent.h"
 
 #define CCGASVENT_GROUP           0x3f
 #define CCGASVENT_TARGET_OBJGROUP 5
@@ -18,6 +18,8 @@ extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 /* ccgasvent_update state machine */
 #define CCGASVENT_STATE_IDLE     0 /* player near: dormant, watching distance */
 #define CCGASVENT_STATE_SPAWNING 1 /* player far enough: emitting gas each tick */
+
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 
 int ccgasvent_getExtraSize(void)
 {

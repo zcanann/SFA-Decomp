@@ -14,6 +14,34 @@
 #include "main/dll/modgfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/frame_timing.h"
+
+/* A plain XYZ point; recovered file-locally for the patch-target scratch slot
+ * at TrickyState+0xD4 (an unnamed pad region in tricky_state.h). */
+typedef struct TrickyPoint3
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} TrickyPoint3;
+
+/*
+ * File-local overlay for the parabolic-jump scratch block that the leap
+ * substates (case 9 seed / case 10 arc step) stash in TrickyState's unnamed
+ * pad64 region (0x64..0x84). It is not named in the shared tricky_state.h, so
+ * it is recovered here as a typed view over (state + 0x64).
+ */
+typedef struct TrickyJumpArc
+{
+    f32 duration;  /* 0x64: horizontal distance / lbl_803E24A4 */
+    f32 time;      /* 0x68: elapsed arc time (init 0, += timeDelta) */
+    f32 riseCoeff; /* 0x6C: linear vertical coefficient */
+    f32 baseY;     /* 0x70: launch worldPosY */
+    f32 baseX;     /* 0x74: launch worldPosX */
+    f32 baseZ;     /* 0x78: launch worldPosZ */
+    f32 landX;     /* 0x7C: landing node rootMotionScale (X) */
+    f32 landZ;     /* 0x80: landing node localPosY (Z) */
+} TrickyJumpArc;
+
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
@@ -45,10 +73,10 @@ extern f32 lbl_803E24B8;
 extern f32 lbl_803E24BC;
 extern f32 lbl_803E24C0;
 extern char lbl_8031D2E8[];
+
 extern f32 getXZDistance(f32* a, f32* b);
 extern void vecRotateZXY(void* params, void* outVec);
 extern f32 sqrtf(f32 x);
-
 extern int isInWalkGroupOrPatch(f32* pos);
 extern void ObjHits_SyncObjectPosition(u8* obj);
 extern u32 Objfsa_GetWalkGroupIndexAtPoint(f32* pos, void* info);
@@ -72,33 +100,6 @@ extern void fn_8004B31C(void* search, u32 route, void* target, int pathId, u32 d
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode);
 extern void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag);
-
-/* A plain XYZ point; recovered file-locally for the patch-target scratch slot
- * at TrickyState+0xD4 (an unnamed pad region in tricky_state.h). */
-typedef struct TrickyPoint3
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} TrickyPoint3;
-
-/*
- * File-local overlay for the parabolic-jump scratch block that the leap
- * substates (case 9 seed / case 10 arc step) stash in TrickyState's unnamed
- * pad64 region (0x64..0x84). It is not named in the shared tricky_state.h, so
- * it is recovered here as a typed view over (state + 0x64).
- */
-typedef struct TrickyJumpArc
-{
-    f32 duration;  /* 0x64: horizontal distance / lbl_803E24A4 */
-    f32 time;      /* 0x68: elapsed arc time (init 0, += timeDelta) */
-    f32 riseCoeff; /* 0x6C: linear vertical coefficient */
-    f32 baseY;     /* 0x70: launch worldPosY */
-    f32 baseX;     /* 0x74: launch worldPosX */
-    f32 baseZ;     /* 0x78: launch worldPosZ */
-    f32 landX;     /* 0x7C: landing node rootMotionScale (X) */
-    f32 landZ;     /* 0x80: landing node localPosY (Z) */
-} TrickyJumpArc;
 
 static u8* trickyfollow_validateRouteNode(u8* node)
 {

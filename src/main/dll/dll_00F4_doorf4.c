@@ -72,34 +72,18 @@ STATIC_ASSERT(offsetof(DoorF4Placement, gameBitC) == 0x20);
 #define DOORF4_OBJFLAG_HIDDEN             0x4000
 #define DOORF4_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject();
-extern int ObjMsg_Peek();
-extern int ObjMsg_Pop();
-extern void ObjMsg_SendToNearbyObjects();
-extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern f32 lbl_803E3680;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
-extern void Sfx_StopFromObject(int obj, int sfxId);
-extern void* Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 lbl_803E3654;
-extern f32 lbl_803E3684;
-extern f32 gDoorF4Pi;
-extern f32 gDoorF4BinaryAngleScale;
-
-extern void* ObjList_GetObjects(int* outA, int* outB);
-extern f32 sqrtf(f32 x);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern f32 lbl_803E3648;
-
 /* Env-fx ids (getEnvfxAct 3rd arg): A/B are the two door-open variants gated by
  * gamebit 0x57; OFF is activated when the door deactivates (toggled 1 -> 0). */
 #define DOORF4_ENVFX_A   0x7f
 #define DOORF4_ENVFX_B   0x7c
 #define DOORF4_ENVFX_OFF 0xe
+
+extern f32 lbl_803E3680;
+extern f32 lbl_803E3654;
+extern f32 lbl_803E3684;
+extern f32 gDoorF4Pi;
+extern f32 gDoorF4BinaryAngleScale;
+extern f32 lbl_803E3648;
 extern f32 lbl_803E3658;
 extern f32 lbl_803E365C;
 extern f32 lbl_803E3660;
@@ -108,6 +92,22 @@ extern f32 lbl_803E3668;
 extern f32 lbl_803E366C;
 extern f32 lbl_803E3670;
 extern f32 lbl_803E3674;
+
+extern void ObjGroup_RemoveObject(u32 obj, int group);
+extern void ObjGroup_AddObject();
+extern int ObjMsg_Peek();
+extern int ObjMsg_Pop();
+extern void ObjMsg_SendToNearbyObjects();
+extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern void* Obj_GetPlayerObject(void);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void* ObjList_GetObjects(int* outA, int* outB);
+extern f32 sqrtf(f32 x);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 void DoorF4_hitDetect(void)
 {

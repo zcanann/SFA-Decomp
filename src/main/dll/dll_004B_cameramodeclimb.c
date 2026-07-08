@@ -23,7 +23,8 @@
 #include "main/camera_interface.h"
 #include "main/object_transform.h"
 #include "main/dll/dll_80220608_shared.h"
-extern void memset(void* dst, int val, int size);
+#include "main/dll/dll_004B_cameramodeclimb.h"
+
 extern f32 lbl_803E19A0;
 extern f32 gCamClimbDistanceSmoothRate;
 extern f32 gCamClimbTraceOrbitRadius;
@@ -36,6 +37,8 @@ extern f32 gCamClimbDefaultEndMaxHeight;
 extern f32 lbl_803E19C4;
 extern f32 gCamClimbDefaultHeightAdjustRate;
 extern CameraModeClimbState* gCamClimbState;
+
+extern void memset(void* dst, int val, int size);
 
 void CameraModeClimb_copyToCurrent(void)
 {

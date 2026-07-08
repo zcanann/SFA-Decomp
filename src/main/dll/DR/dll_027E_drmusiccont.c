@@ -18,16 +18,12 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#include "main/dll/DR/dll_027E_drmusiccont.h"
+
 #define DRMUSICCONT_ENVFX_A 0x210
 #define DRMUSICCONT_ENVFX_B 0x20f
 #define DRMUSICCONT_ENVFX_C 0x212
 #define DRMUSICCONT_ENVFX_D 0x1ea
-
-typedef struct DrmusiccontState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 stingerTimer; /* 0x04 */
-} DrmusiccontState;
 
 int drmusiccont_getExtraSize(void)
 {

@@ -24,12 +24,6 @@
 #include "main/gamebits.h"
 #include "main/dll/player_80295318_shared.h"
 
-/* Tricky vtable slots reached through (tricky + 0x68). */
-#define TRICKY_VTBL_IS_BUSY 0x11
-#define TRICKY_VTBL_GUARD   0x0A
-
-#define TRICKYGUARD_OBJECT_FLAG 0x4000
-
 typedef struct TrickyguardPlacement
 {
     u8 pad00[0x18];
@@ -38,6 +32,12 @@ typedef struct TrickyguardPlacement
     s16 armingGameBit; /* 0x1A: -1 = always armed */
     u8 pad1C[0x20 - 0x1C];
 } TrickyguardPlacement;
+
+/* Tricky vtable slots reached through (tricky + 0x68). */
+#define TRICKY_VTBL_IS_BUSY 0x11
+#define TRICKY_VTBL_GUARD   0x0A
+
+#define TRICKYGUARD_OBJECT_FLAG 0x4000
 
 extern void objRenderFn_80041018(int* obj);
 

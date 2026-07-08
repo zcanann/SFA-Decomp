@@ -5,12 +5,13 @@
  */
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
-extern f32 lbl_803E3EE8;
-extern f32 lbl_803E3EEC;
-extern f32 lbl_803E3EF0;
 
 #define CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED    0x8000
 #define CFLIGHTWALL_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+extern f32 lbl_803E3EE8;
+extern f32 lbl_803E3EEC;
+extern f32 lbl_803E3EF0;
 
 int CFLightWall_getExtraSize(void)
 {

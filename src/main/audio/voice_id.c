@@ -1,10 +1,31 @@
 #include "main/audio/voice_id.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_unregister.h"
-extern u8 vidListNodes[];
+
+typedef struct VoicePrioVoiceRec
+{
+    u8 prev;
+    u8 next;
+    u16 user;
+} VoicePrioVoiceRec;
+
+typedef struct VoicePrioRootRec
+{
+    u16 next;
+    u16 prev;
+} VoicePrioRootRec;
+
+typedef struct VoicePrioBlockRec
+{
+    u8 vidNodes[0x8C0];
+    VoicePrioVoiceRec prioVoices[64];   /* 0x8C0 */
+    u8 prioVoicesRoot[256];             /* 0x9C0 */
+    VoicePrioRootRec prioRootList[256]; /* 0xAC0 */
+} VoicePrioBlockRec;
 
 #define voicePriorityLinks (vidListNodes + 0x8c0)
 
+extern u8 vidListNodes[];
 extern u32 vidCurrentId;
 extern void* vidRoot;
 extern void* vidFree;
@@ -201,27 +222,6 @@ int vidGetInternalId(u32 id)
  * voiceRemovePriority - voice priority-queue removal. Removes the active
  * voice from its group's linked list and from the sorted priority list.
  */
-typedef struct VoicePrioVoiceRec
-{
-    u8 prev;
-    u8 next;
-    u16 user;
-} VoicePrioVoiceRec;
-
-typedef struct VoicePrioRootRec
-{
-    u16 next;
-    u16 prev;
-} VoicePrioRootRec;
-
-typedef struct VoicePrioBlockRec
-{
-    u8 vidNodes[0x8C0];
-    VoicePrioVoiceRec prioVoices[64];   /* 0x8C0 */
-    u8 prioVoicesRoot[256];             /* 0x9C0 */
-    VoicePrioRootRec prioRootList[256]; /* 0xAC0 */
-} VoicePrioBlockRec;
-
 #pragma optimization_level 2
 void voiceRemovePriority(int state)
 {

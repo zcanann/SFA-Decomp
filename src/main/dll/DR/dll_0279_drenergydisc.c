@@ -14,16 +14,10 @@
 
 #include "main/audio/sfx_ids.h"
 
+#include "main/dll/DR/dll_0279_drenergydisc.h"
+
 #define DRENERGYDISC_OBJFLAG_HIDDEN             0x4000
 #define DRENERGYDISC_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-typedef struct DrenergydiscPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 moveGameBit;   /* 0x1E */
-    s16 activeGameBit; /* 0x20 */
-    u8 pad22[0x28 - 0x22];
-} DrenergydiscPlacement;
 
 int DR_EnergyDisc_getExtraSize(void)
 {

@@ -26,31 +26,30 @@
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
-extern int randomGetRange(int lo, int hi);
-extern void* Obj_GetPlayerObject(void);
-extern int ObjMsg_Pop();
-extern u32 ObjMsg_SendToObject();
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern f32 Vec_xzDistance(f32* a, f32* b);
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* outHits, int e, int f);
-extern int Obj_IsParentSlackClear(int obj);
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
-extern f32 lbl_803E38B0;
-extern f32 gDusterObjHitDetectRadius;
-extern f32 gDusterObjGravityVelYThreshold;
-extern f32 gDusterObjGravityAccel;
-extern f32 gDusterObjFloorSearchMaxDelta;
-extern f32 lbl_803E38C4;
-extern f32 gDusterObjLaunchVelocityX;
-extern f32 gDusterObjDriftSpinRate;
-extern f32 gDusterObjPickupRangeY;
-extern f32 gDusterObjPickupRangeXZ;
-extern f32 gDusterObjMoveStepScale;
-extern f32 timeDelta;
-extern void vecRotateZXY(void* angles, void* outVec);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, void* obj, int flags, int mask,
-                              int arg9, int arg10);
+
+typedef struct DusterSetup
+{
+    u8 pad00[0x24];
+    s16 activeGameBit;
+} DusterSetup;
+
+typedef struct DusterMapEventState
+{
+    u8 pad00[9];
+    u8 collectedCount;
+    u8 maxCollectedCount;
+} DusterMapEventState;
+
+typedef struct DusterLaunchRotation
+{
+    s16 yaw;
+    s16 pitch;
+    s16 roll;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} DusterLaunchRotation;
 
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
@@ -80,6 +79,33 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 #define DUSTER_PARTFX_DEPOSIT 0x51a
 /* partfx spawned 2x on bounce/collision during a move step (with river-loop sfx) */
 #define DUSTER_PARTFX_BOUNCE 0x51f
+
+extern f32 lbl_803E38B0;
+extern f32 gDusterObjHitDetectRadius;
+extern f32 gDusterObjGravityVelYThreshold;
+extern f32 gDusterObjGravityAccel;
+extern f32 gDusterObjFloorSearchMaxDelta;
+extern f32 lbl_803E38C4;
+extern f32 gDusterObjLaunchVelocityX;
+extern f32 gDusterObjDriftSpinRate;
+extern f32 gDusterObjPickupRangeY;
+extern f32 gDusterObjPickupRangeXZ;
+extern f32 gDusterObjMoveStepScale;
+extern f32 timeDelta;
+
+extern int randomGetRange(int lo, int hi);
+extern void* Obj_GetPlayerObject(void);
+extern int ObjMsg_Pop();
+extern u32 ObjMsg_SendToObject();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
+extern f32 Vec_xzDistance(f32* a, f32* b);
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* outHits, int e, int f);
+extern int Obj_IsParentSlackClear(int obj);
+extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+extern void vecRotateZXY(void* angles, void* outVec);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, void* obj, int flags, int mask,
+                              int arg9, int arg10);
 
 int duster_SeqFn(u8* obj)
 {
@@ -119,30 +145,6 @@ void duster_hitDetect(int obj)
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
 }
-
-typedef struct DusterSetup
-{
-    u8 pad00[0x24];
-    s16 activeGameBit;
-} DusterSetup;
-
-typedef struct DusterMapEventState
-{
-    u8 pad00[9];
-    u8 collectedCount;
-    u8 maxCollectedCount;
-} DusterMapEventState;
-
-typedef struct DusterLaunchRotation
-{
-    s16 yaw;
-    s16 pitch;
-    s16 roll;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} DusterLaunchRotation;
 
 void duster_update(int obj)
 {

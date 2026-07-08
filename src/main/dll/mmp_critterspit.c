@@ -20,14 +20,6 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 
-#define MMPCRITTERSPIT_OBJFLAG_PARENT_SLACK 0x1000
-#define PRESSURESWITCHFB_REMOVE_GROUP_ID    0x53 /* DLL 0xFB pressureswitchfb (self-registers) */
-extern f32 lbl_803E242C;                         /* initial search radius for ObjGroup_FindNearestObject */
-extern f32 lbl_803E24C4;                         /* squared eating-range threshold */
-extern u8* ObjGroup_FindNearestObject(int kind, u8* self, f32* outDist);
-extern int coordsToMapCell(u8* p, f32 a, f32 b);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
-
 /* per-critter packed flags at byte 0x58; bits 27..30 hold a countdown mode */
 struct CritterFlags
 {
@@ -35,6 +27,16 @@ struct CritterFlags
     u32 mode : 4;
     u32 pad_low : 1;
 };
+
+#define MMPCRITTERSPIT_OBJFLAG_PARENT_SLACK 0x1000
+#define PRESSURESWITCHFB_REMOVE_GROUP_ID    0x53 /* DLL 0xFB pressureswitchfb (self-registers) */
+
+extern f32 lbl_803E242C; /* initial search radius for ObjGroup_FindNearestObject */
+extern f32 lbl_803E24C4; /* squared eating-range threshold */
+
+extern u8* ObjGroup_FindNearestObject(int kind, u8* self, f32* outDist);
+extern int coordsToMapCell(u8* p, f32 a, f32 b);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
 int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
 {

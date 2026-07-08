@@ -11,6 +11,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
 
 #define OBJGROUP_SNOWHORN_PUZZLE        0x13  /* puzzle-target object group for nearest-object search */
 #define DIMSNOWHORN1_OBJGROUP           0xa   /* snowhorn own add/remove group */
@@ -20,44 +21,6 @@
 #define GAMEBIT_SNOWHORN_AIR_RESET      0x3e9 /* set to reset the air meter to full */
 #define GAMEBIT_SNOWHORN_PUZZLE         0x170 /* puzzle-step trigger, counts pushes */
 #define PAD_BUTTON_A                    0x100 /* A button */
-
-/* Per-object extra state (getExtraSize == 0xD0C); BaddieState is the prefix. */
-typedef struct DIMSnowHorn1State
-{
-    BaddieState baddie;
-    u8 lookController[0x96D - 0x35C]; /* dll_2E look-controller block at 0x35C (start evidenced; true extent unknown) */
-    u8 unk96D;
-    u8 pad96E[0x980 - 0x96E];
-    u8 playerNearby; /* 0x980: 1 when player within mount range (mountMode==0); gates spawnPos capture */
-    u8 pad981[3];
-    f32 spawnPosX;
-    f32 spawnPosY;
-    f32 spawnPosZ;
-    u8 pad990[0x9B0 - 0x990];
-    f32 pathPointArray[12]; /* 0x9B0: ObjPath_GetPointWorldPositionArray(2,4) -> 4 XYZ points */
-    u8 pad9E0[0x9E8 - 0x9E0];
-    f32 pathPosX; /* model-matrix offset vec */
-    f32 pathPosY;
-    f32 pathPosZ;
-    u8 pad9F4[0xA84 - 0x9F4];
-    s16 countdownTimer;
-    s16 advanceCountThreshold; /* 0xA86: push-count at state+0x334 must reach this (=5) to advance state */
-    s16 airMeterValue;
-    u8 mountMode; /* 0=unmounted, 2=riding */
-    u8 padA8B;
-    u8 mode;
-    u8 triggerMode;
-    u8 flags; /* 0xA8E: bit0x2 riding (GAMEBIT_SNOWHORN_RIDING), bit0x8 hitvol-priority, bit0x20 sequence-triggered */
-    u8 queryFlagA8F;   /* 0xA8F: nonzero queried by DIMSnowHorn1_func14 (set cross-DLL) */
-    u8 queryFlagA90;   /* 0xA90: nonzero queried by DIMSnowHorn1_func11 (set cross-DLL) */
-    u8 proximityPhase; /* 0xA91: 0/1/2 phase toggling linked objects by player distance (stateHandler05) */
-    u8 padA92[0xD00 - 0xA92];
-    u8 hitReactState; /* 0xD00: ObjHitReact_Update persistent state (in/out), gates fn_8003A168 */
-    u8 padD01[0xB];
-} DIMSnowHorn1State;
-
-STATIC_ASSERT(sizeof(DIMSnowHorn1State) == 0xD0C);
-STATIC_ASSERT(offsetof(DIMSnowHorn1State, countdownTimer) == 0xA84);
 
 /* DIMSnowHorn1State.flags bits */
 #define SNOWHORN1_FLAG_RIDING        0x2  /* GAMEBIT_SNOWHORN_RIDING active (set cross-DLL) */

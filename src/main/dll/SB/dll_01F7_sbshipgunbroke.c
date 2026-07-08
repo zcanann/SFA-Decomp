@@ -15,22 +15,16 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 lbl_803E59C0;
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
-
-/* Placement record for the broken ship-gun: only the destroyed-flag
-   GameBit index (0x1E) is read by this DLL. */
-typedef struct SBShipGunBrokePlacement
-{
-    u8 pad0[0x1E];
-    s16 destroyedGameBit; /* 0x1E */
-} SBShipGunBrokePlacement;
+#include "main/dll/SB/dll_01F7_sbshipgunbroke.h"
 
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
+
+extern f32 lbl_803E59C0;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void Sfx_PlayFromObject(int* obj, int sfxId);
 
 int SB_ShipGunBroke_getExtraSize(void)
 {

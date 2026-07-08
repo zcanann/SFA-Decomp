@@ -21,12 +21,6 @@
 #include "main/dll/ARW/arwing_state.h"
 #include "main/audio/sfx_ids.h"
 
-#define WCFLOORTILE_CHILD_OBJ_BOMB 0x605
-
-#define PAD_TRIGGER_Z 0x20
-#define PAD_TRIGGER_R 0x40
-#define PAD_BUTTON_B  0x200
-
 typedef struct WcFloorTileState
 {
     f32 shakeTime;
@@ -70,6 +64,12 @@ STATIC_ASSERT(offsetof(WcFloorTileState, flags) == 0x07);
 STATIC_ASSERT(sizeof(WcFloorTileSetup) == 0x24);
 STATIC_ASSERT(offsetof(WcFloorTileSetup, base.posY) == 0x0C);
 STATIC_ASSERT(offsetof(WcFloorTileSetup, eventId) == 0x1A);
+
+#define WCFLOORTILE_CHILD_OBJ_BOMB 0x605
+
+#define PAD_TRIGGER_Z 0x20
+#define PAD_TRIGGER_R 0x40
+#define PAD_BUTTON_B  0x200
 
 int wcfloortile_getExtraSize(void)
 {

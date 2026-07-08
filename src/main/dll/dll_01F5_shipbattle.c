@@ -20,23 +20,14 @@
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/objlib.h"
-
-#define MODEL_LIGHT_KIND_POINT 2
-
-typedef struct ShipBattleObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 segmentIndex; /* chain index of this segment (-1 = head) */
-    s16 unk1A;
-    u8 pad1C[0x24 - 0x1C];
-    u8 dampingDivisor; /* feeds state->unk24 damping factor */
-    u8 pad25[0x28 - 0x25];
-} ShipBattleObjectDef;
+#include "main/dll/dll_01F5_shipbattle.h"
 
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
+
+#define MODEL_LIGHT_KIND_POINT 2
 
 #define SHIPBATTLE_OBJECT_TYPE_ID 0xb
 #define SHIPBATTLE_FIRE_SEQ_ID    0x171
@@ -50,6 +41,7 @@ extern f32 lbl_803E595C;
 extern f32 lbl_803E5958;
 extern u8 lbl_803DB411;
 extern f32 lbl_803DDC50[2];
+
 extern void ModelLightStruct_free(int* p);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);

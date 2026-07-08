@@ -22,24 +22,11 @@
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/object_descriptor.h"
+#include "main/dll/dll_017F_moonseedbush.h"
+
+STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 
 #define MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED 0x2000
-extern f32 lbl_803E44D0;
-extern f32 lbl_803E44D4;
-extern f32 lbl_803E44D8;
-
-typedef struct MoonSeedBushPlacement
-{
-    ObjPlacement base;
-    s16 triggerGameBit; /* 0x18 */
-    s16 grownGameBit;   /* 0x1A: seedState gamebit (-1 = none) */
-    s16 preemptSeq;     /* 0x1C */
-    s8 sequence;        /* 0x1E: sequence slot index (-1 = none) */
-    u8 rotXByte;        /* 0x1F: rotX in 1/256 turns */
-    u8 preemptSlot;     /* 0x20: preempt sequence slot */
-    u8 scaleByte;       /* 0x21: model scale param */
-    u8 pad22[0x28 - 0x22];
-} MoonSeedBushPlacement;
 
 /* sequence event opcodes consumed by MoonSeedBush_SeqFn */
 #define MOONSEEDBUSH_SEQEV_PLANT    1
@@ -54,7 +41,9 @@ typedef struct MoonSeedBushPlacement
 #define MOONSEEDBUSH_SEED_PLANTED 1 /* planted, growing */
 #define MOONSEEDBUSH_SEED_GROWN   2 /* fully grown / triggered */
 
-STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
+extern f32 lbl_803E44D0;
+extern f32 lbl_803E44D4;
+extern f32 lbl_803E44D8;
 
 #pragma peephole off
 #pragma scheduling off

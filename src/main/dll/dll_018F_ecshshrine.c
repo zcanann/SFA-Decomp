@@ -49,93 +49,11 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
 
-extern void ecsh_creator_getExtraSize(void);
-extern void gpsh_shrine_getExtraSize(void);
-
-extern void ecsh_creator_getObjectTypeId(void);
-extern void gpsh_shrine_getObjectTypeId(void);
-
-extern void ecsh_creator_free(void);
-extern void gpsh_shrine_free(void);
-
-extern void ecsh_creator_render(void);
-extern void gpsh_shrine_render(void);
-
-extern void ecsh_creator_hitDetect(void);
-extern void gpsh_shrine_hitDetect(void);
-
-extern void ecsh_creator_update(void);
-extern void gpsh_shrine_update(void);
-
-extern void ecsh_creator_init(void);
-extern void gpsh_shrine_init(void);
-
-extern void ecsh_creator_release(void);
-extern void gpsh_shrine_release(void);
-
-extern void ecsh_creator_initialise(void);
-extern void gpsh_shrine_initialise(void);
-
-#define ECSHSHRINE_OBJGROUP 0xb
-
-/* camera mode DLL 0x48 = dll_0048_cameramodestatic */
-#define ECSHSHRINE_CAMMODE_STATIC 0x48
-
 typedef struct EcshIntPair
 {
     int a;
     int b;
 } EcshIntPair;
-
-extern f32 Vec_xzDistance(f32* a, f32* b);
-
-extern f32 gEcShShrineOrbitSpeedA;
-extern f32 gEcShShrineOrbitSpeedB;
-extern f32 gEcShShrineOrbitSpeedC;
-extern f32 lbl_803E4F9C;
-extern f32 gEcShShrinePi;
-extern f32 gEcShShrineAngleUnitScale;
-extern f32 lbl_803E4FA8;
-extern f32 lbl_803E4FAC;
-extern f32 lbl_803E4FB0;
-extern f32 gEcShShrineFadeDistance;
-extern f32 gEcShShrineFadeAlphaMax;
-extern f32 lbl_803E4FC8;
-extern f32 lbl_803E4FCC;
-extern f32 lbl_803E4FD0;
-extern f32 lbl_803E4FD4;
-extern f32 lbl_803E4FD8;
-extern f32 lbl_803E4FDC;
-extern f32 lbl_803E4FE0;
-extern f32 lbl_803E4FE4;
-extern f32 lbl_803E4FE8;
-extern f32 lbl_803E4FEC;
-extern f32 lbl_803E4FF0;
-extern int lbl_803DDBC0;
-extern EcshIntPair lbl_803E8470;
-extern void Music_Trigger(int id, int arg);
-extern void ModelLightStruct_free(void* p);
-extern int objCreateLight(int a, int b);
-extern void skyFn_80088c94(int flags, int mode);
-extern void getEnvfxAct(s16* obj, int* target, int id, int p);
-
-/* env-effect ids fired when the shrine intro countdown expires (index-style; roles opaque) */
-#define ECSH_SHRINE_ENVFX_A 0x221
-#define ECSH_SHRINE_ENVFX_B 0x220
-#define ECSH_SHRINE_ENVFX_C 0x222
-
-extern int objIsCurModelNotZero(void* obj);
-extern void staffToggle(int* player, int a);
-extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
-extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
-extern void audioStopByMask(int mask);
-extern int objGetAnimStateFlags(int* player, int flags);
-extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-extern void Sfx_PlayFromObject(s16* obj, int sfxId);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(void* obj, int group);
-extern int ObjMsg_Pop(void* obj, int* msg, int* a, int* b);
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 
 typedef struct MmShrineAnimState
 {
@@ -164,6 +82,100 @@ typedef struct EcshRenderPair
     f32 a;
     f32 b;
 } EcshRenderPair;
+
+typedef struct EcshPuzzleState
+{
+    f32 cupPos[12];        /* 0x00: the 6 cups' (x,z) positions */
+    s16 cupSlotMap[6];     /* 0x30: current slot->cup index map (== gEcShShrineCupSlotMap) */
+    s16 nextCupSlotMap[7]; /* 0x3c: next round's slot->cup map */
+} EcshPuzzleState;
+
+#define ECSHSHRINE_OBJGROUP 0xb
+
+/* camera mode DLL 0x48 = dll_0048_cameramodestatic */
+#define ECSHSHRINE_CAMMODE_STATIC 0x48
+
+/* env-effect ids fired when the shrine intro countdown expires (index-style; roles opaque) */
+#define ECSH_SHRINE_ENVFX_A 0x221
+#define ECSH_SHRINE_ENVFX_B 0x220
+#define ECSH_SHRINE_ENVFX_C 0x222
+
+/* Number of cups in the shuffle puzzle (cupSlotMap[6], cupPos holds 6 (x,z) pairs). */
+#define ECSHSHRINE_CUP_COUNT 6
+
+extern f32 gEcShShrineOrbitSpeedA;
+extern f32 gEcShShrineOrbitSpeedB;
+extern f32 gEcShShrineOrbitSpeedC;
+extern f32 lbl_803E4F9C;
+extern f32 gEcShShrinePi;
+extern f32 gEcShShrineAngleUnitScale;
+extern f32 lbl_803E4FA8;
+extern f32 lbl_803E4FAC;
+extern f32 lbl_803E4FB0;
+extern f32 gEcShShrineFadeDistance;
+extern f32 gEcShShrineFadeAlphaMax;
+extern f32 lbl_803E4FC8;
+extern f32 lbl_803E4FCC;
+extern f32 lbl_803E4FD0;
+extern f32 lbl_803E4FD4;
+extern f32 lbl_803E4FD8;
+extern f32 lbl_803E4FDC;
+extern f32 lbl_803E4FE0;
+extern f32 lbl_803E4FE4;
+extern f32 lbl_803E4FE8;
+extern f32 lbl_803E4FEC;
+extern f32 lbl_803E4FF0;
+extern int lbl_803DDBC0;
+extern EcshIntPair lbl_803E8470;
+
+extern void ecsh_creator_getExtraSize(void);
+extern void gpsh_shrine_getExtraSize(void);
+
+extern void ecsh_creator_getObjectTypeId(void);
+extern void gpsh_shrine_getObjectTypeId(void);
+
+extern void ecsh_creator_free(void);
+extern void gpsh_shrine_free(void);
+
+extern void ecsh_creator_render(void);
+extern void gpsh_shrine_render(void);
+
+extern void ecsh_creator_hitDetect(void);
+extern void gpsh_shrine_hitDetect(void);
+
+extern void ecsh_creator_update(void);
+extern void gpsh_shrine_update(void);
+
+extern void ecsh_creator_init(void);
+extern void gpsh_shrine_init(void);
+
+extern void ecsh_creator_release(void);
+extern void gpsh_shrine_release(void);
+
+extern void ecsh_creator_initialise(void);
+extern void gpsh_shrine_initialise(void);
+
+extern f32 Vec_xzDistance(f32* a, f32* b);
+extern void Music_Trigger(int id, int arg);
+extern void ModelLightStruct_free(void* p);
+extern int objCreateLight(int a, int b);
+extern void skyFn_80088c94(int flags, int mode);
+extern void getEnvfxAct(s16* obj, int* target, int id, int p);
+extern int objIsCurModelNotZero(void* obj);
+extern void staffToggle(int* player, int a);
+extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
+extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
+extern void audioStopByMask(int mask);
+extern int objGetAnimStateFlags(int* player, int flags);
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
+extern void Sfx_PlayFromObject(s16* obj, int sfxId);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
+extern void ObjGroup_AddObject(void* obj, int group);
+extern int ObjMsg_Pop(void* obj, int* msg, int* a, int* b);
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
+extern int getAngle(float y, float x);
+extern void objSetAnimStateFlags(void* obj, int arg, int enable);
+extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
 
 /*
  * The shell-game working set: the 6 cups' (x,z) positions (see EcshPuzzleState
@@ -200,7 +212,6 @@ u32 gECSH_ShrineObjDescriptor[19] = {0x00000000,
 
 void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 {
-    extern int getAngle(float y, float x);
     u8* config;
     MmShrineAnimState* state;
     void* player;
@@ -269,7 +280,6 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 
 int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
 {
-    extern void objSetAnimStateFlags(void* obj, int arg, int enable);
     extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
     MmShrineAnimObj* obj;
     MmShrineAnimState* state;
@@ -407,7 +417,6 @@ void ecsh_shrine_hitDetect(void)
 void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objParticleFn_80099d84(int obj, f32 a, int kind, f32 b, int h);
-    extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
     extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
     void** inner = ((GameObject*)obj)->extra;
     if (visible == 0)
@@ -443,16 +452,6 @@ void ecsh_shrine_free(int* obj)
     mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, 1);
     mainSetBits(GAMEBIT_WMRelated0A7F, 1);
 }
-
-/* Number of cups in the shuffle puzzle (cupSlotMap[6], cupPos holds 6 (x,z) pairs). */
-#define ECSHSHRINE_CUP_COUNT 6
-
-typedef struct EcshPuzzleState
-{
-    f32 cupPos[12];        /* 0x00: the 6 cups' (x,z) positions */
-    s16 cupSlotMap[6];     /* 0x30: current slot->cup index map (== gEcShShrineCupSlotMap) */
-    s16 nextCupSlotMap[7]; /* 0x3c: next round's slot->cup map */
-} EcshPuzzleState;
 
 /*
  * Main state machine.

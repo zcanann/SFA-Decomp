@@ -22,11 +22,7 @@
 #include "main/vecmath.h"
 #include "main/sfa_shared_decls.h"
 #include "main/frame_timing.h"
-extern int getAngle(float y, float x);
-extern f32 sqrtf(f32 x);
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
+#include "main/dll/dll_000F_unk.h"
 
 extern u32 gPlayerMoveSlowMoveId;
 extern u32 gPlayerMoveFastMoveId;
@@ -59,55 +55,11 @@ extern const f32 lbl_803E05B8;
 extern const f32 lbl_803E05BC;
 extern const f32 lbl_803E05C0;
 extern const f32 lbl_803E05C4;
-
-struct PartDesc
-{
-    s16 ang[3];
-    f32 sc[4];
-};
-
-typedef struct PlayerMoveBuf
-{
-    f32 a;
-    f32 b;
-    f32 c;
-    u8 pad_0C[2];
-    s16 angleDelta;
-    u8 pad_10[2];
-    u8 flag;
-    s8 ids[8];
-    s8 count;
-} PlayerMoveBuf;
-
-void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd);
-void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5);
-void player_applyVelocityStep(int* p, int* ctx, f32 t);
-void fn_800D8414(int* obj, int* ctx);
-void player_updateParticles(int* p1, int p2, int p3, int count, int mode);
-void player_doProjGfx(int* p1, int p2, int resIdBase, int count, int p5, int mode);
-void player_updateSecondaryBlend(int* obj, int* ctx, int moveA, int moveB);
-void player_setAnimIds(int unused1, int unused2, u32 a, u32 b);
-void player_clearXZvel(int* obj, int* state);
-void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale);
-void dll_0F_func19_nop(void);
-void player_updateCurve(int* obj, int* state, f32 t);
-void player_findCurve(int* obj, int* state, int p3);
-void player_playSoundFn10(int* obj, int* state, int bit, int idx, int* sfxTable);
-void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable);
-void player_rotateTowardEnemy(int* obj, int* ctx, int spd);
-void player_render2(s16* obj, int* state, f32 f1, f32 f2);
-void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2);
-void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3);
-void player_advanceMove(short* moveState, u32* obj, f32 dt, int flags);
-void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable);
-void playerRunStateMachine(char* pos, char* state, float dt, int stateFns);
-void player_setState(void* ctx, void* p, int new_state);
-void player_setOverride(u32 x);
-void player_updateVel(char* p, char* obj, int unused);
-void player_update(char* pos, char* state, float dt, float pathDt, int stateFns, int auxStateFns);
-void player_init(int unused, void* obj, int a, int b);
-void player_release(void);
-void player_initialise(void);
+extern int getAngle(float y, float x);
+extern f32 sqrtf(f32 x);
+extern void Sfx_PlayFromObject(int* obj, int sfxId);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
 
 #pragma opt_common_subs off
 void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd)

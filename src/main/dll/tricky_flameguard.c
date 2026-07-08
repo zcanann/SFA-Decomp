@@ -94,23 +94,7 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
         TRICKY_RUNTIME(st)->unk0D = -1;                                                                                \
     }
 
-extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
-extern f32 getXZDistance(f32* a, f32* b);
-
-int trickyGuardFindBaddieTarget(TrickyRuntime* state);
-
-extern int Objfsa_FindNearestCurveType24(float* pos, int p2, int p3);
-extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, void* target, int flag);
-extern int trickyMove(int p1, void* p2);
-extern void trickyTurnTowardYaw(int p1, s16 angle);
-extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
-extern void objSetAnimSpeedTo1(int* obj);
-extern void objAudioFn_800393f8(int obj, void* p2, int p3, int p4, int p5, int p6);
 extern char lbl_8031D2E8[];
-extern int getAngle(float y, float x);
-extern void* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E23EC;
 extern f32 lbl_803E23F4;
 extern f32 lbl_803E2410;
@@ -132,6 +116,22 @@ extern f32 lbl_803E2488;
 extern f32 lbl_803E24AC;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E2504;
+
+extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
+extern f32 getXZDistance(f32* a, f32* b);
+extern int Objfsa_FindNearestCurveType24(float* pos, int p2, int p3);
+extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, void* target, int flag);
+extern int trickyMove(int p1, void* p2);
+extern void trickyTurnTowardYaw(int p1, s16 angle);
+extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
+extern void* Obj_AllocObjectSetup(int size, int b);
+extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
+extern void objSetAnimSpeedTo1(int* obj);
+extern void objAudioFn_800393f8(int obj, void* p2, int p3, int p4, int p5, int p6);
+extern int getAngle(float y, float x);
+extern void* ObjGroup_GetObjects(int group, int* count);
+
+int trickyGuardFindBaddieTarget(TrickyRuntime* state);
 
 #pragma opt_propagation off
 #pragma opt_common_subs off

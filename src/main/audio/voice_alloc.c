@@ -3,17 +3,6 @@
 #include "main/audio/voice_manage.h"
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/vidlisttables.h"
-extern VoiceIdSlot voiceFreeListSlots[];
-extern u8* synthVoice;
-extern u8 lbl_803BD150[];
-extern u8 synthIdleWaitActive;
-extern u16 voicePrioSortRootListRoot;
-extern u8 voiceMusicRunning;
-extern u8 voiceFxRunning;
-extern u8 voiceListInsert;
-extern u8 voiceListRoot;
-
-extern u8 vidListNodes[];
 
 typedef struct AllocVoice
 {
@@ -38,6 +27,17 @@ typedef struct AllocVoice
 #define VB_PRIO_SORT_NEXT(vb, p) (((SynthRootListNode*)((u8*)&(vb)->prioritySortLinks[0] + (p) * 4))->next)
 #define AV_PRIO(i)               (*(u8*)((u8*)&ALLOC_VOICE[0].prio + (i) * 0x404))
 #define AV_FXFLAG(i)             (*(u8*)((u8*)&ALLOC_VOICE[0].fxFlag + (i) * 0x404))
+
+extern VoiceIdSlot voiceFreeListSlots[];
+extern u8* synthVoice;
+extern u8 lbl_803BD150[];
+extern u8 synthIdleWaitActive;
+extern u16 voicePrioSortRootListRoot;
+extern u8 voiceMusicRunning;
+extern u8 voiceFxRunning;
+extern u8 voiceListInsert;
+extern u8 voiceListRoot;
+extern u8 vidListNodes[];
 
 /*
  * Allocate a voice id, preferring a free slot but stealing the lowest-priority

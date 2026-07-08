@@ -8,6 +8,7 @@
  * attributed to this address range actually belongs to the dll_0014 sibling
  * TU; only these ten symbols (0x800D9EB4..0x800D9EE8) live here.
  */
+#include "main/dll/dll_0012_unk.h"
 
 extern unsigned int lbl_803DD458; /* .sbss status word */
 

@@ -18,33 +18,11 @@
 #include "main/resource.h"
 #include "main/sfa_shared_decls.h"
 #include "main/frame_timing.h"
-
-void partfx_onMapSetup(void)
-{
-}
+#include "main/dll/dll_000E_partfx.h"
 
 extern u8 gPartfxCachedResourceCount;
 extern s16 gPartfxResourceTimeouts[];
 extern u8 lbl_80380209[];
-
-#pragma scheduling off
-#pragma peephole off
-void partfx_initialise(void)
-{
-    s16* p;
-    int i;
-    i = 0x14;
-    p = gPartfxResourceTimeouts + 0x14;
-    while ((s8)i != 0)
-    {
-        p = p - 1;
-        i = i - 1;
-        *p = 0;
-    }
-    gPartfxCachedResourceCount = 0;
-}
-#pragma reset
-
 extern void* gPartfxResourceModule00;
 extern void* gPartfxResourceModule01;
 extern void* gPartfxResourceModule02;
@@ -77,6 +55,175 @@ extern f32 gPartfxOscSine1;
 extern f32 gPartfxOscSine0;
 extern f32 gPartfxPi;
 extern f32 lbl_803DF71C;
+extern f32 gPartfxSpawnAnimPhase0;
+extern f32 gPartfxSpawnAnimPhase1;
+extern f32 lbl_803DF4D4;
+extern f32 lbl_803DF4DC;
+extern f32 lbl_803DF4E0;
+extern f32 lbl_803DF4E4;
+extern f32 lbl_803DF4E8;
+extern f32 lbl_803DF4EC;
+extern f32 lbl_803DF4F0;
+extern f32 lbl_803DF4F4;
+extern f32 lbl_803DF4F8;
+extern f32 lbl_803DF4FC;
+extern f32 lbl_803DF500;
+extern f32 lbl_803DF504;
+extern f32 lbl_803DF508;
+extern f32 lbl_803DF50C;
+extern f32 lbl_803DF510;
+extern f32 lbl_803DF514;
+extern f32 lbl_803DF518;
+extern f32 lbl_803DF51C;
+extern f32 lbl_803DF520;
+extern f32 lbl_803DF524;
+extern f32 lbl_803DF528;
+extern f32 lbl_803DF52C;
+extern f32 lbl_803DF530;
+extern f32 lbl_803DF534;
+extern f32 lbl_803DF538;
+extern f32 lbl_803DF53C;
+extern f32 lbl_803DF540;
+extern f32 lbl_803DF544;
+extern f32 gPartfxAlphaByteScale;
+extern f32 lbl_803DF54C;
+extern f32 lbl_803DF550;
+extern f32 lbl_803DF554;
+extern f32 lbl_803DF558;
+extern f32 lbl_803DF55C;
+extern f32 lbl_803DF560;
+extern f32 lbl_803DF564;
+extern f32 lbl_803DF568;
+extern f32 lbl_803DF56C;
+extern f32 lbl_803DF570;
+extern f32 lbl_803DF574;
+extern f32 lbl_803DF578;
+extern f32 lbl_803DF57C;
+extern f32 lbl_803DF580;
+extern f32 lbl_803DF584;
+extern f32 lbl_803DF588;
+extern f32 lbl_803DF58C;
+extern f32 lbl_803DF590;
+extern f32 lbl_803DF594;
+extern f32 lbl_803DF598;
+extern f32 lbl_803DF59C;
+extern f32 lbl_803DF5A0;
+extern f32 lbl_803DF5A4;
+extern f32 lbl_803DF5A8;
+extern f32 lbl_803DF5AC;
+extern f32 lbl_803DF5B0;
+extern f32 lbl_803DF5B4;
+extern f32 lbl_803DF5B8;
+extern f32 lbl_803DF5BC;
+extern f32 lbl_803DF5C0;
+extern f32 lbl_803DF5C4;
+extern f32 lbl_803DF5C8;
+extern f32 lbl_803DF5CC;
+extern f32 lbl_803DF5D0;
+extern f32 lbl_803DF5D4;
+extern f32 lbl_803DF5D8;
+extern f32 lbl_803DF5DC;
+extern f32 lbl_803DF5E0;
+extern f32 lbl_803DF5E4;
+extern f32 lbl_803DF5E8;
+extern f32 lbl_803DF5EC;
+extern double lbl_803DF5F0;
+extern f32 lbl_803DF5F8;
+extern f32 lbl_803DF5FC;
+extern f32 lbl_803DF600;
+extern f32 lbl_803DF604;
+extern f32 lbl_803DF608;
+extern f32 lbl_803DF60C;
+extern f32 lbl_803DF610;
+extern f32 lbl_803DF614;
+extern f32 lbl_803DF618;
+extern f32 lbl_803DF61C;
+extern f32 lbl_803DF620;
+extern f32 lbl_803DF624;
+extern f32 lbl_803DF628;
+extern f32 lbl_803DF62C;
+extern f32 lbl_803DF630;
+extern f32 lbl_803DF634;
+extern f32 lbl_803DF638;
+extern f32 lbl_803DF63C;
+extern f32 lbl_803DF640;
+extern f32 lbl_803DF644;
+extern f32 lbl_803DF648;
+extern f32 lbl_803DF64C;
+extern f32 lbl_803DF650;
+extern f32 lbl_803DF654;
+extern f32 lbl_803DF658;
+extern f32 lbl_803DF65C;
+extern f32 lbl_803DF660;
+extern f32 lbl_803DF664;
+extern f32 lbl_803DF668;
+extern f32 lbl_803DF66C;
+extern f32 lbl_803DF670;
+extern f32 lbl_803DF674;
+extern f32 lbl_803DF678;
+extern f32 lbl_803DF67C;
+extern f32 lbl_803DF680;
+extern f32 lbl_803DF684;
+extern f32 lbl_803DF688;
+extern f32 lbl_803DF68C;
+extern f32 lbl_803DF690;
+extern f32 lbl_803DF694;
+extern f32 lbl_803DF698;
+extern f32 lbl_803DF69C;
+extern f32 lbl_803DF6A0;
+extern f32 lbl_803DF6A4;
+extern f32 lbl_803DF6A8;
+extern f32 lbl_803DF6AC;
+extern f32 lbl_803DF6B0;
+extern f32 lbl_803DF6B4;
+extern f32 lbl_803DF6B8;
+extern f32 lbl_803DF6BC;
+extern f32 lbl_803DF6C0;
+extern f32 lbl_803DF6C4;
+extern f32 lbl_803DF6C8;
+extern f32 lbl_803DF6CC;
+extern f32 lbl_803DF6D0;
+extern f32 lbl_803DF6D4;
+extern f32 lbl_803DF6D8;
+extern f32 lbl_803DF6DC;
+extern f32 lbl_803DF6E0;
+extern f32 lbl_803DF6E4;
+extern f32 lbl_803DF6E8;
+extern f32 lbl_803DF6EC;
+extern f32 lbl_803DF6F0;
+extern f32 lbl_803DF6F4;
+extern f32 lbl_803DF6F8;
+extern f32 lbl_803DF6FC;
+extern f32 lbl_803DF700;
+extern f32 lbl_803DF704;
+extern f32 lbl_803DF708;
+extern s16 gPartfxResourceTimeouts[20];
+extern PartFxSpawnParams gPartfxDefaultSpawnParams;
+extern char sModgfxAlphaDebugFormat[];
+extern void vecRotateZXY(void* obj, f32* vec);
+extern void logPrintf(char* fmt, ...);
+
+void partfx_onMapSetup(void)
+{
+}
+
+#pragma scheduling off
+#pragma peephole off
+void partfx_initialise(void)
+{
+    s16* p;
+    int i;
+    i = 0x14;
+    p = gPartfxResourceTimeouts + 0x14;
+    while ((s8)i != 0)
+    {
+        p = p - 1;
+        i = i - 1;
+        *p = 0;
+    }
+    gPartfxCachedResourceCount = 0;
+}
+#pragma reset
 
 /* Tick global effect phases and expire the 20 cached particle resource
  * slots. */
@@ -342,155 +489,6 @@ void partfx_release(void)
     gPartfxResourceModule19 = NULL;
     gPartfxCachedResourceCount = 0;
 }
-
-extern f32 gPartfxSpawnAnimPhase0;
-extern f32 gPartfxSpawnAnimPhase1;
-extern f32 lbl_803DF4D4;
-extern f32 lbl_803DF4DC;
-extern f32 lbl_803DF4E0;
-extern f32 lbl_803DF4E4;
-extern f32 lbl_803DF4E8;
-extern f32 lbl_803DF4EC;
-extern f32 lbl_803DF4F0;
-extern f32 lbl_803DF4F4;
-extern f32 lbl_803DF4F8;
-extern f32 lbl_803DF4FC;
-extern f32 lbl_803DF500;
-extern f32 lbl_803DF504;
-extern f32 lbl_803DF508;
-extern f32 lbl_803DF50C;
-extern f32 lbl_803DF510;
-extern f32 lbl_803DF514;
-extern f32 lbl_803DF518;
-extern f32 lbl_803DF51C;
-extern f32 lbl_803DF520;
-extern f32 lbl_803DF524;
-extern f32 lbl_803DF528;
-extern f32 lbl_803DF52C;
-extern f32 lbl_803DF530;
-extern f32 lbl_803DF534;
-extern f32 lbl_803DF538;
-extern f32 lbl_803DF53C;
-extern f32 lbl_803DF540;
-extern f32 lbl_803DF544;
-extern f32 gPartfxAlphaByteScale;
-extern f32 lbl_803DF54C;
-extern f32 lbl_803DF550;
-extern f32 lbl_803DF554;
-extern f32 lbl_803DF558;
-extern f32 lbl_803DF55C;
-extern f32 lbl_803DF560;
-extern f32 lbl_803DF564;
-extern f32 lbl_803DF568;
-extern f32 lbl_803DF56C;
-extern f32 lbl_803DF570;
-extern f32 lbl_803DF574;
-extern f32 lbl_803DF578;
-extern f32 lbl_803DF57C;
-extern f32 lbl_803DF580;
-extern f32 lbl_803DF584;
-extern f32 lbl_803DF588;
-extern f32 lbl_803DF58C;
-extern f32 lbl_803DF590;
-extern f32 lbl_803DF594;
-extern f32 lbl_803DF598;
-extern f32 lbl_803DF59C;
-extern f32 lbl_803DF5A0;
-extern f32 lbl_803DF5A4;
-extern f32 lbl_803DF5A8;
-extern f32 lbl_803DF5AC;
-extern f32 lbl_803DF5B0;
-extern f32 lbl_803DF5B4;
-extern f32 lbl_803DF5B8;
-extern f32 lbl_803DF5BC;
-extern f32 lbl_803DF5C0;
-extern f32 lbl_803DF5C4;
-extern f32 lbl_803DF5C8;
-extern f32 lbl_803DF5CC;
-extern f32 lbl_803DF5D0;
-extern f32 lbl_803DF5D4;
-extern f32 lbl_803DF5D8;
-extern f32 lbl_803DF5DC;
-extern f32 lbl_803DF5E0;
-extern f32 lbl_803DF5E4;
-extern f32 lbl_803DF5E8;
-extern f32 lbl_803DF5EC;
-extern double lbl_803DF5F0;
-extern f32 lbl_803DF5F8;
-extern f32 lbl_803DF5FC;
-extern f32 lbl_803DF600;
-extern f32 lbl_803DF604;
-extern f32 lbl_803DF608;
-extern f32 lbl_803DF60C;
-extern f32 lbl_803DF610;
-extern f32 lbl_803DF614;
-extern f32 lbl_803DF618;
-extern f32 lbl_803DF61C;
-extern f32 lbl_803DF620;
-extern f32 lbl_803DF624;
-extern f32 lbl_803DF628;
-extern f32 lbl_803DF62C;
-extern f32 lbl_803DF630;
-extern f32 lbl_803DF634;
-extern f32 lbl_803DF638;
-extern f32 lbl_803DF63C;
-extern f32 lbl_803DF640;
-extern f32 lbl_803DF644;
-extern f32 lbl_803DF648;
-extern f32 lbl_803DF64C;
-extern f32 lbl_803DF650;
-extern f32 lbl_803DF654;
-extern f32 lbl_803DF658;
-extern f32 lbl_803DF65C;
-extern f32 lbl_803DF660;
-extern f32 lbl_803DF664;
-extern f32 lbl_803DF668;
-extern f32 lbl_803DF66C;
-extern f32 lbl_803DF670;
-extern f32 lbl_803DF674;
-extern f32 lbl_803DF678;
-extern f32 lbl_803DF67C;
-extern f32 lbl_803DF680;
-extern f32 lbl_803DF684;
-extern f32 lbl_803DF688;
-extern f32 lbl_803DF68C;
-extern f32 lbl_803DF690;
-extern f32 lbl_803DF694;
-extern f32 lbl_803DF698;
-extern f32 lbl_803DF69C;
-extern f32 lbl_803DF6A0;
-extern f32 lbl_803DF6A4;
-extern f32 lbl_803DF6A8;
-extern f32 lbl_803DF6AC;
-extern f32 lbl_803DF6B0;
-extern f32 lbl_803DF6B4;
-extern f32 lbl_803DF6B8;
-extern f32 lbl_803DF6BC;
-extern f32 lbl_803DF6C0;
-extern f32 lbl_803DF6C4;
-extern f32 lbl_803DF6C8;
-extern f32 lbl_803DF6CC;
-extern f32 lbl_803DF6D0;
-extern f32 lbl_803DF6D4;
-extern f32 lbl_803DF6D8;
-extern f32 lbl_803DF6DC;
-extern f32 lbl_803DF6E0;
-extern f32 lbl_803DF6E4;
-extern f32 lbl_803DF6E8;
-extern f32 lbl_803DF6EC;
-extern f32 lbl_803DF6F0;
-extern f32 lbl_803DF6F4;
-extern f32 lbl_803DF6F8;
-extern f32 lbl_803DF6FC;
-extern f32 lbl_803DF700;
-extern f32 lbl_803DF704;
-extern f32 lbl_803DF708;
-extern s16 gPartfxResourceTimeouts[20];
-extern PartFxSpawnParams gPartfxDefaultSpawnParams;
-
-extern void vecRotateZXY(void* obj, f32* vec);
-extern char sModgfxAlphaDebugFormat[];
-extern void logPrintf(char* fmt, ...);
 
 int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawnParams, u32 spawnFlags, u32 modelIdArg,
                        void* extraArgsArg)

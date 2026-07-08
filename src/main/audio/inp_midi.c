@@ -3,10 +3,6 @@
 #include "string.h"
 
 #pragma exceptions on
-extern int inpTranslateExCtrl(int input);
-extern u8 sInpMidiCtrlFullResetPreset[];
-extern u8 sInpMidiCtrlMaskedResetPreset[];
-extern u8 lbl_803CD760[][INP_MIDI_SLOT_COUNT];
 
 typedef struct InpMidiState
 {
@@ -14,11 +10,34 @@ typedef struct InpMidiState
     u8 midiCtrl[8][16][134]; /* 0x00C0 */
     u8 fxCtrl[16][134];      /* 0x43C0 */
 } InpMidiState;
+
+/*
+ * Push an event onto a 4-slot ring at obj+0x22. Resets counter when
+ * the flags byte is zero. Slot layout: [ctrl, flags|0x10 or translated
+ * ctrl, _, _, value, _, _, _].
+ */
+typedef struct InpCtrlRing
+{
+    struct
+    {
+        u8 ctrl;  /* 0x0 */
+        u8 flags; /* 0x1 */
+        u8 pad[2];
+        int value; /* 0x4 */
+    } slots[4];    /* 0x00 */
+    u8 pad20[2];   /* 0x20 */
+    u8 count;      /* 0x22 */
+} InpCtrlRing;
+
+extern u8 sInpMidiCtrlFullResetPreset[];
+extern u8 sInpMidiCtrlMaskedResetPreset[];
+extern u8 lbl_803CD760[][INP_MIDI_SLOT_COUNT];
 extern u8 gInpMidiLastNote[];
 extern u8 gInpMidiCtrlByKey[];
 extern u8 gInpMidiCtrl[];
 extern u8 gInpChannelDefaultsByKey[][INP_MIDI_SLOT_COUNT];
 extern u8 gInpChannelDefaults[];
+extern int inpTranslateExCtrl(int input);
 
 /*
  * Reset a MIDI-controller/default table from one of two preset banks,
@@ -160,24 +179,6 @@ void inpResetChannelDefaults(u8 channel, u8 key)
     }
     *p = 2;
 }
-
-/*
- * Push an event onto a 4-slot ring at obj+0x22. Resets counter when
- * the flags byte is zero. Slot layout: [ctrl, flags|0x10 or translated
- * ctrl, _, _, value, _, _, _].
- */
-typedef struct InpCtrlRing
-{
-    struct
-    {
-        u8 ctrl;  /* 0x0 */
-        u8 flags; /* 0x1 */
-        u8 pad[2];
-        int value; /* 0x4 */
-    } slots[4];    /* 0x00 */
-    u8 pad20[2];   /* 0x20 */
-    u8 count;      /* 0x22 */
-} InpCtrlRing;
 
 void inpAddCtrl(int obj, int ctrl, int value, int flags, u32 flag)
 {

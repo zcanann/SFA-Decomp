@@ -10,6 +10,35 @@
 #define GX_CULL_BACK  2
 #define GX_FOG_NONE   0
 #define GX_LEQUAL     3
+
+extern f32 lbl_803DEBC8;
+extern f32 lbl_803DEBCC;
+extern const f32 displayOffsetH_803DEBFC;
+extern f32 CurrTiming_803DEC20;
+extern const f32 gTexIndMtxScale;
+extern f32 FBSet_803DEC28;
+extern const f32 lbl_803DEC2C;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern int lbl_803DEBB0;
+extern int gTexDimmedLightList;
+extern int gTexBlockLightList;
+extern int lbl_803DCE30;
+extern int* lbl_803DCE34;
+extern int lbl_803DCE68;
+extern int lbl_803DCE6C;
+extern int gTexIndMtxTable[];
+extern u8 lbl_8037E0C0[];
+extern u8 lbl_803DB638;
+extern int gTexShaderAmbColor;
+extern int gTexLightmapAmbColor;
+extern s8 gTexIndMtxScaleExp;
+extern int lbl_80382008[5];
+#define FRUSTUM_PLANE_COUNT 5
+extern FrustumPlane gViewFrustumPlanes[FRUSTUM_PLANE_COUNT];
+extern int gTexShaderFogColor;
+extern int gTexLightmapFogColor;
+
 extern f32 modelLightStruct_getRadius(void* light);
 extern void modelLightStruct_getPosition(void* light, void* a, void* b, void* c);
 extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2, u8* dest,
@@ -38,23 +67,6 @@ extern void textureFn_8006c4e0();
 extern void fn_80088730();
 extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
 extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
-
-extern f32 lbl_803DEBC8;
-extern f32 lbl_803DEBCC;
-extern const f32 displayOffsetH_803DEBFC;
-extern f32 CurrTiming_803DEC20;
-extern const f32 gTexIndMtxScale;
-extern f32 FBSet_803DEC28;
-extern const f32 lbl_803DEC2C;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern int lbl_803DEBB0;
-extern int gTexDimmedLightList;
-extern int gTexBlockLightList;
-extern int lbl_803DCE30;
-extern int* lbl_803DCE34;
-extern int lbl_803DCE68;
-extern int lbl_803DCE6C;
 
 typedef struct TexOverride
 {
@@ -101,18 +113,6 @@ typedef struct TexShadowRow
     int unk8;
     int type;
 } TexShadowRow;
-
-extern int gTexIndMtxTable[];
-extern u8 lbl_8037E0C0[];
-extern u8 lbl_803DB638;
-extern int gTexShaderAmbColor;
-extern int gTexLightmapAmbColor;
-extern s8 gTexIndMtxScaleExp;
-extern int lbl_80382008[5];
-#define FRUSTUM_PLANE_COUNT 5
-extern FrustumPlane gViewFrustumPlanes[FRUSTUM_PLANE_COUNT];
-extern int gTexShaderFogColor;
-extern int gTexLightmapFogColor;
 
 u8 mapBlockBounds_HasCornerPastDepthThreshold(int bounds, float* xform)
 {

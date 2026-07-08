@@ -24,13 +24,29 @@ STATIC_ASSERT(sizeof(WmObjCreatorPlacement) == 0x24);
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
-extern u32 lbl_803DC0F0;
-extern s8 lbl_803DDC70;
-extern int* gScreensInterface;
-extern u32* lbl_803DCA94;
-extern void* lbl_803DDC74;
-extern f32 lbl_803E5CE8;
+/* neighbor-TU placement layouts (dll_01FB) shared by this unit */
+
+/* NOTE: distinct from the WmGalleonState head-section copy above -
+   this is the galleon TU's own state layout (the lowercase-m one is
+   the WM_ObjCreator-group view of the same 0x10 block). */
+
+STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
+STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
+STATIC_ASSERT(offsetof(Dll1FBState, triggerMode) == 0x06);
+STATIC_ASSERT(offsetof(Dll1FBState, hideModel) == 0x09);
+STATIC_ASSERT(sizeof(WMGalleonState) == 0x10);
+STATIC_ASSERT(offsetof(WMGalleonState, savedX) == 0x00);
+STATIC_ASSERT(offsetof(WMGalleonState, savedY) == 0x04);
+STATIC_ASSERT(offsetof(WMGalleonState, savedZ) == 0x08);
+STATIC_ASSERT(offsetof(WMGalleonState, mapEventsLatched) == 0x0C);
+STATIC_ASSERT(offsetof(WMGalleonState, savedYaw) == 0x0E);
+STATIC_ASSERT(offsetof(Dll1FBSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(Dll1FBSetup, baseMove) == 0x19);
+STATIC_ASSERT(offsetof(Dll1FBSetup, triggerMode) == 0x1a);
+STATIC_ASSERT(offsetof(Dll1FBSetup, objectParam) == 0x1c);
+STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 
 #define WM_GALLEON_GAMEBIT_CUTSCENE_DONE    0x429
 #define WM_GALLEON_GAMEBIT_CLEAR_DOOR       0xD1
@@ -51,15 +67,30 @@ extern f32 lbl_803E5CE8;
 #define OBJ_U8(obj, offset)  (*(u8*)((u8*)(obj) + (offset)))
 #define OBJ_S16(obj, offset) (*(s16*)((u8*)(obj) + (offset)))
 #define OBJ_S32(obj, offset) (*(s32*)((u8*)(obj) + (offset)))
+#define OBJ_F32(obj, offset) (*(f32*)((u8*)(obj) + (offset)))
+#define OBJ_PTR(obj, offset) (*(void**)((u8*)(obj) + (offset)))
 
+#define MAP_EVENT_TEST(mapId, eventId)            (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
+#define MAP_EVENT_SET(mapId, eventId, value)      (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
+#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
+
+extern u32 lbl_803DC0F0;
+extern s8 lbl_803DDC70;
+extern int* gScreensInterface;
+extern u32* lbl_803DCA94;
+extern void* lbl_803DDC74;
+extern f32 lbl_803E5CE8;
+extern f32 lbl_803E5CEC;
+extern f32 lbl_803E5CF0;
+extern f32 lbl_803E5CF4;
+
+extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 extern int Obj_GetPlayerObject(void);
 extern void objSetSlot(int* obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
 extern void fn_80065574(int a, int* obj, int b);
 extern void fn_80296BBC(int player);
-extern f32 lbl_803E5CEC;
-extern f32 lbl_803E5CF0;
-extern f32 lbl_803E5CF4;
+extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -146,7 +177,6 @@ void WM_Galleon_free(int* obj, int leavingMap)
 
 void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
     if (mainGetBit(GAMEBIT_WM_Galleon_despawn) != 0)
     {
         return;
@@ -171,37 +201,6 @@ void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 void WM_Galleon_hitDetect(void)
 {
 }
-
-#define OBJ_F32(obj, offset) (*(f32*)((u8*)(obj) + (offset)))
-#define OBJ_PTR(obj, offset) (*(void**)((u8*)(obj) + (offset)))
-
-#define MAP_EVENT_TEST(mapId, eventId)            (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
-#define MAP_EVENT_SET(mapId, eventId, value)      (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
-#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
-
-/* neighbor-TU placement layouts (dll_01FB) shared by this unit */
-
-/* NOTE: distinct from the WmGalleonState head-section copy above -
-   this is the galleon TU's own state layout (the lowercase-m one is
-   the WM_ObjCreator-group view of the same 0x10 block). */
-
-STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
-STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
-STATIC_ASSERT(offsetof(Dll1FBState, triggerMode) == 0x06);
-STATIC_ASSERT(offsetof(Dll1FBState, hideModel) == 0x09);
-STATIC_ASSERT(sizeof(WMGalleonState) == 0x10);
-STATIC_ASSERT(offsetof(WMGalleonState, savedX) == 0x00);
-STATIC_ASSERT(offsetof(WMGalleonState, savedY) == 0x04);
-STATIC_ASSERT(offsetof(WMGalleonState, savedZ) == 0x08);
-STATIC_ASSERT(offsetof(WMGalleonState, mapEventsLatched) == 0x0C);
-STATIC_ASSERT(offsetof(WMGalleonState, savedYaw) == 0x0E);
-STATIC_ASSERT(offsetof(Dll1FBSetup, yawByte) == 0x18);
-STATIC_ASSERT(offsetof(Dll1FBSetup, baseMove) == 0x19);
-STATIC_ASSERT(offsetof(Dll1FBSetup, triggerMode) == 0x1a);
-STATIC_ASSERT(offsetof(Dll1FBSetup, objectParam) == 0x1c);
-STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
-STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
-STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 
 void WM_Galleon_update(int* obj)
 {

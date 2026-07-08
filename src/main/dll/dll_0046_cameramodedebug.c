@@ -12,12 +12,7 @@
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/dll/fx_800944A0_shared.h"
-
-/* pad.h declares getButtonsJustPressed as u32; the u16 override in
-   CameraModeDebug_update is load-bearing for the mask comparison. */
-extern u32 getButtonsHeld(int port);
-extern u8 padGetCX(int port);
-extern u8 padGetCY(int port);
+#include "main/dll/dll_0046_cameramodedebug.h"
 
 /* camera mode id to restore on B-press exit */
 #define CAMCONTROL_ACTION_DEFAULT 0x42
@@ -37,6 +32,12 @@ extern f32 gCamDebugOrbitRadiusMax;
 extern f32 gCamDebugPi;
 extern f32 gCamDebugAngleUnitScale;
 extern f32 gCamDebugOrbitRadiusInit;
+extern u32 getButtonsHeld(int port);
+extern u8 padGetCX(int port);
+extern u8 padGetCY(int port);
+/* pad.h declares getButtonsJustPressed as u32; the u16 override in
+   CameraModeDebug_update is load-bearing for the mask comparison. */
+extern u16 getButtonsJustPressed(int port);
 
 void CameraModeDebug_copyToCurrent_nop(void)
 {
@@ -52,7 +53,6 @@ void CameraModeDebug_free(void)
 #pragma opt_propagation off
 void CameraModeDebug_update(CameraObject* cam)
 {
-    extern u16 getButtonsJustPressed(int port);
     GameObject* state;
     u16 held;
     f32 move;

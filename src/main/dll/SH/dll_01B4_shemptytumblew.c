@@ -8,27 +8,16 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
+#include "main/dll/SH/dll_01B4_shemptytumblew.h"
 
 #define SHEMPTYTUMBLEW_OBJFLAG_HIDDEN 0x4000
 
 extern f32 lbl_803DDC00;
-extern void ObjHitbox_SetCapsuleBounds();
 extern f32 lbl_803E5540;
 extern f32 lbl_803E5544;
 extern f32 lbl_803E5548;
 
-typedef struct ShEmptyTumblewPlacement
-{
-    ObjPlacement head;
-    u8 rotZByte;
-    u8 rotYByte;
-    u8 rotXByte;
-    u8 pad1b;
-    f32 scale;
-} ShEmptyTumblewPlacement;
-
-STATIC_ASSERT(offsetof(ShEmptyTumblewPlacement, rotZByte) == 0x18);
-STATIC_ASSERT(offsetof(ShEmptyTumblewPlacement, scale) == 0x1c);
+extern void ObjHitbox_SetCapsuleBounds();
 
 void SH_EmptyTumbleW_update(int obj)
 {

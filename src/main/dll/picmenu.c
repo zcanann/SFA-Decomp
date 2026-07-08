@@ -26,19 +26,17 @@
 #include "main/dll/FRONT/attract_movie.h"
 #include "dolphin/thp/THPPlayer.h"
 #include "string.h"
-extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
-extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
-extern void AttractMovieAudio_DmaCallback(void);
+
+#define THP_VERSION_1_0 0x10000
+
+/* per-frame component kinds in THPHeader::mCompInfoDataOffsets table */
+enum
+{
+    THP_COMPONENT_VIDEO = 0,
+    THP_COMPONENT_AUDIO = 1
+};
+
 extern char lbl_803A57C0[0x50C];
-char gPicMenuReadThreadArea[0x1000];
-OSThread gPicMenuReadThread;
-OSMessageQueue gPicMenuReadedBuffer2Queue;
-OSMessageQueue gPicMenuReadedBufferQueue;
-OSMessageQueue gPicMenuFreeReadBufferQueue;
-char gPicMenuVideoDecodeThreadArea[0x18];
-OSMessageQueue gPicMenuDecodedTextureSetQueue;
-OSMessageQueue gPicMenuFreeTextureSetQueue;
-OSThread gPicMenuVideoDecodeThread;
 extern char gPicMenuDvdReadBuffer[0x40];
 extern char sPicMenuThpMagic;
 extern f32 gPicMenuMaxVolume;
@@ -53,18 +51,23 @@ extern s32 gPicMenuVideoDecodeThreadCreated;
 extern s32 gPicMenuVideoDecodePrepareReady;
 extern u32 gAttractMovieIdleFrameCount; /* sbss slot is 8 bytes; upper word unreferenced */
 
+extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
+extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
+extern void AttractMovieAudio_DmaCallback(void);
+
 void THPRead_Reader(void);
 void AttractMovieVideo_DecoderForOnMemory(void*);
 void AttractMovieVideo_Decoder(void);
 
-#define THP_VERSION_1_0 0x10000
-
-/* per-frame component kinds in THPHeader::mCompInfoDataOffsets table */
-enum
-{
-    THP_COMPONENT_VIDEO = 0,
-    THP_COMPONENT_AUDIO = 1
-};
+char gPicMenuReadThreadArea[0x1000];
+OSThread gPicMenuReadThread;
+OSMessageQueue gPicMenuReadedBuffer2Queue;
+OSMessageQueue gPicMenuReadedBufferQueue;
+OSMessageQueue gPicMenuFreeReadBufferQueue;
+char gPicMenuVideoDecodeThreadArea[0x18];
+OSMessageQueue gPicMenuDecodedTextureSetQueue;
+OSMessageQueue gPicMenuFreeTextureSetQueue;
+OSThread gPicMenuVideoDecodeThread;
 
 BOOL movieLoad(const char* fileName, void* onMemory)
 {

@@ -22,18 +22,6 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/audio/sfx.h"
 
-extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points, void* scratch, f32 scaleX,
-                                f32 scaleZ);
-extern void fn_8003A168(int obj, void* p);
-extern void fn_8003B228(int obj, void* p);
-extern u8 lbl_803268B4[];
-extern f32 lbl_803E5200;
-extern f32 lbl_803E520C;
-extern f32 lbl_803E5210;
-extern f32 lbl_803E5214;
-
-void fn_801CDF94(int obj, int state, int flag);
-
 /* GameBit that erupts/retires the geyser (hides it, drops its sounds). */
 #define GAMEBIT_GEYSER_OFF 0xa
 
@@ -44,6 +32,19 @@ void fn_801CDF94(int obj, int state, int flag);
 #define NWGEYSER_OBJFLAG_HIDDEN             0x4000
 #define NWGEYSER_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define NWGEYSER_OBJFLAG_UPDATE_DISABLED    0x8000
+
+extern u8 lbl_803268B4[];
+extern f32 lbl_803E5200;
+extern f32 lbl_803E520C;
+extern f32 lbl_803E5210;
+extern f32 lbl_803E5214;
+
+extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points, void* scratch, f32 scaleX,
+                                f32 scaleZ);
+extern void fn_8003A168(int obj, void* p);
+extern void fn_8003B228(int obj, void* p);
+
+void fn_801CDF94(int obj, int state, int flag);
 
 int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

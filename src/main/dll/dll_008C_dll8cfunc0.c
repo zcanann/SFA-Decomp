@@ -17,6 +17,9 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL8C_EFFECT_ID 0x5e0
+
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80316950[]; /* per-effect texture/asset blob */
 extern f32 lbl_803E10B0;
@@ -29,9 +32,6 @@ extern f32 lbl_803E10C8;
 extern f32 lbl_803E10CC;
 extern f32 lbl_803E10D0;
 extern f32 lbl_803E10D4;
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL8C_EFFECT_ID 0x5e0
 
 void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

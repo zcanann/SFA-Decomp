@@ -12,8 +12,6 @@
 #include "main/dll/genprops.h"
 #include "main/frame_timing.h"
 
-extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
-
 extern f32 lbl_803E31F8;
 extern f32 lbl_803E31FC;
 extern f32 lbl_803E3200;
@@ -21,6 +19,8 @@ extern f32 lbl_803E3204;
 extern f32 lbl_803E3208;
 extern f32 lbl_803E320C;
 extern f32 lbl_803E3210;
+extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void Obj_FreeObject(int* obj);
 
 int GCbaddieShield_getExtraSize(void)
 {
@@ -57,7 +57,6 @@ void GCbaddieShield_hitDetect(void)
 
 void GCbaddieShield_update(int* obj)
 {
-    extern void Obj_FreeObject(int* obj);
     f32* state = ((GameObject*)obj)->extra;
     state[0] = state[0] - timeDelta;
     if (state[0] <= lbl_803E31FC)

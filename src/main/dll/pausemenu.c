@@ -17,36 +17,9 @@
 #include "main/textrender.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
-extern float mathSinf(float x);
-extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s32 x, u8 alpha, s32 mode, s32 flag);
+#include "main/dll/pausemenu.h"
+
 extern u8 hudTextures[0x198];
-extern void drawRect(f32 sx, f32 sy, int x, int y);
-extern void boxDrawFn_8012975c(void* a, void* b, void* c);
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void gameTextFn_80016810(int a, int b, int c);
-
-extern float mathCosf(float x);
-extern float fn_802943F4(float x);
-extern void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c);
-extern void* Obj_GetActiveModel(u8* obj);
-extern void objRender(int a, int b, int c, int d, void* obj, int e);
-extern void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9);
-extern void Camera_SetCurrentViewIndex(int index);
-extern void Camera_UpdateViewMatrices(void);
-extern void Camera_SetFovY(f32 fovY);
-extern void Camera_RebuildProjectionMatrix(void);
-extern void Camera_ApplyFullViewport(void);
-extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
-extern void gameTextMeasureFn_800163c4(void* text, s32 a, s32 b, s32 c, s32* o1, s32* o2, s32* o3, s32* o4);
-
-extern void* gameTextGetBox(int box);
-extern void gameTextFn_8001628c(int id, int a, int b, s32* o1, s32* o2, s32* o3, s32* o4);
-
-extern u16 getNextTaskHintText(void);
-
-extern void fn_80128120(void* obj, u8 v);
-extern void fn_80128470(int v);
 extern f32 hudElementOpacity;
 extern u8 pauseMenuState;
 extern u8 pauseMenuTextDrawFn[];
@@ -135,8 +108,31 @@ extern f32 lbl_803E20C0;
 extern f32 lbl_803E20C4;
 extern f32 lbl_803E20CC;
 
-void pauseMenuDrawStatus_801274A0(int* arg1);
-void fn_80127F24(s32 alpha);
+extern float mathSinf(float x);
+extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s32 x, u8 alpha, s32 mode, s32 flag);
+extern void drawRect(f32 sx, f32 sy, int x, int y);
+extern void boxDrawFn_8012975c(void* a, void* b, void* c);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextFn_80016810(int a, int b, int c);
+extern float mathCosf(float x);
+extern float fn_802943F4(float x);
+extern void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c);
+extern void* Obj_GetActiveModel(u8* obj);
+extern void objRender(int a, int b, int c, int d, void* obj, int e);
+extern void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9);
+extern void Camera_SetCurrentViewIndex(int index);
+extern void Camera_UpdateViewMatrices(void);
+extern void Camera_SetFovY(f32 fovY);
+extern void Camera_RebuildProjectionMatrix(void);
+extern void Camera_ApplyFullViewport(void);
+extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
+extern void gameTextMeasureFn_800163c4(void* text, s32 a, s32 b, s32 c, s32* o1, s32* o2, s32* o3, s32* o4);
+extern void* gameTextGetBox(int box);
+extern void gameTextFn_8001628c(int id, int a, int b, s32* o1, s32* o2, s32* o3, s32* o4);
+extern u16 getNextTaskHintText(void);
+extern void fn_80128120(void* obj, u8 v);
+extern void fn_80128470(int v);
 
 void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
 {

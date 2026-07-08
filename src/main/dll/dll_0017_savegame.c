@@ -57,39 +57,6 @@ STATIC_ASSERT(offsetof(SaveGameData, timeEntryCount) == 0x6EC);
 STATIC_ASSERT(offsetof(SaveGameData, timeEntries) == 0x6F0);
 STATIC_ASSERT(sizeof(SaveGameData) == 0xF70);
 
-u8 gSaveGameData[0xF70];
-extern u8 saveGameLoadStatus;
-extern s8 gSaveGameCurrentSlot;
-extern u8* lbl_803DD498;
-extern char sGameplayFoxName;
-u8 saveData[228];
-extern f32 lbl_803E06C8;
-extern f32 lbl_803E06CC;
-extern u16 gSaveGameMapActBits[];
-extern u16 gSaveGameMapObjGroupBits[];
-u32 gMapObjGroupStatuses[0x78];
-u8 gExtendedMapActLookup[0x28];
-extern int gSaveGameObjGroupCacheIdx;
-extern s8 gSaveGameMapActCacheIdx;
-extern u32 pRestartPoint;
-extern f32 lbl_803E06D0;
-extern f32 lbl_803E06D4;
-extern int loadSaveGame(int slot, void* save);
-extern int _saveGame(int slot, int save, int data);
-extern int maybeTryLoadSave(int a);
-extern void mm_free(u32);
-extern int unlockLevel(s32 val, int idx, int flag);
-
-extern void audioStopByMask(int mask);
-extern void stopRumble2(void);
-
-extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
-extern int getCurUiDll(void);
-extern void loadUiDll(int index);
-
-extern void playerAddHealth(u8* player, int v);
-extern void* mmAlloc(int size, int type, int flag);
-
 #define SAVEGAME_OBJECT_POSITION_COUNT        0x3f
 #define SAVEGAME_OBJECT_POSITION_OFFSET       0x168
 #define SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET 0x20158
@@ -193,6 +160,42 @@ typedef struct MapBitTransient
     s8 timer;
 } MapBitTransient;
 
+extern u8 saveGameLoadStatus;
+extern s8 gSaveGameCurrentSlot;
+extern u8* lbl_803DD498;
+extern char sGameplayFoxName;
+extern f32 lbl_803E06C8;
+extern f32 lbl_803E06CC;
+extern u16 gSaveGameMapActBits[];
+extern u16 gSaveGameMapObjGroupBits[];
+extern int gSaveGameObjGroupCacheIdx;
+extern s8 gSaveGameMapActCacheIdx;
+extern u32 pRestartPoint;
+extern f32 lbl_803E06D0;
+extern f32 lbl_803E06D4;
+extern SaveGameDefaultPosition gSaveGameDefaultPosition;
+
+extern int loadSaveGame(int slot, void* save);
+extern int _saveGame(int slot, int save, int data);
+extern int maybeTryLoadSave(int a);
+extern void mm_free(u32);
+extern int unlockLevel(s32 val, int idx, int flag);
+extern void audioStopByMask(int mask);
+extern void stopRumble2(void);
+extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
+extern int getCurUiDll(void);
+extern void loadUiDll(int index);
+extern void playerAddHealth(u8* player, int v);
+extern void* mmAlloc(int size, int type, int flag);
+
+void loadMapForCurrentSaveGame(void);
+void saveGame_saveObjectPos(int* obj);
+
+u8 gSaveGameData[0xF70];
+u8 saveData[228];
+u32 gMapObjGroupStatuses[0x78];
+u8 gExtendedMapActLookup[0x28];
+
 MapBitTransient gTransientMapBits[0x3C / sizeof(MapBitTransient)];
 
 /* The three .bss objects gTransientMapBits (0x803A2F80), gMapObjGroupStatuses
@@ -205,8 +208,6 @@ typedef struct SaveGameMapState
     u8 extendedMapActLookup[40];                                 /* 0x21C */
 } SaveGameMapState;
 #define gSaveGameMapState (*(SaveGameMapState*)gTransientMapBits)
-
-extern SaveGameDefaultPosition gSaveGameDefaultPosition;
 
 int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
 {
@@ -820,8 +821,6 @@ void SaveGame_gplayClearRestartPoint(void)
     }
 }
 
-void loadMapForCurrentSaveGame(void);
-
 void SaveGame_gplayGotoRestartPoint(void)
 {
     if (pRestartPoint != 0)
@@ -865,8 +864,6 @@ void loadMapForCurrentSaveGame(void)
     screenTransitionFn_800d7b04(0x1e, 1);
     saveGameLoadStatus = 2;
 }
-
-void saveGame_saveObjectPos(int* obj);
 
 void saveGame_saveObjectPos(int* obj)
 {

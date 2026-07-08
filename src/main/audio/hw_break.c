@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/hw_break.h"
 
 extern u8* dspVoice;
 extern u8 salTimeOffset;

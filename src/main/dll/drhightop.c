@@ -29,22 +29,23 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern f32 PSVECMag(void* vec);
-extern void PSVECScale(f32* dst, f32* src, f32 s);
-extern void PSVECNormalize(void* src, void* dst);
-extern f32 PSVECDotProduct(void* a, void* b);
-extern int randomGetRange(int lo, int hi);
-extern void setMotionBlur(u8 enabled, f32 amount);
+typedef struct HightopFlags3
+{
+    u8 hi : 4;
+    u8 active : 1;
+    u8 lo : 3;
+} HightopFlags3;
+
+typedef struct HightopFlags
+{
+    u8 resetLatch : 1;
+    u8 flags : 7;
+} HightopFlags;
 
 /* particle spray spawned in a burst loop (~0x32/framesThisStep) on a bike collision */
 #define DRHIGHTOP_PARTFX_COLLISION_SPRAY 0x553
 #define DRHIGHTOP_HIT_VOLUME_SLOT        0x15
 
-extern f32 sqrtf(f32);
-extern void fn_8009A8C8();
-extern int arrayIndexOf(int* arr, int count, int target);
-extern void SnowBike_resetToRomListPosition();
 extern f32 oneOverTimeDelta;
 extern char lbl_803AD088[];
 extern int gDrHighTopHitObjectKinds[];
@@ -102,12 +103,17 @@ extern f32 lbl_803E5C0C;
 extern f32 lbl_803E5C10;
 extern f32 lbl_803E5C14;
 
-typedef struct HightopFlags3
-{
-    u8 hi : 4;
-    u8 active : 1;
-    u8 lo : 3;
-} HightopFlags3;
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern f32 PSVECMag(void* vec);
+extern void PSVECScale(f32* dst, f32* src, f32 s);
+extern void PSVECNormalize(void* src, void* dst);
+extern f32 PSVECDotProduct(void* a, void* b);
+extern int randomGetRange(int lo, int hi);
+extern void setMotionBlur(u8 enabled, f32 amount);
+extern f32 sqrtf(f32);
+extern void fn_8009A8C8();
+extern int arrayIndexOf(int* arr, int count, int target);
+extern void SnowBike_resetToRomListPosition();
 
 void fn_801EAE4C(short* obj, int stateRaw)
 {
@@ -267,12 +273,6 @@ void fn_801EB0D4(u32 obj, int stateRaw)
         }
     }
 }
-
-typedef struct HightopFlags
-{
-    u8 resetLatch : 1;
-    u8 flags : 7;
-} HightopFlags;
 
 void SnowBike_onSeqFree(int* obj)
 {

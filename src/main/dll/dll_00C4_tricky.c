@@ -20,42 +20,6 @@
 #include "main/dll/tricky_state.h"
 #include "main/gamebit_ids.h"
 
-/* group owned by another DLL, queried here */
-#define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
-
-#define TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT   0x00000008
-#define TRICKY_CONTROL_FLAG_USE_SPECIAL_FLOOR_Y 0x08000000
-#define TRICKY_CONTROL_FLAG_OFFSET_FLOOR_Y      0x20000000
-#define TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK 0x28000002
-#define TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR    0x10
-/* flags2DC status bits set by the floor-response pass (Tricky_applyFloorResponse /
- * Tricky_findNearbyFloorHeights) to record what floor correction ran this frame. */
-#define TRICKY_STATE2DC_FLAG_FLOOR_OFFSET_APPLIED 0x08000000LL /* offset-floor-Y push applied */
-#define TRICKY_STATE2DC_FLAG_FLOOR_SNAP_APPLIED   0x00100000LL /* snap-to-floor velocity applied */
-#define TRICKY_STATE2DC_FLAG_SPECIAL_FLOOR_FOUND  0x10000000LL /* a nearby type-0xe special floor was found */
-/* stateFlags movement-enable bits: each gates applying its matching per-frame
- * position delta (backstepDelta / verticalDelta / sidestepDelta) or the
- * rotate-toward-target interpolation in the per-frame update. */
-#define TRICKY_STATE_FLAG_SIDESTEP      0x20  /* apply sidestepDelta lateral offset */
-#define TRICKY_STATE_FLAG_BACKSTEP      0x40  /* apply backstepDelta offset */
-#define TRICKY_STATE_FLAG_VERTICAL_MOVE 0x80  /* apply verticalDelta to localPosY */
-#define TRICKY_STATE_FLAG_ROTATE        0x100 /* interpolate rotation toward targetYaw target */
-/* stateFlags flame-particle child bookkeeping: 0x800 marks the 7 flame children
- * as spawned; on teardown it is cleared and 0x1000 is set. */
-#define TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE  0x800  /* 7 flame child objects are spawned */
-#define TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP 0x1000 /* flame children torn down this cycle */
-/* GameObject.objectFlags bit (distinct field from stateFlags above). */
-#define TRICKY_OBJFLAG_PARENT_SLACK            0x1000
-#define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
-#define TRICKY_HEIGHT_TRACK_GROUP              0x51
-#define TRICKY_OBJGROUP                        1
-#define TRICKY_HEIGHT_TRACK_MODEL_SLOT         3
-#define TRICKY_BBOX_HIT_SCRATCH_SIZE           84
-/* ObjPlacement offsets read by the defeat handler to fire the baddie's
- * death gamebits. */
-#define BADDIE_PLACEMENT_DEATH_GAMEBIT          0x18 /* s16: gamebit incremented on defeat */
-#define BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT 0x1a /* s16: gamebit cleared on defeat */
-
 typedef struct BaddieInstantiateWeaponPlacement
 {
     u8 pad0[0x4 - 0x0];
@@ -99,6 +63,113 @@ typedef struct TrickyStatusFlags58
     u8 bit1 : 1;
     u8 bit0 : 1;
 } TrickyStatusFlags58;
+
+typedef struct PromptSlotByte
+{
+    u8 slotA : 2;
+    u8 slotB : 2;
+    u8 unk4 : 4;
+} PromptSlotByte;
+
+typedef struct
+{
+    u8 slotA : 2;
+    u8 slotB : 2;
+    u8 slotC : 2;
+    u8 slotD : 2;
+} TrickySlotBits;
+
+typedef struct
+{
+    void* pad[9];
+    void (*handlers[1])(int obj, int state);
+} TrickyHandlerTable;
+
+typedef struct
+{
+    int a;
+    int b;
+    int c;
+    int d;
+    int e;
+} TrickyCmdQuery;
+
+typedef struct
+{
+    u16 a;
+    u16 b;
+} TrickySfxPair;
+
+struct TrickyCommandSpawnPair
+{
+    u32 a;
+    u32 b;
+};
+
+typedef struct
+{
+    s16 rot[3];
+    f32 scale;
+    Vec pos;
+} FrozenFxParams;
+
+typedef struct
+{
+    int c0;
+    int c1;
+    int c2;
+    int c3;
+} FrozenFxColors;
+
+typedef struct
+{
+    u8 fadeCounter : 5;
+    u8 low : 3;
+} FrozenByte2F6;
+
+struct VisBits16
+{
+    u32 w0;
+    u32 w1;
+    u32 w2;
+    u32 w3;
+};
+
+/* group owned by another DLL, queried here */
+#define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
+
+#define TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT   0x00000008
+#define TRICKY_CONTROL_FLAG_USE_SPECIAL_FLOOR_Y 0x08000000
+#define TRICKY_CONTROL_FLAG_OFFSET_FLOOR_Y      0x20000000
+#define TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK 0x28000002
+#define TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR    0x10
+/* flags2DC status bits set by the floor-response pass (Tricky_applyFloorResponse /
+ * Tricky_findNearbyFloorHeights) to record what floor correction ran this frame. */
+#define TRICKY_STATE2DC_FLAG_FLOOR_OFFSET_APPLIED 0x08000000LL /* offset-floor-Y push applied */
+#define TRICKY_STATE2DC_FLAG_FLOOR_SNAP_APPLIED   0x00100000LL /* snap-to-floor velocity applied */
+#define TRICKY_STATE2DC_FLAG_SPECIAL_FLOOR_FOUND  0x10000000LL /* a nearby type-0xe special floor was found */
+/* stateFlags movement-enable bits: each gates applying its matching per-frame
+ * position delta (backstepDelta / verticalDelta / sidestepDelta) or the
+ * rotate-toward-target interpolation in the per-frame update. */
+#define TRICKY_STATE_FLAG_SIDESTEP      0x20  /* apply sidestepDelta lateral offset */
+#define TRICKY_STATE_FLAG_BACKSTEP      0x40  /* apply backstepDelta offset */
+#define TRICKY_STATE_FLAG_VERTICAL_MOVE 0x80  /* apply verticalDelta to localPosY */
+#define TRICKY_STATE_FLAG_ROTATE        0x100 /* interpolate rotation toward targetYaw target */
+/* stateFlags flame-particle child bookkeeping: 0x800 marks the 7 flame children
+ * as spawned; on teardown it is cleared and 0x1000 is set. */
+#define TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE  0x800  /* 7 flame child objects are spawned */
+#define TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP 0x1000 /* flame children torn down this cycle */
+/* GameObject.objectFlags bit (distinct field from stateFlags above). */
+#define TRICKY_OBJFLAG_PARENT_SLACK            0x1000
+#define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
+#define TRICKY_HEIGHT_TRACK_GROUP              0x51
+#define TRICKY_OBJGROUP                        1
+#define TRICKY_HEIGHT_TRACK_MODEL_SLOT         3
+#define TRICKY_BBOX_HIT_SCRATCH_SIZE           84
+/* ObjPlacement offsets read by the defeat handler to fire the baddie's
+ * death gamebits. */
+#define BADDIE_PLACEMENT_DEATH_GAMEBIT          0x18 /* s16: gamebit incremented on defeat */
+#define BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT 0x1a /* s16: gamebit cleared on defeat */
 
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
@@ -221,6 +292,90 @@ extern int ObjModel_ClearBlendChannels(int model);
 extern void characterDoEyeAnims(int obj, void* p);
 extern int fn_80138D7C(int obj, int state);
 extern void Tricky_updateBlendChannelWeight(int obj, int state);
+extern u8 Objfsa_GetWalkGroupIndexAtPoint(void* pos, int patchInfo);
+extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
+extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int filter4, int filter5);
+extern f32 lbl_803E25A4;
+extern f32 lbl_803E2500;
+extern f32 lbl_803E2418;
+extern f32 sqrtf(f32 x);
+extern int getAngle(float y, float x);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern int gTrickyFrozenFxColors[];
+extern int* lbl_803DDA50;
+extern f32 lbl_803E2588;
+extern f32 lbl_803E258C;
+extern f32 lbl_803E2590;
+extern f32 lbl_803E2594;
+extern f32 lbl_803E259C;
+extern void fn_802972B4(int player, u32* outEffects, f32* outA, f32* outB, f32* outC, u16* outSfx);
+extern void vecRotateZXY(int obj, void* vel);
+extern int objCreateLight(int a, int b);
+extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
+extern void Obj_Shatter(int obj);
+extern void Obj_StartModelFadeIn(int obj, int duration);
+extern void fn_802961FC(u8* proj, int result);
+extern int sidekickToy_handleHitMessage(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                        int sector, f32 hDist, f32 vDist);
+extern void guardClawUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                       int sector);
+extern void gcRobotPatrol_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                            int sector);
+extern void mikaladon_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                        int sector);
+extern void vambat_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                     int sector);
+extern void kooshy_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                     int sector);
+extern void weevil_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                     int sector);
+extern void Baddie_HandleHitReaction(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                     int sector);
+extern void rachnopUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                     int sector);
+extern void wbUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void baddieUpdateWhileFrozen_80155e10(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                             int sector);
+extern void mutatedEbaUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                        int sector);
+extern void whirlpool_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                        int sector);
+extern void snowworm_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                       int sector);
+extern void hoodedZyckUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                        int sector);
+extern void battleDroidUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                         int sector);
+extern void crawler_onHit(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void hagabonMK2_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+                                         int sector);
+extern int gTrickyCmdQueryInit[];
+extern TrickySfxPair lbl_803E23C4;
+extern f32 lbl_803E2408;
+extern f32 lbl_803E23EC;
+extern f32 lbl_803E24C8;
+extern f32 lbl_803E24D8;
+extern f32 lbl_803E2538;
+extern f32 lbl_803E2544;
+extern f32 lbl_803E2548;
+extern f32 lbl_803E254C;
+extern f32 lbl_803E2550;
+extern int trickySelectQueuedCommandTarget(int state, int type);
+extern int trickyFoodFn_8013db3c(int obj, int state);
+extern void memmove(void* dst, void* src, int n);
+extern void fn_801B17F4(void);
+extern void fn_801B6D40(void);
+extern void fn_801FD4A8(void);
+extern void fn_801B0784(void);
+extern void drchimmey_countdownCallback(void);
+extern void fn_801DA9CC(void);
+extern void wcbeacon_aButtonCallback(void);
+extern void fn_8003A168(int obj, void* p);
+extern void fn_8003B228(int obj, void* p);
+
+void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val);
+void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* nearestSpecialY);
 
 int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -390,13 +545,6 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
     ((TrickyState*)state)->commandCount++;
     return;
 }
-
-typedef struct PromptSlotByte
-{
-    u8 slotA : 2;
-    u8 slotB : 2;
-    u8 unk4 : 4;
-} PromptSlotByte;
 
 int Tricky_updateSideCommandPrompts(int obj)
 {
@@ -703,59 +851,6 @@ void Tricky_free(int obj, int shouldKeepFlameChildren)
 }
 
 /* Tricky sidekick command state machine and per-frame update. */
-typedef struct
-{
-    u8 slotA : 2;
-    u8 slotB : 2;
-    u8 slotC : 2;
-    u8 slotD : 2;
-} TrickySlotBits;
-
-typedef struct
-{
-    void* pad[9];
-    void (*handlers[1])(int obj, int state);
-} TrickyHandlerTable;
-
-typedef struct
-{
-    int a;
-    int b;
-    int c;
-    int d;
-    int e;
-} TrickyCmdQuery;
-
-typedef struct
-{
-    u16 a;
-    u16 b;
-} TrickySfxPair;
-
-extern int gTrickyCmdQueryInit[];
-extern TrickySfxPair lbl_803E23C4;
-extern f32 lbl_803E2408;
-extern f32 lbl_803E23EC;
-extern f32 lbl_803E24C8;
-extern f32 lbl_803E24D8;
-extern f32 lbl_803E2538;
-extern f32 lbl_803E2544;
-extern f32 lbl_803E2548;
-extern f32 lbl_803E254C;
-extern f32 lbl_803E2550;
-extern int trickySelectQueuedCommandTarget(int state, int type);
-extern int trickyFoodFn_8013db3c(int obj, int state);
-extern void memmove(void* dst, void* src, int n);
-extern void fn_801B17F4(void);
-extern void fn_801B6D40(void);
-extern void fn_801FD4A8(void);
-extern void fn_801B0784(void);
-extern void drchimmey_countdownCallback(void);
-extern void fn_801DA9CC(void);
-extern void wcbeacon_aButtonCallback(void);
-extern void fn_8003A168(int obj, void* p);
-extern void fn_8003B228(int obj, void* p);
-
 #define TRICKY_RESET_COMMAND(state)                                                                                    \
     *(u8*)((state) + 8) = 1;                                                                                           \
     *(u8*)((state) + 0xa) = 0;                                                                                         \
@@ -1789,12 +1884,6 @@ void tricky_handleDefeat(int obj, int state)
     }
 }
 
-struct TrickyCommandSpawnPair
-{
-    u32 a;
-    u32 b;
-};
-
 int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u32 mode)
 {
     u32 commandSpawnIds[2];
@@ -1935,90 +2024,6 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
     }
     return gTrickyNearestObject;
 }
-
-/* Shared frozen-state update + per-baddie reaction dispatch. */
-typedef struct
-{
-    s16 rot[3];
-    f32 scale;
-    Vec pos;
-} FrozenFxParams;
-
-typedef struct
-{
-    int c0;
-    int c1;
-    int c2;
-    int c3;
-} FrozenFxColors;
-
-typedef struct
-{
-    u8 fadeCounter : 5;
-    u8 low : 3;
-} FrozenByte2F6;
-
-struct VisBits16
-{
-    u32 w0;
-    u32 w1;
-    u32 w2;
-    u32 w3;
-};
-
-extern f32 sqrtf(f32 x);
-extern int getAngle(float y, float x);
-void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern int gTrickyFrozenFxColors[];
-extern int* lbl_803DDA50;
-extern f32 lbl_803E2588;
-extern f32 lbl_803E258C;
-extern f32 lbl_803E2590;
-extern f32 lbl_803E2594;
-extern f32 lbl_803E259C;
-extern void fn_802972B4(int player, u32* outEffects, f32* outA, f32* outB, f32* outC, u16* outSfx);
-extern void vecRotateZXY(int obj, void* vel);
-extern int objCreateLight(int a, int b);
-extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
-extern void Obj_Shatter(int obj);
-extern void Obj_StartModelFadeIn(int obj, int duration);
-extern void fn_802961FC(u8* proj, int result);
-extern int sidekickToy_handleHitMessage(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                        int sector, f32 hDist, f32 vDist);
-extern void guardClawUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                       int sector);
-extern void gcRobotPatrol_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                            int sector);
-extern void mikaladon_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                        int sector);
-extern void vambat_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                     int sector);
-extern void kooshy_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                     int sector);
-extern void weevil_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                     int sector);
-extern void Baddie_HandleHitReaction(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                     int sector);
-extern void rachnopUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                     int sector);
-extern void wbUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void baddieUpdateWhileFrozen_80155e10(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                             int sector);
-extern void mutatedEbaUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                        int sector);
-extern void whirlpool_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                        int sector);
-extern void snowworm_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                       int sector);
-extern void hoodedZyckUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                        int sector);
-extern void battleDroidUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                         int sector);
-extern void crawler_onHit(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void hagabonMK2_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                         int sector);
 
 void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
 {
@@ -2489,8 +2494,6 @@ void baddieFn_8014a304(int obj, int state, f32 radius)
     }
 }
 
-void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* nearestSpecialY);
-
 void Tricky_applyFloorResponse(int obj, int state)
 {
     f32 nearestFloorY;
@@ -2795,10 +2798,6 @@ int Tricky_getCurrentCommandType(int* obj, int* out)
     return 1;
 }
 
-extern u8 Objfsa_GetWalkGroupIndexAtPoint(void* pos, int patchInfo);
-extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
-extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int filter4, int filter5);
-
 void trickyFn_801451d8(int obj, int state)
 {
     u8 pathBytes[16];
@@ -2974,10 +2973,6 @@ void trickyReportError(const char* fmt, ...)
 void trickyDebugPrint(const char* fmt, ...)
 {
 }
-
-extern f32 lbl_803E25A4;
-extern f32 lbl_803E2500;
-extern f32 lbl_803E2418;
 
 u8* Tricky_findNearestGroup4BObject(u8* obj, TrickyState* state)
 {

@@ -7,14 +7,25 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/dll_0075_dll75func0.h"
 
 extern ModgfxInterface** gModgfxInterface;
-
-s16 gModgfxFxHwTuning[8] = {0, 155, 200, 155, 0, 0, 0, 0};
 extern f32 lbl_803E0BE8, lbl_803E0BEC, lbl_803E0BF0, lbl_803E0BF4, lbl_803E0BF8, lbl_803E0BFC;
 extern f32 lbl_803E0C00, lbl_803E0C04, lbl_803E0C08, lbl_803E0C0C, lbl_803E0C10, lbl_803E0C14;
 extern f32 lbl_803E0C18, lbl_803E0C1C, lbl_803E0C20, lbl_803E0C24, lbl_803E0C28, lbl_803E0C2C;
 extern f32 lbl_803E0C30, lbl_803E0C34, lbl_803E0C38, lbl_803E0C3C;
+/*__DATA_EXTERNS__*/
+extern void dll_78_func03();
+extern void dll_78_func01_nop();
+extern void dll_78_func00_nop();
+extern void dll_77_func03();
+extern void dll_77_func01_nop();
+extern void dll_77_func00_nop();
+extern void dll_76_func03();
+extern void dll_76_func01_nop();
+extern void dll_76_func00_nop();
+
+s16 gModgfxFxHwTuning[8] = {0, 155, 200, 155, 0, 0, 0, 0};
 
 void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -217,16 +228,6 @@ void dll_75_func00_nop(void)
 {
 }
 
-/*__DATA_EXTERNS__*/
-extern void dll_78_func03();
-extern void dll_78_func01_nop();
-extern void dll_78_func00_nop();
-extern void dll_77_func03();
-extern void dll_77_func01_nop();
-extern void dll_77_func00_nop();
-extern void dll_76_func03();
-extern void dll_76_func01_nop();
-extern void dll_76_func00_nop();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* lbl_80314930[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_75_func00_nop, dll_75_func01_nop, (void*)0x00000000, dll_75_func03};

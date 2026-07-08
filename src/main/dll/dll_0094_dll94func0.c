@@ -12,6 +12,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/savegame.h"
+#include "main/dll/dll_0094_dll94func0.h"
 
 /* GfxCmd/GfxBuf are duplicated from dll_0093; should be unified in a shared header. */
 typedef struct
@@ -22,24 +23,6 @@ typedef struct
     u16 flags;   /* +0x14 */
     u8 layer;    /* +0x16 */
 } GfxCmd;
-
-extern ModgfxInterface** gModgfxInterface;
-
-extern u8 lbl_803DB938[8]; /* texture/resource handle */
-extern f32 lbl_803E1270;
-extern f32 lbl_803E1278;
-extern u8 lbl_80317488[];
-extern f32 lbl_803E1268;
-extern f32 lbl_803E126C; /* 0.0f */
-extern f32 lbl_803E1274;
-extern f32 lbl_803E127C;
-extern f32 lbl_803E1280;
-extern f32 lbl_803E1284;
-extern f32 lbl_803E1288;
-extern f32 lbl_803E128C;
-extern f32 lbl_803E1290;
-
-void dll_95_func01_nop(void); /* forward decl to align function set with v1.0 asm; defined in dll_0095 */
 
 typedef struct
 {
@@ -61,10 +44,28 @@ typedef struct
     GfxCmd entries[32];    /* +0x60 */
 } GfxBuf;
 
-#pragma inline_max_size(2000)
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL94_EFFECT_ID 0x3c
 
+extern ModgfxInterface** gModgfxInterface;
+
+extern u8 lbl_803DB938[8]; /* texture/resource handle */
+extern f32 lbl_803E1270;
+extern f32 lbl_803E1278;
+extern u8 lbl_80317488[];
+extern f32 lbl_803E1268;
+extern f32 lbl_803E126C; /* 0.0f */
+extern f32 lbl_803E1274;
+extern f32 lbl_803E127C;
+extern f32 lbl_803E1280;
+extern f32 lbl_803E1284;
+extern f32 lbl_803E1288;
+extern f32 lbl_803E128C;
+extern f32 lbl_803E1290;
+
+void dll_95_func01_nop(void); /* forward decl to align function set with v1.0 asm; defined in dll_0095 */
+
+#pragma inline_max_size(2000)
 static inline void dll_94_func03Body(u8* base, int sourceObj, int variant, int posSource, u32 flags, int arg5,
                                      f32* extraArgs)
 {

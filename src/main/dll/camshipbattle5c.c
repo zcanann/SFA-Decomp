@@ -21,21 +21,6 @@
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/engine_shared.h"
-extern const f32 lbl_803E1890; /* angle delta upper bound */
-extern const f32 lbl_803E1894; /* angle delta lower bound */
-extern const f32 lbl_803E1898; /* angle unwrap step */
-extern const f32 lbl_803E1888; /* angle near/zero threshold */
-extern char sPathCamNeedTwoControlPointsError[];
-
-extern f32 lbl_803E18A8; /* midpoint factor (segment normal averaging) */
-
-/* curve-node field offsets (raw walking-pointer accesses below) */
-#define NODE_SELF_ID    0x14
-#define NODE_DIR_MASK   0x1B
-#define NODE_NEIGHBOURS 0x1C
-#define NODE_TAG0       0x31
-#define NODE_TAG1       0x32
-#define NODE_TAG2       0x33
 
 /*
  * A single ROM curve-node as returned by gRomCurveInterface->getById.
@@ -75,6 +60,22 @@ STATIC_ASSERT(offsetof(RomCurveNode, sampleA) == 0x34);
 STATIC_ASSERT(offsetof(RomCurveNode, sampleB) == 0x36);
 STATIC_ASSERT(offsetof(RomCurveNode, sampleC) == 0x38);
 STATIC_ASSERT(offsetof(RomCurveNode, sampleD) == 0x3A);
+
+/* curve-node field offsets (raw walking-pointer accesses below) */
+#define NODE_SELF_ID    0x14
+#define NODE_DIR_MASK   0x1B
+#define NODE_NEIGHBOURS 0x1C
+#define NODE_TAG0       0x31
+#define NODE_TAG1       0x32
+#define NODE_TAG2       0x33
+
+extern const f32 lbl_803E1890; /* angle delta upper bound */
+extern const f32 lbl_803E1894; /* angle delta lower bound */
+extern const f32 lbl_803E1898; /* angle unwrap step */
+extern const f32 lbl_803E1888; /* angle near/zero threshold */
+extern char sPathCamNeedTwoControlPointsError[];
+
+extern f32 lbl_803E18A8; /* midpoint factor (segment normal averaging) */
 
 #pragma opt_common_subs off
 #pragma ppc_unroll_factor_limit 1

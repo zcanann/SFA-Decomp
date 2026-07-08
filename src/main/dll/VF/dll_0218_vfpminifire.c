@@ -13,9 +13,9 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/VF/dll_0218_vfpminifire.h"
 
 #define VFPMINIFIRE_OBJFLAG_HITDETECT_DISABLED 0x2000
-extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 #define VFPMINIFIRE_PERSIST_EFFECT 0x38c
 #define VFPMINIFIRE_SMOKE_EFFECT   0x38a
@@ -24,28 +24,10 @@ extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 #define VFPMINIFIRE_EFFECT_FLAGS   0x80001
 #define VFPMINIFIRE_BURST_COUNT    10
 
-typedef struct VfpMinifireState
-{
-    f32 baseY; /* 0x00: downward hit-scan result, then rebased to
-                         (localPosY - that) as the fall threshold */
-    u8 pad4[6];
-    u8 burstStarted; /* 0x0A: flame burst has fired; fading out */
-} VfpMinifireState;
-
-typedef struct VfpMinifirePartfxArgs
-{
-    s16 rx;
-    s16 ry;
-    s16 rz;
-    s16 pad;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} VfpMinifirePartfxArgs;
-
 #define VFPMINIFIRE_SPAWN(obj, id, args, flags)                                                                        \
     (*gPartfxInterface)->spawnObject((void*)(obj), (id), (args), (flags), -1, NULL)
+
+extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 int VFP_MiniFire_getExtraSize(void)
 {

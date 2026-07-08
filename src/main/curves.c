@@ -1,5 +1,7 @@
 #include "main/engine_shared.h"
 
+typedef f32 (*CurveEvalPtrFirst)(f32* values, f32 t, f32* outTangent);
+
 void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, f32* outZ, int count,
                                void (*evalFn)(f32* ch, f32* buf))
 {
@@ -127,8 +129,6 @@ void Curve_BuildSegmentLengthTable(Curve* curve, int count)
     }
 }
 #pragma dont_inline reset
-
-typedef f32 (*CurveEvalPtrFirst)(f32* values, f32 t, f32* outTangent);
 
 int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
 {

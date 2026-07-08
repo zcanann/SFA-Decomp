@@ -12,15 +12,6 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 
-extern f32 lbl_803E4EB8;
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
-
-/* Object id of the SpiritPrize object this creator spawns (docblock:
- * "builds a SpiritPrize object setup (object id 0x11)"). */
-#define DFSHOBJCREATOR_SPIRITPRIZE_OBJ_ID 0x11
-
 /* Obj_AllocObjectSetup(0x38,...) buffer composed in DFSH_ObjCreator_update.
  * Head is the common ObjPlacement; tail (0x18..0x37) is file-local. */
 typedef struct DfshObjCreatorSetup
@@ -46,6 +37,12 @@ typedef struct DfshObjCreatorSetup
     u8 pad36[0x38 - 0x36];
 } DfshObjCreatorSetup;
 
+typedef struct DfshObjCreatorState
+{
+    s16 spawnTimer;
+    s16 spawnTimerStep;
+} DfshObjCreatorState;
+
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk18) == 0x18);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk22) == 0x22);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk27) == 0x27);
@@ -55,6 +52,16 @@ STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk2E) == 0x2E);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk30) == 0x30);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk34) == 0x34);
 STATIC_ASSERT(sizeof(DfshObjCreatorSetup) == 0x38);
+
+/* Object id of the SpiritPrize object this creator spawns (docblock:
+ * "builds a SpiritPrize object setup (object id 0x11)"). */
+#define DFSHOBJCREATOR_SPIRITPRIZE_OBJ_ID 0x11
+
+extern f32 lbl_803E4EB8;
+
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
+extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
 
 int DFSH_ObjCreator_getExtraSize(void)
 {
@@ -79,12 +86,6 @@ void DFSH_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void DFSH_ObjCreator_hitDetect(void)
 {
 }
-
-typedef struct DfshObjCreatorState
-{
-    s16 spawnTimer;
-    s16 spawnTimerStep;
-} DfshObjCreatorState;
 
 void DFSH_ObjCreator_update(int obj)
 {

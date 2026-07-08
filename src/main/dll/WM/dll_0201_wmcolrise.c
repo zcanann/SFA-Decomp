@@ -13,23 +13,19 @@
 #include "main/game_object.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/audio/sfx.h"
+#include "main/dll/WM/dll_0201_wmcolrise.h"
 
-typedef struct WMColrisePlacement
-{
-    ObjPlacement base; /* base.posY = the column's rest height */
-    s8 rotXByte;       /* 0x18: rotX in 1/256 turns */
-    u8 pad19[5];
-    s16 gameBit; /* 0x1E: rise-allowed gate, -1 = always */
-} WMColrisePlacement;
+#define OBJ_RIDER_REGISTRY(o) (*(ObjRiderRegistry**)((char*)(o) + 0x58))
 
-STATIC_ASSERT(offsetof(WMColrisePlacement, gameBit) == 0x1E);
-
-typedef struct WMColriseState
-{
-    s16 gameBit;
-    u8 raiseTimer;
-    u8 pad3;
-} WMColriseState;
+extern f32 lbl_803E5DC8; /* 1.0: render scale */
+extern f32 timeDelta;
+extern const f32 lbl_803E5DCC; /* 3.0: rider height to trigger the rise */
+extern f32 lbl_803E5DD0;       /* 20.0 */
+extern f32 lbl_803E5DD4;       /* 100.0: raised height above placement */
+extern f32 lbl_803E5DD8;       /* 0.5: settle speed when overshot */
+extern f32 lbl_803E5DDC;       /* 0.25: rise speed */
+extern f32 lbl_803E5DE0;       /* 0.125: sink speed */
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -51,9 +47,6 @@ void WM_colrise_free(void)
 {
 }
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 lbl_803E5DC8; /* 1.0: render scale */
-
 void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -64,29 +57,6 @@ void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void WM_colrise_hitDetect(void)
 {
 }
-
-extern f32 timeDelta;
-extern const f32 lbl_803E5DCC; /* 3.0: rider height to trigger the rise */
-extern f32 lbl_803E5DD0;       /* 20.0 */
-extern f32 lbl_803E5DD4;       /* 100.0: raised height above placement */
-extern f32 lbl_803E5DD8;       /* 0.5: settle speed when overshot */
-extern f32 lbl_803E5DDC;       /* 0.25: rise speed */
-extern f32 lbl_803E5DE0;       /* 0.125: sink speed */
-
-/* the rider registry hanging off anim+0x58 (engine field not yet
-   named in ObjAnimComponent): the shared platform helpers push the
-   objects standing on this one into riders[]. */
-typedef struct ObjRiderRegistry
-{
-    u8 pad000[0x100];
-    int riders[3]; /* 0x100 */
-    u8 pad10C[3];
-    s8 riderCount; /* 0x10F */
-} ObjRiderRegistry;
-
-STATIC_ASSERT(offsetof(ObjRiderRegistry, riderCount) == 0x10F);
-
-#define OBJ_RIDER_REGISTRY(o) (*(ObjRiderRegistry**)((char*)(o) + 0x58))
 
 void WM_colrise_update(int* obj)
 {

@@ -27,8 +27,6 @@
 #include "main/objprint_dolphin.h"
 #include "main/sfa_shared_decls.h"
 
-extern void getEnvfxActImmediately(int* a, int* b, int id, int p4);
-
 /* Env-effect ids activated by Transporter_SeqFn case 8 (env-fx / sky restore
    on arrival), grouped by the destinationId that fires them. Opaque distinct
    roles per index within each destination group. */
@@ -48,11 +46,12 @@ extern void getEnvfxActImmediately(int* a, int* b, int id, int p4);
 #define TRANSPORTER_ENVFX_G4_A 0x238 /* dest 0x4cb6a */
 #define TRANSPORTER_ENVFX_G4_B 0x239
 
-extern void skyFn_80088e54(int mode, f32 brightness);
-
 extern f32 lbl_803E3E98;
-extern void objRenderFn_80041018(int obj);
 extern s16 lbl_803DCEB8;
+
+extern void getEnvfxActImmediately(int* a, int* b, int id, int p4);
+extern void skyFn_80088e54(int mode, f32 brightness);
+extern void objRenderFn_80041018(int obj);
 
 int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 {

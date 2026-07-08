@@ -16,6 +16,7 @@
  */
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
+#include "main/dll/VF/dll_0216_vfplevelcontrol.h"
 
 #define VFPLEVELCONTROL_OBJGROUP 9
 
@@ -47,49 +48,14 @@ enum
 #define VFPLEVELCONTROL_OBJFLAG_HIDDEN             0x4000
 #define VFPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-typedef union VfpLevelControlLatch
-{
-    u8 raw[8];
-
-    struct
-    {
-        u8 pad00[4];
-        u8 sequenceStep; /* 0x04: index of the next sequence bit to light */
-        u8 pad05[3];
-    } fields;
-} VfpLevelControlLatch;
-
-typedef struct VfpLevelControlState
-{
-    u8 pad00[2];
-    s16 unk02[6]; /* 0x02: cleared at init, never read back */
-    s16 areaMode; /* 0x0E: 1..2, from setup (defaults to 1) */
-    u8 pad10[4];
-    VfpLevelControlLatch latch; /* 0x14 */
-} VfpLevelControlState;
-
-typedef struct VfpLevelControlSetup
-{
-    u8 pad00[0x1a];
-    s16 areaMode; /* 0x1A */
-} VfpLevelControlSetup;
-
-STATIC_ASSERT(offsetof(VfpLevelControlState, unk02) == 0x02);
-STATIC_ASSERT(offsetof(VfpLevelControlState, areaMode) == 0x0E);
-STATIC_ASSERT(offsetof(VfpLevelControlState, latch) == 0x14);
-STATIC_ASSERT(sizeof(VfpLevelControlState) == 0x1c);
-STATIC_ASSERT(offsetof(VfpLevelControlLatch, fields.sequenceStep) == 0x04);
-STATIC_ASSERT(offsetof(VfpLevelControlSetup, areaMode) == 0x1A);
+extern f32 lbl_803E6060;
 
 extern int coordsToMapCell(f32 x, f32 z);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
                                   int musicId);
 extern void skyFn_80088e54(int mode, f32 brightness);
-extern f32 lbl_803E6060;
 extern u32 ObjGroup_AddObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-
-void fn_801F9804(int obj);
 
 /* Advance the ordered spell-tablet puzzle. The four step bits must be
    set in array order; the next-expected bit advances the step, any

@@ -42,11 +42,6 @@
 #include "main/dll/objfsa.h"
 #include "main/frame_timing.h"
 
-/* object-type id of the pollen-spit projectile spawned by pollenFn_80155b10
- * (see file docblock). */
-#define DUSTER_CHILD_OBJ_POLLEN_SPIT 0x47b
-#define DUSTER_HIT_VOLUME_SLOT       10
-
 /*
  * DusterState - file-local overlay naming the PER-FAMILY scratch that
  * baddie_state.h leaves raw for the duster creatures. phaseTimer/decoyTimer
@@ -76,24 +71,14 @@ typedef struct DusterState
     f32 planeAnchorZ;   /* 0x364 hit[5] */
 } DusterState;
 
+/* object-type id of the pollen-spit projectile spawned by pollenFn_80155b10
+ * (see file docblock). */
+#define DUSTER_CHILD_OBJ_POLLEN_SPIT 0x47b
+#define DUSTER_HIT_VOLUME_SLOT       10
+
 #pragma dont_inline on
 
-extern int getAngle(float y, float x);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject();
-extern int Obj_IsLoadingLocked(void);
-extern int objBboxFn_800640cc();
-extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
-
 extern char lbl_803DBCD8;
-extern void fn_80154D0C(int, int, u16*, float*);
-extern u32 fn_80154FB4(short*, int, u32, double);
-extern int fn_80169EF4(float* src, float* dst, f32 speed, char flag, f32 arc);
-extern void PSVECSubtract(f32* a, f32* b, f32* out);
-extern void PSVECNormalize(f32* in, f32* out);
-extern f32 PSVECDotProduct(f32* a, f32* b);
-extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
-extern u32 fn_80295CBC();
 extern f32 gDusterWallProbeOffsets[];
 extern u8 gDusterEbaMoveTable[];
 extern f32 lbl_803E2A00;
@@ -154,6 +139,21 @@ extern const f32 lbl_803E2B3C;
 extern const f32 lbl_803E2B40;
 extern const f32 lbl_803E2B44;
 extern f32 lbl_803DBCEC;
+
+extern int getAngle(float y, float x);
+extern void* Obj_AllocObjectSetup(int size, int b);
+extern int Obj_SetupObject();
+extern int Obj_IsLoadingLocked(void);
+extern int objBboxFn_800640cc();
+extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
+extern void fn_80154D0C(int, int, u16*, float*);
+extern u32 fn_80154FB4(short*, int, u32, double);
+extern int fn_80169EF4(float* src, float* dst, f32 speed, char flag, f32 arc);
+extern void PSVECSubtract(f32* a, f32* b, f32* out);
+extern void PSVECNormalize(f32* in, f32* out);
+extern f32 PSVECDotProduct(f32* a, f32* b);
+extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
+extern u32 fn_80295CBC();
 
 #pragma opt_common_subs off
 void fn_8015536C(float* outPos, float* anchor, float lateral, float height)

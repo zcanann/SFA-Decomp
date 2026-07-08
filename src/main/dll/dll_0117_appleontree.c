@@ -16,6 +16,21 @@
 #include "main/dll/dll_0117_appleontree.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+typedef struct AppleontreeObjectDef
+{
+    u8 pad0[0x18 - 0x0];
+    u32 unk18;
+    u16 duration;
+    u16 elapsed;
+    u8 stage0Frac;
+    u8 stage1Frac;
+    u8 stage2Frac;
+    u8 stage3Frac;
+    u8 unk24;
+    s8 unk25;
+    s16 gameBit;
+} AppleontreeObjectDef;
+
 /* AppleOnTree_update animState machine: an apple's lifecycle from hanging on
  * the tree through falling, resting, being knocked loose, and despawning. */
 #define APPLEONTREE_STATE_GROWING 0 /* unripe, hanging; scales up toward ripe */
@@ -32,9 +47,54 @@
 #define APPLEONTREE_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 #define APPLEONTREE_MSG_PICKUP   0x7000b /* player collected: restore health + burst */
 
+extern f32 lbl_803E37C8;
+extern f32 gAppleOnTreePickupXZRange;
+extern f32 gAppleOnTreePickupRange;
+extern f32 timeDelta;
+extern f32 lbl_803E37D4;
+extern f32 lbl_803E37D8;
+extern f32 lbl_803E37DC;
+extern f32 lbl_803E37E0;
+extern f32 lbl_803E37E4;
+extern f32 lbl_803E37E8;
+extern f32 lbl_803E37F4;
+extern f32 lbl_803E37F8;
+extern f32 lbl_803E37FC;
+extern f32 lbl_803E3800;
+extern const f32 lbl_803E3828;
+extern f32 lbl_803E382C;
+extern f32 lbl_803E3830;
+extern f32 lbl_803E3834;
+extern f32 lbl_803E3838;
+extern f32 lbl_803E37CC;
+extern f32 lbl_803E37D0;
+extern f32 lbl_803E3804;
+extern f32 lbl_803E3808;
+extern f32 lbl_803E380C;
+extern f32 lbl_803E3810;
+extern f32 lbl_803E3814;
+extern f32 lbl_803E3818;
+
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
 extern f32 Vec_distance(f32* a, f32* b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
+extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Obj_FreeObject(int obj);
+extern f32 sqrtf(f32);
+extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
+extern int ObjMsg_Pop();
+extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void ObjMsg_AllocQueue(int obj, int capacity);
+void dll_FC_free_nop(void);
+int dll_FC_getExtraSize_ret_8(void);
+int dll_FC_getObjectTypeId(void);
+void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+extern void AppleOnTree_init();
+extern void AppleOnTree_update();
 
 ObjectDescriptor gWM_ColumnObjDescriptor = {
     0,
@@ -52,9 +112,6 @@ ObjectDescriptor gWM_ColumnObjDescriptor = {
     (ObjectDescriptorCallback)WM_Column_getObjectTypeId,
     WM_Column_getExtraSize,
 };
-
-extern void AppleOnTree_init();
-extern void AppleOnTree_update();
 
 ObjectDescriptor13 gAppleOnTreeObjDescriptor = {
     0,
@@ -82,44 +139,6 @@ u32 jumptable_803214DC[] = {
     (u32)((u8*)AppleOnTree_update + 0x554), (u32)((u8*)AppleOnTree_update + 0x6C8),
     (u32)((u8*)AppleOnTree_update + 0x71C),
 };
-
-extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Obj_FreeObject(int obj);
-extern f32 lbl_803E37C8;
-extern f32 gAppleOnTreePickupXZRange;
-extern f32 gAppleOnTreePickupRange;
-extern f32 timeDelta;
-extern f32 sqrtf(f32);
-extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
-extern f32 lbl_803E37D4;
-extern f32 lbl_803E37D8;
-extern f32 lbl_803E37DC;
-extern f32 lbl_803E37E0;
-extern f32 lbl_803E37E4;
-extern f32 lbl_803E37E8;
-extern f32 lbl_803E37F4;
-extern f32 lbl_803E37F8;
-extern f32 lbl_803E37FC;
-extern f32 lbl_803E3800;
-extern int ObjMsg_Pop();
-extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void ObjMsg_AllocQueue(int obj, int capacity);
-extern const f32 lbl_803E3828;
-extern f32 lbl_803E382C;
-extern f32 lbl_803E3830;
-extern f32 lbl_803E3834;
-extern f32 lbl_803E3838;
-extern f32 lbl_803E37CC;
-extern f32 lbl_803E37D0;
-extern f32 lbl_803E3804;
-extern f32 lbl_803E3808;
-extern f32 lbl_803E380C;
-extern f32 lbl_803E3810;
-extern f32 lbl_803E3814;
-extern f32 lbl_803E3818;
 
 void AppleOnTree_setPosition(int obj, float* pos)
 {
@@ -554,21 +573,6 @@ int fn_8017DF34(int p, int state, f32 y)
     }
 }
 
-typedef struct AppleontreeObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    u32 unk18;
-    u16 duration;
-    u16 elapsed;
-    u8 stage0Frac;
-    u8 stage1Frac;
-    u8 stage2Frac;
-    u8 stage3Frac;
-    u8 unk24;
-    s8 unk25;
-    s16 gameBit;
-} AppleontreeObjectDef;
-
 #pragma inline_max_size(1)
 void AppleOnTree_update(int objArg)
 {
@@ -941,13 +945,6 @@ void AppleOnTree_init(int obj, int def)
         ObjMsg_AllocQueue(obj, 2);
     }
 }
-
-void dll_FC_free_nop(void);
-
-int dll_FC_getExtraSize_ret_8(void);
-int dll_FC_getObjectTypeId(void);
-
-void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 ObjectDescriptor gDllFCObjDescriptor = {
     0,

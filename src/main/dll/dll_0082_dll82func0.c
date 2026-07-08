@@ -7,6 +7,10 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
+/* spawnEffect effect ids per variant (textureAssetId arg). */
+#define DLL82_EFFECT_ID_VARIANT3_4 0xd9
+#define DLL82_EFFECT_ID_DEFAULT    0x2e
+
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80315770[];
 extern f32 lbl_803E0EB0;
@@ -18,10 +22,6 @@ extern f32 lbl_803E0EC4;
 extern f32 lbl_803E0EC8;
 extern f32 lbl_803E0ECC;
 extern f32 lbl_803E0ED0;
-
-/* spawnEffect effect ids per variant (textureAssetId arg). */
-#define DLL82_EFFECT_ID_VARIANT3_4 0xd9
-#define DLL82_EFFECT_ID_DEFAULT    0x2e
 
 void dll_82_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

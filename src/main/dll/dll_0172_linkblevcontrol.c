@@ -19,22 +19,26 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/gameplay_runtime.h"
 
+typedef struct LinkbLevState
+{
+    int flags;
+    s8 trickyHitCount : 2;
+    u8 stage : 3;
+    u8 unk_02_low : 3; /* cleared on every stage advance, never read */
+    u8 altPath : 1;    /* stage-3 gamebit 0x380 latch */
+    u8 unusedFlags : 7;
+    u8 pad6[2];
+    f32 timer;
+    s16 music;
+} LinkbLevState;
+
 #define LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK       0x1000
 #define LINKBLEVCONTROL_OBJFLAG_HIDDEN             0x4000
 #define LINKBLEVCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
-extern void Music_Trigger(int id, int arg);
-extern int getSaveGameLoadStatus(void);
-
-extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int c, int d);
-extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
-extern u8 lbl_803238D8[];
 
 /* env-effect id activated on level init (immediate when save already loaded,
  * else deferred; index-style, role opaque) */
 #define LINKBLEVCONTROL_ENVFX_A 0x23c
-
-extern void fn_80138908(int* tricky, int mode);
-extern f32 lbl_803E47C8;
 
 /* arena music track (also stored in state->music as the active-track marker) */
 #define LINKB_MUSIC_TRACK 0x1a
@@ -49,11 +53,6 @@ enum
     GAMEBIT_LINKB_STAGE_5 = 0x543
 };
 
-int linkb_levcontrol_getExtraSize(void)
-{
-    return 0x10;
-}
-
 enum LinkbLevStage
 {
     LINKBLEVCONTROL_STAGE_START = 0, /* awaiting stage-1 gate bit (0x384)     */
@@ -64,18 +63,19 @@ enum LinkbLevStage
     LINKBLEVCONTROL_STAGE_5 = 5      /* final stage reached (gate 0x543)      */
 };
 
-typedef struct LinkbLevState
+extern u8 lbl_803238D8[];
+extern f32 lbl_803E47C8;
+extern void Music_Trigger(int id, int arg);
+extern int getSaveGameLoadStatus(void);
+extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int c, int d);
+extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
+extern void fn_80138908(int* tricky, int mode);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
+
+int linkb_levcontrol_getExtraSize(void)
 {
-    int flags;
-    s8 trickyHitCount : 2;
-    u8 stage : 3;
-    u8 unk_02_low : 3; /* cleared on every stage advance, never read */
-    u8 altPath : 1;    /* stage-3 gamebit 0x380 latch */
-    u8 unusedFlags : 7;
-    u8 pad6[2];
-    f32 timer;
-    s16 music;
-} LinkbLevState;
+    return 0x10;
+}
 
 void linkb_levcontrol_update(int* obj)
 {
@@ -230,7 +230,6 @@ void linkb_levcontrol_update(int* obj)
 
 void linkb_levcontrol_init(int* obj)
 {
-    extern int getEnvfxAct(int a, int b, u16 idx, int d);
     /* the (u8*)(int) launder is load-bearing: it makes the fn_80088870 arg
      * reuse envBase's register instead of re-materializing the address */
     u8* envBase = (u8*)(int)lbl_803238D8;

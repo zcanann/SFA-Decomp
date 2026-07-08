@@ -16,6 +16,67 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
+#include "main/dll/CF/dll_0149_cfwindlift.h"
+
+#define CFWINDLIFT_OBJGROUP 0x49
+#define CFGUARDIAN_OBJGROUP 0x16 /* DLL 0x148 cfguardian */
+
+#define CFWINDLIFT_OBJFLAG_PARENT_SLACK 0x1000
+
+#define WINDLIFT_SLOTS 14 /* max tracked lift slots */
+
+/* WindLiftSlot.phaseFlags bits */
+#define WLSLOT_RISING   0x1  /* rise force active this frame */
+#define WLSLOT_PENDING  0x2  /* pull direction re-evaluation requested */
+#define WLSLOT_PULLUP   0x4  /* pulling rider upward */
+#define WLSLOT_PULLDOWN 0x8  /* pulling rider downward */
+#define WLSLOT_HOLD     0x20 /* rider holding gamebit (grabbed) phase */
+#define WLSLOT_RELEASE  0x40 /* rider released phase */
+#define WLSLOT_LATCH    0x80 /* lift event latched/consumed */
+
+typedef struct
+{
+    int duration;
+    int seqId;
+    int delay;
+    int gamebit;
+    int pad10;
+    int timer;
+    WindLiftSlot slots[WINDLIFT_SLOTS];
+    int pad168;
+    int pad16c;
+    f32 liftHeight;
+    u8 musicOn : 1;
+    u8 active : 1;
+    u8 _f2 : 6;
+} WindLiftSub;
+
+extern f32 lbl_803E4190;
+extern const f32 lbl_803E416C;
+extern u8 gWindLiftSeqDurationTable[];
+extern u8 gWindLiftSeqGamebitTable[];
+extern f32 gWindLiftHeightByteScale;
+extern f32 gWindLiftDefaultHeight;
+extern const f32 lbl_803E4168;
+extern f32 lbl_803E4170;
+extern f32 lbl_803E4174;
+extern f32 lbl_803E4178;
+extern f32 lbl_803E417C;
+extern f32 lbl_803E4180;
+extern f32 lbl_803E4184;
+extern f32 lbl_803E4188;
+extern f32 lbl_803E418C;
+extern f32 lbl_803E4194;
+extern f32 lbl_803E4198;
+extern f32 lbl_803E419C;
+extern f32 lbl_803E41A0;
+extern f32 lbl_803E41A4;
+extern f32 lbl_803E41A8;
+extern f32 lbl_803E41AC;
+extern f32 lbl_803E41B0;
+extern f32 lbl_803E41B4;
+extern f32 lbl_803E41B8;
+extern f32 lbl_803E41BC;
 
 extern void CFPowerBase_getExtraSize(void);
 extern void CFMainCrystal_getExtraSize(void);
@@ -44,116 +105,14 @@ extern void CFMainCrystal_release(void);
 extern void CFPowerBase_initialise(void);
 extern void CFMainCrystal_initialise(void);
 
-#define CFWINDLIFT_OBJGROUP 0x49
-#define CFGUARDIAN_OBJGROUP 0x16 /* DLL 0x148 cfguardian */
-
-#define CFWINDLIFT_OBJFLAG_PARENT_SLACK 0x1000
-
-#define WINDLIFT_SLOTS 14 /* max tracked lift slots */
-
-typedef struct WindliftPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 posX; /* 0x08 */
-    f32 posY; /* 0x0C */
-    f32 posZ; /* 0x10 */
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 pullStrength; /* 0x1A: wind pull strength passed to fn_8019C784 */
-    u8 pad1C[0x22 - 0x1C];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} WindliftPlacement;
-
-typedef struct WindliftObjectDef
-{
-    u8 pad0[0x8 - 0x0];
-    f32 posX; /* 0x08 */
-    f32 posY; /* 0x0C */
-    f32 posZ; /* 0x10 */
-    u8 pad14[0x18 - 0x14];
-    s8 unk18;
-    s8 heightByte;    /* 0x19: lift height in gWindLiftHeightByteScale units (0 = default) */
-    s16 pullStrength; /* 0x1A */
-    s16 delay;
-    s16 seqId;
-    u8 pad20[0x22 - 0x20];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} WindliftObjectDef;
-
-typedef struct
-{
-    int riderObj;
-    f32 f4;
-    f32 speedDelta;
-    f32 riseSpeed;
-    u8 phaseFlags;
-    u8 oscCounter;
-    u8 pad12[2];
-    int linkIndex;
-} WindLiftSlot;
-
-/* WindLiftSlot.phaseFlags bits */
-#define WLSLOT_RISING   0x1  /* rise force active this frame */
-#define WLSLOT_PENDING  0x2  /* pull direction re-evaluation requested */
-#define WLSLOT_PULLUP   0x4  /* pulling rider upward */
-#define WLSLOT_PULLDOWN 0x8  /* pulling rider downward */
-#define WLSLOT_HOLD     0x20 /* rider holding gamebit (grabbed) phase */
-#define WLSLOT_RELEASE  0x40 /* rider released phase */
-#define WLSLOT_LATCH    0x80 /* lift event latched/consumed */
-
-typedef struct
-{
-    int duration;
-    int seqId;
-    int delay;
-    int gamebit;
-    int pad10;
-    int timer;
-    WindLiftSlot slots[WINDLIFT_SLOTS];
-    int pad168;
-    int pad16c;
-    f32 liftHeight;
-    u8 musicOn : 1;
-    u8 active : 1;
-    u8 _f2 : 6;
-} WindLiftSub;
-
 extern void* ObjGroup_GetObjects();
 extern int ObjGroup_RemoveObject();
 extern int ObjGroup_AddObject();
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
-extern f32 lbl_803E4190;
-extern const f32 lbl_803E416C;
 extern void Music_Trigger(int id, int arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
-extern u8 gWindLiftSeqDurationTable[];
-extern u8 gWindLiftSeqGamebitTable[];
-extern f32 gWindLiftHeightByteScale;
-extern f32 gWindLiftDefaultHeight;
-extern const f32 lbl_803E4168;
 extern f32 Vec_xzDistance(void* a, void* b);
-extern f32 lbl_803E4170;
-extern f32 lbl_803E4174;
-extern f32 lbl_803E4178;
-extern f32 lbl_803E417C;
-extern f32 lbl_803E4180;
-extern f32 lbl_803E4184;
-extern f32 lbl_803E4188;
-extern f32 lbl_803E418C;
-extern f32 lbl_803E4194;
-extern f32 lbl_803E4198;
-extern f32 lbl_803E419C;
-extern f32 lbl_803E41A0;
-extern f32 lbl_803E41A4;
-extern f32 lbl_803E41A8;
-extern f32 lbl_803E41AC;
-extern f32 lbl_803E41B0;
-extern f32 lbl_803E41B4;
-extern f32 lbl_803E41B8;
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
-extern f32 lbl_803E41BC;
 
 /* fn_8019C784: per-rider wind lift physics - track the rider while
  * above the lift and in range, send the lift/drop messages on state

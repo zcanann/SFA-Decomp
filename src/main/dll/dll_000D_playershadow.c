@@ -14,6 +14,7 @@
 #include "main/game_object.h"
 #include "main/camera.h"
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_000D_playershadow.h"
 
 /* foot/bone particle ids scattered per struck-triangle surface type
    (index-style; roles opaque). A on surfaces 0x10/0x12; B on 0x11/0x14/0x15;
@@ -33,39 +34,18 @@ extern const f32 lbl_803DF498;
 extern const f32 lbl_803DF49C;
 extern const f32 lbl_803DF4A0;
 extern const f32 lbl_803DF4A4;
-extern void hitDetect_calcSweptSphereBounds(void* out, void* top, void* bottom, void* params, int count);
-extern void hitDetectFn_800691c0(void* obj, void* hitData, int flags, int arg3);
-extern void fn_80069968(int* outA, int* outB);
-extern void fn_80069958(int** out);
-
-/* One terrain-triangle hit record produced by the hit-detect pipeline
- * (hitDetectFn_800691c0 / fn_80069968). Stride 0x4c; the three struck-triangle
- * corners are stored as separate s16 component arrays (tile-local coords), and
- * the GameObject surface type lives at 0x48. */
-typedef struct PlayerShadowTriHit
-{
-    u8 pad00[0x10];
-    s16 vertX[3]; /* 0x10 */
-    s16 vertY[3]; /* 0x16 */
-    s16 vertZ[3]; /* 0x1c */
-    u8 pad22[0x48 - 0x22];
-    u8 surfaceType; /* 0x48 */
-    u8 pad49[0x4c - 0x49];
-} PlayerShadowTriHit;
-
-STATIC_ASSERT(sizeof(PlayerShadowTriHit) == 0x4c);
-STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertX) == 0x10);
-STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertY) == 0x16);
-STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertZ) == 0x1c);
-STATIC_ASSERT(offsetof(PlayerShadowTriHit, surfaceType) == 0x48);
-
-f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
 extern s16 lbl_803DD29A;
 extern s16 gPlayerShadowCamRotY;
 extern const f32 lbl_803DF468;
 extern const f32 lbl_803DF470;
 extern const f32 lbl_803DF474;
 extern const f32 lbl_803DF478;
+extern void hitDetect_calcSweptSphereBounds(void* out, void* top, void* bottom, void* params, int count);
+extern void hitDetectFn_800691c0(void* obj, void* hitData, int flags, int arg3);
+extern void fn_80069968(int* outA, int* outB);
+extern void fn_80069958(int** out);
+
+f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
 
 #pragma peephole off
 #pragma scheduling off
@@ -226,13 +206,7 @@ void playerShadow_setMode(u8 v)
         gPlayerShadowMode = v;
     }
 }
-struct PlayerShadowParamsBlob
-{
-    u32 a;
-    u32 b;
-    u32 c;
-    u32 d;
-};
+
 #pragma scheduling off
 void playerShadow_renderObject(void* obj)
 {

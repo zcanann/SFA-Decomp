@@ -11,6 +11,7 @@
  * divided by 5. func00/func01 are the DLL's unused entry-point stubs.
  */
 #include "main/effect_interfaces.h"
+#include "main/dll/dll_00AA_dllaafunc0.h"
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80319168[];

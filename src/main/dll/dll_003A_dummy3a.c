@@ -4,6 +4,7 @@
  * simply returns 0), then release and initialise (empty voids). The object
  * does nothing per frame.
  */
+#include "main/dll/dll_003A_dummy3a.h"
 
 void Dummy3A_render(void)
 {

@@ -11,40 +11,11 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-
-typedef struct ControlLightSetup
-{
-    ObjPlacement base;
-    u8 pad18;
-    s8 invertMode;
-    s16 radius;
-    u8 pad1C[0x1E - 0x1C];
-    s16 gameBit;
-} ControlLightSetup;
-
-typedef struct ControlLightState
-{
-    s16 gameBit;
-    u8 pad02[2];
-    f32 radius;
-    u8 invertMode;
-    u8 lastBit;
-    u8 pad0A[2];
-} ControlLightState;
+#include "main/dll/LGT/dll_02AC_lgtcontrollight.h"
 
 #define CONTROLLIGHT_MODE_DIRECT      0
 #define CONTROLLIGHT_MODE_INVERTED    1
 #define CONTROLLIGHT_LAST_BIT_INVALID 0xff
-
-STATIC_ASSERT(sizeof(ControlLightState) == 0x0C);
-STATIC_ASSERT(offsetof(ControlLightState, gameBit) == 0x00);
-STATIC_ASSERT(offsetof(ControlLightState, radius) == 0x04);
-STATIC_ASSERT(offsetof(ControlLightState, invertMode) == 0x08);
-STATIC_ASSERT(offsetof(ControlLightState, lastBit) == 0x09);
-STATIC_ASSERT(offsetof(ControlLightSetup, invertMode) == 0x19);
-STATIC_ASSERT(offsetof(ControlLightSetup, radius) == 0x1A);
-STATIC_ASSERT(offsetof(ControlLightSetup, gameBit) == 0x1E);
-STATIC_ASSERT(sizeof(ControlLightSetup) == 0x20);
 
 int ControlLight_getExtraSize(void)
 {

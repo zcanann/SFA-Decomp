@@ -18,6 +18,33 @@
 #include "main/objhits.h"
 #include "main/dll/DIM/DIMboulder.h"
 
+typedef struct DimlogfirePlacement
+{
+    u8 pad0[0x1E - 0x0];
+    s16 douseGameBit;
+    u8 pad20[0x68 - 0x20];
+    void* linkedObjPtr; /* 0x68 pointer to an object; its vtable[0x28/4] method is invoked */
+    u8 pad6C[0x70 - 0x6C];
+} DimlogfirePlacement;
+
+typedef struct DimlogfireObjectDef
+{
+    u8 pad0[0x1A - 0x0];
+    s16 initMode;
+    s16 strengthInit;
+    s16 douseGameBit;
+} DimlogfireObjectDef;
+
+STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
+
+STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
+
+STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
+
+STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
+
+STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
+
 #define DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMLOGFIRE_HIT_VOLUME_SLOT            0x1f
 /* smoke particle emitted while the smoke-toggle phase is active */
@@ -29,15 +56,7 @@
 #define DIMLOGFIRE_MODE_UNLIT     2 /* doused: light off, waiting on the tricky/strength gate */
 #define DIMLOGFIRE_MODE_ANIM_HELD 4 /* frozen by anim event 3 (SeqFn triggerCommand) */
 
-STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
-
-STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
-
-STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
-
-STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
-
-STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
+#define DIMLOGFIRE_GROUP 0x31
 
 extern int randomGetRange(int lo, int hi);
 
@@ -61,8 +80,6 @@ extern f32 lbl_803E4830;
 extern f32 lbl_803E4834;
 extern f32 lbl_803E4838;
 extern f32 lbl_803E483C;
-
-#define DIMLOGFIRE_GROUP 0x31
 
 int DIMLogFire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -162,23 +179,6 @@ void DIMLogFire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-
-typedef struct DimlogfirePlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 douseGameBit;
-    u8 pad20[0x68 - 0x20];
-    void* linkedObjPtr; /* 0x68 pointer to an object; its vtable[0x28/4] method is invoked */
-    u8 pad6C[0x70 - 0x6C];
-} DimlogfirePlacement;
-
-typedef struct DimlogfireObjectDef
-{
-    u8 pad0[0x1A - 0x0];
-    s16 initMode;
-    s16 strengthInit;
-    s16 douseGameBit;
-} DimlogfireObjectDef;
 
 void DIMLogFire_update(int obj)
 {

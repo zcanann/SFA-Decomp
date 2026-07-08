@@ -18,11 +18,6 @@
 #include "main/dll/player_objects.h"
 #include "main/frame_timing.h"
 
-int sh_staff_getExtraSize(void)
-{
-    return 0x74;
-}
-
 /* ShStaffState.phase pickup / carry state machine (see file header) */
 #define SHSTAFF_PHASE_IDLE           0     /* wait for the staff object / acquired game bit */
 #define SHSTAFF_PHASE_ARMED          1     /* proximity map load; wait for the pickup trigger */
@@ -33,6 +28,11 @@ int sh_staff_getExtraSize(void)
 #define SHSTAFF_PHASE_DONE           6     /* deactivated */
 #define SHSTAFF_CHILD_OBJ_HAZE_FLAME 0x659 /* staff-haze child flame (SH_StaffHaze_update), spawned by sh_staff_SeqFn */
 #define SHSTAFF_TARGET_OBJGROUP      0xf   /* player-target group; the nearest object gets the pickup sequence */
+
+int sh_staff_getExtraSize(void)
+{
+    return 0x74;
+}
 
 #pragma opt_strength_reduction on
 void sh_staff_free(int* obj, int p2)
@@ -66,6 +66,35 @@ void sh_staff_free(int* obj, int p2)
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+typedef struct ShStaffPlacement
+{
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 pad6[0x7 - 0x6];
+    u8 unk7;
+    u8 pad8[0x18 - 0x8];
+    u8 rotZByte; /* 0x18: rotZ in 1/256 turns */
+    u8 rotYByte; /* 0x19: rotY in 1/256 turns */
+    u8 pad1A[0x20 - 0x1A];
+} ShStaffPlacement;
+
+extern f32 lbl_803E54D0;
+extern f32 lbl_803E54D4;
+extern f32 lbl_803E54D8;
+extern f32 gShStaffHazeFadeOutScaleRate;
+extern f32 gShStaffFadeTimerMax;
+extern f32 gShStaffHazeScaleRampRate;
+extern f32 gShStaffConvergeLerpBase;
+extern f32 gShStaffConvergeLerpDiv;
+extern f32 gShStaffHazeSpacing;
+extern f32 gShStaffScatterJitterDiv;
+extern f32 gShStaffHazeScale;
+extern f32 gShStaffFadeOutTimerInit;
+extern f32 gShStaffFizzSfxTimerInit;
+extern f32 gShStaffMapUnloadDistSq;
+extern f32 gShStaffMapLoadDistSq;
 
 extern void sc_levelcontrol_getAnimEventState(void);
 
@@ -115,24 +144,10 @@ extern void sc_levelcontrol_initialise(void);
 extern void sc_musictree_initialise(void);
 extern void sc_totempole_initialise(void);
 
-typedef struct ShStaffPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 pad6[0x7 - 0x6];
-    u8 unk7;
-    u8 pad8[0x18 - 0x8];
-    u8 rotZByte; /* 0x18: rotZ in 1/256 turns */
-    u8 rotYByte; /* 0x19: rotY in 1/256 turns */
-    u8 pad1A[0x20 - 0x1A];
-} ShStaffPlacement;
-
 extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern int ObjTrigger_IsSet();
 extern u32 ObjPath_GetPointLocalMtx();
-
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
 extern void* Obj_GetPlayerObject(void);
@@ -141,21 +156,19 @@ extern void PSMTXInverse(int src, f32* dst);
 extern void PSMTXConcat(f32* a, f32* b, f32* dst);
 extern void objSetMtxFn_800412d4(f32* mtx);
 extern void objRenderModel(int obj);
-extern f32 lbl_803E54D0;
-extern f32 lbl_803E54D4;
-extern f32 lbl_803E54D8;
-extern f32 gShStaffHazeFadeOutScaleRate;
-extern f32 gShStaffFadeTimerMax;
-extern f32 gShStaffHazeScaleRampRate;
-extern f32 gShStaffConvergeLerpBase;
-extern f32 gShStaffConvergeLerpDiv;
-extern f32 gShStaffHazeSpacing;
-extern f32 gShStaffScatterJitterDiv;
-extern f32 gShStaffHazeScale;
+extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
+extern int loadObjectAtObject(int obj, int* setup);
+extern f32 getXZDistance(f32* a, f32* b);
+extern void staffToggle(int obj, int a);
+extern void playerPutAwayStaff(int obj, int mode);
+extern int ObjTrigger_IsSet(int obj);
+
+extern void sh_staff_deactivate(int obj, ShStaffState* state, int a);
 
 void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
     ShStaffState* state;
     int player;
     int i;
@@ -374,13 +387,6 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int loadObjectAtObject(int obj, int* setup);
-
-extern void sh_staff_deactivate(int obj, ShStaffState* state, int a);
-extern f32 gShStaffFadeOutTimerInit;
-
 int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     ShStaffState* state = ((GameObject*)obj)->extra;
@@ -467,15 +473,6 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern f32 getXZDistance(f32* a, f32* b);
-extern void staffToggle(int obj, int a);
-extern void playerPutAwayStaff(int obj, int mode);
-extern int ObjTrigger_IsSet(int obj);
-
-extern f32 gShStaffFizzSfxTimerInit;
-extern f32 gShStaffMapUnloadDistSq;
-extern f32 gShStaffMapLoadDistSq;
 
 #pragma dont_inline on
 #pragma opt_strength_reduction on

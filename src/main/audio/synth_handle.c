@@ -1,30 +1,5 @@
 #include "src/main/audio/synth_internal.h"
 
-extern SynthVoiceRuntime lbl_803AF550;
-#undef SYNTH_VOICE_RUNTIME
-#define SYNTH_VOICE_RUNTIME() (&lbl_803AF550)
-
-#define SYNTH_VOICE_STUDIO_MAP_OFFSET ((u32) & (((SynthVoice*)0)->studioMap))
-#define SYNTH_RUNTIME_VOICES_OFFSET   ((u32) & (((SynthVoiceRuntime*)0)->voices))
-
-extern void synthVolume(u32 value0, u32 value1, u8 studio, u32 mode, u32 handle);
-extern void sndSeqVolume(u32 value0, u16 value1, u32 handle, u32 mode);
-extern void sndSeqMute(u32 handle, u32 value0, u32 value1);
-extern void sndSeqContinue(u32 handle);
-extern void sndSeqSpeed(u32 handle, u16 speed);
-extern u32 synthResolveHandle(u32 handle);
-extern u32 seqPlaySong(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 noLock, u8 studio);
-extern u32 sndSeqPlayEx(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 studio);
-
-#define SYNTH_START_FLAG_VOLUME_MODE2  0x01
-#define SYNTH_START_FLAG_REUSE_HANDLE  0x02
-#define SYNTH_START_FLAG_PENDING_START 0x04
-#define SYNTH_START_FLAG_PARAM_14      0x08
-#define SYNTH_START_FLAG_MUTE          0x10
-#define SYNTH_START_FLAG_SPEED         0x20
-#define SYNTH_START_FLAG_VOLUME_MODE3  0x40
-#define SYNTH_START_FLAG_CLEAR_MUTE    0x80
-
 typedef struct SynthStartParams
 {
     u32 flags;
@@ -37,6 +12,31 @@ typedef struct SynthStartParams
     u8 active;
     u8 pad25[3];
 } SynthStartParams;
+
+#undef SYNTH_VOICE_RUNTIME
+#define SYNTH_VOICE_RUNTIME() (&lbl_803AF550)
+
+#define SYNTH_VOICE_STUDIO_MAP_OFFSET ((u32) & (((SynthVoice*)0)->studioMap))
+#define SYNTH_RUNTIME_VOICES_OFFSET   ((u32) & (((SynthVoiceRuntime*)0)->voices))
+
+#define SYNTH_START_FLAG_VOLUME_MODE2  0x01
+#define SYNTH_START_FLAG_REUSE_HANDLE  0x02
+#define SYNTH_START_FLAG_PENDING_START 0x04
+#define SYNTH_START_FLAG_PARAM_14      0x08
+#define SYNTH_START_FLAG_MUTE          0x10
+#define SYNTH_START_FLAG_SPEED         0x20
+#define SYNTH_START_FLAG_VOLUME_MODE3  0x40
+#define SYNTH_START_FLAG_CLEAR_MUTE    0x80
+
+extern SynthVoiceRuntime lbl_803AF550;
+extern void synthVolume(u32 value0, u32 value1, u8 studio, u32 mode, u32 handle);
+extern void sndSeqVolume(u32 value0, u16 value1, u32 handle, u32 mode);
+extern void sndSeqMute(u32 handle, u32 value0, u32 value1);
+extern void sndSeqContinue(u32 handle);
+extern void sndSeqSpeed(u32 handle, u16 speed);
+extern u32 synthResolveHandle(u32 handle);
+extern u32 seqPlaySong(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 noLock, u8 studio);
+extern u32 sndSeqPlayEx(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 studio);
 
 /*
  * sndSeqVolume backend. Resolves a sequence handle across queued and active

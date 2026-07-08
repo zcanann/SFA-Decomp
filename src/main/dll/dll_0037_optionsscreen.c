@@ -21,12 +21,8 @@
 #include "main/engine_shared.h"
 #include "main/dll/savedata_struct.h"
 #include "main/dll/debug/prof.h"
-extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
-extern TitleMenuControl* gTitleMenuItemInterface;
-extern TitleMenuControl* gTitleMenuLinkInterface;
-extern s8 lbl_803DBA28;     /* active panel id (-1 = none) */
-extern u16 lbl_8031ACB8[];  /* per-panel text-box table, 8 u16 per panel */
-extern int lbl_803A87D0[8]; /* the 8 menu-item objects of the active panel */
+#include "main/dll/dll_0037_optionsscreen.h"
+
 /* Menu-item slots per options panel (lbl_803A87D0[8], size 0x20 / 4). */
 #define OPTIONSSCREEN_MENU_ITEM_COUNT 8
 
@@ -36,17 +32,17 @@ extern int lbl_803A87D0[8]; /* the 8 menu-item objects of the active panel */
 #define OPTIONSSCREEN_PANEL_AUDIO    1
 #define OPTIONSSCREEN_PANEL_GAMEPLAY 2
 #define OPTIONSSCREEN_PANEL_MISC     3
+
+extern TitleMenuControl* gTitleMenuItemInterface;
+extern TitleMenuControl* gTitleMenuLinkInterface;
+extern s8 lbl_803DBA28;     /* active panel id (-1 = none) */
+extern u16 lbl_8031ACB8[];  /* per-panel text-box table, 8 u16 per panel */
+extern int lbl_803A87D0[8]; /* the 8 menu-item objects of the active panel */
 extern f32 lbl_803E1DD4;
 extern f32 lbl_803E1DD8;
 extern f32 lbl_803E1DDC;
 extern f32 lbl_803E1DE0;
 extern f32 lbl_803E1DE4;
-extern u8 shouldShowCredits(void);
-extern void titleScreenTextDrawFunc(void);
-extern void titleScreenPositionElements(f32 a, f32 b);
-extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
-extern void titleScreenShowCopyright(u8 arg);
-extern void gameTextLoadDir(int dirId);
 extern s8 lbl_803DD706;  /* render-stale countdown */
 extern s8 lbl_803DD70C;  /* last top-level item index (read by other DLL) */
 extern u8* lbl_803DD708; /* save-file struct base */
@@ -55,6 +51,13 @@ extern u8 lbl_803DD6F9;
 extern u8 lbl_803DD6F8;  /* initial panel selector */
 extern s8 lbl_803DD704;  /* exit fade countdown */
 extern int lbl_803DD700; /* last highlighted item (for select sfx) */
+extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
+extern u8 shouldShowCredits(void);
+extern void titleScreenTextDrawFunc(void);
+extern void titleScreenPositionElements(f32 a, f32 b);
+extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
+extern void titleScreenShowCopyright(u8 arg);
+extern void gameTextLoadDir(int dirId);
 extern void setDrawCloudsAndLights(int v);
 extern void setWidescreen(u8 enabled);
 extern void setSubtitlesEnabled(u8 enabled);

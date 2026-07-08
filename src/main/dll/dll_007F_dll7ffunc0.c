@@ -12,6 +12,11 @@
 #include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
+#include "main/dll/dll_007F_dll7ffunc0.h"
+
+/* spawnEffect effect ids per variant (textureAssetId arg). */
+#define DLL7F_EFFECT_ID_VARIANT0 0x156
+#define DLL7F_EFFECT_ID_DEFAULT  0x8a
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80315328[];
@@ -30,10 +35,6 @@ extern f32 lbl_803E0E48;
 extern f32 lbl_803E0E4C;
 extern f32 lbl_803E0E50;
 extern f32 lbl_803E0E54;
-
-/* spawnEffect effect ids per variant (textureAssetId arg). */
-#define DLL7F_EFFECT_ID_VARIANT0 0x156
-#define DLL7F_EFFECT_ID_DEFAULT  0x8a
 
 void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

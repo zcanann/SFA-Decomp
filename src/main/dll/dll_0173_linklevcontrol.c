@@ -25,6 +25,7 @@
 #include "main/lightmap.h"
 #include "sfa_light_decls.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/dll/dll_0173_linklevcontrol.h"
 
 #define LINKLEVCONTROL_OBJFLAG_HIDDEN 0x4000
 
@@ -45,13 +46,6 @@ enum
     LEVCON_SAVE_STATUS_LOADED = 2
 };
 
-extern void Music_Trigger(int id, int arg);
-extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
-
-extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
-extern void skyFn_80088c94(int flags, int mode);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
-
 /* env-effect ids activated on entering AREA_CELL_45 (index-style; roles opaque) */
 #define LINKLEVCONTROL_ENVFX_A 0x13e
 #define LINKLEVCONTROL_ENVFX_B 0x140
@@ -59,8 +53,11 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 extern u8 lbl_803239F0[];
 
-void link_levcontrol_updateAreaMusic(int* obj);
-void link_levcontrol_applyEnterAreaEffects(int* obj);
+extern void Music_Trigger(int id, int arg);
+extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
+extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
+extern void skyFn_80088c94(int flags, int mode);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 #pragma dont_inline on
 void link_levcontrol_updateAreaMusic(int* obj)

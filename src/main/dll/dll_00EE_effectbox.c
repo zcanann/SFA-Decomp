@@ -16,32 +16,7 @@
 #include "main/object_descriptor.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
-extern float mathCosf(float x);
-extern float mathSinf(float x);
-extern void* getTrickyObject(void);
-extern void fn_8002B758(void);
-extern void fn_8002B860(int obj);
-extern void fn_80295918(int obj, int sel, f32 fval);
-extern f32 lbl_803E3508;
-extern f32 lbl_803E350C;
-extern f32 lbl_803E3510;
-extern f32 lbl_803E3514;
-
-typedef struct EffectboxPlacement
-{
-    ObjPlacement base;
-    u8 rotYaw;    /* 0x18: yaw in 1/256 turns */
-    u8 rotPitch;  /* 0x19: pitch in 1/256 turns */
-    u8 extentX;   /* 0x1A */
-    u8 extentY;   /* 0x1B */
-    u8 extentZ;   /* 0x1C */
-    u8 actionArg; /* 0x1D: action argument */
-    u8 pad1E;
-    u8 gameBitValue;  /* 0x1F: gate value compared against the game bit */
-    s16 gameBitIndex; /* 0x20: game bit index */
-    u8 targetMode;    /* 0x22: EFFECTBOX_TARGET_* candidate set */
-    u8 pad23[0x28 - 0x23];
-} EffectboxPlacement;
+#include "main/dll/dll_00EE_effectbox.h"
 
 /* EffectboxPlacement.targetMode values */
 #define EFFECTBOX_TARGET_PLAYER   0 /* Obj_GetPlayerObject */
@@ -51,6 +26,17 @@ typedef struct EffectboxPlacement
 
 #define EFFECTBOX_OBJFLAG_HIDDEN             0x4000
 #define EFFECTBOX_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+extern f32 lbl_803E3508;
+extern f32 lbl_803E350C;
+extern f32 lbl_803E3510;
+extern f32 lbl_803E3514;
+extern float mathCosf(float x);
+extern float mathSinf(float x);
+extern void* getTrickyObject(void);
+extern void fn_8002B758(void);
+extern void fn_8002B860(int obj);
+extern void fn_80295918(int obj, int sel, f32 fval);
 
 int EffectBox_getExtraSize(void)
 {

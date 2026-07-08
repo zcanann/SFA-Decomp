@@ -18,34 +18,11 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_0000_gameui.h"
 #include "main/frame_timing.h"
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void gameTextShow(int a);
-extern void gameTextFn_80016810(int a, int b, int c);
-extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
-
-extern u8 warpstoneUIState;
-extern void* lbl_803DD984;
-extern void* lbl_803DD980;
-extern f32 lbl_803DD97C;
+#include "main/dll/dll_0041_warpstoneui.h"
 
 /* texture assets loaded by WarpstoneUI_initialise (A -> lbl_803DD984, B -> lbl_803DD980) */
 #define WARPSTONEUI_TEXTURE_A 0x4FA
 #define WARPSTONEUI_TEXTURE_B 0x5E3
-extern int gWarpStoneUiMenuActive;
-extern f32 lbl_803E22E0;
-extern f32 lbl_803E22D8;
-extern f32 lbl_803E22DC;
-extern int lbl_803DBBF8;
-extern int lbl_803DBBFC;
-extern int lbl_803DBC00;
-extern int lbl_803DBC04;
-
-typedef struct
-{
-    s16 bit;
-    u8 mapAct;
-    u8 b3; /* unused/padding */
-} WarpstoneEntry;
 
 /* gWarpStoneUiEntryTable holds one WarpstoneEntry per warpstone destination
    (data symbol size 0x18 / sizeof(WarpstoneEntry) == 6). */
@@ -55,13 +32,31 @@ typedef struct
    issues the selected destination's act on it). */
 #define WARPSTONEUI_MAPEVENT_KRAZOA 0x42
 
+extern u8 warpstoneUIState;
+extern void* lbl_803DD984;
+extern void* lbl_803DD980;
+extern f32 lbl_803DD97C;
+extern int gWarpStoneUiMenuActive;
+extern f32 lbl_803E22E0;
+extern f32 lbl_803E22D8;
+extern f32 lbl_803E22DC;
+extern int lbl_803DBBF8;
+extern int lbl_803DBBFC;
+extern int lbl_803DBC00;
+extern int lbl_803DBC04;
 extern u8 gWarpStoneUiMenuItemTemplates[];
+extern int* gTitleMenuLinkInterface;
+
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextShow(int a);
+extern void gameTextFn_80016810(int a, int b, int c);
+extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
+
 u8 gWarpStoneUiMenuItems[0x168];
 WarpstoneEntry gWarpStoneUiEntryTable[WARPSTONE_UI_ENTRY_COUNT] = {
     {0x0ABA, 1, 0}, {0x0ABD, 4, 0}, {0x0ABE, 5, 0}, {0x0ABF, 6, 0}, {0x0AC0, 7, 0}, {0x0AC1, 8, 0},
 };
 int gWarpStoneUiSelectedIndices[0x6];
-extern int* gTitleMenuLinkInterface;
 
 #pragma scheduling off
 #pragma peephole off

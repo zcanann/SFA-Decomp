@@ -62,42 +62,33 @@ typedef struct TrickyImpressState
     u8 pad80C[0x810 - 0x80C];
 } TrickyImpressState;
 
-extern u64 ObjLink_DetachChild();
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern u32 mainGetBit(int eventId);
-extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
-extern const f32 lbl_803E23E8;
-extern void Obj_FreeObject(u8* obj);
-extern f32 gDebugInitialScale;
-extern f32 gDebugScaleX;
-extern f32 gDebugScaleY;
-extern u8 gDebugScaleBiasX;
-extern u8 gDebugScaleBiasY;
-extern void* gDebugFontTex2;
-extern void* gDebugFontTex1;
-extern void* gDebugFontTex0;
-extern void* debugLogEnd;
+/* Bit setter at bit 6 (0x40) of obj->_b8->_58. */
+struct Bits58
+{
+    u8 _pad[0x58];
+    u8 b7 : 1;
+    u8 b6 : 1;
+    u8 lo : 6;
+};
+
+typedef struct
+{
+    u8 pending : 1;
+    u8 active : 1;
+    u8 rest : 6;
+} TumbleweedBlendFlags;
+
+typedef struct
+{
+    u8 s0 : 2;
+    u8 s1 : 2;
+    u8 s2 : 2;
+    u8 s3 : 2;
+} AnimSlots;
+
 /* debug font glyph-atlas texture asset (gDebugFontTex0) */
 #define DEBUG_FONT_TEXTURE0_ID 0x25D
-u8 debugLogBuffer[0x1100];
-extern u32 getScreenResolution(void);
-extern int gDebugRecordCount;
-extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
-extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
-extern int* Obj_GetActiveModel(int obj);
-extern f32 lbl_803E2408;
-extern f32 timeDelta;
-extern u32 gDebugPrintOriginX;
-extern u32 gDebugPrintOriginY;
-extern u16 debugPrintXpos;
-extern u16 debugPrintYpos;
-u8 gErrDisplayThread[0x310];
-extern s16 gErrExceptionType;
-extern u32 gErrContext;
-extern u32 lbl_803DDA38;
-extern u32 lbl_803DDA34;
-extern void OSResumeThread(u8* thread);
-extern void OSSetErrorHandler(int kind, void* handler);
+
 // OSSetErrorHandler() error kinds (OSError)
 #define OS_ERROR_SYSTEM_RESET       0
 #define OS_ERROR_MACHINE_CHECK      1
@@ -107,11 +98,37 @@ extern void OSSetErrorHandler(int kind, void* handler);
 #define OS_ERROR_PERFORMACE_MONITOR 11
 #define OS_ERROR_SYSTEM_INTERRUPT   13
 #define OS_ERROR_PROTECTION         15
-extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
 
-u8 gErrDisplayThreadStack[0x1000];
-extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
-extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
+/* The one partfx effect emitted along Tricky's queued impress path. */
+#define TRICKY_PATH_PARTFX 0x533
+
+#define TRICKY_BADDIE_TARGET_OBJGROUP 49 /* baddie object group scanned by trickyFindNearestUsableBaddie */
+
+#define TUMBLEWEED_BLEND_FLAGS_OFFSET    0x82e
+#define TUMBLEWEED_BLEND_WEIGHT_OFFSET   0x830
+#define TUMBLEWEED_BLEND_VELOCITY_OFFSET 0x834
+
+extern const f32 lbl_803E23E8;
+extern f32 gDebugInitialScale;
+extern f32 gDebugScaleX;
+extern f32 gDebugScaleY;
+extern u8 gDebugScaleBiasX;
+extern u8 gDebugScaleBiasY;
+extern void* gDebugFontTex2;
+extern void* gDebugFontTex1;
+extern void* gDebugFontTex0;
+extern void* debugLogEnd;
+extern int gDebugRecordCount;
+extern f32 lbl_803E2408;
+extern f32 timeDelta;
+extern u32 gDebugPrintOriginX;
+extern u32 gDebugPrintOriginY;
+extern u16 debugPrintXpos;
+extern u16 debugPrintYpos;
+extern s16 gErrExceptionType;
+extern u32 gErrContext;
+extern u32 lbl_803DDA38;
+extern u32 lbl_803DDA34;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23E4;
@@ -121,46 +138,22 @@ extern f32 lbl_803E23F4;
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E240C;
 extern const f32 lbl_803E2418;
-extern f32 getXZDistance(f32* a, f32* b);
-extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
-extern int dll_19_func1B(int p);
 extern int* gBaddieControlInterface;
-extern f32 enemy_getHealthFraction(register int obj);
-extern f32 vec3f_distanceSquared(int, int);
 extern u8 enableDebugText;
 extern u16* debugDrawFrameBuffer;
-
 extern u16* externalFrameBuffer1;
 extern u16* externalFrameBuffer0;
 extern u8 gDebugFontGlyphs[];
-extern void selectTexture(char* tex, int slot);
-extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
-extern void gxDebugTextureFn_80078c1c(void);
 extern u32 gDebugCurrentFontSet;
 extern int gDebugDrawPass;
 extern f32 gDebugGlyphVScale;
 extern f32 gDebugGlyphUScale;
-u8 gDebugGlyphMetricsTable[192] = {
-    0x02, 0x04, 0x06, 0x08, 0x0A, 0x0F, 0x11, 0x15, 0x17, 0x1F, 0x21, 0x27, 0x29, 0x2B, 0x2D, 0x2F, 0x31, 0x33,
-    0x35, 0x38, 0x3A, 0x3F, 0x41, 0x43, 0x45, 0x48, 0x4A, 0x4B, 0x4D, 0x50, 0x52, 0x56, 0x58, 0x5B, 0x5D, 0x62,
-    0x64, 0x68, 0x6A, 0x6F, 0x71, 0x76, 0x78, 0x7D, 0x7F, 0x84, 0x86, 0x8B, 0x8D, 0x92, 0x94, 0x96, 0x98, 0x9A,
-    0x9D, 0xA2, 0xA5, 0xA9, 0xAB, 0xB0, 0xB3, 0xB8, 0x00, 0x01, 0x00, 0x09, 0x0B, 0x11, 0x13, 0x19, 0x1B, 0x21,
-    0x23, 0x29, 0x2B, 0x31, 0x33, 0x38, 0x3A, 0x41, 0x43, 0x49, 0x4B, 0x4C, 0x4E, 0x53, 0x55, 0x5B, 0x5D, 0x62,
-    0x64, 0x6B, 0x6D, 0x73, 0x75, 0x7B, 0x7D, 0x83, 0x85, 0x8B, 0x8D, 0x93, 0x95, 0x9B, 0x9D, 0xA3, 0xA5, 0xAA,
-    0xAC, 0xB2, 0xB4, 0xBC, 0xBE, 0xC4, 0xC6, 0xCC, 0xCE, 0xD3, 0xD5, 0xD7, 0xD9, 0xDC, 0xDE, 0xE0, 0xE2, 0xE7,
-    0xE9, 0xEF, 0x00, 0x01, 0x03, 0x08, 0x09, 0x0F, 0x11, 0x16, 0x18, 0x1D, 0x1F, 0x24, 0x26, 0x28, 0x2A, 0x2F,
-    0x31, 0x36, 0x38, 0x39, 0x3B, 0x3D, 0x3F, 0x43, 0x45, 0x46, 0x48, 0x4F, 0x51, 0x56, 0x58, 0x5D, 0x5F, 0x64,
-    0x66, 0x6B, 0x6C, 0x70, 0x72, 0x77, 0x79, 0x7C, 0x7E, 0x82, 0x84, 0x89, 0x8B, 0x92, 0x94, 0x99, 0x9B, 0xA0,
-    0xA2, 0xA6, 0xA8, 0xAB, 0xAD, 0xAE, 0xB0, 0xB3, 0xB5, 0xB9, 0xB5, 0xB9,
-};
 extern f32 lbl_803E2390;
 extern f32 gDebugGlyphCellTexels;
 extern f32 lbl_803E2398;
 extern f32 lbl_803E239C;
 extern f32 lbl_803E23A0;
 extern f32 lbl_803E23A4;
-extern void GXSetTevColor(int id, int* color);
-extern void setTextColor(int p);
 extern u16 gDebugRectStartX;
 extern u16 gDebugRectStartY;
 extern u16 gDebugTabWidth;
@@ -177,6 +170,34 @@ extern char sErrFmtPC;
 extern char sErrFmtSP;
 extern char lbl_803DBC30;
 extern char lbl_803DBC34;
+extern u16 gDebugScreenHeight;
+extern u32 gDebugMarginRight;
+extern u32 gDebugMarginBottom;
+
+extern u64 ObjLink_DetachChild();
+extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
+extern u32 mainGetBit(int eventId);
+extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
+extern void Obj_FreeObject(u8* obj);
+extern u32 getScreenResolution(void);
+extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
+extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
+extern int* Obj_GetActiveModel(int obj);
+extern void OSResumeThread(u8* thread);
+extern void OSSetErrorHandler(int kind, void* handler);
+extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
+extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
+extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
+extern f32 getXZDistance(f32* a, f32* b);
+extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
+extern int dll_19_func1B(int p);
+extern f32 enemy_getHealthFraction(register int obj);
+extern f32 vec3f_distanceSquared(int, int);
+extern void selectTexture(char* tex, int slot);
+extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
+extern void gxDebugTextureFn_80078c1c(void);
+extern void GXSetTevColor(int id, int* color);
+extern void setTextColor(int p);
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void VISetPreRetraceCallback(void* cb);
@@ -185,9 +206,29 @@ extern void GXSetBreakPtCallback(void* cb);
 extern void VISetNextFrameBuffer(void* fb);
 extern void VIFlush(void);
 extern void VIWaitForRetrace(void);
-extern u16 gDebugScreenHeight;
-extern u32 gDebugMarginRight;
-extern u32 gDebugMarginBottom;
+extern int* ObjGroup_GetObjects(int, int*);
+extern int ObjGroup_ContainsObject(int, int);
+int TitleScreen_getObjectTypeId(u8* obj);
+
+u8 debugLogBuffer[0x1100];
+
+u8 gErrDisplayThread[0x310];
+
+u8 gErrDisplayThreadStack[0x1000];
+
+u8 gDebugGlyphMetricsTable[192] = {
+    0x02, 0x04, 0x06, 0x08, 0x0A, 0x0F, 0x11, 0x15, 0x17, 0x1F, 0x21, 0x27, 0x29, 0x2B, 0x2D, 0x2F, 0x31, 0x33,
+    0x35, 0x38, 0x3A, 0x3F, 0x41, 0x43, 0x45, 0x48, 0x4A, 0x4B, 0x4D, 0x50, 0x52, 0x56, 0x58, 0x5B, 0x5D, 0x62,
+    0x64, 0x68, 0x6A, 0x6F, 0x71, 0x76, 0x78, 0x7D, 0x7F, 0x84, 0x86, 0x8B, 0x8D, 0x92, 0x94, 0x96, 0x98, 0x9A,
+    0x9D, 0xA2, 0xA5, 0xA9, 0xAB, 0xB0, 0xB3, 0xB8, 0x00, 0x01, 0x00, 0x09, 0x0B, 0x11, 0x13, 0x19, 0x1B, 0x21,
+    0x23, 0x29, 0x2B, 0x31, 0x33, 0x38, 0x3A, 0x41, 0x43, 0x49, 0x4B, 0x4C, 0x4E, 0x53, 0x55, 0x5B, 0x5D, 0x62,
+    0x64, 0x6B, 0x6D, 0x73, 0x75, 0x7B, 0x7D, 0x83, 0x85, 0x8B, 0x8D, 0x93, 0x95, 0x9B, 0x9D, 0xA3, 0xA5, 0xAA,
+    0xAC, 0xB2, 0xB4, 0xBC, 0xBE, 0xC4, 0xC6, 0xCC, 0xCE, 0xD3, 0xD5, 0xD7, 0xD9, 0xDC, 0xDE, 0xE0, 0xE2, 0xE7,
+    0xE9, 0xEF, 0x00, 0x01, 0x03, 0x08, 0x09, 0x0F, 0x11, 0x16, 0x18, 0x1D, 0x1F, 0x24, 0x26, 0x28, 0x2A, 0x2F,
+    0x31, 0x36, 0x38, 0x39, 0x3B, 0x3D, 0x3F, 0x43, 0x45, 0x46, 0x48, 0x4F, 0x51, 0x56, 0x58, 0x5D, 0x5F, 0x64,
+    0x66, 0x6B, 0x6C, 0x70, 0x72, 0x77, 0x79, 0x7C, 0x7E, 0x82, 0x84, 0x89, 0x8B, 0x92, 0x94, 0x99, 0x9B, 0xA0,
+    0xA2, 0xA6, 0xA8, 0xAB, 0xAD, 0xAE, 0xB0, 0xB3, 0xB5, 0xB9, 0xB5, 0xB9,
+};
 
 void reportAllocFail(void)
 {
@@ -209,8 +250,6 @@ void* trickyGetQueuedPathParticlePos(void* obj)
 {
     return &((TrickyImpressState*)((GameObject*)obj)->extra)->renderPosX;
 }
-
-int TitleScreen_getObjectTypeId(u8* obj);
 
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     {
@@ -235,8 +274,6 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
 /* When b->_54 carries the spawn flag, build a particle descriptor on the stack from a's heading
  * and the delta to b's position, then emit it 20 times via the partfx
  * interface and clear the flag. */
-/* The one partfx effect emitted along Tricky's queued impress path. */
-#define TRICKY_PATH_PARTFX 0x533
 #pragma peephole off
 void Tricky_emitQueuedPathParticles(u8* a, u8* b)
 {
@@ -483,13 +520,6 @@ void debugPrintReset(void)
 }
 
 /* Bit setter at bit 6 (0x40) of obj->_b8->_58. */
-struct Bits58
-{
-    u8 _pad[0x58];
-    u8 b7 : 1;
-    u8 b6 : 1;
-    u8 lo : 6;
-};
 void fn_80138908(u8* obj, int v)
 {
     ((struct Bits58*)((GameObject*)obj)->extra)->b6 = v;
@@ -519,12 +549,8 @@ void errDisplayInstallHandlers(void)
     OSCreateThread(gErrDisplayThread, errDisplayThreadMain, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
 }
 
-#define TRICKY_BADDIE_TARGET_OBJGROUP 49 /* baddie object group scanned by trickyFindNearestUsableBaddie */
-
 int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
 {
-    extern int* ObjGroup_GetObjects(int, int*);
-    extern int ObjGroup_ContainsObject(int, int);
     int* objs;
     int* tmpList;
     int closest;
@@ -646,17 +672,6 @@ void fn_80138D7C(int obj, int p2)
     }
 }
 
-#define TUMBLEWEED_BLEND_FLAGS_OFFSET    0x82e
-#define TUMBLEWEED_BLEND_WEIGHT_OFFSET   0x830
-#define TUMBLEWEED_BLEND_VELOCITY_OFFSET 0x834
-
-typedef struct
-{
-    u8 pending : 1;
-    u8 active : 1;
-    u8 rest : 6;
-} TumbleweedBlendFlags;
-
 /* Weighted blend-channel animator. On state[0x82e] bit 0x80,
  * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
  * the active flag. While bit 0x40 is set, ramps state[0x830] toward
@@ -739,14 +754,6 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
 }
 
 PPCWGPipe GXWGFifo : (0xCC008000);
-
-typedef struct
-{
-    u8 s0 : 2;
-    u8 s1 : 2;
-    u8 s2 : 2;
-    u8 s3 : 2;
-} AnimSlots;
 
 void objAnimFreeChildren(int a, int b, void** c)
 {

@@ -13,14 +13,15 @@
 /* Firefly object spawned by FireFlyLantern_spawnFireFly. */
 #define FIREFLYLANTERN_CHILD_OBJ_FIREFLY 1084
 
+extern f32 lbl_803E3AF0;
+extern f32 lbl_803E3AE8;
+
 extern int gameBitDecrement(int bit);
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
-extern f32 lbl_803E3AF0;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int* obj, void* setup);
-extern f32 lbl_803E3AE8;
 
 #pragma dont_inline on
 int FireFlyLantern_spawnFireFly(int* obj)

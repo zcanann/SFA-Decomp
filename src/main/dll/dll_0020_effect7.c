@@ -16,43 +16,7 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/DR/dr_shared.h"
-
-void Effect7_func03_nop(void)
-{
-}
-
-void Effect7_release(void)
-{
-}
-
-void Effect7_initialise(void)
-{
-}
-
-ObjectDescriptor11 projgfx_funcs = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-    projgfx_initialise,
-    (ObjectDescriptorCallback)projgfx_release_doUnsupported,
-    0,
-    projgfx_onMapSetup,
-    (ObjectDescriptorCallback)projgfx_func04_ret_m1,
-    (ObjectDescriptorCallback)projgfx_func05_nop,
-    (ObjectDescriptorCallback)projgfx_func06_nop,
-    (ObjectDescriptorCallback)projgfx_func07_nop,
-    (ObjectDescriptorCallback)projgfx_getObjectTypeId,
-    (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
-    (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
-};
-
-char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
-static u8 sProjgfxStringPad0[] = {0, 0, 0};
-char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
-static u8 sProjgfxStringPad1[] = {0, 0, 0};
-char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
-static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
+#include "main/dll/dll_0020_effect7.h"
 
 extern f32 gEffect7TexScrollPhaseA;
 extern f32 gEffect7TexScrollPhaseB;
@@ -66,47 +30,6 @@ extern f32 lbl_803DFCE0;
 extern f32 lbl_803DFCE8;
 extern f32 gEffect7Pi;
 extern f32 gEffect7SinAngleScale;
-
-/*
- * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
- * the consumer-side definition of this 0x64-byte spawn request consumed by
- * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
- * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
- * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
- */
-
-#pragma scheduling off
-#pragma peephole off
-void Effect7_func05(void)
-{
-    f32 sum;
-    f32 step;
-    sum = gEffect7TexScrollPhaseA + (step = lbl_803DFCD8 * timeDelta);
-    gEffect7TexScrollPhaseA = sum;
-    if (sum > 1.0f)
-    {
-        gEffect7TexScrollPhaseA = lbl_803DFCDC;
-    }
-    sum = gEffect7TexScrollPhaseB + step;
-    gEffect7TexScrollPhaseB = sum;
-    if (sum > 1.0f)
-    {
-        gEffect7TexScrollPhaseB = lbl_803DFCE8;
-    }
-    gEffect7SinAngleA = gEffect7SinAngleA + framesThisStep * 0x64;
-    if (gEffect7SinAngleA > 0x7fff)
-    {
-        gEffect7SinAngleA = 0;
-    }
-    gEffect7SinValueA = mathSinf(gEffect7Pi * (f32)(s16)gEffect7SinAngleA / gEffect7SinAngleScale);
-    gEffect7SinAngleB = gEffect7SinAngleB + framesThisStep * 0x32;
-    if (gEffect7SinAngleB > 0x7fff)
-    {
-        gEffect7SinAngleB = 0;
-    }
-    gEffect7SinValueB = mathSinf(gEffect7Pi * (f32)(s16)gEffect7SinAngleB / gEffect7SinAngleScale);
-}
-
 extern FxNode9 lbl_8039C368;
 extern f32 gEffect7ScrollPhaseA;
 extern f32 gEffect7ScrollPhaseB;
@@ -149,6 +72,83 @@ extern f32 lbl_803DFD78;
 extern f32 lbl_803DFD7C;
 extern f32 lbl_803DFD80;
 extern f32 lbl_803DFD84;
+
+void Effect7_func03_nop(void)
+{
+}
+
+void Effect7_release(void)
+{
+}
+
+void Effect7_initialise(void)
+{
+}
+
+ObjectDescriptor11 projgfx_funcs = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+    projgfx_initialise,
+    (ObjectDescriptorCallback)projgfx_release_doUnsupported,
+    0,
+    projgfx_onMapSetup,
+    (ObjectDescriptorCallback)projgfx_func04_ret_m1,
+    (ObjectDescriptorCallback)projgfx_func05_nop,
+    (ObjectDescriptorCallback)projgfx_func06_nop,
+    (ObjectDescriptorCallback)projgfx_func07_nop,
+    (ObjectDescriptorCallback)projgfx_getObjectTypeId,
+    (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
+    (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
+};
+
+char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
+static u8 sProjgfxStringPad0[] = {0, 0, 0};
+char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
+static u8 sProjgfxStringPad1[] = {0, 0, 0};
+char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
+static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
+
+/*
+ * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
+ * the consumer-side definition of this 0x64-byte spawn request consumed by
+ * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
+ * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
+ * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
+ */
+
+#pragma scheduling off
+#pragma peephole off
+void Effect7_func05(void)
+{
+    f32 sum;
+    f32 step;
+    sum = gEffect7TexScrollPhaseA + (step = lbl_803DFCD8 * timeDelta);
+    gEffect7TexScrollPhaseA = sum;
+    if (sum > 1.0f)
+    {
+        gEffect7TexScrollPhaseA = lbl_803DFCDC;
+    }
+    sum = gEffect7TexScrollPhaseB + step;
+    gEffect7TexScrollPhaseB = sum;
+    if (sum > 1.0f)
+    {
+        gEffect7TexScrollPhaseB = lbl_803DFCE8;
+    }
+    gEffect7SinAngleA = gEffect7SinAngleA + framesThisStep * 0x64;
+    if (gEffect7SinAngleA > 0x7fff)
+    {
+        gEffect7SinAngleA = 0;
+    }
+    gEffect7SinValueA = mathSinf(gEffect7Pi * (f32)(s16)gEffect7SinAngleA / gEffect7SinAngleScale);
+    gEffect7SinAngleB = gEffect7SinAngleB + framesThisStep * 0x32;
+    if (gEffect7SinAngleB > 0x7fff)
+    {
+        gEffect7SinAngleB = 0;
+    }
+    gEffect7SinValueB = mathSinf(gEffect7Pi * (f32)(s16)gEffect7SinAngleB / gEffect7SinAngleScale);
+}
 
 #define FILL368()                                                                                                      \
     do                                                                                                                 \

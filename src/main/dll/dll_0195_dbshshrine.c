@@ -42,6 +42,14 @@
 #define DBSH_SHRINE_ENVFX_C  0x222
 #define DBSH_SHRINE_IDLE_SFX 0x343
 
+#define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) (*gObjectTriggerInterface)->runSequence((triggerId), (obj), (arg))
+#define MAP_EVENT_GET_ANIM(mapId, eventId)          (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
+#define MAP_EVENT_SET_ANIM(mapId, eventId, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
+
+extern f32 timeDelta;
+extern f32 lbl_803E50DC;
+extern f32 lbl_803E50D8;
+
 extern void skyFn_80088c94(int flags, int mode);
 extern void getEnvfxAct(DbshShrineObject* obj, int target, int effectId, int flags);
 extern void fn_801C8B68(DbshShrineObject* obj);
@@ -59,13 +67,7 @@ extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5,
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern void objSetAnimStateFlags(int obj, int flag, int set);
 extern void* objCreateLight(int arg, u8 addToList);
-extern f32 timeDelta;
-extern f32 lbl_803E50DC;
-extern f32 lbl_803E50D8;
-
-#define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) (*gObjectTriggerInterface)->runSequence((triggerId), (obj), (arg))
-#define MAP_EVENT_GET_ANIM(mapId, eventId)          (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
-#define MAP_EVENT_SET_ANIM(mapId, eventId, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
+extern int randomGetRange(int lo, int hi);
 
 int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
@@ -178,7 +180,6 @@ void dbsh_shrine_hitDetect(void)
 
 void dbsh_shrine_update(DbshShrineObject* obj)
 {
-    extern int randomGetRange(int lo, int hi);
     int player;
     u8 active;
     DbshShrineRuntime* runtime;

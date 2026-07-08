@@ -36,23 +36,12 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 #define zcEn3_ROCKFALL_MODE_SHATTERED 3 /* hit: stop scrape sfx, play impact, maybe explode */
 #define zcEn3_ROCKFALL_MODE_4         4
 
-extern u32 ObjHitbox_SetCapsuleBounds();
-extern u32 ObjHits_DisableObject();
-extern void* Obj_GetPlayerObject(void);
 extern void* gRockfallResource;
 extern f32 lbl_803E4708;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;
-extern f32 Vec_distance(f32* a, f32* b);
 extern u8 gRockfallCfgTable[];
 extern f32 gRockfallScaleDivisor;
-extern void fn_800628CC(int* obj);
-extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void Sfx_PlayFromObject(int* obj, int sfx);
-extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern f32 lbl_803E46E8;
 extern f32 lbl_803E46EC;
 extern f32 lbl_803E46F0;
@@ -62,6 +51,17 @@ extern f32 lbl_803E4714;
 extern f32 lbl_803E4718;
 extern f32 lbl_803E471C;
 extern f32 gRockfallGravity;
+extern u32 ObjHitbox_SetCapsuleBounds();
+extern u32 ObjHits_DisableObject();
+extern void* Obj_GetPlayerObject(void);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
+extern f32 Vec_distance(f32* a, f32* b);
+extern void fn_800628CC(int* obj);
+extern f32 Vec_xzDistance(f32* a, f32* b);
+extern void Sfx_PlayFromObject(int* obj, int sfx);
+extern void Sfx_StopObjectChannel(int* obj, int channel);
+extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 
 void crrockfall_free(void)
 {

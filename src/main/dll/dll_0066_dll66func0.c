@@ -10,6 +10,10 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/dll_0066_dll66func0.h"
+
+/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
+#define DLL66_EFFECT_ID 0x155
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_803131A8[];
@@ -20,9 +24,6 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (u8*)objAnim->banks[objAnim->bankIndex];
 }
-
-/* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
-#define DLL66_EFFECT_ID 0x155
 
 void dll_66_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

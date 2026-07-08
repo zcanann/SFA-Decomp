@@ -15,41 +15,16 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/VF/dll_021A_vfpstatueball.h"
 
 #define VFPSTATUEBALL_OBJFLAG_HIDDEN 0x4000
 
 #define VFPSTATUEBALL_HIT_SEQID 0x14b /* staff-strike object seq id */
 
-typedef struct VfpStatueBallPlacement
-{
-    u8 pad00[0x1a];
-    s16 variant;    /* 0x1A: 0..2, selects model and matched against the striker */
-    s16 modelScale; /* 0x1C: >1 scales the model's root motion up */
-    s16 gameBit;    /* 0x1E */
-} VfpStatueBallPlacement;
-
-typedef struct VfpStatueBallState
-{
-    s16 gameBit;        /* 0x00 */
-    s16 timer;          /* 0x02: decremented each tick, never tested */
-    u8 unk4;            /* 0x04 */
-    u8 active;          /* 0x05 */
-    u8 playActivateSfx; /* 0x06 */
-    u8 prevActive;      /* 0x07 */
-    u8 unk8;            /* 0x08 */
-    u8 particleIdx;     /* 0x09 */
-    u8 particleAlpha;   /* 0x0A */
-    u8 particleChance;  /* 0x0B */
-} VfpStatueBallState;
-
-STATIC_ASSERT(sizeof(VfpStatueBallState) == 0xc);
-STATIC_ASSERT(offsetof(VfpStatueBallPlacement, variant) == 0x1A);
-STATIC_ASSERT(offsetof(VfpStatueBallPlacement, gameBit) == 0x1E);
-
+extern f32 lbl_803E60B8;
 extern void objfx_spawnDirectionalBurst(int* obj, u8 idx, f32 scale, int model, int mode, u8 chance, f32 alpha,
                                         int flags, int unused);
 extern u8 fn_8016F16C(int* obj);
-extern f32 lbl_803E60B8;
 
 int VFP_statueball_getExtraSize(void)
 {

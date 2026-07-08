@@ -17,17 +17,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-/* squadron-ship object ids spawned by the generator's two modes */
-#define OBJ_ID_SQUADRON_SHIP_A 0x616
-#define OBJ_ID_SQUADRON_SHIP_B 0x617
-
-/* spawned squadron-ship extra block; fields written at +0x4,0x5,0x8,0xc,0x10,0x18..0x1a */
-#define SPAWN_EXTRA_SIZE 0x20
-
-/* random start-rotation range and per-axis spin-rate range */
-#define ROT_RANGE_MAX 0xffff
-#define SPIN_RATE_MAG 0x14
-
 typedef struct Dll2A4State
 {
     f32 fadeTimer; /* 0x00: counts down by timeDelta; frees obj at 0 */
@@ -51,6 +40,17 @@ typedef struct SquadronShipSetup
     u8 rot19;          /* 0x19 */
     u8 rot1A;          /* 0x1a */
 } SquadronShipSetup;
+
+/* squadron-ship object ids spawned by the generator's two modes */
+#define OBJ_ID_SQUADRON_SHIP_A 0x616
+#define OBJ_ID_SQUADRON_SHIP_B 0x617
+
+/* spawned squadron-ship extra block; fields written at +0x4,0x5,0x8,0xc,0x10,0x18..0x1a */
+#define SPAWN_EXTRA_SIZE 0x20
+
+/* random start-rotation range and per-axis spin-rate range */
+#define ROT_RANGE_MAX 0xffff
+#define SPIN_RATE_MAG 0x14
 
 int dll_2A4_getExtraSize_ret_12(void)
 {

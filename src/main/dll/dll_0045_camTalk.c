@@ -9,16 +9,7 @@
 #include "string.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern CameraModeBikeState* gCamTalkBikeState;
-
-extern void vecRotateZXY(void* params, void* outVec);
-extern u32 setMatrixFromObjectPos();
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern GameObject* getSbGalleon(void);
-extern int DBprotection_getCameraState(GameObject* obj);
-extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 extern ViewfinderState* lbl_803DD548;
 extern f32 lbl_803E1780;
 extern const f32 gCamTalkDefaultFov;
@@ -39,6 +30,14 @@ extern f32 lbl_803E17C4;
 extern f32 lbl_803E17C8;
 extern f32 lbl_803E17CC;
 extern f32 lbl_803E17D0;
+extern float mathSinf(float x);
+extern float mathCosf(float x);
+extern void vecRotateZXY(void* params, void* outVec);
+extern u32 setMatrixFromObjectPos();
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern GameObject* getSbGalleon(void);
+extern int DBprotection_getCameraState(GameObject* obj);
+extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 
 void CameraModeBike_copyToCurrent(f32* inputs)
 {

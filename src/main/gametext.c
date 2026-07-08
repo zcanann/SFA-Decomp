@@ -13,6 +13,33 @@
 #define LANGUAGE_JAPANESE 4
 #define LANGUAGE_SPANISH  5
 
+extern char sMapDirectoryNameArwing[];
+extern char sMapDirectoryNameBoot[];
+extern char sMapDirectoryNameCRFort[];
+extern char sMapDirectoryNameDFPTop[];
+extern char sMapDirectoryNameDesert[];
+extern char sMapDirectoryNameLINKG[];
+extern char sMapDirectoryNameLink[];
+extern char sMapDirectoryNameLinkB[];
+extern char sMapDirectoryNameLinkC[];
+extern char sMapDirectoryNameLinkD[];
+extern char sMapDirectoryNameLinkE[];
+extern char sMapDirectoryNameLinkF[];
+extern char sMapDirectoryNameLinkH[];
+extern char sMapDirectoryNameLinkJ[];
+extern char sMapDirectoryNameMMPass[];
+extern char sMapDirectoryNameNWastes[];
+extern char sMapDirectoryNameShop[];
+extern char sMapDirectoryNameSwapHol[];
+extern char sMapDirectoryNameVolcano[];
+extern char sMapDirectoryNameWarlock[];
+
+extern char sLanguageNameEnglish[];
+extern char sLanguageNameFrench[];
+extern char sLanguageNameGerman[];
+extern char sLanguageNameItalian[];
+extern char sLanguageNameSpanish[];
+
 int isSpace(u32 c)
 {
     int result = 0;
@@ -968,27 +995,6 @@ TaskTextEntry gTaskTextTable[208] = {
     {0xFFFF, 0xFFFF, 0xFFFF}, {0xFFFF, 0xFFFF, 0xFFFF}, {0xFFFF, 0xFFFF, 0xFFFF}, {0x0000, 0x0000, 0x0000},
 };
 
-extern char sMapDirectoryNameArwing[];
-extern char sMapDirectoryNameBoot[];
-extern char sMapDirectoryNameCRFort[];
-extern char sMapDirectoryNameDFPTop[];
-extern char sMapDirectoryNameDesert[];
-extern char sMapDirectoryNameLINKG[];
-extern char sMapDirectoryNameLink[];
-extern char sMapDirectoryNameLinkB[];
-extern char sMapDirectoryNameLinkC[];
-extern char sMapDirectoryNameLinkD[];
-extern char sMapDirectoryNameLinkE[];
-extern char sMapDirectoryNameLinkF[];
-extern char sMapDirectoryNameLinkH[];
-extern char sMapDirectoryNameLinkJ[];
-extern char sMapDirectoryNameMMPass[];
-extern char sMapDirectoryNameNWastes[];
-extern char sMapDirectoryNameShop[];
-extern char sMapDirectoryNameSwapHol[];
-extern char sMapDirectoryNameVolcano[];
-extern char sMapDirectoryNameWarlock[];
-
 u8 gUtf8CharClassTable[256] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1108,12 +1114,6 @@ char sMapDirectoryNameWallCity[] = "WallCity";
 char sMapDirectoryNameWorldMap[] = "WorldMap";
 
 char sLanguageNameJapanese[] = "Japanese";
-
-extern char sLanguageNameEnglish[];
-extern char sLanguageNameFrench[];
-extern char sLanguageNameGerman[];
-extern char sLanguageNameItalian[];
-extern char sLanguageNameSpanish[];
 
 LanguageName sLanguageNameTable[6] = {
     {sLanguageNameEnglish, 4, {0, 0, 0}}, {sLanguageNameFrench, 4, {0, 0, 0}},   {sLanguageNameGerman, 4, {0, 0, 0}},

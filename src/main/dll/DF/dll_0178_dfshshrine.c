@@ -18,6 +18,75 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 
+typedef struct DFlanternShrineState
+{
+    void* light;
+    u8 pad04[0x14 - 0x04];
+    s16 orbitA;
+    s16 orbitB;
+    s16 orbitC;
+    u8 pad1a[0x1c - 0x1a];
+    u8 flags;
+} DFlanternShrineState;
+
+typedef struct LanternFlagBits
+{
+    u8 on : 1;
+    u8 rest : 7;
+} LanternFlagBits;
+
+typedef struct DfshShrineState
+{
+    void* light;
+    f32 rewardTimer;
+    f32 idleChimeTimer;
+    u8 musicLatch[4];
+    s16 startDelayFrames;
+    s16 transitionTimer;
+    u8 pad14[0x1A - 0x14];
+    u8 mode;
+    u8 rewardIndex;
+    u8 flags;
+    u8 pad1D[0x20 - 0x1D];
+} DfshShrineState;
+
+typedef struct DfshShrinePlacement
+{
+    ObjPlacement base;
+    s8 initialYaw;
+    u8 pad19;
+    s16 startDelay;
+    u8 pad1C[0x24 - 0x1C];
+} DfshShrinePlacement;
+
+typedef struct DfshShrineFlagsBits
+{
+    u8 openedBySequence : 1;
+    u8 success : 1;
+    u8 b2 : 1;
+    u8 b3 : 1;
+    u8 b4 : 1;
+    u8 b5 : 1;
+    u8 b6 : 1;
+    u8 b7 : 1;
+} DfshShrineFlagsBits;
+
+typedef struct DfshShrineFlags
+{
+    u8 openedBySequence : 1;
+    u8 unused1 : 1;
+    u8 unused2 : 1;
+    u8 unused3 : 1;
+    u8 unused4 : 1;
+    u8 unused5 : 1;
+    u8 unused6 : 1;
+    u8 unused7 : 1;
+} DfshShrineFlags;
+
+STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
+STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
+STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
+
 #define DFSHSHRINE_MAP_SHRINE 0xb
 
 /* shrine-lantern state machine (state->mode) */
@@ -34,17 +103,13 @@
 #define DFSHRINE_MODE_AFTER_FINISH  6 /* one frame after the finish transition */
 #define DFSHRINE_MODE_FINISH        7 /* start the finishing screen transition */
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void ModelLightStruct_free(void* light);
-extern void gameTimerStop(void);
-extern int mapGetDirIdx(int idx);
-extern int unlockLevel(s32 val, int idx, int flag);
-extern void Music_Trigger(int id, int arg);
-extern void objSetAnimStateFlags(void* obj, int arg, int enable);
-extern int getAngle(float y, float x);
-extern f32 Vec_xzDistance(void* a, void* b);
-extern float mathSinf(float x);
-extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
+#define DFSH_REWARD_BIT(idx)    (base[(idx)])
+#define DFSH_REWARD_DELAY(idx)  (base[10 + (idx)])
+#define DFSH_REQUIRED_BIT(idx)  (((u16*)((u8*)base + 40))[(idx)])
+#define DFSH_TARGET_OBJECT(idx) (((int*)((u8*)base + 0x3c))[(idx)])
+
+#define DFSH_FLAGS(state) ((DfshShrineFlagsBits*)&(state)->flags)
+
 extern f32 lbl_803E4E50;
 extern f32 lbl_803E4E54;
 extern f32 lbl_803E4E58;
@@ -57,29 +122,29 @@ extern f32 lbl_803E4E70;
 extern f32 gDfShShrineFadeDistance;
 extern f32 lbl_803E4E78;
 extern f32 lbl_803E4E88;
-
-typedef struct DFlanternShrineState
-{
-    void* light;
-    u8 pad04[0x14 - 0x04];
-    s16 orbitA;
-    s16 orbitB;
-    s16 orbitC;
-    u8 pad1a[0x1c - 0x1a];
-    u8 flags;
-} DFlanternShrineState;
-
-extern int randomGetRange(int lo, int hi);
-extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern u8 gDfShShrinePendingReward;
 extern u16 gDfShShrineRewardTable[];
+extern const f32 lbl_803E4E8C;
+
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void ModelLightStruct_free(void* light);
+extern void gameTimerStop(void);
+extern int mapGetDirIdx(int idx);
+extern int unlockLevel(s32 val, int idx, int flag);
+extern void Music_Trigger(int id, int arg);
+extern void objSetAnimStateFlags(void* obj, int arg, int enable);
+extern int getAngle(float y, float x);
+extern f32 Vec_xzDistance(void* a, void* b);
+extern float mathSinf(float x);
+extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
+extern int randomGetRange(int lo, int hi);
+extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void playerAddRemoveMagic(int obj, int amount);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
                                           int value);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
-
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);
@@ -87,12 +152,11 @@ extern void* ObjList_FindObjectById(int objId);
 extern void fn_8014C5C0(void* obj);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
-extern const f32 lbl_803E4E8C;
 extern void* objCreateLight(int* obj, int v);
+extern u8* Obj_GetPlayerObject(void);
 
 void fn_801C2914(int obj)
 {
-    extern u8* Obj_GetPlayerObject(void);
     int def;
     DFlanternShrineState* state;
     u8* player;
@@ -160,15 +224,8 @@ void fn_801C2914(int obj)
     }
 }
 
-typedef struct LanternFlagBits
-{
-    u8 on : 1;
-    u8 rest : 7;
-} LanternFlagBits;
-
 int DFSH_Shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern u8* Obj_GetPlayerObject(void);
     int objLocal;
     DFlanternShrineState* state;
     u8* player;
@@ -245,34 +302,6 @@ void DFSH_Shrine_free(int obj)
     mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, 1);
 }
 
-typedef struct DfshShrineState
-{
-    void* light;
-    f32 rewardTimer;
-    f32 idleChimeTimer;
-    u8 musicLatch[4];
-    s16 startDelayFrames;
-    s16 transitionTimer;
-    u8 pad14[0x1A - 0x14];
-    u8 mode;
-    u8 rewardIndex;
-    u8 flags;
-    u8 pad1D[0x20 - 0x1D];
-} DfshShrineState;
-
-typedef struct DfshShrinePlacement
-{
-    ObjPlacement base;
-    s8 initialYaw;
-    u8 pad19;
-    s16 startDelay;
-    u8 pad1C[0x24 - 0x1C];
-} DfshShrinePlacement;
-
-STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
-STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
-STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
-
 void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DfshShrineState* state;
@@ -300,25 +329,6 @@ void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objParticleFn_80099d84((int*)obj, lbl_803E4E88, 7, *(f32*)&lbl_803E4E88, (int)state->light);
     }
 }
-
-#define DFSH_REWARD_BIT(idx)    (base[(idx)])
-#define DFSH_REWARD_DELAY(idx)  (base[10 + (idx)])
-#define DFSH_REQUIRED_BIT(idx)  (((u16*)((u8*)base + 40))[(idx)])
-#define DFSH_TARGET_OBJECT(idx) (((int*)((u8*)base + 0x3c))[(idx)])
-
-typedef struct DfshShrineFlagsBits
-{
-    u8 openedBySequence : 1;
-    u8 success : 1;
-    u8 b2 : 1;
-    u8 b3 : 1;
-    u8 b4 : 1;
-    u8 b5 : 1;
-    u8 b6 : 1;
-    u8 b7 : 1;
-} DfshShrineFlagsBits;
-
-#define DFSH_FLAGS(state) ((DfshShrineFlagsBits*)&(state)->flags)
 
 void DFSH_Shrine_update(int objArg)
 {
@@ -512,18 +522,6 @@ void DFSH_Shrine_release(void)
 void DFSH_Shrine_initialise(void)
 {
 }
-
-typedef struct DfshShrineFlags
-{
-    u8 openedBySequence : 1;
-    u8 unused1 : 1;
-    u8 unused2 : 1;
-    u8 unused3 : 1;
-    u8 unused4 : 1;
-    u8 unused5 : 1;
-    u8 unused6 : 1;
-    u8 unused7 : 1;
-} DfshShrineFlags;
 
 void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init)
 {

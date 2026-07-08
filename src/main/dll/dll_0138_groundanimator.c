@@ -4,8 +4,6 @@
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
-extern void* mapGetBlock(int i);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
 #include "main/gamebits.h"
@@ -13,10 +11,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/mm.h"
 #include "main/track_dolphin.h"
 #include "main/dll/fx_800944A0_shared.h"
-
-#define GROUNDANIMATOR_OBJFLAG_FREED   0x40
-#define GROUNDANIMATOR_OBJGROUP        0x31
-#define GROUNDANIMATOR_TARGET_OBJGROUP 0x4
 
 typedef struct GroundanimatorPlacement
 {
@@ -44,6 +38,12 @@ STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
+#define GROUNDANIMATOR_OBJFLAG_FREED   0x40
+#define GROUNDANIMATOR_OBJGROUP        0x31
+#define GROUNDANIMATOR_TARGET_OBJGROUP 0x4
+
+extern void* mapGetBlock(int i);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjGroup_FindNearestObject();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
@@ -537,5 +537,3 @@ void groundanimator_update(int* obj)
     }
     objRenderFn_80041018(obj);
 }
-
-void fn_801923F8(int* cfgArg);

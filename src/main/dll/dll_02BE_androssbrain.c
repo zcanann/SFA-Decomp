@@ -11,6 +11,26 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+typedef struct AndrossBrainState
+{
+    GameObject* andross;   /* objId ANDROSS_OBJ_ID, main andross object */
+    GameObject* lightning; /* objId ANDROSSLIGH_OBJ_ID, androssligh target */
+    u8 pad08[0x1C - 0x08];
+    s8 brainState; /* BRAIN_* */
+    s8 prevState;
+    u8 health;     /* decrements per hit */
+    u8 flashTimer; /* frames of red flash / hit cooldown */
+    u8 pad20[0x28 - 0x20];
+} AndrossBrainState;
+
+STATIC_ASSERT(sizeof(AndrossBrainState) == 0x28);
+STATIC_ASSERT(offsetof(AndrossBrainState, andross) == 0x0);
+STATIC_ASSERT(offsetof(AndrossBrainState, lightning) == 0x4);
+STATIC_ASSERT(offsetof(AndrossBrainState, brainState) == 0x1C);
+STATIC_ASSERT(offsetof(AndrossBrainState, prevState) == 0x1D);
+STATIC_ASSERT(offsetof(AndrossBrainState, health) == 0x1E);
+STATIC_ASSERT(offsetof(AndrossBrainState, flashTimer) == 0x1F);
+
 enum
 {
     ANDROSS_OBJ_ID = 0x47b77,
@@ -33,26 +53,6 @@ enum
     ANDROSS_SIGNAL_BRAIN_HIT = 1,
     ANDROSS_SIGNAL_BRAIN_DEFEATED = 8
 };
-
-typedef struct AndrossBrainState
-{
-    GameObject* andross;   /* objId ANDROSS_OBJ_ID, main andross object */
-    GameObject* lightning; /* objId ANDROSSLIGH_OBJ_ID, androssligh target */
-    u8 pad08[0x1C - 0x08];
-    s8 brainState; /* BRAIN_* */
-    s8 prevState;
-    u8 health;     /* decrements per hit */
-    u8 flashTimer; /* frames of red flash / hit cooldown */
-    u8 pad20[0x28 - 0x20];
-} AndrossBrainState;
-
-STATIC_ASSERT(sizeof(AndrossBrainState) == 0x28);
-STATIC_ASSERT(offsetof(AndrossBrainState, andross) == 0x0);
-STATIC_ASSERT(offsetof(AndrossBrainState, lightning) == 0x4);
-STATIC_ASSERT(offsetof(AndrossBrainState, brainState) == 0x1C);
-STATIC_ASSERT(offsetof(AndrossBrainState, prevState) == 0x1D);
-STATIC_ASSERT(offsetof(AndrossBrainState, health) == 0x1E);
-STATIC_ASSERT(offsetof(AndrossBrainState, flashTimer) == 0x1F);
 
 void androssbrain_setState(int obj, int newState, u8 force)
 {

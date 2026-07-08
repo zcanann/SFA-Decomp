@@ -16,6 +16,7 @@
 #include "main/dll/gameplay.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_0057_cameramodetitle.h"
 
 /* title-screen music tracks crossfaded as pose 4 is entered/left */
 #define MUSIC_TITLE_TRACK_A 0xbe
@@ -24,14 +25,37 @@
 /* gCamTitlePoseTable pose index of the resting title pose */
 #define TITLE_CAM_REST_POSE 4
 
-extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
 extern CameraModeTitlePose gCamTitlePoseTable[];
 extern u8 gCamTitleCurPose;
 extern u8 gCamTitlePrevPose;
 extern u8 gCamTitleStartPosePending;
 extern f32 titleScreenCamProgress;
-
 extern CameraModeTitlePose gCamTitleStartPose;
+extern u8 dll_19_func03_nop[];
+extern u8 dll_19_func04_nop[];
+extern u8 dll_19_func05[];
+extern u8 dll_19_func06[];
+extern u8 dll_19_func07[];
+extern u8 dll_19_func08[];
+extern u8 dll_19_func09_ret_0[];
+extern u8 dll_19_func0A[];
+extern u8 dll_19_func0B[];
+extern u8 dll_19_func0C[];
+extern u8 dll_19_func0D[];
+extern u8 dll_19_func0E[];
+extern u8 dll_19_func0F[];
+extern u8 dll_19_func10[];
+extern u8 dll_19_func11[];
+extern u8 dll_19_func12[];
+extern u8 dll_19_func13[];
+extern u8 dll_19_func14[];
+extern u8 dll_19_func15[];
+extern u8 dll_19_func16[];
+extern u8 dll_19_func17[];
+extern u8 dll_19_func18[];
+extern u8 dll_19_func19[];
+extern u8 dll_19_func1A[];
+extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
 
 #pragma scheduling off
 #pragma peephole off
@@ -211,31 +235,6 @@ CameraModeTitlePose gCamTitlePoseTable[5] = {
 };
 
 /* descriptor/ptr table auto 0x8031a01c-0x8031a0e0 */
-extern u8 dll_19_func03_nop[];
-extern u8 dll_19_func04_nop[];
-extern u8 dll_19_func05[];
-extern u8 dll_19_func06[];
-extern u8 dll_19_func07[];
-extern u8 dll_19_func08[];
-extern u8 dll_19_func09_ret_0[];
-extern u8 dll_19_func0A[];
-extern u8 dll_19_func0B[];
-extern u8 dll_19_func0C[];
-extern u8 dll_19_func0D[];
-extern u8 dll_19_func0E[];
-extern u8 dll_19_func0F[];
-extern u8 dll_19_func10[];
-extern u8 dll_19_func11[];
-extern u8 dll_19_func12[];
-extern u8 dll_19_func13[];
-extern u8 dll_19_func14[];
-extern u8 dll_19_func15[];
-extern u8 dll_19_func16[];
-extern u8 dll_19_func17[];
-extern u8 dll_19_func18[];
-extern u8 dll_19_func19[];
-extern u8 dll_19_func1A[];
-
 u32 lbl_8031A01C[11] = {0x00000000,
                         0x00000000,
                         0x00000000,

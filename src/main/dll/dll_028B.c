@@ -16,9 +16,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define DLL28B_OBJ_GROUP    3
-#define OBJFLAG_BIT_2000000 0x2000000
-
 typedef struct Dll28BState
 {
     int objectFlagsMirror; /* 0x00: receives OBJFLAG_BIT_2000000 each update */
@@ -40,6 +37,9 @@ STATIC_ASSERT(offsetof(Dll28BState, eyeAnim) == 0x980);
 STATIC_ASSERT(offsetof(Dll28BState, route) == 0x9B0);
 STATIC_ASSERT(offsetof(Dll28BState, playerDistance) == 0xAB8);
 STATIC_ASSERT(offsetof(Dll28BState, flagsAC0) == 0xAC0);
+
+#define DLL28B_OBJ_GROUP    3
+#define OBJFLAG_BIT_2000000 0x2000000
 
 int dll_28B_getExtraSize(void)
 {

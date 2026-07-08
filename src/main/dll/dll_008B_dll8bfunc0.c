@@ -16,11 +16,11 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h" /* family cross-sibling header (7C..90 convention); also supplies undefined4 + this DLL's own func03 decl */
 
-extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80316728[];
-
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL8B_EFFECT_ID 0xd9
+
+extern ModgfxInterface** gModgfxInterface;
+extern u8 lbl_80316728[];
 
 void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5, f32* scalePtr)
 {

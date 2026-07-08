@@ -4,17 +4,6 @@
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#define PAD_BUTTON_A 0x100
-
-#define DREARTHWARRIOR_OBJGROUP           0xa
-#define DREARTHWARRIOR_PARTFX             0x7e6
-#define DREARTHWARRIOR_AIRMETER_BGTEXTURE 0x5cf /* HUD air-meter background texture id */
-
-#define DREARTHWARRIOR_OBJFLAG_PARENT_SLACK 0x1000
-
-#define DREARTHWARRIOR_CHILD_OBJ_HELPER   0x6f5
-#define DREARTHWARRIOR_EFFECT_RESOURCE_ID 0x5a /* shared effect resource -> gEarthWarriorResource */
-
 typedef struct DREarthWarriorPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -211,6 +200,17 @@ typedef struct
 {
     f32 m[4][4];
 } EWColorTbl;
+
+#define PAD_BUTTON_A 0x100
+
+#define DREARTHWARRIOR_OBJGROUP           0xa
+#define DREARTHWARRIOR_PARTFX             0x7e6
+#define DREARTHWARRIOR_AIRMETER_BGTEXTURE 0x5cf /* HUD air-meter background texture id */
+
+#define DREARTHWARRIOR_OBJFLAG_PARENT_SLACK 0x1000
+
+#define DREARTHWARRIOR_CHILD_OBJ_HELPER   0x6f5
+#define DREARTHWARRIOR_EFFECT_RESOURCE_ID 0x5a /* shared effect resource -> gEarthWarriorResource */
 
 extern f32 lbl_803E8314;
 extern f32 lbl_803E8318;

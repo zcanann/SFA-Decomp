@@ -18,11 +18,6 @@
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
 
-#define NWTREEBRID_TARGET_OBJGROUP 4
-
-extern f32 lbl_803E51F8;
-extern f32 lbl_803E51FC;
-
 typedef struct TreeBirdState
 {
     s16 gameBit;          /* 0x00: game bit that arms / fires the trigger */
@@ -43,7 +38,12 @@ typedef struct NwTreeBirdMapData
     s16 gameBit;       /* 0x1E */
 } NwTreeBirdMapData;
 
+#define NWTREEBRID_TARGET_OBJGROUP 4
+
 #define TREEBIRD_SPAWN_PARTICLE(obj, id) (*gPartfxInterface)->spawnObject((void*)(obj), (id), 0, 1, -1, 0)
+
+extern f32 lbl_803E51F8;
+extern f32 lbl_803E51FC;
 
 int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

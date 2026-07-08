@@ -1,14 +1,16 @@
 #include "main/audio/hw_volume.h"
 #include "main/audio/dsp_voice.h"
 
-extern void salDeactivateVoice(void* entry);
-extern void salActivateStudio(void);
-extern void salDeactivateStudio(void);
 extern u8* dspVoice;
 extern u8 lbl_803CC1E0[];
 extern u8 lbl_802C2820[];
-
 extern f32 lbl_803E78E4;
+
+extern void salDeactivateVoice(void* entry);
+extern void salActivateStudio(void);
+extern void salDeactivateStudio(void);
+extern void salCalcVolumeMatrix(int voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 vol, f32 auxa,
+                                f32 auxb);
 
 /*
  * hwSetVolume - large mix-volume setter; computes 4-channel pan from
@@ -34,8 +36,6 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
     aux_entry = (DSPstudioinfo*)(lbl_803CC1E0 + voice->studio * 0xbc);
 
     {
-        extern void salCalcVolumeMatrix(int voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 vol,
-                                        f32 auxa, f32 auxb);
         u32 f0w = voice->flags;
         salCalcVolumeMatrix(p2, out, aux, p7, (f0w & 0x80000000u) != 0, aux_entry->type == 1, vol, auxa, auxb);
     }

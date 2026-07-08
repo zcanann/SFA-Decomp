@@ -1,15 +1,15 @@
 #include "main/audio/synth_seq_events.h"
 
-#define SYNTH_TRACK_COMMAND_END  0xFFFF
-#define SYNTH_TRACK_COMMAND_JUMP 0xFFFE
-
-#define TRACK_CMD(cursor) ((SynthTrackCommand*)(cursor)->current)
-
 typedef struct SynthVoiceKeyGroups
 {
     u8 pad[0x14E8];
     SynthKeyGroupState keyGroupStates[SYNTH_VOICE_NOTE_COUNT];
 } SynthVoiceKeyGroups;
+
+#define SYNTH_TRACK_COMMAND_END  0xFFFF
+#define SYNTH_TRACK_COMMAND_JUMP 0xFFFE
+
+#define TRACK_CMD(cursor) ((SynthTrackCommand*)(cursor)->current)
 
 #define KEYGROUP_STATE(voice, index) (((SynthKeyGroupState*)((u8*)(voice) + 0x14E8))[index])
 

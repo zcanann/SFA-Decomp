@@ -4,6 +4,31 @@
 #include "main/game_object.h"
 #include "main/engine_shared.h"
 
+typedef struct EcshCupState
+{
+    f32 startPosX;
+    f32 startPosY;
+    f32 startPosZ;
+    f32 velX;
+    f32 velY;
+    f32 velZ;
+    f32 spawnPosY;
+    f32 spawnTimer;
+    f32 bobTimer;
+    s32 currentMode;
+    s32 slotId;
+    s16 spinRate;
+    s8 bobDir;
+    u8 pad2F[0x30 - 0x2F];
+} EcshCupState;
+
+typedef struct
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} CupVec3;
+
 #define ECSHCUP_TARGET_OBJGROUP 0xb
 
 /* periodic particle emitted while the cup is in its normal tracking mode */
@@ -12,12 +37,7 @@
 #define ECSHCUP_PARTFX_TRANSITION 0x271
 #define ECSHCUP_HIT_VOLUME_SLOT   10
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E5060;
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
-extern u32 ObjHits_SyncObjectPositionIfDirty();
-extern u32 ObjHits_EnableObject();
-extern u32 ObjGroup_FindNearestObject();
 extern const f32 lbl_803E5064;
 extern const f32 lbl_803E5068;
 extern const f32 lbl_803E506C;
@@ -29,11 +49,7 @@ extern const f32 lbl_803E5080;
 extern const f32 lbl_803E5084;
 extern const f32 lbl_803E5088;
 extern u32 gEcShCupNearestObject;
-extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_802C23B8[];
-
-extern int getAngle(float y, float x);
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern const f32 lbl_803E50A0;
 extern const f32 lbl_803E50A4;
 extern const f32 lbl_803E50A8;
@@ -45,6 +61,15 @@ extern const f32 lbl_803E50BC;
 extern const f32 lbl_803E50C0;
 extern const f32 lbl_803E50C4;
 extern const f32 lbl_803E50C8;
+
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
+extern u32 ObjHits_SyncObjectPositionIfDirty();
+extern u32 ObjHits_EnableObject();
+extern u32 ObjGroup_FindNearestObject();
+extern f32 Vec_distance(f32* a, f32* b);
+extern int getAngle(float y, float x);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 
 void ecsh_cup_hitDetect(void)
 {
@@ -70,31 +95,6 @@ void ecsh_cup_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-
-typedef struct EcshCupState
-{
-    f32 startPosX;
-    f32 startPosY;
-    f32 startPosZ;
-    f32 velX;
-    f32 velY;
-    f32 velZ;
-    f32 spawnPosY;
-    f32 spawnTimer;
-    f32 bobTimer;
-    s32 currentMode;
-    s32 slotId;
-    s16 spinRate;
-    s8 bobDir;
-    u8 pad2F[0x30 - 0x2F];
-} EcshCupState;
-
-typedef struct
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} CupVec3;
 
 void ecsh_cup_update(short* obj)
 {
