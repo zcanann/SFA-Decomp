@@ -142,7 +142,7 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
         case 4:
             ((Dll197State*)st)->menuState = 4;
             ((Dll197State*)st)->unk10 = 2;
-            mainSetBits(0x129, 1);
+            mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
             mainSetBits(0x1cf, 0);
             mainSetBits(0x126, 1);
             ((Dll197State*)st)->scrollVel = -3;
@@ -150,7 +150,7 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
         case 5:
             ((Dll197State*)st)->unk10 = 3;
             ((Dll197State*)st)->scrollVel = -3;
-            mainSetBits(0x129, 1);
+            mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
             break;
         case 6:
             mainSetBits(0x1cf, 1);
@@ -328,7 +328,7 @@ void dll_199_update(int obj)
             if (Vec_distance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < state[0])
             {
                 ((Dll199State*)state)->phase = 1;
-                mainSetBits(0x129, 0);
+                mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 0xffffffff);
                 {
                     int* res = Resource_Acquire(0x83, 1);
@@ -391,7 +391,7 @@ void dll_199_update(int obj)
             }
             ((Dll199State*)state)->phase = 0;
             state[1] = 400;
-            mainSetBits(0x129, 1);
+            mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
             mainSetBits(0x126, 1);
             mainSetBits(0x127, 1);
             mainSetBits(0x5b2, 0);
@@ -418,7 +418,7 @@ void dll_199_update(int obj)
                 (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(
                     3, 0x2c, 0x50, state[4] & 0xff, 0);
                 state[5] = 1;
-                mainSetBits(0x129, 1);
+                mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 ((Dll199State*)state)->phase = 5;
             }
             else
@@ -467,7 +467,7 @@ void dll_199_init(int obj, int def)
     ((Dll199State*)state)->unlockCount = 0;
     ((GameObject*)obj)->animEventCallback = dll_199_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
-    mainSetBits(0x129, 1);
+    mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
     mainSetBits(0x1cf, 0);
     mainSetBits(0x126, 1);
     mainSetBits(0x127, 1);
