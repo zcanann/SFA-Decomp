@@ -219,7 +219,7 @@ void decoration11a_init(int* obj, u8* def)
             int i;
             int* m;
             f32* state;
-            f32 tmp[3];
+            f32 vertexPos[3];
             f32 magB;
             f32 maxMag;
 
@@ -229,8 +229,8 @@ void decoration11a_init(int* obj, u8* def)
             Model_GetVertexPosition(m, 0, state + 3);
             for (i = 1; i < *(u16*)((char*)m + 0xe4); i++)
             {
-                Model_GetVertexPosition(m, i, tmp);
-                decoration11a_expandBoundsWithVertex(tmp, state, state + 3);
+                Model_GetVertexPosition(m, i, vertexPos);
+                decoration11a_expandBoundsWithVertex(vertexPos, state, state + 3);
             }
             PSVECScale(state, state, ((GameObject*)obj)->anim.rootMotionScale);
             PSVECScale(state + 3, state + 3, ((GameObject*)obj)->anim.rootMotionScale);

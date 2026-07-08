@@ -98,7 +98,7 @@ void DR_BarrelGr_render(int obj, int p2, int p3, int p4, int p5)
     int match;
     int i;
     f32 dval;
-    f32 vec[3];
+    f32 pathPoint[3];
     DrBarrelGrRenderParams params;
     extern void objfx_spawnLightPulse(int obj, f32 a, int b, int c, int d, f32 e, void* params);
 
@@ -108,9 +108,9 @@ void DR_BarrelGr_render(int obj, int p2, int p3, int p4, int p5)
     params.c = 0;
     params.b = 0x4000;
     i = 0;
-    vp2 = &vec[2];
-    vp1 = &vec[1];
-    vp = &vec[0];
+    vp2 = &pathPoint[2];
+    vp1 = &pathPoint[1];
+    vp = &pathPoint[0];
     dval = lbl_803E6CA4;
     for (; i < 4; i++)
     {
@@ -151,8 +151,8 @@ void DR_BarrelGr_update(int obj)
     int nearest;
     int match;
     int gameBit;
-    f32 vec[3];
-    f32 tmp[3];
+    f32 traceTarget[3];
+    f32 throwDir[3];
 
     {
         int held = ((DrbarrelgrState*)state)->heldBarrel;
@@ -190,10 +190,10 @@ void DR_BarrelGr_update(int obj)
             if ((u32)nearest != 0 && Vec_xzDistance(obj + 24, nearest + 24) < gDrBarrelGenGrabRange &&
                 ((GameObject*)nearest)->anim.localPosY < ((GameObject*)obj)->anim.localPosY)
             {
-                vec[0] = ((GameObject*)nearest)->anim.localPosX;
-                vec[1] = lbl_803E6CB4 + ((GameObject*)nearest)->anim.localPosY;
-                vec[2] = ((GameObject*)nearest)->anim.localPosZ;
-                if (voxmaps_traceWorldLine((void*)&((GameObject*)obj)->anim.localPosX, vec) != 0 &&
+                traceTarget[0] = ((GameObject*)nearest)->anim.localPosX;
+                traceTarget[1] = lbl_803E6CB4 + ((GameObject*)nearest)->anim.localPosY;
+                traceTarget[2] = ((GameObject*)nearest)->anim.localPosZ;
+                if (voxmaps_traceWorldLine((void*)&((GameObject*)obj)->anim.localPosX, traceTarget) != 0 &&
                     gunpowderbarrel_canBeGrabbed(nearest) != 0)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_jbike_snowspray);
@@ -225,13 +225,13 @@ void DR_BarrelGr_update(int obj)
             break;
         }
         PSVECSubtract((void*)(state + 0x14),
-                      (void*)&((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosX, tmp);
-        if (tmp[0] != lbl_803E6CA4 || tmp[1] != lbl_803E6CA4 || tmp[2] != lbl_803E6CA4)
+                      (void*)&((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosX, throwDir);
+        if (throwDir[0] != lbl_803E6CA4 || throwDir[1] != lbl_803E6CA4 || throwDir[2] != lbl_803E6CA4)
         {
-            PSVECNormalize(tmp, tmp);
+            PSVECNormalize(throwDir, throwDir);
         }
-        PSVECScale(tmp, tmp, lbl_803DC3B0);
-        gunpowderbarrel_addThrowVelocity(((DrbarrelgrState*)state)->heldBarrel, tmp);
+        PSVECScale(throwDir, throwDir, lbl_803DC3B0);
+        gunpowderbarrel_addThrowVelocity(((DrbarrelgrState*)state)->heldBarrel, throwDir);
         if (PSVECDistance((void*)(state + 0x14),
                           (void*)&((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosX) <
                 lbl_803E6CA0 ||
