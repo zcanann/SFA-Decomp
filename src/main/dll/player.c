@@ -15044,7 +15044,6 @@ int playerStateMountBike(int obj, int state, f32 fv)
     return 0;
 }
 
-#pragma opt_lifetimes off
 void fn_802ABFBC(int obj, int state, PlayerState* inner)
 {
     f32 x1, y1, z1;
@@ -15078,8 +15077,8 @@ void fn_802ABFBC(int obj, int state, PlayerState* inner)
                 d = d - 0xffff;
             if (d < -0x8000)
                 d = d + 0xffff;
-            d = (f32)d * lbl_803E7EB4;
-            inner->headYaw += (f32)d * timeDelta;
+            d *= lbl_803E7EB4;
+            inner->headYaw += d * timeDelta;
 
             d = getAngle(-dx, -dz) & 0xffff;
             d -= (u16)inner->targetYaw;
@@ -15097,8 +15096,8 @@ void fn_802ABFBC(int obj, int state, PlayerState* inner)
             if (d < -0x8000)
                 d = d + 0xffff;
 
-            d = (f32)d * lbl_803E7EB4;
-            inner->bodyLeanAngle += (f32)d * timeDelta;
+            d *= lbl_803E7EB4;
+            inner->bodyLeanAngle += d * timeDelta;
             inner->bodyLeanHalf = inner->bodyLeanAngle / 2;
         }
     }
@@ -15107,7 +15106,6 @@ void fn_802ABFBC(int obj, int state, PlayerState* inner)
         inner->headYaw *= powfBitEstimate(lbl_803E7F1C, timeDelta);
     }
 }
-#pragma opt_lifetimes reset
 
 #pragma opt_propagation reset
 int playerState24(int obj, int state, f32 fv)
