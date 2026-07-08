@@ -7240,3 +7240,22 @@ Method: subtract `git log --name-only`-derived set of files touched by any "name
 - dll_01E5_dimbossspit.c: DIMbossspit_updateBurst local iVar->alphaFade (alpha=0xff-alphaFade decay term). .o md5 7caedab23424cb97ea96b8307a0f114d UNCHANGED.
 - Commits 2bbf472943, 6e15831f97, ca3a2e40cd (path-scoped, main). Full all_source EXIT=0 zero FAILED.
 - EXHAUSTED (zero renamable non-extern generics): dll_01E0_dimboss (already fully named: hitReactMode/updateResult/mapDirIndex/etc), dll_01E1_dimbossgut, dll_01E7_dimbossfire, dll_01D1_dimtruthhornice, dll_01E6_dimbosscrackpar. dll_01E2_dimbosstonsil SKIPPED (touched 9min prior by sibling naming agent).
+
+## Jul08 Jack-domain id-constant sweep (GameBit / SFX) — NULL YIELD, vein empty
+Scope: tricky*/scarab/dim*/drakor*/andross*/snowbike/magicplant/boneparticle + DIM/DR/SH/NW/SP/SH subdirs (68 .c files). Target: reuse EXISTING verified GAMEBIT_* (gamebit_ids.h) / SFXTRIG_* (sfx_trigger_ids.h) names for raw id literals passed to GameBit*/GameBits/Sfx_* call sites.
+- RESULT: **zero call sites**. Exhaustive grep `Sfx_|SFXTRIG|GameBit|gGameBit|PlaySfx|GameBits` over all 68 Jack-domain files = 0 matches. These baddie/object units never invoke the gamebit or sfx APIs directly (audio/state driven through the object + ObjMsg system, not inline). Confirmed the APIs+headers DO exist project-wide (modelEngine.c/object.c/proximitymine_update.c use Sfx_PlayFromObject(...,SFXTRIG_*); include/main/gamebit_ids.h + audio/sfx_trigger_ids.h present) — the domain simply has no in-file id literals to name.
+- No edits, no commits. Nothing to md5-check. The "earlier id-pass skipped Jack's domain" gap is empty: skipping it cost nothing because there was nothing there. Reopen only if new Jack-domain units land that call Sfx_*/GameBit* with inline literals.
+- Note: dll_0271_drakorhoverpad.c was dirty (sibling mid-edit) at scan time; irrelevant since no sfx/gamebit tokens anywhere in domain.
+
+## Jul08 tricky/scarab/dim/drakor/andross/snowbike/magicplant/bonepart STRUCT-FIELD + FLAG-BIT naming sweep (semantic-recovery specialist)
+Scope: struct fields (unkNN/field_NN) + manual flag bits in the Jack domain + headers. Coordinated around 3 live local/param sibling agents (avoided dll_01E3_dimbossgut2, tricky_flameguard, dll_01E2_dimbosstonsil = hot at 12:46-12:57; arwingandrossstuff/tree/andross = sibling WIP dirty at commit time).
+- WIN commit bede5e6620: **dll_0256_dimsnowhorn1** DIMSnowHorn1State.baddie.unk31C `& 0x100` at stateHandler07/08/0B -> **PAD_BUTTON_A** (existing file macro, same value). Pinned by writer `unk31C = getButtonsJustPressed(0)` (line 1167). Op-B literal->macro only; NO struct change (unk31C is shared BaddieState, left raw). .o md5 ebc08755ef0c56eef43ae79c683c6e31 UNCHANGED. Full all_source EXIT=0 zero FAILED.
+- STRUCT-FIELD VEIN = EXHAUSTED (sampled every sub-family header+consumer):
+  - dim2prisonmammoth (8 unk): ALL write-only zero-inits (unk25F/28C/290/318/31C/330/354/38C) + flags bits 0x8000/0x400000 set-only never-checked -> RAW.
+  - dimlavasmash (6 unk): unk7/9/A/B never referenced (padding); unk0 write-only (from def.unk1C); DimlavasmashObjectDef.unk1C write-only chain -> RAW.
+  - bossdrakor (3 unk): unk1C/unk0C/unk16C all write-only (=lbl/0/-1) -> RAW.
+  - SnowBikeState (BWalphaanim.h, 4 consumers): residual unkNN (unk420/422/410/430/3D6/3D9/etc) are accessor-returned or raw-magic-compared with NO derivable role; struct already extensively named where roles clear -> remainder RAW (deliberate).
+  - AndrossState.unk44: read-only `!= 0x10` x5, no writer in family -> role unpinned, RAW.
+  - dim2roofrub unk6A<-Placement.unk1A: write-only + per-file def (byte-risk) -> RAW.
+- FLAG-BIT VEIN: only two set&check candidates tree-wide. snowhorn A-button = WON (above). TrickyState.stateFlags (0x10/0x10000/0x20000) = LEAVE RAW: densely-packed, per-family-OVERLOADED bit space (0x800 = CHILDREN_ACTIVE in tricky_state.h BUT FLAME_CHILDREN_ACTIVE 0x800 in dll_00C4_tricky.c), set at ~15 scattered sites, TrickyState spans ~10 TUs (huge shared byte-risk + sibling-owned consumers) -> ktrex-phaseFlags-class ambiguous, unnameable.
+- VERDICT: domain struct/flag semantic vein now closed (1 op-B win). Matches Jul05 catch-all (zero raw casts vs mapped structs) + coloring-cap posture. Reopen only on new team commits adding fresh readable fields.
