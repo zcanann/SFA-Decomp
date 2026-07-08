@@ -22,6 +22,7 @@
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
 #include "main/dll/WM/dll_0211_wmwallcrawler.h"
+#include "main/audio/sfx_ids.h"
 
 #define WMWALLCRAWLER_OBJGROUP 3
 #define WMWALLCRAWLER_PARTFX 0x1a3
@@ -307,7 +308,7 @@ void wmwallcrawler_update(int obj)
             if (((GameObject*)ob)->anim.currentMove != 1)
             {
                 ObjAnim_SetCurrentMove(ob, 1, lbl_803E5FB0, 0);
-                Sfx_PlayFromObject(ob, 0x73);
+                Sfx_PlayFromObject(ob, SFXmn_heart1_c);
             }
             if (((GameObject*)ob)->anim.currentMoveProgress > lbl_803E5FC4)
             {
@@ -408,7 +409,7 @@ void wmwallcrawler_update(int obj)
                             ((WmwallcrawlerState*)st)->lifeTimer -= framesThisStep;
                             if (randFn_80080100(0x32) != 0)
                             {
-                                Sfx_PlayFromObject(ob, 0x74);
+                                Sfx_PlayFromObject(ob, SFXmn_impyflap16);
                             }
                             if (((WmwallcrawlerState*)st)->lifeTimer <= 0)
                             {
@@ -445,7 +446,7 @@ void wmwallcrawler_update(int obj)
                         (**(u8 (**)(int))(*(int*)(*(int*)(tricky + 0x68)) + 0x44))(tricky) != 0)
                     {
                         ((WmwallcrawlerState*)st)->mode = WMWALLCRAWLER_MODE_FLEE;
-                        Sfx_PlayFromObject(ob, 0x74);
+                        Sfx_PlayFromObject(ob, SFXmn_impyflap16);
                     }
                     if (((WmwallcrawlerState*)st)->mode == WMWALLCRAWLER_MODE_FLEE)
                     {
@@ -552,7 +553,7 @@ void wmwallcrawler_update(int obj)
                             }
                             else if (mode == WMWALLCRAWLER_MODE_CHASE)
                             {
-                                Sfx_PlayFromObject(ob, 0x47);
+                                Sfx_PlayFromObject(ob, SFXen_neonbuzzlp16);
                                 if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0)
                                 {
                                     (*gPathControlInterface)->update((void*)ob, st, timeDelta);
@@ -635,7 +636,7 @@ void wmwallcrawler_update(int obj)
                                     else if (gWallCrawlerHitCount >= 3 || ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) != 0 &&
                                         gWallCrawlerHitCount >= 3))
                                     {
-                                        Sfx_PlayFromObject(ob, 0x75);
+                                        Sfx_PlayFromObject(ob, SFXmn_lummy111);
                                         if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0)
                                         {
                                             ObjMsg_SendToObject(player, WMWALLCRAWLER_MSG_PLAYER_BURST, ob, 1);
@@ -713,7 +714,7 @@ void wmwallcrawler_update(int obj)
                         }
                         if (randFn_80080100(0x32) != 0)
                         {
-                            Sfx_PlayFromObject(ob, 0x76);
+                            Sfx_PlayFromObject(ob, SFXmn_lummy211);
                         }
                     }
                 }
