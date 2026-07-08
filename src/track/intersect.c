@@ -62,7 +62,7 @@ extern GXColor lbl_803DB6EC;
 extern GXColor lbl_803DB6F0;
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
-extern u8 hudOpacity;
+extern u8 gHudTintAlpha;
 extern volatile s32 lbl_803DB700;
 extern u32 screenWidth;
 extern u8 gGxZCompLocValid;
@@ -530,7 +530,6 @@ void mapInitFn_8006fccc(void)
 {
     extern u8 gWaterFxState[];
     extern f32 lbl_803DFADC, lbl_803DFAE0, lbl_803DFAE4;
-    extern u32 fn_80054ED0(int);
     extern u32 lbl_803DCFF4;
     extern u8 gWaterRippleWriteIdx, gWaterQuadWriteIdx, gWaterFxDisabled;
     int i;
@@ -558,10 +557,10 @@ void mapInitFn_8006fccc(void)
         a += 0x380;
         b += 0x100;
     }
-    *(u32*)(base + 0x10) = fn_80054ED0(0x19);
-    *(u32*)(base + 0x14) = fn_80054ED0(0x18);
-    *(u32*)(base + 0x18) = fn_80054ED0(0x1A);
-    *(u32*)(base + 0x1C) = fn_80054ED0(0x646);
+    *(u32*)(base + 0x10) = (u32)textureLoadAsset(0x19);
+    *(u32*)(base + 0x14) = (u32)textureLoadAsset(0x18);
+    *(u32*)(base + 0x18) = (u32)textureLoadAsset(0x1A);
+    *(u32*)(base + 0x1C) = (u32)textureLoadAsset(0x646);
     *(f32*)(base + 0x00) = lbl_803DFADC;
     *(f32*)(base + 0x04) = lbl_803DFAE0;
     *(f32*)(base + 0x08) = lbl_803DFAE0;
@@ -746,7 +745,7 @@ void resetSomeGxFlags(void)
 
 void setHudOpacity(u8 opacity)
 {
-    hudOpacity = opacity;
+    gHudTintAlpha = opacity;
 }
 
 void _gxSetFogParams(void)
@@ -2046,14 +2045,14 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
 
 void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
 {
-    extern void fn_8004C460(void*, int);
+    extern void selectTexture(void* tex, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    fn_8004C460(texture, 0);
+    selectTexture(texture, 0);
     GXSetTevKColor(0, *(GXColor*)colorA);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
@@ -3484,7 +3483,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
 
 void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 {
-    extern void fn_8004C460(int, int);
+    extern void selectTexture(int tex, int slot);
     extern GXColor lbl_803DC308;
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -3497,7 +3496,7 @@ void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     PSMTXConcat((float(*)[4])obj, mtx, tmp);
     GXLoadTexMtxImm(tmp, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    fn_8004C460(*(int*)(obj + 0x18), 0);
+    selectTexture(*(int*)(obj + 0x18), 0);
     GXSetTevKColor(0, *(GXColor*)colorPtr);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
@@ -3534,7 +3533,7 @@ void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 
 void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 {
-    extern void fn_8004C460(int, int);
+    extern void selectTexture(int tex, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
@@ -3545,7 +3544,7 @@ void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     PSMTXConcat((float(*)[4])obj, mtx, tmp);
     GXLoadTexMtxImm(tmp, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    fn_8004C460(*(int*)(obj + 0x18), 0);
+    selectTexture(*(int*)(obj + 0x18), 0);
     GXSetTevKColor(0, *(GXColor*)colorPtr);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
