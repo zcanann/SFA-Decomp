@@ -14,8 +14,8 @@ typedef struct Torch1CDState {
     s16 flameFrame;
     s16 flameFrameVel;
     u8 unkC[0x13 - 0xC];
-    u8 unk13;
-    u8 unk14;
+    u8 phase;
+    u8 pendingEvent;
     u8 unk15[0x1C - 0x15];
 } Torch1CDState;
 

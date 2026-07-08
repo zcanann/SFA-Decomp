@@ -18,7 +18,7 @@ typedef struct BackpackState {
     f32 growRate; /* scale/frame while growing; reused as a seconds countdown in later phases */
     u8 unk274[0x278 - 0x274];
     u8 phase;
-    u8 unk279;
+    u8 variant;
     u8 flags;
     u8 unk27B[0x27C - 0x27B];
     s16 recoilVelX;
@@ -46,7 +46,7 @@ STATIC_ASSERT(offsetof(BackpackState, triggerRange) == 0x26A);
 STATIC_ASSERT(offsetof(BackpackState, targetScale) == 0x26C);
 STATIC_ASSERT(offsetof(BackpackState, growRate) == 0x270);
 STATIC_ASSERT(offsetof(BackpackState, phase) == 0x278);
-STATIC_ASSERT(offsetof(BackpackState, unk279) == 0x279);
+STATIC_ASSERT(offsetof(BackpackState, variant) == 0x279);
 STATIC_ASSERT(offsetof(BackpackState, flags) == 0x27A);
 STATIC_ASSERT(offsetof(BackpackState, recoilVelX) == 0x27C);
 STATIC_ASSERT(offsetof(BackpackState, targetObj) == 0x284);

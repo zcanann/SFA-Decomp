@@ -143,7 +143,7 @@ void LevelName_init(int obj, int objDef)
     ((TFrameAnimatorState*)state)->unk4 = **(int**)(text + 2);
     ((TFrameAnimatorState*)state)->duration = 0x64;
     ((TFrameAnimatorState*)state)->textRecord = (int)text;
-    ((TFrameAnimatorState*)state)->unkC = *(u8*)(objDef + 0x20);
+    ((TFrameAnimatorState*)state)->triggerRadius = *(u8*)(objDef + 0x20);
     ((TFrameAnimatorState*)state)->enableGameBit = *(s16*)(objDef + 0x18);
     ((TFrameAnimatorState*)state)->phase = LEVELNAME_PHASE_WAIT;
     ((TFrameAnimatorState*)state)->bannerY = 0;

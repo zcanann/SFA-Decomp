@@ -13,7 +13,7 @@ typedef struct TrickyCurveObjState {
     s16 rangeX; /* accessed via raw *(s16*)state; X-axis half-extent (parallel to rangeY/rangeZ) */
     s16 rangeZ;
     s16 rangeY;
-    s16 unk6;
+    s16 cooldown;
     s16 gateGameBit;
     s16 triggerGameBit;
     u8 unkC[0x10 - 0xC];

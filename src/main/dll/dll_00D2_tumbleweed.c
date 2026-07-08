@@ -509,7 +509,7 @@ void tumbleweed_init(int obj, int defData)
     ((BackpackState*)aux)->anchorPosX = ((GameObject*)obj)->anim.localPosX;
     ((BackpackState*)aux)->anchorPosZ = ((GameObject*)obj)->anim.localPosZ;
     ((BackpackState*)aux)->triggerRange = (short)(lbl_803E2FCC * *(f32*)(defData + 0x1c));
-    ((BackpackState*)aux)->unk279 = *(u8*)(defData + 0x1b);
+    ((BackpackState*)aux)->variant = *(u8*)(defData + 0x1b);
     ((BackpackState*)aux)->targetScale = ((GameObject*)obj)->anim.rootMotionScale;
     ((BackpackState*)aux)->growRate = ((BackpackState*)aux)->targetScale / (f32)(s32)
     randomGetRange(0xc8, 0x1f4);

@@ -55,7 +55,7 @@ typedef struct GameObject {
     s16 colorFadeFrames; /* obj+0xE6 frames left; -= framesThisStep, <=0 with
         no ownerObj -> Obj_ClearModelColorFadeRecursive */
     u8 hintTextIdx; /* obj+0xE8 written by objSetHintTextIdx (clamped <=4) */
-    s8 unkE9;
+    s8 contactRefCount;
     u8 unkEA;
     u8 childCount;
     u8 unkEC[3];

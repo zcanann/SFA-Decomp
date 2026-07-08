@@ -1512,7 +1512,7 @@ void objFreeObjDef(u8* obj, int flag)
     int group;
     int type;
 
-    if (*(u8*)&((GameObject*)obj)->unkE9 != 0)
+    if (*(u8*)&((GameObject*)obj)->contactRefCount != 0)
     {
         ObjContact_RemoveObjectCallbacks((int)obj);
     }

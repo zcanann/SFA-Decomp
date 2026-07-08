@@ -28,7 +28,7 @@ typedef struct ViewfinderFlags {
  */
 typedef struct ViewfinderState {
     u8 unk0[0x4 - 0x0];
-    f32 unk4;
+    f32 yOffset;
     u8 unk8[0x10 - 0x8];
     ViewfinderHermiteChannel posXCurve;
     ViewfinderHermiteChannel posYCurve;
@@ -37,7 +37,7 @@ typedef struct ViewfinderState {
     ViewfinderHermiteChannel pitchCurve;
     u8 unk60[0x78 - 0x60];
     Curve viewCurve;
-    f32 unk114;
+    f32 height;
     f32 exitDistance;
     f32 yawSpeed;
     f32 camPosX;

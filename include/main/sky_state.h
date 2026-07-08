@@ -86,7 +86,7 @@ typedef struct Sky2Config {
     u8 color3B;
     u8 color3A;
     u8 unk20[4];
-    u16 unk24;
+    u16 envfxActId; /* 0x24: 1-based env effect action id; (id-1) passed to getEnvfxAct, 0 => disabled */
     u8 unk26[4];
     u16 fadeDurationA; /* 0x2A: clamped to >=1; state+0x3c=this, rate at +0x5c = k/this (per-frame fade increment) */
     u16 fadeDurationB; /* 0x2C: clamped to >=1; state+0x40=this, rate at +0x58/+0x60 = k/this */

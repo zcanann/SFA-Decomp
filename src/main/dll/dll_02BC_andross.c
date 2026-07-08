@@ -1480,7 +1480,7 @@ void andross_update(int obj)
         for (; ref < (int)(u32) * (u8*)(work + 0xf8); ref = ref + 1)
         {
             found = ObjModel_GetRenderOp(work, ref);
-            ((AndrossState*)found)->unk43 = fval;
+            ((AndrossState*)found)->alpha = fval;
         }
         if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
         {
@@ -1787,7 +1787,7 @@ void andross_update(int obj)
         for (; ref < (int)(u32) * (u8*)(work + 0xf8); ref = ref + 1)
         {
             found = ObjModel_GetRenderOp(work, ref);
-            ((AndrossState*)found)->unk43 = fval;
+            ((AndrossState*)found)->alpha = fval;
         }
         break;
     case 0x1d:
@@ -1851,7 +1851,7 @@ void andross_update(int obj)
             found = *(int*)(((AndrossState*)state)->handObjB + 0xb8);
             bval = *(char*)(*(int*)(((AndrossState*)state)->handObjA + 0xb8) + 0x23);
             if ((((bval != 2) && (bval != 1)) &&
-                    (bval = *(char*)&((AndrossState*)found)->unk23, bval != 2)) &&
+                    (bval = *(char*)&((AndrossState*)found)->handState, bval != 2)) &&
                 (bval != 1))
             {
                 ((AndrossState*)state)->actionPending = 1;
@@ -1901,9 +1901,9 @@ void andross_update(int obj)
             Sfx_PlayFromObject(obj, SFXTRIG_and_laugh);
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f80 = 1;
         }
-        bval = *(char*)&((AndrossState*)ref)->unk23;
+        bval = *(char*)&((AndrossState*)ref)->handState;
         if ((((bval != 2) && (bval != 1)) &&
-            (bval = *(char*)&((AndrossState*)found)->unk23, bval != 2)) && (bval != 1))
+            (bval = *(char*)&((AndrossState*)found)->handState, bval != 2)) && (bval != 1))
         {
             if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
             {

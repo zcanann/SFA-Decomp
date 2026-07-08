@@ -10,7 +10,7 @@
  * unobserved ranges are padded.
  */
 typedef struct AndrossState {
-    int unk0;
+    int arwingObj;
     int handObjA; /* ObjList_FindObjectById(0x47b78); driven via androsshand_setState */
     int handObjB; /* ObjList_FindObjectById(0x47b6a); driven via androsshand_setState */
     int lightAnchorObj;
@@ -34,9 +34,9 @@ typedef struct AndrossState {
             u8 unk18[0x20 - 0x18];
             s16 unk20;
             u8 unk22[0x23 - 0x22];
-            u8 unk23;
+            u8 handState;
             u8 unk24[0x43 - 0x24];
-            s8 unk43;
+            s8 alpha;
             s16 unk44;
             u8 unk46[0x4C - 0x46];
             int targetPosPtr;

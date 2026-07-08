@@ -1946,8 +1946,8 @@ void sky2_update(int a, int b, u8* cfg)
     env = saveGameGetEnvState();
     if (cfg != NULL)
     {
-        (&lbl_803DB610)[1] = lbl_803DB610 = (s16)((Sky2Config*)cfg)->unk24 - 1;
-        *(s16*)(env + 0xc) = (s16)((Sky2Config*)cfg)->unk24 - 1;
+        (&lbl_803DB610)[1] = lbl_803DB610 = (s16)((Sky2Config*)cfg)->envfxActId - 1;
+        *(s16*)(env + 0xc) = (s16)((Sky2Config*)cfg)->envfxActId - 1;
         flags58 = ((Sky2Config*)cfg)->flags;
         b1 = (flags58 & 0x80) ? 1 : 0;
         if (*(s8*)((&gSky2State)[b1] + 0x317) == 0)
@@ -3165,7 +3165,7 @@ void Sky_func03(int a, int b, u8* cfg)
         {
             if ((mask & (1 << i)) != 0)
             {
-                envp[2] = (s16)((Sky2Config*)cfg)->unk24 - 1;
+                envp[2] = (s16)((Sky2Config*)cfg)->envfxActId - 1;
                 *(f32*)(gSkyState + iofs + 0x20) = (f32)(u32)((Sky2Config*)cfg)->lightColorR;
                 *(f32*)(gSkyState + iofs + 0x24) = (f32)(u32)((Sky2Config*)cfg)->lightColorR;
                 *(f32*)(gSkyState + iofs + 0x28) = (f32)(u32)((Sky2Config*)cfg)->lightColorG;

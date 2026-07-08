@@ -18,7 +18,7 @@ typedef struct SfxplayerState {
     s16 unused0;
   };
   union {
-    s16 unk2;
+    s16 config20;
     s16 activationEventId;
     s16 effectSfxBaseId;
   };

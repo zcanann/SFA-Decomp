@@ -13,7 +13,7 @@ typedef struct TFrameAnimatorState {
     int textRecord;
     int unk4;
     int duration;
-    u8 unkC;
+    u8 triggerRadius;
     u8 unkD[0xE - 0xD];
     s16 enableGameBit;
     s16 elapsedFrames;

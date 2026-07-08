@@ -878,21 +878,21 @@ void AppleOnTree_init(int obj, int def)
         ((CrackAnimState*)state)->stageEnd2 = progress + ((CrackAnimState*)state)->stageEnd1;
         progress = (f32)((AppleontreeObjectDef*)def)->stage3Frac / lbl_803E3828;
         ((CrackAnimState*)state)->stageEnd3 = progress + ((CrackAnimState*)state)->stageEnd2;
-        ((CrackAnimState*)state)->unk20 = (f32)((AppleontreeObjectDef*)def)->unk24 / lbl_803E3828;
-        ((CrackAnimState*)state)->unk28 = (f32)((AppleontreeObjectDef*)def)->unk25 / lbl_803E3828;
-        ((CrackAnimState*)state)->unk28 = ((CrackAnimState*)state)->unk28 * lbl_803E37DC;
-        ((CrackAnimState*)state)->unk24 = lbl_803E37C8;
-        ((CrackAnimState*)state)->unk38 = 0;
+        ((CrackAnimState*)state)->fadeThreshold = (f32)((AppleontreeObjectDef*)def)->unk24 / lbl_803E3828;
+        ((CrackAnimState*)state)->velY = (f32)((AppleontreeObjectDef*)def)->unk25 / lbl_803E3828;
+        ((CrackAnimState*)state)->velY = ((CrackAnimState*)state)->velY * lbl_803E37DC;
+        ((CrackAnimState*)state)->fallScale = lbl_803E37C8;
+        ((CrackAnimState*)state)->healthRestore = 0;
         zeroScale = lbl_803E37D4;
-        ((CrackAnimState*)state)->unk3C = zeroScale;
-        ((CrackAnimState*)state)->unk40 = lbl_803E382C;
-        ((CrackAnimState*)state)->unk44 = zeroScale;
+        ((CrackAnimState*)state)->extraAccel = zeroScale;
+        ((CrackAnimState*)state)->gravity = lbl_803E382C;
+        ((CrackAnimState*)state)->bounceVel = zeroScale;
 
         timeScale = ((CrackAnimState*)state)->duration * ((CrackAnimState*)state)->stageEnd2;
         timeScale *= timeScale;
         timeScale *= timeScale;
         zeroScale = timeScale * timeScale;
-        ((CrackAnimState*)state)->unk54 = zeroScale * lbl_803E3830;
+        ((CrackAnimState*)state)->fallBlendDivisor = zeroScale * lbl_803E3830;
 
         ((GameObject*)obj)->anim.rotX = randomGetRange(-0x8000, 0x7fff);
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3834;
@@ -926,7 +926,7 @@ void AppleOnTree_init(int obj, int def)
                 int reread = *(int*)&((GameObject*)obj)->extra;
                 texture = objFindTexture((void*)obj, 0, 0);
                 texture->textureId = 0;
-                ((CrackAnimState*)reread)->unk24 = lbl_803E37C8;
+                ((CrackAnimState*)reread)->fallScale = lbl_803E37C8;
                 ((GameObject*)obj)->anim.rootMotionScale =
                     ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
                 Obj_SetActiveModelIndex(obj, 1);

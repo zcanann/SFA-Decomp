@@ -415,7 +415,7 @@ void sfxplayer_init(int obj, int config)
         (void (*)(void))TrickyCurve_activateEffectHandleRing;
     state->config19 = *(u8*)(config + SFXPLAYER_CONFIG_MODE_OFFSET);
     state->eventId = *(s16*)(config + SFXPLAYER_CONFIG_EVENT_ID_OFFSET);
-    state->unk2 = *(s16*)(config + SFXPLAYER_CONFIG_FIELD20_OFFSET);
+    state->config20 = *(s16*)(config + SFXPLAYER_CONFIG_FIELD20_OFFSET);
     state->unk4 = 1;
     gSfxplayerEffectHandles[0] = 0;
     gSfxplayerEffectHandles[1] = 0;

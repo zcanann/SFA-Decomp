@@ -233,7 +233,7 @@ void TrickyCurve_init(int* obj, u8* def)
     state[0x12] = 0;
     ((TrickyCurveObjState*)state)->gateGameBit = ((TrickyCurveObjectDef*)def)->gateGameBit;
     ((TrickyCurveObjState*)state)->triggerGameBit = ((TrickyCurveObjectDef*)def)->triggerGameBit;
-    ((TrickyCurveObjState*)state)->unk6 = 0;
+    ((TrickyCurveObjState*)state)->cooldown = 0;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED);
 }
 

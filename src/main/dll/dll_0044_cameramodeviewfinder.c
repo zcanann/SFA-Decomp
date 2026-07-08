@@ -512,8 +512,8 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     }
     memset(lbl_803DD548, 0, sizeof(ViewfinderState));
     *(f32*)lbl_803DD548 = *(f32*)args;
-    lbl_803DD548->unk114 = (f32)(u32) * (u16*)((int)args + 8);
-    lbl_803DD548->unk4 = *(f32*)(args + 1);
+    lbl_803DD548->height = (f32)(u32) * (u16*)((int)args + 8);
+    lbl_803DD548->yOffset = *(f32*)(args + 1);
     lbl_803DD548->yawSpeed = lbl_803E17C4;
     diff = 0x8000 - obj[0] - camObj[0];
     if (diff < 0)

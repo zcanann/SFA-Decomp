@@ -340,9 +340,9 @@ extern void shaderInit(u8* def, void* out, int arg, int n);
 void ObjModel_RelocateModelData(u8* m)
 {
     int i;
-    if (*(u32*)&((ModelFileHeader*)m)->unk58)
+    if (*(u32*)&((ModelFileHeader*)m)->hitVolumes)
     {
-        ((ModelFileHeader*)m)->unk58 = m + *(u32*)&((ModelFileHeader*)m)->unk58;
+        ((ModelFileHeader*)m)->hitVolumes = m + *(u32*)&((ModelFileHeader*)m)->hitVolumes;
     }
     if (*(u32*)&((ModelFileHeader*)m)->jointData)
     {

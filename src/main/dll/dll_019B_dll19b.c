@@ -98,19 +98,19 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 break;
             case 3:
-                ((Torch1CDState*)state)->unk14 = 1;
+                ((Torch1CDState*)state)->pendingEvent = 1;
                 break;
             case 4:
-                ((Torch1CDState*)state)->unk13 = 4;
-                ((Torch1CDState*)state)->unk14 = 2;
+                ((Torch1CDState*)state)->phase = 4;
+                ((Torch1CDState*)state)->pendingEvent = 2;
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 mainSetBits(0x1d2, 0);
                 mainSetBits(0x126, 1);
                 ((Torch1CDState*)state)->flameFrameVel = -3;
                 break;
             case 5:
-                ((Torch1CDState*)state)->unk13 = 6;
-                ((Torch1CDState*)state)->unk14 = 3;
+                ((Torch1CDState*)state)->phase = 6;
+                ((Torch1CDState*)state)->pendingEvent = 3;
                 ((Torch1CDState*)state)->flameFrameVel = -3;
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 break;

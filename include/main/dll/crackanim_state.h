@@ -19,18 +19,18 @@ typedef struct CrackAnimState {
     f32 stageEnd1;
     f32 stageEnd2;
     f32 stageEnd3;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
+    f32 fadeThreshold;
+    f32 fallScale;
+    f32 velY;
     u8 unk2C[0x38 - 0x2C];
-    u16 unk38;
+    u16 healthRestore;
     u8 stage;
     u8 unk3B[0x3C - 0x3B];
-    f32 unk3C;
-    f32 unk40;
-    f32 unk44;
+    f32 extraAccel;
+    f32 gravity;
+    f32 bounceVel;
     u8 unk48[0x54 - 0x48];
-    f32 unk54;
+    f32 fallBlendDivisor;
     u8 unk58[0x5C - 0x58];
 } CrackAnimState;
 
