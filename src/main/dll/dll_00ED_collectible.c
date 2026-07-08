@@ -879,10 +879,10 @@ void collectible_checkProximityPickup(int obj, u8* state)
         switch (((GameObject*)obj)->anim.seqId)
         {
         case COLLECTIBLE_ITEM_ENERGY_EGG:
-            if (mainGetBit(0x90e) == 0)
+            if (mainGetBit(GAMEBIT_SawBigHealth) == 0)
             {
                 ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
-                mainSetBits(0x90e, 1);
+                mainSetBits(GAMEBIT_SawBigHealth, 1);
             }
             else
             {
@@ -897,10 +897,10 @@ void collectible_checkProximityPickup(int obj, u8* state)
         case 0x49:
         case 0x2da:
         case COLLECTIBLE_ITEM_APPLE:
-            if (mainGetBit(0x90f) == 0)
+            if (mainGetBit(GAMEBIT_SawApple) == 0)
             {
                 ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
-                mainSetBits(0x90f, 1);
+                mainSetBits(GAMEBIT_SawApple, 1);
             }
             else
             {
@@ -909,10 +909,10 @@ void collectible_checkProximityPickup(int obj, u8* state)
             state[0x37] |= 1;
             break;
         case 0x6a6:
-            if (mainGetBit(0x9a8) == 0)
+            if (mainGetBit(GAMEBIT_CollectedFlag09A8) == 0)
             {
                 ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
-                mainSetBits(0x9a8, 1);
+                mainSetBits(GAMEBIT_CollectedFlag09A8, 1);
             }
             else
             {
@@ -923,7 +923,7 @@ void collectible_checkProximityPickup(int obj, u8* state)
         default:
             if (ObjTrigger_IsSet(obj) != 0)
             {
-                mainSetBits(0xa7b, 1);
+                mainSetBits(GAMEBIT_EnableCMenu, 1);
                 ((CollectibleState*)state)->pickupMsgValue = attach[0xf];
                 ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
                 state[0x37] |= 1;
