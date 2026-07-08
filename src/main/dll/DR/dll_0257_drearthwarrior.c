@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -1281,7 +1282,7 @@ void DR_EarthWarrior_update(int obj)
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
             buttonDisable(0, PAD_BUTTON_A);
             inner->sub.health += 4;
-            mainSetBits(0xc1, mainGetBit(0xc1) - 1);
+            mainSetBits(GAMEBIT_ITEM_TrickyFood_Count, mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) - 1);
         }
         else if (inner->sub.interactSequenceId != -1)
         {
