@@ -26,6 +26,7 @@ extern u8 gPartfxCachedResourceCount;
 extern s16 gPartfxResourceTimeouts[];
 extern f32 timeDelta;
 extern u8 framesThisStep;
+extern u8 lbl_80380209[];
 
 #pragma scheduling off
 #pragma peephole off
@@ -3987,7 +3988,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             randomGetRange(0x15, 0x29);
             cfg.lifetimeFrames = 0x1cc;
         }
-        cfg.behaviorFlags = 0x80380209;
+        cfg.behaviorFlags = (u32)lbl_80380209;
         cfg.renderFlags = 0x5000820;
         cfg.textureId = 0xc0b;
         cfg.initialAlpha = 0x7f;
