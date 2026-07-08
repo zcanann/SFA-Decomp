@@ -176,10 +176,10 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
 }
 
 #pragma dont_inline off
-void kaldachom_handleAnimEvents(int obj, int p2, int p3)
+void kaldachom_handleAnimEvents(int obj, int state, int eventStateArg)
 {
-    KaldaChomControl* control = ((CampfireState*)p2)->control;
-    GroundBaddieState* eventState = (GroundBaddieState*)p3;
+    KaldaChomControl* control = ((CampfireState*)state)->control;
+    GroundBaddieState* eventState = (GroundBaddieState*)eventStateArg;
     int spawnCount;
 
     gKaldachomMouthSpawnScratch =
@@ -203,12 +203,12 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     if (((s32)eventState->baddie.eventFlags & 0x40) != 0)
     {
         eventState->baddie.eventFlags &= ~0x40;
-        kaldaChomFn_80168374(obj, p2, 0);
+        kaldaChomFn_80168374(obj, state, 0);
     }
     if (((s32)eventState->baddie.eventFlags & 0x800) != 0)
     {
         eventState->baddie.eventFlags &= ~0x800;
-        kaldaChomFn_80168374(obj, p2, 1);
+        kaldaChomFn_80168374(obj, state, 1);
     }
     if (((s32)eventState->baddie.eventFlags & BADDIE_EVENT_LANDING) != 0)
     {
