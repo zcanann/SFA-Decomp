@@ -155,10 +155,10 @@ void dll_54_update(u8* obj)
     }
 }
 
-void dll_54_init(int* p1, int unused, int* p3)
+void dll_54_init(int* cameraObj, int unused, int* sourceObj)
 {
-    CameraObject* camera = (CameraObject*)p1;
-    CameraObject* source = (CameraObject*)p3;
+    CameraObject* camera = (CameraObject*)cameraObj;
+    CameraObject* source = (CameraObject*)sourceObj;
 
     if (gCameraModeNpcSpeakState == NULL)
     {
@@ -167,7 +167,7 @@ void dll_54_init(int* p1, int unused, int* p3)
     memset(gCameraModeNpcSpeakState, 0, sizeof(CameraMode54State));
     gCameraModeNpcSpeakState->transitionTimer = 60.0f;
     gCameraModeNpcSpeakState->transitionDone = 0;
-    if (p3 != NULL)
+    if (sourceObj != NULL)
     {
         camera->anim.localPosX = source->anim.worldPosX;
         camera->anim.localPosY = source->anim.worldPosY;
