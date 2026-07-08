@@ -7259,3 +7259,14 @@ Scope: struct fields (unkNN/field_NN) + manual flag bits in the Jack domain + he
   - dim2roofrub unk6A<-Placement.unk1A: write-only + per-file def (byte-risk) -> RAW.
 - FLAG-BIT VEIN: only two set&check candidates tree-wide. snowhorn A-button = WON (above). TrickyState.stateFlags (0x10/0x10000/0x20000) = LEAVE RAW: densely-packed, per-family-OVERLOADED bit space (0x800 = CHILDREN_ACTIVE in tricky_state.h BUT FLAME_CHILDREN_ACTIVE 0x800 in dll_00C4_tricky.c), set at ~15 scattered sites, TrickyState spans ~10 TUs (huge shared byte-risk + sibling-owned consumers) -> ktrex-phaseFlags-class ambiguous, unnameable.
 - VERDICT: domain struct/flag semantic vein now closed (1 op-B win). Matches Jul05 catch-all (zero raw casts vs mapped structs) + coloring-cap posture. Reopen only on new team commits adding fresh readable fields.
+
+## SEMANTIC-NAMING PASS Jul08 (scarab/drakor/andross/snowbike domain, generic-local rename, all byte-identical)
+Skipped-vein sweep (Jack idle, git-log-guarded, one-owner-per-.c). Renamed GENERIC locals/params only (no struct fields/globals), md5-verified identical, full `all_source` EXIT=0 zero FAILED.
+- **dll_0106_scarab** (Scarab_update, fn_801845FC): ph->phaseState, diff->yawDelta, sumsq->speed, fang->angleF, dy->deltaY, st->rotParams, sub->velCache. md5 4c5ddef0... unchanged. commit cea2e4de59.
+- **dll_0241_drakorenergy** (update/init/render): blob/sub/inner->state, data->placement, trio->colorRGB, v1->interceptPt, v2->seekDir, v->zeroF, t->mode. md5 e9289c64... unchanged. commit cea2e4de59.
+- **dll_0262_drakormissile** (all fns): s->state (61x), arg->setup. md5 69124157... unchanged. commit 48927e18ed.
+- **dll_02BD_androsshand** (update/handlers): va->swipeVel, vb->grabVel, h->gobj, w->vel (include lines protected). md5 389bd7dd... unchanged. commit 48927e18ed.
+- **dll_0271_drakorhoverpad** (update/handlePathPointEvent/modelMtxFn/func12): arg->maxIndex, a->eventCode, b->subCode, modelMtxFn a/b/c->ox/oy/oz, func12 a/b->outFloat/outFlag. md5 4234fba1... unchanged. commit f2e7ce96eb.
+- **dll_029B_arwingandrossstuff** (fn_8022ECE0/fn_8022ED74): param->lifetime, v->scalar. md5 1a977b28... unchanged. commit 012fc1b204.
+- **dll_02BC_andross** (fn_8023A87C/fn_8023A6A4): v->cooldown, val->mag. md5 64671cf0... unchanged. commit 012fc1b204.
+- **NO-CHANGE (already thoroughly named, verified)**: dll_0255_snowbike (only dead unused `t` in update; params obj/state/type/params/flag/outFloat), dll_00FE_magicplant (setupParam/stateParam/objectId/freeChildren), dll_0018_boneparticleeffect (effectId/renderParam/prob/src), dll_02BE_androssbrain (clean). androssligh SKIPPED (named earlier this cycle 10:48 by 1b8445e187). render p2-p5 left RAW per convention; idiomatic i/j/k/x/y/z left as-is.
