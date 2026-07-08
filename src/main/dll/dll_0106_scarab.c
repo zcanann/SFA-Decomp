@@ -489,13 +489,13 @@ void Scarab_update(int obj)
                 dy = (dy >= lbl_803E39F8) ? dy : -dy;
                 if (dy < lbl_803E3A3C)
                 {
-                    if (mainGetBit(0x910) == 0)
+                    if (mainGetBit(GAMEBIT_SawScarab) == 0)
                     {
                         ((ScarabState*)state)->msgParamA = -1;
                         ((ScarabState*)state)->msgParamB = 0;
                         ((ScarabState*)state)->msgParamC = lbl_803E3A00;
                         ObjMsg_SendToObject(player, SCARAB_MSG_IN_RANGE, obj, state + 0x2c);
-                        mainSetBits(0x910, 1);
+                        mainSetBits(GAMEBIT_SawScarab, 1);
                         ((ScarabState*)state)->flags28 |= 1;
                     }
                     else
