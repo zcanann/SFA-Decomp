@@ -80,7 +80,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             switch (id)
             {
             case 0x49c33:
-                mainSetBits(0x884, 1);
+                mainSetBits(GAMEBIT_SH_WarpStoneRelated0884, 1);
                 (*gMapEventInterface)->setObjGroupStatus(7, 0, 1);
                 (*gMapEventInterface)->setObjGroupStatus(7, 2, 1);
                 (*gMapEventInterface)->setObjGroupStatus(7, 3, 1);
@@ -116,13 +116,13 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 break;
             case 0x48018:
                 unlockLevel(mapGetDirIdx(0x22), 1, 0);
-                mainSetBits(0x36a, 0);
+                mainSetBits(GAMEBIT_WC_ObjGroups, 0);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 0, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 1, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 5, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 10, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 1);
-                mainSetBits(0xe05, 0);
+                mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 0);
                 break;
             case 0x45dd6:
                 unlockLevel(0, 0, 1);
@@ -383,37 +383,37 @@ void Transporter_init(int obj, u8* params)
          * setter (set from save/level-event data), left as a raw literal in
          * dll_012C_transporter.c until traced.
          */
-        if (mainGetBit(GAMEBIT_K1_SPIRIT_COLLECTED) != 0 || mainGetBit(GAMEBIT_K1_SPIRIT_DEPOSITED) != 0 || mainGetBit(0x511) != 0)
+        if (mainGetBit(GAMEBIT_K1_SPIRIT_COLLECTED) != 0 || mainGetBit(GAMEBIT_K1_SPIRIT_DEPOSITED) != 0 || mainGetBit(GAMEBIT_TransporterRelated0511) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x2BA7:
-        if (mainGetBit(0xBFD) != 0 || mainGetBit(0x29A) != 0 || mainGetBit(0x29B) != 0)
+        if (mainGetBit(GAMEBIT_ITEM_TestCombatSpirit_Got) != 0 || mainGetBit(GAMEBIT_ITEM_Spirit2_Used) != 0 || mainGetBit(GAMEBIT_TransporterRelated029B) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x46A40:
-        if (mainGetBit(0xFF) != 0 || mainGetBit(0x8A0) != 0 || mainGetBit(0x8A2) != 0)
+        if (mainGetBit(GAMEBIT_ITEM_SpiritTestFear_Got) != 0 || mainGetBit(GAMEBIT_ITEM_Unknown8A0_Got) != 0 || mainGetBit(GAMEBIT_ITEM_Unknown8A0_Used) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x497F4:
-        if (mainGetBit(0xC6E) != 0 || mainGetBit(0xC70) != 0 || mainGetBit(0xC71) != 0)
+        if (mainGetBit(GAMEBIT_ITEM_SpiritTestStrength_Got) != 0 || mainGetBit(GAMEBIT_ITEM_Spirit4_Used) != 0 || mainGetBit(GAMEBIT_TransporterRelated07C1) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x4800C:
-        if (mainGetBit(0xC85) != 0 || mainGetBit(0xCB5) != 0 || mainGetBit(0xCB6) != 0)
+        if (mainGetBit(GAMEBIT_ITEM_Spirit5_Got) != 0 || mainGetBit(GAMEBIT_ITEM_Spirit5_Released) != 0 || mainGetBit(0xCB6) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
         break;
     case 0x4A533:
-        if (mainGetBit(0x174) != 0 || mainGetBit(0xCB7) != 0 || mainGetBit(0xCB8) != 0)
+        if (mainGetBit(GAMEBIT_ITEM_Spirit6_Got) != 0 || mainGetBit(GAMEBIT_ITEM_Spirit6_Released) != 0 || mainGetBit(GAMEBIT_TransportedRelated0CB8) != 0)
         {
             state->flags = (u8)(state->flags | WARPPAD_FLAG_DISABLED);
         }
