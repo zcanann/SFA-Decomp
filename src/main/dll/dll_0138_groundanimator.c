@@ -515,7 +515,7 @@ void groundanimator_update(int* obj)
     if ((g->flags & 2) == 0 && allow != 0)
     {
         tricky = getTrickyObject();
-        if (tricky != NULL && mainGetBit(0x4e4) != 0)
+        if (tricky != NULL && mainGetBit(GAMEBIT_Tricky_Usable) != 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
