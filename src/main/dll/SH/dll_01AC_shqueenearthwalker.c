@@ -10,6 +10,7 @@
  * (gQueenEarthWalkerMoveTable/E24 tables); the flags byte tracks the per-frame mode.
  */
 #include "main/dll/SH/SHrocketmushroom.h"
+#include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 #include "main/mapEvent.h"
@@ -92,7 +93,7 @@ void sh_queenearthwalker_update(void* obj)
             queenFeedFn_801d44a4(obj, state);
             break;
         case 1:
-            if (mainGetBit(0x193) != 0)
+            if (mainGetBit(GAMEBIT_ITEM_MoonPassKey_Got) != 0)
             {
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
             }
@@ -111,7 +112,7 @@ void sh_queenearthwalker_update(void* obj)
             openPortalFn_801d4364(obj, state);
             break;
         case 3:
-            if (mainGetBit(0x13f) != 0)
+            if (mainGetBit(GAMEBIT_ITEM_BigScarabBag_Got) != 0)
             {
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
             }
@@ -170,7 +171,7 @@ void sh_queenearthwalker_update(void* obj)
             ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableAct1;
             break;
         case 2:
-            if (mainGetBit(0xc2) == 6)
+            if (mainGetBit(GAMEBIT_ITEM_WhiteGrubTub_Used) == 6)
             {
                 (*gObjectTriggerInterface)->preempt((int)obj, 0x18f6);
                 (*gObjectTriggerInterface)->runSequence(6, obj, 1);
@@ -178,7 +179,7 @@ void sh_queenearthwalker_update(void* obj)
             }
             else
             {
-                if (mainGetBit(0xbf) != 0)
+                if (mainGetBit(GAMEBIT_SH_ReturnedToQueen) != 0)
                 {
                     ((QueenEarthWalkerState*)state)->stateIndex = 1;
                 }
@@ -257,7 +258,7 @@ void queenFeedFn_801d44a4(void* obj, void* state)
     switch (((QueenEarthWalkerState*)state)->stateIndex)
     {
     case 0:
-        if (mainGetBit(0xbf) != 0)
+        if (mainGetBit(GAMEBIT_SH_ReturnedToQueen) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             ((QueenEarthWalkerState*)state)->stateIndex = 1;
@@ -287,10 +288,10 @@ void queenFeedFn_801d44a4(void* obj, void* state)
         if (ObjTrigger_IsSetById(obj, 0x66d) != 0)
         {
             ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_ACTIVE;
-            total = mainGetBit(0x66d);
-            total += mainGetBit(0xc2);
-            mainSetBits(0x66d, 0);
-            mainSetBits(0xc2, total);
+            total = mainGetBit(GAMEBIT_ITEM_WhiteShroom_Count);
+            total += mainGetBit(GAMEBIT_ITEM_WhiteGrubTub_Used);
+            mainSetBits(GAMEBIT_ITEM_WhiteShroom_Count, 0);
+            mainSetBits(GAMEBIT_ITEM_WhiteGrubTub_Used, total);
             if (total != 6)
             {
                 ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_TARGETING;
@@ -342,7 +343,7 @@ void openPortalFn_801d4364(void* obj, void* state)
     {
         ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
     }
-    else if (mainGetBit(0x23c) != 0)
+    else if (mainGetBit(GAMEBIT_SH_Related023C) != 0)
     {
         ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTablePortalReady;
     }
@@ -355,7 +356,7 @@ void openPortalFn_801d4364(void* obj, void* state)
             mainSetBits(0x23b, 1);
         }
     }
-    else if (mainGetBit(0xa31) != 0)
+    else if (mainGetBit(GAMEBIT_SH_RescuedEggs) != 0)
     {
         ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
     }
