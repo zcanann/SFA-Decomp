@@ -13,6 +13,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/gamebit_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
 /* env effects co-activated once with the sky preset; opaque distinct roles */
@@ -174,9 +175,9 @@ void arwlevelcon_update(int obj)
         }
         (*gObjectTriggerInterface)->runSequence(mode, (void*)obj, -1);
         state->sequenceStarted = 1;
-        mainSetBits(0x9d6, 0);
-        mainSetBits(0x9d8, 0);
-        mainSetBits(0x9d7, 0);
+        mainSetBits(GAMEBIT_ArwingRelated09D6, 0);
+        mainSetBits(GAMEBIT_ARWING_FLIGHT_RINGS_PASSED, 0);
+        mainSetBits(GAMEBIT_ARWING_FLIGHT_RINGS_FAILED, 0);
     }
     if (state->ringChoiceTriggered == 0)
     {
@@ -191,11 +192,11 @@ void arwlevelcon_update(int obj)
             collectedRings = arwarwing_getCollectedRingCount(arwing);
             if (collectedRings >= requiredRings)
             {
-                mainSetBits(0x9d8, 1);
+                mainSetBits(GAMEBIT_ARWING_FLIGHT_RINGS_PASSED, 1);
             }
             else
             {
-                mainSetBits(0x9d7, 1);
+                mainSetBits(GAMEBIT_ARWING_FLIGHT_RINGS_FAILED, 1);
             }
             state->ringChoiceTriggered = 1;
             Music_Trigger(MUSICTRIG_starfox_rwing_1, 0);
@@ -225,10 +226,10 @@ void arwlevelcon_init(int obj, u8* setup)
     }
     if (state->sequenceStarted == 0)
     {
-        mainSetBits(0x9d6, 0);
-        mainSetBits(0x9d8, 0);
-        mainSetBits(0x9d7, 0);
-        mainSetBits(0xe74, 0);
+        mainSetBits(GAMEBIT_ArwingRelated09D6, 0);
+        mainSetBits(GAMEBIT_ARWING_FLIGHT_RINGS_PASSED, 0);
+        mainSetBits(GAMEBIT_ARWING_FLIGHT_RINGS_FAILED, 0);
+        mainSetBits(GAMEBIT_ArwingRelated0E74, 0);
     }
     arwingHudSetVisible(2);
     pauseMenuCreateHeads();
