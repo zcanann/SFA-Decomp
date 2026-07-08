@@ -1,6 +1,7 @@
 #include "main/engine_shared.h"
 #include "main/game_object.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 /* gAudioPendingLoadFlags / gAudioCompletedLoadFlags: one bit per async
  * resource load, set when enqueued and cleared/mirrored when the load
@@ -1503,11 +1504,11 @@ void Sfx_UpdateObjectSounds(void)
     {
         globalCtrl = 0xE;
     }
-    else if (mainGetBit(0xEFA) != 0)
+    else if (mainGetBit(GAMEBIT_ECSH_InShrine) != 0)
     {
         globalCtrl = 0xC;
     }
-    else if (mainGetBit(0xEFB) != 0)
+    else if (mainGetBit(GAMEBIT_WarpRelated0EFB) != 0)
     {
         globalCtrl = 0xD;
     }
@@ -1515,15 +1516,15 @@ void Sfx_UpdateObjectSounds(void)
     {
         globalCtrl = 0xC;
     }
-    else if (mainGetBit(0xA7F) != 0)
+    else if (mainGetBit(GAMEBIT_WMRelated0A7F) != 0)
     {
         globalCtrl = 0xC;
     }
-    else if (mainGetBit(0xEFC) != 0)
+    else if (mainGetBit(GAMEBIT_MAZEWELL_ACTIVE) != 0)
     {
         globalCtrl = 0xC;
     }
-    else if (mainGetBit(0xEFE) != 0)
+    else if (mainGetBit(GAMEBIT_PlayerInShop) != 0)
     {
         globalCtrl = 0xC;
     }
@@ -2364,7 +2365,7 @@ void Music_Trigger(int id, int arg)
     if (id == 0xeb && arg == 1)
     {
         MusicChannel* ch = Music_FindActiveChannelForTrack(0x5e);
-        if (ch != NULL || mainGetBit(0xa7f) != 0u)
+        if (ch != NULL || mainGetBit(GAMEBIT_WMRelated0A7F) != 0u)
         {
             return;
         }
