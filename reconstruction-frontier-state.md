@@ -6791,3 +6791,92 @@ EXTERN HYGIENE (job B): single-occurrence scan over all eligible .c found ZERO g
 unused inline externs (all lbl_/proto decls load-bearing; headers not #included). Confirms
 prior pass. No byte-neutral removals available. `grep undefined4|undefined2` = 1 hit
 (a comment, not code). Codebase correctness-bug frontier is exhausted in this scope.
+
+---
+## Jul08 post-team-reset verify (Jack's clang-format + header-extract + extern-dedup wave)
+Aggregate CONFIRMED **99.6269** unchanged (in-tree `ninja report.json`; private objdiff-cli gave 99.548
+ONLY because it loaded a stale 1223-unit config vs the true 1321 — use in-tree report.json for aggregate).
+Gate `locked_ninja all_source` EXIT=0 (transient FAILEDs = concurrent agents on CF/DIM/DR units, not mine).
+Jack's wave is byte-neutral at aggregate — CONFIRMED non-colliding, does NOT touch fuzzy.
+
+Auto-scanned all 166 band fns (98.8-99.92, non-domain) for tag histograms + T/C instr deltas. Findings:
+band is UNIFORMLY welded — reg-perm (#108) + pool-reloc (#70 score-neutral, spelling `@NNN` vs `lbl_`
+churned by Jack's header dedup but SCORE-NEUTRAL, correctly ignored) dominate; the residual singletons:
+- **skyFn_8008a04c 99.80**: T `mr r27,r19` vs C `li r27,0` = #110 shared-zero (welded, T==C len).
+- **fn_8007BD8C 99.74** / **optionsMenu_openGeneralPanel 98.91**: `addi rN,r4,0`+`mr rN,r4` = r0-detour (welded).
+- **Pollen_burst 99.92**: T `bne;b`→C `beq` = peephole branch-FOLD (welded, not source-reproducible).
+- **voxmaps_updateRoutePath 99.x**: extra `li r0,0` = shared-zero (welded).
+- **ext-insert (#53 narrowing) candidates** — objMathFn_8003a380 (2× extsh, s16 wrap-angle math
+  `src[0]=(s16)(src[0]-0xffff)` w/ `>0x8000` cmp), fn_80089A60 (clrlwi on branch-tail-dup'd stb+192
+  c2=(int)(float)), ObjSeq_ApplyFrameCurves (1 extsh amid 705-instr reg-perm sea): all the s16-cast/
+  narrow-at-store extsh are LEGIT-under-peephole + coloring-coupled — matches banked sandworm caveat,
+  restructure regresses. NOT crackable.
+- **fn_8023A3E4 (gflevelcon) 99.349 TESTED**: extra lbz-174 (T caches switch-tested byte in r3, C reloads
+  r0→r3 after switch-pivot `cmplwi r0,4` clobber). Tried `u8 cnt=hp[0xAE]` cache → REGRESSED C=180→181
+  (u8 local forced clrlwi on the `-=1`). Reverted, tree clean. Coloring cascade around switch pivot = welded.
+CONCLUSION: band remains coloring/copy/shared-zero/pool-reloc/peephole-fold capped. Jack's reformat
+exposed NO new source-controllable lever. Zero confirmed gains this pass (frontier stays exhausted).
+
+## Local/param naming pass Jul08 (DR/DIM, byte-identical — semantic-recovery agent)
+Renamed GENERIC locals/params (p1/p2/p3, argN) to meaningful names from usage across DR/DIM
+baddie DLLs; ALL byte-identical (md5-verified vs HEAD rebuild; names never reach codegen).
+Excluded Jack's domain (dimboss*/dim_boss/dim2lift boss-anim/tricky/*horn/explosion/scarab/drakor).
+Commits (main): acafd3d654 drcloudrunner (baddie-substate p2->baddie in stateHandler01/02/03/06 +
+fn_802BF0C8; _init p2->def; render p1->obj), c16e22208e drearthwarrior (same baddie/def/obj pattern;
+render p2-p5 left raw), cace39da57 kttorch/ktrex (render p1->obj; ktrex_stateHandlerB00 state-block
+p2->baddie), f16794acf1 dim2snowball/dimlevelcontrol/dimlavasmash (p1->obj; setBlockSurfaceFlags
+arg1/2/3->map/disable/surfaceType), 4bd1b6685b 12 DIM render p1->obj (icefloe/magicbridge/conveyor/
+barrier/snowball1c2/bridgecogmai/lavacontrol/wooddoor2/lavaball/snowball/icicle/gate),
+f9b992f96f dimcannon SeqFn p2->unused + drcloudrunner fn_802C11BC p2->triggerFrame.
+PATTERN CONFIRMED: baddie handler (obj,p2) p2 = *State substate ptr -> 'baddie'; _init 2nd param =
+placement/def descriptor -> 'def'; render p2-p5 = opaque forwarded args -> LEAVE RAW (only p1->obj);
+extern-prototype params inside fn bodies -> LEAVE untouched. Most DR/DIM signatures were ALREADY
+struct-typed by Jack's wave; remaining generics were mostly render-passthrough. Scope near-exhausted:
+getCurveVals out-pointers (p1-p4) left raw (no derivable semantic distinction); unused SeqFn slots
+left or named 'unused'; dim2lift/dimboss* excluded as Jack's boss domain.
+
+## Semantic-rename wave Jul08 (local/param naming niche, top-level dll_00*/dll_01*/non-subdir)
+8 files, 4 commits, ALL byte-identical (.o md5 unchanged vs HEAD, verified by build-orig-vs-mine):
+- b9020eaebe moveLib(dll_02E): fn_80114224 p1-p4->startPos/endPos/startTangent/endTangent, n->steps
+  (Hermite arc-length); fn_80114408 ->obj/def/state/phaseOut/speed + tmp[3]->angles;
+  func0E p4/c/d->state/curveVariant/rootOut; setLookAtMaxDistance/func04 p/v->state/value/target.
+  animobjd2: trickyUpdateCirclingTargetPosition p1/p2->objPtr/state; trickyFindCirclingTarget arg2->state.
+- d713cc4732 objfx: hitDetectFn_80097070/spawnMaskedHitEffect p7->origin (sibling spawnRandomBurst
+  already uses 'origin'); spawnFlaggedTrailBurst p5/p6/p7->f6val/f4val/origin. dll_000F: player_
+  updateParticles/doProjGfx p1/p3->obj/effectId + unused; followCurve p5->unused; findCurve p3->curveId;
+  applyVelocityStep p->obj; fn_800D915C p1->gameObj.
+- 42c31e6517 dll_80136a40: trickyFindNearestUsableBaddie p1/p2->origin/allowSpecialTypes; fn_80138D7C
+  p2->state; fn_80136A40 p1->unused; debugPrintDrawRecord p1->color. dll_8010a104: fn_8010A104
+  p1/p2->nodeId/leadNodeId (path-cam node-id in/out cursors). dll_80174438: fn_80174588 p2->state;
+  fn_80174668 locals p1/p2->eyeScaledX/eyeScaledY.
+- 85051c1515 waterfx: func08 p1/a-d->id/x/y/z/w (map to WaterEntry fields). dllce: dll_CE_update
+  p2/p3->unusedA/unusedB (both unused); fn_8015E00C p1/obj->obj/state. lightfoot: free p2->flag,
+  init p2/p3->def/flag (_init descriptor + gate pattern).
+RULE reconfirmed: render passthrough p2-p5 (lightfoot_render/ChukChuk_render/dll_CE_render/IceBall_
+render) LEFT RAW; extern-prototype param names inside fn bodies untouched. animobjd2 is tricky-content
+but NOT in Jack's filename-glob exclusion and explicitly listed in this niche's scope; touched
+locals/params only, md5-verified. Collision check: all 8 files last-touched >60min (layout/audio waves).
+
+## Jul08 local/param naming wave (dll_02*/CF/CC/WC/SC niche) — 14 files, all md5-identical
+Renamed generic locals/params only; verified each .o md5 unchanged vs clean-HEAD-rebuild baseline;
+gated `all_source` EXIT=0 between batches. Files + commits:
+- barrelgener (5c908ba): Obj_SpawnHitLightAndFade p2->pos; Obj_PredictInterceptPoint p3/p4->targetPos/outPos;
+  voxmaps_traceWorldLine p1/p2->startPos/endPos; voxmaps_traceScaledVectorEnd p1/p2/p3->out/origin/dir.
+- androssligh (1b8445e): updateBeam scratch tmp->offset (offsetof untouched via word-boundary).
+- dbstealerworm (1bec4be): init param3->flag; fn_80203000/A04/A0E param2->baddie; fn_80203144 p2/p3->groundState/baddie
+  (NOTE p2->sub collided with a local `sub` — used groundState instead); fn_80202C78/DA4 unused p3->unused.
+- scmusictree (4066047): spawnAmbientEffect p2/p3->extra/unused; handleHitObject p1/p2->obj/extra.
+- cfprisonuncle (2a0afa7): update ObjMsg_Pop out-locals m1/m2/m3->msgType/msgArg/msgFlag.
+- cfpowerbase (947072e): CFPowerBase_SeqFn p1->obj (SeqFn callback, NOT render).
+- sccloudrunnera (52de42e) / sctotempole (f80d0f4): init p2->def.
+- cfcrate (33fc1f9): CFCrate_update rotation-delta tmp->rotDelta (kept `aux` init param — already meaningful).
+- shopitem (e8c652c): shopitem_SeqFn 2nd param p2->unused (sibling SeqFn convention).
+- cclightfoot (8f473ca): cclightfoot_free gate param p2->flag (documented _free pattern).
+- dll22c (e4c9f92): dll_22C_free p1->obj; dll_22C_init p->def.
+- front (852d1f1) / ccgasventcontrol (4633b83): _init descriptor param p->def.
+RULES reconfirmed: render passthrough p2-p5 (barrelgener/dbstealerworm/scmusictree/cfprisonuncle/cfpowerbase/
+sccloudrunnera/sctotempole/cfcrate/shopitem/dll22c _render) LEFT RAW; extern-prototype params (objBboxFn/
+getLActions p4-p10) untouched; FUN_ ABI-spill args (FUN_80200558 arg1..16 in dbegg) LEFT RAW; idiomatic
+swap/XOR temps (sctotempole/cclightfoot) left as tmp. dbegg had no safe non-render generic target — skipped.
+Collision: no scope file touched <60min at start; sibling agents committed to DIM/DR/audio/other units
+concurrently — my commits path-scoped, interleaved cleanly.
