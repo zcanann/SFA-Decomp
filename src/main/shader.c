@@ -5,6 +5,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEvent.h"
+#include "main/mldf_fileid.h"
 #include "main/newclouds.h"
 #include "main/objseq.h"
 #include "main/sky_interface.h"
@@ -491,14 +492,14 @@ void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
     curMapLayer = 0;
     mapY = fastFloorf(c / gMapBlockWorldSize);
     mapId = mapCoordsToId((s32)fastFloorf(a / gMapBlockWorldSize), mapY, layer);
-    mapCount = (s32)((u32)getDataFileSize(0x1f) >> 5);
+    mapCount = (s32)((u32)getDataFileSize(MLDF_FILEID_MAPINFO_BIN) >> 5);
     if (mapId < 0 || mapId >= mapCount)
     {
         curMapType = 0;
     }
     else
     {
-        getTabEntry(tabEntry = (MapInfoRecord*)lbl_803DCE78, 0x1f, mapId << 5, 0x20);
+        getTabEntry(tabEntry = (MapInfoRecord*)lbl_803DCE78, MLDF_FILEID_MAPINFO_BIN, mapId << 5, 0x20);
         curMapType = tabEntry->mapType;
     }
     lbl_803DCEB4 = 0;
@@ -984,7 +985,7 @@ void mapInitSetRects(s16* rect, u8* bitmap, int p3, int p4, int idx)
     int offset0 = *(int*)(lbl_803DCE7C + tabOff);
     int x, y;
 
-    getTabEntry(self, 0x1d, offset0,
+    getTabEntry(self, MLDF_FILEID_MAPS_BIN, offset0,
                 *(int*)((lbl_803DCE7C + 8) + tabOff) - offset0);
     *(int*)(self + 0xc) = (int)self + *(int*)((lbl_803DCE7C + 4) + tabOff) - *(int*)(lbl_803DCE7C + tabOff);
     rect[0] = p3 - *(s16*)(self + 4);
@@ -1213,8 +1214,8 @@ void initMaps(void)
     char* e;
 
     data = 0;
-    total = getDataFileSize(0x15);
-    loadAssetFileById(&data, 0x15);
+    total = getDataFileSize(MLDF_FILEID_GLOBALMA_BIN);
+    loadAssetFileById(&data, MLDF_FILEID_GLOBALMA_BIN);
     gShaderMapRomBuffers[0] = -1;
     gShaderMapRomBuffers[1] = (int)mmAlloc(1280, 5, 0);
     gShaderMapRomBuffers[2] = (int)mmAlloc(512, 5, 0);
@@ -2736,14 +2737,14 @@ void doPendingMapLoads(void)
                 {
                     int d = mapGetDirIdx(41);
                     setForceLoadImmediately();
-                    mapLoadDataFile(d, 32);
-                    mapLoadDataFile(d, 35);
-                    mapLoadDataFile(d, 48);
-                    mapLoadDataFile(d, 43);
-                    mapLoadDataFile(d, 33);
-                    mapLoadDataFile(d, 42);
-                    mapLoadDataFile(d, 47);
-                    mapLoadDataFile(d, 36);
+                    mapLoadDataFile(d, MLDF_FILEID_TEX1_BIN_A);
+                    mapLoadDataFile(d, MLDF_FILEID_TEX0_BIN_A);
+                    mapLoadDataFile(d, MLDF_FILEID_ANIM_BIN_A);
+                    mapLoadDataFile(d, MLDF_FILEID_MODELS_BIN_A);
+                    mapLoadDataFile(d, MLDF_FILEID_TEX1_TAB_A);
+                    mapLoadDataFile(d, MLDF_FILEID_MODELS_TAB_A);
+                    mapLoadDataFile(d, MLDF_FILEID_ANIM_TAB_A);
+                    mapLoadDataFile(d, MLDF_FILEID_TEX0_TAB_A);
                     clearForceLoadImmediately();
                     while (getLoadedFileFlags(0) != 0)
                     {
@@ -2790,7 +2791,7 @@ void doPendingMapLoads(void)
                             slot = mapProcessRomList(gShaderCurMapEventId);
                         {
                             int m2 = gShaderCurMapEventId;
-                            int sz = (int)(getDataFileSize(0x1f) >> 5);
+                            int sz = (int)(getDataFileSize(MLDF_FILEID_MAPINFO_BIN) >> 5);
                             if (m2 < 0 || m2 >= sz)
                             {
                                 curMapType = 0;
@@ -2798,7 +2799,7 @@ void doPendingMapLoads(void)
                             else
                             {
                                 MapInfoRecord* e = (MapInfoRecord*)lbl_803DCE78;
-                                getTabEntry(e, 0x1f, m2 << 5, 0x20);
+                                getTabEntry(e, MLDF_FILEID_MAPINFO_BIN, m2 << 5, 0x20);
                                 *(u8*)&curMapType = *(u8*)&e->mapType;
                             }
                         }
@@ -2806,10 +2807,10 @@ void doPendingMapLoads(void)
                         gMapCurRomListSlot = slot;
                         mapGetDirIdx(gShaderCurMapEventId);
                         mapCheckCurBlocks(0);
-                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), 38);
-                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), 37);
-                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), 26);
-                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), 27);
+                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_BLOCKS_TAB_A);
+                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_BLOCKS_BIN_A);
+                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_VOXMAP_TAB_A);
+                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_VOXMAP_BIN_A);
                         gMapBlockIndexList = (int*)getCurrentDataFile(38);
                         gMapBlockIndexCount = 0;
                         {
@@ -2836,16 +2837,16 @@ void doPendingMapLoads(void)
                         }
                         {
                             int d2 = mapGetDirIdx(gShaderCurMapEventId);
-                            mapLoadDataFile(d2, 32);
-                            mapLoadDataFile(d2, 35);
-                            mapLoadDataFile(d2, 48);
-                            mapLoadDataFile(d2, 43);
-                            mapLoadDataFile(d2, 13);
-                            mapLoadDataFile(d2, 33);
-                            mapLoadDataFile(d2, 42);
-                            mapLoadDataFile(d2, 47);
-                            mapLoadDataFile(d2, 36);
-                            mapLoadDataFile(d2, 14);
+                            mapLoadDataFile(d2, MLDF_FILEID_TEX1_BIN_A);
+                            mapLoadDataFile(d2, MLDF_FILEID_TEX0_BIN_A);
+                            mapLoadDataFile(d2, MLDF_FILEID_ANIM_BIN_A);
+                            mapLoadDataFile(d2, MLDF_FILEID_MODELS_BIN_A);
+                            mapLoadDataFile(d2, MLDF_FILEID_ANIMCURV_BIN_A);
+                            mapLoadDataFile(d2, MLDF_FILEID_TEX1_TAB_A);
+                            mapLoadDataFile(d2, MLDF_FILEID_MODELS_TAB_A);
+                            mapLoadDataFile(d2, MLDF_FILEID_ANIM_TAB_A);
+                            mapLoadDataFile(d2, MLDF_FILEID_TEX0_TAB_A);
+                            mapLoadDataFile(d2, MLDF_FILEID_ANIMCURV_TAB_A);
                         }
                         loadModelAndAnimTabs();
                         {
