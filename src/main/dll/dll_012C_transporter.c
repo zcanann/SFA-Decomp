@@ -21,6 +21,7 @@
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
@@ -66,7 +67,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
         {
         case 7: /* pulse fx + sfx */
             state->flags = state->flags | WARPPAD_FLAG_PULSE_FX;
-            Sfx_PlayFromObject((u32)obj, 0x420);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_id_420);
             break;
         case 2: /* map progress: lock/load per destination */
             id = setup->destinationId;

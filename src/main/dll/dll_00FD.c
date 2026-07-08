@@ -8,6 +8,7 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/dll/dll_00FE_magicplant.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define DLL00FD_OBJFLAG_HIDDEN 0x4000
 extern void objRenderFn_80041018(void);
@@ -247,7 +248,7 @@ void magicPlantDropGem(int obj, void* setup, void* stateArg)
             launchSpeed * mathSinf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
         ((GameObject*)childObj)->anim.velocityZ =
             launchSpeed * mathCosf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
-        Sfx_PlayFromObject(obj, 0x5e);
+        Sfx_PlayFromObject(obj, SFXTRIG_id_5e);
     }
 
     if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3858)

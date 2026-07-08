@@ -313,7 +313,7 @@ void enemymushroom_update(int* obj)
     case 3:
         ((GameObject*)obj)->anim.resetHitboxFlags =
             (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x9c);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_id_9c);
         if (((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
         {
             ((EnemyMushroomState*)state)->stateId = 4;

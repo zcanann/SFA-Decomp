@@ -6777,7 +6777,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             ((ByteFlags*)(((char*)inner) + 0x3f2))->b08 = 0;
             if (ps->waterDepth > lbl_803E7FC4)
             {
-                Sfx_PlayFromObject(obj, 0x428);
+                Sfx_PlayFromObject(obj, SFXTRIG_foot_run_jingle3);
             }
         }
         else if (hdiff > lbl_803E8108)
@@ -6786,11 +6786,11 @@ int fn_802AD2F4(int obj, int inner, int state)
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E800C;
             Sfx_PlayFromObject(obj, sfx);
-            Sfx_StopFromObject(obj, (u16)((ps->characterId == 0) ? (0x2d0) : (0x26)));
+            Sfx_StopFromObject(obj, (u16)((ps->characterId == 0) ? (SFXTRIG_jump2) : (SFXTRIG_sa_climb02)));
             ((ByteFlags*)(((char*)inner) + 0x3f2))->b08 = 1;
             if (ps->waterDepth > lbl_803E7FC4)
             {
-                Sfx_PlayFromObject(obj, 0x429);
+                Sfx_PlayFromObject(obj, SFXTRIG_foot_run_jingle3_429);
             }
         }
         else if (hdiff > lbl_803E810C)
@@ -6799,11 +6799,11 @@ int fn_802AD2F4(int obj, int inner, int state)
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E800C;
             Sfx_PlayFromObject(obj, sfx);
-            Sfx_PlayFromObject(obj, (u16)((((PlayerState*)inner)->characterId == 0) ? (0x399) : (0x27)));
+            Sfx_PlayFromObject(obj, (u16)((((PlayerState*)inner)->characterId == 0) ? (SFXTRIG_panting2) : (SFXTRIG_sa_jump03_var)));
             ((ByteFlags*)(((char*)inner) + 0x3f2))->b08 = 1;
             if (((PlayerState*)inner)->waterDepth > lbl_803E7FC4)
             {
-                Sfx_PlayFromObject(obj, 0x42a);
+                Sfx_PlayFromObject(obj, SFXTRIG_foot_run_jingle3_42a);
             }
         }
         else
@@ -6817,7 +6817,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             ((ByteFlags*)(((char*)inner) + 0x3f2))->b08 = 1;
             if (((PlayerState*)inner)->waterDepth > lbl_803E7FC4)
             {
-                Sfx_PlayFromObject(obj, 0x42b);
+                Sfx_PlayFromObject(obj, SFXTRIG_foot_run_jingle3_42b);
             }
         }
         if (hdiff > lbl_803E810C)
@@ -6844,9 +6844,9 @@ int fn_802AD2F4(int obj, int inner, int state)
         }
         else if ((hdiff > lbl_803E8108) && (ps->fallSeverity < 2))
         {
-            if (Sfx_IsPlayingFromObject(0, (u16)((((PlayerState*)inner)->characterId == 0) ? (0x2d0) : (0x26))) == 0)
+            if (Sfx_IsPlayingFromObject(0, (u16)((((PlayerState*)inner)->characterId == 0) ? (SFXTRIG_jump2) : (SFXTRIG_sa_climb02))) == 0)
             {
-                Sfx_PlayFromObject(obj, (u16)((ps->characterId == 0) ? (0x2d0) : (0x26)));
+                Sfx_PlayFromObject(obj, (u16)((ps->characterId == 0) ? (SFXTRIG_jump2) : (SFXTRIG_sa_climb02)));
             }
             ((PlayerState*)inner)->fallSeverity = 2;
         }
