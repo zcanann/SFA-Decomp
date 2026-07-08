@@ -704,11 +704,11 @@ void newshadows_renderQueuedShadowCasters(void)
     int* queueEntry;
     double invSqrt;
     double savedZParam;
-    double dVar22;
+    double dotLen;
     double savedF21;
     double savedF22;
     double savedF23;
-    double dVar23;
+    double shadowScale;
     double savedF24;
     double savedF25;
     double savedLightZ;
@@ -717,12 +717,12 @@ void newshadows_renderQueuedShadowCasters(void)
     double savedF27;
     double savedLightX;
     double savedF28;
-    double dVar27;
+    double ndirX;
     double savedF29;
     double savedF30;
-    double dVar28;
+    double ndirZ;
     double savedF31;
-    double dVar29;
+    double ndirY;
     double savedPs21;
     double savedPs22;
     double savedPs23;
@@ -866,17 +866,17 @@ void newshadows_renderQueuedShadowCasters(void)
                     if (dirShadowCount < 3)
                     {
                         baseTexSize = 0x100;
-                        dVar23 = (double)lbl_803DF9B8;
+                        shadowScale = (double)lbl_803DF9B8;
                     }
                     else if (dirShadowCount < 5)
                     {
                         baseTexSize = 0x80;
-                        dVar23 = (double)lbl_803DF9BC;
+                        shadowScale = (double)lbl_803DF9BC;
                     }
                     else
                     {
                         baseTexSize = 0x40;
-                        dVar23 = (double)lbl_803DF9C0;
+                        shadowScale = (double)lbl_803DF9C0;
                     }
                     texSize = baseTexSize;
                     if (dirShadowCount == 0)
@@ -892,16 +892,16 @@ void newshadows_renderQueuedShadowCasters(void)
                     objDirX = -model[5];
                     objDirY = -model[6];
                     objDirZ = -model[7];
-                    dVar22 = FUN_80247f90(&objDirX, &dirX);
-                    if ((dVar22 < (double)lbl_803DF9AC) && ((double)lbl_803DF9C4 < dVar22))
+                    dotLen = FUN_80247f90(&objDirX, &dirX);
+                    if ((dotLen < (double)lbl_803DF9AC) && ((double)lbl_803DF9C4 < dotLen))
                     {
                         blendX = lbl_803DF9C8 * objDirX + lbl_803DF9CC * dirX;
                         blendY = lbl_803DF9C8 * objDirY + lbl_803DF9CC * dirY;
                         blendZ = lbl_803DF9C8 * objDirZ + lbl_803DF9CC * dirZ;
-                        dVar22 = SeekTwiceBeforeRead(&blendX);
-                        if ((double)lbl_803DF9A8 < dVar22)
+                        dotLen = SeekTwiceBeforeRead(&blendX);
+                        if ((double)lbl_803DF9A8 < dotLen)
                         {
-                            FUN_80247edc((double)(float)((double)lbl_803DF9AC / dVar22), &blendX, &dirX);
+                            FUN_80247edc((double)(float)((double)lbl_803DF9AC / dotLen), &blendX, &dirX);
                         }
                     }
                     if (lbl_803DF9D0 < dirY)
@@ -909,31 +909,31 @@ void newshadows_renderQueuedShadowCasters(void)
                         dirY = lbl_803DF9D0;
                         FUN_80247ef8(&dirX, &dirX);
                     }
-                    dVar27 = -(double)dirX;
-                    dVar29 = -(double)dirY;
-                    dVar28 = -(double)dirZ;
+                    ndirX = -(double)dirX;
+                    ndirY = -(double)dirY;
+                    ndirZ = -(double)dirZ;
                     randVal = FUN_80017730();
                     DAT_803ddc04 = randVal & 0xffff;
                     randVal = FUN_80017730();
                     DAT_803ddc08 = (randVal & 0xffff) - 0x3fc8;
                     light[1] = DAT_803ddc08;
                     *light = DAT_803ddc04;
-                    dVar22 = (double)(float)(dVar28 * dVar28 +
-                                             (double)(float)(dVar27 * dVar27 + (double)(float)(dVar29 * dVar29)));
-                    if ((double)lbl_803DF9A8 < dVar22)
+                    dotLen = (double)(float)(ndirZ * ndirZ +
+                                             (double)(float)(ndirX * ndirX + (double)(float)(ndirY * ndirY)));
+                    if ((double)lbl_803DF9A8 < dotLen)
                     {
-                        invSqrt = 1.0 / SQRT(dVar22);
-                        invSqrt = DOUBLE_803df9d8 * invSqrt * -(dVar22 * invSqrt * invSqrt - DOUBLE_803df9e0);
-                        invSqrt = DOUBLE_803df9d8 * invSqrt * -(dVar22 * invSqrt * invSqrt - DOUBLE_803df9e0);
-                        dVar22 = (double)(float)(dVar22 * DOUBLE_803df9d8 * invSqrt *
-                                                 -(dVar22 * invSqrt * invSqrt - DOUBLE_803df9e0));
+                        invSqrt = 1.0 / SQRT(dotLen);
+                        invSqrt = DOUBLE_803df9d8 * invSqrt * -(dotLen * invSqrt * invSqrt - DOUBLE_803df9e0);
+                        invSqrt = DOUBLE_803df9d8 * invSqrt * -(dotLen * invSqrt * invSqrt - DOUBLE_803df9e0);
+                        dotLen = (double)(float)(dotLen * DOUBLE_803df9d8 * invSqrt *
+                                                 -(dotLen * invSqrt * invSqrt - DOUBLE_803df9e0));
                     }
-                    if ((double)lbl_803DF9A8 < dVar22)
+                    if ((double)lbl_803DF9A8 < dotLen)
                     {
-                        dVar22 = (double)(float)((double)lbl_803DF9E8 / dVar22);
-                        dVar27 = (double)(float)(dVar27 * dVar22);
-                        dVar29 = (double)(float)(dVar29 * dVar22);
-                        dVar28 = (double)(float)(dVar28 * dVar22);
+                        dotLen = (double)(float)((double)lbl_803DF9E8 / dotLen);
+                        ndirX = (double)(float)(ndirX * dotLen);
+                        ndirY = (double)(float)(ndirY * dotLen);
+                        ndirZ = (double)(float)(ndirZ * dotLen);
                     }
                     *(u32*)(light + 0x20) = 0;
                     model[5] = -dirX;
@@ -942,33 +942,33 @@ void newshadows_renderQueuedShadowCasters(void)
                     FUN_8006f788(texSize);
                     entryPtr = (int*)FUN_80017a54(obj);
                     pivot = FUN_80017970(entryPtr, 0);
-                    *(float*)(light + 6) = (float)(dVar27 + (double)*(float*)(pivot + 0xc));
-                    *(float*)(light + 8) = (float)(dVar29 + (double)*(float*)(pivot + 0x1c));
-                    *(float*)(light + 10) = (float)(dVar28 + (double)*(float*)(pivot + 0x2c));
+                    *(float*)(light + 6) = (float)(ndirX + (double)*(float*)(pivot + 0xc));
+                    *(float*)(light + 8) = (float)(ndirY + (double)*(float*)(pivot + 0x1c));
+                    *(float*)(light + 10) = (float)(ndirZ + (double)*(float*)(pivot + 0x2c));
                     if (*(int*)&((GameObject*)obj)->anim.parent == 0)
                     {
                         *(float*)(light + 6) = *(float*)(light + 6) + lbl_803DDB50;
                         *(float*)(light + 10) = *(float*)(light + 10) + lbl_803DDB4C;
                     }
-                    dVar22 = (double)*model;
-                    dVar27 = -dVar22;
+                    dotLen = (double)*model;
+                    ndirX = -dotLen;
                     if (*(int*)&((GameObject*)obj)->anim.parent != 0)
                     {
                         *(float*)(light + 6) = *(float*)(light + 6) + lbl_803DDA58;
                         *(float*)(light + 10) = *(float*)(light + 10) + lbl_803DDA5C;
                     }
                     FUN_8025da88(2, 2, texSize - 4, texSize - 4);
-                    dVar28 = (double)lbl_803DF9A8;
+                    ndirZ = (double)lbl_803DF9A8;
                     dcvtHiA = 0x43300000;
                     dcvtHiB = 0x43300000;
                     dcvtLoA = texSize;
                     dcvtLoB = texSize;
-                    FUN_8025da64(dVar28, dVar28, (double)(float)((double)(u32)texSize),
-                                 (double)(float)((double)(u32)texSize), dVar28, (double)lbl_803DF9AC);
-                    FUN_80247dfc(dVar27, dVar22, dVar27, dVar22, (double)lbl_803DF9AC, (double)lbl_803DF9EC, projMtx);
+                    FUN_8025da64(ndirZ, ndirZ, (double)(float)((double)(u32)texSize),
+                                 (double)(float)((double)(u32)texSize), ndirZ, (double)lbl_803DF9AC);
+                    FUN_80247dfc(ndirX, dotLen, ndirX, dotLen, (double)lbl_803DF9AC, (double)lbl_803DF9EC, projMtx);
                     FUN_8025d6ac(projMtx, 1);
                     FUN_80006984();
-                    FUN_80247b70(dVar22, dVar27, dVar27, dVar22, dVar23, dVar23, dVar23, dVar23, shadowMtx);
+                    FUN_80247b70(dotLen, ndirX, ndirX, dotLen, shadowScale, shadowScale, shadowScale, shadowScale, shadowMtx);
                     viewMtx = (float*)FUN_80006974();
                     FUN_802475e4(viewMtx, (float*)(&DAT_8038fd48 + slotOff));
                     FUN_80247618(shadowMtx, viewMtx, shadowMtx);
@@ -980,8 +980,8 @@ void newshadows_renderQueuedShadowCasters(void)
                     if (*(char*)(queueEntry + 2) == '\x02')
                     {
                         gxSetZMode_(1, GX_LEQUAL, 1);
-                        dVar23 = (double)lbl_803DF9A8;
-                        FUN_80247a7c(dVar23, dVar23, dVar23, (float*)(&DAT_8038fd48 + slotOff));
+                        shadowScale = (double)lbl_803DF9A8;
+                        FUN_80247a7c(shadowScale, shadowScale, shadowScale, (float*)(&DAT_8038fd48 + slotOff));
                         (&DAT_8038fd50)[slotByte * 0x1a] = lbl_803DF9F0;
                         (&DAT_8038fd54)[slotByte * 0x1a] = lbl_803DF9F4;
                         (&DAT_8038fd74)[slotByte * 0x1a] = lbl_803DF9AC;
@@ -1009,14 +1009,14 @@ void newshadows_renderQueuedShadowCasters(void)
                 else
                 {
                     (&DAT_8038fd78)[slotByte * 0x1a] = *(u32*)(*(int*)&((GameObject*)obj)->anim.modelState + 4);
-                    dVar23 = (double)((GameObject*)obj)->anim.localPosX;
-                    dVar22 = (double)((GameObject*)obj)->anim.localPosZ;
+                    shadowScale = (double)((GameObject*)obj)->anim.localPosX;
+                    dotLen = (double)((GameObject*)obj)->anim.localPosZ;
                     if (*(int*)&((GameObject*)obj)->anim.parent == 0)
                     {
-                        dVar23 = (double)(float)(dVar23 - (double)lbl_803DDA58);
-                        dVar22 = (double)(float)(dVar22 - (double)lbl_803DDA5C);
+                        shadowScale = (double)(float)(shadowScale - (double)lbl_803DDA58);
+                        dotLen = (double)(float)(dotLen - (double)lbl_803DDA5C);
                     }
-                    FUN_80247a48(-dVar23, -(double)((GameObject*)obj)->anim.localPosY, -dVar22, transMtx);
+                    FUN_80247a48(-shadowScale, -(double)((GameObject*)obj)->anim.localPosY, -dotLen, transMtx);
                     scaleMtx0 = lbl_803DF9B8 / *model;
                     scaleMtx1 = lbl_803DF9A8;
                     scaleMtx2 = lbl_803DF9A8;
