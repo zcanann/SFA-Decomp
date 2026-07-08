@@ -1,5 +1,7 @@
 #include "ghidra_import.h"
 
+#pragma exceptions on
+
 
 extern u8 lbl_803D3F60[];
 extern u8 lbl_803D41E4[];

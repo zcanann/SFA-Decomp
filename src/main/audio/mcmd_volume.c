@@ -1,4 +1,6 @@
 #include "ghidra_import.h"
+
+#pragma exceptions on
 #include "main/audio/mcmd.h"
 #include "main/audio/data_tables.h"
 #include "main/sfa_shared_decls.h"

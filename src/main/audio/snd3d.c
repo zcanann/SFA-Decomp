@@ -1,4 +1,6 @@
 #include "main/audio/snd3d.h"
+
+#pragma exceptions on
 #include "main/audio/synth_channel_scale.h"
 #include "main/audio/synth_job_init.h"
 #include "main/audio/vsample_alloc.h"

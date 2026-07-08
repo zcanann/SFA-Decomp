@@ -1,5 +1,7 @@
 #include "src/main/audio/synth_internal.h"
 
+#pragma exceptions on
+
 #ifndef NULL
 #define NULL ((void*)0)
 #endif

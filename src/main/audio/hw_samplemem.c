@@ -1,5 +1,7 @@
 #include "main/audio/hw_samplemem.h"
 
+#pragma exceptions on
+
 extern u32 dspHRTFOn;
 extern u8* dspVoice;
 extern void*(*gSalMallocHook)(u32 size);

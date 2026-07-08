@@ -1,5 +1,7 @@
 #include "main/audio/inp_ctrl.h"
 
+#pragma exceptions on
+
 u16 inpGetDoppler(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;

@@ -1,4 +1,6 @@
 #include "main/audio/hw_init.h"
+
+#pragma exceptions on
 #include "main/audio/dsp_voice.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/synth_jobs.h"

@@ -1,4 +1,6 @@
 #include "main/audio/vsample_update.h"
+
+#pragma exceptions on
 #include "main/audio/hw_stream.h"
 #include "main/sfa_shared_decls.h"
 

@@ -1,5 +1,7 @@
 #include "main/audio/adsr_lowprec.h"
 
+#pragma exceptions on
+
 extern u32 adsrHandle(int p1, int p2, int p3);
 
 int adsrHandleLowPrecision(int p1, int p2, int p3)

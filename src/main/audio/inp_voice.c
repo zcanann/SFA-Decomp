@@ -1,5 +1,7 @@
 #include "main/audio/inp_ctrl.h"
 
+#pragma exceptions on
+
 int inpGetSurPanning(McmdVoiceState* state)
 {
     extern int _GetInputValue(McmdVoiceState* state, McmdInputSlot* slot, u8 midiSlot, u8 midiEvent);

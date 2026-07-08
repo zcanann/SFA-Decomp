@@ -1,4 +1,6 @@
 #include "main/audio/adsr.h"
+
+#pragma exceptions on
 #include "main/audio/adsr_setup.h"
 extern u16 lbl_8032F618[];
 

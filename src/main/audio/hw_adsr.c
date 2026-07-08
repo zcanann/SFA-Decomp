@@ -1,4 +1,6 @@
 #include "main/audio/dsp_voice.h"
+
+#pragma exceptions on
 #include "main/audio/voice_conv.h"
 extern u8 voiceAdsrDecayTable[];
 extern DSPvoice* dspVoice;

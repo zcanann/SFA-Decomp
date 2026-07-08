@@ -1,4 +1,6 @@
 #include "main/audio/hw_stream.h"
+
+#pragma exceptions on
 #include "main/audio/dsp_voice.h"
 #include "main/engine_shared.h"
 extern void salRemoveStudioInput(void* p, void* input);

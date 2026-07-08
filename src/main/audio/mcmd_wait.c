@@ -1,4 +1,6 @@
 #include "ghidra_import.h"
+
+#pragma exceptions on
 #include "main/audio/mcmd.h"
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/hw_init.h"

@@ -1,5 +1,7 @@
 #include "main/audio/hw_voice_start.h"
 
+#pragma exceptions on
+
 extern void salActivateVoice(void* entry, u8 studioIndex);
 extern u8* dspVoice;
 extern u8 salTimeOffset;
