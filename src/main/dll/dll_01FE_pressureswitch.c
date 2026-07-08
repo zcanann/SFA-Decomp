@@ -196,16 +196,16 @@ void PressureSwitch_update(int obj)
             posY = placement->restPosY - self->anim.localPosY;
             if (posY > 2.5f && posY < 5.0f && mainGetBit(state->mapGameBit) == 0)
             {
-                mainSetBits(0x905, 1);
+                mainSetBits(GAMEBIT_WM_SwitchCamActive, 1);
             }
-            else if (mainGetBit(0x905) != 0)
+            else if (mainGetBit(GAMEBIT_WM_SwitchCamActive) != 0)
             {
-                mainSetBits(0x905, 0);
+                mainSetBits(GAMEBIT_WM_SwitchCamActive, 0);
             }
         }
-        else if (mainGetBit(0x905) != 0)
+        else if (mainGetBit(GAMEBIT_WM_SwitchCamActive) != 0)
         {
-            mainSetBits(0x905, 0);
+            mainSetBits(GAMEBIT_WM_SwitchCamActive, 0);
         }
     }
     moving = 0;
