@@ -1,4 +1,5 @@
 #include "main/engine_shared.h"
+#include "main/pi_dolphin.h"
 
 #define VOXMAP_SLOT_COUNT 6
 #define VOXMAPS_ROUTE_NODE_CAPACITY 200
@@ -569,7 +570,7 @@ void* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
     int entry;
     VoxMapFile* hdr;
 
-    if (getTableFileEntry(26, mapArg, &entry) == 0)
+    if (getTableFileEntry(MLDF_FILEID_VOXMAP_TAB_A, mapArg, &entry) == 0)
     {
         OSReport(msg + 0xd0);
         return NULL;
@@ -595,7 +596,7 @@ void* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
         OSReport(msg + 0x174);
         return NULL;
     }
-    loadAndDecompressDataFile(27, hdr, entry, count, 0, 0, 0);
+    loadAndDecompressDataFile(MLDF_FILEID_VOXMAP_BIN_A, hdr, entry, count, 0, 0, 0);
     if (hdr == NULL)
     {
         OSReport(msg + 0x174);
