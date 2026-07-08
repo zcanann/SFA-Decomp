@@ -1121,7 +1121,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
 /* Object-sequence turn-to-face-player step: starts (mode 4) or advances
  * (mode 5) a smooth turn of the object toward the player, blending the model
  * vector and animation as it goes. */
-int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
+int ObjSeq_func20(int obj, int state, s16 turnDegrees, s16 yawThreshold, s16 maxAngle, s16 animRight, s16 animLeft)
 {
     int player;
     s16* modelVec;
@@ -1135,9 +1135,9 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
     f32 yaw;
 
     player = Obj_GetPlayerObject();
-    p4 = (s16)(182.04445f * p4);
-    p5 = (s16)(182.04445f * p5);
-    p3 = (s16)(182.04445f * p3);
+    yawThreshold = (s16)(182.04445f * yawThreshold);
+    maxAngle = (s16)(182.04445f * maxAngle);
+    turnDegrees = (s16)(182.04445f * turnDegrees);
     mode = (s8)((ObjSeqTurnState*)state)->mode;
     if (mode == 4)
     {
@@ -1152,13 +1152,13 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         ((ObjSeqTurnState*)state)->vecY = 0.0f;
         ((ObjSeqTurnState*)state)->vecZ = 0.0f;
         yawd = Obj_GetYawDeltaToObject((u16*)obj, player, (float*)0);
-        if (((s16)yawd >= 0 ? (s16)yawd : -(s16)yawd) < p4)
+        if (((s16)yawd >= 0 ? (s16)yawd : -(s16)yawd) < yawThreshold)
         {
             turn = 0;
         }
         else
         {
-            turn = (s16)((s16)yawd > 0 ? (s16)yawd - p4 : (s16)yawd + p4);
+            turn = (s16)((s16)yawd > 0 ? (s16)yawd - yawThreshold : (s16)yawd + yawThreshold);
         }
         ((ObjSeqTurnState*)state)->turnAmount = turn;
         {
@@ -1185,7 +1185,7 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         ((ObjSeqTurnState*)state)->blend = 0.0f;
         if (turn != 0)
         {
-            rate = (f32)p3 / (f32)turn;
+            rate = (f32)turnDegrees / (f32)turn;
             ((ObjSeqTurnState*)state)->turnRate = rate >= 0.0f ? rate : -rate;
         }
         else
@@ -1196,23 +1196,23 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
             f32 c = ((ObjSeqTurnState*)state)->turnRate;
             ((ObjSeqTurnState*)state)->turnRate = c < 0.0f ? 0.0f : (c > 0.25f ? 0.25f : c);
         }
-        if (p6 != -1)
+        if (animRight != -1)
         {
-            if (p7 != -1)
+            if (animLeft != -1)
             {
                 ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~4;
                 if (((ObjSeqTurnState*)state)->turnAmount < 0)
                 {
-                    if (p7 != -1)
+                    if (animLeft != -1)
                     {
-                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, p7, 0.0f, 0);
+                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, animLeft, 0.0f, 0);
                     }
                 }
                 else
                 {
-                    if (p6 != -1)
+                    if (animRight != -1)
                     {
-                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, p6, 0.0f, 0);
+                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, animRight, 0.0f, 0);
                     }
                 }
             }
@@ -1239,13 +1239,13 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
                 f32 cur = (f32)modelVec[1];
                 yaw = cur * (1.0f - ((ObjSeqTurnState*)state)->blend) + yaw * ((ObjSeqTurnState*)state)->blend;
             }
-            yaw = (yaw < (f32)-p5) ? (f32)-p5 : ((yaw > (f32)p5) ? (f32)p5 : yaw);
+            yaw = (yaw < (f32)-maxAngle) ? (f32)-maxAngle : ((yaw > (f32)maxAngle) ? (f32)maxAngle : yaw);
             modelVec[1] = yaw;
             modelVec[0] = (f32)((ObjSeqTurnState*)state)->targetPitch * ((ObjSeqTurnState*)state)->blend;
         }
-        if (p6 != -1)
+        if (animRight != -1)
         {
-            if (p7 != -1)
+            if (animLeft != -1)
             {
                 s16 t50 = ((ObjSeqTurnState*)state)->turnAmount;
                 f32 fa = (f32)(t50 >= 0 ? t50 : -t50);
