@@ -931,11 +931,11 @@ void SnowBike_update(int obj)
 
     if (((GameObject*)obj)->anim.mapEventSlot == -1)
     {
-        if (mainGetBit(0x1fa) != 0)
+        if (mainGetBit(GAMEBIT_DIM_CrossedBlizzard) != 0)
         {
             ((SnowBikeState*)state)->unk420 = 0;
         }
-        if (mainGetBit(0x1fb) != 0)
+        if (mainGetBit(GAMEBIT_SnowBikeRelated01FB) != 0)
         {
             Obj_SetModelSlotIndex(obj, 0x13);
         }
