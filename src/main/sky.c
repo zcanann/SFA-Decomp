@@ -1,4 +1,5 @@
 #include "main/sky_state.h"
+#include "main/gamebit_ids.h"
 #include "main/sky_80080E58_shared.h"
 
 /* gSkyEnvFxFlags: per-group env-FX trigger enables + update state */
@@ -43,7 +44,7 @@
 
 int getEnvFxBit2BA(void)
 {
-    return (u8)mainGetBit(0x2ba);
+    return (u8)mainGetBit(GAMEBIT_ENV_dayNo);
 }
 
 void setGameBit2BA(int value)
@@ -52,12 +53,12 @@ void setGameBit2BA(int value)
     {
         value = 0;
     }
-    mainSetBits(0x2ba, (u8)value);
+    mainSetBits(GAMEBIT_ENV_dayNo, (u8)value);
 }
 
 void envFxFn_800887cc(void)
 {
-    playerEnvFxFn_80088ad4((u8)mainGetBit(0x2ba));
+    playerEnvFxFn_80088ad4((u8)mainGetBit(GAMEBIT_ENV_dayNo));
 }
 
 void envFxActFn_800887f8(u8 value)
@@ -92,7 +93,7 @@ void envFxFn_80088884(void)
     u8 flags;
 
     a = (u8)(*gSkyInterface)->getSunPosition(0);
-    b = mainGetBit(0x2ba);
+    b = mainGetBit(GAMEBIT_ENV_dayNo);
     if (a != gSkySunPositionPrev)
     {
         gSkySunPositionPrev = a;
@@ -103,7 +104,7 @@ void envFxFn_80088884(void)
             {
                 b = 0;
             }
-            mainSetBits(0x2ba, b);
+            mainSetBits(GAMEBIT_ENV_dayNo, b);
         }
         if (gSkyEnvFxFlags != 0)
         {
@@ -117,7 +118,7 @@ void envFxFn_80088884(void)
     }
     flags = (u8)(flags & ~SKY_ENVFX_UPDATE_PENDING);
     gSkyEnvFxFlags = flags;
-    if ((u32)lbl_803DD130 != 0 && (flags & SKY_ENVFX_GROUP_A) != 0 && mainGetBit(0x3ac) == 0)
+    if ((u32)lbl_803DD130 != 0 && (flags & SKY_ENVFX_GROUP_A) != 0 && mainGetBit(GAMEBIT_ENV_disableDayFX2) == 0)
     {
         if ((gSkyEnvFxFlags & SKY_ENVFX_IMMEDIATE) != 0)
         {
@@ -139,7 +140,7 @@ void envFxFn_80088884(void)
             getEnvfxAct(0, 0, (u16)((s16*)lbl_803DD13C)[b], 0);
         }
     }
-    if ((u32)lbl_803DD138 != 0 && (gSkyEnvFxFlags & SKY_ENVFX_GROUP_C) != 0 && mainGetBit(0x3ab) == 0)
+    if ((u32)lbl_803DD138 != 0 && (gSkyEnvFxFlags & SKY_ENVFX_GROUP_C) != 0 && mainGetBit(GAMEBIT_ENV_disableDayFX1) == 0)
     {
         if ((gSkyEnvFxFlags & SKY_ENVFX_IMMEDIATE) != 0)
         {
