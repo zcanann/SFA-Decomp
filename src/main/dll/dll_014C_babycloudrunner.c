@@ -81,18 +81,6 @@ extern f32 lbl_803E424C;
 extern f32 lbl_803E4250;
 extern f32 lbl_803E4254;
 
-void babycloudrunner_init_OLD_v1_1(int obj)
-{
-    u32* state;
-
-    state = ((GameObject*)obj)->extra;
-    *state = 0;
-    state[1] = 0;
-    ObjHits_EnableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0x80;
-    return;
-}
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 typedef struct BabyCloudRunnerState
