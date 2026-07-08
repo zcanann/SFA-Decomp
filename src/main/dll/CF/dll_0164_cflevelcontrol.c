@@ -13,6 +13,7 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/fx_800944A0_shared.h"
 
@@ -88,8 +89,8 @@ int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (v)
         {
         case 1:
-            mainSetBits(0xdcb, 1);
-            mainSetBits(0x4a3, 0);
+            mainSetBits(GAMEBIT_CFRaceRelated0DCB, 1);
+            mainSetBits(GAMEBIT_CF_ObjGroups2, 0);
             loadMapAndParent(0x2b);
             unlockLevel(0, 0, 1);
             lockLevel(mapGetDirIdx(0x2b), 0);
@@ -143,15 +144,15 @@ void cflevelcontrol_update(int obj)
     }
 
     if ((*gMapEventInterface)->getMapAct(CFLEVELCONTROL_MAP_FORTRESS) == 1 &&
-        mainGetBit(0x40) != 0)
+        mainGetBit(GAMEBIT_STAFF_ABILITY_SHARPCLAW_DISGUISE) != 0)
     {
         (*gMapEventInterface)->setMapAct(CFLEVELCONTROL_MAP_FORTRESS, 2);
     }
 
     /* sting on the first of the two fortress alarm bits, fanfare once
        both are set; the flag byte remembers last tick's values */
-    bit974 = (u8)mainGetBit(0x974);
-    bit975 = mainGetBit(0x975);
+    bit974 = (u8)mainGetBit(GAMEBIT_CFLever0974);
+    bit975 = mainGetBit(GAMEBIT_CFLever0975);
     if (((CfLevelControlFlags*)&state[0xc])->b5 == 0 || ((CfLevelControlFlags*)&state[0xc])->b4 == 0)
     {
         if (((CfLevelControlFlags*)&state[0xc])->b5 == 0 && ((CfLevelControlFlags*)&state[0xc])->b4 == 0)
@@ -173,34 +174,34 @@ void cflevelcontrol_update(int obj)
     if (((GameObject*)obj)->unkF4 == 0)
     {
         getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_A, 0);
-        if (mainGetBit(0xd73) == 0)
+        if (mainGetBit(GAMEBIT_CFRelated0D73) == 0)
         {
             getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
             getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_C, 0);
             getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_D, 0);
             skyFn_80088e54(0, lbl_803E43EC);
-            mainSetBits(0xd73, 1);
+            mainSetBits(GAMEBIT_CFRelated0D73, 1);
         }
 
-        if (mainGetBit(0xdca) != 0)
+        if (mainGetBit(GAMEBIT_CFRelated0DCA) != 0)
         {
             getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
             getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_E, 0);
             getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_F, 0);
             skyFn_80088e54(1, lbl_803E43EC);
-            mainSetBits(0xdca, 0);
+            mainSetBits(GAMEBIT_CFRelated0DCA, 0);
             unlockLevel(0, 0, 1);
         }
 
         ((GameObject*)obj)->unkF4 = 1;
     }
 
-    if (mainGetBit(0x94f) != 0 && (((GameObject*)player)->objectFlags & CFLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
+    if (mainGetBit(GAMEBIT_CF_NotRecoveredStaff) != 0 && (((GameObject*)player)->objectFlags & CFLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
     {
-        mainSetBits(0x94e, 0);
+        mainSetBits(GAMEBIT_CF_HaveStaff, 0);
     }
 
-    bit94e = mainGetBit(0x94e);
+    bit94e = mainGetBit(GAMEBIT_CF_HaveStaff);
     if (bit94e != 0 && playerIsDisguised(player) == 0)
     {
         staffToggle((int)Obj_GetPlayerObject(), 0);
@@ -210,10 +211,10 @@ void cflevelcontrol_update(int obj)
         staffToggle((int)Obj_GetPlayerObject(), 1);
     }
 
-    if (mainGetBit(0xd3d) != 0)
+    if (mainGetBit(GAMEBIT_CFRestartPointRelated0D3D) != 0)
     {
         (*gMapEventInterface)->restartPoint(&triggerPos, 0, getCurMapLayer(), 1);
-        mainSetBits(0xd3d, 0);
+        mainSetBits(GAMEBIT_CFRestartPointRelated0D3D, 0);
         getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
         getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_C, 0);
         skyFn_80088e54(1, lbl_803E43E8);
@@ -225,13 +226,13 @@ void cflevelcontrol_update(int obj)
     case 0x47: /* the cell camera mode */
         if ((s8)state[0xd] != 0x47)
         {
-            mainSetBits(0xc0, 1);
+            mainSetBits(GAMEBIT_SH_Entered00C0, 1);
         }
         break;
     default:
         if ((s8)state[0xd] == 0x47)
         {
-            mainSetBits(0x1a8, 1);
+            mainSetBits(GAMEBIT_SH_WarpStoneRelated01A8, 1);
         }
         break;
     }
@@ -242,14 +243,14 @@ void cflevelcontrol_update(int obj)
     SCGameBitLatch_UpdateInverted(state + 8, 0x100, -1, -1, 0x983, 0x16);
     SCGameBitLatch_UpdateInverted(state + 8, 0x80, -1, -1, 0x983, 0x39);
 
-    if (mainGetBit(0x983) == 0)
+    if (mainGetBit(GAMEBIT_CFRelated0983) == 0)
     {
-        if (mainGetBit(0xe23) == 0)
+        if (mainGetBit(GAMEBIT_CFRelated0E23) == 0)
         {
             SCGameBitLatch_UpdateInverted(state + 8, 0x200, -1, -1, 0x984, 0xad);
             SCGameBitLatch_Update(state + 8, 0x40, -1, -1, 0x984, 0x16);
         }
-        if (mainGetBit(0x984) != 0)
+        if (mainGetBit(GAMEBIT_CFRelated0984) != 0)
         {
             SCGameBitLatch_Update(state + 8, 0x20, -1, -1, 0xe23, 0x17);
             SCGameBitLatch_UpdateInverted(state + 8, 0x400, -1, -1, 0xe23, 0x16);
@@ -275,8 +276,8 @@ void cflevelcontrol_init(u8* obj, u8* params)
     s16toFloat(sub, 0x1e0);
     ((CfLevelControlFlags*)(sub + 0xc))->b6 = 0;
     ((GameObject*)obj)->animEventCallback = CFLevelControl_SeqFn;
-    mainSetBits(0x983, *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14) != 0x2cef);
-    if (mainGetBit(0x2fe) == 0)
+    mainSetBits(GAMEBIT_CFRelated0983, *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14) != 0x2cef);
+    if (mainGetBit(GAMEBIT_CFRelated02FE) == 0)
     {
         for (i = 0; i < 0x17; i++)
         {
@@ -287,8 +288,8 @@ void cflevelcontrol_init(u8* obj, u8* params)
     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x11, 0);
     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x15, 0);
     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x16, 0);
-    ((CfLevelControlFlags*)(sub + 0xc))->b5 = mainGetBit(0x974);
-    ((CfLevelControlFlags*)(sub + 0xc))->b4 = mainGetBit(0x975);
+    ((CfLevelControlFlags*)(sub + 0xc))->b5 = mainGetBit(GAMEBIT_CFLever0974);
+    ((CfLevelControlFlags*)(sub + 0xc))->b4 = mainGetBit(GAMEBIT_CFLever0975);
     objSetSlot(obj, 0x51);
     ((CfLevelControlFlags*)(sub + 0xc))->b3 = 1;
 }
