@@ -105,11 +105,11 @@ void dim2snowball_free(void)
 {
 }
 
-void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dim2snowball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4AA0);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4AA0);
 }
 
 void dim2snowball_hitDetect(void)

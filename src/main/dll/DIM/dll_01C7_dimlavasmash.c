@@ -78,20 +78,20 @@ int dimlavasmash_getObjectTypeId(void)
 
 #pragma dont_inline on
 #pragma opt_propagation off
-void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
+void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
 {
     int clearMask;
     int i;
     int j;
     int* block;
     int got;
-    for (j = 0; j < (int)*(u16*)((char*)arg1 + 0x9a); j++)
+    for (j = 0; j < (int)*(u16*)((char*)map + 0x9a); j++)
     {
-        block = (int*)mapBlockFn_800606ec(arg1, j);
+        block = (int*)mapBlockFn_800606ec(map, j);
         got = mapBlockFn_80060678();
-        if (arg3 == got)
+        if (surfaceType == got)
         {
-            if (arg2 != 0)
+            if (disable != 0)
             {
                 *(u32*)(block + 0x10 / 4) &= ~2LL;
                 *(u32*)(block + 0x10 / 4) &= ~1LL;
@@ -103,12 +103,12 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
             }
         }
     }
-    for (i = 0, clearMask = ~2; i < (int)*(u8*)((char*)arg1 + 0xa2); i++)
+    for (i = 0, clearMask = ~2; i < (int)*(u8*)((char*)map + 0xa2); i++)
     {
-        block = (int*)fn_8006070C(arg1, i);
-        if (arg3 == (int)*(u8*)((char*)Shader_getLayer((int)block, 0) + 5))
+        block = (int*)fn_8006070C(map, i);
+        if (surfaceType == (int)*(u8*)((char*)Shader_getLayer((int)block, 0) + 5))
         {
-            if (arg2 != 0)
+            if (disable != 0)
             {
                 *(u32*)(block + 0x3c / 4) &= clearMask;
             }

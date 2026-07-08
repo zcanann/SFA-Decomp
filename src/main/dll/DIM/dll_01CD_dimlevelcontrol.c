@@ -72,7 +72,7 @@ extern int unlockLevel(s32 val, int idx, int flag);
 
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 
-void dim_levelcontrol_free(int p1)
+void dim_levelcontrol_free(int obj)
 {
     extern void Music_Trigger(int id, int arg);
     Music_Trigger(MUSICTRIG_drako_1, 0);
@@ -80,11 +80,11 @@ void dim_levelcontrol_free(int p1)
     timeOfDayFn_80055000();
 }
 
-void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dim_levelcontrol_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 v);
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A20);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4A20);
 }
 
 FbWGPipe GXWGFifo : (0xCC008000);
