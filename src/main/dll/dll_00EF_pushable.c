@@ -568,10 +568,10 @@ void pushable_update(int* obj)
     LAB_clear:
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && mainGetBit(0x913) == 0)
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && mainGetBit(GAMEBIT_PushableRelated0913) == 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-        mainSetBits(0x913, 1);
+        mainSetBits(GAMEBIT_PushableRelated0913, 1);
         return;
     }
     player = Obj_GetPlayerObject();
@@ -611,9 +611,9 @@ void pushable_update(int* obj)
         if (lbl_803E3528 == state->prevWaterDepth && state->waterDepth > lbl_803E3528)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_curtainopen16);
-            mainSetBits(0x272, 1);
+            mainSetBits(GAMEBIT_PushableRelated0272, 1);
         }
-        if (mainGetBit(0x272) != 0)
+        if (mainGetBit(GAMEBIT_PushableRelated0272) != 0)
         {
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject((u32)obj);
@@ -929,7 +929,7 @@ void pushable_hitDetect(int obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x108:
-        if (mainGetBit(0x272) != 0)
+        if (mainGetBit(GAMEBIT_PushableRelated0272) != 0)
         {
             return;
         }
