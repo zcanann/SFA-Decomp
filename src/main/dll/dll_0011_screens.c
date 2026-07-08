@@ -242,7 +242,7 @@ void screens_show(int id)
             lbl_803DD4A0 = (u32)mmAlloc(size, 2, 0);
         }
         lbl_803DD4A4 = size;
-        getTabEntry((void*)lbl_803DD4A0, 0x18, offset, size);
+        getTabEntry((void*)lbl_803DD4A0, MLDF_FILEID_SCREENS_BIN, offset, size);
         mm_free((u32)asset);
         lbl_803DD4AC = id;
     }
