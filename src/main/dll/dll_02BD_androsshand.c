@@ -67,8 +67,8 @@ void AndrossHand_update(int obj)
     f32 fScale = lbl_803DC4F8;
     AndrossHandState* state = ((GameObject*)obj)->extra;
     u8 changed = 0;
-    SunVec3 va;
-    SunVec3 vb;
+    SunVec3 swipeVel;
+    SunVec3 grabVel;
 
     if (state->androssObj == 0u)
     {
@@ -129,17 +129,17 @@ void AndrossHand_update(int obj)
     case ANDROSSHAND_STATE_IDLE:
         if (changed)
         {
-            GameObject* h = (GameObject*)((GameObject*)obj)->extra;
+            GameObject* gobj = (GameObject*)((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E75AC, 0);
-            h->anim.localPosZ = gAndrossHandMoveAnimSpeeds[0];
+            gobj->anim.localPosZ = gAndrossHandMoveAnimSpeeds[0];
         }
         break;
     case ANDROSSHAND_STATE_EXIT:
         if (changed)
         {
-            GameObject* h = (GameObject*)((GameObject*)obj)->extra;
+            GameObject* gobj = (GameObject*)((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E75AC, 0);
-            h->anim.localPosZ = gAndrossHandMoveAnimSpeeds[4];
+            gobj->anim.localPosZ = gAndrossHandMoveAnimSpeeds[4];
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75B0)
         {
@@ -150,9 +150,9 @@ void AndrossHand_update(int obj)
     case ANDROSSHAND_STATE_ENTER:
         if (changed)
         {
-            GameObject* h = (GameObject*)((GameObject*)obj)->extra;
+            GameObject* gobj = (GameObject*)((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 5, lbl_803E75AC, 0);
-            h->anim.localPosZ = gAndrossHandMoveAnimSpeeds[5];
+            gobj->anim.localPosZ = gAndrossHandMoveAnimSpeeds[5];
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75B0)
         {
@@ -162,22 +162,22 @@ void AndrossHand_update(int obj)
     case ANDROSSHAND_STATE_SWIPE:
         if (changed)
         {
-            GameObject* h;
+            GameObject* gobj;
             state->soundGate = 0;
-            h = (GameObject*)((GameObject*)obj)->extra;
+            gobj = (GameObject*)((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E75AC, 0);
-            h->anim.localPosZ = gAndrossHandMoveAnimSpeeds[1];
+            gobj->anim.localPosZ = gAndrossHandMoveAnimSpeeds[1];
         }
         {
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             if (hitState->lastHitObject != 0)
             {
-                SunVec3 w;
-                va.x = state->sideFlag ? lbl_803E75C0 : lbl_803E75C4;
-                va.y = lbl_803E75AC;
-                va.z = lbl_803E75AC;
-                w = va;
-                arwarwing_setVelocity(state->arwingObj, (int)&w);
+                SunVec3 vel;
+                swipeVel.x = state->sideFlag ? lbl_803E75C0 : lbl_803E75C4;
+                swipeVel.y = lbl_803E75AC;
+                swipeVel.z = lbl_803E75AC;
+                vel = swipeVel;
+                arwarwing_setVelocity(state->arwingObj, (int)&vel);
                 doRumble(lbl_803E75C8);
             }
         }
@@ -204,11 +204,11 @@ void AndrossHand_update(int obj)
     case ANDROSSHAND_STATE_GRAB:
         if (changed)
         {
-            GameObject* h;
+            GameObject* gobj;
             state->soundGate = 0;
-            h = (GameObject*)((GameObject*)obj)->extra;
+            gobj = (GameObject*)((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E75AC, 0);
-            h->anim.localPosZ = gAndrossHandMoveAnimSpeeds[2];
+            gobj->anim.localPosZ = gAndrossHandMoveAnimSpeeds[2];
         }
         if (state->sideFlag != 0 && ((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75B0)
         {
@@ -227,12 +227,12 @@ void AndrossHand_update(int obj)
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             if (hitState->lastHitObject != 0)
             {
-                SunVec3 w;
-                vb.x = lbl_803E75AC;
-                vb.y = lbl_803E75F4;
-                vb.z = lbl_803E75AC;
-                w = vb;
-                arwarwing_setVelocity(state->arwingObj, (int)&w);
+                SunVec3 vel;
+                grabVel.x = lbl_803E75AC;
+                grabVel.y = lbl_803E75F4;
+                grabVel.z = lbl_803E75AC;
+                vel = grabVel;
+                arwarwing_setVelocity(state->arwingObj, (int)&vel);
                 doRumble(lbl_803E75C8);
             }
         }
@@ -260,9 +260,9 @@ void AndrossHand_update(int obj)
     case ANDROSSHAND_STATE_SHOOT:
         if (changed)
         {
-            GameObject* h = (GameObject*)((GameObject*)obj)->extra;
+            GameObject* gobj = (GameObject*)((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 3, lbl_803E75AC, 0);
-            h->anim.localPosZ = gAndrossHandMoveAnimSpeeds[3];
+            gobj->anim.localPosZ = gAndrossHandMoveAnimSpeeds[3];
             state->shotTimer = -1;
         }
         state->shotTimer -= framesThisStep;
@@ -290,9 +290,9 @@ void AndrossHand_update(int obj)
     case ANDROSSHAND_STATE_IDLE2:
         if (changed)
         {
-            GameObject* h = (GameObject*)((GameObject*)obj)->extra;
+            GameObject* gobj = (GameObject*)((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E75AC, 0);
-            h->anim.localPosZ = gAndrossHandMoveAnimSpeeds[0];
+            gobj->anim.localPosZ = gAndrossHandMoveAnimSpeeds[0];
         }
         break;
     case ANDROSSHAND_STATE_DEAD:
