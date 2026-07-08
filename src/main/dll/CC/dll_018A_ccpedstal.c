@@ -59,7 +59,7 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2)
     {
         int doMark;
         Obj_SetActiveModelIndex(obj, 0);
-        if (mainGetBit(0xa9) != 0)
+        if (mainGetBit(GAMEBIT_ITEM_FireGem_Count) != 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
