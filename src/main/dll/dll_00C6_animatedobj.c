@@ -1,7 +1,6 @@
 /* DLL 0xC6 — animated object [8016984C-801713AC) */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
-extern u32 FUN_8003b818();
 
 void MikaBomb_hitDetect(void);
 
@@ -263,40 +262,6 @@ extern void objSetMtxFn_800412d4(f32 * m);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3230;
-
-void staticCamera_free(int obj)
-{
-    ObjGroup_RemoveObject(obj, ANIMATEDOBJ_OBJGROUP);
-    return;
-}
-
-void staticCamera_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0)
-    {
-        FUN_8003b818(obj);
-    }
-    return;
-}
-
-void staticCamera_init(short* obj, int params, int flag)
-{
-    u8* dest;
-
-    *obj = -*(short*)(params + 0x1c);
-    obj[1] = -*(short*)(params + 0x1e);
-    obj[2] = -*(short*)(params + 0x20);
-    dest = *(u8**)(obj + 0x5c);
-    *dest = *(u8*)(params + 0x19);
-    *(float*)(dest + 4) =
-        (float)((double)(u32) * (u8*)(params + 0x1a));
-    dest[1] = 0;
-    if (flag == 0)
-    {
-        ObjGroup_AddObject((int)obj, ANIMATEDOBJ_OBJGROUP);
-    }
-    return;
-}
 
 void MikaBombShadow_update(int* obj);
 
