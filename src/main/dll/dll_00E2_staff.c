@@ -53,8 +53,6 @@
 /* swipe/attack lingering trail: single follow-up spawn after the burst cluster */
 #define STAFF_PARTFX_SWIPE_TRAIL 0x7b3
 
-extern u32 FUN_8003b818();
-
 void MikaBomb_hitDetect(void);
 
 void MikaBomb_free(int obj, int mode);
@@ -244,39 +242,6 @@ typedef struct StaffDoGrowShrinkAnimState
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-
-void staticCamera_free(int obj)
-{
-    ObjGroup_RemoveObject(obj, STAFF_OBJGROUP);
-    return;
-}
-
-void staticCamera_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0)
-    {
-        FUN_8003b818(obj);
-    }
-    return;
-}
-
-void staticCamera_init(s16* obj, int params, int flag)
-{
-    u8* state;
-
-    *obj = -*(s16*)(params + 0x1c);
-    obj[1] = -*(s16*)(params + 0x1e);
-    obj[2] = -*(s16*)(params + 0x20);
-    state = *(u8**)(obj + 0x5c);
-    *state = *(u8*)(params + 0x19);
-    *(f32*)(state + 4) = (f32)(u32) * (u8*)(params + 0x1a);
-    state[1] = 0;
-    if (flag == 0)
-    {
-        ObjGroup_AddObject((int)obj, STAFF_OBJGROUP);
-    }
-    return;
-}
 
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
