@@ -6,12 +6,13 @@
  * them into "forward"/"backward" links, plus three path-tag bytes
  * (+0x31..+0x33) used to keep a walk on the path selected by `tag`.
  *
- * fn_8010A104 advances the camera's near/far node pair (*p1/*p2) along
- * the tagged path: it nudges *p1 to the matching neighbour, then slides
- * it by world distance through the node window from
- * pathcam_findTaggedNodeWindow (near/far thresholds lbl_803E1888 /
- * lbl_803E188C), counts the tagged span with fn_8010A47C, and walks *p2
- * the same number of steps so the pair stays a fixed span apart.
+ * fn_8010A104 advances the camera's near/far node pair
+ * (*nodeId/*leadNodeId) along the tagged path: it nudges *nodeId to the
+ * matching neighbour, then slides it by world distance through the node
+ * window from pathcam_findTaggedNodeWindow (near/far thresholds
+ * lbl_803E1888 / lbl_803E188C), counts the tagged span with fn_8010A47C,
+ * and walks *leadNodeId the same number of steps so the pair stays a
+ * fixed span apart.
  *
  * fn_8010A47C walks a node along its forward tagged links until it hits
  * an endpoint (node type 0x1A/0x1B at +0x19), returning the final node
@@ -54,7 +55,7 @@ extern f32 lbl_803E1888; /* near distance threshold */
 extern f32 lbl_803E188C; /* far distance threshold */
 extern f32 fn_8010AC48(f32 px, f32 py, f32 pz, int* obj);
 
-void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
+void fn_8010A104(int* nodeId, int* leadNodeId, f32 x, f32 y, f32 z, int tag)
 {
     int node;
     int linked;
@@ -69,7 +70,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
     f32 dist;
     f32 nearThresh;
 
-    node = (int)(*gRomCurveInterface)->getById(*p1);
+    node = (int)(*gRomCurveInterface)->getById(*nodeId);
     noForwardExit = 1;
     for (slot = 0; slot < PATHCURVE_NODE_LINK_COUNT; slot++)
     {
@@ -95,7 +96,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
                     (((PathCurveNode*)linked)->tag0 == tag || ((PathCurveNode*)linked)->tag1 == tag ||
                      ((PathCurveNode*)linked)->tag2 == tag))
                 {
-                    *p1 = ((PathCurveNode*)node)->links[slot];
+                    *nodeId = ((PathCurveNode*)node)->links[slot];
                     slot = PATHCURVE_NODE_LINK_COUNT;
                 }
             }
@@ -106,14 +107,14 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
     while (settled == 0)
     {
         settled = 1;
-        node = (int)(*gRomCurveInterface)->getById(*p1);
+        node = (int)(*gRomCurveInterface)->getById(*nodeId);
         pathcam_findTaggedNodeWindow((u8*)node, window, tag);
         dist = fn_8010AC48(x, y, z, window);
         if (dist < nearThresh)
         {
             if (window[0] > -1)
             {
-                *p1 = window[0];
+                *nodeId = window[0];
                 settled = 0;
             }
         }
@@ -121,18 +122,18 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
         {
             if (window[2] > -1 && window[3] > -1)
             {
-                *p1 = window[2];
+                *nodeId = window[2];
                 settled = 0;
             }
         }
     }
-    node = (int)(*gRomCurveInterface)->getById(*p1);
+    node = (int)(*gRomCurveInterface)->getById(*nodeId);
     fn_8010A47C(node, &span, tag);
-    node = (int)(*gRomCurveInterface)->getById(*p2);
-    *p2 = ((PathCurveNode*)fn_8010A47C(node, &farSpan, tag))->selfId;
+    node = (int)(*gRomCurveInterface)->getById(*leadNodeId);
+    *leadNodeId = ((PathCurveNode*)fn_8010A47C(node, &farSpan, tag))->selfId;
     for (step = 0; step < span; step++)
     {
-        node = (int)(*gRomCurveInterface)->getById(*p2);
+        node = (int)(*gRomCurveInterface)->getById(*leadNodeId);
         for (slot2 = 0; slot2 < PATHCURVE_NODE_LINK_COUNT; slot2++)
         {
             if (((PathCurveNode*)node)->links[slot2] > -1 &&
@@ -143,7 +144,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
                     (((PathCurveNode*)linked)->tag0 == tag || ((PathCurveNode*)linked)->tag1 == tag ||
                      ((PathCurveNode*)linked)->tag2 == tag))
                 {
-                    *p2 = ((PathCurveNode*)node)->links[slot2];
+                    *leadNodeId = ((PathCurveNode*)node)->links[slot2];
                     slot2 = PATHCURVE_NODE_LINK_COUNT;
                 }
             }

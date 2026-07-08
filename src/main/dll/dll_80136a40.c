@@ -548,7 +548,7 @@ void errDisplayInstallHandlers(void)
     OSCreateThread(gErrDisplayThread, errDisplayThreadMain, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
 }
 
-int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
+int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTypes)
 {
     int* objs;
     int* tmpList;
@@ -607,14 +607,14 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
             {
                 if ((*gMapEventInterface)->shouldNotSaveTime(*(int*)((char*)data + 0x14)) != 0)
                 {
-                    if (p2 == 0)
+                    if (allowSpecialTypes == 0)
                     {
                         s16 m = ((GameObject*)*objs)->anim.seqId;
                         if (m == 1022 || m == 1239 || m == 636 || m == 593)
                             goto next;
                     }
                     {
-                        f32 dist = vec3f_distanceSquared(p1 + 0x18, *objs + 0x18);
+                        f32 dist = vec3f_distanceSquared(origin + 0x18, *objs + 0x18);
                         if (dist < bestDistSq)
                         {
                             bestDistSq = dist;
@@ -630,22 +630,22 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
     return closest;
 }
 
-void fn_80138D7C(int obj, int p2)
+void fn_80138D7C(int obj, int state)
 {
-    u8 ratio = (u8)((s32) * (u8*)(*(int*)(p2 + 0) + 2) / 10);
+    u8 ratio = (u8)((s32) * (u8*)(*(int*)(state + 0) + 2) / 10);
 
-    if (*(u8*)(p2 + 0x82c) != ratio)
+    if (*(u8*)(state + 0x82c) != ratio)
     {
         f32 t;
         if (mainGetBit(1005) == 0)
         {
             mainSetBits(1005, 1);
             (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
-            ((TrickyImpressState*)p2)->flags54 |= 0x4000;
-            *(f32*)(p2 + 0x828) = *(f32*)(p2 + 0x828) + lbl_803E2408;
+            ((TrickyImpressState*)state)->flags54 |= 0x4000;
+            *(f32*)(state + 0x828) = *(f32*)(state + 0x828) + lbl_803E2408;
         }
-        *(f32*)(p2 + 0x828) = *(f32*)(p2 + 0x828) - timeDelta;
-        t = *(f32*)(p2 + 0x828);
+        *(f32*)(state + 0x828) = *(f32*)(state + 0x828) - timeDelta;
+        t = *(f32*)(state + 0x828);
         if (!(t > lbl_803E2408))
         {
             if (t > lbl_803E23DC)
@@ -658,13 +658,13 @@ void fn_80138D7C(int obj, int p2)
                 else
                 {
                     *(u8*)(*(int*)((char*)Obj_GetActiveModel(obj) + 0x34) + 8) = ratio;
-                    alpha = *(f32*)(p2 + 0x828) / lbl_803E23E0;
+                    alpha = *(f32*)(state + 0x828) / lbl_803E23E0;
                 }
                 Obj_SetModelColorOverrideRecursive(obj, 255, 255, 255, (s32)(lbl_803E240C * alpha), 1);
             }
             else
             {
-                *(u8*)(p2 + 0x82c) = ratio;
+                *(u8*)(state + 0x82c) = ratio;
                 Obj_SetModelColorOverrideRecursive(obj, 0, 0, 0, 0, 0);
             }
         }
@@ -913,7 +913,7 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
     }
 }
 
-int fn_80136A40(int p1, int c)
+int fn_80136A40(int unused, int c)
 {
     u8* tbl;
     u8 first;
@@ -983,7 +983,7 @@ int fn_80136A40(int p1, int c)
 }
 
 #pragma optimization_level 3
-int debugPrintDrawRecord(int p1, u8* p)
+int debugPrintDrawRecord(int color, u8* p)
 {
     u8 c;
     int w;
@@ -1053,7 +1053,7 @@ int debugPrintDrawRecord(int p1, u8* p)
                 gDebugTextColorG = c1;
                 gDebugTextColorB = c2;
                 gDebugTextColorA = c3;
-                setTextColor(p1);
+                setTextColor(color);
             }
             break;
         case 0x82:
@@ -1139,7 +1139,7 @@ int debugPrintDrawRecord(int p1, u8* p)
             }
             break;
         default:
-            w = fn_80136A40(p1, c);
+            w = fn_80136A40(color, c);
             break;
         }
         if (gDebugFixedWidthMode != 0 && c >= 0x20 && c <= 0x7f)

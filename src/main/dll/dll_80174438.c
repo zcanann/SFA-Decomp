@@ -76,21 +76,21 @@ int fn_80174438(int obj, PushableState* state)
     return 0;
 }
 
-void fn_80174588(int obj, PushableState* p2)
+void fn_80174588(int obj, PushableState* state)
 {
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
 
     switch (*(int*)(data + 0x14))
     {
     case 0x49B2C:
-        p2->requiredHitId = 10;
+        state->requiredHitId = 10;
         break;
     case 0x49B5D:
-        p2->requiredHitId = 11;
+        state->requiredHitId = 11;
         ((ObjAnimComponent*)obj)->bankIndex = 1;
         break;
     case 0x49B5E:
-        p2->requiredHitId = 12;
+        state->requiredHitId = 12;
         ((ObjAnimComponent*)obj)->bankIndex = 1;
         break;
     }
@@ -98,7 +98,7 @@ void fn_80174588(int obj, PushableState* p2)
     if (mainGetBit(*(s16*)(data + 0x18)) != 0)
     {
         ObjTextureRuntimeSlot* tex;
-        p2->flags = (u16)(p2->flags | 0x80);
+        state->flags = (u16)(state->flags | 0x80);
         tex = objFindTexture((void*)obj, 0, 0);
         if (tex != NULL)
         {
@@ -115,8 +115,8 @@ int fn_80174668(int obj, PushableState* state)
     f32 dx;
     f32 cur;
     f32 bound;
-    f32 p1;
-    f32 p2;
+    f32 eyeScaledX;
+    f32 eyeScaledY;
     f32 dist[2];
 
     flag = 0;
@@ -225,11 +225,11 @@ int fn_80174668(int obj, PushableState* state)
             {
                 state->eyePosY = lbl_803E356C;
             }
-            p1 = state->eyePosX * (lbl_803E3570 + state->blinkPhase);
-            p2 = state->eyePosY * (lbl_803E3570 + state->blinkPhase);
+            eyeScaledX = state->eyePosX * (lbl_803E3570 + state->blinkPhase);
+            eyeScaledY = state->eyePosY * (lbl_803E3570 + state->blinkPhase);
             tex->colorR = (u8)(int)state->eyeOpenAmount;
-            tex->colorG = (u8)(int)p1;
-            tex->colorB = (u8)(int)p2;
+            tex->colorG = (u8)(int)eyeScaledX;
+            tex->colorB = (u8)(int)eyeScaledY;
         }
     }
     return 0;
