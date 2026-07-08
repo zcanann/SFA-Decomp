@@ -462,7 +462,7 @@ void* ObjModel_LoadModelData(int id)
     ((ModelFileHeader*)model)->refCount = 1;
     if (((ModelFileHeader*)model)->animationCount == 0)
     {
-        ((ModelFileHeader*)model)->flags |= 2;
+        ((ModelFileHeader*)model)->flags |= MODEL_FLAG_NO_ANIMATIONS;
     }
     if (amapFlag != 0)
     {
