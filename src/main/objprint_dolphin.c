@@ -778,7 +778,7 @@ typedef struct
     s8 joints[6];
 } ChildEnt;
 
-void objRenderChild(int* child, int* parent, u8 p3)
+void objRenderChild(int* child, int* parent, u8 isShadow)
 {
     f32 res[3];
     struct
@@ -849,7 +849,7 @@ void objRenderChild(int* child, int* parent, u8 p3)
         setMatrixFromObjectTransposed(&blk, m2);
         PSMTXConcat(mtx, m2, m2);
     }
-    if (p3 == 0)
+    if (isShadow == 0)
     {
         void* space;
         ((GameObject*)child)->anim.worldPosX = m2[3] + playerMapOffsetX;
@@ -876,7 +876,7 @@ void objRenderChild(int* child, int* parent, u8 p3)
     if (!(((GameObject*)child)->anim.flags & OBJANIM_FLAG_HIDDEN))
     {
         curObjMtx = (u32)m2;
-        if (p3 == 0)
+        if (isShadow == 0)
         {
             ((GameObject*)child)->objectFlags |= OBJECT_OBJFLAG_RENDERED;
             objRenderModel(child);

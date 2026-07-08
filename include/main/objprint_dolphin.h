@@ -79,7 +79,7 @@ void clearLoadedFileFlags_blocks1(void);
 /* extern-cleanup: defining-file public prototypes */
 void objRenderShadow2(int* obj, int* obj2, u8* m, int p4);
 void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode);
-void objRenderChild(int* child, int* parent, u8 p3);
+void objRenderChild(int* child, int* parent, u8 isShadow);
 
 
 /* extern-cleanup: defining-file public prototypes */
