@@ -143,7 +143,7 @@ extern f32 Vec_distance(f32* a, f32* b);
 extern int ObjGroup_FindNearestObject();
 extern int Obj_GetYawDeltaToObject();
 
-f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
+f32 fn_80114224(int startPos, int endPos, int startTangent, int endTangent, int steps)
 {
     f32 prev_x, prev_y, prev_z;
     f32 total;
@@ -153,33 +153,33 @@ f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
     f32 buf[4];
     int i;
 
-    prev_x = *(f32*)(p1 + 0);
-    prev_y = *(f32*)(p1 + 4);
-    prev_z = *(f32*)(p1 + 8);
+    prev_x = *(f32*)(startPos + 0);
+    prev_y = *(f32*)(startPos + 4);
+    prev_z = *(f32*)(startPos + 8);
     total = lbl_803E1C90;
 
-    for (i = 1; i < n + 1; i++)
+    for (i = 1; i < steps + 1; i++)
     {
-        t = (f32)i / n;
+        t = (f32)i / steps;
 
-        buf[0] = *(f32*)(p1 + 0);
-        buf[1] = *(f32*)(p3 + 0);
-        buf[2] = *(f32*)(p2 + 0);
-        buf[3] = *(f32*)(p4 + 0);
+        buf[0] = *(f32*)(startPos + 0);
+        buf[1] = *(f32*)(startTangent + 0);
+        buf[2] = *(f32*)(endPos + 0);
+        buf[3] = *(f32*)(endTangent + 0);
         cur_x = Curve_EvalHermite(buf, t, 0);
         dx = cur_x - prev_x;
 
-        buf[0] = *(f32*)(p1 + 4);
-        buf[1] = *(f32*)(p3 + 4);
-        buf[2] = *(f32*)(p2 + 4);
-        buf[3] = *(f32*)(p4 + 4);
+        buf[0] = *(f32*)(startPos + 4);
+        buf[1] = *(f32*)(startTangent + 4);
+        buf[2] = *(f32*)(endPos + 4);
+        buf[3] = *(f32*)(endTangent + 4);
         cur_y = Curve_EvalHermite(buf, t, 0);
         dy = cur_y - prev_y;
 
-        buf[0] = *(f32*)(p1 + 8);
-        buf[1] = *(f32*)(p3 + 8);
-        buf[2] = *(f32*)(p2 + 8);
-        buf[3] = *(f32*)(p4 + 8);
+        buf[0] = *(f32*)(startPos + 8);
+        buf[1] = *(f32*)(startTangent + 8);
+        buf[2] = *(f32*)(endPos + 8);
+        buf[3] = *(f32*)(endTangent + 8);
         cur_z = Curve_EvalHermite(buf, t, 0);
         dz = cur_z - prev_z;
 
@@ -192,61 +192,61 @@ f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
     return total;
 }
 
-int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
+int fn_80114408(int obj, int def, int state, int phaseOut, f32 speed)
 {
     extern void vecRotateYXZ(int, int);
     extern f32 fn_80114224(int, int, int, int, int);
     extern f32 lbl_803E1CA0;
     int ret = 0;
 
-    if ((void*)p2 != NULL)
+    if ((void*)def != NULL)
     {
-        s16 tmp[3];
+        s16 angles[3];
         f32 va;
         f32 vb;
         va = *(f32*)&lbl_803E1CA0;
-        ((BaddieState*)p3)->posY = va;
+        ((BaddieState*)state)->posY = va;
         vb = lbl_803E1C90;
-        ((BaddieState*)p3)->posZ = vb;
-        *(f32*)(p3 + 0x20) = vb;
-        *(f32*)(p3 + 0x24) = va;
-        *(f32*)(p3 + 0x28) = vb;
-        *(f32*)(p3 + 0x2c) = vb;
-        vecRotateYXZ(p1, p3 + 0x18);
-        tmp[2] = 0;
-        tmp[1] = (s16)(s8) * (u8*)(p2 + 0x2d);
-        tmp[0] = (s16)(s8) * (u8*)(p2 + 0x2c);
-        vecRotateYXZ((int)tmp, p3 + 0x24);
-        *(f32*)p4 = lbl_803E1C90;
-        *(f32*)(p3 + 0x34) = fn_80114224(p3, p3 + 0x18, p3 + 0xc, p3 + 0x24, 10);
+        ((BaddieState*)state)->posZ = vb;
+        *(f32*)(state + 0x20) = vb;
+        *(f32*)(state + 0x24) = va;
+        *(f32*)(state + 0x28) = vb;
+        *(f32*)(state + 0x2c) = vb;
+        vecRotateYXZ(obj, state + 0x18);
+        angles[2] = 0;
+        angles[1] = (s16)(s8) * (u8*)(def + 0x2d);
+        angles[0] = (s16)(s8) * (u8*)(def + 0x2c);
+        vecRotateYXZ((int)angles, state + 0x24);
+        *(f32*)phaseOut = lbl_803E1C90;
+        *(f32*)(state + 0x34) = fn_80114224(state, state + 0x18, state + 0xc, state + 0x24, 10);
     }
     else
     {
-        *(f32*)p4 = *(f32*)p4 + p5 * (f32)(u32)framesThisStep / *(f32*)(p3 + 0x34);
-        if (*(f32*)p4 >= *(f32*)&lbl_803E1CA4)
+        *(f32*)phaseOut = *(f32*)phaseOut + speed * (f32)(u32)framesThisStep / *(f32*)(state + 0x34);
+        if (*(f32*)phaseOut >= *(f32*)&lbl_803E1CA4)
         {
             ret = 1;
-            *(f32*)p4 = lbl_803E1CA4;
+            *(f32*)phaseOut = lbl_803E1CA4;
         }
     }
 
     {
         f32 buf[4];
-        buf[0] = *(f32*)(p3 + 0x00);
-        buf[1] = *(f32*)(p3 + 0x0c);
-        buf[2] = ((BaddieState*)p3)->posY;
-        buf[3] = *(f32*)(p3 + 0x24);
-        ((GameObject*)p1)->anim.localPosX = Curve_EvalHermite(buf, *(f32*)p4, 0);
-        buf[0] = *(f32*)(p3 + 0x04);
-        buf[1] = *(f32*)(p3 + 0x10);
-        buf[2] = ((BaddieState*)p3)->posZ;
-        buf[3] = *(f32*)(p3 + 0x28);
-        ((GameObject*)p1)->anim.localPosY = Curve_EvalHermite(buf, *(f32*)p4, 0);
-        buf[0] = *(f32*)(p3 + 0x08);
-        buf[1] = ((BaddieState*)p3)->posX;
-        buf[2] = *(f32*)(p3 + 0x20);
-        buf[3] = *(f32*)(p3 + 0x2c);
-        ((GameObject*)p1)->anim.localPosZ = Curve_EvalHermite(buf, *(f32*)p4, 0);
+        buf[0] = *(f32*)(state + 0x00);
+        buf[1] = *(f32*)(state + 0x0c);
+        buf[2] = ((BaddieState*)state)->posY;
+        buf[3] = *(f32*)(state + 0x24);
+        ((GameObject*)obj)->anim.localPosX = Curve_EvalHermite(buf, *(f32*)phaseOut, 0);
+        buf[0] = *(f32*)(state + 0x04);
+        buf[1] = *(f32*)(state + 0x10);
+        buf[2] = ((BaddieState*)state)->posZ;
+        buf[3] = *(f32*)(state + 0x28);
+        ((GameObject*)obj)->anim.localPosY = Curve_EvalHermite(buf, *(f32*)phaseOut, 0);
+        buf[0] = *(f32*)(state + 0x08);
+        buf[1] = ((BaddieState*)state)->posX;
+        buf[2] = *(f32*)(state + 0x20);
+        buf[3] = *(f32*)(state + 0x2c);
+        ((GameObject*)obj)->anim.localPosZ = Curve_EvalHermite(buf, *(f32*)phaseOut, 0);
     }
     return ret;
 }
@@ -256,13 +256,13 @@ int dll_2E_func0F_ret_0(void)
     return 0x0;
 }
 
-void dll_2E_setLookAtMaxDistance(int* p, f32 v)
+void dll_2E_setLookAtMaxDistance(int* state, f32 value)
 {
-    ((MoveLibState*)p)->lookAtMaxDistance = v;
+    ((MoveLibState*)state)->lookAtMaxDistance = value;
 }
-void dll_2E_func04(int* p, int v)
+void dll_2E_func04(int* state, int target)
 {
-    *(int*)&((MoveLibState*)p)->lockTarget = v;
+    *(int*)&((MoveLibState*)state)->lockTarget = target;
 }
 
 void dll_2E_func08(int obj, int v1, int v2)
@@ -457,7 +457,7 @@ void dll_2E_func06(int obj, char* st, int point)
 
 /* Advances the object along its movement curve, snapping to ground and
  * easing the yaw toward the path direction. */
-int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int p4, int c, f32* d, int* flags)
+int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int state, int curveVariant, f32* rootOut, int* flags)
 {
     int moved;
     int hit;
@@ -475,11 +475,11 @@ int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int p4, int c, f32*
     }
     if (fl & 0x4)
     {
-        if (fn_80114408(obj, 0, p4, p4 + 0x30, phase) != 0)
+        if (fn_80114408(obj, 0, state, state + 0x30, phase) != 0)
         {
             args[0] = 0x19;
             args[1] = 0x15;
-            (*gRomCurveInterface)->initCurve(route, (void*)obj, lbl_803E1CB0, args, (u8)c);
+            (*gRomCurveInterface)->initCurve(route, (void*)obj, lbl_803E1CB0, args, (u8)curveVariant);
             *flags |= 8;
             moved = 1;
         }
@@ -499,7 +499,7 @@ int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int p4, int c, f32*
             *flags |= 0x10;
         }
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, phase, d);
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, phase, rootOut);
     if (*flags & 1)
     {
         if (hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,

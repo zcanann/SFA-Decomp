@@ -100,7 +100,7 @@ extern f32 lbl_803E24E0;
 extern f32 lbl_803E24E4;
 extern f32 lbl_803E24E8;
 
-void* trickyFindCirclingTarget(void* obj, void* arg2);
+void* trickyFindCirclingTarget(void* obj, void* state);
 
 typedef struct TrickyPackedSlots
 {
@@ -585,7 +585,7 @@ void fn_8013E0D0(int* obj, u8* st)
 
 #pragma dont_inline on
 #pragma opt_common_subs off
-void* trickyFindCirclingTarget(void* obj, void* arg2)
+void* trickyFindCirclingTarget(void* obj, void* state)
 {
     void* target;
     void** list;
@@ -593,13 +593,13 @@ void* trickyFindCirclingTarget(void* obj, void* arg2)
     int i;
     f32 d1, d2, d3;
 
-    target = *(void**)((u8*)arg2 + 0x24);
+    target = *(void**)((u8*)state + 0x24);
     if (((GameObject*)target)->anim.seqId == ANIMOBJD2_CIRCLE_TARGET_SEQID)
     {
         return target;
     }
 
-    target = (void*)fn_80296118(*(int*)((u8*)arg2 + 0x4));
+    target = (void*)fn_80296118(*(int*)((u8*)state + 0x4));
     if (target == NULL)
         goto fail;
 
@@ -610,9 +610,9 @@ void* trickyFindCirclingTarget(void* obj, void* arg2)
         {
             d1 = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)target)->anim.worldPosX);
             d2 = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
-                                &((GameObject*)*(void**)((u8*)arg2 + 0x4))->anim.worldPosX);
+                                &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
             d3 = Vec_xzDistance(&((GameObject*)target)->anim.worldPosX,
-                                &((GameObject*)*(void**)((u8*)arg2 + 0x4))->anim.worldPosX);
+                                &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
             if ((d1 + d2) < lbl_803E23F8 * d3)
             {
                 return target;
@@ -626,28 +626,28 @@ fail:
 #pragma opt_common_subs reset
 #pragma dont_inline reset
 
-void trickyUpdateCirclingTargetPosition(void* p1, void* p2)
+void trickyUpdateCirclingTargetPosition(void* objPtr, void* state)
 {
-    GameObject* obj = (GameObject*)p1;
-    GameObject* target = *(GameObject**)&((TrickyState*)p2)->followObj;
+    GameObject* obj = (GameObject*)objPtr;
+    GameObject* target = *(GameObject**)&((TrickyState*)state)->followObj;
     f32 dx = target->anim.worldPosX - obj->anim.worldPosX;
     f32 dz = target->anim.worldPosZ - obj->anim.worldPosZ;
     int angle = atan2_8002178c(dx, dz);
     s32 delta;
     s32 absDelta;
 
-    if (((TrickyState*)p2)->substate == ANIMOBJD2_SUBSTATE_ACQUIRE)
+    if (((TrickyState*)state)->substate == ANIMOBJD2_SUBSTATE_ACQUIRE)
     {
-        *(s32*)&((TrickyState*)p2)->unk700 = randomGetRange(0, 1);
-        if (*(s32*)&((TrickyState*)p2)->unk700 == 0)
+        *(s32*)&((TrickyState*)state)->unk700 = randomGetRange(0, 1);
+        if (*(s32*)&((TrickyState*)state)->unk700 == 0)
         {
-            *(s32*)&((TrickyState*)p2)->unk700 = -1;
+            *(s32*)&((TrickyState*)state)->unk700 = -1;
         }
-        *(s32*)&((TrickyState*)p2)->unk704 = angle;
-        ((TrickyState*)p2)->substate = ANIMOBJD2_SUBSTATE_APPROACH;
+        *(s32*)&((TrickyState*)state)->unk704 = angle;
+        ((TrickyState*)state)->substate = ANIMOBJD2_SUBSTATE_APPROACH;
     }
 
-    delta = angle - (s32)(u16) * (s32*)((u8*)p2 + 0x704);
+    delta = angle - (s32)(u16) * (s32*)((u8*)state + 0x704);
     if (delta > 0x8000)
         delta -= 0xFFFF;
     if (delta < -0x8000)
@@ -663,16 +663,17 @@ void trickyUpdateCirclingTargetPosition(void* p1, void* p2)
     }
     if (absDelta < 0x2000)
     {
-        *(s32*)&((TrickyState*)p2)->unk704 = *(s32*)((int)p2 + 0x704) + (*(s32*)&((TrickyState*)p2)->unk700 << 11);
+        *(s32*)&((TrickyState*)state)->unk704 =
+            *(s32*)((int)state + 0x704) + (*(s32*)&((TrickyState*)state)->unk700 << 11);
     }
 
-    *(f32*)&((TrickyState*)p2)->unk708 = (*(GameObject**)&((TrickyState*)p2)->followObj)->anim.worldPosX -
-                                         lbl_803E24D4 * fsin16Precise((u16) * &((TrickyState*)p2)->unk704);
-    *(f32*)&((TrickyState*)p2)->unk70C = (*(GameObject**)&((TrickyState*)p2)->followObj)->anim.worldPosY;
-    ((TrickyState*)p2)->unk710 = (*(GameObject**)&((TrickyState*)p2)->followObj)->anim.worldPosZ -
-                                 lbl_803E24D4 * fcos16Precise((u16) * &((TrickyState*)p2)->unk704);
+    *(f32*)&((TrickyState*)state)->unk708 = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosX -
+                                            lbl_803E24D4 * fsin16Precise((u16) * &((TrickyState*)state)->unk704);
+    *(f32*)&((TrickyState*)state)->unk70C = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosY;
+    ((TrickyState*)state)->unk710 = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosZ -
+                                    lbl_803E24D4 * fcos16Precise((u16) * &((TrickyState*)state)->unk704);
 
-    if (trickyFn_8013b368(p1, lbl_803E2488, p2) == 0)
+    if (trickyFn_8013b368(objPtr, lbl_803E2488, state) == 0)
     {
         trickyReportError(sTrickyShouldNeverStopCirclingError);
     }
