@@ -7111,16 +7111,16 @@ extern InflateBaseExtra gInflateLengthCodes[29];
 extern InflateBaseExtra gInflateDistCodes[30];
 extern u8 lbl_803DCD20[];
 extern u8 lbl_803DCD18[];
-u8 lbl_80377880[0x14];
-u16 lbl_80377894[0x10];
-u16 lbl_80377954[0x10];
-u16 lbl_803778B4[0x10];
-u16 lbl_80377974[0x16];
-u8 lbl_803778D4[0x80];
-u8 lbl_8035F740[0x120];
-u16 lbl_8035F860[0x8000];
-u8 lbl_8036F860[0x20];
-u8 lbl_8036F880[0x8000];
+extern u8 lbl_80377880[0x14];
+extern u16 lbl_80377894[0x10];
+extern u16 lbl_80377954[0x10];
+extern u16 lbl_803778B4[0x10];
+extern u16 lbl_80377974[0x16];
+extern u8 lbl_803778D4[0x80];
+extern u8 lbl_8035F740[0x120];
+extern u16 lbl_8035F860[0x8000];
+extern u8 lbl_8036F860[0x20];
+extern u8 lbl_8036F880[0x8000];
 
 #define ZROT1(b) ((u32)__rlwnm((b), sh, 31, 31))
 #define ZROT8(b) ((u32)__rlwnm((b), sh, 24, 31))
@@ -7189,11 +7189,9 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                 pos = 0;
             }
             len = *(u16*)src;
-            {
-                u8* s2 = src + 1;
-                len |= *(u16*)s2 << 8;
-                src = s2 + 3;
-            }
+            src += 1;
+            len |= *(u16*)src << 8;
+            src += 3;
             do
             {
                 u8 v = *src;
