@@ -7226,3 +7226,17 @@ Method: subtract `git log --name-only`-derived set of files touched by any "name
 - WIN commit 5870c2bcf0: **dll_02B6_cnthitobjec** (SeqFn p2->unused, p3->animEvent), **dll_01E2_dimbosstonsil** (SeqFn p2->unused; _init p2->def per baddie-interface+0x58 arg2 convention grimble/kaldachom), **dll_0052_cameramodeforcebehind** (_init p2->unused, f32* p3->params [orbitRadius,heightOffset]). All .o md5-identical.
 - WIN commit e37abc83f6: **dll_0293_suntemple** / **dll_0295_wcapertures** / **dll_0296_wctempledia** interactCallback + **dll_012C_transporter** Transporter_SeqFn: all had a p2 unused 2nd param before ObjAnimUpdateState -> `unused` (crcloudrace/kytesmum/ktrex convention). All .o md5-identical.
 - VEIN CLOSED: every remaining never-named file's generics are RENDER-PASSTHROUGH ONLY (`_render(obj,p2,p3,p4,p5,visible)` forwarding straight into objRenderModelAndHitVolumes) — LEFT RAW per the render-p2-p5 rule. Zero never-named files carry iVar/fVar/uVar/local_ decompiler-generics (only 1 such file tree-wide, already named). Confirmed by exhaustive grep of non-passthrough p2-p9 across all 136 files: empty after these 7. Reopen only on new team commits introducing fresh generic-carrying units. Full build gate `all_source` EXIT=0.
+
+## Jul08 tricky-family generic-local naming (byte-identical)
+- tricky_flameguard.c trickyFlame(int p1,int p2) -> (int obj,int trickyState). .o md5 aa61f360a7d4ff7ca770a769bac9ba37 UNCHANGED. Sibling trickyGuard already used obj/trickyState.
+- dll_80136a40.c debugPrintSetColor: p2 -> termCursor (debug-log terminator write cursor). .o md5 7a044683d87766f980ee685ddc5ade8e UNCHANGED.
+- Commit fc922f6949 (path-scoped, main).
+- REST of tricky family (dll_00C4_tricky Tricky_render p2-p5, tricky.c drawFn_8011e8d8/eb3c p4-p9, DIM dll_19E_render p2-p5) are RENDER PASSTHROUGH params -> left RAW per scope rule. Remaining generics in these units are all in extern prototypes (not local defs). trickyfollow/substates/rollroute/guardspot/trickyguard/trickywarp/dimtricky/shtricky/nwtricky: ZERO renamable non-extern generics. Vein exhausted for local-naming in tricky family.
+
+## Jul08 dim/boss-family generic-local naming (byte-identical)
+- dll_01E3_dimbossgut2.c: DIM_BossGut2_free(int arg9->objArg); DIM_BossGut2_update local tmpVar->result (dual-use: objPosToMapBlockIdx + ObjMsg_Pop return). .o md5 702243b466f206a216cd7a6172ad208b UNCHANGED.
+- dll_01CA_dimexplosion.c: explosion_init(int obj,int p2->def) [placement descriptor, used (char*)def+0x1a/0x1c]. render p2-p5 left RAW (passthrough). .o md5 7fbb7fc1a1f0b4834bc0118cd2996759 UNCHANGED.
+- dll_0256_dimsnowhorn1.c: fn_802BB4B4(int obj,int a->frameStep,int slot) [a=framesThisStep gravity mult]; stateHandler0A local int p2->moveIdx [phase*2 anim-band index]; DIMSnowHorn1_init(int obj,int p2->def,int p3->spawnFlag). render p2-p5 left RAW. .o md5 ebc08755ef0c56eef43ae79c683c6e31 UNCHANGED.
+- dll_01E5_dimbossspit.c: DIMbossspit_updateBurst local iVar->alphaFade (alpha=0xff-alphaFade decay term). .o md5 7caedab23424cb97ea96b8307a0f114d UNCHANGED.
+- Commits 2bbf472943, 6e15831f97, ca3a2e40cd (path-scoped, main). Full all_source EXIT=0 zero FAILED.
+- EXHAUSTED (zero renamable non-extern generics): dll_01E0_dimboss (already fully named: hitReactMode/updateResult/mapDirIndex/etc), dll_01E1_dimbossgut, dll_01E7_dimbossfire, dll_01D1_dimtruthhornice, dll_01E6_dimbosscrackpar. dll_01E2_dimbosstonsil SKIPPED (touched 9min prior by sibling naming agent).
