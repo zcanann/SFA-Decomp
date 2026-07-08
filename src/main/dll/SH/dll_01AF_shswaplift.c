@@ -9,6 +9,7 @@
  * disables its hit volume.
  */
 #include "main/game_object.h"
+#include "main/gamebit_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "sfa_light_decls.h"
@@ -89,20 +90,20 @@ void warpstonelift_update(u8* obj)
             }
             if (ObjTrigger_IsSetById((int)obj, WARPSTONELIFT_ITEM_BIT) != 0)
             {
-                mainSetBits(0x886, 1);
-                mainSetBits(0xC7D, 1);
+                mainSetBits(GAMEBIT_ITEM_RockCandyRelated0886, 1);
+                mainSetBits(GAMEBIT_ITEM_RockCandy_Used, 1);
                 *state = WARPSTONELIFT_STATE_SWAPPED;
                 Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
             }
             else if (ObjTrigger_IsSet((int)obj) != 0)
             {
-                mainSetBits(0xC7E, 1);
+                mainSetBits(GAMEBIT_SH_WarpStoneComplainingAboutGifts, 1);
             }
             break;
         case WARPSTONELIFT_STATE_SWAPPED:
             if (ObjTrigger_IsSet((int)obj) != 0)
             {
-                mainSetBits(0x886, 1);
+                mainSetBits(GAMEBIT_ITEM_RockCandyRelated0886, 1);
             }
             break;
         }
