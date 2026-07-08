@@ -92,7 +92,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     ObjHits_EnableObject(obj);
     gb50 = mainGetBit(0x50); /* the old CloudRunner has flown off */
     gb48 = mainGetBit(0x48); /* the caged guardian has broken out */
-    if ((sub->flags & 2) != 0 && mainGetBit(0x4d) != 0)
+    if ((sub->flags & 2) != 0 && mainGetBit(GAMEBIT_CFPerchRelated004D) != 0)
     {
         sub->flags &= ~0x2;
         return 4;
@@ -269,7 +269,7 @@ void CFPrisonGuard_update(int* obj)
     }
     /* 0x44: the free-the-prisoner event - once set, the guard no
        longer chases (it also arms the cage switch, see cfprisoncage) */
-    bit44 = mainGetBit(0x44);
+    bit44 = mainGetBit(GAMEBIT_ITEM_PrisonKey_Got);
     dist = Vec_distance((char*)obj + 0x18, (char*)player + 0x18);
     if (sub->flags == 1)
     {
@@ -307,7 +307,7 @@ void CFPrisonGuard_init(int* obj, u8* params)
     ((GameObject*)obj)->animEventCallback = CFPrisonGuard_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     sub->capturedLatch = 1;
-    if (mainGetBit(0x4d) != 0)
+    if (mainGetBit(GAMEBIT_CFPerchRelated004D) != 0)
     {
         sub->flags = (u8)(sub->flags | 4);
     }
